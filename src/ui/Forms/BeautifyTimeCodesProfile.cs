@@ -24,7 +24,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 cuesPreviewViewInCues.FrameRate = (float)frameRate;
                 cuesPreviewViewOutCues.FrameRate = (float)frameRate;
-                cuesPreviewViewConnectedSubtitles.FrameRate = (float)frameRate;
+                cuesPreviewViewConnectedSubtitlesInCueClosest.FrameRate = (float)frameRate;
+                cuesPreviewViewConnectedSubtitlesOutCueClosest.FrameRate = (float)frameRate;
                 cuesPreviewViewChainingGeneral.FrameRate = (float)frameRate;
                 cuesPreviewViewChainingInCueOnShot.FrameRate = (float)frameRate;
                 cuesPreviewViewChainingOutCueOnShot.FrameRate = (float)frameRate;
@@ -59,9 +60,10 @@ namespace Nikse.SubtitleEdit.Forms
             numericUpDownOutCuesLeftGreenZone.Value = settings.OutCuesLeftGreenZone;
             numericUpDownOutCuesRightGreenZone.Value = settings.OutCuesRightGreenZone;
 
-            numericUpDownConnectedSubtitlesLeftGap.Value = settings.ConnectedSubtitlesLeftGap;
-            numericUpDownConnectedSubtitlesRightGap.Value = settings.ConnectedSubtitlesRightGap;
-            comboBoxConnectedSubtitlesBehavior.SelectedIndex = (int)settings.ConnectedSubtitlesBehavior;
+            numericUpDownConnectedSubtitlesInCueClosestLeftGap.Value = settings.ConnectedSubtitlesInCueClosestLeftGap;
+            numericUpDownConnectedSubtitlesInCueClosestRightGap.Value = settings.ConnectedSubtitlesInCueClosestRightGap;
+            numericUpDownConnectedSubtitlesOutCueClosestLeftGap.Value = settings.ConnectedSubtitlesOutCueClosestLeftGap;
+            numericUpDownConnectedSubtitlesOutCueClosestRightGap.Value = settings.ConnectedSubtitlesOutCueClosestRightGap;
             numericUpDownConnectedSubtitlesLeftRedZone.Value = settings.ConnectedSubtitlesLeftRedZone;
             numericUpDownConnectedSubtitlesRightRedZone.Value = settings.ConnectedSubtitlesRightRedZone;
             numericUpDownConnectedSubtitlesLeftGreenZone.Value = settings.ConnectedSubtitlesLeftGreenZone;
@@ -107,7 +109,11 @@ namespace Nikse.SubtitleEdit.Forms
             labelChainingOutCueOnShotMaxGapSuffix.Enabled = radioButtonChainingOutCueOnShotMaxGap.Checked;
             numericUpDownChainingOutCueOnShotRightRedZone.Enabled = radioButtonChainingOutCueOnShotZones.Checked;
             numericUpDownChainingOutCueOnShotRightGreenZone.Enabled = radioButtonChainingOutCueOnShotZones.Checked;
-
+            
+            // Connected subtitles page toggling
+            cuesPreviewViewConnectedSubtitlesInCueClosest.Visible = tabControlConnectedSubtitles.SelectedIndex == 0;
+            cuesPreviewViewConnectedSubtitlesOutCueClosest.Visible = tabControlConnectedSubtitles.SelectedIndex == 1;
+            
             // Chaining page toggling
             cuesPreviewViewChainingGeneral.Visible = tabControlChaining.SelectedIndex == 0;
             cuesPreviewViewChainingInCueOnShot.Visible = tabControlChaining.SelectedIndex == 1;
@@ -126,12 +132,19 @@ namespace Nikse.SubtitleEdit.Forms
             cuesPreviewViewOutCues.RightRedZone = Convert.ToInt32(numericUpDownOutCuesRightRedZone.Value);
             cuesPreviewViewOutCues.RightGreenZone = Convert.ToInt32(numericUpDownOutCuesRightGreenZone.Value);
 
-            cuesPreviewViewConnectedSubtitles.LeftGap = Convert.ToInt32(numericUpDownConnectedSubtitlesLeftGap.Value);
-            cuesPreviewViewConnectedSubtitles.RightGap = Convert.ToInt32(numericUpDownConnectedSubtitlesRightGap.Value);
-            cuesPreviewViewConnectedSubtitles.LeftGreenZone = Convert.ToInt32(numericUpDownConnectedSubtitlesLeftGreenZone.Value);
-            cuesPreviewViewConnectedSubtitles.LeftRedZone = Convert.ToInt32(numericUpDownConnectedSubtitlesLeftRedZone.Value);
-            cuesPreviewViewConnectedSubtitles.RightRedZone = Convert.ToInt32(numericUpDownConnectedSubtitlesRightRedZone.Value);
-            cuesPreviewViewConnectedSubtitles.RightGreenZone = Convert.ToInt32(numericUpDownConnectedSubtitlesRightGreenZone.Value);
+            cuesPreviewViewConnectedSubtitlesInCueClosest.LeftGap = Convert.ToInt32(numericUpDownConnectedSubtitlesInCueClosestLeftGap.Value);
+            cuesPreviewViewConnectedSubtitlesInCueClosest.RightGap = Convert.ToInt32(numericUpDownConnectedSubtitlesInCueClosestRightGap.Value);
+            cuesPreviewViewConnectedSubtitlesInCueClosest.LeftGreenZone = Convert.ToInt32(numericUpDownConnectedSubtitlesLeftGreenZone.Value);
+            cuesPreviewViewConnectedSubtitlesInCueClosest.LeftRedZone = Convert.ToInt32(numericUpDownConnectedSubtitlesLeftRedZone.Value);
+            cuesPreviewViewConnectedSubtitlesInCueClosest.RightRedZone = Convert.ToInt32(numericUpDownConnectedSubtitlesRightRedZone.Value);
+            cuesPreviewViewConnectedSubtitlesInCueClosest.RightGreenZone = Convert.ToInt32(numericUpDownConnectedSubtitlesRightGreenZone.Value);
+
+            cuesPreviewViewConnectedSubtitlesOutCueClosest.LeftGap = Convert.ToInt32(numericUpDownConnectedSubtitlesOutCueClosestLeftGap.Value);
+            cuesPreviewViewConnectedSubtitlesOutCueClosest.RightGap = Convert.ToInt32(numericUpDownConnectedSubtitlesOutCueClosestRightGap.Value);
+            cuesPreviewViewConnectedSubtitlesOutCueClosest.LeftGreenZone = Convert.ToInt32(numericUpDownConnectedSubtitlesLeftGreenZone.Value);
+            cuesPreviewViewConnectedSubtitlesOutCueClosest.LeftRedZone = Convert.ToInt32(numericUpDownConnectedSubtitlesLeftRedZone.Value);
+            cuesPreviewViewConnectedSubtitlesOutCueClosest.RightRedZone = Convert.ToInt32(numericUpDownConnectedSubtitlesRightRedZone.Value);
+            cuesPreviewViewConnectedSubtitlesOutCueClosest.RightGreenZone = Convert.ToInt32(numericUpDownConnectedSubtitlesRightGreenZone.Value);
 
             cuesPreviewViewChainingGeneral.LeftGreenZone = Convert.ToInt32(numericUpDownChainingGeneralLeftGreenZone.Value);
             cuesPreviewViewChainingGeneral.LeftRedZone = Convert.ToInt32(numericUpDownChainingGeneralLeftRedZone.Value);
@@ -162,9 +175,10 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.BeautifyTimeCodes.Profile.OutCuesRightRedZone = Convert.ToInt32(numericUpDownOutCuesRightRedZone.Value);
             Configuration.Settings.BeautifyTimeCodes.Profile.OutCuesRightGreenZone = Convert.ToInt32(numericUpDownOutCuesRightGreenZone.Value);
 
-            Configuration.Settings.BeautifyTimeCodes.Profile.ConnectedSubtitlesLeftGap = Convert.ToInt32(numericUpDownConnectedSubtitlesLeftGap.Value);
-            Configuration.Settings.BeautifyTimeCodes.Profile.ConnectedSubtitlesRightGap = Convert.ToInt32(numericUpDownConnectedSubtitlesRightGap.Value);
-            Configuration.Settings.BeautifyTimeCodes.Profile.ConnectedSubtitlesBehavior = (BeautifyTimeCodesSettings.BeautifyTimeCodesProfile.ConnectedSubtitlesBehaviorEnum)comboBoxConnectedSubtitlesBehavior.SelectedIndex;
+            Configuration.Settings.BeautifyTimeCodes.Profile.ConnectedSubtitlesInCueClosestLeftGap = Convert.ToInt32(numericUpDownConnectedSubtitlesInCueClosestLeftGap.Value);
+            Configuration.Settings.BeautifyTimeCodes.Profile.ConnectedSubtitlesInCueClosestRightGap = Convert.ToInt32(numericUpDownConnectedSubtitlesInCueClosestRightGap.Value);
+            Configuration.Settings.BeautifyTimeCodes.Profile.ConnectedSubtitlesOutCueClosestLeftGap = Convert.ToInt32(numericUpDownConnectedSubtitlesOutCueClosestLeftGap.Value);
+            Configuration.Settings.BeautifyTimeCodes.Profile.ConnectedSubtitlesOutCueClosestRightGap = Convert.ToInt32(numericUpDownConnectedSubtitlesOutCueClosestRightGap.Value);
             Configuration.Settings.BeautifyTimeCodes.Profile.ConnectedSubtitlesLeftGreenZone = Convert.ToInt32(numericUpDownConnectedSubtitlesLeftGreenZone.Value);
             Configuration.Settings.BeautifyTimeCodes.Profile.ConnectedSubtitlesLeftRedZone = Convert.ToInt32(numericUpDownConnectedSubtitlesLeftRedZone.Value);
             Configuration.Settings.BeautifyTimeCodes.Profile.ConnectedSubtitlesRightRedZone = Convert.ToInt32(numericUpDownConnectedSubtitlesRightRedZone.Value);
@@ -223,13 +237,14 @@ namespace Nikse.SubtitleEdit.Forms
         {
             RefreshControls();
         }
+
         private void numericUpDown_ValueChanged(object sender, EventArgs e)
         {
             ValidateZones();
             RefreshControls();
         }
 
-        private void comboBoxConnectedSubtitlesBehavior_SelectedIndexChanged(object sender, EventArgs e)
+        private void tabControlConnectedSubtitles_SelectedIndexChanged(object sender, EventArgs e)
         {
             RefreshControls();
         }
@@ -241,14 +256,24 @@ namespace Nikse.SubtitleEdit.Forms
                 numericUpDownOutCuesGap.Value = numericUpDownGap.Value;
             }
 
-            if (numericUpDownConnectedSubtitlesLeftGap.Value > 0 && numericUpDownConnectedSubtitlesRightGap.Value == 0)
+            if (numericUpDownConnectedSubtitlesInCueClosestLeftGap.Value > 0 && numericUpDownConnectedSubtitlesInCueClosestRightGap.Value == 0)
             {
-                numericUpDownConnectedSubtitlesLeftGap.Value = numericUpDownGap.Value;
+                numericUpDownConnectedSubtitlesInCueClosestLeftGap.Value = numericUpDownGap.Value;
             }
 
-            if (numericUpDownConnectedSubtitlesLeftGap.Value == 0 && numericUpDownConnectedSubtitlesRightGap.Value > 0)
+            if (numericUpDownConnectedSubtitlesInCueClosestLeftGap.Value == 0 && numericUpDownConnectedSubtitlesInCueClosestRightGap.Value > 0)
             {
-                numericUpDownConnectedSubtitlesRightGap.Value = numericUpDownGap.Value;
+                numericUpDownConnectedSubtitlesInCueClosestRightGap.Value = numericUpDownGap.Value;
+            }
+
+            if (numericUpDownConnectedSubtitlesOutCueClosestRightGap.Value > 0 && numericUpDownConnectedSubtitlesOutCueClosestLeftGap.Value == 0)
+            {
+                numericUpDownConnectedSubtitlesOutCueClosestRightGap.Value = numericUpDownGap.Value;
+            }
+
+            if (numericUpDownConnectedSubtitlesOutCueClosestRightGap.Value == 0 && numericUpDownConnectedSubtitlesOutCueClosestLeftGap.Value > 0)
+            {
+                numericUpDownConnectedSubtitlesOutCueClosestLeftGap.Value = numericUpDownGap.Value;
             }
         }
 
