@@ -3459,5 +3459,17 @@ namespace Test.FixCommonErrors
                 Assert.AreEqual("They wanted to test!" + Environment.NewLine + "But not Kal-El.", _subtitle.Paragraphs[0].Text);
             }
         }
+
+        [TestMethod]
+        public void UnbreakLinesExceptDialogWithUnicode()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "‏- fasdfsdf.\r\n‏-adfasf.");
+                Configuration.Settings.General.ContinuationStyle = ContinuationStyle.LeadingTrailingDots;
+                new FixShortLinesAll().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual("‏- fasdfsdf.\r\n‏-adfasf.", _subtitle.Paragraphs[0].Text);
+            }
+        }
     }
 }

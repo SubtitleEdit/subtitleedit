@@ -14,25 +14,29 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {
-            string fixAction = Language.MergeShortLineAll;
-            int noOfShortLines = 0;
-            for (int i = 0; i < subtitle.Paragraphs.Count; i++)
+            var fixAction = Language.MergeShortLineAll;
+            var noOfShortLines = 0;
+            for (var i = 0; i < subtitle.Paragraphs.Count; i++)
             {
-                Paragraph p = subtitle.Paragraphs[i];
-                if (callbacks.AllowFix(p, fixAction))
+                var p = subtitle.Paragraphs[i];
+                if (!callbacks.AllowFix(p, fixAction))
                 {
-                    string s = HtmlUtil.RemoveHtmlTags(p.Text, true);
-                    if (s.Contains(Environment.NewLine) && s.Replace(Environment.NewLine, " ").Replace("  ", " ").CountCharacters(false) < Configuration.Settings.General.MergeLinesShorterThan)
-                    {
-                        s = Utilities.AutoBreakLine(p.Text, callbacks.Language);
-                        if (s != p.Text)
-                        {
-                            string oldCurrent = p.Text;
-                            p.Text = s;
-                            noOfShortLines++;
-                            callbacks.AddFixToListView(p, fixAction, oldCurrent, p.Text);
-                        }
-                    }
+                    continue;
+                }
+
+                var s = HtmlUtil.RemoveHtmlTags(p.Text, true);
+                if (!s.Contains(Environment.NewLine) || s.Replace(Environment.NewLine, " ").Replace("  ", " ").CountCharacters(false) >= Configuration.Settings.General.MergeLinesShorterThan)
+                {
+                    continue;
+                }
+
+                s = Utilities.AutoBreakLine(p.Text, callbacks.Language);
+                if (s != p.Text)
+                {
+                    var oldCurrent = p.Text;
+                    p.Text = s;
+                    noOfShortLines++;
+                    callbacks.AddFixToListView(p, fixAction, oldCurrent, p.Text);
                 }
             }
             callbacks.UpdateFixStatus(noOfShortLines, Language.RemoveLineBreaks);
