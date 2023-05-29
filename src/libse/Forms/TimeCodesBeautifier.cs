@@ -11,9 +11,8 @@ namespace Nikse.SubtitleEdit.Core.Forms
         private readonly Subtitle _subtitle;
         private readonly double _frameRate;
 
-        private List<double> _timeCodes;
-        private List<double> _shotChanges;
-        private List<int> _shotChangesFrames;
+        private readonly List<double> _timeCodes;
+        private readonly List<int> _shotChangesFrames;
 
         public ProgressChangedDelegate ProgressChanged { get; set; }
 
@@ -22,10 +21,9 @@ namespace Nikse.SubtitleEdit.Core.Forms
             _subtitle = subtitle;
             _frameRate = frameRate;
             _timeCodes = timeCodes;
-            _shotChanges = shotChanges;
 
             // Convert shot changes to frame numbers
-            _shotChangesFrames = _shotChanges.Select(d => SubtitleFormat.MillisecondsToFrames(d * 1000, _frameRate)).ToList();
+            _shotChangesFrames = shotChanges.Select(d => SubtitleFormat.MillisecondsToFrames(d * 1000, _frameRate)).ToList();
         }
 
         public void Beautify()
@@ -392,10 +390,8 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     if (fixedLeftOutCueFrame != null)
                     {
                         // Check if there are any shot changes in between them
-                        var firstShotChangeInBetween = new List<int> { -1 }.Concat(_shotChangesFrames).Concat(new List<int> { int.MaxValue }).First(x => x >= bestLeftOutCueFrame && x <= bestRightInCueFrame);
-                        var hasShotChangesInBetween = firstShotChangeInBetween >= 0 && firstShotChangeInBetween != int.MaxValue;
-
-                        if (hasShotChangesInBetween)
+                        var firstShotChangeInBetween = GetFirstShotChangeFrameInBetween(bestLeftOutCueFrame, bestRightInCueFrame);
+                        if (firstShotChangeInBetween != null)
                         {
                             // There are shot changes in between. Check behaviors
                             switch (Configuration.Settings.BeautifyTimeCodes.Profile.ChainingGeneralShotChangeBehavior)
@@ -413,7 +409,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                                     break;
                                 case BeautifyTimeCodesSettings.BeautifyTimeCodesProfile.ChainingGeneralShotChangeBehaviorEnum.ExtendUntilShotChange:
                                     // Put the left out cue on the shot change, minus gap
-                                    newLeftOutCueFrame = firstShotChangeInBetween - Configuration.Settings.BeautifyTimeCodes.Profile.OutCuesGap;
+                                    newLeftOutCueFrame = firstShotChangeInBetween.Value - Configuration.Settings.BeautifyTimeCodes.Profile.OutCuesGap;
                                     newRightInCueFrame = bestRightInCueFrame;
                                     break;
                             }
@@ -460,22 +456,24 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
             return true;
         }
-
+        
         private bool IsCueOnShotChange(int cueFrame, bool isInCue)
         {
-            var closestShotChangeFrame = new List<int> { -1 }.Concat(_shotChangesFrames).Concat(new List<int> { int.MaxValue }).Aggregate((x, y) => Math.Abs(x - cueFrame) < Math.Abs(y - cueFrame) ? x : y);
-            if (closestShotChangeFrame < 0 || closestShotChangeFrame == int.MaxValue)
+            var closestShotChangeFrame = GetClosestShotChangeFrame(cueFrame);
+            if (closestShotChangeFrame != null)
             {
-                return false;
-            }
-
-            if (isInCue)
-            {
-                return cueFrame >= closestShotChangeFrame && cueFrame <= closestShotChangeFrame + Configuration.Settings.BeautifyTimeCodes.Profile.InCuesGap;
+                if (isInCue)
+                {
+                    return cueFrame >= closestShotChangeFrame.Value && cueFrame <= closestShotChangeFrame.Value + Configuration.Settings.BeautifyTimeCodes.Profile.InCuesGap;
+                }
+                else
+                {
+                    return cueFrame <= closestShotChangeFrame.Value && cueFrame >= closestShotChangeFrame.Value - Configuration.Settings.BeautifyTimeCodes.Profile.OutCuesGap;
+                }
             }
             else
             {
-                return cueFrame <= closestShotChangeFrame && cueFrame >= closestShotChangeFrame - Configuration.Settings.BeautifyTimeCodes.Profile.OutCuesGap;
+                return false;
             }
         }
 
@@ -794,6 +792,33 @@ namespace Nikse.SubtitleEdit.Core.Forms
             if (paragraph.Duration.TotalMilliseconds < 0)
             {
                 paragraph.EndTime.TotalMilliseconds = paragraph.StartTime.TotalMilliseconds;
+            }
+        }
+
+
+        // Helpers
+
+        private int? GetFirstShotChangeFrameInBetween(int leftCueFrame, int rightCueFrame)
+        {
+            try
+            {
+                return _shotChangesFrames.First(x => x >= leftCueFrame && x <= rightCueFrame);
+            }
+            catch (InvalidOperationException)
+            {
+                return null;
+            }
+        }
+
+        private int? GetClosestShotChangeFrame(int cueFrame)
+        {
+            try
+            {
+                return _shotChangesFrames.Aggregate((x, y) => Math.Abs(x - cueFrame) < Math.Abs(y - cueFrame) ? x : y);
+            }
+            catch (InvalidOperationException)
+            {
+                return null;
             }
         }
 
