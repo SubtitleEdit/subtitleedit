@@ -332,7 +332,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
             // Check which cue is closest (use milliseconds to check original unaligned positions)
             var shotChangeMs = SubtitleFormat.FramesToMilliseconds(shotChangeFrame, _frameRate);
 
-            if (Math.Abs(leftParagraph.EndTime.Milliseconds - shotChangeMs) < Math.Abs(rightParagraph.StartTime.Milliseconds - shotChangeMs))
+            if (Math.Abs(leftParagraph.EndTime.TotalMilliseconds - shotChangeMs) < Math.Abs(rightParagraph.StartTime.TotalMilliseconds - shotChangeMs))
             {
                 // Left subtitle's out cue is closest
                 var newLeftOutCueFrame = shotChangeFrame - Configuration.Settings.BeautifyTimeCodes.Profile.ConnectedSubtitlesOutCueClosestLeftGap;
