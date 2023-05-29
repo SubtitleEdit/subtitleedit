@@ -34,48 +34,57 @@ namespace Nikse.SubtitleEdit.Core.Forms
         public void Beautify()
         {
             var amountOfPasses = 2;
+            var skipNextInCue = false;
 
             for (int pass = 0; pass < amountOfPasses; pass++)
             {
                 for (int p = 0; p < _subtitle.Paragraphs.Count; p++)
                 {
-                    // === In cue ===
-                    
+                    // Gather relevant paragraphs
                     var paragraph = _subtitle.Paragraphs.ElementAtOrDefault(p);
                     var previousParagraph = _subtitle.Paragraphs.ElementAtOrDefault(p - 1);
+                    var nextParagraph = _subtitle.Paragraphs.ElementAtOrDefault(p + 1);
 
-                    // Check if we have connected subtitles
-                    var result = FixConnectedSubtitles(true, previousParagraph, paragraph);
+                    var result = false;
 
-                    // If not, check if we have chainable subtitles
-                    if (!result)
+                    // === In cue ===
+
+                    // Check if the in cue should be processed
+                    if (!skipNextInCue)
                     {
-                        result = FixChainableSubtitles(true, previousParagraph, paragraph);
-                    }
+                        // Check if we have connected subtitles
+                        result = FixConnectedSubtitles(previousParagraph, paragraph);
 
-                    // If not, then we have a free in cue
-                    if (!result)
+                        // If not, check if we have chainable subtitles
+                        if (!result)
+                        {
+                            result = FixChainableSubtitles(previousParagraph, paragraph);
+                        }
+
+                        // If not, then we have a free in cue
+                        if (!result)
+                        {
+                            FixInCue(p);
+                        }
+                    }
+                    else
                     {
-                        FixInCue(p);
+                        // Reset flag for next iteration
+                        skipNextInCue = false;
                     }
-
 
                     // === Out cue ===
 
-                    var nextParagraph = _subtitle.Paragraphs.ElementAtOrDefault(p + 1);
-
                     // Check if we have connected subtitles
-                    result = FixConnectedSubtitles(false, paragraph, nextParagraph);
-
-                    // If not, check if we have chainable subtitles
-                    if (!result)
+                    result = FixConnectedSubtitles(paragraph, nextParagraph);
+                    if (result)
                     {
-                        result = FixChainableSubtitles(true, paragraph, nextParagraph);
+                        // Yes, this means the next subtitle's in cue is now also processed. Skipping in next iteration
+                        skipNextInCue = true;
                     }
-
-                    // If not, then we have a free out cue
-                    if (!result)
+                    else
                     {
+                        // If not, then we have a free out cue
                         FixOutCue(p);
                     }
 
@@ -86,7 +95,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
             }
         }
 
-        private bool FixConnectedSubtitles(bool isInCue, Paragraph leftParagraph = null, Paragraph rightParagraph = null)
+        private bool FixConnectedSubtitles(Paragraph leftParagraph = null, Paragraph rightParagraph = null)
         {
             if (leftParagraph == null || rightParagraph == null)
             {
@@ -314,7 +323,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
             }
         }
 
-        private bool FixChainableSubtitles(bool isInCue, Paragraph leftParagraph = null, Paragraph rightParagraph = null)
+        private bool FixChainableSubtitles(Paragraph leftParagraph = null, Paragraph rightParagraph = null)
         {
             if (leftParagraph == null || rightParagraph == null)
             {
