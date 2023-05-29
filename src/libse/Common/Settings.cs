@@ -2858,125 +2858,125 @@ $HorzAlign          =   Center
 
             public BeautifyTimeCodesProfile(Preset preset = Preset.Default)
             {
-                if (preset == Preset.Netflix)
+                switch (preset)
                 {
-                    Gap = 2;
+                    case Preset.Netflix:
+                        Gap = 2;
 
-                    InCuesGap = 0;
-                    InCuesLeftGreenZone = 12;
-                    InCuesLeftRedZone = 7;
-                    InCuesRightRedZone = 7;
-                    InCuesRightGreenZone = 12;
+                        InCuesGap = 0;
+                        InCuesLeftGreenZone = 12;
+                        InCuesLeftRedZone = 7;
+                        InCuesRightRedZone = 7;
+                        InCuesRightGreenZone = 12;
 
-                    OutCuesGap = 2;
-                    OutCuesLeftGreenZone = 12;
-                    OutCuesLeftRedZone = 7;
-                    OutCuesRightRedZone = 7;
-                    OutCuesRightGreenZone = 12;
+                        OutCuesGap = 2;
+                        OutCuesLeftGreenZone = 12;
+                        OutCuesLeftRedZone = 7;
+                        OutCuesRightRedZone = 7;
+                        OutCuesRightGreenZone = 12;
 
-                    ConnectedSubtitlesInCueClosestLeftGap = 2;
-                    ConnectedSubtitlesInCueClosestRightGap = 0;
-                    ConnectedSubtitlesOutCueClosestLeftGap = 2;
-                    ConnectedSubtitlesOutCueClosestRightGap = 0;
-                    ConnectedSubtitlesLeftGreenZone = 12;
-                    ConnectedSubtitlesLeftRedZone = 7;
-                    ConnectedSubtitlesRightRedZone = 7;
-                    ConnectedSubtitlesRightGreenZone = 12;
-                    ConnectedSubtitlesTreatConnected = 180;
+                        ConnectedSubtitlesInCueClosestLeftGap = 2;
+                        ConnectedSubtitlesInCueClosestRightGap = 0;
+                        ConnectedSubtitlesOutCueClosestLeftGap = 2;
+                        ConnectedSubtitlesOutCueClosestRightGap = 0;
+                        ConnectedSubtitlesLeftGreenZone = 12;
+                        ConnectedSubtitlesLeftRedZone = 7;
+                        ConnectedSubtitlesRightRedZone = 7;
+                        ConnectedSubtitlesRightGreenZone = 12;
+                        ConnectedSubtitlesTreatConnected = 180;
 
-                    ChainingGeneralUseZones = false;
-                    ChainingGeneralMaxGap = 500;
-                    ChainingGeneralLeftGreenZone = 12;
-                    ChainingGeneralLeftRedZone = 12;
-                    ChainingGeneralShotChangeBehavior = ChainingGeneralShotChangeBehaviorEnum.ExtendUntilShotChange;
-                    ChainingInCueOnShotUseZones = false;
-                    ChainingInCueOnShotMaxGap = 500;
-                    ChainingInCueOnShotLeftGreenZone = 12;
-                    ChainingInCueOnShotLeftRedZone = 12;
-                    ChainingOutCueOnShotUseZones = false;
-                    ChainingOutCueOnShotMaxGap = 500;
-                    ChainingOutCueOnShotRightRedZone = 12;
-                    ChainingOutCueOnShotRightGreenZone = 12;
-                }
-                else if (preset == Preset.SDI)
-                {
-                    Gap = 4;
+                        ChainingGeneralUseZones = false;
+                        ChainingGeneralMaxGap = 500;
+                        ChainingGeneralLeftGreenZone = 12;
+                        ChainingGeneralLeftRedZone = 12;
+                        ChainingGeneralShotChangeBehavior = ChainingGeneralShotChangeBehaviorEnum.ExtendUntilShotChange;
+                        ChainingInCueOnShotUseZones = false;
+                        ChainingInCueOnShotMaxGap = 500;
+                        ChainingInCueOnShotLeftGreenZone = 12;
+                        ChainingInCueOnShotLeftRedZone = 12;
+                        ChainingOutCueOnShotUseZones = false;
+                        ChainingOutCueOnShotMaxGap = 500;
+                        ChainingOutCueOnShotRightRedZone = 12;
+                        ChainingOutCueOnShotRightGreenZone = 12;
+                        break;
+                    case Preset.SDI:
+                        Gap = 4;
 
-                    InCuesGap = 2;
-                    InCuesLeftGreenZone = 12;
-                    InCuesLeftRedZone = 7;
-                    InCuesRightRedZone = 7;
-                    InCuesRightGreenZone = 12;
+                        InCuesGap = 2;
+                        InCuesLeftGreenZone = 12;
+                        InCuesLeftRedZone = 7;
+                        InCuesRightRedZone = 7;
+                        InCuesRightGreenZone = 12;
 
-                    OutCuesGap = 2;
-                    OutCuesLeftGreenZone = 12;
-                    OutCuesLeftRedZone = 7;
-                    OutCuesRightRedZone = 7;
-                    OutCuesRightGreenZone = 12;
+                        OutCuesGap = 2;
+                        OutCuesLeftGreenZone = 12;
+                        OutCuesLeftRedZone = 7;
+                        OutCuesRightRedZone = 7;
+                        OutCuesRightGreenZone = 12;
 
-                    ConnectedSubtitlesInCueClosestLeftGap = 2;
-                    ConnectedSubtitlesInCueClosestRightGap = 2;
-                    ConnectedSubtitlesOutCueClosestLeftGap = 2;
-                    ConnectedSubtitlesOutCueClosestRightGap = 2;
-                    ConnectedSubtitlesLeftGreenZone = 12;
-                    ConnectedSubtitlesLeftRedZone = 7;
-                    ConnectedSubtitlesRightRedZone = 7;
-                    ConnectedSubtitlesRightGreenZone = 12;
-                    ConnectedSubtitlesTreatConnected = 240;
+                        ConnectedSubtitlesInCueClosestLeftGap = 2;
+                        ConnectedSubtitlesInCueClosestRightGap = 2;
+                        ConnectedSubtitlesOutCueClosestLeftGap = 2;
+                        ConnectedSubtitlesOutCueClosestRightGap = 2;
+                        ConnectedSubtitlesLeftGreenZone = 12;
+                        ConnectedSubtitlesLeftRedZone = 7;
+                        ConnectedSubtitlesRightRedZone = 7;
+                        ConnectedSubtitlesRightGreenZone = 12;
+                        ConnectedSubtitlesTreatConnected = 240;
 
-                    ChainingGeneralUseZones = false;
-                    ChainingGeneralMaxGap = 1000;
-                    ChainingGeneralLeftGreenZone = 25;
-                    ChainingGeneralLeftRedZone = 24;
-                    ChainingGeneralShotChangeBehavior = ChainingGeneralShotChangeBehaviorEnum.ExtendCrossingShotChange;
-                    ChainingInCueOnShotUseZones = false;
-                    ChainingInCueOnShotMaxGap = 1000;
-                    ChainingInCueOnShotLeftGreenZone = 25;
-                    ChainingInCueOnShotLeftRedZone = 24;
-                    ChainingOutCueOnShotUseZones = false;
-                    ChainingOutCueOnShotMaxGap = 1000;
-                    ChainingOutCueOnShotRightRedZone = 24;
-                    ChainingOutCueOnShotRightGreenZone = 25;
-                }
-                else
-                {
-                    Gap = 3;
+                        ChainingGeneralUseZones = false;
+                        ChainingGeneralMaxGap = 1000;
+                        ChainingGeneralLeftGreenZone = 25;
+                        ChainingGeneralLeftRedZone = 24;
+                        ChainingGeneralShotChangeBehavior = ChainingGeneralShotChangeBehaviorEnum.ExtendCrossingShotChange;
+                        ChainingInCueOnShotUseZones = false;
+                        ChainingInCueOnShotMaxGap = 1000;
+                        ChainingInCueOnShotLeftGreenZone = 25;
+                        ChainingInCueOnShotLeftRedZone = 24;
+                        ChainingOutCueOnShotUseZones = false;
+                        ChainingOutCueOnShotMaxGap = 1000;
+                        ChainingOutCueOnShotRightRedZone = 24;
+                        ChainingOutCueOnShotRightGreenZone = 25;
+                        break;
+                    default:
+                        Gap = 3;
 
-                    InCuesGap = 0;
-                    InCuesLeftGreenZone = 2;
-                    InCuesLeftRedZone = 2;
-                    InCuesRightRedZone = 5;
-                    InCuesRightGreenZone = 5;
+                        InCuesGap = 0;
+                        InCuesLeftGreenZone = 2;
+                        InCuesLeftRedZone = 2;
+                        InCuesRightRedZone = 5;
+                        InCuesRightGreenZone = 5;
 
-                    OutCuesGap = 0;
-                    OutCuesLeftGreenZone = 10;
-                    OutCuesLeftRedZone = 10;
-                    OutCuesRightRedZone = 2;
-                    OutCuesRightGreenZone = 12;
+                        OutCuesGap = 0;
+                        OutCuesLeftGreenZone = 10;
+                        OutCuesLeftRedZone = 10;
+                        OutCuesRightRedZone = 2;
+                        OutCuesRightGreenZone = 12;
 
-                    ConnectedSubtitlesInCueClosestLeftGap = 3;
-                    ConnectedSubtitlesInCueClosestRightGap = 0;
-                    ConnectedSubtitlesOutCueClosestLeftGap = 0;
-                    ConnectedSubtitlesOutCueClosestRightGap = 3;
-                    ConnectedSubtitlesLeftGreenZone = 2;
-                    ConnectedSubtitlesLeftRedZone = 2;
-                    ConnectedSubtitlesRightRedZone = 2;
-                    ConnectedSubtitlesRightGreenZone = 2;
-                    ConnectedSubtitlesTreatConnected = 180;
+                        ConnectedSubtitlesInCueClosestLeftGap = 3;
+                        ConnectedSubtitlesInCueClosestRightGap = 0;
+                        ConnectedSubtitlesOutCueClosestLeftGap = 0;
+                        ConnectedSubtitlesOutCueClosestRightGap = 3;
+                        ConnectedSubtitlesLeftGreenZone = 2;
+                        ConnectedSubtitlesLeftRedZone = 2;
+                        ConnectedSubtitlesRightRedZone = 2;
+                        ConnectedSubtitlesRightGreenZone = 2;
+                        ConnectedSubtitlesTreatConnected = 180;
 
-                    ChainingGeneralUseZones = false;
-                    ChainingGeneralMaxGap = 1000;
-                    ChainingGeneralLeftGreenZone = 25;
-                    ChainingGeneralLeftRedZone = 24;
-                    ChainingGeneralShotChangeBehavior = ChainingGeneralShotChangeBehaviorEnum.ExtendUntilShotChange;
-                    ChainingInCueOnShotUseZones = false;
-                    ChainingInCueOnShotMaxGap = 1000;
-                    ChainingInCueOnShotLeftGreenZone = 25;
-                    ChainingInCueOnShotLeftRedZone = 24;
-                    ChainingOutCueOnShotUseZones = false;
-                    ChainingOutCueOnShotMaxGap = 500;
-                    ChainingOutCueOnShotRightRedZone = 11;
-                    ChainingOutCueOnShotRightGreenZone = 12;
+                        ChainingGeneralUseZones = false;
+                        ChainingGeneralMaxGap = 1000;
+                        ChainingGeneralLeftGreenZone = 25;
+                        ChainingGeneralLeftRedZone = 24;
+                        ChainingGeneralShotChangeBehavior = ChainingGeneralShotChangeBehaviorEnum.ExtendUntilShotChange;
+                        ChainingInCueOnShotUseZones = false;
+                        ChainingInCueOnShotMaxGap = 1000;
+                        ChainingInCueOnShotLeftGreenZone = 25;
+                        ChainingInCueOnShotLeftRedZone = 24;
+                        ChainingOutCueOnShotUseZones = false;
+                        ChainingOutCueOnShotMaxGap = 500;
+                        ChainingOutCueOnShotRightRedZone = 11;
+                        ChainingOutCueOnShotRightGreenZone = 12;
+                        break;
                 }
             }
         }
