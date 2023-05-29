@@ -5786,6 +5786,7 @@ namespace Nikse.SubtitleEdit.Forms
                     DarkTheme.UndoDarkTheme(this, 1500);
 
                     OnLoad(null);
+                    InitializeToolbar();
                 }
             }
 
@@ -5918,7 +5919,14 @@ namespace Nikse.SubtitleEdit.Forms
 
         private static void TryLoadIcon(ToolStripButton button, string iconName)
         {
-            string fullPath = Configuration.IconsDirectory + iconName + ".png";
+            var theme = Configuration.Settings.General.UseDarkTheme ? "DarkTheme" : "DefaultTheme";
+            var themeFullPath = Path.Combine(Configuration.IconsDirectory, theme, iconName + ".png");
+            if (File.Exists(themeFullPath))
+            {
+                button.Image = new Bitmap(themeFullPath);
+            }
+
+            var fullPath = Configuration.IconsDirectory + iconName + ".png";
             if (File.Exists(fullPath))
             {
                 button.Image = new Bitmap(fullPath);
@@ -5952,6 +5960,7 @@ namespace Nikse.SubtitleEdit.Forms
                 TryLoadIcon(toolStripButtonToggleWaveform, "WaveformToggle");
                 TryLoadIcon(toolStripButtonToggleVideo, "VideoToggle");
                 TryLoadIcon(toolStripButtonSourceView, "SourceView");
+                //  IttProperties, WebVttProperties, EbuProperties
             }
 
             toolStripButtonFileNew.Visible = gs.ShowToolbarNew;
@@ -6350,7 +6359,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else
                     {
-                        if (!(_subtitleListViewIndex == 0 && _findHelper.SelectedPosition <= 0)) 
+                        if (!(_subtitleListViewIndex == 0 && _findHelper.SelectedPosition <= 0))
                         {
                             if (MessageBox.Show(_language.FindContinue, _language.FindContinueTitle, MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
                             {
@@ -6541,7 +6550,7 @@ namespace Nikse.SubtitleEdit.Forms
                 bool found = _findHelper.Find(_subtitle, _subtitleOriginal, _subtitleListViewIndex, startPos);
                 tb = GetFindReplaceTextBox();
                 // if we fail to find the text, we might want to start searching from the top of the file.
-                if (!found && !(_subtitleListViewIndex == 0 && _findHelper.SelectedPosition <= 0)) 
+                if (!found && !(_subtitleListViewIndex == 0 && _findHelper.SelectedPosition <= 0))
                 {
                     if (MessageBox.Show(_language.FindContinue, _language.FindContinueTitle, MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
                     {
@@ -6669,7 +6678,7 @@ namespace Nikse.SubtitleEdit.Forms
                 ShowStatus(msg + string.Format(_language.XNotFound, _findHelper.FindText));
 
                 // Prompt for start over
-                if (!(_subtitleListViewIndex == 0 && _findHelper.SelectedPosition <= 0)) 
+                if (!(_subtitleListViewIndex == 0 && _findHelper.SelectedPosition <= 0))
                 {
                     _replaceStartLineIndex = 0;
                     if (MessageBox.Show(_language.FindContinue, _language.FindContinueTitle, MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
@@ -10051,7 +10060,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             var prev = _subtitle.GetParagraphOrDefault(firstSelectedIndex - 1);
             var next = _subtitle.GetParagraphOrDefault(firstSelectedIndex);
-            
+
             var addMilliseconds = MinGapBetweenLines;
             if (addMilliseconds < 1)
             {
@@ -32789,6 +32798,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 toolStripButtonXProperties.ToolTipText = string.Format(_language.Menu.File.FormatXProperties, _currentSubtitleFormat?.Name);
                 toolStripButtonXProperties.Image = Properties.Resources.itt;
+                TryLoadIcon(toolStripButtonXProperties, "IttProperties");
             }
 
             if (formatType == typeof(WebVTT) || formatType == typeof(WebVTTFileWithLineNumber))
@@ -32796,6 +32806,7 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripButtonXProperties.Visible = true;
                 toolStripButtonXProperties.ToolTipText = string.Format(_language.Menu.File.FormatXProperties, new WebVTT().Name);
                 toolStripButtonXProperties.Image = Properties.Resources.webvtt;
+                TryLoadIcon(toolStripButtonXProperties, "WebVttProperties");
             }
 
             if (formatType == typeof(Ebu))
@@ -32803,6 +32814,7 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripButtonXProperties.Visible = true;
                 toolStripButtonXProperties.ToolTipText = string.Format(_language.Menu.File.FormatXProperties, new Ebu().Name);
                 toolStripButtonXProperties.Image = Properties.Resources.ebu;
+                TryLoadIcon(toolStripButtonXProperties, "EbuProperties");
             }
         }
 
