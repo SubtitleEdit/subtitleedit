@@ -5920,13 +5920,19 @@ namespace Nikse.SubtitleEdit.Forms
         private static void TryLoadIcon(ToolStripButton button, string iconName)
         {
             var theme = Configuration.Settings.General.UseDarkTheme ? "DarkTheme" : "DefaultTheme";
+            if (!string.IsNullOrEmpty(Configuration.Settings.General.ToolbarIconTheme) && !Configuration.Settings.General.ToolbarIconTheme.Equals("Auto", StringComparison.OrdinalIgnoreCase))
+            {
+                theme = Configuration.Settings.General.ToolbarIconTheme;
+            }
+
             var themeFullPath = Path.Combine(Configuration.IconsDirectory, theme, iconName + ".png");
             if (File.Exists(themeFullPath))
             {
                 button.Image = new Bitmap(themeFullPath);
+                return;
             }
 
-            var fullPath = Configuration.IconsDirectory + iconName + ".png";
+            var fullPath = Path.Combine(Configuration.IconsDirectory, "DefaultTheme", iconName + ".png");
             if (File.Exists(fullPath))
             {
                 button.Image = new Bitmap(fullPath);
