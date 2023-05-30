@@ -120,7 +120,6 @@ CloseApplications=true
 SetupMutex='subtitle_edit_setup_mutex'
 ArchitecturesInstallIn64BitMode=x64
 
-
 [Languages]
 Name: "en";   MessagesFile: "compiler:Default.isl"
 #ifdef localize
@@ -264,7 +263,10 @@ Source: ..\Icons\sup.ico;                          DestDir: {app}\Icons;        
 Source: ..\Icons\vtt.ico;                          DestDir: {app}\Icons;                              Flags: ignoreversion onlyifdoesntexist; Components: main
 Source: ..\Icons\smi.ico;                          DestDir: {app}\Icons;                              Flags: ignoreversion onlyifdoesntexist; Components: main
 Source: ..\Icons\itt.ico;                          DestDir: {app}\Icons;                              Flags: ignoreversion onlyifdoesntexist; Components: main
-  
+
+Source: ..\Icons\DarkTheme\*.png;                  DestDir: {userappdata}\Subtitle Edit\Icons\DarkTheme;     Flags: ignoreversion onlyifdoesntexist; Components: main
+Source: ..\Icons\DefaultTheme\*.png;               DestDir: {userappdata}\Subtitle Edit\Icons\DefaultTheme;  Flags: ignoreversion onlyifdoesntexist; Components: main
+
 #ifdef localize
 Source: {#bindir}\Languages\ar-EG.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
 Source: {#bindir}\Languages\bg-BG.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
@@ -725,6 +727,7 @@ begin
   RemoveDir(ExpandConstant('{userappdata}\Subtitle Edit\Ocr'));
   DelTree(ExpandConstant('{userappdata}\Subtitle Edit\Plugins\*.*'), False, True, False);
   RemoveDir(ExpandConstant('{userappdata}\Subtitle Edit\Plugins'));
+  DelTree(ExpandConstant('{userappdata}\Subtitle Edit\Icons\*.*'), False, True, False);
 end;
 
 
