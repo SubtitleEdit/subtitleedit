@@ -319,6 +319,15 @@
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.checkBoxShowFrameRate = new System.Windows.Forms.CheckBox();
             this.groupBoxShowToolBarButtons = new System.Windows.Forms.GroupBox();
+            this.pictureBoxEbuProperties = new System.Windows.Forms.PictureBox();
+            this.pictureBoxWebVttProperties = new System.Windows.Forms.PictureBox();
+            this.pictureBoxIttProperties = new System.Windows.Forms.PictureBox();
+            this.pictureBoxToggleVideo = new System.Windows.Forms.PictureBox();
+            this.pictureBoxToggleWaveform = new System.Windows.Forms.PictureBox();
+            this.pictureBoxAssaDraw = new System.Windows.Forms.PictureBox();
+            this.pictureBoxAssAttachments = new System.Windows.Forms.PictureBox();
+            this.pictureBoxAssProperties = new System.Windows.Forms.PictureBox();
+            this.pictureBoxAssStyleManager = new System.Windows.Forms.PictureBox();
             this.labelToolbarIconTheme = new System.Windows.Forms.Label();
             this.comboBoxToolbarIconTheme = new System.Windows.Forms.ComboBox();
             this.labelToggleSourceView = new System.Windows.Forms.Label();
@@ -431,15 +440,6 @@
             this.labelUpdateFileTypeAssociationsStatus = new System.Windows.Forms.Label();
             this.imageListFileTypeAssociations = new System.Windows.Forms.ImageList(this.components);
             this.toolTipDialogStylePreview = new System.Windows.Forms.ToolTip(this.components);
-            this.pictureBoxAssStyleManager = new System.Windows.Forms.PictureBox();
-            this.pictureBoxAssProperties = new System.Windows.Forms.PictureBox();
-            this.pictureBoxAssAttachments = new System.Windows.Forms.PictureBox();
-            this.pictureBoxAssaDraw = new System.Windows.Forms.PictureBox();
-            this.pictureBoxToggleWaveform = new System.Windows.Forms.PictureBox();
-            this.pictureBoxToggleVideo = new System.Windows.Forms.PictureBox();
-            this.pictureBoxIttProperties = new System.Windows.Forms.PictureBox();
-            this.pictureBoxWebVttProperties = new System.Windows.Forms.PictureBox();
-            this.pictureBoxEbuProperties = new System.Windows.Forms.PictureBox();
             this.panelGeneral.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
             this.groupBoxGeneralRules.SuspendLayout();
@@ -485,6 +485,15 @@
             this.panelToolBar.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBoxShowToolBarButtons.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxEbuProperties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxWebVttProperties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxIttProperties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxToggleVideo)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxToggleWaveform)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxAssaDraw)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxAssAttachments)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxAssProperties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxAssStyleManager)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSourceView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBurnIn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxNetflixQualityCheck)).BeginInit();
@@ -512,15 +521,6 @@
             this.groupBoxProxySettings.SuspendLayout();
             this.groupBoxProxyAuthentication.SuspendLayout();
             this.panelFileTypeAssociations.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxAssStyleManager)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxAssProperties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxAssAttachments)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxAssaDraw)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxToggleWaveform)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxToggleVideo)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxIttProperties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxWebVttProperties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxEbuProperties)).BeginInit();
             this.SuspendLayout();
             // 
             // buttonOK
@@ -4091,10 +4091,82 @@
             this.groupBoxShowToolBarButtons.TabStop = false;
             this.groupBoxShowToolBarButtons.Text = "Show toolbar buttons";
             // 
+            // pictureBoxEbuProperties
+            // 
+            this.pictureBoxEbuProperties.Location = new System.Drawing.Point(323, 400);
+            this.pictureBoxEbuProperties.Name = "pictureBoxEbuProperties";
+            this.pictureBoxEbuProperties.Size = new System.Drawing.Size(32, 32);
+            this.pictureBoxEbuProperties.TabIndex = 59;
+            this.pictureBoxEbuProperties.TabStop = false;
+            // 
+            // pictureBoxWebVttProperties
+            // 
+            this.pictureBoxWebVttProperties.Location = new System.Drawing.Point(285, 400);
+            this.pictureBoxWebVttProperties.Name = "pictureBoxWebVttProperties";
+            this.pictureBoxWebVttProperties.Size = new System.Drawing.Size(32, 32);
+            this.pictureBoxWebVttProperties.TabIndex = 58;
+            this.pictureBoxWebVttProperties.TabStop = false;
+            // 
+            // pictureBoxIttProperties
+            // 
+            this.pictureBoxIttProperties.Location = new System.Drawing.Point(247, 400);
+            this.pictureBoxIttProperties.Name = "pictureBoxIttProperties";
+            this.pictureBoxIttProperties.Size = new System.Drawing.Size(32, 32);
+            this.pictureBoxIttProperties.TabIndex = 57;
+            this.pictureBoxIttProperties.TabStop = false;
+            // 
+            // pictureBoxToggleVideo
+            // 
+            this.pictureBoxToggleVideo.Location = new System.Drawing.Point(209, 400);
+            this.pictureBoxToggleVideo.Name = "pictureBoxToggleVideo";
+            this.pictureBoxToggleVideo.Size = new System.Drawing.Size(32, 32);
+            this.pictureBoxToggleVideo.TabIndex = 56;
+            this.pictureBoxToggleVideo.TabStop = false;
+            // 
+            // pictureBoxToggleWaveform
+            // 
+            this.pictureBoxToggleWaveform.Location = new System.Drawing.Point(171, 400);
+            this.pictureBoxToggleWaveform.Name = "pictureBoxToggleWaveform";
+            this.pictureBoxToggleWaveform.Size = new System.Drawing.Size(32, 32);
+            this.pictureBoxToggleWaveform.TabIndex = 55;
+            this.pictureBoxToggleWaveform.TabStop = false;
+            // 
+            // pictureBoxAssaDraw
+            // 
+            this.pictureBoxAssaDraw.Location = new System.Drawing.Point(133, 400);
+            this.pictureBoxAssaDraw.Name = "pictureBoxAssaDraw";
+            this.pictureBoxAssaDraw.Size = new System.Drawing.Size(32, 32);
+            this.pictureBoxAssaDraw.TabIndex = 54;
+            this.pictureBoxAssaDraw.TabStop = false;
+            // 
+            // pictureBoxAssAttachments
+            // 
+            this.pictureBoxAssAttachments.Location = new System.Drawing.Point(95, 400);
+            this.pictureBoxAssAttachments.Name = "pictureBoxAssAttachments";
+            this.pictureBoxAssAttachments.Size = new System.Drawing.Size(32, 32);
+            this.pictureBoxAssAttachments.TabIndex = 53;
+            this.pictureBoxAssAttachments.TabStop = false;
+            // 
+            // pictureBoxAssProperties
+            // 
+            this.pictureBoxAssProperties.Location = new System.Drawing.Point(57, 400);
+            this.pictureBoxAssProperties.Name = "pictureBoxAssProperties";
+            this.pictureBoxAssProperties.Size = new System.Drawing.Size(32, 32);
+            this.pictureBoxAssProperties.TabIndex = 52;
+            this.pictureBoxAssProperties.TabStop = false;
+            // 
+            // pictureBoxAssStyleManager
+            // 
+            this.pictureBoxAssStyleManager.Location = new System.Drawing.Point(19, 400);
+            this.pictureBoxAssStyleManager.Name = "pictureBoxAssStyleManager";
+            this.pictureBoxAssStyleManager.Size = new System.Drawing.Size(32, 32);
+            this.pictureBoxAssStyleManager.TabIndex = 51;
+            this.pictureBoxAssStyleManager.TabStop = false;
+            // 
             // labelToolbarIconTheme
             // 
             this.labelToolbarIconTheme.AutoSize = true;
-            this.labelToolbarIconTheme.Location = new System.Drawing.Point(487, 276);
+            this.labelToolbarIconTheme.Location = new System.Drawing.Point(15, 346);
             this.labelToolbarIconTheme.Name = "labelToolbarIconTheme";
             this.labelToolbarIconTheme.Size = new System.Drawing.Size(39, 13);
             this.labelToolbarIconTheme.TabIndex = 50;
@@ -4104,7 +4176,7 @@
             // 
             this.comboBoxToolbarIconTheme.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxToolbarIconTheme.FormattingEnabled = true;
-            this.comboBoxToolbarIconTheme.Location = new System.Drawing.Point(487, 291);
+            this.comboBoxToolbarIconTheme.Location = new System.Drawing.Point(15, 361);
             this.comboBoxToolbarIconTheme.Name = "comboBoxToolbarIconTheme";
             this.comboBoxToolbarIconTheme.Size = new System.Drawing.Size(202, 21);
             this.comboBoxToolbarIconTheme.TabIndex = 49;
@@ -5209,78 +5281,6 @@
             this.toolTipDialogStylePreview.InitialDelay = 500;
             this.toolTipDialogStylePreview.ReshowDelay = 100;
             // 
-            // pictureBoxAssStyleManager
-            // 
-            this.pictureBoxAssStyleManager.Location = new System.Drawing.Point(19, 399);
-            this.pictureBoxAssStyleManager.Name = "pictureBoxAssStyleManager";
-            this.pictureBoxAssStyleManager.Size = new System.Drawing.Size(32, 32);
-            this.pictureBoxAssStyleManager.TabIndex = 51;
-            this.pictureBoxAssStyleManager.TabStop = false;
-            // 
-            // pictureBoxAssProperties
-            // 
-            this.pictureBoxAssProperties.Location = new System.Drawing.Point(57, 399);
-            this.pictureBoxAssProperties.Name = "pictureBoxAssProperties";
-            this.pictureBoxAssProperties.Size = new System.Drawing.Size(32, 32);
-            this.pictureBoxAssProperties.TabIndex = 52;
-            this.pictureBoxAssProperties.TabStop = false;
-            // 
-            // pictureBoxAssAttachments
-            // 
-            this.pictureBoxAssAttachments.Location = new System.Drawing.Point(95, 399);
-            this.pictureBoxAssAttachments.Name = "pictureBoxAssAttachments";
-            this.pictureBoxAssAttachments.Size = new System.Drawing.Size(32, 32);
-            this.pictureBoxAssAttachments.TabIndex = 53;
-            this.pictureBoxAssAttachments.TabStop = false;
-            // 
-            // pictureBoxAssaDraw
-            // 
-            this.pictureBoxAssaDraw.Location = new System.Drawing.Point(133, 399);
-            this.pictureBoxAssaDraw.Name = "pictureBoxAssaDraw";
-            this.pictureBoxAssaDraw.Size = new System.Drawing.Size(32, 32);
-            this.pictureBoxAssaDraw.TabIndex = 54;
-            this.pictureBoxAssaDraw.TabStop = false;
-            // 
-            // pictureBoxToggleWaveform
-            // 
-            this.pictureBoxToggleWaveform.Location = new System.Drawing.Point(171, 398);
-            this.pictureBoxToggleWaveform.Name = "pictureBoxToggleWaveform";
-            this.pictureBoxToggleWaveform.Size = new System.Drawing.Size(32, 32);
-            this.pictureBoxToggleWaveform.TabIndex = 55;
-            this.pictureBoxToggleWaveform.TabStop = false;
-            // 
-            // pictureBoxToggleVideo
-            // 
-            this.pictureBoxToggleVideo.Location = new System.Drawing.Point(209, 398);
-            this.pictureBoxToggleVideo.Name = "pictureBoxToggleVideo";
-            this.pictureBoxToggleVideo.Size = new System.Drawing.Size(32, 32);
-            this.pictureBoxToggleVideo.TabIndex = 56;
-            this.pictureBoxToggleVideo.TabStop = false;
-            // 
-            // pictureBoxIttProperties
-            // 
-            this.pictureBoxIttProperties.Location = new System.Drawing.Point(247, 398);
-            this.pictureBoxIttProperties.Name = "pictureBoxIttProperties";
-            this.pictureBoxIttProperties.Size = new System.Drawing.Size(32, 32);
-            this.pictureBoxIttProperties.TabIndex = 57;
-            this.pictureBoxIttProperties.TabStop = false;
-            // 
-            // pictureBoxWebVttProperties
-            // 
-            this.pictureBoxWebVttProperties.Location = new System.Drawing.Point(285, 398);
-            this.pictureBoxWebVttProperties.Name = "pictureBoxWebVttProperties";
-            this.pictureBoxWebVttProperties.Size = new System.Drawing.Size(32, 32);
-            this.pictureBoxWebVttProperties.TabIndex = 58;
-            this.pictureBoxWebVttProperties.TabStop = false;
-            // 
-            // pictureBoxEbuProperties
-            // 
-            this.pictureBoxEbuProperties.Location = new System.Drawing.Point(323, 398);
-            this.pictureBoxEbuProperties.Name = "pictureBoxEbuProperties";
-            this.pictureBoxEbuProperties.Size = new System.Drawing.Size(32, 32);
-            this.pictureBoxEbuProperties.TabIndex = 59;
-            this.pictureBoxEbuProperties.TabStop = false;
-            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -5381,6 +5381,15 @@
             this.groupBox2.PerformLayout();
             this.groupBoxShowToolBarButtons.ResumeLayout(false);
             this.groupBoxShowToolBarButtons.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxEbuProperties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxWebVttProperties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxIttProperties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxToggleVideo)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxToggleWaveform)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxAssaDraw)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxAssAttachments)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxAssProperties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxAssStyleManager)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSourceView)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBurnIn)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxNetflixQualityCheck)).EndInit();
@@ -5416,15 +5425,6 @@
             this.groupBoxProxyAuthentication.ResumeLayout(false);
             this.groupBoxProxyAuthentication.PerformLayout();
             this.panelFileTypeAssociations.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxAssStyleManager)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxAssProperties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxAssAttachments)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxAssaDraw)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxToggleWaveform)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxToggleVideo)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxIttProperties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxWebVttProperties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxEbuProperties)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 

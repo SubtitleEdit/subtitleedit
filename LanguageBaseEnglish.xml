@@ -2401,6 +2401,8 @@ can edit in same subtitle file (collaboration)</Information>
     <UseSyntaxColoring>Use syntax coloring</UseSyntaxColoring>
     <HtmlColor>Html color</HtmlColor>
     <AssaColor>ASSA color</AssaColor>
+    <Theme>Theme</Theme>
+    <Automatic>Automatic</Automatic>
     <DarkTheme>Dark theme</DarkTheme>
     <DarkThemeEnabled>Use dark theme</DarkThemeEnabled>
     <DarkThemeShowGridViewLines>Show list view grid lines</DarkThemeShowGridViewLines>

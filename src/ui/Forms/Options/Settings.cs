@@ -390,6 +390,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             labelToggleSourceView.Text = language.ToggleView;
             labelTBSettings.Text = language.SettingsName;
             labelTBHelp.Text = language.Help;
+            labelToolbarIconTheme.Text = language.Theme;
             checkBoxToolbarNew.Text = LanguageSettings.Current.General.Visible;
             checkBoxToolbarOpen.Text = LanguageSettings.Current.General.Visible;
             checkBoxToolbarSave.Text = LanguageSettings.Current.General.Visible;
@@ -1208,7 +1209,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             comboBoxToolbarIconTheme.SelectedIndexChanged -= comboBoxToolbarIconTheme_SelectedIndexChanged;
             var directories = Directory.GetDirectories(Configuration.IconsDirectory);
             comboBoxToolbarIconTheme.Items.Clear();
-            comboBoxToolbarIconTheme.Items.Add("Auto");
+            comboBoxToolbarIconTheme.Items.Add($"- {LanguageSettings.Current.Settings.Automatic} -");
             comboBoxToolbarIconTheme.SelectedIndex = 0;
             foreach (var dir in directories)
             {
@@ -3669,23 +3670,23 @@ namespace Nikse.SubtitleEdit.Forms.Options
             TryLoadIcon(pictureBoxEbuProperties, "EbuProperties");
         }
 
-        private void TryLoadIcon(PictureBox button, string iconName)
+        private void TryLoadIcon(PictureBox pictureBox, string iconName)
         {
-            pictureBoxEbuProperties.Image?.Dispose();
-            pictureBoxEbuProperties.Image = null;
+            pictureBox.Image?.Dispose();
+            pictureBox.Image = null;
 
             var theme = comboBoxToolbarIconTheme.Text;
             var themeFullPath = Path.Combine(Configuration.IconsDirectory, theme, iconName + ".png");
             if (comboBoxToolbarIconTheme.SelectedIndex > 0 && File.Exists(themeFullPath))
             {
-                button.Image = new Bitmap(themeFullPath);
+                pictureBox.Image = new Bitmap(themeFullPath);
                 return;
             }
 
             var fullPath = Path.Combine(Configuration.IconsDirectory, "DefaultTheme", iconName + ".png");
             if (File.Exists(fullPath))
             {
-                button.Image = new Bitmap(fullPath);
+                pictureBox.Image = new Bitmap(fullPath);
             }
         }
     }
