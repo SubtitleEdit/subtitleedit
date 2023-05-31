@@ -4204,7 +4204,7 @@
             // labelToggleSourceView
             // 
             this.labelToggleSourceView.AutoSize = true;
-            this.labelToggleSourceView.Location = new System.Drawing.Point(132, 256);
+            this.labelToggleSourceView.Location = new System.Drawing.Point(9, 256);
             this.labelToggleSourceView.Name = "labelToggleSourceView";
             this.labelToggleSourceView.Size = new System.Drawing.Size(99, 13);
             this.labelToggleSourceView.TabIndex = 48;
@@ -4212,7 +4212,7 @@
             // 
             // pictureBoxSourceView
             // 
-            this.pictureBoxSourceView.Location = new System.Drawing.Point(145, 275);
+            this.pictureBoxSourceView.Location = new System.Drawing.Point(22, 275);
             this.pictureBoxSourceView.Name = "pictureBoxSourceView";
             this.pictureBoxSourceView.Size = new System.Drawing.Size(32, 32);
             this.pictureBoxSourceView.TabIndex = 47;
@@ -4221,7 +4221,7 @@
             // checkBoxTBToggleSourceView
             // 
             this.checkBoxTBToggleSourceView.AutoSize = true;
-            this.checkBoxTBToggleSourceView.Location = new System.Drawing.Point(148, 314);
+            this.checkBoxTBToggleSourceView.Location = new System.Drawing.Point(25, 314);
             this.checkBoxTBToggleSourceView.Name = "checkBoxTBToggleSourceView";
             this.checkBoxTBToggleSourceView.Size = new System.Drawing.Size(55, 17);
             this.checkBoxTBToggleSourceView.TabIndex = 46;
@@ -4258,7 +4258,7 @@
             // labelTBBeautifyTimeCodes
             // 
             this.labelTBBeautifyTimeCodes.AutoSize = true;
-            this.labelTBBeautifyTimeCodes.Location = new System.Drawing.Point(13, 256);
+            this.labelTBBeautifyTimeCodes.Location = new System.Drawing.Point(765, 143);
             this.labelTBBeautifyTimeCodes.Name = "labelTBBeautifyTimeCodes";
             this.labelTBBeautifyTimeCodes.Size = new System.Drawing.Size(101, 13);
             this.labelTBBeautifyTimeCodes.TabIndex = 45;
@@ -4266,7 +4266,7 @@
             // 
             // pictureBoxBeautifyTimeCodes
             // 
-            this.pictureBoxBeautifyTimeCodes.Location = new System.Drawing.Point(22, 275);
+            this.pictureBoxBeautifyTimeCodes.Location = new System.Drawing.Point(776, 160);
             this.pictureBoxBeautifyTimeCodes.Name = "pictureBoxBeautifyTimeCodes";
             this.pictureBoxBeautifyTimeCodes.Size = new System.Drawing.Size(32, 32);
             this.pictureBoxBeautifyTimeCodes.TabIndex = 44;
@@ -4275,7 +4275,7 @@
             // checkBoxBeautifyTimeCodes
             // 
             this.checkBoxBeautifyTimeCodes.AutoSize = true;
-            this.checkBoxBeautifyTimeCodes.Location = new System.Drawing.Point(25, 314);
+            this.checkBoxBeautifyTimeCodes.Location = new System.Drawing.Point(779, 198);
             this.checkBoxBeautifyTimeCodes.Name = "checkBoxBeautifyTimeCodes";
             this.checkBoxBeautifyTimeCodes.Size = new System.Drawing.Size(55, 17);
             this.checkBoxBeautifyTimeCodes.TabIndex = 43;
