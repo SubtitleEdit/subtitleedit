@@ -258,17 +258,23 @@
     <Compile Include="Forms\BatchConvertTsSettings.Designer.cs">
       <DependentUpon>BatchConvertTsSettings.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\BeautifyTimeCodes.cs">
+    <Compile Include="Forms\BeautifyTimeCodes\BeautifyTimeCodes.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\BeautifyTimeCodes.Designer.cs">
+    <Compile Include="Forms\BeautifyTimeCodes\BeautifyTimeCodes.Designer.cs">
       <DependentUpon>BeautifyTimeCodes.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\BeautifyTimeCodesProfile.cs">
+    <Compile Include="Forms\BeautifyTimeCodes\BeautifyTimeCodesProfile.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\BeautifyTimeCodesProfile.Designer.cs">
+    <Compile Include="Forms\BeautifyTimeCodes\BeautifyTimeCodesProfile.Designer.cs">
       <DependentUpon>BeautifyTimeCodesProfile.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\BeautifyTimeCodes\BeautifyTimeCodesProfileSimple.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\BeautifyTimeCodes\BeautifyTimeCodesProfileSimple.Designer.cs">
+      <DependentUpon>BeautifyTimeCodesProfileSimple.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\BinaryEdit\BinEdit.cs">
       <SubType>Form</SubType>
@@ -1592,11 +1598,14 @@
     <EmbeddedResource Include="Forms\BatchConvertTsSettings.resx">
       <DependentUpon>BatchConvertTsSettings.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\BeautifyTimeCodes.resx">
+    <EmbeddedResource Include="Forms\BeautifyTimeCodes\BeautifyTimeCodes.resx">
       <DependentUpon>BeautifyTimeCodes.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\BeautifyTimeCodesProfile.resx">
+    <EmbeddedResource Include="Forms\BeautifyTimeCodes\BeautifyTimeCodesProfile.resx">
       <DependentUpon>BeautifyTimeCodesProfile.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\BeautifyTimeCodes\BeautifyTimeCodesProfileSimple.resx">
+      <DependentUpon>BeautifyTimeCodesProfileSimple.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\BinaryEdit\BinEdit.resx">
       <DependentUpon>BinEdit.cs</DependentUpon>

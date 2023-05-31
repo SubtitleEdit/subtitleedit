@@ -546,15 +546,96 @@ namespace Nikse.SubtitleEdit.Logic
                 EditProfile = "Edit profile...",
                 NoTimeCodesLoaded = "No time codes loaded",
                 XTimeCodesLoaded = "{0} time codes loaded",
-                NoTimeCodesLoadedError = "You've selected to extract exact frame time codes, but there are no time codes loaded.\n\nPlease click \"{0}\" to extract the time codes first, or disable this option.",
+                NoTimeCodesLoadedError =
+                    "You've selected to extract exact frame time codes, but there are no time codes loaded." +
+                    Environment.NewLine + Environment.NewLine +
+                    "Please click \"{0}\" to extract the time codes first, or disable this option.",
                 NoShotChangesLoaded = "No shot changes loaded",
                 XShotChangesLoaded = "{0} shot changes loaded",
-                NoShotChangesLoadedError = "You've selected to snap cues to shot changes, but there are no shot changes loaded.\n\nPlease click \"{0}\" to generate or import shot changes first, or disable this option.",
+                NoShotChangesLoadedError =
+                    "You've selected to snap cues to shot changes, but there are no shot changes loaded." +
+                    Environment.NewLine + Environment.NewLine +
+                    "Please click \"{0}\" to generate or import shot changes first, or disable this option.",
             };
 
             BeautifyTimeCodesProfile = new LanguageStructure.BeautifyTimeCodesProfile
             {
                 Title = "Edit profile",
+                LoadPreset = "Load preset...",
+                PresetDefault = "Default",
+                PresetNetflix = "Netflix",
+                PresetSDI = "SDI",
+                CreateSimple = "Simple mode...",
+                General = "General",
+                Gap = "Gap:",
+                GapSuffix = "frames (will overwrite custom settings)",
+                InCues = "In cues",
+                SubtitlePreviewText = "Subtitle text.",
+                Zones = "Zones:",
+                OutCues = "Out cues",
+                ConnectedSubtitles = "Connected subtitles",
+                InCueClosest = "In cue is closest",
+                OutCueClosest = "Out cue is closest",
+                TreadAsConnected = "Treat as connected if gap is smaller than:",
+                Milliseconds = "ms",
+                Chaining = "Chaining",
+                InCueOnShot = "In cue on shot change",
+                OutCueOnShot = "Out cue on shot change",
+                MaxGap = "Max. gap:",
+                ShotChangeBehavior = "If there is a shot change in between:",
+                DontChain = "Don't chain",
+                ExtendCrossingShotChange = "Extend, crossing shot change",
+                ExtendUntilShotChange = "Extend until shot change",
+                ResetWarning =
+                    "This will reset your current profile and replace all values with those of the selected preset. This cannot be undone." +
+                    Environment.NewLine +
+                    Environment.NewLine +
+                    "Do you want to continue?",
+                CreateSimpleTitle = "Create simple",
+                CreateSimpleInstruction =
+                    "Enter these basic rules, and the current profile will be updated accordingly.",
+                CreateSimpleGapInstruction = "The minimum amount of space between subtitles.",
+                CreateSimpleInCues = "In cues should be:",
+                CreateSimpleInCues0Frames = "On the shot change",
+                CreateSimpleInCues1Frames = "1 frame after the shot change",
+                CreateSimpleInCues2Frames = "2 frames after the shot change",
+                CreateSimpleInCues3Frames = "3 frames after the shot change",
+                CreateSimpleOutCues = "Out cues should be:",
+                CreateSimpleOutCues0Frames = "On the shot change",
+                CreateSimpleOutCues1Frames = "1 frame before the shot change",
+                CreateSimpleOutCues2Frames = "2 frames before the shot change",
+                CreateSimpleOutCues3Frames = "3 frames before the shot change",
+                CreateSimpleOutCuesGap = "Minimum gap before the shot change",
+                CreateSimpleSnapClosestCue =
+                    "For connected subtitles, snap the in or out cue to the shot change based on which one is closer",
+                CreateSimpleMaxOffset = "Max. offset:",
+                CreateSimpleMaxOffsetInstruction =
+                    "Cues within this distance from shot changes will be considered as being on the shot change.",
+                CreateSimpleSafeZone = "Safe zone:",
+                CreateSimpleSafeZoneInstruction = "The amount of frames around shot changes where no cues are allowed.",
+                CreateSimpleChainingGap = "Max. chaining gap:",
+                CreateSimpleChainingGapInstruction =
+                    "If the space between two subtitles is smaller than this amount, the subtitles will be connected.",
+                CreateSimpleChainingGapAfterShotChanges = "After an out cue on a shot change, the gap may be smaller",
+                CreateSimpleChainingToolTip =
+                    "Chaining subtitles is recommended to ensure a consistent \"rhythm\" in the \"flashing\" of the subtitles." +
+                    Environment.NewLine + 
+                    "This offers a more relaxed viewing experience." +
+                    Environment.NewLine +
+                    Environment.NewLine +
+                    "After chaining, subtitles are either connected (i.e. a subtitle disappears and a new subtitle appears immediately after a slight pause) or not." +
+                    Environment.NewLine + 
+                    "This gives the viewer some sense on when they can shift their focus back to the screen." +
+                    Environment.NewLine +
+                    Environment.NewLine +
+                    "The length of the chaining gap can be a bit smaller right after a subtitle disappears on a shot change, because the changing shot \"resets\" the image in a way." +
+                    Environment.NewLine + 
+                    "We leverage the intrinsic rhythm of the image.",
+                CreateSimpleLoadNetflixRules = "Load Netflix rules",
+                Frames = "frames",
+                Maximum = "Max.",
+                GapInMsFormat = "{0} ms @ {1} FPS",
+                OffsetSafeZoneError = "The safe zone should be larger than the max. offset.",
             };
 
             BinEdit = new LanguageStructure.BinEdit

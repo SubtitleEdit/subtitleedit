@@ -410,6 +410,60 @@ namespace Nikse.SubtitleEdit.Logic
         public class BeautifyTimeCodesProfile
         {
             public string Title { get; set; }
+            public string LoadPreset { get; set; }
+            public string PresetDefault { get; set; }
+            public string PresetNetflix { get; set; }
+            public string PresetSDI { get; set; }
+            public string CreateSimple { get; set; }
+            public string General { get; set; }
+            public string Gap { get; set; }
+            public string GapSuffix { get; set; }
+            public string InCues { get; set; }
+            public string SubtitlePreviewText { get; set; }
+            public string Zones { get; set; }
+            public string OutCues { get; set; }
+            public string ConnectedSubtitles { get; set; }
+            public string InCueClosest { get; set; }
+            public string OutCueClosest { get; set; }
+            public string TreadAsConnected { get; set; }
+            public string Milliseconds { get; set; }
+            public string Chaining { get; set; }
+            public string InCueOnShot { get; set; }
+            public string OutCueOnShot { get; set; }
+            public string MaxGap { get; set; }
+            public string ShotChangeBehavior { get; set; }
+            public string DontChain { get; set; }
+            public string ExtendCrossingShotChange { get; set; }
+            public string ExtendUntilShotChange { get; set; }
+            public string ResetWarning { get; set; }
+            public string CreateSimpleTitle { get; set; }
+            public string CreateSimpleInstruction { get; set; }
+            public string CreateSimpleGapInstruction { get; set; }
+            public string CreateSimpleInCues { get; set; }
+            public string CreateSimpleInCues0Frames { get; set; }
+            public string CreateSimpleInCues1Frames { get; set; }
+            public string CreateSimpleInCues2Frames { get; set; }
+            public string CreateSimpleInCues3Frames { get; set; }
+            public string CreateSimpleOutCues { get; set; }
+            public string CreateSimpleOutCues0Frames { get; set; }
+            public string CreateSimpleOutCues1Frames { get; set; }
+            public string CreateSimpleOutCues2Frames { get; set; }
+            public string CreateSimpleOutCues3Frames { get; set; }
+            public string CreateSimpleOutCuesGap { get; set; }
+            public string CreateSimpleSnapClosestCue { get; set; }
+            public string CreateSimpleMaxOffset { get; set; }
+            public string CreateSimpleMaxOffsetInstruction { get; set; }
+            public string CreateSimpleSafeZone { get; set; }
+            public string CreateSimpleSafeZoneInstruction { get; set; }
+            public string CreateSimpleChainingGap { get; set; }
+            public string CreateSimpleChainingGapInstruction { get; set; }
+            public string CreateSimpleChainingGapAfterShotChanges { get; set; }
+            public string CreateSimpleChainingToolTip { get; set; }
+            public string CreateSimpleLoadNetflixRules { get; set; }
+            public string Frames { get; set; }
+            public string Maximum { get; set; }
+            public string GapInMsFormat { get; set; }
+            public string OffsetSafeZoneError { get; set; }
         }
 
         public class BinEdit

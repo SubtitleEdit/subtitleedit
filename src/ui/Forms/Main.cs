@@ -34106,7 +34106,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            using (var form = new BeautifyTimeCodes(_subtitle, _videoInfo, _videoFileName, audioVisualizer.ShotChanges))
+            using (var form = new BeautifyTimeCodes.BeautifyTimeCodes(_subtitle, _videoInfo, _videoFileName, audioVisualizer.ShotChanges))
             {
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
