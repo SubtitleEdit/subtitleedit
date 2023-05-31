@@ -607,12 +607,12 @@ namespace Nikse.SubtitleEdit.Logic
                 CreateSimpleOutCues3Frames = "3 frames before the shot change",
                 CreateSimpleOutCuesGap = "Minimum gap before the shot change",
                 CreateSimpleSnapClosestCue =
-                    "For connected subtitles, snap the in or out cue to the shot change based on which one is closer",
+                    "For connected subtitles, snap the in or out cue to a shot change based on which one is closer",
                 CreateSimpleMaxOffset = "Max. offset:",
                 CreateSimpleMaxOffsetInstruction =
-                    "Cues within this distance from shot changes will be considered as being on the shot change.",
+                    "Cues within this distance from shot changes will be snapped to the shot change.",
                 CreateSimpleSafeZone = "Safe zone:",
-                CreateSimpleSafeZoneInstruction = "The amount of frames around shot changes where no cues are allowed.",
+                CreateSimpleSafeZoneInstruction = "Cues within this distance from shot changes will be moved away from the shot change.",
                 CreateSimpleChainingGap = "Max. chaining gap:",
                 CreateSimpleChainingGapInstruction =
                     "If the space between two subtitles is smaller than this amount, the subtitles will be connected.",

@@ -460,6 +460,10 @@ namespace Nikse.SubtitleEdit.Forms.Options
             pictureBoxNetflixQualityCheck.Left = labelTBNetflixQualityCheck.Left;
             checkBoxNetflixQualityCheck.Left = labelTBNetflixQualityCheck.Left;
 
+            labelTBBeautifyTimeCodes.Left = Math.Max(labelTBNetflixQualityCheck.Right, checkBoxNetflixQualityCheck.Right) + 18;
+            pictureBoxBeautifyTimeCodes.Left = labelTBBeautifyTimeCodes.Left;
+            checkBoxBeautifyTimeCodes.Left = labelTBBeautifyTimeCodes.Left;
+
             groupBoxMiscellaneous.Text = language.General;
             groupBoxToolsMisc.Text = language.Miscellaneous;
             groupBoxGeneralRules.Text = language.Rules;
