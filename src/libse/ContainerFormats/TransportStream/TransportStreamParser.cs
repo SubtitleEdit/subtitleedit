@@ -220,6 +220,12 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                             bdMs = new MemoryStream();
                             currentList.Clear();
                         }
+                        else if (bdMs.Length > 2_000_000_000) // Avoid crashing on very large files
+                        {
+                            bdMs.Dispose();
+                            bdMs = new MemoryStream();
+                            currentList.Clear();
+                        }
                     }
 
                     if (subList.Count > 0)

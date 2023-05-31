@@ -320,11 +320,22 @@
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.checkBoxShowFrameRate = new System.Windows.Forms.CheckBox();
             this.groupBoxShowToolBarButtons = new System.Windows.Forms.GroupBox();
+            this.pictureBoxEbuProperties = new System.Windows.Forms.PictureBox();
+            this.pictureBoxWebVttProperties = new System.Windows.Forms.PictureBox();
+            this.pictureBoxIttProperties = new System.Windows.Forms.PictureBox();
+            this.pictureBoxToggleVideo = new System.Windows.Forms.PictureBox();
+            this.pictureBoxToggleWaveform = new System.Windows.Forms.PictureBox();
+            this.pictureBoxAssaDraw = new System.Windows.Forms.PictureBox();
+            this.pictureBoxAssAttachments = new System.Windows.Forms.PictureBox();
+            this.pictureBoxAssProperties = new System.Windows.Forms.PictureBox();
+            this.pictureBoxAssStyleManager = new System.Windows.Forms.PictureBox();
+            this.labelToolbarIconTheme = new System.Windows.Forms.Label();
+            this.comboBoxToolbarIconTheme = new System.Windows.Forms.ComboBox();
             this.labelToggleSourceView = new System.Windows.Forms.Label();
-            this.pictureBoxToggleSourceView = new System.Windows.Forms.PictureBox();
+            this.pictureBoxSourceView = new System.Windows.Forms.PictureBox();
             this.checkBoxTBToggleSourceView = new System.Windows.Forms.CheckBox();
             this.labelTBBurnIn = new System.Windows.Forms.Label();
-            this.pictureBoxTBBurnIn = new System.Windows.Forms.PictureBox();
+            this.pictureBoxBurnIn = new System.Windows.Forms.PictureBox();
             this.checkBoxTBBurnIn = new System.Windows.Forms.CheckBox();
             this.labelTBBeautifyTimeCodes = new System.Windows.Forms.Label();
             this.pictureBoxBeautifyTimeCodes = new System.Windows.Forms.PictureBox();
@@ -333,10 +344,10 @@
             this.pictureBoxNetflixQualityCheck = new System.Windows.Forms.PictureBox();
             this.checkBoxNetflixQualityCheck = new System.Windows.Forms.CheckBox();
             this.labelTBRemoveTextForHi = new System.Windows.Forms.Label();
-            this.pictureBoxTBRemoveTextForHi = new System.Windows.Forms.PictureBox();
+            this.pictureBoxRemoveTextForHi = new System.Windows.Forms.PictureBox();
             this.checkBoxTBRemoveTextForHi = new System.Windows.Forms.CheckBox();
             this.labelTBFixCommonErrors = new System.Windows.Forms.Label();
-            this.pictureBoxTBFixCommonErrors = new System.Windows.Forms.PictureBox();
+            this.pictureBoxFixCommonErrors = new System.Windows.Forms.PictureBox();
             this.checkBoxTBFixCommonErrors = new System.Windows.Forms.CheckBox();
             this.labelTBHelp = new System.Windows.Forms.Label();
             this.pictureBoxHelp = new System.Windows.Forms.PictureBox();
@@ -363,10 +374,10 @@
             this.pictureBoxSave = new System.Windows.Forms.PictureBox();
             this.checkBoxToolbarSave = new System.Windows.Forms.CheckBox();
             this.labelTBOpen = new System.Windows.Forms.Label();
-            this.pictureBoxOpen = new System.Windows.Forms.PictureBox();
+            this.pictureBoxFileOpen = new System.Windows.Forms.PictureBox();
             this.checkBoxToolbarOpen = new System.Windows.Forms.CheckBox();
             this.labelTBNew = new System.Windows.Forms.Label();
-            this.pictureBoxNew = new System.Windows.Forms.PictureBox();
+            this.pictureBoxFileNew = new System.Windows.Forms.PictureBox();
             this.checkBoxToolbarNew = new System.Windows.Forms.CheckBox();
             this.panelFont = new System.Windows.Forms.Panel();
             this.groupBoxAppearance = new System.Windows.Forms.GroupBox();
@@ -478,12 +489,21 @@
             this.panelToolBar.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBoxShowToolBarButtons.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxToggleSourceView)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxTBBurnIn)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxEbuProperties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxWebVttProperties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxIttProperties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxToggleVideo)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxToggleWaveform)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxAssaDraw)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxAssAttachments)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxAssProperties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxAssStyleManager)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSourceView)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBurnIn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBeautifyTimeCodes)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxNetflixQualityCheck)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxTBRemoveTextForHi)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxTBFixCommonErrors)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxRemoveTextForHi)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxFixCommonErrors)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxHelp)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSettings)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSpellCheck)).BeginInit();
@@ -492,8 +512,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxFind)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSaveAs)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSave)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxOpen)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxNew)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxFileOpen)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxFileNew)).BeginInit();
             this.panelFont.SuspendLayout();
             this.groupBoxAppearance.SuspendLayout();
             this.groupBoxFontInUI.SuspendLayout();
@@ -4004,9 +4024,9 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox2.Controls.Add(this.checkBoxShowFrameRate);
-            this.groupBox2.Location = new System.Drawing.Point(0, 340);
+            this.groupBox2.Location = new System.Drawing.Point(0, 449);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(850, 179);
+            this.groupBox2.Size = new System.Drawing.Size(850, 70);
             this.groupBox2.TabIndex = 35;
             this.groupBox2.TabStop = false;
             // 
@@ -4024,11 +4044,22 @@
             // 
             this.groupBoxShowToolBarButtons.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxShowToolBarButtons.Controls.Add(this.pictureBoxEbuProperties);
+            this.groupBoxShowToolBarButtons.Controls.Add(this.pictureBoxWebVttProperties);
+            this.groupBoxShowToolBarButtons.Controls.Add(this.pictureBoxIttProperties);
+            this.groupBoxShowToolBarButtons.Controls.Add(this.pictureBoxToggleVideo);
+            this.groupBoxShowToolBarButtons.Controls.Add(this.pictureBoxToggleWaveform);
+            this.groupBoxShowToolBarButtons.Controls.Add(this.pictureBoxAssaDraw);
+            this.groupBoxShowToolBarButtons.Controls.Add(this.pictureBoxAssAttachments);
+            this.groupBoxShowToolBarButtons.Controls.Add(this.pictureBoxAssProperties);
+            this.groupBoxShowToolBarButtons.Controls.Add(this.pictureBoxAssStyleManager);
+            this.groupBoxShowToolBarButtons.Controls.Add(this.labelToolbarIconTheme);
+            this.groupBoxShowToolBarButtons.Controls.Add(this.comboBoxToolbarIconTheme);
             this.groupBoxShowToolBarButtons.Controls.Add(this.labelToggleSourceView);
-            this.groupBoxShowToolBarButtons.Controls.Add(this.pictureBoxToggleSourceView);
+            this.groupBoxShowToolBarButtons.Controls.Add(this.pictureBoxSourceView);
             this.groupBoxShowToolBarButtons.Controls.Add(this.checkBoxTBToggleSourceView);
             this.groupBoxShowToolBarButtons.Controls.Add(this.labelTBBurnIn);
-            this.groupBoxShowToolBarButtons.Controls.Add(this.pictureBoxTBBurnIn);
+            this.groupBoxShowToolBarButtons.Controls.Add(this.pictureBoxBurnIn);
             this.groupBoxShowToolBarButtons.Controls.Add(this.checkBoxTBBurnIn);
             this.groupBoxShowToolBarButtons.Controls.Add(this.labelTBBeautifyTimeCodes);
             this.groupBoxShowToolBarButtons.Controls.Add(this.pictureBoxBeautifyTimeCodes);
@@ -4037,10 +4068,10 @@
             this.groupBoxShowToolBarButtons.Controls.Add(this.pictureBoxNetflixQualityCheck);
             this.groupBoxShowToolBarButtons.Controls.Add(this.checkBoxNetflixQualityCheck);
             this.groupBoxShowToolBarButtons.Controls.Add(this.labelTBRemoveTextForHi);
-            this.groupBoxShowToolBarButtons.Controls.Add(this.pictureBoxTBRemoveTextForHi);
+            this.groupBoxShowToolBarButtons.Controls.Add(this.pictureBoxRemoveTextForHi);
             this.groupBoxShowToolBarButtons.Controls.Add(this.checkBoxTBRemoveTextForHi);
             this.groupBoxShowToolBarButtons.Controls.Add(this.labelTBFixCommonErrors);
-            this.groupBoxShowToolBarButtons.Controls.Add(this.pictureBoxTBFixCommonErrors);
+            this.groupBoxShowToolBarButtons.Controls.Add(this.pictureBoxFixCommonErrors);
             this.groupBoxShowToolBarButtons.Controls.Add(this.checkBoxTBFixCommonErrors);
             this.groupBoxShowToolBarButtons.Controls.Add(this.labelTBHelp);
             this.groupBoxShowToolBarButtons.Controls.Add(this.pictureBoxHelp);
@@ -4067,39 +4098,130 @@
             this.groupBoxShowToolBarButtons.Controls.Add(this.pictureBoxSave);
             this.groupBoxShowToolBarButtons.Controls.Add(this.checkBoxToolbarSave);
             this.groupBoxShowToolBarButtons.Controls.Add(this.labelTBOpen);
-            this.groupBoxShowToolBarButtons.Controls.Add(this.pictureBoxOpen);
+            this.groupBoxShowToolBarButtons.Controls.Add(this.pictureBoxFileOpen);
             this.groupBoxShowToolBarButtons.Controls.Add(this.checkBoxToolbarOpen);
             this.groupBoxShowToolBarButtons.Controls.Add(this.labelTBNew);
-            this.groupBoxShowToolBarButtons.Controls.Add(this.pictureBoxNew);
+            this.groupBoxShowToolBarButtons.Controls.Add(this.pictureBoxFileNew);
             this.groupBoxShowToolBarButtons.Controls.Add(this.checkBoxToolbarNew);
             this.groupBoxShowToolBarButtons.Location = new System.Drawing.Point(0, 0);
             this.groupBoxShowToolBarButtons.Name = "groupBoxShowToolBarButtons";
-            this.groupBoxShowToolBarButtons.Size = new System.Drawing.Size(851, 341);
+            this.groupBoxShowToolBarButtons.Size = new System.Drawing.Size(851, 448);
             this.groupBoxShowToolBarButtons.TabIndex = 0;
             this.groupBoxShowToolBarButtons.TabStop = false;
             this.groupBoxShowToolBarButtons.Text = "Show toolbar buttons";
             // 
+            // pictureBoxEbuProperties
+            // 
+            this.pictureBoxEbuProperties.Location = new System.Drawing.Point(323, 398);
+            this.pictureBoxEbuProperties.Name = "pictureBoxEbuProperties";
+            this.pictureBoxEbuProperties.Size = new System.Drawing.Size(32, 32);
+            this.pictureBoxEbuProperties.TabIndex = 59;
+            this.pictureBoxEbuProperties.TabStop = false;
+            // 
+            // pictureBoxWebVttProperties
+            // 
+            this.pictureBoxWebVttProperties.Location = new System.Drawing.Point(285, 398);
+            this.pictureBoxWebVttProperties.Name = "pictureBoxWebVttProperties";
+            this.pictureBoxWebVttProperties.Size = new System.Drawing.Size(32, 32);
+            this.pictureBoxWebVttProperties.TabIndex = 58;
+            this.pictureBoxWebVttProperties.TabStop = false;
+            // 
+            // pictureBoxIttProperties
+            // 
+            this.pictureBoxIttProperties.Location = new System.Drawing.Point(247, 398);
+            this.pictureBoxIttProperties.Name = "pictureBoxIttProperties";
+            this.pictureBoxIttProperties.Size = new System.Drawing.Size(32, 32);
+            this.pictureBoxIttProperties.TabIndex = 57;
+            this.pictureBoxIttProperties.TabStop = false;
+            // 
+            // pictureBoxToggleVideo
+            // 
+            this.pictureBoxToggleVideo.Location = new System.Drawing.Point(209, 398);
+            this.pictureBoxToggleVideo.Name = "pictureBoxToggleVideo";
+            this.pictureBoxToggleVideo.Size = new System.Drawing.Size(32, 32);
+            this.pictureBoxToggleVideo.TabIndex = 56;
+            this.pictureBoxToggleVideo.TabStop = false;
+            // 
+            // pictureBoxToggleWaveform
+            // 
+            this.pictureBoxToggleWaveform.Location = new System.Drawing.Point(171, 398);
+            this.pictureBoxToggleWaveform.Name = "pictureBoxToggleWaveform";
+            this.pictureBoxToggleWaveform.Size = new System.Drawing.Size(32, 32);
+            this.pictureBoxToggleWaveform.TabIndex = 55;
+            this.pictureBoxToggleWaveform.TabStop = false;
+            // 
+            // pictureBoxAssaDraw
+            // 
+            this.pictureBoxAssaDraw.Location = new System.Drawing.Point(133, 399);
+            this.pictureBoxAssaDraw.Name = "pictureBoxAssaDraw";
+            this.pictureBoxAssaDraw.Size = new System.Drawing.Size(32, 32);
+            this.pictureBoxAssaDraw.TabIndex = 54;
+            this.pictureBoxAssaDraw.TabStop = false;
+            // 
+            // pictureBoxAssAttachments
+            // 
+            this.pictureBoxAssAttachments.Location = new System.Drawing.Point(95, 399);
+            this.pictureBoxAssAttachments.Name = "pictureBoxAssAttachments";
+            this.pictureBoxAssAttachments.Size = new System.Drawing.Size(32, 32);
+            this.pictureBoxAssAttachments.TabIndex = 53;
+            this.pictureBoxAssAttachments.TabStop = false;
+            // 
+            // pictureBoxAssProperties
+            // 
+            this.pictureBoxAssProperties.Location = new System.Drawing.Point(57, 399);
+            this.pictureBoxAssProperties.Name = "pictureBoxAssProperties";
+            this.pictureBoxAssProperties.Size = new System.Drawing.Size(32, 32);
+            this.pictureBoxAssProperties.TabIndex = 52;
+            this.pictureBoxAssProperties.TabStop = false;
+            // 
+            // pictureBoxAssStyleManager
+            // 
+            this.pictureBoxAssStyleManager.Location = new System.Drawing.Point(19, 399);
+            this.pictureBoxAssStyleManager.Name = "pictureBoxAssStyleManager";
+            this.pictureBoxAssStyleManager.Size = new System.Drawing.Size(32, 32);
+            this.pictureBoxAssStyleManager.TabIndex = 51;
+            this.pictureBoxAssStyleManager.TabStop = false;
+            // 
+            // labelToolbarIconTheme
+            // 
+            this.labelToolbarIconTheme.AutoSize = true;
+            this.labelToolbarIconTheme.Location = new System.Drawing.Point(487, 276);
+            this.labelToolbarIconTheme.Name = "labelToolbarIconTheme";
+            this.labelToolbarIconTheme.Size = new System.Drawing.Size(39, 13);
+            this.labelToolbarIconTheme.TabIndex = 50;
+            this.labelToolbarIconTheme.Text = "Theme";
+            // 
+            // comboBoxToolbarIconTheme
+            // 
+            this.comboBoxToolbarIconTheme.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxToolbarIconTheme.FormattingEnabled = true;
+            this.comboBoxToolbarIconTheme.Location = new System.Drawing.Point(487, 291);
+            this.comboBoxToolbarIconTheme.Name = "comboBoxToolbarIconTheme";
+            this.comboBoxToolbarIconTheme.Size = new System.Drawing.Size(202, 21);
+            this.comboBoxToolbarIconTheme.TabIndex = 49;
+            this.comboBoxToolbarIconTheme.SelectedIndexChanged += new System.EventHandler(this.comboBoxToolbarIconTheme_SelectedIndexChanged);
+            // 
             // labelToggleSourceView
             // 
             this.labelToggleSourceView.AutoSize = true;
-            this.labelToggleSourceView.Location = new System.Drawing.Point(11, 253);
+            this.labelToggleSourceView.Location = new System.Drawing.Point(132, 256);
             this.labelToggleSourceView.Name = "labelToggleSourceView";
             this.labelToggleSourceView.Size = new System.Drawing.Size(99, 13);
             this.labelToggleSourceView.TabIndex = 48;
             this.labelToggleSourceView.Text = "Toggle source view";
             // 
-            // pictureBoxToggleSourceView
+            // pictureBoxSourceView
             // 
-            this.pictureBoxToggleSourceView.Location = new System.Drawing.Point(24, 272);
-            this.pictureBoxToggleSourceView.Name = "pictureBoxToggleSourceView";
-            this.pictureBoxToggleSourceView.Size = new System.Drawing.Size(32, 32);
-            this.pictureBoxToggleSourceView.TabIndex = 47;
-            this.pictureBoxToggleSourceView.TabStop = false;
+            this.pictureBoxSourceView.Location = new System.Drawing.Point(145, 275);
+            this.pictureBoxSourceView.Name = "pictureBoxSourceView";
+            this.pictureBoxSourceView.Size = new System.Drawing.Size(32, 32);
+            this.pictureBoxSourceView.TabIndex = 47;
+            this.pictureBoxSourceView.TabStop = false;
             // 
             // checkBoxTBToggleSourceView
             // 
             this.checkBoxTBToggleSourceView.AutoSize = true;
-            this.checkBoxTBToggleSourceView.Location = new System.Drawing.Point(27, 311);
+            this.checkBoxTBToggleSourceView.Location = new System.Drawing.Point(148, 314);
             this.checkBoxTBToggleSourceView.Name = "checkBoxTBToggleSourceView";
             this.checkBoxTBToggleSourceView.Size = new System.Drawing.Size(55, 17);
             this.checkBoxTBToggleSourceView.TabIndex = 46;
@@ -4115,13 +4237,13 @@
             this.labelTBBurnIn.TabIndex = 45;
             this.labelTBBurnIn.Text = "Burn in";
             // 
-            // pictureBoxTBBurnIn
+            // pictureBoxBurnIn
             // 
-            this.pictureBoxTBBurnIn.Location = new System.Drawing.Point(256, 159);
-            this.pictureBoxTBBurnIn.Name = "pictureBoxTBBurnIn";
-            this.pictureBoxTBBurnIn.Size = new System.Drawing.Size(32, 32);
-            this.pictureBoxTBBurnIn.TabIndex = 44;
-            this.pictureBoxTBBurnIn.TabStop = false;
+            this.pictureBoxBurnIn.Location = new System.Drawing.Point(256, 159);
+            this.pictureBoxBurnIn.Name = "pictureBoxBurnIn";
+            this.pictureBoxBurnIn.Size = new System.Drawing.Size(32, 32);
+            this.pictureBoxBurnIn.TabIndex = 44;
+            this.pictureBoxBurnIn.TabStop = false;
             // 
             // checkBoxTBBurnIn
             // 
@@ -4136,7 +4258,7 @@
             // labelTBBeautifyTimeCodes
             // 
             this.labelTBBeautifyTimeCodes.AutoSize = true;
-            this.labelTBBeautifyTimeCodes.Location = new System.Drawing.Point(742, 136);
+            this.labelTBBeautifyTimeCodes.Location = new System.Drawing.Point(13, 256);
             this.labelTBBeautifyTimeCodes.Name = "labelTBBeautifyTimeCodes";
             this.labelTBBeautifyTimeCodes.Size = new System.Drawing.Size(101, 13);
             this.labelTBBeautifyTimeCodes.TabIndex = 45;
@@ -4144,7 +4266,7 @@
             // 
             // pictureBoxBeautifyTimeCodes
             // 
-            this.pictureBoxBeautifyTimeCodes.Location = new System.Drawing.Point(751, 155);
+            this.pictureBoxBeautifyTimeCodes.Location = new System.Drawing.Point(22, 275);
             this.pictureBoxBeautifyTimeCodes.Name = "pictureBoxBeautifyTimeCodes";
             this.pictureBoxBeautifyTimeCodes.Size = new System.Drawing.Size(32, 32);
             this.pictureBoxBeautifyTimeCodes.TabIndex = 44;
@@ -4153,7 +4275,7 @@
             // checkBoxBeautifyTimeCodes
             // 
             this.checkBoxBeautifyTimeCodes.AutoSize = true;
-            this.checkBoxBeautifyTimeCodes.Location = new System.Drawing.Point(754, 195);
+            this.checkBoxBeautifyTimeCodes.Location = new System.Drawing.Point(25, 314);
             this.checkBoxBeautifyTimeCodes.Name = "checkBoxBeautifyTimeCodes";
             this.checkBoxBeautifyTimeCodes.Size = new System.Drawing.Size(55, 17);
             this.checkBoxBeautifyTimeCodes.TabIndex = 43;
@@ -4196,13 +4318,13 @@
             this.labelTBRemoveTextForHi.TabIndex = 39;
             this.labelTBRemoveTextForHi.Text = "Remove text for HI";
             // 
-            // pictureBoxTBRemoveTextForHi
+            // pictureBoxRemoveTextForHi
             // 
-            this.pictureBoxTBRemoveTextForHi.Location = new System.Drawing.Point(22, 161);
-            this.pictureBoxTBRemoveTextForHi.Name = "pictureBoxTBRemoveTextForHi";
-            this.pictureBoxTBRemoveTextForHi.Size = new System.Drawing.Size(32, 32);
-            this.pictureBoxTBRemoveTextForHi.TabIndex = 38;
-            this.pictureBoxTBRemoveTextForHi.TabStop = false;
+            this.pictureBoxRemoveTextForHi.Location = new System.Drawing.Point(22, 161);
+            this.pictureBoxRemoveTextForHi.Name = "pictureBoxRemoveTextForHi";
+            this.pictureBoxRemoveTextForHi.Size = new System.Drawing.Size(32, 32);
+            this.pictureBoxRemoveTextForHi.TabIndex = 38;
+            this.pictureBoxRemoveTextForHi.TabStop = false;
             // 
             // checkBoxTBRemoveTextForHi
             // 
@@ -4223,13 +4345,13 @@
             this.labelTBFixCommonErrors.TabIndex = 36;
             this.labelTBFixCommonErrors.Text = "Fix common errors";
             // 
-            // pictureBoxTBFixCommonErrors
+            // pictureBoxFixCommonErrors
             // 
-            this.pictureBoxTBFixCommonErrors.Location = new System.Drawing.Point(610, 41);
-            this.pictureBoxTBFixCommonErrors.Name = "pictureBoxTBFixCommonErrors";
-            this.pictureBoxTBFixCommonErrors.Size = new System.Drawing.Size(32, 32);
-            this.pictureBoxTBFixCommonErrors.TabIndex = 35;
-            this.pictureBoxTBFixCommonErrors.TabStop = false;
+            this.pictureBoxFixCommonErrors.Location = new System.Drawing.Point(610, 41);
+            this.pictureBoxFixCommonErrors.Name = "pictureBoxFixCommonErrors";
+            this.pictureBoxFixCommonErrors.Size = new System.Drawing.Size(32, 32);
+            this.pictureBoxFixCommonErrors.TabIndex = 35;
+            this.pictureBoxFixCommonErrors.TabStop = false;
             // 
             // checkBoxTBFixCommonErrors
             // 
@@ -4466,13 +4588,13 @@
             this.labelTBOpen.TabIndex = 6;
             this.labelTBOpen.Text = "Open";
             // 
-            // pictureBoxOpen
+            // pictureBoxFileOpen
             // 
-            this.pictureBoxOpen.Location = new System.Drawing.Point(123, 41);
-            this.pictureBoxOpen.Name = "pictureBoxOpen";
-            this.pictureBoxOpen.Size = new System.Drawing.Size(32, 32);
-            this.pictureBoxOpen.TabIndex = 5;
-            this.pictureBoxOpen.TabStop = false;
+            this.pictureBoxFileOpen.Location = new System.Drawing.Point(123, 41);
+            this.pictureBoxFileOpen.Name = "pictureBoxFileOpen";
+            this.pictureBoxFileOpen.Size = new System.Drawing.Size(32, 32);
+            this.pictureBoxFileOpen.TabIndex = 5;
+            this.pictureBoxFileOpen.TabStop = false;
             // 
             // checkBoxToolbarOpen
             // 
@@ -4493,13 +4615,13 @@
             this.labelTBNew.TabIndex = 3;
             this.labelTBNew.Text = "New";
             // 
-            // pictureBoxNew
+            // pictureBoxFileNew
             // 
-            this.pictureBoxNew.Location = new System.Drawing.Point(22, 41);
-            this.pictureBoxNew.Name = "pictureBoxNew";
-            this.pictureBoxNew.Size = new System.Drawing.Size(32, 32);
-            this.pictureBoxNew.TabIndex = 2;
-            this.pictureBoxNew.TabStop = false;
+            this.pictureBoxFileNew.Location = new System.Drawing.Point(22, 41);
+            this.pictureBoxFileNew.Name = "pictureBoxFileNew";
+            this.pictureBoxFileNew.Size = new System.Drawing.Size(32, 32);
+            this.pictureBoxFileNew.TabIndex = 2;
+            this.pictureBoxFileNew.TabStop = false;
             // 
             // checkBoxToolbarNew
             // 
@@ -5211,8 +5333,8 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1092, 574);
             this.Controls.Add(this.labelUpdateFileTypeAssociationsStatus);
-            this.Controls.Add(this.panelVideoPlayer);
             this.Controls.Add(this.panelToolBar);
+            this.Controls.Add(this.panelVideoPlayer);
             this.Controls.Add(this.panelTools);
             this.Controls.Add(this.panelWaveform);
             this.Controls.Add(this.panelGeneral);
@@ -5305,12 +5427,21 @@
             this.groupBox2.PerformLayout();
             this.groupBoxShowToolBarButtons.ResumeLayout(false);
             this.groupBoxShowToolBarButtons.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxToggleSourceView)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxTBBurnIn)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxEbuProperties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxWebVttProperties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxIttProperties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxToggleVideo)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxToggleWaveform)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxAssaDraw)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxAssAttachments)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxAssProperties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxAssStyleManager)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSourceView)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBurnIn)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBeautifyTimeCodes)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxNetflixQualityCheck)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxTBRemoveTextForHi)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxTBFixCommonErrors)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxRemoveTextForHi)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxFixCommonErrors)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxHelp)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSettings)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSpellCheck)).EndInit();
@@ -5319,8 +5450,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxFind)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSaveAs)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSave)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxOpen)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxNew)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxFileOpen)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxFileNew)).EndInit();
             this.panelFont.ResumeLayout(false);
             this.groupBoxAppearance.ResumeLayout(false);
             this.groupBoxAppearance.PerformLayout();
@@ -5354,7 +5485,7 @@
         private System.Windows.Forms.Panel panelGeneral;
         private System.Windows.Forms.GroupBox groupBoxMiscellaneous;
         private System.Windows.Forms.GroupBox groupBoxShowToolBarButtons;
-        private System.Windows.Forms.PictureBox pictureBoxNew;
+        private System.Windows.Forms.PictureBox pictureBoxFileNew;
         private System.Windows.Forms.CheckBox checkBoxToolbarNew;
         private System.Windows.Forms.Label labelTBSpellCheck;
         private System.Windows.Forms.PictureBox pictureBoxSpellCheck;
@@ -5375,7 +5506,7 @@
         private System.Windows.Forms.PictureBox pictureBoxSave;
         private System.Windows.Forms.CheckBox checkBoxToolbarSave;
         private System.Windows.Forms.Label labelTBOpen;
-        private System.Windows.Forms.PictureBox pictureBoxOpen;
+        private System.Windows.Forms.PictureBox pictureBoxFileOpen;
         private System.Windows.Forms.CheckBox checkBoxToolbarOpen;
         private System.Windows.Forms.Label labelTBNew;
         private System.Windows.Forms.Label labelTBHelp;
@@ -5542,7 +5673,7 @@
         private System.Windows.Forms.NumericUpDown numericUpDownMinGapMs;
         private System.Windows.Forms.Label labelMinGapMs;
         private System.Windows.Forms.Label labelTBFixCommonErrors;
-        private System.Windows.Forms.PictureBox pictureBoxTBFixCommonErrors;
+        private System.Windows.Forms.PictureBox pictureBoxFixCommonErrors;
         private System.Windows.Forms.CheckBox checkBoxTBFixCommonErrors;
         private System.Windows.Forms.CheckBox checkBoxFixShortDisplayTimesAllowMoveStartTime;
         private System.Windows.Forms.Button buttonVlcPathBrowse;
@@ -5573,7 +5704,7 @@
         private System.Windows.Forms.ComboBox comboBoxAutoBackupDeleteAfter;
         private System.Windows.Forms.Label labelAutoBackupDeleteAfter;
         private System.Windows.Forms.Label labelTBRemoveTextForHi;
-        private System.Windows.Forms.PictureBox pictureBoxTBRemoveTextForHi;
+        private System.Windows.Forms.PictureBox pictureBoxRemoveTextForHi;
         private System.Windows.Forms.CheckBox checkBoxTBRemoveTextForHi;
         private System.Windows.Forms.NumericUpDown numericUpDownMaxNumberOfLines;
         private System.Windows.Forms.Label labelMaxLines;
@@ -5716,7 +5847,7 @@
         private System.Windows.Forms.Label labelUpdateFileTypeAssociationsStatus;
         private System.Windows.Forms.ColumnHeader columnHeader2;
         private System.Windows.Forms.Label labelTBBurnIn;
-        private System.Windows.Forms.PictureBox pictureBoxTBBurnIn;
+        private System.Windows.Forms.PictureBox pictureBoxBurnIn;
         private System.Windows.Forms.CheckBox checkBoxTBBurnIn;
         private System.Windows.Forms.ComboBox comboBoxCpsLineLenCalc;
         private System.Windows.Forms.Label labelCpsLineLenCalc;
@@ -5728,7 +5859,7 @@
         private System.Windows.Forms.ComboBox comboBoxProxyAuthType;
         private System.Windows.Forms.CheckBox checkBoxFfmpegUseCenterChannel;
         private System.Windows.Forms.Label labelToggleSourceView;
-        private System.Windows.Forms.PictureBox pictureBoxToggleSourceView;
+        private System.Windows.Forms.PictureBox pictureBoxSourceView;
         private System.Windows.Forms.CheckBox checkBoxTBToggleSourceView;
         private System.Windows.Forms.Button buttonTranslationAutoSuffix;
         private System.Windows.Forms.ComboBox comboBoxTranslationAutoSuffix;
@@ -5752,5 +5883,16 @@
         private System.Windows.Forms.Panel panelMpvPrimaryColor;
         private System.Windows.Forms.Button buttonMpvPrimaryColor;
         private System.Windows.Forms.Button buttonEditShotChangesProfile;
+        private System.Windows.Forms.Label labelToolbarIconTheme;
+        private System.Windows.Forms.ComboBox comboBoxToolbarIconTheme;
+        private System.Windows.Forms.PictureBox pictureBoxAssStyleManager;
+        private System.Windows.Forms.PictureBox pictureBoxAssAttachments;
+        private System.Windows.Forms.PictureBox pictureBoxAssProperties;
+        private System.Windows.Forms.PictureBox pictureBoxAssaDraw;
+        private System.Windows.Forms.PictureBox pictureBoxToggleVideo;
+        private System.Windows.Forms.PictureBox pictureBoxToggleWaveform;
+        private System.Windows.Forms.PictureBox pictureBoxEbuProperties;
+        private System.Windows.Forms.PictureBox pictureBoxWebVttProperties;
+        private System.Windows.Forms.PictureBox pictureBoxIttProperties;
     }
 }

@@ -4,6 +4,7 @@ using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Core.Translate.Service;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
+using Nikse.SubtitleEdit.Forms.BeautifyTimeCodes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -14,7 +15,6 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Forms.BeautifyTimeCodes;
 
 namespace Nikse.SubtitleEdit.Forms.Options
 {
@@ -412,7 +412,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
             // Toolbar icons first row
             labelTBOpen.Left = Math.Max(labelTBNew.Right, checkBoxToolbarNew.Right) + 18;
-            pictureBoxOpen.Left = labelTBOpen.Left;
+            pictureBoxFileOpen.Left = labelTBOpen.Left;
             checkBoxToolbarOpen.Left = labelTBOpen.Left;
 
             labelTBSave.Left = Math.Max(labelTBOpen.Right, checkBoxToolbarOpen.Right) + 18;
@@ -432,7 +432,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             checkBoxReplace.Left = labelTBReplace.Left;
 
             labelTBFixCommonErrors.Left = Math.Max(labelTBReplace.Right, checkBoxReplace.Right) + 18;
-            pictureBoxTBFixCommonErrors.Left = labelTBFixCommonErrors.Left;
+            pictureBoxFixCommonErrors.Left = labelTBFixCommonErrors.Left;
             checkBoxTBFixCommonErrors.Left = labelTBFixCommonErrors.Left;
 
             // Toolbar icons second row
@@ -441,7 +441,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             checkBoxVisualSync.Left = labelTBVisualSync.Left;
 
             labelTBBurnIn.Left = Math.Max(labelTBVisualSync.Right, checkBoxVisualSync.Right) + 18;
-            pictureBoxTBBurnIn.Left = labelTBBurnIn.Left;
+            pictureBoxBurnIn.Left = labelTBBurnIn.Left;
             checkBoxTBBurnIn.Left = labelTBBurnIn.Left;
 
             labelTBSpellCheck.Left = Math.Max(labelTBBurnIn.Right, checkBoxTBBurnIn.Right) + 18;
@@ -459,11 +459,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
             labelTBNetflixQualityCheck.Left = Math.Max(labelTBHelp.Right, checkBoxHelp.Right) + 18;
             pictureBoxNetflixQualityCheck.Left = labelTBNetflixQualityCheck.Left;
             checkBoxNetflixQualityCheck.Left = labelTBNetflixQualityCheck.Left;
-
-            labelTBBeautifyTimeCodes.Left = Math.Max(labelTBNetflixQualityCheck.Right, checkBoxNetflixQualityCheck.Right) + 18;
-            pictureBoxBeautifyTimeCodes.Left = labelTBBeautifyTimeCodes.Left;
-            checkBoxBeautifyTimeCodes.Left = labelTBBeautifyTimeCodes.Left;
-
 
             groupBoxMiscellaneous.Text = language.General;
             groupBoxToolsMisc.Text = language.Miscellaneous;
@@ -1204,6 +1199,39 @@ namespace Nikse.SubtitleEdit.Forms.Options
             labelUpdateFileTypeAssociationsStatus.Text = string.Empty;
 
             checkBoxDarkThemeEnabled_CheckedChanged(null, null);
+
+            ToolbarIconThemeInit();
+        }
+
+        private void ToolbarIconThemeInit()
+        {
+            if (!Directory.Exists(Configuration.IconsDirectory))
+            {
+                comboBoxToolbarIconTheme.Visible = false;
+                labelToolbarIconTheme.Visible = false;
+            }
+
+            comboBoxToolbarIconTheme.SelectedIndexChanged -= comboBoxToolbarIconTheme_SelectedIndexChanged;
+            var directories = Directory.GetDirectories(Configuration.IconsDirectory);
+            comboBoxToolbarIconTheme.Items.Clear();
+            comboBoxToolbarIconTheme.Items.Add("Auto");
+            comboBoxToolbarIconTheme.SelectedIndex = 0;
+            foreach (var dir in directories)
+            {
+                if (File.Exists(Path.Combine(dir, "new.png")))
+                {
+                    var d = Path.GetFileName(dir);
+                    comboBoxToolbarIconTheme.Items.Add(d);
+                    if (Configuration.Settings.General.ToolbarIconTheme != null &&
+                        Configuration.Settings.General.ToolbarIconTheme.Equals(d, StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        comboBoxToolbarIconTheme.SelectedIndex = comboBoxToolbarIconTheme.Items.Count - 1;
+                    }
+                }
+            }
+
+            comboBoxToolbarIconTheme.SelectedIndexChanged += comboBoxToolbarIconTheme_SelectedIndexChanged;
+
         }
 
         private void ShowMpvVideoOutput()
@@ -1846,17 +1874,17 @@ namespace Nikse.SubtitleEdit.Forms.Options
                                Image visualSync, Image burnIn, Image spellCheck, Image netflixGlyphCheck, Image beautifyTimeCodes, Image settings, Image help, Image toggleSourceView)
         {
             Icon = (Icon)icon.Clone();
-            pictureBoxNew.Image = (Image)newFile.Clone();
-            pictureBoxOpen.Image = (Image)openFile.Clone();
+            pictureBoxFileNew.Image = (Image)newFile.Clone();
+            pictureBoxFileOpen.Image = (Image)openFile.Clone();
             pictureBoxSave.Image = (Image)saveFile.Clone();
             pictureBoxSaveAs.Image = (Image)saveFileAs.Clone();
             pictureBoxFind.Image = (Image)find.Clone();
             pictureBoxReplace.Image = (Image)replace.Clone();
-            pictureBoxTBFixCommonErrors.Image = (Image)fixCommonErrors.Clone();
-            pictureBoxTBRemoveTextForHi.Image = (Image)removeTextForHi.Clone();
-            pictureBoxToggleSourceView.Image = (Image)toggleSourceView.Clone();
+            pictureBoxFixCommonErrors.Image = (Image)fixCommonErrors.Clone();
+            pictureBoxRemoveTextForHi.Image = (Image)removeTextForHi.Clone();
+            pictureBoxSourceView.Image = (Image)toggleSourceView.Clone();
             pictureBoxVisualSync.Image = (Image)visualSync.Clone();
-            pictureBoxTBBurnIn.Image = (Image)burnIn.Clone();
+            pictureBoxBurnIn.Image = (Image)burnIn.Clone();
             pictureBoxSpellCheck.Image = (Image)spellCheck.Clone();
             pictureBoxNetflixQualityCheck.Image = (Image)netflixGlyphCheck.Clone();
             pictureBoxBeautifyTimeCodes.Image = (Image)beautifyTimeCodes.Clone();
@@ -2184,6 +2212,8 @@ namespace Nikse.SubtitleEdit.Forms.Options
             gs.UseFFmpegForWaveExtraction = checkBoxUseFFmpeg.Checked;
             gs.FFmpegUseCenterChannelOnly = checkBoxFfmpegUseCenterChannel.Checked;
             gs.FFmpegLocation = textBoxFFmpegPath.Text;
+
+            gs.ToolbarIconTheme = comboBoxToolbarIconTheme.SelectedIndex > 0 ? comboBoxToolbarIconTheme.Text : "Auto";
 
             // save shortcuts
             Configuration.Settings.Shortcuts.PluginShortcuts = _pluginShortcuts;
@@ -3624,6 +3654,55 @@ namespace Nikse.SubtitleEdit.Forms.Options
             using (var form = new BeautifyTimeCodesProfile(0))
             {
                 form.ShowDialog(this);
+            }
+        }
+        
+        private void comboBoxToolbarIconTheme_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            TryLoadIcon(pictureBoxFileNew, "New");
+            TryLoadIcon(pictureBoxFileOpen, "Open");
+            TryLoadIcon(pictureBoxSave, "Save");
+            TryLoadIcon(pictureBoxSaveAs, "SaveAs");
+            TryLoadIcon(pictureBoxFind, "Find");
+            TryLoadIcon(pictureBoxReplace, "Replace");
+            TryLoadIcon(pictureBoxFixCommonErrors, "FixCommonErrors");
+            TryLoadIcon(pictureBoxRemoveTextForHi, "RemoveTextForHi");
+            TryLoadIcon(pictureBoxVisualSync, "VisualSync");
+            TryLoadIcon(pictureBoxBurnIn, "BurnIn");
+            TryLoadIcon(pictureBoxSpellCheck, "SpellCheck");
+            TryLoadIcon(pictureBoxNetflixQualityCheck, "Netflix");
+            TryLoadIcon(pictureBoxBeautifyTimeCodes, "BeautifyTimeCodes");
+            TryLoadIcon(pictureBoxAssStyleManager, "AssaStyle");
+            TryLoadIcon(pictureBoxAssProperties, "AssaProperties");
+            TryLoadIcon(pictureBoxAssAttachments, "AssaAttachments");
+            TryLoadIcon(pictureBoxAssaDraw, "AssaDraw");
+            TryLoadIcon(pictureBoxSettings, "Settings");
+            TryLoadIcon(pictureBoxHelp, "Help");
+            TryLoadIcon(pictureBoxToggleWaveform, "WaveformToggle");
+            TryLoadIcon(pictureBoxToggleVideo, "VideoToggle");
+            TryLoadIcon(pictureBoxSourceView, "SourceView");
+            TryLoadIcon(pictureBoxIttProperties, "IttProperties");
+            TryLoadIcon(pictureBoxWebVttProperties, "WebVttProperties");
+            TryLoadIcon(pictureBoxEbuProperties, "EbuProperties");
+        }
+
+        private void TryLoadIcon(PictureBox button, string iconName)
+        {
+            pictureBoxEbuProperties.Image?.Dispose();
+            pictureBoxEbuProperties.Image = null;
+
+            var theme = comboBoxToolbarIconTheme.Text;
+            var themeFullPath = Path.Combine(Configuration.IconsDirectory, theme, iconName + ".png");
+            if (comboBoxToolbarIconTheme.SelectedIndex > 0 && File.Exists(themeFullPath))
+            {
+                button.Image = new Bitmap(themeFullPath);
+                return;
+            }
+
+            var fullPath = Path.Combine(Configuration.IconsDirectory, "DefaultTheme", iconName + ".png");
+            if (File.Exists(fullPath))
+            {
+                button.Image = new Bitmap(fullPath);
             }
         }
     }

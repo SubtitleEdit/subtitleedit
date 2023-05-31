@@ -1472,6 +1472,7 @@ $HorzAlign          =   Center
         public Color LastColorPickerColor6 { get; set; }
         public Color LastColorPickerColor7 { get; set; }
         public Color LastColorPickerDropper { get; set; }
+        public string ToolbarIconTheme { get; set; }
         public bool UseDarkTheme { get; set; }
         public bool DarkThemeShowListViewGridLines { get; set; }
         public bool ShowBetaStuff { get; set; }
@@ -1637,6 +1638,7 @@ $HorzAlign          =   Center
             LastColorPickerColor6 = Color.Cyan;
             LastColorPickerColor7 = Color.DarkOrange;
             LastColorPickerDropper = Color.Transparent;
+            ToolbarIconTheme = "Auto";
             UseDarkTheme = false;
             DarkThemeShowListViewGridLines = false;
             AutoSetVideoSmpteForTtml = true;
@@ -4682,6 +4684,12 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.General.UseDarkTheme = Convert.ToBoolean(subNode.InnerText.Trim(), CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("ToolbarIconTheme");
+            if (subNode != null)
+            {
+                settings.General.ToolbarIconTheme = subNode.InnerText;
             }
 
             subNode = node.SelectSingleNode("DarkThemeShowListViewGridLines");
@@ -10920,6 +10928,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("LastColorPickerColor7", ToHtml(settings.General.LastColorPickerColor7));
                 textWriter.WriteElementString("DarkThemeBackColor", settings.General.DarkThemeBackColor.ToArgb().ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("DarkThemeForeColor", settings.General.DarkThemeForeColor.ToArgb().ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ToolbarIconTheme", settings.General.ToolbarIconTheme);
                 textWriter.WriteElementString("UseDarkTheme", settings.General.UseDarkTheme.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("DarkThemeShowListViewGridLines", settings.General.DarkThemeShowListViewGridLines.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ShowBetaStuff", settings.General.ShowBetaStuff.ToString(CultureInfo.InvariantCulture));
