@@ -11,8 +11,7 @@
     <Yes>Ja</Yes>
     <No>Nein</No>
     <Apply>Auswahl</Apply>
-    <ApplyTo>Anwenden auf
-</ApplyTo>
+    <ApplyTo>Anwenden auf</ApplyTo>
     <None>Aus</None>
     <All>Alle</All>
     <Preview>Vorschau</Preview>
@@ -65,6 +64,7 @@
     <OverlapPreviousLineX>Vorherige Überlappung ({0:#,##0.###})</OverlapPreviousLineX>
     <OverlapX>Überlappung ({0:#,##0.###})</OverlapX>
     <OverlapNextX>Nächste Überlappung ({0:#,##0.###})</OverlapNextX>
+    <OverlapStartAndEnd>STart und Ende überlappen</OverlapStartAndEnd>
     <Negative>Negativ</Negative>
     <RegularExpressionIsNotValid>Regulärer Ausdruck ist ungültig!</RegularExpressionIsNotValid>
     <CurrentSubtitle>Aktueller Untertitel</CurrentSubtitle>
@@ -103,16 +103,18 @@
   </General>
   <About>
     <Title>Über Subtitle Edit</Title>
-    <AboutText1>Subtitle Edit ist Freie Software unter der GNU Public License.
-Sie dürfen sie frei verbreiten, verändern und verwenden.
+    <AboutText1>
+			Subtitle Edit ist Freie Software unter der GNU Public License.
+			Sie dürfen sie frei verbreiten, verändern und verwenden.
 
-Der C# Quelltext ist erhältlich unter https://github.com/SubtitleEdit/subtitleedit
+			Der C# Quelltext ist erhältlich unter https://github.com/SubtitleEdit/subtitleedit
 
-Besuchen Sie www.nikse.dk für die neueste Version.
+			Besuchen Sie www.nikse.dk für die neueste Version.
 
-Vorschläge sind willkommen.
+			Vorschläge sind willkommen.
 
-E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
+			E-Mail: mailto:nikse.dk@gmail.com
+		</AboutText1>
   </About>
   <AddToNames>
     <Title>Zur Namensliste hinzufügen</Title>
@@ -136,15 +138,19 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <GeneratingSpectrogram>Erzeuge Spektogramm...</GeneratingSpectrogram>
     <ExtractingSeconds>Extrahiere Audio: {0:0.0} Sekunden</ExtractingSeconds>
     <ExtractingMinutes>Extrahiere Audio: {0}.{1:00} Minuten</ExtractingMinutes>
-    <WaveFileNotFound>Wellenformdatei nicht gefunden!
-Diese Funktion erfordert VLC media player 1.1.x oder höher ({0}-bit).
+    <WaveFileNotFound>
+			Wellenformdatei nicht gefunden!
+			Diese Funktion erfordert VLC media player 1.1.x oder höher ({0}-bit).
 
-Befehlszeile: {1} {2}</WaveFileNotFound>
-    <WaveFileMalformed>{0} konnte die Wellenformdatei nicht erzeugen!
+			Befehlszeile: {1} {2}
+		</WaveFileNotFound>
+    <WaveFileMalformed>
+			{0} konnte die Wellenformdatei nicht erzeugen!
 
-Befehlszeile: {1} {2}
+			Befehlszeile: {1} {2}
 
-Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
+			Ist genügend Plattenspeicherplatz verfügbar?
+		</WaveFileMalformed>
     <LowDiskSpace>GERINGER PLATTENSPEICHERPLATZ</LowDiskSpace>
     <FreeDiskSpace>{0} freier Plattenspeicherplatz</FreeDiskSpace>
     <NoAudioTracksFoundGenerateEmptyWaveform>Keine Tonspuren gefunden. Soll eine leere Wellenform erzeugt werden?</NoAudioTracksFoundGenerateEmptyWaveform>
@@ -199,6 +205,7 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
     <MaxCharsPerSubtitle>Max. Anzahl Zeichen pru Untertitelzeile</MaxCharsPerSubtitle>
     <RemoveTemporaryFiles>Temp-Dateien entfernen</RemoveTemporaryFiles>
     <SetCppConstMeFolder>CPP/Const-me Modellordner festlegen...</SetCppConstMeFolder>
+    <OnlyRunPostProcessing>Nur Nachbearbeitung durchführen/Timings anpassen</OnlyRunPostProcessing>
   </AudioToText>
   <AssaAttachments>
     <Title>Erweiterte Sub Station Alpha Anhänge</Title>
@@ -262,7 +269,7 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
     <BoxColor>Boxfarbe</BoxColor>
     <Radius>Radius</Radius>
     <Step>Schritt</Step>
-    <Spikes>Spikes</Spikes>
+    <Spikes>Spitzen</Spikes>
     <Bubbles>Blasen</Bubbles>
     <Circle>Kreis</Circle>
     <MarginX>Rand X</MarginX>
@@ -354,6 +361,7 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
     <MkvLanguageStyleTwoLetter>Sprachcode aus zwei Buchstaben</MkvLanguageStyleTwoLetter>
     <MkvLanguageStyleThreeLetter>Sprachcode aus drei Buchstaben</MkvLanguageStyleThreeLetter>
     <MkvLanguageStyleEmpty>Kein Sprachcode</MkvLanguageStyleEmpty>
+    <SearchFolderScanVideo>Auch Videodateien im Suchordner prüfen (langsam)</SearchFolderScanVideo>
   </BatchConvert>
   <BinEdit>
     <ImportImage>Bild importieren...</ImportImage>
@@ -685,8 +693,10 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
     <SavePremiereEdlAs>Premiere EDL Dateiname wählen</SavePremiereEdlAs>
     <SaveFcpAs>Final Cut Pro XML Dateiname wählen</SaveFcpAs>
     <SaveDostAs>DoStudio dost Dateiname wählen</SaveDostAs>
-    <SomeLinesWereTooLongX>Einige Zeilen sind zu lang:
-{0}</SomeLinesWereTooLongX>
+    <SomeLinesWereTooLongX>
+			Einige Zeilen sind zu lang:
+			{0}
+		</SomeLinesWereTooLongX>
     <LineHeight>Zeilenhöhe</LineHeight>
     <BoxSingleLine>Box - Einzeilig</BoxSingleLine>
     <BoxMultiLine>Box - Mehrzeilig</BoxMultiLine>
@@ -816,7 +826,7 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
     <RemoveUnneededPeriodsExample>Hey du!. -&gt; Hey du!</RemoveUnneededPeriodsExample>
     <FixMissingSpacesExample>Hey.Du. -&gt; Hey. Du.</FixMissingSpacesExample>
     <FixUppercaseIInsideLowercaseWordsExample>Die Erde ist fIach. -&gt; Die Erde ist flach.</FixUppercaseIInsideLowercaseWordsExample>
-    <FixLowercaseIToUppercaseIExample>What do i care. -&gt; What do I care.</FixLowercaseIToUppercaseIExample>
+    <FixLowercaseIToUppercaseIExample>Der bauer mäht die wiese. -&gt; Der Bauer mäht die Wiese..</FixLowercaseIToUppercaseIExample>
     <StartTimeLaterThanEndTime>Textnummer {0}: Startzeit kommt nach Endzeit: {4}{1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
     <UnableToFixStartTimeLaterThanEndTime>Konnte Textnummer {0} nicht korrigieren: Startzeit kommt nach Endzeit: {1}</UnableToFixStartTimeLaterThanEndTime>
     <XFixedToYZ>{0} korrigiert zu: {1}{2}</XFixedToYZ>
@@ -923,9 +933,11 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
     <PleaseWait>Bitte warten... das könnte einen Moment dauern</PleaseWait>
     <PoweredByGoogleTranslate>Powered by Google Übersetzer</PoweredByGoogleTranslate>
     <PoweredByMicrosoftTranslate>Powered by Microsoft Übersetzer</PoweredByMicrosoftTranslate>
-    <MsClientSecretNeeded>Zugriff auf Microsoft Translator erfordert einen Cognitive Services "Translator Text" Schlüssel von Microsoft.
+    <MsClientSecretNeeded>
+			Zugriff auf Microsoft Translator erfordert einen Cognitive Services "Translator Text" Schlüssel von Microsoft.
 
-"Optionen -&gt; Einstellungen -&gt; Werkzeuge" öffnen zur Eingabe des Schlüssels.</MsClientSecretNeeded>
+			"Optionen -&gt; Einstellungen -&gt; Werkzeuge" öffnen zur Eingabe des Schlüssels.
+		</MsClientSecretNeeded>
     <GoogleNoApiKeyWarning>Google Übersetzer ohne API Schlüssel... (begrenzt)</GoogleNoApiKeyWarning>
     <Service>Service:</Service>
     <LineMergeHandling>Zeilenzusammenführung:</LineMergeHandling>
@@ -1534,15 +1546,20 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
     <LoadedEmptyOrShort>Leere oder sehr kurze Untertitel {0} geladen</LoadedEmptyOrShort>
     <FileIsEmptyOrShort>Datei ist leer oder sehr kurz!</FileIsEmptyOrShort>
     <FileNotFound>Datei nicht gefunden: {0}</FileNotFound>
+    <FileLocked>Datei kann nicht geöffnet werden, da sie von einem anderen Programm verwendet wird: {0}</FileLocked>
     <SavedSubtitleX>Untertitel {0} gespeichert</SavedSubtitleX>
     <SavedOriginalSubtitleX>Original Untertitel {0} gespeichert</SavedOriginalSubtitleX>
     <FileOnDiskModified>Datei auf Disk wurde geändert</FileOnDiskModified>
     <OverwriteModifiedFile>Soll die Datei {0} bearbeitet am {1} {2}{3} überschrieben werden mit aktueller Datei, geladen am {4} {5}?</OverwriteModifiedFile>
-    <FileXIsReadOnly>Kann {0} nicht speichern
+    <FileXIsReadOnly>
+			Kann {0} nicht speichern
 
-Die Datei ist schreibgeschützt!</FileXIsReadOnly>
-    <UnableToSaveSubtitleX>Konnte Untertiteldatei {0} nicht speichern
-Untertitel scheint leer zu sein - erneutes Speichern versuchen!</UnableToSaveSubtitleX>
+			Die Datei ist schreibgeschützt!
+		</FileXIsReadOnly>
+    <UnableToSaveSubtitleX>
+			Konnte Untertiteldatei {0} nicht speichern
+			Untertitel scheint leer zu sein - erneutes Speichern versuchen!
+		</UnableToSaveSubtitleX>
     <FormatXShouldUseUft8>Beim Speichern von {0}-Dateien sollte die UTF-8-Codierung verwendet werden!</FormatXShouldUseUft8>
     <BeforeNew>Vor Neu</BeforeNew>
     <New>Neu</New>
@@ -1554,13 +1571,19 @@ Untertitel scheint leer zu sein - erneutes Speichern versuchen!</UnableToSaveSub
     <OpenVideoFile>Videodatei öffnen...</OpenVideoFile>
     <NewFrameRateUsedToCalculateTimeCodes>Neue Bildfrequenz ({0}) wurde verwendet um Start/Ende Zeitstempel zu berechnen</NewFrameRateUsedToCalculateTimeCodes>
     <NewFrameRateUsedToCalculateFrameNumbers>Neue Bildfrequenz ({0}) wurde verwendet um Start/Ende Bildnummer zu berechnen</NewFrameRateUsedToCalculateFrameNumbers>
-    <FindContinue>Der Suchbegriff wurde nicht gefunden.
-Am Anfang des Dokuments weitersuchen?</FindContinue>
+    <FindContinue>
+			Der Suchbegriff wurde nicht gefunden.
+			Am Anfang des Dokuments weitersuchen?
+		</FindContinue>
     <FindContinueTitle>Suche fortsetzen?</FindContinueTitle>
-    <ReplaceContinueNotFound>Der Suchbegriff wurde nicht gefunden.
-Am Anfang des Dokuments weitersuchen?</ReplaceContinueNotFound>
-    <ReplaceXContinue>Der Suchbegriff wurde {0} Mal ersetzt.
-Am Anfang des Dokuments weitersuchen?</ReplaceXContinue>
+    <ReplaceContinueNotFound>
+			Der Suchbegriff wurde nicht gefunden.
+			Am Anfang des Dokuments weitersuchen?
+		</ReplaceContinueNotFound>
+    <ReplaceXContinue>
+			Der Suchbegriff wurde {0} Mal ersetzt.
+			Am Anfang des Dokuments weitersuchen?
+		</ReplaceXContinue>
     <ReplaceContinueTitle>Ersetzen fortsetzen?</ReplaceContinueTitle>
     <SearchingForXFromLineY>Suche nach '{0}' ab Text {1}...</SearchingForXFromLineY>
     <XFoundAtLineNumberY>'{0}' gefunden in Text {1}</XFoundAtLineNumberY>
@@ -1590,10 +1613,12 @@ Am Anfang des Dokuments weitersuchen?</ReplaceXContinue>
     <TextingForHearingImpairedRemovedOneLine>Text für Hörgeschädigte entfernt: Ein Text</TextingForHearingImpairedRemovedOneLine>
     <TextingForHearingImpairedRemovedXLines>Text für Hörgeschädigte entfernt: {0} Texte</TextingForHearingImpairedRemovedXLines>
     <SubtitleSplitted>Untertitel wurde getrennt</SubtitleSplitted>
-    <SubtitleAppendPrompt>Es wird ein existierender Untertitel am aktuell geladenen Untertitel
-angehängt, der schon an das Video angepasst sein sollte.
+    <SubtitleAppendPrompt>
+			Es wird ein existierender Untertitel am aktuell geladenen Untertitel
+			angehängt, der schon an das Video angepasst sein sollte.
 
-Fortfahren?</SubtitleAppendPrompt>
+			Fortfahren?
+		</SubtitleAppendPrompt>
     <SubtitleAppendPromptTitle>Untertitel anhängen</SubtitleAppendPromptTitle>
     <OpenSubtitleToAppend>Öffne Untertitel zum Anhängen...</OpenSubtitleToAppend>
     <AppendViaVisualSyncTitle>Visuelle Anpassung - zweiten Teil des Untertitels anhängen</AppendViaVisualSyncTitle>
@@ -1763,15 +1788,19 @@ Fortfahren?</SubtitleAppendPrompt>
     <PluginXExecuted>Plugin '{0}' ausgeführt.</PluginXExecuted>
     <NotAValidXSubFile>Keine gültige XSub Datei!</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>Vor Zeilenverbinden mit gleichen Text</BeforeMergeLinesWithSameText>
-    <ImportTimeCodesDifferentNumberOfLinesWarning>Untertitel mit Zeitstempel hat eine andere Zeilenanzahl ({0}) als der aktuelle ({1}).
+    <ImportTimeCodesDifferentNumberOfLinesWarning>
+			Untertitel mit Zeitstempel hat eine andere Zeilenanzahl ({0}) als der aktuelle ({1}).
 
-Trotzdem fortfahren?</ImportTimeCodesDifferentNumberOfLinesWarning>
+			Trotzdem fortfahren?
+		</ImportTimeCodesDifferentNumberOfLinesWarning>
     <ParsingTransportStream>Untersuche Transport Stream - Bitte warten...</ParsingTransportStream>
     <XPercentCompleted>{0}% vollendet</XPercentCompleted>
     <NextX>Nächster: {0}</NextX>
-    <PromptInsertSubtitleOverlap>Einfügen des Untertitels an Wellenformposition führt zu Überlappung.
+    <PromptInsertSubtitleOverlap>
+			Einfügen des Untertitels an Wellenformposition führt zu Überlappung.
 
-Trotzdem fortfahren?</PromptInsertSubtitleOverlap>
+			Trotzdem fortfahren?
+		</PromptInsertSubtitleOverlap>
     <SubtitleContainsNegativeDurationsX>Untertitel enthält negative Dauer in Zeile(n): {0}</SubtitleContainsNegativeDurationsX>
     <SetPlayRateX>Wiedergabegeschwindigkeit auf {0}% festlegen</SetPlayRateX>
     <ErrorLoadIdx>Subtitle Edit kann keine .idx Dateien lesen. Sie sind Teile von idx/sub Dateipaaren (VobSub). Die .sub Dateien können geöffnet werden.</ErrorLoadIdx>
@@ -1782,9 +1811,11 @@ Trotzdem fortfahren?</PromptInsertSubtitleOverlap>
     <ErrorLoadJpg>Diese Datei ist ein JPEG-Bild. Subtitle Edit kann keine JPEG-Dateien öffnen.</ErrorLoadJpg>
     <ErrorLoadSrr>Diese Datei ist eine ReScene .srr Datei - keine Untertiteldatei.</ErrorLoadSrr>
     <ErrorLoadTorrent>Diese Datei ist eine BitTorrent Datei - keine Untertiteldatei.</ErrorLoadTorrent>
-    <ErrorLoadBinaryZeroes>Diese Datei enthällt nur Nullzeichen.
+    <ErrorLoadBinaryZeroes>
+			Diese Datei enthällt nur Nullzeichen.
 
-Falls Sie diese Datei mit Subtitle Edit bearbeitet haben, dürfte eine Sicherung vorliegen unter Menüpunkt "Datei -&gt; Automatische Sicherung wiederherstellen..."</ErrorLoadBinaryZeroes>
+			Falls Sie diese Datei mit Subtitle Edit bearbeitet haben, dürfte eine Sicherung vorliegen unter Menüpunkt "Datei -&gt; Automatische Sicherung wiederherstellen..."
+		</ErrorLoadBinaryZeroes>
     <ErrorDirectoryDropNotAllowed>Das Ziehen eines Ordners ist hier nicht erlaubt.</ErrorDirectoryDropNotAllowed>
     <NoSupportEncryptedVobSub>Verschlüsselte VobSub-Untertitel können nicht verarbeitet werden.</NoSupportEncryptedVobSub>
     <NoSupportHereBluRaySup>Blu-ray sup Dateien sind hier nicht erlaubt.</NoSupportHereBluRaySup>
@@ -2010,8 +2041,10 @@ Falls Sie diese Datei mit Subtitle Edit bearbeitet haben, dürfte eine Sicherung
   </NetworkChat>
   <NetworkJoin>
     <Title>Einer Sitzung beitreten</Title>
-    <Information>Einer Sitzung beitreten, in der mehrere Personen die
-gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
+    <Information>
+			Einer Sitzung beitreten, in der mehrere Personen die
+			gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)
+		</Information>
     <Join>Beitreten</Join>
   </NetworkJoin>
   <NetworkLogAndInfo>
@@ -2021,8 +2054,10 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
   <NetworkStart>
     <Title>Neue Sitzung beginnen</Title>
     <ConnectionTo>Verbinde mit {0}...</ConnectionTo>
-    <Information>Beginne neue Sitzung, in der mehrere Personen die
-gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
+    <Information>
+			Beginne neue Sitzung, in der mehrere Personen die
+			gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)
+		</Information>
     <Start>Start</Start>
   </NetworkStart>
   <OpenVideoDvd>
@@ -2634,8 +2669,10 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <HowToSignUp>Wie anmelden?</HowToSignUp>
     <MicrosoftTranslateApiKey>Schlüssel</MicrosoftTranslateApiKey>
     <MicrosoftTranslateTokenEndpoint>Token-Endpunkt</MicrosoftTranslateTokenEndpoint>
-    <FontNote>Hinweis: Diese Schrifteinstellungen Sind nur für die SubtitleEdit-GUI. Festlegen einer Schriftart für einen Untertitel erfolgt üblicherweise im Videoplayer, kann aber auch mittels einem Untertitelformat mit eingebetteten Schriftart-Information wie 
-"Advanced Sub Station Alpha" oder über den Export in image-baseierte Formate.</FontNote>
+    <FontNote>
+			Hinweis: Diese Schrifteinstellungen Sind nur für die SubtitleEdit-GUI. Festlegen einer Schriftart für einen Untertitel erfolgt üblicherweise im Videoplayer, kann aber auch mittels einem Untertitelformat mit eingebetteten Schriftart-Information wie
+			"Advanced Sub Station Alpha" oder über den Export in image-baseierte Formate.
+		</FontNote>
     <RestoreDefaultSettings>Standardeinstellungen wiederherstellen</RestoreDefaultSettings>
     <RestoreDefaultSettingsMsg>Alle Einstellungen werden auf Standard zurückgesetzt. Fortsetzen?</RestoreDefaultSettingsMsg>
     <RemoveTimeCodes>Zeitstempel entfernen</RemoveTimeCodes>
@@ -2675,9 +2712,11 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
   </Settings>
   <SettingsMpv>
     <DownloadMpv>Mpv-lib herunterladen</DownloadMpv>
-    <DownloadMpvFailed>Herunterladen der Mpv-Programmbibliothek ist fehlgeschlagen!
+    <DownloadMpvFailed>
+			Herunterladen der Mpv-Programmbibliothek ist fehlgeschlagen!
 
-Bitte versuchen Sie es später noch einmal.</DownloadMpvFailed>
+			Bitte versuchen Sie es später noch einmal.
+		</DownloadMpvFailed>
     <DownloadMpvOk>Nach erfolgreichem Herunterladen ist die Mpv-Programmbibliothek einsatzbereit.</DownloadMpvOk>
   </SettingsMpv>
   <SettingsFfmpeg>
@@ -2780,6 +2819,7 @@ Bitte versuchen Sie es später noch einmal.</DownloadMpvFailed>
     <NumberOfSplits>Trennungen: {0}</NumberOfSplits>
     <LongestSingleLineIsXAtY>Längste Einzelzeilenlänge ist {0} bei Text {1}</LongestSingleLineIsXAtY>
     <LongestLineIsXAtY>Längste Textlänge ist {0} bei Text {1}</LongestLineIsXAtY>
+    <SplitAtLineBreaks>Bei Zeilenumbrüchen trennen</SplitAtLineBreaks>
   </SplitLongLines>
   <SplitSubtitle>
     <Title>Untertitel teilen</Title>
@@ -2863,8 +2903,10 @@ Bitte versuchen Sie es später noch einmal.</DownloadMpvFailed>
     <ScaleBorderAndShadow>Ränder und Schatten skalieren</ScaleBorderAndShadow>
     <WrapStyle0>0: Smart Wrapping, obere Linie ist breiter</WrapStyle0>
     <WrapStyle1>1: Zeilenende-Wortumbruch, nur N bricht</WrapStyle1>
-    <WrapStyle2>2: Kein Zeilenumbruch, sowohl
-als auch N brechen</WrapStyle2>
+    <WrapStyle2>
+			2: Kein Zeilenumbruch, sowohl
+			als auch N brechen
+		</WrapStyle2>
     <WrapStyle3>3: Smart Wrapping, Endergebnis ist breiter</WrapStyle3>
   </SubStationAlphaProperties>
   <SubStationAlphaStyles>
@@ -2987,9 +3029,11 @@ als auch N brechen</WrapStyle2>
     <FindText>Suche Text</FindText>
     <GoToSubPosition>Zur Text Pos.</GoToSubPosition>
     <KeepChangesTitle>Änderungen speichern?</KeepChangesTitle>
-    <KeepChangesMessage>Es wurden Änderungen am Untertitel mit 'Visueller Anpassung' vorgenommen.
+    <KeepChangesMessage>
+			Es wurden Änderungen am Untertitel mit 'Visueller Anpassung' vorgenommen.
 
-Änderungen speichern?</KeepChangesMessage>
+			Änderungen speichern?
+		</KeepChangesMessage>
     <SynchronizationDone>Anpassung erfolgreich!</SynchronizationDone>
     <StartSceneMustComeBeforeEndScene>Anfangsszene muss vor Endszene liegen!</StartSceneMustComeBeforeEndScene>
     <Tip>Tip: Nutze &lt;Strg+Pfeil links/rechts&gt; für 100 ms vor/zurück</Tip>
