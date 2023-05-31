@@ -2588,6 +2588,8 @@ namespace Nikse.SubtitleEdit.Logic
             public string UseSyntaxColoring { get; set; }
             public string HtmlColor { get; set; }
             public string AssaColor { get; set; }
+            public string Theme { get; set; }
+            public string Automatic { get; set; }
             public string DarkTheme { get; set; }
             public string DarkThemeEnabled { get; set; }
             public string DarkThemeShowGridViewLines { get; set; }
