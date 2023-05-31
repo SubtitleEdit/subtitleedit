@@ -1386,6 +1386,21 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
+        public static string GetBeautifyTimeCodesProfilePresetName(BeautifyTimeCodesSettings.BeautifyTimeCodesProfile.Preset preset)
+        {
+            switch (preset)
+            {
+                case BeautifyTimeCodesSettings.BeautifyTimeCodesProfile.Preset.Default:
+                    return LanguageSettings.Current.BeautifyTimeCodesProfile.PresetDefault;
+                case BeautifyTimeCodesSettings.BeautifyTimeCodesProfile.Preset.Netflix:
+                    return LanguageSettings.Current.BeautifyTimeCodesProfile.PresetNetflix;
+                case BeautifyTimeCodesSettings.BeautifyTimeCodesProfile.Preset.SDI:
+                    return LanguageSettings.Current.BeautifyTimeCodesProfile.PresetSDI;
+                default:
+                    return preset.ToString();
+            }
+        }
+
         public static string DecimalSeparator => CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator;
 
         public static Control FindFocusedControl(Control control)

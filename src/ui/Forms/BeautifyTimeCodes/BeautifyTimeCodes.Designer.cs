@@ -1,5 +1,5 @@
 ﻿
-namespace Nikse.SubtitleEdit.Forms
+namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
 {
     partial class BeautifyTimeCodes
     {
@@ -61,7 +61,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonOK.Location = new System.Drawing.Point(415, 350);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
-            this.buttonOK.TabIndex = 3;
+            this.buttonOK.TabIndex = 21;
             this.buttonOK.Text = "OK";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
@@ -73,7 +73,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonCancel.Location = new System.Drawing.Point(496, 350);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
-            this.buttonCancel.TabIndex = 4;
+            this.buttonCancel.TabIndex = 22;
             this.buttonCancel.Text = "Cancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             // 
@@ -99,7 +99,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.checkBoxAlignTimeCodes.Location = new System.Drawing.Point(10, 22);
             this.checkBoxAlignTimeCodes.Name = "checkBoxAlignTimeCodes";
             this.checkBoxAlignTimeCodes.Size = new System.Drawing.Size(224, 19);
-            this.checkBoxAlignTimeCodes.TabIndex = 1;
+            this.checkBoxAlignTimeCodes.TabIndex = 2;
             this.checkBoxAlignTimeCodes.Text = "Align time codes to frame time codes";
             this.checkBoxAlignTimeCodes.UseVisualStyleBackColor = true;
             this.checkBoxAlignTimeCodes.CheckedChanged += new System.EventHandler(this.checkBoxAlignTimeCodes_CheckedChanged);
@@ -121,7 +121,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.checkBoxExtractExactTimeCodes.Location = new System.Drawing.Point(4, 2);
             this.checkBoxExtractExactTimeCodes.Name = "checkBoxExtractExactTimeCodes";
             this.checkBoxExtractExactTimeCodes.Size = new System.Drawing.Size(266, 19);
-            this.checkBoxExtractExactTimeCodes.TabIndex = 1;
+            this.checkBoxExtractExactTimeCodes.TabIndex = 3;
             this.checkBoxExtractExactTimeCodes.Text = "Use ffprobe to extract exact frame time codes";
             this.checkBoxExtractExactTimeCodes.UseVisualStyleBackColor = true;
             this.checkBoxExtractExactTimeCodes.CheckedChanged += new System.EventHandler(this.checkBoxExtractExactTimeCodes_CheckedChanged);
@@ -171,7 +171,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonExtractTimeCodes.Location = new System.Drawing.Point(23, 18);
             this.buttonExtractTimeCodes.Name = "buttonExtractTimeCodes";
             this.buttonExtractTimeCodes.Size = new System.Drawing.Size(149, 23);
-            this.buttonExtractTimeCodes.TabIndex = 2;
+            this.buttonExtractTimeCodes.TabIndex = 4;
             this.buttonExtractTimeCodes.Text = "Extract time codes";
             this.buttonExtractTimeCodes.UseVisualStyleBackColor = true;
             this.buttonExtractTimeCodes.Click += new System.EventHandler(this.buttonExtractTimeCodes_Click);
@@ -195,7 +195,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxShotChanges.Location = new System.Drawing.Point(12, 170);
             this.groupBoxShotChanges.Name = "groupBoxShotChanges";
             this.groupBoxShotChanges.Size = new System.Drawing.Size(558, 101);
-            this.groupBoxShotChanges.TabIndex = 2;
+            this.groupBoxShotChanges.TabIndex = 10;
             this.groupBoxShotChanges.TabStop = false;
             this.groupBoxShotChanges.Text = "Shot changes";
             // 
@@ -207,7 +207,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.checkBoxSnapToShotChanges.Location = new System.Drawing.Point(10, 22);
             this.checkBoxSnapToShotChanges.Name = "checkBoxSnapToShotChanges";
             this.checkBoxSnapToShotChanges.Size = new System.Drawing.Size(166, 19);
-            this.checkBoxSnapToShotChanges.TabIndex = 1;
+            this.checkBoxSnapToShotChanges.TabIndex = 11;
             this.checkBoxSnapToShotChanges.Text = "Snap cues to shot changes";
             this.checkBoxSnapToShotChanges.UseVisualStyleBackColor = true;
             this.checkBoxSnapToShotChanges.CheckedChanged += new System.EventHandler(this.checkBoxSnapToShotChanges_CheckedChanged);
@@ -229,7 +229,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonImportShotChanges.Location = new System.Drawing.Point(23, 18);
             this.buttonImportShotChanges.Name = "buttonImportShotChanges";
             this.buttonImportShotChanges.Size = new System.Drawing.Size(221, 23);
-            this.buttonImportShotChanges.TabIndex = 2;
+            this.buttonImportShotChanges.TabIndex = 12;
             this.buttonImportShotChanges.Text = "Generate / import shot changes...";
             this.buttonImportShotChanges.UseVisualStyleBackColor = true;
             this.buttonImportShotChanges.Click += new System.EventHandler(this.buttonImportShotChanges_Click);
@@ -249,7 +249,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonEditProfile.Location = new System.Drawing.Point(11, 279);
             this.buttonEditProfile.Name = "buttonEditProfile";
             this.buttonEditProfile.Size = new System.Drawing.Size(178, 28);
-            this.buttonEditProfile.TabIndex = 3;
+            this.buttonEditProfile.TabIndex = 20;
             this.buttonEditProfile.Text = "Edit profile...";
             this.buttonEditProfile.UseVisualStyleBackColor = true;
             this.buttonEditProfile.Click += new System.EventHandler(this.buttonEditProfile_Click);

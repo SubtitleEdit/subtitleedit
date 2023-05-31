@@ -1,25 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic;
 
-namespace Nikse.SubtitleEdit.Forms
+namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
 {
     public partial class BeautifyTimeCodesProfile : Form
     {
+        private readonly double _frameRate;
+
         public BeautifyTimeCodesProfile(double frameRate)
         {
+            _frameRate = frameRate;
+
             UiUtil.PreInitialize(this);
             InitializeComponent();
             UiUtil.FixFonts(this);
-
+            
             if (frameRate > 0)
             {
                 cuesPreviewViewInCues.FrameRate = (float)frameRate;
@@ -30,16 +27,78 @@ namespace Nikse.SubtitleEdit.Forms
                 cuesPreviewViewChainingInCueOnShot.FrameRate = (float)frameRate;
                 cuesPreviewViewChainingOutCueOnShot.FrameRate = (float)frameRate;
             }
-
+            
             var language = LanguageSettings.Current.BeautifyTimeCodesProfile;
             Text = language.Title;
-            // TODO i18n
+            buttonCreateSimple.Text = language.CreateSimple;
+            toolStripMenuItemLoadPreset.Text = language.LoadPreset;
+            groupBoxGeneral.Text = language.General;
+            labelGap.Text = language.Gap;
+            labelGapSuffix.Text = language.GapSuffix;
+            groupBoxInCues.Text = language.InCues;
+            labelInCuesGap.Text = language.Gap;
+            labelInCuesZones.Text = language.Zones;
+            groupBoxOutCues.Text = language.OutCues;
+            labelOutCuesGap.Text = language.Gap;
+            labelOutCuesZones.Text = language.Zones;
+            groupBoxConnectedSubtitles.Text = language.ConnectedSubtitles;
+            tabPageConnectedSubtitlesInCueClosest.Text = language.InCueClosest;
+            labelConnectedSubtitlesInCueClosestGaps.Text = language.Gap;
+            tabPageConnectedSubtitlesOutCueClosest.Text = language.OutCueClosest;
+            labelConnectedSubtitlesOutCueClosestGaps.Text = language.Gap;
+            labelConnectedSubtitlesZones.Text = language.Zones;
+            labelConnectedSubtitlesTreatConnected.Text = language.TreadAsConnected;
+            labelConnectedSubtitlesTreatConnectedSuffix.Text = language.Milliseconds;
+            groupBoxChaining.Text = language.Chaining;
+            tabPageChainingGeneral.Text = language.General;
+            radioButtonChainingGeneralMaxGap.Text = language.MaxGap;
+            labelChainingGeneralMaxGapSuffix.Text = language.Milliseconds;
+            radioButtonChainingGeneralZones.Text = language.Zones;
+            labelChainingGeneralShotChangeBehavior.Text = language.ShotChangeBehavior;
+            comboBoxChainingGeneralShotChangeBehavior.Items.Clear();
+            comboBoxChainingGeneralShotChangeBehavior.Items.Add(language.DontChain);
+            comboBoxChainingGeneralShotChangeBehavior.Items.Add(language.ExtendCrossingShotChange);
+            comboBoxChainingGeneralShotChangeBehavior.Items.Add(language.ExtendUntilShotChange);
+            radioButtonChainingInCueOnShotMaxGap.Text = language.MaxGap;
+            labelChainingInCueOnShotMaxGapSuffix.Text = language.Milliseconds;
+            radioButtonChainingInCueOnShotZones.Text = language.Zones;
+            radioButtonChainingOutCueOnShotMaxGap.Text = language.MaxGap;
+            labelChainingOutCueOnShotMaxGapSuffix.Text = language.Milliseconds;
+            radioButtonChainingOutCueOnShotZones.Text = language.Zones;
 
-            LoadSettings();
+            cuesPreviewViewInCues.PreviewText = language.SubtitlePreviewText;
+            cuesPreviewViewOutCues.PreviewText = language.SubtitlePreviewText;
+            cuesPreviewViewConnectedSubtitlesInCueClosest.PreviewText = language.SubtitlePreviewText;
+            cuesPreviewViewConnectedSubtitlesOutCueClosest.PreviewText = language.SubtitlePreviewText;
+            cuesPreviewViewChainingGeneral.PreviewText = language.SubtitlePreviewText;
+            cuesPreviewViewChainingInCueOnShot.PreviewText = language.SubtitlePreviewText;
+            cuesPreviewViewChainingOutCueOnShot.PreviewText = language.SubtitlePreviewText;
+
+            numericUpDownGap.Left = labelGap.Left + labelGap.Width + 12;
+            labelGapSuffix.Left = numericUpDownGap.Left + numericUpDownGap.Width + 6;
+
+            numericUpDownConnectedSubtitlesTreatConnected.Left = Math.Max(labelConnectedSubtitlesTreatConnected.Left + labelConnectedSubtitlesTreatConnected.Width + 6, numericUpDownConnectedSubtitlesTreatConnected.Left);
+            labelConnectedSubtitlesTreatConnectedSuffix.Left = numericUpDownConnectedSubtitlesTreatConnected.Left + numericUpDownConnectedSubtitlesTreatConnected.Width + 6;
+
+            var comboBoxRight = comboBoxChainingGeneralShotChangeBehavior.Right;
+            comboBoxChainingGeneralShotChangeBehavior.Left = Math.Max(labelChainingGeneralShotChangeBehavior.Left + labelChainingGeneralShotChangeBehavior.Width + 6, comboBoxChainingGeneralShotChangeBehavior.Left);
+            comboBoxChainingGeneralShotChangeBehavior.Width = comboBoxRight - comboBoxChainingGeneralShotChangeBehavior.Left;
+
+            foreach (BeautifyTimeCodesSettings.BeautifyTimeCodesProfile.Preset preset in Enum.GetValues(typeof(BeautifyTimeCodesSettings.BeautifyTimeCodesProfile.Preset)))
+            {
+                var toolStripMenuItem = new ToolStripMenuItem(UiUtil.GetBeautifyTimeCodesProfilePresetName(preset));
+                toolStripMenuItem.Click += (sender, args) =>
+                {
+                    ResetSettings(preset);
+                };
+                toolStripMenuItemLoadPreset.DropDownItems.Add(toolStripMenuItem);
+            }
 
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             UiUtil.FixLargeFonts(this, buttonOK);
+
+            LoadSettings();
         }
 
         private void LoadSettings()
@@ -204,24 +263,9 @@ namespace Nikse.SubtitleEdit.Forms
             DialogResult = DialogResult.OK;
         }
 
-        private void toolStripMenuItemLoadDefault_Click(object sender, EventArgs e)
-        {
-            ResetSettings(BeautifyTimeCodesSettings.BeautifyTimeCodesProfile.Preset.Default);
-        }
-
-        private void toolStripMenuItemLoadNetflix_Click(object sender, EventArgs e)
-        {
-            ResetSettings(BeautifyTimeCodesSettings.BeautifyTimeCodesProfile.Preset.Netflix);
-        }
-
-        private void toolStripMenuItemLoadSDI_Click(object sender, EventArgs e)
-        {
-            ResetSettings(BeautifyTimeCodesSettings.BeautifyTimeCodesProfile.Preset.SDI);
-        }
-
         private void ResetSettings(BeautifyTimeCodesSettings.BeautifyTimeCodesProfile.Preset preset)
         {
-            if (MessageBox.Show(this, "This will reset your current profile and replace all values with those of the selected preset. This cannot be undone.\n\nDo you want to continue?", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+            if (MessageBox.Show(this, LanguageSettings.Current.BeautifyTimeCodesProfile.ResetWarning, LanguageSettings.Current.General.Warning, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
             {
                 Configuration.Settings.BeautifyTimeCodes.Profile = new BeautifyTimeCodesSettings.BeautifyTimeCodesProfile(preset);
                 LoadSettings();
@@ -290,6 +334,17 @@ namespace Nikse.SubtitleEdit.Forms
             numericUpDownChainingGeneralLeftGreenZone.Minimum = numericUpDownChainingGeneralLeftRedZone.Value;
             numericUpDownChainingInCueOnShotLeftGreenZone.Minimum = numericUpDownChainingInCueOnShotLeftRedZone.Value;
             numericUpDownChainingOutCueOnShotRightGreenZone.Minimum = numericUpDownChainingOutCueOnShotRightRedZone.Value;
+        }
+
+        private void buttonCreateSimple_Click(object sender, EventArgs e)
+        {
+            using (var form = new BeautifyTimeCodesProfileSimple(_frameRate))
+            {
+                if (form.ShowDialog() == DialogResult.OK)
+                {
+                    LoadSettings();
+                }
+            }
         }
     }
 }
