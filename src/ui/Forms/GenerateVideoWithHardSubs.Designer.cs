@@ -153,7 +153,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.contextMenuStripGenerate.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.promptParameterBeforeGenerateToolStripMenuItem});
             this.contextMenuStripGenerate.Name = "contextMenuStripGenerate";
-            this.contextMenuStripGenerate.Size = new System.Drawing.Size(290, 48);
+            this.contextMenuStripGenerate.Size = new System.Drawing.Size(290, 26);
             // 
             // promptParameterBeforeGenerateToolStripMenuItem
             // 
@@ -670,7 +670,8 @@ namespace Nikse.SubtitleEdit.Forms
             "h264_nvenc",
             "hevc_nvenc",
             "h264_amf",
-            "hevc_amf"});
+            "hevc_amf",
+            "prores_ks"});
             this.comboBoxVideoEncoding.Location = new System.Drawing.Point(95, 58);
             this.comboBoxVideoEncoding.Name = "comboBoxVideoEncoding";
             this.comboBoxVideoEncoding.Size = new System.Drawing.Size(121, 21);
