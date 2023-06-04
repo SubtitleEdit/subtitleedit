@@ -647,11 +647,20 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 _panelControls.Visible = true;
                 _panelControls.BringToFront();
-                _panelSubtitle.Height -= ControlsHeight;
 
-                if (PanelPlayer.Dock == DockStyle.Fill)
+                var useCompleteFullscreen = VideoPlayer is LibMpvDynamic && Configuration.Settings.General.MpvHandlesPreviewText;
+                if (useCompleteFullscreen && PanelPlayer.Dock == DockStyle.Fill)
                 {
-                    PanelPlayer.Dock = DockStyle.None;
+                    // keep fullscreen
+                }
+                else
+                {
+                    _panelSubtitle.Height -= ControlsHeight;
+
+                    if (PanelPlayer.Dock == DockStyle.Fill)
+                    {
+                        PanelPlayer.Dock = DockStyle.None;
+                    }
                 }
             }
 
@@ -1270,6 +1279,16 @@ namespace Nikse.SubtitleEdit.Controls
             _pictureBoxFullscreenOver.Visible = false;
             _pictureBoxFullscreenDown.Visible = false;
             _pictureBoxFullscreen.Visible = false;
+        }
+
+        public void SetFullFixed()
+        {
+            var useCompleteFullscreen = VideoPlayer is LibMpvDynamic && Configuration.Settings.General.MpvHandlesPreviewText;
+            if (useCompleteFullscreen)
+            {
+                PanelPlayer.Dock = DockStyle.Fill;
+                _panelControls.BringToFront();
+            }
         }
 
         public void ShowFullScreenControls()
