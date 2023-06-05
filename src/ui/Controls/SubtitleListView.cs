@@ -34,6 +34,9 @@ namespace Nikse.SubtitleEdit.Controls
             return SubtitleColumns.IndexOf(column);
         }
 
+        public const int InvalidIndex = -1;
+        public int SelectedIndex => SelectedIndices.Count == 1 ? SelectedIndices[0] : InvalidIndex;
+
         public int ColumnIndexNumber { get; private set; }
         public int ColumnIndexStart { get; private set; }
         public int ColumnIndexEnd { get; private set; }
