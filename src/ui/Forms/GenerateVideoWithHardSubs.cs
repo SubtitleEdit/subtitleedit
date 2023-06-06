@@ -296,6 +296,11 @@ namespace Nikse.SubtitleEdit.Forms
 
             using (var saveDialog = new SaveFileDialog { FileName = SuggestNewVideoFileName(), Filter = "MP4|*.mp4|Matroska|*.mkv|WebM|*.webm", AddExtension = true })
             {
+                if (comboBoxVideoEncoding.Text == "prores_ks")
+                {
+                    saveDialog.Filter = "mov|*.mov|Matroska|*.mkv|Material eXchange Format|*.mxf";
+                }
+
                 if (saveDialog.ShowDialog(this) != DialogResult.OK)
                 {
                     buttonGenerate.Enabled = true;
@@ -475,6 +480,10 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 fileName += ".vp9";
             }
+            else if (comboBoxVideoEncoding.Text == "prores_ks")
+            {
+                fileName += ".ProRes";
+            }
             else
             {
                 fileName += ".x264";
@@ -483,6 +492,11 @@ namespace Nikse.SubtitleEdit.Forms
             if (checkBoxCut.Enabled && checkBoxCut.Checked)
             {
                 fileName += $".{numericUpDownCutFromHours.Text}-{numericUpDownCutFromMinutes.Text}-{numericUpDownCutFromSeconds.Text}_{numericUpDownCutToHours.Text}-{numericUpDownCutToMinutes.Text}-{numericUpDownCutToSeconds.Text}";
+            }
+
+            if (comboBoxVideoEncoding.Text == "prores_ks")
+            {
+                return fileName.Replace(".", "_") + ".mov";
             }
 
             return fileName.Replace(".", "_") + ".mp4";
@@ -830,6 +844,10 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 UiUtil.OpenUrl("https://trac.ffmpeg.org/wiki/HWAccelIntro");
             }
+            else if (comboBoxVideoEncoding.Text == "prores_ks")
+            {
+                UiUtil.OpenUrl("https://ottverse.com/ffmpeg-convert-to-apple-prores-422-4444-hq");
+            }
             else
             {
                 UiUtil.OpenUrl("http://trac.ffmpeg.org/wiki/Encode/H.264");
@@ -869,7 +887,10 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxCrf.Items.Add(string.Empty);
             labelTune.Visible = true;
             comboBoxTune.Visible = true;
-            labelCRF.Text = "CRF";
+            labelCRF.Visible = true;
+            comboBoxCrf.Visible = true;
+            labelPreset.Text = LanguageSettings.Current.GenerateVideoWithBurnedInSubs.Preset;
+            labelCRF.Text = LanguageSettings.Current.GenerateVideoWithBurnedInSubs.Crf;
             labelCrfHint.Text = string.Empty;
 
             FillPresets(comboBoxVideoEncoding.Text);
@@ -921,6 +942,19 @@ namespace Nikse.SubtitleEdit.Forms
                 labelCrfHint.Text = "0=best quality, 10=best speed";
                 comboBoxCrf.Text = string.Empty;
             }
+            else if (comboBoxVideoEncoding.Text == "prores_ks")
+            {
+                labelPreset.Text = "Profile";
+                comboBoxPreset.SelectedItem = 2;
+
+                // https://ottverse.com/ffmpeg-convert-to-apple-prores-422-4444-hq/
+
+                labelCRF.Visible = false;
+                comboBoxCrf.Visible = false;
+
+                labelTune.Visible = false;
+                comboBoxTune.Visible = false;
+            }
             else
             {
                 for (var i = 17; i <= 28; i++)
@@ -931,7 +965,6 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxCrf.Text = "23";
             }
             comboBoxCrf.EndUpdate();
-
         }
 
         private void FillTuneIn(string videoCodec)
@@ -1006,12 +1039,16 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (videoCodec == "hevc_amf")
             {
-                items = new List<string>
-                {
-                    string.Empty,
-                };
+                items = new List<string> { string.Empty };
             }
             else if (videoCodec == "libvpx-vp9")
+            {
+                items = new List<string> { string.Empty };
+                labelTune.Visible = false;
+                comboBoxTune.Visible = false;
+                comboBoxTune.Text = string.Empty;
+            }
+            else if (videoCodec == "prores_ks")
             {
                 items = new List<string> { string.Empty };
                 labelTune.Visible = false;
@@ -1110,6 +1147,18 @@ namespace Nikse.SubtitleEdit.Forms
             else if (videoCodec == "libvpx-vp9")
             {
                 items = new List<string> { string.Empty };
+            }
+            else if (videoCodec == "prores_ks")
+            {
+                items = new List<string>
+                {
+                    "proxy",
+                    "lt",
+                    "standard",
+                    "hq",
+                    "4444",
+                    "4444xq",
+                };
             }
 
             comboBoxPreset.Items.Clear();

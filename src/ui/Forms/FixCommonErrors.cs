@@ -822,6 +822,13 @@ namespace Nikse.SubtitleEdit.Forms
             _newLog.Clear();
 
             Subtitle = new Subtitle(FixedSubtitle, false);
+
+            if (listView1.Items[IndexFixDoubleDash].Checked)
+            {
+                var fixItem = (FixItem)listView1.Items[IndexFixDoubleDash].Tag;
+                fixItem.Action.Invoke();
+            }
+
             if (listView1.Items[IndexFixOcrErrorsViaReplaceList].Checked)
             {
                 var fixItem = (FixItem)listView1.Items[IndexFixOcrErrorsViaReplaceList].Tag;

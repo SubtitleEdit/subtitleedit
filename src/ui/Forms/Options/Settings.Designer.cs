@@ -4112,7 +4112,7 @@
             // 
             // pictureBoxEbuProperties
             // 
-            this.pictureBoxEbuProperties.Location = new System.Drawing.Point(323, 398);
+            this.pictureBoxEbuProperties.Location = new System.Drawing.Point(323, 400);
             this.pictureBoxEbuProperties.Name = "pictureBoxEbuProperties";
             this.pictureBoxEbuProperties.Size = new System.Drawing.Size(32, 32);
             this.pictureBoxEbuProperties.TabIndex = 59;
@@ -4120,7 +4120,7 @@
             // 
             // pictureBoxWebVttProperties
             // 
-            this.pictureBoxWebVttProperties.Location = new System.Drawing.Point(285, 398);
+            this.pictureBoxWebVttProperties.Location = new System.Drawing.Point(285, 400);
             this.pictureBoxWebVttProperties.Name = "pictureBoxWebVttProperties";
             this.pictureBoxWebVttProperties.Size = new System.Drawing.Size(32, 32);
             this.pictureBoxWebVttProperties.TabIndex = 58;
@@ -4128,7 +4128,7 @@
             // 
             // pictureBoxIttProperties
             // 
-            this.pictureBoxIttProperties.Location = new System.Drawing.Point(247, 398);
+            this.pictureBoxIttProperties.Location = new System.Drawing.Point(247, 400);
             this.pictureBoxIttProperties.Name = "pictureBoxIttProperties";
             this.pictureBoxIttProperties.Size = new System.Drawing.Size(32, 32);
             this.pictureBoxIttProperties.TabIndex = 57;
@@ -4136,7 +4136,7 @@
             // 
             // pictureBoxToggleVideo
             // 
-            this.pictureBoxToggleVideo.Location = new System.Drawing.Point(209, 398);
+            this.pictureBoxToggleVideo.Location = new System.Drawing.Point(209, 400);
             this.pictureBoxToggleVideo.Name = "pictureBoxToggleVideo";
             this.pictureBoxToggleVideo.Size = new System.Drawing.Size(32, 32);
             this.pictureBoxToggleVideo.TabIndex = 56;
@@ -4144,7 +4144,7 @@
             // 
             // pictureBoxToggleWaveform
             // 
-            this.pictureBoxToggleWaveform.Location = new System.Drawing.Point(171, 398);
+            this.pictureBoxToggleWaveform.Location = new System.Drawing.Point(171, 400);
             this.pictureBoxToggleWaveform.Name = "pictureBoxToggleWaveform";
             this.pictureBoxToggleWaveform.Size = new System.Drawing.Size(32, 32);
             this.pictureBoxToggleWaveform.TabIndex = 55;
@@ -4152,7 +4152,7 @@
             // 
             // pictureBoxAssaDraw
             // 
-            this.pictureBoxAssaDraw.Location = new System.Drawing.Point(133, 399);
+            this.pictureBoxAssaDraw.Location = new System.Drawing.Point(133, 400);
             this.pictureBoxAssaDraw.Name = "pictureBoxAssaDraw";
             this.pictureBoxAssaDraw.Size = new System.Drawing.Size(32, 32);
             this.pictureBoxAssaDraw.TabIndex = 54;
@@ -4160,7 +4160,7 @@
             // 
             // pictureBoxAssAttachments
             // 
-            this.pictureBoxAssAttachments.Location = new System.Drawing.Point(95, 399);
+            this.pictureBoxAssAttachments.Location = new System.Drawing.Point(95, 400);
             this.pictureBoxAssAttachments.Name = "pictureBoxAssAttachments";
             this.pictureBoxAssAttachments.Size = new System.Drawing.Size(32, 32);
             this.pictureBoxAssAttachments.TabIndex = 53;
@@ -4168,7 +4168,7 @@
             // 
             // pictureBoxAssProperties
             // 
-            this.pictureBoxAssProperties.Location = new System.Drawing.Point(57, 399);
+            this.pictureBoxAssProperties.Location = new System.Drawing.Point(57, 400);
             this.pictureBoxAssProperties.Name = "pictureBoxAssProperties";
             this.pictureBoxAssProperties.Size = new System.Drawing.Size(32, 32);
             this.pictureBoxAssProperties.TabIndex = 52;
@@ -4176,7 +4176,7 @@
             // 
             // pictureBoxAssStyleManager
             // 
-            this.pictureBoxAssStyleManager.Location = new System.Drawing.Point(19, 399);
+            this.pictureBoxAssStyleManager.Location = new System.Drawing.Point(19, 400);
             this.pictureBoxAssStyleManager.Name = "pictureBoxAssStyleManager";
             this.pictureBoxAssStyleManager.Size = new System.Drawing.Size(32, 32);
             this.pictureBoxAssStyleManager.TabIndex = 51;
@@ -4185,7 +4185,7 @@
             // labelToolbarIconTheme
             // 
             this.labelToolbarIconTheme.AutoSize = true;
-            this.labelToolbarIconTheme.Location = new System.Drawing.Point(487, 276);
+            this.labelToolbarIconTheme.Location = new System.Drawing.Point(15, 346);
             this.labelToolbarIconTheme.Name = "labelToolbarIconTheme";
             this.labelToolbarIconTheme.Size = new System.Drawing.Size(39, 13);
             this.labelToolbarIconTheme.TabIndex = 50;
@@ -4195,7 +4195,7 @@
             // 
             this.comboBoxToolbarIconTheme.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxToolbarIconTheme.FormattingEnabled = true;
-            this.comboBoxToolbarIconTheme.Location = new System.Drawing.Point(487, 291);
+            this.comboBoxToolbarIconTheme.Location = new System.Drawing.Point(15, 361);
             this.comboBoxToolbarIconTheme.Name = "comboBoxToolbarIconTheme";
             this.comboBoxToolbarIconTheme.Size = new System.Drawing.Size(202, 21);
             this.comboBoxToolbarIconTheme.TabIndex = 49;

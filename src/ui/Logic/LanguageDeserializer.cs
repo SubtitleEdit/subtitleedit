@@ -6784,6 +6784,12 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/AssaColor":
                     language.Settings.AssaColor = reader.Value;
                     break;
+                case "Settings/Theme":
+                    language.Settings.Theme = reader.Value;
+                    break;
+                case "Settings/Automatic":
+                    language.Settings.Automatic = reader.Value;
+                    break;
                 case "Settings/DarkTheme":
                     language.Settings.DarkTheme = reader.Value;
                     break;
