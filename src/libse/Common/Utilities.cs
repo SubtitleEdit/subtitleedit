@@ -869,7 +869,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             return GetOptimalDisplayMilliseconds(text, Configuration.Settings.General.SubtitleOptimalCharactersPerSeconds);
         }
 
-        public static double GetOptimalDisplayMilliseconds(string text, double optimalCharactersPerSecond, bool onlyOptimal = false)
+        public static double GetOptimalDisplayMilliseconds(string text, double optimalCharactersPerSecond, bool onlyOptimal = false, bool enforceDurationLimits = true)
         {
             if (optimalCharactersPerSecond < 2 || optimalCharactersPerSecond > 100)
             {
@@ -894,12 +894,12 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
             }
 
-            if (duration < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
+            if (enforceDurationLimits && duration < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
             {
                 duration = Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds;
             }
 
-            if (duration > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
+            if (enforceDurationLimits && duration > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
             {
                 duration = Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds;
             }

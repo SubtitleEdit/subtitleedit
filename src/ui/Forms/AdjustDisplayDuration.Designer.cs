@@ -49,6 +49,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.checkBoxExtendOnly = new System.Windows.Forms.CheckBox();
             this.checkBoxCheckShotChanges = new System.Windows.Forms.CheckBox();
+            this.checkBoxEnforceDurationLimits = new System.Windows.Forms.CheckBox();
             this.groupBoxAdjustVia.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxCharsSec)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSeconds)).BeginInit();
@@ -123,7 +124,7 @@
             this.labelNote.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelNote.AutoSize = true;
             this.labelNote.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.labelNote.Location = new System.Drawing.Point(10, 270);
+            this.labelNote.Location = new System.Drawing.Point(10, 275);
             this.labelNote.Name = "labelNote";
             this.labelNote.Size = new System.Drawing.Size(279, 13);
             this.labelNote.TabIndex = 7;
@@ -152,7 +153,7 @@
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(537, 265);
+            this.buttonCancel.Location = new System.Drawing.Point(537, 270);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 21;
@@ -163,7 +164,7 @@
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(456, 265);
+            this.buttonOK.Location = new System.Drawing.Point(456, 270);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 20;
@@ -337,18 +338,30 @@
             // 
             this.checkBoxCheckShotChanges.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.checkBoxCheckShotChanges.AutoSize = true;
-            this.checkBoxCheckShotChanges.Location = new System.Drawing.Point(12, 242);
+            this.checkBoxCheckShotChanges.Location = new System.Drawing.Point(12, 247);
             this.checkBoxCheckShotChanges.Name = "checkBoxCheckShotChanges";
             this.checkBoxCheckShotChanges.Size = new System.Drawing.Size(122, 17);
-            this.checkBoxCheckShotChanges.TabIndex = 23;
+            this.checkBoxCheckShotChanges.TabIndex = 19;
             this.checkBoxCheckShotChanges.Text = "Check shot changes";
             this.checkBoxCheckShotChanges.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxEnforceDurationLimits
+            // 
+            this.checkBoxEnforceDurationLimits.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.checkBoxEnforceDurationLimits.AutoSize = true;
+            this.checkBoxEnforceDurationLimits.Location = new System.Drawing.Point(12, 224);
+            this.checkBoxEnforceDurationLimits.Name = "checkBoxEnforceDurationLimits";
+            this.checkBoxEnforceDurationLimits.Size = new System.Drawing.Size(217, 17);
+            this.checkBoxEnforceDurationLimits.TabIndex = 18;
+            this.checkBoxEnforceDurationLimits.Text = "Enforce minimum and maximum duration";
+            this.checkBoxEnforceDurationLimits.UseVisualStyleBackColor = true;
             // 
             // AdjustDisplayDuration
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(624, 302);
+            this.ClientSize = new System.Drawing.Size(624, 307);
+            this.Controls.Add(this.checkBoxEnforceDurationLimits);
             this.Controls.Add(this.checkBoxCheckShotChanges);
             this.Controls.Add(this.checkBoxExtendOnly);
             this.Controls.Add(this.label1);
@@ -411,5 +424,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.CheckBox checkBoxExtendOnly;
         private System.Windows.Forms.CheckBox checkBoxCheckShotChanges;
+        private System.Windows.Forms.CheckBox checkBoxEnforceDurationLimits;
     }
 }
