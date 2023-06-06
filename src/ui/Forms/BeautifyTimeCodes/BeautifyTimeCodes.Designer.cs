@@ -61,7 +61,7 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             this.buttonOK.Location = new System.Drawing.Point(415, 350);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
-            this.buttonOK.TabIndex = 21;
+            this.buttonOK.TabIndex = 30;
             this.buttonOK.Text = "OK";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
@@ -73,7 +73,7 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             this.buttonCancel.Location = new System.Drawing.Point(496, 350);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
-            this.buttonCancel.TabIndex = 22;
+            this.buttonCancel.TabIndex = 31;
             this.buttonCancel.Text = "Cancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             // 
@@ -261,7 +261,7 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             this.progressBar.Location = new System.Drawing.Point(12, 316);
             this.progressBar.Name = "progressBar";
             this.progressBar.Size = new System.Drawing.Size(558, 23);
-            this.progressBar.TabIndex = 5;
+            this.progressBar.TabIndex = 21;
             // 
             // BeautifyTimeCodes
             // 
