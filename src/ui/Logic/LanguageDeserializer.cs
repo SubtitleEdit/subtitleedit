@@ -6904,26 +6904,14 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/AdjustSnapStartToNextShotChange":
                     language.Settings.AdjustSnapStartToNextShotChange = reader.Value;
                     break;
-                case "Settings/AdjustSnapStartToNextShotChangeWithGap":
-                    language.Settings.AdjustSnapStartToNextShotChangeWithGap = reader.Value;
-                    break;
                 case "Settings/AdjustSnapEndToPreviousShotChange":
                     language.Settings.AdjustSnapEndToPreviousShotChange = reader.Value;
-                    break;
-                case "Settings/AdjustSnapEndToPreviousShotChangeWithGap":
-                    language.Settings.AdjustSnapEndToPreviousShotChangeWithGap = reader.Value;
                     break;
                 case "Settings/AdjustExtendToNextShotChange":
                     language.Settings.AdjustExtendToNextShotChange = reader.Value;
                     break;
-                case "Settings/AdjustExtendToNextShotChangeWithGap":
-                    language.Settings.AdjustExtendToNextShotChangeWithGap = reader.Value;
-                    break;
                 case "Settings/AdjustExtendToPreviousShotChange":
                     language.Settings.AdjustExtendToPreviousShotChange = reader.Value;
-                    break;
-                case "Settings/AdjustExtendToPreviousShotChangeWithGap":
-                    language.Settings.AdjustExtendToPreviousShotChangeWithGap = reader.Value;
                     break;
                 case "Settings/AdjustExtendToNextSubtitle":
                     language.Settings.AdjustExtendToNextSubtitle = reader.Value;

@@ -1702,13 +1702,9 @@ namespace Nikse.SubtitleEdit.Forms.Options
             AddNode(createAndAdjustNode, language.RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed, nameof(Configuration.Settings.Shortcuts.GeneralAutoCalcCurrentDurationByOptimalReadingSpeed));
             AddNode(createAndAdjustNode, language.RecalculateDurationOfCurrentSubtitleByMinReadingSpeed, nameof(Configuration.Settings.Shortcuts.GeneralAutoCalcCurrentDurationByMinReadingSpeed));
             AddNode(createAndAdjustNode, language.AdjustSnapStartToNextShotChange, nameof(Configuration.Settings.Shortcuts.MainAdjustSnapStartToNextShotChange));
-            AddNode(createAndAdjustNode, language.AdjustSnapStartToNextShotChangeWithGap, nameof(Configuration.Settings.Shortcuts.MainAdjustSnapStartToNextShotChangeWithGap));
             AddNode(createAndAdjustNode, language.AdjustSnapEndToPreviousShotChange, nameof(Configuration.Settings.Shortcuts.MainAdjustSnapEndToPreviousShotChange));
-            AddNode(createAndAdjustNode, language.AdjustSnapEndToPreviousShotChangeWithGap, nameof(Configuration.Settings.Shortcuts.MainAdjustSnapEndToPreviousShotChangeWithGap));
             AddNode(createAndAdjustNode, language.AdjustExtendToNextShotChange, nameof(Configuration.Settings.Shortcuts.MainAdjustExtendToNextShotChange));
-            AddNode(createAndAdjustNode, language.AdjustExtendToNextShotChangeWithGap, nameof(Configuration.Settings.Shortcuts.MainAdjustExtendToNextShotChangeWithGap));
             AddNode(createAndAdjustNode, language.AdjustExtendToPreviousShotChange, nameof(Configuration.Settings.Shortcuts.MainAdjustExtendToPreviousShotChange));
-            AddNode(createAndAdjustNode, language.AdjustExtendToPreviousShotChangeWithGap, nameof(Configuration.Settings.Shortcuts.MainAdjustExtendToPreviousShotChangeWithGap));
             AddNode(createAndAdjustNode, language.AdjustExtendToNextSubtitle, nameof(Configuration.Settings.Shortcuts.MainAdjustExtendToNextSubtitle));
             AddNode(createAndAdjustNode, language.AdjustExtendToPreviousSubtitle, nameof(Configuration.Settings.Shortcuts.MainAdjustExtendToPreviousSubtitle));
             AddNode(createAndAdjustNode, language.AdjustExtendToNextSubtitleMinusChainingGap, nameof(Configuration.Settings.Shortcuts.MainAdjustExtendToNextSubtitleMinusChainingGap));

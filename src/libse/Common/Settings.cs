@@ -2536,13 +2536,9 @@ $HorzAlign          =   Center
         public string MoveEndOneFrameBackKeepGapNext { get; set; }
         public string MoveEndOneFrameForwardKeepGapNext { get; set; }
         public string MainAdjustSnapStartToNextShotChange { get; set; }
-        public string MainAdjustSnapStartToNextShotChangeWithGap { get; set; }
         public string MainAdjustSnapEndToPreviousShotChange { get; set; }
-        public string MainAdjustSnapEndToPreviousShotChangeWithGap { get; set; }
         public string MainAdjustExtendToNextShotChange { get; set; }
-        public string MainAdjustExtendToNextShotChangeWithGap { get; set; }
         public string MainAdjustExtendToPreviousShotChange { get; set; }
-        public string MainAdjustExtendToPreviousShotChangeWithGap { get; set; }
         public string MainAdjustExtendToNextSubtitle { get; set; }
         public string MainAdjustExtendToPreviousSubtitle { get; set; }
         public string MainAdjustExtendToNextSubtitleMinusChainingGap { get; set; }
@@ -10269,22 +10265,10 @@ $HorzAlign          =   Center
                     shortcuts.MainAdjustSnapStartToNextShotChange = subNode.InnerText;
                 }
 
-                subNode = node.SelectSingleNode("MainAdjustSnapStartToNextShotChangeWithGap");
-                if (subNode != null)
-                {
-                    shortcuts.MainAdjustSnapStartToNextShotChangeWithGap = subNode.InnerText;
-                }
-
                 subNode = node.SelectSingleNode("MainAdjustSnapEndToPreviousShotChange");
                 if (subNode != null)
                 {
                     shortcuts.MainAdjustSnapEndToPreviousShotChange = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainAdjustSnapEndToPreviousShotChangeWithGap");
-                if (subNode != null)
-                {
-                    shortcuts.MainAdjustSnapEndToPreviousShotChangeWithGap = subNode.InnerText;
                 }
 
                 subNode = node.SelectSingleNode("MainAdjustExtendToNextShotChange");
@@ -10293,22 +10277,10 @@ $HorzAlign          =   Center
                     shortcuts.MainAdjustExtendToNextShotChange = subNode.InnerText;
                 }
 
-                subNode = node.SelectSingleNode("MainAdjustExtendToNextShotChangeWithGap");
-                if (subNode != null)
-                {
-                    shortcuts.MainAdjustExtendToNextShotChangeWithGap = subNode.InnerText;
-                }
-
                 subNode = node.SelectSingleNode("MainAdjustExtendToPreviousShotChange");
                 if (subNode != null)
                 {
                     shortcuts.MainAdjustExtendToPreviousShotChange = subNode.InnerText;
-                }
-
-                subNode = node.SelectSingleNode("MainAdjustExtendToPreviousShotChangeWithGap");
-                if (subNode != null)
-                {
-                    shortcuts.MainAdjustExtendToPreviousShotChangeWithGap = subNode.InnerText;
                 }
 
                 subNode = node.SelectSingleNode("MainAdjustExtendToNextSubtitle");
@@ -12068,13 +12040,9 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("MoveEndOneFrameBackKeepGapNext", shortcuts.MoveEndOneFrameBackKeepGapNext);
             textWriter.WriteElementString("MoveEndOneFrameForwardKeepGapNext", shortcuts.MoveEndOneFrameForwardKeepGapNext);
             textWriter.WriteElementString("MainAdjustSnapStartToNextShotChange", shortcuts.MainAdjustSnapStartToNextShotChange);
-            textWriter.WriteElementString("MainAdjustSnapStartToNextShotChangeWithGap", shortcuts.MainAdjustSnapStartToNextShotChangeWithGap);
             textWriter.WriteElementString("MainAdjustSnapEndToPreviousShotChange", shortcuts.MainAdjustSnapEndToPreviousShotChange);
-            textWriter.WriteElementString("MainAdjustSnapEndToPreviousShotChangeWithGap", shortcuts.MainAdjustSnapEndToPreviousShotChangeWithGap);
             textWriter.WriteElementString("MainAdjustExtendToNextShotChange", shortcuts.MainAdjustExtendToNextShotChange);
-            textWriter.WriteElementString("MainAdjustExtendToNextShotChangeWithGap", shortcuts.MainAdjustExtendToNextShotChangeWithGap);
             textWriter.WriteElementString("MainAdjustExtendToPreviousShotChange", shortcuts.MainAdjustExtendToPreviousShotChange);
-            textWriter.WriteElementString("MainAdjustExtendToPreviousShotChangeWithGap", shortcuts.MainAdjustExtendToPreviousShotChangeWithGap);
             textWriter.WriteElementString("MainAdjustExtendToNextSubtitle", shortcuts.MainAdjustExtendToNextSubtitle);
             textWriter.WriteElementString("MainAdjustExtendToPreviousSubtitle", shortcuts.MainAdjustExtendToPreviousSubtitle);
             textWriter.WriteElementString("MainAdjustExtendToNextSubtitleMinusChainingGap", shortcuts.MainAdjustExtendToNextSubtitleMinusChainingGap);

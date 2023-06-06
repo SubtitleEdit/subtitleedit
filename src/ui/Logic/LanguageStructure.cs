@@ -2717,13 +2717,9 @@ namespace Nikse.SubtitleEdit.Logic
             public string AdjustSetEndAndOffsetTheRest { get; set; }
             public string AdjustSetEndAndOffsetTheRestAndGoToNext { get; set; }
             public string AdjustSnapStartToNextShotChange { get; set; }
-            public string AdjustSnapStartToNextShotChangeWithGap { get; set; }
             public string AdjustSnapEndToPreviousShotChange { get; set; }
-            public string AdjustSnapEndToPreviousShotChangeWithGap { get; set; }
             public string AdjustExtendToNextShotChange { get; set; }
-            public string AdjustExtendToNextShotChangeWithGap { get; set; }
             public string AdjustExtendToPreviousShotChange { get; set; }
-            public string AdjustExtendToPreviousShotChangeWithGap { get; set; }
             public string AdjustExtendToNextSubtitle { get; set; }
             public string AdjustExtendToPreviousSubtitle { get; set; }
             public string AdjustExtendToNextSubtitleMinusChainingGap { get; set; }
