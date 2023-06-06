@@ -2,6 +2,7 @@
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Core.Forms;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 
 namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
@@ -76,6 +77,7 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             if (numericUpDownSafeZone.Value < numericUpDownOffset.Value)
             {
                 MessageBox.Show(this, LanguageSettings.Current.BeautifyTimeCodesProfile.OffsetSafeZoneError, LanguageSettings.Current.General.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                DialogResult = DialogResult.None;
                 return;
             }
             

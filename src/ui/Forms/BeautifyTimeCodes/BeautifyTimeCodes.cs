@@ -248,12 +248,14 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             if (checkBoxExtractExactTimeCodes.Checked && _timeCodes.Count == 0) // we check the extract checkbox here, otherwise it should just calculate the time codes based on frame rate
             {
                 MessageBox.Show(this, string.Format(LanguageSettings.Current.BeautifyTimeCodes.NoTimeCodesLoadedError, LanguageSettings.Current.BeautifyTimeCodes.ExtractTimeCodes), LanguageSettings.Current.General.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                DialogResult = DialogResult.None;
                 return;
             }
 
             if (checkBoxSnapToShotChanges.Checked && _shotChanges.Count == 0)
             {
                 MessageBox.Show(this, string.Format(LanguageSettings.Current.BeautifyTimeCodes.NoShotChangesLoadedError, LanguageSettings.Current.BeautifyTimeCodes.ImportShotChanges), LanguageSettings.Current.General.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                DialogResult = DialogResult.None;
                 return;
             }
 
