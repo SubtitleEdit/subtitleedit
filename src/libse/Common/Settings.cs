@@ -341,6 +341,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public int AdjustDurationPercent { get; set; }
         public string AdjustDurationLast { get; set; }
         public bool AdjustDurationExtendOnly { get; set; }
+        public bool AdjustDurationExtendEnforceDurationLimits { get; set; }
         public bool AdjustDurationExtendCheckShotChanges { get; set; }
         public bool ChangeSpeedAllowOverlap { get; set; }
         public bool AutoBreakCommaBreakEarly { get; set; }
@@ -577,6 +578,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             AdjustDurationSeconds = 0.1m;
             AdjustDurationPercent = 120;
             AdjustDurationExtendOnly = true;
+            AdjustDurationExtendEnforceDurationLimits = true;
             AdjustDurationExtendCheckShotChanges = true;
             AutoBreakCommaBreakEarly = false;
             AutoBreakDashEarly = true;
@@ -6101,6 +6103,12 @@ $HorzAlign          =   Center
                 settings.Tools.AdjustDurationExtendOnly = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
+            subNode = node.SelectSingleNode("AdjustDurationExtendEnforceDurationLimits");
+            if (subNode != null)
+            {
+                settings.Tools.AdjustDurationExtendEnforceDurationLimits = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("AdjustDurationExtendCheckShotChanges");
             if (subNode != null)
             {
@@ -11175,6 +11183,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("AdjustDurationPercent", settings.Tools.AdjustDurationPercent.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AdjustDurationLast", settings.Tools.AdjustDurationLast);
                 textWriter.WriteElementString("AdjustDurationExtendOnly", settings.Tools.AdjustDurationExtendOnly.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("AdjustDurationExtendEnforceDurationLimits", settings.Tools.AdjustDurationExtendEnforceDurationLimits.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AdjustDurationExtendCheckShotChanges", settings.Tools.AdjustDurationExtendCheckShotChanges.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ChangeSpeedAllowOverlap", settings.Tools.ChangeSpeedAllowOverlap.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AutoBreakCommaBreakEarly", settings.Tools.AutoBreakCommaBreakEarly.ToString(CultureInfo.InvariantCulture));

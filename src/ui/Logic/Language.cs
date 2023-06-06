@@ -318,6 +318,7 @@ namespace Nikse.SubtitleEdit.Logic
                 Fixed = "Fixed",
                 Milliseconds = "Milliseconds",
                 ExtendOnly = "Extend only",
+                EnforceDurationLimits = "Enforce minimum and maximum duration",
                 CheckShotChanges = "Don't extend past shot changes",
             };
 
