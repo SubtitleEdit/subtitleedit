@@ -10706,6 +10706,18 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private void numericUpDownLayer_ValueChanged(object sender, EventArgs e)
+        {
+            var idx = _subtitleListViewIndex;
+            var p = _subtitle.GetParagraphOrDefault(idx);
+            if (p == null)
+            {
+                return;
+            }
+
+            p.Layer = (int)numericUpDownLayer.Value;
+        }
+
         public Point GetPositionInForm(Control ctrl)
         {
             Point p = ctrl.Location;
@@ -12843,6 +12855,9 @@ namespace Nikse.SubtitleEdit.Forms
             textBoxListViewText.Text = p.Text;
             textBoxListViewText.TextChanged += TextBoxListViewTextTextChanged;
             _listViewTextUndoLast = p.Text;
+            numericUpDownLayer.ValueChanged -= numericUpDownLayer_ValueChanged;
+            numericUpDownLayer.Value = p.Layer;
+            numericUpDownLayer.ValueChanged += numericUpDownLayer_ValueChanged;
 
             timeUpDownStartTime.MaskedTextBox.TextChanged -= MaskedTextBoxTextChanged;
             timeUpDownStartTime.TimeCode = p.StartTime;
