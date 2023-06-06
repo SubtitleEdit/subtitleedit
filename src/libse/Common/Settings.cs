@@ -2890,15 +2890,15 @@ $HorzAlign          =   Center
                         ChainingGeneralUseZones = false;
                         ChainingGeneralMaxGap = 500;
                         ChainingGeneralLeftGreenZone = 12;
-                        ChainingGeneralLeftRedZone = 12;
+                        ChainingGeneralLeftRedZone = 11;
                         ChainingGeneralShotChangeBehavior = ChainingGeneralShotChangeBehaviorEnum.ExtendUntilShotChange;
                         ChainingInCueOnShotUseZones = false;
                         ChainingInCueOnShotMaxGap = 500;
                         ChainingInCueOnShotLeftGreenZone = 12;
-                        ChainingInCueOnShotLeftRedZone = 12;
+                        ChainingInCueOnShotLeftRedZone = 11;
                         ChainingOutCueOnShotUseZones = false;
                         ChainingOutCueOnShotMaxGap = 500;
-                        ChainingOutCueOnShotRightRedZone = 12;
+                        ChainingOutCueOnShotRightRedZone = 11;
                         ChainingOutCueOnShotRightGreenZone = 12;
                         break;
                     case Preset.SDI:
