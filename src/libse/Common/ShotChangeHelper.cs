@@ -78,10 +78,26 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         // Util functions
 
+        public static double GetPreviousShotChangeInMs(List<double> shotChanges, TimeCode currentTime)
+        {
+            var previousShotChangeInSeconds = new List<double> { double.MinValue }.Concat(shotChanges).Last(x => x <= currentTime.TotalSeconds); // will return minValue if none found
+            return previousShotChangeInSeconds * 1000;
+        }
+
+        public static double GetPreviousShotChangePlusGapInMs(List<double> shotChanges, TimeCode currentTime)
+        {
+            return GetPreviousShotChangeInMs(shotChanges, currentTime) + TimeCodesBeautifierUtils.GetInCuesGapMs();
+        }
+
+        public static double GetNextShotChangeInMs(List<double> shotChanges, TimeCode currentTime)
+        {
+            var nextShotChangeInSeconds = shotChanges.Concat(new[] { double.MaxValue }).First(x => x >= currentTime.TotalSeconds); // will return maxValue if none found
+            return nextShotChangeInSeconds * 1000;
+        }
+
         public static double GetNextShotChangeMinusGapInMs(List<double> shotChanges, TimeCode currentTime)
         {
-            var nextShotChangeInSeconds = shotChanges.Concat(new[] { double.MaxValue }).First(x => x >= currentTime.TotalSeconds); // will return maxValue if empty
-            return (nextShotChangeInSeconds * 1000) - TimeCodesBeautifierUtils.GetOutCuesGapMs();
+            return GetNextShotChangeInMs(shotChanges, currentTime) - TimeCodesBeautifierUtils.GetOutCuesGapMs();
         }
     }
 }
