@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.6.13</Version>
-    <TranslatedBy>Последен превод на български 10.05.2023: KalinM</TranslatedBy>
+    <TranslatedBy>Последен превод на български 15.05.2023: KalinM</TranslatedBy>
     <CultureName>bg-BG</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -1296,7 +1296,7 @@ https://github.com/SubtitleEdit/subtitleedit
         <CloseVideo>Затвори видео файла</CloseVideo>
         <OpenSecondSubtitle>Отваряне на втори файл със субтитри...</OpenSecondSubtitle>
         <SetVideoOffset>Задаване на видео отместване...</SetVideoOffset>
-        <SmptTimeMode>SMPTE тайминг (избиране на не цяло число кадрова честота)</SmptTimeMode>
+        <SmptTimeMode>SMPTE синхронизация (не цяло число честота на кадрите)</SmptTimeMode>
         <GenerateTextFromVideo>Генериране на текст от видео...</GenerateTextFromVideo>
         <GenerateBlankVideo>Генериране на празно видео...</GenerateBlankVideo>
         <GenerateVideoWithBurnedInSub>Генериране на видео със записани субтитри...</GenerateVideoWithBurnedInSub>
@@ -1314,7 +1314,7 @@ https://github.com/SubtitleEdit/subtitleedit
       </Video>
       <SpellCheck>
         <Title>Правопис</Title>
-        <SpellCheck>Проверка на правопис...</SpellCheck>
+        <SpellCheck>Проверка на правописа...</SpellCheck>
         <SpellCheckFromCurrentLine>Правописна проверка от този ред</SpellCheckFromCurrentLine>
         <FindDoubleWords>Търси дублиращи се думи</FindDoubleWords>
         <FindDoubleLines>Търси дублиращи се редове</FindDoubleLines>
@@ -1632,7 +1632,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <NumberOfNameHits>Брой съвпадащи думи: {0}</NumberOfNameHits>
     <SpellCheck>Проверка на правопис</SpellCheck>
     <BeforeSpellCheck>Преди проверката на правопис</BeforeSpellCheck>
-    <SpellCheckChangedXToY>Проверка на правопис: Променени '{0}' на '{1}'</SpellCheckChangedXToY>
+    <SpellCheckChangedXToY>Проверка на правописа: Променени '{0}' на '{1}'</SpellCheckChangedXToY>
     <BeforeAddingTagX>Преди добавянето на тага '{0}'</BeforeAddingTagX>
     <TagXAdded>'{0}' добавени тагове</TagXAdded>
     <LineXOfY>ред {0} на {1}</LineXOfY>
@@ -1730,7 +1730,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <BeforeSetStartTimeAndOffsetTheRest>Преди задаване на изместване на началното време и коригиране на останалото</BeforeSetStartTimeAndOffsetTheRest>
     <BeforeSetEndTimeAndOffsetTheRest>Преди задаване на изместване на крайното време и коригиране на останалото</BeforeSetEndTimeAndOffsetTheRest>
     <BeforeSetEndAndVideoPosition>Преди задаване на крайното време на видеото и авт. изчисляване на началното</BeforeSetEndAndVideoPosition>
-    <ContinueWithCurrentSpellCheck>Искате ли да продължите с текущата проверка на правопис?</ContinueWithCurrentSpellCheck>
+    <ContinueWithCurrentSpellCheck>Ще продължите ли с текущата проверка на правописа?</ContinueWithCurrentSpellCheck>
     <CharactersPerSecond>Симв./сек.: {0:0.00}</CharactersPerSecond>
     <GetFrameRateFromVideoFile>Вземете честотата на кадри от видео файла</GetFrameRateFromVideoFile>
     <NetworkMessage>Ново съобщение: {0} ({1}): {2}</NetworkMessage>
@@ -2211,7 +2211,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <SubtitleCenter>По средата</SubtitleCenter>
     <SubtitleFontColor>Цвят на шрифта на субтитрите</SubtitleFontColor>
     <SubtitleBackgroundColor>Цвят на фона на субтитрите</SubtitleBackgroundColor>
-    <SpellChecker>Проверка на правопис</SpellChecker>
+    <SpellChecker>Проверка на правописа</SpellChecker>
     <RememberRecentFiles>Запомняне на предишните файлове (за повторно отваряне)</RememberRecentFiles>
     <StartWithLastFileLoaded>Стартиране с последния зареден файл</StartWithLastFileLoaded>
     <RememberSelectedLine>Запомняне на избрания ред</RememberSelectedLine>
@@ -2403,6 +2403,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <UseSyntaxColoring>Оцветяване на синтаксиса</UseSyntaxColoring>
     <HtmlColor>Html цвят</HtmlColor>
     <AssaColor>ASSA цвят</AssaColor>
+    <Theme>Тема</Theme>
+    <Automatic>Автоматично</Automatic>
     <DarkTheme>Тъмна тема</DarkTheme>
     <DarkThemeEnabled>Използване на тъмна тема</DarkThemeEnabled>
     <DarkThemeShowGridViewLines>Показване на решетка в изгледа на списъка</DarkThemeShowGridViewLines>
@@ -2480,7 +2482,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <ToggleDialogDashes>Размяна на диалоговите тирета</ToggleDialogDashes>
     <ToggleQuotes>Превключване на кавички</ToggleQuotes>
     <ToggleHiTags>Превключване на HI тагове</ToggleHiTags>
-    <ToggleCustomTags>Превключване на персонализирани тагове</ToggleCustomTags>
+    <ToggleCustomTags>Превключване на персонализирани тагове (обграждане с)</ToggleCustomTags>
     <ToggleMusicSymbols>Превключване на музикални символи</ToggleMusicSymbols>
     <Alignment>Подравняване (редовете в момента)</Alignment>
     <AlignmentN1>Подравняване Долу-Ляво - {\an1}</AlignmentN1>
@@ -2723,7 +2725,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <Rollback>Върни назад</Rollback>
   </ShowHistory>
   <SpellCheck>
-    <Title>Проверка на правопис</Title>
+    <Title>Проверка на правописа</Title>
     <FullText>Пълен текст</FullText>
     <WordNotFound>Думата не е намерена</WordNotFound>
     <Language>Език</Language>
@@ -2736,14 +2738,14 @@ https://github.com/SubtitleEdit/subtitleedit
     <AddToOcrReplaceList>Доб.няколко в OCR списъкаЗАзамяна</AddToOcrReplaceList>
     <Abort>Прекрати</Abort>
     <Use>Използвай</Use>
-    <UseAlways>Изпол. винаги</UseAlways>
+    <UseAlways>Използвай винаги</UseAlways>
     <Suggestions>Предложения</Suggestions>
-    <SpellCheckProgress>Проверка на правопис [{0}] - {1}</SpellCheckProgress>
+    <SpellCheckProgress>Проверка на правописа [{0}] - {1}</SpellCheckProgress>
     <EditWholeText>Редактирай текста</EditWholeText>
     <EditWordOnly>Редактирай думата</EditWordOnly>
     <AddXToNames>Добави "{0}" към списъка с думи</AddXToNames>
     <AddXToUserDictionary>Добави '{0}' към потреб. речник</AddXToUserDictionary>
-    <AutoFixNames>Поправяне на думи с различна големина на буквите</AutoFixNames>
+    <AutoFixNames>Поправяне на думи с разл. големина на буквите</AutoFixNames>
     <AutoFixNamesViaSuggestions>Корекция на имената чрез «Предложение за проверка на правописа»</AutoFixNamesViaSuggestions>
     <CheckOneLetterWords>Питане за непозната буква</CheckOneLetterWords>
     <TreatINQuoteAsING>Промяна опред. член на думи, завършващи на «in», «ing»(Само за англ.)</TreatINQuoteAsING>
