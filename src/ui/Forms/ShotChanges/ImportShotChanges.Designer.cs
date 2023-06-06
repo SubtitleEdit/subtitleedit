@@ -204,7 +204,7 @@
             this.groupBoxGenerateShotChanges.Controls.Add(this.textBoxGenerate);
             this.groupBoxGenerateShotChanges.Location = new System.Drawing.Point(12, 12);
             this.groupBoxGenerateShotChanges.Name = "groupBoxGenerateShotChanges";
-            this.groupBoxGenerateShotChanges.Size = new System.Drawing.Size(349, 413);
+            this.groupBoxGenerateShotChanges.Size = new System.Drawing.Size(349, 412);
             this.groupBoxGenerateShotChanges.TabIndex = 0;
             this.groupBoxGenerateShotChanges.TabStop = false;
             this.groupBoxGenerateShotChanges.Text = "Generate shot changes";
@@ -271,7 +271,7 @@
             // 
             this.buttonImportWithFfmpeg.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonImportWithFfmpeg.Location = new System.Drawing.Point(6, 352);
+            this.buttonImportWithFfmpeg.Location = new System.Drawing.Point(6, 351);
             this.buttonImportWithFfmpeg.Name = "buttonImportWithFfmpeg";
             this.buttonImportWithFfmpeg.Size = new System.Drawing.Size(337, 23);
             this.buttonImportWithFfmpeg.TabIndex = 2;
@@ -291,7 +291,7 @@
             this.textBoxGenerate.Name = "textBoxGenerate";
             this.textBoxGenerate.ReadOnly = true;
             this.textBoxGenerate.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBoxGenerate.Size = new System.Drawing.Size(337, 298);
+            this.textBoxGenerate.Size = new System.Drawing.Size(337, 297);
             this.textBoxGenerate.TabIndex = 1;
             // 
             // progressBar1
