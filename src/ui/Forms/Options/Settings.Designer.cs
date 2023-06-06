@@ -3064,7 +3064,7 @@
             this.buttonEditShotChangesProfile.Location = new System.Drawing.Point(524, 157);
             this.buttonEditShotChangesProfile.Name = "buttonEditShotChangesProfile";
             this.buttonEditShotChangesProfile.Size = new System.Drawing.Size(136, 23);
-            this.buttonEditShotChangesProfile.TabIndex = 36;
+            this.buttonEditShotChangesProfile.TabIndex = 27;
             this.buttonEditShotChangesProfile.Text = "Edit profile...";
             this.buttonEditShotChangesProfile.UseVisualStyleBackColor = true;
             this.buttonEditShotChangesProfile.Click += new System.EventHandler(this.buttonEditShotChangesProfile_Click);
@@ -3075,7 +3075,7 @@
             this.checkBoxWaveformAutoGen.Location = new System.Drawing.Point(262, 186);
             this.checkBoxWaveformAutoGen.Name = "checkBoxWaveformAutoGen";
             this.checkBoxWaveformAutoGen.Size = new System.Drawing.Size(220, 17);
-            this.checkBoxWaveformAutoGen.TabIndex = 27;
+            this.checkBoxWaveformAutoGen.TabIndex = 28;
             this.checkBoxWaveformAutoGen.Text = "Auto gen waveform when opening video";
             this.checkBoxWaveformAutoGen.UseVisualStyleBackColor = true;
             // 
@@ -3154,7 +3154,7 @@
             this.labelWaveformTextSize.Location = new System.Drawing.Point(259, 220);
             this.labelWaveformTextSize.Name = "labelWaveformTextSize";
             this.labelWaveformTextSize.Size = new System.Drawing.Size(73, 13);
-            this.labelWaveformTextSize.TabIndex = 27;
+            this.labelWaveformTextSize.TabIndex = 29;
             this.labelWaveformTextSize.Text = "Text font size";
             // 
             // checkBoxWaveformTextBold
@@ -3163,7 +3163,7 @@
             this.checkBoxWaveformTextBold.Location = new System.Drawing.Point(463, 221);
             this.checkBoxWaveformTextBold.Name = "checkBoxWaveformTextBold";
             this.checkBoxWaveformTextBold.Size = new System.Drawing.Size(46, 17);
-            this.checkBoxWaveformTextBold.TabIndex = 29;
+            this.checkBoxWaveformTextBold.TabIndex = 31;
             this.checkBoxWaveformTextBold.Text = "Bold";
             this.checkBoxWaveformTextBold.UseVisualStyleBackColor = true;
             // 
@@ -3189,7 +3189,7 @@
             this.comboBoxWaveformTextSize.Location = new System.Drawing.Point(336, 217);
             this.comboBoxWaveformTextSize.Name = "comboBoxWaveformTextSize";
             this.comboBoxWaveformTextSize.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxWaveformTextSize.TabIndex = 28;
+            this.comboBoxWaveformTextSize.TabIndex = 30;
             // 
             // checkBoxListViewMouseEnterFocus
             // 
@@ -3218,7 +3218,7 @@
             this.labelWaveformBorderHitMs2.Location = new System.Drawing.Point(454, 250);
             this.labelWaveformBorderHitMs2.Name = "labelWaveformBorderHitMs2";
             this.labelWaveformBorderHitMs2.Size = new System.Drawing.Size(62, 13);
-            this.labelWaveformBorderHitMs2.TabIndex = 32;
+            this.labelWaveformBorderHitMs2.TabIndex = 34;
             this.labelWaveformBorderHitMs2.Text = "milliseconds";
             // 
             // numericUpDownWaveformBorderHitMs
@@ -3231,7 +3231,7 @@
             0});
             this.numericUpDownWaveformBorderHitMs.Name = "numericUpDownWaveformBorderHitMs";
             this.numericUpDownWaveformBorderHitMs.Size = new System.Drawing.Size(44, 21);
-            this.numericUpDownWaveformBorderHitMs.TabIndex = 31;
+            this.numericUpDownWaveformBorderHitMs.TabIndex = 33;
             this.numericUpDownWaveformBorderHitMs.Value = new decimal(new int[] {
             18,
             0,
@@ -3244,7 +3244,7 @@
             this.labelWaveformBorderHitMs1.Location = new System.Drawing.Point(259, 250);
             this.labelWaveformBorderHitMs1.Name = "labelWaveformBorderHitMs1";
             this.labelWaveformBorderHitMs1.Size = new System.Drawing.Size(127, 13);
-            this.labelWaveformBorderHitMs1.TabIndex = 30;
+            this.labelWaveformBorderHitMs1.TabIndex = 32;
             this.labelWaveformBorderHitMs1.Text = "Marker hit must be within";
             // 
             // checkBoxAllowOverlap
