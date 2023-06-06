@@ -75,7 +75,7 @@
             0});
             this.numericUpDownDurationMax.Name = "numericUpDownDurationMax";
             this.numericUpDownDurationMax.Size = new System.Drawing.Size(56, 20);
-            this.numericUpDownDurationMax.TabIndex = 4;
+            this.numericUpDownDurationMax.TabIndex = 5;
             this.numericUpDownDurationMax.Value = new decimal(new int[] {
             50000,
             0,
@@ -151,7 +151,7 @@
             this.groupBoxFixesAvailable.Location = new System.Drawing.Point(0, 0);
             this.groupBoxFixesAvailable.Name = "groupBoxFixesAvailable";
             this.groupBoxFixesAvailable.Size = new System.Drawing.Size(931, 292);
-            this.groupBoxFixesAvailable.TabIndex = 5;
+            this.groupBoxFixesAvailable.TabIndex = 6;
             this.groupBoxFixesAvailable.TabStop = false;
             this.groupBoxFixesAvailable.Text = "Fixes available: {0}";
             // 
@@ -294,7 +294,7 @@
             this.checkBoxMaxDuration.Location = new System.Drawing.Point(16, 39);
             this.checkBoxMaxDuration.Name = "checkBoxMaxDuration";
             this.checkBoxMaxDuration.Size = new System.Drawing.Size(152, 17);
-            this.checkBoxMaxDuration.TabIndex = 3;
+            this.checkBoxMaxDuration.TabIndex = 4;
             this.checkBoxMaxDuration.Text = "Max. duration, milliseconds";
             this.checkBoxMaxDuration.UseVisualStyleBackColor = true;
             this.checkBoxMaxDuration.CheckedChanged += new System.EventHandler(this.checkBoxMaxDuration_CheckedChanged);
@@ -305,7 +305,7 @@
             this.checkBoxCheckShotChanges.Location = new System.Drawing.Point(269, 13);
             this.checkBoxCheckShotChanges.Name = "checkBoxCheckShotChanges";
             this.checkBoxCheckShotChanges.Size = new System.Drawing.Size(124, 17);
-            this.checkBoxCheckShotChanges.TabIndex = 111;
+            this.checkBoxCheckShotChanges.TabIndex = 3;
             this.checkBoxCheckShotChanges.Text = "Check shot changes";
             this.checkBoxCheckShotChanges.UseVisualStyleBackColor = true;
             this.checkBoxCheckShotChanges.CheckedChanged += new System.EventHandler(this.checkBoxCheckShotChanges_CheckedChanged);
