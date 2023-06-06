@@ -166,6 +166,8 @@ namespace Nikse.SubtitleEdit.Logic
         public Keys MainAdjustExtendToPreviousShotChangeWithGap { get; set; }
         public Keys MainAdjustExtendToNextSubtitle { get; set; }
         public Keys MainAdjustExtendToPreviousSubtitle { get; set; }
+        public Keys MainAdjustExtendToNextSubtitleMinusChainingGap { get; set; }
+        public Keys MainAdjustExtendToPreviousSubtitleMinusChainingGap { get; set; }
         public Keys MainAdjustExtendCurrentSubtitle { get; set; }
         public Keys MainAdjustExtendPreviousLineEndToCurrentStart { get; set; }
         public Keys MainAdjustExtendNextLineStartToCurrentEnd { get; set; }
@@ -442,6 +444,8 @@ namespace Nikse.SubtitleEdit.Logic
             MainAdjustExtendToPreviousShotChangeWithGap = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustExtendToPreviousShotChangeWithGap);
             MainAdjustExtendToNextSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustExtendToNextSubtitle);
             MainAdjustExtendToPreviousSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustExtendToPreviousSubtitle);
+            MainAdjustExtendToNextSubtitleMinusChainingGap = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustExtendToNextSubtitleMinusChainingGap);
+            MainAdjustExtendToPreviousSubtitleMinusChainingGap = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustExtendToPreviousSubtitleMinusChainingGap);
             MainAdjustExtendCurrentSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustExtendCurrentSubtitle);
             MainAdjustExtendPreviousLineEndToCurrentStart = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustExtendPreviousLineEndToCurrentStart);
             MainAdjustExtendNextLineStartToCurrentEnd = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustExtendNextLineStartToCurrentEnd);

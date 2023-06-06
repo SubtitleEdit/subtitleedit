@@ -2726,6 +2726,8 @@ namespace Nikse.SubtitleEdit.Logic
             public string AdjustExtendToPreviousShotChangeWithGap { get; set; }
             public string AdjustExtendToNextSubtitle { get; set; }
             public string AdjustExtendToPreviousSubtitle { get; set; }
+            public string AdjustExtendToNextSubtitleMinusChainingGap { get; set; }
+            public string AdjustExtendToPreviousSubtitleMinusChainingGap { get; set; }
             public string AdjustExtendCurrentSubtitle { get; set; }
             public string AdjustExtendPreviousLineEndToCurrentStart { get; set; }
             public string AdjustExtendNextLineStartToCurrentEnd { get; set; }

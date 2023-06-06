@@ -2545,6 +2545,8 @@ $HorzAlign          =   Center
         public string MainAdjustExtendToPreviousShotChangeWithGap { get; set; }
         public string MainAdjustExtendToNextSubtitle { get; set; }
         public string MainAdjustExtendToPreviousSubtitle { get; set; }
+        public string MainAdjustExtendToNextSubtitleMinusChainingGap { get; set; }
+        public string MainAdjustExtendToPreviousSubtitleMinusChainingGap { get; set; }
         public string MainAdjustExtendCurrentSubtitle { get; set; }
         public string MainAdjustExtendPreviousLineEndToCurrentStart { get; set; }
         public string MainAdjustExtendNextLineStartToCurrentEnd { get; set; }
@@ -2675,6 +2677,8 @@ $HorzAlign          =   Center
             MainTranslateAuto = "Control+Shift+G";
             MainAdjustExtendToNextSubtitle = "Control+Shift+E";
             MainAdjustExtendToPreviousSubtitle = "Alt+Shift+E";
+            MainAdjustExtendToNextSubtitleMinusChainingGap = "Control+Shift+W";
+            MainAdjustExtendToPreviousSubtitleMinusChainingGap = "Alt+Shift+W";
             WaveformVerticalZoom = "Shift+Add";
             WaveformVerticalZoomOut = "Shift+Subtract";
             WaveformAddTextHere = "Return";
@@ -10319,6 +10323,18 @@ $HorzAlign          =   Center
                     shortcuts.MainAdjustExtendToPreviousSubtitle = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainAdjustExtendToNextSubtitleMinusChainingGap");
+                if (subNode != null)
+                {
+                    shortcuts.MainAdjustExtendToNextSubtitleMinusChainingGap = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainAdjustExtendToPreviousSubtitleMinusChainingGap");
+                if (subNode != null)
+                {
+                    shortcuts.MainAdjustExtendToPreviousSubtitleMinusChainingGap = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainAdjustExtendCurrentSubtitle");
                 if (subNode != null)
                 {
@@ -12061,6 +12077,8 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("MainAdjustExtendToPreviousShotChangeWithGap", shortcuts.MainAdjustExtendToPreviousShotChangeWithGap);
             textWriter.WriteElementString("MainAdjustExtendToNextSubtitle", shortcuts.MainAdjustExtendToNextSubtitle);
             textWriter.WriteElementString("MainAdjustExtendToPreviousSubtitle", shortcuts.MainAdjustExtendToPreviousSubtitle);
+            textWriter.WriteElementString("MainAdjustExtendToNextSubtitleMinusChainingGap", shortcuts.MainAdjustExtendToNextSubtitleMinusChainingGap);
+            textWriter.WriteElementString("MainAdjustExtendToPreviousSubtitleMinusChainingGap", shortcuts.MainAdjustExtendToPreviousSubtitleMinusChainingGap);
             textWriter.WriteElementString("MainAdjustExtendCurrentSubtitle", shortcuts.MainAdjustExtendCurrentSubtitle);
             textWriter.WriteElementString("MainAdjustExtendPreviousLineEndToCurrentStart", shortcuts.MainAdjustExtendPreviousLineEndToCurrentStart);
             textWriter.WriteElementString("MainAdjustExtendNextLineStartToCurrentEnd", shortcuts.MainAdjustExtendNextLineStartToCurrentEnd);
