@@ -2944,25 +2944,25 @@ $HorzAlign          =   Center
                         Gap = 3;
 
                         InCuesGap = 0;
-                        InCuesLeftGreenZone = 2;
-                        InCuesLeftRedZone = 2;
+                        InCuesLeftGreenZone = 3;
+                        InCuesLeftRedZone = 3;
                         InCuesRightRedZone = 5;
                         InCuesRightGreenZone = 5;
 
                         OutCuesGap = 0;
                         OutCuesLeftGreenZone = 10;
                         OutCuesLeftRedZone = 10;
-                        OutCuesRightRedZone = 2;
+                        OutCuesRightRedZone = 3;
                         OutCuesRightGreenZone = 12;
 
                         ConnectedSubtitlesInCueClosestLeftGap = 3;
                         ConnectedSubtitlesInCueClosestRightGap = 0;
                         ConnectedSubtitlesOutCueClosestLeftGap = 0;
                         ConnectedSubtitlesOutCueClosestRightGap = 3;
-                        ConnectedSubtitlesLeftGreenZone = 2;
-                        ConnectedSubtitlesLeftRedZone = 2;
-                        ConnectedSubtitlesRightRedZone = 2;
-                        ConnectedSubtitlesRightGreenZone = 2;
+                        ConnectedSubtitlesLeftGreenZone = 3;
+                        ConnectedSubtitlesLeftRedZone = 3;
+                        ConnectedSubtitlesRightRedZone = 3;
+                        ConnectedSubtitlesRightGreenZone = 3;
                         ConnectedSubtitlesTreatConnected = 180;
 
                         ChainingGeneralUseZones = false;
