@@ -18644,7 +18644,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 var idx = selectedItem.Index;
                 var p = _subtitle.Paragraphs[idx];
-                if (idx < _subtitle.Paragraphs.Count - 1 && audioVisualizer.ShotChanges.Count > 0)
+                if (audioVisualizer.ShotChanges.Count > 0)
                 {
                     var next = _subtitle.GetParagraphOrDefault(idx + 1);
                     double nearestShotChangeWithGap = ShotChangeHelper.GetNextShotChangeMinusGapInMs(audioVisualizer.ShotChanges, p.EndTime);
@@ -18656,7 +18656,11 @@ namespace Nikse.SubtitleEdit.Forms
                         historyAdded = true;
                     }
 
-                    p.EndTime.TotalMilliseconds = Math.Min(nearestShotChangeWithGap, nearestStartTimeWithGap);
+                    var newEndTime = Math.Min(nearestShotChangeWithGap, nearestStartTimeWithGap);
+                    if (newEndTime <= _videoInfo.TotalMilliseconds)
+                    {
+                        p.EndTime.TotalMilliseconds = newEndTime;
+                    }
 
                     if (IsOriginalEditable)
                     {
@@ -18672,7 +18676,11 @@ namespace Nikse.SubtitleEdit.Forms
                                 historyAdded = true;
                             }
 
-                            original.EndTime.TotalMilliseconds = Math.Min(nearestShotChangeWithGap, nearestStartTimeWithGap);
+                            var originalNewEndTime = Math.Min(nearestShotChangeWithGap, nearestStartTimeWithGap);
+                            if (originalNewEndTime <= _videoInfo.TotalMilliseconds)
+                            {
+                                original.EndTime.TotalMilliseconds = originalNewEndTime;
+                            }
                         }
                     }
                 }
@@ -18688,7 +18696,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 var idx = selectedItem.Index;
                 var p = _subtitle.Paragraphs[idx];
-                if (idx > 0 && audioVisualizer.ShotChanges.Count > 0)
+                if (audioVisualizer.ShotChanges.Count > 0)
                 {
                     var previous = _subtitle.GetParagraphOrDefault(idx - 1);
                     double nearestShotChangeWithGap = ShotChangeHelper.GetPreviousShotChangePlusGapInMs(audioVisualizer.ShotChanges, p.StartTime);
@@ -18708,7 +18716,11 @@ namespace Nikse.SubtitleEdit.Forms
                                 historyAdded = true;
                             }
 
-                            original.StartTime.TotalMilliseconds = Math.Max(nearestShotChangeWithGap, nearestOriginalEndTimeWithGap);
+                            var originalNewStartTime = Math.Max(nearestShotChangeWithGap, nearestOriginalEndTimeWithGap);
+                            if (originalNewStartTime >= 0)
+                            {
+                                original.StartTime.TotalMilliseconds = originalNewStartTime;
+                            }
                         }
                     }
 
@@ -18718,7 +18730,11 @@ namespace Nikse.SubtitleEdit.Forms
                         historyAdded = true;
                     }
 
-                    p.StartTime.TotalMilliseconds = Math.Max(nearestShotChangeWithGap, nearestEndTimeWithGap);
+                    var newStartTime = Math.Max(nearestShotChangeWithGap, nearestEndTimeWithGap);
+                    if (newStartTime >= 0)
+                    {
+                        p.StartTime.TotalMilliseconds = newStartTime;
+                    }
                 }
 
                 RefreshSelectedParagraphs();
