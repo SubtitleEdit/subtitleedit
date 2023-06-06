@@ -1824,7 +1824,7 @@ namespace Nikse.SubtitleEdit.Forms
             // checkBoxEnforceDurationLimits
             // 
             this.checkBoxEnforceDurationLimits.AutoSize = true;
-            this.checkBoxEnforceDurationLimits.Location = new System.Drawing.Point(14, 222);
+            this.checkBoxEnforceDurationLimits.Location = new System.Drawing.Point(10, 222);
             this.checkBoxEnforceDurationLimits.Name = "checkBoxEnforceDurationLimits";
             this.checkBoxEnforceDurationLimits.Size = new System.Drawing.Size(214, 17);
             this.checkBoxEnforceDurationLimits.TabIndex = 17;
