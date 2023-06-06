@@ -548,7 +548,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // checkBoxSeHandlesTextMerge
             // 
             this.checkBoxSeHandlesTextMerge.AutoSize = true;
-            this.checkBoxSeHandlesTextMerge.Location = new System.Drawing.Point(7, 105);
+            this.checkBoxSeHandlesTextMerge.Location = new System.Drawing.Point(9, 104);
             this.checkBoxSeHandlesTextMerge.Name = "checkBoxSeHandlesTextMerge";
             this.checkBoxSeHandlesTextMerge.Size = new System.Drawing.Size(134, 17);
             this.checkBoxSeHandlesTextMerge.TabIndex = 5;
