@@ -260,7 +260,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                         {
                             sub.EndMilliseconds = list[i + 1].PresentationTimestampToMilliseconds() - 25;
                         }
-                        if (sub.EndMilliseconds < sub.StartMilliseconds || sub.EndMilliseconds - sub.StartMilliseconds > (ulong)Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
+                        if (sub.EndMilliseconds < sub.StartMilliseconds)
                         {
                             sub.EndMilliseconds = sub.StartMilliseconds + (ulong)Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds;
                         }
