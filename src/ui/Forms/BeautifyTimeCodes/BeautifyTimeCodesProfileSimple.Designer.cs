@@ -103,7 +103,7 @@
             this.labelInstructions.Location = new System.Drawing.Point(9, 9);
             this.labelInstructions.Name = "labelInstructions";
             this.labelInstructions.Size = new System.Drawing.Size(399, 15);
-            this.labelInstructions.TabIndex = 104;
+            this.labelInstructions.TabIndex = 1;
             this.labelInstructions.Text = "Enter these basic rules, and the current profile will be updated accordingly.";
             // 
             // groupBox1
@@ -141,7 +141,7 @@
             this.groupBox1.Location = new System.Drawing.Point(12, 27);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(525, 490);
-            this.groupBox1.TabIndex = 1;
+            this.groupBox1.TabIndex = 2;
             this.groupBox1.TabStop = false;
             // 
             // checkBoxSnapClosestCue
@@ -153,7 +153,7 @@
             this.checkBoxSnapClosestCue.Location = new System.Drawing.Point(134, 157);
             this.checkBoxSnapClosestCue.Name = "checkBoxSnapClosestCue";
             this.checkBoxSnapClosestCue.Size = new System.Drawing.Size(377, 35);
-            this.checkBoxSnapClosestCue.TabIndex = 32;
+            this.checkBoxSnapClosestCue.TabIndex = 10;
             this.checkBoxSnapClosestCue.Text = "For connected subtitles, snap the in or out cue to the shot change based on which" +
     " one is closer";
             this.checkBoxSnapClosestCue.UseVisualStyleBackColor = true;
@@ -173,7 +173,7 @@
             this.labelChainingGapAfterShotChangesPrefix.Location = new System.Drawing.Point(150, 447);
             this.labelChainingGapAfterShotChangesPrefix.Name = "labelChainingGapAfterShotChangesPrefix";
             this.labelChainingGapAfterShotChangesPrefix.Size = new System.Drawing.Size(33, 15);
-            this.labelChainingGapAfterShotChangesPrefix.TabIndex = 30;
+            this.labelChainingGapAfterShotChangesPrefix.TabIndex = 24;
             this.labelChainingGapAfterShotChangesPrefix.Text = "Max.";
             // 
             // numericUpDownChainingGapAfterShotChanges
@@ -186,7 +186,7 @@
             0});
             this.numericUpDownChainingGapAfterShotChanges.Name = "numericUpDownChainingGapAfterShotChanges";
             this.numericUpDownChainingGapAfterShotChanges.Size = new System.Drawing.Size(52, 23);
-            this.numericUpDownChainingGapAfterShotChanges.TabIndex = 10;
+            this.numericUpDownChainingGapAfterShotChanges.TabIndex = 25;
             this.numericUpDownChainingGapAfterShotChanges.Value = new decimal(new int[] {
             500,
             0,
@@ -199,7 +199,7 @@
             this.labelChainingGapAfterShotChangesSuffix.Location = new System.Drawing.Point(251, 447);
             this.labelChainingGapAfterShotChangesSuffix.Name = "labelChainingGapAfterShotChangesSuffix";
             this.labelChainingGapAfterShotChangesSuffix.Size = new System.Drawing.Size(23, 15);
-            this.labelChainingGapAfterShotChangesSuffix.TabIndex = 28;
+            this.labelChainingGapAfterShotChangesSuffix.TabIndex = 26;
             this.labelChainingGapAfterShotChangesSuffix.Text = "ms";
             // 
             // checkBoxChainingGapAfterShotChanges
@@ -210,7 +210,7 @@
             this.checkBoxChainingGapAfterShotChanges.Location = new System.Drawing.Point(134, 422);
             this.checkBoxChainingGapAfterShotChanges.Name = "checkBoxChainingGapAfterShotChanges";
             this.checkBoxChainingGapAfterShotChanges.Size = new System.Drawing.Size(334, 19);
-            this.checkBoxChainingGapAfterShotChanges.TabIndex = 9;
+            this.checkBoxChainingGapAfterShotChanges.TabIndex = 23;
             this.checkBoxChainingGapAfterShotChanges.Text = "After an out cue on a shot change, the gap may be smaller";
             this.checkBoxChainingGapAfterShotChanges.UseVisualStyleBackColor = true;
             this.checkBoxChainingGapAfterShotChanges.CheckedChanged += new System.EventHandler(this.checkBoxChainingGapAfterShotChanges_CheckedChanged);
@@ -225,7 +225,7 @@
             0});
             this.numericUpDownChainingGap.Name = "numericUpDownChainingGap";
             this.numericUpDownChainingGap.Size = new System.Drawing.Size(52, 23);
-            this.numericUpDownChainingGap.TabIndex = 8;
+            this.numericUpDownChainingGap.TabIndex = 20;
             this.numericUpDownChainingGap.Value = new decimal(new int[] {
             1000,
             0,
@@ -240,7 +240,7 @@
             this.labelChainingGapInstruction.Location = new System.Drawing.Point(131, 381);
             this.labelChainingGapInstruction.Name = "labelChainingGapInstruction";
             this.labelChainingGapInstruction.Size = new System.Drawing.Size(380, 30);
-            this.labelChainingGapInstruction.TabIndex = 25;
+            this.labelChainingGapInstruction.TabIndex = 22;
             this.labelChainingGapInstruction.Text = "If the space between two subtitles is smaller than this amount, the subtitles wil" +
     "l be connected.";
             // 
@@ -250,7 +250,7 @@
             this.labelChainingGapSuffix.Location = new System.Drawing.Point(192, 355);
             this.labelChainingGapSuffix.Name = "labelChainingGapSuffix";
             this.labelChainingGapSuffix.Size = new System.Drawing.Size(23, 15);
-            this.labelChainingGapSuffix.TabIndex = 24;
+            this.labelChainingGapSuffix.TabIndex = 21;
             this.labelChainingGapSuffix.Text = "ms";
             // 
             // labelChainingGap
@@ -259,7 +259,7 @@
             this.labelChainingGap.Location = new System.Drawing.Point(12, 355);
             this.labelChainingGap.Name = "labelChainingGap";
             this.labelChainingGap.Size = new System.Drawing.Size(108, 15);
-            this.labelChainingGap.TabIndex = 22;
+            this.labelChainingGap.TabIndex = 19;
             this.labelChainingGap.Text = "Max. chaining gap:";
             // 
             // labelOffsetInstruction
@@ -270,7 +270,7 @@
             this.labelOffsetInstruction.Location = new System.Drawing.Point(131, 237);
             this.labelOffsetInstruction.Name = "labelOffsetInstruction";
             this.labelOffsetInstruction.Size = new System.Drawing.Size(380, 30);
-            this.labelOffsetInstruction.TabIndex = 21;
+            this.labelOffsetInstruction.TabIndex = 14;
             this.labelOffsetInstruction.Text = "Cues within this distance from shot changes will be considered as being on the sh" +
     "ot change.";
             // 
@@ -280,7 +280,7 @@
             this.labelOffsetSuffix.Location = new System.Drawing.Point(192, 211);
             this.labelOffsetSuffix.Name = "labelOffsetSuffix";
             this.labelOffsetSuffix.Size = new System.Drawing.Size(43, 15);
-            this.labelOffsetSuffix.TabIndex = 20;
+            this.labelOffsetSuffix.TabIndex = 13;
             this.labelOffsetSuffix.Text = "frames";
             // 
             // numericUpDownOffset
@@ -293,7 +293,7 @@
             0});
             this.numericUpDownOffset.Name = "numericUpDownOffset";
             this.numericUpDownOffset.Size = new System.Drawing.Size(52, 23);
-            this.numericUpDownOffset.TabIndex = 6;
+            this.numericUpDownOffset.TabIndex = 12;
             this.numericUpDownOffset.Value = new decimal(new int[] {
             3,
             0,
@@ -306,7 +306,7 @@
             this.labelOffset.Location = new System.Drawing.Point(12, 211);
             this.labelOffset.Name = "labelOffset";
             this.labelOffset.Size = new System.Drawing.Size(69, 15);
-            this.labelOffset.TabIndex = 18;
+            this.labelOffset.TabIndex = 11;
             this.labelOffset.Text = "Max. offset:";
             // 
             // labelSafeZoneInstruction
@@ -317,7 +317,7 @@
             this.labelSafeZoneInstruction.Location = new System.Drawing.Point(131, 309);
             this.labelSafeZoneInstruction.Name = "labelSafeZoneInstruction";
             this.labelSafeZoneInstruction.Size = new System.Drawing.Size(380, 30);
-            this.labelSafeZoneInstruction.TabIndex = 17;
+            this.labelSafeZoneInstruction.TabIndex = 18;
             this.labelSafeZoneInstruction.Text = "The amount of frames around shot changes where no cues are allowed.";
             // 
             // labelSafeZoneSuffix
@@ -326,7 +326,7 @@
             this.labelSafeZoneSuffix.Location = new System.Drawing.Point(192, 283);
             this.labelSafeZoneSuffix.Name = "labelSafeZoneSuffix";
             this.labelSafeZoneSuffix.Size = new System.Drawing.Size(43, 15);
-            this.labelSafeZoneSuffix.TabIndex = 16;
+            this.labelSafeZoneSuffix.TabIndex = 17;
             this.labelSafeZoneSuffix.Text = "frames";
             // 
             // numericUpDownSafeZone
@@ -339,7 +339,7 @@
             0});
             this.numericUpDownSafeZone.Name = "numericUpDownSafeZone";
             this.numericUpDownSafeZone.Size = new System.Drawing.Size(52, 23);
-            this.numericUpDownSafeZone.TabIndex = 7;
+            this.numericUpDownSafeZone.TabIndex = 16;
             this.numericUpDownSafeZone.Value = new decimal(new int[] {
             6,
             0,
@@ -361,7 +361,7 @@
             this.comboBoxOutCues.Location = new System.Drawing.Point(134, 118);
             this.comboBoxOutCues.Name = "comboBoxOutCues";
             this.comboBoxOutCues.Size = new System.Drawing.Size(377, 23);
-            this.comboBoxOutCues.TabIndex = 4;
+            this.comboBoxOutCues.TabIndex = 9;
             this.comboBoxOutCues.SelectedIndexChanged += new System.EventHandler(this.comboBoxInCues_SelectedIndexChanged);
             // 
             // comboBoxInCues
@@ -378,7 +378,7 @@
             this.comboBoxInCues.Location = new System.Drawing.Point(134, 79);
             this.comboBoxInCues.Name = "comboBoxInCues";
             this.comboBoxInCues.Size = new System.Drawing.Size(377, 23);
-            this.comboBoxInCues.TabIndex = 3;
+            this.comboBoxInCues.TabIndex = 7;
             this.comboBoxInCues.SelectedIndexChanged += new System.EventHandler(this.comboBoxInCues_SelectedIndexChanged);
             // 
             // labelOutCues
@@ -387,7 +387,7 @@
             this.labelOutCues.Location = new System.Drawing.Point(12, 121);
             this.labelOutCues.Name = "labelOutCues";
             this.labelOutCues.Size = new System.Drawing.Size(112, 15);
-            this.labelOutCues.TabIndex = 11;
+            this.labelOutCues.TabIndex = 8;
             this.labelOutCues.Text = "Out cues should be:";
             // 
             // labelInCues
@@ -396,7 +396,7 @@
             this.labelInCues.Location = new System.Drawing.Point(12, 82);
             this.labelInCues.Name = "labelInCues";
             this.labelInCues.Size = new System.Drawing.Size(102, 15);
-            this.labelInCues.TabIndex = 10;
+            this.labelInCues.TabIndex = 6;
             this.labelInCues.Text = "In cues should be:";
             // 
             // labelSafeZone
@@ -405,7 +405,7 @@
             this.labelSafeZone.Location = new System.Drawing.Point(12, 283);
             this.labelSafeZone.Name = "labelSafeZone";
             this.labelSafeZone.Size = new System.Drawing.Size(60, 15);
-            this.labelSafeZone.TabIndex = 9;
+            this.labelSafeZone.TabIndex = 15;
             this.labelSafeZone.Text = "Safe zone:";
             // 
             // labelGapInstruction
@@ -416,7 +416,7 @@
             this.labelGapInstruction.Location = new System.Drawing.Point(131, 51);
             this.labelGapInstruction.Name = "labelGapInstruction";
             this.labelGapInstruction.Size = new System.Drawing.Size(380, 15);
-            this.labelGapInstruction.TabIndex = 7;
+            this.labelGapInstruction.TabIndex = 5;
             this.labelGapInstruction.Text = "The minimum amount of space between subtitles.";
             // 
             // labelGapHint
@@ -426,7 +426,7 @@
             this.labelGapHint.Location = new System.Drawing.Point(250, 25);
             this.labelGapHint.Name = "labelGapHint";
             this.labelGapHint.Size = new System.Drawing.Size(95, 15);
-            this.labelGapHint.TabIndex = 6;
+            this.labelGapHint.TabIndex = 4;
             this.labelGapHint.Text = "120 ms @ 25 FPS";
             // 
             // labelGapSuffix
@@ -435,7 +435,7 @@
             this.labelGapSuffix.Location = new System.Drawing.Point(192, 25);
             this.labelGapSuffix.Name = "labelGapSuffix";
             this.labelGapSuffix.Size = new System.Drawing.Size(43, 15);
-            this.labelGapSuffix.TabIndex = 5;
+            this.labelGapSuffix.TabIndex = 3;
             this.labelGapSuffix.Text = "frames";
             // 
             // numericUpDownGap
@@ -462,7 +462,7 @@
             this.labelGap.Location = new System.Drawing.Point(12, 25);
             this.labelGap.Name = "labelGap";
             this.labelGap.Size = new System.Drawing.Size(31, 15);
-            this.labelGap.TabIndex = 0;
+            this.labelGap.TabIndex = 1;
             this.labelGap.Text = "Gap:";
             // 
             // toolTipChaining
@@ -482,6 +482,7 @@
             // 
             // BeautifyTimeCodesProfileSimple
             // 
+            this.AcceptButton = this.buttonOK;
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.buttonCancel;

@@ -49,7 +49,7 @@
             this.buttonCancel.Location = new System.Drawing.Point(368, 91);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
-            this.buttonCancel.TabIndex = 8;
+            this.buttonCancel.TabIndex = 11;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
@@ -61,7 +61,7 @@
             this.buttonOK.Location = new System.Drawing.Point(287, 91);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
-            this.buttonOK.TabIndex = 7;
+            this.buttonOK.TabIndex = 10;
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
@@ -72,7 +72,7 @@
             this.labelMaximumLineWidth.Location = new System.Drawing.Point(12, 14);
             this.labelMaximumLineWidth.Name = "labelMaximumLineWidth";
             this.labelMaximumLineWidth.Size = new System.Drawing.Size(101, 13);
-            this.labelMaximumLineWidth.TabIndex = 208;
+            this.labelMaximumLineWidth.TabIndex = 1;
             this.labelMaximumLineWidth.Text = "Maximum line width:";
             // 
             // numericUpDownMaxLineWidth
@@ -85,7 +85,7 @@
             0});
             this.numericUpDownMaxLineWidth.Name = "numericUpDownMaxLineWidth";
             this.numericUpDownMaxLineWidth.Size = new System.Drawing.Size(56, 20);
-            this.numericUpDownMaxLineWidth.TabIndex = 1;
+            this.numericUpDownMaxLineWidth.TabIndex = 2;
             this.numericUpDownMaxLineWidth.Value = new decimal(new int[] {
             576,
             0,
@@ -98,7 +98,7 @@
             this.labelPixelsSuffix.Location = new System.Drawing.Point(181, 14);
             this.labelPixelsSuffix.Name = "labelPixelsSuffix";
             this.labelPixelsSuffix.Size = new System.Drawing.Size(33, 13);
-            this.labelPixelsSuffix.TabIndex = 210;
+            this.labelPixelsSuffix.TabIndex = 3;
             this.labelPixelsSuffix.Text = "pixels";
             // 
             // comboBoxMeasureFontName
@@ -111,7 +111,7 @@
             this.comboBoxMeasureFontName.Location = new System.Drawing.Point(119, 38);
             this.comboBoxMeasureFontName.Name = "comboBoxMeasureFontName";
             this.comboBoxMeasureFontName.Size = new System.Drawing.Size(199, 21);
-            this.comboBoxMeasureFontName.TabIndex = 2;
+            this.comboBoxMeasureFontName.TabIndex = 5;
             // 
             // labelMeasureFont
             // 
@@ -119,7 +119,7 @@
             this.labelMeasureFont.Location = new System.Drawing.Point(12, 41);
             this.labelMeasureFont.Name = "labelMeasureFont";
             this.labelMeasureFont.Size = new System.Drawing.Size(72, 13);
-            this.labelMeasureFont.TabIndex = 213;
+            this.labelMeasureFont.TabIndex = 4;
             this.labelMeasureFont.Text = "Measure font:";
             // 
             // checkBoxMeasureFontBold
@@ -129,7 +129,7 @@
             this.checkBoxMeasureFontBold.Location = new System.Drawing.Point(386, 40);
             this.checkBoxMeasureFontBold.Name = "checkBoxMeasureFontBold";
             this.checkBoxMeasureFontBold.Size = new System.Drawing.Size(47, 17);
-            this.checkBoxMeasureFontBold.TabIndex = 4;
+            this.checkBoxMeasureFontBold.TabIndex = 7;
             this.checkBoxMeasureFontBold.Text = "Bold";
             this.checkBoxMeasureFontBold.UseVisualStyleBackColor = true;
             // 
@@ -149,7 +149,7 @@
             0});
             this.numericUpDownMeasureFontSize.Name = "numericUpDownMeasureFontSize";
             this.numericUpDownMeasureFontSize.Size = new System.Drawing.Size(56, 20);
-            this.numericUpDownMeasureFontSize.TabIndex = 3;
+            this.numericUpDownMeasureFontSize.TabIndex = 6;
             this.numericUpDownMeasureFontSize.Value = new decimal(new int[] {
             24,
             0,
