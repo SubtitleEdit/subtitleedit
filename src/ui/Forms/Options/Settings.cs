@@ -1204,6 +1204,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             {
                 comboBoxToolbarIconTheme.Visible = false;
                 labelToolbarIconTheme.Visible = false;
+                return;
             }
 
             comboBoxToolbarIconTheme.SelectedIndexChanged -= comboBoxToolbarIconTheme_SelectedIndexChanged;
