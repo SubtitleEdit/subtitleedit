@@ -2400,6 +2400,8 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <UseSyntaxColoring>구문 색상 사용</UseSyntaxColoring>
     <HtmlColor>Html 색상</HtmlColor>
     <AssaColor>ASSA 색상</AssaColor>
+    <Theme>테마</Theme>
+    <Automatic>자동</Automatic>
     <DarkTheme>어두운 테마</DarkTheme>
     <DarkThemeEnabled>어두운 테마 사용</DarkThemeEnabled>
     <DarkThemeShowGridViewLines>목록 보기 그리드 선 표시</DarkThemeShowGridViewLines>
@@ -2477,7 +2479,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <ToggleDialogDashes>대화의 대시('-') 전환</ToggleDialogDashes>
     <ToggleQuotes>따옴표 전환</ToggleQuotes>
     <ToggleHiTags>HI 태그 전환</ToggleHiTags>
-    <ToggleCustomTags>사용자 지정 태그</ToggleCustomTags>
+    <ToggleCustomTags>사용자 지정 태그 전환 (서라운드 포함)</ToggleCustomTags>
     <ToggleMusicSymbols>음악 기호 전환</ToggleMusicSymbols>
     <Alignment>정렬 (선택한 줄)</Alignment>
     <AlignmentN1>좌측 하단 정렬 - {\an1}</AlignmentN1>
