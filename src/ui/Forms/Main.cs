@@ -14052,7 +14052,7 @@ namespace Nikse.SubtitleEdit.Forms
                     var c = ColorTranslator.FromHtml(color);
                     var styleWithColor = WebVttHelper.AddStyleFromColor(c);
                     subtitle.Header = WebVttHelper.AddStyleToHeader(_subtitle.Header, styleWithColor);
-                    WebVttHelper.AddStyleToText(p.Text, styleWithColor);
+                    p.Text = WebVttHelper.AddStyleToText(p.Text, styleWithColor);
                 }
                 catch
                 {

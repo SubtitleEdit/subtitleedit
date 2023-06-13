@@ -385,9 +385,13 @@ namespace Nikse.SubtitleEdit.Core.Common
                     text = text.Remove(idx, 4);
                 }
             }
-            else
+            else if (text.Contains("<c."))
             {
                 text = text.Replace("." + style.Name, string.Empty);
+            }
+            else 
+            {
+                text = "<c." + style.Name + ">" + text + "</c>";
             }
 
             return text;

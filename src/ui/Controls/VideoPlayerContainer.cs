@@ -478,6 +478,7 @@ namespace Nikse.SubtitleEdit.Controls
                 }
                 else if (uiFormat.Name == WebVTT.NameOfFormat || uiFormat.Name == WebVTTFileWithLineNumber.NameOfFormat)
                 {
+                    //TODO: add some caching!?
                     var defaultStyle = GetMpvPreviewStyle(Configuration.Settings.General);
                     defaultStyle.BorderStyle = "3";
                     subtitle = new Subtitle(subtitle);
