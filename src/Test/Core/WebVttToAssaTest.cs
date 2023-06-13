@@ -15,20 +15,20 @@ namespace Test.Core
             var converted = WebVttToAssa.Convert(subtitle, new SsaStyle(), 1920, 1080);
             var styles = AdvancedSubStationAlpha.GetSsaStylesFromHeader(converted.Header);
 
-            Assert.AreEqual(".background-color_transparent", styles[0].Name);
-            Assert.AreEqual(".color_EBEBEB", styles[1].Name);
-            Assert.AreEqual(".font-family_Arial", styles[2].Name);
-            Assert.AreEqual(".font-style_normal", styles[3].Name);
-            Assert.AreEqual(".font-weight_normal", styles[4].Name);
-            Assert.AreEqual(".text-shadow_#101010-3px", styles[5].Name);
-            Assert.AreEqual(".font-style_italic", styles[6].Name);
+            Assert.AreEqual(".background-color_transparent", styles[1].Name);
+            Assert.AreEqual(".color_EBEBEB", styles[2].Name);
+            Assert.AreEqual(".font-family_Arial", styles[3].Name);
+            Assert.AreEqual(".font-style_normal", styles[4].Name);
+            Assert.AreEqual(".font-weight_normal", styles[5].Name);
+            Assert.AreEqual(".text-shadow_#101010-3px", styles[6].Name);
+            Assert.AreEqual(".font-style_italic", styles[7].Name);
 
-            Assert.AreEqual(235, styles[1].Primary.R);
-            Assert.AreEqual("Arial", styles[2].FontName);
-            Assert.AreEqual(false, styles[3].Italic);
-            Assert.AreEqual(false, styles[4].Bold);
-            Assert.AreEqual(3, styles[5].ShadowWidth);
-            Assert.AreEqual(true, styles[6].Italic);
+            Assert.AreEqual(235, styles[2].Primary.R);
+            Assert.AreEqual("Arial", styles[3].FontName);
+            Assert.AreEqual(false, styles[4].Italic);
+            Assert.AreEqual(false, styles[5].Bold);
+            Assert.AreEqual(3, styles[6].ShadowWidth);
+            Assert.AreEqual(true, styles[7].Italic);
         }
 
         [TestMethod]
@@ -39,24 +39,78 @@ namespace Test.Core
             var converted = WebVttToAssa.Convert(subtitle, new SsaStyle(), 1920, 1080);
             var styles = AdvancedSubStationAlpha.GetSsaStylesFromHeader(converted.Header);
 
-            Assert.AreEqual(".styledotEAC118", styles[0].Name);
-            Assert.AreEqual(".styledotaqua", styles[1].Name);
-            Assert.AreEqual(".styledotaquadotitalic", styles[2].Name);
-            Assert.AreEqual(".styledotitalic", styles[3].Name);
-            Assert.AreEqual(".styledotEAC118dotitalic", styles[4].Name);
+            Assert.AreEqual(".styledotEAC118", styles[1].Name);
+            Assert.AreEqual(".styledotaqua", styles[2].Name);
+            Assert.AreEqual(".styledotaquadotitalic", styles[3].Name);
+            Assert.AreEqual(".styledotitalic", styles[4].Name);
+            Assert.AreEqual(".styledotEAC118dotitalic", styles[5].Name);
 
-            Assert.AreEqual(234, styles[0].Primary.R);
-            Assert.AreEqual(193, styles[0].Primary.G);
-            Assert.AreEqual(24, styles[0].Primary.B);
-            Assert.AreEqual(0, styles[1].Primary.R);
-            Assert.AreEqual(255, styles[1].Primary.G);
-            Assert.AreEqual(255, styles[1].Primary.B);
-            Assert.AreEqual(true, styles[2].Italic);
+            Assert.AreEqual(234, styles[1].Primary.R);
+            Assert.AreEqual(193, styles[1].Primary.G);
+            Assert.AreEqual(24, styles[1].Primary.B);
+            Assert.AreEqual(0, styles[2].Primary.R);
+            Assert.AreEqual(255, styles[2].Primary.G);
+            Assert.AreEqual(255, styles[2].Primary.B);
             Assert.AreEqual(true, styles[3].Italic);
             Assert.AreEqual(true, styles[4].Italic);
-            Assert.AreEqual(234, styles[4].Primary.R);
-            Assert.AreEqual(193, styles[4].Primary.G);
-            Assert.AreEqual(24, styles[4].Primary.B);
+            Assert.AreEqual(true, styles[5].Italic);
+            Assert.AreEqual(234, styles[5].Primary.R);
+            Assert.AreEqual(193, styles[5].Primary.G);
+            Assert.AreEqual(24, styles[5].Primary.B);
+        }
+
+        [TestMethod]
+        public void TestLineStyles1()
+        {
+            var subtitle = new Subtitle();
+            subtitle.Header = "STYLE\r\n::cue(.styledotEAC118) { color:#EAC118 }";
+            subtitle.Paragraphs.Add(new Paragraph("<c.styledotEAC118>Hi</c>", 0,0));
+            var converted = WebVttToAssa.Convert(subtitle, new SsaStyle(), 1920, 1080);
+
+            Assert.AreEqual("Hi", converted.Paragraphs[0].Text);
+            Assert.AreEqual(".styledotEAC118", converted.Paragraphs[0].Extra);
+        }
+
+        [TestMethod]
+        public void TestLineStyles2()
+        {
+            var subtitle = new Subtitle();
+            subtitle.Header = "STYLE\r\n::cue(.styleItalic) { font-style:italic }\r\n::cue(.styleColor123456) {  color:#123456 }";
+            subtitle.Paragraphs.Add(new Paragraph("<c.styleItalic.styleColor123456>Hi</c>", 0, 0));
+            var converted = WebVttToAssa.Convert(subtitle, new SsaStyle(), 1920, 1080);
+
+            Assert.AreEqual("{\\c&H563412\\i1}Hi", converted.Paragraphs[0].Text);
+        }
+
+        [TestMethod]
+        public void TestItalicInline()
+        {
+            var subtitle = new Subtitle();
+            subtitle.Paragraphs.Add(new Paragraph("Hallo <i>italic</i> world.", 0, 0));
+            var converted = WebVttToAssa.Convert(subtitle, new SsaStyle(), 1920, 1080);
+            var text = converted.ToText(new AdvancedSubStationAlpha());
+            Assert.AreEqual("Hallo {\\i1}italic{\\i0} world.", converted.Paragraphs[0].Text);
+            Assert.IsTrue(text.Contains("Hallo {\\i1}italic{\\i0} world."));
+        }
+
+        [TestMethod]
+        public void TestBoldInline()
+        {
+            var subtitle = new Subtitle();
+            subtitle.Paragraphs.Add(new Paragraph("Hallo <b>bold</b> world.", 0, 0));
+            var converted = WebVttToAssa.Convert(subtitle, new SsaStyle(), 1920, 1080);
+            var text = converted.ToText(new AdvancedSubStationAlpha());
+            Assert.IsTrue(text.Contains("Hallo {\\b1}bold{\\b0} world."));
+        }
+
+        [TestMethod]
+        public void TestUnderlineInline()
+        {
+            var subtitle = new Subtitle();
+            subtitle.Paragraphs.Add(new Paragraph("Hallo <u>underline</u> world.", 0, 0));
+            var converted = WebVttToAssa.Convert(subtitle, new SsaStyle(), 1920, 1080);
+            var text = converted.ToText(new AdvancedSubStationAlpha());
+            Assert.IsTrue(text.Contains("Hallo {\\u1}underline{\\u0} world."));
         }
     }
 }
