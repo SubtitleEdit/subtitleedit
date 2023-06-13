@@ -1405,7 +1405,6 @@ $HorzAlign          =   Center
         public string MpvVideoVf { get; set; }
         public string MpvVideoAf { get; set; }
         public string MpvExtraOptions { get; set; }
-        public string MpvAllowNativePreview { get; set; }
         public bool MpvLogging { get; set; }
         public bool MpvHandlesPreviewText { get; set; }
         public Color MpvPreviewTextPrimaryColor { get; set; }
@@ -1603,7 +1602,6 @@ $HorzAlign          =   Center
             MpvPreviewTextOpaqueBoxStyle = "1";
             MpvPreviewTextAlignment = "2";
             MpvPreviewTextMarginVertical = 10;
-            MpvAllowNativePreview = "WebVTT;WebVTT File with#";
             FFmpegSceneThreshold = "0.4"; // threshold for generating shot changes - 0.2 is sensitive (more shot changes), 0.6 is less sensitive (fewer shot changes)
             UseTimeFormatHHMMSSFF = false;
             SplitBehavior = 1; // 0=take gap from left, 1=divide evenly, 2=take gap from right
@@ -4129,12 +4127,6 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.General.MpvExtraOptions = subNode.InnerText.Trim();
-            }
-
-            subNode = node.SelectSingleNode("MpvAllowNativePreview");
-            if (subNode != null)
-            {
-                settings.General.MpvAllowNativePreview = subNode.InnerText.Trim();
             }
 
             subNode = node.SelectSingleNode("MpvLogging");
@@ -10418,7 +10410,6 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("MpvVideoVf", settings.General.MpvVideoVf);
                 textWriter.WriteElementString("MpvVideoAf", settings.General.MpvVideoAf);
                 textWriter.WriteElementString("MpvExtraOptions", settings.General.MpvExtraOptions);
-                textWriter.WriteElementString("MpvAllowNativePreview", settings.General.MpvAllowNativePreview);
                 textWriter.WriteElementString("MpvLogging", settings.General.MpvLogging.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("MpvHandlesPreviewText", settings.General.MpvHandlesPreviewText.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("MpvPreviewTextPrimaryColor", ColorTranslator.ToHtml(settings.General.MpvPreviewTextPrimaryColor));
