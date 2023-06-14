@@ -8848,16 +8848,7 @@ namespace Nikse.SubtitleEdit.Forms
                     audio.DropDownItems.Insert(0, audioToTextWhisper);
                 }
 
-                audioClip.Click += (senderNew, eNew) =>
-                {
-                    if (!RequireFfmpegOk())
-                    {
-                        return;
-                    }
-
-                    var audioClips = GetAudioClips();
-                    UiUtil.OpenFolder(Path.GetDirectoryName(audioClips[0].AudioFileName));
-                };
+                audioClip.Click += (senderNew, eNew) => { ExtractAudioSelectedLines(); };
 
                 audioToTextWhisper.Click += (senderNew, eNew) => { AudioToTextWhisperSelectedLines(); };
 
@@ -9317,6 +9308,17 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripMenuItemAssaTools.Visible = false;
                 toolStripSeparatorAssa.Visible = false;
             }
+        }
+
+        private void ExtractAudioSelectedLines()
+        {
+            if (!RequireFfmpegOk())
+            {
+                return;
+            }
+
+            var audioClips = GetAudioClips();
+            UiUtil.OpenFolder(Path.GetDirectoryName(audioClips[0].AudioFileName));
         }
 
         private void AudioToTextVoskSelectedLines()
@@ -13776,16 +13778,18 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         else if (isWebVtt)
                         {
+                            var removeFound = false;
                             foreach (var style in webVttStyles)
                             {
                                 if (style.Color == c && p.Text.Contains("." + style.Name))
                                 {
-                                    remove = true;
+                                    removeFound = true;
                                 }
                             }
 
-                            if (remove)
+                            if (!removeFound)
                             {
+                                remove = false;
                                 break;
                             }
                         }
@@ -17933,10 +17937,20 @@ namespace Nikse.SubtitleEdit.Forms
 
                 e.SuppressKeyPress = true;
             }
-            else if (e.KeyData == _shortcuts.MainVideoAudioToText)
+            else if (e.KeyData == _shortcuts.MainVideoAudioToTextVosk)
             {
                 videoaudioToTextToolStripMenuItem_Click(null, null);
                 e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == _shortcuts.MainVideoAudioToTextWhisper)
+            {
+                audioToTextWhisperTolStripMenuItem_Click(null, null);
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == _shortcuts.MainVideoAudioExtractSelectedLines)
+            {
+                e.SuppressKeyPress = true;
+                ExtractAudioSelectedLines();
             }
             else if (e.KeyData == _shortcuts.MainVideoToggleBrightness)
             {

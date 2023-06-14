@@ -333,12 +333,26 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             if (style.Color != null)
             {
-                sb.Append($"color:rgba({style.Color.Value.R},{style.Color.Value.G},{style.Color.Value.B},{(style.Color.Value.A / 255.0).ToString(CultureInfo.InvariantCulture)}); ");
+                if (style.Color.Value.A == byte.MaxValue)
+                {
+                    sb.Append($"color:rgb({style.Color.Value.R},{style.Color.Value.G},{style.Color.Value.B}); ");
+                }
+                else
+                {
+                    sb.Append($"color:rgba({style.Color.Value.R},{style.Color.Value.G},{style.Color.Value.B},{(style.Color.Value.A / 255.0).ToString(CultureInfo.InvariantCulture)}); ");
+                }
             }
 
             if (style.BackgroundColor != null)
             {
-                sb.Append($"background-color:rgba({style.BackgroundColor.Value.R},{style.BackgroundColor.Value.G},{style.BackgroundColor.Value.B},{(style.BackgroundColor.Value.A / 255.0).ToString(CultureInfo.InvariantCulture)}); ");
+                if (style.BackgroundColor.Value.A == byte.MaxValue)
+                {
+                    sb.Append($"background-color:rgb({style.BackgroundColor.Value.R},{style.BackgroundColor.Value.G},{style.BackgroundColor.Value.B}); ");
+                }
+                else
+                {
+                    sb.Append($"background-color:rgba({style.BackgroundColor.Value.R},{style.BackgroundColor.Value.G},{style.BackgroundColor.Value.B},{(style.BackgroundColor.Value.A / 255.0).ToString(CultureInfo.InvariantCulture)}); ");
+                }
             }
 
             if (style.Italic != null && style.Italic.Value == true)

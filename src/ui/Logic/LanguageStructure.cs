@@ -2744,6 +2744,7 @@ namespace Nikse.SubtitleEdit.Logic
             public string MainToggleVideoControls { get; set; }
             public string VideoToggleContrast { get; set; }
             public string AudioToTextX { get; set; }
+            public string AudioExtractSelectedLines { get; set; }
             public string AudioToTextSelectedLinesX { get; set; }
             public string VideoToggleBrightness { get; set; }
             public string CustomSearch1 { get; set; }
