@@ -2556,6 +2556,7 @@ can edit in same subtitle file (collaboration)</Information>
     <MainToggleVideoControls>Toggle video controls</MainToggleVideoControls>
     <VideoToggleContrast>Toggle contrast (mpv only)</VideoToggleContrast>
     <AudioToTextX>Audio to text ({0})</AudioToTextX>
+    <AudioExtractSelectedLines>Extract audio (selected lines)</AudioExtractSelectedLines>
     <AudioToTextSelectedLinesX>Audio to text selected lines ({0})</AudioToTextSelectedLinesX>
     <VideoToggleBrightness>Toggle brightness (mpv only)</VideoToggleBrightness>
     <CustomSearch1>Translate, custom search 1</CustomSearch1>

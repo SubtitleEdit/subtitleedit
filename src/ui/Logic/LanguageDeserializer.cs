@@ -7009,6 +7009,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/AudioToTextX":
                     language.Settings.AudioToTextX = reader.Value;
                     break;
+                case "Settings/AudioExtractSelectedLines":
+                    language.Settings.AudioExtractSelectedLines = reader.Value;
+                    break;
                 case "Settings/AudioToTextSelectedLinesX":
                     language.Settings.AudioToTextSelectedLinesX = reader.Value;
                     break;
