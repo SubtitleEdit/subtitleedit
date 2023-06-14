@@ -2403,6 +2403,7 @@ $HorzAlign          =   Center
         public string MainVideoToggleContrast { get; set; }
         public string MainVideoAudioToTextVosk { get; set; }
         public string MainVideoAudioToTextWhisper { get; set; }
+        public string MainVideoAudioExtractAudioSelectedLines { get; set; }
 
         // spell check
         public string MainSpellCheck { get; set; }
@@ -9024,6 +9025,12 @@ $HorzAlign          =   Center
                     shortcuts.MainVideoAudioToTextWhisper = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainVideoAudioExtractAudioSelectedLines");
+                if (subNode != null)
+                {
+                    shortcuts.MainVideoAudioExtractAudioSelectedLines= subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainSpellCheck");
                 if (subNode != null)
                 {
@@ -11411,6 +11418,7 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("MainVideoToggleContrast", shortcuts.MainVideoToggleContrast);
             textWriter.WriteElementString("MainVideoAudioToTextVosk", shortcuts.MainVideoAudioToTextVosk);
             textWriter.WriteElementString("MainVideoAudioToTextWhisper", shortcuts.MainVideoAudioToTextWhisper);
+            textWriter.WriteElementString("MainVideoAudioExtractAudioSelectedLines", shortcuts.MainVideoAudioExtractAudioSelectedLines);
             textWriter.WriteElementString("MainSpellCheck", shortcuts.MainSpellCheck);
             textWriter.WriteElementString("MainSpellCheckFindDoubleWords", shortcuts.MainSpellCheckFindDoubleWords);
             textWriter.WriteElementString("MainSpellCheckAddWordToNames", shortcuts.MainSpellCheckAddWordToNames);
