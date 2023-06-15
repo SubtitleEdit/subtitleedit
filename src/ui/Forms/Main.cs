@@ -44,6 +44,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Core.AudioToText;
 using Nikse.SubtitleEdit.Forms.AudioToText;
+using WebVTT = Nikse.SubtitleEdit.Core.SubtitleFormats.WebVTT;
+using Nikse.SubtitleEdit.Forms.VTT;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -30751,6 +30753,21 @@ namespace Nikse.SubtitleEdit.Forms
             else if (formatType == typeof(TimedText10) || formatType == typeof(ItunesTimedText))
             {
                 using (var styles = new TimedTextStyles(_subtitle))
+                {
+                    if (styles.ShowDialog(this) == DialogResult.OK)
+                    {
+                        if (_subtitle.Header != styles.Header)
+                        {
+                            MakeHistoryForUndo(styles.Text);
+                        }
+
+                        _subtitle.Header = styles.Header;
+                    }
+                }
+            }
+            else if (formatType == typeof(WebVTT) || formatType == typeof(WebVTTFileWithLineNumber))
+            {
+                using (var styles = new WebVttStyleManager(_subtitle))
                 {
                     if (styles.ShowDialog(this) == DialogResult.OK)
                     {

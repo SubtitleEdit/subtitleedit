@@ -1390,6 +1390,12 @@
     <Compile Include="Forms\TextPrompt.Designer.cs">
       <DependentUpon>TextPrompt.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\VTT\WebVttStyleManager.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\VTT\WebVttStyleManager.Designer.cs">
+      <DependentUpon>WebVttStyleManager.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\YouTubeAnnotationsImport.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -2132,6 +2138,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\TextPrompt.resx">
       <DependentUpon>TextPrompt.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\VTT\WebVttStyleManager.resx">
+      <DependentUpon>WebVttStyleManager.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\YouTubeAnnotationsImport.resx">
       <DependentUpon>YouTubeAnnotationsImport.cs</DependentUpon>

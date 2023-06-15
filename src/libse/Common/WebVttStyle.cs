@@ -12,6 +12,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public bool? Italic { get; set; }
         public bool? Bold { get; set; }
         public bool? Underline { get; set; }
+        public bool? StrikeThrough { get; set; }
         public decimal? ShadowWidth { get; set; }
         public Color? ShadowColor { get; set; }
     }
