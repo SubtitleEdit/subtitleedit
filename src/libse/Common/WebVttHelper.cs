@@ -149,6 +149,10 @@ namespace Nikse.SubtitleEdit.Core.Common
             {
                 SetTextShadow(webVttStyle, value);
             }
+            else if (name == "text-decoration")
+            {
+                SetTextDecoration(webVttStyle, value);
+            }
         }
 
         private static void SetColor(WebVttStyle webVttStyle, string value)
@@ -237,6 +241,18 @@ namespace Nikse.SubtitleEdit.Core.Common
             else if (value == "normal")
             {
                 webVttStyle.Italic = false;
+            }
+        }
+
+        private static void SetTextDecoration(WebVttStyle webVttStyle, string value)
+        {
+            if (value == "underline")
+            {
+                webVttStyle.Underline = true;
+            }
+            else if (value == "line-through")
+            {
+                webVttStyle.StrikeThrough = true;
             }
         }
 
@@ -355,14 +371,24 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
             }
 
-            if (style.Italic != null && style.Italic.Value == true)
+            if (style.Italic != null && style.Italic.Value)
             {
                 sb.Append("font-style:italic; ");
             }
 
-            if (style.Bold != null && style.Bold.Value == true)
+            if (style.Bold != null && style.Bold.Value)
             {
                 sb.Append("font-weight:bold; ");
+            }
+
+            if (style.Underline != null && style.Underline.Value)
+            {
+                sb.Append("text-decoration:underline; ");
+            }
+
+            if (style.StrikeThrough != null && style.StrikeThrough.Value)
+            {
+                sb.Append("text-decoration:line-through; ");
             }
 
             return sb.ToString().TrimEnd(' ', ';');
@@ -403,7 +429,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             {
                 text = text.Replace("." + style.Name, string.Empty);
             }
-            else 
+            else
             {
                 text = "<c." + style.Name + ">" + text + "</c>";
             }

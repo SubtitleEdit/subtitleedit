@@ -370,6 +370,16 @@ namespace Nikse.SubtitleEdit.Core.Common
                 sb.Append("\\u0");
             }
 
+            if (webVttStyle.StrikeThrough != null && webVttStyle.StrikeThrough == true)
+            {
+                sb.Append("\\s1");
+            }
+
+            if (webVttStyle.StrikeThrough != null && webVttStyle.StrikeThrough == false)
+            {
+                sb.Append("\\s0");
+            }
+
             sb.Append("}");
 
             if (sb.Length > 2)
@@ -406,7 +416,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             {
                 var newStyle = new SsaStyle
                 {
-                    BorderStyle = "3", // box per line (bg color is outline)
+                    BorderStyle = "3", // box per line (background color is outline)
                     Name = style.Name,
                     FontName = style.FontName ?? defaultStyle.FontName,
                     FontSize = style.FontSize ?? defaultStyle.FontSize,
@@ -415,6 +425,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     Bold = style.Bold ?? defaultStyle.Bold,
                     Italic = style.Italic ?? defaultStyle.Italic,
                     Underline = style.Underline ?? defaultStyle.Underline,
+                    Strikeout = style.StrikeThrough ?? defaultStyle.Strikeout,
                     ShadowWidth = style.ShadowWidth ?? defaultStyle.ShadowWidth,
                     Secondary = style.ShadowColor ?? defaultStyle.Secondary,
                 };
