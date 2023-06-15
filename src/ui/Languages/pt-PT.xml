@@ -2557,6 +2557,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <MainToggleVideoControls>Alternar controlos vídeo</MainToggleVideoControls>
     <VideoToggleContrast>Alternar contraste (apenas mpv)</VideoToggleContrast>
     <AudioToTextX>Áudio para texto ({0})</AudioToTextX>
+    <AudioExtractSelectedLines>Extrair áudio (linhas seleccionadas)</AudioExtractSelectedLines>
     <AudioToTextSelectedLinesX>Áudio para texto em linhas seleccionadas ({0})</AudioToTextSelectedLinesX>
     <VideoToggleBrightness>Alternar luminosidade (apenas mpv)</VideoToggleBrightness>
     <CustomSearch1>Traduzir, pesquisa personalizada 1</CustomSearch1>
