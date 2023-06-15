@@ -1787,6 +1787,7 @@ namespace Nikse.SubtitleEdit.Logic
                     public string SizeAllColumnsToFit { get; set; }
                     public string SetStyle { get; set; }
                     public string SetActor { get; set; }
+                    public string SetLayer { get; set; }
                     public string AssaTools { get; set; }
                     public string SubStationAlphaStyles { get; set; }
                     public string AdvancedSubStationAlphaStyles { get; set; }
