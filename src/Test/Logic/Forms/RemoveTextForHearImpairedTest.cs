@@ -659,6 +659,24 @@ namespace Test.Logic.Forms
         }
 
         [TestMethod]
+        public void RemoveInterjections19()
+        {
+            var text = $"- ¡Hm!{Environment.NewLine}- Increíble, ¿verdad?";
+            var settings = GetRemoveInterjectionContext(text, true);
+            var actual = new RemoveInterjection().Invoke(settings);
+            Assert.AreEqual("Increíble, ¿verdad?", actual);
+        }
+
+        [TestMethod]
+        public void RemoveInterjections19B()
+        {
+            var text = $"- ¿Hm?{Environment.NewLine}- Increíble, ¿verdad?";
+            var settings = GetRemoveInterjectionContext(text, true);
+            var actual = new RemoveInterjection().Invoke(settings);
+            Assert.AreEqual("Increíble, ¿verdad?", actual);
+        }
+
+        [TestMethod]
         public void RemoveColonOnlyOnSeparateLine()
         {
             var target = GetRemoveTextForHiLib();

@@ -1787,6 +1787,7 @@ namespace Nikse.SubtitleEdit.Logic
                     public string SizeAllColumnsToFit { get; set; }
                     public string SetStyle { get; set; }
                     public string SetActor { get; set; }
+                    public string SetLayer { get; set; }
                     public string AssaTools { get; set; }
                     public string SubStationAlphaStyles { get; set; }
                     public string AdvancedSubStationAlphaStyles { get; set; }
@@ -2744,6 +2745,7 @@ namespace Nikse.SubtitleEdit.Logic
             public string MainToggleVideoControls { get; set; }
             public string VideoToggleContrast { get; set; }
             public string AudioToTextX { get; set; }
+            public string AudioExtractSelectedLines { get; set; }
             public string AudioToTextSelectedLinesX { get; set; }
             public string VideoToggleBrightness { get; set; }
             public string CustomSearch1 { get; set; }
