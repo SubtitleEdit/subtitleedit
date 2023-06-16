@@ -8958,6 +8958,10 @@ namespace Nikse.SubtitleEdit.Forms
                         toolStripMenuItemSetLayer.DropDownItems.Add((layer + 1).ToString(CultureInfo.InvariantCulture), null, SetLayer);
                         toolStripMenuItemSetLayer.DropDownItems.Add((layer + 10).ToString(CultureInfo.InvariantCulture), null, SetLayer);
                         toolStripMenuItemSetLayer.DropDownItems.Add((layer + 100).ToString(CultureInfo.InvariantCulture), null, SetLayer);
+
+                        toolStripMenuItemSetLayer.DropDownItems.Add(new ToolStripSeparator());
+
+                        toolStripMenuItemSetLayer.DropDownItems.Add(_language.Menu.ContextMenu.SetLayer, null, SetLayerChooseValue);
                     }
                     toolStripMenuItemSetLayer.Visible = true;
                 }
@@ -9482,6 +9486,23 @@ namespace Nikse.SubtitleEdit.Forms
                 foreach (int index in SubtitleListview1.SelectedIndices)
                 {
                     _subtitle.Paragraphs[index].Layer = number;
+                }
+            }
+        }
+
+        private void SetLayerChooseValue(object sender, EventArgs e)
+        {
+            var p = _subtitle.GetParagraphOrDefault(FirstSelectedIndex);
+            using (var form = new SetLayer(_subtitle, p))
+            {
+                if (form.ShowDialog(this) == DialogResult.OK)
+                {
+                    MakeHistoryForUndo("Set layer: " + form.Layer);
+                    var selectedIndices = new List<int>(SubtitleListview1.GetSelectedIndices());
+                    foreach (int index in selectedIndices)
+                    {
+                        _subtitle.Paragraphs[index].Layer = form.Layer;
+                    }
                 }
             }
         }
