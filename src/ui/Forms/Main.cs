@@ -10768,7 +10768,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void numericUpDownLayer_ValueChanged(object sender, EventArgs e)
+        private void NumericUpDownLayer_ValueChanged(object sender, EventArgs e)
         {
             var idx = _subtitleListViewIndex;
             var p = _subtitle.GetParagraphOrDefault(idx);
@@ -10777,7 +10777,14 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            p.Layer = (int)numericUpDownLayer.Value;
+            var format = GetCurrentSubtitleFormat();
+            bool isAssa = format.GetType() == typeof(AdvancedSubStationAlpha);
+            if (isAssa)
+            {
+                int layer = (int)numericUpDownLayer.Value;
+                MakeHistoryForUndo(LanguageSettings.Current.Main.Controls.SetLayer + ": " + layer);
+                p.Layer = layer;
+            }
         }
 
         public Point GetPositionInForm(Control ctrl)
@@ -12917,9 +12924,17 @@ namespace Nikse.SubtitleEdit.Forms
             textBoxListViewText.Text = p.Text;
             textBoxListViewText.TextChanged += TextBoxListViewTextTextChanged;
             _listViewTextUndoLast = p.Text;
-            numericUpDownLayer.ValueChanged -= numericUpDownLayer_ValueChanged;
-            numericUpDownLayer.Value = p.Layer;
-            numericUpDownLayer.ValueChanged += numericUpDownLayer_ValueChanged;
+
+            var format = GetCurrentSubtitleFormat();
+            bool isAssa = format.GetType() == typeof(AdvancedSubStationAlpha);
+            numericUpDownLayer.Visible = isAssa;
+            labelLayer.Visible = isAssa;
+            if (isAssa)
+            {
+                numericUpDownLayer.ValueChanged -= NumericUpDownLayer_ValueChanged;
+                numericUpDownLayer.Value = p.Layer;
+                numericUpDownLayer.ValueChanged += NumericUpDownLayer_ValueChanged;
+            }
 
             timeUpDownStartTime.MaskedTextBox.TextChanged -= MaskedTextBoxTextChanged;
             timeUpDownStartTime.TimeCode = p.StartTime;

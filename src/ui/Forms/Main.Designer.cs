@@ -4583,7 +4583,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.numericUpDownLayer.Name = "numericUpDownLayer";
             this.numericUpDownLayer.Size = new System.Drawing.Size(37, 20);
             this.numericUpDownLayer.TabIndex = 46;
-            this.numericUpDownLayer.ValueChanged += new System.EventHandler(this.numericUpDownLayer_ValueChanged);
+            this.numericUpDownLayer.ValueChanged += new System.EventHandler(this.NumericUpDownLayer_ValueChanged);
             // 
             // labelLayer
             // 
