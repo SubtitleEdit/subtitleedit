@@ -2040,7 +2040,8 @@ namespace Nikse.SubtitleEdit.Logic
                     Previous = "< Prev",
                     Next = "Next >",
                     AutoBreak = "Auto &br",
-                    Unbreak = "Unbreak"
+                    Unbreak = "Unbreak",
+                    SetLayer = "Set Layer"
                 },
 
                 VideoControls = new LanguageStructure.Main.MainVideoControls

@@ -1474,6 +1474,7 @@ To use an API key, go to "Options -&gt; Settings -&gt; Tools" to enter your Goog
       <Next>Next &gt;</Next>
       <AutoBreak>Auto &amp;br</AutoBreak>
       <Unbreak>Unbreak</Unbreak>
+      <SetLayer>Set layer</SetLayer>
     </Controls>
     <VideoControls>
       <Translate>Translate</Translate>
