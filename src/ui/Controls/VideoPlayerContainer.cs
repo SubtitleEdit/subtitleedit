@@ -55,8 +55,6 @@ namespace Nikse.SubtitleEdit.Controls
 
         public float FontSizeFactor { get; set; }
 
-        private readonly List<string> _allowedMpvNativePreviewFormats = new List<string>();
-
         public VideoPlayer VideoPlayer
         {
             get => _videoPlayer;
@@ -235,11 +233,6 @@ namespace Nikse.SubtitleEdit.Controls
             PictureBoxFastForwardOverMouseLeave(null, null);
 
             _labelTimeCode.Click += LabelTimeCodeClick;
-
-            if (Configuration.Settings.General.MpvAllowNativePreview != null)
-            {
-                _allowedMpvNativePreviewFormats = Configuration.Settings.General.MpvAllowNativePreview.Split(';').ToList();
-            }
         }
 
         private bool _showDuration = true;
@@ -413,7 +406,14 @@ namespace Nikse.SubtitleEdit.Controls
         public void UpdateMpvStyle()
         {
             var gs = Configuration.Settings.General;
-            var mpvStyle = new SsaStyle
+            var mpvStyle = GetMpvPreviewStyle(gs);
+
+            MpvPreviewStyleHeader = string.Format(AdvancedSubStationAlpha.HeaderNoStyles, "MPV preview file", mpvStyle.ToRawAss(SsaStyle.DefaultAssStyleFormat));
+        }
+
+        private static SsaStyle GetMpvPreviewStyle(GeneralSettings gs)
+        {
+            return new SsaStyle
             {
                 Name = "Default",
                 FontName = gs.VideoPlayerPreviewFontName,
@@ -428,8 +428,6 @@ namespace Nikse.SubtitleEdit.Controls
                 Alignment = gs.MpvPreviewTextAlignment,
                 MarginVertical = gs.MpvPreviewTextMarginVertical
             };
-
-            MpvPreviewStyleHeader = string.Format(AdvancedSubStationAlpha.HeaderNoStyles, "MPV preview file", mpvStyle.ToRawAss(SsaStyle.DefaultAssStyleFormat));
         }
 
         private string _mpvPreviewStyleHeader;
@@ -478,6 +476,17 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     text = NetflixImsc11JapaneseToAss.Convert(subtitle, 1280, 720);
                 }
+                else if (uiFormat.Name == WebVTT.NameOfFormat || uiFormat.Name == WebVTTFileWithLineNumber.NameOfFormat)
+                {
+                    //TODO: add some caching!?
+                    var defaultStyle = GetMpvPreviewStyle(Configuration.Settings.General);
+                    defaultStyle.BorderStyle = "3";
+                    subtitle = new Subtitle(subtitle);
+                    subtitle = WebVttToAssa.Convert(subtitle, defaultStyle, VideoWidth, VideoHeight);
+                    format = new AdvancedSubStationAlpha();
+                    text = subtitle.ToText(format);
+                //    File.WriteAllText(@"c:\data\__a.ass", text);
+                }
                 else
                 {
                     if (subtitle.Header == null || !subtitle.Header.Contains("[V4+ Styles]") || uiFormat.Name != AdvancedSubStationAlpha.NameOfFormat)
@@ -525,11 +534,6 @@ namespace Nikse.SubtitleEdit.Controls
                                 }
                             }
                         }
-                    }
-
-                    if (_allowedMpvNativePreviewFormats.Contains(uiFormat.Name))
-                    {
-                        format = uiFormat;
                     }
 
                     var hash = subtitle.GetFastHashCode(null);

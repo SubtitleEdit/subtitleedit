@@ -177,6 +177,12 @@
     <Compile Include="Forms\Assa\AssSetBackground.Designer.cs">
       <DependentUpon>AssSetBackground.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Assa\SetLayer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Assa\SetLayer.Designer.cs">
+      <DependentUpon>SetLayer.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Assa\SetPosition.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1390,6 +1396,12 @@
     <Compile Include="Forms\TextPrompt.Designer.cs">
       <DependentUpon>TextPrompt.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\VTT\WebVttStyleManager.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\VTT\WebVttStyleManager.Designer.cs">
+      <DependentUpon>WebVttStyleManager.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\YouTubeAnnotationsImport.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1536,6 +1548,9 @@
     <EmbeddedResource Include="Forms\Assa\AssSetBackground.resx">
       <DependentUpon>AssSetBackground.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Assa\SetLayer.resx">
+      <DependentUpon>SetLayer.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Assa\SetPosition.resx">
       <DependentUpon>SetPosition.cs</DependentUpon>
@@ -2132,6 +2147,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\TextPrompt.resx">
       <DependentUpon>TextPrompt.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\VTT\WebVttStyleManager.resx">
+      <DependentUpon>WebVttStyleManager.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\YouTubeAnnotationsImport.resx">
       <DependentUpon>YouTubeAnnotationsImport.cs</DependentUpon>

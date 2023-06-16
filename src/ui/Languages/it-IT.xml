@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.6.13</Version>
-    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 26.04.2023</TranslatedBy>
+    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 16.06.2023</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -1378,6 +1378,7 @@ Per usare una chiave API vai su "Opzioni -&gt; Impostazioni -&gt; Strumenti" per
         <SizeAllColumnsToFit>Ridimensiona tutte le colonne per adattarle</SizeAllColumnsToFit>
         <SetStyle>Imposta stile</SetStyle>
         <SetActor>Imposta attore</SetActor>
+        <SetLayer>Imposta layer</SetLayer>
         <AssaTools>Strumenti ASSA</AssaTools>
         <SubStationAlphaStyles>Stili Alpha della stazione secondaria...</SubStationAlphaStyles>
         <AdvancedSubStationAlphaStyles>Stili Alpha Sub Station avanzati...</AdvancedSubStationAlphaStyles>
@@ -2401,6 +2402,8 @@ stesso file di sottotitolo (collaborazione)</Information>
     <UseSyntaxColoring>Usa colorazione sintassi</UseSyntaxColoring>
     <HtmlColor>Colore HTML</HtmlColor>
     <AssaColor>Colore ASSA</AssaColor>
+    <Theme>Tema</Theme>
+    <Automatic>Automatico</Automatic>
     <DarkTheme>Tema scuro</DarkTheme>
     <DarkThemeEnabled>Usa tema scuro</DarkThemeEnabled>
     <DarkThemeShowGridViewLines>Visualizza le linee della griglia nella vista elenco</DarkThemeShowGridViewLines>
@@ -2554,6 +2557,7 @@ stesso file di sottotitolo (collaborazione)</Information>
     <MainToggleVideoControls>Attiva/disattiva i controlli video</MainToggleVideoControls>
     <VideoToggleContrast>Attiva/disattiva contrasto (solo mpv)</VideoToggleContrast>
     <AudioToTextX>Da audio a testo ({0})</AudioToTextX>
+    <AudioExtractSelectedLines>Estrai audio (righe selezionate)</AudioExtractSelectedLines>
     <AudioToTextSelectedLinesX>Da audio a testo righe selezionate ({0})</AudioToTextSelectedLinesX>
     <VideoToggleBrightness>Attiva/disattiva luminosità (solo mpv)</VideoToggleBrightness>
     <CustomSearch1>Traduci, ricerca personalizzata 1</CustomSearch1>
