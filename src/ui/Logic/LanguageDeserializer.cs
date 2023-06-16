@@ -4504,6 +4504,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Main/Menu/ContextMenu/SetActor":
                     language.Main.Menu.ContextMenu.SetActor = reader.Value;
                     break;
+                case "Main/Menu/ContextMenu/SetLayer":
+                    language.Main.Menu.ContextMenu.SetLayer = reader.Value;
+                    break;
                 case "Main/Menu/ContextMenu/AssaTools":
                     language.Main.Menu.ContextMenu.AssaTools = reader.Value;
                     break;
@@ -7008,6 +7011,9 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "Settings/AudioToTextX":
                     language.Settings.AudioToTextX = reader.Value;
+                    break;
+                case "Settings/AudioExtractSelectedLines":
+                    language.Settings.AudioExtractSelectedLines = reader.Value;
                     break;
                 case "Settings/AudioToTextSelectedLinesX":
                     language.Settings.AudioToTextSelectedLinesX = reader.Value;
