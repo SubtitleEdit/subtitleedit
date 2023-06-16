@@ -182,6 +182,26 @@ namespace Nikse.SubtitleEdit.Core.Forms
                                         temp = temp.Remove(subIndex, 2);
                                         removeAfter = false;
                                     }
+                                    else if (subTemp == " ¡!")
+                                    {
+                                        temp = temp.Remove(subIndex, 3);
+                                        removeAfter = false;
+                                    }
+                                    else if (subTemp == " ¿?")
+                                    {
+                                        temp = temp.Remove(subIndex, 3);
+                                        removeAfter = false;
+                                    }
+                                    else if (index == 1 && temp.StartsWith("¿?" + Environment.NewLine, StringComparison.Ordinal))
+                                    {
+                                        temp = temp.Remove(0, 2).TrimEnd();
+                                        removeAfter = false;
+                                    }
+                                    else if (index == 1 && temp.StartsWith("¡!" + Environment.NewLine, StringComparison.Ordinal))
+                                    {
+                                        temp = temp.Remove(0, 2).TrimEnd();
+                                        removeAfter = false;
+                                    }
                                     else
                                     {
                                         subTemp = temp.Substring(subIndex);
@@ -235,6 +255,17 @@ namespace Nikse.SubtitleEdit.Core.Forms
                                 {
                                     removeAfter = false;
                                 }
+                            }
+
+                            if (index == 1 && temp.StartsWith("¿?"))
+                            {
+                                removeAfter = false;
+                                temp = temp.Remove(0, 2);
+                            }
+                            else if (index == 1 && temp.StartsWith("¡!"))
+                            {
+                                removeAfter = false;
+                                temp = temp.Remove(0, 2);
                             }
 
                             if (removeAfter)
