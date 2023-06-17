@@ -279,6 +279,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.contextMenuStripListView = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.setStylesForSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.setActorForSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemSetLayer = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemAssaTools = new System.Windows.Forms.ToolStripMenuItem();
             this.applyCustomStylesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.setPositionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -574,7 +575,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.timerOriginalTextUndo = new System.Windows.Forms.Timer(this.components);
             this.contextMenuStripShowVideoControls = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItemShowVideoControls = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemSetLayer = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -2674,7 +2674,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemSelectedLines,
             this.toolStripMenuItemGoogleMicrosoftTranslateSelLine});
             this.contextMenuStripListView.Name = "contextMenuStripListView";
-            this.contextMenuStripListView.Size = new System.Drawing.Size(285, 826);
+            this.contextMenuStripListView.Size = new System.Drawing.Size(285, 804);
             this.contextMenuStripListView.Closed += new System.Windows.Forms.ToolStripDropDownClosedEventHandler(this.MenuClosed);
             this.contextMenuStripListView.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripListViewOpening);
             this.contextMenuStripListView.Opened += new System.EventHandler(this.MenuOpened);
@@ -2690,6 +2690,12 @@ namespace Nikse.SubtitleEdit.Forms
             this.setActorForSelectedLinesToolStripMenuItem.Name = "setActorForSelectedLinesToolStripMenuItem";
             this.setActorForSelectedLinesToolStripMenuItem.Size = new System.Drawing.Size(284, 22);
             this.setActorForSelectedLinesToolStripMenuItem.Text = "Set actor";
+            // 
+            // toolStripMenuItemSetLayer
+            // 
+            this.toolStripMenuItemSetLayer.Name = "toolStripMenuItemSetLayer";
+            this.toolStripMenuItemSetLayer.Size = new System.Drawing.Size(284, 22);
+            this.toolStripMenuItemSetLayer.Text = "Set layer";
             // 
             // toolStripMenuItemAssaTools
             // 
@@ -4581,8 +4587,8 @@ namespace Nikse.SubtitleEdit.Forms
             0,
             -2147483648});
             this.numericUpDownLayer.Name = "numericUpDownLayer";
-            this.numericUpDownLayer.Size = new System.Drawing.Size(37, 20);
-            this.numericUpDownLayer.TabIndex = 46;
+            this.numericUpDownLayer.Size = new System.Drawing.Size(59, 20);
+            this.numericUpDownLayer.TabIndex = 4;
             this.numericUpDownLayer.ValueChanged += new System.EventHandler(this.NumericUpDownLayer_ValueChanged);
             // 
             // labelLayer
@@ -5614,12 +5620,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemShowVideoControls.Size = new System.Drawing.Size(181, 22);
             this.toolStripMenuItemShowVideoControls.Text = "Show video controls";
             this.toolStripMenuItemShowVideoControls.Click += new System.EventHandler(this.toolStripMenuItemShowVideoControls_Click);
-            // 
-            // toolStripMenuItemSetLayer
-            // 
-            this.toolStripMenuItemSetLayer.Name = "toolStripMenuItemSetLayer";
-            this.toolStripMenuItemSetLayer.Size = new System.Drawing.Size(284, 22);
-            this.toolStripMenuItemSetLayer.Text = "Set layer";
             // 
             // Main
             // 

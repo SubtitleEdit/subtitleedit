@@ -422,6 +422,9 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripComboBoxFrameRate.Text = Configuration.Settings.General.DefaultFrameRate.ToString();
                 pictureBoxBookmark.Visible = false;
 
+                labelLayer.Visible = false;
+                numericUpDownLayer.Visible = false;
+
                 UpdateRecentFilesUI();
                 InitializeToolbar();
 
@@ -3711,7 +3714,7 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleListview1.SelectedIndexChanged -= SubtitleListview1_SelectedIndexChanged;
 
                 RemoveOriginal(true, false);
-                if (format.HasStyleSupport && format.Name == AdvancedSubStationAlpha.NameOfFormat)
+                if (format.HasStyleSupport && format.GetType() == typeof(AdvancedSubStationAlpha))
                 {
                     SubtitleListview1.ShowExtraColumn(_languageGeneral.Style);
                 }
@@ -5248,6 +5251,8 @@ namespace Nikse.SubtitleEdit.Forms
             RemoveOriginal(true, false);
             _splitDualSami = false;
             _imageSubFileName = null;
+            labelLayer.Visible = false;
+            numericUpDownLayer.Visible = false;
 
             SubtitleListview1.HideColumn(SubtitleListView.SubtitleColumn.Extra);
 
@@ -9481,8 +9486,7 @@ namespace Nikse.SubtitleEdit.Forms
             string layer = (sender as ToolStripItem).Text;
             if (!string.IsNullOrEmpty(layer) && int.TryParse(layer, out int number))
             {
-                MakeHistoryForUndo(LanguageSettings.Current.Main.Menu.ContextMenu.SetLayer + ": " + layer);
-
+                MakeHistoryForUndo(string.Format(_language.BeforeX, $"{_language.Menu.ContextMenu.SetLayer}: {layer}"));
                 foreach (int index in SubtitleListview1.SelectedIndices)
                 {
                     _subtitle.Paragraphs[index].Layer = number;
@@ -9497,7 +9501,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
-                    MakeHistoryForUndo("Set layer: " + form.Layer);
+                    MakeHistoryForUndo(string.Format(_language.BeforeX, $"{_language.Menu.ContextMenu.SetLayer}: {form.Layer}"));
                     var selectedIndices = new List<int>(SubtitleListview1.GetSelectedIndices());
                     foreach (int index in selectedIndices)
                     {
@@ -9837,6 +9841,7 @@ namespace Nikse.SubtitleEdit.Forms
                 buttonNext.Enabled = false;
                 buttonUnBreak.Enabled = false;
                 buttonAutoBreak.Enabled = false;
+                numericUpDownLayer.Enabled = false;
                 if (!Configuration.Settings.General.UseDarkTheme)
                 {
                     labelText.Enabled = false;
@@ -9868,6 +9873,7 @@ namespace Nikse.SubtitleEdit.Forms
                 buttonNext.Enabled = true;
                 buttonUnBreak.Enabled = true;
                 buttonAutoBreak.Enabled = true;
+                numericUpDownLayer.Enabled = true;
                 labelText.Enabled = true;
                 labelStartTime.Enabled = true;
                 labelDuration.Enabled = true;
@@ -10770,19 +10776,17 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void NumericUpDownLayer_ValueChanged(object sender, EventArgs e)
         {
-            var idx = _subtitleListViewIndex;
-            var p = _subtitle.GetParagraphOrDefault(idx);
+            var p = _subtitle.GetParagraphOrDefault(_subtitleListViewIndex);
             if (p == null)
             {
                 return;
             }
 
-            var format = GetCurrentSubtitleFormat();
-            bool isAssa = format.GetType() == typeof(AdvancedSubStationAlpha);
+            var isAssa =  GetCurrentSubtitleFormat().GetType() == typeof(AdvancedSubStationAlpha);
             if (isAssa)
             {
-                int layer = (int)numericUpDownLayer.Value;
-                MakeHistoryForUndo(LanguageSettings.Current.Main.Controls.SetLayer + ": " + layer);
+                var layer = (int)numericUpDownLayer.Value;
+                MakeHistoryForUndo(string.Format(_language.BeforeX, $"{_language.Menu.ContextMenu.SetLayer}: {layer}"));
                 p.Layer = layer;
             }
         }
@@ -12931,6 +12935,8 @@ namespace Nikse.SubtitleEdit.Forms
             labelLayer.Visible = isAssa;
             if (isAssa)
             {
+                labelLayer.Text = LanguageSettings.Current.General.Layer;
+                numericUpDownLayer.Left = labelLayer.Right + 5;
                 numericUpDownLayer.ValueChanged -= NumericUpDownLayer_ValueChanged;
                 numericUpDownLayer.Value = p.Layer;
                 numericUpDownLayer.ValueChanged += NumericUpDownLayer_ValueChanged;
@@ -20504,7 +20510,7 @@ namespace Nikse.SubtitleEdit.Forms
                             addMs = lastParagraph.EndTime.TotalMilliseconds - tmp.Paragraphs[0].StartTime.TotalMilliseconds + MinGapBetweenLines;
                         }
 
-                        if (isAssa && format.Name == AdvancedSubStationAlpha.NameOfFormat)
+                        if (isAssa && format.GetType() == typeof(AdvancedSubStationAlpha))
                         {
                             addMs = 0;
 
@@ -31720,7 +31726,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         var isAssa = IsAssa();
                         var assaStyles = AdvancedSubStationAlpha.GetStylesFromHeader(_subtitle.Header);
-                        for (int i = 0; i + index < _subtitle.Paragraphs.Count && i < tmp.Paragraphs.Count; i++)
+                        for (var i = 0; i + index < _subtitle.Paragraphs.Count && i < tmp.Paragraphs.Count; i++)
                         {
                             if (index + i < _subtitle.Paragraphs.Count)
                             {
@@ -31729,7 +31735,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     _subtitle.Paragraphs[index + i].Text = tmp.Paragraphs[i].Text;
                                     _subtitle.Paragraphs[index + i].StartTime.TotalMilliseconds = tmp.Paragraphs[i].StartTime.TotalMilliseconds;
                                     _subtitle.Paragraphs[index + i].EndTime.TotalMilliseconds = tmp.Paragraphs[i].EndTime.TotalMilliseconds;
-                                    if (isAssa && format.Name == AdvancedSubStationAlpha.NameOfFormat)
+                                    if (isAssa && format.GetType() == typeof(AdvancedSubStationAlpha))
                                     {
                                         _subtitle.Paragraphs[index + i].Extra = tmp.Paragraphs[i].Extra;
                                         _subtitle.Paragraphs[index + i].Actor = tmp.Paragraphs[i].Actor;
@@ -34727,7 +34733,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void generateBackgroundBoxToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (GetCurrentSubtitleFormat().Name != AdvancedSubStationAlpha.NameOfFormat)
+            if (GetCurrentSubtitleFormat().GetType() != typeof(AdvancedSubStationAlpha))
             {
                 return;
             }

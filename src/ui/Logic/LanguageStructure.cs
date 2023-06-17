@@ -43,6 +43,7 @@ namespace Nikse.SubtitleEdit.Logic
             public string Actor { get; set; }
             public string Gap { get; set; }
             public string Region { get; set; }
+            public string Layer { get; set; }
             public string NumberSymbol { get; set; }
             public string Number { get; set; }
             public string Text { get; set; }
@@ -1898,7 +1899,6 @@ namespace Nikse.SubtitleEdit.Logic
                 public string Next { get; set; }
                 public string AutoBreak { get; set; }
                 public string Unbreak { get; set; }
-                public string SetLayer { get; set; }
             }
 
             public class MainVideoControls
