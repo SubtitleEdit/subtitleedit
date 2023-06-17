@@ -1898,6 +1898,7 @@ namespace Nikse.SubtitleEdit.Logic
                 public string Next { get; set; }
                 public string AutoBreak { get; set; }
                 public string Unbreak { get; set; }
+                public string SetLayer { get; set; }
             }
 
             public class MainVideoControls

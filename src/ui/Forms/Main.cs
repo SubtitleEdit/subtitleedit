@@ -10768,6 +10768,25 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private void NumericUpDownLayer_ValueChanged(object sender, EventArgs e)
+        {
+            var idx = _subtitleListViewIndex;
+            var p = _subtitle.GetParagraphOrDefault(idx);
+            if (p == null)
+            {
+                return;
+            }
+
+            var format = GetCurrentSubtitleFormat();
+            bool isAssa = format.GetType() == typeof(AdvancedSubStationAlpha);
+            if (isAssa)
+            {
+                int layer = (int)numericUpDownLayer.Value;
+                MakeHistoryForUndo(LanguageSettings.Current.Main.Controls.SetLayer + ": " + layer);
+                p.Layer = layer;
+            }
+        }
+
         public Point GetPositionInForm(Control ctrl)
         {
             Point p = ctrl.Location;
@@ -12905,6 +12924,17 @@ namespace Nikse.SubtitleEdit.Forms
             textBoxListViewText.Text = p.Text;
             textBoxListViewText.TextChanged += TextBoxListViewTextTextChanged;
             _listViewTextUndoLast = p.Text;
+
+            var format = GetCurrentSubtitleFormat();
+            bool isAssa = format.GetType() == typeof(AdvancedSubStationAlpha);
+            numericUpDownLayer.Visible = isAssa;
+            labelLayer.Visible = isAssa;
+            if (isAssa)
+            {
+                numericUpDownLayer.ValueChanged -= NumericUpDownLayer_ValueChanged;
+                numericUpDownLayer.Value = p.Layer;
+                numericUpDownLayer.ValueChanged += NumericUpDownLayer_ValueChanged;
+            }
 
             timeUpDownStartTime.MaskedTextBox.TextChanged -= MaskedTextBoxTextChanged;
             timeUpDownStartTime.TimeCode = p.StartTime;
