@@ -2141,49 +2141,58 @@ namespace Nikse.SubtitleEdit.Controls
 
         public void SetBackgroundColor(int index, Color color)
         {
-            if (IsValidIndex(index))
+            UpdateItem(index, i => i.BackColor = color, si => si.BackColor = color);
+        }
+        
+        public void SetForegroundColor(int index, Color color)
+        {
+            UpdateItem(index, i => i.ForeColor = color, si => si.ForeColor = color);
+        }
+        
+        private void UpdateItem(int index, Action<ListViewItem> itemUpdater,  Action<ListViewItem.ListViewSubItem> subItemUpdater)
+        {
+            if (!IsValidIndex(index)) return;
+            
+            var item = Items[index];
+            itemUpdater(item);
+            if (ColumnIndexStart >= 0)
             {
-                ListViewItem item = Items[index];
-                item.BackColor = color;
-                if (ColumnIndexStart >= 0)
-                {
-                    Items[index].SubItems[ColumnIndexStart].BackColor = color;
-                }
+                subItemUpdater(Items[index].SubItems[ColumnIndexStart]);
+            }
 
-                if (ColumnIndexEnd >= 0)
-                {
-                    Items[index].SubItems[ColumnIndexEnd].BackColor = color;
-                }
+            if (ColumnIndexEnd >= 0)
+            {
+                subItemUpdater(Items[index].SubItems[ColumnIndexEnd]);
+            }
 
-                if (ColumnIndexDuration >= 0)
-                {
-                    Items[index].SubItems[ColumnIndexDuration].BackColor = color;
-                }
+            if (ColumnIndexDuration >= 0)
+            {
+                subItemUpdater(Items[index].SubItems[ColumnIndexDuration]);
+            }
 
-                if (ColumnIndexCps >= 0)
-                {
-                    Items[index].SubItems[ColumnIndexCps].BackColor = color;
-                }
+            if (ColumnIndexCps >= 0)
+            {
+                subItemUpdater(Items[index].SubItems[ColumnIndexCps]);
+            }
 
-                if (ColumnIndexWpm >= 0)
-                {
-                    Items[index].SubItems[ColumnIndexWpm].BackColor = color;
-                }
+            if (ColumnIndexWpm >= 0)
+            {
+                subItemUpdater(Items[index].SubItems[ColumnIndexWpm]);
+            }
 
-                if (ColumnIndexGap >= 0)
-                {
-                    Items[index].SubItems[ColumnIndexGap].BackColor = color;
-                }
+            if (ColumnIndexGap >= 0)
+            {
+                subItemUpdater(Items[index].SubItems[ColumnIndexGap]);
+            }
 
-                if (ColumnIndexText >= 0)
-                {
-                    Items[index].SubItems[ColumnIndexText].BackColor = color;
-                }
+            if (ColumnIndexText >= 0)
+            {
+                subItemUpdater(Items[index].SubItems[ColumnIndexText]);
+            }
 
-                if (ColumnIndexTextOriginal >= 0)
-                {
-                    Items[index].SubItems[ColumnIndexTextOriginal].BackColor = color;
-                }
+            if (ColumnIndexTextOriginal >= 0)
+            {
+                subItemUpdater(Items[index].SubItems[ColumnIndexTextOriginal]);
             }
         }
 
