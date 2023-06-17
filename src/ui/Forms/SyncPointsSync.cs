@@ -164,8 +164,8 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            SetViewBackgroundColor( _otherSubtitle, subtitleListView2, _synchronizationPoints.Values.Select(v => v.OtherIndex), GetSelectedParagraph(_subtitle, subtitleListView1));
-            SetViewBackgroundColor( _subtitle, subtitleListView1,  _synchronizationPoints.Keys, GetSelectedParagraph(_otherSubtitle, subtitleListView2));
+            SetViewColors( _otherSubtitle, subtitleListView2, _synchronizationPoints.Values.Select(v => v.OtherIndex), GetSelectedParagraph(_subtitle, subtitleListView1));
+            SetViewColors( _subtitle, subtitleListView1,  _synchronizationPoints.Keys, GetSelectedParagraph(_otherSubtitle, subtitleListView2));
         }
 
         private void buttonSetSyncPoint_Click(object sender, EventArgs e)
@@ -503,12 +503,12 @@ namespace Nikse.SubtitleEdit.Forms
         
         private void SubtitleListview1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            SetViewBackgroundColor( _otherSubtitle, subtitleListView2, _synchronizationPoints.Values.Select(v => v.OtherIndex), GetSelectedParagraph(_subtitle, subtitleListView1));
+            SetViewColors( _otherSubtitle, subtitleListView2, _synchronizationPoints.Values.Select(v => v.OtherIndex), GetSelectedParagraph(_subtitle, subtitleListView1));
         }
         
         private void subtitleListView2_SelectedIndexChanged(object sender, EventArgs e)
         {
-            SetViewBackgroundColor( _subtitle, subtitleListView1,  _synchronizationPoints.Keys, GetSelectedParagraph(_otherSubtitle, subtitleListView2));
+            SetViewColors( _subtitle, subtitleListView1,  _synchronizationPoints.Keys, GetSelectedParagraph(_otherSubtitle, subtitleListView2));
         }
 
         private static Paragraph GetSelectedParagraph(Subtitle subtitle, SubtitleListView view)
@@ -518,7 +518,7 @@ namespace Nikse.SubtitleEdit.Forms
         }
         
 
-        private static void SetViewBackgroundColor( Subtitle subtitle,  SubtitleListView view, IEnumerable<int> marked, Paragraph syncParagraph = null )
+        private void SetViewColors( Subtitle subtitle,  SubtitleListView view, IEnumerable<int> marked, Paragraph syncParagraph = null )
         {
             if (!view.Visible) return;
             var markedHashSet = marked.Where(v => v != SubtitleListView.InvalidIndex).ToHashSet();
@@ -527,6 +527,7 @@ namespace Nikse.SubtitleEdit.Forms
                 for (var i = 0; i < view.Items.Count; i++)
                 {
                     view.SetBackgroundColor(i, CalculateBackgroundColor(view.BackColor, markedHashSet.Contains(i), 1));
+                    view.SetForegroundColor(i, CalculateForegroundColor(view.ForeColor, view.GetBackgroundColor(i).Luminance(), 1));
                 }
                 return;
             }
@@ -543,6 +544,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var distanceFromSelected = Math.Abs(subtitle.Paragraphs[i].StartTime.TotalMilliseconds - selectedLocation);
                 var percentageDistance = distanceFromSelected / 5 / selectedDuration;
                 view.SetBackgroundColor(i, CalculateBackgroundColor(view.BackColor, markedHashSet.Contains(i), percentageDistance));
+                view.SetForegroundColor(i, CalculateForegroundColor(view.ForeColor, view.GetBackgroundColor(i).Luminance(), percentageDistance));
                 if (closesIndex.Dinstance > distanceFromSelected || closesIndex.Index == SubtitleListView.InvalidIndex)
                 {
                     closesIndex = (i, distanceFromSelected);
@@ -552,20 +554,33 @@ namespace Nikse.SubtitleEdit.Forms
             if (closesIndex.Index == SubtitleListView.InvalidIndex)
                 return;
             view.SetBackgroundColor(closesIndex.Index, CalculateBackgroundColor(view.BackColor, markedHashSet.Contains(closesIndex.Index), 0));
+            view.SetForegroundColor(closesIndex.Index, CalculateForegroundColor(view.ForeColor, view.GetBackgroundColor(closesIndex.Index).Luminance(), 0));
             view.Items[closesIndex.Index].EnsureVisible();
         }
-        private static Color MarkedBackgroundColor { get; } = ColorTranslator.FromHtml("#6ebe6e");
-        private static Color VisualMarkBackgroundColor { get; } = Color.DarkGray;
+        private Color MarkedBackgroundColor { get; } = ColorTranslator.FromHtml("#6ebe6e");
+        private Color VisualMarkBackgroundColor { get; } = Configuration.Settings.General.UseDarkTheme ? Color.LightGray: Color.DarkGray;
 
-        private static Color CalculateBackgroundColor(Color baseColor, bool shouldUseSyncColor, double percentageDistance)
+        private Color CalculateBackgroundColor(Color baseColor, bool shouldUseSyncColor, double percentageDistance)
         {
             var color = shouldUseSyncColor ? MarkedBackgroundColor : baseColor;
-            if (percentageDistance > 1) return color;
+            if (percentageDistance >= 1) return color;
             
-            var visualMarkedColorWithOffset = ColorUtils.Blend(VisualMarkBackgroundColor,baseColor,   percentageDistance);
+            var visualMarkedColorWithOffset = VisualMarkBackgroundColor.Blend(baseColor,   percentageDistance);
             return shouldUseSyncColor
-                ? ColorUtils.Blend(visualMarkedColorWithOffset,MarkedBackgroundColor )
+                ? visualMarkedColorWithOffset.Blend(MarkedBackgroundColor )
                 : visualMarkedColorWithOffset;
+        }
+        
+        private static Color CalculateForegroundColor(Color baseColor, double backGroundColorLuminance, double percentageDistance)
+        {
+            if (percentageDistance >= 1 )
+                return baseColor;
+            if (backGroundColorLuminance < 0.5)
+            {
+                return Color.White; 
+            }
+
+            return Color.Black;
         }
     }
 }
