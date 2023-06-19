@@ -33,6 +33,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     {
                         styleOn = false;
                         AddStyle(result, currentStyle);
+                        currentStyle = new StringBuilder();
                     }
                     else
                     {
@@ -309,7 +310,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public static string AddStyleToHeader(string header, WebVttStyle style)
         {
-            var rawStyle = "::cue(." + style.Name + ") { " + GetCssProperties(style) + " }";
+            var rawStyle = "::cue(." + style.Name.RemoveChar('.') + ") { " + GetCssProperties(style) + " }";
 
             if (string.IsNullOrEmpty(header))
             {
@@ -343,7 +344,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             return sb.ToString();
         }
 
-        private static string GetCssProperties(WebVttStyle style)
+        public static string GetCssProperties(WebVttStyle style)
         {
             var sb = new StringBuilder();
 
@@ -389,6 +390,23 @@ namespace Nikse.SubtitleEdit.Core.Common
             if (style.StrikeThrough != null && style.StrikeThrough.Value)
             {
                 sb.Append("text-decoration:line-through; ");
+            }
+
+            if (!string.IsNullOrEmpty(style.FontName))
+            {
+                sb.Append($"font-family:{style.FontName}; ");
+            }
+
+            if (style.FontSize.HasValue && style.FontSize > 0)
+            {
+                sb.Append($"font-size:{style.FontSize}px; ");
+            }
+
+            if (style.ShadowColor.HasValue && style.ShadowWidth.HasValue && style.ShadowWidth > 0)
+            {
+                var colorString = Utilities.ColorToHexWithTransparency(style.ShadowColor.Value);
+                var widthString = "{style.ShadowWidth.Value.ToString(CultureInfo.InvariantCulture)} px";
+                sb.Append($"text-shadow: {colorString} {widthString}");
             }
 
             return sb.ToString().TrimEnd(' ', ';');

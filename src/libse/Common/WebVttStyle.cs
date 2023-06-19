@@ -15,5 +15,33 @@ namespace Nikse.SubtitleEdit.Core.Common
         public bool? StrikeThrough { get; set; }
         public decimal? ShadowWidth { get; set; }
         public Color? ShadowColor { get; set; }
+
+        public WebVttStyle()
+        {
+                
+        }
+
+        public WebVttStyle(WebVttStyle style)
+        {
+            Name = style.Name;
+            FontName = style.FontName;
+            FontSize = style.FontSize;
+            Color = style.Color;
+            BackgroundColor = style.BackgroundColor;
+            Bold = style.Bold;
+            Underline = style.Underline;
+            StrikeThrough = style.StrikeThrough;
+            ShadowWidth = style.ShadowWidth;
+            ShadowColor = style.ShadowColor;
+            Underline = style.Underline;
+            ShadowWidth = style.ShadowWidth;
+            StrikeThrough = style.StrikeThrough;
+            ShadowWidth = style.ShadowWidth;
+        }
+
+        public override string ToString()
+        {
+            return WebVttHelper.GetCssProperties(this);
+        }
     }
 }
