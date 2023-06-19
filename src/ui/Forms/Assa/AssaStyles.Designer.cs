@@ -38,8 +38,8 @@
             this.columnHeaderOutline = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.contextMenuStripFile = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.removeAndReplaceWithToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemRemoveAll = new System.Windows.Forms.ToolStripMenuItem();
+            this.removeAndReplaceWithToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.addToStorageToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
@@ -272,7 +272,7 @@
             this.toolStripMenuItemImport,
             this.toolStripMenuItemExport});
             this.contextMenuStripFile.Name = "contextMenuStrip1";
-            this.contextMenuStripFile.Size = new System.Drawing.Size(216, 314);
+            this.contextMenuStripFile.Size = new System.Drawing.Size(216, 292);
             this.contextMenuStripFile.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripFile_Opening);
             // 
             // deleteToolStripMenuItem
@@ -283,19 +283,19 @@
             this.deleteToolStripMenuItem.Text = "Remove";
             this.deleteToolStripMenuItem.Click += new System.EventHandler(this.buttonRemove_Click);
             // 
-            // removeAndReplaceWithToolStripMenuItem
-            // 
-            this.removeAndReplaceWithToolStripMenuItem.Name = "removeAndReplaceWithToolStripMenuItem";
-            this.removeAndReplaceWithToolStripMenuItem.Size = new System.Drawing.Size(215, 22);
-            this.removeAndReplaceWithToolStripMenuItem.Text = "Replace with...";
-            this.removeAndReplaceWithToolStripMenuItem.Click += new System.EventHandler(this.buttonRemoveAndReplaceWith_Click);
-            // 
             // toolStripMenuItemRemoveAll
             // 
             this.toolStripMenuItemRemoveAll.Name = "toolStripMenuItemRemoveAll";
             this.toolStripMenuItemRemoveAll.Size = new System.Drawing.Size(215, 22);
             this.toolStripMenuItemRemoveAll.Text = "Remove all";
             this.toolStripMenuItemRemoveAll.Click += new System.EventHandler(this.buttonRemoveAll_Click);
+            // 
+            // removeAndReplaceWithToolStripMenuItem
+            // 
+            this.removeAndReplaceWithToolStripMenuItem.Name = "removeAndReplaceWithToolStripMenuItem";
+            this.removeAndReplaceWithToolStripMenuItem.Size = new System.Drawing.Size(215, 22);
+            this.removeAndReplaceWithToolStripMenuItem.Text = "Replace with...";
+            this.removeAndReplaceWithToolStripMenuItem.Click += new System.EventHandler(this.buttonRemoveAndReplaceWith_Click);
             // 
             // toolStripSeparator4
             // 
@@ -1217,6 +1217,7 @@
             this.groupBoxStorage.Controls.Add(this.buttonAddToFile);
             this.groupBoxStorage.Controls.Add(this.buttonStorageExport);
             this.groupBoxStorage.Controls.Add(this.buttonStorageImport);
+            this.groupBoxStorage.Controls.Add(this.labelDuplicateStyleNames);
             this.groupBoxStorage.Controls.Add(this.buttonStorageCopy);
             this.groupBoxStorage.Controls.Add(this.buttonStorageRemoveAll);
             this.groupBoxStorage.Controls.Add(this.buttonStorageAdd);
@@ -1619,7 +1620,7 @@
             this.labelDuplicateStyleNames.AutoSize = true;
             this.labelDuplicateStyleNames.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelDuplicateStyleNames.ForeColor = System.Drawing.Color.Firebrick;
-            this.labelDuplicateStyleNames.Location = new System.Drawing.Point(12, 648);
+            this.labelDuplicateStyleNames.Location = new System.Drawing.Point(494, 102);
             this.labelDuplicateStyleNames.Name = "labelDuplicateStyleNames";
             this.labelDuplicateStyleNames.Size = new System.Drawing.Size(154, 13);
             this.labelDuplicateStyleNames.TabIndex = 10;
@@ -1630,7 +1631,6 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1064, 670);
-            this.Controls.Add(this.labelDuplicateStyleNames);
             this.Controls.Add(this.buttonApply);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.labelStatus);

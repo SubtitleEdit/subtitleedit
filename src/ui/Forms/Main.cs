@@ -30861,16 +30861,15 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (formatType == typeof(WebVTT) || formatType == typeof(WebVTTFileWithLineNumber))
             {
-                using (var styles = new WebVttStyleManager(_subtitle))
+                using (var styles = new WebVttStyleManager(_subtitle, FirstSelectedIndex))
                 {
                     if (styles.ShowDialog(this) == DialogResult.OK)
                     {
                         if (_subtitle.Header != styles.Header)
                         {
                             MakeHistoryForUndo(styles.Text);
+                            _subtitle.Header = styles.Header;
                         }
-
-                        _subtitle.Header = styles.Header;
                     }
                 }
             }

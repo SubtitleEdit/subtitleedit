@@ -2306,7 +2306,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
         private void UpdateCurrentFileButtonsState()
         {
-            bool oneOrMoreSelected = listViewStyles.SelectedItems.Count > 0;
+            var oneOrMoreSelected = listViewStyles.SelectedItems.Count > 0;
             buttonRemove.Enabled = oneOrMoreSelected;
             buttonCopy.Enabled = oneOrMoreSelected;
             buttonAddStyleToStorage.Enabled = oneOrMoreSelected;
