@@ -3669,6 +3669,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             TryLoadIcon(pictureBoxSourceView, "SourceView");
             TryLoadIcon(pictureBoxIttProperties, "IttProperties");
             TryLoadIcon(pictureBoxWebVttProperties, "WebVttProperties");
+            TryLoadIcon(pictureBoxWebVttStyle, "WebVttStyle");
             TryLoadIcon(pictureBoxEbuProperties, "EbuProperties");
         }
 
