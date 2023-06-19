@@ -3459,5 +3459,9 @@ namespace Nikse.SubtitleEdit.Logic
             public string VoiceName { get; set; }
         }
 
+        public class WebVttStyleManager
+        {
+            public string Title { get; set; }
+        }
     }
 }

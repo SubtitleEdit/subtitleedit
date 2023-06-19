@@ -5973,7 +5973,7 @@ namespace Nikse.SubtitleEdit.Forms
                 TryLoadIcon(toolStripButtonToggleWaveform, "WaveformToggle");
                 TryLoadIcon(toolStripButtonToggleVideo, "VideoToggle");
                 TryLoadIcon(toolStripButtonSourceView, "SourceView");
-                //  IttProperties, WebVttProperties, EbuProperties
+                //  IttProperties, WebVttProperties, WebVttStyle, EbuProperties
             }
 
             toolStripButtonFileNew.Visible = gs.ShowToolbarNew;
@@ -10782,7 +10782,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            var isAssa =  GetCurrentSubtitleFormat().GetType() == typeof(AdvancedSubStationAlpha);
+            var isAssa = GetCurrentSubtitleFormat().GetType() == typeof(AdvancedSubStationAlpha);
             if (isAssa)
             {
                 var layer = (int)numericUpDownLayer.Value;
@@ -32989,6 +32989,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             var assFormatOn = formatType == typeof(AdvancedSubStationAlpha);
             toolStripButtonAssStyleManager.Visible = assFormatOn;
+            toolStripButtonAssStyleManager.ToolTipText = LanguageSettings.Current.SubStationAlphaStyles.Title;
             toolStripButtonAssProperties.Visible = assFormatOn;
             toolStripButtonAssaDraw.Visible = assFormatOn && File.Exists(Path.Combine(Configuration.PluginsDirectory, "AssaDraw.dll"));
             toolStripButtonAssAttachments.Visible = assFormatOn;
@@ -33014,6 +33015,11 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripButtonXProperties.ToolTipText = string.Format(_language.Menu.File.FormatXProperties, new WebVTT().Name);
                 toolStripButtonXProperties.Image = Properties.Resources.webvtt;
                 TryLoadIcon(toolStripButtonXProperties, "WebVttProperties");
+
+                toolStripButtonAssStyleManager.Visible = true;
+                toolStripButtonAssStyleManager.ToolTipText = string.Format(LanguageSettings.Current.WebVttStyleManager.Title, new WebVTT().Name); 
+                toolStripButtonAssStyleManager.Image = Properties.Resources.webvtt;
+                TryLoadIcon(toolStripButtonAssStyleManager, "WebVttStyle");
             }
 
             if (formatType == typeof(Ebu))
