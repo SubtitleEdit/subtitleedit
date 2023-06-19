@@ -440,6 +440,7 @@
             this.labelUpdateFileTypeAssociationsStatus = new System.Windows.Forms.Label();
             this.imageListFileTypeAssociations = new System.Windows.Forms.ImageList(this.components);
             this.toolTipDialogStylePreview = new System.Windows.Forms.ToolTip(this.components);
+            this.pictureBoxWebVttStyle = new System.Windows.Forms.PictureBox();
             this.panelGeneral.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
             this.groupBoxGeneralRules.SuspendLayout();
@@ -521,6 +522,7 @@
             this.groupBoxProxySettings.SuspendLayout();
             this.groupBoxProxyAuthentication.SuspendLayout();
             this.panelFileTypeAssociations.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxWebVttStyle)).BeginInit();
             this.SuspendLayout();
             // 
             // buttonOK
@@ -4028,6 +4030,7 @@
             // 
             this.groupBoxShowToolBarButtons.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxShowToolBarButtons.Controls.Add(this.pictureBoxWebVttStyle);
             this.groupBoxShowToolBarButtons.Controls.Add(this.pictureBoxEbuProperties);
             this.groupBoxShowToolBarButtons.Controls.Add(this.pictureBoxWebVttProperties);
             this.groupBoxShowToolBarButtons.Controls.Add(this.pictureBoxIttProperties);
@@ -4093,7 +4096,7 @@
             // 
             // pictureBoxEbuProperties
             // 
-            this.pictureBoxEbuProperties.Location = new System.Drawing.Point(323, 400);
+            this.pictureBoxEbuProperties.Location = new System.Drawing.Point(361, 400);
             this.pictureBoxEbuProperties.Name = "pictureBoxEbuProperties";
             this.pictureBoxEbuProperties.Size = new System.Drawing.Size(32, 32);
             this.pictureBoxEbuProperties.TabIndex = 59;
@@ -4149,7 +4152,7 @@
             // 
             // pictureBoxAssProperties
             // 
-            this.pictureBoxAssProperties.Location = new System.Drawing.Point(57, 400);
+            this.pictureBoxAssProperties.Location = new System.Drawing.Point(56, 400);
             this.pictureBoxAssProperties.Name = "pictureBoxAssProperties";
             this.pictureBoxAssProperties.Size = new System.Drawing.Size(32, 32);
             this.pictureBoxAssProperties.TabIndex = 52;
@@ -5281,6 +5284,14 @@
             this.toolTipDialogStylePreview.InitialDelay = 500;
             this.toolTipDialogStylePreview.ReshowDelay = 100;
             // 
+            // pictureBoxWebVttStyle
+            // 
+            this.pictureBoxWebVttStyle.Location = new System.Drawing.Point(323, 400);
+            this.pictureBoxWebVttStyle.Name = "pictureBoxWebVttStyle";
+            this.pictureBoxWebVttStyle.Size = new System.Drawing.Size(32, 32);
+            this.pictureBoxWebVttStyle.TabIndex = 60;
+            this.pictureBoxWebVttStyle.TabStop = false;
+            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -5425,6 +5436,7 @@
             this.groupBoxProxyAuthentication.ResumeLayout(false);
             this.groupBoxProxyAuthentication.PerformLayout();
             this.panelFileTypeAssociations.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxWebVttStyle)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -5843,5 +5855,6 @@
         private System.Windows.Forms.PictureBox pictureBoxEbuProperties;
         private System.Windows.Forms.PictureBox pictureBoxWebVttProperties;
         private System.Windows.Forms.PictureBox pictureBoxIttProperties;
+        private System.Windows.Forms.PictureBox pictureBoxWebVttStyle;
     }
 }
