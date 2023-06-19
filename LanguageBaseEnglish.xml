@@ -37,6 +37,7 @@
     <Actor>Actor</Actor>
     <Gap>Gap</Gap>
     <Region>Region</Region>
+    <Layer>Layer</Layer>
     <NumberSymbol>#</NumberSymbol>
     <Number>Number</Number>
     <Text>Text</Text>
@@ -1474,7 +1475,6 @@ To use an API key, go to "Options -&gt; Settings -&gt; Tools" to enter your Goog
       <Next>Next &gt;</Next>
       <AutoBreak>Auto &amp;br</AutoBreak>
       <Unbreak>Unbreak</Unbreak>
-      <SetLayer>Set layer</SetLayer>
     </Controls>
     <VideoControls>
       <Translate>Translate</Translate>
@@ -3214,4 +3214,7 @@ Keep changes?</KeepChangesMessage>
     <Title>WebVTT - set new voice</Title>
     <VoiceName>Name of voice</VoiceName>
   </WebVttNewVoice>
+  <WebVttStyleManager>
+    <Title>WebVTT styles</Title>
+  </WebVttStyleManager>
 </Language>

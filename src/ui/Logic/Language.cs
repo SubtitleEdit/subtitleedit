@@ -125,6 +125,7 @@ namespace Nikse.SubtitleEdit.Logic
         public LanguageStructure.Waveform Waveform;
         public LanguageStructure.WaveformGenerateTimeCodes WaveformGenerateTimeCodes;
         public LanguageStructure.WebVttNewVoice WebVttNewVoice;
+        public LanguageStructure.WebVttStyleManager WebVttStyleManager;
 
         public Language()
         {
@@ -3611,6 +3612,11 @@ Keep changes?",
             {
                 Title = "WebVTT - set new voice",
                 VoiceName = "Name of voice",
+            };
+
+            WebVttStyleManager = new LanguageStructure.WebVttStyleManager
+            {
+                Title = "WebVTT styles",
             };
         }
 

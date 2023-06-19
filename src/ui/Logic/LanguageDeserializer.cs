@@ -166,6 +166,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "General/Region":
                     language.General.Region = reader.Value;
                     break;
+                case "General/Layer":
+                    language.General.Layer = reader.Value;
+                    break;
                 case "General/NumberSymbol":
                     language.General.NumberSymbol = reader.Value;
                     break;
@@ -8772,6 +8775,9 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "WebVttNewVoice/VoiceName":
                     language.WebVttNewVoice.VoiceName = reader.Value;
+                    break;
+                case "WebVttStyleManager/Title":
+                    language.WebVttStyleManager.Title = reader.Value;
                     break;
 
             }
