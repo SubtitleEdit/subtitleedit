@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.6.13</Version>
-    <TranslatedBy>Последен превод на български 15.05.2023: KalinM</TranslatedBy>
+    <TranslatedBy>Последен превод на български 19.06.2023: KalinM</TranslatedBy>
     <CultureName>bg-BG</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -1375,6 +1375,7 @@ https://github.com/SubtitleEdit/subtitleedit
         <SizeAllColumnsToFit>Побери по дължина</SizeAllColumnsToFit>
         <SetStyle>Задай стил</SetStyle>
         <SetActor>Задай актьор</SetActor>
+        <SetLayer>Задай слой</SetLayer>
         <AssaTools>Инструменти на ASSA</AssaTools>
         <SubStationAlphaStyles>Sub Station Alpha (SSA) - стил...</SubStationAlphaStyles>
         <AdvancedSubStationAlphaStyles>Настройка на стил Sub Station Alpha (SSA)...</AdvancedSubStationAlphaStyles>
@@ -1470,6 +1471,7 @@ https://github.com/SubtitleEdit/subtitleedit
       <Next>Напред&gt;</Next>
       <AutoBreak>Авт. прекъсни</AutoBreak>
       <Unbreak>ОбединиВ1ред</Unbreak>
+      <SetLayer>Задай слой</SetLayer>
     </Controls>
     <VideoControls>
       <Translate>Превод</Translate>
