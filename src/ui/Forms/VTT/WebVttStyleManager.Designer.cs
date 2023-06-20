@@ -113,6 +113,7 @@
             this.buttonExport.TabIndex = 5;
             this.buttonExport.Text = "Export...";
             this.buttonExport.UseVisualStyleBackColor = true;
+            this.buttonExport.Click += new System.EventHandler(this.buttonExport_Click);
             // 
             // buttonImport
             // 

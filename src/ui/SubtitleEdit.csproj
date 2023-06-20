@@ -1366,6 +1366,12 @@
     <Compile Include="Forms\Ocr\VobSubOcrSetItalicFactor.Designer.cs">
       <DependentUpon>VobSubOcrSetItalicFactor.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\VTT\WebVttImportExport.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\VTT\WebVttImportExport.Designer.cs">
+      <DependentUpon>WebVttImportExport.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Watermark.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -2132,6 +2138,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Ocr\VobSubOcrSetItalicFactor.resx">
       <DependentUpon>VobSubOcrSetItalicFactor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\VTT\WebVttImportExport.resx">
+      <DependentUpon>WebVttImportExport.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Watermark.resx">
       <DependentUpon>Watermark.cs</DependentUpon>
