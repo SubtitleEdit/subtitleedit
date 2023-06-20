@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Forms.Styles;
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
@@ -606,6 +607,21 @@ namespace Nikse.SubtitleEdit.Forms.VTT
                 _doUpdate = true;
             }
             CheckDuplicateStyles();
+        }
+
+        private void buttonExport_Click(object sender, EventArgs e)
+        {
+            if (listViewStyles.Items.Count == 0)
+            {
+                return;
+            }
+
+            using (var form = new WebVttImportExport(_webVttStyles))
+            {
+                if (form.ShowDialog(this) == DialogResult.OK)
+                {
+                }
+            }
         }
     }
 }
