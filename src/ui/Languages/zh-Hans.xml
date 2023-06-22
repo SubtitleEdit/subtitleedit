@@ -37,6 +37,7 @@
     <Actor>演员</Actor>
     <Gap>间隔</Gap>
     <Region>区域</Region>
+    <Layer>层</Layer>
     <NumberSymbol>编号</NumberSymbol>
     <Number>编号</Number>
     <Text>文本</Text>
@@ -1373,6 +1374,7 @@ Command line: {1} {2}
         <SizeAllColumnsToFit>自适应所有的列宽度</SizeAllColumnsToFit>
         <SetStyle>设置样式</SetStyle>
         <SetActor>设置演员</SetActor>
+        <SetLayer>设置层</SetLayer>
         <AssaTools>ASSA工具</AssaTools>
         <SubStationAlphaStyles>Sub Station Alpha 样式...</SubStationAlphaStyles>
         <AdvancedSubStationAlphaStyles>高级 Sub Station Alpha 样式...</AdvancedSubStationAlphaStyles>
@@ -2544,6 +2546,7 @@ Command line: {1} {2}
     <MainToggleVideoControls>切换视频控件</MainToggleVideoControls>
     <VideoToggleContrast>切换对比度（仅适用于MPV）</VideoToggleContrast>
     <AudioToTextX>语音转文本 ({0})</AudioToTextX>
+    <AudioExtractSelectedLines>提取音频（仅所选行）</AudioExtractSelectedLines>
     <AudioToTextSelectedLinesX>对选定行语音转文本 ({0})</AudioToTextSelectedLinesX>
     <VideoToggleBrightness>切换亮度（仅限mpv）</VideoToggleBrightness>
     <CustomSearch1>翻译、自定义搜索 1</CustomSearch1>
@@ -3196,4 +3199,7 @@ Command line: {1} {2}
     <Title>WebVTT - 设定新人声</Title>
     <VoiceName>人声名称</VoiceName>
   </WebVttNewVoice>
+  <WebVttStyleManager>
+    <Title>WebVTT 样式</Title>
+  </WebVttStyleManager>
 </Language>
