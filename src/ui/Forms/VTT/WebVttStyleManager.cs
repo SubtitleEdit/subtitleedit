@@ -243,7 +243,7 @@ namespace Nikse.SubtitleEdit.Forms.VTT
             }
             else
             {
-                labelBefore.Text = style.ToString().Replace("; ", ";" + Environment.NewLine);
+                labelBefore.Text = beforeStyle.ToString().Replace("; ", ";" + Environment.NewLine);
             }
 
             UpdateRawBeforeStyle();
@@ -587,6 +587,7 @@ namespace Nikse.SubtitleEdit.Forms.VTT
                 return;
             }
 
+            var tempStyles = new List<WebVttStyle>();
             foreach (ListViewItem selectedItem in listViewStyles.SelectedItems)
             {
                 var styleName = selectedItem.Text;
@@ -608,10 +609,20 @@ namespace Nikse.SubtitleEdit.Forms.VTT
                 }
 
                 _doUpdate = false;
+                tempStyles.Add(style);
+                _doUpdate = true;
+
+                selectedItem.Selected = false;
+            }
+
+            foreach (var style in tempStyles)
+            {
                 AddStyle(listViewStyles, style, _subtitle);
                 _webVttStyles.Add(style);
-                _doUpdate = true;
             }
+
+            listViewStyles.Items[listViewStyles.Items.Count - 1].Selected = true;
+            listViewStyles.Items[listViewStyles.Items.Count - 1].Focused = true;
 
             CheckDuplicateStyles();
         }
@@ -642,7 +653,7 @@ namespace Nikse.SubtitleEdit.Forms.VTT
                         {
                             labelInfo.Text = string.Empty;
                         }
-                        catch 
+                        catch
                         {
                             // ignore
                         }
@@ -766,6 +777,8 @@ namespace Nikse.SubtitleEdit.Forms.VTT
             {
                 _currentStyle.Bold = null;
             }
+
+            UpdateRawBeforeStyle();
         }
 
         private void checkBoxFontItalic_CheckedChanged(object sender, EventArgs e)
@@ -786,6 +799,7 @@ namespace Nikse.SubtitleEdit.Forms.VTT
             }
 
             listViewStyles.SelectedItems[0].SubItems[3].Text = _currentStyle.Italic.HasValue && _currentStyle.Italic.Value == true ? LanguageSettings.Current.General.Yes : "-";
+            UpdateRawBeforeStyle();
         }
 
         private void checkBoxFontUnderline_CheckedChanged(object sender, EventArgs e)
@@ -803,6 +817,8 @@ namespace Nikse.SubtitleEdit.Forms.VTT
             {
                 _currentStyle.Underline = null;
             }
+
+            UpdateRawBeforeStyle();
         }
 
         private void checkBoxStrikeout_CheckedChanged(object sender, EventArgs e)
@@ -820,6 +836,8 @@ namespace Nikse.SubtitleEdit.Forms.VTT
             {
                 _currentStyle.StrikeThrough = null;
             }
+
+            UpdateRawBeforeStyle();
         }
 
         private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
@@ -856,7 +874,6 @@ namespace Nikse.SubtitleEdit.Forms.VTT
         {
             MoveUp(listViewStyles);
         }
-
 
         private void MoveUp(ListView listView)
         {
