@@ -35209,5 +35209,14 @@ namespace Nikse.SubtitleEdit.Forms
                 exportBdnXmlPng.ShowDialog(this);
             }
         }
+
+        private void toolStripMenuItemWebVttStyle_Click(object sender, EventArgs e)
+        {
+            var styles = WebVttHelper.GetStyles(_subtitle.Header);
+            using (var form = new WebVttStylePicker(styles))
+            {
+                form.ShowDialog(this);
+            }
+        }
     }
 }
