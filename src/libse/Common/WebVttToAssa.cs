@@ -15,7 +15,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public static Subtitle Convert(Subtitle webVttSubtitle, SsaStyle defaultStyle, int videoWidth, int videoHeight)
         {
-            var vttStyles = WebVttHelper.GetStyles(webVttSubtitle);
+            var vttStyles = WebVttHelper.GetStyles(webVttSubtitle.Header);
             var ssaStyles = ConvertStyles(vttStyles, defaultStyle);
             var header = AdvancedSubStationAlpha.GetHeaderAndStylesFromAdvancedSubStationAlpha(AdvancedSubStationAlpha.DefaultHeader, ssaStyles);
             var assaSubtitle = ConvertSubtitle(webVttSubtitle, header, ssaStyles, vttStyles, videoWidth, videoHeight);

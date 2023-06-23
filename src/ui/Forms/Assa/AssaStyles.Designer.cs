@@ -130,6 +130,7 @@
             this.buttonAddToFile = new System.Windows.Forms.Button();
             this.buttonStorageExport = new System.Windows.Forms.Button();
             this.buttonStorageImport = new System.Windows.Forms.Button();
+            this.labelDuplicateStyleNames = new System.Windows.Forms.Label();
             this.buttonStorageCopy = new System.Windows.Forms.Button();
             this.buttonStorageRemoveAll = new System.Windows.Forms.Button();
             this.buttonStorageAdd = new System.Windows.Forms.Button();
@@ -167,7 +168,6 @@
             this.labelStorageCategory = new System.Windows.Forms.Label();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.buttonApply = new System.Windows.Forms.Button();
-            this.labelDuplicateStyleNames = new System.Windows.Forms.Label();
             this.contextMenuStripFile.SuspendLayout();
             this.groupBoxStyles.SuspendLayout();
             this.groupBoxProperties.SuspendLayout();
@@ -1098,7 +1098,7 @@
             // 
             this.checkBoxStrikeout.AutoSize = true;
             this.checkBoxStrikeout.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Strikeout, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.checkBoxStrikeout.Location = new System.Drawing.Point(246, 54);
+            this.checkBoxStrikeout.Location = new System.Drawing.Point(265, 54);
             this.checkBoxStrikeout.Name = "checkBoxStrikeout";
             this.checkBoxStrikeout.Size = new System.Drawing.Size(68, 17);
             this.checkBoxStrikeout.TabIndex = 8;
@@ -1120,7 +1120,7 @@
             // 
             this.checkBoxFontUnderline.AutoSize = true;
             this.checkBoxFontUnderline.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.checkBoxFontUnderline.Location = new System.Drawing.Point(169, 54);
+            this.checkBoxFontUnderline.Location = new System.Drawing.Point(173, 54);
             this.checkBoxFontUnderline.Name = "checkBoxFontUnderline";
             this.checkBoxFontUnderline.Size = new System.Drawing.Size(71, 17);
             this.checkBoxFontUnderline.TabIndex = 7;
@@ -1146,7 +1146,7 @@
             // 
             this.checkBoxFontItalic.AutoSize = true;
             this.checkBoxFontItalic.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.checkBoxFontItalic.Location = new System.Drawing.Point(90, 54);
+            this.checkBoxFontItalic.Location = new System.Drawing.Point(94, 54);
             this.checkBoxFontItalic.Name = "checkBoxFontItalic";
             this.checkBoxFontItalic.Size = new System.Drawing.Size(48, 17);
             this.checkBoxFontItalic.TabIndex = 6;
@@ -1272,6 +1272,18 @@
             this.buttonStorageImport.Text = "Import...";
             this.buttonStorageImport.UseVisualStyleBackColor = true;
             this.buttonStorageImport.Click += new System.EventHandler(this.buttonStorageImport_Click);
+            // 
+            // labelDuplicateStyleNames
+            // 
+            this.labelDuplicateStyleNames.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.labelDuplicateStyleNames.AutoSize = true;
+            this.labelDuplicateStyleNames.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelDuplicateStyleNames.ForeColor = System.Drawing.Color.Firebrick;
+            this.labelDuplicateStyleNames.Location = new System.Drawing.Point(494, 102);
+            this.labelDuplicateStyleNames.Name = "labelDuplicateStyleNames";
+            this.labelDuplicateStyleNames.Size = new System.Drawing.Size(154, 13);
+            this.labelDuplicateStyleNames.TabIndex = 10;
+            this.labelDuplicateStyleNames.Text = "labelDuplicateStyleNames";
             // 
             // buttonStorageCopy
             // 
@@ -1613,18 +1625,6 @@
             this.buttonApply.Text = "&Apply";
             this.buttonApply.UseVisualStyleBackColor = true;
             this.buttonApply.Click += new System.EventHandler(this.buttonApply_Click);
-            // 
-            // labelDuplicateStyleNames
-            // 
-            this.labelDuplicateStyleNames.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.labelDuplicateStyleNames.AutoSize = true;
-            this.labelDuplicateStyleNames.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelDuplicateStyleNames.ForeColor = System.Drawing.Color.Firebrick;
-            this.labelDuplicateStyleNames.Location = new System.Drawing.Point(494, 102);
-            this.labelDuplicateStyleNames.Name = "labelDuplicateStyleNames";
-            this.labelDuplicateStyleNames.Size = new System.Drawing.Size(154, 13);
-            this.labelDuplicateStyleNames.TabIndex = 10;
-            this.labelDuplicateStyleNames.Text = "labelDuplicateStyleNames";
             // 
             // AssaStyles
             // 

@@ -13846,7 +13846,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var webVttStyles = new List<WebVttStyle>();
                 if (isWebVtt)
                 {
-                    webVttStyles = WebVttHelper.GetStyles(_subtitle);
+                    webVttStyles = WebVttHelper.GetStyles(_subtitle.Header);
                 }
 
                 MakeHistoryForUndo(_language.BeforeSettingColor);

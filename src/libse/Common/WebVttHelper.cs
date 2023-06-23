@@ -13,9 +13,9 @@ namespace Nikse.SubtitleEdit.Core.Common
         private static readonly Regex NameRegex = new Regex("\\([\\.a-zA-Z\\d#_-]+\\)", RegexOptions.Compiled);
         private static readonly Regex PropertiesRegex = new Regex("{[ \\.a-zA-Z\\d:#\\s,_;:\\-\\(\\)]+}", RegexOptions.Compiled);
 
-        public static List<WebVttStyle> GetStyles(Subtitle webVttSubtitle)
+        public static List<WebVttStyle> GetStyles(string header)
         {
-            if (string.IsNullOrEmpty(webVttSubtitle.Header))
+            if (string.IsNullOrEmpty(header))
             {
                 return new List<WebVttStyle>();
             }
@@ -24,7 +24,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             var styleOn = false;
             var result = new List<WebVttStyle>();
             var currentStyle = new StringBuilder();
-            foreach (var line in webVttSubtitle.Header.SplitToLines())
+            foreach (var line in header.SplitToLines())
             {
                 var s = line.Trim();
                 if (styleOn)
@@ -282,7 +282,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public static WebVttStyle GetStyleFromColor(Color color, Subtitle webVttSubtitle)
         {
-            foreach (var style in GetStyles(webVttSubtitle))
+            foreach (var style in GetStyles(webVttSubtitle.Header))
             {
                 if (style.Color.HasValue && style.Color.Value == color &&
                     style.BackgroundColor == null &&
