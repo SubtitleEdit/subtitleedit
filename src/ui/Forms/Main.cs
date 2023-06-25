@@ -33003,6 +33003,11 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripButtonAssAttachments.Visible = true;
             }
 
+            if (formatType == typeof(AdvancedSubStationAlpha) || formatType == typeof(SubStationAlpha))
+            {
+                TryLoadIcon(toolStripButtonAssStyleManager, "AssaStyle");
+            }
+
             toolStripButtonXProperties.Visible = formatType == typeof(ItunesTimedText);
             if (toolStripButtonXProperties.Visible)
             {
@@ -35223,8 +35228,20 @@ namespace Nikse.SubtitleEdit.Forms
             var styles = WebVttHelper.GetStyles(_subtitle.Header);
             using (var form = new WebVttStylePicker(styles, _subtitle.GetParagraphOrDefault(idx)))
             {
-                form.ShowDialog(this);
+                if (form.ShowDialog(this) != DialogResult.OK)
+                {
+                    return;
+                }
+
+                foreach (int index in SubtitleListview1.SelectedIndices)
+                {
+                    var p = _subtitle.Paragraphs[index];
+                    p.Text = WebVttHelper.SetParagraphStyles(p, form.ImportExportStyles);
+                    SubtitleListview1.SetText(index, p.Text);
+                }
             }
+
+            RefreshSelectedParagraph();
         }
     }
 }
