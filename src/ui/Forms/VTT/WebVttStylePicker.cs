@@ -8,20 +8,20 @@ namespace Nikse.SubtitleEdit.Forms.VTT
 {
     public sealed partial class WebVttStylePicker : Form
     {
-        private readonly List<WebVttStyle> _styles;
         public List<WebVttStyle> ImportExportStyles { get; set; }
 
-        public WebVttStylePicker(List<WebVttStyle> styles, Paragraph getParagraphOrDefault)
+        public WebVttStylePicker(List<WebVttStyle> styles, Paragraph paragraph)
         {
             InitializeComponent();
             UiUtil.FixFonts(this);
 
             ImportExportStyles = new List<WebVttStyle>();
-            _styles = styles;
             listViewExportStyles.Columns[0].Width = listViewExportStyles.Width - 20;
-            foreach (var style in _styles)
+
+            var paragraphStyles = WebVttHelper.GetParagraphStyles(paragraph);
+            foreach (var style in styles)
             {
-                listViewExportStyles.Items.Add(new ListViewItem(style.Name) { Checked = true, Tag = style });
+                listViewExportStyles.Items.Add(new ListViewItem(style.Name) { Checked = paragraphStyles.Contains(style.Name), Tag = style });
             }
 
             Text = LanguageSettings.Current.SubStationAlphaStyles.Export;
@@ -41,6 +41,8 @@ namespace Nikse.SubtitleEdit.Forms.VTT
                     ImportExportStyles.Add((WebVttStyle)item.Tag);
                 }
             }
+
+            DialogResult = ImportExportStyles.Count == 0 ? DialogResult.Cancel : DialogResult.OK;
         }
 
         private void WebVttImportExport_KeyDown(object sender, KeyEventArgs e)

@@ -99,10 +99,7 @@ namespace Nikse.SubtitleEdit.Logic
                 {
                     _regEx = new Regex(FindText, RegexOptions.None, TimeSpan.FromSeconds(5));
                 }
-                else
-                {
-                    
-                }
+
                 match = _regEx.Match(text, startIndex);
             }
             catch (RegexMatchTimeoutException exception)

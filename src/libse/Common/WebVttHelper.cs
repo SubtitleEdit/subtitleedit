@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 
 namespace Nikse.SubtitleEdit.Core.Common
 {
@@ -453,6 +454,59 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             return text;
+        }
+
+        public static List<string> GetParagraphStyles(Paragraph paragraph)
+        {
+            var list = new List<string>();
+            if (paragraph == null || string.IsNullOrEmpty(paragraph.Text))
+            {
+                return list;
+            }
+
+            var regex = new Regex(@"<c\.[\.a-zA-Z\d#_-]+>");
+            foreach (Match match in regex.Matches(paragraph.Text))
+            {
+                var styles = match.Value.Remove(0, 3).Trim('>', ' ').Split('.');
+                foreach (var styleName in styles)
+                {
+                    if (!string.IsNullOrEmpty(styleName) && !list.Contains(styleName))
+                    {
+                        list.Add("." + styleName);
+                    }
+                }
+            }
+
+            return list;
+        }
+
+        public static string SetParagraphStyles(Paragraph p, List<WebVttStyle> styles)
+        {
+            if (string.IsNullOrEmpty(p.Text) || 
+                !p.Text.Contains("<c.", StringComparison.Ordinal))
+            {
+                return p.Text;
+            }
+
+            var text = p.Text;
+            var regex = new Regex(@"<c\.[\.a-zA-Z\d#_-]+>");
+            var match = regex.Match(text);
+            while (match.Success)
+            {
+                text = text.Remove(match.Index, match.Value.Length);
+                match = regex.Match(text);
+            }
+
+            text = text.Replace("</c>", string.Empty);
+
+            if (styles.Count == 0)
+            {
+                return text;
+            }
+
+            var prefix = "<c" + string.Join("", styles.Select(s=>s.Name)) +">";
+
+            return prefix + text + "</c>";
         }
     }
 }
