@@ -32996,6 +32996,8 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripButtonAssaDraw.Visible = assFormatOn && File.Exists(Path.Combine(Configuration.PluginsDirectory, "AssaDraw.dll"));
             toolStripButtonAssAttachments.Visible = assFormatOn;
 
+            toolStripMenuItemWebVttStyle.Visible = false;
+
             if (formatType == typeof(SubStationAlpha))
             {
                 toolStripButtonAssStyleManager.Visible = true;
@@ -33027,6 +33029,8 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripButtonAssStyleManager.ToolTipText = string.Format(LanguageSettings.Current.WebVttStyleManager.Title, new WebVTT().Name); 
                 toolStripButtonAssStyleManager.Image = Properties.Resources.webvtt;
                 TryLoadIcon(toolStripButtonAssStyleManager, "WebVttStyle");
+
+                toolStripMenuItemWebVttStyle.Visible = true;
             }
 
             if (formatType == typeof(Ebu))
