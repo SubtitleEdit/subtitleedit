@@ -95,7 +95,14 @@ namespace Nikse.SubtitleEdit.Logic
             Match match;
             try
             {
-                _regEx = new Regex(FindText, RegexOptions.None, TimeSpan.FromSeconds(5));
+                if (_regEx == null)
+                {
+                    _regEx = new Regex(FindText, RegexOptions.None, TimeSpan.FromSeconds(5));
+                }
+                else
+                {
+                    
+                }
                 match = _regEx.Match(text, startIndex);
             }
             catch (RegexMatchTimeoutException exception)
