@@ -16,6 +16,7 @@
    * Update Korean translation - thx domddol
    * Update Tesseract OCR to 5.3.1
 * FIXED:
+   * Fix "Find Double Words" - th uckthis
    * Fix "double dash" issue in "Fix common errors" - thx Joel
    * Avoid crash on very large TS files - thx Mariusz
    * Do not count Unicode control characters in Auto-br - MichaelYochpaz 
