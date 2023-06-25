@@ -190,6 +190,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             buttonReplace.Focus();
+            SetRegEx();
         }
 
         private void ButtonReplaceAllClick(object sender, EventArgs e)
@@ -205,6 +206,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             buttonReplaceAll.Focus();
+            SetRegEx();
         }
 
         private void Validate(string searchText)
@@ -242,6 +244,22 @@ namespace Nikse.SubtitleEdit.Forms
         {
             Find();
             buttonFind.Focus();
+            SetRegEx();
+        }
+
+        private void SetRegEx()
+        {
+            if (radioButtonRegEx.Checked)
+            {
+                try
+                {
+                    _regEx = new Regex(RegexUtils.FixNewLine(FindText), RegexOptions.Compiled, TimeSpan.FromSeconds(5));
+                }
+                catch (Exception exception)
+                {
+                    MessageBox.Show(exception.Message);
+                }
+            }
         }
 
         private void Find()

@@ -20966,6 +20966,8 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             _findHelper = new FindReplaceDialogHelper(new ReplaceType { FindType = FindType.RegEx }, string.Format(_language.DoubleWordsViaRegEx, regex), regex, string.Empty, _subtitleListViewIndex);
+            _findHelper.FindReplaceType.SearchTranslation = true;
+            _findHelper.FindReplaceType.SearchOriginal = _subtitleOriginal != null && _subtitleOriginal.Paragraphs.Count > 0;
 
             ReloadFromSourceView();
             FindNext();
@@ -35212,8 +35214,14 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void toolStripMenuItemWebVttStyle_Click(object sender, EventArgs e)
         {
+            var idx = FirstSelectedIndex;
+            if (idx == -1)
+            {
+                return;
+            }
+
             var styles = WebVttHelper.GetStyles(_subtitle.Header);
-            using (var form = new WebVttStylePicker(styles))
+            using (var form = new WebVttStylePicker(styles, _subtitle.GetParagraphOrDefault(idx)))
             {
                 form.ShowDialog(this);
             }

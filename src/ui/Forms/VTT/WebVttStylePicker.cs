@@ -11,11 +11,12 @@ namespace Nikse.SubtitleEdit.Forms.VTT
         private readonly List<WebVttStyle> _styles;
         public List<WebVttStyle> ImportExportStyles { get; set; }
 
-        public WebVttStylePicker(List<WebVttStyle> styles)
+        public WebVttStylePicker(List<WebVttStyle> styles, Paragraph getParagraphOrDefault)
         {
             InitializeComponent();
             UiUtil.FixFonts(this);
 
+            ImportExportStyles = new List<WebVttStyle>();
             _styles = styles;
             listViewExportStyles.Columns[0].Width = listViewExportStyles.Width - 20;
             foreach (var style in _styles)
@@ -33,7 +34,13 @@ namespace Nikse.SubtitleEdit.Forms.VTT
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
-            
+            foreach (ListViewItem item in listViewExportStyles.Items)
+            {
+                if (item.Checked)
+                {
+                    ImportExportStyles.Add((WebVttStyle)item.Tag);
+                }
+            }
         }
 
         private void WebVttImportExport_KeyDown(object sender, KeyEventArgs e)
