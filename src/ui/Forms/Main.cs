@@ -14037,7 +14037,7 @@ namespace Nikse.SubtitleEdit.Forms
             else if (format.Name == WebVTT.NameOfFormat || format.Name == WebVTTFileWithLineNumber.NameOfFormat)
             {
                 var c = ColorTranslator.FromHtml(color);
-                WebVttStyle styleWithColor = WebVttHelper.GetStyleFromColor(c, _subtitle);
+                WebVttStyle styleWithColor = WebVttHelper.GetOnlyColorStyle(c, _subtitle.Header);
                 if (styleWithColor == null)
                 {
                     styleWithColor = WebVttHelper.AddStyleFromColor(c);
@@ -14049,13 +14049,15 @@ namespace Nikse.SubtitleEdit.Forms
                     var indexOfEndTag = text.IndexOf('>');
                     if (indexOfEndTag > 0)
                     {
-                        text = text.Insert(indexOfEndTag, "." + styleWithColor.Name);
+                        text = text.Insert(indexOfEndTag, "." + styleWithColor.Name.RemoveChar('.'));
                     }
                 }
                 else
                 {
-                    text = "<c." + styleWithColor.Name + ">" + text + "</c>";
+                    text = "<c." + styleWithColor.Name.RemoveChar('.') + ">" + text + "</c>";
                 }
+
+                text = WebVttHelper.RemoveUnusedColorStylesFromText(text, _subtitle.Header);
 
                 tb.SelectedText = text;
                 tb.SelectionStart = selectionStart;
@@ -14154,9 +14156,19 @@ namespace Nikse.SubtitleEdit.Forms
                 try
                 {
                     var c = ColorTranslator.FromHtml(color);
-                    var styleWithColor = WebVttHelper.AddStyleFromColor(c);
-                    subtitle.Header = WebVttHelper.AddStyleToHeader(_subtitle.Header, styleWithColor);
-                    p.Text = WebVttHelper.AddStyleToText(p.Text, styleWithColor);
+                    var existingStyle = WebVttHelper.GetOnlyColorStyle(c, _subtitle.Header);
+                    if (existingStyle != null)
+                    {
+                        p.Text = WebVttHelper.AddStyleToText(p.Text, existingStyle);
+                        p.Text = WebVttHelper.RemoveUnusedColorStylesFromText(p.Text, subtitle.Header);
+                    }
+                    else
+                    {
+                        var styleWithColor = WebVttHelper.AddStyleFromColor(c);
+                        subtitle.Header = WebVttHelper.AddStyleToHeader(_subtitle.Header, styleWithColor);
+                        p.Text = WebVttHelper.AddStyleToText(p.Text, styleWithColor);
+                        p.Text = WebVttHelper.RemoveUnusedColorStylesFromText(p.Text, subtitle.Header);
+                    }
                 }
                 catch
                 {
@@ -27250,7 +27262,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             string color;
             var formatType = GetCurrentSubtitleFormat().GetType();
-            if (formatType == typeof(AdvancedSubStationAlpha))
+            if (formatType == typeof(AdvancedSubStationAlpha) || formatType == typeof(WebVTT) || formatType == typeof(WebVTTFileWithLineNumber))
             {
                 using (var form = new ColorChooser { Color = Configuration.Settings.General.LastColorPickerColor })
                 {

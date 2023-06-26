@@ -39,7 +39,9 @@
             this.saveFileDialogStyle = new System.Windows.Forms.SaveFileDialog();
             this.labelStyles = new System.Windows.Forms.Label();
             this.groupBoxStyle = new System.Windows.Forms.GroupBox();
+            this.labelStyle = new System.Windows.Forms.Label();
             this.contextMenuStrip1.SuspendLayout();
+            this.groupBoxStyle.SuspendLayout();
             this.SuspendLayout();
             // 
             // listViewExportStyles
@@ -58,6 +60,7 @@
             this.listViewExportStyles.TabIndex = 0;
             this.listViewExportStyles.UseCompatibleStateImageBehavior = false;
             this.listViewExportStyles.View = System.Windows.Forms.View.Details;
+            this.listViewExportStyles.SelectedIndexChanged += new System.EventHandler(this.listViewExportStyles_SelectedIndexChanged);
             // 
             // contextMenuStrip1
             // 
@@ -120,6 +123,7 @@
             // 
             // groupBoxStyle
             // 
+            this.groupBoxStyle.Controls.Add(this.labelStyle);
             this.groupBoxStyle.Location = new System.Drawing.Point(201, 38);
             this.groupBoxStyle.Name = "groupBoxStyle";
             this.groupBoxStyle.Size = new System.Drawing.Size(319, 187);
@@ -127,7 +131,16 @@
             this.groupBoxStyle.TabStop = false;
             this.groupBoxStyle.Text = "Style";
             // 
-            // WebVttIStylePicker
+            // labelStyle
+            // 
+            this.labelStyle.AutoSize = true;
+            this.labelStyle.Location = new System.Drawing.Point(7, 20);
+            this.labelStyle.Name = "labelStyle";
+            this.labelStyle.Size = new System.Drawing.Size(52, 13);
+            this.labelStyle.TabIndex = 0;
+            this.labelStyle.Text = "labelStyle";
+            // 
+            // WebVttStylePicker
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -148,6 +161,8 @@
             this.Text = "SubStationAlphaStylesExport";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.WebVttImportExport_KeyDown);
             this.contextMenuStrip1.ResumeLayout(false);
+            this.groupBoxStyle.ResumeLayout(false);
+            this.groupBoxStyle.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -165,5 +180,6 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSelectAll;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemInverseSelection;
         private System.Windows.Forms.GroupBox groupBoxStyle;
+        private System.Windows.Forms.Label labelStyle;
     }
 }

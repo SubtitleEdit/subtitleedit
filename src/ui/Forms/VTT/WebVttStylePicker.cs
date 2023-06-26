@@ -30,6 +30,8 @@ namespace Nikse.SubtitleEdit.Forms.VTT
             toolStripMenuItemSelectAll.Text = LanguageSettings.Current.Main.Menu.ContextMenu.SelectAll;
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
+
+            labelStyle.Text = string.Empty;
         }
 
         private void buttonOK_Click(object sender, EventArgs e)
@@ -67,6 +69,21 @@ namespace Nikse.SubtitleEdit.Forms.VTT
             {
                 item.Checked = !item.Checked;
             }
+        }
+
+        private void listViewExportStyles_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var x = listViewExportStyles.SelectedIndices;
+            if (x.Count != 1)
+            {
+                labelStyle.Text = string.Empty;
+                return;
+            }
+
+            var idx = x[0];
+            var style = (WebVttStyle)listViewExportStyles.Items[idx].Tag;
+
+            labelStyle.Text = style.ToString().Replace("; ", ";" + Environment.NewLine);
         }
     }
 }
