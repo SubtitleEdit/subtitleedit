@@ -2,7 +2,6 @@
 using System.Drawing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nikse.SubtitleEdit.Core.Common;
-using Nikse.SubtitleEdit.Core.SubtitleFormats;
 
 namespace Test.Core
 {
@@ -16,7 +15,7 @@ namespace Test.Core
             {
                 new WebVttStyle()
                 {
-                    Name = "Red",
+                    Name = ".Red",
                     Color = Color.Red,
                 },
             };
@@ -34,12 +33,12 @@ namespace Test.Core
             {
                 new WebVttStyle
                 {
-                    Name = "Red",
+                    Name = ".Red",
                     Color = Color.Red,
                 },
                 new WebVttStyle
                 {
-                    Name = "Italic",
+                    Name = ".Italic",
                     Italic = true,
                 },
             };
