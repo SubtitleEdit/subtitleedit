@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Nikse.SubtitleEdit.Core.Common
 {
@@ -280,30 +281,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
-        public static WebVttStyle GetStyleFromColor(Color color, Subtitle webVttSubtitle)
-        {
-            foreach (var style in GetStyles(webVttSubtitle.Header))
-            {
-                if (style.Color.HasValue && style.Color.Value == color &&
-                    style.BackgroundColor == null &&
-                    style.Bold == null &&
-                    style.Italic == null &&
-                    style.FontName == null &&
-                    style.FontSize == null &&
-                    style.Underline == null)
-                {
-                    return style;
-                }
-            }
-
-            return null;
-        }
-
         public static WebVttStyle AddStyleFromColor(Color color)
         {
             return new WebVttStyle
             {
-                Name = Utilities.ColorToHexWithTransparency(color).TrimStart('#'),
+                Name = "." + Utilities.ColorToHexWithTransparency(color).TrimStart('#'),
                 Color = color,
             };
         }
@@ -317,7 +299,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return "WEBVTT" + Environment.NewLine + Environment.NewLine + "STYLE" + Environment.NewLine + rawStyle;
             }
 
-            if (header.Contains("::cue(." + style.Name + ")"))
+            if (header.Contains("::cue(." + style.Name.RemoveChar('.') + ")"))
             {
                 return header;
             }
@@ -433,10 +415,10 @@ namespace Nikse.SubtitleEdit.Core.Common
         public static string AddStyleToText(string input, WebVttStyle style)
         {
             var text = input;
-            var idx = text.IndexOf("<c." + style.Name + ">", StringComparison.Ordinal);
+            var idx = text.IndexOf("<c." + style.Name.TrimStart('.') + ">", StringComparison.Ordinal);
             if (idx >= 0)
             {
-                text = text.Replace("<c." + style.Name + ">", string.Empty);
+                text = text.Replace("<c." + style.Name.TrimStart('.') + ">", string.Empty);
                 idx = text.IndexOf("</c>", StringComparison.Ordinal);
                 if (idx >= 0)
                 {
@@ -445,11 +427,17 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
             else if (text.Contains("<c."))
             {
-                text = text.Replace("." + style.Name, string.Empty);
+                var regex = new Regex(@"<c\.[\.a-zA-Z\d#_-]+>");
+                var match = regex.Match(text);
+                if (match.Success)
+                {
+                    // todo: remove only color styles
+                    text = text.Insert(match.Index + match.Length-1, "." + style.Name.TrimStart('.'));
+                }
             }
             else
             {
-                text = "<c." + style.Name + ">" + text + "</c>";
+                text = "<c." + style.Name.TrimStart('.') + ">" + text + "</c>";
             }
 
             return text;
@@ -506,6 +494,94 @@ namespace Nikse.SubtitleEdit.Core.Common
             var prefix = "<c" + string.Join("", styles.Select(s=>s.Name)) +">";
 
             return prefix + text + "</c>";
+        }
+
+        public static string RemoveUnusedColorStylesFromText(string input, string header)
+        {
+            if (string.IsNullOrEmpty(header) || !header.Contains("WEBVTT"))
+            {
+                return input;
+            }
+
+            var styles = GetStyles(header);
+            if (styles.Count <= 1)
+            {
+                return input;
+            }
+
+            var regex = new Regex(@"<c\.[\.a-zA-Z\d#_-]+>");
+            var match = regex.Match(input);
+            if (!match.Success)
+            {
+                return input;
+            }
+
+            var text = input;
+            var styleNames = match.Value.Remove(0,3).Trim('>').Split('.');
+            var colorsOnly = new List<string>();
+            foreach (var styleName in styleNames)
+            {
+                var style = styles.FirstOrDefault(p => p.Name == "." + styleName);
+                if (style != null && 
+                    style.Color.HasValue && 
+                    style.Bold == null && 
+                    style.Italic == null &&
+                    style.FontName == null && 
+                    style.FontSize == null && 
+                    style.ShadowColor == null &&
+                    style.BackgroundColor == null && 
+                    style.Underline == null && 
+                    style.StrikeThrough == null &&
+                    style.StrikeThrough == null)
+                {
+                    colorsOnly.Add(styleName);
+                }
+            }
+
+            while (colorsOnly.Count > 1)
+            {
+                var name = colorsOnly[0];
+                text = text.Replace("." + name + ".", ".");
+                text = text.Replace("." + name + ">", ">");
+                colorsOnly.RemoveAt(0);
+            }
+
+            return text;
+        }
+
+        public static WebVttStyle GetOnlyColorStyle(Color color, string header)
+        {
+            if (string.IsNullOrEmpty(header) || !header.Contains("WEBVTT"))
+            {
+                return null;
+            }
+
+            var styles = GetStyles(header);
+            if (styles.Count <= 1)
+            {
+                return null;
+            }
+
+            foreach (var style in styles)
+            {
+                if (style != null &&
+                    style.Color.HasValue &&
+                    style.Bold == null &&
+                    style.Italic == null &&
+                    style.FontName == null &&
+                    style.FontSize == null &&
+                    style.ShadowColor == null &&
+                    style.BackgroundColor == null &&
+                    style.Underline == null &&
+                    style.StrikeThrough == null &&
+                    style.StrikeThrough == null &&
+                    style.Color == color)
+                {
+                    return style;
+                }
+            }
+
+            return null;
         }
     }
 }
