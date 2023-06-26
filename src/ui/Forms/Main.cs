@@ -14159,14 +14159,14 @@ namespace Nikse.SubtitleEdit.Forms
                     var existingStyle = WebVttHelper.GetOnlyColorStyle(c, _subtitle.Header);
                     if (existingStyle != null)
                     {
-                        p.Text = WebVttHelper.AddStyleToText(p.Text, existingStyle);
+                        p.Text = WebVttHelper.AddStyleToText(p.Text, existingStyle, WebVttHelper.GetStyles(_subtitle.Header));
                         p.Text = WebVttHelper.RemoveUnusedColorStylesFromText(p.Text, subtitle.Header);
                     }
                     else
                     {
                         var styleWithColor = WebVttHelper.AddStyleFromColor(c);
                         subtitle.Header = WebVttHelper.AddStyleToHeader(_subtitle.Header, styleWithColor);
-                        p.Text = WebVttHelper.AddStyleToText(p.Text, styleWithColor);
+                        p.Text = WebVttHelper.AddStyleToText(p.Text, styleWithColor, WebVttHelper.GetStyles(_subtitle.Header));
                         p.Text = WebVttHelper.RemoveUnusedColorStylesFromText(p.Text, subtitle.Header);
                     }
                 }

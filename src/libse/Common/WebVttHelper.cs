@@ -5,7 +5,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using static System.Net.Mime.MediaTypeNames;
+using System.Xml.Linq;
 
 namespace Nikse.SubtitleEdit.Core.Common
 {
@@ -409,30 +409,38 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return input;
             }
 
-            return AddStyleToText(input, style);
-        }
-
-        public static string AddStyleToText(string input, WebVttStyle style)
-        {
             var text = input;
-            var idx = text.IndexOf("<c." + style.Name.TrimStart('.') + ">", StringComparison.Ordinal);
+            text = text.Replace("." + style.Name.TrimStart('.') + ".", ".");
+            text = text.Replace("." + style.Name.TrimStart('.') + ">", ">");
+
+            var idx = text.IndexOf("<c>", StringComparison.Ordinal);
             if (idx >= 0)
             {
-                text = text.Replace("<c." + style.Name.TrimStart('.') + ">", string.Empty);
-                idx = text.IndexOf("</c>", StringComparison.Ordinal);
-                if (idx >= 0)
+                var endIdx = text.IndexOf("</c>", idx);
+                if (endIdx > 0)
                 {
-                    text = text.Remove(idx, 4);
+                    text = text.Remove(endIdx, 4);
+                    text = text.Remove(idx, 3);
                 }
             }
-            else if (text.Contains("<c."))
+
+            return text;
+        }
+
+        public static string AddStyleToText(string input, WebVttStyle style, List<WebVttStyle> webVttStyles)
+        {
+            var text = input;
+            if (text.Contains("<c."))
             {
-                var regex = new Regex(@"<c\.[\.a-zA-Z\d#_-]+>");
-                var match = regex.Match(text);
-                if (match.Success)
+                if (!text.Contains("." + style.Name.TrimStart('.') + ".") && !text.Contains("." + style.Name.TrimStart('.') + ">"))
                 {
-                    // todo: remove only color styles
-                    text = text.Insert(match.Index + match.Length-1, "." + style.Name.TrimStart('.'));
+                    var regex = new Regex(@"<c\.[\.a-zA-Z\d#_-]+>");
+                    var match = regex.Match(text);
+                    if (match.Success)
+                    {
+                        text = RemoveUnusedColorStylesFromText(text, webVttStyles);
+                        text = text.Insert(match.Index + match.Length - 1, "." + style.Name.TrimStart('.'));
+                    }
                 }
             }
             else
@@ -469,7 +477,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public static string SetParagraphStyles(Paragraph p, List<WebVttStyle> styles)
         {
-            if (string.IsNullOrEmpty(p.Text) || 
+            if (string.IsNullOrEmpty(p.Text) ||
                 !p.Text.Contains("<c.", StringComparison.Ordinal))
             {
                 return p.Text;
@@ -491,7 +499,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return text;
             }
 
-            var prefix = "<c" + string.Join("", styles.Select(s=>s.Name)) +">";
+            var prefix = "<c" + string.Join("", styles.Select(s => s.Name)) + ">";
 
             return prefix + text + "</c>";
         }
@@ -509,6 +517,11 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return input;
             }
 
+            return RemoveUnusedColorStylesFromText(input, styles);
+        }
+
+        public static string RemoveUnusedColorStylesFromText(string input, List<WebVttStyle> styles)
+        {
             var regex = new Regex(@"<c\.[\.a-zA-Z\d#_-]+>");
             var match = regex.Match(input);
             if (!match.Success)
@@ -517,20 +530,20 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             var text = input;
-            var styleNames = match.Value.Remove(0,3).Trim('>').Split('.');
+            var styleNames = match.Value.Remove(0, 3).Trim('>').Split('.');
             var colorsOnly = new List<string>();
             foreach (var styleName in styleNames)
             {
                 var style = styles.FirstOrDefault(p => p.Name == "." + styleName);
-                if (style != null && 
-                    style.Color.HasValue && 
-                    style.Bold == null && 
+                if (style != null &&
+                    style.Color.HasValue &&
+                    style.Bold == null &&
                     style.Italic == null &&
-                    style.FontName == null && 
-                    style.FontSize == null && 
+                    style.FontName == null &&
+                    style.FontSize == null &&
                     style.ShadowColor == null &&
-                    style.BackgroundColor == null && 
-                    style.Underline == null && 
+                    style.BackgroundColor == null &&
+                    style.Underline == null &&
                     style.StrikeThrough == null &&
                     style.StrikeThrough == null)
                 {
