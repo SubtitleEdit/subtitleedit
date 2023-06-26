@@ -37,6 +37,7 @@
     <Actor>배우</Actor>
     <Gap>간격</Gap>
     <Region>지역</Region>
+    <Layer>레이어</Layer>
     <NumberSymbol>번호</NumberSymbol>
     <Number>번호</Number>
     <Text>텍스트</Text>
@@ -1374,6 +1375,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
         <SizeAllColumnsToFit>모든 열의 크기 맞추기</SizeAllColumnsToFit>
         <SetStyle>스타일 설정</SetStyle>
         <SetActor>배우 설정</SetActor>
+        <SetLayer>레이어 설정</SetLayer>
         <AssaTools>ASSA 도구</AssaTools>
         <SubStationAlphaStyles>SSA의 스타일...</SubStationAlphaStyles>
         <AdvancedSubStationAlphaStyles>ASS의 스타일...</AdvancedSubStationAlphaStyles>
@@ -2555,6 +2557,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <MainToggleVideoControls>비디오 컨트롤 전환</MainToggleVideoControls>
     <VideoToggleContrast>대비 전환 (mpv 만)</VideoToggleContrast>
     <AudioToTextX>오디오를 텍스트로 ({0})</AudioToTextX>
+    <AudioExtractSelectedLines>오디오 추출 (선택한 줄)</AudioExtractSelectedLines>
     <AudioToTextSelectedLinesX>선택한 줄 오디오를 텍스트로 ({0})</AudioToTextSelectedLinesX>
     <VideoToggleBrightness>밝기 전환 (mpv 만)</VideoToggleBrightness>
     <CustomSearch1>번역, 사용자 지정 검색 1</CustomSearch1>
@@ -3209,4 +3212,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <Title>WebVTT - 새로운 음성 설정</Title>
     <VoiceName>음성 이름</VoiceName>
   </WebVttNewVoice>
+  <WebVttStyleManager>
+    <Title>WebVTT 스타일</Title>
+  </WebVttStyleManager>
 </Language>
