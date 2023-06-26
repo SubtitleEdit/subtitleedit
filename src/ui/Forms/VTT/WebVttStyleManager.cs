@@ -1,25 +1,32 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.VideoPlayers;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Text;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms.VTT
 {
-    public partial class WebVttStyleManager : Form
+    public sealed partial class WebVttStyleManager : Form
     {
         public string Header { get; set; }
         private readonly List<WebVttStyle> _webVttStyles;
         private readonly List<WebVttStyle> _originalWebVttStyles;
         private WebVttStyle _currentStyle;
         private readonly Subtitle _subtitle;
-        private string _startName;
-        private string _editedName;
         private bool _doUpdate;
+        private readonly Timer _previewTimer = new Timer();
+        private Bitmap _backgroundImage;
+        private readonly bool _backgroundImageDark;
+        private LibMpvDynamic _mpv;
+        private string _mpvTextFileName;
 
         public WebVttStyleManager(Subtitle subtitle, int index)
         {
@@ -32,7 +39,7 @@ namespace Nikse.SubtitleEdit.Forms.VTT
             _webVttStyles = WebVttHelper.GetStyles(subtitle.Header);
             _originalWebVttStyles = WebVttHelper.GetStyles(subtitle.Header);
             Header = subtitle.Header;
-            InitializeStylesListView(_subtitle.GetParagraphOrDefault(index)?.Extra);
+            InitializeStylesListView();
             CheckDuplicateStyles();
 
             var fontNames = new List<string>();
@@ -44,9 +51,79 @@ namespace Nikse.SubtitleEdit.Forms.VTT
             comboBoxFontName.Items.Clear();
             comboBoxFontName.Items.AddRange(fontNames.ToArray<object>());
             labelInfo.Text = string.Empty;
+
+            Text = LanguageSettings.Current.WebVttStyleManager.Title;
+            var l = LanguageSettings.Current.SubStationAlphaStyles;
+            groupBoxStyles.Text = l.Styles;
+            listViewStyles.Columns[0].Text = l.Name;
+            listViewStyles.Columns[1].Text = l.FontName;
+            listViewStyles.Columns[2].Text = l.FontSize;
+            listViewStyles.Columns[3].Text = LanguageSettings.Current.General.Italic;
+            listViewStyles.Columns[4].Text = LanguageSettings.Current.GenerateBlankVideo.Background;
+            listViewStyles.Columns[5].Text = LanguageSettings.Current.General.Text;
+            listViewStyles.Columns[6].Text = l.UseCount;
+            groupBoxProperties.Text = l.Properties;
+            labelStyleName.Text = l.Name;
+            groupBoxFont.Text = l.Font;
+            labelFontName.Text = l.FontName;
+            labelFontSize.Text = l.FontSize;
+            checkBoxFontItalic.Text = LanguageSettings.Current.General.Italic;
+            checkBoxFontBold.Text = LanguageSettings.Current.General.Bold;
+            checkBoxFontUnderline.Text = LanguageSettings.Current.General.Underline;
+            checkBoxStrikeout.Text = LanguageSettings.Current.General.Strikeout;
+            buttonPrimaryColor.Text = l.Primary;
+            //buttonSecondaryColor.Text = l.Secondary;
+            //buttonOutlineColor.Text = l.Outline;
+            //buttonBackColor.Text = l.Shadow;
+            labelShadow.Text = l.Shadow;
+            buttonImport.Text = l.Import;
+            buttonExport.Text = l.Export;
+            buttonCopy.Text = l.Copy;
+            buttonAdd.Text = l.New;
+            buttonRemove.Text = l.Remove;
+            buttonRemoveAll.Text = l.RemoveAll;
+            groupBoxPreview.Text = LanguageSettings.Current.General.Preview;
+
+            deleteToolStripMenuItem.Text = l.Remove;
+            //removeAndReplaceWithToolStripMenuItem.Text = l.ReplaceWith;
+            toolStripMenuItemRemoveAll.Text = l.RemoveAll;
+            moveUpToolStripMenuItem.Text = LanguageSettings.Current.DvdSubRip.MoveUp;
+            moveDownToolStripMenuItem.Text = LanguageSettings.Current.DvdSubRip.MoveDown;
+            moveTopToolStripMenuItem.Text = LanguageSettings.Current.MultipleReplace.MoveToTop;
+            moveBottomToolStripMenuItem.Text = LanguageSettings.Current.MultipleReplace.MoveToBottom;
+            newToolStripMenuItemNew.Text = l.New;
+            copyToolStripMenuItemCopy.Text = l.Copy;
+            toolStripMenuItemImport.Text = l.Import;
+            toolStripMenuItemExport.Text = l.Export;
+
+            checkBoxColorEnabled.Text = LanguageSettings.Current.MultipleReplace.Enabled;
+            checkBoxBackgroundColorEnabled.Text = LanguageSettings.Current.MultipleReplace.Enabled;
+            checkBoxShadowEnabled.Text = LanguageSettings.Current.MultipleReplace.Enabled;
+
+            buttonApply.Text = LanguageSettings.Current.General.Apply;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
+
+            comboBoxFontName.Left = labelFontName.Right + 5;
+            labelFontSize.Left = comboBoxFontName.Right + 15;
+            numericUpDownFontSize.Left = labelFontSize.Right + 5;
+
+            checkBoxFontItalic.Left = checkBoxFontBold.Right + 15;
+            checkBoxFontUnderline.Left = checkBoxFontItalic.Right + 15;
+            checkBoxStrikeout.Left = checkBoxFontUnderline.Right + 15;
+
+            _backgroundImageDark = Configuration.Settings.General.UseDarkTheme;
+            _previewTimer.Interval = 200;
+            _previewTimer.Tick += PreviewTimerTick;
         }
 
-        private void InitializeStylesListView(string currentStyleName)
+        private void PreviewTimerTick(object sender, EventArgs e)
+        {
+            _previewTimer.Stop();
+            GeneratePreviewReal();
+        }
+
+        private void InitializeStylesListView()
         {
             listViewStyles.Items.Clear();
             foreach (var style in _webVttStyles)
@@ -59,7 +136,6 @@ namespace Nikse.SubtitleEdit.Forms.VTT
                 listViewStyles.Items[0].Selected = true;
             }
         }
-
 
         public static void AddStyle(ListView lv, WebVttStyle style, Subtitle subtitle)
         {
@@ -154,8 +230,6 @@ namespace Nikse.SubtitleEdit.Forms.VTT
             if (listViewStyles.SelectedItems.Count == 1)
             {
                 var styleName = "." + listViewStyles.SelectedItems[0].Text;
-                _startName = styleName;
-                _editedName = null;
                 var style = _webVttStyles.FirstOrDefault(p => p.Name == styleName);
                 SetControlsFromStyle(style);
                 _doUpdate = true;
@@ -165,13 +239,13 @@ namespace Nikse.SubtitleEdit.Forms.VTT
             {
                 groupBoxProperties.Enabled = false;
                 _doUpdate = false;
-                _startName = null;
                 _currentStyle = null;
                 pictureBoxPreview.Image?.Dispose();
                 pictureBoxPreview.Image = new Bitmap(1, 1);
             }
 
             UpdateCurrentFileButtonsState();
+            GeneratePreview();
         }
 
         private void SetControlsFromStyle(WebVttStyle style)
@@ -484,13 +558,13 @@ namespace Nikse.SubtitleEdit.Forms.VTT
                 {
                     styleOn = true;
                 }
-                else if (styleOn)
-                {
-                    // ignore
-                }
                 else if (line == string.Empty && styleOn)
                 {
                     styleOn = false;
+                }
+                else if (styleOn)
+                {
+                    // ignore
                 }
                 else
                 {
@@ -506,7 +580,7 @@ namespace Nikse.SubtitleEdit.Forms.VTT
                 sbStyles.AppendLine(rawStyle);
             }
 
-            header = sb.ToString().Trim() + Environment.NewLine + Environment.NewLine + sbStyles.ToString();
+            header = sb.ToString().Trim() + Environment.NewLine + Environment.NewLine + sbStyles;
             Header = header;
         }
 
@@ -540,7 +614,7 @@ namespace Nikse.SubtitleEdit.Forms.VTT
 
             if (listViewStyles.Items.Count == 0)
             {
-                InitializeStylesListView(string.Empty);
+                InitializeStylesListView();
             }
 
             CheckDuplicateStyles();
@@ -575,7 +649,7 @@ namespace Nikse.SubtitleEdit.Forms.VTT
 
             listViewStyles.Items.Clear();
             _webVttStyles.Clear();
-            InitializeStylesListView(string.Empty);
+            InitializeStylesListView();
             CheckDuplicateStyles();
         }
 
@@ -688,6 +762,8 @@ namespace Nikse.SubtitleEdit.Forms.VTT
                     }
                 }
             }
+
+            GeneratePreview();
         }
 
         private string GetUniqueName(WebVttStyle style)
@@ -701,7 +777,7 @@ namespace Nikse.SubtitleEdit.Forms.VTT
                 while (doRepeat)
                 {
                     newName = "." + string.Format(LanguageSettings.Current.SubStationAlphaStyles.CopyXOfY, count, styleName.RemoveChar('.'));
-                    newName = style.Name.Replace(" ", "-");
+                    newName = newName.Replace(" ", "-");
                     doRepeat = _webVttStyles.FirstOrDefault(p => p.Name == style.Name) != null;
                     count++;
                 }
@@ -760,6 +836,8 @@ namespace Nikse.SubtitleEdit.Forms.VTT
                 _currentStyle.Name = "." + newName;
                 listViewStyles.SelectedItems[0].Text = newName;
             }
+
+            GeneratePreview();
         }
 
         private void checkBoxFontBold_CheckedChanged(object sender, EventArgs e)
@@ -779,6 +857,7 @@ namespace Nikse.SubtitleEdit.Forms.VTT
             }
 
             UpdateRawBeforeStyle();
+            GeneratePreview();
         }
 
         private void checkBoxFontItalic_CheckedChanged(object sender, EventArgs e)
@@ -788,7 +867,6 @@ namespace Nikse.SubtitleEdit.Forms.VTT
                 return;
             }
 
-            var idx = listViewStyles.SelectedItems[0].Index;
             if (checkBoxFontItalic.Checked)
             {
                 _currentStyle.Italic = true;
@@ -798,8 +876,9 @@ namespace Nikse.SubtitleEdit.Forms.VTT
                 _currentStyle.Italic = null;
             }
 
-            listViewStyles.SelectedItems[0].SubItems[3].Text = _currentStyle.Italic.HasValue && _currentStyle.Italic.Value == true ? LanguageSettings.Current.General.Yes : "-";
+            listViewStyles.SelectedItems[0].SubItems[3].Text = _currentStyle.Italic.HasValue && _currentStyle.Italic.Value ? LanguageSettings.Current.General.Yes : "-";
             UpdateRawBeforeStyle();
+            GeneratePreview();
         }
 
         private void checkBoxFontUnderline_CheckedChanged(object sender, EventArgs e)
@@ -819,6 +898,7 @@ namespace Nikse.SubtitleEdit.Forms.VTT
             }
 
             UpdateRawBeforeStyle();
+            GeneratePreview();
         }
 
         private void checkBoxStrikeout_CheckedChanged(object sender, EventArgs e)
@@ -838,6 +918,7 @@ namespace Nikse.SubtitleEdit.Forms.VTT
             }
 
             UpdateRawBeforeStyle();
+            GeneratePreview();
         }
 
         private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
@@ -981,6 +1062,169 @@ namespace Nikse.SubtitleEdit.Forms.VTT
         private void moveBottomToolStripMenuItem_Click(object sender, EventArgs e)
         {
             MoveToBottom(listViewStyles);
+        }
+
+        private void GeneratePreview()
+        {
+            if (_previewTimer.Enabled)
+            {
+                _previewTimer.Stop();
+                _previewTimer.Start();
+            }
+            else
+            {
+                _previewTimer.Start();
+            }
+        }
+
+        private void GeneratePreviewReal()
+        {
+            if (_currentStyle == null || listViewStyles.SelectedItems.Count != 1 || pictureBoxPreview.Width <= 0 || pictureBoxPreview.Height <= 0)
+            {
+                return;
+            }
+
+            if (GeneratePreviewViaMpv())
+            {
+                return;
+            }
+
+            if (_backgroundImage == null)
+            {
+                const int rectangleSize = 9;
+                _backgroundImage = TextDesigner.MakeBackgroundImage(pictureBoxPreview.Width, pictureBoxPreview.Height, rectangleSize, _backgroundImageDark);
+            }
+
+            var defaultStyle = new SsaStyle();
+            var shadowWidth = (float)numericUpDownShadowWidth.Value;
+            var outlineColor = _currentStyle.BackgroundColor ?? defaultStyle.Background;
+
+            Font font;
+            var privateFontCollection = new PrivateFontCollection();
+            try
+            {
+                var fontSize = defaultStyle.FontSize;
+                if (_currentStyle.FontSize.HasValue && _currentStyle.FontSize.Value > 0.1m)
+                {
+                    fontSize = _currentStyle.FontSize.Value;
+                }
+
+                var fontName = _currentStyle.FontName;
+                if (string.IsNullOrEmpty(fontName))
+                {
+                    fontName = Font.FontFamily.Name;
+                }
+
+                font = new Font(fontName, (float)fontSize * 1.1f, checkBoxFontBold.Checked ? FontStyle.Bold : FontStyle.Regular);
+                if (_currentStyle.Italic.HasValue && _currentStyle.Italic.Value)
+                {
+                    font = new Font(fontName, (float)fontSize * 1.1f, font.Style | FontStyle.Italic);
+                }
+
+                if (_currentStyle.Underline.HasValue && _currentStyle.Underline.Value)
+                {
+                    font = new Font(fontName, (float)fontSize * 1.1f, font.Style | FontStyle.Underline);
+                }
+
+                if (_currentStyle.StrikeThrough.HasValue && _currentStyle.StrikeThrough.Value)
+                {
+                    font = new Font(fontName, (float)fontSize * 1.1f, font.Style | FontStyle.Strikeout);
+                }
+            }
+            catch
+            {
+                font = new Font(Font, FontStyle.Regular);
+            }
+
+            var measureBmp = TextDesigner.MakeTextBitmapAssa(
+                Configuration.Settings.General.PreviewAssaText,
+                0,
+                0,
+                font,
+                pictureBoxPreview.Width,
+                pictureBoxPreview.Height,
+                5, //outlineWidth,
+                shadowWidth,
+                null,
+                _currentStyle.Color ?? defaultStyle.Primary,
+                outlineColor,
+                _currentStyle.ShadowColor ?? defaultStyle.Outline,
+                !(_currentStyle.BackgroundColor.HasValue && _currentStyle.BackgroundColor.Value.A == 0));
+            var nBmp = new NikseBitmap(measureBmp);
+            var measuredWidth = nBmp.GetNonTransparentWidth();
+            var measuredHeight = nBmp.GetNonTransparentHeight();
+
+            var left = (pictureBoxPreview.Width - measuredWidth) / 2.0f;
+
+            float top = pictureBoxPreview.Height - measuredHeight - 15;
+
+            var designedText = TextDesigner.MakeTextBitmapAssa(
+                Configuration.Settings.General.PreviewAssaText,
+                (int)Math.Round(left),
+                (int)Math.Round(top),
+                font,
+                pictureBoxPreview.Width,
+                pictureBoxPreview.Height,
+                5, //outlineWidth,
+                shadowWidth,
+                _backgroundImage,
+                _currentStyle.Color ?? defaultStyle.Primary,
+                outlineColor,
+                _currentStyle.ShadowColor ?? defaultStyle.Outline,
+                !(_currentStyle.BackgroundColor.HasValue && _currentStyle.BackgroundColor.Value.A == 0));
+
+            pictureBoxPreview.Image?.Dispose();
+            pictureBoxPreview.Image = designedText;
+            font.Dispose();
+            privateFontCollection.Dispose();
+        }
+
+        private bool GeneratePreviewViaMpv()
+        {
+            var fileName = VideoPreviewGenerator.GetVideoPreviewFileName();
+            if (string.IsNullOrEmpty(fileName) || !LibMpvDynamic.IsInstalled)
+            {
+                return false;
+            }
+
+            if (_mpv == null)
+            {
+                _mpv = new LibMpvDynamic();
+                _mpv.Initialize(pictureBoxPreview, fileName, VideoStartLoaded, null);
+            }
+            else
+            {
+                VideoStartLoaded(null, null);
+            }
+
+            return true;
+        }
+
+        private void VideoStartLoaded(object sender, EventArgs e)
+        {
+            if (_currentStyle == null)
+            {
+                return;
+            }
+
+            var subtitle = new Subtitle();
+            var p = new Paragraph(Configuration.Settings.General.PreviewAssaText, 0, 10000);
+            subtitle.Paragraphs.Add(p);
+            subtitle.Header = WebVttHelper.AddStyleToHeader(null, _currentStyle);
+            var assa = WebVttToAssa.Convert(subtitle, new SsaStyle(), _mpv.VideoWidth, _mpv.VideoHeight);
+            assa.Paragraphs[0].Extra = _currentStyle.Name;
+            var format = new AdvancedSubStationAlpha();
+            var text = assa.ToText(format);
+            _mpvTextFileName = FileUtil.GetTempFileName(format.Extension);
+            File.WriteAllText(_mpvTextFileName, text);
+            _mpv.LoadSubtitle(_mpvTextFileName);
+            _mpv.Pause();
+            _mpv.CurrentPosition = 0.5;
+        }
+
+        private void WebVttStyleManager_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            _mpv?.Dispose();
         }
     }
 }

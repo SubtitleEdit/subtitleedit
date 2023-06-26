@@ -4537,6 +4537,15 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Main/Menu/ContextMenu/NuendoSetStyle":
                     language.Main.Menu.ContextMenu.NuendoSetStyle = reader.Value;
                     break;
+                case "Main/Menu/ContextMenu/WebVttSetStyle":
+                    language.Main.Menu.ContextMenu.WebVttSetStyle = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/WebVttSetVoice":
+                    language.Main.Menu.ContextMenu.WebVttSetVoice = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/WebVttBrowserPreview":
+                    language.Main.Menu.ContextMenu.WebVttBrowserPreview = reader.Value;
+                    break;
                 case "Main/Menu/ContextMenu/Cut":
                     language.Main.Menu.ContextMenu.Cut = reader.Value;
                     break;
