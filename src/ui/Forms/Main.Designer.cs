@@ -291,8 +291,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripSeparatorAssa = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemSetRegion = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemSetLanguage = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemWebVttStyle = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemWebVTT = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemPreview = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuWebVttBrowserPreview = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemDelete = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemInsertBefore = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemInsertAfter = new System.Windows.Forms.ToolStripMenuItem();
@@ -575,7 +576,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.timerOriginalTextUndo = new System.Windows.Forms.Timer(this.components);
             this.contextMenuStripShowVideoControls = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItemShowVideoControls = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemWebVttStyle = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -2644,7 +2644,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemSetLanguage,
             this.toolStripMenuItemWebVttStyle,
             this.toolStripMenuItemWebVTT,
-            this.toolStripMenuItemPreview,
+            this.toolStripMenuWebVttBrowserPreview,
             this.toolStripMenuItemDelete,
             this.toolStripMenuItemInsertBefore,
             this.toolStripMenuItemInsertAfter,
@@ -2778,18 +2778,25 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemSetLanguage.Size = new System.Drawing.Size(284, 22);
             this.toolStripMenuItemSetLanguage.Text = "Timed text - set language";
             // 
+            // toolStripMenuItemWebVttStyle
+            // 
+            this.toolStripMenuItemWebVttStyle.Name = "toolStripMenuItemWebVttStyle";
+            this.toolStripMenuItemWebVttStyle.Size = new System.Drawing.Size(284, 22);
+            this.toolStripMenuItemWebVttStyle.Text = "WebVTT style...";
+            this.toolStripMenuItemWebVttStyle.Click += new System.EventHandler(this.toolStripMenuItemWebVttStyle_Click);
+            // 
             // toolStripMenuItemWebVTT
             // 
             this.toolStripMenuItemWebVTT.Name = "toolStripMenuItemWebVTT";
             this.toolStripMenuItemWebVTT.Size = new System.Drawing.Size(284, 22);
             this.toolStripMenuItemWebVTT.Text = "WebVTT voice";
             // 
-            // toolStripMenuItemPreview
+            // toolStripMenuWebVttBrowserPreview
             // 
-            this.toolStripMenuItemPreview.Name = "toolStripMenuItemPreview";
-            this.toolStripMenuItemPreview.Size = new System.Drawing.Size(284, 22);
-            this.toolStripMenuItemPreview.Text = "WebVTT browser preview";
-            this.toolStripMenuItemPreview.Click += new System.EventHandler(this.toolStripMenuItemPreview_Click);
+            this.toolStripMenuWebVttBrowserPreview.Name = "toolStripMenuWebVttBrowserPreview";
+            this.toolStripMenuWebVttBrowserPreview.Size = new System.Drawing.Size(284, 22);
+            this.toolStripMenuWebVttBrowserPreview.Text = "WebVTT browser preview";
+            this.toolStripMenuWebVttBrowserPreview.Click += new System.EventHandler(this.toolStripMenuItemPreview_Click);
             // 
             // toolStripMenuItemDelete
             // 
@@ -5623,13 +5630,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemShowVideoControls.Text = "Show video controls";
             this.toolStripMenuItemShowVideoControls.Click += new System.EventHandler(this.toolStripMenuItemShowVideoControls_Click);
             // 
-            // toolStripMenuItemWebVttStyle
-            // 
-            this.toolStripMenuItemWebVttStyle.Name = "toolStripMenuItemWebVttStyle";
-            this.toolStripMenuItemWebVttStyle.Size = new System.Drawing.Size(284, 22);
-            this.toolStripMenuItemWebVttStyle.Text = "WebVTT style...";
-            this.toolStripMenuItemWebVttStyle.Click += new System.EventHandler(this.toolStripMenuItemWebVttStyle_Click);
-            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -6090,7 +6090,7 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSpellCheckAddToNames;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparatorSpellCheck;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemWebVttVoice;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemPreview;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuWebVttBrowserPreview;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparatorWebVTT;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemModifySelection;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemInverseSelection;

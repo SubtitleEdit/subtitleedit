@@ -1,6 +1,6 @@
 ﻿namespace Nikse.SubtitleEdit.Forms.VTT
 {
-    partial class WebVttStyleManager
+    sealed partial class WebVttStyleManager
     {
         /// <summary>
         /// Required designer variable.
@@ -386,9 +386,9 @@
             this.groupBoxAfter.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxAfter.Controls.Add(this.labelAfter);
-            this.groupBoxAfter.Location = new System.Drawing.Point(249, 259);
+            this.groupBoxAfter.Location = new System.Drawing.Point(249, 239);
             this.groupBoxAfter.Name = "groupBoxAfter";
-            this.groupBoxAfter.Size = new System.Drawing.Size(229, 136);
+            this.groupBoxAfter.Size = new System.Drawing.Size(229, 100);
             this.groupBoxAfter.TabIndex = 12;
             this.groupBoxAfter.TabStop = false;
             this.groupBoxAfter.Text = "After";
@@ -405,9 +405,9 @@
             // groupBoxBefore
             // 
             this.groupBoxBefore.Controls.Add(this.labelBefore);
-            this.groupBoxBefore.Location = new System.Drawing.Point(10, 259);
+            this.groupBoxBefore.Location = new System.Drawing.Point(10, 239);
             this.groupBoxBefore.Name = "groupBoxBefore";
-            this.groupBoxBefore.Size = new System.Drawing.Size(233, 136);
+            this.groupBoxBefore.Size = new System.Drawing.Size(233, 100);
             this.groupBoxBefore.TabIndex = 11;
             this.groupBoxBefore.TabStop = false;
             this.groupBoxBefore.Text = "Before";
@@ -444,9 +444,9 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxPreview.Controls.Add(this.pictureBoxPreview);
-            this.groupBoxPreview.Location = new System.Drawing.Point(7, 401);
+            this.groupBoxPreview.Location = new System.Drawing.Point(7, 345);
             this.groupBoxPreview.Name = "groupBoxPreview";
-            this.groupBoxPreview.Size = new System.Drawing.Size(472, 192);
+            this.groupBoxPreview.Size = new System.Drawing.Size(472, 248);
             this.groupBoxPreview.TabIndex = 7;
             this.groupBoxPreview.TabStop = false;
             this.groupBoxPreview.Text = "Preview";
@@ -456,7 +456,7 @@
             this.pictureBoxPreview.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pictureBoxPreview.Location = new System.Drawing.Point(3, 16);
             this.pictureBoxPreview.Name = "pictureBoxPreview";
-            this.pictureBoxPreview.Size = new System.Drawing.Size(466, 173);
+            this.pictureBoxPreview.Size = new System.Drawing.Size(466, 229);
             this.pictureBoxPreview.TabIndex = 0;
             this.pictureBoxPreview.TabStop = false;
             // 
@@ -485,7 +485,7 @@
             this.groupBoxFont.Controls.Add(this.labelFontName);
             this.groupBoxFont.Location = new System.Drawing.Point(7, 51);
             this.groupBoxFont.Name = "groupBoxFont";
-            this.groupBoxFont.Size = new System.Drawing.Size(472, 202);
+            this.groupBoxFont.Size = new System.Drawing.Size(472, 182);
             this.groupBoxFont.TabIndex = 2;
             this.groupBoxFont.TabStop = false;
             this.groupBoxFont.Text = "Font";
@@ -494,7 +494,7 @@
             // 
             this.checkBoxShadowEnabled.AutoSize = true;
             this.checkBoxShadowEnabled.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.checkBoxShadowEnabled.Location = new System.Drawing.Point(282, 119);
+            this.checkBoxShadowEnabled.Location = new System.Drawing.Point(282, 100);
             this.checkBoxShadowEnabled.Name = "checkBoxShadowEnabled";
             this.checkBoxShadowEnabled.Size = new System.Drawing.Size(65, 17);
             this.checkBoxShadowEnabled.TabIndex = 11;
@@ -506,7 +506,7 @@
             // 
             this.checkBoxBackgroundColorEnabled.AutoSize = true;
             this.checkBoxBackgroundColorEnabled.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.checkBoxBackgroundColorEnabled.Location = new System.Drawing.Point(135, 119);
+            this.checkBoxBackgroundColorEnabled.Location = new System.Drawing.Point(135, 100);
             this.checkBoxBackgroundColorEnabled.Name = "checkBoxBackgroundColorEnabled";
             this.checkBoxBackgroundColorEnabled.Size = new System.Drawing.Size(65, 17);
             this.checkBoxBackgroundColorEnabled.TabIndex = 10;
@@ -518,7 +518,7 @@
             // 
             this.checkBoxColorEnabled.AutoSize = true;
             this.checkBoxColorEnabled.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.checkBoxColorEnabled.Location = new System.Drawing.Point(16, 119);
+            this.checkBoxColorEnabled.Location = new System.Drawing.Point(16, 100);
             this.checkBoxColorEnabled.Name = "checkBoxColorEnabled";
             this.checkBoxColorEnabled.Size = new System.Drawing.Size(65, 17);
             this.checkBoxColorEnabled.TabIndex = 9;
@@ -529,7 +529,7 @@
             // panelShadowColor
             // 
             this.panelShadowColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelShadowColor.Location = new System.Drawing.Point(371, 143);
+            this.panelShadowColor.Location = new System.Drawing.Point(371, 124);
             this.panelShadowColor.Name = "panelShadowColor";
             this.panelShadowColor.Size = new System.Drawing.Size(21, 20);
             this.panelShadowColor.TabIndex = 7;
@@ -537,7 +537,7 @@
             // 
             // buttonShadowColor
             // 
-            this.buttonShadowColor.Location = new System.Drawing.Point(282, 142);
+            this.buttonShadowColor.Location = new System.Drawing.Point(282, 123);
             this.buttonShadowColor.Name = "buttonShadowColor";
             this.buttonShadowColor.Size = new System.Drawing.Size(84, 23);
             this.buttonShadowColor.TabIndex = 6;
@@ -552,7 +552,7 @@
             0,
             0,
             65536});
-            this.numericUpDownShadowWidth.Location = new System.Drawing.Point(286, 171);
+            this.numericUpDownShadowWidth.Location = new System.Drawing.Point(286, 152);
             this.numericUpDownShadowWidth.Name = "numericUpDownShadowWidth";
             this.numericUpDownShadowWidth.Size = new System.Drawing.Size(52, 20);
             this.numericUpDownShadowWidth.TabIndex = 2;
@@ -560,7 +560,7 @@
             // panelBackgroundColor
             // 
             this.panelBackgroundColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelBackgroundColor.Location = new System.Drawing.Point(242, 143);
+            this.panelBackgroundColor.Location = new System.Drawing.Point(242, 124);
             this.panelBackgroundColor.Name = "panelBackgroundColor";
             this.panelBackgroundColor.Size = new System.Drawing.Size(21, 20);
             this.panelBackgroundColor.TabIndex = 3;
@@ -569,7 +569,7 @@
             // labelShadow
             // 
             this.labelShadow.AutoSize = true;
-            this.labelShadow.Location = new System.Drawing.Point(344, 173);
+            this.labelShadow.Location = new System.Drawing.Point(344, 154);
             this.labelShadow.Name = "labelShadow";
             this.labelShadow.Size = new System.Drawing.Size(46, 13);
             this.labelShadow.TabIndex = 2;
@@ -577,7 +577,7 @@
             // 
             // buttonBackgroundColor
             // 
-            this.buttonBackgroundColor.Location = new System.Drawing.Point(135, 142);
+            this.buttonBackgroundColor.Location = new System.Drawing.Point(135, 123);
             this.buttonBackgroundColor.Name = "buttonBackgroundColor";
             this.buttonBackgroundColor.Size = new System.Drawing.Size(101, 23);
             this.buttonBackgroundColor.TabIndex = 2;
@@ -588,7 +588,7 @@
             // panelPrimaryColor
             // 
             this.panelPrimaryColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelPrimaryColor.Location = new System.Drawing.Point(100, 143);
+            this.panelPrimaryColor.Location = new System.Drawing.Point(100, 124);
             this.panelPrimaryColor.Name = "panelPrimaryColor";
             this.panelPrimaryColor.Size = new System.Drawing.Size(21, 20);
             this.panelPrimaryColor.TabIndex = 1;
@@ -598,7 +598,7 @@
             // 
             this.checkBoxStrikeout.AutoSize = true;
             this.checkBoxStrikeout.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Strikeout, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.checkBoxStrikeout.Location = new System.Drawing.Point(246, 59);
+            this.checkBoxStrikeout.Location = new System.Drawing.Point(265, 59);
             this.checkBoxStrikeout.Name = "checkBoxStrikeout";
             this.checkBoxStrikeout.Size = new System.Drawing.Size(68, 17);
             this.checkBoxStrikeout.TabIndex = 8;
@@ -608,7 +608,7 @@
             // 
             // buttonPrimaryColor
             // 
-            this.buttonPrimaryColor.Location = new System.Drawing.Point(14, 142);
+            this.buttonPrimaryColor.Location = new System.Drawing.Point(14, 123);
             this.buttonPrimaryColor.Name = "buttonPrimaryColor";
             this.buttonPrimaryColor.Size = new System.Drawing.Size(80, 23);
             this.buttonPrimaryColor.TabIndex = 0;
@@ -770,6 +770,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "WebVttStyleManager";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.WebVttStyleManager_FormClosing);
             this.groupBoxStyles.ResumeLayout(false);
             this.contextMenuStripStyles.ResumeLayout(false);
             this.groupBoxProperties.ResumeLayout(false);

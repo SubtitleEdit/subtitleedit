@@ -1389,6 +1389,9 @@ To use an API key, go to "Options -&gt; Settings -&gt; Tools" to enter your Goog
         <TimedTextSetLanguage>Timed Text - set language</TimedTextSetLanguage>
         <SamiSetStyle>Sami - set class</SamiSetStyle>
         <NuendoSetStyle>Nuendo - set character</NuendoSetStyle>
+        <WebVttSetStyle>WebVTT - set style</WebVttSetStyle>
+        <WebVttSetVoice>WebVTT - set voice</WebVttSetVoice>
+        <WebVttBrowserPreview>WebVTT - browser preview</WebVttBrowserPreview>
         <Cut>Cut</Cut>
         <Copy>Copy</Copy>
         <Paste>Paste</Paste>

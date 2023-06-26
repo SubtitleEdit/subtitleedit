@@ -1798,6 +1798,9 @@ namespace Nikse.SubtitleEdit.Logic
                     public string TimedTextSetLanguage { get; set; }
                     public string SamiSetStyle { get; set; }
                     public string NuendoSetStyle { get; set; }
+                    public string WebVttSetStyle { get; set; }
+                    public string WebVttSetVoice { get; set; }
+                    public string WebVttBrowserPreview { get; set; }
                     public string Cut { get; set; }
                     public string Copy { get; set; }
                     public string Paste { get; set; }

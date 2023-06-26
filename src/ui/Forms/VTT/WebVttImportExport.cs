@@ -12,7 +12,6 @@ namespace Nikse.SubtitleEdit.Forms.VTT
     public sealed partial class WebVttImportExport : Form
     {
         private readonly List<WebVttStyle> _styles;
-        private readonly SubtitleFormat _format;
         private readonly bool _export;
         public List<WebVttStyle> ImportExportStyles { get; set; }
         public string FileName { get; set; }

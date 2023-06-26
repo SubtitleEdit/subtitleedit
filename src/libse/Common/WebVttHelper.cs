@@ -5,7 +5,6 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using Nikse.SubtitleEdit.Core.SubtitleFormats;
 
 namespace Nikse.SubtitleEdit.Core.Common
 {
@@ -315,7 +314,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             if (string.IsNullOrEmpty(header))
             {
-                return "STYLE" + Environment.NewLine + rawStyle;
+                return "WEBVTT" + Environment.NewLine + Environment.NewLine + "STYLE" + Environment.NewLine + rawStyle;
             }
 
             if (header.Contains("::cue(." + style.Name + ")"))
