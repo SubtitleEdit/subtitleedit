@@ -7,6 +7,7 @@
    * Add video format ProRes for "Generate video with burned-in sub"
    * Allow setting profile from cmd line - thx emcodem
    * ASSA set layer - thx JonSchram
+   * Allow OCR of XML/PNG from MXF - thx Rodney
 * IMPROVED:
    * Update German translation - thx Netspark
    * Update Chinese translation - thx nkh0472
