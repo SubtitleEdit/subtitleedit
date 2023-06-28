@@ -16,6 +16,7 @@
    * Update Portuguese translation - thx hugok79
    * Update Korean translation - thx domddol
    * Update Tesseract OCR to 5.3.1
+   * Improve convert of SSA to ASSA - thx Emiliano
 * FIXED:
    * Fix "Find Double Words" - th uckthis
    * Fix "double dash" issue in "Fix common errors" - thx Joel
