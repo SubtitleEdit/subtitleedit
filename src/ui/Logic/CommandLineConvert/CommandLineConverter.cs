@@ -428,7 +428,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                 var forcedOnly = GetArgument(unconsumedArguments, "forcedonly").Length > 0;
                 var teletextOnlyPage = GetArgument(unconsumedArguments, "teletextonlypage:");
                 var teletextOnly = GetArgument(unconsumedArguments, "teletextonly").Length > 0;
-                
+
                 var profileName = GetArgument(unconsumedArguments, "profile:");
                 if (!string.IsNullOrEmpty(profileName))
                 {
@@ -899,7 +899,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
             gs.SubtitleLineMaximumLength = profile.SubtitleLineMaximumLength;
             gs.MaxNumberOfLines = profile.MaxNumberOfLines;
             gs.MergeLinesShorterThan = profile.MergeLinesShorterThan;
-            gs.SubtitleMaximumCharactersPerSeconds =(double) profile.SubtitleMaximumCharactersPerSeconds;
+            gs.SubtitleMaximumCharactersPerSeconds = (double)profile.SubtitleMaximumCharactersPerSeconds;
             gs.SubtitleOptimalCharactersPerSeconds = (double)profile.SubtitleOptimalCharactersPerSeconds;
             gs.SubtitleMaximumDisplayMilliseconds = profile.SubtitleMaximumDisplayMilliseconds;
             gs.SubtitleMinimumDisplayMilliseconds = profile.SubtitleMinimumDisplayMilliseconds;
@@ -1402,7 +1402,13 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                         // Remove native formatting
                         if (format != null && format.Name != sf.Name)
                         {
-                            format.RemoveNativeFormatting(sub, sf);
+                            if (format.GetType() == typeof(SubStationAlpha) && sf.GetType() == typeof(AdvancedSubStationAlpha))
+                            {
+                            }
+                            else
+                            {
+                                format.RemoveNativeFormatting(sub, sf);
+                            }
                         }
 
                         try
