@@ -1384,6 +1384,9 @@ Command line: {1} {2}
         <TimedTextSetLanguage>带时间文本 - 选择语言</TimedTextSetLanguage>
         <SamiSetStyle>Sami - 设置等级</SamiSetStyle>
         <NuendoSetStyle>Nuendo - 设置字符</NuendoSetStyle>
+        <WebVttSetStyle>WebVTT - 设置样式</WebVttSetStyle>
+        <WebVttSetVoice>WebVTT - 设置语音</WebVttSetVoice>
+        <WebVttBrowserPreview>WebVTT - 浏览器预览</WebVttBrowserPreview>
         <Cut>剪切</Cut>
         <Copy>复制</Copy>
         <Paste>粘贴</Paste>
