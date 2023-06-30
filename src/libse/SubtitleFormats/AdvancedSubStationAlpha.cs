@@ -166,6 +166,15 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                     styles = GetStylesFromHeader(subtitle.Header);
                 }
             }
+            else if (subtitle.Header != null && subtitle.Header.StartsWith("WEBVTT", StringComparison.Ordinal))
+            {
+                subtitle = WebVttToAssa.Convert(subtitle, new SsaStyle(), 0, 0);
+                isValidAssHeader = !string.IsNullOrEmpty(subtitle.Header) && subtitle.Header.Contains("[V4+ Styles]");
+                if (isValidAssHeader)
+                {
+                    styles = GetStylesFromHeader(subtitle.Header);
+                }
+            }
             else
             {
                 sb.AppendFormat(header, title).AppendLine();

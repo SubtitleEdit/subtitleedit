@@ -26,12 +26,16 @@ namespace Nikse.SubtitleEdit.Core.Common
         {
             var assaSubtitle = new Subtitle(webVttSubtitle) { Header = header };
 
-            assaSubtitle.Header = AdvancedSubStationAlpha.AddTagToHeader("PlayResX", "PlayResX: " + width.ToString(CultureInfo.InvariantCulture), "[Script Info]", assaSubtitle.Header);
-            assaSubtitle.Header = AdvancedSubStationAlpha.AddTagToHeader("PlayResY", "PlayResY: " + height.ToString(CultureInfo.InvariantCulture), "[Script Info]", assaSubtitle.Header);
+            if (width > 0 && height > 0)
+            {
+                assaSubtitle.Header = AdvancedSubStationAlpha.AddTagToHeader("PlayResX", "PlayResX: " + width.ToString(CultureInfo.InvariantCulture), "[Script Info]", assaSubtitle.Header);
+                assaSubtitle.Header = AdvancedSubStationAlpha.AddTagToHeader("PlayResY", "PlayResY: " + height.ToString(CultureInfo.InvariantCulture), "[Script Info]", assaSubtitle.Header);
+            }
+
             var styles = AdvancedSubStationAlpha.GetSsaStylesFromHeader(assaSubtitle.Header);
             foreach (var style in styles)
             {
-                if (style.FontSize <= 25)
+                if (style.FontSize <= 25 && width > 0 && height > 0)
                 {
                     const int defaultAssaHeight = 288;
                     style.FontSize = AssaResampler.Resample(defaultAssaHeight, height, style.FontSize);
@@ -102,6 +106,11 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         internal static string GetPositionInfo(string s, int width, int height)
         {
+            if (width <= 0 || height <= 0)
+            {
+                return string.Empty;
+            }
+
             //position: x --- 0% = left, 100% = right (horizontal)
             //line: x --- 0 or -16 or 0% = top, 16 or -1 or 100% = bottom (vertical)
             var x = 0;
