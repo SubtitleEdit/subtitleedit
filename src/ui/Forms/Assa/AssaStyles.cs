@@ -76,6 +76,11 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 AdvancedSubStationAlpha.LoadStylesFromTimedText10(s, string.Empty, _header, AdvancedSubStationAlpha.HeaderNoStyles, new StringBuilder());
                 _header = s.Header;
             }
+            else if (_header != null && _header.StartsWith("WEBVTT", StringComparison.Ordinal))
+            {
+                _subtitle = WebVttToAssa.Convert(subtitle, new SsaStyle(), 0, 0);
+                _header = _subtitle.Header;
+            }
 
             if (_header == null || !_header.Contains("style:", StringComparison.OrdinalIgnoreCase))
             {
