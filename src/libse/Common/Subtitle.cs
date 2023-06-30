@@ -147,18 +147,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// </summary>
         /// <param name="fileName">File name of subtitle to load.</param>
         /// <returns>Loaded subtitle, null if file is not known subtitle format.</returns>
-        public static Subtitle Parse(string fileName)
-        {
-            var subtitle = new Subtitle();
-            var format = subtitle.LoadSubtitle(fileName, out var encodingUsed, null);
-            if (format == null)
-            {
-                return null;
-            }
-
-            subtitle.OriginalEncoding = encodingUsed;
-            return subtitle;
-        }
+        public static Subtitle Parse(string fileName) => Parse(fileName, useThisEncoding: null);
 
         /// <summary>
         /// Load a subtitle from a file.
