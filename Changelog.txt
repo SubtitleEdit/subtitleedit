@@ -15,8 +15,10 @@
    * Update Russian translation - thx elfriob
    * Update Portuguese translation - thx hugok79
    * Update Korean translation - thx domddol
-   * Update Tesseract OCR to 5.3.1
+   * Update Tesseract OCR to 5.3.1 (64-bit only)
    * Improve convert of SSA to ASSA - thx Emiliano
+   * Update burn-in video preview to video - thx Masina86
+   * Improve handling of invalid xml in ttml - thx m0ck69
 * FIXED:
    * Fix "Find Double Words" - th uckthis
    * Fix "double dash" issue in "Fix common errors" - thx Joel
@@ -25,6 +27,7 @@
    * Fix to eager file locked check - thx OSokil
    * Preserve white space in "Multiple replace import" - thx OtaStrom
    * Fix frozen settings in "Batch convert" - thx OtaStrom
+   * Fix export image alignment when using font tag - thx Matt
 
 
 3.6.13 (14th May 2023)
