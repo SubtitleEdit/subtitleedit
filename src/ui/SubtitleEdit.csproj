@@ -385,6 +385,12 @@
     <Compile Include="Forms\GetVideoPosition.Designer.cs">
       <DependentUpon>GetVideoPosition.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\PreviewVideo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\PreviewVideo.Designer.cs">
+      <DependentUpon>PreviewVideo.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\ShotChangesList.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1664,6 +1670,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Options\WordLists.resx">
       <DependentUpon>WordLists.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\PreviewVideo.resx">
+      <DependentUpon>PreviewVideo.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ShotChangesList.resx">
       <DependentUpon>ShotChangesList.cs</DependentUpon>
