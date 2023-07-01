@@ -508,7 +508,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         private static void ListView_DrawItem(object sender, DrawListViewItemEventArgs e)
         {
-            if (sender is ListView lv && !lv.Focused && (e.State & ListViewItemStates.Selected) != 0)
+            if (sender is ListView && (e.State & ListViewItemStates.Selected) != 0)
             {
                 if (e.Item.Focused)
                 {
@@ -530,13 +530,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             var backgroundColor = lv.Items[e.ItemIndex].SubItems[e.ColumnIndex].BackColor;
             var subBackgroundColor = Color.FromArgb(backgroundColor.A, Math.Max(backgroundColor.R - 39, 0), Math.Max(backgroundColor.G - 39, 0), Math.Max(backgroundColor.B - 39, 0));
-            if (lv.Focused && backgroundColor == BackColor || lv.RightToLeftLayout)
-            {
-                e.DrawDefault = true;
-                return;
-            }
-
-            if (e.Item.Selected)
+            if (e.Item.Selected || e.Item.Focused)
             {
                 var subtitleFont = e.Item.Font;
                 var rect = e.Bounds;
@@ -562,14 +556,15 @@ namespace Nikse.SubtitleEdit.Logic
                     CheckBoxRenderer.DrawCheckBox(e.Graphics, new Point(e.Bounds.X + 4, e.Bounds.Y + 2), checkBoxState);
                 }
 
+                var foreColor = e.Item.ForeColor;
                 if (lv.Columns[e.ColumnIndex].TextAlign == HorizontalAlignment.Right)
                 {
                     var stringWidth = (int)e.Graphics.MeasureString(e.Item.SubItems[e.ColumnIndex].Text, subtitleFont).Width;
-                    TextRenderer.DrawText(e.Graphics, e.Item.SubItems[e.ColumnIndex].Text, subtitleFont, new Point(e.Bounds.Right - stringWidth - 7, e.Bounds.Top + 2), e.Item.ForeColor, TextFormatFlags.NoPrefix);
+                    TextRenderer.DrawText(e.Graphics, e.Item.SubItems[e.ColumnIndex].Text, subtitleFont, new Point(e.Bounds.Right - stringWidth - 7, e.Bounds.Top + 2), foreColor, TextFormatFlags.NoPrefix);
                 }
                 else
                 {
-                    TextRenderer.DrawText(e.Graphics, e.Item.SubItems[e.ColumnIndex].Text, subtitleFont, new Point(e.Bounds.Left + 3 + addX, e.Bounds.Top + 2), e.Item.ForeColor, TextFormatFlags.NoPrefix);
+                    TextRenderer.DrawText(e.Graphics, e.Item.SubItems[e.ColumnIndex].Text, subtitleFont, new Point(e.Bounds.Left + 3 + addX, e.Bounds.Top + 2), foreColor, TextFormatFlags.NoPrefix);
                 }
             }
             else
@@ -593,7 +588,7 @@ namespace Nikse.SubtitleEdit.Logic
                 e.Graphics.FillRectangle(slightlyDarkerBrush, e.Bounds);
             }
 
-            int posY = Math.Abs(e.Bounds.Height - e.Font.Height) / 2;
+            var posY = Math.Abs(e.Bounds.Height - e.Font.Height) / 2;
             TextRenderer.DrawText(e.Graphics, e.Header.Text, e.Font, new Point(e.Bounds.X + 3, posY), ForeColor);
 
             if (Configuration.Settings.General.DarkThemeShowListViewGridLines && e.ColumnIndex != 0)
@@ -622,8 +617,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-        private static void ListView_HandleCreated(object sender, EventArgs e) =>
-            SetWindowThemeDark((Control)sender);
+        private static void ListView_HandleCreated(object sender, EventArgs e) => SetWindowThemeDark((Control)sender);
 
         private class MyRenderer : ToolStripProfessionalRenderer
         {
@@ -843,7 +837,7 @@ namespace Nikse.SubtitleEdit.Logic
             private Rectangle GetTabImageRect(int index)
             {
                 var innerRect = _tabRects[index];
-                int imgHeight = _imageSize.Height;
+                var imgHeight = _imageSize.Height;
                 var imgRect = new Rectangle(
                     new Point(innerRect.X + ImagePadding,
                         innerRect.Y + ((innerRect.Height - imgHeight) / 2)),
