@@ -1662,9 +1662,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 result = result.Remove(0, idx);
             }
 
-            return result
-                .Replace(" & ", " &amp; ")
-                .Replace("Q&A", "Q&amp;A");
+            var fixAmpersandRegex = new Regex("&(?!amp;)");
+            return fixAmpersandRegex.Replace(result, "&amp;");
         }
     }
 }
