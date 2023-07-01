@@ -11,6 +11,8 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Logic.VideoPlayers;
+using Nikse.SubtitleEdit.Forms.BinaryEdit;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -1217,6 +1219,21 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 buttonPreview.Enabled = false;
                 labelPreviewPleaseWait.Visible = true;
+
+                if (LibMpvDynamic.IsInstalled && Configuration.Settings.General.VideoPlayer == "MPV")
+                {
+                    var temp = new Subtitle(_assaSubtitle);
+                    var subFileName = GetAssaFileName(_inputVideoFileName);
+                    FileUtil.WriteAllText(subFileName, new AdvancedSubStationAlpha().ToText(temp, null), new TextEncoding(Encoding.UTF8, "UTF8"));
+
+                    using (var form = new PreviewVideo(_inputVideoFileName, subFileName, _assaSubtitle))
+                    {
+                        form.ShowDialog(this);
+                    }
+
+                    return;
+                }
+
                 Cursor = Cursors.WaitCursor;
 
                 // generate blank video
