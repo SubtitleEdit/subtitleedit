@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.6.13</Version>
-    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 16.06.2023</TranslatedBy>
+    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 02.07.2023</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -37,6 +37,7 @@
     <Actor>Attore</Actor>
     <Gap>Divario</Gap>
     <Region>Regione</Region>
+    <Layer>Layer</Layer>
     <NumberSymbol>N.</NumberSymbol>
     <Number>Numero</Number>
     <Text>Testo</Text>
@@ -1387,7 +1388,10 @@ Per usare una chiave API vai su "Opzioni -&gt; Impostazioni -&gt; Strumenti" per
         <TimedTextStyles>Stili di testo a tempo...</TimedTextStyles>
         <TimedTextSetLanguage>Testo a tempo - imposta la lingua</TimedTextSetLanguage>
         <SamiSetStyle>Sami - imposta classe</SamiSetStyle>
-        <NuendoSetStyle>Nuendo - impostare il carattere</NuendoSetStyle>
+        <NuendoSetStyle>Nuendo - imposta carattere</NuendoSetStyle>
+        <WebVttSetStyle>WebVTT - imposta stile</WebVttSetStyle>
+        <WebVttSetVoice>WebVTT - imposta voce</WebVttSetVoice>
+        <WebVttBrowserPreview>WebVTT - anteprima browser</WebVttBrowserPreview>
         <Cut>Taglia</Cut>
         <Copy>Copia</Copy>
         <Paste>Incolla</Paste>
@@ -3213,4 +3217,7 @@ Vuoi mantenere le modifiche?</KeepChangesMessage>
     <Title>WebVTT - imposta nuova voce</Title>
     <VoiceName>Nome voce</VoiceName>
   </WebVttNewVoice>
+  <WebVttStyleManager>
+    <Title>Stili WebVTT</Title>
+  </WebVttStyleManager>
 </Language>
