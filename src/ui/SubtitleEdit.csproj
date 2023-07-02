@@ -250,6 +250,12 @@
     <Compile Include="Forms\AudioToText\VoskAudioToText.Designer.cs">
       <DependentUpon>VoskAudioToText.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\BatchConvertOcrLanguage.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\BatchConvertOcrLanguage.Designer.cs">
+      <DependentUpon>BatchConvertOcrLanguage.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\BatchConvertMkvEnding.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1603,6 +1609,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\AudioToText\VoskAudioToText.resx">
       <DependentUpon>VoskAudioToText.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\BatchConvertOcrLanguage.resx">
+      <DependentUpon>BatchConvertOcrLanguage.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\BatchConvertMkvEnding.resx">
       <DependentUpon>BatchConvertMkvEnding.cs</DependentUpon>

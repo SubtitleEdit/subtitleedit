@@ -241,6 +241,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public bool BatchConvertTsOnlyTeletext { get; set; }
         public string BatchConvertMkvLanguageCodeStyle { get; set; }
         public string BatchConvertOcrEngine { get; set; }
+        public string BatchConvertOcrLanguage { get; set; }
         public string WaveformBatchLastFolder { get; set; }
         public string ModifySelectionText { get; set; }
         public string ModifySelectionRule { get; set; }
@@ -510,6 +511,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             BatchConvertTsScreenWidth = 1920;
             BatchConvertTsScreenHeight = 1080;
             BatchConvertOcrEngine = "Tesseract";
+            BatchConvertOcrLanguage = "en";
             BatchConvertTsOverrideHAlign = "center"; // left center right
             BatchConvertTsOverrideHMargin = 5; // pct
             BatchConvertTsFileNameAppend = ".{two-letter-country-code}";
@@ -5278,6 +5280,12 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.Tools.BatchConvertOcrEngine = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("BatchConvertOcrLanguage");
+            if (subNode != null)
+            {
+                settings.Tools.BatchConvertOcrLanguage = subNode.InnerText;
             }
 
             subNode = node.SelectSingleNode("WaveformBatchLastFolder");
@@ -10622,6 +10630,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("BatchConvertTsFileNameAppend", settings.Tools.BatchConvertTsFileNameAppend);
                 textWriter.WriteElementString("BatchConvertMkvLanguageCodeStyle", settings.Tools.BatchConvertMkvLanguageCodeStyle);
                 textWriter.WriteElementString("BatchConvertOcrEngine", settings.Tools.BatchConvertOcrEngine);
+                textWriter.WriteElementString("BatchConvertOcrLanguage", settings.Tools.BatchConvertOcrLanguage);
                 textWriter.WriteElementString("WaveformBatchLastFolder", settings.Tools.WaveformBatchLastFolder);
                 textWriter.WriteElementString("ModifySelectionRule", settings.Tools.ModifySelectionRule);
                 textWriter.WriteElementString("ModifySelectionText", settings.Tools.ModifySelectionText);

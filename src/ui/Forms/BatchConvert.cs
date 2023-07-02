@@ -111,6 +111,7 @@ namespace Nikse.SubtitleEdit.Forms
         private RemoveTextForHISettings _removeTextForHiSettings;
         private PreprocessingSettings _preprocessingSettings;
         private string _ocrEngine = "Tesseract";
+        private string _ocrLanguage = "en";
 
         public BatchConvert(Icon icon)
         {
@@ -251,15 +252,13 @@ namespace Nikse.SubtitleEdit.Forms
                 textBoxOutputFolder.Text = Configuration.Settings.Tools.BatchConvertOutputFolder;
             }
 
-            toolStripMenuItemOcrEngine.Text = LanguageSettings.Current.VobSubOcr.OcrMethod;
-            if (Configuration.Settings.Tools.BatchConvertOcrEngine.Equals("nOcr", StringComparison.OrdinalIgnoreCase))
+            if (Configuration.Settings.Tools.BatchConvertOcrEngine.Equals("nOCR", StringComparison.OrdinalIgnoreCase))
             {
-                nOCRToolStripMenuItem_Click(null, null);
+                _ocrEngine = "nOCR";
             }
-            else
-            {
-                tesseractToolStripMenuItem_Click(null, null);
-            }
+
+            _ocrLanguage = Configuration.Settings.Tools.BatchConvertOcrLanguage;
+            UpdateOcrInfo();
 
             alsoScanVideoFilesInSearchFolderslowToolStripMenuItem.Text = LanguageSettings.Current.BatchConvert.SearchFolderScanVideo;
             checkBoxOverwrite.Checked = Configuration.Settings.Tools.BatchConvertOverwriteExisting;
@@ -1502,7 +1501,7 @@ namespace Nikse.SubtitleEdit.Forms
                                         }
                                     };
                                     vobSubOcr.FileName = Path.GetFileName(fileName);
-                                    vobSubOcr.InitializeBatch(bluRaySubtitles, Configuration.Settings.VobSubOcr, fileName, false, null, _ocrEngine);
+                                    vobSubOcr.InitializeBatch(bluRaySubtitles, Configuration.Settings.VobSubOcr, fileName, false, _ocrLanguage, _ocrEngine);
                                     sub = vobSubOcr.SubtitleFromOcr;
                                 }
                             }
@@ -1521,7 +1520,7 @@ namespace Nikse.SubtitleEdit.Forms
                                         lastProgress = progress;
                                     }
                                 };
-                                vobSubOcr.InitializeBatch(fileName, Configuration.Settings.VobSubOcr, false, _ocrEngine);
+                                vobSubOcr.InitializeBatch(fileName, Configuration.Settings.VobSubOcr, false, _ocrEngine, _ocrLanguage);
                                 sub = vobSubOcr.SubtitleFromOcr;
                             }
                         }
@@ -1589,7 +1588,7 @@ namespace Nikse.SubtitleEdit.Forms
                                                 item.SubItems[3].Text = $"OCR: {progress}";
                                             };
                                             var language = programMapTableParser.GetSubtitleLanguage(id);
-                                            language = string.IsNullOrEmpty(language) ? null : language;
+                                            language = string.IsNullOrEmpty(language) ? _ocrLanguage : language;
                                             vobSubOcr.FileName = Path.GetFileName(fileName);
                                             vobSubOcr.InitializeBatch(tsBinaryParagraphs, Configuration.Settings.VobSubOcr, fileName, false, language, _ocrEngine);
                                             subtitle = vobSubOcr.SubtitleFromOcr;
@@ -3084,6 +3083,7 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.Tools.ConvertColorsToDialogReBreakLines = checkBoxConvertColorsToDialogReBreakLines.Checked;
 
             Configuration.Settings.Tools.BatchConvertOcrEngine = _ocrEngine;
+            Configuration.Settings.Tools.BatchConvertOcrLanguage = _ocrLanguage;
 
             UpdateRtlSettings();
         }
@@ -3700,24 +3700,29 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void tesseractToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            _ocrEngine = "Tesseract";
-            tesseractToolStripMenuItem.Checked = true;
-            nOCRToolStripMenuItem.Checked = false;
-        }
-
-        private void nOCRToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            _ocrEngine = "nOcr";
-            nOCRToolStripMenuItem.Checked = true;
-            tesseractToolStripMenuItem.Checked = false;
-        }
-
-        private void alsoScanVideoFilesInSearchFolderslowToolStripMenuItem_Click(object sender, EventArgs e)
+        private void alsoScanVideoFilesInSearchFolderSlowToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Configuration.Settings.Tools.BatchConvertScanFolderIncludeVideo = !Configuration.Settings.Tools.BatchConvertScanFolderIncludeVideo;
             alsoScanVideoFilesInSearchFolderslowToolStripMenuItem.Checked = Configuration.Settings.Tools.BatchConvertScanFolderIncludeVideo;
+        }
+
+        private void toolStripMenuItemOcrEngine_Click(object sender, EventArgs e)
+        {
+            using (var form = new BatchConvertOcrLanguage(_ocrEngine, _ocrLanguage))
+            {
+                if (form.ShowDialog(this) == DialogResult.OK)
+                {
+                    _ocrEngine = form.OcrEngine;
+                    _ocrLanguage = form.OcrLanguage;
+                }
+
+                UpdateOcrInfo();
+            }
+        }
+
+        private void UpdateOcrInfo()
+        {
+            toolStripMenuItemOcrEngine.Text = $"{LanguageSettings.Current.VobSubOcr.OcrMethod}: {_ocrEngine} / {_ocrLanguage}";
         }
     }
 }
