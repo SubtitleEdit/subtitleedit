@@ -1354,7 +1354,6 @@ $HorzAlign          =   Center
         public string VideoPlayerPreviewFontName { get; set; }
         public int VideoPlayerPreviewFontSize { get; set; }
         public bool VideoPlayerPreviewFontBold { get; set; }
-        public int VideoPlayerPreviewVerticalMargin { get; set; }
         public bool VideoPlayerShowStopButton { get; set; }
         public bool VideoPlayerShowFullscreenButton { get; set; }
         public bool VideoPlayerShowMuteButton { get; set; }
@@ -1563,7 +1562,6 @@ $HorzAlign          =   Center
             VideoPlayerPreviewFontName = "Tahoma";
             VideoPlayerPreviewFontSize = 12;
             VideoPlayerPreviewFontBold = true;
-            VideoPlayerPreviewVerticalMargin = 12;
             VideoPlayerShowStopButton = true;
             VideoPlayerShowMuteButton = true;
             VideoPlayerShowFullscreenButton = true;
@@ -3816,12 +3814,6 @@ $HorzAlign          =   Center
                 settings.General.VideoPlayerPreviewFontBold = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
-            subNode = node.SelectSingleNode("VideoPlayerPreviewVerticalMargin");
-            if (subNode != null)
-            {
-                settings.General.VideoPlayerPreviewVerticalMargin = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
-            }
-
             subNode = node.SelectSingleNode("VideoPlayerShowStopButton");
             if (subNode != null)
             {
@@ -4205,6 +4197,7 @@ $HorzAlign          =   Center
             {
                 settings.General.MpvPreviewTextMarginVertical = Convert.ToInt32(subNode.InnerText.Trim());
             }
+
             subNode = node.SelectSingleNode("MpcHcLocation");
             if (subNode != null)
             {
@@ -10381,7 +10374,6 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("VideoPlayerPreviewFontName", settings.General.VideoPlayerPreviewFontName);
                 textWriter.WriteElementString("VideoPlayerPreviewFontSize", settings.General.VideoPlayerPreviewFontSize.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("VideoPlayerPreviewFontBold", settings.General.VideoPlayerPreviewFontBold.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("VideoPlayerPreviewVerticalMargin", settings.General.VideoPlayerPreviewVerticalMargin.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("VideoPlayerShowStopButton", settings.General.VideoPlayerShowStopButton.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("VideoPlayerShowMuteButton", settings.General.VideoPlayerShowMuteButton.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("VideoPlayerShowFullscreenButton", settings.General.VideoPlayerShowFullscreenButton.ToString(CultureInfo.InvariantCulture));
