@@ -266,7 +266,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
                 comboBoxlVideoPlayerPreviewFontSize.SelectedIndex = 3;
             }
 
-            var verticalMargin = gs.VideoPlayerPreviewVerticalMargin;
+            var verticalMargin = gs.MpvPreviewTextMarginVertical;
             if (verticalMargin >= numericUpDownMarginVertical.Minimum && verticalMargin <= numericUpDownMarginVertical.Maximum)
             {
                 numericUpDownMarginVertical.Value = verticalMargin;
@@ -2033,7 +2033,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             gs.VideoPlayerShowFullscreenButton = checkBoxVideoPlayerShowFullscreenButton.Checked;
             gs.VideoPlayerPreviewFontName = comboBoxVideoPlayerPreviewFontName.SelectedItem.ToString();
             gs.VideoPlayerPreviewFontSize = int.Parse(comboBoxlVideoPlayerPreviewFontSize.Items[0].ToString()) + comboBoxlVideoPlayerPreviewFontSize.SelectedIndex;
-            gs.VideoPlayerPreviewVerticalMargin = (int)numericUpDownMarginVertical.Value;
+            gs.MpvPreviewTextMarginVertical = (int)numericUpDownMarginVertical.Value;
             gs.VideoPlayerPreviewFontBold = checkBoxVideoPlayerPreviewFontBold.Checked;
             gs.MpvPreviewTextPrimaryColor = panelMpvPrimaryColor.BackColor;
             gs.MpvPreviewTextOutlineColor = panelMpvOutlineColor.BackColor;
