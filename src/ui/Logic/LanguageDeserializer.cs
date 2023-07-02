@@ -6175,6 +6175,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/PreviewFontSize":
                     language.Settings.PreviewFontSize = reader.Value;
                     break;
+                case "Settings/PreviewVerticalMargin":
+                    language.Settings.PreviewVerticalMargin = reader.Value;
+                    break;
                 case "Settings/MainWindowVideoControls":
                     language.Settings.MainWindowVideoControls = reader.Value;
                     break;

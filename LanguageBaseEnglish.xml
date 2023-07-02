@@ -2278,6 +2278,7 @@ can edit in same subtitle file (collaboration)</Information>
     <ShowFullscreenButton>Show fullscreen button</ShowFullscreenButton>
     <PreviewFontName>Subtitle preview font name</PreviewFontName>
     <PreviewFontSize>Subtitle preview font size</PreviewFontSize>
+    <PreviewVerticalMargin>Vertical margin</PreviewVerticalMargin>
     <MainWindowVideoControls>Main window video controls</MainWindowVideoControls>
     <CustomSearchTextAndUrl>Custom search text and URL</CustomSearchTextAndUrl>
     <WaveformAppearance>Waveform appearance</WaveformAppearance>
