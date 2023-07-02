@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using Nikse.SubtitleEdit.Core.Common;
 using System.IO;
 using System.Linq;
+using Nikse.SubtitleEdit.Forms.Ocr;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -50,7 +51,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
-            OcrLanguage = (comboBoxLanguage.SelectedItem as OcrLanguageItem).Id;
+            OcrLanguage = !(comboBoxLanguage.SelectedItem is OcrLanguageItem item) ? "en" : item.Id;
 
             DialogResult = DialogResult.OK;
         }
@@ -122,6 +123,10 @@ namespace Nikse.SubtitleEdit.Forms
                             }
 
                             comboBoxLanguage.Items.Add(new OcrLanguageItem { Id = tesseractName, Text = cultureName });
+                            if (cultureName == Configuration.Settings.VobSubOcr.TesseractLastLanguage)
+                            {
+                                comboBoxLanguage.SelectedIndex = comboBoxLanguage.Items.Count - 1;
+                            }
                         }
                     }
                 }
@@ -138,13 +143,25 @@ namespace Nikse.SubtitleEdit.Forms
             if (comboBoxOcrMethod.SelectedIndex == 1)
             {
                 OcrEngine = "nOCR";
+                buttonGetTesseractDictionaries.Visible = false;
             }
             else
             {
                 OcrEngine = "Tesseract";
+                buttonGetTesseractDictionaries.Visible = true;
             }
 
             InitLanguage();
+        }
+
+        private void buttonGetTesseractDictionaries_Click(object sender, EventArgs e)
+        {
+            using (var form = new GetTesseractDictionaries(comboBoxLanguage.Items.Count == 0))
+            {
+                form.ShowDialog(this);
+                Configuration.Settings.VobSubOcr.TesseractLastLanguage = form.ChosenLanguage;
+                InitLanguage();
+            }
         }
     }
 }
