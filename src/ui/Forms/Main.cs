@@ -6002,7 +6002,8 @@ namespace Nikse.SubtitleEdit.Forms
                 TryLoadIcon(toolStripButtonWaveformPlay, "WaveformPlay");
                 TryLoadIcon(toolStripButtonLockCenter, "WaveformCenter");
                 TryLoadIcon(toolStripSplitButtonPlayRate, "WaveformPlaybackSpeed");
-                //  IttProperties, WebVttProperties, WebVttStyle, EbuProperties
+
+                // Other images: IttProperties, WebVttProperties, WebVttStyle, EbuProperties
             }
 
             toolStripButtonFileNew.Visible = gs.ShowToolbarNew;
@@ -17719,7 +17720,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     mediaPlayer.VideoPlayer.PlayRate = 1.0;
                     InitializePlayRateDropDown();
-                    //toolStripSplitButtonPlayRate.Image = imageListPlayRate.Images[0];
+                    TryLoadIcon(toolStripSplitButtonPlayRate, "WaveformPlaybackSpeed");
                 }
             }
             else if (audioVisualizer.Focused && audioVisualizer.NewSelectionParagraph != null && e.KeyData == _shortcuts.WaveformAddTextAtHere)
@@ -25245,13 +25246,12 @@ namespace Nikse.SubtitleEdit.Forms
                 playRateDropDownItem.Checked = true;
                 if (Math.Abs(factor - 1) < 0.01)
                 {
+                    TryLoadIcon(toolStripSplitButtonPlayRate, "WaveformPlaybackSpeed");
                 }
                 else
                 {
-                    toolStripSplitButtonPlayRate.Select();
+                    TryLoadIcon(toolStripSplitButtonPlayRate, "WaveformPlaybackSpeedSelected");
                 }
-                
-                //toolStripSplitButtonPlayRate.Image = Math.Abs(factor - 1) < 0.01 ? imageListPlayRate.Images[0] : imageListPlayRate.Images[1];
             }
 
             try
@@ -33075,7 +33075,7 @@ namespace Nikse.SubtitleEdit.Forms
                 TryLoadIcon(toolStripButtonXProperties, "WebVttProperties");
 
                 toolStripButtonAssStyleManager.Visible = true;
-                toolStripButtonAssStyleManager.ToolTipText = string.Format(LanguageSettings.Current.WebVttStyleManager.Title, new WebVTT().Name); 
+                toolStripButtonAssStyleManager.ToolTipText = string.Format(LanguageSettings.Current.WebVttStyleManager.Title, new WebVTT().Name);
                 toolStripButtonAssStyleManager.Image = Properties.Resources.webvtt;
                 TryLoadIcon(toolStripButtonAssStyleManager, "WebVttStyle");
 
