@@ -319,6 +319,7 @@
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.checkBoxShowFrameRate = new System.Windows.Forms.CheckBox();
             this.groupBoxShowToolBarButtons = new System.Windows.Forms.GroupBox();
+            this.pictureBoxWebVttStyle = new System.Windows.Forms.PictureBox();
             this.pictureBoxEbuProperties = new System.Windows.Forms.PictureBox();
             this.pictureBoxWebVttProperties = new System.Windows.Forms.PictureBox();
             this.pictureBoxIttProperties = new System.Windows.Forms.PictureBox();
@@ -440,7 +441,6 @@
             this.labelUpdateFileTypeAssociationsStatus = new System.Windows.Forms.Label();
             this.imageListFileTypeAssociations = new System.Windows.Forms.ImageList(this.components);
             this.toolTipDialogStylePreview = new System.Windows.Forms.ToolTip(this.components);
-            this.pictureBoxWebVttStyle = new System.Windows.Forms.PictureBox();
             this.panelGeneral.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
             this.groupBoxGeneralRules.SuspendLayout();
@@ -486,6 +486,7 @@
             this.panelToolBar.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBoxShowToolBarButtons.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxWebVttStyle)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxEbuProperties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxWebVttProperties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxIttProperties)).BeginInit();
@@ -522,7 +523,6 @@
             this.groupBoxProxySettings.SuspendLayout();
             this.groupBoxProxyAuthentication.SuspendLayout();
             this.panelFileTypeAssociations.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxWebVttStyle)).BeginInit();
             this.SuspendLayout();
             // 
             // buttonOK
@@ -4094,6 +4094,14 @@
             this.groupBoxShowToolBarButtons.TabStop = false;
             this.groupBoxShowToolBarButtons.Text = "Show toolbar buttons";
             // 
+            // pictureBoxWebVttStyle
+            // 
+            this.pictureBoxWebVttStyle.Location = new System.Drawing.Point(285, 400);
+            this.pictureBoxWebVttStyle.Name = "pictureBoxWebVttStyle";
+            this.pictureBoxWebVttStyle.Size = new System.Drawing.Size(32, 32);
+            this.pictureBoxWebVttStyle.TabIndex = 60;
+            this.pictureBoxWebVttStyle.TabStop = false;
+            // 
             // pictureBoxEbuProperties
             // 
             this.pictureBoxEbuProperties.Location = new System.Drawing.Point(361, 400);
@@ -4104,7 +4112,7 @@
             // 
             // pictureBoxWebVttProperties
             // 
-            this.pictureBoxWebVttProperties.Location = new System.Drawing.Point(285, 400);
+            this.pictureBoxWebVttProperties.Location = new System.Drawing.Point(324, 400);
             this.pictureBoxWebVttProperties.Name = "pictureBoxWebVttProperties";
             this.pictureBoxWebVttProperties.Size = new System.Drawing.Size(32, 32);
             this.pictureBoxWebVttProperties.TabIndex = 58;
@@ -5284,14 +5292,6 @@
             this.toolTipDialogStylePreview.InitialDelay = 500;
             this.toolTipDialogStylePreview.ReshowDelay = 100;
             // 
-            // pictureBoxWebVttStyle
-            // 
-            this.pictureBoxWebVttStyle.Location = new System.Drawing.Point(323, 400);
-            this.pictureBoxWebVttStyle.Name = "pictureBoxWebVttStyle";
-            this.pictureBoxWebVttStyle.Size = new System.Drawing.Size(32, 32);
-            this.pictureBoxWebVttStyle.TabIndex = 60;
-            this.pictureBoxWebVttStyle.TabStop = false;
-            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -5392,6 +5392,7 @@
             this.groupBox2.PerformLayout();
             this.groupBoxShowToolBarButtons.ResumeLayout(false);
             this.groupBoxShowToolBarButtons.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxWebVttStyle)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxEbuProperties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxWebVttProperties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxIttProperties)).EndInit();
@@ -5436,7 +5437,6 @@
             this.groupBoxProxyAuthentication.ResumeLayout(false);
             this.groupBoxProxyAuthentication.PerformLayout();
             this.panelFileTypeAssociations.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxWebVttStyle)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
