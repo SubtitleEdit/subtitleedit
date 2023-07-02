@@ -441,6 +441,8 @@
             this.labelUpdateFileTypeAssociationsStatus = new System.Windows.Forms.Label();
             this.imageListFileTypeAssociations = new System.Windows.Forms.ImageList(this.components);
             this.toolTipDialogStylePreview = new System.Windows.Forms.ToolTip(this.components);
+            this.numericUpDownMarginVertical = new System.Windows.Forms.NumericUpDown();
+            this.labelMarginVertical = new System.Windows.Forms.Label();
             this.panelGeneral.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
             this.groupBoxGeneralRules.SuspendLayout();
@@ -523,6 +525,7 @@
             this.groupBoxProxySettings.SuspendLayout();
             this.groupBoxProxyAuthentication.SuspendLayout();
             this.panelFileTypeAssociations.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMarginVertical)).BeginInit();
             this.SuspendLayout();
             // 
             // buttonOK
@@ -2382,6 +2385,8 @@
             // 
             this.groupBoxVideoPlayerDefault.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxVideoPlayerDefault.Controls.Add(this.numericUpDownMarginVertical);
+            this.groupBoxVideoPlayerDefault.Controls.Add(this.labelMarginVertical);
             this.groupBoxVideoPlayerDefault.Controls.Add(this.panelMpvBackColor);
             this.groupBoxVideoPlayerDefault.Controls.Add(this.buttonMpvBackColor);
             this.groupBoxVideoPlayerDefault.Controls.Add(this.panelMpvOutlineColor);
@@ -5292,14 +5297,35 @@
             this.toolTipDialogStylePreview.InitialDelay = 500;
             this.toolTipDialogStylePreview.ReshowDelay = 100;
             // 
+            // numericUpDownMarginVertical
+            // 
+            this.numericUpDownMarginVertical.Location = new System.Drawing.Point(380, 153);
+            this.numericUpDownMarginVertical.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.numericUpDownMarginVertical.Name = "numericUpDownMarginVertical";
+            this.numericUpDownMarginVertical.Size = new System.Drawing.Size(44, 21);
+            this.numericUpDownMarginVertical.TabIndex = 21;
+            // 
+            // labelMarginVertical
+            // 
+            this.labelMarginVertical.AutoSize = true;
+            this.labelMarginVertical.Location = new System.Drawing.Point(325, 155);
+            this.labelMarginVertical.Name = "labelMarginVertical";
+            this.labelMarginVertical.Size = new System.Drawing.Size(42, 13);
+            this.labelMarginVertical.TabIndex = 20;
+            this.labelMarginVertical.Text = "Vertical";
+            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1092, 574);
             this.Controls.Add(this.labelUpdateFileTypeAssociationsStatus);
-            this.Controls.Add(this.panelToolBar);
             this.Controls.Add(this.panelVideoPlayer);
+            this.Controls.Add(this.panelToolBar);
             this.Controls.Add(this.panelTools);
             this.Controls.Add(this.panelWaveform);
             this.Controls.Add(this.panelGeneral);
@@ -5437,6 +5463,7 @@
             this.groupBoxProxyAuthentication.ResumeLayout(false);
             this.groupBoxProxyAuthentication.PerformLayout();
             this.panelFileTypeAssociations.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMarginVertical)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -5856,5 +5883,7 @@
         private System.Windows.Forms.PictureBox pictureBoxWebVttProperties;
         private System.Windows.Forms.PictureBox pictureBoxIttProperties;
         private System.Windows.Forms.PictureBox pictureBoxWebVttStyle;
+        private System.Windows.Forms.NumericUpDown numericUpDownMarginVertical;
+        private System.Windows.Forms.Label labelMarginVertical;
     }
 }
