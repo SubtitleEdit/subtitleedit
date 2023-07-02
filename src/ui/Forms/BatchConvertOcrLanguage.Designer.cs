@@ -34,6 +34,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.comboBoxLanguage = new System.Windows.Forms.ComboBox();
             this.comboBoxOcrMethod = new System.Windows.Forms.ComboBox();
+            this.buttonGetTesseractDictionaries = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // labelFileNameEnding
@@ -52,7 +53,7 @@
             this.buttonOK.Location = new System.Drawing.Point(287, 123);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
-            this.buttonOK.TabIndex = 106;
+            this.buttonOK.TabIndex = 333;
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
@@ -65,7 +66,7 @@
             this.buttonCancel.Location = new System.Drawing.Point(368, 123);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
-            this.buttonCancel.TabIndex = 107;
+            this.buttonCancel.TabIndex = 335;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
@@ -86,7 +87,7 @@
             this.comboBoxLanguage.Location = new System.Drawing.Point(83, 44);
             this.comboBoxLanguage.Name = "comboBoxLanguage";
             this.comboBoxLanguage.Size = new System.Drawing.Size(180, 21);
-            this.comboBoxLanguage.TabIndex = 109;
+            this.comboBoxLanguage.TabIndex = 222;
             // 
             // comboBoxOcrMethod
             // 
@@ -101,11 +102,22 @@
             this.comboBoxOcrMethod.TabIndex = 111;
             this.comboBoxOcrMethod.SelectedIndexChanged += new System.EventHandler(this.comboBoxOcrMethod_SelectedIndexChanged);
             // 
+            // buttonGetTesseractDictionaries
+            // 
+            this.buttonGetTesseractDictionaries.Location = new System.Drawing.Point(269, 43);
+            this.buttonGetTesseractDictionaries.Name = "buttonGetTesseractDictionaries";
+            this.buttonGetTesseractDictionaries.Size = new System.Drawing.Size(29, 23);
+            this.buttonGetTesseractDictionaries.TabIndex = 336;
+            this.buttonGetTesseractDictionaries.Text = "...";
+            this.buttonGetTesseractDictionaries.UseVisualStyleBackColor = true;
+            this.buttonGetTesseractDictionaries.Click += new System.EventHandler(this.buttonGetTesseractDictionaries_Click);
+            // 
             // BatchConvertOcrLanguage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(455, 158);
+            this.Controls.Add(this.buttonGetTesseractDictionaries);
             this.Controls.Add(this.comboBoxOcrMethod);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.comboBoxLanguage);
@@ -135,5 +147,6 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ComboBox comboBoxLanguage;
         private System.Windows.Forms.ComboBox comboBoxOcrMethod;
+        private System.Windows.Forms.Button buttonGetTesseractDictionaries;
     }
 }
