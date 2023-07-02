@@ -2241,7 +2241,6 @@
     <Content Include="DLLs\Voikkox64.dll" />
     <Content Include="DLLs\Voikkox86.dll" />
     <None Include="Resources\SE2.ico" />
-    <None Include="Resources\webvtt.bmp" />
     <None Include="Resources\webvtt.png" />
     <None Include="Resources\itt.png" />
     <None Include="Resources\ebu.png" />
