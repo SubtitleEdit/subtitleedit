@@ -266,6 +266,16 @@ namespace Nikse.SubtitleEdit.Forms.Options
                 comboBoxlVideoPlayerPreviewFontSize.SelectedIndex = 3;
             }
 
+            var verticalMargin = gs.VideoPlayerPreviewVerticalMargin;
+            if (verticalMargin >= numericUpDownMarginVertical.Minimum && verticalMargin <= numericUpDownMarginVertical.Maximum)
+            {
+                numericUpDownMarginVertical.Value = verticalMargin;
+            }
+            else
+            {
+                numericUpDownMarginVertical.Value = 10;
+            }
+
             numericUpDownMpvOutline.Value = gs.MpvPreviewTextOutlineWidth;
             numericUpDownMpvShadowWidth.Value = gs.MpvPreviewTextShadowWidth;
             checkBoxVideoPlayerPreviewFontBold.Checked = gs.VideoPlayerPreviewFontBold;
@@ -642,6 +652,9 @@ namespace Nikse.SubtitleEdit.Forms.Options
             buttonMpvPrimaryColor.Text = LanguageSettings.Current.SubStationAlphaStyles.Primary;
             buttonMpvOutlineColor.Text = LanguageSettings.Current.SubStationAlphaStyles.Outline;
             buttonMpvBackColor.Text = LanguageSettings.Current.SubStationAlphaStyles.Shadow;
+            labelMarginVertical.Text = language.PreviewVerticalMargin;
+            numericUpDownMarginVertical.Left = labelMarginVertical.Right + 5;
+
             checkBoxVideoPlayerPreviewFontBold.Text = language.SubtitleBold;
             var left = labelVideoPlayerPreviewFontName.Left + 5 +
                         Math.Max(labelVideoPlayerPreviewFontName.Width, labelVideoPlayerPreviewFontSize.Width);
@@ -2020,6 +2033,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             gs.VideoPlayerShowFullscreenButton = checkBoxVideoPlayerShowFullscreenButton.Checked;
             gs.VideoPlayerPreviewFontName = comboBoxVideoPlayerPreviewFontName.SelectedItem.ToString();
             gs.VideoPlayerPreviewFontSize = int.Parse(comboBoxlVideoPlayerPreviewFontSize.Items[0].ToString()) + comboBoxlVideoPlayerPreviewFontSize.SelectedIndex;
+            gs.VideoPlayerPreviewVerticalMargin = (int)numericUpDownMarginVertical.Value;
             gs.VideoPlayerPreviewFontBold = checkBoxVideoPlayerPreviewFontBold.Checked;
             gs.MpvPreviewTextPrimaryColor = panelMpvPrimaryColor.BackColor;
             gs.MpvPreviewTextOutlineColor = panelMpvOutlineColor.BackColor;
