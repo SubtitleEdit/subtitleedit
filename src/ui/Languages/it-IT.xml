@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.6.13</Version>
-    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 02.07.2023</TranslatedBy>
+    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 03.07.2023</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -2278,6 +2278,7 @@ stesso file di sottotitolo (collaborazione)</Information>
     <ShowFullscreenButton>Visualizza pulsante schermo intero</ShowFullscreenButton>
     <PreviewFontName>Nome font anteprima sottotitolo</PreviewFontName>
     <PreviewFontSize>Anteprima dimensione font sottotitolo</PreviewFontSize>
+    <PreviewVerticalMargin>Margine verticale</PreviewVerticalMargin>
     <MainWindowVideoControls>Controlli video nella finestra principale</MainWindowVideoControls>
     <CustomSearchTextAndUrl>Ricerca personalizzata testo e URL</CustomSearchTextAndUrl>
     <WaveformAppearance>Apparenza forma onda</WaveformAppearance>
