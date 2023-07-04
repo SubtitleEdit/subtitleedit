@@ -6003,6 +6003,8 @@ namespace Nikse.SubtitleEdit.Forms
                 TryLoadIcon(toolStripButtonLockCenter, "WaveformCenter");
                 TryLoadIcon(toolStripSplitButtonPlayRate, "WaveformPlaybackSpeed");
 
+                mediaPlayer.TryLoadGfx();
+
                 // Other images: IttProperties, WebVttProperties, WebVttStyle, EbuProperties
             }
 

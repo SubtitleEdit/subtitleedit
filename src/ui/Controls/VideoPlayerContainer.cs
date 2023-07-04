@@ -4,10 +4,8 @@ using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Controls
@@ -127,7 +125,7 @@ namespace Nikse.SubtitleEdit.Controls
         private int _lastCurrentPositionToolTipX;
         private int _lastCurrentPositionToolTipY;
 
-        public MatroskaChapter[] Chapters { get; set; } 
+        public MatroskaChapter[] Chapters { get; set; }
 
         public RightToLeft TextRightToLeft
         {
@@ -485,7 +483,7 @@ namespace Nikse.SubtitleEdit.Controls
                     subtitle = WebVttToAssa.Convert(subtitle, defaultStyle, VideoWidth, VideoHeight);
                     format = new AdvancedSubStationAlpha();
                     text = subtitle.ToText(format);
-                //    File.WriteAllText(@"c:\data\__a.ass", text);
+                    //    File.WriteAllText(@"c:\data\__a.ass", text);
                 }
                 else
                 {
@@ -2060,6 +2058,58 @@ namespace Nikse.SubtitleEdit.Controls
             _labelVideoPlayerName.Font = new Font(_labelTimeCode.Font.FontFamily, 6);
             _labelVolume.Font = new Font(_labelTimeCode.Font.FontFamily, 6);
             _labelVolume.Top -= 2;
+        }
+
+        public void TryLoadGfx()
+        {
+            TryLoadIcon(_pictureBoxBackground, "Background");
+            TryLoadIcon(_pictureBoxReverse, "Reverse");
+            TryLoadIcon(_pictureBoxReverseOver, "ReverseOver");
+            TryLoadIcon(_pictureBoxReverseDown, "ReverseDown");
+            TryLoadIcon(_pictureBoxFastForward, "FastForward");
+            TryLoadIcon(_pictureBoxFastForwardOver, "FastForwardOver");
+            TryLoadIcon(_pictureBoxFastForwardDown, "FastForwardDown");
+            TryLoadIcon(_pictureBoxPlay, "Play");
+            TryLoadIcon(_pictureBoxPlayOver, "PlayOver");
+            TryLoadIcon(_pictureBoxPlayDown, "PlayDown");
+            TryLoadIcon(_pictureBoxPause, "Pause");
+            TryLoadIcon(_pictureBoxPauseOver, "PauseOver");
+            TryLoadIcon(_pictureBoxPauseDown, "PauseDown");
+            TryLoadIcon(_pictureBoxStop, "Stop");
+            TryLoadIcon(_pictureBoxStopOver, "StopOver");
+            TryLoadIcon(_pictureBoxStopDown, "StopDown");
+            TryLoadIcon(_pictureBoxFullscreen, "Fullscreen");
+            TryLoadIcon(_pictureBoxFullscreenOver, "FullscreenOver");
+            TryLoadIcon(_pictureBoxFullscreenDown, "FullscreenDown");
+            TryLoadIcon(_pictureBoxMute, "Mute");
+            TryLoadIcon(_pictureBoxMuteOver, "MuteOver");
+            TryLoadIcon(_pictureBoxMuteDown, "MuteDown");
+            TryLoadIcon(_pictureBoxProgressbarBackground, "ProgressBarBackground");
+            TryLoadIcon(_pictureBoxProgressBar, "ProgressBar");
+            TryLoadIcon(_pictureBoxVolumeBarBackground, "VolumeBarBackground");
+            TryLoadIcon(_pictureBoxVolumeBar, "VolumeBar");
+        }
+
+        private static void TryLoadIcon(PictureBox pb, string iconName)
+        {
+            var theme = Configuration.Settings.General.UseDarkTheme ? "DarkTheme" : "DefaultTheme";
+            if (!string.IsNullOrEmpty(Configuration.Settings.General.ToolbarIconTheme) && !Configuration.Settings.General.ToolbarIconTheme.Equals("Auto", StringComparison.OrdinalIgnoreCase))
+            {
+                theme = Configuration.Settings.General.ToolbarIconTheme;
+            }
+
+            var themeFullPath = Path.Combine(Configuration.IconsDirectory,  theme, "VideoPlayer", iconName + ".png");
+            if (File.Exists(themeFullPath))
+            {
+                pb.Image = new Bitmap(themeFullPath);
+                return;
+            }
+
+            var fullPath = Path.Combine(Configuration.IconsDirectory, "DefaultTheme", "VideoPlayer", iconName + ".png");
+            if (File.Exists(fullPath))
+            {
+                pb.Image = new Bitmap(fullPath);
+            }
         }
     }
 }
