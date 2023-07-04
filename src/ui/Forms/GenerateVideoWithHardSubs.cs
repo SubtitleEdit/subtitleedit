@@ -1223,6 +1223,11 @@ namespace Nikse.SubtitleEdit.Forms
                 if (LibMpvDynamic.IsInstalled && Configuration.Settings.General.VideoPlayer == "MPV")
                 {
                     var temp = new Subtitle(_assaSubtitle);
+                    if (!_isAssa)
+                    {
+                        SetStyleForNonAssa(temp);
+                    }
+                    FixRightToLeft(temp);
                     var subFileName = GetAssaFileName(_inputVideoFileName);
                     FileUtil.WriteAllText(subFileName, new AdvancedSubStationAlpha().ToText(temp, null), new TextEncoding(Encoding.UTF8, "UTF8"));
 
