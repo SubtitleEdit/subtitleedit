@@ -12,7 +12,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
-using Nikse.SubtitleEdit.Forms.BinaryEdit;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -31,6 +30,8 @@ namespace Nikse.SubtitleEdit.Forms
         private readonly bool _isAssa;
         private readonly FfmpegMediaInfo _mediaInfo;
         private bool _promptFFmpegParameters;
+        private readonly bool _mpvOn;
+        private readonly string _mpvSubtitleFileName;
         public string VideoFileName { get; private set; }
         public long MillisecondsEncoding { get; private set; }
 
@@ -42,9 +43,10 @@ namespace Nikse.SubtitleEdit.Forms
 
             _loading = true;
             _videoInfo = videoInfo;
-            Text = LanguageSettings.Current.GenerateVideoWithBurnedInSubs.Title;
             _assaSubtitle = new Subtitle(assaSubtitle);
             _inputVideoFileName = inputVideoFileName;
+
+            Text = LanguageSettings.Current.GenerateVideoWithBurnedInSubs.Title;
             buttonGenerate.Text = LanguageSettings.Current.Watermark.Generate;
             labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait;
             labelResolution.Text = LanguageSettings.Current.SubStationAlphaProperties.Resolution;
@@ -112,7 +114,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelInfo.Text = LanguageSettings.Current.GenerateVideoWithBurnedInSubs.InfoAssaOff;
             checkBoxRightToLeft.Left = left;
             checkBoxAlignRight.Left = left;
-            checkBoxBox.Left = left;
+            checkBoxBox.Left = numericUpDownFontSize.Right + 12;
 
             var audioLeft = Math.Max(Math.Max(labelAudioEnc.Left + labelAudioEnc.Width, labelAudioSampleRate.Left + labelAudioSampleRate.Width), labelAudioBitRate.Left + labelAudioBitRate.Width) + 5;
             comboBoxAudioEnc.Left = audioLeft;
@@ -232,6 +234,17 @@ namespace Nikse.SubtitleEdit.Forms
             else
             {
                 groupBoxCut.Visible = false;
+            }
+
+            _mpvOn = LibMpvDynamic.IsInstalled && Configuration.Settings.General.VideoPlayer == "MPV";
+            _mpvSubtitleFileName = GetAssaFileName(_inputVideoFileName);
+            if (_mpvOn)
+            {
+                buttonPreview.Visible = false;
+            }
+            else
+            {
+                videoPlayerContainer1.Visible = false;
             }
         }
 
@@ -763,6 +776,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 numericUpDownWidth.Value++;
             }
+
+            UpdateVideoPreview();
         }
 
         private void numericUpDownHeight_ValueChanged(object sender, EventArgs e)
@@ -772,6 +787,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 numericUpDownHeight.Value++;
             }
+
+            UpdateVideoPreview();
         }
 
         private void comboBoxAudioEnc_SelectedIndexChanged(object sender, EventArgs e)
@@ -871,6 +888,8 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.Tools.GenVideoNonAssaBox = checkBoxBox.Checked;
             Configuration.Settings.Tools.GenVideoNonAssaAlignRight = checkBoxAlignRight.Checked;
             Configuration.Settings.Tools.GenVideoNonAssaFixRtlUnicode = checkBoxRightToLeft.Checked;
+
+            CloseVideo();
 
             using (var graphics = CreateGraphics())
             {
@@ -1195,7 +1214,35 @@ namespace Nikse.SubtitleEdit.Forms
             _loading = false;
             UiUtil.FixFonts(groupBoxSettings, 2000);
 
+            if (_mpvOn)
+            {
+                UiUtil.InitializeVideoPlayerAndContainer(_inputVideoFileName, _videoInfo, videoPlayerContainer1, VideoStartLoaded, VideoStartEnded);
+            }
+
             buttonGenerate.Focus();
+        }
+
+        private void VideoStartEnded(object sender, EventArgs e)
+        {
+            videoPlayerContainer1.Pause();
+            if (videoPlayerContainer1.VideoPlayer is LibMpvDynamic libmpv)
+            {
+                libmpv.RemoveSubtitle();
+            }
+        }
+
+        private void VideoStartLoaded(object sender, EventArgs e)
+        {
+            videoPlayerContainer1.Pause();
+            if (videoPlayerContainer1.VideoPlayer is LibMpvDynamic libmpv)
+            {
+                libmpv.LoadSubtitle(_mpvSubtitleFileName);
+            }
+
+            if (_assaSubtitle?.Paragraphs.Count > 0)
+            {
+                videoPlayerContainer1.CurrentPosition = _assaSubtitle.Paragraphs[0].StartTime.TotalSeconds + 0.1;
+            }
         }
 
         private void checkBoxTargetFileSize_CheckedChanged(object sender, EventArgs e)
@@ -1511,5 +1558,58 @@ namespace Nikse.SubtitleEdit.Forms
             _promptFFmpegParameters = true;
             buttonGenerate_Click(null, null);
         }
+
+        private void numericUpDownFontSize_ValueChanged(object sender, EventArgs e)
+        {
+            UpdateVideoPreview();
+        }
+
+        private void UpdateVideoPreview()
+        {
+            
+        }
+
+        private void checkBoxBox_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateVideoPreview();
+        }
+
+        private void comboBoxSubtitleFont_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void comboBoxSubtitleFont_SelectedValueChanged(object sender, EventArgs e)
+        {
+            UpdateVideoPreview();
+        }
+
+        private void checkBoxRightToLeft_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateVideoPreview();
+        }
+
+        private void checkBoxAlignRight_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateVideoPreview();
+        }
+
+        private void CloseVideo()
+        {
+            if (!_mpvOn)
+            {
+                return;
+            }
+
+            Application.DoEvents();
+            if (videoPlayerContainer1.VideoPlayer != null)
+            {
+                videoPlayerContainer1.Pause();
+                videoPlayerContainer1.VideoPlayer.DisposeVideoPlayer();
+                videoPlayerContainer1.VideoPlayer = null;
+            }
+            Application.DoEvents();
+        }
+
     }
 }

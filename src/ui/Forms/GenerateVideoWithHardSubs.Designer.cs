@@ -55,7 +55,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.checkBoxCut = new System.Windows.Forms.CheckBox();
             this.labelVideoBitrate = new System.Windows.Forms.Label();
             this.checkBoxBox = new System.Windows.Forms.CheckBox();
-            this.labelPreviewPleaseWait = new System.Windows.Forms.Label();
             this.checkBoxAlignRight = new System.Windows.Forms.CheckBox();
             this.checkBoxRightToLeft = new System.Windows.Forms.CheckBox();
             this.comboBoxSubtitleFont = new System.Windows.Forms.ComboBox();
@@ -107,6 +106,8 @@ namespace Nikse.SubtitleEdit.Forms
             this.nTSC720x480ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.x352ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.x272ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.labelPreviewPleaseWait = new System.Windows.Forms.Label();
+            this.videoPlayerContainer1 = new Nikse.SubtitleEdit.Controls.VideoPlayerContainer();
             this.contextMenuStripGenerate.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFontSize)).BeginInit();
             this.groupBoxSettings.SuspendLayout();
@@ -129,9 +130,9 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.progressBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.progressBar1.Location = new System.Drawing.Point(12, 570);
+            this.progressBar1.Location = new System.Drawing.Point(12, 615);
             this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(628, 11);
+            this.progressBar1.Size = new System.Drawing.Size(653, 11);
             this.progressBar1.TabIndex = 22;
             this.progressBar1.Visible = false;
             // 
@@ -140,7 +141,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonGenerate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonGenerate.ContextMenuStrip = this.contextMenuStripGenerate;
             this.buttonGenerate.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonGenerate.Location = new System.Drawing.Point(646, 570);
+            this.buttonGenerate.Location = new System.Drawing.Point(671, 615);
             this.buttonGenerate.Name = "buttonGenerate";
             this.buttonGenerate.Size = new System.Drawing.Size(121, 23);
             this.buttonGenerate.TabIndex = 4;
@@ -167,7 +168,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(773, 570);
+            this.buttonCancel.Location = new System.Drawing.Point(798, 615);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 6;
@@ -179,7 +180,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.labelPleaseWait.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelPleaseWait.AutoSize = true;
-            this.labelPleaseWait.Location = new System.Drawing.Point(12, 554);
+            this.labelPleaseWait.Location = new System.Drawing.Point(12, 599);
             this.labelPleaseWait.Name = "labelPleaseWait";
             this.labelPleaseWait.Size = new System.Drawing.Size(70, 13);
             this.labelPleaseWait.TabIndex = 25;
@@ -187,7 +188,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // numericUpDownFontSize
             // 
-            this.numericUpDownFontSize.Location = new System.Drawing.Point(120, 33);
+            this.numericUpDownFontSize.Location = new System.Drawing.Point(120, 25);
             this.numericUpDownFontSize.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -206,11 +207,12 @@ namespace Nikse.SubtitleEdit.Forms
             0,
             0,
             0});
+            this.numericUpDownFontSize.ValueChanged += new System.EventHandler(this.numericUpDownFontSize_ValueChanged);
             // 
             // labelFontSize
             // 
             this.labelFontSize.AutoSize = true;
-            this.labelFontSize.Location = new System.Drawing.Point(19, 35);
+            this.labelFontSize.Location = new System.Drawing.Point(19, 27);
             this.labelFontSize.Name = "labelFontSize";
             this.labelFontSize.Size = new System.Drawing.Size(49, 13);
             this.labelFontSize.TabIndex = 0;
@@ -225,7 +227,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.labelProgress.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelProgress.AutoSize = true;
-            this.labelProgress.Location = new System.Drawing.Point(12, 584);
+            this.labelProgress.Location = new System.Drawing.Point(12, 629);
             this.labelProgress.Name = "labelProgress";
             this.labelProgress.Size = new System.Drawing.Size(88, 13);
             this.labelProgress.TabIndex = 29;
@@ -236,15 +238,15 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxSettings.Controls.Add(this.videoPlayerContainer1);
             this.groupBoxSettings.Controls.Add(this.groupBoxCut);
             this.groupBoxSettings.Controls.Add(this.labelVideoBitrate);
             this.groupBoxSettings.Controls.Add(this.checkBoxBox);
-            this.groupBoxSettings.Controls.Add(this.labelPreviewPleaseWait);
             this.groupBoxSettings.Controls.Add(this.checkBoxAlignRight);
+            this.groupBoxSettings.Controls.Add(this.labelInfo);
             this.groupBoxSettings.Controls.Add(this.checkBoxRightToLeft);
             this.groupBoxSettings.Controls.Add(this.comboBoxSubtitleFont);
             this.groupBoxSettings.Controls.Add(this.labelSubtitleFont);
-            this.groupBoxSettings.Controls.Add(this.buttonPreview);
             this.groupBoxSettings.Controls.Add(this.groupBoxVideo);
             this.groupBoxSettings.Controls.Add(this.groupBoxAudio);
             this.groupBoxSettings.Controls.Add(this.numericUpDownTargetFileSize);
@@ -255,7 +257,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxSettings.Controls.Add(this.labelFontSize);
             this.groupBoxSettings.Location = new System.Drawing.Point(12, 13);
             this.groupBoxSettings.Name = "groupBoxSettings";
-            this.groupBoxSettings.Size = new System.Drawing.Size(836, 502);
+            this.groupBoxSettings.Size = new System.Drawing.Size(861, 547);
             this.groupBoxSettings.TabIndex = 0;
             this.groupBoxSettings.TabStop = false;
             this.groupBoxSettings.Text = "Settings";
@@ -273,9 +275,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxCut.Controls.Add(this.labelCutTo);
             this.groupBoxCut.Controls.Add(this.labelCutFrom);
             this.groupBoxCut.Controls.Add(this.checkBoxCut);
-            this.groupBoxCut.Location = new System.Drawing.Point(430, 369);
+            this.groupBoxCut.Location = new System.Drawing.Point(430, 21);
             this.groupBoxCut.Name = "groupBoxCut";
-            this.groupBoxCut.Size = new System.Drawing.Size(391, 115);
+            this.groupBoxCut.Size = new System.Drawing.Size(425, 96);
             this.groupBoxCut.TabIndex = 15;
             this.groupBoxCut.TabStop = false;
             // 
@@ -403,7 +405,7 @@ namespace Nikse.SubtitleEdit.Forms
             // labelVideoBitrate
             // 
             this.labelVideoBitrate.AutoSize = true;
-            this.labelVideoBitrate.Location = new System.Drawing.Point(193, 403);
+            this.labelVideoBitrate.Location = new System.Drawing.Point(193, 352);
             this.labelVideoBitrate.Name = "labelVideoBitrate";
             this.labelVideoBitrate.Size = new System.Drawing.Size(86, 13);
             this.labelVideoBitrate.TabIndex = 14;
@@ -412,56 +414,52 @@ namespace Nikse.SubtitleEdit.Forms
             // checkBoxBox
             // 
             this.checkBoxBox.AutoSize = true;
-            this.checkBoxBox.Location = new System.Drawing.Point(120, 136);
+            this.checkBoxBox.Location = new System.Drawing.Point(203, 27);
             this.checkBoxBox.Name = "checkBoxBox";
             this.checkBoxBox.Size = new System.Drawing.Size(44, 17);
             this.checkBoxBox.TabIndex = 6;
             this.checkBoxBox.Text = "Box";
             this.checkBoxBox.UseVisualStyleBackColor = true;
-            // 
-            // labelPreviewPleaseWait
-            // 
-            this.labelPreviewPleaseWait.AutoSize = true;
-            this.labelPreviewPleaseWait.Location = new System.Drawing.Point(717, 45);
-            this.labelPreviewPleaseWait.Name = "labelPreviewPleaseWait";
-            this.labelPreviewPleaseWait.Size = new System.Drawing.Size(70, 13);
-            this.labelPreviewPleaseWait.TabIndex = 7;
-            this.labelPreviewPleaseWait.Text = "Please wait...";
+            this.checkBoxBox.CheckedChanged += new System.EventHandler(this.checkBoxBox_CheckedChanged);
             // 
             // checkBoxAlignRight
             // 
             this.checkBoxAlignRight.AutoSize = true;
-            this.checkBoxAlignRight.Location = new System.Drawing.Point(120, 113);
+            this.checkBoxAlignRight.Location = new System.Drawing.Point(120, 105);
             this.checkBoxAlignRight.Name = "checkBoxAlignRight";
             this.checkBoxAlignRight.Size = new System.Drawing.Size(72, 17);
             this.checkBoxAlignRight.TabIndex = 5;
             this.checkBoxAlignRight.Text = "Align right";
             this.checkBoxAlignRight.UseVisualStyleBackColor = true;
+            this.checkBoxAlignRight.CheckedChanged += new System.EventHandler(this.checkBoxAlignRight_CheckedChanged);
             // 
             // checkBoxRightToLeft
             // 
             this.checkBoxRightToLeft.AutoSize = true;
-            this.checkBoxRightToLeft.Location = new System.Drawing.Point(120, 90);
+            this.checkBoxRightToLeft.Location = new System.Drawing.Point(120, 82);
             this.checkBoxRightToLeft.Name = "checkBoxRightToLeft";
             this.checkBoxRightToLeft.Size = new System.Drawing.Size(80, 17);
             this.checkBoxRightToLeft.TabIndex = 4;
             this.checkBoxRightToLeft.Text = "Right to left";
             this.checkBoxRightToLeft.UseVisualStyleBackColor = true;
+            this.checkBoxRightToLeft.CheckedChanged += new System.EventHandler(this.checkBoxRightToLeft_CheckedChanged);
             // 
             // comboBoxSubtitleFont
             // 
             this.comboBoxSubtitleFont.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxSubtitleFont.DropDownWidth = 250;
             this.comboBoxSubtitleFont.FormattingEnabled = true;
-            this.comboBoxSubtitleFont.Location = new System.Drawing.Point(120, 63);
+            this.comboBoxSubtitleFont.Location = new System.Drawing.Point(120, 55);
             this.comboBoxSubtitleFont.Name = "comboBoxSubtitleFont";
             this.comboBoxSubtitleFont.Size = new System.Drawing.Size(250, 21);
             this.comboBoxSubtitleFont.TabIndex = 3;
+            this.comboBoxSubtitleFont.SelectedIndexChanged += new System.EventHandler(this.comboBoxSubtitleFont_SelectedIndexChanged);
+            this.comboBoxSubtitleFont.SelectedValueChanged += new System.EventHandler(this.comboBoxSubtitleFont_SelectedValueChanged);
             // 
             // labelSubtitleFont
             // 
             this.labelSubtitleFont.AutoSize = true;
-            this.labelSubtitleFont.Location = new System.Drawing.Point(19, 66);
+            this.labelSubtitleFont.Location = new System.Drawing.Point(19, 58);
             this.labelSubtitleFont.Name = "labelSubtitleFont";
             this.labelSubtitleFont.Size = new System.Drawing.Size(63, 13);
             this.labelSubtitleFont.TabIndex = 2;
@@ -469,11 +467,10 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // buttonPreview
             // 
-            this.buttonPreview.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonPreview.Location = new System.Drawing.Point(720, 19);
+            this.buttonPreview.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonPreview.Location = new System.Drawing.Point(671, 586);
             this.buttonPreview.Name = "buttonPreview";
-            this.buttonPreview.Size = new System.Drawing.Size(101, 23);
+            this.buttonPreview.Size = new System.Drawing.Size(121, 23);
             this.buttonPreview.TabIndex = 6;
             this.buttonPreview.Text = "Preview";
             this.buttonPreview.UseVisualStyleBackColor = true;
@@ -495,9 +492,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxVideo.Controls.Add(this.comboBoxVideoEncoding);
             this.groupBoxVideo.Controls.Add(this.comboBoxCrf);
             this.groupBoxVideo.Controls.Add(this.labelVideoEncoding);
-            this.groupBoxVideo.Location = new System.Drawing.Point(6, 165);
+            this.groupBoxVideo.Location = new System.Drawing.Point(6, 131);
             this.groupBoxVideo.Name = "groupBoxVideo";
-            this.groupBoxVideo.Size = new System.Drawing.Size(406, 197);
+            this.groupBoxVideo.Size = new System.Drawing.Size(406, 176);
             this.groupBoxVideo.TabIndex = 8;
             this.groupBoxVideo.TabStop = false;
             this.groupBoxVideo.Text = "Video";
@@ -711,8 +708,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // groupBoxAudio
             // 
-            this.groupBoxAudio.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.groupBoxAudio.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxAudio.Controls.Add(this.labelAudioEnc);
             this.groupBoxAudio.Controls.Add(this.comboBoxAudioBitRate);
@@ -721,9 +717,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxAudio.Controls.Add(this.checkBoxMakeStereo);
             this.groupBoxAudio.Controls.Add(this.labelAudioSampleRate);
             this.groupBoxAudio.Controls.Add(this.comboBoxAudioSampleRate);
-            this.groupBoxAudio.Location = new System.Drawing.Point(430, 165);
+            this.groupBoxAudio.Location = new System.Drawing.Point(430, 131);
             this.groupBoxAudio.Name = "groupBoxAudio";
-            this.groupBoxAudio.Size = new System.Drawing.Size(391, 197);
+            this.groupBoxAudio.Size = new System.Drawing.Size(425, 176);
             this.groupBoxAudio.TabIndex = 10;
             this.groupBoxAudio.TabStop = false;
             this.groupBoxAudio.Text = "Audio";
@@ -813,7 +809,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // numericUpDownTargetFileSize
             // 
-            this.numericUpDownTargetFileSize.Location = new System.Drawing.Point(120, 401);
+            this.numericUpDownTargetFileSize.Location = new System.Drawing.Point(120, 350);
             this.numericUpDownTargetFileSize.Maximum = new decimal(new int[] {
             1000000,
             0,
@@ -837,7 +833,7 @@ namespace Nikse.SubtitleEdit.Forms
             // labelFileSize
             // 
             this.labelFileSize.AutoSize = true;
-            this.labelFileSize.Location = new System.Drawing.Point(35, 403);
+            this.labelFileSize.Location = new System.Drawing.Point(35, 352);
             this.labelFileSize.Name = "labelFileSize";
             this.labelFileSize.Size = new System.Drawing.Size(74, 13);
             this.labelFileSize.TabIndex = 12;
@@ -846,7 +842,7 @@ namespace Nikse.SubtitleEdit.Forms
             // checkBoxTargetFileSize
             // 
             this.checkBoxTargetFileSize.AutoSize = true;
-            this.checkBoxTargetFileSize.Location = new System.Drawing.Point(22, 378);
+            this.checkBoxTargetFileSize.Location = new System.Drawing.Point(22, 327);
             this.checkBoxTargetFileSize.Name = "checkBoxTargetFileSize";
             this.checkBoxTargetFileSize.Size = new System.Drawing.Size(192, 17);
             this.checkBoxTargetFileSize.TabIndex = 11;
@@ -857,7 +853,7 @@ namespace Nikse.SubtitleEdit.Forms
             // labelFileName
             // 
             this.labelFileName.AutoSize = true;
-            this.labelFileName.Location = new System.Drawing.Point(19, 449);
+            this.labelFileName.Location = new System.Drawing.Point(19, 398);
             this.labelFileName.Name = "labelFileName";
             this.labelFileName.Size = new System.Drawing.Size(52, 13);
             this.labelFileName.TabIndex = 0;
@@ -867,7 +863,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.linkLabelHelp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.linkLabelHelp.AutoSize = true;
-            this.linkLabelHelp.Location = new System.Drawing.Point(819, 518);
+            this.linkLabelHelp.Location = new System.Drawing.Point(844, 563);
             this.linkLabelHelp.Name = "linkLabelHelp";
             this.linkLabelHelp.Size = new System.Drawing.Size(29, 13);
             this.linkLabelHelp.TabIndex = 2;
@@ -888,7 +884,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.labelInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelInfo.AutoSize = true;
-            this.labelInfo.Location = new System.Drawing.Point(12, 518);
+            this.labelInfo.Location = new System.Drawing.Point(5, 526);
             this.labelInfo.Name = "labelInfo";
             this.labelInfo.Size = new System.Drawing.Size(25, 13);
             this.labelInfo.TabIndex = 1;
@@ -898,7 +894,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.labelPass.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.labelPass.AutoSize = true;
-            this.labelPass.Location = new System.Drawing.Point(589, 554);
+            this.labelPass.Location = new System.Drawing.Point(614, 599);
             this.labelPass.Name = "labelPass";
             this.labelPass.Size = new System.Drawing.Size(51, 13);
             this.labelPass.TabIndex = 47;
@@ -1022,25 +1018,58 @@ namespace Nikse.SubtitleEdit.Forms
             this.x272ToolStripMenuItem.Text = "640x272";
             this.x272ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
             // 
+            // labelPreviewPleaseWait
+            // 
+            this.labelPreviewPleaseWait.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.labelPreviewPleaseWait.AutoSize = true;
+            this.labelPreviewPleaseWait.Location = new System.Drawing.Point(668, 570);
+            this.labelPreviewPleaseWait.Name = "labelPreviewPleaseWait";
+            this.labelPreviewPleaseWait.Size = new System.Drawing.Size(70, 13);
+            this.labelPreviewPleaseWait.TabIndex = 48;
+            this.labelPreviewPleaseWait.Text = "Please wait...";
+            // 
+            // videoPlayerContainer1
+            // 
+            this.videoPlayerContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.videoPlayerContainer1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(18)))), ((int)(((byte)(18)))), ((int)(((byte)(18)))));
+            this.videoPlayerContainer1.Chapters = null;
+            this.videoPlayerContainer1.CurrentPosition = 0D;
+            this.videoPlayerContainer1.FontSizeFactor = 1F;
+            this.videoPlayerContainer1.LastParagraph = null;
+            this.videoPlayerContainer1.Location = new System.Drawing.Point(430, 313);
+            this.videoPlayerContainer1.Name = "videoPlayerContainer1";
+            this.videoPlayerContainer1.ShowFullscreenButton = true;
+            this.videoPlayerContainer1.ShowMuteButton = true;
+            this.videoPlayerContainer1.ShowStopButton = true;
+            this.videoPlayerContainer1.Size = new System.Drawing.Size(431, 226);
+            this.videoPlayerContainer1.SubtitleText = "";
+            this.videoPlayerContainer1.TabIndex = 17;
+            this.videoPlayerContainer1.TextRightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.videoPlayerContainer1.UsingFrontCenterAudioChannelOnly = false;
+            this.videoPlayerContainer1.VideoHeight = 0;
+            this.videoPlayerContainer1.VideoPlayer = null;
+            this.videoPlayerContainer1.VideoWidth = 0;
+            this.videoPlayerContainer1.Volume = 0D;
+            // 
             // GenerateVideoWithHardSubs
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(860, 605);
+            this.ClientSize = new System.Drawing.Size(885, 650);
+            this.Controls.Add(this.labelPreviewPleaseWait);
             this.Controls.Add(this.groupBoxSettings);
             this.Controls.Add(this.labelPass);
-            this.Controls.Add(this.labelInfo);
             this.Controls.Add(this.linkLabelHelp);
             this.Controls.Add(this.labelProgress);
+            this.Controls.Add(this.buttonPreview);
             this.Controls.Add(this.labelPleaseWait);
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.buttonGenerate);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.textBoxLog);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.KeyPreview = true;
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
             this.Name = "GenerateVideoWithHardSubs";
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
@@ -1118,7 +1147,6 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.Label labelSubtitleFont;
         private System.Windows.Forms.CheckBox checkBoxRightToLeft;
         private System.Windows.Forms.CheckBox checkBoxAlignRight;
-        private System.Windows.Forms.Label labelPreviewPleaseWait;
         private System.Windows.Forms.CheckBox checkBoxBox;
         private System.Windows.Forms.Button buttonVideoChooseStandardRes;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripRes;
@@ -1152,5 +1180,7 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.Button buttonCutFrom;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripGenerate;
         private System.Windows.Forms.ToolStripMenuItem promptParameterBeforeGenerateToolStripMenuItem;
+        private System.Windows.Forms.Label labelPreviewPleaseWait;
+        private Controls.VideoPlayerContainer videoPlayerContainer1;
     }
 }
