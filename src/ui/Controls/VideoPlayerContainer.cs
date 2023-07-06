@@ -92,6 +92,13 @@ namespace Nikse.SubtitleEdit.Controls
         private readonly Color _backgroundColor = Color.FromArgb(18, 18, 18);
         private Panel _panelControls;
 
+        private Bitmap _bitmapFullscreen;
+        private Bitmap _bitmapFullscreenDown;
+        private Bitmap _bitmapFullscreenOver;
+        private Bitmap _bitmapNoFullscreen;
+        private Bitmap _bitmapNoFullscreenDown;
+        private Bitmap _bitmapNoFullscreenOver;
+
         private PictureBox _pictureBoxBackground;
         private PictureBox _pictureBoxReverse;
         private PictureBox _pictureBoxReverseOver;
@@ -733,7 +740,7 @@ namespace Nikse.SubtitleEdit.Controls
             _pictureBoxPlayDown = new PictureBox
             {
                 Image = (Image)_resources.GetObject("pictureBoxPlayDown.Image"),
-                Location = new Point(22, 127 - 113),
+                Location = new Point(22, 126 - 113),
                 Name = "_pictureBoxPlayDown",
                 Size = new Size(29, 29),
                 SizeMode = PictureBoxSizeMode.AutoSize,
@@ -744,7 +751,7 @@ namespace Nikse.SubtitleEdit.Controls
             _pictureBoxPlayOver = new PictureBox
             {
                 Image = (Image)_resources.GetObject("pictureBoxPlayOver.Image"),
-                Location = new Point(23, 126 - 113),
+                Location = new Point(22, 126 - 113),
                 Name = "_pictureBoxPlayOver",
                 Size = new Size(29, 29),
                 SizeMode = PictureBoxSizeMode.AutoSize,
@@ -765,7 +772,7 @@ namespace Nikse.SubtitleEdit.Controls
             _panelControls.Controls.Add(_pictureBoxPause);
 
             _pictureBoxPauseDown.Image = (Image)_resources.GetObject("pictureBoxPauseDown.Image");
-            _pictureBoxPauseDown.Location = new Point(22, 127 - 113);
+            _pictureBoxPauseDown.Location = new Point(23, 126 - 113);
             _pictureBoxPauseDown.Name = "_pictureBoxPauseDown";
             _pictureBoxPauseDown.Size = new Size(29, 29);
             _pictureBoxPauseDown.SizeMode = PictureBoxSizeMode.AutoSize;
@@ -773,7 +780,7 @@ namespace Nikse.SubtitleEdit.Controls
             _panelControls.Controls.Add(_pictureBoxPauseDown);
 
             _pictureBoxPauseOver.Image = (Image)_resources.GetObject("pictureBoxPauseOver.Image");
-            _pictureBoxPauseOver.Location = new Point(22, 127 - 113);
+            _pictureBoxPauseOver.Location = new Point(23, 126 - 113);
             _pictureBoxPauseOver.Name = "_pictureBoxPauseOver";
             _pictureBoxPauseOver.Size = new Size(29, 29);
             _pictureBoxPauseOver.SizeMode = PictureBoxSizeMode.AutoSize;
@@ -819,6 +826,7 @@ namespace Nikse.SubtitleEdit.Controls
             _pictureBoxFullscreen.TabStop = false;
             _pictureBoxFullscreen.MouseEnter += PictureBoxFullscreenMouseEnter;
             _panelControls.Controls.Add(_pictureBoxFullscreen);
+            _bitmapFullscreen = _pictureBoxFullscreen.Image as Bitmap;
 
             _pictureBoxFullscreenDown.Image = (Image)_resources.GetObject("pictureBoxFSDown.Image");
             _pictureBoxFullscreenDown.Location = new Point(95, 130 - 113);
@@ -827,6 +835,7 @@ namespace Nikse.SubtitleEdit.Controls
             _pictureBoxFullscreenDown.SizeMode = PictureBoxSizeMode.AutoSize;
             _pictureBoxFullscreenDown.TabStop = false;
             _panelControls.Controls.Add(_pictureBoxFullscreenDown);
+            _bitmapFullscreenDown = _pictureBoxFullscreenDown.Image as Bitmap;
 
             _pictureBoxFullscreenOver.Image = (Image)_resources.GetObject("pictureBoxFSOver.Image");
             _pictureBoxFullscreenOver.Location = new Point(95, 130 - 113);
@@ -838,6 +847,11 @@ namespace Nikse.SubtitleEdit.Controls
             _pictureBoxFullscreenOver.MouseDown += PictureBoxFullscreenOverMouseDown;
             _pictureBoxFullscreenOver.MouseUp += PictureBoxFullscreenOverMouseUp;
             _panelControls.Controls.Add(_pictureBoxFullscreenOver);
+            _bitmapFullscreenOver = _pictureBoxFullscreenOver.Image as Bitmap;
+
+            _bitmapNoFullscreen = (Image)_resources.GetObject("pictureBoxNoFS.Image") as Bitmap;
+            _bitmapNoFullscreenDown = (Image)_resources.GetObject("pictureBoxNoFSDown.Image") as Bitmap;
+            _bitmapNoFullscreenOver = (Image)_resources.GetObject("pictureBoxNoFSOver.Image") as Bitmap;
 
             _pictureBoxProgressbarBackground.Anchor = AnchorStyles.Top | AnchorStyles.Left;
             _pictureBoxProgressbarBackground.BackColor = Color.Transparent;
@@ -1009,13 +1023,10 @@ namespace Nikse.SubtitleEdit.Controls
             _labelVideoPlayerName.Font = new Font(_labelTimeCode.Font.FontFamily, 6);
             _panelControls.Controls.Add(_labelVideoPlayerName);
 
-            if (Configuration.Settings.General.UseDarkTheme)
-            {
-                _labelVolume.ForeColor = Color.Gray;
-                _labelTimeCode.ForeColor = Color.Gray;
-                _labelVideoPlayerName.ForeColor = Color.Gray;
-            }
-
+            var bg = (_pictureBoxBackground.Image as Bitmap);
+            _labelVolume.BackColor = bg.GetPixel(_labelVolume.Left, _labelVolume.Top);
+            _labelTimeCode.BackColor = bg.GetPixel(_labelTimeCode.Left, _labelTimeCode.Top);
+            _labelVideoPlayerName.BackColor = bg.GetPixel(_labelVideoPlayerName.Left, _labelVideoPlayerName.Top);
 
             _pictureBoxBackground.SendToBack();
             _pictureBoxFastForwardDown.BringToFront();
@@ -1295,16 +1306,16 @@ namespace Nikse.SubtitleEdit.Controls
 
         public void ShowFullScreenControls()
         {
-            _pictureBoxFullscreen.Image = (Image)_resources.GetObject("pictureBoxNoFS.Image");
-            _pictureBoxFullscreenDown.Image = (Image)_resources.GetObject("pictureBoxNoFSDown.Image");
-            _pictureBoxFullscreenOver.Image = (Image)_resources.GetObject("pictureBoxNoFSOver.Image");
+            _pictureBoxFullscreen.Image = (Image)_bitmapNoFullscreen;
+            _pictureBoxFullscreenDown.Image = (Image)_bitmapNoFullscreenDown;
+            _pictureBoxFullscreenOver.Image = (Image)_bitmapNoFullscreenOver;
         }
 
         public void ShowNonFullScreenControls()
         {
-            _pictureBoxFullscreen.Image = (Image)_resources.GetObject("pictureBoxFS.Image");
-            _pictureBoxFullscreenDown.Image = (Image)_resources.GetObject("pictureBoxFSDown.Image");
-            _pictureBoxFullscreenOver.Image = (Image)_resources.GetObject("pictureBoxFSOver.Image");
+            _pictureBoxFullscreen.Image = (Image)_bitmapFullscreen;
+            _pictureBoxFullscreenDown.Image = (Image)_bitmapFullscreenDown;
+            _pictureBoxFullscreenOver.Image = (Image)_bitmapFullscreenOver;
         }
 
         private void PictureBoxFullscreenMouseEnter(object sender, EventArgs e)
@@ -2088,6 +2099,36 @@ namespace Nikse.SubtitleEdit.Controls
             TryLoadIcon(_pictureBoxProgressBar, "ProgressBar");
             TryLoadIcon(_pictureBoxVolumeBarBackground, "VolumeBarBackground");
             TryLoadIcon(_pictureBoxVolumeBar, "VolumeBar");
+
+            TryLoadBitmap(ref _bitmapFullscreen, "Fullscreen");
+            TryLoadBitmap(ref _bitmapFullscreenDown, "FullscreenDown");
+            TryLoadBitmap(ref _bitmapFullscreenOver, "FullscreenOver");
+
+            TryLoadBitmap(ref _bitmapNoFullscreen, "NoFullscreen");
+            TryLoadBitmap(ref _bitmapNoFullscreenDown, "NoFullscreenDown");
+            TryLoadBitmap(ref _bitmapNoFullscreenOver, "NoFullscreenOver");
+
+            var bg = (_pictureBoxBackground.Image as Bitmap);
+            _labelVolume.BackColor = bg.GetPixel(_labelVolume.Left, _labelVolume.Top);
+            _labelTimeCode.BackColor = bg.GetPixel(_labelTimeCode.Left, _labelTimeCode.Top);
+            _labelVideoPlayerName.BackColor = bg.GetPixel(_labelVideoPlayerName.Left, _labelVideoPlayerName.Top);
+
+            //TODO: Auto set fore color depending on bg color
+            //    _labelVolume.ForeColor = Color.Gray;
+            //    _labelTimeCode.ForeColor = Color.Gray;
+            //    _labelVideoPlayerName.ForeColor = Color.Gray;
+        }
+
+        private void TryLoadBitmap(ref Bitmap bmp, string name)
+        {
+            var pb = new PictureBox();
+            TryLoadIcon(pb, name);
+            if (pb.Image != null)
+            {
+                bmp = pb.Image as Bitmap;
+            }
+
+            pb.Dispose();
         }
 
         private static void TryLoadIcon(PictureBox pb, string iconName)
