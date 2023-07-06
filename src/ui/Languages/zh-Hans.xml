@@ -2266,6 +2266,7 @@ Command line: {1} {2}
     <ShowFullscreenButton>显示全屏幕按钮</ShowFullscreenButton>
     <PreviewFontName>预览字幕字体名</PreviewFontName>
     <PreviewFontSize>字幕预览字体大小</PreviewFontSize>
+    <PreviewVerticalMargin>垂直边距</PreviewVerticalMargin>
     <MainWindowVideoControls>主窗口视频控制</MainWindowVideoControls>
     <CustomSearchTextAndUrl>自定义搜索文本和网址</CustomSearchTextAndUrl>
     <WaveformAppearance>波形外观</WaveformAppearance>
