@@ -1071,7 +1071,6 @@ namespace Nikse.SubtitleEdit.Controls
         {
             if (string.IsNullOrEmpty(_labelTimeCode.Text))
             {
-                var span = TimeCode.FromSeconds(1);
                 _labelTimeCode.Text = GetDisplayTimeCode(0, 0);
                 _labelTimeCode.Left = Width - _labelTimeCode.Width - 9;
                 if (_labelTimeCode.Top + _labelTimeCode.Height >= _panelControls.Height - 4)
@@ -1306,16 +1305,16 @@ namespace Nikse.SubtitleEdit.Controls
 
         public void ShowFullScreenControls()
         {
-            _pictureBoxFullscreen.Image = (Image)_bitmapNoFullscreen;
-            _pictureBoxFullscreenDown.Image = (Image)_bitmapNoFullscreenDown;
-            _pictureBoxFullscreenOver.Image = (Image)_bitmapNoFullscreenOver;
+            _pictureBoxFullscreen.Image = _bitmapNoFullscreen;
+            _pictureBoxFullscreenDown.Image = _bitmapNoFullscreenDown;
+            _pictureBoxFullscreenOver.Image = _bitmapNoFullscreenOver;
         }
 
         public void ShowNonFullScreenControls()
         {
-            _pictureBoxFullscreen.Image = (Image)_bitmapFullscreen;
-            _pictureBoxFullscreenDown.Image = (Image)_bitmapFullscreenDown;
-            _pictureBoxFullscreenOver.Image = (Image)_bitmapFullscreenOver;
+            _pictureBoxFullscreen.Image = _bitmapFullscreen;
+            _pictureBoxFullscreenDown.Image = _bitmapFullscreenDown;
+            _pictureBoxFullscreenOver.Image = _bitmapFullscreenOver;
         }
 
         private void PictureBoxFullscreenMouseEnter(object sender, EventArgs e)
@@ -2090,8 +2089,11 @@ namespace Nikse.SubtitleEdit.Controls
             TryLoadIcon(_pictureBoxStopOver, "StopOver");
             TryLoadIcon(_pictureBoxStopDown, "StopDown");
             TryLoadIcon(_pictureBoxFullscreen, "Fullscreen");
+            TryLoadBitmap(ref _bitmapFullscreen, "Fullscreen");
             TryLoadIcon(_pictureBoxFullscreenOver, "FullscreenOver");
+            TryLoadBitmap(ref _bitmapFullscreenOver, "FullscreenOver");
             TryLoadIcon(_pictureBoxFullscreenDown, "FullscreenDown");
+            TryLoadBitmap(ref _bitmapFullscreenDown, "FullscreenDown");
             TryLoadIcon(_pictureBoxMute, "Mute");
             TryLoadIcon(_pictureBoxMuteOver, "MuteOver");
             TryLoadIcon(_pictureBoxMuteDown, "MuteDown");
@@ -2100,26 +2102,47 @@ namespace Nikse.SubtitleEdit.Controls
             TryLoadIcon(_pictureBoxVolumeBarBackground, "VolumeBarBackground");
             TryLoadIcon(_pictureBoxVolumeBar, "VolumeBar");
 
-            TryLoadBitmap(ref _bitmapFullscreen, "Fullscreen");
-            TryLoadBitmap(ref _bitmapFullscreenDown, "FullscreenDown");
-            TryLoadBitmap(ref _bitmapFullscreenOver, "FullscreenOver");
-
             TryLoadBitmap(ref _bitmapNoFullscreen, "NoFullscreen");
             TryLoadBitmap(ref _bitmapNoFullscreenDown, "NoFullscreenDown");
             TryLoadBitmap(ref _bitmapNoFullscreenOver, "NoFullscreenOver");
 
-            var bg = (_pictureBoxBackground.Image as Bitmap);
-            _labelVolume.BackColor = bg.GetPixel(_labelVolume.Left, _labelVolume.Top);
-            _labelTimeCode.BackColor = bg.GetPixel(_labelTimeCode.Left, _labelTimeCode.Top);
-            _labelVideoPlayerName.BackColor = bg.GetPixel(_labelVideoPlayerName.Left, _labelVideoPlayerName.Top);
+            if (_pictureBoxBackground.Image is Bitmap bg)
+            {
+                _labelVolume.BackColor = bg.GetPixel(_labelVolume.Left, _labelVolume.Top);
+                _labelTimeCode.BackColor = bg.GetPixel(_labelTimeCode.Left, _labelTimeCode.Top);
+                _labelVideoPlayerName.BackColor = bg.GetPixel(_labelVideoPlayerName.Left, _labelVideoPlayerName.Top);
+            }
 
-            //TODO: Auto set fore color depending on bg color
-            //    _labelVolume.ForeColor = Color.Gray;
-            //    _labelTimeCode.ForeColor = Color.Gray;
-            //    _labelVideoPlayerName.ForeColor = Color.Gray;
+            // Set ForeColor to either white or black depending on background color
+            if (_labelVolume.BackColor.R + _labelVolume.BackColor.G + _labelVolume.BackColor.B > 255 * 1.5)
+            {
+                _labelVolume.ForeColor = Color.Black;
+            }
+            else
+            {
+                _labelVolume.ForeColor = Color.White;
+            }
+
+            if (_labelTimeCode.BackColor.R + _labelTimeCode.BackColor.G + _labelTimeCode.BackColor.B > 255 * 1.5)
+            {
+                _labelTimeCode.ForeColor = Color.Black;
+            }
+            else
+            {
+                _labelVolume.ForeColor = Color.White;
+            }
+
+            if (_labelVideoPlayerName.BackColor.R + _labelVideoPlayerName.BackColor.G + _labelVideoPlayerName.BackColor.B > 255 * 1.5)
+            {
+                _labelVideoPlayerName.ForeColor = Color.Black;
+            }
+            else
+            {
+                _labelVideoPlayerName.ForeColor = Color.White;
+            }
         }
 
-        private void TryLoadBitmap(ref Bitmap bmp, string name)
+        private static void TryLoadBitmap(ref Bitmap bmp, string name)
         {
             var pb = new PictureBox();
             TryLoadIcon(pb, name);
@@ -2139,7 +2162,7 @@ namespace Nikse.SubtitleEdit.Controls
                 theme = Configuration.Settings.General.ToolbarIconTheme;
             }
 
-            var themeFullPath = Path.Combine(Configuration.IconsDirectory,  theme, "VideoPlayer", iconName + ".png");
+            var themeFullPath = Path.Combine(Configuration.IconsDirectory, theme, "VideoPlayer", iconName + ".png");
             if (File.Exists(themeFullPath))
             {
                 pb.Image = new Bitmap(themeFullPath);
