@@ -453,7 +453,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.comboBoxSubtitleFont.Name = "comboBoxSubtitleFont";
             this.comboBoxSubtitleFont.Size = new System.Drawing.Size(250, 21);
             this.comboBoxSubtitleFont.TabIndex = 3;
-            this.comboBoxSubtitleFont.SelectedIndexChanged += new System.EventHandler(this.comboBoxSubtitleFont_SelectedIndexChanged);
             this.comboBoxSubtitleFont.SelectedValueChanged += new System.EventHandler(this.comboBoxSubtitleFont_SelectedValueChanged);
             // 
             // labelSubtitleFont

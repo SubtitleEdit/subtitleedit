@@ -1216,6 +1216,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (_mpvOn)
             {
+                SavePreviewSubtitle();
                 UiUtil.InitializeVideoPlayerAndContainer(_inputVideoFileName, _videoInfo, videoPlayerContainer1, VideoStartLoaded, VideoStartEnded);
             }
 
@@ -1225,10 +1226,6 @@ namespace Nikse.SubtitleEdit.Forms
         private void VideoStartEnded(object sender, EventArgs e)
         {
             videoPlayerContainer1.Pause();
-            if (videoPlayerContainer1.VideoPlayer is LibMpvDynamic libmpv)
-            {
-                libmpv.RemoveSubtitle();
-            }
         }
 
         private void VideoStartLoaded(object sender, EventArgs e)
@@ -1243,6 +1240,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 videoPlayerContainer1.CurrentPosition = _assaSubtitle.Paragraphs[0].StartTime.TotalSeconds + 0.1;
             }
+
+            //videoPlayerContainer1.ShowFullscreenButton = true; //TODO: Add full screen?
         }
 
         private void checkBoxTargetFileSize_CheckedChanged(object sender, EventArgs e)
@@ -1566,17 +1565,33 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void UpdateVideoPreview()
         {
-            
+            if (_loading)
+            {
+                return;
+            }
+
+            if (videoPlayerContainer1.VideoPlayer is LibMpvDynamic libmpv)
+            {
+                SavePreviewSubtitle();
+                libmpv.ReloadSubtitle();
+            }
+        }
+
+        private void SavePreviewSubtitle()
+        {
+            var temp = new Subtitle(_assaSubtitle);
+            if (!_isAssa)
+            {
+                SetStyleForNonAssa(temp);
+            }
+
+            FixRightToLeft(temp);
+            FileUtil.WriteAllText(_mpvSubtitleFileName, new AdvancedSubStationAlpha().ToText(temp, null), new TextEncoding(Encoding.UTF8, "UTF8"));
         }
 
         private void checkBoxBox_CheckedChanged(object sender, EventArgs e)
         {
             UpdateVideoPreview();
-        }
-
-        private void comboBoxSubtitleFont_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
         }
 
         private void comboBoxSubtitleFont_SelectedValueChanged(object sender, EventArgs e)
