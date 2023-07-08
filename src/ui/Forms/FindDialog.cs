@@ -125,9 +125,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonFind_Click(object sender, EventArgs e)
         {
+            SetRegEx();
             FindNext();
             buttonFind.Focus();
-            SetRegEx();
         }
 
         private void SetRegEx()
@@ -137,8 +137,6 @@ namespace Nikse.SubtitleEdit.Forms
                 try
                 {
                     _regEx = new Regex(RegexUtils.FixNewLine(FindText), RegexOptions.Compiled, TimeSpan.FromSeconds(5));
-                    DialogResult = DialogResult.OK;
-                    _findAndReplaceMethods.FindDialogFind(FindText, FindReplaceType);
                 }
                 catch (Exception exception)
                 {
@@ -156,12 +154,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 DialogResult = DialogResult.Cancel;
             }
-            else if (radioButtonNormal.Checked)
-            {
-                DialogResult = DialogResult.OK;
-                _findAndReplaceMethods.FindDialogFind(FindText, FindReplaceType);
-            }
-            else if (radioButtonCaseSensitive.Checked)
+            else
             {
                 DialogResult = DialogResult.OK;
                 _findAndReplaceMethods.FindDialogFind(FindText, FindReplaceType);
@@ -304,15 +297,20 @@ namespace Nikse.SubtitleEdit.Forms
             else if (radioButtonNormal.Checked)
             {
                 DialogResult = DialogResult.OK;
+                SetRegEx();
                 _findAndReplaceMethods.FindDialogFindPrevious(FindText);
             }
             else if (radioButtonCaseSensitive.Checked)
             {
                 DialogResult = DialogResult.OK;
+                SetRegEx();
                 _findAndReplaceMethods.FindDialogFindPrevious(FindText);
             }
+            else
+            {
+                SetRegEx();
+            }
 
-            SetRegEx();
             buttonFindPrev.Focus();
         }
     }

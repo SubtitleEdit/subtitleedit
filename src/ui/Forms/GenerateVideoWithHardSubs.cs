@@ -519,15 +519,17 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void FixRightToLeft(Subtitle subtitle)
         {
-            if (checkBoxRightToLeft.Checked)
+            if (!checkBoxRightToLeft.Checked)
             {
-                for (var index = 0; index < subtitle.Paragraphs.Count; index++)
+                return;
+            }
+
+            for (var index = 0; index < subtitle.Paragraphs.Count; index++)
+            {
+                var paragraph = subtitle.Paragraphs[index];
+                if (LanguageAutoDetect.ContainsRightToLeftLetter(paragraph.Text))
                 {
-                    var paragraph = subtitle.Paragraphs[index];
-                    if (LanguageAutoDetect.ContainsRightToLeftLetter(paragraph.Text))
-                    {
-                        paragraph.Text = Utilities.FixRtlViaUnicodeChars(paragraph.Text);
-                    }
+                    paragraph.Text = Utilities.FixRtlViaUnicodeChars(paragraph.Text);
                 }
             }
         }
@@ -663,7 +665,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void RunOnePassEncoding(string assaTempFileName)
         {
-            var process = GetFfmpegProcess(_inputVideoFileName, VideoFileName, assaTempFileName, null);
+            var process = GetFfmpegProcess(_inputVideoFileName, VideoFileName, assaTempFileName);
             _log.AppendLine("ffmpeg arguments: " + process.StartInfo.Arguments);
 
             if (!CheckForPromptParameters(process, Text))
@@ -1407,7 +1409,7 @@ namespace Nikse.SubtitleEdit.Forms
                 style.ShadowWidth = 5;
             }
 
-            sub.Header = AdvancedSubStationAlpha.GetHeaderAndStylesFromAdvancedSubStationAlpha(sub.Header, new System.Collections.Generic.List<SsaStyle>() { style });
+            sub.Header = AdvancedSubStationAlpha.GetHeaderAndStylesFromAdvancedSubStationAlpha(sub.Header, new List<SsaStyle> { style });
             sub.Header = AdvancedSubStationAlpha.AddTagToHeader("PlayResX", "PlayResX: " + ((int)numericUpDownWidth.Value).ToString(CultureInfo.InvariantCulture), "[Script Info]", sub.Header);
             sub.Header = AdvancedSubStationAlpha.AddTagToHeader("PlayResY", "PlayResY: " + ((int)numericUpDownHeight.Value).ToString(CultureInfo.InvariantCulture), "[Script Info]", sub.Header);
         }
@@ -1625,6 +1627,5 @@ namespace Nikse.SubtitleEdit.Forms
             }
             Application.DoEvents();
         }
-
     }
 }
