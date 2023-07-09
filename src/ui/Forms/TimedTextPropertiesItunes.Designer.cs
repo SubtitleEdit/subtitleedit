@@ -31,6 +31,8 @@
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.groupBoxOptions = new System.Windows.Forms.GroupBox();
+            this.comboBoxStyleAttribute = new System.Windows.Forms.ComboBox();
+            this.labelStyleAttributeName = new System.Windows.Forms.Label();
             this.groupBoxAlignment = new System.Windows.Forms.GroupBox();
             this.textBoxBottomExtent = new System.Windows.Forms.TextBox();
             this.labelBottomExtent = new System.Windows.Forms.Label();
@@ -61,7 +63,7 @@
             this.comboBoxLanguage = new System.Windows.Forms.ComboBox();
             this.labelCollision = new System.Windows.Forms.Label();
             this.comboBoxDefaultStyle = new System.Windows.Forms.ComboBox();
-            this.labelWrapStyle = new System.Windows.Forms.Label();
+            this.labelDefaultStyle = new System.Windows.Forms.Label();
             this.groupBoxOptions.SuspendLayout();
             this.groupBoxAlignment.SuspendLayout();
             this.SuspendLayout();
@@ -69,7 +71,7 @@
             // buttonOK
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonOK.Location = new System.Drawing.Point(745, 401);
+            this.buttonOK.Location = new System.Drawing.Point(745, 439);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 1;
@@ -81,7 +83,7 @@
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(826, 401);
+            this.buttonCancel.Location = new System.Drawing.Point(826, 439);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 2;
@@ -94,6 +96,8 @@
             this.groupBoxOptions.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxOptions.Controls.Add(this.comboBoxStyleAttribute);
+            this.groupBoxOptions.Controls.Add(this.labelStyleAttributeName);
             this.groupBoxOptions.Controls.Add(this.groupBoxAlignment);
             this.groupBoxOptions.Controls.Add(this.comboBoxFileExtensions);
             this.groupBoxOptions.Controls.Add(this.labelFileExtension);
@@ -116,12 +120,33 @@
             this.groupBoxOptions.Controls.Add(this.comboBoxLanguage);
             this.groupBoxOptions.Controls.Add(this.labelCollision);
             this.groupBoxOptions.Controls.Add(this.comboBoxDefaultStyle);
-            this.groupBoxOptions.Controls.Add(this.labelWrapStyle);
+            this.groupBoxOptions.Controls.Add(this.labelDefaultStyle);
             this.groupBoxOptions.Location = new System.Drawing.Point(12, 12);
             this.groupBoxOptions.Name = "groupBoxOptions";
-            this.groupBoxOptions.Size = new System.Drawing.Size(889, 383);
+            this.groupBoxOptions.Size = new System.Drawing.Size(889, 421);
             this.groupBoxOptions.TabIndex = 0;
             this.groupBoxOptions.TabStop = false;
+            // 
+            // comboBoxStyleAttribute
+            // 
+            this.comboBoxStyleAttribute.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxStyleAttribute.FormattingEnabled = true;
+            this.comboBoxStyleAttribute.Items.AddRange(new object[] {
+            "tts:fontStyle",
+            "style"});
+            this.comboBoxStyleAttribute.Location = new System.Drawing.Point(191, 270);
+            this.comboBoxStyleAttribute.Name = "comboBoxStyleAttribute";
+            this.comboBoxStyleAttribute.Size = new System.Drawing.Size(263, 21);
+            this.comboBoxStyleAttribute.TabIndex = 25;
+            // 
+            // labelStyleAttributeName
+            // 
+            this.labelStyleAttributeName.AutoSize = true;
+            this.labelStyleAttributeName.Location = new System.Drawing.Point(6, 273);
+            this.labelStyleAttributeName.Name = "labelStyleAttributeName";
+            this.labelStyleAttributeName.Size = new System.Drawing.Size(100, 13);
+            this.labelStyleAttributeName.TabIndex = 24;
+            this.labelStyleAttributeName.Text = "Style attribute name";
             // 
             // groupBoxAlignment
             // 
@@ -138,7 +163,7 @@
             this.groupBoxAlignment.Controls.Add(this.labelTopOrigin);
             this.groupBoxAlignment.Location = new System.Drawing.Point(485, 30);
             this.groupBoxAlignment.Name = "groupBoxAlignment";
-            this.groupBoxAlignment.Size = new System.Drawing.Size(398, 337);
+            this.groupBoxAlignment.Size = new System.Drawing.Size(398, 375);
             this.groupBoxAlignment.TabIndex = 23;
             this.groupBoxAlignment.TabStop = false;
             this.groupBoxAlignment.Text = "Alignment";
@@ -215,7 +240,7 @@
             ".xml",
             ".ttml",
             ".dfxp"});
-            this.comboBoxFileExtensions.Location = new System.Drawing.Point(191, 346);
+            this.comboBoxFileExtensions.Location = new System.Drawing.Point(191, 378);
             this.comboBoxFileExtensions.Name = "comboBoxFileExtensions";
             this.comboBoxFileExtensions.Size = new System.Drawing.Size(263, 21);
             this.comboBoxFileExtensions.TabIndex = 21;
@@ -223,7 +248,7 @@
             // labelFileExtension
             // 
             this.labelFileExtension.AutoSize = true;
-            this.labelFileExtension.Location = new System.Drawing.Point(6, 349);
+            this.labelFileExtension.Location = new System.Drawing.Point(6, 381);
             this.labelFileExtension.Name = "labelFileExtension";
             this.labelFileExtension.Size = new System.Drawing.Size(71, 13);
             this.labelFileExtension.TabIndex = 22;
@@ -234,6 +259,7 @@
             this.comboBoxTimeCodeFormat.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxTimeCodeFormat.FormattingEnabled = true;
             this.comboBoxTimeCodeFormat.Items.AddRange(new object[] {
+            "Frames",
             "Source",
             "Seconds",
             "Milliseconds",
@@ -242,7 +268,7 @@
             "hh:mm:ss.ms",
             "hh:mm:ss.ms-two-digits",
             "hh:mm:ss,ms"});
-            this.comboBoxTimeCodeFormat.Location = new System.Drawing.Point(191, 309);
+            this.comboBoxTimeCodeFormat.Location = new System.Drawing.Point(191, 341);
             this.comboBoxTimeCodeFormat.Name = "comboBoxTimeCodeFormat";
             this.comboBoxTimeCodeFormat.Size = new System.Drawing.Size(263, 21);
             this.comboBoxTimeCodeFormat.TabIndex = 19;
@@ -250,7 +276,7 @@
             // labelTimeCode
             // 
             this.labelTimeCode.AutoSize = true;
-            this.labelTimeCode.Location = new System.Drawing.Point(6, 312);
+            this.labelTimeCode.Location = new System.Drawing.Point(6, 344);
             this.labelTimeCode.Name = "labelTimeCode";
             this.labelTimeCode.Size = new System.Drawing.Size(89, 13);
             this.labelTimeCode.TabIndex = 20;
@@ -304,7 +330,7 @@
             // 
             this.comboBoxDefaultRegion.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxDefaultRegion.FormattingEnabled = true;
-            this.comboBoxDefaultRegion.Location = new System.Drawing.Point(191, 270);
+            this.comboBoxDefaultRegion.Location = new System.Drawing.Point(191, 302);
             this.comboBoxDefaultRegion.Name = "comboBoxDefaultRegion";
             this.comboBoxDefaultRegion.Size = new System.Drawing.Size(263, 21);
             this.comboBoxDefaultRegion.TabIndex = 8;
@@ -312,7 +338,7 @@
             // labelDefaultRegion
             // 
             this.labelDefaultRegion.AutoSize = true;
-            this.labelDefaultRegion.Location = new System.Drawing.Point(6, 273);
+            this.labelDefaultRegion.Location = new System.Drawing.Point(6, 305);
             this.labelDefaultRegion.Name = "labelDefaultRegion";
             this.labelDefaultRegion.Size = new System.Drawing.Size(73, 13);
             this.labelDefaultRegion.TabIndex = 12;
@@ -416,20 +442,20 @@
             this.comboBoxDefaultStyle.Size = new System.Drawing.Size(263, 21);
             this.comboBoxDefaultStyle.TabIndex = 7;
             // 
-            // labelWrapStyle
+            // labelDefaultStyle
             // 
-            this.labelWrapStyle.AutoSize = true;
-            this.labelWrapStyle.Location = new System.Drawing.Point(6, 246);
-            this.labelWrapStyle.Name = "labelWrapStyle";
-            this.labelWrapStyle.Size = new System.Drawing.Size(65, 13);
-            this.labelWrapStyle.TabIndex = 1;
-            this.labelWrapStyle.Text = "Default style";
+            this.labelDefaultStyle.AutoSize = true;
+            this.labelDefaultStyle.Location = new System.Drawing.Point(6, 246);
+            this.labelDefaultStyle.Name = "labelDefaultStyle";
+            this.labelDefaultStyle.Size = new System.Drawing.Size(65, 13);
+            this.labelDefaultStyle.TabIndex = 1;
+            this.labelDefaultStyle.Text = "Default style";
             // 
             // TimedTextPropertiesItunes
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(913, 434);
+            this.ClientSize = new System.Drawing.Size(913, 472);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.groupBoxOptions);
@@ -466,7 +492,7 @@
         private System.Windows.Forms.ComboBox comboBoxLanguage;
         private System.Windows.Forms.Label labelCollision;
         private System.Windows.Forms.ComboBox comboBoxDefaultStyle;
-        private System.Windows.Forms.Label labelWrapStyle;
+        private System.Windows.Forms.Label labelDefaultStyle;
         private System.Windows.Forms.ComboBox comboBoxDefaultRegion;
         private System.Windows.Forms.Label labelDefaultRegion;
         private System.Windows.Forms.TextBox textBoxDescription;
@@ -487,5 +513,7 @@
         private System.Windows.Forms.Label labelBottomExtent;
         private System.Windows.Forms.TextBox textBoxBottomOrigin;
         private System.Windows.Forms.Label labelBottomOrigin;
+        private System.Windows.Forms.ComboBox comboBoxStyleAttribute;
+        private System.Windows.Forms.Label labelStyleAttributeName;
     }
 }

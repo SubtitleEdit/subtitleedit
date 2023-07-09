@@ -195,10 +195,6 @@ namespace Nikse.SubtitleEdit.Forms
                             mergedIndexes.Add(i - 1);
                         }
                     }
-                    else
-                    {
-                        break;
-                    }
                 }
 
                 if (!removed.Contains(i - 1) && lineNumbers.Count > 0 && clearFixes)

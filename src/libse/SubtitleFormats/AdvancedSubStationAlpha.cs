@@ -94,7 +94,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public static string HeaderNoStyles = @"[Script Info]
 ; This is an Advanced Sub Station Alpha v4+ script.
 Title: {0}
-ScriptType: v4.00+" + 
+ScriptType: v4.00+" +
 (Configuration.Settings.SubtitleSettings.AssaShowPlayDepth ? Environment.NewLine + "PlayDepth: 0" : string.Empty) +
 (Configuration.Settings.SubtitleSettings.AssaShowScaledBorderAndShadow ? Environment.NewLine + "ScaledBorderAndShadow: Yes" : string.Empty) +
 @"
@@ -140,6 +140,11 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
             else if (!string.IsNullOrEmpty(subtitle.Header) && subtitle.Header.Contains("[V4 Styles]"))
             {
                 LoadStylesFromSubstationAlpha(subtitle, title, header, HeaderNoStyles, sb);
+                isValidAssHeader = !string.IsNullOrEmpty(subtitle.Header) && subtitle.Header.Contains("[V4+ Styles]");
+                if (isValidAssHeader)
+                {
+                    styles = GetStylesFromHeader(subtitle.Header);
+                }
             }
             else if (subtitle.Header != null && subtitle.Header.Contains("http://www.w3.org/ns/ttml"))
             {
@@ -155,6 +160,15 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
             {
                 LoadStylesFromTimedTextTimedDraft2006Oct(subtitle, title, header, HeaderNoStyles, sb);
                 fromTtml = true;
+                isValidAssHeader = !string.IsNullOrEmpty(subtitle.Header) && subtitle.Header.Contains("[V4+ Styles]");
+                if (isValidAssHeader)
+                {
+                    styles = GetStylesFromHeader(subtitle.Header);
+                }
+            }
+            else if (subtitle.Header != null && subtitle.Header.StartsWith("WEBVTT", StringComparison.Ordinal))
+            {
+                subtitle = WebVttToAssa.Convert(subtitle, new SsaStyle(), 0, 0);
                 isValidAssHeader = !string.IsNullOrEmpty(subtitle.Header) && subtitle.Header.Contains("[V4+ Styles]");
                 if (isValidAssHeader)
                 {
@@ -180,7 +194,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                     style = p.Style;
                 }
 
-                var actor = "";
+                var actor = string.Empty;
                 if (!string.IsNullOrEmpty(p.Actor))
                 {
                     actor = p.Actor;
@@ -204,7 +218,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                     marginV = p.MarginV;
                 }
 
-                var effect = "";
+                var effect = string.Empty;
                 if (!string.IsNullOrEmpty(p.Effect))
                 {
                     effect = p.Effect;
@@ -246,12 +260,12 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
         public static string GetHeaderAndStylesFromSubStationAlpha(string header)
         {
             var scriptInfo = string.Empty;
-            header = FixScriptType(header);
             if (header != null &&
                 header.Contains("[Script Info]") &&
                 header.Contains("ScriptType: v4.00") &&
                 !header.Contains("ScriptType: v4.00+"))
             {
+                header = FixScriptType(header);
                 var sb = new StringBuilder();
                 var scriptInfoOn = false;
                 foreach (var line in header.SplitToLines())
@@ -264,6 +278,12 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                     if (line.Equals("[Script Info]", StringComparison.OrdinalIgnoreCase))
                     {
                         scriptInfoOn = true;
+                    }
+
+                    if (line.Length > 10 && line.TrimStart().StartsWith("format:", StringComparison.OrdinalIgnoreCase))
+                    {
+                        var s = line.Trim().Remove(0, 7);
+                        var arr = line.Split(',');
                     }
 
                     if (scriptInfoOn)
@@ -282,21 +302,28 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                         }
                     }
                 }
+
                 scriptInfo = sb.ToString();
             }
+            else
+            {
+                header = FixScriptType(header);
+            }
 
-            var style = GetStyle(header);
-
-            if (string.IsNullOrEmpty(scriptInfo) || string.IsNullOrEmpty(style))
+            var stylesContent = GetStyleContentFromHeader(header);
+            if (string.IsNullOrEmpty(scriptInfo) || stylesContent.Count == 0)
             {
                 return DefaultHeader;
             }
 
-            return string.Format($@"{scriptInfo.Trim() + Environment.NewLine}
-[V4+ Styles]
-{SsaStyle.DefaultAssStyleFormat}
-{style.Trim() + Environment.NewLine}
-[Events]");
+            var styles = new List<SsaStyle>();
+            foreach (var styleAsString in stylesContent)
+            {
+                styles.Add(SsaStyle.FromRawSsa(header, styleAsString));
+            }
+
+            header = GetHeaderAndStylesFromAdvancedSubStationAlpha(header, styles);
+            return header;
         }
 
         public static string GetHeaderAndStylesFromAdvancedSubStationAlpha(string header, List<SsaStyle> styles)
@@ -352,11 +379,13 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                 return DefaultHeader;
             }
 
-            return string.Format($@"{scriptInfo.Trim() + Environment.NewLine}
-[V4+ Styles]
-{SsaStyle.DefaultAssStyleFormat}
-{style.ToString().Trim() + Environment.NewLine}
-[Events]");
+            return scriptInfo.Trim() + Environment.NewLine + 
+                   Environment.NewLine +
+                   "[V4+ Styles]" + Environment.NewLine + 
+                   SsaStyle.DefaultAssStyleFormat + Environment.NewLine + 
+                   style.ToString().Trim() + Environment.NewLine +
+                   Environment.NewLine +
+                   "[Events]";
         }
 
         private static string FixScriptType(string header)
@@ -912,6 +941,37 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                     if (end > 0)
                     {
                         list.Add(line.Substring(6, end - 6).Trim());
+                    }
+                }
+            }
+
+            return list;
+        }
+
+        public static List<string> GetStyleContentFromHeader(string headerLines)
+        {
+            var list = new List<string>();
+
+            if (headerLines == null)
+            {
+                headerLines = DefaultStyle;
+            }
+
+            if (headerLines.Contains("http://www.w3.org/ns/ttml"))
+            {
+                var subtitle = new Subtitle { Header = headerLines };
+                LoadStylesFromTimedText10(subtitle, string.Empty, headerLines, HeaderNoStyles, new StringBuilder());
+                headerLines = subtitle.Header;
+            }
+
+            foreach (var line in headerLines.SplitToLines())
+            {
+                if (line.StartsWith("style:", StringComparison.OrdinalIgnoreCase))
+                {
+                    var end = line.IndexOf(',');
+                    if (end > 0)
+                    {
+                        list.Add(line.Remove(0, 6).Trim());
                     }
                 }
             }
@@ -1986,15 +2046,29 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
             return $"&H{255 - c.A:X2}{c.B:X2}{c.G:X2}{c.R:X2}"; // ASS stores alpha in reverse (0=full intensity and 255=fully transparent)
         }
 
-        public static string GetSsaColorStringForEvent(Color c)
+        public static string GetSsaColorStringForEvent(Color c, string tag = "c")
         {
             if (c.A >= 255)
             {
-                return $"c&H{c.B:X2}{c.G:X2}{c.R:X2}";
+                return $"{tag}&H{c.B:X2}{c.G:X2}{c.R:X2}";
+            }
+
+            var alphaName = "alpha";
+            if (tag == "2c")
+            {
+                alphaName = "2a";
+            }
+            else if (tag == "3c")
+            {
+                alphaName = "3a";
+            }
+            else if (tag == "4c")
+            {
+                alphaName = "4a";
             }
 
             var alpha = 255 - c.A; // ASS stores alpha in reverse (0=full intensity and 255=fully transparent)
-            return $"alpha&H{alpha:X2}&\\c&H{c.B:X2}{c.G:X2}{c.R:X2}";
+            return $"{alphaName}&H{alpha:X2}&\\{tag}&H{c.B:X2}{c.G:X2}{c.R:X2}";
         }
 
         public static string GetSsaColorStringNoTransparency(Color c) => $"&H{c.B:X2}{c.G:X2}{c.R:X2}";
@@ -2396,46 +2470,46 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
         {
             var style = new SsaStyle { Name = styleName };
 
-            int nameIndex = -1;
-            int fontNameIndex = -1;
-            int fontsizeIndex = -1;
-            int primaryColourIndex = -1;
-            int secondaryColourIndex = -1;
-            int tertiaryColourIndex = -1;
-            int outlineColourIndex = -1;
-            int backColourIndex = -1;
-            int boldIndex = -1;
-            int italicIndex = -1;
-            int underlineIndex = -1;
-            int strikOutIndex = -1;
-            int outlineIndex = -1;
-            int shadowIndex = -1;
-            int alignmentIndex = -1;
-            int marginLIndex = -1;
-            int marginRIndex = -1;
-            int marginVIndex = -1;
-            int scaleXIndex = -1;
-            int scaleYIndex = -1;
-            int spacingIndex = -1;
-            int angleIndex = -1;
-            int borderStyleIndex = -1;
+            var nameIndex = -1;
+            var fontNameIndex = -1;
+            var fontSizeIndex = -1;
+            var primaryColourIndex = -1;
+            var secondaryColourIndex = -1;
+            var tertiaryColourIndex = -1;
+            var outlineColourIndex = -1;
+            var backColourIndex = -1;
+            var boldIndex = -1;
+            var italicIndex = -1;
+            var underlineIndex = -1;
+            var strikeOutIndex = -1;
+            var outlineIndex = -1;
+            var shadowIndex = -1;
+            var alignmentIndex = -1;
+            var marginLIndex = -1;
+            var marginRIndex = -1;
+            var marginVIndex = -1;
+            var scaleXIndex = -1;
+            var scaleYIndex = -1;
+            var spacingIndex = -1;
+            var angleIndex = -1;
+            var borderStyleIndex = -1;
 
             if (header == null)
             {
                 header = DefaultHeader;
             }
 
-            foreach (string line in header.SplitToLines())
+            foreach (var line in header.SplitToLines())
             {
-                string s = line.Trim().ToLowerInvariant();
+                var s = line.Trim().ToLowerInvariant();
                 if (s.StartsWith("format:", StringComparison.Ordinal))
                 {
                     if (line.Length > 10)
                     {
                         var format = line.ToLowerInvariant().Substring(8).Split(',');
-                        for (int i = 0; i < format.Length; i++)
+                        for (var i = 0; i < format.Length; i++)
                         {
-                            string f = format[i].Trim().ToLowerInvariant();
+                            var f = format[i].Trim().ToLowerInvariant();
                             if (f == "name")
                             {
                                 nameIndex = i;
@@ -2446,7 +2520,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                             }
                             else if (f == "fontsize")
                             {
-                                fontsizeIndex = i;
+                                fontSizeIndex = i;
                             }
                             else if (f == "primarycolour")
                             {
@@ -2482,7 +2556,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                             }
                             else if (f == "strikeout")
                             {
-                                strikOutIndex = i;
+                                strikeOutIndex = i;
                             }
                             else if (f == "outline")
                             {
@@ -2537,9 +2611,9 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                     {
                         style.RawLine = line;
                         var format = line.Substring(6).Split(',');
-                        for (int i = 0; i < format.Length; i++)
+                        for (var i = 0; i < format.Length; i++)
                         {
-                            string f = format[i].Trim();
+                            var f = format[i].Trim();
                             if (i == nameIndex)
                             {
                                 style.Name = format[i].Trim();
@@ -2548,7 +2622,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                             {
                                 style.FontName = f;
                             }
-                            else if (i == fontsizeIndex)
+                            else if (i == fontSizeIndex)
                             {
                                 if (decimal.TryParse(f, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var fOut))
                                 {
@@ -2587,7 +2661,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                             {
                                 style.Underline = f == "-1" || f == "1";
                             }
-                            else if (i == strikOutIndex)
+                            else if (i == strikeOutIndex)
                             {
                                 style.Strikeout = f == "-1" || f == "1";
                             }

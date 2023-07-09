@@ -2,12 +2,14 @@
 <Language Name="中文(简体)">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.10</Version>
+    <Version>3.6.13</Version>
     <TranslatedBy>翻译: FeiXJ | Leon Cheung | larsenlouis | VK | nkh0472</TranslatedBy>
     <CultureName>zh-Hans</CultureName>
     <HelpFile>https://www.nikse.dk/SubtitleEdit/Help</HelpFile>
     <Ok>确定(&amp;O)</Ok>
     <Cancel>取消(&amp;A)</Cancel>
+    <Yes>是</Yes>
+    <No>否</No>
     <Apply>应用</Apply>
     <ApplyTo>应用于</ApplyTo>
     <None>无</None>
@@ -35,6 +37,7 @@
     <Actor>演员</Actor>
     <Gap>间隔</Gap>
     <Region>区域</Region>
+    <Layer>层</Layer>
     <NumberSymbol>编号</NumberSymbol>
     <Number>编号</Number>
     <Text>文本</Text>
@@ -62,6 +65,7 @@
     <OverlapPreviousLineX>重叠上一行 ({0:#,##0.###})</OverlapPreviousLineX>
     <OverlapX>重叠 ({0:#,##0.###})</OverlapX>
     <OverlapNextX>重叠下一行 ({0:#,##0.###})</OverlapNextX>
+    <OverlapStartAndEnd>重叠起点和终点</OverlapStartAndEnd>
     <Negative>负值</Negative>
     <RegularExpressionIsNotValid>正则表达式无效！</RegularExpressionIsNotValid>
     <CurrentSubtitle>当前字幕</CurrentSubtitle>
@@ -176,6 +180,7 @@ Command line: {1} {2}
     <Title>音频转文字</Title>
     <Info>通过 Vosk/Kaldi 语音识别从音频生成文本</Info>
     <WhisperInfo>通过 Whisper 语音识别从音频生成文本</WhisperInfo>
+    <Engine>引擎</Engine>
     <VoskWebsite>Vosk 网站</VoskWebsite>
     <WhisperWebsite>Whisper 网站</WhisperWebsite>
     <WhisperNotFound>未找到 Whisper。
@@ -195,6 +200,10 @@ Command line: {1} {2}
     <BatchMode>批处理模式</BatchMode>
     <KeepPartialTranscription>保留部分转录</KeepPartialTranscription>
     <TranslateToEnglish>翻译为英语</TranslateToEnglish>
+    <MaxCharsPerSubtitle>每行字幕的最大字符数</MaxCharsPerSubtitle>
+    <RemoveTemporaryFiles>移除临时文件</RemoveTemporaryFiles>
+    <SetCppConstMeFolder>设置 CPP/Const-me 模型文件夹...</SetCppConstMeFolder>
+    <OnlyRunPostProcessing>仅进行后处理/调整时间</OnlyRunPostProcessing>
   </AudioToText>
   <AssaAttachments>
     <Title>Advanced Sub Station Alpha字幕附件</Title>
@@ -328,7 +337,7 @@ Command line: {1} {2}
     <FilterMoreThanTwoLines>单字幕包含有两行及以上</FilterMoreThanTwoLines>
     <FilterContains>文字内容包含...</FilterContains>
     <FilterFileNameContains>文件名包含...</FilterFileNameContains>
-    <MkvLanguageCodeContains>Matroska (.mkv) 语言包含...</MkvLanguageCodeContains>
+    <LanguageCodeContains>语言代码 (mkv/mp4) 包含...</LanguageCodeContains>
     <FixCommonErrorsErrorX>修复常见错误： {0}</FixCommonErrorsErrorX>
     <MultipleReplaceErrorX>多内容替换： {0}</MultipleReplaceErrorX>
     <AutoBalanceErrorX>自动平衡： {0}</AutoBalanceErrorX>
@@ -350,6 +359,7 @@ Command line: {1} {2}
     <MkvLanguageStyleTwoLetter>双字母语言代码</MkvLanguageStyleTwoLetter>
     <MkvLanguageStyleThreeLetter>三字母语言代码</MkvLanguageStyleThreeLetter>
     <MkvLanguageStyleEmpty>无语言代码</MkvLanguageStyleEmpty>
+    <SearchFolderScanVideo>同时扫描“搜索文件夹”中的视频文件（慢速）</SearchFolderScanVideo>
   </BatchConvert>
   <BinEdit>
     <ImportImage>导入图片…</ImportImage>
@@ -392,6 +402,7 @@ Command line: {1} {2}
     <OnlyChangeAllUppercaseLines>仅更改全部大写的行</OnlyChangeAllUppercaseLines>
     <AllUppercase>全部大写</AllUppercase>
     <AllLowercase>全部小写</AllLowercase>
+    <ProperCase>单词首字母大写</ProperCase>
   </ChangeCasing>
   <ChangeCasingNames>
     <Title>更改大小写 - 名称</Title>
@@ -721,7 +732,8 @@ Command line: {1} {2}
   </ExtractDateTimeInfo>
   <FindDialog>
     <Title>查找</Title>
-    <Find>查找</Find>
+    <FindNext>查找下一处(&amp;F)</FindNext>
+    <FindPrevious>查找上一处(&amp;P)</FindPrevious>
     <Normal>正常</Normal>
     <CaseSensitive>区分大小写</CaseSensitive>
     <RegularExpression>正则表达式</RegularExpression>
@@ -851,6 +863,8 @@ Command line: {1} {2}
     <SolidColor>纯色</SolidColor>
     <DurationInMinutes>持续时间（分钟）</DurationInMinutes>
     <Background>背景</Background>
+    <FfmpegParameters>运行 FFmpeg 时调用如下参数:</FfmpegParameters>
+    <GenerateWithFfmpegParametersPrompt>生成 - FFmpeg 命令行参数</GenerateWithFfmpegParametersPrompt>
   </GenerateBlankVideo>
   <GenerateVideoWithBurnedInSubs>
     <Title>生成带有内嵌字幕的视频</Title>
@@ -875,7 +889,19 @@ Command line: {1} {2}
     <Crf>CRF</Crf>
     <TuneFor>视频类型</TuneFor>
     <AlignRight>右对齐</AlignRight>
+    <GetStartPosition>获取起始位置</GetStartPosition>
+    <GetEndPosition>获取结束位置</GetEndPosition>
   </GenerateVideoWithBurnedInSubs>
+  <GenerateVideoWithEmbeddedSubs>
+    <Title>生成带有嵌入式字幕的视频</Title>
+    <InputVideoFile>输入视频文件</InputVideoFile>
+    <SubtitlesX>字幕 ({0})</SubtitlesX>
+    <SetLanguage>设置语言...</SetLanguage>
+    <ToggleForced>切换强制</ToggleForced>
+    <ToggleDefault>切换默认</ToggleDefault>
+    <Default>默认</Default>
+    <XGeneratedWithEmbeddedSubs>生成带有嵌入式字幕的"{0}"</XGeneratedWithEmbeddedSubs>
+  </GenerateVideoWithEmbeddedSubs>
   <GetDictionaries>
     <Title>获取更多词典</Title>
     <DescriptionLine1>Subtitle Edit 的拼写检查基于 NHunspell 引擎，</DescriptionLine1>
@@ -1273,6 +1299,7 @@ Command line: {1} {2}
         <GenerateTextFromVideo>从视频生成文本...</GenerateTextFromVideo>
         <GenerateBlankVideo>生成空白视频...</GenerateBlankVideo>
         <GenerateVideoWithBurnedInSub>生成带有内嵌字幕的视频...</GenerateVideoWithBurnedInSub>
+        <GenerateVideoWithEmbeddedSubs>生成带有嵌入式字幕的视频...</GenerateVideoWithEmbeddedSubs>
         <VideoAudioToTextX>语言识别 ({0})...</VideoAudioToTextX>
         <ImportChaptersFromVideo>从视频中导入章节</ImportChaptersFromVideo>
         <GenerateImportShotChanges>生成/导入场景切换...</GenerateImportShotChanges>
@@ -1347,6 +1374,7 @@ Command line: {1} {2}
         <SizeAllColumnsToFit>自适应所有的列宽度</SizeAllColumnsToFit>
         <SetStyle>设置样式</SetStyle>
         <SetActor>设置演员</SetActor>
+        <SetLayer>设置层</SetLayer>
         <AssaTools>ASSA工具</AssaTools>
         <SubStationAlphaStyles>Sub Station Alpha 样式...</SubStationAlphaStyles>
         <AdvancedSubStationAlphaStyles>高级 Sub Station Alpha 样式...</AdvancedSubStationAlphaStyles>
@@ -1356,11 +1384,15 @@ Command line: {1} {2}
         <TimedTextSetLanguage>带时间文本 - 选择语言</TimedTextSetLanguage>
         <SamiSetStyle>Sami - 设置等级</SamiSetStyle>
         <NuendoSetStyle>Nuendo - 设置字符</NuendoSetStyle>
+        <WebVttSetStyle>WebVTT - 设置样式</WebVttSetStyle>
+        <WebVttSetVoice>WebVTT - 设置语音</WebVttSetVoice>
+        <WebVttBrowserPreview>WebVTT - 浏览器预览</WebVttBrowserPreview>
         <Cut>剪切</Cut>
         <Copy>复制</Copy>
         <Paste>粘贴</Paste>
         <Delete>删除</Delete>
         <SplitLineAtCursorPosition>在光标处分割行</SplitLineAtCursorPosition>
+        <SplitLineAtCursorPositionAndAutoBr>在光标处分割并自动换行</SplitLineAtCursorPositionAndAutoBr>
         <SplitLineAtCursorAndWaveformPosition>在光标/视频位置处分割行</SplitLineAtCursorAndWaveformPosition>
         <AutoDurationCurrentLine>自动设置时长 (当前行)</AutoDurationCurrentLine>
         <SelectAll>全部选择</SelectAll>
@@ -1465,18 +1497,18 @@ Command line: {1} {2}
       <AutoContinueInOneSecond>1 秒后自动继续</AutoContinueInOneSecond>
       <AutoContinueInXSeconds>{0} 秒后自动继续</AutoContinueInXSeconds>
       <StillTypingAutoContinueStopped>仍然输入... 自动继续已停止</StillTypingAutoContinueStopped>
-      <InsertNewSubtitleAtVideoPosition>在视频位置插入新字幕(&amp;I)</InsertNewSubtitleAtVideoPosition>
+      <InsertNewSubtitleAtVideoPosition>在视频位置插入新字幕</InsertNewSubtitleAtVideoPosition>
       <InsertNewSubtitleAtVideoPositionNoTextBoxFocus>在当前视频位置插入新字幕 (且不将操作焦点定位到文本框)</InsertNewSubtitleAtVideoPositionNoTextBoxFocus>
       <Auto>自动</Auto>
-      <PlayFromJustBeforeText>从文本前播放(&amp;T)</PlayFromJustBeforeText>
+      <PlayFromJustBeforeText>从文本前播放</PlayFromJustBeforeText>
       <PlayFromBeginning>从视频开头播放</PlayFromBeginning>
       <Pause>暂停</Pause>
       <GoToSubtitlePositionAndPause>转到字幕位置并暂停</GoToSubtitlePositionAndPause>
-      <SetStartTime>设为起始时间(&amp;S)</SetStartTime>
-      <SetEndTimeAndGoToNext>设为结束时间并转到下一行(&amp;E)</SetEndTimeAndGoToNext>
+      <SetStartTime>设为起始时间</SetStartTime>
+      <SetEndTimeAndGoToNext>设为结束时间并转到下一行</SetEndTimeAndGoToNext>
       <AdjustedViaEndTime>通过结束时间调整 {0}</AdjustedViaEndTime>
       <SetEndTime>设为结束时间(&amp;N)</SetEndTime>
-      <SetStartTimeAndOffsetTheRest>设为起始时间并偏移其余(&amp;R)</SetStartTimeAndOffsetTheRest>
+      <SetStartTimeAndOffsetTheRest>设为起始时间并偏移其余</SetStartTimeAndOffsetTheRest>
       <SearchTextOnline>在网上搜索文本</SearchTextOnline>
       <GoogleTranslate>谷歌翻译</GoogleTranslate>
       <AutoTranslate>自动翻译</AutoTranslate>
@@ -1510,6 +1542,7 @@ Command line: {1} {2}
     <LoadedEmptyOrShort>已加载空白或很短的字幕 "{0}"</LoadedEmptyOrShort>
     <FileIsEmptyOrShort>文件是空的或者太短！</FileIsEmptyOrShort>
     <FileNotFound>文件未找到: {0}</FileNotFound>
+    <FileLocked>文件正被其他程序占用，因此无法打开: {0}</FileLocked>
     <SavedSubtitleX>字幕 "{0}" 已保存</SavedSubtitleX>
     <SavedOriginalSubtitleX>原始字幕 "{0}" 已保存</SavedOriginalSubtitleX>
     <FileOnDiskModified>磁盘上的文件已修改</FileOnDiskModified>
@@ -1553,7 +1586,7 @@ Command line: {1} {2}
     <BeforeDisplayTimeAdjustment>显示时间调整之前</BeforeDisplayTimeAdjustment>
     <DisplayTimeAdjustedX>已调整显示时间: {0}</DisplayTimeAdjustedX>
     <DisplayTimesAdjustedX>已调整显示时间: {0}</DisplayTimesAdjustedX>
-    <StarTimeAdjustedX>已调整开始时间: {0}</StarTimeAdjustedX>
+    <StartTimeAdjustedX>已调整开始时间: {0}</StartTimeAdjustedX>
     <BeforeCommonErrorFixes>修复常规错误之前</BeforeCommonErrorFixes>
     <CommonErrorsFixedInSelectedLines>已修复所选行内的常规错误</CommonErrorsFixedInSelectedLines>
     <CommonErrorsFixed>常规错误已修复</CommonErrorsFixed>
@@ -1715,7 +1748,7 @@ Command line: {1} {2}
     <LineNumberXErrorReadingFromSourceLineY>行 {0} - 出错于读取: {1}</LineNumberXErrorReadingFromSourceLineY>
     <LineNumberXErrorReadingTimeCodeFromSourceLineY>行 {0} - 出错于读取时间码: {1}</LineNumberXErrorReadingTimeCodeFromSourceLineY>
     <LineNumberXExpectedNumberFromSourceLineY>行 {0} - 期望的字幕编号: {1}</LineNumberXExpectedNumberFromSourceLineY>
-    <LineNumberXExpectedEmptyLine>行 {0} - 本应是空白字幕编号但发现了编号 + 时间码 (已跳过的编号): {1}</LineNumberXExpectedEmptyLine>
+    <LineNumberXExpectedEmptyLine>行 {0}: 应是空行，但发现了编号 ({1}) 及时间码。</LineNumberXExpectedEmptyLine>
     <BeforeGuessingTimeCodes>猜测时间码之前</BeforeGuessingTimeCodes>
     <BeforeAutoDuration>为所选行自动设置时长之前</BeforeAutoDuration>
     <BeforeColumnPaste>列粘贴之前</BeforeColumnPaste>
@@ -1944,7 +1977,7 @@ Command line: {1} {2}
   <MultipleReplace>
     <Title>多项替换</Title>
     <FindWhat>查找内容</FindWhat>
-    <ReplaceWith>替换</ReplaceWith>
+    <ReplaceWith>替换：</ReplaceWith>
     <Normal>正常</Normal>
     <CaseSensitive>区分大小写</CaseSensitive>
     <RegularExpression>正则表达式</RegularExpression>
@@ -2062,10 +2095,14 @@ Command line: {1} {2}
     <Normal>正常</Normal>
     <CaseSensitive>区分大小写</CaseSensitive>
     <RegularExpression>正则表达式</RegularExpression>
-    <ReplaceWith>替换</ReplaceWith>
+    <ReplaceWith>替换:</ReplaceWith>
     <Find>查找(&amp;F)</Find>
     <Replace>替换(&amp;R)</Replace>
     <ReplaceAll>全部替换(&amp;A)</ReplaceAll>
+    <FindReplaceIn>替换/查找:</FindReplaceIn>
+    <TranslationAndOriginal>翻译和原文</TranslationAndOriginal>
+    <TranslationOnly>仅翻译</TranslationOnly>
+    <OriginalOnly>仅原文</OriginalOnly>
   </ReplaceDialog>
   <RestoreAutoBackup>
     <Title>还原自动备份</Title>
@@ -2229,6 +2266,7 @@ Command line: {1} {2}
     <ShowFullscreenButton>显示全屏幕按钮</ShowFullscreenButton>
     <PreviewFontName>预览字幕字体名</PreviewFontName>
     <PreviewFontSize>字幕预览字体大小</PreviewFontSize>
+    <PreviewVerticalMargin>垂直边距</PreviewVerticalMargin>
     <MainWindowVideoControls>主窗口视频控制</MainWindowVideoControls>
     <CustomSearchTextAndUrl>自定义搜索文本和网址</CustomSearchTextAndUrl>
     <WaveformAppearance>波形外观</WaveformAppearance>
@@ -2357,6 +2395,8 @@ Command line: {1} {2}
     <UseSyntaxColoring>启用语法高亮</UseSyntaxColoring>
     <HtmlColor>Html配色</HtmlColor>
     <AssaColor>ASSA配色</AssaColor>
+    <Theme>主题</Theme>
+    <Automatic>自动</Automatic>
     <DarkTheme>暗色主题</DarkTheme>
     <DarkThemeEnabled>使用暗色主题</DarkThemeEnabled>
     <DarkThemeShowGridViewLines>显示列表视图网格线</DarkThemeShowGridViewLines>
@@ -2434,6 +2474,7 @@ Command line: {1} {2}
     <ToggleDialogDashes>在对话内容前使用破折号</ToggleDialogDashes>
     <ToggleQuotes>切换引号</ToggleQuotes>
     <ToggleHiTags>切换HI标签</ToggleHiTags>
+    <ToggleCustomTags>切换自定义标签（环绕）</ToggleCustomTags>
     <ToggleMusicSymbols>使用音乐符号</ToggleMusicSymbols>
     <Alignment>对齐 (所选行)</Alignment>
     <AlignmentN1>左下对齐 - {\an1}</AlignmentN1>
@@ -2478,19 +2519,22 @@ Command line: {1} {2}
     <GoForward500Milliseconds>前进 500 毫秒</GoForward500Milliseconds>
     <GoBack1Second>回退 1 秒</GoBack1Second>
     <GoForward1Second>前进 1 秒</GoForward1Second>
+    <GoBack3Seconds>回退 3 秒</GoBack3Seconds>
+    <GoForward3Seconds>前进 3 秒</GoForward3Seconds>
     <GoBack5Seconds>回退 5 秒</GoBack5Seconds>
     <GoForward5Seconds>前进 5 秒</GoForward5Seconds>
     <GoBackXSSeconds>以选定的时间少量回退</GoBackXSSeconds>
     <GoForwardXSSeconds>以选定的时间少量前进</GoForwardXSSeconds>
     <GoBackXLSeconds>以选定的时间回退</GoBackXLSeconds>
     <GoForwardXLSeconds>以选定的时间前进</GoForwardXLSeconds>
-    <GoBack3Second>回退 3 秒</GoBack3Second>
     <GoToStartCurrent>设定视频位置定位到当前字幕的起始点</GoToStartCurrent>
     <ToggleStartEndCurrent>让视频位置在当前字幕的起始点与结束点间切换跳转</ToggleStartEndCurrent>
     <PlaySelectedLines>播放选定的行</PlaySelectedLines>
     <LoopSelectedLines>循环播放选定的行</LoopSelectedLines>
     <WaveformGoToPrevSubtitle>转到上一条字幕（从当前视频位置起）</WaveformGoToPrevSubtitle>
     <WaveformGoToNextSubtitle>转到下一条字幕（从当前视频位置起）</WaveformGoToNextSubtitle>
+    <WaveformGoToPrevTimeCode>转到上一个时间码（从当前视频位置起）</WaveformGoToPrevTimeCode>
+    <WaveformGoToNextTimeCode>转到下一个时间码（从当前视频位置起）</WaveformGoToNextTimeCode>
     <WaveformGoToPrevChapter>转到上一章节</WaveformGoToPrevChapter>
     <WaveformGoToNextChapter>转到下一章节</WaveformGoToNextChapter>
     <WaveformSelectNextSubtitle>选择下一行字幕 (从当前视频位置起, 保持视频位置不变)</WaveformSelectNextSubtitle>
@@ -2505,7 +2549,9 @@ Command line: {1} {2}
     <VideoResetSpeedAndZoom>重置播放速度/波形缩放</VideoResetSpeedAndZoom>
     <MainToggleVideoControls>切换视频控件</MainToggleVideoControls>
     <VideoToggleContrast>切换对比度（仅适用于MPV）</VideoToggleContrast>
-    <VideoAudioToText>视频/音频到文本（语音识别）</VideoAudioToText>
+    <AudioToTextX>语音转文本 ({0})</AudioToTextX>
+    <AudioExtractSelectedLines>提取音频（仅所选行）</AudioExtractSelectedLines>
+    <AudioToTextSelectedLinesX>对选定行语音转文本 ({0})</AudioToTextSelectedLinesX>
     <VideoToggleBrightness>切换亮度（仅限mpv）</VideoToggleBrightness>
     <CustomSearch1>翻译、自定义搜索 1</CustomSearch1>
     <CustomSearch2>翻译、自定义搜索 2</CustomSearch2>
@@ -2617,6 +2663,7 @@ Command line: {1} {2}
     <BDOpensInOcr>OCR</BDOpensInOcr>
     <BDOpensInEdit>编辑</BDOpensInEdit>
     <ShortcutsAllowSingleLetterOrNumberInTextBox>快捷方式：在文本框中允许单个字母/数字</ShortcutsAllowSingleLetterOrNumberInTextBox>
+    <ShortcutCustomToggle>快捷方式切换自定义始/终点</ShortcutCustomToggle>
     <UpdateFileTypeAssociations>更新文件类型关联</UpdateFileTypeAssociations>
     <FileTypeAssociationsUpdated>文件类型关联已更新</FileTypeAssociationsUpdated>
     <CustomContinuationStyle>编辑自定义延续样式</CustomContinuationStyle>
@@ -2631,6 +2678,7 @@ Command line: {1} {2}
     <PreviewPause>（暂停）</PreviewPause>
     <CustomContinuationStyleNote>注意：自定义延续样式将在配置文件之间共享。</CustomContinuationStyleNote>
     <ResetCustomContinuationStyleWarning>这将覆盖对话框中的值。 你确定吗？</ResetCustomContinuationStyleWarning>
+    <ExportAsHtml>导出为 HTML...</ExportAsHtml>
   </Settings>
   <SettingsMpv>
     <DownloadMpv>下载 mpv 库</DownloadMpv>
@@ -2737,6 +2785,7 @@ Command line: {1} {2}
     <NumberOfSplits>分割数量: {0}</NumberOfSplits>
     <LongestSingleLineIsXAtY>最长单行的长度为 {0} 在第 {1} 行</LongestSingleLineIsXAtY>
     <LongestLineIsXAtY>最长总行的长度是 {0} 在第 {1} 行</LongestLineIsXAtY>
+    <SplitAtLineBreaks>分割换行处</SplitAtLineBreaks>
   </SplitLongLines>
   <SplitSubtitle>
     <Title>分割字幕</Title>
@@ -2865,6 +2914,7 @@ Command line: {1} {2}
     <CopyXOfY>复制 {0}/{1}</CopyXOfY>
     <New>新建</New>
     <Remove>删除</Remove>
+    <ReplaceWith>替换...</ReplaceWith>
     <RemoveAll>全部删除</RemoveAll>
     <ImportStyleFromFile>从文件导入样式...</ImportStyleFromFile>
     <ExportStyleToFile>将样式导出为文件... (若文件已存在，则新建样式)</ExportStyleToFile>
@@ -2997,7 +3047,7 @@ Command line: {1} {2}
     <TransportStreamGrayscale>灰度图</TransportStreamGrayscale>
     <TransportStreamGetColor>使用颜色 (将拆离某些行)</TransportStreamGetColor>
     <PromptForUnknownWords>提示未知词</PromptForUnknownWords>
-    <TryToGuessUnkownWords>尝试猜测未知词</TryToGuessUnkownWords>
+    <TryToGuessUnknownWords>尝试猜测未知词</TryToGuessUnknownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>如果超过两行自动断开</AutoBreakSubtitleIfMoreThanTwoLines>
     <AllFixes>全部修复</AllFixes>
     <GuessesUsed>已用猜测</GuessesUsed>
@@ -3153,4 +3203,7 @@ Command line: {1} {2}
     <Title>WebVTT - 设定新人声</Title>
     <VoiceName>人声名称</VoiceName>
   </WebVttNewVoice>
+  <WebVttStyleManager>
+    <Title>WebVTT 样式</Title>
+  </WebVttStyleManager>
 </Language>

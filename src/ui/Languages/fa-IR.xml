@@ -2,7 +2,7 @@
 <Language Name="فارسي">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.10</Version>
+    <Version>3.6.13</Version>
     <TranslatedBy>ترجمه توسط:سید مهدی حسینی، نیما، مجید عبدالهی</TranslatedBy>
     <CultureName>fa-IR</CultureName>
     <HelpFile />
@@ -1512,7 +1512,7 @@
     <BeforeDisplayTimeAdjustment>قبل از تنظیم زمان نمایش</BeforeDisplayTimeAdjustment>
     <DisplayTimeAdjustedX>زمان نمایش تنظیم شد: {0}</DisplayTimeAdjustedX>
     <DisplayTimesAdjustedX>زمان نمایش تنظیم شده: {0}</DisplayTimesAdjustedX>
-    <StarTimeAdjustedX>زمان شروع تنظیم شد: {0}</StarTimeAdjustedX>
+    <StartTimeAdjustedX>زمان شروع تنظیم شد: {0}</StartTimeAdjustedX>
     <BeforeCommonErrorFixes>قبل از رفع خطا مشترک</BeforeCommonErrorFixes>
     <CommonErrorsFixedInSelectedLines>اشتباهات رایج در انتخاب خطوط ثابت</CommonErrorsFixedInSelectedLines>
     <CommonErrorsFixed>اشتباهات رایج ثابت</CommonErrorsFixed>
@@ -2405,7 +2405,7 @@
     <GoForwardXSSeconds>زمان کوچک انتخاب شده به جلو</GoForwardXSSeconds>
     <GoBackXLSeconds>زمان انتخابی بزرگ به عقب</GoBackXLSeconds>
     <GoForwardXLSeconds>زمان انتخابی بزرگ به جلو</GoForwardXLSeconds>
-    <GoBack3Second>سه ثانیه عقب</GoBack3Second>
+    <GoBack3Seconds>سه ثانیه عقب</GoBack3Seconds>
     <GoToStartCurrent>موقعیت ویدیو را روی شروع زیرنویس فعلی تنظیم کنید</GoToStartCurrent>
     <ToggleStartEndCurrent>وضعیت ویدیو را بین شروع/پایان زیرنویس فعلی تغییر دهید</ToggleStartEndCurrent>
     <PlaySelectedLines>پخش خطوط انتخاب شده</PlaySelectedLines>
@@ -2892,7 +2892,7 @@
     <TransportStreamGrayscale>سیاه و سفید</TransportStreamGrayscale>
     <TransportStreamGetColor>استفاده از رنگ (تقسیم خطوط ممکن است رخ دهد)</TransportStreamGetColor>
     <PromptForUnknownWords>اعلان کلمات ناشناخته</PromptForUnknownWords>
-    <TryToGuessUnkownWords>سعی کنید به حدس زدن کلمات ناشناخته</TryToGuessUnkownWords>
+    <TryToGuessUnknownWords>سعی کنید به حدس زدن کلمات ناشناخته</TryToGuessUnknownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>خودکار بند شکستن اگر بیش از دو خط</AutoBreakSubtitleIfMoreThanTwoLines>
     <AllFixes>همه رفع</AllFixes>
     <GuessesUsed>حدس استفاده</GuessesUsed>

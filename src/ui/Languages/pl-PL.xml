@@ -2,12 +2,14 @@
 <Language Name="Polish">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.10</Version>
+    <Version>3.6.13</Version>
     <TranslatedBy>Tłumaczenie: Adam Malich (mailto:adam_malich@windowslive.com)</TranslatedBy>
     <CultureName>pl-PL</CultureName>
     <HelpFile />
     <Ok>&amp;OK</Ok>
     <Cancel>&amp;Anuluj</Cancel>
+    <Yes>Tak</Yes>
+    <No>Nie</No>
     <Apply>Zastosuj</Apply>
     <ApplyTo>Zastosuj do</ApplyTo>
     <None>Brak</None>
@@ -62,6 +64,7 @@
     <OverlapPreviousLineX>Nakładanie się na poprzednią linię ({0:#,##0.###})</OverlapPreviousLineX>
     <OverlapX>Nakładanie się ({0:#,##0.###})</OverlapX>
     <OverlapNextX>Nakładanie się na następną linię ({0:#,##0.###})</OverlapNextX>
+    <OverlapStartAndEnd>Nakładanie się początku i końca</OverlapStartAndEnd>
     <Negative>Negatywny</Negative>
     <RegularExpressionIsNotValid>Wyrażenie regularne jest nieprawidłowe!</RegularExpressionIsNotValid>
     <CurrentSubtitle>Bieżące napisy</CurrentSubtitle>
@@ -121,7 +124,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   </AddToOcrReplaceList>
   <AddToUserDictionary>
     <Title>Dodaj do słownika użytkownika</Title>
-    <Description>Dodaj słowo do słownika użytkownika (wielkość liter nie jest uwzględniana)</Description>
+    <Description>Dodaj słowo do słownika użytkownika (bez rozróżniania wielkości liter)</Description>
   </AddToUserDictionary>
   <AddWaveform>
     <Title>Generuj dane wykresu falowego</Title>
@@ -151,7 +154,7 @@ Uwaga: Sprawdź ilość wolnego miejsca na dysku.</WaveFileMalformed>
   <AddWaveformBatch>
     <Title>Wsadowe generowanie wykresów falowych</Title>
     <ExtractingAudio>Wyodrębnianie dźwięku...</ExtractingAudio>
-    <Calculating>Obliczenie...</Calculating>
+    <Calculating>Obliczanie...</Calculating>
     <Done>Gotowe</Done>
     <Error>Błąd</Error>
   </AddWaveformBatch>
@@ -177,6 +180,7 @@ Uwaga: Sprawdź ilość wolnego miejsca na dysku.</WaveFileMalformed>
     <Title>Audio na tekst</Title>
     <Info>Generowanie tekstu z audio za pomocą funkcji rozpoznawania mowy Vosk/Kaldi</Info>
     <WhisperInfo>Generowanie tekstu z audio za pomocą funkcji rozpoznawania mowy Whisper</WhisperInfo>
+    <Engine>Silnik</Engine>
     <VoskWebsite>Strona internetowa Vosk</VoskWebsite>
     <WhisperWebsite>Strona internetowa Whisper</WhisperWebsite>
     <WhisperNotFound>Nie znaleziono aplikacji Whisper.
@@ -196,6 +200,10 @@ Chcesz przeczytać więcej informacji (w sieci)?</WhisperNotFound>
     <BatchMode>Tryb wsadowy</BatchMode>
     <KeepPartialTranscription>Zachowaj częściową transkrypcję</KeepPartialTranscription>
     <TranslateToEnglish>Przetłumacz na angielski</TranslateToEnglish>
+    <MaxCharsPerSubtitle>Max. znaków na linię napisów</MaxCharsPerSubtitle>
+    <RemoveTemporaryFiles>Usuń pliki tymczasowe</RemoveTemporaryFiles>
+    <SetCppConstMeFolder>Ustaw folder modeli CPP/Const-me...</SetCppConstMeFolder>
+    <OnlyRunPostProcessing>Uruchom tylko przetwarzanie końcowe/dostosuj czasy</OnlyRunPostProcessing>
   </AudioToText>
   <AssaAttachments>
     <Title>Załączniki Advanced Sub Station Alpha</Title>
@@ -329,7 +337,7 @@ Chcesz przeczytać więcej informacji (w sieci)?</WhisperNotFound>
     <FilterMoreThanTwoLines>Więcej, niż dwie linie w jednym napisie</FilterMoreThanTwoLines>
     <FilterContains>Tekst zawiera...</FilterContains>
     <FilterFileNameContains>Nazwa pliku zawiera...</FilterFileNameContains>
-    <MkvLanguageCodeContains>Kod języka Matroska (.mkv) zawiera...</MkvLanguageCodeContains>
+    <LanguageCodeContains>Kod języka (mkv/mp4) zawiera...</LanguageCodeContains>
     <FixCommonErrorsErrorX>Poprawiono najczęstsze błędy: {0}</FixCommonErrorsErrorX>
     <MultipleReplaceErrorX>Wielokrotne zastępowanie: {0}</MultipleReplaceErrorX>
     <AutoBalanceErrorX>Automatyczne równoważenie linii: {0}</AutoBalanceErrorX>
@@ -351,6 +359,7 @@ Chcesz przeczytać więcej informacji (w sieci)?</WhisperNotFound>
     <MkvLanguageStyleTwoLetter>Dwuliterowy kod języka</MkvLanguageStyleTwoLetter>
     <MkvLanguageStyleThreeLetter>Trzyliterowy kod języka</MkvLanguageStyleThreeLetter>
     <MkvLanguageStyleEmpty>Brak kodu języka</MkvLanguageStyleEmpty>
+    <SearchFolderScanVideo>Skanuj także pliki wideo w "Folder wyszukiwania" (wolno)</SearchFolderScanVideo>
   </BatchConvert>
   <BinEdit>
     <ImportImage>Importuj obraz...</ImportImage>
@@ -393,6 +402,7 @@ Chcesz przeczytać więcej informacji (w sieci)?</WhisperNotFound>
     <OnlyChangeAllUppercaseLines>Zmień tylko wszystkie linie pisane dużymi literami</OnlyChangeAllUppercaseLines>
     <AllUppercase>WSZYSTKIE DUŻE LITERY</AllUppercase>
     <AllLowercase>wszystkie małe litery</AllLowercase>
+    <ProperCase>Duże pierwsze litery wyrazów</ProperCase>
   </ChangeCasing>
   <ChangeCasingNames>
     <Title>Zmiana pisowni - Nazwy własne</Title>
@@ -722,7 +732,8 @@ Chcesz przeczytać więcej informacji (w sieci)?</WhisperNotFound>
   </ExtractDateTimeInfo>
   <FindDialog>
     <Title>Znajdź</Title>
-    <Find>&amp;Znajdź</Find>
+    <FindNext>&amp;Znajdź następne wystąpienie</FindNext>
+    <FindPrevious>Znajdź &amp;poprzednie wystąpienie</FindPrevious>
     <Normal>&amp;Normalny tryb wyszukiwania</Normal>
     <CaseSensitive>Uwzględnij wielkość liter</CaseSensitive>
     <RegularExpression>Wyrażenie &amp;regularne</RegularExpression>
@@ -776,7 +787,7 @@ Chcesz przeczytać więcej informacji (w sieci)?</WhisperNotFound>
     <FixCommonOcrErrors>Popraw typowe błędy OCR (przy użyciu listy zamienników OCR)</FixCommonOcrErrors>
     <CommonOcrErrorsFixed>Poprawiono typowe błędy OCR (używając listy zamienników OCR): {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>Usuń spację między liczbami</RemoveSpaceBetweenNumber>
-    <BreakDialogsOnOneLine>Popraw dialogi znajdujące się w jednej linii</BreakDialogsOnOneLine>
+    <BreakDialogsOnOneLine>Podziel dialogi będące w jednej linii</BreakDialogsOnOneLine>
     <RemoveDialogFirstInNonDialogs>Usuń myślnik początkowy w pierwszej linii dla nie-dialogów</RemoveDialogFirstInNonDialogs>
     <NormalizeStrings>Normalizuj ciągi</NormalizeStrings>
     <FixTurkishAnsi>Popraw tureckie litery ANSI (Icelandic) na Unicode</FixTurkishAnsi>
@@ -852,11 +863,13 @@ Chcesz przeczytać więcej informacji (w sieci)?</WhisperNotFound>
     <SolidColor>Jednolity kolor</SolidColor>
     <DurationInMinutes>Czas trwania w minutach</DurationInMinutes>
     <Background>Tło</Background>
+    <FfmpegParameters>Uruchom FFmpeg z następującymi parametrami:</FfmpegParameters>
+    <GenerateWithFfmpegParametersPrompt>Generuj - podpowiedz parametry FFmpeg</GenerateWithFfmpegParametersPrompt>
   </GenerateBlankVideo>
   <GenerateVideoWithBurnedInSubs>
     <Title>Wygeneruj wideo z wtopionymi napisami</Title>
-    <InfoAssaOff>Uwaga: Obsługiwana jest stylizacja Advanced Substation Alpha.</InfoAssaOff>
-    <InfoAssaOn>Uwaga: Zostanie zastosowana stylizacja Advanced Substation Alpha :)</InfoAssaOn>
+    <InfoAssaOff>Uwaga: Obsługiwana jest stylizacja Advanced SubStation Alpha.</InfoAssaOff>
+    <InfoAssaOn>Uwaga: Zostanie zastosowana stylizacja Advanced SubStation Alpha :)</InfoAssaOn>
     <XGeneratedWithBurnedInSubsInX>Wygenerowano "{0}" z wtopionymi napisami w {1}.</XGeneratedWithBurnedInSubsInX>
     <TimeRemainingMinutes>Pozostały czas: {0} minut</TimeRemainingMinutes>
     <TimeRemainingSeconds>Pozostały czas: {0} sekund</TimeRemainingSeconds>
@@ -876,7 +889,19 @@ Chcesz przeczytać więcej informacji (w sieci)?</WhisperNotFound>
     <Crf>CRF</Crf>
     <TuneFor>Dostrój do</TuneFor>
     <AlignRight>Wyrównaj do prawej</AlignRight>
+    <GetStartPosition>Pobierz pozycję początkową</GetStartPosition>
+    <GetEndPosition>Pobierz pozycję zakończenia</GetEndPosition>
   </GenerateVideoWithBurnedInSubs>
+  <GenerateVideoWithEmbeddedSubs>
+    <Title>Generuj wideo z dodanymi/usuniętymi osadzonymi napisami</Title>
+    <InputVideoFile>Wejściowy plik wideo</InputVideoFile>
+    <SubtitlesX>Napisy ({0})</SubtitlesX>
+    <SetLanguage>Ustaw język...</SetLanguage>
+    <ToggleForced>Przeł. wymuszone</ToggleForced>
+    <ToggleDefault>Przełącz domyślne</ToggleDefault>
+    <Default>Domyślne</Default>
+    <XGeneratedWithEmbeddedSubs>Wygenerowano "{0}" z osadzonymi napisami</XGeneratedWithEmbeddedSubs>
+  </GenerateVideoWithEmbeddedSubs>
   <GetDictionaries>
     <Title>Potrzebujesz słowników?</Title>
     <DescriptionLine1>Sprawdzanie pisowni w Subtitle Edit oparte jest na silniku NHunspell,</DescriptionLine1>
@@ -1164,7 +1189,8 @@ Aby użyć klucza API przejdź do "Opcje -&gt; Ustawienia -&gt; Narzędzia", aby
         <OpenOriginal>Otwórz oryginalne napisy (tryb tłumacza)...</OpenOriginal>
         <SaveOriginal>Zapisz oryginalne napisy</SaveOriginal>
         <CloseOriginal>Zamknij oryginalne napisy</CloseOriginal>
-        <OpenContainingFolder>Otwórz folder z zawartością</OpenContainingFolder>
+        <CloseTranslation>Zamknij przetłumaczone napisy</CloseTranslation>
+        <OpenContainingFolder>Otwórz folder zawierający wideo</OpenContainingFolder>
         <Compare>&amp;Porównaj...</Compare>
         <Statistics>S&amp;tatystyki...</Statistics>
         <Plugins>&amp;Wtyczki...</Plugins>
@@ -1277,6 +1303,7 @@ Aby użyć klucza API przejdź do "Opcje -&gt; Ustawienia -&gt; Narzędzia", aby
         <GenerateTextFromVideo>Wygeneruj tekst z wideo...</GenerateTextFromVideo>
         <GenerateBlankVideo>Wygeneruj puste wideo...</GenerateBlankVideo>
         <GenerateVideoWithBurnedInSub>Wygeneruj wideo z wtopionymi napisami...</GenerateVideoWithBurnedInSub>
+        <GenerateVideoWithEmbeddedSubs>Wygeneruj wideo z dodanymi/usuniętymi osadzonymi napisami...</GenerateVideoWithEmbeddedSubs>
         <VideoAudioToTextX>Audio na tekst ({0})...</VideoAudioToTextX>
         <ImportChaptersFromVideo>Importuj rozdziały z wideo</ImportChaptersFromVideo>
         <GenerateImportShotChanges>Generuj/importuj zmiany kadru...</GenerateImportShotChanges>
@@ -1365,6 +1392,7 @@ Aby użyć klucza API przejdź do "Opcje -&gt; Ustawienia -&gt; Narzędzia", aby
         <Paste>Wklej</Paste>
         <Delete>Usuń</Delete>
         <SplitLineAtCursorPosition>Podziel linię w pozycji kursora</SplitLineAtCursorPosition>
+        <SplitLineAtCursorPositionAndAutoBr>Podziel linię w pozycji kursora i automatycznie przełam linię</SplitLineAtCursorPositionAndAutoBr>
         <SplitLineAtCursorAndWaveformPosition>Podziel linię w pozycji kursora/wideo</SplitLineAtCursorAndWaveformPosition>
         <AutoDurationCurrentLine>Automatyczny czas trwania (bieżąca linia)</AutoDurationCurrentLine>
         <SelectAll>Zaznacz wszystko</SelectAll>
@@ -1469,18 +1497,18 @@ Aby użyć klucza API przejdź do "Opcje -&gt; Ustawienia -&gt; Narzędzia", aby
       <AutoContinueInOneSecond>Automatycznie kontynuuj po 1 sekundzie</AutoContinueInOneSecond>
       <AutoContinueInXSeconds>Automatycznie kontynuuj po {0} sekundach</AutoContinueInXSeconds>
       <StillTypingAutoContinueStopped>Trwa pisanie... przejście do następnego napisu zostało zatrzymane</StillTypingAutoContinueStopped>
-      <InsertNewSubtitleAtVideoPosition>&amp;Wstaw nowe napisy w pozycji wideo</InsertNewSubtitleAtVideoPosition>
+      <InsertNewSubtitleAtVideoPosition>Wstaw nowe napisy w pozycji wideo</InsertNewSubtitleAtVideoPosition>
       <InsertNewSubtitleAtVideoPositionNoTextBoxFocus>Wstaw nowe napisy w pozycji wideo (bez koncentracji na polu tekstowym)</InsertNewSubtitleAtVideoPositionNoTextBoxFocus>
       <Auto>Auto</Auto>
-      <PlayFromJustBeforeText>Odtwarzaj tuż przed &amp;tekstem</PlayFromJustBeforeText>
+      <PlayFromJustBeforeText>Odtwarzaj tuż przed tekstem</PlayFromJustBeforeText>
       <PlayFromBeginning>Odtwarzaj od początku wideo</PlayFromBeginning>
       <Pause>Pauza</Pause>
       <GoToSubtitlePositionAndPause>Idź do pozycji napisów i pauza</GoToSubtitlePositionAndPause>
-      <SetStartTime>Ustaw czas &amp;rozpoczęcia</SetStartTime>
-      <SetEndTimeAndGoToNext>Ustaw koni&amp;ec &amp;&amp; Idź do następ.</SetEndTimeAndGoToNext>
+      <SetStartTime>Ustaw czas rozpoczęcia</SetStartTime>
+      <SetEndTimeAndGoToNext>Ustaw koniec &amp;&amp; Idź do następ.</SetEndTimeAndGoToNext>
       <AdjustedViaEndTime>Dostosowano za pomocą czasu zakończenia {0}</AdjustedViaEndTime>
-      <SetEndTime>Ustaw c&amp;zas zakończenia</SetEndTime>
-      <SetStartTimeAndOffsetTheRest>Ustaw sta&amp;rt &amp;&amp; Przesuń pozost.</SetStartTimeAndOffsetTheRest>
+      <SetEndTime>Ustaw czas zakończenia</SetEndTime>
+      <SetStartTimeAndOffsetTheRest>Ustaw start &amp;&amp; Przesuń pozost.</SetStartTimeAndOffsetTheRest>
       <SearchTextOnline>Wyszukaj tekst online</SearchTextOnline>
       <GoogleTranslate>Tłumacz Google</GoogleTranslate>
       <AutoTranslate>Tłumacz automatycznie</AutoTranslate>
@@ -1514,6 +1542,7 @@ Aby użyć klucza API przejdź do "Opcje -&gt; Ustawienia -&gt; Narzędzia", aby
     <LoadedEmptyOrShort>Wczytany plik napisów {0} jest pusty lub bardzo krótki</LoadedEmptyOrShort>
     <FileIsEmptyOrShort>Plik jest pusty lub bardzo krótki!</FileIsEmptyOrShort>
     <FileNotFound>Nie znaleziono pliku: {0}</FileNotFound>
+    <FileLocked>Nie można otworzyć pliku ponieważ jest on używany przez inny program: {0}</FileLocked>
     <SavedSubtitleX>Napisy zapisano w pliku {0}</SavedSubtitleX>
     <SavedOriginalSubtitleX>Zapisano oryginalne napisy {0}</SavedOriginalSubtitleX>
     <FileOnDiskModified>Zmodyfikowano plik na dysku</FileOnDiskModified>
@@ -1560,7 +1589,7 @@ Czy chcesz zacząć od początku dokumentu i kontynuować wyszukiwanie i zastęp
     <BeforeDisplayTimeAdjustment>Przed dostosowaniem czasu wyświetlania</BeforeDisplayTimeAdjustment>
     <DisplayTimeAdjustedX>Dostosowano czas wyświetlania: {0}</DisplayTimeAdjustedX>
     <DisplayTimesAdjustedX>Dostosowano czasy wyświetlania: {0}</DisplayTimesAdjustedX>
-    <StarTimeAdjustedX>Dostosowano czas rozpoczęcia: {0}</StarTimeAdjustedX>
+    <StartTimeAdjustedX>Dostosowano czas rozpoczęcia: {0}</StartTimeAdjustedX>
     <BeforeCommonErrorFixes>Przed poprawieniem najczęstszych błędów</BeforeCommonErrorFixes>
     <CommonErrorsFixedInSelectedLines>Poprawiono najczęstsze błędy w wybranych liniach</CommonErrorsFixedInSelectedLines>
     <CommonErrorsFixed>Poprawiono najczęstsze błędy</CommonErrorsFixed>
@@ -1722,7 +1751,7 @@ Kontynuować?</SubtitleAppendPrompt>
     <LineNumberXErrorReadingFromSourceLineY>Linia {0} - błąd odczytu: {1}</LineNumberXErrorReadingFromSourceLineY>
     <LineNumberXErrorReadingTimeCodeFromSourceLineY>Linia {0} - błąd odczytu kodu czasowego: {1}</LineNumberXErrorReadingTimeCodeFromSourceLineY>
     <LineNumberXExpectedNumberFromSourceLineY>Linia {0} - oczekiwany numer napisu: {1}</LineNumberXExpectedNumberFromSourceLineY>
-    <LineNumberXExpectedEmptyLine>Linia {0} - spodziewana pusta linia, ale znaleziono numer + kod czasowy (numer pominięty): {1}</LineNumberXExpectedEmptyLine>
+    <LineNumberXExpectedEmptyLine>Linia {0}: Oczekiwano pustej linii, ale znaleziono numer ({1}), po którym następuje kod czasowy.</LineNumberXExpectedEmptyLine>
     <BeforeGuessingTimeCodes>Przed odgadnięciem kodów czasowych</BeforeGuessingTimeCodes>
     <BeforeAutoDuration>Przed automatycznym czasem trwania dla wybranych linii</BeforeAutoDuration>
     <BeforeColumnPaste>Przed wklejeniem kolumny</BeforeColumnPaste>
@@ -2077,6 +2106,10 @@ może edytować ten sam plik napisów (współpraca)</Information>
     <Find>&amp;Znajdź</Find>
     <Replace>Zas&amp;tąp</Replace>
     <ReplaceAll>Zastąp &amp;wszystko</ReplaceAll>
+    <FindReplaceIn>Zastąp/Szukaj w:</FindReplaceIn>
+    <TranslationAndOriginal>Tłumaczenie i oryginał</TranslationAndOriginal>
+    <TranslationOnly>Tylko tłumaczenie</TranslationOnly>
+    <OriginalOnly>Tylko oryginał</OriginalOnly>
   </ReplaceDialog>
   <RestoreAutoBackup>
     <Title>Przywróć automatyczną kopię zapasową</Title>
@@ -2231,7 +2264,7 @@ może edytować ten sam plik napisów (współpraca)</Information>
     <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>
     <MpvPlayer>mpv</MpvPlayer>
     <MpvPlayerDescription>https://mpv.io/ - darmowy, otwarty i wieloplatformowy odtwarzacz multimedialny</MpvPlayerDescription>
-    <MpvHandlesPreviewText>mpv obsługuje tekst podglądu</MpvHandlesPreviewText>
+    <MpvHandlesPreviewText>mpv obsługuje podgląd tekstu</MpvHandlesPreviewText>
     <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll z VLC media player 1.1.0 lub nowszego</VlcMediaPlayerDescription>
     <VlcBrowseToLabel>Ścieżka do VLC (wymagana tylko w przypadku korzystania z przenośnej wersji VLC)</VlcBrowseToLabel>
@@ -2347,6 +2380,7 @@ może edytować ten sam plik napisów (współpraca)</Information>
     <MusicSymbolsReplace>Symbole muzyczne do zastąpienia (oddzielone przecinkiem)</MusicSymbolsReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Popraw częste błędy OCR - także z użyciem reguł zakodowanych na stałe</FixCommonOcrErrorsUseHardcodedRules>
     <UseWordSplitList>Użyj listy dzielenia wyrazów (OCR + FCE)</UseWordSplitList>
+    <AvoidPropercase>Unikaj kapitalizacji pierwszych liter każdego słowa w łańcuchu</AvoidPropercase>
     <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Popraw krótki czas wyświetlania - zezwól na przesunięcie czasu rozpoczęcia</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
     <FixCommonErrorsSkipStepOne>Pomiń pierwszy krok (wybór zasad poprawy)</FixCommonErrorsSkipStepOne>
     <DefaultFormat>Domyślny format</DefaultFormat>
@@ -2444,6 +2478,7 @@ może edytować ten sam plik napisów (współpraca)</Information>
     <ToggleDialogDashes>Przełącz myślniki dialogów</ToggleDialogDashes>
     <ToggleQuotes>Przełącz cudzysłowy</ToggleQuotes>
     <ToggleHiTags>Przełącz tagi dla osób niedosłyszących</ToggleHiTags>
+    <ToggleCustomTags>Przełącz tagi niestandardowe (z otaczającymi)</ToggleCustomTags>
     <ToggleMusicSymbols>Przełącz symbole muzyczne</ToggleMusicSymbols>
     <Alignment>Wyrównanie (wybrane linie)</Alignment>
     <AlignmentN1>Wyrównanie - u dołu po lewej - {\an1}</AlignmentN1>
@@ -2488,19 +2523,22 @@ może edytować ten sam plik napisów (współpraca)</Information>
     <GoForward500Milliseconds>500 ms do przodu</GoForward500Milliseconds>
     <GoBack1Second>Jedna sekunda do tyłu</GoBack1Second>
     <GoForward1Second>Jedna sekunda do przodu</GoForward1Second>
+    <GoBack3Seconds>Trzy sekundy do tyłu</GoBack3Seconds>
+    <GoForward3Seconds>Trzy sekundy do przodu</GoForward3Seconds>
     <GoBack5Seconds>Pięć sekund do tyłu</GoBack5Seconds>
     <GoForward5Seconds>Pięć sekund do przodu</GoForward5Seconds>
     <GoBackXSSeconds>Mały wybrany czas do tyłu</GoBackXSSeconds>
     <GoForwardXSSeconds>Mały wybrany czas do przodu</GoForwardXSSeconds>
     <GoBackXLSeconds>Duży wybrany czas do tyłu</GoBackXLSeconds>
     <GoForwardXLSeconds>Duży wybrany czas do przodu</GoForwardXLSeconds>
-    <GoBack3Second>Trzy sekundy do tyłu</GoBack3Second>
     <GoToStartCurrent>Ustaw pozycję wideo na początek bieżącego napisu</GoToStartCurrent>
     <ToggleStartEndCurrent>Przełącz pozycję wideo między początkiem/końcem bieżącego napisu</ToggleStartEndCurrent>
     <PlaySelectedLines>Odtwarzaj wybrane linie</PlaySelectedLines>
     <LoopSelectedLines>Zapętlaj wybrane linie</LoopSelectedLines>
     <WaveformGoToPrevSubtitle>Przejdź do poprzedniej linii napisów (z pozycji wideo)</WaveformGoToPrevSubtitle>
     <WaveformGoToNextSubtitle>Przejdź do następnej linii napisów (z pozycji wideo)</WaveformGoToNextSubtitle>
+    <WaveformGoToPrevTimeCode>Przejdź do poprzedniego kodu czasowego (z pozycji wideo)</WaveformGoToPrevTimeCode>
+    <WaveformGoToNextTimeCode>Przejdź do następnego kodu czasowego (z pozycji wideo)</WaveformGoToNextTimeCode>
     <WaveformGoToPrevChapter>Przejdź do poprzedniego rozdziału</WaveformGoToPrevChapter>
     <WaveformGoToNextChapter>Przejdź do następnego rozdziału</WaveformGoToNextChapter>
     <WaveformSelectNextSubtitle>Wybierz następny napis (z pozycji wideo, zachowaj pozycję wideo)</WaveformSelectNextSubtitle>
@@ -2515,7 +2553,8 @@ może edytować ten sam plik napisów (współpraca)</Information>
     <VideoResetSpeedAndZoom>Resetuj szybkość/zoom</VideoResetSpeedAndZoom>
     <MainToggleVideoControls>Przełącz elementy sterujące wideo</MainToggleVideoControls>
     <VideoToggleContrast>Przełącz kontrast (tylko mpv)</VideoToggleContrast>
-    <VideoAudioToText>Audio na tekst (rozpoznawanie mowy)</VideoAudioToText>
+    <AudioToTextX>Audio na tekst ({0})</AudioToTextX>
+    <AudioToTextSelectedLinesX>Audio na tekst wybranych linii ({0})</AudioToTextSelectedLinesX>
     <VideoToggleBrightness>Przełącz jasność (tylko mpv)</VideoToggleBrightness>
     <CustomSearch1>Tłumaczenie, wyszukiwanie niestandardowe 1</CustomSearch1>
     <CustomSearch2>Tłumaczenie, wyszukiwanie niestandardowe 2</CustomSearch2>
@@ -2628,6 +2667,7 @@ Kontynuować?</RestoreDefaultSettingsMsg>
     <BDOpensInOcr>OCR</BDOpensInOcr>
     <BDOpensInEdit>Edycja</BDOpensInEdit>
     <ShortcutsAllowSingleLetterOrNumberInTextBox>Skróty: Zezwalaj na pojedyncze litery/cyfry w polu tekstowym</ShortcutsAllowSingleLetterOrNumberInTextBox>
+    <ShortcutCustomToggle>Skrót przełącza niestandardowy początek/koniec</ShortcutCustomToggle>
     <UpdateFileTypeAssociations>Zaktualizuj skojarzenia typów plików</UpdateFileTypeAssociations>
     <FileTypeAssociationsUpdated>Zaktualizowano skojarzenia typów plików</FileTypeAssociationsUpdated>
     <CustomContinuationStyle>Edytuj niestandardowy styl kontynuacji</CustomContinuationStyle>
@@ -2642,6 +2682,7 @@ Kontynuować?</RestoreDefaultSettingsMsg>
     <PreviewPause>(pauza)</PreviewPause>
     <CustomContinuationStyleNote>Uwaga: Niestandardowy styl kontynuacji jest wspólny dla wszystkich profili.</CustomContinuationStyleNote>
     <ResetCustomContinuationStyleWarning>Zastąpi to wartości w oknie dialogowym. Jesteś pewny?</ResetCustomContinuationStyleWarning>
+    <ExportAsHtml>Eksportuj jako HTML...</ExportAsHtml>
   </Settings>
   <SettingsMpv>
     <DownloadMpv>Pobierz bibliotekę mpv</DownloadMpv>
@@ -2699,7 +2740,7 @@ Kontynuować?</RestoreDefaultSettingsMsg>
     <EditWordOnly>Edytuj tylko słowo</EditWordOnly>
     <AddXToNames>Dodaj '{0}' do listy imion/nazwisk/nazw własnych</AddXToNames>
     <AddXToUserDictionary>Dodaj '{0}' do słownika użytkownika</AddXToUserDictionary>
-    <AutoFixNames>Automatycznie popraw nazwy różniące się tylko wielkością liter</AutoFixNames>
+    <AutoFixNames>Auto popraw nazwy różniące się tylko wielkością liter</AutoFixNames>
     <AutoFixNamesViaSuggestions>Popraw nazwy własne również za pomocą "sugestii sprawdzania pisowni"</AutoFixNamesViaSuggestions>
     <CheckOneLetterWords>Pytaj o nieznaną pojedynczą literę słowa</CheckOneLetterWords>
     <TreatINQuoteAsING>Traktuj słowo kończące się "in'" jako "ing" (tylko w języku angielskim)</TreatINQuoteAsING>
@@ -2748,6 +2789,7 @@ Kontynuować?</RestoreDefaultSettingsMsg>
     <NumberOfSplits>Liczba przełamanych/podzielonych: {0}</NumberOfSplits>
     <LongestSingleLineIsXAtY>Najdłuższą pojedynczą linią jest linia o nr {1} - zawiera {0} znaków</LongestSingleLineIsXAtY>
     <LongestLineIsXAtY>Ogólnie najdłuższą linią jest linia o nr {1} - zawiera {0} znaków&lt;</LongestLineIsXAtY>
+    <SplitAtLineBreaks>Podział w miejscach przełamywania linii</SplitAtLineBreaks>
   </SplitLongLines>
   <SplitSubtitle>
     <Title>Podziel napisy</Title>
@@ -2876,6 +2918,7 @@ Kontynuować?</RestoreDefaultSettingsMsg>
     <CopyXOfY>Kopiuj {0} z {1}</CopyXOfY>
     <New>Nowy</New>
     <Remove>Usuń</Remove>
+    <ReplaceWith>Zastąp...</ReplaceWith>
     <RemoveAll>Usuń wszystko</RemoveAll>
     <ImportStyleFromFile>Importuj styl z pliku...</ImportStyleFromFile>
     <ExportStyleToFile>Eksportuj styl do pliku... (doda styl, jeśli plik już istnieje)</ExportStyleToFile>
@@ -3010,7 +3053,7 @@ Zachować te zmiany?</KeepChangesMessage>
     <TransportStreamGrayscale>Skala szarości</TransportStreamGrayscale>
     <TransportStreamGetColor>Użyj koloru (może wystąpić podział linii)</TransportStreamGetColor>
     <PromptForUnknownWords>Pytaj o nieznane słowa</PromptForUnknownWords>
-    <TryToGuessUnkownWords>Próbuj odgadnąć nieznane słowa</TryToGuessUnkownWords>
+    <TryToGuessUnknownWords>Próbuj odgadnąć nieznane słowa</TryToGuessUnknownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>Automatycznie przełam akapit, jeśli więcej niż dwie linie</AutoBreakSubtitleIfMoreThanTwoLines>
     <AllFixes>Wszystkie poprawki</AllFixes>
     <GuessesUsed>Użyte przypuszczenia</GuessesUsed>

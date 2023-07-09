@@ -2,7 +2,7 @@
 <Language Name="中文(繁體)">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.10</Version>
+    <Version>3.6.13</Version>
     <TranslatedBy>譯者: BAWAN | 風逸蘭 | Jackie Lam | SiderealArt</TranslatedBy>
     <CultureName>zh-TW</CultureName>
     <HelpFile />
@@ -1491,7 +1491,7 @@ To use an API key go to "Options -&gt; Settings -&gt; Tools" to enter your Googl
     <BeforeDisplayTimeAdjustment>顯示時間調整之前</BeforeDisplayTimeAdjustment>
     <DisplayTimeAdjustedX>已調整顯示時間: {0}</DisplayTimeAdjustedX>
     <DisplayTimesAdjustedX>已調整顯示時間: {0}</DisplayTimesAdjustedX>
-    <StarTimeAdjustedX>已調整起始時間: {0}</StarTimeAdjustedX>
+    <StartTimeAdjustedX>已調整起始時間: {0}</StartTimeAdjustedX>
     <BeforeCommonErrorFixes>一般錯誤修復之前</BeforeCommonErrorFixes>
     <CommonErrorsFixedInSelectedLines>已修復已選的行內的一般錯誤</CommonErrorsFixedInSelectedLines>
     <CommonErrorsFixed>已修復一般錯誤</CommonErrorsFixed>
@@ -2371,7 +2371,7 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <GoForwardXSSeconds>Small selected time forward</GoForwardXSSeconds>
     <GoBackXLSeconds>Large selected time back</GoBackXLSeconds>
     <GoForwardXLSeconds>Large selected time forward</GoForwardXLSeconds>
-    <GoBack3Second>Three seconds back</GoBack3Second>
+    <GoBack3Seconds>Three seconds back</GoBack3Seconds>
     <GoToStartCurrent>Set video pos to start of current subtitle</GoToStartCurrent>
     <ToggleStartEndCurrent>Toggle video pos between start/end of current subtitle</ToggleStartEndCurrent>
     <PlaySelectedLines>Play selected lines</PlaySelectedLines>
@@ -2839,7 +2839,7 @@ Continue?</RestoreDefaultSettingsMsg>
     <TransportStreamGrayscale>灰階</TransportStreamGrayscale>
     <TransportStreamGetColor>使用色彩 (將分割某些行)</TransportStreamGetColor>
     <PromptForUnknownWords>提示未知單字</PromptForUnknownWords>
-    <TryToGuessUnkownWords>嘗試猜測未知單字</TryToGuessUnkownWords>
+    <TryToGuessUnknownWords>嘗試猜測未知單字</TryToGuessUnknownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>如果超過兩行自動換行</AutoBreakSubtitleIfMoreThanTwoLines>
     <AllFixes>全部修復</AllFixes>
     <GuessesUsed>已用猜測</GuessesUsed>

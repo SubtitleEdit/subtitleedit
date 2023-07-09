@@ -62,6 +62,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     return new TimeCode(hours, minutes, seconds, 0).TotalMilliseconds;
                 }
             }
+
             return 0;
         }
 
@@ -155,8 +156,8 @@ namespace Nikse.SubtitleEdit.Core.Common
         public string ToString(bool localize)
         {
             var ts = TimeSpan;
-            string decimalSeparator = localize ? CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator : ",";
-            string s = $"{ts.Hours + ts.Days * 24:00}:{ts.Minutes:00}:{ts.Seconds:00}{decimalSeparator}{ts.Milliseconds:000}";
+            var decimalSeparator = localize ? CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator : ",";
+            var s = $"{ts.Hours + ts.Days * 24:00}:{ts.Minutes:00}:{ts.Seconds:00}{decimalSeparator}{ts.Milliseconds:000}";
 
             return PrefixSign(s);
         }
@@ -164,7 +165,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public string ToShortString(bool localize = false)
         {
             var ts = TimeSpan;
-            string decimalSeparator = localize ? CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator : ",";
+            var decimalSeparator = localize ? CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator : ",";
             string s;
             if (ts.Minutes == 0 && ts.Hours == 0 && ts.Days == 0)
             {
@@ -178,20 +179,22 @@ namespace Nikse.SubtitleEdit.Core.Common
             {
                 s = $"{ts.Hours + ts.Days * 24:0}:{ts.Minutes:00}:{ts.Seconds:00}{decimalSeparator}{ts.Milliseconds:000}";
             }
+
             return PrefixSign(s);
         }
 
         public string ToShortStringHHMMSSFF()
         {
-            string s = ToHHMMSSFF();
-            string pre = string.Empty;
+            var s = ToHHMMSSFF();
+            var pre = string.Empty;
             if (s.StartsWith('-'))
             {
                 pre = "-";
                 s = s.TrimStart('-');
             }
-            int j = 0;
-            int len = s.Length;
+
+            var j = 0;
+            var len = s.Length;
             while (j + 6 < len && s[j] == '0' && s[j + 1] == '0' && s[j + 2] == ':')
             {
                 j += 3;
@@ -215,6 +218,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             {
                 s = $"{ts.Days * 24 + ts.Hours:00}:{ts.Minutes:00}:{ts.Seconds:00}:{SubtitleFormat.MillisecondsToFramesMaxFrameRate(ts.Milliseconds):00}";
             }
+
             return PrefixSign(s);
         }
 
@@ -267,6 +271,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             {
                 s = $"{ts.Seconds:00}:{SubtitleFormat.MillisecondsToFramesMaxFrameRate(ts.Milliseconds):00}";
             }
+
             return PrefixSign(s);
         }
 
@@ -320,6 +325,5 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             return ToShortString(true);
         }
-
     }
 }

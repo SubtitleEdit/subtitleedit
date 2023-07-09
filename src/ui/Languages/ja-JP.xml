@@ -2,7 +2,7 @@
 <Language Name="日本語">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.10</Version>
+    <Version>3.6.13</Version>
     <TranslatedBy>Nardog</TranslatedBy>
     <CultureName>ja-JP</CultureName>
     <HelpFile />
@@ -1149,7 +1149,7 @@ C# ソースコードは https://github.com/SubtitleEdit/subtitleedit にあり�
     <BeforeDisplayTimeAdjustment>表示時間の調整前</BeforeDisplayTimeAdjustment>
     <DisplayTimeAdjustedX>調整された表示時間: {0}</DisplayTimeAdjustedX>
     <DisplayTimesAdjustedX>調整された表示時間: {0}</DisplayTimesAdjustedX>
-    <StarTimeAdjustedX>調整された開始時間: {0}</StarTimeAdjustedX>
+    <StartTimeAdjustedX>調整された開始時間: {0}</StartTimeAdjustedX>
     <BeforeCommonErrorFixes>ありがちなエラーの修正前</BeforeCommonErrorFixes>
     <CommonErrorsFixedInSelectedLines>選択した行のありがちなエラーが修正されました</CommonErrorsFixedInSelectedLines>
     <CommonErrorsFixed>ありがちなエラーが修正されました</CommonErrorsFixed>
@@ -2054,7 +2054,7 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <UseCustomColors>カスタム色を使用する</UseCustomColors>
     <Transparent>透明</Transparent>
     <PromptForUnknownWords>不明な単語を確認する</PromptForUnknownWords>
-    <TryToGuessUnkownWords>不明な単語の推測を試行する</TryToGuessUnkownWords>
+    <TryToGuessUnknownWords>不明な単語の推測を試行する</TryToGuessUnknownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>3 行以上の段落を自動改行する</AutoBreakSubtitleIfMoreThanTwoLines>
     <AllFixes>すべての修正</AllFixes>
     <GuessesUsed>使用された推測</GuessesUsed>

@@ -2,7 +2,7 @@
 <Language Name="brezhoneg">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.10</Version>
+    <Version>3.6.13</Version>
     <TranslatedBy>Troet gant WaniBzh29.</TranslatedBy>
     <CultureName>br-FR</CultureName>
     <HelpFile />
@@ -1206,7 +1206,7 @@ Ha fellout a ra deoc'h adkregiñ adalek krec'h ar restr ha kenderc'hel gant an e
     <BeforeDisplayTimeAdjustment>A-raok an arventennoù amzer diskouez</BeforeDisplayTimeAdjustment>
     <DisplayTimeAdjustedX>Diskouez an amzer keidet : {0}</DisplayTimeAdjustedX>
     <DisplayTimesAdjustedX>Amzer diskouez keidet : {0}</DisplayTimesAdjustedX>
-    <StarTimeAdjustedX>Amzer loc'hañ keidet : {0}</StarTimeAdjustedX>
+    <StartTimeAdjustedX>Amzer loc'hañ keidet : {0}</StartTimeAdjustedX>
     <BeforeCommonErrorFixes>A-raok ar reizhadennoù fazioù reoliek</BeforeCommonErrorFixes>
     <CommonErrorsFixedInSelectedLines>Fazioù reoliek reizhet e-barzh al linennoù diuzet</CommonErrorsFixedInSelectedLines>
     <CommonErrorsFixed>Fazioù reoliek reizhet</CommonErrorsFixed>
@@ -2133,7 +2133,7 @@ Adklaskit diwezhatoc'h mar-plij.</DownloadMpvFailed>
     <TransportStreamGrayscale>Live ar gris</TransportStreamGrayscale>
     <TransportStreamGetColor>Implijout al liv (war linennoù da zispatartiañ 'zo)</TransportStreamGetColor>
     <PromptForUnknownWords>Goulenn evit ar gerioù dianv</PromptForUnknownWords>
-    <TryToGuessUnkownWords>Klask divinout ar gerioù dianv</TryToGuessUnkownWords>
+    <TryToGuessUnknownWords>Klask divinout ar gerioù dianv</TryToGuessUnknownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>Rannañ ar rannbennad a zibas div linenn</AutoBreakSubtitleIfMoreThanTwoLines>
     <AllFixes>Holl ar reizhadennoù</AllFixes>
     <GuessesUsed>Martezeadennoù implijet</GuessesUsed>

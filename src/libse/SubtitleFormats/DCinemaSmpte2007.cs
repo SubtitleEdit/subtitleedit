@@ -563,6 +563,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     Errors = "Error validating xml via SMPTE-428-7-2007-DCST.xsd: " + exception.Message;
                 }
             }
+
             return DCinemaSmpte2010.FixDcsTextSameLine(result);
         }
 

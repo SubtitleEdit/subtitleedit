@@ -50,12 +50,11 @@
             this.listViewInputFiles = new System.Windows.Forms.ListView();
             this.columnHeaderFileName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.checkBoxTranslateToEnglish = new System.Windows.Forms.CheckBox();
-            this.labelCpp = new System.Windows.Forms.Label();
             this.contextMenuStripWhisperAdvanced = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.whisperPhpOriginalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.whisperCppCToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.setCPPConstmeModelsFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.removeTemporaryFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.labelEngine = new System.Windows.Forms.Label();
+            this.comboBoxWhisperEngine = new System.Windows.Forms.ComboBox();
             this.groupBoxModels.SuspendLayout();
             this.groupBoxInputFiles.SuspendLayout();
             this.contextMenuStripWhisperAdvanced.SuspendLayout();
@@ -114,6 +113,7 @@
             this.textBoxLog.Location = new System.Drawing.Point(469, 9);
             this.textBoxLog.Multiline = true;
             this.textBoxLog.Name = "textBoxLog";
+            this.textBoxLog.ReadOnly = true;
             this.textBoxLog.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.textBoxLog.Size = new System.Drawing.Size(168, 258);
             this.textBoxLog.TabIndex = 0;
@@ -284,59 +284,57 @@
             this.checkBoxTranslateToEnglish.Text = "Translate to English";
             this.checkBoxTranslateToEnglish.UseVisualStyleBackColor = true;
             // 
-            // labelCpp
-            // 
-            this.labelCpp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelCpp.AutoSize = true;
-            this.labelCpp.ForeColor = System.Drawing.SystemColors.ControlDark;
-            this.labelCpp.Location = new System.Drawing.Point(669, 9);
-            this.labelCpp.Name = "labelCpp";
-            this.labelCpp.Size = new System.Drawing.Size(28, 13);
-            this.labelCpp.TabIndex = 22;
-            this.labelCpp.Text = "CPP";
-            // 
             // contextMenuStripWhisperAdvanced
             // 
             this.contextMenuStripWhisperAdvanced.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.whisperPhpOriginalToolStripMenuItem,
-            this.whisperCppCToolStripMenuItem,
-            this.toolStripSeparator1,
+            this.setCPPConstmeModelsFolderToolStripMenuItem,
             this.removeTemporaryFilesToolStripMenuItem});
             this.contextMenuStripWhisperAdvanced.Name = "contextMenuStripWhisperAdvanced";
-            this.contextMenuStripWhisperAdvanced.Size = new System.Drawing.Size(200, 98);
+            this.contextMenuStripWhisperAdvanced.Size = new System.Drawing.Size(259, 70);
+            this.contextMenuStripWhisperAdvanced.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripWhisperAdvanced_Opening);
             // 
-            // whisperPhpOriginalToolStripMenuItem
+            // setCPPConstmeModelsFolderToolStripMenuItem
             // 
-            this.whisperPhpOriginalToolStripMenuItem.Name = "whisperPhpOriginalToolStripMenuItem";
-            this.whisperPhpOriginalToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
-            this.whisperPhpOriginalToolStripMenuItem.Text = "Whisper OpenAI (Python)";
-            this.whisperPhpOriginalToolStripMenuItem.Click += new System.EventHandler(this.whisperPhpOriginalToolStripMenuItem_Click);
-            // 
-            // whisperCppCToolStripMenuItem
-            // 
-            this.whisperCppCToolStripMenuItem.Name = "whisperCppCToolStripMenuItem";
-            this.whisperCppCToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
-            this.whisperCppCToolStripMenuItem.Text = "Whisper cpp (C++)";
-            this.whisperCppCToolStripMenuItem.Click += new System.EventHandler(this.whisperCppCToolStripMenuItem_Click);
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(196, 6);
+            this.setCPPConstmeModelsFolderToolStripMenuItem.Name = "setCPPConstmeModelsFolderToolStripMenuItem";
+            this.setCPPConstmeModelsFolderToolStripMenuItem.Size = new System.Drawing.Size(258, 22);
+            this.setCPPConstmeModelsFolderToolStripMenuItem.Text = "Set CPP/Const-me models folder...";
+            this.setCPPConstmeModelsFolderToolStripMenuItem.Click += new System.EventHandler(this.setCPPConstMeModelsFolderToolStripMenuItem_Click);
             // 
             // removeTemporaryFilesToolStripMenuItem
             // 
             this.removeTemporaryFilesToolStripMenuItem.Name = "removeTemporaryFilesToolStripMenuItem";
-            this.removeTemporaryFilesToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
+            this.removeTemporaryFilesToolStripMenuItem.Size = new System.Drawing.Size(258, 22);
             this.removeTemporaryFilesToolStripMenuItem.Text = "Remove temporary files";
             this.removeTemporaryFilesToolStripMenuItem.Click += new System.EventHandler(this.removeTemporaryFilesToolStripMenuItem_Click);
+            // 
+            // labelEngine
+            // 
+            this.labelEngine.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelEngine.AutoSize = true;
+            this.labelEngine.Location = new System.Drawing.Point(497, 9);
+            this.labelEngine.Name = "labelEngine";
+            this.labelEngine.Size = new System.Drawing.Size(40, 13);
+            this.labelEngine.TabIndex = 29;
+            this.labelEngine.Text = "Engine";
+            // 
+            // comboBoxWhisperEngine
+            // 
+            this.comboBoxWhisperEngine.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxWhisperEngine.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxWhisperEngine.FormattingEnabled = true;
+            this.comboBoxWhisperEngine.Location = new System.Drawing.Point(543, 6);
+            this.comboBoxWhisperEngine.Name = "comboBoxWhisperEngine";
+            this.comboBoxWhisperEngine.Size = new System.Drawing.Size(154, 21);
+            this.comboBoxWhisperEngine.TabIndex = 28;
+            this.comboBoxWhisperEngine.SelectedIndexChanged += new System.EventHandler(this.comboBoxWhisperEngine_SelectedIndexChanged);
             // 
             // WhisperAudioToTextSelectedLines
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(709, 464);
-            this.Controls.Add(this.labelCpp);
+            this.Controls.Add(this.labelEngine);
+            this.Controls.Add(this.comboBoxWhisperEngine);
             this.Controls.Add(this.checkBoxTranslateToEnglish);
             this.Controls.Add(this.groupBoxInputFiles);
             this.Controls.Add(this.checkBoxUsePostProcessing);
@@ -393,11 +391,10 @@
         private System.Windows.Forms.Label labelChooseLanguage;
         private System.Windows.Forms.ComboBox comboBoxLanguages;
         private System.Windows.Forms.CheckBox checkBoxTranslateToEnglish;
-        private System.Windows.Forms.Label labelCpp;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripWhisperAdvanced;
-        private System.Windows.Forms.ToolStripMenuItem whisperPhpOriginalToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem whisperCppCToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem removeTemporaryFilesToolStripMenuItem;
+        private System.Windows.Forms.Label labelEngine;
+        private System.Windows.Forms.ComboBox comboBoxWhisperEngine;
+        private System.Windows.Forms.ToolStripMenuItem setCPPConstmeModelsFolderToolStripMenuItem;
     }
 }

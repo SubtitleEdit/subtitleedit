@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Http;
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.IO;
@@ -53,7 +54,7 @@ namespace Nikse.SubtitleEdit.Forms
                 labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait;
                 buttonOK.Enabled = false;
                 Cursor = Cursors.WaitCursor;
-                var httpClient = HttpClientHelper.MakeHttpClient();
+                var httpClient = DownloaderFactory.MakeHttpClient();
                 using (var downloadStream = new MemoryStream())
                 {
                     var downloadTask = httpClient.DownloadAsync(url, downloadStream, new Progress<float>((progress) =>

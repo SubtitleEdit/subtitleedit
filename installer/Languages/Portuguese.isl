@@ -1,7 +1,5 @@
 ; *** Inno Setup version 6.1.0+ Portuguese (Portugal) messages ***
 ;
-; Portuguese Translation: (Hugo Carvalho) (hugokarvalho@hotmail.com)
-;
 ; Maintained by Nuno Silva (nars AT gmx.net)
 
 [LangOptions]

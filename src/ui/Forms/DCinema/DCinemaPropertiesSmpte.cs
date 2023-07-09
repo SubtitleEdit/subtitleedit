@@ -152,7 +152,7 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
 
         private void buttonToday_Click(object sender, EventArgs e)
         {
-            textBoxIssueDate.Text = DateTime.Now.ToString("s") + ".000-00:00";
+            textBoxIssueDate.Text = DateTime.Now.ToString("s");
         }
 
         private void buttonOK_Click_1(object sender, EventArgs e)

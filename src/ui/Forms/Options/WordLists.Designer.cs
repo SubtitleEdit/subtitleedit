@@ -76,7 +76,7 @@
             this.groupBoxWordLists.Controls.Add(this.comboBoxWordListLanguage);
             this.groupBoxWordLists.Location = new System.Drawing.Point(12, 12);
             this.groupBoxWordLists.Name = "groupBoxWordLists";
-            this.groupBoxWordLists.Size = new System.Drawing.Size(828, 501);
+            this.groupBoxWordLists.Size = new System.Drawing.Size(836, 520);
             this.groupBoxWordLists.TabIndex = 3;
             this.groupBoxWordLists.TabStop = false;
             this.groupBoxWordLists.Text = "Word lists";
@@ -85,7 +85,7 @@
             // 
             this.linkLabelOpenDictionaryFolder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.linkLabelOpenDictionaryFolder.AutoSize = true;
-            this.linkLabelOpenDictionaryFolder.Location = new System.Drawing.Point(6, 476);
+            this.linkLabelOpenDictionaryFolder.Location = new System.Drawing.Point(6, 495);
             this.linkLabelOpenDictionaryFolder.Name = "linkLabelOpenDictionaryFolder";
             this.linkLabelOpenDictionaryFolder.Size = new System.Drawing.Size(124, 13);
             this.linkLabelOpenDictionaryFolder.TabIndex = 29;
@@ -95,6 +95,9 @@
             // 
             // groupBoxOcrFixList
             // 
+            this.groupBoxOcrFixList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxOcrFixList.Controls.Add(this.textBoxOcrFixValue);
             this.groupBoxOcrFixList.Controls.Add(this.buttonRemoveOcrFix);
             this.groupBoxOcrFixList.Controls.Add(this.listBoxOcrFixList);
@@ -102,14 +105,15 @@
             this.groupBoxOcrFixList.Controls.Add(this.buttonAddOcrFix);
             this.groupBoxOcrFixList.Location = new System.Drawing.Point(510, 43);
             this.groupBoxOcrFixList.Name = "groupBoxOcrFixList";
-            this.groupBoxOcrFixList.Size = new System.Drawing.Size(293, 334);
+            this.groupBoxOcrFixList.Size = new System.Drawing.Size(301, 345);
             this.groupBoxOcrFixList.TabIndex = 6;
             this.groupBoxOcrFixList.TabStop = false;
             this.groupBoxOcrFixList.Text = "OCR fix list";
             // 
             // textBoxOcrFixValue
             // 
-            this.textBoxOcrFixValue.Location = new System.Drawing.Point(99, 298);
+            this.textBoxOcrFixValue.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.textBoxOcrFixValue.Location = new System.Drawing.Point(99, 309);
             this.textBoxOcrFixValue.Name = "textBoxOcrFixValue";
             this.textBoxOcrFixValue.Size = new System.Drawing.Size(85, 20);
             this.textBoxOcrFixValue.TabIndex = 45;
@@ -117,7 +121,8 @@
             // 
             // buttonRemoveOcrFix
             // 
-            this.buttonRemoveOcrFix.Location = new System.Drawing.Point(191, 16);
+            this.buttonRemoveOcrFix.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonRemoveOcrFix.Location = new System.Drawing.Point(199, 16);
             this.buttonRemoveOcrFix.Name = "buttonRemoveOcrFix";
             this.buttonRemoveOcrFix.Size = new System.Drawing.Size(75, 23);
             this.buttonRemoveOcrFix.TabIndex = 42;
@@ -127,11 +132,14 @@
             // 
             // listBoxOcrFixList
             // 
+            this.listBoxOcrFixList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.listBoxOcrFixList.FormattingEnabled = true;
             this.listBoxOcrFixList.Location = new System.Drawing.Point(6, 16);
             this.listBoxOcrFixList.Name = "listBoxOcrFixList";
             this.listBoxOcrFixList.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.listBoxOcrFixList.Size = new System.Drawing.Size(179, 277);
+            this.listBoxOcrFixList.Size = new System.Drawing.Size(187, 277);
             this.listBoxOcrFixList.TabIndex = 40;
             this.listBoxOcrFixList.SelectedIndexChanged += new System.EventHandler(this.ListBoxOcrFixListSelectedIndexChanged);
             this.listBoxOcrFixList.DoubleClick += new System.EventHandler(this.listBoxOcrFixList_DoubleClick);
@@ -140,14 +148,16 @@
             // 
             // textBoxOcrFixKey
             // 
-            this.textBoxOcrFixKey.Location = new System.Drawing.Point(5, 298);
+            this.textBoxOcrFixKey.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.textBoxOcrFixKey.Location = new System.Drawing.Point(5, 309);
             this.textBoxOcrFixKey.Name = "textBoxOcrFixKey";
             this.textBoxOcrFixKey.Size = new System.Drawing.Size(88, 20);
             this.textBoxOcrFixKey.TabIndex = 44;
             // 
             // buttonAddOcrFix
             // 
-            this.buttonAddOcrFix.Location = new System.Drawing.Point(190, 296);
+            this.buttonAddOcrFix.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonAddOcrFix.Location = new System.Drawing.Point(190, 307);
             this.buttonAddOcrFix.Name = "buttonAddOcrFix";
             this.buttonAddOcrFix.Size = new System.Drawing.Size(75, 23);
             this.buttonAddOcrFix.TabIndex = 46;
@@ -157,13 +167,16 @@
             // 
             // groupBoxUserWordList
             // 
+            this.groupBoxUserWordList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxUserWordList.Controls.Add(this.buttonRemoveUserWord);
             this.groupBoxUserWordList.Controls.Add(this.listBoxUserWordLists);
             this.groupBoxUserWordList.Controls.Add(this.textBoxUserWord);
             this.groupBoxUserWordList.Controls.Add(this.buttonAddUserWord);
             this.groupBoxUserWordList.Location = new System.Drawing.Point(259, 43);
             this.groupBoxUserWordList.Name = "groupBoxUserWordList";
-            this.groupBoxUserWordList.Size = new System.Drawing.Size(241, 334);
+            this.groupBoxUserWordList.Size = new System.Drawing.Size(249, 345);
             this.groupBoxUserWordList.TabIndex = 4;
             this.groupBoxUserWordList.TabStop = false;
             this.groupBoxUserWordList.Text = "User word list";
@@ -180,6 +193,8 @@
             // 
             // listBoxUserWordLists
             // 
+            this.listBoxUserWordLists.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.listBoxUserWordLists.FormattingEnabled = true;
             this.listBoxUserWordLists.Location = new System.Drawing.Point(3, 16);
             this.listBoxUserWordLists.Name = "listBoxUserWordLists";
@@ -193,7 +208,8 @@
             // 
             // textBoxUserWord
             // 
-            this.textBoxUserWord.Location = new System.Drawing.Point(2, 298);
+            this.textBoxUserWord.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.textBoxUserWord.Location = new System.Drawing.Point(2, 309);
             this.textBoxUserWord.Name = "textBoxUserWord";
             this.textBoxUserWord.Size = new System.Drawing.Size(150, 20);
             this.textBoxUserWord.TabIndex = 34;
@@ -201,7 +217,8 @@
             // 
             // buttonAddUserWord
             // 
-            this.buttonAddUserWord.Location = new System.Drawing.Point(159, 296);
+            this.buttonAddUserWord.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonAddUserWord.Location = new System.Drawing.Point(159, 307);
             this.buttonAddUserWord.Name = "buttonAddUserWord";
             this.buttonAddUserWord.Size = new System.Drawing.Size(75, 23);
             this.buttonAddUserWord.TabIndex = 36;
@@ -215,9 +232,9 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxWordListLocation.Controls.Add(this.checkBoxNamesOnline);
             this.groupBoxWordListLocation.Controls.Add(this.textBoxNamesOnline);
-            this.groupBoxWordListLocation.Location = new System.Drawing.Point(6, 386);
+            this.groupBoxWordListLocation.Location = new System.Drawing.Point(6, 405);
             this.groupBoxWordListLocation.Name = "groupBoxWordListLocation";
-            this.groupBoxWordListLocation.Size = new System.Drawing.Size(797, 92);
+            this.groupBoxWordListLocation.Size = new System.Drawing.Size(805, 74);
             this.groupBoxWordListLocation.TabIndex = 8;
             this.groupBoxWordListLocation.TabStop = false;
             this.groupBoxWordListLocation.Text = "Location";
@@ -243,19 +260,24 @@
             // 
             // groupBoxNamesIgonoreLists
             // 
+            this.groupBoxNamesIgonoreLists.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxNamesIgonoreLists.Controls.Add(this.listViewNames);
             this.groupBoxNamesIgonoreLists.Controls.Add(this.buttonRemoveNameEtc);
             this.groupBoxNamesIgonoreLists.Controls.Add(this.textBoxNameEtc);
             this.groupBoxNamesIgonoreLists.Controls.Add(this.buttonAddNames);
             this.groupBoxNamesIgonoreLists.Location = new System.Drawing.Point(6, 43);
             this.groupBoxNamesIgonoreLists.Name = "groupBoxNamesIgonoreLists";
-            this.groupBoxNamesIgonoreLists.Size = new System.Drawing.Size(241, 334);
+            this.groupBoxNamesIgonoreLists.Size = new System.Drawing.Size(249, 345);
             this.groupBoxNamesIgonoreLists.TabIndex = 2;
             this.groupBoxNamesIgonoreLists.TabStop = false;
             this.groupBoxNamesIgonoreLists.Text = "Names/ignore lists";
             // 
             // listViewNames
             // 
+            this.listViewNames.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.listViewNames.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeaderNames});
             this.listViewNames.FullRowSelect = true;
@@ -263,7 +285,7 @@
             this.listViewNames.HideSelection = false;
             this.listViewNames.Location = new System.Drawing.Point(3, 21);
             this.listViewNames.Name = "listViewNames";
-            this.listViewNames.Size = new System.Drawing.Size(148, 270);
+            this.listViewNames.Size = new System.Drawing.Size(148, 281);
             this.listViewNames.TabIndex = 27;
             this.listViewNames.UseCompatibleStateImageBehavior = false;
             this.listViewNames.View = System.Windows.Forms.View.Details;
@@ -287,7 +309,8 @@
             // 
             // textBoxNameEtc
             // 
-            this.textBoxNameEtc.Location = new System.Drawing.Point(3, 298);
+            this.textBoxNameEtc.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.textBoxNameEtc.Location = new System.Drawing.Point(3, 309);
             this.textBoxNameEtc.Name = "textBoxNameEtc";
             this.textBoxNameEtc.Size = new System.Drawing.Size(151, 20);
             this.textBoxNameEtc.TabIndex = 24;
@@ -295,7 +318,8 @@
             // 
             // buttonAddNames
             // 
-            this.buttonAddNames.Location = new System.Drawing.Point(157, 296);
+            this.buttonAddNames.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonAddNames.Location = new System.Drawing.Point(157, 307);
             this.buttonAddNames.Name = "buttonAddNames";
             this.buttonAddNames.Size = new System.Drawing.Size(75, 23);
             this.buttonAddNames.TabIndex = 26;
@@ -326,7 +350,7 @@
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(765, 529);
+            this.buttonCancel.Location = new System.Drawing.Point(765, 537);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 16;
@@ -338,7 +362,7 @@
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonOK.Location = new System.Drawing.Point(684, 529);
+            this.buttonOK.Location = new System.Drawing.Point(684, 537);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 15;
@@ -350,7 +374,7 @@
             // 
             this.labelStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelStatus.AutoSize = true;
-            this.labelStatus.Location = new System.Drawing.Point(22, 534);
+            this.labelStatus.Location = new System.Drawing.Point(22, 553);
             this.labelStatus.Name = "labelStatus";
             this.labelStatus.Size = new System.Drawing.Size(59, 13);
             this.labelStatus.TabIndex = 17;
@@ -360,15 +384,14 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(852, 564);
+            this.ClientSize = new System.Drawing.Size(852, 572);
             this.Controls.Add(this.labelStatus);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.groupBoxWordLists);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.KeyPreview = true;
-            this.MaximizeBox = false;
             this.MinimizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(860, 600);
             this.Name = "WordLists";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;

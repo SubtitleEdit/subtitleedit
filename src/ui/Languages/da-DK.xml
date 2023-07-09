@@ -2,12 +2,14 @@
 <Language Name="dansk">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.10</Version>
+    <Version>3.6.13</Version>
     <TranslatedBy>Oversat til dansk af Nikse (mailto:nikse.dk@gmail.com)</TranslatedBy>
     <CultureName>da-DK</CultureName>
     <HelpFile />
     <Ok>&amp;OK</Ok>
     <Cancel>&amp;Fortryd</Cancel>
+    <Yes>Ja</Yes>
+    <No>Nej</No>
     <Apply>Anvend</Apply>
     <ApplyTo>Anvend for</ApplyTo>
     <None>Ingen</None>
@@ -62,6 +64,7 @@
     <OverlapPreviousLineX>Overlap forrige ({0:#,##0.###})</OverlapPreviousLineX>
     <OverlapX>Overlap ({0:#,##0.###})</OverlapX>
     <OverlapNextX>Overlap næste ({0:#,##0.###})</OverlapNextX>
+    <OverlapStartAndEnd>Overlap start og slut</OverlapStartAndEnd>
     <Negative>Negativ</Negative>
     <RegularExpressionIsNotValid>Regulært udtryk er ikke gyldigt</RegularExpressionIsNotValid>
     <CurrentSubtitle>Nuværende undertekst</CurrentSubtitle>
@@ -172,6 +175,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <Title>Lyd til tekst</Title>
     <Info>Generer tekst fra lyd via Vosk/Kaldi talegenkendelse</Info>
     <WhisperInfo>Generer tekst fra lyd via Whisper-talegenkendelse</WhisperInfo>
+    <Engine>Motor</Engine>
     <VoskWebsite>Vosk hjemmeside</VoskWebsite>
     <WhisperWebsite>Whisper hjemmeside</WhisperWebsite>
     <WhisperNotFound>Whisper ikke fundet - læs mere (web)?</WhisperNotFound>
@@ -185,9 +189,14 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <TranscribingXOfY>Transskriberer lyd til tekst - fil {0} af {1}...</TranscribingXOfY>
     <XFilesSavedToVideoSourceFolder>{0} filer gemt i videokildemappen</XFilesSavedToVideoSourceFolder>
     <UsePostProcessing>Brug efterbehandling (linjefletning, ret store og små bogstaver, tegnsætning og mere)</UsePostProcessing>
+    <AutoAdjustTimings>Autojuster tid</AutoAdjustTimings>
     <BatchMode>Batch-tilstand</BatchMode>
     <KeepPartialTranscription>Behold delvis transskription</KeepPartialTranscription>
     <TranslateToEnglish>Oversæt til engelsk</TranslateToEnglish>
+    <MaxCharsPerSubtitle>Maks.  tegn pr. undertekstlinje</MaxCharsPerSubtitle>
+    <RemoveTemporaryFiles>Fjern midlertidige filer</RemoveTemporaryFiles>
+    <SetCppConstMeFolder>Indstil mappen for CPP/Const-me-modeller...</SetCppConstMeFolder>
+    <OnlyRunPostProcessing>Kør kun efterbehandling/juster tider</OnlyRunPostProcessing>
   </AudioToText>
   <AssaAttachments>
     <Title>Avancerede Sub Station Alpha vedhæftede filer</Title>
@@ -322,7 +331,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <FilterMoreThanTwoLines>Mere end to linjer i en undertekst</FilterMoreThanTwoLines>
     <FilterContains>Tekst indeholder...</FilterContains>
     <FilterFileNameContains>Filnavn indeholder...</FilterFileNameContains>
-    <MkvLanguageCodeContains>Matroska (.mkv) sprogkode indeholder...</MkvLanguageCodeContains>
+    <LanguageCodeContains>Sprogkode (mkv/mp4) indeholder...</LanguageCodeContains>
     <FixCommonErrorsErrorX>Fix almindelige fejl: {0}</FixCommonErrorsErrorX>
     <MultipleReplaceErrorX>Multiple erstatte: {0}</MultipleReplaceErrorX>
     <AutoBalanceErrorX>Auto balance: {0}</AutoBalanceErrorX>
@@ -344,6 +353,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <MkvLanguageStyleTwoLetter>To bogstavs sprogkode</MkvLanguageStyleTwoLetter>
     <MkvLanguageStyleThreeLetter>Tre bogstavs sprogkode</MkvLanguageStyleThreeLetter>
     <MkvLanguageStyleEmpty>Ingen sprogkode</MkvLanguageStyleEmpty>
+    <SearchFolderScanVideo>Scan også videofiler i "Scan mappe" (langsom)</SearchFolderScanVideo>
   </BatchConvert>
   <BinEdit>
     <ImportImage>Importer billede...</ImportImage>
@@ -386,6 +396,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <OnlyChangeAllUppercaseLines>Ændr kun linjer med kun store bogstaver.</OnlyChangeAllUppercaseLines>
     <AllUppercase>KUN STORE BOGSTAVER</AllUppercase>
     <AllLowercase>kun små bogstaver</AllLowercase>
+    <ProperCase>Start Med Stort Bogstav</ProperCase>
   </ChangeCasing>
   <ChangeCasingNames>
     <Title>Skift mellem STORE/små/Normal - Navne</Title>
@@ -715,7 +726,8 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
   </ExtractDateTimeInfo>
   <FindDialog>
     <Title>Find</Title>
-    <Find>Find</Find>
+    <FindNext>Find &amp;næste</FindNext>
+    <FindPrevious>Find &amp;forrige</FindPrevious>
     <Normal>Normal</Normal>
     <CaseSensitive>Versalfølsom</CaseSensitive>
     <RegularExpression>Regulært udtryk</RegularExpression>
@@ -845,6 +857,8 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <SolidColor>Farve</SolidColor>
     <DurationInMinutes>Varighed i minutter</DurationInMinutes>
     <Background>Baggrund</Background>
+    <FfmpegParameters>Kør FFmpeg med følgende parametre:</FfmpegParameters>
+    <GenerateWithFfmpegParametersPrompt>Generer - prompt FFmpeg-parametre</GenerateWithFfmpegParametersPrompt>
   </GenerateBlankVideo>
   <GenerateVideoWithBurnedInSubs>
     <Title>Generer video med indbrændt subtil</Title>
@@ -853,6 +867,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <XGeneratedWithBurnedInSubsInX>"{0}" genereret med indbrændt undertekst tog {1}.</XGeneratedWithBurnedInSubsInX>
     <TimeRemainingMinutes>Resterende tid: {0} minutter</TimeRemainingMinutes>
     <TimeRemainingSeconds>Resterende tid: {0} sekunder</TimeRemainingSeconds>
+    <TimeRemainingAFewSeconds>Resterende tid: Et par sekunder</TimeRemainingAFewSeconds>
     <TimeRemainingMinutesAndSeconds>Resterende tid: {0} minutter og {1} sekunder</TimeRemainingMinutesAndSeconds>
     <TargetFileName>Målfilnavn: {0}</TargetFileName>
     <TargetFileSize>Målfilstørrelse (kræver 2 -pass -kodning)</TargetFileSize>
@@ -868,7 +883,19 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <Crf>CRF</Crf>
     <TuneFor>Indstil efter</TuneFor>
     <AlignRight>Juster til højre</AlignRight>
+    <GetStartPosition>Hent startposition</GetStartPosition>
+    <GetEndPosition>Hent slutposition</GetEndPosition>
   </GenerateVideoWithBurnedInSubs>
+  <GenerateVideoWithEmbeddedSubs>
+    <Title>Generer video med indlejrede undertekster</Title>
+    <InputVideoFile>Input videofil</InputVideoFile>
+    <SubtitlesX>Undertekster ({0})</SubtitlesX>
+    <SetLanguage>Indstil sprog...</SetLanguage>
+    <ToggleForced>Skift tvunget</ToggleForced>
+    <ToggleDefault>Skift standard</ToggleDefault>
+    <Default>Standard</Default>
+    <XGeneratedWithEmbeddedSubs>"{0}" genereret med indlejrede undertekster</XGeneratedWithEmbeddedSubs>
+  </GenerateVideoWithEmbeddedSubs>
   <GetDictionaries>
     <Title>Mangler ordbøger?</Title>
     <DescriptionLine1>Subtitle Edit's stavekontrol er baseret på NHunspell, der</DescriptionLine1>
@@ -1155,6 +1182,7 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Bi
         <OpenOriginal>Åbn original undertekst (oversætter mode)...</OpenOriginal>
         <SaveOriginal>Gem original</SaveOriginal>
         <CloseOriginal>Luk original</CloseOriginal>
+        <CloseTranslation>Luk oversat undertekst</CloseTranslation>
         <OpenContainingFolder>Åbn indeholdende mappe</OpenContainingFolder>
         <Compare>Sammenlign...</Compare>
         <Statistics>Statistik...</Statistics>
@@ -1268,6 +1296,7 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Bi
         <GenerateTextFromVideo>Generer tekst fra video...</GenerateTextFromVideo>
         <GenerateBlankVideo>Generer blank video...</GenerateBlankVideo>
         <GenerateVideoWithBurnedInSub>Generer video med indbrændt sub...</GenerateVideoWithBurnedInSub>
+        <GenerateVideoWithEmbeddedSubs>Generer video med indlejrede undertekster...</GenerateVideoWithEmbeddedSubs>
         <VideoAudioToTextX>Lyd til tekst ({0})...</VideoAudioToTextX>
         <ImportChaptersFromVideo>Importer kapitler fra video</ImportChaptersFromVideo>
         <GenerateImportShotChanges>Generer/importer sceneændringer...</GenerateImportShotChanges>
@@ -1356,6 +1385,7 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Bi
         <Paste>Indsæt</Paste>
         <Delete>Slet</Delete>
         <SplitLineAtCursorPosition>Split ved markør</SplitLineAtCursorPosition>
+        <SplitLineAtCursorPositionAndAutoBr>Split linje ved markørposition og auto-bryd</SplitLineAtCursorPositionAndAutoBr>
         <SplitLineAtCursorAndWaveformPosition>Split linje ved cursor/video position</SplitLineAtCursorAndWaveformPosition>
         <AutoDurationCurrentLine>Auto varighed (aktuelle linje)</AutoDurationCurrentLine>
         <SelectAll>Vælg alle</SelectAll>
@@ -1505,6 +1535,7 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Bi
     <LoadedEmptyOrShort>Indlæst tom eller meget korte undertekst {0}</LoadedEmptyOrShort>
     <FileIsEmptyOrShort>Filen er tom eller meget kort!</FileIsEmptyOrShort>
     <FileNotFound>Fil ikke findet: {0}</FileNotFound>
+    <FileLocked>Filen kunne ikke åbnes, da den er i brug af et andet program: {0}</FileLocked>
     <SavedSubtitleX>Gemte undertekst {0}</SavedSubtitleX>
     <SavedOriginalSubtitleX>Gemte originale undertekst {0}</SavedOriginalSubtitleX>
     <FileOnDiskModified>Fil på disken ændret</FileOnDiskModified>
@@ -1550,7 +1581,7 @@ Vil du starte fra toppen af ​​underteksten og fortsætte søg og erstat?</Re
     <BeforeDisplayTimeAdjustment>Før visningstider justering</BeforeDisplayTimeAdjustment>
     <DisplayTimeAdjustedX>Visningstider justeret: {0}</DisplayTimeAdjustedX>
     <DisplayTimesAdjustedX>Visningstid justeret: {0}</DisplayTimesAdjustedX>
-    <StarTimeAdjustedX>Start tid justeret: {0}</StarTimeAdjustedX>
+    <StartTimeAdjustedX>Start tid justeret: {0}</StartTimeAdjustedX>
     <BeforeCommonErrorFixes>Før ret almindelige fejl</BeforeCommonErrorFixes>
     <CommonErrorsFixedInSelectedLines>Almindelige fejl er rettet i valgte linjer</CommonErrorsFixedInSelectedLines>
     <CommonErrorsFixed>Ret almindelige fejl udført</CommonErrorsFixed>
@@ -1769,6 +1800,11 @@ Hvis du har redigeret denne fil med Subtitle Edit du måske finde en backup via 
     <UsingOnlyFrontCenterChannel>Bruger kun lydkanal foran i midten</UsingOnlyFrontCenterChannel>
     <BeforeConvertingColorsToDialog>Før konverterering af farver til dialog</BeforeConvertingColorsToDialog>
     <ConvertedColorsToDialog>Konverterede farver til dialog</ConvertedColorsToDialog>
+    <PleaseInstallVideoPlayer>Installer venligst videoafspiller</PleaseInstallVideoPlayer>
+    <UnableToPlayMediaFile>SE kunne ikke afspille video-/lydfilen (eller filen er ikke en gyldig video-/lydfil).</UnableToPlayMediaFile>
+    <SubtitleEditNeedsVideoPlayer>Subtitle Edit kræver en videoafspiller.</SubtitleEditNeedsVideoPlayer>
+    <UseRecommendMpv>For at bruge den anbefalede videoafspiller "mpv" skal du klikke på knappen nedenfor.</UseRecommendMpv>
+    <DownloadAndUseMpv>Download og brug "mpv" som videoafspiller</DownloadAndUseMpv>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Vælg undertekst fra Matroska fil</Title>
@@ -2060,6 +2096,10 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <Find>&amp;Find</Find>
     <Replace>&amp;Erstat</Replace>
     <ReplaceAll>Erstat &amp;alle</ReplaceAll>
+    <FindReplaceIn>Erstat/søg i:</FindReplaceIn>
+    <TranslationAndOriginal>Oversættelse og original</TranslationAndOriginal>
+    <TranslationOnly>Kun oversættelse</TranslationOnly>
+    <OriginalOnly>Kun original</OriginalOnly>
   </ReplaceDialog>
   <RestoreAutoBackup>
     <Title>Gendan auto backup</Title>
@@ -2193,6 +2233,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <AutoBackupEveryFiveMinutes>Hver 5. minut</AutoBackupEveryFiveMinutes>
     <AutoBackupEveryFifteenMinutes>Hver 15. minut</AutoBackupEveryFifteenMinutes>
     <AutoBackupDeleteAfter>Slet efter</AutoBackupDeleteAfter>
+    <TranslationAutoSuffix>Oversættelse filnavn auto suffiks</TranslationAutoSuffix>
     <AutoBackupDeleteAfterOneMonth>En måned</AutoBackupDeleteAfterOneMonth>
     <AutoBackupDeleteAfterXMonths>{0} måneder</AutoBackupDeleteAfterXMonths>
     <CheckForUpdates>Tjek for opdateringer</CheckForUpdates>
@@ -2329,6 +2370,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <MusicSymbolsReplace>Musik symboler, der skal erstattes (adskilt med komma)</MusicSymbolsReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Ret normale OCR fejl - Inkluder hardcodede regler</FixCommonOcrErrorsUseHardcodedRules>
     <UseWordSplitList>Brug ordopdel liste (OCR + FCE)</UseWordSplitList>
+    <AvoidPropercase>Undgå ord der starter med stort bogstav</AvoidPropercase>
     <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Fix kort visningstid - tillad flytning af starttidspunkt</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
     <FixCommonErrorsSkipStepOne>Spring trin 1 over (vælg fix regler)</FixCommonErrorsSkipStepOne>
     <DefaultFormat>Standardformat</DefaultFormat>
@@ -2426,6 +2468,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <ToggleDialogDashes>Toggle dialog tankestreger</ToggleDialogDashes>
     <ToggleQuotes>Skift gåseøjne</ToggleQuotes>
     <ToggleHiTags>Skift HI-tags</ToggleHiTags>
+    <ToggleCustomTags>Skift tilpassede tags</ToggleCustomTags>
     <ToggleMusicSymbols>Skift musik symboler</ToggleMusicSymbols>
     <Alignment>Justering (valgte linier)</Alignment>
     <AlignmentN1>Justering bund venstre left - {\an1}</AlignmentN1>
@@ -2470,19 +2513,22 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <GoForward500Milliseconds>500 ms frem</GoForward500Milliseconds>
     <GoBack1Second>Et sekund tilbage</GoBack1Second>
     <GoForward1Second>Et sekund fremad</GoForward1Second>
+    <GoBack3Seconds>Tre sekunder tilbage</GoBack3Seconds>
+    <GoForward3Seconds>Tre sekunder frem</GoForward3Seconds>
     <GoBack5Seconds>Fem sekunder tilbage</GoBack5Seconds>
     <GoForward5Seconds>Fem sekunder frem</GoForward5Seconds>
     <GoBackXSSeconds>Lille valgt tid tilbage</GoBackXSSeconds>
     <GoForwardXSSeconds>Lille valgt tid frem</GoForwardXSSeconds>
     <GoBackXLSeconds>Stor valgt tid tilbage</GoBackXLSeconds>
     <GoForwardXLSeconds>Stor valgt tid frem</GoForwardXLSeconds>
-    <GoBack3Second>Tre sekunder tilbage</GoBack3Second>
     <GoToStartCurrent>Indstil video pos til start af den aktuelle undertekst</GoToStartCurrent>
     <ToggleStartEndCurrent>Skift video pos mellem start/slut af aktuelle undertekst</ToggleStartEndCurrent>
     <PlaySelectedLines>Afspil valgte linjer</PlaySelectedLines>
     <LoopSelectedLines>Loop valgt linjer</LoopSelectedLines>
     <WaveformGoToPrevSubtitle>Gå til forrige undertekst (fra video position)</WaveformGoToPrevSubtitle>
     <WaveformGoToNextSubtitle>Gå til næste undertekst (fra video position)</WaveformGoToNextSubtitle>
+    <WaveformGoToPrevTimeCode>Gå til forrige tidskode (fra videoposition)</WaveformGoToPrevTimeCode>
+    <WaveformGoToNextTimeCode>Gå til næste tidskode (fra videoposition)</WaveformGoToNextTimeCode>
     <WaveformGoToPrevChapter>Gå til forrige kapitel</WaveformGoToPrevChapter>
     <WaveformGoToNextChapter>Gå til næste kapitel</WaveformGoToNextChapter>
     <WaveformSelectNextSubtitle>Vælg næste undertekst (fra videoposition, behold videopos)</WaveformSelectNextSubtitle>
@@ -2497,7 +2543,8 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <VideoResetSpeedAndZoom>Nulstil hastighed/zoom</VideoResetSpeedAndZoom>
     <MainToggleVideoControls>Toggle videokontrol</MainToggleVideoControls>
     <VideoToggleContrast>Skift kontrast (kun mpv)</VideoToggleContrast>
-    <VideoAudioToText>Lyd til tekst</VideoAudioToText>
+    <AudioToTextX>Lyd til tekst ({0})</AudioToTextX>
+    <AudioToTextSelectedLinesX>Lyd til tekst valgte linjer ({0})</AudioToTextSelectedLinesX>
     <VideoToggleBrightness>Skift lysstyrke (kun mpv)</VideoToggleBrightness>
     <CustomSearch1>Oversæt, brugerdefineret søgning 1</CustomSearch1>
     <CustomSearch2>Oversæt, brugerdefineret søgning 2</CustomSearch2>
@@ -2610,6 +2657,7 @@ Fortsæt?</RestoreDefaultSettingsMsg>
     <BDOpensInOcr>OCR</BDOpensInOcr>
     <BDOpensInEdit>Rediger</BDOpensInEdit>
     <ShortcutsAllowSingleLetterOrNumberInTextBox>Genveje: Tillad enkelt bogstav/tal i tekstfeltet</ShortcutsAllowSingleLetterOrNumberInTextBox>
+    <ShortcutCustomToggle>Genvejsskift tilpasset start/slut</ShortcutCustomToggle>
     <UpdateFileTypeAssociations>Opdater filtypetilknytninger</UpdateFileTypeAssociations>
     <FileTypeAssociationsUpdated>Filtypetilknytninger opdateret</FileTypeAssociationsUpdated>
     <CustomContinuationStyle>Rediger tilpasset fortsættelsesstil</CustomContinuationStyle>
@@ -2624,6 +2672,7 @@ Fortsæt?</RestoreDefaultSettingsMsg>
     <PreviewPause>(pause)</PreviewPause>
     <CustomContinuationStyleNote>Bemærk: Den tilpassede fortsættelsesstil deles på tværs af profiler.</CustomContinuationStyleNote>
     <ResetCustomContinuationStyleWarning>Dette vil overskrive i dialogen.  Er du sikker?</ResetCustomContinuationStyleWarning>
+    <ExportAsHtml>Eksporter som HTML...</ExportAsHtml>
   </Settings>
   <SettingsMpv>
     <DownloadMpv>Hent MPV lib</DownloadMpv>
@@ -2730,6 +2779,7 @@ Fortsæt?</RestoreDefaultSettingsMsg>
     <NumberOfSplits>Antal splits: {0}</NumberOfSplits>
     <LongestSingleLineIsXAtY>Længste enkelt linje længde er {0} på linie {1}</LongestSingleLineIsXAtY>
     <LongestLineIsXAtY>Længste samlet linjelængde er {0} på linie {1}</LongestLineIsXAtY>
+    <SplitAtLineBreaks>Opdel ved linjeskift</SplitAtLineBreaks>
   </SplitLongLines>
   <SplitSubtitle>
     <Title>Split undertekst</Title>
@@ -2858,6 +2908,7 @@ Fortsæt?</RestoreDefaultSettingsMsg>
     <CopyXOfY>Kopier {0} af {1}</CopyXOfY>
     <New>Ny</New>
     <Remove>Fjern</Remove>
+    <ReplaceWith>Erstat med...</ReplaceWith>
     <RemoveAll>Fjern alle</RemoveAll>
     <ImportStyleFromFile>Importer style fra fil...</ImportStyleFromFile>
     <ExportStyleToFile>Export style til fil...</ExportStyleToFile>
@@ -2990,7 +3041,7 @@ Fortsæt?</RestoreDefaultSettingsMsg>
     <TransportStreamGrayscale>Gråtone</TransportStreamGrayscale>
     <TransportStreamGetColor>Brug farve (vil omfatte nogle opdeling af linjer)</TransportStreamGetColor>
     <PromptForUnknownWords>Spørg om ukendte ord</PromptForUnknownWords>
-    <TryToGuessUnkownWords>Prøv at gætte ukendte ord</TryToGuessUnkownWords>
+    <TryToGuessUnknownWords>Prøv at gætte ukendte ord</TryToGuessUnknownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>Autoombryd afsnit, hvis mere end to linjer</AutoBreakSubtitleIfMoreThanTwoLines>
     <AllFixes>Alle rettelser</AllFixes>
     <GuessesUsed>Gæt brugt</GuessesUsed>
@@ -3034,6 +3085,7 @@ Fortsæt?</RestoreDefaultSettingsMsg>
     <CloudVisionApi>Google Cloud Vision API</CloudVisionApi>
     <ApiKey>API nøgle</ApiKey>
     <SendOriginalImages>Send originale billeder</SendOriginalImages>
+    <SeHandlesTextMerge>SE håndterer tekstfletning</SeHandlesTextMerge>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub - Manual billede til tekst</Title>

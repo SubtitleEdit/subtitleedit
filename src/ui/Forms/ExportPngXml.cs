@@ -42,6 +42,7 @@ namespace Nikse.SubtitleEdit.Forms
             internal const string EdlClipName = "EDL_CLIPNAME";
             internal const string ImageFrame = "IMAGE/FRAME";
             internal const string Spumux = "SPUMUX";
+            internal const string TtmlInlinePng = "TTML SMPTE-TT/PNG (inline)";
         }
 
         internal class MakeBitmapParameter
@@ -113,6 +114,7 @@ namespace Nikse.SubtitleEdit.Forms
         private readonly Dictionary<string, int> _lineHeights;
         private static int _boxBorderSize = 8;
         private int _lastIndex;
+        private Dictionary<int, string> _smpteTtmlImages = new Dictionary<int, string>();
 
         private const string BoxMultiLineText = "BoxMultiLine";
         private const string BoxSingleLineText = "BoxSingleLine";
@@ -213,15 +215,32 @@ namespace Nikse.SubtitleEdit.Forms
             var text = p.P.Text;
             if (format.GetType() == typeof(SubStationAlpha) && text.Length > 5)
             {
-                text = p.P.Text.Substring(0, 6);
-                alignment = GetSsaAlignment(text, alignment);
+                var assaTag = GetStartAssaTag(text);
+                alignment = GetSsaAlignment(assaTag, alignment);
             }
             else if (text.Length > 6)
             {
-                text = p.P.Text.Substring(0, 6);
-                alignment = GetAssAlignment(text, alignment);
+                var assaTag = GetStartAssaTag(text);
+                alignment = GetAssAlignment(assaTag, alignment);
             }
+
             return alignment;
+        }
+
+        private static string GetStartAssaTag(string text)
+        {
+            if (string.IsNullOrEmpty(text) || !text.StartsWith("{\\", StringComparison.Ordinal))
+            {
+                return string.Empty;
+            }
+
+            var tagEnd = text.IndexOf('}');
+            if (tagEnd < 0)
+            {
+                return string.Empty;
+            }
+
+            return text.Substring(0, tagEnd + 1);
         }
 
         private static ContentAlignment GetSsaAlignment(string text, ContentAlignment defaultAlignment)
@@ -235,27 +254,52 @@ namespace Nikse.SubtitleEdit.Forms
             //5: Top left
             //6: Top center
             //7: Top right
-            switch (text)
+
+            if (text.Contains("\\a1\\", StringComparison.Ordinal) || text.Contains("\\a1}", StringComparison.Ordinal))
             {
-                case "{\\a1}":
-                    return ContentAlignment.BottomLeft;
-                case "{\\a2}":
-                    return ContentAlignment.BottomCenter;
-                case "{\\a3}":
-                    return ContentAlignment.BottomRight;
-                case "{\\a9}":
-                    return ContentAlignment.MiddleLeft;
-                case "{\\a10}":
-                    return ContentAlignment.MiddleCenter;
-                case "{\\a11}":
-                    return ContentAlignment.MiddleRight;
-                case "{\\a5}":
-                    return ContentAlignment.TopLeft;
-                case "{\\a6}":
-                    return ContentAlignment.TopCenter;
-                case "{\\a7}":
-                    return ContentAlignment.TopRight;
+                return ContentAlignment.BottomLeft;
             }
+
+            if (text.Contains("\\a2\\", StringComparison.Ordinal) || text.Contains("\\a2}", StringComparison.Ordinal))
+            {
+                return ContentAlignment.BottomCenter;
+            }
+
+            if (text.Contains("\\a3\\", StringComparison.Ordinal) || text.Contains("\\a3}", StringComparison.Ordinal))
+            {
+                return ContentAlignment.BottomRight;
+            }
+
+            if (text.Contains("\\a9\\", StringComparison.Ordinal) || text.Contains("\\a9}", StringComparison.Ordinal))
+            {
+                return ContentAlignment.MiddleLeft;
+            }
+
+            if (text.Contains("\\a10\\", StringComparison.Ordinal) || text.Contains("\\a10}", StringComparison.Ordinal))
+            {
+                return ContentAlignment.MiddleCenter;
+            }
+
+            if (text.Contains("\\a11\\", StringComparison.Ordinal) || text.Contains("\\a11}", StringComparison.Ordinal))
+            {
+                return ContentAlignment.MiddleRight;
+            }
+
+            if (text.Contains("\\a5\\", StringComparison.Ordinal) || text.Contains("\\a5}", StringComparison.Ordinal))
+            {
+                return ContentAlignment.TopLeft;
+            }
+
+            if (text.Contains("\\a6\\", StringComparison.Ordinal) || text.Contains("\\a6}", StringComparison.Ordinal))
+            {
+                return ContentAlignment.TopCenter;
+            }
+
+            if (text.Contains("\\a7\\", StringComparison.Ordinal) || text.Contains("\\a7}", StringComparison.Ordinal))
+            {
+                return ContentAlignment.TopRight;
+            }
+
             return defaultAlignment;
         }
 
@@ -270,27 +314,52 @@ namespace Nikse.SubtitleEdit.Forms
             //7: Top left
             //8: Top center
             //9: Top right
-            switch (text)
+
+            if (text.Contains("\\an1\\", StringComparison.Ordinal) || text.Contains("\\an1}", StringComparison.Ordinal))
             {
-                case "{\\an1}":
-                    return ContentAlignment.BottomLeft;
-                case "{\\an2}":
-                    return ContentAlignment.BottomCenter;
-                case "{\\an3}":
-                    return ContentAlignment.BottomRight;
-                case "{\\an4}":
-                    return ContentAlignment.MiddleLeft;
-                case "{\\an5}":
-                    return ContentAlignment.MiddleCenter;
-                case "{\\an6}":
-                    return ContentAlignment.MiddleRight;
-                case "{\\an7}":
-                    return ContentAlignment.TopLeft;
-                case "{\\an8}":
-                    return ContentAlignment.TopCenter;
-                case "{\\an9}":
-                    return ContentAlignment.TopRight;
+                return ContentAlignment.BottomLeft;
             }
+
+            if (text.Contains("\\an2\\", StringComparison.Ordinal) || text.Contains("\\an2}", StringComparison.Ordinal))
+            {
+                return ContentAlignment.BottomCenter;
+            }
+
+            if (text.Contains("\\an3\\", StringComparison.Ordinal) || text.Contains("\\an3}", StringComparison.Ordinal))
+            {
+                return ContentAlignment.BottomRight;
+            }
+
+            if (text.Contains("\\an4\\", StringComparison.Ordinal) || text.Contains("\\an4}", StringComparison.Ordinal))
+            {
+                return ContentAlignment.MiddleLeft;
+            }
+
+            if (text.Contains("\\an5\\", StringComparison.Ordinal) || text.Contains("\\an5}", StringComparison.Ordinal))
+            {
+                return ContentAlignment.MiddleCenter;
+            }
+
+            if (text.Contains("\\an6\\", StringComparison.Ordinal) || text.Contains("\\an6}", StringComparison.Ordinal))
+            {
+                return ContentAlignment.MiddleRight;
+            }
+
+            if (text.Contains("\\an7\\", StringComparison.Ordinal) || text.Contains("\\an7}", StringComparison.Ordinal))
+            {
+                return ContentAlignment.TopLeft;
+            }
+
+            if (text.Contains("\\an8\\", StringComparison.Ordinal) || text.Contains("\\an8}", StringComparison.Ordinal))
+            {
+                return ContentAlignment.TopCenter;
+            }
+
+            if (text.Contains("\\an9\\", StringComparison.Ordinal) || text.Contains("\\an9}", StringComparison.Ordinal))
+            {
+                return ContentAlignment.TopRight;
+            }
+
             return defaultAlignment;
         }
 
@@ -536,6 +605,15 @@ namespace Nikse.SubtitleEdit.Forms
                 saveFileDialog1.Filter = "Blu-Ray sup|*.sup";
                 singleFile = true;
             }
+            else if (_exportType == ExportFormats.TtmlInlinePng)
+            {
+                saveFileDialog1.Title = LanguageSettings.Current.ExportPngXml.SaveImageAs;
+                saveFileDialog1.DefaultExt = "*.ttml";
+                saveFileDialog1.AddExtension = true;
+                saveFileDialog1.Filter = "TTML files|*.ttml|XML files|*.xml";
+                singleFile = true;
+                _smpteTtmlImages = new Dictionary<int, string>();
+            }
             else if (_exportType == ExportFormats.VobSub)
             {
                 saveFileDialog1.Title = LanguageSettings.Current.ExportPngXml.SaveVobSubAs;
@@ -605,6 +683,20 @@ namespace Nikse.SubtitleEdit.Forms
             if (singleFile && saveFileDialog1.ShowDialog(this) == DialogResult.OK || !singleFile && folderBrowserDialog1.ShowDialog(this) == DialogResult.OK)
             {
                 GetResolution(out var width, out var height);
+
+                if (!singleFile && !Directory.Exists(folderBrowserDialog1.SelectedPath))
+                {
+                    try
+                    {
+                        Directory.CreateDirectory(folderBrowserDialog1.SelectedPath);
+                    }
+                    catch
+                    {
+                        MessageBox.Show("Please select a valid folder");
+                        buttonExport.Enabled = true;
+                        return;
+                    }
+                }
 
                 _outputFileName = singleFile ? saveFileDialog1.FileName : folderBrowserDialog1.SelectedPath;
 
@@ -820,14 +912,20 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else if (_exportType == ExportFormats.Spumux)
                 {
-                    string s = "<subpictures>" + Environment.NewLine +
-                               "\t<stream>" + Environment.NewLine +
-                               sb +
-                               "\t</stream>" + Environment.NewLine +
-                               "</subpictures>";
+                    var s = "<subpictures>" + Environment.NewLine +
+                            "\t<stream>" + Environment.NewLine +
+                            sb +
+                            "\t</stream>" + Environment.NewLine +
+                            "</subpictures>";
                     File.WriteAllText(Path.Combine(folderBrowserDialog1.SelectedPath, "spu.xml"), s);
                     var text = string.Format(LanguageSettings.Current.ExportPngXml.XImagesSavedInY, imagesSavedCount, folderBrowserDialog1.SelectedPath);
                     MessageBoxShowWithFolderName(text, folderBrowserDialog1.SelectedPath);
+                }
+                else if (_exportType == ExportFormats.TtmlInlinePng)
+                {
+                    File.WriteAllText(saveFileDialog1.FileName, MakeTtmlInlinePngXml(_subtitle, _smpteTtmlImages));
+                    var text = string.Format(LanguageSettings.Current.ExportPngXml.XImagesSavedInY, imagesSavedCount, folderBrowserDialog1.SelectedPath);
+                    MessageBoxShowWithFolderName(text, Path.GetDirectoryName(saveFileDialog1.FileName));
                 }
                 else if (_exportType == ExportFormats.Fcp)
                 {
@@ -928,6 +1026,55 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 _subtitle.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(-Configuration.Settings.General.CurrentVideoOffsetInMs));
             }
+        }
+
+        private string MakeTtmlInlinePngXml(Subtitle subtitle, Dictionary<int, string> smpteTtmlImages)
+        {
+            var template = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<tt xmlns=\"http://www.w3.org/ns/ttml\"\r\n    xmlns:smpte=\"http://www.smpte-ra.org/schemas/2052-1/2010/smpte-tt\"\r\n    xmlns:ttm=\"http://www.w3.org/ns/ttml#metadata\" xmlns:tts=\"http://www.w3.org/ns/ttml#styling\"\r\n    xml:space=\"default\" xml:lang=\"eng\">\r\n    <head>\r\n        <metadata></metadata>\r\n        <layout>\r\n            <region xml:id=\"region0\" tts:extent=\"100.000000% 5.000000%\" tts:origin=\"0.000000% 86.851852%\" />\r\n        </layout>\r\n    </head>\r\n    <body></body>\r\n</tt>";
+            var xml = new XmlDocument();
+            xml.LoadXml(template);
+            var nsmgr = new XmlNamespaceManager(xml.NameTable);
+            nsmgr.AddNamespace("ttml", TimedText10.TtmlNamespace);
+            var meta = xml.SelectSingleNode("//ttml:metadata", nsmgr);
+            var body = xml.SelectSingleNode("//ttml:body", nsmgr);
+            foreach (var keyValuePair in smpteTtmlImages.OrderBy(p => p.Key))
+            {
+                var name = $"img{keyValuePair.Key}";
+
+                XmlNode image = xml.CreateElement("smpte:image", TimedText10.TtmlNamespace);
+                meta.AppendChild(image);
+                var attr = xml.CreateAttribute("imagetype");
+                attr.Value = "PNG";
+                image.Attributes.Append(attr);
+                attr = xml.CreateAttribute("encoding");
+                attr.Value = "Base64";
+                image.Attributes.Append(attr);
+                attr = xml.CreateAttribute("xml:id");
+                attr.Value = name;
+                image.Attributes.Append(attr);
+                image.InnerText = keyValuePair.Value;
+
+                var p = _subtitle.GetParagraphOrDefault(keyValuePair.Key - 1);
+                if (p != null)
+                {
+                    XmlNode pNode = xml.CreateElement("div", TimedText10.TtmlNamespace);
+                    body.AppendChild(pNode);
+                    attr = xml.CreateAttribute("begin");
+                    attr.Value = p.StartTime.ToHHMMSSFF();
+                    pNode.Attributes.Append(attr);
+                    attr = xml.CreateAttribute("end");
+                    attr.Value = p.EndTime.ToHHMMSSFF();
+                    pNode.Attributes.Append(attr);
+                    attr = xml.CreateAttribute("smpte:backgroundImage", TimedText10.TtmlNamespace);
+                    attr.Value = $"#{name}";
+                    pNode.Attributes.Append(attr);
+                    attr = xml.CreateAttribute("region");
+                    attr.Value = "region0";
+                    pNode.Attributes.Append(attr);
+                }
+            }
+
+            return xml.OuterXml.Replace("xmlns:smpte=\"http://www.w3.org/ns/ttml\"", "");
         }
 
         private void MessageBoxShowWithFolderName(string text, string folderName)
@@ -1540,6 +1687,14 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         param.Saved = true;
                     }
                 }
+                else if (_exportType == ExportFormats.TtmlInlinePng)
+                {
+                    if (!param.Saved)
+                    {
+                        imagesSavedCount = WriteTtmlInlinePgnParagraph(imagesSavedCount, param, i);
+                        param.Saved = true;
+                    }
+                }
                 else if (_exportType == ExportFormats.Fcp)
                 {
                     if (!param.Saved)
@@ -1940,8 +2095,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             }
             imagesSavedCount++;
 
-            int timeBase = 25;
-            string ntsc = "FALSE";
+            var timeBase = 25;
+            var ntsc = "FALSE";
             if (comboBoxLanguage.SelectedItem.ToString().Equals("NTSC", StringComparison.Ordinal))
             {
                 ntsc = "TRUE";
@@ -1978,10 +2133,28 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             return imagesSavedCount;
         }
 
+        internal int WriteTtmlInlinePgnParagraph(int imagesSavedCount, MakeBitmapParameter param, int i)
+        {
+            string imageBase64;
+            using (var memoryStream = new MemoryStream())
+            {
+                param.Bitmap.Save(memoryStream, ImageFormat.Png);
+                imageBase64 = Convert.ToBase64String(memoryStream.ToArray());
+            }
+
+            if (!_smpteTtmlImages.ContainsKey(i))
+            {
+                imagesSavedCount++;
+                _smpteTtmlImages.Add(i, imageBase64);
+            }
+
+            return imagesSavedCount;
+        }
+
         internal int WriteBdnXmlParagraph(int width, StringBuilder sb, int border, int height, int imagesSavedCount, MakeBitmapParameter param, int i, string path)
         {
-            string numberString = $"{i:0000}";
-            string fileName = Path.Combine(path, numberString + ".png");
+            var numberString = $"{i:0000}";
+            var fileName = Path.Combine(path, numberString + ".png");
 
             if (comboBoxImageFormat.Text == "Png 8-bit")
             {
@@ -2014,8 +2187,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             sb.AppendLine("<Event InTC=\"" + ToHHMMSSFF(param.P.StartTime) + "\" OutTC=\"" +
                           ToHHMMSSFF(param.P.EndTime) + "\" Forced=\"" + param.Forced.ToString().ToLowerInvariant() + "\">");
 
-            int x = (width - param.Bitmap.Width) / 2;
-            int y = height - (param.Bitmap.Height + param.BottomMargin);
+            var x = (width - param.Bitmap.Width) / 2;
+            var y = height - (param.Bitmap.Height + param.BottomMargin);
             switch (param.Alignment)
             {
                 case ContentAlignment.BottomLeft:
@@ -2529,39 +2702,23 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
             var font = GetFont(parameter, parameter.SubtitleFontSize);
             var fontStack = new Stack<Font>();
+            var addLeft = 0f;
             while (i < text.Length)
             {
                 if (text.Substring(i).StartsWith("<font ", StringComparison.OrdinalIgnoreCase))
                 {
-                    var addLeft = 0f;
-                    var oldPathPointIndex = path.PointCount;
-                    if (oldPathPointIndex < 0)
-                    {
-                        oldPathPointIndex = 0;
-                    }
-
                     if (sb.Length > 0)
                     {
                         lastText.Append(sb);
+                        left = GetLastPositionFromPath(path, 0, 0) + addLeft;
                         TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
                     }
-
-                    addLeft = GetLastPositionFromPath(path, oldPathPointIndex, addLeft);
-                    if (path.PointCount == 0)
-                    {
-                        addLeft = left;
-                    }
-                    else if (addLeft < 0.01)
-                    {
-                        addLeft = left + 2;
-                    }
-
-                    left = addLeft;
 
                     DrawShadowAndPath(parameter, g, path);
                     var p2 = new SolidBrush(c);
                     g.FillPath(p2, path);
                     p2.Dispose();
+                    addLeft = GetLastPositionFromPath(path, 0, 0);
                     path.Reset();
                     path = new GraphicsPath();
                     sb.Clear();
@@ -2642,50 +2799,27 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                             sb.Append(t);
                         }
 
-                        var addLeft = 0f;
-                        var oldPathPointIndex = path.PointCount - 1;
-                        if (oldPathPointIndex < 0)
-                        {
-                            oldPathPointIndex = 0;
-                        }
-
                         if (sb.Length > 0)
                         {
-                            if (lastText.Length > 0 && left > 2)
-                            {
-                                left -= 1.5f;
-                            }
-
                             lastText.Append(sb);
-
+                            left = GetLastPositionFromPath(path, 0, 0) + addLeft;
                             TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
                         }
 
-                        addLeft = GetLastPositionFromPath(path, oldPathPointIndex, addLeft);
-                        if (addLeft < 0.01)
-                        {
-                            addLeft = left + 2;
-                        }
-
-                        left = addLeft;
-
                         DrawShadowAndPath(parameter, g, path);
                         g.FillPath(new SolidBrush(c), path);
+                        addLeft = GetLastPositionFromPath(path, 0, 0);
                         path.Reset();
                         sb = new StringBuilder();
                         if (colorStack.Count > 0)
                         {
                             c = colorStack.Pop();
                         }
-
-                        if (left >= 3)
-                        {
-                            left -= 2.5f;
-                        }
                     }
 
                     if (sb.Length > 0)
                     {
+                        left = GetLastPositionFromPath(path, 0, 0) + addLeft;
                         TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
                         sb.Clear();
                     }
@@ -2703,6 +2837,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     if (sb.Length > 0)
                     {
                         lastText.Append(sb);
+                        left = GetLastPositionFromPath(path, 0, 0) + addLeft;
                         TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
                     }
                     isItalic = true;
@@ -2718,6 +2853,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         sb.Append(t);
                     }
                     lastText.Append(sb);
+                    left = GetLastPositionFromPath(path, 0, 0) + addLeft;
                     TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
                     isItalic = false;
                     i += 3;
@@ -2727,6 +2863,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     if (sb.Length > 0)
                     {
                         lastText.Append(sb);
+                        left = GetLastPositionFromPath(path, 0, 0) + addLeft;
                         TextDraw.DrawText(font, sf, path, sb, isItalic, isBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
                     }
                     isBold = true;
@@ -2742,6 +2879,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         sb.Append(t);
                     }
                     lastText.Append(sb);
+                    left = GetLastPositionFromPath(path, 0, 0) + addLeft;
                     TextDraw.DrawText(font, sf, path, sb, isItalic, isBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
                     isBold = false;
                     i += 3;
@@ -2756,13 +2894,14 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
             if (sb.Length > 0)
             {
+                left = GetLastPositionFromPath(path, 0, 0) + addLeft;
                 TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
             }
 
             DrawShadowAndPath(parameter, g, path);
             g.FillPath(new SolidBrush(c), path);
             g.Dispose();
-
+            path.Dispose();
             var nbmp = new NikseBitmap(bmp);
             bmp.Dispose();
             font.Dispose();
@@ -2799,8 +2938,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             Bitmap bmp = null;
             if (!parameter.SimpleRendering && parameter.P.Text.Contains(Environment.NewLine) && (parameter.BoxSingleLine || parameter.P.Text.Contains(BoxSingleLineText)))
             {
-                string old = parameter.P.Text;
-                int oldType3D = parameter.Type3D;
+                var old = parameter.P.Text;
+                var oldType3D = parameter.Type3D;
                 if (parameter.Type3D == 2) // Half-Top/Bottom 3D
                 {
                     parameter.Type3D = 0; // fix later
@@ -2815,7 +2954,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 var italicOn = false;
                 var boldOn = false;
                 var fontTag = string.Empty;
-                var lineWidts = new List<int>();
+                var lineWidths = new List<int>();
                 foreach (var line in parameter.P.Text.SplitToLines())
                 {
                     parameter.P.Text = line;
@@ -2849,7 +2988,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     }
 
                     var lineImage = GenerateImageFromTextWithStyleInner(parameter);
-                    lineWidts.Add(lineImage.Width);
+                    lineWidths.Add(lineImage.Width);
                     if (bmp == null)
                     {
                         bmp = lineImage;
@@ -2904,7 +3043,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                 l2 = w - lineImage.Width;
                                 if (parameter.BoxSingleLine)
                                 {
-                                    l1 = w - lineWidts[0];
+                                    l1 = w - lineWidths[0];
                                 }
                             }
                         }
@@ -2957,7 +3096,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             else
             {
                 var oldBackgroundColor = parameter.BackgroundColor;
-                string oldText = parameter.P.Text;
+                var oldText = parameter.P.Text;
                 if (parameter.P.Text.Contains(BoxMultiLineText) || parameter.P.Text.Contains(BoxSingleLineText))
                 {
                     parameter.P.Text = parameter.P.Text.Replace("<" + BoxMultiLineText + ">", string.Empty).Replace("</" + BoxMultiLineText + ">", string.Empty);
@@ -3718,7 +3857,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 if (parameter.BackgroundColor == Color.Transparent)
                 {
                     nbmp.CropTransparentSidesAndBottom(baseLinePadding, true);
-                    nbmp.CropTransparentSidesAndBottom(2, false);
+                    nbmp.CropTransparentSidesAndBottom(0, false);
                 }
                 else
                 {
@@ -3770,7 +3909,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private static float GetLastPositionFromPath(GraphicsPath path, int oldPathPointIndex, float addLeft)
         {
-            if (path.PointCount > 0)
+            if (path.PointCount > 0 && oldPathPointIndex >= 0)
             {
                 var list = (PointF[])path.PathPoints.Clone(); // avoid using very slow path.PathPoints indexer!!!
                 for (int k = oldPathPointIndex + 1; k < list.Length; k++)
@@ -3781,6 +3920,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     }
                 }
             }
+
             return addLeft;
         }
 
@@ -3814,10 +3954,10 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private static string AssToHtmlTagsIfKnow(string s)
         {
-            int k = s.IndexOf("{\\", StringComparison.Ordinal);
+            var k = s.IndexOf("{\\", StringComparison.Ordinal);
             while (k >= 0)
             {
-                int l = s.IndexOf('}', k + 1);
+                var l = s.IndexOf('}', k + 1);
                 if (l < k)
                 {
                     break;
@@ -4049,6 +4189,10 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             {
                 Text = ExportFormats.Spumux;
             }
+            else if (exportType == ExportFormats.TtmlInlinePng)
+            {
+                Text = ExportFormats.TtmlInlinePng;
+            }
             else
             {
                 Text = LanguageSettings.Current.ExportPngXml.Title;
@@ -4185,7 +4329,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
             labelImagePrefix.Text = LanguageSettings.Current.ExportPngXml.ImagePrefix;
             textBoxImagePrefix.Left = labelImagePrefix.Left + labelImagePrefix.Width + 3;
-            textBoxImagePrefix.Width = comboBoxFrameRate.Right - textBoxImagePrefix.Left;
+            textBoxImagePrefix.Width = comboBoxFrameRate.Left - textBoxImagePrefix.Left - 3;
 
             buttonBorderColor.Text = LanguageSettings.Current.ExportPngXml.BorderColor;
             labelBorderWidth.Text = LanguageSettings.Current.ExportPngXml.BorderStyle;
@@ -4277,7 +4421,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             bool showImageFormat = exportType == ExportFormats.Fab || exportType == ExportFormats.ImageFrame || exportType == ExportFormats.Stl || exportType == ExportFormats.Fcp || exportType == ExportFormats.BdnXml;
             if (exportType == ExportFormats.Fab || exportType == ExportFormats.BluraySup || exportType == ExportFormats.Fcp)
             {
-                checkBoxFullFrameImage.Visible = exportType == ExportFormats.Fab || exportType == ExportFormats.BluraySup || exportType == ExportFormats.Fcp;
+                checkBoxFullFrameImage.Visible = true;
             }
             else
             {
@@ -4503,6 +4647,27 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 numericUpDownDepth3D.Enabled = true;
                 labelDepth.Enabled = true;
                 labelDepth.Text = LanguageSettings.Current.DCinemaProperties.ZPosition;
+            }
+
+            if (exportType == ExportFormats.TtmlInlinePng)
+            {
+                label3D.Visible = false;
+                comboBox3D.Visible = false;
+                numericUpDownDepth3D.Visible = false;
+                labelDepth.Visible = false;
+                labelLanguage.Visible = true;
+                labelLanguage.BringToFront();
+
+                comboBoxLanguage.Items.Clear();
+                foreach (var iso639Dash2LanguageCode in Iso639Dash2LanguageCode.List)
+                {
+                    comboBoxLanguage.Items.Add(iso639Dash2LanguageCode.ThreeLetterCode);
+                    if (_language == iso639Dash2LanguageCode.TwoLetterCode)
+                    {
+                        comboBoxLanguage.SelectedIndex = comboBoxLanguage.Items.Count - 1;
+                    }
+                }
+                comboBoxLanguage.Visible = true;
             }
 
             if (_exportType == ExportFormats.Fcp)
@@ -5267,7 +5432,18 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 {
                     panelShadowColor.BackColor = colorChooser.Color;
                     subtitleListView1_SelectedIndexChanged(null, null);
-                    numericUpDownShadowTransparency.Value = colorChooser.Color.A;
+                    if (colorChooser.Color.A < numericUpDownShadowTransparency.Minimum)
+                    {
+                        numericUpDownShadowTransparency.Value = numericUpDownShadowTransparency.Minimum;
+                    }
+                    else if (colorChooser.Color.A > numericUpDownShadowTransparency.Maximum)
+                    {
+                        numericUpDownShadowTransparency.Value = numericUpDownShadowTransparency.Maximum;
+                    }
+                    else
+                    {
+                        numericUpDownShadowTransparency.Value = colorChooser.Color.A;
+                    }
                 }
             }
         }

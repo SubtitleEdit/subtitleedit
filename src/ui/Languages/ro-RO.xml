@@ -2,7 +2,7 @@
 <Language Name="română">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.10</Version>
+    <Version>3.6.13</Version>
     <TranslatedBy>Tradus de Mircea Voiculescu</TranslatedBy>
     <CultureName>ro-RO</CultureName>
     <HelpFile />
@@ -1417,7 +1417,7 @@ Reiei căutarea de la începutul documentului, cu căutare și înlocuire?</Repl
     <BeforeDisplayTimeAdjustment>Înaintea afișării timpilor ajustați</BeforeDisplayTimeAdjustment>
     <DisplayTimeAdjustedX>Afișează timpul ajustat: {0}</DisplayTimeAdjustedX>
     <DisplayTimesAdjustedX>Afișează timpii ajustați: {0}</DisplayTimesAdjustedX>
-    <StarTimeAdjustedX>Timpul de pornire ajustat: {0}</StarTimeAdjustedX>
+    <StartTimeAdjustedX>Timpul de pornire ajustat: {0}</StartTimeAdjustedX>
     <BeforeCommonErrorFixes>Înaintea reparării erorilor uzuale</BeforeCommonErrorFixes>
     <CommonErrorsFixedInSelectedLines>Erori uzuale reparate în linii selectate</CommonErrorsFixedInSelectedLines>
     <CommonErrorsFixed>Erori uzuale reparate</CommonErrorsFixed>
@@ -2274,7 +2274,7 @@ pot edita aceeași subtitrare (colaborare)</Information>
     <GoForwardXSSeconds>Avansare redusă selectată</GoForwardXSSeconds>
     <GoBackXLSeconds>Întoarcere majoră selectată</GoBackXLSeconds>
     <GoForwardXLSeconds>Avansare majoră selectată</GoForwardXLSeconds>
-    <GoBack3Second>Înapoi 3 secunde</GoBack3Second>
+    <GoBack3Seconds>Înapoi 3 secunde</GoBack3Seconds>
     <GoToStartCurrent>Setează poziția video la startul subtitrării actuale</GoToStartCurrent>
     <ToggleStartEndCurrent>Comută poziția video între startul/sfârșitul subtitrării actuale</ToggleStartEndCurrent>
     <PlayCurrent>Redă subtitrarea actuală</PlayCurrent>
@@ -2407,7 +2407,7 @@ Continui?</RestoreDefaultSettingsMsg>
     <TotalAdjustmentX>Ajustare totală: {0}</TotalAdjustmentX>
     <AllLines>&amp;Toate liniile</AllLines>
     <SelectedLinesOnly>&amp;Doar liniile selectate</SelectedLinesOnly>
-    <SelectedLinesAndForward>Linia/liniile selectată/selectate și &amp;dinainte</SelectedLinesAndForward>
+    <SelectedLinesAndForward>Linia/liniile selectată/selectate și &amp;următoarele</SelectedLinesAndForward>
   </ShowEarlierLater>
   <ShowHistory>
     <Title>Istoric (ptr. anulări)</Title>
@@ -2741,7 +2741,7 @@ Reții schimbările?</KeepChangesMessage>
     <TransportStreamGrayscale>Nuanțe de gri</TransportStreamGrayscale>
     <TransportStreamGetColor>Folosește culoare (pot avea loc scindări de linii)</TransportStreamGetColor>
     <PromptForUnknownWords>Avizează cuvintele necunoscute</PromptForUnknownWords>
-    <TryToGuessUnkownWords>Estimează cuvintele necunoscute</TryToGuessUnkownWords>
+    <TryToGuessUnknownWords>Estimează cuvintele necunoscute</TryToGuessUnknownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>Auto-întrerupere paragraf cu mai mult de două linii</AutoBreakSubtitleIfMoreThanTwoLines>
     <AllFixes>Toate reparările</AllFixes>
     <GuessesUsed>Estimări folosite</GuessesUsed>

@@ -24,7 +24,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public static readonly string ShotChangesDirectory = DataDirectory + "ShotChanges" + Path.DirectorySeparatorChar;
         public static readonly string AutoBackupDirectory = DataDirectory + "AutoBackup" + Path.DirectorySeparatorChar;
         public static readonly string VobSubCompareDirectory = DataDirectory + "VobSub" + Path.DirectorySeparatorChar;
-        public static readonly string TesseractDirectory = DataDirectory + "Tesseract520" + Path.DirectorySeparatorChar;
+        public static readonly string TesseractDirectory = DataDirectory + "Tesseract531" + Path.DirectorySeparatorChar;
         public static readonly string Tesseract302Directory = DataDirectory + "Tesseract302" + Path.DirectorySeparatorChar;
         public static readonly string WaveformsDirectory = DataDirectory + "Waveforms" + Path.DirectorySeparatorChar;
         public static readonly string PluginsDirectory = DataDirectory + "Plugins";
@@ -171,9 +171,17 @@ namespace Nikse.SubtitleEdit.Core.Common
                         // ignored
                     }
                 }
-                Directory.CreateDirectory(Path.Combine(appDataRoamingPath, "Dictionaries"));
-                return appDataRoamingPath + Path.DirectorySeparatorChar; // system installation
 
+                try
+                {
+                    Directory.CreateDirectory(Path.Combine(appDataRoamingPath, "Dictionaries"));
+                }
+                catch
+                {
+                    // ignored
+                }
+
+                return appDataRoamingPath + Path.DirectorySeparatorChar; // system installation
             }
 
             var installerPath = GetInstallerPath();
@@ -227,6 +235,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     return "/usr/share/tessdata";
                 }
             }
+
             return Path.Combine(TesseractDirectory, "tessdata");
         }
 
@@ -266,6 +275,20 @@ namespace Nikse.SubtitleEdit.Core.Common
                     // though advertised, this code page is not supported
                 }
             }
+
+            try
+            {
+                var enc = Encoding.GetEncoding(28606);
+                if (!encodings.Contains(enc))
+                {
+                    encodings.Add(enc);
+                }
+            }
+            catch
+            {
+                // ignore
+            }
+
             return encodings.AsEnumerable();
         }
 

@@ -1,6 +1,8 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Interfaces;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
@@ -15,34 +17,44 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {
-            string fixAction = Language.UnneededPeriod;
-            int removedCount = 0;
-            for (int i = 0; i < subtitle.Paragraphs.Count; i++)
+            var fixAction = Language.UnneededPeriod;
+            var removedCount = 0;
+            for (var i = 0; i < subtitle.Paragraphs.Count; i++)
             {
                 var p = subtitle.Paragraphs[i];
                 if (callbacks.AllowFix(p, fixAction))
                 {
                     // Returns processed text.
-                    string procText = RemoveDotAfterPunctuation(p.Text);
+                    var procText = RemoveDotAfterPunctuation(p.Text);
 
-                    while (procText.Contains("....", StringComparison.Ordinal))
+                    if (callbacks.Language == "zh")
                     {
-                        procText = procText.Replace("....", "...");
+                        while (procText.Contains(".......", StringComparison.Ordinal))
+                        {
+                            procText = procText.Replace(".......", "......");
+                        }
                     }
-
-                    while (procText.Contains("……", StringComparison.Ordinal))
+                    else
                     {
-                        procText = procText.Replace("……", "…");
-                    }
+                        while (procText.Contains("....", StringComparison.Ordinal))
+                        {
+                            procText = procText.Replace("....", "...");
+                        }
 
-                    while (procText.Contains(".…", StringComparison.Ordinal))
-                    {
-                        procText = procText.Replace(".…", "…");
-                    }
+                        while (procText.Contains("……", StringComparison.Ordinal))
+                        {
+                            procText = procText.Replace("……", "…");
+                        }
 
-                    while (procText.Contains("….", StringComparison.Ordinal))
-                    {
-                        procText = procText.Replace("….", "…");
+                        while (procText.Contains(".…", StringComparison.Ordinal))
+                        {
+                            procText = procText.Replace(".…", "…");
+                        }
+
+                        while (procText.Contains("….", StringComparison.Ordinal))
+                        {
+                            procText = procText.Replace("….", "…");
+                        }
                     }
 
                     var l = callbacks.Language;
@@ -67,32 +79,34 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         procText = sb.ToString().TrimEnd();
                     }
 
-                    int diff = p.Text.Length - procText.Length;
-                    if (diff > 0)
+                    var diff = p.Text.Length - procText.Length;
+                    if (diff != 0)
                     {
                         // Calculate total removed dots.
-                        removedCount += diff;
+                        removedCount += Math.Abs(diff);
                         callbacks.AddFixToListView(p, fixAction, p.Text, procText);
                         p.Text = procText;
                     }
                 }
             }
+
             callbacks.UpdateFixStatus(removedCount, Language.RemoveUnneededPeriods);
         }
 
         public static string RemoveDotAfterPunctuation(string input)
         {
-            for (int i = input.Length - 1; i > 0; i--)
+            for (var i = input.Length - 1; i > 0; i--)
             {
                 // Expecting pre characters: [?!]
                 if (input[i] == '.' && (input[i - 1] == '?' || input[i - 1] == '!'))
                 {
-                    int j = i;
+                    var j = i;
                     // Fix recursive dot after ?/!
                     while (j + 1 < input.Length && input[j + 1] == '.')
                     {
                         j++;
                     }
+
                     // Expecting post characters: [\r\n ]
                     if (j + 1 == input.Length || input[j + 1] == ' ' || input[j + 1] == '\r' || input[j + 1] == '\n')
                     {
@@ -100,8 +114,8 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     }
                 }
             }
+
             return input;
         }
-
     }
 }

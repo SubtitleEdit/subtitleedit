@@ -84,11 +84,17 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         internal static string ConvertToTimeString(TimeCode time)
         {
-            var timeCodeFormat = Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormat.Trim().ToLowerInvariant();
+            return ConvertToTimeString(time, Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormat);
+        }
+
+        internal static string ConvertToTimeString(TimeCode time, string timeCodeFormat)
+        {
+            timeCodeFormat = timeCodeFormat.Trim().ToLowerInvariant();
             if (timeCodeFormat == "source" && !string.IsNullOrWhiteSpace(Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormatSource))
             {
                 timeCodeFormat = Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormatSource.Trim().ToLowerInvariant();
             }
+
             switch (timeCodeFormat)
             {
                 case "source":
@@ -471,7 +477,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 if (text.StartsWith("{\\an8}", StringComparison.Ordinal))
                 {
-                    var topRegions = GetRegionsTopFromHeader(xml.OuterXml);
+                    var topRegions = GetRegionsTopFromHeader(xml);
                     if (topRegions.Count == 1)
                     {
                         region = topRegions[0];
@@ -488,7 +494,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
                 else if (text.StartsWith("{\\an2}", StringComparison.Ordinal) || !text.Contains("{\\an"))
                 {
-                    var bottomRegions = GetRegionsBottomFromHeader(xml.OuterXml);
+                    var bottomRegions = GetRegionsBottomFromHeader(xml);
                     if (bottomRegions.Count == 1)
                     {
                         region = bottomRegions[0];
@@ -813,7 +819,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 // ignored
             }
 
-            var topRegions = GetRegionsTopFromHeader(xml.OuterXml);
+            var topRegions = GetRegionsTopFromHeader(xml);
             XmlNode lastDiv = null;
             foreach (XmlNode node in body.SelectNodes("//ttml:p", nsmgr))
             {
@@ -1409,19 +1415,17 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return list;
         }
 
-        public static List<string> GetRegionsTopFromHeader(string xmlAsString)
+        public static List<string> GetRegionsTopFromHeader(XmlDocument xml)
         {
             var list = new List<string>();
-            var xml = new XmlDocument();
             try
             {
-                xml.LoadXml(xmlAsString);
-                var nsmgr = new XmlNamespaceManager(xml.NameTable);
-                nsmgr.AddNamespace("ttml", "http://www.w3.org/ns/ttml");
-                XmlNode head = xml.DocumentElement.SelectSingleNode("ttml:head", nsmgr);
-                foreach (XmlNode node in head.SelectNodes("//ttml:region", nsmgr))
+                var namespaceManager = new XmlNamespaceManager(xml.NameTable);
+                namespaceManager.AddNamespace("ttml", "http://www.w3.org/ns/ttml");
+                var head = xml.DocumentElement.SelectSingleNode("ttml:head", namespaceManager);
+                foreach (XmlNode node in head.SelectNodes("//ttml:region", namespaceManager))
                 {
-                    bool top = false;
+                    var top = false;
                     foreach (XmlNode styleNode in node.ChildNodes)
                     {
                         top = GetIfTopAligned(styleNode);
@@ -1457,13 +1461,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return list;
         }
 
-        public static List<string> GetRegionsBottomFromHeader(string xmlAsString)
+        public static List<string> GetRegionsBottomFromHeader(XmlDocument xml)
         {
             var list = new List<string>();
-            var xml = new XmlDocument();
             try
             {
-                xml.LoadXml(xmlAsString);
                 var nsmgr = new XmlNamespaceManager(xml.NameTable);
                 nsmgr.AddNamespace("ttml", "http://www.w3.org/ns/ttml");
                 XmlNode head = xml.DocumentElement.SelectSingleNode("ttml:head", nsmgr);
@@ -1556,11 +1558,17 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     return true;
                 }
-                else if (yPos <= 25 && displayAlign == "before") // before = top align
+
+                if (yPos <= 25 && displayAlign == "before") // before = top align
                 {
                     return true;
                 }
             }
+            else if (displayAlign == "before") // before = top align
+            {
+                return true;
+            }
+
             return false;
         }
 
@@ -1654,9 +1662,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 result = result.Remove(0, idx);
             }
 
-            return result
-                .Replace(" & ", " &amp; ")
-                .Replace("Q&A", "Q&amp;A");
+            var fixAmpersandRegex = new Regex("&(?!amp;)");
+            return fixAmpersandRegex.Replace(result, "&amp;");
         }
     }
 }

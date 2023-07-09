@@ -9,7 +9,7 @@ namespace Nikse.SubtitleEdit.Core.Translate.Processor
     /// </summary>
     public class NextLineMergeTranslationProcessor : AbstractTranslationProcessor<NextLineMergeTranslationProcessor.NextLineMerging>
     {
-        const int TimeThresholdBetweenTwoParagraphs = 200;
+        private const int TimeThresholdBetweenTwoParagraphs = 200;
 
         public class NextLineMerging : ITranslationBaseUnit
         {
@@ -35,7 +35,7 @@ namespace Nikse.SubtitleEdit.Core.Translate.Processor
 
         protected override IEnumerable<NextLineMerging> ConstructTranslationBaseUnits(List<Paragraph> sourceParagraphs)
         {
-            bool skipNext = false;
+            var skipNext = false;
             for (var index = 0; index < sourceParagraphs.Count; index++)
             {
                 if (skipNext)
@@ -56,9 +56,10 @@ namespace Nikse.SubtitleEdit.Core.Translate.Processor
                     }
                 }
 
-                string baseUnitText = currentParagraphText;
+                var baseUnitText = currentParagraphText;
                 if (Configuration.Settings.Tools.TranslateAllowSplit &&
-                    !string.IsNullOrEmpty(nextParagraphText) && !string.IsNullOrEmpty(currentParagraphText) &&
+                    !string.IsNullOrEmpty(HtmlUtil.RemoveHtmlTags(nextParagraphText, true)) && 
+                    !string.IsNullOrEmpty(HtmlUtil.RemoveHtmlTags(currentParagraphText, true)) &&
                     (char.IsLetterOrDigit(currentParagraphText[currentParagraphText.Length - 1]) || currentParagraphText[currentParagraphText.Length - 1] == ',' || currentParagraphText[currentParagraphText.Length - 1] == '\u060C') && //  \u060C = arabic comma
                     char.IsLower(nextParagraphText[0]) &&
                     !currentParagraphText.Contains('-') && !nextParagraphText.Contains('-'))
@@ -83,14 +84,18 @@ namespace Nikse.SubtitleEdit.Core.Translate.Processor
 
         protected override Dictionary<int, string> GetTargetParagraphs(List<NextLineMerging> sourceTranslationUnits, List<string> targetTexts)
         {
-            Dictionary<int, string> targetParagraphs = new Dictionary<int, string>();
-
-            for (int i = 0; i < sourceTranslationUnits.Count; i++)
+            var targetParagraphs = new Dictionary<int, string>();
+            for (var i = 0; i < sourceTranslationUnits.Count; i++)
             {
                 var sourceTranslationUnit = sourceTranslationUnits[i];
                 var targetText = targetTexts[i].Trim();
 
-                string currentText = targetText;
+                if (targetTexts.Count < sourceTranslationUnits.Count)
+                {
+                    targetTexts.Add(string.Empty);
+                }
+
+                var currentText = targetText;
                 string nextText = null;
                 if (sourceTranslationUnit.SkipNext)
                 {
@@ -108,7 +113,7 @@ namespace Nikse.SubtitleEdit.Core.Translate.Processor
                     {
                         currentText = Utilities.AutoBreakLine(lines[0] + " " + lines[1]);
                         var sb = new StringBuilder();
-                        for (int j = 2; j < lines.Count; j++)
+                        for (var j = 2; j < lines.Count; j++)
                         {
                             sb.Append(lines[j]);
                             sb.Append(" ");
@@ -124,6 +129,7 @@ namespace Nikse.SubtitleEdit.Core.Translate.Processor
                     targetParagraphs[sourceTranslationUnit.OngoingSourceParagraphNumber + 1] = nextText;
                 }
             }
+
             return targetParagraphs;
         }
 

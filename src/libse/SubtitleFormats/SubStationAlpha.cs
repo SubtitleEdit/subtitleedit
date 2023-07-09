@@ -27,7 +27,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return subtitle.Paragraphs.Count > _errorCount;
         }
 
-        const string HeaderNoStyles =
+        private const string HeaderNoStyles =
             @"[Script Info]
 ; This is a Sub Station Alpha v4 script.
 Title: {0}
@@ -54,7 +54,7 @@ PlayDepth: 0
 
 [V4 Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, TertiaryColour, BackColour, Bold, Italic, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, AlphaLevel, Encoding
-Style: Default,{1},{2},{3},65535,65535,-2147483640,{9},0,1,{4},{5},2,{6},{7},{8},0,1
+Style: Default,{1},{2},{3},{4},{5},{6},{12:0.##},0,1,{7:0.##},{8:0.##},2,{9:0.##},{10:0.##},{11:0.##},0,1
 
 [Events]
 Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text";
@@ -91,15 +91,7 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
             }
             else
             {
-                SsaStyle style = null;
-                var storageCategories = Configuration.Settings.SubtitleSettings.AssaStyleStorageCategories;
-                if (storageCategories != null && storageCategories.Count > 0 && storageCategories.Exists(x => x.IsDefault))
-                {
-                    var defaultStyle = storageCategories.FirstOrDefault(x => x.IsDefault)?.Styles.FirstOrDefault(x => x.Name.ToLowerInvariant() == "default");
-                    style = defaultStyle ?? storageCategories.FirstOrDefault(x => x.IsDefault)?.Styles[0];
-                }
-
-                style = style ?? new SsaStyle();
+                var style = GetDefaultStyle();
 
                 var boldStyle = "0"; // 0=regular
                 if (style.Bold)
@@ -112,6 +104,9 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                                             style.FontName,
                                             style.FontSize,
                                             ColorTranslator.ToWin32(style.Primary),
+                                            ColorTranslator.ToWin32(style.Secondary),
+                                            ColorTranslator.ToWin32(style.Tertiary),
+                                            ColorTranslator.ToWin32(style.Background),
                                             style.OutlineWidth,
                                             style.ShadowWidth,
                                             style.MarginLeft,
@@ -143,13 +138,13 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                     marginR = p.MarginR.PadLeft(4, '0');
                 }
 
-                string marginV = "0000";
+                var marginV = "0000";
                 if (!string.IsNullOrEmpty(p.MarginV) && Utilities.IsInteger(p.MarginV))
                 {
                     marginV = p.MarginV.PadLeft(4, '0');
                 }
 
-                string effect = "";
+                var effect = string.Empty;
                 if (!string.IsNullOrEmpty(p.Effect))
                 {
                     effect = p.Effect;
@@ -186,6 +181,25 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
             return sb.ToString().Trim() + Environment.NewLine;
         }
 
+        private static SsaStyle GetDefaultStyle()
+        {
+            SsaStyle style = null;
+            var storageCategories = Configuration.Settings.SubtitleSettings.AssaStyleStorageCategories;
+            if (storageCategories != null && storageCategories.Count > 0 && storageCategories.Exists(x => x.IsDefault))
+            {
+                var defaultStyle = storageCategories.FirstOrDefault(x => x.IsDefault)?.Styles.FirstOrDefault(x => x.Name.ToLowerInvariant() == "default");
+                style = defaultStyle ?? storageCategories.FirstOrDefault(x => x.IsDefault)?.Styles[0];
+                if (style != null)
+                {
+                    style.Tertiary = style.Outline;
+                }
+            }
+
+            style = style ?? new SsaStyle();
+
+            return style;
+        }
+
         private static void LoadStylesFromAdvancedSubstationAlpha(Subtitle subtitle, string title, string header, string headerNoStyles, StringBuilder sb)
         {
             try
@@ -210,25 +224,25 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
         private static string GetStyle(string header)
         {
             var ttStyles = new StringBuilder();
-            foreach (string styleName in AdvancedSubStationAlpha.GetStylesFromHeader(header))
+            foreach (var styleName in AdvancedSubStationAlpha.GetStylesFromHeader(header))
             {
                 try
                 {
                     var ssaStyle = AdvancedSubStationAlpha.GetSsaStyle(styleName, header);
 
-                    string bold = "0";
+                    var bold = "0";
                     if (ssaStyle.Bold)
                     {
                         bold = "-1";
                     }
 
-                    string italic = "0";
+                    var italic = "0";
                     if (ssaStyle.Italic)
                     {
                         italic = "-1";
                     }
 
-                    string newAlignment = "2";
+                    var newAlignment = "2";
                     switch (ssaStyle.Alignment)
                     {
                         case "1":
@@ -306,25 +320,25 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                     {
                         stylexmlCount++;
 
-                        string fontFamily = "Arial";
+                        var fontFamily = "Arial";
                         if (node.Attributes["tts:fontFamily"] != null)
                         {
                             fontFamily = node.Attributes["tts:fontFamily"].Value;
                         }
 
-                        string fontWeight = "normal";
+                        var fontWeight = "normal";
                         if (node.Attributes["tts:fontWeight"] != null)
                         {
                             fontWeight = node.Attributes["tts:fontWeight"].Value;
                         }
 
-                        string fontStyle = "normal";
+                        var fontStyle = "normal";
                         if (node.Attributes["tts:fontStyle"] != null)
                         {
                             fontStyle = node.Attributes["tts:fontStyle"].Value;
                         }
 
-                        string color = "#ffffff";
+                        var color = "#ffffff";
                         if (node.Attributes["tts:color"] != null)
                         {
                             color = node.Attributes["tts:color"].Value.Trim();
@@ -335,7 +349,7 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                         {
                             if (color.StartsWith("rgb(", StringComparison.Ordinal))
                             {
-                                string[] arr = color.Remove(0, 4).TrimEnd(')').Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                                var arr = color.Remove(0, 4).TrimEnd(')').Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                                 c = Color.FromArgb(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]));
                             }
                             else
@@ -348,7 +362,7 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                             c = Color.White;
                         }
 
-                        string fontSize = "20";
+                        var fontSize = "20";
                         if (node.Attributes["tts:fontSize"] != null)
                         {
                             fontSize = node.Attributes["tts:fontSize"].Value.Replace("px", string.Empty).Replace("em", string.Empty);
@@ -385,29 +399,29 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
         {
             _errorCount = 0;
             Errors = null;
-            bool eventsStarted = false;
+            var eventsStarted = false;
             var fontsStarted = false;
             var graphicsStarted = false;
             subtitle.Paragraphs.Clear();
             // "Marked", " Start", " End", " Style", " Name", " MarginL", " MarginR", " MarginV", " Effect", " Text"
-            int indexLayer = 0;
-            int indexStart = 1;
-            int indexEnd = 2;
-            int indexStyle = 3;
+            var indexLayer = 0;
+            var indexStart = 1;
+            var indexEnd = 2;
+            var indexStyle = 3;
             const int indexName = 4;
-            int indexMarginL = 5;
-            int indexMarginR = 6;
-            int indexMarginV = 7;
-            int indexEffect = 8;
-            int indexText = 9;
+            var indexMarginL = 5;
+            var indexMarginR = 6;
+            var indexMarginV = 7;
+            var indexEffect = 8;
+            var indexText = 9;
             var errors = new StringBuilder();
-            int lineNumber = 0;
+            var lineNumber = 0;
 
             var header = new StringBuilder();
             var footer = new StringBuilder();
-            for (int i1 = 0; i1 < lines.Count; i1++)
+            for (var i1 = 0; i1 < lines.Count; i1++)
             {
-                string line = lines[i1];
+                var line = lines[i1];
                 lineNumber++;
                 if (!eventsStarted)
                 {
@@ -442,11 +456,11 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                 }
                 else if (eventsStarted && !string.IsNullOrWhiteSpace(line))
                 {
-                    string s = line.Trim().ToLowerInvariant();
+                    var s = line.Trim().ToLowerInvariant();
                     if (line.Length > 10 && s.StartsWith("format:", StringComparison.Ordinal))
                     {
                         var format = s.Substring(8).Split(',');
-                        for (int i = 0; i < format.Length; i++)
+                        for (var i = 0; i < format.Length; i++)
                         {
                             var formatTrimmed = format[i].Trim();
                             if (formatTrimmed.Equals("layer", StringComparison.Ordinal))
@@ -532,7 +546,7 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                             splitLine = line.Split(',');
                         }
 
-                        for (int i = 0; i < splitLine.Length; i++)
+                        for (var i = 0; i < splitLine.Length; i++)
                         {
                             if (i == indexStart)
                             {
@@ -656,7 +670,7 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
         private static TimeCode GetTimeCodeFromString(string time)
         {
             // h:mm:ss.cc
-            string[] timeCode = time.Split(':', '.');
+            var timeCode = time.Split(':', '.');
             return new TimeCode(int.Parse(timeCode[0]),
                                 int.Parse(timeCode[1]),
                                 int.Parse(timeCode[2]),
@@ -671,13 +685,13 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
             }
             else
             {
-                foreach (Paragraph p in subtitle.Paragraphs)
+                foreach (var p in subtitle.Paragraphs)
                 {
-                    int indexOfBegin = p.Text.IndexOf('{');
-                    string pre = string.Empty;
+                    var indexOfBegin = p.Text.IndexOf('{');
+                    var pre = string.Empty;
                     while (indexOfBegin >= 0 && p.Text.IndexOf('}') > indexOfBegin)
                     {
-                        string s = p.Text.Substring(indexOfBegin);
+                        var s = p.Text.Substring(indexOfBegin);
                         if (s.StartsWith("{\\an1}", StringComparison.Ordinal) ||
                             s.StartsWith("{\\an2}", StringComparison.Ordinal) ||
                             s.StartsWith("{\\an3}", StringComparison.Ordinal) ||
@@ -731,11 +745,13 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                         {
                             pre = "{\\an9}";
                         }
-                        int indexOfEnd = p.Text.IndexOf('}');
+
+                        var indexOfEnd = p.Text.IndexOf('}');
                         p.Text = p.Text.Remove(indexOfBegin, (indexOfEnd - indexOfBegin) + 1);
 
                         indexOfBegin = p.Text.IndexOf('{');
                     }
+
                     p.Text = pre + p.Text;
                 }
             }
@@ -795,6 +811,19 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, TertiaryColour, BackColour, Bold, Italic, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, AlphaLevel, Encoding
 {style.Trim() + Environment.NewLine}
 [Events]");
+        }
+
+        public static string DefaultHeader
+        {
+            get
+            {
+                var format = new SubStationAlpha();
+                var sub = new Subtitle();
+                var text = format.ToText(sub, string.Empty);
+                var lines = text.SplitToLines();
+                format.LoadSubtitle(sub, lines, string.Empty);
+                return sub.Header;
+            }
         }
     }
 }

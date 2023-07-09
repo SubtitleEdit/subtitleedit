@@ -2,7 +2,7 @@
 <Language Name="Norsk">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.10</Version>
+    <Version>3.6.13</Version>
     <TranslatedBy>Oversatt av Dandelion Sprout</TranslatedBy>
     <CultureName>nb-NO</CultureName>
     <HelpFile />
@@ -1214,7 +1214,7 @@ Vil du starte fra toppen av dokumentet og lete en gang til?</ReplaceXContinue>
     <BeforeDisplayTimeAdjustment>Før visning av tidsjusteringer</BeforeDisplayTimeAdjustment>
     <DisplayTimeAdjustedX>Visningstid justert: {0}</DisplayTimeAdjustedX>
     <DisplayTimesAdjustedX>Visningstider justert: {0}</DisplayTimesAdjustedX>
-    <StarTimeAdjustedX>Starttid justert: {0}</StarTimeAdjustedX>
+    <StartTimeAdjustedX>Starttid justert: {0}</StartTimeAdjustedX>
     <BeforeCommonErrorFixes>Før korrigering av vanlige feil</BeforeCommonErrorFixes>
     <CommonErrorsFixedInSelectedLines>Vanlige feil korrigert i valgte linjer</CommonErrorsFixedInSelectedLines>
     <CommonErrorsFixed>Vanlige feil er korrigert</CommonErrorsFixed>
@@ -2136,7 +2136,7 @@ Vil du beholde endringene?</KeepChangesMessage>
     <TransportStreamGrayscale>Monokrom</TransportStreamGrayscale>
     <TransportStreamGetColor>Bruk farger (vil inkludere litt oppdeling av linjer)</TransportStreamGetColor>
     <PromptForUnknownWords>Versel ved ukjente ord</PromptForUnknownWords>
-    <TryToGuessUnkownWords>Prøv å gjette på ukjente ord</TryToGuessUnkownWords>
+    <TryToGuessUnknownWords>Prøv å gjette på ukjente ord</TryToGuessUnknownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>Autobryt paragrafer hvis de er mer enn to linjer</AutoBreakSubtitleIfMoreThanTwoLines>
     <AllFixes>Alle korrigeringer</AllFixes>
     <GuessesUsed>Gjetninger brukt</GuessesUsed>

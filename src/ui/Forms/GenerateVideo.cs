@@ -21,6 +21,7 @@ namespace Nikse.SubtitleEdit.Forms
         private long _totalFrames;
         private static readonly Regex FrameFinderRegex = new Regex(@"[Ff]rame=\s*\d+", RegexOptions.Compiled);
         private Bitmap _backgroundImage;
+        private bool _promptFFmpegParameters;
 
         public GenerateVideo(Subtitle subtitle, VideoInfo videoInfo)
         {
@@ -67,6 +68,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelResolution.Text = LanguageSettings.Current.ExportPngXml.VideoResolution;
             labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
+            checkBoxAddTimeCode.Text = LanguageSettings.Current.ImportText.GenerateTimeCodes;
             progressBar1.Visible = false;
             labelPleaseWait.Visible = false;
             labelProgress.Text = string.Empty;
@@ -106,7 +108,12 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (videoInfo != null && videoInfo.Success && videoInfo.TotalSeconds > 0)
             {
-                numericUpDownDurationMinutes.Value = (decimal)(videoInfo.TotalSeconds / 60.0);
+                var target = (decimal)(videoInfo.TotalSeconds / 60.0);
+                if (target >= numericUpDownDurationMinutes.Minimum &&
+                    target <= numericUpDownDurationMinutes.Maximum)
+                {
+                    numericUpDownDurationMinutes.Value = target;
+                }
             }
         }
 
@@ -135,7 +142,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void buttonOK_Click(object sender, EventArgs e)
+        private void buttonGenerate_Click(object sender, EventArgs e)
         {
             EnableDisableControls(false);
 
@@ -160,6 +167,12 @@ namespace Nikse.SubtitleEdit.Forms
                 File.Delete(VideoFileName);
             }
 
+            var addTimeColor = "white";
+            if (radioButtonCheckeredImage.Checked)
+            {
+                addTimeColor = "black";
+            }
+
             progressBar1.Visible = true;
             labelPleaseWait.Visible = true;
             var process = VideoPreviewGenerator.GenerateVideoFile(
@@ -171,7 +184,15 @@ namespace Nikse.SubtitleEdit.Forms
                 radioButtonCheckeredImage.Checked,
                 decimal.Parse(comboBoxFrameRate.Text),
                 radioButtonImage.Checked ? _backgroundImage : null,
-                OutputHandler);
+                OutputHandler,
+                checkBoxAddTimeCode.Checked,
+                addTimeColor);
+
+            if (!CheckForPromptParameters(process, Text))
+            {
+                _abort = true;
+                return;
+            }
 
             process.Start();
             process.BeginOutputReadLine();
@@ -201,6 +222,26 @@ namespace Nikse.SubtitleEdit.Forms
             timer1.Stop();
             labelProgress.Text = string.Empty;
             DialogResult = _abort ? DialogResult.Cancel : DialogResult.OK;
+        }
+
+        private bool CheckForPromptParameters(Process process, string title)
+        {
+            if (!_promptFFmpegParameters)
+            {
+                return true;
+            }
+
+            using (var form = new GenerateVideoFFmpegPrompt(title, process.StartInfo.Arguments))
+            {
+                if (form.ShowDialog(this) != DialogResult.OK)
+                {
+                    return false;
+                }
+
+                process.StartInfo.Arguments = form.Parameters;
+            }
+
+            return true;
         }
 
         private void EnableDisableControls(bool enable)
@@ -364,6 +405,13 @@ namespace Nikse.SubtitleEdit.Forms
         private void GenerateVideo_Shown(object sender, EventArgs e)
         {
             buttonGenerate.Show();
+        }
+
+        private void promptParameterBeforeGenerateToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            _promptFFmpegParameters = true;
+            buttonGenerate_Click(null, null);
+
         }
     }
 }

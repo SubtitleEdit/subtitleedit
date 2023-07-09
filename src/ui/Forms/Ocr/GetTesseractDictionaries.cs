@@ -1,9 +1,11 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Http;
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -30,7 +32,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             labelPleaseWait.Text = string.Empty;
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             FixLargeFonts();
-            _dictionaries = TesseractDictionary.List();
+            _dictionaries = TesseractDictionary.List().OrderBy(p=>p.Name).ToList();
             LoadDictionaryList(first);
             _cancellationTokenSource = new CancellationTokenSource();
         }
@@ -85,7 +87,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
                 ChosenLanguage = comboBoxDictionaries.Items[index].ToString();
 
-                var httpClient = HttpClientHelper.MakeHttpClient();
+                var httpClient = DownloaderFactory.MakeHttpClient();
                 using (var downloadStream = new MemoryStream())
                 {
                     var downloadTask = httpClient.DownloadAsync(url, downloadStream, new Progress<float>((progress) =>

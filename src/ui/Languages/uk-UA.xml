@@ -2,7 +2,7 @@
 <Language Name="українська">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.10</Version>
+    <Version>3.6.13</Version>
     <TranslatedBy>Переклад: Максим Кобєлєв http://mazepa-studio.com</TranslatedBy>
     <CultureName>uk-UA</CultureName>
     <HelpFile />
@@ -1207,7 +1207,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <BeforeDisplayTimeAdjustment>Перед зміною тривалостей</BeforeDisplayTimeAdjustment>
     <DisplayTimeAdjustedX>Тривалість змінено: {0}</DisplayTimeAdjustedX>
     <DisplayTimesAdjustedX>Тривалості змінено: {0}</DisplayTimesAdjustedX>
-    <StarTimeAdjustedX>Змінено початок: {0}</StarTimeAdjustedX>
+    <StartTimeAdjustedX>Змінено початок: {0}</StartTimeAdjustedX>
     <BeforeCommonErrorFixes>Перед виправленням типових проблем</BeforeCommonErrorFixes>
     <CommonErrorsFixedInSelectedLines>Типові проблеми виправлено у вибраних рядках</CommonErrorsFixedInSelectedLines>
     <CommonErrorsFixed>Типові проблеми виправлено</CommonErrorsFixed>
@@ -2128,7 +2128,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <TransportStreamGrayscale>Відтінки сірого</TransportStreamGrayscale>
     <TransportStreamGetColor>Використовувати колір (включатиме розбиття деяких рядків)</TransportStreamGetColor>
     <PromptForUnknownWords>Запитувати про невідомі слова</PromptForUnknownWords>
-    <TryToGuessUnkownWords>Намагатися вгадати невідомі слова</TryToGuessUnkownWords>
+    <TryToGuessUnknownWords>Намагатися вгадати невідомі слова</TryToGuessUnknownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>Автоматично розбивати субтитр, якщо більше двох рядків</AutoBreakSubtitleIfMoreThanTwoLines>
     <AllFixes>Всі виправлення</AllFixes>
     <GuessesUsed>Використані здогадки</GuessesUsed>

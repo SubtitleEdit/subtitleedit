@@ -156,7 +156,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             {
                 ParagraphMaxChars = Configuration.Settings.General.SubtitleLineMaximumLength * 2,
             };
-            TranscribedSubtitle = postProcessor.Generate(AudioToTextPostProcessor.Engine.Vosk, transcript, checkBoxUsePostProcessing.Checked, true, true, true, true, false);
+            TranscribedSubtitle = postProcessor.Fix(AudioToTextPostProcessor.Engine.Vosk, transcript, checkBoxUsePostProcessing.Checked, true, true, true, true, false);
             DialogResult = DialogResult.OK;
         }
 
@@ -218,7 +218,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 {
                     ParagraphMaxChars = Configuration.Settings.General.SubtitleLineMaximumLength * 2,
                 };
-                TranscribedSubtitle = postProcessor.Generate(AudioToTextPostProcessor.Engine.Vosk, transcript, checkBoxUsePostProcessing.Checked, true, true, true, true, false);
+                TranscribedSubtitle = postProcessor.Fix(AudioToTextPostProcessor.Engine.Vosk, transcript, checkBoxUsePostProcessing.Checked, true, true, true, true, false);
 
                 SaveToSourceFolder(videoFileName);
                 TaskbarList.SetProgressValue(_parentForm.Handle, _batchFileNumber, listViewInputFiles.Items.Count);
@@ -570,7 +570,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             }
             else if (e.KeyData == UiUtil.HelpKeys)
             {
-                UiUtil.ShowHelp("#audio_to_text");
+                UiUtil.ShowHelp("#audio_to_text_vosk");
                 e.SuppressKeyPress = true;
             }
         }

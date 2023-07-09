@@ -822,6 +822,13 @@ namespace Nikse.SubtitleEdit.Forms
             _newLog.Clear();
 
             Subtitle = new Subtitle(FixedSubtitle, false);
+
+            if (listView1.Items[IndexFixDoubleDash].Checked)
+            {
+                var fixItem = (FixItem)listView1.Items[IndexFixDoubleDash].Tag;
+                fixItem.Action.Invoke();
+            }
+
             if (listView1.Items[IndexFixOcrErrorsViaReplaceList].Checked)
             {
                 var fixItem = (FixItem)listView1.Items[IndexFixOcrErrorsViaReplaceList].Tag;
@@ -2086,6 +2093,70 @@ namespace Nikse.SubtitleEdit.Forms
         private void selectDefaultToolStripMenuItem_Click(object sender, EventArgs e)
         {
             buttonResetDefault_Click(null, null);
+        }
+
+        private void listView1_KeyDown(object sender, KeyEventArgs e)
+        {
+            var items = listView1.Items;
+            if (e.KeyCode == Keys.A && e.Modifiers == Keys.Control)
+            {
+                foreach (ListViewItem item in items)
+                {
+                    item.Checked = true;
+                    item.Selected = true;
+                }
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyCode == Keys.D && e.Modifiers == Keys.Control)
+            {
+                foreach (ListViewItem item in items)
+                {
+                    item.Checked = false;
+                    item.Selected = false;
+                }
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyCode == Keys.I && e.Modifiers == (Keys.Control | Keys.Shift)) //InverseSelection
+            {
+                foreach (ListViewItem item in items)
+                {
+                    item.Checked = !item.Checked;
+                }
+                e.SuppressKeyPress = true;
+                e.SuppressKeyPress = true;
+            }
+        }
+
+        private void listViewFixes_KeyDown(object sender, KeyEventArgs e)
+        {
+            var items = listViewFixes.Items;
+            if (e.KeyCode == Keys.A && e.Modifiers == Keys.Control)
+            {
+                foreach (ListViewItem item in items)
+                {
+                    item.Checked = true;
+                    item.Selected = true;
+                }
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyCode == Keys.D && e.Modifiers == Keys.Control)
+            {
+                foreach (ListViewItem item in items)
+                {
+                    item.Checked = false;
+                    item.Selected = false;
+                }
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyCode == Keys.I && e.Modifiers == (Keys.Control | Keys.Shift)) //InverseSelection
+            {
+                foreach (ListViewItem item in items)
+                {
+                    item.Checked = !item.Checked;
+                }
+                e.SuppressKeyPress = true;
+                e.SuppressKeyPress = true;
+            }
         }
     }
 }

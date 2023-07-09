@@ -32,7 +32,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            TimeCode timeCode1 = new TimeCode();
+            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode2 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonNextFinish = new System.Windows.Forms.Button();
             this.labelStatus = new System.Windows.Forms.Label();
@@ -252,6 +252,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.listView1.TabIndex = 1;
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
+            this.listView1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listView1_KeyDown);
             // 
             // columnHeader1
             // 
@@ -407,6 +408,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.listViewFixes.View = System.Windows.Forms.View.Details;
             this.listViewFixes.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.ListViewFixesColumnClick);
             this.listViewFixes.SelectedIndexChanged += new System.EventHandler(this.ListViewFixesSelectedIndexChanged);
+            this.listViewFixes.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listViewFixes_KeyDown);
             // 
             // columnHeader4
             // 
@@ -654,16 +656,16 @@ namespace Nikse.SubtitleEdit.Forms
             this.timeUpDownStartTime.Location = new System.Drawing.Point(8, 27);
             this.timeUpDownStartTime.Margin = new System.Windows.Forms.Padding(4);
             this.timeUpDownStartTime.Name = "timeUpDownStartTime";
-            this.timeUpDownStartTime.Size = new System.Drawing.Size(111, 27);
+            this.timeUpDownStartTime.Size = new System.Drawing.Size(113, 27);
             this.timeUpDownStartTime.TabIndex = 112;
-            timeCode1.Hours = 0;
-            timeCode1.Milliseconds = 0;
-            timeCode1.Minutes = 0;
-            timeCode1.Seconds = 0;
-            timeCode1.TimeSpan = System.TimeSpan.Parse("00:00:00");
-            timeCode1.TotalMilliseconds = 0D;
-            timeCode1.TotalSeconds = 0D;
-            this.timeUpDownStartTime.TimeCode = timeCode1;
+            timeCode2.Hours = 0;
+            timeCode2.Milliseconds = 0;
+            timeCode2.Minutes = 0;
+            timeCode2.Seconds = 0;
+            timeCode2.TimeSpan = System.TimeSpan.Parse("00:00:00");
+            timeCode2.TotalMilliseconds = 0D;
+            timeCode2.TotalSeconds = 0D;
+            this.timeUpDownStartTime.TimeCode = timeCode2;
             this.timeUpDownStartTime.UseVideoOffset = false;
             // 
             // numericUpDownDuration

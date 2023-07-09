@@ -9,6 +9,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     public class CsvNuendo : SubtitleFormat
     {
         private static readonly Regex CsvLine = new Regex("^(\"(.*)\")*,\\d+:\\d+:\\d+:\\d+,\\d+:\\d+:\\d+:\\d+,(\"(.*)\")*", RegexOptions.Compiled);
+        private static readonly Regex CsvLineNoQuotes = new Regex("[^\"][^,]+[^\"],\\d+:\\d+:\\d+:\\d+,\\d+:\\d+:\\d+:\\d+,[^\"][^,]+[^\"]", RegexOptions.Compiled);
+        private static readonly Regex CsvLineNoQuotesFirst = new Regex("[^\"][^,]+[^\"],\\d+:\\d+:\\d+:\\d+,\\d+:\\d+:\\d+:\\d+,(\"(.*)\")*", RegexOptions.Compiled);
+        private static readonly Regex CsvLineAllQuotes = new Regex("^(\"(.*)\")*,\"\\d+:\\d+:\\d+:\\d+\",\"\\d+:\\d+:\\d+:\\d+\",(\"(.*)\")*", RegexOptions.Compiled);
         private const string LineFormat = "{1}{0}{2}{0}{3}{0}{4}";
         private static readonly string Header = string.Format(LineFormat, ",", "\"Character\"", "\"Timecode In\"", "\"Timecode Out\"", "\"Dialogue\"");
 
@@ -19,17 +22,41 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override bool IsMine(List<string> lines, string fileName)
         {
             var fine = 0;
+            var errors = 0;
             var sb = new StringBuilder();
-            foreach (var line in lines)
+            for (var index = 0; index < lines.Count; index++)
             {
+                var line = lines[index];
+                if (index == 0 && 
+                    (line.StartsWith("<tt xmlns", StringComparison.Ordinal) ||
+                     line.StartsWith("<?xml version", StringComparison.Ordinal)))
+                {
+                    return false;
+                }
+
                 sb.Append(line);
-                if (line.IndexOf(':') > 0 && CsvLine.IsMatch(line))
+                if (line.IndexOf(':') > 0 &&
+                    (CsvLine.IsMatch(line) ||
+                     CsvLineNoQuotes.IsMatch(line) ||
+                     CsvLineAllQuotes.IsMatch(line) ||
+                     CsvLineNoQuotesFirst.IsMatch(line)))
                 {
                     fine++;
                 }
+                else
+                {
+                    errors++;
+                    if (fine == 0 && errors > 10)
+                    {
+                        return false;
+                    }
+                }
             }
 
-            return fine > 0 && sb.ToString().Contains(Header);
+            return fine > 0 && sb.ToString()
+                .RemoveChar('"')
+                .RemoveChar(' ')
+                .Contains(Header.RemoveChar('"').RemoveChar(' '));
         }
 
         public override string ToText(Subtitle subtitle, string title)
@@ -52,7 +79,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             Paragraph p = null;
             foreach (var line in lines)
             {
-                if (CsvLine.IsMatch(line))
+                if (line.Contains(':') && 
+                    CsvLine.IsMatch(line) ||
+                    CsvLineNoQuotes.IsMatch(line) ||
+                    CsvLineAllQuotes.IsMatch(line) ||
+                    CsvLineNoQuotesFirst.IsMatch(line))
                 {
                     var parts = CsvUtil.CsvSplit(line, false, out var con);
                     continuation = con;
@@ -60,10 +91,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         try
                         {
-                            var actor = Utilities.FixQuotes(parts[0]);
+                            var actor = parts[0];
                             var start = DecodeTime(parts[1]);
                             var end = DecodeTime(parts[2]);
-                            var text = Utilities.FixQuotes(parts[3]);
+                            var text = parts[3];
                             p = new Paragraph(start, end, text);
                             if (!string.IsNullOrEmpty(actor))
                             {

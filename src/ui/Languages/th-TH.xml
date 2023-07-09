@@ -2,7 +2,7 @@
 <Language Name="ไทย">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.10</Version>
+    <Version>3.6.13</Version>
     <TranslatedBy>ภาษาไทยโดย Bonfelder</TranslatedBy>
     <CultureName>th-TH</CultureName>
     <HelpFile />
@@ -1147,7 +1147,7 @@
     <BeforeDisplayTimeAdjustment>ก่อนการปรับเวลาแสดงผล</BeforeDisplayTimeAdjustment>
     <DisplayTimeAdjustedX>เวลาแสดงผลที่ปรับแล้ว: {0}</DisplayTimeAdjustedX>
     <DisplayTimesAdjustedX>เวลาแสดงผลที่ปรับแล้ว: {0}</DisplayTimesAdjustedX>
-    <StarTimeAdjustedX>เวลาเริ่มต้นที่ปรับแล้ว: {0}</StarTimeAdjustedX>
+    <StartTimeAdjustedX>เวลาเริ่มต้นที่ปรับแล้ว: {0}</StartTimeAdjustedX>
     <BeforeCommonErrorFixes>ก่อนแก้ไขข้อผิดพลาดทั่วไป</BeforeCommonErrorFixes>
     <CommonErrorsFixedInSelectedLines>ข้อผิดพลาดทั่วไปที่แก้แล้วบนบรรทัดที่เลือก</CommonErrorsFixedInSelectedLines>
     <CommonErrorsFixed>ข้อผิดพลาดทั่วไปที่แก้แล้ว</CommonErrorsFixed>
@@ -2033,7 +2033,7 @@
     <TransportStreamGrayscale>ขาวดำ</TransportStreamGrayscale>
     <TransportStreamGetColor>ใช้สี (อาจเกิดการแบ่งบรรทัด)</TransportStreamGetColor>
     <PromptForUnknownWords>ยืนยันคำที่ไม่รู้จัก</PromptForUnknownWords>
-    <TryToGuessUnkownWords>พยายามเดาคำที่ไม่รู้จัก</TryToGuessUnkownWords>
+    <TryToGuessUnknownWords>พยายามเดาคำที่ไม่รู้จัก</TryToGuessUnknownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>แบ่งย่อหน้าอัตโนมัติถ้ายาวเกินสองบรรทัด</AutoBreakSubtitleIfMoreThanTwoLines>
     <AllFixes>ส่วนที่แก้ทั้งหมด</AllFixes>
     <GuessesUsed>สิ่งที่เดาไปทั้งหมด</GuessesUsed>

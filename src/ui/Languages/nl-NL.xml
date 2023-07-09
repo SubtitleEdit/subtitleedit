@@ -2,7 +2,7 @@
 <Language Name="Nederlands">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.10</Version>
+    <Version>3.6.13</Version>
     <TranslatedBy>Vertaald door Quetsbeek, minouhse, René Maassen en Flitskikker</TranslatedBy>
     <CultureName>nl-NL</CultureName>
     <HelpFile />
@@ -1343,7 +1343,7 @@ Wilt u het zoeken/vervangen vanaf het begin van het document voortzetten?</Repla
     <BeforeDisplayTimeAdjustment>Vóór aanpassing weergavetĳd</BeforeDisplayTimeAdjustment>
     <DisplayTimeAdjustedX>Weergavetĳd aangepast: {0}</DisplayTimeAdjustedX>
     <DisplayTimesAdjustedX>Weergavetĳden aangepast: {0}</DisplayTimesAdjustedX>
-    <StarTimeAdjustedX>Begintĳd aangepast: {0}</StarTimeAdjustedX>
+    <StartTimeAdjustedX>Begintĳd aangepast: {0}</StartTimeAdjustedX>
     <BeforeCommonErrorFixes>Vóór correctie veelvoorkomende fouten</BeforeCommonErrorFixes>
     <CommonErrorsFixedInSelectedLines>Veelvoorkomende fouten gecorrigeerd in geselecteerde titels</CommonErrorsFixedInSelectedLines>
     <CommonErrorsFixed>Veelvoorkomende fouten gecorrigeerd</CommonErrorsFixed>
@@ -2056,7 +2056,7 @@ hetzelfde ondertitelbestand bewerken (samenwerken)</Information>
     <GoForward1Second>Eén seconde vooruit</GoForward1Second>
     <GoBack5Seconds>Vĳf seconden terug</GoBack5Seconds>
     <GoForward5Seconds>Vĳf seconden vooruit</GoForward5Seconds>
-    <GoBack3Second>Drie seconden terug</GoBack3Second>
+    <GoBack3Seconds>Drie seconden terug</GoBack3Seconds>
     <GoToStartCurrent>Videopositie instellen op begin van huidige ondertitel</GoToStartCurrent>
     <ToggleStartEndCurrent>Videopositie wisselen tussen begin/einde huidige ondertitel</ToggleStartEndCurrent>
     <PlayCurrent>Huidige ondertitel afspelen</PlayCurrent>
@@ -2475,7 +2475,7 @@ Wilt u deze wĳzigingen behouden?</KeepChangesMessage>
     <TransportStreamGrayscale>Grĳswaarden</TransportStreamGrayscale>
     <TransportStreamGetColor>Kleur gebruiken (ook bĳ enkele regeleinden)</TransportStreamGetColor>
     <PromptForUnknownWords>Naar onbekende woorden vragen</PromptForUnknownWords>
-    <TryToGuessUnkownWords>Proberen onbekende woorden te raden</TryToGuessUnkownWords>
+    <TryToGuessUnknownWords>Proberen onbekende woorden te raden</TryToGuessUnknownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>Titel met meer dan twee regels automatisch afbreken</AutoBreakSubtitleIfMoreThanTwoLines>
     <AllFixes>Alle correcties</AllFixes>
     <GuessesUsed>Gebruikte schattingen</GuessesUsed>

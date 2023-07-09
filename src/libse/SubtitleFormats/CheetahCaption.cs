@@ -47,14 +47,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 byte[] buffer = { 0xEA, 0x22, 1, 0 }; // header
                 fs.Write(buffer, 0, buffer.Length);
 
-                int numberOfLines = subtitle.Paragraphs.Count;
+                var numberOfLines = subtitle.Paragraphs.Count;
                 fs.WriteByte((byte)(numberOfLines % 256)); // paragraphs - low byte
                 fs.WriteByte((byte)(numberOfLines / 256)); // paragraphs - high byte
 
                 buffer = new byte[] { 9, 0xA8, 0xAF, 0x4F }; // ?
                 fs.Write(buffer, 0, buffer.Length);
 
-                for (int i = 0; i < 118; i++)
+                for (var i = 0; i < 118; i++)
                 {
                     fs.WriteByte(0);
                 }
@@ -62,11 +62,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 var dictionaryLatinCode = DicCodeLatin.ToLookup(pair => pair.Value, pair => pair.Key);
 
                 // paragraphs
-                for (int index = 0; index < subtitle.Paragraphs.Count; index++)
+                for (var index = 0; index < subtitle.Paragraphs.Count; index++)
                 {
                     var p = subtitle.Paragraphs[index];
                     var next = subtitle.GetParagraphOrDefault(index + 1);
-                    string text = p.Text;
+                    var text = p.Text;
 
                     var bufferShort = new byte[]
                     {
@@ -166,8 +166,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         }
                     }
 
-                    int length = textBytes.Count + 20;
-                    long end = fs.Position + length;
+                    var length = textBytes.Count + 20;
+                    var end = fs.Position + length;
                     if (Configuration.Settings.SubtitleSettings.CheetahCaptionAlwayWriteEndTime || next == null || next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds >= 1500)
                     {
                         fs.WriteByte((byte)length);
@@ -194,7 +194,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         fs.Write(bufferShort, 0, bufferShort.Length); // styles
                     }
 
-                    foreach (byte b in textBytes) // text
+                    foreach (var b in textBytes) // text
                     {
                         fs.WriteByte(b);
                     }
@@ -224,8 +224,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     if (fileName.EndsWith(".cap", StringComparison.OrdinalIgnoreCase))
                     {
-                        byte[] buffer = FileUtil.ReadAllBytesShared(fileName);
-                        for (int i = 0; i < buffer.Length - 20; i++)
+                        var buffer = FileUtil.ReadAllBytesShared(fileName);
+                        for (var i = 0; i < buffer.Length - 20; i++)
                         {
                             if (buffer[i + 0] == 0xEA &&
                                 buffer[i + 1] == 0x22 &&
@@ -251,9 +251,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             subtitle.Paragraphs.Clear();
             subtitle.Header = null;
-            byte[] buffer = FileUtil.ReadAllBytesShared(fileName);
+            var buffer = FileUtil.ReadAllBytesShared(fileName);
 
-            int i = 128;
+            var i = 128;
             Paragraph last = null;
             var sb = new StringBuilder();
             while (i < buffer.Length - 16)
@@ -261,7 +261,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 var p = new Paragraph();
                 int length = buffer[i];
 
-                int usedBytes = 20;
+                var usedBytes = 20;
 
                 p.StartTime = DecodeTimestamp(buffer, i + 2);
                 p.EndTime = DecodeTimestamp(buffer, i + 6);
@@ -271,9 +271,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     usedBytes = 20 - 4;
                 }
 
-                int textLength = length - usedBytes;
-                int start = usedBytes - 1;
-                for (int j = 0; j < 4 && i + start - 1 < buffer.Length; j++)
+                var textLength = length - usedBytes;
+                var start = usedBytes - 1;
+                for (var j = 0; j < 4 && i + start - 1 < buffer.Length; j++)
                 {
                     if (buffer[i + start - 1] > 0x10)
                     {
@@ -290,12 +290,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
 
                     sb.Clear();
-                    int j = 0;
-                    bool italics = false;
+                    var j = 0;
+                    var italics = false;
                     var encoding = Encoding.GetEncoding(1252);
                     while (j < textLength)
                     {
-                        int index = i + start + j;
+                        var index = i + start + j;
                         if (buffer[index] == 0)
                         {
                             if (italics)

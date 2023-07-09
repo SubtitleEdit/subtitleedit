@@ -69,7 +69,6 @@ namespace Nikse.SubtitleEdit.Controls
             KeyPress += UiTextBox_KeyPress;
             KeyDown += UiTextBox_KeyDown;
             MouseDown += UiTextBox_MouseDown;
-
             TextChanged += TextChangedHighlight;
             HandleCreated += (sender, args) =>
             {
@@ -163,7 +162,7 @@ namespace Nikse.SubtitleEdit.Controls
                 var text = base.Text;
                 var extra = 0;
                 var target = base.SelectionStart;
-                for (int i = 0; i < target && i < text.Length; i++)
+                for (var i = 0; i < target && i < text.Length; i++)
                 {
                     if (text[i] == '\n')
                     {
@@ -177,7 +176,7 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 var text = base.Text;
                 var extra = 0;
-                for (int i = 0; i < value && i < text.Length; i++)
+                for (var i = 0; i < value && i < text.Length; i++)
                 {
                     if (text[i] == '\n')
                     {
@@ -202,7 +201,7 @@ namespace Nikse.SubtitleEdit.Controls
                 var text = base.Text;
                 var extra = 0;
                 var start = SelectionStart;
-                for (int i = start; i < target + start && i < text.Length; i++)
+                for (var i = start; i < target + start && i < text.Length; i++)
                 {
                     if (text[i] == '\n')
                     {
@@ -224,7 +223,7 @@ namespace Nikse.SubtitleEdit.Controls
                 var text = base.Text;
                 var extra = 0;
                 var start = SelectionStart;
-                for (int i = start; i < target + start && i < text.Length; i++)
+                for (var i = start; i < target + start && i < text.Length; i++)
                 {
                     if (text[i] == '\n')
                     {
@@ -246,7 +245,7 @@ namespace Nikse.SubtitleEdit.Controls
         {
             var text = base.Text;
             var extra = 0;
-            for (int i = 0; i < index && i < text.Length; i++)
+            for (var i = 0; i < index && i < text.Length; i++)
             {
                 if (text[i] == '\n')
                 {
@@ -264,7 +263,14 @@ namespace Nikse.SubtitleEdit.Controls
             var length = SelectionLength;
             formattingAction();
             SelectionStart = start;
+            if (SelectionStart < start)
+            {
+                SelectionStart = start + 1;
+            }
+
             SelectionLength = length;
+
+
             this.EndRichTextBoxUpdate();
         }
 
@@ -322,19 +328,19 @@ namespace Nikse.SubtitleEdit.Controls
             SelectionColor = ForeColor;
             SelectionBackColor = BackColor;
 
-            bool htmlTagOn = false;
-            bool htmlTagFontOn = false;
-            int htmlTagStart = -1;
-            bool assaTagOn = false;
-            bool assaPrimaryColorTagOn = false;
-            bool assaSecondaryColorTagOn = false;
-            bool assaBorderColorTagOn = false;
-            bool assaShadowColorTagOn = false;
+            var htmlTagOn = false;
+            var htmlTagFontOn = false;
+            var htmlTagStart = -1;
+            var assaTagOn = false;
+            var assaPrimaryColorTagOn = false;
+            var assaSecondaryColorTagOn = false;
+            var assaBorderColorTagOn = false;
+            var assaShadowColorTagOn = false;
             var assaTagStart = -1;
-            int tagOn = -1;
+            var tagOn = -1;
             var text = Text;
             var textLength = text.Length;
-            int i = 0;
+            var i = 0;
 
             while (i < textLength)
             {
@@ -433,7 +439,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         private void SetHtmlColor(string text, int htmlTagStart)
         {
-            int colorStart = text.IndexOf(" color=", htmlTagStart, StringComparison.OrdinalIgnoreCase);
+            var colorStart = text.IndexOf(" color=", htmlTagStart, StringComparison.OrdinalIgnoreCase);
             if (colorStart > 0)
             {
                 colorStart += " color=".Length;
@@ -442,7 +448,7 @@ namespace Nikse.SubtitleEdit.Controls
                     colorStart++;
                 }
 
-                int colorEnd = text.IndexOf('"', colorStart + 1);
+                var colorEnd = text.IndexOf('"', colorStart + 1);
                 if (colorEnd > 0)
                 {
                     var color = text.Substring(colorStart, colorEnd - colorStart);
@@ -471,7 +477,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         private void SetAssaColor(string text, int assaTagStart, string colorTag)
         {
-            int colorStart = text.IndexOf(colorTag, assaTagStart, StringComparison.OrdinalIgnoreCase);
+            var colorStart = text.IndexOf(colorTag, assaTagStart, StringComparison.OrdinalIgnoreCase);
             if (colorStart > 0)
             {
                 colorStart += colorTag.Length;
@@ -484,7 +490,7 @@ namespace Nikse.SubtitleEdit.Controls
                     colorStart++;
                 }
 
-                int colorEnd = text.IndexOfAny(new[] { '}', '\\', '&' }, colorStart + 1);
+                var colorEnd = text.IndexOfAny(new[] { '}', '\\', '&' }, colorStart + 1);
                 if (colorEnd > 0)
                 {
                     var color = text.Substring(colorStart, colorEnd - colorStart);
@@ -524,19 +530,51 @@ namespace Nikse.SubtitleEdit.Controls
         }
 
         private const int WM_PAINT = 0x0F;
+        private const int WM_LBUTTONDBLCLK = 0x0203;
+
         protected override void WndProc(ref Message m)
         {
-            base.WndProc(ref m);
-
-            if (m.Msg == WM_PAINT)
+            if (m.Msg == WM_LBUTTONDBLCLK)
             {
-                if (!Enabled && Configuration.Settings.General.UseDarkTheme)
+                var text = Text;
+                var posStart = SelectionStart;
+                if (posStart >= 0 && posStart < text.Length && char.IsLetterOrDigit(text[posStart]))
                 {
-                    using (var g = Graphics.FromHwnd(Handle))
-                    using (var sb = new SolidBrush(BackColor))
+                    var posEnd = posStart;
+                    while (posStart > 0 && char.IsLetterOrDigit(text[posStart - 1]))
                     {
-                        g.FillRectangle(sb, ClientRectangle);
+                        posStart--;
                     }
+
+                    while (posEnd < text.Length && char.IsLetterOrDigit(text[posEnd]))
+                    {
+                        posEnd++;
+                    }
+
+                    if (posEnd < text.Length && text[posEnd] == '\r')
+                    {
+                        posEnd++;
+                    }
+
+                    var length = posEnd - posStart;
+                    if (length > 0)
+                    {
+                        SelectionStart = posStart;
+                        SelectionLength = length;
+                    }
+                }
+            }
+            else
+            {
+                base.WndProc(ref m);
+            }
+
+            if (m.Msg == WM_PAINT && !Enabled && Configuration.Settings.General.UseDarkTheme)
+            {
+                using (var g = Graphics.FromHwnd(Handle))
+                using (var sb = new SolidBrush(BackColor))
+                {
+                    g.FillRectangle(sb, ClientRectangle);
                 }
             }
         }
@@ -605,7 +643,7 @@ namespace Nikse.SubtitleEdit.Controls
         private void LoadDictionaries(string languageName)
         {
             var dictionaryFolder = Utilities.DictionaryFolder;
-            string dictionary = Utilities.DictionaryFolder + languageName;
+            var dictionary = Utilities.DictionaryFolder + languageName;
             _spellCheckWordLists = new SpellCheckWordLists(dictionaryFolder, languageName, this);
             _skipAllList = new List<string>();
             _skipOnceList = new HashSet<string>();
@@ -666,17 +704,17 @@ namespace Nikse.SubtitleEdit.Controls
         {
             _wrongWords = new List<SpellCheckWord>();
 
-            for (int i = 0; i < _words.Count; i++)
+            for (var i = 0; i < _words.Count; i++)
             {
                 var currentWord = _words[i];
                 var currentWordText = _words[i].Text;
-                int minLength = 2;
+                var minLength = 2;
                 if (Configuration.Settings.Tools.CheckOneLetterWords)
                 {
                     minLength = 1;
                 }
 
-                string key = CurrentLineIndex + "-" + currentWord.Text + "-" + currentWord.Index;
+                var key = CurrentLineIndex + "-" + currentWord.Text + "-" + currentWord.Index;
                 if (DoSpell(currentWordText) || Utilities.IsNumber(currentWordText) || _skipAllList.Contains(currentWordText)
                     || _skipOnceList.Contains(key) || _spellCheckWordLists.HasUserWord(currentWordText) || _spellCheckWordLists.HasName(currentWordText)
                     || currentWordText.Length < minLength || currentWordText == "&")
@@ -690,12 +728,12 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     if (currentWordText.Length > 0)
                     {
-                        var trimChars = "'`*#\u200E\u200F\u202A\u202B\u202C\u202D\u202E\u200B\uFEFF";
+                        const string trimChars = "'`*#\u200E\u200F\u202A\u202B\u202C\u202D\u202E\u200B\uFEFF";
                         var charHit = true;
                         while (charHit)
                         {
                             charHit = false;
-                            foreach (char c in trimChars)
+                            foreach (var c in trimChars)
                             {
                                 if (currentWordText.StartsWith(c))
                                 {
@@ -718,7 +756,8 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     continue;
                 }
-                else if (currentWordText.Length > 1)
+
+                if (currentWordText.Length > 1)
                 {
                     if ("`'".Contains(currentWordText[currentWordText.Length - 1]) && DoSpell(currentWordText.TrimEnd('\'').TrimEnd('`')))
                     {
@@ -726,7 +765,7 @@ namespace Nikse.SubtitleEdit.Controls
                     }
 
                     if (currentWordText.EndsWith("'s", StringComparison.Ordinal) && currentWordText.Length > 4
-                    && DoSpell(currentWordText.TrimEnd('s').TrimEnd('\'')))
+                                                                                 && DoSpell(currentWordText.TrimEnd('s').TrimEnd('\'')))
                     {
                         continue;
                     }
@@ -736,7 +775,7 @@ namespace Nikse.SubtitleEdit.Controls
                         continue;
                     }
 
-                    string removeUnicode = currentWordText.Replace("\u200b", string.Empty); // zero width space
+                    var removeUnicode = currentWordText.Replace("\u200b", string.Empty); // zero width space
                     removeUnicode = removeUnicode.Replace("\u2060", string.Empty); // word joiner
                     removeUnicode = removeUnicode.Replace("\ufeff", string.Empty); // zero width no-break space
                     if (DoSpell(removeUnicode))
@@ -761,7 +800,7 @@ namespace Nikse.SubtitleEdit.Controls
                         if (trimmed != currentWordText)
                         {
                             if (_spellCheckWordLists.HasName(trimmed) || _skipAllList.Contains(trimmed.ToUpperInvariant())
-                                || _spellCheckWordLists.HasUserWord(trimmed) || DoSpell(trimmed))
+                                                                      || _spellCheckWordLists.HasUserWord(trimmed) || DoSpell(trimmed))
                             {
                                 continue;
                             }
@@ -779,7 +818,7 @@ namespace Nikse.SubtitleEdit.Controls
 
                         wordWithDash = _words[i - 1].Text + "‑" + currentWordText; // non break hyphen
                         if (DoSpell(wordWithDash) || _spellCheckWordLists.HasUserWord(wordWithDash)
-                        || _spellCheckWordLists.HasUserWord(wordWithDash.Replace("‑", "-")) || _spellCheckWordLists.HasUserWord("-" + currentWordText))
+                                                  || _spellCheckWordLists.HasUserWord(wordWithDash.Replace("‑", "-")) || _spellCheckWordLists.HasUserWord("-" + currentWordText))
                         {
                             continue;
                         }
@@ -808,18 +847,20 @@ namespace Nikse.SubtitleEdit.Controls
                     {
                         continue;
                     }
-                    else if (CurrentLanguage == "en " && (currentWordText.Equals("a", StringComparison.OrdinalIgnoreCase) || currentWordText == "I"))
+
+                    if (CurrentLanguage == "en " && (currentWordText.Equals("a", StringComparison.OrdinalIgnoreCase) || currentWordText == "I"))
                     {
                         continue;
                     }
-                    else if (CurrentLanguage == "da" && currentWordText.Equals("i", StringComparison.OrdinalIgnoreCase))
+
+                    if (CurrentLanguage == "da" && currentWordText.Equals("i", StringComparison.OrdinalIgnoreCase))
                     {
                         continue;
                     }
                 }
 
                 if (Configuration.Settings.Tools.SpellCheckEnglishAllowInQuoteAsIng && CurrentLanguage == "en"
-                    && _words[i].Text.EndsWith("in'", StringComparison.OrdinalIgnoreCase) && DoSpell(currentWordText.TrimEnd('\'') + "g"))
+                                                                                    && _words[i].Text.EndsWith("in'", StringComparison.OrdinalIgnoreCase) && DoSpell(currentWordText.TrimEnd('\'') + "g"))
                 {
                     continue;
                 }
@@ -871,7 +912,7 @@ namespace Nikse.SubtitleEdit.Controls
         {
             if (IsLiveSpellCheckEnabled && _wrongWords?.Count > 0 && e.Clicks == 1 && e.Button == MouseButtons.Right)
             {
-                int positionToSearch = GetCharIndexFromPosition(new Point(e.X, e.Y));
+                var positionToSearch = GetCharIndexFromPosition(new Point(e.X, e.Y));
                 var wrongWord = _wrongWords.Find(word => positionToSearch > GetIndexWithLineBreak(word.Index) && positionToSearch < GetIndexWithLineBreak(word.Index) + word.Length);
                 if (wrongWord != null)
                 {

@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,13 +15,14 @@ namespace Nikse.SubtitleEdit.Core.Translate.Service
     /// </summary>
     public class GoogleTranslator1 : ITranslationStrategy
     {
-        private readonly HttpClient _httpClient;
+        private readonly IDownloader _httpClient;
         private const char SplitChar = '\n';
 
 
         public GoogleTranslator1()
         {
-            _httpClient = HttpClientHelper.MakeHttpClient();
+            var x = new HttpClient();
+            _httpClient = DownloaderFactory.MakeHttpClient();
             _httpClient.DefaultRequestHeaders.Add("user-agent", "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36");
             _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json; charset=UTF-8");
             _httpClient.BaseAddress = new Uri("https://translate.googleapis.com/");
@@ -53,7 +55,6 @@ namespace Nikse.SubtitleEdit.Core.Translate.Service
             var formatList = new List<Formatting>();
             for (var index = 0; index < sourceParagraphs.Count; index++)
             {
-
                 var p = sourceParagraphs[index];
                 var f = new Formatting();
                 formatList.Add(f);
@@ -178,7 +179,16 @@ namespace Nikse.SubtitleEdit.Core.Translate.Service
                     var c = result[i];
                     if (start)
                     {
-                        if (c == '"' && result[i - 1] != '\\')
+                        if (c == '\\' && result[i + 1] == '\\')
+                        {
+                            i++;
+                        }
+                        else if (c == '\\' && result[i + 1] == '"')
+                        {
+                            c = '"';
+                            i++;
+                        }
+                        else if (c == '"')
                         {
                             count++;
                             if (count % 2 == 1 && level > 2 && level < 5) // even numbers are original text, level 3 is translation
@@ -208,7 +218,15 @@ namespace Nikse.SubtitleEdit.Core.Translate.Service
             }
 
             var res = sbAll.ToString().Trim();
-            res = Regex.Unescape(res);
+            try
+            {
+                res = Regex.Unescape(res);
+            }
+            catch
+            {
+                res = res.Replace("\\n", "\n");
+            }
+
             var lines = res.SplitToLines().ToList();
             return lines;
         }

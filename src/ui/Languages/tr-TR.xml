@@ -2,7 +2,7 @@
 <Language Name="Türkçe">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.10</Version>
+    <Version>3.6.13</Version>
     <TranslatedBy>Türkçe Çeviri: Falcon006
 Son eklemeler: ismail0100</TranslatedBy>
     <CultureName>tr-TR</CultureName>
@@ -1407,7 +1407,7 @@ Belgenin üstünden başlamak ve aramaya devam etmek veya değiştirmek ister mi
     <BeforeDisplayTimeAdjustment>Ekran zaman ayarlamadan önce</BeforeDisplayTimeAdjustment>
     <DisplayTimeAdjustedX>Görüntü zamanı ayarlandı: {0}</DisplayTimeAdjustedX>
     <DisplayTimesAdjustedX>Görüntü zamanları ayarlandı: {0}</DisplayTimesAdjustedX>
-    <StarTimeAdjustedX>Başlangıç zamanı ayarlandı: {0}</StarTimeAdjustedX>
+    <StartTimeAdjustedX>Başlangıç zamanı ayarlandı: {0}</StartTimeAdjustedX>
     <BeforeCommonErrorFixes>Yaygın hata düzeltmelerinden önce</BeforeCommonErrorFixes>
     <CommonErrorsFixedInSelectedLines>Seçilen satırdaki yaygın hatalar düzeltildi</CommonErrorsFixedInSelectedLines>
     <CommonErrorsFixed>Yaygın hatalar düzeltildi</CommonErrorsFixed>
@@ -2275,7 +2275,7 @@ Yeni oturum başlatın (işbirliği)</Information>
     <GoForwardXSSeconds>Küçük seçilmiş zaman kadar ileri</GoForwardXSSeconds>
     <GoBackXLSeconds>Büyük seçilmiş zaman kadar geri</GoBackXLSeconds>
     <GoForwardXLSeconds>Büyük seçili zaman kadar ileri</GoForwardXLSeconds>
-    <GoBack3Second>Üç saniye geri</GoBack3Second>
+    <GoBack3Seconds>Üç saniye geri</GoBack3Seconds>
     <GoToStartCurrent>Video konumunu mevcut altyazının başlangıcına ayarla</GoToStartCurrent>
     <ToggleStartEndCurrent>Mevcut altyazının başlangıcı/bitişi arasında video konumunu değiştir</ToggleStartEndCurrent>
     <PlayCurrent>Mevcut altyazıyı oynat</PlayCurrent>
@@ -2730,7 +2730,7 @@ Değişiklikler saklansın mı?</KeepChangesMessage>
     <TransportStreamGrayscale>Gri tonlama</TransportStreamGrayscale>
     <TransportStreamGetColor>Renk kullan (satırlarda bölme oluşabilir)</TransportStreamGetColor>
     <PromptForUnknownWords>Bilinmeyen kelimeler için sor</PromptForUnknownWords>
-    <TryToGuessUnkownWords>Bilinmeyen kelimeleri tahmin etmeyi dene</TryToGuessUnkownWords>
+    <TryToGuessUnknownWords>Bilinmeyen kelimeleri tahmin etmeyi dene</TryToGuessUnknownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>İki satırdan fazla ise otomatik olarak böl</AutoBreakSubtitleIfMoreThanTwoLines>
     <AllFixes>Tüm düzeltmeler</AllFixes>
     <GuessesUsed>Tahminler-Kullanılmış</GuessesUsed>

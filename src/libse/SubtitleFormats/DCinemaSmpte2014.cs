@@ -13,11 +13,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     public class DCinemaSmpte2014 : SubtitleFormat
     {
         //<?xml version="1.0" encoding="UTF-8"?>
-        //<dcst:SubtitleReel xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:dcst="http://www.smpte-ra.org/schemas/428-7/2014/DCST">
+        //<dcst:SubtitleReel xmlns:dcst="http://www.smpte-ra.org/schemas/428-7/2014/DCST">
         //  <Id>urn:uuid:7be835a3-cfb4-43d0-bb4b-f0b4c95e962e</Id>
         //  <ContentTitleText>2001, A Space Odissey</ContentTitleText>
         //  <AnnotationText>This is a subtitle file</AnnotationText>
-        //  <IssueDate>2012-06-26T12:33:59.000-00:00</IssueDate>
+        //  <IssueDate>2012-06-26T12:33:59</IssueDate>
         //  <ReelNumber>1</ReelNumber>
         //  <Language>fr</Language>
         //  <EditRate>25 1</EditRate>
@@ -46,7 +46,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             var sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
-            string xmlAsString = sb.ToString().Trim();
+            var xmlAsString = sb.ToString().Trim();
 
             if (xmlAsString.Contains("http://www.smpte-ra.org/schemas/428-7/2007/DCST") ||
                 xmlAsString.Contains("http://www.smpte-ra.org/schemas/428-7/2010/DCST"))
@@ -89,11 +89,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             var xmlStructure =
-                "<dcst:SubtitleReel xmlns:dcst=\"http://www.smpte-ra.org/schemas/428-7/2014/DCST\" xmlns:xs=\"http://www.w3.org/2001/XMLSchema\">" + Environment.NewLine +
+                "<dcst:SubtitleReel xmlns:dcst=\"http://www.smpte-ra.org/schemas/428-7/2014/DCST\">" + Environment.NewLine +
                 "  <dcst:Id>" + DCinemaSmpte2007.GenerateId() + "</dcst:Id>" + Environment.NewLine +
                 "  <dcst:ContentTitleText></dcst:ContentTitleText> " + Environment.NewLine +
                 "  <dcst:AnnotationText>This is a subtitle file</dcst:AnnotationText>" + Environment.NewLine +
-                "  <dcst:IssueDate>2012-06-26T12:33:59.000-00:00</dcst:IssueDate>" + Environment.NewLine +
+                "  <dcst:IssueDate>2012-06-26T12:33:59</dcst:IssueDate>" + Environment.NewLine +
                 "  <dcst:ReelNumber>1</dcst:ReelNumber>" + Environment.NewLine +
                 "  <dcst:Language>en</dcst:Language>" + Environment.NewLine +
                 "  <dcst:EditRate>25 1</dcst:EditRate>" + Environment.NewLine +
@@ -134,7 +134,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             xml.DocumentElement.SelectSingleNode("dcst:ReelNumber", nsmgr).InnerText = ss.CurrentDCinemaReelNumber;
-            xml.DocumentElement.SelectSingleNode("dcst:IssueDate", nsmgr).InnerText = ss.CurrentDCinemaIssueDate;
+
+            var issueDate = ss.CurrentDCinemaIssueDate;
+            if (issueDate != null && issueDate.Length > 19)
+            {
+                issueDate = issueDate.Substring(0, 19);
+            }
+            xml.DocumentElement.SelectSingleNode("dcst:IssueDate", nsmgr).InnerText = issueDate;
+
+
             if (string.IsNullOrEmpty(ss.CurrentDCinemaLanguage))
             {
                 ss.CurrentDCinemaLanguage = "en";
@@ -568,36 +576,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     Errors = "Error validating xml via SMPTE-428-7-2014-DCST.xsd: " + exception.Message;
                 }
             }
-            return FixDcsTextSameLine(result);
-        }
 
-        /// <summary>
-        /// All space characters present inside the content of a Text element shall be rendered
-        /// </summary>
-        internal static string FixDcsTextSameLine(string xml)
-        {
-            var index = xml.IndexOf("<dcst:Text", StringComparison.Ordinal);
-            var endIndex = 1;
-            while (index > 0 && endIndex > 0)
-            {
-                endIndex = xml.IndexOf("</dcst:Text>", index, StringComparison.Ordinal);
-                if (endIndex > 0)
-                {
-                    var part = xml.Substring(index, endIndex - index);
-                    if (part.Contains(Environment.NewLine))
-                    {
-                        part = part.Replace(Environment.NewLine, " ");
-                        while (part.Contains("  "))
-                        {
-                            part = part.Replace("  ", " ");
-                        }
-                        part = part.Replace("> <", "><");
-                    }
-                    xml = xml.Remove(index, endIndex - index).Insert(index, part);
-                    index = xml.IndexOf("<dcst:Text", endIndex, StringComparison.Ordinal);
-                }
-            }
-            return xml;
+            return DCinemaSmpte2010.FixDcsTextSameLine(result);
         }
 
         private void ValidationCallBack(object sender, ValidationEventArgs e)

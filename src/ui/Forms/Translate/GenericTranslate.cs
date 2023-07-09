@@ -57,6 +57,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             subtitleListViewSource.AutoSizeColumns();
             subtitleListViewSource.AutoSizeColumns();
             UiUtil.FixLargeFonts(this, buttonOK);
+            ActiveControl = buttonTranslate;
         }
 
         internal void Initialize(Subtitle subtitle, Subtitle target, string title, Encoding encoding, SubtitleFormat subtitleFormat)
@@ -66,11 +67,10 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 Text = title;
             }
 
-            subtitle.Renumber(); // "Renumber" is required for translation engine atm
-
             labelPleaseWait.Visible = false;
             progressBar1.Visible = false;
-            _subtitle = subtitle;
+            _subtitle = new Subtitle(subtitle);
+            _subtitle.Renumber(); // "Renumber" is required for translation engine atm
             _encoding = encoding;
             _subtitleFormat = subtitleFormat;
             buttonTranslate.Enabled = false;
@@ -83,7 +83,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             }
             else
             {
-                TranslatedSubtitle = new Subtitle(subtitle);
+                TranslatedSubtitle = new Subtitle(_subtitle);
                 foreach (var paragraph in TranslatedSubtitle.Paragraphs)
                 {
                     paragraph.Text = string.Empty;
@@ -96,7 +96,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             InitTranslationServices();
             InitParagraphHandlingStrategies();
 
-            subtitleListViewSource.Fill(subtitle);
+            subtitleListViewSource.Fill(_subtitle);
             Translate_Resize(null, null);
 
             _autoSplit = new bool[_subtitle.Paragraphs.Count];
@@ -146,7 +146,6 @@ namespace Nikse.SubtitleEdit.Forms.Translate
         {
             AddTranslationService(GoogleTranslationInitializer.Init(this));
             AddTranslationService(MicrosoftTranslationInitializer.Init());
-            //  AddTranslationService(new NikseDkTranslationService());
 
             if (comboBoxTranslationServices.Items.Count > 0 && comboBoxTranslationServices.SelectedIndex < 0)
             {
@@ -202,17 +201,10 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
         public static string EvaluateDefaultSourceLanguageCode(Encoding encoding, Subtitle subtitle)
         {
-            string defaultSourceLanguageCode = LanguageAutoDetect.AutoDetectGoogleLanguage(encoding); // Guess language via encoding
+            var defaultSourceLanguageCode = LanguageAutoDetect.AutoDetectGoogleLanguage(encoding); // Guess language via encoding
             if (string.IsNullOrEmpty(defaultSourceLanguageCode))
             {
                 defaultSourceLanguageCode = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle); // Guess language based on subtitle contents
-            }
-
-            //convert new Hebrew code (he) to old Hebrew code (iw)  http://www.mathguide.de/info/tools/languagecode.html
-            //brummochse: why get it converted to the old code?
-            if (defaultSourceLanguageCode == "he")
-            {
-                defaultSourceLanguageCode = "iw";
             }
 
             return defaultSourceLanguageCode;
@@ -335,6 +327,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
             ReadLanguageSettings();
             Translate();
+            buttonOK.Focus();
         }
 
         public static bool IsAvailableNetworkActive()
@@ -386,25 +379,31 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                     return _breakTranslation;
                 });
             }
-            catch (TranslationException translationException)
-            {
-                if (translationException.InnerException != null && !IsAvailableNetworkActive())
-                {
-                    ShowNetworkError(translationException.InnerException);
-                }
-                else
-                {
-                    MessageBox.Show(translationException.Message + Environment.NewLine +
-                                    translationException.InnerException?.Source + ": " + translationException.InnerException?.Message);
-                }
-            }
-            catch (Exception exception)
-            {
-                SeLogger.Error(exception);
-                ShowNetworkError(exception);
-            }
             finally
             {
+                if (comboBoxParagraphHandling.Text != LanguageSettings.Current.GoogleTranslate.ProcessorSingle)
+                {
+                    var indexesToRemove = new List<int>();
+                    for (var i = 0; i < TranslatedSubtitle.Paragraphs.Count - 1; i++)
+                    {
+                        var p = TranslatedSubtitle.Paragraphs[i];
+                        var next = TranslatedSubtitle.Paragraphs[i + 1];
+                        if (!string.IsNullOrEmpty(p.Text) && string.IsNullOrEmpty(next.Text) &&
+                            next.EndTime.TotalMilliseconds - p.StartTime.TotalMilliseconds < 10000)
+                        {
+                            p.EndTime = next.EndTime;
+                            indexesToRemove.Add(i + 1);
+                        }
+                    }
+
+                    foreach (var idx in indexesToRemove.OrderByDescending(p => p))
+                    {
+                        TranslatedSubtitle.Paragraphs.RemoveAt(idx);
+                    }
+
+                    subtitleListViewTarget.Fill(TranslatedSubtitle);
+                }
+
                 labelPleaseWait.Visible = false;
                 progressBar1.Visible = false;
                 Cursor.Current = Cursors.Default;
@@ -468,6 +467,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 var cleanText = CleanText(paragraphTargetText, lastIndex);
                 TranslatedSubtitle.Paragraphs[lastIndex].Text = cleanText;
             }
+
             subtitleListViewTarget.BeginUpdate();
             subtitleListViewTarget.Fill(TranslatedSubtitle);
             subtitleListViewTarget.SelectIndexAndEnsureVisible(lastIndex);

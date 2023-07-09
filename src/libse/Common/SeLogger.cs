@@ -8,6 +8,8 @@ namespace Nikse.SubtitleEdit.Core.Common
     public static class SeLogger
     {
 
+        public static string ErrorFile => Path.Combine(Configuration.DataDirectory, "error_log.txt");
+
         public static void Error(Exception exception, string message = null)
         {
             if (exception == null)
@@ -17,8 +19,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             try
             {
-                var filePath = Path.Combine(Configuration.DataDirectory, "error_log.txt");
-                using (var writer = new StreamWriter(filePath, true, Encoding.UTF8))
+                using (var writer = new StreamWriter(ErrorFile, true, Encoding.UTF8))
                 {
                     writer.WriteLine("-----------------------------------------------------------------------------");
                     writer.WriteLine($"Date: {DateTime.Now.ToString(CultureInfo.InvariantCulture)}");
@@ -44,7 +45,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
             catch
             {
-                throw exception;
+                // ignore
             }
         }
 

@@ -4,15 +4,19 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 
 namespace Nikse.SubtitleEdit.Core.Common
 {
     public class FixCasing
     {
-        public bool FixNormal = true;
-        public bool FixNormalOnlyAllUppercase = false;
-        public bool FixMakeLowercase = false;
-        public bool FixMakeUppercase = false;
+        public bool FixNormal { get; set; }
+        public bool FixNormalOnlyAllUppercase { get; set; }
+        public bool FixMakeLowercase { get; set; }
+        public bool FixMakeProperCase { get; set; }
+        public bool FixMakeUppercase { get; set; }
+        public bool FixProperCaseOnlyAllUppercase { get; set; }
+        public SubtitleFormat Format { get; set; }
 
         private readonly string _language;
         private readonly List<string> _names;
@@ -33,7 +37,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         {
             var subCulture = GetCultureInfoFromLanguage(_language);
             Paragraph last = null;
-            foreach (Paragraph p in subtitle.Paragraphs)
+            foreach (var p in subtitle.Paragraphs)
             {
                 if (last != null)
                 {
@@ -271,6 +275,22 @@ namespace Nikse.SubtitleEdit.Core.Common
             {
                 text = text.ToLower(subtitleCulture);
             }
+            else if (FixMakeProperCase)
+            {
+                if (FixProperCaseOnlyAllUppercase)
+                {
+                    var stripped = HtmlUtil.RemoveHtmlTags(text, true);
+                    if (stripped == stripped.ToUpperInvariant())
+                    {
+                        text = text.ToProperCase(Format);
+                    }
+                }
+                else
+                {
+                    text = text.ToProperCase(Format);
+                }
+            }
+
             if (original != text)
             {
                 NoOfLinesChanged++;
@@ -278,6 +298,5 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             return text;
         }
-
     }
 }

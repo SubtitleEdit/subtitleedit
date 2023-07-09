@@ -113,8 +113,8 @@ namespace Nikse.SubtitleEdit.Controls
         public event ParagraphEventHandler OnDoubleClickNonParagraph;
         public event EventHandler OnPause;
         public event EventHandler OnZoomedChanged;
-        public event EventHandler InsertAtVideoPosition;
-        public event EventHandler PasteAtVideoPosition;
+        public event EventHandler OnInsertAtVideoPosition;
+        public event EventHandler OnPasteAtVideoPosition;
 
         private double _wholeParagraphMinMilliseconds;
         private double _wholeParagraphMaxMilliseconds = double.MaxValue;
@@ -198,9 +198,9 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        private List<MatroskaChapter> _chapters = new List<MatroskaChapter>();
+        private MatroskaChapter[] _chapters = Array.Empty<MatroskaChapter>();
 
-        public List<MatroskaChapter> Chapters
+        public MatroskaChapter[] Chapters
         {
             get => _chapters;
             set
@@ -333,7 +333,7 @@ namespace Nikse.SubtitleEdit.Controls
             if (_wavePeaks != null)
             {
                 var list = new List<WavePeak>();
-                for (int i = 0; i < _wavePeaks.Peaks.Count; i++)
+                for (var i = 0; i < _wavePeaks.Peaks.Count; i++)
                 {
                     if (i % 1001 != 0)
                     {
@@ -425,9 +425,7 @@ namespace Nikse.SubtitleEdit.Controls
             const double additionalSeconds = 15.0; // Helps when scrolling
             var startThresholdMilliseconds = (_startPositionSeconds - additionalSeconds) * TimeCode.BaseUnit;
             var endThresholdMilliseconds = (EndPositionSeconds + additionalSeconds) * TimeCode.BaseUnit;
-
-            var lastTimeStampHash = -1;
-            var lastLastTimeStampHash = -2;
+            var displayableParagraphs = new List<Paragraph>();
             for (var i = 0; i < subtitle.Paragraphs.Count; i++)
             {
                 var p = subtitle.Paragraphs[i];
@@ -438,24 +436,28 @@ namespace Nikse.SubtitleEdit.Controls
                 }
 
                 _subtitle.Paragraphs.Add(p);
-
                 if (p.EndTime.TotalMilliseconds >= startThresholdMilliseconds && p.StartTime.TotalMilliseconds <= endThresholdMilliseconds)
                 {
-                    var timeStampHash = p.StartTime.TotalMilliseconds.GetHashCode() + p.EndTime.TotalMilliseconds.GetHashCode();
-                    if (timeStampHash == lastTimeStampHash && timeStampHash == lastLastTimeStampHash)
-                    {
-                        continue;
-                    }
-
-                    _displayableParagraphs.Add(p);
-                    if (_displayableParagraphs.Count > 200)
+                    displayableParagraphs.Add(p);
+                    if (displayableParagraphs.Count > 99)
                     {
                         break;
                     }
-
-                    lastLastTimeStampHash = lastTimeStampHash;
-                    lastTimeStampHash = timeStampHash;
                 }
+            }
+
+            displayableParagraphs = displayableParagraphs.OrderBy(p => p.StartTime.TotalMilliseconds).ToList();
+            var lastStartTime = -1d;
+            foreach (var p in displayableParagraphs)
+            {
+                if (displayableParagraphs.Count > 30 &&
+                    (p.Duration.TotalMilliseconds < 0.01 || p.StartTime.TotalMilliseconds - lastStartTime < 90))
+                {
+                    continue;
+                }
+
+                _displayableParagraphs.Add(p);
+                lastStartTime = p.StartTime.TotalMilliseconds;
             }
 
             var primaryParagraph = subtitle.GetParagraphOrDefault(primarySelectedIndex);
@@ -724,7 +726,7 @@ namespace Nikse.SubtitleEdit.Controls
                     try
                     {
                         var index = 0;
-                        while (index < _chapters.Count)
+                        while (index < _chapters.Length)
                         {
                             int pos;
                             try
@@ -744,7 +746,7 @@ namespace Nikse.SubtitleEdit.Controls
                                 {
                                     string name;
                                     var x = pos + 3;
-                                    var y = index + 1 < _chapters.Count && Math.Abs(_chapters[index].StartTime - _chapters[index + 1].StartTime) < 0.01 ? Height / 2 - font.Height - 12 : Height / 2 - 12;
+                                    var y = index + 1 < _chapters.Length && Math.Abs(_chapters[index].StartTime - _chapters[index + 1].StartTime) < 0.01 ? Height / 2 - font.Height - 12 : Height / 2 - 12;
                                     using (var chapterTextBackBrush = new SolidBrush(ChaptersColor))
                                     {
                                         name = _chapters[index].Nested ? "+ " + _chapters[index].Name : _chapters[index].Name;
@@ -1123,9 +1125,9 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     // This try/catch is due to some characters crashing MeasureString, see https://github.com/SubtitleEdit/subtitleedit/issues/6108
                     text = "?";
-                    measureResult = new SizeF(5,5);
+                    measureResult = new SizeF(5, 5);
                 }
-                
+
                 while (text.Length > removeLength && graphics.MeasureString(text, font).Width > max)
                 {
                     text = text.Remove(text.Length - removeLength).TrimEnd() + "…";
@@ -2197,17 +2199,17 @@ namespace Nikse.SubtitleEdit.Controls
             }
             else if (e.KeyData == InsertAtVideoPositionShortcut)
             {
-                if (InsertAtVideoPosition != null)
+                if (OnInsertAtVideoPosition != null)
                 {
-                    InsertAtVideoPosition.Invoke(this, null);
+                    OnInsertAtVideoPosition.Invoke(this, null);
                     e.SuppressKeyPress = true;
                 }
             }
             else if (e.KeyCode == Keys.V && e.Modifiers == Keys.Control) //Ctrl+v = Paste from clipboard
             {
-                if (PasteAtVideoPosition != null)
+                if (OnPasteAtVideoPosition != null)
                 {
-                    PasteAtVideoPosition.Invoke(this, null);
+                    OnPasteAtVideoPosition.Invoke(this, null);
                     e.SuppressKeyPress = true;
                 }
             }

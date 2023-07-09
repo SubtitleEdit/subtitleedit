@@ -51,6 +51,7 @@ namespace Nikse.SubtitleEdit.Forms.FormatProperties
             this.textBoxAn7 = new System.Windows.Forms.TextBox();
             this.labelAn7 = new System.Windows.Forms.Label();
             this.checkBoxUseXTimestampMap = new System.Windows.Forms.CheckBox();
+            this.checkBoxAutoMerge = new System.Windows.Forms.CheckBox();
             this.groupBoxAlignment.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -59,7 +60,7 @@ namespace Nikse.SubtitleEdit.Forms.FormatProperties
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(465, 310);
+            this.buttonCancel.Location = new System.Drawing.Point(465, 317);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 23;
@@ -71,7 +72,7 @@ namespace Nikse.SubtitleEdit.Forms.FormatProperties
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(384, 310);
+            this.buttonOK.Location = new System.Drawing.Point(384, 317);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 22;
@@ -104,7 +105,7 @@ namespace Nikse.SubtitleEdit.Forms.FormatProperties
             this.groupBoxAlignment.Controls.Add(this.labelAn7);
             this.groupBoxAlignment.Location = new System.Drawing.Point(12, 22);
             this.groupBoxAlignment.Name = "groupBoxAlignment";
-            this.groupBoxAlignment.Size = new System.Drawing.Size(528, 248);
+            this.groupBoxAlignment.Size = new System.Drawing.Size(528, 255);
             this.groupBoxAlignment.TabIndex = 24;
             this.groupBoxAlignment.TabStop = false;
             this.groupBoxAlignment.Text = "Alignment";
@@ -257,18 +258,30 @@ namespace Nikse.SubtitleEdit.Forms.FormatProperties
             // 
             this.checkBoxUseXTimestampMap.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.checkBoxUseXTimestampMap.AutoSize = true;
-            this.checkBoxUseXTimestampMap.Location = new System.Drawing.Point(12, 292);
+            this.checkBoxUseXTimestampMap.Location = new System.Drawing.Point(12, 274);
             this.checkBoxUseXTimestampMap.Name = "checkBoxUseXTimestampMap";
             this.checkBoxUseXTimestampMap.Size = new System.Drawing.Size(212, 17);
             this.checkBoxUseXTimestampMap.TabIndex = 25;
             this.checkBoxUseXTimestampMap.Text = "Use X-TIMESTAMP-MAP header value";
             this.checkBoxUseXTimestampMap.UseVisualStyleBackColor = true;
             // 
+            // checkBoxAutoMerge
+            // 
+            this.checkBoxAutoMerge.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.checkBoxAutoMerge.AutoSize = true;
+            this.checkBoxAutoMerge.Location = new System.Drawing.Point(12, 297);
+            this.checkBoxAutoMerge.Name = "checkBoxAutoMerge";
+            this.checkBoxAutoMerge.Size = new System.Drawing.Size(188, 17);
+            this.checkBoxAutoMerge.TabIndex = 26;
+            this.checkBoxAutoMerge.Text = "Merge lines with same text on load";
+            this.checkBoxAutoMerge.UseVisualStyleBackColor = true;
+            // 
             // WebVttProperties
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(552, 345);
+            this.ClientSize = new System.Drawing.Size(552, 352);
+            this.Controls.Add(this.checkBoxAutoMerge);
             this.Controls.Add(this.checkBoxUseXTimestampMap);
             this.Controls.Add(this.groupBoxAlignment);
             this.Controls.Add(this.buttonCancel);
@@ -314,5 +327,6 @@ namespace Nikse.SubtitleEdit.Forms.FormatProperties
         private System.Windows.Forms.TextBox textBoxAn7;
         private System.Windows.Forms.Label labelAn7;
         private System.Windows.Forms.CheckBox checkBoxUseXTimestampMap;
+        private System.Windows.Forms.CheckBox checkBoxAutoMerge;
     }
 }

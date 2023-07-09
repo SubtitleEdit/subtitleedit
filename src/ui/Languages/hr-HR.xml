@@ -2,7 +2,7 @@
 <Language Name="hrvatski">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.10</Version>
+    <Version>3.6.13</Version>
     <TranslatedBy>Prijevod: Jozo Marić &amp; diomed</TranslatedBy>
     <CultureName>hr-HR</CultureName>
     <HelpFile />
@@ -1249,7 +1249,7 @@ Datoteka samo za čitanje!</FileXIsReadOnly>
     <BeforeDisplayTimeAdjustment>Izmijenjeno vrijeme</BeforeDisplayTimeAdjustment>
     <DisplayTimeAdjustedX>Postavljeno je vrijeme prikaza: {0}</DisplayTimeAdjustedX>
     <DisplayTimesAdjustedX>Postavljena su vremena prikaza: {0}</DisplayTimesAdjustedX>
-    <StarTimeAdjustedX>Postavljeno početno vrijeme: {0}</StarTimeAdjustedX>
+    <StartTimeAdjustedX>Postavljeno početno vrijeme: {0}</StartTimeAdjustedX>
     <BeforeCommonErrorFixes>Ispravljene česte pogreške</BeforeCommonErrorFixes>
     <CommonErrorsFixedInSelectedLines>Ispravljene su česte pogreške u izabranim linijama.</CommonErrorsFixedInSelectedLines>
     <CommonErrorsFixed>Česte pogreške su ispravljene.</CommonErrorsFixed>
@@ -2236,7 +2236,7 @@ određeni podnaslov s drugim ljudima.</Information>
     <TransportStreamGrayscale>Sivim tonovima</TransportStreamGrayscale>
     <TransportStreamGetColor>Koristiti boje (sa uključenim razdvajanjem linija)</TransportStreamGetColor>
     <PromptForUnknownWords>&amp;Pitaj me za nepoznate riječi</PromptForUnknownWords>
-    <TryToGuessUnkownWords>&amp;Nagađaj nepoznate riječi</TryToGuessUnkownWords>
+    <TryToGuessUnknownWords>&amp;Nagađaj nepoznate riječi</TryToGuessUnknownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>&amp;Razmakni red ako ima više od dvije linije</AutoBreakSubtitleIfMoreThanTwoLines>
     <AllFixes>Sve ispravke</AllFixes>
     <GuessesUsed>Korištena nagađanja</GuessesUsed>

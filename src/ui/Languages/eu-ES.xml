@@ -2,7 +2,7 @@
 <Language Name="euskara">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.10</Version>
+    <Version>3.6.13</Version>
     <TranslatedBy>Itzultzailea: Xabier Aramendi</TranslatedBy>
     <CultureName>eu-ES</CultureName>
     <HelpFile>https://www.nikse.dk/SubtitleEdit/HelpEU</HelpFile>
@@ -1396,7 +1396,7 @@ Nahi duzu agiriaren hasieratik hastea eta bilaketa eta ordezpenarekin jarraitzea
     <BeforeDisplayTimeAdjustment>Erakus denbora zehaztu aurretik</BeforeDisplayTimeAdjustment>
     <DisplayTimeAdjustedX>Erakus denbora zehaztuta: {0}</DisplayTimeAdjustedX>
     <DisplayTimesAdjustedX>Erakus denborak zehaztuta: {0}</DisplayTimesAdjustedX>
-    <StarTimeAdjustedX>Hasiera denbora zehaztuta: {0}</StarTimeAdjustedX>
+    <StartTimeAdjustedX>Hasiera denbora zehaztuta: {0}</StartTimeAdjustedX>
     <BeforeCommonErrorFixes>Akats arruntak zuzendu aurretik</BeforeCommonErrorFixes>
     <CommonErrorsFixedInSelectedLines>Akats arruntak zuzenduta hautaturiko lerroetan</CommonErrorsFixedInSelectedLines>
     <CommonErrorsFixed>Akats arruntak zuzenduta</CommonErrorsFixed>
@@ -2252,7 +2252,7 @@ Jarraitu horrela ere?</PromptInsertSubtitleOverlap>
     <GoForwardXSSeconds>Txikitu hautaturiko denbora aurrerantz</GoForwardXSSeconds>
     <GoBackXLSeconds>Handitu hautaturiko denbora atzerantz</GoBackXLSeconds>
     <GoForwardXLSeconds>Handitu hautaturiko denbora aurrerantz</GoForwardXLSeconds>
-    <GoBack3Second>Hiru segundu atzera</GoBack3Second>
+    <GoBack3Seconds>Hiru segundu atzera</GoBack3Seconds>
     <GoToStartCurrent>Ezarri bideo kokap azpidatziaren hasieran</GoToStartCurrent>
     <ToggleStartEndCurrent>Aldatu bide kokap azpidatziaren has/amai artean</ToggleStartEndCurrent>
     <PlayCurrent>Irakurri uneko azpidatzia</PlayCurrent>
@@ -2703,7 +2703,7 @@ Gorde aldaketak?</KeepChangesMessage>
     <TransportStreamGrayscale>Urdinabar-neurria</TransportStreamGrayscale>
     <TransportStreamGetColor>Erabili margoa (lerro banaketa batzuk barneratuko ditu)</TransportStreamGetColor>
     <PromptForUnknownWords>Galdetu hitz ezezagunak</PromptForUnknownWords>
-    <TryToGuessUnkownWords>Saiatu hitz ezezagunen adiera asmatzen</TryToGuessUnkownWords>
+    <TryToGuessUnknownWords>Saiatu hitz ezezagunen adiera asmatzen</TryToGuessUnknownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>Berez hautsi esaldia bi lerro baino gehiagokoa bada</AutoBreakSubtitleIfMoreThanTwoLines>
     <AllFixes>Zuzenketa denak</AllFixes>
     <GuessesUsed>Erabilitako adiera asmatuak</GuessesUsed>

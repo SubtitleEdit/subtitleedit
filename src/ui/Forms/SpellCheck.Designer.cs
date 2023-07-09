@@ -56,8 +56,9 @@
             this.pictureBoxBookmark = new System.Windows.Forms.PictureBox();
             this.panelBookmark = new System.Windows.Forms.Panel();
             this.labelBookmark = new System.Windows.Forms.Label();
-            this.contextMenuStrip2 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.contextMenuStripWindow = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.useLargerFontForThisWindowToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextMenuStripSearchEngine = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.contextMenuStrip1.SuspendLayout();
             this.groupBoxWordNotFound.SuspendLayout();
             this.groupBoxSuggestions.SuspendLayout();
@@ -65,7 +66,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBdSup)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBookmark)).BeginInit();
             this.panelBookmark.SuspendLayout();
-            this.contextMenuStrip2.SuspendLayout();
+            this.contextMenuStripWindow.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonAddToDictionary
@@ -322,6 +323,7 @@
             // 
             // buttonGoogleIt
             // 
+            this.buttonGoogleIt.ContextMenuStrip = this.contextMenuStripSearchEngine;
             this.buttonGoogleIt.Location = new System.Drawing.Point(6, 163);
             this.buttonGoogleIt.Name = "buttonGoogleIt";
             this.buttonGoogleIt.Size = new System.Drawing.Size(374, 23);
@@ -480,12 +482,12 @@
             this.labelBookmark.TabIndex = 0;
             this.labelBookmark.Text = "labelBookmark";
             // 
-            // contextMenuStrip2
+            // contextMenuStripWindow
             // 
-            this.contextMenuStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.contextMenuStripWindow.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.useLargerFontForThisWindowToolStripMenuItem1});
-            this.contextMenuStrip2.Name = "contextMenuStrip2";
-            this.contextMenuStrip2.Size = new System.Drawing.Size(237, 26);
+            this.contextMenuStripWindow.Name = "contextMenuStrip2";
+            this.contextMenuStripWindow.Size = new System.Drawing.Size(237, 26);
             // 
             // useLargerFontForThisWindowToolStripMenuItem1
             // 
@@ -494,12 +496,17 @@
             this.useLargerFontForThisWindowToolStripMenuItem1.Text = "Use larger font for this window";
             this.useLargerFontForThisWindowToolStripMenuItem1.Click += new System.EventHandler(this.useLargerFontForThisWindowToolStripMenuItem_Click);
             // 
+            // contextMenuStripSearchEngine
+            // 
+            this.contextMenuStripSearchEngine.Name = "contextMenuStripSearchEngine";
+            this.contextMenuStripSearchEngine.Size = new System.Drawing.Size(181, 26);
+            // 
             // SpellCheck
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(713, 427);
-            this.ContextMenuStrip = this.contextMenuStrip2;
+            this.ContextMenuStrip = this.contextMenuStripWindow;
             this.Controls.Add(this.panelBookmark);
             this.Controls.Add(this.pictureBoxBookmark);
             this.Controls.Add(this.buttonSpellCheckDownload);
@@ -536,7 +543,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBookmark)).EndInit();
             this.panelBookmark.ResumeLayout(false);
             this.panelBookmark.PerformLayout();
-            this.contextMenuStrip2.ResumeLayout(false);
+            this.contextMenuStripWindow.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -584,7 +591,8 @@
         private System.Windows.Forms.ToolStripMenuItem bookmarkCommentToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem useLargerFontForThisWindowToolStripMenuItem;
-        private System.Windows.Forms.ContextMenuStrip contextMenuStrip2;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripWindow;
         private System.Windows.Forms.ToolStripMenuItem useLargerFontForThisWindowToolStripMenuItem1;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripSearchEngine;
     }
 }

@@ -2,7 +2,7 @@
 <Language Name="Vietnamese">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.10</Version>
+    <Version>3.6.13</Version>
     <TranslatedBy>Ghé thăm www.nikse.dk của chủ phần mềm - Nikse
 thường xuyên để biết thêm thông tin và tải về phiên bản mới nhất.
 Rất hân hạnh chào đón các bạn :))
@@ -1506,7 +1506,7 @@ Bạn có muốn bắt đầu từ phía trên cùng của tài liệu và tiế
     <BeforeDisplayTimeAdjustment>Trước khi điều chỉnh thời gian hiển thị</BeforeDisplayTimeAdjustment>
     <DisplayTimeAdjustedX>Hiển thị thời gian điều chỉnh: {0}</DisplayTimeAdjustedX>
     <DisplayTimesAdjustedX>Hiển thị thời gian điều chỉnh: {0}</DisplayTimesAdjustedX>
-    <StarTimeAdjustedX>Chỉnh Start time: {0}</StarTimeAdjustedX>
+    <StartTimeAdjustedX>Chỉnh Start time: {0}</StartTimeAdjustedX>
     <BeforeCommonErrorFixes>Trước khi sửa các lỗi phổ biến</BeforeCommonErrorFixes>
     <CommonErrorsFixedInSelectedLines>Các lỗi thường gặp được sửa trong các dòng hiện tại</CommonErrorsFixedInSelectedLines>
     <CommonErrorsFixed>Các lỗi thường gặp</CommonErrorsFixed>
@@ -2405,7 +2405,7 @@ có thể chỉnh sửa trong cùng một tập tin phụ đề (hợp tác vớ
     <GoForwardXSSeconds>Các dòng đã chọn tới time ngắn</GoForwardXSSeconds>
     <GoBackXLSeconds>Các dòng đã chọn lùi time dài</GoBackXLSeconds>
     <GoForwardXLSeconds>Các dòng đã chọn tới time dài</GoForwardXLSeconds>
-    <GoBack3Second>Lùi 3 giây</GoBack3Second>
+    <GoBack3Seconds>Lùi 3 giây</GoBack3Seconds>
     <GoToStartCurrent>Đặt vị trí video bắt đầu từ dòng hiện tại</GoToStartCurrent>
     <ToggleStartEndCurrent>Chuyển đổi vị trí video giữa đầu/cuối phụ đề hiện tại</ToggleStartEndCurrent>
     <PlaySelectedLines>Phát các dòng đã chọn</PlaySelectedLines>
@@ -2888,7 +2888,7 @@ Cài đặt font cho phụ đề thường được dùng cho trình phát video
     <TransportStreamGrayscale>Thang độ xám</TransportStreamGrayscale>
     <TransportStreamGetColor>Sử dụng màu sắc (có thể xảy ra hiện tượng tách dòng)</TransportStreamGetColor>
     <PromptForUnknownWords>Nhắc nhở từ ngữ chưa biết</PromptForUnknownWords>
-    <TryToGuessUnkownWords>Thử đoán từ ngữ chưa biết</TryToGuessUnkownWords>
+    <TryToGuessUnknownWords>Thử đoán từ ngữ chưa biết</TryToGuessUnknownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>Tự động ngắt đoạn nếu có nhiều hơn 2 dòng</AutoBreakSubtitleIfMoreThanTwoLines>
     <AllFixes>Tất cả các bản sửa lỗi</AllFixes>
     <GuessesUsed>Phỏng đoán sử dụng</GuessesUsed>

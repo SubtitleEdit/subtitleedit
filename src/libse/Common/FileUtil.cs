@@ -604,8 +604,28 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public static bool IsMatroskaFile(string fileName)
         {
-            var validator = new MatroskaFile(fileName);
-            return validator.IsValid;
+            using (var validator = new MatroskaFile(fileName))
+            {
+                return validator.IsValid;
+            }
+        }
+
+        public static bool IsFileLocked(string fileName)
+        {
+            try
+            {
+                using (var stream = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read))
+                {
+                    stream.Close();
+                }
+            }
+            catch (IOException exception)
+            {
+                SeLogger.Error(exception);
+                return true;
+            }
+
+            return false;
         }
     }
 }

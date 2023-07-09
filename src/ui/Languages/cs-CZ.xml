@@ -2,7 +2,7 @@
 <Language Name="Čeština">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.10</Version>
+    <Version>3.6.13</Version>
     <TranslatedBy>Překlad do češtiny: Trottel</TranslatedBy>
     <CultureName>cs-CZ</CultureName>
     <HelpFile />
@@ -1466,7 +1466,7 @@ Chcete začít od začátku dokumentu a pokračovat v hledání a nahrazování?
     <BeforeDisplayTimeAdjustment>Před úpravou času zobrazení</BeforeDisplayTimeAdjustment>
     <DisplayTimeAdjustedX>Upraven čas zobrazení: {0}</DisplayTimeAdjustedX>
     <DisplayTimesAdjustedX>Upraveny časy zobrazení: {0}</DisplayTimesAdjustedX>
-    <StarTimeAdjustedX>Upraven čas začátku: {0}</StarTimeAdjustedX>
+    <StartTimeAdjustedX>Upraven čas začátku: {0}</StartTimeAdjustedX>
     <BeforeCommonErrorFixes>Před opravou běžných chyb</BeforeCommonErrorFixes>
     <CommonErrorsFixedInSelectedLines>Opraveny běžné chyby ve vybraných řádcích</CommonErrorsFixedInSelectedLines>
     <CommonErrorsFixed>Opraveny běžné chyby</CommonErrorsFixed>
@@ -2343,7 +2343,7 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <GoForwardXSSeconds>O malý vybraný čas vpřed</GoForwardXSSeconds>
     <GoBackXLSeconds>O velký vybraný čas zpět</GoBackXLSeconds>
     <GoForwardXLSeconds>O velký vybraný čas vpřed</GoForwardXLSeconds>
-    <GoBack3Second>O tři sekundy zpět</GoBack3Second>
+    <GoBack3Seconds>O tři sekundy zpět</GoBack3Seconds>
     <GoToStartCurrent>Nastavit pozici videa na začátek aktuálního titulku</GoToStartCurrent>
     <ToggleStartEndCurrent>Přepnout pozici videa mezi začátkem a koncem aktuálního titulku</ToggleStartEndCurrent>
     <PlaySelectedLines>Přehrát vybrané řádky</PlaySelectedLines>
@@ -2808,7 +2808,7 @@ Zachovat změny?</KeepChangesMessage>
     <TransportStreamGrayscale>Stupně šedé</TransportStreamGrayscale>
     <TransportStreamGetColor>Použít barvu (může dojít k rozdělení řádků)</TransportStreamGetColor>
     <PromptForUnknownWords>Dotázat se na neznámá slova</PromptForUnknownWords>
-    <TryToGuessUnkownWords>Pokusit se odhadnout neznámá slova</TryToGuessUnkownWords>
+    <TryToGuessUnknownWords>Pokusit se odhadnout neznámá slova</TryToGuessUnknownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>Automaticky zalamovat odstavce při více než dvou řádcích</AutoBreakSubtitleIfMoreThanTwoLines>
     <AllFixes>Všechny opravy</AllFixes>
     <GuessesUsed>Použité odhady</GuessesUsed>

@@ -29,7 +29,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         private static readonly Regex RegexIsEpisodeNumber = new Regex("^\\d+x\\d+$", RegexOptions.Compiled);
         private static readonly Regex RegexNumberSpacePeriod = new Regex(@"(\d) (\.)", RegexOptions.Compiled);
 
-        public static string[] VideoFileExtensions { get; } = { ".avi", ".mkv", ".wmv", ".mpg", ".mpeg", ".divx", ".mp4", ".asf", ".flv", ".mov", ".m4v", ".vob", ".ogv", ".webm", ".ts", ".m2ts", ".mts", ".avs", ".mxf" };
+        public static string[] VideoFileExtensions { get; } = { ".avi", ".mkv", ".wmv", ".mpg", ".mpeg", ".divx", ".mp4", ".asf", ".flv", ".mov", ".m4v", ".vob", ".ogv", ".webm", ".ts", ".tts", ".m2ts", ".mts", ".avs", ".mxf" };
         public static string[] AudioFileExtensions { get; } = { ".mp3", ".wav", ".wma", ".ogg", ".mpa", ".m4a", ".ape", ".aiff", ".flac", ".aac", ".ac3", ".eac3", ".mka" };
 
         public static bool IsInteger(string s)
@@ -353,13 +353,13 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             var words = s.Split(' ');
-            for (int numberOfLines = 3; numberOfLines < 9999; numberOfLines++)
+            for (var numberOfLines = 3; numberOfLines < 9999; numberOfLines++)
             {
-                int average = s.Length / numberOfLines + 1;
-                for (int len = average; len < maximumLength; len++)
+                var average = s.Length / numberOfLines + 1;
+                for (var len = average; len < maximumLength; len++)
                 {
-                    List<int> list = SplitToX(words, numberOfLines, len);
-                    bool allOk = true;
+                    var list = SplitToX(words, numberOfLines, len);
+                    var allOk = true;
                     foreach (var lineLength in list)
                     {
                         if (lineLength > maximumLength)
@@ -367,14 +367,33 @@ namespace Nikse.SubtitleEdit.Core.Common
                             allOk = false;
                         }
                     }
+
                     if (allOk)
                     {
-                        int index = 0;
+                        var index = 0;
                         foreach (var item in list)
                         {
                             index += item;
-                            htmlTags.Add(index, Environment.NewLine);
+                            if (htmlTags.ContainsKey(index))
+                            {
+                                var v = htmlTags[index];
+                                if (v.StartsWith("</", StringComparison.Ordinal))
+                                {
+                                    v = Environment.NewLine + v;
+                                }
+                                else
+                                {
+                                    v += Environment.NewLine;
+                                }
+
+                                htmlTags[index] = v;
+                            }
+                            else
+                            {
+                                htmlTags.Add(index, Environment.NewLine);
+                            }
                         }
+
                         return ReInsertHtmlTagsAndCleanUp(s, htmlTags);
                     }
                 }
@@ -461,13 +480,13 @@ namespace Nikse.SubtitleEdit.Core.Common
             // do not auto break dialogs or music symbol
             if (text.Contains(Environment.NewLine) && (text.IndexOf('-') >= 0 || text.IndexOf('♪') >= 0))
             {
-                var noTagLines = HtmlUtil.RemoveHtmlTags(text, true).SplitToLines();
-                if (noTagLines.Count == 2)
+                var sanitizedLines = RemoveUnicodeControlChars(HtmlUtil.RemoveHtmlTags(text, true)).SplitToLines();
+                if (sanitizedLines.Count == 2)
                 {
-                    var arr0 = noTagLines[0].Trim().TrimEnd('"', '\'').TrimEnd();
+                    var arr0 = sanitizedLines[0].Trim().TrimEnd('"', '\'').TrimEnd();
                     if (language == "ar")
                     {
-                        if (arr0.EndsWith('-') && noTagLines[1].TrimStart().EndsWith('-') && arr0.Length > 1 && (".?!)]♪؟".Contains(arr0[0]) || arr0.StartsWith("--", StringComparison.Ordinal) || arr0.StartsWith('–')))
+                        if (arr0.EndsWith('-') && sanitizedLines[1].TrimStart().EndsWith('-') && arr0.Length > 1 && (".?!)]♪؟".Contains(arr0[0]) || arr0.StartsWith("--", StringComparison.Ordinal) || arr0.StartsWith('–')))
                         {
                             if (Configuration.Settings.Tools.AutoBreakDashEarly)
                             {
@@ -477,7 +496,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     }
                     else
                     {
-                        if (arr0.StartsWith('-') && noTagLines[1].TrimStart().StartsWith('-') && arr0.Length > 1 && (".?!)]♪؟".Contains(arr0[arr0.Length - 1]) || arr0.EndsWith("--", StringComparison.Ordinal) || arr0.EndsWith('–') || arr0 == "- _" || arr0 == "-_"))
+                        if (arr0.StartsWith('-') && sanitizedLines[1].TrimStart().StartsWith('-') && arr0.Length > 1 && (".?!)]♪؟".Contains(arr0[arr0.Length - 1]) || arr0.EndsWith("--", StringComparison.Ordinal) || arr0.EndsWith('–') || arr0 == "- _" || arr0 == "-_"))
                         {
                             if (Configuration.Settings.Tools.AutoBreakDashEarly)
                             {
@@ -485,15 +504,15 @@ namespace Nikse.SubtitleEdit.Core.Common
                             }
                         }
                     }
-                    if (noTagLines[0].StartsWith('♪') && noTagLines[0].EndsWith('♪') || noTagLines[1].StartsWith('♪') && noTagLines[0].EndsWith('♪'))
+                    if (sanitizedLines[0].StartsWith('♪') && sanitizedLines[0].EndsWith('♪') || sanitizedLines[1].StartsWith('♪') && sanitizedLines[0].EndsWith('♪'))
                     {
                         return input;
                     }
-                    if (noTagLines[0].StartsWith('[') && noTagLines[0].Length > 1 && (".?!)]♪؟".Contains(arr0[arr0.Length - 1]) && (noTagLines[1].StartsWith('-') || noTagLines[1].StartsWith('['))))
+                    if (sanitizedLines[0].StartsWith('[') && sanitizedLines[0].Length > 1 && (".?!)]♪؟".Contains(arr0[arr0.Length - 1]) && (sanitizedLines[1].StartsWith('-') || sanitizedLines[1].StartsWith('['))))
                     {
                         return input;
                     }
-                    if (noTagLines[0].StartsWith('-') && noTagLines[0].Length > 1 && (".?!)]♪؟".Contains(arr0[arr0.Length - 1]) && (noTagLines[1].StartsWith('-') || noTagLines[1].StartsWith('['))))
+                    if (sanitizedLines[0].StartsWith('-') && sanitizedLines[0].Length > 1 && (".?!)]♪؟".Contains(arr0[arr0.Length - 1]) && (sanitizedLines[1].StartsWith('-') || sanitizedLines[1].StartsWith('['))))
                     {
                         if (Configuration.Settings.Tools.AutoBreakDashEarly)
                         {
@@ -504,7 +523,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
                 var dialogHelper = new DialogSplitMerge { DialogStyle = Configuration.Settings.General.DialogStyle, TwoLetterLanguageCode = language };
                 if (Configuration.Settings.Tools.AutoBreakDashEarly &&
-                    dialogHelper.IsDialog(noTagLines) && noTagLines.Count <= Configuration.Settings.General.MaxNumberOfLines)
+                    dialogHelper.IsDialog(sanitizedLines) && sanitizedLines.Count <= Configuration.Settings.General.MaxNumberOfLines)
                 {
                     return input;
                 }
@@ -1731,10 +1750,10 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public static Color GetColorFromAssa(string text, Color defaultColor)
         {
-            var start = text.IndexOf(@"\c");
+            var start = text.IndexOf(@"\c", StringComparison.Ordinal);
             if (start < 0)
             {
-                start = text.IndexOf(@"\1c");
+                start = text.IndexOf(@"\1c", StringComparison.Ordinal);
             }
 
             if (start < 0 || text.Substring(start).StartsWith(@"\clip", StringComparison.Ordinal))
@@ -1987,7 +2006,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                         if (match.Index > 4)
                         {
                             var before = text.Substring(match.Index - 4, 4);
-                            if (int.TryParse(before.Trim(), NumberStyles.None, CultureInfo.InvariantCulture, out  var n) && n > 999)
+                            if (int.TryParse(before.Trim(), NumberStyles.None, CultureInfo.InvariantCulture, out var n) && n > 999)
                             {
                                 skip = false;
                             }
@@ -2887,7 +2906,6 @@ namespace Nikse.SubtitleEdit.Core.Common
             return fileName;
         }
 
-
         public static string ReSplit(string text, int selectionStart)
         {
             if (string.IsNullOrWhiteSpace(text) || !text.Contains(" ") || selectionStart == 0)
@@ -2976,6 +2994,131 @@ namespace Nikse.SubtitleEdit.Core.Common
                     return hashString.ToString();
                 }
             }
+        }
+
+        public static string ToggleSymbols(string tag, string text, string endTag = null)
+        {
+            var pre = string.Empty;
+            var post = string.Empty;
+            text = SplitStartTags(text, ref pre);
+            text = SplitEndTags(text, ref post);
+
+            if (!string.IsNullOrEmpty(tag) && text.Contains(tag) || string.IsNullOrEmpty(tag) && !string.IsNullOrEmpty(endTag) && text.Contains(endTag))
+            {
+                if (!string.IsNullOrEmpty(endTag) && !string.IsNullOrEmpty(tag))
+                {
+                    text = pre + text.Replace(tag, string.Empty).Replace(endTag, string.Empty).Replace(Environment.NewLine + " ", Environment.NewLine).Replace(" " + Environment.NewLine, Environment.NewLine).Trim() + post;
+                }
+                else if (string.IsNullOrEmpty(endTag) && !string.IsNullOrEmpty(tag))
+                {
+                    text = pre + text.Replace(tag, string.Empty).Replace(Environment.NewLine + " ", Environment.NewLine).Replace(" " + Environment.NewLine, Environment.NewLine).Trim() + post;
+                }
+                else if (!string.IsNullOrEmpty(endTag))
+                {
+                    text = pre + text.Replace(endTag, string.Empty).Replace(Environment.NewLine + " ", Environment.NewLine).Replace(" " + Environment.NewLine, Environment.NewLine).Trim() + post;
+                }
+            }
+            else
+            {
+                if (tag == Configuration.Settings.Tools.MusicSymbol)
+                {
+                    if (Configuration.Settings.Tools.MusicSymbolStyle.Equals("single", StringComparison.OrdinalIgnoreCase))
+                    {
+                        text = string.Format("{0}{1} {2}{3}", pre, tag, text.Replace(Environment.NewLine, Environment.NewLine + tag + " "), post);
+                    }
+                    else
+                    {
+                        text = string.Format("{0}{1} {2} {1}{3}", pre, tag, text.Replace(Environment.NewLine, " " + tag + Environment.NewLine + tag + " "), post);
+                    }
+                }
+                else
+                {
+                    text = string.Format("{0}{1}{2}{3}{4}", pre, tag, text, endTag ?? tag, post);
+                }
+            }
+
+            return text;
+        }
+
+        public static string SplitStartTags(string line, ref string pre)
+        {
+            var s = line;
+            if (s.StartsWith("{\\", StringComparison.Ordinal) && s.IndexOf('}') > 0)
+            {
+                pre = s.Substring(0, s.IndexOf('}') + 1);
+                s = s.Remove(0, pre.Length);
+            }
+
+            var updated = true;
+            while (updated)
+            {
+                updated = false;
+                if (s.StartsWith(' '))
+                {
+                    pre += ' ';
+                    s = s.Remove(0, 1);
+                    updated = true;
+                }
+                else if (s.StartsWith("<i>", StringComparison.OrdinalIgnoreCase) ||
+                         s.StartsWith("<b>", StringComparison.OrdinalIgnoreCase) ||
+                         s.StartsWith("<u>", StringComparison.OrdinalIgnoreCase))
+                {
+                    pre += s.Substring(0, 3);
+                    s = s.Remove(0, 3);
+                    updated = true;
+                }
+                else if (s.StartsWith("<font", StringComparison.OrdinalIgnoreCase))
+                {
+                    int endFont = s.IndexOf('>');
+                    if (endFont > 0)
+                    {
+                        pre += s.Substring(0, endFont + 1);
+                        s = s.Remove(0, endFont + 1);
+                        updated = true;
+                    }
+                }
+            }
+
+            return s;
+        }
+
+        public static string SplitEndTags(string line, ref string post)
+        {
+            var s = line;
+            if (s.EndsWith("{\\r}", StringComparison.Ordinal))
+            {
+                post = s.Substring(s.Length - 4, 4);
+                s = s.Remove(s.Length - 4, 4);
+            }
+
+            bool updated = true;
+            while (updated)
+            {
+                updated = false;
+                if (s.EndsWith(' '))
+                {
+                    post += ' ';
+                    s = s.Remove(s.Length - 1, 1);
+                    updated = true;
+                }
+                else if (s.EndsWith("</i>", StringComparison.OrdinalIgnoreCase) ||
+                         s.EndsWith("</b>", StringComparison.OrdinalIgnoreCase) ||
+                         s.EndsWith("</u>", StringComparison.OrdinalIgnoreCase))
+                {
+                    post += s.Substring(s.Length - 4, 4);
+                    s = s.Remove(s.Length - 4, 4);
+                    updated = true;
+                }
+                else if (s.EndsWith("</font>", StringComparison.OrdinalIgnoreCase))
+                {
+                    var endFontTag = "</font>";
+                    post += endFontTag;
+                    s = s.Remove(s.Length - endFontTag.Length, endFontTag.Length);
+                    updated = true;
+                }
+            }
+
+            return s;
         }
     }
 }

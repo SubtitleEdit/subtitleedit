@@ -76,6 +76,11 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 AdvancedSubStationAlpha.LoadStylesFromTimedText10(s, string.Empty, _header, AdvancedSubStationAlpha.HeaderNoStyles, new StringBuilder());
                 _header = s.Header;
             }
+            else if (_header != null && _header.StartsWith("WEBVTT", StringComparison.Ordinal))
+            {
+                _subtitle = WebVttToAssa.Convert(subtitle, new SsaStyle(), 0, 0);
+                _header = _subtitle.Header;
+            }
 
             if (_header == null || !_header.Contains("style:", StringComparison.OrdinalIgnoreCase))
             {
@@ -1836,7 +1841,8 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 _lastFormWindowState = WindowState;
                 return;
             }
-            else if (WindowState == FormWindowState.Normal && _lastFormWindowState == FormWindowState.Maximized)
+
+            if (WindowState == FormWindowState.Normal && _lastFormWindowState == FormWindowState.Maximized)
             {
                 System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(25), () =>
                 {
@@ -2305,7 +2311,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
         private void UpdateCurrentFileButtonsState()
         {
-            bool oneOrMoreSelected = listViewStyles.SelectedItems.Count > 0;
+            var oneOrMoreSelected = listViewStyles.SelectedItems.Count > 0;
             buttonRemove.Enabled = oneOrMoreSelected;
             buttonCopy.Enabled = oneOrMoreSelected;
             buttonAddStyleToStorage.Enabled = oneOrMoreSelected;

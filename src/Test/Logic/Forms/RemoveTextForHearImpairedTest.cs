@@ -618,6 +618,65 @@ namespace Test.Logic.Forms
         }
 
         [TestMethod]
+        public void RemoveInterjections16()
+        {
+            var text = "Ah...! Missy, you're a real bitch!";
+            var expected = "Missy, you're a real bitch!";
+            var actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext(text, false));
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void RemoveInterjections17A()
+        {
+            var text = $"- Hm.{Environment.NewLine}- Hm.";
+            var actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext(text, false));
+            Assert.AreEqual(string.Empty, actual);
+        }
+
+        [TestMethod]
+        public void RemoveInterjections17B()
+        {
+            var text = $"- Hm.{Environment.NewLine}- Hm.";
+            var actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext(text, true));
+            Assert.AreEqual(string.Empty, actual);
+        }
+
+        [TestMethod]
+        public void RemoveInterjections18A()
+        {
+            var text = $"- Hm!{Environment.NewLine}- Hm!";
+            var actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext(text, false));
+            Assert.AreEqual(string.Empty, actual);
+        }
+
+        [TestMethod]
+        public void RemoveInterjections18B()
+        {
+            var text = $"- Hm!{Environment.NewLine}- Hm!";
+            var actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext(text, true));
+            Assert.AreEqual(string.Empty, actual);
+        }
+
+        [TestMethod]
+        public void RemoveInterjections19()
+        {
+            var text = $"- ¡Hm!{Environment.NewLine}- Increíble, ¿verdad?";
+            var settings = GetRemoveInterjectionContext(text, true);
+            var actual = new RemoveInterjection().Invoke(settings);
+            Assert.AreEqual("Increíble, ¿verdad?", actual);
+        }
+
+        [TestMethod]
+        public void RemoveInterjections19B()
+        {
+            var text = $"- ¿Hm?{Environment.NewLine}- Increíble, ¿verdad?";
+            var settings = GetRemoveInterjectionContext(text, true);
+            var actual = new RemoveInterjection().Invoke(settings);
+            Assert.AreEqual("Increíble, ¿verdad?", actual);
+        }
+
+        [TestMethod]
         public void RemoveColonOnlyOnSeparateLine()
         {
             var target = GetRemoveTextForHiLib();
@@ -1998,6 +2057,32 @@ namespace Test.Logic.Forms
         }
 
         [TestMethod]
+        public void RemoveTextForHiSingleLine1()
+        {
+            var target = GetRemoveTextForHiLib();
+            target.Settings.RemoveTextBeforeColon = true;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            target.Settings.RemoveInterjections = false;
+            target.Settings.RemoveTextBetweenBrackets = false;
+            target.Settings.OnlyIfInSeparateLine = true;
+            var actual = target.RemoveTextFromHearImpaired("What's going on...?! [gasps]");
+            Assert.AreEqual("What's going on...?! [gasps]", actual);
+        }
+
+        [TestMethod]
+        public void RemoveTextForHiSingleLine2()
+        {
+            var target = GetRemoveTextForHiLib();
+            target.Settings.RemoveTextBeforeColon = true;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            target.Settings.RemoveInterjections = false;
+            target.Settings.RemoveTextBetweenBrackets = false;
+            target.Settings.OnlyIfInSeparateLine = false;
+            string actual = target.RemoveTextFromHearImpaired("What's going on...?! [gasps]");
+            Assert.AreEqual("What's going on...?!", actual);
+        }
+
+        [TestMethod]
         public void RemoveInterjectionsAfterComma()
         {
             string actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext("Hey, ahhhh.", onlyInSeparatedLine: false));
@@ -2042,8 +2127,8 @@ namespace Test.Logic.Forms
         [TestMethod]
         public void RemoveInterjectionsAllDualOhOnlySeparateLine()
         {
-            string actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext("- Oh, what?" + Environment.NewLine + "- Oh.", onlyInSeparatedLine: true));
-            Assert.AreEqual("Oh, what?", actual);
+            var actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext("- I bet it hurt when they cut it off." + Environment.NewLine + "- Ugh!", onlyInSeparatedLine: true));
+            Assert.AreEqual("I bet it hurt when they cut it off.", actual);
         }
 
         [TestMethod]

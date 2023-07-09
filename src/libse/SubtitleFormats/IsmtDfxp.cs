@@ -28,7 +28,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
 
                 var buffer = new byte[12];
-                int l = fs.Read(buffer, 0, buffer.Length);
+                var l = fs.Read(buffer, 0, buffer.Length);
                 if (l != buffer.Length)
                 {
                     return false;
@@ -54,6 +54,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var mp4Parser = new MP4Parser(fileName);
             var dfxpStrings = mp4Parser.GetMdatsAsStrings();
             SubtitleFormat format = new TimedText10();
+            SubtitleFormat format2 = new TimedTextBase64Image();
+            SubtitleFormat format3 = new TimedTextImage();
             foreach (var xmlAsString in dfxpStrings)
             {
                 try
@@ -70,8 +72,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
 
                     var sub = new Subtitle();
-                    var mdatLines = xmlAsString.SplitToLines(25_000);
-                    format = sub.ReloadLoadSubtitle(mdatLines, null, format);
+                    var mdatLines = xmlAsString.SplitToLines(100_000);
+                    format = sub.ReloadLoadSubtitle(mdatLines, null, format, format2, format3);
                     if (sub.Paragraphs.Count == 0)
                     {
                         continue;
@@ -93,6 +95,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     _errorCount++;
                 }
+
+                subtitle.OriginalFormat = format;
             }
 
             var merged = MergeLinesSameTextUtils.MergeLinesWithSameTextInSubtitle(subtitle, false, 250);

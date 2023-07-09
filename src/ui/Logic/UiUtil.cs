@@ -656,6 +656,9 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 using (var g = Graphics.FromHwnd(IntPtr.Zero))
                 {
+                    timeUpDown.Font = GetDefaultFont();
+                    timeUpDown.MaskedTextBox.Font = GetDefaultFont();
+                    timeUpDown.MaskedTextBox.ForeColor = ForeColor;
                     var width = g.MeasureString("00:00:00.000", form.Font).Width;
                     if (timeUpDown.MaskedTextBox.Width < width - 3)
                     {
@@ -685,6 +688,11 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static void FixLargeFonts(Control mainCtrl, Control ctrl)
         {
+            if (mainCtrl == null || ctrl == null)
+            {
+                return;
+            }
+
             using (var graphics = mainCtrl.CreateGraphics())
             {
                 var textSize = graphics.MeasureString(ctrl.Text, ctrl.Font);
@@ -1090,7 +1098,7 @@ namespace Nikse.SubtitleEdit.Logic
             return c == UnicodeCategory.SpaceSeparator || c == UnicodeCategory.Control || c == UnicodeCategory.LineSeparator || c == UnicodeCategory.ParagraphSeparator;
         }
 
-        private static void AddExtension(StringBuilder sb, string extension)
+        public static void AddExtension(StringBuilder sb, string extension)
         {
             if (!sb.ToString().Contains("*" + extension + ";", StringComparison.OrdinalIgnoreCase))
             {

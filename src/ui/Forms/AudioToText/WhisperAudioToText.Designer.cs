@@ -55,14 +55,17 @@
             this.columnHeaderFileName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.labelFC = new System.Windows.Forms.Label();
             this.checkBoxTranslateToEnglish = new System.Windows.Forms.CheckBox();
-            this.labelCpp = new System.Windows.Forms.Label();
             this.labelElapsed = new System.Windows.Forms.Label();
             this.contextMenuStripWhisperAdvanced = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.whisperPhpOriginalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.whisperCppCToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.setCPPConstmeModelsFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.removeTemporaryFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.checkBoxAutoAdjustTimings = new System.Windows.Forms.CheckBox();
+            this.labelCharsPerSub = new System.Windows.Forms.Label();
+            this.comboBoxCharsPerSub = new System.Windows.Forms.ComboBox();
+            this.comboBoxWhisperEngine = new System.Windows.Forms.ComboBox();
+            this.labelEngine = new System.Windows.Forms.Label();
+            this.runOnlyPostProcessingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparatorRunOnlyPostprocessing = new System.Windows.Forms.ToolStripSeparator();
             this.groupBoxModels.SuspendLayout();
             this.groupBoxInputFiles.SuspendLayout();
             this.contextMenuStripWhisperAdvanced.SuspendLayout();
@@ -121,8 +124,9 @@
             this.textBoxLog.Location = new System.Drawing.Point(465, 9);
             this.textBoxLog.Multiline = true;
             this.textBoxLog.Name = "textBoxLog";
+            this.textBoxLog.ReadOnly = true;
             this.textBoxLog.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBoxLog.Size = new System.Drawing.Size(168, 288);
+            this.textBoxLog.Size = new System.Drawing.Size(168, 65);
             this.textBoxLog.TabIndex = 0;
             // 
             // labelInfo
@@ -352,17 +356,6 @@
             this.checkBoxTranslateToEnglish.Text = "Translate to English";
             this.checkBoxTranslateToEnglish.UseVisualStyleBackColor = true;
             // 
-            // labelCpp
-            // 
-            this.labelCpp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelCpp.AutoSize = true;
-            this.labelCpp.ForeColor = System.Drawing.SystemColors.ControlDark;
-            this.labelCpp.Location = new System.Drawing.Point(669, 9);
-            this.labelCpp.Name = "labelCpp";
-            this.labelCpp.Size = new System.Drawing.Size(28, 13);
-            this.labelCpp.TabIndex = 21;
-            this.labelCpp.Text = "CPP";
-            // 
             // labelElapsed
             // 
             this.labelElapsed.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
@@ -376,36 +369,25 @@
             // contextMenuStripWhisperAdvanced
             // 
             this.contextMenuStripWhisperAdvanced.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.whisperPhpOriginalToolStripMenuItem,
-            this.whisperCppCToolStripMenuItem,
-            this.toolStripSeparator1,
+            this.runOnlyPostProcessingToolStripMenuItem,
+            this.toolStripSeparatorRunOnlyPostprocessing,
+            this.setCPPConstmeModelsFolderToolStripMenuItem,
             this.removeTemporaryFilesToolStripMenuItem});
             this.contextMenuStripWhisperAdvanced.Name = "contextMenuStripWhisperAdvanced";
-            this.contextMenuStripWhisperAdvanced.Size = new System.Drawing.Size(210, 76);
+            this.contextMenuStripWhisperAdvanced.Size = new System.Drawing.Size(259, 98);
+            this.contextMenuStripWhisperAdvanced.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripWhisperAdvanced_Opening);
             // 
-            // whisperPhpOriginalToolStripMenuItem
+            // setCPPConstmeModelsFolderToolStripMenuItem
             // 
-            this.whisperPhpOriginalToolStripMenuItem.Name = "whisperPhpOriginalToolStripMenuItem";
-            this.whisperPhpOriginalToolStripMenuItem.Size = new System.Drawing.Size(209, 22);
-            this.whisperPhpOriginalToolStripMenuItem.Text = "Whisper OpenAI (Python)";
-            this.whisperPhpOriginalToolStripMenuItem.Click += new System.EventHandler(this.whisperPhpOriginalToolStripMenuItem_Click);
-            // 
-            // whisperCppCToolStripMenuItem
-            // 
-            this.whisperCppCToolStripMenuItem.Name = "whisperCppCToolStripMenuItem";
-            this.whisperCppCToolStripMenuItem.Size = new System.Drawing.Size(209, 22);
-            this.whisperCppCToolStripMenuItem.Text = "Whisper cpp (C++)";
-            this.whisperCppCToolStripMenuItem.Click += new System.EventHandler(this.whisperCppCToolStripMenuItem_Click);
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(206, 6);
+            this.setCPPConstmeModelsFolderToolStripMenuItem.Name = "setCPPConstmeModelsFolderToolStripMenuItem";
+            this.setCPPConstmeModelsFolderToolStripMenuItem.Size = new System.Drawing.Size(258, 22);
+            this.setCPPConstmeModelsFolderToolStripMenuItem.Text = "Set CPP/Const-me models folder...";
+            this.setCPPConstmeModelsFolderToolStripMenuItem.Click += new System.EventHandler(this.setCPPConstMeModelsFolderToolStripMenuItem_Click);
             // 
             // removeTemporaryFilesToolStripMenuItem
             // 
             this.removeTemporaryFilesToolStripMenuItem.Name = "removeTemporaryFilesToolStripMenuItem";
-            this.removeTemporaryFilesToolStripMenuItem.Size = new System.Drawing.Size(209, 22);
+            this.removeTemporaryFilesToolStripMenuItem.Size = new System.Drawing.Size(258, 22);
             this.removeTemporaryFilesToolStripMenuItem.Text = "Remove temporary files";
             this.removeTemporaryFilesToolStripMenuItem.Click += new System.EventHandler(this.removeTemporaryFilesToolStripMenuItem_Click);
             // 
@@ -419,14 +401,68 @@
             this.checkBoxAutoAdjustTimings.Text = "Auto adjust timings";
             this.checkBoxAutoAdjustTimings.UseVisualStyleBackColor = true;
             // 
+            // labelCharsPerSub
+            // 
+            this.labelCharsPerSub.AutoSize = true;
+            this.labelCharsPerSub.Location = new System.Drawing.Point(522, 150);
+            this.labelCharsPerSub.Name = "labelCharsPerSub";
+            this.labelCharsPerSub.Size = new System.Drawing.Size(94, 13);
+            this.labelCharsPerSub.TabIndex = 24;
+            this.labelCharsPerSub.Text = "Max chars/subtitle";
+            // 
+            // comboBoxCharsPerSub
+            // 
+            this.comboBoxCharsPerSub.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxCharsPerSub.FormattingEnabled = true;
+            this.comboBoxCharsPerSub.Location = new System.Drawing.Point(618, 147);
+            this.comboBoxCharsPerSub.Name = "comboBoxCharsPerSub";
+            this.comboBoxCharsPerSub.Size = new System.Drawing.Size(79, 21);
+            this.comboBoxCharsPerSub.TabIndex = 25;
+            // 
+            // comboBoxWhisperEngine
+            // 
+            this.comboBoxWhisperEngine.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxWhisperEngine.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxWhisperEngine.FormattingEnabled = true;
+            this.comboBoxWhisperEngine.Location = new System.Drawing.Point(547, 9);
+            this.comboBoxWhisperEngine.Name = "comboBoxWhisperEngine";
+            this.comboBoxWhisperEngine.Size = new System.Drawing.Size(154, 21);
+            this.comboBoxWhisperEngine.TabIndex = 26;
+            this.comboBoxWhisperEngine.SelectedIndexChanged += new System.EventHandler(this.comboBoxWhisperEngine_SelectedIndexChanged);
+            // 
+            // labelEngine
+            // 
+            this.labelEngine.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelEngine.AutoSize = true;
+            this.labelEngine.Location = new System.Drawing.Point(501, 12);
+            this.labelEngine.Name = "labelEngine";
+            this.labelEngine.Size = new System.Drawing.Size(40, 13);
+            this.labelEngine.TabIndex = 27;
+            this.labelEngine.Text = "Engine";
+            // 
+            // runOnlyPostProcessingToolStripMenuItem
+            // 
+            this.runOnlyPostProcessingToolStripMenuItem.Name = "runOnlyPostProcessingToolStripMenuItem";
+            this.runOnlyPostProcessingToolStripMenuItem.Size = new System.Drawing.Size(258, 22);
+            this.runOnlyPostProcessingToolStripMenuItem.Text = "Run only post processing";
+            this.runOnlyPostProcessingToolStripMenuItem.Click += new System.EventHandler(this.runOnlyPostProcessingToolStripMenuItem_Click);
+            // 
+            // toolStripSeparatorRunOnlyPostprocessing
+            // 
+            this.toolStripSeparatorRunOnlyPostprocessing.Name = "toolStripSeparatorRunOnlyPostprocessing";
+            this.toolStripSeparatorRunOnlyPostprocessing.Size = new System.Drawing.Size(255, 6);
+            // 
             // WhisperAudioToText
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(709, 494);
+            this.Controls.Add(this.labelEngine);
+            this.Controls.Add(this.comboBoxWhisperEngine);
+            this.Controls.Add(this.comboBoxCharsPerSub);
+            this.Controls.Add(this.labelCharsPerSub);
             this.Controls.Add(this.labelElapsed);
             this.Controls.Add(this.checkBoxAutoAdjustTimings);
-            this.Controls.Add(this.labelCpp);
             this.Controls.Add(this.checkBoxTranslateToEnglish);
             this.Controls.Add(this.labelFC);
             this.Controls.Add(this.groupBoxInputFiles);
@@ -490,13 +526,16 @@
         private System.Windows.Forms.Label labelChooseLanguage;
         private System.Windows.Forms.ComboBox comboBoxLanguages;
         private System.Windows.Forms.CheckBox checkBoxTranslateToEnglish;
-        private System.Windows.Forms.Label labelCpp;
         private System.Windows.Forms.Label labelElapsed;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripWhisperAdvanced;
-        private System.Windows.Forms.ToolStripMenuItem whisperPhpOriginalToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem whisperCppCToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem removeTemporaryFilesToolStripMenuItem;
         private System.Windows.Forms.CheckBox checkBoxAutoAdjustTimings;
+        private System.Windows.Forms.Label labelCharsPerSub;
+        private System.Windows.Forms.ComboBox comboBoxCharsPerSub;
+        private System.Windows.Forms.ComboBox comboBoxWhisperEngine;
+        private System.Windows.Forms.Label labelEngine;
+        private System.Windows.Forms.ToolStripMenuItem setCPPConstmeModelsFolderToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem runOnlyPostProcessingToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparatorRunOnlyPostprocessing;
     }
 }

@@ -127,7 +127,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                     return;
                 }
 
-                TranscribedSubtitle = postProcessor.Generate(AudioToTextPostProcessor.Engine.Vosk, transcript, checkBoxUsePostProcessing.Checked, false, true, false, false, false);
+                TranscribedSubtitle = postProcessor.Fix(AudioToTextPostProcessor.Engine.Vosk, transcript, checkBoxUsePostProcessing.Checked, false, true, false, false, false);
 
                 progressBar1.Value = (int)Math.Round(_batchFileNumber * 100.0 / _audioClips.Count, MidpointRounding.AwayFromZero);
                 progressBar1.Refresh();
@@ -153,7 +153,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 postSub.Paragraphs.Add(audioClip.Paragraph);
             }
 
-            var postSubFixed = postProcessor.Generate(postSub, checkBoxUsePostProcessing.Checked, true, false, true, false, false);
+            var postSubFixed = postProcessor.Fix(postSub, checkBoxUsePostProcessing.Checked, true, false, true, false, false, AudioToTextPostProcessor.Engine.Vosk);
             for (var index = 0; index < _audioClips.Count; index++)
             {
                 var audioClip = _audioClips[index];
@@ -308,7 +308,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             }
             else if (e.KeyData == UiUtil.HelpKeys)
             {
-                UiUtil.ShowHelp("#audio_to_text");
+                UiUtil.ShowHelp("#audio_to_text_vosk");
                 e.SuppressKeyPress = true;
             }
         }

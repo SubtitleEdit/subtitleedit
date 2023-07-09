@@ -2,7 +2,7 @@
 <Language Name="Македонски">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.10</Version>
+    <Version>3.6.13</Version>
     <TranslatedBy>Превод на македонски: Numberguy
 dzoole@hotmail.com</TranslatedBy>
     <CultureName>mk-MK</CultureName>
@@ -1350,7 +1350,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <BeforeDisplayTimeAdjustment>Пред прилагодба на временскиот приказ</BeforeDisplayTimeAdjustment>
     <DisplayTimeAdjustedX>Временскиот приказ е прилагоден: {0}</DisplayTimeAdjustedX>
     <DisplayTimesAdjustedX>Временските прикази се прилагодени{0}</DisplayTimesAdjustedX>
-    <StarTimeAdjustedX>Почетното време е прилагодено: {0}</StarTimeAdjustedX>
+    <StartTimeAdjustedX>Почетното време е прилагодено: {0}</StartTimeAdjustedX>
     <BeforeCommonErrorFixes>Пред поправките на чести грешки</BeforeCommonErrorFixes>
     <CommonErrorsFixedInSelectedLines>Поправени се честите грешки во избраните линии</CommonErrorsFixedInSelectedLines>
     <CommonErrorsFixed>Поправени чести грешки</CommonErrorsFixed>
@@ -2077,7 +2077,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GoForward1Second>Една секунда напред</GoForward1Second>
     <GoBack5Seconds>Пет секунди назад</GoBack5Seconds>
     <GoForward5Seconds>Пет секунди напред</GoForward5Seconds>
-    <GoBack3Second>Три секунди назад</GoBack3Second>
+    <GoBack3Seconds>Три секунди назад</GoBack3Seconds>
     <GoToStartCurrent>Постави видео позиција на почеток на тековен титл</GoToStartCurrent>
     <ToggleStartEndCurrent>Преклопи видео позиција меѓу почеток/крај на тековен титл</ToggleStartEndCurrent>
     <PlayCurrent>Пушти го тековниот титл</PlayCurrent>
@@ -2496,7 +2496,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <TransportStreamGrayscale>Скала на сивило</TransportStreamGrayscale>
     <TransportStreamGetColor>Употреби боја (може да настане разделба на линии)</TransportStreamGetColor>
     <PromptForUnknownWords>Извести за непознати зборови</PromptForUnknownWords>
-    <TryToGuessUnkownWords>Можност за претпоставка на непознати зборови</TryToGuessUnkownWords>
+    <TryToGuessUnknownWords>Можност за претпоставка на непознати зборови</TryToGuessUnknownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>Автоматски прекрши го параграфот ако има повеќе од два реда</AutoBreakSubtitleIfMoreThanTwoLines>
     <AllFixes>Сите поправки</AllFixes>
     <GuessesUsed>Употребени претпоставки</GuessesUsed>

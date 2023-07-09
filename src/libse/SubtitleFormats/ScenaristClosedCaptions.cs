@@ -212,6 +212,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             new KeyValuePair<string, string>("132f",                "~" ),
             new KeyValuePair<string, string>("13b0",                "Ä" ),
             new KeyValuePair<string, string>("c180 13b0",           "Ä" ),
+            new KeyValuePair<string, string>("6180 1331 1331",      "ä"),
+            new KeyValuePair<string, string>("1331 1331",           "ä"),
             new KeyValuePair<string, string>("1331",                "ä" ),
             new KeyValuePair<string, string>("6180 1331",           "ä" ),
             new KeyValuePair<string, string>("1332",                "Ö" ),
@@ -286,9 +288,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             new KeyValuePair<string, string>("6180 913b 913b",      "â"),
             new KeyValuePair<string, string>("913b 913b",           "â"),
 
-            new KeyValuePair<string, string>("6180 1331 1331",      "ä"),
-            new KeyValuePair<string, string>("1331 1331",           "ä"),
-
             new KeyValuePair<string, string>("e580 91ba 91ba",      "è"),
             new KeyValuePair<string, string>("6180 91ba 91ba",      "è"),
             new KeyValuePair<string, string>("91ba 91ba",           "è"),
@@ -323,9 +322,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             new KeyValuePair<string, string>("ef80 13b3 13b3",      "ö"),
             new KeyValuePair<string, string>("6f80 13b3 13b3",      "ö"),
 
-            new KeyValuePair<string, string>("7580 13b3 13b3",      "ù"), //u=75
-
             new KeyValuePair<string, string>("7580 92bc 92bc",      "ù"),
+            new KeyValuePair<string, string>("7580 13b3 13b3",      "ù"), //u=75
             new KeyValuePair<string, string>("92bc 92bc",           "ù"),
 
             new KeyValuePair<string, string>("7580 91bf 91bf",      "û"),
@@ -1140,9 +1138,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 text = HtmlUtil.RemoveHtmlTags(text);
                 if (text != null && !string.IsNullOrEmpty(text))
                 {
-                    if (text.Length < 28)
+                    if (text.Length < 25)
                     {
-                        if (x < 3)
+                        if (x < 2)
                         {
                             leftAlign = true;
                         }

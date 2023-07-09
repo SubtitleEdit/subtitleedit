@@ -2,7 +2,7 @@
 <Language Name="srpski">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.10</Version>
+    <Version>3.6.13</Version>
     <TranslatedBy>Prevod: Misa Forger</TranslatedBy>
     <CultureName>sr-Latn-RS</CultureName>
     <HelpFile />
@@ -1310,7 +1310,7 @@ Datoteka samo za čitanje!!</FileXIsReadOnly>
     <BeforeDisplayTimeAdjustment>Pre podešavanja vremena prikaza</BeforeDisplayTimeAdjustment>
     <DisplayTimeAdjustedX>Prilagođeno vreme prikaza: {0}</DisplayTimeAdjustedX>
     <DisplayTimesAdjustedX>Prilagođena vremena prikaza: {0}</DisplayTimesAdjustedX>
-    <StarTimeAdjustedX>Prilagođeno početno vreme: {0}</StarTimeAdjustedX>
+    <StartTimeAdjustedX>Prilagođeno početno vreme: {0}</StartTimeAdjustedX>
     <BeforeCommonErrorFixes>Pre ispravljenja čestih grešaka</BeforeCommonErrorFixes>
     <CommonErrorsFixedInSelectedLines>Ispravljene česte greške u izabranim linijama</CommonErrorsFixedInSelectedLines>
     <CommonErrorsFixed>Česte greške su ispravljene</CommonErrorsFixed>
@@ -2366,7 +2366,7 @@ sa ugrađenim informacijama o fontu kao u "Advanced Sub Station Alpha" ili preko
     <TransportStreamGrayscale>Sivi tonovi</TransportStreamGrayscale>
     <TransportStreamGetColor>Koristi boju (može doći do razdvajanja linija)</TransportStreamGetColor>
     <PromptForUnknownWords>Pitaj za nepoznate reči</PromptForUnknownWords>
-    <TryToGuessUnkownWords>Nagađaj nepoznate reči</TryToGuessUnkownWords>
+    <TryToGuessUnknownWords>Nagađaj nepoznate reči</TryToGuessUnknownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>Automatski razdvoji tekst ako ima više od dve linije</AutoBreakSubtitleIfMoreThanTwoLines>
     <AllFixes>Ispravke</AllFixes>
     <GuessesUsed>Korišćena nagađanja</GuessesUsed>

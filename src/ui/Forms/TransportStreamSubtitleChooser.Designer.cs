@@ -197,13 +197,13 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(613, 483);
-            this.Controls.Add(this.textBoxTeletext);
-            this.Controls.Add(this.pictureBox1);
-            this.Controls.Add(this.listBoxSubtitles);
             this.Controls.Add(this.labelChoose);
             this.Controls.Add(this.listBoxTracks);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
+            this.Controls.Add(this.listBoxSubtitles);
+            this.Controls.Add(this.pictureBox1);
+            this.Controls.Add(this.textBoxTeletext);
             this.KeyPreview = true;
             this.MaximizeBox = false;
             this.MinimizeBox = false;

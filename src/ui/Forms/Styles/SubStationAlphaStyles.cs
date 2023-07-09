@@ -328,7 +328,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             }
         }
 
-        private List<string> GetFontNames(byte[] fontBytes)
+        private static List<string> GetFontNames(byte[] fontBytes)
         {
             var privateFontCollection = new PrivateFontCollection();
             var handle = GCHandle.Alloc(fontBytes, GCHandleType.Pinned);
@@ -570,25 +570,6 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             {
                 listViewStyles.Items[0].Selected = true;
             }
-        }
-
-        private static string FixDuplicateStyleName(string newStyleName, List<SsaStyle> existingStyles)
-        {
-            if (existingStyles.All(p => p.Name != newStyleName))
-            {
-                return newStyleName;
-            }
-
-            for (int i = 1; i < int.MaxValue; i++)
-            {
-                var name = $"{newStyleName}_{i}";
-                if (existingStyles.All(p => p.Name != name))
-                {
-                    return name;
-                }
-            }
-
-            return Guid.NewGuid().ToString();
         }
 
         public static void AddStyle(ListView lv, SsaStyle ssaStyle, Subtitle subtitle, bool isSubstationAlpha)
@@ -848,7 +829,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             return sb.ToString();
         }
 
-        private void UpdateSelectedIndices(ListView listview, int startingIndex = -1, int numberOfSelectedItems = 1)
+        private static void UpdateSelectedIndices(ListView listview, int startingIndex = -1, int numberOfSelectedItems = 1)
         {
             if (numberOfSelectedItems == 0)
             {
@@ -866,7 +847,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             }
 
             listview.SelectedItems.Clear();
-            for (int i = 0; i < numberOfSelectedItems; i++)
+            for (var i = 0; i < numberOfSelectedItems; i++)
             {
                 listview.Items[startingIndex - i].Selected = true;
                 listview.Items[startingIndex - i].EnsureVisible();
@@ -880,11 +861,11 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
             if (listViewStyles.SelectedItems.Count == 1)
             {
-                string styleName = listViewStyles.SelectedItems[0].Text;
+                var styleName = listViewStyles.SelectedItems[0].Text;
                 _startName = styleName;
                 _editedName = null;
                 _oldSsaName = styleName;
-                SsaStyle style = GetSsaStyleFile(styleName);
+                var style = GetSsaStyleFile(styleName);
                 SetControlsFromStyle(style);
                 _doUpdate = true;
                 groupBoxProperties.Enabled = true;
@@ -1114,7 +1095,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
         private static string GetSsaColorString(Color c)
         {
-            return Color.FromArgb(0, c.B, c.G, c.R).ToArgb().ToString(); ;
+            return Color.FromArgb(0, c.B, c.G, c.R).ToArgb().ToString();
         }
 
         private void buttonCopy_Click(object sender, EventArgs e)
@@ -1160,19 +1141,6 @@ namespace Nikse.SubtitleEdit.Forms.Styles
         private void RemoveStyleFromHeader(string name)
         {
             _currentFileStyles.Remove(_currentFileStyles.Find(p => p.Name == name));
-        }
-
-        private void ReplaceStyleInHeader(SsaStyle style)
-        {
-            var hit = _currentFileStyles.Find(p => p.Name == style.Name);
-            if (hit == null)
-            {
-                return;
-            }
-
-            var index = _currentFileStyles.IndexOf(hit);
-            _currentFileStyles.RemoveAt(index);
-            _currentFileStyles.Insert(index, style);
         }
 
         private void buttonAdd_Click(object sender, EventArgs e)
@@ -1256,6 +1224,13 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             foreach (ListViewItem selectedItem in listViewStyles.SelectedItems)
             {
                 var name = selectedItem.Text;
+
+                var currentStyle = _currentFileStyles.FirstOrDefault(p => p.Name == name);
+                if (currentStyle != null)
+                {
+                    _currentFileStyles.Remove(currentStyle);
+                }
+
                 listViewStyles.Items.RemoveAt(listViewStyles.SelectedItems[0].Index);
                 RemoveStyleFromHeader(name);
                 CheckDuplicateStyles();
@@ -1534,11 +1509,6 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             SetLastColumnWidth();
         }
 
-        private void listViewStorage_ClientSizeChanged(object sender, EventArgs e)
-        {
-            SetLastColumnWidth();
-        }
-
         private void SubStationAlphaStyles_ResizeEnd(object sender, EventArgs e)
         {
             _backgroundImage?.Dispose();
@@ -1648,17 +1618,18 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                             {
                                 var styleNames = string.Join(", ", cs.SelectedStyleNames.ToArray());
 
+                                listViewStyles.BeginUpdate();
                                 foreach (var styleName in cs.SelectedStyleNames)
                                 {
                                     var style = AdvancedSubStationAlpha.GetSsaStyle(styleName, s.Header);
                                     if (GetSsaStyleFile(style.Name) != null && GetSsaStyleFile(style.Name) != null)
                                     {
-                                        int count = 2;
-                                        bool doRepeat = GetSsaStyleFile(style.Name + count) != null;
+                                        var count = 2;
+                                        var doRepeat = GetSsaStyleFile(style.Name + count) != null;
                                         while (doRepeat)
                                         {
-                                            doRepeat = GetSsaStyleFile(style.Name + count) != null;
                                             count++;
+                                            doRepeat = GetSsaStyleFile(style.Name + count) != null;
                                         }
                                         style.RawLine = style.RawLine.Replace(" " + style.Name + ",", " " + style.Name + count + ",");
                                         style.Name += count;
@@ -1666,6 +1637,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
                                     _doUpdate = false;
                                     AddStyle(listViewStyles, style, Subtitle, _isSubStationAlpha);
+                                    AddStyleToHeader(style);
                                     _header = _header.Trim();
                                     if (_header.EndsWith("[Events]", StringComparison.Ordinal))
                                     {
@@ -1678,14 +1650,18 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                                         _header = _header.Trim() + Environment.NewLine + style.RawLine + Environment.NewLine;
                                     }
 
-                                    UpdateSelectedIndices(listViewStyles);
-                                    textBoxStyleName.Text = style.Name;
-                                    textBoxStyleName.Focus();
-                                    _doUpdate = true;
-                                    SetControlsFromStyle(style);
-                                    listViewStyles_SelectedIndexChanged(null, null);
+                                    if (styleName == cs.SelectedStyleNames.Last())
+                                    {
+                                        UpdateSelectedIndices(listViewStyles);
+                                        _doUpdate = true;
+                                        textBoxStyleName.Text = style.Name;
+                                        textBoxStyleName.Focus();
+                                        SetControlsFromStyle(style);
+                                        listViewStyles_SelectedIndexChanged(null, null);
+                                    }
                                 }
 
+                                listViewStyles.EndUpdate();
                                 labelStatus.Text = string.Format(LanguageSettings.Current.SubStationAlphaStyles.StyleXImportedFromFileY, styleNames, openFileDialogImport.FileName);
                                 timerClearStatus.Start();
                             }

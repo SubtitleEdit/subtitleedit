@@ -2435,6 +2435,26 @@ namespace Test.FixCommonErrors
         }
 
         [TestMethod]
+        public void FixUnneededPeriodsTestChineseDoNotChange()
+        {
+            var sub = new Subtitle();
+            sub.Paragraphs.Add(new Paragraph("但是……但是我們必須等待。", 0, 1000));
+            var fup = new FixUnneededPeriods();
+            fup.Fix(sub, new EmptyFixCallback { Language = "zh" });
+            Assert.AreEqual("但是……但是我們必須等待。", sub.Paragraphs[0].Text);
+        }
+
+        [TestMethod]
+        public void FixUnneededPeriodsTestChineseDoChange()
+        {
+            var sub = new Subtitle();
+            sub.Paragraphs.Add(new Paragraph("但是.......但是我們必須等待。", 0, 1000));
+            var fup = new FixUnneededPeriods();
+            fup.Fix(sub, new EmptyFixCallback { Language = "zh" });
+            Assert.AreEqual("但是......但是我們必須等待。", sub.Paragraphs[0].Text);
+        }
+
+        [TestMethod]
         public void FixCommas1()
         {
             var sub = new Subtitle();
@@ -2698,6 +2718,20 @@ namespace Test.FixCommonErrors
                 new FixUnnecessaryLeadingDots().Fix(_subtitle, new EmptyFixCallback());
                 Assert.AreEqual("{\an8}<i>This is a test...</i>" + Environment.NewLine + " " + Environment.NewLine + "_", _subtitle.Paragraphs[0].Text);
                 Assert.AreEqual("{\an8}<i>and we need to do it.</i>" + Environment.NewLine + " " + Environment.NewLine + "_", _subtitle.Paragraphs[1].Text);
+            }
+        }
+
+        [TestMethod]
+        public void FixContinuationStyle0()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "No comma before dots...", "but is no problem.");
+                Configuration.Settings.General.ContinuationStyle = ContinuationStyle.Custom;
+                Configuration.Settings.General.CustomContinuationStyleSuffix = "...";
+                new FixContinuationStyle().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual("No comma before dots...", _subtitle.Paragraphs[0].Text);
+                Assert.AreEqual("but is no problem.", _subtitle.Paragraphs[1].Text);
             }
         }
 
@@ -3423,6 +3457,18 @@ namespace Test.FixCommonErrors
                 Configuration.Settings.General.ContinuationStyle = ContinuationStyle.LeadingTrailingDots;
                 new RemoveDialogFirstLineInNonDialogs().Fix(_subtitle, new EmptyFixCallback());
                 Assert.AreEqual("They wanted to test!" + Environment.NewLine + "But not Kal-El.", _subtitle.Paragraphs[0].Text);
+            }
+        }
+
+        [TestMethod]
+        public void UnbreakLinesExceptDialogWithUnicode()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "‏- fasdfsdf.\r\n‏-adfasf.");
+                Configuration.Settings.General.ContinuationStyle = ContinuationStyle.LeadingTrailingDots;
+                new FixShortLinesAll().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual("‏- fasdfsdf.\r\n‏-adfasf.", _subtitle.Paragraphs[0].Text);
             }
         }
     }
