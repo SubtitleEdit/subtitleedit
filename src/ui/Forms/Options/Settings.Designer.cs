@@ -176,6 +176,8 @@
             this.labelCustomSearch = new System.Windows.Forms.Label();
             this.comboBoxCustomSearch1 = new System.Windows.Forms.ComboBox();
             this.groupBoxVideoPlayerDefault = new System.Windows.Forms.GroupBox();
+            this.numericUpDownMarginVertical = new System.Windows.Forms.NumericUpDown();
+            this.labelMarginVertical = new System.Windows.Forms.Label();
             this.panelMpvBackColor = new System.Windows.Forms.Panel();
             this.buttonMpvBackColor = new System.Windows.Forms.Button();
             this.panelMpvOutlineColor = new System.Windows.Forms.Panel();
@@ -329,8 +331,6 @@
             this.pictureBoxAssAttachments = new System.Windows.Forms.PictureBox();
             this.pictureBoxAssProperties = new System.Windows.Forms.PictureBox();
             this.pictureBoxAssStyleManager = new System.Windows.Forms.PictureBox();
-            this.labelToolbarIconTheme = new System.Windows.Forms.Label();
-            this.comboBoxToolbarIconTheme = new System.Windows.Forms.ComboBox();
             this.labelToggleSourceView = new System.Windows.Forms.Label();
             this.pictureBoxSourceView = new System.Windows.Forms.PictureBox();
             this.checkBoxTBToggleSourceView = new System.Windows.Forms.CheckBox();
@@ -378,6 +378,12 @@
             this.checkBoxToolbarNew = new System.Windows.Forms.CheckBox();
             this.panelFont = new System.Windows.Forms.Panel();
             this.groupBoxAppearance = new System.Windows.Forms.GroupBox();
+            this.groupBoxGraphicsButtons = new System.Windows.Forms.GroupBox();
+            this.pictureBoxPreview3 = new System.Windows.Forms.PictureBox();
+            this.pictureBoxPreview2 = new System.Windows.Forms.PictureBox();
+            this.pictureBoxPreview1 = new System.Windows.Forms.PictureBox();
+            this.labelToolbarIconTheme = new System.Windows.Forms.Label();
+            this.comboBoxToolbarIconTheme = new System.Windows.Forms.ComboBox();
             this.groupBoxFontInUI = new System.Windows.Forms.GroupBox();
             this.groupBoxFontGeneral = new System.Windows.Forms.GroupBox();
             this.comboBoxSubtitleFont = new System.Windows.Forms.ComboBox();
@@ -441,8 +447,6 @@
             this.labelUpdateFileTypeAssociationsStatus = new System.Windows.Forms.Label();
             this.imageListFileTypeAssociations = new System.Windows.Forms.ImageList(this.components);
             this.toolTipDialogStylePreview = new System.Windows.Forms.ToolTip(this.components);
-            this.numericUpDownMarginVertical = new System.Windows.Forms.NumericUpDown();
-            this.labelMarginVertical = new System.Windows.Forms.Label();
             this.panelGeneral.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
             this.groupBoxGeneralRules.SuspendLayout();
@@ -466,6 +470,7 @@
             this.panelVideoPlayer.SuspendLayout();
             this.groupBoxMainWindowVideoControls.SuspendLayout();
             this.groupBoxVideoPlayerDefault.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMarginVertical)).BeginInit();
             this.groupBoxMpvBorder.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMpvShadowWidth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMpvOutline)).BeginInit();
@@ -515,6 +520,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxFileNew)).BeginInit();
             this.panelFont.SuspendLayout();
             this.groupBoxAppearance.SuspendLayout();
+            this.groupBoxGraphicsButtons.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPreview3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPreview2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPreview1)).BeginInit();
             this.groupBoxFontInUI.SuspendLayout();
             this.groupBoxFontGeneral.SuspendLayout();
             this.groupBoxFontListViews.SuspendLayout();
@@ -525,7 +534,6 @@
             this.groupBoxProxySettings.SuspendLayout();
             this.groupBoxProxyAuthentication.SuspendLayout();
             this.panelFileTypeAssociations.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMarginVertical)).BeginInit();
             this.SuspendLayout();
             // 
             // buttonOK
@@ -2410,6 +2418,27 @@
             this.groupBoxVideoPlayerDefault.TabIndex = 14;
             this.groupBoxVideoPlayerDefault.TabStop = false;
             // 
+            // numericUpDownMarginVertical
+            // 
+            this.numericUpDownMarginVertical.Location = new System.Drawing.Point(380, 153);
+            this.numericUpDownMarginVertical.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.numericUpDownMarginVertical.Name = "numericUpDownMarginVertical";
+            this.numericUpDownMarginVertical.Size = new System.Drawing.Size(44, 21);
+            this.numericUpDownMarginVertical.TabIndex = 21;
+            // 
+            // labelMarginVertical
+            // 
+            this.labelMarginVertical.AutoSize = true;
+            this.labelMarginVertical.Location = new System.Drawing.Point(325, 155);
+            this.labelMarginVertical.Name = "labelMarginVertical";
+            this.labelMarginVertical.Size = new System.Drawing.Size(42, 13);
+            this.labelMarginVertical.TabIndex = 20;
+            this.labelMarginVertical.Text = "Vertical";
+            // 
             // panelMpvBackColor
             // 
             this.panelMpvBackColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
@@ -4045,8 +4074,6 @@
             this.groupBoxShowToolBarButtons.Controls.Add(this.pictureBoxAssAttachments);
             this.groupBoxShowToolBarButtons.Controls.Add(this.pictureBoxAssProperties);
             this.groupBoxShowToolBarButtons.Controls.Add(this.pictureBoxAssStyleManager);
-            this.groupBoxShowToolBarButtons.Controls.Add(this.labelToolbarIconTheme);
-            this.groupBoxShowToolBarButtons.Controls.Add(this.comboBoxToolbarIconTheme);
             this.groupBoxShowToolBarButtons.Controls.Add(this.labelToggleSourceView);
             this.groupBoxShowToolBarButtons.Controls.Add(this.pictureBoxSourceView);
             this.groupBoxShowToolBarButtons.Controls.Add(this.checkBoxTBToggleSourceView);
@@ -4178,25 +4205,6 @@
             this.pictureBoxAssStyleManager.Size = new System.Drawing.Size(32, 32);
             this.pictureBoxAssStyleManager.TabIndex = 51;
             this.pictureBoxAssStyleManager.TabStop = false;
-            // 
-            // labelToolbarIconTheme
-            // 
-            this.labelToolbarIconTheme.AutoSize = true;
-            this.labelToolbarIconTheme.Location = new System.Drawing.Point(15, 346);
-            this.labelToolbarIconTheme.Name = "labelToolbarIconTheme";
-            this.labelToolbarIconTheme.Size = new System.Drawing.Size(39, 13);
-            this.labelToolbarIconTheme.TabIndex = 50;
-            this.labelToolbarIconTheme.Text = "Theme";
-            // 
-            // comboBoxToolbarIconTheme
-            // 
-            this.comboBoxToolbarIconTheme.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxToolbarIconTheme.FormattingEnabled = true;
-            this.comboBoxToolbarIconTheme.Location = new System.Drawing.Point(15, 361);
-            this.comboBoxToolbarIconTheme.Name = "comboBoxToolbarIconTheme";
-            this.comboBoxToolbarIconTheme.Size = new System.Drawing.Size(202, 21);
-            this.comboBoxToolbarIconTheme.TabIndex = 49;
-            this.comboBoxToolbarIconTheme.SelectedIndexChanged += new System.EventHandler(this.comboBoxToolbarIconTheme_SelectedIndexChanged);
             // 
             // labelToggleSourceView
             // 
@@ -4617,6 +4625,7 @@
             this.groupBoxAppearance.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxAppearance.Controls.Add(this.groupBoxGraphicsButtons);
             this.groupBoxAppearance.Controls.Add(this.groupBoxFontInUI);
             this.groupBoxAppearance.Controls.Add(this.groupBoxDarkTheme);
             this.groupBoxAppearance.Controls.Add(this.labelFontNote);
@@ -4626,6 +4635,62 @@
             this.groupBoxAppearance.TabIndex = 0;
             this.groupBoxAppearance.TabStop = false;
             this.groupBoxAppearance.Text = "Appearance";
+            // 
+            // groupBoxGraphicsButtons
+            // 
+            this.groupBoxGraphicsButtons.Controls.Add(this.pictureBoxPreview3);
+            this.groupBoxGraphicsButtons.Controls.Add(this.pictureBoxPreview2);
+            this.groupBoxGraphicsButtons.Controls.Add(this.pictureBoxPreview1);
+            this.groupBoxGraphicsButtons.Controls.Add(this.labelToolbarIconTheme);
+            this.groupBoxGraphicsButtons.Controls.Add(this.comboBoxToolbarIconTheme);
+            this.groupBoxGraphicsButtons.Location = new System.Drawing.Point(383, 310);
+            this.groupBoxGraphicsButtons.Name = "groupBoxGraphicsButtons";
+            this.groupBoxGraphicsButtons.Size = new System.Drawing.Size(461, 109);
+            this.groupBoxGraphicsButtons.TabIndex = 41;
+            this.groupBoxGraphicsButtons.TabStop = false;
+            this.groupBoxGraphicsButtons.Text = "Graphics buttons";
+            // 
+            // pictureBoxPreview3
+            // 
+            this.pictureBoxPreview3.Location = new System.Drawing.Point(306, 31);
+            this.pictureBoxPreview3.Name = "pictureBoxPreview3";
+            this.pictureBoxPreview3.Size = new System.Drawing.Size(32, 32);
+            this.pictureBoxPreview3.TabIndex = 56;
+            this.pictureBoxPreview3.TabStop = false;
+            // 
+            // pictureBoxPreview2
+            // 
+            this.pictureBoxPreview2.Location = new System.Drawing.Point(267, 31);
+            this.pictureBoxPreview2.Name = "pictureBoxPreview2";
+            this.pictureBoxPreview2.Size = new System.Drawing.Size(32, 32);
+            this.pictureBoxPreview2.TabIndex = 55;
+            this.pictureBoxPreview2.TabStop = false;
+            // 
+            // pictureBoxPreview1
+            // 
+            this.pictureBoxPreview1.Location = new System.Drawing.Point(230, 31);
+            this.pictureBoxPreview1.Name = "pictureBoxPreview1";
+            this.pictureBoxPreview1.Size = new System.Drawing.Size(32, 32);
+            this.pictureBoxPreview1.TabIndex = 54;
+            this.pictureBoxPreview1.TabStop = false;
+            // 
+            // labelToolbarIconTheme
+            // 
+            this.labelToolbarIconTheme.AutoSize = true;
+            this.labelToolbarIconTheme.Location = new System.Drawing.Point(13, 23);
+            this.labelToolbarIconTheme.Name = "labelToolbarIconTheme";
+            this.labelToolbarIconTheme.Size = new System.Drawing.Size(39, 13);
+            this.labelToolbarIconTheme.TabIndex = 52;
+            this.labelToolbarIconTheme.Text = "Theme";
+            // 
+            // comboBoxToolbarIconTheme
+            // 
+            this.comboBoxToolbarIconTheme.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxToolbarIconTheme.FormattingEnabled = true;
+            this.comboBoxToolbarIconTheme.Location = new System.Drawing.Point(13, 38);
+            this.comboBoxToolbarIconTheme.Name = "comboBoxToolbarIconTheme";
+            this.comboBoxToolbarIconTheme.Size = new System.Drawing.Size(202, 21);
+            this.comboBoxToolbarIconTheme.TabIndex = 51;
             // 
             // groupBoxFontInUI
             // 
@@ -4954,9 +5019,9 @@
             this.groupBoxDarkTheme.Controls.Add(this.buttonDarkThemeBackColor);
             this.groupBoxDarkTheme.Controls.Add(this.panelDarkThemeColor);
             this.groupBoxDarkTheme.Controls.Add(this.buttonDarkThemeColor);
-            this.groupBoxDarkTheme.Location = new System.Drawing.Point(5, 307);
+            this.groupBoxDarkTheme.Location = new System.Drawing.Point(6, 307);
             this.groupBoxDarkTheme.Name = "groupBoxDarkTheme";
-            this.groupBoxDarkTheme.Size = new System.Drawing.Size(839, 114);
+            this.groupBoxDarkTheme.Size = new System.Drawing.Size(368, 114);
             this.groupBoxDarkTheme.TabIndex = 40;
             this.groupBoxDarkTheme.TabStop = false;
             this.groupBoxDarkTheme.Text = "Dark theme";
@@ -5297,40 +5362,19 @@
             this.toolTipDialogStylePreview.InitialDelay = 500;
             this.toolTipDialogStylePreview.ReshowDelay = 100;
             // 
-            // numericUpDownMarginVertical
-            // 
-            this.numericUpDownMarginVertical.Location = new System.Drawing.Point(380, 153);
-            this.numericUpDownMarginVertical.Maximum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
-            this.numericUpDownMarginVertical.Name = "numericUpDownMarginVertical";
-            this.numericUpDownMarginVertical.Size = new System.Drawing.Size(44, 21);
-            this.numericUpDownMarginVertical.TabIndex = 21;
-            // 
-            // labelMarginVertical
-            // 
-            this.labelMarginVertical.AutoSize = true;
-            this.labelMarginVertical.Location = new System.Drawing.Point(325, 155);
-            this.labelMarginVertical.Name = "labelMarginVertical";
-            this.labelMarginVertical.Size = new System.Drawing.Size(42, 13);
-            this.labelMarginVertical.TabIndex = 20;
-            this.labelMarginVertical.Text = "Vertical";
-            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1092, 574);
             this.Controls.Add(this.labelUpdateFileTypeAssociationsStatus);
-            this.Controls.Add(this.panelVideoPlayer);
+            this.Controls.Add(this.panelFont);
             this.Controls.Add(this.panelToolBar);
+            this.Controls.Add(this.panelVideoPlayer);
             this.Controls.Add(this.panelTools);
             this.Controls.Add(this.panelWaveform);
             this.Controls.Add(this.panelGeneral);
             this.Controls.Add(this.panelShortcuts);
-            this.Controls.Add(this.panelFont);
             this.Controls.Add(this.panelNetwork);
             this.Controls.Add(this.panelFileTypeAssociations);
             this.Controls.Add(this.panelSubtitleFormats);
@@ -5381,6 +5425,7 @@
             this.groupBoxMainWindowVideoControls.PerformLayout();
             this.groupBoxVideoPlayerDefault.ResumeLayout(false);
             this.groupBoxVideoPlayerDefault.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMarginVertical)).EndInit();
             this.groupBoxMpvBorder.ResumeLayout(false);
             this.groupBoxMpvBorder.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMpvShadowWidth)).EndInit();
@@ -5446,6 +5491,11 @@
             this.panelFont.ResumeLayout(false);
             this.groupBoxAppearance.ResumeLayout(false);
             this.groupBoxAppearance.PerformLayout();
+            this.groupBoxGraphicsButtons.ResumeLayout(false);
+            this.groupBoxGraphicsButtons.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPreview3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPreview2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPreview1)).EndInit();
             this.groupBoxFontInUI.ResumeLayout(false);
             this.groupBoxFontGeneral.ResumeLayout(false);
             this.groupBoxFontGeneral.PerformLayout();
@@ -5463,7 +5513,6 @@
             this.groupBoxProxyAuthentication.ResumeLayout(false);
             this.groupBoxProxyAuthentication.PerformLayout();
             this.panelFileTypeAssociations.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMarginVertical)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -5871,8 +5920,6 @@
         private System.Windows.Forms.Button buttonMpvOutlineColor;
         private System.Windows.Forms.Panel panelMpvPrimaryColor;
         private System.Windows.Forms.Button buttonMpvPrimaryColor;
-        private System.Windows.Forms.Label labelToolbarIconTheme;
-        private System.Windows.Forms.ComboBox comboBoxToolbarIconTheme;
         private System.Windows.Forms.PictureBox pictureBoxAssStyleManager;
         private System.Windows.Forms.PictureBox pictureBoxAssAttachments;
         private System.Windows.Forms.PictureBox pictureBoxAssProperties;
@@ -5885,5 +5932,11 @@
         private System.Windows.Forms.PictureBox pictureBoxWebVttStyle;
         private System.Windows.Forms.NumericUpDown numericUpDownMarginVertical;
         private System.Windows.Forms.Label labelMarginVertical;
+        private System.Windows.Forms.GroupBox groupBoxGraphicsButtons;
+        private System.Windows.Forms.PictureBox pictureBoxPreview3;
+        private System.Windows.Forms.PictureBox pictureBoxPreview2;
+        private System.Windows.Forms.PictureBox pictureBoxPreview1;
+        private System.Windows.Forms.Label labelToolbarIconTheme;
+        private System.Windows.Forms.ComboBox comboBoxToolbarIconTheme;
     }
 }

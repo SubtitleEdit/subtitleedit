@@ -2412,6 +2412,7 @@ can edit in same subtitle file (collaboration)</Information>
     <DarkTheme>Dark theme</DarkTheme>
     <DarkThemeEnabled>Use dark theme</DarkThemeEnabled>
     <DarkThemeShowGridViewLines>Show list view grid lines</DarkThemeShowGridViewLines>
+    <GraphicsButtons>Graphics buttons</GraphicsButtons>
     <UpdateShortcut>Update</UpdateShortcut>
     <FoucsSetVideoPosition>Focus set video position</FoucsSetVideoPosition>
     <ToggleDockUndockOfVideoControls>Toggle dock/undock of video controls</ToggleDockUndockOfVideoControls>

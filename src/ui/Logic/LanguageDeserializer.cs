@@ -6577,6 +6577,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/DarkThemeShowGridViewLines":
                     language.Settings.DarkThemeShowGridViewLines = reader.Value;
                     break;
+                case "Settings/GraphicsButtons":
+                    language.Settings.GraphicsButtons = reader.Value;
+                    break;
                 case "Settings/UpdateShortcut":
                     language.Settings.UpdateShortcut = reader.Value;
                     break;

@@ -535,6 +535,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             buttonTextBoxHtmlColor.Text = language.HtmlColor;
             buttonTextBoxAssColor.Text = language.AssaColor;
             groupBoxDarkTheme.Text = language.DarkTheme;
+            groupBoxGraphicsButtons.Text = language.GraphicsButtons;
             checkBoxDarkThemeEnabled.Text = language.DarkThemeEnabled;
             checkBoxDarkThemeShowListViewGridLines.Text = language.DarkThemeShowGridViewLines;
             buttonDarkThemeColor.Text = language.WaveformTextColor;
@@ -1885,8 +1886,11 @@ namespace Nikse.SubtitleEdit.Forms.Options
         {
             Icon = (Icon)icon.Clone();
             pictureBoxFileNew.Image = (Image)newFile.Clone();
+            pictureBoxPreview1.Image = (Image)newFile.Clone();
             pictureBoxFileOpen.Image = (Image)openFile.Clone();
+            pictureBoxPreview2.Image = (Image)openFile.Clone();
             pictureBoxSave.Image = (Image)saveFile.Clone();
+            pictureBoxPreview3.Image = (Image)saveFile.Clone();
             pictureBoxSaveAs.Image = (Image)saveFileAs.Clone();
             pictureBoxFind.Image = (Image)find.Clone();
             pictureBoxReplace.Image = (Image)replace.Clone();
@@ -3271,6 +3275,8 @@ namespace Nikse.SubtitleEdit.Forms.Options
             buttonDarkThemeBackColor.Enabled = enabled;
             panelDarkThemeBackColor.Enabled = enabled;
             checkBoxDarkThemeShowListViewGridLines.Enabled = enabled;
+
+            comboBoxToolbarIconTheme_SelectedIndexChanged(null, null);
         }
 
         private void listBoxFavoriteSubtitleFormats_SelectedIndexChanged(object sender, EventArgs e)
@@ -3660,6 +3666,10 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
         private void comboBoxToolbarIconTheme_SelectedIndexChanged(object sender, EventArgs e)
         {
+            TryLoadIcon(pictureBoxPreview1, "New");
+            TryLoadIcon(pictureBoxPreview2, "Open");
+            TryLoadIcon(pictureBoxPreview3, "Save");
+
             TryLoadIcon(pictureBoxFileNew, "New");
             TryLoadIcon(pictureBoxFileOpen, "Open");
             TryLoadIcon(pictureBoxSave, "Save");
@@ -3692,9 +3702,14 @@ namespace Nikse.SubtitleEdit.Forms.Options
             pictureBox.Image?.Dispose();
             pictureBox.Image = null;
 
-            var theme = comboBoxToolbarIconTheme.Text;
+            var theme = checkBoxDarkThemeEnabled.Checked ? "DarkTheme" : "DefaultTheme";
+            if (comboBoxToolbarIconTheme.SelectedIndex != 0)
+            {
+                theme = comboBoxToolbarIconTheme.Text;
+            }
+
             var themeFullPath = Path.Combine(Configuration.IconsDirectory, theme, iconName + ".png");
-            if (comboBoxToolbarIconTheme.SelectedIndex > 0 && File.Exists(themeFullPath))
+            if (File.Exists(themeFullPath))
             {
                 pictureBox.Image = new Bitmap(themeFullPath);
                 return;
