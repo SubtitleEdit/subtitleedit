@@ -38,7 +38,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
         private readonly Dictionary<ShortcutHelper, string> _newShortcuts = new Dictionary<ShortcutHelper, string>();
         private List<RulesProfile> _rulesProfiles;
         private List<PluginShortcut> _pluginShortcuts;
-
+        private bool _loading = true;
         private readonly BackgroundWorker _shortcutsBackgroundWorker;
 
         private static IEnumerable<string> GetSubtitleFormats() => SubtitleFormat.AllSubtitleFormats.Where(format => !format.IsVobSubIndexFile).Select(format => format.FriendlyName);
@@ -108,8 +108,10 @@ namespace Nikse.SubtitleEdit.Forms.Options
             UiUtil.FixFonts(this);
             UiUtil.FixLargeFonts(this, buttonOK);
 
+
             _shortcutsBackgroundWorker = new BackgroundWorker();
             Init();
+            _loading = false;
 
             _oldSettings = Core.Common.Settings.CustomSerialize(Configuration.Settings);
         }
@@ -1241,7 +1243,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
             }
 
             comboBoxToolbarIconTheme.SelectedIndexChanged += comboBoxToolbarIconTheme_SelectedIndexChanged;
-
         }
 
         private void ShowMpvVideoOutput()
@@ -2315,6 +2316,9 @@ namespace Nikse.SubtitleEdit.Forms.Options
                     section = panelToolBar;
                     break;
                 case AppearanceSection:
+                    TryLoadIcon(pictureBoxPreview1, "New");
+                    TryLoadIcon(pictureBoxPreview2, "Open");
+                    TryLoadIcon(pictureBoxPreview3, "Save");
                     section = panelFont;
                     break;
                 case NetworkSection:
@@ -3666,6 +3670,11 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
         private void comboBoxToolbarIconTheme_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (_loading)
+            {
+                return;
+            }
+
             TryLoadIcon(pictureBoxPreview1, "New");
             TryLoadIcon(pictureBoxPreview2, "Open");
             TryLoadIcon(pictureBoxPreview3, "Save");
