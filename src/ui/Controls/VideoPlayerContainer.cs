@@ -1003,7 +1003,7 @@ namespace Nikse.SubtitleEdit.Controls
             };
             _panelControls.Controls.Add(_pictureBoxFastForwardDown);
 
-            _labelVolume.Location = new Point(120, 17);
+            _labelVolume.Location = new Point(120, 16);
             _labelVolume.ForeColor = Color.WhiteSmoke;
             _labelVolume.BackColor = Color.FromArgb(67, 75, 93);
             _labelVolume.AutoSize = true;
@@ -1023,7 +1023,7 @@ namespace Nikse.SubtitleEdit.Controls
             _labelVideoPlayerName.Font = new Font(_labelTimeCode.Font.FontFamily, 6);
             _panelControls.Controls.Add(_labelVideoPlayerName);
 
-            var bg = (_pictureBoxBackground.Image as Bitmap);
+            var bg = _pictureBoxBackground.Image as Bitmap;
             _labelVolume.BackColor = bg.GetPixel(_labelVolume.Left, _labelVolume.Top);
             _labelTimeCode.BackColor = bg.GetPixel(_labelTimeCode.Left, _labelTimeCode.Top);
             _labelVideoPlayerName.BackColor = bg.GetPixel(_labelVideoPlayerName.Left, _labelVideoPlayerName.Top);
