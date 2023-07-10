@@ -1209,6 +1209,10 @@ namespace Nikse.SubtitleEdit.Forms.Options
             buttonUpdateFileTypeAssociations.Text = language.UpdateFileTypeAssociations;
             labelUpdateFileTypeAssociationsStatus.Text = string.Empty;
 
+            numericUpDownMpvOutline.Left = radioButtonMpvOutline.Right + 9;
+            numericUpDownMpvShadowWidth.Left = numericUpDownMpvOutline.Right + 9;
+            labelMpvShadow.Left = numericUpDownMpvShadowWidth.Left;
+
             checkBoxDarkThemeEnabled_CheckedChanged(null, null);
 
             ToolbarIconThemeInit();

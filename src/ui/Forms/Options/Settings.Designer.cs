@@ -2442,7 +2442,7 @@
             // panelMpvBackColor
             // 
             this.panelMpvBackColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelMpvBackColor.Location = new System.Drawing.Point(399, 125);
+            this.panelMpvBackColor.Location = new System.Drawing.Point(420, 125);
             this.panelMpvBackColor.Name = "panelMpvBackColor";
             this.panelMpvBackColor.Size = new System.Drawing.Size(21, 20);
             this.panelMpvBackColor.TabIndex = 19;
@@ -2452,7 +2452,7 @@
             // 
             this.buttonMpvBackColor.Location = new System.Drawing.Point(325, 124);
             this.buttonMpvBackColor.Name = "buttonMpvBackColor";
-            this.buttonMpvBackColor.Size = new System.Drawing.Size(69, 23);
+            this.buttonMpvBackColor.Size = new System.Drawing.Size(89, 23);
             this.buttonMpvBackColor.TabIndex = 18;
             this.buttonMpvBackColor.Text = "Shadow";
             this.buttonMpvBackColor.UseVisualStyleBackColor = true;
@@ -2461,7 +2461,7 @@
             // panelMpvOutlineColor
             // 
             this.panelMpvOutlineColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelMpvOutlineColor.Location = new System.Drawing.Point(387, 96);
+            this.panelMpvOutlineColor.Location = new System.Drawing.Point(420, 96);
             this.panelMpvOutlineColor.Name = "panelMpvOutlineColor";
             this.panelMpvOutlineColor.Size = new System.Drawing.Size(21, 20);
             this.panelMpvOutlineColor.TabIndex = 17;
@@ -2471,7 +2471,7 @@
             // 
             this.buttonMpvOutlineColor.Location = new System.Drawing.Point(325, 95);
             this.buttonMpvOutlineColor.Name = "buttonMpvOutlineColor";
-            this.buttonMpvOutlineColor.Size = new System.Drawing.Size(58, 23);
+            this.buttonMpvOutlineColor.Size = new System.Drawing.Size(89, 23);
             this.buttonMpvOutlineColor.TabIndex = 16;
             this.buttonMpvOutlineColor.Text = "Outline";
             this.buttonMpvOutlineColor.UseVisualStyleBackColor = true;
@@ -2480,7 +2480,7 @@
             // panelMpvPrimaryColor
             // 
             this.panelMpvPrimaryColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelMpvPrimaryColor.Location = new System.Drawing.Point(403, 67);
+            this.panelMpvPrimaryColor.Location = new System.Drawing.Point(420, 67);
             this.panelMpvPrimaryColor.Name = "panelMpvPrimaryColor";
             this.panelMpvPrimaryColor.Size = new System.Drawing.Size(21, 20);
             this.panelMpvPrimaryColor.TabIndex = 15;
@@ -2490,7 +2490,7 @@
             // 
             this.buttonMpvPrimaryColor.Location = new System.Drawing.Point(325, 66);
             this.buttonMpvPrimaryColor.Name = "buttonMpvPrimaryColor";
-            this.buttonMpvPrimaryColor.Size = new System.Drawing.Size(72, 23);
+            this.buttonMpvPrimaryColor.Size = new System.Drawing.Size(89, 23);
             this.buttonMpvPrimaryColor.TabIndex = 14;
             this.buttonMpvPrimaryColor.Text = "&Primary";
             this.buttonMpvPrimaryColor.UseVisualStyleBackColor = true;
@@ -5368,9 +5368,9 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1092, 574);
             this.Controls.Add(this.labelUpdateFileTypeAssociationsStatus);
+            this.Controls.Add(this.panelVideoPlayer);
             this.Controls.Add(this.panelFont);
             this.Controls.Add(this.panelToolBar);
-            this.Controls.Add(this.panelVideoPlayer);
             this.Controls.Add(this.panelTools);
             this.Controls.Add(this.panelWaveform);
             this.Controls.Add(this.panelGeneral);
