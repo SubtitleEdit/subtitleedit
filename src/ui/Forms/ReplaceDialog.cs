@@ -181,6 +181,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             ReplaceAll = false;
             FindOnly = false;
+            SetRegEx();
 
             Validate(FindText);
             if (DialogResult == DialogResult.OK)
@@ -190,7 +191,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             buttonReplace.Focus();
-            SetRegEx();
         }
 
         private void ButtonReplaceAllClick(object sender, EventArgs e)
@@ -198,6 +198,7 @@ namespace Nikse.SubtitleEdit.Forms
             ReplaceAll = true;
             FindOnly = false;
 
+            SetRegEx();
             Validate(FindText);
             if (DialogResult == DialogResult.OK)
             {
@@ -206,7 +207,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             buttonReplaceAll.Focus();
-            SetRegEx();
         }
 
         private void Validate(string searchText)
@@ -242,9 +242,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonFindClick(object sender, EventArgs e)
         {
+            SetRegEx();
             Find();
             buttonFind.Focus();
-            SetRegEx();
         }
 
         private void SetRegEx()
@@ -304,6 +304,7 @@ namespace Nikse.SubtitleEdit.Forms
             _findHelper.FindReplaceType = GetFindType();
             _findHelper.FindText = FindText;
             _findHelper.FindTextLength = _findHelper.FindText.Length;
+            _findHelper.SetRegex(_regEx);
         }
 
         private void RadioButtonCheckedChanged(object sender, EventArgs e)
