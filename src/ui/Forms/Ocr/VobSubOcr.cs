@@ -9790,13 +9790,14 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             Configuration.Settings.Tools.OcrGoogleCloudVisionSeHandlesTextMerge = checkBoxSeHandlesTextMerge.Checked;
         }
 
-        public void FindDialogFind(string findText, ReplaceType findReplaceType)
+        public void FindDialogFind(string findText, ReplaceType findReplaceType, Regex regex)
         {
             _findHelper = _findHelper ?? _findDialog.GetFindDialogHelper(_selectedIndex);
             _findHelper.FindText = findText;
             _findHelper.FindTextLength = findText.Length;
             _findHelper.FindReplaceType = findReplaceType;
             _findHelper.InProgress = true;
+            _findHelper.SetRegex(regex);
             if (!string.IsNullOrWhiteSpace(_findHelper.FindText))
             {
                 if (Configuration.Settings.Tools.FindHistory.Count == 0 || Configuration.Settings.Tools.FindHistory[0] != _findHelper.FindText)

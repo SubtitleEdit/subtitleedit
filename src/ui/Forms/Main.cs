@@ -6333,7 +6333,7 @@ namespace Nikse.SubtitleEdit.Forms
             FindPrevious();
         }
 
-        public void FindDialogFind(string findText, ReplaceType findReplaceType)
+        public void FindDialogFind(string findText, ReplaceType findReplaceType, Regex regex)
         {
             _findHelper = _findHelper ?? _findDialog.GetFindDialogHelper(_subtitleListViewIndex);
             _findHelper.FindText = findText;
@@ -6341,6 +6341,7 @@ namespace Nikse.SubtitleEdit.Forms
             _findHelper.FindReplaceType = findReplaceType;
             if (findReplaceType.FindType == FindType.RegEx)
             {
+                _findHelper.SetRegex(regex);
             }
 
             DialogFind(_findHelper);

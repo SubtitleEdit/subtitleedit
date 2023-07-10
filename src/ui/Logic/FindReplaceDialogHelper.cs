@@ -500,5 +500,9 @@ namespace Nikse.SubtitleEdit.Logic
 
         private StringComparison GetComparison() => FindReplaceType.FindType == FindType.Normal ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
 
+        public void SetRegex(Regex regex)
+        {
+            _regEx = regex;
+        }
     }
 }

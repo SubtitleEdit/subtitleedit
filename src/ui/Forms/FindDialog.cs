@@ -157,7 +157,7 @@ namespace Nikse.SubtitleEdit.Forms
             else
             {
                 DialogResult = DialogResult.OK;
-                _findAndReplaceMethods.FindDialogFind(FindText, FindReplaceType);
+                _findAndReplaceMethods.FindDialogFind(FindText, FindReplaceType, _regEx);
             }
         }
 
