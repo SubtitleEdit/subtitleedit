@@ -1,7 +1,9 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic;
 using System;
+using System.Drawing;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Core.AudioToText;
 
 namespace Nikse.SubtitleEdit.Forms.AudioToText
 {
@@ -25,6 +27,31 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             comboBoxWhisperExtra.Text = Configuration.Settings.Tools.WhisperExtraSettings;
+
+            if (whisperEngine == WhisperChoice.Cpp)
+            {
+                tabControlCommandLineHelp.SelectedTab = TabPageCPP;
+            }
+            else if (whisperEngine == WhisperChoice.ConstMe)
+            {
+                tabControlCommandLineHelp.SelectedTab = tabPageConstMe;
+            }
+            else
+            {
+                tabControlCommandLineHelp.SelectedTab = tabPageOpenAI;
+            }
+
+            try
+            {
+                textBoxCpp.Font = new Font("Consolas", textBoxCpp.Font.Size);
+                textBoxConstMe.Font = new Font("Consolas", textBoxCpp.Font.Size);
+                textBoxOpenAI.Font = new Font("Consolas", textBoxCpp.Font.Size);
+            }
+            catch
+            {
+                // ignore
+            }
+
         }
 
         private void buttonOK_Click(object sender, EventArgs e)
