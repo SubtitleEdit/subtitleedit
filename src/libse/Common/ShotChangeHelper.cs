@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
 using Nikse.SubtitleEdit.Core.Forms;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 
 namespace Nikse.SubtitleEdit.Core.Common
 {
@@ -98,6 +100,41 @@ namespace Nikse.SubtitleEdit.Core.Common
         public static double GetNextShotChangeMinusGapInMs(List<double> shotChanges, TimeCode currentTime)
         {
             return GetNextShotChangeInMs(shotChanges, currentTime) - TimeCodesBeautifierUtils.GetOutCuesGapMs();
+        }
+
+        public static double? GetClosestShotChangeInMs(List<double> shotChanges, TimeCode currentTime)
+        {
+            try
+            {
+                return shotChanges.Aggregate((x, y) => Math.Abs(x - currentTime.TotalSeconds) < Math.Abs(y - currentTime.TotalSeconds) ? x : y);
+            }
+            catch (InvalidOperationException)
+            {
+                return null;
+            }
+        }
+
+        public static bool IsCueOnShotChange(List<double> shotChanges, TimeCode currentTime, bool isInCue)
+        {
+            var closestShotChange = GetClosestShotChangeInMs(shotChanges, currentTime);
+            if (closestShotChange != null)
+            {
+                var currentFrame = SubtitleFormat.MillisecondsToFrames(currentTime.TotalSeconds * 1000);
+                var closestShotChangeFrame = SubtitleFormat.MillisecondsToFrames(closestShotChange.Value * 1000);
+
+                if (isInCue)
+                {
+                    return currentFrame >= closestShotChangeFrame && currentFrame <= closestShotChangeFrame + Configuration.Settings.BeautifyTimeCodes.Profile.InCuesGap;
+                }
+                else
+                {
+                    return currentFrame <= closestShotChangeFrame && currentFrame >= closestShotChangeFrame - Configuration.Settings.BeautifyTimeCodes.Profile.OutCuesGap;
+                }
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }
