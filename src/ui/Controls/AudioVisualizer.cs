@@ -130,7 +130,7 @@ namespace Nikse.SubtitleEdit.Controls
         public const double ZoomMaximum = 2.5;
         private double _zoomFactor = 1.0; // 1.0=no zoom
 
-        public const int ShotChangeSnapPixels = 8;
+        public int ShotChangeSnapPixels = 8;
 
         public double ZoomFactor
         {
@@ -151,6 +151,7 @@ namespace Nikse.SubtitleEdit.Controls
                 if (Math.Abs(_zoomFactor - value) > 0.01)
                 {
                     _zoomFactor = value;
+                    UpdateSnappingDistance();
                     Invalidate();
                 }
             }
@@ -392,6 +393,8 @@ namespace Nikse.SubtitleEdit.Controls
             ShowSpectrogram = true;
             ShowWaveform = true;
             InsertAtVideoPositionShortcut = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainWaveformInsertAtCurrentPosition);
+
+            UpdateSnappingDistance();
         }
 
         protected override bool IsInputKey(Keys keyData)
@@ -2720,6 +2723,22 @@ namespace Nikse.SubtitleEdit.Controls
             }
 
             return -1;
+        }
+
+        private void UpdateSnappingDistance()
+        {
+            if (_wavePeaks != null)
+            {
+                var largestGapInFrames = Math.Max(Configuration.Settings.BeautifyTimeCodes.Profile.InCuesGap, Configuration.Settings.BeautifyTimeCodes.Profile.OutCuesGap);
+                var pixelsPerFrame = (_wavePeaks.SampleRate * _zoomFactor) / Configuration.Settings.General.CurrentFrameRate;
+                var snappingDistance = (int) Math.Round(pixelsPerFrame * Math.Max(1, largestGapInFrames));
+
+                ShotChangeSnapPixels = Math.Max(8, snappingDistance);
+            } 
+            else
+            {
+                ShotChangeSnapPixels = 8;
+            }
         }
     }
 }
