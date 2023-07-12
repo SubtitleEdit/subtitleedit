@@ -172,6 +172,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <Fixed>Fixed</Fixed>
     <Milliseconds>Milliseconds</Milliseconds>
     <ExtendOnly>Extend only</ExtendOnly>
+    <EnforceDurationLimits>Enforce minimum and maximum duration</EnforceDurationLimits>
     <CheckShotChanges>Don't extend past shot changes</CheckShotChanges>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
@@ -431,11 +432,11 @@ Do you want to continue?</ResetWarning>
     <CreateSimpleOutCues2Frames>2 frames before the shot change</CreateSimpleOutCues2Frames>
     <CreateSimpleOutCues3Frames>3 frames before the shot change</CreateSimpleOutCues3Frames>
     <CreateSimpleOutCuesGap>Minimum gap before the shot change</CreateSimpleOutCuesGap>
-    <CreateSimpleSnapClosestCue>For connected subtitles, snap the in or out cue to the shot change based on which one is closer</CreateSimpleSnapClosestCue>
+    <CreateSimpleSnapClosestCue>For connected subtitles, snap the in or out cue to a shot change based on which one is closer</CreateSimpleSnapClosestCue>
     <CreateSimpleMaxOffset>Max. offset:</CreateSimpleMaxOffset>
-    <CreateSimpleMaxOffsetInstruction>Cues within this distance from shot changes will be considered as being on the shot change.</CreateSimpleMaxOffsetInstruction>
+    <CreateSimpleMaxOffsetInstruction>Cues within this distance from shot changes will be snapped to the shot change.</CreateSimpleMaxOffsetInstruction>
     <CreateSimpleSafeZone>Safe zone:</CreateSimpleSafeZone>
-    <CreateSimpleSafeZoneInstruction>The amount of frames around shot changes where no cues are allowed.</CreateSimpleSafeZoneInstruction>
+    <CreateSimpleSafeZoneInstruction>Cues within this distance from shot changes will be moved away from the shot change.</CreateSimpleSafeZoneInstruction>
     <CreateSimpleChainingGap>Max. chaining gap:</CreateSimpleChainingGap>
     <CreateSimpleChainingGapInstruction>If the space between two subtitles is smaller than this amount, the subtitles will be connected.</CreateSimpleChainingGapInstruction>
     <CreateSimpleChainingGapAfterShotChanges>After an out cue on a shot change, the gap may be smaller</CreateSimpleChainingGapAfterShotChanges>
@@ -2545,15 +2546,13 @@ can edit in same subtitle file (collaboration)</Information>
     <AdjustSetEndAndOffsetTheRest>Set end, offset the rest</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Set end, offset the rest and go to next</AdjustSetEndAndOffsetTheRestAndGoToNext>
     <AdjustSnapStartToNextShotChange>Snap selected lines start to next shot change</AdjustSnapStartToNextShotChange>
-    <AdjustSnapStartToNextShotChangeWithGap>Snap selected lines start to next shot change with min. gap</AdjustSnapStartToNextShotChangeWithGap>
     <AdjustSnapEndToPreviousShotChange>Snap selected lines end to previous shot change</AdjustSnapEndToPreviousShotChange>
-    <AdjustSnapEndToPreviousShotChangeWithGap>Snap selected lines end to previous shot change with min. gap</AdjustSnapEndToPreviousShotChangeWithGap>
     <AdjustExtendToNextShotChange>Extend selected lines to next shot change (or next subtitle)</AdjustExtendToNextShotChange>
-    <AdjustExtendToNextShotChangeWithGap>Extend selected lines to next shot change with min. gap (or next subtitle)</AdjustExtendToNextShotChangeWithGap>
     <AdjustExtendToPreviousShotChange>Extend selected lines to previous shot change (or previous subtitle)</AdjustExtendToPreviousShotChange>
-    <AdjustExtendToPreviousShotChangeWithGap>Extend selected lines to previous shot change with min. gap (or previous subtitle)</AdjustExtendToPreviousShotChangeWithGap>
     <AdjustExtendToNextSubtitle>Extend selected lines to next subtitle</AdjustExtendToNextSubtitle>
     <AdjustExtendToPreviousSubtitle>Extend selected lines to previous subtitle</AdjustExtendToPreviousSubtitle>
+    <AdjustExtendToNextSubtitleMinusChainingGap>Extend selected lines to next subtitle with chaining gap</AdjustExtendToNextSubtitleMinusChainingGap>
+    <AdjustExtendToPreviousSubtitleMinusChainingGap>Extend selected lines to previous subtitle with chaining gap</AdjustExtendToPreviousSubtitleMinusChainingGap>
     <AdjustExtendCurrentSubtitle>Extend current line to next subtitle or max duration</AdjustExtendCurrentSubtitle>
     <AdjustExtendPreviousLineEndToCurrentStart>Extend previous line's end to current's start</AdjustExtendPreviousLineEndToCurrentStart>
     <AdjustExtendNextLineStartToCurrentEnd>Extend next line's start to current's end</AdjustExtendNextLineStartToCurrentEnd>

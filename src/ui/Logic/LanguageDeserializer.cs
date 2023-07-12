@@ -475,6 +475,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "AdjustDisplayDuration/ExtendOnly":
                     language.AdjustDisplayDuration.ExtendOnly = reader.Value;
                     break;
+                case "AdjustDisplayDuration/EnforceDurationLimits":
+                    language.AdjustDisplayDuration.EnforceDurationLimits = reader.Value;
+                    break;
                 case "AdjustDisplayDuration/CheckShotChanges":
                     language.AdjustDisplayDuration.CheckShotChanges = reader.Value;
                     break;
@@ -6939,6 +6942,12 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "Settings/AdjustExtendToPreviousSubtitle":
                     language.Settings.AdjustExtendToPreviousSubtitle = reader.Value;
+                    break;
+                case "Settings/AdjustExtendToNextSubtitleMinusChainingGap":
+                    language.Settings.AdjustExtendToNextSubtitleMinusChainingGap = reader.Value;
+                    break;
+                case "Settings/AdjustExtendToPreviousSubtitleMinusChainingGap":
+                    language.Settings.AdjustExtendToPreviousSubtitleMinusChainingGap = reader.Value;
                     break;
                 case "Settings/AdjustExtendCurrentSubtitle":
                     language.Settings.AdjustExtendCurrentSubtitle = reader.Value;
