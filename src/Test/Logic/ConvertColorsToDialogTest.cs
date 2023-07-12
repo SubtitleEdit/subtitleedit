@@ -374,5 +374,33 @@ namespace Test.Logic
 
             Assert.AreEqual("{\\an8}That was really delicious." + Environment.NewLine + "-I know.", result);
         }
+
+        [TestMethod]
+        public void TestVttDialog1()
+        {
+            Configuration.Settings.General.DialogStyle = Nikse.SubtitleEdit.Core.Enums.DialogType.DashBothLinesWithSpace;
+
+            var subtitle = new Subtitle(new List<Paragraph>() { new Paragraph("<c.cyan>That was really delicious.</c>" + Environment.NewLine +
+                                                                              "I know.", 0, 2000) });
+
+            ConvertColorsToDialogUtils.ConvertColorsToDialogInSubtitle(subtitle, true, false, false);
+            var result = subtitle.Paragraphs.First().Text;
+
+            Assert.AreEqual("- That was really delicious." + Environment.NewLine + "- I know.", result);
+        }
+
+        [TestMethod]
+        public void TestVttDialog2()
+        {
+            Configuration.Settings.General.DialogStyle = Nikse.SubtitleEdit.Core.Enums.DialogType.DashBothLinesWithSpace;
+
+            var subtitle = new Subtitle(new List<Paragraph>() { new Paragraph("That's it!" + Environment.NewLine +
+                                                                              "<c.cyan>..sped to victory.</c>", 0, 2000) });
+
+            ConvertColorsToDialogUtils.ConvertColorsToDialogInSubtitle(subtitle, true, false, false);
+            var result = subtitle.Paragraphs.First().Text;
+
+            Assert.AreEqual("- That's it!" + Environment.NewLine + "- ..sped to victory.", result);
+        }
     }
 }

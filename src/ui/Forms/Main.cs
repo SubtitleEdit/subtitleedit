@@ -29674,7 +29674,7 @@ namespace Nikse.SubtitleEdit.Forms
             var formatType = f.GetType();
             actorToolStripMenuItem.Visible = formatType == typeof(AdvancedSubStationAlpha) || formatType == typeof(SubStationAlpha);
 
-            convertColorsToDialogToolStripMenuItem.Visible = _subtitle.Paragraphs.Any(p => p.Text.Contains("<font color"));
+            convertColorsToDialogToolStripMenuItem.Visible = _subtitle.Paragraphs.Any(p => p.Text.Contains("<font color") || p.Text.Contains("<c."));
         }
 
         private void ContextMenuStripWaveformOpening(object sender, CancelEventArgs e)
