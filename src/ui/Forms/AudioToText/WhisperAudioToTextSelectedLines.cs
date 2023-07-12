@@ -48,9 +48,9 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             groupBoxInputFiles.Text = LanguageSettings.Current.BatchConvert.Input;
             linkLabeWhisperWebSite.Text = LanguageSettings.Current.AudioToText.WhisperWebsite;
-
+            buttonAdvanced.Text = LanguageSettings.Current.General.Advanced;
+            labelAdvanced.Text = Configuration.Settings.Tools.WhisperExtraSettings;
             columnHeaderFileName.Text = LanguageSettings.Current.JoinSubtitles.FileName;
-
             checkBoxUsePostProcessing.Checked = Configuration.Settings.Tools.VoskPostProcessing;
 
             Init();
@@ -177,7 +177,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             labelProgress.Refresh();
             Application.DoEvents();
             _resultList = new List<ResultText>();
-            var process = WhisperAudioToText.GetWhisperProcess(waveFileName, model.Name, _languageCode, checkBoxTranslateToEnglish.Checked, 0, OutputHandler);
+            var process = WhisperAudioToText.GetWhisperProcess(waveFileName, model.Name, _languageCode, checkBoxTranslateToEnglish.Checked, OutputHandler);
             var sw = Stopwatch.StartNew();
             _outputText.Add($"Calling whisper ({Configuration.Settings.Tools.WhisperChoice}) with : whisper {process.StartInfo.Arguments}{Environment.NewLine}");
             buttonCancel.Visible = true;
@@ -640,6 +640,15 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             else
             {
                 setCPPConstmeModelsFolderToolStripMenuItem.Text = "Set CPP/Const-me models folder...";
+            }
+        }
+
+        private void buttonAdvanced_Click(object sender, EventArgs e)
+        {
+            using (var form = new WhisperAdvanced(comboBoxWhisperEngine.Text))
+            {
+                var res = form.ShowDialog(this);
+                labelAdvanced.Text = Configuration.Settings.Tools.WhisperExtraSettings;
             }
         }
     }

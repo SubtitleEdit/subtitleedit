@@ -10,10 +10,11 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.MaterialExchangeFormat
         public bool IsValid { get; private set; }
 
         private readonly List<string> _subtitleList = new List<string>();
-        public List<string> GetSubtitles()
-        {
-            return _subtitleList;
-        }
+        private readonly List<byte[]> _images = new List<byte[]>();
+
+        public List<string> GetSubtitles() => _subtitleList;
+
+        public List<byte[]> GetImages() => _images;
 
         private long _startPosition;
 
@@ -49,8 +50,15 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.MaterialExchangeFormat
                     {
                         stream.Seek(klv.DataPosition, SeekOrigin.Begin);
                         var buffer = new byte[klv.DataSize];
-                        stream.Read(buffer, 0, buffer.Length);
-                        if (buffer.Length >= 12)
+                        var bytesRead = stream.Read(buffer, 0, buffer.Length);
+
+                        if (buffer[0] == 0x89 && buffer[1] == 0x50 && buffer[2] == 0x4E && buffer[3] == 0x47) // PNG header
+                        {
+                            _images.Add(buffer);
+                            continue;
+                        }
+
+                        if (buffer.Length >= 12 && bytesRead >= 12)
                         {
                             string s;
                             if (buffer[0] == 0xef && buffer[1] == 0xbb && buffer[2] == 0xbf)
@@ -88,7 +96,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.MaterialExchangeFormat
             }
         }
 
-        private bool IsSubtitle(string s)
+        private static bool IsSubtitle(string s)
         {
             if (s.Contains("\0"))
             {
@@ -115,7 +123,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.MaterialExchangeFormat
             }
             _startPosition = 0;
 
-            for (int i = 0; i < count - 11; i++)
+            for (var i = 0; i < count - 11; i++)
             {
                 //Header Partition PackId = 06 0E 2B 34 02 05 01 01 0D 01 02
                 if (buffer[i + 00] == 0x06 && // OID

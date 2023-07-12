@@ -166,6 +166,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "General/Region":
                     language.General.Region = reader.Value;
                     break;
+                case "General/Layer":
+                    language.General.Layer = reader.Value;
+                    break;
                 case "General/NumberSymbol":
                     language.General.NumberSymbol = reader.Value;
                     break;
@@ -4738,6 +4741,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Main/Menu/ContextMenu/SetActor":
                     language.Main.Menu.ContextMenu.SetActor = reader.Value;
                     break;
+                case "Main/Menu/ContextMenu/SetLayer":
+                    language.Main.Menu.ContextMenu.SetLayer = reader.Value;
+                    break;
                 case "Main/Menu/ContextMenu/AssaTools":
                     language.Main.Menu.ContextMenu.AssaTools = reader.Value;
                     break;
@@ -4764,6 +4770,15 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "Main/Menu/ContextMenu/NuendoSetStyle":
                     language.Main.Menu.ContextMenu.NuendoSetStyle = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/WebVttSetStyle":
+                    language.Main.Menu.ContextMenu.WebVttSetStyle = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/WebVttSetVoice":
+                    language.Main.Menu.ContextMenu.WebVttSetVoice = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/WebVttBrowserPreview":
+                    language.Main.Menu.ContextMenu.WebVttBrowserPreview = reader.Value;
                     break;
                 case "Main/Menu/ContextMenu/Cut":
                     language.Main.Menu.ContextMenu.Cut = reader.Value;
@@ -6397,6 +6412,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/PreviewFontSize":
                     language.Settings.PreviewFontSize = reader.Value;
                     break;
+                case "Settings/PreviewVerticalMargin":
+                    language.Settings.PreviewVerticalMargin = reader.Value;
+                    break;
                 case "Settings/MainWindowVideoControls":
                     language.Settings.MainWindowVideoControls = reader.Value;
                     break;
@@ -6798,6 +6816,9 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "Settings/DarkThemeShowGridViewLines":
                     language.Settings.DarkThemeShowGridViewLines = reader.Value;
+                    break;
+                case "Settings/GraphicsButtons":
+                    language.Settings.GraphicsButtons = reader.Value;
                     break;
                 case "Settings/UpdateShortcut":
                     language.Settings.UpdateShortcut = reader.Value;
@@ -7236,6 +7257,9 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "Settings/AudioToTextX":
                     language.Settings.AudioToTextX = reader.Value;
+                    break;
+                case "Settings/AudioExtractSelectedLines":
+                    language.Settings.AudioExtractSelectedLines = reader.Value;
                     break;
                 case "Settings/AudioToTextSelectedLinesX":
                     language.Settings.AudioToTextSelectedLinesX = reader.Value;
@@ -8994,6 +9018,18 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "WebVttNewVoice/VoiceName":
                     language.WebVttNewVoice.VoiceName = reader.Value;
+                    break;
+                case "WebVttStyleManager/Title":
+                    language.WebVttStyleManager.Title = reader.Value;
+                    break;
+                case "WhisperAdvanced/Title":
+                    language.WhisperAdvanced.Title = reader.Value;
+                    break;
+                case "WhisperAdvanced/CommandLineArguments":
+                    language.WhisperAdvanced.CommandLineArguments = reader.Value;
+                    break;
+                case "WhisperAdvanced/Info":
+                    language.WhisperAdvanced.Info = reader.Value;
                     break;
 
             }

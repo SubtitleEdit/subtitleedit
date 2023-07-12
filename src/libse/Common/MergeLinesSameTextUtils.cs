@@ -50,10 +50,6 @@ namespace Nikse.SubtitleEdit.Core.Common
                             mergedIndexes.Add(i - 1);
                         }
                     }
-                    else
-                    {
-                        break;
-                    }
                 }
             }
 

@@ -127,6 +127,8 @@ namespace Nikse.SubtitleEdit.Logic
         public LanguageStructure.Waveform Waveform;
         public LanguageStructure.WaveformGenerateTimeCodes WaveformGenerateTimeCodes;
         public LanguageStructure.WebVttNewVoice WebVttNewVoice;
+        public LanguageStructure.WebVttStyleManager WebVttStyleManager;
+        public LanguageStructure.WhisperAdvanced WhisperAdvanced;
 
         public Language()
         {
@@ -170,6 +172,7 @@ namespace Nikse.SubtitleEdit.Logic
                 Actor = "Actor",
                 Gap = "Gap",
                 Region = "Region",
+                Layer = "Layer",
                 NumberSymbol = "#",
                 Number = "Number",
                 Text = "Text",
@@ -715,7 +718,7 @@ namespace Nikse.SubtitleEdit.Logic
                 Custom = "Custom",
                 ToDropFrame = "To drop frame",
                 FromDropFrame = "From drop frame",
-                AllowOverlap = "Allow overlap"
+                AllowOverlap = "Allow overlap",
             };
 
             CheckForUpdates = new LanguageStructure.CheckForUpdates
@@ -917,7 +920,7 @@ namespace Nikse.SubtitleEdit.Logic
                 TextLeftJustifiedText = "Left justified text",
                 TextCenteredText = "Centered text",
                 TextRightJustifiedText = "Right justified text",
-                UseBoxForOneNewLine = "Check 'Use box around text' for only one new-line"
+                UseBoxForOneNewLine = "Check 'Use box around text' for only one new-line",
             };
 
             EffectKaraoke = new LanguageStructure.EffectKaraoke
@@ -925,14 +928,14 @@ namespace Nikse.SubtitleEdit.Logic
                 Title = "Karaoke effect",
                 ChooseColor = "Choose color:",
                 TotalSeconds = "Total seconds:",
-                EndDelayInSeconds = "End delay in seconds:"
+                EndDelayInSeconds = "End delay in seconds:",
             };
 
             EffectTypewriter = new LanguageStructure.EffectTypewriter
             {
                 Title = "Typewriter effect",
                 TotalSeconds = "Total seconds:",
-                EndDelayInSeconds = "End delay in seconds:"
+                EndDelayInSeconds = "End delay in seconds:",
             };
 
             ExportCustomText = new LanguageStructure.ExportCustomText
@@ -1072,7 +1075,7 @@ namespace Nikse.SubtitleEdit.Logic
                 WholeWord = "&Whole word",
                 Count = "Coun&t",
                 XNumberOfMatches = "{0:#,##0} matches",
-                OneMatch = "One match"
+                OneMatch = "One match",
             };
 
             FindSubtitleLine = new LanguageStructure.FindSubtitleLine
@@ -1322,7 +1325,7 @@ namespace Nikse.SubtitleEdit.Logic
                 InputDescription = "Choose input files (browse or drag-n-drop)",
                 ImageFiles = "Image files",
                 Remove = "Remove",
-                RemoveAll = "Remove all"
+                RemoveAll = "Remove all",
             };
 
             ImportShotChanges = new LanguageStructure.ImportShotChanges
@@ -1339,7 +1342,7 @@ namespace Nikse.SubtitleEdit.Logic
                 GetShotChangesWithFfmpeg = "Generate shot changes with FFmpeg",
                 Sensitivity = "Sensitivity",
                 SensitivityDescription = "Lower value gives more shot changes",
-                NoShotChangesFound = "No shot changes found."
+                NoShotChangesFound = "No shot changes found.",
             };
 
             ImportText = new LanguageStructure.ImportText
@@ -1368,7 +1371,7 @@ namespace Nikse.SubtitleEdit.Logic
                 TextFiles = "Text files",
                 PreviewLinesModifiedX = "Preview - subtitles modified: {0}",
                 TimeCodes = "Time codes",
-                SplitAtEndChars = "Split at end chars"
+                SplitAtEndChars = "Split at end chars",
             };
 
             Interjections = new LanguageStructure.Interjections
@@ -1388,7 +1391,7 @@ namespace Nikse.SubtitleEdit.Logic
                 TotalNumberOfLinesX = "Total number of lines: {0:#,###,###}",
                 AlreadyCorrectTimeCodes = "Files already have correct time codes",
                 AppendTimeCodes = "Add end time of previous file",
-                AddMs = "Add milliseconds after each file"
+                AddMs = "Add milliseconds after each file",
             };
 
             LanguageNames = new LanguageStructure.LanguageNames
@@ -1534,7 +1537,7 @@ namespace Nikse.SubtitleEdit.Logic
                 yoName = "Yoruba",
                 zaName = "Zhuang",
                 zhName = "Chinese",
-                zuName = "Zulu"
+                zuName = "Zulu",
             };
 
             Main = new LanguageStructure.Main
@@ -2020,7 +2023,7 @@ namespace Nikse.SubtitleEdit.Logic
                         CheckForUpdates = "Check for updates...",
                         Title = "Help",
                         Help = "&Help",
-                        About = "&About"
+                        About = "&About",
                     },
 
                     Networking = new LanguageStructure.Main.MainMenu.NetworkingMenu
@@ -2059,6 +2062,7 @@ namespace Nikse.SubtitleEdit.Logic
                         SizeAllColumnsToFit = "Size all columns to fit",
                         SetStyle = "Set style",
                         SetActor = "Set actor",
+                        SetLayer = "Set layer",
                         AssaTools = "ASSA tools",
                         AdvancedSubStationAlphaStyles = "Advanced Sub Station Alpha styles...",
                         SubStationAlphaStyles = "Sub Station Alpha styles...",
@@ -2068,6 +2072,9 @@ namespace Nikse.SubtitleEdit.Logic
                         TimedTextSetLanguage = "Timed Text - set language",
                         SamiSetStyle = "Sami - set class",
                         NuendoSetStyle = "Nuendo - set character",
+                        WebVttSetVoice = "WebVTT - set voice",
+                        WebVttSetStyle = "WebVTT - set style",
+                        WebVttBrowserPreview = "WebVTT - browser preview",
                         Cut = "Cut",
                         Copy = "Copy",
                         Paste = "Paste",
@@ -2155,7 +2162,7 @@ namespace Nikse.SubtitleEdit.Logic
                     Previous = "< Prev",
                     Next = "Next >",
                     AutoBreak = "Auto &br",
-                    Unbreak = "Unbreak"
+                    Unbreak = "Unbreak",
                 },
 
                 VideoControls = new LanguageStructure.Main.MainVideoControls
@@ -2210,7 +2217,7 @@ namespace Nikse.SubtitleEdit.Logic
                     NewTextInsertAtX = "New text inserted at {0}",
 
                     Center = "Center",
-                    PlayRate = "Play rate (speed)"
+                    PlayRate = "Play rate (speed)",
                 },
             };
 
@@ -2344,7 +2351,7 @@ namespace Nikse.SubtitleEdit.Logic
                 MillimetersOfMercury = "Millimeters of Mercury",
                 PoundPerSquareInch = "Pound-force per square inch",
                 KilogramPerSquareCentimeter = "Kilogram-force per square centimeter",
-                KiloPascals = "Kilopascals"
+                KiloPascals = "Kilopascals",
             };
 
             MergeDoubleLines = new LanguageStructure.MergeDoubleLines
@@ -2398,7 +2405,7 @@ namespace Nikse.SubtitleEdit.Logic
                 ExactlyTwoLines = "Exactly two lines",
                 MoreThanTwoLines = "More than two lines",
                 Bookmarked = "Bookmarked",
-                BlankLines = "Blank lines"
+                BlankLines = "Blank lines",
             };
 
             MultipleReplace = new LanguageStructure.MultipleReplace
@@ -2433,7 +2440,7 @@ namespace Nikse.SubtitleEdit.Logic
                 RulesForGroupX = "Rules for group \"{0}\"",
                 NewGroup = "New group...",
                 NothingToImport = "Nothing to import",
-                RuleInfo = "Rule information"
+                RuleInfo = "Rule information",
             };
 
             NetworkChat = new LanguageStructure.NetworkChat
@@ -2453,7 +2460,7 @@ can edit in same subtitle file (collaboration)",
             NetworkLogAndInfo = new LanguageStructure.NetworkLogAndInfo
             {
                 Title = "Network session info and log",
-                Log = "Log:"
+                Log = "Log:",
             };
 
             NetworkStart = new LanguageStructure.NetworkStart
@@ -2727,6 +2734,7 @@ can edit in same subtitle file (collaboration)",
                 ShowFullscreenButton = "Show fullscreen button",
                 PreviewFontName = "Subtitle preview font name",
                 PreviewFontSize = "Subtitle preview font size",
+                PreviewVerticalMargin = "Vertical margin",
                 MainWindowVideoControls = "Main window video controls",
                 CustomSearchTextAndUrl = "Custom search text and URL",
                 WaveformAppearance = "Waveform appearance",
@@ -2858,6 +2866,7 @@ can edit in same subtitle file (collaboration)",
                 DarkTheme = "Dark theme",
                 DarkThemeEnabled = "Use dark theme",
                 DarkThemeShowGridViewLines = "Show list view grid lines",
+                GraphicsButtons = "Graphics buttons",
                 ListViewAndTextBox = "List view and text box",
                 UpdateShortcut = "Update",
                 FoucsSetVideoPosition = "Focus set video position",
@@ -3008,6 +3017,7 @@ can edit in same subtitle file (collaboration)",
                 VideoToggleContrast = "Toggle contrast (mpv only)",
                 AudioToTextX = "Audio to text ({0})",
                 AudioToTextSelectedLinesX = "Audio to text selected lines ({0})",
+                AudioExtractSelectedLines = "Extract audio (selected lines)",
                 VideoToggleBrightness = "Toggle brightness (mpv only)",
                 CustomSearch1 = "Translate, custom search 1",
                 CustomSearch2 = "Translate, custom search 2",
@@ -3650,7 +3660,7 @@ Keep changes?",
                 InvertColors = "Invert colors",
                 OriginalImage = "Original image",
                 PostImage = "Image after preprocessing",
-                YellowToWhite = "Yellow to white"
+                YellowToWhite = "Yellow to white",
             };
 
             Watermark = new LanguageStructure.Watermark
@@ -3725,6 +3735,18 @@ Keep changes?",
                 Title = "WebVTT - set new voice",
                 VoiceName = "Name of voice",
             };
+
+            WebVttStyleManager = new LanguageStructure.WebVttStyleManager
+            {
+                Title = "WebVTT styles",
+            };
+
+            WhisperAdvanced = new LanguageStructure.WhisperAdvanced
+            {
+                Title = "Whisper Advanced - extra command line arguments",
+                CommandLineArguments = "Extra pameters for whisper command line:",
+                Info = "Note: Different Whisper implementations have different command line parameters!",
+            };
         }
 
         //public static Language Load(StreamReader sr) // normal but slow .net way
@@ -3798,7 +3820,5 @@ Keep changes?",
         {
             File.WriteAllText(fileName, GetCurrentLanguageAsXml(), Encoding.UTF8);
         }
-
     }
 }
-

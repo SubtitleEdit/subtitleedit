@@ -38,6 +38,7 @@ E-mail: mailto:hugokarvalho@hotmail.com</TranslatedBy>
     <Actor>Actor</Actor>
     <Gap>Intervalo</Gap>
     <Region>Região</Region>
+    <Layer>Camada</Layer>
     <NumberSymbol>#</NumberSymbol>
     <Number>Número</Number>
     <Text>Texto</Text>
@@ -1379,6 +1380,7 @@ Para usar a chave API, vá a "Opções -&gt; Definições -&gt; Ferramentas" par
         <SizeAllColumnsToFit>Ajustar o tamanho das colunas para caber</SizeAllColumnsToFit>
         <SetStyle>Definir estilo</SetStyle>
         <SetActor>Definir actor</SetActor>
+        <SetLayer>Definir camada</SetLayer>
         <AssaTools>Ferramentas ASSA</AssaTools>
         <SubStationAlphaStyles>Estilos Sub Station Alpha...</SubStationAlphaStyles>
         <AdvancedSubStationAlphaStyles>Estilos Advanced Sub Station Alpha...</AdvancedSubStationAlphaStyles>
@@ -1388,6 +1390,9 @@ Para usar a chave API, vá a "Opções -&gt; Definições -&gt; Ferramentas" par
         <TimedTextSetLanguage>Timed Text - Definir o idioma</TimedTextSetLanguage>
         <SamiSetStyle>Sami - Definir classe</SamiSetStyle>
         <NuendoSetStyle>Nuendo - Definir carácter</NuendoSetStyle>
+        <WebVttSetStyle>WebVTT - definir estilo</WebVttSetStyle>
+        <WebVttSetVoice>WebVTT - definir voz</WebVttSetVoice>
+        <WebVttBrowserPreview>WebVTT - pré-visualização do navegador</WebVttBrowserPreview>
         <Cut>Cortar</Cut>
         <Copy>Copiar</Copy>
         <Paste>Colar</Paste>
@@ -2269,11 +2274,12 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll do VLC media player 1.1.0 ou superior</VlcMediaPlayerDescription>
     <VlcBrowseToLabel>Directoria do VLC (apenas é necessário se estiver a usar a versão portátil do VLC)</VlcBrowseToLabel>
-    <ShowStopButton>Mostrar botão parar</ShowStopButton>
+    <ShowStopButton>Mostrar botão (Parar)</ShowStopButton>
     <ShowMuteButton>Mostrar botão (Sem som)</ShowMuteButton>
     <ShowFullscreenButton>Mostrar botão (Ecrã inteiro)</ShowFullscreenButton>
     <PreviewFontName>Pré-visualização do tipo de letra</PreviewFontName>
     <PreviewFontSize>Tamanho na pré-visualização</PreviewFontSize>
+    <PreviewVerticalMargin>Margem vertical</PreviewVerticalMargin>
     <MainWindowVideoControls>Controlos de vídeo na janela principal</MainWindowVideoControls>
     <CustomSearchTextAndUrl>Procura de texto e URL personalizada</CustomSearchTextAndUrl>
     <WaveformAppearance>Aparência da forma de onda</WaveformAppearance>
@@ -2402,6 +2408,8 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <UseSyntaxColoring>Usar coloração sintáctica</UseSyntaxColoring>
     <HtmlColor>Cor Html</HtmlColor>
     <AssaColor>Cor ASSA</AssaColor>
+    <Theme>Tema</Theme>
+    <Automatic>Automático</Automatic>
     <DarkTheme>Tema escuro</DarkTheme>
     <DarkThemeEnabled>Activar tema escuro</DarkThemeEnabled>
     <DarkThemeShowGridViewLines>Mostrar grelha na Lista</DarkThemeShowGridViewLines>
@@ -2555,6 +2563,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <MainToggleVideoControls>Alternar controlos vídeo</MainToggleVideoControls>
     <VideoToggleContrast>Alternar contraste (apenas mpv)</VideoToggleContrast>
     <AudioToTextX>Áudio para texto ({0})</AudioToTextX>
+    <AudioExtractSelectedLines>Extrair áudio (linhas seleccionadas)</AudioExtractSelectedLines>
     <AudioToTextSelectedLinesX>Áudio para texto em linhas seleccionadas ({0})</AudioToTextSelectedLinesX>
     <VideoToggleBrightness>Alternar luminosidade (apenas mpv)</VideoToggleBrightness>
     <CustomSearch1>Traduzir, pesquisa personalizada 1</CustomSearch1>
@@ -3210,4 +3219,7 @@ Manter as alterações?</KeepChangesMessage>
     <Title>WebVTT - definir nova voz</Title>
     <VoiceName>Nome da voz</VoiceName>
   </WebVttNewVoice>
+  <WebVttStyleManager>
+    <Title>Estilos WebVTT</Title>
+  </WebVttStyleManager>
 </Language>

@@ -52,6 +52,7 @@
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
+  <PropertyGroup />
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
@@ -180,6 +181,12 @@
     <Compile Include="Forms\Assa\AssSetBackground.Designer.cs">
       <DependentUpon>AssSetBackground.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Assa\SetLayer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Assa\SetLayer.Designer.cs">
+      <DependentUpon>SetLayer.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Assa\SetPosition.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -216,6 +223,12 @@
     <Compile Include="Forms\AudioClipsGet.Designer.cs">
       <DependentUpon>AudioClipsGet.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\AudioToText\WhisperAdvanced.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\AudioToText\WhisperAdvanced.Designer.cs">
+      <DependentUpon>WhisperAdvanced.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\AudioToText\WhisperDownload.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -245,6 +258,12 @@
     </Compile>
     <Compile Include="Forms\AudioToText\VoskAudioToText.Designer.cs">
       <DependentUpon>VoskAudioToText.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\BatchConvertOcrLanguage.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\BatchConvertOcrLanguage.Designer.cs">
+      <DependentUpon>BatchConvertOcrLanguage.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\BatchConvertMkvEnding.cs">
       <SubType>Form</SubType>
@@ -401,6 +420,12 @@
     </Compile>
     <Compile Include="Forms\GetVideoPosition.Designer.cs">
       <DependentUpon>GetVideoPosition.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\PreviewVideo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\PreviewVideo.Designer.cs">
+      <DependentUpon>PreviewVideo.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\ShotChangesList.cs">
       <SubType>Form</SubType>
@@ -1381,6 +1406,18 @@
     <Compile Include="Forms\Ocr\VobSubOcrSetItalicFactor.Designer.cs">
       <DependentUpon>VobSubOcrSetItalicFactor.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\VTT\WebVttStylePicker.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\VTT\WebVttStylePicker.Designer.cs">
+      <DependentUpon>WebVttStylePicker.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\VTT\WebVttImportExport.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\VTT\WebVttImportExport.Designer.cs">
+      <DependentUpon>WebVttImportExport.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Watermark.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1410,6 +1447,12 @@
     </Compile>
     <Compile Include="Forms\TextPrompt.Designer.cs">
       <DependentUpon>TextPrompt.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\VTT\WebVttStyleManager.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\VTT\WebVttStyleManager.Designer.cs">
+      <DependentUpon>WebVttStyleManager.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\YouTubeAnnotationsImport.cs">
       <SubType>Form</SubType>
@@ -1559,6 +1602,9 @@
       <DependentUpon>AssSetBackground.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Assa\SetLayer.resx">
+      <DependentUpon>SetLayer.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Assa\SetPosition.resx">
       <DependentUpon>SetPosition.cs</DependentUpon>
     </EmbeddedResource>
@@ -1577,6 +1623,9 @@
     <EmbeddedResource Include="Forms\AudioClipsGet.resx">
       <DependentUpon>AudioClipsGet.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\AudioToText\WhisperAdvanced.resx">
+      <DependentUpon>WhisperAdvanced.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\AudioToText\WhisperDownload.resx">
       <DependentUpon>WhisperDownload.cs</DependentUpon>
     </EmbeddedResource>
@@ -1591,6 +1640,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\AudioToText\VoskAudioToText.resx">
       <DependentUpon>VoskAudioToText.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\BatchConvertOcrLanguage.resx">
+      <DependentUpon>BatchConvertOcrLanguage.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\BatchConvertMkvEnding.resx">
       <DependentUpon>BatchConvertMkvEnding.cs</DependentUpon>
@@ -1670,6 +1722,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Options\WordLists.resx">
       <DependentUpon>WordLists.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\PreviewVideo.resx">
+      <DependentUpon>PreviewVideo.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ShotChangesList.resx">
       <DependentUpon>ShotChangesList.cs</DependentUpon>
@@ -2149,6 +2204,12 @@
     <EmbeddedResource Include="Forms\Ocr\VobSubOcrSetItalicFactor.resx">
       <DependentUpon>VobSubOcrSetItalicFactor.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\VTT\WebVttStylePicker.resx">
+      <DependentUpon>WebVttStylePicker.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\VTT\WebVttImportExport.resx">
+      <DependentUpon>WebVttImportExport.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Watermark.resx">
       <DependentUpon>Watermark.cs</DependentUpon>
     </EmbeddedResource>
@@ -2163,6 +2224,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\TextPrompt.resx">
       <DependentUpon>TextPrompt.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\VTT\WebVttStyleManager.resx">
+      <DependentUpon>WebVttStyleManager.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\YouTubeAnnotationsImport.resx">
       <DependentUpon>YouTubeAnnotationsImport.cs</DependentUpon>
@@ -2217,7 +2281,6 @@
     <Content Include="DLLs\Voikkox64.dll" />
     <Content Include="DLLs\Voikkox86.dll" />
     <None Include="Resources\SE2.ico" />
-    <None Include="Resources\webvtt.bmp" />
     <None Include="Resources\webvtt.png" />
     <None Include="Resources\itt.png" />
     <None Include="Resources\ebu.png" />

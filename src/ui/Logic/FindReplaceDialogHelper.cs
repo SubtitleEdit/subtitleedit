@@ -95,7 +95,11 @@ namespace Nikse.SubtitleEdit.Logic
             Match match;
             try
             {
-                _regEx = new Regex(FindText, RegexOptions.None, TimeSpan.FromSeconds(5));
+                if (_regEx == null)
+                {
+                    _regEx = new Regex(FindText, RegexOptions.None, TimeSpan.FromSeconds(5));
+                }
+
                 match = _regEx.Match(text, startIndex);
             }
             catch (RegexMatchTimeoutException exception)
@@ -496,5 +500,9 @@ namespace Nikse.SubtitleEdit.Logic
 
         private StringComparison GetComparison() => FindReplaceType.FindType == FindType.Normal ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
 
+        public void SetRegex(Regex regex)
+        {
+            _regEx = regex;
+        }
     }
 }

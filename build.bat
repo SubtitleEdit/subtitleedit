@@ -189,9 +189,13 @@ IF NOT EXIST "temp_zip\Ocr"          MD "temp_zip\Ocr"
 IF NOT EXIST "temp_zip\Tesseract302" MD "temp_zip\Tesseract302"
 IF NOT EXIST "temp_zip\Icons"        MD "temp_zip\Icons"
 IF NOT EXIST "temp_zip\Icons\DefaultTheme"        MD "temp_zip\Icons\DefaultTheme"
+IF NOT EXIST "temp_zip\Icons\DefaultTheme\VideoPlayer"        MD "temp_zip\Icons\DefaultTheme\VideoPlayer"
 IF NOT EXIST "temp_zip\Icons\DarkTheme"        MD "temp_zip\Icons\DarkTheme"
+IF NOT EXIST "temp_zip\Icons\DarkTheme\VideoPlayer"        MD "temp_zip\Icons\DarkTheme\VideoPlayer"
 IF NOT EXIST "temp_zip\Icons\Legacy"        MD "temp_zip\Icons\Legacy"
+IF NOT EXIST "temp_zip\Icons\Legacy\VideoPlayer"        MD "temp_zip\Icons\Legacy\VideoPlayer"
 IF NOT EXIST "temp_zip\Icons\Black"        MD "temp_zip\Icons\Black"
+IF NOT EXIST "temp_zip\Icons\Black\VideoPlayer"        MD "temp_zip\Icons\Black\VideoPlayer"
 
 ECHO.
 COPY /Y /V "..\..\..\..\LICENSE.txt"               "temp_zip\"
@@ -219,9 +223,13 @@ COPY /Y /V "..\..\..\..\Ocr\*.*"                   "temp_zip\Ocr\"
 XCOPY /Y /V "..\..\..\..\Tesseract302\*.*"         "temp_zip\Tesseract302\" /S
 COPY /Y /V "..\..\..\..\Icons\*.ico"               "temp_zip\Icons\"
 COPY /Y /V "..\..\..\..\Icons\DefaultTheme\*.png"               "temp_zip\Icons\DefaultTheme"
+COPY /Y /V "..\..\..\..\Icons\DefaultTheme\VideoPlayer\*.png"               "temp_zip\Icons\DefaultTheme\VideoPlayer"
 COPY /Y /V "..\..\..\..\Icons\DarkTheme\*.png"               "temp_zip\Icons\DarkTheme"
+COPY /Y /V "..\..\..\..\Icons\DarkTheme\VideoPlayer\*.png"               "temp_zip\Icons\DarkTheme\VideoPlayer"
 COPY /Y /V "..\..\..\..\Icons\Legacy\*.png"               "temp_zip\Icons\Legacy"
+COPY /Y /V "..\..\..\..\Icons\Legacy\VideoPlayer\*.png"               "temp_zip\Icons\Legacy\VideoPlayer"
 COPY /Y /V "..\..\..\..\Icons\Black\*.png"               "temp_zip\Icons\Black"
+COPY /Y /V "..\..\..\..\Icons\Black\VideoPlayer\*.png"               "temp_zip\Icons\Black\VideoPlayer"
 
 PUSHD "temp_zip"
 START "" /B /WAIT "%SEVENZIP%" a -tzip -mx=9 "SubtitleEdit-%VERSION%.zip" * >NUL

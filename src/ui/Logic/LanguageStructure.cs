@@ -43,6 +43,7 @@ namespace Nikse.SubtitleEdit.Logic
             public string Actor { get; set; }
             public string Gap { get; set; }
             public string Region { get; set; }
+            public string Layer { get; set; }
             public string NumberSymbol { get; set; }
             public string Number { get; set; }
             public string Text { get; set; }
@@ -1874,6 +1875,7 @@ namespace Nikse.SubtitleEdit.Logic
                     public string SizeAllColumnsToFit { get; set; }
                     public string SetStyle { get; set; }
                     public string SetActor { get; set; }
+                    public string SetLayer { get; set; }
                     public string AssaTools { get; set; }
                     public string SubStationAlphaStyles { get; set; }
                     public string AdvancedSubStationAlphaStyles { get; set; }
@@ -1883,6 +1885,9 @@ namespace Nikse.SubtitleEdit.Logic
                     public string TimedTextSetLanguage { get; set; }
                     public string SamiSetStyle { get; set; }
                     public string NuendoSetStyle { get; set; }
+                    public string WebVttSetStyle { get; set; }
+                    public string WebVttSetVoice { get; set; }
+                    public string WebVttBrowserPreview { get; set; }
                     public string Cut { get; set; }
                     public string Copy { get; set; }
                     public string Paste { get; set; }
@@ -2546,6 +2551,7 @@ namespace Nikse.SubtitleEdit.Logic
             public string ShowFullscreenButton { get; set; }
             public string PreviewFontName { get; set; }
             public string PreviewFontSize { get; set; }
+            public string PreviewVerticalMargin { get; set; }
             public string MainWindowVideoControls { get; set; }
             public string CustomSearchTextAndUrl { get; set; }
             public string WaveformAppearance { get; set; }
@@ -2682,6 +2688,7 @@ namespace Nikse.SubtitleEdit.Logic
             public string DarkTheme { get; set; }
             public string DarkThemeEnabled { get; set; }
             public string DarkThemeShowGridViewLines { get; set; }
+            public string GraphicsButtons { get; set; }
             public string UpdateShortcut { get; set; }
             public string FoucsSetVideoPosition { get; set; }
             public string ToggleDockUndockOfVideoControls { get; set; }
@@ -2831,6 +2838,7 @@ namespace Nikse.SubtitleEdit.Logic
             public string MainToggleVideoControls { get; set; }
             public string VideoToggleContrast { get; set; }
             public string AudioToTextX { get; set; }
+            public string AudioExtractSelectedLines { get; set; }
             public string AudioToTextSelectedLinesX { get; set; }
             public string VideoToggleBrightness { get; set; }
             public string CustomSearch1 { get; set; }
@@ -3543,5 +3551,16 @@ namespace Nikse.SubtitleEdit.Logic
             public string VoiceName { get; set; }
         }
 
+        public class WebVttStyleManager
+        {
+            public string Title { get; set; }
+        }
+
+        public class WhisperAdvanced
+        {
+            public string Title { get; set; }
+            public string CommandLineArguments { get; set; }
+            public string Info { get; set; }
+        }
     }
 }

@@ -116,6 +116,8 @@ namespace Nikse.SubtitleEdit.Forms
             deleteToolStripMenuItem1.Text = LanguageSettings.Current.MultipleReplace.Remove;
             selectAllToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.ContextMenu.SelectAll;
             inverseSelectionToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.Edit.InverseSelection;
+            toolStripMenuItemGroupsSelectAll.Text = LanguageSettings.Current.Main.Menu.ContextMenu.SelectAll;
+            toolStripMenuItemGroupsInvertSelection.Text = LanguageSettings.Current.Main.Menu.Edit.InverseSelection;
 
             radioButtonCaseSensitive.Left = radioButtonNormal.Left + radioButtonNormal.Width + 40;
             radioButtonRegEx.Left = radioButtonCaseSensitive.Left + radioButtonCaseSensitive.Width + 40;
@@ -1213,7 +1215,10 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (item != newToolStripMenuItem &&
                     item != toolStripSeparatorGroupImportExport &&
-                    item != importToolStripMenuItem)
+                    item != importToolStripMenuItem &&
+                    item != toolStripSeparator6 &&
+                    item != toolStripMenuItemGroupsSelectAll &&
+                    item != toolStripMenuItemGroupsInvertSelection)
                 {
                     item.Visible = doShow;
                 }
@@ -1403,6 +1408,41 @@ namespace Nikse.SubtitleEdit.Forms
             listViewFixes.Columns.Add(columnHeader10);
             listViewFixes.Columns[4].Text = LanguageSettings.Current.MultipleReplace.RuleInfo;
             listViewFixes.AutoSizeLastColumn();
+        }
+
+        private void listViewGroups_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.A && e.Modifiers == Keys.Control)
+            {
+                toolStripMenuItemGroupsSelectAll_Click(null, null);
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyCode == Keys.D && e.Modifiers == Keys.Control)
+            {
+                listViewGroups.SelectFirstSelectedItemOnly();
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyCode == Keys.I && e.Modifiers == (Keys.Control | Keys.Shift)) //InverseSelection
+            {
+                toolStripMenuItemGroupsInvertSelection_Click(null, null);
+                e.SuppressKeyPress = true;
+            }
+        }
+
+        private void toolStripMenuItemGroupsSelectAll_Click(object sender, EventArgs e)
+        {
+            foreach (ListViewItem item in listViewGroups.Items)
+            {
+                item.Checked = true;
+            }
+        }
+
+        private void toolStripMenuItemGroupsInvertSelection_Click(object sender, EventArgs e)
+        {
+            foreach (ListViewItem item in listViewGroups.Items)
+            {
+                item.Checked = !item.Checked;
+            }
         }
     }
 }

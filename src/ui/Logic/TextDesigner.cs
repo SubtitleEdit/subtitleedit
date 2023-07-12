@@ -40,13 +40,13 @@ namespace Nikse.SubtitleEdit.Logic
                     {
                         using (var shadowBoxBrush = new SolidBrush(shadowColor))
                         {
-                            g.FillRectangle(shadowBoxBrush, xPos - outlineWidth + shadowWidth, yPos - outlineWidth + shadowWidth, w + outlineWidth + outlineWidth, h + +outlineWidth + outlineWidth);
+                            g.FillRectangle(shadowBoxBrush, xPos - outlineWidth + shadowWidth, yPos - outlineWidth + shadowWidth, w + outlineWidth + outlineWidth, h + outlineWidth + outlineWidth);
                         }
                     }
 
                     using (var boxBrush = new SolidBrush(outlineColor))
                     {
-                        g.FillRectangle(boxBrush, xPos - outlineWidth, yPos - outlineWidth, w + outlineWidth + outlineWidth, h + +outlineWidth + outlineWidth);
+                        g.FillRectangle(boxBrush, xPos - outlineWidth, yPos - outlineWidth, w + outlineWidth + outlineWidth, h + outlineWidth + outlineWidth);
                     }
 
                     path.AddString(text, font.FontFamily, (int)font.Style, font.Size, new Point(xPos, yPos), stringFormat);
