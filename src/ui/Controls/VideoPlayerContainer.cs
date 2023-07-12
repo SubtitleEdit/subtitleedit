@@ -4,10 +4,8 @@ using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Controls
@@ -55,8 +53,6 @@ namespace Nikse.SubtitleEdit.Controls
 
         public float FontSizeFactor { get; set; }
 
-        private readonly List<string> _allowedMpvNativePreviewFormats = new List<string>();
-
         public VideoPlayer VideoPlayer
         {
             get => _videoPlayer;
@@ -96,6 +92,13 @@ namespace Nikse.SubtitleEdit.Controls
         private readonly Color _backgroundColor = Color.FromArgb(18, 18, 18);
         private Panel _panelControls;
 
+        private Bitmap _bitmapFullscreen;
+        private Bitmap _bitmapFullscreenDown;
+        private Bitmap _bitmapFullscreenOver;
+        private Bitmap _bitmapNoFullscreen;
+        private Bitmap _bitmapNoFullscreenDown;
+        private Bitmap _bitmapNoFullscreenOver;
+
         private PictureBox _pictureBoxBackground;
         private PictureBox _pictureBoxReverse;
         private PictureBox _pictureBoxReverseOver;
@@ -129,7 +132,7 @@ namespace Nikse.SubtitleEdit.Controls
         private int _lastCurrentPositionToolTipX;
         private int _lastCurrentPositionToolTipY;
 
-        public MatroskaChapter[] Chapters { get; set; } 
+        public MatroskaChapter[] Chapters { get; set; }
 
         public RightToLeft TextRightToLeft
         {
@@ -235,11 +238,6 @@ namespace Nikse.SubtitleEdit.Controls
             PictureBoxFastForwardOverMouseLeave(null, null);
 
             _labelTimeCode.Click += LabelTimeCodeClick;
-
-            if (Configuration.Settings.General.MpvAllowNativePreview != null)
-            {
-                _allowedMpvNativePreviewFormats = Configuration.Settings.General.MpvAllowNativePreview.Split(';').ToList();
-            }
         }
 
         private bool _showDuration = true;
@@ -413,7 +411,14 @@ namespace Nikse.SubtitleEdit.Controls
         public void UpdateMpvStyle()
         {
             var gs = Configuration.Settings.General;
-            var mpvStyle = new SsaStyle
+            var mpvStyle = GetMpvPreviewStyle(gs);
+
+            MpvPreviewStyleHeader = string.Format(AdvancedSubStationAlpha.HeaderNoStyles, "MPV preview file", mpvStyle.ToRawAss(SsaStyle.DefaultAssStyleFormat));
+        }
+
+        private static SsaStyle GetMpvPreviewStyle(GeneralSettings gs)
+        {
+            return new SsaStyle
             {
                 Name = "Default",
                 FontName = gs.VideoPlayerPreviewFontName,
@@ -428,8 +433,6 @@ namespace Nikse.SubtitleEdit.Controls
                 Alignment = gs.MpvPreviewTextAlignment,
                 MarginVertical = gs.MpvPreviewTextMarginVertical
             };
-
-            MpvPreviewStyleHeader = string.Format(AdvancedSubStationAlpha.HeaderNoStyles, "MPV preview file", mpvStyle.ToRawAss(SsaStyle.DefaultAssStyleFormat));
         }
 
         private string _mpvPreviewStyleHeader;
@@ -478,6 +481,17 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     text = NetflixImsc11JapaneseToAss.Convert(subtitle, 1280, 720);
                 }
+                else if (uiFormat.Name == WebVTT.NameOfFormat || uiFormat.Name == WebVTTFileWithLineNumber.NameOfFormat)
+                {
+                    //TODO: add some caching!?
+                    var defaultStyle = GetMpvPreviewStyle(Configuration.Settings.General);
+                    defaultStyle.BorderStyle = "3";
+                    subtitle = new Subtitle(subtitle);
+                    subtitle = WebVttToAssa.Convert(subtitle, defaultStyle, VideoWidth, VideoHeight);
+                    format = new AdvancedSubStationAlpha();
+                    text = subtitle.ToText(format);
+                    //    File.WriteAllText(@"c:\data\__a.ass", text);
+                }
                 else
                 {
                     if (subtitle.Header == null || !subtitle.Header.Contains("[V4+ Styles]") || uiFormat.Name != AdvancedSubStationAlpha.NameOfFormat)
@@ -525,11 +539,6 @@ namespace Nikse.SubtitleEdit.Controls
                                 }
                             }
                         }
-                    }
-
-                    if (_allowedMpvNativePreviewFormats.Contains(uiFormat.Name))
-                    {
-                        format = uiFormat;
                     }
 
                     var hash = subtitle.GetFastHashCode(null);
@@ -731,7 +740,7 @@ namespace Nikse.SubtitleEdit.Controls
             _pictureBoxPlayDown = new PictureBox
             {
                 Image = (Image)_resources.GetObject("pictureBoxPlayDown.Image"),
-                Location = new Point(22, 127 - 113),
+                Location = new Point(22, 126 - 113),
                 Name = "_pictureBoxPlayDown",
                 Size = new Size(29, 29),
                 SizeMode = PictureBoxSizeMode.AutoSize,
@@ -742,7 +751,7 @@ namespace Nikse.SubtitleEdit.Controls
             _pictureBoxPlayOver = new PictureBox
             {
                 Image = (Image)_resources.GetObject("pictureBoxPlayOver.Image"),
-                Location = new Point(23, 126 - 113),
+                Location = new Point(22, 126 - 113),
                 Name = "_pictureBoxPlayOver",
                 Size = new Size(29, 29),
                 SizeMode = PictureBoxSizeMode.AutoSize,
@@ -763,7 +772,7 @@ namespace Nikse.SubtitleEdit.Controls
             _panelControls.Controls.Add(_pictureBoxPause);
 
             _pictureBoxPauseDown.Image = (Image)_resources.GetObject("pictureBoxPauseDown.Image");
-            _pictureBoxPauseDown.Location = new Point(22, 127 - 113);
+            _pictureBoxPauseDown.Location = new Point(23, 126 - 113);
             _pictureBoxPauseDown.Name = "_pictureBoxPauseDown";
             _pictureBoxPauseDown.Size = new Size(29, 29);
             _pictureBoxPauseDown.SizeMode = PictureBoxSizeMode.AutoSize;
@@ -771,7 +780,7 @@ namespace Nikse.SubtitleEdit.Controls
             _panelControls.Controls.Add(_pictureBoxPauseDown);
 
             _pictureBoxPauseOver.Image = (Image)_resources.GetObject("pictureBoxPauseOver.Image");
-            _pictureBoxPauseOver.Location = new Point(22, 127 - 113);
+            _pictureBoxPauseOver.Location = new Point(23, 126 - 113);
             _pictureBoxPauseOver.Name = "_pictureBoxPauseOver";
             _pictureBoxPauseOver.Size = new Size(29, 29);
             _pictureBoxPauseOver.SizeMode = PictureBoxSizeMode.AutoSize;
@@ -817,6 +826,7 @@ namespace Nikse.SubtitleEdit.Controls
             _pictureBoxFullscreen.TabStop = false;
             _pictureBoxFullscreen.MouseEnter += PictureBoxFullscreenMouseEnter;
             _panelControls.Controls.Add(_pictureBoxFullscreen);
+            _bitmapFullscreen = _pictureBoxFullscreen.Image as Bitmap;
 
             _pictureBoxFullscreenDown.Image = (Image)_resources.GetObject("pictureBoxFSDown.Image");
             _pictureBoxFullscreenDown.Location = new Point(95, 130 - 113);
@@ -825,6 +835,7 @@ namespace Nikse.SubtitleEdit.Controls
             _pictureBoxFullscreenDown.SizeMode = PictureBoxSizeMode.AutoSize;
             _pictureBoxFullscreenDown.TabStop = false;
             _panelControls.Controls.Add(_pictureBoxFullscreenDown);
+            _bitmapFullscreenDown = _pictureBoxFullscreenDown.Image as Bitmap;
 
             _pictureBoxFullscreenOver.Image = (Image)_resources.GetObject("pictureBoxFSOver.Image");
             _pictureBoxFullscreenOver.Location = new Point(95, 130 - 113);
@@ -836,6 +847,11 @@ namespace Nikse.SubtitleEdit.Controls
             _pictureBoxFullscreenOver.MouseDown += PictureBoxFullscreenOverMouseDown;
             _pictureBoxFullscreenOver.MouseUp += PictureBoxFullscreenOverMouseUp;
             _panelControls.Controls.Add(_pictureBoxFullscreenOver);
+            _bitmapFullscreenOver = _pictureBoxFullscreenOver.Image as Bitmap;
+
+            _bitmapNoFullscreen = (Image)_resources.GetObject("pictureBoxNoFS.Image") as Bitmap;
+            _bitmapNoFullscreenDown = (Image)_resources.GetObject("pictureBoxNoFSDown.Image") as Bitmap;
+            _bitmapNoFullscreenOver = (Image)_resources.GetObject("pictureBoxNoFSOver.Image") as Bitmap;
 
             _pictureBoxProgressbarBackground.Anchor = AnchorStyles.Top | AnchorStyles.Left;
             _pictureBoxProgressbarBackground.BackColor = Color.Transparent;
@@ -987,7 +1003,7 @@ namespace Nikse.SubtitleEdit.Controls
             };
             _panelControls.Controls.Add(_pictureBoxFastForwardDown);
 
-            _labelVolume.Location = new Point(120, 17);
+            _labelVolume.Location = new Point(120, 16);
             _labelVolume.ForeColor = Color.WhiteSmoke;
             _labelVolume.BackColor = Color.FromArgb(67, 75, 93);
             _labelVolume.AutoSize = true;
@@ -1007,13 +1023,10 @@ namespace Nikse.SubtitleEdit.Controls
             _labelVideoPlayerName.Font = new Font(_labelTimeCode.Font.FontFamily, 6);
             _panelControls.Controls.Add(_labelVideoPlayerName);
 
-            if (Configuration.Settings.General.UseDarkTheme)
-            {
-                _labelVolume.ForeColor = Color.Gray;
-                _labelTimeCode.ForeColor = Color.Gray;
-                _labelVideoPlayerName.ForeColor = Color.Gray;
-            }
-
+            var bg = _pictureBoxBackground.Image as Bitmap;
+            _labelVolume.BackColor = bg.GetPixel(_labelVolume.Left, _labelVolume.Top);
+            _labelTimeCode.BackColor = bg.GetPixel(_labelTimeCode.Left, _labelTimeCode.Top);
+            _labelVideoPlayerName.BackColor = bg.GetPixel(_labelVideoPlayerName.Left, _labelVideoPlayerName.Top);
 
             _pictureBoxBackground.SendToBack();
             _pictureBoxFastForwardDown.BringToFront();
@@ -1058,7 +1071,6 @@ namespace Nikse.SubtitleEdit.Controls
         {
             if (string.IsNullOrEmpty(_labelTimeCode.Text))
             {
-                var span = TimeCode.FromSeconds(1);
                 _labelTimeCode.Text = GetDisplayTimeCode(0, 0);
                 _labelTimeCode.Left = Width - _labelTimeCode.Width - 9;
                 if (_labelTimeCode.Top + _labelTimeCode.Height >= _panelControls.Height - 4)
@@ -1293,16 +1305,16 @@ namespace Nikse.SubtitleEdit.Controls
 
         public void ShowFullScreenControls()
         {
-            _pictureBoxFullscreen.Image = (Image)_resources.GetObject("pictureBoxNoFS.Image");
-            _pictureBoxFullscreenDown.Image = (Image)_resources.GetObject("pictureBoxNoFSDown.Image");
-            _pictureBoxFullscreenOver.Image = (Image)_resources.GetObject("pictureBoxNoFSOver.Image");
+            _pictureBoxFullscreen.Image = _bitmapNoFullscreen;
+            _pictureBoxFullscreenDown.Image = _bitmapNoFullscreenDown;
+            _pictureBoxFullscreenOver.Image = _bitmapNoFullscreenOver;
         }
 
         public void ShowNonFullScreenControls()
         {
-            _pictureBoxFullscreen.Image = (Image)_resources.GetObject("pictureBoxFS.Image");
-            _pictureBoxFullscreenDown.Image = (Image)_resources.GetObject("pictureBoxFSDown.Image");
-            _pictureBoxFullscreenOver.Image = (Image)_resources.GetObject("pictureBoxFSOver.Image");
+            _pictureBoxFullscreen.Image = _bitmapFullscreen;
+            _pictureBoxFullscreenDown.Image = _bitmapFullscreenDown;
+            _pictureBoxFullscreenOver.Image = _bitmapFullscreenOver;
         }
 
         private void PictureBoxFullscreenMouseEnter(object sender, EventArgs e)
@@ -2056,6 +2068,112 @@ namespace Nikse.SubtitleEdit.Controls
             _labelVideoPlayerName.Font = new Font(_labelTimeCode.Font.FontFamily, 6);
             _labelVolume.Font = new Font(_labelTimeCode.Font.FontFamily, 6);
             _labelVolume.Top -= 2;
+        }
+
+        public void TryLoadGfx()
+        {
+            TryLoadIcon(_pictureBoxBackground, "Background");
+            TryLoadIcon(_pictureBoxReverse, "Reverse");
+            TryLoadIcon(_pictureBoxReverseOver, "ReverseOver");
+            TryLoadIcon(_pictureBoxReverseDown, "ReverseDown");
+            TryLoadIcon(_pictureBoxFastForward, "FastForward");
+            TryLoadIcon(_pictureBoxFastForwardOver, "FastForwardOver");
+            TryLoadIcon(_pictureBoxFastForwardDown, "FastForwardDown");
+            TryLoadIcon(_pictureBoxPlay, "Play");
+            TryLoadIcon(_pictureBoxPlayOver, "PlayOver");
+            TryLoadIcon(_pictureBoxPlayDown, "PlayDown");
+            TryLoadIcon(_pictureBoxPause, "Pause");
+            TryLoadIcon(_pictureBoxPauseOver, "PauseOver");
+            TryLoadIcon(_pictureBoxPauseDown, "PauseDown");
+            TryLoadIcon(_pictureBoxStop, "Stop");
+            TryLoadIcon(_pictureBoxStopOver, "StopOver");
+            TryLoadIcon(_pictureBoxStopDown, "StopDown");
+            TryLoadIcon(_pictureBoxFullscreen, "Fullscreen");
+            TryLoadBitmap(ref _bitmapFullscreen, "Fullscreen");
+            TryLoadIcon(_pictureBoxFullscreenOver, "FullscreenOver");
+            TryLoadBitmap(ref _bitmapFullscreenOver, "FullscreenOver");
+            TryLoadIcon(_pictureBoxFullscreenDown, "FullscreenDown");
+            TryLoadBitmap(ref _bitmapFullscreenDown, "FullscreenDown");
+            TryLoadIcon(_pictureBoxMute, "Mute");
+            TryLoadIcon(_pictureBoxMuteOver, "MuteOver");
+            TryLoadIcon(_pictureBoxMuteDown, "MuteDown");
+            TryLoadIcon(_pictureBoxProgressbarBackground, "ProgressBarBackground");
+            TryLoadIcon(_pictureBoxProgressBar, "ProgressBar");
+            TryLoadIcon(_pictureBoxVolumeBarBackground, "VolumeBarBackground");
+            TryLoadIcon(_pictureBoxVolumeBar, "VolumeBar");
+
+            TryLoadBitmap(ref _bitmapNoFullscreen, "NoFullscreen");
+            TryLoadBitmap(ref _bitmapNoFullscreenDown, "NoFullscreenDown");
+            TryLoadBitmap(ref _bitmapNoFullscreenOver, "NoFullscreenOver");
+
+            if (_pictureBoxBackground.Image is Bitmap bg)
+            {
+                _labelVolume.BackColor = bg.GetPixel(_labelVolume.Left, _labelVolume.Top);
+                _labelTimeCode.BackColor = bg.GetPixel(_labelTimeCode.Left, _labelTimeCode.Top);
+                _labelVideoPlayerName.BackColor = bg.GetPixel(_labelVideoPlayerName.Left, _labelVideoPlayerName.Top);
+            }
+
+            // Set ForeColor to either white or black depending on background color
+            if (_labelVolume.BackColor.R + _labelVolume.BackColor.G + _labelVolume.BackColor.B > 255 * 1.5)
+            {
+                _labelVolume.ForeColor = Color.Black;
+            }
+            else
+            {
+                _labelVolume.ForeColor = Color.White;
+            }
+
+            if (_labelTimeCode.BackColor.R + _labelTimeCode.BackColor.G + _labelTimeCode.BackColor.B > 255 * 1.5)
+            {
+                _labelTimeCode.ForeColor = Color.Black;
+            }
+            else
+            {
+                _labelVolume.ForeColor = Color.White;
+            }
+
+            if (_labelVideoPlayerName.BackColor.R + _labelVideoPlayerName.BackColor.G + _labelVideoPlayerName.BackColor.B > 255 * 1.5)
+            {
+                _labelVideoPlayerName.ForeColor = Color.Black;
+            }
+            else
+            {
+                _labelVideoPlayerName.ForeColor = Color.White;
+            }
+        }
+
+        private static void TryLoadBitmap(ref Bitmap bmp, string name)
+        {
+            var pb = new PictureBox();
+            TryLoadIcon(pb, name);
+            if (pb.Image != null)
+            {
+                bmp = pb.Image as Bitmap;
+            }
+
+            pb.Dispose();
+        }
+
+        private static void TryLoadIcon(PictureBox pb, string iconName)
+        {
+            var theme = Configuration.Settings.General.UseDarkTheme ? "DarkTheme" : "DefaultTheme";
+            if (!string.IsNullOrEmpty(Configuration.Settings.General.ToolbarIconTheme) && !Configuration.Settings.General.ToolbarIconTheme.Equals("Auto", StringComparison.OrdinalIgnoreCase))
+            {
+                theme = Configuration.Settings.General.ToolbarIconTheme;
+            }
+
+            var themeFullPath = Path.Combine(Configuration.IconsDirectory, theme, "VideoPlayer", iconName + ".png");
+            if (File.Exists(themeFullPath))
+            {
+                pb.Image = new Bitmap(themeFullPath);
+                return;
+            }
+
+            var fullPath = Path.Combine(Configuration.IconsDirectory, "DefaultTheme", "VideoPlayer", iconName + ".png");
+            if (File.Exists(fullPath))
+            {
+                pb.Image = new Bitmap(fullPath);
+            }
         }
     }
 }

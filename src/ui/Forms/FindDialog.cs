@@ -125,8 +125,24 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonFind_Click(object sender, EventArgs e)
         {
+            SetRegEx();
             FindNext();
             buttonFind.Focus();
+        }
+
+        private void SetRegEx()
+        {
+            if (radioButtonRegEx.Checked)
+            {
+                try
+                {
+                    _regEx = new Regex(RegexUtils.FixNewLine(FindText), RegexOptions.Compiled, TimeSpan.FromSeconds(5));
+                }
+                catch (Exception exception)
+                {
+                    MessageBox.Show(exception.Message);
+                }
+            }
         }
 
         private void FindNext()
@@ -138,28 +154,10 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 DialogResult = DialogResult.Cancel;
             }
-            else if (radioButtonNormal.Checked)
+            else
             {
                 DialogResult = DialogResult.OK;
-                _findAndReplaceMethods.FindDialogFind(FindText, FindReplaceType);
-            }
-            else if (radioButtonCaseSensitive.Checked)
-            {
-                DialogResult = DialogResult.OK;
-                _findAndReplaceMethods.FindDialogFind(FindText, FindReplaceType);
-            }
-            else if (radioButtonRegEx.Checked)
-            {
-                try
-                {
-                    _regEx = new Regex(RegexUtils.FixNewLine(searchText), RegexOptions.Compiled, TimeSpan.FromSeconds(5));
-                    DialogResult = DialogResult.OK;
-                    _findAndReplaceMethods.FindDialogFind(FindText, FindReplaceType);
-                }
-                catch (Exception exception)
-                {
-                    MessageBox.Show(exception.Message);
-                }
+                _findAndReplaceMethods.FindDialogFind(FindText, FindReplaceType, _regEx);
             }
         }
 
@@ -259,6 +257,8 @@ namespace Nikse.SubtitleEdit.Forms
                 labelCount.Text = string.Empty;
                 return;
             }
+
+            SetRegEx();
             var count = GetFindDialogHelper(0).FindCount(_subtitle, checkBoxWholeWord.Checked);
             var colorIfFound = Configuration.Settings.General.UseDarkTheme ? Color.FromArgb(9, 128, 204) : Color.Blue;
             labelCount.ForeColor = count > 0 ? colorIfFound : Color.Red;
@@ -297,25 +297,18 @@ namespace Nikse.SubtitleEdit.Forms
             else if (radioButtonNormal.Checked)
             {
                 DialogResult = DialogResult.OK;
+                SetRegEx();
                 _findAndReplaceMethods.FindDialogFindPrevious(FindText);
             }
             else if (radioButtonCaseSensitive.Checked)
             {
                 DialogResult = DialogResult.OK;
+                SetRegEx();
                 _findAndReplaceMethods.FindDialogFindPrevious(FindText);
             }
-            else if (radioButtonRegEx.Checked)
+            else
             {
-                try
-                {
-                    _regEx = new Regex(RegexUtils.FixNewLine(searchText), RegexOptions.Compiled, TimeSpan.FromSeconds(5));
-                    DialogResult = DialogResult.OK;
-                    _findAndReplaceMethods.FindDialogFindPrevious(FindText);
-                }
-                catch (Exception exception)
-                {
-                    MessageBox.Show(exception.Message);
-                }
+                SetRegEx();
             }
 
             buttonFindPrev.Focus();

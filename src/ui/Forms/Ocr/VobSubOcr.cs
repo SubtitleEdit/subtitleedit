@@ -330,7 +330,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         // Dictionaries/spellchecking/fixing
         private OcrFixEngine _ocrFixEngine;
         private int _tesseractOcrAutoFixes;
-        private string Tesseract5Version = "5.3.0";
+        private string Tesseract5Version = "5.3.1";
 
         private Subtitle _bdnXmlOriginal;
         private Subtitle _bdnXmlSubtitle;
@@ -7108,7 +7108,13 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 checkBoxTesseractFallback.Text = string.Format(LanguageSettings.Current.VobSubOcr.FallbackToX, "Tesseract 3.02");
                 if (Configuration.IsRunningOnWindows && !File.Exists(Path.Combine(Configuration.TesseractDirectory, "tesseract.exe")))
                 {
-                    if (MessageBox.Show($"{LanguageSettings.Current.GetTesseractDictionaries.Download} Tesseract {Tesseract5Version}", LanguageSettings.Current.General.Title, MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
+                    if (IntPtr.Size * 8 == 32)
+                    {
+                        MessageBox.Show("Sorry, Tesseract {Tesseract5Version} requires a 64-bit processor");
+                        comboBoxOcrMethod.SelectedIndex = _ocrMethodBinaryImageCompare;
+                        return;
+                    }
+                    else if (MessageBox.Show($"{LanguageSettings.Current.GetTesseractDictionaries.Download} Tesseract {Tesseract5Version}", LanguageSettings.Current.General.Title, MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
                     {
                         comboBoxTesseractLanguages.Items.Clear();
                         using (var form = new DownloadTesseract5(Tesseract5Version))
@@ -9784,13 +9790,14 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             Configuration.Settings.Tools.OcrGoogleCloudVisionSeHandlesTextMerge = checkBoxSeHandlesTextMerge.Checked;
         }
 
-        public void FindDialogFind(string findText, ReplaceType findReplaceType)
+        public void FindDialogFind(string findText, ReplaceType findReplaceType, Regex regex)
         {
             _findHelper = _findHelper ?? _findDialog.GetFindDialogHelper(_selectedIndex);
             _findHelper.FindText = findText;
             _findHelper.FindTextLength = findText.Length;
             _findHelper.FindReplaceType = findReplaceType;
             _findHelper.InProgress = true;
+            _findHelper.SetRegex(regex);
             if (!string.IsNullOrWhiteSpace(_findHelper.FindText))
             {
                 if (Configuration.Settings.Tools.FindHistory.Count == 0 || Configuration.Settings.Tools.FindHistory[0] != _findHelper.FindText)

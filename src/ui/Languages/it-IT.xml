@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.6.13</Version>
-    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 26.04.2023</TranslatedBy>
+    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 09.07.2023</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -37,6 +37,7 @@
     <Actor>Attore</Actor>
     <Gap>Divario</Gap>
     <Region>Regione</Region>
+    <Layer>Layer</Layer>
     <NumberSymbol>N.</NumberSymbol>
     <Number>Numero</Number>
     <Text>Testo</Text>
@@ -1378,6 +1379,7 @@ Per usare una chiave API vai su "Opzioni -&gt; Impostazioni -&gt; Strumenti" per
         <SizeAllColumnsToFit>Ridimensiona tutte le colonne per adattarle</SizeAllColumnsToFit>
         <SetStyle>Imposta stile</SetStyle>
         <SetActor>Imposta attore</SetActor>
+        <SetLayer>Imposta layer</SetLayer>
         <AssaTools>Strumenti ASSA</AssaTools>
         <SubStationAlphaStyles>Stili Alpha della stazione secondaria...</SubStationAlphaStyles>
         <AdvancedSubStationAlphaStyles>Stili Alpha Sub Station avanzati...</AdvancedSubStationAlphaStyles>
@@ -1386,7 +1388,10 @@ Per usare una chiave API vai su "Opzioni -&gt; Impostazioni -&gt; Strumenti" per
         <TimedTextStyles>Stili di testo a tempo...</TimedTextStyles>
         <TimedTextSetLanguage>Testo a tempo - imposta la lingua</TimedTextSetLanguage>
         <SamiSetStyle>Sami - imposta classe</SamiSetStyle>
-        <NuendoSetStyle>Nuendo - impostare il carattere</NuendoSetStyle>
+        <NuendoSetStyle>Nuendo - imposta carattere</NuendoSetStyle>
+        <WebVttSetStyle>WebVTT - imposta stile</WebVttSetStyle>
+        <WebVttSetVoice>WebVTT - imposta voce</WebVttSetVoice>
+        <WebVttBrowserPreview>WebVTT - anteprima browser</WebVttBrowserPreview>
         <Cut>Taglia</Cut>
         <Copy>Copia</Copy>
         <Paste>Incolla</Paste>
@@ -2273,6 +2278,7 @@ stesso file di sottotitolo (collaborazione)</Information>
     <ShowFullscreenButton>Visualizza pulsante schermo intero</ShowFullscreenButton>
     <PreviewFontName>Nome font anteprima sottotitolo</PreviewFontName>
     <PreviewFontSize>Anteprima dimensione font sottotitolo</PreviewFontSize>
+    <PreviewVerticalMargin>Margine verticale</PreviewVerticalMargin>
     <MainWindowVideoControls>Controlli video nella finestra principale</MainWindowVideoControls>
     <CustomSearchTextAndUrl>Ricerca personalizzata testo e URL</CustomSearchTextAndUrl>
     <WaveformAppearance>Apparenza forma onda</WaveformAppearance>
@@ -2401,9 +2407,12 @@ stesso file di sottotitolo (collaborazione)</Information>
     <UseSyntaxColoring>Usa colorazione sintassi</UseSyntaxColoring>
     <HtmlColor>Colore HTML</HtmlColor>
     <AssaColor>Colore ASSA</AssaColor>
+    <Theme>Tema</Theme>
+    <Automatic>Automatico</Automatic>
     <DarkTheme>Tema scuro</DarkTheme>
     <DarkThemeEnabled>Usa tema scuro</DarkThemeEnabled>
     <DarkThemeShowGridViewLines>Visualizza le linee della griglia nella vista elenco</DarkThemeShowGridViewLines>
+    <GraphicsButtons>Pulsanti grafici</GraphicsButtons>
     <UpdateShortcut>Aggiorna</UpdateShortcut>
     <FoucsSetVideoPosition>Imposta la posizione del video</FoucsSetVideoPosition>
     <ToggleDockUndockOfVideoControls>Alterna blocca/sblocca controlli video</ToggleDockUndockOfVideoControls>
@@ -2554,6 +2563,7 @@ stesso file di sottotitolo (collaborazione)</Information>
     <MainToggleVideoControls>Attiva/disattiva i controlli video</MainToggleVideoControls>
     <VideoToggleContrast>Attiva/disattiva contrasto (solo mpv)</VideoToggleContrast>
     <AudioToTextX>Da audio a testo ({0})</AudioToTextX>
+    <AudioExtractSelectedLines>Estrai audio (righe selezionate)</AudioExtractSelectedLines>
     <AudioToTextSelectedLinesX>Da audio a testo righe selezionate ({0})</AudioToTextSelectedLinesX>
     <VideoToggleBrightness>Attiva/disattiva luminosità (solo mpv)</VideoToggleBrightness>
     <CustomSearch1>Traduci, ricerca personalizzata 1</CustomSearch1>
@@ -3209,4 +3219,7 @@ Vuoi mantenere le modifiche?</KeepChangesMessage>
     <Title>WebVTT - imposta nuova voce</Title>
     <VoiceName>Nome voce</VoiceName>
   </WebVttNewVoice>
+  <WebVttStyleManager>
+    <Title>Stili WebVTT</Title>
+  </WebVttStyleManager>
 </Language>

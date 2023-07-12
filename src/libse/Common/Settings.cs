@@ -241,6 +241,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public bool BatchConvertTsOnlyTeletext { get; set; }
         public string BatchConvertMkvLanguageCodeStyle { get; set; }
         public string BatchConvertOcrEngine { get; set; }
+        public string BatchConvertOcrLanguage { get; set; }
         public string WaveformBatchLastFolder { get; set; }
         public string ModifySelectionText { get; set; }
         public string ModifySelectionRule { get; set; }
@@ -440,6 +441,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public string WhisperStableTsLocation { get; set; }
         public string WhisperCppModelLocation { get; set; }
         public string WhisperExtraSettings { get; set; }
+        public string WhisperExtraSettingsHistory { get; set; }
         public bool WhisperAutoAdjustTimings { get; set; }
         public bool WhisperUseLineMaxChars { get; set; }
         public int AudioToTextLineMaxChars { get; set; }
@@ -513,6 +515,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             BatchConvertTsScreenWidth = 1920;
             BatchConvertTsScreenHeight = 1080;
             BatchConvertOcrEngine = "Tesseract";
+            BatchConvertOcrLanguage = "en";
             BatchConvertTsOverrideHAlign = "center"; // left center right
             BatchConvertTsOverrideHMargin = 5; // pct
             BatchConvertTsFileNameAppend = ".{two-letter-country-code}";
@@ -1412,7 +1415,6 @@ $HorzAlign          =   Center
         public string MpvVideoVf { get; set; }
         public string MpvVideoAf { get; set; }
         public string MpvExtraOptions { get; set; }
-        public string MpvAllowNativePreview { get; set; }
         public bool MpvLogging { get; set; }
         public bool MpvHandlesPreviewText { get; set; }
         public Color MpvPreviewTextPrimaryColor { get; set; }
@@ -1611,7 +1613,6 @@ $HorzAlign          =   Center
             MpvPreviewTextOpaqueBoxStyle = "1";
             MpvPreviewTextAlignment = "2";
             MpvPreviewTextMarginVertical = 10;
-            MpvAllowNativePreview = "WebVTT;WebVTT File with#";
             FFmpegSceneThreshold = "0.4"; // threshold for generating shot changes - 0.2 is sensitive (more shot changes), 0.6 is less sensitive (fewer shot changes)
             UseTimeFormatHHMMSSFF = false;
             SplitBehavior = 1; // 0=take gap from left, 1=divide evenly, 2=take gap from right
@@ -2413,6 +2414,7 @@ $HorzAlign          =   Center
         public string MainVideoToggleContrast { get; set; }
         public string MainVideoAudioToTextVosk { get; set; }
         public string MainVideoAudioToTextWhisper { get; set; }
+        public string MainVideoAudioExtractAudioSelectedLines { get; set; }
 
         // spell check
         public string MainSpellCheck { get; set; }
@@ -4347,12 +4349,6 @@ $HorzAlign          =   Center
                 settings.General.MpvExtraOptions = subNode.InnerText.Trim();
             }
 
-            subNode = node.SelectSingleNode("MpvAllowNativePreview");
-            if (subNode != null)
-            {
-                settings.General.MpvAllowNativePreview = subNode.InnerText.Trim();
-            }
-
             subNode = node.SelectSingleNode("MpvLogging");
             if (subNode != null)
             {
@@ -4418,6 +4414,7 @@ $HorzAlign          =   Center
             {
                 settings.General.MpvPreviewTextMarginVertical = Convert.ToInt32(subNode.InnerText.Trim());
             }
+
             subNode = node.SelectSingleNode("MpcHcLocation");
             if (subNode != null)
             {
@@ -5501,6 +5498,12 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.Tools.BatchConvertOcrEngine = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("BatchConvertOcrLanguage");
+            if (subNode != null)
+            {
+                settings.Tools.BatchConvertOcrLanguage = subNode.InnerText;
             }
 
             subNode = node.SelectSingleNode("WaveformBatchLastFolder");
@@ -6649,6 +6652,12 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.Tools.WhisperExtraSettings = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("WhisperExtraSettingsHistory");
+            if (subNode != null)
+            {
+                settings.Tools.WhisperExtraSettingsHistory = subNode.InnerText;
             }
 
             subNode = node.SelectSingleNode("WhisperLanguageCode");
@@ -9491,6 +9500,12 @@ $HorzAlign          =   Center
                     shortcuts.MainVideoAudioToTextWhisper = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainVideoAudioExtractAudioSelectedLines");
+                if (subNode != null)
+                {
+                    shortcuts.MainVideoAudioExtractAudioSelectedLines= subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainSpellCheck");
                 if (subNode != null)
                 {
@@ -10866,7 +10881,6 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("MpvVideoVf", settings.General.MpvVideoVf);
                 textWriter.WriteElementString("MpvVideoAf", settings.General.MpvVideoAf);
                 textWriter.WriteElementString("MpvExtraOptions", settings.General.MpvExtraOptions);
-                textWriter.WriteElementString("MpvAllowNativePreview", settings.General.MpvAllowNativePreview);
                 textWriter.WriteElementString("MpvLogging", settings.General.MpvLogging.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("MpvHandlesPreviewText", settings.General.MpvHandlesPreviewText.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("MpvPreviewTextPrimaryColor", ColorTranslator.ToHtml(settings.General.MpvPreviewTextPrimaryColor));
@@ -11072,6 +11086,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("BatchConvertTsFileNameAppend", settings.Tools.BatchConvertTsFileNameAppend);
                 textWriter.WriteElementString("BatchConvertMkvLanguageCodeStyle", settings.Tools.BatchConvertMkvLanguageCodeStyle);
                 textWriter.WriteElementString("BatchConvertOcrEngine", settings.Tools.BatchConvertOcrEngine);
+                textWriter.WriteElementString("BatchConvertOcrLanguage", settings.Tools.BatchConvertOcrLanguage);
                 textWriter.WriteElementString("WaveformBatchLastFolder", settings.Tools.WaveformBatchLastFolder);
                 textWriter.WriteElementString("ModifySelectionRule", settings.Tools.ModifySelectionRule);
                 textWriter.WriteElementString("ModifySelectionText", settings.Tools.ModifySelectionText);
@@ -11262,6 +11277,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("WhisperStableTsLocation", settings.Tools.WhisperStableTsLocation);
                 textWriter.WriteElementString("WhisperCppModelLocation", settings.Tools.WhisperCppModelLocation);
                 textWriter.WriteElementString("WhisperExtraSettings", settings.Tools.WhisperExtraSettings);
+                textWriter.WriteElementString("WhisperExtraSettingsHistory", settings.Tools.WhisperExtraSettingsHistory);
                 textWriter.WriteElementString("WhisperLanguageCode", settings.Tools.WhisperLanguageCode);
                 textWriter.WriteElementString("WhisperAutoAdjustTimings", settings.Tools.WhisperAutoAdjustTimings.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("WhisperUseLineMaxChars", settings.Tools.WhisperUseLineMaxChars.ToString(CultureInfo.InvariantCulture));
@@ -11912,6 +11928,7 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("MainVideoToggleContrast", shortcuts.MainVideoToggleContrast);
             textWriter.WriteElementString("MainVideoAudioToTextVosk", shortcuts.MainVideoAudioToTextVosk);
             textWriter.WriteElementString("MainVideoAudioToTextWhisper", shortcuts.MainVideoAudioToTextWhisper);
+            textWriter.WriteElementString("MainVideoAudioExtractAudioSelectedLines", shortcuts.MainVideoAudioExtractAudioSelectedLines);
             textWriter.WriteElementString("MainSpellCheck", shortcuts.MainSpellCheck);
             textWriter.WriteElementString("MainSpellCheckFindDoubleWords", shortcuts.MainSpellCheckFindDoubleWords);
             textWriter.WriteElementString("MainSpellCheckAddWordToNames", shortcuts.MainSpellCheckAddWordToNames);

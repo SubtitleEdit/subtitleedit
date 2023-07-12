@@ -55,6 +55,8 @@
             this.removeTemporaryFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.labelEngine = new System.Windows.Forms.Label();
             this.comboBoxWhisperEngine = new System.Windows.Forms.ComboBox();
+            this.labelAdvanced = new System.Windows.Forms.Label();
+            this.buttonAdvanced = new System.Windows.Forms.Button();
             this.groupBoxModels.SuspendLayout();
             this.groupBoxInputFiles.SuspendLayout();
             this.contextMenuStripWhisperAdvanced.SuspendLayout();
@@ -115,7 +117,7 @@
             this.textBoxLog.Name = "textBoxLog";
             this.textBoxLog.ReadOnly = true;
             this.textBoxLog.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBoxLog.Size = new System.Drawing.Size(168, 258);
+            this.textBoxLog.Size = new System.Drawing.Size(77, 258);
             this.textBoxLog.TabIndex = 0;
             // 
             // labelInfo
@@ -290,7 +292,7 @@
             this.setCPPConstmeModelsFolderToolStripMenuItem,
             this.removeTemporaryFilesToolStripMenuItem});
             this.contextMenuStripWhisperAdvanced.Name = "contextMenuStripWhisperAdvanced";
-            this.contextMenuStripWhisperAdvanced.Size = new System.Drawing.Size(259, 70);
+            this.contextMenuStripWhisperAdvanced.Size = new System.Drawing.Size(259, 48);
             this.contextMenuStripWhisperAdvanced.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripWhisperAdvanced_Opening);
             // 
             // setCPPConstmeModelsFolderToolStripMenuItem
@@ -328,11 +330,34 @@
             this.comboBoxWhisperEngine.TabIndex = 28;
             this.comboBoxWhisperEngine.SelectedIndexChanged += new System.EventHandler(this.comboBoxWhisperEngine_SelectedIndexChanged);
             // 
+            // labelAdvanced
+            // 
+            this.labelAdvanced.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelAdvanced.AutoSize = true;
+            this.labelAdvanced.Location = new System.Drawing.Point(535, 178);
+            this.labelAdvanced.Name = "labelAdvanced";
+            this.labelAdvanced.Size = new System.Drawing.Size(65, 13);
+            this.labelAdvanced.TabIndex = 31;
+            this.labelAdvanced.Text = "Advanced...";
+            // 
+            // buttonAdvanced
+            // 
+            this.buttonAdvanced.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonAdvanced.Location = new System.Drawing.Point(535, 148);
+            this.buttonAdvanced.Name = "buttonAdvanced";
+            this.buttonAdvanced.Size = new System.Drawing.Size(156, 23);
+            this.buttonAdvanced.TabIndex = 30;
+            this.buttonAdvanced.Text = "Advanced";
+            this.buttonAdvanced.UseVisualStyleBackColor = true;
+            this.buttonAdvanced.Click += new System.EventHandler(this.buttonAdvanced_Click);
+            // 
             // WhisperAudioToTextSelectedLines
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(709, 464);
+            this.Controls.Add(this.labelAdvanced);
+            this.Controls.Add(this.buttonAdvanced);
             this.Controls.Add(this.labelEngine);
             this.Controls.Add(this.comboBoxWhisperEngine);
             this.Controls.Add(this.checkBoxTranslateToEnglish);
@@ -396,5 +421,7 @@
         private System.Windows.Forms.Label labelEngine;
         private System.Windows.Forms.ComboBox comboBoxWhisperEngine;
         private System.Windows.Forms.ToolStripMenuItem setCPPConstmeModelsFolderToolStripMenuItem;
+        private System.Windows.Forms.Label labelAdvanced;
+        private System.Windows.Forms.Button buttonAdvanced;
     }
 }

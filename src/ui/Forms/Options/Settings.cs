@@ -39,7 +39,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
         private readonly Dictionary<ShortcutHelper, string> _newShortcuts = new Dictionary<ShortcutHelper, string>();
         private List<RulesProfile> _rulesProfiles;
         private List<PluginShortcut> _pluginShortcuts;
-
+        private bool _loading = true;
         private readonly BackgroundWorker _shortcutsBackgroundWorker;
 
         private static IEnumerable<string> GetSubtitleFormats() => SubtitleFormat.AllSubtitleFormats.Where(format => !format.IsVobSubIndexFile).Select(format => format.FriendlyName);
@@ -109,8 +109,10 @@ namespace Nikse.SubtitleEdit.Forms.Options
             UiUtil.FixFonts(this);
             UiUtil.FixLargeFonts(this, buttonOK);
 
+
             _shortcutsBackgroundWorker = new BackgroundWorker();
             Init();
+            _loading = false;
 
             _oldSettings = Core.Common.Settings.CustomSerialize(Configuration.Settings);
         }
@@ -266,6 +268,16 @@ namespace Nikse.SubtitleEdit.Forms.Options
             else
             {
                 comboBoxlVideoPlayerPreviewFontSize.SelectedIndex = 3;
+            }
+
+            var verticalMargin = gs.MpvPreviewTextMarginVertical;
+            if (verticalMargin >= numericUpDownMarginVertical.Minimum && verticalMargin <= numericUpDownMarginVertical.Maximum)
+            {
+                numericUpDownMarginVertical.Value = verticalMargin;
+            }
+            else
+            {
+                numericUpDownMarginVertical.Value = 10;
             }
 
             numericUpDownMpvOutline.Value = gs.MpvPreviewTextOutlineWidth;
@@ -532,6 +544,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             buttonTextBoxHtmlColor.Text = language.HtmlColor;
             buttonTextBoxAssColor.Text = language.AssaColor;
             groupBoxDarkTheme.Text = language.DarkTheme;
+            groupBoxGraphicsButtons.Text = language.GraphicsButtons;
             checkBoxDarkThemeEnabled.Text = language.DarkThemeEnabled;
             checkBoxDarkThemeShowListViewGridLines.Text = language.DarkThemeShowGridViewLines;
             buttonDarkThemeColor.Text = language.WaveformTextColor;
@@ -649,6 +662,9 @@ namespace Nikse.SubtitleEdit.Forms.Options
             buttonMpvPrimaryColor.Text = LanguageSettings.Current.SubStationAlphaStyles.Primary;
             buttonMpvOutlineColor.Text = LanguageSettings.Current.SubStationAlphaStyles.Outline;
             buttonMpvBackColor.Text = LanguageSettings.Current.SubStationAlphaStyles.Shadow;
+            labelMarginVertical.Text = language.PreviewVerticalMargin;
+            numericUpDownMarginVertical.Left = labelMarginVertical.Right + 5;
+
             checkBoxVideoPlayerPreviewFontBold.Text = language.SubtitleBold;
             var left = labelVideoPlayerPreviewFontName.Left + 5 +
                         Math.Max(labelVideoPlayerPreviewFontName.Width, labelVideoPlayerPreviewFontSize.Width);
@@ -1203,6 +1219,10 @@ namespace Nikse.SubtitleEdit.Forms.Options
             buttonUpdateFileTypeAssociations.Text = language.UpdateFileTypeAssociations;
             labelUpdateFileTypeAssociationsStatus.Text = string.Empty;
 
+            numericUpDownMpvOutline.Left = radioButtonMpvOutline.Right + 9;
+            numericUpDownMpvShadowWidth.Left = numericUpDownMpvOutline.Right + 9;
+            labelMpvShadow.Left = numericUpDownMpvShadowWidth.Left;
+
             checkBoxDarkThemeEnabled_CheckedChanged(null, null);
 
             ToolbarIconThemeInit();
@@ -1214,6 +1234,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             {
                 comboBoxToolbarIconTheme.Visible = false;
                 labelToolbarIconTheme.Visible = false;
+                return;
             }
 
             comboBoxToolbarIconTheme.SelectedIndexChanged -= comboBoxToolbarIconTheme_SelectedIndexChanged;
@@ -1236,7 +1257,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
             }
 
             comboBoxToolbarIconTheme.SelectedIndexChanged += comboBoxToolbarIconTheme_SelectedIndexChanged;
-
         }
 
         private void ShowMpvVideoOutput()
@@ -1534,6 +1554,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             AddNode(videoNode, language.MainToggleVideoControls, nameof(Configuration.Settings.Shortcuts.MainVideoToggleControls));
             AddNode(videoNode, string.Format(language.AudioToTextX, "Vosk"), nameof(Configuration.Settings.Shortcuts.MainVideoAudioToTextVosk));
             AddNode(videoNode, string.Format(language.AudioToTextX, "Whisper"), nameof(Configuration.Settings.Shortcuts.MainVideoAudioToTextWhisper));
+            AddNode(videoNode, language.AudioExtractSelectedLines, nameof(Configuration.Settings.Shortcuts.MainVideoAudioExtractAudioSelectedLines));
             AddNode(videoNode, language.VideoToggleContrast, nameof(Configuration.Settings.Shortcuts.MainVideoToggleContrast));
             AddNode(videoNode, language.VideoToggleBrightness, nameof(Configuration.Settings.Shortcuts.MainVideoToggleBrightness));
             _shortcuts.Nodes.Add(videoNode);
@@ -1878,8 +1899,11 @@ namespace Nikse.SubtitleEdit.Forms.Options
         {
             Icon = (Icon)icon.Clone();
             pictureBoxFileNew.Image = (Image)newFile.Clone();
+            pictureBoxPreview1.Image = (Image)newFile.Clone();
             pictureBoxFileOpen.Image = (Image)openFile.Clone();
+            pictureBoxPreview2.Image = (Image)openFile.Clone();
             pictureBoxSave.Image = (Image)saveFile.Clone();
+            pictureBoxPreview3.Image = (Image)saveFile.Clone();
             pictureBoxSaveAs.Image = (Image)saveFileAs.Clone();
             pictureBoxFind.Image = (Image)find.Clone();
             pictureBoxReplace.Image = (Image)replace.Clone();
@@ -2028,6 +2052,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             gs.VideoPlayerShowFullscreenButton = checkBoxVideoPlayerShowFullscreenButton.Checked;
             gs.VideoPlayerPreviewFontName = comboBoxVideoPlayerPreviewFontName.SelectedItem.ToString();
             gs.VideoPlayerPreviewFontSize = int.Parse(comboBoxlVideoPlayerPreviewFontSize.Items[0].ToString()) + comboBoxlVideoPlayerPreviewFontSize.SelectedIndex;
+            gs.MpvPreviewTextMarginVertical = (int)numericUpDownMarginVertical.Value;
             gs.VideoPlayerPreviewFontBold = checkBoxVideoPlayerPreviewFontBold.Checked;
             gs.MpvPreviewTextPrimaryColor = panelMpvPrimaryColor.BackColor;
             gs.MpvPreviewTextOutlineColor = panelMpvOutlineColor.BackColor;
@@ -2305,6 +2330,9 @@ namespace Nikse.SubtitleEdit.Forms.Options
                     section = panelToolBar;
                     break;
                 case AppearanceSection:
+                    TryLoadIcon(pictureBoxPreview1, "New");
+                    TryLoadIcon(pictureBoxPreview2, "Open");
+                    TryLoadIcon(pictureBoxPreview3, "Save");
                     section = panelFont;
                     break;
                 case NetworkSection:
@@ -3265,6 +3293,8 @@ namespace Nikse.SubtitleEdit.Forms.Options
             buttonDarkThemeBackColor.Enabled = enabled;
             panelDarkThemeBackColor.Enabled = enabled;
             checkBoxDarkThemeShowListViewGridLines.Enabled = enabled;
+
+            comboBoxToolbarIconTheme_SelectedIndexChanged(null, null);
         }
 
         private void listBoxFavoriteSubtitleFormats_SelectedIndexChanged(object sender, EventArgs e)
@@ -3662,6 +3692,15 @@ namespace Nikse.SubtitleEdit.Forms.Options
         
         private void comboBoxToolbarIconTheme_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (_loading)
+            {
+                return;
+            }
+
+            TryLoadIcon(pictureBoxPreview1, "New");
+            TryLoadIcon(pictureBoxPreview2, "Open");
+            TryLoadIcon(pictureBoxPreview3, "Save");
+
             TryLoadIcon(pictureBoxFileNew, "New");
             TryLoadIcon(pictureBoxFileOpen, "Open");
             TryLoadIcon(pictureBoxSave, "Save");
@@ -3686,6 +3725,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             TryLoadIcon(pictureBoxSourceView, "SourceView");
             TryLoadIcon(pictureBoxIttProperties, "IttProperties");
             TryLoadIcon(pictureBoxWebVttProperties, "WebVttProperties");
+            TryLoadIcon(pictureBoxWebVttStyle, "WebVttStyle");
             TryLoadIcon(pictureBoxEbuProperties, "EbuProperties");
         }
 
@@ -3694,9 +3734,14 @@ namespace Nikse.SubtitleEdit.Forms.Options
             pictureBox.Image?.Dispose();
             pictureBox.Image = null;
 
-            var theme = comboBoxToolbarIconTheme.Text;
+            var theme = checkBoxDarkThemeEnabled.Checked ? "DarkTheme" : "DefaultTheme";
+            if (comboBoxToolbarIconTheme.SelectedIndex != 0)
+            {
+                theme = comboBoxToolbarIconTheme.Text;
+            }
+
             var themeFullPath = Path.Combine(Configuration.IconsDirectory, theme, iconName + ".png");
-            if (comboBoxToolbarIconTheme.SelectedIndex > 0 && File.Exists(themeFullPath))
+            if (File.Exists(themeFullPath))
             {
                 pictureBox.Image = new Bitmap(themeFullPath);
                 return;

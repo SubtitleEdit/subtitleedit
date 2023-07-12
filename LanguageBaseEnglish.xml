@@ -37,6 +37,7 @@
     <Actor>Actor</Actor>
     <Gap>Gap</Gap>
     <Region>Region</Region>
+    <Layer>Layer</Layer>
     <NumberSymbol>#</NumberSymbol>
     <Number>Number</Number>
     <Text>Text</Text>
@@ -1471,6 +1472,7 @@ To use an API key, go to "Options -&gt; Settings -&gt; Tools" to enter your Goog
         <SizeAllColumnsToFit>Size all columns to fit</SizeAllColumnsToFit>
         <SetStyle>Set style</SetStyle>
         <SetActor>Set actor</SetActor>
+        <SetLayer>Set layer</SetLayer>
         <AssaTools>ASSA tools</AssaTools>
         <SubStationAlphaStyles>Sub Station Alpha styles...</SubStationAlphaStyles>
         <AdvancedSubStationAlphaStyles>Advanced Sub Station Alpha styles...</AdvancedSubStationAlphaStyles>
@@ -1480,6 +1482,9 @@ To use an API key, go to "Options -&gt; Settings -&gt; Tools" to enter your Goog
         <TimedTextSetLanguage>Timed Text - set language</TimedTextSetLanguage>
         <SamiSetStyle>Sami - set class</SamiSetStyle>
         <NuendoSetStyle>Nuendo - set character</NuendoSetStyle>
+        <WebVttSetStyle>WebVTT - set style</WebVttSetStyle>
+        <WebVttSetVoice>WebVTT - set voice</WebVttSetVoice>
+        <WebVttBrowserPreview>WebVTT - browser preview</WebVttBrowserPreview>
         <Cut>Cut</Cut>
         <Copy>Copy</Copy>
         <Paste>Paste</Paste>
@@ -2369,6 +2374,7 @@ can edit in same subtitle file (collaboration)</Information>
     <ShowFullscreenButton>Show fullscreen button</ShowFullscreenButton>
     <PreviewFontName>Subtitle preview font name</PreviewFontName>
     <PreviewFontSize>Subtitle preview font size</PreviewFontSize>
+    <PreviewVerticalMargin>Vertical margin</PreviewVerticalMargin>
     <MainWindowVideoControls>Main window video controls</MainWindowVideoControls>
     <CustomSearchTextAndUrl>Custom search text and URL</CustomSearchTextAndUrl>
     <WaveformAppearance>Waveform appearance</WaveformAppearance>
@@ -2503,6 +2509,7 @@ can edit in same subtitle file (collaboration)</Information>
     <DarkTheme>Dark theme</DarkTheme>
     <DarkThemeEnabled>Use dark theme</DarkThemeEnabled>
     <DarkThemeShowGridViewLines>Show list view grid lines</DarkThemeShowGridViewLines>
+    <GraphicsButtons>Graphics buttons</GraphicsButtons>
     <UpdateShortcut>Update</UpdateShortcut>
     <FoucsSetVideoPosition>Focus set video position</FoucsSetVideoPosition>
     <ToggleDockUndockOfVideoControls>Toggle dock/undock of video controls</ToggleDockUndockOfVideoControls>
@@ -2653,6 +2660,7 @@ can edit in same subtitle file (collaboration)</Information>
     <MainToggleVideoControls>Toggle video controls</MainToggleVideoControls>
     <VideoToggleContrast>Toggle contrast (mpv only)</VideoToggleContrast>
     <AudioToTextX>Audio to text ({0})</AudioToTextX>
+    <AudioExtractSelectedLines>Extract audio (selected lines)</AudioExtractSelectedLines>
     <AudioToTextSelectedLinesX>Audio to text selected lines ({0})</AudioToTextSelectedLinesX>
     <VideoToggleBrightness>Toggle brightness (mpv only)</VideoToggleBrightness>
     <CustomSearch1>Translate, custom search 1</CustomSearch1>
@@ -3308,4 +3316,12 @@ Keep changes?</KeepChangesMessage>
     <Title>WebVTT - set new voice</Title>
     <VoiceName>Name of voice</VoiceName>
   </WebVttNewVoice>
+  <WebVttStyleManager>
+    <Title>WebVTT styles</Title>
+  </WebVttStyleManager>
+  <WhisperAdvanced>
+    <Title>Whisper Advanced - extra command line arguments</Title>
+    <CommandLineArguments>Extra pameters for whisper command line:</CommandLineArguments>
+    <Info>Note: Different Whisper implementations have different command line parameters!</Info>
+  </WhisperAdvanced>
 </Language>

@@ -1,0 +1,200 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="textBoxCpp.Text" xml:space="preserve">
+    <value>CPP:
+  -t N,      --threads N         [4      ] number of threads to use during computation
+  -p N,      --processors N      [1      ] number of processors to use during computation
+  -ot N,     --offset-t N        [0      ] time offset in milliseconds
+  -on N,     --offset-n N        [0      ] segment index offset
+  -d  N,     --duration N        [0      ] duration of audio to process in milliseconds
+  -mc N,     --max-context N     [-1     ] maximum number of text context tokens to store
+  -ml N,     --max-len N         [0      ] maximum segment length in characters
+  -sow,      --split-on-word     [false  ] split on word rather than on token
+  -bo N,     --best-of N         [2      ] number of best candidates to keep
+  -bs N,     --beam-size N       [-1     ] beam size for beam search
+  -wt N,     --word-thold N      [0.01   ] word timestamp probability threshold
+  -et N,     --entropy-thold N   [2.40   ] entropy threshold for decoder fail
+  -lpt N,    --logprob-thold N   [-1.00  ] log probability threshold for decoder fail
+  -su,       --speed-up          [false  ] speed up audio by x2 (reduced accuracy)
+  -tr,       --translate         [false  ] translate from source language to english
+  -di,       --diarize           [false  ] stereo audio diarization
+  -nf,       --no-fallback       [false  ] do not use temperature fallback while decoding
+  -otxt,     --output-txt        [false  ] output result in a text file
+  -ovtt,     --output-vtt        [false  ] output result in a vtt file
+  -osrt,     --output-srt        [false  ] output result in a srt file
+  -olrc,     --output-lrc        [false  ] output result in a lrc file
+  -owts,     --output-words      [false  ] output script for generating karaoke video
+  -fp,       --font-path         [/System/Library/Fonts/Supplemental/Courier New Bold.ttf] path to a monospace font for karaoke video
+  -ocsv,     --output-csv        [false  ] output result in a CSV file
+  -oj,       --output-json       [false  ] output result in a JSON file
+  -of FNAME, --output-file FNAME [       ] output file path (without file extension)
+  -ps,       --print-special     [false  ] print special tokens
+  -pc,       --print-colors      [false  ] print colors
+  -pp,       --print-progress    [false  ] print progress
+  -nt,       --no-timestamps     [true   ] do not print timestamps</value>
+  </data>
+  <data name="textBoxConstMe.Text" xml:space="preserve">
+    <value>Const-me:
+  -h,       --help          [default] show this help message and exit
+  -la,      --list-adapters List graphic adapters and exit
+  -gpu,     --use-gpu       The graphic adapter to use for inference
+  -t N,     --threads N     [4      ] number of threads to use during computation
+  -p N,     --processors N  [1      ] number of processors to use during computation
+  -ot N,    --offset-t N    [0      ] time offset in milliseconds
+  -on N,    --offset-n N    [0      ] segment index offset
+  -d  N,    --duration N    [0      ] duration of audio to process in milliseconds
+  -mc N,    --max-context N [-1     ] maximum number of text context tokens to store
+  -ml N,    --max-len N     [0      ] maximum segment length in characters
+  -wt N,    --word-thold N  [0.01   ] word timestamp probability threshold
+  -su,      --speed-up      [false  ] speed up audio by x2 (reduced accuracy)
+  -tr,      --translate     [false  ] translate from source language to english
+  -di,      --diarize       [false  ] stereo audio diarization
+  -otxt,    --output-txt    [false  ] output result in a text file
+  -ovtt,    --output-vtt    [false  ] output result in a vtt file
+  -osrt,    --output-srt    [false  ] output result in a srt file
+  -owts,    --output-words  [false  ] output script for generating karaoke video
+  -ps,      --print-special [false  ] print special tokens
+  -nc,      --no-colors     [false  ] do not print colors
+</value>
+  </data>
+  <data name="textBoxOpenAI.Text" xml:space="preserve">
+    <value>OpenAI:
+--temperature TEMPERATURE 
+--best_of BEST_OF 
+--beam_size BEAM_SIZE 
+--patience PATIENCE
+--length_penalty LENGTH_PENALTY 
+--suppress_tokens SUPPRESS_TOKENS 
+--initial_prompt INITIAL_PROMPT
+--condition_on_previous_text CONDITION_ON_PREVIOUS_TEXT 
+--fp16 FP16
+--temperature_increment_on_fallback TEMPERATURE_INCREMENT_ON_FALLBACK
+--compression_ratio_threshold COMPRESSION_RATIO_THRESHOLD 
+--logprob_threshold LOGPROB_THRESHOLD
+--no_speech_threshold NO_SPEECH_THRESHOLD 
+--word_timestamps WORD_TIMESTAMPS
+--prepend_punctuations PREPEND_PUNCTUATIONS 
+--append_punctuations APPEND_PUNCTUATIONS
+--highlight_words HIGHLIGHT_WORDS 
+--max_line_width MAX_LINE_WIDTH 
+--max_line_count MAX_LINE_COUNT
+--threads THREADS</value>
+  </data>
+</root>

@@ -37,6 +37,7 @@
     <Actor>배우</Actor>
     <Gap>간격</Gap>
     <Region>지역</Region>
+    <Layer>레이어</Layer>
     <NumberSymbol>번호</NumberSymbol>
     <Number>번호</Number>
     <Text>텍스트</Text>
@@ -1374,6 +1375,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
         <SizeAllColumnsToFit>모든 열의 크기 맞추기</SizeAllColumnsToFit>
         <SetStyle>스타일 설정</SetStyle>
         <SetActor>배우 설정</SetActor>
+        <SetLayer>레이어 설정</SetLayer>
         <AssaTools>ASSA 도구</AssaTools>
         <SubStationAlphaStyles>SSA의 스타일...</SubStationAlphaStyles>
         <AdvancedSubStationAlphaStyles>ASS의 스타일...</AdvancedSubStationAlphaStyles>
@@ -1383,6 +1385,9 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
         <TimedTextSetLanguage>시간 제한 텍스트 - 언어 설정</TimedTextSetLanguage>
         <SamiSetStyle>SAMI - 클래스 설정</SamiSetStyle>
         <NuendoSetStyle>Nuendo - 문자 설정</NuendoSetStyle>
+        <WebVttSetStyle>WebVTT - 스타일 설정</WebVttSetStyle>
+        <WebVttSetVoice>WebVTT - 음성 설정</WebVttSetVoice>
+        <WebVttBrowserPreview>WebVTT - 브라우저 미리보기</WebVttBrowserPreview>
         <Cut>잘라내기</Cut>
         <Copy>복사</Copy>
         <Paste>붙여넣기</Paste>
@@ -2272,6 +2277,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <ShowFullscreenButton>전체 화면 버튼 표시</ShowFullscreenButton>
     <PreviewFontName>자막 미리보기 글꼴 이름</PreviewFontName>
     <PreviewFontSize>미리 보기의 글자 크기:</PreviewFontSize>
+    <PreviewVerticalMargin>세로 여백</PreviewVerticalMargin>
     <MainWindowVideoControls>메인 창의 비디오 컨트롤</MainWindowVideoControls>
     <CustomSearchTextAndUrl>사용자 지정 검색 서비스 / URL</CustomSearchTextAndUrl>
     <WaveformAppearance>파형 스타일</WaveformAppearance>
@@ -2400,6 +2406,8 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <UseSyntaxColoring>구문 색상 사용</UseSyntaxColoring>
     <HtmlColor>Html 색상</HtmlColor>
     <AssaColor>ASSA 색상</AssaColor>
+    <Theme>테마</Theme>
+    <Automatic>자동</Automatic>
     <DarkTheme>어두운 테마</DarkTheme>
     <DarkThemeEnabled>어두운 테마 사용</DarkThemeEnabled>
     <DarkThemeShowGridViewLines>목록 보기 그리드 선 표시</DarkThemeShowGridViewLines>
@@ -2477,7 +2485,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <ToggleDialogDashes>대화의 대시('-') 전환</ToggleDialogDashes>
     <ToggleQuotes>따옴표 전환</ToggleQuotes>
     <ToggleHiTags>HI 태그 전환</ToggleHiTags>
-    <ToggleCustomTags>사용자 지정 태그</ToggleCustomTags>
+    <ToggleCustomTags>사용자 지정 태그 전환 (서라운드 포함)</ToggleCustomTags>
     <ToggleMusicSymbols>음악 기호 전환</ToggleMusicSymbols>
     <Alignment>정렬 (선택한 줄)</Alignment>
     <AlignmentN1>좌측 하단 정렬 - {\an1}</AlignmentN1>
@@ -2553,6 +2561,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <MainToggleVideoControls>비디오 컨트롤 전환</MainToggleVideoControls>
     <VideoToggleContrast>대비 전환 (mpv 만)</VideoToggleContrast>
     <AudioToTextX>오디오를 텍스트로 ({0})</AudioToTextX>
+    <AudioExtractSelectedLines>오디오 추출 (선택한 줄)</AudioExtractSelectedLines>
     <AudioToTextSelectedLinesX>선택한 줄 오디오를 텍스트로 ({0})</AudioToTextSelectedLinesX>
     <VideoToggleBrightness>밝기 전환 (mpv 만)</VideoToggleBrightness>
     <CustomSearch1>번역, 사용자 지정 검색 1</CustomSearch1>
@@ -3207,4 +3216,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <Title>WebVTT - 새로운 음성 설정</Title>
     <VoiceName>음성 이름</VoiceName>
   </WebVttNewVoice>
+  <WebVttStyleManager>
+    <Title>WebVTT 스타일</Title>
+  </WebVttStyleManager>
 </Language>

@@ -166,8 +166,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.convertMkvSettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemOcrEngine = new System.Windows.Forms.ToolStripMenuItem();
-            this.tesseractToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.nOCRToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.alsoScanVideoFilesInSearchFolderslowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
@@ -1760,33 +1758,17 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // toolStripMenuItemOcrEngine
             // 
-            this.toolStripMenuItemOcrEngine.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tesseractToolStripMenuItem,
-            this.nOCRToolStripMenuItem});
             this.toolStripMenuItemOcrEngine.Name = "toolStripMenuItemOcrEngine";
             this.toolStripMenuItemOcrEngine.Size = new System.Drawing.Size(399, 22);
             this.toolStripMenuItemOcrEngine.Text = "OCR engine";
-            // 
-            // tesseractToolStripMenuItem
-            // 
-            this.tesseractToolStripMenuItem.Name = "tesseractToolStripMenuItem";
-            this.tesseractToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
-            this.tesseractToolStripMenuItem.Text = "Tesseract";
-            this.tesseractToolStripMenuItem.Click += new System.EventHandler(this.tesseractToolStripMenuItem_Click);
-            // 
-            // nOCRToolStripMenuItem
-            // 
-            this.nOCRToolStripMenuItem.Name = "nOCRToolStripMenuItem";
-            this.nOCRToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
-            this.nOCRToolStripMenuItem.Text = "nOCR";
-            this.nOCRToolStripMenuItem.Click += new System.EventHandler(this.nOCRToolStripMenuItem_Click);
+            this.toolStripMenuItemOcrEngine.Click += new System.EventHandler(this.toolStripMenuItemOcrEngine_Click);
             // 
             // alsoScanVideoFilesInSearchFolderslowToolStripMenuItem
             // 
             this.alsoScanVideoFilesInSearchFolderslowToolStripMenuItem.Name = "alsoScanVideoFilesInSearchFolderslowToolStripMenuItem";
             this.alsoScanVideoFilesInSearchFolderslowToolStripMenuItem.Size = new System.Drawing.Size(399, 22);
             this.alsoScanVideoFilesInSearchFolderslowToolStripMenuItem.Text = "Also scan video files in \"Search folder\" (slow)";
-            this.alsoScanVideoFilesInSearchFolderslowToolStripMenuItem.Click += new System.EventHandler(this.alsoScanVideoFilesInSearchFolderslowToolStripMenuItem_Click);
+            this.alsoScanVideoFilesInSearchFolderslowToolStripMenuItem.Click += new System.EventHandler(this.alsoScanVideoFilesInSearchFolderSlowToolStripMenuItem_Click);
             // 
             // openFileDialog1
             // 
@@ -2036,8 +2018,6 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.CheckBox checkBoxFontSize;
         private System.Windows.Forms.CheckBox checkBoxMargins;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemOcrEngine;
-        private System.Windows.Forms.ToolStripMenuItem tesseractToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem nOCRToolStripMenuItem;
         private System.Windows.Forms.Label labelError;
         private System.Windows.Forms.GroupBox groupBoxMergeSameTimeCodes;
         private System.Windows.Forms.CheckBox checkBoxMergeSameTimeCodesReBreakLines;
