@@ -18369,6 +18369,32 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ExtendSelectedLinesToNextLine(bool minusChainingGap = false)
         {
+            double GetNextStartTimeMinusChainingGap(Paragraph next)
+            {
+                if (ShotChangeHelper.IsCueOnShotChange(audioVisualizer.ShotChanges, next.StartTime, true))
+                {
+                    if (Configuration.Settings.BeautifyTimeCodes.Profile.ChainingInCueOnShotUseZones)
+                    {
+                        return next.StartTime.TotalMilliseconds - SubtitleFormat.FramesToMilliseconds(Configuration.Settings.BeautifyTimeCodes.Profile.ChainingInCueOnShotLeftGreenZone);
+                    }
+                    else
+                    {
+                        return next.StartTime.TotalMilliseconds - Configuration.Settings.BeautifyTimeCodes.Profile.ChainingInCueOnShotMaxGap;
+                    }
+                }
+                else
+                {
+                    if (Configuration.Settings.BeautifyTimeCodes.Profile.ChainingGeneralUseZones)
+                    {
+                        return next.StartTime.TotalMilliseconds - SubtitleFormat.FramesToMilliseconds(Configuration.Settings.BeautifyTimeCodes.Profile.ChainingGeneralLeftGreenZone);
+                    }
+                    else
+                    {
+                        return next.StartTime.TotalMilliseconds - Configuration.Settings.BeautifyTimeCodes.Profile.ChainingGeneralMaxGap;
+                    }
+                }
+            }
+
             var historyAdded = false;
             foreach (ListViewItem selectedItem in SubtitleListview1.SelectedItems)
             {
@@ -18385,11 +18411,16 @@ namespace Nikse.SubtitleEdit.Forms
 
                     if (minusChainingGap)
                     {
-                        // TODO chaining gap
+                        p.EndTime.TotalMilliseconds = GetNextStartTimeMinusChainingGap(next);
                     }
                     else
                     {
                         p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - MinGapBetweenLines;
+                    }
+
+                    if (p.Duration.TotalMilliseconds < 0)
+                    {
+                        p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds;
                     }
                 }
 
@@ -18409,11 +18440,16 @@ namespace Nikse.SubtitleEdit.Forms
 
                             if (minusChainingGap)
                             {
-                                // TODO chaining gap
+                                original.EndTime.TotalMilliseconds = GetNextStartTimeMinusChainingGap(originalNext);
                             }
                             else
                             {
                                 original.EndTime.TotalMilliseconds = originalNext.StartTime.TotalMilliseconds - MinGapBetweenLines;
+                            }
+
+                            if (original.Duration.TotalMilliseconds < 0)
+                            {
+                                original.EndTime.TotalMilliseconds = original.StartTime.TotalMilliseconds;
                             }
                         }
                     }
@@ -18425,6 +18461,32 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ExtendSelectedLinesToPreviousLine(bool minusChainingGap = false)
         {
+            double GetPreviousEndTimePlusChainingGap(Paragraph previous)
+            {
+                if (ShotChangeHelper.IsCueOnShotChange(audioVisualizer.ShotChanges, previous.EndTime, false))
+                {
+                    if (Configuration.Settings.BeautifyTimeCodes.Profile.ChainingOutCueOnShotUseZones)
+                    {
+                        return previous.EndTime.TotalMilliseconds + SubtitleFormat.FramesToMilliseconds(Configuration.Settings.BeautifyTimeCodes.Profile.ChainingOutCueOnShotRightGreenZone);
+                    }
+                    else
+                    {
+                        return previous.EndTime.TotalMilliseconds + Configuration.Settings.BeautifyTimeCodes.Profile.ChainingOutCueOnShotMaxGap;
+                    }
+                }
+                else
+                {
+                    if (Configuration.Settings.BeautifyTimeCodes.Profile.ChainingGeneralUseZones)
+                    {
+                        return previous.EndTime.TotalMilliseconds + SubtitleFormat.FramesToMilliseconds(Configuration.Settings.BeautifyTimeCodes.Profile.ChainingGeneralLeftGreenZone);
+                    }
+                    else
+                    {
+                        return previous.EndTime.TotalMilliseconds + Configuration.Settings.BeautifyTimeCodes.Profile.ChainingGeneralMaxGap;
+                    }
+                }
+            }
+
             var historyAdded = false;
             foreach (ListViewItem selectedItem in SubtitleListview1.SelectedItems)
             {
@@ -18449,11 +18511,16 @@ namespace Nikse.SubtitleEdit.Forms
 
                                 if (minusChainingGap)
                                 {
-                                    // TODO chaining gap
+                                    original.StartTime.TotalMilliseconds = GetPreviousEndTimePlusChainingGap(originalPrevious);
                                 }
                                 else
                                 {
                                     original.StartTime.TotalMilliseconds = originalPrevious.EndTime.TotalMilliseconds + MinGapBetweenLines;
+                                }
+
+                                if (original.Duration.TotalMilliseconds < 0)
+                                {
+                                    original.StartTime.TotalMilliseconds = original.EndTime.TotalMilliseconds;
                                 }
                             }
                         }
@@ -18467,11 +18534,16 @@ namespace Nikse.SubtitleEdit.Forms
 
                     if (minusChainingGap)
                     {
-                        // TODO chaining gap
+                        p.StartTime.TotalMilliseconds = GetPreviousEndTimePlusChainingGap(previous);
                     }
                     else
                     {
                         p.StartTime.TotalMilliseconds = previous.EndTime.TotalMilliseconds + MinGapBetweenLines;
+                    }
+
+                    if (p.Duration.TotalMilliseconds < 0)
+                    {
+                        p.StartTime.TotalMilliseconds = p.EndTime.TotalMilliseconds;
                     }
                 }
 

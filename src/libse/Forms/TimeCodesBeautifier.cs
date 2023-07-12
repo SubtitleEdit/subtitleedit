@@ -487,26 +487,6 @@ namespace Nikse.SubtitleEdit.Core.Forms
             return true;
         }
         
-        private bool IsCueOnShotChange(int cueFrame, bool isInCue)
-        {
-            var closestShotChangeFrame = GetClosestShotChangeFrame(cueFrame);
-            if (closestShotChangeFrame != null)
-            {
-                if (isInCue)
-                {
-                    return cueFrame >= closestShotChangeFrame.Value && cueFrame <= closestShotChangeFrame.Value + Configuration.Settings.BeautifyTimeCodes.Profile.InCuesGap;
-                }
-                else
-                {
-                    return cueFrame <= closestShotChangeFrame.Value && cueFrame >= closestShotChangeFrame.Value - Configuration.Settings.BeautifyTimeCodes.Profile.OutCuesGap;
-                }
-            }
-            else
-            {
-                return false;
-            }
-        }
-
         private int? GetFixedChainableSubtitlesLeftOutCueFrameGeneral(int leftOutCueFrame, int rightInCueFrame, Paragraph leftParagraph = null, Paragraph rightParagraph = null)
         {
             // Check if zones are being used
@@ -849,6 +829,26 @@ namespace Nikse.SubtitleEdit.Core.Forms
             catch (InvalidOperationException)
             {
                 return null;
+            }
+        }
+
+        private bool IsCueOnShotChange(int cueFrame, bool isInCue)
+        {
+            var closestShotChangeFrame = GetClosestShotChangeFrame(cueFrame);
+            if (closestShotChangeFrame != null)
+            {
+                if (isInCue)
+                {
+                    return cueFrame >= closestShotChangeFrame.Value && cueFrame <= closestShotChangeFrame.Value + Configuration.Settings.BeautifyTimeCodes.Profile.InCuesGap;
+                }
+                else
+                {
+                    return cueFrame <= closestShotChangeFrame.Value && cueFrame >= closestShotChangeFrame.Value - Configuration.Settings.BeautifyTimeCodes.Profile.OutCuesGap;
+                }
+            }
+            else
+            {
+                return false;
             }
         }
 
