@@ -46,7 +46,16 @@ namespace Nikse.SubtitleEdit.Core.Common
                             {
                                 if (dashFirstLine && !firstLineAdded)
                                 {
-                                    p.Text = dash + p.Text;
+                                    if (p.Text.StartsWith("{"))
+                                    {
+                                        var lastBraceIndex = p.Text.LastIndexOf("}");
+                                        p.Text = p.Text.SafeSubstring(0, lastBraceIndex + 1) + dash + p.Text.SafeSubstring(lastBraceIndex + 1);
+                                    } 
+                                    else
+                                    {
+                                        p.Text = dash + p.Text;
+                                    }
+
                                     index += dash.Length;
 
                                     firstLineAdded = true;
@@ -81,6 +90,11 @@ namespace Nikse.SubtitleEdit.Core.Common
 
                         index += "</font>".Length;
                     }
+                    else if (index + "{".Length <= p.Text.Length && p.Text.SafeSubstring(index, "{".Length) == "{")
+                    {
+                        // ASS tag, jump over
+                        index = p.Text.IndexOf("}", index) + 1;
+                    }
                     else if (index + 1 <= p.Text.Length && p.Text.SafeSubstring(index, 1) == " " || p.Text.SafeSubstring(index, 1) == "\r" || p.Text.SafeSubstring(index, 1) == "\n")
                     {
                         // Whitespace, ignore
@@ -107,7 +121,16 @@ namespace Nikse.SubtitleEdit.Core.Common
                                     {
                                         if (dashFirstLine && !firstLineAdded)
                                         {
-                                            p.Text = dash + p.Text;
+                                            if (p.Text.StartsWith("{"))
+                                            {
+                                                var lastBraceIndex = p.Text.LastIndexOf("}");
+                                                p.Text = p.Text.SafeSubstring(0, lastBraceIndex + 1) + dash + p.Text.SafeSubstring(lastBraceIndex + 1);
+                                            }
+                                            else
+                                            {
+                                                p.Text = dash + p.Text;
+                                            }
+
                                             index += dash.Length;
 
                                             firstLineAdded = true;
