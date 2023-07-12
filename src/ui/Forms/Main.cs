@@ -34160,17 +34160,19 @@ namespace Nikse.SubtitleEdit.Forms
 
             using (var form = new BeautifyTimeCodes.BeautifyTimeCodes(_subtitle, _videoInfo, _videoFileName, audioVisualizer.ShotChanges))
             {
-                if (form.ShowDialog(this) == DialogResult.OK)
+                var result = form.ShowDialog(this);
+
+                if (form.ShotChangesInSeconds.Count > 0)
+                {
+                    audioVisualizer.ShotChanges = form.ShotChangesInSeconds;
+                }
+
+                if (result == DialogResult.OK)
                 {
                     int index = FirstSelectedIndex;
                     if (index < 0)
                     {
                         index = 0;
-                    }
-
-                    if (form.ShotChangesInSeconds.Count > 0)
-                    {
-                        audioVisualizer.ShotChanges = form.ShotChangesInSeconds;
                     }
 
                     MakeHistoryForUndo(_language.BeforeBeautifyTimeCodes);
