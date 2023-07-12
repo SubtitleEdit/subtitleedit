@@ -438,6 +438,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public string WhisperStableTsLocation { get; set; }
         public string WhisperCppModelLocation { get; set; }
         public string WhisperExtraSettings { get; set; }
+        public string WhisperExtraSettingsHistory { get; set; }
         public bool WhisperAutoAdjustTimings { get; set; }
         public bool WhisperUseLineMaxChars { get; set; }
         public int AudioToTextLineMaxChars { get; set; }
@@ -6419,6 +6420,12 @@ $HorzAlign          =   Center
                 settings.Tools.WhisperExtraSettings = subNode.InnerText;
             }
 
+            subNode = node.SelectSingleNode("WhisperExtraSettingsHistory");
+            if (subNode != null)
+            {
+                settings.Tools.WhisperExtraSettingsHistory = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("WhisperLanguageCode");
             if (subNode != null)
             {
@@ -10819,6 +10826,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("WhisperStableTsLocation", settings.Tools.WhisperStableTsLocation);
                 textWriter.WriteElementString("WhisperCppModelLocation", settings.Tools.WhisperCppModelLocation);
                 textWriter.WriteElementString("WhisperExtraSettings", settings.Tools.WhisperExtraSettings);
+                textWriter.WriteElementString("WhisperExtraSettingsHistory", settings.Tools.WhisperExtraSettingsHistory);
                 textWriter.WriteElementString("WhisperLanguageCode", settings.Tools.WhisperLanguageCode);
                 textWriter.WriteElementString("WhisperAutoAdjustTimings", settings.Tools.WhisperAutoAdjustTimings.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("WhisperUseLineMaxChars", settings.Tools.WhisperUseLineMaxChars.ToString(CultureInfo.InvariantCulture));

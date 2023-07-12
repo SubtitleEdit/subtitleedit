@@ -3468,5 +3468,12 @@ namespace Nikse.SubtitleEdit.Logic
         {
             public string Title { get; set; }
         }
+
+        public class WhisperAdvanced
+        {
+            public string Title { get; set; }
+            public string CommandLineArguments { get; set; }
+            public string Info { get; set; }
+        }
     }
 }
