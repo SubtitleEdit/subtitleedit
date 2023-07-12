@@ -18625,9 +18625,9 @@ namespace Nikse.SubtitleEdit.Forms
                 var idx = selectedItem.Index;
                 var p = _subtitle.Paragraphs[idx];
                 var nextShotChange = ShotChangeHelper.GetNextShotChangeInMs(audioVisualizer.ShotChanges, p.StartTime);
-                if (nextShotChange != double.MaxValue)
+                if (nextShotChange != null)
                 {
-                    var newStartTime = nextShotChange + TimeCodesBeautifierUtils.GetInCuesGapMs();
+                    var newStartTime = nextShotChange.Value + TimeCodesBeautifierUtils.GetInCuesGapMs();
 
                     if (IsOriginalEditable)
                     {
@@ -18671,9 +18671,9 @@ namespace Nikse.SubtitleEdit.Forms
                 var idx = selectedItem.Index;
                 var p = _subtitle.Paragraphs[idx];
                 var previousShotChange = ShotChangeHelper.GetPreviousShotChangeInMs(audioVisualizer.ShotChanges, p.EndTime);
-                if (previousShotChange >= 0)
+                if (previousShotChange != null)
                 {
-                    var newEndTime = previousShotChange - TimeCodesBeautifierUtils.GetOutCuesGapMs();
+                    var newEndTime = previousShotChange.Value - TimeCodesBeautifierUtils.GetOutCuesGapMs();
                     
                     if (!historyAdded)
                     {
@@ -18719,7 +18719,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (audioVisualizer.ShotChanges.Count > 0)
                 {
                     var next = _subtitle.GetParagraphOrDefault(idx + 1);
-                    double nearestShotChangeWithGap = ShotChangeHelper.GetNextShotChangeMinusGapInMs(audioVisualizer.ShotChanges, p.EndTime);
+                    double nearestShotChangeWithGap = ShotChangeHelper.GetNextShotChangeMinusGapInMs(audioVisualizer.ShotChanges, p.EndTime) ?? double.MaxValue;
                     double nearestStartTimeWithGap = next != null ? next.StartTime.TotalMilliseconds - MinGapBetweenLines : Double.MaxValue;
 
                     if (!historyAdded)
@@ -18771,7 +18771,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (audioVisualizer.ShotChanges.Count > 0)
                 {
                     var previous = _subtitle.GetParagraphOrDefault(idx - 1);
-                    double nearestShotChangeWithGap = ShotChangeHelper.GetPreviousShotChangePlusGapInMs(audioVisualizer.ShotChanges, p.StartTime);
+                    double nearestShotChangeWithGap = ShotChangeHelper.GetPreviousShotChangePlusGapInMs(audioVisualizer.ShotChanges, p.StartTime) ?? double.MinValue;
                     double nearestEndTimeWithGap = previous != null ? previous.EndTime.TotalMilliseconds + MinGapBetweenLines : -9999;
 
                     if (IsOriginalEditable)
