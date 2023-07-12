@@ -8794,6 +8794,15 @@ namespace Nikse.SubtitleEdit.Logic
                 case "WebVttStyleManager/Title":
                     language.WebVttStyleManager.Title = reader.Value;
                     break;
+                case "WhisperAdvanced/Title":
+                    language.WhisperAdvanced.Title = reader.Value;
+                    break;
+                case "WhisperAdvanced/CommandLineArguments":
+                    language.WhisperAdvanced.CommandLineArguments = reader.Value;
+                    break;
+                case "WhisperAdvanced/Info":
+                    language.WhisperAdvanced.Info = reader.Value;
+                    break;
 
             }
         }

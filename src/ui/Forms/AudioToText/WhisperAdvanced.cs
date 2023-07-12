@@ -7,7 +7,7 @@ using Nikse.SubtitleEdit.Core.AudioToText;
 
 namespace Nikse.SubtitleEdit.Forms.AudioToText
 {
-    public partial class WhisperAdvanced : Form
+    public sealed partial class WhisperAdvanced : Form
     {
         public WhisperAdvanced(string whisperEngine)
         {
@@ -16,14 +16,20 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             UiUtil.FixFonts(this);
 
             comboBoxWhisperExtra.Items.Clear();
-            comboBoxWhisperExtra.Items.Add("--temperature <TEMPERATURE>");
-            comboBoxWhisperExtra.Items.Add("--best_of <BEST_OF>");
-            comboBoxWhisperExtra.Items.Add("--beam_size <BEAM_SIZE>");
-            comboBoxWhisperExtra.Items.Add("--patience <PATIENCE>");
-            comboBoxWhisperExtra.Items.Add("--condition_on_previous_text False");
-            comboBoxWhisperExtra.Items.Add("--fp16 False");
-            comboBoxWhisperExtra.Items.Add("--temperature_increment_on_fallback <TEMPERATURE_INCREMENT_ON_FALLBACK>");
+            if (!string.IsNullOrEmpty(Configuration.Settings.Tools.WhisperExtraSettingsHistory))
+            {
+                foreach (var line in Configuration.Settings.Tools.WhisperExtraSettingsHistory.SplitToLines())
+                {
+                    if (!string.IsNullOrEmpty(line))
+                    {
+                        comboBoxWhisperExtra.Items.Add(line);
+                    }
+                }
+            }
 
+            Text = LanguageSettings.Current.WhisperAdvanced.Title;
+            labelWhisperExtraCmdLine.Text = LanguageSettings.Current.WhisperAdvanced.CommandLineArguments;
+            labelNote.Text = LanguageSettings.Current.WhisperAdvanced.Info;
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             comboBoxWhisperExtra.Text = Configuration.Settings.Tools.WhisperExtraSettings;
@@ -56,6 +62,13 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
+            var param = comboBoxWhisperExtra.Text.Trim();
+            if (!string.IsNullOrWhiteSpace(param) && !Configuration.Settings.Tools.WhisperExtraSettings.Contains(param))
+            {
+                Configuration.Settings.Tools.WhisperExtraSettingsHistory = param + Environment.NewLine +
+                                                                           Configuration.Settings.Tools.WhisperExtraSettingsHistory;
+            }
+
             Configuration.Settings.Tools.WhisperExtraSettings = comboBoxWhisperExtra.Text;
             DialogResult = DialogResult.OK;
         }
@@ -63,6 +76,14 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         private void buttonCancel_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.Cancel;
+        }
+
+        private void comboBoxWhisperExtra_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                buttonOK_Click(null, null);
+            }
         }
     }
 }

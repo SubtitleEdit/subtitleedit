@@ -1,6 +1,6 @@
 ﻿namespace Nikse.SubtitleEdit.Forms.AudioToText
 {
-    partial class WhisperAdvanced
+    sealed partial class WhisperAdvanced
     {
         /// <summary>
         /// Required designer variable.
@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(WhisperAdvanced));
-            this.labelMeasureFont = new System.Windows.Forms.Label();
+            this.labelWhisperExtraCmdLine = new System.Windows.Forms.Label();
             this.comboBoxWhisperExtra = new System.Windows.Forms.ComboBox();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
@@ -47,14 +47,14 @@
             this.tabPageOpenAI.SuspendLayout();
             this.SuspendLayout();
             // 
-            // labelMeasureFont
+            // labelWhisperExtraCmdLine
             // 
-            this.labelMeasureFont.AutoSize = true;
-            this.labelMeasureFont.Location = new System.Drawing.Point(12, 22);
-            this.labelMeasureFont.Name = "labelMeasureFont";
-            this.labelMeasureFont.Size = new System.Drawing.Size(202, 13);
-            this.labelMeasureFont.TabIndex = 217;
-            this.labelMeasureFont.Text = "Extra pameters for whisper command line:";
+            this.labelWhisperExtraCmdLine.AutoSize = true;
+            this.labelWhisperExtraCmdLine.Location = new System.Drawing.Point(12, 22);
+            this.labelWhisperExtraCmdLine.Name = "labelWhisperExtraCmdLine";
+            this.labelWhisperExtraCmdLine.Size = new System.Drawing.Size(202, 13);
+            this.labelWhisperExtraCmdLine.TabIndex = 217;
+            this.labelWhisperExtraCmdLine.Text = "Extra pameters for whisper command line:";
             // 
             // comboBoxWhisperExtra
             // 
@@ -66,6 +66,7 @@
             this.comboBoxWhisperExtra.Name = "comboBoxWhisperExtra";
             this.comboBoxWhisperExtra.Size = new System.Drawing.Size(680, 21);
             this.comboBoxWhisperExtra.TabIndex = 214;
+            this.comboBoxWhisperExtra.KeyDown += new System.Windows.Forms.KeyEventHandler(this.comboBoxWhisperExtra_KeyDown);
             // 
             // buttonCancel
             // 
@@ -147,7 +148,7 @@
             this.tabPageConstMe.Location = new System.Drawing.Point(4, 22);
             this.tabPageConstMe.Name = "tabPageConstMe";
             this.tabPageConstMe.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageConstMe.Size = new System.Drawing.Size(636, 290);
+            this.tabPageConstMe.Size = new System.Drawing.Size(672, 332);
             this.tabPageConstMe.TabIndex = 1;
             this.tabPageConstMe.Text = "Const-me";
             this.tabPageConstMe.UseVisualStyleBackColor = true;
@@ -161,7 +162,7 @@
             this.textBoxConstMe.Name = "textBoxConstMe";
             this.textBoxConstMe.ReadOnly = true;
             this.textBoxConstMe.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBoxConstMe.Size = new System.Drawing.Size(630, 284);
+            this.textBoxConstMe.Size = new System.Drawing.Size(666, 326);
             this.textBoxConstMe.TabIndex = 1;
             this.textBoxConstMe.Text = resources.GetString("textBoxConstMe.Text");
             this.textBoxConstMe.WordWrap = false;
@@ -172,7 +173,7 @@
             this.tabPageOpenAI.Location = new System.Drawing.Point(4, 22);
             this.tabPageOpenAI.Name = "tabPageOpenAI";
             this.tabPageOpenAI.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageOpenAI.Size = new System.Drawing.Size(636, 290);
+            this.tabPageOpenAI.Size = new System.Drawing.Size(672, 332);
             this.tabPageOpenAI.TabIndex = 2;
             this.tabPageOpenAI.Text = "OpenAI";
             this.tabPageOpenAI.UseVisualStyleBackColor = true;
@@ -186,7 +187,7 @@
             this.textBoxOpenAI.Name = "textBoxOpenAI";
             this.textBoxOpenAI.ReadOnly = true;
             this.textBoxOpenAI.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBoxOpenAI.Size = new System.Drawing.Size(630, 284);
+            this.textBoxOpenAI.Size = new System.Drawing.Size(666, 326);
             this.textBoxOpenAI.TabIndex = 2;
             this.textBoxOpenAI.Text = resources.GetString("textBoxOpenAI.Text");
             this.textBoxOpenAI.WordWrap = false;
@@ -198,7 +199,7 @@
             this.ClientSize = new System.Drawing.Size(707, 507);
             this.Controls.Add(this.tabControlCommandLineHelp);
             this.Controls.Add(this.labelNote);
-            this.Controls.Add(this.labelMeasureFont);
+            this.Controls.Add(this.labelWhisperExtraCmdLine);
             this.Controls.Add(this.comboBoxWhisperExtra);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
@@ -225,7 +226,7 @@
 
         #endregion
 
-        private System.Windows.Forms.Label labelMeasureFont;
+        private System.Windows.Forms.Label labelWhisperExtraCmdLine;
         private System.Windows.Forms.ComboBox comboBoxWhisperExtra;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonOK;

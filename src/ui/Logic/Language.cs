@@ -126,6 +126,7 @@ namespace Nikse.SubtitleEdit.Logic
         public LanguageStructure.WaveformGenerateTimeCodes WaveformGenerateTimeCodes;
         public LanguageStructure.WebVttNewVoice WebVttNewVoice;
         public LanguageStructure.WebVttStyleManager WebVttStyleManager;
+        public LanguageStructure.WhisperAdvanced WhisperAdvanced;
 
         public Language()
         {
@@ -3622,6 +3623,13 @@ Keep changes?",
             WebVttStyleManager = new LanguageStructure.WebVttStyleManager
             {
                 Title = "WebVTT styles",
+            };
+
+            WhisperAdvanced = new LanguageStructure.WhisperAdvanced
+            {
+                Title = "Whisper Advanced - extra command line arguments",
+                CommandLineArguments = "Extra pameters for whisper command line:",
+                Info = "Note: Different Whisper implementations have different command line parameters!",
             };
         }
 
