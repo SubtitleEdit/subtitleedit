@@ -3108,7 +3108,7 @@
             // checkBoxWaveformAutoGen
             // 
             this.checkBoxWaveformAutoGen.AutoSize = true;
-            this.checkBoxWaveformAutoGen.Location = new System.Drawing.Point(262, 186);
+            this.checkBoxWaveformAutoGen.Location = new System.Drawing.Point(262, 185);
             this.checkBoxWaveformAutoGen.Name = "checkBoxWaveformAutoGen";
             this.checkBoxWaveformAutoGen.Size = new System.Drawing.Size(220, 17);
             this.checkBoxWaveformAutoGen.TabIndex = 28;
