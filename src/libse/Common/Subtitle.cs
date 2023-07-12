@@ -427,7 +427,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     // handle shot change if supplied -- keep earliest time
                     if (shotChanges != null)
                     {
-                        double nextShotChangeMilliseconds = ShotChangeHelper.GetNextShotChangeMinusGapInMs(shotChanges, Paragraphs[i].EndTime);
+                        double nextShotChangeMilliseconds = ShotChangeHelper.GetNextShotChangeMinusGapInMs(shotChanges, Paragraphs[i].EndTime) ?? double.MaxValue;
                         if (newEndMilliseconds > nextShotChangeMilliseconds)
                         {
                             newEndMilliseconds = nextShotChangeMilliseconds;
@@ -505,7 +505,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             // handle shot change if supplied -- keep earliest time
             if (shotChanges != null)
             {
-                newEndTimeInMs = Math.Min(newEndTimeInMs, ShotChangeHelper.GetNextShotChangeMinusGapInMs(shotChanges, p.EndTime));
+                newEndTimeInMs = Math.Min(newEndTimeInMs, ShotChangeHelper.GetNextShotChangeMinusGapInMs(shotChanges, p.EndTime) ?? double.MaxValue);
             }
 
             // max duration
@@ -580,7 +580,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             // Then check for next shot change (if option is checked, and if any are supplied) -- keeping earliest time
             if (shotChanges != null)
             {
-                bestEndMs = Math.Min(bestEndMs, ShotChangeHelper.GetNextShotChangeMinusGapInMs(shotChanges, new TimeCode(originalEndTime)));
+                bestEndMs = Math.Min(bestEndMs, ShotChangeHelper.GetNextShotChangeMinusGapInMs(shotChanges, new TimeCode(originalEndTime)) ?? double.MaxValue);
             }
             
             p.EndTime.TotalMilliseconds = wantedEndMs <= bestEndMs ? wantedEndMs : bestEndMs;
@@ -616,7 +616,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     // Then check for next shot change (if option is checked, and if any are supplied) -- keeping earliest time
                     if (shotChanges != null)
                     {
-                        bestEndMs = Math.Min(bestEndMs, ShotChangeHelper.GetNextShotChangeMinusGapInMs(shotChanges, p.EndTime));
+                        bestEndMs = Math.Min(bestEndMs, ShotChangeHelper.GetNextShotChangeMinusGapInMs(shotChanges, p.EndTime) ?? double.MaxValue);
                     }
 
                     p.EndTime.TotalMilliseconds = wantedEndMs <= bestEndMs ? wantedEndMs : bestEndMs;

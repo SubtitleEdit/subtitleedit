@@ -80,26 +80,50 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         // Util functions
 
-        public static double GetPreviousShotChangeInMs(List<double> shotChanges, TimeCode currentTime)
+        public static double? GetPreviousShotChangeInMs(List<double> shotChanges, TimeCode currentTime)
         {
-            var previousShotChangeInSeconds = new List<double> { double.MinValue }.Concat(shotChanges).Last(x => x <= currentTime.TotalSeconds); // will return minValue if none found
-            return previousShotChangeInSeconds * 1000;
+            try
+            {
+                return shotChanges.Last(x => SubtitleFormat.MillisecondsToFrames(x * 1000) <= SubtitleFormat.MillisecondsToFrames(currentTime.TotalMilliseconds));
+            }
+            catch (InvalidOperationException)
+            {
+                return null;
+            }
         }
 
-        public static double GetPreviousShotChangePlusGapInMs(List<double> shotChanges, TimeCode currentTime)
+        public static double? GetPreviousShotChangePlusGapInMs(List<double> shotChanges, TimeCode currentTime)
         {
-            return GetPreviousShotChangeInMs(shotChanges, currentTime) + TimeCodesBeautifierUtils.GetInCuesGapMs();
+            var previousShotChangeInMs = GetPreviousShotChangeInMs(shotChanges, currentTime);
+            if (previousShotChangeInMs != null)
+            {
+                return previousShotChangeInMs + TimeCodesBeautifierUtils.GetInCuesGapMs();
+            }
+
+            return null;
         }
 
-        public static double GetNextShotChangeInMs(List<double> shotChanges, TimeCode currentTime)
+        public static double? GetNextShotChangeInMs(List<double> shotChanges, TimeCode currentTime)
         {
-            var nextShotChangeInSeconds = shotChanges.Concat(new[] { double.MaxValue }).First(x => x >= currentTime.TotalSeconds); // will return maxValue if none found
-            return nextShotChangeInSeconds * 1000;
+            try
+            {
+                return shotChanges.First(x => SubtitleFormat.MillisecondsToFrames(x * 1000) >= SubtitleFormat.MillisecondsToFrames(currentTime.TotalMilliseconds));
+            }
+            catch (InvalidOperationException)
+            {
+                return null;
+            }
         }
 
-        public static double GetNextShotChangeMinusGapInMs(List<double> shotChanges, TimeCode currentTime)
+        public static double? GetNextShotChangeMinusGapInMs(List<double> shotChanges, TimeCode currentTime)
         {
-            return GetNextShotChangeInMs(shotChanges, currentTime) - TimeCodesBeautifierUtils.GetOutCuesGapMs();
+            var nextShotChangeInMs = GetNextShotChangeInMs(shotChanges, currentTime);
+            if (nextShotChangeInMs != null)
+            {
+                return nextShotChangeInMs - TimeCodesBeautifierUtils.GetOutCuesGapMs();
+            }
+
+            return null;
         }
 
         public static double? GetClosestShotChangeInMs(List<double> shotChanges, TimeCode currentTime)

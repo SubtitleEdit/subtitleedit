@@ -179,7 +179,7 @@ namespace Nikse.SubtitleEdit.Forms
                     // Then check for next shot change (if option is checked, and if any are supplied) -- keeping earliest time
                     if (checkBoxCheckShotChanges.Checked && _shotChanges.Count > 0)
                     {
-                        bestEndMs = Math.Min(bestEndMs, ShotChangeHelper.GetNextShotChangeMinusGapInMs(_shotChanges, p.EndTime));
+                        bestEndMs = Math.Min(bestEndMs, ShotChangeHelper.GetNextShotChangeMinusGapInMs(_shotChanges, p.EndTime) ?? double.MaxValue);
                     }
                     
                     if (wantedEndMs <= bestEndMs)
