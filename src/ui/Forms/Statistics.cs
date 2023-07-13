@@ -247,13 +247,14 @@ https://github.com/SubtitleEdit/subtitleedit
             sb.AppendLine(string.Format(_l.LineLengthMinimum, minimumLineLength) + " (" + GetIndicesWithLength(minimumLineLength) + ")");
             sb.AppendLine(string.Format(_l.LineLengthMaximum, maximumLineLength) + " (" + GetIndicesWithLength(maximumLineLength) + ")");
             sb.AppendLine(string.Format(_l.LineLengthAverage, totalLineLength / _subtitle.Paragraphs.Count));
+            sb.AppendLine();
             sb.AppendLine(string.Format(_l.LinesPerSubtitleAverage, (double)totalSingleLines / _subtitle.Paragraphs.Count));
             sb.AppendLine();
             sb.AppendLine(string.Format(_l.SingleLineLengthMinimum, minimumSingleLineLength) + " (" + GetIndicesWithSingleLineLength(minimumSingleLineLength) + ")");
             sb.AppendLine(string.Format(_l.SingleLineLengthMaximum, maximumSingleLineLength) + " (" + GetIndicesWithSingleLineLength(maximumSingleLineLength) + ")");
             sb.AppendLine(string.Format(_l.SingleLineLengthAverage, totalSingleLineLength / totalSingleLines));
             sb.AppendLine();
-            sb.AppendLine(string.Format(_l.SingleLineLengthExceedingMaximum, aboveMaximumLineLengthCount, ((double)aboveMaximumLineLengthCount / _subtitle.Paragraphs.Count) * 100.0));
+            sb.AppendLine(string.Format(_l.SingleLineLengthExceedingMaximum, Configuration.Settings.General.SubtitleLineMaximumLength, aboveMaximumLineLengthCount, ((double)aboveMaximumLineLengthCount / _subtitle.Paragraphs.Count) * 100.0));
             sb.AppendLine();
 
             if (Configuration.Settings.Tools.ListViewSyntaxColorWideLines)
@@ -262,7 +263,7 @@ https://github.com/SubtitleEdit/subtitleedit
                 sb.AppendLine(string.Format(_l.SingleLineWidthMaximum, maximumSingleLineWidth) + " (" + GetIndicesWithSingleLineWidth(maximumSingleLineWidth) + ")");
                 sb.AppendLine(string.Format(_l.SingleLineWidthAverage, totalSingleLineWidth / totalSingleLines));
                 sb.AppendLine();
-                sb.AppendLine(string.Format(_l.SingleLineWidthExceedingMaximum, aboveMaximumLineWidthCount, ((double)aboveMaximumLineWidthCount / _subtitle.Paragraphs.Count) * 100.0));
+                sb.AppendLine(string.Format(_l.SingleLineWidthExceedingMaximum, Configuration.Settings.General.SubtitleLineMaximumPixelWidth, aboveMaximumLineWidthCount, ((double)aboveMaximumLineWidthCount / _subtitle.Paragraphs.Count) * 100.0));
                 sb.AppendLine();
             }
 
@@ -270,21 +271,21 @@ https://github.com/SubtitleEdit/subtitleedit
             sb.AppendLine(string.Format(_l.DurationMaximum, maximumDuration / TimeCode.BaseUnit) + " (" + GetIndicesWithDuration(maximumDuration) + ")");
             sb.AppendLine(string.Format(_l.DurationAverage, totalDuration / _subtitle.Paragraphs.Count / TimeCode.BaseUnit));
             sb.AppendLine();
-            sb.AppendLine(string.Format(_l.DurationExceedingMinimum, belowMinimumDurationCount, ((double)belowMinimumDurationCount / _subtitle.Paragraphs.Count) * 100.0));
-            sb.AppendLine(string.Format(_l.DurationExceedingMaximum, aboveMaximumDurationCount, ((double)aboveMaximumDurationCount / _subtitle.Paragraphs.Count) * 100.0));
+            sb.AppendLine(string.Format(_l.DurationExceedingMinimum, Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds / TimeCode.BaseUnit, belowMinimumDurationCount, _subtitle.Paragraphs.Count, ((double)belowMinimumDurationCount / _subtitle.Paragraphs.Count) * 100.0));
+            sb.AppendLine(string.Format(_l.DurationExceedingMaximum, Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds / TimeCode.BaseUnit, aboveMaximumDurationCount, _subtitle.Paragraphs.Count, ((double)aboveMaximumDurationCount / _subtitle.Paragraphs.Count) * 100.0));
             sb.AppendLine();
             sb.AppendLine(string.Format(_l.CharactersPerSecondMinimum, minimumCharsSec) + " (" + GetIndicesWithCps(minimumCharsSec) + ")");
             sb.AppendLine(string.Format(_l.CharactersPerSecondMaximum, maximumCharsSec) + " (" + GetIndicesWithCps(maximumCharsSec) + ")");
             sb.AppendLine(string.Format(_l.CharactersPerSecondAverage, totalCharsSec / _subtitle.Paragraphs.Count));
             sb.AppendLine();
-            sb.AppendLine(string.Format(_l.CharactersPerSecondExceedingOptimal, aboveOptimalCpsCount, ((double)aboveOptimalCpsCount / _subtitle.Paragraphs.Count) * 100.0));
-            sb.AppendLine(string.Format(_l.CharactersPerSecondExceedingMaximum, aboveMaximumCpsCount, ((double)aboveMaximumCpsCount / _subtitle.Paragraphs.Count) * 100.0));
+            sb.AppendLine(string.Format(_l.CharactersPerSecondExceedingOptimal, Configuration.Settings.General.SubtitleOptimalCharactersPerSeconds, aboveOptimalCpsCount, ((double)aboveOptimalCpsCount / _subtitle.Paragraphs.Count) * 100.0));
+            sb.AppendLine(string.Format(_l.CharactersPerSecondExceedingMaximum, Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds, aboveMaximumCpsCount, ((double)aboveMaximumCpsCount / _subtitle.Paragraphs.Count) * 100.0));
             sb.AppendLine();
             sb.AppendLine(string.Format(_l.WordsPerMinuteMinimum, minimumWpm) + " (" + GetIndicesWithWpm(minimumWpm) + ")");
             sb.AppendLine(string.Format(_l.WordsPerMinuteMaximum, maximumWpm) + " (" + GetIndicesWithWpm(maximumWpm) + ")");
             sb.AppendLine(string.Format(_l.WordsPerMinuteAverage, totalWpm / _subtitle.Paragraphs.Count));
             sb.AppendLine();
-            sb.AppendLine(string.Format(_l.WordsPerMinuteExceedingMaximum, aboveMaximumWpmCount, ((double)aboveMaximumWpmCount / _subtitle.Paragraphs.Count) * 100.0));
+            sb.AppendLine(string.Format(_l.WordsPerMinuteExceedingMaximum, Configuration.Settings.General.SubtitleMaximumWordsPerMinute, aboveMaximumWpmCount, ((double)aboveMaximumWpmCount / _subtitle.Paragraphs.Count) * 100.0));
             sb.AppendLine();
 
             if (_subtitle.Paragraphs.Count > 1)
@@ -293,7 +294,7 @@ https://github.com/SubtitleEdit/subtitleedit
                 sb.AppendLine(string.Format(_l.GapMaximum, gapMaximum) + " (" + GetIndicesWithGap(gapMaximum) + ")");
                 sb.AppendLine(string.Format(_l.GapAverage, gapTotal / _subtitle.Paragraphs.Count - 1));
                 sb.AppendLine();
-                sb.AppendLine(string.Format(_l.GapExceedingMinimum, belowMinimumGapCount, ((double)belowMinimumGapCount / _subtitle.Paragraphs.Count) * 100.0));
+                sb.AppendLine(string.Format(_l.GapExceedingMinimum, Configuration.Settings.General.MinimumMillisecondsBetweenLines, belowMinimumGapCount, ((double)belowMinimumGapCount / _subtitle.Paragraphs.Count) * 100.0));
                 sb.AppendLine();
             }
 
