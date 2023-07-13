@@ -1549,6 +1549,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                         _stdOutWriter?.WriteLine(" done.");
                     }
                 }
+
                 if (!targetFormatFound)
                 {
                     var pac = new Pac();
@@ -1563,6 +1564,20 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                         _stdOutWriter?.WriteLine(" done.");
                     }
                 }
+
+                if (!targetFormatFound)
+                {
+                    var pacUnicode = new PacUnicode();
+                    if (pacUnicode.Name.RemoveChar(' ', '(', ')').Equals(targetFormat.RemoveChar(' ', '(', ')'), StringComparison.OrdinalIgnoreCase) || targetFormat.Equals(".fpc", StringComparison.OrdinalIgnoreCase) || targetFormat.Equals("fpc", StringComparison.OrdinalIgnoreCase))
+                    {
+                        targetFormatFound = true;
+                        outputFileName = FormatOutputFileNameForBatchConvert(fileName, pacUnicode.Extension, outputFolder, overwrite, targetFileName);
+                        _stdOutWriter?.Write($"{count}: {Path.GetFileName(fileName)} -> {outputFileName}...");
+                        pacUnicode.Save(outputFileName, sub);
+                        _stdOutWriter?.WriteLine(" done.");
+                    }
+                }
+
                 if (!targetFormatFound)
                 {
                     var cavena890 = new Cavena890();
@@ -1575,6 +1590,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                         _stdOutWriter?.WriteLine(" done.");
                     }
                 }
+
                 if (!targetFormatFound)
                 {
                     var cheetahCaption = new CheetahCaption();
@@ -1587,6 +1603,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                         _stdOutWriter?.WriteLine(" done.");
                     }
                 }
+
                 if (!targetFormatFound)
                 {
                     var ayato = new Ayato();
@@ -1599,6 +1616,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                         _stdOutWriter?.WriteLine(" done.");
                     }
                 }
+
                 if (!targetFormatFound)
                 {
                     var capMakerPlus = new CapMakerPlus();
@@ -1611,6 +1629,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                         _stdOutWriter?.WriteLine(" done.");
                     }
                 }
+
                 if (!targetFormatFound)
                 {
                     if (LanguageSettings.Current.BatchConvert.PlainText.RemoveChar(' ').Equals(targetFormat.RemoveChar(' '), StringComparison.OrdinalIgnoreCase))
@@ -1637,6 +1656,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                         _stdOutWriter?.WriteLine(" done.");
                     }
                 }
+
                 if (!targetFormatFound)
                 {
                     if (BatchConvert.BluRaySubtitle.RemoveChar(' ').Equals(targetFormat.RemoveChar(' '), StringComparison.OrdinalIgnoreCase))
