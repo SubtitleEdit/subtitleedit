@@ -126,7 +126,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             return null;
         }
 
-        public static double? GetClosestShotChangeInMs(List<double> shotChanges, TimeCode currentTime)
+        public static double? GetClosestShotChange(List<double> shotChanges, TimeCode currentTime)
         {
             try
             {
@@ -140,10 +140,10 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public static bool IsCueOnShotChange(List<double> shotChanges, TimeCode currentTime, bool isInCue)
         {
-            var closestShotChange = GetClosestShotChangeInMs(shotChanges, currentTime);
+            var closestShotChange = GetClosestShotChange(shotChanges, currentTime);
             if (closestShotChange != null)
             {
-                var currentFrame = SubtitleFormat.MillisecondsToFrames(currentTime.TotalSeconds * 1000);
+                var currentFrame = SubtitleFormat.MillisecondsToFrames(currentTime.TotalMilliseconds);
                 var closestShotChangeFrame = SubtitleFormat.MillisecondsToFrames(closestShotChange.Value * 1000);
 
                 if (isInCue)
