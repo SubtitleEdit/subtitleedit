@@ -113,9 +113,22 @@ https://github.com/SubtitleEdit/subtitleedit
             double minimumCharsSec = 100000000;
             double maximumCharsSec = 0;
             double totalCharsSec = 0;
+            double minimumWpm = 100000000;
+            double maximumWpm = 0;
+            double totalWpm = 0;
             var gapMinimum = double.MaxValue;
             var gapMaximum = 0d;
             var gapTotal = 0d;
+
+            var aboveOptimalCpsCount = 0;
+            var aboveMaximumCpsCount = 0;
+            var aboveMaximumWpmCount = 0;
+            var belowMinimumDurationCount = 0;
+            var aboveMaximumDurationCount = 0;
+            var aboveMaximumLineLengthCount = 0;
+            var aboveMaximumLineWidthCount = 0;
+            var belowMinimumGapCount = 0;
+
             foreach (var p in _subtitle.Paragraphs)
             {
                 allText.Append(p.Text);
@@ -135,6 +148,11 @@ https://github.com/SubtitleEdit/subtitleedit
                 maximumCharsSec = Math.Max(charsSec, maximumCharsSec);
                 totalCharsSec += charsSec;
 
+                var wpm = p.WordsPerMinute;
+                minimumWpm = Math.Min(wpm, minimumWpm);
+                maximumWpm = Math.Max(wpm, maximumWpm);
+                totalWpm += wpm;
+
                 var next = _subtitle.GetParagraphOrDefault(_subtitle.GetIndex(p) + 1);
                 if (next != null)
                 {
@@ -149,6 +167,11 @@ https://github.com/SubtitleEdit/subtitleedit
                         gapMaximum = gap;
                     }
 
+                    if (gap < Configuration.Settings.General.MinimumMillisecondsBetweenLines)
+                    {
+                        belowMinimumGapCount++;
+                    }
+
                     gapTotal += gap;
                 }
 
@@ -159,15 +182,49 @@ https://github.com/SubtitleEdit/subtitleedit
                     maximumSingleLineLength = Math.Max(l, maximumSingleLineLength);
                     totalSingleLineLength += l;
 
+                    if (l > Configuration.Settings.General.SubtitleLineMaximumLength)
+                    {
+                        aboveMaximumLineLengthCount++;
+                    }
+
                     if (Configuration.Settings.Tools.ListViewSyntaxColorWideLines)
                     {
                         var w = GetSingleLineWidth(line);
                         minimumSingleLineWidth = Math.Min(w, minimumSingleLineWidth);
                         maximumSingleLineWidth = Math.Max(w, maximumSingleLineWidth);
                         totalSingleLineWidth += w;
+
+                        if (w > Configuration.Settings.General.SubtitleLineMaximumPixelWidth)
+                        {
+                            aboveMaximumLineWidthCount++;
+                        }
                     }
 
                     totalSingleLines++;
+                }
+
+                var cps = Utilities.GetCharactersPerSecond(p);
+                if (cps > Configuration.Settings.General.SubtitleOptimalCharactersPerSeconds)
+                {
+                    aboveOptimalCpsCount++;
+                }
+                if (cps > Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
+                {
+                    aboveMaximumCpsCount++;
+                }
+
+                if (p.WordsPerMinute > Configuration.Settings.General.SubtitleMaximumWordsPerMinute)
+                {
+                    aboveMaximumWpmCount++;
+                }
+
+                if (p.Duration.TotalMilliseconds < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
+                {
+                    belowMinimumDurationCount++;
+                }
+                if (p.Duration.TotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
+                {
+                    aboveMaximumDurationCount++;
                 }
             }
 
@@ -196,6 +253,8 @@ https://github.com/SubtitleEdit/subtitleedit
             sb.AppendLine(string.Format(_l.SingleLineLengthMaximum, maximumSingleLineLength) + " (" + GetIndicesWithSingleLineLength(maximumSingleLineLength) + ")");
             sb.AppendLine(string.Format(_l.SingleLineLengthAverage, totalSingleLineLength / totalSingleLines));
             sb.AppendLine();
+            sb.AppendLine(string.Format(_l.SingleLineLengthExceedingMaximum, aboveMaximumLineLengthCount, ((double)aboveMaximumLineLengthCount / _subtitle.Paragraphs.Count) * 100.0));
+            sb.AppendLine();
 
             if (Configuration.Settings.Tools.ListViewSyntaxColorWideLines)
             {
@@ -203,15 +262,29 @@ https://github.com/SubtitleEdit/subtitleedit
                 sb.AppendLine(string.Format(_l.SingleLineWidthMaximum, maximumSingleLineWidth) + " (" + GetIndicesWithSingleLineWidth(maximumSingleLineWidth) + ")");
                 sb.AppendLine(string.Format(_l.SingleLineWidthAverage, totalSingleLineWidth / totalSingleLines));
                 sb.AppendLine();
+                sb.AppendLine(string.Format(_l.SingleLineWidthExceedingMaximum, aboveMaximumLineWidthCount, ((double)aboveMaximumLineWidthCount / _subtitle.Paragraphs.Count) * 100.0));
+                sb.AppendLine();
             }
 
             sb.AppendLine(string.Format(_l.DurationMinimum, minimumDuration / TimeCode.BaseUnit) + " (" + GetIndicesWithDuration(minimumDuration) + ")");
             sb.AppendLine(string.Format(_l.DurationMaximum, maximumDuration / TimeCode.BaseUnit) + " (" + GetIndicesWithDuration(maximumDuration) + ")");
             sb.AppendLine(string.Format(_l.DurationAverage, totalDuration / _subtitle.Paragraphs.Count / TimeCode.BaseUnit));
             sb.AppendLine();
+            sb.AppendLine(string.Format(_l.DurationExceedingMinimum, belowMinimumDurationCount, ((double)belowMinimumDurationCount / _subtitle.Paragraphs.Count) * 100.0));
+            sb.AppendLine(string.Format(_l.DurationExceedingMaximum, aboveMaximumDurationCount, ((double)aboveMaximumDurationCount / _subtitle.Paragraphs.Count) * 100.0));
+            sb.AppendLine();
             sb.AppendLine(string.Format(_l.CharactersPerSecondMinimum, minimumCharsSec) + " (" + GetIndicesWithCps(minimumCharsSec) + ")");
             sb.AppendLine(string.Format(_l.CharactersPerSecondMaximum, maximumCharsSec) + " (" + GetIndicesWithCps(maximumCharsSec) + ")");
             sb.AppendLine(string.Format(_l.CharactersPerSecondAverage, totalCharsSec / _subtitle.Paragraphs.Count));
+            sb.AppendLine();
+            sb.AppendLine(string.Format(_l.CharactersPerSecondExceedingOptimal, aboveOptimalCpsCount, ((double)aboveOptimalCpsCount / _subtitle.Paragraphs.Count) * 100.0));
+            sb.AppendLine(string.Format(_l.CharactersPerSecondExceedingMaximum, aboveMaximumCpsCount, ((double)aboveMaximumCpsCount / _subtitle.Paragraphs.Count) * 100.0));
+            sb.AppendLine();
+            sb.AppendLine(string.Format(_l.WordsPerMinuteMinimum, minimumWpm) + " (" + GetIndicesWithWpm(minimumWpm) + ")");
+            sb.AppendLine(string.Format(_l.WordsPerMinuteMaximum, maximumWpm) + " (" + GetIndicesWithWpm(maximumWpm) + ")");
+            sb.AppendLine(string.Format(_l.WordsPerMinuteAverage, totalWpm / _subtitle.Paragraphs.Count));
+            sb.AppendLine();
+            sb.AppendLine(string.Format(_l.WordsPerMinuteExceedingMaximum, aboveMaximumWpmCount, ((double)aboveMaximumWpmCount / _subtitle.Paragraphs.Count) * 100.0));
             sb.AppendLine();
 
             if (_subtitle.Paragraphs.Count > 1)
@@ -219,6 +292,8 @@ https://github.com/SubtitleEdit/subtitleedit
                 sb.AppendLine(string.Format(_l.GapMinimum, gapMinimum) + " (" + GetIndicesWithGap(gapMinimum) + ")");
                 sb.AppendLine(string.Format(_l.GapMaximum, gapMaximum) + " (" + GetIndicesWithGap(gapMaximum) + ")");
                 sb.AppendLine(string.Format(_l.GapAverage, gapTotal / _subtitle.Paragraphs.Count - 1));
+                sb.AppendLine();
+                sb.AppendLine(string.Format(_l.GapExceedingMinimum, belowMinimumGapCount, ((double)belowMinimumGapCount / _subtitle.Paragraphs.Count) * 100.0));
                 sb.AppendLine();
             }
 
@@ -268,6 +343,26 @@ https://github.com/SubtitleEdit/subtitleedit
             {
                 var p = _subtitle.Paragraphs[i];
                 if (Math.Abs(Utilities.GetCharactersPerSecond(p) - cps) < 0.01)
+                {
+                    if (indices.Count >= NumberOfLinesToShow)
+                    {
+                        indices.Add("...");
+                        break;
+                    }
+                    indices.Add("#" + (i + 1).ToString(CultureInfo.InvariantCulture));
+                }
+            }
+
+            return string.Join(", ", indices);
+        }
+
+        private string GetIndicesWithWpm(double wpm)
+        {
+            var indices = new List<string>();
+            for (var i = 0; i < _subtitle.Paragraphs.Count; i++)
+            {
+                var p = _subtitle.Paragraphs[i];
+                if (Math.Abs(p.WordsPerMinute - wpm) < 0.01)
                 {
                     if (indices.Count >= NumberOfLinesToShow)
                     {
