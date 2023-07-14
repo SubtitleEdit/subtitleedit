@@ -54,7 +54,7 @@
             this.labelWhisperExtraCmdLine.Name = "labelWhisperExtraCmdLine";
             this.labelWhisperExtraCmdLine.Size = new System.Drawing.Size(202, 13);
             this.labelWhisperExtraCmdLine.TabIndex = 217;
-            this.labelWhisperExtraCmdLine.Text = "Extra pameters for whisper command line:";
+            this.labelWhisperExtraCmdLine.Text = "Extra parameters for whisper command line:";
             // 
             // comboBoxWhisperExtra
             // 

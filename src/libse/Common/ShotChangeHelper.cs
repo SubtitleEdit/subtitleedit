@@ -29,6 +29,12 @@ namespace Nikse.SubtitleEdit.Core.Common
         public static List<double> FromDisk(string videoFileName)
         {
             var list = new List<double>();
+
+            if (string.IsNullOrEmpty(videoFileName))
+            {
+                return list;
+            }
+
             var shotChangesFileName = GetShotChangesFileName(videoFileName);
             if (!File.Exists(shotChangesFileName))
             {
@@ -42,6 +48,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     list.Add(double.Parse(line, CultureInfo.InvariantCulture));
                 }
             }
+
             return list;
         }
 

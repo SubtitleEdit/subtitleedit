@@ -1506,7 +1506,13 @@ namespace Nikse.SubtitleEdit.Forms
                                 }
                             }
                         }
-                        else if (isVobSub)
+                        else if (isVobSub && toFormat == LanguageSettings.Current.VobSubOcr.ImagesWithTimeCodesInFileName.Trim('.'))
+                        {
+                            binaryParagraphs = GetBinaryParagraphsWithPositionFromVobSub(fileName);
+
+                            item.SubItems[3].Text = LanguageSettings.Current.BatchConvert.Converted;
+                        }
+                        else if (isVobSub) 
                         {
                             item.SubItems[3].Text = LanguageSettings.Current.BatchConvert.Ocr;
                             using (var vobSubOcr = new VobSubOcr())
@@ -1806,6 +1812,40 @@ namespace Nikse.SubtitleEdit.Forms
             _binaryParagraphLookup = new Dictionary<string, List<IBinaryParagraphWithPosition>>();
 
             SeLogger.Error($"Batch convert took {sw.ElapsedMilliseconds}");
+        }
+
+        private List<IBinaryParagraphWithPosition> GetBinaryParagraphsWithPositionFromVobSub(string fileName)
+        {
+            var binSubtitles = new List<IBinaryParagraphWithPosition>();
+            var vobSubParser = new VobSubParser(true);
+            var idxFileName = Path.ChangeExtension(fileName, ".idx");
+            vobSubParser.OpenSubIdx(fileName, idxFileName);
+            var vobSubMergedPackList = vobSubParser.MergeVobSubPacks();
+            var palette = vobSubParser.IdxPalette;
+            vobSubParser.VobSubPacks.Clear();
+            var languageStreamIds = new List<int>();
+            foreach (var pack in vobSubMergedPackList)
+            {
+                if (pack.SubPicture.Delay.TotalMilliseconds > 500 && !languageStreamIds.Contains(pack.StreamId))
+                {
+                    languageStreamIds.Add(pack.StreamId);
+                }
+            }
+
+            if (languageStreamIds.Count > 1)
+            {
+                vobSubMergedPackList = vobSubMergedPackList.Where(p => p.StreamId == languageStreamIds[0]).ToList();
+            }
+
+            var max = vobSubMergedPackList.Count;
+            for (var i = 0; i < max; i++)
+            {
+                var vobSubPack = vobSubMergedPackList[i];
+                vobSubPack.Palette = palette;
+                binSubtitles.Add(vobSubPack);
+            }
+
+            return binSubtitles;
         }
 
         public static List<IBinaryParagraphWithPosition> LoadDvbFromMatroska(MatroskaTrackInfo track, MatroskaFile matroska, ref Subtitle subtitle)
@@ -2665,6 +2705,11 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         binaryParagraphs = _binaryParagraphLookup[p.FileName];
                     }
+                    else if (FileUtil.IsVobSub(p.FileName) && p.BinaryParagraphs != null && p.BinaryParagraphs.Count > 0)
+                    {
+                        binaryParagraphs = p.BinaryParagraphs;
+                    }
+
                     var dir = textBoxOutputFolder.Text;
                     var overwrite = checkBoxOverwrite.Checked;
                     if (radioButtonSaveInSourceFolder.Checked)
