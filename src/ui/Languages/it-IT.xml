@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.6.13</Version>
-    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 09.07.2023</TranslatedBy>
+    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 13.07.2023</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -3222,4 +3222,9 @@ Vuoi mantenere le modifiche?</KeepChangesMessage>
   <WebVttStyleManager>
     <Title>Stili WebVTT</Title>
   </WebVttStyleManager>
+  <WhisperAdvanced>
+    <Title>Sussurro avanzato - argomenti extra riga di comando</Title>
+    <CommandLineArguments>Parametri aggiuntivi riga di comando sussurro:</CommandLineArguments>
+    <Info>Nota: diverse implementazioni del sussurro hanno diversi parametri della riga di comando!</Info>
+  </WhisperAdvanced>
 </Language>
