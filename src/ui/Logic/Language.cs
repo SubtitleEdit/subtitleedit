@@ -3628,7 +3628,7 @@ Keep changes?",
             WhisperAdvanced = new LanguageStructure.WhisperAdvanced
             {
                 Title = "Whisper Advanced - extra command line arguments",
-                CommandLineArguments = "Extra parameters for whisper command line:",
+                CommandLineArguments = "Extra parameters for Whisper command line:",
                 Info = "Note: Different Whisper implementations have different command line parameters!",
             };
         }
