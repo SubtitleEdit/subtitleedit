@@ -298,6 +298,11 @@ namespace Nikse.SubtitleEdit.Controls
             _labelVideoPlayerName.Left = Width - _labelVideoPlayerName.Width - 3;
         }
 
+        public void HidePlayerName()
+        {
+            _labelVideoPlayerName.Visible = false;
+        }
+
         public void UpdatePlayerName()
         {
             if (_videoPlayer != null)

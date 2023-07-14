@@ -420,6 +420,8 @@ namespace Nikse.SubtitleEdit.Core.Common
         public bool GenVideoTargetFileSize { get; set; }
         public float GenVideoFontSizePercentOfHeight { get; set; }
         public bool GenVideoNonAssaBox { get; set; }
+        public Color GenVideoNonAssaBoxColor { get; set; }
+        public Color GenVideoNonAssaTextColor { get; set; }
         public bool GenVideoNonAssaAlignRight { get; set; }
         public bool GenVideoNonAssaFixRtlUnicode { get; set; }
 
@@ -646,6 +648,8 @@ namespace Nikse.SubtitleEdit.Core.Common
             GenVideoAudioSampleRate = "48000";
             GenVideoFontSizePercentOfHeight = 0.078f;
             GenVideoNonAssaBox = true;
+            GenVideoNonAssaBoxColor = Color.FromArgb(150, 0, 0, 0);
+            GenVideoNonAssaTextColor = Color.White;
             VoskPostProcessing = true;
             WhisperChoice = Configuration.IsRunningOnWindows ? AudioToText.WhisperChoice.Cpp : AudioToText.WhisperChoice.OpenAI;
             WhisperDeleteTempFiles = true;
@@ -6336,6 +6340,18 @@ $HorzAlign          =   Center
                 settings.Tools.GenVideoNonAssaBox = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
+            subNode = node.SelectSingleNode("GenVideoNonAssaBoxColor");
+            if (subNode != null)
+            {
+                settings.Tools.GenVideoNonAssaBoxColor = FromHtml(subNode.InnerText.Trim());
+            }
+
+            subNode = node.SelectSingleNode("GenVideoNonAssaTextColor");
+            if (subNode != null)
+            {
+                settings.Tools.GenVideoNonAssaTextColor = FromHtml(subNode.InnerText.Trim());
+            }
+
             subNode = node.SelectSingleNode("GenVideoNonAssaAlignRight");
             if (subNode != null)
             {
@@ -10812,6 +10828,8 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("GenVideoTargetFileSize", settings.Tools.GenVideoTargetFileSize.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("GenVideoFontSizePercentOfHeight", settings.Tools.GenVideoFontSizePercentOfHeight.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("GenVideoNonAssaBox", settings.Tools.GenVideoNonAssaBox.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("GenVideoNonAssaBoxColor", ToHtml(settings.Tools.GenVideoNonAssaBoxColor));
+                textWriter.WriteElementString("GenVideoNonAssaTextColor", ToHtml(settings.Tools.GenVideoNonAssaTextColor));
                 textWriter.WriteElementString("GenVideoNonAssaAlignRight", settings.Tools.GenVideoNonAssaAlignRight.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("GenVideoNonAssaFixRtlUnicode", settings.Tools.GenVideoNonAssaFixRtlUnicode.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("GenVideoEmbedOutputExt", settings.Tools.GenVideoEmbedOutputExt);

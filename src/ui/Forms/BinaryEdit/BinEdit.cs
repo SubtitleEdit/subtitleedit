@@ -360,6 +360,9 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             _ocrLowercaseHeightsTotalCount = 0;
             _ocrUppercaseHeightsTotal = 0;
             _ocrUppercaseHeightsTotalCount = 0;
+
+            videoPlayerContainer1.TryLoadGfx();
+            videoPlayerContainer1.HidePlayerName();
         }
 
         private void OpenBinSubtitle(string fileName)
