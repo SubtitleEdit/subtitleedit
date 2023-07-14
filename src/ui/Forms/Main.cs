@@ -28588,7 +28588,7 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripMenuItemListShotChanges.Visible = false;
             }
 
-            if (mediaPlayer.VideoPlayer != null && _videoFileName.EndsWith(".mkv", StringComparison.OrdinalIgnoreCase))
+            if (mediaPlayer.VideoPlayer != null && _videoFileName != null && _videoFileName.EndsWith(".mkv", StringComparison.OrdinalIgnoreCase))
             {
                 toolStripMenuItemImportChapters.Visible = true;
             }
