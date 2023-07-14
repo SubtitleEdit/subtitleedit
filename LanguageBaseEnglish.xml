@@ -3224,7 +3224,7 @@ Keep changes?</KeepChangesMessage>
   </WebVttStyleManager>
   <WhisperAdvanced>
     <Title>Whisper Advanced - extra command line arguments</Title>
-    <CommandLineArguments>Extra pameters for whisper command line:</CommandLineArguments>
+    <CommandLineArguments>Extra parameters for whisper command line:</CommandLineArguments>
     <Info>Note: Different Whisper implementations have different command line parameters!</Info>
   </WhisperAdvanced>
 </Language>
