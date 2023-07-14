@@ -1438,6 +1438,7 @@ $HorzAlign          =   Center
         public bool DisableVideoAutoLoading { get; set; }
         public bool AllowVolumeBoost { get; set; }
         public int NewEmptyDefaultMs { get; set; }
+        public bool NewEmptyUseAutoDuration { get; set; }
         public bool RightToLeftMode { get; set; }
         public string LastSaveAsFormat { get; set; }
         public bool CheckForUpdates { get; set; }
@@ -1616,6 +1617,7 @@ $HorzAlign          =   Center
             ClearStatusBarAfterSeconds = 10;
             MoveVideo100Or500MsPlaySmallSample = false;
             DisableVideoAutoLoading = false;
+            NewEmptyUseAutoDuration = true;
             RightToLeftMode = false;
             LastSaveAsFormat = string.Empty;
             SystemSubtitleFontNameOverride = string.Empty;
@@ -4279,6 +4281,12 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.General.AllowVolumeBoost = Convert.ToBoolean(subNode.InnerText.Trim());
+            }
+
+            subNode = node.SelectSingleNode("NewEmptyUseAutoDuration");
+            if (subNode != null)
+            {
+                settings.General.NewEmptyUseAutoDuration = Convert.ToBoolean(subNode.InnerText.Trim());
             }
 
             subNode = node.SelectSingleNode("RightToLeftMode");
@@ -10474,6 +10482,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("MoveVideo100Or500MsPlaySmallSample", settings.General.MoveVideo100Or500MsPlaySmallSample.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("DisableVideoAutoLoading", settings.General.DisableVideoAutoLoading.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AllowVolumeBoost", settings.General.AllowVolumeBoost.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("NewEmptyUseAutoDuration", settings.General.NewEmptyUseAutoDuration.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("RightToLeftMode", settings.General.RightToLeftMode.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("LastSaveAsFormat", settings.General.LastSaveAsFormat);
                 textWriter.WriteElementString("CheckForUpdates", settings.General.CheckForUpdates.ToString(CultureInfo.InvariantCulture));

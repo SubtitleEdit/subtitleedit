@@ -23746,7 +23746,10 @@ namespace Nikse.SubtitleEdit.Forms
             if (!InSourceView)
             {
                 textBoxListViewText.Focus();
-                timerAutoDuration.Start();
+                if (Configuration.Settings.General.NewEmptyUseAutoDuration)
+                {
+                    timerAutoDuration.Start();
+                }
             }
 
             ShowStatus(string.Format(_language.VideoControls.NewTextInsertAtX, newParagraph.StartTime.ToShortString()));
