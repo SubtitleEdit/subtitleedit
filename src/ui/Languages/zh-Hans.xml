@@ -2400,6 +2400,7 @@ Command line: {1} {2}
     <DarkTheme>暗色主题</DarkTheme>
     <DarkThemeEnabled>使用暗色主题</DarkThemeEnabled>
     <DarkThemeShowGridViewLines>显示列表视图网格线</DarkThemeShowGridViewLines>
+    <GraphicsButtons>图形按钮</GraphicsButtons>
     <UpdateShortcut>更新</UpdateShortcut>
     <FoucsSetVideoPosition>将焦点处设为视频位置</FoucsSetVideoPosition>
     <ToggleDockUndockOfVideoControls>切换 停靠/不停靠 视频控件</ToggleDockUndockOfVideoControls>
@@ -2834,18 +2835,29 @@ Command line: {1} {2}
     <SingleLineLengthMinimum>单行长度（最短）: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>单行长度（最长）: {0}</SingleLineLengthMaximum>
     <SingleLineLengthAverage>单行长度（平均）: {0}</SingleLineLengthAverage>
+    <SingleLineLengthExceedingMaximum>单行长度 - 超过最大值（{0} 个字符）: {1} ({2:0.00}%)</SingleLineLengthExceedingMaximum>
     <SingleLineWidthMinimum>单行宽度（最短）: {0} 像素</SingleLineWidthMinimum>
     <SingleLineWidthMaximum>单行宽度（最长）: {0} 像素</SingleLineWidthMaximum>
     <SingleLineWidthAverage>单行宽度（平均）: {0} 像素</SingleLineWidthAverage>
+    <SingleLineWidthExceedingMaximum>单行宽度 - 超过最大值（{0} 像素）: {1} ({2:0.00}%)</SingleLineWidthExceedingMaximum>
     <DurationMinimum>时长（最短）: {0:0.000} 秒</DurationMinimum>
     <DurationMaximum>时长（最长）: {0:0.000} 秒</DurationMaximum>
     <DurationAverage>时长（平均）: {0:0.000} 秒</DurationAverage>
+    <DurationExceedingMinimum></DurationExceedingMinimum>
+    <DurationExceedingMaximum></DurationExceedingMaximum>
     <CharactersPerSecondMinimum>每秒字符数（最少）: {0:0.000}</CharactersPerSecondMinimum>
     <CharactersPerSecondMaximum>每秒字符数（最多）: {0:0.000}</CharactersPerSecondMaximum>
     <CharactersPerSecondAverage>每秒字符数（平均）: {0:0.000}</CharactersPerSecondAverage>
+    <CharactersPerSecondExceedingOptimal></CharactersPerSecondExceedingOptimal>
+    <CharactersPerSecondExceedingMaximum></CharactersPerSecondExceedingMaximum>
+    <WordsPerMinuteMinimum></WordsPerMinuteMinimum>
+    <WordsPerMinuteMaximum></WordsPerMinuteMaximum>
+    <WordsPerMinuteAverage></WordsPerMinuteAverage>
+    <WordsPerMinuteExceedingMaximum></WordsPerMinuteExceedingMaximum>
     <GapMinimum>间隔 - 最短: {0:#,##0} ms</GapMinimum>
     <GapMaximum>间隔 - 最长: {0:#,##0} ms</GapMaximum>
     <GapAverage>间隔 - 平均: {0:#,##0.##} ms</GapAverage>
+    <GapExceedingMinimum></GapExceedingMinimum>
     <Export>导出...</Export>
   </Statistics>
   <SubStationAlphaProperties>
@@ -3206,4 +3218,9 @@ Command line: {1} {2}
   <WebVttStyleManager>
     <Title>WebVTT 样式</Title>
   </WebVttStyleManager>
+  <WhisperAdvanced>
+    <Title>Whisper Advanced - 额外的命令行参数</Title>
+    <CommandLineArguments>Whisper 命令行的额外参数：</CommandLineArguments>
+    <Info>注意：不同的 Whisper 实现有不同的命令行参数！</Info>
+  </WhisperAdvanced>
 </Language>
