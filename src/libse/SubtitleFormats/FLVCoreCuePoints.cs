@@ -52,7 +52,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 name = xml.CreateElement("Name");
                 name.InnerText = "duration";
                 value = xml.CreateElement("Value");
-                value.InnerText = p.Duration.TotalMilliseconds.ToString();
+                value.InnerText = p.DurationTotalMilliseconds.ToString();
                 parameter.AppendChild(name);
                 parameter.AppendChild(value);
                 parameters.AppendChild(parameter);

@@ -8038,6 +8038,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Statistics/SingleLineLengthAverage":
                     language.Statistics.SingleLineLengthAverage = reader.Value;
                     break;
+                case "Statistics/SingleLineLengthExceedingMaximum":
+                    language.Statistics.SingleLineLengthExceedingMaximum = reader.Value;
+                    break;
                 case "Statistics/SingleLineWidthMinimum":
                     language.Statistics.SingleLineWidthMinimum = reader.Value;
                     break;
@@ -8046,6 +8049,9 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "Statistics/SingleLineWidthAverage":
                     language.Statistics.SingleLineWidthAverage = reader.Value;
+                    break;
+                case "Statistics/SingleLineWidthExceedingMaximum":
+                    language.Statistics.SingleLineWidthExceedingMaximum = reader.Value;
                     break;
                 case "Statistics/DurationMinimum":
                     language.Statistics.DurationMinimum = reader.Value;
@@ -8056,6 +8062,12 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Statistics/DurationAverage":
                     language.Statistics.DurationAverage = reader.Value;
                     break;
+                case "Statistics/DurationExceedingMinimum":
+                    language.Statistics.DurationExceedingMinimum = reader.Value;
+                    break;
+                case "Statistics/DurationExceedingMaximum":
+                    language.Statistics.DurationExceedingMaximum = reader.Value;
+                    break;
                 case "Statistics/CharactersPerSecondMinimum":
                     language.Statistics.CharactersPerSecondMinimum = reader.Value;
                     break;
@@ -8065,6 +8077,24 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Statistics/CharactersPerSecondAverage":
                     language.Statistics.CharactersPerSecondAverage = reader.Value;
                     break;
+                case "Statistics/CharactersPerSecondExceedingOptimal":
+                    language.Statistics.CharactersPerSecondExceedingOptimal = reader.Value;
+                    break;
+                case "Statistics/CharactersPerSecondExceedingMaximum":
+                    language.Statistics.CharactersPerSecondExceedingMaximum = reader.Value;
+                    break;
+                case "Statistics/WordsPerMinuteMinimum":
+                    language.Statistics.WordsPerMinuteMinimum = reader.Value;
+                    break;
+                case "Statistics/WordsPerMinuteMaximum":
+                    language.Statistics.WordsPerMinuteMaximum = reader.Value;
+                    break;
+                case "Statistics/WordsPerMinuteAverage":
+                    language.Statistics.WordsPerMinuteAverage = reader.Value;
+                    break;
+                case "Statistics/WordsPerMinuteExceedingMaximum":
+                    language.Statistics.WordsPerMinuteExceedingMaximum = reader.Value;
+                    break;
                 case "Statistics/GapMinimum":
                     language.Statistics.GapMinimum = reader.Value;
                     break;
@@ -8073,6 +8103,9 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "Statistics/GapAverage":
                     language.Statistics.GapAverage = reader.Value;
+                    break;
+                case "Statistics/GapExceedingMinimum":
+                    language.Statistics.GapExceedingMinimum = reader.Value;
                     break;
                 case "Statistics/Export":
                     language.Statistics.Export = reader.Value;

@@ -455,7 +455,7 @@ namespace Nikse.SubtitleEdit.Controls
             foreach (var p in displayableParagraphs)
             {
                 if (displayableParagraphs.Count > 30 &&
-                    (p.Duration.TotalMilliseconds < 0.01 || p.StartTime.TotalMilliseconds - lastStartTime < 90))
+                    (p.DurationTotalMilliseconds < 0.01 || p.StartTime.TotalMilliseconds - lastStartTime < 90))
                 {
                     continue;
                 }
@@ -1831,7 +1831,7 @@ namespace Nikse.SubtitleEdit.Controls
                         }
                         else if (_mouseDownParagraphType == MouseDownParagraphType.Whole)
                         {
-                            var durationMilliseconds = _mouseDownParagraph.Duration.TotalMilliseconds;
+                            var durationMilliseconds = _mouseDownParagraph.DurationTotalMilliseconds;
                             var oldStart = _mouseDownParagraph.StartTime.TotalMilliseconds;
                             _mouseDownParagraph.StartTime.TotalMilliseconds = milliseconds - _moveWholeStartDifferenceMilliseconds;
                             _mouseDownParagraph.EndTime.TotalMilliseconds = _mouseDownParagraph.StartTime.TotalMilliseconds + durationMilliseconds;
@@ -2135,7 +2135,7 @@ namespace Nikse.SubtitleEdit.Controls
                         {
                             _oldParagraph = new Paragraph(SelectedParagraph);
                             _mouseDownParagraph = SelectedParagraph;
-                            var durationMilliseconds = _mouseDownParagraph.Duration.TotalMilliseconds;
+                            var durationMilliseconds = _mouseDownParagraph.DurationTotalMilliseconds;
                             _mouseDownParagraph.StartTime.TotalMilliseconds = milliseconds;
                             _mouseDownParagraph.EndTime.TotalMilliseconds = _mouseDownParagraph.StartTime.TotalMilliseconds + durationMilliseconds;
                             OnTimeChanged?.Invoke(this, new ParagraphEventArgs(seconds, _mouseDownParagraph, _oldParagraph));

@@ -41,6 +41,10 @@ namespace Nikse.SubtitleEdit.Forms
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.labelProgress = new System.Windows.Forms.Label();
             this.groupBoxSettings = new System.Windows.Forms.GroupBox();
+            this.panelForeColor = new System.Windows.Forms.Panel();
+            this.buttonForeColor = new System.Windows.Forms.Button();
+            this.panelOutlineColor = new System.Windows.Forms.Panel();
+            this.buttonOutlineColor = new System.Windows.Forms.Button();
             this.groupBoxCut = new System.Windows.Forms.GroupBox();
             this.buttonCutTo = new System.Windows.Forms.Button();
             this.buttonCutFrom = new System.Windows.Forms.Button();
@@ -56,10 +60,10 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelVideoBitrate = new System.Windows.Forms.Label();
             this.checkBoxBox = new System.Windows.Forms.CheckBox();
             this.checkBoxAlignRight = new System.Windows.Forms.CheckBox();
+            this.labelInfo = new System.Windows.Forms.Label();
             this.checkBoxRightToLeft = new System.Windows.Forms.CheckBox();
             this.comboBoxSubtitleFont = new System.Windows.Forms.ComboBox();
             this.labelSubtitleFont = new System.Windows.Forms.Label();
-            this.buttonPreview = new System.Windows.Forms.Button();
             this.groupBoxVideo = new System.Windows.Forms.GroupBox();
             this.labelCrfHint = new System.Windows.Forms.Label();
             this.buttonVideoChooseStandardRes = new System.Windows.Forms.Button();
@@ -87,9 +91,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelFileSize = new System.Windows.Forms.Label();
             this.checkBoxTargetFileSize = new System.Windows.Forms.CheckBox();
             this.labelFileName = new System.Windows.Forms.Label();
+            this.buttonPreview = new System.Windows.Forms.Button();
             this.linkLabelHelp = new System.Windows.Forms.LinkLabel();
             this.textBoxLog = new System.Windows.Forms.TextBox();
-            this.labelInfo = new System.Windows.Forms.Label();
             this.labelPass = new System.Windows.Forms.Label();
             this.contextMenuStripRes = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.x2160ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -238,6 +242,10 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxSettings.Controls.Add(this.panelForeColor);
+            this.groupBoxSettings.Controls.Add(this.buttonForeColor);
+            this.groupBoxSettings.Controls.Add(this.panelOutlineColor);
+            this.groupBoxSettings.Controls.Add(this.buttonOutlineColor);
             this.groupBoxSettings.Controls.Add(this.videoPlayerContainer1);
             this.groupBoxSettings.Controls.Add(this.groupBoxCut);
             this.groupBoxSettings.Controls.Add(this.labelVideoBitrate);
@@ -261,6 +269,44 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxSettings.TabIndex = 0;
             this.groupBoxSettings.TabStop = false;
             this.groupBoxSettings.Text = "Settings";
+            // 
+            // panelForeColor
+            // 
+            this.panelForeColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelForeColor.Location = new System.Drawing.Point(369, 54);
+            this.panelForeColor.Name = "panelForeColor";
+            this.panelForeColor.Size = new System.Drawing.Size(21, 20);
+            this.panelForeColor.TabIndex = 21;
+            this.panelForeColor.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panelForeColor_MouseClick);
+            // 
+            // buttonForeColor
+            // 
+            this.buttonForeColor.Location = new System.Drawing.Point(274, 52);
+            this.buttonForeColor.Name = "buttonForeColor";
+            this.buttonForeColor.Size = new System.Drawing.Size(89, 23);
+            this.buttonForeColor.TabIndex = 20;
+            this.buttonForeColor.Text = "Color";
+            this.buttonForeColor.UseVisualStyleBackColor = true;
+            this.buttonForeColor.Click += new System.EventHandler(this.buttonForeColor_Click);
+            // 
+            // panelOutlineColor
+            // 
+            this.panelOutlineColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelOutlineColor.Location = new System.Drawing.Point(369, 25);
+            this.panelOutlineColor.Name = "panelOutlineColor";
+            this.panelOutlineColor.Size = new System.Drawing.Size(21, 20);
+            this.panelOutlineColor.TabIndex = 19;
+            this.panelOutlineColor.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panelOutlineColor_MouseClick);
+            // 
+            // buttonOutlineColor
+            // 
+            this.buttonOutlineColor.Location = new System.Drawing.Point(274, 23);
+            this.buttonOutlineColor.Name = "buttonOutlineColor";
+            this.buttonOutlineColor.Size = new System.Drawing.Size(89, 23);
+            this.buttonOutlineColor.TabIndex = 18;
+            this.buttonOutlineColor.Text = "Color";
+            this.buttonOutlineColor.UseVisualStyleBackColor = true;
+            this.buttonOutlineColor.Click += new System.EventHandler(this.buttonOutlineColor_Click);
             // 
             // groupBoxCut
             // 
@@ -414,7 +460,7 @@ namespace Nikse.SubtitleEdit.Forms
             // checkBoxBox
             // 
             this.checkBoxBox.AutoSize = true;
-            this.checkBoxBox.Location = new System.Drawing.Point(203, 27);
+            this.checkBoxBox.Location = new System.Drawing.Point(226, 27);
             this.checkBoxBox.Name = "checkBoxBox";
             this.checkBoxBox.Size = new System.Drawing.Size(44, 17);
             this.checkBoxBox.TabIndex = 6;
@@ -425,7 +471,7 @@ namespace Nikse.SubtitleEdit.Forms
             // checkBoxAlignRight
             // 
             this.checkBoxAlignRight.AutoSize = true;
-            this.checkBoxAlignRight.Location = new System.Drawing.Point(120, 105);
+            this.checkBoxAlignRight.Location = new System.Drawing.Point(217, 114);
             this.checkBoxAlignRight.Name = "checkBoxAlignRight";
             this.checkBoxAlignRight.Size = new System.Drawing.Size(72, 17);
             this.checkBoxAlignRight.TabIndex = 5;
@@ -433,10 +479,20 @@ namespace Nikse.SubtitleEdit.Forms
             this.checkBoxAlignRight.UseVisualStyleBackColor = true;
             this.checkBoxAlignRight.CheckedChanged += new System.EventHandler(this.checkBoxAlignRight_CheckedChanged);
             // 
+            // labelInfo
+            // 
+            this.labelInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.labelInfo.AutoSize = true;
+            this.labelInfo.Location = new System.Drawing.Point(5, 526);
+            this.labelInfo.Name = "labelInfo";
+            this.labelInfo.Size = new System.Drawing.Size(25, 13);
+            this.labelInfo.TabIndex = 1;
+            this.labelInfo.Text = "Info";
+            // 
             // checkBoxRightToLeft
             // 
             this.checkBoxRightToLeft.AutoSize = true;
-            this.checkBoxRightToLeft.Location = new System.Drawing.Point(120, 82);
+            this.checkBoxRightToLeft.Location = new System.Drawing.Point(120, 114);
             this.checkBoxRightToLeft.Name = "checkBoxRightToLeft";
             this.checkBoxRightToLeft.Size = new System.Drawing.Size(80, 17);
             this.checkBoxRightToLeft.TabIndex = 4;
@@ -449,7 +505,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.comboBoxSubtitleFont.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxSubtitleFont.DropDownWidth = 250;
             this.comboBoxSubtitleFont.FormattingEnabled = true;
-            this.comboBoxSubtitleFont.Location = new System.Drawing.Point(120, 55);
+            this.comboBoxSubtitleFont.Location = new System.Drawing.Point(120, 87);
             this.comboBoxSubtitleFont.Name = "comboBoxSubtitleFont";
             this.comboBoxSubtitleFont.Size = new System.Drawing.Size(250, 21);
             this.comboBoxSubtitleFont.TabIndex = 3;
@@ -458,22 +514,11 @@ namespace Nikse.SubtitleEdit.Forms
             // labelSubtitleFont
             // 
             this.labelSubtitleFont.AutoSize = true;
-            this.labelSubtitleFont.Location = new System.Drawing.Point(19, 58);
+            this.labelSubtitleFont.Location = new System.Drawing.Point(19, 90);
             this.labelSubtitleFont.Name = "labelSubtitleFont";
             this.labelSubtitleFont.Size = new System.Drawing.Size(63, 13);
             this.labelSubtitleFont.TabIndex = 2;
             this.labelSubtitleFont.Text = "Subtitle font";
-            // 
-            // buttonPreview
-            // 
-            this.buttonPreview.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonPreview.Location = new System.Drawing.Point(671, 586);
-            this.buttonPreview.Name = "buttonPreview";
-            this.buttonPreview.Size = new System.Drawing.Size(121, 23);
-            this.buttonPreview.TabIndex = 6;
-            this.buttonPreview.Text = "Preview";
-            this.buttonPreview.UseVisualStyleBackColor = true;
-            this.buttonPreview.Click += new System.EventHandler(this.buttonPreview_Click);
             // 
             // groupBoxVideo
             // 
@@ -491,9 +536,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxVideo.Controls.Add(this.comboBoxVideoEncoding);
             this.groupBoxVideo.Controls.Add(this.comboBoxCrf);
             this.groupBoxVideo.Controls.Add(this.labelVideoEncoding);
-            this.groupBoxVideo.Location = new System.Drawing.Point(6, 131);
+            this.groupBoxVideo.Location = new System.Drawing.Point(6, 141);
             this.groupBoxVideo.Name = "groupBoxVideo";
-            this.groupBoxVideo.Size = new System.Drawing.Size(406, 176);
+            this.groupBoxVideo.Size = new System.Drawing.Size(406, 166);
             this.groupBoxVideo.TabIndex = 8;
             this.groupBoxVideo.TabStop = false;
             this.groupBoxVideo.Text = "Video";
@@ -503,7 +548,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelCrfHint.AutoSize = true;
             this.labelCrfHint.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelCrfHint.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.labelCrfHint.Location = new System.Drawing.Point(220, 115);
+            this.labelCrfHint.Location = new System.Drawing.Point(220, 106);
             this.labelCrfHint.Name = "labelCrfHint";
             this.labelCrfHint.Size = new System.Drawing.Size(22, 12);
             this.labelCrfHint.TabIndex = 32;
@@ -513,7 +558,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.buttonVideoChooseStandardRes.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonVideoChooseStandardRes.Location = new System.Drawing.Point(257, 24);
+            this.buttonVideoChooseStandardRes.Location = new System.Drawing.Point(257, 15);
             this.buttonVideoChooseStandardRes.Name = "buttonVideoChooseStandardRes";
             this.buttonVideoChooseStandardRes.Size = new System.Drawing.Size(69, 23);
             this.buttonVideoChooseStandardRes.TabIndex = 14;
@@ -524,7 +569,7 @@ namespace Nikse.SubtitleEdit.Forms
             // labelResolution
             // 
             this.labelResolution.AutoSize = true;
-            this.labelResolution.Location = new System.Drawing.Point(10, 28);
+            this.labelResolution.Location = new System.Drawing.Point(10, 19);
             this.labelResolution.Name = "labelResolution";
             this.labelResolution.Size = new System.Drawing.Size(57, 13);
             this.labelResolution.TabIndex = 0;
@@ -537,7 +582,7 @@ namespace Nikse.SubtitleEdit.Forms
             0,
             0,
             0});
-            this.numericUpDownWidth.Location = new System.Drawing.Point(96, 26);
+            this.numericUpDownWidth.Location = new System.Drawing.Point(96, 17);
             this.numericUpDownWidth.Maximum = new decimal(new int[] {
             50000,
             0,
@@ -565,7 +610,7 @@ namespace Nikse.SubtitleEdit.Forms
             0,
             0,
             0});
-            this.numericUpDownHeight.Location = new System.Drawing.Point(184, 26);
+            this.numericUpDownHeight.Location = new System.Drawing.Point(184, 17);
             this.numericUpDownHeight.Maximum = new decimal(new int[] {
             50000,
             0,
@@ -589,7 +634,7 @@ namespace Nikse.SubtitleEdit.Forms
             // labelX
             // 
             this.labelX.AutoSize = true;
-            this.labelX.Location = new System.Drawing.Point(166, 28);
+            this.labelX.Location = new System.Drawing.Point(166, 19);
             this.labelX.Name = "labelX";
             this.labelX.Size = new System.Drawing.Size(12, 13);
             this.labelX.TabIndex = 31;
@@ -598,7 +643,7 @@ namespace Nikse.SubtitleEdit.Forms
             // labelPreset
             // 
             this.labelPreset.AutoSize = true;
-            this.labelPreset.Location = new System.Drawing.Point(10, 87);
+            this.labelPreset.Location = new System.Drawing.Point(10, 78);
             this.labelPreset.Name = "labelPreset";
             this.labelPreset.Size = new System.Drawing.Size(37, 13);
             this.labelPreset.TabIndex = 5;
@@ -613,7 +658,7 @@ namespace Nikse.SubtitleEdit.Forms
             "film",
             "animation",
             "grain"});
-            this.comboBoxTune.Location = new System.Drawing.Point(95, 139);
+            this.comboBoxTune.Location = new System.Drawing.Point(95, 130);
             this.comboBoxTune.Name = "comboBoxTune";
             this.comboBoxTune.Size = new System.Drawing.Size(121, 21);
             this.comboBoxTune.TabIndex = 10;
@@ -632,7 +677,7 @@ namespace Nikse.SubtitleEdit.Forms
             "slow",
             "slower",
             "veryslow "});
-            this.comboBoxPreset.Location = new System.Drawing.Point(95, 85);
+            this.comboBoxPreset.Location = new System.Drawing.Point(95, 76);
             this.comboBoxPreset.Name = "comboBoxPreset";
             this.comboBoxPreset.Size = new System.Drawing.Size(121, 21);
             this.comboBoxPreset.TabIndex = 6;
@@ -640,7 +685,7 @@ namespace Nikse.SubtitleEdit.Forms
             // labelTune
             // 
             this.labelTune.AutoSize = true;
-            this.labelTune.Location = new System.Drawing.Point(10, 141);
+            this.labelTune.Location = new System.Drawing.Point(10, 132);
             this.labelTune.Name = "labelTune";
             this.labelTune.Size = new System.Drawing.Size(32, 13);
             this.labelTune.TabIndex = 9;
@@ -649,7 +694,7 @@ namespace Nikse.SubtitleEdit.Forms
             // labelCRF
             // 
             this.labelCRF.AutoSize = true;
-            this.labelCRF.Location = new System.Drawing.Point(10, 114);
+            this.labelCRF.Location = new System.Drawing.Point(10, 105);
             this.labelCRF.Name = "labelCRF";
             this.labelCRF.Size = new System.Drawing.Size(28, 13);
             this.labelCRF.TabIndex = 7;
@@ -668,7 +713,7 @@ namespace Nikse.SubtitleEdit.Forms
             "h264_amf",
             "hevc_amf",
             "prores_ks"});
-            this.comboBoxVideoEncoding.Location = new System.Drawing.Point(95, 58);
+            this.comboBoxVideoEncoding.Location = new System.Drawing.Point(95, 49);
             this.comboBoxVideoEncoding.Name = "comboBoxVideoEncoding";
             this.comboBoxVideoEncoding.Size = new System.Drawing.Size(121, 21);
             this.comboBoxVideoEncoding.TabIndex = 4;
@@ -691,7 +736,7 @@ namespace Nikse.SubtitleEdit.Forms
             "26",
             "27",
             "28"});
-            this.comboBoxCrf.Location = new System.Drawing.Point(95, 112);
+            this.comboBoxCrf.Location = new System.Drawing.Point(95, 103);
             this.comboBoxCrf.Name = "comboBoxCrf";
             this.comboBoxCrf.Size = new System.Drawing.Size(121, 21);
             this.comboBoxCrf.TabIndex = 8;
@@ -699,7 +744,7 @@ namespace Nikse.SubtitleEdit.Forms
             // labelVideoEncoding
             // 
             this.labelVideoEncoding.AutoSize = true;
-            this.labelVideoEncoding.Location = new System.Drawing.Point(10, 60);
+            this.labelVideoEncoding.Location = new System.Drawing.Point(10, 51);
             this.labelVideoEncoding.Name = "labelVideoEncoding";
             this.labelVideoEncoding.Size = new System.Drawing.Size(55, 13);
             this.labelVideoEncoding.TabIndex = 3;
@@ -716,9 +761,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxAudio.Controls.Add(this.checkBoxMakeStereo);
             this.groupBoxAudio.Controls.Add(this.labelAudioSampleRate);
             this.groupBoxAudio.Controls.Add(this.comboBoxAudioSampleRate);
-            this.groupBoxAudio.Location = new System.Drawing.Point(430, 131);
+            this.groupBoxAudio.Location = new System.Drawing.Point(430, 141);
             this.groupBoxAudio.Name = "groupBoxAudio";
-            this.groupBoxAudio.Size = new System.Drawing.Size(425, 176);
+            this.groupBoxAudio.Size = new System.Drawing.Size(425, 166);
             this.groupBoxAudio.TabIndex = 10;
             this.groupBoxAudio.TabStop = false;
             this.groupBoxAudio.Text = "Audio";
@@ -858,6 +903,17 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelFileName.TabIndex = 0;
             this.labelFileName.Text = "File name";
             // 
+            // buttonPreview
+            // 
+            this.buttonPreview.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonPreview.Location = new System.Drawing.Point(671, 586);
+            this.buttonPreview.Name = "buttonPreview";
+            this.buttonPreview.Size = new System.Drawing.Size(121, 23);
+            this.buttonPreview.TabIndex = 6;
+            this.buttonPreview.Text = "Preview";
+            this.buttonPreview.UseVisualStyleBackColor = true;
+            this.buttonPreview.Click += new System.EventHandler(this.buttonPreview_Click);
+            // 
             // linkLabelHelp
             // 
             this.linkLabelHelp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
@@ -878,16 +934,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.textBoxLog.ReadOnly = true;
             this.textBoxLog.Size = new System.Drawing.Size(188, 26);
             this.textBoxLog.TabIndex = 31;
-            // 
-            // labelInfo
-            // 
-            this.labelInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.labelInfo.AutoSize = true;
-            this.labelInfo.Location = new System.Drawing.Point(5, 526);
-            this.labelInfo.Name = "labelInfo";
-            this.labelInfo.Size = new System.Drawing.Size(25, 13);
-            this.labelInfo.TabIndex = 1;
-            this.labelInfo.Text = "Info";
             // 
             // labelPass
             // 
@@ -1181,5 +1227,9 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripMenuItem promptParameterBeforeGenerateToolStripMenuItem;
         private System.Windows.Forms.Label labelPreviewPleaseWait;
         private Controls.VideoPlayerContainer videoPlayerContainer1;
+        private System.Windows.Forms.Panel panelOutlineColor;
+        private System.Windows.Forms.Button buttonOutlineColor;
+        private System.Windows.Forms.Panel panelForeColor;
+        private System.Windows.Forms.Button buttonForeColor;
     }
 }

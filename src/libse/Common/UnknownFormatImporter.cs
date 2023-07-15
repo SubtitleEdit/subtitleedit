@@ -44,13 +44,13 @@ namespace Nikse.SubtitleEdit.Core.Common
                 {
                     var sameLineSub = ImportTimeCodesInFramesAndTextOnSameLine(lines);
                     if (sameLineSub.Paragraphs.Count < 10 &&
-                        (sameLineSub.Paragraphs.Count(p => p.Duration.TotalMilliseconds < 0) > 2 ||
+                        (sameLineSub.Paragraphs.Count(p => p.DurationTotalMilliseconds < 0) > 2 ||
                          sameLineSub.Paragraphs.Count(p => p.Text.Length > 100) > 1))
                     {
                         // probably not a subtitle
                     }
                     else if (sameLineSub.Paragraphs.Count < 20 &&
-                        (sameLineSub.Paragraphs.Count(p => p.Duration.TotalMilliseconds < 0) > 8 ||
+                        (sameLineSub.Paragraphs.Count(p => p.DurationTotalMilliseconds < 0) > 8 ||
                          sameLineSub.Paragraphs.Count(p => p.Text.Length > 100) > 5))
                     {
                         // probably not a subtitle
@@ -764,7 +764,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             double averateDuration = 0;
             foreach (Paragraph a in subtitle.Paragraphs)
             {
-                double d = a.Duration.TotalSeconds;
+                double d = a.DurationTotalSeconds;
                 if (d > 10)
                 {
                     d = 8;

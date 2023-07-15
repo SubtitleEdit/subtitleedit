@@ -52,7 +52,33 @@ namespace Nikse.SubtitleEdit.Core.Forms
                         {
                             var index = match.Index;
                             var temp = text.Remove(index, s.Length);
+
                             if (index == 0 && temp.StartsWith("... ", StringComparison.Ordinal))
+                            {
+                                temp = temp.Remove(0, 4);
+                            }
+
+                            if (index == 1 && temp.StartsWith("¿, ", StringComparison.Ordinal))
+                            {
+                                temp = temp.Remove(1, 2);
+                            }
+
+                            if (index == 1 && temp.StartsWith("¿ ", StringComparison.Ordinal))
+                            {
+                                temp = temp.Remove(1, 1);
+                            }
+
+                            if (index == 1 && temp.StartsWith("¡, ", StringComparison.Ordinal))
+                            {
+                                temp = temp.Remove(1, 2);
+                            }
+
+                            if (index == 1 && temp.StartsWith("¡ ", StringComparison.Ordinal))
+                            {
+                                temp = temp.Remove(1, 1);
+                            }
+
+                            if (index == 1 && temp.StartsWith("... ", StringComparison.Ordinal))
                             {
                                 temp = temp.Remove(0, 4);
                             }
@@ -313,6 +339,8 @@ namespace Nikse.SubtitleEdit.Core.Forms
                                 if (temp.Length > 0 &&
                                     (preNoTags.Length == 0 ||
                                      preNoTags == "-" ||
+                                     preNoTags == "¡" ||
+                                     preNoTags == "¿" ||
                                      preNoTags.EndsWith(". -", StringComparison.Ordinal) ||
                                      preNoTags.EndsWith("! -", StringComparison.Ordinal) ||
                                      preNoTags.EndsWith("? -", StringComparison.Ordinal) ||
@@ -540,7 +568,8 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     {
                         return RemoveStartDashSingleLine(oldLines[1]);
                     }
-                    else if (lineIndexRemoved == 1)
+
+                    if (lineIndexRemoved == 1)
                     {
                         return RemoveStartDashSingleLine(oldLines[0]);
                     }

@@ -163,7 +163,7 @@ namespace Nikse.SubtitleEdit.Forms
             for (int i = 0; i < _working.Paragraphs.Count; i++)
             {
                 var p = _working.Paragraphs[i];
-                var displayTime = p.Duration.TotalMilliseconds;
+                var displayTime = p.DurationTotalMilliseconds;
                 if (displayTime < minDisplayTime)
                 {
                     var next = _working.GetParagraphOrDefault(i + 1);
@@ -229,7 +229,7 @@ namespace Nikse.SubtitleEdit.Forms
             for (int i = 0; i < _working.Paragraphs.Count; i++)
             {
                 var p = _working.Paragraphs[i];
-                var displayTime = p.Duration.TotalMilliseconds;
+                var displayTime = p.DurationTotalMilliseconds;
                 if (displayTime > maxDisplayTime)
                 {
                     AddFix(p, p.StartTime.TotalMilliseconds + maxDisplayTime, DefaultBackColor);

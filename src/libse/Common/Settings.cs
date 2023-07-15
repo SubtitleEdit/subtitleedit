@@ -423,6 +423,8 @@ namespace Nikse.SubtitleEdit.Core.Common
         public bool GenVideoTargetFileSize { get; set; }
         public float GenVideoFontSizePercentOfHeight { get; set; }
         public bool GenVideoNonAssaBox { get; set; }
+        public Color GenVideoNonAssaBoxColor { get; set; }
+        public Color GenVideoNonAssaTextColor { get; set; }
         public bool GenVideoNonAssaAlignRight { get; set; }
         public bool GenVideoNonAssaFixRtlUnicode { get; set; }
 
@@ -652,6 +654,8 @@ namespace Nikse.SubtitleEdit.Core.Common
             GenVideoAudioSampleRate = "48000";
             GenVideoFontSizePercentOfHeight = 0.078f;
             GenVideoNonAssaBox = true;
+            GenVideoNonAssaBoxColor = Color.FromArgb(150, 0, 0, 0);
+            GenVideoNonAssaTextColor = Color.White;
             VoskPostProcessing = true;
             WhisperChoice = Configuration.IsRunningOnWindows ? AudioToText.WhisperChoice.Cpp : AudioToText.WhisperChoice.OpenAI;
             WhisperDeleteTempFiles = true;
@@ -1441,6 +1445,7 @@ $HorzAlign          =   Center
         public bool DisableVideoAutoLoading { get; set; }
         public bool AllowVolumeBoost { get; set; }
         public int NewEmptyDefaultMs { get; set; }
+        public bool NewEmptyUseAutoDuration { get; set; }
         public bool RightToLeftMode { get; set; }
         public string LastSaveAsFormat { get; set; }
         public bool CheckForUpdates { get; set; }
@@ -1620,6 +1625,7 @@ $HorzAlign          =   Center
             ClearStatusBarAfterSeconds = 10;
             MoveVideo100Or500MsPlaySmallSample = false;
             DisableVideoAutoLoading = false;
+            NewEmptyUseAutoDuration = true;
             RightToLeftMode = false;
             LastSaveAsFormat = string.Empty;
             SystemSubtitleFontNameOverride = string.Empty;
@@ -4493,6 +4499,12 @@ $HorzAlign          =   Center
                 settings.General.AllowVolumeBoost = Convert.ToBoolean(subNode.InnerText.Trim());
             }
 
+            subNode = node.SelectSingleNode("NewEmptyUseAutoDuration");
+            if (subNode != null)
+            {
+                settings.General.NewEmptyUseAutoDuration = Convert.ToBoolean(subNode.InnerText.Trim());
+            }
+
             subNode = node.SelectSingleNode("RightToLeftMode");
             if (subNode != null)
             {
@@ -6568,6 +6580,18 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.Tools.GenVideoNonAssaBox = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("GenVideoNonAssaBoxColor");
+            if (subNode != null)
+            {
+                settings.Tools.GenVideoNonAssaBoxColor = FromHtml(subNode.InnerText.Trim());
+            }
+
+            subNode = node.SelectSingleNode("GenVideoNonAssaTextColor");
+            if (subNode != null)
+            {
+                settings.Tools.GenVideoNonAssaTextColor = FromHtml(subNode.InnerText.Trim());
             }
 
             subNode = node.SelectSingleNode("GenVideoNonAssaAlignRight");
@@ -10906,6 +10930,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("MoveVideo100Or500MsPlaySmallSample", settings.General.MoveVideo100Or500MsPlaySmallSample.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("DisableVideoAutoLoading", settings.General.DisableVideoAutoLoading.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AllowVolumeBoost", settings.General.AllowVolumeBoost.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("NewEmptyUseAutoDuration", settings.General.NewEmptyUseAutoDuration.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("RightToLeftMode", settings.General.RightToLeftMode.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("LastSaveAsFormat", settings.General.LastSaveAsFormat);
                 textWriter.WriteElementString("CheckForUpdates", settings.General.CheckForUpdates.ToString(CultureInfo.InvariantCulture));
@@ -11263,6 +11288,8 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("GenVideoTargetFileSize", settings.Tools.GenVideoTargetFileSize.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("GenVideoFontSizePercentOfHeight", settings.Tools.GenVideoFontSizePercentOfHeight.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("GenVideoNonAssaBox", settings.Tools.GenVideoNonAssaBox.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("GenVideoNonAssaBoxColor", ToHtml(settings.Tools.GenVideoNonAssaBoxColor));
+                textWriter.WriteElementString("GenVideoNonAssaTextColor", ToHtml(settings.Tools.GenVideoNonAssaTextColor));
                 textWriter.WriteElementString("GenVideoNonAssaAlignRight", settings.Tools.GenVideoNonAssaAlignRight.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("GenVideoNonAssaFixRtlUnicode", settings.Tools.GenVideoNonAssaFixRtlUnicode.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("GenVideoEmbedOutputExt", settings.Tools.GenVideoEmbedOutputExt);

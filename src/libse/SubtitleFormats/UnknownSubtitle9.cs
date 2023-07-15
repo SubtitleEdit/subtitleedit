@@ -23,7 +23,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             sb.AppendLine("    <div id=\"transcriptPanel\">");
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                sb.AppendLine($"      <a class=\"caption\" starttime=\"{((long)(Math.Round(p.StartTime.TotalMilliseconds))).ToString(CultureInfo.InvariantCulture)}\" duration=\"{((long)(Math.Round(p.Duration.TotalMilliseconds))).ToString(CultureInfo.InvariantCulture)}\">{p.Text.Replace(Environment.NewLine, "<br />")}</a>");
+                sb.AppendLine($"      <a class=\"caption\" starttime=\"{((long)(Math.Round(p.StartTime.TotalMilliseconds))).ToString(CultureInfo.InvariantCulture)}\" duration=\"{((long)(Math.Round(p.DurationTotalMilliseconds))).ToString(CultureInfo.InvariantCulture)}\">{p.Text.Replace(Environment.NewLine, "<br />")}</a>");
             }
             sb.AppendLine("    </div>");
             sb.AppendLine("  </div>");
