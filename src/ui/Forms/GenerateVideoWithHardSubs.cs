@@ -921,6 +921,18 @@ namespace Nikse.SubtitleEdit.Forms
                     Configuration.Settings.Tools.GenVideoFontSizePercentOfHeight = (float)(currentHeight / _videoInfo.Height);
                 }
             }
+
+            try
+            {
+                if (!string.IsNullOrEmpty(_mpvSubtitleFileName))
+                {
+                    File.Delete(_mpvSubtitleFileName);
+                }
+            }
+            catch
+            {
+                // ignore
+            }
         }
 
         private void comboBoxVideoEncoding_SelectedIndexChanged(object sender, EventArgs e)
