@@ -49,6 +49,11 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             // Empty callback
         }
 
+        public object GetCustomCallbackData(IFixCommonError sender, object input)
+        {
+            return null;
+        }
+
         public SubtitleFormat Format => new SubRip();
 
         public string Language { get; set; } = "en";
