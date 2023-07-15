@@ -318,5 +318,89 @@ namespace Test.Logic
 
             Assert.AreEqual("- No, don't touch that-- - That was stupid." + Environment.NewLine + "- I know.", result);
         }
+
+        [TestMethod]
+        public void TestPositioning()
+        {
+            Configuration.Settings.General.DialogStyle = Nikse.SubtitleEdit.Core.Enums.DialogType.DashBothLinesWithSpace;
+
+            var subtitle = new Subtitle(new List<Paragraph>() { new Paragraph("{\\an8}<font color=\"#ffff00\">That was really delicious.</font>" + Environment.NewLine +
+                                                                              "I know.", 0, 2000) });
+
+            ConvertColorsToDialogUtils.ConvertColorsToDialogInSubtitle(subtitle, true, false, false);
+            var result = subtitle.Paragraphs.First().Text;
+
+            Assert.AreEqual("{\\an8}- That was really delicious." + Environment.NewLine + "- I know.", result);
+        }
+
+        [TestMethod]
+        public void TestPositioning2()
+        {
+            Configuration.Settings.General.DialogStyle = Nikse.SubtitleEdit.Core.Enums.DialogType.DashBothLinesWithSpace;
+
+            var subtitle = new Subtitle(new List<Paragraph>() { new Paragraph("{\\an8}That was really delicious." + Environment.NewLine +
+                                                                              "<font color=\"#ffff00\">I know.</font>", 0, 2000) });
+
+            ConvertColorsToDialogUtils.ConvertColorsToDialogInSubtitle(subtitle, true, false, false);
+            var result = subtitle.Paragraphs.First().Text;
+
+            Assert.AreEqual("{\\an8}- That was really delicious." + Environment.NewLine + "- I know.", result);
+        }
+
+        [TestMethod]
+        public void TestPositioning3()
+        {
+            Configuration.Settings.General.DialogStyle = Nikse.SubtitleEdit.Core.Enums.DialogType.DashSecondLineWithoutSpace;
+
+            var subtitle = new Subtitle(new List<Paragraph>() { new Paragraph("{\\an8}<font color=\"#ffff00\">That was really delicious.</font>" + Environment.NewLine +
+                                                                              "I know.", 0, 2000) });
+
+            ConvertColorsToDialogUtils.ConvertColorsToDialogInSubtitle(subtitle, true, false, false);
+            var result = subtitle.Paragraphs.First().Text;
+
+            Assert.AreEqual("{\\an8}That was really delicious." + Environment.NewLine + "-I know.", result);
+        }
+
+        [TestMethod]
+        public void TestPositioning4()
+        {
+            Configuration.Settings.General.DialogStyle = Nikse.SubtitleEdit.Core.Enums.DialogType.DashSecondLineWithoutSpace;
+
+            var subtitle = new Subtitle(new List<Paragraph>() { new Paragraph("{\\an8}That was really delicious." + Environment.NewLine +
+                                                                              "<font color=\"#ffff00\">I know.</font>", 0, 2000) });
+
+            ConvertColorsToDialogUtils.ConvertColorsToDialogInSubtitle(subtitle, true, false, false);
+            var result = subtitle.Paragraphs.First().Text;
+
+            Assert.AreEqual("{\\an8}That was really delicious." + Environment.NewLine + "-I know.", result);
+        }
+
+        [TestMethod]
+        public void TestVttDialog1()
+        {
+            Configuration.Settings.General.DialogStyle = Nikse.SubtitleEdit.Core.Enums.DialogType.DashBothLinesWithSpace;
+
+            var subtitle = new Subtitle(new List<Paragraph>() { new Paragraph("<c.cyan>That was really delicious.</c>" + Environment.NewLine +
+                                                                              "I know.", 0, 2000) });
+
+            ConvertColorsToDialogUtils.ConvertColorsToDialogInSubtitle(subtitle, true, false, false);
+            var result = subtitle.Paragraphs.First().Text;
+
+            Assert.AreEqual("- That was really delicious." + Environment.NewLine + "- I know.", result);
+        }
+
+        [TestMethod]
+        public void TestVttDialog2()
+        {
+            Configuration.Settings.General.DialogStyle = Nikse.SubtitleEdit.Core.Enums.DialogType.DashBothLinesWithSpace;
+
+            var subtitle = new Subtitle(new List<Paragraph>() { new Paragraph("That's it!" + Environment.NewLine +
+                                                                              "<c.cyan>..sped to victory.</c>", 0, 2000) });
+
+            ConvertColorsToDialogUtils.ConvertColorsToDialogInSubtitle(subtitle, true, false, false);
+            var result = subtitle.Paragraphs.First().Text;
+
+            Assert.AreEqual("- That's it!" + Environment.NewLine + "- ..sped to victory.", result);
+        }
     }
 }
