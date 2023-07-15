@@ -14,6 +14,8 @@ namespace Nikse.SubtitleEdit.Core.Common
         public TimeCode EndTime { get; set; }
 
         public TimeCode Duration => new TimeCode(EndTime.TotalMilliseconds - StartTime.TotalMilliseconds);
+        public double DurationTotalMilliseconds => EndTime.TotalMilliseconds - StartTime.TotalMilliseconds;
+        public double DurationTotalSeconds => (EndTime.TotalMilliseconds - StartTime.TotalMilliseconds) / TimeCode.BaseUnit;
 
         public bool Forced { get; set; }
 
@@ -119,7 +121,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     return 0;
                 }
 
-                return 60.0 / Duration.TotalSeconds * Text.CountWords();
+                return 60.0 / DurationTotalSeconds * Text.CountWords();
             }
         }
     }

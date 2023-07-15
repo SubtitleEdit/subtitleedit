@@ -2132,6 +2132,20 @@ namespace Test.Logic.Forms
         }
 
         [TestMethod]
+        public void RemoveInterjectionsAllDuaSpanish1()
+        {
+            var actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext("¿Oh, sí?", onlyInSeparatedLine: false));
+            Assert.AreEqual("¿Sí?", actual);
+        }
+
+        [TestMethod]
+        public void RemoveInterjectionsAllDuaSpanish2()
+        {
+            var actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext("¡Oh, sí!", onlyInSeparatedLine: false));
+            Assert.AreEqual("¡Sí!", actual);
+        }
+
+        [TestMethod]
         public void DoNotRemoveTime()
         {
             var target = GetRemoveTextForHiLib();

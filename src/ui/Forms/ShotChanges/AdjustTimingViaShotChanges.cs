@@ -23,6 +23,8 @@ namespace Nikse.SubtitleEdit.Forms.ShotChanges
             audioVisualizer.ShotChanges = shotChanges;
 
             OpenVideo(videoFileName);
+            videoPlayerContainer1.TryLoadGfx();
+            videoPlayerContainer1.HidePlayerName();
         }
 
         private void SetAudioVisualizerSettings()

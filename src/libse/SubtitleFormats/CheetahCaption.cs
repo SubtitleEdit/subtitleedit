@@ -266,7 +266,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 p.StartTime = DecodeTimestamp(buffer, i + 2);
                 p.EndTime = DecodeTimestamp(buffer, i + 6);
                 if (p.EndTime.Hours == 2 && p.EndTime.Minutes == 1 && p.EndTime.Seconds == 0 && p.EndTime.Milliseconds == 0 &&
-                    (p.Duration.TotalMilliseconds < 0 || p.Duration.TotalMilliseconds > 5000))
+                    (p.DurationTotalMilliseconds < 0 || p.DurationTotalMilliseconds > 5000))
                 {
                     usedBytes = 20 - 4;
                 }
@@ -345,7 +345,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                 i += length;
             }
-            if (last != null && (last.Duration.TotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds || last.Duration.TotalMilliseconds < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds))
+            if (last != null && (last.DurationTotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds || last.DurationTotalMilliseconds < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds))
             {
                 last.EndTime.TotalMilliseconds = last.StartTime.TotalMilliseconds + Utilities.GetOptimalDisplayMilliseconds(last.Text);
             }
@@ -355,7 +355,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 var current = subtitle.Paragraphs[index];
                 var next = subtitle.Paragraphs[index + 1];
                 if (current.EndTime.Hours == 2 && current.EndTime.Minutes == 1 && current.EndTime.Seconds == 0 && current.EndTime.Milliseconds == 0 &&
-                    (current.Duration.TotalMilliseconds < 0 || current.Duration.TotalMilliseconds > 5000))
+                    (current.DurationTotalMilliseconds < 0 || current.DurationTotalMilliseconds > 5000))
                 {
                     current.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
                 }

@@ -656,11 +656,15 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
         public static string FixLowerCaseLInsideUpperCaseWord(string input)
         {
             var word = input;
-            if (word.Length > 3 && word.RemoveChar('l').ToUpperInvariant() == word.RemoveChar('l'))
+            if (word.Length > 3)
             {
-                if (!word.Contains('<') && !word.Contains('>') && !word.Contains('\''))
+                var wordNoLowercaseL = word.RemoveChar('l');
+                if (wordNoLowercaseL.ToUpperInvariant().Equals(wordNoLowercaseL, StringComparison.Ordinal))
                 {
-                    word = word.Replace('l', 'I');
+                    if (!word.Contains('<') && !word.Contains('>') && !word.Contains('\''))
+                    {
+                        word = word.Replace('l', 'I');
+                    }
                 }
             }
 

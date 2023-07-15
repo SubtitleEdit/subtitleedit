@@ -27,24 +27,23 @@ namespace Nikse.SubtitleEdit.Core.Common
         public List<HistoryItem> HistoryItems { get; }
         public bool CanUndo => HistoryItems.Count > 0;
 
-        public Subtitle()
+        public Subtitle() : this(new List<Paragraph>(), new List<HistoryItem>())
         {
-            Paragraphs = new List<Paragraph>();
-            HistoryItems = new List<HistoryItem>();
-            FileName = "Untitled";
         }
 
-        public Subtitle(List<HistoryItem> historyItems)
-            : this()
+        public Subtitle(List<Paragraph> paragraphs) : this(paragraphs, new List<HistoryItem>())
         {
-            HistoryItems = historyItems;
+        }
+
+        public Subtitle(List<HistoryItem> historyItems) : this(new List<Paragraph>(), historyItems)
+        {
         }
 
         public Subtitle(List<Paragraph> paragraphs, List<HistoryItem> historyItems)
-            : this()
         {
             HistoryItems = historyItems;
             Paragraphs = paragraphs;
+            FileName = "Untitled";
         }
 
         /// <summary>
@@ -76,10 +75,6 @@ namespace Nikse.SubtitleEdit.Core.Common
             OriginalEncoding = subtitle.OriginalEncoding;
         }
 
-        public Subtitle(List<Paragraph> paragraphs) : this()
-        {
-            Paragraphs = paragraphs;
-        }
 
         /// <summary>
         /// Get the paragraph of index, null if out of bounds
@@ -152,18 +147,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// </summary>
         /// <param name="fileName">File name of subtitle to load.</param>
         /// <returns>Loaded subtitle, null if file is not known subtitle format.</returns>
-        public static Subtitle Parse(string fileName)
-        {
-            var subtitle = new Subtitle();
-            var format = subtitle.LoadSubtitle(fileName, out var encodingUsed, null);
-            if (format == null)
-            {
-                return null;
-            }
-
-            subtitle.OriginalEncoding = encodingUsed;
-            return subtitle;
-        }
+        public static Subtitle Parse(string fileName) => Parse(fileName, useThisEncoding: null);
 
         /// <summary>
         /// Load a subtitle from a file.
@@ -585,7 +569,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             
             p.EndTime.TotalMilliseconds = wantedEndMs <= bestEndMs ? wantedEndMs : bestEndMs;
 
-            if (p.Duration.TotalMilliseconds <= 0)
+            if (p.DurationTotalMilliseconds <= 0)
             {
                 p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + 1;
             }
@@ -621,7 +605,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
                     p.EndTime.TotalMilliseconds = wantedEndMs <= bestEndMs ? wantedEndMs : bestEndMs;
 
-                    if (p.Duration.TotalMilliseconds <= 0)
+                    if (p.DurationTotalMilliseconds <= 0)
                     {
                         p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + 1;
                     }
@@ -814,7 +798,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     Paragraphs = Paragraphs.OrderBy(p => p.EndTime.TotalMilliseconds).ThenBy(p => p.Number).ToList();
                     break;
                 case SubtitleSortCriteria.Duration:
-                    Paragraphs = Paragraphs.OrderBy(p => p.Duration.TotalMilliseconds).ThenBy(p => p.Number).ToList();
+                    Paragraphs = Paragraphs.OrderBy(p => p.DurationTotalMilliseconds).ThenBy(p => p.Number).ToList();
                     break;
                 case SubtitleSortCriteria.Gap:
                     var lookupDictionary = new Dictionary<string, double>();

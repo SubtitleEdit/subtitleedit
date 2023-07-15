@@ -360,6 +360,9 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             _ocrLowercaseHeightsTotalCount = 0;
             _ocrUppercaseHeightsTotal = 0;
             _ocrUppercaseHeightsTotalCount = 0;
+
+            videoPlayerContainer1.TryLoadGfx();
+            videoPlayerContainer1.HidePlayerName();
         }
 
         private void OpenBinSubtitle(string fileName)
@@ -713,11 +716,11 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
 
             if (_columnIndexDuration >= 0)
             {
-                if (paragraph.Duration.TotalMilliseconds < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds && _columnIndexDuration >= 0)
+                if (paragraph.DurationTotalMilliseconds < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds && _columnIndexDuration >= 0)
                 {
                     colorDuration = true;
                 }
-                else if (paragraph.Duration.TotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
+                else if (paragraph.DurationTotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
                 {
                     colorDuration = true;
                 }
@@ -1136,10 +1139,10 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                     if (pes == null && subtitle.Paragraphs.Count > 0)
                     {
                         var last = subtitle.Paragraphs[subtitle.Paragraphs.Count - 1];
-                        if (last.Duration.TotalMilliseconds < 100)
+                        if (last.DurationTotalMilliseconds < 100)
                         {
                             last.EndTime.TotalMilliseconds = msub.Start;
-                            if (last.Duration.TotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
+                            if (last.DurationTotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
                             {
                                 last.EndTime.TotalMilliseconds = last.StartTime.TotalMilliseconds + 3000;
                             }
@@ -1167,7 +1170,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             for (var index = 0; index < subtitle.Paragraphs.Count; index++)
             {
                 var p = subtitle.Paragraphs[index];
-                if (p.Duration.TotalMilliseconds < 200)
+                if (p.DurationTotalMilliseconds < 200)
                 {
                     p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + 3000;
                 }
@@ -1698,7 +1701,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 ntsc = "TRUE";
             }
 
-            var duration = SubtitleFormat.MillisecondsToFrames(p.Duration.TotalMilliseconds, _frameRate);
+            var duration = SubtitleFormat.MillisecondsToFrames(p.DurationTotalMilliseconds, _frameRate);
             var start = SubtitleFormat.MillisecondsToFrames(p.StartTime.TotalMilliseconds, _frameRate);
             var end = SubtitleFormat.MillisecondsToFrames(p.EndTime.TotalMilliseconds, _frameRate);
 
@@ -3982,11 +3985,11 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
             if (string.IsNullOrEmpty(errorText))
             {
-                if (paragraph.Duration.TotalMilliseconds < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds && _columnIndexDuration >= 0)
+                if (paragraph.DurationTotalMilliseconds < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds && _columnIndexDuration >= 0)
                 {
                     errorText = "Duration too small";
                 }
-                else if (paragraph.Duration.TotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds && _columnIndexDuration >= 0)
+                else if (paragraph.DurationTotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds && _columnIndexDuration >= 0)
                 {
                     errorText = "Duration too large";
                 }

@@ -1549,6 +1549,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                         _stdOutWriter?.WriteLine(" done.");
                     }
                 }
+
                 if (!targetFormatFound)
                 {
                     var pac = new Pac();
@@ -1563,6 +1564,20 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                         _stdOutWriter?.WriteLine(" done.");
                     }
                 }
+
+                if (!targetFormatFound)
+                {
+                    var pacUnicode = new PacUnicode();
+                    if (pacUnicode.Name.RemoveChar(' ', '(', ')').Equals(targetFormat.RemoveChar(' ', '(', ')'), StringComparison.OrdinalIgnoreCase) || targetFormat.Equals(".fpc", StringComparison.OrdinalIgnoreCase) || targetFormat.Equals("fpc", StringComparison.OrdinalIgnoreCase))
+                    {
+                        targetFormatFound = true;
+                        outputFileName = FormatOutputFileNameForBatchConvert(fileName, pacUnicode.Extension, outputFolder, overwrite, targetFileName);
+                        _stdOutWriter?.Write($"{count}: {Path.GetFileName(fileName)} -> {outputFileName}...");
+                        pacUnicode.Save(outputFileName, sub);
+                        _stdOutWriter?.WriteLine(" done.");
+                    }
+                }
+
                 if (!targetFormatFound)
                 {
                     var cavena890 = new Cavena890();
@@ -1575,6 +1590,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                         _stdOutWriter?.WriteLine(" done.");
                     }
                 }
+
                 if (!targetFormatFound)
                 {
                     var cheetahCaption = new CheetahCaption();
@@ -1587,6 +1603,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                         _stdOutWriter?.WriteLine(" done.");
                     }
                 }
+
                 if (!targetFormatFound)
                 {
                     var ayato = new Ayato();
@@ -1599,6 +1616,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                         _stdOutWriter?.WriteLine(" done.");
                     }
                 }
+
                 if (!targetFormatFound)
                 {
                     var capMakerPlus = new CapMakerPlus();
@@ -1611,6 +1629,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                         _stdOutWriter?.WriteLine(" done.");
                     }
                 }
+
                 if (!targetFormatFound)
                 {
                     if (LanguageSettings.Current.BatchConvert.PlainText.RemoveChar(' ').Equals(targetFormat.RemoveChar(' '), StringComparison.OrdinalIgnoreCase))
@@ -1637,6 +1656,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                         _stdOutWriter?.WriteLine(" done.");
                     }
                 }
+
                 if (!targetFormatFound)
                 {
                     if (BatchConvert.BluRaySubtitle.RemoveChar(' ').Equals(targetFormat.RemoveChar(' '), StringComparison.OrdinalIgnoreCase))
@@ -1999,14 +2019,14 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
 
                     else if (!targetFormatFound && targetFormat == LanguageSettings.Current.VobSubOcr.ImagesWithTimeCodesInFileName.Trim('.'))
                     {
-                        var path = Path.Combine(outputFolder, Path.GetFileNameWithoutExtension(fileName));
-                        if (!Directory.Exists(path))
-                        {
-                            Directory.CreateDirectory(path);
-                        }
-
                         if (binaryParagraphs.Count > 0)
                         {
+                            var path = Path.Combine(outputFolder, Path.GetFileNameWithoutExtension(fileName));
+                            if (!Directory.Exists(path))
+                            {
+                                Directory.CreateDirectory(path);
+                            }
+
                             targetFormatFound = true;
                             for (var i = 0; i < binaryParagraphs.Count; i++)
                             {
@@ -2121,7 +2141,8 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                    BatchConvert.VobSubSubtitle.RemoveChar(' ').Equals(target, StringComparison.OrdinalIgnoreCase) ||
                    BatchConvert.DostImageSubtitle.RemoveChar(' ').Equals(target, StringComparison.OrdinalIgnoreCase) ||
                    BatchConvert.BdnXmlSubtitle.RemoveChar(' ').Equals(target, StringComparison.OrdinalIgnoreCase) ||
-                   BatchConvert.FcpImageSubtitle.RemoveChar(' ').Equals(target, StringComparison.OrdinalIgnoreCase);
+                   BatchConvert.FcpImageSubtitle.RemoveChar(' ').Equals(target, StringComparison.OrdinalIgnoreCase) ||
+                   target == LanguageSettings.Current.VobSubOcr.ImagesWithTimeCodesInFileName.Trim('.').RemoveChar(' ');
         }
 
         internal static Subtitle RunActions(TextEncoding targetEncoding, Subtitle sub, SubtitleFormat format, List<BatchAction> actions, bool autoDetectLanguage)

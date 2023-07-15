@@ -1257,7 +1257,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                         if (fromFormat != null && fromFormat.GetType() == typeof(MicroDvd))
                         {
-                            if (sub != null && sub.Paragraphs.Count > 0 && sub.Paragraphs[0].Duration.TotalMilliseconds < 1001)
+                            if (sub != null && sub.Paragraphs.Count > 0 && sub.Paragraphs[0].DurationTotalMilliseconds < 1001)
                             {
                                 if (sub.Paragraphs[0].Text.StartsWith("29.", StringComparison.Ordinal) || sub.Paragraphs[0].Text.StartsWith("23.", StringComparison.Ordinal) ||
                                 sub.Paragraphs[0].Text.StartsWith("29,", StringComparison.Ordinal) || sub.Paragraphs[0].Text.StartsWith("23,", StringComparison.Ordinal) ||
@@ -1508,7 +1508,13 @@ namespace Nikse.SubtitleEdit.Forms
                                 }
                             }
                         }
-                        else if (isVobSub)
+                        else if (isVobSub && toFormat == LanguageSettings.Current.VobSubOcr.ImagesWithTimeCodesInFileName.Trim('.'))
+                        {
+                            binaryParagraphs = GetBinaryParagraphsWithPositionFromVobSub(fileName);
+
+                            item.SubItems[3].Text = LanguageSettings.Current.BatchConvert.Converted;
+                        }
+                        else if (isVobSub) 
                         {
                             item.SubItems[3].Text = LanguageSettings.Current.BatchConvert.Ocr;
                             using (var vobSubOcr = new VobSubOcr())
@@ -1810,6 +1816,40 @@ namespace Nikse.SubtitleEdit.Forms
             SeLogger.Error($"Batch convert took {sw.ElapsedMilliseconds}");
         }
 
+        private List<IBinaryParagraphWithPosition> GetBinaryParagraphsWithPositionFromVobSub(string fileName)
+        {
+            var binSubtitles = new List<IBinaryParagraphWithPosition>();
+            var vobSubParser = new VobSubParser(true);
+            var idxFileName = Path.ChangeExtension(fileName, ".idx");
+            vobSubParser.OpenSubIdx(fileName, idxFileName);
+            var vobSubMergedPackList = vobSubParser.MergeVobSubPacks();
+            var palette = vobSubParser.IdxPalette;
+            vobSubParser.VobSubPacks.Clear();
+            var languageStreamIds = new List<int>();
+            foreach (var pack in vobSubMergedPackList)
+            {
+                if (pack.SubPicture.Delay.TotalMilliseconds > 500 && !languageStreamIds.Contains(pack.StreamId))
+                {
+                    languageStreamIds.Add(pack.StreamId);
+                }
+            }
+
+            if (languageStreamIds.Count > 1)
+            {
+                vobSubMergedPackList = vobSubMergedPackList.Where(p => p.StreamId == languageStreamIds[0]).ToList();
+            }
+
+            var max = vobSubMergedPackList.Count;
+            for (var i = 0; i < max; i++)
+            {
+                var vobSubPack = vobSubMergedPackList[i];
+                vobSubPack.Palette = palette;
+                binSubtitles.Add(vobSubPack);
+            }
+
+            return binSubtitles;
+        }
+
         public static List<IBinaryParagraphWithPosition> LoadDvbFromMatroska(MatroskaTrackInfo track, MatroskaFile matroska, ref Subtitle subtitle)
         {
             var sub = matroska.GetSubtitle(track.TrackNumber, null);
@@ -1847,10 +1887,10 @@ namespace Nikse.SubtitleEdit.Forms
                     if (pes == null && subtitle.Paragraphs.Count > 0)
                     {
                         var last = subtitle.Paragraphs[subtitle.Paragraphs.Count - 1];
-                        if (last.Duration.TotalMilliseconds < 100)
+                        if (last.DurationTotalMilliseconds < 100)
                         {
                             last.EndTime.TotalMilliseconds = msub.Start;
-                            if (last.Duration.TotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
+                            if (last.DurationTotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
                             {
                                 last.EndTime.TotalMilliseconds = last.StartTime.TotalMilliseconds + 3000;
                             }
@@ -1878,7 +1918,7 @@ namespace Nikse.SubtitleEdit.Forms
             for (var index = 0; index < subtitle.Paragraphs.Count; index++)
             {
                 var p = subtitle.Paragraphs[index];
-                if (p.Duration.TotalMilliseconds < 200)
+                if (p.DurationTotalMilliseconds < 200)
                 {
                     p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + 3000;
                 }
@@ -2575,7 +2615,7 @@ namespace Nikse.SubtitleEdit.Forms
                     var current = p.Subtitle.GetParagraphOrDefault(i);
                     var next = p.Subtitle.GetParagraphOrDefault(i + 1);
                     var gapsBetween = next.StartTime.TotalMilliseconds - current.EndTime.TotalMilliseconds;
-                    if (gapsBetween < minimumMillisecondsBetweenLines && current.Duration.TotalMilliseconds > minimumMillisecondsBetweenLines)
+                    if (gapsBetween < minimumMillisecondsBetweenLines && current.DurationTotalMilliseconds > minimumMillisecondsBetweenLines)
                     {
                         current.EndTime.TotalMilliseconds -= (minimumMillisecondsBetweenLines - gapsBetween);
                     }
@@ -2668,6 +2708,11 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         binaryParagraphs = _binaryParagraphLookup[p.FileName];
                     }
+                    else if (FileUtil.IsVobSub(p.FileName) && p.BinaryParagraphs != null && p.BinaryParagraphs.Count > 0)
+                    {
+                        binaryParagraphs = p.BinaryParagraphs;
+                    }
+
                     var dir = textBoxOutputFolder.Text;
                     var overwrite = checkBoxOverwrite.Checked;
                     if (radioButtonSaveInSourceFolder.Checked)

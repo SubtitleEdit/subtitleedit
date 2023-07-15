@@ -176,7 +176,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             foreach (var p2 in subtitle.Paragraphs)
             {
-                if (p2.Duration.TotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
+                if (p2.DurationTotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
                 {
                     p2.EndTime.TotalMilliseconds = p2.StartTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds;
                 }
