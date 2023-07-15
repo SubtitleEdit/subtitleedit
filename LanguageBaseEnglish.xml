@@ -2848,18 +2848,29 @@ Continue?</RestoreDefaultSettingsMsg>
     <SingleLineLengthMinimum>Single line length - minimum: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Single line length - maximum: {0}</SingleLineLengthMaximum>
     <SingleLineLengthAverage>Single line length - average: {0}</SingleLineLengthAverage>
+    <SingleLineLengthExceedingMaximum>Single line length - exceeding maximum ({0} chars): {1} ({2:0.00}%)</SingleLineLengthExceedingMaximum>
     <SingleLineWidthMinimum>Single line width - minimum: {0} pixels</SingleLineWidthMinimum>
     <SingleLineWidthMaximum>Single line width - maximum: {0} pixels</SingleLineWidthMaximum>
     <SingleLineWidthAverage>Single line width - average: {0} pixels</SingleLineWidthAverage>
+    <SingleLineWidthExceedingMaximum>Single line width - exceeding maximum ({0} pixels): {1} ({2:0.00}%)</SingleLineWidthExceedingMaximum>
     <DurationMinimum>Duration - minimum: {0:0.000} seconds</DurationMinimum>
     <DurationMaximum>Duration - maximum: {0:0.000} seconds</DurationMaximum>
     <DurationAverage>Duration - average: {0:0.000} seconds</DurationAverage>
+    <DurationExceedingMinimum>Duration - below minimum ({0:0.###} sec): {1} ({2:0.00}%)</DurationExceedingMinimum>
+    <DurationExceedingMaximum>Duration - exceeding maximum ({0:0.###} sec): {1} ({2:0.00}%)</DurationExceedingMaximum>
     <CharactersPerSecondMinimum>Characters/sec - minimum: {0:0.000}</CharactersPerSecondMinimum>
     <CharactersPerSecondMaximum>Characters/sec - maximum: {0:0.000}</CharactersPerSecondMaximum>
     <CharactersPerSecondAverage>Characters/sec - average: {0:0.000}</CharactersPerSecondAverage>
+    <CharactersPerSecondExceedingOptimal>Characters/sec - exceeding optimal ({0:0.##} cps): {1} ({2:0.00}%)</CharactersPerSecondExceedingOptimal>
+    <CharactersPerSecondExceedingMaximum>Characters/sec - exceeding maximum ({0:0.##} cps): {1} ({2:0.00}%)</CharactersPerSecondExceedingMaximum>
+    <WordsPerMinuteMinimum>Words/min - minimum: {0:0.000}</WordsPerMinuteMinimum>
+    <WordsPerMinuteMaximum>Words/min - maximum: {0:0.000}</WordsPerMinuteMaximum>
+    <WordsPerMinuteAverage>Words/min - average: {0:0.000}</WordsPerMinuteAverage>
+    <WordsPerMinuteExceedingMaximum>Words/min - exceeding maximum ({0} wpm): {1} ({2:0.00}%)</WordsPerMinuteExceedingMaximum>
     <GapMinimum>Gap - minimum: {0:#,##0} ms</GapMinimum>
     <GapMaximum>Gap - maximum: {0:#,##0} ms</GapMaximum>
     <GapAverage>Gap - average: {0:#,##0.##} ms</GapAverage>
+    <GapExceedingMinimum>Gap - below minimum ({0:#,##0} ms): {1} ({2:0.00}%)</GapExceedingMinimum>
     <Export>Export...</Export>
   </Statistics>
   <SubStationAlphaProperties>
