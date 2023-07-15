@@ -76,7 +76,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                 XmlNode generatorNode = video.SelectSingleNode("video");
                 generatorNode.Attributes["offset"].Value = Convert.ToInt64(p.StartTime.TotalSeconds * 2400000) + "/2400000s";
-                generatorNode.Attributes["duration"].Value = Convert.ToInt64(p.Duration.TotalSeconds * 2400000) + "/2400000s";
+                generatorNode.Attributes["duration"].Value = Convert.ToInt64(p.DurationTotalSeconds * 2400000) + "/2400000s";
                 generatorNode.Attributes["start"].Value = Convert.ToInt64(p.StartTime.TotalSeconds * 2400000) + "/2400000s";
 
                 XmlNode param = video.SelectSingleNode("video/param");

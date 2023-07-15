@@ -1476,7 +1476,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     Paragraph p = new Paragraph(string.Empty, x.StartTime.TotalMilliseconds, x.EndTime.TotalMilliseconds);
                     if (checkBoxUseTimeCodesFromIdx.Checked && x.IdxLine != null)
                     {
-                        double durationMilliseconds = p.Duration.TotalMilliseconds;
+                        double durationMilliseconds = p.DurationTotalMilliseconds;
                         p.StartTime = new TimeCode(x.IdxLine.StartTime.TotalMilliseconds);
                         p.EndTime = new TimeCode(x.IdxLine.StartTime.TotalMilliseconds + durationMilliseconds);
                     }
@@ -7512,7 +7512,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 foreach (var old in oldSubtitle.Paragraphs)
                 {
                     if (Math.Abs(current.StartTime.TotalMilliseconds - old.StartTime.TotalMilliseconds) < 0.01 &&
-                        Math.Abs(current.Duration.TotalMilliseconds - old.Duration.TotalMilliseconds) < 0.01)
+                        Math.Abs(current.DurationTotalMilliseconds - old.DurationTotalMilliseconds) < 0.01)
                     {
                         current.Text = old.Text;
                         break;

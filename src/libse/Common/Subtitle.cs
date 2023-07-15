@@ -511,7 +511,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             if (next != null && p.StartTime.TotalMilliseconds + duration + Configuration.Settings.General.MinimumMillisecondsBetweenLines > next.StartTime.TotalMilliseconds)
             {
                 p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
-                if (p.Duration.TotalMilliseconds <= 0)
+                if (p.DurationTotalMilliseconds <= 0)
                 {
                     p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + 1;
                 }
@@ -536,7 +536,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     if (next != null && p.StartTime.TotalMilliseconds + fixedDurationMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines > next.StartTime.TotalMilliseconds)
                     {
                         p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
-                        if (p.Duration.TotalMilliseconds <= 0)
+                        if (p.DurationTotalMilliseconds <= 0)
                         {
                             p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + 1;
                         }
@@ -730,7 +730,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     Paragraphs = Paragraphs.OrderBy(p => p.EndTime.TotalMilliseconds).ThenBy(p => p.Number).ToList();
                     break;
                 case SubtitleSortCriteria.Duration:
-                    Paragraphs = Paragraphs.OrderBy(p => p.Duration.TotalMilliseconds).ThenBy(p => p.Number).ToList();
+                    Paragraphs = Paragraphs.OrderBy(p => p.DurationTotalMilliseconds).ThenBy(p => p.Number).ToList();
                     break;
                 case SubtitleSortCriteria.Gap:
                     var lookupDictionary = new Dictionary<string, double>();

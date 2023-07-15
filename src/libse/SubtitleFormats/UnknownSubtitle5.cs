@@ -30,7 +30,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 paragraph.Attributes.Append(start);
 
                 XmlAttribute duration = xml.CreateAttribute("dur");
-                duration.InnerText = $"{p.Duration.TotalMilliseconds / 1000}".Replace(',', '.');
+                duration.InnerText = $"{p.DurationTotalMilliseconds / 1000}".Replace(',', '.');
                 paragraph.Attributes.Append(duration);
 
                 paragraph.InnerText = p.Text;

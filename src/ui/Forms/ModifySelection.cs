@@ -384,14 +384,14 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else if (comboBoxRule.SelectedIndex == FunctionDurationLessThan) // Duration less than
                     {
-                        if (p.Duration.TotalMilliseconds < (double)numericUpDownDuration.Value)
+                        if (p.DurationTotalMilliseconds < (double)numericUpDownDuration.Value)
                         {
                             listViewItems.Add(MakeListViewItem(p, i));
                         }
                     }
                     else if (comboBoxRule.SelectedIndex == FunctionDurationGreaterThan) // Duration greater than
                     {
-                        if (p.Duration.TotalMilliseconds > (double)numericUpDownDuration.Value)
+                        if (p.DurationTotalMilliseconds > (double)numericUpDownDuration.Value)
                         {
                             listViewItems.Add(MakeListViewItem(p, i));
                         }

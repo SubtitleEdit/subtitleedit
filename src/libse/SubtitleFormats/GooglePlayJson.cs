@@ -21,7 +21,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 sb.AppendLine(count > 0 ? ", {" : "  {");
                 sb.AppendLine("    \"tStartMs\": " + p.StartTime.TotalMilliseconds.ToString(CultureInfo.InvariantCulture) + ",");
-                sb.AppendLine("    \"dDurationMs\": " + p.Duration.TotalMilliseconds.ToString(CultureInfo.InvariantCulture) + ",");
+                sb.AppendLine("    \"dDurationMs\": " + p.DurationTotalMilliseconds.ToString(CultureInfo.InvariantCulture) + ",");
                 sb.AppendLine("    \"segs\": [ {");
                 sb.AppendLine("      \"utf8\": \"" + Json.EncodeJsonText(p.Text).Replace("<br />", "\\n") + "\"");
                 sb.AppendLine("    } ]");

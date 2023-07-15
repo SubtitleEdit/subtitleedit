@@ -1382,7 +1382,7 @@ namespace Nikse.SubtitleEdit.Forms
             timeUpDownStartTime.MaskedTextBox.TextChanged += MaskedTextBox_TextChanged;
 
             numericUpDownDuration.ValueChanged -= NumericUpDownDurationValueChanged;
-            numericUpDownDuration.Value = (decimal)(p.Duration.TotalMilliseconds / TimeCode.BaseUnit);
+            numericUpDownDuration.Value = (decimal)(p.DurationTotalMilliseconds / TimeCode.BaseUnit);
             numericUpDownDuration.ValueChanged += NumericUpDownDurationValueChanged;
         }
 
@@ -1939,7 +1939,7 @@ namespace Nikse.SubtitleEdit.Forms
                     startFactor = 0.80;
                 }
 
-                double middle = currentParagraph.StartTime.TotalMilliseconds + (currentParagraph.Duration.TotalMilliseconds * startFactor);
+                double middle = currentParagraph.StartTime.TotalMilliseconds + (currentParagraph.DurationTotalMilliseconds * startFactor);
                 if (splitSeconds.HasValue && splitSeconds.Value > (currentParagraph.StartTime.TotalSeconds + 0.2) && splitSeconds.Value < (currentParagraph.EndTime.TotalSeconds - 0.2))
                 {
                     middle = splitSeconds.Value * TimeCode.BaseUnit;

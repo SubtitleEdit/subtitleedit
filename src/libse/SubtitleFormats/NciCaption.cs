@@ -233,7 +233,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 Paragraph p = subtitle.GetParagraphOrDefault(i);
                 Paragraph next = subtitle.GetParagraphOrDefault(i + 1);
-                if (p.Duration.TotalMilliseconds <= 0 && next != null)
+                if (p.DurationTotalMilliseconds <= 0 && next != null)
                 {
                     p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - 1;
                 }
