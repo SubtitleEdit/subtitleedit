@@ -18650,7 +18650,7 @@ namespace Nikse.SubtitleEdit.Forms
                         p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - MinGapBetweenLines;
                     }
 
-                    if (p.Duration.TotalMilliseconds < 0)
+                    if (p.DurationTotalMilliseconds < 0)
                     {
                         p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds;
                     }
@@ -18679,7 +18679,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 original.EndTime.TotalMilliseconds = originalNext.StartTime.TotalMilliseconds - MinGapBetweenLines;
                             }
 
-                            if (original.Duration.TotalMilliseconds < 0)
+                            if (original.DurationTotalMilliseconds < 0)
                             {
                                 original.EndTime.TotalMilliseconds = original.StartTime.TotalMilliseconds;
                             }
@@ -18750,7 +18750,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     original.StartTime.TotalMilliseconds = originalPrevious.EndTime.TotalMilliseconds + MinGapBetweenLines;
                                 }
 
-                                if (original.Duration.TotalMilliseconds < 0)
+                                if (original.DurationTotalMilliseconds < 0)
                                 {
                                     original.StartTime.TotalMilliseconds = original.EndTime.TotalMilliseconds;
                                 }
@@ -18773,7 +18773,7 @@ namespace Nikse.SubtitleEdit.Forms
                         p.StartTime.TotalMilliseconds = previous.EndTime.TotalMilliseconds + MinGapBetweenLines;
                     }
 
-                    if (p.Duration.TotalMilliseconds < 0)
+                    if (p.DurationTotalMilliseconds < 0)
                     {
                         p.StartTime.TotalMilliseconds = p.EndTime.TotalMilliseconds;
                     }
