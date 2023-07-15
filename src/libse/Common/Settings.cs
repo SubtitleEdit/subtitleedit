@@ -1234,6 +1234,7 @@ $HorzAlign          =   Center
             InvalidItalicTagsTicked = true;
             BreakLongLinesTicked = true;
             MergeShortLinesTicked = true;
+            MergeShortLinesPixelWidthTicked = false;
             UnneededPeriodsTicked = true;
             FixCommasTicked = true;
             UnneededSpacesTicked = true;
