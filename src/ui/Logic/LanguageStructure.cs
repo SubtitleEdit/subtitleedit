@@ -3056,18 +3056,29 @@ namespace Nikse.SubtitleEdit.Logic
             public string SingleLineLengthMinimum { get; set; }
             public string SingleLineLengthMaximum { get; set; }
             public string SingleLineLengthAverage { get; set; }
+            public string SingleLineLengthExceedingMaximum { get; set; }
             public string SingleLineWidthMinimum { get; set; }
             public string SingleLineWidthMaximum { get; set; }
             public string SingleLineWidthAverage { get; set; }
+            public string SingleLineWidthExceedingMaximum { get; set; }
             public string DurationMinimum { get; set; }
             public string DurationMaximum { get; set; }
             public string DurationAverage { get; set; }
+            public string DurationExceedingMinimum { get; set; }
+            public string DurationExceedingMaximum { get; set; }
             public string CharactersPerSecondMinimum { get; set; }
             public string CharactersPerSecondMaximum { get; set; }
             public string CharactersPerSecondAverage { get; set; }
+            public string CharactersPerSecondExceedingOptimal { get; set; }
+            public string CharactersPerSecondExceedingMaximum { get; set; }
+            public string WordsPerMinuteMinimum { get; set; }
+            public string WordsPerMinuteMaximum { get; set; }
+            public string WordsPerMinuteAverage { get; set; }
+            public string WordsPerMinuteExceedingMaximum { get; set; }
             public string GapMinimum { get; set; }
             public string GapMaximum { get; set; }
             public string GapAverage { get; set; }
+            public string GapExceedingMinimum { get; set; }
             public string Export { get; set; }
         }
 
