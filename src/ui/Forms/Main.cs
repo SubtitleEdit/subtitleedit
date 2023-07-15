@@ -210,6 +210,7 @@ namespace Nikse.SubtitleEdit.Forms
         private VoskDictate _dictateForm;
         private object _dictateTextBox;
         private bool _hasCurrentVosk;
+        private readonly static object _openSaveLock = new object();
 
         public bool IsMenuOpen { get; private set; }
 
@@ -2367,6 +2368,21 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
+            if (force)
+            {
+                DoAutoSave();
+            }
+            else
+            {
+                lock (_openSaveLock)
+                {
+                    DoAutoSave();
+                }
+            }
+        }
+
+        private void DoAutoSave()
+        {
             _lastAutoSave = DateTime.UtcNow.Ticks + 1009000;
             var currentSubtitleHash = GetFastSubtitleHash();
             if (_changeSubtitleHash != currentSubtitleHash && _lastDoNotPrompt != currentSubtitleHash && _subtitle?.Paragraphs.Count > 0)
@@ -4621,11 +4637,17 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleListview1.BeginUpdate();
                 if (rfe == null)
                 {
-                    OpenSubtitle(item.Text, null);
+                    lock (_openSaveLock)
+                    {
+                        OpenSubtitle(item.Text, null);
+                    }
                 }
                 else
                 {
-                    OpenRecentFile(rfe);
+                    lock (_openSaveLock)
+                    {
+                        OpenRecentFile(rfe);
+                    }
                 }
 
                 GotoSubPosAndPause();
@@ -4735,9 +4757,12 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            ReloadFromSourceView();
-            _saveAsCalled = false;
-            SaveSubtitle(GetCurrentSubtitleFormat());
+            lock (_openSaveLock)
+            {
+                ReloadFromSourceView();
+                _saveAsCalled = false;
+                SaveSubtitle(GetCurrentSubtitleFormat());
+            }
         }
 
         private void SaveAsToolStripMenuItemClick(object sender, EventArgs e)
@@ -4749,7 +4774,11 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             ReloadFromSourceView();
-            FileSaveAs(!_converted || !string.IsNullOrEmpty(Configuration.Settings.General.DefaultSaveAsFormat));
+
+            lock (_openSaveLock)
+            {
+                FileSaveAs(!_converted || !string.IsNullOrEmpty(Configuration.Settings.General.DefaultSaveAsFormat));
+            }
         }
 
         private DialogResult FileSaveAs(bool allowUsingDefaultOrLastSaveAsFormat)
@@ -5237,8 +5266,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void NewToolStripMenuItemClick(object sender, EventArgs e)
         {
-            ReloadFromSourceView();
-            FileNew();
+            lock (_openSaveLock)
+            {
+                ReloadFromSourceView();
+                FileNew();
+            }
         }
 
         private void ResetSubtitle()
@@ -6051,10 +6083,13 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ToolStripButtonFileOpenClick(object sender, EventArgs e)
         {
-            toolStripButtonFileOpen.Enabled = false;
-            ReloadFromSourceView();
-            OpenNewFile();
-            toolStripButtonFileOpen.Enabled = true;
+            lock (_openSaveLock)
+            {
+                toolStripButtonFileOpen.Enabled = false;
+                ReloadFromSourceView();
+                OpenNewFile();
+                toolStripButtonFileOpen.Enabled = true;
+            }
         }
 
         private void ToolStripButtonSaveClick(object sender, EventArgs e)
@@ -15606,7 +15641,12 @@ namespace Nikse.SubtitleEdit.Forms
         {
             _dragAndDropTimer.Stop();
 
-            if (ContinueNewOrExit())
+            if (!ContinueNewOrExit())
+            {
+                return;
+            }
+
+            lock (_openSaveLock)
             {
                 string fileName = _dragAndDropFiles[0];
                 var file = new FileInfo(fileName);
@@ -15666,6 +15706,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                     }
                 }
+
                 if (ext == ".ismt" || ext == ".mp4" || ext == ".m4v" || ext == ".mov" || ext == ".3gp" || ext == ".cmaf" || ext == ".m4s")
                 {
                     var mp4Parser = new MP4Parser(fileName);
@@ -15815,7 +15856,10 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         Encoding encoding = chooseEncoding.GetEncoding();
                         SetEncoding(Encoding.UTF8);
-                        OpenSubtitle(openFileDialog1.FileName, encoding);
+                        lock (_openSaveLock)
+                        {
+                            OpenSubtitle(openFileDialog1.FileName, encoding);
+                        }
                     }
                 }
             }
@@ -26123,63 +26167,67 @@ namespace Nikse.SubtitleEdit.Forms
         private string _lastWrittenAutoBackup = string.Empty;
         private void TimerAutoBackupTick(object sender, EventArgs e)
         {
-            string currentText = string.Empty;
-            if (_subtitle != null && _subtitle.Paragraphs.Count > 0)
+            lock (_openSaveLock)
             {
-                var saveFormat = GetCurrentSubtitleFormat();
-                if (!saveFormat.IsTextBased)
-                {
-                    saveFormat = new SubRip();
-                }
 
-                currentText = _subtitle.ToText(saveFormat);
-                if (_textAutoBackup == null)
+                string currentText = string.Empty;
+                if (_subtitle != null && _subtitle.Paragraphs.Count > 0)
                 {
-                    _textAutoBackup = currentText;
-                }
-
-                if ((Configuration.Settings.General.AutoSave ||
-                     !string.IsNullOrEmpty(_textAutoBackup) && currentText.Trim() != _textAutoBackup.Trim() && !string.IsNullOrWhiteSpace(currentText)) &&
-                    _lastWrittenAutoBackup != currentText)
-                {
-                    RestoreAutoBackup.SaveAutoBackup(_subtitle, saveFormat, currentText);
-                    _lastWrittenAutoBackup = currentText;
-
-                    if (!_cleanupHasRun)
+                    var saveFormat = GetCurrentSubtitleFormat();
+                    if (!saveFormat.IsTextBased)
                     {
-                        // let the cleanup process be handled by worker thread
-                        Task.Factory.StartNew(() => { RestoreAutoBackup.CleanAutoBackupFolder(Configuration.AutoBackupDirectory, Configuration.Settings.General.AutoBackupDeleteAfterMonths); });
-                        _cleanupHasRun = true;
-                    }
-                }
-            }
-
-            _textAutoBackup = currentText;
-
-            if (_subtitleOriginalFileName != null && _subtitleOriginal != null && _subtitleOriginal.Paragraphs.Count > 0)
-            {
-                var saveFormat = GetCurrentSubtitleFormat();
-                if (!saveFormat.IsTextBased)
-                {
-                    saveFormat = new SubRip();
-                }
-
-                string currentTextOriginal = _subtitleOriginal.ToText(saveFormat);
-                if (_subtitleOriginal != null && _subtitleOriginal.Paragraphs.Count > 0)
-                {
-                    if (_textAutoBackupOriginal == null)
-                    {
-                        _textAutoBackupOriginal = currentTextOriginal;
+                        saveFormat = new SubRip();
                     }
 
-                    if (Configuration.Settings.General.AutoSave ||
-                        !string.IsNullOrEmpty(_textAutoBackupOriginal) && currentTextOriginal.Trim() != _textAutoBackupOriginal.Trim() && !string.IsNullOrWhiteSpace(currentTextOriginal))
+                    currentText = _subtitle.ToText(saveFormat);
+                    if (_textAutoBackup == null)
                     {
-                        RestoreAutoBackup.SaveAutoBackup(_subtitleOriginal, saveFormat, currentTextOriginal);
+                        _textAutoBackup = currentText;
+                    }
+
+                    if ((Configuration.Settings.General.AutoSave ||
+                         !string.IsNullOrEmpty(_textAutoBackup) && currentText.Trim() != _textAutoBackup.Trim() && !string.IsNullOrWhiteSpace(currentText)) &&
+                        _lastWrittenAutoBackup != currentText)
+                    {
+                        RestoreAutoBackup.SaveAutoBackup(_subtitle, saveFormat, currentText);
+                        _lastWrittenAutoBackup = currentText;
+
+                        if (!_cleanupHasRun)
+                        {
+                            // let the cleanup process be handled by worker thread
+                            Task.Factory.StartNew(() => { RestoreAutoBackup.CleanAutoBackupFolder(Configuration.AutoBackupDirectory, Configuration.Settings.General.AutoBackupDeleteAfterMonths); });
+                            _cleanupHasRun = true;
+                        }
                     }
                 }
 
-                _textAutoBackupOriginal = currentTextOriginal;
+                _textAutoBackup = currentText;
+
+                if (_subtitleOriginalFileName != null && _subtitleOriginal != null && _subtitleOriginal.Paragraphs.Count > 0)
+                {
+                    var saveFormat = GetCurrentSubtitleFormat();
+                    if (!saveFormat.IsTextBased)
+                    {
+                        saveFormat = new SubRip();
+                    }
+
+                    string currentTextOriginal = _subtitleOriginal.ToText(saveFormat);
+                    if (_subtitleOriginal != null && _subtitleOriginal.Paragraphs.Count > 0)
+                    {
+                        if (_textAutoBackupOriginal == null)
+                        {
+                            _textAutoBackupOriginal = currentTextOriginal;
+                        }
+
+                        if (Configuration.Settings.General.AutoSave ||
+                            !string.IsNullOrEmpty(_textAutoBackupOriginal) && currentTextOriginal.Trim() != _textAutoBackupOriginal.Trim() && !string.IsNullOrWhiteSpace(currentTextOriginal))
+                        {
+                            RestoreAutoBackup.SaveAutoBackup(_subtitleOriginal, saveFormat, currentTextOriginal);
+                        }
+                    }
+
+                    _textAutoBackupOriginal = currentTextOriginal;
+                }
             }
         }
 
@@ -31255,10 +31303,13 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (ContinueNewOrExit())
                     {
-                        OpenSubtitle(restoreAutoBackup.AutoBackupFileName, null);
-                        _fileName = _fileName.Remove(0, Configuration.AutoBackupDirectory.Length).TrimStart(Path.DirectorySeparatorChar);
-                        _converted = true;
-                        SetTitle();
+                        lock (_openSaveLock)
+                        {
+                            OpenSubtitle(restoreAutoBackup.AutoBackupFileName, null);
+                            _fileName = _fileName.Remove(0, Configuration.AutoBackupDirectory.Length).TrimStart(Path.DirectorySeparatorChar);
+                            _converted = true;
+                            SetTitle();
+                        }
                     }
                 }
             }
@@ -31997,12 +32048,15 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void toolStripMenuItemOpenKeepVideo_Click(object sender, EventArgs e)
         {
-            openToolStripMenuItem.Enabled = false;
-            ReloadFromSourceView();
-            _resetVideo = false;
-            OpenNewFile();
-            _resetVideo = true;
-            openToolStripMenuItem.Enabled = true;
+            lock (_openSaveLock)
+            {
+                openToolStripMenuItem.Enabled = false;
+                ReloadFromSourceView();
+                _resetVideo = false;
+                OpenNewFile();
+                _resetVideo = true;
+                openToolStripMenuItem.Enabled = true;
+            }
         }
 
         private void changeSpeedInPercentToolStripMenuItem_Click(object sender, EventArgs e)
