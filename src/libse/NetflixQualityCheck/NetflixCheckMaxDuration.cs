@@ -11,7 +11,7 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
         {
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                if (p.Duration.TotalMilliseconds > 7000)
+                if (p.DurationTotalMilliseconds > 7000)
                 {
                     var fixedParagraph = new Paragraph(p, false);
                     fixedParagraph.EndTime.TotalMilliseconds = fixedParagraph.StartTime.TotalMilliseconds + 7000;

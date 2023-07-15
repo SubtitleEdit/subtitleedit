@@ -1255,7 +1255,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                         if (fromFormat != null && fromFormat.GetType() == typeof(MicroDvd))
                         {
-                            if (sub != null && sub.Paragraphs.Count > 0 && sub.Paragraphs[0].Duration.TotalMilliseconds < 1001)
+                            if (sub != null && sub.Paragraphs.Count > 0 && sub.Paragraphs[0].DurationTotalMilliseconds < 1001)
                             {
                                 if (sub.Paragraphs[0].Text.StartsWith("29.", StringComparison.Ordinal) || sub.Paragraphs[0].Text.StartsWith("23.", StringComparison.Ordinal) ||
                                 sub.Paragraphs[0].Text.StartsWith("29,", StringComparison.Ordinal) || sub.Paragraphs[0].Text.StartsWith("23,", StringComparison.Ordinal) ||
@@ -1885,10 +1885,10 @@ namespace Nikse.SubtitleEdit.Forms
                     if (pes == null && subtitle.Paragraphs.Count > 0)
                     {
                         var last = subtitle.Paragraphs[subtitle.Paragraphs.Count - 1];
-                        if (last.Duration.TotalMilliseconds < 100)
+                        if (last.DurationTotalMilliseconds < 100)
                         {
                             last.EndTime.TotalMilliseconds = msub.Start;
-                            if (last.Duration.TotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
+                            if (last.DurationTotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
                             {
                                 last.EndTime.TotalMilliseconds = last.StartTime.TotalMilliseconds + 3000;
                             }
@@ -1916,7 +1916,7 @@ namespace Nikse.SubtitleEdit.Forms
             for (var index = 0; index < subtitle.Paragraphs.Count; index++)
             {
                 var p = subtitle.Paragraphs[index];
-                if (p.Duration.TotalMilliseconds < 200)
+                if (p.DurationTotalMilliseconds < 200)
                 {
                     p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + 3000;
                 }
@@ -2612,7 +2612,7 @@ namespace Nikse.SubtitleEdit.Forms
                     var current = p.Subtitle.GetParagraphOrDefault(i);
                     var next = p.Subtitle.GetParagraphOrDefault(i + 1);
                     var gapsBetween = next.StartTime.TotalMilliseconds - current.EndTime.TotalMilliseconds;
-                    if (gapsBetween < minimumMillisecondsBetweenLines && current.Duration.TotalMilliseconds > minimumMillisecondsBetweenLines)
+                    if (gapsBetween < minimumMillisecondsBetweenLines && current.DurationTotalMilliseconds > minimumMillisecondsBetweenLines)
                     {
                         current.EndTime.TotalMilliseconds -= (minimumMillisecondsBetweenLines - gapsBetween);
                     }

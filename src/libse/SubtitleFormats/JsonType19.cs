@@ -29,7 +29,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 sb.AppendLine();
                 sb.AppendLine("  {");
                 sb.AppendLine($"    \"tStartMs\": {p.StartTime.TotalMilliseconds.ToString(CultureInfo.InvariantCulture)},");
-                sb.AppendLine($"    \"dDurationMs\": {p.Duration.TotalMilliseconds.ToString(CultureInfo.InvariantCulture)},");
+                sb.AppendLine($"    \"dDurationMs\": {p.DurationTotalMilliseconds.ToString(CultureInfo.InvariantCulture)},");
                 sb.AppendLine($"    \"segs\": [{{ \"utf8\": \"{Json.EncodeJsonText(p.Text, "\\n")}\" }} ]");
                 sb.Append("  }");
             }

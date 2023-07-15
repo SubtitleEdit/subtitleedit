@@ -32,7 +32,7 @@ NOTE=
             Paragraph last = null;
             foreach (var p in subtitle.Paragraphs)
             {
-                sb.AppendLine($"{MakeTimeCode(p.StartTime, last)} {MakeTimeCode(p.Duration.TotalSeconds)}\r\n{p.Text}\r\n");
+                sb.AppendLine($"{MakeTimeCode(p.StartTime, last)} {MakeTimeCode(p.DurationTotalSeconds)}\r\n{p.Text}\r\n");
                 last = p;
             }
             return sb.ToString().Trim().Replace(Environment.NewLine, "\n");
