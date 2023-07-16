@@ -2411,6 +2411,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <DarkTheme>어두운 테마</DarkTheme>
     <DarkThemeEnabled>어두운 테마 사용</DarkThemeEnabled>
     <DarkThemeShowGridViewLines>목록 보기 그리드 선 표시</DarkThemeShowGridViewLines>
+    <GraphicsButtons>그래픽 버튼</GraphicsButtons>
     <UpdateShortcut>업데이트</UpdateShortcut>
     <FoucsSetVideoPosition>초점에 비디오 위치 설정</FoucsSetVideoPosition>
     <ToggleDockUndockOfVideoControls>비디오 컨트롤 연결 | 해제</ToggleDockUndockOfVideoControls>
@@ -2846,18 +2847,29 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <SingleLineLengthMinimum>한 줄의 길이 - 최소: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>한 줄의 길이 - 최대: {0}</SingleLineLengthMaximum>
     <SingleLineLengthAverage>한 줄의 길이 - 평균: {0}</SingleLineLengthAverage>
+    <SingleLineLengthExceedingMaximum>한 줄의 길이 - 최대값 초과 ({0} 문자): {1} ({2:0.00}%)</SingleLineLengthExceedingMaximum>
     <SingleLineWidthMinimum>한 줄의 너비 - 최소: {0} 픽셀</SingleLineWidthMinimum>
     <SingleLineWidthMaximum>한 줄의 너비 - 최대: {0} 픽셀</SingleLineWidthMaximum>
     <SingleLineWidthAverage>한 줄의 너비 - 평균: {0} 픽셀</SingleLineWidthAverage>
+    <SingleLineWidthExceedingMaximum>한 줄의 너비 - 최대값 초과 ({0} 픽셀): {1} ({2:0.00}%)</SingleLineWidthExceedingMaximum>
     <DurationMinimum>표시시간 - 최소: {0:0.000}초</DurationMinimum>
     <DurationMaximum>표시시간 - 최대: {0:0.000}초</DurationMaximum>
     <DurationAverage>표시시간 - 평균: {0:0.000}초</DurationAverage>
+    <DurationExceedingMinimum>표시시간 - 최소값 미만 ({0:0.###} 초): {1} ({2:0.00}%)</DurationExceedingMinimum>
+    <DurationExceedingMaximum>표시시간 - 최대값 초과 ({0:0.###} 초): {1} ({2:0.00}%)</DurationExceedingMaximum>
     <CharactersPerSecondMinimum>문자/초 - 최소: {0:0.000}</CharactersPerSecondMinimum>
     <CharactersPerSecondMaximum>문자/초 - 최대: {0:0.000}</CharactersPerSecondMaximum>
     <CharactersPerSecondAverage>문자/초 - 평균: {0:0.000}</CharactersPerSecondAverage>
+    <CharactersPerSecondExceedingOptimal>문자/초 - 최적값 초과 ({0:0.##} cps): {1} ({2:0.00}%)</CharactersPerSecondExceedingOptimal>
+    <CharactersPerSecondExceedingMaximum>문자/초 - 최대값 초과 ({0:0.##} cps): {1} ({2:0.00}%)</CharactersPerSecondExceedingMaximum>
+    <WordsPerMinuteMinimum>단어/분 - 최소: {0:0.000}</WordsPerMinuteMinimum>
+    <WordsPerMinuteMaximum>단어/분 - 최대: {0:0.000}</WordsPerMinuteMaximum>
+    <WordsPerMinuteAverage>단어/분 - 평균: {0:0.000}</WordsPerMinuteAverage>
+    <WordsPerMinuteExceedingMaximum>단어/분 - 최대값 초과 ({0} wpm): {1} ({2:0.00}%)</WordsPerMinuteExceedingMaximum>
     <GapMinimum>간격 - 최소: {0:#,##0} 밀리초</GapMinimum>
     <GapMaximum>간격 - 최대: {0:#,##0} 밀리초</GapMaximum>
     <GapAverage>간격 - 평균: {0:#,##0.##} 밀리초</GapAverage>
+    <GapExceedingMinimum>간격 - 최소값 미만 ({0:#,##0} ms): {1} ({2:0.00}%)</GapExceedingMinimum>
     <Export>내보내기</Export>
   </Statistics>
   <SubStationAlphaProperties>
@@ -3219,4 +3231,9 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
   <WebVttStyleManager>
     <Title>WebVTT 스타일</Title>
   </WebVttStyleManager>
+  <WhisperAdvanced>
+    <Title>Whisper Advanced - 추가 명령줄 인수</Title>
+    <CommandLineArguments>Whisper 명령줄에 대한 추가 매개변수:</CommandLineArguments>
+    <Info>참고: Whisper 구현에 따라 명령줄 매개 변수는 다릅니다!</Info>
+  </WhisperAdvanced>
 </Language>
