@@ -27,24 +27,23 @@ namespace Nikse.SubtitleEdit.Core.Common
         public List<HistoryItem> HistoryItems { get; }
         public bool CanUndo => HistoryItems.Count > 0;
 
-        public Subtitle()
+        public Subtitle() : this(new List<Paragraph>(), new List<HistoryItem>())
         {
-            Paragraphs = new List<Paragraph>();
-            HistoryItems = new List<HistoryItem>();
-            FileName = "Untitled";
         }
 
-        public Subtitle(List<HistoryItem> historyItems)
-            : this()
+        public Subtitle(List<Paragraph> paragraphs) : this(paragraphs, new List<HistoryItem>())
         {
-            HistoryItems = historyItems;
+        }
+
+        public Subtitle(List<HistoryItem> historyItems) : this(new List<Paragraph>(), historyItems)
+        {
         }
 
         public Subtitle(List<Paragraph> paragraphs, List<HistoryItem> historyItems)
-            : this()
         {
             HistoryItems = historyItems;
             Paragraphs = paragraphs;
+            FileName = "Untitled";
         }
 
         /// <summary>
@@ -76,10 +75,6 @@ namespace Nikse.SubtitleEdit.Core.Common
             OriginalEncoding = subtitle.OriginalEncoding;
         }
 
-        public Subtitle(List<Paragraph> paragraphs) : this()
-        {
-            Paragraphs = paragraphs;
-        }
 
         /// <summary>
         /// Get the paragraph of index, null if out of bounds
@@ -152,18 +147,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// </summary>
         /// <param name="fileName">File name of subtitle to load.</param>
         /// <returns>Loaded subtitle, null if file is not known subtitle format.</returns>
-        public static Subtitle Parse(string fileName)
-        {
-            var subtitle = new Subtitle();
-            var format = subtitle.LoadSubtitle(fileName, out var encodingUsed, null);
-            if (format == null)
-            {
-                return null;
-            }
-
-            subtitle.OriginalEncoding = encodingUsed;
-            return subtitle;
-        }
+        public static Subtitle Parse(string fileName) => Parse(fileName, useThisEncoding: null);
 
         /// <summary>
         /// Load a subtitle from a file.
@@ -393,7 +377,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
-        public void AdjustDisplayTimeUsingPercent(double percent, List<int> selectedIndexes)
+        public void AdjustDisplayTimeUsingPercent(double percent, List<int> selectedIndexes, List<double> shotChanges = null, bool enforceDurationLimits = true)
         {
             for (int i = 0; i < Paragraphs.Count; i++)
             {
@@ -407,9 +391,41 @@ namespace Nikse.SubtitleEdit.Core.Common
 
                     double newEndMilliseconds = Paragraphs[i].EndTime.TotalMilliseconds;
                     newEndMilliseconds = Paragraphs[i].StartTime.TotalMilliseconds + (((newEndMilliseconds - Paragraphs[i].StartTime.TotalMilliseconds) * percent) / 100.0);
+
+                    // fix too short duration
+                    if (enforceDurationLimits)
+                    {
+                        var minDur = Math.Max(Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds, 100);
+                        if (Paragraphs[i].StartTime.TotalMilliseconds + minDur > newEndMilliseconds)
+                        {
+                            newEndMilliseconds = Paragraphs[i].StartTime.TotalMilliseconds + minDur;
+                        }
+                    }
+
+                    // handle overlap with next
                     if (newEndMilliseconds > nextStartMilliseconds)
                     {
                         newEndMilliseconds = nextStartMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                    }
+
+                    // handle shot change if supplied -- keep earliest time
+                    if (shotChanges != null)
+                    {
+                        double nextShotChangeMilliseconds = ShotChangeHelper.GetNextShotChangeMinusGapInMs(shotChanges, Paragraphs[i].EndTime) ?? double.MaxValue;
+                        if (newEndMilliseconds > nextShotChangeMilliseconds)
+                        {
+                            newEndMilliseconds = nextShotChangeMilliseconds;
+                        }
+                    }
+
+                    // max duration
+                    if (enforceDurationLimits)
+                    {
+                        var dur = newEndMilliseconds - Paragraphs[i].StartTime.TotalMilliseconds;
+                        if (dur > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
+                        {
+                            newEndMilliseconds = Paragraphs[i].StartTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds;
+                        }
                     }
 
                     if (percent > 100 && newEndMilliseconds > Paragraphs[i].EndTime.TotalMilliseconds || percent < 100)
@@ -420,7 +436,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
-        public void AdjustDisplayTimeUsingSeconds(double seconds, List<int> selectedIndexes)
+        public void AdjustDisplayTimeUsingSeconds(double seconds, List<int> selectedIndexes, List<double> shotChanges = null, bool enforceDurationLimits = true)
         {
             if (Math.Abs(seconds) < 0.001)
             {
@@ -432,19 +448,19 @@ namespace Nikse.SubtitleEdit.Core.Common
             {
                 foreach (var idx in selectedIndexes)
                 {
-                    AdjustDisplayTimeUsingMilliseconds(idx, adjustMs);
+                    AdjustDisplayTimeUsingMilliseconds(idx, adjustMs, shotChanges, enforceDurationLimits);
                 }
             }
             else
             {
                 for (int idx = 0; idx < Paragraphs.Count; idx++)
                 {
-                    AdjustDisplayTimeUsingMilliseconds(idx, adjustMs);
+                    AdjustDisplayTimeUsingMilliseconds(idx, adjustMs, shotChanges, enforceDurationLimits);
                 }
             }
         }
 
-        private void AdjustDisplayTimeUsingMilliseconds(int idx, double ms)
+        private void AdjustDisplayTimeUsingMilliseconds(int idx, double ms, List<double> shotChanges = null, bool enforceDurationLimits = true)
         {
             var p = Paragraphs[idx];
             var nextStartTimeInMs = double.MaxValue;
@@ -455,10 +471,13 @@ namespace Nikse.SubtitleEdit.Core.Common
             var newEndTimeInMs = p.EndTime.TotalMilliseconds + ms;
 
             // fix too short duration
-            var minDur = Math.Max(Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds, 100);
-            if (p.StartTime.TotalMilliseconds + minDur > newEndTimeInMs)
+            if (enforceDurationLimits)
             {
-                newEndTimeInMs = p.StartTime.TotalMilliseconds + minDur;
+                var minDur = Math.Max(Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds, 100);
+                if (p.StartTime.TotalMilliseconds + minDur > newEndTimeInMs)
+                {
+                    newEndTimeInMs = p.StartTime.TotalMilliseconds + minDur;
+                }
             }
 
             // handle overlap with next
@@ -467,11 +486,20 @@ namespace Nikse.SubtitleEdit.Core.Common
                 newEndTimeInMs = nextStartTimeInMs - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
             }
 
-            // max duration
-            var dur = newEndTimeInMs - p.StartTime.TotalMilliseconds;
-            if (dur > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
+            // handle shot change if supplied -- keep earliest time
+            if (shotChanges != null)
             {
-                newEndTimeInMs = p.StartTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds;
+                newEndTimeInMs = Math.Min(newEndTimeInMs, ShotChangeHelper.GetNextShotChangeMinusGapInMs(shotChanges, p.EndTime) ?? double.MaxValue);
+            }
+
+            // max duration
+            if (enforceDurationLimits)
+            {
+                var dur = newEndTimeInMs - p.StartTime.TotalMilliseconds;
+                if (dur > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
+                {
+                    newEndTimeInMs = p.StartTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds;
+                }
             }
 
             if (ms > 0 && newEndTimeInMs < p.EndTime.TotalMilliseconds || ms < 0 && newEndTimeInMs > p.EndTime.TotalMilliseconds)
@@ -482,25 +510,25 @@ namespace Nikse.SubtitleEdit.Core.Common
             p.EndTime.TotalMilliseconds = newEndTimeInMs;
         }
 
-        public void RecalculateDisplayTimes(double maxCharPerSec, List<int> selectedIndexes, double optimalCharPerSec, bool extendOnly = false)
+        public void RecalculateDisplayTimes(double maxCharPerSec, List<int> selectedIndexes, double optimalCharPerSec, bool extendOnly = false, List<double> shotChanges = null, bool enforceDurationLimits = true)
         {
             if (selectedIndexes != null)
             {
                 foreach (var index in selectedIndexes)
                 {
-                    RecalculateDisplayTime(maxCharPerSec, index, optimalCharPerSec, extendOnly);
+                    RecalculateDisplayTime(maxCharPerSec, index, optimalCharPerSec, extendOnly, false, shotChanges, enforceDurationLimits);
                 }
             }
             else
             {
                 for (int i = 0; i < Paragraphs.Count; i++)
                 {
-                    RecalculateDisplayTime(maxCharPerSec, i, optimalCharPerSec, extendOnly);
+                    RecalculateDisplayTime(maxCharPerSec, i, optimalCharPerSec, extendOnly, false, shotChanges, enforceDurationLimits);
                 }
             }
         }
 
-        public void RecalculateDisplayTime(double maxCharactersPerSecond, int index, double optimalCharactersPerSeconds, bool extendOnly = false, bool onlyOptimal = false)
+        public void RecalculateDisplayTime(double maxCharactersPerSecond, int index, double optimalCharactersPerSeconds, bool extendOnly = false, bool onlyOptimal = false, List<double> shotChanges = null, bool enforceDurationLimits = true)
         {
             var p = GetParagraphOrDefault(index);
             if (p == null)
@@ -510,7 +538,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             var originalEndTime = p.EndTime.TotalMilliseconds;
 
-            var duration = Utilities.GetOptimalDisplayMilliseconds(p.Text, optimalCharactersPerSeconds, onlyOptimal);
+            var duration = Utilities.GetOptimalDisplayMilliseconds(p.Text, optimalCharactersPerSeconds, onlyOptimal, enforceDurationLimits);
             p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + duration;
             while (Utilities.GetCharactersPerSecond(p) > maxCharactersPerSecond)
             {
@@ -524,17 +552,30 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             var next = GetParagraphOrDefault(index + 1);
-            if (next != null && p.StartTime.TotalMilliseconds + duration + Configuration.Settings.General.MinimumMillisecondsBetweenLines > next.StartTime.TotalMilliseconds)
+            var wantedEndMs = p.EndTime.TotalMilliseconds;
+            var bestEndMs = double.MaxValue;
+
+            // First check for next subtitle
+            if (next != null)
             {
-                p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
-                if (p.Duration.TotalMilliseconds <= 0)
-                {
-                    p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + 1;
-                }
+                bestEndMs = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+            }
+
+            // Then check for next shot change (if option is checked, and if any are supplied) -- keeping earliest time
+            if (shotChanges != null)
+            {
+                bestEndMs = Math.Min(bestEndMs, ShotChangeHelper.GetNextShotChangeMinusGapInMs(shotChanges, new TimeCode(originalEndTime)) ?? double.MaxValue);
+            }
+            
+            p.EndTime.TotalMilliseconds = wantedEndMs <= bestEndMs ? wantedEndMs : bestEndMs;
+
+            if (p.DurationTotalMilliseconds <= 0)
+            {
+                p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + 1;
             }
         }
 
-        public void SetFixedDuration(List<int> selectedIndexes, double fixedDurationMilliseconds)
+        public void SetFixedDuration(List<int> selectedIndexes, double fixedDurationMilliseconds, List<double> shotChanges = null)
         {
             for (int i = 0; i < Paragraphs.Count; i++)
             {
@@ -546,16 +587,27 @@ namespace Nikse.SubtitleEdit.Core.Common
                         continue;
                     }
 
-                    p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + fixedDurationMilliseconds;
-
                     var next = GetParagraphOrDefault(i + 1);
-                    if (next != null && p.StartTime.TotalMilliseconds + fixedDurationMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines > next.StartTime.TotalMilliseconds)
+                    var wantedEndMs = p.StartTime.TotalMilliseconds + fixedDurationMilliseconds;
+                    var bestEndMs = double.MaxValue;
+
+                    // First check for next subtitle
+                    if (next != null)
                     {
-                        p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
-                        if (p.Duration.TotalMilliseconds <= 0)
-                        {
-                            p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + 1;
-                        }
+                        bestEndMs = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                    }
+
+                    // Then check for next shot change (if option is checked, and if any are supplied) -- keeping earliest time
+                    if (shotChanges != null)
+                    {
+                        bestEndMs = Math.Min(bestEndMs, ShotChangeHelper.GetNextShotChangeMinusGapInMs(shotChanges, p.EndTime) ?? double.MaxValue);
+                    }
+
+                    p.EndTime.TotalMilliseconds = wantedEndMs <= bestEndMs ? wantedEndMs : bestEndMs;
+
+                    if (p.DurationTotalMilliseconds <= 0)
+                    {
+                        p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + 1;
                     }
                 }
             }
@@ -746,7 +798,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     Paragraphs = Paragraphs.OrderBy(p => p.EndTime.TotalMilliseconds).ThenBy(p => p.Number).ToList();
                     break;
                 case SubtitleSortCriteria.Duration:
-                    Paragraphs = Paragraphs.OrderBy(p => p.Duration.TotalMilliseconds).ThenBy(p => p.Number).ToList();
+                    Paragraphs = Paragraphs.OrderBy(p => p.DurationTotalMilliseconds).ThenBy(p => p.Number).ToList();
                     break;
                 case SubtitleSortCriteria.Gap:
                     var lookupDictionary = new Dictionary<string, double>();

@@ -39,55 +39,55 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
             {
                 Name = "tiny.en",
                 Size = "74 MB",
-                Urls = new []{ "https://huggingface.co/datasets/ggerganov/whisper.cpp/resolve/main/ggml-tiny.en.bin" },
+                Urls = new []{ "https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-tiny.en.bin" },
             },
             new WhisperModel
             {
                 Name = "tiny",
                 Size = "74 MB",
-                Urls = new []{ "https://huggingface.co/datasets/ggerganov/whisper.cpp/resolve/main/ggml-tiny.bin" },
+                Urls = new []{ "https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-tiny.bin" },
             },
             new WhisperModel
             {
                 Name = "base.en",
                 Size = "141 MB",
-                Urls = new []{ "https://huggingface.co/datasets/ggerganov/whisper.cpp/resolve/main/ggml-base.en.bin" },
+                Urls = new []{ "https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-base.en.bin" },
             },
             new WhisperModel
             {
                 Name = "base",
                 Size = "141 MB",
-                Urls = new []{ "https://huggingface.co/datasets/ggerganov/whisper.cpp/resolve/main/ggml-base.bin" },
+                Urls = new []{ "https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-base.bin" },
             },
             new WhisperModel
             {
                 Name = "small.en",
                 Size = "465 MB",
-                Urls = new []{ "https://huggingface.co/datasets/ggerganov/whisper.cpp/resolve/main/ggml-small.en.bin" },
+                Urls = new []{ "https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-small.en.bin" },
             },
             new WhisperModel
             {
                 Name = "small",
                 Size = "465 MB",
-                Urls = new []{ "https://huggingface.co/datasets/ggerganov/whisper.cpp/resolve/main/ggml-small.bin" },
+                Urls = new []{ "https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-small.bin" },
             },
             new WhisperModel
             {
                 Name = "medium.en",
                 Size = "1.42 GB",
-                Urls = new []{ "https://huggingface.co/datasets/ggerganov/whisper.cpp/resolve/main/ggml-medium.en.bin" },
+                Urls = new []{ "https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-medium.en.bin" },
             },
             new WhisperModel
             {
                 Name = "medium",
                 Size = "1.42 GB",
-                Urls = new []{ "https://huggingface.co/datasets/ggerganov/whisper.cpp/resolve/main/ggml-medium.bin" },
+                Urls = new []{ "https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-medium.bin" },
             },
             new WhisperModel
             {
                 Name = "large",
                 Size = "2.88 GB",
-                Urls = new []{ "https://huggingface.co/datasets/ggerganov/whisper.cpp/resolve/main/ggml-large.bin" },
+                Urls = new []{ "https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-large.bin" },
             },
         };
     }

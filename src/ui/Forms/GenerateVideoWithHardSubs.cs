@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Logic.VideoPlayers;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -29,8 +30,11 @@ namespace Nikse.SubtitleEdit.Forms
         private readonly bool _isAssa;
         private readonly FfmpegMediaInfo _mediaInfo;
         private bool _promptFFmpegParameters;
+        private readonly bool _mpvOn;
+        private readonly string _mpvSubtitleFileName;
         public string VideoFileName { get; private set; }
         public long MillisecondsEncoding { get; private set; }
+        private PreviewVideo _previewVideo;
 
         public GenerateVideoWithHardSubs(Subtitle assaSubtitle, string inputVideoFileName, VideoInfo videoInfo, int? fontSize, bool setStartEndCut)
         {
@@ -40,9 +44,10 @@ namespace Nikse.SubtitleEdit.Forms
 
             _loading = true;
             _videoInfo = videoInfo;
-            Text = LanguageSettings.Current.GenerateVideoWithBurnedInSubs.Title;
             _assaSubtitle = new Subtitle(assaSubtitle);
             _inputVideoFileName = inputVideoFileName;
+
+            Text = LanguageSettings.Current.GenerateVideoWithBurnedInSubs.Title;
             buttonGenerate.Text = LanguageSettings.Current.Watermark.Generate;
             labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait;
             labelResolution.Text = LanguageSettings.Current.SubStationAlphaProperties.Resolution;
@@ -109,8 +114,14 @@ namespace Nikse.SubtitleEdit.Forms
             buttonVideoChooseStandardRes.Left = numericUpDownHeight.Left + numericUpDownHeight.Width + 9;
             labelInfo.Text = LanguageSettings.Current.GenerateVideoWithBurnedInSubs.InfoAssaOff;
             checkBoxRightToLeft.Left = left;
-            checkBoxAlignRight.Left = left;
-            checkBoxBox.Left = left;
+            checkBoxAlignRight.Left = checkBoxRightToLeft.Right + 15;
+            checkBoxBox.Left = numericUpDownFontSize.Right + 22;
+            buttonOutlineColor.Left = checkBoxBox.Right + 2;
+            buttonOutlineColor.Text = LanguageSettings.Current.AssaSetBackgroundBox.BoxColor;
+            panelOutlineColor.Left = buttonOutlineColor.Right + 3;
+            buttonForeColor.Left = buttonOutlineColor.Left;
+            panelForeColor.Left = panelOutlineColor.Left;
+            buttonForeColor.Text = LanguageSettings.Current.Settings.WaveformTextColor;
 
             var audioLeft = Math.Max(Math.Max(labelAudioEnc.Left + labelAudioEnc.Width, labelAudioSampleRate.Left + labelAudioSampleRate.Width), labelAudioBitRate.Left + labelAudioBitRate.Width) + 5;
             comboBoxAudioEnc.Left = audioLeft;
@@ -155,6 +166,10 @@ namespace Nikse.SubtitleEdit.Forms
                 checkBoxAlignRight.Enabled = false;
                 checkBoxBox.Enabled = false;
                 labelInfo.Text = LanguageSettings.Current.GenerateVideoWithBurnedInSubs.InfoAssaOn;
+                buttonForeColor.Enabled = false;
+                buttonOutlineColor.Enabled = false;
+                panelOutlineColor.Enabled = false;
+                panelForeColor.Enabled = false;
             }
 
             var initialFont = Configuration.Settings.Tools.GenVideoFontName;
@@ -230,6 +245,24 @@ namespace Nikse.SubtitleEdit.Forms
             else
             {
                 groupBoxCut.Visible = false;
+            }
+
+            _mpvOn = LibMpvDynamic.IsInstalled && Configuration.Settings.General.VideoPlayer == "MPV";
+            _mpvSubtitleFileName = GetAssaFileName(_inputVideoFileName);
+            if (_mpvOn)
+            {
+                buttonPreview.Visible = false;
+                videoPlayerContainer1.TryLoadGfx();
+                videoPlayerContainer1.HidePlayerName();
+            }
+            else
+            {
+                videoPlayerContainer1.Visible = false;
+            }
+
+            if (_isAssa)
+            {
+
             }
         }
 
@@ -504,15 +537,17 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void FixRightToLeft(Subtitle subtitle)
         {
-            if (checkBoxRightToLeft.Checked)
+            if (!checkBoxRightToLeft.Checked)
             {
-                for (var index = 0; index < subtitle.Paragraphs.Count; index++)
+                return;
+            }
+
+            for (var index = 0; index < subtitle.Paragraphs.Count; index++)
+            {
+                var paragraph = subtitle.Paragraphs[index];
+                if (LanguageAutoDetect.ContainsRightToLeftLetter(paragraph.Text))
                 {
-                    var paragraph = subtitle.Paragraphs[index];
-                    if (LanguageAutoDetect.ContainsRightToLeftLetter(paragraph.Text))
-                    {
-                        paragraph.Text = Utilities.FixRtlViaUnicodeChars(paragraph.Text);
-                    }
+                    paragraph.Text = Utilities.FixRtlViaUnicodeChars(paragraph.Text);
                 }
             }
         }
@@ -648,7 +683,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void RunOnePassEncoding(string assaTempFileName)
         {
-            var process = GetFfmpegProcess(_inputVideoFileName, VideoFileName, assaTempFileName, null);
+            var process = GetFfmpegProcess(_inputVideoFileName, VideoFileName, assaTempFileName);
             _log.AppendLine("ffmpeg arguments: " + process.StartInfo.Arguments);
 
             if (!CheckForPromptParameters(process, Text))
@@ -761,6 +796,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 numericUpDownWidth.Value++;
             }
+
+            UpdateVideoPreview();
         }
 
         private void numericUpDownHeight_ValueChanged(object sender, EventArgs e)
@@ -770,6 +807,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 numericUpDownHeight.Value++;
             }
+
+            UpdateVideoPreview();
         }
 
         private void comboBoxAudioEnc_SelectedIndexChanged(object sender, EventArgs e)
@@ -869,6 +908,10 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.Tools.GenVideoNonAssaBox = checkBoxBox.Checked;
             Configuration.Settings.Tools.GenVideoNonAssaAlignRight = checkBoxAlignRight.Checked;
             Configuration.Settings.Tools.GenVideoNonAssaFixRtlUnicode = checkBoxRightToLeft.Checked;
+            Configuration.Settings.Tools.GenVideoNonAssaBoxColor = panelOutlineColor.BackColor;
+            Configuration.Settings.Tools.GenVideoNonAssaTextColor = panelForeColor.BackColor;
+
+            CloseVideo();
 
             using (var graphics = CreateGraphics())
             {
@@ -877,6 +920,18 @@ namespace Nikse.SubtitleEdit.Forms
                     var currentHeight = graphics.MeasureString("HJKLj", font).Height;
                     Configuration.Settings.Tools.GenVideoFontSizePercentOfHeight = (float)(currentHeight / _videoInfo.Height);
                 }
+            }
+
+            try
+            {
+                if (!string.IsNullOrEmpty(_mpvSubtitleFileName))
+                {
+                    File.Delete(_mpvSubtitleFileName);
+                }
+            }
+            catch
+            {
+                // ignore
             }
         }
 
@@ -1193,7 +1248,56 @@ namespace Nikse.SubtitleEdit.Forms
             _loading = false;
             UiUtil.FixFonts(groupBoxSettings, 2000);
 
+            panelOutlineColor.BackColor = Configuration.Settings.Tools.GenVideoNonAssaBoxColor;
+            panelForeColor.BackColor = Configuration.Settings.Tools.GenVideoNonAssaTextColor;
+
+            if (_mpvOn)
+            {
+                SavePreviewSubtitle();
+                UiUtil.InitializeVideoPlayerAndContainer(_inputVideoFileName, _videoInfo, videoPlayerContainer1, VideoStartLoaded, VideoStartEnded);
+            }
+
             buttonGenerate.Focus();
+        }
+
+        private void VideoStartEnded(object sender, EventArgs e)
+        {
+            videoPlayerContainer1.Pause();
+        }
+
+        private void VideoStartLoaded(object sender, EventArgs e)
+        {
+            videoPlayerContainer1.Pause();
+            if (videoPlayerContainer1.VideoPlayer is LibMpvDynamic libmpv)
+            {
+                libmpv.LoadSubtitle(_mpvSubtitleFileName);
+            }
+
+            if (_assaSubtitle?.Paragraphs.Count > 0)
+            {
+                videoPlayerContainer1.CurrentPosition = _assaSubtitle.Paragraphs[0].StartTime.TotalSeconds + 0.1;
+            }
+
+            videoPlayerContainer1.ShowFullscreenButton = true;
+            videoPlayerContainer1.OnButtonClicked += MediaPlayer_OnButtonClicked;
+        }
+
+        private void MediaPlayer_OnButtonClicked(object sender, EventArgs e)
+        {
+            if (sender is PictureBox pb && pb.Name == "_pictureBoxFullscreenOver")
+            {
+                if (_previewVideo != null && !_previewVideo.IsDisposed)
+                {
+                    _previewVideo.Close();
+                    _previewVideo.Dispose();
+                    _previewVideo = null;
+                }
+                else
+                {
+                    _previewVideo = new PreviewVideo(_inputVideoFileName, _mpvSubtitleFileName, _assaSubtitle, true);
+                    _previewVideo.Show(this);
+                }
+            }
         }
 
         private void checkBoxTargetFileSize_CheckedChanged(object sender, EventArgs e)
@@ -1217,6 +1321,26 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 buttonPreview.Enabled = false;
                 labelPreviewPleaseWait.Visible = true;
+
+                if (LibMpvDynamic.IsInstalled && Configuration.Settings.General.VideoPlayer == "MPV")
+                {
+                    var temp = new Subtitle(_assaSubtitle);
+                    if (!_isAssa)
+                    {
+                        SetStyleForNonAssa(temp);
+                    }
+                    FixRightToLeft(temp);
+                    var subFileName = GetAssaFileName(_inputVideoFileName);
+                    FileUtil.WriteAllText(subFileName, new AdvancedSubStationAlpha().ToText(temp, null), new TextEncoding(Encoding.UTF8, "UTF8"));
+
+                    using (var form = new PreviewVideo(_inputVideoFileName, subFileName, _assaSubtitle))
+                    {
+                        form.ShowDialog(this);
+                    }
+
+                    return;
+                }
+
                 Cursor = Cursors.WaitCursor;
 
                 // generate blank video
@@ -1326,7 +1450,8 @@ namespace Nikse.SubtitleEdit.Forms
             var style = AdvancedSubStationAlpha.GetSsaStyle("Default", sub.Header);
             style.FontSize = numericUpDownFontSize.Value;
             style.FontName = comboBoxSubtitleFont.Text;
-            style.Background = Color.FromArgb(150, 0, 0, 0);
+            style.Background = panelOutlineColor.BackColor;
+            style.Primary = panelForeColor.BackColor;
 
             if (checkBoxAlignRight.Checked)
             {
@@ -1339,7 +1464,7 @@ namespace Nikse.SubtitleEdit.Forms
                 style.ShadowWidth = 5;
             }
 
-            sub.Header = AdvancedSubStationAlpha.GetHeaderAndStylesFromAdvancedSubStationAlpha(sub.Header, new System.Collections.Generic.List<SsaStyle>() { style });
+            sub.Header = AdvancedSubStationAlpha.GetHeaderAndStylesFromAdvancedSubStationAlpha(sub.Header, new List<SsaStyle> { style });
             sub.Header = AdvancedSubStationAlpha.AddTagToHeader("PlayResX", "PlayResX: " + ((int)numericUpDownWidth.Value).ToString(CultureInfo.InvariantCulture), "[Script Info]", sub.Header);
             sub.Header = AdvancedSubStationAlpha.AddTagToHeader("PlayResY", "PlayResY: " + ((int)numericUpDownHeight.Value).ToString(CultureInfo.InvariantCulture), "[Script Info]", sub.Header);
         }
@@ -1488,6 +1613,108 @@ namespace Nikse.SubtitleEdit.Forms
         {
             _promptFFmpegParameters = true;
             buttonGenerate_Click(null, null);
+        }
+
+        private void numericUpDownFontSize_ValueChanged(object sender, EventArgs e)
+        {
+            UpdateVideoPreview();
+        }
+
+        private void UpdateVideoPreview()
+        {
+            if (_loading)
+            {
+                return;
+            }
+
+            if (videoPlayerContainer1.VideoPlayer is LibMpvDynamic libmpv)
+            {
+                SavePreviewSubtitle();
+                libmpv.ReloadSubtitle();
+            }
+        }
+
+        private void SavePreviewSubtitle()
+        {
+            var temp = new Subtitle(_assaSubtitle);
+            if (!_isAssa)
+            {
+                SetStyleForNonAssa(temp);
+            }
+
+            FixRightToLeft(temp);
+            FileUtil.WriteAllText(_mpvSubtitleFileName, new AdvancedSubStationAlpha().ToText(temp, null), new TextEncoding(Encoding.UTF8, "UTF8"));
+        }
+
+        private void checkBoxBox_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateVideoPreview();
+        }
+
+        private void comboBoxSubtitleFont_SelectedValueChanged(object sender, EventArgs e)
+        {
+            UpdateVideoPreview();
+        }
+
+        private void checkBoxRightToLeft_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateVideoPreview();
+        }
+
+        private void checkBoxAlignRight_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateVideoPreview();
+        }
+
+        private void CloseVideo()
+        {
+            if (!_mpvOn)
+            {
+                return;
+            }
+
+            Application.DoEvents();
+            if (videoPlayerContainer1.VideoPlayer != null)
+            {
+                videoPlayerContainer1.Pause();
+                videoPlayerContainer1.VideoPlayer.DisposeVideoPlayer();
+                videoPlayerContainer1.VideoPlayer = null;
+            }
+            Application.DoEvents();
+        }
+
+        private void buttonOutlineColor_Click(object sender, EventArgs e)
+        {
+            using (var colorChooser = new ColorChooser { Color = panelOutlineColor.BackColor })
+            {
+                if (colorChooser.ShowDialog() == DialogResult.OK)
+                {
+                    panelOutlineColor.BackColor = colorChooser.Color;
+                    UpdateVideoPreview();
+                }
+            }
+        }
+
+        private void panelOutlineColor_MouseClick(object sender, MouseEventArgs e)
+        {
+            buttonOutlineColor_Click(null, null);
+        }
+
+        private void buttonForeColor_Click(object sender, EventArgs e)
+        {
+            using (var colorChooser = new ColorChooser { Color = panelForeColor.BackColor })
+            {
+                if (colorChooser.ShowDialog() == DialogResult.OK)
+                {
+                    panelForeColor.BackColor = colorChooser.Color;
+                    UpdateVideoPreview();
+                }
+            }
+        }
+
+        private void panelForeColor_MouseClick(object sender, MouseEventArgs e)
+        {
+            buttonForeColor_Click(null, null);
         }
     }
 }

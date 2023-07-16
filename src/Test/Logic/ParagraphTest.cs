@@ -65,7 +65,7 @@ namespace Test.Logic
         public void TestDuration()
         {
             var p = new Paragraph { Text = string.Empty, StartTime = new TimeCode(0, 1, 0, 0), EndTime = new TimeCode(0, 1, 1, 1) };
-            Assert.AreEqual(p.Duration.TotalMilliseconds, 1001);
+            Assert.AreEqual(p.DurationTotalMilliseconds, 1001);
         }
 
     }

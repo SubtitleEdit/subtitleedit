@@ -166,14 +166,13 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.convertMkvSettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemOcrEngine = new System.Windows.Forms.ToolStripMenuItem();
-            this.tesseractToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.nOCRToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.alsoScanVideoFilesInSearchFolderslowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.labelStatus = new System.Windows.Forms.Label();
             this.labelError = new System.Windows.Forms.Label();
-            this.alsoScanVideoFilesInSearchFolderslowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.checkBoxEnforceDurationLimits = new System.Windows.Forms.CheckBox();
             this.groupBoxConvertOptions.SuspendLayout();
             this.contextMenuStripOptions.SuspendLayout();
             this.groupBoxChangeCasing.SuspendLayout();
@@ -239,10 +238,10 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.groupBoxConvertOptions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxConvertOptions.Controls.Add(this.groupBoxAdjustDuration);
             this.groupBoxConvertOptions.Controls.Add(this.listViewConvertOptions);
             this.groupBoxConvertOptions.Controls.Add(this.groupBoxChangeCasing);
             this.groupBoxConvertOptions.Controls.Add(this.groupBoxMergeShortLines);
-            this.groupBoxConvertOptions.Controls.Add(this.groupBoxAdjustDuration);
             this.groupBoxConvertOptions.Controls.Add(this.buttonConvertOptionsSettings);
             this.groupBoxConvertOptions.Controls.Add(this.groupBoxAssaChangeRes);
             this.groupBoxConvertOptions.Controls.Add(this.groupBoxSortBy);
@@ -504,6 +503,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // groupBoxAdjustDuration
             // 
+            this.groupBoxAdjustDuration.Controls.Add(this.checkBoxEnforceDurationLimits);
             this.groupBoxAdjustDuration.Controls.Add(this.comboBoxAdjustDurationVia);
             this.groupBoxAdjustDuration.Controls.Add(this.labelAdjustDurationVia);
             this.groupBoxAdjustDuration.Controls.Add(this.panelAdjustDurationFixed);
@@ -1708,7 +1708,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemOcrEngine,
             this.alsoScanVideoFilesInSearchFolderslowToolStripMenuItem});
             this.contextMenuStripFiles.Name = "contextMenuStripStyles";
-            this.contextMenuStripFiles.Size = new System.Drawing.Size(400, 192);
+            this.contextMenuStripFiles.Size = new System.Drawing.Size(400, 170);
             this.contextMenuStripFiles.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripFilesOpening);
             // 
             // addFilesToolStripMenuItem
@@ -1758,26 +1758,17 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // toolStripMenuItemOcrEngine
             // 
-            this.toolStripMenuItemOcrEngine.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tesseractToolStripMenuItem,
-            this.nOCRToolStripMenuItem});
             this.toolStripMenuItemOcrEngine.Name = "toolStripMenuItemOcrEngine";
             this.toolStripMenuItemOcrEngine.Size = new System.Drawing.Size(399, 22);
             this.toolStripMenuItemOcrEngine.Text = "OCR engine";
+            this.toolStripMenuItemOcrEngine.Click += new System.EventHandler(this.toolStripMenuItemOcrEngine_Click);
             // 
-            // tesseractToolStripMenuItem
+            // alsoScanVideoFilesInSearchFolderslowToolStripMenuItem
             // 
-            this.tesseractToolStripMenuItem.Name = "tesseractToolStripMenuItem";
-            this.tesseractToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
-            this.tesseractToolStripMenuItem.Text = "Tesseract";
-            this.tesseractToolStripMenuItem.Click += new System.EventHandler(this.tesseractToolStripMenuItem_Click);
-            // 
-            // nOCRToolStripMenuItem
-            // 
-            this.nOCRToolStripMenuItem.Name = "nOCRToolStripMenuItem";
-            this.nOCRToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
-            this.nOCRToolStripMenuItem.Text = "nOCR";
-            this.nOCRToolStripMenuItem.Click += new System.EventHandler(this.nOCRToolStripMenuItem_Click);
+            this.alsoScanVideoFilesInSearchFolderslowToolStripMenuItem.Name = "alsoScanVideoFilesInSearchFolderslowToolStripMenuItem";
+            this.alsoScanVideoFilesInSearchFolderslowToolStripMenuItem.Size = new System.Drawing.Size(399, 22);
+            this.alsoScanVideoFilesInSearchFolderslowToolStripMenuItem.Text = "Also scan video files in \"Search folder\" (slow)";
+            this.alsoScanVideoFilesInSearchFolderslowToolStripMenuItem.Click += new System.EventHandler(this.alsoScanVideoFilesInSearchFolderSlowToolStripMenuItem_Click);
             // 
             // openFileDialog1
             // 
@@ -1812,12 +1803,15 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelError.TabIndex = 10;
             this.labelError.Text = "labelError";
             // 
-            // alsoScanVideoFilesInSearchFolderslowToolStripMenuItem
+            // checkBoxEnforceDurationLimits
             // 
-            this.alsoScanVideoFilesInSearchFolderslowToolStripMenuItem.Name = "alsoScanVideoFilesInSearchFolderslowToolStripMenuItem";
-            this.alsoScanVideoFilesInSearchFolderslowToolStripMenuItem.Size = new System.Drawing.Size(399, 22);
-            this.alsoScanVideoFilesInSearchFolderslowToolStripMenuItem.Text = "Also scan video files in \"Search folder\" (slow)";
-            this.alsoScanVideoFilesInSearchFolderslowToolStripMenuItem.Click += new System.EventHandler(this.alsoScanVideoFilesInSearchFolderslowToolStripMenuItem_Click);
+            this.checkBoxEnforceDurationLimits.AutoSize = true;
+            this.checkBoxEnforceDurationLimits.Location = new System.Drawing.Point(10, 222);
+            this.checkBoxEnforceDurationLimits.Name = "checkBoxEnforceDurationLimits";
+            this.checkBoxEnforceDurationLimits.Size = new System.Drawing.Size(214, 17);
+            this.checkBoxEnforceDurationLimits.TabIndex = 17;
+            this.checkBoxEnforceDurationLimits.Text = "Enforce minimum and maximum duration";
+            this.checkBoxEnforceDurationLimits.UseVisualStyleBackColor = true;
             // 
             // BatchConvert
             // 
@@ -2024,8 +2018,6 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.CheckBox checkBoxFontSize;
         private System.Windows.Forms.CheckBox checkBoxMargins;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemOcrEngine;
-        private System.Windows.Forms.ToolStripMenuItem tesseractToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem nOCRToolStripMenuItem;
         private System.Windows.Forms.Label labelError;
         private System.Windows.Forms.GroupBox groupBoxMergeSameTimeCodes;
         private System.Windows.Forms.CheckBox checkBoxMergeSameTimeCodesReBreakLines;
@@ -2043,5 +2035,6 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.RadioButton radioButtonProperCase;
         private System.Windows.Forms.CheckBox checkBoxProperCaseOnlyUpper;
         private System.Windows.Forms.ToolStripMenuItem alsoScanVideoFilesInSearchFolderslowToolStripMenuItem;
+        private System.Windows.Forms.CheckBox checkBoxEnforceDurationLimits;
     }
 }

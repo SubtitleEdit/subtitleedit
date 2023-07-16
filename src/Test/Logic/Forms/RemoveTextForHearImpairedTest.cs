@@ -659,6 +659,24 @@ namespace Test.Logic.Forms
         }
 
         [TestMethod]
+        public void RemoveInterjections19()
+        {
+            var text = $"- ¡Hm!{Environment.NewLine}- Increíble, ¿verdad?";
+            var settings = GetRemoveInterjectionContext(text, true);
+            var actual = new RemoveInterjection().Invoke(settings);
+            Assert.AreEqual("Increíble, ¿verdad?", actual);
+        }
+
+        [TestMethod]
+        public void RemoveInterjections19B()
+        {
+            var text = $"- ¿Hm?{Environment.NewLine}- Increíble, ¿verdad?";
+            var settings = GetRemoveInterjectionContext(text, true);
+            var actual = new RemoveInterjection().Invoke(settings);
+            Assert.AreEqual("Increíble, ¿verdad?", actual);
+        }
+
+        [TestMethod]
         public void RemoveColonOnlyOnSeparateLine()
         {
             var target = GetRemoveTextForHiLib();
@@ -2111,6 +2129,20 @@ namespace Test.Logic.Forms
         {
             var actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext("- I bet it hurt when they cut it off." + Environment.NewLine + "- Ugh!", onlyInSeparatedLine: true));
             Assert.AreEqual("I bet it hurt when they cut it off.", actual);
+        }
+
+        [TestMethod]
+        public void RemoveInterjectionsAllDuaSpanish1()
+        {
+            var actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext("¿Oh, sí?", onlyInSeparatedLine: false));
+            Assert.AreEqual("¿Sí?", actual);
+        }
+
+        [TestMethod]
+        public void RemoveInterjectionsAllDuaSpanish2()
+        {
+            var actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext("¡Oh, sí!", onlyInSeparatedLine: false));
+            Assert.AreEqual("¡Sí!", actual);
         }
 
         [TestMethod]

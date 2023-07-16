@@ -52,8 +52,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             AddToPreview(richTextBoxPreview, paragraph.Text);
             RefreshPreview();
-            labelTotalMilliseconds.Text = $"{paragraph.Duration.TotalMilliseconds / TimeCode.BaseUnit:#,##0.000}";
-            numericUpDownDelay.Maximum = (decimal)((paragraph.Duration.TotalMilliseconds - 500) / TimeCode.BaseUnit);
+            labelTotalMilliseconds.Text = $"{paragraph.DurationTotalMilliseconds / TimeCode.BaseUnit:#,##0.000}";
+            numericUpDownDelay.Maximum = (decimal)((paragraph.DurationTotalMilliseconds - 500) / TimeCode.BaseUnit);
             numericUpDownDelay.Minimum = 0;
 
             numericUpDownDelay.Left = labelEndDelay.Left + labelEndDelay.Width + 5;
@@ -108,13 +108,13 @@ namespace Nikse.SubtitleEdit.Forms
         {
             _animation = new List<Paragraph>();
 
-            if (HtmlUtil.RemoveHtmlTags(_paragraph.Text, true).Length == 0 || _paragraph.Duration.TotalMilliseconds < 0.001)
+            if (HtmlUtil.RemoveHtmlTags(_paragraph.Text, true).Length == 0 || _paragraph.DurationTotalMilliseconds < 0.001)
             {
                 _animation.Add(new Paragraph(_paragraph));
                 return;
             }
 
-            var duration = _paragraph.Duration.TotalMilliseconds - ((double)numericUpDownDelay.Value * TimeCode.BaseUnit);
+            var duration = _paragraph.DurationTotalMilliseconds - ((double)numericUpDownDelay.Value * TimeCode.BaseUnit);
             var partsBase = EffectAnimationPart.MakeBase(_paragraph.Text);
             var stepsLength = duration / partsBase.Count+1;
             for (var index = 0; index <= partsBase.Count; index++)

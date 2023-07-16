@@ -4,6 +4,7 @@ using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Core.Translate.Service;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
+using Nikse.SubtitleEdit.Forms.BeautifyTimeCodes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -38,7 +39,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
         private readonly Dictionary<ShortcutHelper, string> _newShortcuts = new Dictionary<ShortcutHelper, string>();
         private List<RulesProfile> _rulesProfiles;
         private List<PluginShortcut> _pluginShortcuts;
-
+        private bool _loading = true;
         private readonly BackgroundWorker _shortcutsBackgroundWorker;
 
         private static IEnumerable<string> GetSubtitleFormats() => SubtitleFormat.AllSubtitleFormats.Where(format => !format.IsVobSubIndexFile).Select(format => format.FriendlyName);
@@ -108,8 +109,10 @@ namespace Nikse.SubtitleEdit.Forms.Options
             UiUtil.FixFonts(this);
             UiUtil.FixLargeFonts(this, buttonOK);
 
+
             _shortcutsBackgroundWorker = new BackgroundWorker();
             Init();
+            _loading = false;
 
             _oldSettings = Core.Common.Settings.CustomSerialize(Configuration.Settings);
         }
@@ -142,6 +145,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             checkBoxSettings.Checked = gs.ShowToolbarSettings;
             checkBoxSpellCheck.Checked = gs.ShowToolbarSpellCheck;
             checkBoxNetflixQualityCheck.Checked = gs.ShowToolbarNetflixGlyphCheck;
+            checkBoxBeautifyTimeCodes.Checked = gs.ShowToolbarBeautifyTimeCodes;
             checkBoxHelp.Checked = gs.ShowToolbarHelp;
 
             comboBoxFrameRate.Items.Clear();
@@ -266,6 +270,16 @@ namespace Nikse.SubtitleEdit.Forms.Options
                 comboBoxlVideoPlayerPreviewFontSize.SelectedIndex = 3;
             }
 
+            var verticalMargin = gs.MpvPreviewTextMarginVertical;
+            if (verticalMargin >= numericUpDownMarginVertical.Minimum && verticalMargin <= numericUpDownMarginVertical.Maximum)
+            {
+                numericUpDownMarginVertical.Value = verticalMargin;
+            }
+            else
+            {
+                numericUpDownMarginVertical.Value = 10;
+            }
+
             numericUpDownMpvOutline.Value = gs.MpvPreviewTextOutlineWidth;
             numericUpDownMpvShadowWidth.Value = gs.MpvPreviewTextShadowWidth;
             checkBoxVideoPlayerPreviewFontBold.Checked = gs.VideoPlayerPreviewFontBold;
@@ -387,6 +401,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             labelTBBurnIn.Text = language.BurnIn;
             labelTBSpellCheck.Text = language.SpellCheck;
             labelTBNetflixQualityCheck.Text = language.NetflixQualityCheck;
+            labelTBBeautifyTimeCodes.Text = language.BeautifyTimeCodes;
             labelToggleSourceView.Text = language.ToggleView;
             labelTBSettings.Text = language.SettingsName;
             labelTBHelp.Text = language.Help;
@@ -403,6 +418,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             checkBoxTBBurnIn.Text = LanguageSettings.Current.General.Visible;
             checkBoxSpellCheck.Text = LanguageSettings.Current.General.Visible;
             checkBoxNetflixQualityCheck.Text = LanguageSettings.Current.General.Visible;
+            checkBoxBeautifyTimeCodes.Text = LanguageSettings.Current.General.Visible;
             checkBoxSettings.Text = LanguageSettings.Current.General.Visible;
             checkBoxHelp.Text = LanguageSettings.Current.General.Visible;
             checkBoxTBToggleSourceView.Text = LanguageSettings.Current.General.Visible;
@@ -457,6 +473,9 @@ namespace Nikse.SubtitleEdit.Forms.Options
             pictureBoxNetflixQualityCheck.Left = labelTBNetflixQualityCheck.Left;
             checkBoxNetflixQualityCheck.Left = labelTBNetflixQualityCheck.Left;
 
+            labelTBBeautifyTimeCodes.Left = Math.Max(labelTBNetflixQualityCheck.Right, checkBoxNetflixQualityCheck.Right) + 18;
+            pictureBoxBeautifyTimeCodes.Left = labelTBBeautifyTimeCodes.Left;
+            checkBoxBeautifyTimeCodes.Left = labelTBBeautifyTimeCodes.Left;
 
             groupBoxMiscellaneous.Text = language.General;
             groupBoxToolsMisc.Text = language.Miscellaneous;
@@ -525,6 +544,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             buttonTextBoxHtmlColor.Text = language.HtmlColor;
             buttonTextBoxAssColor.Text = language.AssaColor;
             groupBoxDarkTheme.Text = language.DarkTheme;
+            groupBoxGraphicsButtons.Text = language.GraphicsButtons;
             checkBoxDarkThemeEnabled.Text = language.DarkThemeEnabled;
             checkBoxDarkThemeShowListViewGridLines.Text = language.DarkThemeShowGridViewLines;
             buttonDarkThemeColor.Text = language.WaveformTextColor;
@@ -642,6 +662,9 @@ namespace Nikse.SubtitleEdit.Forms.Options
             buttonMpvPrimaryColor.Text = LanguageSettings.Current.SubStationAlphaStyles.Primary;
             buttonMpvOutlineColor.Text = LanguageSettings.Current.SubStationAlphaStyles.Outline;
             buttonMpvBackColor.Text = LanguageSettings.Current.SubStationAlphaStyles.Shadow;
+            labelMarginVertical.Text = language.PreviewVerticalMargin;
+            numericUpDownMarginVertical.Left = labelMarginVertical.Right + 5;
+
             checkBoxVideoPlayerPreviewFontBold.Text = language.SubtitleBold;
             var left = labelVideoPlayerPreviewFontName.Left + 5 +
                         Math.Max(labelVideoPlayerPreviewFontName.Width, labelVideoPlayerPreviewFontSize.Width);
@@ -669,6 +692,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             checkBoxListViewMouseEnterFocus.Text = language.WaveformListViewFocusMouseEnter;
             checkBoxWaveformSingleClickSelect.Text = language.WaveformSingleClickSelect;
             checkBoxWaveformSnapToShotChanges.Text = language.WaveformSnapToShotChanges;
+            buttonEditShotChangesProfile.Text = language.WaveformEditShotChangesProfile;
             checkBoxWaveformAutoGen.Text = language.WaveformAutoGen;
             labelWaveformBorderHitMs1.Text = language.WaveformBorderHitMs1;
             labelWaveformBorderHitMs2.Text = language.WaveformBorderHitMs2;
@@ -1055,6 +1079,8 @@ namespace Nikse.SubtitleEdit.Forms.Options
                 numericUpDownWaveformBorderHitMs.Value = Configuration.Settings.VideoControls.WaveformBorderHitMs;
             }
 
+            buttonEditShotChangesProfile.Left = checkBoxWaveformSnapToShotChanges.Left + checkBoxWaveformSnapToShotChanges.Width + 16;
+
             checkBoxUseFFmpeg.Checked = gs.UseFFmpegForWaveExtraction;
             checkBoxFfmpegUseCenterChannel.Checked = gs.FFmpegUseCenterChannelOnly;
             textBoxFFmpegPath.Text = gs.FFmpegLocation;
@@ -1193,6 +1219,10 @@ namespace Nikse.SubtitleEdit.Forms.Options
             buttonUpdateFileTypeAssociations.Text = language.UpdateFileTypeAssociations;
             labelUpdateFileTypeAssociationsStatus.Text = string.Empty;
 
+            numericUpDownMpvOutline.Left = radioButtonMpvOutline.Right + 9;
+            numericUpDownMpvShadowWidth.Left = numericUpDownMpvOutline.Right + 9;
+            labelMpvShadow.Left = numericUpDownMpvShadowWidth.Left;
+
             checkBoxDarkThemeEnabled_CheckedChanged(null, null);
 
             ToolbarIconThemeInit();
@@ -1204,6 +1234,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             {
                 comboBoxToolbarIconTheme.Visible = false;
                 labelToolbarIconTheme.Visible = false;
+                return;
             }
 
             comboBoxToolbarIconTheme.SelectedIndexChanged -= comboBoxToolbarIconTheme_SelectedIndexChanged;
@@ -1226,7 +1257,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
             }
 
             comboBoxToolbarIconTheme.SelectedIndexChanged += comboBoxToolbarIconTheme_SelectedIndexChanged;
-
         }
 
         private void ShowMpvVideoOutput()
@@ -1524,6 +1554,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             AddNode(videoNode, language.MainToggleVideoControls, nameof(Configuration.Settings.Shortcuts.MainVideoToggleControls));
             AddNode(videoNode, string.Format(language.AudioToTextX, "Vosk"), nameof(Configuration.Settings.Shortcuts.MainVideoAudioToTextVosk));
             AddNode(videoNode, string.Format(language.AudioToTextX, "Whisper"), nameof(Configuration.Settings.Shortcuts.MainVideoAudioToTextWhisper));
+            AddNode(videoNode, language.AudioExtractSelectedLines, nameof(Configuration.Settings.Shortcuts.MainVideoAudioExtractAudioSelectedLines));
             AddNode(videoNode, language.VideoToggleContrast, nameof(Configuration.Settings.Shortcuts.MainVideoToggleContrast));
             AddNode(videoNode, language.VideoToggleBrightness, nameof(Configuration.Settings.Shortcuts.MainVideoToggleBrightness));
             _shortcuts.Nodes.Add(videoNode);
@@ -1692,15 +1723,13 @@ namespace Nikse.SubtitleEdit.Forms.Options
             AddNode(createAndAdjustNode, language.RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed, nameof(Configuration.Settings.Shortcuts.GeneralAutoCalcCurrentDurationByOptimalReadingSpeed));
             AddNode(createAndAdjustNode, language.RecalculateDurationOfCurrentSubtitleByMinReadingSpeed, nameof(Configuration.Settings.Shortcuts.GeneralAutoCalcCurrentDurationByMinReadingSpeed));
             AddNode(createAndAdjustNode, language.AdjustSnapStartToNextShotChange, nameof(Configuration.Settings.Shortcuts.MainAdjustSnapStartToNextShotChange));
-            AddNode(createAndAdjustNode, language.AdjustSnapStartToNextShotChangeWithGap, nameof(Configuration.Settings.Shortcuts.MainAdjustSnapStartToNextShotChangeWithGap));
             AddNode(createAndAdjustNode, language.AdjustSnapEndToPreviousShotChange, nameof(Configuration.Settings.Shortcuts.MainAdjustSnapEndToPreviousShotChange));
-            AddNode(createAndAdjustNode, language.AdjustSnapEndToPreviousShotChangeWithGap, nameof(Configuration.Settings.Shortcuts.MainAdjustSnapEndToPreviousShotChangeWithGap));
             AddNode(createAndAdjustNode, language.AdjustExtendToNextShotChange, nameof(Configuration.Settings.Shortcuts.MainAdjustExtendToNextShotChange));
-            AddNode(createAndAdjustNode, language.AdjustExtendToNextShotChangeWithGap, nameof(Configuration.Settings.Shortcuts.MainAdjustExtendToNextShotChangeWithGap));
             AddNode(createAndAdjustNode, language.AdjustExtendToPreviousShotChange, nameof(Configuration.Settings.Shortcuts.MainAdjustExtendToPreviousShotChange));
-            AddNode(createAndAdjustNode, language.AdjustExtendToPreviousShotChangeWithGap, nameof(Configuration.Settings.Shortcuts.MainAdjustExtendToPreviousShotChangeWithGap));
             AddNode(createAndAdjustNode, language.AdjustExtendToNextSubtitle, nameof(Configuration.Settings.Shortcuts.MainAdjustExtendToNextSubtitle));
             AddNode(createAndAdjustNode, language.AdjustExtendToPreviousSubtitle, nameof(Configuration.Settings.Shortcuts.MainAdjustExtendToPreviousSubtitle));
+            AddNode(createAndAdjustNode, language.AdjustExtendToNextSubtitleMinusChainingGap, nameof(Configuration.Settings.Shortcuts.MainAdjustExtendToNextSubtitleMinusChainingGap));
+            AddNode(createAndAdjustNode, language.AdjustExtendToPreviousSubtitleMinusChainingGap, nameof(Configuration.Settings.Shortcuts.MainAdjustExtendToPreviousSubtitleMinusChainingGap));
             AddNode(createAndAdjustNode, language.AdjustExtendCurrentSubtitle, nameof(Configuration.Settings.Shortcuts.MainAdjustExtendCurrentSubtitle));
             AddNode(createAndAdjustNode, language.AdjustExtendPreviousLineEndToCurrentStart, nameof(Configuration.Settings.Shortcuts.MainAdjustExtendPreviousLineEndToCurrentStart));
             AddNode(createAndAdjustNode, language.AdjustExtendNextLineStartToCurrentEnd, nameof(Configuration.Settings.Shortcuts.MainAdjustExtendNextLineStartToCurrentEnd));
@@ -1866,12 +1895,15 @@ namespace Nikse.SubtitleEdit.Forms.Options
         }
 
         public void Initialize(Icon icon, Image newFile, Image openFile, Image saveFile, Image saveFileAs, Image find, Image replace, Image fixCommonErrors, Image removeTextForHi,
-                               Image visualSync, Image burnIn, Image spellCheck, Image netflixGlyphCheck, Image settings, Image help, Image toggleSourceView)
+                               Image visualSync, Image burnIn, Image spellCheck, Image netflixGlyphCheck, Image beautifyTimeCodes, Image settings, Image help, Image toggleSourceView)
         {
             Icon = (Icon)icon.Clone();
             pictureBoxFileNew.Image = (Image)newFile.Clone();
+            pictureBoxPreview1.Image = (Image)newFile.Clone();
             pictureBoxFileOpen.Image = (Image)openFile.Clone();
+            pictureBoxPreview2.Image = (Image)openFile.Clone();
             pictureBoxSave.Image = (Image)saveFile.Clone();
+            pictureBoxPreview3.Image = (Image)saveFile.Clone();
             pictureBoxSaveAs.Image = (Image)saveFileAs.Clone();
             pictureBoxFind.Image = (Image)find.Clone();
             pictureBoxReplace.Image = (Image)replace.Clone();
@@ -1882,6 +1914,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             pictureBoxBurnIn.Image = (Image)burnIn.Clone();
             pictureBoxSpellCheck.Image = (Image)spellCheck.Clone();
             pictureBoxNetflixQualityCheck.Image = (Image)netflixGlyphCheck.Clone();
+            pictureBoxBeautifyTimeCodes.Image = (Image)beautifyTimeCodes.Clone();
             pictureBoxSettings.Image = (Image)settings.Clone();
             pictureBoxHelp.Image = (Image)help.Clone();
         }
@@ -1903,6 +1936,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             gs.ShowToolbarSettings = checkBoxSettings.Checked;
             gs.ShowToolbarSpellCheck = checkBoxSpellCheck.Checked;
             gs.ShowToolbarNetflixGlyphCheck = checkBoxNetflixQualityCheck.Checked;
+            gs.ShowToolbarBeautifyTimeCodes = checkBoxBeautifyTimeCodes.Checked;
             gs.ShowToolbarHelp = checkBoxHelp.Checked;
 
             gs.ShowFrameRate = checkBoxShowFrameRate.Checked;
@@ -2018,6 +2052,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             gs.VideoPlayerShowFullscreenButton = checkBoxVideoPlayerShowFullscreenButton.Checked;
             gs.VideoPlayerPreviewFontName = comboBoxVideoPlayerPreviewFontName.SelectedItem.ToString();
             gs.VideoPlayerPreviewFontSize = int.Parse(comboBoxlVideoPlayerPreviewFontSize.Items[0].ToString()) + comboBoxlVideoPlayerPreviewFontSize.SelectedIndex;
+            gs.MpvPreviewTextMarginVertical = (int)numericUpDownMarginVertical.Value;
             gs.VideoPlayerPreviewFontBold = checkBoxVideoPlayerPreviewFontBold.Checked;
             gs.MpvPreviewTextPrimaryColor = panelMpvPrimaryColor.BackColor;
             gs.MpvPreviewTextOutlineColor = panelMpvOutlineColor.BackColor;
@@ -2295,6 +2330,9 @@ namespace Nikse.SubtitleEdit.Forms.Options
                     section = panelToolBar;
                     break;
                 case AppearanceSection:
+                    TryLoadIcon(pictureBoxPreview1, "New");
+                    TryLoadIcon(pictureBoxPreview2, "Open");
+                    TryLoadIcon(pictureBoxPreview3, "Save");
                     section = panelFont;
                     break;
                 case NetworkSection:
@@ -3255,6 +3293,8 @@ namespace Nikse.SubtitleEdit.Forms.Options
             buttonDarkThemeBackColor.Enabled = enabled;
             panelDarkThemeBackColor.Enabled = enabled;
             checkBoxDarkThemeShowListViewGridLines.Enabled = enabled;
+
+            comboBoxToolbarIconTheme_SelectedIndexChanged(null, null);
         }
 
         private void listBoxFavoriteSubtitleFormats_SelectedIndexChanged(object sender, EventArgs e)
@@ -3642,8 +3682,25 @@ namespace Nikse.SubtitleEdit.Forms.Options
             }
         }
 
+        private void buttonEditShotChangesProfile_Click(object sender, EventArgs e)
+        {
+            using (var form = new BeautifyTimeCodesProfile(0))
+            {
+                form.ShowDialog(this);
+            }
+        }
+        
         private void comboBoxToolbarIconTheme_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (_loading)
+            {
+                return;
+            }
+
+            TryLoadIcon(pictureBoxPreview1, "New");
+            TryLoadIcon(pictureBoxPreview2, "Open");
+            TryLoadIcon(pictureBoxPreview3, "Save");
+
             TryLoadIcon(pictureBoxFileNew, "New");
             TryLoadIcon(pictureBoxFileOpen, "Open");
             TryLoadIcon(pictureBoxSave, "Save");
@@ -3656,6 +3713,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             TryLoadIcon(pictureBoxBurnIn, "BurnIn");
             TryLoadIcon(pictureBoxSpellCheck, "SpellCheck");
             TryLoadIcon(pictureBoxNetflixQualityCheck, "Netflix");
+            TryLoadIcon(pictureBoxBeautifyTimeCodes, "BeautifyTimeCodes");
             TryLoadIcon(pictureBoxAssStyleManager, "AssaStyle");
             TryLoadIcon(pictureBoxAssProperties, "AssaProperties");
             TryLoadIcon(pictureBoxAssAttachments, "AssaAttachments");
@@ -3667,6 +3725,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             TryLoadIcon(pictureBoxSourceView, "SourceView");
             TryLoadIcon(pictureBoxIttProperties, "IttProperties");
             TryLoadIcon(pictureBoxWebVttProperties, "WebVttProperties");
+            TryLoadIcon(pictureBoxWebVttStyle, "WebVttStyle");
             TryLoadIcon(pictureBoxEbuProperties, "EbuProperties");
         }
 
@@ -3675,9 +3734,14 @@ namespace Nikse.SubtitleEdit.Forms.Options
             pictureBox.Image?.Dispose();
             pictureBox.Image = null;
 
-            var theme = comboBoxToolbarIconTheme.Text;
+            var theme = checkBoxDarkThemeEnabled.Checked ? "DarkTheme" : "DefaultTheme";
+            if (comboBoxToolbarIconTheme.SelectedIndex != 0)
+            {
+                theme = comboBoxToolbarIconTheme.Text;
+            }
+
             var themeFullPath = Path.Combine(Configuration.IconsDirectory, theme, iconName + ".png");
-            if (comboBoxToolbarIconTheme.SelectedIndex > 0 && File.Exists(themeFullPath))
+            if (File.Exists(themeFullPath))
             {
                 pictureBox.Image = new Bitmap(themeFullPath);
                 return;

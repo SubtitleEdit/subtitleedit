@@ -2118,7 +2118,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 ntsc = "TRUE";
             }
 
-            var duration = SubtitleFormat.MillisecondsToFrames(param.P.Duration.TotalMilliseconds, param.FramesPerSeconds);
+            var duration = SubtitleFormat.MillisecondsToFrames(param.P.DurationTotalMilliseconds, param.FramesPerSeconds);
             var start = SubtitleFormat.MillisecondsToFrames(param.P.StartTime.TotalMilliseconds, param.FramesPerSeconds);
             var end = SubtitleFormat.MillisecondsToFrames(param.P.EndTime.TotalMilliseconds, param.FramesPerSeconds);
 
@@ -2702,39 +2702,23 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
             var font = GetFont(parameter, parameter.SubtitleFontSize);
             var fontStack = new Stack<Font>();
+            var addLeft = 0f;
             while (i < text.Length)
             {
                 if (text.Substring(i).StartsWith("<font ", StringComparison.OrdinalIgnoreCase))
                 {
-                    var addLeft = 0f;
-                    var oldPathPointIndex = path.PointCount;
-                    if (oldPathPointIndex < 0)
-                    {
-                        oldPathPointIndex = 0;
-                    }
-
                     if (sb.Length > 0)
                     {
                         lastText.Append(sb);
+                        left = GetLastPositionFromPath(path, 0, 0) + addLeft;
                         TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
                     }
-
-                    addLeft = GetLastPositionFromPath(path, oldPathPointIndex, addLeft);
-                    if (path.PointCount == 0)
-                    {
-                        addLeft = left;
-                    }
-                    else if (addLeft < 0.01)
-                    {
-                        addLeft = left + 2;
-                    }
-
-                    left = addLeft;
 
                     DrawShadowAndPath(parameter, g, path);
                     var p2 = new SolidBrush(c);
                     g.FillPath(p2, path);
                     p2.Dispose();
+                    addLeft = GetLastPositionFromPath(path, 0, 0);
                     path.Reset();
                     path = new GraphicsPath();
                     sb.Clear();
@@ -2815,50 +2799,27 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                             sb.Append(t);
                         }
 
-                        var addLeft = 0f;
-                        var oldPathPointIndex = path.PointCount - 1;
-                        if (oldPathPointIndex < 0)
-                        {
-                            oldPathPointIndex = 0;
-                        }
-
                         if (sb.Length > 0)
                         {
-                            if (lastText.Length > 0 && left > 2)
-                            {
-                                left -= 1.5f;
-                            }
-
                             lastText.Append(sb);
-
+                            left = GetLastPositionFromPath(path, 0, 0) + addLeft;
                             TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
                         }
 
-                        addLeft = GetLastPositionFromPath(path, oldPathPointIndex, addLeft);
-                        if (addLeft < 0.01)
-                        {
-                            addLeft = left + 2;
-                        }
-
-                        left = addLeft;
-
                         DrawShadowAndPath(parameter, g, path);
                         g.FillPath(new SolidBrush(c), path);
+                        addLeft = GetLastPositionFromPath(path, 0, 0);
                         path.Reset();
                         sb = new StringBuilder();
                         if (colorStack.Count > 0)
                         {
                             c = colorStack.Pop();
                         }
-
-                        if (left >= 3)
-                        {
-                            left -= 2.5f;
-                        }
                     }
 
                     if (sb.Length > 0)
                     {
+                        left = GetLastPositionFromPath(path, 0, 0) + addLeft;
                         TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
                         sb.Clear();
                     }
@@ -2876,6 +2837,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     if (sb.Length > 0)
                     {
                         lastText.Append(sb);
+                        left = GetLastPositionFromPath(path, 0, 0) + addLeft;
                         TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
                     }
                     isItalic = true;
@@ -2891,6 +2853,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         sb.Append(t);
                     }
                     lastText.Append(sb);
+                    left = GetLastPositionFromPath(path, 0, 0) + addLeft;
                     TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
                     isItalic = false;
                     i += 3;
@@ -2900,6 +2863,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     if (sb.Length > 0)
                     {
                         lastText.Append(sb);
+                        left = GetLastPositionFromPath(path, 0, 0) + addLeft;
                         TextDraw.DrawText(font, sf, path, sb, isItalic, isBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
                     }
                     isBold = true;
@@ -2915,6 +2879,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         sb.Append(t);
                     }
                     lastText.Append(sb);
+                    left = GetLastPositionFromPath(path, 0, 0) + addLeft;
                     TextDraw.DrawText(font, sf, path, sb, isItalic, isBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
                     isBold = false;
                     i += 3;
@@ -2929,13 +2894,14 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
             if (sb.Length > 0)
             {
+                left = GetLastPositionFromPath(path, 0, 0) + addLeft;
                 TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
             }
 
             DrawShadowAndPath(parameter, g, path);
             g.FillPath(new SolidBrush(c), path);
             g.Dispose();
-
+            path.Dispose();
             var nbmp = new NikseBitmap(bmp);
             bmp.Dispose();
             font.Dispose();
@@ -3943,7 +3909,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private static float GetLastPositionFromPath(GraphicsPath path, int oldPathPointIndex, float addLeft)
         {
-            if (path.PointCount > 0)
+            if (path.PointCount > 0 && oldPathPointIndex >= 0)
             {
                 var list = (PointF[])path.PathPoints.Clone(); // avoid using very slow path.PathPoints indexer!!!
                 for (int k = oldPathPointIndex + 1; k < list.Length; k++)
@@ -3954,6 +3920,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     }
                 }
             }
+
             return addLeft;
         }
 

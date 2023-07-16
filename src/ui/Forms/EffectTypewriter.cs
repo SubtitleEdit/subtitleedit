@@ -59,8 +59,8 @@ namespace Nikse.SubtitleEdit.Forms
             AddToPreview(richTextBoxPreview, paragraph.Text);
             RefreshPreview();
 
-            labelTotalMilliseconds.Text = $"{paragraph.Duration.TotalMilliseconds / TimeCode.BaseUnit:#,##0.000}";
-            numericUpDownDelay.Maximum = (decimal)((paragraph.Duration.TotalMilliseconds - 500) / TimeCode.BaseUnit);
+            labelTotalMilliseconds.Text = $"{paragraph.DurationTotalMilliseconds / TimeCode.BaseUnit:#,##0.000}";
+            numericUpDownDelay.Maximum = (decimal)((paragraph.DurationTotalMilliseconds - 500) / TimeCode.BaseUnit);
             numericUpDownDelay.Minimum = 0;
 
             numericUpDownDelay.Left = labelEndDelay.Left + labelEndDelay.Width + 5;
@@ -273,7 +273,7 @@ namespace Nikse.SubtitleEdit.Forms
         public void MakeAnimation()
         {
             TypewriterParagraphs = new List<Paragraph>();
-            var duration = _paragraph.Duration.TotalMilliseconds - (double)numericUpDownDelay.Value * TimeCode.BaseUnit;
+            var duration = _paragraph.DurationTotalMilliseconds - (double)numericUpDownDelay.Value * TimeCode.BaseUnit;
             var stepsLength = CalculateStepLength(_paragraph.Text, duration);
             double startMilliseconds;
             double endMilliseconds;

@@ -18,10 +18,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             for (var index = 0; index < subtitle.Paragraphs.Count; index++)
             {
                 var p = subtitle.Paragraphs[index];
-                sb.AppendLine($"{EncodeTime(p.Duration.TotalSeconds)}");
+                sb.AppendLine($"{EncodeTime(p.DurationTotalSeconds)}");
                 sb.AppendLine(p.Text);
 
-                seconds += p.Duration.TotalSeconds;
+                seconds += p.DurationTotalSeconds;
                 var next = subtitle.GetParagraphOrDefault(index + 1);
                 if (next != null && (next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds) > 100)
                 {

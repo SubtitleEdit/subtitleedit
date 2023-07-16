@@ -4,8 +4,11 @@ using Nikse.SubtitleEdit.Logic;
 using System;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
+using System.Text;
 using System.Threading;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Core.Common;
 using Vosk;
 
 namespace Nikse.SubtitleEdit.Forms.AudioToText
@@ -189,9 +192,22 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
         private void CompleteDownload(Stream downloadStream)
         {
-            if (downloadStream.Length == 0)
+            var streamLength = downloadStream.Length;
+            if (streamLength == 0)
             {
                 throw new Exception("No content downloaded - missing file or no internet connection!");
+            }
+
+            downloadStream.Flush();
+            downloadStream.Close();
+
+            if (streamLength < 50)
+            {
+                var text = FileUtil.ReadAllTextShared(_downloadFileName, Encoding.UTF8);
+                if (text.Contains("Invalid username or password."))
+                {
+                    throw new Exception("Unable to download file - Invalid username or password! (Perhaps file has a new location)");
+                }
             }
 
             var newFileName = _downloadFileName.Replace(".$$$", string.Empty);
@@ -203,9 +219,6 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             {
                 // ignore
             }
-
-            downloadStream.Flush();
-            downloadStream.Close();
 
             Application.DoEvents();
             File.Move(_downloadFileName, newFileName);

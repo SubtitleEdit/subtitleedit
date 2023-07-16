@@ -440,7 +440,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public static bool IsOnlyControlCharactersOrWhiteSpace(this string s)
         {
-            if (string.IsNullOrEmpty(s))
+            if (s == null)
             {
                 return true;
             }
