@@ -16,6 +16,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
         {
             var fixAction = Language.UnbreakShortLine;
             var noOfShortLines = 0;
+            var dialogSplitMerge = new DialogSplitMerge();
             for (var i = 0; i < subtitle.Paragraphs.Count; i++)
             {
                 var p = subtitle.Paragraphs[i];
@@ -29,8 +30,14 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     continue;
                 }
 
-                var unbreakResult = p.Text.Replace(Environment.NewLine, " ").Replace("  ", " ");                
-                var totalPixelWidth = Convert.ToInt32(callbacks.GetCustomCallbackData(this, unbreakResult));
+                if (dialogSplitMerge.IsDialog(p.Text.SplitToLines()))
+                {
+                    continue;
+                }
+
+                var unbreakResult = Utilities.UnbreakLine(p.Text);
+                var cleanUnbreakResult = HtmlUtil.RemoveHtmlTags(unbreakResult, true);
+                var totalPixelWidth = Convert.ToInt32(callbacks.GetCustomCallbackData(this, cleanUnbreakResult));
 
                 if (totalPixelWidth <= Configuration.Settings.General.SubtitleLineMaximumPixelWidth)
                 {
