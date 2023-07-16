@@ -44,7 +44,7 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
 
             if (videoInfo != null && videoInfo.TotalMilliseconds > 0)
             {
-                _duration = videoInfo.TotalMilliseconds;
+                _duration = videoInfo.TotalSeconds;
             }
 
             _videoInfo = videoInfo;
