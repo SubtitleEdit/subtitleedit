@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.6.13</Version>
-    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 13.07.2023</TranslatedBy>
+    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 15.07.2023</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -2840,7 +2840,7 @@ Vuoi continuare?</RestoreDefaultSettingsMsg>
     <NumberOfBoldTags>Numero tag grassetto: {0}</NumberOfBoldTags>
     <NumberOfUnderlineTags>Numero tag sottolineatura: {0}</NumberOfUnderlineTags>
     <NumberOfFontTags>Numero tag per font: {0}</NumberOfFontTags>
-    <NumberOfAlignmentTags>Numero di tag allineamento: {0}</NumberOfAlignmentTags>
+    <NumberOfAlignmentTags>Numero tag allineamento: {0}</NumberOfAlignmentTags>
     <LineLengthMinimum>Lunghezza sottotitolo - minima: {0}</LineLengthMinimum>
     <LineLengthMaximum>Lunghezza sottotitolo - massima: {0}</LineLengthMaximum>
     <LineLengthAverage>Lunghezza sottotitolo - media: {0}</LineLengthAverage>
@@ -2848,18 +2848,29 @@ Vuoi continuare?</RestoreDefaultSettingsMsg>
     <SingleLineLengthMinimum>Lunghezza riga singola - minimo: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Lunghezza riga singola - massima: {0}</SingleLineLengthMaximum>
     <SingleLineLengthAverage>Lunghezza riga singola - media: {0}</SingleLineLengthAverage>
-    <SingleLineWidthMinimum>Larghezza riga singola - minima: {0} pixels</SingleLineWidthMinimum>
-    <SingleLineWidthMaximum>Larghezza riga singola - massima: {0} pixels</SingleLineWidthMaximum>
-    <SingleLineWidthAverage>Larghezza riga singola - media: {0} pixels</SingleLineWidthAverage>
+    <SingleLineLengthExceedingMaximum>Lunghezza riga singola - superiore al massimo ({0} caratteri): {1} ({2:0.00}%)</SingleLineLengthExceedingMaximum>
+    <SingleLineWidthMinimum>Larghezza riga singola - minima: {0} pixel</SingleLineWidthMinimum>
+    <SingleLineWidthMaximum>Larghezza riga singola - massima: {0} pixel</SingleLineWidthMaximum>
+    <SingleLineWidthExceedingMaximum>Larghezza riga singola - superiore al massimo ({0} pixel): {1} ({2:0.00}%)</SingleLineWidthExceedingMaximum>
+    <SingleLineWidthAverage>Larghezza riga singola - media: {0} pixel</SingleLineWidthAverage>
     <DurationMinimum>Durata - minima: {0:0.000} secondi</DurationMinimum>
     <DurationMaximum>Durata - massima: {0:0.000} secondi</DurationMaximum>
     <DurationAverage>Durata - media: {0:0.000} secondi</DurationAverage>
+    <DurationExceedingMinimum>Durata - inferiore al minimo ({0:0.###} sec): {1} ({2:0.00}%)</DurationExceedingMinimum>
+    <DurationExceedingMaximum>Durata - superiore al massimo ({0:0.###} sec): {1} ({2:0.00}%)</DurationExceedingMaximum>
     <CharactersPerSecondMinimum>Caratteri/sec - minimuo: {0:0.000}</CharactersPerSecondMinimum>
     <CharactersPerSecondMaximum>Caratteri/sec - massimo: {0:0.000}</CharactersPerSecondMaximum>
     <CharactersPerSecondAverage>Caratteri/sec - media: {0:0.000}</CharactersPerSecondAverage>
+    <CharactersPerSecondExceedingOptimal>Caratteri/sec - superiore ad ottimale ({0:0.##} cps): {1} ({2:0.00}%)</CharactersPerSecondExceedingOptimal>
+    <CharactersPerSecondExceedingMaximum>Caratteri/sec - superiore al massimo ({0:0.##} cps): {1} ({2:0.00}%)</CharactersPerSecondExceedingMaximum>
+    <WordsPerMinuteMinimum>Parole/min - minimo: {0:0.000}</WordsPerMinuteMinimum>
+    <WordsPerMinuteMaximum>Parole/min - massimo: {0:0.000}</WordsPerMinuteMaximum>
+    <WordsPerMinuteAverage>Parole/min - media: {0:0.000}</WordsPerMinuteAverage>
+    <WordsPerMinuteExceedingMaximum>Words/min - exceeding maximum ({0} wpm): {1} ({2:0.00}%)</WordsPerMinuteExceedingMaximum>
     <GapMinimum>Gap - minimo: {0:#,##0} ms</GapMinimum>
     <GapMaximum>Gap - massimo: {0:#,##0} ms</GapMaximum>
     <GapAverage>Gap - media: {0:#,##0.##} ms</GapAverage>
+    <GapExceedingMinimum>Gap - inferiore al minimo ({0:#,##0} ms): {1} ({2:0.00}%)</GapExceedingMinimum>
     <Export>Esporta...</Export>
   </Statistics>
   <SubStationAlphaProperties>
