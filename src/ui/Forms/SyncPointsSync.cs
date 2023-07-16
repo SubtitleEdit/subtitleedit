@@ -150,7 +150,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (_synchronizationPoints.ContainsKey(i))
                 {
                     var p = new Paragraph { StartTime = { TotalMilliseconds = _synchronizationPoints[i].Time.TotalMilliseconds } };
-                    p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + _subtitle.Paragraphs[i].Duration.DurationTotalMilliseconds;
+                    p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + _subtitle.Paragraphs[i].DurationTotalMilliseconds;
                     subtitleListView1.SetStartTimeAndDuration(i, p, _subtitle.GetParagraphOrDefault(i + 1), _subtitle.GetParagraphOrDefault(i - 1));
 
                     var item = new ListBoxSyncPoint { Index = i, Text = _subtitle.Paragraphs[i].Number + " - " + p.StartTime };
@@ -533,7 +533,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             var selectedLocation = syncParagraph.StartTime.TotalMilliseconds;
-            var selectedDuration = syncParagraph.Duration.TotalMilliseconds;
+            var selectedDuration = syncParagraph.DurationTotalMilliseconds;
             if (selectedDuration == 0)
                 selectedDuration = 1000;
 
