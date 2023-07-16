@@ -234,6 +234,7 @@ namespace Nikse.SubtitleEdit.Controls
                     _dirty = true;
                 }
             };
+            _maskedTextBox.BorderStyle = BorderStyle.None;
 
             Controls.Add(_maskedTextBox);
             BackColor = new TextBox().BackColor;
@@ -642,13 +643,12 @@ namespace Nikse.SubtitleEdit.Controls
             e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
 
             _maskedTextBox.BackColor = BackColor;
-            _maskedTextBox.BorderStyle = BorderStyle.None;
+            _maskedTextBox.ForeColor = ButtonForeColor;
             _maskedTextBox.Top = 2;
             _maskedTextBox.Left = RightToLeft == RightToLeft.Yes ? ButtonsWidth : 3;
             _maskedTextBox.Height = Height - 4;
             _maskedTextBox.Width = Width - ButtonsWidth - 3;
             _maskedTextBox.Invalidate();
-            //            SetText();
 
             if (!Enabled)
             {

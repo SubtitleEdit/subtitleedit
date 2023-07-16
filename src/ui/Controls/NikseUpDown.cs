@@ -222,6 +222,7 @@ namespace Nikse.SubtitleEdit.Controls
             _textBox.LostFocus += (sender, args) => Invalidate();
             _textBox.GotFocus += (sender, args) => Invalidate();
             _textBox.TextChanged += _textBox_TextChanged;
+            _textBox.BorderStyle = BorderStyle.None;
 
             Controls.Add(_textBox);
             BackColor = new TextBox().BackColor;
@@ -462,7 +463,7 @@ namespace Nikse.SubtitleEdit.Controls
             e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
 
             _textBox.BackColor = BackColor;
-            _textBox.BorderStyle = BorderStyle.None;
+            _textBox.ForeColor = ButtonForeColor;
             _textBox.Top = 2;
             _textBox.Left = RightToLeft == RightToLeft.Yes ? ButtonsWidth : 3;
             _textBox.Height = Height - 4;
