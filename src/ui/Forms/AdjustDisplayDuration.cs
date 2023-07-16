@@ -45,6 +45,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         public bool ExtendOnly => checkBoxExtendOnly.Checked;
 
+        public bool EnforceDurationLimits => checkBoxEnforceDurationLimits.Checked;
+
+        public bool CheckShotChanges => checkBoxCheckShotChanges.Checked;
+
         public AdjustDisplayDuration(bool recalcActive = true)
         {
             UiUtil.PreInitialize(this);
@@ -71,6 +75,8 @@ namespace Nikse.SubtitleEdit.Forms
             numericUpDownMaxCharsSec.Value = (decimal)Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds;
 
             checkBoxExtendOnly.Checked = Configuration.Settings.Tools.AdjustDurationExtendOnly;
+            checkBoxEnforceDurationLimits.Checked = Configuration.Settings.Tools.AdjustDurationExtendEnforceDurationLimits;
+            checkBoxCheckShotChanges.Checked = Configuration.Settings.Tools.AdjustDurationExtendCheckShotChanges;
 
             LanguageStructure.AdjustDisplayDuration language = LanguageSettings.Current.AdjustDisplayDuration;
             Text = language.Title;
@@ -86,6 +92,8 @@ namespace Nikse.SubtitleEdit.Forms
             radioButtonFixed.Text = language.Fixed;
             labelMillisecondsFixed.Text = language.Milliseconds;
             checkBoxExtendOnly.Text = language.ExtendOnly;
+            checkBoxEnforceDurationLimits.Text = language.EnforceDurationLimits;
+            checkBoxCheckShotChanges.Text = language.CheckShotChanges;
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             FixLargeFonts();
@@ -161,6 +169,8 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.Tools.AdjustDurationSeconds = numericUpDownSeconds.Value;
             Configuration.Settings.Tools.AdjustDurationPercent = (int)numericUpDownPercent.Value;
             Configuration.Settings.Tools.AdjustDurationExtendOnly = checkBoxExtendOnly.Checked;
+            Configuration.Settings.Tools.AdjustDurationExtendEnforceDurationLimits = checkBoxEnforceDurationLimits.Checked;
+            Configuration.Settings.Tools.AdjustDurationExtendCheckShotChanges = checkBoxCheckShotChanges.Checked;
 
             if (radioButtonSeconds.Checked)
             {

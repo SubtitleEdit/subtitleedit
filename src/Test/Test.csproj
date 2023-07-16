@@ -69,6 +69,7 @@
     <Compile Include="Dictionaries\StringWithoutSpaceSplitToWordsTest.cs" />
     <Compile Include="GoogleCloudVision\GoogleCloudVisionJsonToLinesTest.cs" />
     <Compile Include="LanguageFiles\LanguageFileTest.cs" />
+    <Compile Include="Logic\BeautifyTimeCodesTest.cs" />
     <Compile Include="Logic\ConvertColorsToDialogTest.cs" />
     <Compile Include="Core\LanguageAutoDetectLanguagesTest.cs" />
     <Compile Include="Logic\NetflixHelperTest.cs" />
