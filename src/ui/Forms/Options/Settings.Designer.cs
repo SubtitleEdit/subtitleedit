@@ -4643,9 +4643,9 @@
             this.groupBoxGraphicsButtons.Controls.Add(this.pictureBoxPreview1);
             this.groupBoxGraphicsButtons.Controls.Add(this.labelToolbarIconTheme);
             this.groupBoxGraphicsButtons.Controls.Add(this.comboBoxToolbarIconTheme);
-            this.groupBoxGraphicsButtons.Location = new System.Drawing.Point(383, 310);
+            this.groupBoxGraphicsButtons.Location = new System.Drawing.Point(383, 307);
             this.groupBoxGraphicsButtons.Name = "groupBoxGraphicsButtons";
-            this.groupBoxGraphicsButtons.Size = new System.Drawing.Size(461, 109);
+            this.groupBoxGraphicsButtons.Size = new System.Drawing.Size(461, 114);
             this.groupBoxGraphicsButtons.TabIndex = 41;
             this.groupBoxGraphicsButtons.TabStop = false;
             this.groupBoxGraphicsButtons.Text = "Graphics buttons";
@@ -5368,8 +5368,8 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1092, 574);
             this.Controls.Add(this.labelUpdateFileTypeAssociationsStatus);
-            this.Controls.Add(this.panelVideoPlayer);
             this.Controls.Add(this.panelFont);
+            this.Controls.Add(this.panelVideoPlayer);
             this.Controls.Add(this.panelToolBar);
             this.Controls.Add(this.panelTools);
             this.Controls.Add(this.panelWaveform);
