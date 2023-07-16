@@ -20,7 +20,9 @@ namespace Nikse.SubtitleEdit.Core.Forms
         {
             _subtitle = subtitle;
             _frameRate = frameRate;
-            _timeCodes = timeCodes;
+
+            // Convert time codes to milliseconds
+            _timeCodes = timeCodes.Select(d => d * 1000).ToList();
 
             // Convert shot changes to frame numbers
             _shotChangesFrames = shotChanges.Select(d => SubtitleFormat.MillisecondsToFrames(d * 1000, _frameRate)).ToList();
