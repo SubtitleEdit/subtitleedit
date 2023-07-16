@@ -291,6 +291,10 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             };
             timeCodesBeautifier.Beautify();
 
+            // Re-enable group boxes, otherwise child controls are also disabled, and we need their original state for the checks below
+            groupBoxTimeCodes.Enabled = true;
+            groupBoxShotChanges.Enabled = true;
+
             // Save settings
             Configuration.Settings.BeautifyTimeCodes.AlignTimeCodes = checkBoxAlignTimeCodes.Checked;
 
