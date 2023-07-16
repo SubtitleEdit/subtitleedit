@@ -105,6 +105,7 @@ namespace Nikse.SubtitleEdit.Logic
             public string ShortcutX { get; set; }
             public string ExampleX { get; set; }
             public string Reset { get; set; }
+            public string Error { get; set; }
             public string Warning { get; set; }
             public string UseLargerFontForThisWindow { get; set; }
         }
@@ -173,11 +174,14 @@ namespace Nikse.SubtitleEdit.Logic
             public string Fixed { get; set; }
             public string Milliseconds { get; set; }
             public string ExtendOnly { get; set; }
+            public string EnforceDurationLimits { get; set; }
+            public string CheckShotChanges { get; set; }
         }
 
         public class ApplyDurationLimits
         {
             public string Title { get; set; }
+            public string CheckShotChanges { get; set; }
             public string FixesAvailable { get; set; }
             public string UnableToFix { get; set; }
         }
@@ -383,6 +387,85 @@ namespace Nikse.SubtitleEdit.Logic
             public string MkvLanguageStyleThreeLetter { get; set; }
             public string MkvLanguageStyleEmpty { get; set; }
             public string SearchFolderScanVideo { get; set; }
+        }
+
+        public class BeautifyTimeCodes
+        {
+            public string Title { get; set; }
+            public string GroupTimeCodes { get; set; }
+            public string AlignTimeCodes { get; set; }
+            public string ExtractExactTimeCodes { get; set; }
+            public string ExtractTimeCodes { get; set; }
+            public string CancelTimeCodes { get; set; }
+            public string GroupShotChanges { get; set; }
+            public string SnapToShotChanges { get; set; }
+            public string ImportShotChanges { get; set; }
+            public string EditProfile { get; set; }
+            public string NoTimeCodesLoaded { get; set; }
+            public string XTimeCodesLoaded { get; set; }
+            public string NoTimeCodesLoadedError { get; set; }
+            public string NoShotChangesLoaded { get; set; }
+            public string XShotChangesLoaded { get; set; }
+            public string NoShotChangesLoadedError { get; set; }
+        }
+
+        public class BeautifyTimeCodesProfile
+        {
+            public string Title { get; set; }
+            public string LoadPreset { get; set; }
+            public string PresetDefault { get; set; }
+            public string PresetNetflix { get; set; }
+            public string PresetSDI { get; set; }
+            public string CreateSimple { get; set; }
+            public string General { get; set; }
+            public string Gap { get; set; }
+            public string GapSuffix { get; set; }
+            public string InCues { get; set; }
+            public string SubtitlePreviewText { get; set; }
+            public string Zones { get; set; }
+            public string OutCues { get; set; }
+            public string ConnectedSubtitles { get; set; }
+            public string InCueClosest { get; set; }
+            public string OutCueClosest { get; set; }
+            public string TreadAsConnected { get; set; }
+            public string Milliseconds { get; set; }
+            public string Chaining { get; set; }
+            public string InCueOnShot { get; set; }
+            public string OutCueOnShot { get; set; }
+            public string MaxGap { get; set; }
+            public string ShotChangeBehavior { get; set; }
+            public string DontChain { get; set; }
+            public string ExtendCrossingShotChange { get; set; }
+            public string ExtendUntilShotChange { get; set; }
+            public string ResetWarning { get; set; }
+            public string CreateSimpleTitle { get; set; }
+            public string CreateSimpleInstruction { get; set; }
+            public string CreateSimpleGapInstruction { get; set; }
+            public string CreateSimpleInCues { get; set; }
+            public string CreateSimpleInCues0Frames { get; set; }
+            public string CreateSimpleInCues1Frames { get; set; }
+            public string CreateSimpleInCues2Frames { get; set; }
+            public string CreateSimpleInCues3Frames { get; set; }
+            public string CreateSimpleOutCues { get; set; }
+            public string CreateSimpleOutCues0Frames { get; set; }
+            public string CreateSimpleOutCues1Frames { get; set; }
+            public string CreateSimpleOutCues2Frames { get; set; }
+            public string CreateSimpleOutCues3Frames { get; set; }
+            public string CreateSimpleOutCuesGap { get; set; }
+            public string CreateSimpleSnapClosestCue { get; set; }
+            public string CreateSimpleMaxOffset { get; set; }
+            public string CreateSimpleMaxOffsetInstruction { get; set; }
+            public string CreateSimpleSafeZone { get; set; }
+            public string CreateSimpleSafeZoneInstruction { get; set; }
+            public string CreateSimpleChainingGap { get; set; }
+            public string CreateSimpleChainingGapInstruction { get; set; }
+            public string CreateSimpleChainingGapAfterShotChanges { get; set; }
+            public string CreateSimpleChainingToolTip { get; set; }
+            public string CreateSimpleLoadNetflixRules { get; set; }
+            public string Frames { get; set; }
+            public string Maximum { get; set; }
+            public string GapInMsFormat { get; set; }
+            public string OffsetSafeZoneError { get; set; }
         }
 
         public class BinEdit
@@ -1355,6 +1438,8 @@ namespace Nikse.SubtitleEdit.Logic
             public string CommonErrorsFixed { get; set; }
             public string BeforeRenumbering { get; set; }
             public string RenumberedStartingFromX { get; set; }
+            public string BeforeBeautifyTimeCodes { get; set; }
+            public string BeautifiedTimeCodes { get; set; }
             public string BeforeRemovalOfTextingForHearingImpaired { get; set; }
             public string TextingForHearingImpairedRemovedOneLine { get; set; }
             public string TextingForHearingImpairedRemovedXLines { get; set; }
@@ -1670,6 +1755,7 @@ namespace Nikse.SubtitleEdit.Logic
                     public string Duration { get; set; }
                     public string ListErrors { get; set; }
                     public string NetflixQualityCheck { get; set; }
+                    public string BeautifyTimeCodes { get; set; }
                     public string TextAlphabetically { get; set; }
                     public string TextSingleLineMaximumLength { get; set; }
                     public string TextTotalLength { get; set; }
@@ -1776,6 +1862,7 @@ namespace Nikse.SubtitleEdit.Logic
                     public string VisualSync { get; set; }
                     public string SpellCheck { get; set; }
                     public string NetflixQualityCheck { get; set; }
+                    public string BeautifyTimeCodes { get; set; }
                     public string Settings { get; set; }
                     public string Help { get; set; }
                     public string ShowHideWaveform { get; set; }
@@ -2355,6 +2442,7 @@ namespace Nikse.SubtitleEdit.Logic
             public string BurnIn { get; set; }
             public string SpellCheck { get; set; }
             public string NetflixQualityCheck { get; set; }
+            public string BeautifyTimeCodes { get; set; }
             public string SettingsName { get; set; }
             public string ToggleBookmarks { get; set; }
             public string ToggleBookmarksWithComment { get; set; }
@@ -2478,6 +2566,7 @@ namespace Nikse.SubtitleEdit.Logic
             public string WaveformListViewFocusMouseEnter { get; set; }
             public string WaveformSingleClickSelect { get; set; }
             public string WaveformSnapToShotChanges { get; set; }
+            public string WaveformEditShotChangesProfile { get; set; }
             public string WaveformAutoGen { get; set; }
             public string WaveformBorderHitMs1 { get; set; }
             public string WaveformBorderHitMs2 { get; set; }
@@ -2635,15 +2724,13 @@ namespace Nikse.SubtitleEdit.Logic
             public string AdjustSetEndAndOffsetTheRest { get; set; }
             public string AdjustSetEndAndOffsetTheRestAndGoToNext { get; set; }
             public string AdjustSnapStartToNextShotChange { get; set; }
-            public string AdjustSnapStartToNextShotChangeWithGap { get; set; }
             public string AdjustSnapEndToPreviousShotChange { get; set; }
-            public string AdjustSnapEndToPreviousShotChangeWithGap { get; set; }
             public string AdjustExtendToNextShotChange { get; set; }
-            public string AdjustExtendToNextShotChangeWithGap { get; set; }
             public string AdjustExtendToPreviousShotChange { get; set; }
-            public string AdjustExtendToPreviousShotChangeWithGap { get; set; }
             public string AdjustExtendToNextSubtitle { get; set; }
             public string AdjustExtendToPreviousSubtitle { get; set; }
+            public string AdjustExtendToNextSubtitleMinusChainingGap { get; set; }
+            public string AdjustExtendToPreviousSubtitleMinusChainingGap { get; set; }
             public string AdjustExtendCurrentSubtitle { get; set; }
             public string AdjustExtendPreviousLineEndToCurrentStart { get; set; }
             public string AdjustExtendNextLineStartToCurrentEnd { get; set; }

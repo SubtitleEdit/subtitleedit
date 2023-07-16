@@ -99,6 +99,7 @@
     <ShortcutX>Shortcut: {0}</ShortcutX>
     <ExampleX>Example: {0}</ExampleX>
     <Reset>Reset</Reset>
+    <Error>Error</Error>
     <Warning>Warning</Warning>
     <UseLargerFontForThisWindow>Use larger font for this window</UseLargerFontForThisWindow>
   </General>
@@ -171,9 +172,12 @@ Note: Do check free disk space.</WaveFileMalformed>
     <Fixed>Fixed</Fixed>
     <Milliseconds>Milliseconds</Milliseconds>
     <ExtendOnly>Extend only</ExtendOnly>
+    <EnforceDurationLimits>Enforce minimum and maximum duration</EnforceDurationLimits>
+    <CheckShotChanges>Don't extend past shot changes</CheckShotChanges>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
     <Title>Apply duration limits</Title>
+    <CheckShotChanges>Don't extend past shot changes</CheckShotChanges>
     <FixesAvailable>Fixes available: {0}</FixesAvailable>
     <UnableToFix>Unable to fix: {0}</UnableToFix>
   </ApplyDurationLimits>
@@ -362,6 +366,94 @@ Read more info (web)?</WhisperNotFound>
     <MkvLanguageStyleEmpty>No language code</MkvLanguageStyleEmpty>
     <SearchFolderScanVideo>Also scan video files in "Search folder" (slow)</SearchFolderScanVideo>
   </BatchConvert>
+  <BeautifyTimeCodes>
+    <Title>Beautify time codes</Title>
+    <GroupTimeCodes>Time codes</GroupTimeCodes>
+    <AlignTimeCodes>Align time codes to frame time codes</AlignTimeCodes>
+    <ExtractExactTimeCodes>Use ffprobe to extract exact frame time codes</ExtractExactTimeCodes>
+    <ExtractTimeCodes>Extract time codes</ExtractTimeCodes>
+    <CancelTimeCodes>Cancel</CancelTimeCodes>
+    <GroupShotChanges>Shot changes</GroupShotChanges>
+    <SnapToShotChanges>Snap cues to shot changes</SnapToShotChanges>
+    <ImportShotChanges>Generate / import shot changes...</ImportShotChanges>
+    <EditProfile>Edit profile...</EditProfile>
+    <NoTimeCodesLoaded>No time codes loaded</NoTimeCodesLoaded>
+    <XTimeCodesLoaded>{0} time codes loaded</XTimeCodesLoaded>
+    <NoTimeCodesLoadedError>You've selected to extract exact frame time codes, but there are no time codes loaded.
+
+Please click "{0}" to extract the time codes first, or disable this option.</NoTimeCodesLoadedError>
+    <NoShotChangesLoaded>No shot changes loaded</NoShotChangesLoaded>
+    <XShotChangesLoaded>{0} shot changes loaded</XShotChangesLoaded>
+    <NoShotChangesLoadedError>You've selected to snap cues to shot changes, but there are no shot changes loaded.
+
+Please click "{0}" to generate or import shot changes first, or disable this option.</NoShotChangesLoadedError>
+  </BeautifyTimeCodes>
+  <BeautifyTimeCodesProfile>
+    <Title>Edit profile</Title>
+    <LoadPreset>Load preset...</LoadPreset>
+    <PresetDefault>Default</PresetDefault>
+    <PresetNetflix>Netflix</PresetNetflix>
+    <PresetSDI>SDI</PresetSDI>
+    <CreateSimple>Simple mode...</CreateSimple>
+    <General>General</General>
+    <Gap>Gap:</Gap>
+    <GapSuffix>frames (will overwrite custom settings)</GapSuffix>
+    <InCues>In cues</InCues>
+    <SubtitlePreviewText>Subtitle text.</SubtitlePreviewText>
+    <Zones>Zones:</Zones>
+    <OutCues>Out cues</OutCues>
+    <ConnectedSubtitles>Connected subtitles</ConnectedSubtitles>
+    <InCueClosest>In cue is closest</InCueClosest>
+    <OutCueClosest>Out cue is closest</OutCueClosest>
+    <TreadAsConnected>Treat as connected if gap is smaller than:</TreadAsConnected>
+    <Milliseconds>ms</Milliseconds>
+    <Chaining>Chaining</Chaining>
+    <InCueOnShot>In cue on shot change</InCueOnShot>
+    <OutCueOnShot>Out cue on shot change</OutCueOnShot>
+    <MaxGap>Max. gap:</MaxGap>
+    <ShotChangeBehavior>If there is a shot change in between:</ShotChangeBehavior>
+    <DontChain>Don't chain</DontChain>
+    <ExtendCrossingShotChange>Extend, crossing shot change</ExtendCrossingShotChange>
+    <ExtendUntilShotChange>Extend until shot change</ExtendUntilShotChange>
+    <ResetWarning>This will reset your current profile and replace all values with those of the selected preset. This cannot be undone.
+
+Do you want to continue?</ResetWarning>
+    <CreateSimpleTitle>Create simple</CreateSimpleTitle>
+    <CreateSimpleInstruction>Enter these basic rules, and the current profile will be updated accordingly.</CreateSimpleInstruction>
+    <CreateSimpleGapInstruction>The minimum amount of space between subtitles.</CreateSimpleGapInstruction>
+    <CreateSimpleInCues>In cues should be:</CreateSimpleInCues>
+    <CreateSimpleInCues0Frames>On the shot change</CreateSimpleInCues0Frames>
+    <CreateSimpleInCues1Frames>1 frame after the shot change</CreateSimpleInCues1Frames>
+    <CreateSimpleInCues2Frames>2 frames after the shot change</CreateSimpleInCues2Frames>
+    <CreateSimpleInCues3Frames>3 frames after the shot change</CreateSimpleInCues3Frames>
+    <CreateSimpleOutCues>Out cues should be:</CreateSimpleOutCues>
+    <CreateSimpleOutCues0Frames>On the shot change</CreateSimpleOutCues0Frames>
+    <CreateSimpleOutCues1Frames>1 frame before the shot change</CreateSimpleOutCues1Frames>
+    <CreateSimpleOutCues2Frames>2 frames before the shot change</CreateSimpleOutCues2Frames>
+    <CreateSimpleOutCues3Frames>3 frames before the shot change</CreateSimpleOutCues3Frames>
+    <CreateSimpleOutCuesGap>Minimum gap before the shot change</CreateSimpleOutCuesGap>
+    <CreateSimpleSnapClosestCue>For connected subtitles, snap the in or out cue to a shot change based on which one is closer</CreateSimpleSnapClosestCue>
+    <CreateSimpleMaxOffset>Max. offset:</CreateSimpleMaxOffset>
+    <CreateSimpleMaxOffsetInstruction>Cues within this distance from shot changes will be snapped to the shot change.</CreateSimpleMaxOffsetInstruction>
+    <CreateSimpleSafeZone>Safe zone:</CreateSimpleSafeZone>
+    <CreateSimpleSafeZoneInstruction>Cues within this distance from shot changes will be moved away from the shot change.</CreateSimpleSafeZoneInstruction>
+    <CreateSimpleChainingGap>Max. chaining gap:</CreateSimpleChainingGap>
+    <CreateSimpleChainingGapInstruction>If the space between two subtitles is smaller than this amount, the subtitles will be connected.</CreateSimpleChainingGapInstruction>
+    <CreateSimpleChainingGapAfterShotChanges>After an out cue on a shot change, the gap may be smaller</CreateSimpleChainingGapAfterShotChanges>
+    <CreateSimpleChainingToolTip>Chaining subtitles is recommended to ensure a consistent "rhythm" in the "flashing" of the subtitles.
+This offers a more relaxed viewing experience.
+
+After chaining, subtitles are either connected (i.e. a subtitle disappears and a new subtitle appears immediately after a slight pause) or not.
+This gives the viewer some sense on when they can shift their focus back to the screen.
+
+The length of the chaining gap can be a bit smaller right after a subtitle disappears on a shot change, because the changing shot "resets" the image in a way.
+We leverage the intrinsic rhythm of the image.</CreateSimpleChainingToolTip>
+    <CreateSimpleLoadNetflixRules>Load Netflix rules</CreateSimpleLoadNetflixRules>
+    <Frames>frames</Frames>
+    <Maximum>Max.</Maximum>
+    <GapInMsFormat>{0} ms @ {1} FPS</GapInMsFormat>
+    <OffsetSafeZoneError>The safe zone should be larger than the max. offset.</OffsetSafeZoneError>
+  </BeautifyTimeCodesProfile>
   <BinEdit>
     <ImportImage>Import image...</ImportImage>
     <ExportImage>Export image...</ExportImage>
@@ -1274,6 +1366,7 @@ To use an API key, go to "Options -&gt; Settings -&gt; Tools" to enter your Goog
         <Duration>Duration</Duration>
         <ListErrors>List errors...</ListErrors>
         <NetflixQualityCheck>Netflix quality check...</NetflixQualityCheck>
+        <BeautifyTimeCodes>Beautify time codes...</BeautifyTimeCodes>
         <TextAlphabetically>Text - alphabetically</TextAlphabetically>
         <TextSingleLineMaximumLength>Text - single line max. length</TextSingleLineMaximumLength>
         <TextTotalLength>Text - total length</TextTotalLength>
@@ -1369,6 +1462,7 @@ To use an API key, go to "Options -&gt; Settings -&gt; Tools" to enter your Goog
         <VisualSync>Visual sync</VisualSync>
         <SpellCheck>Spell check</SpellCheck>
         <NetflixQualityCheck>Netflix quality check</NetflixQualityCheck>
+        <BeautifyTimeCodes>Beautify time codes</BeautifyTimeCodes>
         <Settings>Settings</Settings>
         <Help>Help</Help>
         <ShowHideWaveform>Show/hide waveform</ShowHideWaveform>
@@ -1600,6 +1694,8 @@ Would you like to start from the top of the document and continue search and rep
     <CommonErrorsFixed>Common errors fixed</CommonErrorsFixed>
     <BeforeRenumbering>Before renumbering</BeforeRenumbering>
     <RenumberedStartingFromX>Renumbered starting from: {0}</RenumberedStartingFromX>
+    <BeforeBeautifyTimeCodes>Before beautifying time codes</BeforeBeautifyTimeCodes>
+    <BeautifiedTimeCodes>Time codes beautified</BeautifiedTimeCodes>
     <BeforeRemovalOfTextingForHearingImpaired>Before removal of texting for hearing impaired</BeforeRemovalOfTextingForHearingImpaired>
     <TextingForHearingImpairedRemovedOneLine>Texting for hearing impaired removed: One line</TextingForHearingImpairedRemovedOneLine>
     <TextingForHearingImpairedRemovedXLines>Texting for hearing impaired removed: {0} lines</TextingForHearingImpairedRemovedXLines>
@@ -2173,6 +2269,7 @@ can edit in same subtitle file (collaboration)</Information>
     <BurnIn>Burn in</BurnIn>
     <SpellCheck>Spell check</SpellCheck>
     <NetflixQualityCheck>Netflix quality check</NetflixQualityCheck>
+    <BeautifyTimeCodes>Beautify time codes</BeautifyTimeCodes>
     <SettingsName>Settings</SettingsName>
     <ToggleBookmarks>Toggle bookmarks</ToggleBookmarks>
     <ToggleBookmarksWithComment>Toggle bookmarks - add comment</ToggleBookmarksWithComment>
@@ -2293,6 +2390,7 @@ can edit in same subtitle file (collaboration)</Information>
     <WaveformListViewFocusMouseEnter>Also set list view focus on mouse enter in list view</WaveformListViewFocusMouseEnter>
     <WaveformSingleClickSelect>Single click to select subtitles</WaveformSingleClickSelect>
     <WaveformSnapToShotChanges>Snap to shot changes (hold Shift to override)</WaveformSnapToShotChanges>
+    <WaveformEditShotChangesProfile>Edit profile...</WaveformEditShotChangesProfile>
     <WaveformAutoGen>Auto generate waveform when opening video</WaveformAutoGen>
     <WaveformBorderHitMs1>Border marker hit must be within</WaveformBorderHitMs1>
     <WaveformBorderHitMs2>milliseconds</WaveformBorderHitMs2>
@@ -2448,15 +2546,13 @@ can edit in same subtitle file (collaboration)</Information>
     <AdjustSetEndAndOffsetTheRest>Set end, offset the rest</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Set end, offset the rest and go to next</AdjustSetEndAndOffsetTheRestAndGoToNext>
     <AdjustSnapStartToNextShotChange>Snap selected lines start to next shot change</AdjustSnapStartToNextShotChange>
-    <AdjustSnapStartToNextShotChangeWithGap>Snap selected lines start to next shot change with min. gap</AdjustSnapStartToNextShotChangeWithGap>
     <AdjustSnapEndToPreviousShotChange>Snap selected lines end to previous shot change</AdjustSnapEndToPreviousShotChange>
-    <AdjustSnapEndToPreviousShotChangeWithGap>Snap selected lines end to previous shot change with min. gap</AdjustSnapEndToPreviousShotChangeWithGap>
     <AdjustExtendToNextShotChange>Extend selected lines to next shot change (or next subtitle)</AdjustExtendToNextShotChange>
-    <AdjustExtendToNextShotChangeWithGap>Extend selected lines to next shot change with min. gap (or next subtitle)</AdjustExtendToNextShotChangeWithGap>
     <AdjustExtendToPreviousShotChange>Extend selected lines to previous shot change (or previous subtitle)</AdjustExtendToPreviousShotChange>
-    <AdjustExtendToPreviousShotChangeWithGap>Extend selected lines to previous shot change with min. gap (or previous subtitle)</AdjustExtendToPreviousShotChangeWithGap>
     <AdjustExtendToNextSubtitle>Extend selected lines to next subtitle</AdjustExtendToNextSubtitle>
     <AdjustExtendToPreviousSubtitle>Extend selected lines to previous subtitle</AdjustExtendToPreviousSubtitle>
+    <AdjustExtendToNextSubtitleMinusChainingGap>Extend selected lines to next subtitle with chaining gap</AdjustExtendToNextSubtitleMinusChainingGap>
+    <AdjustExtendToPreviousSubtitleMinusChainingGap>Extend selected lines to previous subtitle with chaining gap</AdjustExtendToPreviousSubtitleMinusChainingGap>
     <AdjustExtendCurrentSubtitle>Extend current line to next subtitle or max duration</AdjustExtendCurrentSubtitle>
     <AdjustExtendPreviousLineEndToCurrentStart>Extend previous line's end to current's start</AdjustExtendPreviousLineEndToCurrentStart>
     <AdjustExtendNextLineStartToCurrentEnd>Extend next line's start to current's end</AdjustExtendNextLineStartToCurrentEnd>

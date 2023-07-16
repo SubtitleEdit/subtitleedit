@@ -378,12 +378,14 @@ namespace Nikse.SubtitleEdit.Forms
             numericUpDownOptimalCharsSec.Value = (decimal)Configuration.Settings.General.SubtitleOptimalCharactersPerSeconds;
             numericUpDownMaxCharsSec.Value = (decimal)Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds;
             checkBoxExtendOnly.Checked = Configuration.Settings.Tools.AdjustDurationExtendOnly;
+            checkBoxEnforceDurationLimits.Checked = Configuration.Settings.Tools.AdjustDurationExtendEnforceDurationLimits;
 
             labelOptimalCharsSec.Text = LanguageSettings.Current.Settings.OptimalCharactersPerSecond;
             labelMaxCharsPerSecond.Text = LanguageSettings.Current.Settings.MaximumCharactersPerSecond;
             labelAddSeconds.Text = LanguageSettings.Current.AdjustDisplayDuration.AddSeconds;
             labelMillisecondsFixed.Text = LanguageSettings.Current.AdjustDisplayDuration.Milliseconds;
             checkBoxExtendOnly.Text = LanguageSettings.Current.AdjustDisplayDuration.ExtendOnly;
+            checkBoxEnforceDurationLimits.Text = LanguageSettings.Current.AdjustDisplayDuration.EnforceDurationLimits;
             labelAdjustViaPercent.Text = LanguageSettings.Current.AdjustDisplayDuration.SetAsPercent;
 
             labelTargetRes.Text = LanguageSettings.Current.AssaResolutionChanger.TargetVideoRes;
@@ -1982,14 +1984,15 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (IsActionEnabled(CommandLineConverter.BatchAction.AdjustDisplayDuration))
             {
+                // TODO shot changes
                 var adjustmentType = comboBoxAdjustDurationVia.Text;
                 if (adjustmentType == LanguageSettings.Current.AdjustDisplayDuration.Percent)
                 {
-                    sub.AdjustDisplayTimeUsingPercent((double)numericUpDownAdjustViaPercent.Value, null);
+                    sub.AdjustDisplayTimeUsingPercent((double)numericUpDownAdjustViaPercent.Value, null, null, checkBoxEnforceDurationLimits.Checked);
                 }
                 else if (adjustmentType == LanguageSettings.Current.AdjustDisplayDuration.Recalculate)
                 {
-                    sub.RecalculateDisplayTimes((double)numericUpDownMaxCharsSec.Value, null, (double)numericUpDownOptimalCharsSec.Value, checkBoxExtendOnly.Checked);
+                    sub.RecalculateDisplayTimes((double)numericUpDownMaxCharsSec.Value, null, (double)numericUpDownOptimalCharsSec.Value, checkBoxExtendOnly.Checked, null, checkBoxEnforceDurationLimits.Checked);
                 }
                 else if (adjustmentType == LanguageSettings.Current.AdjustDisplayDuration.Fixed)
                 {
@@ -1997,7 +2000,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
-                    sub.AdjustDisplayTimeUsingSeconds((double)numericUpDownSeconds.Value, null);
+                    sub.AdjustDisplayTimeUsingSeconds((double)numericUpDownSeconds.Value, null, null, checkBoxEnforceDurationLimits.Checked);
                 }
             }
 
@@ -3718,6 +3721,8 @@ namespace Nikse.SubtitleEdit.Forms
             panel.Visible = true;
             panel.Left = 2;
             panel.Top = labelAdjustDurationVia.Top + labelAdjustDurationVia.Height + 9;
+
+            checkBoxEnforceDurationLimits.Visible = panel != panelAdjustDurationFixed;
         }
 
         private void addFilesToolStripMenuItem_Click(object sender, EventArgs e)

@@ -233,6 +233,7 @@
             this.buttonWaveformsFolderEmpty = new System.Windows.Forms.Button();
             this.labelWaveformsFolderInfo = new System.Windows.Forms.Label();
             this.groupBoxWaveformAppearence = new System.Windows.Forms.GroupBox();
+            this.buttonEditShotChangesProfile = new System.Windows.Forms.Button();
             this.checkBoxWaveformAutoGen = new System.Windows.Forms.CheckBox();
             this.panelWaveformCursorColor = new System.Windows.Forms.Panel();
             this.buttonWaveformCursorColor = new System.Windows.Forms.Button();
@@ -337,6 +338,9 @@
             this.labelTBBurnIn = new System.Windows.Forms.Label();
             this.pictureBoxBurnIn = new System.Windows.Forms.PictureBox();
             this.checkBoxTBBurnIn = new System.Windows.Forms.CheckBox();
+            this.labelTBBeautifyTimeCodes = new System.Windows.Forms.Label();
+            this.pictureBoxBeautifyTimeCodes = new System.Windows.Forms.PictureBox();
+            this.checkBoxBeautifyTimeCodes = new System.Windows.Forms.CheckBox();
             this.labelTBNetflixQualityCheck = new System.Windows.Forms.Label();
             this.pictureBoxNetflixQualityCheck = new System.Windows.Forms.PictureBox();
             this.checkBoxNetflixQualityCheck = new System.Windows.Forms.CheckBox();
@@ -505,6 +509,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxAssStyleManager)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSourceView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBurnIn)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBeautifyTimeCodes)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxNetflixQualityCheck)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxRemoveTextForHi)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxFixCommonErrors)).BeginInit();
@@ -3053,6 +3058,7 @@
             // 
             this.groupBoxWaveformAppearence.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxWaveformAppearence.Controls.Add(this.buttonEditShotChangesProfile);
             this.groupBoxWaveformAppearence.Controls.Add(this.checkBoxWaveformAutoGen);
             this.groupBoxWaveformAppearence.Controls.Add(this.panelWaveformCursorColor);
             this.groupBoxWaveformAppearence.Controls.Add(this.buttonWaveformCursorColor);
@@ -3089,13 +3095,23 @@
             this.groupBoxWaveformAppearence.TabStop = false;
             this.groupBoxWaveformAppearence.Text = "Waveform appearance";
             // 
+            // buttonEditShotChangesProfile
+            // 
+            this.buttonEditShotChangesProfile.Location = new System.Drawing.Point(524, 157);
+            this.buttonEditShotChangesProfile.Name = "buttonEditShotChangesProfile";
+            this.buttonEditShotChangesProfile.Size = new System.Drawing.Size(136, 23);
+            this.buttonEditShotChangesProfile.TabIndex = 27;
+            this.buttonEditShotChangesProfile.Text = "Edit profile...";
+            this.buttonEditShotChangesProfile.UseVisualStyleBackColor = true;
+            this.buttonEditShotChangesProfile.Click += new System.EventHandler(this.buttonEditShotChangesProfile_Click);
+            // 
             // checkBoxWaveformAutoGen
             // 
             this.checkBoxWaveformAutoGen.AutoSize = true;
-            this.checkBoxWaveformAutoGen.Location = new System.Drawing.Point(262, 186);
+            this.checkBoxWaveformAutoGen.Location = new System.Drawing.Point(262, 185);
             this.checkBoxWaveformAutoGen.Name = "checkBoxWaveformAutoGen";
             this.checkBoxWaveformAutoGen.Size = new System.Drawing.Size(220, 17);
-            this.checkBoxWaveformAutoGen.TabIndex = 27;
+            this.checkBoxWaveformAutoGen.TabIndex = 28;
             this.checkBoxWaveformAutoGen.Text = "Auto gen waveform when opening video";
             this.checkBoxWaveformAutoGen.UseVisualStyleBackColor = true;
             // 
@@ -3174,7 +3190,7 @@
             this.labelWaveformTextSize.Location = new System.Drawing.Point(259, 220);
             this.labelWaveformTextSize.Name = "labelWaveformTextSize";
             this.labelWaveformTextSize.Size = new System.Drawing.Size(73, 13);
-            this.labelWaveformTextSize.TabIndex = 27;
+            this.labelWaveformTextSize.TabIndex = 29;
             this.labelWaveformTextSize.Text = "Text font size";
             // 
             // checkBoxWaveformTextBold
@@ -3183,7 +3199,7 @@
             this.checkBoxWaveformTextBold.Location = new System.Drawing.Point(463, 221);
             this.checkBoxWaveformTextBold.Name = "checkBoxWaveformTextBold";
             this.checkBoxWaveformTextBold.Size = new System.Drawing.Size(46, 17);
-            this.checkBoxWaveformTextBold.TabIndex = 29;
+            this.checkBoxWaveformTextBold.TabIndex = 31;
             this.checkBoxWaveformTextBold.Text = "Bold";
             this.checkBoxWaveformTextBold.UseVisualStyleBackColor = true;
             // 
@@ -3209,7 +3225,7 @@
             this.comboBoxWaveformTextSize.Location = new System.Drawing.Point(336, 217);
             this.comboBoxWaveformTextSize.Name = "comboBoxWaveformTextSize";
             this.comboBoxWaveformTextSize.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxWaveformTextSize.TabIndex = 28;
+            this.comboBoxWaveformTextSize.TabIndex = 30;
             // 
             // checkBoxListViewMouseEnterFocus
             // 
@@ -3238,7 +3254,7 @@
             this.labelWaveformBorderHitMs2.Location = new System.Drawing.Point(454, 250);
             this.labelWaveformBorderHitMs2.Name = "labelWaveformBorderHitMs2";
             this.labelWaveformBorderHitMs2.Size = new System.Drawing.Size(62, 13);
-            this.labelWaveformBorderHitMs2.TabIndex = 32;
+            this.labelWaveformBorderHitMs2.TabIndex = 34;
             this.labelWaveformBorderHitMs2.Text = "milliseconds";
             // 
             // numericUpDownWaveformBorderHitMs
@@ -3251,7 +3267,7 @@
             0});
             this.numericUpDownWaveformBorderHitMs.Name = "numericUpDownWaveformBorderHitMs";
             this.numericUpDownWaveformBorderHitMs.Size = new System.Drawing.Size(44, 21);
-            this.numericUpDownWaveformBorderHitMs.TabIndex = 31;
+            this.numericUpDownWaveformBorderHitMs.TabIndex = 33;
             this.numericUpDownWaveformBorderHitMs.Value = new decimal(new int[] {
             18,
             0,
@@ -3264,7 +3280,7 @@
             this.labelWaveformBorderHitMs1.Location = new System.Drawing.Point(259, 250);
             this.labelWaveformBorderHitMs1.Name = "labelWaveformBorderHitMs1";
             this.labelWaveformBorderHitMs1.Size = new System.Drawing.Size(127, 13);
-            this.labelWaveformBorderHitMs1.TabIndex = 30;
+            this.labelWaveformBorderHitMs1.TabIndex = 32;
             this.labelWaveformBorderHitMs1.Text = "Marker hit must be within";
             // 
             // checkBoxAllowOverlap
@@ -4080,6 +4096,9 @@
             this.groupBoxShowToolBarButtons.Controls.Add(this.labelTBBurnIn);
             this.groupBoxShowToolBarButtons.Controls.Add(this.pictureBoxBurnIn);
             this.groupBoxShowToolBarButtons.Controls.Add(this.checkBoxTBBurnIn);
+            this.groupBoxShowToolBarButtons.Controls.Add(this.labelTBBeautifyTimeCodes);
+            this.groupBoxShowToolBarButtons.Controls.Add(this.pictureBoxBeautifyTimeCodes);
+            this.groupBoxShowToolBarButtons.Controls.Add(this.checkBoxBeautifyTimeCodes);
             this.groupBoxShowToolBarButtons.Controls.Add(this.labelTBNetflixQualityCheck);
             this.groupBoxShowToolBarButtons.Controls.Add(this.pictureBoxNetflixQualityCheck);
             this.groupBoxShowToolBarButtons.Controls.Add(this.checkBoxNetflixQualityCheck);
@@ -4209,7 +4228,7 @@
             // labelToggleSourceView
             // 
             this.labelToggleSourceView.AutoSize = true;
-            this.labelToggleSourceView.Location = new System.Drawing.Point(11, 253);
+            this.labelToggleSourceView.Location = new System.Drawing.Point(9, 256);
             this.labelToggleSourceView.Name = "labelToggleSourceView";
             this.labelToggleSourceView.Size = new System.Drawing.Size(99, 13);
             this.labelToggleSourceView.TabIndex = 48;
@@ -4217,7 +4236,7 @@
             // 
             // pictureBoxSourceView
             // 
-            this.pictureBoxSourceView.Location = new System.Drawing.Point(24, 272);
+            this.pictureBoxSourceView.Location = new System.Drawing.Point(22, 275);
             this.pictureBoxSourceView.Name = "pictureBoxSourceView";
             this.pictureBoxSourceView.Size = new System.Drawing.Size(32, 32);
             this.pictureBoxSourceView.TabIndex = 47;
@@ -4226,7 +4245,7 @@
             // checkBoxTBToggleSourceView
             // 
             this.checkBoxTBToggleSourceView.AutoSize = true;
-            this.checkBoxTBToggleSourceView.Location = new System.Drawing.Point(27, 311);
+            this.checkBoxTBToggleSourceView.Location = new System.Drawing.Point(25, 314);
             this.checkBoxTBToggleSourceView.Name = "checkBoxTBToggleSourceView";
             this.checkBoxTBToggleSourceView.Size = new System.Drawing.Size(55, 17);
             this.checkBoxTBToggleSourceView.TabIndex = 46;
@@ -4259,6 +4278,33 @@
             this.checkBoxTBBurnIn.TabIndex = 20;
             this.checkBoxTBBurnIn.Text = "Visible";
             this.checkBoxTBBurnIn.UseVisualStyleBackColor = true;
+            // 
+            // labelTBBeautifyTimeCodes
+            // 
+            this.labelTBBeautifyTimeCodes.AutoSize = true;
+            this.labelTBBeautifyTimeCodes.Location = new System.Drawing.Point(765, 143);
+            this.labelTBBeautifyTimeCodes.Name = "labelTBBeautifyTimeCodes";
+            this.labelTBBeautifyTimeCodes.Size = new System.Drawing.Size(101, 13);
+            this.labelTBBeautifyTimeCodes.TabIndex = 45;
+            this.labelTBBeautifyTimeCodes.Text = "Beautify time codes";
+            // 
+            // pictureBoxBeautifyTimeCodes
+            // 
+            this.pictureBoxBeautifyTimeCodes.Location = new System.Drawing.Point(776, 160);
+            this.pictureBoxBeautifyTimeCodes.Name = "pictureBoxBeautifyTimeCodes";
+            this.pictureBoxBeautifyTimeCodes.Size = new System.Drawing.Size(32, 32);
+            this.pictureBoxBeautifyTimeCodes.TabIndex = 44;
+            this.pictureBoxBeautifyTimeCodes.TabStop = false;
+            // 
+            // checkBoxBeautifyTimeCodes
+            // 
+            this.checkBoxBeautifyTimeCodes.AutoSize = true;
+            this.checkBoxBeautifyTimeCodes.Location = new System.Drawing.Point(779, 198);
+            this.checkBoxBeautifyTimeCodes.Name = "checkBoxBeautifyTimeCodes";
+            this.checkBoxBeautifyTimeCodes.Size = new System.Drawing.Size(55, 17);
+            this.checkBoxBeautifyTimeCodes.TabIndex = 43;
+            this.checkBoxBeautifyTimeCodes.Text = "Visible";
+            this.checkBoxBeautifyTimeCodes.UseVisualStyleBackColor = true;
             // 
             // labelTBNetflixQualityCheck
             // 
@@ -5475,6 +5521,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxAssStyleManager)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSourceView)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBurnIn)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBeautifyTimeCodes)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxNetflixQualityCheck)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxRemoveTextForHi)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxFixCommonErrors)).EndInit();
@@ -5872,6 +5919,9 @@
         private System.Windows.Forms.CheckBox checkBoxLiveSpellCheck;
         private System.Windows.Forms.CheckBox checkBoxDarkThemeShowListViewGridLines;
         private System.Windows.Forms.GroupBox groupBoxFontInUI;
+        private System.Windows.Forms.Label labelTBBeautifyTimeCodes;
+        private System.Windows.Forms.PictureBox pictureBoxBeautifyTimeCodes;
+        private System.Windows.Forms.CheckBox checkBoxBeautifyTimeCodes;
         private System.Windows.Forms.GroupBox groupBoxToolsMisc;
         private System.Windows.Forms.ComboBox comboBoxBDOpensIn;
         private System.Windows.Forms.Label labelBDOpensIn;
@@ -5920,6 +5970,7 @@
         private System.Windows.Forms.Button buttonMpvOutlineColor;
         private System.Windows.Forms.Panel panelMpvPrimaryColor;
         private System.Windows.Forms.Button buttonMpvPrimaryColor;
+        private System.Windows.Forms.Button buttonEditShotChangesProfile;
         private System.Windows.Forms.PictureBox pictureBoxAssStyleManager;
         private System.Windows.Forms.PictureBox pictureBoxAssAttachments;
         private System.Windows.Forms.PictureBox pictureBoxAssProperties;

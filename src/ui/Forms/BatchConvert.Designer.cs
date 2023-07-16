@@ -172,6 +172,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.labelStatus = new System.Windows.Forms.Label();
             this.labelError = new System.Windows.Forms.Label();
+            this.checkBoxEnforceDurationLimits = new System.Windows.Forms.CheckBox();
             this.groupBoxConvertOptions.SuspendLayout();
             this.contextMenuStripOptions.SuspendLayout();
             this.groupBoxChangeCasing.SuspendLayout();
@@ -237,10 +238,10 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.groupBoxConvertOptions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxConvertOptions.Controls.Add(this.groupBoxAdjustDuration);
             this.groupBoxConvertOptions.Controls.Add(this.listViewConvertOptions);
             this.groupBoxConvertOptions.Controls.Add(this.groupBoxChangeCasing);
             this.groupBoxConvertOptions.Controls.Add(this.groupBoxMergeShortLines);
-            this.groupBoxConvertOptions.Controls.Add(this.groupBoxAdjustDuration);
             this.groupBoxConvertOptions.Controls.Add(this.buttonConvertOptionsSettings);
             this.groupBoxConvertOptions.Controls.Add(this.groupBoxAssaChangeRes);
             this.groupBoxConvertOptions.Controls.Add(this.groupBoxSortBy);
@@ -502,6 +503,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // groupBoxAdjustDuration
             // 
+            this.groupBoxAdjustDuration.Controls.Add(this.checkBoxEnforceDurationLimits);
             this.groupBoxAdjustDuration.Controls.Add(this.comboBoxAdjustDurationVia);
             this.groupBoxAdjustDuration.Controls.Add(this.labelAdjustDurationVia);
             this.groupBoxAdjustDuration.Controls.Add(this.panelAdjustDurationFixed);
@@ -1706,7 +1708,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemOcrEngine,
             this.alsoScanVideoFilesInSearchFolderslowToolStripMenuItem});
             this.contextMenuStripFiles.Name = "contextMenuStripStyles";
-            this.contextMenuStripFiles.Size = new System.Drawing.Size(400, 192);
+            this.contextMenuStripFiles.Size = new System.Drawing.Size(400, 170);
             this.contextMenuStripFiles.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripFilesOpening);
             // 
             // addFilesToolStripMenuItem
@@ -1800,6 +1802,16 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelError.Size = new System.Drawing.Size(51, 13);
             this.labelError.TabIndex = 10;
             this.labelError.Text = "labelError";
+            // 
+            // checkBoxEnforceDurationLimits
+            // 
+            this.checkBoxEnforceDurationLimits.AutoSize = true;
+            this.checkBoxEnforceDurationLimits.Location = new System.Drawing.Point(10, 222);
+            this.checkBoxEnforceDurationLimits.Name = "checkBoxEnforceDurationLimits";
+            this.checkBoxEnforceDurationLimits.Size = new System.Drawing.Size(214, 17);
+            this.checkBoxEnforceDurationLimits.TabIndex = 17;
+            this.checkBoxEnforceDurationLimits.Text = "Enforce minimum and maximum duration";
+            this.checkBoxEnforceDurationLimits.UseVisualStyleBackColor = true;
             // 
             // BatchConvert
             // 
@@ -2023,5 +2035,6 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.RadioButton radioButtonProperCase;
         private System.Windows.Forms.CheckBox checkBoxProperCaseOnlyUpper;
         private System.Windows.Forms.ToolStripMenuItem alsoScanVideoFilesInSearchFolderslowToolStripMenuItem;
+        private System.Windows.Forms.CheckBox checkBoxEnforceDurationLimits;
     }
 }
