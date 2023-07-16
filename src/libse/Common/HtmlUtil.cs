@@ -409,6 +409,18 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
             }
 
+            // v tag from WebVTT
+            var indexOfCTag = s.IndexOf("<c.", StringComparison.Ordinal);
+            if (indexOfCTag >= 0)
+            {
+                var indexOfEndVTag = s.IndexOf('>', indexOfCTag);
+                if (indexOfEndVTag >= 0)
+                {
+                    s = s.Remove(indexOfCTag, indexOfEndVTag - indexOfCTag + 1);
+                    s = s.Replace("</c>", string.Empty);
+                }
+            }
+
             return RemoveCommonHtmlTags(s);
         }
 

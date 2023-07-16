@@ -44,6 +44,8 @@ namespace Nikse.SubtitleEdit.Forms
             Text = title;
 
             AutoSizeWindowRelativeToVideo();
+            videoPlayerContainer1.TryLoadGfx();
+            videoPlayerContainer1.HidePlayerName();
         }
 
         private void AutoSizeWindowRelativeToVideo()

@@ -38,6 +38,7 @@ E-mail: mailto:hugokarvalho@hotmail.com</TranslatedBy>
     <Actor>Actor</Actor>
     <Gap>Intervalo</Gap>
     <Region>Região</Region>
+    <Layer>Camada</Layer>
     <NumberSymbol>#</NumberSymbol>
     <Number>Número</Number>
     <Text>Texto</Text>
@@ -1379,6 +1380,7 @@ Para usar a chave API, vá a "Opções -&gt; Definições -&gt; Ferramentas" par
         <SizeAllColumnsToFit>Ajustar o tamanho das colunas para caber</SizeAllColumnsToFit>
         <SetStyle>Definir estilo</SetStyle>
         <SetActor>Definir actor</SetActor>
+        <SetLayer>Definir camada</SetLayer>
         <AssaTools>Ferramentas ASSA</AssaTools>
         <SubStationAlphaStyles>Estilos Sub Station Alpha...</SubStationAlphaStyles>
         <AdvancedSubStationAlphaStyles>Estilos Advanced Sub Station Alpha...</AdvancedSubStationAlphaStyles>
@@ -1388,6 +1390,9 @@ Para usar a chave API, vá a "Opções -&gt; Definições -&gt; Ferramentas" par
         <TimedTextSetLanguage>Timed Text - Definir o idioma</TimedTextSetLanguage>
         <SamiSetStyle>Sami - Definir classe</SamiSetStyle>
         <NuendoSetStyle>Nuendo - Definir carácter</NuendoSetStyle>
+        <WebVttSetStyle>WebVTT - definir estilo</WebVttSetStyle>
+        <WebVttSetVoice>WebVTT - definir voz</WebVttSetVoice>
+        <WebVttBrowserPreview>WebVTT - pré-visualização do navegador</WebVttBrowserPreview>
         <Cut>Cortar</Cut>
         <Copy>Copiar</Copy>
         <Paste>Colar</Paste>
@@ -2269,11 +2274,12 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll do VLC media player 1.1.0 ou superior</VlcMediaPlayerDescription>
     <VlcBrowseToLabel>Directoria do VLC (apenas é necessário se estiver a usar a versão portátil do VLC)</VlcBrowseToLabel>
-    <ShowStopButton>Mostrar botão parar</ShowStopButton>
+    <ShowStopButton>Mostrar botão (Parar)</ShowStopButton>
     <ShowMuteButton>Mostrar botão (Sem som)</ShowMuteButton>
     <ShowFullscreenButton>Mostrar botão (Ecrã inteiro)</ShowFullscreenButton>
     <PreviewFontName>Pré-visualização do tipo de letra</PreviewFontName>
     <PreviewFontSize>Tamanho na pré-visualização</PreviewFontSize>
+    <PreviewVerticalMargin>Margem vertical</PreviewVerticalMargin>
     <MainWindowVideoControls>Controlos de vídeo na janela principal</MainWindowVideoControls>
     <CustomSearchTextAndUrl>Procura de texto e URL personalizada</CustomSearchTextAndUrl>
     <WaveformAppearance>Aparência da forma de onda</WaveformAppearance>
@@ -2402,9 +2408,12 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <UseSyntaxColoring>Usar coloração sintáctica</UseSyntaxColoring>
     <HtmlColor>Cor Html</HtmlColor>
     <AssaColor>Cor ASSA</AssaColor>
+    <Theme>Tema</Theme>
+    <Automatic>Automático</Automatic>
     <DarkTheme>Tema escuro</DarkTheme>
     <DarkThemeEnabled>Activar tema escuro</DarkThemeEnabled>
     <DarkThemeShowGridViewLines>Mostrar grelha na Lista</DarkThemeShowGridViewLines>
+    <GraphicsButtons>Botões gráficos</GraphicsButtons>
     <UpdateShortcut>Actualizar</UpdateShortcut>
     <FoucsSetVideoPosition>Evidenciar controlo posição do vídeo</FoucsSetVideoPosition>
     <ToggleDockUndockOfVideoControls>Alternar acoplar/desacoplar controlos de vídeo</ToggleDockUndockOfVideoControls>
@@ -2555,6 +2564,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <MainToggleVideoControls>Alternar controlos vídeo</MainToggleVideoControls>
     <VideoToggleContrast>Alternar contraste (apenas mpv)</VideoToggleContrast>
     <AudioToTextX>Áudio para texto ({0})</AudioToTextX>
+    <AudioExtractSelectedLines>Extrair áudio (linhas seleccionadas)</AudioExtractSelectedLines>
     <AudioToTextSelectedLinesX>Áudio para texto em linhas seleccionadas ({0})</AudioToTextSelectedLinesX>
     <VideoToggleBrightness>Alternar luminosidade (apenas mpv)</VideoToggleBrightness>
     <CustomSearch1>Traduzir, pesquisa personalizada 1</CustomSearch1>
@@ -2839,18 +2849,29 @@ Continuar?</RestoreDefaultSettingsMsg>
     <SingleLineLengthMinimum>Comprimento de uma linha - mínimo: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Comprimento de uma linha - máximo: {0}</SingleLineLengthMaximum>
     <SingleLineLengthAverage>Comprimento de uma linha - médio: {0}</SingleLineLengthAverage>
+    <SingleLineLengthExceedingMaximum>Comprimento de uma linha - excedendo o máximo ({0} cars): {1} ({2:0.00}%)</SingleLineLengthExceedingMaximum>
     <SingleLineWidthMinimum>Largura de uma linha - mínimo: {0} pixéis</SingleLineWidthMinimum>
     <SingleLineWidthMaximum>Largura de uma linha - máximo: {0} pixéis</SingleLineWidthMaximum>
     <SingleLineWidthAverage>Largura de uma linha - média: {0} pixéis</SingleLineWidthAverage>
+    <SingleLineWidthExceedingMaximum>Largura de uma linha - excedendo o máximo ({0} pixéis): {1} ({2:0.00}%)</SingleLineWidthExceedingMaximum>
     <DurationMinimum>Duração - mínima: {0:0.000} segundos</DurationMinimum>
     <DurationMaximum>Duração - máxima: {0:0.000} segundos</DurationMaximum>
     <DurationAverage>Duração - média: {0:0.000} segundos</DurationAverage>
+    <DurationExceedingMinimum>Duração - abaixo do mínimo ({0:0.###} seg): {1} ({2:0.00}%)</DurationExceedingMinimum>
+    <DurationExceedingMaximum>Duração - excedendo o máximo ({0:0.###} seg): {1} ({2:0.00}%)</DurationExceedingMaximum>
     <CharactersPerSecondMinimum>Caracteres/seg - mínimo: {0:0.000}</CharactersPerSecondMinimum>
     <CharactersPerSecondMaximum>Caracteres/seg - máximo: {0:0.000}</CharactersPerSecondMaximum>
     <CharactersPerSecondAverage>Caracteres/seg - médio: {0:0.000}</CharactersPerSecondAverage>
+    <CharactersPerSecondExceedingOptimal>Caracteres/seg - excedendo o ideal ({0:0.##} cps): {1} ({2:0.00}%)</CharactersPerSecondExceedingOptimal>
+    <CharactersPerSecondExceedingMaximum>Caracteres/seg - excedendo o máximo ({0:0.##} cps): {1} ({2:0.00}%)</CharactersPerSecondExceedingMaximum>
+    <WordsPerMinuteMinimum>Palavras/min - mínimo: {0:0.000}</WordsPerMinuteMinimum>
+    <WordsPerMinuteMaximum>Palavras/min - máximo: {0:0.000}</WordsPerMinuteMaximum>
+    <WordsPerMinuteAverage>Palavras/min - médio: {0:0.000}</WordsPerMinuteAverage>
+    <WordsPerMinuteExceedingMaximum>Palavras/min - excedendo o máximo ({0} ppm): {1} ({2:0.00}%)</WordsPerMinuteExceedingMaximum>
     <GapMinimum>Intervalo - mínimo: {0:#,##0} ms</GapMinimum>
     <GapMaximum>Intervalo - máximo: {0:#,##0} ms</GapMaximum>
     <GapAverage>Intervalo - médio: {0:#,##0.##} ms</GapAverage>
+    <GapExceedingMinimum>Intervalo - abaixo do mínimo ({0:#,##0} ms): {1} ({2:0.00}%)</GapExceedingMinimum>
     <Export>Exportar...</Export>
   </Statistics>
   <SubStationAlphaProperties>
@@ -3204,10 +3225,18 @@ Manter as alterações?</KeepChangesMessage>
     <BlockAverageVolMax2>% do total máximo de volume</BlockAverageVolMax2>
     <SplitLongLinesAt1>Dividir linhas longas em</SplitLongLinesAt1>
     <SplitLongLinesAt2>milissegundos</SplitLongLinesAt2>
-    <Other>Outro</Other>
+    <Other>Outros</Other>
   </WaveformGenerateTimeCodes>
   <WebVttNewVoice>
     <Title>WebVTT - definir nova voz</Title>
     <VoiceName>Nome da voz</VoiceName>
   </WebVttNewVoice>
+  <WebVttStyleManager>
+    <Title>Estilos WebVTT</Title>
+  </WebVttStyleManager>
+  <WhisperAdvanced>
+    <Title>Whisper Avançado - argumentos extra na linha de comandos</Title>
+    <CommandLineArguments>Parâmetros extra para a linha de comandos do Whisper:</CommandLineArguments>
+    <Info>Nota: diferentes implementações do Whisper têm diferentes parâmetros de linha de comandos!</Info>
+  </WhisperAdvanced>
 </Language>

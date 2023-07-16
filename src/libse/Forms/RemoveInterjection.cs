@@ -52,7 +52,33 @@ namespace Nikse.SubtitleEdit.Core.Forms
                         {
                             var index = match.Index;
                             var temp = text.Remove(index, s.Length);
+
                             if (index == 0 && temp.StartsWith("... ", StringComparison.Ordinal))
+                            {
+                                temp = temp.Remove(0, 4);
+                            }
+
+                            if (index == 1 && temp.StartsWith("¿, ", StringComparison.Ordinal))
+                            {
+                                temp = temp.Remove(1, 2);
+                            }
+
+                            if (index == 1 && temp.StartsWith("¿ ", StringComparison.Ordinal))
+                            {
+                                temp = temp.Remove(1, 1);
+                            }
+
+                            if (index == 1 && temp.StartsWith("¡, ", StringComparison.Ordinal))
+                            {
+                                temp = temp.Remove(1, 2);
+                            }
+
+                            if (index == 1 && temp.StartsWith("¡ ", StringComparison.Ordinal))
+                            {
+                                temp = temp.Remove(1, 1);
+                            }
+
+                            if (index == 1 && temp.StartsWith("... ", StringComparison.Ordinal))
                             {
                                 temp = temp.Remove(0, 4);
                             }
@@ -182,6 +208,26 @@ namespace Nikse.SubtitleEdit.Core.Forms
                                         temp = temp.Remove(subIndex, 2);
                                         removeAfter = false;
                                     }
+                                    else if (subTemp == " ¡!")
+                                    {
+                                        temp = temp.Remove(subIndex, 3);
+                                        removeAfter = false;
+                                    }
+                                    else if (subTemp == " ¿?")
+                                    {
+                                        temp = temp.Remove(subIndex, 3);
+                                        removeAfter = false;
+                                    }
+                                    else if (index == 1 && temp.StartsWith("¿?" + Environment.NewLine, StringComparison.Ordinal))
+                                    {
+                                        temp = temp.Remove(0, 2).TrimEnd();
+                                        removeAfter = false;
+                                    }
+                                    else if (index == 1 && temp.StartsWith("¡!" + Environment.NewLine, StringComparison.Ordinal))
+                                    {
+                                        temp = temp.Remove(0, 2).TrimEnd();
+                                        removeAfter = false;
+                                    }
                                     else
                                     {
                                         subTemp = temp.Substring(subIndex);
@@ -237,6 +283,17 @@ namespace Nikse.SubtitleEdit.Core.Forms
                                 }
                             }
 
+                            if (index == 1 && temp.StartsWith("¿?"))
+                            {
+                                removeAfter = false;
+                                temp = temp.Remove(0, 2);
+                            }
+                            else if (index == 1 && temp.StartsWith("¡!"))
+                            {
+                                removeAfter = false;
+                                temp = temp.Remove(0, 2);
+                            }
+
                             if (removeAfter)
                             {
                                 if (index == 0)
@@ -282,6 +339,8 @@ namespace Nikse.SubtitleEdit.Core.Forms
                                 if (temp.Length > 0 &&
                                     (preNoTags.Length == 0 ||
                                      preNoTags == "-" ||
+                                     preNoTags == "¡" ||
+                                     preNoTags == "¿" ||
                                      preNoTags.EndsWith(". -", StringComparison.Ordinal) ||
                                      preNoTags.EndsWith("! -", StringComparison.Ordinal) ||
                                      preNoTags.EndsWith("? -", StringComparison.Ordinal) ||
@@ -509,7 +568,8 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     {
                         return RemoveStartDashSingleLine(oldLines[1]);
                     }
-                    else if (lineIndexRemoved == 1)
+
+                    if (lineIndexRemoved == 1)
                     {
                         return RemoveStartDashSingleLine(oldLines[0]);
                     }

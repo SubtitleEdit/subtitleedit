@@ -73,13 +73,14 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             buttonBatchMode.Text = LanguageSettings.Current.AudioToText.BatchMode;
             groupBoxInputFiles.Text = LanguageSettings.Current.BatchConvert.Input;
             linkLabeWhisperWebSite.Text = LanguageSettings.Current.AudioToText.WhisperWebsite;
-            labelCharsPerSub.Text = LanguageSettings.Current.AudioToText.MaxCharsPerSubtitle;
             buttonAddFile.Text = LanguageSettings.Current.DvdSubRip.Add;
             buttonRemoveFile.Text = LanguageSettings.Current.DvdSubRip.Remove;
             buttonClear.Text = LanguageSettings.Current.DvdSubRip.Clear;
             runOnlyPostProcessingToolStripMenuItem.Text = LanguageSettings.Current.AudioToText.OnlyRunPostProcessing;
             setCPPConstmeModelsFolderToolStripMenuItem.Text = LanguageSettings.Current.AudioToText.SetCppConstMeFolder;
             removeTemporaryFilesToolStripMenuItem.Text = LanguageSettings.Current.AudioToText.RemoveTemporaryFiles;
+            buttonAdvanced.Text = LanguageSettings.Current.General.Advanced;
+            labelAdvanced.Text = Configuration.Settings.Tools.WhisperExtraSettings;
 
             columnHeaderFileName.Text = LanguageSettings.Current.JoinSubtitles.FileName;
 
@@ -118,14 +119,6 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             labelEngine.Text = LanguageSettings.Current.AudioToText.Engine;
             labelEngine.Left = comboBoxWhisperEngine.Left - labelEngine.Width - 5;
 
-            comboBoxCharsPerSub.BeginUpdate();
-            comboBoxCharsPerSub.Items.Add(LanguageSettings.Current.General.None);
-            for (var i = 1; i < 99; i++)
-            {
-                comboBoxCharsPerSub.Items.Add(i.ToString(CultureInfo.InvariantCulture));
-            }
-            comboBoxCharsPerSub.EndUpdate();
-
             Init();
 
             var maxChars = (int)Math.Round(Configuration.Settings.General.SubtitleLineMaximumLength * 1.8, MidpointRounding.AwayFromZero);
@@ -137,15 +130,6 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             else if (language?.Code == "cn")
             {
                 maxChars = Configuration.Settings.Tools.AudioToTextLineMaxCharsCn;
-            }
-
-            if (Configuration.Settings.Tools.WhisperUseLineMaxChars)
-            {
-                comboBoxCharsPerSub.Text = maxChars.ToString(CultureInfo.InvariantCulture);
-            }
-            else
-            {
-                comboBoxCharsPerSub.SelectedIndex = 0;
             }
 
             InitializeWhisperEngines(comboBoxWhisperEngine);
@@ -193,10 +177,6 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
             removeTemporaryFilesToolStripMenuItem.Checked = Configuration.Settings.Tools.WhisperDeleteTempFiles;
             ContextMenuStrip = contextMenuStripWhisperAdvanced;
-
-            comboBoxCharsPerSub.Visible = Configuration.Settings.Tools.WhisperChoice == WhisperChoice.Cpp;
-            labelCharsPerSub.Left = comboBoxCharsPerSub.Left - labelCharsPerSub.Width - 9;
-            labelCharsPerSub.Visible = Configuration.Settings.Tools.WhisperChoice == WhisperChoice.Cpp;
         }
 
         public static void FillModels(ComboBox comboBoxModels, string lastDownloadedModel)
@@ -571,7 +551,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             labelProgress.Refresh();
             Application.DoEvents();
             _resultList = new List<ResultText>();
-            var process = GetWhisperProcess(waveFileName, model.Name, _languageCode, checkBoxTranslateToEnglish.Checked, comboBoxCharsPerSub.SelectedIndex, OutputHandler);
+            var process = GetWhisperProcess(waveFileName, model.Name, _languageCode, checkBoxTranslateToEnglish.Checked, OutputHandler);
             var sw = Stopwatch.StartNew();
             _outputText.Add($"Calling whisper ({Configuration.Settings.Tools.WhisperChoice}) with : {process.StartInfo.FileName} {process.StartInfo.Arguments}{Environment.NewLine}");
             _startTicks = DateTime.UtcNow.Ticks;
@@ -936,7 +916,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             }
         }
 
-        public static Process GetWhisperProcess(string waveFileName, string model, string language, bool translate, int maxCharsPerSub, DataReceivedEventHandler dataReceivedHandler = null)
+        public static Process GetWhisperProcess(string waveFileName, string model, string language, bool translate, DataReceivedEventHandler dataReceivedHandler = null)
         {
             // whisper --model tiny.en --language English --fp16 False a.wav
 
@@ -953,11 +933,6 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 {
                     translateToEnglish += "--print-progress ";
                 }
-
-                if (!Configuration.Settings.Tools.WhisperExtraSettings.Contains("--max-len") && maxCharsPerSub > 0)
-                {
-                    translateToEnglish += $"--max-len {maxCharsPerSub} ";
-                }
             }
 
             var outputSrt = string.Empty;
@@ -966,12 +941,6 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 Configuration.Settings.Tools.WhisperChoice == WhisperChoice.ConstMe)
             {
                 outputSrt = "--output-srt ";
-
-                if (Configuration.Settings.Tools.WhisperExtraSettings != null &&
-                    Configuration.Settings.Tools.WhisperExtraSettings.Contains("--fp16"))
-                {
-                    Configuration.Settings.Tools.WhisperExtraSettings = string.Empty;
-                }
             }
             else if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.StableTs)
             {
@@ -1052,7 +1021,6 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
             Configuration.Settings.Tools.VoskPostProcessing = checkBoxUsePostProcessing.Checked;
             Configuration.Settings.Tools.WhisperAutoAdjustTimings = checkBoxAutoAdjustTimings.Checked;
-            Configuration.Settings.Tools.WhisperUseLineMaxChars = comboBoxCharsPerSub.SelectedIndex > 0;
 
             DeleteTemporaryFiles(_filesToDelete);
         }
@@ -1628,6 +1596,15 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 buttonBatchMode.Enabled = true;
                 comboBoxLanguages.Enabled = true;
                 comboBoxModels.Enabled = true;
+            }
+        }
+
+        private void buttonAdvanced_Click(object sender, EventArgs e)
+        {
+            using (var form = new WhisperAdvanced(comboBoxWhisperEngine.Text))
+            {
+                var res = form.ShowDialog(this);
+                labelAdvanced.Text = Configuration.Settings.Tools.WhisperExtraSettings;
             }
         }
     }

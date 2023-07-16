@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
+﻿using System.Collections.Generic;
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Interfaces;
 
 namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
@@ -19,19 +20,10 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             for (var i = 0; i < subtitle.Paragraphs.Count; i++)
             {
                 var p = subtitle.Paragraphs[i];
-                var lines = p.Text.SplitToLines();
-                var tooLong = false;
-                foreach (var line in lines)
+
+                if (HasTooLongLine(p.Text.SplitToLines()) && callbacks.AllowFix(p, fixAction))
                 {
-                    if (line.CountCharacters(false) > Configuration.Settings.General.SubtitleLineMaximumLength)
-                    {
-                        tooLong = true;
-                        break;
-                    }
-                }
-                if (callbacks.AllowFix(p, fixAction) && tooLong)
-                {
-                    string oldText = p.Text;
+                    var oldText = p.Text;
                     p.Text = Utilities.AutoBreakLine(p.Text, callbacks.Language);
                     if (oldText != p.Text)
                     {
@@ -47,6 +39,19 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             }
 
             callbacks.UpdateFixStatus(noOfLongLines, Language.BreakLongLines);
+        }
+
+        private static bool HasTooLongLine(IEnumerable<string> lines)
+        {
+            foreach (var line in lines)
+            {
+                if (line.CountCharacters(false) > Configuration.Settings.General.SubtitleLineMaximumLength)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }

@@ -38,8 +38,8 @@
             this.columnHeaderOutline = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.contextMenuStripFile = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.removeAndReplaceWithToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemRemoveAll = new System.Windows.Forms.ToolStripMenuItem();
+            this.removeAndReplaceWithToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.addToStorageToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
@@ -130,6 +130,7 @@
             this.buttonAddToFile = new System.Windows.Forms.Button();
             this.buttonStorageExport = new System.Windows.Forms.Button();
             this.buttonStorageImport = new System.Windows.Forms.Button();
+            this.labelDuplicateStyleNames = new System.Windows.Forms.Label();
             this.buttonStorageCopy = new System.Windows.Forms.Button();
             this.buttonStorageRemoveAll = new System.Windows.Forms.Button();
             this.buttonStorageAdd = new System.Windows.Forms.Button();
@@ -167,7 +168,6 @@
             this.labelStorageCategory = new System.Windows.Forms.Label();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.buttonApply = new System.Windows.Forms.Button();
-            this.labelDuplicateStyleNames = new System.Windows.Forms.Label();
             this.contextMenuStripFile.SuspendLayout();
             this.groupBoxStyles.SuspendLayout();
             this.groupBoxProperties.SuspendLayout();
@@ -272,7 +272,7 @@
             this.toolStripMenuItemImport,
             this.toolStripMenuItemExport});
             this.contextMenuStripFile.Name = "contextMenuStrip1";
-            this.contextMenuStripFile.Size = new System.Drawing.Size(216, 314);
+            this.contextMenuStripFile.Size = new System.Drawing.Size(216, 292);
             this.contextMenuStripFile.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripFile_Opening);
             // 
             // deleteToolStripMenuItem
@@ -283,19 +283,19 @@
             this.deleteToolStripMenuItem.Text = "Remove";
             this.deleteToolStripMenuItem.Click += new System.EventHandler(this.buttonRemove_Click);
             // 
-            // removeAndReplaceWithToolStripMenuItem
-            // 
-            this.removeAndReplaceWithToolStripMenuItem.Name = "removeAndReplaceWithToolStripMenuItem";
-            this.removeAndReplaceWithToolStripMenuItem.Size = new System.Drawing.Size(215, 22);
-            this.removeAndReplaceWithToolStripMenuItem.Text = "Replace with...";
-            this.removeAndReplaceWithToolStripMenuItem.Click += new System.EventHandler(this.buttonRemoveAndReplaceWith_Click);
-            // 
             // toolStripMenuItemRemoveAll
             // 
             this.toolStripMenuItemRemoveAll.Name = "toolStripMenuItemRemoveAll";
             this.toolStripMenuItemRemoveAll.Size = new System.Drawing.Size(215, 22);
             this.toolStripMenuItemRemoveAll.Text = "Remove all";
             this.toolStripMenuItemRemoveAll.Click += new System.EventHandler(this.buttonRemoveAll_Click);
+            // 
+            // removeAndReplaceWithToolStripMenuItem
+            // 
+            this.removeAndReplaceWithToolStripMenuItem.Name = "removeAndReplaceWithToolStripMenuItem";
+            this.removeAndReplaceWithToolStripMenuItem.Size = new System.Drawing.Size(215, 22);
+            this.removeAndReplaceWithToolStripMenuItem.Text = "Replace with...";
+            this.removeAndReplaceWithToolStripMenuItem.Click += new System.EventHandler(this.buttonRemoveAndReplaceWith_Click);
             // 
             // toolStripSeparator4
             // 
@@ -1098,7 +1098,7 @@
             // 
             this.checkBoxStrikeout.AutoSize = true;
             this.checkBoxStrikeout.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Strikeout, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.checkBoxStrikeout.Location = new System.Drawing.Point(246, 54);
+            this.checkBoxStrikeout.Location = new System.Drawing.Point(265, 54);
             this.checkBoxStrikeout.Name = "checkBoxStrikeout";
             this.checkBoxStrikeout.Size = new System.Drawing.Size(68, 17);
             this.checkBoxStrikeout.TabIndex = 8;
@@ -1120,7 +1120,7 @@
             // 
             this.checkBoxFontUnderline.AutoSize = true;
             this.checkBoxFontUnderline.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.checkBoxFontUnderline.Location = new System.Drawing.Point(169, 54);
+            this.checkBoxFontUnderline.Location = new System.Drawing.Point(173, 54);
             this.checkBoxFontUnderline.Name = "checkBoxFontUnderline";
             this.checkBoxFontUnderline.Size = new System.Drawing.Size(71, 17);
             this.checkBoxFontUnderline.TabIndex = 7;
@@ -1146,7 +1146,7 @@
             // 
             this.checkBoxFontItalic.AutoSize = true;
             this.checkBoxFontItalic.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.checkBoxFontItalic.Location = new System.Drawing.Point(90, 54);
+            this.checkBoxFontItalic.Location = new System.Drawing.Point(94, 54);
             this.checkBoxFontItalic.Name = "checkBoxFontItalic";
             this.checkBoxFontItalic.Size = new System.Drawing.Size(48, 17);
             this.checkBoxFontItalic.TabIndex = 6;
@@ -1217,6 +1217,7 @@
             this.groupBoxStorage.Controls.Add(this.buttonAddToFile);
             this.groupBoxStorage.Controls.Add(this.buttonStorageExport);
             this.groupBoxStorage.Controls.Add(this.buttonStorageImport);
+            this.groupBoxStorage.Controls.Add(this.labelDuplicateStyleNames);
             this.groupBoxStorage.Controls.Add(this.buttonStorageCopy);
             this.groupBoxStorage.Controls.Add(this.buttonStorageRemoveAll);
             this.groupBoxStorage.Controls.Add(this.buttonStorageAdd);
@@ -1271,6 +1272,18 @@
             this.buttonStorageImport.Text = "Import...";
             this.buttonStorageImport.UseVisualStyleBackColor = true;
             this.buttonStorageImport.Click += new System.EventHandler(this.buttonStorageImport_Click);
+            // 
+            // labelDuplicateStyleNames
+            // 
+            this.labelDuplicateStyleNames.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.labelDuplicateStyleNames.AutoSize = true;
+            this.labelDuplicateStyleNames.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelDuplicateStyleNames.ForeColor = System.Drawing.Color.Firebrick;
+            this.labelDuplicateStyleNames.Location = new System.Drawing.Point(494, 102);
+            this.labelDuplicateStyleNames.Name = "labelDuplicateStyleNames";
+            this.labelDuplicateStyleNames.Size = new System.Drawing.Size(154, 13);
+            this.labelDuplicateStyleNames.TabIndex = 10;
+            this.labelDuplicateStyleNames.Text = "labelDuplicateStyleNames";
             // 
             // buttonStorageCopy
             // 
@@ -1613,24 +1626,11 @@
             this.buttonApply.UseVisualStyleBackColor = true;
             this.buttonApply.Click += new System.EventHandler(this.buttonApply_Click);
             // 
-            // labelDuplicateStyleNames
-            // 
-            this.labelDuplicateStyleNames.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.labelDuplicateStyleNames.AutoSize = true;
-            this.labelDuplicateStyleNames.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelDuplicateStyleNames.ForeColor = System.Drawing.Color.Firebrick;
-            this.labelDuplicateStyleNames.Location = new System.Drawing.Point(12, 648);
-            this.labelDuplicateStyleNames.Name = "labelDuplicateStyleNames";
-            this.labelDuplicateStyleNames.Size = new System.Drawing.Size(154, 13);
-            this.labelDuplicateStyleNames.TabIndex = 10;
-            this.labelDuplicateStyleNames.Text = "labelDuplicateStyleNames";
-            // 
             // AssaStyles
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1064, 670);
-            this.Controls.Add(this.labelDuplicateStyleNames);
             this.Controls.Add(this.buttonApply);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.labelStatus);

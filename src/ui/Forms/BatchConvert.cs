@@ -111,6 +111,7 @@ namespace Nikse.SubtitleEdit.Forms
         private RemoveTextForHISettings _removeTextForHiSettings;
         private PreprocessingSettings _preprocessingSettings;
         private string _ocrEngine = "Tesseract";
+        private string _ocrLanguage = "en";
 
         public BatchConvert(Icon icon)
         {
@@ -251,15 +252,13 @@ namespace Nikse.SubtitleEdit.Forms
                 textBoxOutputFolder.Text = Configuration.Settings.Tools.BatchConvertOutputFolder;
             }
 
-            toolStripMenuItemOcrEngine.Text = LanguageSettings.Current.VobSubOcr.OcrMethod;
-            if (Configuration.Settings.Tools.BatchConvertOcrEngine.Equals("nOcr", StringComparison.OrdinalIgnoreCase))
+            if (Configuration.Settings.Tools.BatchConvertOcrEngine.Equals("nOCR", StringComparison.OrdinalIgnoreCase))
             {
-                nOCRToolStripMenuItem_Click(null, null);
+                _ocrEngine = "nOCR";
             }
-            else
-            {
-                tesseractToolStripMenuItem_Click(null, null);
-            }
+
+            _ocrLanguage = Configuration.Settings.Tools.BatchConvertOcrLanguage;
+            UpdateOcrInfo();
 
             alsoScanVideoFilesInSearchFolderslowToolStripMenuItem.Text = LanguageSettings.Current.BatchConvert.SearchFolderScanVideo;
             checkBoxOverwrite.Checked = Configuration.Settings.Tools.BatchConvertOverwriteExisting;
@@ -379,12 +378,14 @@ namespace Nikse.SubtitleEdit.Forms
             numericUpDownOptimalCharsSec.Value = (decimal)Configuration.Settings.General.SubtitleOptimalCharactersPerSeconds;
             numericUpDownMaxCharsSec.Value = (decimal)Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds;
             checkBoxExtendOnly.Checked = Configuration.Settings.Tools.AdjustDurationExtendOnly;
+            checkBoxEnforceDurationLimits.Checked = Configuration.Settings.Tools.AdjustDurationExtendEnforceDurationLimits;
 
             labelOptimalCharsSec.Text = LanguageSettings.Current.Settings.OptimalCharactersPerSecond;
             labelMaxCharsPerSecond.Text = LanguageSettings.Current.Settings.MaximumCharactersPerSecond;
             labelAddSeconds.Text = LanguageSettings.Current.AdjustDisplayDuration.AddSeconds;
             labelMillisecondsFixed.Text = LanguageSettings.Current.AdjustDisplayDuration.Milliseconds;
             checkBoxExtendOnly.Text = LanguageSettings.Current.AdjustDisplayDuration.ExtendOnly;
+            checkBoxEnforceDurationLimits.Text = LanguageSettings.Current.AdjustDisplayDuration.EnforceDurationLimits;
             labelAdjustViaPercent.Text = LanguageSettings.Current.AdjustDisplayDuration.SetAsPercent;
 
             labelTargetRes.Text = LanguageSettings.Current.AssaResolutionChanger.TargetVideoRes;
@@ -1256,7 +1257,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                         if (fromFormat != null && fromFormat.GetType() == typeof(MicroDvd))
                         {
-                            if (sub != null && sub.Paragraphs.Count > 0 && sub.Paragraphs[0].Duration.TotalMilliseconds < 1001)
+                            if (sub != null && sub.Paragraphs.Count > 0 && sub.Paragraphs[0].DurationTotalMilliseconds < 1001)
                             {
                                 if (sub.Paragraphs[0].Text.StartsWith("29.", StringComparison.Ordinal) || sub.Paragraphs[0].Text.StartsWith("23.", StringComparison.Ordinal) ||
                                 sub.Paragraphs[0].Text.StartsWith("29,", StringComparison.Ordinal) || sub.Paragraphs[0].Text.StartsWith("23,", StringComparison.Ordinal) ||
@@ -1502,12 +1503,18 @@ namespace Nikse.SubtitleEdit.Forms
                                         }
                                     };
                                     vobSubOcr.FileName = Path.GetFileName(fileName);
-                                    vobSubOcr.InitializeBatch(bluRaySubtitles, Configuration.Settings.VobSubOcr, fileName, false, null, _ocrEngine);
+                                    vobSubOcr.InitializeBatch(bluRaySubtitles, Configuration.Settings.VobSubOcr, fileName, false, _ocrLanguage, _ocrEngine);
                                     sub = vobSubOcr.SubtitleFromOcr;
                                 }
                             }
                         }
-                        else if (isVobSub)
+                        else if (isVobSub && toFormat == LanguageSettings.Current.VobSubOcr.ImagesWithTimeCodesInFileName.Trim('.'))
+                        {
+                            binaryParagraphs = GetBinaryParagraphsWithPositionFromVobSub(fileName);
+
+                            item.SubItems[3].Text = LanguageSettings.Current.BatchConvert.Converted;
+                        }
+                        else if (isVobSub) 
                         {
                             item.SubItems[3].Text = LanguageSettings.Current.BatchConvert.Ocr;
                             using (var vobSubOcr = new VobSubOcr())
@@ -1521,7 +1528,7 @@ namespace Nikse.SubtitleEdit.Forms
                                         lastProgress = progress;
                                     }
                                 };
-                                vobSubOcr.InitializeBatch(fileName, Configuration.Settings.VobSubOcr, false, _ocrEngine);
+                                vobSubOcr.InitializeBatch(fileName, Configuration.Settings.VobSubOcr, false, _ocrEngine, _ocrLanguage);
                                 sub = vobSubOcr.SubtitleFromOcr;
                             }
                         }
@@ -1589,7 +1596,7 @@ namespace Nikse.SubtitleEdit.Forms
                                                 item.SubItems[3].Text = $"OCR: {progress}";
                                             };
                                             var language = programMapTableParser.GetSubtitleLanguage(id);
-                                            language = string.IsNullOrEmpty(language) ? null : language;
+                                            language = string.IsNullOrEmpty(language) ? _ocrLanguage : language;
                                             vobSubOcr.FileName = Path.GetFileName(fileName);
                                             vobSubOcr.InitializeBatch(tsBinaryParagraphs, Configuration.Settings.VobSubOcr, fileName, false, language, _ocrEngine);
                                             subtitle = vobSubOcr.SubtitleFromOcr;
@@ -1809,6 +1816,40 @@ namespace Nikse.SubtitleEdit.Forms
             SeLogger.Error($"Batch convert took {sw.ElapsedMilliseconds}");
         }
 
+        private List<IBinaryParagraphWithPosition> GetBinaryParagraphsWithPositionFromVobSub(string fileName)
+        {
+            var binSubtitles = new List<IBinaryParagraphWithPosition>();
+            var vobSubParser = new VobSubParser(true);
+            var idxFileName = Path.ChangeExtension(fileName, ".idx");
+            vobSubParser.OpenSubIdx(fileName, idxFileName);
+            var vobSubMergedPackList = vobSubParser.MergeVobSubPacks();
+            var palette = vobSubParser.IdxPalette;
+            vobSubParser.VobSubPacks.Clear();
+            var languageStreamIds = new List<int>();
+            foreach (var pack in vobSubMergedPackList)
+            {
+                if (pack.SubPicture.Delay.TotalMilliseconds > 500 && !languageStreamIds.Contains(pack.StreamId))
+                {
+                    languageStreamIds.Add(pack.StreamId);
+                }
+            }
+
+            if (languageStreamIds.Count > 1)
+            {
+                vobSubMergedPackList = vobSubMergedPackList.Where(p => p.StreamId == languageStreamIds[0]).ToList();
+            }
+
+            var max = vobSubMergedPackList.Count;
+            for (var i = 0; i < max; i++)
+            {
+                var vobSubPack = vobSubMergedPackList[i];
+                vobSubPack.Palette = palette;
+                binSubtitles.Add(vobSubPack);
+            }
+
+            return binSubtitles;
+        }
+
         public static List<IBinaryParagraphWithPosition> LoadDvbFromMatroska(MatroskaTrackInfo track, MatroskaFile matroska, ref Subtitle subtitle)
         {
             var sub = matroska.GetSubtitle(track.TrackNumber, null);
@@ -1846,10 +1887,10 @@ namespace Nikse.SubtitleEdit.Forms
                     if (pes == null && subtitle.Paragraphs.Count > 0)
                     {
                         var last = subtitle.Paragraphs[subtitle.Paragraphs.Count - 1];
-                        if (last.Duration.TotalMilliseconds < 100)
+                        if (last.DurationTotalMilliseconds < 100)
                         {
                             last.EndTime.TotalMilliseconds = msub.Start;
-                            if (last.Duration.TotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
+                            if (last.DurationTotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
                             {
                                 last.EndTime.TotalMilliseconds = last.StartTime.TotalMilliseconds + 3000;
                             }
@@ -1877,7 +1918,7 @@ namespace Nikse.SubtitleEdit.Forms
             for (var index = 0; index < subtitle.Paragraphs.Count; index++)
             {
                 var p = subtitle.Paragraphs[index];
-                if (p.Duration.TotalMilliseconds < 200)
+                if (p.DurationTotalMilliseconds < 200)
                 {
                     p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + 3000;
                 }
@@ -1943,14 +1984,15 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (IsActionEnabled(CommandLineConverter.BatchAction.AdjustDisplayDuration))
             {
+                // TODO shot changes
                 var adjustmentType = comboBoxAdjustDurationVia.Text;
                 if (adjustmentType == LanguageSettings.Current.AdjustDisplayDuration.Percent)
                 {
-                    sub.AdjustDisplayTimeUsingPercent((double)numericUpDownAdjustViaPercent.Value, null);
+                    sub.AdjustDisplayTimeUsingPercent((double)numericUpDownAdjustViaPercent.Value, null, null, checkBoxEnforceDurationLimits.Checked);
                 }
                 else if (adjustmentType == LanguageSettings.Current.AdjustDisplayDuration.Recalculate)
                 {
-                    sub.RecalculateDisplayTimes((double)numericUpDownMaxCharsSec.Value, null, (double)numericUpDownOptimalCharsSec.Value, checkBoxExtendOnly.Checked);
+                    sub.RecalculateDisplayTimes((double)numericUpDownMaxCharsSec.Value, null, (double)numericUpDownOptimalCharsSec.Value, checkBoxExtendOnly.Checked, null, checkBoxEnforceDurationLimits.Checked);
                 }
                 else if (adjustmentType == LanguageSettings.Current.AdjustDisplayDuration.Fixed)
                 {
@@ -1958,7 +2000,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
-                    sub.AdjustDisplayTimeUsingSeconds((double)numericUpDownSeconds.Value, null);
+                    sub.AdjustDisplayTimeUsingSeconds((double)numericUpDownSeconds.Value, null, null, checkBoxEnforceDurationLimits.Checked);
                 }
             }
 
@@ -2573,7 +2615,7 @@ namespace Nikse.SubtitleEdit.Forms
                     var current = p.Subtitle.GetParagraphOrDefault(i);
                     var next = p.Subtitle.GetParagraphOrDefault(i + 1);
                     var gapsBetween = next.StartTime.TotalMilliseconds - current.EndTime.TotalMilliseconds;
-                    if (gapsBetween < minimumMillisecondsBetweenLines && current.Duration.TotalMilliseconds > minimumMillisecondsBetweenLines)
+                    if (gapsBetween < minimumMillisecondsBetweenLines && current.DurationTotalMilliseconds > minimumMillisecondsBetweenLines)
                     {
                         current.EndTime.TotalMilliseconds -= (minimumMillisecondsBetweenLines - gapsBetween);
                     }
@@ -2666,6 +2708,11 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         binaryParagraphs = _binaryParagraphLookup[p.FileName];
                     }
+                    else if (FileUtil.IsVobSub(p.FileName) && p.BinaryParagraphs != null && p.BinaryParagraphs.Count > 0)
+                    {
+                        binaryParagraphs = p.BinaryParagraphs;
+                    }
+
                     var dir = textBoxOutputFolder.Text;
                     var overwrite = checkBoxOverwrite.Checked;
                     if (radioButtonSaveInSourceFolder.Checked)
@@ -3084,6 +3131,7 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.Tools.ConvertColorsToDialogReBreakLines = checkBoxConvertColorsToDialogReBreakLines.Checked;
 
             Configuration.Settings.Tools.BatchConvertOcrEngine = _ocrEngine;
+            Configuration.Settings.Tools.BatchConvertOcrLanguage = _ocrLanguage;
 
             UpdateRtlSettings();
         }
@@ -3673,6 +3721,8 @@ namespace Nikse.SubtitleEdit.Forms
             panel.Visible = true;
             panel.Left = 2;
             panel.Top = labelAdjustDurationVia.Top + labelAdjustDurationVia.Height + 9;
+
+            checkBoxEnforceDurationLimits.Visible = panel != panelAdjustDurationFixed;
         }
 
         private void addFilesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -3700,24 +3750,29 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void tesseractToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            _ocrEngine = "Tesseract";
-            tesseractToolStripMenuItem.Checked = true;
-            nOCRToolStripMenuItem.Checked = false;
-        }
-
-        private void nOCRToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            _ocrEngine = "nOcr";
-            nOCRToolStripMenuItem.Checked = true;
-            tesseractToolStripMenuItem.Checked = false;
-        }
-
-        private void alsoScanVideoFilesInSearchFolderslowToolStripMenuItem_Click(object sender, EventArgs e)
+        private void alsoScanVideoFilesInSearchFolderSlowToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Configuration.Settings.Tools.BatchConvertScanFolderIncludeVideo = !Configuration.Settings.Tools.BatchConvertScanFolderIncludeVideo;
             alsoScanVideoFilesInSearchFolderslowToolStripMenuItem.Checked = Configuration.Settings.Tools.BatchConvertScanFolderIncludeVideo;
+        }
+
+        private void toolStripMenuItemOcrEngine_Click(object sender, EventArgs e)
+        {
+            using (var form = new BatchConvertOcrLanguage(_ocrEngine, _ocrLanguage))
+            {
+                if (form.ShowDialog(this) == DialogResult.OK)
+                {
+                    _ocrEngine = form.OcrEngine;
+                    _ocrLanguage = form.OcrLanguage;
+                }
+
+                UpdateOcrInfo();
+            }
+        }
+
+        private void UpdateOcrInfo()
+        {
+            toolStripMenuItemOcrEngine.Text = $"{LanguageSettings.Current.VobSubOcr.OcrMethod}: {_ocrEngine} / {_ocrLanguage}";
         }
     }
 }

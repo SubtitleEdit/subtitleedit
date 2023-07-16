@@ -141,9 +141,9 @@ https://github.com/SubtitleEdit/subtitleedit
 Хотите скачать и использовать FFmpeg?</FfmpegNotFound>
     <GeneratingPeakFile>Создание файла пиков…</GeneratingPeakFile>
     <GeneratingSpectrogram>Создание спектрограммы…</GeneratingSpectrogram>
-    <ExtractingSeconds>Извлечение аудио: {0:0.0} с</ExtractingSeconds>
-    <ExtractingMinutes>Извлечение аудио: {0}.{1:00} мин</ExtractingMinutes>
-    <WaveFileNotFound>Извлечённая форма сигнала не была найдена!
+    <ExtractingSeconds>Извлечение аудио: {0:0.0} сек.</ExtractingSeconds>
+    <ExtractingMinutes>Извлечение аудио: {0}.{1:00} мин.</ExtractingMinutes>
+    <WaveFileNotFound>Не удалось найти извлечённый wave-файл!
 Для этого требуется VLC media player 1.1.x или новее ({0}-bit).
 
 Командная строка: {1} {2}</WaveFileNotFound>
@@ -589,7 +589,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <MaxNumberOfDisplayableRows>Макс. количество строк:</MaxNumberOfDisplayableRows>
     <DiskSequenceNumber>Номер диска:</DiskSequenceNumber>
     <TotalNumberOfDisks>Общее число дисков:</TotalNumberOfDisks>
-    <Import>Открыть…</Import>
+    <Import>Импорт…</Import>
     <TextAndTimingInformation>Текст и сведения о синхронизации</TextAndTimingInformation>
     <JustificationCode>Размещение кода:</JustificationCode>
     <VerticalPosition>Вертикальное построение</VerticalPosition>
@@ -796,7 +796,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <NormalizeStrings>Нормализовать строки</NormalizeStrings>
     <FixTurkishAnsi>Исправить Turkish ANSI (Icelandic) символы в Unicode</FixTurkishAnsi>
     <FixDanishLetterI>Исправить датскую буквы «i»</FixDanishLetterI>
-    <FixSpanishInvertedQuestionAndExclamationMarks>Исправить Испанские перевёрнутые знаки вопроса и восклицания</FixSpanishInvertedQuestionAndExclamationMarks>
+    <FixSpanishInvertedQuestionAndExclamationMarks>Исправить испанские перевёрнутые знаки вопроса и восклицания</FixSpanishInvertedQuestionAndExclamationMarks>
     <AddMissingQuote>Добавить недостающую кавычку (")</AddMissingQuote>
     <AddMissingQuotes>Добавить недостающие кавычки (")</AddMissingQuotes>
     <RemoveHyphensSingleLine>Удалять диалоговые тире в одной строке</RemoveHyphensSingleLine>
@@ -809,9 +809,9 @@ https://github.com/SubtitleEdit/subtitleedit
     <NothingToFix>Исправлять нечего :)</NothingToFix>
     <FixesFoundX>Найдено неточностей: {0}</FixesFoundX>
     <XFixesApplied>Сделано исправлений: {0}</XFixesApplied>
-    <NothingFixableBut>Ничто не может быть исправлено автоматически. Субтитры содержат ошибки - подробности см. в журнале</NothingFixableBut>
-    <XFixedBut>{0} проблем устранено, но субтитры всё ещё содержат ошибки - подробности см. в журнале</XFixedBut>
-    <XCouldBeFixedBut>{0} проблем может быть исправлено, но субтитры всё равно будут содержать ошибки - подробности см. в журнале</XCouldBeFixedBut>
+    <NothingFixableBut>Ничто не может быть исправлено автоматически. Субтитры содержат ошибки - подробности см. в отчёте</NothingFixableBut>
+    <XFixedBut>{0} проблем устранено, но субтитры всё ещё содержат ошибки - подробности см. в отчёте</XFixedBut>
+    <XCouldBeFixedBut>{0} проблем можно исправить, но субтитры всё равно будут содержать ошибки - подробности см. в отчёте</XCouldBeFixedBut>
     <FixFirstLetterToUppercaseAfterParagraph>Исправить первую букву на заглавную после абзаца</FixFirstLetterToUppercaseAfterParagraph>
     <MergeShortLine>Объединить короткие строки (одно предложение)</MergeShortLine>
     <MergeShortLineAll>Объединить короткие строки (все, за исключением диалогов)</MergeShortLineAll>
@@ -839,13 +839,13 @@ https://github.com/SubtitleEdit/subtitleedit
     <RefreshFixes>Обновить доступные исправления</RefreshFixes>
     <ApplyFixes>Применить выбранные исправления</ApplyFixes>
     <AutoBreak>Автоперенос</AutoBreak>
-    <Unbreak>Удалить перенос</Unbreak>
-    <FixDoubleDash>Исправить символы тире «--» на многоточие «…»</FixDoubleDash>
+    <Unbreak>Удал. перенос</Unbreak>
+    <FixDoubleDash>Исправить символы тире «--» на многоточие «...»</FixDoubleDash>
     <FixDoubleGreaterThan>Удалить символы «&gt;&gt;» в начале строки</FixDoubleGreaterThan>
-    <FixEllipsesStart>Удалить многоточие «…» в начале строки</FixEllipsesStart>
+    <FixEllipsesStart>Удалить многоточие «...» в начале строки</FixEllipsesStart>
     <FixMissingOpenBracket>Добавить недостающие «[» в строке</FixMissingOpenBracket>
     <FixMusicNotation>Заменить музыкальные символы (напр. âTª) выбранным</FixMusicNotation>
-    <FixDoubleDashExample>'Хм-- да!' -&gt; 'Хм… да!'</FixDoubleDashExample>
+    <FixDoubleDashExample>'Хм-- да!' -&gt; 'Хм... да!'</FixDoubleDashExample>
     <FixDoubleGreaterThanExample>'&gt;&gt; Иван: Спасибо!' -&gt; 'Иван: Спасибо!'</FixDoubleGreaterThanExample>
     <FixEllipsesStartExample>'… а потом мы' -&gt; 'а потом мы'</FixEllipsesStartExample>
     <FixMissingOpenBracketExample>'лязг] Смотри!' -&gt; '[лязг] Смотри!'</FixMissingOpenBracketExample>
@@ -1186,8 +1186,8 @@ https://github.com/SubtitleEdit/subtitleedit
       <File>
         <Title>Файл</Title>
         <New>Новый</New>
-        <Open>Открыть</Open>
-        <OpenKeepVideo>Открыть (оставить видео)</OpenKeepVideo>
+        <Open>Открыть…</Open>
+        <OpenKeepVideo>Открыть (оставить видео)…</OpenKeepVideo>
         <Reopen>Открыть заново</Reopen>
         <Save>Сохранить</Save>
         <SaveAs>Сохранить как…</SaveAs>
@@ -1383,8 +1383,9 @@ https://github.com/SubtitleEdit/subtitleedit
       </ToolBar>
       <ContextMenu>
         <SizeAllColumnsToFit>Подогнать по ширине</SizeAllColumnsToFit>
-        <SetStyle>Установить стиль</SetStyle>
-        <SetActor>Указать актёра</SetActor>
+        <SetStyle>Задать стиль</SetStyle>
+        <SetActor>Задать актёра</SetActor>
+        <SetLayer>Задать слой</SetLayer>
         <AssaTools>Инструменты ASSA</AssaTools>
         <SubStationAlphaStyles>Стили SubStation Alpha…</SubStationAlphaStyles>
         <AdvancedSubStationAlphaStyles>Стили Advanced SubStation Alpha…</AdvancedSubStationAlphaStyles>
@@ -1464,8 +1465,8 @@ https://github.com/SubtitleEdit/subtitleedit
         <WebVTTSetNewVoice>Задать новый голос…</WebVTTSetNewVoice>
         <WebVTTRemoveVoices>Удалить голоса</WebVTTRemoveVoices>
         <NewActor>Новый актёр…</NewActor>
-        <RemoveActors>Удалить актёров</RemoveActors>
-        <EditBookmark>Изменить закладку</EditBookmark>
+        <RemoveActors>Удалить актёра</RemoveActors>
+        <EditBookmark>Изменить закладку…</EditBookmark>
         <RemoveBookmark>Удалить закладку</RemoveBookmark>
         <GoToSourceView>Перейти к просмотру исходного кода</GoToSourceView>
         <GoToListView>Перейти к просмотру списка</GoToListView>
@@ -1480,6 +1481,7 @@ https://github.com/SubtitleEdit/subtitleedit
       <Next>Далее &gt;</Next>
       <AutoBreak>Автоперенос</AutoBreak>
       <Unbreak>Удалить перенос</Unbreak>
+      <SetLayer>Установить слой</SetLayer>
     </Controls>
     <VideoControls>
       <Translate>Перевод</Translate>
@@ -2004,12 +2006,12 @@ https://github.com/SubtitleEdit/subtitleedit
     <Enabled>Вкл.</Enabled>
     <SearchType>Тип поиска</SearchType>
     <RemoveAll>Удалить все</RemoveAll>
-    <Import>Открыть правило(-а)…</Import>
-    <Export>Сохранить правило(-а)…</Export>
-    <ImportRulesTitle>Открытие правил замен из…</ImportRulesTitle>
-    <ExportRulesTitle>Сохранение правил замен в…</ExportRulesTitle>
-    <ChooseGroupsToImport>Выберите какие группы Открыть</ChooseGroupsToImport>
-    <ChooseGroupsToExport>Выберите группы для Сохранения</ChooseGroupsToExport>
+    <Import>Импорт…</Import>
+    <Export>Экспорт…</Export>
+    <ImportRulesTitle>Импортировать правила замены из…</ImportRulesTitle>
+    <ExportRulesTitle>Экспорт правил замены в…</ExportRulesTitle>
+    <ChooseGroupsToImport>Выберите группы для импорта</ChooseGroupsToImport>
+    <ChooseGroupsToExport>Выберите группы для экспорта</ChooseGroupsToExport>
     <Rules>Правила поиска и замен</Rules>
     <MoveToTop>Поднять на самый верх</MoveToTop>
     <MoveToBottom>Опустить в самый низ</MoveToBottom>
@@ -2183,7 +2185,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <ToggleBookmarksWithComment>Переключить закладки - добавить комментарий</ToggleBookmarksWithComment>
     <ClearBookmarks>Очистить закладки</ClearBookmarks>
     <ExportBookmarks>Экспортировать закладки…</ExportBookmarks>
-    <GoToBookmark>Перейти в закладки</GoToBookmark>
+    <GoToBookmark>Перейти в закладки…</GoToBookmark>
     <GoToPreviousBookmark>Перейти к предыдущей закладке</GoToPreviousBookmark>
     <GoToNextBookmark>Перейти к следующей закладке</GoToNextBookmark>
     <ChooseProfile>Выбрать профиль</ChooseProfile>
@@ -2324,7 +2326,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <SsaOutline>Контур</SsaOutline>
     <SsaShadow>Тень</SsaShadow>
     <SsaOpaqueBox>Сплошной контур</SsaOpaqueBox>
-    <Testing123>Тестирование 123</Testing123>
+    <Testing123>Тестирование 123…</Testing123>
     <Language>Язык:</Language>
     <NamesIgnoreLists>Список имён (с учётом регистра)</NamesIgnoreLists>
     <AddName>Добавить имя</AddName>
@@ -2412,6 +2414,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <UseSyntaxColoring>Использовать подсветку синтаксиса</UseSyntaxColoring>
     <HtmlColor>HTML-цвет</HtmlColor>
     <AssaColor>ASSA-цвет</AssaColor>
+    <Theme>Тема</Theme>
+    <Automatic>Авто</Automatic>
     <DarkTheme>Тёмная тема</DarkTheme>
     <DarkThemeEnabled>Использовать тёмную тему</DarkThemeEnabled>
     <DarkThemeShowGridViewLines>Показать линии сетки отображения списка</DarkThemeShowGridViewLines>
@@ -2567,7 +2571,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <MainToggleVideoControls>Переключить элементы управления видео</MainToggleVideoControls>
     <VideoToggleContrast>Переключить контрастность (только mpv)</VideoToggleContrast>
     <AudioToTextX>Аудио в текст ({0})</AudioToTextX>
-    <AudioToTextSelectedLinesX>Аудио в выбранные текстовые строки ({0})</AudioToTextSelectedLinesX>
+    <AudioExtractSelectedLines>Извлечь аудио (выделенные строки)</AudioExtractSelectedLines>
+    <AudioToTextSelectedLinesX>Аудио в текст выделенных строк ({0})</AudioToTextSelectedLinesX>
     <VideoToggleBrightness>Переключить яркость (только mpv)</VideoToggleBrightness>
     <CustomSearch1>Перевод, пользовательский поиск 1</CustomSearch1>
     <CustomSearch2>Перевод, пользовательский поиск 2</CustomSearch2>
@@ -2900,7 +2905,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <Font>Шрифт</Font>
     <FontName>Название шрифта</FontName>
     <FontSize>Размер шрифта</FontSize>
-    <UseCount>Используемый</UseCount>
+    <UseCount>Использован</UseCount>
     <Primary>Первичный</Primary>
     <Secondary>Вторичный</Secondary>
     <Tertiary>Третичный</Tertiary>
@@ -2935,7 +2940,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <Remove>Удалить</Remove>
     <ReplaceWith>Заменить…</ReplaceWith>
     <RemoveAll>Удалить все</RemoveAll>
-    <ImportStyleFromFile>Добавить стиль из файла</ImportStyleFromFile>
+    <ImportStyleFromFile>Импорт стиля из файла…</ImportStyleFromFile>
     <ExportStyleToFile>Экспорт стиля… (стиль будет добавлен, если файл существует)</ExportStyleToFile>
     <ChooseStyle>Выбрать стиль для импорта</ChooseStyle>
     <StyleAlreadyExits>Такой стиль существует: {0}</StyleAlreadyExits>

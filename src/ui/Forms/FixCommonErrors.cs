@@ -1382,7 +1382,7 @@ namespace Nikse.SubtitleEdit.Forms
             timeUpDownStartTime.MaskedTextBox.TextChanged += MaskedTextBox_TextChanged;
 
             numericUpDownDuration.ValueChanged -= NumericUpDownDurationValueChanged;
-            numericUpDownDuration.Value = (decimal)(p.Duration.TotalMilliseconds / TimeCode.BaseUnit);
+            numericUpDownDuration.Value = (decimal)(p.DurationTotalMilliseconds / TimeCode.BaseUnit);
             numericUpDownDuration.ValueChanged += NumericUpDownDurationValueChanged;
         }
 
@@ -1939,7 +1939,7 @@ namespace Nikse.SubtitleEdit.Forms
                     startFactor = 0.80;
                 }
 
-                double middle = currentParagraph.StartTime.TotalMilliseconds + (currentParagraph.Duration.TotalMilliseconds * startFactor);
+                double middle = currentParagraph.StartTime.TotalMilliseconds + (currentParagraph.DurationTotalMilliseconds * startFactor);
                 if (splitSeconds.HasValue && splitSeconds.Value > (currentParagraph.StartTime.TotalSeconds + 0.2) && splitSeconds.Value < (currentParagraph.EndTime.TotalSeconds - 0.2))
                 {
                     middle = splitSeconds.Value * TimeCode.BaseUnit;
@@ -2093,6 +2093,70 @@ namespace Nikse.SubtitleEdit.Forms
         private void selectDefaultToolStripMenuItem_Click(object sender, EventArgs e)
         {
             buttonResetDefault_Click(null, null);
+        }
+
+        private void listView1_KeyDown(object sender, KeyEventArgs e)
+        {
+            var items = listView1.Items;
+            if (e.KeyCode == Keys.A && e.Modifiers == Keys.Control)
+            {
+                foreach (ListViewItem item in items)
+                {
+                    item.Checked = true;
+                    item.Selected = true;
+                }
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyCode == Keys.D && e.Modifiers == Keys.Control)
+            {
+                foreach (ListViewItem item in items)
+                {
+                    item.Checked = false;
+                    item.Selected = false;
+                }
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyCode == Keys.I && e.Modifiers == (Keys.Control | Keys.Shift)) //InverseSelection
+            {
+                foreach (ListViewItem item in items)
+                {
+                    item.Checked = !item.Checked;
+                }
+                e.SuppressKeyPress = true;
+                e.SuppressKeyPress = true;
+            }
+        }
+
+        private void listViewFixes_KeyDown(object sender, KeyEventArgs e)
+        {
+            var items = listViewFixes.Items;
+            if (e.KeyCode == Keys.A && e.Modifiers == Keys.Control)
+            {
+                foreach (ListViewItem item in items)
+                {
+                    item.Checked = true;
+                    item.Selected = true;
+                }
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyCode == Keys.D && e.Modifiers == Keys.Control)
+            {
+                foreach (ListViewItem item in items)
+                {
+                    item.Checked = false;
+                    item.Selected = false;
+                }
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyCode == Keys.I && e.Modifiers == (Keys.Control | Keys.Shift)) //InverseSelection
+            {
+                foreach (ListViewItem item in items)
+                {
+                    item.Checked = !item.Checked;
+                }
+                e.SuppressKeyPress = true;
+                e.SuppressKeyPress = true;
+            }
         }
     }
 }

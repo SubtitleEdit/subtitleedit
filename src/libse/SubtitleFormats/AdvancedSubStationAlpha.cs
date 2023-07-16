@@ -140,6 +140,11 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
             else if (!string.IsNullOrEmpty(subtitle.Header) && subtitle.Header.Contains("[V4 Styles]"))
             {
                 LoadStylesFromSubstationAlpha(subtitle, title, header, HeaderNoStyles, sb);
+                isValidAssHeader = !string.IsNullOrEmpty(subtitle.Header) && subtitle.Header.Contains("[V4+ Styles]");
+                if (isValidAssHeader)
+                {
+                    styles = GetStylesFromHeader(subtitle.Header);
+                }
             }
             else if (subtitle.Header != null && subtitle.Header.Contains("http://www.w3.org/ns/ttml"))
             {
@@ -155,6 +160,15 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
             {
                 LoadStylesFromTimedTextTimedDraft2006Oct(subtitle, title, header, HeaderNoStyles, sb);
                 fromTtml = true;
+                isValidAssHeader = !string.IsNullOrEmpty(subtitle.Header) && subtitle.Header.Contains("[V4+ Styles]");
+                if (isValidAssHeader)
+                {
+                    styles = GetStylesFromHeader(subtitle.Header);
+                }
+            }
+            else if (subtitle.Header != null && subtitle.Header.StartsWith("WEBVTT", StringComparison.Ordinal))
+            {
+                subtitle = WebVttToAssa.Convert(subtitle, new SsaStyle(), 0, 0);
                 isValidAssHeader = !string.IsNullOrEmpty(subtitle.Header) && subtitle.Header.Contains("[V4+ Styles]");
                 if (isValidAssHeader)
                 {
@@ -2032,15 +2046,29 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
             return $"&H{255 - c.A:X2}{c.B:X2}{c.G:X2}{c.R:X2}"; // ASS stores alpha in reverse (0=full intensity and 255=fully transparent)
         }
 
-        public static string GetSsaColorStringForEvent(Color c)
+        public static string GetSsaColorStringForEvent(Color c, string tag = "c")
         {
             if (c.A >= 255)
             {
-                return $"c&H{c.B:X2}{c.G:X2}{c.R:X2}";
+                return $"{tag}&H{c.B:X2}{c.G:X2}{c.R:X2}";
+            }
+
+            var alphaName = "alpha";
+            if (tag == "2c")
+            {
+                alphaName = "2a";
+            }
+            else if (tag == "3c")
+            {
+                alphaName = "3a";
+            }
+            else if (tag == "4c")
+            {
+                alphaName = "4a";
             }
 
             var alpha = 255 - c.A; // ASS stores alpha in reverse (0=full intensity and 255=fully transparent)
-            return $"alpha&H{alpha:X2}&\\c&H{c.B:X2}{c.G:X2}{c.R:X2}";
+            return $"{alphaName}&H{alpha:X2}&\\{tag}&H{c.B:X2}{c.G:X2}{c.R:X2}";
         }
 
         public static string GetSsaColorStringNoTransparency(Color c) => $"&H{c.B:X2}{c.G:X2}{c.R:X2}";

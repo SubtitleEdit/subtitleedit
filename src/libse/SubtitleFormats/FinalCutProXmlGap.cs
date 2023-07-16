@@ -66,7 +66,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 titleNode = titleNode.SelectSingleNode("title");
                 titleNode.Attributes["offset"].Value = Convert.ToInt64(p.StartTime.TotalSeconds * 60000) + "/60000s";
                 titleNode.Attributes["name"].Value = HtmlUtil.RemoveHtmlTags(p.Text);
-                titleNode.Attributes["duration"].Value = Convert.ToInt64(p.Duration.TotalSeconds * 60000) + "/60000s";
+                titleNode.Attributes["duration"].Value = Convert.ToInt64(p.DurationTotalSeconds * 60000) + "/60000s";
                 titleNode.Attributes["start"].Value = Convert.ToInt64(p.StartTime.TotalSeconds * 60000) + "/60000s";
                 titleNode.SelectSingleNode("text").InnerText = HtmlUtil.RemoveHtmlTags(p.Text);
                 videoNode.AppendChild(titleNode);

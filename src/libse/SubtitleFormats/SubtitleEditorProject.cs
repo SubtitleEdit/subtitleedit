@@ -62,7 +62,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 XmlNode paragraph = xml.CreateElement("subtitle");
 
                 XmlAttribute duration = xml.CreateAttribute("duration");
-                duration.InnerText = ((int)Math.Round(p.Duration.TotalMilliseconds)).ToString(CultureInfo.InvariantCulture);
+                duration.InnerText = ((int)Math.Round(p.DurationTotalMilliseconds)).ToString(CultureInfo.InvariantCulture);
                 paragraph.Attributes.Append(duration);
 
                 XmlAttribute effect = xml.CreateAttribute("effect");

@@ -24,7 +24,7 @@
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
                 var p = subtitle.Paragraphs[i];
-                var displayTime = p.Duration.TotalMilliseconds;
+                var displayTime = p.DurationTotalMilliseconds;
                 if (displayTime < _minDurationMs)
                 {
                     var next = subtitle.GetParagraphOrDefault(i + 1);
@@ -42,7 +42,7 @@
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
                 var p = subtitle.Paragraphs[i];
-                var displayTime = p.Duration.TotalMilliseconds;
+                var displayTime = p.DurationTotalMilliseconds;
                 if (displayTime > _maxDurationMs)
                 {
                     p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + _maxDurationMs;

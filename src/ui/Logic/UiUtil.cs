@@ -84,7 +84,7 @@ namespace Nikse.SubtitleEdit.Logic
                 if (p.StartTime.TotalMilliseconds <= positionInMilliseconds + 0.01 && p.EndTime.TotalMilliseconds >= positionInMilliseconds - 0.01)
                 {
                     string text = p.Text.Replace("|", Environment.NewLine);
-                    bool isInfo = p == subtitle.Paragraphs[0] && (Math.Abs(p.StartTime.TotalMilliseconds) < 0.01 && Math.Abs(p.Duration.TotalMilliseconds) < 0.01 || Math.Abs(p.StartTime.TotalMilliseconds - Pac.PacNullTime.TotalMilliseconds) < 0.01);
+                    bool isInfo = p == subtitle.Paragraphs[0] && (Math.Abs(p.StartTime.TotalMilliseconds) < 0.01 && Math.Abs(p.DurationTotalMilliseconds) < 0.01 || Math.Abs(p.StartTime.TotalMilliseconds - Pac.PacNullTime.TotalMilliseconds) < 0.01);
                     if (!isInfo)
                     {
                         if (videoPlayerContainer.LastParagraph != p)
@@ -1383,6 +1383,21 @@ namespace Nikse.SubtitleEdit.Logic
                     return LanguageSettings.Current.Settings.ContinuationStyleCustom;
                 default:
                     return LanguageSettings.Current.Settings.ContinuationStyleNone;
+            }
+        }
+
+        public static string GetBeautifyTimeCodesProfilePresetName(BeautifyTimeCodesSettings.BeautifyTimeCodesProfile.Preset preset)
+        {
+            switch (preset)
+            {
+                case BeautifyTimeCodesSettings.BeautifyTimeCodesProfile.Preset.Default:
+                    return LanguageSettings.Current.BeautifyTimeCodesProfile.PresetDefault;
+                case BeautifyTimeCodesSettings.BeautifyTimeCodesProfile.Preset.Netflix:
+                    return LanguageSettings.Current.BeautifyTimeCodesProfile.PresetNetflix;
+                case BeautifyTimeCodesSettings.BeautifyTimeCodesProfile.Preset.SDI:
+                    return LanguageSettings.Current.BeautifyTimeCodesProfile.PresetSDI;
+                default:
+                    return preset.ToString();
             }
         }
 

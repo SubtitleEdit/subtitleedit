@@ -869,7 +869,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             return GetOptimalDisplayMilliseconds(text, Configuration.Settings.General.SubtitleOptimalCharactersPerSeconds);
         }
 
-        public static double GetOptimalDisplayMilliseconds(string text, double optimalCharactersPerSecond, bool onlyOptimal = false)
+        public static double GetOptimalDisplayMilliseconds(string text, double optimalCharactersPerSecond, bool onlyOptimal = false, bool enforceDurationLimits = true)
         {
             if (optimalCharactersPerSecond < 2 || optimalCharactersPerSecond > 100)
             {
@@ -894,12 +894,12 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
             }
 
-            if (duration < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
+            if (enforceDurationLimits && duration < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
             {
                 duration = Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds;
             }
 
-            if (duration > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
+            if (enforceDurationLimits && duration > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
             {
                 duration = Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds;
             }
@@ -933,36 +933,33 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public static double GetCharactersPerSecond(Paragraph paragraph)
         {
-            var duration = paragraph.Duration;
-            if (duration.TotalMilliseconds < 1)
+            if (paragraph.DurationTotalMilliseconds < 1)
             {
                 return 999;
             }
 
-            return (double)paragraph.Text.CountCharacters(true) / duration.TotalSeconds;
+            return (double)paragraph.Text.CountCharacters(true) / paragraph.DurationTotalSeconds;
         }
 
         public static double GetCharactersPerSecond(Paragraph paragraph, double numberOfCharacters)
         {
-            var duration = paragraph.Duration;
-            if (duration.TotalMilliseconds < 1)
+            if (paragraph.DurationTotalMilliseconds < 1)
             {
                 return 999;
             }
 
-            return numberOfCharacters / duration.TotalSeconds;
+            return numberOfCharacters / paragraph.DurationTotalSeconds;
         }
 
 
         public static double GetCharactersPerSecond(Paragraph paragraph, ICalcLength calc)
         {
-            var duration = paragraph.Duration;
-            if (duration.TotalMilliseconds < 1)
+            if (paragraph.DurationTotalMilliseconds < 1)
             {
                 return 999;
             }
 
-            return (double)calc.CountCharacters(paragraph.Text, true) / duration.TotalSeconds;
+            return (double)calc.CountCharacters(paragraph.Text, true) / paragraph.DurationTotalSeconds;
         }
 
         public static bool IsRunningOnMono()
@@ -1259,7 +1256,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return null;
             }
 
-            var middle = paragraph.StartTime.TotalMilliseconds + paragraph.Duration.TotalMilliseconds / 2.0;
+            var middle = paragraph.StartTime.TotalMilliseconds + paragraph.DurationTotalMilliseconds / 2.0;
             if (index < originalParagraphs.Count)
             {
                 var o = originalParagraphs[index];
@@ -2661,7 +2658,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
                 subtitle.Paragraphs[i].Text = subtitle.Paragraphs[i].Text.TrimEnd();
-                if (subtitle.Paragraphs[i].Duration.TotalMilliseconds < 1)
+                if (subtitle.Paragraphs[i].DurationTotalMilliseconds < 1)
                 {
                     // fix subtitles without duration
                     FixShortDisplayTime(subtitle, i);
@@ -2676,7 +2673,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         {
             Paragraph p = s.Paragraphs[i];
             var minDisplayTime = Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds;
-            double displayTime = p.Duration.TotalMilliseconds;
+            double displayTime = p.DurationTotalMilliseconds;
             if (displayTime < minDisplayTime)
             {
                 var next = s.GetParagraphOrDefault(i + 1);

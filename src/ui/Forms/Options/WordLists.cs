@@ -65,7 +65,9 @@ namespace Nikse.SubtitleEdit.Forms.Options
                 // Specific culture e.g: en-US, en-GB...
                 foreach (var culture in CultureInfo.GetCultures(CultureTypes.SpecificCultures))
                 {
-                    if (File.Exists(Path.Combine(dir, culture.Name.Replace('-', '_') + "_user.xml")))
+                    var seFile = Path.Combine(dir, culture.Name.Replace('-', '_') + "_se.xml");
+                    var userFile = Path.Combine(dir, culture.Name.Replace('-', '_') + "_user.xml");
+                    if (File.Exists(seFile) || File.Exists(userFile))
                     {
                         if (!cultures.Contains(culture))
                         {
@@ -80,7 +82,8 @@ namespace Nikse.SubtitleEdit.Forms.Options
                     var ocrFixGeneralFile = Path.Combine(dir, culture.GetThreeLetterIsoLanguageName() + "_OCRFixReplaceList.xml");
                     var ocrFixUserFile = Path.Combine(dir, culture.GetThreeLetterIsoLanguageName() + "_OCRFixReplaceList_User.xml");
                     var namesFile = Path.Combine(dir, culture.TwoLetterISOLanguageName + "_names.xml");
-                    if (File.Exists(ocrFixGeneralFile) || File.Exists(ocrFixUserFile) || File.Exists(namesFile))
+                    var seFile = Path.Combine(dir, culture.Name.Replace('-', '_') + "_se.xml");
+                    if (File.Exists(ocrFixGeneralFile) || File.Exists(ocrFixUserFile) || File.Exists(namesFile) || File.Exists(seFile))
                     {
                         var alreadyInList = false;
                         foreach (var ci in cultures)
