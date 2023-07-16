@@ -2134,7 +2134,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
             else
             {
-                _labelVolume.ForeColor = Color.White;
+                _labelTimeCode.ForeColor = Color.White;
             }
 
             if (_labelVideoPlayerName.BackColor.R + _labelVideoPlayerName.BackColor.G + _labelVideoPlayerName.BackColor.B > 255 * 1.5)

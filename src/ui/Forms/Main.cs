@@ -5554,7 +5554,6 @@ namespace Nikse.SubtitleEdit.Forms
                 UiUtil.InitializeSubtitleFont(textBoxListViewText);
                 UiUtil.InitializeSubtitleFont(textBoxListViewTextOriginal);
                 UiUtil.InitializeSubtitleFont(SubtitleListview1);
-                InitializeToolbar();
             }
             catch (Exception exception)
             {
@@ -5850,7 +5849,6 @@ namespace Nikse.SubtitleEdit.Forms
                     DarkTheme.UndoDarkTheme(this, 1500);
 
                     OnLoad(null);
-                    InitializeToolbar();
                 }
             }
 
@@ -5887,6 +5885,7 @@ namespace Nikse.SubtitleEdit.Forms
             ShowLineInformationListView();
             ShowSourceLineNumber();
             LoadPlugins();
+            InitializeToolbar();
         }
 
         private void SetAudioVisualizerSettings()
