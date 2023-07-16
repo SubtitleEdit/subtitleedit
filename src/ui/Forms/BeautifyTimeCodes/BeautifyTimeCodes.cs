@@ -10,7 +10,7 @@ using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
 {
-    public partial class BeautifyTimeCodes : Form
+    public sealed partial class BeautifyTimeCodes : Form
     {
         private readonly Subtitle _subtitle;
         private readonly VideoInfo _videoInfo;
@@ -80,13 +80,24 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             if (_videoFileName != null)
             {
                 // Load time codes
-                this._timeCodes = TimeCodesFileHelper.FromDisk(videoFileName);
-                this._shotChanges = shotChanges;
+                _timeCodes = TimeCodesFileHelper.FromDisk(videoFileName);
+                _shotChanges = shotChanges;
 
                 // Check if ffprobe is available
-                var ffProbePath = Path.GetDirectoryName(Configuration.Settings.General.FFmpegLocation) + Path.DirectorySeparatorChar + "ffprobe" + Path.GetExtension(Configuration.Settings.General.FFmpegLocation);
-                var isffProbeAvailable = !string.IsNullOrEmpty(ffProbePath) && File.Exists(ffProbePath);
-                if (!isffProbeAvailable)
+                var isFfProbeAvailable = false;
+                if (!string.IsNullOrEmpty(Configuration.Settings.General.FFmpegLocation))
+                {
+                    var ffProbePath = Path.Combine(Path.GetDirectoryName(Configuration.Settings.General.FFmpegLocation), "ffprobe.exe");
+                    if (Configuration.IsRunningOnWindows)
+                    {
+                        isFfProbeAvailable = File.Exists(ffProbePath);
+                    }
+                    else
+                    {
+                        isFfProbeAvailable = true;
+                    }
+                }
+                if (!isFfProbeAvailable)
                 {
                     checkBoxExtractExactTimeCodes.Enabled = false;
                     checkBoxExtractExactTimeCodes.Checked = false;
@@ -234,8 +245,8 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             {
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
-                    this._shotChanges = form.ShotChangesInSeconds;
-                    this.ShotChangesInSeconds = form.ShotChangesInSeconds;
+                    _shotChanges = form.ShotChangesInSeconds;
+                    ShotChangesInSeconds = form.ShotChangesInSeconds;
                     ShotChangeHelper.SaveShotChanges(_videoFileName, form.ShotChangesInSeconds);
                     RefreshControls();
                 }
@@ -268,12 +279,12 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             FixedSubtitle = new Subtitle(_subtitle);
 
             TimeCodesBeautifier timeCodesBeautifier = new TimeCodesBeautifier(
-                FixedSubtitle, 
+                FixedSubtitle,
                 _frameRate,
                 checkBoxExtractExactTimeCodes.Checked ? _timeCodes : new List<double>(), // ditto
                 checkBoxSnapToShotChanges.Checked ? _shotChanges : new List<double>()
             );
-            timeCodesBeautifier.ProgressChanged += delegate(double progress)
+            timeCodesBeautifier.ProgressChanged += delegate (double progress)
             {
                 progressBar.Value = Convert.ToInt32(progress * 100);
                 Application.DoEvents();
