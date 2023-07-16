@@ -38,6 +38,7 @@
     <Actor>Ηθοποιός</Actor>
     <Gap>Κενό</Gap>
     <Region>Περιοχή</Region>
+    <Layer></Layer>
     <NumberSymbol>#</NumberSymbol>
     <Number>Αριθμός</Number>
     <Text>Κείμενο</Text>
@@ -375,8 +376,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <CenterSelectedLines>Κεντράρισμα επιλεγμένων γραμμών (οριζόντια, διατήρηση κάθετης θέσης)</CenterSelectedLines>
     <TopAlignSelectedLines>Άνω στοίχιση επιλεγμένων γραμμών (διατήρηση οριζόντιας θέσης)</TopAlignSelectedLines>
     <BottomAlignSelectedLines>Κάτω στοίχιση επιλεγμένων γραμμών (διατήρηση οριζόντιας θέσης)</BottomAlignSelectedLines>
-    <ToggleForcedSelectedLines>Εναλλαγή "Αναγκαστικοί" επιλεγμένων γραμμών</ToggleForcedSelectedLines>
-    <SelectForcedLines>Επιλογή αναγκαστικών γραμμών</SelectForcedLines>
+    <ToggleForcedSelectedLines>Εναλλαγή "Εξαναγκασμένων" επιλεγμένων γραμμών</ToggleForcedSelectedLines>
+    <SelectForcedLines>Επιλογή εξαναγκασμένων γραμμών</SelectForcedLines>
     <SizeXY>Μέγεθος: {0}χ{1}</SizeXY>
     <SetAspectRatio11>Ορισμός λόγου διαστάσεων 1:1</SetAspectRatio11>
     <ChangeBrightnessTitle>Προσαρμογή φωτεινότητας</ChangeBrightnessTitle>
@@ -694,7 +695,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <LineHeight>Ύψος γραμμής</LineHeight>
     <BoxSingleLine>Πλαίσιο - μονή γραμμή</BoxSingleLine>
     <BoxMultiLine>Πλαίσιο - πολλαπλή γραμμή</BoxMultiLine>
-    <Forced>Αναγκαστικοί</Forced>
+    <Forced>Εξαναγκασμένοι</Forced>
     <ChooseBackgroundColor>Επιλογή χρώματος φόντου</ChooseBackgroundColor>
     <SaveImageAs>Αποθήκευση εικόνας ως…</SaveImageAs>
     <FcpUseFullPathUrl>Χρήση πλήρης διεύθυνσης url εικόνας για FCP xml</FcpUseFullPathUrl>
@@ -1373,15 +1374,19 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <SizeAllColumnsToFit>Αλλαγή μεγέθους στηλών για να χωρούν</SizeAllColumnsToFit>
         <SetStyle>Ορισμός στυλ</SetStyle>
         <SetActor>Ορισμός ηθοποιού</SetActor>
+        <SetLayer></SetLayer>
         <AssaTools>Εργαλεία ASSA</AssaTools>
         <SubStationAlphaStyles>Στυλ Sub Station Alpha…</SubStationAlphaStyles>
         <AdvancedSubStationAlphaStyles>Στυλ Advanced Sub Station Alpha…</AdvancedSubStationAlphaStyles>
-        <TimedTextSetRegion>Timed Text - ορισμός περιοχής</TimedTextSetRegion>
-        <TimedTextSetStyle>Timed Text - ορισμός στυλ</TimedTextSetStyle>
+        <TimedTextSetRegion>Ορισμός περιοχής Timed Text</TimedTextSetRegion>
+        <TimedTextSetStyle>Ορισμός στυλ Timed Text</TimedTextSetStyle>
         <TimedTextStyles>Στυλ Timed Text…</TimedTextStyles>
-        <TimedTextSetLanguage>Timed Text - ορισμός γλώσσας</TimedTextSetLanguage>
-        <SamiSetStyle>Sami - ορισμός κλάσης</SamiSetStyle>
-        <NuendoSetStyle>Nuendo - ορισμός χαρακτήρα</NuendoSetStyle>
+        <TimedTextSetLanguage>Ορισμός γλώσσας Timed Text</TimedTextSetLanguage>
+        <SamiSetStyle>Ορισμός κλάσης Sami</SamiSetStyle>
+        <NuendoSetStyle>Ορισμός χαρακτήρα Nuendo</NuendoSetStyle>
+        <WebVttSetStyle>Ορισμος στυλ WebVTT</WebVttSetStyle>
+        <WebVttSetVoice>Ορισμός φωνής WebVTT</WebVttSetVoice>
+        <WebVttBrowserPreview>Προεπισκόπηση WebVTT</WebVttBrowserPreview>
         <Cut>Αποκοπή</Cut>
         <Copy>Αντιγραφή</Copy>
         <Paste>Επικόλληση</Paste>
@@ -2267,6 +2272,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ShowFullscreenButton>Εμφάνιση κουμπιού πλήρους οθόνης</ShowFullscreenButton>
     <PreviewFontName>Γραμματοσειρά προεπισκόπησης</PreviewFontName>
     <PreviewFontSize>Μέγεθος γραμματοσειράς</PreviewFontSize>
+    <PreviewVerticalMargin>Κάθετο περιθώριο</PreviewVerticalMargin>
     <MainWindowVideoControls>Στοιχεία ελέγχου βίντεο κύριου παραθύρου</MainWindowVideoControls>
     <CustomSearchTextAndUrl>Προσαρμοσμένη αναζήτηση κειμένου και διεύθυνσης URL</CustomSearchTextAndUrl>
     <WaveformAppearance>Εμφάνιση κυματομορφής</WaveformAppearance>
@@ -2395,9 +2401,12 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <UseSyntaxColoring>Χρήση χρωματισμού σύνταξης</UseSyntaxColoring>
     <HtmlColor>Χρώμα HTML</HtmlColor>
     <AssaColor>Χρώμα ASSA</AssaColor>
+    <Theme>Θέμα</Theme>
+    <Automatic>Αυτόματο</Automatic>
     <DarkTheme>Σκούρο θέμα</DarkTheme>
     <DarkThemeEnabled>Χρήση σκούρου θέματος</DarkThemeEnabled>
     <DarkThemeShowGridViewLines>Εμφάνιση γραμμών προβολής λίστας</DarkThemeShowGridViewLines>
+    <GraphicsButtons>Κουμπί γραφικών</GraphicsButtons>
     <UpdateShortcut>Ενημέρωση</UpdateShortcut>
     <FoucsSetVideoPosition>Εστίαση ορισμού θέσης βίντεο</FoucsSetVideoPosition>
     <ToggleDockUndockOfVideoControls>Εναλλαγή αγκύστρωσης/απαγκύστρωσης των στοιχείων ελέγχου βίντεο</ToggleDockUndockOfVideoControls>
@@ -2548,6 +2557,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MainToggleVideoControls>Εναλλαγή ελέγχων βίντεο</MainToggleVideoControls>
     <VideoToggleContrast>Εναλλαγή αντίθεσης (μόνο mpv)</VideoToggleContrast>
     <AudioToTextX>Ήχος σε κείμενο ({0})</AudioToTextX>
+    <AudioExtractSelectedLines>Εξαγωγή ήχου επιλεγμένων γραμμών</AudioExtractSelectedLines>
     <AudioToTextSelectedLinesX>Ήχος σε κείμενο επιλεγμένων γραμμών ({0})</AudioToTextSelectedLinesX>
     <VideoToggleBrightness>Εναλλαγή φωτεινότητας (μόνο mpv)</VideoToggleBrightness>
     <CustomSearch1>Μετάφραση, προσαρμοσμένη αναζήτηση 1</CustomSearch1>
@@ -2829,18 +2839,29 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SingleLineLengthMinimum>Ελάχιστο μήκος μονής γραμμής: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Μέγιστο μήκος μονής γραμμής: {0}</SingleLineLengthMaximum>
     <SingleLineLengthAverage>Μέσο μήκος μονής γραμμής: {0}</SingleLineLengthAverage>
+    <SingleLineLengthExceedingMaximum>Μήκος μονής γραμμής που ξεπερνά το όριο χαρακτήρων ({0} χαρακτήρες): {1} ({2:0.00}%)</SingleLineLengthExceedingMaximum>
     <SingleLineWidthMinimum>Ελάχιστο εύρος μονής γραμμής: {0} εικονοστοιχεία</SingleLineWidthMinimum>
     <SingleLineWidthMaximum>Μέγιστο εύρος μονής γραμμής: {0} εικονοστοιχεία</SingleLineWidthMaximum>
     <SingleLineWidthAverage>Μέσο εύρος μονής γραμμής: {0} εικονοστοιχεία</SingleLineWidthAverage>
+    <SingleLineWidthExceedingMaximum>Μήκος μονής γραμμής που ξεπερνά το όριο χαρακτήρων ({0} εικονοστοιχεία): {1} ({2:0.00}%)</SingleLineWidthExceedingMaximum>
     <DurationMinimum>Ελάχιστη διάρκεια: {0:0.000} δευτερόλεπτα</DurationMinimum>
     <DurationMaximum>Μέγιστη διάρκεια: {0:0.000} δευτερόλεπτα</DurationMaximum>
     <DurationAverage>Μέση διάρκεια: {0:0.000} δευτερόλεπτα</DurationAverage>
+    <DurationExceedingMinimum>Διάρκεια κάτω της ελάχιστης ({0:0.###} δευτερόλεπτα): {1} ({2:0.00}%)</DurationExceedingMinimum>
+    <DurationExceedingMaximum>Διάρκεια πάνω της μέγιστης ({0:0.###} δευτερόλεπτα): {1} ({2:0.00}%)</DurationExceedingMaximum>
     <CharactersPerSecondMinimum>Ελάχιστοι χαρακτήρες/δευτερόλεπτο: {0:0.000}</CharactersPerSecondMinimum>
     <CharactersPerSecondMaximum>Μέγιστοι χαρακτήρες/δευτερόλεπτο: {0:0.000}</CharactersPerSecondMaximum>
-    <CharactersPerSecondAverage>Μέσοι χαρακτήρες/δευτερόλεπτο: {0:0.000}</CharactersPerSecondAverage>
+    <CharactersPerSecondAverage>Μέσος όρος χαρακτήρων/δευτερόλεπτο: {0:0.000}</CharactersPerSecondAverage>
+    <CharactersPerSecondExceedingOptimal>Χαρακτήρες/δευτερόλεπτο πάνω των βέλτιστων ({0:0.###} χαρ./δευτ.): {1} ({2:0.00}%)</CharactersPerSecondExceedingOptimal>
+    <CharactersPerSecondExceedingMaximum>Χαρακτήρες/δευτερόλεπτο πάνω των μέγιστων ({0:0.###} χαρ./δευτ.): {1} ({2:0.00}%)</CharactersPerSecondExceedingMaximum>
+    <WordsPerMinuteMinimum>Ελάχιστες λέξεις/λεπτό: {0:0.000}</WordsPerMinuteMinimum>
+    <WordsPerMinuteMaximum>Μέγιστες λέξεις/λεπτό: {0:0.000}</WordsPerMinuteMaximum>
+    <WordsPerMinuteAverage>Μέσος όρος λέξεις/λεπτό: {0:0.000}</WordsPerMinuteAverage>
+    <WordsPerMinuteExceedingMaximum>Χαρακτήρες/δευτερόλεπτο πάνω των μέγιστων ({0:0.###} λέξεις/λεπτό): {1} ({2:0.00}%)</WordsPerMinuteExceedingMaximum>
     <GapMinimum>Ελάχιστο κενό: {0:#,##0} χιλ. του δευτερολέπτου</GapMinimum>
     <GapMaximum>Μέγιστο κενό: {0:#,##0} χιλ. του δευτερολέπτου</GapMaximum>
-    <GapAverage>Μέσο κενό: {0:#,##0} χιλ. του δευτερολέπτου</GapAverage>
+    <GapAverage>Μέσος όρος κενών: {0:#,##0} χιλ. του δευτερολέπτου</GapAverage>
+    <GapExceedingMinimum>Κενό κάτω τού ελάχιστου ({0:#.##0} χιλιοστά/δευτερόλεπτα): {1} ({2:0.00}%)</GapExceedingMinimum>
     <Export>Εξαγωγή…</Export>
   </Statistics>
   <SubStationAlphaProperties>
@@ -3060,7 +3081,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <XImagesSavedInY>{0} εικόνες αποθηκεύτηκαν στο {1}</XImagesSavedInY>
     <DictionaryX>Λεξικό: {0}</DictionaryX>
     <RightToLeft>Δεξιά προς αριστερά</RightToLeft>
-    <ShowOnlyForcedSubtitles>Εμφάνιση μόνο αναγκαστικών υποτίτλων</ShowOnlyForcedSubtitles>
+    <ShowOnlyForcedSubtitles>Εμφάνιση μόνο εξαναγκασμένων υποτίτλων</ShowOnlyForcedSubtitles>
     <UseTimeCodesFromIdx>Χρήση χρόνων από αρχείο .idx</UseTimeCodesFromIdx>
     <NoMatch>&lt;Καμία αντιστοιχία&gt;</NoMatch>
     <AutoTransparentBackground>Αυτόματη διαφάνεια φόντου</AutoTransparentBackground>
@@ -3200,4 +3221,12 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>WebVTT - ορισμός νέας φωνής</Title>
     <VoiceName>Όνομα φωνής</VoiceName>
   </WebVttNewVoice>
+  <WebVttStyleManager>
+    <Title>Στυλ WebVTT</Title>
+  </WebVttStyleManager>
+  <WhisperAdvanced>
+    <Title>Επιπλέον παράμετροι γραμμής εντολών για το Whisper</Title>
+    <CommandLineArguments>Επιπλέον παράμετροι γραμμής εντολών για το Whisper:</CommandLineArguments>
+    <Info>Σημείωση: Οι παράμετροι από εφαρμογή σε εφαρμογή Whisper διαφέρουν.</Info>
+  </WhisperAdvanced>
 </Language>
