@@ -1,6 +1,6 @@
 ﻿namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
 {
-    partial class BeautifyTimeCodesProfileSimple
+    sealed partial class BeautifyTimeCodesProfileSimple
     {
         /// <summary>
         /// Required designer variable.
