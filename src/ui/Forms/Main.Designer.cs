@@ -539,8 +539,8 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelTextLineTotal = new System.Windows.Forms.Label();
             this.labelCharactersPerSecond = new System.Windows.Forms.Label();
             this.buttonUnBreak = new System.Windows.Forms.Button();
-            this.timeUpDownStartTime = new Nikse.SubtitleEdit.Controls.TimeUpDown();
-            this.numericUpDownDuration = new System.Windows.Forms.NumericUpDown();
+            this.timeUpDownStartTime = new Nikse.SubtitleEdit.Controls.NikseTimeUpDown();
+            this.numericUpDownDuration = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.buttonPrevious = new System.Windows.Forms.Button();
             this.buttonNext = new System.Windows.Forms.Button();
             this.labelStartTime = new System.Windows.Forms.Label();
@@ -613,7 +613,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.panelBookmark.SuspendLayout();
             this.contextMenuStripTextBoxListView.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBookmark)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDuration)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxRecord)).BeginInit();
             this.contextMenuStripTextBoxSourceView.SuspendLayout();
             this.panelVideoPlayer.SuspendLayout();
@@ -5273,15 +5272,24 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // timeUpDownStartTime
             // 
-            this.timeUpDownStartTime.AutoSize = true;
-            this.timeUpDownStartTime.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.timeUpDownStartTime.BackColor = System.Drawing.SystemColors.Control;
+            this.timeUpDownStartTime.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.timeUpDownStartTime.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.timeUpDownStartTime.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.timeUpDownStartTime.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.timeUpDownStartTime.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.timeUpDownStartTime.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.timeUpDownStartTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
             this.timeUpDownStartTime.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(155)))), ((int)(((byte)(155)))), ((int)(((byte)(155)))));
+            this.timeUpDownStartTime.Increment = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
             this.timeUpDownStartTime.Location = new System.Drawing.Point(8, 26);
             this.timeUpDownStartTime.Margin = new System.Windows.Forms.Padding(4);
             this.timeUpDownStartTime.Name = "timeUpDownStartTime";
-            this.timeUpDownStartTime.Size = new System.Drawing.Size(113, 27);
+            this.timeUpDownStartTime.Size = new System.Drawing.Size(113, 21);
             this.timeUpDownStartTime.TabIndex = 0;
             timeCode3.Hours = 0;
             timeCode3.Milliseconds = 0;
@@ -5295,13 +5303,20 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // numericUpDownDuration
             // 
+            this.numericUpDownDuration.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownDuration.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownDuration.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownDuration.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownDuration.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownDuration.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownDuration.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.numericUpDownDuration.DecimalPlaces = 3;
             this.numericUpDownDuration.Increment = new decimal(new int[] {
             1,
             0,
             0,
             65536});
-            this.numericUpDownDuration.Location = new System.Drawing.Point(122, 27);
+            this.numericUpDownDuration.Location = new System.Drawing.Point(122, 26);
             this.numericUpDownDuration.Maximum = new decimal(new int[] {
             999999999,
             0,
@@ -5313,8 +5328,14 @@ namespace Nikse.SubtitleEdit.Forms
             0,
             -2147483648});
             this.numericUpDownDuration.Name = "numericUpDownDuration";
-            this.numericUpDownDuration.Size = new System.Drawing.Size(56, 20);
+            this.numericUpDownDuration.Size = new System.Drawing.Size(56, 21);
             this.numericUpDownDuration.TabIndex = 1;
+            this.numericUpDownDuration.ThousandsSeparator = false;
+            this.numericUpDownDuration.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            196608});
             this.numericUpDownDuration.ValueChanged += new System.EventHandler(this.NumericUpDownDurationValueChanged);
             // 
             // buttonPrevious
@@ -5704,7 +5725,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.panelBookmark.PerformLayout();
             this.contextMenuStripTextBoxListView.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBookmark)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDuration)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxRecord)).EndInit();
             this.contextMenuStripTextBoxSourceView.ResumeLayout(false);
             this.panelVideoPlayer.ResumeLayout(false);
@@ -5787,14 +5807,14 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.Button buttonAutoBreak;
         private System.Windows.Forms.ToolStripMenuItem removeFormattinglToolStripMenuItem;
         private System.Windows.Forms.Label labelTextLineLengths;
-        private System.Windows.Forms.NumericUpDown numericUpDownDuration;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownDuration;
         private System.Windows.Forms.Label labelStartTimeWarning;
         private System.Windows.Forms.Button buttonUnBreak;
         private System.Windows.Forms.ToolStripMenuItem colorToolStripMenuItem;
         private System.Windows.Forms.Label labelTextLineTotal;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator10;
-        private Nikse.SubtitleEdit.Controls.TimeUpDown timeUpDownStartTime;
+        private Nikse.SubtitleEdit.Controls.NikseTimeUpDown timeUpDownStartTime;
         private System.Windows.Forms.ToolStripMenuItem ChangeCasingToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemMergeLines;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSortBy;
