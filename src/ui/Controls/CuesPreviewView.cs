@@ -12,11 +12,11 @@ namespace Nikse.SubtitleEdit.Controls
         private string _previewText = "Subtitle text.";
         private bool _showShotChange = true;
 
-        private int _leftGap = 0;
+        private int _leftGap;
         private int _leftRedZone = 7;
         private int _leftGreenZone = 12;
 
-        private int _rightGap = 0;
+        private int _rightGap;
         private int _rightRedZone = 7;
         private int _rightGreenZone = 12;
 
@@ -74,19 +74,14 @@ namespace Nikse.SubtitleEdit.Controls
             set { _rightGreenZone = value; Invalidate(); }
         }
 
-        public CuesPreviewView()
-        {
-
-        }
-
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
 
             using (var brush = new SolidBrush(Color.White))
             {
-                float width = this.Size.Width;
-                float height = this.Size.Height;
+                float width = Size.Width;
+                float height = Size.Height;
 
                 // Background
                 brush.Color = Color.Gray;
@@ -94,31 +89,31 @@ namespace Nikse.SubtitleEdit.Controls
 
                 // Green zones
                 brush.Color = Color.Green;
-                e.Graphics.FillRectangle(brush, (width / 2) - FramesToPixels(this.LeftGreenZone), 0, FramesToPixels(this.LeftGreenZone), height);
-                e.Graphics.FillRectangle(brush, width / 2, 0, FramesToPixels(this.RightGreenZone), height);
+                e.Graphics.FillRectangle(brush, (width / 2) - FramesToPixels(LeftGreenZone), 0, FramesToPixels(LeftGreenZone), height);
+                e.Graphics.FillRectangle(brush, width / 2, 0, FramesToPixels(RightGreenZone), height);
 
                 // Red zone
                 brush.Color = Color.Firebrick;
-                e.Graphics.FillRectangle(brush, (width / 2) - FramesToPixels(this.LeftRedZone), 0, FramesToPixels(this.LeftRedZone), height);
-                e.Graphics.FillRectangle(brush, width / 2, 0, FramesToPixels(this.RightRedZone), height);
+                e.Graphics.FillRectangle(brush, (width / 2) - FramesToPixels(LeftRedZone), 0, FramesToPixels(LeftRedZone), height);
+                e.Graphics.FillRectangle(brush, width / 2, 0, FramesToPixels(RightRedZone), height);
 
                 // Subtitle
                 brush.Color = Color.FromArgb(153, 0, 0, 0);
-                e.Graphics.FillRectangle(brush, 0, 0, (width / 2) - FramesToPixels(this.LeftGap), height);
-                e.Graphics.FillRectangle(brush, (width / 2) + FramesToPixels(this.RightGap), 0, (width / 2) - FramesToPixels(this.RightGap), height);
+                e.Graphics.FillRectangle(brush, 0, 0, (width / 2) - FramesToPixels(LeftGap), height);
+                e.Graphics.FillRectangle(brush, (width / 2) + FramesToPixels(RightGap), 0, (width / 2) - FramesToPixels(RightGap), height);
 
                 brush.Color = Color.White;
-                if (this.LeftGap <= 12)
+                if (LeftGap <= 12)
                 {
-                    e.Graphics.DrawString(GetSubtitleLabel(1000, GetLeftOutCue()), UiUtil.GetDefaultFont(), brush, new RectangleF(5, 5, (width / 2) - FramesToPixels(this.LeftGap) - 10, height - 10));
+                    e.Graphics.DrawString(GetSubtitleLabel(1000, GetLeftOutCue()), UiUtil.GetDefaultFont(), brush, new RectangleF(5, 5, (width / 2) - FramesToPixels(LeftGap) - 10, height - 10));
                 }
-                if (this.RightGap <= 12)
+                if (RightGap <= 12)
                 {
-                    e.Graphics.DrawString(GetSubtitleLabel(GetRightInCue(), 5000), UiUtil.GetDefaultFont(), brush, new RectangleF((width / 2) + FramesToPixels(this.RightGap) + 5, 5, (width / 2) - FramesToPixels(this.RightGap) - 10, height - 10));
+                    e.Graphics.DrawString(GetSubtitleLabel(GetRightInCue(), 5000), UiUtil.GetDefaultFont(), brush, new RectangleF((width / 2) + FramesToPixels(RightGap) + 5, 5, (width / 2) - FramesToPixels(RightGap) - 10, height - 10));
                 }
 
                 // Shot change
-                if (this.ShowShotChange)
+                if (ShowShotChange)
                 {
                     brush.Color = Color.PaleGreen;
                     e.Graphics.FillRectangle(brush, (width / 2) - (1.5f), 0, 3f, height);
@@ -128,24 +123,24 @@ namespace Nikse.SubtitleEdit.Controls
 
         private float FramesToPixels(float frames)
         {
-            return (Size.Width / (this.FrameRate * 3)) * frames;
+            return (Size.Width / (FrameRate * 3)) * frames;
         }
 
         private double GetLeftOutCue()
         {
-            return 3000 - (this.LeftGap * (1000 / this.FrameRate));
+            return 3000 - (LeftGap * (1000 / FrameRate));
         }
 
         private double GetRightInCue()
         {
-            return 3000 + (this.RightGap * (1000 / this.FrameRate));
+            return 3000 + (RightGap * (1000 / FrameRate));
         }
 
         private string GetSubtitleLabel(double start, double end)
         {
             var timeCodeStart = new TimeCode(start);
             var timeCodeEnd = new TimeCode(end);
-            return timeCodeStart.ToString() + " --> " + timeCodeEnd.ToString() + Environment.NewLine + this.PreviewText;
+            return timeCodeStart + " --> " + timeCodeEnd + Environment.NewLine + PreviewText;
         }
     }
 }

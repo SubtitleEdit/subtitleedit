@@ -271,6 +271,8 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 AddValue(0);
             };
+
+            TabStop = false;
         }
 
         public MaskedTextBox MaskedTextBox => _maskedTextBox;

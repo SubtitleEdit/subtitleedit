@@ -7,7 +7,7 @@ using Nikse.SubtitleEdit.Core.SubtitleFormats;
 
 namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
 {
-    public partial class BeautifyTimeCodesProfileSimple : Form
+    public sealed partial class BeautifyTimeCodesProfileSimple : Form
     {
         private readonly double _frameRate;
 

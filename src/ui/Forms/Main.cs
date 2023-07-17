@@ -1562,7 +1562,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void VideoPositionChanged(object sender, EventArgs e)
         {
-            var tud = (TimeUpDown)sender;
+            var tud = (NikseTimeUpDown)sender;
             if (tud.Enabled)
             {
                 mediaPlayer.CurrentPosition = tud.TimeCode.TotalSeconds;
@@ -5554,7 +5554,6 @@ namespace Nikse.SubtitleEdit.Forms
                 UiUtil.InitializeSubtitleFont(textBoxListViewText);
                 UiUtil.InitializeSubtitleFont(textBoxListViewTextOriginal);
                 UiUtil.InitializeSubtitleFont(SubtitleListview1);
-                InitializeToolbar();
             }
             catch (Exception exception)
             {
@@ -5850,7 +5849,6 @@ namespace Nikse.SubtitleEdit.Forms
                     DarkTheme.UndoDarkTheme(this, 1500);
 
                     OnLoad(null);
-                    InitializeToolbar();
                 }
             }
 
@@ -5887,6 +5885,7 @@ namespace Nikse.SubtitleEdit.Forms
             ShowLineInformationListView();
             ShowSourceLineNumber();
             LoadPlugins();
+            InitializeToolbar();
         }
 
         private void SetAudioVisualizerSettings()
@@ -22834,6 +22833,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ShowSubtitleTimerTick(object sender, EventArgs e)
         {
+            if (_loading)
+            {
+                return; 
+            }
+
             ShowSubtitleTimer.Stop();
 
             if (_subtitle == null || _subtitle.Paragraphs.Count == 0)
