@@ -142,5 +142,199 @@ namespace Test.Logic
             result = ShotChangeHelper.IsCueOnShotChange(shotChangesSeconds, paragraph.EndTime, false);
             Assert.AreEqual(false, result);
         }
+
+        [TestMethod]
+        public void TestGetPreviousShotChange()
+        {
+            Configuration.Settings.General.CurrentFrameRate = 25;
+
+            var shotChangesSeconds = new List<double>() { 1, 10, 20 };
+
+            var paragraph = new Paragraph("Test.", 1000, 3000); // On shot
+            var result = ShotChangeHelper.GetPreviousShotChange(shotChangesSeconds, paragraph.StartTime);
+            Assert.AreEqual(1.0, result);
+
+            paragraph = new Paragraph("Test.", 1500, 3000); // Away from shot
+            result = ShotChangeHelper.GetPreviousShotChange(shotChangesSeconds, paragraph.StartTime);
+            Assert.AreEqual(1.0, result);
+
+            paragraph = new Paragraph("Test.", 990, 3000); // On shot after rounding
+            result = ShotChangeHelper.GetPreviousShotChange(shotChangesSeconds, paragraph.StartTime);
+            Assert.AreEqual(1.0, result);
+
+            paragraph = new Paragraph("Test.", 1010, 3000); // Tiny bit from shot
+            result = ShotChangeHelper.GetPreviousShotChange(shotChangesSeconds, paragraph.StartTime);
+            Assert.AreEqual(1.0, result);
+
+            paragraph = new Paragraph("Test.", 500, 3000); // No more shots
+            result = ShotChangeHelper.GetPreviousShotChange(shotChangesSeconds, paragraph.StartTime);
+            Assert.AreEqual(null, result);
+
+            paragraph = new Paragraph("Test.", 20500, 30000); // Other shot
+            result = ShotChangeHelper.GetPreviousShotChange(shotChangesSeconds, paragraph.StartTime);
+            Assert.AreEqual(20.0, result);
+        }
+
+        [TestMethod]
+        public void TestGetPreviousShotChangeInMs()
+        {
+            Configuration.Settings.General.CurrentFrameRate = 25;
+
+            var shotChangesSeconds = new List<double>() { 1, 10, 20 };
+
+            var paragraph = new Paragraph("Test.", 1000, 3000); // On shot
+            var result = ShotChangeHelper.GetPreviousShotChangeInMs(shotChangesSeconds, paragraph.StartTime);
+            Assert.AreEqual(1000, result);
+
+            paragraph = new Paragraph("Test.", 1500, 3000); // Away from shot
+            result = ShotChangeHelper.GetPreviousShotChangeInMs(shotChangesSeconds, paragraph.StartTime);
+            Assert.AreEqual(1000, result);
+
+            paragraph = new Paragraph("Test.", 990, 3000); // On shot after rounding
+            result = ShotChangeHelper.GetPreviousShotChangeInMs(shotChangesSeconds, paragraph.StartTime);
+            Assert.AreEqual(1000, result);
+
+            paragraph = new Paragraph("Test.", 1010, 3000); // Tiny bit from shot
+            result = ShotChangeHelper.GetPreviousShotChangeInMs(shotChangesSeconds, paragraph.StartTime);
+            Assert.AreEqual(1000, result);
+
+            paragraph = new Paragraph("Test.", 500, 3000); // No more shots
+            result = ShotChangeHelper.GetPreviousShotChangeInMs(shotChangesSeconds, paragraph.StartTime);
+            Assert.AreEqual(null, result);
+
+            paragraph = new Paragraph("Test.", 20500, 30000); // Other shot
+            result = ShotChangeHelper.GetPreviousShotChangeInMs(shotChangesSeconds, paragraph.StartTime);
+            Assert.AreEqual(20000, result);
+        }
+
+        [TestMethod]
+        public void TestGetPreviousShotChangePlusGapInMs()
+        {
+            Configuration.Settings.General.CurrentFrameRate = 25;
+            Configuration.Settings.BeautifyTimeCodes.Profile.InCuesGap = 2;
+
+            var shotChangesSeconds = new List<double>() { 1, 10, 20 };
+
+            var paragraph = new Paragraph("Test.", 1000, 3000); // On shot
+            var result = ShotChangeHelper.GetPreviousShotChangePlusGapInMs(shotChangesSeconds, paragraph.StartTime);
+            Assert.AreEqual(1080, result);
+
+            paragraph = new Paragraph("Test.", 1500, 3000); // Away from shot
+            result = ShotChangeHelper.GetPreviousShotChangePlusGapInMs(shotChangesSeconds, paragraph.StartTime);
+            Assert.AreEqual(1080, result);
+
+            paragraph = new Paragraph("Test.", 990, 3000); // On shot after rounding
+            result = ShotChangeHelper.GetPreviousShotChangePlusGapInMs(shotChangesSeconds, paragraph.StartTime);
+            Assert.AreEqual(1080, result);
+
+            paragraph = new Paragraph("Test.", 1010, 3000); // Tiny bit from shot
+            result = ShotChangeHelper.GetPreviousShotChangePlusGapInMs(shotChangesSeconds, paragraph.StartTime);
+            Assert.AreEqual(1080, result);
+
+            paragraph = new Paragraph("Test.", 500, 3000); // No more shots
+            result = ShotChangeHelper.GetPreviousShotChangePlusGapInMs(shotChangesSeconds, paragraph.StartTime);
+            Assert.AreEqual(null, result);
+
+            paragraph = new Paragraph("Test.", 20500, 30000); // Other shot
+            result = ShotChangeHelper.GetPreviousShotChangePlusGapInMs(shotChangesSeconds, paragraph.StartTime);
+            Assert.AreEqual(20080, result);
+        }
+
+        [TestMethod]
+        public void TestGetNextShotChange()
+        {
+            Configuration.Settings.General.CurrentFrameRate = 25;
+
+            var shotChangesSeconds = new List<double>() { 1, 10, 20 };
+
+            var paragraph = new Paragraph("Test.", 8000, 10000); // On shot
+            var result = ShotChangeHelper.GetNextShotChange(shotChangesSeconds, paragraph.EndTime);
+            Assert.AreEqual(10.0, result);
+
+            paragraph = new Paragraph("Test.", 8000, 9500); // Away from shot
+            result = ShotChangeHelper.GetNextShotChange(shotChangesSeconds, paragraph.EndTime);
+            Assert.AreEqual(10.0, result);
+
+            paragraph = new Paragraph("Test.", 8000, 10010); // On shot after rounding
+            result = ShotChangeHelper.GetNextShotChange(shotChangesSeconds, paragraph.EndTime);
+            Assert.AreEqual(10.0, result);
+
+            paragraph = new Paragraph("Test.", 8000, 9990); // Tiny bit from shot
+            result = ShotChangeHelper.GetNextShotChange(shotChangesSeconds, paragraph.EndTime);
+            Assert.AreEqual(10.0, result);
+
+            paragraph = new Paragraph("Test.", 30000, 32000); // No more shots
+            result = ShotChangeHelper.GetNextShotChange(shotChangesSeconds, paragraph.EndTime);
+            Assert.AreEqual(null, result);
+
+            paragraph = new Paragraph("Test.", 0, 800); // Other shot
+            result = ShotChangeHelper.GetNextShotChange(shotChangesSeconds, paragraph.EndTime);
+            Assert.AreEqual(1.0, result);
+        }
+
+        [TestMethod]
+        public void TestGetNextShotChangeInMs()
+        {
+            Configuration.Settings.General.CurrentFrameRate = 25;
+
+            var shotChangesSeconds = new List<double>() { 1, 10, 20 };
+
+            var paragraph = new Paragraph("Test.", 8000, 10000); // On shot
+            var result = ShotChangeHelper.GetNextShotChangeInMs(shotChangesSeconds, paragraph.EndTime);
+            Assert.AreEqual(10000, result);
+
+            paragraph = new Paragraph("Test.", 8000, 9500); // Away from shot
+            result = ShotChangeHelper.GetNextShotChangeInMs(shotChangesSeconds, paragraph.EndTime);
+            Assert.AreEqual(10000, result);
+
+            paragraph = new Paragraph("Test.", 8000, 10010); // On shot after rounding
+            result = ShotChangeHelper.GetNextShotChangeInMs(shotChangesSeconds, paragraph.EndTime);
+            Assert.AreEqual(10000, result);
+
+            paragraph = new Paragraph("Test.", 8000, 9990); // Tiny bit from shot
+            result = ShotChangeHelper.GetNextShotChangeInMs(shotChangesSeconds, paragraph.EndTime);
+            Assert.AreEqual(10000, result);
+
+            paragraph = new Paragraph("Test.", 30000, 32000); // No more shots
+            result = ShotChangeHelper.GetNextShotChangeInMs(shotChangesSeconds, paragraph.EndTime);
+            Assert.AreEqual(null, result);
+
+            paragraph = new Paragraph("Test.", 0, 800); // Other shot
+            result = ShotChangeHelper.GetNextShotChangeInMs(shotChangesSeconds, paragraph.EndTime);
+            Assert.AreEqual(1000, result);
+        }
+
+        [TestMethod]
+        public void TestGetNextShotChangeMinusGapInMs()
+        {
+            Configuration.Settings.General.CurrentFrameRate = 25;
+            Configuration.Settings.BeautifyTimeCodes.Profile.OutCuesGap = 2;
+
+            var shotChangesSeconds = new List<double>() { 1, 10, 20 };
+
+            var paragraph = new Paragraph("Test.", 8000, 10000); // On shot
+            var result = ShotChangeHelper.GetNextShotChangeMinusGapInMs(shotChangesSeconds, paragraph.EndTime);
+            Assert.AreEqual(9920, result);
+
+            paragraph = new Paragraph("Test.", 8000, 9500); // Away from shot
+            result = ShotChangeHelper.GetNextShotChangeMinusGapInMs(shotChangesSeconds, paragraph.EndTime);
+            Assert.AreEqual(9920, result);
+
+            paragraph = new Paragraph("Test.", 8000, 10010); // On shot after rounding
+            result = ShotChangeHelper.GetNextShotChangeMinusGapInMs(shotChangesSeconds, paragraph.EndTime);
+            Assert.AreEqual(9920, result);
+
+            paragraph = new Paragraph("Test.", 8000, 9990); // Tiny bit from shot
+            result = ShotChangeHelper.GetNextShotChangeMinusGapInMs(shotChangesSeconds, paragraph.EndTime);
+            Assert.AreEqual(9920, result);
+
+            paragraph = new Paragraph("Test.", 30000, 32000); // No more shots
+            result = ShotChangeHelper.GetNextShotChangeMinusGapInMs(shotChangesSeconds, paragraph.EndTime);
+            Assert.AreEqual(null, result);
+
+            paragraph = new Paragraph("Test.", 0, 800); // Other shot
+            result = ShotChangeHelper.GetNextShotChangeMinusGapInMs(shotChangesSeconds, paragraph.EndTime);
+            Assert.AreEqual(920, result);
+        }
     }
 }
