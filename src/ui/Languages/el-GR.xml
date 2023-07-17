@@ -1680,7 +1680,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <BeforeRenumbering>Πριν επαναρίθμησης</BeforeRenumbering>
     <RenumberedStartingFromX>Έναρξη επαναρίθμησης από: {0}</RenumberedStartingFromX>
     <BeforeBeautifyTimeCodes>Πριν από την ωραιοποίηση χρόνων</BeforeBeautifyTimeCodes>
-    <BeautifiedTimeCodes>Χρόνοι ωραιοποίθηκαν</BeautifiedTimeCodes>
+    <BeautifiedTimeCodes>Χρόνοι ωραιοποιήθηκαν</BeautifiedTimeCodes>
     <BeforeRemovalOfTextingForHearingImpaired>Πριν από αφαίρεση κειμένου για κωφούς</BeforeRemovalOfTextingForHearingImpaired>
     <TextingForHearingImpairedRemovedOneLine>Αφαίρεση κειμένου για ανθρώπους με πρόβλημα ακοής: Μία γραμμή</TextingForHearingImpairedRemovedOneLine>
     <TextingForHearingImpairedRemovedXLines>Αφαίρεση κειμένου για ανθρώπους με πρόβλημα ακοής: {0} γραμμές</TextingForHearingImpairedRemovedXLines>
