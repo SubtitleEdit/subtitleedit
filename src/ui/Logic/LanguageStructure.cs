@@ -392,6 +392,7 @@ namespace Nikse.SubtitleEdit.Logic
         public class BeautifyTimeCodes
         {
             public string Title { get; set; }
+            public string TitleSelectedLines { get; set; }
             public string GroupTimeCodes { get; set; }
             public string AlignTimeCodes { get; set; }
             public string ExtractExactTimeCodes { get; set; }
@@ -1439,7 +1440,9 @@ namespace Nikse.SubtitleEdit.Logic
             public string BeforeRenumbering { get; set; }
             public string RenumberedStartingFromX { get; set; }
             public string BeforeBeautifyTimeCodes { get; set; }
+            public string BeforeBeautifyTimeCodesSelectedLines { get; set; }
             public string BeautifiedTimeCodes { get; set; }
+            public string BeautifiedTimeCodesSelectedLines { get; set; }
             public string BeforeRemovalOfTextingForHearingImpaired { get; set; }
             public string TextingForHearingImpairedRemovedOneLine { get; set; }
             public string TextingForHearingImpairedRemovedXLines { get; set; }
@@ -1941,6 +1944,7 @@ namespace Nikse.SubtitleEdit.Logic
                     public string KaraokeEffect { get; set; }
                     public string ShowSelectedLinesEarlierLater { get; set; }
                     public string VisualSyncSelectedLines { get; set; }
+                    public string BeautifyTimeCodesOfSelectedLines { get; set; }
                     public string GoogleAndMicrosoftTranslateSelectedLine { get; set; }
                     public string SelectedLines { get; set; }
                     public string TranslateSelectedLines { get; set; }

@@ -539,6 +539,7 @@ namespace Nikse.SubtitleEdit.Logic
             BeautifyTimeCodes = new LanguageStructure.BeautifyTimeCodes
             {
                 Title = "Beautify time codes",
+                TitleSelectedLines = "Beautify time codes ({0} selected lines)",
                 GroupTimeCodes = "Time codes",
                 AlignTimeCodes = "Align time codes to frame time codes",
                 ExtractExactTimeCodes = "Use ffprobe to extract exact frame time codes",
@@ -1615,7 +1616,9 @@ namespace Nikse.SubtitleEdit.Logic
                 BeforeRenumbering = "Before renumbering",
                 RenumberedStartingFromX = "Renumbered starting from: {0}",
                 BeforeBeautifyTimeCodes = "Before beautifying time codes",
+                BeforeBeautifyTimeCodesSelectedLines = "Before beautifying time codes of selected lines",
                 BeautifiedTimeCodes = "Time codes beautified",
+                BeautifiedTimeCodesSelectedLines = "Time codes of selected lines beautified",
                 BeforeRemovalOfTextingForHearingImpaired = "Before removal of texting for hearing impaired",
                 TextingForHearingImpairedRemovedOneLine = "Texting for hearing impaired removed: One line",
                 TextingForHearingImpairedRemovedXLines = "Texting for hearing impaired removed: {0} lines",
@@ -2128,6 +2131,7 @@ namespace Nikse.SubtitleEdit.Logic
                         KaraokeEffect = "Karaoke effect...",
                         ShowSelectedLinesEarlierLater = "Show selected lines earlier/later...",
                         VisualSyncSelectedLines = "Visual sync selected lines...",
+                        BeautifyTimeCodesOfSelectedLines = "Beautify time codes of selected lines...",
                         GoogleAndMicrosoftTranslateSelectedLine = "Google/Microsoft translate original line",
                         SelectedLines = "Selected lines",
                         TranslateSelectedLines = "Translate selected lines...",

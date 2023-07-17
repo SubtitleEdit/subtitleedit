@@ -1913,6 +1913,7 @@ namespace Nikse.SubtitleEdit.Forms
             karaokeEffectToolStripMenuItem.Text = _language.Menu.ContextMenu.KaraokeEffect;
             showSelectedLinesEarlierlaterToolStripMenuItem.Text = _language.Menu.ContextMenu.ShowSelectedLinesEarlierLater;
             visualSyncSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.VisualSyncSelectedLines;
+            beautifyTimeCodesOfSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.BeautifyTimeCodesOfSelectedLines;
             toolStripMenuItemGoogleMicrosoftTranslateSelLine.Text = _language.Menu.ContextMenu.GoogleAndMicrosoftTranslateSelectedLine;
             toolStripMenuItemSelectedLines.Text = _language.Menu.ContextMenu.SelectedLines;
 
@@ -34482,40 +34483,8 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         private void toolStripMenuItemBeautifyTimeCodes_Click(object sender, EventArgs e)
-        {
-            if (!IsSubtitleLoaded)
-            {
-                DisplaySubtitleNotLoadedMessage();
-                return;
-            }
-
-            using (var form = new BeautifyTimeCodes.BeautifyTimeCodes(_subtitle, _videoInfo, _videoFileName, audioVisualizer.ShotChanges))
-            {
-                var result = form.ShowDialog(this);
-
-                if (form.ShotChangesInSeconds.Count > 0)
-                {
-                    audioVisualizer.ShotChanges = form.ShotChangesInSeconds;
-                }
-
-                if (result == DialogResult.OK)
-                {
-                    int index = FirstSelectedIndex;
-                    if (index < 0)
-                    {
-                        index = 0;
-                    }
-
-                    MakeHistoryForUndo(_language.BeforeBeautifyTimeCodes);
-                    SaveSubtitleListviewIndices();
-                    _subtitle.Paragraphs.Clear();
-                    _subtitle.Paragraphs.AddRange(form.FixedSubtitle.Paragraphs);
-
-                    SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
-                    SubtitleListview1.SelectIndexAndEnsureVisible(index, true);
-                    RestoreSubtitleListviewIndices();
-                }
-            }
+        {            
+            BeautifyTimeCodes(SubtitleListview1.GetSelectedIndices().Length > 1);
         }
 
         private void toolStripButtonBeautifyTimeCodes_Click(object sender, EventArgs e)
@@ -35441,6 +35410,102 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             RefreshSelectedParagraph();
+        }
+
+        private void beautifyTimeCodesOfSelectedLinesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            BeautifyTimeCodes(true);
+        }
+
+        private void BeautifyTimeCodes(bool onlySelectedLines)
+        {
+            if (!IsSubtitleLoaded)
+            {
+                DisplaySubtitleNotLoadedMessage();
+                return;
+            }
+
+            if (onlySelectedLines)
+            {
+                var selectedIndices = SubtitleListview1.GetSelectedIndices();
+                var selectedLines = new Subtitle();
+                foreach (int index in selectedIndices)
+                {
+                    selectedLines.Paragraphs.Add(_subtitle.Paragraphs[index]);
+                }
+
+                using (var form = new BeautifyTimeCodes.BeautifyTimeCodes(selectedLines, _videoInfo, _videoFileName, audioVisualizer.ShotChanges))
+                {
+                    form.Text = string.Format(LanguageSettings.Current.BeautifyTimeCodes.TitleSelectedLines, selectedIndices.Length);
+
+                    var result = form.ShowDialog(this);
+
+                    if (form.ShotChangesInSeconds.Count > 0)
+                    {
+                        audioVisualizer.ShotChanges = form.ShotChangesInSeconds;
+                    }
+
+                    if (result == DialogResult.OK)
+                    {
+                        int index = FirstSelectedIndex;
+                        if (index < 0)
+                        {
+                            index = 0;
+                        }
+
+                        MakeHistoryForUndo(_language.BeforeBeautifyTimeCodesSelectedLines);
+                        SaveSubtitleListviewIndices();
+
+                        foreach (int idx in selectedIndices)
+                        {
+                            var pOld = _subtitle.Paragraphs[idx];
+                            var p = form.FixedSubtitle.GetParagraphOrDefaultById(pOld.Id);
+                            if (p != null)
+                            {
+                                _subtitle.Paragraphs[idx] = p;
+                            }
+                        }
+
+                        SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
+                        SubtitleListview1.SelectIndexAndEnsureVisible(index, true);
+                        RestoreSubtitleListviewIndices();
+
+                        ShowStatus(_language.BeautifiedTimeCodesSelectedLines);
+                    }
+                }
+            }
+            else
+            {
+                using (var form = new BeautifyTimeCodes.BeautifyTimeCodes(_subtitle, _videoInfo, _videoFileName, audioVisualizer.ShotChanges))
+                {
+                    var result = form.ShowDialog(this);
+
+                    if (form.ShotChangesInSeconds.Count > 0)
+                    {
+                        audioVisualizer.ShotChanges = form.ShotChangesInSeconds;
+                    }
+
+                    if (result == DialogResult.OK)
+                    {
+                        int index = FirstSelectedIndex;
+                        if (index < 0)
+                        {
+                            index = 0;
+                        }
+
+                        MakeHistoryForUndo(_language.BeforeBeautifyTimeCodes);
+                        SaveSubtitleListviewIndices();
+                        _subtitle.Paragraphs.Clear();
+                        _subtitle.Paragraphs.AddRange(form.FixedSubtitle.Paragraphs);
+
+                        SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
+                        SubtitleListview1.SelectIndexAndEnsureVisible(index, true);
+                        RestoreSubtitleListviewIndices();
+
+                        ShowStatus(_language.BeautifiedTimeCodes);
+                    }
+                }
+            }
         }
     }
 }
