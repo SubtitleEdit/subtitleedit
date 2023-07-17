@@ -1732,7 +1732,7 @@ namespace Nikse.SubtitleEdit.Controls
 
                                 if (Configuration.Settings.VideoControls.WaveformSnapToShotChanges && ModifierKeys != Keys.Shift)
                                 {
-                                    var nearestShotChange = _shotChanges.Count > 0 ? _shotChanges.Aggregate((x, y) => Math.Abs((x * 1000) - milliseconds) < Math.Abs((y * 1000) - milliseconds) ? x : y) : -9999;
+                                    var nearestShotChange = ShotChangeHelper.GetClosestShotChange(_shotChanges, new TimeCode(milliseconds)) ?? double.MinValue;
                                     if (Math.Abs(e.X - SecondsToXPosition(nearestShotChange - _startPositionSeconds)) < ShotChangeSnapPixels)
                                     { 
                                         _mouseDownParagraph.StartTime.TotalMilliseconds = (nearestShotChange * 1000) + TimeCodesBeautifierUtils.GetInCuesGapMs();
@@ -1750,7 +1750,7 @@ namespace Nikse.SubtitleEdit.Controls
 
                                     if (Configuration.Settings.VideoControls.WaveformSnapToShotChanges && ModifierKeys != Keys.Shift)
                                     {
-                                        var nearestShotChange = _shotChanges.Count > 0 ? _shotChanges.Aggregate((x, y) => Math.Abs((x * 1000) - milliseconds) < Math.Abs((y * 1000) - milliseconds) ? x : y) : -9999;
+                                        var nearestShotChange = ShotChangeHelper.GetClosestShotChange(_shotChanges, new TimeCode(milliseconds)) ?? double.MinValue;
                                         if (Math.Abs(e.X - SecondsToXPosition(nearestShotChange - _startPositionSeconds)) < ShotChangeSnapPixels)
                                         {
                                             NewSelectionParagraph.StartTime.TotalMilliseconds = (nearestShotChange * 1000) + TimeCodesBeautifierUtils.GetInCuesGapMs();
@@ -1789,7 +1789,7 @@ namespace Nikse.SubtitleEdit.Controls
 
                                 if (Configuration.Settings.VideoControls.WaveformSnapToShotChanges && ModifierKeys != Keys.Shift)
                                 {
-                                    var nearestShotChange = _shotChanges.Count > 0 ? _shotChanges.Aggregate((x, y) => Math.Abs((x * 1000) - milliseconds) < Math.Abs((y * 1000) - milliseconds) ? x : y) : -9999;
+                                    var nearestShotChange = ShotChangeHelper.GetClosestShotChange(_shotChanges, new TimeCode(milliseconds)) ?? double.MinValue;
                                     if (Math.Abs(e.X - SecondsToXPosition(nearestShotChange - _startPositionSeconds)) < ShotChangeSnapPixels)
                                     {
                                         _mouseDownParagraph.EndTime.TotalMilliseconds = (nearestShotChange * 1000) - TimeCodesBeautifierUtils.GetOutCuesGapMs();
@@ -1807,7 +1807,7 @@ namespace Nikse.SubtitleEdit.Controls
 
                                     if (Configuration.Settings.VideoControls.WaveformSnapToShotChanges && ModifierKeys != Keys.Shift)
                                     {
-                                        var nearestShotChange = _shotChanges.Count > 0 ? _shotChanges.Aggregate((x, y) => Math.Abs((x * 1000) - milliseconds) < Math.Abs((y * 1000) - milliseconds) ? x : y) : -9999;
+                                        var nearestShotChange = ShotChangeHelper.GetClosestShotChange(_shotChanges, new TimeCode(milliseconds)) ?? double.MinValue; 
                                         if (Math.Abs(e.X - SecondsToXPosition(nearestShotChange - _startPositionSeconds)) < ShotChangeSnapPixels)
                                         {
                                             NewSelectionParagraph.EndTime.TotalMilliseconds = (nearestShotChange * 1000) - TimeCodesBeautifierUtils.GetOutCuesGapMs();
@@ -1838,8 +1838,8 @@ namespace Nikse.SubtitleEdit.Controls
 
                             if (Configuration.Settings.VideoControls.WaveformSnapToShotChanges && ModifierKeys != Keys.Shift)
                             {
-                                var nearestShotChangeInFront = _shotChanges.Count > 0 ? _shotChanges.Aggregate((x, y) => Math.Abs((x * 1000) - _mouseDownParagraph.StartTime.TotalMilliseconds) < Math.Abs((y * 1000) - _mouseDownParagraph.StartTime.TotalMilliseconds) ? x : y) : -9999;
-                                var nearestShotChangeInBack = _shotChanges.Count > 0 ? _shotChanges.Aggregate((x, y) => Math.Abs((x * 1000) - _mouseDownParagraph.EndTime.TotalMilliseconds) < Math.Abs((y * 1000) - _mouseDownParagraph.EndTime.TotalMilliseconds) ? x : y) : -9999;
+                                var nearestShotChangeInFront = ShotChangeHelper.GetClosestShotChange(_shotChanges, _mouseDownParagraph.StartTime) ?? double.MinValue;
+                                var nearestShotChangeInBack = ShotChangeHelper.GetClosestShotChange(_shotChanges, _mouseDownParagraph.EndTime) ?? double.MinValue;
 
                                 if (Math.Abs(SecondsToXPosition(_mouseDownParagraph.StartTime.TotalSeconds - _startPositionSeconds) - SecondsToXPosition(nearestShotChangeInFront - _startPositionSeconds)) < ShotChangeSnapPixels)
                                 {
@@ -1902,8 +1902,8 @@ namespace Nikse.SubtitleEdit.Controls
 
                             if (Configuration.Settings.VideoControls.WaveformSnapToShotChanges && ModifierKeys != Keys.Shift)
                             {
-                                var nearestShotChangeInFront = _shotChanges.Count > 0 ? _shotChanges.Aggregate((x, y) => Math.Abs(x - startTotalSeconds) < Math.Abs(y - startTotalSeconds) ? x : y) : -9999;
-                                var nearestShotChangeInBack = _shotChanges.Count > 0 ? _shotChanges.Aggregate((x, y) => Math.Abs(x - endTotalSeconds) < Math.Abs(y - endTotalSeconds) ? x : y) : -9999;
+                                var nearestShotChangeInFront = ShotChangeHelper.GetClosestShotChange(_shotChanges, TimeCode.FromSeconds(startTotalSeconds)) ?? double.MinValue;
+                                var nearestShotChangeInBack = ShotChangeHelper.GetClosestShotChange(_shotChanges, TimeCode.FromSeconds(endTotalSeconds)) ?? double.MinValue;
 
                                 if (Math.Abs(SecondsToXPosition(NewSelectionParagraph.StartTime.TotalSeconds - _startPositionSeconds) - SecondsToXPosition(nearestShotChangeInFront - _startPositionSeconds)) < ShotChangeSnapPixels)
                                 {
