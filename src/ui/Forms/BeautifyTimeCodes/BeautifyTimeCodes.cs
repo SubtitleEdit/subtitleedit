@@ -44,7 +44,7 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
 
             if (videoInfo != null && videoInfo.TotalMilliseconds > 0)
             {
-                _duration = videoInfo.TotalMilliseconds;
+                _duration = videoInfo.TotalSeconds;
             }
 
             _videoInfo = videoInfo;
@@ -290,6 +290,10 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
                 Application.DoEvents();
             };
             timeCodesBeautifier.Beautify();
+
+            // Re-enable group boxes, otherwise child controls are also disabled, and we need their original state for the checks below
+            groupBoxTimeCodes.Enabled = true;
+            groupBoxShotChanges.Enabled = true;
 
             // Save settings
             Configuration.Settings.BeautifyTimeCodes.AlignTimeCodes = checkBoxAlignTimeCodes.Checked;
