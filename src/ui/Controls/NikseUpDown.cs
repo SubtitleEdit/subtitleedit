@@ -252,6 +252,7 @@ namespace Nikse.SubtitleEdit.Controls
             };
 
             LostFocus += (sender, args) => _repeatTimer.Stop();
+            TabStop = false;
         }
 
         private void _textBox_TextChanged(object sender, EventArgs e)

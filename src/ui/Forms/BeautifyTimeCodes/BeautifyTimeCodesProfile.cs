@@ -5,7 +5,7 @@ using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
 {
-    public partial class BeautifyTimeCodesProfile : Form
+    public sealed partial class BeautifyTimeCodesProfile : Form
     {
         private readonly double _frameRate;
 

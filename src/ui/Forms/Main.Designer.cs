@@ -1,6 +1,4 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
-
-namespace Nikse.SubtitleEdit.Forms
+﻿namespace Nikse.SubtitleEdit.Forms
 {
     sealed partial class Main
     {
@@ -396,7 +394,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonPlayCurrent = new System.Windows.Forms.Button();
             this.buttonPlayNext = new System.Windows.Forms.Button();
             this.tabPageCreate = new System.Windows.Forms.TabPage();
-            this.timeUpDownVideoPosition = new Nikse.SubtitleEdit.Controls.TimeUpDown();
+            this.timeUpDownVideoPosition = new Nikse.SubtitleEdit.Controls.NikseTimeUpDown();
             this.buttonGotoSub = new System.Windows.Forms.Button();
             this.buttonBeforeText = new System.Windows.Forms.Button();
             this.buttonSetEnd = new System.Windows.Forms.Button();
@@ -407,14 +405,14 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelCreateF10 = new System.Windows.Forms.Label();
             this.labelCreateF9 = new System.Windows.Forms.Label();
             this.buttonForward2 = new System.Windows.Forms.Button();
-            this.numericUpDownSec2 = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownSec2 = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.buttonSecBack2 = new System.Windows.Forms.Button();
             this.buttonForward1 = new System.Windows.Forms.Button();
-            this.numericUpDownSec1 = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownSec1 = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelVideoPosition = new System.Windows.Forms.Label();
             this.buttonSecBack1 = new System.Windows.Forms.Button();
             this.tabPageAdjust = new System.Windows.Forms.TabPage();
-            this.timeUpDownVideoPositionAdjust = new Nikse.SubtitleEdit.Controls.TimeUpDown();
+            this.timeUpDownVideoPositionAdjust = new Nikse.SubtitleEdit.Controls.NikseTimeUpDown();
             this.buttonAdjustSetEndTime = new System.Windows.Forms.Button();
             this.buttonSetEndAndGoToNext = new System.Windows.Forms.Button();
             this.buttonSetStartAndOffsetRest = new System.Windows.Forms.Button();
@@ -424,10 +422,10 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelAdjustF10 = new System.Windows.Forms.Label();
             this.labelAdjustF9 = new System.Windows.Forms.Label();
             this.buttonAdjustSecForward2 = new System.Windows.Forms.Button();
-            this.numericUpDownSecAdjust2 = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownSecAdjust2 = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.buttonAdjustSecBack2 = new System.Windows.Forms.Button();
             this.buttonAdjustSecForward1 = new System.Windows.Forms.Button();
-            this.numericUpDownSecAdjust1 = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownSecAdjust1 = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.buttonAdjustSecBack1 = new System.Windows.Forms.Button();
             this.labelVideoPosition2 = new System.Windows.Forms.Label();
             this.buttonAdjustGoToPosAndPause = new System.Windows.Forms.Button();
@@ -470,7 +468,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.SubtitleListview1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.imageListBookmarks = new System.Windows.Forms.ImageList(this.components);
             this.groupBoxEdit = new System.Windows.Forms.GroupBox();
-            this.numericUpDownLayer = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownLayer = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelLayer = new System.Windows.Forms.Label();
             this.panelBookmark = new System.Windows.Forms.Panel();
             this.labelBookmark = new System.Windows.Forms.Label();
@@ -592,11 +590,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxAutoContinue.SuspendLayout();
             this.groupBoxAutoRepeat.SuspendLayout();
             this.tabPageCreate.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSec2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSec1)).BeginInit();
             this.tabPageAdjust.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSecAdjust2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSecAdjust1)).BeginInit();
             this.contextMenuStripHideVideoControls.SuspendLayout();
             this.contextMenuStripWaveform.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerMain)).BeginInit();
@@ -612,7 +606,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.splitContainerListViewAndText.Panel2.SuspendLayout();
             this.splitContainerListViewAndText.SuspendLayout();
             this.groupBoxEdit.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownLayer)).BeginInit();
             this.panelBookmark.SuspendLayout();
             this.contextMenuStripTextBoxListView.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBookmark)).BeginInit();
@@ -3775,15 +3768,24 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // timeUpDownVideoPosition
             // 
-            this.timeUpDownVideoPosition.AutoSize = true;
-            this.timeUpDownVideoPosition.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.timeUpDownVideoPosition.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
+            this.timeUpDownVideoPosition.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.timeUpDownVideoPosition.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.timeUpDownVideoPosition.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.timeUpDownVideoPosition.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.timeUpDownVideoPosition.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.timeUpDownVideoPosition.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.timeUpDownVideoPosition.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
             this.timeUpDownVideoPosition.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(155)))), ((int)(((byte)(155)))), ((int)(((byte)(155)))));
+            this.timeUpDownVideoPosition.Increment = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
             this.timeUpDownVideoPosition.Location = new System.Drawing.Point(90, 190);
             this.timeUpDownVideoPosition.Margin = new System.Windows.Forms.Padding(4);
             this.timeUpDownVideoPosition.Name = "timeUpDownVideoPosition";
-            this.timeUpDownVideoPosition.Size = new System.Drawing.Size(113, 27);
+            this.timeUpDownVideoPosition.Size = new System.Drawing.Size(113, 22);
             this.timeUpDownVideoPosition.TabIndex = 12;
             timeCode1.Hours = 0;
             timeCode1.Milliseconds = 0;
@@ -3902,6 +3904,13 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // numericUpDownSec2
             // 
+            this.numericUpDownSec2.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownSec2.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownSec2.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownSec2.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownSec2.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownSec2.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownSec2.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.numericUpDownSec2.DecimalPlaces = 3;
             this.numericUpDownSec2.Increment = new decimal(new int[] {
             1,
@@ -3914,9 +3923,15 @@ namespace Nikse.SubtitleEdit.Forms
             0,
             0,
             0});
+            this.numericUpDownSec2.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownSec2.Name = "numericUpDownSec2";
-            this.numericUpDownSec2.Size = new System.Drawing.Size(58, 20);
+            this.numericUpDownSec2.Size = new System.Drawing.Size(58, 21);
             this.numericUpDownSec2.TabIndex = 9;
+            this.numericUpDownSec2.ThousandsSeparator = false;
             this.numericUpDownSec2.Value = new decimal(new int[] {
             5000,
             0,
@@ -3946,6 +3961,13 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // numericUpDownSec1
             // 
+            this.numericUpDownSec1.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownSec1.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownSec1.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownSec1.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownSec1.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownSec1.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownSec1.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.numericUpDownSec1.DecimalPlaces = 3;
             this.numericUpDownSec1.Increment = new decimal(new int[] {
             1,
@@ -3958,9 +3980,15 @@ namespace Nikse.SubtitleEdit.Forms
             0,
             0,
             0});
+            this.numericUpDownSec1.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownSec1.Name = "numericUpDownSec1";
-            this.numericUpDownSec1.Size = new System.Drawing.Size(58, 20);
+            this.numericUpDownSec1.Size = new System.Drawing.Size(58, 21);
             this.numericUpDownSec1.TabIndex = 6;
+            this.numericUpDownSec1.ThousandsSeparator = false;
             this.numericUpDownSec1.Value = new decimal(new int[] {
             500,
             0,
@@ -4017,15 +4045,24 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // timeUpDownVideoPositionAdjust
             // 
-            this.timeUpDownVideoPositionAdjust.AutoSize = true;
-            this.timeUpDownVideoPositionAdjust.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.timeUpDownVideoPositionAdjust.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
+            this.timeUpDownVideoPositionAdjust.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.timeUpDownVideoPositionAdjust.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.timeUpDownVideoPositionAdjust.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.timeUpDownVideoPositionAdjust.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.timeUpDownVideoPositionAdjust.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.timeUpDownVideoPositionAdjust.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.timeUpDownVideoPositionAdjust.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
             this.timeUpDownVideoPositionAdjust.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(155)))), ((int)(((byte)(155)))), ((int)(((byte)(155)))));
+            this.timeUpDownVideoPositionAdjust.Increment = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
             this.timeUpDownVideoPositionAdjust.Location = new System.Drawing.Point(90, 215);
             this.timeUpDownVideoPositionAdjust.Margin = new System.Windows.Forms.Padding(4);
             this.timeUpDownVideoPositionAdjust.Name = "timeUpDownVideoPositionAdjust";
-            this.timeUpDownVideoPositionAdjust.Size = new System.Drawing.Size(113, 27);
+            this.timeUpDownVideoPositionAdjust.Size = new System.Drawing.Size(113, 22);
             this.timeUpDownVideoPositionAdjust.TabIndex = 13;
             timeCode2.Hours = 0;
             timeCode2.Milliseconds = 0;
@@ -4133,6 +4170,13 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // numericUpDownSecAdjust2
             // 
+            this.numericUpDownSecAdjust2.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownSecAdjust2.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownSecAdjust2.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownSecAdjust2.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownSecAdjust2.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownSecAdjust2.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownSecAdjust2.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.numericUpDownSecAdjust2.DecimalPlaces = 3;
             this.numericUpDownSecAdjust2.Increment = new decimal(new int[] {
             1,
@@ -4145,9 +4189,15 @@ namespace Nikse.SubtitleEdit.Forms
             0,
             0,
             0});
+            this.numericUpDownSecAdjust2.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownSecAdjust2.Name = "numericUpDownSecAdjust2";
-            this.numericUpDownSecAdjust2.Size = new System.Drawing.Size(58, 20);
+            this.numericUpDownSecAdjust2.Size = new System.Drawing.Size(58, 21);
             this.numericUpDownSecAdjust2.TabIndex = 10;
+            this.numericUpDownSecAdjust2.ThousandsSeparator = false;
             this.numericUpDownSecAdjust2.Value = new decimal(new int[] {
             5000,
             0,
@@ -4177,6 +4227,13 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // numericUpDownSecAdjust1
             // 
+            this.numericUpDownSecAdjust1.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownSecAdjust1.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownSecAdjust1.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownSecAdjust1.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownSecAdjust1.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownSecAdjust1.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownSecAdjust1.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.numericUpDownSecAdjust1.DecimalPlaces = 3;
             this.numericUpDownSecAdjust1.Increment = new decimal(new int[] {
             1,
@@ -4189,9 +4246,15 @@ namespace Nikse.SubtitleEdit.Forms
             0,
             0,
             0});
+            this.numericUpDownSecAdjust1.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownSecAdjust1.Name = "numericUpDownSecAdjust1";
-            this.numericUpDownSecAdjust1.Size = new System.Drawing.Size(58, 20);
+            this.numericUpDownSecAdjust1.Size = new System.Drawing.Size(58, 21);
             this.numericUpDownSecAdjust1.TabIndex = 7;
+            this.numericUpDownSecAdjust1.ThousandsSeparator = false;
             this.numericUpDownSecAdjust1.Value = new decimal(new int[] {
             500,
             0,
@@ -4617,6 +4680,19 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // numericUpDownLayer
             // 
+            this.numericUpDownLayer.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownLayer.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownLayer.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownLayer.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownLayer.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownLayer.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownLayer.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownLayer.DecimalPlaces = 0;
+            this.numericUpDownLayer.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownLayer.Location = new System.Drawing.Point(44, 113);
             this.numericUpDownLayer.Maximum = new decimal(new int[] {
             2147483647,
@@ -4631,6 +4707,12 @@ namespace Nikse.SubtitleEdit.Forms
             this.numericUpDownLayer.Name = "numericUpDownLayer";
             this.numericUpDownLayer.Size = new System.Drawing.Size(59, 20);
             this.numericUpDownLayer.TabIndex = 4;
+            this.numericUpDownLayer.ThousandsSeparator = false;
+            this.numericUpDownLayer.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownLayer.ValueChanged += new System.EventHandler(this.NumericUpDownLayer_ValueChanged);
             // 
             // labelLayer
@@ -5726,12 +5808,8 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxAutoRepeat.PerformLayout();
             this.tabPageCreate.ResumeLayout(false);
             this.tabPageCreate.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSec2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSec1)).EndInit();
             this.tabPageAdjust.ResumeLayout(false);
             this.tabPageAdjust.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSecAdjust2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSecAdjust1)).EndInit();
             this.contextMenuStripHideVideoControls.ResumeLayout(false);
             this.contextMenuStripWaveform.ResumeLayout(false);
             this.splitContainerMain.Panel1.ResumeLayout(false);
@@ -5749,7 +5827,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.splitContainerListViewAndText.ResumeLayout(false);
             this.groupBoxEdit.ResumeLayout(false);
             this.groupBoxEdit.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownLayer)).EndInit();
             this.panelBookmark.ResumeLayout(false);
             this.panelBookmark.PerformLayout();
             this.contextMenuStripTextBoxListView.ResumeLayout(false);
@@ -5906,7 +5983,7 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
         private System.Windows.Forms.ToolStripMenuItem showhideVideoToolStripMenuItem;
         private System.Windows.Forms.Label labelVideoPosition;
-        private Controls.TimeUpDown timeUpDownVideoPosition;
+        private Controls.NikseTimeUpDown timeUpDownVideoPosition;
         private System.Windows.Forms.TabControl tabControlModes;
         private System.Windows.Forms.TabPage tabPageTranslate;
         private System.Windows.Forms.GroupBox groupBoxTranslateSearch;
@@ -5936,18 +6013,18 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.Label labelTranslateTip;
         private System.Windows.Forms.Button buttonCustomUrl1;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemOpenContainingFolder;
-        private System.Windows.Forms.NumericUpDown numericUpDownSec1;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownSec1;
         private System.Windows.Forms.Button buttonForward1;
         private System.Windows.Forms.Label labelVideoPosition2;
-        private Controls.TimeUpDown timeUpDownVideoPositionAdjust;
+        private Controls.NikseTimeUpDown timeUpDownVideoPositionAdjust;
         private System.Windows.Forms.Button buttonAdjustSecForward1;
-        private System.Windows.Forms.NumericUpDown numericUpDownSecAdjust1;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownSecAdjust1;
         private System.Windows.Forms.Button buttonAdjustSecBack1;
         private System.Windows.Forms.Button buttonForward2;
-        private System.Windows.Forms.NumericUpDown numericUpDownSec2;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownSec2;
         private System.Windows.Forms.Button buttonSecBack2;
         private System.Windows.Forms.Button buttonAdjustSecForward2;
-        private System.Windows.Forms.NumericUpDown numericUpDownSecAdjust2;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownSecAdjust2;
         private System.Windows.Forms.Button buttonAdjustSecBack2;
         private System.Windows.Forms.CheckBox checkBoxSyncListViewWithVideoWhilePlaying;
         private System.Windows.Forms.Label labelAdjustF10;
@@ -6298,7 +6375,7 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemExportTtmlImage;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4Extend;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSetLayer;
-        private System.Windows.Forms.NumericUpDown numericUpDownLayer;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownLayer;
         private System.Windows.Forms.Label labelLayer;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemWebVttStyle;
     }

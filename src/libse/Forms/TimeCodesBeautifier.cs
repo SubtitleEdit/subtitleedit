@@ -20,7 +20,9 @@ namespace Nikse.SubtitleEdit.Core.Forms
         {
             _subtitle = subtitle;
             _frameRate = frameRate;
-            _timeCodes = timeCodes;
+
+            // Convert time codes to milliseconds
+            _timeCodes = timeCodes.Select(d => d * 1000).ToList();
 
             // Convert shot changes to frame numbers
             _shotChangesFrames = shotChanges.Select(d => SubtitleFormat.MillisecondsToFrames(d * 1000, _frameRate)).ToList();
@@ -84,7 +86,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     }
 
                     // Report progress
-                    var progress = ((pass + 1) / (double)amountOfPasses) * (p / (double)_subtitle.Paragraphs.Count);
+                    var progress = (double)(pass * _subtitle.Paragraphs.Count + p) / (_subtitle.Paragraphs.Count * amountOfPasses);
                     ProgressChanged.Invoke(progress);
                 }
             }
