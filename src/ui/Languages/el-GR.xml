@@ -38,7 +38,7 @@
     <Actor>Ηθοποιός</Actor>
     <Gap>Κενό</Gap>
     <Region>Περιοχή</Region>
-    <Layer></Layer>
+    <Layer>Επίπεδο</Layer>
     <NumberSymbol>#</NumberSymbol>
     <Number>Αριθμός</Number>
     <Text>Κείμενο</Text>
@@ -100,6 +100,7 @@
     <ShortcutX>Συντόμευση: {0}</ShortcutX>
     <ExampleX>Παράδειγμα: {0}</ExampleX>
     <Reset>Επαναφορά</Reset>
+    <Error>Ορισμός επιπέδου</Error>
     <Warning>Προειδοποίηση</Warning>
     <UseLargerFontForThisWindow>Χρήση μεγαλύτερης γραμματοσειράς για αυτό το παράθυρο</UseLargerFontForThisWindow>
   </General>
@@ -166,13 +167,16 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Recalculate>Επαναϋπολογισμός</Recalculate>
     <AddSeconds>Προσθήκη δευτ.</AddSeconds>
     <SetAsPercent>Ορισμός ως ποσοστό διάρκειας</SetAsPercent>
-    <Note>Σημείωση: Ο χρόνος εμφάνισης δεν θα επικαλύπτει την ώρα έναρξης του επόμενου κειμένου</Note>
+    <Note>Σημείωση: Ο χρόνος εμφάνισης δεν συμπίπτει με την έναρξη του επόμενου κειμένου</Note>
     <Fixed>Διορθωμένα</Fixed>
     <Milliseconds>Χιλ. δευτερολέπτου</Milliseconds>
     <ExtendOnly>Παράταση χρόνου</ExtendOnly>
+    <EnforceDurationLimits>Εξαναγκασμός ελάχιστης και μέγιστης διάρκειας</EnforceDurationLimits>
+    <CheckShotChanges>Επέκταση μέχρι την αλλαγή λήψης</CheckShotChanges>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
     <Title>Εφαρμογή ορίων διάρκειας</Title>
+    <CheckShotChanges>Επέκταση μέχρι την αλλαγή λήψης</CheckShotChanges>
     <FixesAvailable>Διαθέσιμες διορθώσεις: {0}</FixesAvailable>
     <UnableToFix>Αδυναμία διόρθωσης: {0}</UnableToFix>
   </ApplyDurationLimits>
@@ -360,6 +364,84 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MkvLanguageStyleEmpty>Χωρίς κώδικα γλώσσας</MkvLanguageStyleEmpty>
     <SearchFolderScanVideo>Σάρωση αρχείων βίντεο στον φάκελο αναζήτησης (αργό)</SearchFolderScanVideo>
   </BatchConvert>
+  <BeautifyTimeCodes>
+    <Title>Ωραιοποίηση των χρόνων</Title>
+    <GroupTimeCodes>Χρόνοι</GroupTimeCodes>
+    <AlignTimeCodes>Αντιστοίχιση χρόνων σε χρόνους καρέ</AlignTimeCodes>
+    <ExtractExactTimeCodes>Χρήση ffprobe για ακριβή εξαγωγή χρόνων</ExtractExactTimeCodes>
+    <ExtractTimeCodes>Εξαγωγή χρόνων</ExtractTimeCodes>
+    <CancelTimeCodes>Ακύρωση</CancelTimeCodes>
+    <GroupShotChanges>Αλλαγές λήψης</GroupShotChanges>
+    <SnapToShotChanges>Τοποθέτηση σημάτων σε αλλαγές λήψης</SnapToShotChanges>
+    <ImportShotChanges>Δημιουργία/εισαγωγή αλλαγών λήψης</ImportShotChanges>
+    <EditProfile>Επεξεργασία προφίλ…</EditProfile>
+    <NoTimeCodesLoaded>Δεν φορτώθηκαν χρόνοι</NoTimeCodesLoaded>
+    <XTimeCodesLoaded>Φόρτωση {0} χρόνων</XTimeCodesLoaded>
+    <NoTimeCodesLoadedError>Επιλέξατε να εξάγετε ακριβείς χρόνους καρέ, αλλά δεν υπάρχουν φορτωμένοι.
+Παρακαλώ, πατήστε "{0}", για να τους εξάγετε, ή απενεργοποιήστε την επιλογή.</NoTimeCodesLoadedError>
+    <NoShotChangesLoaded>Δεν φορτώθηκαν αλλαγές λήψης</NoShotChangesLoaded>
+    <XShotChangesLoaded>Φόρτωση {0} αλλαγών λήψης</XShotChangesLoaded>
+    <NoShotChangesLoadedError>Επιλέξατε να βάλετε τις ομιλίες σε αλλαγές λήψεων, μα δεν υπάρχουν φορτωμένες.
+Παρακαλώ, πατήστε "{0}", για να δημιουργήσετε ή να εισάγετε, ή απενεργοποιήστε την επιλογή.</NoShotChangesLoadedError>
+  </BeautifyTimeCodes>
+  <BeautifyTimeCodesProfile>
+    <Title>Επεξεργασία προφίλ</Title>
+    <LoadPreset>Φόρτωση προεπιλογών…</LoadPreset>
+    <PresetDefault>Προκαθορισμένα</PresetDefault>
+    <PresetNetflix>Netflix</PresetNetflix>
+    <PresetSDI>SDI</PresetSDI>
+    <CreateSimple>Απλή λειτουργία…</CreateSimple>
+    <General>Γενικά</General>
+    <Gap>Κενό:</Gap>
+    <GapSuffix>καρέ (αντικατάσταση προσαρμοσμένων ρυθμίσεων)</GapSuffix>
+    <InCues>Έναρξη ομιλίας</InCues>
+    <SubtitlePreviewText>Κείμενο υποτίτλου.</SubtitlePreviewText>
+    <Zones>Ζώνες:</Zones>
+    <OutCues>Λήξη ομιλίας</OutCues>
+    <ConnectedSubtitles>Συνδεδεμένοι υπότιτλοι</ConnectedSubtitles>
+    <InCueClosest>Κοντινότερη έναρξη ομιλίας</InCueClosest>
+    <OutCueClosest>Κοντινότερη λήξη ομιλίας</OutCueClosest>
+    <TreadAsConnected>Αντιμετώπιση ως συνδεδεμένους, με κενό μικρότερο από:</TreadAsConnected>
+    <Milliseconds>χιλ. δευτ.</Milliseconds>
+    <Chaining>Αλυσιδωτά</Chaining>
+    <InCueOnShot>Έναρξη ομιλίας σε αλλαγή λήψης</InCueOnShot>
+    <OutCueOnShot>Λήξη ομιλίας σε αλλαγή λήψης</OutCueOnShot>
+    <MaxGap>Μέγιστο κενό:</MaxGap>
+    <ShotChangeBehavior>Αν υπάρχει αλλαγή λήψης ανάμεσα:</ShotChangeBehavior>
+    <DontChain>Μη αλυσιδωτά</DontChain>
+    <ExtendCrossingShotChange>Επέκταση πέρα από την αλλαγή λήψης</ExtendCrossingShotChange>
+    <ExtendUntilShotChange>Επέκταση μέχρι την αλλαγή λήψης</ExtendUntilShotChange>
+    <ResetWarning>Θα επαναφερθεί το τρέχον προφίλ και θα αντικατασταθούν οι τιμές με τις προκαθορισμένες.
+Δεν μπορεί να αναιρεθεί. Συνέχεια;</ResetWarning>
+    <CreateSimpleTitle>Δημιουργία απλού</CreateSimpleTitle>
+    <CreateSimpleInstruction>Εισάγετε τους βασικούς κανόνες και το προφίλ θα ενημερωθεί αναλόγως.</CreateSimpleInstruction>
+    <CreateSimpleGapInstruction>Ελάχιστο κενό μεταξύ των υποτίτλων.</CreateSimpleGapInstruction>
+    <CreateSimpleInCues>Οι ενάρξεις ομιλίας θα είναι:</CreateSimpleInCues>
+    <CreateSimpleInCues0Frames>Επί αλλαγής λήψης</CreateSimpleInCues0Frames>
+    <CreateSimpleInCues1Frames>1 καρέ μετά την αλλαγή λήψης</CreateSimpleInCues1Frames>
+    <CreateSimpleInCues2Frames>2 καρέ μετά την αλλαγή λήψης</CreateSimpleInCues2Frames>
+    <CreateSimpleInCues3Frames>3 καρέ μετά την αλλαγή λήψης</CreateSimpleInCues3Frames>
+    <CreateSimpleOutCues>Οι λήξεις ομιλίας θα είναι:</CreateSimpleOutCues>
+    <CreateSimpleOutCues0Frames>Επί αλλαγής λήψης</CreateSimpleOutCues0Frames>
+    <CreateSimpleOutCues1Frames>1 καρέ πριν την αλλαγή λήψης</CreateSimpleOutCues1Frames>
+    <CreateSimpleOutCues2Frames>2 καρέ πριν την αλλαγή λήψης</CreateSimpleOutCues2Frames>
+    <CreateSimpleOutCues3Frames>3 καρέ πριν την αλλαγή λήψης</CreateSimpleOutCues3Frames>
+    <CreateSimpleOutCuesGap>Ελάχιστο κενό πριν την αλλαγή λήψης</CreateSimpleOutCuesGap>
+    <CreateSimpleSnapClosestCue>Για ενωμένουν υποτίτλους, τοποθέτηση των ενάρξεων ή λήξεων ομιλίας στην κοντινότερη αλλαγή λήψης</CreateSimpleSnapClosestCue>
+    <CreateSimpleMaxOffset>Μέγιστη μετατόπιση:</CreateSimpleMaxOffset>
+    <CreateSimpleMaxOffsetInstruction>Ομιλίες εντός αυτής της απόστασης από αλλαγές λήψης θα τοποθετηθούν σε αυτές.</CreateSimpleMaxOffsetInstruction>
+    <CreateSimpleSafeZone>Απόσταση:</CreateSimpleSafeZone>
+    <CreateSimpleSafeZoneInstruction>Ομιλίες εντός αυτής της απόστασης από αλλαγές λήψης θα απομακρυνθούν από αυτές.</CreateSimpleSafeZoneInstruction>
+    <CreateSimpleChainingGap>Μέγιστο αλυσιδωτό κενό:</CreateSimpleChainingGap>
+    <CreateSimpleChainingGapInstruction>Αν η απόσταση μεταξύ των υποτίτλων είναι μικρότερη, θα διορθωθούν.</CreateSimpleChainingGapInstruction>
+    <CreateSimpleChainingGapAfterShotChanges>Μετά τη λήξη ομιλίας επί αλλαγής λήψης, το κενό θα είναι μικρότερο</CreateSimpleChainingGapAfterShotChanges>
+    <CreateSimpleChainingToolTip>Προτείνονται οι αλυσιδωτοί υπότιτλοι, για τον σταθερό ρυθμό εμφάνισής τους και την άνετη εμπειρία προβολής.</CreateSimpleChainingToolTip>
+    <CreateSimpleLoadNetflixRules>Φόρτωση κανόνων Netflix</CreateSimpleLoadNetflixRules>
+    <Frames>καρέ</Frames>
+    <Maximum>Μέγιστο.</Maximum>
+    <GapInMsFormat>{0} χιλ./δευτ. στα {1} καρέ/δευτ.</GapInMsFormat>
+    <OffsetSafeZoneError>Η απόσταση θα είναι μεγαλύτερη της μέγιστης μετατόπισης.</OffsetSafeZoneError>
+  </BeautifyTimeCodesProfile>
   <BinEdit>
     <ImportImage>Εισαγωγή εικόνας…</ImportImage>
     <ExportImage>Εξαγωγή εικόνας…</ExportImage>
@@ -969,10 +1051,10 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <RemoveAll>Αφαίρεση όλων</RemoveAll>
   </ImportImages>
   <ImportShotChanges>
-    <Title>Δημιουργία/εισαγωγή αλλαγών σκηνών</Title>
+    <Title>Δημιουργία/εισαγωγή αλλαγών λήψης</Title>
     <OpenTextFile>Άνοιγμα αρχείου κειμένου…</OpenTextFile>
-    <Generate>Δημιουργία αλλαγών σκηνών</Generate>
-    <Import>Εισαγωγή αλλαγών σκηνών</Import>
+    <Generate>Δημιουργία αλλαγών λήψης</Generate>
+    <Import>Εισαγωγή αλλαγών λήψης</Import>
     <TextFiles>Αρχεία κειμένου</TextFiles>
     <TimeCodes>Χρόνοι</TimeCodes>
     <Frames>Καρέ</Frames>
@@ -980,7 +1062,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Milliseconds>Χιλιοστά δευτερολέπτου</Milliseconds>
     <GetShotChangesWithFfmpeg>Δημιουργία αλλαγών λήψης με FFmpeg</GetShotChangesWithFfmpeg>
     <Sensitivity>Ευαισθησία</Sensitivity>
-    <SensitivityDescription>Μικρότερη τιμή δίνει περισσότερες αλλαγές σκηνών</SensitivityDescription>
+    <SensitivityDescription>Μικρότερη τιμή δίνει περισσότερες αλλαγές λήψης</SensitivityDescription>
     <NoShotChangesFound>Αδυναμία εύρεσης αλλαγών λήψης.</NoShotChangesFound>
   </ImportShotChanges>
   <ImportText>
@@ -1269,6 +1351,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <Duration>Διάρκεια</Duration>
         <ListErrors>Λίστα σφαλμάτων…</ListErrors>
         <NetflixQualityCheck>Έλεγχος ποιότητας Netflix…</NetflixQualityCheck>
+        <BeautifyTimeCodes>Ωραιοποίηση χρόνων…</BeautifyTimeCodes>
         <TextAlphabetically>Κείμενο - αλφαβητικά</TextAlphabetically>
         <TextSingleLineMaximumLength>Κείμενο - μέγιστο μήκος γραμμής</TextSingleLineMaximumLength>
         <TextTotalLength>Κείμενο - συνολικό μήκος</TextTotalLength>
@@ -1364,6 +1447,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <VisualSync>Οπτικός συγχρονισμός</VisualSync>
         <SpellCheck>Ορθογραφικός έλεγχος</SpellCheck>
         <NetflixQualityCheck>Έλεγχος ποιότητας Netflix</NetflixQualityCheck>
+        <BeautifyTimeCodes>Ωραιοποίηση χρόνων</BeautifyTimeCodes>
         <Settings>Ρυθμίσεις</Settings>
         <Help>Βοήθεια</Help>
         <ShowHideWaveform>Εμφάνιση/απόκρυψη κυματομορφής</ShowHideWaveform>
@@ -1374,7 +1458,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <SizeAllColumnsToFit>Αλλαγή μεγέθους στηλών για να χωρούν</SizeAllColumnsToFit>
         <SetStyle>Ορισμός στυλ</SetStyle>
         <SetActor>Ορισμός ηθοποιού</SetActor>
-        <SetLayer></SetLayer>
+        <SetLayer>Ορισμός επιπέδου</SetLayer>
         <AssaTools>Εργαλεία ASSA</AssaTools>
         <SubStationAlphaStyles>Στυλ Sub Station Alpha…</SubStationAlphaStyles>
         <AdvancedSubStationAlphaStyles>Στυλ Advanced Sub Station Alpha…</AdvancedSubStationAlphaStyles>
@@ -1595,6 +1679,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <CommonErrorsFixed>Σφάλματα διορθώθηκαν</CommonErrorsFixed>
     <BeforeRenumbering>Πριν επαναρίθμησης</BeforeRenumbering>
     <RenumberedStartingFromX>Έναρξη επαναρίθμησης από: {0}</RenumberedStartingFromX>
+    <BeforeBeautifyTimeCodes>Πριν από την ωραιοποίηση χρόνων</BeforeBeautifyTimeCodes>
+    <BeautifiedTimeCodes>Χρόνοι ωραιοποίθηκαν</BeautifiedTimeCodes>
     <BeforeRemovalOfTextingForHearingImpaired>Πριν από αφαίρεση κειμένου για κωφούς</BeforeRemovalOfTextingForHearingImpaired>
     <TextingForHearingImpairedRemovedOneLine>Αφαίρεση κειμένου για ανθρώπους με πρόβλημα ακοής: Μία γραμμή</TextingForHearingImpairedRemovedOneLine>
     <TextingForHearingImpairedRemovedXLines>Αφαίρεση κειμένου για ανθρώπους με πρόβλημα ακοής: {0} γραμμές</TextingForHearingImpairedRemovedXLines>
@@ -2167,6 +2253,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <BurnIn>Ενσωμάτωση</BurnIn>
     <SpellCheck>Ορθογραφικός έλεγχος</SpellCheck>
     <NetflixQualityCheck>Έλεγχος ποιότητας Netflix</NetflixQualityCheck>
+    <BeautifyTimeCodes>Ωραιοποίηση χρόνων</BeautifyTimeCodes>
     <SettingsName>Ρυθμίσεις</SettingsName>
     <ToggleBookmarks>Εναλλαγή σημειώσεων</ToggleBookmarks>
     <ToggleBookmarksWithComment>Εναλλαγή σημειώσεων - προσθήκη σχόλιου</ToggleBookmarksWithComment>
@@ -2286,7 +2373,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <WaveformFocusMouseEnter>Καθορισμός εστίασης δείκτη ποντικιού</WaveformFocusMouseEnter>
     <WaveformListViewFocusMouseEnter>Καθορισμός εστίασης δείκτη ποντικιού στην προβολή λίστας</WaveformListViewFocusMouseEnter>
     <WaveformSingleClickSelect>Μονό κλικ επιλογής υποτίτλου</WaveformSingleClickSelect>
-    <WaveformSnapToShotChanges>Κλείδωμα στην αλλαγή λήψης (κράτημα Shift για παράκαμψη)</WaveformSnapToShotChanges>
+    <WaveformSnapToShotChanges>Τοποθέτηση στην αλλαγή λήψης (κράτημα Shift για παράκαμψη)</WaveformSnapToShotChanges>
+    <WaveformEditShotChangesProfile>Επεξεργασία προφίλ…</WaveformEditShotChangesProfile>
     <WaveformAutoGen>Αυτόματη δημιουργία κυματομορφής στο άνοιγμα βίντεο</WaveformAutoGen>
     <WaveformBorderHitMs1>Το χτύπημα του πλαισίου σήμανσης πρέπει να βρίσκεται μεταξύ</WaveformBorderHitMs1>
     <WaveformBorderHitMs2>χιλιοστών του δευτερολέπτου.</WaveformBorderHitMs2>
@@ -2441,16 +2529,14 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <AdjustSetStartAndOffsetTheWholeSubtitle>Ορισμός χρόνου έναρξης, μετατώπιση όλου του υποτίτλου</AdjustSetStartAndOffsetTheWholeSubtitle>
     <AdjustSetEndAndOffsetTheRest>Ορισμός λήξης, μετατόπιση υπολοίπων</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Ορισμός λήξης, μετατόπιση υπολοίπων και μετάβαση σε επόμενο</AdjustSetEndAndOffsetTheRestAndGoToNext>
-    <AdjustSnapStartToNextShotChange>Κλείδωμα έναρξης γραμμής σε επόμενη αλλαγή λήψης</AdjustSnapStartToNextShotChange>
-    <AdjustSnapStartToNextShotChangeWithGap>Κλείδωμα έναρξης γραμμής σε επόμενη αλλαγή λήψης με ελάχιστο κενό</AdjustSnapStartToNextShotChangeWithGap>
-    <AdjustSnapEndToPreviousShotChange>Κλείδωμα έναρξης γραμμής σε προηγούμενη αλλαγή λήψης</AdjustSnapEndToPreviousShotChange>
-    <AdjustSnapEndToPreviousShotChangeWithGap>Κλείδωμα έναρξης γραμμής σε προηγούμενη αλλαγή λήψης με ελάχιστο κενό</AdjustSnapEndToPreviousShotChangeWithGap>
+    <AdjustSnapStartToNextShotChange>Τοποθέτηση έναρξης γραμμής σε επόμενη αλλαγή λήψης</AdjustSnapStartToNextShotChange>
+    <AdjustSnapEndToPreviousShotChange>Τοποθέτηση έναρξης γραμμής σε προηγούμενη αλλαγή λήψης</AdjustSnapEndToPreviousShotChange>
     <AdjustExtendToNextShotChange>Επέκταση γραμμών μέχρι την επόμενη αλλαγή λήψης (ή επόμενο υπότιτλο)</AdjustExtendToNextShotChange>
-    <AdjustExtendToNextShotChangeWithGap>Επέκταση γραμμών σε επόμενη αλλαγή λήψης με ελάχιστο κενό (ή επόμενο υπότιτλο)</AdjustExtendToNextShotChangeWithGap>
     <AdjustExtendToPreviousShotChange>Επέκταση γραμμών μέχρι την προηγούμενη αλλαγή λήψης (ή προηγούμενο υπότιτλο)</AdjustExtendToPreviousShotChange>
-    <AdjustExtendToPreviousShotChangeWithGap>Επέκταση γραμμών σε προηγούμενη αλλαγή λήψης με ελάχιστο κενό (ή προηγούμενο υπότιτλο)</AdjustExtendToPreviousShotChangeWithGap>
     <AdjustExtendToNextSubtitle>Επέκταση γραμμών μέχρι τον επόμενο υπότιτλο</AdjustExtendToNextSubtitle>
     <AdjustExtendToPreviousSubtitle>Επέκταση γραμμών μέχρι τον προηγούμενο υπότιλο</AdjustExtendToPreviousSubtitle>
+    <AdjustExtendToNextSubtitleMinusChainingGap>Επέκταση επιλεγμένων γραμμών σε επόμενο υπότιτλο, με αλυσιδωτό κενό</AdjustExtendToNextSubtitleMinusChainingGap>
+    <AdjustExtendToPreviousSubtitleMinusChainingGap>Επέκταση επιλεγμένων γραμμών σε προηγούμενο υπότιτλο, με αλυσιδωτό κενό</AdjustExtendToPreviousSubtitleMinusChainingGap>
     <AdjustExtendCurrentSubtitle>Επέκταση γραμμής μέχρι τον επόμενο υπότιτλο ή μέγιστη διάρκεια</AdjustExtendCurrentSubtitle>
     <AdjustExtendPreviousLineEndToCurrentStart>Επέκταση λήξης προηγούμενης γραμμής σε έναρξη τρέχουσας</AdjustExtendPreviousLineEndToCurrentStart>
     <AdjustExtendNextLineStartToCurrentEnd>Επέκταση έναρξης επόμενης γραμμής σε λήξη τρέχουσας</AdjustExtendNextLineStartToCurrentEnd>
@@ -2515,7 +2601,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <WaveformGoToNextShotChange>Μετάβαση σε επόμενη αλλαγή λήψης</WaveformGoToNextShotChange>
     <WaveformToggleShotChange>Εναλλαγή αλλαγή λήψης</WaveformToggleShotChange>
     <WaveformRemoveOrExportShotChanges>Αφαίρεση/εξαγωγή αλλαγών λήψης</WaveformRemoveOrExportShotChanges>
-    <WaveformGuessStart>Αυτόματη προσαρμογή έναρξης μέσω έντασης/αλλαγή σκηνής</WaveformGuessStart>
+    <WaveformGuessStart>Αυτόματη προσαρμογή έναρξης μέσω έντασης/αλλαγή λήψης</WaveformGuessStart>
     <GoBack1Frame>Πίσω ένα καρέ</GoBack1Frame>
     <GoForward1Frame>Μπροστά ένα καρέ</GoForward1Frame>
     <GoBack1FrameWithPlay>Πίσω ένα καρέ (με αναπαραγωγή)</GoBack1FrameWithPlay>
