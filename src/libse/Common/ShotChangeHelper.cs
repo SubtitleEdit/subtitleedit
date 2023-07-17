@@ -87,16 +87,27 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         // Util functions
 
-        public static double? GetPreviousShotChangeInMs(List<double> shotChanges, TimeCode currentTime)
+        public static double? GetPreviousShotChange(List<double> shotChanges, TimeCode currentTime)
         {
             try
             {
-                return shotChanges.Last(x => SubtitleFormat.MillisecondsToFrames(x * 1000) <= SubtitleFormat.MillisecondsToFrames(currentTime.TotalMilliseconds)) * 1000;
+                return shotChanges.Last(x => SubtitleFormat.MillisecondsToFrames(x * 1000) <= SubtitleFormat.MillisecondsToFrames(currentTime.TotalMilliseconds));
             }
             catch (InvalidOperationException)
             {
                 return null;
             }
+        }
+
+        public static double? GetPreviousShotChangeInMs(List<double> shotChanges, TimeCode currentTime)
+        {
+            var previousShotChange = GetPreviousShotChange(shotChanges, currentTime);
+            if (previousShotChange != null)
+            {
+                return previousShotChange * 1000;
+            }
+
+            return null;
         }
 
         public static double? GetPreviousShotChangePlusGapInMs(List<double> shotChanges, TimeCode currentTime)
@@ -110,16 +121,27 @@ namespace Nikse.SubtitleEdit.Core.Common
             return null;
         }
 
-        public static double? GetNextShotChangeInMs(List<double> shotChanges, TimeCode currentTime)
+        public static double? GetNextShotChange(List<double> shotChanges, TimeCode currentTime)
         {
             try
             {
-                return shotChanges.First(x => SubtitleFormat.MillisecondsToFrames(x * 1000) >= SubtitleFormat.MillisecondsToFrames(currentTime.TotalMilliseconds)) * 1000;
+                return shotChanges.First(x => SubtitleFormat.MillisecondsToFrames(x * 1000) >= SubtitleFormat.MillisecondsToFrames(currentTime.TotalMilliseconds));
             }
             catch (InvalidOperationException)
             {
                 return null;
             }
+        }
+
+        public static double? GetNextShotChangeInMs(List<double> shotChanges, TimeCode currentTime)
+        {
+            var nextShotChange = GetNextShotChange(shotChanges, currentTime);
+            if (nextShotChange != null)
+            {
+                return nextShotChange * 1000;
+            }
+
+            return null;
         }
 
         public static double? GetNextShotChangeMinusGapInMs(List<double> shotChanges, TimeCode currentTime)
