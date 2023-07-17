@@ -91,7 +91,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         {
             try
             {
-                return shotChanges.Last(x => SubtitleFormat.MillisecondsToFrames(x * 1000) <= SubtitleFormat.MillisecondsToFrames(currentTime.TotalMilliseconds));
+                return shotChanges.Last(x => SubtitleFormat.MillisecondsToFrames(x * 1000) <= SubtitleFormat.MillisecondsToFrames(currentTime.TotalMilliseconds)) * 1000;
             }
             catch (InvalidOperationException)
             {
@@ -114,7 +114,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         {
             try
             {
-                return shotChanges.First(x => SubtitleFormat.MillisecondsToFrames(x * 1000) >= SubtitleFormat.MillisecondsToFrames(currentTime.TotalMilliseconds));
+                return shotChanges.First(x => SubtitleFormat.MillisecondsToFrames(x * 1000) >= SubtitleFormat.MillisecondsToFrames(currentTime.TotalMilliseconds)) * 1000;
             }
             catch (InvalidOperationException)
             {
