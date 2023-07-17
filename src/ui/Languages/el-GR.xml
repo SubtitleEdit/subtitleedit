@@ -372,7 +372,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ExtractTimeCodes>Εξαγωγή χρόνων</ExtractTimeCodes>
     <CancelTimeCodes>Ακύρωση</CancelTimeCodes>
     <GroupShotChanges>Αλλαγές λήψης</GroupShotChanges>
-    <SnapToShotChanges>Τοποθέτηση σημάτων σε αλλαγές λήψης</SnapToShotChanges>
+    <SnapToShotChanges>Τοποθέτηση κειμένου σε αλλαγές λήψης</SnapToShotChanges>
     <ImportShotChanges>Δημιουργία/εισαγωγή αλλαγών λήψης</ImportShotChanges>
     <EditProfile>Επεξεργασία προφίλ…</EditProfile>
     <NoTimeCodesLoaded>Δεν φορτώθηκαν χρόνοι</NoTimeCodesLoaded>
@@ -381,7 +381,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
 Παρακαλώ, πατήστε "{0}", για να τους εξάγετε, ή απενεργοποιήστε την επιλογή.</NoTimeCodesLoadedError>
     <NoShotChangesLoaded>Δεν φορτώθηκαν αλλαγές λήψης</NoShotChangesLoaded>
     <XShotChangesLoaded>Φόρτωση {0} αλλαγών λήψης</XShotChangesLoaded>
-    <NoShotChangesLoadedError>Επιλέξατε να βάλετε τις ομιλίες σε αλλαγές λήψεων, μα δεν υπάρχουν φορτωμένες.
+    <NoShotChangesLoadedError>Επιλέξατε να βάλετε τα κείμενα σε αλλαγές λήψης, μα δεν υπάρχουν φορτωμένες.
 Παρακαλώ, πατήστε "{0}", για να δημιουργήσετε ή να εισάγετε, ή απενεργοποιήστε την επιλογή.</NoShotChangesLoadedError>
   </BeautifyTimeCodes>
   <BeautifyTimeCodesProfile>
@@ -394,18 +394,18 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <General>Γενικά</General>
     <Gap>Κενό:</Gap>
     <GapSuffix>καρέ (αντικατάσταση προσαρμοσμένων ρυθμίσεων)</GapSuffix>
-    <InCues>Έναρξη ομιλίας</InCues>
+    <InCues>Έναρξη κειμένου</InCues>
     <SubtitlePreviewText>Κείμενο υποτίτλου.</SubtitlePreviewText>
     <Zones>Ζώνες:</Zones>
-    <OutCues>Λήξη ομιλίας</OutCues>
+    <OutCues>Λήξη κειμένου</OutCues>
     <ConnectedSubtitles>Συνδεδεμένοι υπότιτλοι</ConnectedSubtitles>
-    <InCueClosest>Κοντινότερη έναρξη ομιλίας</InCueClosest>
-    <OutCueClosest>Κοντινότερη λήξη ομιλίας</OutCueClosest>
+    <InCueClosest>Κοντινότερη έναρξη κειμένου</InCueClosest>
+    <OutCueClosest>Κοντινότερη λήξη κειμένου</OutCueClosest>
     <TreadAsConnected>Αντιμετώπιση ως συνδεδεμένους, με κενό μικρότερο από:</TreadAsConnected>
     <Milliseconds>χιλ. δευτ.</Milliseconds>
     <Chaining>Αλυσιδωτά</Chaining>
-    <InCueOnShot>Έναρξη ομιλίας σε αλλαγή λήψης</InCueOnShot>
-    <OutCueOnShot>Λήξη ομιλίας σε αλλαγή λήψης</OutCueOnShot>
+    <InCueOnShot>Έναρξη κειμένου σε αλλαγή λήψης</InCueOnShot>
+    <OutCueOnShot>Λήξη κειμένου σε αλλαγή λήψης</OutCueOnShot>
     <MaxGap>Μέγιστο κενό:</MaxGap>
     <ShotChangeBehavior>Αν υπάρχει αλλαγή λήψης ανάμεσα:</ShotChangeBehavior>
     <DontChain>Μη αλυσιδωτά</DontChain>
@@ -416,25 +416,25 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <CreateSimpleTitle>Δημιουργία απλού</CreateSimpleTitle>
     <CreateSimpleInstruction>Εισάγετε τους βασικούς κανόνες και το προφίλ θα ενημερωθεί αναλόγως.</CreateSimpleInstruction>
     <CreateSimpleGapInstruction>Ελάχιστο κενό μεταξύ των υποτίτλων.</CreateSimpleGapInstruction>
-    <CreateSimpleInCues>Οι ενάρξεις ομιλίας θα είναι:</CreateSimpleInCues>
+    <CreateSimpleInCues>Οι ενάρξεις κειμένου θα είναι:</CreateSimpleInCues>
     <CreateSimpleInCues0Frames>Επί αλλαγής λήψης</CreateSimpleInCues0Frames>
     <CreateSimpleInCues1Frames>1 καρέ μετά την αλλαγή λήψης</CreateSimpleInCues1Frames>
     <CreateSimpleInCues2Frames>2 καρέ μετά την αλλαγή λήψης</CreateSimpleInCues2Frames>
     <CreateSimpleInCues3Frames>3 καρέ μετά την αλλαγή λήψης</CreateSimpleInCues3Frames>
-    <CreateSimpleOutCues>Οι λήξεις ομιλίας θα είναι:</CreateSimpleOutCues>
+    <CreateSimpleOutCues>Οι λήξεις κειμένου θα είναι:</CreateSimpleOutCues>
     <CreateSimpleOutCues0Frames>Επί αλλαγής λήψης</CreateSimpleOutCues0Frames>
     <CreateSimpleOutCues1Frames>1 καρέ πριν την αλλαγή λήψης</CreateSimpleOutCues1Frames>
     <CreateSimpleOutCues2Frames>2 καρέ πριν την αλλαγή λήψης</CreateSimpleOutCues2Frames>
     <CreateSimpleOutCues3Frames>3 καρέ πριν την αλλαγή λήψης</CreateSimpleOutCues3Frames>
     <CreateSimpleOutCuesGap>Ελάχιστο κενό πριν την αλλαγή λήψης</CreateSimpleOutCuesGap>
-    <CreateSimpleSnapClosestCue>Για ενωμένουν υποτίτλους, τοποθέτηση των ενάρξεων ή λήξεων ομιλίας στην κοντινότερη αλλαγή λήψης</CreateSimpleSnapClosestCue>
+    <CreateSimpleSnapClosestCue>Για ενωμένουν υποτίτλους, τοποθέτηση των ενάρξεων ή λήξεων κειμένου στην κοντινότερη αλλαγή λήψης</CreateSimpleSnapClosestCue>
     <CreateSimpleMaxOffset>Μέγιστη μετατόπιση:</CreateSimpleMaxOffset>
-    <CreateSimpleMaxOffsetInstruction>Ομιλίες εντός αυτής της απόστασης από αλλαγές λήψης θα τοποθετηθούν σε αυτές.</CreateSimpleMaxOffsetInstruction>
+    <CreateSimpleMaxOffsetInstruction>Κείμενα εντός αυτής της απόστασης από αλλαγές λήψης θα τοποθετηθούν σε αυτές.</CreateSimpleMaxOffsetInstruction>
     <CreateSimpleSafeZone>Απόσταση:</CreateSimpleSafeZone>
-    <CreateSimpleSafeZoneInstruction>Ομιλίες εντός αυτής της απόστασης από αλλαγές λήψης θα απομακρυνθούν από αυτές.</CreateSimpleSafeZoneInstruction>
+    <CreateSimpleSafeZoneInstruction>Κείμενα εντός αυτής της απόστασης από αλλαγές λήψης θα απομακρυνθούν από αυτές.</CreateSimpleSafeZoneInstruction>
     <CreateSimpleChainingGap>Μέγιστο αλυσιδωτό κενό:</CreateSimpleChainingGap>
     <CreateSimpleChainingGapInstruction>Αν η απόσταση μεταξύ των υποτίτλων είναι μικρότερη, θα διορθωθούν.</CreateSimpleChainingGapInstruction>
-    <CreateSimpleChainingGapAfterShotChanges>Μετά τη λήξη ομιλίας επί αλλαγής λήψης, το κενό θα είναι μικρότερο</CreateSimpleChainingGapAfterShotChanges>
+    <CreateSimpleChainingGapAfterShotChanges>Μετά τη λήξη κειμένου επί αλλαγής λήψης, το κενό θα είναι μικρότερο</CreateSimpleChainingGapAfterShotChanges>
     <CreateSimpleChainingToolTip>Προτείνονται οι αλυσιδωτοί υπότιτλοι, για τον σταθερό ρυθμό εμφάνισής τους και την άνετη εμπειρία προβολής.</CreateSimpleChainingToolTip>
     <CreateSimpleLoadNetflixRules>Φόρτωση κανόνων Netflix</CreateSimpleLoadNetflixRules>
     <Frames>καρέ</Frames>
