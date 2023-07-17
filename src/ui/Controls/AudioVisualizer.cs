@@ -131,7 +131,6 @@ namespace Nikse.SubtitleEdit.Controls
         private double _zoomFactor = 1.0; // 1.0=no zoom
 
         public int ShotChangeSnapPixels = 8;
-        private bool _snappingDistanceFirstUpdated = false;
 
         public double ZoomFactor
         {
@@ -329,10 +328,7 @@ namespace Nikse.SubtitleEdit.Controls
                 _noClear = false;
                 _wavePeaks = value;
 
-                if (!_snappingDistanceFirstUpdated)
-                {
-                    UpdateSnappingDistance();
-                }
+                UpdateSnappingDistance();
             }
         }
 
@@ -2740,7 +2736,6 @@ namespace Nikse.SubtitleEdit.Controls
                 var snappingDistance = (int) Math.Round(pixelsPerFrame * Math.Max(1, largestGapInFrames));
 
                 ShotChangeSnapPixels = Math.Max(8, snappingDistance);
-                _snappingDistanceFirstUpdated = true;
             } 
             else
             {
