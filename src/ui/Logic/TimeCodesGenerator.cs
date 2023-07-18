@@ -37,7 +37,8 @@ namespace Nikse.SubtitleEdit.Logic
                 _timeCodes = new List<double>();
             }
 
-            var ffProbePath = Path.Combine(Path.GetDirectoryName(Configuration.Settings.General.FFmpegLocation), "ffprobe.exe");
+            var ffMpegLocation = Configuration.Settings.General.FFmpegLocation;
+            var ffProbePath = !string.IsNullOrWhiteSpace(ffMpegLocation) ? Path.Combine(Path.GetDirectoryName(ffMpegLocation), "ffprobe.exe") : string.Empty;
             if (!Configuration.IsRunningOnWindows && !File.Exists(ffProbePath))
             {
                 ffProbePath = "ffprobe";

@@ -155,8 +155,11 @@ namespace Nikse.SubtitleEdit.Logic
         public class AddWaveformBatch
         {
             public string Title { get; set; }
+            public string ExtractTimeCodes { get; set; }
             public string ExtractingAudio { get; set; }
             public string Calculating { get; set; }
+            public string ExtractingTimeCodes { get; set; }
+            public string DetectingShotChanges { get; set; }
             public string Done { get; set; }
             public string Error { get; set; }
         }
