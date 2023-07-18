@@ -246,7 +246,7 @@
             this.checkBoxGenerateShotChanges.Location = new System.Drawing.Point(839, 510);
             this.checkBoxGenerateShotChanges.Name = "checkBoxGenerateShotChanges";
             this.checkBoxGenerateShotChanges.Size = new System.Drawing.Size(200, 17);
-            this.checkBoxGenerateShotChanges.TabIndex = 25;
+            this.checkBoxGenerateShotChanges.TabIndex = 26;
             this.checkBoxGenerateShotChanges.Text = "Generate shot changes with FFmpeg";
             this.checkBoxGenerateShotChanges.UseVisualStyleBackColor = true;
             // 
@@ -257,7 +257,7 @@
             this.checkBoxExtractTimeCodes.Location = new System.Drawing.Point(626, 510);
             this.checkBoxExtractTimeCodes.Name = "checkBoxExtractTimeCodes";
             this.checkBoxExtractTimeCodes.Size = new System.Drawing.Size(177, 17);
-            this.checkBoxExtractTimeCodes.TabIndex = 26;
+            this.checkBoxExtractTimeCodes.TabIndex = 25;
             this.checkBoxExtractTimeCodes.Text = "Extract time codes with FFprobe";
             this.checkBoxExtractTimeCodes.UseVisualStyleBackColor = true;
             // 
