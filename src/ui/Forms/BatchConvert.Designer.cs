@@ -31,10 +31,16 @@ namespace Nikse.SubtitleEdit.Forms
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode1 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
+            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode2 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
             this.buttonConvert = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.groupBoxConvertOptions = new System.Windows.Forms.GroupBox();
+            this.groupBoxApplyDurationLimits = new System.Windows.Forms.GroupBox();
+            this.checkBoxApplyDurationLimitsMaxDuration = new System.Windows.Forms.CheckBox();
+            this.numericUpDownApplyDurationLimitsMaxDuration = new System.Windows.Forms.NumericUpDown();
+            this.checkBoxApplyDurationLimitsCheckShotChanges = new System.Windows.Forms.CheckBox();
+            this.numericUpDownApplyDurationLimitsMinDuration = new System.Windows.Forms.NumericUpDown();
+            this.checkBoxApplyDurationLimitsMinDuration = new System.Windows.Forms.CheckBox();
             this.groupBoxAdjustDuration = new System.Windows.Forms.GroupBox();
             this.checkBoxAdjustDurationCheckShotChanges = new System.Windows.Forms.CheckBox();
             this.checkBoxEnforceDurationLimits = new System.Windows.Forms.CheckBox();
@@ -180,6 +186,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelStatus = new System.Windows.Forms.Label();
             this.labelError = new System.Windows.Forms.Label();
             this.groupBoxConvertOptions.SuspendLayout();
+            this.groupBoxApplyDurationLimits.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownApplyDurationLimitsMaxDuration)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownApplyDurationLimitsMinDuration)).BeginInit();
             this.groupBoxAdjustDuration.SuspendLayout();
             this.panelAdjustDurationFixed.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFixedMilliseconds)).BeginInit();
@@ -245,6 +254,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.groupBoxConvertOptions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxConvertOptions.Controls.Add(this.groupBoxApplyDurationLimits);
             this.groupBoxConvertOptions.Controls.Add(this.groupBoxAdjustDuration);
             this.groupBoxConvertOptions.Controls.Add(this.groupBoxBeautifyTimeCodes);
             this.groupBoxConvertOptions.Controls.Add(this.listViewConvertOptions);
@@ -267,6 +277,95 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxConvertOptions.TabIndex = 11;
             this.groupBoxConvertOptions.TabStop = false;
             this.groupBoxConvertOptions.Text = "Convert options";
+            // 
+            // groupBoxApplyDurationLimits
+            // 
+            this.groupBoxApplyDurationLimits.Controls.Add(this.checkBoxApplyDurationLimitsMaxDuration);
+            this.groupBoxApplyDurationLimits.Controls.Add(this.numericUpDownApplyDurationLimitsMaxDuration);
+            this.groupBoxApplyDurationLimits.Controls.Add(this.checkBoxApplyDurationLimitsCheckShotChanges);
+            this.groupBoxApplyDurationLimits.Controls.Add(this.numericUpDownApplyDurationLimitsMinDuration);
+            this.groupBoxApplyDurationLimits.Controls.Add(this.checkBoxApplyDurationLimitsMinDuration);
+            this.groupBoxApplyDurationLimits.Location = new System.Drawing.Point(309, 16);
+            this.groupBoxApplyDurationLimits.Name = "groupBoxApplyDurationLimits";
+            this.groupBoxApplyDurationLimits.Size = new System.Drawing.Size(268, 169);
+            this.groupBoxApplyDurationLimits.TabIndex = 313;
+            this.groupBoxApplyDurationLimits.TabStop = false;
+            this.groupBoxApplyDurationLimits.Text = "Apply duration limits";
+            this.groupBoxApplyDurationLimits.Visible = false;
+            // 
+            // checkBoxApplyDurationLimitsMaxDuration
+            // 
+            this.checkBoxApplyDurationLimitsMaxDuration.AutoSize = true;
+            this.checkBoxApplyDurationLimitsMaxDuration.Location = new System.Drawing.Point(9, 71);
+            this.checkBoxApplyDurationLimitsMaxDuration.Name = "checkBoxApplyDurationLimitsMaxDuration";
+            this.checkBoxApplyDurationLimitsMaxDuration.Size = new System.Drawing.Size(152, 17);
+            this.checkBoxApplyDurationLimitsMaxDuration.TabIndex = 4;
+            this.checkBoxApplyDurationLimitsMaxDuration.Text = "Max. duration, milliseconds";
+            this.checkBoxApplyDurationLimitsMaxDuration.UseVisualStyleBackColor = true;
+            // 
+            // numericUpDownApplyDurationLimitsMaxDuration
+            // 
+            this.numericUpDownApplyDurationLimitsMaxDuration.Location = new System.Drawing.Point(184, 69);
+            this.numericUpDownApplyDurationLimitsMaxDuration.Maximum = new decimal(new int[] {
+            50000,
+            0,
+            0,
+            0});
+            this.numericUpDownApplyDurationLimitsMaxDuration.Minimum = new decimal(new int[] {
+            3000,
+            0,
+            0,
+            0});
+            this.numericUpDownApplyDurationLimitsMaxDuration.Name = "numericUpDownApplyDurationLimitsMaxDuration";
+            this.numericUpDownApplyDurationLimitsMaxDuration.Size = new System.Drawing.Size(56, 20);
+            this.numericUpDownApplyDurationLimitsMaxDuration.TabIndex = 5;
+            this.numericUpDownApplyDurationLimitsMaxDuration.Value = new decimal(new int[] {
+            50000,
+            0,
+            0,
+            0});
+            // 
+            // checkBoxApplyDurationLimitsCheckShotChanges
+            // 
+            this.checkBoxApplyDurationLimitsCheckShotChanges.AutoSize = true;
+            this.checkBoxApplyDurationLimitsCheckShotChanges.Location = new System.Drawing.Point(17, 46);
+            this.checkBoxApplyDurationLimitsCheckShotChanges.Name = "checkBoxApplyDurationLimitsCheckShotChanges";
+            this.checkBoxApplyDurationLimitsCheckShotChanges.Size = new System.Drawing.Size(124, 17);
+            this.checkBoxApplyDurationLimitsCheckShotChanges.TabIndex = 3;
+            this.checkBoxApplyDurationLimitsCheckShotChanges.Text = "Check shot changes";
+            this.checkBoxApplyDurationLimitsCheckShotChanges.UseVisualStyleBackColor = true;
+            // 
+            // numericUpDownApplyDurationLimitsMinDuration
+            // 
+            this.numericUpDownApplyDurationLimitsMinDuration.Location = new System.Drawing.Point(184, 21);
+            this.numericUpDownApplyDurationLimitsMinDuration.Maximum = new decimal(new int[] {
+            3000,
+            0,
+            0,
+            0});
+            this.numericUpDownApplyDurationLimitsMinDuration.Minimum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.numericUpDownApplyDurationLimitsMinDuration.Name = "numericUpDownApplyDurationLimitsMinDuration";
+            this.numericUpDownApplyDurationLimitsMinDuration.Size = new System.Drawing.Size(56, 20);
+            this.numericUpDownApplyDurationLimitsMinDuration.TabIndex = 2;
+            this.numericUpDownApplyDurationLimitsMinDuration.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            // 
+            // checkBoxApplyDurationLimitsMinDuration
+            // 
+            this.checkBoxApplyDurationLimitsMinDuration.AutoSize = true;
+            this.checkBoxApplyDurationLimitsMinDuration.Location = new System.Drawing.Point(9, 23);
+            this.checkBoxApplyDurationLimitsMinDuration.Name = "checkBoxApplyDurationLimitsMinDuration";
+            this.checkBoxApplyDurationLimitsMinDuration.Size = new System.Drawing.Size(149, 17);
+            this.checkBoxApplyDurationLimitsMinDuration.TabIndex = 1;
+            this.checkBoxApplyDurationLimitsMinDuration.Text = "Min. duration, milliseconds";
+            this.checkBoxApplyDurationLimitsMinDuration.UseVisualStyleBackColor = true;
             // 
             // groupBoxAdjustDuration
             // 
@@ -1252,14 +1351,14 @@ namespace Nikse.SubtitleEdit.Forms
             this.timeUpDownAdjust.Size = new System.Drawing.Size(113, 23);
             this.timeUpDownAdjust.TabIndex = 1;
             this.timeUpDownAdjust.TabStop = false;
-            timeCode1.Hours = 0;
-            timeCode1.Milliseconds = 0;
-            timeCode1.Minutes = 0;
-            timeCode1.Seconds = 0;
-            timeCode1.TimeSpan = System.TimeSpan.Parse("00:00:00");
-            timeCode1.TotalMilliseconds = 0D;
-            timeCode1.TotalSeconds = 0D;
-            this.timeUpDownAdjust.TimeCode = timeCode1;
+            timeCode2.Hours = 0;
+            timeCode2.Milliseconds = 0;
+            timeCode2.Minutes = 0;
+            timeCode2.Seconds = 0;
+            timeCode2.TimeSpan = System.TimeSpan.Parse("00:00:00");
+            timeCode2.TotalMilliseconds = 0D;
+            timeCode2.TotalSeconds = 0D;
+            this.timeUpDownAdjust.TimeCode = timeCode2;
             this.timeUpDownAdjust.UseVideoOffset = false;
             // 
             // labelHourMinSecMilliSecond
@@ -1921,6 +2020,10 @@ namespace Nikse.SubtitleEdit.Forms
             this.ResizeEnd += new System.EventHandler(this.BatchConvert_ResizeEnd);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.BatchConvert_KeyDown);
             this.groupBoxConvertOptions.ResumeLayout(false);
+            this.groupBoxApplyDurationLimits.ResumeLayout(false);
+            this.groupBoxApplyDurationLimits.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownApplyDurationLimitsMaxDuration)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownApplyDurationLimitsMinDuration)).EndInit();
             this.groupBoxAdjustDuration.ResumeLayout(false);
             this.groupBoxAdjustDuration.PerformLayout();
             this.panelAdjustDurationFixed.ResumeLayout(false);
@@ -2129,5 +2232,11 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.CheckBox checkBoxBeautifyTimeCodesAlignTimeCodes;
         private System.Windows.Forms.Button buttonBeautifyTimeCodesEditProfile;
         private System.Windows.Forms.CheckBox checkBoxAdjustDurationCheckShotChanges;
+        private System.Windows.Forms.GroupBox groupBoxApplyDurationLimits;
+        private System.Windows.Forms.CheckBox checkBoxApplyDurationLimitsMinDuration;
+        private System.Windows.Forms.NumericUpDown numericUpDownApplyDurationLimitsMinDuration;
+        private System.Windows.Forms.CheckBox checkBoxApplyDurationLimitsCheckShotChanges;
+        private System.Windows.Forms.CheckBox checkBoxApplyDurationLimitsMaxDuration;
+        private System.Windows.Forms.NumericUpDown numericUpDownApplyDurationLimitsMaxDuration;
     }
 }

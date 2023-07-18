@@ -335,6 +335,7 @@ namespace Nikse.SubtitleEdit.Logic
                 CheckShotChanges = "Don't extend past shot changes",
                 FixesAvailable = "Fixes available: {0}",
                 UnableToFix = "Unable to fix: {0}",
+                BatchCheckShotChanges = "Respect shot changes (if available)",
             };
 
             AudioToText = new LanguageStructure.AudioToText

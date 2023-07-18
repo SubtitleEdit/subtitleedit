@@ -188,6 +188,7 @@ namespace Nikse.SubtitleEdit.Logic
             public string CheckShotChanges { get; set; }
             public string FixesAvailable { get; set; }
             public string UnableToFix { get; set; }
+            public string BatchCheckShotChanges { get; set; }
         }
 
         public class AudioToText

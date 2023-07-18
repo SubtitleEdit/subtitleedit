@@ -2205,7 +2205,11 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
 
                             break;
                         case BatchAction.ApplyDurationLimits:
-                            var fixDurationLimits = new FixDurationLimits(Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds, Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds);
+                            var minDuration = Configuration.Settings.Tools.ApplyMinimumDurationLimit ? Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds : 0;
+                            var maxDuration = Configuration.Settings.Tools.ApplyMaximumDurationLimit ? Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds : int.MaxValue;
+                            var shotChanges = Configuration.Settings.Tools.ApplyMinimumDurationLimitCheckShotChanges ? BatchConvert.GetShotChangesOrEmpty(sub.FileName) : new List<double>();
+
+                            var fixDurationLimits = new FixDurationLimits(minDuration, maxDuration, shotChanges);
                             sub = fixDurationLimits.Fix(sub);
                             break;
                         case BatchAction.ReverseRtlStartEnd:
