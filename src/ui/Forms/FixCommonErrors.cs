@@ -1535,11 +1535,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (item.Checked)
                 {
-                    string key = item.SubItems[1].Text + "|" + item.SubItems[2].Text;
-                    if (!_allowedFixes.Contains(key))
-                    {
-                        _allowedFixes.Add(key);
-                    }
+                    var key = item.SubItems[1].Text + "|" + item.SubItems[2].Text;
+                    _allowedFixes.Add(key);
                 }
             }
 
