@@ -179,6 +179,7 @@ namespace Nikse.SubtitleEdit.Logic
             public string ExtendOnly { get; set; }
             public string EnforceDurationLimits { get; set; }
             public string CheckShotChanges { get; set; }
+            public string BatchCheckShotChanges { get; set; }
         }
 
         public class ApplyDurationLimits

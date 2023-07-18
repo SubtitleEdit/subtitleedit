@@ -35,12 +35,8 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonConvert = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.groupBoxConvertOptions = new System.Windows.Forms.GroupBox();
-            this.groupBoxBeautifyTimeCodes = new System.Windows.Forms.GroupBox();
-            this.buttonBeautifyTimeCodesEditProfile = new System.Windows.Forms.Button();
-            this.checkBoxBeautifyTimeCodesSnapToShotChanges = new System.Windows.Forms.CheckBox();
-            this.checkBoxBeautifyTimeCodesUseExactTimeCodes = new System.Windows.Forms.CheckBox();
-            this.checkBoxBeautifyTimeCodesAlignTimeCodes = new System.Windows.Forms.CheckBox();
             this.groupBoxAdjustDuration = new System.Windows.Forms.GroupBox();
+            this.checkBoxAdjustDurationCheckShotChanges = new System.Windows.Forms.CheckBox();
             this.checkBoxEnforceDurationLimits = new System.Windows.Forms.CheckBox();
             this.comboBoxAdjustDurationVia = new System.Windows.Forms.ComboBox();
             this.labelAdjustDurationVia = new System.Windows.Forms.Label();
@@ -60,6 +56,11 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelOptimalCharsSec = new System.Windows.Forms.Label();
             this.numericUpDownMaxCharsSec = new System.Windows.Forms.NumericUpDown();
             this.labelMaxCharsPerSecond = new System.Windows.Forms.Label();
+            this.groupBoxBeautifyTimeCodes = new System.Windows.Forms.GroupBox();
+            this.buttonBeautifyTimeCodesEditProfile = new System.Windows.Forms.Button();
+            this.checkBoxBeautifyTimeCodesSnapToShotChanges = new System.Windows.Forms.CheckBox();
+            this.checkBoxBeautifyTimeCodesUseExactTimeCodes = new System.Windows.Forms.CheckBox();
+            this.checkBoxBeautifyTimeCodesAlignTimeCodes = new System.Windows.Forms.CheckBox();
             this.listViewConvertOptions = new System.Windows.Forms.ListView();
             this.ActionCheckBox = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Action = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -179,7 +180,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelStatus = new System.Windows.Forms.Label();
             this.labelError = new System.Windows.Forms.Label();
             this.groupBoxConvertOptions.SuspendLayout();
-            this.groupBoxBeautifyTimeCodes.SuspendLayout();
             this.groupBoxAdjustDuration.SuspendLayout();
             this.panelAdjustDurationFixed.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFixedMilliseconds)).BeginInit();
@@ -190,6 +190,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.panelAdjustDurationRecalc.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownOptimalCharsSec)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxCharsSec)).BeginInit();
+            this.groupBoxBeautifyTimeCodes.SuspendLayout();
             this.contextMenuStripOptions.SuspendLayout();
             this.groupBoxChangeCasing.SuspendLayout();
             this.groupBoxMergeShortLines.SuspendLayout();
@@ -244,8 +245,8 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.groupBoxConvertOptions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBoxConvertOptions.Controls.Add(this.groupBoxBeautifyTimeCodes);
             this.groupBoxConvertOptions.Controls.Add(this.groupBoxAdjustDuration);
+            this.groupBoxConvertOptions.Controls.Add(this.groupBoxBeautifyTimeCodes);
             this.groupBoxConvertOptions.Controls.Add(this.listViewConvertOptions);
             this.groupBoxConvertOptions.Controls.Add(this.groupBoxChangeCasing);
             this.groupBoxConvertOptions.Controls.Add(this.groupBoxMergeShortLines);
@@ -267,63 +268,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxConvertOptions.TabStop = false;
             this.groupBoxConvertOptions.Text = "Convert options";
             // 
-            // groupBoxBeautifyTimeCodes
-            // 
-            this.groupBoxBeautifyTimeCodes.Controls.Add(this.buttonBeautifyTimeCodesEditProfile);
-            this.groupBoxBeautifyTimeCodes.Controls.Add(this.checkBoxBeautifyTimeCodesSnapToShotChanges);
-            this.groupBoxBeautifyTimeCodes.Controls.Add(this.checkBoxBeautifyTimeCodesUseExactTimeCodes);
-            this.groupBoxBeautifyTimeCodes.Controls.Add(this.checkBoxBeautifyTimeCodesAlignTimeCodes);
-            this.groupBoxBeautifyTimeCodes.Location = new System.Drawing.Point(304, 11);
-            this.groupBoxBeautifyTimeCodes.Name = "groupBoxBeautifyTimeCodes";
-            this.groupBoxBeautifyTimeCodes.Size = new System.Drawing.Size(268, 169);
-            this.groupBoxBeautifyTimeCodes.TabIndex = 312;
-            this.groupBoxBeautifyTimeCodes.TabStop = false;
-            this.groupBoxBeautifyTimeCodes.Text = "Beautify time codes";
-            this.groupBoxBeautifyTimeCodes.Visible = false;
-            // 
-            // buttonBeautifyTimeCodesEditProfile
-            // 
-            this.buttonBeautifyTimeCodesEditProfile.Location = new System.Drawing.Point(8, 97);
-            this.buttonBeautifyTimeCodesEditProfile.Name = "buttonBeautifyTimeCodesEditProfile";
-            this.buttonBeautifyTimeCodesEditProfile.Size = new System.Drawing.Size(132, 26);
-            this.buttonBeautifyTimeCodesEditProfile.TabIndex = 7;
-            this.buttonBeautifyTimeCodesEditProfile.Text = "Edit profile...";
-            this.buttonBeautifyTimeCodesEditProfile.UseVisualStyleBackColor = true;
-            this.buttonBeautifyTimeCodesEditProfile.Click += new System.EventHandler(this.buttonBeautifyTimeCodesEditProfile_Click);
-            // 
-            // checkBoxBeautifyTimeCodesSnapToShotChanges
-            // 
-            this.checkBoxBeautifyTimeCodesSnapToShotChanges.AutoSize = true;
-            this.checkBoxBeautifyTimeCodesSnapToShotChanges.Location = new System.Drawing.Point(9, 69);
-            this.checkBoxBeautifyTimeCodesSnapToShotChanges.Name = "checkBoxBeautifyTimeCodesSnapToShotChanges";
-            this.checkBoxBeautifyTimeCodesSnapToShotChanges.Size = new System.Drawing.Size(215, 17);
-            this.checkBoxBeautifyTimeCodesSnapToShotChanges.TabIndex = 6;
-            this.checkBoxBeautifyTimeCodesSnapToShotChanges.Text = "Snap cues to shot changes (if available)";
-            this.checkBoxBeautifyTimeCodesSnapToShotChanges.UseVisualStyleBackColor = true;
-            // 
-            // checkBoxBeautifyTimeCodesUseExactTimeCodes
-            // 
-            this.checkBoxBeautifyTimeCodesUseExactTimeCodes.AutoSize = true;
-            this.checkBoxBeautifyTimeCodesUseExactTimeCodes.Location = new System.Drawing.Point(9, 46);
-            this.checkBoxBeautifyTimeCodesUseExactTimeCodes.Name = "checkBoxBeautifyTimeCodesUseExactTimeCodes";
-            this.checkBoxBeautifyTimeCodesUseExactTimeCodes.Size = new System.Drawing.Size(187, 17);
-            this.checkBoxBeautifyTimeCodesUseExactTimeCodes.TabIndex = 5;
-            this.checkBoxBeautifyTimeCodesUseExactTimeCodes.Text = "Use exact time codes (if available)";
-            this.checkBoxBeautifyTimeCodesUseExactTimeCodes.UseVisualStyleBackColor = true;
-            // 
-            // checkBoxBeautifyTimeCodesAlignTimeCodes
-            // 
-            this.checkBoxBeautifyTimeCodesAlignTimeCodes.AutoSize = true;
-            this.checkBoxBeautifyTimeCodesAlignTimeCodes.Enabled = false;
-            this.checkBoxBeautifyTimeCodesAlignTimeCodes.Location = new System.Drawing.Point(9, 23);
-            this.checkBoxBeautifyTimeCodesAlignTimeCodes.Name = "checkBoxBeautifyTimeCodesAlignTimeCodes";
-            this.checkBoxBeautifyTimeCodesAlignTimeCodes.Size = new System.Drawing.Size(198, 17);
-            this.checkBoxBeautifyTimeCodesAlignTimeCodes.TabIndex = 4;
-            this.checkBoxBeautifyTimeCodesAlignTimeCodes.Text = "Align time codes to frame time codes";
-            this.checkBoxBeautifyTimeCodesAlignTimeCodes.UseVisualStyleBackColor = true;
-            // 
             // groupBoxAdjustDuration
             // 
+            this.groupBoxAdjustDuration.Controls.Add(this.checkBoxAdjustDurationCheckShotChanges);
             this.groupBoxAdjustDuration.Controls.Add(this.checkBoxEnforceDurationLimits);
             this.groupBoxAdjustDuration.Controls.Add(this.comboBoxAdjustDurationVia);
             this.groupBoxAdjustDuration.Controls.Add(this.labelAdjustDurationVia);
@@ -339,10 +286,20 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxAdjustDuration.Text = "Adjust duration";
             this.groupBoxAdjustDuration.Visible = false;
             // 
+            // checkBoxAdjustDurationCheckShotChanges
+            // 
+            this.checkBoxAdjustDurationCheckShotChanges.AutoSize = true;
+            this.checkBoxAdjustDurationCheckShotChanges.Location = new System.Drawing.Point(10, 222);
+            this.checkBoxAdjustDurationCheckShotChanges.Name = "checkBoxAdjustDurationCheckShotChanges";
+            this.checkBoxAdjustDurationCheckShotChanges.Size = new System.Drawing.Size(124, 17);
+            this.checkBoxAdjustDurationCheckShotChanges.TabIndex = 18;
+            this.checkBoxAdjustDurationCheckShotChanges.Text = "Check shot changes";
+            this.checkBoxAdjustDurationCheckShotChanges.UseVisualStyleBackColor = true;
+            // 
             // checkBoxEnforceDurationLimits
             // 
             this.checkBoxEnforceDurationLimits.AutoSize = true;
-            this.checkBoxEnforceDurationLimits.Location = new System.Drawing.Point(10, 222);
+            this.checkBoxEnforceDurationLimits.Location = new System.Drawing.Point(10, 199);
             this.checkBoxEnforceDurationLimits.Name = "checkBoxEnforceDurationLimits";
             this.checkBoxEnforceDurationLimits.Size = new System.Drawing.Size(214, 17);
             this.checkBoxEnforceDurationLimits.TabIndex = 17;
@@ -584,6 +541,61 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelMaxCharsPerSecond.Size = new System.Drawing.Size(81, 13);
             this.labelMaxCharsPerSecond.TabIndex = 11;
             this.labelMaxCharsPerSecond.Text = "Max. chars/sec";
+            // 
+            // groupBoxBeautifyTimeCodes
+            // 
+            this.groupBoxBeautifyTimeCodes.Controls.Add(this.buttonBeautifyTimeCodesEditProfile);
+            this.groupBoxBeautifyTimeCodes.Controls.Add(this.checkBoxBeautifyTimeCodesSnapToShotChanges);
+            this.groupBoxBeautifyTimeCodes.Controls.Add(this.checkBoxBeautifyTimeCodesUseExactTimeCodes);
+            this.groupBoxBeautifyTimeCodes.Controls.Add(this.checkBoxBeautifyTimeCodesAlignTimeCodes);
+            this.groupBoxBeautifyTimeCodes.Location = new System.Drawing.Point(304, 11);
+            this.groupBoxBeautifyTimeCodes.Name = "groupBoxBeautifyTimeCodes";
+            this.groupBoxBeautifyTimeCodes.Size = new System.Drawing.Size(268, 169);
+            this.groupBoxBeautifyTimeCodes.TabIndex = 312;
+            this.groupBoxBeautifyTimeCodes.TabStop = false;
+            this.groupBoxBeautifyTimeCodes.Text = "Beautify time codes";
+            this.groupBoxBeautifyTimeCodes.Visible = false;
+            // 
+            // buttonBeautifyTimeCodesEditProfile
+            // 
+            this.buttonBeautifyTimeCodesEditProfile.Location = new System.Drawing.Point(8, 97);
+            this.buttonBeautifyTimeCodesEditProfile.Name = "buttonBeautifyTimeCodesEditProfile";
+            this.buttonBeautifyTimeCodesEditProfile.Size = new System.Drawing.Size(132, 26);
+            this.buttonBeautifyTimeCodesEditProfile.TabIndex = 4;
+            this.buttonBeautifyTimeCodesEditProfile.Text = "Edit profile...";
+            this.buttonBeautifyTimeCodesEditProfile.UseVisualStyleBackColor = true;
+            this.buttonBeautifyTimeCodesEditProfile.Click += new System.EventHandler(this.buttonBeautifyTimeCodesEditProfile_Click);
+            // 
+            // checkBoxBeautifyTimeCodesSnapToShotChanges
+            // 
+            this.checkBoxBeautifyTimeCodesSnapToShotChanges.AutoSize = true;
+            this.checkBoxBeautifyTimeCodesSnapToShotChanges.Location = new System.Drawing.Point(9, 69);
+            this.checkBoxBeautifyTimeCodesSnapToShotChanges.Name = "checkBoxBeautifyTimeCodesSnapToShotChanges";
+            this.checkBoxBeautifyTimeCodesSnapToShotChanges.Size = new System.Drawing.Size(215, 17);
+            this.checkBoxBeautifyTimeCodesSnapToShotChanges.TabIndex = 3;
+            this.checkBoxBeautifyTimeCodesSnapToShotChanges.Text = "Snap cues to shot changes (if available)";
+            this.checkBoxBeautifyTimeCodesSnapToShotChanges.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxBeautifyTimeCodesUseExactTimeCodes
+            // 
+            this.checkBoxBeautifyTimeCodesUseExactTimeCodes.AutoSize = true;
+            this.checkBoxBeautifyTimeCodesUseExactTimeCodes.Location = new System.Drawing.Point(9, 46);
+            this.checkBoxBeautifyTimeCodesUseExactTimeCodes.Name = "checkBoxBeautifyTimeCodesUseExactTimeCodes";
+            this.checkBoxBeautifyTimeCodesUseExactTimeCodes.Size = new System.Drawing.Size(187, 17);
+            this.checkBoxBeautifyTimeCodesUseExactTimeCodes.TabIndex = 2;
+            this.checkBoxBeautifyTimeCodesUseExactTimeCodes.Text = "Use exact time codes (if available)";
+            this.checkBoxBeautifyTimeCodesUseExactTimeCodes.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxBeautifyTimeCodesAlignTimeCodes
+            // 
+            this.checkBoxBeautifyTimeCodesAlignTimeCodes.AutoSize = true;
+            this.checkBoxBeautifyTimeCodesAlignTimeCodes.Enabled = false;
+            this.checkBoxBeautifyTimeCodesAlignTimeCodes.Location = new System.Drawing.Point(9, 23);
+            this.checkBoxBeautifyTimeCodesAlignTimeCodes.Name = "checkBoxBeautifyTimeCodesAlignTimeCodes";
+            this.checkBoxBeautifyTimeCodesAlignTimeCodes.Size = new System.Drawing.Size(198, 17);
+            this.checkBoxBeautifyTimeCodesAlignTimeCodes.TabIndex = 1;
+            this.checkBoxBeautifyTimeCodesAlignTimeCodes.Text = "Align time codes to frame time codes";
+            this.checkBoxBeautifyTimeCodesAlignTimeCodes.UseVisualStyleBackColor = true;
             // 
             // listViewConvertOptions
             // 
@@ -1909,8 +1921,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.ResizeEnd += new System.EventHandler(this.BatchConvert_ResizeEnd);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.BatchConvert_KeyDown);
             this.groupBoxConvertOptions.ResumeLayout(false);
-            this.groupBoxBeautifyTimeCodes.ResumeLayout(false);
-            this.groupBoxBeautifyTimeCodes.PerformLayout();
             this.groupBoxAdjustDuration.ResumeLayout(false);
             this.groupBoxAdjustDuration.PerformLayout();
             this.panelAdjustDurationFixed.ResumeLayout(false);
@@ -1926,6 +1936,8 @@ namespace Nikse.SubtitleEdit.Forms
             this.panelAdjustDurationRecalc.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownOptimalCharsSec)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxCharsSec)).EndInit();
+            this.groupBoxBeautifyTimeCodes.ResumeLayout(false);
+            this.groupBoxBeautifyTimeCodes.PerformLayout();
             this.contextMenuStripOptions.ResumeLayout(false);
             this.groupBoxChangeCasing.ResumeLayout(false);
             this.groupBoxChangeCasing.PerformLayout();
@@ -2116,5 +2128,6 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.CheckBox checkBoxBeautifyTimeCodesUseExactTimeCodes;
         private System.Windows.Forms.CheckBox checkBoxBeautifyTimeCodesAlignTimeCodes;
         private System.Windows.Forms.Button buttonBeautifyTimeCodesEditProfile;
+        private System.Windows.Forms.CheckBox checkBoxAdjustDurationCheckShotChanges;
     }
 }

@@ -326,6 +326,7 @@ namespace Nikse.SubtitleEdit.Logic
                 ExtendOnly = "Extend only",
                 EnforceDurationLimits = "Enforce minimum and maximum duration",
                 CheckShotChanges = "Don't extend past shot changes",
+                BatchCheckShotChanges = "Respect shot changes (if available)",
             };
 
             ApplyDurationLimits = new LanguageStructure.ApplyDurationLimits
