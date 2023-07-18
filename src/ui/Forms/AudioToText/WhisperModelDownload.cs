@@ -4,12 +4,10 @@ using Nikse.SubtitleEdit.Logic;
 using System;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Core.Common;
-using Vosk;
 
 namespace Nikse.SubtitleEdit.Forms.AudioToText
 {
