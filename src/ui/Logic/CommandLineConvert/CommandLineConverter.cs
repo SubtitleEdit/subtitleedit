@@ -171,6 +171,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                 _stdOutWriter.WriteLine("        /" + BatchAction.ConvertColorsToDialog);
                 _stdOutWriter.WriteLine("        /" + BatchAction.RedoCasing);
                 _stdOutWriter.WriteLine("        /" + BatchAction.BalanceLines);
+                _stdOutWriter.WriteLine("        /" + BatchAction.BeautifyTimeCodes);
                 _stdOutWriter.WriteLine();
                 _stdOutWriter.WriteLine("    Example: SubtitleEdit /convert *.srt sami");
                 _stdOutWriter.WriteLine("    Show this usage message: SubtitleEdit /help");
@@ -2274,6 +2275,9 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                             {
                                 p.Text = Utilities.RemoveUnicodeControlChars(p.Text);
                             }
+                            break;
+                        case BatchAction.BeautifyTimeCodes:
+                            BatchConvert.BeautifyTimeCodes(sub, sub.FileName, Configuration.Settings.BeautifyTimeCodes.ExtractExactTimeCodes, Configuration.Settings.BeautifyTimeCodes.SnapToShotChanges);
                             break;
                     }
                 }
