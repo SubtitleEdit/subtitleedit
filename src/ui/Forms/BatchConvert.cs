@@ -382,6 +382,7 @@ namespace Nikse.SubtitleEdit.Forms
             numericUpDownMaxCharsSec.Value = (decimal)Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds;
             checkBoxExtendOnly.Checked = Configuration.Settings.Tools.AdjustDurationExtendOnly;
             checkBoxEnforceDurationLimits.Checked = Configuration.Settings.Tools.AdjustDurationExtendEnforceDurationLimits;
+            checkBoxAdjustDurationCheckShotChanges.Checked = Configuration.Settings.Tools.AdjustDurationExtendCheckShotChanges;
 
             labelOptimalCharsSec.Text = LanguageSettings.Current.Settings.OptimalCharactersPerSecond;
             labelMaxCharsPerSecond.Text = LanguageSettings.Current.Settings.MaximumCharactersPerSecond;
@@ -389,6 +390,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelMillisecondsFixed.Text = LanguageSettings.Current.AdjustDisplayDuration.Milliseconds;
             checkBoxExtendOnly.Text = LanguageSettings.Current.AdjustDisplayDuration.ExtendOnly;
             checkBoxEnforceDurationLimits.Text = LanguageSettings.Current.AdjustDisplayDuration.EnforceDurationLimits;
+            checkBoxAdjustDurationCheckShotChanges.Text = LanguageSettings.Current.AdjustDisplayDuration.BatchCheckShotChanges;
             labelAdjustViaPercent.Text = LanguageSettings.Current.AdjustDisplayDuration.SetAsPercent;
 
             labelTargetRes.Text = LanguageSettings.Current.AssaResolutionChanger.TargetVideoRes;
@@ -2006,15 +2008,16 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (IsActionEnabled(CommandLineConverter.BatchAction.AdjustDisplayDuration))
             {
-                // TODO shot changes
+                var shotChanges = checkBoxAdjustDurationCheckShotChanges.Checked ? GetShotChangesOrEmpty(sub.FileName) : new List<double>();
+
                 var adjustmentType = comboBoxAdjustDurationVia.Text;
                 if (adjustmentType == LanguageSettings.Current.AdjustDisplayDuration.Percent)
                 {
-                    sub.AdjustDisplayTimeUsingPercent((double)numericUpDownAdjustViaPercent.Value, null, null, checkBoxEnforceDurationLimits.Checked);
+                    sub.AdjustDisplayTimeUsingPercent((double)numericUpDownAdjustViaPercent.Value, null, shotChanges, checkBoxEnforceDurationLimits.Checked);
                 }
                 else if (adjustmentType == LanguageSettings.Current.AdjustDisplayDuration.Recalculate)
                 {
-                    sub.RecalculateDisplayTimes((double)numericUpDownMaxCharsSec.Value, null, (double)numericUpDownOptimalCharsSec.Value, checkBoxExtendOnly.Checked, null, checkBoxEnforceDurationLimits.Checked);
+                    sub.RecalculateDisplayTimes((double)numericUpDownMaxCharsSec.Value, null, (double)numericUpDownOptimalCharsSec.Value, checkBoxExtendOnly.Checked, shotChanges, checkBoxEnforceDurationLimits.Checked);
                 }
                 else if (adjustmentType == LanguageSettings.Current.AdjustDisplayDuration.Fixed)
                 {
@@ -2022,7 +2025,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
-                    sub.AdjustDisplayTimeUsingSeconds((double)numericUpDownSeconds.Value, null, null, checkBoxEnforceDurationLimits.Checked);
+                    sub.AdjustDisplayTimeUsingSeconds((double)numericUpDownSeconds.Value, null, shotChanges, checkBoxEnforceDurationLimits.Checked);
                 }
             }
 
@@ -2668,7 +2671,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var timeCodes = new List<double>();
                 var shotChanges = new List<double>();
 
-                var videoFile = TryToFindVideoFile(Utilities.GetPathAndFileNameWithoutExtension(p.FileName));
+                var videoFile = TryToFindVideoFile(p.FileName);
                 if (videoFile != null)
                 {
                     var videoInfo = UiUtil.GetVideoInfo(videoFile);
@@ -2792,8 +2795,9 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private static string TryToFindVideoFile(string fileNameNoExtension)
+        private static string TryToFindVideoFile(string fileName)
         {
+            string fileNameNoExtension = Utilities.GetPathAndFileNameWithoutExtension(fileName);
             string movieFileName = null;
 
             foreach (var extension in Utilities.VideoFileExtensions)
@@ -2816,6 +2820,17 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             return null;
+        }
+
+        private static List<double> GetShotChangesOrEmpty(string fileName)
+        {
+            var videoFile = TryToFindVideoFile(fileName);
+            if (videoFile != null)
+            {
+                return ShotChangeHelper.FromDisk(videoFile);
+            }
+
+            return new List<double>();
         }
 
         private void ComboBoxSubtitleFormatsSelectedIndexChanged(object sender, EventArgs e)
@@ -3802,6 +3817,7 @@ namespace Nikse.SubtitleEdit.Forms
             panel.Left = 2;
             panel.Top = labelAdjustDurationVia.Top + labelAdjustDurationVia.Height + 9;
 
+            checkBoxAdjustDurationCheckShotChanges.Visible = panel != panelAdjustDurationFixed;
             checkBoxEnforceDurationLimits.Visible = panel != panelAdjustDurationFixed;
         }
 
