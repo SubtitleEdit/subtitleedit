@@ -1991,6 +1991,8 @@ namespace Nikse.SubtitleEdit.Forms
                 var minDuration = checkBoxApplyDurationLimitsMinDuration.Checked ? (int)numericUpDownApplyDurationLimitsMinDuration.Value : 0;
                 var maxDuration = checkBoxApplyDurationLimitsMaxDuration.Checked ? (int)numericUpDownApplyDurationLimitsMaxDuration.Value : int.MaxValue;
                 var shotChanges = checkBoxApplyDurationLimitsCheckShotChanges.Checked ? GetShotChangesOrEmpty(sub.FileName) : new List<double>();
+                
+                TryUpdateCurrentFrameRate(sub.FileName);
 
                 var fixDurationLimits = new FixDurationLimits(minDuration, maxDuration, shotChanges);
                 sub = fixDurationLimits.Fix(sub);
@@ -2032,6 +2034,8 @@ namespace Nikse.SubtitleEdit.Forms
             if (IsActionEnabled(CommandLineConverter.BatchAction.AdjustDisplayDuration))
             {
                 var shotChanges = checkBoxAdjustDurationCheckShotChanges.Checked ? GetShotChangesOrEmpty(sub.FileName) : new List<double>();
+
+                TryUpdateCurrentFrameRate(sub.FileName);
 
                 var adjustmentType = comboBoxAdjustDurationVia.Text;
                 if (adjustmentType == LanguageSettings.Current.AdjustDisplayDuration.Percent)
@@ -2859,6 +2863,19 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             return new List<double>();
+        }
+
+        public static void TryUpdateCurrentFrameRate(string fileName)
+        {
+            var videoFile = TryToFindVideoFile(fileName);
+            if (videoFile != null)
+            {
+                var videoInfo = UiUtil.GetVideoInfo(videoFile);
+                if (videoInfo.FramesPerSecond > 0)
+                {
+                    Configuration.Settings.General.CurrentFrameRate = videoInfo.FramesPerSecond;
+                }
+            }
         }
 
         private void ComboBoxSubtitleFormatsSelectedIndexChanged(object sender, EventArgs e)
