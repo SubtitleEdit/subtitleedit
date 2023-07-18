@@ -1,6 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using System;
-using System.Xml;
 
 namespace Nikse.SubtitleEdit.Core.Forms
 {
