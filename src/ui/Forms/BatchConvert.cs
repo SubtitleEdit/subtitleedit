@@ -40,6 +40,7 @@ namespace Nikse.SubtitleEdit.Forms
             public bool SplitLongLinesActive { get; set; }
             public bool AutoBalanceActive { get; set; }
             public bool SetMinDisplayTimeBetweenSubtitles { get; set; }
+            public (bool Enabled, bool AlignTimeCodes, bool UseExactTimeCodes, bool SnapToShotChanges) BeautifyTimeCodes { get; set; }
             public ListViewItem Item { get; set; }
             public Subtitle Subtitle { get; set; }
             public SubtitleFormat Format { get; set; }
@@ -57,6 +58,7 @@ namespace Nikse.SubtitleEdit.Forms
                 bool splitLongLinesActive,
                 bool autoBalance,
                 bool setMinDisplayTimeBetweenSubtitles,
+                (bool, bool, bool, bool) beautifyTimeCodes,
                 ListViewItem item,
                 Subtitle subtitle,
                 SubtitleFormat format,
@@ -73,6 +75,7 @@ namespace Nikse.SubtitleEdit.Forms
                 SplitLongLinesActive = splitLongLinesActive;
                 AutoBalanceActive = autoBalance;
                 SetMinDisplayTimeBetweenSubtitles = setMinDisplayTimeBetweenSubtitles;
+                BeautifyTimeCodes = beautifyTimeCodes;
                 Item = item;
                 Subtitle = subtitle;
                 Format = format;
@@ -452,6 +455,15 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxConvertColorsToDialogAddNewLines.Checked = Configuration.Settings.Tools.ConvertColorsToDialogAddNewLines;
             checkBoxConvertColorsToDialogReBreakLines.Checked = Configuration.Settings.Tools.ConvertColorsToDialogReBreakLines;
 
+            groupBoxBeautifyTimeCodes.Text = LanguageSettings.Current.BeautifyTimeCodes.Title;
+            checkBoxBeautifyTimeCodesAlignTimeCodes.Text = LanguageSettings.Current.BeautifyTimeCodes.BatchAlignTimeCodes;
+            checkBoxBeautifyTimeCodesUseExactTimeCodes.Text = LanguageSettings.Current.BeautifyTimeCodes.BatchUseExactTimeCodes;
+            checkBoxBeautifyTimeCodesSnapToShotChanges.Text = LanguageSettings.Current.BeautifyTimeCodes.BatchSnapToShotChanges;
+
+            checkBoxBeautifyTimeCodesAlignTimeCodes.Checked = Configuration.Settings.BeautifyTimeCodes.AlignTimeCodes;
+            checkBoxBeautifyTimeCodesUseExactTimeCodes.Checked = Configuration.Settings.BeautifyTimeCodes.ExtractExactTimeCodes;
+            checkBoxBeautifyTimeCodesSnapToShotChanges.Checked = Configuration.Settings.BeautifyTimeCodes.SnapToShotChanges;
+
             inverseSelectionToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.Edit.InverseSelection;
             toolStripMenuItemSelectAll.Text = LanguageSettings.Current.Main.Menu.ContextMenu.SelectAll;
             UpdateNumberOfFiles();
@@ -618,6 +630,13 @@ namespace Nikse.SubtitleEdit.Forms
                     Checked = Configuration.Settings.Tools.BatchConvertSortBy,
                     Action = CommandLineConverter.BatchAction.SortBy,
                     Control = groupBoxSortBy
+                },
+                new FixActionItem
+                {
+                    Text = LanguageSettings.Current.BeautifyTimeCodes.Title,
+                    Checked = Configuration.Settings.Tools.BatchConvertBeautifyTimeCodes,
+                    Action = CommandLineConverter.BatchAction.BeautifyTimeCodes,
+                    Control = groupBoxBeautifyTimeCodes
                 },
             };
             foreach (var fixItem in fixItems)
@@ -1613,6 +1632,7 @@ namespace Nikse.SubtitleEdit.Forms
                                             IsActionEnabled(CommandLineConverter.BatchAction.SplitLongLines),
                                             IsActionEnabled(CommandLineConverter.BatchAction.BalanceLines),
                                             IsActionEnabled(CommandLineConverter.BatchAction.SetMinGap),
+                                            (IsActionEnabled(CommandLineConverter.BatchAction.BeautifyTimeCodes), checkBoxBeautifyTimeCodesAlignTimeCodes.Checked, checkBoxBeautifyTimeCodesUseExactTimeCodes.Checked, checkBoxBeautifyTimeCodesSnapToShotChanges.Checked),
                                             item,
                                             subtitle,
                                             GetCurrentSubtitleFormat(),
@@ -1652,6 +1672,7 @@ namespace Nikse.SubtitleEdit.Forms
                                         IsActionEnabled(CommandLineConverter.BatchAction.SplitLongLines),
                                         IsActionEnabled(CommandLineConverter.BatchAction.BalanceLines),
                                         IsActionEnabled(CommandLineConverter.BatchAction.SetMinGap),
+                                        (IsActionEnabled(CommandLineConverter.BatchAction.BeautifyTimeCodes), checkBoxBeautifyTimeCodesAlignTimeCodes.Checked, checkBoxBeautifyTimeCodesUseExactTimeCodes.Checked, checkBoxBeautifyTimeCodesSnapToShotChanges.Checked),
                                         item,
                                         subtitle,
                                         GetCurrentSubtitleFormat(),
@@ -1752,6 +1773,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 IsActionEnabled(CommandLineConverter.BatchAction.SplitLongLines),
                                 IsActionEnabled(CommandLineConverter.BatchAction.BalanceLines),
                                 IsActionEnabled(CommandLineConverter.BatchAction.SetMinGap),
+                                (IsActionEnabled(CommandLineConverter.BatchAction.BeautifyTimeCodes), checkBoxBeautifyTimeCodesAlignTimeCodes.Checked, checkBoxBeautifyTimeCodesUseExactTimeCodes.Checked, checkBoxBeautifyTimeCodesSnapToShotChanges.Checked),
                                 item,
                                 sub,
                                 GetCurrentSubtitleFormat(),
@@ -2332,6 +2354,7 @@ namespace Nikse.SubtitleEdit.Forms
                    !IsActionEnabled(CommandLineConverter.BatchAction.SplitLongLines) &&
                    !IsActionEnabled(CommandLineConverter.BatchAction.RemoveTextForHI) &&
                    !IsActionEnabled(CommandLineConverter.BatchAction.ConvertColorsToDialog) &&
+                   !IsActionEnabled(CommandLineConverter.BatchAction.BeautifyTimeCodes) &&
                    !IsActionEnabled(CommandLineConverter.BatchAction.MergeSameTexts) &&
                    !IsActionEnabled(CommandLineConverter.BatchAction.MergeSameTimeCodes) &&
                    !IsActionEnabled(CommandLineConverter.BatchAction.MergeShortLines) &&
@@ -2639,6 +2662,35 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
+            if (p.BeautifyTimeCodes.Enabled)
+            {                
+                var frameRate = Configuration.Settings.General.DefaultFrameRate;
+                var timeCodes = new List<double>();
+                var shotChanges = new List<double>();
+
+                var videoFile = TryToFindVideoFile(Utilities.GetPathAndFileNameWithoutExtension(p.FileName));
+                if (videoFile != null)
+                {
+                    var videoInfo = UiUtil.GetVideoInfo(videoFile);
+                    if (videoInfo.FramesPerSecond > 0)
+                    {
+                        frameRate = videoInfo.FramesPerSecond;
+                    }
+
+                    if (p.BeautifyTimeCodes.UseExactTimeCodes)
+                    {
+                        timeCodes = TimeCodesFileHelper.FromDisk(videoFile);
+                    }
+
+                    if (p.BeautifyTimeCodes.SnapToShotChanges)
+                    {
+                        shotChanges = ShotChangeHelper.FromDisk(videoFile);
+                    }
+                }
+
+                new TimeCodesBeautifier(p.Subtitle, frameRate, timeCodes, shotChanges).Beautify();
+            }
+
             // always re-number
             p.Subtitle.Renumber();
         }
@@ -2738,6 +2790,32 @@ namespace Nikse.SubtitleEdit.Forms
 
                 IncrementAndShowProgress();
             }
+        }
+
+        private static string TryToFindVideoFile(string fileNameNoExtension)
+        {
+            string movieFileName = null;
+
+            foreach (var extension in Utilities.VideoFileExtensions)
+            {
+                movieFileName = fileNameNoExtension + extension;
+                if (File.Exists(movieFileName))
+                {
+                    break;
+                }
+            }
+
+            if (movieFileName != null && File.Exists(movieFileName))
+            {
+                return movieFileName;
+            }
+            else if (fileNameNoExtension.Contains('.'))
+            {
+                fileNameNoExtension = fileNameNoExtension.Substring(0, fileNameNoExtension.LastIndexOf('.'));
+                return TryToFindVideoFile(fileNameNoExtension);
+            }
+
+            return null;
         }
 
         private void ComboBoxSubtitleFormatsSelectedIndexChanged(object sender, EventArgs e)
@@ -3099,6 +3177,7 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.Tools.BatchConvertBridgeGaps = IsActionEnabled(CommandLineConverter.BatchAction.BridgeGaps);
             Configuration.Settings.Tools.BatchConvertRemoveTextForHI = IsActionEnabled(CommandLineConverter.BatchAction.RemoveTextForHI);
             Configuration.Settings.Tools.BatchConvertConvertColorsToDialog = IsActionEnabled(CommandLineConverter.BatchAction.ConvertColorsToDialog);
+            Configuration.Settings.Tools.BatchConvertBeautifyTimeCodes = IsActionEnabled(CommandLineConverter.BatchAction.BeautifyTimeCodes);
             Configuration.Settings.Tools.BatchConvertSetMinDisplayTimeBetweenSubtitles = IsActionEnabled(CommandLineConverter.BatchAction.SetMinGap);
             Configuration.Settings.Tools.BatchConvertOutputFolder = textBoxOutputFolder.Text;
             Configuration.Settings.Tools.BatchConvertOverwriteExisting = checkBoxOverwrite.Checked;
@@ -3501,6 +3580,7 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxConvertColorsToDialog.Visible = false;
             groupBoxSortBy.Visible = false;
             groupBoxMergeSameTimeCodes.Visible = false;
+            groupBoxBeautifyTimeCodes.Visible = false;
 
             if (listViewConvertOptions.SelectedIndices.Count != 1)
             {
@@ -3773,6 +3853,14 @@ namespace Nikse.SubtitleEdit.Forms
         private void UpdateOcrInfo()
         {
             toolStripMenuItemOcrEngine.Text = $"{LanguageSettings.Current.VobSubOcr.OcrMethod}: {_ocrEngine} / {_ocrLanguage}";
+        }
+
+        private void buttonBeautifyTimeCodesEditProfile_Click(object sender, EventArgs e)
+        {
+            using (var form = new BeautifyTimeCodes.BeautifyTimeCodesProfile(Configuration.Settings.General.DefaultFrameRate))
+            {
+                form.ShowDialog(this);
+            }
         }
     }
 }

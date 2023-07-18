@@ -411,6 +411,9 @@ namespace Nikse.SubtitleEdit.Logic
             public string NoShotChangesLoaded { get; set; }
             public string XShotChangesLoaded { get; set; }
             public string NoShotChangesLoadedError { get; set; }
+            public string BatchAlignTimeCodes { get; set; }
+            public string BatchUseExactTimeCodes { get; set; }
+            public string BatchSnapToShotChanges { get; set; }
         }
 
         public class BeautifyTimeCodesProfile

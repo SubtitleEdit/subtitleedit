@@ -59,6 +59,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
             DeleteLines,
             AssaChangeRes,
             SortBy,
+            BeautifyTimeCodes,
         }
 
         internal static void ConvertOrReturn(string productIdentifier, string[] commandLineArguments)

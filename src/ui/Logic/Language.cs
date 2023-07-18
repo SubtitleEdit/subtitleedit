@@ -564,6 +564,9 @@ namespace Nikse.SubtitleEdit.Logic
                     "You've selected to snap cues to shot changes, but there are no shot changes loaded." +
                     Environment.NewLine + Environment.NewLine +
                     "Please click \"{0}\" to generate or import shot changes first, or disable this option.",
+                BatchAlignTimeCodes = "Align time codes to frame time codes",
+                BatchUseExactTimeCodes = "Use exact time codes (if available)",
+                BatchSnapToShotChanges = "Snap cues to shot changes (if available)",
             };
 
             BeautifyTimeCodesProfile = new LanguageStructure.BeautifyTimeCodesProfile
