@@ -466,6 +466,24 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxBeautifyTimeCodesUseExactTimeCodes.Checked = Configuration.Settings.BeautifyTimeCodes.ExtractExactTimeCodes;
             checkBoxBeautifyTimeCodesSnapToShotChanges.Checked = Configuration.Settings.BeautifyTimeCodes.SnapToShotChanges;
 
+            groupBoxApplyDurationLimits.Text = LanguageSettings.Current.ApplyDurationLimits.Title;
+            checkBoxApplyDurationLimitsMinDuration.Text = LanguageSettings.Current.Settings.DurationMinimumMilliseconds;
+            checkBoxApplyDurationLimitsMaxDuration.Text = LanguageSettings.Current.Settings.DurationMaximumMilliseconds;
+            checkBoxApplyDurationLimitsCheckShotChanges.Text = LanguageSettings.Current.ApplyDurationLimits.BatchCheckShotChanges;
+            checkBoxApplyDurationLimitsMinDuration.Checked = Configuration.Settings.Tools.ApplyMinimumDurationLimit;
+            checkBoxApplyDurationLimitsMaxDuration.Checked = Configuration.Settings.Tools.ApplyMaximumDurationLimit;
+            checkBoxApplyDurationLimitsCheckShotChanges.Checked = Configuration.Settings.Tools.ApplyMinimumDurationLimitCheckShotChanges;
+            numericUpDownApplyDurationLimitsMinDuration.Value = Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds;
+            numericUpDownApplyDurationLimitsMaxDuration.Value = Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds;
+
+            numericUpDownApplyDurationLimitsMinDuration.Left = checkBoxApplyDurationLimitsMinDuration.Left + checkBoxApplyDurationLimitsMinDuration.Width + 6;
+            numericUpDownApplyDurationLimitsMaxDuration.Left = checkBoxApplyDurationLimitsMaxDuration.Left + checkBoxApplyDurationLimitsMaxDuration.Width + 6;
+            if (Math.Abs(numericUpDownApplyDurationLimitsMinDuration.Left - numericUpDownApplyDurationLimitsMaxDuration.Left) < 10)
+            {
+                numericUpDownApplyDurationLimitsMinDuration.Left = Math.Max(numericUpDownApplyDurationLimitsMinDuration.Left, numericUpDownApplyDurationLimitsMaxDuration.Left);
+                numericUpDownApplyDurationLimitsMaxDuration.Left = Math.Max(numericUpDownApplyDurationLimitsMinDuration.Left, numericUpDownApplyDurationLimitsMaxDuration.Left);
+            }
+
             inverseSelectionToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.Edit.InverseSelection;
             toolStripMenuItemSelectAll.Text = LanguageSettings.Current.Main.Menu.ContextMenu.SelectAll;
             UpdateNumberOfFiles();
@@ -610,7 +628,8 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     Text =  LanguageSettings.Current.ApplyDurationLimits.Title,
                     Checked = Configuration.Settings.Tools.BatchConvertApplyDurationLimits,
-                    Action = CommandLineConverter.BatchAction.ApplyDurationLimits
+                    Action = CommandLineConverter.BatchAction.ApplyDurationLimits,
+                    Control = groupBoxApplyDurationLimits
                 },
                 new FixActionItem
                 {
@@ -1969,7 +1988,11 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (IsActionEnabled(CommandLineConverter.BatchAction.ApplyDurationLimits))
             {
-                var fixDurationLimits = new FixDurationLimits(Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds, Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds);
+                var minDuration = checkBoxApplyDurationLimitsMinDuration.Checked ? (int)numericUpDownApplyDurationLimitsMinDuration.Value : 0;
+                var maxDuration = checkBoxApplyDurationLimitsMaxDuration.Checked ? (int)numericUpDownApplyDurationLimitsMaxDuration.Value : int.MaxValue;
+                var shotChanges = checkBoxApplyDurationLimitsCheckShotChanges.Checked ? GetShotChangesOrEmpty(sub.FileName) : new List<double>();
+
+                var fixDurationLimits = new FixDurationLimits(minDuration, maxDuration, shotChanges);
                 sub = fixDurationLimits.Fix(sub);
             }
 
