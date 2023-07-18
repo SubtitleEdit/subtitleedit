@@ -369,8 +369,12 @@ namespace Nikse.SubtitleEdit.Logic
                 c.BackColor = buttonBackColor;
                 c.ForeColor = Control.DefaultForeColor;
             }
-
-            if (c is Button bu)
+            else if (c is NikseComboBox)
+            {
+                c.BackColor = buttonBackColor;
+                c.ForeColor = Control.DefaultForeColor;
+            }
+            else if (c is Button bu)
             {
                 bu.BackColor = buttonBackColor;
             }
@@ -484,6 +488,13 @@ namespace Nikse.SubtitleEdit.Logic
                 tud.ForeColor = ForeColor;
                 tud.ButtonForeColor = ForeColor;
                 tud.BackColorDisabled = BackColor;
+            }
+            else if (c is NikseComboBox ncb)
+            {
+                ncb.BackColor = BackColor;
+                ncb.ForeColor = ForeColor;
+                ncb.ButtonForeColor = ForeColor;
+                ncb.BackColorDisabled = BackColor;
             }
         }
 
