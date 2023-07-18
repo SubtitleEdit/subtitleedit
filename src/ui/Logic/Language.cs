@@ -302,8 +302,11 @@ namespace Nikse.SubtitleEdit.Logic
             AddWaveformBatch = new LanguageStructure.AddWaveformBatch
             {
                 Title = "Batch generate waveform data",
-                Calculating = "Calculating...",
+                ExtractTimeCodes = "Extract time codes with FFprobe",
                 ExtractingAudio = "Extracting audio...",
+                Calculating = "Calculating...",
+                ExtractingTimeCodes = "Extracting time codes...",
+                DetectingShotChanges = "Detecting shot changes...",
                 Done = "Done",
                 Error = "Error",
             };
