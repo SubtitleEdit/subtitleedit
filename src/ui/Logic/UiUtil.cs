@@ -652,26 +652,6 @@ namespace Nikse.SubtitleEdit.Logic
                 }
             }
 
-            if (form is TimeUpDown timeUpDown)
-            {
-                using (var g = Graphics.FromHwnd(IntPtr.Zero))
-                {
-                    timeUpDown.Font = GetDefaultFont();
-                    timeUpDown.MaskedTextBox.Font = GetDefaultFont();
-                    timeUpDown.MaskedTextBox.ForeColor = ForeColor;
-                    var width = g.MeasureString("00:00:00.000", form.Font).Width;
-                    if (timeUpDown.MaskedTextBox.Width < width - 3)
-                    {
-                        timeUpDown.MaskedTextBox.Font = new Font(timeUpDown.MaskedTextBox.Font.FontFamily, timeUpDown.MaskedTextBox.Font.Size - 1);
-                    }
-                    width = g.MeasureString("00:00:00.000", form.Font).Width;
-                    if (timeUpDown.MaskedTextBox.Width < width - 3)
-                    {
-                        timeUpDown.MaskedTextBox.Font = new Font(timeUpDown.MaskedTextBox.Font.FontFamily, timeUpDown.MaskedTextBox.Font.Size - 1);
-                    }
-                }
-            }
-
             foreach (Control c in form.Controls)
             {
                 if (!c.Font.Name.Equals("Tahoma", StringComparison.Ordinal))

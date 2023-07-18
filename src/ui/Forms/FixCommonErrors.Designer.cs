@@ -83,7 +83,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonAutoBreak = new System.Windows.Forms.Button();
             this.labelStartTimeWarning = new System.Windows.Forms.Label();
             this.labelDurationWarning = new System.Windows.Forms.Label();
-            this.timeUpDownStartTime = new Nikse.SubtitleEdit.Controls.TimeUpDown();
+            this.timeUpDownStartTime = new Nikse.SubtitleEdit.Controls.NikseTimeUpDown();
             this.numericUpDownDuration = new System.Windows.Forms.NumericUpDown();
             this.labelDuration = new System.Windows.Forms.Label();
             this.labelStartTime = new System.Windows.Forms.Label();
@@ -651,7 +651,6 @@ namespace Nikse.SubtitleEdit.Forms
             // timeUpDownStartTime
             // 
             this.timeUpDownStartTime.AutoSize = true;
-            this.timeUpDownStartTime.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.timeUpDownStartTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
             this.timeUpDownStartTime.Location = new System.Drawing.Point(8, 27);
             this.timeUpDownStartTime.Margin = new System.Windows.Forms.Padding(4);
@@ -860,7 +859,7 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.Button buttonFixesSelectAll;
         private System.Windows.Forms.Label labelStartTimeWarning;
         private System.Windows.Forms.Label labelDurationWarning;
-        private Nikse.SubtitleEdit.Controls.TimeUpDown timeUpDownStartTime;
+        private Nikse.SubtitleEdit.Controls.NikseTimeUpDown timeUpDownStartTime;
         private System.Windows.Forms.NumericUpDown numericUpDownDuration;
         private System.Windows.Forms.Label labelDuration;
         private System.Windows.Forms.Label labelStartTime;

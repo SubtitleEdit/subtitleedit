@@ -40,7 +40,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.radioButtonAllLines = new System.Windows.Forms.RadioButton();
             this.radioButtonSelectedLinesOnly = new System.Windows.Forms.RadioButton();
-            this.timeUpDownAdjust = new Nikse.SubtitleEdit.Controls.TimeUpDown();
+            this.timeUpDownAdjust = new Nikse.SubtitleEdit.Controls.NikseTimeUpDown();
             this.radioButtonSelectedLineAndForward = new System.Windows.Forms.RadioButton();
             this.SuspendLayout();
             // 
@@ -113,7 +113,6 @@ namespace Nikse.SubtitleEdit.Forms
             // timeUpDownAdjust
             // 
             this.timeUpDownAdjust.AutoSize = true;
-            this.timeUpDownAdjust.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.timeUpDownAdjust.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.timeUpDownAdjust.Location = new System.Drawing.Point(12, 23);
             this.timeUpDownAdjust.Margin = new System.Windows.Forms.Padding(4);
@@ -172,7 +171,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         #endregion
 
-        private Nikse.SubtitleEdit.Controls.TimeUpDown timeUpDownAdjust;
+        private Nikse.SubtitleEdit.Controls.NikseTimeUpDown timeUpDownAdjust;
         private System.Windows.Forms.Label labelHourMinSecMilliSecond;
         private System.Windows.Forms.Button buttonShowLater;
         private System.Windows.Forms.Button buttonShowEarlier;
