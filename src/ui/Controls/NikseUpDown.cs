@@ -258,8 +258,8 @@ namespace Nikse.SubtitleEdit.Controls
         protected override void OnVisibleChanged(EventArgs e)
         {
             base.OnVisibleChanged(e);
-            Invalidate();
             Height = 23;
+            Invalidate();
         }
 
         private void _textBox_TextChanged(object sender, EventArgs e)
@@ -465,6 +465,16 @@ namespace Nikse.SubtitleEdit.Controls
         }
 
         private const int ButtonsWidth = 13;
+
+        public new bool Enabled
+        {
+            get => base.Enabled;
+            set
+            {
+                base.Enabled = value;
+                Invalidate();
+            }
+        }
 
         protected override void OnPaint(PaintEventArgs e)
         {

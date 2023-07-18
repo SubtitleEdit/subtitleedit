@@ -109,6 +109,9 @@
     <Compile Include="Controls\CuesPreviewView.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Controls\NikseComboBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Controls\NikseTimeUpDown.cs">
       <SubType>Component</SubType>
     </Compile>
