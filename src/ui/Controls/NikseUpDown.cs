@@ -255,6 +255,13 @@ namespace Nikse.SubtitleEdit.Controls
             TabStop = false;
         }
 
+        protected override void OnVisibleChanged(EventArgs e)
+        {
+            base.OnVisibleChanged(e);
+            Invalidate();
+            Height = 23;
+        }
+
         private void _textBox_TextChanged(object sender, EventArgs e)
         {
             if (decimal.TryParse(_textBox.Text, out var result))

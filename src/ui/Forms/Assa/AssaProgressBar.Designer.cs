@@ -62,7 +62,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.numericUpDownYAdjust = new System.Windows.Forms.NumericUpDown();
             this.textBoxChapterText = new System.Windows.Forms.TextBox();
             this.labelText = new System.Windows.Forms.Label();
-            this.timeUpDownStartTime = new Nikse.SubtitleEdit.Controls.TimeUpDown();
+            this.timeUpDownStartTime = new Nikse.SubtitleEdit.Controls.NikseTimeUpDown();
             this.labelStartTime = new System.Windows.Forms.Label();
             this.panelTextColor = new System.Windows.Forms.Panel();
             this.buttonTextColor = new System.Windows.Forms.Button();
@@ -490,7 +490,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             // 
             this.timeUpDownStartTime.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.timeUpDownStartTime.AutoSize = true;
-            this.timeUpDownStartTime.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.timeUpDownStartTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
             this.timeUpDownStartTime.Location = new System.Drawing.Point(63, 290);
             this.timeUpDownStartTime.Margin = new System.Windows.Forms.Padding(4);
@@ -704,7 +703,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         private System.Windows.Forms.TextBox textBoxSource;
         private System.Windows.Forms.Panel panelTextColor;
         private System.Windows.Forms.Button buttonTextColor;
-        private Controls.TimeUpDown timeUpDownStartTime;
+        private Controls.NikseTimeUpDown timeUpDownStartTime;
         private System.Windows.Forms.Label labelStartTime;
         private System.Windows.Forms.TextBox textBoxChapterText;
         private System.Windows.Forms.Label labelText;

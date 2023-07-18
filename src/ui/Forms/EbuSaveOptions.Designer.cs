@@ -40,7 +40,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelMaxCharsPerRow38ForTeletext = new System.Windows.Forms.Label();
             this.labelLanguageCodeFriendlyName = new System.Windows.Forms.Label();
             this.buttonChooseLanguageCode = new System.Windows.Forms.Button();
-            this.timeUpDownStartTime = new Nikse.SubtitleEdit.Controls.TimeUpDown();
+            this.timeUpDownStartTime = new Nikse.SubtitleEdit.Controls.NikseTimeUpDown();
             this.labelDisplayStandardCodeWarning = new System.Windows.Forms.Label();
             this.labelFrameRate = new System.Windows.Forms.Label();
             this.comboBoxFrameRate = new System.Windows.Forms.ComboBox();
@@ -254,7 +254,6 @@ namespace Nikse.SubtitleEdit.Forms
             // timeUpDownStartTime
             // 
             this.timeUpDownStartTime.AutoSize = true;
-            this.timeUpDownStartTime.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.timeUpDownStartTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
             this.timeUpDownStartTime.Location = new System.Drawing.Point(179, 411);
             this.timeUpDownStartTime.Margin = new System.Windows.Forms.Padding(4);
@@ -1018,7 +1017,7 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.Label labelTimeCodeStartOfProgramme;
         private System.Windows.Forms.Label labelTimeCodeStatus;
         private System.Windows.Forms.ComboBox comboBoxTimeCodeStatus;
-        private Controls.TimeUpDown timeUpDownStartTime;
+        private Controls.NikseTimeUpDown timeUpDownStartTime;
         private System.Windows.Forms.Label labelFrameRate;
         private System.Windows.Forms.ComboBox comboBoxFrameRate;
         private System.Windows.Forms.GroupBox groupBoxTeletext;

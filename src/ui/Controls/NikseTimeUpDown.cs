@@ -44,16 +44,13 @@ namespace Nikse.SubtitleEdit.Controls
 
         public void SetAutoWidth()
         {
-            using (var g = Graphics.FromHwnd(IntPtr.Zero))
-            {
-                var widthOfUpDown = 25;
-                if (Configuration.IsRunningOnLinux)
-                {
-                    widthOfUpDown += 20;
-                }
-                var actualWidth = g.MeasureString("00:00:00:000", Font).Width;
-                Width = (int)Math.Round(actualWidth + ButtonsWidth + 6);
-            }
+        }
+
+        protected override void OnVisibleChanged(EventArgs e)
+        {
+            base.OnVisibleChanged(e);
+            Invalidate();
+            Height = 23;
         }
 
         public TimeMode Mode

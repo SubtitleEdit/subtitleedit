@@ -39,7 +39,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.labelHourMinSecMilliSecond = new System.Windows.Forms.Label();
-            this.splitTimeUpDownAdjust = new Nikse.SubtitleEdit.Controls.TimeUpDown();
+            this.splitTimeUpDownAdjust = new Nikse.SubtitleEdit.Controls.NikseTimeUpDown();
             this.buttonAdvanced = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
@@ -109,7 +109,6 @@ namespace Nikse.SubtitleEdit.Forms
             // splitTimeUpDownAdjust
             // 
             this.splitTimeUpDownAdjust.AutoSize = true;
-            this.splitTimeUpDownAdjust.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.splitTimeUpDownAdjust.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.splitTimeUpDownAdjust.Location = new System.Drawing.Point(29, 69);
             this.splitTimeUpDownAdjust.Margin = new System.Windows.Forms.Padding(4);
@@ -174,7 +173,7 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
-        private Nikse.SubtitleEdit.Controls.TimeUpDown splitTimeUpDownAdjust;
+        private Nikse.SubtitleEdit.Controls.NikseTimeUpDown splitTimeUpDownAdjust;
         private System.Windows.Forms.Label labelHourMinSecMilliSecond;
         private System.Windows.Forms.Button buttonAdvanced;
     }
