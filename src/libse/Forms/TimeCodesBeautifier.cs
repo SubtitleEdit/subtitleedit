@@ -87,7 +87,10 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
                     // Report progress
                     var progress = (double)(pass * _subtitle.Paragraphs.Count + p) / (_subtitle.Paragraphs.Count * amountOfPasses);
-                    ProgressChanged.Invoke(progress);
+                    if (ProgressChanged != null)
+                    {
+                        ProgressChanged.Invoke(progress);
+                    }
                 }
             }
         }
