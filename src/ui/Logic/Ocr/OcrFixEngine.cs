@@ -349,20 +349,9 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             _nameMultiWordListAndWordsWithPeriods = new List<string>(_nameMultiWordList.Concat(nameListWithPeriods));
             if (isEnglish)
             {
-                if (!_abbreviationList.Contains("a.m."))
-                {
-                    _abbreviationList.Add("a.m.");
-                }
-
-                if (!_abbreviationList.Contains("p.m."))
-                {
-                    _abbreviationList.Add("p.m.");
-                }
-
-                if (!_abbreviationList.Contains("o.r."))
-                {
-                    _abbreviationList.Add("o.r.");
-                }
+                _abbreviationList.Add("a.m.");
+                _abbreviationList.Add("p.m.");
+                _abbreviationList.Add("o.r.");
             }
 
             // Load Hunspell spell checker
