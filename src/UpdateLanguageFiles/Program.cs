@@ -2,6 +2,7 @@
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace UpdateLanguageFiles
 {
@@ -23,7 +24,7 @@ namespace UpdateLanguageFiles
             Console.Write(WorkInProgress);
         }
 
-        private static int Main(string[] args)
+        private static async Task<int> Main(string[] args)
         {
             var myName = Environment.GetCommandLineArgs()[0];
             myName = Path.GetFileNameWithoutExtension(string.IsNullOrWhiteSpace(myName) ? System.Reflection.Assembly.GetEntryAssembly()?.Location : myName);
@@ -52,7 +53,7 @@ namespace UpdateLanguageFiles
 
                 if (oldLanguageAsXml != languageAsXml)
                 {
-                    SaveWithRetry(args[0], language);
+                    await SaveWithRetry(() => language.Save(args[0]));
                     noOfChanges++;
                     Console.Write(" {0} generated...", Path.GetFileName(args[0]));
                 }
@@ -66,7 +67,7 @@ namespace UpdateLanguageFiles
 
                 if (oldLanguageDeserializerContent != languageDeserializerContent)
                 {
-                    SaveWithRetry(args[1], languageDeserializerContent);
+                    await SaveWithRetry(() => File.WriteAllText(args[1], languageDeserializerContent, Encoding.UTF8));
                     noOfChanges++;
                     Console.Write(" {0} generated...", Path.GetFileName(args[1]));
                 }
@@ -91,66 +92,42 @@ namespace UpdateLanguageFiles
             }
         }
 
-        private static void SaveWithRetry(string fileName, string content)
+        private static async Task SaveWithRetry(Action saveAction)
         {
-            for (var i = 0; i < 10; i++)
+            const int maxRetries = 10;
+            var delayBetweenRetries = TimeSpan.FromMilliseconds(10);
+
+            for (var i = 0; i <= maxRetries; i++)
             {
                 try
                 {
-                    File.WriteAllText(fileName, content, Encoding.UTF8);
+                    saveAction();
                     return;
                 }
                 catch
                 {
-                    System.Threading.Thread.Sleep(10);
+                    if (i == maxRetries)
+                    {
+                        throw;  // Rethrow the original exception if maximum attempts have been tried
+                    }
+
+                    await Task.Delay(delayBetweenRetries).ConfigureAwait(false);
                 }
             }
-            File.WriteAllText(fileName, content, Encoding.UTF8);
         }
-
-        private static void SaveWithRetry(string fileName, Nikse.SubtitleEdit.Logic.Language language)
-        {
-            for (var i = 0; i < 10; i++)
-            {
-                try
-                {
-                    language.Save(fileName);
-                    return;
-                }
-                catch
-                {
-                    System.Threading.Thread.Sleep(10);
-                }
-            }
-            language.Save(fileName);
-        }
-
+        
         private static string FindVersionNumber()
         {
             var templateFileName = Path.Combine("src", "ui", "Properties", "AssemblyInfo.cs.template");
-            if (!File.Exists(templateFileName))
+            var count = 0;
+            while (!File.Exists(templateFileName))
             {
                 templateFileName = Path.Combine("..", templateFileName);
-            }
-
-            if (!File.Exists(templateFileName))
-            {
-                templateFileName = Path.Combine("..", templateFileName);
-            }
-
-            if (!File.Exists(templateFileName))
-            {
-                templateFileName = Path.Combine("..", templateFileName);
-            }
-
-            if (!File.Exists(templateFileName))
-            {
-                templateFileName = Path.Combine("..", templateFileName);
-            }
-
-            if (!File.Exists(templateFileName))
-            {
-                templateFileName = Path.Combine("..", templateFileName);
+                
+                if (count++ == 5)
+                {
+                    break;
+                }
             }
 
             if (File.Exists(templateFileName))
