@@ -540,12 +540,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             if (tokens[0] == "--" && tokens[1] == "--" && tokens[2] == "--" && tokens[3] == "--")
             {
-                return new TimeCode(TimeCode.MaxTimeTotalMilliseconds);
+                return TimeCode.FromMilliseconds(TimeCode.MaxTimeTotalMilliseconds);
             }
 
             if (tokens[0] == "-" && tokens[1] == "-" && tokens[2] == "-" && tokens[3] == "-")
             {
-                return new TimeCode(TimeCode.MaxTimeTotalMilliseconds);
+                return TimeCode.FromMilliseconds(TimeCode.MaxTimeTotalMilliseconds);
             }
 
             return new TimeCode(int.Parse(tokens[0]), int.Parse(tokens[1]), int.Parse(tokens[2]), FramesToMillisecondsMax999(int.Parse(tokens[3])));

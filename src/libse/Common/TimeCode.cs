@@ -12,10 +12,9 @@ namespace Nikse.SubtitleEdit.Core.Common
         public bool IsMaxTime => Math.Abs(TotalMilliseconds - MaxTimeTotalMilliseconds) < 0.01;
         public const double MaxTimeTotalMilliseconds = 359999999; // new TimeCode(99, 59, 59, 999).TotalMilliseconds
 
-        public static TimeCode FromSeconds(double seconds)
-        {
-            return new TimeCode(seconds * BaseUnit);
-        }
+        public static TimeCode FromSeconds(double seconds) => FromMilliseconds(seconds * BaseUnit);
+
+        public static TimeCode FromMilliseconds(double milliseconds) => new TimeCode(milliseconds);
 
         public static double ParseToMilliseconds(string text)
         {
