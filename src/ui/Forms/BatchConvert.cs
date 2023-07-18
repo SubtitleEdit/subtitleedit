@@ -2666,32 +2666,8 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             if (p.BeautifyTimeCodes.Enabled)
-            {                
-                var frameRate = Configuration.Settings.General.DefaultFrameRate;
-                var timeCodes = new List<double>();
-                var shotChanges = new List<double>();
-
-                var videoFile = TryToFindVideoFile(p.FileName);
-                if (videoFile != null)
-                {
-                    var videoInfo = UiUtil.GetVideoInfo(videoFile);
-                    if (videoInfo.FramesPerSecond > 0)
-                    {
-                        frameRate = videoInfo.FramesPerSecond;
-                    }
-
-                    if (p.BeautifyTimeCodes.UseExactTimeCodes)
-                    {
-                        timeCodes = TimeCodesFileHelper.FromDisk(videoFile);
-                    }
-
-                    if (p.BeautifyTimeCodes.SnapToShotChanges)
-                    {
-                        shotChanges = ShotChangeHelper.FromDisk(videoFile);
-                    }
-                }
-
-                new TimeCodesBeautifier(p.Subtitle, frameRate, timeCodes, shotChanges).Beautify();
+            {
+                BeautifyTimeCodes(p.Subtitle, p.FileName, p.BeautifyTimeCodes.UseExactTimeCodes, p.BeautifyTimeCodes.SnapToShotChanges);
             }
 
             // always re-number
@@ -2795,7 +2771,36 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private static string TryToFindVideoFile(string fileName)
+        public static void BeautifyTimeCodes(Subtitle subtitle, string fileName, bool useExactTimeCodes, bool snapToShotChanges)
+        {
+            var frameRate = Configuration.Settings.General.DefaultFrameRate;
+            var timeCodes = new List<double>();
+            var shotChanges = new List<double>();
+
+            var videoFile = TryToFindVideoFile(fileName);
+            if (videoFile != null)
+            {
+                var videoInfo = UiUtil.GetVideoInfo(videoFile);
+                if (videoInfo.FramesPerSecond > 0)
+                {
+                    frameRate = videoInfo.FramesPerSecond;
+                }
+
+                if (useExactTimeCodes)
+                {
+                    timeCodes = TimeCodesFileHelper.FromDisk(videoFile);
+                }
+
+                if (snapToShotChanges)
+                {
+                    shotChanges = ShotChangeHelper.FromDisk(videoFile);
+                }
+            }
+
+            new TimeCodesBeautifier(subtitle, frameRate, timeCodes, shotChanges).Beautify();
+        }
+
+        public static string TryToFindVideoFile(string fileName)
         {
             string fileNameNoExtension = Utilities.GetPathAndFileNameWithoutExtension(fileName);
             string movieFileName = null;
@@ -2822,7 +2827,7 @@ namespace Nikse.SubtitleEdit.Forms
             return null;
         }
 
-        private static List<double> GetShotChangesOrEmpty(string fileName)
+        public static List<double> GetShotChangesOrEmpty(string fileName)
         {
             var videoFile = TryToFindVideoFile(fileName);
             if (videoFile != null)
