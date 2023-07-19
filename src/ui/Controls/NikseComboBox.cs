@@ -1,15 +1,17 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Logic;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Controls
 {
     [Category("NikseComboBox"), Description("ComboBox with better support for color theme")]
-    public sealed class NikseComboBox : Control
+    public class NikseComboBox : Control
     {
         // ReSharper disable once InconsistentNaming
         public event EventHandler SelectedIndexChanged;
@@ -382,6 +384,11 @@ namespace Nikse.SubtitleEdit.Controls
                         _listView.FullRowSelect = true;
                         _listView.MultiSelect = false;
                         _listView.HideSelection = false;
+                        if (Configuration.Settings.General.UseDarkTheme)
+                        {
+                            DarkTheme.SetDarkTheme(_listView);
+                        }
+
                         _listView.MouseEnter += (sender, args) =>
                         {
                             _hasItemsMouseOver = true;
