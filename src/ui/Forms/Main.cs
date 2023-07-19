@@ -19131,7 +19131,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            void SetCueToClosestShotChangeGreenZone(Paragraph p)
+            void SetCueToClosestShotChangeGreenZone(Paragraph p, Subtitle sub)
             {
                 if (isInCue)
                 {
@@ -19144,6 +19144,16 @@ namespace Nikse.SubtitleEdit.Forms
                         if (newInCue >= 0 && newInCue < p.EndTime.TotalMilliseconds)
                         {
                             p.StartTime.TotalMilliseconds = newInCue;
+                        }
+
+                        // Push previous subtitle away if overlap
+                        if (isLeft)
+                        {
+                            var previous = sub.GetParagraphOrDefault(sub.GetIndex(p) - 1);
+                            if (previous != null)
+                            {
+                                previous.EndTime.TotalMilliseconds = Math.Min(previous.EndTime.TotalMilliseconds, p.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines);
+                            }
                         }
                     }
                 }
@@ -19158,6 +19168,16 @@ namespace Nikse.SubtitleEdit.Forms
                         if (newOutCue > p.StartTime.TotalMilliseconds)
                         {
                             p.EndTime.TotalMilliseconds = newOutCue;
+                        }
+
+                        // Push next subtitle away if overlap
+                        if (!isLeft)
+                        {
+                            var next = sub.GetParagraphOrDefault(sub.GetIndex(p) + 1);
+                            if (next != null)
+                            {
+                                next.StartTime.TotalMilliseconds = Math.Max(next.StartTime.TotalMilliseconds, p.EndTime.TotalMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines);
+                            }
                         }
                     }
                 }
@@ -19180,7 +19200,7 @@ namespace Nikse.SubtitleEdit.Forms
                             historyAdded = true;
                         }
 
-                        SetCueToClosestShotChangeGreenZone(original);
+                        SetCueToClosestShotChangeGreenZone(original, _subtitleOriginal);
                     }
                 }
 
@@ -19190,7 +19210,7 @@ namespace Nikse.SubtitleEdit.Forms
                     historyAdded = true;
                 }
 
-                SetCueToClosestShotChangeGreenZone(p);
+                SetCueToClosestShotChangeGreenZone(p, _subtitle);
 
                 RefreshSelectedParagraphs();
             }
