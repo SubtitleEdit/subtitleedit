@@ -19131,29 +19131,19 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            void SetCueToClosestShotChangeGreenZone(Paragraph p, Subtitle sub)
+            void SetCueToClosestShotChangeGreenZone(Paragraph p)
             {
                 if (isInCue)
                 {
                     var closestShotChange = ShotChangeHelper.GetClosestShotChange(audioVisualizer.ShotChanges, p.StartTime);
                     if (closestShotChange != null)
-                    {                        
-                        var newInCue = isLeft ? (closestShotChange.Value * 1000) - SubtitleFormat.FramesToMilliseconds(Configuration.Settings.BeautifyTimeCodes.Profile.InCuesLeftGreenZone) 
+                    {
+                        var newInCue = isLeft ? (closestShotChange.Value * 1000) - SubtitleFormat.FramesToMilliseconds(Configuration.Settings.BeautifyTimeCodes.Profile.InCuesLeftGreenZone)
                             : (closestShotChange.Value * 1000) + SubtitleFormat.FramesToMilliseconds(Configuration.Settings.BeautifyTimeCodes.Profile.InCuesRightGreenZone);
 
                         if (newInCue >= 0 && newInCue < p.EndTime.TotalMilliseconds)
                         {
                             p.StartTime.TotalMilliseconds = newInCue;
-                        }
-
-                        // Push previous subtitle away if overlap
-                        if (isLeft)
-                        {
-                            var previous = sub.GetParagraphOrDefault(sub.GetIndex(p) - 1);
-                            if (previous != null)
-                            {
-                                previous.EndTime.TotalMilliseconds = Math.Min(previous.EndTime.TotalMilliseconds, p.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines);
-                            }
                         }
                     }
                 }
@@ -19169,16 +19159,6 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             p.EndTime.TotalMilliseconds = newOutCue;
                         }
-
-                        // Push next subtitle away if overlap
-                        if (!isLeft)
-                        {
-                            var next = sub.GetParagraphOrDefault(sub.GetIndex(p) + 1);
-                            if (next != null)
-                            {
-                                next.StartTime.TotalMilliseconds = Math.Max(next.StartTime.TotalMilliseconds, p.EndTime.TotalMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines);
-                            }
-                        }
                     }
                 }
             }
@@ -19188,7 +19168,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 var idx = selectedItem.Index;
                 var p = _subtitle.Paragraphs[idx];
-                
+
                 if (IsOriginalEditable)
                 {
                     var original = Utilities.GetOriginalParagraph(idx, p, _subtitleOriginal.Paragraphs);
@@ -19200,7 +19180,7 @@ namespace Nikse.SubtitleEdit.Forms
                             historyAdded = true;
                         }
 
-                        SetCueToClosestShotChangeGreenZone(original, _subtitleOriginal);
+                        SetCueToClosestShotChangeGreenZone(original);
                     }
                 }
 
@@ -19210,7 +19190,7 @@ namespace Nikse.SubtitleEdit.Forms
                     historyAdded = true;
                 }
 
-                SetCueToClosestShotChangeGreenZone(p, _subtitle);
+                SetCueToClosestShotChangeGreenZone(p);
 
                 RefreshSelectedParagraphs();
             }
