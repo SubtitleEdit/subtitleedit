@@ -14,24 +14,39 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {
-            string fixAction = Language.UnneededSpace;
-            int doubleSpaces = 0;
-            for (int i = 0; i < subtitle.Paragraphs.Count; i++)
+            var fixAction = Language.UnneededSpace;
+            var doubleSpaces = 0;
+            foreach (var p in subtitle.Paragraphs)
             {
-                Paragraph p = subtitle.Paragraphs[i];
-                if (callbacks.AllowFix(p, fixAction))
+                if (!callbacks.AllowFix(p, fixAction))
+                    continue;
+
+                var oldText = p.Text;
+                var text = Utilities.RemoveUnneededSpaces(p.Text, callbacks.Language);
+
+                if (text.Length == oldText.Length)
+                    continue;
+
+                var newTextCount = CalculateCharacterCounts(text);
+                var oldTextCount = CalculateCharacterCounts(oldText);
+
+                if (newTextCount < oldTextCount)
                 {
-                    var oldText = p.Text;
-                    var text = Utilities.RemoveUnneededSpaces(p.Text, callbacks.Language);
-                    if (text.Length != oldText.Length && Utilities.CountTagInText(text, ' ') + Utilities.CountTagInText(text, '\t') + Utilities.CountTagInText(text, Environment.NewLine) < (Utilities.CountTagInText(oldText, ' ') + Utilities.CountTagInText(oldText, '\u00A0') + Utilities.CountTagInText(oldText, '\t') + Utilities.CountTagInText(oldText, Environment.NewLine)))
-                    {
-                        doubleSpaces++;
-                        p.Text = text;
-                        callbacks.AddFixToListView(p, fixAction, oldText, p.Text);
-                    }
+                    doubleSpaces++;
+                    p.Text = text;
+                    callbacks.AddFixToListView(p, fixAction, oldText, p.Text);
                 }
             }
+
             callbacks.UpdateFixStatus(doubleSpaces, Language.RemoveUnneededSpaces);
+        }
+
+        private int CalculateCharacterCounts(string text)
+        {
+            return Utilities.CountTagInText(text, ' ')
+                   + Utilities.CountTagInText(text, '\u00A0')
+                   + Utilities.CountTagInText(text, '\t')
+                   + Utilities.CountTagInText(text, Environment.NewLine);
         }
     }
 }
