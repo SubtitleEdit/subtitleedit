@@ -547,7 +547,7 @@ namespace Nikse.SubtitleEdit.Logic
                 TitleSelectedLines = "Beautify time codes ({0} selected lines)",
                 GroupTimeCodes = "Time codes",
                 AlignTimeCodes = "Align time codes to frame time codes",
-                ExtractExactTimeCodes = "Use ffprobe to extract exact frame time codes",
+                ExtractExactTimeCodes = "Use FFprobe to extract exact frame time codes",
                 ExtractTimeCodes = "Extract time codes",
                 CancelTimeCodes = "Cancel",
                 GroupShotChanges = "Shot changes",
