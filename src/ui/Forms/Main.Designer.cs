@@ -344,6 +344,7 @@
             this.changeCasingForSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fixCommonErrorsInSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.visualSyncSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.beautifyTimeCodesOfSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showSelectedLinesEarlierlaterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemTranslateSelected = new System.Windows.Forms.ToolStripMenuItem();
             this.genericTranslateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -3142,6 +3143,7 @@
             this.changeCasingForSelectedLinesToolStripMenuItem,
             this.fixCommonErrorsInSelectedLinesToolStripMenuItem,
             this.visualSyncSelectedLinesToolStripMenuItem,
+            this.beautifyTimeCodesOfSelectedLinesToolStripMenuItem,
             this.showSelectedLinesEarlierlaterToolStripMenuItem,
             this.toolStripMenuItemTranslateSelected,
             this.toolStripMenuItemUnbreakLines,
@@ -3180,6 +3182,13 @@
             this.visualSyncSelectedLinesToolStripMenuItem.Size = new System.Drawing.Size(275, 22);
             this.visualSyncSelectedLinesToolStripMenuItem.Text = "Visual sync selected lines...";
             this.visualSyncSelectedLinesToolStripMenuItem.Click += new System.EventHandler(this.VisualSyncSelectedLinesToolStripMenuItemClick);
+            // 
+            // beautifyTimeCodesOfSelectedLinesToolStripMenuItem
+            // 
+            this.beautifyTimeCodesOfSelectedLinesToolStripMenuItem.Name = "beautifyTimeCodesOfSelectedLinesToolStripMenuItem";
+            this.beautifyTimeCodesOfSelectedLinesToolStripMenuItem.Size = new System.Drawing.Size(275, 22);
+            this.beautifyTimeCodesOfSelectedLinesToolStripMenuItem.Text = "Beautify time codes of selected lines...";
+            this.beautifyTimeCodesOfSelectedLinesToolStripMenuItem.Click += new System.EventHandler(this.beautifyTimeCodesOfSelectedLinesToolStripMenuItem_Click);
             // 
             // showSelectedLinesEarlierlaterToolStripMenuItem
             // 
@@ -3785,8 +3794,9 @@
             this.timeUpDownVideoPosition.Location = new System.Drawing.Point(90, 190);
             this.timeUpDownVideoPosition.Margin = new System.Windows.Forms.Padding(4);
             this.timeUpDownVideoPosition.Name = "timeUpDownVideoPosition";
-            this.timeUpDownVideoPosition.Size = new System.Drawing.Size(113, 22);
+            this.timeUpDownVideoPosition.Size = new System.Drawing.Size(113, 23);
             this.timeUpDownVideoPosition.TabIndex = 12;
+            this.timeUpDownVideoPosition.TabStop = false;
             timeCode1.Hours = 0;
             timeCode1.Milliseconds = 0;
             timeCode1.Minutes = 0;
@@ -3917,7 +3927,7 @@
             0,
             0,
             65536});
-            this.numericUpDownSec2.Location = new System.Drawing.Point(66, 163);
+            this.numericUpDownSec2.Location = new System.Drawing.Point(67, 163);
             this.numericUpDownSec2.Maximum = new decimal(new int[] {
             60,
             0,
@@ -3929,8 +3939,9 @@
             0,
             0});
             this.numericUpDownSec2.Name = "numericUpDownSec2";
-            this.numericUpDownSec2.Size = new System.Drawing.Size(58, 21);
+            this.numericUpDownSec2.Size = new System.Drawing.Size(58, 23);
             this.numericUpDownSec2.TabIndex = 9;
+            this.numericUpDownSec2.TabStop = false;
             this.numericUpDownSec2.ThousandsSeparator = false;
             this.numericUpDownSec2.Value = new decimal(new int[] {
             5000,
@@ -3974,7 +3985,7 @@
             0,
             0,
             65536});
-            this.numericUpDownSec1.Location = new System.Drawing.Point(66, 137);
+            this.numericUpDownSec1.Location = new System.Drawing.Point(67, 137);
             this.numericUpDownSec1.Maximum = new decimal(new int[] {
             60,
             0,
@@ -3986,8 +3997,9 @@
             0,
             0});
             this.numericUpDownSec1.Name = "numericUpDownSec1";
-            this.numericUpDownSec1.Size = new System.Drawing.Size(58, 21);
+            this.numericUpDownSec1.Size = new System.Drawing.Size(58, 23);
             this.numericUpDownSec1.TabIndex = 6;
+            this.numericUpDownSec1.TabStop = false;
             this.numericUpDownSec1.ThousandsSeparator = false;
             this.numericUpDownSec1.Value = new decimal(new int[] {
             500,
@@ -4062,8 +4074,9 @@
             this.timeUpDownVideoPositionAdjust.Location = new System.Drawing.Point(90, 215);
             this.timeUpDownVideoPositionAdjust.Margin = new System.Windows.Forms.Padding(4);
             this.timeUpDownVideoPositionAdjust.Name = "timeUpDownVideoPositionAdjust";
-            this.timeUpDownVideoPositionAdjust.Size = new System.Drawing.Size(113, 22);
+            this.timeUpDownVideoPositionAdjust.Size = new System.Drawing.Size(113, 23);
             this.timeUpDownVideoPositionAdjust.TabIndex = 13;
+            this.timeUpDownVideoPositionAdjust.TabStop = false;
             timeCode2.Hours = 0;
             timeCode2.Milliseconds = 0;
             timeCode2.Minutes = 0;
@@ -4195,8 +4208,9 @@
             0,
             0});
             this.numericUpDownSecAdjust2.Name = "numericUpDownSecAdjust2";
-            this.numericUpDownSecAdjust2.Size = new System.Drawing.Size(58, 21);
+            this.numericUpDownSecAdjust2.Size = new System.Drawing.Size(59, 23);
             this.numericUpDownSecAdjust2.TabIndex = 10;
+            this.numericUpDownSecAdjust2.TabStop = false;
             this.numericUpDownSecAdjust2.ThousandsSeparator = false;
             this.numericUpDownSecAdjust2.Value = new decimal(new int[] {
             5000,
@@ -4252,8 +4266,9 @@
             0,
             0});
             this.numericUpDownSecAdjust1.Name = "numericUpDownSecAdjust1";
-            this.numericUpDownSecAdjust1.Size = new System.Drawing.Size(58, 21);
+            this.numericUpDownSecAdjust1.Size = new System.Drawing.Size(59, 23);
             this.numericUpDownSecAdjust1.TabIndex = 7;
+            this.numericUpDownSecAdjust1.TabStop = false;
             this.numericUpDownSecAdjust1.ThousandsSeparator = false;
             this.numericUpDownSecAdjust1.Value = new decimal(new int[] {
             500,
@@ -4705,8 +4720,9 @@
             0,
             -2147483648});
             this.numericUpDownLayer.Name = "numericUpDownLayer";
-            this.numericUpDownLayer.Size = new System.Drawing.Size(59, 20);
+            this.numericUpDownLayer.Size = new System.Drawing.Size(59, 23);
             this.numericUpDownLayer.TabIndex = 4;
+            this.numericUpDownLayer.TabStop = false;
             this.numericUpDownLayer.ThousandsSeparator = false;
             this.numericUpDownLayer.Value = new decimal(new int[] {
             0,
@@ -5400,8 +5416,9 @@
             this.timeUpDownStartTime.Location = new System.Drawing.Point(8, 26);
             this.timeUpDownStartTime.Margin = new System.Windows.Forms.Padding(4);
             this.timeUpDownStartTime.Name = "timeUpDownStartTime";
-            this.timeUpDownStartTime.Size = new System.Drawing.Size(113, 21);
+            this.timeUpDownStartTime.Size = new System.Drawing.Size(113, 23);
             this.timeUpDownStartTime.TabIndex = 0;
+            this.timeUpDownStartTime.TabStop = false;
             timeCode3.Hours = 0;
             timeCode3.Milliseconds = 0;
             timeCode3.Minutes = 0;
@@ -5439,8 +5456,9 @@
             0,
             -2147483648});
             this.numericUpDownDuration.Name = "numericUpDownDuration";
-            this.numericUpDownDuration.Size = new System.Drawing.Size(56, 21);
+            this.numericUpDownDuration.Size = new System.Drawing.Size(56, 23);
             this.numericUpDownDuration.TabIndex = 1;
+            this.numericUpDownDuration.TabStop = false;
             this.numericUpDownDuration.ThousandsSeparator = false;
             this.numericUpDownDuration.Value = new decimal(new int[] {
             0,
@@ -6378,5 +6396,6 @@
         private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownLayer;
         private System.Windows.Forms.Label labelLayer;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemWebVttStyle;
+        private System.Windows.Forms.ToolStripMenuItem beautifyTimeCodesOfSelectedLinesToolStripMenuItem;
     }
 }

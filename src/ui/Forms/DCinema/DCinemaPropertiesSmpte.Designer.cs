@@ -34,7 +34,7 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
             Nikse.SubtitleEdit.Core.Common.TimeCode timeCode1 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.checkBoxGenerateIdAuto = new System.Windows.Forms.CheckBox();
-            this.timeUpDownStartTime = new Nikse.SubtitleEdit.Controls.TimeUpDown();
+            this.timeUpDownStartTime = new Nikse.SubtitleEdit.Controls.NikseTimeUpDown();
             this.labelStartTime = new System.Windows.Forms.Label();
             this.comboBoxTimeCodeRate = new System.Windows.Forms.ComboBox();
             this.labelTimeCodeRate = new System.Windows.Forms.Label();
@@ -137,7 +137,6 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
             // timeUpDownStartTime
             // 
             this.timeUpDownStartTime.AutoSize = true;
-            this.timeUpDownStartTime.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.timeUpDownStartTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
             this.timeUpDownStartTime.Location = new System.Drawing.Point(181, 248);
             this.timeUpDownStartTime.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
@@ -714,7 +713,7 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ComboBox comboBoxTimeCodeRate;
         private System.Windows.Forms.Label labelTimeCodeRate;
-        private Controls.TimeUpDown timeUpDownStartTime;
+        private Controls.NikseTimeUpDown timeUpDownStartTime;
         private System.Windows.Forms.Label labelStartTime;
         private System.Windows.Forms.Button buttonGenFontUri;
         private System.Windows.Forms.Button buttonOK;

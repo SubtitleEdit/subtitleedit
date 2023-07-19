@@ -110,7 +110,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxOffsetTimeCodes = new System.Windows.Forms.GroupBox();
             this.radioButtonShowLater = new System.Windows.Forms.RadioButton();
             this.radioButtonShowEarlier = new System.Windows.Forms.RadioButton();
-            this.timeUpDownAdjust = new Nikse.SubtitleEdit.Controls.TimeUpDown();
+            this.timeUpDownAdjust = new Nikse.SubtitleEdit.Controls.NikseTimeUpDown();
             this.labelHourMinSecMilliSecond = new System.Windows.Forms.Label();
             this.groupBoxChangeFrameRate = new System.Windows.Forms.GroupBox();
             this.buttonSwapFrameRate = new System.Windows.Forms.Button();
@@ -1150,7 +1150,6 @@ namespace Nikse.SubtitleEdit.Forms
             // timeUpDownAdjust
             // 
             this.timeUpDownAdjust.AutoSize = true;
-            this.timeUpDownAdjust.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.timeUpDownAdjust.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
             this.timeUpDownAdjust.Location = new System.Drawing.Point(7, 37);
             this.timeUpDownAdjust.Margin = new System.Windows.Forms.Padding(4);
@@ -1916,7 +1915,7 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.Button buttonStyles;
         private System.Windows.Forms.GroupBox groupBoxOffsetTimeCodes;
         private System.Windows.Forms.GroupBox groupBoxChangeFrameRate;
-        private Controls.TimeUpDown timeUpDownAdjust;
+        private Controls.NikseTimeUpDown timeUpDownAdjust;
         private System.Windows.Forms.Label labelHourMinSecMilliSecond;
         private System.Windows.Forms.ComboBox comboBoxFrameRateTo;
         private System.Windows.Forms.Label labelToFrameRate;
