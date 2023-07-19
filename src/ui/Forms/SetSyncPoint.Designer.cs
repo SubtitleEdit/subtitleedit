@@ -33,7 +33,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.components = new System.ComponentModel.Container();
             TimeCode timeCode1 = new TimeCode();
             this.groupBoxSyncPointTimeCode = new System.Windows.Forms.GroupBox();
-            this.timeUpDownLine = new Nikse.SubtitleEdit.Controls.TimeUpDown();
+            this.timeUpDownLine = new Nikse.SubtitleEdit.Controls.NikseTimeUpDown();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.subtitleListView1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.buttonCancel = new System.Windows.Forms.Button();
@@ -69,7 +69,6 @@ namespace Nikse.SubtitleEdit.Forms
             // timeUpDownLine
             // 
             this.timeUpDownLine.AutoSize = true;
-            this.timeUpDownLine.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.timeUpDownLine.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.timeUpDownLine.Location = new System.Drawing.Point(18, 19);
             this.timeUpDownLine.Margin = new System.Windows.Forms.Padding(4);
@@ -324,7 +323,7 @@ namespace Nikse.SubtitleEdit.Forms
         #endregion
 
         private Controls.VideoPlayerContainer videoPlayerContainer1;
-        private Controls.TimeUpDown timeUpDownLine;
+        private Controls.NikseTimeUpDown timeUpDownLine;
         private System.Windows.Forms.GroupBox groupBoxSyncPointTimeCode;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Button buttonCancel;

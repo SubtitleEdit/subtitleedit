@@ -985,6 +985,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "BeautifyTimeCodes/Title":
                     language.BeautifyTimeCodes.Title = reader.Value;
                     break;
+                case "BeautifyTimeCodes/TitleSelectedLines":
+                    language.BeautifyTimeCodes.TitleSelectedLines = reader.Value;
+                    break;
                 case "BeautifyTimeCodes/GroupTimeCodes":
                     language.BeautifyTimeCodes.GroupTimeCodes = reader.Value;
                     break;
@@ -3562,8 +3565,14 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Main/BeforeBeautifyTimeCodes":
                     language.Main.BeforeBeautifyTimeCodes = reader.Value;
                     break;
+                case "Main/BeforeBeautifyTimeCodesSelectedLines":
+                    language.Main.BeforeBeautifyTimeCodesSelectedLines = reader.Value;
+                    break;
                 case "Main/BeautifiedTimeCodes":
                     language.Main.BeautifiedTimeCodes = reader.Value;
+                    break;
+                case "Main/BeautifiedTimeCodesSelectedLines":
+                    language.Main.BeautifiedTimeCodesSelectedLines = reader.Value;
                     break;
                 case "Main/BeforeRemovalOfTextingForHearingImpaired":
                     language.Main.BeforeRemovalOfTextingForHearingImpaired = reader.Value;
@@ -4941,6 +4950,9 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "Main/Menu/ContextMenu/VisualSyncSelectedLines":
                     language.Main.Menu.ContextMenu.VisualSyncSelectedLines = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/BeautifyTimeCodesOfSelectedLines":
+                    language.Main.Menu.ContextMenu.BeautifyTimeCodesOfSelectedLines = reader.Value;
                     break;
                 case "Main/Menu/ContextMenu/GoogleAndMicrosoftTranslateSelectedLine":
                     language.Main.Menu.ContextMenu.GoogleAndMicrosoftTranslateSelectedLine = reader.Value;

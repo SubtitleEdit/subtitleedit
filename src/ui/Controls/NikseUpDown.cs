@@ -204,6 +204,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public NikseUpDown()
         {
+            Height = 23;
             _textBox = new TextBox();
             _textBox.KeyPress += TextBox_KeyPress;
             _textBox.KeyDown += (sender, e) =>
@@ -458,6 +459,16 @@ namespace Nikse.SubtitleEdit.Controls
         }
 
         private const int ButtonsWidth = 13;
+
+        public new bool Enabled
+        {
+            get => base.Enabled;
+            set
+            {
+                base.Enabled = value;
+                Invalidate();
+            }
+        }
 
         protected override void OnPaint(PaintEventArgs e)
         {

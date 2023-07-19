@@ -109,6 +109,9 @@
     <Compile Include="Controls\CuesPreviewView.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Controls\NikseComboBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Controls\NikseTimeUpDown.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -124,14 +127,11 @@
     <Compile Include="Controls\SimpleTextBox.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Controls\VideoPlayerContainer.cs">
+    <Compile Include="Controls\ToolStripNikseComboBox.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Controls\TimeUpDown.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\TimeUpDown.Designer.cs">
-      <DependentUpon>TimeUpDown.cs</DependentUpon>
+    <Compile Include="Controls\VideoPlayerContainer.cs">
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Controls\AudioVisualizer.cs">
       <SubType>UserControl</SubType>
@@ -1576,10 +1576,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="Controls\TimeUpDown.resx">
-      <DependentUpon>TimeUpDown.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="Controls\AudioVisualizer.resx">
       <DependentUpon>AudioVisualizer.cs</DependentUpon>
     </EmbeddedResource>

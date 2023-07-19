@@ -276,7 +276,7 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             buttonOK.Enabled = false;
 
             // Actual processing
-            FixedSubtitle = new Subtitle(_subtitle);
+            FixedSubtitle = new Subtitle(_subtitle, false);
 
             TimeCodesBeautifier timeCodesBeautifier = new TimeCodesBeautifier(
                 FixedSubtitle,

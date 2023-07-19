@@ -44,7 +44,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelOriginalTitle = new System.Windows.Forms.Label();
             this.textBoxTranslator = new System.Windows.Forms.TextBox();
             this.labelTranslator = new System.Windows.Forms.Label();
-            this.timeUpDownStartTime = new Nikse.SubtitleEdit.Controls.TimeUpDown();
+            this.timeUpDownStartTime = new Nikse.SubtitleEdit.Controls.NikseTimeUpDown();
             this.comboBoxLanguage = new System.Windows.Forms.ComboBox();
             this.labelLanguage = new System.Windows.Forms.Label();
             this.SuspendLayout();
@@ -170,7 +170,6 @@ namespace Nikse.SubtitleEdit.Forms
             // timeUpDownStartTime
             // 
             this.timeUpDownStartTime.AutoSize = true;
-            this.timeUpDownStartTime.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.timeUpDownStartTime.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.timeUpDownStartTime.Location = new System.Drawing.Point(183, 177);
             this.timeUpDownStartTime.Margin = new System.Windows.Forms.Padding(4);
@@ -251,7 +250,7 @@ namespace Nikse.SubtitleEdit.Forms
         #endregion
 
         private System.Windows.Forms.Label labelTimeCodeStartOfProgramme;
-        private Controls.TimeUpDown timeUpDownStartTime;
+        private Controls.NikseTimeUpDown timeUpDownStartTime;
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonImport;

@@ -368,6 +368,7 @@ Read more info (web)?</WhisperNotFound>
   </BatchConvert>
   <BeautifyTimeCodes>
     <Title>Beautify time codes</Title>
+    <TitleSelectedLines>Beautify time codes ({0} selected lines)</TitleSelectedLines>
     <GroupTimeCodes>Time codes</GroupTimeCodes>
     <AlignTimeCodes>Align time codes to frame time codes</AlignTimeCodes>
     <ExtractExactTimeCodes>Use ffprobe to extract exact frame time codes</ExtractExactTimeCodes>
@@ -1539,6 +1540,7 @@ To use an API key, go to "Options -&gt; Settings -&gt; Tools" to enter your Goog
         <KaraokeEffect>Karaoke effect...</KaraokeEffect>
         <ShowSelectedLinesEarlierLater>Show selected lines earlier/later...</ShowSelectedLinesEarlierLater>
         <VisualSyncSelectedLines>Visual sync selected lines...</VisualSyncSelectedLines>
+        <BeautifyTimeCodesOfSelectedLines>Beautify time codes of selected lines...</BeautifyTimeCodesOfSelectedLines>
         <GoogleAndMicrosoftTranslateSelectedLine>Google/Microsoft translate original line</GoogleAndMicrosoftTranslateSelectedLine>
         <SelectedLines>Selected lines</SelectedLines>
         <TranslateSelectedLines>Translate selected lines...</TranslateSelectedLines>
@@ -1695,7 +1697,9 @@ Would you like to start from the top of the document and continue search and rep
     <BeforeRenumbering>Before renumbering</BeforeRenumbering>
     <RenumberedStartingFromX>Renumbered starting from: {0}</RenumberedStartingFromX>
     <BeforeBeautifyTimeCodes>Before beautifying time codes</BeforeBeautifyTimeCodes>
+    <BeforeBeautifyTimeCodesSelectedLines>Before beautifying time codes of selected lines</BeforeBeautifyTimeCodesSelectedLines>
     <BeautifiedTimeCodes>Time codes beautified</BeautifiedTimeCodes>
+    <BeautifiedTimeCodesSelectedLines>Time codes of selected lines beautified</BeautifiedTimeCodesSelectedLines>
     <BeforeRemovalOfTextingForHearingImpaired>Before removal of texting for hearing impaired</BeforeRemovalOfTextingForHearingImpaired>
     <TextingForHearingImpairedRemovedOneLine>Texting for hearing impaired removed: One line</TextingForHearingImpairedRemovedOneLine>
     <TextingForHearingImpairedRemovedXLines>Texting for hearing impaired removed: {0} lines</TextingForHearingImpairedRemovedXLines>
