@@ -291,6 +291,11 @@ namespace Nikse.SubtitleEdit.Logic
                 cmBox.FlatStyle = FlatStyle.Standard;
             }
 
+            if (c is GroupBox gBox)
+            {
+                gBox.Paint -= PaintBorderDarkGray;
+            }
+
             if (c is NumericUpDown numeric)
             {
                 numeric.BorderStyle = BorderStyle.Fixed3D;
@@ -359,21 +364,66 @@ namespace Nikse.SubtitleEdit.Logic
                 lv.EnabledChanged -= ListView_EnabledChanged;
                 lv.HandleCreated -= ListView_HandleCreated;
             }
-            else if (c is NikseUpDown)
+            else if (c is NikseUpDown ud)
             {
-                c.BackColor = buttonBackColor;
-                c.ForeColor = Control.DefaultForeColor;
+                ud.BackColor = buttonBackColor;
+                ud.ForeColor = Control.DefaultForeColor;
+                ud.ButtonForeColor = Control.DefaultForeColor;
             }
-            else if (c is NikseTimeUpDown)
+            else if (c is NikseTimeUpDown tud)
             {
-                c.BackColor = buttonBackColor;
-                c.ForeColor = Control.DefaultForeColor;
+                tud.BackColor = buttonBackColor;
+                tud.ForeColor = Control.DefaultForeColor;
+                tud.ButtonForeColor = Control.DefaultForeColor;
             }
-
-            if (c is Button bu)
+            else if (c is NikseComboBox ncb)
+            {
+                ncb.BackColor = buttonBackColor;
+                ncb.ForeColor = Control.DefaultForeColor;
+                ncb.ButtonForeColor = Control.DefaultForeColor;
+            }
+            else if (c is Button bu)
             {
                 bu.BackColor = buttonBackColor;
             }
+        }
+
+        private static void PaintBorderDarkGray(object sender, PaintEventArgs p)
+        {
+            var box = (GroupBox)sender;
+            p.Graphics.Clear(BackColor);
+
+            var g = p.Graphics;
+            var textBrush = new SolidBrush(ForeColor);
+            var borderBrush = new SolidBrush(Color.Gray);
+            var borderPen = new Pen(borderBrush);
+            var strSize = g.MeasureString(box.Text, box.Font);
+            var rect = new Rectangle(box.ClientRectangle.X,
+                box.ClientRectangle.Y + (int)(strSize.Height / 2),
+                box.ClientRectangle.Width - 1,
+                box.ClientRectangle.Height - (int)(strSize.Height / 2) - 1);
+
+            // Clear text and border
+            g.Clear(BackColor);
+
+            // Draw text
+            g.DrawString(box.Text, box.Font, textBrush, box.Padding.Left, 0);
+
+            // Drawing Border
+            //Left
+            g.DrawLine(borderPen, rect.Location, new Point(rect.X, rect.Y + rect.Height));
+            //Right
+            g.DrawLine(borderPen, new Point(rect.X + rect.Width, rect.Y), new Point(rect.X + rect.Width, rect.Y + rect.Height - 1));
+            //Bottom
+            g.DrawLine(borderPen, new Point(rect.X, rect.Y + rect.Height - 1), new Point(rect.X + rect.Width, rect.Y + rect.Height - 1));
+            //Top1
+            g.DrawLine(borderPen, new Point(rect.X, rect.Y), new Point(rect.X + box.Padding.Left, rect.Y));
+            //Top2
+            g.DrawLine(borderPen, new Point(rect.X + box.Padding.Left + (int)(strSize.Width), rect.Y), new Point(rect.X + rect.Width, rect.Y));
+
+            borderPen.Dispose();
+            borderBrush.Dispose();
+            textBrush.Dispose();
         }
 
         private static void FixControl(Control c)
@@ -401,6 +451,11 @@ namespace Nikse.SubtitleEdit.Logic
             if (c is ComboBox cmBox)
             {
                 cmBox.FlatStyle = FlatStyle.Flat;
+            }
+
+            if (c is GroupBox gBox)
+            {
+                    gBox.Paint += PaintBorderDarkGray;
             }
 
             if (c is NumericUpDown numeric)
@@ -484,6 +539,13 @@ namespace Nikse.SubtitleEdit.Logic
                 tud.ForeColor = ForeColor;
                 tud.ButtonForeColor = ForeColor;
                 tud.BackColorDisabled = BackColor;
+            }
+            else if (c is NikseComboBox ncb)
+            {
+                ncb.BackColor = BackColor;
+                ncb.ForeColor = ForeColor;
+                ncb.ButtonForeColor = ForeColor;
+                ncb.BackColorDisabled = BackColor;
             }
         }
 
