@@ -149,6 +149,5 @@ namespace Nikse.SubtitleEdit.Forms
         {
             Configuration.Settings.Tools.LastShowEarlierOrLaterSelection = GetSelectionChoice().ToString();
         }
-
     }
 }

@@ -46,13 +46,6 @@ namespace Nikse.SubtitleEdit.Controls
         {
         }
 
-        protected override void OnVisibleChanged(EventArgs e)
-        {
-            base.OnVisibleChanged(e);
-            Invalidate();
-            Height = 23;
-        }
-
         public TimeMode Mode
         {
             get
@@ -195,6 +188,8 @@ namespace Nikse.SubtitleEdit.Controls
         public NikseTimeUpDown()
         {
             _maskedTextBox = new MaskedTextBox();
+            Height = 23;
+            _maskedTextBox.BorderStyle = BorderStyle.None;
             _maskedTextBox.Font = UiUtil.GetDefaultFont();
             _maskedTextBox.KeyPress += TextBox_KeyPress;
             _maskedTextBox.KeyDown += (sender, e) =>
@@ -231,7 +226,6 @@ namespace Nikse.SubtitleEdit.Controls
                     _dirty = true;
                 }
             };
-            _maskedTextBox.BorderStyle = BorderStyle.None;
 
             Controls.Add(_maskedTextBox);
             BackColor = new TextBox().BackColor;
@@ -438,6 +432,8 @@ namespace Nikse.SubtitleEdit.Controls
                     _maskedTextBox.Mask = GetMaskFrames(v.TotalMilliseconds);
                     _maskedTextBox.Text = v.ToHHMMSSFF();
                 }
+
+                Invalidate();
             }
         }
 
@@ -637,10 +633,30 @@ namespace Nikse.SubtitleEdit.Controls
 
         private const int ButtonsWidth = 13;
 
+        public new bool Enabled
+        {
+            get => base.Enabled;
+            set
+            {
+                base.Enabled = value;
+                Invalidate();
+            }
+        }
+
+        public new int Height
+        {
+            get => base.Height;
+            set
+            {
+                base.Height = value;
+                _maskedTextBox.Height = value - 4;
+                Invalidate();
+            }
+        }
+
         protected override void OnPaint(PaintEventArgs e)
         {
             e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
-
             _maskedTextBox.BackColor = BackColor;
             _maskedTextBox.ForeColor = ButtonForeColor;
             _maskedTextBox.Top = 2;
@@ -686,6 +702,7 @@ namespace Nikse.SubtitleEdit.Controls
             DrawArrowDown(e, brush, left, top, height);
         }
 
+        [RefreshProperties(RefreshProperties.Repaint)]
         public override RightToLeft RightToLeft
         {
             get => base.RightToLeft;
@@ -697,6 +714,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
+        [RefreshProperties(RefreshProperties.Repaint)]
         public override Color ForeColor
         {
             get => base.ForeColor;
@@ -709,6 +727,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
+        [RefreshProperties(RefreshProperties.Repaint)]
         public override Color BackColor
         {
             get => base.BackColor;
@@ -770,7 +789,7 @@ namespace Nikse.SubtitleEdit.Controls
         private static char[] GetSplitChars()
         {
             var splitChars = new List<char> { ':', ',', '.' };
-            string cultureSeparator = CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator;
+            var cultureSeparator = CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator;
             if (cultureSeparator.Length == 1)
             {
                 var ch = Convert.ToChar(cultureSeparator);
@@ -779,6 +798,7 @@ namespace Nikse.SubtitleEdit.Controls
                     splitChars.Add(ch);
                 }
             }
+
             return splitChars.ToArray();
         }
 
