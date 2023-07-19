@@ -46,14 +46,6 @@ namespace Nikse.SubtitleEdit.Controls
         {
         }
 
-        protected override void OnVisibleChanged(EventArgs e)
-        {
-            base.OnVisibleChanged(e);
-            Height = 23;
-            Invalidate();
-            Refresh();
-        }
-
         public TimeMode Mode
         {
             get
@@ -196,6 +188,7 @@ namespace Nikse.SubtitleEdit.Controls
         public NikseTimeUpDown()
         {
             _maskedTextBox = new MaskedTextBox();
+            Height = 23;
             _maskedTextBox.BorderStyle = BorderStyle.None;
             _maskedTextBox.Font = UiUtil.GetDefaultFont();
             _maskedTextBox.KeyPress += TextBox_KeyPress;

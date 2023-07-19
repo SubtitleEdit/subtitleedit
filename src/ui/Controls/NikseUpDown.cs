@@ -204,6 +204,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public NikseUpDown()
         {
+            Height = 23;
             _textBox = new TextBox();
             _textBox.KeyPress += TextBox_KeyPress;
             _textBox.KeyDown += (sender, e) =>
@@ -253,13 +254,6 @@ namespace Nikse.SubtitleEdit.Controls
 
             LostFocus += (sender, args) => _repeatTimer.Stop();
             TabStop = false;
-        }
-
-        protected override void OnVisibleChanged(EventArgs e)
-        {
-            base.OnVisibleChanged(e);
-            Height = 23;
-            Invalidate();
         }
 
         private void _textBox_TextChanged(object sender, EventArgs e)
