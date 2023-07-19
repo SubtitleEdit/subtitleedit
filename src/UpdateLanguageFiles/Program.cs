@@ -128,29 +128,15 @@ namespace UpdateLanguageFiles
         private static string FindVersionNumber()
         {
             var templateFileName = Path.Combine("src", "ui", "Properties", "AssemblyInfo.cs.template");
-            if (!File.Exists(templateFileName))
-            {
-                templateFileName = Path.Combine("..", templateFileName);
-            }
+            var retryCount = 0;
 
-            if (!File.Exists(templateFileName))
+            while (!File.Exists(templateFileName))
             {
                 templateFileName = Path.Combine("..", templateFileName);
-            }
-
-            if (!File.Exists(templateFileName))
-            {
-                templateFileName = Path.Combine("..", templateFileName);
-            }
-
-            if (!File.Exists(templateFileName))
-            {
-                templateFileName = Path.Combine("..", templateFileName);
-            }
-
-            if (!File.Exists(templateFileName))
-            {
-                templateFileName = Path.Combine("..", templateFileName);
+                if (retryCount++ == 5)
+                {
+                    break;
+                }
             }
 
             if (File.Exists(templateFileName))
