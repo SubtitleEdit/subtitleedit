@@ -2555,6 +2555,10 @@ $HorzAlign          =   Center
         public string MainAdjustExtendCurrentSubtitle { get; set; }
         public string MainAdjustExtendPreviousLineEndToCurrentStart { get; set; }
         public string MainAdjustExtendNextLineStartToCurrentEnd { get; set; }
+        public string MainSetInCueToClosestShotChangeLeftGreenZone { get; set; }
+        public string MainSetInCueToClosestShotChangeRightGreenZone { get; set; }
+        public string MainSetOutCueToClosestShotChangeLeftGreenZone { get; set; }
+        public string MainSetOutCueToClosestShotChangeRightGreenZone { get; set; }
         public string GeneralAutoCalcCurrentDuration { get; set; }
         public string GeneralAutoCalcCurrentDurationByOptimalReadingSpeed { get; set; }
         public string GeneralAutoCalcCurrentDurationByMinReadingSpeed { get; set; }
@@ -10371,6 +10375,30 @@ $HorzAlign          =   Center
                     shortcuts.MainAdjustExtendNextLineStartToCurrentEnd = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainSetInCueToClosestShotChangeLeftGreenZone");
+                if (subNode != null)
+                {
+                    shortcuts.MainSetInCueToClosestShotChangeLeftGreenZone = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainSetInCueToClosestShotChangeRightGreenZone");
+                if (subNode != null)
+                {
+                    shortcuts.MainSetInCueToClosestShotChangeRightGreenZone = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainSetOutCueToClosestShotChangeLeftGreenZone");
+                if (subNode != null)
+                {
+                    shortcuts.MainSetOutCueToClosestShotChangeLeftGreenZone = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainSetOutCueToClosestShotChangeRightGreenZone");
+                if (subNode != null)
+                {
+                    shortcuts.MainSetOutCueToClosestShotChangeRightGreenZone = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainInsertAfter");
                 if (subNode != null)
                 {
@@ -12102,6 +12130,10 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("MainAdjustExtendCurrentSubtitle", shortcuts.MainAdjustExtendCurrentSubtitle);
             textWriter.WriteElementString("MainAdjustExtendPreviousLineEndToCurrentStart", shortcuts.MainAdjustExtendPreviousLineEndToCurrentStart);
             textWriter.WriteElementString("MainAdjustExtendNextLineStartToCurrentEnd", shortcuts.MainAdjustExtendNextLineStartToCurrentEnd);
+            textWriter.WriteElementString("MainSetInCueToClosestShotChangeLeftGreenZone", shortcuts.MainSetInCueToClosestShotChangeLeftGreenZone);
+            textWriter.WriteElementString("MainSetInCueToClosestShotChangeRightGreenZone", shortcuts.MainSetInCueToClosestShotChangeRightGreenZone);
+            textWriter.WriteElementString("MainSetOutCueToClosestShotChangeLeftGreenZone", shortcuts.MainSetOutCueToClosestShotChangeLeftGreenZone);
+            textWriter.WriteElementString("MainSetOutCueToClosestShotChangeRightGreenZone", shortcuts.MainSetOutCueToClosestShotChangeRightGreenZone);
             textWriter.WriteElementString("MainInsertAfter", shortcuts.MainInsertAfter);
             textWriter.WriteElementString("MainTextBoxAutoBreak", shortcuts.MainTextBoxAutoBreak);
             textWriter.WriteElementString("MainTextBoxBreakAtPosition", shortcuts.MainTextBoxBreakAtPosition);

@@ -18090,6 +18090,26 @@ namespace Nikse.SubtitleEdit.Forms
                 ExtendSelectedLinesToPreviousShotChange();
                 e.SuppressKeyPress = true;
             }
+            else if (_shortcuts.MainSetInCueToClosestShotChangeLeftGreenZone == e.KeyData)
+            {
+                SetCueToClosestShotChangeGreenZone(true, true);
+                e.SuppressKeyPress = true;
+            }
+            else if (_shortcuts.MainSetInCueToClosestShotChangeRightGreenZone == e.KeyData)
+            {
+                SetCueToClosestShotChangeGreenZone(true, false);
+                e.SuppressKeyPress = true;
+            }
+            else if (_shortcuts.MainSetOutCueToClosestShotChangeLeftGreenZone == e.KeyData)
+            {
+                SetCueToClosestShotChangeGreenZone(false, true);
+                e.SuppressKeyPress = true;
+            }
+            else if (_shortcuts.MainSetOutCueToClosestShotChangeRightGreenZone == e.KeyData)
+            {
+                SetCueToClosestShotChangeGreenZone(false, false);
+                e.SuppressKeyPress = true;
+            }
             else if (e.KeyData == _shortcuts.MainListViewGoToNextError)
             {
                 GoToNextSyntaxError();
@@ -19084,6 +19104,93 @@ namespace Nikse.SubtitleEdit.Forms
                         p.StartTime.TotalMilliseconds = newStartTime;
                     }
                 }
+
+                RefreshSelectedParagraphs();
+            }
+        }
+
+        private void SetCueToClosestShotChangeGreenZone(bool isInCue, bool isLeft)
+        {
+            void MakeHistory()
+            {
+                if (isInCue && isLeft)
+                {
+                    MakeHistoryForUndo(string.Format(_language.BeforeX, LanguageSettings.Current.Settings.SetInCueToClosestShotChangeLeftGreenZone));
+                }
+                else if (isInCue && !isLeft)
+                {
+                    MakeHistoryForUndo(string.Format(_language.BeforeX, LanguageSettings.Current.Settings.SetInCueToClosestShotChangeRightGreenZone));
+                }
+                else if (!isInCue && isLeft)
+                {
+                    MakeHistoryForUndo(string.Format(_language.BeforeX, LanguageSettings.Current.Settings.SetOutCueToClosestShotChangeLeftGreenZone));
+                }
+                else if (!isInCue && !isLeft)
+                {
+                    MakeHistoryForUndo(string.Format(_language.BeforeX, LanguageSettings.Current.Settings.SetOutCueToClosestShotChangeRightGreenZone));
+                }
+            }
+
+            void SetCueToClosestShotChangeGreenZone(Paragraph p)
+            {
+                if (isInCue)
+                {
+                    var closestShotChange = ShotChangeHelper.GetClosestShotChange(audioVisualizer.ShotChanges, p.StartTime);
+                    if (closestShotChange != null)
+                    {                        
+                        var newInCue = isLeft ? (closestShotChange.Value * 1000) - SubtitleFormat.FramesToMilliseconds(Configuration.Settings.BeautifyTimeCodes.Profile.InCuesLeftGreenZone) 
+                            : (closestShotChange.Value * 1000) + SubtitleFormat.FramesToMilliseconds(Configuration.Settings.BeautifyTimeCodes.Profile.InCuesRightGreenZone);
+
+                        if (newInCue >= 0 && newInCue < p.EndTime.TotalMilliseconds)
+                        {
+                            p.StartTime.TotalMilliseconds = newInCue;
+                        }
+                    }
+                }
+                else
+                {
+                    var closestShotChange = ShotChangeHelper.GetClosestShotChange(audioVisualizer.ShotChanges, p.EndTime);
+                    if (closestShotChange != null)
+                    {
+                        var newOutCue = isLeft ? (closestShotChange.Value * 1000) - SubtitleFormat.FramesToMilliseconds(Configuration.Settings.BeautifyTimeCodes.Profile.OutCuesLeftGreenZone)
+                            : (closestShotChange.Value * 1000) + SubtitleFormat.FramesToMilliseconds(Configuration.Settings.BeautifyTimeCodes.Profile.OutCuesRightGreenZone);
+
+                        if (newOutCue > p.StartTime.TotalMilliseconds)
+                        {
+                            p.EndTime.TotalMilliseconds = newOutCue;
+                        }
+                    }
+                }
+            }
+
+            var historyAdded = false;
+            foreach (ListViewItem selectedItem in SubtitleListview1.SelectedItems)
+            {
+                var idx = selectedItem.Index;
+                var p = _subtitle.Paragraphs[idx];
+                
+                if (IsOriginalEditable)
+                {
+                    var original = Utilities.GetOriginalParagraph(idx, p, _subtitleOriginal.Paragraphs);
+                    if (original != null)
+                    {
+                        if (!historyAdded)
+                        {
+                            MakeHistory();
+                            historyAdded = true;
+                        }
+
+                        SetCueToClosestShotChangeGreenZone(original);
+                    }
+                }
+
+                if (!historyAdded)
+                {
+                    MakeHistory();
+                    historyAdded = true;
+                }
+
+                SetCueToClosestShotChangeGreenZone(p);
 
                 RefreshSelectedParagraphs();
             }

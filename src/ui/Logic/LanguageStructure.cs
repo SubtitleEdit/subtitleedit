@@ -2749,6 +2749,10 @@ namespace Nikse.SubtitleEdit.Logic
             public string RecalculateDurationOfCurrentSubtitle { get; set; }
             public string RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed { get; set; }
             public string RecalculateDurationOfCurrentSubtitleByMinReadingSpeed { get; set; }
+            public string SetInCueToClosestShotChangeLeftGreenZone { get; set; }
+            public string SetInCueToClosestShotChangeRightGreenZone { get; set; }
+            public string SetOutCueToClosestShotChangeLeftGreenZone { get; set; }
+            public string SetOutCueToClosestShotChangeRightGreenZone { get; set; }
             public string MainCreateStartDownEndUp { get; set; }
             public string MergeDialog { get; set; }
             public string MergeDialogWithNext { get; set; }
