@@ -366,6 +366,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   </BatchConvert>
   <BeautifyTimeCodes>
     <Title>Ωραιοποίηση των χρόνων</Title>
+    <TitleSelectedLines>Ωραιοποίηση των χρόνων ({0} επιλεγμένες γραμμές)</TitleSelectedLines>
     <GroupTimeCodes>Χρόνοι</GroupTimeCodes>
     <AlignTimeCodes>Αντιστοίχιση χρόνων σε χρόνους καρέ</AlignTimeCodes>
     <ExtractExactTimeCodes>Χρήση ffprobe για ακριβή εξαγωγή χρόνων</ExtractExactTimeCodes>
@@ -1524,6 +1525,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <KaraokeEffect>Εφέ καραόκε…</KaraokeEffect>
         <ShowSelectedLinesEarlierLater>Εμφάνιση γραμμών νωρίτερα/αργότερα…</ShowSelectedLinesEarlierLater>
         <VisualSyncSelectedLines>Οπτικός συγχρονισμός γραμμών…</VisualSyncSelectedLines>
+        <BeautifyTimeCodesOfSelectedLines>Ωραιοποίηση των χρόνων σε επιλεγμένες γραμμές…</BeautifyTimeCodesOfSelectedLines>
         <GoogleAndMicrosoftTranslateSelectedLine>Μετάφραση αρχικής γραμμής μέσω Google/Bing</GoogleAndMicrosoftTranslateSelectedLine>
         <SelectedLines>Επιλεγμένες γραμμές</SelectedLines>
         <TranslateSelectedLines>Μετάφραση γραμμών…</TranslateSelectedLines>
@@ -1680,7 +1682,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <BeforeRenumbering>Πριν επαναρίθμησης</BeforeRenumbering>
     <RenumberedStartingFromX>Έναρξη επαναρίθμησης από: {0}</RenumberedStartingFromX>
     <BeforeBeautifyTimeCodes>Πριν από την ωραιοποίηση χρόνων</BeforeBeautifyTimeCodes>
+    <BeforeBeautifyTimeCodesSelectedLines>Πριν την ωραιοποίηση των χρόνων των επιλεγμένων γραμμών</BeforeBeautifyTimeCodesSelectedLines>
     <BeautifiedTimeCodes>Χρόνοι ωραιοποιήθηκαν</BeautifiedTimeCodes>
+    <BeautifiedTimeCodesSelectedLines>Οι χρόνοι των επιλεγμένων γραμμών ωραιοποιήθηκαν</BeautifiedTimeCodesSelectedLines>
     <BeforeRemovalOfTextingForHearingImpaired>Πριν από αφαίρεση κειμένου για κωφούς</BeforeRemovalOfTextingForHearingImpaired>
     <TextingForHearingImpairedRemovedOneLine>Αφαίρεση κειμένου για ανθρώπους με πρόβλημα ακοής: Μία γραμμή</TextingForHearingImpairedRemovedOneLine>
     <TextingForHearingImpairedRemovedXLines>Αφαίρεση κειμένου για ανθρώπους με πρόβλημα ακοής: {0} γραμμές</TextingForHearingImpairedRemovedXLines>
