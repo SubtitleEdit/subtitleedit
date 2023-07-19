@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.6.13</Version>
-    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 17.07.2023</TranslatedBy>
+    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 19.07.2023</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -367,7 +367,8 @@ Vuoi ulteriori informazioni (web)?</WhisperNotFound>
     <SearchFolderScanVideo>Scansiona anche file video in "Cerca cartella" (lento)</SearchFolderScanVideo>
   </BatchConvert>
   <BeautifyTimeCodes>
-    <Title>Time code abbellimento</Title>
+    <Title>Abbellisci time code</Title>
+    <TitleSelectedLines>Abbellisci time code ({0} linee selezionate)</TitleSelectedLines>
     <GroupTimeCodes>Time code</GroupTimeCodes>
     <AlignTimeCodes>Allinea i time code ai codici time code fotogrammi</AlignTimeCodes>
     <ExtractExactTimeCodes>Usa ffprobe per estrarre i time code esatti del fotogramma</ExtractExactTimeCodes>
@@ -1539,6 +1540,7 @@ Per usare una chiave API vai su "Opzioni -&gt; Impostazioni -&gt; Strumenti" per
         <KaraokeEffect>Effetto karaoke...</KaraokeEffect>
         <ShowSelectedLinesEarlierLater>Visualizza righe selezionate prima/dopo...</ShowSelectedLinesEarlierLater>
         <VisualSyncSelectedLines>Sincronizza righe selezionate...</VisualSyncSelectedLines>
+        <BeautifyTimeCodesOfSelectedLines>Abbellisci time delle linee selezionate...</BeautifyTimeCodesOfSelectedLines>
         <GoogleAndMicrosoftTranslateSelectedLine>Traduci riga originale con Google/Microsoft</GoogleAndMicrosoftTranslateSelectedLine>
         <SelectedLines>Linee selezionate</SelectedLines>
         <TranslateSelectedLines>Traduci righe selezionate...</TranslateSelectedLines>
@@ -1695,7 +1697,9 @@ Vuoi tornare all'inizio del documento e continuare a cercare per sostituire?</Re
     <BeforeRenumbering>Prima di rinumerare</BeforeRenumbering>
     <RenumberedStartingFromX>Rinumera partendo da: {0}</RenumberedStartingFromX>
     <BeforeBeautifyTimeCodes>Prima di abbellire i time code</BeforeBeautifyTimeCodes>
+    <BeforeBeautifyTimeCodesSelectedLines>Prima di abbellire i time code delle righe selezionate</BeforeBeautifyTimeCodesSelectedLines>
     <BeautifiedTimeCodes>Time code abbelliti</BeautifiedTimeCodes>
+    <BeautifiedTimeCodesSelectedLines>Abbelliti time code delle linee selezionate</BeautifiedTimeCodesSelectedLines>
     <BeforeRemovalOfTextingForHearingImpaired>Prima di rimuovere il testo per non udenti</BeforeRemovalOfTextingForHearingImpaired>
     <TextingForHearingImpairedRemovedOneLine>Testo per non udenti rimosso: Una riga</TextingForHearingImpairedRemovedOneLine>
     <TextingForHearingImpairedRemovedXLines>Testo per non udenti rimosso: {0} righe</TextingForHearingImpairedRemovedXLines>
