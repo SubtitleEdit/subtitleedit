@@ -19131,7 +19131,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            void SetCueToClosestShotChangeGreenZone(Paragraph p)
+            void SetCueToClosestShotChangeGreenZone(Paragraph p, Subtitle sub)
             {
                 if (isInCue)
                 {
@@ -19141,9 +19141,43 @@ namespace Nikse.SubtitleEdit.Forms
                         var newInCue = isLeft ? (closestShotChange.Value * 1000) - SubtitleFormat.FramesToMilliseconds(Configuration.Settings.BeautifyTimeCodes.Profile.InCuesLeftGreenZone)
                             : (closestShotChange.Value * 1000) + SubtitleFormat.FramesToMilliseconds(Configuration.Settings.BeautifyTimeCodes.Profile.InCuesRightGreenZone);
 
+                        double newStart = 0;
+                        double newPreviousEnd = 0;
+
                         if (newInCue >= 0 && newInCue < p.EndTime.TotalMilliseconds)
                         {
-                            p.StartTime.TotalMilliseconds = newInCue;
+                            newStart = newInCue;
+                        }
+                        else
+                        {
+                            return;
+                        }
+
+                        var previous = sub.GetParagraphOrDefault(sub.GetIndex(p) - 1);
+                        if (previous != null)
+                        {
+                            if (isLeft)
+                            {
+                                // Push previous subtitle away if overlap
+                                newPreviousEnd = Math.Min(previous.EndTime.TotalMilliseconds, newStart - Configuration.Settings.General.MinimumMillisecondsBetweenLines);
+                            }
+                            else
+                            {
+                                // Push previous subtitle away if overlap, until green zone edge
+                                newPreviousEnd = Math.Min(newInCue, previous.EndTime.TotalMilliseconds);
+                                newStart = Math.Max(newInCue, newPreviousEnd + Configuration.Settings.General.MinimumMillisecondsBetweenLines);
+                            }
+
+                            // Prevent invalid durations
+                            if (newPreviousEnd - previous.StartTime.TotalMilliseconds > 0 && p.EndTime.TotalMilliseconds - newStart > 0)
+                            {
+                                p.StartTime.TotalMilliseconds = newStart;
+                                previous.EndTime.TotalMilliseconds = newPreviousEnd;
+                            }
+                        } 
+                        else
+                        {
+                            p.StartTime.TotalMilliseconds = newStart;
                         }
                     }
                 }
@@ -19155,9 +19189,43 @@ namespace Nikse.SubtitleEdit.Forms
                         var newOutCue = isLeft ? (closestShotChange.Value * 1000) - SubtitleFormat.FramesToMilliseconds(Configuration.Settings.BeautifyTimeCodes.Profile.OutCuesLeftGreenZone)
                             : (closestShotChange.Value * 1000) + SubtitleFormat.FramesToMilliseconds(Configuration.Settings.BeautifyTimeCodes.Profile.OutCuesRightGreenZone);
 
+                        double newEnd = 0;
+                        double newNextStart = 0;
+
                         if (newOutCue > p.StartTime.TotalMilliseconds)
                         {
-                            p.EndTime.TotalMilliseconds = newOutCue;
+                            newEnd = newOutCue;
+                        } 
+                        else
+                        {
+                            return;
+                        }
+
+                        var next = sub.GetParagraphOrDefault(sub.GetIndex(p) + 1);
+                        if (next != null)
+                        {
+                            if (!isLeft)
+                            {
+                                // Push next subtitle away if overlap
+                                newNextStart = Math.Max(next.StartTime.TotalMilliseconds, newEnd + Configuration.Settings.General.MinimumMillisecondsBetweenLines);
+                            }
+                            else
+                            {
+                                // Push next subtitle away if overlap, until green zone edge
+                                newNextStart = Math.Max(next.StartTime.TotalMilliseconds, newOutCue);
+                                newEnd = Math.Min(newNextStart - Configuration.Settings.General.MinimumMillisecondsBetweenLines, newOutCue);
+                            }
+
+                            // Prevent invalid durations
+                            if (next.EndTime.TotalMilliseconds - newNextStart > 0 && newEnd - p.StartTime.TotalMilliseconds > 0)
+                            {
+                                p.EndTime.TotalMilliseconds = newEnd;
+                                next.StartTime.TotalMilliseconds = newNextStart;
+                            }
+                        }
+                        else
+                        {
+                            p.EndTime.TotalMilliseconds = newEnd;
                         }
                     }
                 }
@@ -19180,7 +19248,7 @@ namespace Nikse.SubtitleEdit.Forms
                             historyAdded = true;
                         }
 
-                        SetCueToClosestShotChangeGreenZone(original);
+                        SetCueToClosestShotChangeGreenZone(original, _subtitleOriginal);
                     }
                 }
 
@@ -19190,7 +19258,7 @@ namespace Nikse.SubtitleEdit.Forms
                     historyAdded = true;
                 }
 
-                SetCueToClosestShotChangeGreenZone(p);
+                SetCueToClosestShotChangeGreenZone(p, _subtitle);
 
                 RefreshSelectedParagraphs();
             }
