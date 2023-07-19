@@ -160,10 +160,6 @@ namespace Nikse.SubtitleEdit.Core.Common
 
                 if (ch == '\n' || ch == '\u2028')
                 {
-                    if (start >= s.Length || i - start < 0 || i - start >= s.Length)
-                    {
-                    }
-
                     lines.Add(s.Substring(start, i - start));
                     i++;
                     start = i;
