@@ -87,7 +87,10 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
                     // Report progress
                     var progress = (double)(pass * _subtitle.Paragraphs.Count + p) / (_subtitle.Paragraphs.Count * amountOfPasses);
-                    ProgressChanged.Invoke(progress);
+                    if (ProgressChanged != null)
+                    {
+                        ProgressChanged.Invoke(progress);
+                    }
                 }
             }
         }
@@ -163,7 +166,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                         {
                             // Cues want to be pushed together. The connect subtitles are most likely between two shot changes that are close together
                             // For now, check which shot change is closer and align the cues around that, ignoring the zones
-                            var previousShotChange = new List<int> { -1 }.Concat(_shotChangesFrames).Last(x => x <= newLeftOutCueFrame); // will return -1 if none found
+                            var previousShotChange = new List<int> { int.MinValue }.Concat(_shotChangesFrames).Last(x => x <= newLeftOutCueFrame); // will return minValue if none found
                             var nextShotChange = _shotChangesFrames.Concat(new List<int> { int.MaxValue }).First(x => x >= newRightInCueFrame); // will return maxValue if none found
                             if (previousShotChange >= 0 && nextShotChange != int.MaxValue)
                             {
@@ -252,7 +255,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
         
         private (int cueFrame, FindBestCueResult result) FindConnectedSubtitlesBestCueFrame(int cueFrame)
         {
-            var previousShotChange = new List<int> { -1 }.Concat(_shotChangesFrames).Last(x => x <= cueFrame); // will return -1 if none found
+            var previousShotChange = new List<int> { int.MinValue }.Concat(_shotChangesFrames).Last(x => x <= cueFrame); // will return minValue if none found
             var nextShotChange = _shotChangesFrames.Concat(new List<int> { int.MaxValue }).First(x => x >= cueFrame); // will return maxValue if none found
 
             // If both not found, return self
@@ -680,7 +683,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
         private (int cueFrame, FindBestCueResult result) FindBestCueFrame(int cueFrame, bool isInCue)
         {
-            var previousShotChange = new List<int> { -1 }.Concat(_shotChangesFrames).Last(x => x <= cueFrame); // will return -1 if none found
+            var previousShotChange = new List<int> { int.MinValue }.Concat(_shotChangesFrames).Last(x => x <= cueFrame); // will return minValue if none found
             var nextShotChange = _shotChangesFrames.Concat(new List<int> { int.MaxValue }).First(x => x >= cueFrame); // will return maxValue if none found
 
             // If both not found, return self
