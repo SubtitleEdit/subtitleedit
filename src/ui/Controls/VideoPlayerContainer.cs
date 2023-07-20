@@ -2113,9 +2113,32 @@ namespace Nikse.SubtitleEdit.Controls
 
             if (_pictureBoxBackground.Image is Bitmap bg)
             {
-                _labelVolume.BackColor = bg.GetPixel(_labelVolume.Left, _labelVolume.Top);
-                _labelTimeCode.BackColor = bg.GetPixel(_labelTimeCode.Left, _labelTimeCode.Top);
-                _labelVideoPlayerName.BackColor = bg.GetPixel(_labelVideoPlayerName.Left, _labelVideoPlayerName.Top);
+                try
+                {
+                    _labelVolume.BackColor = bg.GetPixel(_labelVolume.Left, _labelVolume.Top);
+                }
+                catch
+                {
+                    // ignore
+                }
+
+                try
+                {
+                    _labelTimeCode.BackColor = bg.GetPixel(_labelTimeCode.Left, _labelTimeCode.Top);
+                }
+                catch
+                {
+                    // ignore
+                }
+
+                try
+                {
+                    _labelVideoPlayerName.BackColor = bg.GetPixel(_labelVideoPlayerName.Left, _labelVideoPlayerName.Top);
+                }
+                catch
+                {
+                    // ignore
+                }
             }
 
             // Set ForeColor to either white or black depending on background color
