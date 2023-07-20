@@ -552,20 +552,26 @@ namespace Nikse.SubtitleEdit.Logic
 
         private static bool IsFontPresent(string fontName)
         {
-            try
+            var fontStyles = new[] { FontStyle.Bold, FontStyle.Italic, FontStyle.Regular };
+            Font font = null;
+
+            foreach (var style in fontStyles)
             {
-                // Bold + italic + regular must be present
-                _ = new Font(fontName, 9, FontStyle.Bold);
-                _ = new Font(fontName, 9, FontStyle.Italic);
-                _ = new Font(fontName, 9, FontStyle.Regular);
-                return true;
-            }
-            catch
-            {
-                // ignore
+                try
+                {
+                    font = new Font(fontName, 9, style);
+                }
+                catch
+                {
+                    return false;
+                }
+                finally
+                {
+                    font?.Dispose();
+                }
             }
 
-            return false;
+            return true;
         }
 
         public static Font GetDefaultFont()
