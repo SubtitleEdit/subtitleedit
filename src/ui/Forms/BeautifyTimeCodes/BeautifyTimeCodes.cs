@@ -83,21 +83,8 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
                 _timeCodes = TimeCodesFileHelper.FromDisk(videoFileName);
                 _shotChanges = shotChanges;
 
-                // Check if ffprobe is available
-                var isFfProbeAvailable = false;
-                if (!string.IsNullOrEmpty(Configuration.Settings.General.FFmpegLocation))
-                {
-                    var ffProbePath = Path.Combine(Path.GetDirectoryName(Configuration.Settings.General.FFmpegLocation), "ffprobe.exe");
-                    if (Configuration.IsRunningOnWindows)
-                    {
-                        isFfProbeAvailable = File.Exists(ffProbePath);
-                    }
-                    else
-                    {
-                        isFfProbeAvailable = true;
-                    }
-                }
-                if (!isFfProbeAvailable)
+                // Check if ffprobe is available              
+                if (!IsFfProbeAvailable())
                 {
                     checkBoxExtractExactTimeCodes.Enabled = false;
                     checkBoxExtractExactTimeCodes.Checked = false;
@@ -204,7 +191,10 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             if (!_abortTimeCodes && success)
             {
                 _timeCodes = _timeCodesGenerator.GetTimeCodes();
-                TimeCodesFileHelper.SaveTimeCodes(_videoFileName, _timeCodes);
+                if (_timeCodes.Count > 0)
+                {
+                    TimeCodesFileHelper.SaveTimeCodes(_videoFileName, _timeCodes);
+                }
             }
 
             RefreshControls();
@@ -329,6 +319,14 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
         private void buttonCancelTimeCodes_Click(object sender, EventArgs e)
         {
             _abortTimeCodes = true;
+        }
+
+        public static bool IsFfProbeAvailable()
+        {
+            return !Configuration.IsRunningOnWindows || (
+                !string.IsNullOrWhiteSpace(Configuration.Settings.General.FFmpegLocation) 
+                && File.Exists(Path.Combine(Path.GetDirectoryName(Configuration.Settings.General.FFmpegLocation), "ffprobe.exe"))
+            );
         }
     }
 }

@@ -40,6 +40,7 @@ namespace Nikse.SubtitleEdit.Forms
             public bool SplitLongLinesActive { get; set; }
             public bool AutoBalanceActive { get; set; }
             public bool SetMinDisplayTimeBetweenSubtitles { get; set; }
+            public (bool Enabled, bool AlignTimeCodes, bool UseExactTimeCodes, bool SnapToShotChanges) BeautifyTimeCodes { get; set; }
             public ListViewItem Item { get; set; }
             public Subtitle Subtitle { get; set; }
             public SubtitleFormat Format { get; set; }
@@ -57,6 +58,7 @@ namespace Nikse.SubtitleEdit.Forms
                 bool splitLongLinesActive,
                 bool autoBalance,
                 bool setMinDisplayTimeBetweenSubtitles,
+                (bool, bool, bool, bool) beautifyTimeCodes,
                 ListViewItem item,
                 Subtitle subtitle,
                 SubtitleFormat format,
@@ -73,6 +75,7 @@ namespace Nikse.SubtitleEdit.Forms
                 SplitLongLinesActive = splitLongLinesActive;
                 AutoBalanceActive = autoBalance;
                 SetMinDisplayTimeBetweenSubtitles = setMinDisplayTimeBetweenSubtitles;
+                BeautifyTimeCodes = beautifyTimeCodes;
                 Item = item;
                 Subtitle = subtitle;
                 Format = format;
@@ -379,6 +382,7 @@ namespace Nikse.SubtitleEdit.Forms
             numericUpDownMaxCharsSec.Value = (decimal)Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds;
             checkBoxExtendOnly.Checked = Configuration.Settings.Tools.AdjustDurationExtendOnly;
             checkBoxEnforceDurationLimits.Checked = Configuration.Settings.Tools.AdjustDurationExtendEnforceDurationLimits;
+            checkBoxAdjustDurationCheckShotChanges.Checked = Configuration.Settings.Tools.AdjustDurationExtendCheckShotChanges;
 
             labelOptimalCharsSec.Text = LanguageSettings.Current.Settings.OptimalCharactersPerSecond;
             labelMaxCharsPerSecond.Text = LanguageSettings.Current.Settings.MaximumCharactersPerSecond;
@@ -386,6 +390,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelMillisecondsFixed.Text = LanguageSettings.Current.AdjustDisplayDuration.Milliseconds;
             checkBoxExtendOnly.Text = LanguageSettings.Current.AdjustDisplayDuration.ExtendOnly;
             checkBoxEnforceDurationLimits.Text = LanguageSettings.Current.AdjustDisplayDuration.EnforceDurationLimits;
+            checkBoxAdjustDurationCheckShotChanges.Text = LanguageSettings.Current.AdjustDisplayDuration.BatchCheckShotChanges;
             labelAdjustViaPercent.Text = LanguageSettings.Current.AdjustDisplayDuration.SetAsPercent;
 
             labelTargetRes.Text = LanguageSettings.Current.AssaResolutionChanger.TargetVideoRes;
@@ -451,6 +456,33 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxConvertColorsToDialogRemoveColorTags.Checked = Configuration.Settings.Tools.ConvertColorsToDialogRemoveColorTags;
             checkBoxConvertColorsToDialogAddNewLines.Checked = Configuration.Settings.Tools.ConvertColorsToDialogAddNewLines;
             checkBoxConvertColorsToDialogReBreakLines.Checked = Configuration.Settings.Tools.ConvertColorsToDialogReBreakLines;
+
+            groupBoxBeautifyTimeCodes.Text = LanguageSettings.Current.BeautifyTimeCodes.Title;
+            checkBoxBeautifyTimeCodesAlignTimeCodes.Text = LanguageSettings.Current.BeautifyTimeCodes.BatchAlignTimeCodes;
+            checkBoxBeautifyTimeCodesUseExactTimeCodes.Text = LanguageSettings.Current.BeautifyTimeCodes.BatchUseExactTimeCodes;
+            checkBoxBeautifyTimeCodesSnapToShotChanges.Text = LanguageSettings.Current.BeautifyTimeCodes.BatchSnapToShotChanges;
+
+            checkBoxBeautifyTimeCodesAlignTimeCodes.Checked = Configuration.Settings.BeautifyTimeCodes.AlignTimeCodes;
+            checkBoxBeautifyTimeCodesUseExactTimeCodes.Checked = Configuration.Settings.BeautifyTimeCodes.ExtractExactTimeCodes;
+            checkBoxBeautifyTimeCodesSnapToShotChanges.Checked = Configuration.Settings.BeautifyTimeCodes.SnapToShotChanges;
+
+            groupBoxApplyDurationLimits.Text = LanguageSettings.Current.ApplyDurationLimits.Title;
+            checkBoxApplyDurationLimitsMinDuration.Text = LanguageSettings.Current.Settings.DurationMinimumMilliseconds;
+            checkBoxApplyDurationLimitsMaxDuration.Text = LanguageSettings.Current.Settings.DurationMaximumMilliseconds;
+            checkBoxApplyDurationLimitsCheckShotChanges.Text = LanguageSettings.Current.ApplyDurationLimits.BatchCheckShotChanges;
+            checkBoxApplyDurationLimitsMinDuration.Checked = Configuration.Settings.Tools.ApplyMinimumDurationLimit;
+            checkBoxApplyDurationLimitsMaxDuration.Checked = Configuration.Settings.Tools.ApplyMaximumDurationLimit;
+            checkBoxApplyDurationLimitsCheckShotChanges.Checked = Configuration.Settings.Tools.ApplyMinimumDurationLimitCheckShotChanges;
+            numericUpDownApplyDurationLimitsMinDuration.Value = Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds;
+            numericUpDownApplyDurationLimitsMaxDuration.Value = Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds;
+
+            numericUpDownApplyDurationLimitsMinDuration.Left = checkBoxApplyDurationLimitsMinDuration.Left + checkBoxApplyDurationLimitsMinDuration.Width + 6;
+            numericUpDownApplyDurationLimitsMaxDuration.Left = checkBoxApplyDurationLimitsMaxDuration.Left + checkBoxApplyDurationLimitsMaxDuration.Width + 6;
+            if (Math.Abs(numericUpDownApplyDurationLimitsMinDuration.Left - numericUpDownApplyDurationLimitsMaxDuration.Left) < 10)
+            {
+                numericUpDownApplyDurationLimitsMinDuration.Left = Math.Max(numericUpDownApplyDurationLimitsMinDuration.Left, numericUpDownApplyDurationLimitsMaxDuration.Left);
+                numericUpDownApplyDurationLimitsMaxDuration.Left = Math.Max(numericUpDownApplyDurationLimitsMinDuration.Left, numericUpDownApplyDurationLimitsMaxDuration.Left);
+            }
 
             inverseSelectionToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.Edit.InverseSelection;
             toolStripMenuItemSelectAll.Text = LanguageSettings.Current.Main.Menu.ContextMenu.SelectAll;
@@ -596,7 +628,8 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     Text =  LanguageSettings.Current.ApplyDurationLimits.Title,
                     Checked = Configuration.Settings.Tools.BatchConvertApplyDurationLimits,
-                    Action = CommandLineConverter.BatchAction.ApplyDurationLimits
+                    Action = CommandLineConverter.BatchAction.ApplyDurationLimits,
+                    Control = groupBoxApplyDurationLimits
                 },
                 new FixActionItem
                 {
@@ -618,6 +651,13 @@ namespace Nikse.SubtitleEdit.Forms
                     Checked = Configuration.Settings.Tools.BatchConvertSortBy,
                     Action = CommandLineConverter.BatchAction.SortBy,
                     Control = groupBoxSortBy
+                },
+                new FixActionItem
+                {
+                    Text = LanguageSettings.Current.BeautifyTimeCodes.Title,
+                    Checked = Configuration.Settings.Tools.BatchConvertBeautifyTimeCodes,
+                    Action = CommandLineConverter.BatchAction.BeautifyTimeCodes,
+                    Control = groupBoxBeautifyTimeCodes
                 },
             };
             foreach (var fixItem in fixItems)
@@ -1613,6 +1653,7 @@ namespace Nikse.SubtitleEdit.Forms
                                             IsActionEnabled(CommandLineConverter.BatchAction.SplitLongLines),
                                             IsActionEnabled(CommandLineConverter.BatchAction.BalanceLines),
                                             IsActionEnabled(CommandLineConverter.BatchAction.SetMinGap),
+                                            (IsActionEnabled(CommandLineConverter.BatchAction.BeautifyTimeCodes), checkBoxBeautifyTimeCodesAlignTimeCodes.Checked, checkBoxBeautifyTimeCodesUseExactTimeCodes.Checked, checkBoxBeautifyTimeCodesSnapToShotChanges.Checked),
                                             item,
                                             subtitle,
                                             GetCurrentSubtitleFormat(),
@@ -1652,6 +1693,7 @@ namespace Nikse.SubtitleEdit.Forms
                                         IsActionEnabled(CommandLineConverter.BatchAction.SplitLongLines),
                                         IsActionEnabled(CommandLineConverter.BatchAction.BalanceLines),
                                         IsActionEnabled(CommandLineConverter.BatchAction.SetMinGap),
+                                        (IsActionEnabled(CommandLineConverter.BatchAction.BeautifyTimeCodes), checkBoxBeautifyTimeCodesAlignTimeCodes.Checked, checkBoxBeautifyTimeCodesUseExactTimeCodes.Checked, checkBoxBeautifyTimeCodesSnapToShotChanges.Checked),
                                         item,
                                         subtitle,
                                         GetCurrentSubtitleFormat(),
@@ -1752,6 +1794,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 IsActionEnabled(CommandLineConverter.BatchAction.SplitLongLines),
                                 IsActionEnabled(CommandLineConverter.BatchAction.BalanceLines),
                                 IsActionEnabled(CommandLineConverter.BatchAction.SetMinGap),
+                                (IsActionEnabled(CommandLineConverter.BatchAction.BeautifyTimeCodes), checkBoxBeautifyTimeCodesAlignTimeCodes.Checked, checkBoxBeautifyTimeCodesUseExactTimeCodes.Checked, checkBoxBeautifyTimeCodesSnapToShotChanges.Checked),
                                 item,
                                 sub,
                                 GetCurrentSubtitleFormat(),
@@ -1945,7 +1988,13 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (IsActionEnabled(CommandLineConverter.BatchAction.ApplyDurationLimits))
             {
-                var fixDurationLimits = new FixDurationLimits(Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds, Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds);
+                var minDuration = checkBoxApplyDurationLimitsMinDuration.Checked ? (int)numericUpDownApplyDurationLimitsMinDuration.Value : 0;
+                var maxDuration = checkBoxApplyDurationLimitsMaxDuration.Checked ? (int)numericUpDownApplyDurationLimitsMaxDuration.Value : int.MaxValue;
+                var shotChanges = checkBoxApplyDurationLimitsCheckShotChanges.Checked ? GetShotChangesOrEmpty(sub.FileName) : new List<double>();
+                
+                TryUpdateCurrentFrameRate(sub.FileName);
+
+                var fixDurationLimits = new FixDurationLimits(minDuration, maxDuration, shotChanges);
                 sub = fixDurationLimits.Fix(sub);
             }
 
@@ -1984,15 +2033,18 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (IsActionEnabled(CommandLineConverter.BatchAction.AdjustDisplayDuration))
             {
-                // TODO shot changes
+                var shotChanges = checkBoxAdjustDurationCheckShotChanges.Checked ? GetShotChangesOrEmpty(sub.FileName) : new List<double>();
+
+                TryUpdateCurrentFrameRate(sub.FileName);
+
                 var adjustmentType = comboBoxAdjustDurationVia.Text;
                 if (adjustmentType == LanguageSettings.Current.AdjustDisplayDuration.Percent)
                 {
-                    sub.AdjustDisplayTimeUsingPercent((double)numericUpDownAdjustViaPercent.Value, null, null, checkBoxEnforceDurationLimits.Checked);
+                    sub.AdjustDisplayTimeUsingPercent((double)numericUpDownAdjustViaPercent.Value, null, shotChanges, checkBoxEnforceDurationLimits.Checked);
                 }
                 else if (adjustmentType == LanguageSettings.Current.AdjustDisplayDuration.Recalculate)
                 {
-                    sub.RecalculateDisplayTimes((double)numericUpDownMaxCharsSec.Value, null, (double)numericUpDownOptimalCharsSec.Value, checkBoxExtendOnly.Checked, null, checkBoxEnforceDurationLimits.Checked);
+                    sub.RecalculateDisplayTimes((double)numericUpDownMaxCharsSec.Value, null, (double)numericUpDownOptimalCharsSec.Value, checkBoxExtendOnly.Checked, shotChanges, checkBoxEnforceDurationLimits.Checked);
                 }
                 else if (adjustmentType == LanguageSettings.Current.AdjustDisplayDuration.Fixed)
                 {
@@ -2000,7 +2052,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
-                    sub.AdjustDisplayTimeUsingSeconds((double)numericUpDownSeconds.Value, null, null, checkBoxEnforceDurationLimits.Checked);
+                    sub.AdjustDisplayTimeUsingSeconds((double)numericUpDownSeconds.Value, null, shotChanges, checkBoxEnforceDurationLimits.Checked);
                 }
             }
 
@@ -2332,6 +2384,7 @@ namespace Nikse.SubtitleEdit.Forms
                    !IsActionEnabled(CommandLineConverter.BatchAction.SplitLongLines) &&
                    !IsActionEnabled(CommandLineConverter.BatchAction.RemoveTextForHI) &&
                    !IsActionEnabled(CommandLineConverter.BatchAction.ConvertColorsToDialog) &&
+                   !IsActionEnabled(CommandLineConverter.BatchAction.BeautifyTimeCodes) &&
                    !IsActionEnabled(CommandLineConverter.BatchAction.MergeSameTexts) &&
                    !IsActionEnabled(CommandLineConverter.BatchAction.MergeSameTimeCodes) &&
                    !IsActionEnabled(CommandLineConverter.BatchAction.MergeShortLines) &&
@@ -2639,6 +2692,11 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
+            if (p.BeautifyTimeCodes.Enabled)
+            {
+                BeautifyTimeCodes(p.Subtitle, p.FileName, p.BeautifyTimeCodes.UseExactTimeCodes, p.BeautifyTimeCodes.SnapToShotChanges);
+            }
+
             // always re-number
             p.Subtitle.Renumber();
         }
@@ -2737,6 +2795,86 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 IncrementAndShowProgress();
+            }
+        }
+
+        public static void BeautifyTimeCodes(Subtitle subtitle, string fileName, bool useExactTimeCodes, bool snapToShotChanges)
+        {
+            var frameRate = Configuration.Settings.General.DefaultFrameRate;
+            var timeCodes = new List<double>();
+            var shotChanges = new List<double>();
+
+            var videoFile = TryToFindVideoFile(fileName);
+            if (videoFile != null)
+            {
+                var videoInfo = UiUtil.GetVideoInfo(videoFile);
+                if (videoInfo.FramesPerSecond > 0)
+                {
+                    frameRate = videoInfo.FramesPerSecond;
+                }
+
+                if (useExactTimeCodes)
+                {
+                    timeCodes = TimeCodesFileHelper.FromDisk(videoFile);
+                }
+
+                if (snapToShotChanges)
+                {
+                    shotChanges = ShotChangeHelper.FromDisk(videoFile);
+                }
+            }
+
+            new TimeCodesBeautifier(subtitle, frameRate, timeCodes, shotChanges).Beautify();
+        }
+
+        public static string TryToFindVideoFile(string fileName)
+        {
+            string fileNameNoExtension = Utilities.GetPathAndFileNameWithoutExtension(fileName);
+            string movieFileName = null;
+
+            foreach (var extension in Utilities.VideoFileExtensions)
+            {
+                movieFileName = fileNameNoExtension + extension;
+                if (File.Exists(movieFileName))
+                {
+                    break;
+                }
+            }
+
+            if (movieFileName != null && File.Exists(movieFileName))
+            {
+                return movieFileName;
+            }
+            else if (fileNameNoExtension.Contains('.'))
+            {
+                fileNameNoExtension = fileNameNoExtension.Substring(0, fileNameNoExtension.LastIndexOf('.'));
+                return TryToFindVideoFile(fileNameNoExtension);
+            }
+
+            return null;
+        }
+
+        public static List<double> GetShotChangesOrEmpty(string fileName)
+        {
+            var videoFile = TryToFindVideoFile(fileName);
+            if (videoFile != null)
+            {
+                return ShotChangeHelper.FromDisk(videoFile);
+            }
+
+            return new List<double>();
+        }
+
+        public static void TryUpdateCurrentFrameRate(string fileName)
+        {
+            var videoFile = TryToFindVideoFile(fileName);
+            if (videoFile != null)
+            {
+                var videoInfo = UiUtil.GetVideoInfo(videoFile);
+                if (videoInfo.FramesPerSecond > 0)
+                {
+                    Configuration.Settings.General.CurrentFrameRate = videoInfo.FramesPerSecond;
+                }
             }
         }
 
@@ -3099,6 +3237,7 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.Tools.BatchConvertBridgeGaps = IsActionEnabled(CommandLineConverter.BatchAction.BridgeGaps);
             Configuration.Settings.Tools.BatchConvertRemoveTextForHI = IsActionEnabled(CommandLineConverter.BatchAction.RemoveTextForHI);
             Configuration.Settings.Tools.BatchConvertConvertColorsToDialog = IsActionEnabled(CommandLineConverter.BatchAction.ConvertColorsToDialog);
+            Configuration.Settings.Tools.BatchConvertBeautifyTimeCodes = IsActionEnabled(CommandLineConverter.BatchAction.BeautifyTimeCodes);
             Configuration.Settings.Tools.BatchConvertSetMinDisplayTimeBetweenSubtitles = IsActionEnabled(CommandLineConverter.BatchAction.SetMinGap);
             Configuration.Settings.Tools.BatchConvertOutputFolder = textBoxOutputFolder.Text;
             Configuration.Settings.Tools.BatchConvertOverwriteExisting = checkBoxOverwrite.Checked;
@@ -3501,6 +3640,7 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxConvertColorsToDialog.Visible = false;
             groupBoxSortBy.Visible = false;
             groupBoxMergeSameTimeCodes.Visible = false;
+            groupBoxBeautifyTimeCodes.Visible = false;
 
             if (listViewConvertOptions.SelectedIndices.Count != 1)
             {
@@ -3722,6 +3862,7 @@ namespace Nikse.SubtitleEdit.Forms
             panel.Left = 2;
             panel.Top = labelAdjustDurationVia.Top + labelAdjustDurationVia.Height + 9;
 
+            checkBoxAdjustDurationCheckShotChanges.Visible = panel != panelAdjustDurationFixed;
             checkBoxEnforceDurationLimits.Visible = panel != panelAdjustDurationFixed;
         }
 
@@ -3773,6 +3914,14 @@ namespace Nikse.SubtitleEdit.Forms
         private void UpdateOcrInfo()
         {
             toolStripMenuItemOcrEngine.Text = $"{LanguageSettings.Current.VobSubOcr.OcrMethod}: {_ocrEngine} / {_ocrLanguage}";
+        }
+
+        private void buttonBeautifyTimeCodesEditProfile_Click(object sender, EventArgs e)
+        {
+            using (var form = new BeautifyTimeCodes.BeautifyTimeCodesProfile(Configuration.Settings.General.DefaultFrameRate))
+            {
+                form.ShowDialog(this);
+            }
         }
     }
 }
