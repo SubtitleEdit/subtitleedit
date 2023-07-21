@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Linq;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Core.Common;
 using System.Drawing.Design;
@@ -14,12 +13,26 @@ namespace Nikse.SubtitleEdit.Controls
     [Category("NikseComboBox"), Description("ComboBox with better support for color theme")]
     public class NikseComboBox : Control
     {
-        // ReSharper disable once InconsistentNaming
+        // ReSharper disable once InconsistentNamingo
         public event EventHandler SelectedIndexChanged;
 
         [Category("NikseComboBox"), Description("Gets or sets DropDownStyle"),
          RefreshProperties(RefreshProperties.Repaint)]
-        public ComboBoxStyle DropDownStyle { get; set; }
+        public ComboBoxStyle DropDownStyle
+        {
+            get => _dropDownStyle;
+            set
+            {
+                _dropDownStyle = value;
+
+                if (_textBox == null)
+                {
+                    return;
+                }
+
+                _textBox.ReadOnly = value == ComboBoxStyle.DropDownList;
+            }
+        }
 
         private bool _sorted;
         [Category("NikseComboBox"), Description("Gets or sets if elements are auto sorted"), DefaultValue(false)]
@@ -65,19 +78,18 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        private string _text;
         public string SelectedText
         {
             get
             {
-                if (_text == null)
+                if (_textBox == null)
                 {
                     return null;
                 }
 
                 if (DropDownStyle == ComboBoxStyle.DropDown)
                 {
-                    return _text;
+                    return _textBox.Text;
                 }
 
                 if (_selectedIndex < 0)
@@ -89,16 +101,16 @@ namespace Nikse.SubtitleEdit.Controls
             }
             set
             {
-                if (_text == null)
+                if (_textBox == null)
                 {
                     return;
                 }
 
                 if (DropDownStyle == ComboBoxStyle.DropDown)
                 {
-                    if (_text != value)
+                    if (_textBox.Text != value)
                     {
-                        _text = value;
+                        _textBox.Text = value;
                         SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
                     }
 
@@ -117,7 +129,7 @@ namespace Nikse.SubtitleEdit.Controls
                     return;
                 }
 
-                _text = value;
+                _textBox.Text = value;
                 _selectedIndex = idx;
 
                 SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
@@ -272,6 +284,7 @@ namespace Nikse.SubtitleEdit.Controls
             _textBox.TextChanged += _textBox_TextChanged;
 
             Controls.Add(_textBox);
+            DropDownStyle = ComboBoxStyle.DropDownList;
             BackColor = _textBox.BackColor;
             ButtonForeColor = DefaultForeColor;
             ButtonForeColorOver = Color.FromArgb(0, 120, 215);
@@ -375,6 +388,8 @@ namespace Nikse.SubtitleEdit.Controls
         private bool _listViewShown;
 
         private int? _dropDownWidth;
+        private ComboBoxStyle _dropDownStyle;
+
         public int DropDownWidth
         {
             get => _dropDownWidth ?? Width;
@@ -434,7 +449,7 @@ namespace Nikse.SubtitleEdit.Controls
                                 _listViewMouseLeaveTimer.Stop();
                                 var item = _listView.SelectedItems[0];
                                 _selectedIndex = item.Index;
-                                _text = item.Text;
+                                _textBox.Text = item.Text;
                                 Invalidate();
                                 SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
                                 HideDropDown();
@@ -451,7 +466,7 @@ namespace Nikse.SubtitleEdit.Controls
                                     {
                                         _listViewMouseLeaveTimer.Stop();
                                         _selectedIndex = i;
-                                        _text = _listView.Items[i].Text;
+                                        _textBox.Text = _listView.Items[i].Text;
                                         SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
                                         HideDropDown(); return;
                                     }
@@ -589,7 +604,7 @@ namespace Nikse.SubtitleEdit.Controls
             _textBox.Left = RightToLeft == RightToLeft.Yes ? ButtonsWidth : 3;
             _textBox.Height = Height - 4;
             _textBox.Width = Width - ButtonsWidth - 3;
-            _textBox.Text = _text;
+            //_textBox.Text = _text;
             _textBox.Invalidate();
 
 
