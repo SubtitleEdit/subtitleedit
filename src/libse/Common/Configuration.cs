@@ -120,16 +120,18 @@ namespace Nikse.SubtitleEdit.Core.Common
         private static string GetInstallerPath()
         {
             const string valueName = "InstallLocation";
-            var value = RegistryUtil.GetValue(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\SubtitleEdit_is1", valueName);
-            if (value != null && Directory.Exists(value))
-            {
-                return value;
-            }
+            string[] paths = {
+                @"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\SubtitleEdit_is1",
+                @"SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\SubtitleEdit_is1"
+            };
 
-            value = RegistryUtil.GetValue(@"SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\SubtitleEdit_is1", valueName);
-            if (value != null && Directory.Exists(value))
+            foreach (var path in paths)
             {
-                return value;
+                var value = RegistryUtil.GetValue(path, valueName);
+                if (Directory.Exists(value))
+                {
+                    return value;
+                }
             }
 
             return null;
