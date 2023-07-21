@@ -229,14 +229,42 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     else if (bestLeftOutCueFrameInfo.result == FindBestCueResult.SnappedToRedZone) // Other cases... Red zone snapping has priority
                     {
                         var fixInfo = GetFixedConnectedSubtitlesCueFrames(leftParagraph, rightParagraph, bestLeftOutCueFrameInfo.cueFrame);
-                        newLeftOutCueFrame = fixInfo.newLeftOutCueFrame;
-                        newRightInCueFrame = fixInfo.newRightInCueFrame;
+
+                        // If the right in cue is on a left green zone (= wants to go forward) and the left subtitle would become invalid (negative duration) while the right subtitle won't,
+                        // we can give the green zone priority this time: put the left out cue on the edge of the green zone, and push the next subtitle forward
+                        var newLeftDuration = fixInfo.newLeftOutCueFrame - leftInCueFrame;
+                        var newRightDuration = rightOutCueFrame - fixInfo.newRightInCueFrame;
+                        if (bestRightInCueFrameInfo.result == FindBestCueResult.SnappedToRightGreenZone && newLeftDuration <= 0 && newRightDuration > 0)
+                        {
+                            newLeftOutCueFrame = bestRightInCueFrameInfo.cueFrame;
+                            newRightInCueFrame = newLeftOutCueFrame + Configuration.Settings.BeautifyTimeCodes.Profile.Gap;
+                        }
+                        else
+                        {
+                            // Otherwise, normal behavior: we'll align the connected subtitles around the shot change
+                            newLeftOutCueFrame = fixInfo.newLeftOutCueFrame;
+                            newRightInCueFrame = fixInfo.newRightInCueFrame;
+                        }                        
                     }
                     else if (bestRightInCueFrameInfo.result == FindBestCueResult.SnappedToRedZone)
                     {
                         var fixInfo = GetFixedConnectedSubtitlesCueFrames(leftParagraph, rightParagraph, bestRightInCueFrameInfo.cueFrame);
-                        newLeftOutCueFrame = fixInfo.newLeftOutCueFrame;
-                        newRightInCueFrame = fixInfo.newRightInCueFrame;
+
+                        // If the left out cue is on a left green zone (= wants to go backward) and the right subtitle would become invalid (negative duration) while the left subtitle won't,
+                        // we can give the green zone priority this time: put the right in cue on the edge of the green zone, and push the previous subtitle backward
+                        var newLeftDuration = fixInfo.newLeftOutCueFrame - leftInCueFrame;
+                        var newRightDuration = rightOutCueFrame - fixInfo.newRightInCueFrame;
+                        if (bestLeftOutCueFrameInfo.result == FindBestCueResult.SnappedToLeftGreenZone && newRightDuration <= 0 && newLeftDuration > 0)
+                        {
+                            newRightInCueFrame = bestLeftOutCueFrameInfo.cueFrame;
+                            newLeftOutCueFrame = newRightInCueFrame - Configuration.Settings.BeautifyTimeCodes.Profile.Gap;
+                        }
+                        else
+                        {
+                            // Otherwise, normal behavior: we'll align the connected subtitles around the shot change
+                            newLeftOutCueFrame = fixInfo.newLeftOutCueFrame;
+                            newRightInCueFrame = fixInfo.newRightInCueFrame;
+                        }
                     }
                     else if (bestLeftOutCueFrameInfo.result == FindBestCueResult.SnappedToLeftGreenZone)
                     {
