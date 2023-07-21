@@ -13,7 +13,7 @@ namespace Nikse.SubtitleEdit.Controls
     [Category("NikseComboBox"), Description("ComboBox with better support for color theme")]
     public class NikseComboBox : Control
     {
-        // ReSharper disable once InconsistentNamingo
+        // ReSharper disable once InconsistentNaming
         public event EventHandler SelectedIndexChanged;
 
         [Category("NikseComboBox"), Description("Gets or sets DropDownStyle"),
