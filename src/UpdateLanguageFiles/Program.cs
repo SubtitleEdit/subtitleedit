@@ -52,7 +52,7 @@ namespace UpdateLanguageFiles
 
                 if (oldLanguageAsXml != languageAsXml)
                 {
-                    SaveWithRetry(args[0], language);
+                    SaveWithRetry(() => language.Save(args[0]));
                     noOfChanges++;
                     Console.Write(" {0} generated...", Path.GetFileName(args[0]));
                 }
@@ -66,7 +66,7 @@ namespace UpdateLanguageFiles
 
                 if (oldLanguageDeserializerContent != languageDeserializerContent)
                 {
-                    SaveWithRetry(args[1], languageDeserializerContent);
+                    SaveWithRetry(() => File.WriteAllText(args[1], languageDeserializerContent, Encoding.UTF8));
                     noOfChanges++;
                     Console.Write(" {0} generated...", Path.GetFileName(args[1]));
                 }
@@ -91,40 +91,29 @@ namespace UpdateLanguageFiles
             }
         }
 
-        private static void SaveWithRetry(string fileName, string content)
+        private static void SaveWithRetry(Action saveAction)
         {
-            for (var i = 0; i < 10; i++)
+            const int maxRetries = 10;
+            var delayBetweenRetries = TimeSpan.FromMilliseconds(10);
+            for (var i = 0; i <= maxRetries; i++)
             {
                 try
                 {
-                    File.WriteAllText(fileName, content, Encoding.UTF8);
+                    saveAction();
                     return;
                 }
                 catch
                 {
+                    if (i == maxRetries)
+                    {
+                        throw;
+                    }
+
                     System.Threading.Thread.Sleep(10);
                 }
             }
-            File.WriteAllText(fileName, content, Encoding.UTF8);
         }
-
-        private static void SaveWithRetry(string fileName, Nikse.SubtitleEdit.Logic.Language language)
-        {
-            for (var i = 0; i < 10; i++)
-            {
-                try
-                {
-                    language.Save(fileName);
-                    return;
-                }
-                catch
-                {
-                    System.Threading.Thread.Sleep(10);
-                }
-            }
-            language.Save(fileName);
-        }
-
+        
         private static string FindVersionNumber()
         {
             var templateFileName = Path.Combine("src", "ui", "Properties", "AssemblyInfo.cs.template");
@@ -161,6 +150,7 @@ namespace UpdateLanguageFiles
                 {
                     return versionMatch.Groups["version"].Value;
                 }
+
                 WriteWarning("No valid AssemblyVersion in template file '" + Path.GetFullPath(templateFileName) + "'.");
             }
             else
