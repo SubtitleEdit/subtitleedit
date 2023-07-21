@@ -3578,6 +3578,12 @@ namespace Nikse.SubtitleEdit.Logic
             public string VoiceName { get; set; }
         }
 
+        public class WebVttProperties
+        {
+            public string UseXTimeStamp { get; set; }
+            public string MergeLines { get; set; }
+        }
+
         public class WebVttStyleManager
         {
             public string Title { get; set; }

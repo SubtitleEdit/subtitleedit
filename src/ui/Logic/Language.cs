@@ -127,6 +127,7 @@ namespace Nikse.SubtitleEdit.Logic
         public LanguageStructure.Waveform Waveform;
         public LanguageStructure.WaveformGenerateTimeCodes WaveformGenerateTimeCodes;
         public LanguageStructure.WebVttNewVoice WebVttNewVoice;
+        public LanguageStructure.WebVttProperties WebVttProperties;
         public LanguageStructure.WebVttStyleManager WebVttStyleManager;
         public LanguageStructure.WhisperAdvanced WhisperAdvanced;
 
@@ -3761,6 +3762,12 @@ Keep changes?",
             {
                 Title = "WebVTT - set new voice",
                 VoiceName = "Name of voice",
+            };
+
+            WebVttProperties = new LanguageStructure.WebVttProperties
+            {
+                UseXTimeStamp = "Use X-TIMESTAMP-MAP header value",
+                MergeLines = "Merge lines with same text on load",
             };
 
             WebVttStyleManager = new LanguageStructure.WebVttStyleManager
