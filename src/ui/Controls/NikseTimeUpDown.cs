@@ -34,7 +34,7 @@ namespace Nikse.SubtitleEdit.Controls
         private static readonly char[] SplitChars = GetSplitChars();
 
         private bool _dirty;
-        double _initialTotalMilliseconds;
+        private double _initialTotalMilliseconds;
 
         internal void ForceHHMMSSFF()
         {
@@ -185,6 +185,15 @@ namespace Nikse.SubtitleEdit.Controls
 
         private readonly MaskedTextBox _maskedTextBox;
 
+        protected override void OnKeyDown(KeyEventArgs e)
+        {
+            if (!_maskedTextBox.Focused && e.KeyCode == (Keys.Control | Keys.C))
+            {
+                Clipboard.SetText(_maskedTextBox.Text);
+                e.Handled = true;
+            }
+        }
+
         public NikseTimeUpDown()
         {
             _maskedTextBox = new MaskedTextBox();
@@ -207,6 +216,21 @@ namespace Nikse.SubtitleEdit.Controls
                 else if (e.KeyData == Keys.Enter)
                 {
                     TimeCodeChanged?.Invoke(this, e);
+                    e.SuppressKeyPress = true;
+                }
+                if (e.Modifiers == Keys.Control && e.KeyCode == Keys.A)
+                {
+                    _maskedTextBox.SelectAll();
+                    e.SuppressKeyPress = true;
+                }
+                if (e.Modifiers == Keys.Control && e.KeyCode == Keys.C)
+                {
+                    Clipboard.SetText(_maskedTextBox.Text);
+                    e.SuppressKeyPress = true;
+                }
+                if (e.Modifiers == Keys.Control && e.KeyCode == Keys.V)
+                {
+                    _maskedTextBox.Paste();
                     e.SuppressKeyPress = true;
                 }
                 else if (e.KeyData != (Keys.Tab | Keys.Shift) &&
@@ -295,6 +319,7 @@ namespace Nikse.SubtitleEdit.Controls
             return _dirty ? TimeCode?.TotalMilliseconds : _initialTotalMilliseconds;
         }
 
+        [RefreshProperties(RefreshProperties.Repaint)]
         public TimeCode TimeCode
         {
             get
@@ -314,8 +339,8 @@ namespace Nikse.SubtitleEdit.Controls
                     return new TimeCode(_initialTotalMilliseconds);
                 }
 
-                string startTime = _maskedTextBox.Text;
-                bool isNegative = startTime.StartsWith('-');
+                var startTime = _maskedTextBox.Text;
+                var isNegative = startTime.StartsWith('-');
                 startTime = startTime.TrimStart('-').Replace(' ', '0');
                 if (Mode == TimeMode.HHMMSSMS)
                 {
@@ -365,7 +390,7 @@ namespace Nikse.SubtitleEdit.Controls
                         startTime += "00";
                     }
 
-                    string[] times = startTime.Split(SplitChars, StringSplitOptions.RemoveEmptyEntries);
+                    var times = startTime.Split(SplitChars, StringSplitOptions.RemoveEmptyEntries);
 
                     if (times.Length == 4)
                     {
@@ -395,6 +420,7 @@ namespace Nikse.SubtitleEdit.Controls
                         return tc;
                     }
                 }
+
                 return null;
             }
             set
@@ -477,6 +503,7 @@ namespace Nikse.SubtitleEdit.Controls
             else if (char.IsDigit(e.KeyChar) || e.KeyChar == (char)Keys.Back)
             {
                 e.Handled = false;
+                Invalidate();
             }
             else
             {
@@ -505,7 +532,11 @@ namespace Nikse.SubtitleEdit.Controls
                 }
                 else
                 {
-                    if (value > NumericUpDownValue)
+                    if (value == 0)
+                    {
+                        SetTotalMilliseconds(milliseconds.Value);
+                    }
+                    else if (value > NumericUpDownValue)
                     {
                         SetTotalMilliseconds(milliseconds.Value + Core.SubtitleFormats.SubtitleFormat.FramesToMilliseconds(1));
                     }
@@ -633,6 +664,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         private const int ButtonsWidth = 13;
 
+        [RefreshProperties(RefreshProperties.Repaint)]
         public new bool Enabled
         {
             get => base.Enabled;
@@ -643,6 +675,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
+        [RefreshProperties(RefreshProperties.Repaint)]
         public new int Height
         {
             get => base.Height;
