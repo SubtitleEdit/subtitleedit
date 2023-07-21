@@ -212,7 +212,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             {
                 listViewNames.BeginUpdate();
                 listViewNames.Items.Clear();
-                var list = new List<ListViewItem>();
+                var list = new List<ListViewItem>(_wordListNames.Count);
                 foreach (var item in _wordListNames)
                 {
                     list.Add(new ListViewItem(item));
