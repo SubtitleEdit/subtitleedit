@@ -117,21 +117,50 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     var bestLeftOutCueFrameInfo = FindConnectedSubtitlesBestCueFrame(newLeftOutCueFrame);
                     var bestRightInCueFrameInfo = FindConnectedSubtitlesBestCueFrame(newRightInCueFrame);
 
+                    // Gather subtitles' other cue for length calculations
+                    var leftInCueFrame = SubtitleFormat.MillisecondsToFrames(leftParagraph.StartTime.TotalMilliseconds, _frameRate);
+                    var rightOutCueFrame = SubtitleFormat.MillisecondsToFrames(rightParagraph.EndTime.TotalMilliseconds, _frameRate);
+
                     // Check result
                     if (bestLeftOutCueFrameInfo.result == FindBestCueResult.SnappedToRedZone && bestRightInCueFrameInfo.result == FindBestCueResult.SnappedToRedZone)
                     {
+                        var fixInfoForLeft = GetFixedConnectedSubtitlesCueFrames(leftParagraph, rightParagraph, bestLeftOutCueFrameInfo.cueFrame);
+                        var fixInfoForRight = GetFixedConnectedSubtitlesCueFrames(leftParagraph, rightParagraph, bestRightInCueFrameInfo.cueFrame);
+
                         // Both are in red zones! We will use the closest shot change to align the cues around
                         if (Math.Abs(newLeftOutCueFrame - bestLeftOutCueFrameInfo.cueFrame) <= Math.Abs(newRightInCueFrame - bestRightInCueFrameInfo.cueFrame))
                         {
-                            var fixInfo = GetFixedConnectedSubtitlesCueFrames(leftParagraph, rightParagraph, bestLeftOutCueFrameInfo.cueFrame);
-                            newLeftOutCueFrame = fixInfo.newLeftOutCueFrame;
-                            newRightInCueFrame = fixInfo.newRightInCueFrame;
+                            // Align around the left shot change
+                            // Except, when the left subtitle now becomes invalid (negative duration) and the right subtitle won't, we will use the right shot change anyway
+                            var newLeftDuration = fixInfoForLeft.newLeftOutCueFrame - leftInCueFrame;
+                            var newRightDuration = rightOutCueFrame - fixInfoForLeft.newRightInCueFrame;
+                            if (newLeftDuration <= 0 && newRightDuration > 0)
+                            {
+                                newLeftOutCueFrame = fixInfoForRight.newLeftOutCueFrame;
+                                newRightInCueFrame = fixInfoForRight.newRightInCueFrame;
+                            }
+                            else
+                            {
+                                newLeftOutCueFrame = fixInfoForLeft.newLeftOutCueFrame;
+                                newRightInCueFrame = fixInfoForLeft.newRightInCueFrame;
+                            }
                         }
                         else
                         {
-                            var fixInfo = GetFixedConnectedSubtitlesCueFrames(leftParagraph, rightParagraph, bestRightInCueFrameInfo.cueFrame);
-                            newLeftOutCueFrame = fixInfo.newLeftOutCueFrame;
-                            newRightInCueFrame = fixInfo.newRightInCueFrame;
+                            // Align around the right shot change
+                            // Except, when the right subtitle now becomes invalid (negative duration) and the left subtitle won't we will use the left shot change anyway
+                            var newLeftDuration = fixInfoForRight.newLeftOutCueFrame - leftInCueFrame;
+                            var newRightDuration = rightOutCueFrame - fixInfoForRight.newRightInCueFrame;
+                            if (newRightDuration <= 0 && newLeftDuration > 0)
+                            {
+                                newLeftOutCueFrame = fixInfoForLeft.newLeftOutCueFrame;
+                                newRightInCueFrame = fixInfoForLeft.newRightInCueFrame;
+                            }
+                            else
+                            {
+                                newLeftOutCueFrame = fixInfoForRight.newLeftOutCueFrame;
+                                newRightInCueFrame = fixInfoForRight.newRightInCueFrame;
+                            }
                         }
                     }
                     else if ((bestLeftOutCueFrameInfo.result == FindBestCueResult.SnappedToLeftGreenZone || bestLeftOutCueFrameInfo.result == FindBestCueResult.SnappedToRightGreenZone) && 
