@@ -51,8 +51,6 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             labelConnectedSubtitlesTreatConnectedSuffix.Text = language.Milliseconds;
             groupBoxChaining.Text = language.Chaining;
             tabPageChainingGeneral.Text = language.General;
-            tabPageChainingInCueOnShot.Text = language.InCueOnShot;
-            tabPageChainingOutCueOnShot. Text = language.OutCueOnShot;
             radioButtonChainingGeneralMaxGap.Text = language.MaxGap;
             labelChainingGeneralMaxGapSuffix.Text = language.Milliseconds;
             radioButtonChainingGeneralZones.Text = language.Zones;
@@ -61,9 +59,11 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             comboBoxChainingGeneralShotChangeBehavior.Items.Add(language.DontChain);
             comboBoxChainingGeneralShotChangeBehavior.Items.Add(language.ExtendCrossingShotChange);
             comboBoxChainingGeneralShotChangeBehavior.Items.Add(language.ExtendUntilShotChange);
+            tabPageChainingInCueOnShot.Text = language.InCueOnShot;
             radioButtonChainingInCueOnShotMaxGap.Text = language.MaxGap;
             labelChainingInCueOnShotMaxGapSuffix.Text = language.Milliseconds;
             radioButtonChainingInCueOnShotZones.Text = language.Zones;
+            tabPageChainingOutCueOnShot.Text = language.OutCueOnShot;
             radioButtonChainingOutCueOnShotMaxGap.Text = language.MaxGap;
             labelChainingOutCueOnShotMaxGapSuffix.Text = language.Milliseconds;
             radioButtonChainingOutCueOnShotZones.Text = language.Zones;
