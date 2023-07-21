@@ -1733,6 +1733,10 @@ namespace Nikse.SubtitleEdit.Forms.Options
             AddNode(createAndAdjustNode, language.AdjustExtendCurrentSubtitle, nameof(Configuration.Settings.Shortcuts.MainAdjustExtendCurrentSubtitle));
             AddNode(createAndAdjustNode, language.AdjustExtendPreviousLineEndToCurrentStart, nameof(Configuration.Settings.Shortcuts.MainAdjustExtendPreviousLineEndToCurrentStart));
             AddNode(createAndAdjustNode, language.AdjustExtendNextLineStartToCurrentEnd, nameof(Configuration.Settings.Shortcuts.MainAdjustExtendNextLineStartToCurrentEnd));
+            AddNode(createAndAdjustNode, language.SetInCueToClosestShotChangeLeftGreenZone, nameof(Configuration.Settings.Shortcuts.MainSetInCueToClosestShotChangeLeftGreenZone));
+            AddNode(createAndAdjustNode, language.SetInCueToClosestShotChangeRightGreenZone, nameof(Configuration.Settings.Shortcuts.MainSetInCueToClosestShotChangeRightGreenZone));
+            AddNode(createAndAdjustNode, language.SetOutCueToClosestShotChangeLeftGreenZone, nameof(Configuration.Settings.Shortcuts.MainSetOutCueToClosestShotChangeLeftGreenZone));
+            AddNode(createAndAdjustNode, language.SetOutCueToClosestShotChangeRightGreenZone, nameof(Configuration.Settings.Shortcuts.MainSetOutCueToClosestShotChangeRightGreenZone));
             _shortcuts.Nodes.Add(createAndAdjustNode);
 
             var audioVisualizerNode = new ShortcutNode(language.WaveformAndSpectrogram);

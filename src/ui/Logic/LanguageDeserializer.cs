@@ -430,11 +430,20 @@ namespace Nikse.SubtitleEdit.Logic
                 case "AddWaveformBatch/Title":
                     language.AddWaveformBatch.Title = reader.Value;
                     break;
+                case "AddWaveformBatch/ExtractTimeCodes":
+                    language.AddWaveformBatch.ExtractTimeCodes = reader.Value;
+                    break;
                 case "AddWaveformBatch/ExtractingAudio":
                     language.AddWaveformBatch.ExtractingAudio = reader.Value;
                     break;
                 case "AddWaveformBatch/Calculating":
                     language.AddWaveformBatch.Calculating = reader.Value;
+                    break;
+                case "AddWaveformBatch/ExtractingTimeCodes":
+                    language.AddWaveformBatch.ExtractingTimeCodes = reader.Value;
+                    break;
+                case "AddWaveformBatch/DetectingShotChanges":
+                    language.AddWaveformBatch.DetectingShotChanges = reader.Value;
                     break;
                 case "AddWaveformBatch/Done":
                     language.AddWaveformBatch.Done = reader.Value;
@@ -481,6 +490,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "AdjustDisplayDuration/CheckShotChanges":
                     language.AdjustDisplayDuration.CheckShotChanges = reader.Value;
                     break;
+                case "AdjustDisplayDuration/BatchCheckShotChanges":
+                    language.AdjustDisplayDuration.BatchCheckShotChanges = reader.Value;
+                    break;
                 case "ApplyDurationLimits/Title":
                     language.ApplyDurationLimits.Title = reader.Value;
                     break;
@@ -492,6 +504,9 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "ApplyDurationLimits/UnableToFix":
                     language.ApplyDurationLimits.UnableToFix = reader.Value;
+                    break;
+                case "ApplyDurationLimits/BatchCheckShotChanges":
+                    language.ApplyDurationLimits.BatchCheckShotChanges = reader.Value;
                     break;
                 case "AudioToText/Title":
                     language.AudioToText.Title = reader.Value;
@@ -1032,6 +1047,15 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "BeautifyTimeCodes/NoShotChangesLoadedError":
                     language.BeautifyTimeCodes.NoShotChangesLoadedError = reader.Value;
+                    break;
+                case "BeautifyTimeCodes/BatchAlignTimeCodes":
+                    language.BeautifyTimeCodes.BatchAlignTimeCodes = reader.Value;
+                    break;
+                case "BeautifyTimeCodes/BatchUseExactTimeCodes":
+                    language.BeautifyTimeCodes.BatchUseExactTimeCodes = reader.Value;
+                    break;
+                case "BeautifyTimeCodes/BatchSnapToShotChanges":
+                    language.BeautifyTimeCodes.BatchSnapToShotChanges = reader.Value;
                     break;
                 case "BeautifyTimeCodesProfile/Title":
                     language.BeautifyTimeCodesProfile.Title = reader.Value;
@@ -6979,6 +7003,18 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/RecalculateDurationOfCurrentSubtitleByMinReadingSpeed":
                     language.Settings.RecalculateDurationOfCurrentSubtitleByMinReadingSpeed = reader.Value;
                     break;
+                case "Settings/SetInCueToClosestShotChangeLeftGreenZone":
+                    language.Settings.SetInCueToClosestShotChangeLeftGreenZone = reader.Value;
+                    break;
+                case "Settings/SetInCueToClosestShotChangeRightGreenZone":
+                    language.Settings.SetInCueToClosestShotChangeRightGreenZone = reader.Value;
+                    break;
+                case "Settings/SetOutCueToClosestShotChangeLeftGreenZone":
+                    language.Settings.SetOutCueToClosestShotChangeLeftGreenZone = reader.Value;
+                    break;
+                case "Settings/SetOutCueToClosestShotChangeRightGreenZone":
+                    language.Settings.SetOutCueToClosestShotChangeRightGreenZone = reader.Value;
+                    break;
                 case "Settings/MainCreateStartDownEndUp":
                     language.Settings.MainCreateStartDownEndUp = reader.Value;
                     break;
@@ -9072,6 +9108,12 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "WebVttNewVoice/VoiceName":
                     language.WebVttNewVoice.VoiceName = reader.Value;
+                    break;
+                case "WebVttProperties/UseXTimeStamp":
+                    language.WebVttProperties.UseXTimeStamp = reader.Value;
+                    break;
+                case "WebVttProperties/MergeLines":
+                    language.WebVttProperties.MergeLines = reader.Value;
                     break;
                 case "WebVttStyleManager/Title":
                     language.WebVttStyleManager.Title = reader.Value;

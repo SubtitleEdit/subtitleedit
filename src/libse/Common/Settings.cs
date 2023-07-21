@@ -202,6 +202,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public bool BatchConvertFixCasing { get; set; }
         public bool BatchConvertRemoveTextForHI { get; set; }
         public bool BatchConvertConvertColorsToDialog { get; set; }
+        public bool BatchConvertBeautifyTimeCodes { get; set; }
         public bool BatchConvertFixCommonErrors { get; set; }
         public bool BatchConvertMultipleReplace { get; set; }
         public bool BatchConvertFixRtl { get; set; }
@@ -2554,6 +2555,10 @@ $HorzAlign          =   Center
         public string MainAdjustExtendCurrentSubtitle { get; set; }
         public string MainAdjustExtendPreviousLineEndToCurrentStart { get; set; }
         public string MainAdjustExtendNextLineStartToCurrentEnd { get; set; }
+        public string MainSetInCueToClosestShotChangeLeftGreenZone { get; set; }
+        public string MainSetInCueToClosestShotChangeRightGreenZone { get; set; }
+        public string MainSetOutCueToClosestShotChangeLeftGreenZone { get; set; }
+        public string MainSetOutCueToClosestShotChangeRightGreenZone { get; set; }
         public string GeneralAutoCalcCurrentDuration { get; set; }
         public string GeneralAutoCalcCurrentDurationByOptimalReadingSpeed { get; set; }
         public string GeneralAutoCalcCurrentDurationByMinReadingSpeed { get; set; }
@@ -5276,6 +5281,12 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.Tools.BatchConvertConvertColorsToDialog = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("BatchConvertBeautifyTimeCodes");
+            if (subNode != null)
+            {
+                settings.Tools.BatchConvertBeautifyTimeCodes = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
             subNode = node.SelectSingleNode("BatchConvertFixCommonErrors");
@@ -10364,6 +10375,30 @@ $HorzAlign          =   Center
                     shortcuts.MainAdjustExtendNextLineStartToCurrentEnd = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainSetInCueToClosestShotChangeLeftGreenZone");
+                if (subNode != null)
+                {
+                    shortcuts.MainSetInCueToClosestShotChangeLeftGreenZone = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainSetInCueToClosestShotChangeRightGreenZone");
+                if (subNode != null)
+                {
+                    shortcuts.MainSetInCueToClosestShotChangeRightGreenZone = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainSetOutCueToClosestShotChangeLeftGreenZone");
+                if (subNode != null)
+                {
+                    shortcuts.MainSetOutCueToClosestShotChangeLeftGreenZone = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainSetOutCueToClosestShotChangeRightGreenZone");
+                if (subNode != null)
+                {
+                    shortcuts.MainSetOutCueToClosestShotChangeRightGreenZone = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainInsertAfter");
                 if (subNode != null)
                 {
@@ -11072,6 +11107,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("BatchConvertFixCasing", settings.Tools.BatchConvertFixCasing.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BatchConvertRemoveTextForHI", settings.Tools.BatchConvertRemoveTextForHI.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BatchConvertConvertColorsToDialog", settings.Tools.BatchConvertConvertColorsToDialog.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("BatchConvertBeautifyTimeCodes", settings.Tools.BatchConvertBeautifyTimeCodes.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BatchConvertSplitLongLines", settings.Tools.BatchConvertSplitLongLines.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BatchConvertFixCommonErrors", settings.Tools.BatchConvertFixCommonErrors.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BatchConvertMultipleReplace", settings.Tools.BatchConvertMultipleReplace.ToString(CultureInfo.InvariantCulture));
@@ -12094,6 +12130,10 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("MainAdjustExtendCurrentSubtitle", shortcuts.MainAdjustExtendCurrentSubtitle);
             textWriter.WriteElementString("MainAdjustExtendPreviousLineEndToCurrentStart", shortcuts.MainAdjustExtendPreviousLineEndToCurrentStart);
             textWriter.WriteElementString("MainAdjustExtendNextLineStartToCurrentEnd", shortcuts.MainAdjustExtendNextLineStartToCurrentEnd);
+            textWriter.WriteElementString("MainSetInCueToClosestShotChangeLeftGreenZone", shortcuts.MainSetInCueToClosestShotChangeLeftGreenZone);
+            textWriter.WriteElementString("MainSetInCueToClosestShotChangeRightGreenZone", shortcuts.MainSetInCueToClosestShotChangeRightGreenZone);
+            textWriter.WriteElementString("MainSetOutCueToClosestShotChangeLeftGreenZone", shortcuts.MainSetOutCueToClosestShotChangeLeftGreenZone);
+            textWriter.WriteElementString("MainSetOutCueToClosestShotChangeRightGreenZone", shortcuts.MainSetOutCueToClosestShotChangeRightGreenZone);
             textWriter.WriteElementString("MainInsertAfter", shortcuts.MainInsertAfter);
             textWriter.WriteElementString("MainTextBoxAutoBreak", shortcuts.MainTextBoxAutoBreak);
             textWriter.WriteElementString("MainTextBoxBreakAtPosition", shortcuts.MainTextBoxBreakAtPosition);

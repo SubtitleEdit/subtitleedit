@@ -172,31 +172,5 @@ namespace Nikse.SubtitleEdit.Forms
             MakeAnimation();
             DialogResult = DialogResult.OK;
         }
-
-        public static bool IsTagFollowIndex(string text, int index)
-        {
-            string tag;
-            // <i>, </i>, <font...>, </font>
-            if (text.Length >= index + 7)
-            {
-                tag = text.Substring(index, 7);
-                if (tag.StartsWith("<font", StringComparison.OrdinalIgnoreCase) || tag.StartsWith("</font", StringComparison.Ordinal))
-                {
-                    return true;
-                }
-            }
-
-            if (text.Length >= index + 3)
-            {
-                tag = text.Substring(index, 3);
-                var idx = 1;
-                if ((tag[2] == '>' || tag[idx++] == '/') && (tag[idx] == 'i' || tag[idx] == 'I' || tag[idx] == 'b' || tag[idx] == 'B' || tag[idx] == 'u' || tag[idx] == 'U'))
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
     }
 }

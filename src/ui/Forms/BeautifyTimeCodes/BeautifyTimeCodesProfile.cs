@@ -51,6 +51,8 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             labelConnectedSubtitlesTreatConnectedSuffix.Text = language.Milliseconds;
             groupBoxChaining.Text = language.Chaining;
             tabPageChainingGeneral.Text = language.General;
+            tabPageChainingInCueOnShot.Text = language.InCueOnShot;
+            tabPageChainingOutCueOnShot. Text = language.OutCueOnShot;
             radioButtonChainingGeneralMaxGap.Text = language.MaxGap;
             labelChainingGeneralMaxGapSuffix.Text = language.Milliseconds;
             radioButtonChainingGeneralZones.Text = language.Zones;

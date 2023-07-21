@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.6.13</Version>
-    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 17.07.2023</TranslatedBy>
+    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 21.07.2023</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -155,7 +155,10 @@ Nota: Controlla lo spazio libero nel disco.</WaveFileMalformed>
   </AddWaveform>
   <AddWaveformBatch>
     <Title>Generazione dati forma d'onda batch</Title>
+    <ExtractTimeCodes>Estrai time code con FFprobe</ExtractTimeCodes>
     <ExtractingAudio>Estrazione audio...</ExtractingAudio>
+    <ExtractingTimeCodes>Estrazione time code...</ExtractingTimeCodes>
+    <DetectingShotChanges>Rilevamento cambi inquadrature...</DetectingShotChanges>
     <Calculating>Calcolo...</Calculating>
     <Done>Fatto</Done>
     <Error>Errore</Error>
@@ -174,12 +177,14 @@ Nota: Controlla lo spazio libero nel disco.</WaveFileMalformed>
     <ExtendOnly>Estendi solo</ExtendOnly>
     <EnforceDurationLimits>Applica la durata minima e massima</EnforceDurationLimits>
     <CheckShotChanges>Non prolungare oltre i cambi di inquadratura</CheckShotChanges>
+    <BatchCheckShotChanges>Rispetta cambi inquadrature (se disponibili)</BatchCheckShotChanges>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
     <Title>Applica limiti durata</Title>
     <CheckShotChanges>Non prolungare oltre i cambi di inquadratura</CheckShotChanges>
     <FixesAvailable>Correzioni possibili: {0}</FixesAvailable>
     <UnableToFix>Impossibile correggere: {0}</UnableToFix>
+    <BatchCheckShotChanges>Rispetta cambi inquadrature (se disponibili)</BatchCheckShotChanges>
   </ApplyDurationLimits>
   <AudioToText>
     <Title>Audio/video a testo</Title>
@@ -367,7 +372,8 @@ Vuoi ulteriori informazioni (web)?</WhisperNotFound>
     <SearchFolderScanVideo>Scansiona anche file video in "Cerca cartella" (lento)</SearchFolderScanVideo>
   </BatchConvert>
   <BeautifyTimeCodes>
-    <Title>Time code abbellimento</Title>
+    <Title>Abbellisci time code</Title>
+    <TitleSelectedLines>Abbellisci time code ({0} linee selezionate)</TitleSelectedLines>
     <GroupTimeCodes>Time code</GroupTimeCodes>
     <AlignTimeCodes>Allinea i time code ai codici time code fotogrammi</AlignTimeCodes>
     <ExtractExactTimeCodes>Usa ffprobe per estrarre i time code esatti del fotogramma</ExtractExactTimeCodes>
@@ -387,6 +393,9 @@ Seleziona "{0}" per estrarre prima i time code o disabilita questa opzione.</NoT
     <NoShotChangesLoadedError>Hai scelto di agganciare i punti di taglio ai cambi inquadratura, ma non sono stai caricati cambi inquadratura.
 
 Seleziona "{0}" per generare o importare prima le modifiche alle inquadrature oppure disabilitare questa opzione.</NoShotChangesLoadedError>
+    <BatchAlignTimeCodes>Allinea time code ai time code fotogrammi</BatchAlignTimeCodes>
+    <BatchUseExactTimeCodes>Usa time code esatti (se disponibili)</BatchUseExactTimeCodes>
+    <BatchSnapToShotChanges>Allinea time code ai cambi inquadrature (se disponibili)</BatchSnapToShotChanges>
   </BeautifyTimeCodes>
   <BeautifyTimeCodesProfile>
     <Title>Modifica profilo</Title>
@@ -1539,6 +1548,7 @@ Per usare una chiave API vai su "Opzioni -&gt; Impostazioni -&gt; Strumenti" per
         <KaraokeEffect>Effetto karaoke...</KaraokeEffect>
         <ShowSelectedLinesEarlierLater>Visualizza righe selezionate prima/dopo...</ShowSelectedLinesEarlierLater>
         <VisualSyncSelectedLines>Sincronizza righe selezionate...</VisualSyncSelectedLines>
+        <BeautifyTimeCodesOfSelectedLines>Abbellisci time delle linee selezionate...</BeautifyTimeCodesOfSelectedLines>
         <GoogleAndMicrosoftTranslateSelectedLine>Traduci riga originale con Google/Microsoft</GoogleAndMicrosoftTranslateSelectedLine>
         <SelectedLines>Linee selezionate</SelectedLines>
         <TranslateSelectedLines>Traduci righe selezionate...</TranslateSelectedLines>
@@ -1695,7 +1705,9 @@ Vuoi tornare all'inizio del documento e continuare a cercare per sostituire?</Re
     <BeforeRenumbering>Prima di rinumerare</BeforeRenumbering>
     <RenumberedStartingFromX>Rinumera partendo da: {0}</RenumberedStartingFromX>
     <BeforeBeautifyTimeCodes>Prima di abbellire i time code</BeforeBeautifyTimeCodes>
+    <BeforeBeautifyTimeCodesSelectedLines>Prima di abbellire i time code delle righe selezionate</BeforeBeautifyTimeCodesSelectedLines>
     <BeautifiedTimeCodes>Time code abbelliti</BeautifiedTimeCodes>
+    <BeautifiedTimeCodesSelectedLines>Abbelliti time code delle linee selezionate</BeautifiedTimeCodesSelectedLines>
     <BeforeRemovalOfTextingForHearingImpaired>Prima di rimuovere il testo per non udenti</BeforeRemovalOfTextingForHearingImpaired>
     <TextingForHearingImpairedRemovedOneLine>Testo per non udenti rimosso: Una riga</TextingForHearingImpairedRemovedOneLine>
     <TextingForHearingImpairedRemovedXLines>Testo per non udenti rimosso: {0} righe</TextingForHearingImpairedRemovedXLines>
@@ -2559,6 +2571,10 @@ stesso file di sottotitolo (collaborazione)</Information>
     <RecalculateDurationOfCurrentSubtitle>Ricalcola durata sottotitolo attuale</RecalculateDurationOfCurrentSubtitle>
     <RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed>Ricalcola durata sottotitolo attuale (in base a velocità lettura ottimale)</RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed>
     <RecalculateDurationOfCurrentSubtitleByMinReadingSpeed>Ricalcola la durata del sottotitolo attuale (basato sulla velocità lettura minima)</RecalculateDurationOfCurrentSubtitleByMinReadingSpeed>
+    <SetInCueToClosestShotChangeLeftGreenZone>Allinea time code iniziale a distanza minima prima del cambio inquadratura più vicino (zona verde sinistra)</SetInCueToClosestShotChangeLeftGreenZone>
+    <SetInCueToClosestShotChangeRightGreenZone>Allinea time code iniziale a distanza minima dopo il cambio inquadratura più vicino (zona verde destra)</SetInCueToClosestShotChangeRightGreenZone>
+    <SetOutCueToClosestShotChangeLeftGreenZone>Allinea time code finale a distanza minima prima del cambio inquadratura più vicino (zona verde sinistra)</SetOutCueToClosestShotChangeLeftGreenZone>
+    <SetOutCueToClosestShotChangeRightGreenZone>Allinea time code finale a distanza minima dopo il cambio inquadratura più vicino (zona verde destra)</SetOutCueToClosestShotChangeRightGreenZone>
     <MainCreateStartDownEndUp>Crea nuovo premendo la freccia giù, imposta la fine premendo la freccia su</MainCreateStartDownEndUp>
     <MergeDialog>Unisci dialoghi (inserisci trattini)</MergeDialog>
     <MergeDialogWithNext>Unisci la finestra di dialogo con il successivo (inserisci trattini)</MergeDialogWithNext>
@@ -3327,6 +3343,10 @@ Vuoi mantenere le modifiche?</KeepChangesMessage>
     <VoiceName>Nome voce</VoiceName>
   </WebVttNewVoice>
   <WebVttStyleManager>
+  <WebVttProperties>
+    <UseXTimeStamp>Usa valore intestazione X-TIMESTAMP-MAP</UseXTimeStamp>
+    <MergeLines>Al caricamento unisci righe con lo stesso testo</MergeLines>
+  </WebVttProperties>
     <Title>Stili WebVTT</Title>
   </WebVttStyleManager>
   <WhisperAdvanced>
