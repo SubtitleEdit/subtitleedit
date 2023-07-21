@@ -127,6 +127,7 @@ namespace Nikse.SubtitleEdit.Logic
         public LanguageStructure.Waveform Waveform;
         public LanguageStructure.WaveformGenerateTimeCodes WaveformGenerateTimeCodes;
         public LanguageStructure.WebVttNewVoice WebVttNewVoice;
+        public LanguageStructure.WebVttProperties WebVttProperties;
         public LanguageStructure.WebVttStyleManager WebVttStyleManager;
         public LanguageStructure.WhisperAdvanced WhisperAdvanced;
 
@@ -302,8 +303,11 @@ namespace Nikse.SubtitleEdit.Logic
             AddWaveformBatch = new LanguageStructure.AddWaveformBatch
             {
                 Title = "Batch generate waveform data",
-                Calculating = "Calculating...",
+                ExtractTimeCodes = "Extract time codes with FFprobe",
                 ExtractingAudio = "Extracting audio...",
+                Calculating = "Calculating...",
+                ExtractingTimeCodes = "Extracting time codes...",
+                DetectingShotChanges = "Detecting shot changes...",
                 Done = "Done",
                 Error = "Error",
             };
@@ -323,6 +327,7 @@ namespace Nikse.SubtitleEdit.Logic
                 ExtendOnly = "Extend only",
                 EnforceDurationLimits = "Enforce minimum and maximum duration",
                 CheckShotChanges = "Don't extend past shot changes",
+                BatchCheckShotChanges = "Respect shot changes (if available)",
             };
 
             ApplyDurationLimits = new LanguageStructure.ApplyDurationLimits
@@ -331,6 +336,7 @@ namespace Nikse.SubtitleEdit.Logic
                 CheckShotChanges = "Don't extend past shot changes",
                 FixesAvailable = "Fixes available: {0}",
                 UnableToFix = "Unable to fix: {0}",
+                BatchCheckShotChanges = "Respect shot changes (if available)",
             };
 
             AudioToText = new LanguageStructure.AudioToText
@@ -542,7 +548,7 @@ namespace Nikse.SubtitleEdit.Logic
                 TitleSelectedLines = "Beautify time codes ({0} selected lines)",
                 GroupTimeCodes = "Time codes",
                 AlignTimeCodes = "Align time codes to frame time codes",
-                ExtractExactTimeCodes = "Use ffprobe to extract exact frame time codes",
+                ExtractExactTimeCodes = "Use FFprobe to extract exact frame time codes",
                 ExtractTimeCodes = "Extract time codes",
                 CancelTimeCodes = "Cancel",
                 GroupShotChanges = "Shot changes",
@@ -561,6 +567,9 @@ namespace Nikse.SubtitleEdit.Logic
                     "You've selected to snap cues to shot changes, but there are no shot changes loaded." +
                     Environment.NewLine + Environment.NewLine +
                     "Please click \"{0}\" to generate or import shot changes first, or disable this option.",
+                BatchAlignTimeCodes = "Align time codes to frame time codes",
+                BatchUseExactTimeCodes = "Use exact time codes (if available)",
+                BatchSnapToShotChanges = "Snap cues to shot changes (if available)",
             };
 
             BeautifyTimeCodesProfile = new LanguageStructure.BeautifyTimeCodesProfile
@@ -2920,6 +2929,10 @@ can edit in same subtitle file (collaboration)",
                 RecalculateDurationOfCurrentSubtitle = "Re-calculate duration of current subtitle",
                 RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed = "Re-calculate duration of current subtitle (based on optimal reading speed)",
                 RecalculateDurationOfCurrentSubtitleByMinReadingSpeed = "Re-calculate duration of current subtitle (based on minimum reading speed)",
+                SetInCueToClosestShotChangeLeftGreenZone = "Set in cue to minimum distance before closest shot change (left green zone)",
+                SetInCueToClosestShotChangeRightGreenZone = "Set in cue to minimum distance after closest shot change (right green zone)",
+                SetOutCueToClosestShotChangeLeftGreenZone = "Set out cue to minimum distance before closest shot change (left green zone)",
+                SetOutCueToClosestShotChangeRightGreenZone = "Set out cue to minimum distance after closest shot change (right green zone)",
                 MainCreateStartDownEndUp = "Insert new subtitle at key-down, set end time at key-up",
                 MergeDialog = "Merge dialog (insert dashes)",
                 MergeDialogWithNext = "Merge dialog with next (insert dashes)",
@@ -3749,6 +3762,12 @@ Keep changes?",
             {
                 Title = "WebVTT - set new voice",
                 VoiceName = "Name of voice",
+            };
+
+            WebVttProperties = new LanguageStructure.WebVttProperties
+            {
+                UseXTimeStamp = "Use X-TIMESTAMP-MAP header value",
+                MergeLines = "Merge lines with same text on load",
             };
 
             WebVttStyleManager = new LanguageStructure.WebVttStyleManager

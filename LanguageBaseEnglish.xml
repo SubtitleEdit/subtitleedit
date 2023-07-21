@@ -155,8 +155,11 @@ Note: Do check free disk space.</WaveFileMalformed>
   </AddWaveform>
   <AddWaveformBatch>
     <Title>Batch generate waveform data</Title>
+    <ExtractTimeCodes>Extract time codes with FFprobe</ExtractTimeCodes>
     <ExtractingAudio>Extracting audio...</ExtractingAudio>
     <Calculating>Calculating...</Calculating>
+    <ExtractingTimeCodes>Extracting time codes...</ExtractingTimeCodes>
+    <DetectingShotChanges>Detecting shot changes...</DetectingShotChanges>
     <Done>Done</Done>
     <Error>Error</Error>
   </AddWaveformBatch>
@@ -174,12 +177,14 @@ Note: Do check free disk space.</WaveFileMalformed>
     <ExtendOnly>Extend only</ExtendOnly>
     <EnforceDurationLimits>Enforce minimum and maximum duration</EnforceDurationLimits>
     <CheckShotChanges>Don't extend past shot changes</CheckShotChanges>
+    <BatchCheckShotChanges>Respect shot changes (if available)</BatchCheckShotChanges>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
     <Title>Apply duration limits</Title>
     <CheckShotChanges>Don't extend past shot changes</CheckShotChanges>
     <FixesAvailable>Fixes available: {0}</FixesAvailable>
     <UnableToFix>Unable to fix: {0}</UnableToFix>
+    <BatchCheckShotChanges>Respect shot changes (if available)</BatchCheckShotChanges>
   </ApplyDurationLimits>
   <AudioToText>
     <Title>Audio to text</Title>
@@ -371,7 +376,7 @@ Read more info (web)?</WhisperNotFound>
     <TitleSelectedLines>Beautify time codes ({0} selected lines)</TitleSelectedLines>
     <GroupTimeCodes>Time codes</GroupTimeCodes>
     <AlignTimeCodes>Align time codes to frame time codes</AlignTimeCodes>
-    <ExtractExactTimeCodes>Use ffprobe to extract exact frame time codes</ExtractExactTimeCodes>
+    <ExtractExactTimeCodes>Use FFprobe to extract exact frame time codes</ExtractExactTimeCodes>
     <ExtractTimeCodes>Extract time codes</ExtractTimeCodes>
     <CancelTimeCodes>Cancel</CancelTimeCodes>
     <GroupShotChanges>Shot changes</GroupShotChanges>
@@ -388,6 +393,9 @@ Please click "{0}" to extract the time codes first, or disable this option.</NoT
     <NoShotChangesLoadedError>You've selected to snap cues to shot changes, but there are no shot changes loaded.
 
 Please click "{0}" to generate or import shot changes first, or disable this option.</NoShotChangesLoadedError>
+    <BatchAlignTimeCodes>Align time codes to frame time codes</BatchAlignTimeCodes>
+    <BatchUseExactTimeCodes>Use exact time codes (if available)</BatchUseExactTimeCodes>
+    <BatchSnapToShotChanges>Snap cues to shot changes (if available)</BatchSnapToShotChanges>
   </BeautifyTimeCodes>
   <BeautifyTimeCodesProfile>
     <Title>Edit profile</Title>
@@ -2563,6 +2571,10 @@ can edit in same subtitle file (collaboration)</Information>
     <RecalculateDurationOfCurrentSubtitle>Re-calculate duration of current subtitle</RecalculateDurationOfCurrentSubtitle>
     <RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed>Re-calculate duration of current subtitle (based on optimal reading speed)</RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed>
     <RecalculateDurationOfCurrentSubtitleByMinReadingSpeed>Re-calculate duration of current subtitle (based on minimum reading speed)</RecalculateDurationOfCurrentSubtitleByMinReadingSpeed>
+    <SetInCueToClosestShotChangeLeftGreenZone>Set in cue to minimum distance before closest shot change (left green zone)</SetInCueToClosestShotChangeLeftGreenZone>
+    <SetInCueToClosestShotChangeRightGreenZone>Set in cue to minimum distance after closest shot change (right green zone)</SetInCueToClosestShotChangeRightGreenZone>
+    <SetOutCueToClosestShotChangeLeftGreenZone>Set out cue to minimum distance before closest shot change (left green zone)</SetOutCueToClosestShotChangeLeftGreenZone>
+    <SetOutCueToClosestShotChangeRightGreenZone>Set out cue to minimum distance after closest shot change (right green zone)</SetOutCueToClosestShotChangeRightGreenZone>
     <MainCreateStartDownEndUp>Insert new subtitle at key-down, set end time at key-up</MainCreateStartDownEndUp>
     <MergeDialog>Merge dialog (insert dashes)</MergeDialog>
     <MergeDialogWithNext>Merge dialog with next (insert dashes)</MergeDialogWithNext>
@@ -3330,6 +3342,10 @@ Keep changes?</KeepChangesMessage>
     <Title>WebVTT - set new voice</Title>
     <VoiceName>Name of voice</VoiceName>
   </WebVttNewVoice>
+  <WebVttProperties>
+    <UseXTimeStamp>Use X-TIMESTAMP-MAP header value</UseXTimeStamp>
+    <MergeLines>Merge lines with same text on load</MergeLines>
+  </WebVttProperties>
   <WebVttStyleManager>
     <Title>WebVTT styles</Title>
   </WebVttStyleManager>

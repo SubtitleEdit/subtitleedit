@@ -116,58 +116,12 @@ namespace Nikse.SubtitleEdit.Core.Common
             return source.IndexOf(value, comparisonType) >= 0;
         }
 
-        public static List<string> SplitToLines(this string s)
+        public static List<string> SplitToLines(this string s) => SplitToLines(s, s.Length);
+        
+        public static List<string> SplitToLines(this string s, int max)
         {
             //original non-optimized version: return source.Replace("\r\r\n", "\n").Replace("\r\n", "\n").Replace('\r', '\n').Replace('\u2028', '\n').Split('\n');
 
-            var lines = new List<string>();
-            var start = 0;
-            var max = s.Length;
-            var i = 0;
-            while (i < max)
-            {
-                var ch = s[i];
-                if (ch == '\r')
-                {
-                    if (i < max - 2 && s[i + 1] == '\r' && s[i + 2] == '\n') // \r\r\n
-                    {
-                        lines.Add(s.Substring(start, i - start));
-                        i += 3;
-                        start = i;
-                        continue;
-                    }
-
-                    if (i < max - 1 && s[i + 1] == '\n') // \r\n
-                    {
-                        lines.Add(s.Substring(start, i - start));
-                        i += 2;
-                        start = i;
-                        continue;
-                    }
-
-                    lines.Add(s.Substring(start, i - start));
-                    i++;
-                    start = i;
-                    continue;
-                }
-
-                if (ch == '\n' || ch == '\u2028')
-                {
-                    lines.Add(s.Substring(start, i - start));
-                    i++;
-                    start = i;
-                    continue;
-                }
-
-                i++;
-            }
-
-            lines.Add(s.Substring(start, i - start));
-            return lines;
-        }
-
-        public static List<string> SplitToLines(this string s, int max)
-        {
             var lines = new List<string>();
             var start = 0;
             var i = 0;
@@ -206,10 +160,6 @@ namespace Nikse.SubtitleEdit.Core.Common
 
                 if (ch == '\n' || ch == '\u2028')
                 {
-                    if (start >= s.Length || i - start < 0 || i - start >= s.Length)
-                    {
-                    }
-
                     lines.Add(s.Substring(start, i - start));
                     i++;
                     start = i;
