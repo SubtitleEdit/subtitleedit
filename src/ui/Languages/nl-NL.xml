@@ -135,7 +135,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <PleaseWait>Dit kan enkele minuten duren. Een ogenblik geduld.</PleaseWait>
     <FfmpegNotFound>Subtitle Edit heeft FFmpeg nodig om audiogegevens te extraheren, op basis waarvan de golfvorm wordt gegenereerd.
 
-Wil je FFmpeg downloaden en gebruiken?</FfmpegNotFound>
+Wilt u FFmpeg downloaden en gebruiken?</FfmpegNotFound>
     <GeneratingPeakFile>Piekbestand genereren...</GeneratingPeakFile>
     <GeneratingSpectrogram>Spectrogram genereren...</GeneratingSpectrogram>
     <ExtractingSeconds>Audio uitpakken: {0:0.0} seconden</ExtractingSeconds>
@@ -385,10 +385,12 @@ Meer informatie online weergeven?</WhisperNotFound>
     <EditProfile>Profiel bewerken...</EditProfile>
     <NoTimeCodesLoaded>Geen tijdcodes ingeladen</NoTimeCodesLoaded>
     <XTimeCodesLoaded>{0} tijdcodes ingeladen</XTimeCodesLoaded>
-    <NoTimeCodesLoadedError>Je wilt exacte frame-tijdcodes gebruiken, maar er zijn geen tijdcodes ingeladen.Klik op '{0}' om eerst tijdcodes te extraheren, of schakel deze optie uit.</NoTimeCodesLoadedError>
+    <NoTimeCodesLoadedError>U wilt exacte frame-tijdcodes gebruiken, maar er zijn geen tijdcodes ingeladen.
+
+Klik op '{0}' om eerst tijdcodes te extraheren, of schakel deze optie uit.</NoTimeCodesLoadedError>
     <NoShotChangesLoaded>Geen beeldwissels ingeladen</NoShotChangesLoaded>
     <XShotChangesLoaded>{0} beeldwissels ingeladen</XShotChangesLoaded>
-    <NoShotChangesLoadedError>Je wilt tijden op beeldwissels zetten, maar er zijn geen beeldwissels ingeladen.
+    <NoShotChangesLoadedError>U wilt tijden op beeldwissels zetten, maar er zijn geen beeldwissels ingeladen.
 
 Klik op '{0}' om eerst beeldwissels te genereren of importeren, of schakel deze optie uit.</NoShotChangesLoadedError>
     <BatchAlignTimeCodes>Tijdcodes op frame-tijdcodes zetten</BatchAlignTimeCodes>
@@ -422,7 +424,7 @@ Klik op '{0}' om eerst beeldwissels te genereren of importeren, of schakel deze 
     <DontChain>Niet aansluiten</DontChain>
     <ExtendCrossingShotChange>Aansluiten, over beeldwissel heen</ExtendCrossingShotChange>
     <ExtendUntilShotChange>Verlengen tot beeldwissel</ExtendUntilShotChange>
-    <ResetWarning>Hiermee wordt je huidige profiel opnieuw ingesteld en worden alle waarden overgeschreven door die van deze gekozen voorinstelling.</ResetWarning>
+    <ResetWarning>Hiermee wordt het huidige profiel opnieuw ingesteld en worden alle waarden overgeschreven door die van deze gekozen voorinstelling.</ResetWarning>
     <CreateSimpleTitle>Eenvoudige modus</CreateSimpleTitle>
     <CreateSimpleInstruction>Vul deze eenvoudige regels in. Het huidige profiel wordt dan als zodanig ingesteld.</CreateSimpleInstruction>
     <CreateSimpleGapInstruction>De minimale tussenruimte tussen ondertitels.</CreateSimpleGapInstruction>
@@ -1895,7 +1897,7 @@ Wilt u toch doorgaan?</PromptInsertSubtitleOverlap>
     <ErrorLoadIdx>Subtitle Edit kan idx-bestanden niet lezen. Die maken deel uit van een sub/idx-bestandspaar (ook wel VobSub genoemd). Subtitle Edit kan het sub-bestand openen.</ErrorLoadIdx>
     <ErrorLoadRar>Dit is een RAR-bestand. Subtitle Edit kan gecomprimeerde bestanden niet openen.</ErrorLoadRar>
     <ErrorLoadZip>Dit is een ZIP-bestand. Subtitle Edit kan gecomprimeerde bestanden niet openen.</ErrorLoadZip>
-    <ErrorLoad7Zip>Dit is een 7-Zip bestand. Subtitle Edit kan gecomprimeerde bestanden niet openen.</ErrorLoad7Zip>
+    <ErrorLoad7Zip>Dit is een 7-Zip-bestand. Subtitle Edit kan gecomprimeerde bestanden niet openen.</ErrorLoad7Zip>
     <ErrorLoadPng>Dit is een PNG-afbeeldingsbestand. Subtitle Edit kan PNG-bestanden niet openen.</ErrorLoadPng>
     <ErrorLoadJpg>Dit is een JPEG-afbeeldingsbestand. Subtitle Edit kan JPEG-bestanden niet openen.</ErrorLoadJpg>
     <ErrorLoadSrr>Dit is een ReScene-SRR-bestand, géén ondertitelbestand.</ErrorLoadSrr>
@@ -1910,7 +1912,7 @@ Indien u dit bestand met Subtitle Edit hebt bewerkt, kunt u een vorige versie vi
     <NoSupportHereVobSub>U kunt hier geen VobSub-bestand opgeven.</NoSupportHereVobSub>
     <NoSupportHereDivx>U kunt hier geen divx- of avi-bestand opgeven.</NoSupportHereDivx>
     <NoChapters>Geen hoofdstukken gevonden in de video.</NoChapters>
-    <VideoFromUrlRequirements>Voor het openen van een video van een URL zijn mpv en youtube-dl vereist. Wil je deze downloaden?</VideoFromUrlRequirements>
+    <VideoFromUrlRequirements>Voor het openen van een video van een URL zijn mpv en youtube-dl vereist. Wilt u deze downloaden?</VideoFromUrlRequirements>
     <Url>URL</Url>
     <Errors>Fouten</Errors>
     <ShowVideoControls>Videobediening weergeven</ShowVideoControls>
