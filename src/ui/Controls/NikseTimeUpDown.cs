@@ -215,7 +215,7 @@ namespace Nikse.SubtitleEdit.Controls
                 }
                 else if (e.KeyData == Keys.Enter)
                 {
-                    TimeCodeChanged?.Invoke(this, e);
+                    AddValue(0);
                     e.SuppressKeyPress = true;
                 }
                 if (e.Modifiers == Keys.Control && e.KeyCode == Keys.A)
