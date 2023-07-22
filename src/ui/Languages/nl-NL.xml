@@ -138,13 +138,13 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
 Wilt u FFmpeg downloaden en gebruiken?</FfmpegNotFound>
     <GeneratingPeakFile>Piekbestand genereren...</GeneratingPeakFile>
     <GeneratingSpectrogram>Spectrogram genereren...</GeneratingSpectrogram>
-    <ExtractingSeconds>Audio uitpakken: {0:0.0} seconden</ExtractingSeconds>
-    <ExtractingMinutes>Audio uitpakken: {0} {1:00} minuten</ExtractingMinutes>
+    <ExtractingSeconds>Audio extraheren: {0:0.0} seconden</ExtractingSeconds>
+    <ExtractingMinutes>Audio extraheren: {0} {1:00} minuten</ExtractingMinutes>
     <WaveFileNotFound>Kan uitgepakt WAV-bestand niet vinden!
 Voor deze functie is VLC media player 1.1.x of nieuwer ({0}-bit) vereist.
 
 Opdrachtregel: {1} {2}</WaveFileNotFound>
-    <WaveFileMalformed>Het uitpakken van audiogegevens met {0} is mislukt!
+    <WaveFileMalformed>Het extraheren van audiogegevens met {0} is mislukt!
 
 Opdrachtregel: {1} {2}
 
@@ -156,7 +156,7 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
   <AddWaveformBatch>
     <Title>Golfvormgegevens in bulk genereren</Title>
     <ExtractTimeCodes>Tijdcodes extraheren met FFprobe</ExtractTimeCodes>
-    <ExtractingAudio>Audio uitpakken...</ExtractingAudio>
+    <ExtractingAudio>Audio extraheren...</ExtractingAudio>
     <Calculating>Berekenen...</Calculating>
     <ExtractingTimeCodes>Tijdcodes extraheren...</ExtractingTimeCodes>
     <DetectingShotChanges>Beeldwissels zoeken...</DetectingShotChanges>
@@ -1282,7 +1282,7 @@ Open ‘Instellingen -&gt; Voorkeuren -&gt; Extra’ voor meer informatie.</MsCl
         <Save>Op&amp;slaan</Save>
         <SaveAs>Ops&amp;laan als...</SaveAs>
         <RestoreAutoBackup>&amp;Back-up herstellen...</RestoreAutoBackup>
-        <FormatXProperties>Eigenschappen van {0}...</FormatXProperties>
+        <FormatXProperties>Eigenschappen voor {0}...</FormatXProperties>
         <OpenOriginal>Originele ondertitel openen (vertaalmodus)</OpenOriginal>
         <SaveOriginal>Originele ondertitel opslaan</SaveOriginal>
         <CloseOriginal>Originele ondertitel sluiten</CloseOriginal>
@@ -2597,7 +2597,7 @@ hetzelfde ondertitelbestand bewerken (samenwerken)</Information>
     <ToggleFocusWaveformTextBox>Tussen tekstvak en golfvorm/spectogram wisselen</ToggleFocusWaveformTextBox>
     <ToggleDialogDashes>Dialoogstreepjes toevoegen/verwĳderen</ToggleDialogDashes>
     <ToggleQuotes>Aanhalingstekens toevoegen/verwĳderen</ToggleQuotes>
-    <ToggleHiTags>ODS-tags toevoegen/verwĳderen</ToggleHiTags>
+    <ToggleHiTags>DSH-tags toevoegen/verwĳderen</ToggleHiTags>
     <ToggleCustomTags>Aangepaste tags toevoegen/verwĳderen (omsluiten)</ToggleCustomTags>
     <ToggleMusicSymbols>Muzieksymbolen toevoegen/verwĳderen</ToggleMusicSymbols>
     <Alignment>Uitlĳning (geselecteerde ondertitels)</Alignment>
