@@ -431,40 +431,52 @@ namespace Nikse.SubtitleEdit.Controls
             const double additionalSeconds = 15.0; // Helps when scrolling
             var startThresholdMilliseconds = (_startPositionSeconds - additionalSeconds) * TimeCode.BaseUnit;
             var endThresholdMilliseconds = (EndPositionSeconds + additionalSeconds) * TimeCode.BaseUnit;
-            var displayableParagraphs = new List<Paragraph>();
-            for (var i = 0; i < subtitle.Paragraphs.Count; i++)
+
+            List<Paragraph> thresholdParagraphs = subtitle.Paragraphs.Where(p => !p.StartTime.IsMaxTime)
+                .Where(p => p.EndTime.TotalMilliseconds >= startThresholdMilliseconds && p.StartTime.TotalMilliseconds <= endThresholdMilliseconds).ToList();
+            _subtitle.Paragraphs.AddRange(thresholdParagraphs);
+
+            double startVisibleMilliseconds = _startPositionSeconds * TimeCode.BaseUnit;
+            double endVisibleMilliseconds = EndPositionSeconds * TimeCode.BaseUnit;
+            List<Paragraph> visibleParagraphs = thresholdParagraphs.Where(
+                p => p.EndTime.TotalMilliseconds >= startVisibleMilliseconds && p.StartTime.TotalMilliseconds <= endVisibleMilliseconds).ToList();
+            List<Paragraph> invisibleParagraphs = thresholdParagraphs.Except(visibleParagraphs).ToList();
+
+            const int maxDisplayableParagraphs = 100;
+            IEnumerable<Paragraph> displayableParagraphs = visibleParagraphs;
+            if (visibleParagraphs.Count > maxDisplayableParagraphs)
             {
-                var p = subtitle.Paragraphs[i];
-
-                if (p.StartTime.IsMaxTime)
-                {
-                    continue;
-                }
-
-                _subtitle.Paragraphs.Add(p);
-                if (p.EndTime.TotalMilliseconds >= startThresholdMilliseconds && p.StartTime.TotalMilliseconds <= endThresholdMilliseconds)
-                {
-                    displayableParagraphs.Add(p);
-                    if (displayableParagraphs.Count > 99)
-                    {
-                        break;
-                    }
-                }
+                /*
+                 * Group & select is done so that it draws paragraphs across the entire timeline before drawing overlapping paragraphs, up to the display limit.
+                 * Materialize to list so that it can be counted below without pruning twice.
+                 */
+                displayableParagraphs = visibleParagraphs.Where(p => p.DurationTotalMilliseconds >= 0.01)
+                    .GroupBy(p => Math.Floor(p.StartTime.TotalMilliseconds / 90))
+                    .SelectMany(group => group,
+                        (group, p) =>
+                            {
+                                int index = group.ToList().IndexOf(p);
+                                return new { index, p };
+                            })
+                    .OrderBy(items => items.index)
+                    .Select(item => item.p)
+                    .Take(maxDisplayableParagraphs)
+                    .ToList();
             }
 
-            displayableParagraphs = displayableParagraphs.OrderBy(p => p.StartTime.TotalMilliseconds).ToList();
-            var lastStartTime = -1d;
-            foreach (var p in displayableParagraphs)
+            if (displayableParagraphs.Count() < maxDisplayableParagraphs && invisibleParagraphs.Count + displayableParagraphs.Count() > maxDisplayableParagraphs)
             {
-                if (displayableParagraphs.Count > 30 &&
-                    (p.DurationTotalMilliseconds < 0.01 || p.StartTime.TotalMilliseconds - lastStartTime < 90))
-                {
-                    continue;
-                }
-
-                _displayableParagraphs.Add(p);
-                lastStartTime = p.StartTime.TotalMilliseconds;
+                // These paragraphs won't be visible in the timeline and are in addition to visible paragraphs, so use simpler pruning algorithm to save time.
+                IEnumerable<Paragraph> additionalParagraphs = invisibleParagraphs.Where(p => p.DurationTotalMilliseconds >= 0.01)
+                    .GroupBy(p => Math.Floor(p.StartTime.TotalMilliseconds / 90))
+                    .Select(p => p.First());
+                displayableParagraphs = displayableParagraphs.Concat(additionalParagraphs);
             }
+            else
+            {
+                displayableParagraphs = displayableParagraphs.Concat(invisibleParagraphs);
+            }
+            _displayableParagraphs.AddRange(displayableParagraphs.Take(maxDisplayableParagraphs));
 
             var primaryParagraph = subtitle.GetParagraphOrDefault(primarySelectedIndex);
             if (primaryParagraph != null && !primaryParagraph.StartTime.IsMaxTime)
