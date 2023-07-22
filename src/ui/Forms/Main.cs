@@ -12722,7 +12722,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void UpdateStartTimeInfo(TimeCode startTime)
         {
-            if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count > 0 && startTime != null)
+            if (_subtitle.Paragraphs.Count > 0 && _subtitleListViewIndex >= 0 && startTime != null)
             {
                 UpdateOverlapErrors(startTime);
 
@@ -12770,9 +12770,9 @@ namespace Nikse.SubtitleEdit.Forms
         {
             string startTimeWarning = string.Empty;
             string durationWarning = string.Empty;
-            if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedIndices.Count > 0 && startTime != null)
+            if (_subtitle.Paragraphs.Count > 0 && _subtitleListViewIndex >= 0 && startTime != null)
             {
-                int firstSelectedIndex = SubtitleListview1.SelectedIndices[0];
+                int firstSelectedIndex = _subtitleListViewIndex;
 
                 var prevParagraph = _subtitle.GetParagraphOrDefault(firstSelectedIndex - 1);
                 if (prevParagraph != null && !prevParagraph.EndTime.IsMaxTime && prevParagraph.EndTime.TotalMilliseconds > startTime.TotalMilliseconds && Configuration.Settings.Tools.ListViewSyntaxColorOverlap)
@@ -12915,10 +12915,10 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             _durationIsDirty = true;
-            if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedIndices.Count > 0)
+            if (_subtitle.Paragraphs.Count > 0 && _subtitleListViewIndex >= 0)
             {
                 labelStatus.Text = string.Empty;
-                int firstSelectedIndex = SubtitleListview1.SelectedIndices[0];
+                int firstSelectedIndex = _subtitleListViewIndex;
                 var currentParagraph = _subtitle.GetParagraphOrDefault(firstSelectedIndex);
                 if (currentParagraph != null)
                 {
@@ -13070,12 +13070,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void MaskedTextBoxTextChanged(object sender, EventArgs e)
         {
-            if (_subtitleListViewIndex >= 0 && IsSubtitleLoaded)
+            if (_subtitleListViewIndex >= 0 && SubtitleListview1.Items.Count > 0)
             {
                 MakeHistoryForUndoOnlyIfNotRecent(string.Format(_language.StartTimeAdjustedX, "#" + (_subtitleListViewIndex + 1) + ": " + timeUpDownStartTime.TimeCode));
 
-                int firstSelectedIndex = FirstSelectedIndex;
-                var oldParagraph = _subtitle.GetParagraphOrDefault(firstSelectedIndex);
+                var oldParagraph = _subtitle.GetParagraphOrDefault(_subtitleListViewIndex);
                 if (oldParagraph != null)
                 {
                     oldParagraph = new Paragraph(oldParagraph, false);
