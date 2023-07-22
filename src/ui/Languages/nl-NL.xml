@@ -587,7 +587,7 @@ We maken dan handig gebruik van het ritme van het beeld zelf.</CreateSimpleChain
     <Title>Kleuren omzetten naar dialogen</Title>
     <RemoveColorTags>Kleurtags verwijderen</RemoveColorTags>
     <AddNewLines>Elk streepje op nieuwe regel plaatsen</AddNewLines>
-    <ReBreakLines>Regels opnieuw indelen</ReBreakLines>
+    <ReBreakLines>Regels opnieuw afbreken</ReBreakLines>
   </ConvertColorsToDialog>
   <DCinemaProperties>
     <Title>Eigenschappen voor D-Cinema (interop)</Title>
@@ -979,9 +979,9 @@ We maken dan handig gebruik van het ritme van het beeld zelf.</CreateSimpleChain
     <FileSizeMb>Bestandsgrootte in MB</FileSizeMb>
     <PassX>Fase {0}</PassX>
     <Encoding>Codering</Encoding>
-    <BitRate>Bitrate:</BitRate>
-    <TotalBitRateX>Totale bitrate: {0}</TotalBitRateX>
-    <SampleRate>Samplerate</SampleRate>
+    <BitRate>Bitsnelheid:</BitRate>
+    <TotalBitRateX>Totale bitsnelheid: {0}</TotalBitRateX>
+    <SampleRate>Samplingfrequentie</SampleRate>
     <Audio>Audio</Audio>
     <Stereo>Stereo</Stereo>
     <Preset>Preset</Preset>
@@ -3210,8 +3210,8 @@ Wilt u deze wĳzigingen behouden?</KeepChangesMessage>
     <CaptureTopAlign>Bovenuitlĳning afvangen</CaptureTopAlign>
     <InspectCompareMatchesForCurrentImage>Vergelĳkingsovereenkomsten voor huidig beeld inspecteren...</InspectCompareMatchesForCurrentImage>
     <EditLastAdditions>Laatste beeldvergelĳkingstoevoegingen bewerken...</EditLastAdditions>
-    <SetItalicAngle>Hoek voor cursief instellen...</SetItalicAngle>
-    <ItalicAngle>Hoek voor cursief</ItalicAngle>
+    <SetItalicAngle>Decursiveringshoek instellen...</SetItalicAngle>
+    <ItalicAngle>Decursiveringshoek</ItalicAngle>
     <DiscardTitle>OCR-wĳzigingen verwerpen?</DiscardTitle>
     <DiscardText>Wilt u de wĳzigingen in deze OCR-sessie verwerpen?</DiscardText>
     <MinLineSplitHeight>Min. regelhoogte (splitsing)</MinLineSplitHeight>
@@ -3261,8 +3261,8 @@ Wilt u deze wĳzigingen behouden?</KeepChangesMessage>
     <Message>Naam van de nieuwe tekendatabankmap</Message>
   </VobSubOcrNewFolder>
   <VobSubOcrSetItalicAngle>
-    <Title>Hoek voor cursief instellen</Title>
-    <Description>Pas de waarde aan totdat de tekststijl normaal is en niet cursief. De originele afbeelding moet cursief zijn.</Description>
+    <Title>Decursiveringshoek instellen</Title>
+    <Description>Pas de waarde aan tot cursief in normaal overgaat. De originele afbeelding moet cursief zijn.</Description>
   </VobSubOcrSetItalicAngle>
   <OcrPreprocessing>
     <Title>OCR-beeldvoorbewerking</Title>
