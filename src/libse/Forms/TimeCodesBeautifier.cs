@@ -10,7 +10,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
     {
         private readonly Subtitle _subtitle;
         private readonly double _frameRate;
-
+        private int _progressPercentage = -1;
         private readonly List<double> _timeCodes;
         private readonly List<int> _shotChangesFrames;
 
@@ -30,12 +30,12 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
         public void Beautify()
         {
-            var amountOfPasses = 2;
+            const int amountOfPasses = 2;
             var skipNextInCue = false;
 
-            for (int pass = 0; pass < amountOfPasses; pass++)
+            for (var pass = 0; pass < amountOfPasses; pass++)
             {
-                for (int p = 0; p < _subtitle.Paragraphs.Count; p++)
+                for (var p = 0; p < _subtitle.Paragraphs.Count; p++)
                 {
                     // Gather relevant paragraphs
                     var paragraph = _subtitle.Paragraphs.ElementAtOrDefault(p);
@@ -86,10 +86,15 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     }
 
                     // Report progress
-                    var progress = (double)(pass * _subtitle.Paragraphs.Count + p) / (_subtitle.Paragraphs.Count * amountOfPasses);
                     if (ProgressChanged != null)
                     {
-                        ProgressChanged.Invoke(progress);
+                        var progress = (double)(pass * _subtitle.Paragraphs.Count + p) / (_subtitle.Paragraphs.Count * amountOfPasses);
+                        var progressPercentage = (int)Math.Round(progress * 100.0, MidpointRounding.AwayFromZero);
+                        if (progressPercentage != _progressPercentage)
+                        {
+                            _progressPercentage = progressPercentage;
+                            ProgressChanged.Invoke(progressPercentage);
+                        }
                     }
                 }
             }
@@ -870,7 +875,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
         // Delegates
 
-        public delegate void ProgressChangedDelegate(double progress);
+        public delegate void ProgressChangedDelegate(int progress);
     }
 
     public static class TimeCodesBeautifierUtils
