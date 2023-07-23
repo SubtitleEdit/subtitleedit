@@ -70,13 +70,13 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        [Category("NikseUpDown"), Description("Gets or sets the increment value")]
+        [Category("NikseUpDown"), Description("Gets or sets the increment value"), DefaultValue(1)]
         public decimal Increment { get; set; } = 1;
 
-        [Category("NikseUpDown"), Description("Gets or sets the Maximum value (max 25 significant digits)")]
+        [Category("NikseUpDown"), Description("Gets or sets the Maximum value (max 25 significant digits)"), DefaultValue(100)]
         public decimal Maximum { get; set; } = 100;
 
-        [Category("NikseUpDown"), Description("Gets or sets the Minimum value")]
+        [Category("NikseUpDown"), Description("Gets or sets the Minimum value"), DefaultValue(0)]
         public decimal Minimum { get; set; } = 0;
 
         [Category("NikseUpDown"), Description("Allow arrow keys to set increment/decrement value")]
@@ -222,7 +222,7 @@ namespace Nikse.SubtitleEdit.Controls
             };
             _textBox.LostFocus += (sender, args) =>
             {
-                SetText();
+                SetText(true);
                 Invalidate();
             };
             _textBox.GotFocus += (sender, args) => Invalidate();
@@ -262,7 +262,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         private void _textBox_TextChanged(object sender, EventArgs e)
         {
-            if (decimal.TryParse(_textBox.Text, out var result))
+            if (decimal.TryParse("0" + _textBox.Text, out var result))
             {
                 Value = Math.Round(result, DecimalPlaces);
 
@@ -314,7 +314,7 @@ namespace Nikse.SubtitleEdit.Controls
             if (string.IsNullOrEmpty(_textBox.Text))
             {
                 Value = 0 >= Minimum && 0 <= Maximum ? 0 : Minimum;
-                SetText();
+                SetText(true);
                 ValueChanged?.Invoke(this, null);
                 return;
             }
@@ -322,12 +322,12 @@ namespace Nikse.SubtitleEdit.Controls
             if (_textBox.TextLength > 25)
             {
                 Value = Maximum;
-                SetText();
+                SetText(true);
                 ValueChanged?.Invoke(this, null);
                 return;
             }
 
-            if (decimal.TryParse(_textBox.Text, out var result))
+            if (decimal.TryParse("0" + _textBox.Text, out var result))
             {
                 Value = Math.Round(result + value, DecimalPlaces);
 
@@ -561,7 +561,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        private void SetText()
+        private void SetText(bool leaving = false)
         {
             var selectionStart = _textBox.SelectionStart;
 
@@ -588,6 +588,13 @@ namespace Nikse.SubtitleEdit.Controls
             }
 
             if (newText == _textBox.Text)
+            {
+                return;
+            }
+
+            if (!leaving &&
+                (_textBox.Text.StartsWith(",") || _textBox.Text.StartsWith(".")) &&
+                (newText.StartsWith("0,") || newText.StartsWith("0.")))
             {
                 return;
             }
