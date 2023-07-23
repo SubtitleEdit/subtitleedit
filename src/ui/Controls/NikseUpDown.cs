@@ -220,7 +220,11 @@ namespace Nikse.SubtitleEdit.Controls
                     e.Handled = true;
                 }
             };
-            _textBox.LostFocus += (sender, args) => Invalidate();
+            _textBox.LostFocus += (sender, args) =>
+            {
+                SetText();
+                Invalidate();
+            };
             _textBox.GotFocus += (sender, args) => Invalidate();
             _textBox.TextChanged += _textBox_TextChanged;
             _textBox.BorderStyle = BorderStyle.None;
@@ -272,6 +276,8 @@ namespace Nikse.SubtitleEdit.Controls
                     Value = Maximum;
                     Invalidate();
                 }
+
+                ValueChanged?.Invoke(this, null);
             }
         }
 
@@ -480,6 +486,7 @@ namespace Nikse.SubtitleEdit.Controls
             _textBox.Left = RightToLeft == RightToLeft.Yes ? ButtonsWidth : 3;
             _textBox.Height = Height - 4;
             _textBox.Width = Width - ButtonsWidth - 3;
+            _textBox.Invalidate();
             SetText();
 
             if (!Enabled)
@@ -556,26 +563,37 @@ namespace Nikse.SubtitleEdit.Controls
 
         private void SetText()
         {
+            var selectionStart = _textBox.SelectionStart;
+
+            string newText;
             if (DecimalPlaces <= 0)
             {
-                _textBox.Text = ThousandsSeparator ? $"{Value:#,###,##0}" : $"{Value:########0}";
+                newText = ThousandsSeparator ? $"{Value:#,###,##0}" : $"{Value:########0}";
             }
             else if (DecimalPlaces == 1)
             {
-                _textBox.Text = ThousandsSeparator ? $"{Value:#,###,##0.0}" : $"{Value:########0.0}";
+                newText = ThousandsSeparator ? $"{Value:#,###,##0.0}" : $"{Value:########0.0}";
             }
             else if (DecimalPlaces == 2)
             {
-                _textBox.Text = ThousandsSeparator ? $"{Value:#,###,##0.00}" : $"{Value:#########0.00}";
+                newText = ThousandsSeparator ? $"{Value:#,###,##0.00}" : $"{Value:#########0.00}";
             }
             else if (DecimalPlaces == 3)
             {
-                _textBox.Text = ThousandsSeparator ? $"{Value:#,###,##0.000}" : $"{Value:#########0.000}";
+                newText = ThousandsSeparator ? $"{Value:#,###,##0.000}" : $"{Value:#########0.000}";
             }
             else
             {
-                _textBox.Text = ThousandsSeparator ? $"{Value:#,###,##0.0000}" : $"{Value:#########0.0000}";
+                newText = ThousandsSeparator ? $"{Value:#,###,##0.0000}" : $"{Value:#########0.0000}";
             }
+
+            if (newText == _textBox.Text)
+            {
+                return;
+            }
+
+            _textBox.Text = newText;
+            _textBox.SelectionStart = selectionStart;
         }
 
         private static void DrawArrowDown(PaintEventArgs e, Brush brush, int left, int top, int height)
