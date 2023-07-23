@@ -292,6 +292,46 @@ namespace Nikse.SubtitleEdit.Core.Common
             return s;
         }
 
+        // note: replace both input and output variable type with ReadOnlySpan<char> when in more modern .NET
+        // that will make it allocation free
+        public static string RemoveRecursiveLineBreaks(this string input)
+        {
+            var len = input.Length;
+            var writeIndex = len - 1;
+            var isLineBreakAdjacent = false;
+            var buffer = new char[len];
+        
+            // windows line break style
+            var hasCarriageReturn = input.Contains('\r');
+
+            for (int i = len - 1; i >= 0; i--)
+            {
+                var charAtIndex = input[i];
+                // carriage return line feed
+                if ((hasCarriageReturn && charAtIndex == '\r') || charAtIndex == '\n')
+                {
+                    // line break is adjacent but we found another line break - ignore it
+                    if (isLineBreakAdjacent)
+                    {
+                        continue;
+                    }
+
+                    // write into buffer and update the flag
+                    buffer[writeIndex--] = charAtIndex;
+                    isLineBreakAdjacent = charAtIndex == '\r' || (!hasCarriageReturn && charAtIndex == '\n');
+                }
+                else
+                {
+                    // write current character to the buffer and decrement the write-index
+                    buffer[writeIndex--] = charAtIndex;
+                    // update adjacent line break flag
+                    isLineBreakAdjacent = false;
+                }
+            }
+        
+            return new string(buffer, writeIndex + 1, len - (writeIndex + 1));
+        }
+        
         public static bool ContainsLetter(this string s)
         {
             if (s != null)
