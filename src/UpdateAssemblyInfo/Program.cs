@@ -225,7 +225,9 @@ namespace UpdateAssemblyInfo
 
         private static void SaveWithRetry(string fileName, string content)
         {
-            for (int i = 0; i < 10; i++)
+            const int maxRetries = 10;
+            var delayBetweenRetries = TimeSpan.FromMilliseconds(10);
+            for (var i = 0; i <= maxRetries; i++)
             {
                 try
                 {
@@ -234,10 +236,14 @@ namespace UpdateAssemblyInfo
                 }
                 catch
                 {
-                    System.Threading.Thread.Sleep(10);
+                    if (i == maxRetries)
+                    {
+                        throw;
+                    }
+
+                    System.Threading.Thread.Sleep(delayBetweenRetries);
                 }
             }
-            File.WriteAllText(fileName, content, Encoding.UTF8);
         }
 
         private static void GetRepositoryVersions(out VersionInfo currentRepositoryVersion, out VersionInfo latestRepositoryVersion)
