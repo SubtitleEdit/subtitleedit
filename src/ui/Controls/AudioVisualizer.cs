@@ -1067,7 +1067,19 @@ namespace Nikse.SubtitleEdit.Controls
                 // paragraph number
                 if (n > 15)
                 {
+                    // Calculate Relative Playhead time in currently selected paragraph
+                    var relativeTime = Math.Truncate((_currentVideoPositionSeconds - SelectedParagraph.StartTime.TotalSeconds)*1000);
+
                     var text = "#" + paragraph.Number + "  " + paragraph.Duration.ToShortDisplayString();
+
+                    // If paragraph is SelectedParagraph - add relativeTime;
+                    // ! Probably should refactor this to work better with overlaying subtitles 
+
+                    if(paragraph.StartTime == SelectedParagraph.StartTime)
+                    {
+                        text += " / " + relativeTime;
+                    }
+
                     if (n <= 51 || graphics.MeasureString(text, font).Width >= currentRegionWidth - padding - 1)
                     {
                         text = "#" + paragraph.Number;
