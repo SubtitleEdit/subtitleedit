@@ -26,7 +26,6 @@ namespace Nikse.SubtitleEdit.Controls
 
         private const int NumericUpDownValue = 50;
 
-
         private bool _forceHHMMSSFF;
 
         public bool UseVideoOffset { get; set; }
@@ -201,31 +200,6 @@ namespace Nikse.SubtitleEdit.Controls
             Invalidate();
         }
 
-        protected override void OnLocationChanged(EventArgs e)
-        {
-            base.OnLocationChanged(e);
-            Invalidate();
-        }
-
-        protected override void OnResize(EventArgs e)
-        {
-            base.OnResize(e);
-            Invalidate();
-            Refresh();
-        }
-
-        protected override void OnVisibleChanged(EventArgs e)
-        {
-            base.OnVisibleChanged(e);
-            Invalidate();
-        }
-
-        protected override void OnParentChanged(EventArgs e)
-        {
-            base.OnParentChanged(e);
-            Invalidate();
-        }
-
         protected override CreateParams CreateParams
         {
             get
@@ -346,20 +320,6 @@ namespace Nikse.SubtitleEdit.Controls
             };
 
             TabStop = false;
-
-            //var t = new Timer();
-            //t.Interval = 500;
-            //t.Tick += (sender, args) =>
-            //{
-            //    Invalidate();
-            //    Invalidate();
-            //    Invalidate();
-            //    _maskedTextBox.Refresh();
-            //    Refresh();
-            //    //t.Stop();
-            //};
-            //t.Start();
-
         }
 
         public MaskedTextBox MaskedTextBox => _maskedTextBox;
@@ -629,6 +589,7 @@ namespace Nikse.SubtitleEdit.Controls
                         SetTotalMilliseconds(milliseconds.Value - Core.SubtitleFormats.SubtitleFormat.FramesToMilliseconds(1));
                     }
                 }
+
                 TimeCodeChanged?.Invoke(this, null);
             }
         }
