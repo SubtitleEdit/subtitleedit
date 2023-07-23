@@ -109,7 +109,7 @@ namespace UpdateLanguageFiles
                         throw;
                     }
 
-                    System.Threading.Thread.Sleep(10);
+                    System.Threading.Thread.Sleep(delayBetweenRetries);
                 }
             }
         }
