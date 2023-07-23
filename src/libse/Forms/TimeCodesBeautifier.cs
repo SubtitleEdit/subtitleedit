@@ -815,6 +815,11 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
         private int? GetFirstShotChangeFrameInBetween(int leftCueFrame, int rightCueFrame)
         {
+            if (_shotChangesFrames == null || _shotChangesFrames.Count == 0)
+            {
+                return null;
+            }
+
             try
             {
                 return _shotChangesFrames.First(x => x >= leftCueFrame && x <= rightCueFrame);
@@ -827,6 +832,11 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
         private int? GetClosestShotChangeFrame(int cueFrame)
         {
+            if (_shotChangesFrames == null || _shotChangesFrames.Count == 0)
+            {
+                return null;
+            }
+
             try
             {
                 return _shotChangesFrames.Aggregate((x, y) => Math.Abs(x - cueFrame) < Math.Abs(y - cueFrame) ? x : y);
