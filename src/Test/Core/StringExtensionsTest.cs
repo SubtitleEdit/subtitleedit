@@ -378,7 +378,6 @@ namespace Test.Core
             Assert.AreEqual("<v Johnny>HOW ARE YOU?", res);
         }
 
-
         [TestMethod]
         public void ToProperCaseFromUpper()
         {
@@ -402,5 +401,32 @@ namespace Test.Core
             var res = input.ToProperCase(null);
             Assert.AreEqual("<i>How Are You?</i>", res);
         }
+
+        [TestMethod]
+        public void HasSentenceEndingCultureNeutralTest()
+        {
+            Assert.IsTrue("foobar.".HasSentenceEnding());
+            Assert.IsTrue("foobar?</font>".HasSentenceEnding());
+            Assert.IsTrue("foobar!</font>".HasSentenceEnding());
+            Assert.IsTrue("foobar.</font>\"".HasSentenceEnding());
+            Assert.IsTrue("foobar.\"".HasSentenceEnding());
+            Assert.IsTrue("foobar--".HasSentenceEnding());
+            Assert.IsTrue("foobar—".HasSentenceEnding());
+            Assert.IsTrue("".HasSentenceEnding());
+            
+            Assert.IsFalse("\"".HasSentenceEnding());
+            Assert.IsFalse("foobar>".HasSentenceEnding());
+        }
+
+        [TestMethod]
+        public void HasSentenceEndingGreekTest()
+        {
+            const string greekCultureTwoLetter = "el";
+            Assert.IsTrue("foobar)".HasSentenceEnding(greekCultureTwoLetter));
+            Assert.IsTrue("foobar\u037E</font>\"".HasSentenceEnding(greekCultureTwoLetter));
+            Assert.IsTrue("foobar؟\"".HasSentenceEnding(greekCultureTwoLetter));
+            Assert.IsTrue("foobar;".HasSentenceEnding(greekCultureTwoLetter));
+        }
+        
     }
 }
