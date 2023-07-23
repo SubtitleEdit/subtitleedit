@@ -277,7 +277,7 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             timeCodesBeautifier.ProgressChanged += delegate (int progress)
             {
                 progressBar.Value = progress;
-                progressBar.Refresh();
+                Application.DoEvents();
             };
             timeCodesBeautifier.Beautify();
 
