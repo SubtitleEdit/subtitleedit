@@ -757,24 +757,70 @@ namespace Nikse.SubtitleEdit.Core.Common
             return value.HasSentenceEnding(string.Empty);
         }
 
+        private static readonly HashSet<char> NeutralSentenceEndingChars = new HashSet<char>
+        {
+            '.', '!', '?', ']', ')', '…', '♪', '؟'
+        };
+
+        private static readonly HashSet<char> GreekSentenceEndingChars = new HashSet<char>
+        {
+            '\u037E', ';'
+        };
+
         public static bool HasSentenceEnding(this string value, string twoLetterLanguageCode)
         {
             if (string.IsNullOrEmpty(value))
             {
-                return false;
+                return true;
             }
 
-            var s = HtmlUtil.RemoveHtmlTags(value, true).TrimEnd('"').TrimEnd('”');
-            if (s == string.Empty)
+            var len = value.Length;
+            var checkIndex = len - 1;
+
+            // skip quotes
+            while (checkIndex >= 0 && (value[checkIndex] == '"' || value[checkIndex] == '”'))
+            {
+                checkIndex--;
+            }
+
+            // value contains only quotes
+            if (checkIndex < 0)
             {
                 return false;
             }
 
-            var last = s[s.Length - 1];
-            return last == '.' || last == '!' || last == '?' || last == ']' || last == ')' || last == '…' || last == '♪' || last == '؟' ||
-                   twoLetterLanguageCode == "el" && last == ';' || twoLetterLanguageCode == "el" && last == '\u037E' ||
-                   last == '-' && s.Length > 3 && s.EndsWith("--", StringComparison.Ordinal) && char.IsLetter(s[s.Length - 3]) ||
-                   last == '—' && s.Length > 2 && char.IsLetter(s[s.Length - 2]);
+            // evaluate culture type
+            var isCultureNeutral = twoLetterLanguageCode?.Equals("el", StringComparison.OrdinalIgnoreCase) == false;
+
+            // handles when sentence ending char is adjacent with html closing tags e.g: </i>, </font>...
+            if (value[checkIndex] == '>')
+            {
+                checkIndex = value.LastIndexOf('<', checkIndex) - 1;
+
+                // in this case '>' is the last char
+                if (checkIndex < 0)
+                {
+                    return false;
+                }
+            }
+
+            var charAtIndex = value[checkIndex];
+
+            // ending with dash/hyphen
+            if (charAtIndex == '-')
+            {
+                // foobar--
+                return len > 3 && char.IsLetter(value[len - 3]) && value[len - 2] == '-';
+            }
+
+            // em dash: used in written English to indicate an interruption or break in thought
+            if (charAtIndex == '—') // U+2014
+            {
+                // foobar—
+                return len > 2 && char.IsLetter(value[len - 2]);
+            }
+
+            return NeutralSentenceEndingChars.Contains(charAtIndex) || (!isCultureNeutral && GreekSentenceEndingChars.Contains(charAtIndex));
         }
 
         public static string NormalizeUnicode(this string input, Encoding encoding)
