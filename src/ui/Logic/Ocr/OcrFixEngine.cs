@@ -445,13 +445,8 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 text = text.Replace(" " + Environment.NewLine, Environment.NewLine);
             }
 
-            while (text.Contains(Environment.NewLine + Environment.NewLine, StringComparison.Ordinal))
-            {
-                text = text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
-            }
-
-            text = text.Trim();
-
+            text = text.RemoveRecursiveLineBreaks().Trim();
+            
             var textNoAssa = Utilities.RemoveSsaTags(text, true);
             if (textNoAssa.Length == 0)
             {
