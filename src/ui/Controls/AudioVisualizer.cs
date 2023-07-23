@@ -1732,7 +1732,8 @@ namespace Nikse.SubtitleEdit.Controls
 
                                 _mouseDownParagraph.StartTime.TotalMilliseconds = milliseconds;
 
-                                if (Configuration.Settings.VideoControls.WaveformSnapToShotChanges && ModifierKeys != Keys.Shift)
+                                if (Configuration.Settings.VideoControls.WaveformSnapToShotChanges && ModifierKeys != Keys.Shift  &&
+                                    _shotChanges?.Count > 0)
                                 {
                                     var nearestShotChange = ShotChangeHelper.GetClosestShotChange(_shotChanges, new TimeCode(milliseconds)) ?? double.MinValue;
                                     if (Math.Abs(e.X - SecondsToXPosition(nearestShotChange - _startPositionSeconds)) < ShotChangeSnapPixels)

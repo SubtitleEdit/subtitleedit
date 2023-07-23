@@ -3626,21 +3626,13 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void listViewConvertOptions_SelectedIndexChanged(object sender, EventArgs e)
         {
-            groupBoxMergeShortLines.Visible = false;
-            groupBoxChangeFrameRate.Visible = false;
-            groupBoxSpeed.Visible = false;
-            groupBoxOffsetTimeCodes.Visible = false;
-            buttonConvertOptionsSettings.Visible = false;
-            groupBoxFixRtl.Visible = false;
-            groupBoxChangeCasing.Visible = false;
-            groupBoxRemoveStyle.Visible = false;
-            groupBoxAdjustDuration.Visible = false;
-            groupBoxDeleteLines.Visible = false;
-            groupBoxAssaChangeRes.Visible = false;
-            groupBoxConvertColorsToDialog.Visible = false;
-            groupBoxSortBy.Visible = false;
-            groupBoxMergeSameTimeCodes.Visible = false;
-            groupBoxBeautifyTimeCodes.Visible = false;
+            foreach (ListViewItem item in listViewConvertOptions.Items)  
+            {
+                if (item.Tag is FixActionItem fi && fi.Control != null)
+                {
+                    fi.Control.Visible = false;
+                }
+            }
 
             if (listViewConvertOptions.SelectedIndices.Count != 1)
             {
