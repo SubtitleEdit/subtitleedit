@@ -244,6 +244,11 @@ namespace Nikse.SubtitleEdit.Controls
 
         public NikseTimeUpDown()
         {
+            SetStyle(ControlStyles.AllPaintingInWmPaint, true);
+            SetStyle(ControlStyles.ResizeRedraw, true);
+            SetStyle(ControlStyles.Selectable, true);
+            DoubleBuffered = true;
+
             _maskedTextBox = new MaskedTextBox();
             Height = 23;
             _maskedTextBox.FontChanged += (o, args) => { base.OnFontChanged(args); Invalidate(); };
@@ -313,15 +318,8 @@ namespace Nikse.SubtitleEdit.Controls
             BorderColor = Color.FromArgb(171, 173, 179);
             BorderColorDisabled = Color.FromArgb(120, 120, 120);
             BackColorDisabled = Color.FromArgb(240, 240, 240);
-            DoubleBuffered = true;
             InterceptArrowKeys = true;
             Increment = 100;
-
-            SetStyle(ControlStyles.AllPaintingInWmPaint, true);
-            SetStyle(ControlStyles.ResizeRedraw, true);
-            SetStyle(ControlStyles.Selectable, true);
-
-            
 
             _repeatTimer = new Timer();
             _repeatTimer.Tick += (sender, args) =>
