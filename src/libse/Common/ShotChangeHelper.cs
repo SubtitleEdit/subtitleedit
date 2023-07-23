@@ -154,9 +154,14 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             return null;
         }
-
+        
         public static double? GetClosestShotChange(List<double> shotChanges, TimeCode currentTime)
         {
+            if (shotChanges == null || shotChanges.Count == 0)
+            {
+                return null;
+            }
+
             try
             {
                 return shotChanges.Aggregate((x, y) => Math.Abs(x - currentTime.TotalSeconds) < Math.Abs(y - currentTime.TotalSeconds) ? x : y);
