@@ -44,6 +44,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public void SetAutoWidth()
         {
+            Invalidate();
         }
 
         public TimeMode Mode
@@ -59,8 +60,8 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        [Category("NikseTimeUpDown"), Description("Gets or sets the increment value")]
-        public decimal Increment { get; set; } = 100;
+        [Category("NikseTimeUpDown"), Description("Gets or sets the increment value"), DefaultValue(100)]
+        public decimal Increment { get; set; }
 
         [Category("NikseTimeUpDown"), Description("Allow arrow keys to set increment/decrement value")]
         [DefaultValue(true)]
@@ -189,8 +190,55 @@ namespace Nikse.SubtitleEdit.Controls
         {
             if (!_maskedTextBox.Focused && e.KeyCode == (Keys.Control | Keys.C))
             {
-                Clipboard.SetText(_maskedTextBox.Text);
+                _maskedTextBox.Copy();
                 e.Handled = true;
+            }
+        }
+
+        protected override void OnFontChanged(EventArgs e)
+        {
+            base.OnFontChanged(e);
+            Invalidate();
+        }
+
+        protected override void OnLocationChanged(EventArgs e)
+        {
+            base.OnLocationChanged(e);
+            Invalidate();
+        }
+
+        protected override void OnResize(EventArgs e)
+        {
+            base.OnResize(e);
+            Invalidate();
+            Refresh();
+        }
+
+        protected override void OnVisibleChanged(EventArgs e)
+        {
+            base.OnVisibleChanged(e);
+            Invalidate();
+        }
+
+        protected override void OnParentChanged(EventArgs e)
+        {
+            base.OnParentChanged(e);
+            Invalidate();
+        }
+
+        protected override CreateParams CreateParams
+        {
+            get
+            {
+                // https://stackoverflow.com/questions/2612487/how-to-fix-the-flickering-in-user-controls
+                // https://stackoverflow.com/questions/69908353/window-not-fully-painting-until-i-grab-and-move-it
+                var cp = base.CreateParams;
+                cp.ExStyle |= 0x02000000;  // Turn on WS_EX_COMPOSITED
+                return cp;
+
+                //var parms = base.CreateParams;
+                //parms.Style |= 0x02000000;  // Turn off WS_CLIPCHILDREN
+                //return parms;
             }
         }
 
@@ -198,6 +246,7 @@ namespace Nikse.SubtitleEdit.Controls
         {
             _maskedTextBox = new MaskedTextBox();
             Height = 23;
+            _maskedTextBox.FontChanged += (o, args) => { base.OnFontChanged(args); Invalidate(); };
             _maskedTextBox.BorderStyle = BorderStyle.None;
             _maskedTextBox.Font = UiUtil.GetDefaultFont();
             _maskedTextBox.KeyPress += TextBox_KeyPress;
@@ -215,8 +264,12 @@ namespace Nikse.SubtitleEdit.Controls
                 }
                 else if (e.KeyData == Keys.Enter)
                 {
-                    AddValue(0);
-                    e.SuppressKeyPress = true;
+                    if (!_maskedTextBox.MaskCompleted)
+                    {
+                        AddValue(0);
+                    }
+
+                    Invalidate();
                 }
                 if (e.Modifiers == Keys.Control && e.KeyCode == Keys.A)
                 {
@@ -225,7 +278,7 @@ namespace Nikse.SubtitleEdit.Controls
                 }
                 if (e.Modifiers == Keys.Control && e.KeyCode == Keys.C)
                 {
-                    Clipboard.SetText(_maskedTextBox.Text);
+                    _maskedTextBox.Copy();
                     e.SuppressKeyPress = true;
                 }
                 if (e.Modifiers == Keys.Control && e.KeyCode == Keys.V)
@@ -239,6 +292,7 @@ namespace Nikse.SubtitleEdit.Controls
                          e.KeyData != Keys.Right)
                 {
                     _dirty = true;
+                    Invalidate();
                 }
             };
             _maskedTextBox.LostFocus += (sender, args) => Invalidate();
@@ -262,6 +316,12 @@ namespace Nikse.SubtitleEdit.Controls
             DoubleBuffered = true;
             InterceptArrowKeys = true;
             Increment = 100;
+
+            SetStyle(ControlStyles.AllPaintingInWmPaint, true);
+            SetStyle(ControlStyles.ResizeRedraw, true);
+            SetStyle(ControlStyles.Selectable, true);
+
+            
 
             _repeatTimer = new Timer();
             _repeatTimer.Tick += (sender, args) =>
@@ -288,6 +348,20 @@ namespace Nikse.SubtitleEdit.Controls
             };
 
             TabStop = false;
+
+            //var t = new Timer();
+            //t.Interval = 500;
+            //t.Tick += (sender, args) =>
+            //{
+            //    Invalidate();
+            //    Invalidate();
+            //    Invalidate();
+            //    _maskedTextBox.Refresh();
+            //    Refresh();
+            //    //t.Stop();
+            //};
+            //t.Start();
+
         }
 
         public MaskedTextBox MaskedTextBox => _maskedTextBox;
@@ -296,21 +370,33 @@ namespace Nikse.SubtitleEdit.Controls
         {
             _dirty = false;
             _initialTotalMilliseconds = milliseconds;
+            string mask;
             if (UseVideoOffset)
             {
                 milliseconds += Configuration.Settings.General.CurrentVideoOffsetInMs;
             }
+
             if (Mode == TimeMode.HHMMSSMS)
             {
-                _maskedTextBox.Mask = GetMask(milliseconds);
+                mask = GetMask(milliseconds);
+                if (_maskedTextBox.Mask != mask)
+                {
+                    _maskedTextBox.Mask = mask;
+                }
+
                 _maskedTextBox.Text = new TimeCode(milliseconds).ToString();
             }
             else
             {
                 var tc = new TimeCode(milliseconds);
-                _maskedTextBox.Mask = GetMaskFrames(milliseconds);
+                mask = GetMaskFrames(milliseconds);
+                if (_maskedTextBox.Mask != mask)
+                {
+                    _maskedTextBox.Mask = mask;
+                }
                 _maskedTextBox.Text = tc.ToString().Substring(0, 9) + $"{Core.SubtitleFormats.SubtitleFormat.MillisecondsToFrames(tc.Milliseconds):00}";
             }
+
             _dirty = false;
         }
 
@@ -681,8 +767,28 @@ namespace Nikse.SubtitleEdit.Controls
             get => base.Height;
             set
             {
+                if (_maskedTextBox != null)
+                {
+                    _maskedTextBox.Height = value - 4;
+                }
+
                 base.Height = value;
-                _maskedTextBox.Height = value - 4;
+                Invalidate();
+            }
+        }
+
+        [RefreshProperties(RefreshProperties.Repaint)]
+        public new int Width
+        {
+            get => base.Width;
+            set
+            {
+                if (_maskedTextBox != null)
+                {
+                    _maskedTextBox.Width = Width - ButtonsWidth - 3;
+                }
+
+                base.Width = value;
                 Invalidate();
             }
         }
