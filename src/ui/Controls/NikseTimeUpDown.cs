@@ -200,21 +200,21 @@ namespace Nikse.SubtitleEdit.Controls
             Invalidate();
         }
 
-        protected override CreateParams CreateParams
-        {
-            get
-            {
-                // https://stackoverflow.com/questions/2612487/how-to-fix-the-flickering-in-user-controls
-                // https://stackoverflow.com/questions/69908353/window-not-fully-painting-until-i-grab-and-move-it
-                var cp = base.CreateParams;
-                cp.ExStyle |= 0x02000000;  // Turn on WS_EX_COMPOSITED
-                return cp;
+        //protected override CreateParams CreateParams
+        //{
+        //    get
+        //    {
+        //        // https://stackoverflow.com/questions/2612487/how-to-fix-the-flickering-in-user-controls
+        //        // https://stackoverflow.com/questions/69908353/window-not-fully-painting-until-i-grab-and-move-it
+        //        var cp = base.CreateParams;
+        //        cp.ExStyle |= 0x02000000;  // Turn on WS_EX_COMPOSITED
+        //        return cp;
 
-                //var parms = base.CreateParams;
-                //parms.Style |= 0x02000000;  // Turn off WS_CLIPCHILDREN
-                //return parms;
-            }
-        }
+        //        //var parms = base.CreateParams;
+        //        //parms.Style |= 0x02000000;  // Turn off WS_CLIPCHILDREN
+        //        //return parms;
+        //    }
+        //}
 
         public NikseTimeUpDown()
         {
@@ -225,7 +225,11 @@ namespace Nikse.SubtitleEdit.Controls
 
             _maskedTextBox = new MaskedTextBox();
             Height = 23;
-            _maskedTextBox.FontChanged += (o, args) => { base.OnFontChanged(args); Invalidate(); };
+            _maskedTextBox.FontChanged += (o, args) =>
+            {
+                base.OnFontChanged(args); 
+                Invalidate();
+            };
             _maskedTextBox.BorderStyle = BorderStyle.None;
             _maskedTextBox.Font = UiUtil.GetDefaultFont();
             _maskedTextBox.KeyPress += TextBox_KeyPress;
@@ -274,8 +278,13 @@ namespace Nikse.SubtitleEdit.Controls
                     Invalidate();
                 }
             };
-            _maskedTextBox.LostFocus += (sender, args) => Invalidate();
-            _maskedTextBox.GotFocus += (sender, args) => Invalidate();
+            _maskedTextBox.LostFocus += (sender, args) =>
+            {
+                Invalidate();
+            };
+            _maskedTextBox.GotFocus += (sender, args) => {
+                Invalidate();
+            };
             _maskedTextBox.MouseDown += (sender, e) =>
             {
                 if (e.Button == MouseButtons.Right)
@@ -320,6 +329,21 @@ namespace Nikse.SubtitleEdit.Controls
             };
 
             TabStop = false;
+
+            // having trouble to getting control drawn correctly at load...
+            var startRenderTimer = new Timer();
+            startRenderTimer.Interval = 397;
+            startRenderTimer.Tick += (sender, args) =>
+            {
+                Invalidate();
+                _startRenderCount++;
+                if (_startRenderCount >= StartRenderMaxCount)
+                {
+                    startRenderTimer.Stop();
+                    startRenderTimer.Dispose();
+                }
+            };
+            startRenderTimer.Start();
         }
 
         public MaskedTextBox MaskedTextBox => _maskedTextBox;
@@ -606,6 +630,9 @@ namespace Nikse.SubtitleEdit.Controls
         private bool _repeatTimerArrowUp;
         private int _repeatCount;
 
+        private const int StartRenderMaxCount = 7;
+        private int _startRenderCount;
+
         protected override void OnMouseEnter(EventArgs e)
         {
             _buttonUpActive = false;
@@ -715,6 +742,11 @@ namespace Nikse.SubtitleEdit.Controls
             get => base.Enabled;
             set
             {
+                if (value == Enabled)
+                {
+                    return;
+                }
+
                 base.Enabled = value;
                 Invalidate();
             }
