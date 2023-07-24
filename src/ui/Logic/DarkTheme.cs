@@ -263,10 +263,7 @@ namespace Nikse.SubtitleEdit.Logic
         {
             c.BackColor = Control.DefaultBackColor;
             c.ForeColor = Control.DefaultForeColor;
-
-            var newButton = new TextBox();
-            var buttonBackColor = newButton.BackColor;
-            newButton.Dispose();
+            var buttonBackColor = SystemColors.Window; 
 
             if (c is Button b)
             {
