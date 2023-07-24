@@ -227,7 +227,7 @@ namespace Nikse.SubtitleEdit.Controls
             Height = 23;
             _maskedTextBox.FontChanged += (o, args) =>
             {
-                base.OnFontChanged(args); 
+                base.OnFontChanged(args);
                 Invalidate();
             };
             _maskedTextBox.BorderStyle = BorderStyle.None;
@@ -282,7 +282,8 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 Invalidate();
             };
-            _maskedTextBox.GotFocus += (sender, args) => {
+            _maskedTextBox.GotFocus += (sender, args) =>
+            {
                 Invalidate();
             };
             _maskedTextBox.MouseDown += (sender, e) =>
@@ -294,7 +295,6 @@ namespace Nikse.SubtitleEdit.Controls
             };
 
             Controls.Add(_maskedTextBox);
-            BackColor = new TextBox().BackColor;
             ButtonForeColor = DefaultForeColor;
             ButtonForeColorOver = Color.FromArgb(0, 120, 215);
             ButtonForeColorDown = Color.Orange;
@@ -303,6 +303,7 @@ namespace Nikse.SubtitleEdit.Controls
             BackColorDisabled = Color.FromArgb(240, 240, 240);
             InterceptArrowKeys = true;
             Increment = 100;
+            BackColor = SystemColors.Window;
 
             _repeatTimer = new Timer();
             _repeatTimer.Tick += (sender, args) =>
@@ -535,29 +536,6 @@ namespace Nikse.SubtitleEdit.Controls
         private static string GetMask(double val) => val >= 0 ? "00:00:00.000" : "-00:00:00.000";
 
         private static string GetMaskFrames(double val) => val >= 0 ? "00:00:00:00" : "-00:00:00:00";
-
-        public void Theme()
-        {
-            var enabled = Enabled;
-            Enabled = true;
-            if (Configuration.Settings.General.UseDarkTheme)
-            {
-                BackColor = DarkTheme.BackColor;
-                MaskedTextBox.BackColor = DarkTheme.BackColor;
-                BackColor = DarkTheme.BackColor;
-            }
-            else
-            {
-                BackColor = DefaultBackColor;
-                using (var tb = new TextBox())
-                {
-                    MaskedTextBox.BackColor = tb.BackColor;
-                    BackColor = tb.BackColor;
-                }
-            }
-
-            Enabled = enabled;
-        }
 
         /// <summary>
         /// Allow only digits, Enter and Backspace key.
@@ -858,12 +836,11 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 base.ForeColor = value;
                 _maskedTextBox.ForeColor = value;
-                Application.DoEvents();
                 Invalidate();
             }
         }
 
-        [RefreshProperties(RefreshProperties.Repaint)]
+        [RefreshProperties(RefreshProperties.Repaint), DefaultValue(typeof(Color), "0xFFFFFFFF")]
         public override Color BackColor
         {
             get => base.BackColor;
@@ -871,7 +848,6 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 base.BackColor = value;
                 _maskedTextBox.BackColor = value;
-                Application.DoEvents();
                 Invalidate();
             }
         }
