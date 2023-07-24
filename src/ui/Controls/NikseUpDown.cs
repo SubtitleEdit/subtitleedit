@@ -230,7 +230,7 @@ namespace Nikse.SubtitleEdit.Controls
             _textBox.BorderStyle = BorderStyle.None;
 
             Controls.Add(_textBox);
-            BackColor = new TextBox().BackColor;
+            BackColor = SystemColors.Window;
             ButtonForeColor = DefaultForeColor;
             ButtonForeColorOver = Color.FromArgb(0, 120, 215);
             ButtonForeColorDown = Color.Orange;
