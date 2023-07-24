@@ -1554,7 +1554,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                             item.SubItems[3].Text = LanguageSettings.Current.BatchConvert.Converted;
                         }
-                        else if (isVobSub) 
+                        else if (isVobSub)
                         {
                             item.SubItems[3].Text = LanguageSettings.Current.BatchConvert.Ocr;
                             using (var vobSubOcr = new VobSubOcr())
@@ -1991,7 +1991,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var minDuration = checkBoxApplyDurationLimitsMinDuration.Checked ? (int)numericUpDownApplyDurationLimitsMinDuration.Value : 0;
                 var maxDuration = checkBoxApplyDurationLimitsMaxDuration.Checked ? (int)numericUpDownApplyDurationLimitsMaxDuration.Value : int.MaxValue;
                 var shotChanges = checkBoxApplyDurationLimitsCheckShotChanges.Checked ? GetShotChangesOrEmpty(sub.FileName) : new List<double>();
-                
+
                 TryUpdateCurrentFrameRate(sub.FileName);
 
                 var fixDurationLimits = new FixDurationLimits(minDuration, maxDuration, shotChanges);
@@ -2766,7 +2766,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         binaryParagraphs = _binaryParagraphLookup[p.FileName];
                     }
-                    else if (FileUtil.IsVobSub(p.FileName) && p.BinaryParagraphs != null && p.BinaryParagraphs.Count > 0)
+                    else if (p.BinaryParagraphs != null && p.BinaryParagraphs.Count > 0 && File.Exists(p.FileName) && FileUtil.IsVobSub(p.FileName))
                     {
                         binaryParagraphs = p.BinaryParagraphs;
                     }
@@ -3626,7 +3626,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void listViewConvertOptions_SelectedIndexChanged(object sender, EventArgs e)
         {
-            foreach (ListViewItem item in listViewConvertOptions.Items)  
+            foreach (ListViewItem item in listViewConvertOptions.Items)
             {
                 if (item.Tag is FixActionItem fi && fi.Control != null)
                 {
