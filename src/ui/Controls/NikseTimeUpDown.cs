@@ -22,7 +22,7 @@ namespace Nikse.SubtitleEdit.Controls
             HHMMSSFF
         }
 
-        private readonly bool _designMode = LicenseManager.UsageMode == LicenseUsageMode.Designtime;
+        private bool _loading = true;
 
         private const int NumericUpDownValue = 50;
 
@@ -344,6 +344,7 @@ namespace Nikse.SubtitleEdit.Controls
                 }
             };
             startRenderTimer.Start();
+            _loading = false;
         }
 
         public MaskedTextBox MaskedTextBox => _maskedTextBox;
@@ -392,7 +393,7 @@ namespace Nikse.SubtitleEdit.Controls
         {
             get
             {
-                if (_designMode)
+                if (_loading)
                 {
                     return new TimeCode();
                 }
@@ -493,7 +494,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
             set
             {
-                if (_designMode)
+                if (_loading)
                 {
                     return;
                 }
@@ -786,6 +787,11 @@ namespace Nikse.SubtitleEdit.Controls
 
         protected override void OnPaint(PaintEventArgs e)
         {
+            if (_loading)
+            {
+                return;
+            }
+
             e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
             _maskedTextBox.BackColor = BackColor;
             _maskedTextBox.ForeColor = ButtonForeColor;
