@@ -473,7 +473,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public static int FramesToMilliseconds(double frames)
         {
-            return (int)Math.Round(frames * (TimeCode.BaseUnit / GetFrameForCalculation(Configuration.Settings.General.CurrentFrameRate)), MidpointRounding.AwayFromZero);
+            return FramesToMilliseconds(frames, Configuration.Settings.General.CurrentFrameRate);
+        }
+
+        public static int FramesToMilliseconds(double frames, double frameRate)
+        {
+            return (int)Math.Round(frames * (TimeCode.BaseUnit / GetFrameForCalculation(frameRate)), MidpointRounding.AwayFromZero);
         }
 
         public static int FramesToMillisecondsMax999(double frames)

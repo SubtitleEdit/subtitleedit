@@ -552,20 +552,26 @@ namespace Nikse.SubtitleEdit.Logic
 
         private static bool IsFontPresent(string fontName)
         {
-            try
+            var fontStyles = new[] { FontStyle.Bold, FontStyle.Italic, FontStyle.Regular };
+            Font font = null;
+
+            foreach (var style in fontStyles)
             {
-                // Bold + italic + regular must be present
-                _ = new Font(fontName, 9, FontStyle.Bold);
-                _ = new Font(fontName, 9, FontStyle.Italic);
-                _ = new Font(fontName, 9, FontStyle.Regular);
-                return true;
-            }
-            catch
-            {
-                // ignore
+                try
+                {
+                    font = new Font(fontName, 9, style);
+                }
+                catch
+                {
+                    return false;
+                }
+                finally
+                {
+                    font?.Dispose();
+                }
             }
 
-            return false;
+            return true;
         }
 
         public static Font GetDefaultFont()
@@ -648,26 +654,6 @@ namespace Nikse.SubtitleEdit.Logic
                                 }
                             }
                         }
-                    }
-                }
-            }
-
-            if (form is TimeUpDown timeUpDown)
-            {
-                using (var g = Graphics.FromHwnd(IntPtr.Zero))
-                {
-                    timeUpDown.Font = GetDefaultFont();
-                    timeUpDown.MaskedTextBox.Font = GetDefaultFont();
-                    timeUpDown.MaskedTextBox.ForeColor = ForeColor;
-                    var width = g.MeasureString("00:00:00.000", form.Font).Width;
-                    if (timeUpDown.MaskedTextBox.Width < width - 3)
-                    {
-                        timeUpDown.MaskedTextBox.Font = new Font(timeUpDown.MaskedTextBox.Font.FontFamily, timeUpDown.MaskedTextBox.Font.Size - 1);
-                    }
-                    width = g.MeasureString("00:00:00.000", form.Font).Width;
-                    if (timeUpDown.MaskedTextBox.Width < width - 3)
-                    {
-                        timeUpDown.MaskedTextBox.Font = new Font(timeUpDown.MaskedTextBox.Font.FontFamily, timeUpDown.MaskedTextBox.Font.Size - 1);
                     }
                 }
             }
@@ -1383,6 +1369,21 @@ namespace Nikse.SubtitleEdit.Logic
                     return LanguageSettings.Current.Settings.ContinuationStyleCustom;
                 default:
                     return LanguageSettings.Current.Settings.ContinuationStyleNone;
+            }
+        }
+
+        public static string GetBeautifyTimeCodesProfilePresetName(BeautifyTimeCodesSettings.BeautifyTimeCodesProfile.Preset preset)
+        {
+            switch (preset)
+            {
+                case BeautifyTimeCodesSettings.BeautifyTimeCodesProfile.Preset.Default:
+                    return LanguageSettings.Current.BeautifyTimeCodesProfile.PresetDefault;
+                case BeautifyTimeCodesSettings.BeautifyTimeCodesProfile.Preset.Netflix:
+                    return LanguageSettings.Current.BeautifyTimeCodesProfile.PresetNetflix;
+                case BeautifyTimeCodesSettings.BeautifyTimeCodesProfile.Preset.SDI:
+                    return LanguageSettings.Current.BeautifyTimeCodesProfile.PresetSDI;
+                default:
+                    return preset.ToString();
             }
         }
 

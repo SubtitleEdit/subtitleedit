@@ -45,8 +45,8 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelExample = new System.Windows.Forms.Label();
             this.textBoxExample = new System.Windows.Forms.TextBox();
             this.labelDuration = new System.Windows.Forms.Label();
-            this.timeUpDownDuration = new Nikse.SubtitleEdit.Controls.TimeUpDown();
-            this.timeUpDownStartTime = new Nikse.SubtitleEdit.Controls.TimeUpDown();
+            this.timeUpDownDuration = new Nikse.SubtitleEdit.Controls.NikseTimeUpDown();
+            this.timeUpDownStartTime = new Nikse.SubtitleEdit.Controls.NikseTimeUpDown();
             this.SuspendLayout();
             // 
             // openFileDialog1
@@ -182,7 +182,6 @@ namespace Nikse.SubtitleEdit.Forms
             // timeUpDownDuration
             // 
             this.timeUpDownDuration.AutoSize = true;
-            this.timeUpDownDuration.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.timeUpDownDuration.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.timeUpDownDuration.Location = new System.Drawing.Point(252, 87);
             this.timeUpDownDuration.Margin = new System.Windows.Forms.Padding(4);
@@ -202,7 +201,6 @@ namespace Nikse.SubtitleEdit.Forms
             // timeUpDownStartTime
             // 
             this.timeUpDownStartTime.AutoSize = true;
-            this.timeUpDownStartTime.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.timeUpDownStartTime.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.timeUpDownStartTime.Location = new System.Drawing.Point(118, 86);
             this.timeUpDownStartTime.Margin = new System.Windows.Forms.Padding(4);
@@ -267,8 +265,8 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.Label labelStartFrom;
         private System.Windows.Forms.Label labelExample;
         private System.Windows.Forms.TextBox textBoxExample;
-        private Controls.TimeUpDown timeUpDownStartTime;
+        private Controls.NikseTimeUpDown timeUpDownStartTime;
         private System.Windows.Forms.Label labelDuration;
-        private Controls.TimeUpDown timeUpDownDuration;
+        private Controls.NikseTimeUpDown timeUpDownDuration;
     }
 }

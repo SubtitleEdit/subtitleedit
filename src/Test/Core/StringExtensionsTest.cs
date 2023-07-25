@@ -185,6 +185,22 @@ namespace Test.Core
             var res = input.FixExtraSpaces();
             Assert.AreEqual("a" + Environment.NewLine + "b", res);
         }
+        
+        [TestMethod]
+        public void RemoveRecursiveLineBreakTest()
+        {
+            Assert.AreEqual("foo\r\nfoo", "foo\r\n\r\nfoo".RemoveRecursiveLineBreaks());
+            Assert.AreEqual("foo\r\nfoo", "foo\r\nfoo".RemoveRecursiveLineBreaks());
+            Assert.AreEqual("foo\r\nfoo", "foo\r\n\r\n\r\nfoo".RemoveRecursiveLineBreaks());
+        }
+
+        [TestMethod]
+        public void RemoveRecursiveLineBreakNonWindowsStyleTest(string input)
+        {
+            Assert.AreEqual("foo\nfoo", "foo\nfoo".RemoveRecursiveLineBreaks());
+            Assert.AreEqual("foo\n\foo", "foo\n\n\nfoo".RemoveRecursiveLineBreaks());
+            Assert.AreEqual("foo\n.\nfoo", "foo\n.\n\n\nfoo".RemoveRecursiveLineBreaks());
+        }
 
         [TestMethod]
         public void RemoveChar1()

@@ -72,9 +72,8 @@ namespace Nikse.SubtitleEdit.Forms.VTT
             checkBoxFontUnderline.Text = LanguageSettings.Current.General.Underline;
             checkBoxStrikeout.Text = LanguageSettings.Current.General.Strikeout;
             buttonPrimaryColor.Text = l.Primary;
-            //buttonSecondaryColor.Text = l.Secondary;
-            //buttonOutlineColor.Text = l.Outline;
-            //buttonBackColor.Text = l.Shadow;
+            buttonShadowColor.Text = l.Shadow;
+            buttonBackgroundColor.Text = l.Back;
             labelShadow.Text = l.Shadow;
             buttonImport.Text = l.Import;
             buttonExport.Text = l.Export;
@@ -111,6 +110,9 @@ namespace Nikse.SubtitleEdit.Forms.VTT
             checkBoxFontItalic.Left = checkBoxFontBold.Right + 15;
             checkBoxFontUnderline.Left = checkBoxFontItalic.Right + 15;
             checkBoxStrikeout.Left = checkBoxFontUnderline.Right + 15;
+
+            groupBoxBefore.Text = LanguageSettings.Current.General.Before;
+            groupBoxAfter.Text = LanguageSettings.Current.General.After;
 
             _backgroundImageDark = Configuration.Settings.General.UseDarkTheme;
             _previewTimer.Interval = 200;

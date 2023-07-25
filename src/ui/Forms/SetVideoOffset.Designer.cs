@@ -36,7 +36,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonOK = new System.Windows.Forms.Button();
             this.labelDescription = new System.Windows.Forms.Label();
             this.checkBoxFromCurrentPosition = new System.Windows.Forms.CheckBox();
-            this.timeUpDownVideoPosition = new Nikse.SubtitleEdit.Controls.TimeUpDown();
+            this.timeUpDownVideoPosition = new Nikse.SubtitleEdit.Controls.NikseTimeUpDown();
             this.buttonReset = new System.Windows.Forms.Button();
             this.checkBoxKeepTimeCodes = new System.Windows.Forms.CheckBox();
             this.buttonPickOffset = new System.Windows.Forms.Button();
@@ -90,7 +90,6 @@ namespace Nikse.SubtitleEdit.Forms
             // timeUpDownVideoPosition
             // 
             this.timeUpDownVideoPosition.AutoSize = true;
-            this.timeUpDownVideoPosition.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.timeUpDownVideoPosition.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.timeUpDownVideoPosition.Location = new System.Drawing.Point(13, 39);
             this.timeUpDownVideoPosition.Margin = new System.Windows.Forms.Padding(4);
@@ -177,7 +176,7 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Label labelDescription;
-        private Controls.TimeUpDown timeUpDownVideoPosition;
+        private Controls.NikseTimeUpDown timeUpDownVideoPosition;
         private System.Windows.Forms.CheckBox checkBoxFromCurrentPosition;
         private System.Windows.Forms.Button buttonReset;
         private System.Windows.Forms.CheckBox checkBoxKeepTimeCodes;

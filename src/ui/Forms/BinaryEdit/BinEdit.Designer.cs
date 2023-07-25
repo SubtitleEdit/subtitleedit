@@ -44,8 +44,8 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.numericUpDownY = new System.Windows.Forms.NumericUpDown();
             this.numericUpDownX = new System.Windows.Forms.NumericUpDown();
             this.checkBoxIsForced = new System.Windows.Forms.CheckBox();
-            this.timeUpDownEndTime = new Nikse.SubtitleEdit.Controls.TimeUpDown();
-            this.timeUpDownStartTime = new Nikse.SubtitleEdit.Controls.TimeUpDown();
+            this.timeUpDownEndTime = new Nikse.SubtitleEdit.Controls.NikseTimeUpDown();
+            this.timeUpDownStartTime = new Nikse.SubtitleEdit.Controls.NikseTimeUpDown();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.labelFrameRate = new System.Windows.Forms.Label();
@@ -295,7 +295,6 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             // timeUpDownEndTime
             // 
             this.timeUpDownEndTime.AutoSize = true;
-            this.timeUpDownEndTime.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.timeUpDownEndTime.BackColor = System.Drawing.SystemColors.Control;
             this.timeUpDownEndTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
             this.timeUpDownEndTime.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(155)))), ((int)(((byte)(155)))), ((int)(((byte)(155)))));
@@ -317,7 +316,6 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             // timeUpDownStartTime
             // 
             this.timeUpDownStartTime.AutoSize = true;
-            this.timeUpDownStartTime.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.timeUpDownStartTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
             this.timeUpDownStartTime.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(155)))), ((int)(((byte)(155)))), ((int)(((byte)(155)))));
             this.timeUpDownStartTime.Location = new System.Drawing.Point(74, 18);
@@ -1072,8 +1070,8 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
         #endregion
         private System.Windows.Forms.GroupBox groupBoxCurrent;
         private System.Windows.Forms.CheckBox checkBoxIsForced;
-        private Controls.TimeUpDown timeUpDownEndTime;
-        private Controls.TimeUpDown timeUpDownStartTime;
+        private Controls.NikseTimeUpDown timeUpDownEndTime;
+        private Controls.NikseTimeUpDown timeUpDownStartTime;
         private System.Windows.Forms.Button buttonImportImage;
         private System.Windows.Forms.Label labelPositionComma;
         private System.Windows.Forms.Label label1;

@@ -50,6 +50,7 @@
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.labelInfo = new System.Windows.Forms.Label();
             this.checkBoxGenerateShotChanges = new System.Windows.Forms.CheckBox();
+            this.checkBoxExtractTimeCodes = new System.Windows.Forms.CheckBox();
             this.groupBoxInput.SuspendLayout();
             this.contextMenuStripFiles.SuspendLayout();
             this.SuspendLayout();
@@ -242,18 +243,30 @@
             // 
             this.checkBoxGenerateShotChanges.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.checkBoxGenerateShotChanges.AutoSize = true;
-            this.checkBoxGenerateShotChanges.Location = new System.Drawing.Point(739, 510);
+            this.checkBoxGenerateShotChanges.Location = new System.Drawing.Point(839, 510);
             this.checkBoxGenerateShotChanges.Name = "checkBoxGenerateShotChanges";
-            this.checkBoxGenerateShotChanges.Size = new System.Drawing.Size(209, 17);
-            this.checkBoxGenerateShotChanges.TabIndex = 25;
+            this.checkBoxGenerateShotChanges.Size = new System.Drawing.Size(200, 17);
+            this.checkBoxGenerateShotChanges.TabIndex = 26;
             this.checkBoxGenerateShotChanges.Text = "Generate shot changes with FFmpeg";
             this.checkBoxGenerateShotChanges.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxExtractTimeCodes
+            // 
+            this.checkBoxExtractTimeCodes.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.checkBoxExtractTimeCodes.AutoSize = true;
+            this.checkBoxExtractTimeCodes.Location = new System.Drawing.Point(626, 510);
+            this.checkBoxExtractTimeCodes.Name = "checkBoxExtractTimeCodes";
+            this.checkBoxExtractTimeCodes.Size = new System.Drawing.Size(177, 17);
+            this.checkBoxExtractTimeCodes.TabIndex = 25;
+            this.checkBoxExtractTimeCodes.Text = "Extract time codes with FFprobe";
+            this.checkBoxExtractTimeCodes.UseVisualStyleBackColor = true;
             // 
             // AddWaveformBatch
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1091, 590);
+            this.Controls.Add(this.checkBoxExtractTimeCodes);
             this.Controls.Add(this.checkBoxGenerateShotChanges);
             this.Controls.Add(this.labelInfo);
             this.Controls.Add(this.buttonDone);
@@ -266,9 +279,9 @@
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.Text = "AddWaveformBatch";
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.AddWaveformBatch_KeyDown);
-            this.ResizeEnd += new System.EventHandler(this.AddWaveformBatch_ResizeEnd);
             this.Shown += new System.EventHandler(this.AddWaveformBatch_Shown);
+            this.ResizeEnd += new System.EventHandler(this.AddWaveformBatch_ResizeEnd);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.AddWaveformBatch_KeyDown);
             this.groupBoxInput.ResumeLayout(false);
             this.groupBoxInput.PerformLayout();
             this.contextMenuStripFiles.ResumeLayout(false);
@@ -300,5 +313,6 @@
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
         private System.Windows.Forms.Label labelInfo;
         private System.Windows.Forms.CheckBox checkBoxGenerateShotChanges;
+        private System.Windows.Forms.CheckBox checkBoxExtractTimeCodes;
     }
 }

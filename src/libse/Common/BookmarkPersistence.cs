@@ -29,30 +29,25 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             var fileName = GetBookmarksFileName();
-            var b = SerializeBookmarks();
-            if (b != null)
+            var serializedBookmarks = SerializeBookmarks();
+
+            try
             {
-                try
+                if (serializedBookmarks != null)
                 {
-                    File.WriteAllText(fileName, b, Encoding.UTF8);
+                    File.WriteAllText(fileName, serializedBookmarks, Encoding.UTF8);
                 }
-                catch
-                {
-                    return false;
-                }
-            }
-            else if (File.Exists(fileName))
-            {
-                try
+                else if (File.Exists(fileName))
                 {
                     File.Delete(fileName);
                 }
-                catch
-                {
-                    return false;
-                }
+
+                return true;
             }
-            return true;
+            catch
+            {
+                return false;
+            }
         }
 
         private string SerializeBookmarks()

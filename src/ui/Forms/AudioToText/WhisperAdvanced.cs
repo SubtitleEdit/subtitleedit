@@ -84,6 +84,10 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             {
                 buttonOK_Click(null, null);
             }
+            else if (e.KeyCode == Keys.Escape)
+            {
+                DialogResult = DialogResult.Cancel;
+            }
         }
     }
 }

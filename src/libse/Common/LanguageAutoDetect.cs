@@ -77,14 +77,18 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         private static readonly string[] AutoDetectWordsEnglish =
         {
-            "we", "are", "and", "your", "what", "[TW]hat's", "You're", "(any|some|every)thing", "money", "because", "human", "because", "welcome", "really", "something", "confusing", "about", "know", "people", "other", "which", "would",
-            "these", "could"
+            "we", "are", "and", "your", "what", "[TW]hat's", "You're", "(any|some|every)thing", "money", "because", "human", "abandon",
+            "welcome", "really", "something", "confusing", "about", "know", "people", "other", "which", "would", "these", "could",
+            "tutorial", "I'll", "show", "you", "about", "absolutely", "accept", "wrong", "thought", "training", "treatment", "successful",
+            "strong", "simply", "situation","soldier", "somebody", "someone","something", "sometimes", "speak","statement", "perhaps",
+            "piece", "picture", "police", "popular", "population", "suggest", "weapon", "water", "window", "woman", "talk", "security",
+            "season", "remain", "relationship", "report" ,"user" ,"result", "this",
         };
 
         private static readonly string[] AutoDetectWordsDanish =
         {
             "vi", "han", "og", "jeg", "var", "men", "gider", "bliver", "virkelig", "kommer", "tilbage", "Hej", "længere", "gjorde", "dig", "havde", "[Uu]ndskyld", "arbejder", "vidste", "troede", "stadigvæk", "[Mm]åske", "første", "gik",
-            "fortælle", "begyndt", "spørgsmål", "pludselig"
+            "fortælle", "begyndt", "spørgsmål", "pludselig", "være", "fordi", "været", "sidste","også", "løb", "sagde", "hjem",
         };
 
         private static readonly string[] AutoDetectWordsNorwegian =
@@ -190,7 +194,9 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         private static readonly string[] AutoDetectWordsHebrew =
         {
-            "אתה", "אולי", "הוא", "בסדר", "יודע", "טוב"
+            "אתה", "אולי", "הוא", "בסדר", "יודע", "טוב", "אֶת", "שֶׁל", "עַל", "הוּא", 
+            "אֲשֶׁר", "הִיא", "הַמְלֶט", "נָסִיךְ", "הֲלֹא", "עוֹד", "אֵין", "אֲנִי", "זֹאת", "וְלֹא",
+            "כָּךְ", "הִנֵּה", "מְאֹד", "אֲדוֹנִי",    
         };
 
         private static readonly string[] AutoDetectWordsVietnamese =
@@ -796,11 +802,275 @@ namespace Nikse.SubtitleEdit.Core.Common
             return languageId;
         }
 
+        public class LanguageForAutoDetect
+        {
+            public string LanguageCode { get; set; }
+            public string[] Words { get; set; }
+            public int WordCount { get; set; }
+        }
+
+        public static LanguageForAutoDetect[] GetLanguagesWithCount(string text)
+        {
+            var list = new LanguageForAutoDetect[]
+            {
+                new LanguageForAutoDetect
+                {
+                    LanguageCode = "en",
+                    Words = AutoDetectWordsEnglish,
+                },
+                new LanguageForAutoDetect
+                {
+                    LanguageCode = "da",
+                    Words = AutoDetectWordsDanish,
+                },
+                new LanguageForAutoDetect
+                {
+                    LanguageCode = "no",
+                    Words = AutoDetectWordsNorwegian,
+                },
+                new LanguageForAutoDetect
+                {
+                    LanguageCode = "sv",
+                    Words = AutoDetectWordsSwedish,
+                },
+                new LanguageForAutoDetect
+                {
+                    LanguageCode = "es",
+                    Words = AutoDetectWordsSpanish,
+                },
+                new LanguageForAutoDetect
+                {
+                    LanguageCode = "it",
+                    Words = AutoDetectWordsItalian,
+                },
+                new LanguageForAutoDetect
+                {
+                    LanguageCode = "fr",
+                    Words = AutoDetectWordsFrench,
+                },
+                new LanguageForAutoDetect
+                {
+                    LanguageCode = "pt",
+                    Words = AutoDetectWordsPortuguese,
+                },
+                new LanguageForAutoDetect
+                {
+                    LanguageCode = "de",
+                    Words = AutoDetectWordsGerman,
+                },
+                new LanguageForAutoDetect
+                {
+                    LanguageCode = "nl",
+                    Words = AutoDetectWordsDutch,
+                },
+                new LanguageForAutoDetect
+                {
+                    LanguageCode = "pl",
+                    Words = AutoDetectWordsPolish,
+                },
+                new LanguageForAutoDetect
+                {
+                    LanguageCode = "el",
+                    Words = AutoDetectWordsGreek,
+                },
+                new LanguageForAutoDetect
+                {
+                    LanguageCode = "ru",
+                    Words = AutoDetectWordsRussian,
+                },
+                new LanguageForAutoDetect
+                {
+                    LanguageCode = "bg",
+                    Words = AutoDetectWordsBulgarian,
+                },
+                new LanguageForAutoDetect
+                {
+                    LanguageCode = "uk",
+                    Words = AutoDetectWordsUkrainian,
+                },
+                new LanguageForAutoDetect
+                {
+                    LanguageCode = "sq",
+                    Words = AutoDetectWordsAlbanian,
+                },
+                new LanguageForAutoDetect
+                {
+                    LanguageCode = "ar",
+                    Words = AutoDetectWordsArabic,
+                },
+                new LanguageForAutoDetect
+                {
+                    LanguageCode = "fa",
+                    Words = AutoDetectWordsFarsi,
+                },
+                new LanguageForAutoDetect
+                {
+                    LanguageCode = "he",
+                    Words = AutoDetectWordsHebrew,
+                },
+                new LanguageForAutoDetect
+                {
+                    LanguageCode = "vi",
+                    Words = AutoDetectWordsVietnamese,
+                },
+                new LanguageForAutoDetect
+                {
+                    LanguageCode = "hu",
+                    Words = AutoDetectWordsHungarian,
+                },
+                new LanguageForAutoDetect
+                {
+                    LanguageCode = "tr",
+                    Words = AutoDetectWordsTurkish,
+                },
+                new LanguageForAutoDetect
+                {
+                    LanguageCode = "-",
+                    Words = AutoDetectWordsCroatianAndSerbian,
+                },
+                new LanguageForAutoDetect
+                {
+                    LanguageCode = "hr",
+                    Words = AutoDetectWordsCroatian,
+                },
+                new LanguageForAutoDetect
+                {
+                    LanguageCode = "sr",
+                    Words = AutoDetectWordsSerbian,
+                },
+                new LanguageForAutoDetect
+                {
+                    LanguageCode = "sr",
+                    Words = AutoDetectWordsSerbianCyrillic,
+                },
+                new LanguageForAutoDetect
+                {
+                    LanguageCode = "sr-cy",
+                    Words = AutoDetectWordsSerbianCyrillicOnly,
+                },
+                new LanguageForAutoDetect
+                {
+                    LanguageCode = "id",
+                    Words = AutoDetectWordsIndonesian,
+                },
+                new LanguageForAutoDetect
+                {
+                    LanguageCode = "th",
+                    Words = AutoDetectWordsThai,
+                },
+                new LanguageForAutoDetect
+                {
+                    LanguageCode = "ko",
+                    Words = AutoDetectWordsKorean,
+                },
+                new LanguageForAutoDetect
+                {
+                    LanguageCode = "mk",
+                    Words = AutoDetectWordsMacedonian,
+                },
+                new LanguageForAutoDetect
+                {
+                    LanguageCode = "fi",
+                    Words = AutoDetectWordsFinnish,
+                },
+                new LanguageForAutoDetect
+                {
+                    LanguageCode = "ro",
+                    Words = AutoDetectWordsRomanian,
+                },
+                new LanguageForAutoDetect
+                {
+                    LanguageCode = "-",
+                    Words = AutoDetectWordsCzechAndSlovak,
+                },
+                new LanguageForAutoDetect
+                {
+                    LanguageCode = "cs",
+                    Words = AutoDetectWordsCzech,
+                },
+                new LanguageForAutoDetect
+                {
+                    LanguageCode = "sk",
+                    Words = AutoDetectWordsSlovak,
+                },
+                new LanguageForAutoDetect
+                {
+                    LanguageCode = "sl",
+                    Words = AutoDetectWordsSlovenian,
+                },
+                new LanguageForAutoDetect
+                {
+                    LanguageCode = "is",
+                    Words = AutoDetectWordsIcelandic,
+                },
+                new LanguageForAutoDetect
+                {
+                    LanguageCode = "lv",
+                    Words = AutoDetectWordsLatvian,
+                },
+                new LanguageForAutoDetect
+                {
+                    LanguageCode = "lt",
+                    Words = AutoDetectWordsLithuanian,
+                },
+                new LanguageForAutoDetect
+                {
+                    LanguageCode = "hi",
+                    Words = AutoDetectWordsHindi,
+                },
+                new LanguageForAutoDetect
+                {
+                    LanguageCode = "ur",
+                    Words = AutoDetectWordsUrdu,
+                },
+                new LanguageForAutoDetect
+                {
+                    LanguageCode = "si",
+                    Words = AutoDetectWordsSinhalese,
+                },
+            };
+
+            foreach (var item in list)
+            {
+                item.WordCount = GetCount(text, item.Words);
+            }
+
+            return list;
+        }
+
+        //TODO: improve... a lot ;)
+        public static string AutoDetectGoogleLanguageOrNull2(Subtitle subtitle)
+        {
+            var s = new Subtitle(subtitle);
+            s.RemoveEmptyLines();
+            var allText = s.GetAllTexts(500000).TrimEnd();
+            var languagesAndWords = GetLanguagesWithCount(allText);
+            var languageAndWordHitsOrdered = languagesAndWords
+                .Where(p => p.WordCount > 0)
+                .OrderByDescending(p => p.WordCount);
+            var languageIdFromWordCount = languageAndWordHitsOrdered
+                .FirstOrDefault(p => p.LanguageCode != "-")?.LanguageCode;
+
+            var languageIdViaLetters = GetEncodingViaLetter(allText);
+
+            if (languageIdFromWordCount != null)
+            {
+                return languageIdFromWordCount;
+            }
+
+            if (languageIdViaLetters != null)
+            {
+                return languageIdViaLetters;
+            }
+
+            return null;
+        }
+
         public static string AutoDetectGoogleLanguageOrNull(Subtitle subtitle)
         {
             var s = new Subtitle(subtitle);
             s.RemoveEmptyLines();
-            var allText = s.GetAllTexts(500000);
+            var allText = s.GetAllTexts(500000).TrimEnd();
             var languageId = AutoDetectGoogleLanguage(allText, s.Paragraphs.Count / 14);
             if (string.IsNullOrEmpty(languageId))
             {
@@ -811,6 +1081,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             {
                 languageId = null;
             }
+
             return languageId;
         }
 

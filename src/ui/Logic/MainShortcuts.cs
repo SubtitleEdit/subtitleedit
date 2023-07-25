@@ -159,18 +159,20 @@ namespace Nikse.SubtitleEdit.Logic
         public Keys MainAdjustMoveEndOneFrameBackKeepGapNext { get; set; }
         public Keys MainAdjustMoveEndOneFrameForwardKeepGapNext { get; set; }
         public Keys MainAdjustSnapStartToNextShotChange { get; set; }
-        public Keys MainAdjustSnapStartToNextShotChangeWithGap { get; set; }
         public Keys MainAdjustSnapEndToPreviousShotChange { get; set; }
-        public Keys MainAdjustSnapEndToPreviousShotChangeWithGap { get; set; }
         public Keys MainAdjustExtendToNextShotChange { get; set; }
-        public Keys MainAdjustExtendToNextShotChangeWithGap { get; set; }
         public Keys MainAdjustExtendToPreviousShotChange { get; set; }
-        public Keys MainAdjustExtendToPreviousShotChangeWithGap { get; set; }
         public Keys MainAdjustExtendToNextSubtitle { get; set; }
         public Keys MainAdjustExtendToPreviousSubtitle { get; set; }
+        public Keys MainAdjustExtendToNextSubtitleMinusChainingGap { get; set; }
+        public Keys MainAdjustExtendToPreviousSubtitleMinusChainingGap { get; set; }
         public Keys MainAdjustExtendCurrentSubtitle { get; set; }
         public Keys MainAdjustExtendPreviousLineEndToCurrentStart { get; set; }
         public Keys MainAdjustExtendNextLineStartToCurrentEnd { get; set; }
+        public Keys MainSetInCueToClosestShotChangeLeftGreenZone { get; set; }
+        public Keys MainSetInCueToClosestShotChangeRightGreenZone { get; set; }
+        public Keys MainSetOutCueToClosestShotChangeLeftGreenZone { get; set; }
+        public Keys MainSetOutCueToClosestShotChangeRightGreenZone { get; set; }
         public Keys MainInsertAfter { get; set; }
         public Keys MainInsertBefore { get; set; }
         public Keys MainTextBoxAutoBreak { get; set; }
@@ -437,18 +439,20 @@ namespace Nikse.SubtitleEdit.Logic
             MainAdjustMoveEndOneFrameBackKeepGapNext = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MoveEndOneFrameBackKeepGapNext);
             MainAdjustMoveEndOneFrameForwardKeepGapNext = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MoveEndOneFrameForwardKeepGapNext);
             MainAdjustSnapStartToNextShotChange = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSnapStartToNextShotChange);
-            MainAdjustSnapStartToNextShotChangeWithGap = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSnapStartToNextShotChangeWithGap);
             MainAdjustSnapEndToPreviousShotChange = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSnapEndToPreviousShotChange);
-            MainAdjustSnapEndToPreviousShotChangeWithGap = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSnapEndToPreviousShotChangeWithGap);
             MainAdjustExtendToNextShotChange = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustExtendToNextShotChange);
-            MainAdjustExtendToNextShotChangeWithGap = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustExtendToNextShotChangeWithGap);
             MainAdjustExtendToPreviousShotChange = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustExtendToPreviousShotChange);
-            MainAdjustExtendToPreviousShotChangeWithGap = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustExtendToPreviousShotChangeWithGap);
             MainAdjustExtendToNextSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustExtendToNextSubtitle);
             MainAdjustExtendToPreviousSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustExtendToPreviousSubtitle);
+            MainAdjustExtendToNextSubtitleMinusChainingGap = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustExtendToNextSubtitleMinusChainingGap);
+            MainAdjustExtendToPreviousSubtitleMinusChainingGap = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustExtendToPreviousSubtitleMinusChainingGap);
             MainAdjustExtendCurrentSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustExtendCurrentSubtitle);
             MainAdjustExtendPreviousLineEndToCurrentStart = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustExtendPreviousLineEndToCurrentStart);
             MainAdjustExtendNextLineStartToCurrentEnd = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustExtendNextLineStartToCurrentEnd);
+            MainSetInCueToClosestShotChangeLeftGreenZone = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainSetInCueToClosestShotChangeLeftGreenZone);
+            MainSetInCueToClosestShotChangeRightGreenZone = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainSetInCueToClosestShotChangeRightGreenZone);
+            MainSetOutCueToClosestShotChangeLeftGreenZone = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainSetOutCueToClosestShotChangeLeftGreenZone);
+            MainSetOutCueToClosestShotChangeRightGreenZone = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainSetOutCueToClosestShotChangeRightGreenZone);
             MainInsertAfter = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainInsertAfter);
             MainInsertBefore = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainInsertBefore);
             MainTextBoxAutoBreak = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxAutoBreak);

@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.6.13</Version>
-    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 13.07.2023</TranslatedBy>
+    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 21.07.2023</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -99,6 +99,7 @@
     <ShortcutX>Scorciatoia: {0}</ShortcutX>
     <ExampleX>Esempio: {0}</ExampleX>
     <Reset>Ripristina</Reset>
+    <Error>Errore</Error>
     <Warning>Avviso</Warning>
     <UseLargerFontForThisWindow>Per questa finestra usa una font più grande </UseLargerFontForThisWindow>
   </General>
@@ -154,7 +155,10 @@ Nota: Controlla lo spazio libero nel disco.</WaveFileMalformed>
   </AddWaveform>
   <AddWaveformBatch>
     <Title>Generazione dati forma d'onda batch</Title>
+    <ExtractTimeCodes>Estrai time code con FFprobe</ExtractTimeCodes>
     <ExtractingAudio>Estrazione audio...</ExtractingAudio>
+    <ExtractingTimeCodes>Estrazione time code...</ExtractingTimeCodes>
+    <DetectingShotChanges>Rilevamento cambi inquadrature...</DetectingShotChanges>
     <Calculating>Calcolo...</Calculating>
     <Done>Fatto</Done>
     <Error>Errore</Error>
@@ -171,11 +175,16 @@ Nota: Controlla lo spazio libero nel disco.</WaveFileMalformed>
     <Fixed>Fisso</Fixed>
     <Milliseconds>Millisecondi</Milliseconds>
     <ExtendOnly>Estendi solo</ExtendOnly>
+    <EnforceDurationLimits>Applica la durata minima e massima</EnforceDurationLimits>
+    <CheckShotChanges>Non prolungare oltre i cambi di inquadratura</CheckShotChanges>
+    <BatchCheckShotChanges>Rispetta cambi inquadrature (se disponibili)</BatchCheckShotChanges>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
     <Title>Applica limiti durata</Title>
+    <CheckShotChanges>Non prolungare oltre i cambi di inquadratura</CheckShotChanges>
     <FixesAvailable>Correzioni possibili: {0}</FixesAvailable>
     <UnableToFix>Impossibile correggere: {0}</UnableToFix>
+    <BatchCheckShotChanges>Rispetta cambi inquadrature (se disponibili)</BatchCheckShotChanges>
   </ApplyDurationLimits>
   <AudioToText>
     <Title>Audio/video a testo</Title>
@@ -362,6 +371,98 @@ Vuoi ulteriori informazioni (web)?</WhisperNotFound>
     <MkvLanguageStyleEmpty>Nessun codice lingua</MkvLanguageStyleEmpty>
     <SearchFolderScanVideo>Scansiona anche file video in "Cerca cartella" (lento)</SearchFolderScanVideo>
   </BatchConvert>
+  <BeautifyTimeCodes>
+    <Title>Abbellisci time code</Title>
+    <TitleSelectedLines>Abbellisci time code ({0} linee selezionate)</TitleSelectedLines>
+    <GroupTimeCodes>Time code</GroupTimeCodes>
+    <AlignTimeCodes>Allinea i time code ai codici time code fotogrammi</AlignTimeCodes>
+    <ExtractExactTimeCodes>Usa ffprobe per estrarre i time code esatti del fotogramma</ExtractExactTimeCodes>
+    <ExtractTimeCodes>Estrai time code</ExtractTimeCodes>
+    <CancelTimeCodes>Annulla</CancelTimeCodes>
+    <GroupShotChanges>Cambiamenti inquadratura</GroupShotChanges>
+    <SnapToShotChanges>Punti taglio ai cambi inquadratura</SnapToShotChanges>
+    <ImportShotChanges>Genera/importa modifiche cambi inquadratura...</ImportShotChanges>
+    <EditProfile>Modifica profilo...</EditProfile>
+    <NoTimeCodesLoaded>Nessun time code caricato</NoTimeCodesLoaded>
+    <XTimeCodesLoaded>{0} time code caricati</XTimeCodesLoaded>
+    <NoTimeCodesLoadedError>Hai scelto di estrarre i time code esatti dei fotogrammi, ma non sono stati caricati time code.
+
+Seleziona "{0}" per estrarre prima i time code o disabilita questa opzione.</NoTimeCodesLoadedError>
+    <NoShotChangesLoaded>Nessun cambio inquadratura caricato</NoShotChangesLoaded>
+    <XShotChangesLoaded>{0} cambi inquadratura caricati</XShotChangesLoaded>
+    <NoShotChangesLoadedError>Hai scelto di agganciare i punti di taglio ai cambi inquadratura, ma non sono stai caricati cambi inquadratura.
+
+Seleziona "{0}" per generare o importare prima le modifiche alle inquadrature oppure disabilitare questa opzione.</NoShotChangesLoadedError>
+    <BatchAlignTimeCodes>Allinea time code ai time code fotogrammi</BatchAlignTimeCodes>
+    <BatchUseExactTimeCodes>Usa time code esatti (se disponibili)</BatchUseExactTimeCodes>
+    <BatchSnapToShotChanges>Allinea time code ai cambi inquadrature (se disponibili)</BatchSnapToShotChanges>
+  </BeautifyTimeCodes>
+  <BeautifyTimeCodesProfile>
+    <Title>Modifica profilo</Title>
+    <LoadPreset>Carica profilo...</LoadPreset>
+    <PresetDefault>Predefinito</PresetDefault>
+    <PresetNetflix>Netflix</PresetNetflix>
+    <PresetSDI>SDI</PresetSDI>
+    <CreateSimple>Modalità semplice...</CreateSimple>
+    <General>Generale</General>
+    <Gap>Gap:</Gap>
+    <GapSuffix>fotogramma (sovrascriverà impostazioni personalizzate)</GapSuffix>
+    <InCues>Tagli iniziali</InCues>
+    <SubtitlePreviewText>Testo sittotitoli.</SubtitlePreviewText>
+    <Zones>Zone:</Zones>
+    <OutCues>Tagli finali</OutCues>
+    <ConnectedSubtitles>Sottotitoli collegati</ConnectedSubtitles>
+    <InCueClosest>Taglio iniziale più vicino</InCueClosest>
+    <OutCueClosest>Taglio finale più vicino</OutCueClosest>
+    <TreadAsConnected>Tratta come connesso se il gap è minore di:</TreadAsConnected>
+    <Milliseconds>ms</Milliseconds>
+    <Chaining>Concatenamento</Chaining>
+    <InCueOnShot>Taglio iniziale al cambio inquadratura</InCueOnShot>
+    <OutCueOnShot>Taglio finale al cambio inquadratura</OutCueOnShot>
+    <MaxGap>Gap max:</MaxGap>
+    <ShotChangeBehavior>Se c'è un cambio inquadratura:</ShotChangeBehavior>
+    <DontChain>Non unire</DontChain>
+    <ExtendCrossingShotChange>Estendi, incrociando il cambio inquadratura</ExtendCrossingShotChange>
+    <ExtendUntilShotChange>Estendi fino al cambio inqudratura</ExtendUntilShotChange>
+    <ResetWarning>Questo ripristinerà il profilo attuale e sostituirà tutti i valori con quelli del profilo selezionato.\nQuesta operazione non può essere annullata.
+
+Vuoi continuare?</ResetWarning>
+    <CreateSimpleTitle>Crea semplice</CreateSimpleTitle>
+    <CreateSimpleInstruction>Inserisci queste regole di base e il profilo attuale verrà aggiornato di conseguenza.</CreateSimpleInstruction>
+    <CreateSimpleGapInstruction>La quantità minima di spazio tra i sottotitoli.</CreateSimpleGapInstruction>
+    <CreateSimpleInCues>Taglio iniziale dovrebbe essere:</CreateSimpleInCues>
+    <CreateSimpleInCues0Frames>Al cambio inquadratura</CreateSimpleInCues0Frames>
+    <CreateSimpleInCues1Frames>1 fotogramma dopo il cambio inquadratura</CreateSimpleInCues1Frames>
+    <CreateSimpleInCues2Frames>2 fotogrammi dopo il cambio inquadratura</CreateSimpleInCues2Frames>
+    <CreateSimpleInCues3Frames>3 fotogrammi dopo il cambio inquadratura</CreateSimpleInCues3Frames>
+    <CreateSimpleOutCues>Il taglio finale dovrebbe essere:</CreateSimpleOutCues>
+    <CreateSimpleOutCues0Frames>Al cambio inquadratura</CreateSimpleOutCues0Frames>
+    <CreateSimpleOutCues1Frames>1 fotogramma dopo il cambio inquadratura</CreateSimpleOutCues1Frames>
+    <CreateSimpleOutCues2Frames>2 fotogrammi dopo il cambio inquadratura</CreateSimpleOutCues2Frames>
+    <CreateSimpleOutCues3Frames>3 fotogrammi dopo il cambio inquadratura</CreateSimpleOutCues3Frames>
+    <CreateSimpleOutCuesGap>Gap minimo prima del cambio inquadratura</CreateSimpleOutCuesGap>
+    <CreateSimpleSnapClosestCue>Per i sottotitoli collegati, aggancia il segnale di entrata o di uscita ad un cambio inquadratura in base a quale è più vicino</CreateSimpleSnapClosestCue>
+    <CreateSimpleMaxOffset>Offset max.:</CreateSimpleMaxOffset>
+    <CreateSimpleMaxOffsetInstruction>I segnali entro questa distanza dai cambi inquadratura verranno agganciati al cambio inquadratura.</CreateSimpleMaxOffsetInstruction>
+    <CreateSimpleSafeZone>Zona sicura:</CreateSimpleSafeZone>
+    <CreateSimpleSafeZoneInstruction>I segnali entro questa distanza dai cambi inquadratura verranno allontanati dal cambio inquadratura.</CreateSimpleSafeZoneInstruction>
+    <CreateSimpleChainingGap>Gap max collegamento:</CreateSimpleChainingGap>
+    <CreateSimpleChainingGapInstruction>Se lo spazio tra due sottotitoli è inferiore a questo valore, i sottotitoli verranno collegati.</CreateSimpleChainingGapInstruction>
+    <CreateSimpleChainingGapAfterShotChanges>Dopo un taglio finale in un cambio scena, il gap potrebbe essere inferiore</CreateSimpleChainingGapAfterShotChanges>
+    <CreateSimpleChainingToolTip>Ti consigliamo di collegare i sottotitoli per garantire un "ritmo" coerente nel "lampeggio" dei sottotitoli.
+Ciò offre un'esperienza visiva più rilassata.
+
+Dopo il collegamento, i sottotitoli sono collegati (ovvero un sottotitolo scompare e un nuovo sottotitolo appare subito dopo una breve pausa) oppure no.
+Ciò dà allo spettatore un'idea di quando può spostare nuovamente l'attenzione sullo schermo.
+
+La lunghezza dell'intervallo di collegamento può essere leggermente inferiore subito dopo che un sottotitolo scompare al cambio inquadratura, perché il cambio inquadratura in un certo senso "ripristina" l'immagine.
+Si sfrutta così il ritmo intrinseco dell'immagine.</CreateSimpleChainingToolTip>
+    <CreateSimpleLoadNetflixRules>Carica regole Netflix</CreateSimpleLoadNetflixRules>
+    <Frames>fotogrammi</Frames>
+    <Maximum>Max.</Maximum>
+    <GapInMsFormat>{0} ms @ {1} FPS</GapInMsFormat>
+    <OffsetSafeZoneError>La zona sicura dovrebbe essere più grande dell'offset max.</OffsetSafeZoneError>
+  </BeautifyTimeCodesProfile>
   <BinEdit>
     <ImportImage>Importa immagine...</ImportImage>
     <ExportImage>Esporta immagine...</ExportImage>
@@ -1274,6 +1375,7 @@ Per usare una chiave API vai su "Opzioni -&gt; Impostazioni -&gt; Strumenti" per
         <Duration>Durata</Duration>
         <ListErrors>Elenco errori...</ListErrors>
         <NetflixQualityCheck>Controllo qualità Netflix...</NetflixQualityCheck>
+        <BeautifyTimeCodes>Time code abbellimento...</BeautifyTimeCodes>
         <TextAlphabetically>Testo - ordine alfabetico</TextAlphabetically>
         <TextSingleLineMaximumLength>Testo - riga singola massima lunghezza </TextSingleLineMaximumLength>
         <TextTotalLength>Testo - lunghezza totale</TextTotalLength>
@@ -1369,6 +1471,7 @@ Per usare una chiave API vai su "Opzioni -&gt; Impostazioni -&gt; Strumenti" per
         <VisualSync>Sincronizzazione visiva</VisualSync>
         <SpellCheck>Controllo ortografico</SpellCheck>
         <NetflixQualityCheck>Controllo qualità Netflix</NetflixQualityCheck>
+        <BeautifyTimeCodes>Time code abbellimento</BeautifyTimeCodes>
         <Settings>Preferenze</Settings>
         <Help>Aiuto</Help>
         <ShowHideWaveform>Visualizza/nascondi forma onda</ShowHideWaveform>
@@ -1445,6 +1548,7 @@ Per usare una chiave API vai su "Opzioni -&gt; Impostazioni -&gt; Strumenti" per
         <KaraokeEffect>Effetto karaoke...</KaraokeEffect>
         <ShowSelectedLinesEarlierLater>Visualizza righe selezionate prima/dopo...</ShowSelectedLinesEarlierLater>
         <VisualSyncSelectedLines>Sincronizza righe selezionate...</VisualSyncSelectedLines>
+        <BeautifyTimeCodesOfSelectedLines>Abbellisci time delle linee selezionate...</BeautifyTimeCodesOfSelectedLines>
         <GoogleAndMicrosoftTranslateSelectedLine>Traduci riga originale con Google/Microsoft</GoogleAndMicrosoftTranslateSelectedLine>
         <SelectedLines>Linee selezionate</SelectedLines>
         <TranslateSelectedLines>Traduci righe selezionate...</TranslateSelectedLines>
@@ -1600,6 +1704,10 @@ Vuoi tornare all'inizio del documento e continuare a cercare per sostituire?</Re
     <CommonErrorsFixed>Errori comuni corretti</CommonErrorsFixed>
     <BeforeRenumbering>Prima di rinumerare</BeforeRenumbering>
     <RenumberedStartingFromX>Rinumera partendo da: {0}</RenumberedStartingFromX>
+    <BeforeBeautifyTimeCodes>Prima di abbellire i time code</BeforeBeautifyTimeCodes>
+    <BeforeBeautifyTimeCodesSelectedLines>Prima di abbellire i time code delle righe selezionate</BeforeBeautifyTimeCodesSelectedLines>
+    <BeautifiedTimeCodes>Time code abbelliti</BeautifiedTimeCodes>
+    <BeautifiedTimeCodesSelectedLines>Abbelliti time code delle linee selezionate</BeautifiedTimeCodesSelectedLines>
     <BeforeRemovalOfTextingForHearingImpaired>Prima di rimuovere il testo per non udenti</BeforeRemovalOfTextingForHearingImpaired>
     <TextingForHearingImpairedRemovedOneLine>Testo per non udenti rimosso: Una riga</TextingForHearingImpairedRemovedOneLine>
     <TextingForHearingImpairedRemovedXLines>Testo per non udenti rimosso: {0} righe</TextingForHearingImpairedRemovedXLines>
@@ -2173,6 +2281,7 @@ stesso file di sottotitolo (collaborazione)</Information>
     <BurnIn>Masterizza</BurnIn>
     <SpellCheck>Controllo ortografia</SpellCheck>
     <NetflixQualityCheck>Controllo qualità Netflix</NetflixQualityCheck>
+    <BeautifyTimeCodes>Abbellisci time code</BeautifyTimeCodes>
     <SettingsName>Impostazioni</SettingsName>
     <ToggleBookmarks>Attiva/disattiva segnalibri</ToggleBookmarks>
     <ToggleBookmarksWithComment>Attiva/disattiva segnalibri - Aggiungi commento</ToggleBookmarksWithComment>
@@ -2293,6 +2402,7 @@ stesso file di sottotitolo (collaborazione)</Information>
     <WaveformListViewFocusMouseEnter>Imposta anche su visualizzazione elenco in entrata mouse</WaveformListViewFocusMouseEnter>
     <WaveformSingleClickSelect>Singolo clic per selezionare i sottotitoli</WaveformSingleClickSelect>
     <WaveformSnapToShotChanges>Aggancia ai cambi di scena (tieni premuto Maiusc per ignorare)</WaveformSnapToShotChanges>
+    <WaveformEditShotChangesProfile>Modifica profilo...</WaveformEditShotChangesProfile>
     <WaveformAutoGen>Genera automaticamente forma d'onda all'apertura del video</WaveformAutoGen>
     <WaveformBorderHitMs1>Il marcatore del bordo deve essere all'interno</WaveformBorderHitMs1>
     <WaveformBorderHitMs2>millisecondi</WaveformBorderHitMs2>
@@ -2448,21 +2558,23 @@ stesso file di sottotitolo (collaborazione)</Information>
     <AdjustSetEndAndOffsetTheRest>Imposta la scadenza di offset</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Imposta la scadenza, sposta e vai al prossimo</AdjustSetEndAndOffsetTheRestAndGoToNext>
     <AdjustSnapStartToNextShotChange>Blocco inizio linea al cambio di scena successivo</AdjustSnapStartToNextShotChange>
-    <AdjustSnapStartToNextShotChangeWithGap>Blocco dell'inizio della linea al cambio di scena successivo con spazio minimo</AdjustSnapStartToNextShotChangeWithGap>
-    <AdjustSnapEndToPreviousShotChange>Blocco dell'inizio linea al cambio di scena precedente</AdjustSnapEndToPreviousShotChange>
-    <AdjustSnapEndToPreviousShotChangeWithGap>Blocco dell'inizio della linea al cambio di scena precedente con spazio minimo</AdjustSnapEndToPreviousShotChangeWithGap>
-    <AdjustExtendToNextShotChange>Estendi le righe selezionate al cambio di scena successivo (o al sottotitolo successivo)</AdjustExtendToNextShotChange>
-    <AdjustExtendToNextShotChangeWithGap>Estendi le righe selezionate al cambio di scena successivo di min. gap (o sottotitolo successivo)</AdjustExtendToNextShotChangeWithGap>
-    <AdjustExtendToPreviousShotChange>Estendi le righe selezionate al cambiamento di scena precedente (o al sottotitolo precedente)</AdjustExtendToPreviousShotChange>
-    <AdjustExtendToPreviousShotChangeWithGap>Estendi le righe selezionate ai cambiamenti di scena precedenti di min. (o sottotitolo precedente)</AdjustExtendToPreviousShotChangeWithGap>
+    <AdjustSnapEndToPreviousShotChange>Aggancia le linee selezionate alla fine del cambio inquadratura precedente</AdjustSnapEndToPreviousShotChange>
+    <AdjustExtendToNextShotChange>Estendi le righe selezionate al prossimo cambio inquadratura (o sottotitolo successivo)</AdjustExtendToNextShotChange>
+    <AdjustExtendToPreviousShotChange>Estendi le righe selezionate al cambio inquadratura precedente (o al sottotitolo precedente)</AdjustExtendToPreviousShotChange>
     <AdjustExtendToNextSubtitle>Estendi le righe selezionate al sottotitolo successivo</AdjustExtendToNextSubtitle>
     <AdjustExtendToPreviousSubtitle>Estendi le righe selezionate al sottotitolo precedente</AdjustExtendToPreviousSubtitle>
+    <AdjustExtendToNextSubtitleMinusChainingGap>Estendi le righe selezionate al sottotitolo successivo con spazio di collegamento</AdjustExtendToNextSubtitleMinusChainingGap>
+    <AdjustExtendToPreviousSubtitleMinusChainingGap>Estendi le righe selezionate al sottotitolo precedente con spazio di collegamento</AdjustExtendToPreviousSubtitleMinusChainingGap>
     <AdjustExtendCurrentSubtitle>Estendi la riga attuale al sottotitolo successivo o alla durata massima</AdjustExtendCurrentSubtitle>
     <AdjustExtendPreviousLineEndToCurrentStart>Estendi la fine della riga precedente all'inizio dell'attuale</AdjustExtendPreviousLineEndToCurrentStart>
     <AdjustExtendNextLineStartToCurrentEnd>Estendi l'inizio della riga successiva alla fine dell'attuale</AdjustExtendNextLineStartToCurrentEnd>
     <RecalculateDurationOfCurrentSubtitle>Ricalcola durata sottotitolo attuale</RecalculateDurationOfCurrentSubtitle>
     <RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed>Ricalcola durata sottotitolo attuale (in base a velocità lettura ottimale)</RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed>
     <RecalculateDurationOfCurrentSubtitleByMinReadingSpeed>Ricalcola la durata del sottotitolo attuale (basato sulla velocità lettura minima)</RecalculateDurationOfCurrentSubtitleByMinReadingSpeed>
+    <SetInCueToClosestShotChangeLeftGreenZone>Allinea time code iniziale a distanza minima prima del cambio inquadratura più vicino (zona verde sinistra)</SetInCueToClosestShotChangeLeftGreenZone>
+    <SetInCueToClosestShotChangeRightGreenZone>Allinea time code iniziale a distanza minima dopo il cambio inquadratura più vicino (zona verde destra)</SetInCueToClosestShotChangeRightGreenZone>
+    <SetOutCueToClosestShotChangeLeftGreenZone>Allinea time code finale a distanza minima prima del cambio inquadratura più vicino (zona verde sinistra)</SetOutCueToClosestShotChangeLeftGreenZone>
+    <SetOutCueToClosestShotChangeRightGreenZone>Allinea time code finale a distanza minima dopo il cambio inquadratura più vicino (zona verde destra)</SetOutCueToClosestShotChangeRightGreenZone>
     <MainCreateStartDownEndUp>Crea nuovo premendo la freccia giù, imposta la fine premendo la freccia su</MainCreateStartDownEndUp>
     <MergeDialog>Unisci dialoghi (inserisci trattini)</MergeDialog>
     <MergeDialogWithNext>Unisci la finestra di dialogo con il successivo (inserisci trattini)</MergeDialogWithNext>
@@ -2840,7 +2952,7 @@ Vuoi continuare?</RestoreDefaultSettingsMsg>
     <NumberOfBoldTags>Numero tag grassetto: {0}</NumberOfBoldTags>
     <NumberOfUnderlineTags>Numero tag sottolineatura: {0}</NumberOfUnderlineTags>
     <NumberOfFontTags>Numero tag per font: {0}</NumberOfFontTags>
-    <NumberOfAlignmentTags>Numero di tag allineamento: {0}</NumberOfAlignmentTags>
+    <NumberOfAlignmentTags>Numero tag allineamento: {0}</NumberOfAlignmentTags>
     <LineLengthMinimum>Lunghezza sottotitolo - minima: {0}</LineLengthMinimum>
     <LineLengthMaximum>Lunghezza sottotitolo - massima: {0}</LineLengthMaximum>
     <LineLengthAverage>Lunghezza sottotitolo - media: {0}</LineLengthAverage>
@@ -2848,18 +2960,29 @@ Vuoi continuare?</RestoreDefaultSettingsMsg>
     <SingleLineLengthMinimum>Lunghezza riga singola - minimo: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Lunghezza riga singola - massima: {0}</SingleLineLengthMaximum>
     <SingleLineLengthAverage>Lunghezza riga singola - media: {0}</SingleLineLengthAverage>
-    <SingleLineWidthMinimum>Larghezza riga singola - minima: {0} pixels</SingleLineWidthMinimum>
-    <SingleLineWidthMaximum>Larghezza riga singola - massima: {0} pixels</SingleLineWidthMaximum>
-    <SingleLineWidthAverage>Larghezza riga singola - media: {0} pixels</SingleLineWidthAverage>
+    <SingleLineLengthExceedingMaximum>Lunghezza riga singola - superiore al massimo ({0} caratteri): {1} ({2:0.00}%)</SingleLineLengthExceedingMaximum>
+    <SingleLineWidthMinimum>Larghezza riga singola - minima: {0} pixel</SingleLineWidthMinimum>
+    <SingleLineWidthMaximum>Larghezza riga singola - massima: {0} pixel</SingleLineWidthMaximum>
+    <SingleLineWidthExceedingMaximum>Larghezza riga singola - superiore al massimo ({0} pixel): {1} ({2:0.00}%)</SingleLineWidthExceedingMaximum>
+    <SingleLineWidthAverage>Larghezza riga singola - media: {0} pixel</SingleLineWidthAverage>
     <DurationMinimum>Durata - minima: {0:0.000} secondi</DurationMinimum>
     <DurationMaximum>Durata - massima: {0:0.000} secondi</DurationMaximum>
     <DurationAverage>Durata - media: {0:0.000} secondi</DurationAverage>
+    <DurationExceedingMinimum>Durata - inferiore al minimo ({0:0.###} sec): {1} ({2:0.00}%)</DurationExceedingMinimum>
+    <DurationExceedingMaximum>Durata - superiore al massimo ({0:0.###} sec): {1} ({2:0.00}%)</DurationExceedingMaximum>
     <CharactersPerSecondMinimum>Caratteri/sec - minimuo: {0:0.000}</CharactersPerSecondMinimum>
     <CharactersPerSecondMaximum>Caratteri/sec - massimo: {0:0.000}</CharactersPerSecondMaximum>
     <CharactersPerSecondAverage>Caratteri/sec - media: {0:0.000}</CharactersPerSecondAverage>
+    <CharactersPerSecondExceedingOptimal>Caratteri/sec - superiore ad ottimale ({0:0.##} cps): {1} ({2:0.00}%)</CharactersPerSecondExceedingOptimal>
+    <CharactersPerSecondExceedingMaximum>Caratteri/sec - superiore al massimo ({0:0.##} cps): {1} ({2:0.00}%)</CharactersPerSecondExceedingMaximum>
+    <WordsPerMinuteMinimum>Parole/min - minimo: {0:0.000}</WordsPerMinuteMinimum>
+    <WordsPerMinuteMaximum>Parole/min - massimo: {0:0.000}</WordsPerMinuteMaximum>
+    <WordsPerMinuteAverage>Parole/min - media: {0:0.000}</WordsPerMinuteAverage>
+    <WordsPerMinuteExceedingMaximum>Words/min - exceeding maximum ({0} wpm): {1} ({2:0.00}%)</WordsPerMinuteExceedingMaximum>
     <GapMinimum>Gap - minimo: {0:#,##0} ms</GapMinimum>
     <GapMaximum>Gap - massimo: {0:#,##0} ms</GapMaximum>
     <GapAverage>Gap - media: {0:#,##0.##} ms</GapAverage>
+    <GapExceedingMinimum>Gap - inferiore al minimo ({0:#,##0} ms): {1} ({2:0.00}%)</GapExceedingMinimum>
     <Export>Esporta...</Export>
   </Statistics>
   <SubStationAlphaProperties>
@@ -3220,6 +3343,10 @@ Vuoi mantenere le modifiche?</KeepChangesMessage>
     <VoiceName>Nome voce</VoiceName>
   </WebVttNewVoice>
   <WebVttStyleManager>
+  <WebVttProperties>
+    <UseXTimeStamp>Usa valore intestazione X-TIMESTAMP-MAP</UseXTimeStamp>
+    <MergeLines>Al caricamento unisci righe con lo stesso testo</MergeLines>
+  </WebVttProperties>
     <Title>Stili WebVTT</Title>
   </WebVttStyleManager>
   <WhisperAdvanced>
