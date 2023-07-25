@@ -1983,11 +1983,6 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void FixCommonErrorsFormClosing(object sender, FormClosingEventArgs e)
         {
-            if (_ocrFixEngine != null)
-            {
-                _ocrFixEngine.Dispose();
-                _ocrFixEngine = null;
-            }
             Owner = null;
         }
 
