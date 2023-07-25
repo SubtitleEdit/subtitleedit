@@ -154,8 +154,11 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   </AddWaveform>
   <AddWaveformBatch>
     <Title>Ομαδική δημιουργία δεδομένων κυματομορφής</Title>
+    <ExtractTimeCodes>Εξαγωγή χρόνων με FFprobe</ExtractTimeCodes>
     <ExtractingAudio>Εξαγωγή ήχου…</ExtractingAudio>
     <Calculating>Υπολογισμός…</Calculating>
+    <ExtractingTimeCodes>Εξαγωγή χρόνων…</ExtractingTimeCodes>
+    <DetectingShotChanges>Εντοπισμός αλλαγών λήψης…</DetectingShotChanges>
     <Done>Έτοιμο</Done>
     <Error>Σφάλμα</Error>
   </AddWaveformBatch>
@@ -173,12 +176,14 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ExtendOnly>Παράταση χρόνου</ExtendOnly>
     <EnforceDurationLimits>Εξαναγκασμός ελάχιστης και μέγιστης διάρκειας</EnforceDurationLimits>
     <CheckShotChanges>Επέκταση μέχρι την αλλαγή λήψης</CheckShotChanges>
+    <BatchCheckShotChanges>Διατήρηση χρόνου σε αλλαγή λήψης</BatchCheckShotChanges>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
     <Title>Εφαρμογή ορίων διάρκειας</Title>
     <CheckShotChanges>Επέκταση μέχρι την αλλαγή λήψης</CheckShotChanges>
     <FixesAvailable>Διαθέσιμες διορθώσεις: {0}</FixesAvailable>
     <UnableToFix>Αδυναμία διόρθωσης: {0}</UnableToFix>
+    <BatchCheckShotChanges>Διατήρηση χρόνου σε αλλαγή λήψης</BatchCheckShotChanges>
   </ApplyDurationLimits>
   <AudioToText>
     <Title>Ήχος σε κείμενο</Title>
@@ -384,6 +389,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <XShotChangesLoaded>Φόρτωση {0} αλλαγών λήψης</XShotChangesLoaded>
     <NoShotChangesLoadedError>Επιλέξατε να βάλετε τα κείμενα σε αλλαγές λήψης, μα δεν υπάρχουν φορτωμένες.
 Παρακαλώ, πατήστε "{0}", για να δημιουργήσετε ή να εισάγετε, ή απενεργοποιήστε την επιλογή.</NoShotChangesLoadedError>
+    <BatchAlignTimeCodes>Αντιστοίχιση χρόνων σε χρόνους καρέ</BatchAlignTimeCodes>
+    <BatchUseExactTimeCodes>Χρήση ακριβών χρόνων</BatchUseExactTimeCodes>
+    <BatchSnapToShotChanges>Τοποθέτηση ομιλιών σε αλλαγές λήψης</BatchSnapToShotChanges>
   </BeautifyTimeCodes>
   <BeautifyTimeCodesProfile>
     <Title>Επεξεργασία προφίλ</Title>
@@ -2547,6 +2555,10 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <RecalculateDurationOfCurrentSubtitle>Επαναϋπολογισμός διάρκειας τρέχοντος υποτίτλου</RecalculateDurationOfCurrentSubtitle>
     <RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed>Επαναϋπολογισμός διάρκειας τρέχοντος υποτίτλου (βάσει βέλτιστης ταχύτητας ανάγνωσης)</RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed>
     <RecalculateDurationOfCurrentSubtitleByMinReadingSpeed>Επαναϋπολογισμός διάρκειας τρέχοντος υποτίτλου (βάσει ελάχιστης ταχύτητας ανάγνωσης)</RecalculateDurationOfCurrentSubtitleByMinReadingSpeed>
+    <SetInCueToClosestShotChangeLeftGreenZone>Ορισμός έναρξης κειμένου σε απόσταση πριν την πλησιέστερη αλλαγή λήψης</SetInCueToClosestShotChangeLeftGreenZone>
+    <SetInCueToClosestShotChangeRightGreenZone>Ορισμός έναρξης κειμένου σε απόσταση μετά την πλησιέστερη αλλαγή λήψης</SetInCueToClosestShotChangeRightGreenZone>
+    <SetOutCueToClosestShotChangeLeftGreenZone>Ορισμός λήξη κειμένου σε απόσταση πριν την πλησιέστερη αλλαγή λήψης</SetOutCueToClosestShotChangeLeftGreenZone>
+    <SetOutCueToClosestShotChangeRightGreenZone>Ορισμός λήξης κειμένου σε απόσταση μετά την πλησιέστερη αλλαγή λήψης</SetOutCueToClosestShotChangeRightGreenZone>
     <MainCreateStartDownEndUp>Δημιουργία νέου στο πάτημα του κάτω βέλους, ορισμός χρόνου λήξης στο πάτημα του πάνω βέλους</MainCreateStartDownEndUp>
     <MergeDialog>Συγχώνευση διαλόγου (εισαγωγή παυλών)</MergeDialog>
     <MergeDialogWithNext>Συγχώνευση διαλόγου με επόμενο (εισαγωγή παυλών)</MergeDialogWithNext>
@@ -3311,6 +3323,10 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>WebVTT - ορισμός νέας φωνής</Title>
     <VoiceName>Όνομα φωνής</VoiceName>
   </WebVttNewVoice>
+  <WebVttProperties>
+    <UseXTimeStamp>Χρήση των τιμών επικεφαλίδας X-TIMESTAMP-MAP</UseXTimeStamp>
+    <MergeLines>Συγχώνευση γραμμών με ίδιο κείμενο κατά τη φόρτωση</MergeLines>
+  </WebVttProperties>
   <WebVttStyleManager>
     <Title>Στυλ WebVTT</Title>
   </WebVttStyleManager>
