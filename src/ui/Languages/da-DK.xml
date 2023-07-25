@@ -37,6 +37,7 @@
     <Actor>Taler</Actor>
     <Gap>Gap</Gap>
     <Region>Region</Region>
+    <Layer>Lag</Layer>
     <NumberSymbol>#</NumberSymbol>
     <Number>Antal</Number>
     <Text>Tekst</Text>
@@ -98,6 +99,7 @@
     <ShortcutX>Genvej: {0}</ShortcutX>
     <ExampleX>Eksempel: {0}</ExampleX>
     <Reset>Nulstil</Reset>
+    <Error>Fejl</Error>
     <Warning>Advarsel</Warning>
     <UseLargerFontForThisWindow>Brug stor skrifttype til dette vindue</UseLargerFontForThisWindow>
   </General>
@@ -165,9 +167,12 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <Fixed>Fast</Fixed>
     <Milliseconds>Millisekunder</Milliseconds>
     <ExtendOnly>Kun udvid</ExtendOnly>
+    <EnforceDurationLimits>Håndhæv minimum og maksimum varighed</EnforceDurationLimits>
+    <CheckShotChanges>Forlæng ikke tidligere sceneskift</CheckShotChanges>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
     <Title>Overhold visnings-grænser</Title>
+    <CheckShotChanges>Forlæng ikke tidligere sceneskift</CheckShotChanges>
     <FixesAvailable>Mulige rettelser: {0}</FixesAvailable>
     <UnableToFix>Kan ikke rettes: {0}</UnableToFix>
   </ApplyDurationLimits>
@@ -355,6 +360,95 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <MkvLanguageStyleEmpty>Ingen sprogkode</MkvLanguageStyleEmpty>
     <SearchFolderScanVideo>Scan også videofiler i "Scan mappe" (langsom)</SearchFolderScanVideo>
   </BatchConvert>
+  <BeautifyTimeCodes>
+    <Title>Forskøn tidskoder</Title>
+    <TitleSelectedLines>Forskøn tidskoder ({0} valgte linjer)</TitleSelectedLines>
+    <GroupTimeCodes>Tidskoder</GroupTimeCodes>
+    <AlignTimeCodes>Juster tidskoder til rammetidskoder</AlignTimeCodes>
+    <ExtractExactTimeCodes>Brug ffprobe til at udtrække nøjagtige frame-tidskoder</ExtractExactTimeCodes>
+    <ExtractTimeCodes>Udtræk tidskoder</ExtractTimeCodes>
+    <CancelTimeCodes>Afbestille</CancelTimeCodes>
+    <GroupShotChanges>Skudskifter</GroupShotChanges>
+    <SnapToShotChanges>Snap signaler til sceneskift</SnapToShotChanges>
+    <ImportShotChanges>Generer/importér sceneskift...</ImportShotChanges>
+    <EditProfile>Rediger profil...</EditProfile>
+    <NoTimeCodesLoaded>Ingen tidskoder indlæst</NoTimeCodesLoaded>
+    <XTimeCodesLoaded>{0} tidskoder indlæst</XTimeCodesLoaded>
+    <NoTimeCodesLoadedError>Du har valgt at udtrække nøjagtige rammetidskoder, men der er ingen tidskoder indlæst.
+
+Klik venligst på "{0}" for at udtrække tidskoderne først, eller deaktiver denne mulighed.</NoTimeCodesLoadedError>
+    <NoShotChangesLoaded>Ingen skudændringer indlæst</NoShotChangesLoaded>
+    <XShotChangesLoaded>{0} skudændringer blev indlæst</XShotChangesLoaded>
+    <NoShotChangesLoadedError>Du har valgt at sætte stikord til skudændringer, men der er ingen skudændringer indlæst.
+
+Klik venligst på "{0}" for at generere eller importere skudændringer først, eller deaktiver denne mulighed.</NoShotChangesLoadedError>
+  </BeautifyTimeCodes>
+  <BeautifyTimeCodesProfile>
+    <Title>Rediger profil</Title>
+    <LoadPreset>Indlæs forudindstilling...</LoadPreset>
+    <PresetDefault>Standard</PresetDefault>
+    <PresetNetflix>Netflix</PresetNetflix>
+    <PresetSDI>SDI</PresetSDI>
+    <CreateSimple>Simpel tilstand...</CreateSimple>
+    <General>Generel</General>
+    <Gap>Gap:</Gap>
+    <GapSuffix>frames (overskriver brugerdefinerede indstillinger)</GapSuffix>
+    <InCues>Ind-tidskode</InCues>
+    <SubtitlePreviewText>Underteksttekst.</SubtitlePreviewText>
+    <Zones>Zoner:</Zones>
+    <OutCues>Ud-tidskode</OutCues>
+    <ConnectedSubtitles>Tilknyttede undertekster</ConnectedSubtitles>
+    <InCueClosest>Ind-tidskode er tættest på</InCueClosest>
+    <OutCueClosest>Ud-tidskode er tættest på</OutCueClosest>
+    <TreadAsConnected>Behandles som forbundet, hvis afstanden er mindre end:</TreadAsConnected>
+    <Milliseconds>ms</Milliseconds>
+    <Chaining>Kædning</Chaining>
+    <InCueOnShot>I kø ved sceneskift</InCueOnShot>
+    <OutCueOnShot>Out cue på sceneskift</OutCueOnShot>
+    <MaxGap>Maks.  gap</MaxGap>
+    <ShotChangeBehavior>Hvis der er et skudskifte imellem:</ShotChangeBehavior>
+    <DontChain>Sammenkød ikke</DontChain>
+    <ExtendCrossingShotChange>Forlæng, krydsende skudskift</ExtendCrossingShotChange>
+    <ExtendUntilShotChange>Forlæng indtil skudskift</ExtendUntilShotChange>
+    <ResetWarning>Dette vil nulstille din nuværende profil og erstatte alle værdier med værdierne for den valgte forudindstilling. Dette kan ikke fortrydes.
+
+Vil du fortsætte?</ResetWarning>
+    <CreateSimpleTitle>Opret enkelt</CreateSimpleTitle>
+    <CreateSimpleInstruction>Indtast disse grundlæggende regler, og den aktuelle profil vil blive opdateret i overensstemmelse hermed.</CreateSimpleInstruction>
+    <CreateSimpleGapInstruction>Den mindste mængde mellemrum mellem undertekster.</CreateSimpleGapInstruction>
+    <CreateSimpleInCues>I stikord skal være:</CreateSimpleInCues>
+    <CreateSimpleInCues0Frames>På skudskifte</CreateSimpleInCues0Frames>
+    <CreateSimpleInCues1Frames>1 billede efter skudskifte</CreateSimpleInCues1Frames>
+    <CreateSimpleInCues2Frames>2 billeder efter skudskifte</CreateSimpleInCues2Frames>
+    <CreateSimpleInCues3Frames>3 billeder efter skudskifte</CreateSimpleInCues3Frames>
+    <CreateSimpleOutCues>Udgangssignaler skal være:</CreateSimpleOutCues>
+    <CreateSimpleOutCues0Frames>På skudskifte</CreateSimpleOutCues0Frames>
+    <CreateSimpleOutCues1Frames>1 billede før skudskifte</CreateSimpleOutCues1Frames>
+    <CreateSimpleOutCues2Frames>2 billeder før skudskifte</CreateSimpleOutCues2Frames>
+    <CreateSimpleOutCues3Frames>3 billeder før skudskifte</CreateSimpleOutCues3Frames>
+    <CreateSimpleOutCuesGap>Minimum mellemrum før skudskifte</CreateSimpleOutCuesGap>
+    <CreateSimpleSnapClosestCue>For tilknyttede undertekster, snap ind- eller ud-signalet til et skudskift baseret på, hvilken der er tættest på</CreateSimpleSnapClosestCue>
+    <CreateSimpleMaxOffset>Maks.  offset:</CreateSimpleMaxOffset>
+    <CreateSimpleMaxOffsetInstruction>Stikord inden for denne afstand fra skudændringer vil blive snappet til skudændringen.</CreateSimpleMaxOffsetInstruction>
+    <CreateSimpleSafeZone>Sikker zone:</CreateSimpleSafeZone>
+    <CreateSimpleSafeZoneInstruction>Stikord inden for denne afstand fra skudændringer vil blive flyttet væk fra skudændringen.</CreateSimpleSafeZoneInstruction>
+    <CreateSimpleChainingGap>Maks.  kædegab:</CreateSimpleChainingGap>
+    <CreateSimpleChainingGapInstruction>Hvis mellemrummet mellem to undertekster er mindre end dette beløb, vil underteksterne blive forbundet.</CreateSimpleChainingGapInstruction>
+    <CreateSimpleChainingGapAfterShotChanges>Efter en out cue på et skudskifte, kan mellemrummet være mindre</CreateSimpleChainingGapAfterShotChanges>
+    <CreateSimpleChainingToolTip>Det anbefales at sammenkæde undertekster for at sikre en ensartet "rytme" i "blinkningen" af underteksterne.
+Dette giver en mere afslappet seeroplevelse.
+
+Efter kæde er undertekster enten forbundet (dvs. en undertekst forsvinder, og en ny undertekst vises umiddelbart efter en lille pause) eller ej.
+Dette giver seeren en vis fornemmelse af, hvornår de kan flytte fokus tilbage til skærmen.
+
+Længden af kædegabet kan være en smule mindre lige efter, at en undertekst forsvinder ved et skudskift, fordi det skiftende skud "nulstiller" billedet på en måde.
+Vi udnytter billedets indre rytme.</CreateSimpleChainingToolTip>
+    <CreateSimpleLoadNetflixRules>Indlæs Netflix regler</CreateSimpleLoadNetflixRules>
+    <Frames>frames</Frames>
+    <Maximum>Maks.</Maximum>
+    <GapInMsFormat>{0} ms @ {1} FPS</GapInMsFormat>
+    <OffsetSafeZoneError>Den sikre zone skal være større end max.  offset.</OffsetSafeZoneError>
+  </BeautifyTimeCodesProfile>
   <BinEdit>
     <ImportImage>Importer billede...</ImportImage>
     <ExportImage>Eksportér billede...</ExportImage>
@@ -1266,6 +1360,7 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Bi
         <Duration>Varighed</Duration>
         <ListErrors>Liste over fejl...</ListErrors>
         <NetflixQualityCheck>Netflix kvalitetskontrol...</NetflixQualityCheck>
+        <BeautifyTimeCodes>Forskøn tidskoder...</BeautifyTimeCodes>
         <TextAlphabetically>Tekst - alfabetisk</TextAlphabetically>
         <TextSingleLineMaximumLength>Tekst - enkelt linje max. længde</TextSingleLineMaximumLength>
         <TextTotalLength>Tekst - samlet længde</TextTotalLength>
@@ -1361,6 +1456,7 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Bi
         <VisualSync>Visuel synkroniser</VisualSync>
         <SpellCheck>Stavekontrol</SpellCheck>
         <NetflixQualityCheck>Netflix kvalitetstjek</NetflixQualityCheck>
+        <BeautifyTimeCodes>Forskøn tidskoder</BeautifyTimeCodes>
         <Settings>Indstillinger</Settings>
         <Help>Hjælp</Help>
         <ShowHideWaveform>Vis/skjul kurveform</ShowHideWaveform>
@@ -1371,6 +1467,7 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Bi
         <SizeAllColumnsToFit>Auto-tilpas kolonner</SizeAllColumnsToFit>
         <SetStyle>Vælg stil</SetStyle>
         <SetActor>Vælg taler</SetActor>
+        <SetLayer>Vælg lag</SetLayer>
         <AssaTools>ASSA værktøjer</AssaTools>
         <SubStationAlphaStyles>Sub Station Alpha stilarter...</SubStationAlphaStyles>
         <AdvancedSubStationAlphaStyles>Advanced Sub Station Alpha stilarter...</AdvancedSubStationAlphaStyles>
@@ -1380,6 +1477,9 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Bi
         <TimedTextSetLanguage>Timed Text - vælg sprog</TimedTextSetLanguage>
         <SamiSetStyle>Sami - sæt class</SamiSetStyle>
         <NuendoSetStyle>Nuendo - vælg person</NuendoSetStyle>
+        <WebVttSetStyle>WebVTT - sæt stil</WebVttSetStyle>
+        <WebVttSetVoice>WebVTT - vælg stemme</WebVttSetVoice>
+        <WebVttBrowserPreview>WebVTT - browser forhåndsvisning</WebVttBrowserPreview>
         <Cut>Klip</Cut>
         <Copy>Kopier</Copy>
         <Paste>Indsæt</Paste>
@@ -1433,6 +1533,7 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Bi
         <KaraokeEffect>Karaoke effekt...</KaraokeEffect>
         <ShowSelectedLinesEarlierLater>Vis valgte linjer tidligere/senere...</ShowSelectedLinesEarlierLater>
         <VisualSyncSelectedLines>Visual sync markerede linjer...</VisualSyncSelectedLines>
+        <BeautifyTimeCodesOfSelectedLines>Forskøn tidskoder for valgte linjer...</BeautifyTimeCodesOfSelectedLines>
         <GoogleAndMicrosoftTranslateSelectedLine>Google/Microsoft oversæt original linje</GoogleAndMicrosoftTranslateSelectedLine>
         <SelectedLines>Valgte linjer</SelectedLines>
         <TranslateSelectedLines>Oversæt valgte linjer...</TranslateSelectedLines>
@@ -1587,6 +1688,10 @@ Vil du starte fra toppen af ​​underteksten og fortsætte søg og erstat?</Re
     <CommonErrorsFixed>Ret almindelige fejl udført</CommonErrorsFixed>
     <BeforeRenumbering>Før omnummerering</BeforeRenumbering>
     <RenumberedStartingFromX>Omnummereret fra: {0}</RenumberedStartingFromX>
+    <BeforeBeautifyTimeCodes>Før forskønnelse af tidskoder</BeforeBeautifyTimeCodes>
+    <BeforeBeautifyTimeCodesSelectedLines>Før forskønnelse af tidskoder for udvalgte linjer</BeforeBeautifyTimeCodesSelectedLines>
+    <BeautifiedTimeCodes>Tidskoder forskønnet</BeautifiedTimeCodes>
+    <BeautifiedTimeCodesSelectedLines>Tidskoder for udvalgte linjer forskønnet</BeautifiedTimeCodesSelectedLines>
     <BeforeRemovalOfTextingForHearingImpaired>Før fjernelse af tekstning for hørehæmmede</BeforeRemovalOfTextingForHearingImpaired>
     <TextingForHearingImpairedRemovedOneLine>Tekstning for hørehæmmede fjernet: En linje</TextingForHearingImpairedRemovedOneLine>
     <TextingForHearingImpairedRemovedXLines>Tekstning for hørehæmmede fjernet: {0} linjer</TextingForHearingImpairedRemovedXLines>
@@ -2158,6 +2263,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <BurnIn>Brænd ind</BurnIn>
     <SpellCheck>Stavekontrol</SpellCheck>
     <NetflixQualityCheck>Netflix kvalitetstjek</NetflixQualityCheck>
+    <BeautifyTimeCodes>Forskøn tidskoder</BeautifyTimeCodes>
     <SettingsName>Indstillinger</SettingsName>
     <ToggleBookmarks>Tilføj/fjern bogmærker</ToggleBookmarks>
     <ToggleBookmarksWithComment>Tilføj/fjern bogmærker medj kommentar</ToggleBookmarksWithComment>
@@ -2263,6 +2369,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <ShowFullscreenButton>Vis fuldskærm knap</ShowFullscreenButton>
     <PreviewFontName>Fontnavn i undertekst preview</PreviewFontName>
     <PreviewFontSize>Undertekst preview skriftstørrelse</PreviewFontSize>
+    <PreviewVerticalMargin>Lodret margin</PreviewVerticalMargin>
     <MainWindowVideoControls>Hovedvinduet video-kontrol</MainWindowVideoControls>
     <CustomSearchTextAndUrl>Egen defineret søge titel og URL</CustomSearchTextAndUrl>
     <WaveformAppearance>Lyd kurve udseende</WaveformAppearance>
@@ -2277,6 +2384,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <WaveformListViewFocusMouseEnter>Set focus i listevisning ved mus over listevisning</WaveformListViewFocusMouseEnter>
     <WaveformSingleClickSelect>Enkeltklik for at vælge undertekster</WaveformSingleClickSelect>
     <WaveformSnapToShotChanges>Skift til sceneændringer (hold "shift" nede for at override)</WaveformSnapToShotChanges>
+    <WaveformEditShotChangesProfile>Rediger profil...</WaveformEditShotChangesProfile>
     <WaveformAutoGen>Generer automatisk bølgeform, når du åbner video</WaveformAutoGen>
     <WaveformBorderHitMs1>Grænse-markør ved flyt er aktiv inden for</WaveformBorderHitMs1>
     <WaveformBorderHitMs2>millisekunder</WaveformBorderHitMs2>
@@ -2391,9 +2499,12 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <UseSyntaxColoring>Brug syntaksfarvning</UseSyntaxColoring>
     <HtmlColor>HTML-farve</HtmlColor>
     <AssaColor>ASSA farve</AssaColor>
+    <Theme>Tema</Theme>
+    <Automatic>Automatisk</Automatic>
     <DarkTheme>Mørkt tema</DarkTheme>
     <DarkThemeEnabled>Brug mørkt tema</DarkThemeEnabled>
     <DarkThemeShowGridViewLines>Vis gitterlinjer for listevisning</DarkThemeShowGridViewLines>
+    <GraphicsButtons>Grafik knapper</GraphicsButtons>
     <UpdateShortcut>Opdater</UpdateShortcut>
     <FoucsSetVideoPosition>Fokus, sæt videoposition</FoucsSetVideoPosition>
     <ToggleDockUndockOfVideoControls>Skift dok/frigør af video kontrol</ToggleDockUndockOfVideoControls>
@@ -2429,15 +2540,13 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <AdjustSetEndAndOffsetTheRest>Set sluttid, juster resten</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Set sluttid, juster resten og gå til næste</AdjustSetEndAndOffsetTheRestAndGoToNext>
     <AdjustSnapStartToNextShotChange>Snap valgte linjer start til næste sceneændring</AdjustSnapStartToNextShotChange>
-    <AdjustSnapStartToNextShotChangeWithGap>Snap valgte linjer start til næste sceneændring med min. gap</AdjustSnapStartToNextShotChangeWithGap>
     <AdjustSnapEndToPreviousShotChange>Snap valgte linjer slut til forrige sceneændring</AdjustSnapEndToPreviousShotChange>
-    <AdjustSnapEndToPreviousShotChangeWithGap>Snap valgte linjer slut til forrige sceneændring med min. gap</AdjustSnapEndToPreviousShotChangeWithGap>
     <AdjustExtendToNextShotChange>Udvid valgte linjer til næste sceneændring (eller næste undertekst)</AdjustExtendToNextShotChange>
-    <AdjustExtendToNextShotChangeWithGap>Udvid valgte linjer til næste sceneændring med min. gap (eller næste undertekst)</AdjustExtendToNextShotChangeWithGap>
     <AdjustExtendToPreviousShotChange>Udvid valgte linjer til forrige sceneændring (eller forrige undertekst)</AdjustExtendToPreviousShotChange>
-    <AdjustExtendToPreviousShotChangeWithGap>Udvid valgte linjer til tidligere sceneskift med min. gap (eller forrige undertekst)</AdjustExtendToPreviousShotChangeWithGap>
     <AdjustExtendToNextSubtitle>Udvid valgte linjer til næste undertekst</AdjustExtendToNextSubtitle>
     <AdjustExtendToPreviousSubtitle>Udvid valgte linjer til forrige undertekst</AdjustExtendToPreviousSubtitle>
+    <AdjustExtendToNextSubtitleMinusChainingGap>Udvid valgte linjer til næste undertekst med kædegab</AdjustExtendToNextSubtitleMinusChainingGap>
+    <AdjustExtendToPreviousSubtitleMinusChainingGap>Udvid valgte linjer til forrige undertekst med kædegab</AdjustExtendToPreviousSubtitleMinusChainingGap>
     <AdjustExtendCurrentSubtitle>Forlæng aktuelle linje til næste undertekster eller max varighed</AdjustExtendCurrentSubtitle>
     <AdjustExtendPreviousLineEndToCurrentStart>Forlæng slutningen af ​​den forrige linje til den aktuelle start</AdjustExtendPreviousLineEndToCurrentStart>
     <AdjustExtendNextLineStartToCurrentEnd>Forlæng næste linjes start til strømens slutning</AdjustExtendNextLineStartToCurrentEnd>
@@ -2544,6 +2653,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <MainToggleVideoControls>Toggle videokontrol</MainToggleVideoControls>
     <VideoToggleContrast>Skift kontrast (kun mpv)</VideoToggleContrast>
     <AudioToTextX>Lyd til tekst ({0})</AudioToTextX>
+    <AudioExtractSelectedLines>Udpak lyd (udvalgte linjer)</AudioExtractSelectedLines>
     <AudioToTextSelectedLinesX>Lyd til tekst valgte linjer ({0})</AudioToTextSelectedLinesX>
     <VideoToggleBrightness>Skift lysstyrke (kun mpv)</VideoToggleBrightness>
     <CustomSearch1>Oversæt, brugerdefineret søgning 1</CustomSearch1>
@@ -2828,18 +2938,29 @@ Fortsæt?</RestoreDefaultSettingsMsg>
     <SingleLineLengthMinimum>Enkelt linje længde - minimum: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Enkelt linjelængde - maks.: {0}</SingleLineLengthMaximum>
     <SingleLineLengthAverage>Enkelt linje længde - gennemsnit: {0}</SingleLineLengthAverage>
+    <SingleLineLengthExceedingMaximum>Enkelt linjelængde - overskrider maksimum ({0} tegn): {1} ({2:0,00}%)</SingleLineLengthExceedingMaximum>
     <SingleLineWidthMinimum>Enkelt linjebredde - minimum: {0} pixels</SingleLineWidthMinimum>
     <SingleLineWidthMaximum>Enkelt linjebredde - maksimalt: {0} pixels</SingleLineWidthMaximum>
     <SingleLineWidthAverage>Enkelt linjebredde - gennemsnit: {0} pixels</SingleLineWidthAverage>
+    <SingleLineWidthExceedingMaximum>Enkelt linjebredde - overskrider maksimum ({0} pixels): {1} ({2:0,00}%)</SingleLineWidthExceedingMaximum>
     <DurationMinimum>Varihed - minimum: {0:0.000} sekunder</DurationMinimum>
     <DurationMaximum>Varihed - maximum: {0:0.000} sekunder</DurationMaximum>
     <DurationAverage>Varihed - average: {0:0.000} sekunder</DurationAverage>
+    <DurationExceedingMinimum>Duration - below minimum ({0:0.###} sec): {1} ({2:0.00}%)</DurationExceedingMinimum>
+    <DurationExceedingMaximum>Duration - exceeding maximum ({0:0.###} sec): {1} ({2:0.00}%)</DurationExceedingMaximum>
     <CharactersPerSecondMinimum>Karakterer/sek - min: {0:0.000}</CharactersPerSecondMinimum>
     <CharactersPerSecondMaximum>Karakterer/sek - maks: {0:0.000}</CharactersPerSecondMaximum>
     <CharactersPerSecondAverage>Karakterer/sek - gennemsnit: {0:0.000}</CharactersPerSecondAverage>
+    <CharactersPerSecondExceedingOptimal>Characters/sec - exceeding optimal ({0:0.##} cps): {1} ({2:0.00}%)</CharactersPerSecondExceedingOptimal>
+    <CharactersPerSecondExceedingMaximum>Characters/sec - exceeding maximum ({0:0.##} cps): {1} ({2:0.00}%)</CharactersPerSecondExceedingMaximum>
+    <WordsPerMinuteMinimum>Words/min - minimum: {0:0.000}</WordsPerMinuteMinimum>
+    <WordsPerMinuteMaximum>Words/min - maximum: {0:0.000}</WordsPerMinuteMaximum>
+    <WordsPerMinuteAverage>Words/min - average: {0:0.000}</WordsPerMinuteAverage>
+    <WordsPerMinuteExceedingMaximum>Ord/min - overskrider maksimum ({0} wpm): {1} ({2:0.00}%)</WordsPerMinuteExceedingMaximum>
     <GapMinimum>Gap - minimum: {0:#,##0} ms</GapMinimum>
     <GapMaximum>Gap - maksimum: {0:#,##0} ms</GapMaximum>
     <GapAverage>Gap - gennemsnit: {0:#,##0.##} ms</GapAverage>
+    <GapExceedingMinimum>Gap - below minimum ({0:#,##0} ms): {1} ({2:0.00}%)</GapExceedingMinimum>
     <Export>Eksporter...</Export>
   </Statistics>
   <SubStationAlphaProperties>
@@ -3197,4 +3318,12 @@ Fortsæt?</RestoreDefaultSettingsMsg>
     <Title>WebVTT - angiv ny stemme</Title>
     <VoiceName>Stemme-navn</VoiceName>
   </WebVttNewVoice>
+  <WebVttStyleManager>
+    <Title>WebVTT stilarter</Title>
+  </WebVttStyleManager>
+  <WhisperAdvanced>
+    <Title>Whisper Advanced - ekstra kommandolinjeargumenter</Title>
+    <CommandLineArguments>Ekstra parametre til Whisper kommandolinje:</CommandLineArguments>
+    <Info>Bemærk: Forskellige Whisper-implementeringer har forskellige kommandolinjeparametre!</Info>
+  </WhisperAdvanced>
 </Language>

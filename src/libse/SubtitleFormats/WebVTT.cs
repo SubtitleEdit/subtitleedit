@@ -769,6 +769,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 if (end > 0)
                 {
                     var content = header.Substring(match.Index + match.Length, end - (match.Index + match.Length));
+
+                    if (dic.ContainsKey(cueName))
+                    {
+                        dic.Remove(cueName);
+                    }
+
                     dic.Add(cueName, content.Trim().Replace(" ", string.Empty));
                 }
             }

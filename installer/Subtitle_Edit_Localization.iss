@@ -408,19 +408,19 @@ nl.SetupAppTitle=Setup - Subtitle Edit
 nl.SetupWindowTitle=Setup - Subtitle Edit {#app_ver}
 [CustomMessages]
 nl.comp_translations=Vertalingen
-nl.msg_AskToDownNET=Subtitle Edit vereist .NET Framework 4.8. Download en instaleer deze software alstublieft en doe de setup opnieuw.%n%nWilt u nu .NET Framework 4.8 instaleren?
-nl.msg_DeleteSettings=Wilt u de instellingen en persoonlijke aanpassingen in de woordenboeken van Subtitle Edit verwijderen?%n%nAls u Subtitle Edit opnieuw installeert hoeft u deze niet te verwijderen.
-nl.msg_OptimizingPerformance=Prestatie optimaliseren...
-nl.run_VisitWebsite=Bezoek Subtitle Edit Website
-nl.sm_com_Changelog=Subtitle Edit Changelog
+nl.msg_AskToDownNET=Voor Subtitle Edit is .NET Framework 4.8 vereist. Download en installeer deze software en voer Setup opnieuw uit.%n%nWilt u .NET Framework 4.8 nu installeren?
+nl.msg_DeleteSettings=Wilt u de instellingen en persoonlijke aanpassingen in de woordenboeken van Subtitle Edit verwijderen?%n%nAls u Subtitle Edit opnieuw wilt installeren, hoeft u deze niet te verwijderen.
+nl.msg_OptimizingPerformance=Prestaties optimaliseren...
+nl.run_VisitWebsite=Website van Subtitle Edit bezoeken
+nl.sm_com_Changelog=Recente wijzigingen in Subtitle Edit
 nl.tsk_AllUsers=Voor alle gebruikers
 nl.tsk_CurrentUser=Alleen voor huidige gebruiker
 nl.tsk_Other=Anders:
-nl.tsk_ResetDictionaries=Herstel woordenboeken en verwijder elke persoonlijke toevoeging
-nl.tsk_ResetSettings=Herstel Subtitle Edit settings
-nl.tsk_SetFileTypes=Koppel veelgebruikte ondertitelbestanden aan Subtitle Edit
-nl.types_custom=Gebruiker specifieke installatie
-nl.types_default=Standaard installatie
+nl.tsk_ResetDictionaries=Woordenboeken en aangepaste namen verwijderen
+nl.tsk_ResetSettings=Instellingen van Subtitle Edit verwijderen
+nl.tsk_SetFileTypes=Veelgebruikte ondertitelbestanden openen met Subtitle Edit
+nl.types_custom=Aangepaste installatie
+nl.types_default=Standaardinstallatie
 
 ; Polish
 [Messages]

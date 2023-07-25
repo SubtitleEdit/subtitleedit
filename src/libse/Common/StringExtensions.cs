@@ -116,58 +116,12 @@ namespace Nikse.SubtitleEdit.Core.Common
             return source.IndexOf(value, comparisonType) >= 0;
         }
 
-        public static List<string> SplitToLines(this string s)
+        public static List<string> SplitToLines(this string s) => SplitToLines(s, s.Length);
+        
+        public static List<string> SplitToLines(this string s, int max)
         {
             //original non-optimized version: return source.Replace("\r\r\n", "\n").Replace("\r\n", "\n").Replace('\r', '\n').Replace('\u2028', '\n').Split('\n');
 
-            var lines = new List<string>();
-            var start = 0;
-            var max = s.Length;
-            var i = 0;
-            while (i < max)
-            {
-                var ch = s[i];
-                if (ch == '\r')
-                {
-                    if (i < max - 2 && s[i + 1] == '\r' && s[i + 2] == '\n') // \r\r\n
-                    {
-                        lines.Add(s.Substring(start, i - start));
-                        i += 3;
-                        start = i;
-                        continue;
-                    }
-
-                    if (i < max - 1 && s[i + 1] == '\n') // \r\n
-                    {
-                        lines.Add(s.Substring(start, i - start));
-                        i += 2;
-                        start = i;
-                        continue;
-                    }
-
-                    lines.Add(s.Substring(start, i - start));
-                    i++;
-                    start = i;
-                    continue;
-                }
-
-                if (ch == '\n' || ch == '\u2028')
-                {
-                    lines.Add(s.Substring(start, i - start));
-                    i++;
-                    start = i;
-                    continue;
-                }
-
-                i++;
-            }
-
-            lines.Add(s.Substring(start, i - start));
-            return lines;
-        }
-
-        public static List<string> SplitToLines(this string s, int max)
-        {
             var lines = new List<string>();
             var start = 0;
             var i = 0;
@@ -206,10 +160,6 @@ namespace Nikse.SubtitleEdit.Core.Common
 
                 if (ch == '\n' || ch == '\u2028')
                 {
-                    if (start >= s.Length || i - start < 0 || i - start >= s.Length)
-                    {
-                    }
-
                     lines.Add(s.Substring(start, i - start));
                     i++;
                     start = i;
@@ -342,6 +292,46 @@ namespace Nikse.SubtitleEdit.Core.Common
             return s;
         }
 
+        // note: replace both input and output variable type with ReadOnlySpan<char> when in more modern .NET
+        // that will make it allocation free
+        public static string RemoveRecursiveLineBreaks(this string input)
+        {
+            var len = input.Length;
+            var writeIndex = len - 1;
+            var isLineBreakAdjacent = false;
+            var buffer = new char[len];
+        
+            // windows line break style
+            var hasCarriageReturn = input.Contains('\r');
+
+            for (int i = len - 1; i >= 0; i--)
+            {
+                var charAtIndex = input[i];
+                // carriage return line feed
+                if ((hasCarriageReturn && charAtIndex == '\r') || charAtIndex == '\n')
+                {
+                    // line break is adjacent but we found another line break - ignore it
+                    if (isLineBreakAdjacent)
+                    {
+                        continue;
+                    }
+
+                    // write into buffer and update the flag
+                    buffer[writeIndex--] = charAtIndex;
+                    isLineBreakAdjacent = charAtIndex == '\r' || (!hasCarriageReturn && charAtIndex == '\n');
+                }
+                else
+                {
+                    // write current character to the buffer and decrement the write-index
+                    buffer[writeIndex--] = charAtIndex;
+                    // update adjacent line break flag
+                    isLineBreakAdjacent = false;
+                }
+            }
+        
+            return new string(buffer, writeIndex + 1, len - (writeIndex + 1));
+        }
+        
         public static bool ContainsLetter(this string s)
         {
             if (s != null)

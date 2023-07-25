@@ -558,23 +558,29 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public static WavePeakData GenerateEmptyPeaks(string peakFileName, int totalSeconds)
         {
-            int peaksPerSecond = Configuration.Settings.VideoControls.WaveformMinimumSampleRate;
+            var peaksPerSecond = Configuration.Settings.VideoControls.WaveformMinimumSampleRate;
             var peaks = new List<WavePeak>
             {
                 new WavePeak(1000, -1000)
             };
             var totalPeaks = peaksPerSecond * totalSeconds;
-            for (int i = 0; i < totalPeaks; i++)
+            for (var i = 0; i < totalPeaks; i++)
             {
                 peaks.Add(new WavePeak(1, -1));
             }
             peaks.Add(new WavePeak(1000, -1000));
 
             // save results to file
+            var dir = Path.GetDirectoryName(peakFileName);
+            if (!string.IsNullOrEmpty(dir) && !Directory.Exists(dir))
+            {
+                Directory.CreateDirectory(dir);
+            }
+
             using (var stream = File.Create(peakFileName))
             {
                 WaveHeader.WriteHeader(stream, peaksPerSecond, 2, 16, peaks.Count);
-                byte[] buffer = new byte[4];
+                var buffer = new byte[4];
                 foreach (var peak in peaks)
                 {
                     WriteValue16Bit(buffer, 0, peak.Max);

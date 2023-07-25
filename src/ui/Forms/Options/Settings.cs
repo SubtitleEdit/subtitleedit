@@ -4,6 +4,7 @@ using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Core.Translate.Service;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
+using Nikse.SubtitleEdit.Forms.BeautifyTimeCodes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -144,6 +145,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             checkBoxSettings.Checked = gs.ShowToolbarSettings;
             checkBoxSpellCheck.Checked = gs.ShowToolbarSpellCheck;
             checkBoxNetflixQualityCheck.Checked = gs.ShowToolbarNetflixGlyphCheck;
+            checkBoxBeautifyTimeCodes.Checked = gs.ShowToolbarBeautifyTimeCodes;
             checkBoxHelp.Checked = gs.ShowToolbarHelp;
 
             comboBoxFrameRate.Items.Clear();
@@ -399,6 +401,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             labelTBBurnIn.Text = language.BurnIn;
             labelTBSpellCheck.Text = language.SpellCheck;
             labelTBNetflixQualityCheck.Text = language.NetflixQualityCheck;
+            labelTBBeautifyTimeCodes.Text = language.BeautifyTimeCodes;
             labelToggleSourceView.Text = language.ToggleView;
             labelTBSettings.Text = language.SettingsName;
             labelTBHelp.Text = language.Help;
@@ -415,6 +418,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             checkBoxTBBurnIn.Text = LanguageSettings.Current.General.Visible;
             checkBoxSpellCheck.Text = LanguageSettings.Current.General.Visible;
             checkBoxNetflixQualityCheck.Text = LanguageSettings.Current.General.Visible;
+            checkBoxBeautifyTimeCodes.Text = LanguageSettings.Current.General.Visible;
             checkBoxSettings.Text = LanguageSettings.Current.General.Visible;
             checkBoxHelp.Text = LanguageSettings.Current.General.Visible;
             checkBoxTBToggleSourceView.Text = LanguageSettings.Current.General.Visible;
@@ -469,6 +473,9 @@ namespace Nikse.SubtitleEdit.Forms.Options
             pictureBoxNetflixQualityCheck.Left = labelTBNetflixQualityCheck.Left;
             checkBoxNetflixQualityCheck.Left = labelTBNetflixQualityCheck.Left;
 
+            labelTBBeautifyTimeCodes.Left = Math.Max(labelTBNetflixQualityCheck.Right, checkBoxNetflixQualityCheck.Right) + 18;
+            pictureBoxBeautifyTimeCodes.Left = labelTBBeautifyTimeCodes.Left;
+            checkBoxBeautifyTimeCodes.Left = labelTBBeautifyTimeCodes.Left;
 
             groupBoxMiscellaneous.Text = language.General;
             groupBoxToolsMisc.Text = language.Miscellaneous;
@@ -685,6 +692,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             checkBoxListViewMouseEnterFocus.Text = language.WaveformListViewFocusMouseEnter;
             checkBoxWaveformSingleClickSelect.Text = language.WaveformSingleClickSelect;
             checkBoxWaveformSnapToShotChanges.Text = language.WaveformSnapToShotChanges;
+            buttonEditShotChangesProfile.Text = language.WaveformEditShotChangesProfile;
             checkBoxWaveformAutoGen.Text = language.WaveformAutoGen;
             labelWaveformBorderHitMs1.Text = language.WaveformBorderHitMs1;
             labelWaveformBorderHitMs2.Text = language.WaveformBorderHitMs2;
@@ -1070,6 +1078,8 @@ namespace Nikse.SubtitleEdit.Forms.Options
             {
                 numericUpDownWaveformBorderHitMs.Value = Configuration.Settings.VideoControls.WaveformBorderHitMs;
             }
+
+            buttonEditShotChangesProfile.Left = checkBoxWaveformSnapToShotChanges.Left + checkBoxWaveformSnapToShotChanges.Width + 16;
 
             checkBoxUseFFmpeg.Checked = gs.UseFFmpegForWaveExtraction;
             checkBoxFfmpegUseCenterChannel.Checked = gs.FFmpegUseCenterChannelOnly;
@@ -1713,18 +1723,20 @@ namespace Nikse.SubtitleEdit.Forms.Options
             AddNode(createAndAdjustNode, language.RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed, nameof(Configuration.Settings.Shortcuts.GeneralAutoCalcCurrentDurationByOptimalReadingSpeed));
             AddNode(createAndAdjustNode, language.RecalculateDurationOfCurrentSubtitleByMinReadingSpeed, nameof(Configuration.Settings.Shortcuts.GeneralAutoCalcCurrentDurationByMinReadingSpeed));
             AddNode(createAndAdjustNode, language.AdjustSnapStartToNextShotChange, nameof(Configuration.Settings.Shortcuts.MainAdjustSnapStartToNextShotChange));
-            AddNode(createAndAdjustNode, language.AdjustSnapStartToNextShotChangeWithGap, nameof(Configuration.Settings.Shortcuts.MainAdjustSnapStartToNextShotChangeWithGap));
             AddNode(createAndAdjustNode, language.AdjustSnapEndToPreviousShotChange, nameof(Configuration.Settings.Shortcuts.MainAdjustSnapEndToPreviousShotChange));
-            AddNode(createAndAdjustNode, language.AdjustSnapEndToPreviousShotChangeWithGap, nameof(Configuration.Settings.Shortcuts.MainAdjustSnapEndToPreviousShotChangeWithGap));
             AddNode(createAndAdjustNode, language.AdjustExtendToNextShotChange, nameof(Configuration.Settings.Shortcuts.MainAdjustExtendToNextShotChange));
-            AddNode(createAndAdjustNode, language.AdjustExtendToNextShotChangeWithGap, nameof(Configuration.Settings.Shortcuts.MainAdjustExtendToNextShotChangeWithGap));
             AddNode(createAndAdjustNode, language.AdjustExtendToPreviousShotChange, nameof(Configuration.Settings.Shortcuts.MainAdjustExtendToPreviousShotChange));
-            AddNode(createAndAdjustNode, language.AdjustExtendToPreviousShotChangeWithGap, nameof(Configuration.Settings.Shortcuts.MainAdjustExtendToPreviousShotChangeWithGap));
             AddNode(createAndAdjustNode, language.AdjustExtendToNextSubtitle, nameof(Configuration.Settings.Shortcuts.MainAdjustExtendToNextSubtitle));
             AddNode(createAndAdjustNode, language.AdjustExtendToPreviousSubtitle, nameof(Configuration.Settings.Shortcuts.MainAdjustExtendToPreviousSubtitle));
+            AddNode(createAndAdjustNode, language.AdjustExtendToNextSubtitleMinusChainingGap, nameof(Configuration.Settings.Shortcuts.MainAdjustExtendToNextSubtitleMinusChainingGap));
+            AddNode(createAndAdjustNode, language.AdjustExtendToPreviousSubtitleMinusChainingGap, nameof(Configuration.Settings.Shortcuts.MainAdjustExtendToPreviousSubtitleMinusChainingGap));
             AddNode(createAndAdjustNode, language.AdjustExtendCurrentSubtitle, nameof(Configuration.Settings.Shortcuts.MainAdjustExtendCurrentSubtitle));
             AddNode(createAndAdjustNode, language.AdjustExtendPreviousLineEndToCurrentStart, nameof(Configuration.Settings.Shortcuts.MainAdjustExtendPreviousLineEndToCurrentStart));
             AddNode(createAndAdjustNode, language.AdjustExtendNextLineStartToCurrentEnd, nameof(Configuration.Settings.Shortcuts.MainAdjustExtendNextLineStartToCurrentEnd));
+            AddNode(createAndAdjustNode, language.SetInCueToClosestShotChangeLeftGreenZone, nameof(Configuration.Settings.Shortcuts.MainSetInCueToClosestShotChangeLeftGreenZone));
+            AddNode(createAndAdjustNode, language.SetInCueToClosestShotChangeRightGreenZone, nameof(Configuration.Settings.Shortcuts.MainSetInCueToClosestShotChangeRightGreenZone));
+            AddNode(createAndAdjustNode, language.SetOutCueToClosestShotChangeLeftGreenZone, nameof(Configuration.Settings.Shortcuts.MainSetOutCueToClosestShotChangeLeftGreenZone));
+            AddNode(createAndAdjustNode, language.SetOutCueToClosestShotChangeRightGreenZone, nameof(Configuration.Settings.Shortcuts.MainSetOutCueToClosestShotChangeRightGreenZone));
             _shortcuts.Nodes.Add(createAndAdjustNode);
 
             var audioVisualizerNode = new ShortcutNode(language.WaveformAndSpectrogram);
@@ -1887,7 +1899,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
         }
 
         public void Initialize(Icon icon, Image newFile, Image openFile, Image saveFile, Image saveFileAs, Image find, Image replace, Image fixCommonErrors, Image removeTextForHi,
-                               Image visualSync, Image burnIn, Image spellCheck, Image netflixGlyphCheck, Image settings, Image help, Image toggleSourceView)
+                               Image visualSync, Image burnIn, Image spellCheck, Image netflixGlyphCheck, Image beautifyTimeCodes, Image settings, Image help, Image toggleSourceView)
         {
             Icon = (Icon)icon.Clone();
             pictureBoxFileNew.Image = (Image)newFile.Clone();
@@ -1906,6 +1918,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             pictureBoxBurnIn.Image = (Image)burnIn.Clone();
             pictureBoxSpellCheck.Image = (Image)spellCheck.Clone();
             pictureBoxNetflixQualityCheck.Image = (Image)netflixGlyphCheck.Clone();
+            pictureBoxBeautifyTimeCodes.Image = (Image)beautifyTimeCodes.Clone();
             pictureBoxSettings.Image = (Image)settings.Clone();
             pictureBoxHelp.Image = (Image)help.Clone();
         }
@@ -1927,6 +1940,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             gs.ShowToolbarSettings = checkBoxSettings.Checked;
             gs.ShowToolbarSpellCheck = checkBoxSpellCheck.Checked;
             gs.ShowToolbarNetflixGlyphCheck = checkBoxNetflixQualityCheck.Checked;
+            gs.ShowToolbarBeautifyTimeCodes = checkBoxBeautifyTimeCodes.Checked;
             gs.ShowToolbarHelp = checkBoxHelp.Checked;
 
             gs.ShowFrameRate = checkBoxShowFrameRate.Checked;
@@ -3672,6 +3686,14 @@ namespace Nikse.SubtitleEdit.Forms.Options
             }
         }
 
+        private void buttonEditShotChangesProfile_Click(object sender, EventArgs e)
+        {
+            using (var form = new BeautifyTimeCodesProfile(0))
+            {
+                form.ShowDialog(this);
+            }
+        }
+        
         private void comboBoxToolbarIconTheme_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (_loading)
@@ -3695,6 +3717,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             TryLoadIcon(pictureBoxBurnIn, "BurnIn");
             TryLoadIcon(pictureBoxSpellCheck, "SpellCheck");
             TryLoadIcon(pictureBoxNetflixQualityCheck, "Netflix");
+            TryLoadIcon(pictureBoxBeautifyTimeCodes, "BeautifyTimeCodes");
             TryLoadIcon(pictureBoxAssStyleManager, "AssaStyle");
             TryLoadIcon(pictureBoxAssProperties, "AssaProperties");
             TryLoadIcon(pictureBoxAssAttachments, "AssaAttachments");
