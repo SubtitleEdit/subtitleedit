@@ -10,7 +10,6 @@ namespace Nikse.SubtitleEdit.Core.Forms
     {
         private readonly Subtitle _subtitle;
         private readonly double _frameRate;
-
         private readonly List<double> _timeCodes;
         private readonly List<int> _shotChangesFrames;
 
@@ -30,12 +29,13 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
         public void Beautify()
         {
-            var amountOfPasses = 2;
+            const int amountOfPasses = 2;
             var skipNextInCue = false;
+            var progressPercentage = -1;
 
-            for (int pass = 0; pass < amountOfPasses; pass++)
+            for (var pass = 0; pass < amountOfPasses; pass++)
             {
-                for (int p = 0; p < _subtitle.Paragraphs.Count; p++)
+                for (var p = 0; p < _subtitle.Paragraphs.Count; p++)
                 {
                     // Gather relevant paragraphs
                     var paragraph = _subtitle.Paragraphs.ElementAtOrDefault(p);
@@ -86,10 +86,15 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     }
 
                     // Report progress
-                    var progress = (double)(pass * _subtitle.Paragraphs.Count + p) / (_subtitle.Paragraphs.Count * amountOfPasses);
                     if (ProgressChanged != null)
                     {
-                        ProgressChanged.Invoke(progress);
+                        var progress = (double)(pass * _subtitle.Paragraphs.Count + p) / (_subtitle.Paragraphs.Count * amountOfPasses);
+                        var pct = (int)Math.Round(progress * 100.0, MidpointRounding.AwayFromZero);
+                        if (pct != progressPercentage)
+                        {
+                            progressPercentage = pct;
+                            ProgressChanged.Invoke(pct);
+                        }
                     }
                 }
             }
@@ -134,7 +139,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                             newRightInCueFrame = fixInfo.newRightInCueFrame;
                         }
                     }
-                    else if ((bestLeftOutCueFrameInfo.result == FindBestCueResult.SnappedToLeftGreenZone || bestLeftOutCueFrameInfo.result == FindBestCueResult.SnappedToRightGreenZone) && 
+                    else if ((bestLeftOutCueFrameInfo.result == FindBestCueResult.SnappedToLeftGreenZone || bestLeftOutCueFrameInfo.result == FindBestCueResult.SnappedToRightGreenZone) &&
                              (bestRightInCueFrameInfo.result == FindBestCueResult.SnappedToLeftGreenZone || bestRightInCueFrameInfo.result == FindBestCueResult.SnappedToRightGreenZone))
                     {
                         // Both are in green zones! Check cases...
@@ -252,7 +257,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
             return true;
         }
-        
+
         private (int cueFrame, FindBestCueResult result) FindConnectedSubtitlesBestCueFrame(int cueFrame)
         {
             var previousShotChange = new List<int> { int.MinValue }.Concat(_shotChangesFrames).Last(x => x <= cueFrame); // will return minValue if none found
@@ -491,7 +496,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
             return true;
         }
-        
+
         private int? GetFixedChainableSubtitlesLeftOutCueFrameGeneral(int leftOutCueFrame, int rightInCueFrame, Paragraph leftParagraph = null, Paragraph rightParagraph = null)
         {
             // Check if zones are being used
@@ -529,7 +534,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 {
                     distance = SubtitleFormat.FramesToMilliseconds(rightInCueFrame, _frameRate) - SubtitleFormat.FramesToMilliseconds(leftOutCueFrame, _frameRate);
                 }
-                
+
                 if (distance < Configuration.Settings.BeautifyTimeCodes.Profile.ChainingGeneralMaxGap)
                 {
                     // Chain them
@@ -708,7 +713,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
             {
                 previousShotChangeWithGreenZone = previousShotChange + Configuration.Settings.BeautifyTimeCodes.Profile.InCuesRightGreenZone;
                 nextShotChangeWithGreenZone = nextShotChange - Configuration.Settings.BeautifyTimeCodes.Profile.InCuesLeftGreenZone;
-                
+
                 isInPreviousShotChangeGreenZone = cueFrame < previousShotChangeWithGreenZone && cueFrame > (previousShotChange + Configuration.Settings.BeautifyTimeCodes.Profile.InCuesRightRedZone);
                 isInPreviousShotChangeRedZone = cueFrame <= (previousShotChange + Configuration.Settings.BeautifyTimeCodes.Profile.InCuesRightRedZone) && cueFrame >= previousShotChange;
                 isInNextShotChangeGreenZone = cueFrame > nextShotChangeWithGreenZone && cueFrame < (nextShotChange - Configuration.Settings.BeautifyTimeCodes.Profile.InCuesLeftRedZone);
@@ -721,7 +726,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
             {
                 previousShotChangeWithGreenZone = previousShotChange + Configuration.Settings.BeautifyTimeCodes.Profile.OutCuesRightGreenZone;
                 nextShotChangeWithGreenZone = nextShotChange - Configuration.Settings.BeautifyTimeCodes.Profile.OutCuesLeftGreenZone;
-                
+
                 isInPreviousShotChangeGreenZone = cueFrame < previousShotChangeWithGreenZone && cueFrame > (previousShotChange + Configuration.Settings.BeautifyTimeCodes.Profile.OutCuesRightRedZone);
                 isInPreviousShotChangeRedZone = cueFrame <= (previousShotChange + Configuration.Settings.BeautifyTimeCodes.Profile.OutCuesRightRedZone) && cueFrame >= previousShotChange;
                 isInNextShotChangeGreenZone = cueFrame > nextShotChangeWithGreenZone && cueFrame < (nextShotChange - Configuration.Settings.BeautifyTimeCodes.Profile.OutCuesLeftRedZone);
@@ -730,7 +735,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 previousShotChangeWithGap = previousShotChange - Configuration.Settings.BeautifyTimeCodes.Profile.OutCuesGap;
                 nextShotChangeWithGap = nextShotChange - Configuration.Settings.BeautifyTimeCodes.Profile.OutCuesGap;
             }
-            
+
             if (isInPreviousShotChangeRedZone && isInNextShotChangeRedZone)
             {
                 // We are in both red zones! Snap to closest shot change
@@ -815,6 +820,11 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
         private int? GetFirstShotChangeFrameInBetween(int leftCueFrame, int rightCueFrame)
         {
+            if (_shotChangesFrames == null || _shotChangesFrames.Count == 0)
+            {
+                return null;
+            }
+
             try
             {
                 return _shotChangesFrames.First(x => x >= leftCueFrame && x <= rightCueFrame);
@@ -827,6 +837,11 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
         private int? GetClosestShotChangeFrame(int cueFrame)
         {
+            if (_shotChangesFrames == null || _shotChangesFrames.Count == 0)
+            {
+                return null;
+            }
+
             try
             {
                 return _shotChangesFrames.Aggregate((x, y) => Math.Abs(x - cueFrame) < Math.Abs(y - cueFrame) ? x : y);
@@ -860,7 +875,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
         // Delegates
 
-        public delegate void ProgressChangedDelegate(double progress);
+        public delegate void ProgressChangedDelegate(int progress);
     }
 
     public static class TimeCodesBeautifierUtils
