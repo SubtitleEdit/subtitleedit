@@ -1,7 +1,5 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
-using Nikse.SubtitleEdit.Logic;
+﻿using Nikse.SubtitleEdit.Logic;
 using System;
-using System.Drawing;
 using System.Globalization;
 using System.Windows.Forms;
 

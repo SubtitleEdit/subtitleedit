@@ -1,6 +1,4 @@
-﻿using System.Drawing;
-
-namespace Nikse.SubtitleEdit.Logic
+﻿namespace Nikse.SubtitleEdit.Logic
 {
     // The language classes are built for easy xml-serialization (makes save/load code simple)
     public static class LanguageStructure

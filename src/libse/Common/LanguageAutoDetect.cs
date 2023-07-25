@@ -194,7 +194,9 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         private static readonly string[] AutoDetectWordsHebrew =
         {
-            "אתה", "אולי", "הוא", "בסדר", "יודע", "טוב"
+            "אתה", "אולי", "הוא", "בסדר", "יודע", "טוב", "אֶת", "שֶׁל", "עַל", "הוּא", 
+            "אֲשֶׁר", "הִיא", "הַמְלֶט", "נָסִיךְ", "הֲלֹא", "עוֹד", "אֵין", "אֲנִי", "זֹאת", "וְלֹא",
+            "כָּךְ", "הִנֵּה", "מְאֹד", "אֲדוֹנִי",    
         };
 
         private static readonly string[] AutoDetectWordsVietnamese =

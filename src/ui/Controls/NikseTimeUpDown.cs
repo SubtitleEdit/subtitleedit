@@ -22,10 +22,9 @@ namespace Nikse.SubtitleEdit.Controls
             HHMMSSFF
         }
 
-        private readonly bool _designMode = LicenseManager.UsageMode == LicenseUsageMode.Designtime;
+        private bool _loading = true;
 
         private const int NumericUpDownValue = 50;
-
 
         private bool _forceHHMMSSFF;
 
@@ -34,7 +33,7 @@ namespace Nikse.SubtitleEdit.Controls
         private static readonly char[] SplitChars = GetSplitChars();
 
         private bool _dirty;
-        double _initialTotalMilliseconds;
+        private double _initialTotalMilliseconds;
 
         internal void ForceHHMMSSFF()
         {
@@ -44,6 +43,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public void SetAutoWidth()
         {
+            Invalidate();
         }
 
         public TimeMode Mode
@@ -59,8 +59,8 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        [Category("NikseTimeUpDown"), Description("Gets or sets the increment value")]
-        public decimal Increment { get; set; } = 100;
+        [Category("NikseTimeUpDown"), Description("Gets or sets the increment value"), DefaultValue(100)]
+        public decimal Increment { get; set; }
 
         [Category("NikseTimeUpDown"), Description("Allow arrow keys to set increment/decrement value")]
         [DefaultValue(true)]
@@ -185,10 +185,51 @@ namespace Nikse.SubtitleEdit.Controls
 
         private readonly MaskedTextBox _maskedTextBox;
 
+        protected override void OnKeyDown(KeyEventArgs e)
+        {
+            if (!_maskedTextBox.Focused && e.KeyCode == (Keys.Control | Keys.C))
+            {
+                _maskedTextBox.Copy();
+                e.Handled = true;
+            }
+        }
+
+        protected override void OnFontChanged(EventArgs e)
+        {
+            base.OnFontChanged(e);
+            Invalidate();
+        }
+
+        //protected override CreateParams CreateParams
+        //{
+        //    get
+        //    {
+        //        // https://stackoverflow.com/questions/2612487/how-to-fix-the-flickering-in-user-controls
+        //        // https://stackoverflow.com/questions/69908353/window-not-fully-painting-until-i-grab-and-move-it
+        //        var cp = base.CreateParams;
+        //        cp.ExStyle |= 0x02000000;  // Turn on WS_EX_COMPOSITED
+        //        return cp;
+
+        //        //var parms = base.CreateParams;
+        //        //parms.Style |= 0x02000000;  // Turn off WS_CLIPCHILDREN
+        //        //return parms;
+        //    }
+        //}
+
         public NikseTimeUpDown()
         {
+            SetStyle(ControlStyles.AllPaintingInWmPaint, true);
+            SetStyle(ControlStyles.ResizeRedraw, true);
+            SetStyle(ControlStyles.Selectable, true);
+            DoubleBuffered = true;
+
             _maskedTextBox = new MaskedTextBox();
             Height = 23;
+            _maskedTextBox.FontChanged += (o, args) =>
+            {
+                base.OnFontChanged(args);
+                Invalidate();
+            };
             _maskedTextBox.BorderStyle = BorderStyle.None;
             _maskedTextBox.Font = UiUtil.GetDefaultFont();
             _maskedTextBox.KeyPress += TextBox_KeyPress;
@@ -206,7 +247,26 @@ namespace Nikse.SubtitleEdit.Controls
                 }
                 else if (e.KeyData == Keys.Enter)
                 {
-                    TimeCodeChanged?.Invoke(this, e);
+                    if (!_maskedTextBox.MaskCompleted)
+                    {
+                        AddValue(0);
+                    }
+
+                    Invalidate();
+                }
+                if (e.Modifiers == Keys.Control && e.KeyCode == Keys.A)
+                {
+                    _maskedTextBox.SelectAll();
+                    e.SuppressKeyPress = true;
+                }
+                if (e.Modifiers == Keys.Control && e.KeyCode == Keys.C)
+                {
+                    _maskedTextBox.Copy();
+                    e.SuppressKeyPress = true;
+                }
+                if (e.Modifiers == Keys.Control && e.KeyCode == Keys.V)
+                {
+                    _maskedTextBox.Paste();
                     e.SuppressKeyPress = true;
                 }
                 else if (e.KeyData != (Keys.Tab | Keys.Shift) &&
@@ -215,10 +275,17 @@ namespace Nikse.SubtitleEdit.Controls
                          e.KeyData != Keys.Right)
                 {
                     _dirty = true;
+                    Invalidate();
                 }
             };
-            _maskedTextBox.LostFocus += (sender, args) => Invalidate();
-            _maskedTextBox.GotFocus += (sender, args) => Invalidate();
+            _maskedTextBox.LostFocus += (sender, args) =>
+            {
+                Invalidate();
+            };
+            _maskedTextBox.GotFocus += (sender, args) =>
+            {
+                Invalidate();
+            };
             _maskedTextBox.MouseDown += (sender, e) =>
             {
                 if (e.Button == MouseButtons.Right)
@@ -228,16 +295,15 @@ namespace Nikse.SubtitleEdit.Controls
             };
 
             Controls.Add(_maskedTextBox);
-            BackColor = new TextBox().BackColor;
             ButtonForeColor = DefaultForeColor;
             ButtonForeColorOver = Color.FromArgb(0, 120, 215);
             ButtonForeColorDown = Color.Orange;
             BorderColor = Color.FromArgb(171, 173, 179);
             BorderColorDisabled = Color.FromArgb(120, 120, 120);
             BackColorDisabled = Color.FromArgb(240, 240, 240);
-            DoubleBuffered = true;
             InterceptArrowKeys = true;
             Increment = 100;
+            BackColor = SystemColors.Window;
 
             _repeatTimer = new Timer();
             _repeatTimer.Tick += (sender, args) =>
@@ -264,6 +330,22 @@ namespace Nikse.SubtitleEdit.Controls
             };
 
             TabStop = false;
+
+            // having trouble to getting control drawn correctly at load...
+            var startRenderTimer = new Timer();
+            startRenderTimer.Interval = 397;
+            startRenderTimer.Tick += (sender, args) =>
+            {
+                Invalidate();
+                _startRenderCount++;
+                if (_startRenderCount >= StartRenderMaxCount)
+                {
+                    startRenderTimer.Stop();
+                    startRenderTimer.Dispose();
+                }
+            };
+            startRenderTimer.Start();
+            _loading = false;
         }
 
         public MaskedTextBox MaskedTextBox => _maskedTextBox;
@@ -272,21 +354,33 @@ namespace Nikse.SubtitleEdit.Controls
         {
             _dirty = false;
             _initialTotalMilliseconds = milliseconds;
+            string mask;
             if (UseVideoOffset)
             {
                 milliseconds += Configuration.Settings.General.CurrentVideoOffsetInMs;
             }
+
             if (Mode == TimeMode.HHMMSSMS)
             {
-                _maskedTextBox.Mask = GetMask(milliseconds);
+                mask = GetMask(milliseconds);
+                if (_maskedTextBox.Mask != mask)
+                {
+                    _maskedTextBox.Mask = mask;
+                }
+
                 _maskedTextBox.Text = new TimeCode(milliseconds).ToString();
             }
             else
             {
                 var tc = new TimeCode(milliseconds);
-                _maskedTextBox.Mask = GetMaskFrames(milliseconds);
+                mask = GetMaskFrames(milliseconds);
+                if (_maskedTextBox.Mask != mask)
+                {
+                    _maskedTextBox.Mask = mask;
+                }
                 _maskedTextBox.Text = tc.ToString().Substring(0, 9) + $"{Core.SubtitleFormats.SubtitleFormat.MillisecondsToFrames(tc.Milliseconds):00}";
             }
+
             _dirty = false;
         }
 
@@ -295,11 +389,12 @@ namespace Nikse.SubtitleEdit.Controls
             return _dirty ? TimeCode?.TotalMilliseconds : _initialTotalMilliseconds;
         }
 
+        [RefreshProperties(RefreshProperties.Repaint)]
         public TimeCode TimeCode
         {
             get
             {
-                if (_designMode)
+                if (_loading)
                 {
                     return new TimeCode();
                 }
@@ -314,8 +409,8 @@ namespace Nikse.SubtitleEdit.Controls
                     return new TimeCode(_initialTotalMilliseconds);
                 }
 
-                string startTime = _maskedTextBox.Text;
-                bool isNegative = startTime.StartsWith('-');
+                var startTime = _maskedTextBox.Text;
+                var isNegative = startTime.StartsWith('-');
                 startTime = startTime.TrimStart('-').Replace(' ', '0');
                 if (Mode == TimeMode.HHMMSSMS)
                 {
@@ -365,7 +460,7 @@ namespace Nikse.SubtitleEdit.Controls
                         startTime += "00";
                     }
 
-                    string[] times = startTime.Split(SplitChars, StringSplitOptions.RemoveEmptyEntries);
+                    var times = startTime.Split(SplitChars, StringSplitOptions.RemoveEmptyEntries);
 
                     if (times.Length == 4)
                     {
@@ -395,11 +490,12 @@ namespace Nikse.SubtitleEdit.Controls
                         return tc;
                     }
                 }
+
                 return null;
             }
             set
             {
-                if (_designMode)
+                if (_loading)
                 {
                     return;
                 }
@@ -441,29 +537,6 @@ namespace Nikse.SubtitleEdit.Controls
 
         private static string GetMaskFrames(double val) => val >= 0 ? "00:00:00:00" : "-00:00:00:00";
 
-        public void Theme()
-        {
-            var enabled = Enabled;
-            Enabled = true;
-            if (Configuration.Settings.General.UseDarkTheme)
-            {
-                BackColor = DarkTheme.BackColor;
-                MaskedTextBox.BackColor = DarkTheme.BackColor;
-                BackColor = DarkTheme.BackColor;
-            }
-            else
-            {
-                BackColor = DefaultBackColor;
-                using (var tb = new TextBox())
-                {
-                    MaskedTextBox.BackColor = tb.BackColor;
-                    BackColor = tb.BackColor;
-                }
-            }
-
-            Enabled = enabled;
-        }
-
         /// <summary>
         /// Allow only digits, Enter and Backspace key.
         /// </summary>
@@ -477,6 +550,7 @@ namespace Nikse.SubtitleEdit.Controls
             else if (char.IsDigit(e.KeyChar) || e.KeyChar == (char)Keys.Back)
             {
                 e.Handled = false;
+                Invalidate();
             }
             else
             {
@@ -505,7 +579,11 @@ namespace Nikse.SubtitleEdit.Controls
                 }
                 else
                 {
-                    if (value > NumericUpDownValue)
+                    if (value == 0)
+                    {
+                        SetTotalMilliseconds(milliseconds.Value);
+                    }
+                    else if (value > NumericUpDownValue)
                     {
                         SetTotalMilliseconds(milliseconds.Value + Core.SubtitleFormats.SubtitleFormat.FramesToMilliseconds(1));
                     }
@@ -514,6 +592,7 @@ namespace Nikse.SubtitleEdit.Controls
                         SetTotalMilliseconds(milliseconds.Value - Core.SubtitleFormats.SubtitleFormat.FramesToMilliseconds(1));
                     }
                 }
+
                 TimeCodeChanged?.Invoke(this, null);
             }
         }
@@ -529,6 +608,9 @@ namespace Nikse.SubtitleEdit.Controls
         private readonly Timer _repeatTimer;
         private bool _repeatTimerArrowUp;
         private int _repeatCount;
+
+        private const int StartRenderMaxCount = 7;
+        private int _startRenderCount;
 
         protected override void OnMouseEnter(EventArgs e)
         {
@@ -633,29 +715,61 @@ namespace Nikse.SubtitleEdit.Controls
 
         private const int ButtonsWidth = 13;
 
+        [RefreshProperties(RefreshProperties.Repaint)]
         public new bool Enabled
         {
             get => base.Enabled;
             set
             {
+                if (value == Enabled)
+                {
+                    return;
+                }
+
                 base.Enabled = value;
                 Invalidate();
             }
         }
 
+        [RefreshProperties(RefreshProperties.Repaint)]
         public new int Height
         {
             get => base.Height;
             set
             {
+                if (_maskedTextBox != null)
+                {
+                    _maskedTextBox.Height = value - 4;
+                }
+
                 base.Height = value;
-                _maskedTextBox.Height = value - 4;
+                Invalidate();
+            }
+        }
+
+        [RefreshProperties(RefreshProperties.Repaint)]
+        public new int Width
+        {
+            get => base.Width;
+            set
+            {
+                if (_maskedTextBox != null)
+                {
+                    _maskedTextBox.Width = Width - ButtonsWidth - 3;
+                }
+
+                base.Width = value;
                 Invalidate();
             }
         }
 
         protected override void OnPaint(PaintEventArgs e)
         {
+            if (_loading)
+            {
+                return;
+            }
+
             e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
             _maskedTextBox.BackColor = BackColor;
             _maskedTextBox.ForeColor = ButtonForeColor;
@@ -722,12 +836,11 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 base.ForeColor = value;
                 _maskedTextBox.ForeColor = value;
-                Application.DoEvents();
                 Invalidate();
             }
         }
 
-        [RefreshProperties(RefreshProperties.Repaint)]
+        [RefreshProperties(RefreshProperties.Repaint), DefaultValue(typeof(Color), "0xFFFFFFFF")]
         public override Color BackColor
         {
             get => base.BackColor;
@@ -735,7 +848,6 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 base.BackColor = value;
                 _maskedTextBox.BackColor = value;
-                Application.DoEvents();
                 Invalidate();
             }
         }
