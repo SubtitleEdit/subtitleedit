@@ -9870,6 +9870,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         public void FindDialogClose()
         {
+            if (_findHelper == null)
+            {
+                return;
+            }
+
             _findHelper.InProgress = false;
         }
 
