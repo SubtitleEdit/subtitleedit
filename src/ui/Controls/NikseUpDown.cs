@@ -264,7 +264,13 @@ namespace Nikse.SubtitleEdit.Controls
         {
             if (decimal.TryParse("0" + _textBox.Text, out var result))
             {
-                Value = Math.Round(result, DecimalPlaces);
+                var v = Math.Round(result, DecimalPlaces);
+                if (v == Value)
+                {
+                    return;
+                }
+
+                Value = v;
 
                 if (Value < Minimum)
                 {
