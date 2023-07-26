@@ -213,9 +213,9 @@
             // 
             this.labelThresholdDescription.AutoEllipsis = true;
             this.labelThresholdDescription.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.labelThresholdDescription.Location = new System.Drawing.Point(120, 378);
+            this.labelThresholdDescription.Location = new System.Drawing.Point(120, 377);
             this.labelThresholdDescription.Name = "labelThresholdDescription";
-            this.labelThresholdDescription.Size = new System.Drawing.Size(223, 26);
+            this.labelThresholdDescription.Size = new System.Drawing.Size(223, 30);
             this.labelThresholdDescription.TabIndex = 5;
             this.labelThresholdDescription.Text = "Lower value gives more shot changes";
             this.labelThresholdDescription.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
