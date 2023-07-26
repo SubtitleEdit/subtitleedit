@@ -438,7 +438,7 @@ Klik op '{0}' om eerst beeldwissels te genereren of importeren, of schakel deze 
     <CreateSimpleOutCues1Frames>1 frame voor de beeldwissel</CreateSimpleOutCues1Frames>
     <CreateSimpleOutCues2Frames>2 frames voor de beeldwissel</CreateSimpleOutCues2Frames>
     <CreateSimpleOutCues3Frames>3 frames voor de beeldwissel</CreateSimpleOutCues3Frames>
-    <CreateSimpleOutCuesGap>De minimale tussenruimte voor beeldwissels</CreateSimpleOutCuesGap>
+    <CreateSimpleOutCuesGap>De minimale tussenruimte voor de beeldwissel</CreateSimpleOutCuesGap>
     <CreateSimpleSnapClosestCue>Bij aangesloten titels: de in- of uittijd op de beeldwissel zetten op basis van welke het dichtstbij is</CreateSimpleSnapClosestCue>
     <CreateSimpleMaxOffset>Max. afwijking:</CreateSimpleMaxOffset>
     <CreateSimpleMaxOffsetInstruction>Tijden binnen deze afstand van beeldwissels worden op de beeldwissel gezet.</CreateSimpleMaxOffsetInstruction>
