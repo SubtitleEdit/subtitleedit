@@ -323,7 +323,7 @@ Mais informação online?</WhisperNotFound>
     <RemoveTextForHI>Remover texto para Deficientes Auditivos</RemoveTextForHI>
     <ConvertColorsToDialog>Converter cores para diálogos</ConvertColorsToDialog>
     <OverwriteOriginalFiles>Substituir os ficheiros originais (nova extensão se o formato for alterado)</OverwriteOriginalFiles>
-    <RedoCasing>Refazer Maiúsculas/Minúsculas</RedoCasing>
+    <RedoCasing>Refazer maiúsculas/minúsculas</RedoCasing>
     <Convert>Converter</Convert>
     <NothingToConvert>Nada para converter!</NothingToConvert>
     <PleaseChooseOutputFolder>Por favor, seleccione a pasta de saída</PleaseChooseOutputFolder>
@@ -497,7 +497,7 @@ Tiramos partido do ritmo intrínseco da imagem.</CreateSimpleChainingToolTip>
     <GoToBookmark>Ir para o marcador...</GoToBookmark>
   </Bookmarks>
   <ChangeCasing>
-    <Title>Inverter Maiúsculas/Minúsculas</Title>
+    <Title>Inverter maiúsculas/minúsculas</Title>
     <ChangeCasingTo>Inverter maiúsculas para</ChangeCasingTo>
     <NormalCasing>Maiúsculas normais. Primeira letra de cada frase em maiúsculo.</NormalCasing>
     <FixNamesCasing>Corrigir nomes em maiúsculas (através de Dictionaries\names.xml)</FixNamesCasing>
@@ -1361,7 +1361,7 @@ Para usar a chave API, vá a "Opções -&gt; Definições -&gt; Ferramentas" par
         <StartNumberingFrom>Renumerar...</StartNumberingFrom>
         <RemoveTextForHearingImpaired>Remover texto para Deficientes Auditivos...</RemoveTextForHearingImpaired>
         <ConvertColorsToDialog>Converter cores para diálogos...</ConvertColorsToDialog>
-        <ChangeCasing>Alterar Maiúsculas/Minúsculas...</ChangeCasing>
+        <ChangeCasing>Alterar maiúsculas/minúsculas...</ChangeCasing>
         <ChangeFrameRate>Alterar taxa de fotogramas...</ChangeFrameRate>
         <ChangeSpeedInPercent>Alterar a velocidade (percentagem)...</ChangeSpeedInPercent>
         <MergeShortLines>Combinar as linhas curtas...</MergeShortLines>
@@ -1562,7 +1562,7 @@ Para usar a chave API, vá a "Opções -&gt; Definições -&gt; Ferramentas" par
         <AssaGenerateBackgroundBox>Gerar quadro de fundo...</AssaGenerateBackgroundBox>
         <ImageColorPicker>Selector de cores de imagem...</ImageColorPicker>
         <FixCommonErrorsInSelectedLines>Corrigir erros frequentes nas linhas seleccionadas...</FixCommonErrorsInSelectedLines>
-        <ChangeCasingForSelectedLines>Alterar Maiúsculas/Minúsculas nas linhas seleccionadas...</ChangeCasingForSelectedLines>
+        <ChangeCasingForSelectedLines>Alterar maiúsculas/minúsculas nas linhas seleccionadas...</ChangeCasingForSelectedLines>
         <SaveSelectedLines>Guardar linhas seleccionadas como...</SaveSelectedLines>
         <WebVTTSetNewVoice>Definir nova voz...</WebVTTSetNewVoice>
         <WebVTTRemoveVoices>Remover vozes</WebVTTRemoveVoices>
@@ -2132,7 +2132,7 @@ Transferir e continuar?</VideoFromUrlRequirements>
   </NetworkChat>
   <NetworkJoin>
     <Title>Juntar-se a uma sessão de rede</Title>
-    <Information>Juntar-se a uma sessão existente com múltiplos utilizadores que
+    <Information>Juntar-se a uma sessão existente com vários utilizadores que
 possam editar o mesmo ficheiro de legenda (colaboração)</Information>
     <Join>Juntar-se</Join>
   </NetworkJoin>
@@ -2142,10 +2142,10 @@ possam editar o mesmo ficheiro de legenda (colaboração)</Information>
   </NetworkLogAndInfo>
   <NetworkStart>
     <Title>Iniciar sessão de rede</Title>
-    <ConnectionTo>Conectando a {0}...</ConnectionTo>
-    <Information>Começar uma nova sessão onde várias pessoas podem
+    <ConnectionTo>A estabelecer ligação a {0}...</ConnectionTo>
+    <Information>Iniciar uma nova sessão onde várias pessoas podem
 editar o mesmo ficheiro de legenda (colaboração)</Information>
-    <Start>Início</Start>
+    <Start>Iniciar</Start>
   </NetworkStart>
   <OpenVideoDvd>
     <Title>Abrir DVD através VLC</Title>
