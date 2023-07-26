@@ -2535,14 +2535,6 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <ItemGroup>
-    <HunspellAssemblies Include="Hunspellx64.dll">
-      <Visible>false</Visible>
-    </HunspellAssemblies>
-    <HunspellAssemblies Include="Hunspellx86.dll">
-      <Visible>false</Visible>
-    </HunspellAssemblies>
-  </ItemGroup>
   <ItemGroup />
   <Target Name="BeforeCompile">
     <XmlPeek XmlInputPath="$(SolutionDir)\src\ui\packages.config" Query="//package[@id='NHunspell']/@version">
