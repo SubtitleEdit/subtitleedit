@@ -958,6 +958,7 @@ namespace Test.FixCommonErrors
         {
             using (var target = GetFixCommonErrorsLib())
             {
+                Configuration.Settings.General.DialogStyle = DialogType.DashBothLinesWithSpace;
                 InitializeFixCommonErrorsLine(target, "-Person one speaks" + Environment.NewLine +
                     "and continues speaking some." + Environment.NewLine +
                     "-The other person speaks and there will be no fix executed.");
