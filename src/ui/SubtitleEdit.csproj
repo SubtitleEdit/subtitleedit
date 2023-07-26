@@ -2281,8 +2281,6 @@
     <EmbeddedResource Include="Resources\SMPTE-428-7-2014-DCST.xsd.gz" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="DLLs\Voikkox64.dll" />
-    <Content Include="DLLs\Voikkox86.dll" />
     <None Include="Resources\SE2.ico" />
     <None Include="Resources\webvtt.png" />
     <None Include="Resources\itt.png" />
@@ -2293,12 +2291,6 @@
     <Content Include="Icons\BeautifyTimeCodes.png" />
     <Content Include="SE2.ico" />
     <None Include="Resources\SE.ico" />
-    <None Include="Hunspellx64.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Hunspellx86.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <Content Include="Languages\ar-EG.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -2416,7 +2408,6 @@
     <Content Include="Languages\zh-TW.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="DLLs\Interop.QuartzTypeLib.dll" />
     <EmbeddedResource Include="Controls\VideoPlayerContainer.resx">
       <DependentUpon>VideoPlayerContainer.cs</DependentUpon>
       <SubType>Designer</SubType>
