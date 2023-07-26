@@ -2288,6 +2288,9 @@
     <None Include="Resources\color-picker-small2.png" />
     <None Include="Resources\rec32.png" />
     <None Include="Resources\Help32.png" />
+    <Content Include="DLLs\Interop.QuartzTypeLib.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Icons\BeautifyTimeCodes.png" />
     <Content Include="SE2.ico" />
     <None Include="Resources\SE.ico" />
@@ -2535,7 +2538,6 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <ItemGroup />
   <Target Name="BeforeCompile">
     <XmlPeek XmlInputPath="$(SolutionDir)\src\ui\packages.config" Query="//package[@id='NHunspell']/@version">
       <Output TaskParameter="Result" PropertyName="HunspellVersion" />
