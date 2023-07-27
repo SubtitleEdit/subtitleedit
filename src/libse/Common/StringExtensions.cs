@@ -789,19 +789,28 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return false;
             }
 
-            // handles when sentence ending char is adjacent with html closing tags e.g: </i>, </font>...
-            if (value[checkIndex] == '>')
+
+            var charAtIndex = value[checkIndex];
+            // handles when sentence ending char is adjacent with html/assa closing tags e.g: </i>, </font>, {\\i0}...
+            while (charAtIndex == '>' || charAtIndex == '}')
             {
-                checkIndex = value.LastIndexOf('<', checkIndex) - 1;
+                if (charAtIndex == '>')
+                {
+                    checkIndex = value.LastIndexOf('<', checkIndex) - 1;
+                }
+                else if (charAtIndex == '}')
+                {
+                    checkIndex = value.LastIndexOf('{', checkIndex) - 1;
+                }
 
                 // in this case '>' is the last char
                 if (checkIndex < 0)
                 {
                     return false;
                 }
-            }
 
-            var charAtIndex = value[checkIndex];
+                charAtIndex = value[checkIndex];
+            }
 
             // ending with dash/hyphen
             if (charAtIndex == '-')
