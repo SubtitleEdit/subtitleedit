@@ -7,18 +7,12 @@ namespace Nikse.SubtitleEdit.Core.Common
     internal static class StringBuilderPool
     {
         private const int MinLimit = 1024;
+        private const int MaxPoolSize = 3;
 
-        private static readonly object _lock = new object();
+        private static readonly object Lock = new object();
         private static readonly Stack<StringBuilder> Pool = new Stack<StringBuilder>();
 
-        private static int _maxPoolSize = 3;
         private static int _maxLimit = 85000;
-
-        internal static int MaxPoolSize
-        {
-            get => _maxPoolSize;
-            set => _maxPoolSize = Math.Max(1, value);
-        }
 
         internal static int MaxLimit
         {
@@ -26,9 +20,9 @@ namespace Nikse.SubtitleEdit.Core.Common
             set => _maxLimit = Math.Max(MinLimit, value);
         }
 
-        internal static StringBuilder Retrieve()
+        internal static StringBuilder Get()
         {
-            lock (_lock)
+            lock (Lock)
             {
                 // nothing in the pool
                 if (Pool.Count == 0)
@@ -41,26 +35,39 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
-        internal static void ReturnToPool(this StringBuilder sb)
+        internal static string ToPool(this StringBuilder sb)
         {
-            lock (_lock)
+            var content = sb.ToString();
+            ReturnToPool(sb);
+            return content;
+        }
+
+        private static bool ReturnToPool(this StringBuilder sb)
+        {
+            lock (Lock)
             {
                 var currentPoolSize = Pool.Count;
-                
+
                 // capacity passes the max allowed limit in the pool
                 if (sb.Capacity > _maxLimit)
                 {
-                    return;
+                    return false;
                 }
 
-                if (currentPoolSize == _maxPoolSize)
+                // pool already at is max capacity
+                if (currentPoolSize == MaxPoolSize)
                 {
-                    // drop min from the bag
+                    return false;
                 }
-                else if (currentPoolSize < Math.Min(2, _maxPoolSize) || Pool.Peek().Capacity < sb.Capacity)
+
+                // the incoming stringbuilder will enter the pool only if it's capacity
+                // is greater than the available one on the top
+                if (Pool.Peek().Capacity < sb.Capacity)
                 {
                     Pool.Push(sb);
                 }
+
+                return true;
             }
         }
     }
