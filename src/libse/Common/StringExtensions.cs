@@ -803,7 +803,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     checkIndex = value.LastIndexOf('{', checkIndex) - 1;
                 }
 
-                // in this case '>' is the last char
+                // in this case '>' or '}' is the last char
                 if (checkIndex < 0)
                 {
                     return false;
