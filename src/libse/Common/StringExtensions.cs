@@ -827,7 +827,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             // evaluate culture type
-            var isCultureNeutral = twoLetterLanguageCode?.Equals("el", StringComparison.OrdinalIgnoreCase) == false;
+            var isCultureNeutral = twoLetterLanguageCode == null || twoLetterLanguageCode.Equals("el", StringComparison.OrdinalIgnoreCase) == false;
             return NeutralSentenceEndingChars.Contains(charAtIndex) || (!isCultureNeutral && GreekSentenceEndingChars.Contains(charAtIndex));
         }
 
