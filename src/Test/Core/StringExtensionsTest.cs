@@ -405,6 +405,9 @@ namespace Test.Core
         [TestMethod]
         public void HasSentenceEndingCultureNeutralTest()
         {
+            // language two letter language set to null
+            Assert.IsTrue("foobar.".HasSentenceEnding(null)); // this is supposed to use the culture neutral chars
+            
             Assert.IsTrue("foobar.".HasSentenceEnding());
             Assert.IsTrue("foobar?</font>".HasSentenceEnding());
             Assert.IsTrue("foobar!</font>".HasSentenceEnding());
