@@ -810,14 +810,14 @@ namespace Nikse.SubtitleEdit.Core.Common
             if (charAtIndex == '-')
             {
                 // foobar--
-                return len > 3 && char.IsLetter(value[len - 3]) && value[len - 2] == '-';
+                return checkIndex > 1 && char.IsLetter(value[checkIndex - 2]) && value[checkIndex - 1] == '-';
             }
 
             // em dash: used in written English to indicate an interruption or break in thought
             if (charAtIndex == '—') // U+2014
             {
                 // foobar—
-                return len > 2 && char.IsLetter(value[len - 2]);
+                return checkIndex > 0 && char.IsLetter(value[checkIndex - 1]);
             }
 
             return NeutralSentenceEndingChars.Contains(charAtIndex) || (!isCultureNeutral && GreekSentenceEndingChars.Contains(charAtIndex));
