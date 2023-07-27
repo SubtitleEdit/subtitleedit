@@ -789,9 +789,6 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return false;
             }
 
-            // evaluate culture type
-            var isCultureNeutral = twoLetterLanguageCode?.Equals("el", StringComparison.OrdinalIgnoreCase) == false;
-
             // handles when sentence ending char is adjacent with html closing tags e.g: </i>, </font>...
             if (value[checkIndex] == '>')
             {
@@ -820,6 +817,8 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return checkIndex > 0 && char.IsLetter(value[checkIndex - 1]);
             }
 
+            // evaluate culture type
+            var isCultureNeutral = twoLetterLanguageCode?.Equals("el", StringComparison.OrdinalIgnoreCase) == false;
             return NeutralSentenceEndingChars.Contains(charAtIndex) || (!isCultureNeutral && GreekSentenceEndingChars.Contains(charAtIndex));
         }
 
