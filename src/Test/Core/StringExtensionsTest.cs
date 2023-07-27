@@ -411,8 +411,10 @@ namespace Test.Core
             Assert.IsTrue("foobar.</font>\"".HasSentenceEnding());
             Assert.IsTrue("foobar.\"".HasSentenceEnding());
             Assert.IsTrue("foobar--".HasSentenceEnding());
-            Assert.IsTrue("foobar—".HasSentenceEnding());
-            Assert.IsTrue("".HasSentenceEnding());
+            Assert.IsTrue("foobar--</i>".HasSentenceEnding());
+            Assert.IsTrue("foobar—".HasSentenceEnding()); // em dash
+            Assert.IsTrue("foobar—</i>".HasSentenceEnding()); // em dash
+            Assert.IsFalse("".HasSentenceEnding());
             
             Assert.IsFalse("\"".HasSentenceEnding());
             Assert.IsFalse("foobar>".HasSentenceEnding());
