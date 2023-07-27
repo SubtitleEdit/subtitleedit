@@ -356,11 +356,10 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return false;
             }
 
-            var max = s.Length;
-            for (var index = 0; index < max; index++)
+            var len = s.Length;
+            for (var i = 0; i < len; i++)
             {
-                var ch = s[index];
-                if (char.IsNumber(ch))
+                if (CharUtils.IsDigit(s[i]))
                 {
                     return true;
                 }
