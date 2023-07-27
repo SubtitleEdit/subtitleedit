@@ -4,6 +4,10 @@ using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.Common
 {
+    /// <summary>
+    /// Represents a pool of StringBuilder objects that can be reused to mitigate the
+    /// performance cost of frequently instantiating StringBuilders.
+    /// </summary>
     internal static class StringBuilderPool
     {
         private const int MinCapacity = 1024;
@@ -14,12 +18,21 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         private static int _maxCapacity = 85000;
 
+        /// <summary>
+        /// Get or set the maximum capacity of StringBuilder that can be stored in
+        /// the pool.
+        /// </summary>
         internal static int MaxCapacity
         {
             get => _maxCapacity;
             set => _maxCapacity = Math.Max(MinCapacity, value);
         }
 
+        /// <summary>
+        /// Returns a StringBuilder instance from the pool. If the pool is empty,
+        /// a new instance is created with a default minimum capacity.
+        /// </summary>
+        /// <returns>A StringBuilder instance.</returns>
         internal static StringBuilder Get()
         {
             lock (Lock)
@@ -35,6 +48,12 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
+        /// <summary>
+        /// Converts the StringBuilder into a string, returns the StringBuilder
+        /// to the pool, and then returns the string contents of the StringBuilder.
+        /// </summary>
+        /// <param name="sb">The StringBuilder instance to return to the pool.</param>
+        /// <returns>The string content of the StringBuilder.</returns>
         internal static string ToPool(this StringBuilder sb)
         {
             var content = sb.ToString();
@@ -42,6 +61,12 @@ namespace Nikse.SubtitleEdit.Core.Common
             return content;
         }
 
+        /// <summary>
+        /// Tries to return a StringBuilder to the pool. If the pool is full or
+        /// the capacity of the StringBuilder is too large, it is not added to the pool.
+        /// </summary>
+        /// <param name="sb">The StringBuilder instance to return to the pool.</param>
+        /// <returns>A boolean value indicating whether the operation was successful.</returns>
         private static bool ReturnToPool(this StringBuilder sb)
         {
             lock (Lock)
