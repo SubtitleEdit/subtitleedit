@@ -6,18 +6,18 @@ namespace Nikse.SubtitleEdit.Core.Common
 {
     internal static class StringBuilderPool
     {
-        private const int MinLimit = 1024;
+        private const int MinCapacity = 1024;
         private const int MaxPoolSize = 3;
 
         private static readonly object Lock = new object();
         private static readonly Stack<StringBuilder> Pool = new Stack<StringBuilder>();
 
-        private static int _maxLimit = 85000;
+        private static int _maxCapacity = 85000;
 
-        internal static int MaxLimit
+        internal static int MaxCapacity
         {
-            get => _maxLimit;
-            set => _maxLimit = Math.Max(MinLimit, value);
+            get => _maxCapacity;
+            set => _maxCapacity = Math.Max(MinCapacity, value);
         }
 
         internal static StringBuilder Get()
@@ -27,7 +27,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 // nothing in the pool
                 if (Pool.Count == 0)
                 {
-                    return new StringBuilder(MinLimit);
+                    return new StringBuilder(MinCapacity);
                 }
 
                 // clear and return from the pool
@@ -49,7 +49,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 var currentPoolSize = Pool.Count;
 
                 // capacity passes the max allowed limit in the pool
-                if (sb.Capacity > _maxLimit)
+                if (sb.Capacity > _maxCapacity)
                 {
                     return false;
                 }
