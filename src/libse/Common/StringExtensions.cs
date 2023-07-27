@@ -771,7 +771,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         {
             if (string.IsNullOrEmpty(value))
             {
-                return true;
+                return false;
             }
 
             var len = value.Length;
