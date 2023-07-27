@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Language Name="Español (Argentina)">
   <General>
     <Title>Subtitle Edit</Title>
@@ -37,6 +37,7 @@
     <Actor>Actor</Actor>
     <Gap>Intervalo</Gap>
     <Region>Región</Region>
+    <Layer>Capa</Layer>
     <NumberSymbol>#</NumberSymbol>
     <Number>Número</Number>
     <Text>Texto</Text>
@@ -64,6 +65,7 @@
     <OverlapPreviousLineX>Solapamiento con línea previa ({0:#,##0.###})</OverlapPreviousLineX>
     <OverlapX>Solapamiento ({0:#,##0.###})</OverlapX>
     <OverlapNextX>Solapamiento siguiente ({0:#,##0.###})</OverlapNextX>
+    <OverlapStartAndEnd>Inicio y final del solapamiento</OverlapStartAndEnd>
     <Negative>Negativo</Negative>
     <RegularExpressionIsNotValid>Expresión regular no válida!</RegularExpressionIsNotValid>
     <CurrentSubtitle>Subtítulo Actual</CurrentSubtitle>
@@ -97,6 +99,7 @@
     <ShortcutX>Atajo: {0}</ShortcutX>
     <ExampleX>Ejemplo: {0}</ExampleX>
     <Reset>Restablecer</Reset>
+    <Error>Error</Error>
     <Warning>Advertencia</Warning>
     <UseLargerFontForThisWindow>Usar letra más grande para esta ventana</UseLargerFontForThisWindow>
   </General>
@@ -147,8 +150,11 @@ Nota: comprobar el espacio libre en disco.</WaveFileMalformed>
   </AddWaveform>
   <AddWaveformBatch>
     <Title>Generar datos de forma de onda por lotes</Title>
+    <ExtractTimeCodes>Extraer códigos de tiempo con FFprobe</ExtractTimeCodes>
     <ExtractingAudio>Extrayendo audio...</ExtractingAudio>
     <Calculating>Calculando...</Calculating>
+    <ExtractingTimeCodes>Extrayendo códigos de tiempo...</ExtractingTimeCodes>
+    <DetectingShotChanges>Detectando cambios de tomas</DetectingShotChanges>
     <Done>Hecho</Done>
     <Error>Error</Error>
   </AddWaveformBatch>
@@ -164,16 +170,22 @@ Nota: comprobar el espacio libre en disco.</WaveFileMalformed>
     <Fixed>Corregido</Fixed>
     <Milliseconds>Milisegundos</Milliseconds>
     <ExtendOnly>Solo extender</ExtendOnly>
+    <EnforceDurationLimits>Aplicar duración mínima y máxima</EnforceDurationLimits>
+    <CheckShotChanges>No extender más allá de cambios de tomas</CheckShotChanges>
+    <BatchCheckShotChanges>Respetar los cambios de tomas (si están disponibles)</BatchCheckShotChanges>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
     <Title>Aplicar límites de duración</Title>
+    <CheckShotChanges>No extender más allá de cambios de tomas</CheckShotChanges>
     <FixesAvailable>Arreglos disponibles: {0}</FixesAvailable>
     <UnableToFix>No se puede arreglar: {0}</UnableToFix>
+    <BatchCheckShotChanges>Respetar los cambios de tomas (si están disponibles)</BatchCheckShotChanges>
   </ApplyDurationLimits>
   <AudioToText>
     <Title>Audio a texto</Title>
     <Info>Generar texto a partir del audio mediante el reconocimiento de voz Vosk/Kaldi</Info>
     <WhisperInfo>Generar texto a partir del audio mediante el reconocimiento de voz Whisper</WhisperInfo>
+    <Engine>Motor</Engine>
     <VoskWebsite>Sitio web de Vosk</VoskWebsite>
     <WhisperWebsite>Sitio web de Whisper</WhisperWebsite>
     <WhisperNotFound>Whisper no encontrado. ¿Más información (web)?</WhisperNotFound>
@@ -192,6 +204,9 @@ Nota: comprobar el espacio libre en disco.</WaveFileMalformed>
     <KeepPartialTranscription>Conservar transcripción parcial</KeepPartialTranscription>
     <TranslateToEnglish>Traducir al inglés</TranslateToEnglish>
     <MaxCharsPerSubtitle>Máx. de caracteres por línea del subtítulo</MaxCharsPerSubtitle>
+    <RemoveTemporaryFiles>Eliminar archivos temporales</RemoveTemporaryFiles>
+    <SetCppConstMeFolder>Establecer carpeta de modelos CPP/Const-me...</SetCppConstMeFolder>
+    <OnlyRunPostProcessing>Ejecutar solo el procesamiento posterior/ajuste de tiempos</OnlyRunPostProcessing>
   </AudioToText>
   <AssaAttachments>
     <Title>Adjuntos de Advanced Sub Station Alpha</Title>
@@ -347,7 +362,100 @@ Nota: comprobar el espacio libre en disco.</WaveFileMalformed>
     <MkvLanguageStyleTwoLetter>Código lingüístico de dos letras</MkvLanguageStyleTwoLetter>
     <MkvLanguageStyleThreeLetter>Código lingüístico de tres letras</MkvLanguageStyleThreeLetter>
     <MkvLanguageStyleEmpty>Sin código de idioma</MkvLanguageStyleEmpty>
+    <SearchFolderScanVideo>También escanee archivos de video en "Carpeta de búsqueda" (lento)</SearchFolderScanVideo>
   </BatchConvert>
+  <BeautifyTimeCodes>
+    <Title>Embellecer códigos de tiempo</Title>
+    <TitleSelectedLines>Embellecer códigos de tiempo ({0} líneas seleccionadas)</TitleSelectedLines>
+    <GroupTimeCodes>Códigos de tiempo</GroupTimeCodes>
+    <AlignTimeCodes>Alinear códigos de tiempo a códigos de tiempo de fotograma</AlignTimeCodes>
+    <ExtractExactTimeCodes>Usar FFprobe para extraer códigos de tiempo exactos de fotogramas</ExtractExactTimeCodes>
+    <ExtractTimeCodes>Extraer códigos de tiempo</ExtractTimeCodes>
+    <CancelTimeCodes>Cancelar</CancelTimeCodes>
+    <GroupShotChanges>Cambios de toma</GroupShotChanges>
+    <SnapToShotChanges>Ajustar señales a cambios de toma</SnapToShotChanges>
+    <ImportShotChanges>Generar / importar cambios de toma...</ImportShotChanges>
+    <EditProfile>Editar perfil...</EditProfile>
+    <NoTimeCodesLoaded>No se han cargado códigos de tiempo</NoTimeCodesLoaded>
+    <XTimeCodesLoaded>{0} códigos de tiempo cargados</XTimeCodesLoaded>
+    <NoTimeCodesLoadedError>Has seleccionado extraer códigos de tiempo exactos de fotogramas, pero no hay códigos de tiempo cargados.
+
+Por favor, haz clic en "{0}" para extraer los códigos de tiempo primero o desactiva esta opción.</NoTimeCodesLoadedError>
+    <NoShotChangesLoaded>No se han cargado cambios de toma</NoShotChangesLoaded>
+    <XShotChangesLoaded>{0} cambios de toma cargados</XShotChangesLoaded>
+    <NoShotChangesLoadedError>Has seleccionado ajustar señales a cambios de toma, pero no hay cambios de toma cargados.
+
+Por favor, haz clic en "{0}" para generar o importar los cambios de toma primero o desactiva esta opción.</NoShotChangesLoadedError>
+    <BatchAlignTimeCodes>Alinear códigos de tiempo a códigos de tiempo de fotograma</BatchAlignTimeCodes>
+    <BatchUseExactTimeCodes>Usar códigos de tiempo exactos (si están disponibles)</BatchUseExactTimeCodes>
+    <BatchSnapToShotChanges>Ajustar señales a cambios de toma (si están disponibles)</BatchSnapToShotChanges>
+  </BeautifyTimeCodes>
+  <BeautifyTimeCodesProfile>
+    <Title>Editar perfil</Title>
+    <LoadPreset>Cargar preconfiguración...</LoadPreset>
+    <PresetDefault>Por defecto</PresetDefault>
+    <PresetNetflix>Netflix</PresetNetflix>
+    <PresetSDI>SDI</PresetSDI>
+    <CreateSimple>Modo simple...</CreateSimple>
+    <General>General</General>
+    <Gap>Espaciado:</Gap>
+    <GapSuffix>cuadros (sobrescribirá la configuración personalizada)</GapSuffix>
+    <InCues>Señales de entrada</InCues>
+    <SubtitlePreviewText>Texto del subtítulo.</SubtitlePreviewText>
+    <Zones>Zonas:</Zones>
+    <OutCues>Señales de salida</OutCues>
+    <ConnectedSubtitles>Subtítulos conectados</ConnectedSubtitles>
+    <InCueClosest>La señal de entrada es la más cercana</InCueClosest>
+    <OutCueClosest>La señal de salida es la más cercana</OutCueClosest>
+    <TreadAsConnected>Considerar como conectado si el espacio es menor que:</TreadAsConnected>
+    <Milliseconds>ms</Milliseconds>
+    <Chaining>Encadenamiento</Chaining>
+    <InCueOnShot>Señal de entrada en cambio de toma</InCueOnShot>
+    <OutCueOnShot>Señal de salida en cambio de toma</OutCueOnShot>
+    <MaxGap>Intervalo máximo:</MaxGap>
+    <ShotChangeBehavior>Si hay un cambio de toma entre medio:</ShotChangeBehavior>
+    <DontChain>No encadenar</DontChain>
+    <ExtendCrossingShotChange>Extender, cruzando el cambio de toma</ExtendCrossingShotChange>
+    <ExtendUntilShotChange>Extender hasta el cambio de toma</ExtendUntilShotChange>
+    <ResetWarning>Esto restablecerá tu perfil actual y reemplazará todos los valores con los de la preconfiguración seleccionada. Esto no se puede deshacer.
+
+¿Deseas continuar?</ResetWarning>
+    <CreateSimpleTitle>Crear simple</CreateSimpleTitle>
+    <CreateSimpleInstruction>Ingresa estas reglas básicas y el perfil actual se actualizará en consecuencia.</CreateSimpleInstruction>
+    <CreateSimpleGapInstruction>La cantidad mínima de espacio entre subtítulos.</CreateSimpleGapInstruction>
+    <CreateSimpleInCues>Las señales de entrada deben ser:</CreateSimpleInCues>
+    <CreateSimpleInCues0Frames>En el cambio de toma</CreateSimpleInCues0Frames>
+    <CreateSimpleInCues1Frames>1 cuadro después del cambio de toma</CreateSimpleInCues1Frames>
+    <CreateSimpleInCues2Frames>2 cuadros después del cambio de toma</CreateSimpleInCues2Frames>
+    <CreateSimpleInCues3Frames>3 cuadros después del cambio de toma</CreateSimpleInCues3Frames>
+    <CreateSimpleOutCues>Las señales de salida deben ser:</CreateSimpleOutCues>
+    <CreateSimpleOutCues0Frames>En el cambio de toma</CreateSimpleOutCues0Frames>
+    <CreateSimpleOutCues1Frames>1 cuadro antes del cambio de toma</CreateSimpleOutCues1Frames>
+    <CreateSimpleOutCues2Frames>2 cuadros antes del cambio de toma</CreateSimpleOutCues2Frames>
+    <CreateSimpleOutCues3Frames>3 cuadros antes del cambio de toma</CreateSimpleOutCues3Frames>
+    <CreateSimpleOutCuesGap>Espacio mínimo antes del cambio de toma</CreateSimpleOutCuesGap>
+    <CreateSimpleSnapClosestCue>Para subtítulos conectados, ajustar la señal de entrada o salida a un cambio de toma según cuál sea la más cercana</CreateSimpleSnapClosestCue>
+    <CreateSimpleMaxOffset>Desplazamiento máximo:</CreateSimpleMaxOffset>
+    <CreateSimpleMaxOffsetInstruction>Las señales dentro de esta distancia del cambio de toma se ajustarán al cambio de toma.</CreateSimpleMaxOffsetInstruction>
+    <CreateSimpleSafeZone>Zona segura:</CreateSimpleSafeZone>
+    <CreateSimpleSafeZoneInstruction>Las señales dentro de esta distancia del cambio de toma se alejarán del cambio de toma.</CreateSimpleSafeZoneInstruction>
+    <CreateSimpleChainingGap>Intervalo máximo de encadenamiento:</CreateSimpleChainingGap>
+    <CreateSimpleChainingGapInstruction>Si el espacio entre dos subtítulos es menor que esta cantidad, los subtítulos estarán encadenados.</CreateSimpleChainingGapInstruction>
+    <CreateSimpleChainingGapAfterShotChanges>Después de una señal de salida en un cambio de toma, el espacio puede ser menor</CreateSimpleChainingGapAfterShotChanges>
+    <CreateSimpleChainingToolTip>Se recomienda encadenar subtítulos para garantizar un "ritmo" constante en el "parpadeo" de los subtítulos.
+Esto ofrece una experiencia de visualización más relajada.
+
+Después del encadenamiento, los subtítulos estarán conectados (es decir, un subtítulo desaparece y un nuevo subtítulo aparece inmediatamente después de una pequeña pausa) o no.
+Esto le da al espectador una idea de cuándo puede volver a centrar su atención en la pantalla.
+
+La longitud del intervalo de encadenamiento puede ser un poco menor justo después de que un subtítulo desaparece en un cambio de toma, porque el cambio de toma "reinicia" la imagen de alguna manera.
+Aprovechamos el ritmo intrínseco de la imagen.</CreateSimpleChainingToolTip>
+    <CreateSimpleLoadNetflixRules>Cargar reglas de Netflix</CreateSimpleLoadNetflixRules>
+    <Frames>cuadros</Frames>
+    <Maximum>Máx.</Maximum>
+    <GapInMsFormat>{0} ms @ {1} FPS</GapInMsFormat>
+    <OffsetSafeZoneError>La zona segura debe ser más grande que el desplazamiento máximo.</OffsetSafeZoneError>
+  </BeautifyTimeCodesProfile>
   <BinEdit>
     <ImportImage>Importar imagen...</ImportImage>
     <ExportImage>Exportar imagen...</ExportImage>
@@ -389,6 +497,7 @@ Nota: comprobar el espacio libre en disco.</WaveFileMalformed>
     <OnlyChangeAllUppercaseLines>Cambiar solo líneas con todo en mayúsculas.</OnlyChangeAllUppercaseLines>
     <AllUppercase>TODO MAYÚSCULAS</AllUppercase>
     <AllLowercase>todo minúsculas</AllLowercase>
+    <ProperCase>Mayúscula Inicial</ProperCase>
   </ChangeCasing>
   <ChangeCasingNames>
     <Title>Cambiar mayúsculas - Nombres</Title>
@@ -718,7 +827,8 @@ Nota: comprobar el espacio libre en disco.</WaveFileMalformed>
   </ExtractDateTimeInfo>
   <FindDialog>
     <Title>Buscar</Title>
-    <Find>Buscar</Find>
+    <FindNext>Buscar siguiente</FindNext>
+    <FindPrevious>Buscar anterior</FindPrevious>
     <Normal>Normal</Normal>
     <CaseSensitive>Sensible a mayúsculas</CaseSensitive>
     <RegularExpression>Expresión regular</RegularExpression>
@@ -848,6 +958,8 @@ Nota: comprobar el espacio libre en disco.</WaveFileMalformed>
     <SolidColor>Color sólido</SolidColor>
     <DurationInMinutes>Duración en minutos</DurationInMinutes>
     <Background>Fondo</Background>
+    <FfmpegParameters>Ejecuta FFmpeg con los siguientes parámetros:</FfmpegParameters>
+    <GenerateWithFfmpegParametersPrompt>Generar - solicitar parámetros de FFmpeg</GenerateWithFfmpegParametersPrompt>
   </GenerateBlankVideo>
   <GenerateVideoWithBurnedInSubs>
     <Title>Generar video con subtítulos incrustados</Title>
@@ -872,7 +984,19 @@ Nota: comprobar el espacio libre en disco.</WaveFileMalformed>
     <Crf>CRF</Crf>
     <TuneFor>Ajustar a</TuneFor>
     <AlignRight>Alinear a la derecha</AlignRight>
+    <GetStartPosition>Obtener posición de inicio</GetStartPosition>
+    <GetEndPosition>Obtener posición de fin</GetEndPosition>
   </GenerateVideoWithBurnedInSubs>
+  <GenerateVideoWithEmbeddedSubs>
+    <Title>Generar video con subtítulos incrustados añadidos/eliminados</Title>
+    <InputVideoFile>Archivo de video de entrada</InputVideoFile>
+    <SubtitlesX>Subtítulos ({0})</SubtitlesX>
+    <SetLanguage>Establecer idioma...</SetLanguage>
+    <ToggleForced>Alternar forzado</ToggleForced>
+    <ToggleDefault>Alternar predeterminado</ToggleDefault>
+    <Default>Predeterminado</Default>
+    <XGeneratedWithEmbeddedSubs>"{0}" generado con subtítulos incrustados</XGeneratedWithEmbeddedSubs>
+  </GenerateVideoWithEmbeddedSubs>
   <GetDictionaries>
     <Title>¿Necesita diccionarios?</Title>
     <DescriptionLine1>La revisión ortográfica de Subtitle Edit está basada en al motor NHunspell</DescriptionLine1>
@@ -900,10 +1024,11 @@ Nota: comprobar el espacio libre en disco.</WaveFileMalformed>
     <PleaseWait>Por favor, espere... puede tardar unos momentos</PleaseWait>
     <PoweredByGoogleTranslate>Powered by Google translate</PoweredByGoogleTranslate>
     <PoweredByMicrosoftTranslate>Powered by Microsoft translate</PoweredByMicrosoftTranslate>
-    <MsClientSecretNeeded>Lo siento, necesitas una clave de Servicios Cognitivos 'Translatyor Text' de Microsoft para usar la última versión de Microsoft Translator.
+    <MsClientSecretNeeded>Lo siento, necesitas una clave de Servicios Cognitivos 'Translator Text' de Microsoft para usar la última versión de Microsoft Translator.
 
 Ve a "Opciones -&gt; Ajustes -&gt; Herramientas" para introducir tu clave.</MsClientSecretNeeded>
-    <GoogleNoApiKeyWarning>Intentando traducir sin la clave API... (datos lentos y limitados)</GoogleNoApiKeyWarning>
+    <GoogleNoApiKeyWarning>Intentando traducir sin la clave API... (datos lentos y limitados).
+Para usar una clave de API, ve a "Opciones --&gt; Configuración --&gt; Herramientas" para ingresar tu clave de API de Google Translate.</GoogleNoApiKeyWarning>
     <Service>Servicio:</Service>
     <LineMergeHandling>Fusión de línea:</LineMergeHandling>
     <ProcessorMergeNext>Fusionar un máximo de dos líneas</ProcessorMergeNext>
@@ -1243,6 +1368,7 @@ Ve a "Opciones -&gt; Ajustes -&gt; Herramientas" para introducir tu clave.</MsCl
         <Duration>Duración</Duration>
         <ListErrors>Lista de errores...</ListErrors>
         <NetflixQualityCheck>Control de calidad Netflix...</NetflixQualityCheck>
+        <BeautifyTimeCodes>Embellecer códigos de tiempo...</BeautifyTimeCodes>
         <TextAlphabetically>Texto - alfabéticamente</TextAlphabetically>
         <TextSingleLineMaximumLength>Texto - línea única máx. longitud</TextSingleLineMaximumLength>
         <TextTotalLength>Texto - longitud total</TextTotalLength>
@@ -1273,6 +1399,7 @@ Ve a "Opciones -&gt; Ajustes -&gt; Herramientas" para introducir tu clave.</MsCl
         <GenerateTextFromVideo>Generar texto a partir del video...</GenerateTextFromVideo>
         <GenerateBlankVideo>Generar video en blanco...</GenerateBlankVideo>
         <GenerateVideoWithBurnedInSub>Generar video con subtítulos incrustados...</GenerateVideoWithBurnedInSub>
+        <GenerateVideoWithEmbeddedSubs>Generar video con subtítulos incrustados añadidos/eliminados...</GenerateVideoWithEmbeddedSubs>
         <VideoAudioToTextX>Audio a texto ({0})...</VideoAudioToTextX>
         <ImportChaptersFromVideo>Importar capítulos del video</ImportChaptersFromVideo>
         <GenerateImportShotChanges>Generar/importar cambios de escena...</GenerateImportShotChanges>
@@ -1337,6 +1464,7 @@ Ve a "Opciones -&gt; Ajustes -&gt; Herramientas" para introducir tu clave.</MsCl
         <VisualSync>Sincronización visual</VisualSync>
         <SpellCheck>Ortografía</SpellCheck>
         <NetflixQualityCheck>Control de calidad Netflix</NetflixQualityCheck>
+        <BeautifyTimeCodes>Embellecer códigos de tiempo</BeautifyTimeCodes>
         <Settings>Ajustes</Settings>
         <Help>Ayuda</Help>
         <ShowHideWaveform>Mostrar/ocultar forma de onda</ShowHideWaveform>
@@ -1347,6 +1475,7 @@ Ve a "Opciones -&gt; Ajustes -&gt; Herramientas" para introducir tu clave.</MsCl
         <SizeAllColumnsToFit>Ajustar tamaño de todas las columnas</SizeAllColumnsToFit>
         <SetStyle>Fijar estilo</SetStyle>
         <SetActor>Fijar actor</SetActor>
+        <SetLayer>Fijar capa</SetLayer>
         <AssaTools>Herramientas ASSA</AssaTools>
         <SubStationAlphaStyles>Sub Station Alpha estilos...</SubStationAlphaStyles>
         <AdvancedSubStationAlphaStyles>Avanzada Sub Station Alpha estilos...</AdvancedSubStationAlphaStyles>
@@ -1356,11 +1485,15 @@ Ve a "Opciones -&gt; Ajustes -&gt; Herramientas" para introducir tu clave.</MsCl
         <TimedTextSetLanguage>Texto temporizado - establecer idioma</TimedTextSetLanguage>
         <SamiSetStyle>Sami - clase conjunto</SamiSetStyle>
         <NuendoSetStyle>Nuendo -  juego de caracteres</NuendoSetStyle>
+        <WebVttSetStyle>WebVTT - establecer estilo</WebVttSetStyle>
+        <WebVttSetVoice>WebVTT - establecer voz</WebVttSetVoice>
+        <WebVttBrowserPreview>WebVTT - vista previa del navegador</WebVttBrowserPreview>
         <Cut>Cortar</Cut>
         <Copy>Copiar</Copy>
         <Paste>Pegar</Paste>
         <Delete>Borrar</Delete>
         <SplitLineAtCursorPosition>Dividir línea desde el cursor</SplitLineAtCursorPosition>
+        <SplitLineAtCursorPositionAndAutoBr>Dividir línea en la posición del cursor y salto automático de línea</SplitLineAtCursorPositionAndAutoBr>
         <SplitLineAtCursorAndWaveformPosition>Dividir línea con la posición del cursor/video</SplitLineAtCursorAndWaveformPosition>
         <AutoDurationCurrentLine>Auto duración (línea de corriente)</AutoDurationCurrentLine>
         <SelectAll>Seleccionar todo</SelectAll>
@@ -1408,6 +1541,7 @@ Ve a "Opciones -&gt; Ajustes -&gt; Herramientas" para introducir tu clave.</MsCl
         <KaraokeEffect>Efecto Karaoke...</KaraokeEffect>
         <ShowSelectedLinesEarlierLater>Mostrar líneas seleccionadas antes/después...</ShowSelectedLinesEarlierLater>
         <VisualSyncSelectedLines>Sincro. visual líneas seleccionadas...</VisualSyncSelectedLines>
+        <BeautifyTimeCodesOfSelectedLines>Embellecer códigos de tiempo de las líneas seleccionadas...</BeautifyTimeCodesOfSelectedLines>
         <GoogleAndMicrosoftTranslateSelectedLine>Google/Microsoft traducir línea original</GoogleAndMicrosoftTranslateSelectedLine>
         <SelectedLines>Líneas seleccionadas</SelectedLines>
         <TranslateSelectedLines>Traducir líneas seleccionadas...</TranslateSelectedLines>
@@ -1510,6 +1644,7 @@ Ve a "Opciones -&gt; Ajustes -&gt; Herramientas" para introducir tu clave.</MsCl
     <LoadedEmptyOrShort>Cargado subtítulo vacío o muy pequeño {0}</LoadedEmptyOrShort>
     <FileIsEmptyOrShort>¡Archivo vacío o muy pequeño!</FileIsEmptyOrShort>
     <FileNotFound>Archivo no encontrado: {0}</FileNotFound>
+    <FileLocked>No se puede abrir el archivo porque está siendo utilizado por otro programa: {0}</FileLocked>
     <SavedSubtitleX>Subtítulo guardado {0}</SavedSubtitleX>
     <SavedOriginalSubtitleX>Subtítulo original guardado {0}</SavedOriginalSubtitleX>
     <FileOnDiskModified>Modificado archivo en disco</FileOnDiskModified>
@@ -1517,7 +1652,8 @@ Ve a "Opciones -&gt; Ajustes -&gt; Herramientas" para introducir tu clave.</MsCl
     <FileXIsReadOnly>No se puede guardar {0}
 
 ¡El archivo es de solo lectura!</FileXIsReadOnly>
-    <UnableToSaveSubtitleX>Imposible guardar archivo de subtítulo {0}</UnableToSaveSubtitleX>
+    <UnableToSaveSubtitleX>Imposible guardar archivo de subtítulo {0}
+El subtítulo parece estar vacío; intenta guardar de nuevo si estás trabajando en un subtítulo válido.</UnableToSaveSubtitleX>
     <FormatXShouldUseUft8>¡Se debe utilizar la codificación UTF-8 al guardar archivos {0}!</FormatXShouldUseUft8>
     <BeforeNew>Anterior nuevo</BeforeNew>
     <New>Nuevo</New>
@@ -1561,12 +1697,15 @@ Ve a "Opciones -&gt; Ajustes -&gt; Herramientas" para introducir tu clave.</MsCl
     <CommonErrorsFixed>Errores comunes corregidos</CommonErrorsFixed>
     <BeforeRenumbering>Antes de renumerar</BeforeRenumbering>
     <RenumberedStartingFromX>Renumerar a partir de: {0}</RenumberedStartingFromX>
+    <BeforeBeautifyTimeCodes>Antes de embellecer los códigos de tiempo</BeforeBeautifyTimeCodes>
+    <BeforeBeautifyTimeCodesSelectedLines>Antes de embellecer los códigos de tiempo de las líneas seleccionadas</BeforeBeautifyTimeCodesSelectedLines>
+    <BeautifiedTimeCodes>Códigos de tiempo embellecidos</BeautifiedTimeCodes>
+    <BeautifiedTimeCodesSelectedLines>Códigos de tiempo de las líneas seleccionadas embellecidos</BeautifiedTimeCodesSelectedLines>
     <BeforeRemovalOfTextingForHearingImpaired>Antes de eliminar los mensajes de texto para sordos</BeforeRemovalOfTextingForHearingImpaired>
     <TextingForHearingImpairedRemovedOneLine>Eliminados los mensajes de texto para sordos: Una línea</TextingForHearingImpairedRemovedOneLine>
     <TextingForHearingImpairedRemovedXLines>Texto para sordos eliminado: {0} líneas</TextingForHearingImpairedRemovedXLines>
     <SubtitleSplitted>Subtítulo dividido</SubtitleSplitted>
-    <SubtitleAppendPrompt>Esto añadirá un subtítulo existente, que debería estar sincronizado
-con el archivo de vídeo, al subtítulo actual cargado.
+    <SubtitleAppendPrompt>Esto añadirá un subtítulo existente, que debería estar sincronizado con el archivo de vídeo, al subtítulo actual cargado.
 
 ¿Desea continuar?</SubtitleAppendPrompt>
     <SubtitleAppendPromptTitle>Anexar subtítulo</SubtitleAppendPromptTitle>
@@ -1757,7 +1896,6 @@ con el archivo de vídeo, al subtítulo actual cargado.
     <ErrorLoadTorrent>Este archivo parece ser un archivo de BitTorrent - no es un archivo de subtítulos.</ErrorLoadTorrent>
     <ErrorLoadBinaryZeroes>¡Lo siento, este fichero contiene sólo ceros binarios!
 
-
 Si ha editado este archivo con Subtitle Edit es posible que pueda encontrar una copia de seguridad a través de la opción de menú Archivo -&gt; Restaurar copia de seguridad automática...</ErrorLoadBinaryZeroes>
     <ErrorDirectoryDropNotAllowed>Directorio en caída no es compatible aquí.</ErrorDirectoryDropNotAllowed>
     <NoSupportEncryptedVobSub>El contenido cifrado VobSub no es compatible.</NoSupportEncryptedVobSub>
@@ -1766,7 +1904,9 @@ Si ha editado este archivo con Subtitle Edit es posible que pueda encontrar una 
     <NoSupportHereVobSub>Los archivos VobSub no son compatibles aquí.</NoSupportHereVobSub>
     <NoSupportHereDivx>Los archivos DivX no son compatibles aquí.</NoSupportHereDivx>
     <NoChapters>No se han encontrado capítulos en el video.</NoChapters>
-    <VideoFromUrlRequirements>Abrir un video desde una url requiere mpv y youtube-dl, ¿descargar y continuar?</VideoFromUrlRequirements>
+    <VideoFromUrlRequirements>Abrir un video desde una url requiere mpv y youtube-dl.
+    
+¿Descargar y continuar?</VideoFromUrlRequirements>
     <Url>URL</Url>
     <Errors>Errores</Errors>
     <ShowVideoControls>Mostrar controles de video</ShowVideoControls>
@@ -2072,6 +2212,10 @@ puede editar el mismo archivo de subtítulo (colaboración)</Information>
     <Find>Buscar</Find>
     <Replace>&amp;Reemplazar</Replace>
     <ReplaceAll>Reempl&amp;azar todo</ReplaceAll>
+    <FindReplaceIn>Reemplazar/buscar en:</FindReplaceIn>
+    <TranslationAndOriginal>Traducción y original</TranslationAndOriginal>
+    <TranslationOnly>Solo traducción</TranslationOnly>
+    <OriginalOnly>Solo original</OriginalOnly>
   </ReplaceDialog>
   <RestoreAutoBackup>
     <Title>Restaurar copia de seguridad automática</Title>
@@ -2130,6 +2274,7 @@ puede editar el mismo archivo de subtítulo (colaboración)</Information>
     <BurnIn>Incrustar</BurnIn>
     <SpellCheck>Rev.ortográfica</SpellCheck>
     <NetflixQualityCheck>Control de calidad Netflix</NetflixQualityCheck>
+    <BeautifyTimeCodes>Embellecer códigos de tiempo</BeautifyTimeCodes>
     <SettingsName>Configuración</SettingsName>
     <ToggleBookmarks>Alternar marcadores</ToggleBookmarks>
     <ToggleBookmarksWithComment>Alternar marcadores - agregar comentario</ToggleBookmarksWithComment>
@@ -2235,6 +2380,7 @@ puede editar el mismo archivo de subtítulo (colaboración)</Information>
     <ShowFullscreenButton>Mostrar botón Pantalla Completa</ShowFullscreenButton>
     <PreviewFontName>Nombre del tipo de letra de la vista previa de los subtítulos</PreviewFontName>
     <PreviewFontSize>Tamaño de fuente en vista previa del subtítulo</PreviewFontSize>
+    <PreviewVerticalMargin>Margen vertical</PreviewVerticalMargin>
     <MainWindowVideoControls>Controles de vídeo en la ventana principal</MainWindowVideoControls>
     <CustomSearchTextAndUrl>Búsqueda de texto y URL personalizada</CustomSearchTextAndUrl>
     <WaveformAppearance>Apariencia de forma de onda</WaveformAppearance>
@@ -2249,6 +2395,7 @@ puede editar el mismo archivo de subtítulo (colaboración)</Information>
     <WaveformListViewFocusMouseEnter>También establecer el foco en vista de lista al enter del mouse en la vista de lista.</WaveformListViewFocusMouseEnter>
     <WaveformSingleClickSelect>Un solo clic para seleccionar los subtítulos</WaveformSingleClickSelect>
     <WaveformSnapToShotChanges>Ajustarse a los cambios de escena (mantener Shift para anular)</WaveformSnapToShotChanges>
+    <WaveformEditShotChangesProfile>Editar perfil...</WaveformEditShotChangesProfile>
     <WaveformAutoGen>Generar forma de onda automáticamente al abrir el video</WaveformAutoGen>
     <WaveformBorderHitMs1>Golpe de marcador de frontera debe estar dentro de</WaveformBorderHitMs1>
     <WaveformBorderHitMs2>milisegundos</WaveformBorderHitMs2>
@@ -2363,9 +2510,12 @@ puede editar el mismo archivo de subtítulo (colaboración)</Information>
     <UseSyntaxColoring>Utilizar coloreado de la sintaxis</UseSyntaxColoring>
     <HtmlColor>Color HTML</HtmlColor>
     <AssaColor>Color ASSA</AssaColor>
+    <Theme>Tema</Theme>
+    <Automatic>Automático</Automatic>
     <DarkTheme>Tema oscuro</DarkTheme>
     <DarkThemeEnabled>Utilizar el tema oscuro</DarkThemeEnabled>
     <DarkThemeShowGridViewLines>Mostrar las líneas de la cuadrícula de la vista de lista</DarkThemeShowGridViewLines>
+    <GraphicsButtons>Botones gráficos</GraphicsButtons>
     <UpdateShortcut>Actualizar</UpdateShortcut>
     <FoucsSetVideoPosition>Enfocar la posición del video</FoucsSetVideoPosition>
     <ToggleDockUndockOfVideoControls>Cambiar acoplar/desacoplar controles de vídeo</ToggleDockUndockOfVideoControls>
@@ -2401,21 +2551,23 @@ puede editar el mismo archivo de subtítulo (colaboración)</Information>
     <AdjustSetEndAndOffsetTheRest>Ajuste final, que se compensan al resto</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Ajuste final, que se compensan al resto e ir al siguiente</AdjustSetEndAndOffsetTheRestAndGoToNext>
     <AdjustSnapStartToNextShotChange>Ajustar el inicio de las líneas seleccionadas al siguiente cambio de escena</AdjustSnapStartToNextShotChange>
-    <AdjustSnapStartToNextShotChangeWithGap>Ajustar el inicio de las líneas seleccionadas al siguiente cambio de escena con un intervalo mínimo</AdjustSnapStartToNextShotChangeWithGap>
     <AdjustSnapEndToPreviousShotChange>Ajustar el final de las líneas seleccionadas al cambio de escena anterior</AdjustSnapEndToPreviousShotChange>
-    <AdjustSnapEndToPreviousShotChangeWithGap>Ajustar el final de las líneas seleccionadas al cambio de escena anterior con un intervalo mínimo</AdjustSnapEndToPreviousShotChangeWithGap>
     <AdjustExtendToNextShotChange>Extender las líneas seleccionadas hasta el siguiente cambio de escena (o el siguiente subtítulo)</AdjustExtendToNextShotChange>
-    <AdjustExtendToNextShotChangeWithGap>Extender las líneas seleccionadas hasta el siguiente cambio de escena con intervalo mínimo (o siguiente subtítulo)</AdjustExtendToNextShotChangeWithGap>
     <AdjustExtendToPreviousShotChange>Extender las líneas seleccionadas al cambio de escena anterior (o al subtítulo anterior)</AdjustExtendToPreviousShotChange>
-    <AdjustExtendToPreviousShotChangeWithGap>Extender las líneas seleccionadas al cambio de escena anterior con intervalo mínimo (o subtítulo anterior)</AdjustExtendToPreviousShotChangeWithGap>
     <AdjustExtendToNextSubtitle>Extender las líneas seleccionadas al subtítulo siguiente</AdjustExtendToNextSubtitle>
     <AdjustExtendToPreviousSubtitle>Extender las líneas seleccionadas al subtítulo anterior</AdjustExtendToPreviousSubtitle>
+    <AdjustExtendToNextSubtitleMinusChainingGap>Extender líneas seleccionadas al siguiente subtítulo con intervalo de encadenamiento</AdjustExtendToNextSubtitleMinusChainingGap>
+    <AdjustExtendToPreviousSubtitleMinusChainingGap>Extender líneas seleccionadas al subtítulo anterior con intervalo de encadenamiento</AdjustExtendToPreviousSubtitleMinusChainingGap>
     <AdjustExtendCurrentSubtitle>Extender línea actual al siguiente subtítulo o la duración máx.</AdjustExtendCurrentSubtitle>
     <AdjustExtendPreviousLineEndToCurrentStart>Extender el final de la línea anterior hasta el inicio de la actual</AdjustExtendPreviousLineEndToCurrentStart>
     <AdjustExtendNextLineStartToCurrentEnd>Extender el inicio de la línea siguiente hasta el final de la actual</AdjustExtendNextLineStartToCurrentEnd>
     <RecalculateDurationOfCurrentSubtitle>Recalcular la duración del subtítulo actual</RecalculateDurationOfCurrentSubtitle>
     <RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed>Recalcular la duración del subtítulo actual (según la velocidad de lectura óptima)</RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed>
     <RecalculateDurationOfCurrentSubtitleByMinReadingSpeed>Recalcular la duración del subtítulo actual (basado en la velocidad de lectura mínima)</RecalculateDurationOfCurrentSubtitleByMinReadingSpeed>
+    <SetInCueToClosestShotChangeLeftGreenZone>Establecer la señal de entrada en la distancia mínima antes del cambio de toma más cercano (zona verde izquierda)</SetInCueToClosestShotChangeLeftGreenZone>
+    <SetInCueToClosestShotChangeRightGreenZone>Establecer la señal de entrada en la distancia mínima después del cambio de toma más cercano (zona verde derecha)</SetInCueToClosestShotChangeRightGreenZone>
+    <SetOutCueToClosestShotChangeLeftGreenZone>Establecer la señal de salida en la distancia mínima antes del cambio de toma más cercano (zona verde izquierda)</SetOutCueToClosestShotChangeLeftGreenZone>
+    <SetOutCueToClosestShotChangeRightGreenZone>Establecer la señal de salida en la distancia mínima después del cambio de toma más cercano (zona verde derecha)</SetOutCueToClosestShotChangeRightGreenZone>
     <MainCreateStartDownEndUp>Crear nueva clave hacia abajo, ajustar la hora final en clave-up</MainCreateStartDownEndUp>
     <MergeDialog>Unir Diálogo (guiones de inserción)</MergeDialog>
     <MergeDialogWithNext>Unir diálogo con el siguiente (insertar guiones)</MergeDialogWithNext>
@@ -2440,6 +2592,7 @@ puede editar el mismo archivo de subtítulo (colaboración)</Information>
     <ToggleDialogDashes>Cambiar guiones de diálogo</ToggleDialogDashes>
     <ToggleQuotes>Alternar citas</ToggleQuotes>
     <ToggleHiTags>Alternar etiquetas CC (para sordos)</ToggleHiTags>
+    <ToggleCustomTags>Alternar etiquetas personalizadas (encerrar con)</ToggleCustomTags>
     <ToggleMusicSymbols>Alternar símbolos musicales</ToggleMusicSymbols>
     <Alignment>Alineación (líneas seleccionadas)</Alignment>
     <AlignmentN1>Alineación inferior izquierda - {\an1}</AlignmentN1>
@@ -2484,19 +2637,22 @@ puede editar el mismo archivo de subtítulo (colaboración)</Information>
     <GoForward500Milliseconds>500 ms adelante</GoForward500Milliseconds>
     <GoBack1Second>Retroceder un segundo</GoBack1Second>
     <GoForward1Second>Avanzar un segundo</GoForward1Second>
-    <GoBack5Seconds>Cinco segundos atrás</GoBack5Seconds>
-    <GoForward5Seconds>Cinco segundos adelante</GoForward5Seconds>
+    <GoBack3Second>Retroceder tres segundos</GoBack3Second>
+    <GoForward3Second>Avanzar tres segundos</GoForward3Second>
+    <GoBack5Seconds>Retroceder cinco segundos</GoBack5Seconds>
+    <GoForward5Seconds>Avanzar cinco segundos</GoForward5Seconds>
     <GoBackXSSeconds>Atrasar el tiempo de los pocos seleccionados</GoBackXSSeconds>
     <GoForwardXSSeconds>Adelantar el tiempo de los pocos seleccionados</GoForwardXSSeconds>
     <GoBackXLSeconds>Atrasar el tiempo de los muchos seleccionados</GoBackXLSeconds>
     <GoForwardXLSeconds>Adelantar el tiempo de los muchos seleccionados</GoForwardXLSeconds>
-    <GoBack3Seconds>Atrasar tres segundos</GoBack3Seconds>
     <GoToStartCurrent>Fijar la posición del video al inicio del subtítulo actual</GoToStartCurrent>
     <ToggleStartEndCurrent>Alternar la posición del video entre el inicio y el final del subtítulo actual</ToggleStartEndCurrent>
     <PlaySelectedLines>Reproducir líneas seleccionadas</PlaySelectedLines>
     <LoopSelectedLines>Bucle de líneas seleccionadas</LoopSelectedLines>
     <WaveformGoToPrevSubtitle>Ir al subtítulo anterior (desde la posición del video)</WaveformGoToPrevSubtitle>
     <WaveformGoToNextSubtitle>Ir al subtítulo siguiente (desde la posición del video)</WaveformGoToNextSubtitle>
+    <WaveformGoToPrevTimeCode>Ir al código de tiempo anterior (desde la posición del video)</WaveformGoToPrevTimeCode>
+    <WaveformGoToNextTimeCode>Ir al código de tiempo siguiente (desde la posición del video)</WaveformGoToNextTimeCode>
     <WaveformGoToPrevChapter>Ir al capítulo anterior</WaveformGoToPrevChapter>
     <WaveformGoToNextChapter>Ir al capítulo siguiente</WaveformGoToNextChapter>
     <WaveformSelectNextSubtitle>Seleccionar el siguiente subtítulo (desde la posición del vdeo, manteniendo la posición del video)</WaveformSelectNextSubtitle>
@@ -2512,6 +2668,7 @@ puede editar el mismo archivo de subtítulo (colaboración)</Information>
     <MainToggleVideoControls>Alternar los controles de video</MainToggleVideoControls>
     <VideoToggleContrast>Alternar contraste (solo mpv)</VideoToggleContrast>
     <AudioToTextX>Audio a texto ({0})</AudioToTextX>
+    <AudioExtractSelectedLines>Extraer audio (líneas seleccionadas)</AudioExtractSelectedLines>
     <AudioToTextSelectedLinesX>Audio a texto de las líneas seleccionadas ({0})</AudioToTextSelectedLinesX>
     <VideoToggleBrightness>Alternar brillo (solo mpv)</VideoToggleBrightness>
     <CustomSearch1>Traducir, búsqueda personalizada 1</CustomSearch1>
@@ -2625,6 +2782,7 @@ La configuración de una fuente para un subtítulo se realiza normalmente en el 
     <BDOpensInOcr>OCR</BDOpensInOcr>
     <BDOpensInEdit>Editar</BDOpensInEdit>
     <ShortcutsAllowSingleLetterOrNumberInTextBox>Atajos: Permitir una sola letra/número en el cuadro de texto</ShortcutsAllowSingleLetterOrNumberInTextBox>
+    <ShortcutCustomToggle>Alternar inicio/fin personalizado de atajo</ShortcutCustomToggle>
     <UpdateFileTypeAssociations>Actualizar asociaciones de tipos de archivos</UpdateFileTypeAssociations>
     <FileTypeAssociationsUpdated>Asociaciones de tipo de archivo actualizadas</FileTypeAssociationsUpdated>
     <CustomContinuationStyle>Editar estilo de continuación personalizado</CustomContinuationStyle>
@@ -2639,6 +2797,7 @@ La configuración de una fuente para un subtítulo se realiza normalmente en el 
     <PreviewPause>(pausa)</PreviewPause>
     <CustomContinuationStyleNote>Nota: El estilo de continuación personalizado se comparte en todos los perfiles.</CustomContinuationStyleNote>
     <ResetCustomContinuationStyleWarning>Esto reemplazará los valores del cuadro de diálogo. ¿Estás seguro?</ResetCustomContinuationStyleWarning>
+    <ExportAsHtml>Exportar como HTML...</ExportAsHtml>
   </Settings>
   <SettingsMpv>
     <DownloadMpv>Descargar mpv lib</DownloadMpv>
@@ -2745,6 +2904,7 @@ La configuración de una fuente para un subtítulo se realiza normalmente en el 
     <NumberOfSplits>Número de divisiones: {0}</NumberOfSplits>
     <LongestSingleLineIsXAtY>La longitud de la línea individual más larga es {0} en la línea {1}</LongestSingleLineIsXAtY>
     <LongestLineIsXAtY>La longitud de la línea más larga es {0} en la línea {1}</LongestLineIsXAtY>
+    <SplitAtLineBreaks>Dividir en saltos de línea</SplitAtLineBreaks>
   </SplitLongLines>
   <SplitSubtitle>
     <Title>Dividir subtítulos</Title>
@@ -2793,18 +2953,29 @@ La configuración de una fuente para un subtítulo se realiza normalmente en el 
     <SingleLineLengthMinimum>longitud de una sola línea - mínimo: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Una sola línea longitud - máximo: {0}</SingleLineLengthMaximum>
     <SingleLineLengthAverage>longitud de línea individual - Media: {0} Duración</SingleLineLengthAverage>
+    <SingleLineLengthExceedingMaximum>Longitud de línea única - excede el máximo ({0} caracteres): {1} ({2:0.00}%)</SingleLineLengthExceedingMaximum>
     <SingleLineWidthMinimum>Ancho de línea simple - mínimo: {0} píxeles</SingleLineWidthMinimum>
-    <SingleLineWidthMaximum>Single line width - maximum: {0} pixelsAncho de línea simple - máximo: {0} píxeles</SingleLineWidthMaximum>
-    <SingleLineWidthAverage>Single line width - average: {0} pixelsAncho de línea simple - promedio: {0} píxeles</SingleLineWidthAverage>
+    <SingleLineWidthMaximum>Ancho de línea simple - máximo: {0} píxeles</SingleLineWidthMaximum>
+    <SingleLineWidthAverage>Ancho de línea simple - promedio: {0} píxeles</SingleLineWidthAverage>
+    <SingleLineWidthExceedingMaximum>Ancho de línea única - excede el máximo ({0} píxeles): {1} ({2:0.00}%)</SingleLineWidthExceedingMaximum>
     <DurationMinimum>Duración - mínima: {0:0.000} segundos</DurationMinimum>
     <DurationMaximum>Duración - máxima: {0:0.000} segundos</DurationMaximum>
     <DurationAverage>Duración - promedio: {0:0.000} segundos</DurationAverage>
+    <DurationExceedingMinimum>Duración - por debajo del mínimo ({0:0.###} seg): {1} ({2:0.00}%)</DurationExceedingMinimum>
+    <DurationExceedingMaximum>Duración - excede el máximo ({0:0.###} seg): {1} ({2:0.00}%)</DurationExceedingMaximum>
     <CharactersPerSecondMinimum>Caracteres/seg - mínimo: {0:0.000}</CharactersPerSecondMinimum>
     <CharactersPerSecondMaximum>Caracteres/seg - máximo: {0:0.000}</CharactersPerSecondMaximum>
     <CharactersPerSecondAverage>Caracteres/seg - promedio: {0:0.000}</CharactersPerSecondAverage>
+    <CharactersPerSecondExceedingOptimal>Caracteres/seg - excede el óptimo ({0:0.##} cps): {1} ({2:0.00}%)</CharactersPerSecondExceedingOptimal>
+    <CharactersPerSecondExceedingMaximum>Caracteres/seg - excede el máximo ({0:0.##} cps): {1} ({2:0.00}%)</CharactersPerSecondExceedingMaximum>
+    <WordsPerMinuteMinimum>Palabras/min - mínimo: {0:0.000}</WordsPerMinuteMinimum>
+    <WordsPerMinuteMaximum>Palabras/min - máximo: {0:0.000}</WordsPerMinuteMaximum>
+    <WordsPerMinuteAverage>Palabras/min - promedio: {0:0.000}</WordsPerMinuteAverage>
+    <WordsPerMinuteExceedingMaximum>Palabras/min - excede el máximo ({0} ppm): {1} ({2:0.00}%)</WordsPerMinuteExceedingMaximum>
     <GapMinimum>Desfase - mínimo: {0:#,##0} ms</GapMinimum>
     <GapMaximum>Desfase - máximo: {0:#,##0} ms</GapMaximum>
     <GapAverage>Desfase - promedio: {0:#,##0.##} ms</GapAverage>
+    <GapExceedingMinimum>Gap - debajo del mínimo ({0:#,##0} ms): {1} ({2:0.00}%)</GapExceedingMinimum>
     <Export>Exportar...</Export>
   </Statistics>
   <SubStationAlphaProperties>
@@ -2846,7 +3017,7 @@ La configuración de una fuente para un subtítulo se realiza normalmente en el 
     <Tertiary>Terciario</Tertiary>
     <Outline>Esquema</Outline>
     <Shadow>Sombra</Shadow>
-    <Back>Atras</Back>
+    <Back>Atrás</Back>
     <Alignment>Alineación</Alignment>
     <TopLeft>Superior/izquierda</TopLeft>
     <TopCenter>Arriba/centro</TopCenter>
@@ -2932,8 +3103,7 @@ La configuración de una fuente para un subtítulo se realiza normalmente en el 
   <TransportStreamSubtitleChooser>
     <Title>Selector de flujo de transporte de subtítulos - {0}</Title>
     <PidLineImage>Imágenes - Identificador de paquetes de transporte (PID) = {0}, idioma = {1}, número de subtítulos = {2}</PidLineImage>
-    <PidLineTeletext>Teletexto - Identificador de paquetes de transporte (PID) = {1}, página {0}, idioma = {2}, número de subtítulos = {3}
-</PidLineTeletext>
+    <PidLineTeletext>Teletexto - Identificador de paquetes de transporte (PID) = {1}, página {0}, idioma = {2}, número de subtítulos = {3}</PidLineTeletext>
     <SubLine>{0}: {1} -&gt; {2}, {3} imagen(es)</SubLine>
   </TransportStreamSubtitleChooser>
   <UnknownSubtitle>
@@ -3165,4 +3335,16 @@ La configuración de una fuente para un subtítulo se realiza normalmente en el 
     <Title>WebVTT - establecer nueva voz</Title>
     <VoiceName>Nombre de la voz</VoiceName>
   </WebVttNewVoice>
+  <WebVttProperties>
+    <UseXTimeStamp>Usar el valor del encabezado X-TIMESTAMP-MAP</UseXTimeStamp>
+    <MergeLines>Combinar líneas con el mismo texto al cargar</MergeLines>
+  </WebVttProperties>
+  <WebVttStyleManager>
+    <Title>Estilos de WebVTT</Title>
+  </WebVttStyleManager>
+  <WhisperAdvanced>
+    <Title>Whisper Advanced - argumentos adicionales de la línea de comandos</Title>
+    <CommandLineArguments>Parámetros adicionales para la línea de comandos de Whisper:</CommandLineArguments>
+    <Info>Nota: ¡Diferentes implementaciones de Whisper tienen diferentes parámetros de línea de comandos!</Info>
+  </WhisperAdvanced>
 </Language>
