@@ -412,6 +412,7 @@ namespace Test.Core
             Assert.IsTrue("{\\i1}How are you?{\\i0}".HasSentenceEnding());
             Assert.IsTrue("{\\i1}How are you?{\\i0}</font>".HasSentenceEnding());
             Assert.IsTrue("{\\i1}How are you?</font>{\\i0}".HasSentenceEnding());
+            Assert.IsFalse("How are you{\\i0}".HasSentenceEnding());
             Assert.IsTrue("foobar.\"".HasSentenceEnding());
             Assert.IsTrue("foobar--".HasSentenceEnding());
             Assert.IsTrue("foobar--</i>".HasSentenceEnding());
