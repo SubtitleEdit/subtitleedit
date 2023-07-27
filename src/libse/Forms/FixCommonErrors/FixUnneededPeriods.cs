@@ -58,7 +58,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     var l = callbacks.Language;
                     if (procText.Contains('.') && LanguageAutoDetect.IsLanguageWithoutPeriods(l))
                     {
-                        var sb = new StringBuilder();
+                        var sb = StringBuilderPool.Get();
                         foreach (var line in procText.SplitToLines())
                         {
                             var s = line;
@@ -74,7 +74,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                             sb.AppendLine(s);
                         }
 
-                        procText = sb.ToString().TrimEnd();
+                        procText = sb.ToPool().TrimEnd();
                     }
 
                     var diff = p.Text.Length - procText.Length;

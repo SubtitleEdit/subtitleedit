@@ -28,9 +28,9 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
             var assTagOn = false;
             var htmlTagOn = false;
-            var sbWord = new StringBuilder();
+            var sbWord = StringBuilderPool.Get();
             var done = false;
-            var sbS2 = new StringBuilder();
+            var sbS2 = StringBuilderPool.Get();
             for (int i = 0; i < S2.Length; i++)
             {
                 var ch = S2[i];
@@ -80,9 +80,9 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     sbWord.Append(ch);
                 }
             }
-            S1 = AddWordAfter(sbWord.ToString().Trim(), S1);
+            S1 = AddWordAfter(sbWord.ToPool().Trim(), S1);
             S1 = AutoBreakIfNeeded(S1);
-            S2 = sbS2.ToString().Trim();
+            S2 = sbS2.ToPool().Trim();
             S2 = RemoveEmptyTags(S2);
         }
 
@@ -98,9 +98,9 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
             var assTagOn = false;
             var htmlTagOn = false;
-            var sbWord = new StringBuilder();
+            var sbWord = StringBuilderPool.Get();
             var done = false;
-            var sbS1 = new StringBuilder();
+            var sbS1 = StringBuilderPool.Get();
             for (int i = S1.Length - 1; i >= 0; i--)
             {
                 var ch = S1[i];
@@ -157,9 +157,9 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     sbWord.Append(ch);
                 }
             }
-            S1 = string.Join(string.Empty, sbS1.ToString().Trim().ToCharArray().Reverse());
+            S1 = string.Join(string.Empty, sbS1.ToPool().Trim().ToCharArray().Reverse());
             S1 = RemoveEmptyTags(S1);
-            S2 = AddWordBefore(string.Join(string.Empty, sbWord.ToString().Trim().ToCharArray().Reverse()), S2);
+            S2 = AddWordBefore(string.Join(string.Empty, sbWord.ToPool().Trim().ToCharArray().Reverse()), S2);
             S2 = AutoBreakIfNeeded(S2);
         }
 

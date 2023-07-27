@@ -1204,7 +1204,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             text = text.Replace("<I>", "<i>");
             text = text.Replace("</I>", "</i>");
-            var sb = new StringBuilder();
+            var sb = StringBuilderPool.Get();
             var parts = text.SplitToLines();
             var nextPre = string.Empty;
             foreach (string line in parts)
@@ -1232,7 +1232,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     sb.AppendLine(s);
                 }
             }
-            return sb.ToString().Trim();
+            return sb.ToPool().Trim();
         }
 
         internal static void WriteTimeCode(Stream fs, TimeCode timeCode)
@@ -1490,7 +1490,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             var overrides = (CodePage == CodePageLatinTurkish) ? LatinTurkishOverrides : null;
-            var sb = new StringBuilder();
+            var sb = StringBuilderPool.Get();
             index = feIndex + 3;
             var w16 = buffer[index] == 0x1f && Encoding.ASCII.GetString(buffer, index + 1, 3) == "W16";
             if (w16)
@@ -1643,7 +1643,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 return null;
             }
 
-            p.Text = sb.ToString();
+            p.Text = sb.ToPool();
             p.Text = p.Text.Replace("\0", string.Empty);
             p.Text = FixItalics(p.Text);
             if (CodePage == CodePageArabic)

@@ -26,12 +26,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             const string paragraphWriteFormat = "{0}{1}#{2},{3}{1}";
 
-            var sb = new StringBuilder();
+            var sb = StringBuilderPool.Get();
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 sb.AppendLine(string.Format(paragraphWriteFormat, p.Text, Environment.NewLine, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime)));
             }
-            return sb.ToString().Trim();
+            return sb.ToPool().Trim();
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)

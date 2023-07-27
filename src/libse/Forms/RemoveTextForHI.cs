@@ -901,7 +901,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
             }
 
             var st = new StrippableText(text, pre, post);
-            var sb = new StringBuilder();
+            var sb = StringBuilderPool.Get();
             var parts = st.StrippedText.Trim().SplitToLines();
             var lineNumber = 0;
             var removedDialogInFirstLine = false;
@@ -1003,7 +1003,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
             {
                 st.Post = " " + st.Post;
             }
-            text = st.Pre + sb.ToString().Trim() + st.Post;
+            text = st.Pre + sb.ToPool().Trim() + st.Post;
 
             text = text.Replace("  ", " ").Trim();
             text = text.Replace("<i></i>", string.Empty);
@@ -1530,7 +1530,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 return text;
             }
 
-            var sb = new StringBuilder();
+            var sb = StringBuilderPool.Get();
             char[] endTrimChars = { '.', '!', '?', ':' };
             char[] trimChars = { ' ', '-', '—' };
             foreach (var line in text.SplitToLines())
@@ -1549,7 +1549,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     sb.AppendLine(line);
                 }
             }
-            return sb.ToString().Trim();
+            return sb.ToPool().Trim();
         }
 
         public static IList<string> GetInterjectionList()

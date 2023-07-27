@@ -58,7 +58,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
         private string GetLatestChangeLog(string changeLog)
         {
             var releaseOn = false;
-            var sb = new StringBuilder();
+            var sb = StringBuilderPool.Get();
             foreach (var line in changeLog.Replace(Environment.NewLine, "\n").Split('\n'))
             {
                 var s = line.Trim();
@@ -86,7 +86,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 }
             }
 
-            return sb.ToString();
+            return sb.ToPool();
         }
 
         public void CheckForUpdates()

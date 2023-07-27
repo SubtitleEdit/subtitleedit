@@ -255,7 +255,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             var i = 128;
             Paragraph last = null;
-            var sb = new StringBuilder();
             while (i < buffer.Length - 16)
             {
                 var p = new Paragraph();
@@ -289,7 +288,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         last.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
                     }
 
-                    sb.Clear();
+                    var sb = StringBuilderPool.Get();
                     var j = 0;
                     var italics = false;
                     var encoding = Encoding.GetEncoding(1252);
@@ -332,7 +331,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         sb.Append("</i>");
                     }
 
-                    p.Text = sb.ToString().Trim();
+                    p.Text = sb.ToPool().Trim();
                     p.Text = p.Text.Replace("</i>" + Environment.NewLine + "<i>", Environment.NewLine);
 
                     subtitle.Paragraphs.Add(p);

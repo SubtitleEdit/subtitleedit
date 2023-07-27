@@ -1322,7 +1322,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static string ReverseAnsi(string text)
         {
-            var sb = new StringBuilder();
+            var sb = StringBuilderPool.Get();
             var ansi = new StringBuilder();
             foreach (var ch in text)
             {
@@ -1345,7 +1345,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 sb.Append(Utilities.ReverseString(ansi.ToString()));
             }
 
-            return sb.ToString();
+            return sb.ToPool();
         }
 
         private static void AddTwo(byte[] buffer, ref int index, byte b1, byte b2)
@@ -1507,7 +1507,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (languageId == LanguageIdRussian)
             {
                 var encoding = Encoding.GetEncoding(1252);
-                var sb = new StringBuilder();
+                var sb = StringBuilderPool.Get();
                 for (int i = 0; i < textLength; i++)
                 {
                     int b = buffer[start + i];
@@ -1522,7 +1522,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                 }
 
-                text = sb.ToString();
+                text = sb.ToPool();
 
                 text = text.Replace(encoding.GetString(new byte[] { 0x7F }), string.Empty); // Used to fill empty space upto 51 bytes
                 text = text.Replace(encoding.GetString(new byte[] { 0xBE }), string.Empty); // Unknown?
@@ -1541,7 +1541,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             else if (languageId == LanguageIdHebrew) // (_language == "HEBNOA")
             {
                 var encoding = Encoding.GetEncoding(1252);
-                var sb = new StringBuilder();
+                var sb = StringBuilderPool.Get();
                 for (int i = 0; i < textLength; i++)
                 {
                     int b = buffer[start + i];
@@ -1556,7 +1556,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                 }
 
-                text = sb.ToString();
+                text = sb.ToPool();
 
                 text = text.Replace(encoding.GetString(new byte[] { 0x7F }), string.Empty); // Used to fill empty space upto 51 bytes
                 text = text.Replace(encoding.GetString(new byte[] { 0xBE }), string.Empty); // Unknown?
@@ -1568,7 +1568,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             else if (languageId == LanguageIdArabic)
             {
                 var encoding = Encoding.GetEncoding(1252);
-                var sb = new StringBuilder();
+                var sb = StringBuilderPool.Get();
                 for (int i = 0; i < textLength; i++)
                 {
                     int b = buffer[start + i];
@@ -1582,7 +1582,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                 }
 
-                text = sb.ToString();
+                text = sb.ToPool();
                 text = text.Replace(encoding.GetString(new byte[] { 0xBE }), string.Empty); // Unknown?
                 text = FixColors(text).Trim();
             }
@@ -1802,7 +1802,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             Encoding encoding = Encoding.GetEncoding(1252);
             bool fontColorOn = false;
-            var sb = new StringBuilder();
+            var sb = StringBuilderPool.Get();
             for (int i = 0; i < text.Length; i++)
             {
                 var s = text.Substring(i, 1);
@@ -1882,7 +1882,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 sb.Append("</font>"); // white
             }
-            return sb.ToString();
+            return sb.ToPool();
         }
 
     }

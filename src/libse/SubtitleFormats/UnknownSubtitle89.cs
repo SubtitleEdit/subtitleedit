@@ -17,7 +17,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
-            var sb = new StringBuilder();
+            var sb = StringBuilderPool.Get();
             foreach (var p in subtitle.Paragraphs)
             {
                 sb.Append(EncodeTime(p.StartTime) + " " + (string.IsNullOrWhiteSpace(p.Actor) ? "Speaker" : p.Actor));
@@ -25,7 +25,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 sb.AppendLine(p.Text);
                 sb.AppendLine();
             }
-            return sb.ToString();
+
+            return sb.ToPool();
         }
 
         private static string EncodeTime(TimeCode timeCode)

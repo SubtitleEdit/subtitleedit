@@ -32,9 +32,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            var sb = new StringBuilder();
+            var sb = StringBuilderPool.Get();
             lines.ForEach(line => sb.AppendLine(line));
-            string xmlAsString = sb.ToString().Trim();
+            string xmlAsString = sb.ToPool().Trim();
             if (xmlAsString.Contains("</plist>") && xmlAsString.Contains("</dict>"))
             {
                 XmlDocument xml = new XmlDocument { XmlResolver = null };

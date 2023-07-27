@@ -22,7 +22,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
-            var sb = new StringBuilder();
+            var sb = StringBuilderPool.Get();
             sb.AppendLine(@"TVS - TITRA FILM
 
 Titre VO :   L'heure d'été
@@ -50,7 +50,7 @@ ATTENTION : Pas plus de 40 caractères PAR LIGNE
                     sb.AppendLine();
                 }
             }
-            return sb.ToString();
+            return sb.ToPool();
         }
 
         private static string EncodeTimeCode(TimeCode time)

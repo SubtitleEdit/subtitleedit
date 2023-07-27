@@ -93,7 +93,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override string ToText(Subtitle subtitle, string title)
         {
             const string writeFormat = "{0},{1},\"{2}\"{3}";
-            var sb = new StringBuilder();
+            var sb = StringBuilderPool.Get();
             foreach (var p in subtitle.Paragraphs)
             {
                 string text = HtmlUtil.RemoveHtmlTags(p.Text, true);
@@ -101,7 +101,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 text = text.Replace(Environment.NewLine, "|");
                 sb.AppendFormat(writeFormat, MillisecondsToFrames(p.StartTime.TotalMilliseconds), MillisecondsToFrames(p.EndTime.TotalMilliseconds), text, Environment.NewLine);
             }
-            return sb.ToString();
+            return sb.ToPool();
         }
 
     }

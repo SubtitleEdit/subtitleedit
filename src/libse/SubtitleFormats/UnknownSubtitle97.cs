@@ -22,7 +22,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             //00:00:22 - Wait, he’s the one that…
             //\t\t-ENOUGH!
             const string writeFormat = "{0:00}:{1:00}:{2:00} {3}";
-            var sb = new StringBuilder();
+            var sb = StringBuilderPool.Get();
             foreach (var p in subtitle.Paragraphs)
             {
                 var textBuilder = new StringBuilder();
@@ -39,7 +39,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                 sb.AppendLine(string.Format(writeFormat, p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, textBuilder));
             }
-            return sb.ToString().Trim() + Environment.NewLine;
+            return sb.ToPool().Trim() + Environment.NewLine;
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
