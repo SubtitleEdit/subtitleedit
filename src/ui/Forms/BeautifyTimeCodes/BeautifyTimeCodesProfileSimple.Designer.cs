@@ -99,10 +99,10 @@
             // 
             this.labelInstructions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelInstructions.AutoSize = true;
+            this.labelInstructions.AutoEllipsis = true;
             this.labelInstructions.Location = new System.Drawing.Point(9, 9);
             this.labelInstructions.Name = "labelInstructions";
-            this.labelInstructions.Size = new System.Drawing.Size(399, 15);
+            this.labelInstructions.Size = new System.Drawing.Size(528, 15);
             this.labelInstructions.TabIndex = 1;
             this.labelInstructions.Text = "Enter these basic rules, and the current profile will be updated accordingly.";
             // 
@@ -111,11 +111,11 @@
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox1.Controls.Add(this.checkBoxSnapClosestCue);
-            this.groupBox1.Controls.Add(this.pictureBoxChainingInfo);
             this.groupBox1.Controls.Add(this.labelChainingGapAfterShotChangesPrefix);
             this.groupBox1.Controls.Add(this.numericUpDownChainingGapAfterShotChanges);
             this.groupBox1.Controls.Add(this.labelChainingGapAfterShotChangesSuffix);
+            this.groupBox1.Controls.Add(this.pictureBoxChainingInfo);
+            this.groupBox1.Controls.Add(this.checkBoxSnapClosestCue);
             this.groupBox1.Controls.Add(this.checkBoxChainingGapAfterShotChanges);
             this.groupBox1.Controls.Add(this.numericUpDownChainingGap);
             this.groupBox1.Controls.Add(this.labelChainingGapInstruction);
@@ -148,11 +148,12 @@
             // 
             this.checkBoxSnapClosestCue.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.checkBoxSnapClosestCue.AutoEllipsis = true;
             this.checkBoxSnapClosestCue.Checked = true;
             this.checkBoxSnapClosestCue.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxSnapClosestCue.Location = new System.Drawing.Point(134, 157);
+            this.checkBoxSnapClosestCue.Location = new System.Drawing.Point(134, 150);
             this.checkBoxSnapClosestCue.Name = "checkBoxSnapClosestCue";
-            this.checkBoxSnapClosestCue.Size = new System.Drawing.Size(377, 35);
+            this.checkBoxSnapClosestCue.Size = new System.Drawing.Size(377, 49);
             this.checkBoxSnapClosestCue.TabIndex = 10;
             this.checkBoxSnapClosestCue.Text = "For connected subtitles, snap the in or out cue to the shot change based on which" +
     " one is closer";
@@ -160,6 +161,7 @@
             // 
             // pictureBoxChainingInfo
             // 
+            this.pictureBoxChainingInfo.BackColor = System.Drawing.Color.Transparent;
             this.pictureBoxChainingInfo.Image = ((System.Drawing.Image)(resources.GetObject("pictureBoxChainingInfo.Image")));
             this.pictureBoxChainingInfo.Location = new System.Drawing.Point(15, 381);
             this.pictureBoxChainingInfo.Name = "pictureBoxChainingInfo";
@@ -170,7 +172,8 @@
             // labelChainingGapAfterShotChangesPrefix
             // 
             this.labelChainingGapAfterShotChangesPrefix.AutoSize = true;
-            this.labelChainingGapAfterShotChangesPrefix.Location = new System.Drawing.Point(150, 447);
+            this.labelChainingGapAfterShotChangesPrefix.BackColor = System.Drawing.Color.Transparent;
+            this.labelChainingGapAfterShotChangesPrefix.Location = new System.Drawing.Point(150, 448);
             this.labelChainingGapAfterShotChangesPrefix.Name = "labelChainingGapAfterShotChangesPrefix";
             this.labelChainingGapAfterShotChangesPrefix.Size = new System.Drawing.Size(33, 15);
             this.labelChainingGapAfterShotChangesPrefix.TabIndex = 24;
@@ -178,7 +181,7 @@
             // 
             // numericUpDownChainingGapAfterShotChanges
             // 
-            this.numericUpDownChainingGapAfterShotChanges.Location = new System.Drawing.Point(193, 444);
+            this.numericUpDownChainingGapAfterShotChanges.Location = new System.Drawing.Point(193, 445);
             this.numericUpDownChainingGapAfterShotChanges.Maximum = new decimal(new int[] {
             2000,
             0,
@@ -196,7 +199,8 @@
             // labelChainingGapAfterShotChangesSuffix
             // 
             this.labelChainingGapAfterShotChangesSuffix.AutoSize = true;
-            this.labelChainingGapAfterShotChangesSuffix.Location = new System.Drawing.Point(251, 447);
+            this.labelChainingGapAfterShotChangesSuffix.BackColor = System.Drawing.Color.Transparent;
+            this.labelChainingGapAfterShotChangesSuffix.Location = new System.Drawing.Point(251, 448);
             this.labelChainingGapAfterShotChangesSuffix.Name = "labelChainingGapAfterShotChangesSuffix";
             this.labelChainingGapAfterShotChangesSuffix.Size = new System.Drawing.Size(23, 15);
             this.labelChainingGapAfterShotChangesSuffix.TabIndex = 26;
@@ -204,12 +208,12 @@
             // 
             // checkBoxChainingGapAfterShotChanges
             // 
-            this.checkBoxChainingGapAfterShotChanges.AutoSize = true;
+            this.checkBoxChainingGapAfterShotChanges.AutoEllipsis = true;
             this.checkBoxChainingGapAfterShotChanges.Checked = true;
             this.checkBoxChainingGapAfterShotChanges.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxChainingGapAfterShotChanges.Location = new System.Drawing.Point(134, 422);
+            this.checkBoxChainingGapAfterShotChanges.Location = new System.Drawing.Point(134, 414);
             this.checkBoxChainingGapAfterShotChanges.Name = "checkBoxChainingGapAfterShotChanges";
-            this.checkBoxChainingGapAfterShotChanges.Size = new System.Drawing.Size(334, 19);
+            this.checkBoxChainingGapAfterShotChanges.Size = new System.Drawing.Size(377, 35);
             this.checkBoxChainingGapAfterShotChanges.TabIndex = 23;
             this.checkBoxChainingGapAfterShotChanges.Text = "After an out cue on a shot change, the gap may be smaller";
             this.checkBoxChainingGapAfterShotChanges.UseVisualStyleBackColor = true;
@@ -236,6 +240,7 @@
             // 
             this.labelChainingGapInstruction.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelChainingGapInstruction.AutoEllipsis = true;
             this.labelChainingGapInstruction.ForeColor = System.Drawing.SystemColors.GrayText;
             this.labelChainingGapInstruction.Location = new System.Drawing.Point(131, 381);
             this.labelChainingGapInstruction.Name = "labelChainingGapInstruction";
@@ -255,17 +260,19 @@
             // 
             // labelChainingGap
             // 
-            this.labelChainingGap.AutoSize = true;
-            this.labelChainingGap.Location = new System.Drawing.Point(12, 355);
+            this.labelChainingGap.AutoEllipsis = true;
+            this.labelChainingGap.Location = new System.Drawing.Point(12, 347);
             this.labelChainingGap.Name = "labelChainingGap";
-            this.labelChainingGap.Size = new System.Drawing.Size(108, 15);
+            this.labelChainingGap.Size = new System.Drawing.Size(116, 31);
             this.labelChainingGap.TabIndex = 19;
             this.labelChainingGap.Text = "Max. chaining gap:";
+            this.labelChainingGap.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // labelOffsetInstruction
             // 
             this.labelOffsetInstruction.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelOffsetInstruction.AutoEllipsis = true;
             this.labelOffsetInstruction.ForeColor = System.Drawing.SystemColors.GrayText;
             this.labelOffsetInstruction.Location = new System.Drawing.Point(131, 237);
             this.labelOffsetInstruction.Name = "labelOffsetInstruction";
@@ -302,17 +309,19 @@
             // 
             // labelOffset
             // 
-            this.labelOffset.AutoSize = true;
-            this.labelOffset.Location = new System.Drawing.Point(12, 211);
+            this.labelOffset.AutoEllipsis = true;
+            this.labelOffset.Location = new System.Drawing.Point(12, 203);
             this.labelOffset.Name = "labelOffset";
-            this.labelOffset.Size = new System.Drawing.Size(69, 15);
+            this.labelOffset.Size = new System.Drawing.Size(116, 31);
             this.labelOffset.TabIndex = 11;
             this.labelOffset.Text = "Max. offset:";
+            this.labelOffset.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // labelSafeZoneInstruction
             // 
             this.labelSafeZoneInstruction.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelSafeZoneInstruction.AutoEllipsis = true;
             this.labelSafeZoneInstruction.ForeColor = System.Drawing.SystemColors.GrayText;
             this.labelSafeZoneInstruction.Location = new System.Drawing.Point(131, 309);
             this.labelSafeZoneInstruction.Name = "labelSafeZoneInstruction";
@@ -383,35 +392,39 @@
             // 
             // labelOutCues
             // 
-            this.labelOutCues.AutoSize = true;
-            this.labelOutCues.Location = new System.Drawing.Point(12, 121);
+            this.labelOutCues.AutoEllipsis = true;
+            this.labelOutCues.Location = new System.Drawing.Point(12, 113);
             this.labelOutCues.Name = "labelOutCues";
-            this.labelOutCues.Size = new System.Drawing.Size(112, 15);
+            this.labelOutCues.Size = new System.Drawing.Size(116, 31);
             this.labelOutCues.TabIndex = 8;
             this.labelOutCues.Text = "Out cues should be:";
+            this.labelOutCues.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // labelInCues
             // 
-            this.labelInCues.AutoSize = true;
-            this.labelInCues.Location = new System.Drawing.Point(12, 82);
+            this.labelInCues.AutoEllipsis = true;
+            this.labelInCues.Location = new System.Drawing.Point(12, 74);
             this.labelInCues.Name = "labelInCues";
-            this.labelInCues.Size = new System.Drawing.Size(102, 15);
+            this.labelInCues.Size = new System.Drawing.Size(116, 31);
             this.labelInCues.TabIndex = 6;
             this.labelInCues.Text = "In cues should be:";
+            this.labelInCues.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // labelSafeZone
             // 
-            this.labelSafeZone.AutoSize = true;
-            this.labelSafeZone.Location = new System.Drawing.Point(12, 283);
+            this.labelSafeZone.AutoEllipsis = true;
+            this.labelSafeZone.Location = new System.Drawing.Point(12, 275);
             this.labelSafeZone.Name = "labelSafeZone";
-            this.labelSafeZone.Size = new System.Drawing.Size(60, 15);
+            this.labelSafeZone.Size = new System.Drawing.Size(116, 31);
             this.labelSafeZone.TabIndex = 15;
             this.labelSafeZone.Text = "Safe zone:";
+            this.labelSafeZone.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // labelGapInstruction
             // 
             this.labelGapInstruction.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelGapInstruction.AutoEllipsis = true;
             this.labelGapInstruction.ForeColor = System.Drawing.SystemColors.GrayText;
             this.labelGapInstruction.Location = new System.Drawing.Point(131, 51);
             this.labelGapInstruction.Name = "labelGapInstruction";
@@ -458,12 +471,13 @@
             // 
             // labelGap
             // 
-            this.labelGap.AutoSize = true;
-            this.labelGap.Location = new System.Drawing.Point(12, 25);
+            this.labelGap.AutoEllipsis = true;
+            this.labelGap.Location = new System.Drawing.Point(12, 17);
             this.labelGap.Name = "labelGap";
-            this.labelGap.Size = new System.Drawing.Size(31, 15);
+            this.labelGap.Size = new System.Drawing.Size(116, 31);
             this.labelGap.TabIndex = 1;
             this.labelGap.Text = "Gap:";
+            this.labelGap.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // toolTipChaining
             // 
@@ -509,7 +523,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSafeZone)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownGap)).EndInit();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
