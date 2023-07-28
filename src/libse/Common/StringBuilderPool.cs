@@ -67,7 +67,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// </summary>
         /// <param name="sb">The StringBuilder instance to return to the pool.</param>
         /// <returns>A boolean value indicating whether the operation was successful.</returns>
-        private static bool ReturnToPool(this StringBuilder sb)
+        public static bool ReturnToPool(this StringBuilder sb)
         {
             lock (Lock)
             {
