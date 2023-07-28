@@ -80,18 +80,19 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
 
                 // pool already at is max capacity
-                if (currentPoolSize == MaxPoolSize)
+                if (currentPoolSize >= MaxPoolSize)
                 {
                     return false;
                 }
 
                 // the incoming stringbuilder will enter the pool only if its capacity
                 // is greater than the available one on the top
-                if (currentPoolSize < MaxPoolSize || Pool.Peek().Capacity < sb.Capacity)
+                if (currentPoolSize > 0 && Pool.Peek().Capacity > sb.Capacity)
                 {
-                    Pool.Push(sb);
+                    return false;
                 }
 
+                Pool.Push(sb);
                 return true;
             }
         }
