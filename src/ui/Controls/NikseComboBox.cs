@@ -601,26 +601,28 @@ namespace Nikse.SubtitleEdit.Controls
                     _textBox.SelectionLength = 0;
                 }
             };
-            
-            _listView.MouseClick += (sender, args) =>
+
+            _listView.MouseClick += (sender, mouseArgs) =>
             {
-                if (args is MouseEventArgs mouseArgs)
+                if (mouseArgs == null)
                 {
-                    var cachedCount = _listView.Items.Count; 
-                    for (var i = 0; i < cachedCount; i++)
+                    return;
+                }
+
+                var cachedCount = _listView.Items.Count;
+                for (var i = 0; i < cachedCount; i++)
+                {
+                    var rectangle = _listView.GetItemRect(i);
+                    if (rectangle.Contains(mouseArgs.Location))
                     {
-                        var rectangle = _listView.GetItemRect(i);
-                        if (rectangle.Contains(mouseArgs.Location))
-                        {
-                            _listViewMouseLeaveTimer.Stop();
-                            _selectedIndex = i;
-                            _textBox.Text = _listView.Items[i].Text;
-                            SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
-                            HideDropDown();
-                            _textBox.Focus();
-                            _textBox.SelectionLength = 0;
-                            return;
-                        }
+                        _listViewMouseLeaveTimer.Stop();
+                        _selectedIndex = i;
+                        _textBox.Text = _listView.Items[i].Text;
+                        SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
+                        HideDropDown();
+                        _textBox.Focus();
+                        _textBox.SelectionLength = 0;
+                        return;
                     }
                 }
             };
