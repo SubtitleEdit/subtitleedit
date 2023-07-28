@@ -606,7 +606,8 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 if (args is MouseEventArgs mouseArgs)
                 {
-                    for (var i = 0; i < _listView.Items.Count; i++)
+                    var cachedCount = _listView.Items.Count; 
+                    for (var i = 0; i < cachedCount; i++)
                     {
                         var rectangle = _listView.GetItemRect(i);
                         if (rectangle.Contains(mouseArgs.Location))
