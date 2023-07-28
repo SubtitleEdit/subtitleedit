@@ -655,13 +655,10 @@ namespace Nikse.SubtitleEdit.Controls
                 _buttonDownActive = true;
                 Invalidate();
             }
-            else
+            else if (_buttonDownActive)
             {
-                if (_buttonDownActive)
-                {
-                    _buttonDownActive = false;
-                    Invalidate();
-                }
+                _buttonDownActive = false;
+                Invalidate();
             }
 
             base.OnMouseMove(e);
