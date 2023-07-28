@@ -403,8 +403,13 @@ namespace Nikse.SubtitleEdit.Controls
                 _listViewShown = false;
             }
 
-            FindForm()?.Controls.Remove(_listView);
-            FindForm()?.Invalidate();
+            var form = FindForm();
+            if (form != null)
+            {
+                form.Controls.Remove(_listView);
+                form.Invalidate();
+            }
+
             Invalidate();
         }
 
