@@ -85,7 +85,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     return false;
                 }
 
-                // the incoming stringbuilder will enter the pool only if it's capacity
+                // the incoming stringbuilder will enter the pool only if its capacity
                 // is greater than the available one on the top
                 if (currentPoolSize < MaxPoolSize || Pool.Peek().Capacity < sb.Capacity)
                 {
