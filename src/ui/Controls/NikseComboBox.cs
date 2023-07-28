@@ -576,10 +576,10 @@ namespace Nikse.SubtitleEdit.Controls
                         totalY += ctl.Top;
                     }
 
-                    if (_listView.Items.Count > 0)
+                    if (listViewItems.Count > 0)
                     {
                         var itemHeight = _listView.GetItemRect(0).Height;
-                        lvHeight = itemHeight * _listView.Items.Count + 6;
+                        lvHeight = itemHeight * listViewItems.Count + 6;
                         var spaceInPixelsTop = totalY;
                         var spaceInPixelsBottom = form.Height - (spaceInPixelsTop + Height);
                         var maxHeight = DropDownHeight;
