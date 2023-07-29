@@ -21,49 +21,27 @@ namespace Nikse.SubtitleEdit.Logic
     {
         public static readonly Lazy<string> SubtitleExtensionFilter = new Lazy<string>(GetOpenDialogFilter);
 
+        private static readonly Lazy<List<Func<string, VideoInfo>>> DecodersLazy = new Lazy<List<Func<string, VideoInfo>>>(() => new List<Func<string, VideoInfo>>()
+        {
+            FileUtil.TryReadVideoInfoViaAviHeader,
+            FileUtil.TryReadVideoInfoViaMatroskaHeader,
+            FileUtil.TryReadVideoInfoViaMp4,
+            QuartsPlayer.GetVideoInfo,
+            LibMpvDynamic.GetVideoInfo,
+        });
+
         public static VideoInfo GetVideoInfo(string fileName)
         {
-            var info = FileUtil.TryReadVideoInfoViaAviHeader(fileName);
-            if (info.Success)
+            foreach (var decoder in DecodersLazy.Value)
             {
-                return info;
-            }
-
-            info = FileUtil.TryReadVideoInfoViaMatroskaHeader(fileName);
-            if (info.Success)
-            {
-                return info;
-            }
-
-            info = FileUtil.TryReadVideoInfoViaMp4(fileName);
-            if (info.Success)
-            {
-                return info;
-            }
-
-            info = TryReadVideoInfoViaDirectShow(fileName);
-            if (info.Success)
-            {
-                return info;
-            }
-
-            info = TryReadVideoInfoViaLibMpv(fileName);
-            if (info.Success)
-            {
-                return info;
+                var videoInfo = decoder(fileName);
+                if (videoInfo.Success)
+                {
+                    return videoInfo;
+                }
             }
 
             return new VideoInfo { VideoCodec = "Unknown" };
-        }
-
-        private static VideoInfo TryReadVideoInfoViaDirectShow(string fileName)
-        {
-            return QuartsPlayer.GetVideoInfo(fileName);
-        }
-
-        private static VideoInfo TryReadVideoInfoViaLibMpv(string fileName)
-        {
-            return LibMpvDynamic.GetVideoInfo(fileName);
         }
 
         private static long _lastShowSubTicks = DateTime.UtcNow.Ticks;
