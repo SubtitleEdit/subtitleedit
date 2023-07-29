@@ -3489,14 +3489,7 @@ namespace Test.FixCommonErrors
             {
                 Configuration.Settings.General.SubtitleLineMaximumPixelWidth = 576;
                 InitializeFixCommonErrorsLine(target, "It is I this illustrious illiteration.\r\nIt's this...");
-                new FixShortLinesPixelWidth().Fix(_subtitle, new EmptyFixCallback()
-                {
-                    CustomCallbackDataHandler = (sender, input) =>
-                    {
-                        var text = Convert.ToString(input);
-                        return TextWidth.CalcPixelWidth(text);
-                    }
-                });
+                new FixShortLinesPixelWidth(TextWidth.CalcPixelWidth).Fix(_subtitle, new EmptyFixCallback());
                 Assert.AreEqual("It is I this illustrious illiteration. It's this...", _subtitle.Paragraphs[0].Text);
             }
         }
@@ -3509,14 +3502,7 @@ namespace Test.FixCommonErrors
                 Configuration.Settings.General.SubtitleLineMaximumPixelWidth = 576;
                 Configuration.Settings.General.DialogStyle = DialogType.DashSecondLineWithoutSpace;
                 InitializeFixCommonErrorsLine(target, "It is I this illustrious illiteration.\r\n-It's this...");
-                new FixShortLinesPixelWidth().Fix(_subtitle, new EmptyFixCallback()
-                {
-                    CustomCallbackDataHandler = (sender, input) =>
-                    {
-                        var text = Convert.ToString(input);
-                        return TextWidth.CalcPixelWidth(text);
-                    }
-                });
+                new FixShortLinesPixelWidth(TextWidth.CalcPixelWidth).Fix(_subtitle, new EmptyFixCallback());
                 Assert.AreEqual("It is I this illustrious illiteration.\r\n-It's this...", _subtitle.Paragraphs[0].Text);
             }
         }
@@ -3528,14 +3514,7 @@ namespace Test.FixCommonErrors
             {
                 Configuration.Settings.General.SubtitleLineMaximumPixelWidth = 576;
                 InitializeFixCommonErrorsLine(target, "It is I this illustrious illiteration.\r\nIt's super...");
-                new FixShortLinesPixelWidth().Fix(_subtitle, new EmptyFixCallback()
-                {
-                    CustomCallbackDataHandler = (sender, input) =>
-                    {
-                        var text = Convert.ToString(input);
-                        return TextWidth.CalcPixelWidth(text);
-                    }
-                });
+                new FixShortLinesPixelWidth(TextWidth.CalcPixelWidth).Fix(_subtitle, new EmptyFixCallback());
                 Assert.AreEqual("It is I this illustrious illiteration.\r\nIt's super...", _subtitle.Paragraphs[0].Text);
             }
         }
@@ -3547,14 +3526,7 @@ namespace Test.FixCommonErrors
             {
                 Configuration.Settings.General.SubtitleLineMaximumPixelWidth = 576;
                 InitializeFixCommonErrorsLine(target, "<i>It is I this illustrious illiteration.</i>\r\n<i>It's this...</i>");
-                new FixShortLinesPixelWidth().Fix(_subtitle, new EmptyFixCallback()
-                {
-                    CustomCallbackDataHandler = (sender, input) =>
-                    {
-                        var text = Convert.ToString(input);
-                        return TextWidth.CalcPixelWidth(text);
-                    }
-                });
+                new FixShortLinesPixelWidth(TextWidth.CalcPixelWidth).Fix(_subtitle, new EmptyFixCallback());
                 Assert.AreEqual("<i>It is I this illustrious illiteration. It's this...</i>", _subtitle.Paragraphs[0].Text);
             }
         }
