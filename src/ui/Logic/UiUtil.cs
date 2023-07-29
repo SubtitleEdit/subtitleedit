@@ -19,9 +19,11 @@ namespace Nikse.SubtitleEdit.Logic
 {
     internal static class UiUtil
     {
+        private delegate VideoInfo VideoDecoder(string fileName);
+
         public static readonly Lazy<string> SubtitleExtensionFilter = new Lazy<string>(GetOpenDialogFilter);
 
-        private static readonly Lazy<List<Func<string, VideoInfo>>> DecodersLazy = new Lazy<List<Func<string, VideoInfo>>>(() => new List<Func<string, VideoInfo>>()
+        private static readonly Lazy<List<VideoDecoder>> DecodersLazy = new Lazy<List<VideoDecoder>>(() => new List<VideoDecoder>()
         {
             FileUtil.TryReadVideoInfoViaAviHeader,
             FileUtil.TryReadVideoInfoViaMatroskaHeader,
