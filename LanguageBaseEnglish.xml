@@ -879,6 +879,7 @@ We leverage the intrinsic rhythm of the image.</CreateSimpleChainingToolTip>
     <BreakLongLines>Break long lines</BreakLongLines>
     <RemoveLineBreaks>Remove line breaks in short texts with only one sentence</RemoveLineBreaks>
     <RemoveLineBreaksAll>Remove line breaks in short texts (all except dialogs)</RemoveLineBreaksAll>
+    <RemoveLineBreaksPixelWidth>Unbreak subtitles that can fit on one line (pixel width)</RemoveLineBreaksPixelWidth>
     <FixUppercaseIInsideLowercaseWords>Fix uppercase 'i' inside lowercase words (OCR error)</FixUppercaseIInsideLowercaseWords>
     <FixDoubleApostrophes>Fix double apostrophe characters ('') to a single quote (")</FixDoubleApostrophes>
     <AddPeriods>Add period after lines where next line starts with uppercase letter</AddPeriods>
@@ -913,6 +914,7 @@ We leverage the intrinsic rhythm of the image.</CreateSimpleChainingToolTip>
     <FixFirstLetterToUppercaseAfterParagraph>Fix first letter to uppercase after paragraph</FixFirstLetterToUppercaseAfterParagraph>
     <MergeShortLine>Merge short line (single sentence)</MergeShortLine>
     <MergeShortLineAll>Merge short line (all except dialogs)</MergeShortLineAll>
+    <UnbreakShortLinePixelWidth>Unbreak short line (pixel width)</UnbreakShortLinePixelWidth>
     <BreakLongLine>Break long line</BreakLongLine>
     <FixLongDisplayTime>Fix long display time</FixLongDisplayTime>
     <FixInvalidItalicTag>Fix invalid italic tag</FixInvalidItalicTag>

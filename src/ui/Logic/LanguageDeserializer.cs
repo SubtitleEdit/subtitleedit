@@ -2293,6 +2293,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "FixCommonErrors/RemoveLineBreaksAll":
                     language.FixCommonErrors.RemoveLineBreaksAll = reader.Value;
                     break;
+                case "FixCommonErrors/RemoveLineBreaksPixelWidth":
+                    language.FixCommonErrors.RemoveLineBreaksPixelWidth = reader.Value;
+                    break;
                 case "FixCommonErrors/FixUppercaseIInsideLowercaseWords":
                     language.FixCommonErrors.FixUppercaseIInsideLowercaseWords = reader.Value;
                     break;
@@ -2394,6 +2397,9 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "FixCommonErrors/MergeShortLineAll":
                     language.FixCommonErrors.MergeShortLineAll = reader.Value;
+                    break;
+                case "FixCommonErrors/UnbreakShortLinePixelWidth":
+                    language.FixCommonErrors.UnbreakShortLinePixelWidth = reader.Value;
                     break;
                 case "FixCommonErrors/BreakLongLine":
                     language.FixCommonErrors.BreakLongLine = reader.Value;
