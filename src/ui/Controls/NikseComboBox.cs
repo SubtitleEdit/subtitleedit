@@ -403,8 +403,13 @@ namespace Nikse.SubtitleEdit.Controls
                 _listViewShown = false;
             }
 
-            FindForm()?.Controls.Remove(_listView);
-            FindForm()?.Invalidate();
+            var form = FindForm();
+            if (form != null)
+            {
+                form.Controls.Remove(_listView);
+                form.Invalidate();
+            }
+
             Invalidate();
         }
 
@@ -484,71 +489,10 @@ namespace Nikse.SubtitleEdit.Controls
                     _listViewShown = true;
                     _textBox.Focus();
 
-                    if (_listView == null)
-                    {
-                        _listView = new ListView();
-                        _listView.View = View.Details;
-                        _listView.Columns.Add("text", DropDownWidth - 4);
-                        _listView.HeaderStyle = ColumnHeaderStyle.None;
-                        _listView.FullRowSelect = true;
-                        _listView.MultiSelect = false;
-                        _listView.HideSelection = false;
+                    EnsureListViewInitialized();
 
-                        if (Configuration.Settings.General.UseDarkTheme)
-                        {
-                            DarkTheme.SetDarkTheme(_listView);
-                        }
-
-                        _listView.MouseEnter += (sender, args) =>
-                        {
-                            _hasItemsMouseOver = true;
-                        };
-                        _listView.KeyDown += (sender, args) =>
-                        {
-                            if (args.KeyCode == Keys.Escape)
-                            {
-                                HideDropDown();
-                            }
-                            else if (args.KeyCode == Keys.Enter)
-                            {
-                                _listViewMouseLeaveTimer.Stop();
-                                var item = _listView.SelectedItems[0];
-                                _selectedIndex = item.Index;
-                                _textBox.Text = item.Text;
-                                Invalidate();
-                                SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
-                                HideDropDown();
-                                _textBox.Focus();
-                                _textBox.SelectionLength = 0;
-                            }
-                        };
-                        _listView.MouseClick += (sender, args) =>
-                        {
-                            if (args is MouseEventArgs mouseArgs)
-                            {
-                                for (var i = 0; i < _listView.Items.Count; i++)
-                                {
-                                    var rectangle = _listView.GetItemRect(i);
-                                    if (rectangle.Contains(mouseArgs.Location))
-                                    {
-                                        _listViewMouseLeaveTimer.Stop();
-                                        _selectedIndex = i;
-                                        _textBox.Text = _listView.Items[i].Text;
-                                        SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
-                                        HideDropDown();
-                                        _textBox.Focus();
-                                        _textBox.SelectionLength = 0;
-                                        return;
-                                    }
-                                }
-                            }
-                        };
-                    }
-                    else
-                    {
-                        _listView.Items.Clear();
-                    }
-
+                    _listView.BeginUpdate();
+                    _listView.Items.Clear();
                     var listViewItems = new List<ListViewItem>();
                     foreach (var item in Items)
                     {
@@ -556,6 +500,7 @@ namespace Nikse.SubtitleEdit.Controls
                     }
                     _listView.Items.AddRange(listViewItems.ToArray());
                     _listView.Width = DropDownWidth;
+                    _listView.EndUpdate();
 
                     var lvHeight = 5;
                     var top = Bottom;
@@ -575,10 +520,10 @@ namespace Nikse.SubtitleEdit.Controls
                         totalY += ctl.Top;
                     }
 
-                    if (_listView.Items.Count > 0)
+                    if (listViewItems.Count > 0)
                     {
                         var itemHeight = _listView.GetItemRect(0).Height;
-                        lvHeight = itemHeight * _listView.Items.Count + 6;
+                        lvHeight = itemHeight * listViewItems.Count + 6;
                         var spaceInPixelsTop = totalY;
                         var spaceInPixelsBottom = form.Height - (spaceInPixelsTop + Height);
                         var maxHeight = DropDownHeight;
@@ -620,6 +565,74 @@ namespace Nikse.SubtitleEdit.Controls
             base.OnMouseDown(e);
         }
 
+        private void EnsureListViewInitialized()
+        {
+            if (_listView != null)
+            {
+                return;
+            }
+
+            _listView = new ListView();
+            _listView.View = View.Details;
+            _listView.Columns.Add("text", DropDownWidth - 4);
+            _listView.HeaderStyle = ColumnHeaderStyle.None;
+            _listView.FullRowSelect = true;
+            _listView.MultiSelect = false;
+            _listView.HideSelection = false;
+
+            if (Configuration.Settings.General.UseDarkTheme)
+            {
+                DarkTheme.SetDarkTheme(_listView);
+            }
+
+            _listView.MouseEnter += (sender, args) => { _hasItemsMouseOver = true; };
+            
+            _listView.KeyDown += (sender, args) =>
+            {
+                if (args.KeyCode == Keys.Escape)
+                {
+                    HideDropDown();
+                }
+                else if (args.KeyCode == Keys.Enter)
+                {
+                    _listViewMouseLeaveTimer.Stop();
+                    var item = _listView.SelectedItems[0];
+                    _selectedIndex = item.Index;
+                    _textBox.Text = item.Text;
+                    Invalidate();
+                    SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
+                    HideDropDown();
+                    _textBox.Focus();
+                    _textBox.SelectionLength = 0;
+                }
+            };
+
+            _listView.MouseClick += (sender, mouseArgs) =>
+            {
+                if (mouseArgs == null)
+                {
+                    return;
+                }
+
+                var cachedCount = _listView.Items.Count;
+                for (var i = 0; i < cachedCount; i++)
+                {
+                    var rectangle = _listView.GetItemRect(i);
+                    if (rectangle.Contains(mouseArgs.Location))
+                    {
+                        _listViewMouseLeaveTimer.Stop();
+                        _selectedIndex = i;
+                        _textBox.Text = _listView.Items[i].Text;
+                        SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
+                        HideDropDown();
+                        _textBox.Focus();
+                        _textBox.SelectionLength = 0;
+                        return;
+                    }
+                }
+            };
+        }
+
         protected override void OnMouseUp(MouseEventArgs e)
         {
             if (_buttonLeftIsDown)
@@ -642,13 +655,10 @@ namespace Nikse.SubtitleEdit.Controls
                 _buttonDownActive = true;
                 Invalidate();
             }
-            else
+            else if (_buttonDownActive)
             {
-                if (_buttonDownActive)
-                {
-                    _buttonDownActive = false;
-                    Invalidate();
-                }
+                _buttonDownActive = false;
+                Invalidate();
             }
 
             base.OnMouseMove(e);
