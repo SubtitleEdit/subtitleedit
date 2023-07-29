@@ -40,7 +40,7 @@ namespace Nikse.SubtitleEdit.Controls
                 cbc.Owner = this;
             }
 
-            Padding = new Padding(7);
+            Padding = new Padding(2);
 
             ComboBox.SelectedIndexChanged += (sender, args) =>
             {
