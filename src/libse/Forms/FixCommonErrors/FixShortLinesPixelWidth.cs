@@ -11,6 +11,13 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             public static string UnbreakShortLine { get; set; } = "Unbreak short line (pixel width)";
             public static string RemoveLineBreaks { get; set; } = "Unbreak subtitles that can fit on one line (pixel width)";
         }
+        
+        private readonly Func<string, int> _calcPixelWidth;
+
+        public FixShortLinesPixelWidth(Func<string, int> calcPixelWidth)
+        {
+            _calcPixelWidth = calcPixelWidth;
+        }
 
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {
@@ -37,8 +44,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
                 var unbreakResult = Utilities.UnbreakLine(p.Text);
                 var cleanUnbreakResult = HtmlUtil.RemoveHtmlTags(unbreakResult, true);
-                var totalPixelWidth = Convert.ToInt32(callbacks.GetCustomCallbackData(this, cleanUnbreakResult));
-
+                var totalPixelWidth = Convert.ToInt32(_calcPixelWidth(cleanUnbreakResult));
                 if (totalPixelWidth <= Configuration.Settings.General.SubtitleLineMaximumPixelWidth)
                 {
                     var oldCurrent = p.Text;
