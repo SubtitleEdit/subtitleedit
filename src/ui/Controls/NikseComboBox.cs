@@ -96,6 +96,16 @@ namespace Nikse.SubtitleEdit.Controls
 
                 return _items[_selectedIndex];
             }
+            set
+            {
+                var idx = _items.IndexOf(value);
+                if (idx < 0)
+                {
+                    return;
+                }
+
+                SelectedIndex = idx;
+            }
         }
 
         public string SelectedText
@@ -411,6 +421,11 @@ namespace Nikse.SubtitleEdit.Controls
                 }
 
                 _hasItemsMouseOver = true;
+            };
+
+            LostFocus += (sender, args) =>
+            {
+                Invalidate();
             };
         }
 

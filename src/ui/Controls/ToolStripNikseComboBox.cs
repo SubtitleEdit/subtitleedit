@@ -56,6 +56,16 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 DropDownClosed?.Invoke(sender, args);
             };
+
+            ComboBox.LostFocus += (sender, args) =>
+            {
+                Invalidate();
+            };
+
+            LostFocus += (sender, args) =>
+            {
+                Invalidate();
+            };
         }
 
         public ToolStripNikseComboBox(Control c, string name) : base(c, name)
@@ -145,7 +155,11 @@ namespace Nikse.SubtitleEdit.Controls
             set => ComboBox.BorderColor = value;
         }
 
-        public object SelectedItem => ComboBox.SelectedItem;
+        public object SelectedItem
+        {
+            get => ComboBox.SelectedItem;
+            set => ComboBox.SelectedItem = value;
+        }
 
         public bool DroppedDown => ComboBox.DroppedDown;
 
