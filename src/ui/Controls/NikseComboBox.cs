@@ -397,8 +397,13 @@ namespace Nikse.SubtitleEdit.Controls
                 }
 
                 var coordinates = form.PointToClient(Cursor.Position);
+                var listViewBounds = new Rectangle(
+                    _listView.Bounds.X, 
+                    _listView.Bounds.Y, 
+                    _listView.Bounds.Width + 15, 
+                    _listView.Bounds.Height);
                 if (_hasItemsMouseOver &&
-                    !(_listView.Bounds.Contains(coordinates) || Bounds.Contains(coordinates)) ||
+                    !(listViewBounds.Contains(coordinates) || Bounds.Contains(coordinates)) ||
                     !_listViewShown)
                 {
                     HideDropDown();
@@ -594,8 +599,6 @@ namespace Nikse.SubtitleEdit.Controls
                 _listView.Items[_selectedIndex].Focused = true;
             }
 
-            //_listView.Columns[_listView.Columns.Count - 1].Width = -1;
-
             DropDown?.Invoke(this, EventArgs.Empty);
             Invalidate();
         }
@@ -609,11 +612,13 @@ namespace Nikse.SubtitleEdit.Controls
 
             _listView = new ListView();
             _listView.View = View.Details;
-            _listView.Columns.Add("text", DropDownWidth - 8);
+            var widthNoScrollBar = DropDownWidth - SystemInformation.VerticalScrollBarWidth - SystemInformation.BorderSize.Width * 4;
+            _listView.Columns.Add("text", widthNoScrollBar);
             _listView.HeaderStyle = ColumnHeaderStyle.None;
             _listView.FullRowSelect = true;
             _listView.MultiSelect = false;
             _listView.HideSelection = false;
+            _listView.GridLines = false;
 
             if (Configuration.Settings.General.UseDarkTheme)
             {
