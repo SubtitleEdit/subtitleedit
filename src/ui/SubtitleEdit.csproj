@@ -131,6 +131,9 @@
     <Compile Include="Controls\ToolStripNikseComboBox.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Controls\ToolStripNikseSeparator.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Controls\VideoPlayerContainer.cs">
       <SubType>Component</SubType>
     </Compile>
