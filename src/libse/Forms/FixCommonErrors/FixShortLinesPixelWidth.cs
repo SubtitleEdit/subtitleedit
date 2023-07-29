@@ -44,7 +44,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
                 var unbreakResult = Utilities.UnbreakLine(p.Text);
                 var cleanUnbreakResult = HtmlUtil.RemoveHtmlTags(unbreakResult, true);
-                var totalPixelWidth = Convert.ToInt32(_calcPixelWidth(cleanUnbreakResult));
+                var totalPixelWidth = _calcPixelWidth(cleanUnbreakResult);
                 if (totalPixelWidth <= Configuration.Settings.General.SubtitleLineMaximumPixelWidth)
                 {
                     var oldCurrent = p.Text;
