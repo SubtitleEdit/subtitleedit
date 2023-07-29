@@ -715,23 +715,21 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return lines[0];
             }
 
-            var singleLine = string.Join(" ", lines);
-            while (singleLine.Contains("  "))
-            {
-                singleLine = singleLine.Replace("  ", " ");
-            }
+            var singleLine = string.Join(" ", lines).FixExtraSpaces();
 
             if (singleLine.Contains("</")) // Fix tag
             {
-                singleLine = singleLine.Replace("</i> <i>", " ");
-                singleLine = singleLine.Replace("</i><i>", " ");
+                const string singleWhiteSpace = " ";
+                singleLine = singleLine.Replace("</i> <i>", singleWhiteSpace);
+                singleLine = singleLine.Replace("</i><i>", singleWhiteSpace);
 
-                singleLine = singleLine.Replace("</b> <b>", " ");
-                singleLine = singleLine.Replace("</b><b>", " ");
+                singleLine = singleLine.Replace("</b> <b>", singleWhiteSpace);
+                singleLine = singleLine.Replace("</b><b>", singleWhiteSpace);
 
-                singleLine = singleLine.Replace("</u> <u>", " ");
-                singleLine = singleLine.Replace("</u><u>", " ");
+                singleLine = singleLine.Replace("</u> <u>", singleWhiteSpace);
+                singleLine = singleLine.Replace("</u><u>", singleWhiteSpace);
             }
+
             return singleLine;
         }
 
