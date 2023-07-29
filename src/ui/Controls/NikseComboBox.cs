@@ -315,20 +315,14 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     if (_selectedIndex > 0)
                     {
-                        _selectedIndex--;
-                        SelectedText = Items[_selectedIndex].ToString();
-                        Invalidate();
-                        SelectedIndexChanged?.Invoke(sender, e);
+                        SelectedIndex--;
                     }
                 }
                 else if (e.KeyCode == Keys.Down)
                 {
                     if (_selectedIndex < Items.Count - 2)
                     {
-                        _selectedIndex++;
-                        SelectedText = Items[_selectedIndex].ToString();
-                        Invalidate();
-                        SelectedIndexChanged?.Invoke(sender, e);
+                        SelectedIndex++;
                     }
                 }
 
@@ -433,6 +427,16 @@ namespace Nikse.SubtitleEdit.Controls
             }
 
             Invalidate();
+
+            if (_textBox.Visible)
+            {
+                _textBox.Focus();
+                _textBox.SelectionLength = 0;
+            }
+            else
+            {
+                Focus();
+            }
         }
 
         private void _textBox_TextChanged(object sender, EventArgs e)
@@ -492,6 +496,8 @@ namespace Nikse.SubtitleEdit.Controls
 
         protected override void OnMouseDown(MouseEventArgs e)
         {
+            Focus();
+
             if (e.Button == MouseButtons.Left)
             {
                 if (_buttonLeftIsDown == false)
@@ -506,7 +512,7 @@ namespace Nikse.SubtitleEdit.Controls
                     return;
                 }
 
-                if (_buttonDownActive)
+                if (_buttonDownActive || _dropDownStyle != ComboBoxStyle.DropDown)
                 {
                     ShowListView();
                 }
@@ -588,6 +594,8 @@ namespace Nikse.SubtitleEdit.Controls
                 _listView.Items[_selectedIndex].Focused = true;
             }
 
+            //_listView.Columns[_listView.Columns.Count - 1].Width = -1;
+
             DropDown?.Invoke(this, EventArgs.Empty);
             Invalidate();
         }
@@ -601,7 +609,7 @@ namespace Nikse.SubtitleEdit.Controls
 
             _listView = new ListView();
             _listView.View = View.Details;
-            _listView.Columns.Add("text", DropDownWidth - 4);
+            _listView.Columns.Add("text", DropDownWidth - 8);
             _listView.HeaderStyle = ColumnHeaderStyle.None;
             _listView.FullRowSelect = true;
             _listView.MultiSelect = false;
@@ -629,8 +637,6 @@ namespace Nikse.SubtitleEdit.Controls
                     Invalidate();
                     SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
                     HideDropDown();
-                    _textBox.Focus();
-                    _textBox.SelectionLength = 0;
                 }
             };
 
@@ -725,12 +731,22 @@ namespace Nikse.SubtitleEdit.Controls
                 return;
             }
 
-            using (var brushBg = new SolidBrush(BackColor))
+            e.Graphics.Clear(BackColor);
+
+            if (DropDownStyle == ComboBoxStyle.DropDown)
             {
-                e.Graphics.FillRectangle(brushBg, e.ClipRectangle);
+                _textBox.Visible = true;
+            }
+            else
+            {
+                _textBox.Visible = false;
+                using (var textBrush = new SolidBrush(ButtonForeColor))
+                {
+                    e.Graphics.DrawString(_textBox.Text, _textBox.Font, textBrush, _textBox.Bounds);
+                }
             }
 
-            using (var pen = _textBox.Focused || (_listView != null && _listView.Focused) ? new Pen(_buttonForeColorOver, 1f) : new Pen(BorderColor, 1f))
+            using (var pen = Focused || _textBox.Focused || (_listView != null && _listView.Focused) ? new Pen(_buttonForeColorOver, 1f) : new Pen(BorderColor, 1f))
             {
                 var borderRectangle = new Rectangle(e.ClipRectangle.X, e.ClipRectangle.Y, e.ClipRectangle.Width - 1, e.ClipRectangle.Height - 1);
                 e.Graphics.DrawRectangle(pen, borderRectangle);
@@ -779,9 +795,11 @@ namespace Nikse.SubtitleEdit.Controls
 
         private void DrawDisabled(PaintEventArgs e)
         {
-            using (var brushBg = new SolidBrush(BackColorDisabled))
+            e.Graphics.Clear(BackColorDisabled);
+
+            if (!_textBox.Visible)
             {
-                e.Graphics.FillRectangle(brushBg, e.ClipRectangle);
+                _textBox.Visible = true;
             }
 
             using (var pen = new Pen(BorderColorDisabled, 1f))
@@ -801,7 +819,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        private bool _skipPaint = false;
+        private bool _skipPaint;
 
         public void BeginUpdate()
         {
