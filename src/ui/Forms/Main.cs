@@ -25146,8 +25146,9 @@ namespace Nikse.SubtitleEdit.Forms
                 _changeSubtitleHash = GetFastSubtitleHash();
             }
 
-            comboBoxSubtitleFormats.AutoCompleteSource = AutoCompleteSource.ListItems;
-            comboBoxSubtitleFormats.AutoCompleteMode = AutoCompleteMode.Append;
+            //TODO:
+            //comboBoxSubtitleFormats.AutoCompleteSource = AutoCompleteSource.ListItems;
+            //comboBoxSubtitleFormats.AutoCompleteMode = AutoCompleteMode.Append;
             InitializePlayRateDropDown();
 
             LoadPlugins();

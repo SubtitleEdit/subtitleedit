@@ -3,11 +3,9 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Design;
 using System.Windows.Forms;
-using System.Windows.Forms.Design;
 
 namespace Nikse.SubtitleEdit.Controls
 {
-    [ToolStripItemDesignerAvailability(ToolStripItemDesignerAvailability.ToolStrip)]
     public class ToolStripNikseComboBox : ToolStripControlHost
     {
         // ReSharper disable once InconsistentNaming
@@ -32,12 +30,17 @@ namespace Nikse.SubtitleEdit.Controls
 
         private void Init()
         {
+            if (DesignMode)
+            {
+                return;
+            }
+
             if (Control is ToolStripNikseComboBoxControl cbc)
             {
                 cbc.Owner = this;
             }
 
-            Padding = new Padding(6);
+            Padding = new Padding(7);
 
             ComboBox.SelectedIndexChanged += (sender, args) =>
             {
@@ -76,7 +79,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
         [Editor("System.Windows.Forms.Design.ListControlStringCollectionEditor, System.Design, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a", typeof(UITypeEditor))]
-        public NikseComboBoxCollection Items => ComboBox.Items;
+        public NikseComboBoxCollection Items => ComboBox?.Items;
 
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
@@ -92,6 +95,18 @@ namespace Nikse.SubtitleEdit.Controls
         {
             get => ComboBox.SelectedText;
             set => ComboBox.SelectedText = value;
+        }
+
+        public ComboBoxStyle DropDownStyle
+        {
+            get => ComboBox.DropDownStyle;
+            set => ComboBox.DropDownStyle = value;
+        }
+
+        public int DropDownHeight
+        {
+            get => ComboBox.DropDownHeight;
+            set => ComboBox.DropDownHeight = value;
         }
 
         public Color ButtonForeColor
@@ -130,6 +145,10 @@ namespace Nikse.SubtitleEdit.Controls
             set => ComboBox.BorderColor = value;
         }
 
+        public object SelectedItem => ComboBox.SelectedItem;
+
+        public bool DroppedDown => ComboBox.DroppedDown;
+
         internal class ToolStripNikseComboBoxControl : NikseComboBox
         {
             public ToolStripNikseComboBoxControl()
@@ -139,7 +158,15 @@ namespace Nikse.SubtitleEdit.Controls
 
             public ToolStripNikseComboBox Owner { get; set; }
         }
+
+        public void BeginUpdate()
+        {
+            ComboBox?.BeginUpdate();
+        }
+
+        public void EndUpdate()
+        {
+            ComboBox?.EndUpdate();
+        }
     }
 }
-
-

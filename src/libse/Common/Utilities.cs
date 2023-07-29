@@ -3115,5 +3115,10 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             return s;
         }
+
+        public static SubtitleFormat GetSubtitleFormatByFriendlyName(object value)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

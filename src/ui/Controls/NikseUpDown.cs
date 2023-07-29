@@ -164,6 +164,8 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
+        public static Color DefaultBackColorDisabled = Color.FromArgb(240, 240, 240);
+
         private Color _backColorDisabled;
         [Category("NikseUpDown"), Description("Gets or sets the button foreground color"),
          RefreshProperties(RefreshProperties.Repaint)]
@@ -236,7 +238,7 @@ namespace Nikse.SubtitleEdit.Controls
             ButtonForeColorDown = Color.Orange;
             BorderColor = Color.FromArgb(171, 173, 179);
             BorderColorDisabled = Color.FromArgb(120, 120, 120);
-            BackColorDisabled = Color.FromArgb(240, 240, 240);
+            BackColorDisabled = DefaultBackColorDisabled;
             DoubleBuffered = true;
             InterceptArrowKeys = true;
 

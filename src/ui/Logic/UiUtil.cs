@@ -774,6 +774,17 @@ namespace Nikse.SubtitleEdit.Logic
             comboBox.DropDownWidth += 5; // .Net quirk?
         }
 
+        public static void InitializeSubtitleFormatComboBox(ToolStripNikseComboBox comboBox, SubtitleFormat format)
+        {
+            InitializeSubtitleFormatComboBox(comboBox.ComboBox, format);
+            //comboBox.DropDownWidth += 5; // .Net quirk?
+        }
+
+        public static void InitializeSubtitleFormatComboBox(NikseComboBox comboBox, SubtitleFormat format)
+        {
+            InitializeSubtitleFormatComboBox(comboBox, new List<string> { format.FriendlyName }, format.FriendlyName);
+        }
+
         public static void InitializeSubtitleFormatComboBox(ComboBox comboBox, SubtitleFormat format)
         {
             InitializeSubtitleFormatComboBox(comboBox, new List<string> { format.FriendlyName }, format.FriendlyName);
@@ -785,7 +796,19 @@ namespace Nikse.SubtitleEdit.Logic
             comboBox.DropDownWidth += 5; // .Net quirk?
         }
 
+        public static void InitializeSubtitleFormatComboBox(ToolStripNikseComboBox comboBox, string selectedName)
+        {
+            InitializeSubtitleFormatComboBox(comboBox.ComboBox, selectedName);
+            //comboBox.DropDownWidth += 5; // .Net quirk?
+        }
+
         public static void InitializeSubtitleFormatComboBox(ComboBox comboBox, string selectedName)
+        {
+            var formatNames = SubtitleFormat.AllSubtitleFormats.Where(format => !format.IsVobSubIndexFile).Select(format => format.FriendlyName);
+            InitializeSubtitleFormatComboBox(comboBox, formatNames.ToList(), selectedName);
+        }
+
+        public static void InitializeSubtitleFormatComboBox(NikseComboBox comboBox, string selectedName)
         {
             var formatNames = SubtitleFormat.AllSubtitleFormats.Where(format => !format.IsVobSubIndexFile).Select(format => format.FriendlyName);
             InitializeSubtitleFormatComboBox(comboBox, formatNames.ToList(), selectedName);
@@ -816,6 +839,40 @@ namespace Nikse.SubtitleEdit.Logic
                 }
 
                 comboBox.DropDownWidth = (int)Math.Round(maxWidth + 7.5);
+            }
+
+            comboBox.BeginUpdate();
+            comboBox.Items.Clear();
+            comboBox.Items.AddRange(formatNames.ToArray<object>());
+            comboBox.SelectedIndex = selectedIndex;
+            comboBox.EndUpdate();
+        }
+
+        public static void InitializeSubtitleFormatComboBox(NikseComboBox comboBox, List<string> formatNames, string selectedName)
+        {
+            var selectedIndex = 0;
+            using (var graphics = comboBox.CreateGraphics())
+            {
+                var maxWidth = (float)comboBox.DropDownWidth;
+                var max = formatNames.Count;
+                for (var index = 0; index < max; index++)
+                {
+                    var name = formatNames[index];
+                    if (name.Equals(selectedName, StringComparison.OrdinalIgnoreCase))
+                    {
+                        selectedIndex = index;
+                    }
+                    if (name.Length > 30)
+                    {
+                        var width = graphics.MeasureString(name, comboBox.Font).Width;
+                        if (width > maxWidth)
+                        {
+                            maxWidth = width;
+                        }
+                    }
+                }
+
+                comboBox.DropDownWidth = (int)Math.Round(maxWidth + 17.5);
             }
 
             comboBox.BeginUpdate();
