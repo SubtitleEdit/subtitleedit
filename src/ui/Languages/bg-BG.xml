@@ -808,7 +808,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <FormatText>Форматиране на текст</FormatText>
     <None>Няма</None>
     <MergeAllLines>Обединяване на всички редове</MergeAllLines>
-    <UnbreakLines>Не разделени редове</UnbreakLines>
+    <UnbreakLines>Без прекъсване на редове</UnbreakLines>
     <RemoveStyling>Премахване на стила</RemoveStyling>
     <ShowLineNumbers>Показване № на реда</ShowLineNumbers>
     <AddNewLineAfterLineNumber>Добавяне на нов ред след номера на реда</AddNewLineAfterLineNumber>
@@ -877,6 +877,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <BreakLongLines>Прекъсване на дълги редове</BreakLongLines>
     <RemoveLineBreaks>Обединяване в един ред на редове с кратък текст</RemoveLineBreaks>
     <RemoveLineBreaksAll>Обединяване на редове с кратък текст (всички освен диалозите)</RemoveLineBreaksAll>
+    <RemoveLineBreaksPixelWidth>Обединяване на субтитри, които могат да се поберат на един ред (ширина на пиксела)</RemoveLineBreaksPixelWidth>
     <FixUppercaseIInsideLowercaseWords>Поправяне Главните букви «I» на малки «i» в думи, които са с малки букви (на англ.)(грешка OCR)</FixUppercaseIInsideLowercaseWords>
     <FixDoubleApostrophes>Поправяне на символите за двоен апостроф «' '» с единични кавички «"»</FixDoubleApostrophes>
     <AddPeriods>Добавяне на точка след редове, където следващия ред започва с Главна буква</AddPeriods>
@@ -911,6 +912,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <FixFirstLetterToUppercaseAfterParagraph>Поправяне на началната буква на Главна след абзац</FixFirstLetterToUppercaseAfterParagraph>
     <MergeShortLine>Обединяване на кратки редове (едно изречение)</MergeShortLine>
     <MergeShortLineAll>Обединяване на кратки редове (всички освен диалозите)</MergeShortLineAll>
+    <UnbreakShortLinePixelWidth>Обединяване на кратки редове (ширина на пиксела)</UnbreakShortLinePixelWidth>
     <BreakLongLine>Прекъсване на дълги редове (пренасяне)</BreakLongLine>
     <FixLongDisplayTime>Поправяне на дълго време на показване</FixLongDisplayTime>
     <FixInvalidItalicTag>Поправяне на невалиден курсив таг</FixInvalidItalicTag>
@@ -934,7 +936,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <FixMissingPeriodAtEndOfLine>Добавяне на липсващи точки в края на ред</FixMissingPeriodAtEndOfLine>
     <RefreshFixes>Обнови наличните поправки</RefreshFixes>
     <ApplyFixes>Приложи за избраните поправки</ApplyFixes>
-    <AutoBreak>Прекъсни реда</AutoBreak>
+    <AutoBreak>Авт.прекъсни реда</AutoBreak>
     <Unbreak>Обедини реда</Unbreak>
     <FixDoubleDash>Поправяне на символ тирета «--» на многоточие «...»</FixDoubleDash>
     <FixDoubleGreaterThan>Премахване на символ «&gt;&gt;» в началото на реда</FixDoubleGreaterThan>
@@ -2704,8 +2706,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <GoToNextEmptyLine>Преминаване на следващия празен ред</GoToNextEmptyLine>
     <MergeSelectedLines>Обединяване на избраните редове</MergeSelectedLines>
     <MergeSelectedLinesAndAutoBreak>Обединяване на избраните редове и авт. прекъсване</MergeSelectedLinesAndAutoBreak>
-    <MergeSelectedLinesAndUnbreak>Обединяване на избраните редове и прекъсване</MergeSelectedLinesAndUnbreak>
-    <MergeSelectedLinesAndUnbreakCjk>Обединяване на избраните редове и прекъсване без интервал (CJK)</MergeSelectedLinesAndUnbreakCjk>
+    <MergeSelectedLinesAndUnbreak>Обединяване на избраните редове и премахване на прекъсването</MergeSelectedLinesAndUnbreak>
+    <MergeSelectedLinesAndUnbreakCjk>Обединяване на избраните редове и премахване на прекъсването без интервал (CJK)</MergeSelectedLinesAndUnbreakCjk>
     <MergeSelectedLinesOnlyFirstText>Обединяване на избраните редове, запазване само на първия не празен текст</MergeSelectedLinesOnlyFirstText>
     <MergeSelectedLinesBilingual>Обединяване на избраните двуезични редове</MergeSelectedLinesBilingual>
     <MergeWithPreviousBilingual>Обединяване с предишния двуезичен</MergeWithPreviousBilingual>
@@ -2716,10 +2718,10 @@ https://github.com/SubtitleEdit/subtitleedit
     <SwitchOriginalAndTranslationTextBoxes>Превключване на оригинални и преведени текстови полета/колони за преглед на списъка</SwitchOriginalAndTranslationTextBoxes>
     <MergeOriginalAndTranslation>Обединяване на оригинален и преведен</MergeOriginalAndTranslation>
     <MergeWithNext>Обединяване със следващия</MergeWithNext>
-    <MergeWithPreviousAndUnbreak>Обединяване с предишния и без разделяне</MergeWithPreviousAndUnbreak>
-    <MergeWithNextAndUnbreak>Обединяване със следващия и без разделяне</MergeWithNextAndUnbreak>
-    <MergeWithPreviousAndBreak>Обединяване с предишния и авт. разделяне</MergeWithPreviousAndBreak>
-    <MergeWithNextAndBreak>Обединяване със следващия и авт. разделяне</MergeWithNextAndBreak>
+    <MergeWithPreviousAndUnbreak>Обединяване с предишния и премахване на прекъсването</MergeWithPreviousAndUnbreak>
+    <MergeWithNextAndUnbreak>Обединяване със следващия и премахване на прекъсването</MergeWithNextAndUnbreak>
+    <MergeWithPreviousAndBreak>Обединяване с предишния и авт. прекъсване</MergeWithPreviousAndBreak>
+    <MergeWithNextAndBreak>Обединяване със следващия и авт. прекъсване</MergeWithNextAndBreak>
     <MergeWithPrevious>Обединяване с предишния</MergeWithPrevious>
     <ShortcutIsAlreadyDefinedX>Прекият път вече е зададен: {0}</ShortcutIsAlreadyDefinedX>
     <ToggleTranslationAndOriginalInPreviews>Превключване на превод и оригинал за предварителен преглед на видео/аудио</ToggleTranslationAndOriginalInPreviews>
@@ -2748,7 +2750,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <MainTextBoxAutoBreakFromPosAndGoToNext>Прекъсване на първото място от позицията на курсора и преминаване към следващото</MainTextBoxAutoBreakFromPosAndGoToNext>
     <MainTextBoxDictate>Диктуване (клавиш надолу=начало на запис, клавиш нагоре=край на записа)</MainTextBoxDictate>
     <MainTextBoxUnbreak>Без прекъсване на текста</MainTextBoxUnbreak>
-    <MainTextBoxUnbreakNoSpace>Прекъсване без пространство (CJK) /Chinese, Japanese &amp; Korean символи/</MainTextBoxUnbreakNoSpace>
+    <MainTextBoxUnbreakNoSpace>Прехвърляне без място (CJK) /Chinese, Japanese &amp; Korean символи/</MainTextBoxUnbreakNoSpace>
     <MainTextBoxAssaIntellisense>Показване на помощника за ASSA тагове</MainTextBoxAssaIntellisense>
     <MainTextBoxAssaRemoveTag>Премахване на ASSA тага при курсора</MainTextBoxAssaRemoveTag>
     <MainFileSaveAll>Запис на всички</MainFileSaveAll>
