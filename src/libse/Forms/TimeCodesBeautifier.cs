@@ -89,11 +89,11 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     if (ProgressChanged != null)
                     {
                         var progress = (double)(pass * _subtitle.Paragraphs.Count + p) / (_subtitle.Paragraphs.Count * amountOfPasses);
-                        var pct = (int)Math.Round(progress * 100.0, MidpointRounding.AwayFromZero);
-                        if (pct != progressPercentage)
+                        var percentage = (int)Math.Round(progress * 100.0, MidpointRounding.AwayFromZero);
+                        if (percentage != progressPercentage)
                         {
-                            progressPercentage = pct;
-                            ProgressChanged.Invoke(pct);
+                            progressPercentage = percentage;
+                            ProgressChanged.Invoke(percentage);
                         }
                     }
                 }
