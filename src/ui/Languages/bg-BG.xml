@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.6.13</Version>
-    <TranslatedBy>Последен превод на български 28.07.2023: KalinM</TranslatedBy>
+    <TranslatedBy>Последен превод на български 30.07.2023: KalinM</TranslatedBy>
     <CultureName>bg-BG</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -149,8 +149,7 @@ https://github.com/SubtitleEdit/subtitleedit
 Забележка: Проверете за свободно дисково пространство</WaveFileMalformed>
     <LowDiskSpace>НЕДОСТАТЪЧНО ДИСКОВО ПРОСТРАНСТВО!</LowDiskSpace>
     <FreeDiskSpace>Свободно: {0}</FreeDiskSpace>
-    <NoAudioTracksFoundGenerateEmptyWaveform>НЯМА НАМЕРЕНИ АУДИ ЗАПИСИ!
-Създаване на празна вълнова Wav форма на звуковия сигнал?</NoAudioTracksFoundGenerateEmptyWaveform>
+    <NoAudioTracksFoundGenerateEmptyWaveform>НЯМА НАМЕРЕНИ АУДИ ЗАПИСИ!</NoAudioTracksFoundGenerateEmptyWaveform>
   </AddWaveform>
   <AddWaveformBatch>
     <Title>Пакетно създаване вълнова Wav форма на звуковия сигнал</Title>
@@ -187,13 +186,13 @@ https://github.com/SubtitleEdit/subtitleedit
   </ApplyDurationLimits>
   <AudioToText>
     <Title>Аудио/Видео към текст</Title>
-    <Info>Генерирай текст от аудио чрез Vosk/Kaldi разпознаване на реч</Info>
+    <Info>Генериране текст от аудио чрез Vosk/Kaldi разпознаване на реч</Info>
     <WhisperInfo>Генерирайте текст от аудио чрез разпознаване на говор Whisper</WhisperInfo>
     <Engine>Двигател</Engine>
     <VoskWebsite>Уебсайт на Vosk</VoskWebsite>
     <WhisperWebsite>Уебсайт Whisper</WhisperWebsite>
     <WhisperNotFound>Не е намерен Whisper.
-	
+
 Прочетете повече информация (уеб)?</WhisperNotFound>
     <Models>Модели</Models>
     <LanguagesAndModels>Езици и модели</LanguagesAndModels>
@@ -492,7 +491,7 @@ https://github.com/SubtitleEdit/subtitleedit
   <Bookmarks>
     <EditBookmark>Редактиране на отметка</EditBookmark>
     <AddBookmark>Добавяне на отметка</AddBookmark>
-    <GoToBookmark>Отидете на отметката</GoToBookmark>
+    <GoToBookmark>Преминаване на отметката</GoToBookmark>
   </Bookmarks>
   <ChangeCasing>
     <Title>Промяна големината на буквите</Title>
@@ -514,8 +513,7 @@ https://github.com/SubtitleEdit/subtitleedit
   </ChangeCasingNames>
   <ChangeFrameRate>
     <Title>Промяна честотата (fps) на кадрите</Title>
-    <ConvertFrameRateOfSubtitle>Конвертиране честотата (fps) на кадрите
-	на субтитрите</ConvertFrameRateOfSubtitle>
+    <ConvertFrameRateOfSubtitle>Конвертиране честотата (fps) на кадрите на субтитрите</ConvertFrameRateOfSubtitle>
     <FromFrameRate>От честота кадри (fps):</FromFrameRate>
     <ToFrameRate>Към честота кадри (fps):</ToFrameRate>
     <FrameRateNotCorrect>Честотата на кадрите (fps) е некоректна</FrameRateNotCorrect>
@@ -1570,7 +1568,7 @@ https://github.com/SubtitleEdit/subtitleedit
         <EditBookmark>Редактиране на отметка...</EditBookmark>
         <RemoveBookmark>Премахване на отметката</RemoveBookmark>
         <GoToSourceView>Към първоначалния изглед</GoToSourceView>
-        <GoToListView>Преглед на списъка</GoToListView>
+        <GoToListView>Към преглед на списъка</GoToListView>
         <ExtractAudio>Извличане на аудио...</ExtractAudio>
       </ContextMenu>
     </Menu>
@@ -1614,7 +1612,7 @@ https://github.com/SubtitleEdit/subtitleedit
       <Pause>Пауза</Pause>
       <GoToSubtitlePositionAndPause>Отиди до субпоз. и пауза</GoToSubtitlePositionAndPause>
       <SetStartTime>Задай начално време</SetStartTime>
-      <SetEndTimeAndGoToNext>Задай край и продължи</SetEndTimeAndGoToNext>
+      <SetEndTimeAndGoToNext>Задай край и към следващия</SetEndTimeAndGoToNext>
       <AdjustedViaEndTime>Настройване чрез крайно време {0}</AdjustedViaEndTime>
       <SetEndTime>Задай крайно време</SetEndTime>
       <SetStartTimeAndOffsetTheRest>НачалоИзместиОстаналите</SetStartTimeAndOffsetTheRest>
@@ -1862,11 +1860,11 @@ https://github.com/SubtitleEdit/subtitleedit
     <ExportPlainTextAs>Експорт на чист текст като</ExportPlainTextAs>
     <TextFiles>Текстови файлове</TextFiles>
     <SubtitleExported>Субтитрите са изнесени</SubtitleExported>
-    <LineNumberXErrorReadingFromSourceLineY>Грешка в прочитането на: {1} (Ред {0})</LineNumberXErrorReadingFromSourceLineY>
-    <LineNumberXErrorReadingTimeCodeFromSourceLineY>Грешка в прочитането на тайминг: {1} във файла със субтитрите (Ред {0})</LineNumberXErrorReadingTimeCodeFromSourceLineY>
-    <LineNumberXExpectedNumberFromSourceLineY>Предполагаема грешка във файла със субтитрите [Ред {0}]: {1}</LineNumberXExpectedNumberFromSourceLineY>
-    <LineNumberXExpectedEmptyLine>Ред {0} - Очаква се празен ред, но е намерен номер ({1}), последван от времеви код.</LineNumberXExpectedEmptyLine>
-    <BeforeGuessingTimeCodes>Преди налучването на времевия код</BeforeGuessingTimeCodes>
+    <LineNumberXErrorReadingFromSourceLineY>Ред {0} - грешка в прочитането на: {1}</LineNumberXErrorReadingFromSourceLineY>
+    <LineNumberXErrorReadingTimeCodeFromSourceLineY>Ред {0} - грешка в прочитането на времевия код: {1}</LineNumberXErrorReadingTimeCodeFromSourceLineY>
+    <LineNumberXExpectedNumberFromSourceLineY>Ред {0} - очакван номер на субтитрите: {1}</LineNumberXExpectedNumberFromSourceLineY>
+    <LineNumberXExpectedEmptyLine>Ред {0}: Очаква се празен ред, но е намерен номер ({1}), последван от времеви код.</LineNumberXExpectedEmptyLine>
+    <BeforeGuessingTimeCodes>Преди познаването на времевия код</BeforeGuessingTimeCodes>
     <BeforeAutoDuration>Преди авт. времетраене за избраните редове</BeforeAutoDuration>
     <BeforeColumnPaste>Преди поставянето на колона</BeforeColumnPaste>
     <BeforeColumnDelete>Преди изтриването на колона</BeforeColumnDelete>
@@ -2323,7 +2321,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <SubtitleFontSize>Размер на шрифта</SubtitleFontSize>
     <SubtitleBold>Удебелен</SubtitleBold>
     <VideoAutoOpen>Авт. отваряне на видео файл при отваряне на субтитри</VideoAutoOpen>
-    <AllowVolumeBoost>Разрешено е увеличаване силата на звука</AllowVolumeBoost>
+    <AllowVolumeBoost>Разрешаване увеличаване силата на звука</AllowVolumeBoost>
     <SubtitleCenter>По средата</SubtitleCenter>
     <SubtitleFontColor>Цвят на шрифта на субтитрите</SubtitleFontColor>
     <SubtitleBackgroundColor>Цвят на фона на субтитрите</SubtitleBackgroundColor>
@@ -2345,14 +2343,14 @@ https://github.com/SubtitleEdit/subtitleedit
     <MainListViewDoubleClickAction>Двойно кликване в/у ред в «Изглед на списъка» на главния прозорец ще:</MainListViewDoubleClickAction>
     <MainListViewColumnsInfo>Изберете колони за показване</MainListViewColumnsInfo>
     <MainListViewNothing>Нищо</MainListViewNothing>
-    <MainListViewVideoGoToPositionAndPause>Премине до позицията на видеото и пауза</MainListViewVideoGoToPositionAndPause>
-    <MainListViewVideoGoToPositionAndPlay>Премине до позицията на видеото и възпроизвеждане</MainListViewVideoGoToPositionAndPlay>
-    <MainListViewVideoGoToPositionAndPlayCurrentAndPause>Премине до позицията на видеото, възпр. на текущото и пауза</MainListViewVideoGoToPositionAndPlayCurrentAndPause>
-    <MainListViewEditText>Премине до панела за редактиране на текст</MainListViewEditText>
-    <MainListViewVideoGoToPositionMinus1SecAndPause>Премине на видео позиция - 1 сек и пауза</MainListViewVideoGoToPositionMinus1SecAndPause>
-    <MainListViewVideoGoToPositionMinusHalfSecAndPause>Премине на видео позиция - 0,5 сек и пауза</MainListViewVideoGoToPositionMinusHalfSecAndPause>
-    <MainListViewVideoGoToPositionMinus1SecAndPlay>Премине на видео позиция - 1 сек и пускане</MainListViewVideoGoToPositionMinus1SecAndPlay>
-    <MainListViewEditTextAndPause>Премине в текстовото поле и пауза на видео позиция</MainListViewEditTextAndPause>
+    <MainListViewVideoGoToPositionAndPause>Преминаване до позицията на видеото и пауза</MainListViewVideoGoToPositionAndPause>
+    <MainListViewVideoGoToPositionAndPlay>Преминаване до позицията на видеото и възпроизвеждане</MainListViewVideoGoToPositionAndPlay>
+    <MainListViewVideoGoToPositionAndPlayCurrentAndPause>Преминаване до позицията на видеото, възпр. на текущото и пауза</MainListViewVideoGoToPositionAndPlayCurrentAndPause>
+    <MainListViewEditText>Преминаване до панела за редактиране на текст</MainListViewEditText>
+    <MainListViewVideoGoToPositionMinus1SecAndPause>Преминаване на видео позиция - 1 сек и пауза</MainListViewVideoGoToPositionMinus1SecAndPause>
+    <MainListViewVideoGoToPositionMinusHalfSecAndPause>Преминаване на видео позиция - 0,5 сек и пауза</MainListViewVideoGoToPositionMinusHalfSecAndPause>
+    <MainListViewVideoGoToPositionMinus1SecAndPlay>Преминаване на видео позиция - 1 сек и пускане</MainListViewVideoGoToPositionMinus1SecAndPlay>
+    <MainListViewEditTextAndPause>Преминаване в текстовото поле и пауза на видео позиция</MainListViewEditTextAndPause>
     <VideoFileName>Име на видео файла</VideoFileName>
     <ExistingFileName>Съществуващо име на файла</ExistingFileName>
     <AutoBackup>Авт. архив на:</AutoBackup>
@@ -2426,8 +2424,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <WaveformUseCenterChannelOnly>Използване само на предния централен канал (за 5.1/7.1)</WaveformUseCenterChannelOnly>
     <DownloadX>Изтегляне на {0}</DownloadX>
     <WaveformFFmpegPath>Път до FFmpeg:</WaveformFFmpegPath>
-    <WaveformBrowseToFFmpeg>Преминете към FFmpeg</WaveformBrowseToFFmpeg>
-    <WaveformBrowseToVLC>Преминете към VLC portable</WaveformBrowseToVLC>
+    <WaveformBrowseToFFmpeg>Преминаване към FFmpeg</WaveformBrowseToFFmpeg>
+    <WaveformBrowseToVLC>Преминаване към VLC portable</WaveformBrowseToVLC>
     <SubStationAlphaStyle>(Специален) Sub Station Alpha (SSA) стил</SubStationAlphaStyle>
     <ChooseColor>Избор на цвят</ChooseColor>
     <SsaOutline>Контур</SsaOutline>
@@ -2718,8 +2716,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <SwitchOriginalAndTranslationTextBoxes>Превключване на оригинални и преведени текстови полета/колони за преглед на списъка</SwitchOriginalAndTranslationTextBoxes>
     <MergeOriginalAndTranslation>Обединяване на оригинален и преведен</MergeOriginalAndTranslation>
     <MergeWithNext>Обединяване със следващия</MergeWithNext>
-    <MergeWithPreviousAndUnbreak>Обединяване с предишния и неразделен</MergeWithPreviousAndUnbreak>
-    <MergeWithNextAndUnbreak>Обединяване със следващия и неразделен</MergeWithNextAndUnbreak>
+    <MergeWithPreviousAndUnbreak>Обединяване с предишния и без разделяне</MergeWithPreviousAndUnbreak>
+    <MergeWithNextAndUnbreak>Обединяване със следващия и без разделяне</MergeWithNextAndUnbreak>
     <MergeWithPreviousAndBreak>Обединяване с предишния и авт. разделяне</MergeWithPreviousAndBreak>
     <MergeWithNextAndBreak>Обединяване със следващия и авт. разделяне</MergeWithNextAndBreak>
     <MergeWithPrevious>Обединяване с предишния</MergeWithPrevious>
@@ -2764,7 +2762,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <BreakEarlyForComma>Прекъсване в началото за запетая</BreakEarlyForComma>
     <GoogleTranslate>Google преводач</GoogleTranslate>
     <GoogleTranslateApiKey>API ключ</GoogleTranslateApiKey>
-    <MicrosoftBingTranslator>Microsoft Bing преводач</MicrosoftBingTranslator>
+    <MicrosoftBingTranslator>Microsoft преводач</MicrosoftBingTranslator>
     <HowToSignUp>Как да се регистрирате</HowToSignUp>
     <MicrosoftTranslateApiKey>Ключ</MicrosoftTranslateApiKey>
     <MicrosoftTranslateTokenEndpoint>Крайна точка на токена</MicrosoftTranslateTokenEndpoint>
@@ -3265,8 +3263,7 @@ https://github.com/SubtitleEdit/subtitleedit
   </VobSubOcrNewFolder>
   <VobSubOcrSetItalicAngle>
     <Title>Задаване наклон на ъгъла</Title>
-    <Description>Регулирайте стойността, докато стилът на текста стане нормален и не е в курсив (НЕ-наклонен).
-Обърнете внимание, че оригиналното изображение трябва да е изцяло в курсив (наклонен).</Description>
+    <Description>Регулирайте стойността, докато стилът на текста стане нормален и не е в курсив (НЕ-наклонен). Обърнете внимание, че оригиналното изображение трябва да е изцяло в курсив (наклонен).</Description>
   </VobSubOcrSetItalicAngle>
   <OcrPreprocessing>
     <Title>Предварителна обработка на OCR изображение</Title>
