@@ -315,9 +315,11 @@ namespace Nikse.SubtitleEdit.Controls
 
         public NikseComboBox()
         {
-            SetStyle(ControlStyles.ResizeRedraw | ControlStyles.OptimizedDoubleBuffer, true);
-
+            _textBox = new TextBox();
+            _textBox.Visible = false;
             _items = new NikseComboBoxCollection(this);
+
+            SetStyle(ControlStyles.ResizeRedraw | ControlStyles.OptimizedDoubleBuffer, true);
 
             KeyDown += (sender, e) =>
             {
@@ -338,7 +340,6 @@ namespace Nikse.SubtitleEdit.Controls
 
             };
 
-            _textBox = new TextBox();
             _textBox.KeyDown += (sender, e) =>
             {
                 if (DropDownStyle != ComboBoxStyle.DropDown)
@@ -752,27 +753,32 @@ namespace Nikse.SubtitleEdit.Controls
             }
 
             e.Graphics.Clear(BackColor);
-
-            if (DropDownStyle == ComboBoxStyle.DropDown)
-            {
-                _textBox.Visible = true;
-            }
-            else
-            {
-                _textBox.Visible = false;
-                using (var textBrush = new SolidBrush(ButtonForeColor))
-                {
-                    e.Graphics.DrawString(_textBox.Text, _textBox.Font, textBrush, _textBox.Bounds);
-                }
-            }
-
             using (var pen = Focused || _textBox.Focused || (_listView != null && _listView.Focused) ? new Pen(_buttonForeColorOver, 1f) : new Pen(BorderColor, 1f))
             {
                 var borderRectangle = new Rectangle(e.ClipRectangle.X, e.ClipRectangle.Y, e.ClipRectangle.Width - 1, e.ClipRectangle.Height - 1);
                 e.Graphics.DrawRectangle(pen, borderRectangle);
             }
 
-            _textBox.Invalidate();
+            if (DropDownStyle == ComboBoxStyle.DropDown)
+            {
+                if (!_textBox.Visible)
+                {
+                    _textBox.Visible = true;
+                }
+                _textBox.Invalidate();
+            }
+            else
+            {
+                if (_textBox.Visible)
+                {
+                    _textBox.Visible = false;
+                }
+
+                using (var textBrush = new SolidBrush(ButtonForeColor))
+                {
+                    e.Graphics.DrawString(_textBox.Text, _textBox.Font, textBrush, _textBox.Bounds);
+                }
+            }
 
             Brush brush;
             if (_buttonDownActive)
