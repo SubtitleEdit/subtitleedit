@@ -503,7 +503,7 @@ namespace Nikse.SubtitleEdit.Controls
                 return;
             }
 
-            base.OnPaint(e);
+            e.Graphics.Clear(BackColor);
             using (var pen = _textBox.Focused ? new Pen(_buttonForeColorOver, 1f) : new Pen(BorderColor, 1f))
             {
                 var borderRectangle = new Rectangle(e.ClipRectangle.X, e.ClipRectangle.Y, e.ClipRectangle.Width - 1, e.ClipRectangle.Height - 1);
@@ -635,10 +635,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         private void DrawDisabled(PaintEventArgs e)
         {
-            using (var brushBg = new SolidBrush(BackColorDisabled))
-            {
-                e.Graphics.FillRectangle(brushBg, e.ClipRectangle);
-            }
+            e.Graphics.Clear(BackColorDisabled);
 
             using (var pen = new Pen(BorderColorDisabled, 1f))
             {
