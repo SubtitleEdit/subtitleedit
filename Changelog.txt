@@ -2,7 +2,8 @@
 
 3.6.14 (xth August 2023) BETA
 * NEW:
-   * New toolbar themes - thx jmaraujouy
+   * New toolbar/video-player themes - thx jmaraujouy
+   * Beautify time codes (via shot changes) - thx  Flitskikker
    * Use native styles for WebVTT
    * Add video format ProRes for "Generate video with burned-in sub"
    * Allow setting profile from cmd line - thx emcodem
@@ -19,6 +20,8 @@
    * Improve convert of SSA to ASSA - thx Emiliano
    * Update burn-in video preview to video - thx Masina86
    * Improve handling of invalid xml in ttml - thx m0ck69
+   * Update Whisper Const-me to version 1.12
+   * Minor refact/optmize - thx ivandrofly
 * FIXED:
    * Fix "Find Double Words" - th uckthis
    * Fix "double dash" issue in "Fix common errors" - thx Joel
@@ -28,6 +31,8 @@
    * Preserve white space in "Multiple replace import" - thx OtaStrom
    * Fix frozen settings in "Batch convert" - thx OtaStrom
    * Fix export image alignment when using font tag - thx Matt
+   * Fix crash in OCR Find - thx przemo20
+   * Fix crash generating empty wav for online video - thx Gromko1111 
 
 
 3.6.13 (14th May 2023)

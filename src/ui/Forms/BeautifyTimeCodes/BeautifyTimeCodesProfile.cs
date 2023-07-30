@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic;
@@ -85,6 +86,17 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             var comboBoxRight = comboBoxChainingGeneralShotChangeBehavior.Right;
             comboBoxChainingGeneralShotChangeBehavior.Left = Math.Max(labelChainingGeneralShotChangeBehavior.Left + labelChainingGeneralShotChangeBehavior.Width + 6, comboBoxChainingGeneralShotChangeBehavior.Left);
             comboBoxChainingGeneralShotChangeBehavior.Width = comboBoxRight - comboBoxChainingGeneralShotChangeBehavior.Left;
+
+            var dropDownWidth = comboBoxChainingGeneralShotChangeBehavior.Width;
+            using (var g = Graphics.FromHwnd(IntPtr.Zero))
+            {
+                foreach (var item in comboBoxChainingGeneralShotChangeBehavior.Items)
+                {
+                    var itemWidth = (int)g.MeasureString((string)item, Font).Width + 5;
+                    dropDownWidth = Math.Max(itemWidth, dropDownWidth);
+                }
+            }
+            comboBoxChainingGeneralShotChangeBehavior.DropDownWidth = dropDownWidth;
 
             foreach (BeautifyTimeCodesSettings.BeautifyTimeCodesProfile.Preset preset in Enum.GetValues(typeof(BeautifyTimeCodesSettings.BeautifyTimeCodesProfile.Preset)))
             {

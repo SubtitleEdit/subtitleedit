@@ -33,27 +33,28 @@ namespace Nikse.SubtitleEdit.Forms
         private const int IndexBreakLongLines = 10;
         private const int IndexMergeShortLines = 11;
         private const int IndexMergeShortLinesAll = 12;
-        private const int IndexDoubleApostropheToQuote = 13;
-        private const int IndexFixMusicNotation = 14;
-        private const int IndexAddPeriodAfterParagraph = 15;
-        private const int IndexStartWithUppercaseLetterAfterParagraph = 16;
-        private const int IndexStartWithUppercaseLetterAfterPeriodInsideParagraph = 17;
-        private const int IndexStartWithUppercaseLetterAfterColon = 18;
-        private const int IndexAddMissingQuotes = 19;
-        private const int IndexFixHyphens = 20;
-        private const int IndexRemoveHyphensSingleLine = 21;
-        private const int IndexFix3PlusLines = 22;
-        private const int IndexFixDoubleDash = 23;
-        private const int IndexFixDoubleGreaterThan = 24;
-        private const int IndexFixContinuationStyle = 25;
-        private const int IndexFixMissingOpenBracket = 26;
-        private const int IndexFixOcrErrorsViaReplaceList = 27;
-        private const int IndexUppercaseIInsideLowercaseWord = 28;
-        private const int IndexRemoveSpaceBetweenNumbers = 29;
-        private const int IndexDialogsOnOneLine = 30;
-        private const int IndexRemoveDashFirstLine = 31;
-        private const int IndexNormalizeStrings = 32;
-        private const int IndexFixEllipsesStart = 33;
+        private const int IndexMergeShortLinesPixelWidth = 13;
+        private const int IndexDoubleApostropheToQuote = 14;
+        private const int IndexFixMusicNotation = 15;
+        private const int IndexAddPeriodAfterParagraph = 16;
+        private const int IndexStartWithUppercaseLetterAfterParagraph = 17;
+        private const int IndexStartWithUppercaseLetterAfterPeriodInsideParagraph = 18;
+        private const int IndexStartWithUppercaseLetterAfterColon = 19;
+        private const int IndexAddMissingQuotes = 20;
+        private const int IndexFixHyphens = 21;
+        private const int IndexRemoveHyphensSingleLine = 22;
+        private const int IndexFix3PlusLines = 23;
+        private const int IndexFixDoubleDash = 24;
+        private const int IndexFixDoubleGreaterThan = 25;
+        private const int IndexFixContinuationStyle = 26;
+        private const int IndexFixMissingOpenBracket = 27;
+        private const int IndexFixOcrErrorsViaReplaceList = 28;
+        private const int IndexUppercaseIInsideLowercaseWord = 29;
+        private const int IndexRemoveSpaceBetweenNumbers = 30;
+        private const int IndexDialogsOnOneLine = 31;
+        private const int IndexRemoveDashFirstLine = 32;
+        private const int IndexNormalizeStrings = 33;
+        private const int IndexFixEllipsesStart = 34;
         private int _indexAloneLowercaseIToUppercaseIEnglish = -1;
         private int _turkishAnsiIndex = -1;
         private int _danishLetterIIndex = -1;
@@ -377,7 +378,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             _fixActions = new List<FixItem>
             {
-                new FixItem(_language.RemovedEmptyLinesUnsedLineBreaks, string.Empty, () => new FixEmptyLines().Fix(Subtitle, this), ce.EmptyLinesTicked),
+                new FixItem(_language.RemovedEmptyLinesUnsedLineBreaks, "Has only one valid line!</br><i> -> Has only one valid line!", () => new FixEmptyLines().Fix(Subtitle, this), ce.EmptyLinesTicked),
                 new FixItem(_language.FixOverlappingDisplayTimes, string.Empty, () => new FixOverlappingDisplayTimes().Fix(Subtitle, this), ce.OverlappingDisplayTimeTicked),
                 new FixItem(_language.FixShortDisplayTimes, string.Empty, () => new FixShortDisplayTimes().Fix(Subtitle, this), ce.TooShortDisplayTimeTicked),
                 new FixItem(_language.FixLongDisplayTimes, string.Empty, () => new FixLongDisplayTimes().Fix(Subtitle, this), ce.TooLongDisplayTimeTicked),
@@ -388,18 +389,19 @@ namespace Nikse.SubtitleEdit.Forms
                 new FixItem(_language.RemoveUnneededPeriods, _language.RemoveUnneededPeriodsExample, () => new FixUnneededPeriods().Fix(Subtitle, this), ce.UnneededPeriodsTicked),
                 new FixItem(_language.FixCommas, ",, -> ,", () => new FixCommas().Fix(Subtitle, this), ce.FixCommasTicked),
                 new FixItem(_language.BreakLongLines, string.Empty, () => new FixLongLines().Fix(Subtitle, this), ce.BreakLongLinesTicked),
-                new FixItem(_language.RemoveLineBreaks, string.Empty, () => new FixShortLines().Fix(Subtitle, this), ce.MergeShortLinesTicked),
+                new FixItem(_language.RemoveLineBreaks, "Foo</br>bar! -> Foo bar!", () => new FixShortLines().Fix(Subtitle, this), ce.MergeShortLinesTicked),
                 new FixItem(_language.RemoveLineBreaksAll, string.Empty, () => new FixShortLinesAll().Fix(Subtitle, this), ce.MergeShortLinesAllTicked),
-                new FixItem(_language.FixDoubleApostrophes, string.Empty, () => new FixDoubleApostrophes().Fix(Subtitle, this), ce.DoubleApostropheToQuoteTicked),
+                new FixItem(_language.RemoveLineBreaksPixelWidth, string.Empty, () => new FixShortLinesPixelWidth().Fix(Subtitle, this), ce.MergeShortLinesPixelWidthTicked),
+                new FixItem(_language.FixDoubleApostrophes, "''Has double single quotes'' -> \"Has single double quote\"", () => new FixDoubleApostrophes().Fix(Subtitle, this), ce.DoubleApostropheToQuoteTicked),
                 new FixItem(_language.FixMusicNotation, _language.FixMusicNotationExample, () => new FixMusicNotation().Fix(Subtitle, this), ce.FixMusicNotationTicked),
-                new FixItem(_language.AddPeriods, string.Empty, () => new FixMissingPeriodsAtEndOfLine().Fix(Subtitle, this), ce.AddPeriodAfterParagraphTicked),
-                new FixItem(_language.StartWithUppercaseLetterAfterParagraph, string.Empty, () => new FixStartWithUppercaseLetterAfterParagraph().Fix(Subtitle, this) , ce.StartWithUppercaseLetterAfterParagraphTicked),
-                new FixItem(_language.StartWithUppercaseLetterAfterPeriodInsideParagraph, string.Empty, () => new FixStartWithUppercaseLetterAfterPeriodInsideParagraph().Fix(Subtitle, this) , ce.StartWithUppercaseLetterAfterPeriodInsideParagraphTicked),
-                new FixItem(_language.StartWithUppercaseLetterAfterColon, string.Empty, () => new FixStartWithUppercaseLetterAfterColon().Fix(Subtitle, this), ce.StartWithUppercaseLetterAfterColonTicked),
+                new FixItem(_language.AddPeriods, "Hello world -> Hello world.", () => new FixMissingPeriodsAtEndOfLine().Fix(Subtitle, this), ce.AddPeriodAfterParagraphTicked),
+                new FixItem(_language.StartWithUppercaseLetterAfterParagraph, "p1: Foobar! || p2: foobar! -> p1: Foobar! || p2: Foobar!", () => new FixStartWithUppercaseLetterAfterParagraph().Fix(Subtitle, this) , ce.StartWithUppercaseLetterAfterParagraphTicked),
+                new FixItem(_language.StartWithUppercaseLetterAfterPeriodInsideParagraph, "Hello there! how are you?  -> Hello there! How are you?", () => new FixStartWithUppercaseLetterAfterPeriodInsideParagraph().Fix(Subtitle, this) , ce.StartWithUppercaseLetterAfterPeriodInsideParagraphTicked),
+                new FixItem(_language.StartWithUppercaseLetterAfterColon, "Speaker: hello world! -> Speaker: Hello world!", () => new FixStartWithUppercaseLetterAfterColon().Fix(Subtitle, this), ce.StartWithUppercaseLetterAfterColonTicked),
                 new FixItem(_language.AddMissingQuotes, _language.AddMissingQuotesExample, () => new AddMissingQuotes().Fix(Subtitle, this), ce.AddMissingQuotesTicked),
                 new FixItem( string.Format(_language.FixHyphensInDialogs, GetDialogStyle(Configuration.Settings.General.DialogStyle)), string.Empty, () => new FixHyphensInDialog().Fix(Subtitle, this), ce.FixHyphensTicked),
-                new FixItem( _language.RemoveHyphensSingleLine, string.Empty, () => new FixHyphensRemoveDashSingleLine().Fix(Subtitle, this), ce.FixHyphensRemoveSingleLineTicked),
-                new FixItem(_language.Fix3PlusLines, string.Empty, () => new Fix3PlusLines().Fix(Subtitle, this), ce.Fix3PlusLinesTicked),
+                new FixItem( _language.RemoveHyphensSingleLine, "- Foobar. -> Foobar.", () => new FixHyphensRemoveDashSingleLine().Fix(Subtitle, this), ce.FixHyphensRemoveSingleLineTicked),
+                new FixItem(_language.Fix3PlusLines, "Foo</br>bar</br>baz! -> Foo bar baz!", () => new Fix3PlusLines().Fix(Subtitle, this), ce.Fix3PlusLinesTicked),
                 new FixItem(_language.FixDoubleDash, _language.FixDoubleDashExample, () => new FixDoubleDash().Fix(Subtitle, this), ce.FixDoubleDashTicked),
                 new FixItem(_language.FixDoubleGreaterThan, _language.FixDoubleGreaterThanExample, () => new FixDoubleGreaterThan().Fix(Subtitle, this), ce.FixDoubleGreaterThanTicked),
                 new FixItem( string.Format(_language.FixContinuationStyleX, UiUtil.GetContinuationStyleName(Configuration.Settings.General.ContinuationStyle)), string.Empty, () => new FixContinuationStyle
@@ -572,6 +574,8 @@ namespace Nikse.SubtitleEdit.Forms
             FixShortLines.Language.MergeShortLine = LanguageSettings.Current.FixCommonErrors.MergeShortLine;
             FixShortLinesAll.Language.MergeShortLineAll = LanguageSettings.Current.FixCommonErrors.MergeShortLineAll;
             FixShortLinesAll.Language.RemoveLineBreaks = LanguageSettings.Current.FixCommonErrors.RemoveLineBreaks;
+            FixShortLinesPixelWidth.Language.UnbreakShortLine = LanguageSettings.Current.FixCommonErrors.UnbreakShortLinePixelWidth;
+            FixShortLinesPixelWidth.Language.RemoveLineBreaks = LanguageSettings.Current.FixCommonErrors.RemoveLineBreaksPixelWidth;
             FixSpanishInvertedQuestionAndExclamationMarks.Language.FixSpanishInvertedQuestionAndExclamationMarks = LanguageSettings.Current.FixCommonErrors.FixSpanishInvertedQuestionAndExclamationMarks;
             FixStartWithUppercaseLetterAfterColon.Language.StartWithUppercaseLetterAfterColon = LanguageSettings.Current.FixCommonErrors.StartWithUppercaseLetterAfterColon;
             FixStartWithUppercaseLetterAfterParagraph.Language.FixFirstLetterToUppercaseAfterParagraph = LanguageSettings.Current.FixCommonErrors.FixFirstLetterToUppercaseAfterParagraph;
@@ -676,6 +680,17 @@ namespace Nikse.SubtitleEdit.Forms
                     _appliedLog.AppendLine(string.Format(_language.FixedOkXY, sender, message));
                 }
             }
+        }
+
+        public object GetCustomCallbackData(IFixCommonError sender, object input)
+        {
+            if (sender is FixShortLinesPixelWidth)
+            {
+                var text = Convert.ToString(input);
+                return TextWidth.CalcPixelWidth(text);
+            }
+
+            return null;
         }
 
         public bool IsName(string candidate)
@@ -1188,6 +1203,7 @@ namespace Nikse.SubtitleEdit.Forms
             ce.BreakLongLinesTicked = listView1.Items[IndexBreakLongLines].Checked;
             ce.MergeShortLinesTicked = listView1.Items[IndexMergeShortLines].Checked;
             ce.MergeShortLinesAllTicked = listView1.Items[IndexMergeShortLinesAll].Checked;
+            ce.MergeShortLinesPixelWidthTicked = listView1.Items[IndexMergeShortLinesPixelWidth].Checked;
 
             ce.UppercaseIInsideLowercaseWordTicked = listView1.Items[IndexUppercaseIInsideLowercaseWord].Checked;
             ce.DoubleApostropheToQuoteTicked = listView1.Items[IndexDoubleApostropheToQuote].Checked;
@@ -1983,11 +1999,6 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void FixCommonErrorsFormClosing(object sender, FormClosingEventArgs e)
         {
-            if (_ocrFixEngine != null)
-            {
-                _ocrFixEngine.Dispose();
-                _ocrFixEngine = null;
-            }
             Owner = null;
         }
 

@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.6.13</Version>
-    <TranslatedBy>Последен превод на български 19.06.2023: KalinM</TranslatedBy>
+    <TranslatedBy>Последен превод на български 25.07.2023: KalinM</TranslatedBy>
     <CultureName>bg-BG</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -37,6 +37,7 @@
     <Actor>Актьор</Actor>
     <Gap>Разлика</Gap>
     <Region>Регион</Region>
+    <Layer>Слой</Layer>
     <NumberSymbol>№</NumberSymbol>
     <Number>Номер</Number>
     <Text>Текст</Text>
@@ -59,7 +60,7 @@
     <TotalLengthX>Обща дължина: {0}</TotalLengthX>
     <TotalLengthXSplitLine>Обща дължина: {0} (раздели реда!)</TotalLengthXSplitLine>
     <SplitLine>Раздели реда!</SplitLine>
-    <NotAvailable>N/A</NotAvailable>
+    <NotAvailable>Не е налично</NotAvailable>
     <Overlap>Застъпване</Overlap>
     <OverlapPreviousLineX>Застъпване с предишния ред ({0:#,##0.###})</OverlapPreviousLineX>
     <OverlapX>Застъпване с ({0:#,##0.###})</OverlapX>
@@ -98,6 +99,7 @@
     <ShortcutX>Пряк път: {0}</ShortcutX>
     <ExampleX>Пример: {0}</ExampleX>
     <Reset>Нулиране</Reset>
+    <Error>Грешка</Error>
     <Warning>Внимание</Warning>
     <UseLargerFontForThisWindow>Използвайте по-голям шрифт за този прозорец</UseLargerFontForThisWindow>
   </General>
@@ -150,8 +152,11 @@ https://github.com/SubtitleEdit/subtitleedit
   </AddWaveform>
   <AddWaveformBatch>
     <Title>Пакетно създаване вълнова Wav форма на звуковия сигнал</Title>
+    <ExtractTimeCodes>Извличане на времеви кодове с FFprobe</ExtractTimeCodes>
     <ExtractingAudio>Извличане на аудио...</ExtractingAudio>
     <Calculating>Пресмятане...</Calculating>
+    <ExtractingTimeCodes>Извличане на времеви кодове...</ExtractingTimeCodes>
+    <DetectingShotChanges>Откриване на промени в кадъра...</DetectingShotChanges>
     <Done>Завършено</Done>
     <Error>Грешка</Error>
   </AddWaveformBatch>
@@ -167,11 +172,16 @@ https://github.com/SubtitleEdit/subtitleedit
     <Fixed>Фиксирани</Fixed>
     <Milliseconds>Милисекунди</Milliseconds>
     <ExtendOnly>Само разширяване</ExtendOnly>
+    <EnforceDurationLimits>Прилагане на минимална и максимална продължителност</EnforceDurationLimits>
+    <CheckShotChanges>Без удължаване миналите промени в кадъра</CheckShotChanges>
+    <BatchCheckShotChanges>Със зачитане на промените в кадъра (ако има такива)</BatchCheckShotChanges>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
     <Title>Прилагане на лимит с ограничения във времетраенето</Title>
+    <CheckShotChanges>Без удължаване миналите промени в кадъра</CheckShotChanges>
     <FixesAvailable>Налични поправки: {0}</FixesAvailable>
     <UnableToFix>Невъзможни поправки: {0}</UnableToFix>
+    <BatchCheckShotChanges>Със зачитане на промените в кадъра (ако има такива)</BatchCheckShotChanges>
   </ApplyDurationLimits>
   <AudioToText>
     <Title>Аудио/Видео към текст</Title>
@@ -356,6 +366,102 @@ https://github.com/SubtitleEdit/subtitleedit
     <MkvLanguageStyleEmpty>Няма езиков код</MkvLanguageStyleEmpty>
     <SearchFolderScanVideo>Също така сканирайте видео файлове в «Папка за търсене» (бавно)</SearchFolderScanVideo>
   </BatchConvert>
+  <BeautifyTimeCodes>
+    <Title>Разкрасяване на времевите кодове</Title>
+    <TitleSelectedLines>Разкрасяване на времеви кодове ({0} избрани реда)</TitleSelectedLines>
+    <GroupTimeCodes>Времеви кодове</GroupTimeCodes>
+    <AlignTimeCodes>Изравняване на времевите кодове с времевите кодове на кадрите</AlignTimeCodes>
+    <ExtractExactTimeCodes>Използване FFprobe за извличане на точни времеви кодове на кадрите</ExtractExactTimeCodes>
+    <ExtractTimeCodes>Извличане на времеви кодове</ExtractTimeCodes>
+    <CancelTimeCodes>Отказ</CancelTimeCodes>
+    <GroupShotChanges>Промени в кадъра</GroupShotChanges>
+    <SnapToShotChanges>Бързи подсказки за промени в кадрите</SnapToShotChanges>
+    <ImportShotChanges>Генериране/импортиране на промени в кадъра...</ImportShotChanges>
+    <EditProfile>Редакция на профила...</EditProfile>
+    <NoTimeCodesLoaded>Няма заредени времеви кодове</NoTimeCodesLoaded>
+    <XTimeCodesLoaded>Заредени са {0} времеви кодове</XTimeCodesLoaded>
+    <NoTimeCodesLoadedError>Избрали сте да извлечете точни времеви кодове на кадри, но няма заредени времеви кодове.
+
+Кликнете върху "{0}" за да извлечете първо времевите кодове, или деактивирайте тази опция.</NoTimeCodesLoadedError>
+    <NoShotChangesLoaded>Няма заредени промени в кадрите</NoShotChangesLoaded>
+    <XShotChangesLoaded>Заредени са {0} промени в кадрите</XShotChangesLoaded>
+    <NoShotChangesLoadedError>Избрали сте да прихващате подсказки за промени в кадрите, но няма заредени промени в кадрите.
+
+
+
+Кликнете върху "{0}" за да генерирате или импортирате първо промените в кадрите, или да деактивирате тази опция.</NoShotChangesLoadedError>
+    <BatchAlignTimeCodes>Изравняване на времевите кодове с времевите кодове на кадрите</BatchAlignTimeCodes>
+    <BatchUseExactTimeCodes>Използване на точни часови кодове (ако има такива)</BatchUseExactTimeCodes>
+    <BatchSnapToShotChanges>Бързи подсказки за промени в кадите (ако има такива)</BatchSnapToShotChanges>
+  </BeautifyTimeCodes>
+  <BeautifyTimeCodesProfile>
+    <Title>Редакция на профила</Title>
+    <LoadPreset>Зареждане на предварително зададени настройки...</LoadPreset>
+    <PresetDefault>По подразбиране</PresetDefault>
+    <PresetNetflix>Netflix</PresetNetflix>
+    <PresetSDI>SDI</PresetSDI>
+    <CreateSimple>Обикновен режим...</CreateSimple>
+    <General>Общ</General>
+    <Gap>Разлика:</Gap>
+    <GapSuffix>кадри (ще презапише потребителските настройки)</GapSuffix>
+    <InCues>В подсказките</InCues>
+    <SubtitlePreviewText>Текст на субтитрите.</SubtitlePreviewText>
+    <Zones>Зони:</Zones>
+    <OutCues>Изходящи подсказки</OutCues>
+    <ConnectedSubtitles>Свързани субтитри</ConnectedSubtitles>
+    <InCueClosest>В подсказката е най-близо</InCueClosest>
+    <OutCueClosest>Изходната подсказка е най-близката</OutCueClosest>
+    <TreadAsConnected>Третира се като свързано, ако разликата е по-малка от:</TreadAsConnected>
+    <Milliseconds>мс</Milliseconds>
+    <Chaining>Верижно свързване</Chaining>
+    <InCueOnShot>В подсказката при промяна на кадъра</InCueOnShot>
+    <OutCueOnShot>Излизане на подсказка при смяна на кадъра</OutCueOnShot>
+    <MaxGap>Макс.  разлика:</MaxGap>
+    <ShotChangeBehavior>Ако между тях има промяна на кадъра:</ShotChangeBehavior>
+    <DontChain>Без свързване на вериги</DontChain>
+    <ExtendCrossingShotChange>Удължаване, промяна на кръстосан кадър</ExtendCrossingShotChange>
+    <ExtendUntilShotChange>Удължаване до смяна на кадъра</ExtendUntilShotChange>
+    <ResetWarning>Това ще нулира текущия ви профил и ще замени всички стойности с тези от избраната предварителна настройка. Това не може да бъде отменено.
+
+
+
+Искате ли да продължите?</ResetWarning>
+    <CreateSimpleTitle>Създаване на обикновен</CreateSimpleTitle>
+    <CreateSimpleInstruction>Въведете тези основни правила и текущият профил ще бъде съответно актуализиран.</CreateSimpleInstruction>
+    <CreateSimpleGapInstruction>Минимално разстояние между субтитрите.</CreateSimpleGapInstruction>
+    <CreateSimpleInCues>В подсказките трябва да има:</CreateSimpleInCues>
+    <CreateSimpleInCues0Frames>Относно промяната на кадъра</CreateSimpleInCues0Frames>
+    <CreateSimpleInCues1Frames>1 кадър след смяната на кадъра</CreateSimpleInCues1Frames>
+    <CreateSimpleInCues2Frames>2 кадъра след смяната на кадъра</CreateSimpleInCues2Frames>
+    <CreateSimpleInCues3Frames>3 кадъра след смяната на кадрите</CreateSimpleInCues3Frames>
+    <CreateSimpleOutCues>Изходящите подсказки трябва да бъдат:</CreateSimpleOutCues>
+    <CreateSimpleOutCues0Frames>Относно промяната на кадъра</CreateSimpleOutCues0Frames>
+    <CreateSimpleOutCues1Frames>1 кадър преди смяната на кадъра</CreateSimpleOutCues1Frames>
+    <CreateSimpleOutCues2Frames>2 кадъра преди смяната на кадрите</CreateSimpleOutCues2Frames>
+    <CreateSimpleOutCues3Frames>3 кадъра преди смяната на кадрите</CreateSimpleOutCues3Frames>
+    <CreateSimpleOutCuesGap>Минимална разлика преди смяната на кадъра</CreateSimpleOutCuesGap>
+    <CreateSimpleSnapClosestCue>За свързани субтитри превключете входящата или изходящта подсказка към промяна на кадъра в зависимост от това кой от тях е по-близо.</CreateSimpleSnapClosestCue>
+    <CreateSimpleMaxOffset>Макс.  изместване:</CreateSimpleMaxOffset>
+    <CreateSimpleMaxOffsetInstruction>Подсказките, които се намират на това разстояние от промяната на кадрите, ще бъдат прехвърлени към промяната на кадрите.</CreateSimpleMaxOffsetInstruction>
+    <CreateSimpleSafeZone>Безопасна зона:</CreateSimpleSafeZone>
+    <CreateSimpleSafeZoneInstruction>Подсказките, които се намират на това разстояние от промяната на кадрите, ще бъдат преместени встрани от промяната на кадрите.</CreateSimpleSafeZoneInstruction>
+    <CreateSimpleChainingGap>Макс.  разлика във веригата:</CreateSimpleChainingGap>
+    <CreateSimpleChainingGapInstruction>Ако разстоянието между два субтитъра е по-малко от тази стойност, субтитрите ще бъдат свързани.</CreateSimpleChainingGapInstruction>
+    <CreateSimpleChainingGapAfterShotChanges>След извеждаща подсказка при промяна на удара разликата може да е по-малка.</CreateSimpleChainingGapAfterShotChanges>
+    <CreateSimpleChainingToolTip>Верижното свързване на субтитрите е препоръчително, за да се осигури постоянен "ритъм" в "мигането" на субтитрите.
+Това предлага по-спокойно изживяване при гледане.
+
+След верижно свързване субтитрите са или свързани (т.е. субтитрите изчезват и нови субтитри се появяват веднага след лека пауза), или не.
+Това дава на зрителя известна представа кога може да премести фокуса си обратно към екрана.
+
+Дължината на разликата във веригата може да бъде малко по-малка веднага след изчезването на субтитрите при смяна на кадъра, тъй като променящият се кадър "нулира" изображението по някакъв начин.
+Използваме присъщия ритъм на изображението.</CreateSimpleChainingToolTip>
+    <CreateSimpleLoadNetflixRules>Зареждане правилата на Netflix</CreateSimpleLoadNetflixRules>
+    <Frames>кадри</Frames>
+    <Maximum>Макс.</Maximum>
+    <GapInMsFormat>{0} мс @ {1} FPS</GapInMsFormat>
+    <OffsetSafeZoneError>Безопасната зона трябва да е по-голяма от макс.  изместване.</OffsetSafeZoneError>
+  </BeautifyTimeCodesProfile>
   <BinEdit>
     <ImportImage>Импорт изобр...</ImportImage>
     <ExportImage>Експорт изобр...</ExportImage>
@@ -1270,6 +1376,7 @@ https://github.com/SubtitleEdit/subtitleedit
         <Duration>Продължителност</Duration>
         <ListErrors>Списък с грешки...</ListErrors>
         <NetflixQualityCheck>Проверка за качеството с Netflix...</NetflixQualityCheck>
+        <BeautifyTimeCodes>Разкрасяване на времевите кодове...</BeautifyTimeCodes>
         <TextAlphabetically>Текст – по азбучен ред</TextAlphabetically>
         <TextSingleLineMaximumLength>Текст – по макс.дължина на ред</TextSingleLineMaximumLength>
         <TextTotalLength>Текст – по обща дължина</TextTotalLength>
@@ -1365,6 +1472,7 @@ https://github.com/SubtitleEdit/subtitleedit
         <VisualSync>Визуална синхронизация</VisualSync>
         <SpellCheck>Проверка на правопис</SpellCheck>
         <NetflixQualityCheck>Проверка за качеството с Netflix</NetflixQualityCheck>
+        <BeautifyTimeCodes>Разкрасяване на времевите кодове</BeautifyTimeCodes>
         <Settings>Настройки</Settings>
         <Help>Помощ</Help>
         <ShowHideWaveform>Покажи/скрий вълновата форма на звуковия сигнал</ShowHideWaveform>
@@ -1385,6 +1493,9 @@ https://github.com/SubtitleEdit/subtitleedit
         <TimedTextSetLanguage>Времеви текст - задаване на език</TimedTextSetLanguage>
         <SamiSetStyle>Sami - задаване на клас</SamiSetStyle>
         <NuendoSetStyle>Nuendo - задаване на символ</NuendoSetStyle>
+        <WebVttSetStyle>WebVTT - задаване на стил</WebVttSetStyle>
+        <WebVttSetVoice>WebVTT - задаване на глас</WebVttSetVoice>
+        <WebVttBrowserPreview>WebVTT - преглед в браузъра</WebVttBrowserPreview>
         <Cut>Изрязване</Cut>
         <Copy>Копиране</Copy>
         <Paste>Вмъкване</Paste>
@@ -1438,6 +1549,7 @@ https://github.com/SubtitleEdit/subtitleedit
         <KaraokeEffect>Ефект караоке...</KaraokeEffect>
         <ShowSelectedLinesEarlierLater>Изместване на избраните редове по-време...</ShowSelectedLinesEarlierLater>
         <VisualSyncSelectedLines>Визуална синхронизация на избраните редове...</VisualSyncSelectedLines>
+        <BeautifyTimeCodesOfSelectedLines>Разкрасяване на времевите кодове на избрани редове...</BeautifyTimeCodesOfSelectedLines>
         <GoogleAndMicrosoftTranslateSelectedLine>Google/Microsoft превод на оригиналния ред</GoogleAndMicrosoftTranslateSelectedLine>
         <SelectedLines>Избрани редове</SelectedLines>
         <TranslateSelectedLines>Превод на избраните редове...</TranslateSelectedLines>
@@ -1471,7 +1583,6 @@ https://github.com/SubtitleEdit/subtitleedit
       <Next>Напред&gt;</Next>
       <AutoBreak>Авт. прекъсни</AutoBreak>
       <Unbreak>ОбединиВ1ред</Unbreak>
-      <SetLayer>Задай слой</SetLayer>
     </Controls>
     <VideoControls>
       <Translate>Превод</Translate>
@@ -1596,6 +1707,10 @@ https://github.com/SubtitleEdit/subtitleedit
     <CommonErrorsFixed>Поправени грешки</CommonErrorsFixed>
     <BeforeRenumbering>Преди преномериранията</BeforeRenumbering>
     <RenumberedStartingFromX>Начално преномериране от: {0}</RenumberedStartingFromX>
+    <BeforeBeautifyTimeCodes>Преди разкрасяване на времевите кодове</BeforeBeautifyTimeCodes>
+    <BeforeBeautifyTimeCodesSelectedLines>Преди разкрасяване на времевите кодове на избраните редове</BeforeBeautifyTimeCodesSelectedLines>
+    <BeautifiedTimeCodes>Разкрасени времеви кодове</BeautifiedTimeCodes>
+    <BeautifiedTimeCodesSelectedLines>Времевите кодове на избраните редове са разкрасени</BeautifiedTimeCodesSelectedLines>
     <BeforeRemovalOfTextingForHearingImpaired>Преди премахването на текста за увредени със слуха</BeforeRemovalOfTextingForHearingImpaired>
     <TextingForHearingImpairedRemovedOneLine>Премахнат текст за увредени със слуха: Един ред</TextingForHearingImpairedRemovedOneLine>
     <TextingForHearingImpairedRemovedXLines>Премахнат текст за увредени със слуха: {0} реда</TextingForHearingImpairedRemovedXLines>
@@ -1752,9 +1867,9 @@ https://github.com/SubtitleEdit/subtitleedit
     <SubtitleExported>Субтитрите са изнесени</SubtitleExported>
     <LineNumberXErrorReadingFromSourceLineY>Грешка в прочитането на: {1} (Ред {0})</LineNumberXErrorReadingFromSourceLineY>
     <LineNumberXErrorReadingTimeCodeFromSourceLineY>Грешка в прочитането на тайминг: {1}
-във файла със субитрите (Ред {0})
+във файла със субтитрите (Ред {0})
 </LineNumberXErrorReadingTimeCodeFromSourceLineY>
-    <LineNumberXExpectedNumberFromSourceLineY>Предполагаема грешка във файла със субитрите [Ред {0}]: {1}</LineNumberXExpectedNumberFromSourceLineY>
+    <LineNumberXExpectedNumberFromSourceLineY>Предполагаема грешка във файла със субтитрите [Ред {0}]: {1}</LineNumberXExpectedNumberFromSourceLineY>
     <LineNumberXExpectedEmptyLine>Ред {0} - Очаква се празен ред, но е намерен номер ({1}), последван от времеви код.</LineNumberXExpectedEmptyLine>
     <BeforeGuessingTimeCodes>Преди налучването на времевия код</BeforeGuessingTimeCodes>
     <BeforeAutoDuration>Преди авт. времетраене за избраните редове</BeforeAutoDuration>
@@ -2151,7 +2266,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <SubtitleFormats>Формати на субтитрите</SubtitleFormats>
     <Toolbar>Лента с инструменти</Toolbar>
     <VideoPlayer>Видео плеър</VideoPlayer>
-    <WaveformAndSpectrogram>Форма на звуковия сигнал/спектрограма</WaveformAndSpectrogram>
+    <WaveformAndSpectrogram>Форма на зв. сигнал/спектрограма</WaveformAndSpectrogram>
     <Tools>Инструменти</Tools>
     <WordLists>Списък с думи</WordLists>
     <SsaStyle>Стил на SSA</SsaStyle>
@@ -2170,6 +2285,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <SpellCheck>Правопис</SpellCheck>
     <NetflixQualityCheck>Качествен контрол
 на Netflix</NetflixQualityCheck>
+    <BeautifyTimeCodes>Разкрасяване на времевите кодове</BeautifyTimeCodes>
     <SettingsName>Настройки</SettingsName>
     <ToggleBookmarks>Превключване на отметки</ToggleBookmarks>
     <ToggleBookmarksWithComment>Превключване на отметки - добавяне на коментар</ToggleBookmarksWithComment>
@@ -2276,6 +2392,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <ShowFullscreenButton>Показване на бутон «На цял екран»</ShowFullscreenButton>
     <PreviewFontName>Име на шрифта за преглед на субтитрите</PreviewFontName>
     <PreviewFontSize>Размер на шрифта за преглед на субтитрите</PreviewFontSize>
+    <PreviewVerticalMargin>Вертикално поле</PreviewVerticalMargin>
     <MainWindowVideoControls>Главен прозорец за видео управление</MainWindowVideoControls>
     <CustomSearchTextAndUrl>URL адрес за търсене на текст</CustomSearchTextAndUrl>
     <WaveformAppearance>Изглед на вълновата форма на звуковия сигнал</WaveformAppearance>
@@ -2290,6 +2407,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <WaveformListViewFocusMouseEnter>Задаване на фокуса върху списъка по курсора при кликване с мишката</WaveformListViewFocusMouseEnter>
     <WaveformSingleClickSelect>Еднократно кликване за избиране на субтитри</WaveformSingleClickSelect>
     <WaveformSnapToShotChanges>Преминаване към промените на сцената (задръжте Shift за отмяна)</WaveformSnapToShotChanges>
+    <WaveformEditShotChangesProfile>Редакция на профила...</WaveformEditShotChangesProfile>
     <WaveformAutoGen>Авт. генериране вълнова Wav форма на зв. сигнал при отваряне на видео</WaveformAutoGen>
     <WaveformBorderHitMs1>Граница на ограждащият маркер</WaveformBorderHitMs1>
     <WaveformBorderHitMs2>милисек.</WaveformBorderHitMs2>
@@ -2410,6 +2528,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <DarkTheme>Тъмна тема</DarkTheme>
     <DarkThemeEnabled>Използване на тъмна тема</DarkThemeEnabled>
     <DarkThemeShowGridViewLines>Показване на решетка в изгледа на списъка</DarkThemeShowGridViewLines>
+    <GraphicsButtons>Графични бутони</GraphicsButtons>
     <UpdateShortcut>Обнови</UpdateShortcut>
     <FoucsSetVideoPosition>Задаване на фокус позицията на видеото</FoucsSetVideoPosition>
     <ToggleDockUndockOfVideoControls>Превключване положението на видео управлението</ToggleDockUndockOfVideoControls>
@@ -2444,22 +2563,24 @@ https://github.com/SubtitleEdit/subtitleedit
     <AdjustSetStartAndOffsetTheWholeSubtitle>Задаване на начално време, отместване на целия субтитър</AdjustSetStartAndOffsetTheWholeSubtitle>
     <AdjustSetEndAndOffsetTheRest>Задаване на край и начало на останалите</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Задаване на край и начало на останалите, и преминаване на следващите</AdjustSetEndAndOffsetTheRestAndGoToNext>
-    <AdjustSnapStartToNextShotChange>Свързване на избраните редове започва до следващата промяна на сцената</AdjustSnapStartToNextShotChange>
-    <AdjustSnapStartToNextShotChangeWithGap>Свързване на избраните редове започва до следващата промяна на сцената с мин. разлика</AdjustSnapStartToNextShotChangeWithGap>
-    <AdjustSnapEndToPreviousShotChange>Свързване на избраните редове завършва до предишната промяна на сцената</AdjustSnapEndToPreviousShotChange>
-    <AdjustSnapEndToPreviousShotChangeWithGap>Свързване на избраните редове завършва до предишната промяна на сцената с мин. разлика</AdjustSnapEndToPreviousShotChangeWithGap>
-    <AdjustExtendToNextShotChange>Удължаване на избраните редове до следващата промяна на сцената (или следващия субтитър)</AdjustExtendToNextShotChange>
-    <AdjustExtendToNextShotChangeWithGap>Удължаване на избраните редове до следващата промяна на сцената с мин. разлика (или следващия субтитър)</AdjustExtendToNextShotChangeWithGap>
-    <AdjustExtendToPreviousShotChange>Удължаване на избраните редове до предишната промяна на сцената (или предишния субтитър)</AdjustExtendToPreviousShotChange>
-    <AdjustExtendToPreviousShotChangeWithGap>Удължаване на избраните редове до предишната промяна на сцената с мин.  разлика (или предишния субтитър)</AdjustExtendToPreviousShotChangeWithGap>
+    <AdjustSnapStartToNextShotChange>Свързване на избраните редове започва до следващата промяна на кадъра</AdjustSnapStartToNextShotChange>
+    <AdjustSnapEndToPreviousShotChange>Свързване на избраните редове завършва до предишната промяна на кадъра</AdjustSnapEndToPreviousShotChange>
+    <AdjustExtendToNextShotChange>Удължаване на избраните редове до следващата промяна на кадъра (или следващия субтитър)</AdjustExtendToNextShotChange>
+    <AdjustExtendToPreviousShotChange>Удължаване на избраните редове до предишната промяна на кадъра (или предишния субтитър)</AdjustExtendToPreviousShotChange>
     <AdjustExtendToNextSubtitle>Удължаване на избраните редове до следващия субтитър</AdjustExtendToNextSubtitle>
     <AdjustExtendToPreviousSubtitle>Удължаване на избраните редове до предишния субтитър</AdjustExtendToPreviousSubtitle>
+    <AdjustExtendToNextSubtitleMinusChainingGap>Удължаване на избраните редове до следващия субтитър с верижна пауза</AdjustExtendToNextSubtitleMinusChainingGap>
+    <AdjustExtendToPreviousSubtitleMinusChainingGap>Удължаване на избраните редове до предишния субтитър с верижна пауза</AdjustExtendToPreviousSubtitleMinusChainingGap>
     <AdjustExtendCurrentSubtitle>Удължаване на реда до след. субтитър или макс. продължителност</AdjustExtendCurrentSubtitle>
     <AdjustExtendPreviousLineEndToCurrentStart>Удължаване края на предишния ред до текущото начало</AdjustExtendPreviousLineEndToCurrentStart>
     <AdjustExtendNextLineStartToCurrentEnd>Удължаване началото на следващия ред до текущия край</AdjustExtendNextLineStartToCurrentEnd>
     <RecalculateDurationOfCurrentSubtitle>Преизчисляване продължителността на текущия субтитър</RecalculateDurationOfCurrentSubtitle>
     <RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed>Преизчисляване продължителността на текущия субтитър (въз основа на оптималната скорост на четене)</RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed>
     <RecalculateDurationOfCurrentSubtitleByMinReadingSpeed>Преизчисляване продължителността на текущия субтитър (въз основа на минималната скорост на четене)</RecalculateDurationOfCurrentSubtitleByMinReadingSpeed>
+    <SetInCueToClosestShotChangeLeftGreenZone>Задаване на подсказка на минимално разстояние преди най-близката промяна на кадъра (лява зелена зона)</SetInCueToClosestShotChangeLeftGreenZone>
+    <SetInCueToClosestShotChangeRightGreenZone>Задаване на подсказка на минимално разстояние след най-близката промяна на кадъра (лява зелена зона)</SetInCueToClosestShotChangeRightGreenZone>
+    <SetOutCueToClosestShotChangeLeftGreenZone>Поставяне подсказката на минимално разстояние преди най-близката промяна на кадъра (лява зелена зона)</SetOutCueToClosestShotChangeLeftGreenZone>
+    <SetOutCueToClosestShotChangeRightGreenZone>Поставяне подсказката на минимално разстояние след най-близката промяна на кадъра (лява зелена зона)</SetOutCueToClosestShotChangeRightGreenZone>
     <MainCreateStartDownEndUp>Вмъкване на нови субтитри при натискане на клавиш - стрелка НАДОЛУ, задаване на крайно време при натискане на клавиш - стрелка НАГОРЕ</MainCreateStartDownEndUp>
     <MergeDialog>Диалог за обединяване (вмъкване на тирета)</MergeDialog>
     <MergeDialogWithNext>Обединяване на диалога със следващия (вмъкване на тирета)</MergeDialogWithNext>
@@ -2560,6 +2681,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <MainToggleVideoControls>Превключване на видео управлението</MainToggleVideoControls>
     <VideoToggleContrast>Превключване на контраста (само за mpv)</VideoToggleContrast>
     <AudioToTextX>Видео/аудио към текст (разпознаване на говор) ({0})</AudioToTextX>
+    <AudioExtractSelectedLines>Извличане на аудио (избрани редове)</AudioExtractSelectedLines>
     <AudioToTextSelectedLinesX>Аудио към текст на избраните редове ({0})</AudioToTextSelectedLinesX>
     <VideoToggleBrightness>Превключване на яркостта (само за mpv)</VideoToggleBrightness>
     <CustomSearch1>Превод, лично търсене 1</CustomSearch1>
@@ -2666,7 +2788,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <IgnoreLyrics>Игнориране текстовете на песни между музикалните символи</IgnoreLyrics>
     <ContinuationPause>Праг на паузата:</ContinuationPause>
     <Milliseconds>мс</Milliseconds>
-    <EditCustomContinuationStyle>Редактиране на персонализиран стил на продължение...</EditCustomContinuationStyle>
+    <EditCustomContinuationStyle>Редакция перс. стил на продълж...</EditCustomContinuationStyle>
     <MinFrameGap>Мин. разлика в кадрите</MinFrameGap>
     <XFramesAtYFrameRateGivesZMs>{0} кадрите със скорост на кадър от {1} дава {2} милисекунди.</XFramesAtYFrameRateGivesZMs>
     <UseXAsNewGap>Използване "{0}" милисекунди като нова минимална разлика?</UseXAsNewGap>
@@ -2845,18 +2967,29 @@ https://github.com/SubtitleEdit/subtitleedit
     <SingleLineLengthMinimum>Дължина на един ред - минимум: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Дължина на един ред - максимум: {0}</SingleLineLengthMaximum>
     <SingleLineLengthAverage>Дължина на един ред - средно: {0}</SingleLineLengthAverage>
+    <SingleLineLengthExceedingMaximum>Дължина на един ред - превишава максимума ({0} символи): {1} ({2:0.00}%)</SingleLineLengthExceedingMaximum>
     <SingleLineWidthMinimum>Ширина на един ред - минимум: {0} пиксела</SingleLineWidthMinimum>
     <SingleLineWidthMaximum>Ширина на един ред - максимум: {0} пиксела</SingleLineWidthMaximum>
     <SingleLineWidthAverage>Ширина на един ред - средно: {0} пиксела</SingleLineWidthAverage>
+    <SingleLineWidthExceedingMaximum>Ширина на един ред- надвишава максимума ({0} пиксела): {1} ({2:0,00}%)</SingleLineWidthExceedingMaximum>
     <DurationMinimum>Времетраене - минимум: {0:0.000} секунди</DurationMinimum>
     <DurationMaximum>Времетраене - максимум: {0:0.000} секунди</DurationMaximum>
     <DurationAverage>Времетраене - средно: {0:0.000} секунди</DurationAverage>
+    <DurationExceedingMinimum>Времетраене - под минимума ({0:0.###} сек): {1} ({2:0.00}%)</DurationExceedingMinimum>
+    <DurationExceedingMaximum>Времетраене - превишава максимума ({0:0.###} сек): {1} ({2:0.00}%)</DurationExceedingMaximum>
     <CharactersPerSecondMinimum>Символи/сек - минимум: {0:0.000}</CharactersPerSecondMinimum>
     <CharactersPerSecondMaximum>Символи/сек - максимум: {0:0.000}</CharactersPerSecondMaximum>
     <CharactersPerSecondAverage>Символи/сек - средно: {0:0.000}</CharactersPerSecondAverage>
-    <GapMinimum>Празнина-минимум: {0:#,##0} мс</GapMinimum>
-    <GapMaximum>Празнина-максимум: {0:#,##0} мс</GapMaximum>
-    <GapAverage>Празнина-средна: {0:#,##0.## } мс</GapAverage>
+    <CharactersPerSecondExceedingOptimal>Символи/сек - надвишава оптималното ({0:0.##} cps): {1} ({2:0.00}%)</CharactersPerSecondExceedingOptimal>
+    <CharactersPerSecondExceedingMaximum>Символи/сек - превишава максимума ({0:0.##} cps): {1} ({2:0.00}%)</CharactersPerSecondExceedingMaximum>
+    <WordsPerMinuteMinimum>Думи/мин - минимум: {0:0.000}</WordsPerMinuteMinimum>
+    <WordsPerMinuteMaximum>Думи/мин - максимум: {0:0.000}</WordsPerMinuteMaximum>
+    <WordsPerMinuteAverage>Думи/мин - средно: {0:0.000}</WordsPerMinuteAverage>
+    <WordsPerMinuteExceedingMaximum>Думи/мин - превишаване на максимума ({0} wpm): {1} ({2:0,00}%)</WordsPerMinuteExceedingMaximum>
+    <GapMinimum>Разминаване - минимум: {0:#,##0} мс</GapMinimum>
+    <GapMaximum>Разминаване - максимум: {0:#,##0} мс</GapMaximum>
+    <GapAverage>Разминаване - средно: {0:#,##0.## } мс</GapAverage>
+    <GapExceedingMinimum>Разминаване - под минимума ({0:#,##0} мс): {1} ({2:0.00}%)</GapExceedingMinimum>
     <Export>Експорт...</Export>
   </Statistics>
   <SubStationAlphaProperties>
@@ -3062,7 +3195,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <TryToGuessUnknownWords>Опит за отгатване на непознати думи</TryToGuessUnknownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>Авт. прекъсване на субтитри, ако са на повече от два реда</AutoBreakSubtitleIfMoreThanTwoLines>
     <AllFixes>Всички поправки</AllFixes>
-    <GuessesUsed>Използвани подсказки</GuessesUsed>
+    <GuessesUsed>Използвани предположения</GuessesUsed>
     <UnknownWords>Непознати думи</UnknownWords>
     <UnknownWordToGuessInLine>{0} ⇒ {1} чрез „OCRFixReplaceList/WordSplitList“ на ред: {2}</UnknownWordToGuessInLine>
     <OcrAutoCorrectionSpellChecking>OCR авт. корекция / проверка правопис</OcrAutoCorrectionSpellChecking>
@@ -3216,4 +3349,16 @@ https://github.com/SubtitleEdit/subtitleedit
     <Title>WebVTT - задаване на нов глас</Title>
     <VoiceName>Име на гласа</VoiceName>
   </WebVttNewVoice>
+  <WebVttProperties>
+    <UseXTimeStamp>Използване стойността на заглавието X-TIMESTAMP-MAP</UseXTimeStamp>
+    <MergeLines>Обединяване на редове със същия текст при зареждане</MergeLines>
+  </WebVttProperties>
+  <WebVttStyleManager>
+    <Title>WebVTT стилове</Title>
+  </WebVttStyleManager>
+  <WhisperAdvanced>
+    <Title>Whisper Advanced - допълнителни аргументи на командния ред</Title>
+    <CommandLineArguments>Допълнителни параметри за командния ред на Whisper:</CommandLineArguments>
+    <Info>Забележка: Различните реализации на Whisper имат различни параметри на командния ред!</Info>
+  </WhisperAdvanced>
 </Language>
