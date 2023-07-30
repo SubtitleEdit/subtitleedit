@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.6.13</Version>
-    <TranslatedBy>Последен превод на български 25.07.2023: KalinM</TranslatedBy>
+    <TranslatedBy>Последен превод на български 28.07.2023: KalinM</TranslatedBy>
     <CultureName>bg-BG</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -141,10 +141,12 @@ https://github.com/SubtitleEdit/subtitleedit
     <WaveFileNotFound>Не е открита извлечена вълнова Wav форма на зв. сигнал (Wav файл)!
 Тази функция изисква VLC media player 1.1.x или по-нова ({0}-bit).
 
-Конзолна команда: {1} {2}</WaveFileNotFound>
+Команден ред: {1} {2}</WaveFileNotFound>
     <WaveFileMalformed>{0} не можа да извлече вълнова Wav форма на зв. сигнал от аудио файла!
 
-Конзолна команда: {1} {2} Забележка: Проверете за свободно дисково пространство</WaveFileMalformed>
+Команден ред: {1} {2}
+
+Забележка: Проверете за свободно дисково пространство</WaveFileMalformed>
     <LowDiskSpace>НЕДОСТАТЪЧНО ДИСКОВО ПРОСТРАНСТВО!</LowDiskSpace>
     <FreeDiskSpace>Свободно: {0}</FreeDiskSpace>
     <NoAudioTracksFoundGenerateEmptyWaveform>НЯМА НАМЕРЕНИ АУДИ ЗАПИСИ!
@@ -190,7 +192,9 @@ https://github.com/SubtitleEdit/subtitleedit
     <Engine>Двигател</Engine>
     <VoskWebsite>Уебсайт на Vosk</VoskWebsite>
     <WhisperWebsite>Уебсайт Whisper</WhisperWebsite>
-    <WhisperNotFound>Не е намерен Whisper. Прочетете повече информация (уеб)?</WhisperNotFound>
+    <WhisperNotFound>Не е намерен Whisper.
+	
+Прочетете повече информация (уеб)?</WhisperNotFound>
     <Models>Модели</Models>
     <LanguagesAndModels>Езици и модели</LanguagesAndModels>
     <ChooseModel>Избери модел</ChooseModel>
@@ -211,7 +215,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <OnlyRunPostProcessing>Изпълнявайте само последваща обработка/коригиране на времената</OnlyRunPostProcessing>
   </AudioToText>
   <AssaAttachments>
-    <Title>Приложения за SSA</Title>
+    <Title>Приложения за SSA /Sub Station Alpha/</Title>
     <AttachFiles>Прикачи файлове...</AttachFiles>
     <FontsAndImages>Шрифтове и изображения</FontsAndImages>
     <Graphics>Графика</Graphics>
@@ -387,8 +391,6 @@ https://github.com/SubtitleEdit/subtitleedit
     <XShotChangesLoaded>Заредени са {0} промени в кадрите</XShotChangesLoaded>
     <NoShotChangesLoadedError>Избрали сте да прихващате подсказки за промени в кадрите, но няма заредени промени в кадрите.
 
-
-
 Кликнете върху "{0}" за да генерирате или импортирате първо промените в кадрите, или да деактивирате тази опция.</NoShotChangesLoadedError>
     <BatchAlignTimeCodes>Изравняване на времевите кодове с времевите кодове на кадрите</BatchAlignTimeCodes>
     <BatchUseExactTimeCodes>Използване на точни часови кодове (ако има такива)</BatchUseExactTimeCodes>
@@ -422,8 +424,6 @@ https://github.com/SubtitleEdit/subtitleedit
     <ExtendCrossingShotChange>Удължаване, промяна на кръстосан кадър</ExtendCrossingShotChange>
     <ExtendUntilShotChange>Удължаване до смяна на кадъра</ExtendUntilShotChange>
     <ResetWarning>Това ще нулира текущия ви профил и ще замени всички стойности с тези от избраната предварителна настройка. Това не може да бъде отменено.
-
-
 
 Искате ли да продължите?</ResetWarning>
     <CreateSimpleTitle>Създаване на обикновен</CreateSimpleTitle>
@@ -1031,10 +1031,11 @@ https://github.com/SubtitleEdit/subtitleedit
     <PleaseWait>Моля изчакайте... това може да продължи малко</PleaseWait>
     <PoweredByGoogleTranslate>С помощта на Google преводач</PoweredByGoogleTranslate>
     <PoweredByMicrosoftTranslate>С помощта на Microsoft преводач</PoweredByMicrosoftTranslate>
-    <MsClientSecretNeeded>Трябва ви ключ за Bing клиента от Microsoft, за да използвате последния Bing преводач.
+    <MsClientSecretNeeded>Съжаляваме, но за да използвате най-новия преводач на Microsoft, ви е необходим ключ от Microsoft за когнитивни услуги "Преводач на текст".
 
-Отворете "Опции -&gt; Настройки -&gt; Инструменти", за да въведете вашия ключ за Bing.</MsClientSecretNeeded>
-    <GoogleNoApiKeyWarning>Трудно се превежда без API ключ... (бавни и ограничени данни)</GoogleNoApiKeyWarning>
+Отворете "Опции -&gt; Настройки -&gt; Инструменти", за да въведете вашия ключ.</MsClientSecretNeeded>
+    <GoogleNoApiKeyWarning>Трудно се превежда без API ключ... (бавни и ограничени данни)
+За да използвате API ключ, отворете "Опции -&gt; Настройки -&gt; Инструменти", за да въведете вашия API ключ за преводач на Google.</GoogleNoApiKeyWarning>
     <Service>Услуги:</Service>
     <LineMergeHandling>Обединяване на редове:</LineMergeHandling>
     <ProcessorMergeNext>Обединяване на максимум два реда</ProcessorMergeNext>
@@ -1063,9 +1064,7 @@ https://github.com/SubtitleEdit/subtitleedit
   </GoogleOrMicrosoftTranslate>
   <GoToLine>
     <Title>Преминаване до субтитър с №</Title>
-    <XIsNotAValidNumber>Ред № {0} в текущия списък на субтитрите не съществува.
-
-Моля, въведете число в зададен диапазон.</XIsNotAValidNumber>
+    <XIsNotAValidNumber>Ред № {0} в текущия списък на субтитрите не съществува.</XIsNotAValidNumber>
   </GoToLine>
   <ImportImages>
     <Title>Импорт на изображения</Title>
@@ -1658,7 +1657,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <FileOnDiskModified>Файлът на диска е променен</FileOnDiskModified>
     <OverwriteModifiedFile>Да се презапише ли файла {0} променен на {1} {2}{3} с текущия файл зареден от диска {4} {5}?</OverwriteModifiedFile>
     <FileXIsReadOnly>Не може да се запише {0}
-
+	
 Файлът е само за четене!</FileXIsReadOnly>
     <UnableToSaveSubtitleX>Не може да се запише файлът със субтитри {0}
 Може да е празен. Опитайте да го презапишете, ако работите с действителните субтитри!</UnableToSaveSubtitleX>
@@ -1674,7 +1673,6 @@ https://github.com/SubtitleEdit/subtitleedit
     <NewFrameRateUsedToCalculateTimeCodes>Новата честота на кадри ({0}) беше използвана за определяне на началните/крайните времеви кодове</NewFrameRateUsedToCalculateTimeCodes>
     <NewFrameRateUsedToCalculateFrameNumbers>Новата честота на кадри ({0}) беше използвана за определяне на началните/крайните номера на кадри</NewFrameRateUsedToCalculateFrameNumbers>
     <FindContinue>Търсения елемент не е намерен.
-
 Желаете ли търсенето да започне от началото на документа
 и да се потърси още веднъж?</FindContinue>
     <FindContinueTitle>Искате ли да продължите търсенето?</FindContinueTitle>
@@ -1715,8 +1713,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <TextingForHearingImpairedRemovedOneLine>Премахнат текст за увредени със слуха: Един ред</TextingForHearingImpairedRemovedOneLine>
     <TextingForHearingImpairedRemovedXLines>Премахнат текст за увредени със слуха: {0} реда</TextingForHearingImpairedRemovedXLines>
     <SubtitleSplitted>Субтитрите са разделени</SubtitleSplitted>
-    <SubtitleAppendPrompt>Това ще добави съществуващите субтитри към текущо заредените субтитри,
-които вече трябва да са синхронизирани с видео файла.
+    <SubtitleAppendPrompt>Това ще добави съществуващите субтитри към текущо заредените субтитри, които вече трябва да са синхронизирани с видео файла.
 
 Искате ли да продължите?</SubtitleAppendPrompt>
     <SubtitleAppendPromptTitle>Обединяване на файлове със субтитри</SubtitleAppendPromptTitle>
@@ -1866,9 +1863,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <TextFiles>Текстови файлове</TextFiles>
     <SubtitleExported>Субтитрите са изнесени</SubtitleExported>
     <LineNumberXErrorReadingFromSourceLineY>Грешка в прочитането на: {1} (Ред {0})</LineNumberXErrorReadingFromSourceLineY>
-    <LineNumberXErrorReadingTimeCodeFromSourceLineY>Грешка в прочитането на тайминг: {1}
-във файла със субтитрите (Ред {0})
-</LineNumberXErrorReadingTimeCodeFromSourceLineY>
+    <LineNumberXErrorReadingTimeCodeFromSourceLineY>Грешка в прочитането на тайминг: {1} във файла със субтитрите (Ред {0})</LineNumberXErrorReadingTimeCodeFromSourceLineY>
     <LineNumberXExpectedNumberFromSourceLineY>Предполагаема грешка във файла със субтитрите [Ред {0}]: {1}</LineNumberXExpectedNumberFromSourceLineY>
     <LineNumberXExpectedEmptyLine>Ред {0} - Очаква се празен ред, но е намерен номер ({1}), последван от времеви код.</LineNumberXExpectedEmptyLine>
     <BeforeGuessingTimeCodes>Преди налучването на времевия код</BeforeGuessingTimeCodes>
@@ -1908,7 +1903,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <ErrorLoadSrr>Изглежда това е ReScene .srr файл - това не е файл със субтитри.</ErrorLoadSrr>
     <ErrorLoadTorrent>Изглежда файла е BitTorrent - това не е файл със субтитри.</ErrorLoadTorrent>
     <ErrorLoadBinaryZeroes>За съжаление, този файл съдържа само бинарни нули!
-Ако сте го редактирали със Subtitle Edit, можете да го възстановите чрез архивно копие от меню Файл -&gt; Възстановяване авт. от копие...</ErrorLoadBinaryZeroes>
+
+Ако сте го редактирали със Subtitle Edit, можете да го възстановите чрез архивно копие от меню Файл -&gt; Възстановяване авт. от архивно копие...</ErrorLoadBinaryZeroes>
     <ErrorDirectoryDropNotAllowed>Влаченето на папка тук, не е позволено</ErrorDirectoryDropNotAllowed>
     <NoSupportEncryptedVobSub>Encrypted VobSub съдържание не се поддържа</NoSupportEncryptedVobSub>
     <NoSupportHereBluRaySup>Тук не се поддържат Blu-ray sup файлове</NoSupportHereBluRaySup>
@@ -1916,7 +1912,9 @@ https://github.com/SubtitleEdit/subtitleedit
     <NoSupportHereVobSub>Тук не се поддържат VobSub файлове</NoSupportHereVobSub>
     <NoSupportHereDivx>Тук не се поддържат DivX файлове</NoSupportHereDivx>
     <NoChapters>Няма намерени глави във видеото.</NoChapters>
-    <VideoFromUrlRequirements>Отварянето на видео от url изисква mpv и youtube-dl - изтегляне и продължаване?</VideoFromUrlRequirements>
+    <VideoFromUrlRequirements>Отварянето на видео от URL изисква mpv и youtube-dl.
+
+Изтегляне и продължаване?</VideoFromUrlRequirements>
     <Url>URL адрес</Url>
     <Errors>Грешки</Errors>
     <ShowVideoControls>Показване на видео управлението</ShowVideoControls>
@@ -2324,7 +2322,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <SubtitleFont>Шрифт на субтитрите</SubtitleFont>
     <SubtitleFontSize>Размер на шрифта</SubtitleFontSize>
     <SubtitleBold>Удебелен</SubtitleBold>
-    <VideoAutoOpen>Автоматично отваряне на видео файл при отваряне на субтитри</VideoAutoOpen>
+    <VideoAutoOpen>Авт. отваряне на видео файл при отваряне на субтитри</VideoAutoOpen>
     <AllowVolumeBoost>Разрешено е увеличаване силата на звука</AllowVolumeBoost>
     <SubtitleCenter>По средата</SubtitleCenter>
     <SubtitleFontColor>Цвят на шрифта на субтитрите</SubtitleFontColor>
@@ -2725,8 +2723,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <MergeWithPreviousAndBreak>Обединяване с предишния и авт. разделяне</MergeWithPreviousAndBreak>
     <MergeWithNextAndBreak>Обединяване със следващия и авт. разделяне</MergeWithNextAndBreak>
     <MergeWithPrevious>Обединяване с предишния</MergeWithPrevious>
-    <ShortcutIsAlreadyDefinedX>Прекият път вече е зададен:
-{0}</ShortcutIsAlreadyDefinedX>
+    <ShortcutIsAlreadyDefinedX>Прекият път вече е зададен: {0}</ShortcutIsAlreadyDefinedX>
     <ToggleTranslationAndOriginalInPreviews>Превключване на превод и оригинал за предварителен преглед на видео/аудио</ToggleTranslationAndOriginalInPreviews>
     <ListViewColumnDelete>Колона, изтриване на текст</ListViewColumnDelete>
     <ListViewColumnDeleteAndShiftUp>Колона, изтриване на текст и преместване</ListViewColumnDeleteAndShiftUp>
@@ -2772,7 +2769,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <MicrosoftTranslateApiKey>Ключ</MicrosoftTranslateApiKey>
     <MicrosoftTranslateTokenEndpoint>Крайна точка на токена</MicrosoftTranslateTokenEndpoint>
     <FontNote>Забележка: Тези настройки на шрифта са само за потребителския интерфейс за редактиране на субтитрите.
-Настройването на шрифта за субтитри обикновено се извършва във видео плеъра, но може да бъде направено и при използване на формат на субтитрите
+Настройката на шрифта за субтитри обикновено се извършва във видео плеъра, но може да бъде направено и при използване на формат на субтитрите
 с вградена информация за шрифта, като «Настройки Sub Station Alpha» или чрез експортиране на формати, базирани на изображения.</FontNote>
     <RestoreDefaultSettings>Възстановяване на настройките по подразбиране</RestoreDefaultSettings>
     <RestoreDefaultSettingsMsg>Всички настройки ще бъдат възстановени до стойностите по подразбиране
@@ -3137,6 +3134,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <GoToSubPosition>До субпозиция</GoToSubPosition>
     <KeepChangesTitle>Да се запазят ли промените?</KeepChangesTitle>
     <KeepChangesMessage>Субтитрите са променени във «Визуална синхронизация».
+
 Ще запазите ли промените?</KeepChangesMessage>
     <SynchronizationDone>Синхронизацията е завършена!</SynchronizationDone>
     <StartSceneMustComeBeforeEndScene>Началната сцена трябва да е преди крайната сцена!</StartSceneMustComeBeforeEndScene>
