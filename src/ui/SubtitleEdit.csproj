@@ -1495,6 +1495,7 @@
     <Compile Include="Logic\Language.cs" />
     <Compile Include="Logic\LanguageDeserializer.cs" />
     <Compile Include="Logic\LanguageStructure.cs" />
+    <Compile Include="Logic\ListViewHelper.cs" />
     <Compile Include="Logic\Networking\SeNetworkService.cs" />
     <Compile Include="Logic\PathHelper.cs" />
     <Compile Include="Logic\ProgressHelper.cs" />

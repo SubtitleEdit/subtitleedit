@@ -637,6 +637,8 @@ namespace Nikse.SubtitleEdit.Forms
                 timeUpDownVideoPositionAdjust.SetAutoWidth();
 
                 toolStripSelected.Text = string.Empty;
+
+                ListViewHelper.RestoreListViewDisplayIndices(SubtitleListview1);
             }
             catch (Exception exception)
             {
@@ -13194,7 +13196,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             SaveUndockedPositions();
-            SaveListViewWidths();
+            ListViewHelper.SaveListViewState(SubtitleListview1, _subtitle);
             CheckSecondSubtitleReset();
             Configuration.Settings.Save();
 
@@ -13216,49 +13218,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             _dictateForm?.Dispose();
-        }
-
-        private void SaveListViewWidths()
-        {
-            if (Configuration.Settings.General.ListViewColumnsRememberSize)
-            {
-                if (SubtitleListview1.ColumnIndexNumber >= 0)
-                {
-                    var fileHasBookmarkedLines = _subtitle != null && _subtitle.Paragraphs.Any(p => p.Bookmark != null);
-                    var columnIndexNumberWidth = SubtitleListview1.Columns[SubtitleListview1.ColumnIndexNumber].Width;
-                    Configuration.Settings.General.ListViewNumberWidth = fileHasBookmarkedLines ? columnIndexNumberWidth - 18 : columnIndexNumberWidth;
-                }
-
-                if (SubtitleListview1.ColumnIndexStart >= 0)
-                {
-                    Configuration.Settings.General.ListViewStartWidth = SubtitleListview1.Columns[SubtitleListview1.ColumnIndexStart].Width;
-                }
-
-                if (SubtitleListview1.ColumnIndexEnd >= 0)
-                {
-                    Configuration.Settings.General.ListViewEndWidth = SubtitleListview1.Columns[SubtitleListview1.ColumnIndexEnd].Width;
-                }
-
-                if (SubtitleListview1.ColumnIndexDuration >= 0)
-                {
-                    Configuration.Settings.General.ListViewDurationWidth = SubtitleListview1.Columns[SubtitleListview1.ColumnIndexDuration].Width;
-                }
-
-                if (SubtitleListview1.ColumnIndexCps >= 0)
-                {
-                    Configuration.Settings.General.ListViewCpsWidth = SubtitleListview1.Columns[SubtitleListview1.ColumnIndexCps].Width;
-                }
-
-                if (SubtitleListview1.ColumnIndexWpm >= 0)
-                {
-                    Configuration.Settings.General.ListViewWpmWidth = SubtitleListview1.Columns[SubtitleListview1.ColumnIndexWpm].Width;
-                }
-
-                if (SubtitleListview1.ColumnIndexText >= 0)
-                {
-                    Configuration.Settings.General.ListViewTextWidth = SubtitleListview1.Columns[SubtitleListview1.ColumnIndexText].Width;
-                }
-            }
         }
 
         private void SaveUndockedPositions()
