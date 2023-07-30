@@ -185,6 +185,22 @@ namespace Test.Core
             var res = input.FixExtraSpaces();
             Assert.AreEqual("a" + Environment.NewLine + "b", res);
         }
+        
+        [TestMethod]
+        public void RemoveRecursiveLineBreakTest()
+        {
+            Assert.AreEqual("foo\r\nfoo", "foo\r\n\r\nfoo".RemoveRecursiveLineBreaks());
+            Assert.AreEqual("foo\r\nfoo", "foo\r\nfoo".RemoveRecursiveLineBreaks());
+            Assert.AreEqual("foo\r\nfoo", "foo\r\n\r\n\r\nfoo".RemoveRecursiveLineBreaks());
+        }
+
+        [TestMethod]
+        public void RemoveRecursiveLineBreakNonWindowsStyleTest(string input)
+        {
+            Assert.AreEqual("foo\nfoo", "foo\nfoo".RemoveRecursiveLineBreaks());
+            Assert.AreEqual("foo\n\foo", "foo\n\n\nfoo".RemoveRecursiveLineBreaks());
+            Assert.AreEqual("foo\n.\nfoo", "foo\n.\n\n\nfoo".RemoveRecursiveLineBreaks());
+        }
 
         [TestMethod]
         public void RemoveChar1()
@@ -362,7 +378,6 @@ namespace Test.Core
             Assert.AreEqual("<v Johnny>HOW ARE YOU?", res);
         }
 
-
         [TestMethod]
         public void ToProperCaseFromUpper()
         {
@@ -386,5 +401,41 @@ namespace Test.Core
             var res = input.ToProperCase(null);
             Assert.AreEqual("<i>How Are You?</i>", res);
         }
+
+        [TestMethod]
+        public void HasSentenceEndingCultureNeutralTest()
+        {
+            // language two letter language set to null
+            Assert.IsTrue("foobar.".HasSentenceEnding(null)); // this is supposed to use the culture neutral chars
+            
+            Assert.IsTrue("foobar.".HasSentenceEnding());
+            Assert.IsTrue("foobar?</font>".HasSentenceEnding());
+            Assert.IsTrue("foobar!</font>".HasSentenceEnding());
+            Assert.IsTrue("foobar.</font>\"".HasSentenceEnding());
+            Assert.IsTrue("{\\i1}How are you?{\\i0}".HasSentenceEnding());
+            Assert.IsTrue("{\\i1}How are you?{\\i0}</font>".HasSentenceEnding());
+            Assert.IsTrue("{\\i1}How are you?</font>{\\i0}".HasSentenceEnding());
+            Assert.IsTrue("foobar.\"".HasSentenceEnding());
+            Assert.IsTrue("foobar--".HasSentenceEnding());
+            Assert.IsTrue("foobar--</i>".HasSentenceEnding());
+            Assert.IsTrue("foobar—".HasSentenceEnding()); // em dash
+            Assert.IsTrue("foobar—</i>".HasSentenceEnding()); // em dash
+            
+            Assert.IsFalse("\"".HasSentenceEnding());
+            Assert.IsFalse("foobar>".HasSentenceEnding());
+            Assert.IsFalse("How are you{\\i0}".HasSentenceEnding());
+            Assert.IsFalse("".HasSentenceEnding());
+        }
+
+        [TestMethod]
+        public void HasSentenceEndingGreekTest()
+        {
+            const string greekCultureTwoLetter = "el";
+            Assert.IsTrue("foobar)".HasSentenceEnding(greekCultureTwoLetter));
+            Assert.IsTrue("foobar\u037E</font>\"".HasSentenceEnding(greekCultureTwoLetter));
+            Assert.IsTrue("foobar؟\"".HasSentenceEnding(greekCultureTwoLetter));
+            Assert.IsTrue("foobar;".HasSentenceEnding(greekCultureTwoLetter));
+        }
+        
     }
 }

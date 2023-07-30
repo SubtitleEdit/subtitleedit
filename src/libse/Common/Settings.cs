@@ -945,6 +945,7 @@ $HorzAlign          =   Center
         public bool BreakLongLinesTicked { get; set; }
         public bool MergeShortLinesTicked { get; set; }
         public bool MergeShortLinesAllTicked { get; set; }
+        public bool MergeShortLinesPixelWidthTicked { get; set; }
         public bool UnneededSpacesTicked { get; set; }
         public bool UnneededPeriodsTicked { get; set; }
         public bool FixCommasTicked { get; set; }
@@ -1030,6 +1031,11 @@ $HorzAlign          =   Center
             if (MergeShortLinesAllTicked)
             {
                 sb.Append(nameof(MergeShortLinesAllTicked) + ";");
+            }
+
+            if (MergeShortLinesPixelWidthTicked)
+            {
+                sb.Append(nameof(MergeShortLinesPixelWidthTicked) + ";");
             }
 
             if (UnneededSpacesTicked)
@@ -1192,6 +1198,7 @@ $HorzAlign          =   Center
             BreakLongLinesTicked = list.Contains(nameof(BreakLongLinesTicked));
             MergeShortLinesTicked = list.Contains(nameof(MergeShortLinesTicked));
             MergeShortLinesAllTicked = list.Contains(nameof(MergeShortLinesAllTicked));
+            MergeShortLinesPixelWidthTicked = list.Contains(nameof(MergeShortLinesPixelWidthTicked));
             UnneededSpacesTicked = list.Contains(nameof(UnneededSpacesTicked));
             UnneededPeriodsTicked = list.Contains(nameof(UnneededPeriodsTicked));
             FixCommasTicked = list.Contains(nameof(FixCommasTicked));
@@ -1234,6 +1241,7 @@ $HorzAlign          =   Center
             InvalidItalicTagsTicked = true;
             BreakLongLinesTicked = true;
             MergeShortLinesTicked = true;
+            MergeShortLinesPixelWidthTicked = false;
             UnneededPeriodsTicked = true;
             FixCommasTicked = true;
             UnneededSpacesTicked = true;
@@ -7414,6 +7422,12 @@ $HorzAlign          =   Center
                 settings.CommonErrors.MergeShortLinesAllTicked = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
+            subNode = node.SelectSingleNode("MergeShortLinesPixelWidthTicked");
+            if (subNode != null)
+            {
+                settings.CommonErrors.MergeShortLinesPixelWidthTicked = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("UnneededSpacesTicked");
             if (subNode != null)
             {
@@ -11514,6 +11528,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("BreakLongLinesTicked", settings.CommonErrors.BreakLongLinesTicked.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("MergeShortLinesTicked", settings.CommonErrors.MergeShortLinesTicked.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("MergeShortLinesAllTicked", settings.CommonErrors.MergeShortLinesAllTicked.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("MergeShortLinesPixelWidthTicked", settings.CommonErrors.MergeShortLinesPixelWidthTicked.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("UnneededSpacesTicked", settings.CommonErrors.UnneededSpacesTicked.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("UnneededPeriodsTicked", settings.CommonErrors.UnneededPeriodsTicked.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("FixCommasTicked", settings.CommonErrors.FixCommasTicked.ToString(CultureInfo.InvariantCulture));

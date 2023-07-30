@@ -111,6 +111,14 @@ namespace Nikse.SubtitleEdit.Logic
                     c.FlatStyle = FlatStyle.Flat;
                 }
 
+                var toolStripNikseComboBox = GetSubControls<ToolStripNikseComboBox>(form);
+                foreach (ToolStripNikseComboBox c in toolStripNikseComboBox)
+                {
+                    c.BackColor = BackColor;
+                    c.ForeColor = ForeColor;
+                    SetDarkTheme(c.ComboBox);
+                }
+
                 var toolStripContentPanels = GetSubControls<ToolStripContentPanel>(form);
                 foreach (ToolStripContentPanel c in toolStripContentPanels)
                 {
@@ -205,6 +213,14 @@ namespace Nikse.SubtitleEdit.Logic
                     c.FlatStyle = FlatStyle.Flat;
                 }
 
+                var toolStripNikseComboBox = GetSubControls<ToolStripNikseComboBox>(form);
+                foreach (ToolStripNikseComboBox c in toolStripNikseComboBox)
+                {
+                    c.BackColor = BackColor;
+                    c.ForeColor = ForeColor;
+                    UnFixControl(c.ComboBox);
+                }
+
                 var toolStripContentPanels = GetSubControls<ToolStripContentPanel>(form);
                 foreach (ToolStripContentPanel c in toolStripContentPanels)
                 {
@@ -263,10 +279,7 @@ namespace Nikse.SubtitleEdit.Logic
         {
             c.BackColor = Control.DefaultBackColor;
             c.ForeColor = Control.DefaultForeColor;
-
-            var newButton = new TextBox();
-            var buttonBackColor = newButton.BackColor;
-            newButton.Dispose();
+            var buttonBackColor = SystemColors.Window;
 
             if (c is Button b)
             {
@@ -369,18 +382,26 @@ namespace Nikse.SubtitleEdit.Logic
                 ud.BackColor = buttonBackColor;
                 ud.ForeColor = Control.DefaultForeColor;
                 ud.ButtonForeColor = Control.DefaultForeColor;
+                ud.BackColorDisabled = NikseUpDown.DefaultBackColorDisabled;
             }
             else if (c is NikseTimeUpDown tud)
             {
                 tud.BackColor = buttonBackColor;
                 tud.ForeColor = Control.DefaultForeColor;
                 tud.ButtonForeColor = Control.DefaultForeColor;
+                tud.BackColorDisabled = NikseUpDown.DefaultBackColorDisabled; 
             }
             else if (c is NikseComboBox ncb)
             {
                 ncb.BackColor = buttonBackColor;
                 ncb.ForeColor = Control.DefaultForeColor;
                 ncb.ButtonForeColor = Control.DefaultForeColor;
+                ncb.BorderColor = Color.LightGray;
+                ncb.BackColorDisabled = NikseUpDown.DefaultBackColorDisabled; ;
+                if (ncb.DropDownControl != null)
+                {
+                    UnFixControl(ncb.DropDownControl);
+                }
             }
             else if (c is Button bu)
             {
@@ -455,7 +476,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             if (c is GroupBox gBox)
             {
-                    gBox.Paint += PaintBorderDarkGray;
+                gBox.Paint += PaintBorderDarkGray;
             }
 
             if (c is NumericUpDown numeric)
@@ -546,6 +567,11 @@ namespace Nikse.SubtitleEdit.Logic
                 ncb.ForeColor = ForeColor;
                 ncb.ButtonForeColor = ForeColor;
                 ncb.BackColorDisabled = BackColor;
+                ncb.BorderColor = Color.Gray;
+                if (ncb.DropDownControl != null)
+                {
+                    FixControl(ncb.DropDownControl);
+                }
             }
         }
 

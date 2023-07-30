@@ -274,10 +274,10 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
                 checkBoxExtractExactTimeCodes.Checked ? _timeCodes : new List<double>(), // ditto
                 checkBoxSnapToShotChanges.Checked ? _shotChanges : new List<double>()
             );
-            timeCodesBeautifier.ProgressChanged += delegate (double progress)
+            timeCodesBeautifier.ProgressChanged += delegate (int progress)
             {
-                progressBar.Value = Convert.ToInt32(progress * 100);
-                Application.DoEvents();
+                progressBar.Value = progress;
+                progressBar.Invalidate();
             };
             timeCodesBeautifier.Beautify();
 

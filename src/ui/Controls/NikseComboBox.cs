@@ -1,12 +1,12 @@
-﻿using Nikse.SubtitleEdit.Logic;
+﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Drawing.Design;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core.Common;
-using System.Drawing.Design;
 
 namespace Nikse.SubtitleEdit.Controls
 {
@@ -16,8 +16,13 @@ namespace Nikse.SubtitleEdit.Controls
         // ReSharper disable once InconsistentNaming
         public event EventHandler SelectedIndexChanged;
 
-        [Category("NikseComboBox"), Description("Gets or sets DropDownStyle"),
-         RefreshProperties(RefreshProperties.Repaint)]
+        // ReSharper disable once InconsistentNaming
+        public event EventHandler DropDown;
+
+        // ReSharper disable once InconsistentNaming
+        public event EventHandler DropDownClosed;
+
+        [Category("NikseComboBox"), Description("Gets or sets DropDownStyle"), RefreshProperties(RefreshProperties.Repaint)]
         public ComboBoxStyle DropDownStyle
         {
             get => _dropDownStyle;
@@ -31,6 +36,7 @@ namespace Nikse.SubtitleEdit.Controls
                 }
 
                 _textBox.ReadOnly = value == ComboBoxStyle.DropDownList;
+                //TODO: Hide cursor?
             }
         }
 
@@ -54,15 +60,14 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        private NikseComboBoxCollection _items;
+        private readonly NikseComboBoxCollection _items;
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
-        [Localizable(true)]
         [Editor("System.Windows.Forms.Design.ListControlStringCollectionEditor, System.Design, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a", typeof(UITypeEditor))]
         [MergableProperty(false)]
         public NikseComboBoxCollection Items => _items;
 
-        private int _selectedIndex;
+        private int _selectedIndex = -1;
         public int SelectedIndex
         {
             get => _selectedIndex;
@@ -74,7 +79,22 @@ namespace Nikse.SubtitleEdit.Controls
                 }
 
                 _selectedIndex = value;
+                _textBox.Text = Items[_selectedIndex].ToString();
                 SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
+                Invalidate();
+            }
+        }
+
+        public object SelectedItem
+        {
+            get
+            {
+                if (_selectedIndex < 0)
+                {
+                    return null;
+                }
+
+                return _items[_selectedIndex];
             }
         }
 
@@ -136,6 +156,8 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
+        public Control DropDownControl => _listView;
+
         private Color _buttonForeColor;
         private Brush _buttonForeColorBrush;
         [Category("NikseComboBox"), Description("Gets or sets the button foreground color"),
@@ -153,6 +175,11 @@ namespace Nikse.SubtitleEdit.Controls
                 _buttonForeColor = value;
                 _buttonForeColorBrush?.Dispose();
                 _buttonForeColorBrush = new SolidBrush(_buttonForeColor);
+                if (_textBox != null)
+                {
+                    _textBox.ForeColor = value;
+                }
+
                 Invalidate();
             }
         }
@@ -218,7 +245,7 @@ namespace Nikse.SubtitleEdit.Controls
         }
 
         private Color _backColorDisabled;
-        [Category("NikseComboBox"), Description("Gets or sets the button foreground color"),
+        [Category("NikseComboBox"), Description("Gets or sets the disabled background color"),
          RefreshProperties(RefreshProperties.Repaint)]
         public Color BackColorDisabled
         {
@@ -231,6 +258,27 @@ namespace Nikse.SubtitleEdit.Controls
                 }
 
                 _backColorDisabled = value;
+                Invalidate();
+            }
+        }
+
+        [Category("NikseComboBox"), Description("Gets or sets the background color"), RefreshProperties(RefreshProperties.Repaint)]
+        public new Color BackColor
+        {
+            get => base.BackColor;
+            set
+            {
+                if (value.A == 0)
+                {
+                    return;
+                }
+
+                base.BackColor = value;
+                if (_textBox != null)
+                {
+                    _textBox.BackColor = value;
+                }
+
                 Invalidate();
             }
         }
@@ -257,27 +305,65 @@ namespace Nikse.SubtitleEdit.Controls
 
         public NikseComboBox()
         {
+            SetStyle(ControlStyles.ResizeRedraw | ControlStyles.OptimizedDoubleBuffer, true);
+
             _items = new NikseComboBoxCollection(this);
 
-            _textBox = new TextBox();
-            _textBox.KeyPress += TextBox_KeyPress;
-            _textBox.KeyDown += (sender, e) =>
+            KeyDown += (sender, e) =>
             {
-                if (_listView != null && _listViewShown)
+                if (e.KeyCode == Keys.Up)
                 {
-                    _listView.Focus();
-                    if (_selectedIndex < 0 && _listView.SelectedItems.Count > 0)
+                    if (_selectedIndex > 0)
                     {
-                        _listView.Items[0].Selected = true;
-                        _listView.Items[0].Focused = true;
-                    }
-                    else
-                    {
-                        _listView.Items[_selectedIndex].Selected = true;
-                        _listView.Items[_selectedIndex].EnsureVisible();
-                        _listView.Items[_selectedIndex].Focused = true;
+                        _selectedIndex--;
+                        SelectedText = Items[_selectedIndex].ToString();
+                        Invalidate();
+                        SelectedIndexChanged?.Invoke(sender, e);
                     }
                 }
+                else if (e.KeyCode == Keys.Down)
+                {
+                    if (_selectedIndex < Items.Count - 2)
+                    {
+                        _selectedIndex++;
+                        SelectedText = Items[_selectedIndex].ToString();
+                        Invalidate();
+                        SelectedIndexChanged?.Invoke(sender, e);
+                    }
+                }
+
+            };
+
+            _textBox = new TextBox();
+            _textBox.KeyDown += (sender, e) =>
+            {
+                if (DropDownStyle != ComboBoxStyle.DropDown)
+                {
+
+                    if (e.KeyCode == Keys.Up)
+                    {
+                        if (_selectedIndex > 0)
+                        {
+                            _selectedIndex--;
+                            _textBox.Text = Items[_selectedIndex].ToString();
+                            Invalidate();
+                            SelectedIndexChanged?.Invoke(sender, e);
+                        }
+                        e.Handled = true;
+                    }
+                    else if (e.KeyCode == Keys.Down)
+                    {
+                        if (_selectedIndex < Items.Count - 2)
+                        {
+                            _selectedIndex++;
+                            _textBox.Text = Items[_selectedIndex].ToString();
+                            Invalidate();
+                            SelectedIndexChanged?.Invoke(sender, e);
+                        }
+                        e.Handled = true;
+                    }
+                }
+
             };
             _textBox.LostFocus += (sender, args) => Invalidate();
             _textBox.GotFocus += (sender, args) => Invalidate();
@@ -292,7 +378,7 @@ namespace Nikse.SubtitleEdit.Controls
             BorderColor = Color.FromArgb(171, 173, 179);
             BorderColorDisabled = Color.FromArgb(120, 120, 120);
             BackColorDisabled = Color.FromArgb(240, 240, 240);
-            DoubleBuffered = true;
+            BackColor = SystemColors.Window;
 
             _mouseLeaveTimer = new Timer();
             _mouseLeaveTimer.Interval = 200;
@@ -317,7 +403,9 @@ namespace Nikse.SubtitleEdit.Controls
                 }
 
                 var coordinates = form.PointToClient(Cursor.Position);
-                if (_hasItemsMouseOver && !_listView.Bounds.Contains(coordinates) || !_listViewShown)
+                if (_hasItemsMouseOver &&
+                    !(_listView.Bounds.Contains(coordinates) || Bounds.Contains(coordinates)) ||
+                    !_listViewShown)
                 {
                     HideDropDown();
                     return;
@@ -325,16 +413,25 @@ namespace Nikse.SubtitleEdit.Controls
 
                 _hasItemsMouseOver = true;
             };
-
         }
 
         private void HideDropDown()
         {
             _listViewMouseLeaveTimer?.Stop();
             _mouseLeaveTimer?.Stop();
-            _listViewShown = false;
-            FindForm()?.Controls.Remove(_listView);
-            FindForm()?.Invalidate();
+            if (_listViewShown)
+            {
+                DropDownClosed?.Invoke(this, EventArgs.Empty);
+                _listViewShown = false;
+            }
+
+            var form = FindForm();
+            if (form != null)
+            {
+                form.Controls.Remove(_listView);
+                form.Invalidate();
+            }
+
             Invalidate();
         }
 
@@ -342,15 +439,6 @@ namespace Nikse.SubtitleEdit.Controls
         {
             Invalidate();
         }
-
-        /// <summary>
-        /// Allow only digits, Enter and Backspace key.
-        /// </summary>
-        private void TextBox_KeyPress(object sender, KeyPressEventArgs e)
-        {
-
-        }
-
 
         private bool _buttonDownActive;
 
@@ -396,7 +484,11 @@ namespace Nikse.SubtitleEdit.Controls
             set => _dropDownWidth = value;
         }
 
-        public int DropDownMaximumHeight { get; set; } = 400;
+
+        /// <summary>
+        /// Max drop down height
+        /// </summary>
+        public int DropDownHeight { get; set; } = 400;
 
         protected override void OnMouseDown(MouseEventArgs e)
         {
@@ -416,136 +508,156 @@ namespace Nikse.SubtitleEdit.Controls
 
                 if (_buttonDownActive)
                 {
-                    _listViewShown = true;
-                    _textBox.Focus();
-
-                    if (_listView == null)
-                    {
-                        _listView = new ListView();
-                        _listView.View = View.Details;
-                        _listView.Columns.Add("text", DropDownWidth - 4);
-                        _listView.HeaderStyle = ColumnHeaderStyle.None;
-                        _listView.FullRowSelect = true;
-                        _listView.MultiSelect = false;
-                        _listView.HideSelection = false;
-
-                        if (Configuration.Settings.General.UseDarkTheme)
-                        {
-                            DarkTheme.SetDarkTheme(_listView);
-                        }
-
-                        _listView.MouseEnter += (sender, args) =>
-                        {
-                            _hasItemsMouseOver = true;
-                        };
-                        _listView.KeyDown += (sender, args) =>
-                        {
-                            if (args.KeyCode == Keys.Escape)
-                            {
-                                HideDropDown();
-                            }
-                            else if (args.KeyCode == Keys.Enter)
-                            {
-                                _listViewMouseLeaveTimer.Stop();
-                                var item = _listView.SelectedItems[0];
-                                _selectedIndex = item.Index;
-                                _textBox.Text = item.Text;
-                                Invalidate();
-                                SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
-                                HideDropDown();
-                            }
-                        };
-                        _listView.MouseClick += (sender, args) =>
-                        {
-                            if (args is MouseEventArgs mouseArgs)
-                            {
-                                for (var i = 0; i < _listView.Items.Count; i++)
-                                {
-                                    var rectangle = _listView.GetItemRect(i);
-                                    if (rectangle.Contains(mouseArgs.Location))
-                                    {
-                                        _listViewMouseLeaveTimer.Stop();
-                                        _selectedIndex = i;
-                                        _textBox.Text = _listView.Items[i].Text;
-                                        SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
-                                        HideDropDown(); return;
-                                    }
-                                }
-                            }
-                        };
-                    }
-                    else
-                    {
-                        _listView.Items.Clear();
-                    }
-
-                    var listViewItems = new List<ListViewItem>();
-                    foreach (var item in Items)
-                    {
-                        listViewItems.Add(new ListViewItem(item.ToString()));
-                    }
-                    _listView.Items.AddRange(listViewItems.ToArray());
-                    _listView.Width = DropDownWidth;
-
-                    var lvHeight = 5;
-                    var top = Bottom;
-                    var form = FindForm();
-                    if (form == null)
-                    {
-                        return;
-                    }
-
-                    var ctl = (Control)this;
-                    var totalX = ctl.Left;
-                    var totalY = ctl.Top;
-                    while (ctl.Parent != form)
-                    {
-                        ctl = ctl.Parent;
-                        totalX += ctl.Left;
-                        totalY += ctl.Top;
-                    }
-
-                    if (_listView.Items.Count > 0)
-                    {
-                        var itemHeight = _listView.GetItemRect(0).Height;
-                        lvHeight = itemHeight * _listView.Items.Count + 6;
-                        var spaceInPixelsTop = totalY;
-                        var spaceInPixelsBottom = form.Height - (spaceInPixelsTop + Height);
-                        var maxHeight = DropDownMaximumHeight;
-                        if (spaceInPixelsBottom >= DropDownMaximumHeight ||
-                            spaceInPixelsBottom * 1.2 > spaceInPixelsTop)
-                        {
-                            top = totalY + Height;
-                            maxHeight = Math.Min(maxHeight, form.Height - Bottom - 18 - SystemInformation.CaptionHeight);
-                            lvHeight = Math.Min(lvHeight, maxHeight);
-                        }
-                        else
-                        {
-                            maxHeight = Math.Min(maxHeight, spaceInPixelsTop - 18 - SystemInformation.CaptionHeight);
-                            lvHeight = Math.Min(lvHeight, maxHeight);
-                            top = totalY - lvHeight;
-                        }
-                    }
-
-                    _listView.Height = lvHeight;
-
-                    form.Controls.Add(_listView);
-                    _listView.BringToFront();
-
-                    _listView.Left = totalX;
-                    _listView.Top = top;
-                    if (_selectedIndex >= 0)
-                    {
-                        _listView.Focus();
-                        _listView.Items[_selectedIndex].Selected = true;
-                        _listView.EnsureVisible(_selectedIndex);
-                        _listView.Items[_selectedIndex].Focused = true;
-                    }
+                    ShowListView();
                 }
 
-                Invalidate();
             }
             base.OnMouseDown(e);
+        }
+
+        private void ShowListView()
+        {
+            _textBox.Focus();
+
+            _listViewShown = true;
+            EnsureListViewInitialized();
+
+            _listView.BeginUpdate();
+            _listView.Items.Clear();
+            var listViewItems = new List<ListViewItem>();
+            foreach (var item in Items)
+            {
+                listViewItems.Add(new ListViewItem(item.ToString()));
+            }
+
+            _listView.Items.AddRange(listViewItems.ToArray());
+            _listView.Width = DropDownWidth;
+            _listView.EndUpdate();
+
+            var lvHeight = 5;
+            var top = Bottom;
+            var form = FindForm();
+            if (form == null)
+            {
+                return;
+            }
+
+            var ctl = (Control)this;
+            var totalX = ctl.Left;
+            var totalY = ctl.Top;
+            while (ctl.Parent != form)
+            {
+                ctl = ctl.Parent;
+                totalX += ctl.Left;
+                totalY += ctl.Top;
+            }
+
+            if (listViewItems.Count > 0)
+            {
+                var itemHeight = _listView.GetItemRect(0).Height;
+                lvHeight = itemHeight * listViewItems.Count + 6;
+                var spaceInPixelsBottom = form.Height - (totalY + Height);
+                var maxHeight = DropDownHeight;
+                if (spaceInPixelsBottom >= DropDownHeight ||
+                    spaceInPixelsBottom * 1.2 > totalY)
+                {
+                    top = totalY + Height;
+                    maxHeight = Math.Min(maxHeight, form.Height - Bottom - 18 - SystemInformation.CaptionHeight);
+                    lvHeight = Math.Min(lvHeight, maxHeight);
+                }
+                else
+                {
+                    maxHeight = Math.Min(maxHeight, totalY - 18 - SystemInformation.CaptionHeight);
+                    lvHeight = Math.Min(lvHeight, maxHeight);
+                    top = totalY - lvHeight;
+                }
+            }
+
+            _listView.Height = lvHeight;
+
+            form.Controls.Add(_listView);
+            _listView.BringToFront();
+
+            _listView.Left = totalX;
+            _listView.Top = top;
+            if (_selectedIndex >= 0)
+            {
+                _listView.Focus();
+                _listView.Items[_selectedIndex].Selected = true;
+                _listView.EnsureVisible(_selectedIndex);
+                _listView.Items[_selectedIndex].Focused = true;
+            }
+
+            DropDown?.Invoke(this, EventArgs.Empty);
+            Invalidate();
+        }
+
+        private void EnsureListViewInitialized()
+        {
+            if (_listView != null)
+            {
+                return;
+            }
+
+            _listView = new ListView();
+            _listView.View = View.Details;
+            _listView.Columns.Add("text", DropDownWidth - 4);
+            _listView.HeaderStyle = ColumnHeaderStyle.None;
+            _listView.FullRowSelect = true;
+            _listView.MultiSelect = false;
+            _listView.HideSelection = false;
+
+            if (Configuration.Settings.General.UseDarkTheme)
+            {
+                DarkTheme.SetDarkTheme(_listView);
+            }
+
+            _listView.MouseEnter += (sender, args) => { _hasItemsMouseOver = true; };
+
+            _listView.KeyDown += (sender, args) =>
+            {
+                if (args.KeyCode == Keys.Escape)
+                {
+                    HideDropDown();
+                }
+                else if (args.KeyCode == Keys.Enter)
+                {
+                    _listViewMouseLeaveTimer.Stop();
+                    var item = _listView.SelectedItems[0];
+                    _selectedIndex = item.Index;
+                    _textBox.Text = item.Text;
+                    Invalidate();
+                    SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
+                    HideDropDown();
+                    _textBox.Focus();
+                    _textBox.SelectionLength = 0;
+                }
+            };
+
+            _listView.MouseClick += (sender, mouseArgs) =>
+            {
+                if (mouseArgs == null)
+                {
+                    return;
+                }
+
+                var cachedCount = _listView.Items.Count;
+                for (var i = 0; i < cachedCount; i++)
+                {
+                    var rectangle = _listView.GetItemRect(i);
+                    if (rectangle.Contains(mouseArgs.Location))
+                    {
+                        _listViewMouseLeaveTimer.Stop();
+                        _selectedIndex = i;
+                        _textBox.Text = _listView.Items[i].Text;
+                        SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
+                        HideDropDown();
+                        _textBox.Focus();
+                        _textBox.SelectionLength = 0;
+                        return;
+                    }
+                }
+            };
         }
 
         protected override void OnMouseUp(MouseEventArgs e)
@@ -570,13 +682,10 @@ namespace Nikse.SubtitleEdit.Controls
                 _buttonDownActive = true;
                 Invalidate();
             }
-            else
+            else if (_buttonDownActive)
             {
-                if (_buttonDownActive)
-                {
-                    _buttonDownActive = false;
-                    Invalidate();
-                }
+                _buttonDownActive = false;
+                Invalidate();
             }
 
             base.OnMouseMove(e);
@@ -596,6 +705,11 @@ namespace Nikse.SubtitleEdit.Controls
 
         protected override void OnPaint(PaintEventArgs e)
         {
+            if (_skipPaint)
+            {
+                return;
+            }
+
             e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
 
             _textBox.BackColor = BackColor;
@@ -604,9 +718,6 @@ namespace Nikse.SubtitleEdit.Controls
             _textBox.Left = RightToLeft == RightToLeft.Yes ? ButtonsWidth : 3;
             _textBox.Height = Height - 4;
             _textBox.Width = Width - ButtonsWidth - 3;
-            //_textBox.Text = _text;
-            _textBox.Invalidate();
-
 
             if (!Enabled)
             {
@@ -614,12 +725,18 @@ namespace Nikse.SubtitleEdit.Controls
                 return;
             }
 
-            base.OnPaint(e);
+            using (var brushBg = new SolidBrush(BackColor))
+            {
+                e.Graphics.FillRectangle(brushBg, e.ClipRectangle);
+            }
+
             using (var pen = _textBox.Focused || (_listView != null && _listView.Focused) ? new Pen(_buttonForeColorOver, 1f) : new Pen(BorderColor, 1f))
             {
                 var borderRectangle = new Rectangle(e.ClipRectangle.X, e.ClipRectangle.Y, e.ClipRectangle.Width - 1, e.ClipRectangle.Height - 1);
                 e.Graphics.DrawRectangle(pen, borderRectangle);
             }
+
+            _textBox.Invalidate();
 
             Brush brush;
             if (_buttonDownActive)
@@ -643,10 +760,11 @@ namespace Nikse.SubtitleEdit.Controls
             set
             {
                 base.RightToLeft = value;
-                Application.DoEvents();
                 Invalidate();
             }
         }
+
+        public bool DroppedDown => _listViewShown;
 
         private static void DrawArrowDown(PaintEventArgs e, Brush brush, int left, int top, int height)
         {
@@ -672,6 +790,8 @@ namespace Nikse.SubtitleEdit.Controls
                 e.Graphics.DrawRectangle(pen, borderRectangle);
             }
 
+            _textBox.Invalidate();
+
             var left = RightToLeft == RightToLeft.Yes ? 3 : e.ClipRectangle.Width - ButtonsWidth;
             var height = e.ClipRectangle.Height / 2 - 4;
             var top = (height / 2) + 5;
@@ -679,6 +799,19 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 DrawArrowDown(e, brush, left, top, height);
             }
+        }
+
+        private bool _skipPaint = false;
+
+        public void BeginUpdate()
+        {
+            _skipPaint = true;
+        }
+
+        public void EndUpdate()
+        {
+            _skipPaint = false;
+            Invalidate();
         }
     }
 }

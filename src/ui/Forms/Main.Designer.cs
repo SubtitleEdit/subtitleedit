@@ -76,7 +76,7 @@
             this.toolStripButtonToggleVideo = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparatorSubtitleFormat = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripLabelSubtitleFormat = new System.Windows.Forms.ToolStripLabel();
-            this.comboBoxSubtitleFormats = new System.Windows.Forms.ToolStripComboBox();
+            this.comboBoxSubtitleFormats = new Nikse.SubtitleEdit.Controls.ToolStripNikseComboBox();
             this.toolStripSeparatorEncoding = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripLabelEncoding = new System.Windows.Forms.ToolStripLabel();
             this.comboBoxEncoding = new System.Windows.Forms.ToolStripComboBox();
@@ -1032,10 +1032,10 @@
             // 
             // comboBoxSubtitleFormats
             // 
-            this.comboBoxSubtitleFormats.DropDownHeight = 215;
+            this.comboBoxSubtitleFormats.DropDownHeight = 295;
             this.comboBoxSubtitleFormats.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxSubtitleFormats.FlatStyle = System.Windows.Forms.FlatStyle.Standard;
-            this.comboBoxSubtitleFormats.IntegralHeight = false;
+            //this.comboBoxSubtitleFormats.FlatStyle = System.Windows.Forms.FlatStyle.Standard;
+            //this.comboBoxSubtitleFormats.IntegralHeight = false;
             this.comboBoxSubtitleFormats.Name = "comboBoxSubtitleFormats";
             this.comboBoxSubtitleFormats.Size = new System.Drawing.Size(150, 23);
             this.comboBoxSubtitleFormats.DropDown += new System.EventHandler(this.comboBoxSubtitleFormats_DropDown);
@@ -3777,7 +3777,6 @@
             // 
             // timeUpDownVideoPosition
             // 
-            this.timeUpDownVideoPosition.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
             this.timeUpDownVideoPosition.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
             this.timeUpDownVideoPosition.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
             this.timeUpDownVideoPosition.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
@@ -4057,7 +4056,6 @@
             // 
             // timeUpDownVideoPositionAdjust
             // 
-            this.timeUpDownVideoPositionAdjust.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
             this.timeUpDownVideoPositionAdjust.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
             this.timeUpDownVideoPositionAdjust.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
             this.timeUpDownVideoPositionAdjust.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
@@ -5399,7 +5397,6 @@
             // 
             // timeUpDownStartTime
             // 
-            this.timeUpDownStartTime.BackColor = System.Drawing.SystemColors.Control;
             this.timeUpDownStartTime.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
             this.timeUpDownStartTime.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
             this.timeUpDownStartTime.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
@@ -5972,7 +5969,7 @@
         private System.Windows.Forms.Timer timerAutoDuration;
         private System.Windows.Forms.Label labelAutoDuration;
         private System.Windows.Forms.Timer timerAutoContinue;
-        private System.Windows.Forms.ToolStripComboBox comboBoxSubtitleFormats;
+        private Nikse.SubtitleEdit.Controls.ToolStripNikseComboBox comboBoxSubtitleFormats;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparatorToggle;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparatorSubtitleFormat;
         private System.Windows.Forms.ToolStripLabel toolStripLabelSubtitleFormat;

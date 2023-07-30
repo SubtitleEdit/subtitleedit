@@ -90,8 +90,8 @@ namespace Nikse.SubtitleEdit.Forms
             var autoBreakIndexes = new List<int>();
 
             NumberOfSplits = 0;
-            SubtitleListview1.Items.Clear();
             SubtitleListview1.BeginUpdate();
+            SubtitleListview1.Items.Clear();
             if (checkBoxSplitAtLineBreaks.Checked)
             {
                 SplitSubtitle = SplitAtLineBreak(_subtitle, splitIndexes, out var count, clearFixes);

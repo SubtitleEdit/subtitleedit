@@ -57,6 +57,10 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             toolTipChaining.SetToolTip(pictureBoxChainingInfo, language.CreateSimpleChainingToolTip);
             buttonLoadNetflixRules.Text = language.CreateSimpleLoadNetflixRules;
 
+            labelGapHint.Left = labelGapSuffix.Left + labelGapSuffix.Width + 15;
+            numericUpDownChainingGapAfterShotChanges.Left = labelChainingGapAfterShotChangesPrefix.Left + labelChainingGapAfterShotChangesPrefix.Width + 10;
+            labelChainingGapAfterShotChangesSuffix.Left = numericUpDownChainingGapAfterShotChanges.Left + numericUpDownChainingGapAfterShotChanges.Width + 6;
+
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             UiUtil.FixLargeFonts(this, buttonOK);
