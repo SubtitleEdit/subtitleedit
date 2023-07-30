@@ -171,14 +171,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return null;
             }
 
-            try
-            {
-                return shotChanges.Aggregate((x, y) => Math.Abs(x - currentTime.TotalSeconds) < Math.Abs(y - currentTime.TotalSeconds) ? x : y);
-            }
-            catch (InvalidOperationException)
-            {
-                return null;
-            }
+            return shotChanges.ClosestTo(currentTime.TotalSeconds);
         }
 
         public static bool IsCueOnShotChange(List<double> shotChanges, TimeCode currentTime, bool isInCue)
