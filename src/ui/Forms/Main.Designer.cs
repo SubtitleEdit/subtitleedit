@@ -79,7 +79,7 @@
             this.comboBoxSubtitleFormats = new Nikse.SubtitleEdit.Controls.ToolStripNikseComboBox();
             this.toolStripSeparatorEncoding = new Nikse.SubtitleEdit.Controls.ToolStripNikseSeparator();
             this.toolStripLabelEncoding = new System.Windows.Forms.ToolStripLabel();
-            this.comboBoxEncoding = new System.Windows.Forms.ToolStripComboBox();
+            this.comboBoxEncoding = new Nikse.SubtitleEdit.Controls.ToolStripNikseComboBox();
             this.toolStripSeparatorFrameRate = new Nikse.SubtitleEdit.Controls.ToolStripNikseSeparator();
             this.toolStripLabelFrameRate = new System.Windows.Forms.ToolStripLabel();
             this.toolStripComboBoxFrameRate = new System.Windows.Forms.ToolStripComboBox();
@@ -366,7 +366,7 @@
             this.panelWaveformControls = new System.Windows.Forms.Panel();
             this.toolStripWaveControls = new System.Windows.Forms.ToolStrip();
             this.toolStripButtonWaveformZoomOut = new System.Windows.Forms.ToolStripButton();
-            this.toolStripComboBoxWaveform = new System.Windows.Forms.ToolStripComboBox();
+            this.toolStripComboBoxWaveform = new Nikse.SubtitleEdit.Controls.ToolStripNikseComboBox();
             this.toolStripButtonWaveformZoomIn = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator16 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButtonWaveformPause = new System.Windows.Forms.ToolStripButton();
@@ -383,12 +383,12 @@
             this.buttonGoogleIt = new System.Windows.Forms.Button();
             this.textBoxSearchWord = new System.Windows.Forms.TextBox();
             this.groupBoxAutoContinue = new System.Windows.Forms.GroupBox();
-            this.comboBoxAutoContinue = new System.Windows.Forms.ComboBox();
+            this.comboBoxAutoContinue = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelAutoContinueDelay = new System.Windows.Forms.Label();
             this.checkBoxAutoContinue = new System.Windows.Forms.CheckBox();
             this.buttonStop = new System.Windows.Forms.Button();
             this.groupBoxAutoRepeat = new System.Windows.Forms.GroupBox();
-            this.comboBoxAutoRepeat = new System.Windows.Forms.ComboBox();
+            this.comboBoxAutoRepeat = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelAutoRepeatCount = new System.Windows.Forms.Label();
             this.checkBoxAutoRepeatOn = new System.Windows.Forms.CheckBox();
             this.buttonPlayPrevious = new System.Windows.Forms.Button();
@@ -770,7 +770,7 @@
             // toolStripSeparatorFindReplace
             // 
             this.toolStripSeparatorFindReplace.Name = "toolStripSeparatorFindReplace";
-            this.toolStripSeparatorFindReplace.Size = new System.Drawing.Size(6, 40);
+            this.toolStripSeparatorFindReplace.Size = new System.Drawing.Size(6, 29);
             // 
             // toolStripButtonFind
             // 
@@ -800,7 +800,7 @@
             // toolStripSeparatorFixSyncSpell
             // 
             this.toolStripSeparatorFixSyncSpell.Name = "toolStripSeparatorFixSyncSpell";
-            this.toolStripSeparatorFixSyncSpell.Size = new System.Drawing.Size(6, 40);
+            this.toolStripSeparatorFixSyncSpell.Size = new System.Drawing.Size(6, 29);
             // 
             // toolStripButtonFixCommonErrors
             // 
@@ -962,7 +962,7 @@
             // toolStripSeparatorHelp
             // 
             this.toolStripSeparatorHelp.Name = "toolStripSeparatorHelp";
-            this.toolStripSeparatorHelp.Size = new System.Drawing.Size(6, 40);
+            this.toolStripSeparatorHelp.Size = new System.Drawing.Size(6, 29);
             // 
             // toolStripButtonHelp
             // 
@@ -979,7 +979,7 @@
             // toolStripSeparatorToggle
             // 
             this.toolStripSeparatorToggle.Name = "toolStripSeparatorToggle";
-            this.toolStripSeparatorToggle.Size = new System.Drawing.Size(6, 40);
+            this.toolStripSeparatorToggle.Size = new System.Drawing.Size(6, 29);
             // 
             // toolStripButtonSourceView
             // 
@@ -1022,7 +1022,7 @@
             // toolStripSeparatorSubtitleFormat
             // 
             this.toolStripSeparatorSubtitleFormat.Name = "toolStripSeparatorSubtitleFormat";
-            this.toolStripSeparatorSubtitleFormat.Size = new System.Drawing.Size(6, 40);
+            this.toolStripSeparatorSubtitleFormat.Size = new System.Drawing.Size(6, 29);
             // 
             // toolStripLabelSubtitleFormat
             // 
@@ -1032,20 +1032,28 @@
             // 
             // comboBoxSubtitleFormats
             // 
+            this.comboBoxSubtitleFormats.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxSubtitleFormats.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxSubtitleFormats.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxSubtitleFormats.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxSubtitleFormats.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxSubtitleFormats.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.comboBoxSubtitleFormats.DropDownHeight = 295;
             this.comboBoxSubtitleFormats.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            //this.comboBoxSubtitleFormats.FlatStyle = System.Windows.Forms.FlatStyle.Standard;
-            //this.comboBoxSubtitleFormats.IntegralHeight = false;
             this.comboBoxSubtitleFormats.Name = "comboBoxSubtitleFormats";
+            this.comboBoxSubtitleFormats.Padding = new System.Windows.Forms.Padding(2);
+            this.comboBoxSubtitleFormats.SelectedIndex = -1;
+            this.comboBoxSubtitleFormats.SelectedItem = null;
+            this.comboBoxSubtitleFormats.SelectedText = null;
             this.comboBoxSubtitleFormats.Size = new System.Drawing.Size(150, 23);
+            this.comboBoxSubtitleFormats.SelectedIndexChanged += new System.EventHandler(this.ComboBoxSubtitleFormatsSelectedIndexChanged);
             this.comboBoxSubtitleFormats.DropDown += new System.EventHandler(this.comboBoxSubtitleFormats_DropDown);
             this.comboBoxSubtitleFormats.DropDownClosed += new System.EventHandler(this.comboBoxSubtitleFormats_DropDownClosed);
-            this.comboBoxSubtitleFormats.SelectedIndexChanged += new System.EventHandler(this.ComboBoxSubtitleFormatsSelectedIndexChanged);
             // 
             // toolStripSeparatorEncoding
             // 
             this.toolStripSeparatorEncoding.Name = "toolStripSeparatorEncoding";
-            this.toolStripSeparatorEncoding.Size = new System.Drawing.Size(6, 40);
+            this.toolStripSeparatorEncoding.Size = new System.Drawing.Size(6, 23);
             // 
             // toolStripLabelEncoding
             // 
@@ -1055,10 +1063,14 @@
             // 
             // comboBoxEncoding
             // 
+            this.comboBoxEncoding.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxEncoding.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxEncoding.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxEncoding.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxEncoding.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxEncoding.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.comboBoxEncoding.DropDownHeight = 215;
             this.comboBoxEncoding.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxEncoding.FlatStyle = System.Windows.Forms.FlatStyle.Standard;
-            this.comboBoxEncoding.IntegralHeight = false;
             this.comboBoxEncoding.Items.AddRange(new object[] {
             "ANSI",
             "UTF-7",
@@ -1066,6 +1078,10 @@
             "Unicode",
             "Unicode (big endian)"});
             this.comboBoxEncoding.Name = "comboBoxEncoding";
+            this.comboBoxEncoding.Padding = new System.Windows.Forms.Padding(2);
+            this.comboBoxEncoding.SelectedIndex = -1;
+            this.comboBoxEncoding.SelectedItem = null;
+            this.comboBoxEncoding.SelectedText = null;
             this.comboBoxEncoding.Size = new System.Drawing.Size(129, 23);
             this.comboBoxEncoding.DropDown += new System.EventHandler(this.MenuOpened);
             this.comboBoxEncoding.DropDownClosed += new System.EventHandler(this.MenuClosed);
@@ -1073,7 +1089,7 @@
             // toolStripSeparatorFrameRate
             // 
             this.toolStripSeparatorFrameRate.Name = "toolStripSeparatorFrameRate";
-            this.toolStripSeparatorFrameRate.Size = new System.Drawing.Size(6, 40);
+            this.toolStripSeparatorFrameRate.Size = new System.Drawing.Size(6, 23);
             // 
             // toolStripLabelFrameRate
             // 
@@ -1803,7 +1819,7 @@
             // toolStripMenuItemInverseSelection
             // 
             this.toolStripMenuItemInverseSelection.Name = "toolStripMenuItemInverseSelection";
-            this.toolStripMenuItemInverseSelection.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
+            this.toolStripMenuItemInverseSelection.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
             | System.Windows.Forms.Keys.I)));
             this.toolStripMenuItemInverseSelection.Size = new System.Drawing.Size(301, 22);
             this.toolStripMenuItemInverseSelection.Text = "Inverse selection";
@@ -1882,7 +1898,7 @@
             // fixToolStripMenuItem
             // 
             this.fixToolStripMenuItem.Name = "fixToolStripMenuItem";
-            this.fixToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
+            this.fixToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
             | System.Windows.Forms.Keys.F)));
             this.fixToolStripMenuItem.Size = new System.Drawing.Size(338, 22);
             this.fixToolStripMenuItem.Text = "Fix common errors...";
@@ -1891,7 +1907,7 @@
             // startNumberingFromToolStripMenuItem
             // 
             this.startNumberingFromToolStripMenuItem.Name = "startNumberingFromToolStripMenuItem";
-            this.startNumberingFromToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
+            this.startNumberingFromToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
             | System.Windows.Forms.Keys.N)));
             this.startNumberingFromToolStripMenuItem.Size = new System.Drawing.Size(338, 22);
             this.startNumberingFromToolStripMenuItem.Text = "Start numbering from...";
@@ -1900,7 +1916,7 @@
             // removeTextForHearImpairedToolStripMenuItem
             // 
             this.removeTextForHearImpairedToolStripMenuItem.Name = "removeTextForHearImpairedToolStripMenuItem";
-            this.removeTextForHearImpairedToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
+            this.removeTextForHearImpairedToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
             | System.Windows.Forms.Keys.H)));
             this.removeTextForHearImpairedToolStripMenuItem.Size = new System.Drawing.Size(338, 22);
             this.removeTextForHearImpairedToolStripMenuItem.Text = "Remove text for hearing impaired...";
@@ -1916,7 +1932,7 @@
             // ChangeCasingToolStripMenuItem
             // 
             this.ChangeCasingToolStripMenuItem.Name = "ChangeCasingToolStripMenuItem";
-            this.ChangeCasingToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
+            this.ChangeCasingToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
             | System.Windows.Forms.Keys.C)));
             this.ChangeCasingToolStripMenuItem.Size = new System.Drawing.Size(338, 22);
             this.ChangeCasingToolStripMenuItem.Text = "Change casing...";
@@ -2188,7 +2204,7 @@
             // spellCheckToolStripMenuItem
             // 
             this.spellCheckToolStripMenuItem.Name = "spellCheckToolStripMenuItem";
-            this.spellCheckToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
+            this.spellCheckToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
             | System.Windows.Forms.Keys.S)));
             this.spellCheckToolStripMenuItem.Size = new System.Drawing.Size(267, 22);
             this.spellCheckToolStripMenuItem.Text = "Spell check...";
@@ -2204,7 +2220,7 @@
             // findDoubleWordsToolStripMenuItem
             // 
             this.findDoubleWordsToolStripMenuItem.Name = "findDoubleWordsToolStripMenuItem";
-            this.findDoubleWordsToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
+            this.findDoubleWordsToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
             | System.Windows.Forms.Keys.D)));
             this.findDoubleWordsToolStripMenuItem.Size = new System.Drawing.Size(267, 22);
             this.findDoubleWordsToolStripMenuItem.Text = "Find double words";
@@ -2232,7 +2248,7 @@
             // addWordToNameListToolStripMenuItem
             // 
             this.addWordToNameListToolStripMenuItem.Name = "addWordToNameListToolStripMenuItem";
-            this.addWordToNameListToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
+            this.addWordToNameListToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
             | System.Windows.Forms.Keys.L)));
             this.addWordToNameListToolStripMenuItem.Size = new System.Drawing.Size(267, 22);
             this.addWordToNameListToolStripMenuItem.Text = "Add word to names list";
@@ -2443,7 +2459,7 @@
             // toolStripMenuItemAdjustAllTimes
             // 
             this.toolStripMenuItemAdjustAllTimes.Name = "toolStripMenuItemAdjustAllTimes";
-            this.toolStripMenuItemAdjustAllTimes.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
+            this.toolStripMenuItemAdjustAllTimes.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
             | System.Windows.Forms.Keys.A)));
             this.toolStripMenuItemAdjustAllTimes.Size = new System.Drawing.Size(324, 22);
             this.toolStripMenuItemAdjustAllTimes.Text = "Adjust times (show earlier/later)...";
@@ -2452,7 +2468,7 @@
             // visualSyncToolStripMenuItem
             // 
             this.visualSyncToolStripMenuItem.Name = "visualSyncToolStripMenuItem";
-            this.visualSyncToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
+            this.visualSyncToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
             | System.Windows.Forms.Keys.V)));
             this.visualSyncToolStripMenuItem.Size = new System.Drawing.Size(324, 22);
             this.visualSyncToolStripMenuItem.Text = "Visual sync...";
@@ -2461,7 +2477,7 @@
             // toolStripMenuItemPointSync
             // 
             this.toolStripMenuItemPointSync.Name = "toolStripMenuItemPointSync";
-            this.toolStripMenuItemPointSync.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
+            this.toolStripMenuItemPointSync.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
             | System.Windows.Forms.Keys.P)));
             this.toolStripMenuItemPointSync.Size = new System.Drawing.Size(324, 22);
             this.toolStripMenuItemPointSync.Text = "Point sync...";
@@ -3301,8 +3317,8 @@
             this.audioVisualizer.AllowDrop = true;
             this.audioVisualizer.AllowNewSelection = true;
             this.audioVisualizer.AllowOverlap = false;
-            this.audioVisualizer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+            this.audioVisualizer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.audioVisualizer.BackColor = System.Drawing.Color.Black;
             this.audioVisualizer.BackgroundColor = System.Drawing.Color.Black;
@@ -3367,7 +3383,7 @@
             // 
             // trackBarWaveformPosition
             // 
-            this.trackBarWaveformPosition.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+            this.trackBarWaveformPosition.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.trackBarWaveformPosition.AutoSize = false;
             this.trackBarWaveformPosition.Location = new System.Drawing.Point(674, 267);
@@ -3404,7 +3420,7 @@
             this.toolStripSplitButtonPlayRate});
             this.toolStripWaveControls.Location = new System.Drawing.Point(0, 3);
             this.toolStripWaveControls.Name = "toolStripWaveControls";
-            this.toolStripWaveControls.Size = new System.Drawing.Size(197, 25);
+            this.toolStripWaveControls.Size = new System.Drawing.Size(251, 25);
             this.toolStripWaveControls.TabIndex = 0;
             this.toolStripWaveControls.Text = "toolStrip2";
             // 
@@ -3608,8 +3624,16 @@
             // 
             // comboBoxAutoContinue
             // 
+            this.comboBoxAutoContinue.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxAutoContinue.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxAutoContinue.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxAutoContinue.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxAutoContinue.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxAutoContinue.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxAutoContinue.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxAutoContinue.DropDownHeight = 400;
             this.comboBoxAutoContinue.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxAutoContinue.FormattingEnabled = true;
+            this.comboBoxAutoContinue.DropDownWidth = 96;
             this.comboBoxAutoContinue.Items.AddRange(new object[] {
             "0",
             "1",
@@ -3629,6 +3653,9 @@
             "15"});
             this.comboBoxAutoContinue.Location = new System.Drawing.Point(6, 59);
             this.comboBoxAutoContinue.Name = "comboBoxAutoContinue";
+            this.comboBoxAutoContinue.SelectedIndex = -1;
+            this.comboBoxAutoContinue.SelectedItem = null;
+            this.comboBoxAutoContinue.SelectedText = null;
             this.comboBoxAutoContinue.Size = new System.Drawing.Size(96, 21);
             this.comboBoxAutoContinue.TabIndex = 2;
             // 
@@ -3676,8 +3703,16 @@
             // 
             // comboBoxAutoRepeat
             // 
+            this.comboBoxAutoRepeat.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxAutoRepeat.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxAutoRepeat.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxAutoRepeat.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxAutoRepeat.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxAutoRepeat.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxAutoRepeat.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxAutoRepeat.DropDownHeight = 400;
             this.comboBoxAutoRepeat.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxAutoRepeat.FormattingEnabled = true;
+            this.comboBoxAutoRepeat.DropDownWidth = 96;
             this.comboBoxAutoRepeat.Items.AddRange(new object[] {
             "0",
             "1",
@@ -3691,6 +3726,9 @@
             "9"});
             this.comboBoxAutoRepeat.Location = new System.Drawing.Point(6, 60);
             this.comboBoxAutoRepeat.Name = "comboBoxAutoRepeat";
+            this.comboBoxAutoRepeat.SelectedIndex = -1;
+            this.comboBoxAutoRepeat.SelectedItem = null;
+            this.comboBoxAutoRepeat.SelectedText = null;
             this.comboBoxAutoRepeat.Size = new System.Drawing.Size(96, 21);
             this.comboBoxAutoRepeat.TabIndex = 2;
             // 
@@ -3777,6 +3815,7 @@
             // 
             // timeUpDownVideoPosition
             // 
+            this.timeUpDownVideoPosition.BackColor = System.Drawing.SystemColors.Window;
             this.timeUpDownVideoPosition.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
             this.timeUpDownVideoPosition.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
             this.timeUpDownVideoPosition.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
@@ -4056,6 +4095,7 @@
             // 
             // timeUpDownVideoPositionAdjust
             // 
+            this.timeUpDownVideoPositionAdjust.BackColor = System.Drawing.SystemColors.Window;
             this.timeUpDownVideoPositionAdjust.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
             this.timeUpDownVideoPositionAdjust.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
             this.timeUpDownVideoPositionAdjust.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
@@ -4762,8 +4802,8 @@
             // textBoxListViewText
             // 
             this.textBoxListViewText.AllowDrop = true;
-            this.textBoxListViewText.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+            this.textBoxListViewText.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxListViewText.BackColor = System.Drawing.SystemColors.WindowFrame;
             this.textBoxListViewText.ContextMenuStrip = this.contextMenuStripTextBoxListView;
@@ -5309,8 +5349,8 @@
             // textBoxListViewTextOriginal
             // 
             this.textBoxListViewTextOriginal.AllowDrop = true;
-            this.textBoxListViewTextOriginal.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+            this.textBoxListViewTextOriginal.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxListViewTextOriginal.BackColor = System.Drawing.SystemColors.WindowFrame;
             this.textBoxListViewTextOriginal.ContextMenuStrip = this.contextMenuStripTextBoxListView;
@@ -5397,6 +5437,7 @@
             // 
             // timeUpDownStartTime
             // 
+            this.timeUpDownStartTime.BackColor = System.Drawing.SystemColors.Window;
             this.timeUpDownStartTime.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
             this.timeUpDownStartTime.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
             this.timeUpDownStartTime.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
@@ -5689,8 +5730,8 @@
             // 
             // panelVideoPlayer
             // 
-            this.panelVideoPlayer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+            this.panelVideoPlayer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panelVideoPlayer.Controls.Add(this.mediaPlayer);
             this.panelVideoPlayer.Location = new System.Drawing.Point(1, 1);
@@ -5701,8 +5742,8 @@
             // mediaPlayer
             // 
             this.mediaPlayer.AllowDrop = true;
-            this.mediaPlayer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+            this.mediaPlayer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.mediaPlayer.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(18)))), ((int)(((byte)(18)))), ((int)(((byte)(18)))));
             this.mediaPlayer.Chapters = null;
@@ -5974,7 +6015,7 @@
         private Nikse.SubtitleEdit.Controls.ToolStripNikseSeparator toolStripSeparatorSubtitleFormat;
         private System.Windows.Forms.ToolStripLabel toolStripLabelSubtitleFormat;
         private System.Windows.Forms.ToolStripLabel toolStripLabelEncoding;
-        private System.Windows.Forms.ToolStripComboBox comboBoxEncoding;
+        private Nikse.SubtitleEdit.Controls.ToolStripNikseComboBox comboBoxEncoding;
         private System.Windows.Forms.ToolStripButton toolStripButtonToggleVideo;
         private Nikse.SubtitleEdit.Controls.ToolStripNikseSeparator toolStripSeparatorEncoding;
         private Nikse.SubtitleEdit.Controls.ToolStripNikseSeparator toolStripSeparatorFrameRate;
@@ -6006,11 +6047,11 @@
         private System.Windows.Forms.Button buttonGoogleIt;
         private System.Windows.Forms.TextBox textBoxSearchWord;
         private System.Windows.Forms.GroupBox groupBoxAutoContinue;
-        private System.Windows.Forms.ComboBox comboBoxAutoContinue;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxAutoContinue;
         private System.Windows.Forms.Label labelAutoContinueDelay;
         private System.Windows.Forms.CheckBox checkBoxAutoContinue;
         private System.Windows.Forms.GroupBox groupBoxAutoRepeat;
-        private System.Windows.Forms.ComboBox comboBoxAutoRepeat;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxAutoRepeat;
         private System.Windows.Forms.Label labelAutoRepeatCount;
         private System.Windows.Forms.CheckBox checkBoxAutoRepeatOn;
         private System.Windows.Forms.Button buttonStop;
@@ -6066,7 +6107,7 @@
         private System.Windows.Forms.Panel panelWaveformControls;
         private System.Windows.Forms.ToolStrip toolStripWaveControls;
         private System.Windows.Forms.ToolStripButton toolStripButtonWaveformZoomIn;
-        private System.Windows.Forms.ToolStripComboBox toolStripComboBoxWaveform;
+        private Nikse.SubtitleEdit.Controls.ToolStripNikseComboBox toolStripComboBoxWaveform;
         private System.Windows.Forms.ToolStripButton toolStripButtonWaveformZoomOut;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator16;
         private System.Windows.Forms.ToolStripButton toolStripButtonWaveformPause;

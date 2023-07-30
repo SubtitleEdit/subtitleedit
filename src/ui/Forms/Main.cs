@@ -895,7 +895,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SetEncoding(string encodingName)
         {
-            UiUtil.SetTextEncoding(comboBoxEncoding, encodingName);
+            UiUtil.SetTextEncoding(comboBoxEncoding.ComboBox, encodingName);
         }
 
         private Encoding GetCurrentEncoding()
@@ -10886,7 +10886,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _listViewTextTicks = 0;
                 TimerTextUndoTick(sender, e);
                 Application.DoEvents();
-                System.Threading.Thread.Sleep(50);
+                Thread.Sleep(50);
                 Application.DoEvents();
                 _listViewTextTicks = 0;
                 TimerTextUndoTick(sender, e);
@@ -11196,7 +11196,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
 
                         intellisenseListBox.Hide();
-                        System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(10), () => tb.Focus());
+                        SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(10), () => tb.Focus());
                     }
                 };
                 intellisenseListBox.KeyDown += (o, args) =>
@@ -11896,7 +11896,7 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleListview1.SelectedIndexChanged += SubtitleListview1_SelectedIndexChanged;
                 RefreshSelectedParagraph();
 
-                System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(25), () =>
+                SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(25), () =>
                 {
                     _lastTextKeyDownTicks = -1; // faster refresh
                 });
@@ -17236,7 +17236,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     ResetPlaySelection();
                     e.SuppressKeyPress = true;
-                    System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(1), () => mediaPlayer.TogglePlayPause());
+                    SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(1), () => mediaPlayer.TogglePlayPause());
                 }
             }
             else if (e.KeyData == _shortcuts.VideoPlay150Speed)
@@ -20240,7 +20240,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 mediaPlayer.CurrentPosition = newPosition;
                 mediaPlayer.Play();
-                System.Threading.Thread.Sleep(99);
+                Thread.Sleep(99);
                 mediaPlayer.Stop();
             }
 
@@ -20604,7 +20604,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 catch
                 {
-                    System.Threading.Thread.Sleep(100);
+                    Thread.Sleep(100);
                 }
             }
 
@@ -22556,7 +22556,7 @@ namespace Nikse.SubtitleEdit.Forms
                     try
                     {
                         process = AddWaveform.GetCommandLineProcess(fileName, -1, targetFile, Configuration.Settings.General.VlcWaveTranscodeSettings, out var encoderName);
-                        System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(25), () => ShowStatus(_language.GeneratingWaveformInBackground, true, 10_000));
+                        SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(25), () => ShowStatus(_language.GeneratingWaveformInBackground, true, 10_000));
                         var bw = new BackgroundWorker();
                         bw.DoWork += (sender, args) =>
                         {
@@ -22845,9 +22845,9 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (VideoFileNameIsUrl)
             {
-                System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(2000), () => LoadVideoInfoAfterVideoFromUrlLoad());
-                System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(5000), () => LoadVideoInfoAfterVideoFromUrlLoad());
-                System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(10000), () => LoadVideoInfoAfterVideoFromUrlLoad());
+                SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(2000), () => LoadVideoInfoAfterVideoFromUrlLoad());
+                SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(5000), () => LoadVideoInfoAfterVideoFromUrlLoad());
+                SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(10000), () => LoadVideoInfoAfterVideoFromUrlLoad());
             }
 
             if (VideoAudioTrackNumber > 0)
@@ -23037,7 +23037,7 @@ namespace Nikse.SubtitleEdit.Forms
                             {
                                 _endSeconds = p.EndTime.TotalSeconds;
                                 mediaPlayer.CurrentPosition = p.StartTime.TotalSeconds;
-                                System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(15), () =>
+                                SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(15), () =>
                                 {
                                     UiUtil.ShowSubtitle(_subtitle, mediaPlayer, GetCurrentSubtitleFormat());
                                     mediaPlayer.Play();
@@ -23051,7 +23051,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 {
                                     _endSeconds = first.EndTime.TotalSeconds;
                                     mediaPlayer.CurrentPosition = first.StartTime.TotalSeconds;
-                                    System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(151), () =>
+                                    SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(151), () =>
                                     {
                                         UiUtil.ShowSubtitle(_subtitle, mediaPlayer, GetCurrentSubtitleFormat());
                                         _endSeconds = first.EndTime.TotalSeconds;
@@ -23463,7 +23463,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (WindowState == FormWindowState.Maximized ||
                 WindowState == FormWindowState.Normal && _lastFormWindowState == FormWindowState.Maximized)
             {
-                System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(25), () =>
+                SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(25), () =>
                 {
                     MainResize();
                     if (_textHeightResize >= 1)
@@ -24706,6 +24706,20 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 tabControlModes.Width = groupBoxTranslateSearch.Left + groupBoxTranslateSearch.Width + 12;
                 Configuration.Settings.VideoControls.LastActiveTab = "Translate";
+                if (!comboBoxAutoRepeat.Visible)
+                {
+                    SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(250), () =>
+                    {
+                        try
+                        {
+                            comboBoxAutoRepeat.Visible = true;
+                        }
+                        catch
+                        {
+                            // Ignore
+                        }
+                    });
+                }
             }
             else if (tabControlModes.SelectedIndex == 1)
             {
@@ -27856,7 +27870,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
 
                     Application.DoEvents();
-                    System.Threading.Thread.Sleep(250);
+                    Thread.Sleep(250);
                 }
             }
 
@@ -28862,7 +28876,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _listViewOriginalTextTicks = 0;
                 TimerOriginalTextUndoTick(sender, e);
                 Application.DoEvents();
-                System.Threading.Thread.Sleep(50);
+                Thread.Sleep(50);
                 Application.DoEvents();
                 _listViewOriginalTextTicks = 0;
                 TimerOriginalTextUndoTick(sender, e);
@@ -34198,7 +34212,7 @@ namespace Nikse.SubtitleEdit.Forms
                 .Replace("[EXT]", Path.GetExtension(_videoFileName).TrimStart('.').ToLowerInvariant()), Encoding.UTF8);
             UiUtil.OpenFile(htmlFileName);
 
-            System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(25000), () =>
+            SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(25000), () =>
             {
                 try
                 {
