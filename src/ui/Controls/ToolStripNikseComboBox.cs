@@ -40,7 +40,7 @@ namespace Nikse.SubtitleEdit.Controls
                 cbc.Owner = this;
             }
 
-            Padding = new Padding(7);
+            Padding = new Padding(2);
 
             ComboBox.SelectedIndexChanged += (sender, args) =>
             {
@@ -55,6 +55,16 @@ namespace Nikse.SubtitleEdit.Controls
             ComboBox.DropDownClosed += (sender, args) =>
             {
                 DropDownClosed?.Invoke(sender, args);
+            };
+
+            ComboBox.LostFocus += (sender, args) =>
+            {
+                Invalidate();
+            };
+
+            LostFocus += (sender, args) =>
+            {
+                Invalidate();
             };
         }
 
@@ -145,7 +155,11 @@ namespace Nikse.SubtitleEdit.Controls
             set => ComboBox.BorderColor = value;
         }
 
-        public object SelectedItem => ComboBox.SelectedItem;
+        public object SelectedItem
+        {
+            get => ComboBox.SelectedItem;
+            set => ComboBox.SelectedItem = value;
+        }
 
         public bool DroppedDown => ComboBox.DroppedDown;
 
