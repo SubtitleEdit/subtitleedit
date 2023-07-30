@@ -867,6 +867,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <BreakLongLines>Σπάσιμο μεγάλης γραμμής</BreakLongLines>
     <RemoveLineBreaks>Ένωση γραμμών σε μικρά κείμενα με μία πρόταση</RemoveLineBreaks>
     <RemoveLineBreaksAll>Ένωση γραμμών σε μικρά κείμενα (εκτός διαλόγου)</RemoveLineBreaksAll>
+    <RemoveLineBreaksPixelWidth>Ένωση υποτίτλων που χωρούν σε μία γραμμή (εύρος εικονοστοιχείων)</RemoveLineBreaksPixelWidth>
     <FixUppercaseIInsideLowercaseWords>Διόρθωση κεφαλαίου 'i' σε πεζές λέξεις (σφάλμα OCR)</FixUppercaseIInsideLowercaseWords>
     <FixDoubleApostrophes>Διόρθωση διπλής αποστρόφου ('') σε εισαγωγικό (")</FixDoubleApostrophes>
     <AddPeriods>Προσθήκη τελείας</AddPeriods>
@@ -901,6 +902,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixFirstLetterToUppercaseAfterParagraph>Διόρθωση αρχικού γράμματος σε κεφαλαίο μετά από παράγραφο</FixFirstLetterToUppercaseAfterParagraph>
     <MergeShortLine>Ένωση γραμμής</MergeShortLine>
     <MergeShortLineAll>Ένωση γραμμής (εκτός διαλόγου)</MergeShortLineAll>
+    <UnbreakShortLinePixelWidth>Ένωση μικρής γραμμής (εύρος εικονοστοιχείων)</UnbreakShortLinePixelWidth>
     <BreakLongLine>Σπάσιμο γραμμής</BreakLongLine>
     <FixLongDisplayTime>Διόρθωση μεγάλου χρόνου</FixLongDisplayTime>
     <FixInvalidItalicTag>Διόρθωση ετικέτας πλάγιας γραφής</FixInvalidItalicTag>
