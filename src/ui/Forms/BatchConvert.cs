@@ -488,6 +488,14 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemSelectAll.Text = LanguageSettings.Current.Main.Menu.ContextMenu.SelectAll;
             UpdateNumberOfFiles();
 
+            checkBoxRemoveAllFormatting.Text = LanguageSettings.Current.Main.Menu.ContextMenu.RemoveFormattingAll;
+            checkBoxRemoveItalic.Text = LanguageSettings.Current.Main.Menu.ContextMenu.RemoveFormattingItalic;
+            checkBoxRemoveBold.Text = LanguageSettings.Current.Main.Menu.ContextMenu.RemoveFormattingBold;
+            checkBoxRemoveUnderline.Text = LanguageSettings.Current.Main.Menu.ContextMenu.RemoveFormattingUnderline;
+            checkBoxRemoveFontName.Text = LanguageSettings.Current.Main.Menu.ContextMenu.RemoveFormattingFontName;
+            checkBoxRemoveColor.Text = LanguageSettings.Current.Main.Menu.ContextMenu.RemoveFormattingColor;
+            checkBoxRemoveAlignment.Text = LanguageSettings.Current.Main.Menu.ContextMenu.RemoveFormattingAlignment;
+
             checkBoxRemoveAllFormatting.Checked = Configuration.Settings.Tools.BatchConvertRemoveFormattingAll;
             checkBoxRemoveItalic.Checked = Configuration.Settings.Tools.BatchConvertRemoveFormattingItalic;
             checkBoxRemoveBold.Checked = Configuration.Settings.Tools.BatchConvertRemoveFormattingBold;
