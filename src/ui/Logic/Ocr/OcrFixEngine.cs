@@ -667,12 +667,11 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         public static string FixFrenchLApostrophe(string input, string tag, string lastLine)
         {
             var text = input;
-            var endingBeforeThis = string.IsNullOrEmpty(lastLine) || lastLine.EndsWith('.') || lastLine.EndsWith('!') || lastLine.EndsWith('?') ||
-                                   lastLine.EndsWith(".</i>", StringComparison.Ordinal) || lastLine.EndsWith("!</i>", StringComparison.Ordinal) || lastLine.EndsWith("?</i>", StringComparison.Ordinal) ||
-                                   lastLine.EndsWith(".</font>", StringComparison.Ordinal) || lastLine.EndsWith("!</font>", StringComparison.Ordinal) || lastLine.EndsWith("?</font>", StringComparison.Ordinal);
+            var isPreviousLineClose = lastLine.HasSentenceEnding();
+            
             if (text.StartsWith(tag.TrimStart(), StringComparison.Ordinal) && text.Length > 3)
             {
-                if (endingBeforeThis || char.IsUpper(text[2]))
+                if (isPreviousLineClose || char.IsUpper(text[2]))
                 {
                     text = @"L" + text.Substring(1);
                 }
@@ -683,7 +682,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             }
             else if (text.StartsWith("<i>" + tag.TrimStart(), StringComparison.Ordinal) && text.Length > 6)
             {
-                if (endingBeforeThis || char.IsUpper(text[5]))
+                if (isPreviousLineClose || char.IsUpper(text[5]))
                 {
                     text = text.Remove(3, 1).Insert(3, "L");
                 }
@@ -697,21 +696,21 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             while (start > 0)
             {
                 lastLine = HtmlUtil.RemoveHtmlTags(text.Substring(0, start)).TrimEnd().TrimEnd('-').TrimEnd();
-                endingBeforeThis = string.IsNullOrEmpty(lastLine) || lastLine.EndsWith('.') || lastLine.EndsWith('!') || lastLine.EndsWith('?');
+                isPreviousLineClose = string.IsNullOrEmpty(lastLine) || lastLine.EndsWith('.') || lastLine.EndsWith('!') || lastLine.EndsWith('?');
                 if (start < text.Length - 4)
                 {
                     if (start == 1 && text.StartsWith('-'))
                     {
-                        endingBeforeThis = true;
+                        isPreviousLineClose = true;
                     }
 
                     if (start > 1)
                     {
                         var beforeThis = HtmlUtil.RemoveHtmlTags(text.Substring(0, start));
-                        endingBeforeThis = beforeThis.EndsWith('.') || beforeThis.EndsWith('!') || beforeThis.EndsWith('?');
+                        isPreviousLineClose = beforeThis.EndsWith('.') || beforeThis.EndsWith('!') || beforeThis.EndsWith('?');
                     }
 
-                    if (endingBeforeThis)
+                    if (isPreviousLineClose)
                     {
                         text = text.Remove(start + 1, 1).Insert(start + 1, "L");
                     }
@@ -728,16 +727,16 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             while (start > 0)
             {
                 lastLine = HtmlUtil.RemoveHtmlTags(text.Substring(0, start)).TrimEnd().TrimEnd('-').TrimEnd();
-                endingBeforeThis = string.IsNullOrEmpty(lastLine) || lastLine.EndsWith('.') || lastLine.EndsWith('!') || lastLine.EndsWith('?') || lastLine.EndsWith(".</i>", StringComparison.Ordinal);
+                isPreviousLineClose = string.IsNullOrEmpty(lastLine) || lastLine.EndsWith('.') || lastLine.EndsWith('!') || lastLine.EndsWith('?') || lastLine.EndsWith(".</i>", StringComparison.Ordinal);
                 if (start < text.Length - 5)
                 {
                     if (start > 1)
                     {
                         var beforeThis = HtmlUtil.RemoveHtmlTags(text.Substring(0, start));
-                        endingBeforeThis = beforeThis.EndsWith('.') || beforeThis.EndsWith('!') || beforeThis.EndsWith('?');
+                        isPreviousLineClose = beforeThis.EndsWith('.') || beforeThis.EndsWith('!') || beforeThis.EndsWith('?');
                     }
 
-                    if (endingBeforeThis)
+                    if (isPreviousLineClose)
                     {
                         text = text.Remove(start + Environment.NewLine.Length, 1).Insert(start + Environment.NewLine.Length, "L");
                     }
@@ -754,10 +753,10 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             while (start > 0)
             {
                 lastLine = HtmlUtil.RemoveHtmlTags(text.Substring(0, start)).TrimEnd().TrimEnd('-').TrimEnd();
-                endingBeforeThis = string.IsNullOrEmpty(lastLine) || lastLine.EndsWith('.') || lastLine.EndsWith('!') || lastLine.EndsWith('?') || lastLine.EndsWith(".</i>", StringComparison.Ordinal);
+                isPreviousLineClose = string.IsNullOrEmpty(lastLine) || lastLine.EndsWith('.') || lastLine.EndsWith('!') || lastLine.EndsWith('?') || lastLine.EndsWith(".</i>", StringComparison.Ordinal);
                 if (start < text.Length - 8)
                 {
-                    if (endingBeforeThis || char.IsUpper(text[start + 5 + Environment.NewLine.Length]))
+                    if (isPreviousLineClose || char.IsUpper(text[start + 5 + Environment.NewLine.Length]))
                     {
                         text = text.Remove(start + Environment.NewLine.Length + 3, 1).Insert(start + Environment.NewLine.Length + 3, "L");
                     }

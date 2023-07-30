@@ -93,7 +93,7 @@
     <Size>크기</Size>
     <Search>검색</Search>
     <DeleteCurrentLine>현재 줄 삭제</DeleteCurrentLine>
-    <Width>폭</Width>
+    <Width>너비</Width>
     <Height>높이</Height>
     <Collapse>축소</Collapse>
     <ShortcutX>단축키: {0}</ShortcutX>
@@ -151,8 +151,11 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
   </AddWaveform>
   <AddWaveformBatch>
     <Title>파형 데이터 일괄 생성</Title>
+    <ExtractTimeCodes>FFprobe로 타임코드 추출</ExtractTimeCodes>
     <ExtractingAudio>오디오 추출 중...</ExtractingAudio>
     <Calculating>계산 중...</Calculating>
+    <ExtractingTimeCodes>타임코드를 추출하는 중...</ExtractingTimeCodes>
+    <DetectingShotChanges>장면전환을 검색하는 중...</DetectingShotChanges>
     <Done>완료</Done>
     <Error>오류</Error>
   </AddWaveformBatch>
@@ -169,13 +172,15 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <Milliseconds>밀리초</Milliseconds>
     <ExtendOnly>확장만</ExtendOnly>
     <EnforceDurationLimits>최소 및 최대 표시시간 적용</EnforceDurationLimits>
-    <CheckShotChanges>이전 샷 변경 사항을 확장하지 마십시오</CheckShotChanges>
+    <CheckShotChanges>이전 장면전환 확장 안 함</CheckShotChanges>
+    <BatchCheckShotChanges>장면전환 존중 (사용 가능한 경우)</BatchCheckShotChanges>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
     <Title>최대/최소 표시시간 설정</Title>
-    <CheckShotChanges>이전 샷 변경 사항을 확장하지 마십시오</CheckShotChanges>
+    <CheckShotChanges>이전 장면전환 확장 안 함</CheckShotChanges>
     <FixesAvailable>수리 가능: {0}</FixesAvailable>
     <UnableToFix>수리 불가: {0}</UnableToFix>
+    <BatchCheckShotChanges>장면전환 존중 (사용 가능한 경우)</BatchCheckShotChanges>
   </ApplyDurationLimits>
   <AudioToText>
     <Title>오디오를 텍스트로</Title>
@@ -366,24 +371,27 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <Title>타임코드 보기좋게 꾸미기</Title>
     <TitleSelectedLines>타임코드 보기좋게 꾸미기 (선택한 줄 {0}개)</TitleSelectedLines>
     <GroupTimeCodes>타임코드</GroupTimeCodes>
-    <AlignTimeCodes>타임코드를 프레임 타임코드에 맞춤</AlignTimeCodes>
-    <ExtractExactTimeCodes>ffprobe를 사용하여 정확한 프레임 타임코드 추출</ExtractExactTimeCodes>
+    <AlignTimeCodes>타임코드를 프레임 타임코드에 맞추기</AlignTimeCodes>
+    <ExtractExactTimeCodes>FFprobe를 사용하여 정확한 프레임 타임코드 추출</ExtractExactTimeCodes>
     <ExtractTimeCodes>타임코드 추출</ExtractTimeCodes>
     <CancelTimeCodes>취소</CancelTimeCodes>
     <GroupShotChanges>장면전환</GroupShotChanges>
-    <SnapToShotChanges>장면전환 신호 캡처</SnapToShotChanges>
+    <SnapToShotChanges>큐를 장면전환에 맞춤</SnapToShotChanges>
     <ImportShotChanges>장면전환 생성/가져오기...</ImportShotChanges>
     <EditProfile>프로필 편집...</EditProfile>
     <NoTimeCodesLoaded>로드된 타임코드 없음</NoTimeCodesLoaded>
     <XTimeCodesLoaded>{0}개의 타임코드가 로드됨</XTimeCodesLoaded>
     <NoTimeCodesLoadedError>정확한 프레임 타임코드를 추출하도록 선택했지만 로드된 타임코드가 없습니다.
 
-"{0}"을 클릭하여 우선 타임코드를 추출하거나 이 옵션을 비활성화 하십시오.</NoTimeCodesLoadedError>
+"{0}"을 클릭하여 우선 타임코드를 추출하거나 이 옵션을 비활성하십시오.</NoTimeCodesLoadedError>
     <NoShotChangesLoaded>로드된 장면전환 없음</NoShotChangesLoaded>
     <XShotChangesLoaded>{0}개의 장면전환이 로드됨</XShotChangesLoaded>
-    <NoShotChangesLoadedError>장면전환 신호를 캡처하도록 선택했지만 로드된 장면전환이 없습니다.
+    <NoShotChangesLoadedError>장면전환 큐를 캡처하도록 선택했지만 로드된 장면전환이 없습니다.
 
-"{0}"을 클릭하여 우선 장면전환을 생성하거나 가져오거나 이 옵션을 비활성화 하십시오.</NoShotChangesLoadedError>
+"{0}"을 클릭하여 우선 장면전환을 생성하거나 가져오거나 이 옵션을 비활성하십시오.</NoShotChangesLoadedError>
+    <BatchAlignTimeCodes>타임코드를 프레임 타임코드에 맞춤</BatchAlignTimeCodes>
+    <BatchUseExactTimeCodes>정확한 타임코드 사용 (사용 가능한 경우)</BatchUseExactTimeCodes>
+    <BatchSnapToShotChanges>큐를 장면전환에 맞춤 (사용 가능한 경우)</BatchSnapToShotChanges>
   </BeautifyTimeCodes>
   <BeautifyTimeCodesProfile>
     <Title>프로필 편집</Title>
@@ -395,22 +403,22 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <General>일반</General>
     <Gap>간격:</Gap>
     <GapSuffix>프레임(사용자 지정 설정 덮어쓰기)</GapSuffix>
-    <InCues>첫 신호</InCues>
+    <InCues>시작 큐</InCues>
     <SubtitlePreviewText>자막 텍스트.</SubtitlePreviewText>
     <Zones>영역:</Zones>
-    <OutCues>끝 신호</OutCues>
+    <OutCues>종료 큐</OutCues>
     <ConnectedSubtitles>연결된 자막</ConnectedSubtitles>
-    <InCueClosest>첫 신호가 근접</InCueClosest>
-    <OutCueClosest>끝 신호가 근접</OutCueClosest>
-    <TreadAsConnected>다음보다 작은 간격인 경우 연결된 것으로 처리:</TreadAsConnected>
+    <InCueClosest>시작 큐가 근접</InCueClosest>
+    <OutCueClosest>종료 큐가 근접</OutCueClosest>
+    <TreadAsConnected>다음보다 작은 간격은 연결된 것으로 처리:</TreadAsConnected>
     <Milliseconds>밀리초</Milliseconds>
     <Chaining>체이닝</Chaining>
-    <InCueOnShot>장면전환 시 첫 신호</InCueOnShot>
-    <OutCueOnShot>장면전환 시 끝 신호</OutCueOnShot>
+    <InCueOnShot>장면전환 상의 시작 큐</InCueOnShot>
+    <OutCueOnShot>장면전환 상의 종료 큐</OutCueOnShot>
     <MaxGap>최대 간격:</MaxGap>
     <ShotChangeBehavior>중간에 장면전환이 있는 경우:</ShotChangeBehavior>
     <DontChain>체이닝 안 함</DontChain>
-    <ExtendCrossingShotChange>확장, 교차하는 장면전환</ExtendCrossingShotChange>
+    <ExtendCrossingShotChange>확장, 교차 장면전환</ExtendCrossingShotChange>
     <ExtendUntilShotChange>장면전환까지 확장</ExtendUntilShotChange>
     <ResetWarning>이렇게 하면 현재 프로필이 초기화되고 모든 값이 선택한 이전 설정 값으로 바뀝니다. 이 작업은 취소할 수 없습니다.
 
@@ -418,32 +426,32 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <CreateSimpleTitle>간단하게 생성</CreateSimpleTitle>
     <CreateSimpleInstruction>이러한 기본 규칙을 입력하면, 현재 프로필이 그에 따라 업데이트됩니다.</CreateSimpleInstruction>
     <CreateSimpleGapInstruction>자막 사이의 최소 공간입니다.</CreateSimpleGapInstruction>
-    <CreateSimpleInCues>첫 신호 생성:</CreateSimpleInCues>
+    <CreateSimpleInCues>시작 큐 생성:</CreateSimpleInCues>
     <CreateSimpleInCues0Frames>장면전환 시</CreateSimpleInCues0Frames>
     <CreateSimpleInCues1Frames>장면전환 후 1프레임</CreateSimpleInCues1Frames>
     <CreateSimpleInCues2Frames>장면전환 후 2프레임</CreateSimpleInCues2Frames>
     <CreateSimpleInCues3Frames>장면전환 후 3프레임</CreateSimpleInCues3Frames>
-    <CreateSimpleOutCues>끝 신호 생성:</CreateSimpleOutCues>
+    <CreateSimpleOutCues>종료 큐 생성:</CreateSimpleOutCues>
     <CreateSimpleOutCues0Frames>장면전환 시</CreateSimpleOutCues0Frames>
     <CreateSimpleOutCues1Frames>장면전환 전 1프레임</CreateSimpleOutCues1Frames>
     <CreateSimpleOutCues2Frames>장면전환 전 2프레임</CreateSimpleOutCues2Frames>
     <CreateSimpleOutCues3Frames>장면전환 전 3프레임</CreateSimpleOutCues3Frames>
     <CreateSimpleOutCuesGap>장면전환 전 최소 간격</CreateSimpleOutCuesGap>
-    <CreateSimpleSnapClosestCue>연결된 자막의 경우, 어느 쪽이 더 가까운지에 따라 장면전환 시에 첫 신호 또는 끝 신호를 캡처합니다.</CreateSimpleSnapClosestCue>
+    <CreateSimpleSnapClosestCue>연결된 자막의 경우, 어느 쪽이 더 가까운지에 따라 시작 큐 또는 종료 큐를 장면전환에 맞춥니다.</CreateSimpleSnapClosestCue>
     <CreateSimpleMaxOffset>최대 오프셋:</CreateSimpleMaxOffset>
-    <CreateSimpleMaxOffsetInstruction>장면전환에서 이 거리 내에 있는 신호는 장면전환에 캡처됩니다.</CreateSimpleMaxOffsetInstruction>
+    <CreateSimpleMaxOffsetInstruction>장면전환에서 이 거리 내에 있는 큐는 장면전환에 맞춰집니다.</CreateSimpleMaxOffsetInstruction>
     <CreateSimpleSafeZone>안전 영역:</CreateSimpleSafeZone>
-    <CreateSimpleSafeZoneInstruction>장면전환에서 이 거리 내에 있는 신호는 장면전환에서 멀어집니다.</CreateSimpleSafeZoneInstruction>
+    <CreateSimpleSafeZoneInstruction>장면전환에서 이 거리 내에 있는 큐는 장면전환에서 멀어집니다.</CreateSimpleSafeZoneInstruction>
     <CreateSimpleChainingGap>최대 체이닝 간격:</CreateSimpleChainingGap>
     <CreateSimpleChainingGapInstruction>두 자막 사이의 간격이 이 크기보다 작으면 자막이 연결됩니다.</CreateSimpleChainingGapInstruction>
-    <CreateSimpleChainingGapAfterShotChanges>장면전환 시 끝 신호 후에는 간격이 더 작아질 수 있습니다.</CreateSimpleChainingGapAfterShotChanges>
+    <CreateSimpleChainingGapAfterShotChanges>장면전환 상의 종료 큐 후에 간격이 더 줄어들 수 있습니다.</CreateSimpleChainingGapAfterShotChanges>
     <CreateSimpleChainingToolTip>자막의 "점멸"에 일관된 "리듬"을 확보하기 위해 자막을 체이닝하는 것이 좋습니다.
 이것은 보다 편안한 시청 체험을 제공합니다.
 
-체이닝 후 자막이 연결되거나(즉, 자막이 사라지고 잠시 후 새 자막이 즉시 ​​나타남) 안될 수 있습니다.
-이를 통해 시청자는 언제 초점을 다시 화면으로 옮길 수 있는지 어느 정도 알 수 있습니다.
+체이닝 후 자막이 연결되거나(즉, 자막이 사라지고 잠시 후 새 자막이 즉시 ​​나타남) 연결되지 않습니다.
+이를 통해 시청자는 언제 주의를 다시 화면으로 돌릴 수 있는지 어느 정도 알 수 있습니다.
 
-체이닝 간격의 길이는 장면전환 시 자막이 사라진 직후 약간 더 작을 수 있는데, 이것은 장면전환이 이미지를 "초기화"하기 때문입니다.
+체이닝 간격의 길이는 장면전환 시 자막이 사라진 직후 약간 더 작을 수 있는데, 이것은 장면전환이 이미지를 "리셋"하기 때문입니다.
 우리는 이미지 고유의 리듬을 활용합니다.</CreateSimpleChainingToolTip>
     <CreateSimpleLoadNetflixRules>넷플릭스 규칙 불러오기</CreateSimpleLoadNetflixRules>
     <Frames>프레임</Frames>
@@ -742,13 +750,13 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <FontSize>글꼴 크기</FontSize>
     <FontColor>색상</FontColor>
     <BorderColor>테두리 색상</BorderColor>
-    <BorderWidth>테두리 폭</BorderWidth>
+    <BorderWidth>테두리 너비</BorderWidth>
     <BorderStyle>테두리 모양</BorderStyle>
     <BorderStyleOneBox>하나의 상자</BorderStyleOneBox>
     <BorderStyleBoxForEachLine>각 줄에 대한 상자</BorderStyleBoxForEachLine>
-    <BorderStyleNormalWidthX>보통, 폭={0}</BorderStyleNormalWidthX>
+    <BorderStyleNormalWidthX>보통, 너비={0}</BorderStyleNormalWidthX>
     <ShadowColor>그림자 색상</ShadowColor>
-    <ShadowWidth>그림자 폭</ShadowWidth>
+    <ShadowWidth>그림자 너비</ShadowWidth>
     <Transparency>투명도</Transparency>
     <ImageFormat>이미지 형식</ImageFormat>
     <FullFrameImage>전체 이미지</FullFrameImage>
@@ -866,6 +874,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <BreakLongLines>긴 줄 줄바꿈</BreakLongLines>
     <RemoveLineBreaks>짧은 단일 문장의 줄바꿈 제거하기</RemoveLineBreaks>
     <RemoveLineBreaksAll>짧은 문장의 줄바꿈 제거하기 (대화형식은 제외)</RemoveLineBreaksAll>
+    <RemoveLineBreaksPixelWidth>한 줄에 들어갈 수 있게 자막 줄바꿈 해제 (픽셀 너비)</RemoveLineBreaksPixelWidth>
     <FixUppercaseIInsideLowercaseWords>소문자 단어 안에 대문자 'I' 수정하기 (OCR 오류)</FixUppercaseIInsideLowercaseWords>
     <FixDoubleApostrophes>두개의 작은 따옴표(')를 큰 따옴표(")로 수정하기</FixDoubleApostrophes>
     <AddPeriods>다음 줄이 대문자로 시작하면 줄 끝에 마침표 추가하기</AddPeriods>
@@ -900,6 +909,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <FixFirstLetterToUppercaseAfterParagraph>단락이 끝난 뒤에 나오는 첫글자를 대문자로 바꾸기</FixFirstLetterToUppercaseAfterParagraph>
     <MergeShortLine>짧은 줄 병합 (단일 문장)</MergeShortLine>
     <MergeShortLineAll>짧은 줄 병합 (대화형식 제외)</MergeShortLineAll>
+    <UnbreakShortLinePixelWidth>짧은 줄 줄바꿈 해제 (픽셀 너비)</UnbreakShortLinePixelWidth>
     <BreakLongLine>긴 줄(행) 줄바꿈</BreakLongLine>
     <FixLongDisplayTime>긴 표시시간 수정하기</FixLongDisplayTime>
     <FixInvalidItalicTag>잘못된 기울임꼴 태그 수정하기</FixInvalidItalicTag>
@@ -1693,7 +1703,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <BeforeRenumbering>자막 시작 번호 변경 전</BeforeRenumbering>
     <RenumberedStartingFromX>변경됨! - 새 시작 번호: {0}</RenumberedStartingFromX>
     <BeforeBeautifyTimeCodes>타임코드 보기좋게 꾸미기 전</BeforeBeautifyTimeCodes>
-    <BeforeBeautifyTimeCodesSelectedLines>선택한 줄의 타임코드 보기좋게 꾸미기 전</BeforeBeautifyTimeCodesSelectedLines>
+    <BeforeBeautifyTimeCodesSelectedLines>선택한 줄의 타임코드를 보기좋게 꾸미기 전</BeforeBeautifyTimeCodesSelectedLines>
     <BeautifiedTimeCodes>타임코드를 보기좋게 꾸몄습니다!</BeautifiedTimeCodes>
     <BeautifiedTimeCodesSelectedLines>선택한 줄의 타임코드를 보기좋게 꾸몄습니다!</BeautifiedTimeCodesSelectedLines>
     <BeforeRemovalOfTextingForHearingImpaired>청각 장애인용 텍스트 삭제하기</BeforeRemovalOfTextingForHearingImpaired>
@@ -2392,7 +2402,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <WaveformFocusMouseEnter>마우스 입력에 초점 놓기</WaveformFocusMouseEnter>
     <WaveformListViewFocusMouseEnter>「자막 보기」에서 마우스 입력에 초점 놓기</WaveformListViewFocusMouseEnter>
     <WaveformSingleClickSelect>한 번 클릭으로 자막을 선택</WaveformSingleClickSelect>
-    <WaveformSnapToShotChanges>장면전환 캡처 (다시 지정하려면 Shift 누름)</WaveformSnapToShotChanges>
+    <WaveformSnapToShotChanges>장면전환에 맞춤 (Shift 키를 누르면 재정의)</WaveformSnapToShotChanges>
     <WaveformEditShotChangesProfile>프로필 편집...</WaveformEditShotChangesProfile>
     <WaveformAutoGen>비디오를 열 때 파형 자동 생성</WaveformAutoGen>
     <WaveformBorderHitMs1>다음 시간 이하로 테두리 표시:</WaveformBorderHitMs1>
@@ -2554,14 +2564,18 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <AdjustExtendToPreviousShotChange>선택한 줄을 이전 장면전환으로 확장 (또는 이전 자막)</AdjustExtendToPreviousShotChange>
     <AdjustExtendToNextSubtitle>선택한 줄을 다음 자막으로 확장</AdjustExtendToNextSubtitle>
     <AdjustExtendToPreviousSubtitle>선택한 줄을 이전 자막으로 확장</AdjustExtendToPreviousSubtitle>
-    <AdjustExtendToNextSubtitleMinusChainingGap>선택한 줄을 체이닝 간격이 있는 다음 자막으로 확장</AdjustExtendToNextSubtitleMinusChainingGap>
-    <AdjustExtendToPreviousSubtitleMinusChainingGap>선택한 줄을 체이닝 간격이 있는 이전 자막으로 확장</AdjustExtendToPreviousSubtitleMinusChainingGap>
+    <AdjustExtendToNextSubtitleMinusChainingGap>선택한 줄을 체이닝 간격과 함께 다음 자막으로 확장</AdjustExtendToNextSubtitleMinusChainingGap>
+    <AdjustExtendToPreviousSubtitleMinusChainingGap>선택한 줄을 체이닝 간격과 함께 이전 자막으로 확장</AdjustExtendToPreviousSubtitleMinusChainingGap>
     <AdjustExtendCurrentSubtitle>현재 줄을 다음 자막으로 확장하거나 표시시간 최대화</AdjustExtendCurrentSubtitle>
     <AdjustExtendPreviousLineEndToCurrentStart>이전 줄의 끝을 현재의 시작으로 확장</AdjustExtendPreviousLineEndToCurrentStart>
     <AdjustExtendNextLineStartToCurrentEnd>다음 줄의 시작을 현재의 끝으로 확장</AdjustExtendNextLineStartToCurrentEnd>
     <RecalculateDurationOfCurrentSubtitle>현재 자막의 표시시간 다시 계산</RecalculateDurationOfCurrentSubtitle>
     <RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed>현재 자막의 표시시간 다시 계산 (최적의 판독 속도 기준)</RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed>
     <RecalculateDurationOfCurrentSubtitleByMinReadingSpeed>현재 자막의 표시시간 다시 계산 (최소 판독 속도 기준)</RecalculateDurationOfCurrentSubtitleByMinReadingSpeed>
+    <SetInCueToClosestShotChangeLeftGreenZone>가장 근접한 장면전환 전 최소 거리로 시작 큐 설정 (좌측 녹색 영역)</SetInCueToClosestShotChangeLeftGreenZone>
+    <SetInCueToClosestShotChangeRightGreenZone>가장 근접한 장면전환 후 최소 거리로 시작 큐 설정 (우측 녹색 영역)</SetInCueToClosestShotChangeRightGreenZone>
+    <SetOutCueToClosestShotChangeLeftGreenZone>가장 근접한 장면전환 전 최소 거리로 종료 큐 설정 (좌측 녹색 영역)</SetOutCueToClosestShotChangeLeftGreenZone>
+    <SetOutCueToClosestShotChangeRightGreenZone>가장 근접한 장면전환 후 최소 거리로 종료 큐 설정 (우측 녹색 영역)</SetOutCueToClosestShotChangeRightGreenZone>
     <MainCreateStartDownEndUp>'↓'키로 새로운 자막 삽입, '↑'키로 종료 시간 설정</MainCreateStartDownEndUp>
     <MergeDialog>대화 병합 (대시 삽입)</MergeDialog>
     <MergeDialogWithNext>대화를 다음 대화와 병합 (대시 삽입)</MergeDialogWithNext>
@@ -3328,6 +3342,10 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <Title>WebVTT - 새로운 음성 설정</Title>
     <VoiceName>음성 이름</VoiceName>
   </WebVttNewVoice>
+  <WebVttProperties>
+    <UseXTimeStamp>X-TIMESTAMP-MAP 헤더 값 사용</UseXTimeStamp>
+    <MergeLines>로드 시 동일한 텍스트가 있는 줄 병합</MergeLines>
+  </WebVttProperties>
   <WebVttStyleManager>
     <Title>WebVTT 스타일</Title>
   </WebVttStyleManager>

@@ -951,6 +951,7 @@
             public string BreakLongLines { get; set; }
             public string RemoveLineBreaks { get; set; }
             public string RemoveLineBreaksAll { get; set; }
+            public string RemoveLineBreaksPixelWidth { get; set; }
             public string FixUppercaseIInsideLowercaseWords { get; set; }
             public string FixDoubleApostrophes { get; set; }
             public string AddPeriods { get; set; }
@@ -985,6 +986,7 @@
             public string FixFirstLetterToUppercaseAfterParagraph { get; set; }
             public string MergeShortLine { get; set; }
             public string MergeShortLineAll { get; set; }
+            public string UnbreakShortLinePixelWidth { get; set; }
             public string BreakLongLine { get; set; }
             public string FixLongDisplayTime { get; set; }
             public string FixInvalidItalicTag { get; set; }

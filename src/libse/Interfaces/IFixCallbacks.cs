@@ -17,6 +17,7 @@ namespace Nikse.SubtitleEdit.Core.Interfaces
         HashSet<string> GetAbbreviations();
         void AddToTotalErrors(int count);
         void AddToDeleteIndices(int index);
+        object GetCustomCallbackData(IFixCommonError sender, object input);
         SubtitleFormat Format { get; }
         Encoding Encoding { get; }
         string Language { get; }

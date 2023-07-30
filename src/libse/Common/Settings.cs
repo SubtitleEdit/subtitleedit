@@ -945,6 +945,7 @@ $HorzAlign          =   Center
         public bool BreakLongLinesTicked { get; set; }
         public bool MergeShortLinesTicked { get; set; }
         public bool MergeShortLinesAllTicked { get; set; }
+        public bool MergeShortLinesPixelWidthTicked { get; set; }
         public bool UnneededSpacesTicked { get; set; }
         public bool UnneededPeriodsTicked { get; set; }
         public bool FixCommasTicked { get; set; }
@@ -1030,6 +1031,11 @@ $HorzAlign          =   Center
             if (MergeShortLinesAllTicked)
             {
                 sb.Append(nameof(MergeShortLinesAllTicked) + ";");
+            }
+
+            if (MergeShortLinesPixelWidthTicked)
+            {
+                sb.Append(nameof(MergeShortLinesPixelWidthTicked) + ";");
             }
 
             if (UnneededSpacesTicked)
@@ -1192,6 +1198,7 @@ $HorzAlign          =   Center
             BreakLongLinesTicked = list.Contains(nameof(BreakLongLinesTicked));
             MergeShortLinesTicked = list.Contains(nameof(MergeShortLinesTicked));
             MergeShortLinesAllTicked = list.Contains(nameof(MergeShortLinesAllTicked));
+            MergeShortLinesPixelWidthTicked = list.Contains(nameof(MergeShortLinesPixelWidthTicked));
             UnneededSpacesTicked = list.Contains(nameof(UnneededSpacesTicked));
             UnneededPeriodsTicked = list.Contains(nameof(UnneededPeriodsTicked));
             FixCommasTicked = list.Contains(nameof(FixCommasTicked));
@@ -1234,6 +1241,7 @@ $HorzAlign          =   Center
             InvalidItalicTagsTicked = true;
             BreakLongLinesTicked = true;
             MergeShortLinesTicked = true;
+            MergeShortLinesPixelWidthTicked = false;
             UnneededPeriodsTicked = true;
             FixCommasTicked = true;
             UnneededSpacesTicked = true;
@@ -1401,6 +1409,7 @@ $HorzAlign          =   Center
         public int LastPacCodePage { get; set; }
         public string OpenSubtitleExtraExtensions { get; set; }
         public bool ListViewColumnsRememberSize { get; set; }
+
         public int ListViewNumberWidth { get; set; }
         public int ListViewStartWidth { get; set; }
         public int ListViewEndWidth { get; set; }
@@ -1411,6 +1420,18 @@ $HorzAlign          =   Center
         public int ListViewActorWidth { get; set; }
         public int ListViewRegionWidth { get; set; }
         public int ListViewTextWidth { get; set; }
+
+        public int ListViewNumberDisplayIndex { get; set; } = -1;
+        public int ListViewStartDisplayIndex { get; set; } = -1;
+        public int ListViewEndDisplayIndex { get; set; } = -1;
+        public int ListViewDurationDisplayIndex { get; set; } = -1;
+        public int ListViewCpsDisplayIndex { get; set; } = -1;
+        public int ListViewWpmDisplayIndex { get; set; } = -1;
+        public int ListViewGapDisplayIndex { get; set; } = -1;
+        public int ListViewActorDisplayIndex { get; set; } = -1;
+        public int ListViewRegionDisplayIndex { get; set; } = -1;
+        public int ListViewTextDisplayIndex { get; set; } = -1;
+
         public bool DirectShowDoubleLoad { get; set; }
         public string VlcWaveTranscodeSettings { get; set; }
         public string VlcLocation { get; set; }
@@ -4305,6 +4326,68 @@ $HorzAlign          =   Center
             {
                 settings.General.ListViewTextWidth = Convert.ToInt32(subNode.InnerText.Trim(), CultureInfo.InvariantCulture);
             }
+
+
+            subNode = node.SelectSingleNode("ListViewNumberDisplayIndex");
+            if (subNode != null)
+            {
+                settings.General.ListViewNumberDisplayIndex = Convert.ToInt32(subNode.InnerText.Trim(), CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("ListViewStartDisplayIndex");
+            if (subNode != null)
+            {
+                settings.General.ListViewStartDisplayIndex = Convert.ToInt32(subNode.InnerText.Trim(), CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("ListViewEndDisplayIndex");
+            if (subNode != null)
+            {
+                settings.General.ListViewEndDisplayIndex = Convert.ToInt32(subNode.InnerText.Trim(), CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("ListViewDurationDisplayIndex");
+            if (subNode != null)
+            {
+                settings.General.ListViewDurationDisplayIndex = Convert.ToInt32(subNode.InnerText.Trim(), CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("ListViewCpsDisplayIndex");
+            if (subNode != null)
+            {
+                settings.General.ListViewCpsDisplayIndex = Convert.ToInt32(subNode.InnerText.Trim(), CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("ListViewWpmDisplayIndex");
+            if (subNode != null)
+            {
+                settings.General.ListViewWpmDisplayIndex = Convert.ToInt32(subNode.InnerText.Trim(), CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("ListViewGapDisplayIndex");
+            if (subNode != null)
+            {
+                settings.General.ListViewGapDisplayIndex = Convert.ToInt32(subNode.InnerText.Trim(), CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("ListViewActorDisplayIndex");
+            if (subNode != null)
+            {
+                settings.General.ListViewActorDisplayIndex = Convert.ToInt32(subNode.InnerText.Trim(), CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("ListViewRegionDisplayIndex");
+            if (subNode != null)
+            {
+                settings.General.ListViewRegionDisplayIndex = Convert.ToInt32(subNode.InnerText.Trim(), CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("ListViewTextDisplayIndex");
+            if (subNode != null)
+            {
+                settings.General.ListViewTextDisplayIndex = Convert.ToInt32(subNode.InnerText.Trim(), CultureInfo.InvariantCulture);
+            }
+            
 
             subNode = node.SelectSingleNode("DirectShowDoubleLoad");
             if (subNode != null)
@@ -7412,6 +7495,12 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.CommonErrors.MergeShortLinesAllTicked = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("MergeShortLinesPixelWidthTicked");
+            if (subNode != null)
+            {
+                settings.CommonErrors.MergeShortLinesPixelWidthTicked = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
             subNode = node.SelectSingleNode("UnneededSpacesTicked");
@@ -10922,6 +11011,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("LastPacCodePage", settings.General.LastPacCodePage.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("OpenSubtitleExtraExtensions", settings.General.OpenSubtitleExtraExtensions);
                 textWriter.WriteElementString("ListViewColumnsRememberSize", settings.General.ListViewColumnsRememberSize.ToString(CultureInfo.InvariantCulture));
+
                 textWriter.WriteElementString("ListViewNumberWidth", settings.General.ListViewNumberWidth.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewStartWidth", settings.General.ListViewStartWidth.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewEndWidth", settings.General.ListViewEndWidth.ToString(CultureInfo.InvariantCulture));
@@ -10931,6 +11021,19 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("ListViewGapWidth", settings.General.ListViewGapWidth.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewActorWidth", settings.General.ListViewActorWidth.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewRegionWidth", settings.General.ListViewRegionWidth.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ListViewTextWidth", settings.General.ListViewTextWidth.ToString(CultureInfo.InvariantCulture));
+
+                textWriter.WriteElementString("ListViewNumberDisplayIndex", settings.General.ListViewNumberDisplayIndex.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ListViewStartDisplayIndex", settings.General.ListViewStartDisplayIndex.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ListViewEndDisplayIndex", settings.General.ListViewEndDisplayIndex.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ListViewDurationDisplayIndex", settings.General.ListViewDurationDisplayIndex.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ListViewCpsDisplayIndex", settings.General.ListViewCpsDisplayIndex.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ListViewWpmDisplayIndex", settings.General.ListViewWpmDisplayIndex.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ListViewGapDisplayIndex", settings.General.ListViewGapDisplayIndex.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ListViewActorDisplayIndex", settings.General.ListViewActorDisplayIndex.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ListViewRegionDisplayIndex", settings.General.ListViewRegionDisplayIndex.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ListViewTextDisplayIndex", settings.General.ListViewTextDisplayIndex.ToString(CultureInfo.InvariantCulture));
+
                 textWriter.WriteElementString("DirectShowDoubleLoad", settings.General.DirectShowDoubleLoad.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("VlcWaveTranscodeSettings", settings.General.VlcWaveTranscodeSettings);
                 textWriter.WriteElementString("VlcLocation", settings.General.VlcLocation);
@@ -11514,6 +11617,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("BreakLongLinesTicked", settings.CommonErrors.BreakLongLinesTicked.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("MergeShortLinesTicked", settings.CommonErrors.MergeShortLinesTicked.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("MergeShortLinesAllTicked", settings.CommonErrors.MergeShortLinesAllTicked.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("MergeShortLinesPixelWidthTicked", settings.CommonErrors.MergeShortLinesPixelWidthTicked.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("UnneededSpacesTicked", settings.CommonErrors.UnneededSpacesTicked.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("UnneededPeriodsTicked", settings.CommonErrors.UnneededPeriodsTicked.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("FixCommasTicked", settings.CommonErrors.FixCommasTicked.ToString(CultureInfo.InvariantCulture));

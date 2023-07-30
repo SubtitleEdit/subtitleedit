@@ -33,27 +33,28 @@ namespace Nikse.SubtitleEdit.Forms
         private const int IndexBreakLongLines = 10;
         private const int IndexMergeShortLines = 11;
         private const int IndexMergeShortLinesAll = 12;
-        private const int IndexDoubleApostropheToQuote = 13;
-        private const int IndexFixMusicNotation = 14;
-        private const int IndexAddPeriodAfterParagraph = 15;
-        private const int IndexStartWithUppercaseLetterAfterParagraph = 16;
-        private const int IndexStartWithUppercaseLetterAfterPeriodInsideParagraph = 17;
-        private const int IndexStartWithUppercaseLetterAfterColon = 18;
-        private const int IndexAddMissingQuotes = 19;
-        private const int IndexFixHyphens = 20;
-        private const int IndexRemoveHyphensSingleLine = 21;
-        private const int IndexFix3PlusLines = 22;
-        private const int IndexFixDoubleDash = 23;
-        private const int IndexFixDoubleGreaterThan = 24;
-        private const int IndexFixContinuationStyle = 25;
-        private const int IndexFixMissingOpenBracket = 26;
-        private const int IndexFixOcrErrorsViaReplaceList = 27;
-        private const int IndexUppercaseIInsideLowercaseWord = 28;
-        private const int IndexRemoveSpaceBetweenNumbers = 29;
-        private const int IndexDialogsOnOneLine = 30;
-        private const int IndexRemoveDashFirstLine = 31;
-        private const int IndexNormalizeStrings = 32;
-        private const int IndexFixEllipsesStart = 33;
+        private const int IndexMergeShortLinesPixelWidth = 13;
+        private const int IndexDoubleApostropheToQuote = 14;
+        private const int IndexFixMusicNotation = 15;
+        private const int IndexAddPeriodAfterParagraph = 16;
+        private const int IndexStartWithUppercaseLetterAfterParagraph = 17;
+        private const int IndexStartWithUppercaseLetterAfterPeriodInsideParagraph = 18;
+        private const int IndexStartWithUppercaseLetterAfterColon = 19;
+        private const int IndexAddMissingQuotes = 20;
+        private const int IndexFixHyphens = 21;
+        private const int IndexRemoveHyphensSingleLine = 22;
+        private const int IndexFix3PlusLines = 23;
+        private const int IndexFixDoubleDash = 24;
+        private const int IndexFixDoubleGreaterThan = 25;
+        private const int IndexFixContinuationStyle = 26;
+        private const int IndexFixMissingOpenBracket = 27;
+        private const int IndexFixOcrErrorsViaReplaceList = 28;
+        private const int IndexUppercaseIInsideLowercaseWord = 29;
+        private const int IndexRemoveSpaceBetweenNumbers = 30;
+        private const int IndexDialogsOnOneLine = 31;
+        private const int IndexRemoveDashFirstLine = 32;
+        private const int IndexNormalizeStrings = 33;
+        private const int IndexFixEllipsesStart = 34;
         private int _indexAloneLowercaseIToUppercaseIEnglish = -1;
         private int _turkishAnsiIndex = -1;
         private int _danishLetterIIndex = -1;
@@ -390,6 +391,7 @@ namespace Nikse.SubtitleEdit.Forms
                 new FixItem(_language.BreakLongLines, string.Empty, () => new FixLongLines().Fix(Subtitle, this), ce.BreakLongLinesTicked),
                 new FixItem(_language.RemoveLineBreaks, "Foo</br>bar! -> Foo bar!", () => new FixShortLines().Fix(Subtitle, this), ce.MergeShortLinesTicked),
                 new FixItem(_language.RemoveLineBreaksAll, string.Empty, () => new FixShortLinesAll().Fix(Subtitle, this), ce.MergeShortLinesAllTicked),
+                new FixItem(_language.RemoveLineBreaksPixelWidth, string.Empty, () => new FixShortLinesPixelWidth().Fix(Subtitle, this), ce.MergeShortLinesPixelWidthTicked),
                 new FixItem(_language.FixDoubleApostrophes, "''Has double single quotes'' -> \"Has single double quote\"", () => new FixDoubleApostrophes().Fix(Subtitle, this), ce.DoubleApostropheToQuoteTicked),
                 new FixItem(_language.FixMusicNotation, _language.FixMusicNotationExample, () => new FixMusicNotation().Fix(Subtitle, this), ce.FixMusicNotationTicked),
                 new FixItem(_language.AddPeriods, "Hello world -> Hello world.", () => new FixMissingPeriodsAtEndOfLine().Fix(Subtitle, this), ce.AddPeriodAfterParagraphTicked),
@@ -572,6 +574,8 @@ namespace Nikse.SubtitleEdit.Forms
             FixShortLines.Language.MergeShortLine = LanguageSettings.Current.FixCommonErrors.MergeShortLine;
             FixShortLinesAll.Language.MergeShortLineAll = LanguageSettings.Current.FixCommonErrors.MergeShortLineAll;
             FixShortLinesAll.Language.RemoveLineBreaks = LanguageSettings.Current.FixCommonErrors.RemoveLineBreaks;
+            FixShortLinesPixelWidth.Language.UnbreakShortLine = LanguageSettings.Current.FixCommonErrors.UnbreakShortLinePixelWidth;
+            FixShortLinesPixelWidth.Language.RemoveLineBreaks = LanguageSettings.Current.FixCommonErrors.RemoveLineBreaksPixelWidth;
             FixSpanishInvertedQuestionAndExclamationMarks.Language.FixSpanishInvertedQuestionAndExclamationMarks = LanguageSettings.Current.FixCommonErrors.FixSpanishInvertedQuestionAndExclamationMarks;
             FixStartWithUppercaseLetterAfterColon.Language.StartWithUppercaseLetterAfterColon = LanguageSettings.Current.FixCommonErrors.StartWithUppercaseLetterAfterColon;
             FixStartWithUppercaseLetterAfterParagraph.Language.FixFirstLetterToUppercaseAfterParagraph = LanguageSettings.Current.FixCommonErrors.FixFirstLetterToUppercaseAfterParagraph;
@@ -676,6 +680,17 @@ namespace Nikse.SubtitleEdit.Forms
                     _appliedLog.AppendLine(string.Format(_language.FixedOkXY, sender, message));
                 }
             }
+        }
+
+        public object GetCustomCallbackData(IFixCommonError sender, object input)
+        {
+            if (sender is FixShortLinesPixelWidth)
+            {
+                var text = Convert.ToString(input);
+                return TextWidth.CalcPixelWidth(text);
+            }
+
+            return null;
         }
 
         public bool IsName(string candidate)
@@ -1188,6 +1203,7 @@ namespace Nikse.SubtitleEdit.Forms
             ce.BreakLongLinesTicked = listView1.Items[IndexBreakLongLines].Checked;
             ce.MergeShortLinesTicked = listView1.Items[IndexMergeShortLines].Checked;
             ce.MergeShortLinesAllTicked = listView1.Items[IndexMergeShortLinesAll].Checked;
+            ce.MergeShortLinesPixelWidthTicked = listView1.Items[IndexMergeShortLinesPixelWidth].Checked;
 
             ce.UppercaseIInsideLowercaseWordTicked = listView1.Items[IndexUppercaseIInsideLowercaseWord].Checked;
             ce.DoubleApostropheToQuoteTicked = listView1.Items[IndexDoubleApostropheToQuote].Checked;
@@ -1983,11 +1999,6 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void FixCommonErrorsFormClosing(object sender, FormClosingEventArgs e)
         {
-            if (_ocrFixEngine != null)
-            {
-                _ocrFixEngine.Dispose();
-                _ocrFixEngine = null;
-            }
             Owner = null;
         }
 

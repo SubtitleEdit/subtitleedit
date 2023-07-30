@@ -4,6 +4,7 @@ using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.Forms.FixCommonErrors;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Forms;
+using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -957,6 +958,7 @@ namespace Test.FixCommonErrors
         {
             using (var target = GetFixCommonErrorsLib())
             {
+                Configuration.Settings.General.DialogStyle = DialogType.DashBothLinesWithSpace;
                 InitializeFixCommonErrorsLine(target, "-Person one speaks" + Environment.NewLine +
                     "and continues speaking some." + Environment.NewLine +
                     "-The other person speaks and there will be no fix executed.");
@@ -3477,6 +3479,83 @@ namespace Test.FixCommonErrors
                 Configuration.Settings.General.ContinuationStyle = ContinuationStyle.LeadingTrailingDots;
                 new FixShortLinesAll().Fix(_subtitle, new EmptyFixCallback());
                 Assert.AreEqual("‏- fasdfsdf.\r\n‏-adfasf.", _subtitle.Paragraphs[0].Text);
+            }
+        }
+
+        [TestMethod]
+        public void UnbreakShortLinesPixelWidth()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                Configuration.Settings.General.SubtitleLineMaximumPixelWidth = 576;
+                InitializeFixCommonErrorsLine(target, "It is I this illustrious illiteration.\r\nIt's this...");
+                new FixShortLinesPixelWidth().Fix(_subtitle, new EmptyFixCallback()
+                {
+                    CustomCallbackDataHandler = (sender, input) =>
+                    {
+                        var text = Convert.ToString(input);
+                        return TextWidth.CalcPixelWidth(text);
+                    }
+                });
+                Assert.AreEqual("It is I this illustrious illiteration. It's this...", _subtitle.Paragraphs[0].Text);
+            }
+        }
+
+        [TestMethod]
+        public void UnbreakShortLinesPixelWidthDialog()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                Configuration.Settings.General.SubtitleLineMaximumPixelWidth = 576;
+                Configuration.Settings.General.DialogStyle = DialogType.DashSecondLineWithoutSpace;
+                InitializeFixCommonErrorsLine(target, "It is I this illustrious illiteration.\r\n-It's this...");
+                new FixShortLinesPixelWidth().Fix(_subtitle, new EmptyFixCallback()
+                {
+                    CustomCallbackDataHandler = (sender, input) =>
+                    {
+                        var text = Convert.ToString(input);
+                        return TextWidth.CalcPixelWidth(text);
+                    }
+                });
+                Assert.AreEqual("It is I this illustrious illiteration.\r\n-It's this...", _subtitle.Paragraphs[0].Text);
+            }
+        }
+
+        [TestMethod]
+        public void UnbreakShortLinesPixelWidthTooLong()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                Configuration.Settings.General.SubtitleLineMaximumPixelWidth = 576;
+                InitializeFixCommonErrorsLine(target, "It is I this illustrious illiteration.\r\nIt's super...");
+                new FixShortLinesPixelWidth().Fix(_subtitle, new EmptyFixCallback()
+                {
+                    CustomCallbackDataHandler = (sender, input) =>
+                    {
+                        var text = Convert.ToString(input);
+                        return TextWidth.CalcPixelWidth(text);
+                    }
+                });
+                Assert.AreEqual("It is I this illustrious illiteration.\r\nIt's super...", _subtitle.Paragraphs[0].Text);
+            }
+        }
+
+        [TestMethod]
+        public void UnbreakShortLinesPixelWidthTags()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                Configuration.Settings.General.SubtitleLineMaximumPixelWidth = 576;
+                InitializeFixCommonErrorsLine(target, "<i>It is I this illustrious illiteration.</i>\r\n<i>It's this...</i>");
+                new FixShortLinesPixelWidth().Fix(_subtitle, new EmptyFixCallback()
+                {
+                    CustomCallbackDataHandler = (sender, input) =>
+                    {
+                        var text = Convert.ToString(input);
+                        return TextWidth.CalcPixelWidth(text);
+                    }
+                });
+                Assert.AreEqual("<i>It is I this illustrious illiteration. It's this...</i>", _subtitle.Paragraphs[0].Text);
             }
         }
     }
