@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
@@ -931,11 +932,33 @@ $HorzAlign          =   Center
 
         public string DecodePassword()
         {
-            return Encoding.UTF8.GetString(Convert.FromBase64String(Password));
+            if (string.IsNullOrEmpty(Password))
+            {
+                return string.Empty;
+            }
+
+            try
+            {
+                var protectedBuffer = Convert.FromBase64String(Password);
+                var unprotected = ProtectedData.Unprotect(protectedBuffer, null, DataProtectionScope.CurrentUser);
+                return Encoding.UTF8.GetString(unprotected);
+            }
+            catch (Exception e)
+            {
+                return string.Empty;
+            }
         }
+
         public void EncodePassword(string unencryptedPassword)
         {
-            Password = Convert.ToBase64String(Encoding.UTF8.GetBytes(unencryptedPassword));
+            if(string.IsNullOrEmpty(unencryptedPassword))
+            {
+                return;
+            }
+
+            var passwordBuffer = Encoding.UTF8.GetBytes(unencryptedPassword);
+            var protectedBuffer = ProtectedData.Protect(passwordBuffer, null, DataProtectionScope.CurrentUser);
+            Password = Convert.ToBase64String(protectedBuffer);
         }
     }
 
