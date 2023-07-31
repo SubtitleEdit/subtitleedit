@@ -9,8 +9,6 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 {
     public class EmptyFixCallback : IFixCallbacks
     {
-        public Func<IFixCommonError, object, object> CustomCallbackDataHandler { get; set; } = null;
-
         public bool AllowFix(Paragraph p, string action)
         {
             return true;
@@ -49,16 +47,6 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
         public void AddToDeleteIndices(int index)
         {
             // Empty callback
-        }
-
-        public object GetCustomCallbackData(IFixCommonError sender, object input)
-        {
-            if (CustomCallbackDataHandler != null)
-            {
-                return CustomCallbackDataHandler(sender, input);
-            }
-
-            return null;
         }
 
         public SubtitleFormat Format => new SubRip();

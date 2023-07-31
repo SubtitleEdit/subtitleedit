@@ -391,7 +391,7 @@ namespace Nikse.SubtitleEdit.Forms
                 new FixItem(_language.BreakLongLines, string.Empty, () => new FixLongLines().Fix(Subtitle, this), ce.BreakLongLinesTicked),
                 new FixItem(_language.RemoveLineBreaks, "Foo</br>bar! -> Foo bar!", () => new FixShortLines().Fix(Subtitle, this), ce.MergeShortLinesTicked),
                 new FixItem(_language.RemoveLineBreaksAll, string.Empty, () => new FixShortLinesAll().Fix(Subtitle, this), ce.MergeShortLinesAllTicked),
-                new FixItem(_language.RemoveLineBreaksPixelWidth, string.Empty, () => new FixShortLinesPixelWidth().Fix(Subtitle, this), ce.MergeShortLinesPixelWidthTicked),
+                new FixItem(_language.RemoveLineBreaksPixelWidth, string.Empty, () => new FixShortLinesPixelWidth(TextWidth.CalcPixelWidth).Fix(Subtitle, this), ce.MergeShortLinesPixelWidthTicked),
                 new FixItem(_language.FixDoubleApostrophes, "''Has double single quotes'' -> \"Has single double quote\"", () => new FixDoubleApostrophes().Fix(Subtitle, this), ce.DoubleApostropheToQuoteTicked),
                 new FixItem(_language.FixMusicNotation, _language.FixMusicNotationExample, () => new FixMusicNotation().Fix(Subtitle, this), ce.FixMusicNotationTicked),
                 new FixItem(_language.AddPeriods, "Hello world -> Hello world.", () => new FixMissingPeriodsAtEndOfLine().Fix(Subtitle, this), ce.AddPeriodAfterParagraphTicked),
@@ -681,18 +681,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
         }
-
-        public object GetCustomCallbackData(IFixCommonError sender, object input)
-        {
-            if (sender is FixShortLinesPixelWidth)
-            {
-                var text = Convert.ToString(input);
-                return TextWidth.CalcPixelWidth(text);
-            }
-
-            return null;
-        }
-
+        
         public bool IsName(string candidate)
         {
             MakeSureNameListIsLoaded();

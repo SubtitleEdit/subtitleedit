@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.6.13</Version>
-    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 21.07.2023</TranslatedBy>
+    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 30.07.2023</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -879,7 +879,7 @@ Si sfrutta così il ritmo intrinseco dell'immagine.</CreateSimpleChainingToolTip
     <BreakLongLines>Dividi righe lunghe</BreakLongLines>
     <RemoveLineBreaks>Elimina divisioni di riga in testi corti con una sola frase</RemoveLineBreaks>
     <RemoveLineBreaksAll>Elimina divisioni di riga in testi corti (tutti eccetto dialoghi)</RemoveLineBreaksAll>
-    <FixUppercaseIInsideLowercaseWords>Correggi la "i" maiuscola all'interno delle parole minuscole (errore OCR)</FixUppercaseIInsideLowercaseWords>
+    <RemoveLineBreaksPixelWidth>Non interrompere i sottotitoli che possono stare su una riga (larghezza in pixel)</RemoveLineBreaksPixelWidth>    <FixUppercaseIInsideLowercaseWords>Correggi la "i" maiuscola all'interno delle parole minuscole (errore OCR)</FixUppercaseIInsideLowercaseWords>
     <FixDoubleApostrophes>Sostituisci i doppi apici ('') con le virgolette (")</FixDoubleApostrophes>
     <AddPeriods>Aggiungi il punto a fine riga se la seguente inizia con una lettera maiuscola</AddPeriods>
     <StartWithUppercaseLetterAfterParagraph>Inizia la riga con una lettera maiuscola dopo un paragrafo</StartWithUppercaseLetterAfterParagraph>
@@ -914,6 +914,7 @@ Si sfrutta così il ritmo intrinseco dell'immagine.</CreateSimpleChainingToolTip
     <MergeShortLine>Unisci riga corta (singola frase)</MergeShortLine>
     <MergeShortLineAll>Unisci riga corta (tutte eccetto dialoghi)</MergeShortLineAll>
     <BreakLongLine>Dividi riga lunga</BreakLongLine>
+    <UnbreakShortLinePixelWidth>Non interrompere linea corta (larghezza in pixel)</UnbreakShortLinePixelWidth>
     <FixLongDisplayTime>Correggi i tempi di visualizzazione lunghi</FixLongDisplayTime>
     <FixInvalidItalicTag>Correggi etichette corsivo non valide</FixInvalidItalicTag>
     <FixShortDisplayTime>Correggi tempi di visualizzazione corti</FixShortDisplayTime>
