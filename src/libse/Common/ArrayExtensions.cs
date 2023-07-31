@@ -5,6 +5,8 @@ namespace Nikse.SubtitleEdit.Core.Common
 {
     public static class ArrayExtensions
     {
+        // First on or after / before (generic)
+
         public static T FirstOnOrAfter<T>(this List<T> orderedList, T target, T defaultValue)
         {
             int index = orderedList.BinarySearch(target);
@@ -37,6 +39,54 @@ namespace Nikse.SubtitleEdit.Core.Common
             return defaultValue;
         }
 
+
+        // First on or after / before with max difference (double)
+
+        public static double FirstOnOrAfter(this List<double> orderedList, double target, double maxDifference, double defaultValue)
+        {
+            int index = orderedList.BinarySearch(target);
+            if (index < 0)
+            {
+                index = ~index; // Get the bitwise complement to find the index of the first element greater than the target
+            }
+
+            if ((index - 1) >= 0 && target - orderedList[index - 1] <= maxDifference)
+            {
+                return orderedList[index - 1];
+            }
+
+            if (index < orderedList.Count)
+            {
+                return orderedList[index];
+            }
+
+            return defaultValue;
+        }
+
+        public static double FirstOnOrBefore(this List<double> orderedList, double target, double maxDifference, double defaultValue)
+        {
+            int index = orderedList.BinarySearch(target);
+            if (index < 0)
+            {
+                index = ~index - 1; // Get the bitwise complement to find the index of the last element smaller than the target
+            }
+
+            if (index + 1 < orderedList.Count && orderedList[index + 1] - target <= maxDifference)
+            {
+                return orderedList[index + 1];
+            }
+
+            if (index >= 0)
+            {
+                return orderedList[index];
+            }
+
+            return defaultValue;
+        }
+
+
+        // Closest to (int)
+
         public static int ClosestIndexTo(this List<int> orderedList, int target)
         {
             int closestIndex = orderedList.BinarySearch(target);
@@ -68,6 +118,9 @@ namespace Nikse.SubtitleEdit.Core.Common
             return orderedList[closestIndex];
         }
 
+
+        // Closest to (double)
+
         public static int ClosestIndexTo(this List<double> orderedList, double target)
         {
             int closestIndex = orderedList.BinarySearch(target);
@@ -98,6 +151,9 @@ namespace Nikse.SubtitleEdit.Core.Common
             int closestIndex = orderedList.ClosestIndexTo(target);
             return orderedList[closestIndex];
         }
+
+
+        // First within (int)
 
         public static int? FirstWithin(this List<int> orderedList, int start, int end)
         {
