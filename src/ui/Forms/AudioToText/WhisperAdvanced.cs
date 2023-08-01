@@ -42,6 +42,11 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             {
                 tabControlCommandLineHelp.SelectedTab = tabPageConstMe;
             }
+            else if (whisperEngine == WhisperChoice.CTranslate2 ||
+                     whisperEngine == WhisperChoice.PurfviewFasterWhisper)
+            {
+                tabControlCommandLineHelp.SelectedTab = tabPageFasterWhisper;
+            }
             else
             {
                 tabControlCommandLineHelp.SelectedTab = tabPageOpenAI;
@@ -57,7 +62,6 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             {
                 // ignore
             }
-
         }
 
         private void buttonOK_Click(object sender, EventArgs e)
