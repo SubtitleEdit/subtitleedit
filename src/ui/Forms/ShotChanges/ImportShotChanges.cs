@@ -396,7 +396,7 @@ namespace Nikse.SubtitleEdit.Forms.ShotChanges
                     progressBar1.Maximum = Convert.ToInt32(_duration / 1000);
                 }
 
-                progressBar1.Value = Convert.ToInt32(_shotChangesGenerator.LastSeconds);
+                progressBar1.Value = Math.Min(Convert.ToInt32(_shotChangesGenerator.LastSeconds), progressBar1.Maximum);
                 labelProgress.Text = FormatSeconds(_shotChangesGenerator.LastSeconds) + @" / " + FormatSeconds(_duration / 1000);
             }
 
