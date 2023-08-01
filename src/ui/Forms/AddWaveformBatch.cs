@@ -375,15 +375,15 @@ namespace Nikse.SubtitleEdit.Forms
                     UpdateStatus(LanguageSettings.Current.AddWaveformBatch.Calculating);
                     MakeWaveformAndSpectrogram(fileName, targetFile, _delayInMilliseconds);
 
-                    UpdateStatus(LanguageSettings.Current.AddWaveformBatch.ExtractingTimeCodes);
                     if (checkBoxExtractTimeCodes.Visible && checkBoxExtractTimeCodes.Checked)
                     {
+                        UpdateStatus(LanguageSettings.Current.AddWaveformBatch.ExtractingTimeCodes);
                         ExtractTimeCodes(fileName);
                     }
 
-                    UpdateStatus(LanguageSettings.Current.AddWaveformBatch.DetectingShotChanges);
                     if (checkBoxGenerateShotChanges.Visible && checkBoxGenerateShotChanges.Checked)
                     {
+                        UpdateStatus(LanguageSettings.Current.AddWaveformBatch.DetectingShotChanges);
                         GenerateShotChanges(fileName);
                     }
 

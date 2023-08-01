@@ -93,14 +93,14 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return null;
             }
 
-            try
+            var maxDifference = (TimeCodesBeautifierUtils.GetFrameDurationMs() - 1) / 1000;
+            var previousShotChange = shotChanges.FirstOnOrBefore(currentTime.TotalSeconds, maxDifference, -1);
+            if (previousShotChange >= 0)
             {
-                return shotChanges.Last(x => SubtitleFormat.MillisecondsToFrames(x * 1000) <= SubtitleFormat.MillisecondsToFrames(currentTime.TotalMilliseconds));
+                return previousShotChange;
             }
-            catch (InvalidOperationException)
-            {
-                return null;
-            }
+
+            return null;
         }
 
         public static double? GetPreviousShotChangeInMs(List<double> shotChanges, TimeCode currentTime)
@@ -132,14 +132,14 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return null;
             }
 
-            try
+            var maxDifference = (TimeCodesBeautifierUtils.GetFrameDurationMs() - 1) / 1000;
+            var nextShotChange = shotChanges.FirstOnOrAfter(currentTime.TotalSeconds, maxDifference, -1);
+            if (nextShotChange >= 0)
             {
-                return shotChanges.First(x => SubtitleFormat.MillisecondsToFrames(x * 1000) >= SubtitleFormat.MillisecondsToFrames(currentTime.TotalMilliseconds));
+                return nextShotChange;
             }
-            catch (InvalidOperationException)
-            {
-                return null;
-            }
+
+            return null;
         }
 
         public static double? GetNextShotChangeInMs(List<double> shotChanges, TimeCode currentTime)
@@ -171,14 +171,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return null;
             }
 
-            try
-            {
-                return shotChanges.Aggregate((x, y) => Math.Abs(x - currentTime.TotalSeconds) < Math.Abs(y - currentTime.TotalSeconds) ? x : y);
-            }
-            catch (InvalidOperationException)
-            {
-                return null;
-            }
+            return shotChanges.ClosestTo(currentTime.TotalSeconds);
         }
 
         public static bool IsCueOnShotChange(List<double> shotChanges, TimeCode currentTime, bool isInCue)
