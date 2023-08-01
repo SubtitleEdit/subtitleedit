@@ -447,6 +447,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public string WhisperLanguageCode { get; set; }
         public string WhisperLocation { get; set; }
         public string WhisperCtranslate2Location { get; set; }
+        public string WhisperPurfviewFasterWhisperLocation { get; set; }
         public string WhisperXLocation { get; set; }
         public string WhisperStableTsLocation { get; set; }
         public string WhisperCppModelLocation { get; set; }
@@ -6815,6 +6816,12 @@ $HorzAlign          =   Center
                 settings.Tools.WhisperCtranslate2Location = subNode.InnerText;
             }
 
+            subNode = node.SelectSingleNode("WhisperPurfviewFasterWhisperLocation");
+            if (subNode != null)
+            {
+                settings.Tools.WhisperPurfviewFasterWhisperLocation = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("WhisperExtraSettings");
             if (subNode != null)
             {
@@ -11495,6 +11502,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("WhisperModel", settings.Tools.WhisperModel);
                 textWriter.WriteElementString("WhisperLocation", settings.Tools.WhisperLocation);
                 textWriter.WriteElementString("WhisperCtranslate2Location", settings.Tools.WhisperCtranslate2Location);
+                textWriter.WriteElementString("WhisperPurfviewFasterWhisperLocation", settings.Tools.WhisperPurfviewFasterWhisperLocation);
                 textWriter.WriteElementString("WhisperXLocation", settings.Tools.WhisperXLocation);
                 textWriter.WriteElementString("WhisperStableTsLocation", settings.Tools.WhisperStableTsLocation);
                 textWriter.WriteElementString("WhisperCppModelLocation", settings.Tools.WhisperCppModelLocation);
