@@ -204,13 +204,15 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 pre = s.Substring(0, idx + 1);
                 s = s.Remove(0, idx + 1);
             }
+
             var arr = s.SplitToLines();
             if (s.StartsWith("<i>", StringComparison.OrdinalIgnoreCase) && (s.EndsWith("</i>", StringComparison.OrdinalIgnoreCase) || arr[0].EndsWith("</i>", StringComparison.OrdinalIgnoreCase)))
             {
-                return pre + s.Insert(3, word.Trim() + " ").Trim();
+                var suffix = 3 + word.Length == s.Length ? string.Empty : " ";
+                return pre + s.Insert(3, word.Trim() + suffix);
             }
 
-            return pre + (word.Trim() + " " + s.Trim()).Trim();
+            return pre + word.Trim() + " " + s.Trim();
         }
 
         private static string AddWordAfter(string word, string s)
@@ -218,25 +220,23 @@ namespace Nikse.SubtitleEdit.Core.Forms
             var arr = s.SplitToLines();
             if (s.EndsWith("</i>", StringComparison.OrdinalIgnoreCase) && (s.StartsWith("<i>", StringComparison.OrdinalIgnoreCase) || arr[arr.Count - 1].StartsWith("<i>", StringComparison.OrdinalIgnoreCase)))
             {
-                return s.Insert(s.Length - 4, " " + word.Trim()).Trim();
+                var prefix = s.Length - 4 == 0 ? string.Empty : " ";
+                return s.Insert(s.Length - 4, prefix + word.Trim());
             }
 
-            return (s.Trim() + " " + word.Trim()).Trim();
+            return s.Trim() + " " + word.Trim();
         }
-
         private static string AutoBreakIfNeeded(string s)
         {
-            var doBreak = false;
             foreach (var line in s.SplitToLines())
             {
                 if (line.CountCharacters(false) > Configuration.Settings.General.SubtitleLineMaximumLength)
                 {
-                    doBreak = true;
-                    break;
+                    return Utilities.AutoBreakLine(s);
                 }
             }
 
-            return doBreak ? Utilities.AutoBreakLine(s) : s;
+            return s;
         }
     }
 }
