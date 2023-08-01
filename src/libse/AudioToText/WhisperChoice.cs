@@ -8,5 +8,6 @@
         public const string ConstMe = "Const-me";
         public const string CTranslate2 = "CTranslate2";
         public const string StableTs = "stable-ts";
+        public const string PurfviewFasterWhisper = "PurfviewFasterWhisper";
     }
 }
