@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Nikse.SubtitleEdit.Core.Common
 {
-    public static class ArrayExtensions
+    public static class ListExtensions
     {
         // First on or after / before (generic)
 
