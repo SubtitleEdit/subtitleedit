@@ -68,4 +68,8 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="System.Security" />
+  </ItemGroup>
+
 </Project>
