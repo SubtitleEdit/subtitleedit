@@ -340,6 +340,29 @@ namespace Nikse.SubtitleEdit.Controls
 
             };
 
+            MouseWheel += (sender, e) =>
+            {
+                if (_listViewShown)
+                {
+                    return;
+                }
+
+                if (e.Delta > 0)
+                {
+                    if (_selectedIndex > 0)
+                    {
+                        SelectedIndex--;
+                    }
+                }
+                else if (e.Delta < 0)
+                {
+                    if (_selectedIndex < Items.Count - 2)
+                    {
+                        SelectedIndex++;
+                    }
+                }
+            };
+
             _textBox.KeyDown += (sender, e) =>
             {
                 if (DropDownStyle != ComboBoxStyle.DropDown)
