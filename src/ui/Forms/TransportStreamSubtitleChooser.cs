@@ -133,8 +133,10 @@ namespace Nikse.SubtitleEdit.Forms
             var item = (StreamTrackItem)listBoxTracks.SelectedItem;
             if (item.IsTeletext)
             {
+                listBoxSubtitles.Visible = false;
                 textBoxTeletext.Visible = true;
                 textBoxTeletext.Text = item.Srt;
+                textBoxTeletext.BringToFront();
                 IsTeletext = true;
                 Srt = item.Srt;
                 return;
@@ -158,6 +160,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 listBoxSubtitles.SelectedIndex = 0;
             }
+            listBoxSubtitles.Visible = true;
         }
 
         private void listBoxSubtitles_SelectedIndexChanged(object sender, EventArgs e)
