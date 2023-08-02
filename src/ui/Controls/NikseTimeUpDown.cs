@@ -218,10 +218,11 @@ namespace Nikse.SubtitleEdit.Controls
 
         public NikseTimeUpDown()
         {
-            SetStyle(ControlStyles.AllPaintingInWmPaint, true);
-            SetStyle(ControlStyles.ResizeRedraw, true);
-            SetStyle(ControlStyles.Selectable, true);
-            DoubleBuffered = true;
+            SetStyle(ControlStyles.OptimizedDoubleBuffer | 
+                     ControlStyles.UserPaint |
+                     ControlStyles.ResizeRedraw |
+                     ControlStyles.Selectable |
+                     ControlStyles.AllPaintingInWmPaint, true);
 
             _maskedTextBox = new MaskedTextBox();
             Height = 23;
@@ -332,19 +333,19 @@ namespace Nikse.SubtitleEdit.Controls
             TabStop = false;
 
             // having trouble to getting control drawn correctly at load...
-            var startRenderTimer = new Timer();
-            startRenderTimer.Interval = 397;
-            startRenderTimer.Tick += (sender, args) =>
-            {
-                Invalidate();
-                _startRenderCount++;
-                if (_startRenderCount >= StartRenderMaxCount)
-                {
-                    startRenderTimer.Stop();
-                    startRenderTimer.Dispose();
-                }
-            };
-            startRenderTimer.Start();
+            //var startRenderTimer = new Timer();
+            //startRenderTimer.Interval = 397;
+            //startRenderTimer.Tick += (sender, args) =>
+            //{
+            //    Invalidate();
+            //    _startRenderCount++;
+            //    if (_startRenderCount >= StartRenderMaxCount)
+            //    {
+            //        startRenderTimer.Stop();
+            //        startRenderTimer.Dispose();
+            //    }
+            //};
+            //startRenderTimer.Start();
             _loading = false;
         }
 
@@ -788,13 +789,13 @@ namespace Nikse.SubtitleEdit.Controls
             e.Graphics.Clear(BackColor);
             using (var pen = _maskedTextBox.Focused ? new Pen(_buttonForeColorOver, 1f) : new Pen(BorderColor, 1f))
             {
-                var borderRectangle = new Rectangle(e.ClipRectangle.X, e.ClipRectangle.Y, e.ClipRectangle.Width - 1, e.ClipRectangle.Height - 1);
+                var borderRectangle = new Rectangle(0, 0, Width - 1, Height - 1);
                 e.Graphics.DrawRectangle(pen, borderRectangle);
             }
 
             var brush = _buttonForeColorBrush;
             var left = RightToLeft == RightToLeft.Yes ? 3 : Width - ButtonsWidth;
-            var height = e.ClipRectangle.Height / 2 - 4;
+            var height = Height / 2 - 4;
             var top = 2;
             if (_buttonUpActive)
             {
@@ -879,12 +880,12 @@ namespace Nikse.SubtitleEdit.Controls
             e.Graphics.Clear(BackColorDisabled);
             using (var pen = new Pen(BorderColorDisabled, 1f))
             {
-                var borderRectangle = new Rectangle(e.ClipRectangle.X, e.ClipRectangle.Y, e.ClipRectangle.Width - 1, e.ClipRectangle.Height - 1);
+                var borderRectangle = new Rectangle(0, 0, Width - 1, Height - 1);
                 e.Graphics.DrawRectangle(pen, borderRectangle);
             }
 
-            var left = RightToLeft == RightToLeft.Yes ? 3 : e.ClipRectangle.Width - ButtonsWidth;
-            var height = e.ClipRectangle.Height / 2 - 4;
+            var left = RightToLeft == RightToLeft.Yes ? 3 : Width - ButtonsWidth;
+            var height = Height / 2 - 4;
             var top = 2;
             using (var brush = new SolidBrush(BorderColorDisabled))
             {
