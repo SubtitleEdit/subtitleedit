@@ -1502,6 +1502,7 @@ $HorzAlign          =   Center
         public bool AllowLetterShortcutsInTextBox { get; set; }
         public Color DarkThemeForeColor { get; set; }
         public Color DarkThemeBackColor { get; set; }
+        public Color DarkThemeDisabledColor { get; set; }
         public Color LastColorPickerColor { get; set; }
         public Color LastColorPickerColor1 { get; set; }
         public Color LastColorPickerColor2 { get; set; }
@@ -1668,6 +1669,7 @@ $HorzAlign          =   Center
             DefaultVideoOffsetInMsList = "36000000;3600000";
             DarkThemeForeColor = Color.FromArgb(155, 155, 155);
             DarkThemeBackColor = Color.FromArgb(30, 30, 30);
+            DarkThemeDisabledColor = Color.FromArgb(120, 120, 120); ;
             LastColorPickerColor = Color.Yellow;
             LastColorPickerColor1 = Color.Red;
             LastColorPickerColor2 = Color.Green;
@@ -4785,6 +4787,12 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.General.DarkThemeForeColor = Color.FromArgb(int.Parse(subNode.InnerText, CultureInfo.InvariantCulture));
+            }
+
+            subNode = node.SelectSingleNode("DarkThemeDisabledColor");
+            if (subNode != null)
+            {
+                settings.General.DarkThemeDisabledColor = FromHtml(subNode.InnerText);
             }
 
             subNode = node.SelectSingleNode("UseDarkTheme");
@@ -11157,6 +11165,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("LastColorPickerColor7", ToHtml(settings.General.LastColorPickerColor7));
                 textWriter.WriteElementString("DarkThemeBackColor", settings.General.DarkThemeBackColor.ToArgb().ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("DarkThemeForeColor", settings.General.DarkThemeForeColor.ToArgb().ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("DarkThemeDisabledColor", ToHtml(settings.General.DarkThemeDisabledColor));
                 textWriter.WriteElementString("ToolbarIconTheme", settings.General.ToolbarIconTheme);
                 textWriter.WriteElementString("UseDarkTheme", settings.General.UseDarkTheme.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("DarkThemeShowListViewGridLines", settings.General.DarkThemeShowListViewGridLines.ToString(CultureInfo.InvariantCulture));
