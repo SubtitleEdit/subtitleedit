@@ -1062,5 +1062,113 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             return s.Trim();
         }
+
+        public static string RemoveFontName(string input)
+        {
+            if (!input.Contains("<font", StringComparison.OrdinalIgnoreCase))
+            {
+                var x = input;
+                if (x.Contains("\\fn"))
+                {
+                    x = Regex.Replace(x, "{\\\\fn[a-zA-Z \\d]*}", string.Empty);
+                    x = Regex.Replace(x, "\\\\fn[a-zA-Z \\d]\\\\", string.Empty);
+                }
+
+                return x;
+            }
+
+            var r = new Regex("[ ]*(FACE|face|Face)=[\"']*[\\d\\p{L} ]*[\"']*[ ]*");
+            var s = input;
+            var match = r.Match(s);
+            while (match.Success)
+            {
+                s = s.Remove(match.Index, match.Value.Length).Insert(match.Index, " ");
+                if (match.Index > 4)
+                {
+                    var font = s.Substring(match.Index - 5);
+                    if (font.StartsWith("<font >", StringComparison.OrdinalIgnoreCase))
+                    {
+                        s = s.Remove(match.Index - 5, 7);
+                        var endIndex = s.IndexOf("</font>", match.Index - 5, StringComparison.OrdinalIgnoreCase);
+                        if (endIndex >= 0)
+                        {
+                            s = s.Remove(endIndex, 7);
+                        }
+                    }
+                    else if (s.Length > match.Index + 1 && s[match.Index + 1] == '>')
+                    {
+                        s = s.Remove(match.Index, 1);
+                    }
+                }
+
+                match = r.Match(s);
+            }
+
+            return s;
+        }
+
+        public static string RemoveAssAlignmentTags(string s)
+        {
+            return s.Replace("{\\an1}", string.Empty) // ASS tags alone
+                .Replace("{\\an2}", string.Empty)
+                .Replace("{\\an3}", string.Empty)
+                .Replace("{\\an4}", string.Empty)
+                .Replace("{\\an5}", string.Empty)
+                .Replace("{\\an6}", string.Empty)
+                .Replace("{\\an7}", string.Empty)
+                .Replace("{\\an8}", string.Empty)
+                .Replace("{\\an9}", string.Empty)
+
+                .Replace("{an1\\", "{") // ASS multi tags (start)
+                .Replace("{an2\\", "{")
+                .Replace("{an3\\", "{")
+                .Replace("{an4\\", "{")
+                .Replace("{an5\\", "{")
+                .Replace("{an6\\", "{")
+                .Replace("{an7\\", "{")
+                .Replace("{an8\\", "{")
+                .Replace("{an9\\", "{")
+
+                .Replace("\\an1\\", "\\") // ASS multi tags (middle)
+                .Replace("\\an2\\", "\\")
+                .Replace("\\an3\\", "\\")
+                .Replace("\\an4\\", "\\")
+                .Replace("\\an5\\", "\\")
+                .Replace("\\an6\\", "\\")
+                .Replace("\\an7\\", "\\")
+                .Replace("\\an8\\", "\\")
+                .Replace("\\an9\\", "\\")
+
+                .Replace("\\an1}", "}") // ASS multi tags (end)
+                .Replace("\\an2}", "}")
+                .Replace("\\an3}", "}")
+                .Replace("\\an4}", "}")
+                .Replace("\\an5}", "}")
+                .Replace("\\an6}", "}")
+                .Replace("\\an7}", "}")
+                .Replace("\\an8}", "}")
+                .Replace("\\an9}", "}")
+
+                .Replace("{\\a1}", string.Empty) // SSA tags
+                .Replace("{\\a2}", string.Empty)
+                .Replace("{\\a3}", string.Empty)
+                .Replace("{\\a4}", string.Empty)
+                .Replace("{\\a5}", string.Empty)
+                .Replace("{\\a6}", string.Empty)
+                .Replace("{\\a7}", string.Empty)
+                .Replace("{\\a8}", string.Empty)
+                .Replace("{\\a9}", string.Empty);
+        }
+
+        public static string RemoveAssaColor(string input)
+        {
+            var text = input;
+            text = Regex.Replace(text, "\\\\alpha&H.{1,2}&\\\\", "\\");
+            text = Regex.Replace(text, "{\\\\1c&[abcdefghABCDEFGH\\d]*&}", string.Empty);
+            text = Regex.Replace(text, "{\\\\c&[abcdefghABCDEFGH\\d]*&}", string.Empty);
+            text = Regex.Replace(text, "\\\\c&[abcdefghABCDEFGH\\d]*&", string.Empty);
+            text = Regex.Replace(text, "\\\\1c&[abcdefghABCDEFGH\\d]*&", string.Empty);
+            return text;
+        }
     }
 }

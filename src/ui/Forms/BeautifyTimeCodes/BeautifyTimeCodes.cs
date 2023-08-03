@@ -210,7 +210,7 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
                     progressBarExtractTimeCodes.Maximum = Convert.ToInt32(_duration);
                 }
 
-                progressBarExtractTimeCodes.Value = Convert.ToInt32(_timeCodesGenerator.LastSeconds);
+                progressBarExtractTimeCodes.Value = Math.Min(Convert.ToInt32(_timeCodesGenerator.LastSeconds), progressBarExtractTimeCodes.Maximum);
                 labelExtractTimeCodesProgress.Text = FormatSeconds(_timeCodesGenerator.LastSeconds) + @" / " + FormatSeconds(_duration);
             }
         }

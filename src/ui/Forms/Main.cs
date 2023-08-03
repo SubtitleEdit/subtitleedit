@@ -13963,7 +13963,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             if (isAssa)
                             {
-                                p.Text = RemoveAssaColor(p.Text);
+                                p.Text = HtmlUtil.RemoveAssaColor(p.Text);
                             }
                             else if (isWebVtt)
                             {
@@ -14162,7 +14162,7 @@ namespace Nikse.SubtitleEdit.Forms
                 try
                 {
                     var c = ColorTranslator.FromHtml(color);
-                    p.Text = RemoveAssaColor(p.Text);
+                    p.Text = HtmlUtil.RemoveAssaColor(p.Text);
                     p.Text = "{\\" + AdvancedSubStationAlpha.GetSsaColorStringForEvent(c) + "&}" + p.Text;
                 }
                 catch
@@ -14240,17 +14240,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             p.Text = $"{pre}<font color=\"{color}\">{p.Text}</font>";
-        }
-
-        private static string RemoveAssaColor(string input)
-        {
-            var text = input;
-            text = Regex.Replace(text, "\\\\alpha&H.{1,2}&\\\\", "\\");
-            text = Regex.Replace(text, "{\\\\1c&[abcdefghABCDEFGH\\d]*&}", string.Empty);
-            text = Regex.Replace(text, "{\\\\c&[abcdefghABCDEFGH\\d]*&}", string.Empty);
-            text = Regex.Replace(text, "\\\\c&[abcdefghABCDEFGH\\d]*&", string.Empty);
-            text = Regex.Replace(text, "\\\\1c&[abcdefghABCDEFGH\\d]*&", string.Empty);
-            return text;
         }
 
         private void toolStripMenuItemFont_Click(object sender, EventArgs e)
@@ -31217,62 +31206,9 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private static string RemoveAssAlignmentTags(string s)
-        {
-            return s.Replace("{\\an1}", string.Empty) // ASS tags alone
-                .Replace("{\\an2}", string.Empty)
-                .Replace("{\\an3}", string.Empty)
-                .Replace("{\\an4}", string.Empty)
-                .Replace("{\\an5}", string.Empty)
-                .Replace("{\\an6}", string.Empty)
-                .Replace("{\\an7}", string.Empty)
-                .Replace("{\\an8}", string.Empty)
-                .Replace("{\\an9}", string.Empty)
-
-                .Replace("{an1\\", "{") // ASS multi tags (start)
-                .Replace("{an2\\", "{")
-                .Replace("{an3\\", "{")
-                .Replace("{an4\\", "{")
-                .Replace("{an5\\", "{")
-                .Replace("{an6\\", "{")
-                .Replace("{an7\\", "{")
-                .Replace("{an8\\", "{")
-                .Replace("{an9\\", "{")
-
-                .Replace("\\an1\\", "\\") // ASS multi tags (middle)
-                .Replace("\\an2\\", "\\")
-                .Replace("\\an3\\", "\\")
-                .Replace("\\an4\\", "\\")
-                .Replace("\\an5\\", "\\")
-                .Replace("\\an6\\", "\\")
-                .Replace("\\an7\\", "\\")
-                .Replace("\\an8\\", "\\")
-                .Replace("\\an9\\", "\\")
-
-                .Replace("\\an1}", "}") // ASS multi tags (end)
-                .Replace("\\an2}", "}")
-                .Replace("\\an3}", "}")
-                .Replace("\\an4}", "}")
-                .Replace("\\an5}", "}")
-                .Replace("\\an6}", "}")
-                .Replace("\\an7}", "}")
-                .Replace("\\an8}", "}")
-                .Replace("\\an9}", "}")
-
-                .Replace("{\\a1}", string.Empty) // SSA tags
-                .Replace("{\\a2}", string.Empty)
-                .Replace("{\\a3}", string.Empty)
-                .Replace("{\\a4}", string.Empty)
-                .Replace("{\\a5}", string.Empty)
-                .Replace("{\\a6}", string.Empty)
-                .Replace("{\\a7}", string.Empty)
-                .Replace("{\\a8}", string.Empty)
-                .Replace("{\\a9}", string.Empty);
-        }
-
         private static string SetAlignTag(string s, string tag)
         {
-            var text = RemoveAssAlignmentTags(s);
+            var text = HtmlUtil.RemoveAssAlignmentTags(s);
             if (text.StartsWith("{\\", StringComparison.Ordinal) && text.Contains('}'))
             {
                 if (!string.IsNullOrEmpty(tag))
@@ -33885,7 +33821,7 @@ namespace Nikse.SubtitleEdit.Forms
                     var x = p.Text;
                     if (x.Contains("\\c") || x.Contains("\\1c"))
                     {
-                        x = RemoveAssaColor(x);
+                        x = HtmlUtil.RemoveAssaColor(x);
                     }
 
                     return x;
@@ -33899,46 +33835,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             RunActionOnAllParagraphs((p) =>
             {
-                if (!p.Text.Contains("<font", StringComparison.OrdinalIgnoreCase))
-                {
-                    var x = p.Text;
-                    if (x.Contains("\\fn"))
-                    {
-                        x = Regex.Replace(x, "{\\\\fn[a-zA-Z \\d]*}", string.Empty);
-                        x = Regex.Replace(x, "\\\\fn[a-zA-Z \\d]\\\\", string.Empty);
-                    }
-
-                    return x;
-                }
-
-                var r = new Regex("[ ]*(FACE|face|Face)=[\"']*[\\d\\p{L} ]*[\"']*[ ]*");
-                var s = p.Text;
-                var match = r.Match(s);
-                while (match.Success)
-                {
-                    s = s.Remove(match.Index, match.Value.Length).Insert(match.Index, " ");
-                    if (match.Index > 4)
-                    {
-                        var font = s.Substring(match.Index - 5);
-                        if (font.StartsWith("<font >", StringComparison.OrdinalIgnoreCase))
-                        {
-                            s = s.Remove(match.Index - 5, 7);
-                            var endIndex = s.IndexOf("</font>", match.Index - 5, StringComparison.OrdinalIgnoreCase);
-                            if (endIndex >= 0)
-                            {
-                                s = s.Remove(endIndex, 7);
-                            }
-                        }
-                        else if (s.Length > match.Index + 1 && s[match.Index + 1] == '>')
-                        {
-                            s = s.Remove(match.Index, 1);
-                        }
-                    }
-
-                    match = r.Match(s);
-                }
-
-                return s;
+                return HtmlUtil.RemoveFontName(p.Text);
             }, string.Format(_language.BeforeX, _language.Menu.ContextMenu.RemoveFormattingFontName));
         }
 
@@ -33951,7 +33848,7 @@ namespace Nikse.SubtitleEdit.Forms
                     return p.Text;
                 }
 
-                return RemoveAssAlignmentTags(p.Text);
+                return HtmlUtil.RemoveAssAlignmentTags(p.Text);
             }, string.Format(_language.BeforeX, _language.Menu.ContextMenu.RemoveFormattingAlignment));
         }
 

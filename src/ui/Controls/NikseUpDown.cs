@@ -206,7 +206,15 @@ namespace Nikse.SubtitleEdit.Controls
 
         public NikseUpDown()
         {
+            SetStyle(ControlStyles.OptimizedDoubleBuffer |
+                     ControlStyles.UserPaint |
+                     ControlStyles.ResizeRedraw |
+                     ControlStyles.Selectable |
+                     ControlStyles.AllPaintingInWmPaint, true);
+
+            InterceptArrowKeys = true;
             Height = 23;
+
             _textBox = new TextBox();
             _textBox.KeyPress += TextBox_KeyPress;
             _textBox.KeyDown += (sender, e) =>
@@ -239,8 +247,6 @@ namespace Nikse.SubtitleEdit.Controls
             BorderColor = Color.FromArgb(171, 173, 179);
             BorderColorDisabled = Color.FromArgb(120, 120, 120);
             BackColorDisabled = DefaultBackColorDisabled;
-            DoubleBuffered = true;
-            InterceptArrowKeys = true;
 
             _repeatTimer = new Timer();
             _repeatTimer.Tick += (sender, args) =>
@@ -506,13 +512,13 @@ namespace Nikse.SubtitleEdit.Controls
             e.Graphics.Clear(BackColor);
             using (var pen = _textBox.Focused ? new Pen(_buttonForeColorOver, 1f) : new Pen(BorderColor, 1f))
             {
-                var borderRectangle = new Rectangle(e.ClipRectangle.X, e.ClipRectangle.Y, e.ClipRectangle.Width - 1, e.ClipRectangle.Height - 1);
+                var borderRectangle = new Rectangle(0,0, Width - 1, Height - 1);
                 e.Graphics.DrawRectangle(pen, borderRectangle);
             }
 
             var brush = _buttonForeColorBrush;
             var left = RightToLeft == RightToLeft.Yes ? 3 : Width - ButtonsWidth;
-            var height = e.ClipRectangle.Height / 2 - 4;
+            var height = Height / 2 - 4;
             var top = 2;
             if (_buttonUpActive)
             {
@@ -611,40 +617,41 @@ namespace Nikse.SubtitleEdit.Controls
             _textBox.SelectionStart = selectionStart;
         }
 
-        private static void DrawArrowDown(PaintEventArgs e, Brush brush, int left, int top, int height)
+        public static void DrawArrowUp(PaintEventArgs e, Brush brush, int left, int top, int height)
         {
             e.Graphics.FillPolygon(brush,
                 new[]
                 {
-                    new Point(left + 5, top + height),
-                    new Point(left + 0, top + 0),
-                    new Point(left + 10, top + 0)
-                });
-        }
-
-        private static void DrawArrowUp(PaintEventArgs e, Brush brush, int left, int top, int height)
-        {
-            e.Graphics.FillPolygon(brush,
-                new[]
-                {
-                    new Point(left + 5, top + 0),
+                    new Point(left + 5, top + 1),
                     new Point(left + 0, top + height),
-                    new Point(left + 10, top + height)
+                    new Point(left + 10, top + height),
                 });
         }
 
+        public static void DrawArrowDown(PaintEventArgs e, Brush brush, int left, int top, int height)
+        {
+            e.Graphics.FillPolygon(brush,
+                new[]
+                {
+                    new Point(left + 0, top),
+                    new Point(left + 10, top),
+                    new Point(left + 5, top + height -1),
+                });
+        }
+        
         private void DrawDisabled(PaintEventArgs e)
         {
             e.Graphics.Clear(BackColorDisabled);
 
+
             using (var pen = new Pen(BorderColorDisabled, 1f))
             {
-                var borderRectangle = new Rectangle(e.ClipRectangle.X, e.ClipRectangle.Y, e.ClipRectangle.Width - 1, e.ClipRectangle.Height - 1);
+                var borderRectangle = new Rectangle(0, 0, Width - 1, Height - 1);
                 e.Graphics.DrawRectangle(pen, borderRectangle);
             }
 
-            var left = RightToLeft == RightToLeft.Yes ? 3 : e.ClipRectangle.Width - ButtonsWidth;
-            var height = e.ClipRectangle.Height / 2 - 4;
+            var left = RightToLeft == RightToLeft.Yes ? 3 : Width - ButtonsWidth;
+            var height = Height / 2 - 4;
             var top = 2;
             using (var brush = new SolidBrush(BorderColorDisabled))
             {

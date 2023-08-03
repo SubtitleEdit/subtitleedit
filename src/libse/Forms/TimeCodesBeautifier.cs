@@ -24,7 +24,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
             _timeCodes = timeCodes.Select(d => d * 1000).ToList();
 
             // Convert shot changes to frame numbers
-            _shotChangesFrames = shotChanges.Select(d => SubtitleFormat.MillisecondsToFrames(d * 1000, _frameRate)).ToList();
+            _shotChangesFrames = shotChanges.Select(d => MillisecondsToFrames(d * 1000)).ToList();
         }
 
         public void Beautify()
@@ -89,11 +89,11 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     if (ProgressChanged != null)
                     {
                         var progress = (double)(pass * _subtitle.Paragraphs.Count + p) / (_subtitle.Paragraphs.Count * amountOfPasses);
-                        var pct = (int)Math.Round(progress * 100.0, MidpointRounding.AwayFromZero);
-                        if (pct != progressPercentage)
+                        var percentage = (int)Math.Round(progress * 100.0, MidpointRounding.AwayFromZero);
+                        if (percentage != progressPercentage)
                         {
-                            progressPercentage = pct;
-                            ProgressChanged.Invoke(pct);
+                            progressPercentage = percentage;
+                            ProgressChanged.Invoke(percentage);
                         }
                     }
                 }
@@ -112,8 +112,8 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
             if (subtitlesAreConnected)
             {
-                var newLeftOutCueFrame = SubtitleFormat.MillisecondsToFrames(leftParagraph.EndTime.TotalMilliseconds, _frameRate);
-                var newRightInCueFrame = SubtitleFormat.MillisecondsToFrames(rightParagraph.StartTime.TotalMilliseconds, _frameRate);
+                var newLeftOutCueFrame = MillisecondsToFrames(leftParagraph.EndTime.TotalMilliseconds);
+                var newRightInCueFrame = MillisecondsToFrames(rightParagraph.StartTime.TotalMilliseconds);
 
                 // Check if we should do something with shot changes
                 if (_shotChangesFrames.Count > 0)
@@ -122,21 +122,50 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     var bestLeftOutCueFrameInfo = FindConnectedSubtitlesBestCueFrame(newLeftOutCueFrame);
                     var bestRightInCueFrameInfo = FindConnectedSubtitlesBestCueFrame(newRightInCueFrame);
 
+                    // Gather subtitles' other cue for length calculations
+                    var leftInCueFrame = MillisecondsToFrames(leftParagraph.StartTime.TotalMilliseconds);
+                    var rightOutCueFrame = MillisecondsToFrames(rightParagraph.EndTime.TotalMilliseconds);
+
                     // Check result
                     if (bestLeftOutCueFrameInfo.result == FindBestCueResult.SnappedToRedZone && bestRightInCueFrameInfo.result == FindBestCueResult.SnappedToRedZone)
                     {
+                        var fixInfoForLeft = GetFixedConnectedSubtitlesCueFrames(leftParagraph, rightParagraph, bestLeftOutCueFrameInfo.cueFrame);
+                        var fixInfoForRight = GetFixedConnectedSubtitlesCueFrames(leftParagraph, rightParagraph, bestRightInCueFrameInfo.cueFrame);
+
                         // Both are in red zones! We will use the closest shot change to align the cues around
                         if (Math.Abs(newLeftOutCueFrame - bestLeftOutCueFrameInfo.cueFrame) <= Math.Abs(newRightInCueFrame - bestRightInCueFrameInfo.cueFrame))
                         {
-                            var fixInfo = GetFixedConnectedSubtitlesCueFrames(leftParagraph, rightParagraph, bestLeftOutCueFrameInfo.cueFrame);
-                            newLeftOutCueFrame = fixInfo.newLeftOutCueFrame;
-                            newRightInCueFrame = fixInfo.newRightInCueFrame;
+                            // Align around the left shot change
+                            // Except, when the left subtitle now becomes invalid (negative duration) and the right subtitle won't, we will use the right shot change anyway
+                            var newLeftDuration = fixInfoForLeft.newLeftOutCueFrame - leftInCueFrame;
+                            var newRightDuration = rightOutCueFrame - fixInfoForLeft.newRightInCueFrame;
+                            if (newLeftDuration <= 0 && newRightDuration > 0)
+                            {
+                                newLeftOutCueFrame = fixInfoForRight.newLeftOutCueFrame;
+                                newRightInCueFrame = fixInfoForRight.newRightInCueFrame;
+                            }
+                            else
+                            {
+                                newLeftOutCueFrame = fixInfoForLeft.newLeftOutCueFrame;
+                                newRightInCueFrame = fixInfoForLeft.newRightInCueFrame;
+                            }
                         }
                         else
                         {
-                            var fixInfo = GetFixedConnectedSubtitlesCueFrames(leftParagraph, rightParagraph, bestRightInCueFrameInfo.cueFrame);
-                            newLeftOutCueFrame = fixInfo.newLeftOutCueFrame;
-                            newRightInCueFrame = fixInfo.newRightInCueFrame;
+                            // Align around the right shot change
+                            // Except, when the right subtitle now becomes invalid (negative duration) and the left subtitle won't we will use the left shot change anyway
+                            var newLeftDuration = fixInfoForRight.newLeftOutCueFrame - leftInCueFrame;
+                            var newRightDuration = rightOutCueFrame - fixInfoForRight.newRightInCueFrame;
+                            if (newRightDuration <= 0 && newLeftDuration > 0)
+                            {
+                                newLeftOutCueFrame = fixInfoForLeft.newLeftOutCueFrame;
+                                newRightInCueFrame = fixInfoForLeft.newRightInCueFrame;
+                            }
+                            else
+                            {
+                                newLeftOutCueFrame = fixInfoForRight.newLeftOutCueFrame;
+                                newRightInCueFrame = fixInfoForRight.newRightInCueFrame;
+                            }
                         }
                     }
                     else if ((bestLeftOutCueFrameInfo.result == FindBestCueResult.SnappedToLeftGreenZone || bestLeftOutCueFrameInfo.result == FindBestCueResult.SnappedToRightGreenZone) &&
@@ -171,8 +200,8 @@ namespace Nikse.SubtitleEdit.Core.Forms
                         {
                             // Cues want to be pushed together. The connect subtitles are most likely between two shot changes that are close together
                             // For now, check which shot change is closer and align the cues around that, ignoring the zones
-                            var previousShotChange = new List<int> { int.MinValue }.Concat(_shotChangesFrames).Last(x => x <= newLeftOutCueFrame); // will return minValue if none found
-                            var nextShotChange = _shotChangesFrames.Concat(new List<int> { int.MaxValue }).First(x => x >= newRightInCueFrame); // will return maxValue if none found
+                            var previousShotChange = _shotChangesFrames.FirstOnOrBefore(newLeftOutCueFrame, int.MinValue); // will return minValue if none found
+                            var nextShotChange = _shotChangesFrames.FirstOnOrAfter(newRightInCueFrame, int.MaxValue); // will return maxValue if none found
                             if (previousShotChange >= 0 && nextShotChange != int.MaxValue)
                             {
                                 if (Math.Abs(previousShotChange - newLeftOutCueFrame) <= Math.Abs(nextShotChange - newRightInCueFrame))
@@ -205,14 +234,42 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     else if (bestLeftOutCueFrameInfo.result == FindBestCueResult.SnappedToRedZone) // Other cases... Red zone snapping has priority
                     {
                         var fixInfo = GetFixedConnectedSubtitlesCueFrames(leftParagraph, rightParagraph, bestLeftOutCueFrameInfo.cueFrame);
-                        newLeftOutCueFrame = fixInfo.newLeftOutCueFrame;
-                        newRightInCueFrame = fixInfo.newRightInCueFrame;
+
+                        // If the right in cue is on a left green zone (= wants to go forward) and the left subtitle would become invalid (negative duration) while the right subtitle won't,
+                        // we can give the green zone priority this time: put the left out cue on the edge of the green zone, and push the next subtitle forward
+                        var newLeftDuration = fixInfo.newLeftOutCueFrame - leftInCueFrame;
+                        var newRightDuration = rightOutCueFrame - fixInfo.newRightInCueFrame;
+                        if (bestRightInCueFrameInfo.result == FindBestCueResult.SnappedToRightGreenZone && newLeftDuration <= 0 && newRightDuration > 0)
+                        {
+                            newLeftOutCueFrame = bestRightInCueFrameInfo.cueFrame;
+                            newRightInCueFrame = newLeftOutCueFrame + Configuration.Settings.BeautifyTimeCodes.Profile.Gap;
+                        }
+                        else
+                        {
+                            // Otherwise, normal behavior: we'll align the connected subtitles around the shot change
+                            newLeftOutCueFrame = fixInfo.newLeftOutCueFrame;
+                            newRightInCueFrame = fixInfo.newRightInCueFrame;
+                        }                        
                     }
                     else if (bestRightInCueFrameInfo.result == FindBestCueResult.SnappedToRedZone)
                     {
                         var fixInfo = GetFixedConnectedSubtitlesCueFrames(leftParagraph, rightParagraph, bestRightInCueFrameInfo.cueFrame);
-                        newLeftOutCueFrame = fixInfo.newLeftOutCueFrame;
-                        newRightInCueFrame = fixInfo.newRightInCueFrame;
+
+                        // If the left out cue is on a left green zone (= wants to go backward) and the right subtitle would become invalid (negative duration) while the left subtitle won't,
+                        // we can give the green zone priority this time: put the right in cue on the edge of the green zone, and push the previous subtitle backward
+                        var newLeftDuration = fixInfo.newLeftOutCueFrame - leftInCueFrame;
+                        var newRightDuration = rightOutCueFrame - fixInfo.newRightInCueFrame;
+                        if (bestLeftOutCueFrameInfo.result == FindBestCueResult.SnappedToLeftGreenZone && newRightDuration <= 0 && newLeftDuration > 0)
+                        {
+                            newRightInCueFrame = bestLeftOutCueFrameInfo.cueFrame;
+                            newLeftOutCueFrame = newRightInCueFrame - Configuration.Settings.BeautifyTimeCodes.Profile.Gap;
+                        }
+                        else
+                        {
+                            // Otherwise, normal behavior: we'll align the connected subtitles around the shot change
+                            newLeftOutCueFrame = fixInfo.newLeftOutCueFrame;
+                            newRightInCueFrame = fixInfo.newRightInCueFrame;
+                        }
                     }
                     else if (bestLeftOutCueFrameInfo.result == FindBestCueResult.SnappedToLeftGreenZone)
                     {
@@ -260,8 +317,8 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
         private (int cueFrame, FindBestCueResult result) FindConnectedSubtitlesBestCueFrame(int cueFrame)
         {
-            var previousShotChange = new List<int> { int.MinValue }.Concat(_shotChangesFrames).Last(x => x <= cueFrame); // will return minValue if none found
-            var nextShotChange = _shotChangesFrames.Concat(new List<int> { int.MaxValue }).First(x => x >= cueFrame); // will return maxValue if none found
+            var previousShotChange = _shotChangesFrames.FirstOnOrBefore(cueFrame, int.MinValue); // will return minValue if none found
+            var nextShotChange = _shotChangesFrames.FirstOnOrAfter(cueFrame, int.MaxValue); // will return maxValue if none found
 
             // If both not found, return self
             if (previousShotChange < 0 && nextShotChange == int.MaxValue)
@@ -340,7 +397,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
         private (int newLeftOutCueFrame, int newRightInCueFrame) GetFixedConnectedSubtitlesCueFrames(Paragraph leftParagraph, Paragraph rightParagraph, int shotChangeFrame)
         {
             // Check which cue is closest (use milliseconds to check original unaligned positions)
-            var shotChangeMs = SubtitleFormat.FramesToMilliseconds(shotChangeFrame, _frameRate);
+            var shotChangeMs = FramesToMilliseconds(shotChangeFrame);
 
             if (Math.Abs(leftParagraph.EndTime.TotalMilliseconds - shotChangeMs) < Math.Abs(rightParagraph.StartTime.TotalMilliseconds - shotChangeMs))
             {
@@ -365,8 +422,8 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 return false;
             }
 
-            var newLeftOutCueFrame = SubtitleFormat.MillisecondsToFrames(leftParagraph.EndTime.TotalMilliseconds, _frameRate);
-            var newRightInCueFrame = SubtitleFormat.MillisecondsToFrames(rightParagraph.StartTime.TotalMilliseconds, _frameRate);
+            var newLeftOutCueFrame = MillisecondsToFrames(leftParagraph.EndTime.TotalMilliseconds);
+            var newRightInCueFrame = MillisecondsToFrames(rightParagraph.StartTime.TotalMilliseconds);
 
             var shouldFixConnectedSubtitles = false;
 
@@ -532,7 +589,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 }
                 else
                 {
-                    distance = SubtitleFormat.FramesToMilliseconds(rightInCueFrame, _frameRate) - SubtitleFormat.FramesToMilliseconds(leftOutCueFrame, _frameRate);
+                    distance = FramesToMilliseconds(rightInCueFrame) - FramesToMilliseconds(leftOutCueFrame);
                 }
 
                 if (distance < Configuration.Settings.BeautifyTimeCodes.Profile.ChainingGeneralMaxGap)
@@ -576,7 +633,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
             else
             {
                 // No, so just check the distance in milliseconds
-                var distance = SubtitleFormat.FramesToMilliseconds(rightInCueFrame, _frameRate) - SubtitleFormat.FramesToMilliseconds(leftOutCueFrame, _frameRate);
+                var distance = FramesToMilliseconds(rightInCueFrame) - FramesToMilliseconds(leftOutCueFrame);
                 if (distance < Configuration.Settings.BeautifyTimeCodes.Profile.ChainingInCueOnShotMaxGap)
                 {
                     // Chain them
@@ -618,7 +675,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
             else
             {
                 // No, so just check the distance in milliseconds
-                var distance = SubtitleFormat.FramesToMilliseconds(rightInCueFrame, _frameRate) - SubtitleFormat.FramesToMilliseconds(leftOutCueFrame, _frameRate);
+                var distance = FramesToMilliseconds(rightInCueFrame) - FramesToMilliseconds(leftOutCueFrame);
                 if (distance < Configuration.Settings.BeautifyTimeCodes.Profile.ChainingOutCueOnShotMaxGap)
                 {
                     // Chain them
@@ -645,7 +702,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
         private void FixCue(int index, bool isInCue)
         {
             var paragraph = _subtitle.Paragraphs[index];
-            var newCueFrame = SubtitleFormat.MillisecondsToFrames(isInCue ? paragraph.StartTime.TotalMilliseconds : paragraph.EndTime.TotalMilliseconds, _frameRate);
+            var newCueFrame = MillisecondsToFrames(isInCue ? paragraph.StartTime.TotalMilliseconds : paragraph.EndTime.TotalMilliseconds);
 
             // Check if we should do something with shot changes
             if (_shotChangesFrames.Count > 0)
@@ -659,7 +716,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     var previousParagraph = _subtitle.Paragraphs.ElementAtOrDefault(index - 1);
                     if (previousParagraph != null)
                     {
-                        var previousOutCueFrame = SubtitleFormat.MillisecondsToFrames(previousParagraph.EndTime.TotalMilliseconds, _frameRate);
+                        var previousOutCueFrame = MillisecondsToFrames(previousParagraph.EndTime.TotalMilliseconds);
                         newCueFrame = Math.Max(bestCueFrame, previousOutCueFrame + Configuration.Settings.BeautifyTimeCodes.Profile.Gap);
                     }
                     else
@@ -672,7 +729,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     var nextParagraph = _subtitle.Paragraphs.ElementAtOrDefault(index + 1);
                     if (nextParagraph != null)
                     {
-                        var nextInCueFrame = SubtitleFormat.MillisecondsToFrames(nextParagraph.StartTime.TotalMilliseconds, _frameRate);
+                        var nextInCueFrame = MillisecondsToFrames(nextParagraph.StartTime.TotalMilliseconds);
                         newCueFrame = Math.Min(bestCueFrame, nextInCueFrame - Configuration.Settings.BeautifyTimeCodes.Profile.Gap);
                     }
                     else
@@ -688,8 +745,8 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
         private (int cueFrame, FindBestCueResult result) FindBestCueFrame(int cueFrame, bool isInCue)
         {
-            var previousShotChange = new List<int> { int.MinValue }.Concat(_shotChangesFrames).Last(x => x <= cueFrame); // will return minValue if none found
-            var nextShotChange = _shotChangesFrames.Concat(new List<int> { int.MaxValue }).First(x => x >= cueFrame); // will return maxValue if none found
+            var previousShotChange = _shotChangesFrames.FirstOnOrBefore(cueFrame, int.MinValue); // will return minValue if none found
+            var nextShotChange = _shotChangesFrames.FirstOnOrAfter(cueFrame, int.MaxValue); // will return maxValue if none found
 
             // If both not found, return self
             if (previousShotChange < 0 && nextShotChange == int.MaxValue)
@@ -790,14 +847,8 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
         private void AlignAndSetCue(Paragraph paragraph, bool isInCue, int newFrame)
         {
-            double newTime = SubtitleFormat.FramesToMilliseconds(newFrame, _frameRate);
-
-            // Check if we have extracted exact time codes
-            if (_timeCodes.Count > 0)
-            {
-                newTime = _timeCodes.Aggregate((x, y) => Math.Abs(x - newTime) < Math.Abs(y - newTime) ? x : y);
-            }
-
+            double newTime = FramesToMilliseconds(newFrame);
+                        
             // Finally, update time
             if (isInCue)
             {
@@ -818,6 +869,29 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
         // Helpers
 
+        private int MillisecondsToFrames(double milliseconds)
+        {
+            if (_timeCodes.Count > 0)
+            {
+                return _timeCodes.ClosestIndexTo(milliseconds);
+            }
+
+            return SubtitleFormat.MillisecondsToFrames(milliseconds, _frameRate);
+        }
+
+        private double FramesToMilliseconds(int frames)
+        {
+            if (_timeCodes.Count > 0)
+            {
+                if (frames >= 0 && frames < _timeCodes.Count)
+                {
+                    return _timeCodes[frames];
+                }
+            }
+
+            return SubtitleFormat.FramesToMilliseconds(frames, _frameRate);
+        }
+
         private int? GetFirstShotChangeFrameInBetween(int leftCueFrame, int rightCueFrame)
         {
             if (_shotChangesFrames == null || _shotChangesFrames.Count == 0)
@@ -825,14 +899,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 return null;
             }
 
-            try
-            {
-                return _shotChangesFrames.First(x => x >= leftCueFrame && x <= rightCueFrame);
-            }
-            catch (InvalidOperationException)
-            {
-                return null;
-            }
+            return _shotChangesFrames.FirstWithin(leftCueFrame, rightCueFrame);
         }
 
         private int? GetClosestShotChangeFrame(int cueFrame)
@@ -842,14 +909,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 return null;
             }
 
-            try
-            {
-                return _shotChangesFrames.Aggregate((x, y) => Math.Abs(x - cueFrame) < Math.Abs(y - cueFrame) ? x : y);
-            }
-            catch (InvalidOperationException)
-            {
-                return null;
-            }
+            return _shotChangesFrames.ClosestTo(cueFrame);
         }
 
         private bool IsCueOnShotChange(int cueFrame, bool isInCue)

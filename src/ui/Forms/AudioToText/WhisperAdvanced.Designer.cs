@@ -41,10 +41,13 @@
             this.textBoxConstMe = new System.Windows.Forms.TextBox();
             this.tabPageOpenAI = new System.Windows.Forms.TabPage();
             this.textBoxOpenAI = new System.Windows.Forms.TextBox();
+            this.tabPageFasterWhisper = new System.Windows.Forms.TabPage();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             this.tabControlCommandLineHelp.SuspendLayout();
             this.TabPageCPP.SuspendLayout();
             this.tabPageConstMe.SuspendLayout();
             this.tabPageOpenAI.SuspendLayout();
+            this.tabPageFasterWhisper.SuspendLayout();
             this.SuspendLayout();
             // 
             // labelWhisperExtraCmdLine
@@ -52,7 +55,7 @@
             this.labelWhisperExtraCmdLine.AutoSize = true;
             this.labelWhisperExtraCmdLine.Location = new System.Drawing.Point(12, 22);
             this.labelWhisperExtraCmdLine.Name = "labelWhisperExtraCmdLine";
-            this.labelWhisperExtraCmdLine.Size = new System.Drawing.Size(202, 13);
+            this.labelWhisperExtraCmdLine.Size = new System.Drawing.Size(214, 13);
             this.labelWhisperExtraCmdLine.TabIndex = 217;
             this.labelWhisperExtraCmdLine.Text = "Extra parameters for Whisper command line:";
             // 
@@ -64,7 +67,7 @@
             this.comboBoxWhisperExtra.FormattingEnabled = true;
             this.comboBoxWhisperExtra.Location = new System.Drawing.Point(15, 38);
             this.comboBoxWhisperExtra.Name = "comboBoxWhisperExtra";
-            this.comboBoxWhisperExtra.Size = new System.Drawing.Size(680, 21);
+            this.comboBoxWhisperExtra.Size = new System.Drawing.Size(838, 21);
             this.comboBoxWhisperExtra.TabIndex = 214;
             this.comboBoxWhisperExtra.KeyDown += new System.Windows.Forms.KeyEventHandler(this.comboBoxWhisperExtra_KeyDown);
             // 
@@ -73,7 +76,7 @@
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(620, 472);
+            this.buttonCancel.Location = new System.Drawing.Point(778, 559);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 216;
@@ -85,7 +88,7 @@
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(539, 472);
+            this.buttonOK.Location = new System.Drawing.Point(697, 559);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 215;
@@ -111,10 +114,11 @@
             this.tabControlCommandLineHelp.Controls.Add(this.TabPageCPP);
             this.tabControlCommandLineHelp.Controls.Add(this.tabPageConstMe);
             this.tabControlCommandLineHelp.Controls.Add(this.tabPageOpenAI);
+            this.tabControlCommandLineHelp.Controls.Add(this.tabPageFasterWhisper);
             this.tabControlCommandLineHelp.Location = new System.Drawing.Point(15, 108);
             this.tabControlCommandLineHelp.Name = "tabControlCommandLineHelp";
             this.tabControlCommandLineHelp.SelectedIndex = 0;
-            this.tabControlCommandLineHelp.Size = new System.Drawing.Size(680, 358);
+            this.tabControlCommandLineHelp.Size = new System.Drawing.Size(838, 445);
             this.tabControlCommandLineHelp.TabIndex = 219;
             // 
             // TabPageCPP
@@ -123,7 +127,7 @@
             this.TabPageCPP.Location = new System.Drawing.Point(4, 22);
             this.TabPageCPP.Name = "TabPageCPP";
             this.TabPageCPP.Padding = new System.Windows.Forms.Padding(3);
-            this.TabPageCPP.Size = new System.Drawing.Size(672, 332);
+            this.TabPageCPP.Size = new System.Drawing.Size(830, 419);
             this.TabPageCPP.TabIndex = 0;
             this.TabPageCPP.Text = "CPP";
             this.TabPageCPP.UseVisualStyleBackColor = true;
@@ -137,7 +141,7 @@
             this.textBoxCpp.Name = "textBoxCpp";
             this.textBoxCpp.ReadOnly = true;
             this.textBoxCpp.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBoxCpp.Size = new System.Drawing.Size(666, 326);
+            this.textBoxCpp.Size = new System.Drawing.Size(824, 413);
             this.textBoxCpp.TabIndex = 0;
             this.textBoxCpp.Text = resources.GetString("textBoxCpp.Text");
             this.textBoxCpp.WordWrap = false;
@@ -148,7 +152,7 @@
             this.tabPageConstMe.Location = new System.Drawing.Point(4, 22);
             this.tabPageConstMe.Name = "tabPageConstMe";
             this.tabPageConstMe.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageConstMe.Size = new System.Drawing.Size(672, 332);
+            this.tabPageConstMe.Size = new System.Drawing.Size(830, 419);
             this.tabPageConstMe.TabIndex = 1;
             this.tabPageConstMe.Text = "Const-me";
             this.tabPageConstMe.UseVisualStyleBackColor = true;
@@ -162,7 +166,7 @@
             this.textBoxConstMe.Name = "textBoxConstMe";
             this.textBoxConstMe.ReadOnly = true;
             this.textBoxConstMe.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBoxConstMe.Size = new System.Drawing.Size(666, 326);
+            this.textBoxConstMe.Size = new System.Drawing.Size(824, 413);
             this.textBoxConstMe.TabIndex = 1;
             this.textBoxConstMe.Text = resources.GetString("textBoxConstMe.Text");
             this.textBoxConstMe.WordWrap = false;
@@ -173,7 +177,7 @@
             this.tabPageOpenAI.Location = new System.Drawing.Point(4, 22);
             this.tabPageOpenAI.Name = "tabPageOpenAI";
             this.tabPageOpenAI.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageOpenAI.Size = new System.Drawing.Size(672, 332);
+            this.tabPageOpenAI.Size = new System.Drawing.Size(830, 419);
             this.tabPageOpenAI.TabIndex = 2;
             this.tabPageOpenAI.Text = "OpenAI";
             this.tabPageOpenAI.UseVisualStyleBackColor = true;
@@ -187,16 +191,41 @@
             this.textBoxOpenAI.Name = "textBoxOpenAI";
             this.textBoxOpenAI.ReadOnly = true;
             this.textBoxOpenAI.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBoxOpenAI.Size = new System.Drawing.Size(666, 326);
+            this.textBoxOpenAI.Size = new System.Drawing.Size(824, 413);
             this.textBoxOpenAI.TabIndex = 2;
             this.textBoxOpenAI.Text = resources.GetString("textBoxOpenAI.Text");
             this.textBoxOpenAI.WordWrap = false;
+            // 
+            // tabPagePurviewFasterWhisper
+            // 
+            this.tabPageFasterWhisper.Controls.Add(this.textBox1);
+            this.tabPageFasterWhisper.Location = new System.Drawing.Point(4, 22);
+            this.tabPageFasterWhisper.Name = "tabPageFasterWhisper";
+            this.tabPageFasterWhisper.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageFasterWhisper.Size = new System.Drawing.Size(830, 419);
+            this.tabPageFasterWhisper.TabIndex = 3;
+            this.tabPageFasterWhisper.Text = "Faster Whisper";
+            this.tabPageFasterWhisper.UseVisualStyleBackColor = true;
+            // 
+            // textBox1
+            // 
+            this.textBox1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textBox1.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBox1.Location = new System.Drawing.Point(3, 3);
+            this.textBox1.Multiline = true;
+            this.textBox1.Name = "textBox1";
+            this.textBox1.ReadOnly = true;
+            this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.textBox1.Size = new System.Drawing.Size(824, 413);
+            this.textBox1.TabIndex = 3;
+            this.textBox1.Text = resources.GetString("textBox1.Text");
+            this.textBox1.WordWrap = false;
             // 
             // WhisperAdvanced
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(707, 507);
+            this.ClientSize = new System.Drawing.Size(865, 594);
             this.Controls.Add(this.tabControlCommandLineHelp);
             this.Controls.Add(this.labelNote);
             this.Controls.Add(this.labelWhisperExtraCmdLine);
@@ -219,6 +248,8 @@
             this.tabPageConstMe.PerformLayout();
             this.tabPageOpenAI.ResumeLayout(false);
             this.tabPageOpenAI.PerformLayout();
+            this.tabPageFasterWhisper.ResumeLayout(false);
+            this.tabPageFasterWhisper.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -238,5 +269,7 @@
         private System.Windows.Forms.TabPage tabPageOpenAI;
         private System.Windows.Forms.TextBox textBoxConstMe;
         private System.Windows.Forms.TextBox textBoxOpenAI;
+        private System.Windows.Forms.TabPage tabPageFasterWhisper;
+        private System.Windows.Forms.TextBox textBox1;
     }
 }

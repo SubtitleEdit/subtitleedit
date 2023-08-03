@@ -1,12 +1,12 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Logic;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Globalization;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core.Common;
-using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Controls
 {
@@ -200,28 +200,13 @@ namespace Nikse.SubtitleEdit.Controls
             Invalidate();
         }
 
-        //protected override CreateParams CreateParams
-        //{
-        //    get
-        //    {
-        //        // https://stackoverflow.com/questions/2612487/how-to-fix-the-flickering-in-user-controls
-        //        // https://stackoverflow.com/questions/69908353/window-not-fully-painting-until-i-grab-and-move-it
-        //        var cp = base.CreateParams;
-        //        cp.ExStyle |= 0x02000000;  // Turn on WS_EX_COMPOSITED
-        //        return cp;
-
-        //        //var parms = base.CreateParams;
-        //        //parms.Style |= 0x02000000;  // Turn off WS_CLIPCHILDREN
-        //        //return parms;
-        //    }
-        //}
-
         public NikseTimeUpDown()
         {
-            SetStyle(ControlStyles.AllPaintingInWmPaint, true);
-            SetStyle(ControlStyles.ResizeRedraw, true);
-            SetStyle(ControlStyles.Selectable, true);
-            DoubleBuffered = true;
+            SetStyle(ControlStyles.OptimizedDoubleBuffer |
+                     ControlStyles.UserPaint |
+                     ControlStyles.ResizeRedraw |
+                     ControlStyles.Selectable |
+                     ControlStyles.AllPaintingInWmPaint, true);
 
             _maskedTextBox = new MaskedTextBox();
             Height = 23;
@@ -331,20 +316,6 @@ namespace Nikse.SubtitleEdit.Controls
 
             TabStop = false;
 
-            // having trouble to getting control drawn correctly at load...
-            var startRenderTimer = new Timer();
-            startRenderTimer.Interval = 397;
-            startRenderTimer.Tick += (sender, args) =>
-            {
-                Invalidate();
-                _startRenderCount++;
-                if (_startRenderCount >= StartRenderMaxCount)
-                {
-                    startRenderTimer.Stop();
-                    startRenderTimer.Dispose();
-                }
-            };
-            startRenderTimer.Start();
             _loading = false;
         }
 
@@ -609,9 +580,6 @@ namespace Nikse.SubtitleEdit.Controls
         private bool _repeatTimerArrowUp;
         private int _repeatCount;
 
-        private const int StartRenderMaxCount = 7;
-        private int _startRenderCount;
-
         protected override void OnMouseEnter(EventArgs e)
         {
             _buttonUpActive = false;
@@ -788,20 +756,20 @@ namespace Nikse.SubtitleEdit.Controls
             e.Graphics.Clear(BackColor);
             using (var pen = _maskedTextBox.Focused ? new Pen(_buttonForeColorOver, 1f) : new Pen(BorderColor, 1f))
             {
-                var borderRectangle = new Rectangle(e.ClipRectangle.X, e.ClipRectangle.Y, e.ClipRectangle.Width - 1, e.ClipRectangle.Height - 1);
+                var borderRectangle = new Rectangle(0, 0, Width - 1, Height - 1);
                 e.Graphics.DrawRectangle(pen, borderRectangle);
             }
 
             var brush = _buttonForeColorBrush;
             var left = RightToLeft == RightToLeft.Yes ? 3 : Width - ButtonsWidth;
-            var height = e.ClipRectangle.Height / 2 - 4;
+            var height = Height / 2 - 4;
             var top = 2;
             if (_buttonUpActive)
             {
                 brush = _buttonLeftIsDown ? _buttonForeColorDownBrush : _buttonForeColorOverBrush;
             }
 
-            DrawArrowUp(e, brush, left, top, height);
+            NikseUpDown.DrawArrowUp(e, brush, left, top, height);
 
             if (_buttonDownActive)
             {
@@ -813,7 +781,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
 
             top = height + 5;
-            DrawArrowDown(e, brush, left, top, height);
+            NikseUpDown.DrawArrowDown(e, brush, left, top, height);
         }
 
         [RefreshProperties(RefreshProperties.Repaint)]
@@ -852,45 +820,23 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        private static void DrawArrowDown(PaintEventArgs e, Brush brush, int left, int top, int height)
-        {
-            e.Graphics.FillPolygon(brush,
-                new[]
-                {
-                    new Point(left + 5, top + height),
-                    new Point(left + 0, top + 0),
-                    new Point(left + 10, top + 0)
-                });
-        }
-
-        private static void DrawArrowUp(PaintEventArgs e, Brush brush, int left, int top, int height)
-        {
-            e.Graphics.FillPolygon(brush,
-                new[]
-                {
-                    new Point(left + 5, top + 0),
-                    new Point(left + 0, top + height),
-                    new Point(left + 10, top + height)
-                });
-        }
-
         private void DrawDisabled(PaintEventArgs e)
         {
             e.Graphics.Clear(BackColorDisabled);
             using (var pen = new Pen(BorderColorDisabled, 1f))
             {
-                var borderRectangle = new Rectangle(e.ClipRectangle.X, e.ClipRectangle.Y, e.ClipRectangle.Width - 1, e.ClipRectangle.Height - 1);
+                var borderRectangle = new Rectangle(0, 0, Width - 1, Height - 1);
                 e.Graphics.DrawRectangle(pen, borderRectangle);
             }
 
-            var left = RightToLeft == RightToLeft.Yes ? 3 : e.ClipRectangle.Width - ButtonsWidth;
-            var height = e.ClipRectangle.Height / 2 - 4;
+            var left = RightToLeft == RightToLeft.Yes ? 3 : Width - ButtonsWidth;
+            var height = Height / 2 - 4;
             var top = 2;
             using (var brush = new SolidBrush(BorderColorDisabled))
             {
-                DrawArrowUp(e, brush, left, top, height);
+                NikseUpDown.DrawArrowUp(e, brush, left, top, height);
                 top = height + 5;
-                DrawArrowDown(e, brush, left, top, height);
+                NikseUpDown.DrawArrowDown(e, brush, left, top, height);
             }
         }
 

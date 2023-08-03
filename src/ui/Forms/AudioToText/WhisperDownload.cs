@@ -43,6 +43,8 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             "2a9e10f746a1ebe05dffa86e9f66cd20848faa6e849f3300c2281051c1a17b0fc35c60dc435f07f5974aa1191000aaf2866a4f03a5fe35ecffd4ae0919778e63", // SSE2 32-bit
         };
 
+        private const string DownloadUrlConstMe = "https://github.com/Const-me/Whisper/releases/download/1.12.0/cli.zip";
+
         private static readonly string[] Sha512HashesConstMe =
         {
             "bc329789c58887f14cfcdb14d4ced4e6322b6f8c8c4625bddc40321a46e9bae7c45107f4a757793b02d0df456ac839d4ef66529e79d3144b1813a2ae49e7a1ca", // 1.12
@@ -56,7 +58,17 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             "a4681b139c93d7b4b6cefbb4d72de175b3980a4c6052499ca9db473e817659479d2ef8096dfd0c50876194671b09b25985f6db56450b6b5f8a4117851cfd9f1f",
         };
 
-        private const string DownloadUrlConstMe = "https://github.com/Const-me/Whisper/releases/download/1.12.0/cli.zip";
+
+        private const string DownloadUrlPurfviewFasterWhisper = "https://github.com/Purfview/whisper-standalone-win/releases/download/faster-whisper/Whisper-Faster_r141.4.zip";
+
+        private static readonly string[] Sha512HashesPurfviewFasterWhisper =
+        {
+            "5414c15bb1682efc2f737f3ab5f15c4350a70c30a6101b631297420bbc4cb077ef9b88cb6e5512f4adcdafbda85eb894ff92eae07bd70c66efa0b28a08361033", // Whisper-Faster r141.4
+        };
+
+        private static readonly string[] OldSha512HashesPurfviewFasterWhisper =
+        {
+        };
 
 
         public WhisperDownload(string whisperChoice)
@@ -64,9 +76,9 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             UiUtil.PreInitialize(this);
             InitializeComponent();
             UiUtil.FixFonts(this);
-            Text = LanguageSettings.Current.GetTesseractDictionaries.Download + " whisper.cpp";
+            Text = LanguageSettings.Current.GetTesseractDictionaries.Download;
             labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait;
-            labelDescription1.Text = LanguageSettings.Current.GetTesseractDictionaries.Download + " whisper.cpp";
+            labelDescription1.Text = LanguageSettings.Current.GetTesseractDictionaries.Download + " " + whisperChoice;
             _cancellationTokenSource = new CancellationTokenSource();
             _whisperChoice = whisperChoice;
             labelWhisperChoice.Text = _whisperChoice;
@@ -79,6 +91,10 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             if (_whisperChoice == WhisperChoice.ConstMe)
             {
                 downloadUrl = DownloadUrlConstMe;
+            }
+            else if (_whisperChoice == WhisperChoice.PurfviewFasterWhisper)
+            {
+                downloadUrl = DownloadUrlPurfviewFasterWhisper;
             }
 
             try
@@ -127,7 +143,20 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
             downloadStream.Position = 0;
             var hash = Utilities.GetSha512Hash(downloadStream.ToArray());
-            var hashes = _whisperChoice == WhisperChoice.ConstMe ? Sha512HashesConstMe : Sha512Hashes;
+            string[] hashes;
+            if (_whisperChoice == WhisperChoice.ConstMe)
+            {
+                hashes = Sha512HashesConstMe;
+            }
+            else if (_whisperChoice == WhisperChoice.PurfviewFasterWhisper)
+            {
+                hashes = Sha512HashesPurfviewFasterWhisper;
+            }
+            else
+            {
+                hashes = Sha512Hashes;
+            }
+
             if (!hashes.Contains(hash))
             {
                 MessageBox.Show("Whisper SHA-512 hash does not match!");
@@ -145,6 +174,15 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             {
                 folder = Path.Combine(folder, "Const-me");
 
+                if (!Directory.Exists(folder))
+                {
+                    Directory.CreateDirectory(folder);
+                }
+            }
+
+            if (_whisperChoice == WhisperChoice.PurfviewFasterWhisper)
+            {
+                folder = Path.Combine(folder, "Purfview");
                 if (!Directory.Exists(folder))
                 {
                     Directory.CreateDirectory(folder);
@@ -177,6 +215,10 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             if (whisperChoice == WhisperChoice.ConstMe)
             {
                 return OldSha512HashesConstMe.Contains(hash);
+            }
+            else if (whisperChoice == WhisperChoice.PurfviewFasterWhisper)
+            {
+                return OldSha512HashesPurfviewFasterWhisper.Contains(hash);
             }
 
             return OldSha512Hashes.Contains(hash);

@@ -31,10 +31,18 @@ namespace Nikse.SubtitleEdit.Forms
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode2 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
+            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode1 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
             this.buttonConvert = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.groupBoxConvertOptions = new System.Windows.Forms.GroupBox();
+            this.groupBoxRemoveFormatting = new System.Windows.Forms.GroupBox();
+            this.checkBoxRemoveAllFormatting = new System.Windows.Forms.CheckBox();
+            this.checkBoxRemoveAlignment = new System.Windows.Forms.CheckBox();
+            this.checkBoxRemoveFontName = new System.Windows.Forms.CheckBox();
+            this.checkBoxRemoveColor = new System.Windows.Forms.CheckBox();
+            this.checkBoxRemoveUnderline = new System.Windows.Forms.CheckBox();
+            this.checkBoxRemoveItalic = new System.Windows.Forms.CheckBox();
+            this.checkBoxRemoveBold = new System.Windows.Forms.CheckBox();
             this.groupBoxApplyDurationLimits = new System.Windows.Forms.GroupBox();
             this.checkBoxApplyDurationLimitsMaxDuration = new System.Windows.Forms.CheckBox();
             this.numericUpDownApplyDurationLimitsMaxDuration = new System.Windows.Forms.NumericUpDown();
@@ -186,6 +194,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelStatus = new System.Windows.Forms.Label();
             this.labelError = new System.Windows.Forms.Label();
             this.groupBoxConvertOptions.SuspendLayout();
+            this.groupBoxRemoveFormatting.SuspendLayout();
             this.groupBoxApplyDurationLimits.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownApplyDurationLimitsMaxDuration)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownApplyDurationLimitsMinDuration)).BeginInit();
@@ -254,6 +263,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.groupBoxConvertOptions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxConvertOptions.Controls.Add(this.groupBoxRemoveFormatting);
             this.groupBoxConvertOptions.Controls.Add(this.groupBoxApplyDurationLimits);
             this.groupBoxConvertOptions.Controls.Add(this.groupBoxAdjustDuration);
             this.groupBoxConvertOptions.Controls.Add(this.groupBoxBeautifyTimeCodes);
@@ -278,6 +288,94 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxConvertOptions.TabStop = false;
             this.groupBoxConvertOptions.Text = "Convert options";
             // 
+            // groupBoxRemoveFormatting
+            // 
+            this.groupBoxRemoveFormatting.Controls.Add(this.checkBoxRemoveAllFormatting);
+            this.groupBoxRemoveFormatting.Controls.Add(this.checkBoxRemoveAlignment);
+            this.groupBoxRemoveFormatting.Controls.Add(this.checkBoxRemoveFontName);
+            this.groupBoxRemoveFormatting.Controls.Add(this.checkBoxRemoveColor);
+            this.groupBoxRemoveFormatting.Controls.Add(this.checkBoxRemoveUnderline);
+            this.groupBoxRemoveFormatting.Controls.Add(this.checkBoxRemoveItalic);
+            this.groupBoxRemoveFormatting.Controls.Add(this.checkBoxRemoveBold);
+            this.groupBoxRemoveFormatting.Location = new System.Drawing.Point(314, 12);
+            this.groupBoxRemoveFormatting.Name = "groupBoxRemoveFormatting";
+            this.groupBoxRemoveFormatting.Size = new System.Drawing.Size(268, 210);
+            this.groupBoxRemoveFormatting.TabIndex = 314;
+            this.groupBoxRemoveFormatting.TabStop = false;
+            this.groupBoxRemoveFormatting.Text = "Remove formatting";
+            this.groupBoxRemoveFormatting.Visible = false;
+            // 
+            // checkBoxRemoveAllFormatting
+            // 
+            this.checkBoxRemoveAllFormatting.AutoSize = true;
+            this.checkBoxRemoveAllFormatting.Location = new System.Drawing.Point(14, 20);
+            this.checkBoxRemoveAllFormatting.Name = "checkBoxRemoveAllFormatting";
+            this.checkBoxRemoveAllFormatting.Size = new System.Drawing.Size(79, 17);
+            this.checkBoxRemoveAllFormatting.TabIndex = 8;
+            this.checkBoxRemoveAllFormatting.Text = "Remove all";
+            this.checkBoxRemoveAllFormatting.UseVisualStyleBackColor = true;
+            this.checkBoxRemoveAllFormatting.CheckedChanged += new System.EventHandler(this.checkBoxRemoveAllFormatting_CheckedChanged);
+            // 
+            // checkBoxRemoveAlignment
+            // 
+            this.checkBoxRemoveAlignment.AutoSize = true;
+            this.checkBoxRemoveAlignment.Location = new System.Drawing.Point(23, 155);
+            this.checkBoxRemoveAlignment.Name = "checkBoxRemoveAlignment";
+            this.checkBoxRemoveAlignment.Size = new System.Drawing.Size(114, 17);
+            this.checkBoxRemoveAlignment.TabIndex = 7;
+            this.checkBoxRemoveAlignment.Text = "Remove alignment";
+            this.checkBoxRemoveAlignment.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxRemoveFontName
+            // 
+            this.checkBoxRemoveFontName.AutoSize = true;
+            this.checkBoxRemoveFontName.Location = new System.Drawing.Point(23, 132);
+            this.checkBoxRemoveFontName.Name = "checkBoxRemoveFontName";
+            this.checkBoxRemoveFontName.Size = new System.Drawing.Size(116, 17);
+            this.checkBoxRemoveFontName.TabIndex = 6;
+            this.checkBoxRemoveFontName.Text = "Remove font name";
+            this.checkBoxRemoveFontName.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxRemoveColor
+            // 
+            this.checkBoxRemoveColor.AutoSize = true;
+            this.checkBoxRemoveColor.Location = new System.Drawing.Point(23, 109);
+            this.checkBoxRemoveColor.Name = "checkBoxRemoveColor";
+            this.checkBoxRemoveColor.Size = new System.Drawing.Size(92, 17);
+            this.checkBoxRemoveColor.TabIndex = 5;
+            this.checkBoxRemoveColor.Text = "Remove color";
+            this.checkBoxRemoveColor.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxRemoveUnderline
+            // 
+            this.checkBoxRemoveUnderline.AutoSize = true;
+            this.checkBoxRemoveUnderline.Location = new System.Drawing.Point(23, 88);
+            this.checkBoxRemoveUnderline.Name = "checkBoxRemoveUnderline";
+            this.checkBoxRemoveUnderline.Size = new System.Drawing.Size(112, 17);
+            this.checkBoxRemoveUnderline.TabIndex = 4;
+            this.checkBoxRemoveUnderline.Text = "Remove underline";
+            this.checkBoxRemoveUnderline.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxRemoveItalic
+            // 
+            this.checkBoxRemoveItalic.AutoSize = true;
+            this.checkBoxRemoveItalic.Location = new System.Drawing.Point(23, 64);
+            this.checkBoxRemoveItalic.Name = "checkBoxRemoveItalic";
+            this.checkBoxRemoveItalic.Size = new System.Drawing.Size(90, 17);
+            this.checkBoxRemoveItalic.TabIndex = 3;
+            this.checkBoxRemoveItalic.Text = "Remove italic";
+            this.checkBoxRemoveItalic.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxRemoveBold
+            // 
+            this.checkBoxRemoveBold.AutoSize = true;
+            this.checkBoxRemoveBold.Location = new System.Drawing.Point(23, 43);
+            this.checkBoxRemoveBold.Name = "checkBoxRemoveBold";
+            this.checkBoxRemoveBold.Size = new System.Drawing.Size(89, 17);
+            this.checkBoxRemoveBold.TabIndex = 1;
+            this.checkBoxRemoveBold.Text = "Remove bold";
+            this.checkBoxRemoveBold.UseVisualStyleBackColor = true;
+            // 
             // groupBoxApplyDurationLimits
             // 
             this.groupBoxApplyDurationLimits.Controls.Add(this.checkBoxApplyDurationLimitsMaxDuration);
@@ -287,7 +385,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxApplyDurationLimits.Controls.Add(this.checkBoxApplyDurationLimitsMinDuration);
             this.groupBoxApplyDurationLimits.Location = new System.Drawing.Point(309, 16);
             this.groupBoxApplyDurationLimits.Name = "groupBoxApplyDurationLimits";
-            this.groupBoxApplyDurationLimits.Size = new System.Drawing.Size(268, 169);
+            this.groupBoxApplyDurationLimits.Size = new System.Drawing.Size(268, 116);
             this.groupBoxApplyDurationLimits.TabIndex = 313;
             this.groupBoxApplyDurationLimits.TabStop = false;
             this.groupBoxApplyDurationLimits.Text = "Apply duration limits";
@@ -1351,14 +1449,14 @@ namespace Nikse.SubtitleEdit.Forms
             this.timeUpDownAdjust.Size = new System.Drawing.Size(113, 23);
             this.timeUpDownAdjust.TabIndex = 1;
             this.timeUpDownAdjust.TabStop = false;
-            timeCode2.Hours = 0;
-            timeCode2.Milliseconds = 0;
-            timeCode2.Minutes = 0;
-            timeCode2.Seconds = 0;
-            timeCode2.TimeSpan = System.TimeSpan.Parse("00:00:00");
-            timeCode2.TotalMilliseconds = 0D;
-            timeCode2.TotalSeconds = 0D;
-            this.timeUpDownAdjust.TimeCode = timeCode2;
+            timeCode1.Hours = 0;
+            timeCode1.Milliseconds = 0;
+            timeCode1.Minutes = 0;
+            timeCode1.Seconds = 0;
+            timeCode1.TimeSpan = System.TimeSpan.Parse("00:00:00");
+            timeCode1.TotalMilliseconds = 0D;
+            timeCode1.TotalSeconds = 0D;
+            this.timeUpDownAdjust.TimeCode = timeCode1;
             this.timeUpDownAdjust.UseVideoOffset = false;
             // 
             // labelHourMinSecMilliSecond
@@ -2020,6 +2118,8 @@ namespace Nikse.SubtitleEdit.Forms
             this.ResizeEnd += new System.EventHandler(this.BatchConvert_ResizeEnd);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.BatchConvert_KeyDown);
             this.groupBoxConvertOptions.ResumeLayout(false);
+            this.groupBoxRemoveFormatting.ResumeLayout(false);
+            this.groupBoxRemoveFormatting.PerformLayout();
             this.groupBoxApplyDurationLimits.ResumeLayout(false);
             this.groupBoxApplyDurationLimits.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownApplyDurationLimitsMaxDuration)).EndInit();
@@ -2238,5 +2338,13 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.CheckBox checkBoxApplyDurationLimitsCheckShotChanges;
         private System.Windows.Forms.CheckBox checkBoxApplyDurationLimitsMaxDuration;
         private System.Windows.Forms.NumericUpDown numericUpDownApplyDurationLimitsMaxDuration;
+        private System.Windows.Forms.GroupBox groupBoxRemoveFormatting;
+        private System.Windows.Forms.CheckBox checkBoxRemoveAlignment;
+        private System.Windows.Forms.CheckBox checkBoxRemoveFontName;
+        private System.Windows.Forms.CheckBox checkBoxRemoveColor;
+        private System.Windows.Forms.CheckBox checkBoxRemoveUnderline;
+        private System.Windows.Forms.CheckBox checkBoxRemoveItalic;
+        private System.Windows.Forms.CheckBox checkBoxRemoveBold;
+        private System.Windows.Forms.CheckBox checkBoxRemoveAllFormatting;
     }
 }
