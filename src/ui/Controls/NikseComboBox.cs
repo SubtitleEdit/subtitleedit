@@ -640,11 +640,11 @@ namespace Nikse.SubtitleEdit.Controls
 
             _listView.Height = lvHeight;
 
+            _listView.Left = totalX;
+            _listView.Top = top;
             form.Controls.Add(_listView);
             _listView.BringToFront();
 
-            _listView.Left = totalX;
-            _listView.Top = top;
             if (_selectedIndex >= 0)
             {
                 _listView.Focus();
@@ -793,7 +793,7 @@ namespace Nikse.SubtitleEdit.Controls
             e.Graphics.Clear(BackColor);
             using (var pen = Focused || _textBox.Focused || (_listView != null && _listView.Focused) ? new Pen(_buttonForeColorOver, 1f) : new Pen(BorderColor, 1f))
             {
-                var borderRectangle = new Rectangle(e.ClipRectangle.X, e.ClipRectangle.Y, e.ClipRectangle.Width - 1, e.ClipRectangle.Height - 1);
+                var borderRectangle = new Rectangle(0, 0, Width - 1, Height - 1);
                 e.Graphics.DrawRectangle(pen, borderRectangle);
             }
 
@@ -829,7 +829,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
 
             var left = RightToLeft == RightToLeft.Yes ? 3 : Width - ButtonsWidth;
-            var height = e.ClipRectangle.Height / 2 - 4;
+            var height = Height / 2 - 4;
             var top = height / 2 + 5;
             DrawArrow(e, brush, left, top, height);
         }
@@ -871,14 +871,14 @@ namespace Nikse.SubtitleEdit.Controls
 
             using (var pen = new Pen(BorderColorDisabled, 1f))
             {
-                var borderRectangle = new Rectangle(e.ClipRectangle.X, e.ClipRectangle.Y, e.ClipRectangle.Width - 1, e.ClipRectangle.Height - 1);
+                var borderRectangle = new Rectangle(0, 0, Width - 1, Height - 1);
                 e.Graphics.DrawRectangle(pen, borderRectangle);
             }
 
             _textBox.Invalidate();
 
-            var left = RightToLeft == RightToLeft.Yes ? 3 : e.ClipRectangle.Width - ButtonsWidth;
-            var height = e.ClipRectangle.Height / 2 - 4;
+            var left = RightToLeft == RightToLeft.Yes ? 3 : Width - ButtonsWidth;
+            var height = Height / 2 - 4;
             var top = (height / 2) + 5;
             using (var brush = new SolidBrush(BorderColorDisabled))
             {
