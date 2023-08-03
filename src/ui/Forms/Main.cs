@@ -34957,10 +34957,10 @@ namespace Nikse.SubtitleEdit.Forms
                 return true;
             }
 
-            var fullPath = Path.Combine(Configuration.DataDirectory, "Whisper", "main.exe");
+            var fullPath = Path.Combine(Configuration.DataDirectory, "Whisper", "Cpp", "main.exe");
             if (!File.Exists(fullPath) || WhisperDownload.IsOld(fullPath, WhisperChoice.Cpp))
             {
-                if (MessageBox.Show(string.Format(LanguageSettings.Current.Settings.DownloadX, "whisper.cpp"), "Subtitle Edit", MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
+                if (MessageBox.Show(string.Format(LanguageSettings.Current.Settings.DownloadX, "Whisper.cpp"), "Subtitle Edit", MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
                 {
                     return false;
                 }
@@ -35196,16 +35196,6 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            if (!WhisperHelper.IsWhisperInstalled())
-            {
-                if (MessageBox.Show(LanguageSettings.Current.AudioToText.WhisperNotFound,
-                                    "Subtitle Edit",
-                                    MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
-                {
-                    UiUtil.ShowHelp("#audio_to_text_whisper");
-                }
-            }
-
             CheckWhisperCpp();
 
             var oldVideoFileName = _videoFileName;
@@ -35237,16 +35227,13 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else if (form.UnknownArgument)
                     {
-                        if (MessageBox.Show(string.Format(LanguageSettings.Current.Settings.DownloadX, "whisper.cpp"), "Subtitle Edit", MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
+                        var customArgument = Configuration.Settings.Tools.WhisperExtraSettings;
+                        var extraMessage = string.Empty;
+                        if (!string.IsNullOrEmpty(customArgument))
                         {
-                            using (var downloadForm = new WhisperDownload(WhisperChoice.Cpp))
-                            {
-                                if (form.ShowDialog(this) == DialogResult.OK)
-                                {
-                                    audioToTextWhisperTolStripMenuItem_Click(null, null);
-                                }
-                            }
+                            extraMessage = Environment.NewLine + "Note you have a custom argument: " + customArgument;
                         }
+                        MessageBox.Show($"Whisper reported unknown argument - check 'error_log.txt'" + extraMessage);
                     }
                     else
                     {
@@ -35276,13 +35263,13 @@ namespace Nikse.SubtitleEdit.Forms
             if (Configuration.IsRunningOnLinux && WhisperHelper.GetWhisperPathAndFileName() == "whisper")
             {
                 SeLogger.Error("UseWhisperChoice changed to 'OpenAI' as 'Whisper/whisper' or '/Whisper/main' was not found!");
-                Configuration.Settings.Tools.WhisperChoice = WhisperChoice.OpenAI;
+                Configuration.Settings.Tools.WhisperChoice = WhisperChoice.OpenAi;
             }
 
             if (Configuration.IsRunningOnWindows && WhisperHelper.GetWhisperPathAndFileName() == "whisper")
             {
                 SeLogger.Error("UseWhisperChoice changed to 'OpenAI' as 'Whisper/whisper.exe' or '/Whisper/main.exe' was not found!");
-                Configuration.Settings.Tools.WhisperChoice = WhisperChoice.OpenAI;
+                Configuration.Settings.Tools.WhisperChoice = WhisperChoice.OpenAi;
             }
         }
 

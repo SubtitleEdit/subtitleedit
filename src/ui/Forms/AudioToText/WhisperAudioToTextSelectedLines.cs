@@ -424,7 +424,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
         private void whisperPhpOriginalToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Configuration.Settings.Tools.WhisperChoice = WhisperChoice.OpenAI;
+            Configuration.Settings.Tools.WhisperChoice = WhisperChoice.OpenAi;
 
             if (Configuration.IsRunningOnWindows)
             {
@@ -624,7 +624,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 return;
             }
 
-            if (comboBoxWhisperEngine.Text == WhisperChoice.OpenAI)
+            if (comboBoxWhisperEngine.Text == WhisperChoice.OpenAi)
             {
                 whisperPhpOriginalToolStripMenuItem_Click(null, null);
             }
