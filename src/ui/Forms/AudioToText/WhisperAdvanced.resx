@@ -117,6 +117,81 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="textBox1.Text" xml:space="preserve">
+    <value>  --temperature TEMPERATURE
+                        temperature to use for sampling (default: 0)
+  --best_of BEST_OF     number of candidates when sampling with non-zero temperature (default: 5)
+  --beam_size BEAM_SIZE
+                        number of beams in beam search, only applicable when temperature is zero (default: 1)
+  --patience PATIENCE   optional patience value to use in beam decoding, as in https://arxiv.org/abs/2204.05424, the
+                        default (1.0) is equivalent to conventional beam search (default: 1.0)
+  --length_penalty LENGTH_PENALTY
+                        optional token length penalty coefficient (alpha) as in https://arxiv.org/abs/1609.08144, uses
+                        simple length normalization by default (default: 1.0)
+  --suppress_tokens SUPPRESS_TOKENS
+                        comma-separated list of token ids to suppress during sampling; '-1' will suppress most special
+                        characters except common punctuations (default: -1)
+  --initial_prompt INITIAL_PROMPT
+                        optional text to provide as a prompt for the first window. (default: None)
+  --condition_on_previous_text CONDITION_ON_PREVIOUS_TEXT
+                        if True, provide the previous output of the model as a prompt for the next window; disabling
+                        may make the text inconsistent across windows, but the model becomes less prone to getting
+                        stuck in a failure loop (default: True)
+  --temperature_increment_on_fallback TEMPERATURE_INCREMENT_ON_FALLBACK
+                        temperature to increase when falling back when the decoding fails to meet either of the
+                        thresholds below (default: 0.2)
+  --compression_ratio_threshold COMPRESSION_RATIO_THRESHOLD
+                        if the gzip compression ratio is higher than this value, treat the decoding as failed
+                        (default: 2.4)
+  --logprob_threshold LOGPROB_THRESHOLD
+                        if the average log probability is lower than this value, treat the decoding as failed
+                        (default: -1.0)
+  --no_speech_threshold NO_SPEECH_THRESHOLD
+                        if the probability of the &lt;|nospeech|&gt; token is higher than this value AND the decoding has
+                        failed due to `logprob_threshold`, consider the segment as silence (default: 0.6)
+  --no_speech_strict_lvl {0,1,2}
+                        Level of stricter actions when no_speech_prob &gt; 0.93. Use beam_size=5 if this is enabled.
+                        Options: 0 - Disabled (do nothing), 1 - Reset propmt (see condition_on_previous_text), 2 -
+                        Invalidate the cached encoder output (if no_speech_threshold is not None). Arg meant to combat
+                        cases where the model is getting stuck in a failure loop or outputs nonsense (default: 0)
+  --word_timestamps WORD_TIMESTAMPS
+                        (experimental) extract word-level timestamps and refine the results based on them (default:
+                        True)
+  --highlight_words HIGHLIGHT_WORDS
+                        underline each word as it is spoken AKA karaoke in srt and vtt output formats (default: False)
+  --prepend_punctuations PREPEND_PUNCTUATIONS
+                        if word_timestamps is True, merge these punctuation symbols with the next word (default:
+                        "'“¿([{-)
+  --append_punctuations APPEND_PUNCTUATIONS
+                        if word_timestamps is True, merge these punctuation symbols with the previous word (default:
+                        "'.。,，!！?？:：”)]}、)
+  --threads THREADS     number of threads used for CPU inference; By default number of the real cores but no more that
+                        4 (default: 0)
+  --version             Show Faster-Whisper's version number
+  --vad_filter VAD_FILTER
+                        Enable the voice activity detection (VAD) to filter out parts of the audio without speech.
+                        (default: True)
+  --vad_threshold VAD_THRESHOLD
+                        Probabilities above this value are considered as speech. (default: 0.45)
+  --vad_min_speech_duration_ms VAD_MIN_SPEECH_DURATION_MS
+                        Final speech chunks shorter min_speech_duration_ms are thrown out. (default: 350)
+  --vad_max_speech_duration_s VAD_MAX_SPEECH_DURATION_S
+                        Maximum duration of speech chunks in seconds. Longer will be split at the timestamp of the
+                        last silence. (default: None)
+  --vad_min_silence_duration_ms VAD_MIN_SILENCE_DURATION_MS
+                        In the end of each speech chunk time to wait before separating it. (default: 3000)
+  --vad_speech_pad_ms VAD_SPEECH_PAD_MS
+                        Final speech chunks are padded by speech_pad_ms each side. (default: 900)
+  --vad_window_size_samples VAD_WINDOW_SIZE_SAMPLES
+                        Size of audio chunks fed to the silero VAD model. Values other than 512, 1024, 1536 may affect
+                        model perfomance!!! (default: 1536)
+  --compute_type {default,auto,int8,int8_float16,int16,float16,float32,int8_bfloat16,bfloat16}
+                        Type of quantization to use (see https://opennmt.net/CTranslate2/quantization.html) (default:
+                        default)
+  --beep BEEP           Enables beep sound when operation is finished. (default: True)
+  --skip SKIP           Skips files if 'srt' subtitle exists. Works if input is wildcard or directory. (default:
+                        False)</value>
+  </data>
   <data name="textBoxCpp.Text" xml:space="preserve">
     <value>CPP:
   -t N,      --threads N         [4      ] number of threads to use during computation
@@ -175,26 +250,58 @@
 </value>
   </data>
   <data name="textBoxOpenAI.Text" xml:space="preserve">
-    <value>OpenAI:
---temperature TEMPERATURE 
---best_of BEST_OF 
---beam_size BEAM_SIZE 
---patience PATIENCE
---length_penalty LENGTH_PENALTY 
---suppress_tokens SUPPRESS_TOKENS 
---initial_prompt INITIAL_PROMPT
---condition_on_previous_text CONDITION_ON_PREVIOUS_TEXT 
---fp16 FP16
---temperature_increment_on_fallback TEMPERATURE_INCREMENT_ON_FALLBACK
---compression_ratio_threshold COMPRESSION_RATIO_THRESHOLD 
---logprob_threshold LOGPROB_THRESHOLD
---no_speech_threshold NO_SPEECH_THRESHOLD 
---word_timestamps WORD_TIMESTAMPS
---prepend_punctuations PREPEND_PUNCTUATIONS 
---append_punctuations APPEND_PUNCTUATIONS
---highlight_words HIGHLIGHT_WORDS 
---max_line_width MAX_LINE_WIDTH 
---max_line_count MAX_LINE_COUNT
---threads THREADS</value>
+    <value> --device DEVICE       device to use for PyTorch inference (default: cpu)
+ --temperature TEMPERATURE
+                        temperature to use for sampling (default: 0)
+  --best_of BEST_OF     number of candidates when sampling with non-zero temperature (default: 5)
+  --beam_size BEAM_SIZE
+                        number of beams in beam search, only applicable when temperature is zero (default: 5)
+  --patience PATIENCE   optional patience value to use in beam decoding, as in https://arxiv.org/abs/2204.05424, the
+                        default (1.0) is equivalent to conventional beam search (default: None)
+  --length_penalty LENGTH_PENALTY
+                        optional token length penalty coefficient (alpha) as in https://arxiv.org/abs/1609.08144, uses
+                        simple length normalization by default (default: None)
+  --suppress_tokens SUPPRESS_TOKENS
+                        comma-separated list of token ids to suppress during sampling; '-1' will suppress most special
+                        characters except common punctuations (default: -1)
+  --initial_prompt INITIAL_PROMPT
+                        optional text to provide as a prompt for the first window. (default: None)
+  --condition_on_previous_text CONDITION_ON_PREVIOUS_TEXT
+                        if True, provide the previous output of the model as a prompt for the next window; disabling
+                        may make the text inconsistent across windows, but the model becomes less prone to getting
+                        stuck in a failure loop (default: True)
+  --fp16 FP16           whether to perform inference in fp16; True by default (default: True)
+  --temperature_increment_on_fallback TEMPERATURE_INCREMENT_ON_FALLBACK
+                        temperature to increase when falling back when the decoding fails to meet either of the
+                        thresholds below (default: 0.2)
+  --compression_ratio_threshold COMPRESSION_RATIO_THRESHOLD
+                        if the gzip compression ratio is higher than this value, treat the decoding as failed
+                        (default: 2.4)
+  --logprob_threshold LOGPROB_THRESHOLD
+                        if the average log probability is lower than this value, treat the decoding as failed
+                        (default: -1.0)
+  --no_speech_threshold NO_SPEECH_THRESHOLD
+                        if the probability of the &lt;|nospeech|&gt; token is higher than this value AND the decoding has
+                        failed due to `logprob_threshold`, consider the segment as silence (default: 0.6)
+  --word_timestamps WORD_TIMESTAMPS
+                        (experimental) extract word-level timestamps and refine the results based on them (default:
+                        False)
+  --prepend_punctuations PREPEND_PUNCTUATIONS
+                        if word_timestamps is True, merge these punctuation symbols with the next word (default:
+                        "'“¿([{-)
+  --append_punctuations APPEND_PUNCTUATIONS
+                        if word_timestamps is True, merge these punctuation symbols with the previous word (default:
+                        "'.。,，!！?？:：”)]}、)
+  --highlight_words HIGHLIGHT_WORDS
+                        (requires --word_timestamps True) underline each word as it is spoken in srt and vtt (default:
+                        False)
+  --max_line_width MAX_LINE_WIDTH
+                        (requires --word_timestamps True) the maximum number of characters in a line before breaking
+                        the line (default: None)
+  --max_line_count MAX_LINE_COUNT
+                        (requires --word_timestamps True) the maximum number of lines in a segment (default: None)
+  --threads THREADS     number of threads used by torch for CPU inference; supercedes MKL_NUM_THREADS/OMP_NUM_THREADS
+                        (default: 0)
+</value>
   </data>
 </root>

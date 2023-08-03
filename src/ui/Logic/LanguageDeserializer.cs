@@ -3688,6 +3688,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Main/DoNotDisplayMessageAgain":
                     language.Main.DoNotDisplayMessageAgain = reader.Value;
                     break;
+                case "Main/DoNotAutoLoadVideo":
+                    language.Main.DoNotAutoLoadVideo = reader.Value;
+                    break;
                 case "Main/NumberOfCorrectedWords":
                     language.Main.NumberOfCorrectedWords = reader.Value;
                     break;

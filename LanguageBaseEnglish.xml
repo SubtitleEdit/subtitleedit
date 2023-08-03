@@ -1740,6 +1740,7 @@ Continue?</SubtitleAppendPrompt>
     <NothingToUndo>Nothing to undo</NothingToUndo>
     <InvalidLanguageNameX>Invalid language name: {0}</InvalidLanguageNameX>
     <DoNotDisplayMessageAgain>Don't display this message again</DoNotDisplayMessageAgain>
+    <DoNotAutoLoadVideo>Do not autoload video</DoNotAutoLoadVideo>
     <NumberOfCorrectedWords>Number of corrected words: {0}</NumberOfCorrectedWords>
     <NumberOfSkippedWords>Number of skipped words: {0}</NumberOfSkippedWords>
     <NumberOfCorrectWords>Number of correct words: {0}</NumberOfCorrectWords>

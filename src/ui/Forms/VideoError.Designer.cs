@@ -32,6 +32,7 @@
             this.buttonMpvSettings = new System.Windows.Forms.Button();
             this.labelMpvInfo = new System.Windows.Forms.Label();
             this.labelError = new System.Windows.Forms.Label();
+            this.checkBoxDoNotAutoLoadVideo = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // buttonCancel
@@ -75,11 +76,24 @@
             this.labelError.TabIndex = 32;
             this.labelError.Text = "labelError";
             // 
+            // checkBoxDoNotAutoLoadVideo
+            // 
+            this.checkBoxDoNotAutoLoadVideo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.checkBoxDoNotAutoLoadVideo.AutoSize = true;
+            this.checkBoxDoNotAutoLoadVideo.Font = new System.Drawing.Font("Tahoma", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.checkBoxDoNotAutoLoadVideo.Location = new System.Drawing.Point(12, 152);
+            this.checkBoxDoNotAutoLoadVideo.Name = "checkBoxDoNotAutoLoadVideo";
+            this.checkBoxDoNotAutoLoadVideo.Size = new System.Drawing.Size(119, 15);
+            this.checkBoxDoNotAutoLoadVideo.TabIndex = 33;
+            this.checkBoxDoNotAutoLoadVideo.Text = "Do not auto-load video";
+            this.checkBoxDoNotAutoLoadVideo.UseVisualStyleBackColor = true;
+            // 
             // VideoError
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(580, 179);
+            this.Controls.Add(this.checkBoxDoNotAutoLoadVideo);
             this.Controls.Add(this.labelError);
             this.Controls.Add(this.labelMpvInfo);
             this.Controls.Add(this.buttonMpvSettings);
@@ -94,6 +108,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Error playing video file - ";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.VideoError_FormClosing);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.VideoError_KeyDown);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -105,5 +120,6 @@
         private System.Windows.Forms.Button buttonMpvSettings;
         private System.Windows.Forms.Label labelMpvInfo;
         private System.Windows.Forms.Label labelError;
+        private System.Windows.Forms.CheckBox checkBoxDoNotAutoLoadVideo;
     }
 }
