@@ -1724,6 +1724,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <NothingToUndo>Τίποτα για αναίρεση</NothingToUndo>
     <InvalidLanguageNameX>Μη έγκυρο όνομα γλώσσας: {0}</InvalidLanguageNameX>
     <DoNotDisplayMessageAgain>Απόκρυψη μηνύματος</DoNotDisplayMessageAgain>
+    <DoNotAutoLoadVideo>Μη αυτόματη φόρτωση βίντεο</DoNotAutoLoadVideo>
     <NumberOfCorrectedWords>Σύνολο διορθωμένων λέξεων: {0}</NumberOfCorrectedWords>
     <NumberOfSkippedWords>Σύνολο παραλειπόμενων λέξεων: {0}</NumberOfSkippedWords>
     <NumberOfCorrectWords>Σύνολο σωστών λέξεων: {0}</NumberOfCorrectWords>
