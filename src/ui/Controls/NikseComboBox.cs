@@ -837,6 +837,8 @@ namespace Nikse.SubtitleEdit.Controls
 
         public bool DroppedDown => _listViewShown;
 
+        public bool FormattingEnabled { get; set; }
+
         private static void DrawArrowDown(PaintEventArgs e, Brush brush, int left, int top, int height)
         {
             e.Graphics.FillPolygon(brush,
