@@ -49,6 +49,10 @@ namespace Nikse.SubtitleEdit.Controls
 
         public void Clear()
         {
+            if (SyncRoot is NikseComboBox ncb)
+            {
+                ncb.SelectedIndex = -1;
+            }
             _items.Clear();
         }
 
