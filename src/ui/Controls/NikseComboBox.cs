@@ -108,6 +108,12 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
+        public override string Text
+        {
+            get => SelectedText;
+            set => SelectedText = value;
+        }
+
         public string SelectedText
         {
             get

@@ -1,12 +1,12 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Logic;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Globalization;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core.Common;
-using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Controls
 {
@@ -200,25 +200,9 @@ namespace Nikse.SubtitleEdit.Controls
             Invalidate();
         }
 
-        //protected override CreateParams CreateParams
-        //{
-        //    get
-        //    {
-        //        // https://stackoverflow.com/questions/2612487/how-to-fix-the-flickering-in-user-controls
-        //        // https://stackoverflow.com/questions/69908353/window-not-fully-painting-until-i-grab-and-move-it
-        //        var cp = base.CreateParams;
-        //        cp.ExStyle |= 0x02000000;  // Turn on WS_EX_COMPOSITED
-        //        return cp;
-
-        //        //var parms = base.CreateParams;
-        //        //parms.Style |= 0x02000000;  // Turn off WS_CLIPCHILDREN
-        //        //return parms;
-        //    }
-        //}
-
         public NikseTimeUpDown()
         {
-            SetStyle(ControlStyles.OptimizedDoubleBuffer | 
+            SetStyle(ControlStyles.OptimizedDoubleBuffer |
                      ControlStyles.UserPaint |
                      ControlStyles.ResizeRedraw |
                      ControlStyles.Selectable |
@@ -332,20 +316,6 @@ namespace Nikse.SubtitleEdit.Controls
 
             TabStop = false;
 
-            // having trouble to getting control drawn correctly at load...
-            //var startRenderTimer = new Timer();
-            //startRenderTimer.Interval = 397;
-            //startRenderTimer.Tick += (sender, args) =>
-            //{
-            //    Invalidate();
-            //    _startRenderCount++;
-            //    if (_startRenderCount >= StartRenderMaxCount)
-            //    {
-            //        startRenderTimer.Stop();
-            //        startRenderTimer.Dispose();
-            //    }
-            //};
-            //startRenderTimer.Start();
             _loading = false;
         }
 
@@ -610,9 +580,6 @@ namespace Nikse.SubtitleEdit.Controls
         private bool _repeatTimerArrowUp;
         private int _repeatCount;
 
-        private const int StartRenderMaxCount = 7;
-        private int _startRenderCount;
-
         protected override void OnMouseEnter(EventArgs e)
         {
             _buttonUpActive = false;
@@ -802,7 +769,7 @@ namespace Nikse.SubtitleEdit.Controls
                 brush = _buttonLeftIsDown ? _buttonForeColorDownBrush : _buttonForeColorOverBrush;
             }
 
-            DrawArrowUp(e, brush, left, top, height);
+            NikseUpDown.DrawArrowUp(e, brush, left, top, height);
 
             if (_buttonDownActive)
             {
@@ -814,7 +781,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
 
             top = height + 5;
-            DrawArrowDown(e, brush, left, top, height);
+            NikseUpDown.DrawArrowDown(e, brush, left, top, height);
         }
 
         [RefreshProperties(RefreshProperties.Repaint)]
@@ -853,28 +820,6 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        private static void DrawArrowDown(PaintEventArgs e, Brush brush, int left, int top, int height)
-        {
-            e.Graphics.FillPolygon(brush,
-                new[]
-                {
-                    new Point(left + 5, top + height),
-                    new Point(left + 0, top + 0),
-                    new Point(left + 10, top + 0)
-                });
-        }
-
-        private static void DrawArrowUp(PaintEventArgs e, Brush brush, int left, int top, int height)
-        {
-            e.Graphics.FillPolygon(brush,
-                new[]
-                {
-                    new Point(left + 5, top + 0),
-                    new Point(left + 0, top + height),
-                    new Point(left + 10, top + height)
-                });
-        }
-
         private void DrawDisabled(PaintEventArgs e)
         {
             e.Graphics.Clear(BackColorDisabled);
@@ -889,9 +834,9 @@ namespace Nikse.SubtitleEdit.Controls
             var top = 2;
             using (var brush = new SolidBrush(BorderColorDisabled))
             {
-                DrawArrowUp(e, brush, left, top, height);
+                NikseUpDown.DrawArrowUp(e, brush, left, top, height);
                 top = height + 5;
-                DrawArrowDown(e, brush, left, top, height);
+                NikseUpDown.DrawArrowDown(e, brush, left, top, height);
             }
         }
 

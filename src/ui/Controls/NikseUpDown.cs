@@ -617,28 +617,28 @@ namespace Nikse.SubtitleEdit.Controls
             _textBox.SelectionStart = selectionStart;
         }
 
-        private static void DrawArrowDown(PaintEventArgs e, Brush brush, int left, int top, int height)
+        public static void DrawArrowUp(PaintEventArgs e, Brush brush, int left, int top, int height)
         {
             e.Graphics.FillPolygon(brush,
                 new[]
                 {
-                    new Point(left + 5, top + height),
-                    new Point(left + 0, top + 0),
-                    new Point(left + 10, top + 0)
-                });
-        }
-
-        private static void DrawArrowUp(PaintEventArgs e, Brush brush, int left, int top, int height)
-        {
-            e.Graphics.FillPolygon(brush,
-                new[]
-                {
-                    new Point(left + 5, top + 0),
+                    new Point(left + 5, top + 1),
                     new Point(left + 0, top + height),
-                    new Point(left + 10, top + height)
+                    new Point(left + 10, top + height),
                 });
         }
 
+        public static void DrawArrowDown(PaintEventArgs e, Brush brush, int left, int top, int height)
+        {
+            e.Graphics.FillPolygon(brush,
+                new[]
+                {
+                    new Point(left + 0, top),
+                    new Point(left + 10, top),
+                    new Point(left + 5, top + height -1),
+                });
+        }
+        
         private void DrawDisabled(PaintEventArgs e)
         {
             e.Graphics.Clear(BackColorDisabled);
