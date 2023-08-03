@@ -13,6 +13,7 @@ namespace Nikse.SubtitleEdit.Logic
     {
         public static Color BackColor => Configuration.Settings.General.DarkThemeBackColor;
         public static Color ForeColor => Configuration.Settings.General.DarkThemeForeColor;
+        public static Color DarkThemeDisabledColor => Configuration.Settings.General.DarkThemeDisabledColor;
 
         private const int DWMWA_USE_IMMERSIVE_DARK_MODE_BEFORE_20H1 = 19;
         private const int DWMWA_USE_IMMERSIVE_DARK_MODE = 20;
@@ -397,7 +398,7 @@ namespace Nikse.SubtitleEdit.Logic
                 ncb.ForeColor = Control.DefaultForeColor;
                 ncb.ButtonForeColor = Control.DefaultForeColor;
                 ncb.BorderColor = Color.LightGray;
-                ncb.BackColorDisabled = NikseUpDown.DefaultBackColorDisabled; ;
+                ncb.BackColorDisabled = NikseUpDown.DefaultBackColorDisabled;
                 if (ncb.DropDownControl != null)
                 {
                     UnFixControl(ncb.DropDownControl);
@@ -586,7 +587,7 @@ namespace Nikse.SubtitleEdit.Logic
             if (sender is Button button && !button.Enabled)
             {
                 button.ForeColor = Color.DimGray;
-                TextFormatFlags flags = TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter;
+                var flags = TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter;
                 TextRenderer.DrawText(e.Graphics, button.Text, button.Font, e.ClipRectangle, button.ForeColor, flags);
             }
         }
@@ -596,7 +597,7 @@ namespace Nikse.SubtitleEdit.Logic
             if (sender is CheckBox checkBox && !checkBox.Enabled)
             {
                 var checkBoxWidth = CheckBoxRenderer.GetGlyphSize(e.Graphics, System.Windows.Forms.VisualStyles.CheckBoxState.CheckedDisabled).Width;
-                Rectangle textRectangleValue = new Rectangle
+                var textRectangleValue = new Rectangle
                 {
                     X = e.ClipRectangle.X + checkBoxWidth,
                     Y = e.ClipRectangle.Y,
@@ -613,7 +614,7 @@ namespace Nikse.SubtitleEdit.Logic
             if (sender is RadioButton radioButton && !radioButton.Enabled)
             {
                 var radioButtonWidth = RadioButtonRenderer.GetGlyphSize(e.Graphics, System.Windows.Forms.VisualStyles.RadioButtonState.UncheckedDisabled).Width;
-                Rectangle textRectangleValue = new Rectangle
+                var textRectangleValue = new Rectangle
                 {
                     X = e.ClipRectangle.X + radioButtonWidth,
                     Y = e.ClipRectangle.Y,
@@ -753,7 +754,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             protected override void OnRenderToolStripBorder(ToolStripRenderEventArgs e)
             {
-                if (!(e.ToolStrip is ToolStrip))
+                if (e.ToolStrip == null)
                 {
                     base.OnRenderToolStripBorder(e);
                 }

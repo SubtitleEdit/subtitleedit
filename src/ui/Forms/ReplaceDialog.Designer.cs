@@ -40,7 +40,7 @@
             this.buttonFind = new System.Windows.Forms.Button();
             this.checkBoxWholeWord = new System.Windows.Forms.CheckBox();
             this.comboBoxFindReplaceIn = new System.Windows.Forms.ComboBox();
-            this.labelFindReplaceIn = new System.Windows.Forms.Label();
+            this.labelFindReplaceIn = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.comboBoxFind = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
@@ -238,7 +238,7 @@
         private System.Windows.Forms.Button buttonFind;
         private System.Windows.Forms.CheckBox checkBoxWholeWord;
         private System.Windows.Forms.ComboBox comboBoxFindReplaceIn;
-        private System.Windows.Forms.Label labelFindReplaceIn;
+        private Nikse.SubtitleEdit.Controls.NikseLabel labelFindReplaceIn;
         private System.Windows.Forms.ComboBox comboBoxFind;
     }
 }
