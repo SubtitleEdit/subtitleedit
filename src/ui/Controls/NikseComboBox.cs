@@ -78,6 +78,15 @@ namespace Nikse.SubtitleEdit.Controls
                     return;
                 }
 
+                if (value == -1)
+                {
+                    _selectedIndex = value;
+                    _textBox.Text = string.Empty;
+                    SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
+                    Invalidate();
+                    return;
+                }
+
                 _selectedIndex = value;
                 _textBox.Text = Items[_selectedIndex].ToString();
                 SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
@@ -120,7 +129,7 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 if (_textBox == null)
                 {
-                    return null;
+                    return string.Empty;
                 }
 
                 if (DropDownStyle == ComboBoxStyle.DropDown)
@@ -130,7 +139,7 @@ namespace Nikse.SubtitleEdit.Controls
 
                 if (_selectedIndex < 0)
                 {
-                    return null;
+                    return string.Empty;
                 }
 
                 return _items[_selectedIndex].ToString();
@@ -822,7 +831,7 @@ namespace Nikse.SubtitleEdit.Controls
             var left = RightToLeft == RightToLeft.Yes ? 3 : Width - ButtonsWidth;
             var height = e.ClipRectangle.Height / 2 - 4;
             var top = height / 2 + 5;
-            DrawArrowDown(e, brush, left, top, height);
+            DrawArrow(e, brush, left, top, height);
         }
 
         public override RightToLeft RightToLeft
@@ -839,15 +848,16 @@ namespace Nikse.SubtitleEdit.Controls
 
         public bool FormattingEnabled { get; set; }
 
-        private static void DrawArrowDown(PaintEventArgs e, Brush brush, int left, int top, int height)
+        private void DrawArrow(PaintEventArgs e, Brush brush, int left, int top, int height)
         {
-            e.Graphics.FillPolygon(brush,
-                new[]
-                {
-                    new Point(left + 5, top + height),
-                    new Point(left + 0, top + 0),
-                    new Point(left + 10, top + 0)
-                });
+            if (_listViewShown)
+            {
+                NikseUpDown.DrawArrowUp(e, brush, left, top - 1, height);
+            }
+            else
+            {
+                NikseUpDown.DrawArrowDown(e, brush, left, top, height);
+            }
         }
 
         private void DrawDisabled(PaintEventArgs e)
@@ -872,7 +882,7 @@ namespace Nikse.SubtitleEdit.Controls
             var top = (height / 2) + 5;
             using (var brush = new SolidBrush(BorderColorDisabled))
             {
-                DrawArrowDown(e, brush, left, top, height);
+                DrawArrow(e, brush, left, top, height);
             }
         }
 
