@@ -22,6 +22,9 @@ namespace Nikse.SubtitleEdit.Controls
         // ReSharper disable once InconsistentNaming
         public event EventHandler DropDownClosed;
 
+        // ReSharper disable once InconsistentNaming
+        public new event KeyEventHandler KeyDown;
+
         [Category("NikseComboBox"), Description("Gets or sets DropDownStyle"), RefreshProperties(RefreshProperties.Repaint)]
         public ComboBoxStyle DropDownStyle
         {
@@ -336,7 +339,7 @@ namespace Nikse.SubtitleEdit.Controls
 
             SetStyle(ControlStyles.ResizeRedraw | ControlStyles.OptimizedDoubleBuffer, true);
 
-            KeyDown += (sender, e) =>
+            base.KeyDown += (sender, e) =>
             {
                 if (e.KeyCode == Keys.Up)
                 {
@@ -344,6 +347,7 @@ namespace Nikse.SubtitleEdit.Controls
                     {
                         SelectedIndex--;
                     }
+                    e.SuppressKeyPress = true;
                 }
                 else if (e.KeyCode == Keys.Down)
                 {
@@ -351,9 +355,15 @@ namespace Nikse.SubtitleEdit.Controls
                     {
                         SelectedIndex++;
                     }
+                    e.SuppressKeyPress = true;
                 }
-
+                else
+                {
+                    KeyDown?.Invoke(this, e);
+                }
             };
+
+            _textBox.KeyDown += (sender, e) => { KeyDown?.Invoke(this, e); };
 
             MouseWheel += (sender, e) =>
             {
@@ -413,7 +423,7 @@ namespace Nikse.SubtitleEdit.Controls
             _textBox.TextChanged += _textBox_TextChanged;
 
             Controls.Add(_textBox);
-            DropDownStyle = ComboBoxStyle.DropDownList;
+            DropDownStyle = ComboBoxStyle.DropDown;
             BackColor = _textBox.BackColor;
             ButtonForeColor = DefaultForeColor;
             ButtonForeColorOver = Color.FromArgb(0, 120, 215);
@@ -447,10 +457,10 @@ namespace Nikse.SubtitleEdit.Controls
 
                 var coordinates = form.PointToClient(Cursor.Position);
                 var listViewBounds = new Rectangle(
-                    _listView.Bounds.X, 
-                    _listView.Bounds.Y, 
-                    _listView.Bounds.Width + 15, 
-                    _listView.Bounds.Height);
+                    _listView.Bounds.X,
+                    _listView.Bounds.Y,
+                    _listView.Bounds.Width + 25,
+                    _listView.Bounds.Height + 25);
                 if (_hasItemsMouseOver &&
                     !(listViewBounds.Contains(coordinates) || Bounds.Contains(coordinates)) ||
                     !_listViewShown)
@@ -686,6 +696,7 @@ namespace Nikse.SubtitleEdit.Controls
                 if (args.KeyCode == Keys.Escape)
                 {
                     HideDropDown();
+                    args.SuppressKeyPress = true;
                 }
                 else if (args.KeyCode == Keys.Enter)
                 {
@@ -696,6 +707,7 @@ namespace Nikse.SubtitleEdit.Controls
                     Invalidate();
                     SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
                     HideDropDown();
+                    args.SuppressKeyPress = true;
                 }
             };
 
@@ -721,6 +733,14 @@ namespace Nikse.SubtitleEdit.Controls
                         _textBox.SelectionLength = 0;
                         return;
                     }
+                }
+            };
+
+            _listView.LostFocus += (sender, e) =>
+            {
+                if (_listViewShown)
+                {
+                    HideDropDown();
                 }
             };
         }
