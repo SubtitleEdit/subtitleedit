@@ -31,12 +31,12 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         {
             Nikse.SubtitleEdit.Core.Common.TimeCode timeCode1 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
             this.groupBoxStyle = new System.Windows.Forms.GroupBox();
-            this.comboBoxProgressBarEdge = new System.Windows.Forms.ComboBox();
+            this.comboBoxProgressBarEdge = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelEdgeStyle = new System.Windows.Forms.Label();
             this.radioButtonPosTop = new System.Windows.Forms.RadioButton();
             this.radioButtonPosBottom = new System.Windows.Forms.RadioButton();
             this.labelHeight = new System.Windows.Forms.Label();
-            this.numericUpDownHeight = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownHeight = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.panelSecondaryColor = new System.Windows.Forms.Panel();
             this.buttonSecondaryColor = new System.Windows.Forms.Button();
             this.panelPrimaryColor = new System.Windows.Forms.Panel();
@@ -44,22 +44,22 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.labelPosition = new System.Windows.Forms.Label();
             this.buttonReset = new System.Windows.Forms.Button();
             this.buttonPickAttachmentFont = new System.Windows.Forms.Button();
-            this.comboBoxFontName = new System.Windows.Forms.ComboBox();
+            this.comboBoxFontName = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelFontName = new System.Windows.Forms.Label();
-            this.numericUpDownSplitterWidth = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownSplitterWidth = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelSplitterWidth = new System.Windows.Forms.Label();
-            this.numericUpDownSplitterHeight = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownSplitterHeight = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelSplitterHeight = new System.Windows.Forms.Label();
             this.labelFontSize = new System.Windows.Forms.Label();
-            this.numericUpDownFontSize = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownFontSize = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.groupBoxChapters = new System.Windows.Forms.GroupBox();
             this.buttonTakePosFromVideo = new System.Windows.Forms.Button();
             this.labelXAdjust = new System.Windows.Forms.Label();
-            this.numericUpDownXAdjust = new System.Windows.Forms.NumericUpDown();
-            this.comboBoxTextHorizontalAlignment = new System.Windows.Forms.ComboBox();
+            this.numericUpDownXAdjust = new Nikse.SubtitleEdit.Controls.NikseUpDown();
+            this.comboBoxTextHorizontalAlignment = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelTextHorizontalAlignment = new System.Windows.Forms.Label();
             this.labelYAdjust = new System.Windows.Forms.Label();
-            this.numericUpDownYAdjust = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownYAdjust = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.textBoxChapterText = new System.Windows.Forms.TextBox();
             this.labelText = new System.Windows.Forms.Label();
             this.timeUpDownStartTime = new Nikse.SubtitleEdit.Controls.NikseTimeUpDown();
@@ -76,13 +76,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.buttonCancel = new System.Windows.Forms.Button();
             this.textBoxSource = new System.Windows.Forms.TextBox();
             this.groupBoxStyle.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownHeight)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSplitterWidth)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSplitterHeight)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFontSize)).BeginInit();
             this.groupBoxChapters.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownXAdjust)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownYAdjust)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBoxStyle
@@ -658,14 +652,8 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.AssaProgressBar_KeyDown);
             this.groupBoxStyle.ResumeLayout(false);
             this.groupBoxStyle.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownHeight)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSplitterWidth)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSplitterHeight)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFontSize)).EndInit();
             this.groupBoxChapters.ResumeLayout(false);
             this.groupBoxChapters.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownXAdjust)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownYAdjust)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -677,7 +665,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Label labelFontSize;
-        private System.Windows.Forms.NumericUpDown numericUpDownFontSize;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownFontSize;
         private System.Windows.Forms.Label labelPosition;
         private System.Windows.Forms.Panel panelSecondaryColor;
         private System.Windows.Forms.Button buttonSecondaryColor;
@@ -691,14 +679,14 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         private System.Windows.Forms.Button buttonAdd;
         private System.Windows.Forms.Button buttonRemove;
         private System.Windows.Forms.Label labelHeight;
-        private System.Windows.Forms.NumericUpDown numericUpDownHeight;
-        private System.Windows.Forms.NumericUpDown numericUpDownSplitterWidth;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownHeight;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownSplitterWidth;
         private System.Windows.Forms.Label labelSplitterWidth;
-        private System.Windows.Forms.NumericUpDown numericUpDownSplitterHeight;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownSplitterHeight;
         private System.Windows.Forms.RadioButton radioButtonPosTop;
         private System.Windows.Forms.RadioButton radioButtonPosBottom;
         private System.Windows.Forms.Button buttonPickAttachmentFont;
-        private System.Windows.Forms.ComboBox comboBoxFontName;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxFontName;
         private System.Windows.Forms.Label labelFontName;
         private System.Windows.Forms.TextBox textBoxSource;
         private System.Windows.Forms.Panel panelTextColor;
@@ -708,13 +696,13 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         private System.Windows.Forms.TextBox textBoxChapterText;
         private System.Windows.Forms.Label labelText;
         private System.Windows.Forms.Label labelYAdjust;
-        private System.Windows.Forms.NumericUpDown numericUpDownYAdjust;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownYAdjust;
         private System.Windows.Forms.Button buttonReset;
-        private System.Windows.Forms.ComboBox comboBoxTextHorizontalAlignment;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxTextHorizontalAlignment;
         private System.Windows.Forms.Label labelTextHorizontalAlignment;
         private System.Windows.Forms.Label labelXAdjust;
-        private System.Windows.Forms.NumericUpDown numericUpDownXAdjust;
-        private System.Windows.Forms.ComboBox comboBoxProgressBarEdge;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownXAdjust;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxProgressBarEdge;
         private System.Windows.Forms.Label labelEdgeStyle;
         private System.Windows.Forms.Button buttonTakePosFromVideo;
     }
