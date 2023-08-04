@@ -23,7 +23,7 @@
             this.buttonCancel = new System.Windows.Forms.Button();
             this.textBoxAddName = new System.Windows.Forms.TextBox();
             this.labelDescription = new System.Windows.Forms.Label();
-            this.comboBoxDictionaries = new System.Windows.Forms.ComboBox();
+            this.comboBoxDictionaries = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelLanguage = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
@@ -117,7 +117,7 @@
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.TextBox textBoxAddName;
         private System.Windows.Forms.Label labelDescription;
-        private System.Windows.Forms.ComboBox comboBoxDictionaries;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxDictionaries;
         private System.Windows.Forms.Label labelLanguage;
     }
 }
