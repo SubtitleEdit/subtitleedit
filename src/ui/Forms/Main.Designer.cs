@@ -3534,6 +3534,8 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // tabControlModes
             // 
+            this.tabControlModes.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.tabControlModes.Controls.Add(this.tabPageTranslate);
             this.tabControlModes.Controls.Add(this.tabPageCreate);
             this.tabControlModes.Controls.Add(this.tabPageAdjust);
