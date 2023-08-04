@@ -162,6 +162,7 @@ namespace Nikse.SubtitleEdit.Controls
         }
 
         public bool DroppedDown => ComboBox.DroppedDown;
+        public int DropDownWidth { get; set; } //TODO: use
 
         internal class ToolStripNikseComboBoxControl : NikseComboBox
         {

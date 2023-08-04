@@ -1,4 +1,6 @@
-﻿namespace Nikse.SubtitleEdit.Forms
+﻿using Nikse.SubtitleEdit.Controls;
+
+namespace Nikse.SubtitleEdit.Forms
 {
     sealed partial class Main
     {
@@ -82,7 +84,7 @@
             this.comboBoxEncoding = new Nikse.SubtitleEdit.Controls.ToolStripNikseComboBox();
             this.toolStripSeparatorFrameRate = new Nikse.SubtitleEdit.Controls.ToolStripNikseSeparator();
             this.toolStripLabelFrameRate = new System.Windows.Forms.ToolStripLabel();
-            this.toolStripComboBoxFrameRate = new System.Windows.Forms.ToolStripComboBox();
+            this.toolStripComboBoxFrameRate = new ToolStripNikseComboBox();
             this.toolStripButtonGetFrameRate = new System.Windows.Forms.ToolStripButton();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -1102,12 +1104,12 @@
             // toolStripComboBoxFrameRate
             // 
             this.toolStripComboBoxFrameRate.DropDownWidth = 75;
-            this.toolStripComboBoxFrameRate.FlatStyle = System.Windows.Forms.FlatStyle.Standard;
             this.toolStripComboBoxFrameRate.Name = "toolStripComboBoxFrameRate";
             this.toolStripComboBoxFrameRate.Size = new System.Drawing.Size(75, 23);
             this.toolStripComboBoxFrameRate.DropDown += new System.EventHandler(this.MenuOpened);
             this.toolStripComboBoxFrameRate.DropDownClosed += new System.EventHandler(this.MenuClosed);
             this.toolStripComboBoxFrameRate.TextChanged += new System.EventHandler(this.ToolStripComboBoxFrameRateTextChanged);
+            this.toolStripComboBoxFrameRate.Padding = new System.Windows.Forms.Padding(2,7,2,7);
             // 
             // toolStripButtonGetFrameRate
             // 
@@ -6038,7 +6040,7 @@
         private Nikse.SubtitleEdit.Controls.ToolStripNikseSeparator toolStripSeparatorEncoding;
         private Nikse.SubtitleEdit.Controls.ToolStripNikseSeparator toolStripSeparatorFrameRate;
         private System.Windows.Forms.ToolStripLabel toolStripLabelFrameRate;
-        private System.Windows.Forms.ToolStripComboBox toolStripComboBoxFrameRate;
+        private Nikse.SubtitleEdit.Controls.ToolStripNikseComboBox toolStripComboBoxFrameRate;
         private System.Windows.Forms.ToolStripButton toolStripButtonGetFrameRate;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSpellCheckMain;
         private System.Windows.Forms.ToolStripMenuItem spellCheckToolStripMenuItem;
