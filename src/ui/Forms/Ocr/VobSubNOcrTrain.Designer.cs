@@ -36,7 +36,7 @@
             this.labelLineSegments = new System.Windows.Forms.Label();
             this.numericUpDownSegmentsPerCharacter = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelSubtitleFontSize = new System.Windows.Forms.Label();
-            this.comboBoxSubtitleFontSize = new System.Windows.Forms.ComboBox();
+            this.comboBoxSubtitleFontSize = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelSubtitleFont = new System.Windows.Forms.Label();
             this.labelSubtitleForTraining = new System.Windows.Forms.Label();
             this.textBoxInputFile = new System.Windows.Forms.TextBox();
@@ -402,7 +402,7 @@
         private System.Windows.Forms.TextBox textBoxInputFile;
         private System.Windows.Forms.Label labelSubtitleForTraining;
         private System.Windows.Forms.Label labelSubtitleFontSize;
-        private System.Windows.Forms.ComboBox comboBoxSubtitleFontSize;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxSubtitleFontSize;
         private System.Windows.Forms.Label labelSubtitleFont;
         private System.Windows.Forms.ListView listViewFonts;
         private System.Windows.Forms.Label labelLineSegments;

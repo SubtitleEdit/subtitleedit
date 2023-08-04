@@ -34,7 +34,7 @@
             this.groupBoxDvd = new System.Windows.Forms.GroupBox();
             this.buttonClear = new System.Windows.Forms.Button();
             this.groupBoxLanguages = new System.Windows.Forms.GroupBox();
-            this.comboBoxLanguages = new System.Windows.Forms.ComboBox();
+            this.comboBoxLanguages = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.groupBoxPalNtsc = new System.Windows.Forms.GroupBox();
             this.radioButtonNtsc = new System.Windows.Forms.RadioButton();
             this.radioButtonPal = new System.Windows.Forms.RadioButton();
@@ -327,7 +327,7 @@
         private System.Windows.Forms.ProgressBar progressBarRip;
         private System.Windows.Forms.Label labelStatus;
         private System.Windows.Forms.Button buttonStartRipping;
-        private System.Windows.Forms.ComboBox comboBoxLanguages;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxLanguages;
         private System.Windows.Forms.GroupBox groupBoxLanguages;
         private System.Windows.Forms.GroupBox groupBoxPalNtsc;
         private System.Windows.Forms.RadioButton radioButtonNtsc;

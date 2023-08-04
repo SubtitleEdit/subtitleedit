@@ -35,7 +35,7 @@
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.checkBoxShowOnlyChangedLines = new System.Windows.Forms.CheckBox();
-            this.comboBoxFrameRate = new System.Windows.Forms.ComboBox();
+            this.comboBoxFrameRate = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelFrames = new System.Windows.Forms.Label();
             this.numericUpDownFrames = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelXFrameIsXMS = new System.Windows.Forms.Label();
@@ -247,7 +247,7 @@
         private System.Windows.Forms.Button buttonCancel;
         private Controls.SubtitleListView SubtitleListview1;
         private System.Windows.Forms.CheckBox checkBoxShowOnlyChangedLines;
-        private System.Windows.Forms.ComboBox comboBoxFrameRate;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxFrameRate;
         private System.Windows.Forms.Label labelXFrameIsXMS;
         private System.Windows.Forms.Label labelFrames;
         private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownFrames;

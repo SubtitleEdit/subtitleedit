@@ -42,7 +42,7 @@
             this.checkBoxSDH = new System.Windows.Forms.CheckBox();
             this.checkBoxChildrenProgram = new System.Windows.Forms.CheckBox();
             this.checkBox17CharsPerSecond = new System.Windows.Forms.CheckBox();
-            this.comboBoxLanguage = new System.Windows.Forms.ComboBox();
+            this.comboBoxLanguage = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelLanguage = new System.Windows.Forms.Label();
             this.checkBoxWriteOutOneToTen = new System.Windows.Forms.CheckBox();
             this.checkBoxSpellOutStartNumbers = new System.Windows.Forms.CheckBox();
@@ -497,7 +497,7 @@
         private System.Windows.Forms.CheckBox checkBox17CharsPerSecond;
         private System.Windows.Forms.CheckBox checkBoxChildrenProgram;
         private System.Windows.Forms.CheckBox checkBoxSDH;
-        private System.Windows.Forms.ComboBox comboBoxLanguage;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxLanguage;
         private System.Windows.Forms.Label labelLanguage;
         private System.Windows.Forms.CheckBox checkBoxWriteOutOneToTen;
         private System.Windows.Forms.CheckBox checkBoxSpellOutStartNumbers;

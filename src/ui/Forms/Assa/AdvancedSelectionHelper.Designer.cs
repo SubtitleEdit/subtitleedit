@@ -29,7 +29,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         /// </summary>
         private void InitializeComponent()
         {
-            this.comboBoxRule = new System.Windows.Forms.ComboBox();
+            this.comboBoxRule = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.listViewStyles = new System.Windows.Forms.ListView();
             this.columnHeaderStyleName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.groupBoxPreview = new System.Windows.Forms.GroupBox();
@@ -179,7 +179,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
         #endregion
 
-        private System.Windows.Forms.ComboBox comboBoxRule;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxRule;
         private System.Windows.Forms.ListView listViewStyles;
         private System.Windows.Forms.ColumnHeader columnHeaderStyleName;
         private System.Windows.Forms.GroupBox groupBoxPreview;

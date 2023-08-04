@@ -30,7 +30,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
         private void InitializeComponent()
         {
             this.groupBoxImageSettings = new System.Windows.Forms.GroupBox();
-            this.comboBoxHAlign = new System.Windows.Forms.ComboBox();
+            this.comboBoxHAlign = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelHorizontalAlign = new System.Windows.Forms.Label();
             this.labelText = new System.Windows.Forms.Label();
             this.textBoxText = new System.Windows.Forms.TextBox();
@@ -39,17 +39,17 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.numericUpDownShadowTransparency = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelShadowTransparency = new System.Windows.Forms.Label();
             this.labelShadowWidth = new System.Windows.Forms.Label();
-            this.comboBoxShadowWidth = new System.Windows.Forms.ComboBox();
+            this.comboBoxShadowWidth = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.panelShadowColor = new System.Windows.Forms.Panel();
             this.buttonShadowColor = new System.Windows.Forms.Button();
             this.checkBoxBold = new System.Windows.Forms.CheckBox();
             this.checkBoxSimpleRender = new System.Windows.Forms.CheckBox();
             this.labelSubtitleFontSize = new System.Windows.Forms.Label();
-            this.comboBoxSubtitleFont = new System.Windows.Forms.ComboBox();
-            this.comboBoxSubtitleFontSize = new System.Windows.Forms.ComboBox();
+            this.comboBoxSubtitleFont = new Nikse.SubtitleEdit.Controls.NikseComboBox();
+            this.comboBoxSubtitleFontSize = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelSubtitleFont = new System.Windows.Forms.Label();
             this.labelBorderWidth = new System.Windows.Forms.Label();
-            this.comboBoxBorderWidth = new System.Windows.Forms.ComboBox();
+            this.comboBoxBorderWidth = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.panelBorderColor = new System.Windows.Forms.Panel();
             this.buttonBorderColor = new System.Windows.Forms.Button();
             this.panelColor = new System.Windows.Forms.Panel();
@@ -571,17 +571,17 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
         private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownShadowTransparency;
         private System.Windows.Forms.Label labelShadowTransparency;
         private System.Windows.Forms.Label labelShadowWidth;
-        private System.Windows.Forms.ComboBox comboBoxShadowWidth;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxShadowWidth;
         private System.Windows.Forms.Panel panelShadowColor;
         private System.Windows.Forms.Button buttonShadowColor;
         private System.Windows.Forms.CheckBox checkBoxBold;
         private System.Windows.Forms.CheckBox checkBoxSimpleRender;
         private System.Windows.Forms.Label labelSubtitleFontSize;
-        private System.Windows.Forms.ComboBox comboBoxSubtitleFont;
-        private System.Windows.Forms.ComboBox comboBoxSubtitleFontSize;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxSubtitleFont;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxSubtitleFontSize;
         private System.Windows.Forms.Label labelSubtitleFont;
         private System.Windows.Forms.Label labelBorderWidth;
-        private System.Windows.Forms.ComboBox comboBoxBorderWidth;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxBorderWidth;
         private System.Windows.Forms.Panel panelBorderColor;
         private System.Windows.Forms.Button buttonBorderColor;
         private System.Windows.Forms.Panel panelColor;
@@ -591,7 +591,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Button buttonCancel;
-        private System.Windows.Forms.ComboBox comboBoxHAlign;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxHAlign;
         private System.Windows.Forms.Label labelHorizontalAlign;
     }
 }

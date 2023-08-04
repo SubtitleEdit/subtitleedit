@@ -139,8 +139,8 @@
             this.groupBoxFontStyle = new System.Windows.Forms.GroupBox();
             this.label43 = new System.Windows.Forms.Label();
             this.label42 = new System.Windows.Forms.Label();
-            this.comboBoxChangeFontStyleOutlineThickness = new System.Windows.Forms.ComboBox();
-            this.comboBoxChangeFontStyleFontStyle = new System.Windows.Forms.ComboBox();
+            this.comboBoxChangeFontStyleOutlineThickness = new Nikse.SubtitleEdit.Controls.NikseComboBox();
+            this.comboBoxChangeFontStyleFontStyle = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.numericUpDownChangeFontStyleOutlinePaletteId = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.label41 = new System.Windows.Forms.Label();
             this.groupBoxChangeFontSize = new System.Windows.Forms.GroupBox();
@@ -2006,8 +2006,8 @@
         private System.Windows.Forms.GroupBox groupBoxFontStyle;
         private System.Windows.Forms.Label label43;
         private System.Windows.Forms.Label label42;
-        private System.Windows.Forms.ComboBox comboBoxChangeFontStyleOutlineThickness;
-        private System.Windows.Forms.ComboBox comboBoxChangeFontStyleFontStyle;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxChangeFontStyleOutlineThickness;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxChangeFontStyleFontStyle;
         private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownChangeFontStyleOutlinePaletteId;
         private System.Windows.Forms.Label label41;
         private System.Windows.Forms.GroupBox groupBoxChangeFontSize;

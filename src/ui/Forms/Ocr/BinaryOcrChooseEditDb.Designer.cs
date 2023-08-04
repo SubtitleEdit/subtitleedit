@@ -31,8 +31,8 @@
             this.buttonEditCharacterDatabase = new System.Windows.Forms.Button();
             this.buttonNewCharacterDatabase = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
-            this.comboBoxNOcrLanguage = new System.Windows.Forms.ComboBox();
-            this.comboBoxCharacterDatabase = new System.Windows.Forms.ComboBox();
+            this.comboBoxNOcrLanguage = new Nikse.SubtitleEdit.Controls.NikseComboBox();
+            this.comboBoxCharacterDatabase = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelImageDatabase = new System.Windows.Forms.Label();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
@@ -164,8 +164,8 @@
         private System.Windows.Forms.Button buttonEditCharacterDatabase;
         private System.Windows.Forms.Button buttonNewCharacterDatabase;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.ComboBox comboBoxNOcrLanguage;
-        private System.Windows.Forms.ComboBox comboBoxCharacterDatabase;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxNOcrLanguage;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxCharacterDatabase;
         private System.Windows.Forms.Label labelImageDatabase;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonOK;

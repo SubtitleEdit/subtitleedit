@@ -44,7 +44,7 @@
             this.textBoxPreview = new System.Windows.Forms.TextBox();
             this.groupBoxPreview = new System.Windows.Forms.GroupBox();
             this.labelEncoding = new System.Windows.Forms.Label();
-            this.comboBoxEncoding = new System.Windows.Forms.ComboBox();
+            this.comboBoxEncoding = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonSave = new System.Windows.Forms.Button();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
@@ -282,7 +282,7 @@
         private System.Windows.Forms.TextBox textBoxPreview;
         private System.Windows.Forms.GroupBox groupBoxPreview;
         private System.Windows.Forms.Label labelEncoding;
-        private System.Windows.Forms.ComboBox comboBoxEncoding;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxEncoding;
         private System.Windows.Forms.Button buttonNew;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonSave;

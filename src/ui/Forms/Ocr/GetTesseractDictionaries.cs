@@ -58,8 +58,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 comboBoxDictionaries.SelectedIndex = 0;
             }
             comboBoxDictionaries.EndUpdate();
-            comboBoxDictionaries.AutoCompleteSource = AutoCompleteSource.ListItems;
-            comboBoxDictionaries.AutoCompleteMode = AutoCompleteMode.Append;
         }
 
         private void FixLargeFonts()

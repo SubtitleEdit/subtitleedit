@@ -47,9 +47,9 @@
             this.labelTitle = new System.Windows.Forms.Label();
             this.groupBoxOptions = new System.Windows.Forms.GroupBox();
             this.checkBoxScaleBorderAndShadow = new System.Windows.Forms.CheckBox();
-            this.comboBoxCollision = new System.Windows.Forms.ComboBox();
+            this.comboBoxCollision = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelCollision = new System.Windows.Forms.Label();
-            this.comboBoxWrapStyle = new System.Windows.Forms.ComboBox();
+            this.comboBoxWrapStyle = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelWrapStyle = new System.Windows.Forms.Label();
             this.groupBoxResolution = new System.Windows.Forms.GroupBox();
             this.labelVideoResolution = new System.Windows.Forms.Label();
@@ -447,9 +447,9 @@
         private System.Windows.Forms.TextBox textBoxTitle;
         private System.Windows.Forms.Label labelTitle;
         private System.Windows.Forms.CheckBox checkBoxScaleBorderAndShadow;
-        private System.Windows.Forms.ComboBox comboBoxCollision;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxCollision;
         private System.Windows.Forms.Label labelCollision;
-        private System.Windows.Forms.ComboBox comboBoxWrapStyle;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxWrapStyle;
         private System.Windows.Forms.Label labelWrapStyle;
         private System.Windows.Forms.GroupBox groupBoxResolution;
         private System.Windows.Forms.Label labelVideoResolution;

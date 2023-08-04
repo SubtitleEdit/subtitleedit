@@ -34,8 +34,8 @@
             this.labelFileExt = new System.Windows.Forms.Label();
             this.textBoxName = new System.Windows.Forms.TextBox();
             this.labelName = new System.Windows.Forms.Label();
-            this.comboBoxNewLine = new System.Windows.Forms.ComboBox();
-            this.comboBoxTimeCode = new System.Windows.Forms.ComboBox();
+            this.comboBoxNewLine = new Nikse.SubtitleEdit.Controls.NikseComboBox();
+            this.comboBoxTimeCode = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelNewLine = new System.Windows.Forms.Label();
             this.labelTimeCode = new System.Windows.Forms.Label();
             this.textBoxFooter = new System.Windows.Forms.TextBox();
@@ -663,8 +663,8 @@
         private System.Windows.Forms.ToolStripMenuItem insertdurationToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem textToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem tabToolStripMenuItem;
-        private System.Windows.Forms.ComboBox comboBoxNewLine;
-        private System.Windows.Forms.ComboBox comboBoxTimeCode;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxNewLine;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxTimeCode;
         private System.Windows.Forms.Label labelNewLine;
         private System.Windows.Forms.Label labelTimeCode;
         private System.Windows.Forms.GroupBox groupBoxPreview;
