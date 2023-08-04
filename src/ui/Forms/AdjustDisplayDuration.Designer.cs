@@ -38,24 +38,19 @@
             this.labelAddSeconds = new System.Windows.Forms.Label();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
-            this.numericUpDownMaxCharsSec = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownMaxCharsSec = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelMaxCharsPerSecond = new System.Windows.Forms.Label();
-            this.numericUpDownSeconds = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDownPercent = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDownOptimalCharsSec = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownSeconds = new Nikse.SubtitleEdit.Controls.NikseUpDown();
+            this.numericUpDownPercent = new Nikse.SubtitleEdit.Controls.NikseUpDown();
+            this.numericUpDownOptimalCharsSec = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelOptimalCharsSec = new System.Windows.Forms.Label();
-            this.numericUpDownFixedMilliseconds = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownFixedMilliseconds = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelMillisecondsFixed = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.checkBoxExtendOnly = new System.Windows.Forms.CheckBox();
             this.checkBoxCheckShotChanges = new System.Windows.Forms.CheckBox();
             this.checkBoxEnforceDurationLimits = new System.Windows.Forms.CheckBox();
             this.groupBoxAdjustVia.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxCharsSec)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSeconds)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPercent)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownOptimalCharsSec)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFixedMilliseconds)).BeginInit();
             this.SuspendLayout();
             // 
             // radioButtonPercent
@@ -391,11 +386,6 @@
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormAdjustDisplayTime_KeyDown);
             this.groupBoxAdjustVia.ResumeLayout(false);
             this.groupBoxAdjustVia.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxCharsSec)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSeconds)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPercent)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownOptimalCharsSec)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFixedMilliseconds)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -412,14 +402,14 @@
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.RadioButton radioButtonAutoRecalculate;
-        private System.Windows.Forms.NumericUpDown numericUpDownMaxCharsSec;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownMaxCharsSec;
         private System.Windows.Forms.Label labelMaxCharsPerSecond;
-        private System.Windows.Forms.NumericUpDown numericUpDownSeconds;
-        private System.Windows.Forms.NumericUpDown numericUpDownPercent;
-        private System.Windows.Forms.NumericUpDown numericUpDownOptimalCharsSec;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownSeconds;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownPercent;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownOptimalCharsSec;
         private System.Windows.Forms.Label labelOptimalCharsSec;
         private System.Windows.Forms.RadioButton radioButtonFixed;
-        private System.Windows.Forms.NumericUpDown numericUpDownFixedMilliseconds;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownFixedMilliseconds;
         private System.Windows.Forms.Label labelMillisecondsFixed;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.CheckBox checkBoxExtendOnly;

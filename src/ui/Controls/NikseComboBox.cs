@@ -738,7 +738,7 @@ namespace Nikse.SubtitleEdit.Controls
 
             _listView.LostFocus += (sender, e) =>
             {
-                if (_listViewShown)
+                if (_listViewShown && !Focused)
                 {
                     HideDropDown();
                 }

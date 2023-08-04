@@ -37,7 +37,7 @@
             this.groupBoxLinesFound = new System.Windows.Forms.GroupBox();
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
-            this.comboBoxConditions = new System.Windows.Forms.ComboBox();
+            this.comboBoxConditions = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelCondition = new System.Windows.Forms.Label();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItemSelectAll = new System.Windows.Forms.ToolStripMenuItem();
@@ -203,7 +203,7 @@
         private System.Windows.Forms.GroupBox groupBoxLinesFound;
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Button buttonCancel;
-        private System.Windows.Forms.ComboBox comboBoxConditions;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxConditions;
         private System.Windows.Forms.Label labelCondition;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSelectAll;

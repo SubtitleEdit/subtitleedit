@@ -328,9 +328,6 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxUseStyleFromSource.Checked = Configuration.Settings.Tools.BatchConvertUseStyleFromSource;
             _customTextTemplate = Configuration.Settings.Tools.BatchConvertExportCustomTextTemplate;
 
-            comboBoxSubtitleFormats.AutoCompleteSource = AutoCompleteSource.ListItems;
-            comboBoxSubtitleFormats.AutoCompleteMode = AutoCompleteMode.Append;
-
             _bridgeGaps = new DurationsBridgeGaps(null);
             _bridgeGaps.InitializeSettingsOnly();
             buttonTransportStreamSettings.Visible = false;
