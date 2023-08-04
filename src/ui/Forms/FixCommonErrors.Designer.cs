@@ -39,7 +39,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonBack = new System.Windows.Forms.Button();
             this.groupBoxStep1 = new System.Windows.Forms.GroupBox();
             this.buttonResetDefault = new System.Windows.Forms.Button();
-            this.comboBoxLanguage = new System.Windows.Forms.ComboBox();
+            this.comboBoxLanguage = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelLanguage = new System.Windows.Forms.Label();
             this.buttonInverseSelection = new System.Windows.Forms.Button();
             this.buttonSelectAll = new System.Windows.Forms.Button();
@@ -872,7 +872,7 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.SplitContainer splitContainerStep2;
         private System.Windows.Forms.Label labelSingleLine;
         private System.Windows.Forms.Button buttonSplitLine;
-        private System.Windows.Forms.ComboBox comboBoxLanguage;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxLanguage;
         private System.Windows.Forms.Label labelLanguage;
         private System.Windows.Forms.Button buttonResetDefault;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripFixes;

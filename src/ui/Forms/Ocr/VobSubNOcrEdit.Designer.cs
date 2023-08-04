@@ -32,7 +32,7 @@
             this.labelImageCompareFiles = new System.Windows.Forms.Label();
             this.labelChooseCharacters = new System.Windows.Forms.Label();
             this.listBoxFileNames = new System.Windows.Forms.ListBox();
-            this.comboBoxTexts = new System.Windows.Forms.ComboBox();
+            this.comboBoxTexts = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.groupBoxCurrentCompareImage = new System.Windows.Forms.GroupBox();
             this.labelNOcrCharInfo = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
@@ -436,7 +436,7 @@
         private System.Windows.Forms.Label labelImageCompareFiles;
         private System.Windows.Forms.Label labelChooseCharacters;
         private System.Windows.Forms.ListBox listBoxFileNames;
-        private System.Windows.Forms.ComboBox comboBoxTexts;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxTexts;
         private System.Windows.Forms.GroupBox groupBoxCurrentCompareImage;
         private System.Windows.Forms.Button buttonZoomOut;
         private System.Windows.Forms.Button buttonZoomIn;

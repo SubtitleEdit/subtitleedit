@@ -39,9 +39,9 @@
             this.labelFindWhat = new System.Windows.Forms.Label();
             this.buttonFind = new System.Windows.Forms.Button();
             this.checkBoxWholeWord = new System.Windows.Forms.CheckBox();
-            this.comboBoxFindReplaceIn = new System.Windows.Forms.ComboBox();
+            this.comboBoxFindReplaceIn = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelFindReplaceIn = new Nikse.SubtitleEdit.Controls.NikseLabel();
-            this.comboBoxFind = new System.Windows.Forms.ComboBox();
+            this.comboBoxFind = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.SuspendLayout();
             // 
             // radioButtonRegEx
@@ -237,8 +237,8 @@
         private System.Windows.Forms.Label labelFindWhat;
         private System.Windows.Forms.Button buttonFind;
         private System.Windows.Forms.CheckBox checkBoxWholeWord;
-        private System.Windows.Forms.ComboBox comboBoxFindReplaceIn;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxFindReplaceIn;
         private Nikse.SubtitleEdit.Controls.NikseLabel labelFindReplaceIn;
-        private System.Windows.Forms.ComboBox comboBoxFind;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxFind;
     }
 }

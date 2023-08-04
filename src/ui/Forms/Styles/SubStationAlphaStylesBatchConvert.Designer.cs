@@ -37,9 +37,9 @@
             this.numericUpDownVideoWidth = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.groupBoxOptions = new System.Windows.Forms.GroupBox();
             this.checkBoxScaleBorderAndShadow = new System.Windows.Forms.CheckBox();
-            this.comboBoxCollision = new System.Windows.Forms.ComboBox();
+            this.comboBoxCollision = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelCollision = new System.Windows.Forms.Label();
-            this.comboBoxWrapStyle = new System.Windows.Forms.ComboBox();
+            this.comboBoxWrapStyle = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelWrapStyle = new System.Windows.Forms.Label();
             this.groupBoxBorder = new System.Windows.Forms.GroupBox();
             this.radioButtonOpaqueBox = new System.Windows.Forms.RadioButton();
@@ -78,7 +78,7 @@
             this.numericUpDownFontSize = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.checkBoxFontItalic = new System.Windows.Forms.CheckBox();
             this.checkBoxFontBold = new System.Windows.Forms.CheckBox();
-            this.comboBoxFontName = new System.Windows.Forms.ComboBox();
+            this.comboBoxFontName = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelFontSize = new System.Windows.Forms.Label();
             this.labelFontName = new System.Windows.Forms.Label();
             this.buttonCancel = new System.Windows.Forms.Button();
@@ -908,7 +908,7 @@
         private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownFontSize;
         private System.Windows.Forms.CheckBox checkBoxFontItalic;
         private System.Windows.Forms.CheckBox checkBoxFontBold;
-        private System.Windows.Forms.ComboBox comboBoxFontName;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxFontName;
         private System.Windows.Forms.Label labelFontSize;
         private System.Windows.Forms.Label labelFontName;
         private System.Windows.Forms.Button buttonCancel;
@@ -924,9 +924,9 @@
         private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownVideoWidth;
         private System.Windows.Forms.GroupBox groupBoxOptions;
         private System.Windows.Forms.CheckBox checkBoxScaleBorderAndShadow;
-        private System.Windows.Forms.ComboBox comboBoxCollision;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxCollision;
         private System.Windows.Forms.Label labelCollision;
-        private System.Windows.Forms.ComboBox comboBoxWrapStyle;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxWrapStyle;
         private System.Windows.Forms.Label labelWrapStyle;
         private System.Windows.Forms.TextBox textBoxRawHeader;
         private System.Windows.Forms.Button buttonReset;

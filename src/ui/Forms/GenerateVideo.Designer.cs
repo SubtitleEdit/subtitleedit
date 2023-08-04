@@ -51,7 +51,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.numericUpDownDurationMinutes = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelPleaseWait = new System.Windows.Forms.Label();
             this.labelFrameRate = new System.Windows.Forms.Label();
-            this.comboBoxFrameRate = new System.Windows.Forms.ComboBox();
+            this.comboBoxFrameRate = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.labelProgress = new System.Windows.Forms.Label();
             this.contextMenuStripRes = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -580,7 +580,7 @@ namespace Nikse.SubtitleEdit.Forms
         private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownDurationMinutes;
         private System.Windows.Forms.Label labelPleaseWait;
         private System.Windows.Forms.Label labelFrameRate;
-        private System.Windows.Forms.ComboBox comboBoxFrameRate;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxFrameRate;
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.Label labelProgress;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripRes;

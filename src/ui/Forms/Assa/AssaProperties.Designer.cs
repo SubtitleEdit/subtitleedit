@@ -46,9 +46,9 @@
             this.textBoxTitle = new System.Windows.Forms.TextBox();
             this.labelTitle = new System.Windows.Forms.Label();
             this.groupBoxOptions = new System.Windows.Forms.GroupBox();
-            this.comboBoxScaleBorderAndShadow = new System.Windows.Forms.ComboBox();
+            this.comboBoxScaleBorderAndShadow = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelScaleBorderAndShadow = new System.Windows.Forms.Label();
-            this.comboBoxWrapStyle = new System.Windows.Forms.ComboBox();
+            this.comboBoxWrapStyle = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelWrapStyle = new System.Windows.Forms.Label();
             this.groupBoxResolution = new System.Windows.Forms.GroupBox();
             this.labelCurrentVideoResolution = new System.Windows.Forms.Label();
@@ -449,7 +449,7 @@
         private System.Windows.Forms.Label labelOriginalScript;
         private System.Windows.Forms.TextBox textBoxTitle;
         private System.Windows.Forms.Label labelTitle;
-        private System.Windows.Forms.ComboBox comboBoxWrapStyle;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxWrapStyle;
         private System.Windows.Forms.Label labelWrapStyle;
         private System.Windows.Forms.GroupBox groupBoxResolution;
         private System.Windows.Forms.Label labelVideoResolution;
@@ -462,7 +462,7 @@
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.Label labelCurrentVideoResolution;
-        private System.Windows.Forms.ComboBox comboBoxScaleBorderAndShadow;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxScaleBorderAndShadow;
         private System.Windows.Forms.Label labelScaleBorderAndShadow;
     }
 }

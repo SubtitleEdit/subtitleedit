@@ -33,7 +33,7 @@
             this.radioButtonNormal = new System.Windows.Forms.RadioButton();
             this.radioButtonCaseSensitive = new System.Windows.Forms.RadioButton();
             this.radioButtonRegEx = new System.Windows.Forms.RadioButton();
-            this.comboBoxFind = new System.Windows.Forms.ComboBox();
+            this.comboBoxFind = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.buttonCount = new System.Windows.Forms.Button();
             this.labelCount = new System.Windows.Forms.Label();
             this.checkBoxWholeWord = new System.Windows.Forms.CheckBox();
@@ -193,7 +193,7 @@
         private System.Windows.Forms.RadioButton radioButtonNormal;
         private System.Windows.Forms.RadioButton radioButtonCaseSensitive;
         private System.Windows.Forms.RadioButton radioButtonRegEx;
-        private System.Windows.Forms.ComboBox comboBoxFind;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxFind;
         private System.Windows.Forms.Button buttonCount;
         private System.Windows.Forms.Label labelCount;
         private System.Windows.Forms.CheckBox checkBoxWholeWord;

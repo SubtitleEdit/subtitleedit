@@ -45,7 +45,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.textBoxTranslator = new System.Windows.Forms.TextBox();
             this.labelTranslator = new System.Windows.Forms.Label();
             this.timeUpDownStartTime = new Nikse.SubtitleEdit.Controls.NikseTimeUpDown();
-            this.comboBoxLanguage = new System.Windows.Forms.ComboBox();
+            this.comboBoxLanguage = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelLanguage = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
@@ -263,7 +263,7 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.Label labelOriginalTitle;
         private System.Windows.Forms.TextBox textBoxTranslator;
         private System.Windows.Forms.Label labelTranslator;
-        private System.Windows.Forms.ComboBox comboBoxLanguage;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxLanguage;
         private System.Windows.Forms.Label labelLanguage;
     }
 }

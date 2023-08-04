@@ -3,6 +3,7 @@ using Nikse.SubtitleEdit.Core.Enums;
 using System;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Controls;
 
 namespace Nikse.SubtitleEdit.Logic
 {
@@ -302,7 +303,7 @@ namespace Nikse.SubtitleEdit.Logic
             return cm;
         }
 
-        public static ContextMenuStrip GetRegExContextMenu(ComboBox comboBox)
+        public static ContextMenuStrip GetRegExContextMenu(NikseComboBox comboBox)
         {
             var cm = new ContextMenuStrip();
             var l = LanguageSettings.Current.RegularExpressionContextMenu;

@@ -36,14 +36,14 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
             this.checkBoxGenerateIdAuto = new System.Windows.Forms.CheckBox();
             this.timeUpDownStartTime = new Nikse.SubtitleEdit.Controls.NikseTimeUpDown();
             this.labelStartTime = new System.Windows.Forms.Label();
-            this.comboBoxTimeCodeRate = new System.Windows.Forms.ComboBox();
+            this.comboBoxTimeCodeRate = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelTimeCodeRate = new System.Windows.Forms.Label();
             this.textBoxEditRate = new System.Windows.Forms.TextBox();
             this.labelEditRate = new System.Windows.Forms.Label();
             this.buttonToday = new System.Windows.Forms.Button();
             this.textBoxIssueDate = new System.Windows.Forms.TextBox();
             this.labelIssueDate = new System.Windows.Forms.Label();
-            this.comboBoxLanguage = new System.Windows.Forms.ComboBox();
+            this.comboBoxLanguage = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelLanguage = new System.Windows.Forms.Label();
             this.buttonGenerateID = new System.Windows.Forms.Button();
             this.numericUpDownReelNumber = new Nikse.SubtitleEdit.Controls.NikseUpDown();
@@ -64,7 +64,7 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
             this.labelEffectColor = new System.Windows.Forms.Label();
             this.numericUpDownFontSize = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelFontSize = new System.Windows.Forms.Label();
-            this.comboBoxFontEffect = new System.Windows.Forms.ComboBox();
+            this.comboBoxFontEffect = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelEffect = new System.Windows.Forms.Label();
             this.labelFontColor = new System.Windows.Forms.Label();
             this.textBoxFontID = new System.Windows.Forms.TextBox();
@@ -683,7 +683,7 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
         private System.Windows.Forms.Label labelEffectColor;
         private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownFontSize;
         private System.Windows.Forms.Label labelFontSize;
-        private System.Windows.Forms.ComboBox comboBoxFontEffect;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxFontEffect;
         private System.Windows.Forms.Label labelEffect;
         private System.Windows.Forms.Panel panelFontEffectColor;
         private System.Windows.Forms.Button buttonFontEffectColor;
@@ -692,7 +692,7 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
         private System.Windows.Forms.ColorDialog colorDialog1;
         private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownReelNumber;
         private System.Windows.Forms.Button buttonGenerateID;
-        private System.Windows.Forms.ComboBox comboBoxLanguage;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxLanguage;
         private System.Windows.Forms.Label labelLanguage;
         private System.Windows.Forms.Button buttonToday;
         private System.Windows.Forms.TextBox textBoxIssueDate;
@@ -701,7 +701,7 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
         private System.Windows.Forms.Label labelEditRate;
         private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownTopBottomMargin;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.ComboBox comboBoxTimeCodeRate;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxTimeCodeRate;
         private System.Windows.Forms.Label labelTimeCodeRate;
         private Controls.NikseTimeUpDown timeUpDownStartTime;
         private System.Windows.Forms.Label labelStartTime;

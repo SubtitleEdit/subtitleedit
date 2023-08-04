@@ -51,8 +51,8 @@
             this.labelSafeZoneInstruction = new System.Windows.Forms.Label();
             this.labelSafeZoneSuffix = new System.Windows.Forms.Label();
             this.numericUpDownSafeZone = new Nikse.SubtitleEdit.Controls.NikseUpDown();
-            this.comboBoxOutCues = new System.Windows.Forms.ComboBox();
-            this.comboBoxInCues = new System.Windows.Forms.ComboBox();
+            this.comboBoxOutCues = new Nikse.SubtitleEdit.Controls.NikseComboBox();
+            this.comboBoxInCues = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelOutCues = new System.Windows.Forms.Label();
             this.labelInCues = new System.Windows.Forms.Label();
             this.labelSafeZone = new System.Windows.Forms.Label();
@@ -527,8 +527,8 @@
         private System.Windows.Forms.Label labelGapHint;
         private System.Windows.Forms.Label labelGapSuffix;
         private System.Windows.Forms.Label labelGapInstruction;
-        private System.Windows.Forms.ComboBox comboBoxOutCues;
-        private System.Windows.Forms.ComboBox comboBoxInCues;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxOutCues;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxInCues;
         private System.Windows.Forms.Label labelOutCues;
         private System.Windows.Forms.Label labelInCues;
         private System.Windows.Forms.Label labelSafeZone;

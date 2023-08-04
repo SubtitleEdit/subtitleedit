@@ -37,7 +37,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
             this.labelChooseVideoFile = new System.Windows.Forms.Label();
-            this.comboBoxDateTimeFormats = new System.Windows.Forms.ComboBox();
+            this.comboBoxDateTimeFormats = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelWriteFormat = new System.Windows.Forms.Label();
             this.labelVideoFileName = new System.Windows.Forms.Label();
             this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
@@ -258,7 +258,7 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Label labelChooseVideoFile;
-        private System.Windows.Forms.ComboBox comboBoxDateTimeFormats;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxDateTimeFormats;
         private System.Windows.Forms.Label labelWriteFormat;
         private System.Windows.Forms.Label labelVideoFileName;
         private System.Windows.Forms.DateTimePicker dateTimePicker1;

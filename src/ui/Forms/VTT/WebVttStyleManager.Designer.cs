@@ -84,7 +84,7 @@
             this.numericUpDownFontSize = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.checkBoxFontItalic = new System.Windows.Forms.CheckBox();
             this.checkBoxFontBold = new System.Windows.Forms.CheckBox();
-            this.comboBoxFontName = new System.Windows.Forms.ComboBox();
+            this.comboBoxFontName = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelFontSize = new System.Windows.Forms.Label();
             this.labelFontName = new System.Windows.Forms.Label();
             this.buttonApply = new System.Windows.Forms.Button();
@@ -821,7 +821,7 @@
         private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownFontSize;
         private System.Windows.Forms.CheckBox checkBoxFontItalic;
         private System.Windows.Forms.CheckBox checkBoxFontBold;
-        private System.Windows.Forms.ComboBox comboBoxFontName;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxFontName;
         private System.Windows.Forms.Label labelFontSize;
         private System.Windows.Forms.Label labelFontName;
         private System.Windows.Forms.Button buttonApply;

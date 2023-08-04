@@ -35,7 +35,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.groupBoxAlignment = new System.Windows.Forms.GroupBox();
-            this.comboBoxAlignment = new System.Windows.Forms.ComboBox();
+            this.comboBoxAlignment = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.checkBoxFixAlignment = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarResize)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxResized)).BeginInit();
@@ -169,7 +169,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.GroupBox groupBoxAlignment;
-        private System.Windows.Forms.ComboBox comboBoxAlignment;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxAlignment;
         private System.Windows.Forms.CheckBox checkBoxFixAlignment;
     }
 }

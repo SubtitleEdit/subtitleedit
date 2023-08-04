@@ -45,9 +45,9 @@
             this.numericUpDownLineMaxCharacters = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelMaxSingleLineLengthIs = new System.Windows.Forms.Label();
             this.labelMaxLineLengthIs = new System.Windows.Forms.Label();
-            this.comboBoxLineContinuationBegin = new System.Windows.Forms.ComboBox();
+            this.comboBoxLineContinuationBegin = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelLineContinuationBeginEnd = new System.Windows.Forms.Label();
-            this.comboBoxLineContinuationEnd = new System.Windows.Forms.ComboBox();
+            this.comboBoxLineContinuationEnd = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.SubtitleListview1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.checkBoxSplitAtLineBreaks = new System.Windows.Forms.CheckBox();
             this.groupBoxLinesFound.SuspendLayout();
@@ -359,9 +359,9 @@
         private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownLineMaxCharacters;
         private System.Windows.Forms.Label labelMaxSingleLineLengthIs;
         private System.Windows.Forms.Label labelMaxLineLengthIs;
-        private System.Windows.Forms.ComboBox comboBoxLineContinuationBegin;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxLineContinuationBegin;
         private System.Windows.Forms.Label labelLineContinuationBeginEnd;
-        private System.Windows.Forms.ComboBox comboBoxLineContinuationEnd;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxLineContinuationEnd;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSelectAll;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemInverseSelection;

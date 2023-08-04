@@ -49,7 +49,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.labelFrameRate = new System.Windows.Forms.Label();
-            this.comboBoxFrameRate = new System.Windows.Forms.ComboBox();
+            this.comboBoxFrameRate = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelX = new System.Windows.Forms.Label();
             this.labelVideoSize = new System.Windows.Forms.Label();
             this.numericUpDownScreenHeight = new Nikse.SubtitleEdit.Controls.NikseUpDown();
@@ -1091,7 +1091,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
         private System.Windows.Forms.ToolStripMenuItem openVideoToolStripMenuItem;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.Label labelFrameRate;
-        private System.Windows.Forms.ComboBox comboBoxFrameRate;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxFrameRate;
         private System.Windows.Forms.Panel panelBackground;
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;

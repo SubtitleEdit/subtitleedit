@@ -32,7 +32,7 @@
             this.labelDescription2 = new System.Windows.Forms.Label();
             this.linkLabelOpenDictionaryFolder = new System.Windows.Forms.LinkLabel();
             this.labelDescription1 = new System.Windows.Forms.Label();
-            this.comboBoxDictionaries = new System.Windows.Forms.ComboBox();
+            this.comboBoxDictionaries = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.buttonDownload = new System.Windows.Forms.Button();
             this.labelChooseLanguageAndClickDownload = new System.Windows.Forms.Label();
             this.labelPleaseWait = new System.Windows.Forms.Label();
@@ -168,7 +168,7 @@
         private System.Windows.Forms.Label labelDescription2;
         private System.Windows.Forms.LinkLabel linkLabelOpenDictionaryFolder;
         private System.Windows.Forms.Label labelDescription1;
-        private System.Windows.Forms.ComboBox comboBoxDictionaries;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxDictionaries;
         private System.Windows.Forms.Button buttonDownload;
         private System.Windows.Forms.Label labelChooseLanguageAndClickDownload;
         private System.Windows.Forms.Label labelPleaseWait;

@@ -283,7 +283,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             return uiCultureTargetLanguage;
         }
 
-        public static void SelectLanguageCode(ComboBox comboBox, string languageIsoCode)
+        public static void SelectLanguageCode(NikseComboBox comboBox, string languageIsoCode)
         {
             var i = 0;
             foreach (TranslationPair item in comboBox.Items)
@@ -583,7 +583,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             return cleanText;
         }
 
-        public static void FillComboWithLanguages(ComboBox comboBox, IEnumerable<TranslationPair> languages)
+        public static void FillComboWithLanguages(NikseComboBox comboBox, IEnumerable<TranslationPair> languages)
         {
             comboBox.Items.Clear();
             foreach (var language in languages)

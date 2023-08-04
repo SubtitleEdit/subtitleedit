@@ -30,10 +30,10 @@ namespace Nikse.SubtitleEdit.Forms.Translate
         /// </summary>
         private void InitializeComponent()
         {
-            this.comboBoxSource = new System.Windows.Forms.ComboBox();
+            this.comboBoxSource = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelSource = new System.Windows.Forms.Label();
             this.labelTarget = new System.Windows.Forms.Label();
-            this.comboBoxTarget = new System.Windows.Forms.ComboBox();
+            this.comboBoxTarget = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.buttonTranslate = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
@@ -42,10 +42,10 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             this.subtitleListViewTarget = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.subtitleListViewSource = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.labelApiKeyNotFound = new System.Windows.Forms.Label();
-            this.comboBoxTranslationServices = new System.Windows.Forms.ComboBox();
+            this.comboBoxTranslationServices = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelTranslationService = new System.Windows.Forms.Label();
             this.labelParagraphHandling = new System.Windows.Forms.Label();
-            this.comboBoxParagraphHandling = new System.Windows.Forms.ComboBox();
+            this.comboBoxParagraphHandling = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.SuspendLayout();
             // 
             // comboBoxSource
@@ -270,21 +270,21 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
         #endregion
 
-        private System.Windows.Forms.ComboBox comboBoxSource;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxSource;
         private System.Windows.Forms.Label labelSource;
         private SubtitleListView subtitleListViewSource;
         private SubtitleListView subtitleListViewTarget;
         private System.Windows.Forms.Label labelTarget;
-        private System.Windows.Forms.ComboBox comboBoxTarget;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxTarget;
         private System.Windows.Forms.Button buttonTranslate;
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Label labelPleaseWait;
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.Label labelApiKeyNotFound;
-        private System.Windows.Forms.ComboBox comboBoxTranslationServices;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxTranslationServices;
         private System.Windows.Forms.Label labelTranslationService;
         private System.Windows.Forms.Label labelParagraphHandling;
-        private System.Windows.Forms.ComboBox comboBoxParagraphHandling;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxParagraphHandling;
     }
 }

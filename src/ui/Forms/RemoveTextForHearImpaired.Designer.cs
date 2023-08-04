@@ -48,10 +48,10 @@
             this.buttonEditInterjections = new System.Windows.Forms.Button();
             this.checkBoxRemoveInterjections = new System.Windows.Forms.CheckBox();
             this.labelRemoveTextBetween = new System.Windows.Forms.Label();
-            this.comboBoxRemoveIfTextContains = new System.Windows.Forms.ComboBox();
+            this.comboBoxRemoveIfTextContains = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.checkBoxRemoveWhereContains = new System.Windows.Forms.CheckBox();
-            this.comboBoxCustomEnd = new System.Windows.Forms.ComboBox();
-            this.comboBoxCustomStart = new System.Windows.Forms.ComboBox();
+            this.comboBoxCustomEnd = new Nikse.SubtitleEdit.Controls.NikseComboBox();
+            this.comboBoxCustomStart = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.checkBoxRemoveTextBeforeColonOnlyUppercase = new System.Windows.Forms.CheckBox();
             this.checkBoxOnlyIfInSeparateLine = new System.Windows.Forms.CheckBox();
             this.checkBoxRemoveTextBetweenCustomTags = new System.Windows.Forms.CheckBox();
@@ -513,9 +513,9 @@
         private System.Windows.Forms.Label labelAnd;
         private System.Windows.Forms.CheckBox checkBoxRemoveTextBeforeColonOnlyUppercase;
         private System.Windows.Forms.CheckBox checkBoxOnlyIfInSeparateLine;
-        private System.Windows.Forms.ComboBox comboBoxCustomStart;
-        private System.Windows.Forms.ComboBox comboBoxCustomEnd;
-        private System.Windows.Forms.ComboBox comboBoxRemoveIfTextContains;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxCustomStart;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxCustomEnd;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxRemoveIfTextContains;
         private System.Windows.Forms.CheckBox checkBoxRemoveWhereContains;
         private System.Windows.Forms.Label labelRemoveTextBetween;
         private System.Windows.Forms.CheckBox checkBoxRemoveInterjections;

@@ -17,6 +17,9 @@ namespace Nikse.SubtitleEdit.Controls
         public event EventHandler SelectedIndexChanged;
 
         // ReSharper disable once InconsistentNaming
+        public event EventHandler SelectedValueChanged; //TODO: test...
+
+        // ReSharper disable once InconsistentNaming
         public event EventHandler DropDown;
 
         // ReSharper disable once InconsistentNaming
@@ -86,6 +89,7 @@ namespace Nikse.SubtitleEdit.Controls
                     _selectedIndex = value;
                     _textBox.Text = string.Empty;
                     SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
+                    SelectedValueChanged?.Invoke(this, EventArgs.Empty);
                     Invalidate();
                     return;
                 }
@@ -93,6 +97,7 @@ namespace Nikse.SubtitleEdit.Controls
                 _selectedIndex = value;
                 _textBox.Text = Items[_selectedIndex].ToString();
                 SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
+                SelectedValueChanged?.Invoke(this, EventArgs.Empty);
                 Invalidate();
             }
         }
@@ -160,6 +165,7 @@ namespace Nikse.SubtitleEdit.Controls
                     {
                         _textBox.Text = value;
                         SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
+                        SelectedValueChanged?.Invoke(this, EventArgs.Empty);
                     }
 
                     return;
@@ -181,6 +187,7 @@ namespace Nikse.SubtitleEdit.Controls
                 _selectedIndex = idx;
 
                 SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
+                SelectedValueChanged?.Invoke(this, EventArgs.Empty);
             }
         }
 
@@ -401,6 +408,7 @@ namespace Nikse.SubtitleEdit.Controls
                             _textBox.Text = Items[_selectedIndex].ToString();
                             Invalidate();
                             SelectedIndexChanged?.Invoke(sender, e);
+                            SelectedValueChanged?.Invoke(this, EventArgs.Empty);
                         }
                         e.Handled = true;
                     }
@@ -412,6 +420,7 @@ namespace Nikse.SubtitleEdit.Controls
                             _textBox.Text = Items[_selectedIndex].ToString();
                             Invalidate();
                             SelectedIndexChanged?.Invoke(sender, e);
+                            SelectedValueChanged?.Invoke(this, EventArgs.Empty);
                         }
                         e.Handled = true;
                     }
@@ -706,6 +715,7 @@ namespace Nikse.SubtitleEdit.Controls
                     _textBox.Text = item.Text;
                     Invalidate();
                     SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
+                    SelectedValueChanged?.Invoke(this, EventArgs.Empty);
                     HideDropDown();
                     args.SuppressKeyPress = true;
                 }
@@ -728,6 +738,7 @@ namespace Nikse.SubtitleEdit.Controls
                         _selectedIndex = i;
                         _textBox.Text = _listView.Items[i].Text;
                         SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
+                        SelectedValueChanged?.Invoke(this, EventArgs.Empty);
                         HideDropDown();
                         _textBox.Focus();
                         _textBox.SelectionLength = 0;
@@ -868,6 +879,28 @@ namespace Nikse.SubtitleEdit.Controls
 
         public bool FormattingEnabled { get; set; }
 
+        public int MaxLength
+        {
+            get
+            {
+                if (_textBox == null)
+                {
+                    return 0;
+                }
+
+                return _textBox.MaxLength;
+            }
+            set
+            {
+                if (_textBox == null)
+                {
+                    return;
+                }
+
+                _textBox.MaxLength = value;
+            }
+        }
+
         private void DrawArrow(PaintEventArgs e, Brush brush, int left, int top, int height)
         {
             if (_listViewShown)
@@ -917,6 +950,14 @@ namespace Nikse.SubtitleEdit.Controls
         {
             _skipPaint = false;
             Invalidate();
+        }
+
+        public void SelectAll()
+        {
+            if (_textBox != null && DropDownStyle == ComboBoxStyle.DropDown)
+            {
+                _textBox.SelectAll();
+            }
         }
     }
 }

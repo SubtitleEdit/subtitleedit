@@ -31,7 +31,7 @@
             this.labelStatus = new System.Windows.Forms.Label();
             this.labelInfo = new System.Windows.Forms.Label();
             this.labelWebServiceUrl = new System.Windows.Forms.Label();
-            this.comboBoxWebServiceUrl = new System.Windows.Forms.ComboBox();
+            this.comboBoxWebServiceUrl = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.textBoxUserName = new System.Windows.Forms.TextBox();
             this.buttonJoin = new System.Windows.Forms.Button();
@@ -169,7 +169,7 @@
         private System.Windows.Forms.Label labelStatus;
         private System.Windows.Forms.Label labelInfo;
         private System.Windows.Forms.Label labelWebServiceUrl;
-        private System.Windows.Forms.ComboBox comboBoxWebServiceUrl;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxWebServiceUrl;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.TextBox textBoxUserName;
         private System.Windows.Forms.Button buttonJoin;

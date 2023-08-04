@@ -32,7 +32,7 @@
             this.textBoxUserName = new System.Windows.Forms.TextBox();
             this.buttonStart = new System.Windows.Forms.Button();
             this.labelUserName = new System.Windows.Forms.Label();
-            this.comboBoxWebServiceUrl = new System.Windows.Forms.ComboBox();
+            this.comboBoxWebServiceUrl = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelWebServiceUrl = new System.Windows.Forms.Label();
             this.labelInfo = new System.Windows.Forms.Label();
             this.labelStatus = new System.Windows.Forms.Label();
@@ -187,7 +187,7 @@
         private System.Windows.Forms.TextBox textBoxUserName;
         private System.Windows.Forms.Button buttonStart;
         private System.Windows.Forms.Label labelUserName;
-        private System.Windows.Forms.ComboBox comboBoxWebServiceUrl;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxWebServiceUrl;
         private System.Windows.Forms.Label labelWebServiceUrl;
         private System.Windows.Forms.Label labelInfo;
         private System.Windows.Forms.Label labelStatus;

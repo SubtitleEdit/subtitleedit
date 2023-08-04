@@ -61,8 +61,8 @@
             this.checkBoxMergeShortLines = new System.Windows.Forms.CheckBox();
             this.checkBoxRemoveLinesWithoutLetters = new System.Windows.Forms.CheckBox();
             this.groupBoxSplitting = new System.Windows.Forms.GroupBox();
-            this.comboBoxLineMode = new System.Windows.Forms.ComboBox();
-            this.comboBoxLineBreak = new System.Windows.Forms.ComboBox();
+            this.comboBoxLineMode = new Nikse.SubtitleEdit.Controls.NikseComboBox();
+            this.comboBoxLineBreak = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelLineBreak = new System.Windows.Forms.Label();
             this.radioButtonSplitAtBlankLines = new System.Windows.Forms.RadioButton();
             this.radioButtonAutoSplit = new System.Windows.Forms.RadioButton();
@@ -79,7 +79,7 @@
             this.labelStatus = new System.Windows.Forms.Label();
             this.buttonBrowseEncoding = new System.Windows.Forms.Button();
             this.labelEncoding = new System.Windows.Forms.Label();
-            this.comboBoxEncoding = new System.Windows.Forms.ComboBox();
+            this.comboBoxEncoding = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.SubtitleListview1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.groupBoxImportText.SuspendLayout();
             this.contextMenuStripListView.SuspendLayout();
@@ -817,7 +817,7 @@
         private System.Windows.Forms.ColumnHeader columnHeaderFName;
         private System.Windows.Forms.ColumnHeader columnHeaderSize;
         private System.Windows.Forms.CheckBox checkBoxAutoBreak;
-        private System.Windows.Forms.ComboBox comboBoxLineBreak;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxLineBreak;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripListView;
         private System.Windows.Forms.ToolStripMenuItem clearToolStripMenuItem;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripPreview;
@@ -831,12 +831,12 @@
         private System.Windows.Forms.Label labelSubMaxLen;
         private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownSubtitleLineMaximumLength;
         private System.Windows.Forms.CheckBox checkBoxAutoSplitAtEnd;
-        private System.Windows.Forms.ComboBox comboBoxLineMode;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxLineMode;
         private System.Windows.Forms.CheckBox checkBoxTakeTimeFromFileNames;
         private System.Windows.Forms.Label labelStatus;
         private System.Windows.Forms.CheckBox checkBoxUseTimeCodeFromCurrentFile;
         private System.Windows.Forms.Button buttonBrowseEncoding;
         private System.Windows.Forms.Label labelEncoding;
-        private System.Windows.Forms.ComboBox comboBoxEncoding;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxEncoding;
     }
 }
