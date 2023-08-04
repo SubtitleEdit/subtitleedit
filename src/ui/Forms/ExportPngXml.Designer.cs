@@ -50,8 +50,8 @@
             this.checkBoxFullFrameImage = new System.Windows.Forms.CheckBox();
             this.checkBoxTransAntiAliase = new System.Windows.Forms.CheckBox();
             this.labelLineHeight = new System.Windows.Forms.Label();
-            this.numericUpDownLineSpacing = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDownShadowTransparency = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownLineSpacing = new Nikse.SubtitleEdit.Controls.NikseUpDown();
+            this.numericUpDownShadowTransparency = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelShadowTransparency = new System.Windows.Forms.Label();
             this.labelShadowWidth = new System.Windows.Forms.Label();
             this.comboBoxShadowWidth = new System.Windows.Forms.ComboBox();
@@ -60,7 +60,7 @@
             this.labelDepth = new System.Windows.Forms.Label();
             this.label3D = new System.Windows.Forms.Label();
             this.comboBox3D = new System.Windows.Forms.ComboBox();
-            this.numericUpDownDepth3D = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownDepth3D = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.buttonCustomResolution = new System.Windows.Forms.Button();
             this.comboBoxBottomMargin = new System.Windows.Forms.ComboBox();
             this.labelBottomMargin = new System.Windows.Forms.Label();
@@ -114,9 +114,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             this.groupBoxImageSettings.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownLineSpacing)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownShadowTransparency)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDepth3D)).BeginInit();
             this.groupBoxExportImage.SuspendLayout();
             this.contextMenuStripListView.SuspendLayout();
             this.contextMenuStripProfile.SuspendLayout();
@@ -1140,9 +1137,6 @@
             this.contextMenuStrip1.ResumeLayout(false);
             this.groupBoxImageSettings.ResumeLayout(false);
             this.groupBoxImageSettings.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownLineSpacing)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownShadowTransparency)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDepth3D)).EndInit();
             this.groupBoxExportImage.ResumeLayout(false);
             this.groupBoxExportImage.PerformLayout();
             this.contextMenuStripListView.ResumeLayout(false);
@@ -1187,7 +1181,7 @@
         private System.Windows.Forms.CheckBox checkBoxSkipEmptyFrameAtStart;
         private System.Windows.Forms.Button buttonCustomResolution;
         private System.Windows.Forms.GroupBox groupBoxExportImage;
-        private System.Windows.Forms.NumericUpDown numericUpDownDepth3D;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownDepth3D;
         private System.Windows.Forms.Label labelDepth;
         private System.Windows.Forms.Label label3D;
         private System.Windows.Forms.ComboBox comboBox3D;
@@ -1198,10 +1192,10 @@
         private System.Windows.Forms.ComboBox comboBoxShadowWidth;
         private System.Windows.Forms.Panel panelShadowColor;
         private System.Windows.Forms.Button buttonShadowColor;
-        private System.Windows.Forms.NumericUpDown numericUpDownShadowTransparency;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownShadowTransparency;
         private System.Windows.Forms.Label labelShadowTransparency;
         private System.Windows.Forms.Label labelLineHeight;
-        private System.Windows.Forms.NumericUpDown numericUpDownLineSpacing;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownLineSpacing;
         private System.Windows.Forms.CheckBox checkBoxTransAntiAliase;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripListView;
         private System.Windows.Forms.ToolStripMenuItem boxSingleLineToolStripMenuItem;

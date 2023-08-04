@@ -34,23 +34,19 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.panelImageBackgroundColor = new System.Windows.Forms.Panel();
             this.buttonImageBackgroundColor = new System.Windows.Forms.Button();
             this.groupBoxMargins = new System.Windows.Forms.GroupBox();
-            this.numericUpDownMarginTop = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDownMarginRight = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDownMarginLeft = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownMarginTop = new Nikse.SubtitleEdit.Controls.NikseUpDown();
+            this.numericUpDownMarginRight = new Nikse.SubtitleEdit.Controls.NikseUpDown();
+            this.numericUpDownMarginLeft = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelMarginTop = new System.Windows.Forms.Label();
             this.labelMarginRight = new System.Windows.Forms.Label();
             this.labelMarginLeft = new System.Windows.Forms.Label();
             this.groupBoxColors = new System.Windows.Forms.GroupBox();
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
-            this.numericUpDownMarginBottom = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownMarginBottom = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelMarginBottom = new System.Windows.Forms.Label();
             this.groupBoxMargins.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMarginTop)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMarginRight)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMarginLeft)).BeginInit();
             this.groupBoxColors.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMarginBottom)).BeginInit();
             this.SuspendLayout();
             // 
             // panelBackgroundColor
@@ -251,11 +247,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.BinEditSettings_KeyDown);
             this.groupBoxMargins.ResumeLayout(false);
             this.groupBoxMargins.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMarginTop)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMarginRight)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMarginLeft)).EndInit();
             this.groupBoxColors.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMarginBottom)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -267,16 +259,16 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
         private System.Windows.Forms.Panel panelImageBackgroundColor;
         private System.Windows.Forms.Button buttonImageBackgroundColor;
         private System.Windows.Forms.GroupBox groupBoxMargins;
-        private System.Windows.Forms.NumericUpDown numericUpDownMarginTop;
-        private System.Windows.Forms.NumericUpDown numericUpDownMarginRight;
-        private System.Windows.Forms.NumericUpDown numericUpDownMarginLeft;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownMarginTop;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownMarginRight;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownMarginLeft;
         private System.Windows.Forms.Label labelMarginTop;
         private System.Windows.Forms.Label labelMarginRight;
         private System.Windows.Forms.Label labelMarginLeft;
         private System.Windows.Forms.GroupBox groupBoxColors;
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Button buttonCancel;
-        private System.Windows.Forms.NumericUpDown numericUpDownMarginBottom;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownMarginBottom;
         private System.Windows.Forms.Label labelMarginBottom;
     }
 }

@@ -33,14 +33,13 @@
             this.checkBoxItalic = new System.Windows.Forms.CheckBox();
             this.labelText = new System.Windows.Forms.Label();
             this.textBoxText = new System.Windows.Forms.TextBox();
-            this.numericUpDownExpandCount = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownExpandCount = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelImageInfo = new System.Windows.Forms.Label();
             this.pictureBoxInspectItem = new System.Windows.Forms.PictureBox();
             this.listBoxInspectItems = new System.Windows.Forms.ListBox();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
             this.groupBoxInspectItems.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownExpandCount)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxInspectItem)).BeginInit();
             this.SuspendLayout();
             // 
@@ -198,7 +197,6 @@
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.AddBetterMultiMatch_KeyDown);
             this.groupBoxInspectItems.ResumeLayout(false);
             this.groupBoxInspectItems.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownExpandCount)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxInspectItem)).EndInit();
             this.ResumeLayout(false);
 
@@ -211,7 +209,7 @@
         private System.Windows.Forms.CheckBox checkBoxItalic;
         private System.Windows.Forms.Label labelText;
         private System.Windows.Forms.TextBox textBoxText;
-        private System.Windows.Forms.NumericUpDown numericUpDownExpandCount;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownExpandCount;
         private System.Windows.Forms.Label labelImageInfo;
         private System.Windows.Forms.PictureBox pictureBoxInspectItem;
         private System.Windows.Forms.ListBox listBoxInspectItems;

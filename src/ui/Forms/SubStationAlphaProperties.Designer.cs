@@ -53,19 +53,17 @@
             this.labelWrapStyle = new System.Windows.Forms.Label();
             this.groupBoxResolution = new System.Windows.Forms.GroupBox();
             this.labelVideoResolution = new System.Windows.Forms.Label();
-            this.numericUpDownVideoHeight = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownVideoHeight = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.buttonGetResolutionFromVideo = new System.Windows.Forms.Button();
             this.buttonGetResolutionFromCurrentVideo = new System.Windows.Forms.Button();
             this.labelX = new System.Windows.Forms.Label();
-            this.numericUpDownVideoWidth = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownVideoWidth = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.groupBoxScript.SuspendLayout();
             this.groupBoxOptions.SuspendLayout();
             this.groupBoxResolution.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownVideoHeight)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownVideoWidth)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBoxScript
@@ -424,8 +422,6 @@
             this.groupBoxOptions.PerformLayout();
             this.groupBoxResolution.ResumeLayout(false);
             this.groupBoxResolution.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownVideoHeight)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownVideoWidth)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -457,11 +453,11 @@
         private System.Windows.Forms.Label labelWrapStyle;
         private System.Windows.Forms.GroupBox groupBoxResolution;
         private System.Windows.Forms.Label labelVideoResolution;
-        private System.Windows.Forms.NumericUpDown numericUpDownVideoHeight;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownVideoHeight;
         private System.Windows.Forms.Button buttonGetResolutionFromVideo;
         private System.Windows.Forms.Button buttonGetResolutionFromCurrentVideo;
         private System.Windows.Forms.Label labelX;
-        private System.Windows.Forms.NumericUpDown numericUpDownVideoWidth;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownVideoWidth;
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;

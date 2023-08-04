@@ -42,11 +42,10 @@
             this.buttonAddFile = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.radioButtonJoinPlain = new System.Windows.Forms.RadioButton();
-            this.numericUpDownAddMs = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownAddMs = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.radioButtonJoinAddTime = new System.Windows.Forms.RadioButton();
             this.labelAddTime = new System.Windows.Forms.Label();
             this.groupBoxPreview.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownAddMs)).BeginInit();
             this.SuspendLayout();
             // 
             // buttonCancel
@@ -255,7 +254,6 @@
             this.Shown += new System.EventHandler(this.JoinSubtitles_Shown);
             this.groupBoxPreview.ResumeLayout(false);
             this.groupBoxPreview.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownAddMs)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -277,7 +275,7 @@
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.Label labelTotalLines;
         private System.Windows.Forms.RadioButton radioButtonJoinPlain;
-        private System.Windows.Forms.NumericUpDown numericUpDownAddMs;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownAddMs;
         private System.Windows.Forms.RadioButton radioButtonJoinAddTime;
         private System.Windows.Forms.Label labelAddTime;
     }

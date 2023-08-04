@@ -35,8 +35,8 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.labelText = new System.Windows.Forms.Label();
             this.textBoxText = new System.Windows.Forms.TextBox();
             this.labelLineHeight = new System.Windows.Forms.Label();
-            this.numericUpDownLineSpacing = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDownShadowTransparency = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownLineSpacing = new Nikse.SubtitleEdit.Controls.NikseUpDown();
+            this.numericUpDownShadowTransparency = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelShadowTransparency = new System.Windows.Forms.Label();
             this.labelShadowWidth = new System.Windows.Forms.Label();
             this.comboBoxShadowWidth = new System.Windows.Forms.ComboBox();
@@ -58,8 +58,6 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.groupBoxImageSettings.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownLineSpacing)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownShadowTransparency)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -560,8 +558,6 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.BinEditNewText_KeyDown);
             this.groupBoxImageSettings.ResumeLayout(false);
             this.groupBoxImageSettings.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownLineSpacing)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownShadowTransparency)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 
@@ -571,8 +567,8 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
 
         private System.Windows.Forms.GroupBox groupBoxImageSettings;
         private System.Windows.Forms.Label labelLineHeight;
-        private System.Windows.Forms.NumericUpDown numericUpDownLineSpacing;
-        private System.Windows.Forms.NumericUpDown numericUpDownShadowTransparency;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownLineSpacing;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownShadowTransparency;
         private System.Windows.Forms.Label labelShadowTransparency;
         private System.Windows.Forms.Label labelShadowWidth;
         private System.Windows.Forms.ComboBox comboBoxShadowWidth;

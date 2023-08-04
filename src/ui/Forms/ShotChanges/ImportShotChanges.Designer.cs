@@ -41,7 +41,7 @@
             this.textBoxLog = new System.Windows.Forms.TextBox();
             this.groupBoxGenerateShotChanges = new System.Windows.Forms.GroupBox();
             this.labelThresholdDescription = new System.Windows.Forms.Label();
-            this.numericUpDownThreshold = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownThreshold = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelFfmpegThreshold = new System.Windows.Forms.Label();
             this.buttonDownloadFfmpeg = new System.Windows.Forms.Button();
             this.buttonImportWithFfmpeg = new System.Windows.Forms.Button();
@@ -52,7 +52,6 @@
             this.groupBoxImportText.SuspendLayout();
             this.groupBoxTimeCodes.SuspendLayout();
             this.groupBoxGenerateShotChanges.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownThreshold)).BeginInit();
             this.SuspendLayout();
             // 
             // buttonCancel
@@ -348,7 +347,6 @@
             this.groupBoxTimeCodes.PerformLayout();
             this.groupBoxGenerateShotChanges.ResumeLayout(false);
             this.groupBoxGenerateShotChanges.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownThreshold)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -373,7 +371,7 @@
         private System.Windows.Forms.Button buttonDownloadFfmpeg;
         private System.Windows.Forms.TextBox textBoxIImport;
         private System.Windows.Forms.Label labelThresholdDescription;
-        private System.Windows.Forms.NumericUpDown numericUpDownThreshold;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownThreshold;
         private System.Windows.Forms.Label labelFfmpegThreshold;
         private System.Windows.Forms.TextBox textBoxLog;
         private System.Windows.Forms.Label labelProgress;
