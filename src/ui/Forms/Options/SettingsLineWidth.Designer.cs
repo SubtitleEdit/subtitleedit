@@ -31,14 +31,12 @@
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
             this.labelMaximumLineWidth = new System.Windows.Forms.Label();
-            this.numericUpDownMaxLineWidth = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownMaxLineWidth = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelPixelsSuffix = new System.Windows.Forms.Label();
-            this.comboBoxMeasureFontName = new System.Windows.Forms.ComboBox();
+            this.comboBoxMeasureFontName = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelMeasureFont = new System.Windows.Forms.Label();
             this.checkBoxMeasureFontBold = new System.Windows.Forms.CheckBox();
-            this.numericUpDownMeasureFontSize = new System.Windows.Forms.NumericUpDown();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxLineWidth)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMeasureFontSize)).BeginInit();
+            this.numericUpDownMeasureFontSize = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.SuspendLayout();
             // 
             // buttonCancel
@@ -181,8 +179,6 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "SettingsLineWidth";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SettingsLineWidth_KeyDown);
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxLineWidth)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMeasureFontSize)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -193,11 +189,11 @@
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Label labelMaximumLineWidth;
-        private System.Windows.Forms.NumericUpDown numericUpDownMaxLineWidth;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownMaxLineWidth;
         private System.Windows.Forms.Label labelPixelsSuffix;
-        private System.Windows.Forms.ComboBox comboBoxMeasureFontName;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxMeasureFontName;
         private System.Windows.Forms.Label labelMeasureFont;
         private System.Windows.Forms.CheckBox checkBoxMeasureFontBold;
-        private System.Windows.Forms.NumericUpDown numericUpDownMeasureFontSize;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownMeasureFontSize;
     }
 }
