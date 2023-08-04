@@ -874,8 +874,9 @@ We maken dan handig gebruik van het ritme van het beeld zelf.</CreateSimpleChain
     <FixCommas>Onnodige komma's verwĳderen</FixCommas>
     <FixMissingSpaces>Ontbrekende spaties invoegen</FixMissingSpaces>
     <BreakLongLines>Lange regels afbreken</BreakLongLines>
-    <RemoveLineBreaks>Regeleinde in korte tekst met slechts één zin verwĳderen</RemoveLineBreaks>
-    <RemoveLineBreaksAll>Regeleinde in korte tekst (behalve dialogen) verwĳderen</RemoveLineBreaksAll>
+    <RemoveLineBreaks>Regeleinden in korte tekst met slechts één zin verwĳderen</RemoveLineBreaks>
+    <RemoveLineBreaksAll>Regeleinden in korte tekst (behalve dialogen) verwĳderen</RemoveLineBreaksAll>
+    <RemoveLineBreaksPixelWidth>Regeleinden verwijderen indien zin op één regel past (pixelbreedte)</RemoveLineBreaksPixelWidth>
     <FixUppercaseIInsideLowercaseWords>Hoofdletter i in woorden in kleine letters (OCR-fout) corrigeren</FixUppercaseIInsideLowercaseWords>
     <FixDoubleApostrophes>Dubbele apostrof ('') door aanhalingsteken (") vervangen</FixDoubleApostrophes>
     <AddPeriods>Punt invoegen indien de volgende regel met een hoofdletter begint</AddPeriods>
@@ -908,8 +909,9 @@ We maken dan handig gebruik van het ritme van het beeld zelf.</CreateSimpleChain
     <XFixedBut>{0} correctie(s) en enkele dingen kunnen nog worden verbeterd – zie logboek voor details</XFixedBut>
     <XCouldBeFixedBut>{0} mogelĳke correctie(s), maar die zullen niet alle problemen oplossen – zie logboek voor details</XCouldBeFixedBut>
     <FixFirstLetterToUppercaseAfterParagraph>Eerste letter na alinea wordt hoofdletter</FixFirstLetterToUppercaseAfterParagraph>
-    <MergeShortLine>Korte regels samenvoegen (enkele zin)</MergeShortLine>
-    <MergeShortLineAll>Korte regels samenvoegen (behalve dialogen)</MergeShortLineAll>
+    <MergeShortLine>Korte titels op één regel zetten (enkele zin)</MergeShortLine>
+    <MergeShortLineAll>Korte titels op één regel zetten (behalve dialogen)</MergeShortLineAll>
+    <UnbreakShortLinePixelWidth>Korte titels op één regel zetten (pixelbreedte)</UnbreakShortLinePixelWidth>
     <BreakLongLine>Lange regel afbreken</BreakLongLine>
     <FixLongDisplayTime>Lange weergavetĳd corrigeren</FixLongDisplayTime>
     <FixInvalidItalicTag>Ongeldige cursief-tag corrigeren</FixInvalidItalicTag>
@@ -1737,6 +1739,7 @@ Wilt u deze bewerking voortzetten?</SubtitleAppendPrompt>
     <NothingToUndo>Niets om ongedaan te maken</NothingToUndo>
     <InvalidLanguageNameX>Ongeldige taalnaam: {0}</InvalidLanguageNameX>
     <DoNotDisplayMessageAgain>Dit bericht niet meer weergeven</DoNotDisplayMessageAgain>
+    <DoNotAutoLoadVideo>Video niet automatisch laden</DoNotAutoLoadVideo>
     <NumberOfCorrectedWords>Aantal gecorrigeerde woorden: {0}</NumberOfCorrectedWords>
     <NumberOfSkippedWords>Aantal overgeslagen woorden: {0}</NumberOfSkippedWords>
     <NumberOfCorrectWords>Aantal juiste woorden: {0}</NumberOfCorrectWords>
