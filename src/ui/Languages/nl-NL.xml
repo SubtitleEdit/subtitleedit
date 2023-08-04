@@ -909,9 +909,9 @@ We maken dan handig gebruik van het ritme van het beeld zelf.</CreateSimpleChain
     <XFixedBut>{0} correctie(s) en enkele dingen kunnen nog worden verbeterd – zie logboek voor details</XFixedBut>
     <XCouldBeFixedBut>{0} mogelĳke correctie(s), maar die zullen niet alle problemen oplossen – zie logboek voor details</XCouldBeFixedBut>
     <FixFirstLetterToUppercaseAfterParagraph>Eerste letter na alinea wordt hoofdletter</FixFirstLetterToUppercaseAfterParagraph>
-    <MergeShortLine>Korte titels op één regel zetten (enkele zin)</MergeShortLine>
-    <MergeShortLineAll>Korte titels op één regel zetten (behalve dialogen)</MergeShortLineAll>
-    <UnbreakShortLinePixelWidth>Korte titels op één regel zetten (pixelbreedte)</UnbreakShortLinePixelWidth>
+    <MergeShortLine>Korte titels op één regel plaatsen (enkele zin)</MergeShortLine>
+    <MergeShortLineAll>Korte titels op één regel plaatsen (behalve dialogen)</MergeShortLineAll>
+    <UnbreakShortLinePixelWidth>Korte titels op één regel plaatsen (pixelbreedte)</UnbreakShortLinePixelWidth>
     <BreakLongLine>Lange regel afbreken</BreakLongLine>
     <FixLongDisplayTime>Lange weergavetĳd corrigeren</FixLongDisplayTime>
     <FixInvalidItalicTag>Ongeldige cursief-tag corrigeren</FixInvalidItalicTag>
