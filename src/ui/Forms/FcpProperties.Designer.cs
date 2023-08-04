@@ -31,12 +31,11 @@
             this.groupBoxFont = new System.Windows.Forms.GroupBox();
             this.textBoxFontName = new System.Windows.Forms.TextBox();
             this.labelFontName = new System.Windows.Forms.Label();
-            this.numericUpDownFontSize = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownFontSize = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelFontSize = new System.Windows.Forms.Label();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
             this.groupBoxFont.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFontSize)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBoxFont
@@ -136,7 +135,6 @@
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FcpProperties_KeyDown);
             this.groupBoxFont.ResumeLayout(false);
             this.groupBoxFont.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFontSize)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -144,7 +142,7 @@
         #endregion
 
         private System.Windows.Forms.GroupBox groupBoxFont;
-        private System.Windows.Forms.NumericUpDown numericUpDownFontSize;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownFontSize;
         private System.Windows.Forms.Label labelFontSize;
         private System.Windows.Forms.TextBox textBoxFontName;
         private System.Windows.Forms.Label labelFontName;

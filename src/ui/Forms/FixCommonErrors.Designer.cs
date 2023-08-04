@@ -84,7 +84,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelStartTimeWarning = new System.Windows.Forms.Label();
             this.labelDurationWarning = new System.Windows.Forms.Label();
             this.timeUpDownStartTime = new Nikse.SubtitleEdit.Controls.NikseTimeUpDown();
-            this.numericUpDownDuration = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownDuration = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelDuration = new System.Windows.Forms.Label();
             this.labelStartTime = new System.Windows.Forms.Label();
             this.labelTextLineTotal = new System.Windows.Forms.Label();
@@ -105,7 +105,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.contextMenuStripFixes.SuspendLayout();
             this.contextMenuStripListview.SuspendLayout();
             this.groupBoxEditPanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDuration)).BeginInit();
             this.tabPageLog.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -817,7 +816,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.contextMenuStripListview.ResumeLayout(false);
             this.groupBoxEditPanel.ResumeLayout(false);
             this.groupBoxEditPanel.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDuration)).EndInit();
             this.tabPageLog.ResumeLayout(false);
             this.tabPageLog.PerformLayout();
             this.ResumeLayout(false);
@@ -860,7 +858,7 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.Label labelStartTimeWarning;
         private System.Windows.Forms.Label labelDurationWarning;
         private Nikse.SubtitleEdit.Controls.NikseTimeUpDown timeUpDownStartTime;
-        private System.Windows.Forms.NumericUpDown numericUpDownDuration;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownDuration;
         private System.Windows.Forms.Label labelDuration;
         private System.Windows.Forms.Label labelStartTime;
         private System.Windows.Forms.Button buttonRefreshFixes;

@@ -34,10 +34,9 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.labelChangeBrightness = new System.Windows.Forms.Label();
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
-            this.numericUpDownBrightness = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownBrightness = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarBrightness)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPreview)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBrightness)).BeginInit();
             this.SuspendLayout();
             // 
             // trackBarBrightness
@@ -134,7 +133,6 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.BinEditBrightness_KeyDown);
             ((System.ComponentModel.ISupportInitialize)(this.trackBarBrightness)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPreview)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBrightness)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -147,6 +145,6 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
         private System.Windows.Forms.Label labelChangeBrightness;
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Button buttonCancel;
-        private System.Windows.Forms.NumericUpDown numericUpDownBrightness;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownBrightness;
     }
 }

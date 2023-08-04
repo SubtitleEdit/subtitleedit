@@ -37,12 +37,12 @@
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItemSelectAll = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemInverseSelection = new System.Windows.Forms.ToolStripMenuItem();
-            this.numericUpDownSingleLineMaxCharacters = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownSingleLineMaxCharacters = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelLineMaxLength = new System.Windows.Forms.Label();
             this.labelSingleLineMaxLength = new System.Windows.Forms.Label();
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
-            this.numericUpDownLineMaxCharacters = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownLineMaxCharacters = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelMaxSingleLineLengthIs = new System.Windows.Forms.Label();
             this.labelMaxLineLengthIs = new System.Windows.Forms.Label();
             this.comboBoxLineContinuationBegin = new System.Windows.Forms.ComboBox();
@@ -52,8 +52,6 @@
             this.checkBoxSplitAtLineBreaks = new System.Windows.Forms.CheckBox();
             this.groupBoxLinesFound.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSingleLineMaxCharacters)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownLineMaxCharacters)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBoxLinesFound
@@ -340,8 +338,6 @@
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SplitLongLines_KeyDown);
             this.groupBoxLinesFound.ResumeLayout(false);
             this.contextMenuStrip1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSingleLineMaxCharacters)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownLineMaxCharacters)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -354,13 +350,13 @@
         private System.Windows.Forms.ColumnHeader columnHeader4;
         private System.Windows.Forms.ColumnHeader columnHeader5;
         private System.Windows.Forms.ColumnHeader columnHeader7;
-        private System.Windows.Forms.NumericUpDown numericUpDownSingleLineMaxCharacters;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownSingleLineMaxCharacters;
         private System.Windows.Forms.Label labelLineMaxLength;
         private System.Windows.Forms.Label labelSingleLineMaxLength;
         private Controls.SubtitleListView SubtitleListview1;
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Button buttonCancel;
-        private System.Windows.Forms.NumericUpDown numericUpDownLineMaxCharacters;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownLineMaxCharacters;
         private System.Windows.Forms.Label labelMaxSingleLineLengthIs;
         private System.Windows.Forms.Label labelMaxLineLengthIs;
         private System.Windows.Forms.ComboBox comboBoxLineContinuationBegin;

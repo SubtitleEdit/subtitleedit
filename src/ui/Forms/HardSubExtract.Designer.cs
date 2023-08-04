@@ -20,10 +20,10 @@
             this.label1 = new System.Windows.Forms.Label();
             this.labelCustomRgb = new System.Windows.Forms.Label();
             this.pictureBoxCustomColor = new System.Windows.Forms.PictureBox();
-            this.numericUpDownCustomMaxDiff = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownCustomMaxDiff = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.checkBoxCustomColor = new System.Windows.Forms.CheckBox();
             this.checkBoxYellow = new System.Windows.Forms.CheckBox();
-            this.numericUpDownPixelsBottom = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownPixelsBottom = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.label4 = new System.Windows.Forms.Label();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.contextMenuStripScreenshot = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -50,8 +50,6 @@
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCustomColor)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCustomMaxDiff)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPixelsBottom)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.contextMenuStripScreenshot.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -395,8 +393,6 @@
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCustomColor)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCustomMaxDiff)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPixelsBottom)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.contextMenuStripScreenshot.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
@@ -414,7 +410,7 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.Label labelClickOnTextColor;
-        private System.Windows.Forms.NumericUpDown numericUpDownPixelsBottom;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownPixelsBottom;
         private Controls.VideoPlayerContainer mediaPlayer;
         private System.Windows.Forms.OpenFileDialog openFileDialogVideo;
         private System.Windows.Forms.Button buttonCancel;
@@ -432,7 +428,7 @@
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.CheckBox checkBoxCustomColor;
         private System.Windows.Forms.CheckBox checkBoxYellow;
-        private System.Windows.Forms.NumericUpDown numericUpDownCustomMaxDiff;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownCustomMaxDiff;
         private System.Windows.Forms.PictureBox pictureBoxCustomColor;
         private System.Windows.Forms.ColorDialog colorDialog1;
         private System.Windows.Forms.Button buttonStop;

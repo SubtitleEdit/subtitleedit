@@ -31,7 +31,7 @@
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
             this.checkBoxAllowOverlap = new System.Windows.Forms.CheckBox();
-            this.numericUpDownPercent = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownPercent = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelPercent = new System.Windows.Forms.Label();
             this.radioButtonSelectedLinesOnly = new System.Windows.Forms.RadioButton();
             this.radioButtonAllLines = new System.Windows.Forms.RadioButton();
@@ -39,7 +39,6 @@
             this.radioButtonToDropFrame = new System.Windows.Forms.RadioButton();
             this.radioButtonSpeedFromDropFrame = new System.Windows.Forms.RadioButton();
             this.radioButtonSpeedCustom = new System.Windows.Forms.RadioButton();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPercent)).BeginInit();
             this.groupBoxInfo.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -203,7 +202,6 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "ChangeSpeedInPercent";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ChangeSpeedInPercent_KeyDown);
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPercent)).EndInit();
             this.groupBoxInfo.ResumeLayout(false);
             this.groupBoxInfo.PerformLayout();
             this.ResumeLayout(false);
@@ -216,7 +214,7 @@
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.CheckBox checkBoxAllowOverlap;
-        private System.Windows.Forms.NumericUpDown numericUpDownPercent;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownPercent;
         private System.Windows.Forms.Label labelPercent;
         private System.Windows.Forms.RadioButton radioButtonSelectedLinesOnly;
         private System.Windows.Forms.RadioButton radioButtonAllLines;

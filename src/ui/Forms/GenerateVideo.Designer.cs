@@ -38,8 +38,8 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonCancel = new System.Windows.Forms.Button();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.labelDuration = new System.Windows.Forms.Label();
-            this.numericUpDownWidth = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDownHeight = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownWidth = new Nikse.SubtitleEdit.Controls.NikseUpDown();
+            this.numericUpDownHeight = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelResolution = new System.Windows.Forms.Label();
             this.labelX = new System.Windows.Forms.Label();
             this.groupBoxBackground = new System.Windows.Forms.GroupBox();
@@ -48,7 +48,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.radioButtonImage = new System.Windows.Forms.RadioButton();
             this.radioButtonColor = new System.Windows.Forms.RadioButton();
             this.radioButtonCheckeredImage = new System.Windows.Forms.RadioButton();
-            this.numericUpDownDurationMinutes = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownDurationMinutes = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelPleaseWait = new System.Windows.Forms.Label();
             this.labelFrameRate = new System.Windows.Forms.Label();
             this.comboBoxFrameRate = new System.Windows.Forms.ComboBox();
@@ -74,10 +74,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonChooseDuration = new System.Windows.Forms.Button();
             this.checkBoxAddTimeCode = new System.Windows.Forms.CheckBox();
             this.contextMenuStripGenerate.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWidth)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownHeight)).BeginInit();
             this.groupBoxBackground.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDurationMinutes)).BeginInit();
             this.contextMenuStripRes.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -558,11 +555,8 @@ namespace Nikse.SubtitleEdit.Forms
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.GenerateVideo_FormClosing);
             this.Shown += new System.EventHandler(this.GenerateVideo_Shown);
             this.contextMenuStripGenerate.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWidth)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownHeight)).EndInit();
             this.groupBoxBackground.ResumeLayout(false);
             this.groupBoxBackground.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDurationMinutes)).EndInit();
             this.contextMenuStripRes.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -576,14 +570,14 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.Label labelDuration;
-        private System.Windows.Forms.NumericUpDown numericUpDownWidth;
-        private System.Windows.Forms.NumericUpDown numericUpDownHeight;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownWidth;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownHeight;
         private System.Windows.Forms.Label labelResolution;
         private System.Windows.Forms.Label labelX;
         private System.Windows.Forms.GroupBox groupBoxBackground;
         private System.Windows.Forms.RadioButton radioButtonColor;
         private System.Windows.Forms.RadioButton radioButtonCheckeredImage;
-        private System.Windows.Forms.NumericUpDown numericUpDownDurationMinutes;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownDurationMinutes;
         private System.Windows.Forms.Label labelPleaseWait;
         private System.Windows.Forms.Label labelFrameRate;
         private System.Windows.Forms.ComboBox comboBoxFrameRate;

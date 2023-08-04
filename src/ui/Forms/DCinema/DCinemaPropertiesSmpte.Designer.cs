@@ -46,23 +46,23 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
             this.comboBoxLanguage = new System.Windows.Forms.ComboBox();
             this.labelLanguage = new System.Windows.Forms.Label();
             this.buttonGenerateID = new System.Windows.Forms.Button();
-            this.numericUpDownReelNumber = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownReelNumber = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.groupBoxFont = new System.Windows.Forms.GroupBox();
             this.label1 = new System.Windows.Forms.Label();
             this.labelFadeUpMs = new System.Windows.Forms.Label();
-            this.numericUpDownFadeDown = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownFadeDown = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelFadeDownTime = new System.Windows.Forms.Label();
-            this.numericUpDownFadeUp = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownFadeUp = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelFadeUpTime = new System.Windows.Forms.Label();
             this.buttonGenFontUri = new System.Windows.Forms.Button();
-            this.numericUpDownTopBottomMargin = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownTopBottomMargin = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.label2 = new System.Windows.Forms.Label();
             this.panelFontEffectColor = new System.Windows.Forms.Panel();
             this.buttonFontEffectColor = new System.Windows.Forms.Button();
             this.panelFontColor = new System.Windows.Forms.Panel();
             this.buttonFontColor = new System.Windows.Forms.Button();
             this.labelEffectColor = new System.Windows.Forms.Label();
-            this.numericUpDownFontSize = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownFontSize = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelFontSize = new System.Windows.Forms.Label();
             this.comboBoxFontEffect = new System.Windows.Forms.ComboBox();
             this.labelEffect = new System.Windows.Forms.Label();
@@ -84,12 +84,7 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
             this.importToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownReelNumber)).BeginInit();
             this.groupBoxFont.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFadeDown)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFadeUp)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTopBottomMargin)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFontSize)).BeginInit();
             this.contextMenuStripProfile.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -664,13 +659,8 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
             this.Text = "D-Cinema properties (SMPTE)";
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownReelNumber)).EndInit();
             this.groupBoxFont.ResumeLayout(false);
             this.groupBoxFont.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFadeDown)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFadeUp)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTopBottomMargin)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFontSize)).EndInit();
             this.contextMenuStripProfile.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -691,7 +681,7 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
         private System.Windows.Forms.TextBox textBoxSubtitleID;
         private System.Windows.Forms.Label labelSubtitleID;
         private System.Windows.Forms.Label labelEffectColor;
-        private System.Windows.Forms.NumericUpDown numericUpDownFontSize;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownFontSize;
         private System.Windows.Forms.Label labelFontSize;
         private System.Windows.Forms.ComboBox comboBoxFontEffect;
         private System.Windows.Forms.Label labelEffect;
@@ -700,7 +690,7 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
         private System.Windows.Forms.Panel panelFontColor;
         private System.Windows.Forms.Button buttonFontColor;
         private System.Windows.Forms.ColorDialog colorDialog1;
-        private System.Windows.Forms.NumericUpDown numericUpDownReelNumber;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownReelNumber;
         private System.Windows.Forms.Button buttonGenerateID;
         private System.Windows.Forms.ComboBox comboBoxLanguage;
         private System.Windows.Forms.Label labelLanguage;
@@ -709,7 +699,7 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
         private System.Windows.Forms.Label labelIssueDate;
         private System.Windows.Forms.TextBox textBoxEditRate;
         private System.Windows.Forms.Label labelEditRate;
-        private System.Windows.Forms.NumericUpDown numericUpDownTopBottomMargin;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownTopBottomMargin;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ComboBox comboBoxTimeCodeRate;
         private System.Windows.Forms.Label labelTimeCodeRate;
@@ -718,9 +708,9 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
         private System.Windows.Forms.Button buttonGenFontUri;
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Button buttonCancel;
-        private System.Windows.Forms.NumericUpDown numericUpDownFadeDown;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownFadeDown;
         private System.Windows.Forms.Label labelFadeDownTime;
-        private System.Windows.Forms.NumericUpDown numericUpDownFadeUp;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownFadeUp;
         private System.Windows.Forms.Label labelFadeUpTime;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label labelFadeUpMs;

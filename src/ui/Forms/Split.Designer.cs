@@ -33,7 +33,7 @@
             this.labelCharacters = new System.Windows.Forms.Label();
             this.labelLines = new System.Windows.Forms.Label();
             this.labelNumberOfParts = new System.Windows.Forms.Label();
-            this.numericUpDownParts = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownParts = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.radioButtonCharacters = new System.Windows.Forms.RadioButton();
             this.RadioButtonLines = new System.Windows.Forms.RadioButton();
             this.groupBoxOutput = new System.Windows.Forms.GroupBox();
@@ -59,7 +59,6 @@
             this.radioButtonTime = new System.Windows.Forms.RadioButton();
             this.groupBoxSplitOptions.SuspendLayout();
             this.groupBoxSubtitleInfo.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownParts)).BeginInit();
             this.groupBoxOutput.SuspendLayout();
             this.groupBoxPreview.SuspendLayout();
             this.SuspendLayout();
@@ -392,7 +391,6 @@
             this.groupBoxSplitOptions.PerformLayout();
             this.groupBoxSubtitleInfo.ResumeLayout(false);
             this.groupBoxSubtitleInfo.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownParts)).EndInit();
             this.groupBoxOutput.ResumeLayout(false);
             this.groupBoxOutput.PerformLayout();
             this.groupBoxPreview.ResumeLayout(false);
@@ -404,7 +402,7 @@
 
         private System.Windows.Forms.GroupBox groupBoxSplitOptions;
         private System.Windows.Forms.Label labelNumberOfParts;
-        private System.Windows.Forms.NumericUpDown numericUpDownParts;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownParts;
         private System.Windows.Forms.RadioButton radioButtonCharacters;
         private System.Windows.Forms.RadioButton RadioButtonLines;
         private System.Windows.Forms.GroupBox groupBoxOutput;

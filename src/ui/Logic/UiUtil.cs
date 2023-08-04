@@ -1563,7 +1563,7 @@ namespace Nikse.SubtitleEdit.Logic
             return control;
         }
 
-        public static void SetNumericUpDownValue(NumericUpDown numericUpDown, int value)
+        public static void SetNumericUpDownValue(NikseUpDown numericUpDown, int value)
         {
             if (value < numericUpDown.Minimum)
             {

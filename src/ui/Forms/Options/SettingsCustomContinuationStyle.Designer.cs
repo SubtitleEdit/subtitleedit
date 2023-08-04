@@ -41,7 +41,7 @@
             this.labelGapSuffix = new System.Windows.Forms.Label();
             this.comboBoxGapSuffix = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelMs = new System.Windows.Forms.Label();
-            this.numericUpDownDifferentStyleGapMs = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownDifferentStyleGapMs = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.checkBoxDifferentStyleGap = new System.Windows.Forms.CheckBox();
             this.checkBoxPrefixAddSpace = new System.Windows.Forms.CheckBox();
             this.labelPrefix = new System.Windows.Forms.Label();
@@ -60,7 +60,6 @@
             this.toolStripMenuItemLoadStyle = new System.Windows.Forms.ToolStripMenuItem();
             this.labelNote = new System.Windows.Forms.Label();
             this.groupBoxContinuationStyle.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDifferentStyleGapMs)).BeginInit();
             this.groupBoxPreview.SuspendLayout();
             this.menuStrip.SuspendLayout();
             this.SuspendLayout();
@@ -468,7 +467,6 @@
             this.Text = "SettingsCustomContinuationStyle";
             this.groupBoxContinuationStyle.ResumeLayout(false);
             this.groupBoxContinuationStyle.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDifferentStyleGapMs)).EndInit();
             this.groupBoxPreview.ResumeLayout(false);
             this.groupBoxPreview.PerformLayout();
             this.menuStrip.ResumeLayout(false);
@@ -499,7 +497,7 @@
         private System.Windows.Forms.Label labelGapSuffix;
         private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxGapSuffix;
         private System.Windows.Forms.Label labelMs;
-        private System.Windows.Forms.NumericUpDown numericUpDownDifferentStyleGapMs;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownDifferentStyleGapMs;
         private System.Windows.Forms.GroupBox groupBoxPreview;
         private System.Windows.Forms.Label labelPreviewLine3;
         private System.Windows.Forms.Label labelPreviewLine2;

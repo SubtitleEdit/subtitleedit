@@ -34,7 +34,7 @@
             this.listViewFonts = new System.Windows.Forms.ListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.labelLineSegments = new System.Windows.Forms.Label();
-            this.numericUpDownSegmentsPerCharacter = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownSegmentsPerCharacter = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelSubtitleFontSize = new System.Windows.Forms.Label();
             this.comboBoxSubtitleFontSize = new System.Windows.Forms.ComboBox();
             this.labelSubtitleFont = new System.Windows.Forms.Label();
@@ -50,7 +50,6 @@
             this.labelInfo = new System.Windows.Forms.Label();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.groupBoxTrainingOptions.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSegmentsPerCharacter)).BeginInit();
             this.groupBoxInput.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -389,7 +388,6 @@
             this.Shown += new System.EventHandler(this.VobSubNOcrTrain_Shown);
             this.groupBoxTrainingOptions.ResumeLayout(false);
             this.groupBoxTrainingOptions.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSegmentsPerCharacter)).EndInit();
             this.groupBoxInput.ResumeLayout(false);
             this.groupBoxInput.PerformLayout();
             this.ResumeLayout(false);
@@ -408,7 +406,7 @@
         private System.Windows.Forms.Label labelSubtitleFont;
         private System.Windows.Forms.ListView listViewFonts;
         private System.Windows.Forms.Label labelLineSegments;
-        private System.Windows.Forms.NumericUpDown numericUpDownSegmentsPerCharacter;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownSegmentsPerCharacter;
         private System.Windows.Forms.GroupBox groupBoxInput;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.Button buttonTrain;

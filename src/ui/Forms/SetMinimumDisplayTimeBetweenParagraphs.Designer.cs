@@ -30,18 +30,17 @@
         {
             this.groupBoxLinesFound = new System.Windows.Forms.GroupBox();
             this.SubtitleListview1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
-            this.numericUpDownMinMillisecondsBetweenLines = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownMinMillisecondsBetweenLines = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelMaxMillisecondsBetweenLines = new System.Windows.Forms.Label();
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.checkBoxShowOnlyChangedLines = new System.Windows.Forms.CheckBox();
             this.comboBoxFrameRate = new System.Windows.Forms.ComboBox();
             this.labelFrames = new System.Windows.Forms.Label();
-            this.numericUpDownFrames = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownFrames = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelXFrameIsXMS = new System.Windows.Forms.Label();
             this.groupBoxFrameInfo = new System.Windows.Forms.GroupBox();
             this.groupBoxLinesFound.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMinMillisecondsBetweenLines)).BeginInit();
             this.groupBoxFrameInfo.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -232,7 +231,6 @@
             this.Shown += new System.EventHandler(this.SetMinimumDisplayTimeBetweenParagraphs_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SetMinimalDisplayTimeDifference_KeyDown);
             this.groupBoxLinesFound.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMinMillisecondsBetweenLines)).EndInit();
             this.groupBoxFrameInfo.ResumeLayout(false);
             this.groupBoxFrameInfo.PerformLayout();
             this.ResumeLayout(false);
@@ -243,7 +241,7 @@
         #endregion
 
         private System.Windows.Forms.GroupBox groupBoxLinesFound;
-        private System.Windows.Forms.NumericUpDown numericUpDownMinMillisecondsBetweenLines;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownMinMillisecondsBetweenLines;
         private System.Windows.Forms.Label labelMaxMillisecondsBetweenLines;
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Button buttonCancel;
@@ -252,7 +250,7 @@
         private System.Windows.Forms.ComboBox comboBoxFrameRate;
         private System.Windows.Forms.Label labelXFrameIsXMS;
         private System.Windows.Forms.Label labelFrames;
-        private System.Windows.Forms.NumericUpDown numericUpDownFrames;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownFrames;
         private System.Windows.Forms.GroupBox groupBoxFrameInfo;
     }
 }
