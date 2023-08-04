@@ -599,8 +599,7 @@ namespace Nikse.SubtitleEdit.Controls
             _listView.Width = DropDownWidth;
             _listView.EndUpdate();
 
-            var lvHeight = 5;
-            var top = Bottom;
+            var lvHeight = 18;
             var form = FindForm();
             if (form == null)
             {
@@ -616,6 +615,7 @@ namespace Nikse.SubtitleEdit.Controls
                 totalX += ctl.Left;
                 totalY += ctl.Top;
             }
+            var top = totalY + Height;
 
             if (listViewItems.Count > 0)
             {
