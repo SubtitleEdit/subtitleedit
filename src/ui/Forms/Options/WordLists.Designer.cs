@@ -51,7 +51,7 @@
             this.textBoxNameEtc = new System.Windows.Forms.TextBox();
             this.buttonAddNames = new System.Windows.Forms.Button();
             this.labelWordListLanguage = new System.Windows.Forms.Label();
-            this.comboBoxWordListLanguage = new System.Windows.Forms.ComboBox();
+            this.comboBoxWordListLanguage = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
             this.labelStatus = new System.Windows.Forms.Label();
@@ -438,7 +438,7 @@
         private System.Windows.Forms.TextBox textBoxNameEtc;
         private System.Windows.Forms.Button buttonAddNames;
         private System.Windows.Forms.Label labelWordListLanguage;
-        private System.Windows.Forms.ComboBox comboBoxWordListLanguage;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxWordListLanguage;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Label labelStatus;

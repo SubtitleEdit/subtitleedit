@@ -15,6 +15,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Controls;
 
 namespace Nikse.SubtitleEdit.Forms.Options
 {
@@ -2398,7 +2399,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
         private void comboBoxCustomSearch_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var cb = (ComboBox)sender;
+            var cb = (NikseComboBox)sender;
             var tb = textBoxCustomSearchUrl1;
             if (cb == comboBoxCustomSearch2)
             {
