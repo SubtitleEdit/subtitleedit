@@ -1,4 +1,6 @@
-﻿namespace Nikse.SubtitleEdit.Forms.AudioToText
+﻿using System.Windows.Forms;
+
+namespace Nikse.SubtitleEdit.Forms.AudioToText
 {
     sealed partial class WhisperAdvanced
     {
@@ -30,7 +32,7 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(WhisperAdvanced));
             this.labelWhisperExtraCmdLine = new System.Windows.Forms.Label();
-            this.comboBoxWhisperExtra = new System.Windows.Forms.ComboBox();
+            this.comboBoxWhisperExtra = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
             this.labelNote = new System.Windows.Forms.Label();
@@ -63,10 +65,22 @@
             // 
             this.comboBoxWhisperExtra.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxWhisperExtra.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxWhisperExtra.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxWhisperExtra.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxWhisperExtra.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxWhisperExtra.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxWhisperExtra.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxWhisperExtra.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxWhisperExtra.DropDownHeight = 400;
+            this.comboBoxWhisperExtra.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
             this.comboBoxWhisperExtra.DropDownWidth = 240;
             this.comboBoxWhisperExtra.FormattingEnabled = true;
             this.comboBoxWhisperExtra.Location = new System.Drawing.Point(15, 38);
             this.comboBoxWhisperExtra.Name = "comboBoxWhisperExtra";
+            this.comboBoxWhisperExtra.SelectedIndex = -1;
+            this.comboBoxWhisperExtra.SelectedItem = null;
+            this.comboBoxWhisperExtra.SelectedText = "";
             this.comboBoxWhisperExtra.Size = new System.Drawing.Size(838, 21);
             this.comboBoxWhisperExtra.TabIndex = 214;
             this.comboBoxWhisperExtra.KeyDown += new System.Windows.Forms.KeyEventHandler(this.comboBoxWhisperExtra_KeyDown);
@@ -196,7 +210,7 @@
             this.textBoxOpenAI.Text = resources.GetString("textBoxOpenAI.Text");
             this.textBoxOpenAI.WordWrap = false;
             // 
-            // tabPagePurviewFasterWhisper
+            // tabPageFasterWhisper
             // 
             this.tabPageFasterWhisper.Controls.Add(this.textBox1);
             this.tabPageFasterWhisper.Location = new System.Drawing.Point(4, 22);
@@ -241,6 +255,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "WhisperAdvanced";
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.WhisperAdvanced_KeyDown);
             this.tabControlCommandLineHelp.ResumeLayout(false);
             this.TabPageCPP.ResumeLayout(false);
             this.TabPageCPP.PerformLayout();
@@ -258,7 +273,7 @@
         #endregion
 
         private System.Windows.Forms.Label labelWhisperExtraCmdLine;
-        private System.Windows.Forms.ComboBox comboBoxWhisperExtra;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxWhisperExtra;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Label labelNote;
