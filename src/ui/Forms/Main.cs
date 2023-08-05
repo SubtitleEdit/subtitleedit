@@ -9918,14 +9918,6 @@ namespace Nikse.SubtitleEdit.Forms
                     labelStartTime.Enabled = false;
                     labelDuration.Enabled = false;
                 }
-                else
-                {
-                    var foreColor = Configuration.Settings.General.DarkThemeForeColor;
-                    var slightDarker = Color.FromArgb(Math.Max(0, foreColor.R - 75), Math.Max(0, foreColor.G - 75), Math.Max(0, foreColor.B - 75));
-                    labelText.ForeColor = slightDarker;
-                    labelStartTime.ForeColor = slightDarker;
-                    labelDuration.ForeColor = slightDarker;
-                }
 
                 textBoxListViewText.ContextMenuStrip = null;
 
@@ -9947,14 +9939,6 @@ namespace Nikse.SubtitleEdit.Forms
                 labelText.Enabled = true;
                 labelStartTime.Enabled = true;
                 labelDuration.Enabled = true;
-                if (Configuration.Settings.General.UseDarkTheme)
-                {
-                    var foreColor = Configuration.Settings.General.DarkThemeForeColor;
-                    labelText.ForeColor = foreColor;
-                    labelStartTime.ForeColor = foreColor;
-                    labelDuration.ForeColor = foreColor;
-                }
-
                 textBoxListViewText.ContextMenuStrip = contextMenuStripTextBoxListView;
             }
         }

@@ -15,7 +15,25 @@ namespace Nikse.SubtitleEdit.Controls
 
         internal static StringFormat CreateStringFormat(Control control, ContentAlignment contentAlignment, bool showEllipsis)
         {
-            var stringFormat = new StringFormat(); //TODO: { Alignment = textAlign};
+            var stringFormat = new StringFormat(); 
+
+            if (contentAlignment == ContentAlignment.TopRight ||
+                contentAlignment == ContentAlignment.MiddleRight ||
+                contentAlignment == ContentAlignment.BottomRight)
+            {
+                stringFormat.Alignment = StringAlignment.Far;
+            }
+            else if (contentAlignment == ContentAlignment.TopCenter ||
+                contentAlignment == ContentAlignment.MiddleCenter ||
+                contentAlignment == ContentAlignment.BottomCenter)
+            {
+                stringFormat.Alignment = StringAlignment.Center;
+            }
+            else
+            {
+                stringFormat.Alignment = StringAlignment.Near;
+            }
+
             if (control.RightToLeft == RightToLeft.Yes)
             {
                 stringFormat.FormatFlags |= StringFormatFlags.DirectionRightToLeft;
@@ -42,6 +60,27 @@ namespace Nikse.SubtitleEdit.Controls
             if (showEllipsis)
             {
                 textFormatFlags |= TextFormatFlags.EndEllipsis;
+            }
+
+            if (contentAlignment == ContentAlignment.TopCenter ||
+                contentAlignment == ContentAlignment.MiddleCenter ||
+                contentAlignment == ContentAlignment.BottomCenter)
+            {
+                textFormatFlags |= (textFormatFlags & TextFormatFlags.VerticalCenter);
+            }
+
+            if (contentAlignment == ContentAlignment.TopLeft ||
+                contentAlignment == ContentAlignment.MiddleLeft ||
+                contentAlignment == ContentAlignment.BottomLeft)
+            {
+                textFormatFlags |= (textFormatFlags & TextFormatFlags.Left);
+            }
+
+            if (contentAlignment == ContentAlignment.TopRight ||
+                contentAlignment == ContentAlignment.MiddleRight ||
+                contentAlignment == ContentAlignment.BottomRight)
+            {
+                textFormatFlags |= (textFormatFlags & TextFormatFlags.Right);
             }
 
             if (control.RightToLeft == RightToLeft.Yes)
