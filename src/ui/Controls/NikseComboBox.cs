@@ -467,9 +467,9 @@ namespace Nikse.SubtitleEdit.Controls
                 var coordinates = form.PointToClient(Cursor.Position);
                 var listViewBounds = new Rectangle(
                     _listView.Bounds.X,
-                    _listView.Bounds.Y,
-                    _listView.Bounds.Width + 25,
-                    _listView.Bounds.Height + 25);
+                    _listView.Bounds.Y - 25,
+                    _listView.Bounds.Width + 25 + 25,
+                    _listView.Bounds.Height + 50 + 25);
                 if (_hasItemsMouseOver &&
                     !(listViewBounds.Contains(coordinates) || Bounds.Contains(coordinates)) ||
                     !_listViewShown)
@@ -685,7 +685,7 @@ namespace Nikse.SubtitleEdit.Controls
 
             _listView = new ListView();
             _listView.View = View.Details;
-            var w = Width = DropDownWidth > 0 ? DropDownWidth : Width;
+            var w = DropDownWidth > 0 ? DropDownWidth : Width;
             var widthNoScrollBar = w - SystemInformation.VerticalScrollBarWidth - SystemInformation.BorderSize.Width * 4;
             _listView.Columns.Add("text", widthNoScrollBar);
             _listView.HeaderStyle = ColumnHeaderStyle.None;
