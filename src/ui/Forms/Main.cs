@@ -9912,12 +9912,9 @@ namespace Nikse.SubtitleEdit.Forms
                 buttonUnBreak.Enabled = false;
                 buttonAutoBreak.Enabled = false;
                 numericUpDownLayer.Enabled = false;
-                if (!Configuration.Settings.General.UseDarkTheme)
-                {
-                    labelText.Enabled = false;
-                    labelStartTime.Enabled = false;
-                    labelDuration.Enabled = false;
-                }
+                labelText.Enabled = false;
+                labelStartTime.Enabled = false;
+                labelDuration.Enabled = false;
 
                 textBoxListViewText.ContextMenuStrip = null;
 

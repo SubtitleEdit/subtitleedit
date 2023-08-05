@@ -104,7 +104,7 @@ namespace Nikse.SubtitleEdit.Controls
 
             var rectangle = new Rectangle(0, 0, Width, Height);
 
-            using (var font = new Font(Font, FontStyle.Italic))
+            using (var font = new Font(Font.FontFamily, Font.Size-1, FontStyle.Italic))
             {
                 if (UseCompatibleTextRendering)
                 {
