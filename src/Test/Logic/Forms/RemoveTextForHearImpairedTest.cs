@@ -2146,6 +2146,34 @@ namespace Test.Logic.Forms
         }
 
         [TestMethod]
+        public void RemoveInterjectionsAllDuaSpanish4()
+        {
+            var actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext("Entonces, dime qué hago." + Environment.NewLine + "¿Mmm? ¿Finjo que nada pasó?", onlyInSeparatedLine: false));
+            Assert.AreEqual("Entonces, dime qué hago." + Environment.NewLine + "¿Finjo que nada pasó?", actual);
+        }
+
+        [TestMethod]
+        public void RemoveInterjectionsAllDuaSpanish5()
+        {
+            var actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext("- Ah…" + Environment.NewLine + "- Gracias.", onlyInSeparatedLine: false));
+            Assert.AreEqual("Gracias.", actual);
+        }
+
+        [TestMethod]
+        public void RemoveInterjectionsSpanishEnd()
+        {
+            var actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext("¿Y dónde está ese médico ahora? ¿Mmm?", onlyInSeparatedLine: false));
+            Assert.AreEqual("¿Y dónde está ese médico ahora?", actual);
+        }
+
+        [TestMethod]
+        public void RemoveInterjectionsSpanishStartDouble()
+        {
+            var actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext("¡Oh! ¡Oh! Ay, perdóname.", onlyInSeparatedLine: false));
+            Assert.AreEqual("Ay, perdóname.", actual);
+        }
+
+        [TestMethod]
         public void DoNotRemoveTime()
         {
             var target = GetRemoveTextForHiLib();

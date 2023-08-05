@@ -79,7 +79,7 @@ namespace Nikse.SubtitleEdit.Controls
             get => _selectedIndex;
             set
             {
-                if (value == _selectedIndex)
+                if (value == _selectedIndex || _textBox == null || _items == null)
                 {
                     return;
                 }
