@@ -79,7 +79,6 @@ namespace Nikse.SubtitleEdit.Controls
         internal void SelectedIndexReset()
         {
             _selectedIndex = -1;
-            _textBox.Text = string.Empty;
         }
 
         private int _selectedIndex = -1;
