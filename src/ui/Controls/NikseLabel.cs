@@ -1,8 +1,8 @@
-﻿using System.Drawing;
+﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Logic;
+using System.Drawing;
 using System.Drawing.Text;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core.Common;
-using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Controls
 {
@@ -15,7 +15,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         internal static StringFormat CreateStringFormat(Control control, ContentAlignment contentAlignment, bool showEllipsis)
         {
-            var stringFormat = new StringFormat(); 
+            var stringFormat = new StringFormat();
 
             if (contentAlignment == ContentAlignment.TopRight ||
                 contentAlignment == ContentAlignment.MiddleRight ||
@@ -104,7 +104,7 @@ namespace Nikse.SubtitleEdit.Controls
 
             var rectangle = new Rectangle(0, 0, Width, Height);
 
-            using (var font = new Font(Font.FontFamily, Font.Size-1, FontStyle.Italic))
+            using (var font = new Font(Font.FontFamily, Font.Size - 1, FontStyle.Italic))
             {
                 if (UseCompatibleTextRendering)
                 {
