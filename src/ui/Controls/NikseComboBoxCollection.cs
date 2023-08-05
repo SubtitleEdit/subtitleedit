@@ -49,11 +49,11 @@ namespace Nikse.SubtitleEdit.Controls
 
         public void Clear()
         {
+            _items.Clear();
             if (SyncRoot is NikseComboBox ncb)
             {
-                ncb.SelectedIndex = -1;
+                ncb.SelectedIndexReset(); // do not fire change events
             }
-            _items.Clear();
         }
 
         public int IndexOf(object value)
@@ -69,11 +69,19 @@ namespace Nikse.SubtitleEdit.Controls
         public void Remove(object value)
         {
             _items.Remove(value);
+            if (SyncRoot is NikseComboBox ncb && ncb.SelectedIndex >= _items.Count)
+            {
+                ncb.SelectedIndexReset(); // do not fire change events
+            }
         }
 
         public void RemoveAt(int index)
         {
             _items.RemoveAt(index);
+            if (SyncRoot is NikseComboBox ncb && ncb.SelectedIndex >= _items.Count)
+            {
+                ncb.SelectedIndexReset(); // do not fire change events
+            }
         }
 
         public object this[int index]
