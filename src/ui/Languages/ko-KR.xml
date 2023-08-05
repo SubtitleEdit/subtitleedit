@@ -1737,6 +1737,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <NothingToUndo>취소할 것이 없습니다!</NothingToUndo>
     <InvalidLanguageNameX>잘못된 언어 이름: {0}</InvalidLanguageNameX>
     <DoNotDisplayMessageAgain>다시 표시하지 않음</DoNotDisplayMessageAgain>
+    <DoNotAutoLoadVideo>비디오 자동 로드 안 함</DoNotAutoLoadVideo>
     <NumberOfCorrectedWords>수정된 단어: {0}</NumberOfCorrectedWords>
     <NumberOfSkippedWords>무시한 단어: {0}</NumberOfSkippedWords>
     <NumberOfCorrectWords>올바른 단어: {0}</NumberOfCorrectWords>
