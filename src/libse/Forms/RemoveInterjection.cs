@@ -358,14 +358,17 @@ namespace Nikse.SubtitleEdit.Core.Forms
                                         temp = temp.Remove(0, 1);
                                         doRepeat = true;
                                     }
+
+                                    temp = temp.TrimStart();
                                 }
 
                                 var preNoTags = HtmlUtil.RemoveHtmlTags(pre, true).Trim();
                                 if (temp.Length > 0 &&
                                     (preNoTags.Length == 0 ||
                                      preNoTags == "-" ||
-                                     preNoTags == "¡" ||
-                                     preNoTags == "¿" ||
+                                     preNoTags == "" ||
+                                     preNoTags.EndsWith('¡') ||
+                                     preNoTags.EndsWith('¿') ||
                                      preNoTags.EndsWith(". -", StringComparison.Ordinal) ||
                                      preNoTags.EndsWith("! -", StringComparison.Ordinal) ||
                                      preNoTags.EndsWith("? -", StringComparison.Ordinal) ||
@@ -373,7 +376,20 @@ namespace Nikse.SubtitleEdit.Core.Forms
                                      preNoTags.HasSentenceEnding()) &&
                                     s[0].ToString(CultureInfo.InvariantCulture) != s[0].ToString(CultureInfo.InvariantCulture).ToLowerInvariant())
                                 {
-                                    temp = char.ToUpper(temp[0]) + temp.Substring(1);
+                                    if (temp[0] != '¡' && temp[0] != '¿')
+                                    {
+                                        temp = char.ToUpper(temp[0]) + temp.Substring(1);
+                                    }
+
+                                    if (temp[0] == '¡' && temp.Length > 1)
+                                    {
+                                        temp = "¡" + temp.TrimStart('¡').CapitalizeFirstLetter();
+                                    }
+                                    else if (temp[0] == '¿' && temp.Length > 1)
+                                    {
+                                        temp = "¿" + temp.TrimStart('¿').CapitalizeFirstLetter();
+                                    }
+
                                     doRepeat = true;
                                 }
 
