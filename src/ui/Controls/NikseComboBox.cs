@@ -73,6 +73,15 @@ namespace Nikse.SubtitleEdit.Controls
         [MergableProperty(false)]
         public NikseComboBoxCollection Items => _items;
 
+        /// <summary>
+        /// Set SelectedIndex without raising events.
+        /// </summary>
+        internal void SelectedIndexReset()
+        {
+            _selectedIndex = -1;
+            _textBox.Text = string.Empty;
+        }
+
         private int _selectedIndex = -1;
         public int SelectedIndex
         {
