@@ -133,21 +133,21 @@ namespace Nikse.SubtitleEdit.Forms.Options
             listBoxSection.SelectedIndex = GeneralSection;
 
             checkBoxToolbarNew.Checked = gs.ShowToolbarNew;
-            checkBoxToolbarOpen.Checked = gs.ShowToolbarOpen;
-            checkBoxToolbarSave.Checked = gs.ShowToolbarSave;
-            checkBoxToolbarSaveAs.Checked = gs.ShowToolbarSaveAs;
-            checkBoxToolbarFind.Checked = gs.ShowToolbarFind;
-            checkBoxReplace.Checked = gs.ShowToolbarReplace;
+            checkBoxTBpen.Checked = gs.ShowToolbarOpen;
+            checkBoxTBSave.Checked = gs.ShowToolbarSave;
+            checkBoxTBSaveAs.Checked = gs.ShowToolbarSaveAs;
+            checkBoxTBFind.Checked = gs.ShowToolbarFind;
+            checkBoxTBReplace.Checked = gs.ShowToolbarReplace;
             checkBoxTBFixCommonErrors.Checked = gs.ShowToolbarFixCommonErrors;
             checkBoxTBRemoveTextForHi.Checked = gs.ShowToolbarRemoveTextForHi;
             checkBoxTBToggleSourceView.Checked = gs.ShowToolbarToggleSourceView;
-            checkBoxVisualSync.Checked = gs.ShowToolbarVisualSync;
+            checkBoxTBVisualSync.Checked = gs.ShowToolbarVisualSync;
             checkBoxTBBurnIn.Checked = gs.ShowToolbarBurnIn;
-            checkBoxSettings.Checked = gs.ShowToolbarSettings;
-            checkBoxSpellCheck.Checked = gs.ShowToolbarSpellCheck;
-            checkBoxNetflixQualityCheck.Checked = gs.ShowToolbarNetflixGlyphCheck;
-            checkBoxBeautifyTimeCodes.Checked = gs.ShowToolbarBeautifyTimeCodes;
-            checkBoxHelp.Checked = gs.ShowToolbarHelp;
+            checkBoxTBSettings.Checked = gs.ShowToolbarSettings;
+            checkBoxTBSpellCheck.Checked = gs.ShowToolbarSpellCheck;
+            checkBoxTBNetflixQualityCheck.Checked = gs.ShowToolbarNetflixGlyphCheck;
+            checkBoxTBBeautifyTimeCodes.Checked = gs.ShowToolbarBeautifyTimeCodes;
+            checkBoxTBHelp.Checked = gs.ShowToolbarHelp;
 
             comboBoxFrameRate.Items.Clear();
             comboBoxFrameRate.Items.Add(23.976.ToString(CultureInfo.CurrentCulture));
@@ -403,80 +403,116 @@ namespace Nikse.SubtitleEdit.Forms.Options
             labelTBSpellCheck.Text = language.SpellCheck;
             labelTBNetflixQualityCheck.Text = language.NetflixQualityCheck;
             labelTBBeautifyTimeCodes.Text = language.BeautifyTimeCodes;
-            labelToggleSourceView.Text = language.ToggleView;
+            labelTBToggleSourceView.Text = language.ToggleView;
             labelTBSettings.Text = language.SettingsName;
             labelTBHelp.Text = language.Help;
             labelToolbarIconTheme.Text = language.Theme;
             checkBoxToolbarNew.Text = LanguageSettings.Current.General.Visible;
-            checkBoxToolbarOpen.Text = LanguageSettings.Current.General.Visible;
-            checkBoxToolbarSave.Text = LanguageSettings.Current.General.Visible;
-            checkBoxToolbarSaveAs.Text = LanguageSettings.Current.General.Visible;
-            checkBoxToolbarFind.Text = LanguageSettings.Current.General.Visible;
-            checkBoxReplace.Text = LanguageSettings.Current.General.Visible;
+            checkBoxTBpen.Text = LanguageSettings.Current.General.Visible;
+            checkBoxTBSave.Text = LanguageSettings.Current.General.Visible;
+            checkBoxTBSaveAs.Text = LanguageSettings.Current.General.Visible;
+            checkBoxTBFind.Text = LanguageSettings.Current.General.Visible;
+            checkBoxTBReplace.Text = LanguageSettings.Current.General.Visible;
             checkBoxTBFixCommonErrors.Text = LanguageSettings.Current.General.Visible;
             checkBoxTBRemoveTextForHi.Text = LanguageSettings.Current.General.Visible;
-            checkBoxVisualSync.Text = LanguageSettings.Current.General.Visible;
+            checkBoxTBVisualSync.Text = LanguageSettings.Current.General.Visible;
             checkBoxTBBurnIn.Text = LanguageSettings.Current.General.Visible;
-            checkBoxSpellCheck.Text = LanguageSettings.Current.General.Visible;
-            checkBoxNetflixQualityCheck.Text = LanguageSettings.Current.General.Visible;
-            checkBoxBeautifyTimeCodes.Text = LanguageSettings.Current.General.Visible;
-            checkBoxSettings.Text = LanguageSettings.Current.General.Visible;
-            checkBoxHelp.Text = LanguageSettings.Current.General.Visible;
+            checkBoxTBSpellCheck.Text = LanguageSettings.Current.General.Visible;
+            checkBoxTBNetflixQualityCheck.Text = LanguageSettings.Current.General.Visible;
+            checkBoxTBBeautifyTimeCodes.Text = LanguageSettings.Current.General.Visible;
+            checkBoxTBSettings.Text = LanguageSettings.Current.General.Visible;
+            checkBoxTBHelp.Text = LanguageSettings.Current.General.Visible;
             checkBoxTBToggleSourceView.Text = LanguageSettings.Current.General.Visible;
 
             // Toolbar icons first row
+            var tbTabIndex = checkBoxToolbarNew.TabIndex;
+            tbTabIndex++;
+
             labelTBOpen.Left = Math.Max(labelTBNew.Right, checkBoxToolbarNew.Right) + 18;
-            pictureBoxFileOpen.Left = labelTBOpen.Left;
-            checkBoxToolbarOpen.Left = labelTBOpen.Left;
+            pictureBoxTBOpen.Left = labelTBOpen.Left;
+            checkBoxTBpen.Left = labelTBOpen.Left;
+            checkBoxTBpen.TabIndex = tbTabIndex;
+            tbTabIndex++;
 
-            labelTBSave.Left = Math.Max(labelTBOpen.Right, checkBoxToolbarOpen.Right) + 18;
-            pictureBoxSave.Left = labelTBSave.Left;
-            checkBoxToolbarSave.Left = labelTBSave.Left;
+            labelTBSave.Left = Math.Max(labelTBOpen.Right, checkBoxTBpen.Right) + 18;
+            pictureBoxTBSave.Left = labelTBSave.Left;
+            checkBoxTBSave.Left = labelTBSave.Left;
+            checkBoxTBSave.TabIndex = tbTabIndex;
+            tbTabIndex++;
 
-            labelTBSaveAs.Left = Math.Max(labelTBSave.Right, checkBoxToolbarSave.Right) + 18;
-            pictureBoxSaveAs.Left = labelTBSaveAs.Left;
-            checkBoxToolbarSaveAs.Left = labelTBSaveAs.Left;
+            labelTBSaveAs.Left = Math.Max(labelTBSave.Right, checkBoxTBSave.Right) + 18;
+            pictureBoxTBSaveAs.Left = labelTBSaveAs.Left;
+            checkBoxTBSaveAs.Left = labelTBSaveAs.Left;
+            checkBoxTBSaveAs.TabIndex = tbTabIndex;
+            tbTabIndex++;
 
-            labelTBFind.Left = Math.Max(labelTBSaveAs.Right, checkBoxToolbarSaveAs.Right) + 18;
-            pictureBoxFind.Left = labelTBFind.Left;
-            checkBoxToolbarFind.Left = labelTBFind.Left;
+            labelTBFind.Left = Math.Max(labelTBSaveAs.Right, checkBoxTBSaveAs.Right) + 18;
+            pictureBoxTBFind.Left = labelTBFind.Left;
+            checkBoxTBFind.Left = labelTBFind.Left;
+            checkBoxTBFind.TabIndex = tbTabIndex;
+            tbTabIndex++;
 
-            labelTBReplace.Left = Math.Max(labelTBFind.Right, checkBoxToolbarFind.Right) + 18;
-            pictureBoxReplace.Left = labelTBReplace.Left;
-            checkBoxReplace.Left = labelTBReplace.Left;
+            labelTBReplace.Left = Math.Max(labelTBFind.Right, checkBoxTBFind.Right) + 18;
+            pictureBoxTBReplace.Left = labelTBReplace.Left;
+            checkBoxTBReplace.Left = labelTBReplace.Left;
+            checkBoxTBReplace.TabIndex = tbTabIndex;
+            tbTabIndex++;
 
-            labelTBFixCommonErrors.Left = Math.Max(labelTBReplace.Right, checkBoxReplace.Right) + 18;
-            pictureBoxFixCommonErrors.Left = labelTBFixCommonErrors.Left;
+            labelTBFixCommonErrors.Left = Math.Max(labelTBReplace.Right, checkBoxTBReplace.Right) + 18;
+            pictureBoxTBFixCommonErrors.Left = labelTBFixCommonErrors.Left;
             checkBoxTBFixCommonErrors.Left = labelTBFixCommonErrors.Left;
+            checkBoxTBFixCommonErrors.TabIndex = tbTabIndex;
+            tbTabIndex++;
 
             // Toolbar icons second row
-            labelTBVisualSync.Left = Math.Max(labelTBRemoveTextForHi.Right, checkBoxTBRemoveTextForHi.Right) + 18;
-            pictureBoxVisualSync.Left = labelTBVisualSync.Left;
-            checkBoxVisualSync.Left = labelTBVisualSync.Left;
+            checkBoxTBRemoveTextForHi.TabIndex = tbTabIndex;
+            tbTabIndex++;
 
-            labelTBBurnIn.Left = Math.Max(labelTBVisualSync.Right, checkBoxVisualSync.Right) + 18;
-            pictureBoxBurnIn.Left = labelTBBurnIn.Left;
+            labelTBVisualSync.Left = Math.Max(labelTBRemoveTextForHi.Right, checkBoxTBRemoveTextForHi.Right) + 18;
+            pictureBoxTBVisualSync.Left = labelTBVisualSync.Left;
+            checkBoxTBVisualSync.Left = labelTBVisualSync.Left;
+            checkBoxTBVisualSync.TabIndex = tbTabIndex;
+            tbTabIndex++;
+
+            labelTBBurnIn.Left = Math.Max(labelTBVisualSync.Right, checkBoxTBVisualSync.Right) + 18;
+            pictureBoxTBBurnIn.Left = labelTBBurnIn.Left;
             checkBoxTBBurnIn.Left = labelTBBurnIn.Left;
+            checkBoxTBBurnIn.TabIndex = tbTabIndex;
+            tbTabIndex++;
 
             labelTBSpellCheck.Left = Math.Max(labelTBBurnIn.Right, checkBoxTBBurnIn.Right) + 18;
-            pictureBoxSpellCheck.Left = labelTBSpellCheck.Left;
-            checkBoxSpellCheck.Left = labelTBSpellCheck.Left;
+            pictureBoxTBSpellCheck.Left = labelTBSpellCheck.Left;
+            checkBoxTBSpellCheck.Left = labelTBSpellCheck.Left;
+            checkBoxTBSpellCheck.TabIndex = tbTabIndex;
+            tbTabIndex++;
 
-            labelTBSettings.Left = Math.Max(labelTBSpellCheck.Right, checkBoxSpellCheck.Right) + 18;
-            pictureBoxSettings.Left = labelTBSettings.Left;
-            checkBoxSettings.Left = labelTBSettings.Left;
+            labelTBSettings.Left = Math.Max(labelTBSpellCheck.Right, checkBoxTBSpellCheck.Right) + 18;
+            pictureBoxTBSettings.Left = labelTBSettings.Left;
+            checkBoxTBSettings.Left = labelTBSettings.Left;
+            checkBoxTBSettings.TabIndex = tbTabIndex;
+            tbTabIndex++;
 
-            labelTBHelp.Left = Math.Max(labelTBSettings.Right, checkBoxSettings.Right) + 18;
-            pictureBoxHelp.Left = labelTBHelp.Left;
-            checkBoxHelp.Left = labelTBHelp.Left;
+            labelTBNetflixQualityCheck.Left = Math.Max(labelTBSettings.Right, checkBoxTBSettings.Right) + 18;
+            pictureBoxTBNetflixQualityCheck.Left = labelTBNetflixQualityCheck.Left;
+            checkBoxTBNetflixQualityCheck.Left = labelTBNetflixQualityCheck.Left;
+            checkBoxTBNetflixQualityCheck.TabIndex = tbTabIndex;
+            tbTabIndex++;
 
-            labelTBNetflixQualityCheck.Left = Math.Max(labelTBHelp.Right, checkBoxHelp.Right) + 18;
-            pictureBoxNetflixQualityCheck.Left = labelTBNetflixQualityCheck.Left;
-            checkBoxNetflixQualityCheck.Left = labelTBNetflixQualityCheck.Left;
+            // Toolbar icons third row
+            checkBoxTBBeautifyTimeCodes.TabIndex = tbTabIndex;
+            tbTabIndex++;
 
-            labelTBBeautifyTimeCodes.Left = Math.Max(labelTBNetflixQualityCheck.Right, checkBoxNetflixQualityCheck.Right) + 18;
-            pictureBoxBeautifyTimeCodes.Left = labelTBBeautifyTimeCodes.Left;
-            checkBoxBeautifyTimeCodes.Left = labelTBBeautifyTimeCodes.Left;
+            labelTBHelp.Left = Math.Max(labelTBBeautifyTimeCodes.Right, checkBoxTBBeautifyTimeCodes.Right) + 18;
+            pictureBoxTBHelp.Left = labelTBHelp.Left;
+            checkBoxTBHelp.Left = labelTBHelp.Left;
+            checkBoxTBHelp.TabIndex = tbTabIndex;
+            tbTabIndex++;
+
+            labelTBToggleSourceView.Left = Math.Max(labelTBHelp.Right, checkBoxTBHelp.Right) + 18;
+            pictureBoxTBToggleSourceView.Left = labelTBToggleSourceView.Left;
+            checkBoxTBToggleSourceView.Left = labelTBToggleSourceView.Left;
+            checkBoxTBToggleSourceView.TabIndex = tbTabIndex;
+
 
             groupBoxMiscellaneous.Text = language.General;
             groupBoxToolsMisc.Text = language.Miscellaneous;
@@ -1905,44 +1941,44 @@ namespace Nikse.SubtitleEdit.Forms.Options
             Icon = (Icon)icon.Clone();
             pictureBoxFileNew.Image = (Image)newFile.Clone();
             pictureBoxPreview1.Image = (Image)newFile.Clone();
-            pictureBoxFileOpen.Image = (Image)openFile.Clone();
+            pictureBoxTBOpen.Image = (Image)openFile.Clone();
             pictureBoxPreview2.Image = (Image)openFile.Clone();
-            pictureBoxSave.Image = (Image)saveFile.Clone();
+            pictureBoxTBSave.Image = (Image)saveFile.Clone();
             pictureBoxPreview3.Image = (Image)saveFile.Clone();
-            pictureBoxSaveAs.Image = (Image)saveFileAs.Clone();
-            pictureBoxFind.Image = (Image)find.Clone();
-            pictureBoxReplace.Image = (Image)replace.Clone();
-            pictureBoxFixCommonErrors.Image = (Image)fixCommonErrors.Clone();
+            pictureBoxTBSaveAs.Image = (Image)saveFileAs.Clone();
+            pictureBoxTBFind.Image = (Image)find.Clone();
+            pictureBoxTBReplace.Image = (Image)replace.Clone();
+            pictureBoxTBFixCommonErrors.Image = (Image)fixCommonErrors.Clone();
             pictureBoxRemoveTextForHi.Image = (Image)removeTextForHi.Clone();
-            pictureBoxSourceView.Image = (Image)toggleSourceView.Clone();
-            pictureBoxVisualSync.Image = (Image)visualSync.Clone();
-            pictureBoxBurnIn.Image = (Image)burnIn.Clone();
-            pictureBoxSpellCheck.Image = (Image)spellCheck.Clone();
-            pictureBoxNetflixQualityCheck.Image = (Image)netflixGlyphCheck.Clone();
-            pictureBoxBeautifyTimeCodes.Image = (Image)beautifyTimeCodes.Clone();
-            pictureBoxSettings.Image = (Image)settings.Clone();
-            pictureBoxHelp.Image = (Image)help.Clone();
+            pictureBoxTBToggleSourceView.Image = (Image)toggleSourceView.Clone();
+            pictureBoxTBVisualSync.Image = (Image)visualSync.Clone();
+            pictureBoxTBBurnIn.Image = (Image)burnIn.Clone();
+            pictureBoxTBSpellCheck.Image = (Image)spellCheck.Clone();
+            pictureBoxTBNetflixQualityCheck.Image = (Image)netflixGlyphCheck.Clone();
+            pictureBoxTBBeautifyTimeCodes.Image = (Image)beautifyTimeCodes.Clone();
+            pictureBoxTBSettings.Image = (Image)settings.Clone();
+            pictureBoxTBHelp.Image = (Image)help.Clone();
         }
         private void ButtonOkClick(object sender, EventArgs e)
         {
             var gs = Configuration.Settings.General;
 
             gs.ShowToolbarNew = checkBoxToolbarNew.Checked;
-            gs.ShowToolbarOpen = checkBoxToolbarOpen.Checked;
-            gs.ShowToolbarSave = checkBoxToolbarSave.Checked;
-            gs.ShowToolbarSaveAs = checkBoxToolbarSaveAs.Checked;
-            gs.ShowToolbarFind = checkBoxToolbarFind.Checked;
-            gs.ShowToolbarReplace = checkBoxReplace.Checked;
+            gs.ShowToolbarOpen = checkBoxTBpen.Checked;
+            gs.ShowToolbarSave = checkBoxTBSave.Checked;
+            gs.ShowToolbarSaveAs = checkBoxTBSaveAs.Checked;
+            gs.ShowToolbarFind = checkBoxTBFind.Checked;
+            gs.ShowToolbarReplace = checkBoxTBReplace.Checked;
             gs.ShowToolbarFixCommonErrors = checkBoxTBFixCommonErrors.Checked;
             gs.ShowToolbarRemoveTextForHi = checkBoxTBRemoveTextForHi.Checked;
             gs.ShowToolbarToggleSourceView = checkBoxTBToggleSourceView.Checked;
-            gs.ShowToolbarVisualSync = checkBoxVisualSync.Checked;
+            gs.ShowToolbarVisualSync = checkBoxTBVisualSync.Checked;
             gs.ShowToolbarBurnIn = checkBoxTBBurnIn.Checked;
-            gs.ShowToolbarSettings = checkBoxSettings.Checked;
-            gs.ShowToolbarSpellCheck = checkBoxSpellCheck.Checked;
-            gs.ShowToolbarNetflixGlyphCheck = checkBoxNetflixQualityCheck.Checked;
-            gs.ShowToolbarBeautifyTimeCodes = checkBoxBeautifyTimeCodes.Checked;
-            gs.ShowToolbarHelp = checkBoxHelp.Checked;
+            gs.ShowToolbarSettings = checkBoxTBSettings.Checked;
+            gs.ShowToolbarSpellCheck = checkBoxTBSpellCheck.Checked;
+            gs.ShowToolbarNetflixGlyphCheck = checkBoxTBNetflixQualityCheck.Checked;
+            gs.ShowToolbarBeautifyTimeCodes = checkBoxTBBeautifyTimeCodes.Checked;
+            gs.ShowToolbarHelp = checkBoxTBHelp.Checked;
 
             gs.ShowFrameRate = checkBoxShowFrameRate.Checked;
             if (double.TryParse(comboBoxFrameRate.Text.Replace(',', '.').Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, "."), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var outFrameRate))
@@ -3707,27 +3743,27 @@ namespace Nikse.SubtitleEdit.Forms.Options
             TryLoadIcon(pictureBoxPreview3, "Save");
 
             TryLoadIcon(pictureBoxFileNew, "New");
-            TryLoadIcon(pictureBoxFileOpen, "Open");
-            TryLoadIcon(pictureBoxSave, "Save");
-            TryLoadIcon(pictureBoxSaveAs, "SaveAs");
-            TryLoadIcon(pictureBoxFind, "Find");
-            TryLoadIcon(pictureBoxReplace, "Replace");
-            TryLoadIcon(pictureBoxFixCommonErrors, "FixCommonErrors");
+            TryLoadIcon(pictureBoxTBOpen, "Open");
+            TryLoadIcon(pictureBoxTBSave, "Save");
+            TryLoadIcon(pictureBoxTBSaveAs, "SaveAs");
+            TryLoadIcon(pictureBoxTBFind, "Find");
+            TryLoadIcon(pictureBoxTBReplace, "Replace");
+            TryLoadIcon(pictureBoxTBFixCommonErrors, "FixCommonErrors");
             TryLoadIcon(pictureBoxRemoveTextForHi, "RemoveTextForHi");
-            TryLoadIcon(pictureBoxVisualSync, "VisualSync");
-            TryLoadIcon(pictureBoxBurnIn, "BurnIn");
-            TryLoadIcon(pictureBoxSpellCheck, "SpellCheck");
-            TryLoadIcon(pictureBoxNetflixQualityCheck, "Netflix");
-            TryLoadIcon(pictureBoxBeautifyTimeCodes, "BeautifyTimeCodes");
+            TryLoadIcon(pictureBoxTBVisualSync, "VisualSync");
+            TryLoadIcon(pictureBoxTBBurnIn, "BurnIn");
+            TryLoadIcon(pictureBoxTBSpellCheck, "SpellCheck");
+            TryLoadIcon(pictureBoxTBNetflixQualityCheck, "Netflix");
+            TryLoadIcon(pictureBoxTBBeautifyTimeCodes, "BeautifyTimeCodes");
             TryLoadIcon(pictureBoxAssStyleManager, "AssaStyle");
             TryLoadIcon(pictureBoxAssProperties, "AssaProperties");
             TryLoadIcon(pictureBoxAssAttachments, "AssaAttachments");
             TryLoadIcon(pictureBoxAssaDraw, "AssaDraw");
-            TryLoadIcon(pictureBoxSettings, "Settings");
-            TryLoadIcon(pictureBoxHelp, "Help");
+            TryLoadIcon(pictureBoxTBSettings, "Settings");
+            TryLoadIcon(pictureBoxTBHelp, "Help");
             TryLoadIcon(pictureBoxToggleWaveform, "WaveformToggle");
             TryLoadIcon(pictureBoxToggleVideo, "VideoToggle");
-            TryLoadIcon(pictureBoxSourceView, "SourceView");
+            TryLoadIcon(pictureBoxTBToggleSourceView, "SourceView");
             TryLoadIcon(pictureBoxIttProperties, "IttProperties");
             TryLoadIcon(pictureBoxWebVttProperties, "WebVttProperties");
             TryLoadIcon(pictureBoxWebVttStyle, "WebVttStyle");
