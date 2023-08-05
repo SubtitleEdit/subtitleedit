@@ -2174,6 +2174,34 @@ namespace Test.Logic.Forms
         }
 
         [TestMethod]
+        public void RemoveInterjectionsCasing1()
+        {
+            var actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext("- Voy a casarme con él." + Environment.NewLine + "- ¡Oh, sí!", onlyInSeparatedLine: false));
+            Assert.AreEqual("- Voy a casarme con él." + Environment.NewLine + "- ¡Sí!", actual);
+        }
+
+        [TestMethod]
+        public void RemoveInterjectionsCasing2()
+        {
+            var actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext("- Ah, ¿sí?" + Environment.NewLine + "- Sí.", onlyInSeparatedLine: false));
+            Assert.AreEqual("- ¿Sí?" + Environment.NewLine + "- Sí.", actual);
+        }
+
+        [TestMethod]
+        public void RemoveInterjectionsCasing3()
+        {
+            var actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext("Eh, ¿cree que su brazo era enorme? ¿Eh?", onlyInSeparatedLine: false));
+            Assert.AreEqual("¿Cree que su brazo era enorme?", actual);
+        }
+
+        [TestMethod]
+        public void RemoveInterjectionsCasing4()
+        {
+            var actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext("- ¡Oh, tiene una reacción alérgica!" + Environment.NewLine + "- ¿Tienen níquel los cubiertos?", onlyInSeparatedLine: false));
+            Assert.AreEqual("- ¡Tiene una reacción alérgica!" + Environment.NewLine + "- ¿Tienen níquel los cubiertos?", actual);
+        }
+
+        [TestMethod]
         public void DoNotRemoveTime()
         {
             var target = GetRemoveTextForHiLib();
