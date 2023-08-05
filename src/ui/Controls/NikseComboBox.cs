@@ -88,17 +88,26 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     _selectedIndex = value;
                     _textBox.Text = string.Empty;
-                    SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
-                    SelectedValueChanged?.Invoke(this, EventArgs.Empty);
-                    Invalidate();
+
+                    if (!_skipPaint)
+                    {
+                        SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
+                        SelectedValueChanged?.Invoke(this, EventArgs.Empty);
+                        Invalidate();
+                    }
+
                     return;
                 }
 
                 _selectedIndex = value;
                 _textBox.Text = Items[_selectedIndex].ToString();
-                SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
-                SelectedValueChanged?.Invoke(this, EventArgs.Empty);
-                Invalidate();
+
+                if (!_skipPaint)
+                {
+                    SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
+                    SelectedValueChanged?.Invoke(this, EventArgs.Empty);
+                    Invalidate();
+                }
             }
         }
 
@@ -164,8 +173,12 @@ namespace Nikse.SubtitleEdit.Controls
                     if (_textBox.Text != value)
                     {
                         _textBox.Text = value;
-                        SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
-                        SelectedValueChanged?.Invoke(this, EventArgs.Empty);
+
+                        if (!_skipPaint)
+                        {
+                            SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
+                            SelectedValueChanged?.Invoke(this, EventArgs.Empty);
+                        }
                     }
 
                     return;
@@ -186,8 +199,11 @@ namespace Nikse.SubtitleEdit.Controls
                 _textBox.Text = value;
                 _selectedIndex = idx;
 
-                SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
-                SelectedValueChanged?.Invoke(this, EventArgs.Empty);
+                if (!_skipPaint)
+                {
+                    SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
+                    SelectedValueChanged?.Invoke(this, EventArgs.Empty);
+                }
             }
         }
 
@@ -407,8 +423,11 @@ namespace Nikse.SubtitleEdit.Controls
                             _selectedIndex--;
                             _textBox.Text = Items[_selectedIndex].ToString();
                             Invalidate();
-                            SelectedIndexChanged?.Invoke(sender, e);
-                            SelectedValueChanged?.Invoke(this, EventArgs.Empty);
+                            if (!_skipPaint)
+                            {
+                                SelectedIndexChanged?.Invoke(sender, e);
+                                SelectedValueChanged?.Invoke(this, EventArgs.Empty);
+                            }
                         }
                         e.Handled = true;
                     }
@@ -418,9 +437,12 @@ namespace Nikse.SubtitleEdit.Controls
                         {
                             _selectedIndex++;
                             _textBox.Text = Items[_selectedIndex].ToString();
-                            Invalidate();
-                            SelectedIndexChanged?.Invoke(sender, e);
-                            SelectedValueChanged?.Invoke(this, EventArgs.Empty);
+                            if (!_skipPaint)
+                            {
+                                Invalidate();
+                                SelectedIndexChanged?.Invoke(sender, e);
+                                SelectedValueChanged?.Invoke(this, EventArgs.Empty);
+                            }
                         }
                         e.Handled = true;
                     }
@@ -485,6 +507,8 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 Invalidate();
             };
+
+            _skipPaint = false;
         }
 
         private void HideDropDown()
@@ -714,9 +738,13 @@ namespace Nikse.SubtitleEdit.Controls
                     var item = _listView.SelectedItems[0];
                     _selectedIndex = item.Index;
                     _textBox.Text = item.Text;
-                    Invalidate();
-                    SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
-                    SelectedValueChanged?.Invoke(this, EventArgs.Empty);
+                    if (!_skipPaint)
+                    {
+                        Invalidate();
+                        SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
+                        SelectedValueChanged?.Invoke(this, EventArgs.Empty);
+                    }
+
                     HideDropDown();
                     args.SuppressKeyPress = true;
                 }
@@ -738,8 +766,13 @@ namespace Nikse.SubtitleEdit.Controls
                         _listViewMouseLeaveTimer.Stop();
                         _selectedIndex = i;
                         _textBox.Text = _listView.Items[i].Text;
-                        SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
-                        SelectedValueChanged?.Invoke(this, EventArgs.Empty);
+
+                        if (!_skipPaint)
+                        {
+                            SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
+                            SelectedValueChanged?.Invoke(this, EventArgs.Empty);
+                        }
+
                         HideDropDown();
                         _textBox.Focus();
                         _textBox.SelectionLength = 0;
@@ -940,7 +973,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        private bool _skipPaint;
+        private bool _skipPaint = true;
 
         public void BeginUpdate()
         {
