@@ -535,8 +535,8 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelOriginalCharactersPerSecond = new System.Windows.Forms.Label();
             this.labelTextOriginalLineTotal = new System.Windows.Forms.Label();
             this.labelTextOriginalLineLengths = new System.Windows.Forms.Label();
-            this.labelOriginalText = new System.Windows.Forms.Label();
-            this.labelText = new System.Windows.Forms.Label();
+            this.labelOriginalText = new Nikse.SubtitleEdit.Controls.NikseLabel();
+            this.labelText = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.textBoxListViewTextOriginal = new Nikse.SubtitleEdit.Controls.SETextBox();
             this.buttonAutoBreak = new System.Windows.Forms.Button();
             this.labelTextLineLengths = new System.Windows.Forms.Label();
@@ -547,9 +547,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.numericUpDownDuration = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.buttonPrevious = new System.Windows.Forms.Button();
             this.buttonNext = new System.Windows.Forms.Button();
-            this.labelStartTime = new System.Windows.Forms.Label();
-            this.labelDuration = new System.Windows.Forms.Label();
-            this.labelAutoDuration = new System.Windows.Forms.Label();
+            this.labelStartTime = new Nikse.SubtitleEdit.Controls.NikseLabel();
+            this.labelDuration = new Nikse.SubtitleEdit.Controls.NikseLabel();
+            this.labelAutoDuration = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.pictureBoxRecord = new System.Windows.Forms.PictureBox();
             this.textBoxSource = new System.Windows.Forms.TextBox();
             this.contextMenuStripTextBoxSourceView = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -5989,9 +5989,9 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripMenuItem italicToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem underlineToolStripMenuItem;
         private System.Windows.Forms.GroupBox groupBoxEdit;
-        private System.Windows.Forms.Label labelText;
-        private System.Windows.Forms.Label labelDuration;
-        private System.Windows.Forms.Label labelStartTime;
+        private Nikse.SubtitleEdit.Controls.NikseLabel labelText;
+        private Nikse.SubtitleEdit.Controls.NikseLabel labelDuration;
+        private Nikse.SubtitleEdit.Controls.NikseLabel labelStartTime;
         Nikse.SubtitleEdit.Controls.SETextBox textBoxListViewText;
         private System.Windows.Forms.Button buttonPrevious;
         private System.Windows.Forms.Button buttonNext;
@@ -6167,7 +6167,7 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripMenuItem insertLineToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem closeVideoToolStripMenuItem;
         private System.Windows.Forms.Label labelSingleLine;
-        private System.Windows.Forms.Label labelOriginalText;
+        private Nikse.SubtitleEdit.Controls.NikseLabel labelOriginalText;
         private System.Windows.Forms.Label labelOriginalCharactersPerSecond;
         private System.Windows.Forms.Label labelTextOriginalLineTotal;
         private System.Windows.Forms.Label labelOriginalSingleLine;
