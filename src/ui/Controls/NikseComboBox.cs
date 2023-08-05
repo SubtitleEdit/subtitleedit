@@ -615,7 +615,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
 
             _listView.Items.AddRange(listViewItems.ToArray());
-            _listView.Width = DropDownWidth;
+            _listView.Width = DropDownWidth > 0 ? DropDownWidth : Width;
             _listView.EndUpdate();
 
             var lvHeight = 18;
@@ -639,14 +639,14 @@ namespace Nikse.SubtitleEdit.Controls
             if (listViewItems.Count > 0)
             {
                 var itemHeight = _listView.GetItemRect(0).Height;
-                lvHeight = itemHeight * listViewItems.Count + 6;
+                lvHeight = itemHeight * listViewItems.Count + 16;
                 var spaceInPixelsBottom = form.Height - (totalY + Height);
                 var maxHeight = DropDownHeight;
                 if (spaceInPixelsBottom >= DropDownHeight ||
                     spaceInPixelsBottom * 1.2 > totalY)
                 {
                     top = totalY + Height;
-                    maxHeight = Math.Min(maxHeight, form.Height - Bottom - 18 - SystemInformation.CaptionHeight);
+                    maxHeight = Math.Min(maxHeight, form.Height - (totalY + Height) - 18 - SystemInformation.CaptionHeight);
                     lvHeight = Math.Min(lvHeight, maxHeight);
                 }
                 else
@@ -685,7 +685,8 @@ namespace Nikse.SubtitleEdit.Controls
 
             _listView = new ListView();
             _listView.View = View.Details;
-            var widthNoScrollBar = DropDownWidth - SystemInformation.VerticalScrollBarWidth - SystemInformation.BorderSize.Width * 4;
+            var w = Width = DropDownWidth > 0 ? DropDownWidth : Width;
+            var widthNoScrollBar = w - SystemInformation.VerticalScrollBarWidth - SystemInformation.BorderSize.Width * 4;
             _listView.Columns.Add("text", widthNoScrollBar);
             _listView.HeaderStyle = ColumnHeaderStyle.None;
             _listView.FullRowSelect = true;

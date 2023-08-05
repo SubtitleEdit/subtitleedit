@@ -32,7 +32,6 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(WhisperAdvanced));
             this.labelWhisperExtraCmdLine = new System.Windows.Forms.Label();
-            this.comboBoxWhisperExtra = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
             this.labelNote = new System.Windows.Forms.Label();
@@ -45,6 +44,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             this.textBoxOpenAI = new System.Windows.Forms.TextBox();
             this.tabPageFasterWhisper = new System.Windows.Forms.TabPage();
             this.textBox1 = new System.Windows.Forms.TextBox();
+            this.comboBoxWhisperExtra = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.tabControlCommandLineHelp.SuspendLayout();
             this.TabPageCPP.SuspendLayout();
             this.tabPageConstMe.SuspendLayout();
@@ -60,30 +60,6 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             this.labelWhisperExtraCmdLine.Size = new System.Drawing.Size(214, 13);
             this.labelWhisperExtraCmdLine.TabIndex = 217;
             this.labelWhisperExtraCmdLine.Text = "Extra parameters for Whisper command line:";
-            // 
-            // comboBoxWhisperExtra
-            // 
-            this.comboBoxWhisperExtra.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.comboBoxWhisperExtra.BackColor = System.Drawing.SystemColors.Window;
-            this.comboBoxWhisperExtra.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
-            this.comboBoxWhisperExtra.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
-            this.comboBoxWhisperExtra.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
-            this.comboBoxWhisperExtra.ButtonForeColor = System.Drawing.SystemColors.ControlText;
-            this.comboBoxWhisperExtra.ButtonForeColorDown = System.Drawing.Color.Orange;
-            this.comboBoxWhisperExtra.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            this.comboBoxWhisperExtra.DropDownHeight = 400;
-            this.comboBoxWhisperExtra.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
-            this.comboBoxWhisperExtra.DropDownWidth = 240;
-            this.comboBoxWhisperExtra.FormattingEnabled = true;
-            this.comboBoxWhisperExtra.Location = new System.Drawing.Point(15, 38);
-            this.comboBoxWhisperExtra.Name = "comboBoxWhisperExtra";
-            this.comboBoxWhisperExtra.SelectedIndex = -1;
-            this.comboBoxWhisperExtra.SelectedItem = null;
-            this.comboBoxWhisperExtra.SelectedText = "";
-            this.comboBoxWhisperExtra.Size = new System.Drawing.Size(838, 21);
-            this.comboBoxWhisperExtra.TabIndex = 214;
-            this.comboBoxWhisperExtra.KeyDown += new System.Windows.Forms.KeyEventHandler(this.comboBoxWhisperExtra_KeyDown);
             // 
             // buttonCancel
             // 
@@ -235,6 +211,29 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             this.textBox1.Text = resources.GetString("textBox1.Text");
             this.textBox1.WordWrap = false;
             // 
+            // comboBoxWhisperExtra
+            // 
+            this.comboBoxWhisperExtra.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxWhisperExtra.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxWhisperExtra.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxWhisperExtra.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxWhisperExtra.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxWhisperExtra.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxWhisperExtra.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxWhisperExtra.DropDownHeight = 400;
+            this.comboBoxWhisperExtra.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
+            this.comboBoxWhisperExtra.DropDownWidth = 0;
+            this.comboBoxWhisperExtra.FormattingEnabled = true;
+            this.comboBoxWhisperExtra.Location = new System.Drawing.Point(15, 38);
+            this.comboBoxWhisperExtra.MaxLength = 32767;
+            this.comboBoxWhisperExtra.Name = "comboBoxWhisperExtra";
+            this.comboBoxWhisperExtra.SelectedIndex = -1;
+            this.comboBoxWhisperExtra.SelectedItem = null;
+            this.comboBoxWhisperExtra.SelectedText = "";
+            this.comboBoxWhisperExtra.Size = new System.Drawing.Size(441, 21);
+            this.comboBoxWhisperExtra.TabIndex = 214;
+            this.comboBoxWhisperExtra.KeyDown += new System.Windows.Forms.KeyEventHandler(this.comboBoxWhisperExtra_KeyDown);
+            // 
             // WhisperAdvanced
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -246,10 +245,8 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             this.Controls.Add(this.comboBoxWhisperExtra);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.KeyPreview = true;
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(640, 480);
             this.Name = "WhisperAdvanced";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
