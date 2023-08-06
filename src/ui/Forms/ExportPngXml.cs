@@ -2362,7 +2362,6 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             return $"{time.Hours:00};{time.Minutes:00};{time.Seconds:00};{SubtitleFormat.MillisecondsToFramesMaxFrameRate(time.Milliseconds):00}";
         }
 
-
         private void SetupImageParameters()
         {
             _skipPreview = true;
@@ -4919,7 +4918,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private void subtitleListView1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (_isLoading)
+            if (_isLoading || _skipPreview)
             {
                 return;
             }
