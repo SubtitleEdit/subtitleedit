@@ -33,7 +33,7 @@
             this.buttonCancel = new System.Windows.Forms.Button();
             this.groupBoxNames = new System.Windows.Forms.GroupBox();
             this.buttonAddCustomNames = new System.Windows.Forms.Button();
-            this.textBoxExtraNames = new System.Windows.Forms.TextBox();
+            this.textBoxExtraNames = new Nikse.SubtitleEdit.Controls.SETextBox();
             this.labelExtraNames = new System.Windows.Forms.Label();
             this.buttonInverseSelection = new System.Windows.Forms.Button();
             this.buttonSelectAll = new System.Windows.Forms.Button();
@@ -341,7 +341,7 @@
         private System.Windows.Forms.Button buttonInverseSelection;
         private System.Windows.Forms.Button buttonSelectAll;
         private System.Windows.Forms.Button buttonAddCustomNames;
-        private System.Windows.Forms.TextBox textBoxExtraNames;
+        private Nikse.SubtitleEdit.Controls.SETextBox textBoxExtraNames;
         private System.Windows.Forms.Label labelExtraNames;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSelectAll;

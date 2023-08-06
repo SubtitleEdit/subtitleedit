@@ -38,7 +38,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItem1SelectAll.Text = LanguageSettings.Current.FixCommonErrors.SelectAll;
             toolStripMenuItem2InverseSelection.Text = LanguageSettings.Current.FixCommonErrors.InverseSelection;
             labelExtraNames.Text = LanguageSettings.Current.ChangeCasingNames.ExtraNames;
-            buttonAddCustomNames.Text = LanguageSettings.Current.DvdSubRip.Add;
+            buttonAddCustomNames.Text = LanguageSettings.Current.DvdSubRip.Add.TrimEnd('.');
             toolStripMenuItemInverseSelection.Text = LanguageSettings.Current.Main.Menu.Edit.InverseSelection;
             toolStripMenuItemSelectAll.Text = LanguageSettings.Current.Main.Menu.ContextMenu.SelectAll;
             buttonOK.Text = LanguageSettings.Current.General.Ok;
