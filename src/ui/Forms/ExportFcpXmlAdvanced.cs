@@ -72,7 +72,7 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxHAlign.Items.Add(LanguageSettings.Current.ExportPngXml.Right);
             comboBoxHAlign.Items.Add(LanguageSettings.Current.ExportPngXml.CenterLeftJustify);
 
-            foreach (var fontFamily in FontHelper.GetItalicOrBoldCapableFontFamilies())
+            foreach (var fontFamily in FontHelper.GetRegularOrBoldCapableFontFamilies())
             {
                 comboBoxFontName.Items.Add(fontFamily.Name);
                 if (fontFamily.Name.Equals(_fontName, StringComparison.OrdinalIgnoreCase))

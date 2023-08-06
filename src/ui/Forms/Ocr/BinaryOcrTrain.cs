@@ -46,7 +46,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             labelInfo.Text = string.Empty;
             var selectedFonts = Configuration.Settings.Tools.OcrTrainFonts.Split(';');
-            foreach (var fontFamily in FontHelper.GetBoldAndItalicCapableFontFamilies())
+            foreach (var fontFamily in FontHelper.GetRegularAndBoldCapableFontFamilies())
             {
                 var chk = selectedFonts.Contains(fontFamily.Name);
                 ListViewItem item = new ListViewItem(fontFamily.Name) { Font = new Font(fontFamily.Name, 14), Checked = chk };
