@@ -513,6 +513,7 @@ Tiramos partido do ritmo intrínseco da imagem.</CreateSimpleChainingToolTip>
     <Enabled>Activo</Enabled>
     <Name>Nome</Name>
     <LinesFoundX>Linhas encontradas: {0}</LinesFoundX>
+    <ExtraNames>Adicionar nomes extra (separados por vírgula, utilização única)</ExtraNames>
   </ChangeCasingNames>
   <ChangeFrameRate>
     <Title>Alterar a taxa de fotogramas</Title>
