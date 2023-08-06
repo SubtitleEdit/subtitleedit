@@ -97,10 +97,14 @@ namespace Nikse.SubtitleEdit.Controls
                     _selectedIndex = value;
                     _textBox.Text = string.Empty;
 
-                    if (!_skipPaint)
+                    if (!_loading)
                     {
                         SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
                         SelectedValueChanged?.Invoke(this, EventArgs.Empty);
+                    }
+
+                    if (!_skipPaint)
+                    {
                         Invalidate();
                     }
 
@@ -110,10 +114,14 @@ namespace Nikse.SubtitleEdit.Controls
                 _selectedIndex = value;
                 _textBox.Text = Items[_selectedIndex].ToString();
 
-                if (!_skipPaint)
+                if (!_loading)
                 {
                     SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
                     SelectedValueChanged?.Invoke(this, EventArgs.Empty);
+                }
+
+                if (!_skipPaint)
+                {
                     Invalidate();
                 }
             }
@@ -182,7 +190,7 @@ namespace Nikse.SubtitleEdit.Controls
                     {
                         _textBox.Text = value;
 
-                        if (!_skipPaint)
+                        if (!_loading)
                         {
                             SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
                             SelectedValueChanged?.Invoke(this, EventArgs.Empty);
@@ -207,7 +215,7 @@ namespace Nikse.SubtitleEdit.Controls
                 _textBox.Text = value;
                 _selectedIndex = idx;
 
-                if (!_skipPaint)
+                if (!_loading)
                 {
                     SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
                     SelectedValueChanged?.Invoke(this, EventArgs.Empty);
@@ -431,7 +439,7 @@ namespace Nikse.SubtitleEdit.Controls
                             _selectedIndex--;
                             _textBox.Text = Items[_selectedIndex].ToString();
                             Invalidate();
-                            if (!_skipPaint)
+                            if (!_loading)
                             {
                                 SelectedIndexChanged?.Invoke(sender, e);
                                 SelectedValueChanged?.Invoke(this, EventArgs.Empty);
@@ -445,11 +453,14 @@ namespace Nikse.SubtitleEdit.Controls
                         {
                             _selectedIndex++;
                             _textBox.Text = Items[_selectedIndex].ToString();
+                            if (!_loading)
+                            {
+                                SelectedIndexChanged?.Invoke(sender, e);
+                                SelectedValueChanged?.Invoke(this, EventArgs.Empty);
+                            }
                             if (!_skipPaint)
                             {
                                 Invalidate();
-                                SelectedIndexChanged?.Invoke(sender, e);
-                                SelectedValueChanged?.Invoke(this, EventArgs.Empty);
                             }
                         }
                         e.Handled = true;
@@ -516,7 +527,7 @@ namespace Nikse.SubtitleEdit.Controls
                 Invalidate();
             };
 
-            _skipPaint = false;
+            _loading = false;
         }
 
         private void HideDropDown()
@@ -746,11 +757,15 @@ namespace Nikse.SubtitleEdit.Controls
                     var item = _listView.SelectedItems[0];
                     _selectedIndex = item.Index;
                     _textBox.Text = item.Text;
+                    if (!_loading)
+                    {
+                        SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
+                        SelectedValueChanged?.Invoke(this, EventArgs.Empty);
+                    }
+
                     if (!_skipPaint)
                     {
                         Invalidate();
-                        SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
-                        SelectedValueChanged?.Invoke(this, EventArgs.Empty);
                     }
 
                     HideDropDown();
@@ -775,7 +790,7 @@ namespace Nikse.SubtitleEdit.Controls
                         _selectedIndex = i;
                         _textBox.Text = _listView.Items[i].Text;
 
-                        if (!_skipPaint)
+                        if (!_loading)
                         {
                             SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
                             SelectedValueChanged?.Invoke(this, EventArgs.Empty);
@@ -981,7 +996,8 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        private bool _skipPaint = true;
+        private bool _skipPaint;
+        private bool _loading = true;
 
         public void BeginUpdate()
         {
