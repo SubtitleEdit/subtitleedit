@@ -508,6 +508,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <Enabled>사용함</Enabled>
     <Name>이름</Name>
     <LinesFoundX>발견한 줄: {0}개</LinesFoundX>
+    <ExtraNames>보조 이름 추가 (쉼표로 구분, 일회용)</ExtraNames>
   </ChangeCasingNames>
   <ChangeFrameRate>
     <Title>* 프레임 속도 변경</Title>
