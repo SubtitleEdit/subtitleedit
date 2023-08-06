@@ -450,6 +450,11 @@ namespace Nikse.SubtitleEdit.Logic
 
         private static void FixControl(Control c)
         {
+            if (c is SETextBox)
+            {
+                return;
+            }
+
             c.BackColor = BackColor;
             c.ForeColor = ForeColor;
 
