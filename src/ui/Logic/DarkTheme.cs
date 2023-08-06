@@ -656,15 +656,22 @@ namespace Nikse.SubtitleEdit.Logic
                 return;
             }
 
+            
             var backgroundColor = lv.Items[e.ItemIndex].SubItems[e.ColumnIndex].BackColor;
             var subBackgroundColor = Color.FromArgb(backgroundColor.A, Math.Max(backgroundColor.R - 39, 0), Math.Max(backgroundColor.G - 39, 0), Math.Max(backgroundColor.B - 39, 0));
-            if (e.Item.Selected || e.Item.Focused)
+            var hot = (e.ItemState & ListViewItemStates.Hot) != 0;
+            if (e.Item.Selected || e.Item.Focused || hot)
             {
+             
                 var subtitleFont = e.Item.Font;
                 var rect = e.Bounds;
                 if (Configuration.Settings != null)
                 {
                     backgroundColor = backgroundColor == BackColor ? Configuration.Settings.Tools.ListViewUnfocusedSelectedColor : subBackgroundColor;
+                    if (hot)
+                    {
+                        backgroundColor = Color.FromArgb(27, 41, 53);
+                    }
                     using (var sb = new SolidBrush(backgroundColor))
                     {
                         e.Graphics.FillRectangle(sb, rect);
