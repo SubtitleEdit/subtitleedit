@@ -227,6 +227,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.seTextBox1.SelectionStart = 0;
             this.seTextBox1.Size = new System.Drawing.Size(522, 156);
             this.seTextBox1.TabIndex = 0;
+            this.seTextBox1.TextBoxFont = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Bold);
             // 
             // contextMenuStrip1
             // 
@@ -255,6 +256,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "ApplyCustomStyles";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ApplyCustomStyles_FormClosing);
+            this.Shown += new System.EventHandler(this.ApplyCustomStyles_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ApplyCustomStyles_KeyDown);
             this.groupBoxApplyTo.ResumeLayout(false);
             this.groupBoxApplyTo.PerformLayout();
