@@ -56,31 +56,48 @@ namespace Nikse.SubtitleEdit.Controls
 
         internal static TextFormatFlags CreateTextFormatFlags(Control control, ContentAlignment contentAlignment, bool showEllipsis, bool useMnemonic)
         {
-            var textFormatFlags = TextFormatFlags.TextBoxControl | TextFormatFlags.WordBreak; //TODO: use alignment
+            var textFormatFlags = TextFormatFlags.TextBoxControl | TextFormatFlags.WordBreak;
             if (showEllipsis)
             {
                 textFormatFlags |= TextFormatFlags.EndEllipsis;
+            }
+
+            if (contentAlignment == ContentAlignment.MiddleLeft ||
+                contentAlignment == ContentAlignment.MiddleCenter ||
+                contentAlignment == ContentAlignment.MiddleRight)
+            {
+                textFormatFlags |= TextFormatFlags.VerticalCenter;
+            }
+            else if (contentAlignment == ContentAlignment.TopLeft ||
+                     contentAlignment == ContentAlignment.TopCenter ||
+                     contentAlignment == ContentAlignment.TopRight)
+            {
+                textFormatFlags |= TextFormatFlags.Top;
+            }
+            else if (contentAlignment == ContentAlignment.BottomLeft ||
+                     contentAlignment == ContentAlignment.BottomCenter ||
+                     contentAlignment == ContentAlignment.BottomRight)
+            {
+                textFormatFlags |= TextFormatFlags.Bottom;
             }
 
             if (contentAlignment == ContentAlignment.TopCenter ||
                 contentAlignment == ContentAlignment.MiddleCenter ||
                 contentAlignment == ContentAlignment.BottomCenter)
             {
-                textFormatFlags |= (textFormatFlags & TextFormatFlags.VerticalCenter);
+                textFormatFlags |= TextFormatFlags.VerticalCenter;
             }
-
-            if (contentAlignment == ContentAlignment.TopLeft ||
-                contentAlignment == ContentAlignment.MiddleLeft ||
-                contentAlignment == ContentAlignment.BottomLeft)
+            else if (contentAlignment == ContentAlignment.TopLeft ||
+                     contentAlignment == ContentAlignment.MiddleLeft ||
+                     contentAlignment == ContentAlignment.BottomLeft)
             {
-                textFormatFlags |= (textFormatFlags & TextFormatFlags.Left);
+                textFormatFlags |= TextFormatFlags.Left;
             }
-
-            if (contentAlignment == ContentAlignment.TopRight ||
-                contentAlignment == ContentAlignment.MiddleRight ||
-                contentAlignment == ContentAlignment.BottomRight)
+            else if (contentAlignment == ContentAlignment.TopRight ||
+                     contentAlignment == ContentAlignment.MiddleRight ||
+                     contentAlignment == ContentAlignment.BottomRight)
             {
-                textFormatFlags |= (textFormatFlags & TextFormatFlags.Right);
+                textFormatFlags |= TextFormatFlags.Right;
             }
 
             if (control.RightToLeft == RightToLeft.Yes)
