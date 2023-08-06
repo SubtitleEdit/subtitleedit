@@ -708,6 +708,7 @@ namespace Nikse.SubtitleEdit.Logic
                 Enabled = "Enabled",
                 Name = "Name",
                 LinesFoundX = "Lines found: {0}",
+                ExtraNames = "Add extra names (separate by comma, one-time use only)",
             };
 
             ChangeFrameRate = new LanguageStructure.ChangeFrameRate
