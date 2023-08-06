@@ -25,7 +25,7 @@ namespace Nikse.SubtitleEdit.Logic
         /// <returns>
         /// Collection of <see cref="FontFamily"/> which support both Bold and Italic styles.
         /// </returns>
-        public static IEnumerable<FontFamily> GetBoldAndItalicCapableFonts()
+        public static IEnumerable<FontFamily> GetBoldAndItalicCapableFontFamilies()
         {
             return _fonts.Where(font => font.IsStyleAvailable(FontStyle.Bold) && font.IsStyleAvailable(FontStyle.Italic));
         }
@@ -36,7 +36,7 @@ namespace Nikse.SubtitleEdit.Logic
         /// <returns>
         /// Collection of <see cref="FontFamily"/> which support either Bold or Italic style.
         /// </returns>
-        public static IEnumerable<FontFamily> GetItalicOrBoldCapableFonts()
+        public static IEnumerable<FontFamily> GetItalicOrBoldCapableFontFamilies()
         {
             return _fonts.Where(font => font.IsStyleAvailable(FontStyle.Bold) || font.IsStyleAvailable(FontStyle.Italic));
         }

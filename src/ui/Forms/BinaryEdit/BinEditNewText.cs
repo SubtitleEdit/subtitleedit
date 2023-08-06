@@ -70,7 +70,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                 Configuration.Settings.Tools.ExportBluRayFontName = "Arial";
             }
 
-            foreach (var fontFamily in FontHelper.GetItalicOrBoldCapableFonts())
+            foreach (var fontFamily in FontHelper.GetItalicOrBoldCapableFontFamilies())
             {
                 comboBoxSubtitleFont.Items.Add(fontFamily.Name);
                 if (fontFamily.Name.Equals(Configuration.Settings.Tools.ExportBluRayFontName, StringComparison.OrdinalIgnoreCase))
