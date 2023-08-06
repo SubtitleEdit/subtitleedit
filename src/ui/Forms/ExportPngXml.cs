@@ -115,6 +115,7 @@ namespace Nikse.SubtitleEdit.Forms
         private static int _boxBorderSize = 8;
         private int _lastIndex;
         private Dictionary<int, string> _smpteTtmlImages = new Dictionary<int, string>();
+        private bool _skipPreview;
 
         private const string BoxMultiLineText = "BoxMultiLine";
         private const string BoxSingleLineText = "BoxSingleLine";
@@ -147,6 +148,11 @@ namespace Nikse.SubtitleEdit.Forms
         private void previewTimer_Tick(object sender, EventArgs e)
         {
             _previewTimer.Stop();
+            if (_skipPreview)
+            {
+                return;
+            }
+
             GeneratePreview();
         }
 
@@ -2356,8 +2362,11 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             return $"{time.Hours:00};{time.Minutes:00};{time.Seconds:00};{SubtitleFormat.MillisecondsToFramesMaxFrameRate(time.Milliseconds):00}";
         }
 
+
         private void SetupImageParameters()
         {
+            _skipPreview = true;
+
             if (subtitleListView1.SelectedItems.Count > 0 && _format.HasStyleSupport)
             {
                 Paragraph p = _subtitle.GetParagraphOrDefault(subtitleListView1.SelectedItems[0].Index);
@@ -2456,6 +2465,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             _subtitleFontBold = checkBoxBold.Checked;
 
             _borderWidth = GetBorderWidth();
+
+            _skipPreview = false;
         }
 
         private float GetBorderWidth()
@@ -4975,8 +4986,6 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             }
             return GetLeftMarginInPixels(p);
         }
-
-
 
         private void GeneratePreview()
         {
