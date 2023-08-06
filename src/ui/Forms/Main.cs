@@ -3537,6 +3537,29 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
+            if (format == null && ext == ".rtf")
+            {
+                var txt = FileUtil.ReadAllTextShared(fileName, encodingFromFile);
+                if (txt.StartsWith("{\\rtf"))
+                {
+                    var lines = txt.FromRtf().SplitToLines();
+                    foreach (var f in SubtitleFormat.AllSubtitleFormats.Where(p => p.Extension != ".rtf"))
+                    {
+                        if (f.IsMine(lines, fileName))
+                        {
+                            f.LoadSubtitle(newSubtitle, lines, fileName);
+                            _oldSubtitleFormat = f;
+                            SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
+                            SetEncoding(Configuration.Settings.General.DefaultEncoding);
+                            encoding = GetCurrentEncoding();
+                            justConverted = true;
+                            format = GetCurrentSubtitleFormat();
+                            break;
+                        }
+                    }
+                }
+            }
+
             if (format == null)
             {
                 var lines = FileUtil.ReadAllTextShared(fileName, encodingFromFile).SplitToLines();
