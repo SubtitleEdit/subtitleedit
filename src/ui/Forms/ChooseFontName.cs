@@ -31,12 +31,12 @@ namespace Nikse.SubtitleEdit.Forms
             buttonOK.Enabled = false;
             _fontNames = new List<string>();
             listBox1.Items.Clear();
-            foreach (var x in FontFamily.Families)
+            foreach (var fontFamily in FontHelper.GetItalicOrBoldCapableFonts())
             {
-                if (!string.IsNullOrEmpty(x.Name) && (x.IsStyleAvailable(FontStyle.Regular) || x.IsStyleAvailable(FontStyle.Bold)))
+                if (!string.IsNullOrEmpty(fontFamily.Name))
                 {
-                    listBox1.Items.Add(x.Name);
-                    _fontNames.Add(x.Name);
+                    listBox1.Items.Add(fontFamily.Name);
+                    _fontNames.Add(fontFamily.Name);
                 }
             }
             labelPreview1.Text = string.Empty;

@@ -4580,17 +4580,15 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
             checkBoxSkipEmptyFrameAtStart.Visible = exportType == ExportFormats.ImageFrame;
 
-            foreach (var x in FontFamily.Families)
+            foreach (var fontFamily in FontHelper.GetItalicOrBoldCapableFonts())
             {
-                if (x.IsStyleAvailable(FontStyle.Regular) || x.IsStyleAvailable(FontStyle.Bold))
+                comboBoxSubtitleFont.Items.Add(fontFamily.Name);
+                if (fontFamily.Name.Equals(_subtitleFontName, StringComparison.OrdinalIgnoreCase))
                 {
-                    comboBoxSubtitleFont.Items.Add(x.Name);
-                    if (x.Name.Equals(_subtitleFontName, StringComparison.OrdinalIgnoreCase))
-                    {
-                        comboBoxSubtitleFont.SelectedIndex = comboBoxSubtitleFont.Items.Count - 1;
-                    }
+                    comboBoxSubtitleFont.SelectedIndex = comboBoxSubtitleFont.Items.Count - 1;
                 }
             }
+
             if (comboBoxSubtitleFont.SelectedIndex == -1)
             {
                 comboBoxSubtitleFont.SelectedIndex = 0; // take first font if default font was not found (e.g. linux)
