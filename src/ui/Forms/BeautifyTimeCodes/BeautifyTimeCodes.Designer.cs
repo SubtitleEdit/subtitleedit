@@ -45,7 +45,7 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             this.checkBoxSnapToShotChanges = new System.Windows.Forms.CheckBox();
             this.panelShotChanges = new System.Windows.Forms.Panel();
             this.buttonImportShotChanges = new System.Windows.Forms.Button();
-            this.labelShotChangesStatus = new System.Windows.Forms.Label();
+            this.labelShotChangesStatus = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.buttonEditProfile = new System.Windows.Forms.Button();
             this.progressBar = new System.Windows.Forms.ProgressBar();
             this.groupBoxTimeCodes.SuspendLayout();
@@ -315,7 +315,7 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
         private Nikse.SubtitleEdit.Controls.NikseLabel labelTimeCodesStatus;
         private System.Windows.Forms.Panel panelShotChanges;
         private System.Windows.Forms.Button buttonImportShotChanges;
-        private System.Windows.Forms.Label labelShotChangesStatus;
+        private Nikse.SubtitleEdit.Controls.NikseLabel labelShotChangesStatus;
         private System.Windows.Forms.Button buttonEditProfile;
         private System.Windows.Forms.Button buttonCancelTimeCodes;
         private System.Windows.Forms.ProgressBar progressBar;

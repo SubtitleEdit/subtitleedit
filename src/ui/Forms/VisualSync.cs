@@ -51,6 +51,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             MediaPlayerStart.InitializeVolume(Configuration.Settings.General.VideoPlayerDefaultVolume);
             MediaPlayerEnd.InitializeVolume(Configuration.Settings.General.VideoPlayerDefaultVolume);
+            MediaPlayerStart.TryLoadGfx();
+            MediaPlayerEnd.TryLoadGfx();
 
             labelSyncDone.Text = string.Empty;
             _language = LanguageSettings.Current.VisualSync;

@@ -101,6 +101,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             _videoPlayerContainer.Location = new Point(401, 12);
             _videoPlayerContainer.Name = "_videoPlayerContainer";
             _videoPlayerContainer.Size = new Size(923, buttonOK.Top - 18);
+            _videoPlayerContainer.TryLoadGfx();
 
             _fontAttachments = new List<AssaAttachmentFont>();
             if (subtitle.Footer != null)
