@@ -182,7 +182,7 @@ namespace Nikse.SubtitleEdit.Forms
                 initialFont = UiUtil.GetDefaultFont().Name;
             }
 
-            foreach (var x in FontHelper.GetItalicOrBoldCapableFonts())
+            foreach (var x in FontHelper.GetItalicOrBoldCapableFontFamilies())
             {
                 comboBoxSubtitleFont.Items.Add(x.Name);
                 if (x.Name.Equals(initialFont, StringComparison.OrdinalIgnoreCase))
