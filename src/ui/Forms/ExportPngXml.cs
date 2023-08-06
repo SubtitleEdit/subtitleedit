@@ -4580,7 +4580,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
             checkBoxSkipEmptyFrameAtStart.Visible = exportType == ExportFormats.ImageFrame;
 
-            foreach (var fontFamily in FontHelper.GetItalicOrBoldCapableFontFamilies())
+            foreach (var fontFamily in FontHelper.GetRegularOrBoldCapableFontFamilies())
             {
                 comboBoxSubtitleFont.Items.Add(fontFamily.Name);
                 if (fontFamily.Name.Equals(_subtitleFontName, StringComparison.OrdinalIgnoreCase))

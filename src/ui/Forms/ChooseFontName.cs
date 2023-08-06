@@ -31,7 +31,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonOK.Enabled = false;
             _fontNames = new List<string>();
             listBox1.Items.Clear();
-            foreach (var fontFamily in FontHelper.GetItalicOrBoldCapableFontFamilies())
+            foreach (var fontFamily in FontHelper.GetRegularOrBoldCapableFontFamilies())
             {
                 if (!string.IsNullOrEmpty(fontFamily.Name))
                 {
