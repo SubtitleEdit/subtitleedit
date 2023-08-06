@@ -39,7 +39,7 @@
             this.checkBoxShowLineNumbers = new System.Windows.Forms.CheckBox();
             this.groupBoxTimeCodeFormat = new System.Windows.Forms.GroupBox();
             this.comboBoxTimeCodeSeparator = new Nikse.SubtitleEdit.Controls.NikseComboBox();
-            this.labelTimeCodeSeparator = new System.Windows.Forms.Label();
+            this.labelTimeCodeSeparator = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.radioButtonTimeCodeHHMMSSFF = new System.Windows.Forms.RadioButton();
             this.radioButtonTimeCodeMs = new System.Windows.Forms.RadioButton();
             this.radioButtonTimeCodeSrt = new System.Windows.Forms.RadioButton();
@@ -402,7 +402,7 @@
         private System.Windows.Forms.CheckBox checkBoxAddNewlineAfterLineNumber;
         private System.Windows.Forms.CheckBox checkBoxAddNewlineAfterTimeCodes;
         private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxTimeCodeSeparator;
-        private System.Windows.Forms.Label labelTimeCodeSeparator;
+        private Nikse.SubtitleEdit.Controls.NikseLabel labelTimeCodeSeparator;
         private System.Windows.Forms.Label labelPreview;
         private System.Windows.Forms.CheckBox checkBoxRemoveStyling;
         private System.Windows.Forms.Label labelEncoding;
