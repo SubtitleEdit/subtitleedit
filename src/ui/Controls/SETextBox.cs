@@ -25,6 +25,11 @@ namespace Nikse.SubtitleEdit.Controls
 
         public SETextBox()
         {
+            SetStyle(ControlStyles.OptimizedDoubleBuffer |
+                     ControlStyles.UserPaint |
+                     ControlStyles.ResizeRedraw |
+                     ControlStyles.Selectable, true);
+
             Initialize(Configuration.Settings.General.SubtitleTextBoxSyntaxColor);
         }
 

@@ -383,7 +383,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonCustomUrl1 = new System.Windows.Forms.Button();
             this.buttonGoogleTranslateIt = new System.Windows.Forms.Button();
             this.buttonGoogleIt = new System.Windows.Forms.Button();
-            this.textBoxSearchWord = new System.Windows.Forms.TextBox();
+            this.textBoxSearchWord = new Nikse.SubtitleEdit.Controls.SETextBox();
             this.groupBoxAutoContinue = new System.Windows.Forms.GroupBox();
             this.comboBoxAutoContinue = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelAutoContinueDelay = new System.Windows.Forms.Label();
@@ -3633,11 +3633,26 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // textBoxSearchWord
             // 
+            this.textBoxSearchWord.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.textBoxSearchWord.CurrentLanguage = "";
+            this.textBoxSearchWord.CurrentLineIndex = 0;
+            this.textBoxSearchWord.HideSelection = true;
+            this.textBoxSearchWord.IsDictionaryDownloaded = true;
+            this.textBoxSearchWord.IsSpellCheckerInitialized = false;
+            this.textBoxSearchWord.IsSpellCheckRequested = false;
+            this.textBoxSearchWord.IsWrongWord = false;
+            this.textBoxSearchWord.LanguageChanged = false;
             this.textBoxSearchWord.Location = new System.Drawing.Point(6, 18);
             this.textBoxSearchWord.Multiline = true;
             this.textBoxSearchWord.Name = "textBoxSearchWord";
+            this.textBoxSearchWord.Padding = new System.Windows.Forms.Padding(1);
+            this.textBoxSearchWord.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
+            this.textBoxSearchWord.SelectedText = "";
+            this.textBoxSearchWord.SelectionLength = 0;
+            this.textBoxSearchWord.SelectionStart = 0;
             this.textBoxSearchWord.Size = new System.Drawing.Size(244, 39);
             this.textBoxSearchWord.TabIndex = 0;
+            this.textBoxSearchWord.TextBoxFont = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Bold);
             // 
             // groupBoxAutoContinue
             // 
@@ -5890,7 +5905,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.tabPageTranslate.ResumeLayout(false);
             this.tabPageTranslate.PerformLayout();
             this.groupBoxTranslateSearch.ResumeLayout(false);
-            this.groupBoxTranslateSearch.PerformLayout();
             this.groupBoxAutoContinue.ResumeLayout(false);
             this.groupBoxAutoContinue.PerformLayout();
             this.groupBoxAutoRepeat.ResumeLayout(false);
@@ -6041,7 +6055,6 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.Button buttonSecBack1;
         private System.Windows.Forms.Timer ShowSubtitleTimer;
         private System.Windows.Forms.Timer timerAutoDuration;
-        private System.Windows.Forms.Label labelAutoDuration;
         private System.Windows.Forms.Timer timerAutoContinue;
         private Nikse.SubtitleEdit.Controls.ToolStripNikseComboBox comboBoxSubtitleFormats;
         private Nikse.SubtitleEdit.Controls.ToolStripNikseSeparator toolStripSeparatorToggle;
@@ -6078,7 +6091,7 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.GroupBox groupBoxTranslateSearch;
         private System.Windows.Forms.Button buttonGoogleTranslateIt;
         private System.Windows.Forms.Button buttonGoogleIt;
-        private System.Windows.Forms.TextBox textBoxSearchWord;
+        private Nikse.SubtitleEdit.Controls.SETextBox textBoxSearchWord;
         private System.Windows.Forms.GroupBox groupBoxAutoContinue;
         private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxAutoContinue;
         private System.Windows.Forms.Label labelAutoContinueDelay;
@@ -6468,5 +6481,6 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.Label labelLayer;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemWebVttStyle;
         private System.Windows.Forms.ToolStripMenuItem beautifyTimeCodesOfSelectedLinesToolStripMenuItem;
+        private NikseLabel labelAutoDuration;
     }
 }
