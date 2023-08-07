@@ -664,6 +664,27 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
+        public int MaxLength
+        {
+            get
+            {
+                if (_uiTextBox != null)
+                {
+                    return _uiTextBox.MaxLength;
+                }
+
+                return 0;
+            }
+            set
+            {
+                if (_uiTextBox != null)
+                {
+                    _uiTextBox.MaxLength = value;
+                }
+            }
+        }
+
+
         public async Task CheckForLanguageChange(Subtitle subtitle)
         {
             if (_uiTextBox == null)
