@@ -313,5 +313,17 @@ namespace Nikse.SubtitleEdit.Forms
 
             buttonFindPrev.Focus();
         }
+
+        private void FindDialog_Shown(object sender, EventArgs e)
+        {
+            if (comboBoxFind.Visible)
+            {
+                comboBoxFind.Focus();
+            }
+            else
+            {
+                textBoxFind.Focus();
+            }
+        }
     }
 }
