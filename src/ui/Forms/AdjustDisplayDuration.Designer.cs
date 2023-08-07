@@ -169,6 +169,13 @@
             // 
             // numericUpDownMaxCharsSec
             // 
+            this.numericUpDownMaxCharsSec.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownMaxCharsSec.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownMaxCharsSec.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownMaxCharsSec.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownMaxCharsSec.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownMaxCharsSec.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownMaxCharsSec.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.numericUpDownMaxCharsSec.DecimalPlaces = 1;
             this.numericUpDownMaxCharsSec.Enabled = false;
             this.numericUpDownMaxCharsSec.Increment = new decimal(new int[] {
@@ -177,6 +184,11 @@
             0,
             65536});
             this.numericUpDownMaxCharsSec.Location = new System.Drawing.Point(357, 89);
+            this.numericUpDownMaxCharsSec.Maximum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
             this.numericUpDownMaxCharsSec.Minimum = new decimal(new int[] {
             4,
             0,
@@ -185,6 +197,8 @@
             this.numericUpDownMaxCharsSec.Name = "numericUpDownMaxCharsSec";
             this.numericUpDownMaxCharsSec.Size = new System.Drawing.Size(80, 21);
             this.numericUpDownMaxCharsSec.TabIndex = 6;
+            this.numericUpDownMaxCharsSec.TabStop = false;
+            this.numericUpDownMaxCharsSec.ThousandsSeparator = false;
             this.numericUpDownMaxCharsSec.Value = new decimal(new int[] {
             24,
             0,
@@ -202,6 +216,13 @@
             // 
             // numericUpDownSeconds
             // 
+            this.numericUpDownSeconds.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownSeconds.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownSeconds.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownSeconds.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownSeconds.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownSeconds.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownSeconds.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.numericUpDownSeconds.DecimalPlaces = 3;
             this.numericUpDownSeconds.Increment = new decimal(new int[] {
             1,
@@ -222,6 +243,8 @@
             this.numericUpDownSeconds.Name = "numericUpDownSeconds";
             this.numericUpDownSeconds.Size = new System.Drawing.Size(80, 21);
             this.numericUpDownSeconds.TabIndex = 3;
+            this.numericUpDownSeconds.TabStop = false;
+            this.numericUpDownSeconds.ThousandsSeparator = false;
             this.numericUpDownSeconds.Value = new decimal(new int[] {
             1,
             0,
@@ -230,6 +253,19 @@
             // 
             // numericUpDownPercent
             // 
+            this.numericUpDownPercent.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownPercent.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownPercent.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownPercent.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownPercent.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownPercent.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownPercent.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownPercent.DecimalPlaces = 0;
+            this.numericUpDownPercent.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownPercent.Location = new System.Drawing.Point(182, 89);
             this.numericUpDownPercent.Maximum = new decimal(new int[] {
             999,
@@ -244,6 +280,8 @@
             this.numericUpDownPercent.Name = "numericUpDownPercent";
             this.numericUpDownPercent.Size = new System.Drawing.Size(80, 21);
             this.numericUpDownPercent.TabIndex = 4;
+            this.numericUpDownPercent.TabStop = false;
+            this.numericUpDownPercent.ThousandsSeparator = false;
             this.numericUpDownPercent.Value = new decimal(new int[] {
             110,
             0,
@@ -252,6 +290,13 @@
             // 
             // numericUpDownOptimalCharsSec
             // 
+            this.numericUpDownOptimalCharsSec.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownOptimalCharsSec.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownOptimalCharsSec.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownOptimalCharsSec.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownOptimalCharsSec.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownOptimalCharsSec.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownOptimalCharsSec.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.numericUpDownOptimalCharsSec.DecimalPlaces = 1;
             this.numericUpDownOptimalCharsSec.Enabled = false;
             this.numericUpDownOptimalCharsSec.Increment = new decimal(new int[] {
@@ -260,6 +305,11 @@
             0,
             65536});
             this.numericUpDownOptimalCharsSec.Location = new System.Drawing.Point(357, 147);
+            this.numericUpDownOptimalCharsSec.Maximum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
             this.numericUpDownOptimalCharsSec.Minimum = new decimal(new int[] {
             4,
             0,
@@ -268,6 +318,8 @@
             this.numericUpDownOptimalCharsSec.Name = "numericUpDownOptimalCharsSec";
             this.numericUpDownOptimalCharsSec.Size = new System.Drawing.Size(80, 21);
             this.numericUpDownOptimalCharsSec.TabIndex = 7;
+            this.numericUpDownOptimalCharsSec.TabStop = false;
+            this.numericUpDownOptimalCharsSec.ThousandsSeparator = false;
             this.numericUpDownOptimalCharsSec.Value = new decimal(new int[] {
             17,
             0,
@@ -285,16 +337,36 @@
             // 
             // numericUpDownFixedMilliseconds
             // 
+            this.numericUpDownFixedMilliseconds.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownFixedMilliseconds.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownFixedMilliseconds.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownFixedMilliseconds.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownFixedMilliseconds.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownFixedMilliseconds.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownFixedMilliseconds.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownFixedMilliseconds.DecimalPlaces = 0;
             this.numericUpDownFixedMilliseconds.Enabled = false;
+            this.numericUpDownFixedMilliseconds.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownFixedMilliseconds.Location = new System.Drawing.Point(501, 89);
             this.numericUpDownFixedMilliseconds.Maximum = new decimal(new int[] {
             20000,
             0,
             0,
             0});
+            this.numericUpDownFixedMilliseconds.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownFixedMilliseconds.Name = "numericUpDownFixedMilliseconds";
             this.numericUpDownFixedMilliseconds.Size = new System.Drawing.Size(80, 21);
             this.numericUpDownFixedMilliseconds.TabIndex = 9;
+            this.numericUpDownFixedMilliseconds.TabStop = false;
+            this.numericUpDownFixedMilliseconds.ThousandsSeparator = false;
             this.numericUpDownFixedMilliseconds.Value = new decimal(new int[] {
             3000,
             0,
@@ -380,6 +452,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "AdjustDisplayDuration";
+            this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Adjust display time";
