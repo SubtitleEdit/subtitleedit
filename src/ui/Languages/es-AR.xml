@@ -140,9 +140,14 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GeneratingSpectrogram>Generando Espectrograma...</GeneratingSpectrogram>
     <ExtractingSeconds>Extrayendo audio: {0:0.0} segundos</ExtractingSeconds>
     <ExtractingMinutes>Extrayendo audio: {0}.{1:00} minutos</ExtractingMinutes>
-    <WaveFileNotFound>¡No se pudo encontrar el archivo de onda extraido! Esta característica necesita de VLC media player 1.1.x o más reciente ({0}-bits). Línea de comandos: {1} {2}</WaveFileNotFound>
+    <WaveFileNotFound>¡No se pudo encontrar el archivo de onda extraido!
+Esta característica necesita de VLC media player 1.1.x o más reciente ({0}-bits).
+
+Línea de comandos: {1} {2}</WaveFileNotFound>
     <WaveFileMalformed>¡{0} no pudo extraer los datos del audio a un archivo de onda!
+
 Línea de comandos: {1} {2}
+
 Nota: comprobar el espacio libre en disco.</WaveFileMalformed>
     <LowDiskSpace>¡POCO ESPACIO EN DISCO!</LowDiskSpace>
     <FreeDiskSpace>{0} libre</FreeDiskSpace>
@@ -188,7 +193,9 @@ Nota: comprobar el espacio libre en disco.</WaveFileMalformed>
     <Engine>Motor</Engine>
     <VoskWebsite>Sitio web de Vosk</VoskWebsite>
     <WhisperWebsite>Sitio web de Whisper</WhisperWebsite>
-    <WhisperNotFound>Whisper no encontrado. ¿Más información (web)?</WhisperNotFound>
+    <WhisperNotFound>Whisper no encontrado.
+
+¿Más información (web)?</WhisperNotFound>
     <Models>Modelos</Models>
     <LanguagesAndModels>Idiomas y modelos</LanguagesAndModels>
     <ChooseModel>Elige un modelo</ChooseModel>
@@ -505,6 +512,7 @@ Aprovechamos el ritmo intrínseco de la imagen.</CreateSimpleChainingToolTip>
     <Enabled>Habilitado</Enabled>
     <Name>Nombre</Name>
     <LinesFoundX>Líneas encontradas: {0}</LinesFoundX>
+    <ExtraNames>Agregar nombres adicionales (separados por coma, para uso único)</ExtraNames>
   </ChangeCasingNames>
   <ChangeFrameRate>
     <Title>Cambiar tasa de cuadros</Title>
@@ -872,6 +880,7 @@ Aprovechamos el ritmo intrínseco de la imagen.</CreateSimpleChainingToolTip>
     <BreakLongLines>Dividir líneas largas</BreakLongLines>
     <RemoveLineBreaks>Eliminar saltos de línea en textos cortos con una sola frase</RemoveLineBreaks>
     <RemoveLineBreaksAll>Eliminar saltos de línea en textos cortos (todos excepto diálogos)</RemoveLineBreaksAll>
+    <RemoveLineBreaksPixelWidth>Eliminar saltos de línea en subtítulos que puedan caber en una sola línea (ancho en píxeles)</RemoveLineBreaksPixelWidth>
     <FixUppercaseIInsideLowercaseWords>Corregir 'i' mayúscula en palabras en minúscula (error de OCR)</FixUppercaseIInsideLowercaseWords>
     <FixDoubleApostrophes>Sustituir doble coma ('') por comillas (")</FixDoubleApostrophes>
     <AddPeriods>Añadir espacio después de líneas cuando la siguiente línea comienza con mayúscula</AddPeriods>
@@ -906,6 +915,7 @@ Aprovechamos el ritmo intrínseco de la imagen.</CreateSimpleChainingToolTip>
     <FixFirstLetterToUppercaseAfterParagraph>Cambiar primera letra de párrafo a mayúscula</FixFirstLetterToUppercaseAfterParagraph>
     <MergeShortLine>Combinar línea corta (una frase)</MergeShortLine>
     <MergeShortLineAll>Combinar líneas cortas (excepto diálogos)</MergeShortLineAll>
+    <UnbreakShortLinePixelWidth>Unir línea corta (ancho en píxeles)</UnbreakShortLinePixelWidth>
     <BreakLongLine>Dividir línea larga</BreakLongLine>
     <FixLongDisplayTime>Corregir duración excesiva</FixLongDisplayTime>
     <FixInvalidItalicTag>Corregir etiqueta inválida en cursiva</FixInvalidItalicTag>
@@ -1731,6 +1741,7 @@ El subtítulo parece estar vacío; intenta guardar de nuevo si estás trabajando
     <NothingToUndo>Nada que deshacer</NothingToUndo>
     <InvalidLanguageNameX>Nombre de idioma no válido: {0}</InvalidLanguageNameX>
     <DoNotDisplayMessageAgain>No mostrar este mensaje otra vez</DoNotDisplayMessageAgain>
+    <DoNotAutoLoadVideo>No cargar el video automáticamente</DoNotAutoLoadVideo>
     <NumberOfCorrectedWords>Número de palabras corregidas: {0}</NumberOfCorrectedWords>
     <NumberOfSkippedWords>Número de palabras omitidas: {0}</NumberOfSkippedWords>
     <NumberOfCorrectWords>Número de palabras correctas: {0}</NumberOfCorrectWords>
@@ -1905,7 +1916,7 @@ Si ha editado este archivo con Subtitle Edit es posible que pueda encontrar una 
     <NoSupportHereDivx>Los archivos DivX no son compatibles aquí.</NoSupportHereDivx>
     <NoChapters>No se han encontrado capítulos en el video.</NoChapters>
     <VideoFromUrlRequirements>Abrir un video desde una url requiere mpv y youtube-dl.
-    
+
 ¿Descargar y continuar?</VideoFromUrlRequirements>
     <Url>URL</Url>
     <Errors>Errores</Errors>
