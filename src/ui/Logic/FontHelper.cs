@@ -9,14 +9,14 @@ namespace Nikse.SubtitleEdit.Logic
     /// </summary>
     public static class FontHelper
     {
-        private static readonly FontFamily[] _fonts;
+        private static readonly FontFamily[] Fonts;
 
         /// <summary>
         /// Initializes static members of the <see cref="FontHelper"/> class.
         /// </summary>
         static FontHelper()
         {
-            _fonts = FontFamily.Families.OrderBy(font => font.Name).ToArray();
+            Fonts = FontFamily.Families.OrderBy(font => font.Name).ToArray();
         }
 
         /// <summary>
@@ -27,7 +27,7 @@ namespace Nikse.SubtitleEdit.Logic
         /// </returns>
         public static IEnumerable<FontFamily> GetRegularAndBoldCapableFontFamilies()
         {
-            return _fonts.Where(font => font.IsStyleAvailable(FontStyle.Bold) && font.IsStyleAvailable(FontStyle.Regular));
+            return Fonts.Where(font => font.IsStyleAvailable(FontStyle.Bold) && font.IsStyleAvailable(FontStyle.Regular));
         }
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace Nikse.SubtitleEdit.Logic
         /// </returns>
         public static IEnumerable<FontFamily> GetRegularOrBoldCapableFontFamilies()
         {
-            return _fonts.Where(font => font.IsStyleAvailable(FontStyle.Bold) || font.IsStyleAvailable(FontStyle.Regular));
+            return Fonts.Where(font => font.IsStyleAvailable(FontStyle.Bold) || font.IsStyleAvailable(FontStyle.Regular));
         }
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace Nikse.SubtitleEdit.Logic
         /// </returns>
         public static IEnumerable<FontFamily> GetAllSupportedFontFamilies()
         {
-            return _fonts;
+            return Fonts;
         }
     }
 }
