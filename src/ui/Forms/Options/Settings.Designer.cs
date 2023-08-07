@@ -80,7 +80,7 @@
             this.labelTimeCodeMode = new System.Windows.Forms.Label();
             this.comboBoxEncoding = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.checkBoxAutoDetectAnsiEncoding = new System.Windows.Forms.CheckBox();
-            this.textBoxShowLineBreaksAs = new System.Windows.Forms.TextBox();
+            this.textBoxShowLineBreaksAs = new Nikse.SubtitleEdit.Controls.SETextBox();
             this.checkBoxAutoWrapWhileTyping = new System.Windows.Forms.CheckBox();
             this.checkBoxPromptDeleteLines = new System.Windows.Forms.CheckBox();
             this.checkBoxAllowEditOfOriginalSubtitle = new System.Windows.Forms.CheckBox();
@@ -6171,12 +6171,12 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1092, 574);
             this.Controls.Add(this.labelUpdateFileTypeAssociationsStatus);
+            this.Controls.Add(this.panelGeneral);
             this.Controls.Add(this.panelToolBar);
             this.Controls.Add(this.panelFont);
             this.Controls.Add(this.panelVideoPlayer);
             this.Controls.Add(this.panelTools);
             this.Controls.Add(this.panelWaveform);
-            this.Controls.Add(this.panelGeneral);
             this.Controls.Add(this.panelShortcuts);
             this.Controls.Add(this.panelNetwork);
             this.Controls.Add(this.panelFileTypeAssociations);
@@ -6366,7 +6366,7 @@
         private System.Windows.Forms.RadioButton radioButtonVideoPlayerDirectShow;
         private System.Windows.Forms.RadioButton radioButtonVideoPlayerMpcHc;
         private System.Windows.Forms.CheckBox checkBoxRememberWindowPosition;
-        private System.Windows.Forms.TextBox textBoxShowLineBreaksAs;
+        private Nikse.SubtitleEdit.Controls.SETextBox textBoxShowLineBreaksAs;
         private System.Windows.Forms.Label labelShowLineBreaksAs;
         private System.Windows.Forms.Panel panelNetwork;
         private System.Windows.Forms.GroupBox groupBoxProxySettings;

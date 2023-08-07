@@ -118,5 +118,10 @@ namespace Nikse.SubtitleEdit.Forms
             var nameList = new NameList(Configuration.DictionariesDirectory, languageName, Configuration.Settings.WordLists.UseOnlineNames, Configuration.Settings.WordLists.NamesUrl);
             DialogResult = nameList.Add(textBoxAddName.Text) ? DialogResult.OK : DialogResult.Cancel;
         }
+
+        private void AddToNameList_Shown(object sender, EventArgs e)
+        {
+            textBoxAddName.Focus();
+        }
     }
 }
