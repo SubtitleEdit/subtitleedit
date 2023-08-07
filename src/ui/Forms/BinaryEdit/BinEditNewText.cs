@@ -70,15 +70,12 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                 Configuration.Settings.Tools.ExportBluRayFontName = "Arial";
             }
 
-            foreach (var x in FontFamily.Families)
+            foreach (var fontFamily in FontHelper.GetRegularOrBoldCapableFontFamilies())
             {
-                if (x.IsStyleAvailable(FontStyle.Regular) || x.IsStyleAvailable(FontStyle.Bold))
+                comboBoxSubtitleFont.Items.Add(fontFamily.Name);
+                if (fontFamily.Name.Equals(Configuration.Settings.Tools.ExportBluRayFontName, StringComparison.OrdinalIgnoreCase))
                 {
-                    comboBoxSubtitleFont.Items.Add(x.Name);
-                    if (x.Name.Equals(Configuration.Settings.Tools.ExportBluRayFontName, StringComparison.OrdinalIgnoreCase))
-                    {
-                        comboBoxSubtitleFont.SelectedIndex = comboBoxSubtitleFont.Items.Count - 1;
-                    }
+                    comboBoxSubtitleFont.SelectedIndex = comboBoxSubtitleFont.Items.Count - 1;
                 }
             }
 

@@ -46,14 +46,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             labelInfo.Text = string.Empty;
             var selectedFonts = Configuration.Settings.Tools.OcrTrainFonts.Split(';');
-            foreach (var x in FontFamily.Families)
+            foreach (var fontFamily in FontHelper.GetRegularAndBoldCapableFontFamilies())
             {
-                if (x.IsStyleAvailable(FontStyle.Regular) && x.IsStyleAvailable(FontStyle.Bold))
-                {
-                    var chk = selectedFonts.Contains(x.Name);
-                    ListViewItem item = new ListViewItem(x.Name) { Font = new Font(x.Name, 14), Checked = chk };
-                    listViewFonts.Items.Add(item);
-                }
+                var chk = selectedFonts.Contains(fontFamily.Name);
+                ListViewItem item = new ListViewItem(fontFamily.Name) { Font = new Font(fontFamily.Name, 14), Checked = chk };
+                listViewFonts.Items.Add(item);
             }
             comboBoxSubtitleFontSize.SelectedIndex = 5;
             comboBoxFontSizeEnd.SelectedIndex = 15;
