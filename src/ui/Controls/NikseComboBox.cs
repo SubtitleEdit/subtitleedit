@@ -28,6 +28,8 @@ namespace Nikse.SubtitleEdit.Controls
         // ReSharper disable once InconsistentNaming
         public new event KeyEventHandler KeyDown;
 
+        private TextBox _textBox;
+
         [Category("NikseComboBox"), Description("Gets or sets DropDownStyle"), RefreshProperties(RefreshProperties.Repaint)]
         public ComboBoxStyle DropDownStyle
         {
@@ -223,6 +225,23 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
+        protected override void OnGotFocus(EventArgs e)
+        {
+            base.OnGotFocus(e);
+            if (_textBox != null && DropDownStyle == ComboBoxStyle.DropDown)
+            {
+                try
+                {
+                    Application.DoEvents();
+                    System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(25), () => _textBox.Focus());
+                }
+                catch
+                {
+                    // ignore
+                }
+            }
+        }
+
         public Control DropDownControl => _listView;
 
         private Color _buttonForeColor;
@@ -368,10 +387,10 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        private readonly TextBox _textBox;
 
         public NikseComboBox()
         {
+            _loading = true;
             _textBox = new TextBox();
             _textBox.Visible = false;
             _items = new NikseComboBoxCollection(this);
@@ -858,7 +877,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         protected override void OnPaint(PaintEventArgs e)
         {
-            if (_skipPaint)
+            if (_skipPaint || _textBox == null)
             {
                 return;
             }
@@ -997,7 +1016,7 @@ namespace Nikse.SubtitleEdit.Controls
         }
 
         private bool _skipPaint;
-        private bool _loading = true;
+        private bool _loading;
 
         public void BeginUpdate()
         {
