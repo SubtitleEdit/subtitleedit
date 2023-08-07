@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Globalization;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Controls
@@ -270,7 +271,8 @@ namespace Nikse.SubtitleEdit.Controls
 
         private void _textBox_TextChanged(object sender, EventArgs e)
         {
-            if (decimal.TryParse("0" + _textBox.Text, out var result))
+            var text = _textBox.Text.Trim();
+            if (decimal.TryParse(text, NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.DefaultThreadCurrentCulture, out var result))
             {
                 var v = Math.Round(result, DecimalPlaces);
                 if (v == Value)
@@ -341,7 +343,13 @@ namespace Nikse.SubtitleEdit.Controls
                 return;
             }
 
-            if (decimal.TryParse("0" + _textBox.Text, out var result))
+            var text = _textBox.Text.Trim();
+            if (string.IsNullOrEmpty(text))
+            {
+                text = "0";
+            }
+
+            if (decimal.TryParse(text, NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.DefaultThreadCurrentCulture, out var result))
             {
                 Value = Math.Round(result + value, DecimalPlaces);
 
