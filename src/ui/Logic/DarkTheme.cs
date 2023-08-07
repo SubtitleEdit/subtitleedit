@@ -390,7 +390,7 @@ namespace Nikse.SubtitleEdit.Logic
                 tud.BackColor = buttonBackColor;
                 tud.ForeColor = Control.DefaultForeColor;
                 tud.ButtonForeColor = Control.DefaultForeColor;
-                tud.BackColorDisabled = NikseUpDown.DefaultBackColorDisabled; 
+                tud.BackColorDisabled = NikseUpDown.DefaultBackColorDisabled;
             }
             else if (c is NikseComboBox ncb)
             {
@@ -656,13 +656,13 @@ namespace Nikse.SubtitleEdit.Logic
                 return;
             }
 
-            
+
             var backgroundColor = lv.Items[e.ItemIndex].SubItems[e.ColumnIndex].BackColor;
             var subBackgroundColor = Color.FromArgb(backgroundColor.A, Math.Max(backgroundColor.R - 39, 0), Math.Max(backgroundColor.G - 39, 0), Math.Max(backgroundColor.B - 39, 0));
             var hot = (e.ItemState & ListViewItemStates.Hot) != 0;
             if (e.Item.Selected || e.Item.Focused || hot)
             {
-             
+
                 var subtitleFont = e.Item.Font;
                 var rect = e.Bounds;
                 if (Configuration.Settings != null)
@@ -774,11 +774,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             protected override void OnRenderArrow(ToolStripArrowRenderEventArgs e)
             {
-                if (e.Item is ToolStripMenuItem)
-                {
-                    e.ArrowColor = ForeColor;
-                }
-
+                e.ArrowColor = ForeColor;
                 base.OnRenderArrow(e);
             }
 
