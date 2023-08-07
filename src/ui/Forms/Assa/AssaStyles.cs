@@ -104,7 +104,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             }
 
             comboBoxFontName.Items.Clear();
-            foreach (var x in FontFamily.Families)
+            foreach (var x in FontHelper.GetAllSupportedFontFamilies())
             {
                 comboBoxFontName.Items.Add(x.Name);
             }

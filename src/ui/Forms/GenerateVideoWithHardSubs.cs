@@ -181,15 +181,13 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 initialFont = UiUtil.GetDefaultFont().Name;
             }
-            foreach (var x in FontFamily.Families)
+
+            foreach (var x in FontHelper.GetRegularOrBoldCapableFontFamilies())
             {
-                if (x.IsStyleAvailable(FontStyle.Regular) || x.IsStyleAvailable(FontStyle.Bold))
+                comboBoxSubtitleFont.Items.Add(x.Name);
+                if (x.Name.Equals(initialFont, StringComparison.OrdinalIgnoreCase))
                 {
-                    comboBoxSubtitleFont.Items.Add(x.Name);
-                    if (x.Name.Equals(initialFont, StringComparison.OrdinalIgnoreCase))
-                    {
-                        comboBoxSubtitleFont.SelectedIndex = comboBoxSubtitleFont.Items.Count - 1;
-                    }
+                    comboBoxSubtitleFont.SelectedIndex = comboBoxSubtitleFont.Items.Count - 1;
                 }
             }
             if (comboBoxSubtitleFont.SelectedIndex < 0 && comboBoxSubtitleFont.Items.Count > 0)
