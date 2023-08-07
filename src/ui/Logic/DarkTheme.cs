@@ -772,6 +772,16 @@ namespace Nikse.SubtitleEdit.Logic
                 }
             }
 
+            protected override void OnRenderArrow(ToolStripArrowRenderEventArgs e)
+            {
+                if (e.Item is ToolStripMenuItem)
+                {
+                    e.ArrowColor = ForeColor;
+                }
+
+                base.OnRenderArrow(e);
+            }
+
             protected override void OnRenderImageMargin(ToolStripRenderEventArgs e)
             {
                 var g = e.Graphics;
