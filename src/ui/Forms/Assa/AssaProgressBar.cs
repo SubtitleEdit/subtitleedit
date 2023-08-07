@@ -80,7 +80,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             UiUtil.FixLargeFonts(this, buttonOK);
 
             comboBoxFontName.Items.Clear();
-            foreach (var font in FontFamily.Families)
+            foreach (var font in FontHelper.GetAllSupportedFontFamilies())
             {
                 comboBoxFontName.Items.Add(font.Name);
                 if (font.Name == "Arial")
