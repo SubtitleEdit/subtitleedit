@@ -320,15 +320,15 @@ namespace Nikse.SubtitleEdit.Forms.Options
             var comboBoxSubtitleFontList = new List<string>();
             var comboBoxSubtitleFontIndex = 0;
             var comboBoxVideoPlayerPreviewFontIndex = 0;
-            foreach (var x in FontHelper.GetFontFamilies())
+            foreach (var fontFamily in FontHelper.GetAllSupportedFontFamilies())
             {
-                comboBoxSubtitleFontList.Add(x.Name);
-                if (x.Name.Equals(gs.SubtitleFontName, StringComparison.OrdinalIgnoreCase))
+                comboBoxSubtitleFontList.Add(fontFamily.Name);
+                if (fontFamily.Name.Equals(gs.SubtitleFontName, StringComparison.OrdinalIgnoreCase))
                 {
                     comboBoxSubtitleFontIndex = comboBoxSubtitleFontList.Count - 1;
                 }
 
-                if (x.Name.Equals(gs.VideoPlayerPreviewFontName, StringComparison.OrdinalIgnoreCase))
+                if (fontFamily.Name.Equals(gs.VideoPlayerPreviewFontName, StringComparison.OrdinalIgnoreCase))
                 {
                     comboBoxVideoPlayerPreviewFontIndex = comboBoxSubtitleFontList.Count - 1;
                 }
