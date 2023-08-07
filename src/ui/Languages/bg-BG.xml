@@ -510,6 +510,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <Enabled>Избрано</Enabled>
     <Name>Име</Name>
     <LinesFoundX>Намерени редове: {0}</LinesFoundX>
+    <ExtraNames>Добавяне на допълнителни имена (разделени със запетая, само за еднократна употреба)</ExtraNames>
   </ChangeCasingNames>
   <ChangeFrameRate>
     <Title>Промяна честотата (fps) на кадрите</Title>
