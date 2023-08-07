@@ -23,22 +23,22 @@ namespace Nikse.SubtitleEdit.Logic
         /// Gets fonts which support both Bold and Regular styles.
         /// </summary>
         /// <returns>
-        /// Collection of <see cref="FontFamily"/> which support both Bold and Italic styles.
+        /// Collection of <see cref="FontFamily"/> which support both Bold and Regular styles.
         /// </returns>
         public static IEnumerable<FontFamily> GetRegularAndBoldCapableFontFamilies()
         {
-            return _fonts.Where(font => font.IsStyleAvailable(FontStyle.Bold) && font.IsStyleAvailable(FontStyle.Italic));
+            return _fonts.Where(font => font.IsStyleAvailable(FontStyle.Bold) && font.IsStyleAvailable(FontStyle.Regular));
         }
 
         /// <summary>
         /// Gets fonts which support either Bold or Regular style.
         /// </summary>
         /// <returns>
-        /// Collection of <see cref="FontFamily"/> which support either Bold or Italic style.
+        /// Collection of <see cref="FontFamily"/> which support either Bold or Regular style.
         /// </returns>
         public static IEnumerable<FontFamily> GetRegularOrBoldCapableFontFamilies()
         {
-            return _fonts.Where(font => font.IsStyleAvailable(FontStyle.Bold) || font.IsStyleAvailable(FontStyle.Italic));
+            return _fonts.Where(font => font.IsStyleAvailable(FontStyle.Bold) || font.IsStyleAvailable(FontStyle.Regular));
         }
 
         /// <summary>
