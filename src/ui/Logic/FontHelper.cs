@@ -20,7 +20,7 @@ namespace Nikse.SubtitleEdit.Logic
         }
 
         /// <summary>
-        /// Gets fonts which support both Bold and Regular styles.
+        /// Gets font families which support both Bold and Regular styles.
         /// </summary>
         /// <returns>
         /// Collection of <see cref="FontFamily"/> which support both Bold and Regular styles.
@@ -31,7 +31,7 @@ namespace Nikse.SubtitleEdit.Logic
         }
 
         /// <summary>
-        /// Gets fonts which support either Bold or Regular style.
+        /// Gets font families which support either Bold or Regular style.
         /// </summary>
         /// <returns>
         /// Collection of <see cref="FontFamily"/> which support either Bold or Regular style.
