@@ -33,7 +33,7 @@
             this.buttonCancel = new System.Windows.Forms.Button();
             this.groupBoxNames = new System.Windows.Forms.GroupBox();
             this.buttonAddCustomNames = new System.Windows.Forms.Button();
-            this.textBoxExtraNames = new Nikse.SubtitleEdit.Controls.SETextBox();
+            this.textBoxExtraNames = new Nikse.SubtitleEdit.Controls.SETextBox(true);
             this.labelExtraNames = new System.Windows.Forms.Label();
             this.buttonInverseSelection = new System.Windows.Forms.Button();
             this.buttonSelectAll = new System.Windows.Forms.Button();

@@ -5671,8 +5671,8 @@ namespace Nikse.SubtitleEdit.Forms
                     textBoxListViewTextOriginal.BackColor = Configuration.Settings.General.SubtitleBackgroundColor;
                     textBoxListViewText.ForeColor = Configuration.Settings.General.SubtitleBackgroundColor;
                     textBoxListViewTextOriginal.ForeColor = Configuration.Settings.General.SubtitleBackgroundColor;
-                    textBoxListViewText.Initialize(Configuration.Settings.General.SubtitleTextBoxSyntaxColor);
-                    textBoxListViewTextOriginal.Initialize(Configuration.Settings.General.SubtitleTextBoxSyntaxColor);
+                    textBoxListViewText.Initialize(Configuration.Settings.General.SubtitleTextBoxSyntaxColor, false);
+                    textBoxListViewTextOriginal.Initialize(Configuration.Settings.General.SubtitleTextBoxSyntaxColor, false);
 
                     UiUtil.InitializeSubtitleFont(textBoxListViewText);
                     UiUtil.InitializeSubtitleFont(textBoxListViewTextOriginal);
@@ -5841,8 +5841,8 @@ namespace Nikse.SubtitleEdit.Forms
 
                     Configuration.Settings.General.SubtitleBackgroundColor = darkThemeBackColor;
                     Configuration.Settings.General.SubtitleFontColor = darkThemeForeColor;
-                    textBoxListViewText.Initialize(Configuration.Settings.General.SubtitleTextBoxSyntaxColor);
-                    textBoxListViewTextOriginal.Initialize(Configuration.Settings.General.SubtitleTextBoxSyntaxColor);
+                    textBoxListViewText.Initialize(Configuration.Settings.General.SubtitleTextBoxSyntaxColor, false);
+                    textBoxListViewTextOriginal.Initialize(Configuration.Settings.General.SubtitleTextBoxSyntaxColor, false);
                     SubtitleListview1.BackColor = darkThemeBackColor;
                     SubtitleListview1.ForeColor = darkThemeForeColor;
                     RefreshSelectedParagraph();
@@ -5854,8 +5854,8 @@ namespace Nikse.SubtitleEdit.Forms
                     darkThemeForeColor = DefaultForeColor;
                     Configuration.Settings.General.SubtitleBackgroundColor = darkThemeBackColor;
                     Configuration.Settings.General.SubtitleFontColor = darkThemeForeColor;
-                    textBoxListViewText.Initialize(Configuration.Settings.General.SubtitleTextBoxSyntaxColor);
-                    textBoxListViewTextOriginal.Initialize(Configuration.Settings.General.SubtitleTextBoxSyntaxColor);
+                    textBoxListViewText.Initialize(Configuration.Settings.General.SubtitleTextBoxSyntaxColor, false);
+                    textBoxListViewTextOriginal.Initialize(Configuration.Settings.General.SubtitleTextBoxSyntaxColor, false);
                     SubtitleListview1.BackColor = darkThemeBackColor;
                     SubtitleListview1.ForeColor = darkThemeForeColor;
 
@@ -5889,8 +5889,8 @@ namespace Nikse.SubtitleEdit.Forms
                     textBoxListViewText.DisposeHunspellAndDictionaries();
                 }
 
-                textBoxListViewText.Initialize(Configuration.Settings.General.SubtitleTextBoxSyntaxColor);
-                textBoxListViewTextOriginal.Initialize(Configuration.Settings.General.SubtitleTextBoxSyntaxColor);
+                textBoxListViewText.Initialize(Configuration.Settings.General.SubtitleTextBoxSyntaxColor, false);
+                textBoxListViewTextOriginal.Initialize(Configuration.Settings.General.SubtitleTextBoxSyntaxColor, false);
                 RefreshSelectedParagraph();
             }
             else if (oldLiveSpellCheck && oldLiveSpellCheck != Configuration.Settings.Tools.LiveSpellCheck)

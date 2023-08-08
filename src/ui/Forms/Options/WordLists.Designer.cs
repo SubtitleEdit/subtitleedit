@@ -43,7 +43,7 @@
             this.buttonAddUserWord = new System.Windows.Forms.Button();
             this.groupBoxWordListLocation = new System.Windows.Forms.GroupBox();
             this.checkBoxNamesOnline = new System.Windows.Forms.CheckBox();
-            this.textBoxNamesOnline = new Nikse.SubtitleEdit.Controls.SETextBox();
+            this.textBoxNamesOnline = new Nikse.SubtitleEdit.Controls.SETextBox(true);
             this.groupBoxNamesIgonoreLists = new System.Windows.Forms.GroupBox();
             this.listViewNames = new System.Windows.Forms.ListView();
             this.columnHeaderNames = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));

@@ -30,10 +30,21 @@ namespace Nikse.SubtitleEdit.Controls
                      ControlStyles.ResizeRedraw |
                      ControlStyles.Selectable, true);
 
-            Initialize(Configuration.Settings.General.SubtitleTextBoxSyntaxColor);
+            Initialize(Configuration.Settings.General.SubtitleTextBoxSyntaxColor, false);
         }
 
-        public void Initialize(bool useSyntaxColoring)
+        public SETextBox(bool justTextBox)
+        {
+            SetStyle(ControlStyles.OptimizedDoubleBuffer |
+                     ControlStyles.UserPaint |
+                     ControlStyles.ResizeRedraw |
+                     ControlStyles.Selectable, true);
+
+            Initialize(false, true);
+        }
+
+
+        public void Initialize(bool useSyntaxColoring, bool justTextBox)
         {
             ContextMenuStrip oldContextMenuStrip = null;
             var oldEnabled = true;
@@ -69,7 +80,16 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 _simpleTextBox = new SimpleTextBox { BorderStyle = BorderStyle.None, Multiline = true };
                 InitializeBackingControl(_simpleTextBox);
-                UpdateFontAndColors(_simpleTextBox);
+                if (justTextBox)
+                {
+                    var gs = Configuration.Settings.General;
+                    _simpleTextBox.ForeColor = gs.SubtitleFontColor;
+                    _simpleTextBox.BackColor = gs.SubtitleBackgroundColor;
+                }
+                else
+                {
+                    UpdateFontAndColors(_simpleTextBox);
+                }
             }
 
             if (oldContextMenuStrip != null)
@@ -673,6 +693,11 @@ namespace Nikse.SubtitleEdit.Controls
                     return _uiTextBox.MaxLength;
                 }
 
+                if (_simpleTextBox != null)
+                {
+                    return _simpleTextBox.MaxLength;
+                }
+
                 return 0;
             }
             set
@@ -680,6 +705,31 @@ namespace Nikse.SubtitleEdit.Controls
                 if (_uiTextBox != null)
                 {
                     _uiTextBox.MaxLength = value;
+                }
+
+                if (_simpleTextBox != null)
+                {
+                    _simpleTextBox.MaxLength = value;
+                }
+            }
+        }
+
+        public bool UseSystemPasswordChar
+        {
+            get
+            {
+                if (_simpleTextBox != null)
+                {
+                    return _simpleTextBox.UseSystemPasswordChar;
+                }
+
+                return false;
+            }
+            set
+            {
+                if (_simpleTextBox != null)
+                {
+                    _simpleTextBox.UseSystemPasswordChar = value;
                 }
             }
         }
