@@ -919,10 +919,7 @@ namespace Nikse.SubtitleEdit.Controls
                     _textBox.Visible = false;
                 }
 
-                using (var textBrush = new SolidBrush(ButtonForeColor))
-                {
-                    e.Graphics.DrawString(_textBox.Text, _textBox.Font, textBrush, _textBox.Bounds);
-                }
+                DrawText(e, ButtonForeColor);
             }
 
             Brush brush;
@@ -941,11 +938,64 @@ namespace Nikse.SubtitleEdit.Controls
             DrawArrow(e, brush, left, top, height);
         }
 
+        internal static TextFormatFlags CreateTextFormatFlags(Control control, HorizontalAlignment contentAlignment, bool showEllipsis, bool useMnemonic)
+        {
+            var textFormatFlags = TextFormatFlags.TextBoxControl | TextFormatFlags.WordBreak;
+            if (showEllipsis)
+            {
+                textFormatFlags |= TextFormatFlags.EndEllipsis;
+            }
+
+            textFormatFlags |= TextFormatFlags.VerticalCenter;
+
+            if (contentAlignment == HorizontalAlignment.Left)
+            {
+                textFormatFlags |= TextFormatFlags.Left;
+            }
+            else if (contentAlignment == HorizontalAlignment.Center)
+            {
+                textFormatFlags |= TextFormatFlags.HorizontalCenter;
+            }
+            else if (contentAlignment == HorizontalAlignment.Right)
+            {
+                textFormatFlags |= TextFormatFlags.Right;
+            }
+
+            if (control.RightToLeft == RightToLeft.Yes)
+            {
+                textFormatFlags |= TextFormatFlags.RightToLeft;
+            }
+
+            textFormatFlags |= !useMnemonic ? TextFormatFlags.NoPrefix : TextFormatFlags.HidePrefix;
+
+            return textFormatFlags;
+        }
+
+        private void DrawText(PaintEventArgs e, Color textColor)
+        {
+            using (var stringFormat = new StringFormat(StringFormat.GenericDefault))
+            {
+                var textFormatFlags = CreateTextFormatFlags(this, _textBox.TextAlign, false, false);
+
+                TextRenderer.DrawText(e.Graphics,
+                    _textBox.Text,
+                    _textBox.Font,
+                    new Rectangle(0, 0, Width - 1, Height - 1),
+                    textColor,
+                    textFormatFlags);
+            }
+        }
+
         public override RightToLeft RightToLeft
         {
             get => base.RightToLeft;
             set
             {
+                if (_textBox != null)
+                {
+                    _textBox.RightToLeft = value;
+                }
+
                 base.RightToLeft = value;
                 Invalidate();
             }
