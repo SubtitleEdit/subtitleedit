@@ -83,7 +83,7 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             this.tabPageChainingGeneral = new System.Windows.Forms.TabPage();
             this.labelChainingGeneralShotChangeBehavior = new System.Windows.Forms.Label();
             this.comboBoxChainingGeneralShotChangeBehavior = new Nikse.SubtitleEdit.Controls.NikseComboBox();
-            this.labelChainingGeneralMaxGapSuffix = new System.Windows.Forms.Label();
+            this.labelChainingGeneralMaxGapSuffix = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.radioButtonChainingGeneralZones = new System.Windows.Forms.RadioButton();
             this.radioButtonChainingGeneralMaxGap = new System.Windows.Forms.RadioButton();
             this.numericUpDownChainingGeneralLeftGreenZone = new Nikse.SubtitleEdit.Controls.NikseUpDown();
@@ -1312,7 +1312,7 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
         private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownChainingGeneralLeftRedZone;
         private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownChainingGeneralMaxGap;
         private System.Windows.Forms.TabPage tabPageChainingOutCueOnShot;
-        private System.Windows.Forms.Label labelChainingGeneralMaxGapSuffix;
+        private Nikse.SubtitleEdit.Controls.NikseLabel labelChainingGeneralMaxGapSuffix;
         private System.Windows.Forms.Label labelChainingGeneralShotChangeBehavior;
         private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxChainingGeneralShotChangeBehavior;
         private Controls.CuesPreviewView cuesPreviewViewChainingOutCueOnShot;

@@ -47,6 +47,7 @@ using Nikse.SubtitleEdit.Core.AudioToText;
 using Nikse.SubtitleEdit.Forms.AudioToText;
 using Nikse.SubtitleEdit.Forms.VTT;
 using Timer = System.Windows.Forms.Timer;
+using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -133,6 +134,7 @@ namespace Nikse.SubtitleEdit.Forms
         private SpellCheck _spellCheckForm;
         private bool _loading = true;
         private bool _exitWhenLoaded;
+        private bool _forceClose = false;
         private int _repeatCount = -1;
         private double _endSeconds = -1;
         private int _playSelectionIndex = -1;
@@ -13137,6 +13139,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void FormMain_FormClosing(object sender, FormClosingEventArgs e)
         {
+            if (_forceClose)
+            {
+                return;
+            }
+
             _lastDoNotPrompt = -1;
             ReloadFromSourceView();
             if (!ContinueNewOrExit())
@@ -13232,6 +13239,14 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             _dictateForm?.Dispose();
+
+            if (!e.Cancel)
+            {
+                e.Cancel = true;
+                _forceClose = true;
+                // To allow windows in FormClosing...
+                SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(10), () => Application.Exit());
+            }
         }
 
         private void SaveUndockedPositions()

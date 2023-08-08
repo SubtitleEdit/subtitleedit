@@ -31,11 +31,11 @@
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.comboBoxFrom = new Nikse.SubtitleEdit.Controls.NikseComboBox();
-            this.labelFrom = new System.Windows.Forms.Label();
+            this.labelFrom = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.comboboxStorageCategories = new Nikse.SubtitleEdit.Controls.NikseComboBox();
-            this.labelStorageCategory = new System.Windows.Forms.Label();
+            this.labelStorageCategory = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.comboBoxStyle = new Nikse.SubtitleEdit.Controls.NikseComboBox();
-            this.labelStyle = new System.Windows.Forms.Label();
+            this.labelStyle = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.SuspendLayout();
             // 
             // buttonOK
@@ -152,10 +152,10 @@
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Button buttonCancel;
         private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxFrom;
-        private System.Windows.Forms.Label labelFrom;
+        private Nikse.SubtitleEdit.Controls.NikseLabel labelFrom;
         private Nikse.SubtitleEdit.Controls.NikseComboBox comboboxStorageCategories;
-        private System.Windows.Forms.Label labelStorageCategory;
+        private Nikse.SubtitleEdit.Controls.NikseLabel labelStorageCategory;
         private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxStyle;
-        private System.Windows.Forms.Label labelStyle;
+        private Nikse.SubtitleEdit.Controls.NikseLabel labelStyle;
     }
 }
