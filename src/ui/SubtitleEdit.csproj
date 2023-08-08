@@ -440,6 +440,13 @@
     <Compile Include="Forms\PreviewVideo.Designer.cs">
       <DependentUpon>PreviewVideo.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\SeMsgBox\MessageBox.cs" />
+    <Compile Include="Forms\SeMsgBox\MessageBoxForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\SeMsgBox\MessageBoxForm.Designer.cs">
+      <DependentUpon>MessageBoxForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\ShotChangesList.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1735,6 +1742,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\PreviewVideo.resx">
       <DependentUpon>PreviewVideo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\SeMsgBox\MessageBoxForm.resx">
+      <DependentUpon>MessageBoxForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ShotChangesList.resx">
       <DependentUpon>ShotChangesList.cs</DependentUpon>
