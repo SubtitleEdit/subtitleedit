@@ -344,7 +344,7 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
     <TransportStreamFileNameEnding>Suffixe nom de fichier</TransportStreamFileNameEnding>
     <TransportStreamSettingsButton>Paramètres TS…</TransportStreamSettingsButton>
     <RemoveLineBreaks>Retirer les sauts de lignes</RemoveLineBreaks>
-    <DeleteLines>Supprimer des lines</DeleteLines>
+    <DeleteLines>Supprimer des lignes</DeleteLines>
     <TryToUseSourceEncoding>Essayer d'utiliser l'encodage source</TryToUseSourceEncoding>
     <DeleteFirstLines>Supprimer les premières lignes</DeleteFirstLines>
     <DeleteLastLines>Supprimer les dernières lignes</DeleteLastLines>
