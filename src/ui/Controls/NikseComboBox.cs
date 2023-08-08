@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Design;
 using System.Drawing.Drawing2D;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Controls
@@ -236,20 +237,28 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        protected override void OnGotFocus(EventArgs e)
+        private TaskScheduler _uiTaskScheduler;
+        protected override async void OnGotFocus(EventArgs e)
         {
             base.OnGotFocus(e);
             if (_textBox != null && DropDownStyle == ComboBoxStyle.DropDown)
             {
-                try
+                // init if not already initialized otherwise reuse the cached one
+                _uiTaskScheduler = _uiTaskScheduler ??
+                                   // capture the ui/main thread context
+                                   TaskScheduler.FromCurrentSynchronizationContext();
+
+                Task.Delay(25).ContinueWith(task =>
                 {
-                    Application.DoEvents();
-                    System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(25), () => _textBox.Focus());
-                }
-                catch
-                {
-                    // ignore
-                }
+                    try
+                    {
+                        _textBox.Focus();
+                    }
+                    catch
+                    {
+                        // ignore
+                    }
+                }, _uiTaskScheduler);
             }
         }
 
