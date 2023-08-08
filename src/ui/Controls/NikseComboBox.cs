@@ -118,6 +118,17 @@ namespace Nikse.SubtitleEdit.Controls
 
                 if (!_loading)
                 {
+                    if (_listViewShown && _listView != null)
+                    {
+                        if (_listView.SelectedItems.Count > 0)
+                        {
+                            _listView.SelectedItems[0].Selected = false;
+                        }
+                        _listView.Items[_selectedIndex].Selected = true;
+                        _listView.Items[_selectedIndex].EnsureVisible();
+                        _listView.Items[_selectedIndex].Focused = true;
+                    }
+
                     SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
                     SelectedValueChanged?.Invoke(this, EventArgs.Empty);
                 }
@@ -421,7 +432,10 @@ namespace Nikse.SubtitleEdit.Controls
                 }
             };
 
-            _textBox.KeyDown += (sender, e) => { KeyDown?.Invoke(this, e); };
+            _textBox.KeyDown += (sender, e) =>
+            {
+                KeyDown?.Invoke(this, e);
+            };
 
             MouseWheel += (sender, e) =>
             {
@@ -789,6 +803,10 @@ namespace Nikse.SubtitleEdit.Controls
 
                     HideDropDown();
                     args.SuppressKeyPress = true;
+                }
+                else
+                {
+                    KeyDown?.Invoke(this, args);
                 }
             };
 

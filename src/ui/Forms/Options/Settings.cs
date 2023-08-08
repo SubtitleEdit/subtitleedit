@@ -2793,7 +2793,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
                 return;
             }
 
-            int i = 0;
+            var i = 0;
             foreach (var item in comboBoxShortcutKey.Items)
             {
                 if (item.ToString() == e.KeyCode.ToString())
