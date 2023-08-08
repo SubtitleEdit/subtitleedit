@@ -44,7 +44,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.buttonHistory = new System.Windows.Forms.Button();
             this.buttonTogglePreview = new System.Windows.Forms.Button();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.seTextBox1 = new Nikse.SubtitleEdit.Controls.SETextBox();
+            this.seTextBox1 = new Nikse.SubtitleEdit.Controls.SETextBox(true);
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.groupBoxApplyTo.SuspendLayout();
             this.groupBoxPreview.SuspendLayout();

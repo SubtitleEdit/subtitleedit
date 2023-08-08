@@ -29,7 +29,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         /// </summary>
         private void InitializeComponent()
         {
-            this.seTextBoxOverrideStyle = new Nikse.SubtitleEdit.Controls.SETextBox();
+            this.seTextBoxOverrideStyle = new Nikse.SubtitleEdit.Controls.SETextBox(true);
             this.listBoxHistory = new System.Windows.Forms.ListBox();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
