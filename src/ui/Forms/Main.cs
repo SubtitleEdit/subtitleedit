@@ -288,6 +288,7 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.FixLargeFonts(groupBoxEdit, buttonAutoBreak);
             UiUtil.InitializeSubtitleFont(textBoxSource);
             UiUtil.InitializeSubtitleFont(textBoxListViewText);
+            textBoxListViewTextOriginal.Top = textBoxListViewText.Top;
             UiUtil.InitializeSubtitleFont(textBoxListViewTextOriginal);
             UiUtil.InitializeSubtitleFont(SubtitleListview1);
 
