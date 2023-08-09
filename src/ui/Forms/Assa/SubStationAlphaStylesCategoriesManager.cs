@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using System.Xml;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic;
+using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms.Assa
 {

@@ -16,6 +16,7 @@ using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Controls;
+using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms.Options
 {

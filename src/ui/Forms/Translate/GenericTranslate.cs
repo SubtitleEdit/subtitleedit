@@ -13,6 +13,7 @@ using System.Linq;
 using System.Net.NetworkInformation;
 using System.Text;
 using System.Windows.Forms;
+using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms.Translate
 {

@@ -5,6 +5,7 @@ using System;
 using System.Drawing;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -371,7 +372,6 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 Configuration.Settings.Tools.ReplaceIn = nameof(LanguageSettings.Current.ReplaceDialog.TranslationAndOriginal);
             }
-
         }
 
         private void textBoxFind_TextChanged(object sender, EventArgs e)
