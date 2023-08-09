@@ -712,10 +712,12 @@ namespace Nikse.SubtitleEdit.Controls
             }
             var top = totalY + Height;
 
+            var hasScroller = false;
             if (listViewItems.Count > 0)
             {
                 var itemHeight = _listView.GetItemRect(0).Height;
-                lvHeight = itemHeight * listViewItems.Count + 16;
+                var lvVirtualHeight = itemHeight * listViewItems.Count + 16;
+                lvHeight = lvVirtualHeight;
                 var spaceInPixelsBottom = form.Height - (totalY + Height);
                 var maxHeight = DropDownHeight;
                 if (spaceInPixelsBottom >= DropDownHeight ||
@@ -731,6 +733,8 @@ namespace Nikse.SubtitleEdit.Controls
                     lvHeight = Math.Min(lvHeight, maxHeight);
                     top = totalY - lvHeight;
                 }
+
+                hasScroller = lvVirtualHeight > lvHeight;
             }
 
             _listView.Height = lvHeight;
@@ -739,6 +743,16 @@ namespace Nikse.SubtitleEdit.Controls
             _listView.Top = top;
             form.Controls.Add(_listView);
             _listView.BringToFront();
+
+            if (hasScroller)
+            {
+                _listView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.None);
+            }
+            else
+            {
+                _listView.Scrollable = false;
+                _listView.Columns[0].Width = -2;
+            }
 
             if (_selectedIndex >= 0)
             {
@@ -843,7 +857,7 @@ namespace Nikse.SubtitleEdit.Controls
 
             _listView.LostFocus += (sender, e) =>
             {
-                if (_listViewShown && !Focused)
+                if (_textBox != null & _listViewShown && !Focused && !_textBox.Focused)
                 {
                     HideDropDown();
                 }
