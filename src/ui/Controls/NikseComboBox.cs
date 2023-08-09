@@ -28,6 +28,9 @@ namespace Nikse.SubtitleEdit.Controls
         // ReSharper disable once InconsistentNaming
         public new event KeyEventHandler KeyDown;
 
+        // ReSharper disable once InconsistentNaming
+        public new event EventHandler TextChanged;
+
         private TextBox _textBox;
 
         [Category("NikseComboBox"), Description("Gets or sets DropDownStyle"), RefreshProperties(RefreshProperties.Repaint)]
@@ -103,6 +106,7 @@ namespace Nikse.SubtitleEdit.Controls
                     {
                         SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
                         SelectedValueChanged?.Invoke(this, EventArgs.Empty);
+                        TextChanged?.Invoke(this, EventArgs.Empty);
                     }
 
                     if (!_skipPaint)
@@ -131,6 +135,7 @@ namespace Nikse.SubtitleEdit.Controls
 
                     SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
                     SelectedValueChanged?.Invoke(this, EventArgs.Empty);
+                    TextChanged?.Invoke(this, EventArgs.Empty);
                 }
 
                 if (!_skipPaint)
@@ -207,6 +212,7 @@ namespace Nikse.SubtitleEdit.Controls
                         {
                             SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
                             SelectedValueChanged?.Invoke(this, EventArgs.Empty);
+                            TextChanged?.Invoke(this, EventArgs.Empty);
                         }
                     }
 
@@ -232,6 +238,7 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
                     SelectedValueChanged?.Invoke(this, EventArgs.Empty);
+                    TextChanged?.Invoke(this, EventArgs.Empty);
                 }
             }
         }
@@ -476,6 +483,7 @@ namespace Nikse.SubtitleEdit.Controls
                             {
                                 SelectedIndexChanged?.Invoke(sender, e);
                                 SelectedValueChanged?.Invoke(this, EventArgs.Empty);
+                                TextChanged?.Invoke(this, EventArgs.Empty);
                             }
                         }
                         e.Handled = true;
@@ -490,6 +498,7 @@ namespace Nikse.SubtitleEdit.Controls
                             {
                                 SelectedIndexChanged?.Invoke(sender, e);
                                 SelectedValueChanged?.Invoke(this, EventArgs.Empty);
+                                TextChanged?.Invoke(this, EventArgs.Empty);
                             }
                             if (!_skipPaint)
                             {
@@ -596,6 +605,7 @@ namespace Nikse.SubtitleEdit.Controls
         private void _textBox_TextChanged(object sender, EventArgs e)
         {
             Invalidate();
+            TextChanged?.Invoke(sender, e);
         }
 
         private bool _buttonDownActive;
@@ -808,6 +818,7 @@ namespace Nikse.SubtitleEdit.Controls
                     {
                         SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
                         SelectedValueChanged?.Invoke(this, EventArgs.Empty);
+                        TextChanged?.Invoke(this, EventArgs.Empty);
                     }
 
                     if (!_skipPaint)
@@ -845,6 +856,7 @@ namespace Nikse.SubtitleEdit.Controls
                         {
                             SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
                             SelectedValueChanged?.Invoke(this, EventArgs.Empty);
+                            TextChanged?.Invoke(this, EventArgs.Empty);
                         }
 
                         HideDropDown();
