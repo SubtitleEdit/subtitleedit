@@ -28,6 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MessageBoxForm));
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonYes = new System.Windows.Forms.Button();
@@ -36,6 +38,13 @@
             this.buttonRetry = new System.Windows.Forms.Button();
             this.buttonIgnore = new System.Windows.Forms.Button();
             this.labelText = new System.Windows.Forms.Label();
+            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
+            this.pictureBoxIcon = new System.Windows.Forms.PictureBox();
+            this.seTextBox2 = new Nikse.SubtitleEdit.Controls.SETextBox();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.copyTextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxIcon)).BeginInit();
+            this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonCancel
@@ -134,18 +143,76 @@
             this.labelText.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelText.Location = new System.Drawing.Point(32, 22);
+            this.labelText.AutoSize = true;
+            this.labelText.Location = new System.Drawing.Point(99, 52);
             this.labelText.Name = "labelText";
-            this.labelText.Size = new System.Drawing.Size(734, 379);
+            this.labelText.Size = new System.Drawing.Size(50, 13);
             this.labelText.TabIndex = 14;
             this.labelText.Text = "labelText";
             this.labelText.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // imageList1
+            // 
+            this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
+            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
+            this.imageList1.Images.SetKeyName(0, "MsgBoError.png");
+            this.imageList1.Images.SetKeyName(1, "MsgBoxInfo.png");
+            this.imageList1.Images.SetKeyName(2, "MsgBoxQuestion.png");
+            this.imageList1.Images.SetKeyName(3, "MsgBoxWarning.png");
+            // 
+            // pictureBoxIcon
+            // 
+            this.pictureBoxIcon.Location = new System.Drawing.Point(33, 35);
+            this.pictureBoxIcon.Name = "pictureBoxIcon";
+            this.pictureBoxIcon.Size = new System.Drawing.Size(48, 48);
+            this.pictureBoxIcon.TabIndex = 15;
+            this.pictureBoxIcon.TabStop = false;
+            // 
+            // seTextBox2
+            // 
+            this.seTextBox2.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.seTextBox2.CurrentLanguage = "";
+            this.seTextBox2.CurrentLineIndex = 0;
+            this.seTextBox2.HideSelection = true;
+            this.seTextBox2.IsDictionaryDownloaded = true;
+            this.seTextBox2.IsSpellCheckerInitialized = false;
+            this.seTextBox2.IsSpellCheckRequested = false;
+            this.seTextBox2.IsWrongWord = false;
+            this.seTextBox2.LanguageChanged = false;
+            this.seTextBox2.Location = new System.Drawing.Point(87, 35);
+            this.seTextBox2.MaxLength = 32767;
+            this.seTextBox2.Multiline = true;
+            this.seTextBox2.Name = "seTextBox2";
+            this.seTextBox2.Padding = new System.Windows.Forms.Padding(1);
+            this.seTextBox2.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
+            this.seTextBox2.SelectedText = "";
+            this.seTextBox2.SelectionLength = 0;
+            this.seTextBox2.SelectionStart = 0;
+            this.seTextBox2.Size = new System.Drawing.Size(677, 342);
+            this.seTextBox2.TabIndex = 17;
+            this.seTextBox2.TextBoxFont = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Bold);
+            this.seTextBox2.UseSystemPasswordChar = false;
+            // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.copyTextToolStripMenuItem});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(181, 48);
+            // 
+            // copyTextToolStripMenuItem
+            // 
+            this.copyTextToolStripMenuItem.Name = "copyTextToolStripMenuItem";
+            this.copyTextToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.copyTextToolStripMenuItem.Text = "Copy text";
+            this.copyTextToolStripMenuItem.Click += new System.EventHandler(this.copyTextToolStripMenuItem_Click);
             // 
             // MessageBoxForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.pictureBoxIcon);
             this.Controls.Add(this.labelText);
             this.Controls.Add(this.buttonIgnore);
             this.Controls.Add(this.buttonRetry);
@@ -154,6 +221,7 @@
             this.Controls.Add(this.buttonYes);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
+            this.Controls.Add(this.seTextBox2);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.KeyPreview = true;
             this.MaximizeBox = false;
@@ -164,7 +232,10 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "MessageBoxForm";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MessageBoxForm_KeyDown);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxIcon)).EndInit();
+            this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -178,5 +249,10 @@
         private System.Windows.Forms.Button buttonRetry;
         private System.Windows.Forms.Button buttonIgnore;
         private System.Windows.Forms.Label labelText;
+        private System.Windows.Forms.ImageList imageList1;
+        private System.Windows.Forms.PictureBox pictureBoxIcon;
+        private Controls.SETextBox seTextBox2;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem copyTextToolStripMenuItem;
     }
 }

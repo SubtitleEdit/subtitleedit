@@ -22,7 +22,7 @@ namespace Nikse.SubtitleEdit.Forms.SeMsgBox
 
         public static DialogResult Show(Form form, string text, string caption, MessageBoxButtons buttons, MessageBoxIcon icon)
         {
-            using (var msgBox = new MessageBoxForm(text, caption, buttons))
+            using (var msgBox = new MessageBoxForm(text, caption, buttons, icon))
             {
                 return msgBox.ShowDialog(form);
             }
@@ -46,7 +46,7 @@ namespace Nikse.SubtitleEdit.Forms.SeMsgBox
 
         internal static DialogResult Show(string text, string title, MessageBoxButtons buttons, MessageBoxIcon icon)
         {
-            using (var msgBox = new MessageBoxForm(text, title, buttons))
+            using (var msgBox = new MessageBoxForm(text, title, buttons, icon))
             {
                 return msgBox.ShowDialog(Form.ActiveForm);
             }
