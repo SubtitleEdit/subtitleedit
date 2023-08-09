@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Globalization;
 using System.Windows.Forms;
 using static Nikse.SubtitleEdit.Forms.ExportPngXml;
+using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms.BinaryEdit
 {

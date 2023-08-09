@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
 {

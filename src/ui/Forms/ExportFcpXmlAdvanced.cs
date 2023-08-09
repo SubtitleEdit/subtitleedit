@@ -2,12 +2,12 @@
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic;
 using System;
-using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms
 {

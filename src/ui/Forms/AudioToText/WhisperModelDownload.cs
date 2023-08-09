@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Core.Common;
+using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms.AudioToText
 {

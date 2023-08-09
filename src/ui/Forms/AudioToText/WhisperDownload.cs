@@ -7,6 +7,7 @@ using System.Threading;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Core.AudioToText;
 using Nikse.SubtitleEdit.Core.Http;
+using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms.AudioToText
 {

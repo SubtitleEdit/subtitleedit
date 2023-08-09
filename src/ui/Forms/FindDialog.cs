@@ -5,6 +5,7 @@ using System;
 using System.Drawing;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms
 {

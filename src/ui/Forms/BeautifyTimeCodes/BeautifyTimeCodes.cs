@@ -7,6 +7,7 @@ using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Forms;
 using Nikse.SubtitleEdit.Forms.ShotChanges;
 using Nikse.SubtitleEdit.Logic;
+using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
 {

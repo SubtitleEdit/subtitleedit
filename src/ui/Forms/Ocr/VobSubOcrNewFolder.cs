@@ -3,6 +3,7 @@ using Nikse.SubtitleEdit.Logic;
 using System;
 using System.IO;
 using System.Windows.Forms;
+using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms.Ocr
 {

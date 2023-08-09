@@ -22,6 +22,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
+using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms.BinaryEdit
 {
@@ -2792,8 +2793,14 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             }
         }
 
+        private bool _forceClose;
         private void BinEdit_FormClosing(object sender, FormClosingEventArgs e)
         {
+            if (_forceClose)
+            {
+                return;
+            }
+
             if (_extra != null && HasChanges())
             {
                 var result = MessageBox.Show(this, "Close and lose changes?", "SE", MessageBoxButtons.YesNoCancel);
@@ -2806,6 +2813,15 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
             CloseVideo();
             CleanUp();
+
+            if (!e.Cancel)
+            {
+                e.Cancel = true;
+
+                // To allow windows in FormClosing...
+                _forceClose = true;
+                SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(10), () => Close());
+            }
         }
 
         private void CleanUp()

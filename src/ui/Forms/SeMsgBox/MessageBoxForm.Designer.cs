@@ -40,9 +40,9 @@
             this.labelText = new System.Windows.Forms.Label();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.pictureBoxIcon = new System.Windows.Forms.PictureBox();
-            this.seTextBox2 = new Nikse.SubtitleEdit.Controls.SETextBox();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.copyTextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.seTextBox2 = new Nikse.SubtitleEdit.Controls.SETextBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxIcon)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -144,7 +144,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.labelText.AutoSize = true;
-            this.labelText.Location = new System.Drawing.Point(99, 52);
+            this.labelText.Location = new System.Drawing.Point(79, 40);
             this.labelText.Name = "labelText";
             this.labelText.Size = new System.Drawing.Size(50, 13);
             this.labelText.TabIndex = 14;
@@ -164,9 +164,23 @@
             // 
             this.pictureBoxIcon.Location = new System.Drawing.Point(33, 35);
             this.pictureBoxIcon.Name = "pictureBoxIcon";
-            this.pictureBoxIcon.Size = new System.Drawing.Size(48, 48);
+            this.pictureBoxIcon.Size = new System.Drawing.Size(37, 30);
             this.pictureBoxIcon.TabIndex = 15;
             this.pictureBoxIcon.TabStop = false;
+            // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.copyTextToolStripMenuItem});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(126, 26);
+            // 
+            // copyTextToolStripMenuItem
+            // 
+            this.copyTextToolStripMenuItem.Name = "copyTextToolStripMenuItem";
+            this.copyTextToolStripMenuItem.Size = new System.Drawing.Size(125, 22);
+            this.copyTextToolStripMenuItem.Text = "Copy text";
+            this.copyTextToolStripMenuItem.Click += new System.EventHandler(this.copyTextToolStripMenuItem_Click);
             // 
             // seTextBox2
             // 
@@ -179,7 +193,7 @@
             this.seTextBox2.IsSpellCheckRequested = false;
             this.seTextBox2.IsWrongWord = false;
             this.seTextBox2.LanguageChanged = false;
-            this.seTextBox2.Location = new System.Drawing.Point(87, 35);
+            this.seTextBox2.Location = new System.Drawing.Point(76, 35);
             this.seTextBox2.MaxLength = 32767;
             this.seTextBox2.Multiline = true;
             this.seTextBox2.Name = "seTextBox2";
@@ -188,24 +202,10 @@
             this.seTextBox2.SelectedText = "";
             this.seTextBox2.SelectionLength = 0;
             this.seTextBox2.SelectionStart = 0;
-            this.seTextBox2.Size = new System.Drawing.Size(677, 342);
+            this.seTextBox2.Size = new System.Drawing.Size(688, 342);
             this.seTextBox2.TabIndex = 17;
             this.seTextBox2.TextBoxFont = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Bold);
             this.seTextBox2.UseSystemPasswordChar = false;
-            // 
-            // contextMenuStrip1
-            // 
-            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.copyTextToolStripMenuItem});
-            this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(181, 48);
-            // 
-            // copyTextToolStripMenuItem
-            // 
-            this.copyTextToolStripMenuItem.Name = "copyTextToolStripMenuItem";
-            this.copyTextToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.copyTextToolStripMenuItem.Text = "Copy text";
-            this.copyTextToolStripMenuItem.Click += new System.EventHandler(this.copyTextToolStripMenuItem_Click);
             // 
             // MessageBoxForm
             // 

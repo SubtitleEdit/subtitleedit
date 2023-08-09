@@ -22,6 +22,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 using System.Xml;
+using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms
 {
