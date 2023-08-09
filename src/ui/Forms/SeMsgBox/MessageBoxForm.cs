@@ -2,27 +2,30 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Forms.SeMsgBox
 {
     public sealed partial class MessageBoxForm : Form
     {
-        private string _text;
+        private readonly string _text;
 
-        public MessageBoxForm(string text, string caption, MessageBoxButtons buttons)
+        public MessageBoxForm(string text, string caption, MessageBoxButtons buttons, MessageBoxIcon icon = MessageBoxIcon.Information)
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
             UiUtil.FixFonts(this);
 
+            InitializeIcon(icon);
             InitializeText(text);
             InitializeButtons(buttons);
 
             Text = caption;
             _text = text;
             labelText.Font = new Font(Font.FontFamily, Font.Size + 2);
-
+            copyTextToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.ContextMenu.CopyToClipboard;
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             buttonYes.Text = LanguageSettings.Current.General.Yes;
@@ -32,13 +35,83 @@ namespace Nikse.SubtitleEdit.Forms.SeMsgBox
             UiUtil.FixLargeFonts(this, buttonOK);
         }
 
+        private void InitializeIcon(MessageBoxIcon icon)
+        {
+            pictureBoxIcon.SizeMode = PictureBoxSizeMode.AutoSize;
+            if (icon == MessageBoxIcon.Information)
+            {
+                pictureBoxIcon.Image = Properties.Resources.MsgBoxInfo;
+                TryLoadIcon(pictureBoxIcon, "MsgBoxInfo");
+                pictureBoxIcon.BringToFront();
+            }
+            else if (icon == MessageBoxIcon.Question)
+            {
+                pictureBoxIcon.Image = Properties.Resources.MsgBoxQuestion;
+                TryLoadIcon(pictureBoxIcon, "MsgBoxQuestion");
+                pictureBoxIcon.BringToFront();
+            }
+            else if (icon == MessageBoxIcon.Warning)
+            {
+                pictureBoxIcon.Image = Properties.Resources.MsgBoxWarning;
+                TryLoadIcon(pictureBoxIcon, "MsgBoxWarning");
+                pictureBoxIcon.BringToFront();
+            }
+            else if (icon == MessageBoxIcon.Error)
+            {
+                pictureBoxIcon.Image = Properties.Resources.MsgBoError;
+                TryLoadIcon(pictureBoxIcon, "MsgBoError");
+                pictureBoxIcon.BringToFront();
+            }
+            else
+            {
+                pictureBoxIcon.Visible = false;
+            }
+        }
+
+        private static void TryLoadIcon(PictureBox pb, string iconName)
+        {
+            var theme = Configuration.Settings.General.UseDarkTheme ? "DarkTheme" : "DefaultTheme";
+            if (!string.IsNullOrEmpty(Configuration.Settings.General.ToolbarIconTheme) && !Configuration.Settings.General.ToolbarIconTheme.Equals("Auto", StringComparison.OrdinalIgnoreCase))
+            {
+                theme = Configuration.Settings.General.ToolbarIconTheme;
+            }
+
+            var themeFullPath = Path.Combine(Configuration.IconsDirectory, theme, iconName + ".png");
+            if (File.Exists(themeFullPath))
+            {
+                pb.Image = new Bitmap(themeFullPath);
+                return;
+            }
+
+            var fullPath = Path.Combine(Configuration.IconsDirectory, "DefaultTheme", iconName + ".png");
+            if (File.Exists(fullPath))
+            {
+                pb.Image = new Bitmap(fullPath);
+            }
+        }
+
         private void InitializeText(string text)
         {
+            if (text == null)
+            {
+                text = string.Empty;
+            }
+
+            if (text.Length > 500)
+            {
+                seTextBox2.Text = text;
+                labelText.Visible = false;
+                seTextBox2.ContextMenuStrip = contextMenuStrip1;
+                return;
+            }
+
+            seTextBox2.Visible = false;
+            labelText.ContextMenuStrip = contextMenuStrip1;
             using (var g = CreateGraphics())
             {
                 var textSize = g.MeasureString(text, Font);
-                Height = (int) textSize.Height + 80 + (Height - buttonOK.Top);
-                Width = (int)textSize.Width + 200;
+                Height = (int) textSize.Height + 90 + (Height - buttonOK.Top);
+                Width = (int)textSize.Width + 220;
             }
 
             labelText.Text = text;
@@ -133,6 +206,11 @@ namespace Nikse.SubtitleEdit.Forms.SeMsgBox
                     Clipboard.SetText(_text);
                 }
             }
+        }
+
+        private void copyTextToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Clipboard.SetText(_text);
         }
     }
 }
