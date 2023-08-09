@@ -4,6 +4,7 @@ using System;
 using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Controls
 {
@@ -28,7 +29,8 @@ namespace Nikse.SubtitleEdit.Controls
             SetStyle(ControlStyles.OptimizedDoubleBuffer |
                      ControlStyles.UserPaint |
                      ControlStyles.ResizeRedraw |
-                     ControlStyles.Selectable, true);
+                     ControlStyles.Selectable |
+                     ControlStyles.AllPaintingInWmPaint, true);
 
             Initialize(Configuration.Settings.General.SubtitleTextBoxSyntaxColor, false);
         }
@@ -40,7 +42,7 @@ namespace Nikse.SubtitleEdit.Controls
                      ControlStyles.ResizeRedraw |
                      ControlStyles.Selectable, true);
 
-            Initialize(false, true);
+            Initialize(false, justTextBox);
         }
 
 
@@ -70,7 +72,7 @@ namespace Nikse.SubtitleEdit.Controls
             _uiTextBox?.Dispose();
             _simpleTextBox = null;
             _uiTextBox = null;
-            if (useSyntaxColoring)
+            if (useSyntaxColoring && !justTextBox)
             {
                 _uiTextBox = new AdvancedTextBox { BorderStyle = BorderStyle.None, Multiline = true };
                 InitializeBackingControl(_uiTextBox);
@@ -82,9 +84,10 @@ namespace Nikse.SubtitleEdit.Controls
                 InitializeBackingControl(_simpleTextBox);
                 if (justTextBox)
                 {
-                    var gs = Configuration.Settings.General;
-                    _simpleTextBox.ForeColor = gs.SubtitleFontColor;
-                    _simpleTextBox.BackColor = gs.SubtitleBackgroundColor;
+                    _simpleTextBox.ForeColor = DarkTheme.ForeColor;
+                    _simpleTextBox.BackColor = DarkTheme.BackColor;
+                    BackColor = Color.DarkGray;
+                    _simpleTextBox.VisibleChanged += SimpleTextBox_VisibleChanged;
                 }
                 else
                 {
@@ -99,6 +102,13 @@ namespace Nikse.SubtitleEdit.Controls
 
             Enabled = oldEnabled;
             Text = oldText;
+        }
+
+        private void SimpleTextBox_VisibleChanged(object sender, EventArgs e)
+        {
+            Padding = new Padding(1);
+            BackColor = Color.DarkGray;
+            Invalidate();
         }
 
         private void InitializeBackingControl(Control textBox)
