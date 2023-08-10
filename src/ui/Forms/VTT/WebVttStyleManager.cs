@@ -11,6 +11,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms.VTT
 {
@@ -43,7 +44,7 @@ namespace Nikse.SubtitleEdit.Forms.VTT
             CheckDuplicateStyles();
 
             var fontNames = new List<string>();
-            foreach (var x in FontFamily.Families)
+            foreach (var x in FontHelper.GetAllSupportedFontFamilies())
             {
                 fontNames.Add(x.Name);
             }

@@ -31,7 +31,7 @@
             this.components = new System.ComponentModel.Container();
             this.labelTotalMilliseconds = new System.Windows.Forms.Label();
             this.labelTM = new System.Windows.Forms.Label();
-            this.numericUpDownDelay = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownDelay = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelColor = new System.Windows.Forms.Label();
             this.labelEndDelay = new System.Windows.Forms.Label();
             this.buttonCancel = new System.Windows.Forms.Button();
@@ -43,7 +43,6 @@
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.richTextBoxPreview = new System.Windows.Forms.RichTextBox();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDelay)).BeginInit();
             this.SuspendLayout();
             // 
             // labelTotalMilliseconds
@@ -214,7 +213,6 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Karaoke effect";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormEffectKaraoke_KeyDown);
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDelay)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -224,7 +222,7 @@
 
         private System.Windows.Forms.Label labelTotalMilliseconds;
         private System.Windows.Forms.Label labelTM;
-        private System.Windows.Forms.NumericUpDown numericUpDownDelay;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownDelay;
         private System.Windows.Forms.Label labelColor;
         private System.Windows.Forms.Label labelEndDelay;
         private System.Windows.Forms.Button buttonCancel;

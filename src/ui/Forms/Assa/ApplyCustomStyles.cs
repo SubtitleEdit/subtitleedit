@@ -440,5 +440,11 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
             e.Cancel = true;
         }
+
+        private void ApplyCustomStyles_Shown(object sender, EventArgs e)
+        {
+            seTextBox1.Refresh();
+            seTextBox1.Focus();
+        }
     }
 }

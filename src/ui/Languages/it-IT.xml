@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.6.13</Version>
-    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 02.08.2023</TranslatedBy>
+    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 06.08.2023</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -512,6 +512,7 @@ Si sfrutta così il ritmo intrinseco dell'immagine.</CreateSimpleChainingToolTip
     <Enabled>Abilitato</Enabled>
     <Name>Nome</Name>
     <LinesFoundX>Righe trovate: {0}</LinesFoundX>
+    <ExtraNames>Aggiungi nomi extra (separati da virgola, usati solo una volta)</ExtraNames>
   </ChangeCasingNames>
   <ChangeFrameRate>
     <Title>Modifica frequenza fotogrammi</Title>
@@ -880,6 +881,7 @@ Si sfrutta così il ritmo intrinseco dell'immagine.</CreateSimpleChainingToolTip
     <RemoveLineBreaks>Elimina divisioni di riga in testi corti con una sola frase</RemoveLineBreaks>
     <RemoveLineBreaksAll>Elimina divisioni di riga in testi corti (tutti eccetto dialoghi)</RemoveLineBreaksAll>
     <RemoveLineBreaksPixelWidth>Non interrompere i sottotitoli che possono stare su una riga (larghezza in pixel)</RemoveLineBreaksPixelWidth>    <FixUppercaseIInsideLowercaseWords>Correggi la "i" maiuscola all'interno delle parole minuscole (errore OCR)</FixUppercaseIInsideLowercaseWords>
+    <FixUppercaseIInsideLowercaseWords>Correggi "i" maiuscola all'interno delle parole minuscole (errore OCR)</FixUppercaseIInsideLowercaseWords>
     <FixDoubleApostrophes>Sostituisci i doppi apici ('') con le virgolette (")</FixDoubleApostrophes>
     <AddPeriods>Aggiungi il punto a fine riga se la seguente inizia con una lettera maiuscola</AddPeriods>
     <StartWithUppercaseLetterAfterParagraph>Inizia la riga con una lettera maiuscola dopo un paragrafo</StartWithUppercaseLetterAfterParagraph>
@@ -1739,10 +1741,10 @@ Vuoi continuare?</SubtitleAppendPrompt>
     <NothingToUndo>Niente da annullare</NothingToUndo>
     <InvalidLanguageNameX>Nome lingua non valido: {0}</InvalidLanguageNameX>
     <DoNotDisplayMessageAgain>Non visualizzare più questo messaggio</DoNotDisplayMessageAgain>
-    <NumberOfCorrectedWords>Numero di parole corrette: {0}</NumberOfCorrectedWords>
-    <DoNotAutoLoadVideo>Non caricare automaticamente il video</DoNotAutoLoadVideo>
-    <NumberOfSkippedWords>Numero di parole saltate: {0}</NumberOfSkippedWords>
-    <NumberOfCorrectWords>Numero di parole giuste: {0}</NumberOfCorrectWords>
+    <DoNotAutoLoadVideo>Non caricare automaticamente video</DoNotAutoLoadVideo>
+    <NumberOfCorrectedWords>Numero parole corrette: {0}</NumberOfCorrectedWords>
+    <NumberOfSkippedWords>Numero parole saltate: {0}</NumberOfSkippedWords>
+    <NumberOfCorrectWords>Numero parolo corrette: {0}</NumberOfCorrectWords>
     <NumberOfWordsAddedToDictionary>Numero di parole aggiunte al dizionario: {0}</NumberOfWordsAddedToDictionary>
     <NumberOfNameHits>Numero nomi trovati: {0}</NumberOfNameHits>
     <SpellCheck>Controllo ortografico</SpellCheck>

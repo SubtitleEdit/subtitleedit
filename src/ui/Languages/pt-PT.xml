@@ -513,6 +513,7 @@ Tiramos partido do ritmo intrínseco da imagem.</CreateSimpleChainingToolTip>
     <Enabled>Activo</Enabled>
     <Name>Nome</Name>
     <LinesFoundX>Linhas encontradas: {0}</LinesFoundX>
+    <ExtraNames>Adicionar nomes extra (separados por vírgula, utilização única)</ExtraNames>
   </ChangeCasingNames>
   <ChangeFrameRate>
     <Title>Alterar a taxa de fotogramas</Title>
@@ -880,6 +881,7 @@ Tiramos partido do ritmo intrínseco da imagem.</CreateSimpleChainingToolTip>
     <BreakLongLines>Dividir linhas longas</BreakLongLines>
     <RemoveLineBreaks>Remover quebras de linha em textos curtos</RemoveLineBreaks>
     <RemoveLineBreaksAll>Remover quebras de linha em textos curtos (todos excepto diálogos)</RemoveLineBreaksAll>
+    <RemoveLineBreaksPixelWidth>Combinar legendas que cabem numa linha (largura de pixel)</RemoveLineBreaksPixelWidth>
     <FixUppercaseIInsideLowercaseWords>Corrigir 'i' maiúscula em palavras em minúsculo (erro de OCR)</FixUppercaseIInsideLowercaseWords>
     <FixDoubleApostrophes>Substituir apóstrofe dupla ('') por aspas (")</FixDoubleApostrophes>
     <AddPeriods>Adicionar ponto final quando a linha seguinte começar com maiúscula</AddPeriods>
@@ -914,6 +916,7 @@ Tiramos partido do ritmo intrínseco da imagem.</CreateSimpleChainingToolTip>
     <FixFirstLetterToUppercaseAfterParagraph>Corrigir primeira letra do parágrafo para maiúscula</FixFirstLetterToUppercaseAfterParagraph>
     <MergeShortLine>Eliminar quebra de linha em linha curta (uma frase)</MergeShortLine>
     <MergeShortLineAll>Eliminar quebra de linha em linha curta (excepto diálogos)</MergeShortLineAll>
+    <UnbreakShortLinePixelWidth>Combinar linha curta (largura de pixel)</UnbreakShortLinePixelWidth>
     <BreakLongLine>Dividir linha longa</BreakLongLine>
     <FixLongDisplayTime>Corrigir duração longa</FixLongDisplayTime>
     <FixInvalidItalicTag>Corrigir etiqueta itálica inválida</FixInvalidItalicTag>
@@ -1739,6 +1742,7 @@ Continuar?</SubtitleAppendPrompt>
     <NothingToUndo>Nada para anular</NothingToUndo>
     <InvalidLanguageNameX>Nome de idioma inválido: {0}</InvalidLanguageNameX>
     <DoNotDisplayMessageAgain>Não mostrar esta mensagem novamente</DoNotDisplayMessageAgain>
+    <DoNotAutoLoadVideo>Não carregar automaticamente o vídeo</DoNotAutoLoadVideo>
     <NumberOfCorrectedWords>Número de palavras corrigidas: {0}</NumberOfCorrectedWords>
     <NumberOfSkippedWords>Número de palavras omitidas: {0}</NumberOfSkippedWords>
     <NumberOfCorrectWords>Número de palavras correctas: {0}</NumberOfCorrectWords>
@@ -3123,7 +3127,7 @@ Continuar?</RestoreDefaultSettingsMsg>
     <Title>Sincronia visual</Title>
     <StartScene>Cena inicial</StartScene>
     <EndScene>Cena final</EndScene>
-    <Synchronize>Sincronia</Synchronize>
+    <Synchronize>Sincronizar</Synchronize>
     <HalfASecondBack>&lt; ½ seg</HalfASecondBack>
     <ThreeSecondsBack>&lt; 3 segs</ThreeSecondsBack>
     <PlayXSecondsAndBack>Reproduzir {0} segs e voltar</PlayXSecondsAndBack>

@@ -31,7 +31,7 @@
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
             this.PanelDrive = new System.Windows.Forms.Panel();
-            this.comboBoxDrive = new System.Windows.Forms.ComboBox();
+            this.comboBoxDrive = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelChooseDrive = new System.Windows.Forms.Label();
             this.PanelFolder = new System.Windows.Forms.Panel();
             this.buttonChooseFolder = new System.Windows.Forms.Button();
@@ -223,7 +223,7 @@
         private System.Windows.Forms.Label labelChooseDrive;
         private System.Windows.Forms.Label labelChooseFolder;
         private System.Windows.Forms.TextBox textBoxFolder;
-        private System.Windows.Forms.ComboBox comboBoxDrive;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxDrive;
         private System.Windows.Forms.RadioButton radioButtonDisc;
         private System.Windows.Forms.RadioButton radioButtonFolder;
         private System.Windows.Forms.GroupBox groupBoxOpenDvdFrom;

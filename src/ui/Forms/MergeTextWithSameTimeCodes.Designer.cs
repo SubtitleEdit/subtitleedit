@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.numericUpDownMaxMillisecondsBetweenLines = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownMaxMillisecondsBetweenLines = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelMaxDifferenceMS = new System.Windows.Forms.Label();
             this.checkBoxAutoBreakOn = new System.Windows.Forms.CheckBox();
             this.groupBoxLinesFound = new System.Windows.Forms.GroupBox();
@@ -44,7 +44,6 @@
             this.buttonCancel = new System.Windows.Forms.Button();
             this.checkBoxMakeDialog = new System.Windows.Forms.CheckBox();
             this.SubtitleListview1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxMillisecondsBetweenLines)).BeginInit();
             this.groupBoxLinesFound.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -240,7 +239,6 @@
             this.Shown += new System.EventHandler(this.MergeTextWithSameTimeCodes_Shown);
             this.ResizeEnd += new System.EventHandler(this.MergeTextWithSameTimeCodes_ResizeEnd);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MergeTextWithSameTimeCodes_KeyDown);
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxMillisecondsBetweenLines)).EndInit();
             this.groupBoxLinesFound.ResumeLayout(false);
             this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -250,7 +248,7 @@
 
         #endregion
 
-        private System.Windows.Forms.NumericUpDown numericUpDownMaxMillisecondsBetweenLines;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownMaxMillisecondsBetweenLines;
         private System.Windows.Forms.Label labelMaxDifferenceMS;
         private System.Windows.Forms.CheckBox checkBoxAutoBreakOn;
         private System.Windows.Forms.GroupBox groupBoxLinesFound;

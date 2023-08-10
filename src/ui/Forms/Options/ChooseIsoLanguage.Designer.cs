@@ -31,7 +31,7 @@
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
             this.labelLanguage = new System.Windows.Forms.Label();
-            this.comboBoxLanguages = new System.Windows.Forms.ComboBox();
+            this.comboBoxLanguages = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.SuspendLayout();
             // 
             // buttonCancel
@@ -104,6 +104,6 @@
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Label labelLanguage;
-        private System.Windows.Forms.ComboBox comboBoxLanguages;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxLanguages;
     }
 }

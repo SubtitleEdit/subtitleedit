@@ -31,9 +31,9 @@
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
             this.labelInfo = new System.Windows.Forms.Label();
-            this.comboBoxFrameRateFrom = new System.Windows.Forms.ComboBox();
+            this.comboBoxFrameRateFrom = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelFromFrameRate = new System.Windows.Forms.Label();
-            this.comboBoxFrameRateTo = new System.Windows.Forms.ComboBox();
+            this.comboBoxFrameRateTo = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelToFrameRate = new System.Windows.Forms.Label();
             this.buttonGetFrameRateFrom = new System.Windows.Forms.Button();
             this.buttonGetFrameRateTo = new System.Windows.Forms.Button();
@@ -176,9 +176,9 @@
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Label labelInfo;
-        private System.Windows.Forms.ComboBox comboBoxFrameRateFrom;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxFrameRateFrom;
         private System.Windows.Forms.Label labelFromFrameRate;
-        private System.Windows.Forms.ComboBox comboBoxFrameRateTo;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxFrameRateTo;
         private System.Windows.Forms.Label labelToFrameRate;
         private System.Windows.Forms.Button buttonGetFrameRateFrom;
         private System.Windows.Forms.Button buttonGetFrameRateTo;

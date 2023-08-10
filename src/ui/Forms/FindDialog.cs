@@ -5,6 +5,7 @@ using System;
 using System.Drawing;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -312,6 +313,18 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             buttonFindPrev.Focus();
+        }
+
+        private void FindDialog_Shown(object sender, EventArgs e)
+        {
+            if (comboBoxFind.Visible)
+            {
+                comboBoxFind.Focus();
+            }
+            else
+            {
+                textBoxFind.Focus();
+            }
         }
     }
 }

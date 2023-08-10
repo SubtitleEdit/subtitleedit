@@ -133,6 +133,46 @@ namespace Nikse.SubtitleEdit.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap MsgBoError {
+            get {
+                object obj = ResourceManager.GetObject("MsgBoError", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap MsgBoxInfo {
+            get {
+                object obj = ResourceManager.GetObject("MsgBoxInfo", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap MsgBoxQuestion {
+            get {
+                object obj = ResourceManager.GetObject("MsgBoxQuestion", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap MsgBoxWarning {
+            get {
+                object obj = ResourceManager.GetObject("MsgBoxWarning", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap rec32 {
             get {
                 object obj = ResourceManager.GetObject("rec32", resourceCulture);

@@ -512,6 +512,7 @@ We leverage the intrinsic rhythm of the image.</CreateSimpleChainingToolTip>
     <Enabled>Enabled</Enabled>
     <Name>Name</Name>
     <LinesFoundX>Lines found: {0}</LinesFoundX>
+    <ExtraNames>Add extra names (separate by comma, one-time use only)</ExtraNames>
   </ChangeCasingNames>
   <ChangeFrameRate>
     <Title>Change frame rate</Title>

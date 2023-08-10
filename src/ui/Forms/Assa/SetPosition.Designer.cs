@@ -43,26 +43,20 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.labelStyleAlignment = new System.Windows.Forms.Label();
             this.labelVideoResolution = new System.Windows.Forms.Label();
             this.labelCurrentTextPosition = new System.Windows.Forms.Label();
-            this.numericUpDownRotateX = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownRotateX = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelRotateX = new System.Windows.Forms.Label();
-            this.numericUpDownRotateY = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownRotateY = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelRotateY = new System.Windows.Forms.Label();
-            this.numericUpDownRotateZ = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownRotateZ = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelRotateZ = new System.Windows.Forms.Label();
             this.panelAdvanced = new System.Windows.Forms.Panel();
             this.labelDistortX = new System.Windows.Forms.Label();
-            this.numericUpDownDistortX = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownDistortX = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelDistortY = new System.Windows.Forms.Label();
-            this.numericUpDownDistortY = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownDistortY = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.groupBoxApplyTo.SuspendLayout();
             this.groupBoxPreview.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPreview)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownRotateX)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownRotateY)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownRotateZ)).BeginInit();
             this.panelAdvanced.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDistortX)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDistortY)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBoxApplyTo
@@ -398,13 +392,8 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.groupBoxApplyTo.PerformLayout();
             this.groupBoxPreview.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPreview)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownRotateX)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownRotateY)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownRotateZ)).EndInit();
             this.panelAdvanced.ResumeLayout(false);
             this.panelAdvanced.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDistortX)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDistortY)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -424,16 +413,16 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         private System.Windows.Forms.Label labelStyleAlignment;
         private System.Windows.Forms.Label labelVideoResolution;
         private System.Windows.Forms.Label labelCurrentTextPosition;
-        private System.Windows.Forms.NumericUpDown numericUpDownRotateX;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownRotateX;
         private System.Windows.Forms.Label labelRotateX;
-        private System.Windows.Forms.NumericUpDown numericUpDownRotateY;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownRotateY;
         private System.Windows.Forms.Label labelRotateY;
-        private System.Windows.Forms.NumericUpDown numericUpDownRotateZ;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownRotateZ;
         private System.Windows.Forms.Label labelRotateZ;
         private System.Windows.Forms.Panel panelAdvanced;
         private System.Windows.Forms.Label labelDistortX;
-        private System.Windows.Forms.NumericUpDown numericUpDownDistortX;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownDistortX;
         private System.Windows.Forms.Label labelDistortY;
-        private System.Windows.Forms.NumericUpDown numericUpDownDistortY;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownDistortY;
     }
 }

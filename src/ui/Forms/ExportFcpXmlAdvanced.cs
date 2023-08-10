@@ -2,12 +2,12 @@
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic;
 using System;
-using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -72,15 +72,12 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxHAlign.Items.Add(LanguageSettings.Current.ExportPngXml.Right);
             comboBoxHAlign.Items.Add(LanguageSettings.Current.ExportPngXml.CenterLeftJustify);
 
-            foreach (var x in FontFamily.Families)
+            foreach (var fontFamily in FontHelper.GetRegularOrBoldCapableFontFamilies())
             {
-                if (x.IsStyleAvailable(FontStyle.Regular) || x.IsStyleAvailable(FontStyle.Bold))
+                comboBoxFontName.Items.Add(fontFamily.Name);
+                if (fontFamily.Name.Equals(_fontName, StringComparison.OrdinalIgnoreCase))
                 {
-                    comboBoxFontName.Items.Add(x.Name);
-                    if (x.Name.Equals(_fontName, StringComparison.OrdinalIgnoreCase))
-                    {
-                        comboBoxFontName.SelectedIndex = comboBoxFontName.Items.Count - 1;
-                    }
+                    comboBoxFontName.SelectedIndex = comboBoxFontName.Items.Count - 1;
                 }
             }
 

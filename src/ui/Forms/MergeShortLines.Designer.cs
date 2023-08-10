@@ -33,10 +33,10 @@ namespace Nikse.SubtitleEdit.Forms
             this.components = new System.ComponentModel.Container();
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
-            this.numericUpDownMaxCharacters = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownMaxCharacters = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelMaxCharacters = new System.Windows.Forms.Label();
             this.labelMaxMillisecondsBetweenLines = new System.Windows.Forms.Label();
-            this.numericUpDownMaxMillisecondsBetweenLines = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownMaxMillisecondsBetweenLines = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.groupBoxLinesFound = new System.Windows.Forms.GroupBox();
             this.listViewFixes = new System.Windows.Forms.ListView();
             this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -47,8 +47,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItemSelectAll = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemInverseSelection = new System.Windows.Forms.ToolStripMenuItem();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxCharacters)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxMillisecondsBetweenLines)).BeginInit();
             this.groupBoxLinesFound.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -275,8 +273,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MergeShortLines_KeyDown);
             this.ResizeEnd += new System.EventHandler(this.MergeShortLines_ResizeEnd);
             this.Shown += new System.EventHandler(this.MergeShortLines_Shown);
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxCharacters)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxMillisecondsBetweenLines)).EndInit();
             this.groupBoxLinesFound.ResumeLayout(false);
             this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -289,10 +285,10 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Button buttonCancel;
         private SubtitleListView SubtitleListview1;
-        private System.Windows.Forms.NumericUpDown numericUpDownMaxCharacters;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownMaxCharacters;
         private System.Windows.Forms.Label labelMaxCharacters;
         private System.Windows.Forms.Label labelMaxMillisecondsBetweenLines;
-        private System.Windows.Forms.NumericUpDown numericUpDownMaxMillisecondsBetweenLines;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownMaxMillisecondsBetweenLines;
         private System.Windows.Forms.GroupBox groupBoxLinesFound;
         private System.Windows.Forms.ListView listViewFixes;
         private System.Windows.Forms.ColumnHeader columnHeader4;

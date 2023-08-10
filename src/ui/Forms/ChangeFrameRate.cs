@@ -2,6 +2,8 @@
 using System;
 using System.Globalization;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Controls;
+using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -29,7 +31,7 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.FixLargeFonts(this, buttonOK);
         }
 
-        private static void InitializeCombobox(ComboBox comboBox)
+        private static void InitializeCombobox(NikseComboBox comboBox)
         {
             comboBox.BeginUpdate();
             comboBox.Items.Clear();

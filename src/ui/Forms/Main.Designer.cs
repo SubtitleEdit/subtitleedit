@@ -1,4 +1,6 @@
-﻿namespace Nikse.SubtitleEdit.Forms
+﻿using Nikse.SubtitleEdit.Controls;
+
+namespace Nikse.SubtitleEdit.Forms
 {
     sealed partial class Main
     {
@@ -82,7 +84,7 @@
             this.comboBoxEncoding = new Nikse.SubtitleEdit.Controls.ToolStripNikseComboBox();
             this.toolStripSeparatorFrameRate = new Nikse.SubtitleEdit.Controls.ToolStripNikseSeparator();
             this.toolStripLabelFrameRate = new System.Windows.Forms.ToolStripLabel();
-            this.toolStripComboBoxFrameRate = new System.Windows.Forms.ToolStripComboBox();
+            this.toolStripComboBoxFrameRate = new Nikse.SubtitleEdit.Controls.ToolStripNikseComboBox();
             this.toolStripButtonGetFrameRate = new System.Windows.Forms.ToolStripButton();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -381,7 +383,7 @@
             this.buttonCustomUrl1 = new System.Windows.Forms.Button();
             this.buttonGoogleTranslateIt = new System.Windows.Forms.Button();
             this.buttonGoogleIt = new System.Windows.Forms.Button();
-            this.textBoxSearchWord = new System.Windows.Forms.TextBox();
+            this.textBoxSearchWord = new Nikse.SubtitleEdit.Controls.SETextBox();
             this.groupBoxAutoContinue = new System.Windows.Forms.GroupBox();
             this.comboBoxAutoContinue = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelAutoContinueDelay = new System.Windows.Forms.Label();
@@ -533,8 +535,8 @@
             this.labelOriginalCharactersPerSecond = new System.Windows.Forms.Label();
             this.labelTextOriginalLineTotal = new System.Windows.Forms.Label();
             this.labelTextOriginalLineLengths = new System.Windows.Forms.Label();
-            this.labelOriginalText = new System.Windows.Forms.Label();
-            this.labelText = new System.Windows.Forms.Label();
+            this.labelOriginalText = new Nikse.SubtitleEdit.Controls.NikseLabel();
+            this.labelText = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.textBoxListViewTextOriginal = new Nikse.SubtitleEdit.Controls.SETextBox();
             this.buttonAutoBreak = new System.Windows.Forms.Button();
             this.labelTextLineLengths = new System.Windows.Forms.Label();
@@ -545,9 +547,9 @@
             this.numericUpDownDuration = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.buttonPrevious = new System.Windows.Forms.Button();
             this.buttonNext = new System.Windows.Forms.Button();
-            this.labelStartTime = new System.Windows.Forms.Label();
-            this.labelDuration = new System.Windows.Forms.Label();
-            this.labelAutoDuration = new System.Windows.Forms.Label();
+            this.labelStartTime = new Nikse.SubtitleEdit.Controls.NikseLabel();
+            this.labelDuration = new Nikse.SubtitleEdit.Controls.NikseLabel();
+            this.labelAutoDuration = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.pictureBoxRecord = new System.Windows.Forms.PictureBox();
             this.textBoxSource = new System.Windows.Forms.TextBox();
             this.contextMenuStripTextBoxSourceView = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -1040,11 +1042,12 @@
             this.comboBoxSubtitleFormats.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.comboBoxSubtitleFormats.DropDownHeight = 295;
             this.comboBoxSubtitleFormats.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxSubtitleFormats.DropDownWidth = 0;
             this.comboBoxSubtitleFormats.Name = "comboBoxSubtitleFormats";
             this.comboBoxSubtitleFormats.Padding = new System.Windows.Forms.Padding(2);
             this.comboBoxSubtitleFormats.SelectedIndex = -1;
             this.comboBoxSubtitleFormats.SelectedItem = null;
-            this.comboBoxSubtitleFormats.SelectedText = null;
+            this.comboBoxSubtitleFormats.SelectedText = "";
             this.comboBoxSubtitleFormats.Size = new System.Drawing.Size(150, 23);
             this.comboBoxSubtitleFormats.SelectedIndexChanged += new System.EventHandler(this.ComboBoxSubtitleFormatsSelectedIndexChanged);
             this.comboBoxSubtitleFormats.DropDown += new System.EventHandler(this.comboBoxSubtitleFormats_DropDown);
@@ -1071,6 +1074,7 @@
             this.comboBoxEncoding.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.comboBoxEncoding.DropDownHeight = 215;
             this.comboBoxEncoding.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxEncoding.DropDownWidth = 0;
             this.comboBoxEncoding.Items.AddRange(new object[] {
             "ANSI",
             "UTF-7",
@@ -1081,7 +1085,7 @@
             this.comboBoxEncoding.Padding = new System.Windows.Forms.Padding(2);
             this.comboBoxEncoding.SelectedIndex = -1;
             this.comboBoxEncoding.SelectedItem = null;
-            this.comboBoxEncoding.SelectedText = null;
+            this.comboBoxEncoding.SelectedText = "";
             this.comboBoxEncoding.Size = new System.Drawing.Size(129, 23);
             this.comboBoxEncoding.DropDown += new System.EventHandler(this.MenuOpened);
             this.comboBoxEncoding.DropDownClosed += new System.EventHandler(this.MenuClosed);
@@ -1099,10 +1103,21 @@
             // 
             // toolStripComboBoxFrameRate
             // 
+            this.toolStripComboBoxFrameRate.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.toolStripComboBoxFrameRate.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.toolStripComboBoxFrameRate.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.toolStripComboBoxFrameRate.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.toolStripComboBoxFrameRate.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.toolStripComboBoxFrameRate.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.toolStripComboBoxFrameRate.DropDownHeight = 400;
+            this.toolStripComboBoxFrameRate.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
             this.toolStripComboBoxFrameRate.DropDownWidth = 75;
-            this.toolStripComboBoxFrameRate.FlatStyle = System.Windows.Forms.FlatStyle.Standard;
             this.toolStripComboBoxFrameRate.Name = "toolStripComboBoxFrameRate";
-            this.toolStripComboBoxFrameRate.Size = new System.Drawing.Size(75, 23);
+            this.toolStripComboBoxFrameRate.Padding = new System.Windows.Forms.Padding(2, 7, 2, 7);
+            this.toolStripComboBoxFrameRate.SelectedIndex = -1;
+            this.toolStripComboBoxFrameRate.SelectedItem = null;
+            this.toolStripComboBoxFrameRate.SelectedText = "";
+            this.toolStripComboBoxFrameRate.Size = new System.Drawing.Size(75, 33);
             this.toolStripComboBoxFrameRate.DropDown += new System.EventHandler(this.MenuOpened);
             this.toolStripComboBoxFrameRate.DropDownClosed += new System.EventHandler(this.MenuClosed);
             this.toolStripComboBoxFrameRate.TextChanged += new System.EventHandler(this.ToolStripComboBoxFrameRateTextChanged);
@@ -3418,9 +3433,9 @@
             this.toolStripButtonWaveformPlay,
             this.toolStripButtonLockCenter,
             this.toolStripSplitButtonPlayRate});
-            this.toolStripWaveControls.Location = new System.Drawing.Point(0, 3);
+            this.toolStripWaveControls.Location = new System.Drawing.Point(0, 2);
             this.toolStripWaveControls.Name = "toolStripWaveControls";
-            this.toolStripWaveControls.Size = new System.Drawing.Size(251, 25);
+            this.toolStripWaveControls.Size = new System.Drawing.Size(195, 26);
             this.toolStripWaveControls.TabIndex = 0;
             this.toolStripWaveControls.Text = "toolStrip2";
             // 
@@ -3431,15 +3446,27 @@
             this.toolStripButtonWaveformZoomOut.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.toolStripButtonWaveformZoomOut.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonWaveformZoomOut.Name = "toolStripButtonWaveformZoomOut";
-            this.toolStripButtonWaveformZoomOut.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonWaveformZoomOut.Size = new System.Drawing.Size(23, 23);
             this.toolStripButtonWaveformZoomOut.Text = "toolStripButton3";
             this.toolStripButtonWaveformZoomOut.Click += new System.EventHandler(this.toolStripButtonWaveformZoomOut_Click);
             // 
             // toolStripComboBoxWaveform
             // 
             this.toolStripComboBoxWaveform.AutoSize = false;
+            this.toolStripComboBoxWaveform.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.toolStripComboBoxWaveform.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.toolStripComboBoxWaveform.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.toolStripComboBoxWaveform.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.toolStripComboBoxWaveform.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.toolStripComboBoxWaveform.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.toolStripComboBoxWaveform.DropDownHeight = 400;
             this.toolStripComboBoxWaveform.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.toolStripComboBoxWaveform.DropDownWidth = 0;
             this.toolStripComboBoxWaveform.Name = "toolStripComboBoxWaveform";
+            this.toolStripComboBoxWaveform.Padding = new System.Windows.Forms.Padding(2);
+            this.toolStripComboBoxWaveform.SelectedIndex = -1;
+            this.toolStripComboBoxWaveform.SelectedItem = null;
+            this.toolStripComboBoxWaveform.SelectedText = "";
             this.toolStripComboBoxWaveform.Size = new System.Drawing.Size(62, 23);
             // 
             // toolStripButtonWaveformZoomIn
@@ -3449,14 +3476,14 @@
             this.toolStripButtonWaveformZoomIn.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.toolStripButtonWaveformZoomIn.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonWaveformZoomIn.Name = "toolStripButtonWaveformZoomIn";
-            this.toolStripButtonWaveformZoomIn.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonWaveformZoomIn.Size = new System.Drawing.Size(23, 23);
             this.toolStripButtonWaveformZoomIn.Text = "toolStripButton1";
             this.toolStripButtonWaveformZoomIn.Click += new System.EventHandler(this.toolStripButtonWaveformZoomIn_Click);
             // 
             // toolStripSeparator16
             // 
             this.toolStripSeparator16.Name = "toolStripSeparator16";
-            this.toolStripSeparator16.Size = new System.Drawing.Size(6, 25);
+            this.toolStripSeparator16.Size = new System.Drawing.Size(6, 26);
             // 
             // toolStripButtonWaveformPause
             // 
@@ -3466,7 +3493,7 @@
             this.toolStripButtonWaveformPause.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.toolStripButtonWaveformPause.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonWaveformPause.Name = "toolStripButtonWaveformPause";
-            this.toolStripButtonWaveformPause.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonWaveformPause.Size = new System.Drawing.Size(23, 23);
             this.toolStripButtonWaveformPause.Text = "toolStripButton1";
             this.toolStripButtonWaveformPause.Visible = false;
             this.toolStripButtonWaveformPause.Click += new System.EventHandler(this.toolStripButtonWaveformPause_Click);
@@ -3479,7 +3506,7 @@
             this.toolStripButtonWaveformPlay.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.toolStripButtonWaveformPlay.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonWaveformPlay.Name = "toolStripButtonWaveformPlay";
-            this.toolStripButtonWaveformPlay.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonWaveformPlay.Size = new System.Drawing.Size(23, 23);
             this.toolStripButtonWaveformPlay.Text = "toolStripButton1";
             this.toolStripButtonWaveformPlay.Click += new System.EventHandler(this.toolStripButtonWaveformPlay_Click);
             // 
@@ -3490,7 +3517,7 @@
             this.toolStripButtonLockCenter.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.toolStripButtonLockCenter.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonLockCenter.Name = "toolStripButtonLockCenter";
-            this.toolStripButtonLockCenter.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonLockCenter.Size = new System.Drawing.Size(23, 23);
             this.toolStripButtonLockCenter.Text = "Center";
             this.toolStripButtonLockCenter.Click += new System.EventHandler(this.toolStripButtonLockCenter_Click);
             // 
@@ -3501,12 +3528,14 @@
             this.toolStripSplitButtonPlayRate.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.toolStripSplitButtonPlayRate.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripSplitButtonPlayRate.Name = "toolStripSplitButtonPlayRate";
-            this.toolStripSplitButtonPlayRate.Size = new System.Drawing.Size(32, 22);
+            this.toolStripSplitButtonPlayRate.Size = new System.Drawing.Size(32, 23);
             this.toolStripSplitButtonPlayRate.Text = "Play rate (speed)";
             this.toolStripSplitButtonPlayRate.ButtonClick += new System.EventHandler(this.toolStripSplitButtonPlayRate_ButtonClick);
             // 
             // tabControlModes
             // 
+            this.tabControlModes.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.tabControlModes.Controls.Add(this.tabPageTranslate);
             this.tabControlModes.Controls.Add(this.tabPageCreate);
             this.tabControlModes.Controls.Add(this.tabPageAdjust);
@@ -3604,11 +3633,26 @@
             // 
             // textBoxSearchWord
             // 
+            this.textBoxSearchWord.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.textBoxSearchWord.CurrentLanguage = "";
+            this.textBoxSearchWord.CurrentLineIndex = 0;
+            this.textBoxSearchWord.HideSelection = true;
+            this.textBoxSearchWord.IsDictionaryDownloaded = true;
+            this.textBoxSearchWord.IsSpellCheckerInitialized = false;
+            this.textBoxSearchWord.IsSpellCheckRequested = false;
+            this.textBoxSearchWord.IsWrongWord = false;
+            this.textBoxSearchWord.LanguageChanged = false;
             this.textBoxSearchWord.Location = new System.Drawing.Point(6, 18);
             this.textBoxSearchWord.Multiline = true;
             this.textBoxSearchWord.Name = "textBoxSearchWord";
+            this.textBoxSearchWord.Padding = new System.Windows.Forms.Padding(1);
+            this.textBoxSearchWord.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
+            this.textBoxSearchWord.SelectedText = "";
+            this.textBoxSearchWord.SelectionLength = 0;
+            this.textBoxSearchWord.SelectionStart = 0;
             this.textBoxSearchWord.Size = new System.Drawing.Size(244, 39);
             this.textBoxSearchWord.TabIndex = 0;
+            this.textBoxSearchWord.TextBoxFont = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Bold);
             // 
             // groupBoxAutoContinue
             // 
@@ -3634,6 +3678,7 @@
             this.comboBoxAutoContinue.DropDownHeight = 400;
             this.comboBoxAutoContinue.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxAutoContinue.DropDownWidth = 96;
+            this.comboBoxAutoContinue.FormattingEnabled = false;
             this.comboBoxAutoContinue.Items.AddRange(new object[] {
             "0",
             "1",
@@ -3652,10 +3697,11 @@
             "14",
             "15"});
             this.comboBoxAutoContinue.Location = new System.Drawing.Point(6, 59);
+            this.comboBoxAutoContinue.MaxLength = 32767;
             this.comboBoxAutoContinue.Name = "comboBoxAutoContinue";
             this.comboBoxAutoContinue.SelectedIndex = -1;
             this.comboBoxAutoContinue.SelectedItem = null;
-            this.comboBoxAutoContinue.SelectedText = null;
+            this.comboBoxAutoContinue.SelectedText = "";
             this.comboBoxAutoContinue.Size = new System.Drawing.Size(96, 21);
             this.comboBoxAutoContinue.TabIndex = 2;
             // 
@@ -3713,6 +3759,7 @@
             this.comboBoxAutoRepeat.DropDownHeight = 400;
             this.comboBoxAutoRepeat.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxAutoRepeat.DropDownWidth = 96;
+            this.comboBoxAutoRepeat.FormattingEnabled = false;
             this.comboBoxAutoRepeat.Items.AddRange(new object[] {
             "0",
             "1",
@@ -3725,10 +3772,11 @@
             "8",
             "9"});
             this.comboBoxAutoRepeat.Location = new System.Drawing.Point(6, 60);
+            this.comboBoxAutoRepeat.MaxLength = 32767;
             this.comboBoxAutoRepeat.Name = "comboBoxAutoRepeat";
             this.comboBoxAutoRepeat.SelectedIndex = -1;
             this.comboBoxAutoRepeat.SelectedItem = null;
-            this.comboBoxAutoRepeat.SelectedText = null;
+            this.comboBoxAutoRepeat.SelectedText = "";
             this.comboBoxAutoRepeat.Size = new System.Drawing.Size(96, 21);
             this.comboBoxAutoRepeat.TabIndex = 2;
             // 
@@ -4817,7 +4865,7 @@
             this.textBoxListViewText.IsSpellCheckRequested = false;
             this.textBoxListViewText.IsWrongWord = false;
             this.textBoxListViewText.LanguageChanged = false;
-            this.textBoxListViewText.Location = new System.Drawing.Point(184, 27);
+            this.textBoxListViewText.Location = new System.Drawing.Point(184, 26);
             this.textBoxListViewText.Multiline = true;
             this.textBoxListViewText.Name = "textBoxListViewText";
             this.textBoxListViewText.Padding = new System.Windows.Forms.Padding(1);
@@ -5288,7 +5336,7 @@
             // buttonSplitLine
             // 
             this.buttonSplitLine.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonSplitLine.Location = new System.Drawing.Point(620, 77);
+            this.buttonSplitLine.Location = new System.Drawing.Point(620, 84);
             this.buttonSplitLine.Name = "buttonSplitLine";
             this.buttonSplitLine.Size = new System.Drawing.Size(114, 23);
             this.buttonSplitLine.TabIndex = 39;
@@ -5386,7 +5434,7 @@
             // buttonAutoBreak
             // 
             this.buttonAutoBreak.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonAutoBreak.Location = new System.Drawing.Point(620, 48);
+            this.buttonAutoBreak.Location = new System.Drawing.Point(620, 55);
             this.buttonAutoBreak.Name = "buttonAutoBreak";
             this.buttonAutoBreak.Size = new System.Drawing.Size(114, 23);
             this.buttonAutoBreak.TabIndex = 7;
@@ -5427,7 +5475,7 @@
             // buttonUnBreak
             // 
             this.buttonUnBreak.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonUnBreak.Location = new System.Drawing.Point(620, 19);
+            this.buttonUnBreak.Location = new System.Drawing.Point(620, 26);
             this.buttonUnBreak.Name = "buttonUnBreak";
             this.buttonUnBreak.Size = new System.Drawing.Size(114, 23);
             this.buttonUnBreak.TabIndex = 6;
@@ -5857,7 +5905,6 @@
             this.tabPageTranslate.ResumeLayout(false);
             this.tabPageTranslate.PerformLayout();
             this.groupBoxTranslateSearch.ResumeLayout(false);
-            this.groupBoxTranslateSearch.PerformLayout();
             this.groupBoxAutoContinue.ResumeLayout(false);
             this.groupBoxAutoContinue.PerformLayout();
             this.groupBoxAutoRepeat.ResumeLayout(false);
@@ -5956,9 +6003,9 @@
         private System.Windows.Forms.ToolStripMenuItem italicToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem underlineToolStripMenuItem;
         private System.Windows.Forms.GroupBox groupBoxEdit;
-        private System.Windows.Forms.Label labelText;
-        private System.Windows.Forms.Label labelDuration;
-        private System.Windows.Forms.Label labelStartTime;
+        private Nikse.SubtitleEdit.Controls.NikseLabel labelText;
+        private Nikse.SubtitleEdit.Controls.NikseLabel labelDuration;
+        private Nikse.SubtitleEdit.Controls.NikseLabel labelStartTime;
         Nikse.SubtitleEdit.Controls.SETextBox textBoxListViewText;
         private System.Windows.Forms.Button buttonPrevious;
         private System.Windows.Forms.Button buttonNext;
@@ -6008,7 +6055,6 @@
         private System.Windows.Forms.Button buttonSecBack1;
         private System.Windows.Forms.Timer ShowSubtitleTimer;
         private System.Windows.Forms.Timer timerAutoDuration;
-        private System.Windows.Forms.Label labelAutoDuration;
         private System.Windows.Forms.Timer timerAutoContinue;
         private Nikse.SubtitleEdit.Controls.ToolStripNikseComboBox comboBoxSubtitleFormats;
         private Nikse.SubtitleEdit.Controls.ToolStripNikseSeparator toolStripSeparatorToggle;
@@ -6020,7 +6066,7 @@
         private Nikse.SubtitleEdit.Controls.ToolStripNikseSeparator toolStripSeparatorEncoding;
         private Nikse.SubtitleEdit.Controls.ToolStripNikseSeparator toolStripSeparatorFrameRate;
         private System.Windows.Forms.ToolStripLabel toolStripLabelFrameRate;
-        private System.Windows.Forms.ToolStripComboBox toolStripComboBoxFrameRate;
+        private Nikse.SubtitleEdit.Controls.ToolStripNikseComboBox toolStripComboBoxFrameRate;
         private System.Windows.Forms.ToolStripButton toolStripButtonGetFrameRate;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSpellCheckMain;
         private System.Windows.Forms.ToolStripMenuItem spellCheckToolStripMenuItem;
@@ -6045,7 +6091,7 @@
         private System.Windows.Forms.GroupBox groupBoxTranslateSearch;
         private System.Windows.Forms.Button buttonGoogleTranslateIt;
         private System.Windows.Forms.Button buttonGoogleIt;
-        private System.Windows.Forms.TextBox textBoxSearchWord;
+        private Nikse.SubtitleEdit.Controls.SETextBox textBoxSearchWord;
         private System.Windows.Forms.GroupBox groupBoxAutoContinue;
         private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxAutoContinue;
         private System.Windows.Forms.Label labelAutoContinueDelay;
@@ -6134,7 +6180,7 @@
         private System.Windows.Forms.ToolStripMenuItem insertLineToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem closeVideoToolStripMenuItem;
         private System.Windows.Forms.Label labelSingleLine;
-        private System.Windows.Forms.Label labelOriginalText;
+        private Nikse.SubtitleEdit.Controls.NikseLabel labelOriginalText;
         private System.Windows.Forms.Label labelOriginalCharactersPerSecond;
         private System.Windows.Forms.Label labelTextOriginalLineTotal;
         private System.Windows.Forms.Label labelOriginalSingleLine;
@@ -6435,5 +6481,6 @@
         private System.Windows.Forms.Label labelLayer;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemWebVttStyle;
         private System.Windows.Forms.ToolStripMenuItem beautifyTimeCodesOfSelectedLinesToolStripMenuItem;
+        private NikseLabel labelAutoDuration;
     }
 }

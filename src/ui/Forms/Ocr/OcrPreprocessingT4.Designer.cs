@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.labelDescription = new System.Windows.Forms.Label();
-            this.numericUpDownThreshold = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownThreshold = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.pictureBoxSubtitleImage = new System.Windows.Forms.PictureBox();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
@@ -40,16 +40,14 @@
             this.groupBoxBinaryImageCompareThreshold = new System.Windows.Forms.GroupBox();
             this.label4 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.numericUpDownScaling = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownScaling = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.groupBoxColors = new System.Windows.Forms.GroupBox();
             this.checkBoxInvertColors = new System.Windows.Forms.CheckBox();
             this.groupBoxCropping = new System.Windows.Forms.GroupBox();
             this.checkBoxCropTransparent = new System.Windows.Forms.CheckBox();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownThreshold)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSubtitleImage)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBoxBinaryImageCompareThreshold.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownScaling)).BeginInit();
             this.groupBoxColors.SuspendLayout();
             this.groupBoxCropping.SuspendLayout();
             this.SuspendLayout();
@@ -272,12 +270,10 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "OCR image preprocessing";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SetForeColorThreshold_KeyDown);
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownThreshold)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSubtitleImage)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.groupBoxBinaryImageCompareThreshold.ResumeLayout(false);
             this.groupBoxBinaryImageCompareThreshold.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownScaling)).EndInit();
             this.groupBoxColors.ResumeLayout(false);
             this.groupBoxColors.PerformLayout();
             this.groupBoxCropping.ResumeLayout(false);
@@ -290,7 +286,7 @@
         #endregion
 
         private System.Windows.Forms.Label labelDescription;
-        private System.Windows.Forms.NumericUpDown numericUpDownThreshold;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownThreshold;
         private System.Windows.Forms.PictureBox pictureBoxSubtitleImage;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonOK;
@@ -303,7 +299,7 @@
         private System.Windows.Forms.CheckBox checkBoxInvertColors;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.NumericUpDown numericUpDownScaling;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownScaling;
         private System.Windows.Forms.GroupBox groupBoxCropping;
         private System.Windows.Forms.CheckBox checkBoxCropTransparent;
     }

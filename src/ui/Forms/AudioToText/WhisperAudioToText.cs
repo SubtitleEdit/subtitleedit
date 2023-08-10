@@ -14,6 +14,8 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Controls;
+using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms.AudioToText
 {
@@ -123,11 +125,11 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             InitializeWhisperEngines(comboBoxWhisperEngine);
         }
 
-        public static void InitializeWhisperEngines(ComboBox cb)
+        public static void InitializeWhisperEngines(NikseComboBox cb)
         {
             cb.Items.Clear();
             var engines = new List<string>();
-            engines.Add(WhisperChoice.OpenAI);
+            engines.Add(WhisperChoice.OpenAi);
             engines.Add(WhisperChoice.Cpp);
             if (Configuration.IsRunningOnWindows)
             {
@@ -135,7 +137,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 engines.Add(WhisperChoice.PurfviewFasterWhisper);
             }
             engines.Add(WhisperChoice.CTranslate2);
-          //  engines.Add(WhisperChoice.StableTs);
+            //  engines.Add(WhisperChoice.StableTs);
             engines.Add(WhisperChoice.WhisperX);
 
             foreach (var engine in engines)
@@ -168,7 +170,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             ContextMenuStrip = contextMenuStripWhisperAdvanced;
         }
 
-        public static void FillModels(ComboBox comboBoxModels, string lastDownloadedModel)
+        public static void FillModels(NikseComboBox comboBoxModels, string lastDownloadedModel)
         {
             var whisperModel = WhisperHelper.GetWhisperModel();
             var modelsFolder = whisperModel.ModelFolder;
@@ -657,8 +659,8 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             {
                 results.Add(new ResultText
                 {
-                    Start = (int)Math.Round(p.StartTime.TotalSeconds, MidpointRounding.AwayFromZero),
-                    End = (int)Math.Round(p.EndTime.TotalSeconds, MidpointRounding.AwayFromZero),
+                    Start = (decimal)p.StartTime.TotalSeconds,
+                    End = (decimal)p.EndTime.TotalSeconds,
                     Text = p.Text
                 });
             }
@@ -1331,7 +1333,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
         private void WhisperPhpOriginalChoose()
         {
-            Configuration.Settings.Tools.WhisperChoice = WhisperChoice.OpenAI;
+            Configuration.Settings.Tools.WhisperChoice = WhisperChoice.OpenAi;
 
             if (Configuration.IsRunningOnWindows)
             {
@@ -1531,13 +1533,28 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 return;
             }
 
-            if (comboBoxWhisperEngine.Text == WhisperChoice.OpenAI)
+            if (comboBoxWhisperEngine.Text == WhisperChoice.OpenAi)
             {
                 WhisperPhpOriginalChoose();
             }
             else if (comboBoxWhisperEngine.Text == WhisperChoice.Cpp)
             {
                 Configuration.Settings.Tools.WhisperChoice = WhisperChoice.Cpp;
+                var fileName = WhisperHelper.GetWhisperPathAndFileName();
+                if (!File.Exists(fileName) || WhisperDownload.IsOld(fileName, WhisperChoice.Cpp))
+                {
+                    if (MessageBox.Show(string.Format(LanguageSettings.Current.Settings.DownloadX, "Whisper CPP"), "Subtitle Edit", MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
+                    {
+                        using (var downloadForm = new WhisperDownload(WhisperChoice.Cpp))
+                        {
+                            if (downloadForm.ShowDialog(this) != DialogResult.OK)
+                            {
+                                return;
+                            }
+                        }
+                    }
+                }
+
                 Init();
             }
             else if (comboBoxWhisperEngine.Text == WhisperChoice.ConstMe)

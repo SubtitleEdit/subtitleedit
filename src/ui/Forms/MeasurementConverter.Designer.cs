@@ -30,10 +30,10 @@
         {
             this.listBoxCategory = new System.Windows.Forms.ListBox();
             this.labelConvertFrom = new System.Windows.Forms.Label();
-            this.comboBoxFrom = new System.Windows.Forms.ComboBox();
+            this.comboBoxFrom = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.textBoxInput = new System.Windows.Forms.TextBox();
             this.labelConvertTo = new System.Windows.Forms.Label();
-            this.comboBoxTo = new System.Windows.Forms.ComboBox();
+            this.comboBoxTo = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.textBoxResult = new System.Windows.Forms.TextBox();
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.checkBoxCloseOnInsert = new System.Windows.Forms.CheckBox();
@@ -191,10 +191,10 @@
 
         private System.Windows.Forms.ListBox listBoxCategory;
         private System.Windows.Forms.Label labelConvertFrom;
-        private System.Windows.Forms.ComboBox comboBoxFrom;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxFrom;
         private System.Windows.Forms.TextBox textBoxInput;
         private System.Windows.Forms.Label labelConvertTo;
-        private System.Windows.Forms.ComboBox comboBoxTo;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxTo;
         private System.Windows.Forms.TextBox textBoxResult;
         private System.Windows.Forms.LinkLabel linkLabel1;
         private System.Windows.Forms.CheckBox checkBoxCloseOnInsert;

@@ -30,7 +30,7 @@
         {
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.pictureBoxImage = new System.Windows.Forms.PictureBox();
-            this.comboBoxLanguages = new System.Windows.Forms.ComboBox();
+            this.comboBoxLanguages = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelChooseLanguage = new System.Windows.Forms.Label();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
@@ -166,7 +166,7 @@
 
         private System.Windows.Forms.ListBox listBox1;
         private System.Windows.Forms.PictureBox pictureBoxImage;
-        private System.Windows.Forms.ComboBox comboBoxLanguages;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxLanguages;
         private System.Windows.Forms.Label labelChooseLanguage;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonOK;

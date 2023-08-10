@@ -80,7 +80,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             UiUtil.FixLargeFonts(this, buttonOK);
 
             comboBoxFontName.Items.Clear();
-            foreach (var font in FontFamily.Families)
+            foreach (var font in FontHelper.GetAllSupportedFontFamilies())
             {
                 comboBoxFontName.Items.Add(font.Name);
                 if (font.Name == "Arial")
@@ -101,6 +101,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             _videoPlayerContainer.Location = new Point(401, 12);
             _videoPlayerContainer.Name = "_videoPlayerContainer";
             _videoPlayerContainer.Size = new Size(923, buttonOK.Top - 18);
+            _videoPlayerContainer.TryLoadGfx();
 
             _fontAttachments = new List<AssaAttachmentFont>();
             if (subtitle.Footer != null)

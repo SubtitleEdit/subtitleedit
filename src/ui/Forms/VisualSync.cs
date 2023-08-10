@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
+using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -51,6 +52,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             MediaPlayerStart.InitializeVolume(Configuration.Settings.General.VideoPlayerDefaultVolume);
             MediaPlayerEnd.InitializeVolume(Configuration.Settings.General.VideoPlayerDefaultVolume);
+            MediaPlayerStart.TryLoadGfx();
+            MediaPlayerEnd.TryLoadGfx();
 
             labelSyncDone.Text = string.Empty;
             _language = LanguageSettings.Current.VisualSync;
@@ -270,8 +273,14 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private bool _forceClose;
         private void FormVisualSync_FormClosing(object sender, FormClosingEventArgs e)
         {
+            if (_forceClose)
+            {
+                return;
+            }
+
             _timerHideSyncLabel.Stop();
             labelSyncDone.Text = string.Empty;
             timer1.Stop();
@@ -319,6 +328,15 @@ namespace Nikse.SubtitleEdit.Forms
             else
             {
                 DialogResult = DialogResult.Cancel;
+            }
+
+            if (!e.Cancel)
+            {
+                e.Cancel = true;
+
+                // To allow windows in FormClosing...
+                _forceClose = true;
+                System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(10), () => Close());
             }
         }
 

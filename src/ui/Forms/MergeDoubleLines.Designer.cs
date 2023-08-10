@@ -40,12 +40,11 @@
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.checkBoxIncludeIncrementing = new System.Windows.Forms.CheckBox();
-            this.numericUpDownMaxMillisecondsBetweenLines = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownMaxMillisecondsBetweenLines = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelMaxMillisecondsBetweenLines = new System.Windows.Forms.Label();
             this.SubtitleListview1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.groupBoxLinesFound.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxMillisecondsBetweenLines)).BeginInit();
             this.SuspendLayout();
             // 
             // columnHeader4
@@ -233,7 +232,6 @@
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MergeDoubleLines_KeyDown);
             this.groupBoxLinesFound.ResumeLayout(false);
             this.contextMenuStrip1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxMillisecondsBetweenLines)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -250,7 +248,7 @@
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.CheckBox checkBoxIncludeIncrementing;
-        private System.Windows.Forms.NumericUpDown numericUpDownMaxMillisecondsBetweenLines;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownMaxMillisecondsBetweenLines;
         private System.Windows.Forms.Label labelMaxMillisecondsBetweenLines;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSelectAll;

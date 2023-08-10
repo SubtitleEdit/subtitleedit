@@ -33,10 +33,10 @@
             this.buttonCancel = new System.Windows.Forms.Button();
             this.labelGoogleTranslate = new System.Windows.Forms.Label();
             this.labelMicrosoftTranslate = new System.Windows.Forms.Label();
-            this.comboBoxFrom = new System.Windows.Forms.ComboBox();
+            this.comboBoxFrom = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.buttonTranslate = new System.Windows.Forms.Button();
             this.labelTo = new System.Windows.Forms.Label();
-            this.comboBoxTo = new System.Windows.Forms.ComboBox();
+            this.comboBoxTo = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelFrom = new System.Windows.Forms.Label();
             this.textBoxSourceText = new System.Windows.Forms.TextBox();
             this.labelSourceText = new System.Windows.Forms.Label();
@@ -191,10 +191,10 @@
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Label labelGoogleTranslate;
         private System.Windows.Forms.Label labelMicrosoftTranslate;
-        private System.Windows.Forms.ComboBox comboBoxFrom;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxFrom;
         private System.Windows.Forms.Button buttonTranslate;
         private System.Windows.Forms.Label labelTo;
-        private System.Windows.Forms.ComboBox comboBoxTo;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxTo;
         private System.Windows.Forms.Label labelFrom;
         private System.Windows.Forms.TextBox textBoxSourceText;
         private System.Windows.Forms.Label labelSourceText;

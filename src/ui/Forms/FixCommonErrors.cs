@@ -15,6 +15,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -1587,7 +1588,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ShowAvailableFixesStatus(bool applied)
         {
-            labelStatus.ForeColor = DefaultForeColor;
+            labelStatus.ForeColor = DarkTheme.ForeColor;
             if (_totalFixes == 0 && _totalErrors == 0)
             {
                 ShowStatus(_language.NothingToFix);
@@ -1868,6 +1869,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void FixCommonErrorsShown(object sender, EventArgs e)
         {
+            numericUpDownDuration.Left = timeUpDownStartTime.Right + 5;
+            labelDuration.Left = numericUpDownDuration.Left;
             FixCommonErrorsResize(null, null);
         }
 

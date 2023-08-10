@@ -47,6 +47,7 @@ using Nikse.SubtitleEdit.Core.AudioToText;
 using Nikse.SubtitleEdit.Forms.AudioToText;
 using Nikse.SubtitleEdit.Forms.VTT;
 using Timer = System.Windows.Forms.Timer;
+using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -133,6 +134,7 @@ namespace Nikse.SubtitleEdit.Forms
         private SpellCheck _spellCheckForm;
         private bool _loading = true;
         private bool _exitWhenLoaded;
+        private bool _forceClose = false;
         private int _repeatCount = -1;
         private double _endSeconds = -1;
         private int _playSelectionIndex = -1;
@@ -288,6 +290,7 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.FixLargeFonts(groupBoxEdit, buttonAutoBreak);
             UiUtil.InitializeSubtitleFont(textBoxSource);
             UiUtil.InitializeSubtitleFont(textBoxListViewText);
+            textBoxListViewTextOriginal.Top = textBoxListViewText.Top;
             UiUtil.InitializeSubtitleFont(textBoxListViewTextOriginal);
             UiUtil.InitializeSubtitleFont(SubtitleListview1);
 
@@ -3537,6 +3540,29 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
+            if (format == null && ext == ".rtf")
+            {
+                var txt = FileUtil.ReadAllTextShared(fileName, encodingFromFile);
+                if (txt.StartsWith("{\\rtf"))
+                {
+                    var lines = txt.FromRtf().SplitToLines();
+                    foreach (var f in SubtitleFormat.AllSubtitleFormats.Where(p => p.Extension != ".rtf"))
+                    {
+                        if (f.IsMine(lines, fileName))
+                        {
+                            f.LoadSubtitle(newSubtitle, lines, fileName);
+                            _oldSubtitleFormat = f;
+                            SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
+                            SetEncoding(Configuration.Settings.General.DefaultEncoding);
+                            encoding = GetCurrentEncoding();
+                            justConverted = true;
+                            format = GetCurrentSubtitleFormat();
+                            break;
+                        }
+                    }
+                }
+            }
+
             if (format == null)
             {
                 var lines = FileUtil.ReadAllTextShared(fileName, encodingFromFile).SplitToLines();
@@ -5427,6 +5453,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ComboBoxSubtitleFormatsSelectedIndexChanged(object sender, EventArgs e)
         {
+            if (comboBoxSubtitleFormats.SelectedIndex < 0 && comboBoxSubtitleFormats.Items.Count > 0)
+            {
+                comboBoxSubtitleFormats.SelectedIndex = 0;
+            }
+
             var newFormat = Utilities.GetSubtitleFormatByFriendlyName(comboBoxSubtitleFormats.SelectedItem.ToString());
             if (newFormat.Name != _currentSubtitleFormat?.Name)
             {
@@ -5642,8 +5673,8 @@ namespace Nikse.SubtitleEdit.Forms
                     textBoxListViewTextOriginal.BackColor = Configuration.Settings.General.SubtitleBackgroundColor;
                     textBoxListViewText.ForeColor = Configuration.Settings.General.SubtitleBackgroundColor;
                     textBoxListViewTextOriginal.ForeColor = Configuration.Settings.General.SubtitleBackgroundColor;
-                    textBoxListViewText.Initialize(Configuration.Settings.General.SubtitleTextBoxSyntaxColor);
-                    textBoxListViewTextOriginal.Initialize(Configuration.Settings.General.SubtitleTextBoxSyntaxColor);
+                    textBoxListViewText.Initialize(Configuration.Settings.General.SubtitleTextBoxSyntaxColor, false);
+                    textBoxListViewTextOriginal.Initialize(Configuration.Settings.General.SubtitleTextBoxSyntaxColor, false);
 
                     UiUtil.InitializeSubtitleFont(textBoxListViewText);
                     UiUtil.InitializeSubtitleFont(textBoxListViewTextOriginal);
@@ -5812,8 +5843,8 @@ namespace Nikse.SubtitleEdit.Forms
 
                     Configuration.Settings.General.SubtitleBackgroundColor = darkThemeBackColor;
                     Configuration.Settings.General.SubtitleFontColor = darkThemeForeColor;
-                    textBoxListViewText.Initialize(Configuration.Settings.General.SubtitleTextBoxSyntaxColor);
-                    textBoxListViewTextOriginal.Initialize(Configuration.Settings.General.SubtitleTextBoxSyntaxColor);
+                    textBoxListViewText.Initialize(Configuration.Settings.General.SubtitleTextBoxSyntaxColor, false);
+                    textBoxListViewTextOriginal.Initialize(Configuration.Settings.General.SubtitleTextBoxSyntaxColor, false);
                     SubtitleListview1.BackColor = darkThemeBackColor;
                     SubtitleListview1.ForeColor = darkThemeForeColor;
                     RefreshSelectedParagraph();
@@ -5825,8 +5856,8 @@ namespace Nikse.SubtitleEdit.Forms
                     darkThemeForeColor = DefaultForeColor;
                     Configuration.Settings.General.SubtitleBackgroundColor = darkThemeBackColor;
                     Configuration.Settings.General.SubtitleFontColor = darkThemeForeColor;
-                    textBoxListViewText.Initialize(Configuration.Settings.General.SubtitleTextBoxSyntaxColor);
-                    textBoxListViewTextOriginal.Initialize(Configuration.Settings.General.SubtitleTextBoxSyntaxColor);
+                    textBoxListViewText.Initialize(Configuration.Settings.General.SubtitleTextBoxSyntaxColor, false);
+                    textBoxListViewTextOriginal.Initialize(Configuration.Settings.General.SubtitleTextBoxSyntaxColor, false);
                     SubtitleListview1.BackColor = darkThemeBackColor;
                     SubtitleListview1.ForeColor = darkThemeForeColor;
 
@@ -5860,8 +5891,8 @@ namespace Nikse.SubtitleEdit.Forms
                     textBoxListViewText.DisposeHunspellAndDictionaries();
                 }
 
-                textBoxListViewText.Initialize(Configuration.Settings.General.SubtitleTextBoxSyntaxColor);
-                textBoxListViewTextOriginal.Initialize(Configuration.Settings.General.SubtitleTextBoxSyntaxColor);
+                textBoxListViewText.Initialize(Configuration.Settings.General.SubtitleTextBoxSyntaxColor, false);
+                textBoxListViewTextOriginal.Initialize(Configuration.Settings.General.SubtitleTextBoxSyntaxColor, false);
                 RefreshSelectedParagraph();
             }
             else if (oldLiveSpellCheck && oldLiveSpellCheck != Configuration.Settings.Tools.LiveSpellCheck)
@@ -9039,6 +9070,10 @@ namespace Nikse.SubtitleEdit.Forms
                         toolStripMenuItemSetLayer.DropDownItems.Add(_language.Menu.ContextMenu.SetLayer, null, SetLayerChooseValue);
                     }
                     toolStripMenuItemSetLayer.Visible = true;
+                    if (Configuration.Settings.General.UseDarkTheme)
+                    {
+                        DarkTheme.SetDarkTheme(toolStripMenuItemSetLayer);
+                    }
                 }
             }
             else if (((formatType == typeof(TimedText10) && Configuration.Settings.SubtitleSettings.TimedText10ShowStyleAndLanguage) || formatType == typeof(ItunesTimedText)) && SubtitleListview1.SelectedItems.Count > 0)
@@ -9912,20 +9947,9 @@ namespace Nikse.SubtitleEdit.Forms
                 buttonUnBreak.Enabled = false;
                 buttonAutoBreak.Enabled = false;
                 numericUpDownLayer.Enabled = false;
-                if (!Configuration.Settings.General.UseDarkTheme)
-                {
-                    labelText.Enabled = false;
-                    labelStartTime.Enabled = false;
-                    labelDuration.Enabled = false;
-                }
-                else
-                {
-                    var foreColor = Configuration.Settings.General.DarkThemeForeColor;
-                    var slightDarker = Color.FromArgb(Math.Max(0, foreColor.R - 75), Math.Max(0, foreColor.G - 75), Math.Max(0, foreColor.B - 75));
-                    labelText.ForeColor = slightDarker;
-                    labelStartTime.ForeColor = slightDarker;
-                    labelDuration.ForeColor = slightDarker;
-                }
+                labelText.Enabled = false;
+                labelStartTime.Enabled = false;
+                labelDuration.Enabled = false;
 
                 textBoxListViewText.ContextMenuStrip = null;
 
@@ -9947,14 +9971,6 @@ namespace Nikse.SubtitleEdit.Forms
                 labelText.Enabled = true;
                 labelStartTime.Enabled = true;
                 labelDuration.Enabled = true;
-                if (Configuration.Settings.General.UseDarkTheme)
-                {
-                    var foreColor = Configuration.Settings.General.DarkThemeForeColor;
-                    labelText.ForeColor = foreColor;
-                    labelStartTime.ForeColor = foreColor;
-                    labelDuration.ForeColor = foreColor;
-                }
-
                 textBoxListViewText.ContextMenuStrip = contextMenuStripTextBoxListView;
             }
         }
@@ -13123,6 +13139,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void FormMain_FormClosing(object sender, FormClosingEventArgs e)
         {
+            if (_forceClose)
+            {
+                return;
+            }
+
             _lastDoNotPrompt = -1;
             ReloadFromSourceView();
             if (!ContinueNewOrExit())
@@ -13218,6 +13239,14 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             _dictateForm?.Dispose();
+
+            if (!e.Cancel)
+            {
+                e.Cancel = true;
+                _forceClose = true;
+                // To allow windows in FormClosing...
+                SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(10), () => Application.Exit());
+            }
         }
 
         private void SaveUndockedPositions()
@@ -34957,10 +34986,10 @@ namespace Nikse.SubtitleEdit.Forms
                 return true;
             }
 
-            var fullPath = Path.Combine(Configuration.DataDirectory, "Whisper", "main.exe");
+            var fullPath = Path.Combine(Configuration.DataDirectory, "Whisper", "Cpp", "main.exe");
             if (!File.Exists(fullPath) || WhisperDownload.IsOld(fullPath, WhisperChoice.Cpp))
             {
-                if (MessageBox.Show(string.Format(LanguageSettings.Current.Settings.DownloadX, "whisper.cpp"), "Subtitle Edit", MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
+                if (MessageBox.Show(string.Format(LanguageSettings.Current.Settings.DownloadX, "Whisper.cpp"), "Subtitle Edit", MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
                 {
                     return false;
                 }
@@ -35196,16 +35225,6 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            if (!WhisperHelper.IsWhisperInstalled())
-            {
-                if (MessageBox.Show(LanguageSettings.Current.AudioToText.WhisperNotFound,
-                                    "Subtitle Edit",
-                                    MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
-                {
-                    UiUtil.ShowHelp("#audio_to_text_whisper");
-                }
-            }
-
             CheckWhisperCpp();
 
             var oldVideoFileName = _videoFileName;
@@ -35237,16 +35256,13 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else if (form.UnknownArgument)
                     {
-                        if (MessageBox.Show(string.Format(LanguageSettings.Current.Settings.DownloadX, "whisper.cpp"), "Subtitle Edit", MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
+                        var customArgument = Configuration.Settings.Tools.WhisperExtraSettings;
+                        var extraMessage = string.Empty;
+                        if (!string.IsNullOrEmpty(customArgument))
                         {
-                            using (var downloadForm = new WhisperDownload(WhisperChoice.Cpp))
-                            {
-                                if (form.ShowDialog(this) == DialogResult.OK)
-                                {
-                                    audioToTextWhisperTolStripMenuItem_Click(null, null);
-                                }
-                            }
+                            extraMessage = Environment.NewLine + "Note you have a custom argument: " + customArgument;
                         }
+                        MessageBox.Show($"Whisper reported unknown argument - check 'error_log.txt'" + extraMessage);
                     }
                     else
                     {
@@ -35276,13 +35292,13 @@ namespace Nikse.SubtitleEdit.Forms
             if (Configuration.IsRunningOnLinux && WhisperHelper.GetWhisperPathAndFileName() == "whisper")
             {
                 SeLogger.Error("UseWhisperChoice changed to 'OpenAI' as 'Whisper/whisper' or '/Whisper/main' was not found!");
-                Configuration.Settings.Tools.WhisperChoice = WhisperChoice.OpenAI;
+                Configuration.Settings.Tools.WhisperChoice = WhisperChoice.OpenAi;
             }
 
             if (Configuration.IsRunningOnWindows && WhisperHelper.GetWhisperPathAndFileName() == "whisper")
             {
                 SeLogger.Error("UseWhisperChoice changed to 'OpenAI' as 'Whisper/whisper.exe' or '/Whisper/main.exe' was not found!");
-                Configuration.Settings.Tools.WhisperChoice = WhisperChoice.OpenAI;
+                Configuration.Settings.Tools.WhisperChoice = WhisperChoice.OpenAi;
             }
         }
 

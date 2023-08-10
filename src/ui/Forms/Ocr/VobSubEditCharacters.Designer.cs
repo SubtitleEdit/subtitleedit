@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.comboBoxTexts = new System.Windows.Forms.ComboBox();
+            this.comboBoxTexts = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.listBoxFileNames = new System.Windows.Forms.ListBox();
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonDelete = new System.Windows.Forms.Button();
@@ -321,7 +321,7 @@
 
         #endregion
 
-        private System.Windows.Forms.ComboBox comboBoxTexts;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxTexts;
         private System.Windows.Forms.ListBox listBoxFileNames;
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Button buttonDelete;
