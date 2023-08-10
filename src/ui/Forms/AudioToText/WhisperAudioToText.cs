@@ -10,6 +10,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
+using System.IO.Ports;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -313,14 +314,13 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             if (transcript == null || transcript.Paragraphs.Count == 0)
             {
                 UpdateLog();
-                SeLogger.Error(textBoxLog.Text);
+                SeLogger.WhisperInfo(textBoxLog.Text);
                 IncompleteModelName = comboBoxModels.Text;
             }
             else
             {
-                //TODO: remove at some point
                 UpdateLog();
-                SeLogger.Error(textBoxLog.Text);
+                SeLogger.WhisperInfo(textBoxLog.Text);
             }
 
             DialogResult = DialogResult.OK;
@@ -847,7 +847,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
             if (!File.Exists(outWaveFile))
             {
-                SeLogger.Error("Generated wave file not found: " + outWaveFile + Environment.NewLine +
+                SeLogger.WhisperInfo("Generated wave file not found: " + outWaveFile + Environment.NewLine +
                                "ffmpeg: " + process.StartInfo.FileName + Environment.NewLine +
                                "Parameters: " + process.StartInfo.Arguments + Environment.NewLine +
                                "OS: " + Environment.OSVersion + Environment.NewLine +
@@ -944,7 +944,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             var m = WhisperHelper.GetWhisperModelForCmdLine(model);
             var parameters = $"--language {language} --model \"{m}\" {outputSrt}{translateToEnglish}{Configuration.Settings.Tools.WhisperExtraSettings} \"{waveFileName}\"{postParams}";
 
-            SeLogger.Error($"{w} {parameters}");
+            SeLogger.WhisperInfo($"{w} {parameters}");
 
             var process = new Process { StartInfo = new ProcessStartInfo(w, parameters) { WindowStyle = ProcessWindowStyle.Hidden, CreateNoWindow = true } };
 
@@ -1249,6 +1249,19 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 {
                     Init();
                 }
+            }
+
+            try
+            {
+                var f = SeLogger.GetWhisperLogFilePath();
+                if (File.Exists(f) && new FileInfo(f).Length > 50_000)
+                {
+                    File.Delete(f);
+                }
+            }
+            catch 
+            {
+                // ignore
             }
         }
 

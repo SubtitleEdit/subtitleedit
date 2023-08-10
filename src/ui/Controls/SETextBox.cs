@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
+using Newtonsoft.Json.Linq;
 
 namespace Nikse.SubtitleEdit.Controls
 {
@@ -744,6 +745,36 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
+        public bool ReadOnly
+        {
+            get 
+            {
+                if (_simpleTextBox != null)
+                {
+                    return _simpleTextBox.ReadOnly;
+                }
+
+                if (_uiTextBox != null)
+                {
+                    return _uiTextBox.ReadOnly;
+                }
+
+                return false;
+            }
+
+            set
+            {
+                if (_simpleTextBox != null)
+                {
+                    _simpleTextBox.ReadOnly = value;
+                }
+
+                if (_uiTextBox != null)
+                {
+                    _uiTextBox.ReadOnly = value;
+                }
+            }
+        }
 
         public async Task CheckForLanguageChange(Subtitle subtitle)
         {

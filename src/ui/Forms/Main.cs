@@ -35252,7 +35252,8 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (form.IncompleteModel)
                     {
-                        MessageBox.Show($"No text found - model incomplete.{Environment.NewLine}Please re-download model: {form.IncompleteModelName}");
+                        MessageBox.Show($"No text found - model incomplete.{Environment.NewLine}" +
+                                        $"Please re-download model: {form.IncompleteModelName}", MessageBoxIcon.Error);
                     }
                     else if (form.UnknownArgument)
                     {
@@ -35262,11 +35263,22 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             extraMessage = Environment.NewLine + "Note you have a custom argument: " + customArgument;
                         }
-                        MessageBox.Show($"Whisper reported unknown argument - check 'error_log.txt'" + extraMessage);
+                        extraMessage = extraMessage + Environment.NewLine + Environment.NewLine + "View the log file `whisper_log.txt`?";
+                        var r = MessageBox.Show($"Whisper reported unknown argument'" + extraMessage, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Error);
+                        if (r == DialogResult.Yes)
+                        {
+                            UiUtil.OpenFile(SeLogger.GetWhisperLogFilePath());
+                        }
                     }
                     else
                     {
-                        MessageBox.Show("No text found!");
+                        var r = MessageBox.Show("No text found!" + Environment.NewLine +
+                                        Environment.NewLine +
+                                        "View the log file `whisper_log.txt`?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Error);
+                        if (r == DialogResult.Yes)
+                        {
+                            UiUtil.OpenFile(SeLogger.GetWhisperLogFilePath());
+                        }
                     }
 
                     return;
