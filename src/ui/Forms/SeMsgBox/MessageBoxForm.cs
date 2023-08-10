@@ -1,18 +1,45 @@
-﻿using Nikse.SubtitleEdit.Logic;
+﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Forms.SeMsgBox
 {
     public sealed partial class MessageBoxForm : Form
     {
-        private readonly string _text;
+        private string _text;
 
-        public MessageBoxForm(string text, string caption, MessageBoxButtons buttons, MessageBoxIcon icon = MessageBoxIcon.Information)
+        public MessageBoxForm(string text, string caption, MessageBoxButtons buttons)
+        {
+
+            var icon = AutoGuessIcon(text, buttons);
+            Init(text, caption, buttons, icon);
+        }
+
+        private MessageBoxIcon AutoGuessIcon(string text, MessageBoxButtons buttons)
+        {
+            if (buttons == MessageBoxButtons.YesNoCancel || text.EndsWith("?"))
+            {
+                return MessageBoxIcon.Question;
+            }
+
+            if (buttons == MessageBoxButtons.AbortRetryIgnore)
+            {
+                return MessageBoxIcon.Error;
+            }
+
+            return MessageBoxIcon.Information;
+        }
+
+        public MessageBoxForm(string text, string caption, MessageBoxButtons buttons, MessageBoxIcon icon)
+        {
+            Init(text, caption, buttons, icon);
+        }
+
+        private void Init(string text, string caption, MessageBoxButtons buttons, MessageBoxIcon icon)
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
@@ -34,6 +61,7 @@ namespace Nikse.SubtitleEdit.Forms.SeMsgBox
 
             UiUtil.FixLargeFonts(this, buttonOK);
         }
+
 
         private void InitializeIcon(MessageBoxIcon icon)
         {
@@ -110,7 +138,7 @@ namespace Nikse.SubtitleEdit.Forms.SeMsgBox
             using (var g = CreateGraphics())
             {
                 var textSize = g.MeasureString(text, Font);
-                Height = (int) textSize.Height + 90 + (Height - buttonOK.Top);
+                Height = (int)textSize.Height + 90 + (Height - buttonOK.Top);
                 Width = (int)textSize.Width + 220;
             }
 
@@ -122,8 +150,8 @@ namespace Nikse.SubtitleEdit.Forms.SeMsgBox
             var buttonControls = new List<Button>();
             switch (buttons)
             {
-                case MessageBoxButtons.OK: 
-                    buttonControls.AddRange(new List<Button> { buttonOK});
+                case MessageBoxButtons.OK:
+                    buttonControls.AddRange(new List<Button> { buttonOK });
                     break;
                 case MessageBoxButtons.OKCancel:
                     buttonControls.AddRange(new List<Button> { buttonOK, buttonCancel });

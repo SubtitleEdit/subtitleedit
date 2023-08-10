@@ -2425,7 +2425,7 @@ namespace Nikse.SubtitleEdit.Forms
                     promptText = string.Format(_language.SaveChangesToX, _fileName);
                 }
 
-                var dr = MessageBox.Show(this, promptText, Title, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Exclamation);
+                var dr = MessageBox.Show(this, promptText, Title, MessageBoxButtons.YesNoCancel);
 
                 if (dr == DialogResult.Cancel)
                 {
