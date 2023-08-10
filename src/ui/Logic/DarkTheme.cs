@@ -278,6 +278,12 @@ namespace Nikse.SubtitleEdit.Logic
 
         private static void UnFixControl(Control c)
         {
+            if (c is SETextBox seTextBox)
+            {
+                seTextBox.UndoDarkTheme();
+                return;
+            }
+
             c.BackColor = Control.DefaultBackColor;
             c.ForeColor = Control.DefaultForeColor;
             var buttonBackColor = SystemColors.Window;
@@ -356,7 +362,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             if (c is TabControl tc)
             {
-                //SetStyle(tc, ControlStyles.UserPaint | ControlStyles.DoubleBuffer, true);
+                SetStyle(tc, ControlStyles.UserPaint, false);
                 tc.Paint -= TabControl_Paint;
             }
 
@@ -450,8 +456,9 @@ namespace Nikse.SubtitleEdit.Logic
 
         private static void FixControl(Control c)
         {
-            if (c is SETextBox)
+            if (c is SETextBox seTextBox)
             {
+                seTextBox.SetDarkTheme();
                 return;
             }
 
