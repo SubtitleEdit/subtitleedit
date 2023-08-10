@@ -500,6 +500,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Enabled>Ενεργοποιημένο</Enabled>
     <Name>Όνομα</Name>
     <LinesFoundX>Εύρεση γραμμών: {0}</LinesFoundX>
+    <ExtraNames>Προσθήκη επιπλέον ονομάτων χωρισμένα με κόμμα (μόνο μία φορά χρήση)</ExtraNames>
   </ChangeCasingNames>
   <ChangeFrameRate>
     <Title>Αλλαγή ρυθμού καρέ</Title>
