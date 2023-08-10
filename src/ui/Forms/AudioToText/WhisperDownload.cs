@@ -7,6 +7,7 @@ using System.Threading;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Core.AudioToText;
 using Nikse.SubtitleEdit.Core.Http;
+using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms.AudioToText
 {
@@ -81,8 +82,6 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             labelDescription1.Text = LanguageSettings.Current.GetTesseractDictionaries.Download + " " + whisperChoice;
             _cancellationTokenSource = new CancellationTokenSource();
             _whisperChoice = whisperChoice;
-            labelWhisperChoice.Text = _whisperChoice;
-            labelWhisperChoice.Left = Width - labelWhisperChoice.Width - 20;
         }
 
         private void WhisperDownload_Shown(object sender, EventArgs e)
@@ -170,6 +169,16 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 Directory.CreateDirectory(folder);
             }
 
+            if (_whisperChoice == WhisperChoice.Cpp)
+            {
+                folder = Path.Combine(folder, "Cpp");
+
+                if (!Directory.Exists(folder))
+                {
+                    Directory.CreateDirectory(folder);
+                }
+            }
+
             if (_whisperChoice == WhisperChoice.ConstMe)
             {
                 folder = Path.Combine(folder, "Const-me");
@@ -178,30 +187,58 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 {
                     Directory.CreateDirectory(folder);
                 }
+
+                try
+                {
+                    File.WriteAllText(Path.Combine(folder, "models.txt"), "Whisper Const-me uses models from Whisper.cpp");
+                }
+                catch 
+                {
+                    // ignore
+                }
             }
 
             if (_whisperChoice == WhisperChoice.PurfviewFasterWhisper)
             {
-                folder = Path.Combine(folder, "Purfview");
+                folder = Path.Combine(folder, "Purfview-Whisper-Faster");
                 if (!Directory.Exists(folder))
                 {
                     Directory.CreateDirectory(folder);
                 }
-            }
 
-            var skipFileNames = new[] { "command.exe", "stream.exe", "talk.exe", "bench.exe" };
-            using (var zip = ZipExtractor.Open(downloadStream))
-            {
-                var dir = zip.ReadCentralDir();
-                foreach (var entry in dir)
+                using (var zip = ZipExtractor.Open(downloadStream))
                 {
-                    var path = Path.Combine(folder, entry.FilenameInZip);
-                    if (!skipFileNames.Contains(entry.FilenameInZip))
+                    var dir = zip.ReadCentralDir();
+                    foreach (var entry in dir)
                     {
-                        zip.ExtractFile(entry, path);
+                        if (entry.FilenameInZip.EndsWith(WhisperHelper.GetExecutableFileName(WhisperChoice.PurfviewFasterWhisper)))
+                        {
+                            var path = Path.Combine(folder, Path.GetFileName(entry.FilenameInZip));
+                            zip.ExtractFile(entry, path);
+                        }
                     }
                 }
             }
+            else
+            {
+                var skipFileNames = new[] { "command.exe", "stream.exe", "talk.exe", "bench.exe" };
+                using (var zip = ZipExtractor.Open(downloadStream))
+                {
+                    var dir = zip.ReadCentralDir();
+                    foreach (var entry in dir)
+                    {
+                        var path = Path.Combine(folder, entry.FilenameInZip);
+                        if (!skipFileNames.Contains(entry.FilenameInZip))
+                        {
+                            zip.ExtractFile(entry, path);
+                        }
+                    }
+                }
+            }
+
+
+
+
 
             Cursor = Cursors.Default;
             labelPleaseWait.Text = string.Empty;

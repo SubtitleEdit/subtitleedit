@@ -22,6 +22,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 using System.Xml;
+using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -115,6 +116,7 @@ namespace Nikse.SubtitleEdit.Forms
         private static int _boxBorderSize = 8;
         private int _lastIndex;
         private Dictionary<int, string> _smpteTtmlImages = new Dictionary<int, string>();
+        private bool _skipPreview;
 
         private const string BoxMultiLineText = "BoxMultiLine";
         private const string BoxSingleLineText = "BoxSingleLine";
@@ -147,6 +149,11 @@ namespace Nikse.SubtitleEdit.Forms
         private void previewTimer_Tick(object sender, EventArgs e)
         {
             _previewTimer.Stop();
+            if (_skipPreview)
+            {
+                return;
+            }
+
             GeneratePreview();
         }
 
@@ -2358,6 +2365,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private void SetupImageParameters()
         {
+            _skipPreview = true;
+
             if (subtitleListView1.SelectedItems.Count > 0 && _format.HasStyleSupport)
             {
                 Paragraph p = _subtitle.GetParagraphOrDefault(subtitleListView1.SelectedItems[0].Index);
@@ -2456,6 +2465,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             _subtitleFontBold = checkBoxBold.Checked;
 
             _borderWidth = GetBorderWidth();
+
+            _skipPreview = false;
         }
 
         private float GetBorderWidth()
@@ -4570,17 +4581,15 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
             checkBoxSkipEmptyFrameAtStart.Visible = exportType == ExportFormats.ImageFrame;
 
-            foreach (var x in FontFamily.Families)
+            foreach (var fontFamily in FontHelper.GetRegularOrBoldCapableFontFamilies())
             {
-                if (x.IsStyleAvailable(FontStyle.Regular) || x.IsStyleAvailable(FontStyle.Bold))
+                comboBoxSubtitleFont.Items.Add(fontFamily.Name);
+                if (fontFamily.Name.Equals(_subtitleFontName, StringComparison.OrdinalIgnoreCase))
                 {
-                    comboBoxSubtitleFont.Items.Add(x.Name);
-                    if (x.Name.Equals(_subtitleFontName, StringComparison.OrdinalIgnoreCase))
-                    {
-                        comboBoxSubtitleFont.SelectedIndex = comboBoxSubtitleFont.Items.Count - 1;
-                    }
+                    comboBoxSubtitleFont.SelectedIndex = comboBoxSubtitleFont.Items.Count - 1;
                 }
             }
+
             if (comboBoxSubtitleFont.SelectedIndex == -1)
             {
                 comboBoxSubtitleFont.SelectedIndex = 0; // take first font if default font was not found (e.g. linux)
@@ -4908,7 +4917,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private void subtitleListView1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (_isLoading)
+            if (_isLoading || _skipPreview)
             {
                 return;
             }
@@ -4975,8 +4984,6 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             }
             return GetLeftMarginInPixels(p);
         }
-
-
 
         private void GeneratePreview()
         {

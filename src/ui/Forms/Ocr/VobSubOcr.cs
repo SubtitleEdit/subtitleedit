@@ -27,6 +27,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
 using Nikse.SubtitleEdit.Core.Enums;
+using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms.Ocr
 {
@@ -8136,6 +8137,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             return _subtitle != null && _subtitle.Paragraphs.Any(p => !string.IsNullOrWhiteSpace(p.Text));
         }
 
+        private bool _forceClose;
+
         private void VobSubOcr_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (!_okClicked && HasChangesBeenMade())
@@ -8145,6 +8148,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     e.Cancel = true;
                     return;
                 }
+            }
+
+            if (_forceClose)
+            {
+                return;
             }
 
             _ocrThreadStop = true;
@@ -8216,6 +8224,15 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 {
                     Configuration.Settings.VobSubOcr.LineOcrLastLanguages = comboBoxNOcrLanguage.Items[comboBoxNOcrLanguage.SelectedIndex].ToString();
                 }
+            }
+
+            if (!e.Cancel)
+            {
+                e.Cancel = true;
+
+                // To allow windows in FormClosing...
+                _forceClose = true;
+                System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(10), () => Close());
             }
         }
 

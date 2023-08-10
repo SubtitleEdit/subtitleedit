@@ -42,28 +42,28 @@
             this.checkBoxTakeTimeFromFileNames = new System.Windows.Forms.CheckBox();
             this.groupBoxAutoSplitSettings = new System.Windows.Forms.GroupBox();
             this.checkBoxAutoSplitAtEnd = new System.Windows.Forms.CheckBox();
-            this.labelSubMaxLen = new System.Windows.Forms.Label();
-            this.numericUpDownSubtitleLineMaximumLength = new System.Windows.Forms.NumericUpDown();
+            this.labelSubMaxLen = new Nikse.SubtitleEdit.Controls.NikseLabel();
+            this.numericUpDownSubtitleLineMaximumLength = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.textBoxAsEnd = new System.Windows.Forms.TextBox();
             this.checkBoxAutoSplitRemoveLinesNoLetters = new System.Windows.Forms.CheckBox();
             this.checkBoxAutoSplitAtBlankLines = new System.Windows.Forms.CheckBox();
-            this.numericUpDownAutoSplitMaxLines = new System.Windows.Forms.NumericUpDown();
-            this.labelAutoSplitNumberOfLines = new System.Windows.Forms.Label();
+            this.numericUpDownAutoSplitMaxLines = new Nikse.SubtitleEdit.Controls.NikseUpDown();
+            this.labelAutoSplitNumberOfLines = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.checkBoxAutoBreak = new System.Windows.Forms.CheckBox();
             this.checkBoxGenerateTimeCodes = new System.Windows.Forms.CheckBox();
             this.groupBoxTimeCodes = new System.Windows.Forms.GroupBox();
-            this.labelGapBetweenSubtitles = new System.Windows.Forms.Label();
-            this.numericUpDownGapBetweenLines = new System.Windows.Forms.NumericUpDown();
+            this.labelGapBetweenSubtitles = new Nikse.SubtitleEdit.Controls.NikseLabel();
+            this.numericUpDownGapBetweenLines = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.groupBoxDuration = new System.Windows.Forms.GroupBox();
-            this.numericUpDownDurationFixed = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownDurationFixed = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.radioButtonDurationFixed = new System.Windows.Forms.RadioButton();
             this.radioButtonDurationAuto = new System.Windows.Forms.RadioButton();
             this.checkBoxMergeShortLines = new System.Windows.Forms.CheckBox();
             this.checkBoxRemoveLinesWithoutLetters = new System.Windows.Forms.CheckBox();
             this.groupBoxSplitting = new System.Windows.Forms.GroupBox();
-            this.comboBoxLineMode = new System.Windows.Forms.ComboBox();
-            this.comboBoxLineBreak = new System.Windows.Forms.ComboBox();
-            this.labelLineBreak = new System.Windows.Forms.Label();
+            this.comboBoxLineMode = new Nikse.SubtitleEdit.Controls.NikseComboBox();
+            this.comboBoxLineBreak = new Nikse.SubtitleEdit.Controls.NikseComboBox();
+            this.labelLineBreak = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.radioButtonSplitAtBlankLines = new System.Windows.Forms.RadioButton();
             this.radioButtonAutoSplit = new System.Windows.Forms.RadioButton();
             this.radioButtonLineMode = new System.Windows.Forms.RadioButton();
@@ -76,21 +76,17 @@
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
-            this.labelStatus = new System.Windows.Forms.Label();
+            this.labelStatus = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.buttonBrowseEncoding = new System.Windows.Forms.Button();
-            this.labelEncoding = new System.Windows.Forms.Label();
-            this.comboBoxEncoding = new System.Windows.Forms.ComboBox();
+            this.labelEncoding = new Nikse.SubtitleEdit.Controls.NikseLabel();
+            this.comboBoxEncoding = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.SubtitleListview1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.groupBoxImportText.SuspendLayout();
             this.contextMenuStripListView.SuspendLayout();
             this.groupBoxImportOptions.SuspendLayout();
             this.groupBoxAutoSplitSettings.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSubtitleLineMaximumLength)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownAutoSplitMaxLines)).BeginInit();
             this.groupBoxTimeCodes.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownGapBetweenLines)).BeginInit();
             this.groupBoxDuration.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDurationFixed)).BeginInit();
             this.groupBoxSplitting.SuspendLayout();
             this.groupBoxImportResult.SuspendLayout();
             this.contextMenuStripPreview.SuspendLayout();
@@ -109,7 +105,7 @@
             // 
             // groupBoxImportText
             // 
-            this.groupBoxImportText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.groupBoxImportText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxImportText.Controls.Add(this.buttonBrowseEncoding);
             this.groupBoxImportText.Controls.Add(this.labelEncoding);
@@ -140,7 +136,7 @@
             // textBoxText
             // 
             this.textBoxText.AllowDrop = true;
-            this.textBoxText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.textBoxText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxText.Location = new System.Drawing.Point(6, 91);
             this.textBoxText.MaxLength = 0;
@@ -156,8 +152,8 @@
             // listViewInputFiles
             // 
             this.listViewInputFiles.AllowDrop = true;
-            this.listViewInputFiles.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.listViewInputFiles.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.listViewInputFiles.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeaderFName,
@@ -623,8 +619,8 @@
             // 
             // groupBoxImportResult
             // 
-            this.groupBoxImportResult.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.groupBoxImportResult.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxImportResult.Controls.Add(this.SubtitleListview1);
             this.groupBoxImportResult.Location = new System.Drawing.Point(12, 428);
@@ -721,8 +717,8 @@
             // 
             this.SubtitleListview1.AllowColumnReorder = true;
             this.SubtitleListview1.AllowDrop = true;
-            this.SubtitleListview1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.SubtitleListview1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.SubtitleListview1.ContextMenuStrip = this.contextMenuStripPreview;
             this.SubtitleListview1.FirstVisibleIndex = -1;
@@ -775,14 +771,10 @@
             this.groupBoxImportOptions.PerformLayout();
             this.groupBoxAutoSplitSettings.ResumeLayout(false);
             this.groupBoxAutoSplitSettings.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSubtitleLineMaximumLength)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownAutoSplitMaxLines)).EndInit();
             this.groupBoxTimeCodes.ResumeLayout(false);
             this.groupBoxTimeCodes.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownGapBetweenLines)).EndInit();
             this.groupBoxDuration.ResumeLayout(false);
             this.groupBoxDuration.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDurationFixed)).EndInit();
             this.groupBoxSplitting.ResumeLayout(false);
             this.groupBoxSplitting.PerformLayout();
             this.groupBoxImportResult.ResumeLayout(false);
@@ -808,24 +800,24 @@
         private System.Windows.Forms.RadioButton radioButtonLineMode;
         private System.Windows.Forms.CheckBox checkBoxRemoveEmptyLines;
         private System.Windows.Forms.CheckBox checkBoxRemoveLinesWithoutLetters;
-        private System.Windows.Forms.NumericUpDown numericUpDownGapBetweenLines;
-        private System.Windows.Forms.Label labelGapBetweenSubtitles;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownGapBetweenLines;
+        private Nikse.SubtitleEdit.Controls.NikseLabel labelGapBetweenSubtitles;
         private System.Windows.Forms.Button buttonRefresh;
         private System.Windows.Forms.GroupBox groupBoxDuration;
-        private System.Windows.Forms.NumericUpDown numericUpDownDurationFixed;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownDurationFixed;
         private System.Windows.Forms.RadioButton radioButtonDurationFixed;
         private System.Windows.Forms.RadioButton radioButtonDurationAuto;
         private System.Windows.Forms.CheckBox checkBoxMergeShortLines;
         private System.Windows.Forms.RadioButton radioButtonSplitAtBlankLines;
         private System.Windows.Forms.CheckBox checkBoxGenerateTimeCodes;
         private System.Windows.Forms.GroupBox groupBoxTimeCodes;
-        private System.Windows.Forms.Label labelLineBreak;
+        private Nikse.SubtitleEdit.Controls.NikseLabel labelLineBreak;
         private System.Windows.Forms.CheckBox checkBoxMultipleFiles;
         private System.Windows.Forms.ListView listViewInputFiles;
         private System.Windows.Forms.ColumnHeader columnHeaderFName;
         private System.Windows.Forms.ColumnHeader columnHeaderSize;
         private System.Windows.Forms.CheckBox checkBoxAutoBreak;
-        private System.Windows.Forms.ComboBox comboBoxLineBreak;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxLineBreak;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripListView;
         private System.Windows.Forms.ToolStripMenuItem clearToolStripMenuItem;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripPreview;
@@ -834,17 +826,17 @@
         private System.Windows.Forms.TextBox textBoxAsEnd;
         private System.Windows.Forms.CheckBox checkBoxAutoSplitRemoveLinesNoLetters;
         private System.Windows.Forms.CheckBox checkBoxAutoSplitAtBlankLines;
-        private System.Windows.Forms.NumericUpDown numericUpDownAutoSplitMaxLines;
-        private System.Windows.Forms.Label labelAutoSplitNumberOfLines;
-        private System.Windows.Forms.Label labelSubMaxLen;
-        private System.Windows.Forms.NumericUpDown numericUpDownSubtitleLineMaximumLength;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownAutoSplitMaxLines;
+        private Nikse.SubtitleEdit.Controls.NikseLabel labelAutoSplitNumberOfLines;
+        private Nikse.SubtitleEdit.Controls.NikseLabel labelSubMaxLen;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownSubtitleLineMaximumLength;
         private System.Windows.Forms.CheckBox checkBoxAutoSplitAtEnd;
-        private System.Windows.Forms.ComboBox comboBoxLineMode;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxLineMode;
         private System.Windows.Forms.CheckBox checkBoxTakeTimeFromFileNames;
-        private System.Windows.Forms.Label labelStatus;
+        private Nikse.SubtitleEdit.Controls.NikseLabel labelStatus;
         private System.Windows.Forms.CheckBox checkBoxUseTimeCodeFromCurrentFile;
         private System.Windows.Forms.Button buttonBrowseEncoding;
-        private System.Windows.Forms.Label labelEncoding;
-        private System.Windows.Forms.ComboBox comboBoxEncoding;
+        private Nikse.SubtitleEdit.Controls.NikseLabel labelEncoding;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxEncoding;
     }
 }

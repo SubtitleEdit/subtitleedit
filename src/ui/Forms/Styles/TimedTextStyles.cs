@@ -8,6 +8,7 @@ using System.Drawing.Text;
 using System.Text;
 using System.Windows.Forms;
 using System.Xml;
+using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms.Styles
 {
@@ -62,7 +63,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             _nsmgr.AddNamespace("ttml", "http://www.w3.org/ns/ttml");
             _xmlHead = _xml.DocumentElement.SelectSingleNode("ttml:head", _nsmgr);
 
-            foreach (var ff in FontFamily.Families)
+            foreach (var ff in FontHelper.GetAllSupportedFontFamilies())
             {
                 if (ff.Name.Length > 0)
                 {

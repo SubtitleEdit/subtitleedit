@@ -113,6 +113,15 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Controls\NikseComboBoxCollection.cs" />
+    <Compile Include="Controls\NikseComboBoxPopUp.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Controls\NikseComboBoxPopUp.designer.cs">
+      <DependentUpon>NikseComboBoxPopUp.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\NikseLabel.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Controls\NikseTimeUpDown.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -436,6 +445,13 @@
     </Compile>
     <Compile Include="Forms\PreviewVideo.Designer.cs">
       <DependentUpon>PreviewVideo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\SeMsgBox\MessageBox.cs" />
+    <Compile Include="Forms\SeMsgBox\MessageBoxForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\SeMsgBox\MessageBoxForm.Designer.cs">
+      <DependentUpon>MessageBoxForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\ShotChangesList.cs">
       <SubType>Form</SubType>
@@ -1584,6 +1600,9 @@
     <EmbeddedResource Include="Controls\AudioVisualizer.resx">
       <DependentUpon>AudioVisualizer.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Controls\NikseComboBoxPopUp.resx">
+      <DependentUpon>NikseComboBoxPopUp.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\AlignmentPickerJapanese.resx">
       <DependentUpon>AlignmentPickerJapanese.cs</DependentUpon>
     </EmbeddedResource>
@@ -1732,6 +1751,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\PreviewVideo.resx">
       <DependentUpon>PreviewVideo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\SeMsgBox\MessageBoxForm.resx">
+      <DependentUpon>MessageBoxForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ShotChangesList.resx">
       <DependentUpon>ShotChangesList.cs</DependentUpon>
@@ -2295,6 +2317,10 @@
     <None Include="Resources\rec32.png" />
     <None Include="Resources\Help32.png" />
     <Content Include="Icons\BeautifyTimeCodes.png" />
+    <None Include="Resources\MsgBoxInfo.png" />
+    <None Include="Resources\MsgBoxQuestion.png" />
+    <None Include="Resources\MsgBoxWarning.png" />
+    <None Include="Resources\MsgBoError.png" />
     <Content Include="SE2.ico" />
     <None Include="Resources\SE.ico" />
     <None Include="Hunspellx64.dll">

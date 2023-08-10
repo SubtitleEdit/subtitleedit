@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.comboBoxCodePage = new System.Windows.Forms.ComboBox();
+            this.comboBoxCodePage = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelCodePage = new System.Windows.Forms.Label();
             this.labelPreview = new System.Windows.Forms.Label();
             this.textBoxPreview = new System.Windows.Forms.TextBox();
@@ -139,7 +139,7 @@
 
         #endregion
 
-        private System.Windows.Forms.ComboBox comboBoxCodePage;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxCodePage;
         private System.Windows.Forms.Label labelCodePage;
         private System.Windows.Forms.Label labelPreview;
         private System.Windows.Forms.TextBox textBoxPreview;

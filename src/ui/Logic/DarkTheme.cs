@@ -13,6 +13,7 @@ namespace Nikse.SubtitleEdit.Logic
     {
         public static Color BackColor => Configuration.Settings.General.DarkThemeBackColor;
         public static Color ForeColor => Configuration.Settings.General.DarkThemeForeColor;
+        public static Color DarkThemeDisabledColor => Configuration.Settings.General.DarkThemeDisabledColor;
 
         private const int DWMWA_USE_IMMERSIVE_DARK_MODE_BEFORE_20H1 = 19;
         private const int DWMWA_USE_IMMERSIVE_DARK_MODE = 20;
@@ -277,6 +278,12 @@ namespace Nikse.SubtitleEdit.Logic
 
         private static void UnFixControl(Control c)
         {
+            if (c is SETextBox seTextBox)
+            {
+                seTextBox.UndoDarkTheme();
+                return;
+            }
+
             c.BackColor = Control.DefaultBackColor;
             c.ForeColor = Control.DefaultForeColor;
             var buttonBackColor = SystemColors.Window;
@@ -355,7 +362,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             if (c is TabControl tc)
             {
-                //SetStyle(tc, ControlStyles.UserPaint | ControlStyles.DoubleBuffer, true);
+                SetStyle(tc, ControlStyles.UserPaint, false);
                 tc.Paint -= TabControl_Paint;
             }
 
@@ -389,7 +396,7 @@ namespace Nikse.SubtitleEdit.Logic
                 tud.BackColor = buttonBackColor;
                 tud.ForeColor = Control.DefaultForeColor;
                 tud.ButtonForeColor = Control.DefaultForeColor;
-                tud.BackColorDisabled = NikseUpDown.DefaultBackColorDisabled; 
+                tud.BackColorDisabled = NikseUpDown.DefaultBackColorDisabled;
             }
             else if (c is NikseComboBox ncb)
             {
@@ -397,7 +404,7 @@ namespace Nikse.SubtitleEdit.Logic
                 ncb.ForeColor = Control.DefaultForeColor;
                 ncb.ButtonForeColor = Control.DefaultForeColor;
                 ncb.BorderColor = Color.LightGray;
-                ncb.BackColorDisabled = NikseUpDown.DefaultBackColorDisabled; ;
+                ncb.BackColorDisabled = NikseUpDown.DefaultBackColorDisabled;
                 if (ncb.DropDownControl != null)
                 {
                     UnFixControl(ncb.DropDownControl);
@@ -449,6 +456,12 @@ namespace Nikse.SubtitleEdit.Logic
 
         private static void FixControl(Control c)
         {
+            if (c is SETextBox seTextBox)
+            {
+                seTextBox.SetDarkTheme();
+                return;
+            }
+
             c.BackColor = BackColor;
             c.ForeColor = ForeColor;
 
@@ -586,7 +599,7 @@ namespace Nikse.SubtitleEdit.Logic
             if (sender is Button button && !button.Enabled)
             {
                 button.ForeColor = Color.DimGray;
-                TextFormatFlags flags = TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter;
+                var flags = TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter;
                 TextRenderer.DrawText(e.Graphics, button.Text, button.Font, e.ClipRectangle, button.ForeColor, flags);
             }
         }
@@ -596,7 +609,7 @@ namespace Nikse.SubtitleEdit.Logic
             if (sender is CheckBox checkBox && !checkBox.Enabled)
             {
                 var checkBoxWidth = CheckBoxRenderer.GetGlyphSize(e.Graphics, System.Windows.Forms.VisualStyles.CheckBoxState.CheckedDisabled).Width;
-                Rectangle textRectangleValue = new Rectangle
+                var textRectangleValue = new Rectangle
                 {
                     X = e.ClipRectangle.X + checkBoxWidth,
                     Y = e.ClipRectangle.Y,
@@ -613,7 +626,7 @@ namespace Nikse.SubtitleEdit.Logic
             if (sender is RadioButton radioButton && !radioButton.Enabled)
             {
                 var radioButtonWidth = RadioButtonRenderer.GetGlyphSize(e.Graphics, System.Windows.Forms.VisualStyles.RadioButtonState.UncheckedDisabled).Width;
-                Rectangle textRectangleValue = new Rectangle
+                var textRectangleValue = new Rectangle
                 {
                     X = e.ClipRectangle.X + radioButtonWidth,
                     Y = e.ClipRectangle.Y,
@@ -650,15 +663,22 @@ namespace Nikse.SubtitleEdit.Logic
                 return;
             }
 
+
             var backgroundColor = lv.Items[e.ItemIndex].SubItems[e.ColumnIndex].BackColor;
             var subBackgroundColor = Color.FromArgb(backgroundColor.A, Math.Max(backgroundColor.R - 39, 0), Math.Max(backgroundColor.G - 39, 0), Math.Max(backgroundColor.B - 39, 0));
-            if (e.Item.Selected || e.Item.Focused)
+            var hot = (e.ItemState & ListViewItemStates.Hot) != 0;
+            if (e.Item.Selected || e.Item.Focused || hot)
             {
+
                 var subtitleFont = e.Item.Font;
                 var rect = e.Bounds;
                 if (Configuration.Settings != null)
                 {
                     backgroundColor = backgroundColor == BackColor ? Configuration.Settings.Tools.ListViewUnfocusedSelectedColor : subBackgroundColor;
+                    if (hot)
+                    {
+                        backgroundColor = Color.FromArgb(27, 41, 53);
+                    }
                     using (var sb = new SolidBrush(backgroundColor))
                     {
                         e.Graphics.FillRectangle(sb, rect);
@@ -753,10 +773,16 @@ namespace Nikse.SubtitleEdit.Logic
 
             protected override void OnRenderToolStripBorder(ToolStripRenderEventArgs e)
             {
-                if (!(e.ToolStrip is ToolStrip))
+                if (e.ToolStrip == null)
                 {
                     base.OnRenderToolStripBorder(e);
                 }
+            }
+
+            protected override void OnRenderArrow(ToolStripArrowRenderEventArgs e)
+            {
+                e.ArrowColor = ForeColor;
+                base.OnRenderArrow(e);
             }
 
             protected override void OnRenderImageMargin(ToolStripRenderEventArgs e)
@@ -1116,6 +1142,10 @@ namespace Nikse.SubtitleEdit.Logic
                 {
                     dropDownItem.ForeColor = ForeColor;
                     dropDownItem.BackColor = BackColor;
+                    if (dropDownItem is ToolStripSeparator)
+                    {
+                        dropDownItem.Paint += ToolStripSeparatorPaint;
+                    }
                 }
             }
 

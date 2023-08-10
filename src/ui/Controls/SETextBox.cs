@@ -4,6 +4,7 @@ using System;
 using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Controls
 {
@@ -25,10 +26,27 @@ namespace Nikse.SubtitleEdit.Controls
 
         public SETextBox()
         {
-            Initialize(Configuration.Settings.General.SubtitleTextBoxSyntaxColor);
+            SetStyle(ControlStyles.OptimizedDoubleBuffer |
+                     ControlStyles.UserPaint |
+                     ControlStyles.ResizeRedraw |
+                     ControlStyles.Selectable |
+                     ControlStyles.AllPaintingInWmPaint, true);
+
+            Initialize(Configuration.Settings.General.SubtitleTextBoxSyntaxColor, false);
         }
 
-        public void Initialize(bool useSyntaxColoring)
+        public SETextBox(bool justTextBox)
+        {
+            SetStyle(ControlStyles.OptimizedDoubleBuffer |
+                     ControlStyles.UserPaint |
+                     ControlStyles.ResizeRedraw |
+                     ControlStyles.Selectable, true);
+
+            Initialize(false, justTextBox);
+        }
+
+
+        public void Initialize(bool useSyntaxColoring, bool justTextBox)
         {
             ContextMenuStrip oldContextMenuStrip = null;
             var oldEnabled = true;
@@ -54,7 +72,7 @@ namespace Nikse.SubtitleEdit.Controls
             _uiTextBox?.Dispose();
             _simpleTextBox = null;
             _uiTextBox = null;
-            if (useSyntaxColoring)
+            if (useSyntaxColoring && !justTextBox)
             {
                 _uiTextBox = new AdvancedTextBox { BorderStyle = BorderStyle.None, Multiline = true };
                 InitializeBackingControl(_uiTextBox);
@@ -64,7 +82,17 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 _simpleTextBox = new SimpleTextBox { BorderStyle = BorderStyle.None, Multiline = true };
                 InitializeBackingControl(_simpleTextBox);
-                UpdateFontAndColors(_simpleTextBox);
+                if (justTextBox)
+                {
+                    _simpleTextBox.ForeColor = DarkTheme.ForeColor;
+                    _simpleTextBox.BackColor = DarkTheme.BackColor;
+                    BackColor = Color.DarkGray;
+                    _simpleTextBox.VisibleChanged += SimpleTextBox_VisibleChanged;
+                }
+                else
+                {
+                    UpdateFontAndColors(_simpleTextBox);
+                }
             }
 
             if (oldContextMenuStrip != null)
@@ -74,6 +102,13 @@ namespace Nikse.SubtitleEdit.Controls
 
             Enabled = oldEnabled;
             Text = oldText;
+        }
+
+        private void SimpleTextBox_VisibleChanged(object sender, EventArgs e)
+        {
+            Padding = new Padding(1);
+            BackColor = Color.DarkGray;
+            Invalidate();
         }
 
         private void InitializeBackingControl(Control textBox)
@@ -659,6 +694,57 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
+        public int MaxLength
+        {
+            get
+            {
+                if (_uiTextBox != null)
+                {
+                    return _uiTextBox.MaxLength;
+                }
+
+                if (_simpleTextBox != null)
+                {
+                    return _simpleTextBox.MaxLength;
+                }
+
+                return 0;
+            }
+            set
+            {
+                if (_uiTextBox != null)
+                {
+                    _uiTextBox.MaxLength = value;
+                }
+
+                if (_simpleTextBox != null)
+                {
+                    _simpleTextBox.MaxLength = value;
+                }
+            }
+        }
+
+        public bool UseSystemPasswordChar
+        {
+            get
+            {
+                if (_simpleTextBox != null)
+                {
+                    return _simpleTextBox.UseSystemPasswordChar;
+                }
+
+                return false;
+            }
+            set
+            {
+                if (_simpleTextBox != null)
+                {
+                    _simpleTextBox.UseSystemPasswordChar = value;
+                }
+            }
+        }
+
+
         public async Task CheckForLanguageChange(Subtitle subtitle)
         {
             if (_uiTextBox == null)
@@ -686,5 +772,33 @@ namespace Nikse.SubtitleEdit.Controls
         public void DoAction(SpellCheckAction action) => _uiTextBox?.DoAction(action);
 
         #endregion
+
+        public void SetDarkTheme()
+        {
+            if (_uiTextBox != null)
+            {
+                _uiTextBox.BackColor = DarkTheme.BackColor;
+                _uiTextBox.ForeColor = DarkTheme.ForeColor;
+            }
+            if (_simpleTextBox != null)
+            {
+                _simpleTextBox.BackColor = DarkTheme.BackColor;
+                _simpleTextBox.ForeColor = DarkTheme.ForeColor;
+            }
+        }
+
+        public void UndoDarkTheme()
+        {
+            if (_uiTextBox != null)
+            {
+                _uiTextBox.BackColor = SystemColors.Window;
+                _uiTextBox.ForeColor = DefaultForeColor;
+            }
+            if (_simpleTextBox != null)
+            {
+                _simpleTextBox.BackColor = SystemColors.Window;
+                _simpleTextBox.ForeColor = DefaultForeColor;
+            }
+        }
     }
 }

@@ -35,11 +35,11 @@
             this.pictureBoxPreview = new System.Windows.Forms.PictureBox();
             this.groupBoxFont = new System.Windows.Forms.GroupBox();
             this.textBoxFontSize = new System.Windows.Forms.TextBox();
-            this.comboBoxFontWeight = new System.Windows.Forms.ComboBox();
+            this.comboBoxFontWeight = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelFontWeight = new System.Windows.Forms.Label();
-            this.comboBoxFontStyle = new System.Windows.Forms.ComboBox();
+            this.comboBoxFontStyle = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelFontStyle = new System.Windows.Forms.Label();
-            this.comboBoxFontName = new System.Windows.Forms.ComboBox();
+            this.comboBoxFontName = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.panelFontColor = new System.Windows.Forms.Panel();
             this.labelFontSize = new System.Windows.Forms.Label();
             this.buttonFontColor = new System.Windows.Forms.Button();
@@ -403,7 +403,7 @@
         private System.Windows.Forms.Panel panelFontColor;
         private System.Windows.Forms.Button buttonFontColor;
         private System.Windows.Forms.GroupBox groupBoxFont;
-        private System.Windows.Forms.ComboBox comboBoxFontName;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxFontName;
         private System.Windows.Forms.Label labelFontSize;
         private System.Windows.Forms.Label labelFontName;
         private System.Windows.Forms.GroupBox groupBoxStyles;
@@ -418,9 +418,9 @@
         private System.Windows.Forms.ColumnHeader columnHeaderUsed;
         private System.Windows.Forms.GroupBox groupBoxPreview;
         private System.Windows.Forms.PictureBox pictureBoxPreview;
-        private System.Windows.Forms.ComboBox comboBoxFontWeight;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxFontWeight;
         private System.Windows.Forms.Label labelFontWeight;
-        private System.Windows.Forms.ComboBox comboBoxFontStyle;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxFontStyle;
         private System.Windows.Forms.Label labelFontStyle;
         private System.Windows.Forms.ColorDialog colorDialogStyle;
         private System.Windows.Forms.TextBox textBoxFontSize;

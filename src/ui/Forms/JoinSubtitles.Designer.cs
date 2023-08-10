@@ -36,17 +36,16 @@
             this.columnHeaderEndTime = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderFileName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.groupBoxPreview = new System.Windows.Forms.GroupBox();
-            this.labelTotalLines = new System.Windows.Forms.Label();
+            this.labelTotalLines = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.buttonClear = new System.Windows.Forms.Button();
             this.buttonRemoveFile = new System.Windows.Forms.Button();
             this.buttonAddFile = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.radioButtonJoinPlain = new System.Windows.Forms.RadioButton();
-            this.numericUpDownAddMs = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownAddMs = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.radioButtonJoinAddTime = new System.Windows.Forms.RadioButton();
-            this.labelAddTime = new System.Windows.Forms.Label();
+            this.labelAddTime = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.groupBoxPreview.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownAddMs)).BeginInit();
             this.SuspendLayout();
             // 
             // buttonCancel
@@ -255,7 +254,6 @@
             this.Shown += new System.EventHandler(this.JoinSubtitles_Shown);
             this.groupBoxPreview.ResumeLayout(false);
             this.groupBoxPreview.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownAddMs)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -275,10 +273,10 @@
         private System.Windows.Forms.Button buttonAddFile;
         private System.Windows.Forms.ColumnHeader columnHeaderEndTime;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
-        private System.Windows.Forms.Label labelTotalLines;
+        private Nikse.SubtitleEdit.Controls.NikseLabel labelTotalLines;
         private System.Windows.Forms.RadioButton radioButtonJoinPlain;
-        private System.Windows.Forms.NumericUpDown numericUpDownAddMs;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownAddMs;
         private System.Windows.Forms.RadioButton radioButtonJoinAddTime;
-        private System.Windows.Forms.Label labelAddTime;
+        private Nikse.SubtitleEdit.Controls.NikseLabel labelAddTime;
     }
 }

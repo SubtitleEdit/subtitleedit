@@ -15,6 +15,8 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Controls;
+using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms.Assa
 {
@@ -227,7 +229,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             }
         }
 
-        private static void SafeNumericUpDownAssign(NumericUpDown numericUpDown, int value)
+        private static void SafeNumericUpDownAssign(NikseUpDown numericUpDown, int value)
         {
             if (value < numericUpDown.Minimum)
             {

@@ -35,9 +35,9 @@
             this.radioButtonAddToSelection = new System.Windows.Forms.RadioButton();
             this.radioButtonNewSelection = new System.Windows.Forms.RadioButton();
             this.groupBoxRule = new System.Windows.Forms.GroupBox();
-            this.numericUpDownDuration = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownDuration = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.checkBoxCaseSensitive = new System.Windows.Forms.CheckBox();
-            this.comboBoxRule = new System.Windows.Forms.ComboBox();
+            this.comboBoxRule = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.textBoxText = new System.Windows.Forms.TextBox();
             this.listViewStyles = new System.Windows.Forms.ListView();
             this.columnHeaderStyleName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -56,7 +56,6 @@
             this.labelInfo = new System.Windows.Forms.Label();
             this.groupBoxWhatToDo.SuspendLayout();
             this.groupBoxRule.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDuration)).BeginInit();
             this.groupBoxPreview.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -352,7 +351,6 @@
             this.groupBoxWhatToDo.PerformLayout();
             this.groupBoxRule.ResumeLayout(false);
             this.groupBoxRule.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDuration)).EndInit();
             this.groupBoxPreview.ResumeLayout(false);
             this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -380,11 +378,11 @@
         private System.Windows.Forms.CheckBox checkBoxCaseSensitive;
         private System.Windows.Forms.RadioButton radioButtonIntersect;
         private System.Windows.Forms.ColumnHeader columnHeaderStyle;
-        private System.Windows.Forms.NumericUpDown numericUpDownDuration;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownDuration;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSelectAll;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemInverseSelection;
-        private System.Windows.Forms.ComboBox comboBoxRule;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxRule;
         private System.Windows.Forms.ListView listViewStyles;
         private System.Windows.Forms.ColumnHeader columnHeaderStyleName;
     }

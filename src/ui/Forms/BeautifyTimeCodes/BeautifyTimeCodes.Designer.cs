@@ -40,12 +40,12 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             this.labelExtractTimeCodesProgress = new System.Windows.Forms.Label();
             this.progressBarExtractTimeCodes = new System.Windows.Forms.ProgressBar();
             this.buttonExtractTimeCodes = new System.Windows.Forms.Button();
-            this.labelTimeCodesStatus = new System.Windows.Forms.Label();
+            this.labelTimeCodesStatus = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.groupBoxShotChanges = new System.Windows.Forms.GroupBox();
             this.checkBoxSnapToShotChanges = new System.Windows.Forms.CheckBox();
             this.panelShotChanges = new System.Windows.Forms.Panel();
             this.buttonImportShotChanges = new System.Windows.Forms.Button();
-            this.labelShotChangesStatus = new System.Windows.Forms.Label();
+            this.labelShotChangesStatus = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.buttonEditProfile = new System.Windows.Forms.Button();
             this.progressBar = new System.Windows.Forms.ProgressBar();
             this.groupBoxTimeCodes.SuspendLayout();
@@ -312,10 +312,10 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
         private System.Windows.Forms.Label labelExtractTimeCodesProgress;
         private System.Windows.Forms.ProgressBar progressBarExtractTimeCodes;
         private System.Windows.Forms.Button buttonExtractTimeCodes;
-        private System.Windows.Forms.Label labelTimeCodesStatus;
+        private Nikse.SubtitleEdit.Controls.NikseLabel labelTimeCodesStatus;
         private System.Windows.Forms.Panel panelShotChanges;
         private System.Windows.Forms.Button buttonImportShotChanges;
-        private System.Windows.Forms.Label labelShotChangesStatus;
+        private Nikse.SubtitleEdit.Controls.NikseLabel labelShotChangesStatus;
         private System.Windows.Forms.Button buttonEditProfile;
         private System.Windows.Forms.Button buttonCancelTimeCodes;
         private System.Windows.Forms.ProgressBar progressBar;

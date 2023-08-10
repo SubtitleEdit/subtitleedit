@@ -43,7 +43,7 @@
             this.buttonAddUserWord = new System.Windows.Forms.Button();
             this.groupBoxWordListLocation = new System.Windows.Forms.GroupBox();
             this.checkBoxNamesOnline = new System.Windows.Forms.CheckBox();
-            this.textBoxNamesOnline = new System.Windows.Forms.TextBox();
+            this.textBoxNamesOnline = new Nikse.SubtitleEdit.Controls.SETextBox(true);
             this.groupBoxNamesIgonoreLists = new System.Windows.Forms.GroupBox();
             this.listViewNames = new System.Windows.Forms.ListView();
             this.columnHeaderNames = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -51,7 +51,7 @@
             this.textBoxNameEtc = new System.Windows.Forms.TextBox();
             this.buttonAddNames = new System.Windows.Forms.Button();
             this.labelWordListLanguage = new System.Windows.Forms.Label();
-            this.comboBoxWordListLanguage = new System.Windows.Forms.ComboBox();
+            this.comboBoxWordListLanguage = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
             this.labelStatus = new System.Windows.Forms.Label();
@@ -430,7 +430,7 @@
         private System.Windows.Forms.Button buttonAddUserWord;
         private System.Windows.Forms.GroupBox groupBoxWordListLocation;
         private System.Windows.Forms.CheckBox checkBoxNamesOnline;
-        private System.Windows.Forms.TextBox textBoxNamesOnline;
+        private Nikse.SubtitleEdit.Controls.SETextBox textBoxNamesOnline;
         private System.Windows.Forms.GroupBox groupBoxNamesIgonoreLists;
         private System.Windows.Forms.ListView listViewNames;
         private System.Windows.Forms.ColumnHeader columnHeaderNames;
@@ -438,7 +438,7 @@
         private System.Windows.Forms.TextBox textBoxNameEtc;
         private System.Windows.Forms.Button buttonAddNames;
         private System.Windows.Forms.Label labelWordListLanguage;
-        private System.Windows.Forms.ComboBox comboBoxWordListLanguage;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxWordListLanguage;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Label labelStatus;

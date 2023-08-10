@@ -33,13 +33,11 @@
             this.groupBoxSearchDirection = new System.Windows.Forms.GroupBox();
             this.radioButtonBack = new System.Windows.Forms.RadioButton();
             this.radioButtonForward = new System.Windows.Forms.RadioButton();
-            this.numericUpDownSeconds = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDownVolume = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownSeconds = new Nikse.SubtitleEdit.Controls.NikseUpDown();
+            this.numericUpDownVolume = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelDuration = new System.Windows.Forms.Label();
             this.labelVolumeBelow = new System.Windows.Forms.Label();
             this.groupBoxSearchDirection.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSeconds)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownVolume)).BeginInit();
             this.SuspendLayout();
             // 
             // buttonCancel
@@ -189,8 +187,6 @@
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SeekSilence_KeyDown);
             this.groupBoxSearchDirection.ResumeLayout(false);
             this.groupBoxSearchDirection.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSeconds)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownVolume)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -203,8 +199,8 @@
         private System.Windows.Forms.GroupBox groupBoxSearchDirection;
         private System.Windows.Forms.RadioButton radioButtonBack;
         private System.Windows.Forms.RadioButton radioButtonForward;
-        private System.Windows.Forms.NumericUpDown numericUpDownSeconds;
-        private System.Windows.Forms.NumericUpDown numericUpDownVolume;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownSeconds;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownVolume;
         private System.Windows.Forms.Label labelDuration;
         private System.Windows.Forms.Label labelVolumeBelow;
     }

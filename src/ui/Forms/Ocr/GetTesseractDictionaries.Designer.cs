@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.comboBoxDictionaries = new System.Windows.Forms.ComboBox();
+            this.comboBoxDictionaries = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelPleaseWait = new System.Windows.Forms.Label();
             this.labelChooseLanguageAndClickDownload = new System.Windows.Forms.Label();
             this.buttonDownload = new System.Windows.Forms.Button();
@@ -133,7 +133,7 @@
 
         #endregion
 
-        private System.Windows.Forms.ComboBox comboBoxDictionaries;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxDictionaries;
         private System.Windows.Forms.Label labelPleaseWait;
         private System.Windows.Forms.Label labelChooseLanguageAndClickDownload;
         private System.Windows.Forms.Button buttonDownload;

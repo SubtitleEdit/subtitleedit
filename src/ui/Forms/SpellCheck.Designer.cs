@@ -18,7 +18,7 @@
             this.components = new System.ComponentModel.Container();
             this.buttonAddToDictionary = new System.Windows.Forms.Button();
             this.buttonSkipOnce = new System.Windows.Forms.Button();
-            this.comboBoxDictionaries = new System.Windows.Forms.ComboBox();
+            this.comboBoxDictionaries = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelLanguage = new System.Windows.Forms.Label();
             this.richTextBoxParagraph = new System.Windows.Forms.RichTextBox();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -553,7 +553,7 @@
 
         private System.Windows.Forms.Button buttonAddToDictionary;
         private System.Windows.Forms.Button buttonSkipOnce;
-        private System.Windows.Forms.ComboBox comboBoxDictionaries;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxDictionaries;
         private System.Windows.Forms.Label labelLanguage;
         private System.Windows.Forms.RichTextBox richTextBoxParagraph;
         private System.Windows.Forms.ListBox listBoxSuggestions;

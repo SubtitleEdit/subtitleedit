@@ -30,15 +30,15 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         private void InitializeComponent()
         {
             this.labelTargetRes = new System.Windows.Forms.Label();
-            this.numericUpDownTargetHeight = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownTargetHeight = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.buttonGetResolutionFromVideo = new System.Windows.Forms.Button();
             this.labelX = new System.Windows.Forms.Label();
-            this.numericUpDownTargetWidth = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownTargetWidth = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelSourceRes = new System.Windows.Forms.Label();
-            this.numericUpDownSourceHeight = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownSourceHeight = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.buttonSourceRes = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
-            this.numericUpDownSourceWidth = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownSourceWidth = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
             this.checkBoxMargins = new System.Windows.Forms.CheckBox();
@@ -46,10 +46,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.checkBoxPosition = new System.Windows.Forms.CheckBox();
             this.checkBoxDrawing = new System.Windows.Forms.CheckBox();
             this.buttonNever = new System.Windows.Forms.Button();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTargetHeight)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTargetWidth)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSourceHeight)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSourceWidth)).BeginInit();
             this.SuspendLayout();
             // 
             // labelTargetRes
@@ -291,10 +287,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "ResolutionResampler";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ResolutionResampler_KeyDown);
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTargetHeight)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTargetWidth)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSourceHeight)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSourceWidth)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -303,15 +295,15 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         #endregion
 
         private System.Windows.Forms.Label labelTargetRes;
-        private System.Windows.Forms.NumericUpDown numericUpDownTargetHeight;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownTargetHeight;
         private System.Windows.Forms.Button buttonGetResolutionFromVideo;
         private System.Windows.Forms.Label labelX;
-        private System.Windows.Forms.NumericUpDown numericUpDownTargetWidth;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownTargetWidth;
         private System.Windows.Forms.Label labelSourceRes;
-        private System.Windows.Forms.NumericUpDown numericUpDownSourceHeight;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownSourceHeight;
         private System.Windows.Forms.Button buttonSourceRes;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.NumericUpDown numericUpDownSourceWidth;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownSourceWidth;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.CheckBox checkBoxMargins;

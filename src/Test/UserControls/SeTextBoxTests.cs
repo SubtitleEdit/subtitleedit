@@ -1,9 +1,9 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Core.Common;
-using System;
 
-namespace Test.SETextBoxControl
+namespace Test.UserControls
 {
     [TestClass]
     public class SeTextBoxTests

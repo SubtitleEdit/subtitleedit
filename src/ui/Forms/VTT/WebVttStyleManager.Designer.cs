@@ -73,7 +73,7 @@
             this.checkBoxColorEnabled = new System.Windows.Forms.CheckBox();
             this.panelShadowColor = new System.Windows.Forms.Panel();
             this.buttonShadowColor = new System.Windows.Forms.Button();
-            this.numericUpDownShadowWidth = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownShadowWidth = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.panelBackgroundColor = new System.Windows.Forms.Panel();
             this.labelShadow = new System.Windows.Forms.Label();
             this.buttonBackgroundColor = new System.Windows.Forms.Button();
@@ -81,10 +81,10 @@
             this.checkBoxStrikeout = new System.Windows.Forms.CheckBox();
             this.buttonPrimaryColor = new System.Windows.Forms.Button();
             this.checkBoxFontUnderline = new System.Windows.Forms.CheckBox();
-            this.numericUpDownFontSize = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownFontSize = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.checkBoxFontItalic = new System.Windows.Forms.CheckBox();
             this.checkBoxFontBold = new System.Windows.Forms.CheckBox();
-            this.comboBoxFontName = new System.Windows.Forms.ComboBox();
+            this.comboBoxFontName = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelFontSize = new System.Windows.Forms.Label();
             this.labelFontName = new System.Windows.Forms.Label();
             this.buttonApply = new System.Windows.Forms.Button();
@@ -100,8 +100,6 @@
             this.groupBoxPreview.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPreview)).BeginInit();
             this.groupBoxFont.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownShadowWidth)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFontSize)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBoxStyles
@@ -783,8 +781,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPreview)).EndInit();
             this.groupBoxFont.ResumeLayout(false);
             this.groupBoxFont.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownShadowWidth)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFontSize)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -807,7 +803,7 @@
         private System.Windows.Forms.ColumnHeader columnHeaderForeColor;
         private System.Windows.Forms.ColumnHeader columnHeaderBackgroundColor;
         private System.Windows.Forms.GroupBox groupBoxProperties;
-        private System.Windows.Forms.NumericUpDown numericUpDownShadowWidth;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownShadowWidth;
         private System.Windows.Forms.Label labelShadow;
         private System.Windows.Forms.TextBox textBoxStyleName;
         private System.Windows.Forms.Label labelStyleName;
@@ -822,10 +818,10 @@
         private System.Windows.Forms.GroupBox groupBoxFont;
         private System.Windows.Forms.CheckBox checkBoxStrikeout;
         private System.Windows.Forms.CheckBox checkBoxFontUnderline;
-        private System.Windows.Forms.NumericUpDown numericUpDownFontSize;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownFontSize;
         private System.Windows.Forms.CheckBox checkBoxFontItalic;
         private System.Windows.Forms.CheckBox checkBoxFontBold;
-        private System.Windows.Forms.ComboBox comboBoxFontName;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxFontName;
         private System.Windows.Forms.Label labelFontSize;
         private System.Windows.Forms.Label labelFontName;
         private System.Windows.Forms.Button buttonApply;

@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.comboBoxDictionaries = new System.Windows.Forms.ComboBox();
+            this.comboBoxDictionaries = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelDictionaryLoaded = new System.Windows.Forms.Label();
             this.buttonInputBrowse = new System.Windows.Forms.Button();
             this.listViewInputFiles = new System.Windows.Forms.ListView();
@@ -37,9 +37,9 @@
             this.columnHeaderFormat = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ButtonGenerate = new System.Windows.Forms.Button();
             this.labelStatus = new System.Windows.Forms.Label();
-            this.comboBoxMinOccurrences = new System.Windows.Forms.ComboBox();
+            this.comboBoxMinOccurrences = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelMinOccurSmall = new System.Windows.Forms.Label();
-            this.comboBoxMinOccurrencesLongWords = new System.Windows.Forms.ComboBox();
+            this.comboBoxMinOccurrencesLongWords = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelMinOccurLarge = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
@@ -277,7 +277,7 @@
         }
 
         #endregion
-        private System.Windows.Forms.ComboBox comboBoxDictionaries;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxDictionaries;
         private System.Windows.Forms.Label labelDictionaryLoaded;
         private System.Windows.Forms.Button buttonInputBrowse;
         private System.Windows.Forms.ListView listViewInputFiles;
@@ -286,9 +286,9 @@
         private System.Windows.Forms.ColumnHeader columnHeaderFormat;
         private System.Windows.Forms.Button ButtonGenerate;
         private System.Windows.Forms.Label labelStatus;
-        private System.Windows.Forms.ComboBox comboBoxMinOccurrences;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxMinOccurrences;
         private System.Windows.Forms.Label labelMinOccurSmall;
-        private System.Windows.Forms.ComboBox comboBoxMinOccurrencesLongWords;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxMinOccurrencesLongWords;
         private System.Windows.Forms.Label labelMinOccurLarge;
     }
 }

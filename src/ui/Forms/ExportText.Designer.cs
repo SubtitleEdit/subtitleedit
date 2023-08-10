@@ -31,15 +31,15 @@
             this.textBoxText = new System.Windows.Forms.TextBox();
             this.groupBoxImportOptions = new System.Windows.Forms.GroupBox();
             this.labelEncoding = new System.Windows.Forms.Label();
-            this.comboBoxEncoding = new System.Windows.Forms.ComboBox();
+            this.comboBoxEncoding = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.checkBoxAddNewlineAfterTimeCodes = new System.Windows.Forms.CheckBox();
             this.checkBoxAddNewlineAfterLineNumber = new System.Windows.Forms.CheckBox();
             this.checkBoxAddNewLine2 = new System.Windows.Forms.CheckBox();
             this.checkBoxAddAfterText = new System.Windows.Forms.CheckBox();
             this.checkBoxShowLineNumbers = new System.Windows.Forms.CheckBox();
             this.groupBoxTimeCodeFormat = new System.Windows.Forms.GroupBox();
-            this.comboBoxTimeCodeSeparator = new System.Windows.Forms.ComboBox();
-            this.labelTimeCodeSeparator = new System.Windows.Forms.Label();
+            this.comboBoxTimeCodeSeparator = new Nikse.SubtitleEdit.Controls.NikseComboBox();
+            this.labelTimeCodeSeparator = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.radioButtonTimeCodeHHMMSSFF = new System.Windows.Forms.RadioButton();
             this.radioButtonTimeCodeMs = new System.Windows.Forms.RadioButton();
             this.radioButtonTimeCodeSrt = new System.Windows.Forms.RadioButton();
@@ -401,11 +401,11 @@
         private System.Windows.Forms.RadioButton radioButtonTimeCodeHHMMSSFF;
         private System.Windows.Forms.CheckBox checkBoxAddNewlineAfterLineNumber;
         private System.Windows.Forms.CheckBox checkBoxAddNewlineAfterTimeCodes;
-        private System.Windows.Forms.ComboBox comboBoxTimeCodeSeparator;
-        private System.Windows.Forms.Label labelTimeCodeSeparator;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxTimeCodeSeparator;
+        private Nikse.SubtitleEdit.Controls.NikseLabel labelTimeCodeSeparator;
         private System.Windows.Forms.Label labelPreview;
         private System.Windows.Forms.CheckBox checkBoxRemoveStyling;
         private System.Windows.Forms.Label labelEncoding;
-        private System.Windows.Forms.ComboBox comboBoxEncoding;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxEncoding;
     }
 }

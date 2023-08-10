@@ -41,7 +41,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonFindTextStart = new System.Windows.Forms.Button();
             this.buttonStartThreeSecondsBack = new System.Windows.Forms.Button();
             this.buttonStartHalfASecondBack = new System.Windows.Forms.Button();
-            this.comboBoxStartTexts = new System.Windows.Forms.ComboBox();
+            this.comboBoxStartTexts = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.groupBoxEndScene = new System.Windows.Forms.GroupBox();
             this.MediaPlayerEnd = new Nikse.SubtitleEdit.Controls.VideoPlayerContainer();
             this.panelControlsEnd = new System.Windows.Forms.Panel();
@@ -50,7 +50,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonFindTextEnd = new System.Windows.Forms.Button();
             this.buttonThreeSecondsBack = new System.Windows.Forms.Button();
             this.buttonEndHalfASecondBack = new System.Windows.Forms.Button();
-            this.comboBoxEndTexts = new System.Windows.Forms.ComboBox();
+            this.comboBoxEndTexts = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.labelVideoInfo = new System.Windows.Forms.Label();
             this.groupBoxMovieInfo = new System.Windows.Forms.GroupBox();
@@ -429,7 +429,7 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.GroupBox groupBoxEndScene;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Panel panelControlsStart;
-        private System.Windows.Forms.ComboBox comboBoxStartTexts;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxStartTexts;
         private System.Windows.Forms.Button buttonGotoStartSubtitlePosition;
         private System.Windows.Forms.Button buttonFindTextStart;
         private System.Windows.Forms.Button buttonStartThreeSecondsBack;
@@ -441,7 +441,7 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.Button buttonFindTextEnd;
         private System.Windows.Forms.Button buttonThreeSecondsBack;
         private System.Windows.Forms.Button buttonEndHalfASecondBack;
-        private System.Windows.Forms.ComboBox comboBoxEndTexts;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxEndTexts;
         private System.Windows.Forms.Button buttonSync;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.Button buttonStartVerify;

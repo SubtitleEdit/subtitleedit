@@ -30,9 +30,8 @@
         {
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
-            this.numericUpDownLayer = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownLayer = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelLayer = new System.Windows.Forms.Label();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownLayer)).BeginInit();
             this.SuspendLayout();
             // 
             // buttonOK
@@ -95,7 +94,6 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "SetLayer";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SetLayer_KeyDown);
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownLayer)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -105,7 +103,7 @@
 
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Button buttonCancel;
-        private System.Windows.Forms.NumericUpDown numericUpDownLayer;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownLayer;
         private System.Windows.Forms.Label labelLayer;
     }
 }

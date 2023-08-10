@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.numericUpDownDurationMax = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDownDurationMin = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownDurationMax = new Nikse.SubtitleEdit.Controls.NikseUpDown();
+            this.numericUpDownDurationMin = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelNote = new System.Windows.Forms.Label();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
@@ -49,8 +49,6 @@
             this.checkBoxMinDuration = new System.Windows.Forms.CheckBox();
             this.checkBoxMaxDuration = new System.Windows.Forms.CheckBox();
             this.checkBoxCheckShotChanges = new System.Windows.Forms.CheckBox();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDurationMax)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDurationMin)).BeginInit();
             this.groupBoxFixesAvailable.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.groupBoxUnfixable.SuspendLayout();
@@ -336,8 +334,6 @@
             this.Shown += new System.EventHandler(this.ApplyDurationLimits_Shown);
             this.ResizeEnd += new System.EventHandler(this.ApplyDurationLimits_ResizeEnd);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ApplyDurationLimits_KeyDown);
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDurationMax)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDurationMin)).EndInit();
             this.groupBoxFixesAvailable.ResumeLayout(false);
             this.contextMenuStrip1.ResumeLayout(false);
             this.groupBoxUnfixable.ResumeLayout(false);
@@ -351,8 +347,8 @@
         }
 
         #endregion
-        private System.Windows.Forms.NumericUpDown numericUpDownDurationMax;
-        private System.Windows.Forms.NumericUpDown numericUpDownDurationMin;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownDurationMax;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownDurationMin;
         private System.Windows.Forms.Label labelNote;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonOK;

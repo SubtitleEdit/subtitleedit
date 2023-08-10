@@ -20,17 +20,11 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
         private readonly string[] _fileNames = { "model.bin", "config.json", "vocabulary.txt", "tokenizer.json" };
 
 
-        public string ModelFolder => Path.Combine(Configuration.DataDirectory, "Whisper", "Purfview", "Whisper-Faster", "_models");
+        public string ModelFolder => Path.Combine(Configuration.DataDirectory, "Whisper", "Purfview-Whisper-Faster", "_models");
 
         public void CreateModelFolder()
         {
-            var dir = Path.Combine(Configuration.DataDirectory, "Whisper", "Purfview");
-            if (!Directory.Exists(dir))
-            {
-                Directory.CreateDirectory(dir);
-            }
-
-            dir = Path.Combine(Configuration.DataDirectory, "Whisper-Faster");
+            var dir = Path.Combine(Configuration.DataDirectory, "Whisper", "Purfview-Whisper-Faster");
             if (!Directory.Exists(dir))
             {
                 Directory.CreateDirectory(dir);

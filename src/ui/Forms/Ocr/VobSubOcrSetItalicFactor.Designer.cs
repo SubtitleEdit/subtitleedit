@@ -34,12 +34,11 @@
             this.pictureBoxSubtitleImage = new System.Windows.Forms.PictureBox();
             this.contextMenuStripListview = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.saveImageAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.numericUpDownItalicFactor = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownItalicFactor = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelDescription = new System.Windows.Forms.Label();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSubtitleImage)).BeginInit();
             this.contextMenuStripListview.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownItalicFactor)).BeginInit();
             this.SuspendLayout();
             // 
             // buttonCancel
@@ -152,7 +151,6 @@
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.VobSubOcrSetItalicFactor_KeyDown);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSubtitleImage)).EndInit();
             this.contextMenuStripListview.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownItalicFactor)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -163,7 +161,7 @@
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.PictureBox pictureBoxSubtitleImage;
-        private System.Windows.Forms.NumericUpDown numericUpDownItalicFactor;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownItalicFactor;
         private System.Windows.Forms.Label labelDescription;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripListview;

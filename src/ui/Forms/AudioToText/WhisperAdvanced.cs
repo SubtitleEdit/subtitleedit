@@ -93,5 +93,13 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 DialogResult = DialogResult.Cancel;
             }
         }
+
+        private void WhisperAdvanced_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape)
+            {
+                DialogResult = DialogResult.Cancel;
+            }
+        }
     }
 }

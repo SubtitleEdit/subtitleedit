@@ -32,7 +32,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             this.textBoxLineSeparator = new System.Windows.Forms.TextBox();
             this.labelLineSeparator = new System.Windows.Forms.Label();
             this.checkBoxAutoCopyToClipboard = new System.Windows.Forms.CheckBox();
-            this.numericUpDownMaxBytes = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownMaxBytes = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelMaxTextSize = new System.Windows.Forms.Label();
             this.progressBarTranslate = new System.Windows.Forms.ProgressBar();
             this.buttonTranslate = new System.Windows.Forms.Button();
@@ -43,7 +43,6 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             this.columnHeaderSource = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderNumber = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.listViewTranslate = new System.Windows.Forms.ListView();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxBytes)).BeginInit();
             this.SuspendLayout();
             // 
             // textBoxLineSeparator
@@ -227,7 +226,6 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             this.ResizeEnd += new System.EventHandler(this.MainForm_ResizeEnd);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MainForm_KeyDown);
             this.Resize += new System.EventHandler(this.MainForm_Resize);
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxBytes)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -238,7 +236,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
         private System.Windows.Forms.TextBox textBoxLineSeparator;
         private System.Windows.Forms.Label labelLineSeparator;
         private System.Windows.Forms.CheckBox checkBoxAutoCopyToClipboard;
-        private System.Windows.Forms.NumericUpDown numericUpDownMaxBytes;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownMaxBytes;
         private System.Windows.Forms.Label labelMaxTextSize;
         private System.Windows.Forms.ProgressBar progressBarTranslate;
         private System.Windows.Forms.Button buttonTranslate;

@@ -37,11 +37,11 @@
             this.labelInfo = new System.Windows.Forms.Label();
             this.groupBoxModels = new System.Windows.Forms.GroupBox();
             this.labelChooseLanguage = new System.Windows.Forms.Label();
-            this.comboBoxLanguages = new System.Windows.Forms.ComboBox();
+            this.comboBoxLanguages = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.buttonDownload = new System.Windows.Forms.Button();
             this.linkLabelOpenModelsFolder = new System.Windows.Forms.LinkLabel();
             this.labelModel = new System.Windows.Forms.Label();
-            this.comboBoxModels = new System.Windows.Forms.ComboBox();
+            this.comboBoxModels = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.linkLabeWhisperWebSite = new System.Windows.Forms.LinkLabel();
             this.labelTime = new System.Windows.Forms.Label();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
@@ -62,7 +62,7 @@
             this.setCPPConstmeModelsFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.removeTemporaryFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.checkBoxAutoAdjustTimings = new System.Windows.Forms.CheckBox();
-            this.comboBoxWhisperEngine = new System.Windows.Forms.ComboBox();
+            this.comboBoxWhisperEngine = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelEngine = new System.Windows.Forms.Label();
             this.buttonAdvanced = new System.Windows.Forms.Button();
             this.labelAdvanced = new System.Windows.Forms.Label();
@@ -417,10 +417,9 @@
             // 
             this.comboBoxWhisperEngine.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxWhisperEngine.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxWhisperEngine.FormattingEnabled = true;
-            this.comboBoxWhisperEngine.Location = new System.Drawing.Point(547, 9);
+            this.comboBoxWhisperEngine.Location = new System.Drawing.Point(521, 9);
             this.comboBoxWhisperEngine.Name = "comboBoxWhisperEngine";
-            this.comboBoxWhisperEngine.Size = new System.Drawing.Size(154, 21);
+            this.comboBoxWhisperEngine.Size = new System.Drawing.Size(180, 21);
             this.comboBoxWhisperEngine.TabIndex = 26;
             this.comboBoxWhisperEngine.SelectedIndexChanged += new System.EventHandler(this.comboBoxWhisperEngine_SelectedIndexChanged);
             // 
@@ -428,7 +427,7 @@
             // 
             this.labelEngine.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.labelEngine.AutoSize = true;
-            this.labelEngine.Location = new System.Drawing.Point(501, 12);
+            this.labelEngine.Location = new System.Drawing.Point(475, 12);
             this.labelEngine.Name = "labelEngine";
             this.labelEngine.Size = new System.Drawing.Size(40, 13);
             this.labelEngine.TabIndex = 27;
@@ -512,7 +511,7 @@
         private System.Windows.Forms.GroupBox groupBoxModels;
         private System.Windows.Forms.LinkLabel linkLabeWhisperWebSite;
         private System.Windows.Forms.Label labelModel;
-        private System.Windows.Forms.ComboBox comboBoxModels;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxModels;
         private System.Windows.Forms.LinkLabel linkLabelOpenModelsFolder;
         private System.Windows.Forms.Label labelTime;
         private System.Windows.Forms.Timer timer1;
@@ -527,13 +526,13 @@
         private System.Windows.Forms.Button buttonAddFile;
         private System.Windows.Forms.Label labelFC;
         private System.Windows.Forms.Label labelChooseLanguage;
-        private System.Windows.Forms.ComboBox comboBoxLanguages;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxLanguages;
         private System.Windows.Forms.CheckBox checkBoxTranslateToEnglish;
         private System.Windows.Forms.Label labelElapsed;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripWhisperAdvanced;
         private System.Windows.Forms.ToolStripMenuItem removeTemporaryFilesToolStripMenuItem;
         private System.Windows.Forms.CheckBox checkBoxAutoAdjustTimings;
-        private System.Windows.Forms.ComboBox comboBoxWhisperEngine;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxWhisperEngine;
         private System.Windows.Forms.Label labelEngine;
         private System.Windows.Forms.ToolStripMenuItem setCPPConstmeModelsFolderToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem runOnlyPostProcessingToolStripMenuItem;

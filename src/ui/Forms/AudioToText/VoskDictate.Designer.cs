@@ -34,7 +34,7 @@
             this.buttonDownload = new System.Windows.Forms.Button();
             this.linkLabelOpenModelsFolder = new System.Windows.Forms.LinkLabel();
             this.labelModel = new System.Windows.Forms.Label();
-            this.comboBoxModels = new System.Windows.Forms.ComboBox();
+            this.comboBoxModels = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.checkBoxUsePostProcessing = new System.Windows.Forms.CheckBox();
             this.groupBoxModels.SuspendLayout();
             this.SuspendLayout();
@@ -163,7 +163,7 @@
         private System.Windows.Forms.Button buttonDownload;
         private System.Windows.Forms.LinkLabel linkLabelOpenModelsFolder;
         private System.Windows.Forms.Label labelModel;
-        private System.Windows.Forms.ComboBox comboBoxModels;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxModels;
         private System.Windows.Forms.CheckBox checkBoxUsePostProcessing;
     }
 }
