@@ -1,4 +1,6 @@
-﻿namespace Nikse.SubtitleEdit.Forms
+﻿using System.Windows.Forms;
+
+namespace Nikse.SubtitleEdit.Forms
 {
     partial class CheckForUpdates
     {
@@ -30,7 +32,7 @@
         {
             this.components = new System.ComponentModel.Container();
             this.labelStatus = new System.Windows.Forms.Label();
-            this.textBoxChangeLog = new System.Windows.Forms.TextBox();
+            this.textBoxChangeLog = new Nikse.SubtitleEdit.Controls.SETextBox(true);
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonDownloadAndInstall = new System.Windows.Forms.Button();
             this.timerCheckForUpdates = new System.Windows.Forms.Timer(this.components);
@@ -56,7 +58,7 @@
             this.textBoxChangeLog.Multiline = true;
             this.textBoxChangeLog.Name = "textBoxChangeLog";
             this.textBoxChangeLog.ReadOnly = true;
-            this.textBoxChangeLog.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.textBoxChangeLog.ScrollBars = RichTextBoxScrollBars.Both;
             this.textBoxChangeLog.Size = new System.Drawing.Size(618, 53);
             this.textBoxChangeLog.TabIndex = 4;
             // 
@@ -126,7 +128,7 @@
         #endregion
 
         private System.Windows.Forms.Label labelStatus;
-        private System.Windows.Forms.TextBox textBoxChangeLog;
+        private Nikse.SubtitleEdit.Controls.SETextBox textBoxChangeLog;
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Button buttonDownloadAndInstall;
         private System.Windows.Forms.Timer timerCheckForUpdates;

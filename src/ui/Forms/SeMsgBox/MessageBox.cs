@@ -4,6 +4,22 @@ namespace Nikse.SubtitleEdit.Forms.SeMsgBox
 {
     public static class MessageBox
     {
+        public static DialogResult Show(string text, MessageBoxIcon icon)
+        {
+            using (var msgBox = new MessageBoxForm(text, string.Empty, MessageBoxButtons.OK, icon))
+            {
+                return msgBox.ShowDialog(Form.ActiveForm);
+            }
+        }
+
+        public static DialogResult Show(string text, MessageBoxButtons buttons, MessageBoxIcon icon)
+        {
+            using (var msgBox = new MessageBoxForm(text, string.Empty, buttons, icon))
+            {
+                return msgBox.ShowDialog(Form.ActiveForm);
+            }
+        }
+
         public static DialogResult Show(string text)
         {
             using (var msgBox = new MessageBoxForm(text, string.Empty, MessageBoxButtons.OK))
