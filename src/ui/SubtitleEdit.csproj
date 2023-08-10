@@ -113,6 +113,12 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Controls\NikseComboBoxCollection.cs" />
+    <Compile Include="Controls\NikseComboBoxPopUp.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Controls\NikseComboBoxPopUp.designer.cs">
+      <DependentUpon>NikseComboBoxPopUp.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\NikseLabel.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -1593,6 +1599,9 @@
     </Compile>
     <EmbeddedResource Include="Controls\AudioVisualizer.resx">
       <DependentUpon>AudioVisualizer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\NikseComboBoxPopUp.resx">
+      <DependentUpon>NikseComboBoxPopUp.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\AlignmentPickerJapanese.resx">
       <DependentUpon>AlignmentPickerJapanese.cs</DependentUpon>

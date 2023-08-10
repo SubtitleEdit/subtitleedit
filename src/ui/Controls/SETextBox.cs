@@ -772,5 +772,33 @@ namespace Nikse.SubtitleEdit.Controls
         public void DoAction(SpellCheckAction action) => _uiTextBox?.DoAction(action);
 
         #endregion
+
+        public void SetDarkTheme()
+        {
+            if (_uiTextBox != null)
+            {
+                _uiTextBox.BackColor = DarkTheme.BackColor;
+                _uiTextBox.ForeColor = DarkTheme.ForeColor;
+            }
+            if (_simpleTextBox != null)
+            {
+                _simpleTextBox.BackColor = DarkTheme.BackColor;
+                _simpleTextBox.ForeColor = DarkTheme.ForeColor;
+            }
+        }
+
+        public void UndoDarkTheme()
+        {
+            if (_uiTextBox != null)
+            {
+                _uiTextBox.BackColor = SystemColors.Window;
+                _uiTextBox.ForeColor = DefaultForeColor;
+            }
+            if (_simpleTextBox != null)
+            {
+                _simpleTextBox.BackColor = SystemColors.Window;
+                _simpleTextBox.ForeColor = DefaultForeColor;
+            }
+        }
     }
 }

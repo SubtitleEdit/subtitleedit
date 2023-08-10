@@ -33,6 +33,8 @@ namespace Nikse.SubtitleEdit.Controls
 
         private TextBox _textBox;
 
+        private NikseComboBoxPopUp _popUp;
+
         [Category("NikseComboBox"), Description("Gets or sets DropDownStyle"), RefreshProperties(RefreshProperties.Repaint)]
         public ComboBoxStyle DropDownStyle
         {
@@ -529,6 +531,11 @@ namespace Nikse.SubtitleEdit.Controls
             _mouseLeaveTimer.Interval = 200;
             _mouseLeaveTimer.Tick += (sender, args) =>
             {
+                if (_popUp != null)
+                {
+                    return;
+                }
+
                 if (!_hasItemsMouseOver && _listView != null)
                 {
                     HideDropDown();
@@ -574,6 +581,11 @@ namespace Nikse.SubtitleEdit.Controls
 
         private void HideDropDown()
         {
+            if (_popUp != null)
+            {
+                _popUp.DoClose = true;
+            }
+
             _listViewMouseLeaveTimer?.Stop();
             _mouseLeaveTimer?.Stop();
             if (_listViewShown)
@@ -705,16 +717,18 @@ namespace Nikse.SubtitleEdit.Controls
             _listView.EndUpdate();
 
             var lvHeight = 18;
-            var form = FindForm();
-            if (form == null)
+            var isOverflow = Parent.GetType() == typeof(ToolStripOverflow);
+            if (isOverflow)
             {
+                HandleOverflow(listViewItems, lvHeight);
                 return;
             }
 
+            var form = FindForm();
             var ctl = (Control)this;
             var totalX = ctl.Left;
             var totalY = ctl.Top;
-            while (ctl.Parent != form)
+            while (form != null && ctl.Parent != form)
             {
                 ctl = ctl.Parent;
                 totalX += ctl.Left;
@@ -722,14 +736,14 @@ namespace Nikse.SubtitleEdit.Controls
             }
             var top = totalY + Height;
 
-            var hasScroller = false;
+            var hasScrollBar = false;
             if (listViewItems.Count > 0)
             {
                 var itemHeight = _listView.GetItemRect(0).Height;
                 var lvVirtualHeight = itemHeight * listViewItems.Count + 16;
                 lvHeight = lvVirtualHeight;
-                var spaceInPixelsBottom = form.Height - (totalY + Height);
                 var maxHeight = DropDownHeight;
+                var spaceInPixelsBottom = form.Height - (totalY + Height);
                 if (spaceInPixelsBottom >= DropDownHeight ||
                     spaceInPixelsBottom * 1.2 > totalY)
                 {
@@ -744,7 +758,7 @@ namespace Nikse.SubtitleEdit.Controls
                     top = totalY - lvHeight;
                 }
 
-                hasScroller = lvVirtualHeight > lvHeight;
+                hasScrollBar = lvVirtualHeight > lvHeight;
             }
 
             _listView.Height = lvHeight;
@@ -754,7 +768,7 @@ namespace Nikse.SubtitleEdit.Controls
             form.Controls.Add(_listView);
             _listView.BringToFront();
 
-            if (hasScroller)
+            if (hasScrollBar)
             {
                 _listView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.None);
             }
@@ -764,6 +778,49 @@ namespace Nikse.SubtitleEdit.Controls
                 _listView.Columns[0].Width = -2;
             }
 
+            DropDown?.Invoke(this, EventArgs.Empty);
+            Invalidate();
+
+            if (_selectedIndex >= 0)
+            {
+                _listView.Focus();
+                _listView.Items[_selectedIndex].Selected = true;
+                _listView.EnsureVisible(_selectedIndex);
+                _listView.Items[_selectedIndex].Focused = true;
+            }
+        }
+
+        private void HandleOverflow(List<ListViewItem> listViewItems, int lvHeight)
+        {
+            BackColor = DarkTheme.BackColor;
+            ForeColor = DarkTheme.ForeColor;
+            Parent.BackColor = DarkTheme.BackColor;
+            Parent.ForeColor = DarkTheme.ForeColor;
+
+            var hasScrollBar = false;
+            if (listViewItems.Count > 0)
+            {
+                var itemHeight = _listView.GetItemRect(0).Height;
+                var lvVirtualHeight = itemHeight * listViewItems.Count + 16;
+                lvHeight = Math.Min(lvVirtualHeight, DropDownHeight);
+                hasScrollBar = lvVirtualHeight > lvHeight;
+            }
+
+            _listView.Height = lvHeight;
+
+            if (hasScrollBar)
+            {
+                _listView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.None);
+            }
+            else
+            {
+                _listView.Scrollable = false;
+                _listView.Columns[0].Width = -2;
+            }
+
+            DropDown?.Invoke(this, EventArgs.Empty);
+            Invalidate();
+
             if (_selectedIndex >= 0)
             {
                 _listView.Focus();
@@ -772,8 +829,11 @@ namespace Nikse.SubtitleEdit.Controls
                 _listView.Items[_selectedIndex].Focused = true;
             }
 
-            DropDown?.Invoke(this, EventArgs.Empty);
-            Invalidate();
+            _popUp?.Dispose();
+            _popUp = new NikseComboBoxPopUp(_listView, SelectedIndex, Cursor.Position.X- (DropDownWidth / 2), Cursor.Position.Y);
+            _popUp.ShowDialog(this.Parent);
+            _listView?.Dispose();
+            _listView = null;
         }
 
         private void EnsureListViewInitialized()
