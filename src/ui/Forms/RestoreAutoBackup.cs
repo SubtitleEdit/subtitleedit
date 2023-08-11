@@ -8,20 +8,21 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
+using System.Threading;
 
 namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class RestoreAutoBackup : PositionAndSizeForm
     {
         private static readonly object Locker = new object();
-        
+
         //2011-12-13_20-19-18_title
         private static readonly Regex RegexFileNamePattern = new Regex(@"^\d\d\d\d-\d\d-\d\d_\d\d-\d\d-\d\d", RegexOptions.Compiled);
         private string[] _files;
         public string AutoBackupFileName { get; set; }
         private static bool ShowAutoBackupError { get; set; }
 
-    public RestoreAutoBackup()
+        public RestoreAutoBackup()
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
@@ -41,6 +42,23 @@ namespace Nikse.SubtitleEdit.Forms
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
 
             UiUtil.FixLargeFonts(this, buttonCancel);
+
+            if (Directory.Exists(Configuration.AutoBackupDirectory))
+            {
+                _files = Directory.GetFiles(Configuration.AutoBackupDirectory, "*.*");
+                listViewBackups.BeginUpdate();
+                foreach (var fileName in _files)
+                {
+                    var path = Path.GetFileName(fileName);
+                    if (RegexFileNamePattern.IsMatch(path))
+                    {
+                        AddBackupToListView(fileName);
+                    }
+                }
+                listViewBackups.Sorting = SortOrder.Descending;
+                listViewBackups.Sort();
+                listViewBackups.EndUpdate();
+            }
         }
 
         public static bool SaveAutoBackup(Subtitle subtitle, SubtitleFormat saveFormat, string currentText)
@@ -160,7 +178,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Settings.CustomSerialize(Path.Combine(path, fileName), settings);
                 return true;
             }
-            catch 
+            catch
             {
                 return false;
             }
@@ -176,29 +194,16 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void RestoreAutoBackup_Shown(object sender, EventArgs e)
         {
-            if (Directory.Exists(Configuration.AutoBackupDirectory))
+            listViewBackups.AutoSizeLastColumn();
+
+            if (listViewBackups.Items.Count > 0)
             {
-                _files = Directory.GetFiles(Configuration.AutoBackupDirectory, "*.*");
-                foreach (var fileName in _files)
-                {
-                    var path = Path.GetFileName(fileName);
-                    if (RegexFileNamePattern.IsMatch(path))
-                    {
-                        AddBackupToListView(fileName);
-                    }
-                }
-                listViewBackups.Sorting = SortOrder.Descending;
-                listViewBackups.Sort();
-                if (_files.Length > 0)
-                {
-                    return;
-                }
+                return;
             }
+
             linkLabelOpenContainingFolder.Visible = false;
             labelStatus.Left = linkLabelOpenContainingFolder.Left;
             labelStatus.Text = LanguageSettings.Current.RestoreAutoBackup.NoBackedUpFilesFound;
-
-            RestoreAutoBackup_ResizeEnd(sender, e);
         }
 
         private void AddBackupToListView(string fileName)

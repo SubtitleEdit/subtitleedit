@@ -831,5 +831,17 @@ namespace Nikse.SubtitleEdit.Controls
                 _simpleTextBox.ForeColor = DefaultForeColor;
             }
         }
+
+        public void ScrollToCaret()
+        {
+            if (_uiTextBox != null)
+            {
+                _uiTextBox.ScrollToCaret();
+            }
+            if (_simpleTextBox != null)
+            {
+                _simpleTextBox.ScrollToCaret();
+            }
+        }
     }
 }
