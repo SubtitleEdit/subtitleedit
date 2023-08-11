@@ -1042,16 +1042,10 @@ namespace Nikse.SubtitleEdit.Controls
             DrawArrow(e, brush, left, top, height);
         }
 
-        internal static TextFormatFlags CreateTextFormatFlags(Control control, HorizontalAlignment contentAlignment, bool showEllipsis, bool useMnemonic)
+        internal static TextFormatFlags CreateTextFormatFlags(Control control, HorizontalAlignment contentAlignment, bool useMnemonic)
         {
-            var textFormatFlags = TextFormatFlags.TextBoxControl | TextFormatFlags.WordBreak;
-            if (showEllipsis)
-            {
-                textFormatFlags |= TextFormatFlags.EndEllipsis;
-            }
-
-            textFormatFlags |= TextFormatFlags.VerticalCenter;
-
+            var textFormatFlags = TextFormatFlags.TextBoxControl | TextFormatFlags.WordBreak | TextFormatFlags.VerticalCenter;
+        
             if (contentAlignment == HorizontalAlignment.Left)
             {
                 textFormatFlags |= TextFormatFlags.Left;
@@ -1064,7 +1058,7 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 textFormatFlags |= TextFormatFlags.Right;
             }
-
+            
             if (control.RightToLeft == RightToLeft.Yes)
             {
                 textFormatFlags |= TextFormatFlags.RightToLeft;
@@ -1079,12 +1073,12 @@ namespace Nikse.SubtitleEdit.Controls
         {
             using (var stringFormat = new StringFormat(StringFormat.GenericDefault))
             {
-                var textFormatFlags = CreateTextFormatFlags(this, _textBox.TextAlign, false, false);
+                var textFormatFlags = CreateTextFormatFlags(this, _textBox.TextAlign, false);
 
                 TextRenderer.DrawText(e.Graphics,
                     _textBox.Text,
                     _textBox.Font,
-                    new Rectangle(0, 0, Width - 1, Height - 1),
+                    new Rectangle(_textBox.Left, _textBox.Top + 1, _textBox.Width, _textBox.Height),
                     textColor,
                     textFormatFlags);
             }
