@@ -84,8 +84,8 @@ namespace Nikse.SubtitleEdit.Controls
                 InitializeBackingControl(_simpleTextBox);
                 if (justTextBox)
                 {
-                    _simpleTextBox.ForeColor = DarkTheme.ForeColor;
-                    _simpleTextBox.BackColor = DarkTheme.BackColor;
+                    _simpleTextBox.ForeColor = UiUtil.ForeColor;
+                    _simpleTextBox.BackColor = UiUtil.BackColor;
                     BackColor = Color.DarkGray;
                     _simpleTextBox.VisibleChanged += SimpleTextBox_VisibleChanged;
                 }
