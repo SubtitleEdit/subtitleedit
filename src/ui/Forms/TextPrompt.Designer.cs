@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.buttonCancel = new System.Windows.Forms.Button();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.textBox1 = new Nikse.SubtitleEdit.Controls.SETextBox(true);
             this.buttonOK = new System.Windows.Forms.Button();
             this.labelDescription = new System.Windows.Forms.Label();
             this.SuspendLayout();
@@ -104,7 +104,7 @@
         #endregion
 
         private System.Windows.Forms.Button buttonCancel;
-        private System.Windows.Forms.TextBox textBox1;
+        private Nikse.SubtitleEdit.Controls.SETextBox textBox1;
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Label labelDescription;
     }

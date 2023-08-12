@@ -5,7 +5,6 @@ using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
-using Newtonsoft.Json.Linq;
 
 namespace Nikse.SubtitleEdit.Controls
 {

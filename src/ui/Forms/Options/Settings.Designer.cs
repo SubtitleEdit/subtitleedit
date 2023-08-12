@@ -31,7 +31,7 @@
             this.components = new System.ComponentModel.Container();
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
-            this.listBoxSection = new System.Windows.Forms.ListBox();
+            this.listBoxSection = new Nikse.SubtitleEdit.Controls.NikseListBox();
             this.panelGeneral = new System.Windows.Forms.Panel();
             this.groupBoxMiscellaneous = new System.Windows.Forms.GroupBox();
             this.buttonTranslationAutoSuffix = new System.Windows.Forms.Button();
@@ -104,14 +104,14 @@
             this.groupBoxSubtitleFormats = new System.Windows.Forms.GroupBox();
             this.groupBoxFavoriteSubtitleFormats = new System.Windows.Forms.GroupBox();
             this.labelFavoriteSubtitleFormatsNote = new System.Windows.Forms.Label();
-            this.listBoxSubtitleFormats = new System.Windows.Forms.ListBox();
+            this.listBoxSubtitleFormats = new Nikse.SubtitleEdit.Controls.NikseListBox();
             this.buttonFormatsSearchClear = new System.Windows.Forms.Button();
             this.textBoxFormatsSearch = new Nikse.SubtitleEdit.Controls.SETextBox();
             this.labelFormatsSearch = new System.Windows.Forms.Label();
             this.labelFormats = new System.Windows.Forms.Label();
             this.buttonRemoveFromFavoriteFormats = new System.Windows.Forms.Button();
             this.buttonMoveToFavoriteFormats = new System.Windows.Forms.Button();
-            this.listBoxFavoriteSubtitleFormats = new System.Windows.Forms.ListBox();
+            this.listBoxFavoriteSubtitleFormats = new Nikse.SubtitleEdit.Controls.NikseListBox();
             this.contextMenuStripFavoriteFormats = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -6632,7 +6632,7 @@
 
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Button buttonCancel;
-        private System.Windows.Forms.ListBox listBoxSection;
+        private Nikse.SubtitleEdit.Controls.NikseListBox listBoxSection;
         private System.Windows.Forms.Panel panelGeneral;
         private System.Windows.Forms.GroupBox groupBoxMiscellaneous;
         private System.Windows.Forms.GroupBox groupBoxShowToolBarButtons;
@@ -6961,14 +6961,14 @@
         private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxSubtitleSaveAsFormats;
         private System.Windows.Forms.GroupBox groupBoxFavoriteSubtitleFormats;
         private System.Windows.Forms.Label labelFavoriteFormats;
-        private System.Windows.Forms.ListBox listBoxFavoriteSubtitleFormats;
+        private Nikse.SubtitleEdit.Controls.NikseListBox listBoxFavoriteSubtitleFormats;
         private System.Windows.Forms.Button buttonMoveToFavoriteFormats;
         private System.Windows.Forms.Button buttonRemoveFromFavoriteFormats;
         private System.Windows.Forms.Label labelFormats;
         private System.Windows.Forms.Label labelFormatsSearch;
         private Nikse.SubtitleEdit.Controls.SETextBox textBoxFormatsSearch;
         private System.Windows.Forms.Button buttonFormatsSearchClear;
-        private System.Windows.Forms.ListBox listBoxSubtitleFormats;
+        private Nikse.SubtitleEdit.Controls.NikseListBox listBoxSubtitleFormats;
         private System.Windows.Forms.Label labelFavoriteSubtitleFormatsNote;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripFavoriteFormats;
         private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
