@@ -30,9 +30,9 @@
             this.openImagedBasedSourceFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.useLargerFontForThisWindowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.listBoxSuggestions = new System.Windows.Forms.ListBox();
+            this.listBoxSuggestions = new Nikse.SubtitleEdit.Controls.NikseListBox();
             this.labelFullText = new System.Windows.Forms.Label();
-            this.textBoxWord = new System.Windows.Forms.TextBox();
+            this.textBoxWord = new Nikse.SubtitleEdit.Controls.SETextBox(true);
             this.buttonAbort = new System.Windows.Forms.Button();
             this.buttonSkipAll = new System.Windows.Forms.Button();
             this.buttonChange = new System.Windows.Forms.Button();
@@ -49,7 +49,7 @@
             this.groupBoxEditWholeText = new System.Windows.Forms.GroupBox();
             this.buttonSkipText = new System.Windows.Forms.Button();
             this.buttonChangeWholeText = new System.Windows.Forms.Button();
-            this.textBoxWholeText = new System.Windows.Forms.TextBox();
+            this.textBoxWholeText = new Nikse.SubtitleEdit.Controls.SETextBox(true);
             this.labelActionInfo = new System.Windows.Forms.Label();
             this.buttonSpellCheckDownload = new System.Windows.Forms.Button();
             this.pictureBoxBdSup = new System.Windows.Forms.PictureBox();
@@ -556,9 +556,9 @@
         private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxDictionaries;
         private System.Windows.Forms.Label labelLanguage;
         private System.Windows.Forms.RichTextBox richTextBoxParagraph;
-        private System.Windows.Forms.ListBox listBoxSuggestions;
+        private Nikse.SubtitleEdit.Controls.NikseListBox listBoxSuggestions;
         private System.Windows.Forms.Label labelFullText;
-        private System.Windows.Forms.TextBox textBoxWord;
+        private Nikse.SubtitleEdit.Controls.SETextBox textBoxWord;
         private System.Windows.Forms.Button buttonAbort;
         private System.Windows.Forms.Button buttonSkipAll;
         private System.Windows.Forms.Button buttonChange;
@@ -572,7 +572,7 @@
         private System.Windows.Forms.GroupBox groupBoxEditWholeText;
         private System.Windows.Forms.Button buttonSkipText;
         private System.Windows.Forms.Button buttonChangeWholeText;
-        private System.Windows.Forms.TextBox textBoxWholeText;
+        private Nikse.SubtitleEdit.Controls.SETextBox textBoxWholeText;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem addXToNamesnoiseListToolStripMenuItem;
         private System.Windows.Forms.CheckBox checkBoxAutoChangeNames;
