@@ -49,7 +49,7 @@ namespace Nikse.SubtitleEdit.Controls
                 }
 
                 _textBox.ReadOnly = value == ComboBoxStyle.DropDownList;
-                //TODO: Hide cursor?
+                TabStop = value == ComboBoxStyle.DropDownList;
             }
         }
 
@@ -260,6 +260,7 @@ namespace Nikse.SubtitleEdit.Controls
                     // ignore
                 }
             }
+            Invalidate();
         }
 
         public Control DropDownControl => _listView;

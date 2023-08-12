@@ -122,6 +122,9 @@
     <Compile Include="Controls\NikseLabel.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Controls\NikseListBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Controls\NikseTimeUpDown.cs">
       <SubType>Component</SubType>
     </Compile>

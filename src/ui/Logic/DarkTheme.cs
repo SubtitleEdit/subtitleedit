@@ -284,6 +284,12 @@ namespace Nikse.SubtitleEdit.Logic
                 return;
             }
 
+            if (c is NikseListBox nikseListBox)
+            {
+                nikseListBox.UndoDarkTheme();
+                return;
+            }
+
             c.BackColor = Control.DefaultBackColor;
             c.ForeColor = Control.DefaultForeColor;
             var buttonBackColor = SystemColors.Window;
@@ -459,6 +465,12 @@ namespace Nikse.SubtitleEdit.Logic
             if (c is SETextBox seTextBox)
             {
                 seTextBox.SetDarkTheme();
+                return;
+            }
+
+            if (c is NikseListBox nikseListBox)
+            {
+                nikseListBox.SetDarkTheme();
                 return;
             }
 

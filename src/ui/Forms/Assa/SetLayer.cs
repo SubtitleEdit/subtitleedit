@@ -4,7 +4,7 @@ using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Forms.Assa
 {
-    public partial class SetLayer : Form
+    public sealed partial class SetLayer : Form
     {
         private Subtitle _subtitle;
         private Paragraph _p;
@@ -18,6 +18,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
             _subtitle = subtitle;
             _p = p;
+            Text = LanguageSettings.Current.Main.Menu.ContextMenu.SetLayer;
 
             numericUpDownLayer.Minimum = int.MinValue;
             numericUpDownLayer.Maximum = int.MaxValue;
@@ -44,6 +45,11 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         {
             Layer = (int)numericUpDownLayer.Value;
             DialogResult = DialogResult.OK;
+        }
+
+        private void SetLayer_Shown(object sender, System.EventArgs e)
+        {
+            numericUpDownLayer.Focus();
         }
     }
 }

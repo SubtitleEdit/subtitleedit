@@ -1,6 +1,6 @@
 ﻿namespace Nikse.SubtitleEdit.Forms.Assa
 {
-    partial class SetLayer
+    sealed partial class SetLayer
     {
         /// <summary>
         /// Required designer variable.
@@ -60,10 +60,40 @@
             // 
             // numericUpDownLayer
             // 
+            this.numericUpDownLayer.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownLayer.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownLayer.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownLayer.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownLayer.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownLayer.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownLayer.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownLayer.DecimalPlaces = 0;
+            this.numericUpDownLayer.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownLayer.Location = new System.Drawing.Point(24, 33);
+            this.numericUpDownLayer.Maximum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.numericUpDownLayer.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownLayer.Name = "numericUpDownLayer";
             this.numericUpDownLayer.Size = new System.Drawing.Size(76, 20);
             this.numericUpDownLayer.TabIndex = 8;
+            this.numericUpDownLayer.TabStop = false;
+            this.numericUpDownLayer.ThousandsSeparator = false;
+            this.numericUpDownLayer.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownLayer.KeyDown += new System.Windows.Forms.KeyEventHandler(this.numericUpDownLayer_KeyDown);
             // 
             // labelLayer
@@ -93,6 +123,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "SetLayer";
+            this.Shown += new System.EventHandler(this.SetLayer_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SetLayer_KeyDown);
             this.ResumeLayout(false);
             this.PerformLayout();
