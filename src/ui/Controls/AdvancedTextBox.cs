@@ -845,7 +845,7 @@ namespace Nikse.SubtitleEdit.Controls
                         continue;
                     }
 
-                    if (CurrentLanguage == "en " && (currentWordText.Equals("a", StringComparison.OrdinalIgnoreCase) || currentWordText == "I"))
+                    if (CurrentLanguage == "en" && (currentWordText.Equals("a", StringComparison.OrdinalIgnoreCase) || currentWordText == "I"))
                     {
                         continue;
                     }
