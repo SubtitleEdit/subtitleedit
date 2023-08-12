@@ -371,8 +371,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private static string RemoveWeirdRepeatingHeader(string input)
         {
             var text = input;
-            text = text.Replace(" " + Environment.NewLine, Environment.NewLine);
-            text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
+            text = text.FixExtraSpaces();
             if (text.Contains(Environment.NewLine + "WEBVTT"))
             {
                 if (text.TrimEnd().EndsWith('}') && text.Contains("STYLE"))
@@ -434,7 +433,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             for (int i = startIndex + 7; i < s.Length; i++)
             {
                 var ch = s[i];
-                if (char.IsNumber(ch))
+                if (CharUtils.IsDigit(ch))
                 {
                     tsSb.Append(ch);
                 }
@@ -593,7 +592,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             return s.Substring(list.Min(p=>p));
         }
-
 
         internal static string GetRegion(string s)
         {
