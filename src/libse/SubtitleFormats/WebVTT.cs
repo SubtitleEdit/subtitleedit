@@ -64,13 +64,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (subtitle.Header != null && subtitle.Header.StartsWith("WEBVTT", StringComparison.Ordinal))
             {
                 sb.AppendLine(subtitle.Header.Trim());
-                sb.AppendLine();
             }
             else
             {
                 sb.AppendLine("WEBVTT");
-                sb.AppendLine();
             }
+
+            sb.AppendLine();
 
             foreach (var p in subtitle.Paragraphs)
             {
