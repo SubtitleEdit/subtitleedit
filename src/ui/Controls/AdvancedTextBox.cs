@@ -635,8 +635,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        private async Task LoadDictionariesAsync(string languageName) =>
-            await Task.Run(() => LoadDictionaries(languageName));
+        private Task LoadDictionariesAsync(string languageName) => new Task(() => LoadDictionaries(languageName));
 
         private void LoadDictionaries(string languageName)
         {
