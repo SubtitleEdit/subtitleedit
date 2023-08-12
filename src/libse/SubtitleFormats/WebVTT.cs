@@ -139,11 +139,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         internal static string FormatText(Paragraph p)
         {
             var text = Utilities.RemoveSsaTags(p.Text);
-            while (text.Contains(Environment.NewLine + Environment.NewLine))
-            {
-                text = text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
-            }
-
+            text = text.RemoveRecursiveLineBreaks();
             text = ColorHtmlToWebVtt(text);
             text = EscapeEncodeText(text);
             return text;
