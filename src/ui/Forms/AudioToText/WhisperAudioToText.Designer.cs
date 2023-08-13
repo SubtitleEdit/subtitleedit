@@ -79,7 +79,7 @@
             this.buttonCancel.Location = new System.Drawing.Point(622, 457);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
-            this.buttonCancel.TabIndex = 8;
+            this.buttonCancel.TabIndex = 94;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
@@ -91,7 +91,7 @@
             this.buttonGenerate.Location = new System.Drawing.Point(373, 457);
             this.buttonGenerate.Name = "buttonGenerate";
             this.buttonGenerate.Size = new System.Drawing.Size(125, 23);
-            this.buttonGenerate.TabIndex = 6;
+            this.buttonGenerate.TabIndex = 90;
             this.buttonGenerate.Text = "&Generate";
             this.buttonGenerate.UseVisualStyleBackColor = true;
             this.buttonGenerate.Click += new System.EventHandler(this.ButtonGenerate_Click);
@@ -151,7 +151,7 @@
             this.groupBoxModels.Location = new System.Drawing.Point(15, 59);
             this.groupBoxModels.Name = "groupBoxModels";
             this.groupBoxModels.Size = new System.Drawing.Size(682, 83);
-            this.groupBoxModels.TabIndex = 1;
+            this.groupBoxModels.TabIndex = 10;
             this.groupBoxModels.TabStop = false;
             this.groupBoxModels.Text = "Language and models";
             // 
@@ -166,10 +166,23 @@
             // 
             // comboBoxLanguages
             // 
+            this.comboBoxLanguages.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxLanguages.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxLanguages.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxLanguages.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxLanguages.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxLanguages.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxLanguages.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxLanguages.DropDownHeight = 400;
             this.comboBoxLanguages.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxLanguages.DropDownWidth = 240;
             this.comboBoxLanguages.FormattingEnabled = true;
             this.comboBoxLanguages.Location = new System.Drawing.Point(6, 44);
+            this.comboBoxLanguages.MaxLength = 32767;
             this.comboBoxLanguages.Name = "comboBoxLanguages";
+            this.comboBoxLanguages.SelectedIndex = -1;
+            this.comboBoxLanguages.SelectedItem = null;
+            this.comboBoxLanguages.SelectedText = "";
             this.comboBoxLanguages.Size = new System.Drawing.Size(240, 21);
             this.comboBoxLanguages.TabIndex = 0;
             this.comboBoxLanguages.SelectedIndexChanged += new System.EventHandler(this.comboBoxLanguages_SelectedIndexChanged);
@@ -207,10 +220,23 @@
             // 
             // comboBoxModels
             // 
+            this.comboBoxModels.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxModels.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxModels.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxModels.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxModels.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxModels.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxModels.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxModels.DropDownHeight = 400;
             this.comboBoxModels.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxModels.DropDownWidth = 240;
             this.comboBoxModels.FormattingEnabled = true;
             this.comboBoxModels.Location = new System.Drawing.Point(280, 44);
+            this.comboBoxModels.MaxLength = 32767;
             this.comboBoxModels.Name = "comboBoxModels";
+            this.comboBoxModels.SelectedIndex = -1;
+            this.comboBoxModels.SelectedItem = null;
+            this.comboBoxModels.SelectedText = "";
             this.comboBoxModels.Size = new System.Drawing.Size(240, 21);
             this.comboBoxModels.TabIndex = 1;
             // 
@@ -245,7 +271,7 @@
             this.checkBoxUsePostProcessing.Location = new System.Drawing.Point(15, 199);
             this.checkBoxUsePostProcessing.Name = "checkBoxUsePostProcessing";
             this.checkBoxUsePostProcessing.Size = new System.Drawing.Size(312, 17);
-            this.checkBoxUsePostProcessing.TabIndex = 4;
+            this.checkBoxUsePostProcessing.TabIndex = 22;
             this.checkBoxUsePostProcessing.Text = "Use post-processing (line merge, fix casing, and punctuation)";
             this.checkBoxUsePostProcessing.UseVisualStyleBackColor = true;
             // 
@@ -256,7 +282,7 @@
             this.buttonBatchMode.Location = new System.Drawing.Point(504, 457);
             this.buttonBatchMode.Name = "buttonBatchMode";
             this.buttonBatchMode.Size = new System.Drawing.Size(112, 23);
-            this.buttonBatchMode.TabIndex = 7;
+            this.buttonBatchMode.TabIndex = 92;
             this.buttonBatchMode.Text = "Batch mode";
             this.buttonBatchMode.UseVisualStyleBackColor = true;
             this.buttonBatchMode.Click += new System.EventHandler(this.buttonBatchMode_Click);
@@ -273,7 +299,7 @@
             this.groupBoxInputFiles.Location = new System.Drawing.Point(15, 246);
             this.groupBoxInputFiles.Name = "groupBoxInputFiles";
             this.groupBoxInputFiles.Size = new System.Drawing.Size(682, 169);
-            this.groupBoxInputFiles.TabIndex = 5;
+            this.groupBoxInputFiles.TabIndex = 30;
             this.groupBoxInputFiles.TabStop = false;
             this.groupBoxInputFiles.Text = "Input files";
             // 
@@ -352,7 +378,7 @@
             this.checkBoxTranslateToEnglish.Location = new System.Drawing.Point(15, 153);
             this.checkBoxTranslateToEnglish.Name = "checkBoxTranslateToEnglish";
             this.checkBoxTranslateToEnglish.Size = new System.Drawing.Size(119, 17);
-            this.checkBoxTranslateToEnglish.TabIndex = 2;
+            this.checkBoxTranslateToEnglish.TabIndex = 20;
             this.checkBoxTranslateToEnglish.Text = "Translate to English";
             this.checkBoxTranslateToEnglish.UseVisualStyleBackColor = true;
             // 
@@ -409,18 +435,32 @@
             this.checkBoxAutoAdjustTimings.Location = new System.Drawing.Point(15, 176);
             this.checkBoxAutoAdjustTimings.Name = "checkBoxAutoAdjustTimings";
             this.checkBoxAutoAdjustTimings.Size = new System.Drawing.Size(114, 17);
-            this.checkBoxAutoAdjustTimings.TabIndex = 3;
+            this.checkBoxAutoAdjustTimings.TabIndex = 21;
             this.checkBoxAutoAdjustTimings.Text = "Auto adjust timings";
             this.checkBoxAutoAdjustTimings.UseVisualStyleBackColor = true;
             // 
             // comboBoxWhisperEngine
             // 
             this.comboBoxWhisperEngine.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxWhisperEngine.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxWhisperEngine.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxWhisperEngine.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxWhisperEngine.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxWhisperEngine.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxWhisperEngine.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxWhisperEngine.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxWhisperEngine.DropDownHeight = 400;
             this.comboBoxWhisperEngine.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxWhisperEngine.DropDownWidth = 180;
+            this.comboBoxWhisperEngine.FormattingEnabled = false;
             this.comboBoxWhisperEngine.Location = new System.Drawing.Point(521, 9);
+            this.comboBoxWhisperEngine.MaxLength = 32767;
             this.comboBoxWhisperEngine.Name = "comboBoxWhisperEngine";
+            this.comboBoxWhisperEngine.SelectedIndex = -1;
+            this.comboBoxWhisperEngine.SelectedItem = null;
+            this.comboBoxWhisperEngine.SelectedText = "";
             this.comboBoxWhisperEngine.Size = new System.Drawing.Size(180, 21);
-            this.comboBoxWhisperEngine.TabIndex = 26;
+            this.comboBoxWhisperEngine.TabIndex = 1;
             this.comboBoxWhisperEngine.SelectedIndexChanged += new System.EventHandler(this.comboBoxWhisperEngine_SelectedIndexChanged);
             // 
             // labelEngine
