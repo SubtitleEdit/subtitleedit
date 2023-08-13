@@ -35272,9 +35272,14 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else
                     {
-                        var r = MessageBox.Show("No text found!" + Environment.NewLine +
-                                        Environment.NewLine +
-                                        "View the log file `whisper_log.txt`?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Error);
+                        var customArgument = Configuration.Settings.Tools.WhisperExtraSettings;
+                        var extraMessage = string.Empty;
+                        if (!string.IsNullOrEmpty(customArgument))
+                        {
+                            extraMessage = Environment.NewLine + "Note you have a custom argument: " + customArgument;
+                        }
+                        extraMessage = extraMessage + Environment.NewLine + Environment.NewLine + "View the log file `whisper_log.txt`?";
+                        var r = MessageBox.Show($"No text found'" + extraMessage, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Error);
                         if (r == DialogResult.Yes)
                         {
                             UiUtil.OpenFile(SeLogger.GetWhisperLogFilePath());
