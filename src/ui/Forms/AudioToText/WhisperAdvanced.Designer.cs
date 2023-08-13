@@ -232,6 +232,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             this.comboBoxWhisperExtra.SelectedText = "";
             this.comboBoxWhisperExtra.Size = new System.Drawing.Size(441, 21);
             this.comboBoxWhisperExtra.TabIndex = 214;
+            this.comboBoxWhisperExtra.TabStop = false;
             this.comboBoxWhisperExtra.KeyDown += new System.Windows.Forms.KeyEventHandler(this.comboBoxWhisperExtra_KeyDown);
             // 
             // WhisperAdvanced
@@ -252,6 +253,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "WhisperAdvanced";
+            this.Shown += new System.EventHandler(this.WhisperAdvanced_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.WhisperAdvanced_KeyDown);
             this.tabControlCommandLineHelp.ResumeLayout(false);
             this.TabPageCPP.ResumeLayout(false);

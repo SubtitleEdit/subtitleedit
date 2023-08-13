@@ -702,6 +702,11 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             SetupLanguageSettings();
             EvaluateTranslateButtonStatus();
         }
+
+        private void GenericTranslate_Shown(object sender, EventArgs e)
+        {
+            buttonTranslate.Focus();
+        }
     }
 
     public class GoogleTranslationInitializer
