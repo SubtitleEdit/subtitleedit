@@ -696,6 +696,10 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             {
                 UnknownArgument = true;
             }
+            else if (outLine.Data.Contains("error: unrecognized argument: ", StringComparison.OrdinalIgnoreCase))
+            {
+                UnknownArgument = true;
+            }
 
             _outputText.Add(outLine.Data.Trim() + Environment.NewLine);
 
