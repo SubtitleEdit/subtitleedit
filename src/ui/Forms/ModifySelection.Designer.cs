@@ -38,7 +38,7 @@
             this.numericUpDownDuration = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.checkBoxCaseSensitive = new System.Windows.Forms.CheckBox();
             this.comboBoxRule = new Nikse.SubtitleEdit.Controls.NikseComboBox();
-            this.textBoxText = new System.Windows.Forms.TextBox();
+            this.textBoxText = new Nikse.SubtitleEdit.Controls.SETextBox(true);
             this.listViewStyles = new System.Windows.Forms.ListView();
             this.columnHeaderStyleName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.buttonCancel = new System.Windows.Forms.Button();
@@ -365,7 +365,7 @@
         private System.Windows.Forms.RadioButton radioButtonAddToSelection;
         private System.Windows.Forms.RadioButton radioButtonNewSelection;
         private System.Windows.Forms.GroupBox groupBoxRule;
-        private System.Windows.Forms.TextBox textBoxText;
+        private Nikse.SubtitleEdit.Controls.SETextBox textBoxText;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Button buttonApply;
