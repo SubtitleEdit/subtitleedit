@@ -129,6 +129,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelStatus.Text = string.Empty;
             labelError.Visible = false;
             var l = LanguageSettings.Current.BatchConvert;
+            checkBoxMargins.Checked = true;
             Text = l.Title;
             groupBoxInput.Text = l.Input;
             labelChooseInputFiles.Text = l.InputDescription;
