@@ -33,6 +33,13 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         private readonly VideoInfo _videoInfo;
         private bool _positionChanged;
         private bool _loading = true;
+        private int _originalPlayResX;
+        private int _originalPlayResY;
+        private bool _playResScaleOn;
+        private int _tempXScaled;
+        private int _tempYScaled;
+        private int _xScaled = -1;
+        private int _yScaled = -1;
 
         public SetPosition(Subtitle subtitle, int[] selectedIndices, string videoFileName, VideoInfo videoInfo)
         {
@@ -82,6 +89,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             }
 
             labelVideoResolution.Text = string.Format(LanguageSettings.Current.AssaSetPosition.VideoResolutionX, $"{_videoInfo.Width}x{_videoInfo.Height}");
+
             SetPosition_ResizeEnd(null, null);
 
             if (Configuration.Settings.Tools.AssaSetPositionTarget == "Clipboard")
@@ -91,6 +99,22 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             else
             {
                 radioButtonSelectedLines.Checked = true;
+            }
+
+            _originalPlayResX = 384;
+            _originalPlayResY = 288;
+            if (_subtitle?.Header != null)
+            {
+                var playResX = AdvancedSubStationAlpha.GetTagFromHeader("PlayResX", "[Script Info]", _subtitle.Header);
+                playResX = playResX.Trim().Remove(0, 8).TrimStart().TrimStart(':').TrimStart();
+                var playResY = AdvancedSubStationAlpha.GetTagFromHeader("PlayResY", "[Script Info]", _subtitle.Header);
+                playResY = playResY.Trim().Remove(0, 8).TrimStart().TrimStart(':').TrimStart();
+                if (int.TryParse(playResX, NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out var px) &&
+                    int.TryParse(playResY, NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out var py))
+                {
+                    _originalPlayResX = px;
+                    _originalPlayResY = py;
+                }
             }
         }
 
@@ -119,34 +143,66 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             {
                 var v = e.Modifiers == Keys.Alt ? 1 : 10;
 
-                if (e.KeyCode == Keys.Up && _x != -1 && _y != -1)
+                if (_playResScaleOn)
                 {
-                    _y -= v;
-                    e.SuppressKeyPress = true;
-                    VideoLoaded(null, null);
-                    labelCurrentTextPosition.Text = string.Format(LanguageSettings.Current.AssaSetPosition.CurrentTextPositionX, $"{_x},{_y}");
+                    if (e.KeyCode == Keys.Up && _tempXScaled != -1 && _tempYScaled != -1)
+                    {
+                        _tempYScaled -= v;
+                        AcceptKeyAndShowInfo(e);
+                    }
+                    else if (e.KeyCode == Keys.Down && _tempXScaled != -1 && _tempYScaled != -1)
+                    {
+                        _tempYScaled += v;
+                        AcceptKeyAndShowInfo(e);
+                    }
+                    else if (e.KeyCode == Keys.Left && _tempXScaled != -1 && _tempYScaled != -1)
+                    {
+                        _tempXScaled -= v;
+                        AcceptKeyAndShowInfo(e);
+                    }
+                    else if (e.KeyCode == Keys.Right && _tempXScaled != -1 && _tempYScaled != -1)
+                    {
+                        _tempXScaled += v;
+                        AcceptKeyAndShowInfo(e);
+                    }
                 }
-                else if (e.KeyCode == Keys.Down && _x != -1 && _y != -1)
+                else
                 {
-                    _y += v;
-                    e.SuppressKeyPress = true;
-                    VideoLoaded(null, null);
-                    labelCurrentTextPosition.Text = string.Format(LanguageSettings.Current.AssaSetPosition.CurrentTextPositionX, $"{_x},{_y}");
+                    if (e.KeyCode == Keys.Up && _x != -1 && _y != -1)
+                    {
+                        _y -= v;
+                        AcceptKeyAndShowInfo(e);
+                    }
+                    else if (e.KeyCode == Keys.Down && _x != -1 && _y != -1)
+                    {
+                        _y += v;
+                        AcceptKeyAndShowInfo(e);
+                    }
+                    else if (e.KeyCode == Keys.Left && _x != -1 && _y != -1)
+                    {
+                        _x -= v;
+                        AcceptKeyAndShowInfo(e);
+                    }
+                    else if (e.KeyCode == Keys.Right && _x != -1 && _y != -1)
+                    {
+                        _x += v;
+                        AcceptKeyAndShowInfo(e);
+                    }
                 }
-                else if (e.KeyCode == Keys.Left && _x != -1 && _y != -1)
-                {
-                    _x -= v;
-                    e.SuppressKeyPress = true;
-                    VideoLoaded(null, null);
-                    labelCurrentTextPosition.Text = string.Format(LanguageSettings.Current.AssaSetPosition.CurrentTextPositionX, $"{_x},{_y}");
-                }
-                else if (e.KeyCode == Keys.Right && _x != -1 && _y != -1)
-                {
-                    _x += v;
-                    e.SuppressKeyPress = true;
-                    VideoLoaded(null, null);
-                    labelCurrentTextPosition.Text = string.Format(LanguageSettings.Current.AssaSetPosition.CurrentTextPositionX, $"{_x},{_y}");
-                }
+            }
+        }
+
+        private void AcceptKeyAndShowInfo(KeyEventArgs e)
+        {
+            e.SuppressKeyPress = true;
+            VideoLoaded(null, null);
+            if (_playResScaleOn)
+            {
+                labelCurrentTextPosition.Text = string.Format(LanguageSettings.Current.AssaSetPosition.CurrentTextPositionX, $"{_x},{_y}  ({_tempXScaled},{_tempYScaled})");
+            }
+            else
+            {
+                labelCurrentTextPosition.Text = string.Format(LanguageSettings.Current.AssaSetPosition.CurrentTextPositionX, $"{_x},{_y}");
             }
         }
 
@@ -164,6 +220,10 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         private void ApplyOverrideTags(Subtitle subtitle)
         {
             var styleToApply = $"{{\\pos({_x},{_y})}}";
+            if (_playResScaleOn)
+            {
+                styleToApply = $"{{\\pos({_xScaled},{_yScaled})}}";
+            }
 
             var advancedVisible = panelAdvanced.Visible;
             if (advancedVisible)
@@ -181,7 +241,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             UpdatedSubtitle = new Subtitle(subtitle, false);
             var indices = GetIndices();
 
-            for (int i = 0; i < UpdatedSubtitle.Paragraphs.Count; i++)
+            for (var i = 0; i < UpdatedSubtitle.Paragraphs.Count; i++)
             {
                 if (!indices.Contains(i))
                 {
@@ -299,7 +359,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             var format = new AdvancedSubStationAlpha();
             var subtitle = new Subtitle();
             var indices = GetIndices();
-            var styleToApply = $"{{\\pos({_x},{_y})}}";
+            var styleToApply = _playResScaleOn ? $"{{\\pos({_tempXScaled},{_tempYScaled})}}" : $"{{\\pos({_x},{_y})}}";
 
             var p = indices.Length > 0 ?
                 new Paragraph(_subtitleWithNewHeader.Paragraphs[indices[0]]) :
@@ -412,6 +472,8 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             {
                 _x = _tempX;
                 _y = _tempY;
+                _xScaled = _tempXScaled;
+                _yScaled = _tempYScaled;
                 VideoLoaded(null, null);
             }
         }
@@ -435,11 +497,20 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
                     _subtitleWithNewHeader.Header = AdvancedSubStationAlpha.AddTagToHeader("PlayResX", "PlayResX: " + _videoInfo.Width.ToString(CultureInfo.InvariantCulture), "[Script Info]", _subtitleWithNewHeader.Header);
                     _subtitleWithNewHeader.Header = AdvancedSubStationAlpha.AddTagToHeader("PlayResY", "PlayResY: " + _videoInfo.Height.ToString(CultureInfo.InvariantCulture), "[Script Info]", _subtitleWithNewHeader.Header);
+
+                    _originalPlayResX = _videoInfo.Width;
+                    _originalPlayResY = _videoInfo.Height;
                 }
             }
 
+            _playResScaleOn = _originalPlayResX != _videoInfo.Width || _originalPlayResY != _videoInfo.Height;
             GeneratePreviewViaMpv();
             _loading = false;
+
+            if (_playResScaleOn)
+            {
+                labelVideoResolution.Text = string.Format(LanguageSettings.Current.AssaSetPosition.VideoResolutionX, $"{_videoInfo.Width}x{_videoInfo.Height}  ({_originalPlayResX}x{_originalPlayResY})");
+            }
         }
 
         private void ShowCurrentPosition()
@@ -461,8 +532,22 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                     {
                         _x = x;
                         _y = y;
+                        _tempXScaled = _x;
+                        _tempYScaled = _y;
+                        _xScaled = _x;
+                        _yScaled = _y;
                         _updatePos = false;
-                        labelCurrentTextPosition.Text = string.Format(LanguageSettings.Current.AssaSetPosition.CurrentTextPositionX, $"{_x},{_y}");
+
+                        if (_playResScaleOn)
+                        {
+                            _x = AssaResampler.Resample(_originalPlayResX, _videoInfo.Width, _x);
+                            _y = AssaResampler.Resample(_originalPlayResY, _videoInfo.Height, _y);
+                            labelCurrentTextPosition.Text = string.Format(LanguageSettings.Current.AssaSetPosition.CurrentTextPositionX, $"{_x},{_y}  ({_tempXScaled},{_tempYScaled})");
+                        }
+                        else
+                        {
+                            labelCurrentTextPosition.Text = string.Format(LanguageSettings.Current.AssaSetPosition.CurrentTextPositionX, $"{_x},{_y}");
+                        }
                     }
                 }
             }
@@ -587,7 +672,15 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         {
             _x = _tempX;
             _y = _tempY;
-            labelCurrentTextPosition.Text = string.Format(LanguageSettings.Current.AssaSetPosition.CurrentTextPositionX, $"{_x},{_y}");
+            if (_playResScaleOn)
+            {
+                labelCurrentTextPosition.Text = string.Format(LanguageSettings.Current.AssaSetPosition.CurrentTextPositionX, $"{_x},{_y}  ({_tempXScaled},{_tempYScaled})");
+            }
+            else
+            {
+                labelCurrentTextPosition.Text = string.Format(LanguageSettings.Current.AssaSetPosition.CurrentTextPositionX, $"{_x},{_y}");
+            }
+
             _updatePos = !_updatePos;
             VideoLoaded(null, null);
             _positionChanged = true;
@@ -601,7 +694,16 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             var yAspectRatio = (double)_videoInfo.Height / pictureBoxPreview.Height;
             _tempY = (int)Math.Round(e.Location.Y * yAspectRatio);
 
-            labelCurrentPosition.Text = string.Format(LanguageSettings.Current.AssaSetPosition.CurrentMousePositionX, $"{_tempX},{_tempY}");
+            if (_playResScaleOn)
+            {
+                _tempXScaled = AssaResampler.Resample(_videoInfo.Width, _originalPlayResX, _tempX);
+                _tempYScaled = AssaResampler.Resample(_videoInfo.Height, _originalPlayResY, _tempY);
+                labelCurrentPosition.Text = string.Format(LanguageSettings.Current.AssaSetPosition.CurrentMousePositionX, $"{_tempX},{_tempY}  ({_tempXScaled},{_tempYScaled})");
+            }
+            else
+            {
+                labelCurrentPosition.Text = string.Format(LanguageSettings.Current.AssaSetPosition.CurrentMousePositionX, $"{_tempX},{_tempY}");
+            }
         }
 
         private void SetPosition_ResizeEnd(object sender, EventArgs e)
