@@ -2344,6 +2344,22 @@ namespace Nikse.SubtitleEdit.Forms
 
             foreach (var p in sub.Paragraphs)
             {
+                if (fixMargins)
+                {
+                    if (p.MarginL != null && int.TryParse(p.MarginL, out var marginL) && marginL != 0)
+                    {
+                        p.MarginL =  AssaResampler.Resample(sourceWidth, targetWidth, marginL).ToString(CultureInfo.InvariantCulture);
+                    }
+                    if (p.MarginR != null && int.TryParse(p.MarginR, out var marginR) && marginR != 0)
+                    {
+                        p.MarginR = AssaResampler.Resample(sourceWidth, targetWidth, marginR).ToString(CultureInfo.InvariantCulture);
+                    }
+                    if (p.MarginV != null && int.TryParse(p.MarginV, out var marginV) && marginV != 0)
+                    {
+                        p.MarginV = AssaResampler.Resample(sourceWidth, targetWidth, marginV).ToString(CultureInfo.InvariantCulture);
+                    }
+                }
+
                 if (fixFonts)
                 {
                     p.Text = AssaResampler.ResampleOverrideTagsFont(sourceWidth, targetWidth, sourceHeight, targetHeight, p.Text);
