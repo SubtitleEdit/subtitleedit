@@ -3,6 +3,7 @@ using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4;
 using Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream;
+using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.Forms;
 using Nikse.SubtitleEdit.Core.Interfaces;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
@@ -22,7 +23,6 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core.Enums;
 using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms
@@ -1233,10 +1233,6 @@ namespace Nikse.SubtitleEdit.Forms
             _errors = 0;
             _abort = false;
 
-            var worker1 = SpawnWorker();
-            var worker2 = SpawnWorker();
-            var worker3 = SpawnWorker();
-
             listViewInputFiles.BeginUpdate();
             foreach (ListViewItem item in listViewInputFiles.Items)
             {
@@ -1798,11 +1794,6 @@ namespace Nikse.SubtitleEdit.Forms
                                 sub = ApplyFixesStep1(sub, bluRaySubtitles);
                             }
 
-                            while (worker1.IsBusy && worker2.IsBusy && worker3.IsBusy)
-                            {
-                                Application.DoEvents();
-                            }
-
                             var parameter = new ThreadDoWorkParameter(
                                 IsActionEnabled(CommandLineConverter.BatchAction.FixCommonErrors),
                                 IsActionEnabled(CommandLineConverter.BatchAction.MultipleReplace),
@@ -1821,18 +1812,8 @@ namespace Nikse.SubtitleEdit.Forms
                                 fromFormat,
                                 binaryParagraphs);
 
-                            if (!worker1.IsBusy)
-                            {
-                                worker1.RunWorkerAsync(parameter);
-                            }
-                            else if (!worker2.IsBusy)
-                            {
-                                worker2.RunWorkerAsync(parameter);
-                            }
-                            else if (!worker3.IsBusy)
-                            {
-                                worker3.RunWorkerAsync(parameter);
-                            }
+                            ApplyFixesStep2(parameter, Configuration.Settings.Tools.BatchConvertFixRtlMode);
+                            ThreadWorkerCompleted(parameter);
                         }
                     }
                 }
@@ -1844,25 +1825,8 @@ namespace Nikse.SubtitleEdit.Forms
 
                 index++;
                 WindowsHelper.PreventStandBy();
+                Application.DoEvents();
             }
-
-            while (worker1.IsBusy || worker2.IsBusy || worker3.IsBusy)
-            {
-                try
-                {
-                    Application.DoEvents();
-                }
-                catch
-                {
-                    // ignored
-                }
-                Thread.Sleep(10);
-            }
-
-            // dispose workers
-            worker1.Dispose();
-            worker2.Dispose();
-            worker3.Dispose();
 
             _converting = false;
             labelStatus.Text = string.Empty;
@@ -1914,7 +1878,7 @@ namespace Nikse.SubtitleEdit.Forms
             var sub = matroska.GetSubtitle(track.TrackNumber, null);
             var subtitleImages = new List<DvbSubPes>();
             var subtitles = new List<IBinaryParagraphWithPosition>();
-            for (int index = 0; index < sub.Count; index++)
+            for (var index = 0; index < sub.Count; index++)
             {
                 try
                 {
@@ -2348,7 +2312,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (p.MarginL != null && int.TryParse(p.MarginL, out var marginL) && marginL != 0)
                     {
-                        p.MarginL =  AssaResampler.Resample(sourceWidth, targetWidth, marginL).ToString(CultureInfo.InvariantCulture);
+                        p.MarginL = AssaResampler.Resample(sourceWidth, targetWidth, marginL).ToString(CultureInfo.InvariantCulture);
                     }
                     if (p.MarginR != null && int.TryParse(p.MarginR, out var marginR) && marginR != 0)
                     {
@@ -2453,14 +2417,6 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             return false;
-        }
-
-        private BackgroundWorker SpawnWorker()
-        {
-            var worker = new BackgroundWorker();
-            worker.DoWork += DoThreadWork;
-            worker.RunWorkerCompleted += ThreadWorkerCompleted;
-            return worker;
         }
 
         /// <summary>
@@ -2663,16 +2619,6 @@ namespace Nikse.SubtitleEdit.Forms
             Application.DoEvents();
         }
 
-        private static void DoThreadWork(object sender, DoWorkEventArgs e)
-        {
-            var p = (ThreadDoWorkParameter)e.Argument;
-            var mode = Configuration.Settings.Tools.BatchConvertFixRtlMode;
-
-            ApplyFixesStep2(p, mode);
-
-            e.Result = p;
-        }
-
         private static void ApplyFixesStep2(ThreadDoWorkParameter p, string mode)
         {
             if (p.FixRtl && mode == RemoveUnicode)
@@ -2795,10 +2741,10 @@ namespace Nikse.SubtitleEdit.Forms
             p.Subtitle.Renumber();
         }
 
-        private void ThreadWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        private void ThreadWorkerCompleted(ThreadDoWorkParameter p)
         {
             CommandLineConverter.BatchConvertProgress progressCallback = null;
-            var p = (ThreadDoWorkParameter)e.Result;
+            //var p = (ThreadDoWorkParameter)e.Result;
             if (p.Item.Index + 2 < listViewInputFiles.Items.Count)
             {
                 listViewInputFiles.EnsureVisible(p.Item.Index + 2);
