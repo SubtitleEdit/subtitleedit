@@ -701,13 +701,23 @@ namespace Nikse.SubtitleEdit.Logic
                     e.Graphics.FillRectangle(Brushes.LightBlue, rect);
                 }
 
-                var addX = 0;
+                var b = e.Item.SubItems[e.ColumnIndex].Bounds;
 
-                if (e.ColumnIndex == 0 && lv.CheckBoxes)
+
+                if (e.ColumnIndex == 0)
                 {
-                    addX = 16;
-                    var checkBoxState = e.Item.Checked ? System.Windows.Forms.VisualStyles.CheckBoxState.CheckedNormal : System.Windows.Forms.VisualStyles.CheckBoxState.UncheckedNormal;
-                    CheckBoxRenderer.DrawCheckBox(e.Graphics, new Point(e.Bounds.X + 4, e.Bounds.Y + 2), checkBoxState);
+                    var leftImage = 3;
+                    if (lv.CheckBoxes)
+                    {
+                        var checkBoxState = e.Item.Checked ? System.Windows.Forms.VisualStyles.CheckBoxState.CheckedNormal : System.Windows.Forms.VisualStyles.CheckBoxState.UncheckedNormal;
+                        CheckBoxRenderer.DrawCheckBox(e.Graphics, new Point(b.Left + 4, b.Top + ((b.Height - 13) / 2) - 1), checkBoxState);
+                        leftImage += 17;
+                    }
+
+                    if (e.Item.ImageIndex >= 0 && e.Item.ImageList.Images.Count > e.Item.ImageIndex)
+                    {
+                        e.Graphics.DrawImageUnscaled(e.Item.ImageList.Images[e.Item.ImageIndex], new Point(b.Left + leftImage, b.Y));
+                    }
                 }
 
                 var foreColor = e.Item.ForeColor;
@@ -718,7 +728,12 @@ namespace Nikse.SubtitleEdit.Logic
                 }
                 else
                 {
-                    TextRenderer.DrawText(e.Graphics, e.Item.SubItems[e.ColumnIndex].Text, subtitleFont, new Point(e.Bounds.Left + 3 + addX, e.Bounds.Top + 2), foreColor, TextFormatFlags.NoPrefix);
+                    TextRenderer.DrawText(e.Graphics,
+                        e.Item.SubItems[e.ColumnIndex].Text,
+                        subtitleFont,
+                        new Rectangle(b.Left + 3, b.Top, b.Width-3, b.Height),
+                        foreColor,
+                        TextFormatFlags.NoPrefix | TextFormatFlags.VerticalCenter);
                 }
             }
             else
