@@ -14,7 +14,6 @@ namespace Nikse.SubtitleEdit.Forms.SeMsgBox
 
         public MessageBoxForm(string text, string caption, MessageBoxButtons buttons)
         {
-
             var icon = AutoGuessIcon(text, buttons);
             Init(text, caption, buttons, icon);
         }
@@ -46,6 +45,7 @@ namespace Nikse.SubtitleEdit.Forms.SeMsgBox
             UiUtil.FixFonts(this);
 
             labelText.Font = new Font(Font.FontFamily, Font.Size + 2);
+            labelText.TextAlign = ContentAlignment.TopLeft;
             Text = caption;
             _text = text;
             copyTextToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.ContextMenu.CopyToClipboard;
