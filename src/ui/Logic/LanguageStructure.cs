@@ -216,6 +216,7 @@
             public string RemoveTemporaryFiles { get; set; }
             public string SetCppConstMeFolder { get; set; }
             public string OnlyRunPostProcessing { get; set; }
+            public string DownloadFasterWhisperCuda { get; set; }
         }
 
         public class AssaAttachments

@@ -66,6 +66,7 @@
             this.labelEngine = new System.Windows.Forms.Label();
             this.buttonAdvanced = new System.Windows.Forms.Button();
             this.labelAdvanced = new System.Windows.Forms.Label();
+            this.downloadCUDAForPerfviewsWhisperFasterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBoxModels.SuspendLayout();
             this.groupBoxInputFiles.SuspendLayout();
             this.contextMenuStripWhisperAdvanced.SuspendLayout();
@@ -398,34 +399,35 @@
             this.runOnlyPostProcessingToolStripMenuItem,
             this.toolStripSeparatorRunOnlyPostprocessing,
             this.setCPPConstmeModelsFolderToolStripMenuItem,
-            this.removeTemporaryFilesToolStripMenuItem});
+            this.removeTemporaryFilesToolStripMenuItem,
+            this.downloadCUDAForPerfviewsWhisperFasterToolStripMenuItem});
             this.contextMenuStripWhisperAdvanced.Name = "contextMenuStripWhisperAdvanced";
-            this.contextMenuStripWhisperAdvanced.Size = new System.Drawing.Size(259, 76);
+            this.contextMenuStripWhisperAdvanced.Size = new System.Drawing.Size(320, 120);
             this.contextMenuStripWhisperAdvanced.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripWhisperAdvanced_Opening);
             // 
             // runOnlyPostProcessingToolStripMenuItem
             // 
             this.runOnlyPostProcessingToolStripMenuItem.Name = "runOnlyPostProcessingToolStripMenuItem";
-            this.runOnlyPostProcessingToolStripMenuItem.Size = new System.Drawing.Size(258, 22);
+            this.runOnlyPostProcessingToolStripMenuItem.Size = new System.Drawing.Size(319, 22);
             this.runOnlyPostProcessingToolStripMenuItem.Text = "Run only post processing";
             this.runOnlyPostProcessingToolStripMenuItem.Click += new System.EventHandler(this.runOnlyPostProcessingToolStripMenuItem_Click);
             // 
             // toolStripSeparatorRunOnlyPostprocessing
             // 
             this.toolStripSeparatorRunOnlyPostprocessing.Name = "toolStripSeparatorRunOnlyPostprocessing";
-            this.toolStripSeparatorRunOnlyPostprocessing.Size = new System.Drawing.Size(255, 6);
+            this.toolStripSeparatorRunOnlyPostprocessing.Size = new System.Drawing.Size(316, 6);
             // 
             // setCPPConstmeModelsFolderToolStripMenuItem
             // 
             this.setCPPConstmeModelsFolderToolStripMenuItem.Name = "setCPPConstmeModelsFolderToolStripMenuItem";
-            this.setCPPConstmeModelsFolderToolStripMenuItem.Size = new System.Drawing.Size(258, 22);
+            this.setCPPConstmeModelsFolderToolStripMenuItem.Size = new System.Drawing.Size(319, 22);
             this.setCPPConstmeModelsFolderToolStripMenuItem.Text = "Set CPP/Const-me models folder...";
             this.setCPPConstmeModelsFolderToolStripMenuItem.Click += new System.EventHandler(this.setCPPConstMeModelsFolderToolStripMenuItem_Click);
             // 
             // removeTemporaryFilesToolStripMenuItem
             // 
             this.removeTemporaryFilesToolStripMenuItem.Name = "removeTemporaryFilesToolStripMenuItem";
-            this.removeTemporaryFilesToolStripMenuItem.Size = new System.Drawing.Size(258, 22);
+            this.removeTemporaryFilesToolStripMenuItem.Size = new System.Drawing.Size(319, 22);
             this.removeTemporaryFilesToolStripMenuItem.Text = "Remove temporary files";
             this.removeTemporaryFilesToolStripMenuItem.Click += new System.EventHandler(this.removeTemporaryFilesToolStripMenuItem_Click);
             // 
@@ -493,6 +495,13 @@
             this.labelAdvanced.Size = new System.Drawing.Size(65, 13);
             this.labelAdvanced.TabIndex = 29;
             this.labelAdvanced.Text = "Advanced...";
+            // 
+            // downloadCUDAForPerfviewsWhisperFasterToolStripMenuItem
+            // 
+            this.downloadCUDAForPerfviewsWhisperFasterToolStripMenuItem.Name = "downloadCUDAForPerfviewsWhisperFasterToolStripMenuItem";
+            this.downloadCUDAForPerfviewsWhisperFasterToolStripMenuItem.Size = new System.Drawing.Size(319, 22);
+            this.downloadCUDAForPerfviewsWhisperFasterToolStripMenuItem.Text = "Download CUDA for Perfview\'s Whisper-Faster";
+            this.downloadCUDAForPerfviewsWhisperFasterToolStripMenuItem.Click += new System.EventHandler(this.downloadCUDAForPerfviewsWhisperFasterToolStripMenuItem_Click);
             // 
             // WhisperAudioToText
             // 
@@ -579,5 +588,6 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparatorRunOnlyPostprocessing;
         private System.Windows.Forms.Button buttonAdvanced;
         private System.Windows.Forms.Label labelAdvanced;
+        private System.Windows.Forms.ToolStripMenuItem downloadCUDAForPerfviewsWhisperFasterToolStripMenuItem;
     }
 }
