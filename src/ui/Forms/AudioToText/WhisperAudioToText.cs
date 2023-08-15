@@ -16,7 +16,6 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Controls;
 using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace Nikse.SubtitleEdit.Forms.AudioToText
 {
@@ -48,6 +47,9 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         public bool RunningOnCuda { get; set; }
         public bool IncompleteModel { get; set; }
         public string IncompleteModelName { get; set; }
+
+        private static bool? _cudaNoDevice { get; set; }
+        private static bool? _cudaSomeDevice { get; set; }
 
         public Subtitle TranscribedSubtitle { get; private set; }
 
@@ -1270,7 +1272,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                     File.Delete(f);
                 }
             }
-            catch 
+            catch
             {
                 // ignore
             }
@@ -1475,6 +1477,11 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                         {
                             return;
                         }
+                    }
+
+                    if (!IsFasterWhisperCudaInstalled() && IsFasterWhisperCudaSupported())
+                    {
+                        DownloadCudaForWhisperFaster(this);
                     }
                 }
                 else
@@ -1707,6 +1714,59 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             }
         }
 
+        public static bool IsFasterWhisperCudaSupported()
+        {
+            var w = WhisperHelper.GetWhisperPathAndFileName(WhisperChoice.PurfviewFasterWhisper);
+            var process = new Process { StartInfo = new ProcessStartInfo(w, "--checkcuda") { WindowStyle = ProcessWindowStyle.Hidden, CreateNoWindow = true } };
+            var whisperFolder = WhisperHelper.GetWhisperFolder(WhisperChoice.PurfviewFasterWhisper);
+            if (!string.IsNullOrEmpty(whisperFolder))
+            {
+                process.StartInfo.WorkingDirectory = whisperFolder;
+            }
+
+            process.StartInfo.StandardOutputEncoding = Encoding.UTF8;
+            process.StartInfo.UseShellExecute = false;
+            process.StartInfo.RedirectStandardOutput = true;
+            process.StartInfo.RedirectStandardError = true;
+            process.OutputDataReceived += OutputHandlerCheckCuda;
+            process.ErrorDataReceived += OutputHandlerCheckCuda;
+
+            process.Start();
+
+            process.BeginOutputReadLine();
+            process.BeginErrorReadLine();
+
+            while (!process.HasExited)
+            {
+                Application.DoEvents();
+            }
+
+            for (var i = 0; i < 100; i++)
+            {
+                Application.DoEvents();
+                System.Threading.Thread.Sleep(2);
+            }
+
+            return _cudaSomeDevice == true;
+        }
+
+        private static void OutputHandlerCheckCuda(object sendingProcess, DataReceivedEventArgs outLine)
+        {
+            if (string.IsNullOrWhiteSpace(outLine.Data))
+            {
+                return;
+            }
+
+            if (outLine.Data.Contains("CUDA device: 0"))
+            {
+                _cudaNoDevice = true;
+            }
+            else if (outLine.Data.Contains("CUDA device:"))
+            {
+                _cudaSomeDevice = true;
+            }
+        }
+        
         public static bool IsFasterWhisperCudaInstalled()
         {
             var folder = Path.Combine(Configuration.DataDirectory, "Whisper", "Purfview-Whisper-Faster");
