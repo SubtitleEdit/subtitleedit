@@ -16,6 +16,7 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Controls;
 using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace Nikse.SubtitleEdit.Forms.AudioToText
 {
@@ -44,6 +45,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         private VideoInfo _videoInfo;
         private readonly WavePeakData _wavePeaks;
         public bool UnknownArgument { get; set; }
+        public bool RunningOnCuda { get; set; }
         public bool IncompleteModel { get; set; }
         public string IncompleteModelName { get; set; }
 
@@ -83,6 +85,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             removeTemporaryFilesToolStripMenuItem.Text = LanguageSettings.Current.AudioToText.RemoveTemporaryFiles;
             buttonAdvanced.Text = LanguageSettings.Current.General.Advanced;
             labelAdvanced.Text = Configuration.Settings.Tools.WhisperExtraSettings;
+            downloadCUDAForPerfviewsWhisperFasterToolStripMenuItem.Text = LanguageSettings.Current.AudioToText.DownloadFasterWhisperCuda;
 
             columnHeaderFileName.Text = LanguageSettings.Current.JoinSubtitles.FileName;
 
@@ -698,6 +701,11 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             else if (outLine.Data.Contains("error: unrecognized argument: ", StringComparison.OrdinalIgnoreCase))
             {
                 UnknownArgument = true;
+            }
+
+            if (outLine.Data.Contains("running on: CUDA", StringComparison.OrdinalIgnoreCase))
+            {
+                RunningOnCuda = true;
             }
 
             _outputText.Add(outLine.Data.Trim() + Environment.NewLine);
@@ -1617,6 +1625,8 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             {
                 setCPPConstmeModelsFolderToolStripMenuItem.Text = LanguageSettings.Current.AudioToText.SetCppConstMeFolder;
             }
+
+            downloadCUDAForPerfviewsWhisperFasterToolStripMenuItem.Visible = Configuration.Settings.Tools.WhisperChoice == WhisperChoice.PurfviewFasterWhisper;
         }
 
         private void runOnlyPostProcessingToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1665,6 +1675,49 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 var res = form.ShowDialog(this);
                 labelAdvanced.Text = Configuration.Settings.Tools.WhisperExtraSettings;
             }
+        }
+
+        private void downloadCUDAForPerfviewsWhisperFasterToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DownloadCudaForWhisperFaster(this);
+        }
+
+        public static void DownloadCudaForWhisperFaster(IWin32Window owner)
+        {
+            if (MessageBox.Show(string.Format(LanguageSettings.Current.Settings.DownloadX, "Faster-Whisper CUDA (GPU)"), "Subtitle Edit", MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
+            {
+                return;
+            }
+
+            var alreadyInstalled = IsFasterWhisperCudaInstalled();
+
+            if (alreadyInstalled)
+            {
+                if (MessageBox.Show("CUDA is probably already installed - reinstall?", "Subtitle Edit", MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
+                {
+                    return;
+                }
+            }
+
+            using (var downloadForm = new WhisperDownload(WhisperChoice.PurfviewFasterWhisperCuda))
+            {
+                if (downloadForm.ShowDialog(owner) == DialogResult.OK)
+                {
+                }
+            }
+        }
+
+        public static bool IsFasterWhisperCudaInstalled()
+        {
+            var folder = Path.Combine(Configuration.DataDirectory, "Whisper", "Purfview-Whisper-Faster");
+            if (!Directory.Exists(folder))
+            {
+                return false;
+            }
+
+            var cudaFiles = Directory.GetFiles(folder, "cu*.dll");
+            var alreadyInstalled = cudaFiles.Length > 2;
+            return alreadyInstalled;
         }
     }
 }

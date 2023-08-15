@@ -57,6 +57,7 @@
             this.comboBoxWhisperEngine = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelAdvanced = new System.Windows.Forms.Label();
             this.buttonAdvanced = new System.Windows.Forms.Button();
+            this.downloadCUDAForPerfviewsWhisperFasterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBoxModels.SuspendLayout();
             this.groupBoxInputFiles.SuspendLayout();
             this.contextMenuStripWhisperAdvanced.SuspendLayout();
@@ -157,10 +158,23 @@
             // 
             // comboBoxLanguages
             // 
+            this.comboBoxLanguages.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxLanguages.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxLanguages.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxLanguages.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxLanguages.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxLanguages.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxLanguages.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxLanguages.DropDownHeight = 400;
             this.comboBoxLanguages.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxLanguages.DropDownWidth = 194;
             this.comboBoxLanguages.FormattingEnabled = true;
             this.comboBoxLanguages.Location = new System.Drawing.Point(6, 53);
+            this.comboBoxLanguages.MaxLength = 32767;
             this.comboBoxLanguages.Name = "comboBoxLanguages";
+            this.comboBoxLanguages.SelectedIndex = -1;
+            this.comboBoxLanguages.SelectedItem = null;
+            this.comboBoxLanguages.SelectedText = "";
             this.comboBoxLanguages.Size = new System.Drawing.Size(194, 21);
             this.comboBoxLanguages.TabIndex = 7;
             this.comboBoxLanguages.SelectedIndexChanged += new System.EventHandler(this.comboBoxLanguages_SelectedIndexChanged);
@@ -198,10 +212,23 @@
             // 
             // comboBoxModels
             // 
+            this.comboBoxModels.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxModels.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxModels.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxModels.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxModels.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxModels.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxModels.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxModels.DropDownHeight = 400;
             this.comboBoxModels.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxModels.DropDownWidth = 240;
             this.comboBoxModels.FormattingEnabled = true;
             this.comboBoxModels.Location = new System.Drawing.Point(257, 53);
+            this.comboBoxModels.MaxLength = 32767;
             this.comboBoxModels.Name = "comboBoxModels";
+            this.comboBoxModels.SelectedIndex = -1;
+            this.comboBoxModels.SelectedItem = null;
+            this.comboBoxModels.SelectedText = "";
             this.comboBoxModels.Size = new System.Drawing.Size(240, 21);
             this.comboBoxModels.TabIndex = 0;
             // 
@@ -290,22 +317,23 @@
             // 
             this.contextMenuStripWhisperAdvanced.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.setCPPConstmeModelsFolderToolStripMenuItem,
-            this.removeTemporaryFilesToolStripMenuItem});
+            this.removeTemporaryFilesToolStripMenuItem,
+            this.downloadCUDAForPerfviewsWhisperFasterToolStripMenuItem});
             this.contextMenuStripWhisperAdvanced.Name = "contextMenuStripWhisperAdvanced";
-            this.contextMenuStripWhisperAdvanced.Size = new System.Drawing.Size(259, 48);
+            this.contextMenuStripWhisperAdvanced.Size = new System.Drawing.Size(320, 92);
             this.contextMenuStripWhisperAdvanced.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripWhisperAdvanced_Opening);
             // 
             // setCPPConstmeModelsFolderToolStripMenuItem
             // 
             this.setCPPConstmeModelsFolderToolStripMenuItem.Name = "setCPPConstmeModelsFolderToolStripMenuItem";
-            this.setCPPConstmeModelsFolderToolStripMenuItem.Size = new System.Drawing.Size(258, 22);
+            this.setCPPConstmeModelsFolderToolStripMenuItem.Size = new System.Drawing.Size(319, 22);
             this.setCPPConstmeModelsFolderToolStripMenuItem.Text = "Set CPP/Const-me models folder...";
             this.setCPPConstmeModelsFolderToolStripMenuItem.Click += new System.EventHandler(this.setCPPConstMeModelsFolderToolStripMenuItem_Click);
             // 
             // removeTemporaryFilesToolStripMenuItem
             // 
             this.removeTemporaryFilesToolStripMenuItem.Name = "removeTemporaryFilesToolStripMenuItem";
-            this.removeTemporaryFilesToolStripMenuItem.Size = new System.Drawing.Size(258, 22);
+            this.removeTemporaryFilesToolStripMenuItem.Size = new System.Drawing.Size(319, 22);
             this.removeTemporaryFilesToolStripMenuItem.Text = "Remove temporary files";
             this.removeTemporaryFilesToolStripMenuItem.Click += new System.EventHandler(this.removeTemporaryFilesToolStripMenuItem_Click);
             // 
@@ -322,9 +350,23 @@
             // comboBoxWhisperEngine
             // 
             this.comboBoxWhisperEngine.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxWhisperEngine.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxWhisperEngine.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxWhisperEngine.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxWhisperEngine.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxWhisperEngine.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxWhisperEngine.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxWhisperEngine.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxWhisperEngine.DropDownHeight = 400;
             this.comboBoxWhisperEngine.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxWhisperEngine.DropDownWidth = 154;
+            this.comboBoxWhisperEngine.FormattingEnabled = false;
             this.comboBoxWhisperEngine.Location = new System.Drawing.Point(543, 6);
+            this.comboBoxWhisperEngine.MaxLength = 32767;
             this.comboBoxWhisperEngine.Name = "comboBoxWhisperEngine";
+            this.comboBoxWhisperEngine.SelectedIndex = -1;
+            this.comboBoxWhisperEngine.SelectedItem = null;
+            this.comboBoxWhisperEngine.SelectedText = "";
             this.comboBoxWhisperEngine.Size = new System.Drawing.Size(154, 21);
             this.comboBoxWhisperEngine.TabIndex = 28;
             this.comboBoxWhisperEngine.SelectedIndexChanged += new System.EventHandler(this.comboBoxWhisperEngine_SelectedIndexChanged);
@@ -349,6 +391,13 @@
             this.buttonAdvanced.Text = "Advanced";
             this.buttonAdvanced.UseVisualStyleBackColor = true;
             this.buttonAdvanced.Click += new System.EventHandler(this.buttonAdvanced_Click);
+            // 
+            // downloadCUDAForPerfviewsWhisperFasterToolStripMenuItem
+            // 
+            this.downloadCUDAForPerfviewsWhisperFasterToolStripMenuItem.Name = "downloadCUDAForPerfviewsWhisperFasterToolStripMenuItem";
+            this.downloadCUDAForPerfviewsWhisperFasterToolStripMenuItem.Size = new System.Drawing.Size(319, 22);
+            this.downloadCUDAForPerfviewsWhisperFasterToolStripMenuItem.Text = "Download CUDA for Perfview\'s Whisper-Faster";
+            this.downloadCUDAForPerfviewsWhisperFasterToolStripMenuItem.Click += new System.EventHandler(this.downloadCUDAForPerfviewsWhisperFasterToolStripMenuItem_Click);
             // 
             // WhisperAudioToTextSelectedLines
             // 
@@ -422,5 +471,6 @@
         private System.Windows.Forms.ToolStripMenuItem setCPPConstmeModelsFolderToolStripMenuItem;
         private System.Windows.Forms.Label labelAdvanced;
         private System.Windows.Forms.Button buttonAdvanced;
+        private System.Windows.Forms.ToolStripMenuItem downloadCUDAForPerfviewsWhisperFasterToolStripMenuItem;
     }
 }

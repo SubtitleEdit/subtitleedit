@@ -35270,6 +35270,13 @@ namespace Nikse.SubtitleEdit.Forms
                             UiUtil.OpenFile(SeLogger.GetWhisperLogFilePath());
                         }
                     }
+                    else if (form.RunningOnCuda && 
+                             Configuration.Settings.Tools.WhisperChoice == WhisperChoice.PurfviewFasterWhisper &&
+                             !WhisperAudioToText.IsFasterWhisperCudaInstalled())
+                    {
+                        MessageBox.Show("Faster Whisper CUDA (GPU) seems to be missing.");
+                        WhisperAudioToText.DownloadCudaForWhisperFaster(this);
+                    }
                     else
                     {
                         var customArgument = Configuration.Settings.Tools.WhisperExtraSettings;

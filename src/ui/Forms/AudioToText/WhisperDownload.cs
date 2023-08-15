@@ -72,6 +72,18 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             "5414c15bb1682efc2f737f3ab5f15c4350a70c30a6101b631297420bbc4cb077ef9b88cb6e5512f4adcdafbda85eb894ff92eae07bd70c66efa0b28a08361033", // Whisper-Faster r141.4
         };
 
+        private const string DownloadUrlPurfviewFasterWhisperCuda = "https://github.com/Purfview/whisper-standalone-win/releases/download/libs/cuBLAS.and.cuDNN.zip";
+
+        private static readonly string[] Sha512HashesPurfviewFasterWhisperCuda =
+        {
+            "8d3499298bf4ee227c2587ab7ad80a2a6cbac6b64592a2bb2a887821465d20e19ceec2a7d97a4473a9fb47b477cbbba8c69b8e615a42201a6f5509800056a73b",
+        };
+
+        private static readonly string[] OldSha512HashesPurfviewFasterWhisperCuda =
+        {
+            "",
+        };
+
 
         public WhisperDownload(string whisperChoice)
         {
@@ -95,6 +107,10 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             else if (_whisperChoice == WhisperChoice.PurfviewFasterWhisper)
             {
                 downloadUrl = DownloadUrlPurfviewFasterWhisper;
+            }
+            else if (_whisperChoice == WhisperChoice.PurfviewFasterWhisperCuda)
+            {
+                downloadUrl = DownloadUrlPurfviewFasterWhisperCuda;
             }
 
             try
@@ -151,6 +167,10 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             else if (_whisperChoice == WhisperChoice.PurfviewFasterWhisper)
             {
                 hashes = Sha512HashesPurfviewFasterWhisper;
+            }
+            else if (_whisperChoice == WhisperChoice.PurfviewFasterWhisperCuda)
+            {
+                hashes = Sha512HashesPurfviewFasterWhisperCuda;
             }
             else
             {
@@ -220,6 +240,27 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                     }
                 }
             }
+            else if (_whisperChoice == WhisperChoice.PurfviewFasterWhisperCuda)
+            {
+                folder = Path.Combine(folder, "Purfview-Whisper-Faster");
+                if (!Directory.Exists(folder))
+                {
+                    Directory.CreateDirectory(folder);
+                }
+
+                using (var zip = ZipExtractor.Open(downloadStream))
+                {
+                    var dir = zip.ReadCentralDir();
+                    foreach (var entry in dir)
+                    {
+                        if (entry.FileSize > 0)
+                        {
+                            var path = Path.Combine(folder, Path.GetFileName(entry.FilenameInZip));
+                            zip.ExtractFile(entry, path);
+                        }
+                    }
+                }
+            }
             else
             {
                 var skipFileNames = new[] { "command.exe", "stream.exe", "talk.exe", "bench.exe" };
@@ -236,10 +277,6 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                     }
                 }
             }
-
-
-
-
 
             Cursor = Cursors.Default;
             labelPleaseWait.Text = string.Empty;
