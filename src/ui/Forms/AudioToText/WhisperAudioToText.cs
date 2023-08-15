@@ -48,7 +48,6 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         public bool IncompleteModel { get; set; }
         public string IncompleteModelName { get; set; }
 
-        private static bool? _cudaNoDevice { get; set; }
         private static bool? _cudaSomeDevice { get; set; }
 
         public Subtitle TranscribedSubtitle { get; private set; }
@@ -1752,16 +1751,12 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
         private static void OutputHandlerCheckCuda(object sendingProcess, DataReceivedEventArgs outLine)
         {
-            if (string.IsNullOrWhiteSpace(outLine.Data))
+            if (string.IsNullOrEmpty(outLine.Data))
             {
                 return;
             }
 
-            if (outLine.Data.Contains("CUDA device: 0"))
-            {
-                _cudaNoDevice = true;
-            }
-            else if (outLine.Data.Contains("CUDA device:"))
+            if (!outLine.Data.Contains("CUDA device: 0") && outLine.Data.Contains("CUDA device:"))
             {
                 _cudaSomeDevice = true;
             }

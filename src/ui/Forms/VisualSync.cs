@@ -333,9 +333,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (!e.Cancel)
             {
-                e.Cancel = true;
-
-                _forceClose = true;
+                e.Cancel = true; // Hack as FormClosing will crash if any Forms are created here (e.g. a msgbox). _forceClose = true;
                 _dialogResult = DialogResult;
                 System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(10), () =>
                 {

@@ -429,8 +429,8 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                 FillListView(_subtitle);
                 found = true;
             }
-            
-            
+
+
             if (!found && (ext == ".mkv" || ext == ".mks"))
             {
                 if (!OpenMatroskaFile(fileName))
@@ -550,7 +550,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                     found = true;
                 }
             }
-            
+
             if (!found && FileUtil.IsManzanita(fileName))
             {
                 if (!ImportSubtitleFromManzanitaTransportStream(fileName))
@@ -2817,8 +2817,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
             if (!e.Cancel)
             {
-                e.Cancel = true;
-
+                e.Cancel = true; // Hack as FormClosing will crash if any Forms are created here (e.g. a msgbox). 
                 _forceClose = true;
                 _dialogResult = DialogResult;
                 SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(10), () =>

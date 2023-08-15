@@ -13242,9 +13242,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (!e.Cancel)
             {
-                e.Cancel = true;
+                e.Cancel = true; // Hack as FormClosing will crash if any Forms are created here (e.g. a msgbox). 
                 _forceClose = true;
-                // To allow windows in FormClosing...
                 SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(10), () => Application.Exit());
             }
         }

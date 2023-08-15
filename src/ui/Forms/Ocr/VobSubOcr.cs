@@ -8229,9 +8229,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             if (!e.Cancel)
             {
-                e.Cancel = true;
-
-                // To allow windows in FormClosing...
+                e.Cancel = true; // Hack as FormClosing will crash if any Forms are created here (e.g. a msgbox). 
                 _forceClose = true;
                 _dialogResult = DialogResult;
                 System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(10), () =>
