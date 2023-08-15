@@ -8138,6 +8138,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         }
 
         private bool _forceClose;
+        private DialogResult _dialogResult;
 
         private void VobSubOcr_FormClosing(object sender, FormClosingEventArgs e)
         {
@@ -8232,7 +8233,12 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
                 // To allow windows in FormClosing...
                 _forceClose = true;
-                System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(10), () => Close());
+                _dialogResult = DialogResult;
+                System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(10), () =>
+                {
+                    DialogResult = _dialogResult;
+                    Close();
+                });
             }
         }
 
