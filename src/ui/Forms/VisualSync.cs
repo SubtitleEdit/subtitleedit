@@ -274,6 +274,7 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         private bool _forceClose;
+        private DialogResult _dialogResult;
         private void FormVisualSync_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (_forceClose)
@@ -334,9 +335,13 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 e.Cancel = true;
 
-                // To allow windows in FormClosing...
                 _forceClose = true;
-                System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(10), () => Close());
+                _dialogResult = DialogResult;
+                System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(10), () =>
+                {
+                    DialogResult = _dialogResult;
+                    Close();
+                });
             }
         }
 

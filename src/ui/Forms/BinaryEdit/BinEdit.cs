@@ -2794,6 +2794,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
         }
 
         private bool _forceClose;
+        private DialogResult _dialogResult;
         private void BinEdit_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (_forceClose)
@@ -2818,9 +2819,13 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             {
                 e.Cancel = true;
 
-                // To allow windows in FormClosing...
                 _forceClose = true;
-                SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(10), () => Close());
+                _dialogResult = DialogResult;
+                SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(10), () =>
+                {
+                    DialogResult = _dialogResult;
+                    Close();
+                });
             }
         }
 
