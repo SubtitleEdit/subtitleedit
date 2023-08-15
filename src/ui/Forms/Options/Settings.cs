@@ -3546,6 +3546,8 @@ namespace Nikse.SubtitleEdit.Forms.Options
             listViewFileTypeAssociations.SmallImageList = imageListFileTypeAssociations;
             listViewFileTypeAssociations.BeginUpdate();
             listViewFileTypeAssociations.Items.Clear();
+            listViewFileTypeAssociations.GridLines = false;
+            listViewFileTypeAssociations.FullRowSelect = true;
             foreach (var iconFileName in iconFileNames)
             {
                 if (iconFileName.EndsWith("uninstall.ico", StringComparison.OrdinalIgnoreCase))
@@ -3564,6 +3566,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
                 listViewFileTypeAssociations.Items.Add(item);
             }
             listViewFileTypeAssociations.EndUpdate();
+            listViewFileTypeAssociations.AutoSizeLastColumn();
         }
 
         private void buttonUpdateFileTypeAssociations_Click(object sender, EventArgs e)
