@@ -460,7 +460,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         private void SubtitleListView_DrawSubItem(object sender, DrawListViewSubItemEventArgs e)
         {
-            Color backgroundColor = Items[e.ItemIndex].SubItems[e.ColumnIndex].BackColor;
+            var backgroundColor = Items[e.ItemIndex].SubItems[e.ColumnIndex].BackColor;
             if (Focused && backgroundColor == BackColor || RightToLeftLayout)
             {
                 e.DrawDefault = true;
@@ -470,7 +470,7 @@ namespace Nikse.SubtitleEdit.Controls
             if (e.Item.Selected)
             {
 
-                Rectangle rect = e.Bounds;
+                var rect = e.Bounds;
                 if (Configuration.Settings != null)
                 {
                     backgroundColor = backgroundColor == BackColor ? Configuration.Settings.Tools.ListViewUnfocusedSelectedColor : GetCustomColor(backgroundColor);
@@ -482,7 +482,7 @@ namespace Nikse.SubtitleEdit.Controls
                     e.Graphics.FillRectangle(Brushes.LightBlue, rect);
                 }
 
-                int addX = 0;
+                var addX = 0;
 
                 if (e.ColumnIndex == 0 && StateImageList?.Images.Count > 0)
                 {
@@ -512,9 +512,9 @@ namespace Nikse.SubtitleEdit.Controls
 
         private static Color GetCustomColor(Color color)
         {
-            int r = Math.Max(color.R - 39, 0);
-            int g = Math.Max(color.G - 39, 0);
-            int b = Math.Max(color.B - 39, 0);
+            var r = Math.Max(color.R - 39, 0);
+            var g = Math.Max(color.G - 39, 0);
+            var b = Math.Max(color.B - 39, 0);
             return Color.FromArgb(color.A, r, g, b);
         }
 
@@ -1595,7 +1595,11 @@ namespace Nikse.SubtitleEdit.Controls
 
         private ListViewItem MakeListViewItem(Paragraph paragraph, Paragraph next, Paragraph paragraphOriginal, Font font)
         {
-            var item = new ListViewItem(paragraph.Number.ToString(CultureInfo.InvariantCulture)) { Tag = paragraph, UseItemStyleForSubItems = false };
+            var item = new ListViewItem(paragraph.Number.ToString(CultureInfo.InvariantCulture))
+            {
+                Tag = paragraph, 
+                UseItemStyleForSubItems = false,
+            };
             foreach (var column in SubtitleColumns)
             {
                 switch (column)
@@ -2112,7 +2116,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        private string GetGap(Paragraph paragraph, Paragraph next)
+        private static string GetGap(Paragraph paragraph, Paragraph next)
         {
             if (next == null || paragraph == null || next.StartTime.IsMaxTime || paragraph.EndTime.IsMaxTime)
             {
@@ -2151,10 +2155,19 @@ namespace Nikse.SubtitleEdit.Controls
         
         private void UpdateItem(int index, Action<ListViewItem> itemUpdater,  Action<ListViewItem.ListViewSubItem> subItemUpdater)
         {
-            if (!IsValidIndex(index)) return;
-            
+            if (!IsValidIndex(index))
+            {
+                return;
+            }
+
             var item = Items[index];
             itemUpdater(item);
+
+            if (ColumnIndexNumber >= 0)
+            {
+                subItemUpdater(Items[index].SubItems[ColumnIndexNumber]);
+            }
+
             if (ColumnIndexStart >= 0)
             {
                 subItemUpdater(Items[index].SubItems[ColumnIndexStart]);
@@ -2203,6 +2216,7 @@ namespace Nikse.SubtitleEdit.Controls
                 ListViewItem item = Items[index];
                 return item.BackColor;
             }
+
             return DefaultBackColor;
         }
 
