@@ -210,6 +210,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <RemoveTemporaryFiles>임시 파일 제거</RemoveTemporaryFiles>
     <SetCppConstMeFolder>CPP/Const-me 모델 폴더 설정...</SetCppConstMeFolder>
     <OnlyRunPostProcessing>후처리 및 타이밍 조정만 실행</OnlyRunPostProcessing>
+    <DownloadFasterWhisperCuda>Perfview의 Whisper-Fast를 위한 CUDA 다운로드</DownloadFasterWhisperCuda>
   </AudioToText>
   <AssaAttachments>
     <Title>Advanced Sub Station Alpha 첨부파일</Title>
