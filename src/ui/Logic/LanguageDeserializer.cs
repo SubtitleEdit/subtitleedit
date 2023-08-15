@@ -583,6 +583,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "AudioToText/OnlyRunPostProcessing":
                     language.AudioToText.OnlyRunPostProcessing = reader.Value;
                     break;
+                case "AudioToText/DownloadFasterWhisperCuda":
+                    language.AudioToText.DownloadFasterWhisperCuda = reader.Value;
+                    break;
                 case "AssaAttachments/Title":
                     language.AssaAttachments.Title = reader.Value;
                     break;
