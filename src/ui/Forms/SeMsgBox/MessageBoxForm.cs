@@ -68,25 +68,25 @@ namespace Nikse.SubtitleEdit.Forms.SeMsgBox
             pictureBoxIcon.SizeMode = PictureBoxSizeMode.AutoSize;
             if (icon == MessageBoxIcon.Information)
             {
-                pictureBoxIcon.Image = Properties.Resources.MsgBoxInfo;
+                pictureBoxIcon.Image = Properties.Resources.Information;
                 TryLoadIcon(pictureBoxIcon, "Information");
                 pictureBoxIcon.BringToFront();
             }
             else if (icon == MessageBoxIcon.Question)
             {
-                pictureBoxIcon.Image = Properties.Resources.MsgBoxQuestion;
+                pictureBoxIcon.Image = Properties.Resources.Question;
                 TryLoadIcon(pictureBoxIcon, "Question");
                 pictureBoxIcon.BringToFront();
             }
             else if (icon == MessageBoxIcon.Warning)
             {
-                pictureBoxIcon.Image = Properties.Resources.MsgBoxWarning;
+                pictureBoxIcon.Image = Properties.Resources.Warning;
                 TryLoadIcon(pictureBoxIcon, "Warning");
                 pictureBoxIcon.BringToFront();
             }
             else if (icon == MessageBoxIcon.Error)
             {
-                pictureBoxIcon.Image = Properties.Resources.MsgBoError;
+                pictureBoxIcon.Image = Properties.Resources.Error;
                 TryLoadIcon(pictureBoxIcon, "Error");
                 pictureBoxIcon.BringToFront();
             }

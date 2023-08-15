@@ -2320,10 +2320,10 @@
     <None Include="Resources\rec32.png" />
     <None Include="Resources\Help32.png" />
     <Content Include="Icons\BeautifyTimeCodes.png" />
-    <None Include="Resources\MsgBoxInfo.png" />
-    <None Include="Resources\MsgBoxQuestion.png" />
-    <None Include="Resources\MsgBoxWarning.png" />
-    <None Include="Resources\MsgBoError.png" />
+    <None Include="Resources\Error.png" />
+    <None Include="Resources\Information.png" />
+    <None Include="Resources\Question.png" />
+    <None Include="Resources\Warning.png" />
     <Content Include="SE2.ico" />
     <None Include="Resources\SE.ico" />
     <None Include="Hunspellx64.dll">
