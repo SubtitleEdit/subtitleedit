@@ -215,7 +215,7 @@ Mais informação online?</WhisperNotFound>
     <RemoveTemporaryFiles>Remover ficheiros temporários</RemoveTemporaryFiles>
     <SetCppConstMeFolder>Definir pasta de modelos CPP/Const-me...</SetCppConstMeFolder>
     <OnlyRunPostProcessing>Executar apenas os tempos de pós-processamento/ajuste</OnlyRunPostProcessing>
-    <DownloadFasterWhisperCuda>Transferir CUDA para Perfview's Whisper-Faster</DownloadFasterWhisperCuda>
+    <DownloadFasterWhisperCuda>Transferir CUDA para Whisper-Faster de Perfview</DownloadFasterWhisperCuda>
   </AudioToText>
   <AssaAttachments>
     <Title>Anexos Advanced Sub Station Alpha</Title>
