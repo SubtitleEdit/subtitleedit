@@ -2744,7 +2744,6 @@ namespace Nikse.SubtitleEdit.Forms
         private void ThreadWorkerCompleted(ThreadDoWorkParameter p)
         {
             CommandLineConverter.BatchConvertProgress progressCallback = null;
-            //var p = (ThreadDoWorkParameter)e.Result;
             if (p.Item.Index + 2 < listViewInputFiles.Items.Count)
             {
                 listViewInputFiles.EnsureVisible(p.Item.Index + 2);
