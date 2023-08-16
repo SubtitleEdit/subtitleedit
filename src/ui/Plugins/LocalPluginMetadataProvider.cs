@@ -56,15 +56,7 @@ namespace Nikse.SubtitleEdit.Plugins
 
             return installedPlugins;
         }
-        
-        private static string[] GetKnownProperties(Type pluginType)
-        {
-            return pluginType.GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                // .Where(prop => _contextPropMap.Contains(prop.Name))
-                .Select(prop => prop.Name)
-                .ToArray();
-        }
-        
+
         private static LocalPlugin ParseFromType(Type pluginType)
         {
             if (pluginType is null)
@@ -72,16 +64,9 @@ namespace Nikse.SubtitleEdit.Plugins
                 return null;
             }
 
-            var knownProperties = GetKnownProperties(pluginType);
-            if (knownProperties.Length < 3)
-            {
-                return null;
-            }
-
-            // var instance = assembly.CreateInstance(pluginType.FullName);
             var instance = Activator.CreateInstance(pluginType);
 
-            // read name
+            // read name/text
             var name = (string)pluginType
                 .GetProperty("Text", BindingFlags.Instance | BindingFlags.Public)
                 ?.GetValue(instance, null);
