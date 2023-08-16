@@ -33,7 +33,7 @@
             this.buttonGenerate = new System.Windows.Forms.Button();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.labelProgress = new System.Windows.Forms.Label();
-            this.textBoxLog = new System.Windows.Forms.TextBox();
+            this.textBoxLog = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelInfo = new System.Windows.Forms.Label();
             this.groupBoxModels = new System.Windows.Forms.GroupBox();
             this.labelChooseLanguage = new System.Windows.Forms.Label();
@@ -564,7 +564,7 @@
         private System.Windows.Forms.Button buttonGenerate;
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.Label labelProgress;
-        private System.Windows.Forms.TextBox textBoxLog;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxLog;
         private System.Windows.Forms.Label labelInfo;
         private System.Windows.Forms.GroupBox groupBoxModels;
         private System.Windows.Forms.LinkLabel linkLabeWhisperWebSite;
