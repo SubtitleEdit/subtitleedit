@@ -27,7 +27,13 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     using (var p = new Pen(FocusedColor))
                     {
-                        g.DrawRectangle(p, new Rectangle(0, 0, Width - 1, Height - 1));
+                        var widthSubtract = 1;
+                        if (ScrollBars == ScrollBars.Vertical || ScrollBars == ScrollBars.Both)
+                        {
+                            widthSubtract += SystemInformation.VerticalScrollBarWidth + SystemInformation.BorderSize.Width;
+                        }
+
+                        g.DrawRectangle(p, new Rectangle(0, 0, Width - widthSubtract, Height - 1));
                     }
                 }
             }
