@@ -1004,7 +1004,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                 // replace some unsupported characters
                 text = text.Replace("„", "\""); // lower quote
-                text = text.Replace("‚", "’"); // lower apostrophe
+                text = text.Replace("‚", "'"); // lower apostrophe
+                text = text.Replace("’", "'"); // right single quotation mark
                 text = text.Replace("♫", "♪"); // only music single note supported
                 text = text.Replace("…", "..."); // fix Unicode ellipsis
 
