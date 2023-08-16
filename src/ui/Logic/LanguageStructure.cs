@@ -1055,9 +1055,11 @@
             public string InfoAssaOn { get; set; }
             public string XGeneratedWithBurnedInSubsInX { get; set; }
             public string TimeRemainingMinutes { get; set; }
+            public string TimeRemainingOneMinute { get; set; }
             public string TimeRemainingSeconds { get; set; }
             public string TimeRemainingAFewSeconds { get; set; }
             public string TimeRemainingMinutesAndSeconds { get; set; }
+            public string TimeRemainingOneMinuteAndSeconds { get; set; }
             public string TargetFileName { get; set; }
             public string TargetFileSize { get; set; }
             public string FileSizeMb { get; set; }
