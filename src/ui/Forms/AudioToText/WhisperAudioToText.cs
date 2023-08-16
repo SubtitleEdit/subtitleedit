@@ -253,6 +253,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
         private void ButtonGenerate_Click(object sender, EventArgs e)
         {
+            _cancel = false;
             if (comboBoxModels.Items.Count == 0)
             {
                 buttonDownload_Click(null, null);
@@ -1761,17 +1762,31 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
         private void contextMenuStripWhisperAdvanced_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (!string.IsNullOrEmpty(Configuration.Settings.Tools.WhisperCppModelLocation) &&
-                Directory.Exists(Configuration.Settings.Tools.WhisperCppModelLocation))
+            runOnlyPostProcessingToolStripMenuItem.Visible = buttonGenerate.Enabled;
+            toolStripSeparatorRunOnlyPostprocessing.Visible = buttonGenerate.Enabled;
+
+            if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.Cpp ||
+                Configuration.Settings.Tools.WhisperChoice == WhisperChoice.ConstMe)
             {
-                setCPPConstmeModelsFolderToolStripMenuItem.Text = $"{LanguageSettings.Current.AudioToText.SetCppConstMeFolder} [{Configuration.Settings.Tools.WhisperCppModelLocation}]";
+                if (!string.IsNullOrEmpty(Configuration.Settings.Tools.WhisperCppModelLocation) &&
+                    Directory.Exists(Configuration.Settings.Tools.WhisperCppModelLocation))
+                {
+                    setCPPConstmeModelsFolderToolStripMenuItem.Text = $"{LanguageSettings.Current.AudioToText.SetCppConstMeFolder} [{Configuration.Settings.Tools.WhisperCppModelLocation}]";
+                }
+                else
+                {
+                    setCPPConstmeModelsFolderToolStripMenuItem.Text = LanguageSettings.Current.AudioToText.SetCppConstMeFolder;
+                }
+                setCPPConstmeModelsFolderToolStripMenuItem.Visible = true;
             }
             else
             {
-                setCPPConstmeModelsFolderToolStripMenuItem.Text = LanguageSettings.Current.AudioToText.SetCppConstMeFolder;
+                setCPPConstmeModelsFolderToolStripMenuItem.Visible = false;
             }
 
-            downloadCUDAForPerfviewsWhisperFasterToolStripMenuItem.Visible = Configuration.Settings.Tools.WhisperChoice == WhisperChoice.PurfviewFasterWhisper;
+            downloadCUDAForPerfviewsWhisperFasterToolStripMenuItem.Visible =
+                buttonGenerate.Enabled &&
+                Configuration.Settings.Tools.WhisperChoice == WhisperChoice.PurfviewFasterWhisper;
 
             var whisperLogFile = SeLogger.GetWhisperLogFilePath();
             if (File.Exists(whisperLogFile))
@@ -1789,6 +1804,8 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         {
             try
             {
+                labelProgress.Text = LanguageSettings.Current.AudioToText.PostProcessing;
+
                 _languageCode = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle);
                 var postProcessor = new AudioToTextPostProcessor(_languageCode)
                 {

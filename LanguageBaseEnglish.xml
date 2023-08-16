@@ -980,9 +980,11 @@ We leverage the intrinsic rhythm of the image.</CreateSimpleChainingToolTip>
     <InfoAssaOn>Note: Advanced SubStation Alpha styling will be used :)</InfoAssaOn>
     <XGeneratedWithBurnedInSubsInX>"{0}" generated with burned-in subtitle in {1}.</XGeneratedWithBurnedInSubsInX>
     <TimeRemainingMinutes>Time remaining: {0} minutes</TimeRemainingMinutes>
+    <TimeRemainingOneMinute>Time remaining: One minute</TimeRemainingOneMinute>
     <TimeRemainingSeconds>Time remaining: {0} seconds</TimeRemainingSeconds>
     <TimeRemainingAFewSeconds>Time remaining: A few seconds</TimeRemainingAFewSeconds>
     <TimeRemainingMinutesAndSeconds>Time remaining: {0} minutes and {1} seconds</TimeRemainingMinutesAndSeconds>
+    <TimeRemainingOneMinuteAndSeconds>Time remaining: One minute and {0} seconds</TimeRemainingOneMinuteAndSeconds>
     <TargetFileName>Target file name: {0}</TargetFileName>
     <TargetFileSize>Target file size (requires 2 pass encoding)</TargetFileSize>
     <FileSizeMb>File size in MB</FileSizeMb>

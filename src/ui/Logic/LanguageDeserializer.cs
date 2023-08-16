@@ -2581,6 +2581,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "GenerateVideoWithBurnedInSubs/TimeRemainingMinutes":
                     language.GenerateVideoWithBurnedInSubs.TimeRemainingMinutes = reader.Value;
                     break;
+                case "GenerateVideoWithBurnedInSubs/TimeRemainingOneMinute":
+                    language.GenerateVideoWithBurnedInSubs.TimeRemainingOneMinute = reader.Value;
+                    break;
                 case "GenerateVideoWithBurnedInSubs/TimeRemainingSeconds":
                     language.GenerateVideoWithBurnedInSubs.TimeRemainingSeconds = reader.Value;
                     break;
@@ -2589,6 +2592,9 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "GenerateVideoWithBurnedInSubs/TimeRemainingMinutesAndSeconds":
                     language.GenerateVideoWithBurnedInSubs.TimeRemainingMinutesAndSeconds = reader.Value;
+                    break;
+                case "GenerateVideoWithBurnedInSubs/TimeRemainingOneMinuteAndSeconds":
+                    language.GenerateVideoWithBurnedInSubs.TimeRemainingOneMinuteAndSeconds = reader.Value;
                     break;
                 case "GenerateVideoWithBurnedInSubs/TargetFileName":
                     language.GenerateVideoWithBurnedInSubs.TargetFileName = reader.Value;
