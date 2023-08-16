@@ -21,6 +21,7 @@
    * Update Argentinian/Mexican translation - thx jmaraujouy
    * Improve "Dark theme" (new controls/message-boxes)
    * Update Tesseract OCR to 5.3.1 (64-bit only)
+   * Update yt-dlp to 2023.07.06
    * Improve convert of SSA to ASSA - thx Emiliano
    * Update burn-in video preview to video - thx Masina86
    * Improve handling of invalid xml in ttml - thx m0ck69
