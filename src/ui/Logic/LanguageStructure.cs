@@ -102,6 +102,7 @@
             public string Collapse { get; set; }
             public string ShortcutX { get; set; }
             public string ExampleX { get; set; }
+            public string ViewX { get; set; }
             public string Reset { get; set; }
             public string Error { get; set; }
             public string Warning { get; set; }
@@ -206,6 +207,7 @@
             public string LoadingVoskModel { get; set; }
             public string Transcribing { get; set; }
             public string TranscribingXOfY { get; set; }
+            public string PostProcessing { get; set; }
             public string XFilesSavedToVideoSourceFolder { get; set; }
             public string UsePostProcessing { get; set; }
             public string AutoAdjustTimings { get; set; }

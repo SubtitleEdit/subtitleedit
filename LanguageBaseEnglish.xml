@@ -98,6 +98,7 @@
     <Collapse>Collapse</Collapse>
     <ShortcutX>Shortcut: {0}</ShortcutX>
     <ExampleX>Example: {0}</ExampleX>
+    <ViewX>View {0}</ViewX>
     <Reset>Reset</Reset>
     <Error>Error</Error>
     <Warning>Warning</Warning>
@@ -204,6 +205,7 @@ Read more info (web)?</WhisperNotFound>
     <LoadingVoskModel>Loading Vosk speech recognition model...</LoadingVoskModel>
     <Transcribing>Transcribing audio to text...</Transcribing>
     <TranscribingXOfY>Transcribing audio to text - file {0} of {1}...</TranscribingXOfY>
+    <PostProcessing>Post-processing...</PostProcessing>
     <XFilesSavedToVideoSourceFolder>{0} files saved to video source folder</XFilesSavedToVideoSourceFolder>
     <UsePostProcessing>Use post-processing (line merge, fix casing, punctuation, and more)</UsePostProcessing>
     <AutoAdjustTimings>Auto adjust timings</AutoAdjustTimings>
