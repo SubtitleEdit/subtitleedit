@@ -41,11 +41,11 @@
             this.columnHeader10 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.groupBoxReplaces = new System.Windows.Forms.GroupBox();
             this.labelDescription = new System.Windows.Forms.Label();
-            this.textBoxDescription = new Nikse.SubtitleEdit.Controls.SETextBox(true);
+            this.textBoxDescription = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.radioButtonRegEx = new System.Windows.Forms.RadioButton();
             this.radioButtonCaseSensitive = new System.Windows.Forms.RadioButton();
-            this.textBoxFind = new Nikse.SubtitleEdit.Controls.SETextBox(true);
-            this.textBoxReplace = new Nikse.SubtitleEdit.Controls.SETextBox(true);
+            this.textBoxFind = new Nikse.SubtitleEdit.Controls.NikseTextBox();
+            this.textBoxReplace = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.buttonUpdate = new System.Windows.Forms.Button();
             this.buttonAdd = new System.Windows.Forms.Button();
             this.labelFindWhat = new System.Windows.Forms.Label();
@@ -825,11 +825,11 @@
         private System.Windows.Forms.ColumnHeader columnHeader6;
         private System.Windows.Forms.Label labelFindWhat;
         private System.Windows.Forms.Label labelReplaceWith;
-        private Nikse.SubtitleEdit.Controls.SETextBox textBoxReplace;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxReplace;
         private System.Windows.Forms.RadioButton radioButtonRegEx;
         private System.Windows.Forms.RadioButton radioButtonCaseSensitive;
         private System.Windows.Forms.RadioButton radioButtonNormal;
-        private Nikse.SubtitleEdit.Controls.SETextBox textBoxFind;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxFind;
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonAdd;
@@ -867,7 +867,7 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemMoveRulesToGroup;
         private System.Windows.Forms.Button buttonApply;
         private System.Windows.Forms.Label labelDescription;
-        private Nikse.SubtitleEdit.Controls.SETextBox textBoxDescription;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxDescription;
         private System.Windows.Forms.ColumnHeader columnHeader9;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparatorGroupImportExport;
         private System.Windows.Forms.ToolStripMenuItem exportToolStripMenuItem;

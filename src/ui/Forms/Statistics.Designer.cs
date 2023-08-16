@@ -32,12 +32,12 @@ namespace Nikse.SubtitleEdit.Forms
         {
             this.buttonOK = new System.Windows.Forms.Button();
             this.groupBoxGeneral = new System.Windows.Forms.GroupBox();
-            this.textBoxGeneral = new Nikse.SubtitleEdit.Controls.SETextBox(true);
+            this.textBoxGeneral = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.groupBoxMostUsed = new System.Windows.Forms.GroupBox();
             this.labelMostUsedLines = new System.Windows.Forms.Label();
             this.labelMostUsedWords = new System.Windows.Forms.Label();
-            this.textBoxMostUsedLines = new Nikse.SubtitleEdit.Controls.SETextBox(true);
-            this.textBoxMostUsedWords = new Nikse.SubtitleEdit.Controls.SETextBox(true);
+            this.textBoxMostUsedLines = new Nikse.SubtitleEdit.Controls.NikseTextBox();
+            this.textBoxMostUsedWords = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.buttonExport = new System.Windows.Forms.Button();
             this.groupBoxGeneral.SuspendLayout();
             this.groupBoxMostUsed.SuspendLayout();
@@ -76,7 +76,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.textBoxGeneral.Multiline = true;
             this.textBoxGeneral.Name = "textBoxGeneral";
             this.textBoxGeneral.ReadOnly = true;
-            this.textBoxGeneral.ScrollBars = RichTextBoxScrollBars.Both;
+            this.textBoxGeneral.ScrollBars = ScrollBars.Both;
             this.textBoxGeneral.Size = new System.Drawing.Size(694, 351);
             this.textBoxGeneral.TabIndex = 0;
             // 
@@ -123,7 +123,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.textBoxMostUsedLines.Multiline = true;
             this.textBoxMostUsedLines.Name = "textBoxMostUsedLines";
             this.textBoxMostUsedLines.ReadOnly = true;
-            this.textBoxMostUsedLines.ScrollBars = RichTextBoxScrollBars.Both;
+            this.textBoxMostUsedLines.ScrollBars = ScrollBars.Both;
             this.textBoxMostUsedLines.Size = new System.Drawing.Size(371, 183);
             this.textBoxMostUsedLines.TabIndex = 3;
             // 
@@ -135,7 +135,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.textBoxMostUsedWords.Multiline = true;
             this.textBoxMostUsedWords.Name = "textBoxMostUsedWords";
             this.textBoxMostUsedWords.ReadOnly = true;
-            this.textBoxMostUsedWords.ScrollBars = RichTextBoxScrollBars.Both;
+            this.textBoxMostUsedWords.ScrollBars = ScrollBars.Both;
             this.textBoxMostUsedWords.Size = new System.Drawing.Size(320, 183);
             this.textBoxMostUsedWords.TabIndex = 1;
             // 
@@ -181,10 +181,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.GroupBox groupBoxGeneral;
-        private Nikse.SubtitleEdit.Controls.SETextBox textBoxGeneral;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxGeneral;
         private System.Windows.Forms.GroupBox groupBoxMostUsed;
-        private Nikse.SubtitleEdit.Controls.SETextBox textBoxMostUsedWords;
-        private Nikse.SubtitleEdit.Controls.SETextBox textBoxMostUsedLines;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxMostUsedWords;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxMostUsedLines;
         private System.Windows.Forms.Label labelMostUsedLines;
         private System.Windows.Forms.Label labelMostUsedWords;
         private System.Windows.Forms.Button buttonExport;

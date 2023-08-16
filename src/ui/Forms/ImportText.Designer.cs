@@ -32,7 +32,7 @@
             this.buttonOpenText = new System.Windows.Forms.Button();
             this.groupBoxImportText = new System.Windows.Forms.GroupBox();
             this.checkBoxMultipleFiles = new System.Windows.Forms.CheckBox();
-            this.textBoxText = new System.Windows.Forms.TextBox();
+            this.textBoxText = new Controls.NikseTextBox();
             this.listViewInputFiles = new System.Windows.Forms.ListView();
             this.columnHeaderFName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderSize = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -789,7 +789,7 @@
         private System.Windows.Forms.Button buttonOpenText;
         private Controls.SubtitleListView SubtitleListview1;
         private System.Windows.Forms.GroupBox groupBoxImportText;
-        private System.Windows.Forms.TextBox textBoxText;
+        private Controls.NikseTextBox textBoxText;
         private System.Windows.Forms.GroupBox groupBoxImportOptions;
         private System.Windows.Forms.GroupBox groupBoxImportResult;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;

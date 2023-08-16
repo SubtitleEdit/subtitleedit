@@ -284,6 +284,11 @@ namespace Nikse.SubtitleEdit.Logic
                 return;
             }
 
+            if (c is NikseTextBox ntb)
+            {
+                ntb.BorderStyle = BorderStyle.Fixed3D;
+            }
+
             if (c is NikseListBox nikseListBox)
             {
                 nikseListBox.UndoDarkTheme();
@@ -466,6 +471,11 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 seTextBox.SetDarkTheme();
                 return;
+            }
+
+            if (c is NikseTextBox ntb)
+            {
+                ntb.BorderStyle = BorderStyle.FixedSingle;
             }
 
             if (c is NikseListBox nikseListBox)
