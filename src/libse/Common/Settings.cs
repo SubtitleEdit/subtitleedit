@@ -442,6 +442,8 @@ namespace Nikse.SubtitleEdit.Core.Common
         public bool VoskPostProcessing { get; set; }
         public string VoskModel { get; set; }
         public string WhisperChoice { get; set; }
+        public bool WhisperIgnoreVersion { get; set; }
+
         public bool WhisperDeleteTempFiles { get; set; }
         public string WhisperModel { get; set; }
         public string WhisperLanguageCode { get; set; }
@@ -6782,6 +6784,12 @@ $HorzAlign          =   Center
                 settings.Tools.WhisperChoice = subNode.InnerText;
             }
 
+            subNode = node.SelectSingleNode("WhisperIgnoreVersion");
+            if (subNode != null)
+            {
+                settings.Tools.WhisperIgnoreVersion = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("WhisperDeleteTempFiles");
             if (subNode != null)
             {
@@ -11507,6 +11515,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("VoskPostProcessing", settings.Tools.VoskPostProcessing.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("VoskModel", settings.Tools.VoskModel);
                 textWriter.WriteElementString("WhisperChoice", settings.Tools.WhisperChoice);
+                textWriter.WriteElementString("WhisperIgnoreVersion", settings.Tools.WhisperIgnoreVersion.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("WhisperDeleteTempFiles", settings.Tools.WhisperDeleteTempFiles.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("WhisperModel", settings.Tools.WhisperModel);
                 textWriter.WriteElementString("WhisperLocation", settings.Tools.WhisperLocation);

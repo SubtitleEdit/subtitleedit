@@ -61,12 +61,13 @@
             this.toolStripSeparatorRunOnlyPostprocessing = new System.Windows.Forms.ToolStripSeparator();
             this.setCPPConstmeModelsFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.removeTemporaryFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.downloadCUDAForPerfviewsWhisperFasterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.checkBoxAutoAdjustTimings = new System.Windows.Forms.CheckBox();
             this.comboBoxWhisperEngine = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelEngine = new System.Windows.Forms.Label();
             this.buttonAdvanced = new System.Windows.Forms.Button();
             this.labelAdvanced = new System.Windows.Forms.Label();
-            this.downloadCUDAForPerfviewsWhisperFasterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showWhisperlogtxtToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBoxModels.SuspendLayout();
             this.groupBoxInputFiles.SuspendLayout();
             this.contextMenuStripWhisperAdvanced.SuspendLayout();
@@ -400,9 +401,10 @@
             this.toolStripSeparatorRunOnlyPostprocessing,
             this.setCPPConstmeModelsFolderToolStripMenuItem,
             this.removeTemporaryFilesToolStripMenuItem,
-            this.downloadCUDAForPerfviewsWhisperFasterToolStripMenuItem});
+            this.downloadCUDAForPerfviewsWhisperFasterToolStripMenuItem,
+            this.showWhisperlogtxtToolStripMenuItem});
             this.contextMenuStripWhisperAdvanced.Name = "contextMenuStripWhisperAdvanced";
-            this.contextMenuStripWhisperAdvanced.Size = new System.Drawing.Size(320, 120);
+            this.contextMenuStripWhisperAdvanced.Size = new System.Drawing.Size(320, 142);
             this.contextMenuStripWhisperAdvanced.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripWhisperAdvanced_Opening);
             // 
             // runOnlyPostProcessingToolStripMenuItem
@@ -430,6 +432,13 @@
             this.removeTemporaryFilesToolStripMenuItem.Size = new System.Drawing.Size(319, 22);
             this.removeTemporaryFilesToolStripMenuItem.Text = "Remove temporary files";
             this.removeTemporaryFilesToolStripMenuItem.Click += new System.EventHandler(this.removeTemporaryFilesToolStripMenuItem_Click);
+            // 
+            // downloadCUDAForPerfviewsWhisperFasterToolStripMenuItem
+            // 
+            this.downloadCUDAForPerfviewsWhisperFasterToolStripMenuItem.Name = "downloadCUDAForPerfviewsWhisperFasterToolStripMenuItem";
+            this.downloadCUDAForPerfviewsWhisperFasterToolStripMenuItem.Size = new System.Drawing.Size(319, 22);
+            this.downloadCUDAForPerfviewsWhisperFasterToolStripMenuItem.Text = "Download CUDA for Perfview\'s Whisper-Faster";
+            this.downloadCUDAForPerfviewsWhisperFasterToolStripMenuItem.Click += new System.EventHandler(this.downloadCUDAForPerfviewsWhisperFasterToolStripMenuItem_Click);
             // 
             // checkBoxAutoAdjustTimings
             // 
@@ -496,12 +505,12 @@
             this.labelAdvanced.TabIndex = 29;
             this.labelAdvanced.Text = "Advanced...";
             // 
-            // downloadCUDAForPerfviewsWhisperFasterToolStripMenuItem
+            // showWhisperlogtxtToolStripMenuItem
             // 
-            this.downloadCUDAForPerfviewsWhisperFasterToolStripMenuItem.Name = "downloadCUDAForPerfviewsWhisperFasterToolStripMenuItem";
-            this.downloadCUDAForPerfviewsWhisperFasterToolStripMenuItem.Size = new System.Drawing.Size(319, 22);
-            this.downloadCUDAForPerfviewsWhisperFasterToolStripMenuItem.Text = "Download CUDA for Perfview\'s Whisper-Faster";
-            this.downloadCUDAForPerfviewsWhisperFasterToolStripMenuItem.Click += new System.EventHandler(this.downloadCUDAForPerfviewsWhisperFasterToolStripMenuItem_Click);
+            this.showWhisperlogtxtToolStripMenuItem.Name = "showWhisperlogtxtToolStripMenuItem";
+            this.showWhisperlogtxtToolStripMenuItem.Size = new System.Drawing.Size(319, 22);
+            this.showWhisperlogtxtToolStripMenuItem.Text = "Show whisper_log.txt";
+            this.showWhisperlogtxtToolStripMenuItem.Click += new System.EventHandler(this.ShowWhisperLogFileToolStripMenuItem_Click);
             // 
             // WhisperAudioToText
             // 
@@ -589,5 +598,6 @@
         private System.Windows.Forms.Button buttonAdvanced;
         private System.Windows.Forms.Label labelAdvanced;
         private System.Windows.Forms.ToolStripMenuItem downloadCUDAForPerfviewsWhisperFasterToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem showWhisperlogtxtToolStripMenuItem;
     }
 }
