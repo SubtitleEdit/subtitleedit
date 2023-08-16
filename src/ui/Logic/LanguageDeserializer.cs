@@ -349,6 +349,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "General/ExampleX":
                     language.General.ExampleX = reader.Value;
                     break;
+                case "General/ViewX":
+                    language.General.ViewX = reader.Value;
+                    break;
                 case "General/Reset":
                     language.General.Reset = reader.Value;
                     break;
@@ -552,6 +555,9 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "AudioToText/TranscribingXOfY":
                     language.AudioToText.TranscribingXOfY = reader.Value;
+                    break;
+                case "AudioToText/PostProcessing":
+                    language.AudioToText.PostProcessing = reader.Value;
                     break;
                 case "AudioToText/XFilesSavedToVideoSourceFolder":
                     language.AudioToText.XFilesSavedToVideoSourceFolder = reader.Value;

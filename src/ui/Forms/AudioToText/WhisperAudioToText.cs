@@ -315,6 +315,22 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 return;
             }
 
+            timer1.Start();
+            if (_showProgressPct > 0 && progressBar1.Style == ProgressBarStyle.Blocks)
+            {
+                _showProgressPct = 100;
+                progressBar1.Value = progressBar1.Maximum;
+            }
+
+            if (checkBoxAutoAdjustTimings.Checked || checkBoxUsePostProcessing.Checked)
+            {
+                labelProgress.Text = LanguageSettings.Current.AudioToText.PostProcessing;
+            }
+
+            labelTime.Text = string.Empty;
+            labelProgress.Refresh();
+            Application.DoEvents();
+
             var postProcessor = new AudioToTextPostProcessor(_languageCode)
             {
                 ParagraphMaxChars = Configuration.Settings.General.SubtitleLineMaximumLength * 2,
@@ -345,6 +361,8 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 UpdateLog();
                 SeLogger.WhisperInfo(textBoxLog.Text);
             }
+
+            timer1.Stop();
 
             DialogResult = DialogResult.OK;
         }
@@ -1275,7 +1293,10 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             buttonGenerate.Focus();
             _initialWidth = Width;
 
-            CheckIfInstalledAndVersion(Configuration.Settings.Tools.WhisperChoice);
+            System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(25), () =>
+            {
+                CheckIfInstalledAndVersion(Configuration.Settings.Tools.WhisperChoice);
+            });
         }
 
         private void CheckIfInstalledAndVersion(string whisperChoice)
@@ -1744,7 +1765,16 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
             downloadCUDAForPerfviewsWhisperFasterToolStripMenuItem.Visible = Configuration.Settings.Tools.WhisperChoice == WhisperChoice.PurfviewFasterWhisper;
 
-            showWhisperlogtxtToolStripMenuItem.Visible = File.Exists(SeLogger.GetWhisperLogFilePath());
+            var whisperLogFile = SeLogger.GetWhisperLogFilePath();
+            if (File.Exists(whisperLogFile))
+            {
+                showWhisperlogtxtToolStripMenuItem.Visible = true;
+                showWhisperlogtxtToolStripMenuItem.Text = string.Format(LanguageSettings.Current.General.ViewX, $"\"{Path.GetFileName(whisperLogFile)}\"");
+            }
+            else
+            {
+                showWhisperlogtxtToolStripMenuItem.Visible = false;
+            }
         }
 
         private void runOnlyPostProcessingToolStripMenuItem_Click(object sender, EventArgs e)
