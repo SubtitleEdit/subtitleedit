@@ -17,8 +17,6 @@ namespace Nikse.SubtitleEdit.Plugins
 
         public IReadOnlyCollection<LocalPlugin> GetPlugins()
         {
-            const string plugin = "IPlugin";
-
             var pluginFiles = Directory.GetFiles(_pluginFolder, "*.dll");
 
             // no plugin installed
@@ -28,7 +26,8 @@ namespace Nikse.SubtitleEdit.Plugins
             }
 
             var installedPlugins = new List<LocalPlugin>();
-
+            const string plugin = "IPlugin";
+            
             foreach (var pluginFile in pluginFiles)
             {
                 try
