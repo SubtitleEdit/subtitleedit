@@ -159,7 +159,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonStyles = new System.Windows.Forms.Button();
             this.buttonChooseFolder = new System.Windows.Forms.Button();
             this.comboBoxSubtitleFormats = new Nikse.SubtitleEdit.Controls.NikseComboBox();
-            this.textBoxOutputFolder = new Nikse.SubtitleEdit.Controls.SETextBox(true);
+            this.textBoxOutputFolder = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelEncoding = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.radioButtonSaveInSourceFolder = new System.Windows.Forms.RadioButton();
             this.comboBoxEncoding = new Nikse.SubtitleEdit.Controls.NikseComboBox();
@@ -2206,7 +2206,7 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.LinkLabel linkLabelOpenOutputFolder;
         private System.Windows.Forms.CheckBox checkBoxOverwrite;
         private System.Windows.Forms.Button buttonChooseFolder;
-        private Nikse.SubtitleEdit.Controls.SETextBox textBoxOutputFolder;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxOutputFolder;
         private System.Windows.Forms.RadioButton radioButtonSaveInSourceFolder;
         private System.Windows.Forms.ListView listViewConvertOptions;
         private System.Windows.Forms.ColumnHeader ActionCheckBox;

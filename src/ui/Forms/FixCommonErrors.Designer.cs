@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Controls;
+﻿using System.Windows.Forms;
+using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Forms
@@ -89,7 +90,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelStartTime = new System.Windows.Forms.Label();
             this.labelTextLineTotal = new System.Windows.Forms.Label();
             this.labelTextLineLengths = new System.Windows.Forms.Label();
-            this.textBoxListViewText = new Nikse.SubtitleEdit.Controls.SETextBox(true);
+            this.textBoxListViewText = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.tabPageLog = new System.Windows.Forms.TabPage();
             this.textBoxFixedIssues = new System.Windows.Forms.TextBox();
             this.labelNumberOfImportantLogMessages = new System.Windows.Forms.Label();
@@ -771,26 +772,19 @@ namespace Nikse.SubtitleEdit.Forms
             this.textBoxListViewText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxListViewText.BackColor = System.Drawing.SystemColors.WindowFrame;
-            this.textBoxListViewText.CurrentLanguage = "";
-            this.textBoxListViewText.CurrentLineIndex = 0;
             this.textBoxListViewText.HideSelection = false;
-            this.textBoxListViewText.IsDictionaryDownloaded = true;
-            this.textBoxListViewText.IsSpellCheckerInitialized = false;
-            this.textBoxListViewText.IsSpellCheckRequested = false;
-            this.textBoxListViewText.IsWrongWord = false;
-            this.textBoxListViewText.LanguageChanged = false;
             this.textBoxListViewText.Location = new System.Drawing.Point(194, 12);
             this.textBoxListViewText.MaxLength = 32767;
             this.textBoxListViewText.Multiline = true;
             this.textBoxListViewText.Name = "textBoxListViewText";
             this.textBoxListViewText.Padding = new System.Windows.Forms.Padding(1);
-            this.textBoxListViewText.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
+            this.textBoxListViewText.ScrollBars = ScrollBars.None;
             this.textBoxListViewText.SelectedText = "";
             this.textBoxListViewText.SelectionLength = 0;
             this.textBoxListViewText.SelectionStart = 0;
             this.textBoxListViewText.Size = new System.Drawing.Size(427, 64);
             this.textBoxListViewText.TabIndex = 118;
-            this.textBoxListViewText.TextBoxFont = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBoxListViewText.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBoxListViewText.UseSystemPasswordChar = false;
             this.textBoxListViewText.TextChanged += new System.EventHandler(this.TextBoxListViewTextTextChanged);
             this.textBoxListViewText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxListViewTextKeyDown);
@@ -905,7 +899,7 @@ namespace Nikse.SubtitleEdit.Forms
         private SubtitleListView subtitleListView1;
         private System.Windows.Forms.Label labelTextLineTotal;
         private System.Windows.Forms.Label labelTextLineLengths;
-        private Nikse.SubtitleEdit.Controls.SETextBox textBoxListViewText;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxListViewText;
         private System.Windows.Forms.Button buttonFixesApply;
         private System.Windows.Forms.Button buttonFixesInverse;
         private System.Windows.Forms.Button buttonFixesSelectAll;

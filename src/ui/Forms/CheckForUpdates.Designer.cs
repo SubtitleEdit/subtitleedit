@@ -32,7 +32,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             this.components = new System.ComponentModel.Container();
             this.labelStatus = new System.Windows.Forms.Label();
-            this.textBoxChangeLog = new Nikse.SubtitleEdit.Controls.SETextBox(true);
+            this.textBoxChangeLog = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonDownloadAndInstall = new System.Windows.Forms.Button();
             this.timerCheckForUpdates = new System.Windows.Forms.Timer(this.components);
@@ -58,7 +58,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.textBoxChangeLog.Multiline = true;
             this.textBoxChangeLog.Name = "textBoxChangeLog";
             this.textBoxChangeLog.ReadOnly = true;
-            this.textBoxChangeLog.ScrollBars = RichTextBoxScrollBars.Both;
+            this.textBoxChangeLog.ScrollBars = ScrollBars.Both;
             this.textBoxChangeLog.Size = new System.Drawing.Size(618, 53);
             this.textBoxChangeLog.TabIndex = 4;
             // 
@@ -128,7 +128,7 @@ namespace Nikse.SubtitleEdit.Forms
         #endregion
 
         private System.Windows.Forms.Label labelStatus;
-        private Nikse.SubtitleEdit.Controls.SETextBox textBoxChangeLog;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxChangeLog;
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Button buttonDownloadAndInstall;
         private System.Windows.Forms.Timer timerCheckForUpdates;

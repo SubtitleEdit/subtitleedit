@@ -775,6 +775,24 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
+        public string[] Lines
+        {
+            get
+            {
+                if (_simpleTextBox != null)
+                {
+                    return _simpleTextBox.Lines;
+                }
+
+                if (_uiTextBox != null)
+                {
+                    return _uiTextBox.Lines;
+                }
+
+                return Array.Empty<string>();
+            }
+        }
+
         public async Task CheckForLanguageChange(Subtitle subtitle)
         {
             if (_uiTextBox == null)

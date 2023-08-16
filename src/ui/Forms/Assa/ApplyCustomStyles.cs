@@ -119,7 +119,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             }
         }
 
-        private ListBox DoIntellisense(SETextBox tb, ListBox intellisenseListBox)
+        private ListBox DoIntellisense(NikseTextBox tb, ListBox intellisenseListBox)
         {
             if (intellisenseListBox == null)
             {
