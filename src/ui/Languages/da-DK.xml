@@ -98,6 +98,7 @@
     <Collapse>Fold sammen</Collapse>
     <ShortcutX>Genvej: {0}</ShortcutX>
     <ExampleX>Eksempel: {0}</ExampleX>
+    <ViewX>Vis {0}</ViewX>
     <Reset>Nulstil</Reset>
     <Error>Fejl</Error>
     <Warning>Advarsel</Warning>
@@ -150,8 +151,11 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
   </AddWaveform>
   <AddWaveformBatch>
     <Title>Batch generer bølgeform data</Title>
+    <ExtractTimeCodes>Udtræk tidskoder med FFprobe</ExtractTimeCodes>
     <ExtractingAudio>Udpakker lyd...</ExtractingAudio>
     <Calculating>Beregning...</Calculating>
+    <ExtractingTimeCodes>Udtrækker tidskoder...</ExtractingTimeCodes>
+    <DetectingShotChanges>Registrerer skudændringer...</DetectingShotChanges>
     <Done>Udført</Done>
     <Error>Fejl</Error>
   </AddWaveformBatch>
@@ -169,12 +173,14 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <ExtendOnly>Kun udvid</ExtendOnly>
     <EnforceDurationLimits>Håndhæv minimum og maksimum varighed</EnforceDurationLimits>
     <CheckShotChanges>Forlæng ikke tidligere sceneskift</CheckShotChanges>
+    <BatchCheckShotChanges>Respekter skudændringer (hvis tilgængelig)</BatchCheckShotChanges>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
     <Title>Overhold visnings-grænser</Title>
     <CheckShotChanges>Forlæng ikke tidligere sceneskift</CheckShotChanges>
     <FixesAvailable>Mulige rettelser: {0}</FixesAvailable>
     <UnableToFix>Kan ikke rettes: {0}</UnableToFix>
+    <BatchCheckShotChanges>Respekter skudændringer (hvis tilgængelig)</BatchCheckShotChanges>
   </ApplyDurationLimits>
   <AudioToText>
     <Title>Lyd til tekst</Title>
@@ -192,6 +198,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <LoadingVoskModel>Indlæser Vosk talegenkendelsesmodel...</LoadingVoskModel>
     <Transcribing>Transskriberer lyd til tekst...</Transcribing>
     <TranscribingXOfY>Transskriberer lyd til tekst - fil {0} af {1}...</TranscribingXOfY>
+    <PostProcessing>Efterbehandling...</PostProcessing>
     <XFilesSavedToVideoSourceFolder>{0} filer gemt i videokildemappen</XFilesSavedToVideoSourceFolder>
     <UsePostProcessing>Brug efterbehandling (linjefletning, ret store og små bogstaver, tegnsætning og mere)</UsePostProcessing>
     <AutoAdjustTimings>Autojuster tid</AutoAdjustTimings>
@@ -202,6 +209,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <RemoveTemporaryFiles>Fjern midlertidige filer</RemoveTemporaryFiles>
     <SetCppConstMeFolder>Indstil mappen for CPP/Const-me-modeller...</SetCppConstMeFolder>
     <OnlyRunPostProcessing>Kør kun efterbehandling/juster tider</OnlyRunPostProcessing>
+    <DownloadFasterWhisperCuda>Download CUDA til Perfview's Whisper-Faster</DownloadFasterWhisperCuda>
   </AudioToText>
   <AssaAttachments>
     <Title>Avancerede Sub Station Alpha vedhæftede filer</Title>
@@ -382,6 +390,9 @@ Klik venligst på "{0}" for at udtrække tidskoderne først, eller deaktiver den
     <NoShotChangesLoadedError>Du har valgt at sætte stikord til skudændringer, men der er ingen skudændringer indlæst.
 
 Klik venligst på "{0}" for at generere eller importere skudændringer først, eller deaktiver denne mulighed.</NoShotChangesLoadedError>
+    <BatchAlignTimeCodes>Juster tidskoder til frame-tidskoder</BatchAlignTimeCodes>
+    <BatchUseExactTimeCodes>Brug nøjagtige tidskoder (hvis tilgængelig)</BatchUseExactTimeCodes>
+    <BatchSnapToShotChanges>Snap signaler til skudændringer (hvis tilgængelig)</BatchSnapToShotChanges>
   </BeautifyTimeCodes>
   <BeautifyTimeCodesProfile>
     <Title>Rediger profil</Title>
@@ -498,6 +509,7 @@ Vi udnytter billedets indre rytme.</CreateSimpleChainingToolTip>
     <Enabled>Aktiv</Enabled>
     <Name>Navn</Name>
     <LinesFoundX>Antal linjer fundet: {0}</LinesFoundX>
+    <ExtraNames>Tilføj ekstra navne (adskilt med komma, kun engangsbrug)</ExtraNames>
   </ChangeCasingNames>
   <ChangeFrameRate>
     <Title>Skift antal billeder pr. sekund</Title>
@@ -865,6 +877,7 @@ Vi udnytter billedets indre rytme.</CreateSimpleChainingToolTip>
     <BreakLongLines>Ombryd lange linjer</BreakLongLines>
     <RemoveLineBreaks>Fjern linjeskift i korte afsnit med kun én sætning</RemoveLineBreaks>
     <RemoveLineBreaksAll>Fjern linjeskift i korte tekster (undtagen dialog)</RemoveLineBreaksAll>
+    <RemoveLineBreaksPixelWidth>Saml undertekster, der kan passe på én linje (pixelbredde)</RemoveLineBreaksPixelWidth>
     <FixUppercaseIInsideLowercaseWords>Ret store bogstaver 'i' inde i små ord (OCR-fejl)</FixUppercaseIInsideLowercaseWords>
     <FixDoubleApostrophes>Ret dobbelt apostrof tegn ('') til en enkelt qoute (")</FixDoubleApostrophes>
     <AddPeriods>Tilføj punktum efter de linjer, hvor næste linje starter med stort bogstav</AddPeriods>
@@ -899,6 +912,7 @@ Vi udnytter billedets indre rytme.</CreateSimpleChainingToolTip>
     <FixFirstLetterToUppercaseAfterParagraph>Ret første bogstav til stort bogstav efter afsnit</FixFirstLetterToUppercaseAfterParagraph>
     <MergeShortLine>Flet kort line</MergeShortLine>
     <MergeShortLineAll>Flet kort linjer (undtagen dialog)</MergeShortLineAll>
+    <UnbreakShortLinePixelWidth>Saml kort linje (pixelbredde)</UnbreakShortLinePixelWidth>
     <BreakLongLine>Brryd lange linjer</BreakLongLine>
     <FixLongDisplayTime>Ret lang visningstid</FixLongDisplayTime>
     <FixInvalidItalicTag>Ret ugyldig kursiv tag</FixInvalidItalicTag>
@@ -1723,6 +1737,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <NothingToUndo>Intet at fortryde</NothingToUndo>
     <InvalidLanguageNameX>Ugyldigt sprog navn: {0}</InvalidLanguageNameX>
     <DoNotDisplayMessageAgain>Vis ikke denne meddelelse igen</DoNotDisplayMessageAgain>
+    <DoNotAutoLoadVideo>Indlæs ikke video automatisk</DoNotAutoLoadVideo>
     <NumberOfCorrectedWords>Antal rettede ord: {0}</NumberOfCorrectedWords>
     <NumberOfSkippedWords>Antal oversprungne ord: {0}</NumberOfSkippedWords>
     <NumberOfCorrectWords>Antal korrekte ord: {0}</NumberOfCorrectWords>
@@ -2553,6 +2568,10 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <RecalculateDurationOfCurrentSubtitle>Genberegn varighed valgte undertekst</RecalculateDurationOfCurrentSubtitle>
     <RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed>Genberegn varigheden af ​​den aktuelle undertekst (baseret på optimal læsehastighed)</RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed>
     <RecalculateDurationOfCurrentSubtitleByMinReadingSpeed>Genberegn varigheden af ​​den aktuelle undertekst (baseret på minimum læsehastighed)</RecalculateDurationOfCurrentSubtitleByMinReadingSpeed>
+    <SetInCueToClosestShotChangeLeftGreenZone>Sæt i kø til minimumsafstand før nærmeste skudskift (venstre grønne zone)</SetInCueToClosestShotChangeLeftGreenZone>
+    <SetInCueToClosestShotChangeRightGreenZone>Sæt i kø til minimumsafstand efter nærmeste skudskift (højre grøn zone)</SetInCueToClosestShotChangeRightGreenZone>
+    <SetOutCueToClosestShotChangeLeftGreenZone>Sæt stikordet til minimumsafstand før det nærmeste skudskift (venstre grønne zone)</SetOutCueToClosestShotChangeLeftGreenZone>
+    <SetOutCueToClosestShotChangeRightGreenZone>Sæt stikordet til minimum afstand efter nærmeste skudskift (højre grøn zone)</SetOutCueToClosestShotChangeRightGreenZone>
     <MainCreateStartDownEndUp>Opret ny på tast-ned, sæt sluttid ved tast-op</MainCreateStartDownEndUp>
     <MergeDialog>Flet dialog (indsæt tankestreger)</MergeDialog>
     <MergeDialogWithNext>Flet dialog med næste (indsæt bindestreger)</MergeDialogWithNext>
@@ -3318,6 +3337,10 @@ Fortsæt?</RestoreDefaultSettingsMsg>
     <Title>WebVTT - angiv ny stemme</Title>
     <VoiceName>Stemme-navn</VoiceName>
   </WebVttNewVoice>
+  <WebVttProperties>
+    <UseXTimeStamp>Brug X-TIMESTAMP-MAP headerværdi</UseXTimeStamp>
+    <MergeLines>Flet linjer med samme tekst ved indlæsning</MergeLines>
+  </WebVttProperties>
   <WebVttStyleManager>
     <Title>WebVTT stilarter</Title>
   </WebVttStyleManager>
