@@ -494,20 +494,39 @@ namespace Nikse.SubtitleEdit.Controls
                     e.Graphics.DrawImage(StateImageList.Images[e.Item.StateImageIndex], new Rectangle(rect.X + 4, rect.Y + 2, 16, 16));
                 }
 
-                if (Columns[e.ColumnIndex].TextAlign == HorizontalAlignment.Right)
+                // Draw text - impossible to get a precise match with the default list view text :(
+                e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+                e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAliasGridFit;
+                var rectangle = new Rectangle(e.Bounds.Left + 5 + addX, e.Bounds.Top + 2, e.Bounds.Width - 4 - addX, e.Bounds.Height - 2);
+                using (var brush = new SolidBrush(DarkTheme.DarkThemeDisabledColor))
+                using (var stringFormat = CreateStringFormat(this))
                 {
-                    var stringWidth = (int)e.Graphics.MeasureString(e.Item.SubItems[e.ColumnIndex].Text, _subtitleFont).Width;
-                    TextRenderer.DrawText(e.Graphics, e.Item.SubItems[e.ColumnIndex].Text, _subtitleFont, new Point(e.Bounds.Right - stringWidth - 7, e.Bounds.Top + 2), e.Item.ForeColor, TextFormatFlags.NoPrefix);
-                }
-                else
-                {
-                    TextRenderer.DrawText(e.Graphics, e.Item.SubItems[e.ColumnIndex].Text, _subtitleFont, new Point(e.Bounds.Left + 3 + addX, e.Bounds.Top + 2), e.Item.ForeColor, TextFormatFlags.NoPrefix);
+                    e.Graphics.DrawString(e.Item.SubItems[e.ColumnIndex].Text, e.Item.SubItems[e.ColumnIndex].Font, brush, rectangle, stringFormat);
                 }
             }
             else
             {
                 e.DrawDefault = true;
             }
+        }
+
+        internal static StringFormat CreateStringFormat(Control control)
+        {
+            var stringFormat = new StringFormat();
+            stringFormat.Alignment = StringAlignment.Near;
+            stringFormat.Trimming = StringTrimming.EllipsisCharacter;
+            stringFormat.FormatFlags |= StringFormatFlags.LineLimit;
+            if (control.RightToLeft == RightToLeft.Yes)
+            {
+                stringFormat.FormatFlags |= StringFormatFlags.DirectionRightToLeft;
+            }
+
+            if (control.AutoSize)
+            {
+                stringFormat.FormatFlags |= StringFormatFlags.MeasureTrailingSpaces;
+            }
+
+            return stringFormat;
         }
 
         private static Color GetCustomColor(Color color)
@@ -1597,7 +1616,7 @@ namespace Nikse.SubtitleEdit.Controls
         {
             var item = new ListViewItem(paragraph.Number.ToString(CultureInfo.InvariantCulture))
             {
-                Tag = paragraph, 
+                Tag = paragraph,
                 UseItemStyleForSubItems = false,
             };
             foreach (var column in SubtitleColumns)
@@ -2147,13 +2166,13 @@ namespace Nikse.SubtitleEdit.Controls
         {
             UpdateItem(index, i => i.BackColor = color, si => si.BackColor = color);
         }
-        
+
         public void SetForegroundColor(int index, Color color)
         {
             UpdateItem(index, i => i.ForeColor = color, si => si.ForeColor = color);
         }
-        
-        private void UpdateItem(int index, Action<ListViewItem> itemUpdater,  Action<ListViewItem.ListViewSubItem> subItemUpdater)
+
+        private void UpdateItem(int index, Action<ListViewItem> itemUpdater, Action<ListViewItem.ListViewSubItem> subItemUpdater)
         {
             if (!IsValidIndex(index))
             {
