@@ -98,6 +98,7 @@
     <Collapse>축소</Collapse>
     <ShortcutX>단축키: {0}</ShortcutX>
     <ExampleX>예: {0}</ExampleX>
+    <ViewX>보기: {0}</ViewX>
     <Reset>초기화</Reset>
     <Error>오류</Error>
     <Warning>경고</Warning>
@@ -200,6 +201,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <LoadingVoskModel>Vosk 음성 인식 모델을 로드하는 중...</LoadingVoskModel>
     <Transcribing>오디오를 텍스트로 변환하는 중...</Transcribing>
     <TranscribingXOfY>오디오를 텍스트로 변환 - {1}의 {0}파일...</TranscribingXOfY>
+    <PostProcessing>후처리 중...</PostProcessing>
     <XFilesSavedToVideoSourceFolder>{0} 파일을 비디오 소스 폴더에 저장함 </XFilesSavedToVideoSourceFolder>
     <UsePostProcessing>post-processing 사용 (줄 병합, 케이싱 수정, 문장 부호 등)</UsePostProcessing>
     <AutoAdjustTimings>타이밍 자동 조정</AutoAdjustTimings>
