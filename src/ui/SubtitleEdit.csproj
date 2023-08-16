@@ -101,6 +101,7 @@
     <Reference Include="System.Web.Services" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
     <Reference Include="Vosk, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Vosk.0.3.38\lib\netstandard2.0\Vosk.dll</HintPath>
     </Reference>
@@ -1587,6 +1588,10 @@
     <Compile Include="Logic\VideoPreviewGenerator.cs" />
     <Compile Include="Logic\WindowsHelper.cs" />
     <Compile Include="Logic\WordSpellChecker.cs" />
+    <Compile Include="Plugins\LocalPluginMetadataProvider.cs" />
+    <Compile Include="Plugins\OnlinePluginMetadataProvider.cs" />
+    <Compile Include="Plugins\PluginInfo.cs" />
+    <Compile Include="Plugins\PluginUpdateChecker.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Forms\SyncPointsSync.cs">
@@ -2585,7 +2590,6 @@
       <Visible>false</Visible>
     </HunspellAssemblies>
   </ItemGroup>
-  <ItemGroup />
   <Target Name="BeforeCompile">
     <XmlPeek XmlInputPath="$(SolutionDir)\src\ui\packages.config" Query="//package[@id='NHunspell']/@version">
       <Output TaskParameter="Result" PropertyName="HunspellVersion" />

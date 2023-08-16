@@ -64,6 +64,7 @@
     <Compile Include="Assa\AssaTimeCodes.cs" />
     <Compile Include="Core\AudioToTextTest.cs" />
     <Compile Include="Core\CsvUtilTest.cs" />
+    <Compile Include="Core\PluginUpdateCheckerTest.cs" />
     <Compile Include="Core\WebVttHelperTest.cs" />
     <Compile Include="Core\WebVttToAssaTest.cs" />
     <Compile Include="Dictionaries\StringWithoutSpaceSplitToWordsTest.cs" />
