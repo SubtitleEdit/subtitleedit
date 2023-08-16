@@ -1299,8 +1299,16 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             });
         }
 
+        private bool _checkedInstalledAndVersion = false;
         private void CheckIfInstalledAndVersion(string whisperChoice)
         {
+            if (_checkedInstalledAndVersion)
+            {
+                return;
+            }
+
+            _checkedInstalledAndVersion = true;
+
             if (whisperChoice == WhisperChoice.Cpp)
             {
                 var targetFile = WhisperHelper.GetWhisperPathAndFileName(whisperChoice);
@@ -1344,7 +1352,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                     if (!Configuration.Settings.Tools.WhisperIgnoreVersion &&
                         !WhisperDownload.IsLatestVersion(targetFile, whisperChoice))
                     {
-                        if (MessageBox.Show(string.Format(LanguageSettings.Current.Settings.DownloadX, "Whisper CPP (Update)"), "Subtitle Edit", MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
+                        if (MessageBox.Show(string.Format(LanguageSettings.Current.Settings.DownloadX, whisperChoice + " (Update)"), "Subtitle Edit", MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
                         {
                             using (var downloadForm = new WhisperDownload(whisperChoice))
                             {
@@ -1359,7 +1367,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 }
                 else
                 {
-                    if (MessageBox.Show(string.Format(LanguageSettings.Current.Settings.DownloadX, "Whisper CPP"), "Subtitle Edit", MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
+                    if (MessageBox.Show(string.Format(LanguageSettings.Current.Settings.DownloadX, whisperChoice), "Subtitle Edit", MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
                     {
                         using (var downloadForm = new WhisperDownload(whisperChoice))
                         {
