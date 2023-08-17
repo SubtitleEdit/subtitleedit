@@ -13,6 +13,9 @@ namespace Nikse.SubtitleEdit.Controls
         // ReSharper disable once InconsistentNaming
         public event EventHandler ValueChanged;
 
+        // ReSharper disable once InconsistentNaming
+        public new event KeyEventHandler KeyDown;
+
         private decimal _value;
 
         [Category("NikseUpDown"), Description("Gets or sets the default value in textBox"), RefreshProperties(RefreshProperties.Repaint)]
@@ -230,6 +233,10 @@ namespace Nikse.SubtitleEdit.Controls
                     AddValue(Increment);
                     e.Handled = true;
                 }
+                else
+                {
+                    KeyDown?.Invoke(sender, e);
+                }
             };
             _textBox.LostFocus += (sender, args) =>
             {
@@ -267,6 +274,17 @@ namespace Nikse.SubtitleEdit.Controls
 
             LostFocus += (sender, args) => _repeatTimer.Stop();
             TabStop = false;
+        }
+
+        protected override void OnGotFocus(EventArgs e)
+        {
+            if (_textBox != null)
+            {
+                _textBox.Focus();
+                return;
+            }
+
+            base.OnGotFocus(e);
         }
 
         private void _textBox_TextChanged(object sender, EventArgs e)

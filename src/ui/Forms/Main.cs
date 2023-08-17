@@ -9612,6 +9612,8 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         _subtitle.Paragraphs[index].Layer = form.Layer;
                     }
+
+                    numericUpDownLayer.Value = form.Layer;
                 }
             }
         }
