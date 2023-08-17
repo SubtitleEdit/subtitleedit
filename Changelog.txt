@@ -4,13 +4,14 @@
 * NEW:
    * New toolbar/video-player themes - thx jmaraujouy
    * Beautify time codes (via shot changes) - thx  Flitskikker
-   * Add Purfview's FasterWhisper - thx Purview
+   * Add Purfview's FasterWhisper - thx Purfview
    * Use native styles for WebVTT
    * Add video format ProRes for "Generate video with burned-in sub"
    * Allow setting profile from cmd line - thx emcodem
    * ASSA set layer - thx JonSchram
    * Allow OCR of XML/PNG from MXF - thx Rodney
    * Add more "Remove formatting" options in "Batch convert"
+   * Add new shortcuts (focuc text box, set actor/voice)
 * IMPROVED:
    * Update German translation - thx Netspark
    * Update Chinese translation - thx nkh0472
