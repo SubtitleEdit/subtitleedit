@@ -112,6 +112,19 @@ namespace Nikse.SubtitleEdit.Forms.Options
             UiUtil.FixFonts(this);
             UiUtil.FixLargeFonts(this, buttonOK);
 
+            listBoxSection.Items.Clear();
+            listBoxSection.Items.AddRange(new object[] {
+                "General",
+                "Subtitle formats",
+                "Shortcuts",
+                "Syntax coloring",
+                "Video player",
+                "Waveform/spectrogram",
+                "Tools",
+                "Toolbar",
+                "Font",
+                "Network",
+                "File type associations"});
 
             _shortcutsBackgroundWorker = new BackgroundWorker();
             Init();
@@ -3279,19 +3292,23 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
         private void buttonTextBoxHtmlColor_Click(object sender, EventArgs e)
         {
-            colorDialogSSAStyle.Color = panelTextBoxHtmlColor.BackColor;
-            if (colorDialogSSAStyle.ShowDialog() == DialogResult.OK)
+            using (var colorChooser = new ColorChooser { Color = panelTextBoxHtmlColor.BackColor, ShowAlpha = false })
             {
-                panelTextBoxHtmlColor.BackColor = colorDialogSSAStyle.Color;
+                if (colorChooser.ShowDialog() == DialogResult.OK)
+                {
+                    panelTextBoxHtmlColor.BackColor = colorChooser.Color;
+                }
             }
         }
 
         private void buttonTextBoxAssColor_Click(object sender, EventArgs e)
         {
-            colorDialogSSAStyle.Color = panelTextBoxAssColor.BackColor;
-            if (colorDialogSSAStyle.ShowDialog() == DialogResult.OK)
+            using (var colorChooser = new ColorChooser { Color = panelTextBoxAssColor.BackColor, ShowAlpha = false })
             {
-                panelTextBoxAssColor.BackColor = colorDialogSSAStyle.Color;
+                if (colorChooser.ShowDialog() == DialogResult.OK)
+                {
+                    panelTextBoxAssColor.BackColor = colorChooser.Color;
+                }
             }
         }
 
@@ -3316,19 +3333,23 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
         private void buttonDarkThemeColor_Click(object sender, EventArgs e)
         {
-            colorDialogSSAStyle.Color = panelDarkThemeColor.BackColor;
-            if (colorDialogSSAStyle.ShowDialog() == DialogResult.OK)
+            using (var colorChooser = new ColorChooser { Color = panelDarkThemeColor.BackColor, ShowAlpha = false })
             {
-                panelDarkThemeColor.BackColor = colorDialogSSAStyle.Color;
+                if (colorChooser.ShowDialog() == DialogResult.OK)
+                {
+                    panelDarkThemeColor.BackColor = colorChooser.Color;
+                }
             }
         }
 
         private void buttonDarkThemeBackColor_Click(object sender, EventArgs e)
         {
-            colorDialogSSAStyle.Color = panelDarkThemeBackColor.BackColor;
-            if (colorDialogSSAStyle.ShowDialog() == DialogResult.OK)
+            using (var colorChooser = new ColorChooser { Color = panelDarkThemeBackColor.BackColor, ShowAlpha = false })
             {
-                panelDarkThemeBackColor.BackColor = colorDialogSSAStyle.Color;
+                if (colorChooser.ShowDialog() == DialogResult.OK)
+                {
+                    panelDarkThemeBackColor.BackColor = colorChooser.Color;
+                }
             }
         }
 
