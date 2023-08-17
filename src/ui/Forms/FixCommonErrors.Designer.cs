@@ -92,7 +92,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelTextLineLengths = new System.Windows.Forms.Label();
             this.textBoxListViewText = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.tabPageLog = new System.Windows.Forms.TabPage();
-            this.textBoxFixedIssues = new System.Windows.Forms.TextBox();
+            this.textBoxFixedIssues = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelNumberOfImportantLogMessages = new System.Windows.Forms.Label();
             this.groupBoxStep1.SuspendLayout();
             this.contextMenuStripRules.SuspendLayout();
@@ -892,7 +892,7 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ColumnHeader columnHeader7;
         private System.Windows.Forms.ColumnHeader columnHeader8;
         private System.Windows.Forms.TabPage tabPageLog;
-        private System.Windows.Forms.TextBox textBoxFixedIssues;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxFixedIssues;
         private System.Windows.Forms.Button buttonInverseSelection;
         private System.Windows.Forms.Button buttonSelectAll;
         private System.Windows.Forms.GroupBox groupBoxEditPanel;
