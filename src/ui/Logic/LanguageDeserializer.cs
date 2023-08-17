@@ -6166,6 +6166,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/ToggleBookmarks":
                     language.Settings.ToggleBookmarks = reader.Value;
                     break;
+                case "Settings/FocusTextBox":
+                    language.Settings.FocusTextBox = reader.Value;
+                    break;
                 case "Settings/ToggleBookmarksWithComment":
                     language.Settings.ToggleBookmarksWithComment = reader.Value;
                     break;
@@ -7716,6 +7719,12 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "Settings/ExportAsHtml":
                     language.Settings.ExportAsHtml = reader.Value;
+                    break;
+                case "Settings/SetNewActor":
+                    language.Settings.SetNewActor = reader.Value;
+                    break;
+                case "Settings/SetActorX":
+                    language.Settings.SetActorX = reader.Value;
                     break;
                 case "SettingsMpv/DownloadMpv":
                     language.SettingsMpv.DownloadMpv = reader.Value;

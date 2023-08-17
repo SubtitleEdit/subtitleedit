@@ -214,7 +214,15 @@ namespace Nikse.SubtitleEdit.Logic
         public Keys MainListViewColor6 { get; set; }
         public Keys MainListViewColor7 { get; set; }
         public Keys MainListViewColor8 { get; set; }
-
+        public Keys MainListViewSetNewActor { get; set; }
+        public Keys MainListViewSetActor1 { get; set; }
+        public Keys MainListViewSetActor2 { get; set; }
+        public Keys MainListViewSetActor3 { get; set; }
+        public Keys MainListViewSetActor4 { get; set; }
+        public Keys MainListViewSetActor5 { get; set; }
+        public Keys MainListViewSetActor6 { get; set; }
+        public Keys MainListViewSetActor7 { get; set; }
+        public Keys MainListViewSetActor8 { get; set; }
         public Keys MainListViewGoToNextError { get; set; }
         public Keys MainListViewRemoveBlankLines { get; set; }
         public Keys MainListViewRemoveTimeCodes { get; set; }
@@ -380,6 +388,15 @@ namespace Nikse.SubtitleEdit.Logic
             MainListViewColor6 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewColor6);
             MainListViewColor7 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewColor7);
             MainListViewColor8 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewColor8);
+            MainListViewSetNewActor = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewSetNewActor);
+            MainListViewSetActor1 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewSetActor1);
+            MainListViewSetActor2 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewSetActor2);
+            MainListViewSetActor3 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewSetActor3);
+            MainListViewSetActor4 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewSetActor4);
+            MainListViewSetActor5 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewSetActor5);
+            MainListViewSetActor6 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewSetActor6);
+            MainListViewSetActor7 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewSetActor7);
+            MainListViewSetActor8 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewSetActor8);
             MainListViewGoToNextError = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewGoToNextError);
             MainListViewRemoveBlankLines = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralRemoveBlankLines);
             MainListViewRemoveTimeCodes = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewRemoveTimeCodes);

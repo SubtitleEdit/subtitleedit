@@ -2293,6 +2293,7 @@ can edit in same subtitle file (collaboration)</Information>
     <BeautifyTimeCodes>Beautify time codes</BeautifyTimeCodes>
     <SettingsName>Settings</SettingsName>
     <ToggleBookmarks>Toggle bookmarks</ToggleBookmarks>
+    <FocusTextBox>Focus text box</FocusTextBox>
     <ToggleBookmarksWithComment>Toggle bookmarks - add comment</ToggleBookmarksWithComment>
     <ClearBookmarks>Clear bookmarks</ClearBookmarks>
     <ExportBookmarks>Export bookmarks...</ExportBookmarks>
@@ -2814,6 +2815,8 @@ Continue?</RestoreDefaultSettingsMsg>
     <CustomContinuationStyleNote>Note: The custom continuation style is shared across profiles.</CustomContinuationStyleNote>
     <ResetCustomContinuationStyleWarning>This will override the values in the dialog. Are you sure?</ResetCustomContinuationStyleWarning>
     <ExportAsHtml>Export as HTML...</ExportAsHtml>
+    <SetNewActor>Set new actor/voice</SetNewActor>
+    <SetActorX>Set actor/voice {0}</SetActorX>
   </Settings>
   <SettingsMpv>
     <DownloadMpv>Download mpv lib</DownloadMpv>

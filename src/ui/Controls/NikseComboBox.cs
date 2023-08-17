@@ -147,6 +147,8 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
+        public override bool Focused => _listViewShown || (_textBox != null && _textBox.Focused) || base.Focused;
+
         public object SelectedItem
         {
             get
