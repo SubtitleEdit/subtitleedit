@@ -98,6 +98,7 @@
     <Collapse>收起</Collapse>
     <ShortcutX>快捷键: {0}</ShortcutX>
     <ExampleX>示例: {0}</ExampleX>
+    <ViewX>查看 {0}</ViewX>
     <Reset>重置</Reset>
     <Error>错误</Error>
     <Warning>警告</Warning>
@@ -203,6 +204,7 @@ Command line: {1} {2}
     <LoadingVoskModel>正在加载 Vosk 语音识别模型...</LoadingVoskModel>
     <Transcribing>将音频转录为文本...</Transcribing>
     <TranscribingXOfY>将音频转录为文本 - 第{0}/{1}个文件...</TranscribingXOfY>
+    <PostProcessing>后处理...</PostProcessing>
     <XFilesSavedToVideoSourceFolder>{0} 个文件已保存到视频源文件夹</XFilesSavedToVideoSourceFolder>
     <UsePostProcessing>使用后处理（行合并、修复大小写、标点符号等）</UsePostProcessing>
     <AutoAdjustTimings>自动调整时间</AutoAdjustTimings>
@@ -213,6 +215,7 @@ Command line: {1} {2}
     <RemoveTemporaryFiles>移除临时文件</RemoveTemporaryFiles>
     <SetCppConstMeFolder>设置 CPP/Const-me 模型文件夹...</SetCppConstMeFolder>
     <OnlyRunPostProcessing>仅进行后处理/调整时间</OnlyRunPostProcessing>
+    <DownloadFasterWhisperCuda>下载适用于 Perfview 的 Whisper-Faster 的 CUDA 组件</DownloadFasterWhisperCuda>
   </AudioToText>
   <AssaAttachments>
     <Title>Advanced Sub Station Alpha字幕附件</Title>
@@ -974,9 +977,11 @@ Command line: {1} {2}
     <InfoAssaOn>注意：将使用 ASSA 样式:)</InfoAssaOn>
     <XGeneratedWithBurnedInSubsInX>带有内嵌字幕的“{0}”已在{1}生成完毕。</XGeneratedWithBurnedInSubsInX>
     <TimeRemainingMinutes>剩余时间：{0} 分钟</TimeRemainingMinutes>
+    <TimeRemainingOneMinute>剩余时间：1 分钟</TimeRemainingOneMinute>
     <TimeRemainingSeconds>剩余时间: {0} 秒</TimeRemainingSeconds>
     <TimeRemainingAFewSeconds>剩余时间: 几秒钟</TimeRemainingAFewSeconds>
     <TimeRemainingMinutesAndSeconds>剩余时间: {0} 分 {1} 秒</TimeRemainingMinutesAndSeconds>
+    <TimeRemainingOneMinuteAndSeconds>剩余时间：1 分 {0} 秒</TimeRemainingOneMinuteAndSeconds>
     <TargetFileName>目标文件名：{0}</TargetFileName>
     <TargetFileSize>目标文件大小（需要启用2次编码）</TargetFileSize>
     <FileSizeMb>文件大小 (MB)</FileSizeMb>
