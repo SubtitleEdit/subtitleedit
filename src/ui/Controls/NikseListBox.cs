@@ -8,7 +8,7 @@ namespace Nikse.SubtitleEdit.Controls
     public class NikseListBox : Panel
     {
         private readonly ListBox _listBox;
-        private bool _loadingDone = false;
+        private readonly bool _loadingDone;
 
         public NikseListBox()
         {
