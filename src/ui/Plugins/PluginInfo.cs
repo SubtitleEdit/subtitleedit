@@ -38,21 +38,18 @@ namespace Nikse.SubtitleEdit.Plugins
                     continue;
                 }
 
-                return new PluginUpdate
-                {
-                    Name = Name,
-                    OldVersion = Version,
-                    NewVersion = onlinePlugin.Version,
-                };
+                return PluginUpdate(onlinePlugin.Version);
             }
 
-            return new PluginUpdate
-            {
-                Name = Name,
-                OldVersion = Version,
-                NewVersion = Version,
-            };
+            return PluginUpdate(Version);
         }
+
+        private PluginUpdate PluginUpdate(decimal newVersion) => new PluginUpdate
+        {
+            Name = Name,
+            OldVersion = Version,
+            NewVersion = newVersion,
+        };
 
         public bool IsValid() => !string.IsNullOrEmpty(Name) && Version > 0;
     }
