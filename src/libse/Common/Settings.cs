@@ -2338,6 +2338,7 @@ $HorzAlign          =   Center
         public string GeneralColorPicker { get; set; }
         public string GeneralTakeAutoBackup { get; set; }
         public string GeneralHelp { get; set; }
+        public string GeneralFocusTextBox { get; set; }
 
         // File
         public string MainFileNew { get; set; }
@@ -2497,6 +2498,15 @@ $HorzAlign          =   Center
         public string MainListViewColor6 { get; set; }
         public string MainListViewColor7 { get; set; }
         public string MainListViewColor8 { get; set; }
+        public string MainListViewSetNewActor { get; set; }
+        public string MainListViewSetActor1 { get; set; }
+        public string MainListViewSetActor2 { get; set; }
+        public string MainListViewSetActor3 { get; set; }
+        public string MainListViewSetActor4 { get; set; }
+        public string MainListViewSetActor5 { get; set; }
+        public string MainListViewSetActor6 { get; set; }
+        public string MainListViewSetActor7 { get; set; }
+        public string MainListViewSetActor8 { get; set; }
         public string MainListViewColorChoose { get; set; }
         public string MainRemoveFormatting { get; set; }
         public string MainListViewCopyText { get; set; }
@@ -9078,6 +9088,12 @@ $HorzAlign          =   Center
                     shortcuts.GeneralHelp = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("GeneralFocusTextBox");
+                if (subNode != null)
+                {
+                    shortcuts.GeneralFocusTextBox = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainFileNew");
                 if (subNode != null)
                 {
@@ -9922,6 +9938,61 @@ $HorzAlign          =   Center
                 if (subNode != null)
                 {
                     shortcuts.MainListViewColor8 = subNode.InnerText;
+                }
+
+
+                subNode = node.SelectSingleNode("MainListViewSetNewActor");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewSetNewActor = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainListViewSetActor1");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewSetActor1 = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainListViewSetActor2");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewSetActor2 = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainListViewSetActor3");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewSetActor3 = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainListViewSetActor4");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewSetActor4 = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainListViewSetActor5");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewSetActor5 = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainListViewSetActor6");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewSetActor6 = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainListViewSetActor7");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewSetActor7 = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainListViewSetActor8");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewSetActor8 = subNode.InnerText;
                 }
 
                 subNode = node.SelectSingleNode("MainListViewColorChoose");
@@ -12074,6 +12145,7 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("GeneralToggleMode", shortcuts.GeneralToggleMode);
             textWriter.WriteElementString("GeneralTogglePreviewOnVideo", shortcuts.GeneralTogglePreviewOnVideo);
             textWriter.WriteElementString("GeneralHelp", shortcuts.GeneralHelp);
+            textWriter.WriteElementString("GeneralFocusTextBox", shortcuts.GeneralFocusTextBox);
             textWriter.WriteElementString("MainFileNew", shortcuts.MainFileNew);
             textWriter.WriteElementString("MainFileOpen", shortcuts.MainFileOpen);
             textWriter.WriteElementString("MainFileOpenKeepVideo", shortcuts.MainFileOpenKeepVideo);
@@ -12214,6 +12286,15 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("MainListViewColor6", shortcuts.MainListViewColor6);
             textWriter.WriteElementString("MainListViewColor7", shortcuts.MainListViewColor7);
             textWriter.WriteElementString("MainListViewColor8", shortcuts.MainListViewColor8);
+            textWriter.WriteElementString("MainListViewSetNewActor", shortcuts.MainListViewSetNewActor);
+            textWriter.WriteElementString("MainListViewSetActor1", shortcuts.MainListViewSetActor1);
+            textWriter.WriteElementString("MainListViewSetActor2", shortcuts.MainListViewSetActor2);
+            textWriter.WriteElementString("MainListViewSetActor3", shortcuts.MainListViewSetActor3);
+            textWriter.WriteElementString("MainListViewSetActor4", shortcuts.MainListViewSetActor4);
+            textWriter.WriteElementString("MainListViewSetActor5", shortcuts.MainListViewSetActor5);
+            textWriter.WriteElementString("MainListViewSetActor6", shortcuts.MainListViewSetActor6);
+            textWriter.WriteElementString("MainListViewSetActor7", shortcuts.MainListViewSetActor7);
+            textWriter.WriteElementString("MainListViewSetActor8", shortcuts.MainListViewSetActor8);
             textWriter.WriteElementString("MainListViewColorChoose", shortcuts.MainListViewColorChoose);
             textWriter.WriteElementString("MainRemoveFormatting", shortcuts.MainRemoveFormatting);
             textWriter.WriteElementString("MainListViewCopyText", shortcuts.MainListViewCopyText);

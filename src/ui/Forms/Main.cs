@@ -16814,6 +16814,11 @@ namespace Nikse.SubtitleEdit.Forms
                 ToggleBookmarks(false, this);
                 e.SuppressKeyPress = true;
             }
+            else if (_shortcuts.MainGeneralFocusTextBox == e.KeyData)
+            {
+                textBoxListViewText.Focus();
+                e.SuppressKeyPress = true;
+            }
             else if (_shortcuts.MainGeneralEditBookmark == e.KeyData)
             {
                 var p = _subtitle.GetParagraphOrDefault(_subtitleListViewIndex);

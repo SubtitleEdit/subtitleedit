@@ -41,7 +41,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
         private readonly Dictionary<ShortcutHelper, string> _newShortcuts = new Dictionary<ShortcutHelper, string>();
         private List<RulesProfile> _rulesProfiles;
         private List<PluginShortcut> _pluginShortcuts;
-        private bool _loading = true;
+        private readonly bool _loading;
         private readonly BackgroundWorker _shortcutsBackgroundWorker;
 
         private static IEnumerable<string> GetSubtitleFormats() => SubtitleFormat.AllSubtitleFormats.Where(format => !format.IsVobSubIndexFile).Select(format => format.FriendlyName);
@@ -106,6 +106,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
         public Settings()
         {
+            _loading = true;
             UiUtil.PreInitialize(this);
             InitializeComponent();
             UiUtil.FixFonts(this);
@@ -1456,6 +1457,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             AddNode(generalNode, language.GoToPreviousSubtitleAndFocusWaveform, nameof(Configuration.Settings.Shortcuts.GeneralGoToPreviousSubtitleAndFocusWaveform));
             AddNode(generalNode, language.GoToNextSubtitleAndFocusWaveform, nameof(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitleAndFocusWaveform));
             AddNode(generalNode, language.ToggleBookmarks, nameof(Configuration.Settings.Shortcuts.GeneralToggleBookmarks));
+            AddNode(generalNode, language.FocusTextBox, nameof(Configuration.Settings.Shortcuts.GeneralFocusTextBox));
             AddNode(generalNode, language.ToggleBookmarksWithComment, nameof(Configuration.Settings.Shortcuts.GeneralToggleBookmarksWithText), true);
             AddNode(generalNode, LanguageSettings.Current.Bookmarks.EditBookmark, nameof(Configuration.Settings.Shortcuts.GeneralEditBookmarks), true);
             AddNode(generalNode, language.ClearBookmarks, nameof(Configuration.Settings.Shortcuts.GeneralClearBookmarks));
@@ -1646,6 +1648,15 @@ namespace Nikse.SubtitleEdit.Forms.Options
             AddNode(listViewAndTextBoxNode, language.RemoveTimeCodes, nameof(Configuration.Settings.Shortcuts.MainListViewRemoveTimeCodes));
             AddNode(listViewAndTextBoxNode, language.MainTextBoxUnbreak, nameof(Configuration.Settings.Shortcuts.MainTextBoxUnbreak));
             AddNode(listViewAndTextBoxNode, language.MainTextBoxUnbreakNoSpace, nameof(Configuration.Settings.Shortcuts.MainTextBoxUnbreakNoSpace));
+            AddNode(listViewAndTextBoxNode, language.SetNewActor, nameof(Configuration.Settings.Shortcuts.MainListViewSetNewActor));
+            AddNode(listViewAndTextBoxNode, string.Format(language.SetActorX, "1"), nameof(Configuration.Settings.Shortcuts.MainListViewSetActor1));
+            AddNode(listViewAndTextBoxNode, string.Format(language.SetActorX, "2"), nameof(Configuration.Settings.Shortcuts.MainListViewSetActor2));
+            AddNode(listViewAndTextBoxNode, string.Format(language.SetActorX, "3"), nameof(Configuration.Settings.Shortcuts.MainListViewSetActor3));
+            AddNode(listViewAndTextBoxNode, string.Format(language.SetActorX, "4"), nameof(Configuration.Settings.Shortcuts.MainListViewSetActor4));
+            AddNode(listViewAndTextBoxNode, string.Format(language.SetActorX, "5"), nameof(Configuration.Settings.Shortcuts.MainListViewSetActor5));
+            AddNode(listViewAndTextBoxNode, string.Format(language.SetActorX, "6"), nameof(Configuration.Settings.Shortcuts.MainListViewSetActor6));
+            AddNode(listViewAndTextBoxNode, string.Format(language.SetActorX, "7"), nameof(Configuration.Settings.Shortcuts.MainListViewSetActor7));
+            AddNode(listViewAndTextBoxNode, string.Format(language.SetActorX, "8"), nameof(Configuration.Settings.Shortcuts.MainListViewSetActor8));
             _shortcuts.Nodes.Add(listViewAndTextBoxNode);
 
             var listViewNode = new ShortcutNode(language.ListView);

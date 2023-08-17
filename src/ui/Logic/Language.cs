@@ -2653,6 +2653,7 @@ can edit in same subtitle file (collaboration)",
                 BeautifyTimeCodes = "Beautify time codes",
                 SettingsName = "Settings",
                 ToggleBookmarks = "Toggle bookmarks",
+                FocusTextBox = "Focus text box",
                 ToggleBookmarksWithComment = "Toggle bookmarks - add comment",
                 ClearBookmarks = "Clear bookmarks",
                 ExportBookmarks = "Export bookmarks...",
@@ -3172,6 +3173,8 @@ can edit in same subtitle file (collaboration)",
                 CustomContinuationStyleNote = "Note: The custom continuation style is shared across profiles.",
                 ResetCustomContinuationStyleWarning = "This will override the values in the dialog. Are you sure?",
                 ExportAsHtml = "Export as HTML...",
+                SetNewActor = "Set new actor/voice",
+                SetActorX = "Set actor/voice {0}",
             };
 
             SettingsMpv = new LanguageStructure.SettingsMpv
