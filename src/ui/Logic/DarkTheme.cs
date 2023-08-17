@@ -741,7 +741,7 @@ namespace Nikse.SubtitleEdit.Logic
                     TextRenderer.DrawText(e.Graphics,
                         e.Item.SubItems[e.ColumnIndex].Text,
                         subtitleFont,
-                        new Rectangle(b.Left + 3, b.Top, b.Width-3, b.Height),
+                        new Rectangle(b.Left + 3, b.Top, b.Width - 3, b.Height),
                         foreColor,
                         TextFormatFlags.NoPrefix | TextFormatFlags.VerticalCenter);
                 }
@@ -1175,6 +1175,10 @@ namespace Nikse.SubtitleEdit.Logic
 
             if (item is ToolStripDropDownItem dropDownMenu && dropDownMenu.DropDownItems.Count > 0)
             {
+                dropDownMenu.DropDown.BackColor = BackColor;
+                dropDownMenu.DropDown.ForeColor = ForeColor;
+                dropDownMenu.DropDown.RenderMode = ToolStripRenderMode.Professional;
+
                 foreach (ToolStripItem dropDownItem in dropDownMenu.DropDownItems)
                 {
                     dropDownItem.ForeColor = ForeColor;
