@@ -975,9 +975,11 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <InfoAssaOn>참고: Advanced Substation Alpha 스타일링이 사용됩니다:)</InfoAssaOn>
     <XGeneratedWithBurnedInSubsInX>생성 완료! - "{0}" (경과시간: {1})</XGeneratedWithBurnedInSubsInX>
     <TimeRemainingMinutes>남은 시간: {0} 분</TimeRemainingMinutes>
+    <TimeRemainingOneMinute>남은 시간: 1 분</TimeRemainingOneMinute>
     <TimeRemainingSeconds>남은 시간: {0} 초</TimeRemainingSeconds>
     <TimeRemainingAFewSeconds>남은 시간: 몇 초</TimeRemainingAFewSeconds>
     <TimeRemainingMinutesAndSeconds>남은 시간: {0} 분 {1} 초</TimeRemainingMinutesAndSeconds>
+    <TimeRemainingOneMinuteAndSeconds>남은 시간: 1 분 {0} 초</TimeRemainingOneMinuteAndSeconds>
     <TargetFileName>대상 파일 이름: {0}</TargetFileName>
     <TargetFileSize>대상 파일 크기 (2pass 인코딩 필요)</TargetFileSize>
     <FileSizeMb>파일 크기(MB)</FileSizeMb>
