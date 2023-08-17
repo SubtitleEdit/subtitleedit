@@ -37,7 +37,7 @@ namespace Nikse.SubtitleEdit.Logic
         private static bool IsWindows10OrGreater(int build = -1) =>
             Configuration.IsRunningOnWindows && Environment.OSVersion.Version.Major >= 10 && Environment.OSVersion.Version.Build >= build;
 
-        private static void SetWindowThemeDark(Control control)
+        public static void SetWindowThemeDark(Control control)
         {
             if (Configuration.IsRunningOnWindows)
             {
@@ -45,7 +45,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-        private static void SetWindowThemeNormal(Control control)
+        public static void SetWindowThemeNormal(Control control)
         {
             if (Configuration.IsRunningOnWindows)
             {
