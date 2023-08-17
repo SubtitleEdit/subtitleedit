@@ -12731,17 +12731,17 @@ namespace Nikse.SubtitleEdit.Forms
             return s;
         }
 
-        private void UpdateStartTimeInfo(TimeCode startTime)
+        private void UpdateStartTimeInfo(TimeCode startTime, int index)
         {
             if (_subtitle.Paragraphs.Count > 0 && _subtitleListViewIndex >= 0 && startTime != null)
             {
-                UpdateOverlapErrors(startTime);
+                UpdateOverlapErrors(startTime, index);
 
                 // update _subtitle + listview
-                var p = _subtitle.Paragraphs[_subtitleListViewIndex];
+                var p = _subtitle.Paragraphs[index];
                 p.EndTime.TotalMilliseconds += (startTime.TotalMilliseconds - p.StartTime.TotalMilliseconds);
                 p.StartTime = startTime;
-                SubtitleListview1.SetStartTimeAndDuration(_subtitleListViewIndex, p, _subtitle.GetParagraphOrDefault(_subtitleListViewIndex + 1), _subtitle.GetParagraphOrDefault(_subtitleListViewIndex - 1));
+                SubtitleListview1.SetStartTimeAndDuration(index, p, _subtitle.GetParagraphOrDefault(index + 1), _subtitle.GetParagraphOrDefault(index - 1));
                 StartUpdateListSyntaxColoring();
             }
         }
@@ -12777,21 +12777,19 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void UpdateOverlapErrors(TimeCode startTime)
+        private void UpdateOverlapErrors(TimeCode startTime, int index)
         {
             string startTimeWarning = string.Empty;
             string durationWarning = string.Empty;
             if (_subtitle.Paragraphs.Count > 0 && _subtitleListViewIndex >= 0 && startTime != null)
             {
-                int firstSelectedIndex = _subtitleListViewIndex;
-
-                var prevParagraph = _subtitle.GetParagraphOrDefault(firstSelectedIndex - 1);
+                var prevParagraph = _subtitle.GetParagraphOrDefault(index - 1);
                 if (prevParagraph != null && !prevParagraph.EndTime.IsMaxTime && prevParagraph.EndTime.TotalMilliseconds > startTime.TotalMilliseconds && Configuration.Settings.Tools.ListViewSyntaxColorOverlap)
                 {
                     startTimeWarning = string.Format(_languageGeneral.OverlapPreviousLineX, prevParagraph.EndTime.TotalSeconds - startTime.TotalSeconds);
                 }
 
-                var nextParagraph = _subtitle.GetParagraphOrDefault(firstSelectedIndex + 1);
+                var nextParagraph = _subtitle.GetParagraphOrDefault(index + 1);
                 if (nextParagraph != null)
                 {
                     double durationMilliSeconds = GetDurationInMilliseconds();
@@ -12882,7 +12880,7 @@ namespace Nikse.SubtitleEdit.Forms
                     var currentParagraph = _subtitle.GetParagraphOrDefault(firstSelectedIndex);
                     if (currentParagraph != null)
                     {
-                        UpdateOverlapErrors(timeUpDownStartTime.TimeCode);
+                        UpdateOverlapErrors(timeUpDownStartTime.TimeCode, firstSelectedIndex);
                         UpdateListViewTextCharactersPerSeconds(labelCharactersPerSecond, currentParagraph);
 
                         if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleOriginal != null && _subtitleOriginal.Paragraphs.Count > 0)
@@ -12964,7 +12962,7 @@ namespace Nikse.SubtitleEdit.Forms
                     currentParagraph.EndTime.TotalMilliseconds = temp.EndTime.TotalMilliseconds;
                     SubtitleListview1.SetDuration(firstSelectedIndex, currentParagraph, _subtitle.GetParagraphOrDefault(firstSelectedIndex + 1));
 
-                    UpdateOverlapErrors(timeUpDownStartTime.TimeCode);
+                    UpdateOverlapErrors(timeUpDownStartTime.TimeCode, firstSelectedIndex);
                     UpdateListViewTextCharactersPerSeconds(labelCharactersPerSecond, currentParagraph);
 
                     if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleOriginal != null && _subtitleOriginal.Paragraphs.Count > 0)
@@ -13044,7 +13042,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             numericUpDownDuration.ValueChanged += NumericUpDownDurationValueChanged;
 
-            UpdateOverlapErrors(timeUpDownStartTime.TimeCode);
+            UpdateOverlapErrors(timeUpDownStartTime.TimeCode, _subtitle.Paragraphs.IndexOf(p));
             UpdateListViewTextCharactersPerSeconds(labelCharactersPerSecond, p);
             if (_subtitle != null && _subtitle.Paragraphs.Count > 0)
             {
@@ -13075,7 +13073,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             numericUpDownDuration.ValueChanged += NumericUpDownDurationValueChanged;
 
-            UpdateOverlapErrors(timeUpDownStartTime.TimeCode);
+            UpdateOverlapErrors(timeUpDownStartTime.TimeCode, _subtitle.Paragraphs.IndexOf(p));
             StartUpdateListSyntaxColoring();
         }
 
@@ -13092,7 +13090,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 labelStatus.Text = string.Empty;
-                UpdateStartTimeInfo(timeUpDownStartTime.TimeCode);
+                UpdateStartTimeInfo(timeUpDownStartTime.TimeCode, _subtitleListViewIndex);
                 UpdateOriginalTimeCodes(oldParagraph);
             }
         }
@@ -35269,7 +35267,7 @@ namespace Nikse.SubtitleEdit.Forms
                             UiUtil.OpenFile(SeLogger.GetWhisperLogFilePath());
                         }
                     }
-                    else if (form.RunningOnCuda && 
+                    else if (form.RunningOnCuda &&
                              Configuration.Settings.Tools.WhisperChoice == WhisperChoice.PurfviewFasterWhisper &&
                              !WhisperAudioToText.IsFasterWhisperCudaInstalled())
                     {
