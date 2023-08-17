@@ -2463,6 +2463,7 @@
             public string BeautifyTimeCodes { get; set; }
             public string SettingsName { get; set; }
             public string ToggleBookmarks { get; set; }
+            public string FocusTextBox { get; set; }
             public string ToggleBookmarksWithComment { get; set; }
             public string ClearBookmarks { get; set; }
             public string ExportBookmarks { get; set; }
@@ -2986,6 +2987,8 @@
             public string CustomContinuationStyleNote { get; set; }
             public string ResetCustomContinuationStyleWarning { get; set; }
             public string ExportAsHtml { get; set; }
+            public string SetNewActor { get; set; }
+            public string SetActorX { get; set; }
         }
 
         public class SettingsMpv
