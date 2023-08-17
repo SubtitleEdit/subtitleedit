@@ -381,6 +381,9 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 _listBox.BackColor = DarkTheme.BackColor;
                 _listBox.ForeColor = DarkTheme.ForeColor;
+                _listBox.HandleCreated += NikseListBoxHandleCreated;
+                DarkTheme.SetWindowThemeDark(_listBox);
+                DarkTheme.SetWindowThemeDark(this);
             }
         }
 
@@ -390,7 +393,12 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 _listBox.BackColor = DefaultBackColor;
                 _listBox.ForeColor = DefaultForeColor;
+                _listBox.HandleCreated -= NikseListBoxHandleCreated;
+                DarkTheme.SetWindowThemeNormal(_listBox);
+                DarkTheme.SetWindowThemeNormal(this);
             }
         }
+
+        private static void NikseListBoxHandleCreated(object sender, EventArgs e) => DarkTheme.SetWindowThemeDark((Control)sender);
     }
 }

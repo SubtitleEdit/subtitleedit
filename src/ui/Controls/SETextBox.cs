@@ -827,12 +827,17 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 _uiTextBox.BackColor = DarkTheme.BackColor;
                 _uiTextBox.ForeColor = DarkTheme.ForeColor;
+                _uiTextBox.HandleCreated += SeTextBoxBoxHandleCreated;
+                DarkTheme.SetWindowThemeDark(_uiTextBox);
             }
             if (_simpleTextBox != null)
             {
                 _simpleTextBox.BackColor = DarkTheme.BackColor;
                 _simpleTextBox.ForeColor = DarkTheme.ForeColor;
+                _simpleTextBox.HandleCreated += SeTextBoxBoxHandleCreated;
+                DarkTheme.SetWindowThemeDark(_simpleTextBox);
             }
+            DarkTheme.SetWindowThemeDark(this);
         }
 
         public void UndoDarkTheme()
@@ -841,13 +846,20 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 _uiTextBox.BackColor = SystemColors.Window;
                 _uiTextBox.ForeColor = DefaultForeColor;
+                _uiTextBox.HandleCreated -= SeTextBoxBoxHandleCreated;
+                DarkTheme.SetWindowThemeNormal(_uiTextBox);
             }
             if (_simpleTextBox != null)
             {
                 _simpleTextBox.BackColor = SystemColors.Window;
                 _simpleTextBox.ForeColor = DefaultForeColor;
+                _simpleTextBox.HandleCreated -= SeTextBoxBoxHandleCreated;
+                DarkTheme.SetWindowThemeNormal(this);
             }
+            DarkTheme.SetWindowThemeNormal(_simpleTextBox);
         }
+
+        private static void SeTextBoxBoxHandleCreated(object sender, EventArgs e) => DarkTheme.SetWindowThemeDark((Control)sender);
 
         public void ScrollToCaret()
         {
