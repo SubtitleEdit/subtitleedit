@@ -70,9 +70,6 @@ namespace Nikse.SubtitleEdit.Plugins
             return new LocalPlugin(text, description, version);
         }
 
-        private static bool IsValid(string value) => !string.IsNullOrWhiteSpace(value);
-        private static bool IsValid(decimal value) => value > 0;
-
         private class SymbolReader
         {
             public const string Text = "Text";
