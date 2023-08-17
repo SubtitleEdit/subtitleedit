@@ -22,7 +22,7 @@ namespace Nikse.SubtitleEdit.Plugins
             _onlinePluginMetadataProvider = new OnlinePluginMetadataProvider(options.GithubUrl);
         }
 
-        public async Task<PluginUpdateResult> CheckAsync()
+        public async Task<PluginUpdateCheckResult> CheckAsync()
         {
             _lastCheckDate = DateTime.Now;
 
@@ -30,31 +30,31 @@ namespace Nikse.SubtitleEdit.Plugins
             // no plugin is currently installed
             if (!installedPlugins.Any())
             {
-                return new PluginUpdateResult();
+                return new PluginUpdateCheckResult();
             }
 
             // plugin repository
             var onlinePlugins = await _onlinePluginMetadataProvider.GetPluginsAsync();
             if (!onlinePlugins.Any())
             {
-                return new PluginUpdateResult();
+                return new PluginUpdateCheckResult();
             }
 
-            var pluginUpdateResult = new PluginUpdateResult();
+            var pluginUpdateCheckResult = new PluginUpdateCheckResult();
             foreach (var installedPlugin in installedPlugins)
             {
                 var updateCheckInfo = installedPlugin.CheckUpdate(onlinePlugins);
                 if (updateCheckInfo.IsNewUpdateAvailable())
                 {
-                    pluginUpdateResult.Add(updateCheckInfo);
+                    pluginUpdateCheckResult.Add(updateCheckInfo);
                 }
             }
 
-            return pluginUpdateResult;
+            return pluginUpdateCheckResult;
         }
     }
 
-    public class PluginUpdateResult
+    public class PluginUpdateCheckResult
     {
         private ICollection<PluginUpdate> _pluginUpdates;
 
