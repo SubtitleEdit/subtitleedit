@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.6.13</Version>
-    <TranslatedBy>Последен превод на български 02.08.2023: KalinM</TranslatedBy>
+    <TranslatedBy>Последен превод на български 17.08.2023: KalinM</TranslatedBy>
     <CultureName>bg-BG</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -98,6 +98,7 @@
     <Collapse>Свиване</Collapse>
     <ShortcutX>Пряк път: {0}</ShortcutX>
     <ExampleX>Пример: {0}</ExampleX>
+    <ViewX>Изглед {0}</ViewX>
     <Reset>Нулиране</Reset>
     <Error>Грешка</Error>
     <Warning>Внимание</Warning>
@@ -202,6 +203,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <LoadingVoskModel>Моделът за разпознаване на реч Vosk се зарежда...</LoadingVoskModel>
     <Transcribing>Предаване запис на аудио към текст...</Transcribing>
     <TranscribingXOfY>Предаване запис на аудио към текстов файл {0} от {1}...</TranscribingXOfY>
+    <PostProcessing>Последваща обработка...</PostProcessing>
     <XFilesSavedToVideoSourceFolder>{0} файлове, записани в папката с видео източника</XFilesSavedToVideoSourceFolder>
     <UsePostProcessing>Използвайте последваща обработка (сливане на редове, коригиране на главни букви, пунктуация и други)</UsePostProcessing>
     <AutoAdjustTimings>Авт. регулиране на времената</AutoAdjustTimings>
@@ -212,6 +214,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <RemoveTemporaryFiles>Премахване на временни файлове</RemoveTemporaryFiles>
     <SetCppConstMeFolder>Задаване на папка с модели CPP/Const-me...</SetCppConstMeFolder>
     <OnlyRunPostProcessing>Изпълнявайте само последваща обработка/коригиране на времената</OnlyRunPostProcessing>
+    <DownloadFasterWhisperCuda>Изтеглете CUDA за Whisper-Faster на Perfview</DownloadFasterWhisperCuda>
   </AudioToText>
   <AssaAttachments>
     <Title>Приложения за SSA /Sub Station Alpha/</Title>
@@ -975,9 +978,11 @@ https://github.com/SubtitleEdit/subtitleedit
     <InfoAssaOn>Забележка: Ще се използва стилът Advanced SubStation Alpha :)</InfoAssaOn>
     <XGeneratedWithBurnedInSubsInX>"{0}", генериран с вписани субтитри в {1}.</XGeneratedWithBurnedInSubsInX>
     <TimeRemainingMinutes>Оставащо време: {0} минути</TimeRemainingMinutes>
+    <TimeRemainingOneMinute>Оставащо време: Една минута</TimeRemainingOneMinute>
     <TimeRemainingSeconds>Оставащо време: {0} секунди</TimeRemainingSeconds>
     <TimeRemainingAFewSeconds>Оставащо време: Няколко секунди</TimeRemainingAFewSeconds>
     <TimeRemainingMinutesAndSeconds>Оставащо време: {0} минути и {1} секунди</TimeRemainingMinutesAndSeconds>
+    <TimeRemainingOneMinuteAndSeconds>Оставащо време: Една минута и {0} секунди</TimeRemainingOneMinuteAndSeconds>
     <TargetFileName>Име на целевия файл: {0}</TargetFileName>
     <TargetFileSize>Целевият размер на файла (изисква кодиране в 2 паса)</TargetFileSize>
     <FileSizeMb>Размер на файла в MB</FileSizeMb>
