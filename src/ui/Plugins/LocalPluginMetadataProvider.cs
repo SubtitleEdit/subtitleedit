@@ -17,7 +17,7 @@ namespace Nikse.SubtitleEdit.Plugins
             _pluginFolder = pluginFolder ?? throw new ArgumentNullException(nameof(pluginFolder));
         }
 
-        public IReadOnlyCollection<LocalPlugin> GetPlugins()
+        public IReadOnlyCollection<LocalPlugin> GetInstalledPlugins()
         {
             var pluginFiles = Directory.GetFiles(_pluginFolder, KnownPluginExtension);
 
