@@ -26,7 +26,7 @@ namespace Nikse.SubtitleEdit.Plugins
         {
             _lastCheckDate = DateTime.Now;
 
-            var installedPlugins = _localPluginMetadataProvider.GetPlugins();
+            var installedPlugins = _localPluginMetadataProvider.GetInstalledPlugins();
             // no plugin is currently installed
             if (!installedPlugins.Any())
             {
