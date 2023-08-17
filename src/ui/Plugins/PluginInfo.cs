@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace Nikse.SubtitleEdit.Plugins
@@ -15,7 +16,7 @@ namespace Nikse.SubtitleEdit.Plugins
         public decimal Version { get; }
         public string Description { get; }
     }
-    
+
     public class LocalPlugin : PluginInfo
     {
         public LocalPlugin(string name, string description, decimal version)
@@ -27,17 +28,17 @@ namespace Nikse.SubtitleEdit.Plugins
         {
             foreach (var onlinePlugin in onlinePlugins)
             {
-                if (onlinePlugin == null)
+                if (onlinePlugin is null)
                 {
                     continue;
                 }
 
-                if (!Name.Equals(onlinePlugin.Name))
+                if (!Name.Equals(onlinePlugin.Name, StringComparison.OrdinalIgnoreCase))
                 {
                     continue;
                 }
 
-                return new PluginUpdate()
+                return new PluginUpdate
                 {
                     Name = Name,
                     OldVersion = Version,
@@ -45,13 +46,15 @@ namespace Nikse.SubtitleEdit.Plugins
                 };
             }
 
-            return new PluginUpdate()
+            return new PluginUpdate
             {
                 Name = Name,
                 OldVersion = Version,
                 NewVersion = Version,
             };
         }
+
+        public bool IsValid() => !string.IsNullOrEmpty(Name) && Version > 0;
     }
     
     public class PluginUpdate
