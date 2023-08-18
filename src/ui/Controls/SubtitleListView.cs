@@ -54,43 +54,9 @@ namespace Nikse.SubtitleEdit.Controls
         public bool IsOriginalTextColumnVisible => ColumnIndexTextOriginal >= 0;
         private string _lineSeparatorString = " || ";
 
-        private Font _subtitleFont = new Font("Tahoma", 8.25F);
-
-        private string _subtitleFontName = "Tahoma";
-
-        public string SubtitleFontName
-        {
-            get => _subtitleFontName;
-            set
-            {
-                _subtitleFontName = value;
-                _subtitleFont = new Font(_subtitleFontName, SubtitleFontSize, GetFontStyle());
-            }
-        }
-
-        private bool _subtitleFontBold;
-
-        public bool SubtitleFontBold
-        {
-            get { return _subtitleFontBold; }
-            set
-            {
-                _subtitleFontBold = value;
-                _subtitleFont = new Font(_subtitleFontName, SubtitleFontSize, GetFontStyle());
-            }
-        }
-
-        private int _subtitleFontSize = 8;
-
-        public int SubtitleFontSize
-        {
-            get => _subtitleFontSize;
-            set
-            {
-                _subtitleFontSize = value;
-                _subtitleFont = new Font(_subtitleFontName, SubtitleFontSize, GetFontStyle());
-            }
-        }
+        public string SubtitleFontName { get; set; } = "Tahoma";
+        public bool SubtitleFontBold { get; set; }
+        public int SubtitleFontSize { get; set; } = 8;
 
         public bool UseSyntaxColoring { get; set; }
         private Settings _settings;
@@ -190,7 +156,7 @@ namespace Nikse.SubtitleEdit.Controls
 
             if (!string.IsNullOrEmpty(settings.General.SubtitleFontName))
             {
-                _subtitleFontName = settings.General.SubtitleFontName;
+                SubtitleFontName = settings.General.SubtitleFontName;
             }
 
             SubtitleFontBold = settings.General.SubtitleListViewFontBold;
@@ -1283,7 +1249,7 @@ namespace Nikse.SubtitleEdit.Controls
             Items.Clear();
             var x = ListViewItemSorter;
             ListViewItemSorter = null;
-            var font = new Font(_subtitleFontName, SubtitleFontSize, GetFontStyle());
+            var font = new Font(SubtitleFontName, SubtitleFontSize, GetFontStyle());
             var items = new ListViewItem[paragraphs.Count];
             for (var index = 0; index < paragraphs.Count; index++)
             {
@@ -1325,7 +1291,7 @@ namespace Nikse.SubtitleEdit.Controls
             var x = ListViewItemSorter;
             ListViewItemSorter = null;
             var items = new ListViewItem[paragraphs.Count];
-            var font = new Font(_subtitleFontName, SubtitleFontSize, GetFontStyle());
+            var font = new Font(SubtitleFontName, SubtitleFontSize, GetFontStyle());
             for (var index = 0; index < paragraphs.Count; index++)
             {
                 var paragraph = paragraphs[index];
