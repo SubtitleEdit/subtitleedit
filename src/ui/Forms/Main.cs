@@ -159,6 +159,7 @@ namespace Nikse.SubtitleEdit.Forms
         private bool _saveAsCalled;
         private string _imageSubFileName;
         private readonly Timer _timerSlow = new Timer();
+        private readonly ContextMenuStrip _contextMenuStripPlayRate;
 
         private CheckForUpdatesHelper _checkForUpdatesHelper;
         private Timer _timerCheckForUpdates;
@@ -388,6 +389,7 @@ namespace Nikse.SubtitleEdit.Forms
                 labelTextOriginalLineTotal.Visible = false;
                 labelNextWord.Visible = false;
 
+                _contextMenuStripPlayRate = new ContextMenuStrip();
                 SetLanguage(Configuration.Settings.General.Language);
                 toolStripStatusNetworking.Visible = false;
                 labelTextLineLengths.Text = string.Empty;
@@ -17847,12 +17849,12 @@ namespace Nikse.SubtitleEdit.Forms
             else if (e.KeyData == _shortcuts.MainVideoSlower)
             {
                 e.SuppressKeyPress = true;
-                for (var index = 0; index < toolStripSplitButtonPlayRate.DropDownItems.Count; index++)
+                for (var index = 0; index < _contextMenuStripPlayRate.Items.Count; index++)
                 {
-                    var item = (ToolStripMenuItem)toolStripSplitButtonPlayRate.DropDownItems[index];
+                    var item = (ToolStripMenuItem)_contextMenuStripPlayRate.Items[index];
                     if (item.Checked && index > 0)
                     {
-                        SetPlayRate(toolStripSplitButtonPlayRate.DropDownItems[index - 1], null);
+                        SetPlayRate(_contextMenuStripPlayRate.Items[index - 1], null);
                         return;
                     }
                 }
@@ -17860,12 +17862,12 @@ namespace Nikse.SubtitleEdit.Forms
             else if (e.KeyData == _shortcuts.MainVideoFaster)
             {
                 e.SuppressKeyPress = true;
-                for (var index = 0; index < toolStripSplitButtonPlayRate.DropDownItems.Count; index++)
+                for (var index = 0; index < _contextMenuStripPlayRate.Items.Count; index++)
                 {
-                    var item = (ToolStripMenuItem)toolStripSplitButtonPlayRate.DropDownItems[index];
-                    if (item.Checked && index + 1 < toolStripSplitButtonPlayRate.DropDownItems.Count)
+                    var item = (ToolStripMenuItem)_contextMenuStripPlayRate.Items[index];
+                    if (item.Checked && index + 1 < _contextMenuStripPlayRate.Items.Count)
                     {
-                        SetPlayRate(toolStripSplitButtonPlayRate.DropDownItems[index + 1], null);
+                        SetPlayRate(_contextMenuStripPlayRate.Items[index + 1], null);
                         return;
                     }
                 }
@@ -17907,7 +17909,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     mediaPlayer.VideoPlayer.PlayRate = 1.0;
                     InitializePlayRateDropDown();
-                    TryLoadIcon(toolStripSplitButtonPlayRate, "WaveformPlaybackSpeed");
+                    toolStripSplitButtonPlayRate.Checked = false;
                 }
             }
             else if (audioVisualizer.Focused && audioVisualizer.NewSelectionParagraph != null && e.KeyData == _shortcuts.WaveformAddTextAtHere)
@@ -22958,9 +22960,9 @@ namespace Nikse.SubtitleEdit.Forms
             mediaPlayer.UpdatePlayerName();
 
             // Keep current play rate
-            for (var index = 0; index < toolStripSplitButtonPlayRate.DropDownItems.Count; index++)
+            for (var index = 0; index < _contextMenuStripPlayRate.Items.Count; index++)
             {
-                var item = (ToolStripMenuItem)toolStripSplitButtonPlayRate.DropDownItems[index];
+                var item = (ToolStripMenuItem)_contextMenuStripPlayRate.Items[index];
                 if (item.Checked)
                 {
                     SetPlayRate(item, null, true);
@@ -25607,12 +25609,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void InitializePlayRateDropDown()
         {
-            toolStripSplitButtonPlayRate.DropDownItems.Clear();
+            _contextMenuStripPlayRate.Items.Clear();
             var foreColor = UiUtil.ForeColor;
             var backColor = UiUtil.BackColor;
             for (int i = 30; i <= 300; i += 10)
             {
-                toolStripSplitButtonPlayRate.DropDownItems.Add(new ToolStripMenuItem(i + "%", null, SetPlayRate, i.ToString()) { Checked = i == 100, BackColor = backColor, ForeColor = foreColor });
+                _contextMenuStripPlayRate.Items.Add(new ToolStripMenuItem(i + "%", null, SetPlayRate, i.ToString()) { Checked = i == 100, BackColor = backColor, ForeColor = foreColor });
             }
         }
 
@@ -25631,7 +25633,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SetPlayRateAndPlay(int playRate, bool play = true)
         {
-            SetPlayRate(toolStripSplitButtonPlayRate.DropDownItems[playRate.ToString()], null, false, true);
+            SetPlayRate(_contextMenuStripPlayRate.Items[playRate.ToString()], null, false, true);
             if (play)
             {
                 mediaPlayer.Play();
@@ -25650,7 +25652,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            foreach (ToolStripMenuItem item in toolStripSplitButtonPlayRate.DropDownItems)
+            foreach (ToolStripMenuItem item in _contextMenuStripPlayRate.Items)
             {
                 item.Checked = false;
             }
@@ -25667,11 +25669,11 @@ namespace Nikse.SubtitleEdit.Forms
                 playRateDropDownItem.Checked = true;
                 if (Math.Abs(factor - 1) < 0.01)
                 {
-                    TryLoadIcon(toolStripSplitButtonPlayRate, "WaveformPlaybackSpeed");
+                    toolStripSplitButtonPlayRate.Checked = false;
                 }
                 else
                 {
-                    TryLoadIcon(toolStripSplitButtonPlayRate, "WaveformPlaybackSpeedSelected");
+                    toolStripSplitButtonPlayRate.Checked = true;
                 }
             }
 
@@ -34188,11 +34190,6 @@ namespace Nikse.SubtitleEdit.Forms
             MenuOpened(sender, e);
         }
 
-        private void toolStripSplitButtonPlayRate_ButtonClick(object sender, EventArgs e)
-        {
-            toolStripSplitButtonPlayRate.ShowDropDown();
-        }
-
         private void ShowButtonShortcut(string shortcut)
         {
             if (string.IsNullOrEmpty(shortcut))
@@ -35716,6 +35713,11 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
+        }
+
+        private void toolStripSplitButtonPlayRate_Click(object sender, EventArgs e)
+        {
+            _contextMenuStripPlayRate.Show(MousePosition.X, MousePosition.Y);
         }
     }
 }
