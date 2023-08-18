@@ -240,6 +240,9 @@
   --length_penalty LENGTH_PENALTY
                         optional token length penalty coefficient (alpha) as in https://arxiv.org/abs/1609.08144, uses
                         simple length normalization by default (default: 1.0)
+  --repetition_penalty REPETITION_PENALTY
+                        Penalty applied to the score of previously generated tokens (set > 1.0 to
+                        penalize). (default: 1.0)
   --suppress_tokens SUPPRESS_TOKENS
                         comma-separated list of token ids to suppress during sampling; '-1' will suppress most special
                         characters except common punctuations (default: -1)
@@ -249,6 +252,9 @@
                         if True, provide the previous output of the model as a prompt for the next window; disabling
                         may make the text inconsistent across windows, but the model becomes less prone to getting
                         stuck in a failure loop (default: True)
+  --prompt_reset_on_temperature PROMPT_RESET_ON_TEMPERATURE
+                        Resets prompt if temperature is above this value. Arg has effect only if
+                        condition_on_previous_text is True. (default: 0.5)
   --temperature_increment_on_fallback TEMPERATURE_INCREMENT_ON_FALLBACK
                         temperature to increase when falling back when the decoding fails to meet either of the
                         thresholds below (default: 0.2)
