@@ -34,7 +34,7 @@
     <Duration>时长</Duration>
     <CharsPerSec>字/秒</CharsPerSec>
     <WordsPerMin>词/分</WordsPerMin>
-    <Actor>演员</Actor>
+    <Actor>角色</Actor>
     <Gap>间隔</Gap>
     <Region>区域</Region>
     <Layer>层</Layer>
@@ -320,7 +320,7 @@ Command line: {1} {2}
     <UseStyleFromSource>使用来自源文件的样式</UseStyleFromSource>
     <ConvertOptions>转换选项</ConvertOptions>
     <RemoveFormatting>删除格式化标签</RemoveFormatting>
-    <RemoveStyleActor>删除样式/演员</RemoveStyleActor>
+    <RemoveStyleActor>删除样式/角色</RemoveStyleActor>
     <RemoveTextForHI>删除 HI 文本</RemoveTextForHI>
     <ConvertColorsToDialog>将颜色转换为对话框</ConvertColorsToDialog>
     <OverwriteOriginalFiles>覆盖原始文件(若扩展名变更，则使用新的扩展名)</OverwriteOriginalFiles>
@@ -1482,7 +1482,7 @@ Command line: {1} {2}
       <ContextMenu>
         <SizeAllColumnsToFit>自适应所有的列宽度</SizeAllColumnsToFit>
         <SetStyle>设置样式</SetStyle>
-        <SetActor>设置演员</SetActor>
+        <SetActor>设置角色</SetActor>
         <SetLayer>设置层</SetLayer>
         <AssaTools>ASSA工具</AssaTools>
         <SubStationAlphaStyles>Sub Station Alpha 样式...</SubStationAlphaStyles>
@@ -1566,8 +1566,8 @@ Command line: {1} {2}
         <SaveSelectedLines>所选行另存为...</SaveSelectedLines>
         <WebVTTSetNewVoice>设定新人声...</WebVTTSetNewVoice>
         <WebVTTRemoveVoices>移除人声</WebVTTRemoveVoices>
-        <NewActor>没有演员...</NewActor>
-        <RemoveActors>移除演员...</RemoveActors>
+        <NewActor>没有角色...</NewActor>
+        <RemoveActors>移除角色...</RemoveActors>
         <EditBookmark>编辑书签</EditBookmark>
         <RemoveBookmark>移除书签</RemoveBookmark>
         <GoToSourceView>转到源视图</GoToSourceView>
@@ -2800,8 +2800,8 @@ Command line: {1} {2}
     <CustomContinuationStyleNote>注意：自定义延续样式将在配置文件之间共享。</CustomContinuationStyleNote>
     <ResetCustomContinuationStyleWarning>这将覆盖对话框中的值。 你确定吗？</ResetCustomContinuationStyleWarning>
     <ExportAsHtml>导出为 HTML...</ExportAsHtml>
-    <SetNewActor>设置新演员/配音</SetNewActor>
-    <SetActorX>设置演员/配音 {0}</SetActorX>
+    <SetNewActor>设置新角色/配音</SetNewActor>
+    <SetActorX>设置角色/配音 {0}</SetActorX>
   </Settings>
   <SettingsMpv>
     <DownloadMpv>下载 mpv 库</DownloadMpv>
