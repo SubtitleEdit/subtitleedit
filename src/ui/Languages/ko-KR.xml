@@ -1611,7 +1611,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
       <AutoContinueInXSeconds>{0}초 후에 자동으로 진행합니다.</AutoContinueInXSeconds>
       <StillTypingAutoContinueStopped>입력하는 중... 자동 진행이 중지되었습니다.</StillTypingAutoContinueStopped>
       <InsertNewSubtitleAtVideoPosition>재생 위치에 새 자막 삽입</InsertNewSubtitleAtVideoPosition>
-      <InsertNewSubtitleAtVideoPositionNoTextBoxFocus>비디오 위치에 새 자막 삽입 (텍스트 상자 포커스 없음)</InsertNewSubtitleAtVideoPositionNoTextBoxFocus>
+      <InsertNewSubtitleAtVideoPositionNoTextBoxFocus>비디오 위치에 새 자막 삽입 (포커스 텍스트 상자 없음)</InsertNewSubtitleAtVideoPositionNoTextBoxFocus>
       <Auto>자동</Auto>
       <PlayFromJustBeforeText>텍스트 직전부터 재생</PlayFromJustBeforeText>
       <PlayFromBeginning>비디오 시작점에서 재생</PlayFromBeginning>
@@ -2292,6 +2292,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <BeautifyTimeCodes>타임코드 보기좋게 꾸미기</BeautifyTimeCodes>
     <SettingsName>환경 설정</SettingsName>
     <ToggleBookmarks>북마크 전환</ToggleBookmarks>
+    <FocusTextBox>포커스 텍스트 상자</FocusTextBox>
     <ToggleBookmarksWithComment>북마크 - 설명 추가</ToggleBookmarksWithComment>
     <ClearBookmarks>모든 북마크 제거...</ClearBookmarks>
     <ExportBookmarks>북마크 내보내기...</ExportBookmarks>
@@ -2406,8 +2407,8 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <ReverseMouseWheelScrollDirection>마우스 휠 스크롤 방향 반전</ReverseMouseWheelScrollDirection>
     <WaveformAllowOverlap>중복 허용 (이동 및 크기 조정시)</WaveformAllowOverlap>
     <WaveformSetVideoPosMoveStartEnd>시작/끝 이동시 비디오 위치 설정</WaveformSetVideoPosMoveStartEnd>
-    <WaveformFocusMouseEnter>마우스 입력에 초점 놓기</WaveformFocusMouseEnter>
-    <WaveformListViewFocusMouseEnter>「자막 보기」에서 마우스 입력에 초점 놓기</WaveformListViewFocusMouseEnter>
+    <WaveformFocusMouseEnter>마우스 입력에 포커스 맞춤</WaveformFocusMouseEnter>
+    <WaveformListViewFocusMouseEnter>「자막 보기」에서 마우스 입력에 포커스 맞춤</WaveformListViewFocusMouseEnter>
     <WaveformSingleClickSelect>한 번 클릭으로 자막을 선택</WaveformSingleClickSelect>
     <WaveformSnapToShotChanges>장면전환에 맞춤 (Shift 키를 누르면 재정의)</WaveformSnapToShotChanges>
     <WaveformEditShotChangesProfile>프로필 편집...</WaveformEditShotChangesProfile>
@@ -2532,7 +2533,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <DarkThemeShowGridViewLines>목록 보기 그리드 선 표시</DarkThemeShowGridViewLines>
     <GraphicsButtons>그래픽 버튼</GraphicsButtons>
     <UpdateShortcut>업데이트</UpdateShortcut>
-    <FoucsSetVideoPosition>초점에 비디오 위치 설정</FoucsSetVideoPosition>
+    <FoucsSetVideoPosition>포커스에 비디오 위치 설정</FoucsSetVideoPosition>
     <ToggleDockUndockOfVideoControls>비디오 컨트롤 연결 | 해제</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>끝 지점과 새로 추가할 지점을 정하고 새 지점으로 이동</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStart>끝 지점을 통해 조정</AdjustViaEndAutoStart>
@@ -2813,6 +2814,8 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <CustomContinuationStyleNote> 참고: 사용자 지정 연속 스타일은 프로필 간에 공유됩니다.</CustomContinuationStyleNote>
     <ResetCustomContinuationStyleWarning>이렇게 하면 대화 상자의 값이 무시됩니다. 확실합니까?</ResetCustomContinuationStyleWarning>
     <ExportAsHtml>HTML로 내보내기...</ExportAsHtml>
+    <SetNewActor>새 배우/음성 설정</SetNewActor>
+    <SetActorX>배우/음성 설정 {0}</SetActorX>
   </Settings>
   <SettingsMpv>
     <DownloadMpv>mpv lib 다운로드</DownloadMpv>
