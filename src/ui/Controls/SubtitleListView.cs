@@ -495,10 +495,10 @@ namespace Nikse.SubtitleEdit.Controls
                 }
 
                 // Draw text - impossible to get a precise match with the default list view text :(
-                e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-                e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAliasGridFit;
-                var rectangle = new Rectangle(e.Bounds.Left + 5 + addX, e.Bounds.Top + 2, e.Bounds.Width - 4 - addX, e.Bounds.Height - 2);
-                using (var brush = new SolidBrush(DarkTheme.DarkThemeDisabledColor))
+                e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+                e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+                var rectangle = new Rectangle(e.Bounds.Left + 4 + addX, e.Bounds.Top + 2, e.Bounds.Width - 4 - addX, e.Bounds.Height - 2);
+                using (var brush = new SolidBrush(e.Item.SubItems[e.ColumnIndex].ForeColor))
                 using (var stringFormat = CreateStringFormat(this))
                 {
                     e.Graphics.DrawString(e.Item.SubItems[e.ColumnIndex].Text, e.Item.SubItems[e.ColumnIndex].Font, brush, rectangle, stringFormat);
