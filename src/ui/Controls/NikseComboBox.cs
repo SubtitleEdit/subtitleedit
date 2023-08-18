@@ -410,6 +410,15 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
+        protected override bool IsInputKey(Keys keyData)
+        {
+            if (keyData == Keys.Down || keyData == Keys.Up)
+            {
+                return true;
+            }
+
+            return base.IsInputKey(keyData);
+        }
 
         public NikseComboBox()
         {
@@ -417,6 +426,7 @@ namespace Nikse.SubtitleEdit.Controls
             _textBox = new TextBox();
             _textBox.Visible = false;
             _items = new NikseComboBoxCollection(this);
+            
 
             SetStyle(ControlStyles.ResizeRedraw | ControlStyles.OptimizedDoubleBuffer, true);
 
@@ -432,7 +442,7 @@ namespace Nikse.SubtitleEdit.Controls
                 }
                 else if (e.KeyCode == Keys.Down)
                 {
-                    if (_selectedIndex < Items.Count - 2)
+                    if (_selectedIndex < Items.Count - 1)
                     {
                         SelectedIndex++;
                     }
@@ -442,11 +452,6 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     KeyDown?.Invoke(this, e);
                 }
-            };
-
-            _textBox.KeyDown += (sender, e) =>
-            {
-                KeyDown?.Invoke(this, e);
             };
 
             MouseWheel += (sender, e) =>
@@ -495,7 +500,7 @@ namespace Nikse.SubtitleEdit.Controls
                     }
                     else if (e.KeyCode == Keys.Down)
                     {
-                        if (_selectedIndex < Items.Count - 2)
+                        if (_selectedIndex < Items.Count - 1)
                         {
                             _selectedIndex++;
                             _textBox.Text = Items[_selectedIndex].ToString();
@@ -512,9 +517,14 @@ namespace Nikse.SubtitleEdit.Controls
                         }
                         e.Handled = true;
                     }
+                    else
+                    {
+                        KeyDown?.Invoke(this, e);
+                    }
                 }
 
             };
+
             _textBox.LostFocus += (sender, args) => Invalidate();
             _textBox.GotFocus += (sender, args) => Invalidate();
             _textBox.TextChanged += _textBox_TextChanged;
@@ -552,7 +562,7 @@ namespace Nikse.SubtitleEdit.Controls
             _listViewMouseLeaveTimer.Tick += (sender, args) =>
             {
                 var form = FindForm();
-                if (form == null)
+                if (form == null || _listView == null)
                 {
                     return;
                 }
@@ -721,17 +731,17 @@ namespace Nikse.SubtitleEdit.Controls
 
             var lvHeight = 18;
             var isOverflow = Parent.GetType() == typeof(ToolStripOverflow);
-            if (isOverflow)
+            var form = FindForm();
+            if (isOverflow || form == null)
             {
                 HandleOverflow(listViewItems, lvHeight);
                 return;
             }
 
-            var form = FindForm();
             var ctl = (Control)this;
             var totalX = ctl.Left;
             var totalY = ctl.Top;
-            while (form != null && ctl.Parent != form)
+            while (ctl.Parent != form)
             {
                 ctl = ctl.Parent;
                 totalX += ctl.Left;
@@ -743,7 +753,7 @@ namespace Nikse.SubtitleEdit.Controls
             if (listViewItems.Count > 0)
             {
                 var itemHeight = _listView.GetItemRect(0).Height;
-                var lvVirtualHeight = itemHeight * listViewItems.Count + 16;
+                var lvVirtualHeight = itemHeight * listViewItems.Count + 2 * listViewItems.Count + 4;
                 lvHeight = lvVirtualHeight;
                 var maxHeight = DropDownHeight;
                 var spaceInPixelsBottom = form.Height - (totalY + Height);
@@ -868,8 +878,9 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 if (args.KeyCode == Keys.Escape)
                 {
-                    HideDropDown();
                     args.SuppressKeyPress = true;
+                    args.Handled = true;
+                    HideDropDown();
                 }
                 else if (args.KeyCode == Keys.Enter)
                 {
