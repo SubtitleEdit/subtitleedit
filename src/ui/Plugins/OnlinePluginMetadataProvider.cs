@@ -5,7 +5,12 @@ using System.Xml.Linq;
 
 namespace Nikse.SubtitleEdit.Plugins
 {
-    public class OnlinePluginMetadataProvider
+    public interface IOnlinePluginMetadataProvider
+    {
+        Task<IReadOnlyCollection<PluginInfo>> GetPluginsAsync();
+    }
+
+    public class OnlinePluginMetadataProvider : IOnlinePluginMetadataProvider
     {
         private readonly string _githubUrl;
 

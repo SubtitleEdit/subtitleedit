@@ -6,7 +6,12 @@ using System.Reflection;
 
 namespace Nikse.SubtitleEdit.Plugins
 {
-    public class LocalPluginMetadataProvider
+    public interface ILocalPluginMetadataProvider
+    {
+        IReadOnlyCollection<LocalPlugin> GetInstalledPlugins();
+    }
+
+    public class LocalPluginMetadataProvider : ILocalPluginMetadataProvider
     {
         private const string KnownPluginExtension = "*.dll";
 
