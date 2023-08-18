@@ -60,15 +60,16 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         };
 
 
-        private const string DownloadUrlPurfviewFasterWhisper = "https://github.com/Purfview/whisper-standalone-win/releases/download/faster-whisper/Whisper-Faster_r145.2.zip";
+        private const string DownloadUrlPurfviewFasterWhisper = "https://github.com/Purfview/whisper-standalone-win/releases/download/faster-whisper/Whisper-Faster_r145.3.zip";
 
         private static readonly string[] Sha512HashesPurfviewFasterWhisper =
         {
-            "b689f5ff7329f0ae8f08e3d42b1a2f71bcbe2717cf1231395791cf3b90e305ba4e92955a62ebe946a73c5ca83f61bc60b2e4cff1065cc0f49cfc1f3c665fa587", // r145.2 
+            "fee96c9f8f3a9b67c2e1923fa0f5ef388d645aa3788b1b00c9f12392ef2db4b905d84f5c00ab743a284c8ba2750121e08e9fee1edc76d9c0f12ae51d61b1b12a", // r145.3.zip
         };
 
         private static readonly string[] OldSha512HashesPurfviewFasterWhisper =
         {
+            "b689f5ff7329f0ae8f08e3d42b1a2f71bcbe2717cf1231395791cf3b90e305ba4e92955a62ebe946a73c5ca83f61bc60b2e4cff1065cc0f49cfc1f3c665fa587", // r145.2 
             "75ba2bcee9fef0846e54ce367df3fb54f3b9f4cb0f8ac33f01bdde44dc313cd01b3263b43c899271af5901f765ef6257358dcf68c11024652299942405afe289", //  r145.1
             "5414c15bb1682efc2f737f3ab5f15c4350a70c30a6101b631297420bbc4cb077ef9b88cb6e5512f4adcdafbda85eb894ff92eae07bd70c66efa0b28a08361033", // Whisper-Faster r141.4
         };
@@ -312,7 +313,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
             if (whisperChoice == WhisperChoice.PurfviewFasterWhisper)
             {
-                return hash == "ab34a7cb4ce36a0634756da9a2592d81281404c3408ca223dcd9f2bdbc131e81b8a45158d9df295b42fc2bce5485ae1542c00a76efe33775ef811fbef42e86e3";
+                return hash == "f55f3d7f60ec3a5ba6e1cc59062ad34d5e235f726f12bc8e4d1c5c519d1950fecd3e0386f87d937cabb7041235ef3cff54752d82de9f901690cb227ac4d2c2da";
             }
 
             return hash == "c43fed38d1ae99e6fbbd8c842c2d550b4949081c0c7fba72cd2e2e8435ff05eac4f64e659efb09d597c3c062edf1e5026acc375d2a07290fa3c0fca9ac3bd7a2";
