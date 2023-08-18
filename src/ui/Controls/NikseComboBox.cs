@@ -753,7 +753,7 @@ namespace Nikse.SubtitleEdit.Controls
             if (listViewItems.Count > 0)
             {
                 var itemHeight = _listView.GetItemRect(0).Height;
-                var lvVirtualHeight = itemHeight * listViewItems.Count + 2 * listViewItems.Count + 4;
+                var lvVirtualHeight = itemHeight * listViewItems.Count + 9;
                 lvHeight = lvVirtualHeight;
                 var maxHeight = DropDownHeight;
                 var spaceInPixelsBottom = form.Height - (totalY + Height);
@@ -866,6 +866,7 @@ namespace Nikse.SubtitleEdit.Controls
             _listView.MultiSelect = false;
             _listView.HideSelection = false;
             _listView.GridLines = false;
+            _listView.Font = Font;
 
             if (Configuration.Settings.General.UseDarkTheme)
             {
