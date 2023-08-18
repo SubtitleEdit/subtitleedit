@@ -720,9 +720,15 @@ namespace Nikse.SubtitleEdit.Logic
                     if (lv.CheckBoxes)
                     {
                         var checkBoxState = e.Item.Checked ? System.Windows.Forms.VisualStyles.CheckBoxState.CheckedNormal : System.Windows.Forms.VisualStyles.CheckBoxState.UncheckedNormal;
-                        CheckBoxRenderer.DrawCheckBox(e.Graphics, new Point(b.Left + 4, b.Top + ((b.Height - 13) / 2) - 1), checkBoxState);
+                        var top = b.Top + ((b.Height - 13) / 2) - 1;
+                        if (b.Height <= 17)
+                        {
+                            top = b.Top + 2;
+                        }
+
+                        CheckBoxRenderer.DrawCheckBox(e.Graphics, new Point(b.Left + 4, top), checkBoxState);
                         leftImage += 17;
-                        addFromCheckBox = 17;
+                        addFromCheckBox = 16;
                     }
 
                     if (e.Item.ImageIndex >= 0 && e.Item.ImageList.Images.Count > e.Item.ImageIndex)
