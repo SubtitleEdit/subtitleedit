@@ -25135,7 +25135,7 @@ namespace Nikse.SubtitleEdit.Forms
                     videoPosition -= Configuration.Settings.General.SetStartEndHumanDelay / TimeCode.BaseUnit;
                 }
 
-                if (videoPosition < temp.StartTime.TotalSeconds - 0.1)
+                if (videoPosition < temp.StartTime.TotalSeconds + 0.025)
                 {
                     return;
                 }
