@@ -229,24 +229,26 @@
                         (default: 0)
 </value>
   </data>
-  <data name="textBox1.Text" xml:space="preserve">
+  <data name="textBoxPurfviewFasterWhisper.Text" xml:space="preserve">
     <value>  --temperature TEMPERATURE
                         temperature to use for sampling (default: 0)
-  --best_of BEST_OF     number of candidates when sampling with non-zero temperature (default: 5)
-  --beam_size BEAM_SIZE
+  --best_of BEST_OF, -bo BEST_OF
+                        number of candidates when sampling with non-zero temperature (default: 5)
+  --beam_size BEAM_SIZE, -bs BEAM_SIZE
                         number of beams in beam search, only applicable when temperature is zero (default: 1)
-  --patience PATIENCE   optional patience value to use in beam decoding, as in https://arxiv.org/abs/2204.05424, the
+  --patience PATIENCE, -p PATIENCE
+                        optional patience value to use in beam decoding, as in https://arxiv.org/abs/2204.05424, the
                         default (1.0) is equivalent to conventional beam search (default: 1.0)
   --length_penalty LENGTH_PENALTY
                         optional token length penalty coefficient (alpha) as in https://arxiv.org/abs/1609.08144, uses
                         simple length normalization by default (default: 1.0)
   --repetition_penalty REPETITION_PENALTY
-                        Penalty applied to the score of previously generated tokens (set > 1.0 to
-                        penalize). (default: 1.0)
+                        Penalty applied to the score of previously generated tokens (set &gt; 1.0 to penalize). (default:
+                        1.0)
   --suppress_tokens SUPPRESS_TOKENS
                         comma-separated list of token ids to suppress during sampling; '-1' will suppress most special
                         characters except common punctuations (default: -1)
-  --initial_prompt INITIAL_PROMPT
+  --initial_prompt INITIAL_PROMPT, -prompt INITIAL_PROMPT
                         optional text to provide as a prompt for the first window. (default: None)
   --condition_on_previous_text CONDITION_ON_PREVIOUS_TEXT
                         if True, provide the previous output of the model as a prompt for the next window; disabling
@@ -257,7 +259,7 @@
                         condition_on_previous_text is True. (default: 0.5)
   --temperature_increment_on_fallback TEMPERATURE_INCREMENT_ON_FALLBACK
                         temperature to increase when falling back when the decoding fails to meet either of the
-                        thresholds below (default: 0.2)
+                        thresholds below. To disable fallback set it to 'None'. (default: 0.2)
   --compression_ratio_threshold COMPRESSION_RATIO_THRESHOLD
                         if the gzip compression ratio is higher than this value, treat the decoding as failed
                         (default: 2.4)
@@ -286,7 +288,7 @@
   --threads THREADS     number of threads used for CPU inference; By default number of the real cores but no more that
                         4 (default: 0)
   --version             Show Faster-Whisper's version number
-  --vad_filter VAD_FILTER
+  --vad_filter VAD_FILTER, -vad VAD_FILTER
                         Enable the voice activity detection (VAD) to filter out parts of the audio without speech.
                         (default: True)
   --vad_threshold VAD_THRESHOLD
@@ -303,11 +305,18 @@
   --vad_window_size_samples VAD_WINDOW_SIZE_SAMPLES
                         Size of audio chunks fed to the silero VAD model. Values other than 512, 1024, 1536 may affect
                         model perfomance!!! (default: 1536)
-  --compute_type {default,auto,int8,int8_float16,int16,float16,float32,int8_bfloat16,bfloat16}
-                        Type of quantization to use (see https://opennmt.net/CTranslate2/quantization.html) (default:
+  --compute_type {default,auto,int8,int8_float16,int8_float32,int8_bfloat16,int16,float16,float32,bfloat16}, -ct {default,auto,int8,int8_float16,int8_float32,int8_bfloat16,int16,float16,float32,bfloat16}
+                        Type of quantization to use (see https://opennmt.net/CTranslate2/quantization.html). (default:
                         default)
-  --beep BEEP           Enables beep sound when operation is finished. (default: True)
-  --skip SKIP           Skips files if 'srt' subtitle exists. Works if input is wildcard or directory. (default:
-                        False)</value>
+  --batch_recursive, -br
+                        Enables recursive batch processing. Note: If set then it changes defaults of --output_dir.
+                        (default: False)
+  --beep_off            Disables beep sound when operation is finished. (default: False)
+  --skip                Skips files if 'srt' subtitle exists. Works if input is wildcard or directory. (default:
+                        False)
+  --checkcuda, -cc      Check for CUDA devices. (for Subtitle Edit's internal use)
+  --print_progress, -pp
+                        Prints progress bar instead of transcription. (default: False)
+	</value>
   </data>
 </root>
