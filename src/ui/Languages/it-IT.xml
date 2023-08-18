@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.6.13</Version>
-    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 17.08.2023</TranslatedBy>
+    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 18.08.2023</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -2293,6 +2293,7 @@ stesso file di sottotitolo (collaborazione)</Information>
     <BeautifyTimeCodes>Abbellisci time code</BeautifyTimeCodes>
     <SettingsName>Impostazioni</SettingsName>
     <ToggleBookmarks>Attiva/disattiva segnalibri</ToggleBookmarks>
+    <FocusTextBox>Casella testo stato attivo</FocusTextBox>
     <ToggleBookmarksWithComment>Attiva/disattiva segnalibri - Aggiungi commento</ToggleBookmarksWithComment>
     <ClearBookmarks>Azzera segnalibri</ClearBookmarks>
     <ExportBookmarks>Esporta segnalibri...</ExportBookmarks>
@@ -2814,6 +2815,8 @@ Vuoi continuare?</RestoreDefaultSettingsMsg>
     <CustomContinuationStyleNote>Nota: lo stile continuazione personalizzato è condiviso tra i profili.</CustomContinuationStyleNote>
     <ResetCustomContinuationStyleWarning>Questo sovrascriverà i valori nella finestra di dialogo. Sei sicuro?</ResetCustomContinuationStyleWarning>
     <ExportAsHtml>Esporta come HTML...</ExportAsHtml>
+    <SetNewActor>Imposta nuovo attore/voce</SetNewActor>
+    <SetActorX>Imposta attore/voce {0}</SetActorX>
   </Settings>
   <SettingsMpv>
     <DownloadMpv>Download lib mpv</DownloadMpv>
