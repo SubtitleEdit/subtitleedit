@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.6.13</Version>
-    <TranslatedBy>Последен превод на български 17.08.2023: KalinM</TranslatedBy>
+    <TranslatedBy>Последен превод на български 18.08.2023: KalinM</TranslatedBy>
     <CultureName>bg-BG</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -2293,6 +2293,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <BeautifyTimeCodes>Разкрасяване на времевите кодове</BeautifyTimeCodes>
     <SettingsName>Настройки</SettingsName>
     <ToggleBookmarks>Превключване на отметки</ToggleBookmarks>
+    <FocusTextBox>Фокусиране в/у текстовото поле</FocusTextBox>
     <ToggleBookmarksWithComment>Превключване на отметки - добавяне на коментар</ToggleBookmarksWithComment>
     <ClearBookmarks>Изчистване на отметките</ClearBookmarks>
     <ExportBookmarks>Експорт на отметки...</ExportBookmarks>
@@ -2816,6 +2817,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <CustomContinuationStyleNote>Забележка: Персонализираният стил на продължение се споделя между профилите.</CustomContinuationStyleNote>
     <ResetCustomContinuationStyleWarning>Това ще замени стойностите в диалоговия прозорец.  Сигурни ли сте?</ResetCustomContinuationStyleWarning>
     <ExportAsHtml>Експортиране като HTML...</ExportAsHtml>
+    <SetNewActor>Задаване на нов актьор/глас</SetNewActor>
+    <SetActorX>Зададен актьор/глас {0}</SetActorX>
   </Settings>
   <SettingsMpv>
     <DownloadMpv>Изтегляне на mpv</DownloadMpv>
