@@ -6012,6 +6012,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private static void TryLoadIcon(ToolStripItem button, string iconName)
         {
+            button.BackColor = UiUtil.BackColor;
+
             var theme = Configuration.Settings.General.UseDarkTheme ? "DarkTheme" : "DefaultTheme";
             if (!string.IsNullOrEmpty(Configuration.Settings.General.ToolbarIconTheme) && !Configuration.Settings.General.ToolbarIconTheme.Equals("Auto", StringComparison.OrdinalIgnoreCase))
             {
@@ -6021,6 +6023,7 @@ namespace Nikse.SubtitleEdit.Forms
             var themeFullPath = Path.Combine(Configuration.IconsDirectory, theme, iconName + ".png");
             if (File.Exists(themeFullPath))
             {
+                button.Image?.Dispose();
                 button.Image = new Bitmap(themeFullPath);
                 return;
             }
@@ -6028,6 +6031,7 @@ namespace Nikse.SubtitleEdit.Forms
             var fullPath = Path.Combine(Configuration.IconsDirectory, "DefaultTheme", iconName + ".png");
             if (File.Exists(fullPath))
             {
+                button.Image?.Dispose();
                 button.Image = new Bitmap(fullPath);
             }
         }
@@ -25676,6 +25680,9 @@ namespace Nikse.SubtitleEdit.Forms
                     toolStripSplitButtonPlayRate.Checked = true;
                 }
             }
+
+            //toolStripSplitButtonPlayRate.BackColor = UiUtil.BackColor;
+            //TryLoadIcon(toolStripSplitButtonPlayRate, "WaveformPlaybackSpeed");
 
             try
             {
