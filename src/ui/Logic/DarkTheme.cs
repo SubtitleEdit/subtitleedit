@@ -713,7 +713,7 @@ namespace Nikse.SubtitleEdit.Logic
 
                 var b = e.Item.SubItems[e.ColumnIndex].Bounds;
 
-
+                var addFromCheckBox = 0;
                 if (e.ColumnIndex == 0)
                 {
                     var leftImage = 3;
@@ -722,6 +722,7 @@ namespace Nikse.SubtitleEdit.Logic
                         var checkBoxState = e.Item.Checked ? System.Windows.Forms.VisualStyles.CheckBoxState.CheckedNormal : System.Windows.Forms.VisualStyles.CheckBoxState.UncheckedNormal;
                         CheckBoxRenderer.DrawCheckBox(e.Graphics, new Point(b.Left + 4, b.Top + ((b.Height - 13) / 2) - 1), checkBoxState);
                         leftImage += 17;
+                        addFromCheckBox = 17;
                     }
 
                     if (e.Item.ImageIndex >= 0 && e.Item.ImageList.Images.Count > e.Item.ImageIndex)
@@ -741,7 +742,7 @@ namespace Nikse.SubtitleEdit.Logic
                     TextRenderer.DrawText(e.Graphics,
                         e.Item.SubItems[e.ColumnIndex].Text,
                         subtitleFont,
-                        new Rectangle(b.Left + 3, b.Top, b.Width - 3, b.Height),
+                        new Rectangle(b.Left + 3 + addFromCheckBox, b.Top, b.Width - 3 - addFromCheckBox, b.Height),
                         foreColor,
                         TextFormatFlags.NoPrefix | TextFormatFlags.VerticalCenter);
                 }
