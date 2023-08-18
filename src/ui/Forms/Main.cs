@@ -8944,16 +8944,12 @@ namespace Nikse.SubtitleEdit.Forms
             if (SubtitleListview1.SelectedItems.Count > 0 && !string.IsNullOrEmpty(_videoFileName) && !VideoFileNameIsUrl)
             {
                 var audio = new ToolStripMenuItem(LanguageSettings.Current.GenerateVideoWithBurnedInSubs.Audio);
-                UiUtil.FixFonts(audio);
                 audio.Tag = "(REMOVE)";
 
                 toolStripMenuItemSelectedLines.DropDownItems.Insert(0, audio);
                 var audioClip = new ToolStripMenuItem(LanguageSettings.Current.Main.Menu.ContextMenu.ExtractAudio);
-                UiUtil.FixFonts(audioClip);
                 var audioToTextWhisper = new ToolStripMenuItem(string.Format(LanguageSettings.Current.Main.Menu.Video.VideoAudioToTextX, "Whisper"));
-                UiUtil.FixFonts(audioToTextWhisper);
                 var audioToTextVosk = new ToolStripMenuItem(string.Format(LanguageSettings.Current.Main.Menu.Video.VideoAudioToTextX, "Vosk/Kaldi"));
-                UiUtil.FixFonts(audioToTextVosk);
                 audio.DropDownItems.Insert(0, audioClip);
                 audio.DropDownItems.Insert(0, audioToTextVosk);
 
@@ -8962,10 +8958,14 @@ namespace Nikse.SubtitleEdit.Forms
                     audio.DropDownItems.Insert(0, audioToTextWhisper);
                 }
 
+                UiUtil.FixFonts(audio);
+                UiUtil.FixFonts(audioClip);
+                UiUtil.FixFonts(audioToTextWhisper);
+                UiUtil.FixFonts(audioToTextVosk);
+                UiUtil.FixFonts(toolStripMenuItemSelectedLines);
+
                 audioClip.Click += (senderNew, eNew) => { ExtractAudioSelectedLines(); };
-
                 audioToTextWhisper.Click += (senderNew, eNew) => { AudioToTextWhisperSelectedLines(); };
-
                 audioToTextVosk.Click += (senderNew, eNew) => { AudioToTextVoskSelectedLines(); };
             }
 
