@@ -7,8 +7,8 @@ namespace Nikse.SubtitleEdit.Plugins
 {
     public class PluginUpdateChecker
     {
-        private readonly LocalPluginMetadataProvider _localPluginMetadataProvider;
-        private readonly OnlinePluginMetadataProvider _onlinePluginMetadataProvider;
+        private readonly ILocalPluginMetadataProvider _localPluginMetadataProvider;
+        private readonly IOnlinePluginMetadataProvider _onlinePluginMetadataProvider;
         private DateTime _lastCheckDate;
 
         /// <summary>
@@ -17,9 +17,16 @@ namespace Nikse.SubtitleEdit.Plugins
         public DateTime LastCheckDate => _lastCheckDate;
 
         public PluginUpdateChecker(PluginUpdateCheckerOptions options)
+            : this(new LocalPluginMetadataProvider(options.PluginDirectory),
+                new OnlinePluginMetadataProvider(options.GithubUrl))
         {
-            _localPluginMetadataProvider = new LocalPluginMetadataProvider(options.PluginDirectory);
-            _onlinePluginMetadataProvider = new OnlinePluginMetadataProvider(options.GithubUrl);
+        }
+
+        public PluginUpdateChecker(ILocalPluginMetadataProvider localPluginMetadataProvider,
+            IOnlinePluginMetadataProvider onlinePluginMetadataProvider)
+        {
+            _localPluginMetadataProvider = localPluginMetadataProvider;
+            _onlinePluginMetadataProvider = onlinePluginMetadataProvider;
         }
 
         public async Task<PluginUpdateCheckResult> CheckAsync()
