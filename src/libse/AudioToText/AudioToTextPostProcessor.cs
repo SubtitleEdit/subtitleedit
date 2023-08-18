@@ -28,7 +28,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
 
         public AudioToTextPostProcessor(string twoLetterLanguageCode)
         {
-            TwoLetterLanguageCode = twoLetterLanguageCode;
+            TwoLetterLanguageCode = twoLetterLanguageCode == "no" ? "nb" : twoLetterLanguageCode;
 
             ParagraphMaxChars = Configuration.Settings.Tools.AudioToTextLineMaxChars;
             if (ParagraphMaxChars < 10 || ParagraphMaxChars > 1_000_000)
