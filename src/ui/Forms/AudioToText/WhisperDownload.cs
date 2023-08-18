@@ -181,7 +181,8 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
             if (!hashes.Contains(hash))
             {
-                MessageBox.Show("Whisper SHA-512 hash does not match!");
+                MessageBox.Show("Whisper SHA-512 hash does not match!");;
+                DialogResult = DialogResult.Cancel;
                 return;
             }
 
