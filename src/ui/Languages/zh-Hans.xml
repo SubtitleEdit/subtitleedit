@@ -2279,6 +2279,7 @@ Command line: {1} {2}
     <BeautifyTimeCodes>美化时间码</BeautifyTimeCodes>
     <SettingsName>设置</SettingsName>
     <ToggleBookmarks>使用书签</ToggleBookmarks>
+    <FocusTextBox>焦点文本框</FocusTextBox>
     <ToggleBookmarksWithComment>使用书签 - 添加注释</ToggleBookmarksWithComment>
     <ClearBookmarks>清空书签</ClearBookmarks>
     <ExportBookmarks>导出书签...</ExportBookmarks>
@@ -2799,6 +2800,8 @@ Command line: {1} {2}
     <CustomContinuationStyleNote>注意：自定义延续样式将在配置文件之间共享。</CustomContinuationStyleNote>
     <ResetCustomContinuationStyleWarning>这将覆盖对话框中的值。 你确定吗？</ResetCustomContinuationStyleWarning>
     <ExportAsHtml>导出为 HTML...</ExportAsHtml>
+    <SetNewActor>设置新演员/配音</SetNewActor>
+    <SetActorX>设置演员/配音 {0}</SetActorX>
   </Settings>
   <SettingsMpv>
     <DownloadMpv>下载 mpv 库</DownloadMpv>
