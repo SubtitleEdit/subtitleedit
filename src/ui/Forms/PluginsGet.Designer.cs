@@ -50,7 +50,7 @@
             this.tabPageGetPlugins = new System.Windows.Forms.TabPage();
             this.buttonSearchClear = new System.Windows.Forms.Button();
             this.labelShortcutsSearch = new System.Windows.Forms.Label();
-            this.textBoxSearch = new System.Windows.Forms.TextBox();
+            this.textBoxSearch = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelPleaseWait = new System.Windows.Forms.Label();
             this.tabControlPlugins.SuspendLayout();
             this.tabPageInstalledPlugins.SuspendLayout();
@@ -352,6 +352,6 @@
         private System.Windows.Forms.Button buttonUpdateAll;
         private System.Windows.Forms.Button buttonSearchClear;
         private System.Windows.Forms.Label labelShortcutsSearch;
-        private System.Windows.Forms.TextBox textBoxSearch;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxSearch;
     }
 }
