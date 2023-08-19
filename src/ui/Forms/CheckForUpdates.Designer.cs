@@ -37,6 +37,8 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonDownloadAndInstall = new System.Windows.Forms.Button();
             this.timerCheckForUpdates = new System.Windows.Forms.Timer(this.components);
             this.buttonDontCheckUpdates = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
+            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.SuspendLayout();
             // 
             // labelStatus
@@ -54,12 +56,13 @@ namespace Nikse.SubtitleEdit.Forms
             this.textBoxChangeLog.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxChangeLog.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxChangeLog.Location = new System.Drawing.Point(13, 31);
             this.textBoxChangeLog.Multiline = true;
             this.textBoxChangeLog.Name = "textBoxChangeLog";
             this.textBoxChangeLog.ReadOnly = true;
-            this.textBoxChangeLog.ScrollBars = ScrollBars.Both;
-            this.textBoxChangeLog.Size = new System.Drawing.Size(618, 53);
+            this.textBoxChangeLog.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.textBoxChangeLog.Size = new System.Drawing.Size(618, 106);
             this.textBoxChangeLog.TabIndex = 4;
             // 
             // buttonOK
@@ -67,7 +70,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(556, 90);
+            this.buttonOK.Location = new System.Drawing.Point(556, 168);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 2;
@@ -78,7 +81,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.buttonDownloadAndInstall.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonDownloadAndInstall.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonDownloadAndInstall.Location = new System.Drawing.Point(224, 90);
+            this.buttonDownloadAndInstall.Location = new System.Drawing.Point(224, 168);
             this.buttonDownloadAndInstall.Name = "buttonDownloadAndInstall";
             this.buttonDownloadAndInstall.Size = new System.Drawing.Size(160, 23);
             this.buttonDownloadAndInstall.TabIndex = 0;
@@ -94,7 +97,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.buttonDontCheckUpdates.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonDontCheckUpdates.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonDontCheckUpdates.Location = new System.Drawing.Point(390, 90);
+            this.buttonDontCheckUpdates.Location = new System.Drawing.Point(390, 168);
             this.buttonDontCheckUpdates.Name = "buttonDontCheckUpdates";
             this.buttonDontCheckUpdates.Size = new System.Drawing.Size(160, 23);
             this.buttonDontCheckUpdates.TabIndex = 1;
@@ -102,11 +105,32 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonDontCheckUpdates.UseVisualStyleBackColor = true;
             this.buttonDontCheckUpdates.Click += new System.EventHandler(this.buttonDontCheckUpdates_Click);
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(13, 144);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(35, 13);
+            this.label1.TabIndex = 5;
+            this.label1.Text = "label1";
+            // 
+            // linkLabel1
+            // 
+            this.linkLabel1.AutoSize = true;
+            this.linkLabel1.Location = new System.Drawing.Point(55, 143);
+            this.linkLabel1.Name = "linkLabel1";
+            this.linkLabel1.Size = new System.Drawing.Size(55, 13);
+            this.linkLabel1.TabIndex = 6;
+            this.linkLabel1.TabStop = true;
+            this.linkLabel1.Text = "linkLabel1";
+            // 
             // CheckForUpdates
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(643, 123);
+            this.ClientSize = new System.Drawing.Size(643, 201);
+            this.Controls.Add(this.linkLabel1);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.buttonDontCheckUpdates);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.buttonDownloadAndInstall);
@@ -133,5 +157,7 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.Button buttonDownloadAndInstall;
         private System.Windows.Forms.Timer timerCheckForUpdates;
         private System.Windows.Forms.Button buttonDontCheckUpdates;
+        private Label label1;
+        private LinkLabel linkLabel1;
     }
 }
