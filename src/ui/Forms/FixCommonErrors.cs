@@ -357,7 +357,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             if (Configuration.Settings.Tools.FixCommonErrorsSkipStepOne && !BatchMode)
             {
-                Next();
+                Next(false);
             }
             Activate();
         }
@@ -794,14 +794,25 @@ namespace Nikse.SubtitleEdit.Forms
             else
             {
                 Cursor = Cursors.WaitCursor;
-                Next();
+                Next(false);
                 ShowAvailableFixesStatus(false);
             }
             Cursor = Cursors.Default;
         }
 
-        private void Next()
+        // ReSharper disable once InconsistentNaming
+        private void Next(bool generateUIReport = true)
         {
+            // restore de-selected fixes
+            if (generateUIReport)
+            {
+                listViewFixes.BeginUpdate();
+                listViewFixes.Items.Clear();
+                listViewFixes.EndUpdate();
+
+                _onlyListFixes = true;
+            }
+            
             RunSelectedActions();
 
             buttonBack.Enabled = true;
@@ -828,6 +839,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             Subtitle = new Subtitle(FixedSubtitle, false);
 
+            listViewFixes.BeginUpdate();
             if (listView1.Items[IndexFixDoubleDash].Checked)
             {
                 var fixItem = (FixItem)listView1.Items[IndexFixDoubleDash].Tag;
@@ -857,6 +869,8 @@ namespace Nikse.SubtitleEdit.Forms
                 var fixItem = (FixItem)listView1.Items[IndexRemoveEmptyLines].Tag;
                 fixItem.Action.Invoke();
             }
+
+            listViewFixes.EndUpdate();
 
             // build log
             textBoxFixedIssues.Text = string.Empty;
@@ -1467,8 +1481,6 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void RefreshFixes()
         {
-            listViewFixes.BeginUpdate();
-
             // save de-selected fixes
             var deSelectedFixes = new List<string>();
             foreach (ListViewItem item in listViewFixes.Items)
@@ -1479,11 +1491,10 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            listViewFixes.Items.Clear();
-            _onlyListFixes = true;
             Next();
 
             // restore de-selected fixes
+            listViewFixes.BeginUpdate();
             foreach (ListViewItem item in listViewFixes.Items)
             {
                 if (deSelectedFixes.Contains(item.SubItems[1].Text + item.SubItems[2].Text + item.SubItems[3].Text))
@@ -1564,14 +1575,12 @@ namespace Nikse.SubtitleEdit.Forms
             FixedSubtitle.Renumber();
             subtitleListView1.Fill(FixedSubtitle);
 
-            // refresh fixes
-            listViewFixes.Items.Clear();
-            _onlyListFixes = true;
             Next();
 
             // restore de-selected fixes
             if (deSelectedFixes.Count > 0)
             {
+                listViewFixes.BeginUpdate();
                 foreach (ListViewItem item in listViewFixes.Items)
                 {
                     if (deSelectedFixes.Contains(item.SubItems[1].Text + item.SubItems[2].Text + item.SubItems[3].Text))
@@ -1579,6 +1588,8 @@ namespace Nikse.SubtitleEdit.Forms
                         item.Checked = false;
                     }
                 }
+
+                listViewFixes.EndUpdate();
             }
 
             if (subtitleListView1.Items.Count > firstIndex)
@@ -1637,12 +1648,10 @@ namespace Nikse.SubtitleEdit.Forms
                     SubtitleListView1SelectedIndexChanged(null, null);
                 }
 
-                // refresh fixes
-                listViewFixes.Items.Clear();
-                _onlyListFixes = true;
                 Next();
 
                 // restore de-selected fixes
+                listViewFixes.BeginUpdate();
                 foreach (ListViewItem item in listViewFixes.Items)
                 {
                     if (deSelectedFixes.Contains(item.SubItems[1].Text + item.SubItems[2].Text + item.SubItems[3].Text))
@@ -1650,6 +1659,8 @@ namespace Nikse.SubtitleEdit.Forms
                         item.Checked = false;
                     }
                 }
+
+                listViewFixes.EndUpdate();
             }
         }
 
@@ -1810,10 +1821,9 @@ namespace Nikse.SubtitleEdit.Forms
                 subtitleListView1.SelectIndexAndEnsureVisible(firstSelectedIndex);
                 subtitleListView1.SelectedIndexChanged += SubtitleListView1SelectedIndexChanged;
 
-                // restore de-selected fixes
-                listViewFixes.Items.Clear();
-                _onlyListFixes = true;
                 Next();
+
+                listViewFixes.BeginUpdate();
                 foreach (ListViewItem item in listViewFixes.Items)
                 {
                     if (deSelectedFixes.Contains(item.SubItems[1].Text + item.SubItems[2].Text + item.SubItems[3].Text))
@@ -1821,6 +1831,8 @@ namespace Nikse.SubtitleEdit.Forms
                         item.Checked = false;
                     }
                 }
+
+                listViewFixes.EndUpdate();
             }
         }
 
