@@ -1420,6 +1420,15 @@ namespace Nikse.SubtitleEdit.Logic
                 case "CheckForUpdates/NoUpdates":
                     language.CheckForUpdates.NoUpdates = reader.Value;
                     break;
+                case "CheckForUpdates/XPluginsHasAnUpdate":
+                    language.CheckForUpdates.XPluginsHasAnUpdate = reader.Value;
+                    break;
+                case "CheckForUpdates/OnePluginsHasAnUpdate":
+                    language.CheckForUpdates.OnePluginsHasAnUpdate = reader.Value;
+                    break;
+                case "CheckForUpdates/Update":
+                    language.CheckForUpdates.Update = reader.Value;
+                    break;
                 case "ChooseAudioTrack/Title":
                     language.ChooseAudioTrack.Title = reader.Value;
                     break;

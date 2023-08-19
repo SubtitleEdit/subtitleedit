@@ -744,6 +744,9 @@ namespace Nikse.SubtitleEdit.Logic
                 CheckingForUpdatesNewVersion = "New version available!",
                 InstallUpdate = "Go to download page",
                 NoUpdates = "Don't update",
+                OnePluginsHasAnUpdate = "One plugin has an update -",
+                XPluginsHasAnUpdate = "{0} plugins have an updates -",
+                Update = "update",
             };
 
             ChooseAudioTrack = new LanguageStructure.ChooseAudioTrack

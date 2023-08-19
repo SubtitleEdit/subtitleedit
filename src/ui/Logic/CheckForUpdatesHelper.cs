@@ -5,6 +5,8 @@ using System.Text;
 using System.Text.RegularExpressions;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Http;
+using Nikse.SubtitleEdit.Forms;
+using Nikse.SubtitleEdit.Logic.Plugins;
 
 namespace Nikse.SubtitleEdit.Logic
 {
@@ -19,8 +21,10 @@ namespace Nikse.SubtitleEdit.Logic
         private int _successCount;
 
         public string Error { get; set; }
+        public int PluginUpdates { get; set; }
 
         public bool Done => _successCount == 1;
+        public bool ManualCheck { get; set; }
 
         public string LatestVersionNumber { get; set; }
         public string LatestChangeLog { get; set; }
@@ -89,13 +93,23 @@ namespace Nikse.SubtitleEdit.Logic
             return sb.ToString();
         }
 
-        public void CheckForUpdates()
+        public void CheckForUpdates(bool manualCheck)
         {
+            ManualCheck = manualCheck;
+
             try
             {
                 using (var httpClient = DownloaderFactory.MakeHttpClient())
                 {
                     _changeLog = httpClient.GetStringAsync(ChangeLogUrl).Result;
+                }
+
+                var installedPlugins = new InstalledPluginMetadataProvider().GetPlugins();
+                if (installedPlugins.Count > 0)
+                {
+                    var onlinePlugins = new OnlinePluginMetadataProvider(PluginsGet.PluginXmlFileUrl).GetPlugins();
+                    var updates = PluginUpdateChecker.GetAvailableUpdates(installedPlugins, onlinePlugins.ToArray());
+                    PluginUpdates = updates.Count;
                 }
 
                 LatestChangeLog = GetLatestChangeLog(_changeLog);
@@ -120,13 +134,23 @@ namespace Nikse.SubtitleEdit.Logic
 
             try
             {
-                //string[] currentVersionInfo = "3.3.14".Split('.'); // for testing...
-                return Version.Parse(LatestVersionNumber) > Version.Parse(Utilities.AssemblyVersion);
+                if (PluginUpdates > 0)
+                {
+                    return true;
+                }
+
+                return IsNewSubtitleEditAvailable();
             }
             catch
             {
                 return false;
             }
+        }
+
+        public bool IsNewSubtitleEditAvailable()
+        {
+            //string[] currentVersionInfo = "3.3.14".Split('.'); // for testing...
+            return Version.Parse(LatestVersionNumber) > Version.Parse(Utilities.AssemblyVersion);
         }
     }
 }

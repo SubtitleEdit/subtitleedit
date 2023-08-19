@@ -567,6 +567,9 @@
             public string CheckingForUpdatesNewVersion { get; set; }
             public string InstallUpdate { get; set; }
             public string NoUpdates { get; set; }
+            public string XPluginsHasAnUpdate { get; set; }
+            public string OnePluginsHasAnUpdate { get; set; }
+            public string Update { get; set; }
         }
 
         public class ChooseAudioTrack

@@ -542,6 +542,9 @@ We leverage the intrinsic rhythm of the image.</CreateSimpleChainingToolTip>
     <CheckingForUpdatesNewVersion>New version available!</CheckingForUpdatesNewVersion>
     <InstallUpdate>Go to download page</InstallUpdate>
     <NoUpdates>Don't update</NoUpdates>
+    <XPluginsHasAnUpdate>{0} plugins have an updates -</XPluginsHasAnUpdate>
+    <OnePluginsHasAnUpdate>One plugin has an update -</OnePluginsHasAnUpdate>
+    <Update>update</Update>
   </CheckForUpdates>
   <ChooseAudioTrack>
     <Title>Choose audio track</Title>
