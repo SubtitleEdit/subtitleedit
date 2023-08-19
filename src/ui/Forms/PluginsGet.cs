@@ -7,9 +7,9 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
-using System.Xml;
 using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms
@@ -91,27 +91,29 @@ namespace Nikse.SubtitleEdit.Forms
                 _fetchingData = true;
                 labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait;
                 Refresh();
-                ShowInstalledPlugins();
-                ShowOnlinePlugins();
+                var installedPlugins = new InstalledPluginMetadataProvider().GetPlugins();
+                ShowInstalledPlugins(installedPlugins);
+                ShowOnlinePlugins(installedPlugins);
                 labelPleaseWait.Text = string.Empty;
             }
             catch (Exception exception)
             {
                 labelPleaseWait.Text = string.Empty;
                 ChangeControlsState(true);
-                MessageBox.Show($"Unable to get plugin list!" + Environment.NewLine + Environment.NewLine +
+                MessageBox.Show("Unable to get plugin list!" + Environment.NewLine + Environment.NewLine +
                                     exception.Message + Environment.NewLine + Environment.NewLine + exception.StackTrace);
             }
             _fetchingData = false;
         }
 
-        private void ShowOnlinePlugins()
+        private void ShowOnlinePlugins(IEnumerable<PluginInfoItem> installedPlugins)
         {
             _downloadList = new List<PluginInfoItem>();
             listViewGetPlugins.BeginUpdate();
             _updateAllListUrls = new List<string>();
             var onlinePluginInfo = new OnlinePluginMetadataProvider(GetPluginXmlFileUrl());
-            LoadAvailablePlugins(onlinePluginInfo.GetPlugins());
+            _downloadList = onlinePluginInfo.GetPlugins().ToList();
+            LoadAvailablePlugins(installedPlugins, _downloadList);
             ShowAvailablePlugins();
             listViewGetPlugins.EndUpdate();
 
@@ -131,26 +133,18 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void LoadAvailablePlugins(IReadOnlyCollection<PluginInfoItem> plugins)
+        private void LoadAvailablePlugins(IEnumerable<PluginInfoItem> installedPlugins, IEnumerable<PluginInfoItem> onlinePlugins)
         {
-            foreach (var item in plugins)
+            var updates = PluginUpdateChecker.GetAvailableUpdates(installedPlugins, onlinePlugins.ToArray());
+            foreach (ListViewItem installed in listViewInstalledPlugins.Items)
             {
-                _downloadList.Add(item);
-
-                foreach (ListViewItem installed in listViewInstalledPlugins.Items)
+                var update = updates.FirstOrDefault(p => p.InstalledPlugin.Name == installed.Text);
+                if (update != null)
                 {
-                    if (string.Compare(installed.Text, item.Name.Trim('.'), StringComparison.OrdinalIgnoreCase) == 0)
-                    {
-                        var installedVer = MakeComparableVersionNumber(installed.SubItems[2].Text);
-                        var currentVer = MakeComparableVersionNumber(item.Version.ToString(CultureInfo.InvariantCulture));
-                        if (installedVer < currentVer)
-                        {
-                            installed.BackColor = Configuration.Settings.General.UseDarkTheme ? Color.IndianRed : Color.LightPink;
-                            installed.SubItems[1].Text = $"{_language.UpdateAvailable} {installed.SubItems[1].Text}";
-                            buttonUpdateAll.Visible = true;
-                            _updateAllListUrls.Add(item.Url);
-                        }
-                    }
+                    installed.BackColor = Configuration.Settings.General.UseDarkTheme ? Color.IndianRed : Color.LightPink;
+                    installed.SubItems[1].Text = $"{_language.UpdateAvailable} {installed.SubItems[1].Text}";
+                    buttonUpdateAll.Visible = true;
+                    _updateAllListUrls.Add(update.OnlinePlugin.Url);
                 }
             }
         }
@@ -211,12 +205,11 @@ namespace Nikse.SubtitleEdit.Forms
             listViewGetPlugins.EndUpdate();
         }
 
-        private void ShowInstalledPlugins()
+        private void ShowInstalledPlugins(IEnumerable<PluginInfoItem> installedPlugins)
         {
             listViewInstalledPlugins.BeginUpdate();
             listViewInstalledPlugins.Items.Clear();
-            var localPluginInfo = new InstalledPluginMetadataProvider();
-            foreach (var pluginInfo in localPluginInfo.GetPlugins())
+            foreach (var pluginInfo in installedPlugins)
             {
                 var item = new ListViewItem(pluginInfo.Name) { Tag = pluginInfo };
                 item.SubItems.Add(pluginInfo.Description);
@@ -331,7 +324,8 @@ namespace Nikse.SubtitleEdit.Forms
                 MessageBox.Show(string.Format(_language.PluginXDownloaded, _downloadedPluginName));
             }
 
-            ShowInstalledPlugins();
+            var installedPlugins = new InstalledPluginMetadataProvider().GetPlugins();
+            ShowInstalledPlugins(installedPlugins);
         }
 
         private void ChangeControlsState(bool enable)
