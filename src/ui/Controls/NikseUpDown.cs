@@ -369,18 +369,19 @@ namespace Nikse.SubtitleEdit.Controls
 
             if (decimal.TryParse(text, NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.DefaultThreadCurrentCulture, out var result))
             {
-                Value = Math.Round(result + value, DecimalPlaces);
+                var newValue = Math.Round(result + value, DecimalPlaces);
 
-                if (Value < Minimum)
+                if (newValue < Minimum)
                 {
                     Value = Minimum;
                 }
-                else if (Value > Maximum)
+                else if (newValue > Maximum)
                 {
                     Value = Maximum;
                 }
                 else
                 {
+                    Value = newValue;
                     SetText();
                     ValueChanged?.Invoke(this, null);
                     return;
