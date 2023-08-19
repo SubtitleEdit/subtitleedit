@@ -80,10 +80,10 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
         private void numericUpDownBrightness_ValueChanged(object sender, EventArgs e)
         {
             Factor = numericUpDownBrightness.Value / 100.0m;
-            UpdatePreview();
             trackBarBrightness.Scroll -= trackBarBrightness_Scroll;
             trackBarBrightness.Value = (int)Math.Round(numericUpDownBrightness.Value, MidpointRounding.AwayFromZero);
             trackBarBrightness.Scroll += trackBarBrightness_Scroll;
+            UpdatePreview();
         }
     }
 }
