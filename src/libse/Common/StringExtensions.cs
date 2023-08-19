@@ -756,6 +756,18 @@ namespace Nikse.SubtitleEdit.Core.Common
             return value.HasSentenceEnding(string.Empty);
         }
 
+        /// <summary>
+        /// Evaluates whether all of the letter-characters in the given string are uppercase.
+        /// </summary>
+        /// <param name="value">The string to evaluate.</param>
+        /// <remarks>
+        /// If the string is null or empty, the method will return false.
+        /// The method only checks letter-characters and ignores any non-letter characters.
+        /// If the string doesn't contain any letters, the method returns false.
+        /// </remarks>
+        /// <returns>
+        /// Returns true if all letter-characters in the string are uppercase. Returns false otherwise.
+        /// </returns>
         public static bool IsAllUppercase(this string value)
         {
             if (string.IsNullOrEmpty(value))
@@ -763,17 +775,25 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return false;
             }
 
-            var len = value.Length;
-            for (int i = 0; i < len; i++)
+            var hasLetter = false;
+            var reader = new FormattableTextReader(value);
+            while (reader.Read())
             {
-                var ch = value[i];
-                if (char.IsLetter(ch) && char.IsLower(ch))
+                var ch = reader.GetCurrent();
+                if (!char.IsLetter(ch))
+                {
+                    continue;
+                }
+
+                if (char.IsLower(ch))
                 {
                     return false;
                 }
+
+                hasLetter = true;
             }
 
-            return true;
+            return hasLetter;
         }
         
         private static readonly HashSet<char> NeutralSentenceEndingChars = new HashSet<char>

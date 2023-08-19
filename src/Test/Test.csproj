@@ -72,6 +72,7 @@
     <Compile Include="Assa\TagHelperRemoveTagTest.cs" />
     <Compile Include="Assa\ResamplerTest.cs" />
     <Compile Include="Assa\AssaTimeCodes.cs" />
+    <Compile Include="Common\FormattableTextReaderText.cs" />
     <Compile Include="Core\AudioToTextTest.cs" />
     <Compile Include="Core\CsvUtilTest.cs" />
     <Compile Include="Core\PluginUpdateCheckerTest.cs" />
@@ -210,7 +211,6 @@
       <Name>SubtitleEdit</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

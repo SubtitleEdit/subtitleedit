@@ -9,7 +9,20 @@ namespace Test.Core
     [TestClass]
     public class StringExtensionsTest
     {
-
+        [TestMethod]
+        public void IsAllUppercaseTest()
+        {
+            var value = "<i>FOO</i> <i>BAR</i>";
+            Assert.IsTrue(value.IsAllUppercase());
+        }
+        
+        [TestMethod]
+        public void IsAllUppercaseFalseTest()
+        {
+            var value = "<i>foobar</i>";
+            Assert.IsFalse(value.IsAllUppercase());
+        }
+        
         [TestMethod]
         public void LineStartsWithHtmlTagEmpty()
         {
