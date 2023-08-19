@@ -46,6 +46,7 @@ using System.Windows.Forms;
 using Nikse.SubtitleEdit.Core.AudioToText;
 using Nikse.SubtitleEdit.Forms.AudioToText;
 using Nikse.SubtitleEdit.Forms.VTT;
+using Nikse.SubtitleEdit.Plugins;
 using Timer = System.Windows.Forms.Timer;
 using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
@@ -33114,7 +33115,7 @@ namespace Nikse.SubtitleEdit.Forms
             return _subtitle;
         }
 
-        private void checkForUpdatesToolStripMenuItem_Click(object sender, EventArgs e)
+        private async void checkForUpdatesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
             {
@@ -33130,6 +33131,19 @@ namespace Nikse.SubtitleEdit.Forms
             using (var form = new CheckForUpdates(this))
             {
                 form.ShowDialog(this);
+            }
+
+            var pluginUpdateChecker = new PluginUpdateChecker(new PluginUpdateCheckerOptions()
+            {
+                GithubUrl = "https://raw.githubusercontent.com/SubtitleEdit/plugins/master/Plugins4.xml",
+                PluginDirectory = Configuration.PluginsDirectory
+            });
+
+            var updateCheckResult = await pluginUpdateChecker.CheckAsync();
+            if (updateCheckResult.Available)
+            {
+                MessageBox.Show(this, string.Join(Environment.NewLine, updateCheckResult.PluginUpdates),
+                    "Updates Available For Plugins", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
 
             Configuration.Settings.General.LastCheckForUpdates = DateTime.Now;
