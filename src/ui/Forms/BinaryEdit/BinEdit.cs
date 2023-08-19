@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Core.BluRaySup;
+﻿using Nikse.SubtitleEdit.Controls;
+using Nikse.SubtitleEdit.Core.BluRaySup;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 using Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream;
@@ -22,6 +23,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ProgressBar;
 using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms.BinaryEdit
@@ -3148,9 +3150,9 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             var bluePercent = color.B * 100 / total;
 
             var idx = subtitleListView1.SelectedItems[0].Index;
-            SetupProgressBar(GetIndices(true));
+            SetupProgressBar(GetIndices(true), "TODO:");
 
-            int count = 0;
+            var count = 0;
             var selectedIndices = GetIndices(true);
             foreach (var index in selectedIndices)
             {
@@ -3177,7 +3179,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 Application.DoEvents();
             }
 
-            progressBar1.Hide();
+            RemoveProgressBar();
         }
 
         private Bitmap ColorBitmap(Bitmap bitmap, int redPercent, int greenPercent, int bluePercent)
@@ -3391,10 +3393,11 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
                 var idx = subtitleListView1.SelectedItems[0].Index;
                 var selectedIndices = GetIndices(onlySelectedLines);
-                SetupProgressBar(selectedIndices);
+                SetupProgressBar(selectedIndices, "TODO:");
                 foreach (var index in selectedIndices)
                 {
                     progressBar1.Value++;
+
                     var extra = _extra[index];
                     var bmp = extra.Bitmap != null ? (Bitmap)extra.Bitmap.Clone() : GetBitmap(_binSubtitles[index]);
                     FixAlignment(f.Alignment, extra, bmp);
@@ -3409,7 +3412,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     bmp.Dispose();
                 }
 
-                progressBar1.Hide();
+                RemoveProgressBar();
             }
         }
 
@@ -3654,8 +3657,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 }
 
                 var selectedIndices = GetIndices(onlySelectedLines);
-                SetupProgressBar(selectedIndices);
-                int count = 0;
+                SetupProgressBar(selectedIndices, "TODO:");
+                var count = 0;
                 foreach (var i in selectedIndices)
                 {
                     Interlocked.Increment(ref count);
@@ -3682,7 +3685,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     Application.DoEvents();
                 }
 
-                progressBar1.Hide();
+                RemoveProgressBar();
             }
         }
 
@@ -3736,13 +3739,14 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 }
 
                 var selectedIndices = GetIndices(onlySelectedLines);
-                SetupProgressBar(selectedIndices);
+                SetupProgressBar(selectedIndices, "TODO:");
 
-                int count = 0;
+                var count = 0;
                 foreach (var i in selectedIndices)
                 {
                     Interlocked.Increment(ref count);
                     progressBar1.Value = count;
+
                     var sub = _binSubtitles[i];
                     var extraInner = _extra[i];
                     var bmpInner = extraInner.Bitmap != null ? (Bitmap)extraInner.Bitmap.Clone() : GetBitmap(sub);
@@ -3762,7 +3766,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     Application.DoEvents();
                 }
 
-                progressBar1.Hide();
+                RemoveProgressBar();
             }
         }
 
@@ -3800,8 +3804,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 }
 
                 var selectedIndices = GetIndices(onlySelectedLines);
-                SetupProgressBar(selectedIndices);
-                int count = 0;
+                SetupProgressBar(selectedIndices, "TODO:");
+                var count = 0;
                 foreach (var i in selectedIndices)
                 {
                     Interlocked.Increment(ref count);
@@ -3826,18 +3830,33 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     Application.DoEvents();
                 }
 
-                progressBar1.Hide();
+                RemoveProgressBar();
             }
         }
 
-        private void SetupProgressBar(List<int> selectedIndices)
+        private void SetupProgressBar(List<int> selectedIndices, string title)
         {
             if (selectedIndices.Count > 10)
             {
+                menuStrip1.Enabled = false;
+                subtitleListView1.Enabled = false;
+                groupBoxCurrent.Enabled = false;
+                groupBoxVideoInfo.Enabled = false;
+
                 progressBar1.Maximum = selectedIndices.Count;
                 progressBar1.Value = 0;
                 progressBar1.Visible = true;
             }
+        }
+
+        private void RemoveProgressBar()
+        {
+            menuStrip1.Enabled = true;
+            subtitleListView1.Enabled = true;
+            groupBoxCurrent.Enabled = true;
+            groupBoxVideoInfo.Enabled = true;
+
+            progressBar1.Hide();
         }
 
         private void changeAlphaForSelectedLinesToolStripMenuItem_Click(object sender, EventArgs e)
