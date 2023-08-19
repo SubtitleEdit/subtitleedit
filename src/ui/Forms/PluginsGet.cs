@@ -149,29 +149,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private static long MakeComparableVersionNumber(string versionNumber)
-        {
-            var s = versionNumber.Replace(',', '.').Replace(" ", string.Empty);
-            var arr = s.Split('.');
-            if (arr.Length == 1 && long.TryParse(arr[0], out var a0))
-            {
-                return a0 * 1_000_000;
-            }
-
-            if (arr.Length == 2 && long.TryParse(arr[0], out var b0) && long.TryParse(arr[1], out var b1))
-            {
-                return b0 * 1_000_000 + b1 * 1_000;
-            }
-
-            if (arr.Length == 3 && long.TryParse(arr[0], out var c0) && long.TryParse(arr[1], out var c1) && long.TryParse(arr[2], out var c2))
-            {
-                return c0 * 1_000_000 + c1 * 1_000 + c2;
-            }
-
-            SeLogger.Error("Bad plugin version number: " + versionNumber);
-            return 0;
-        }
-
         private void ShowAvailablePlugins()
         {
             if (_downloadList == null)
@@ -280,7 +257,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             var pluginsFolder = GetPluginFolder();
-
             downloadStream.Position = 0;
             using (var zip = ZipExtractor.Open(downloadStream))
             {
@@ -310,22 +286,24 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             Cursor = Cursors.Default;
-            ChangeControlsState(true);
             if (_updatingAllPlugins)
             {
                 _updatingAllPluginsCount++;
                 if (_updatingAllPluginsCount == _updateAllListUrls.Count)
                 {
+                    ChangeControlsState(true);
                     MessageBox.Show(string.Format(_language.XPluginsUpdated, _updatingAllPluginsCount));
+                    var installedPlugins = new InstalledPluginMetadataProvider().GetPlugins();
+                    ShowInstalledPlugins(installedPlugins);
                 }
             }
             else
             {
+                ChangeControlsState(true);
                 MessageBox.Show(string.Format(_language.PluginXDownloaded, _downloadedPluginName));
+                var installedPlugins = new InstalledPluginMetadataProvider().GetPlugins();
+                ShowInstalledPlugins(installedPlugins);
             }
-
-            var installedPlugins = new InstalledPluginMetadataProvider().GetPlugins();
-            ShowInstalledPlugins(installedPlugins);
         }
 
         private void ChangeControlsState(bool enable)
@@ -420,15 +398,15 @@ namespace Nikse.SubtitleEdit.Forms
                 Refresh();
                 Cursor = Cursors.WaitCursor;
 
-                using (var httpClient = DownloaderFactory.MakeHttpClient())
+                _updatingAllPluginsCount = 0;
+                _updatingAllPlugins = true;
+                foreach (var url in _updateAllListUrls)
                 {
-                    _updatingAllPluginsCount = 0;
-                    _updatingAllPlugins = true;
-                    for (var i = 0; i < _updateAllListUrls.Count; i++)
+                    using (var httpClient = DownloaderFactory.MakeHttpClient())
                     {
                         using (var downloadStream = new MemoryStream())
                         {
-                            var downloadTask = httpClient.DownloadAsync(_updateAllListUrls[i], downloadStream, new Progress<float>((progress) =>
+                            var downloadTask = httpClient.DownloadAsync(url, downloadStream, new Progress<float>((progress) =>
                             {
                                 var pct = (int)Math.Round(progress * 100.0, MidpointRounding.AwayFromZero);
                                 labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait + "  " + pct + "%";
