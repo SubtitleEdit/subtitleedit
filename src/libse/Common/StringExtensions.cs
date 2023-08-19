@@ -756,6 +756,26 @@ namespace Nikse.SubtitleEdit.Core.Common
             return value.HasSentenceEnding(string.Empty);
         }
 
+        public static bool IsAllUppercase(this string value)
+        {
+            if (string.IsNullOrEmpty(value))
+            {
+                return false;
+            }
+
+            var len = value.Length;
+            for (int i = 0; i < len; i++)
+            {
+                var ch = value[i];
+                if (char.IsLetter(ch) && char.IsLower(ch))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+        
         private static readonly HashSet<char> NeutralSentenceEndingChars = new HashSet<char>
         {
             '.', '!', '?', ']', ')', '…', '♪', '؟'

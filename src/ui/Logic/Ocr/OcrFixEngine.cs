@@ -1340,16 +1340,10 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             var tempLine = line;
             const string p = " ¡¿,.!?:;()[]{}+-$£\"„”“#&%…—♪\r\n";
             var trimChars = p.ToArray();
-            bool hasAllUpperWord = false;
-            foreach (var w in HtmlUtil.RemoveHtmlTags(line, true).Split(' ', '\r', '\n'))
-            {
-                var word = w.Trim(trimChars);
-                if (word.Length > 1 && word == word.ToUpperInvariant())
-                {
-                    hasAllUpperWord = true;
-                    break;
-                }
-            }
+
+            var hasAllUpperWord = HtmlUtil.RemoveHtmlTags(line, true)
+                .Split(' ', '\r', '\n')
+                .Any(word => word.IsAllUppercase());
 
             foreach (var name in _nameMultiWordListAndWordsWithPeriods)
             {
