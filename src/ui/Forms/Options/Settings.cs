@@ -41,7 +41,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
         private readonly Dictionary<ShortcutHelper, string> _newShortcuts = new Dictionary<ShortcutHelper, string>();
         private List<RulesProfile> _rulesProfiles;
         private List<PluginShortcut> _pluginShortcuts;
-        private bool _loading = true;
+        private readonly bool _loading;
         private readonly BackgroundWorker _shortcutsBackgroundWorker;
 
         private static IEnumerable<string> GetSubtitleFormats() => SubtitleFormat.AllSubtitleFormats.Where(format => !format.IsVobSubIndexFile).Select(format => format.FriendlyName);
@@ -106,11 +106,25 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
         public Settings()
         {
+            _loading = true;
             UiUtil.PreInitialize(this);
             InitializeComponent();
             UiUtil.FixFonts(this);
             UiUtil.FixLargeFonts(this, buttonOK);
 
+            listBoxSection.Items.Clear();
+            listBoxSection.Items.AddRange(new object[] {
+                "General",
+                "Subtitle formats",
+                "Shortcuts",
+                "Syntax coloring",
+                "Video player",
+                "Waveform/spectrogram",
+                "Tools",
+                "Toolbar",
+                "Font",
+                "Network",
+                "File type associations"});
 
             _shortcutsBackgroundWorker = new BackgroundWorker();
             Init();
@@ -1456,6 +1470,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             AddNode(generalNode, language.GoToPreviousSubtitleAndFocusWaveform, nameof(Configuration.Settings.Shortcuts.GeneralGoToPreviousSubtitleAndFocusWaveform));
             AddNode(generalNode, language.GoToNextSubtitleAndFocusWaveform, nameof(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitleAndFocusWaveform));
             AddNode(generalNode, language.ToggleBookmarks, nameof(Configuration.Settings.Shortcuts.GeneralToggleBookmarks));
+            AddNode(generalNode, language.FocusTextBox, nameof(Configuration.Settings.Shortcuts.GeneralFocusTextBox));
             AddNode(generalNode, language.ToggleBookmarksWithComment, nameof(Configuration.Settings.Shortcuts.GeneralToggleBookmarksWithText), true);
             AddNode(generalNode, LanguageSettings.Current.Bookmarks.EditBookmark, nameof(Configuration.Settings.Shortcuts.GeneralEditBookmarks), true);
             AddNode(generalNode, language.ClearBookmarks, nameof(Configuration.Settings.Shortcuts.GeneralClearBookmarks));
@@ -1646,6 +1661,15 @@ namespace Nikse.SubtitleEdit.Forms.Options
             AddNode(listViewAndTextBoxNode, language.RemoveTimeCodes, nameof(Configuration.Settings.Shortcuts.MainListViewRemoveTimeCodes));
             AddNode(listViewAndTextBoxNode, language.MainTextBoxUnbreak, nameof(Configuration.Settings.Shortcuts.MainTextBoxUnbreak));
             AddNode(listViewAndTextBoxNode, language.MainTextBoxUnbreakNoSpace, nameof(Configuration.Settings.Shortcuts.MainTextBoxUnbreakNoSpace));
+            AddNode(listViewAndTextBoxNode, language.SetNewActor, nameof(Configuration.Settings.Shortcuts.MainListViewSetNewActor));
+            AddNode(listViewAndTextBoxNode, string.Format(language.SetActorX, "1"), nameof(Configuration.Settings.Shortcuts.MainListViewSetActor1));
+            AddNode(listViewAndTextBoxNode, string.Format(language.SetActorX, "2"), nameof(Configuration.Settings.Shortcuts.MainListViewSetActor2));
+            AddNode(listViewAndTextBoxNode, string.Format(language.SetActorX, "3"), nameof(Configuration.Settings.Shortcuts.MainListViewSetActor3));
+            AddNode(listViewAndTextBoxNode, string.Format(language.SetActorX, "4"), nameof(Configuration.Settings.Shortcuts.MainListViewSetActor4));
+            AddNode(listViewAndTextBoxNode, string.Format(language.SetActorX, "5"), nameof(Configuration.Settings.Shortcuts.MainListViewSetActor5));
+            AddNode(listViewAndTextBoxNode, string.Format(language.SetActorX, "6"), nameof(Configuration.Settings.Shortcuts.MainListViewSetActor6));
+            AddNode(listViewAndTextBoxNode, string.Format(language.SetActorX, "7"), nameof(Configuration.Settings.Shortcuts.MainListViewSetActor7));
+            AddNode(listViewAndTextBoxNode, string.Format(language.SetActorX, "8"), nameof(Configuration.Settings.Shortcuts.MainListViewSetActor8));
             _shortcuts.Nodes.Add(listViewAndTextBoxNode);
 
             var listViewNode = new ShortcutNode(language.ListView);
@@ -3268,19 +3292,23 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
         private void buttonTextBoxHtmlColor_Click(object sender, EventArgs e)
         {
-            colorDialogSSAStyle.Color = panelTextBoxHtmlColor.BackColor;
-            if (colorDialogSSAStyle.ShowDialog() == DialogResult.OK)
+            using (var colorChooser = new ColorChooser { Color = panelTextBoxHtmlColor.BackColor, ShowAlpha = false })
             {
-                panelTextBoxHtmlColor.BackColor = colorDialogSSAStyle.Color;
+                if (colorChooser.ShowDialog() == DialogResult.OK)
+                {
+                    panelTextBoxHtmlColor.BackColor = colorChooser.Color;
+                }
             }
         }
 
         private void buttonTextBoxAssColor_Click(object sender, EventArgs e)
         {
-            colorDialogSSAStyle.Color = panelTextBoxAssColor.BackColor;
-            if (colorDialogSSAStyle.ShowDialog() == DialogResult.OK)
+            using (var colorChooser = new ColorChooser { Color = panelTextBoxAssColor.BackColor, ShowAlpha = false })
             {
-                panelTextBoxAssColor.BackColor = colorDialogSSAStyle.Color;
+                if (colorChooser.ShowDialog() == DialogResult.OK)
+                {
+                    panelTextBoxAssColor.BackColor = colorChooser.Color;
+                }
             }
         }
 
@@ -3305,19 +3333,23 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
         private void buttonDarkThemeColor_Click(object sender, EventArgs e)
         {
-            colorDialogSSAStyle.Color = panelDarkThemeColor.BackColor;
-            if (colorDialogSSAStyle.ShowDialog() == DialogResult.OK)
+            using (var colorChooser = new ColorChooser { Color = panelDarkThemeColor.BackColor, ShowAlpha = false })
             {
-                panelDarkThemeColor.BackColor = colorDialogSSAStyle.Color;
+                if (colorChooser.ShowDialog() == DialogResult.OK)
+                {
+                    panelDarkThemeColor.BackColor = colorChooser.Color;
+                }
             }
         }
 
         private void buttonDarkThemeBackColor_Click(object sender, EventArgs e)
         {
-            colorDialogSSAStyle.Color = panelDarkThemeBackColor.BackColor;
-            if (colorDialogSSAStyle.ShowDialog() == DialogResult.OK)
+            using (var colorChooser = new ColorChooser { Color = panelDarkThemeBackColor.BackColor, ShowAlpha = false })
             {
-                panelDarkThemeBackColor.BackColor = colorDialogSSAStyle.Color;
+                if (colorChooser.ShowDialog() == DialogResult.OK)
+                {
+                    panelDarkThemeBackColor.BackColor = colorChooser.Color;
+                }
             }
         }
 
@@ -3546,6 +3578,8 @@ namespace Nikse.SubtitleEdit.Forms.Options
             listViewFileTypeAssociations.SmallImageList = imageListFileTypeAssociations;
             listViewFileTypeAssociations.BeginUpdate();
             listViewFileTypeAssociations.Items.Clear();
+            listViewFileTypeAssociations.GridLines = false;
+            listViewFileTypeAssociations.FullRowSelect = true;
             foreach (var iconFileName in iconFileNames)
             {
                 if (iconFileName.EndsWith("uninstall.ico", StringComparison.OrdinalIgnoreCase))
@@ -3564,6 +3598,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
                 listViewFileTypeAssociations.Items.Add(item);
             }
             listViewFileTypeAssociations.EndUpdate();
+            listViewFileTypeAssociations.AutoSizeLastColumn();
         }
 
         private void buttonUpdateFileTypeAssociations_Click(object sender, EventArgs e)

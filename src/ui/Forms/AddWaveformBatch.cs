@@ -502,7 +502,14 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (e.KeyCode == Keys.Escape)
             {
-                _abort = true;
+                if (_converting)
+                {
+                    _abort = true;
+                }
+                else
+                {
+                    DialogResult = DialogResult.Cancel;
+                }
             }
         }
 

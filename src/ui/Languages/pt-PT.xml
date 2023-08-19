@@ -99,6 +99,7 @@ E-mail: mailto:hugokarvalho@hotmail.com</TranslatedBy>
     <Collapse>Recolher</Collapse>
     <ShortcutX>Atalho: {0}</ShortcutX>
     <ExampleX>Exemplo: {0}</ExampleX>
+    <ViewX>Ver {0}</ViewX>
     <Reset>Repor</Reset>
     <Error>Erro</Error>
     <Warning>Aviso</Warning>
@@ -205,6 +206,7 @@ Mais informação online?</WhisperNotFound>
     <LoadingVoskModel>A carregar o modelo de reconhecimento de voz Vosk...</LoadingVoskModel>
     <Transcribing>A transcrever áudio para texto...</Transcribing>
     <TranscribingXOfY>A transcrever áudio para texto - ficheiro {0} de {1}...</TranscribingXOfY>
+    <PostProcessing>Pós-processamento...</PostProcessing>
     <XFilesSavedToVideoSourceFolder>{0} ficheiros guardados na pasta de origem do vídeo</XFilesSavedToVideoSourceFolder>
     <UsePostProcessing>Usar pós-processamento (combinar linhas, corrigir maiúsculas/minúsculas, pontuação e mais)</UsePostProcessing>
     <AutoAdjustTimings>Ajuste automático dos tempos</AutoAdjustTimings>
@@ -215,6 +217,7 @@ Mais informação online?</WhisperNotFound>
     <RemoveTemporaryFiles>Remover ficheiros temporários</RemoveTemporaryFiles>
     <SetCppConstMeFolder>Definir pasta de modelos CPP/Const-me...</SetCppConstMeFolder>
     <OnlyRunPostProcessing>Executar apenas os tempos de pós-processamento/ajuste</OnlyRunPostProcessing>
+    <DownloadFasterWhisperCuda>Transferir CUDA para Whisper-Faster de Perfview</DownloadFasterWhisperCuda>
   </AudioToText>
   <AssaAttachments>
     <Title>Anexos Advanced Sub Station Alpha</Title>
@@ -978,9 +981,11 @@ Tiramos partido do ritmo intrínseco da imagem.</CreateSimpleChainingToolTip>
     <InfoAssaOn>Nota: o estilo de Advanced SubStation Alpha será usado :)</InfoAssaOn>
     <XGeneratedWithBurnedInSubsInX>"{0}" gerado com legenda embutida em {1}.</XGeneratedWithBurnedInSubsInX>
     <TimeRemainingMinutes>Tempo restante: {0} minutos</TimeRemainingMinutes>
+    <TimeRemainingOneMinute>Tempo restante: Um minuto</TimeRemainingOneMinute>
     <TimeRemainingSeconds>Tempo restante: {0} segundos</TimeRemainingSeconds>
     <TimeRemainingAFewSeconds>Tempo restante: Alguns segundos</TimeRemainingAFewSeconds>
     <TimeRemainingMinutesAndSeconds>Tempo restante: {0} minutos e {1} segundos</TimeRemainingMinutesAndSeconds>
+    <TimeRemainingOneMinuteAndSeconds>Tempo restante: Um minuto e {0} segundos</TimeRemainingOneMinuteAndSeconds>
     <TargetFileName>Nome do ficheiro de destino: {0}</TargetFileName>
     <TargetFileSize>Tamanho do ficheiro de destino (requer codificação de 2 passagens)</TargetFileSize>
     <FileSizeMb>Tamanho do ficheiro em MB</FileSizeMb>

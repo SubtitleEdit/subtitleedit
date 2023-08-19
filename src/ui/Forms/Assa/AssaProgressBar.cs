@@ -139,6 +139,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             buttonTakePosFromVideo.Left = timeUpDownStartTime.Left + timeUpDownStartTime.Width + 10;
 
             LoadExistingProgressBarSettings();
+            listViewChapters.AutoSizeLastColumn();
 
             _timerRender = new Timer { Interval = 100 };
             _timerRender.Tick += TimerRenderTick;
@@ -773,6 +774,7 @@ Dialogue: -255,0:00:00.00,0:43:00.00,SE-progress-bar-bg,,0,0,0,,[PB_DRAWING]";
             }
 
             listViewChapters.EndUpdate();
+            listViewChapters.AutoSizeLastColumn();
         }
 
         private void AssaProgressBar_KeyDown(object sender, KeyEventArgs e)

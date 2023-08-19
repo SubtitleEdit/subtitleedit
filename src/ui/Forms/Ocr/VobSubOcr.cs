@@ -8138,6 +8138,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         }
 
         private bool _forceClose;
+        private DialogResult _dialogResult;
 
         private void VobSubOcr_FormClosing(object sender, FormClosingEventArgs e)
         {
@@ -8228,11 +8229,14 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             if (!e.Cancel)
             {
-                e.Cancel = true;
-
-                // To allow windows in FormClosing...
+                e.Cancel = true; // Hack as FormClosing will crash if any Forms are created here (e.g. a msgbox). 
                 _forceClose = true;
-                System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(10), () => Close());
+                _dialogResult = DialogResult;
+                System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(10), () =>
+                {
+                    DialogResult = _dialogResult;
+                    Close();
+                });
             }
         }
 

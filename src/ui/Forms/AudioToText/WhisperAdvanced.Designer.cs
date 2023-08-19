@@ -43,7 +43,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             this.tabPageOpenAI = new System.Windows.Forms.TabPage();
             this.textBoxOpenAI = new System.Windows.Forms.TextBox();
             this.tabPageFasterWhisper = new System.Windows.Forms.TabPage();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.textBoxPurfviewFasterWhisper = new System.Windows.Forms.TextBox();
             this.comboBoxWhisperExtra = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.tabControlCommandLineHelp.SuspendLayout();
             this.TabPageCPP.SuspendLayout();
@@ -188,7 +188,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             // 
             // tabPageFasterWhisper
             // 
-            this.tabPageFasterWhisper.Controls.Add(this.textBox1);
+            this.tabPageFasterWhisper.Controls.Add(this.textBoxPurfviewFasterWhisper);
             this.tabPageFasterWhisper.Location = new System.Drawing.Point(4, 22);
             this.tabPageFasterWhisper.Name = "tabPageFasterWhisper";
             this.tabPageFasterWhisper.Padding = new System.Windows.Forms.Padding(3);
@@ -197,19 +197,19 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             this.tabPageFasterWhisper.Text = "Faster Whisper";
             this.tabPageFasterWhisper.UseVisualStyleBackColor = true;
             // 
-            // textBox1
+            // textBoxPurfviewFasterWhisper
             // 
-            this.textBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBox1.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox1.Location = new System.Drawing.Point(3, 3);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.ReadOnly = true;
-            this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBox1.Size = new System.Drawing.Size(824, 413);
-            this.textBox1.TabIndex = 3;
-            this.textBox1.Text = resources.GetString("textBox1.Text");
-            this.textBox1.WordWrap = false;
+            this.textBoxPurfviewFasterWhisper.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textBoxPurfviewFasterWhisper.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBoxPurfviewFasterWhisper.Location = new System.Drawing.Point(3, 3);
+            this.textBoxPurfviewFasterWhisper.Multiline = true;
+            this.textBoxPurfviewFasterWhisper.Name = "textBoxPurfviewFasterWhisper";
+            this.textBoxPurfviewFasterWhisper.ReadOnly = true;
+            this.textBoxPurfviewFasterWhisper.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.textBoxPurfviewFasterWhisper.Size = new System.Drawing.Size(824, 413);
+            this.textBoxPurfviewFasterWhisper.TabIndex = 3;
+            this.textBoxPurfviewFasterWhisper.Text = resources.GetString("textBoxPurfviewFasterWhisper.Text");
+            this.textBoxPurfviewFasterWhisper.WordWrap = false;
             // 
             // comboBoxWhisperExtra
             // 
@@ -232,6 +232,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             this.comboBoxWhisperExtra.SelectedText = "";
             this.comboBoxWhisperExtra.Size = new System.Drawing.Size(441, 21);
             this.comboBoxWhisperExtra.TabIndex = 214;
+            this.comboBoxWhisperExtra.TabStop = false;
             this.comboBoxWhisperExtra.KeyDown += new System.Windows.Forms.KeyEventHandler(this.comboBoxWhisperExtra_KeyDown);
             // 
             // WhisperAdvanced
@@ -252,6 +253,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "WhisperAdvanced";
+            this.Shown += new System.EventHandler(this.WhisperAdvanced_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.WhisperAdvanced_KeyDown);
             this.tabControlCommandLineHelp.ResumeLayout(false);
             this.TabPageCPP.ResumeLayout(false);
@@ -282,6 +284,6 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         private System.Windows.Forms.TextBox textBoxConstMe;
         private System.Windows.Forms.TextBox textBoxOpenAI;
         private System.Windows.Forms.TabPage tabPageFasterWhisper;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox textBoxPurfviewFasterWhisper;
     }
 }

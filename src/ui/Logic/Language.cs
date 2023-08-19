@@ -234,6 +234,7 @@ namespace Nikse.SubtitleEdit.Logic
                 Collapse = "Collapse",
                 ShortcutX = "Shortcut: {0}",
                 ExampleX = "Example: {0}",
+                ViewX = "View {0}",
                 Reset = "Reset",
                 Error = "Error",
                 Warning = "Warning",
@@ -356,6 +357,7 @@ namespace Nikse.SubtitleEdit.Logic
                 LoadingVoskModel = "Loading Vosk speech recognition model...",
                 Transcribing = "Transcribing audio to text...",
                 TranscribingXOfY = "Transcribing audio to text - file {0} of {1}...",
+                PostProcessing = "Post-processing...",
                 UsePostProcessing = "Use post-processing (line merge, fix casing, punctuation, and more)",
                 AutoAdjustTimings = "Auto adjust timings",
                 BatchMode = "Batch mode",
@@ -366,6 +368,7 @@ namespace Nikse.SubtitleEdit.Logic
                 RemoveTemporaryFiles = "Remove temporary files",
                 SetCppConstMeFolder = "Set CPP/Const-me models folder...",
                 OnlyRunPostProcessing = "Run only post-processing/adjust timings",
+                DownloadFasterWhisperCuda = "Download CUDA for Perfview's Whisper-Faster",
             };
 
             AssaAttachments = new LanguageStructure.AssaAttachments
@@ -741,6 +744,9 @@ namespace Nikse.SubtitleEdit.Logic
                 CheckingForUpdatesNewVersion = "New version available!",
                 InstallUpdate = "Go to download page",
                 NoUpdates = "Don't update",
+                OnePluginsHasAnUpdate = "One plugin has an update -",
+                XPluginsHasAnUpdate = "{0} plugins have an updates -",
+                Update = "update",
             };
 
             ChooseAudioTrack = new LanguageStructure.ChooseAudioTrack
@@ -1228,9 +1234,11 @@ namespace Nikse.SubtitleEdit.Logic
                 InfoAssaOn = "Note: Advanced SubStation Alpha styling will be used :)",
                 XGeneratedWithBurnedInSubsInX = "\"{0}\" generated with burned-in subtitle in {1}.",
                 TimeRemainingMinutes = "Time remaining: {0} minutes",
+                TimeRemainingOneMinute = "Time remaining: One minute",
                 TimeRemainingSeconds = "Time remaining: {0} seconds",
                 TimeRemainingAFewSeconds = "Time remaining: A few seconds",
                 TimeRemainingMinutesAndSeconds = "Time remaining: {0} minutes and {1} seconds",
+                TimeRemainingOneMinuteAndSeconds = "Time remaining: One minute and {0} seconds",
                 TargetFileName = "Target file name: {0}",
                 TargetFileSize = "Target file size (requires 2 pass encoding)",
                 FileSizeMb = "File size in MB",
@@ -2648,6 +2656,7 @@ can edit in same subtitle file (collaboration)",
                 BeautifyTimeCodes = "Beautify time codes",
                 SettingsName = "Settings",
                 ToggleBookmarks = "Toggle bookmarks",
+                FocusTextBox = "Focus text box",
                 ToggleBookmarksWithComment = "Toggle bookmarks - add comment",
                 ClearBookmarks = "Clear bookmarks",
                 ExportBookmarks = "Export bookmarks...",
@@ -3167,6 +3176,8 @@ can edit in same subtitle file (collaboration)",
                 CustomContinuationStyleNote = "Note: The custom continuation style is shared across profiles.",
                 ResetCustomContinuationStyleWarning = "This will override the values in the dialog. Are you sure?",
                 ExportAsHtml = "Export as HTML...",
+                SetNewActor = "Set new actor/voice",
+                SetActorX = "Set actor/voice {0}",
             };
 
             SettingsMpv = new LanguageStructure.SettingsMpv

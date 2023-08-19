@@ -31,7 +31,7 @@
             this.components = new System.ComponentModel.Container();
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
-            this.listBoxSection = new System.Windows.Forms.ListBox();
+            this.listBoxSection = new Nikse.SubtitleEdit.Controls.NikseListBox();
             this.panelGeneral = new System.Windows.Forms.Panel();
             this.groupBoxMiscellaneous = new System.Windows.Forms.GroupBox();
             this.buttonTranslationAutoSuffix = new System.Windows.Forms.Button();
@@ -104,14 +104,14 @@
             this.groupBoxSubtitleFormats = new System.Windows.Forms.GroupBox();
             this.groupBoxFavoriteSubtitleFormats = new System.Windows.Forms.GroupBox();
             this.labelFavoriteSubtitleFormatsNote = new System.Windows.Forms.Label();
-            this.listBoxSubtitleFormats = new System.Windows.Forms.ListBox();
+            this.listBoxSubtitleFormats = new Nikse.SubtitleEdit.Controls.NikseListBox();
             this.buttonFormatsSearchClear = new System.Windows.Forms.Button();
             this.textBoxFormatsSearch = new Nikse.SubtitleEdit.Controls.SETextBox();
             this.labelFormatsSearch = new System.Windows.Forms.Label();
             this.labelFormats = new System.Windows.Forms.Label();
             this.buttonRemoveFromFavoriteFormats = new System.Windows.Forms.Button();
             this.buttonMoveToFavoriteFormats = new System.Windows.Forms.Button();
-            this.listBoxFavoriteSubtitleFormats = new System.Windows.Forms.ListBox();
+            this.listBoxFavoriteSubtitleFormats = new Nikse.SubtitleEdit.Controls.NikseListBox();
             this.contextMenuStripFavoriteFormats = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -554,25 +554,19 @@
             // 
             // listBoxSection
             // 
+            this.listBoxSection.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.listBoxSection.Font = new System.Drawing.Font("Tahoma", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.listBoxSection.FormattingEnabled = true;
             this.listBoxSection.ItemHeight = 16;
-            this.listBoxSection.Items.AddRange(new object[] {
-            "General",
-            "Subtitle formats",
-            "Shortcuts",
-            "Syntax coloring",
-            "Video player",
-            "Waveform/spectrogram",
-            "Tools",
-            "Toolbar",
-            "Font",
-            "Network",
-            "File type associations"});
             this.listBoxSection.Location = new System.Drawing.Point(10, 10);
             this.listBoxSection.Name = "listBoxSection";
+            this.listBoxSection.SelectedIndex = -1;
+            this.listBoxSection.SelectedItem = null;
+            this.listBoxSection.SelectionMode = System.Windows.Forms.SelectionMode.One;
             this.listBoxSection.Size = new System.Drawing.Size(214, 516);
+            this.listBoxSection.Sorted = false;
             this.listBoxSection.TabIndex = 0;
+            this.listBoxSection.TopIndex = 0;
             this.listBoxSection.SelectedIndexChanged += new System.EventHandler(this.ListBoxSectionSelectedIndexChanged);
             this.listBoxSection.LostFocus += new System.EventHandler(this.listBoxSection_LostFocus);
             // 
@@ -1505,6 +1499,7 @@
             this.textBoxShowLineBreaksAs.Multiline = true;
             this.textBoxShowLineBreaksAs.Name = "textBoxShowLineBreaksAs";
             this.textBoxShowLineBreaksAs.Padding = new System.Windows.Forms.Padding(1);
+            this.textBoxShowLineBreaksAs.ReadOnly = false;
             this.textBoxShowLineBreaksAs.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
             this.textBoxShowLineBreaksAs.SelectedText = "";
             this.textBoxShowLineBreaksAs.SelectionLength = 0;
@@ -1751,6 +1746,7 @@
             this.comboBoxFrameRate.SelectedText = "";
             this.comboBoxFrameRate.Size = new System.Drawing.Size(121, 21);
             this.comboBoxFrameRate.TabIndex = 2;
+            this.comboBoxFrameRate.TabStop = false;
             // 
             // labelDefaultFrameRate
             // 
@@ -1822,12 +1818,18 @@
             // 
             // listBoxSubtitleFormats
             // 
+            this.listBoxSubtitleFormats.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.listBoxSubtitleFormats.FormattingEnabled = true;
+            this.listBoxSubtitleFormats.ItemHeight = 13;
             this.listBoxSubtitleFormats.Location = new System.Drawing.Point(489, 76);
             this.listBoxSubtitleFormats.Name = "listBoxSubtitleFormats";
+            this.listBoxSubtitleFormats.SelectedIndex = -1;
+            this.listBoxSubtitleFormats.SelectedItem = null;
             this.listBoxSubtitleFormats.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
             this.listBoxSubtitleFormats.Size = new System.Drawing.Size(300, 251);
+            this.listBoxSubtitleFormats.Sorted = false;
             this.listBoxSubtitleFormats.TabIndex = 8;
+            this.listBoxSubtitleFormats.TopIndex = 0;
             this.listBoxSubtitleFormats.SelectedIndexChanged += new System.EventHandler(this.listBoxSubtitleFormats_SelectedIndexChanged);
             this.listBoxSubtitleFormats.LostFocus += new System.EventHandler(this.listBoxSubtitleFormats_LostFocus);
             // 
@@ -1858,6 +1860,7 @@
             this.textBoxFormatsSearch.Multiline = true;
             this.textBoxFormatsSearch.Name = "textBoxFormatsSearch";
             this.textBoxFormatsSearch.Padding = new System.Windows.Forms.Padding(1);
+            this.textBoxFormatsSearch.ReadOnly = false;
             this.textBoxFormatsSearch.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
             this.textBoxFormatsSearch.SelectedText = "";
             this.textBoxFormatsSearch.SelectionLength = 0;
@@ -1910,13 +1913,19 @@
             // 
             // listBoxFavoriteSubtitleFormats
             // 
+            this.listBoxFavoriteSubtitleFormats.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.listBoxFavoriteSubtitleFormats.ContextMenuStrip = this.contextMenuStripFavoriteFormats;
             this.listBoxFavoriteSubtitleFormats.FormattingEnabled = true;
+            this.listBoxFavoriteSubtitleFormats.ItemHeight = 13;
             this.listBoxFavoriteSubtitleFormats.Location = new System.Drawing.Point(48, 50);
             this.listBoxFavoriteSubtitleFormats.Name = "listBoxFavoriteSubtitleFormats";
+            this.listBoxFavoriteSubtitleFormats.SelectedIndex = -1;
+            this.listBoxFavoriteSubtitleFormats.SelectedItem = null;
             this.listBoxFavoriteSubtitleFormats.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
             this.listBoxFavoriteSubtitleFormats.Size = new System.Drawing.Size(300, 277);
+            this.listBoxFavoriteSubtitleFormats.Sorted = false;
             this.listBoxFavoriteSubtitleFormats.TabIndex = 1;
+            this.listBoxFavoriteSubtitleFormats.TopIndex = 0;
             this.listBoxFavoriteSubtitleFormats.SelectedIndexChanged += new System.EventHandler(this.listBoxFavoriteSubtitleFormats_SelectedIndexChanged);
             this.listBoxFavoriteSubtitleFormats.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listBoxFavoriteSubtitleFormats_KeyDown);
             this.listBoxFavoriteSubtitleFormats.LostFocus += new System.EventHandler(this.listBoxFavoriteSubtitleFormats_LostFocus);
@@ -2128,6 +2137,7 @@
             this.textBoxShortcutSearch.Multiline = true;
             this.textBoxShortcutSearch.Name = "textBoxShortcutSearch";
             this.textBoxShortcutSearch.Padding = new System.Windows.Forms.Padding(1);
+            this.textBoxShortcutSearch.ReadOnly = false;
             this.textBoxShortcutSearch.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
             this.textBoxShortcutSearch.SelectedText = "";
             this.textBoxShortcutSearch.SelectionLength = 0;
@@ -2636,6 +2646,7 @@
             this.textBoxCustomSearchUrl5.Multiline = true;
             this.textBoxCustomSearchUrl5.Name = "textBoxCustomSearchUrl5";
             this.textBoxCustomSearchUrl5.Padding = new System.Windows.Forms.Padding(1);
+            this.textBoxCustomSearchUrl5.ReadOnly = false;
             this.textBoxCustomSearchUrl5.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
             this.textBoxCustomSearchUrl5.SelectedText = "";
             this.textBoxCustomSearchUrl5.SelectionLength = 0;
@@ -2675,6 +2686,7 @@
             this.comboBoxCustomSearch5.SelectedText = "";
             this.comboBoxCustomSearch5.Size = new System.Drawing.Size(148, 21);
             this.comboBoxCustomSearch5.TabIndex = 13;
+            this.comboBoxCustomSearch5.TabStop = false;
             this.comboBoxCustomSearch5.SelectedIndexChanged += new System.EventHandler(this.comboBoxCustomSearch_SelectedIndexChanged);
             // 
             // labelCustomSearch4
@@ -2702,6 +2714,7 @@
             this.textBoxCustomSearchUrl4.Multiline = true;
             this.textBoxCustomSearchUrl4.Name = "textBoxCustomSearchUrl4";
             this.textBoxCustomSearchUrl4.Padding = new System.Windows.Forms.Padding(1);
+            this.textBoxCustomSearchUrl4.ReadOnly = false;
             this.textBoxCustomSearchUrl4.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
             this.textBoxCustomSearchUrl4.SelectedText = "";
             this.textBoxCustomSearchUrl4.SelectionLength = 0;
@@ -2741,6 +2754,7 @@
             this.comboBoxCustomSearch4.SelectedText = "";
             this.comboBoxCustomSearch4.Size = new System.Drawing.Size(148, 21);
             this.comboBoxCustomSearch4.TabIndex = 10;
+            this.comboBoxCustomSearch4.TabStop = false;
             this.comboBoxCustomSearch4.SelectedIndexChanged += new System.EventHandler(this.comboBoxCustomSearch_SelectedIndexChanged);
             // 
             // labelCustomSearch3
@@ -2768,6 +2782,7 @@
             this.textBoxCustomSearchUrl3.Multiline = true;
             this.textBoxCustomSearchUrl3.Name = "textBoxCustomSearchUrl3";
             this.textBoxCustomSearchUrl3.Padding = new System.Windows.Forms.Padding(1);
+            this.textBoxCustomSearchUrl3.ReadOnly = false;
             this.textBoxCustomSearchUrl3.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
             this.textBoxCustomSearchUrl3.SelectedText = "";
             this.textBoxCustomSearchUrl3.SelectionLength = 0;
@@ -2807,6 +2822,7 @@
             this.comboBoxCustomSearch3.SelectedText = "";
             this.comboBoxCustomSearch3.Size = new System.Drawing.Size(148, 21);
             this.comboBoxCustomSearch3.TabIndex = 7;
+            this.comboBoxCustomSearch3.TabStop = false;
             this.comboBoxCustomSearch3.SelectedIndexChanged += new System.EventHandler(this.comboBoxCustomSearch_SelectedIndexChanged);
             // 
             // labelCustomSearch2
@@ -2834,6 +2850,7 @@
             this.textBoxCustomSearchUrl2.Multiline = true;
             this.textBoxCustomSearchUrl2.Name = "textBoxCustomSearchUrl2";
             this.textBoxCustomSearchUrl2.Padding = new System.Windows.Forms.Padding(1);
+            this.textBoxCustomSearchUrl2.ReadOnly = false;
             this.textBoxCustomSearchUrl2.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
             this.textBoxCustomSearchUrl2.SelectedText = "";
             this.textBoxCustomSearchUrl2.SelectionLength = 0;
@@ -2873,6 +2890,7 @@
             this.comboBoxCustomSearch2.SelectedText = "";
             this.comboBoxCustomSearch2.Size = new System.Drawing.Size(148, 21);
             this.comboBoxCustomSearch2.TabIndex = 4;
+            this.comboBoxCustomSearch2.TabStop = false;
             this.comboBoxCustomSearch2.SelectedIndexChanged += new System.EventHandler(this.comboBoxCustomSearch_SelectedIndexChanged);
             // 
             // labelCustomSearch1
@@ -2900,6 +2918,7 @@
             this.textBoxCustomSearchUrl1.Multiline = true;
             this.textBoxCustomSearchUrl1.Name = "textBoxCustomSearchUrl1";
             this.textBoxCustomSearchUrl1.Padding = new System.Windows.Forms.Padding(1);
+            this.textBoxCustomSearchUrl1.ReadOnly = false;
             this.textBoxCustomSearchUrl1.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
             this.textBoxCustomSearchUrl1.SelectedText = "";
             this.textBoxCustomSearchUrl1.SelectionLength = 0;
@@ -2948,6 +2967,7 @@
             this.comboBoxCustomSearch1.SelectedText = "";
             this.comboBoxCustomSearch1.Size = new System.Drawing.Size(148, 21);
             this.comboBoxCustomSearch1.TabIndex = 0;
+            this.comboBoxCustomSearch1.TabStop = false;
             this.comboBoxCustomSearch1.SelectedIndexChanged += new System.EventHandler(this.comboBoxCustomSearch_SelectedIndexChanged);
             // 
             // groupBoxVideoPlayerDefault
@@ -3466,6 +3486,7 @@
             this.textBoxVlcPath.Multiline = true;
             this.textBoxVlcPath.Name = "textBoxVlcPath";
             this.textBoxVlcPath.Padding = new System.Windows.Forms.Padding(1);
+            this.textBoxVlcPath.ReadOnly = false;
             this.textBoxVlcPath.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
             this.textBoxVlcPath.SelectedText = "";
             this.textBoxVlcPath.SelectionLength = 0;
@@ -3651,6 +3672,7 @@
             this.textBoxFFmpegPath.Multiline = true;
             this.textBoxFFmpegPath.Name = "textBoxFFmpegPath";
             this.textBoxFFmpegPath.Padding = new System.Windows.Forms.Padding(1);
+            this.textBoxFFmpegPath.ReadOnly = false;
             this.textBoxFFmpegPath.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
             this.textBoxFFmpegPath.SelectedText = "";
             this.textBoxFFmpegPath.SelectionLength = 0;
@@ -4210,6 +4232,7 @@
             this.comboBoxCustomToggleEnd.SelectedText = "";
             this.comboBoxCustomToggleEnd.Size = new System.Drawing.Size(42, 21);
             this.comboBoxCustomToggleEnd.TabIndex = 64;
+            this.comboBoxCustomToggleEnd.TabStop = false;
             // 
             // comboBoxCustomToggleStart
             // 
@@ -4235,6 +4258,7 @@
             this.comboBoxCustomToggleStart.SelectedText = "";
             this.comboBoxCustomToggleStart.Size = new System.Drawing.Size(42, 21);
             this.comboBoxCustomToggleStart.TabIndex = 63;
+            this.comboBoxCustomToggleStart.TabStop = false;
             // 
             // labelShortcutCustomToggle
             // 
@@ -4329,6 +4353,7 @@
             this.textBoxGoogleTransleApiKey.Multiline = true;
             this.textBoxGoogleTransleApiKey.Name = "textBoxGoogleTransleApiKey";
             this.textBoxGoogleTransleApiKey.Padding = new System.Windows.Forms.Padding(1);
+            this.textBoxGoogleTransleApiKey.ReadOnly = false;
             this.textBoxGoogleTransleApiKey.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
             this.textBoxGoogleTransleApiKey.SelectedText = "";
             this.textBoxGoogleTransleApiKey.SelectionLength = 0;
@@ -4416,6 +4441,7 @@
             this.comboBoxBoxBingTokenEndpoint.SelectedText = "";
             this.comboBoxBoxBingTokenEndpoint.Size = new System.Drawing.Size(375, 21);
             this.comboBoxBoxBingTokenEndpoint.TabIndex = 33;
+            this.comboBoxBoxBingTokenEndpoint.TabStop = false;
             // 
             // labelBingTokenEndpoint
             // 
@@ -4451,6 +4477,7 @@
             this.textBoxBingClientSecret.Multiline = true;
             this.textBoxBingClientSecret.Name = "textBoxBingClientSecret";
             this.textBoxBingClientSecret.Padding = new System.Windows.Forms.Padding(1);
+            this.textBoxBingClientSecret.ReadOnly = false;
             this.textBoxBingClientSecret.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
             this.textBoxBingClientSecret.SelectedText = "";
             this.textBoxBingClientSecret.SelectionLength = 0;
@@ -4812,6 +4839,7 @@
             this.textBoxMusicSymbolsToReplace.Multiline = true;
             this.textBoxMusicSymbolsToReplace.Name = "textBoxMusicSymbolsToReplace";
             this.textBoxMusicSymbolsToReplace.Padding = new System.Windows.Forms.Padding(1);
+            this.textBoxMusicSymbolsToReplace.ReadOnly = false;
             this.textBoxMusicSymbolsToReplace.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
             this.textBoxMusicSymbolsToReplace.SelectedText = "";
             this.textBoxMusicSymbolsToReplace.SelectionLength = 0;
@@ -6164,6 +6192,7 @@
             this.textBoxNetworkSessionNewMessageSound.Multiline = true;
             this.textBoxNetworkSessionNewMessageSound.Name = "textBoxNetworkSessionNewMessageSound";
             this.textBoxNetworkSessionNewMessageSound.Padding = new System.Windows.Forms.Padding(1);
+            this.textBoxNetworkSessionNewMessageSound.ReadOnly = false;
             this.textBoxNetworkSessionNewMessageSound.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
             this.textBoxNetworkSessionNewMessageSound.SelectedText = "";
             this.textBoxNetworkSessionNewMessageSound.SelectionLength = 0;
@@ -6261,6 +6290,7 @@
             this.comboBoxProxyAuthType.SelectedText = "";
             this.comboBoxProxyAuthType.Size = new System.Drawing.Size(192, 21);
             this.comboBoxProxyAuthType.TabIndex = 31;
+            this.comboBoxProxyAuthType.TabStop = false;
             // 
             // textBoxProxyDomain
             // 
@@ -6278,6 +6308,7 @@
             this.textBoxProxyDomain.Multiline = true;
             this.textBoxProxyDomain.Name = "textBoxProxyDomain";
             this.textBoxProxyDomain.Padding = new System.Windows.Forms.Padding(1);
+            this.textBoxProxyDomain.ReadOnly = false;
             this.textBoxProxyDomain.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
             this.textBoxProxyDomain.SelectedText = "";
             this.textBoxProxyDomain.SelectionLength = 0;
@@ -6312,6 +6343,7 @@
             this.textBoxProxyUserName.Multiline = true;
             this.textBoxProxyUserName.Name = "textBoxProxyUserName";
             this.textBoxProxyUserName.Padding = new System.Windows.Forms.Padding(1);
+            this.textBoxProxyUserName.ReadOnly = false;
             this.textBoxProxyUserName.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
             this.textBoxProxyUserName.SelectedText = "";
             this.textBoxProxyUserName.SelectionLength = 0;
@@ -6355,6 +6387,7 @@
             this.textBoxProxyPassword.Multiline = true;
             this.textBoxProxyPassword.Name = "textBoxProxyPassword";
             this.textBoxProxyPassword.Padding = new System.Windows.Forms.Padding(1);
+            this.textBoxProxyPassword.ReadOnly = false;
             this.textBoxProxyPassword.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
             this.textBoxProxyPassword.SelectedText = "";
             this.textBoxProxyPassword.SelectionLength = 0;
@@ -6380,6 +6413,7 @@
             this.textBoxProxyAddress.Multiline = true;
             this.textBoxProxyAddress.Name = "textBoxProxyAddress";
             this.textBoxProxyAddress.Padding = new System.Windows.Forms.Padding(1);
+            this.textBoxProxyAddress.ReadOnly = false;
             this.textBoxProxyAddress.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
             this.textBoxProxyAddress.SelectedText = "";
             this.textBoxProxyAddress.SelectionLength = 0;
@@ -6490,10 +6524,10 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1092, 574);
             this.Controls.Add(this.labelUpdateFileTypeAssociationsStatus);
-            this.Controls.Add(this.panelShortcuts);
             this.Controls.Add(this.panelGeneral);
-            this.Controls.Add(this.panelToolBar);
             this.Controls.Add(this.panelFont);
+            this.Controls.Add(this.panelShortcuts);
+            this.Controls.Add(this.panelToolBar);
             this.Controls.Add(this.panelVideoPlayer);
             this.Controls.Add(this.panelTools);
             this.Controls.Add(this.panelWaveform);
@@ -6632,7 +6666,7 @@
 
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Button buttonCancel;
-        private System.Windows.Forms.ListBox listBoxSection;
+        private Nikse.SubtitleEdit.Controls.NikseListBox listBoxSection;
         private System.Windows.Forms.Panel panelGeneral;
         private System.Windows.Forms.GroupBox groupBoxMiscellaneous;
         private System.Windows.Forms.GroupBox groupBoxShowToolBarButtons;
@@ -6961,14 +6995,14 @@
         private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxSubtitleSaveAsFormats;
         private System.Windows.Forms.GroupBox groupBoxFavoriteSubtitleFormats;
         private System.Windows.Forms.Label labelFavoriteFormats;
-        private System.Windows.Forms.ListBox listBoxFavoriteSubtitleFormats;
+        private Nikse.SubtitleEdit.Controls.NikseListBox listBoxFavoriteSubtitleFormats;
         private System.Windows.Forms.Button buttonMoveToFavoriteFormats;
         private System.Windows.Forms.Button buttonRemoveFromFavoriteFormats;
         private System.Windows.Forms.Label labelFormats;
         private System.Windows.Forms.Label labelFormatsSearch;
         private Nikse.SubtitleEdit.Controls.SETextBox textBoxFormatsSearch;
         private System.Windows.Forms.Button buttonFormatsSearchClear;
-        private System.Windows.Forms.ListBox listBoxSubtitleFormats;
+        private Nikse.SubtitleEdit.Controls.NikseListBox listBoxSubtitleFormats;
         private System.Windows.Forms.Label labelFavoriteSubtitleFormatsNote;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripFavoriteFormats;
         private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;

@@ -59,15 +59,35 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             // 
             // numericUpDownTargetHeight
             // 
+            this.numericUpDownTargetHeight.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownTargetHeight.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownTargetHeight.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownTargetHeight.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownTargetHeight.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownTargetHeight.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownTargetHeight.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownTargetHeight.DecimalPlaces = 0;
+            this.numericUpDownTargetHeight.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownTargetHeight.Location = new System.Drawing.Point(265, 63);
             this.numericUpDownTargetHeight.Maximum = new decimal(new int[] {
             10000,
             0,
             0,
             0});
+            this.numericUpDownTargetHeight.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownTargetHeight.Name = "numericUpDownTargetHeight";
             this.numericUpDownTargetHeight.Size = new System.Drawing.Size(47, 20);
             this.numericUpDownTargetHeight.TabIndex = 10;
+            this.numericUpDownTargetHeight.TabStop = false;
+            this.numericUpDownTargetHeight.ThousandsSeparator = false;
             this.numericUpDownTargetHeight.Value = new decimal(new int[] {
             288,
             0,
@@ -95,15 +115,35 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             // 
             // numericUpDownTargetWidth
             // 
+            this.numericUpDownTargetWidth.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownTargetWidth.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownTargetWidth.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownTargetWidth.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownTargetWidth.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownTargetWidth.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownTargetWidth.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownTargetWidth.DecimalPlaces = 0;
+            this.numericUpDownTargetWidth.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownTargetWidth.Location = new System.Drawing.Point(196, 63);
             this.numericUpDownTargetWidth.Maximum = new decimal(new int[] {
             10000,
             0,
             0,
             0});
+            this.numericUpDownTargetWidth.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownTargetWidth.Name = "numericUpDownTargetWidth";
             this.numericUpDownTargetWidth.Size = new System.Drawing.Size(47, 20);
             this.numericUpDownTargetWidth.TabIndex = 8;
+            this.numericUpDownTargetWidth.TabStop = false;
+            this.numericUpDownTargetWidth.ThousandsSeparator = false;
             this.numericUpDownTargetWidth.Value = new decimal(new int[] {
             384,
             0,
@@ -121,15 +161,35 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             // 
             // numericUpDownSourceHeight
             // 
+            this.numericUpDownSourceHeight.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownSourceHeight.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownSourceHeight.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownSourceHeight.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownSourceHeight.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownSourceHeight.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownSourceHeight.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownSourceHeight.DecimalPlaces = 0;
+            this.numericUpDownSourceHeight.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownSourceHeight.Location = new System.Drawing.Point(265, 37);
             this.numericUpDownSourceHeight.Maximum = new decimal(new int[] {
             10000,
             0,
             0,
             0});
+            this.numericUpDownSourceHeight.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownSourceHeight.Name = "numericUpDownSourceHeight";
             this.numericUpDownSourceHeight.Size = new System.Drawing.Size(47, 20);
             this.numericUpDownSourceHeight.TabIndex = 5;
+            this.numericUpDownSourceHeight.TabStop = false;
+            this.numericUpDownSourceHeight.ThousandsSeparator = false;
             this.numericUpDownSourceHeight.Value = new decimal(new int[] {
             288,
             0,
@@ -157,15 +217,35 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             // 
             // numericUpDownSourceWidth
             // 
+            this.numericUpDownSourceWidth.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownSourceWidth.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownSourceWidth.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownSourceWidth.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownSourceWidth.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownSourceWidth.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownSourceWidth.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownSourceWidth.DecimalPlaces = 0;
+            this.numericUpDownSourceWidth.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownSourceWidth.Location = new System.Drawing.Point(196, 37);
             this.numericUpDownSourceWidth.Maximum = new decimal(new int[] {
             10000,
             0,
             0,
             0});
+            this.numericUpDownSourceWidth.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownSourceWidth.Name = "numericUpDownSourceWidth";
             this.numericUpDownSourceWidth.Size = new System.Drawing.Size(47, 20);
             this.numericUpDownSourceWidth.TabIndex = 3;
+            this.numericUpDownSourceWidth.TabStop = false;
+            this.numericUpDownSourceWidth.ThousandsSeparator = false;
             this.numericUpDownSourceWidth.Value = new decimal(new int[] {
             384,
             0,
@@ -200,6 +280,8 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             // checkBoxMargins
             // 
             this.checkBoxMargins.AutoSize = true;
+            this.checkBoxMargins.Checked = true;
+            this.checkBoxMargins.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxMargins.Location = new System.Drawing.Point(15, 99);
             this.checkBoxMargins.Name = "checkBoxMargins";
             this.checkBoxMargins.Size = new System.Drawing.Size(165, 17);

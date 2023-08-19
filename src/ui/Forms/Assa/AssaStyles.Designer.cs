@@ -71,7 +71,7 @@
             this.numericUpDownShadowWidth = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.numericUpDownOutline = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelShadow = new Nikse.SubtitleEdit.Controls.NikseLabel();
-            this.textBoxStyleName = new System.Windows.Forms.TextBox();
+            this.textBoxStyleName = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelStyleName = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.groupBoxMargins = new System.Windows.Forms.GroupBox();
             this.numericUpDownMarginVertical = new Nikse.SubtitleEdit.Controls.NikseUpDown();
@@ -1715,7 +1715,7 @@
         private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownFontSize;
         private System.Windows.Forms.CheckBox checkBoxFontItalic;
         private System.Windows.Forms.CheckBox checkBoxFontBold;
-        private System.Windows.Forms.TextBox textBoxStyleName;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxStyleName;
         private Nikse.SubtitleEdit.Controls.NikseLabel labelStyleName;
         private System.Windows.Forms.PictureBox pictureBoxPreview;
         private System.Windows.Forms.Button buttonRemoveAll;

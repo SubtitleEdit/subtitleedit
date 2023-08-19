@@ -33,25 +33,25 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             Nikse.SubtitleEdit.Core.Common.TimeCode timeCode1 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
             Nikse.SubtitleEdit.Core.Common.TimeCode timeCode2 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
             this.groupBoxCurrent = new System.Windows.Forms.GroupBox();
-            this.labelSyntaxError = new System.Windows.Forms.Label();
+            this.labelSyntaxError = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.buttonSetText = new System.Windows.Forms.Button();
-            this.labelCurrentSize = new System.Windows.Forms.Label();
+            this.labelCurrentSize = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.buttonExportImage = new System.Windows.Forms.Button();
             this.buttonImportImage = new System.Windows.Forms.Button();
-            this.labelPositionComma = new System.Windows.Forms.Label();
-            this.labelEndTime = new System.Windows.Forms.Label();
-            this.labelStart = new System.Windows.Forms.Label();
+            this.labelPositionComma = new Nikse.SubtitleEdit.Controls.NikseLabel();
+            this.labelEndTime = new Nikse.SubtitleEdit.Controls.NikseLabel();
+            this.labelStart = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.numericUpDownY = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.numericUpDownX = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.checkBoxIsForced = new System.Windows.Forms.CheckBox();
             this.timeUpDownEndTime = new Nikse.SubtitleEdit.Controls.NikseTimeUpDown();
             this.timeUpDownStartTime = new Nikse.SubtitleEdit.Controls.NikseTimeUpDown();
-            this.label1 = new System.Windows.Forms.Label();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.labelFrameRate = new System.Windows.Forms.Label();
+            this.label1 = new Nikse.SubtitleEdit.Controls.NikseLabel();
+            this.groupBoxVideoInfo = new System.Windows.Forms.GroupBox();
+            this.labelFrameRate = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.comboBoxFrameRate = new Nikse.SubtitleEdit.Controls.NikseComboBox();
-            this.labelX = new System.Windows.Forms.Label();
-            this.labelVideoSize = new System.Windows.Forms.Label();
+            this.labelX = new Nikse.SubtitleEdit.Controls.NikseLabel();
+            this.labelVideoSize = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.numericUpDownScreenHeight = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.numericUpDownScreenWidth = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.contextMenuStripListView = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -123,7 +123,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.timerSubtitleOnVideo = new System.Windows.Forms.Timer(this.components);
-            this.labelVideoInfo = new System.Windows.Forms.Label();
+            this.labelVideoInfo = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.subtitleListView1 = new System.Windows.Forms.ListView();
             this.columnHeaderForced = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderNumber = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -132,7 +132,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.columnHeaderText = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.timerSyntaxColor = new System.Windows.Forms.Timer(this.components);
             this.groupBoxCurrent.SuspendLayout();
-            this.groupBox2.SuspendLayout();
+            this.groupBoxVideoInfo.SuspendLayout();
             this.contextMenuStripListView.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.panelBackground.SuspendLayout();
@@ -401,20 +401,20 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.label1.TabIndex = 4;
             this.label1.Text = "Position";
             // 
-            // groupBox2
+            // groupBoxVideoInfo
             // 
-            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.groupBox2.Controls.Add(this.labelFrameRate);
-            this.groupBox2.Controls.Add(this.comboBoxFrameRate);
-            this.groupBox2.Controls.Add(this.labelX);
-            this.groupBox2.Controls.Add(this.labelVideoSize);
-            this.groupBox2.Controls.Add(this.numericUpDownScreenHeight);
-            this.groupBox2.Controls.Add(this.numericUpDownScreenWidth);
-            this.groupBox2.Location = new System.Drawing.Point(13, 506);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(493, 51);
-            this.groupBox2.TabIndex = 3;
-            this.groupBox2.TabStop = false;
+            this.groupBoxVideoInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.groupBoxVideoInfo.Controls.Add(this.labelFrameRate);
+            this.groupBoxVideoInfo.Controls.Add(this.comboBoxFrameRate);
+            this.groupBoxVideoInfo.Controls.Add(this.labelX);
+            this.groupBoxVideoInfo.Controls.Add(this.labelVideoSize);
+            this.groupBoxVideoInfo.Controls.Add(this.numericUpDownScreenHeight);
+            this.groupBoxVideoInfo.Controls.Add(this.numericUpDownScreenWidth);
+            this.groupBoxVideoInfo.Location = new System.Drawing.Point(13, 506);
+            this.groupBoxVideoInfo.Name = "groupBoxVideoInfo";
+            this.groupBoxVideoInfo.Size = new System.Drawing.Size(493, 51);
+            this.groupBoxVideoInfo.TabIndex = 3;
+            this.groupBoxVideoInfo.TabStop = false;
             // 
             // labelFrameRate
             // 
@@ -446,6 +446,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.comboBoxFrameRate.SelectedText = "";
             this.comboBoxFrameRate.Size = new System.Drawing.Size(74, 21);
             this.comboBoxFrameRate.TabIndex = 5;
+            this.comboBoxFrameRate.TabStop = false;
             this.comboBoxFrameRate.SelectedIndexChanged += new System.EventHandler(this.comboBoxFrameRate_SelectedIndexChanged);
             this.comboBoxFrameRate.SelectedValueChanged += new System.EventHandler(this.comboBoxFrameRate_SelectedValueChanged);
             // 
@@ -1145,7 +1146,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.panelBackground);
             this.Controls.Add(this.menuStrip1);
-            this.Controls.Add(this.groupBox2);
+            this.Controls.Add(this.groupBoxVideoInfo);
             this.Controls.Add(this.groupBoxCurrent);
             this.KeyPreview = true;
             this.MainMenuStrip = this.menuStrip1;
@@ -1162,8 +1163,8 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.Resize += new System.EventHandler(this.BinEdit_Resize);
             this.groupBoxCurrent.ResumeLayout(false);
             this.groupBoxCurrent.PerformLayout();
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
+            this.groupBoxVideoInfo.ResumeLayout(false);
+            this.groupBoxVideoInfo.PerformLayout();
             this.contextMenuStripListView.ResumeLayout(false);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
@@ -1182,22 +1183,22 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
         private Controls.NikseTimeUpDown timeUpDownEndTime;
         private Controls.NikseTimeUpDown timeUpDownStartTime;
         private System.Windows.Forms.Button buttonImportImage;
-        private System.Windows.Forms.Label labelPositionComma;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label labelEndTime;
-        private System.Windows.Forms.Label labelStart;
+        private Nikse.SubtitleEdit.Controls.NikseLabel labelPositionComma;
+        private Nikse.SubtitleEdit.Controls.NikseLabel label1;
+        private Nikse.SubtitleEdit.Controls.NikseLabel labelEndTime;
+        private Nikse.SubtitleEdit.Controls.NikseLabel labelStart;
         private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownY;
         private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownX;
-        private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.Label labelX;
-        private System.Windows.Forms.Label labelVideoSize;
+        private System.Windows.Forms.GroupBox groupBoxVideoInfo;
+        private Nikse.SubtitleEdit.Controls.NikseLabel labelX;
+        private Nikse.SubtitleEdit.Controls.NikseLabel labelVideoSize;
         private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownScreenHeight;
         private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownScreenWidth;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripListView;
         private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem insertToolStripMenuItem;
         private System.Windows.Forms.Button buttonExportImage;
-        private System.Windows.Forms.Label labelCurrentSize;
+        private Nikse.SubtitleEdit.Controls.NikseLabel labelCurrentSize;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openFileToolStripMenuItem;
@@ -1207,7 +1208,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
         private System.Windows.Forms.ToolStripMenuItem videoToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openVideoToolStripMenuItem;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
-        private System.Windows.Forms.Label labelFrameRate;
+        private Nikse.SubtitleEdit.Controls.NikseLabel labelFrameRate;
         private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxFrameRate;
         private System.Windows.Forms.Panel panelBackground;
         private System.Windows.Forms.ProgressBar progressBar1;
@@ -1231,7 +1232,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
         private System.Windows.Forms.Button buttonSetText;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.ToolStripMenuItem undoChangesForThisElementToolStripMenuItem;
-        private System.Windows.Forms.Label labelVideoInfo;
+        private Nikse.SubtitleEdit.Controls.NikseLabel labelVideoInfo;
         private System.Windows.Forms.ToolStripMenuItem centerSelectedLineshorizontallyToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem topAlignSelectedLinesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem bottomAlignSelectedLinesToolStripMenuItem;
@@ -1273,7 +1274,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
         private System.Windows.Forms.ColumnHeader columnHeaderDuration;
         private System.Windows.Forms.ColumnHeader columnHeaderText;
         private System.Windows.Forms.Timer timerSyntaxColor;
-        private System.Windows.Forms.Label labelSyntaxError;
+        private Nikse.SubtitleEdit.Controls.NikseLabel labelSyntaxError;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator11;
         private System.Windows.Forms.ToolStripMenuItem saveImageAsToolStripMenuItem;
     }

@@ -98,6 +98,7 @@
     <Collapse>Collapse</Collapse>
     <ShortcutX>Shortcut: {0}</ShortcutX>
     <ExampleX>Example: {0}</ExampleX>
+    <ViewX>View {0}</ViewX>
     <Reset>Reset</Reset>
     <Error>Error</Error>
     <Warning>Warning</Warning>
@@ -204,6 +205,7 @@ Read more info (web)?</WhisperNotFound>
     <LoadingVoskModel>Loading Vosk speech recognition model...</LoadingVoskModel>
     <Transcribing>Transcribing audio to text...</Transcribing>
     <TranscribingXOfY>Transcribing audio to text - file {0} of {1}...</TranscribingXOfY>
+    <PostProcessing>Post-processing...</PostProcessing>
     <XFilesSavedToVideoSourceFolder>{0} files saved to video source folder</XFilesSavedToVideoSourceFolder>
     <UsePostProcessing>Use post-processing (line merge, fix casing, punctuation, and more)</UsePostProcessing>
     <AutoAdjustTimings>Auto adjust timings</AutoAdjustTimings>
@@ -214,6 +216,7 @@ Read more info (web)?</WhisperNotFound>
     <RemoveTemporaryFiles>Remove temporary files</RemoveTemporaryFiles>
     <SetCppConstMeFolder>Set CPP/Const-me models folder...</SetCppConstMeFolder>
     <OnlyRunPostProcessing>Run only post-processing/adjust timings</OnlyRunPostProcessing>
+    <DownloadFasterWhisperCuda>Download CUDA for Perfview's Whisper-Faster</DownloadFasterWhisperCuda>
   </AudioToText>
   <AssaAttachments>
     <Title>Advanced Sub Station Alpha attachments</Title>
@@ -539,6 +542,9 @@ We leverage the intrinsic rhythm of the image.</CreateSimpleChainingToolTip>
     <CheckingForUpdatesNewVersion>New version available!</CheckingForUpdatesNewVersion>
     <InstallUpdate>Go to download page</InstallUpdate>
     <NoUpdates>Don't update</NoUpdates>
+    <XPluginsHasAnUpdate>{0} plugins have an updates -</XPluginsHasAnUpdate>
+    <OnePluginsHasAnUpdate>One plugin has an update -</OnePluginsHasAnUpdate>
+    <Update>update</Update>
   </CheckForUpdates>
   <ChooseAudioTrack>
     <Title>Choose audio track</Title>
@@ -977,9 +983,11 @@ We leverage the intrinsic rhythm of the image.</CreateSimpleChainingToolTip>
     <InfoAssaOn>Note: Advanced SubStation Alpha styling will be used :)</InfoAssaOn>
     <XGeneratedWithBurnedInSubsInX>"{0}" generated with burned-in subtitle in {1}.</XGeneratedWithBurnedInSubsInX>
     <TimeRemainingMinutes>Time remaining: {0} minutes</TimeRemainingMinutes>
+    <TimeRemainingOneMinute>Time remaining: One minute</TimeRemainingOneMinute>
     <TimeRemainingSeconds>Time remaining: {0} seconds</TimeRemainingSeconds>
     <TimeRemainingAFewSeconds>Time remaining: A few seconds</TimeRemainingAFewSeconds>
     <TimeRemainingMinutesAndSeconds>Time remaining: {0} minutes and {1} seconds</TimeRemainingMinutesAndSeconds>
+    <TimeRemainingOneMinuteAndSeconds>Time remaining: One minute and {0} seconds</TimeRemainingOneMinuteAndSeconds>
     <TargetFileName>Target file name: {0}</TargetFileName>
     <TargetFileSize>Target file size (requires 2 pass encoding)</TargetFileSize>
     <FileSizeMb>File size in MB</FileSizeMb>
@@ -2288,6 +2296,7 @@ can edit in same subtitle file (collaboration)</Information>
     <BeautifyTimeCodes>Beautify time codes</BeautifyTimeCodes>
     <SettingsName>Settings</SettingsName>
     <ToggleBookmarks>Toggle bookmarks</ToggleBookmarks>
+    <FocusTextBox>Focus text box</FocusTextBox>
     <ToggleBookmarksWithComment>Toggle bookmarks - add comment</ToggleBookmarksWithComment>
     <ClearBookmarks>Clear bookmarks</ClearBookmarks>
     <ExportBookmarks>Export bookmarks...</ExportBookmarks>
@@ -2809,6 +2818,8 @@ Continue?</RestoreDefaultSettingsMsg>
     <CustomContinuationStyleNote>Note: The custom continuation style is shared across profiles.</CustomContinuationStyleNote>
     <ResetCustomContinuationStyleWarning>This will override the values in the dialog. Are you sure?</ResetCustomContinuationStyleWarning>
     <ExportAsHtml>Export as HTML...</ExportAsHtml>
+    <SetNewActor>Set new actor/voice</SetNewActor>
+    <SetActorX>Set actor/voice {0}</SetActorX>
   </Settings>
   <SettingsMpv>
     <DownloadMpv>Download mpv lib</DownloadMpv>

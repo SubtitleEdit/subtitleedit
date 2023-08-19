@@ -68,9 +68,9 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.labelChangeAlpha.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelChangeAlpha.Location = new System.Drawing.Point(12, 30);
             this.labelChangeAlpha.Name = "labelChangeAlpha";
-            this.labelChangeAlpha.Size = new System.Drawing.Size(145, 18);
+            this.labelChangeAlpha.Size = new System.Drawing.Size(106, 18);
             this.labelChangeAlpha.TabIndex = 2;
-            this.labelChangeAlpha.Text = "Brightness - 100%";
+            this.labelChangeAlpha.Text = "Alpha - 100%";
             // 
             // buttonOK
             // 

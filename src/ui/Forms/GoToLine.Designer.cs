@@ -31,7 +31,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GoToLine));
             this.labelGoToLine = new System.Windows.Forms.Label();
             this.buttonOK = new System.Windows.Forms.Button();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.textBox1 = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
@@ -85,7 +85,7 @@
 
         private System.Windows.Forms.Label labelGoToLine;
         private System.Windows.Forms.Button buttonOK;
-        private System.Windows.Forms.TextBox textBox1;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBox1;
         private System.Windows.Forms.Button buttonCancel;
     }
 }

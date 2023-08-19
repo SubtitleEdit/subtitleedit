@@ -1,4 +1,6 @@
 ﻿
+using System.Windows.Forms;
+
 namespace Nikse.SubtitleEdit.Forms.Assa
 {
     sealed partial class ApplyCustomStyles
@@ -44,8 +46,8 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.buttonHistory = new System.Windows.Forms.Button();
             this.buttonTogglePreview = new System.Windows.Forms.Button();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.seTextBox1 = new Nikse.SubtitleEdit.Controls.SETextBox(true);
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.seTextBox1 = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.groupBoxApplyTo.SuspendLayout();
             this.groupBoxPreview.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPreview)).BeginInit();
@@ -53,7 +55,8 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             // 
             // groupBoxApplyTo
             // 
-            this.groupBoxApplyTo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxApplyTo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxApplyTo.Controls.Add(this.labelAdvancedSelection);
             this.groupBoxApplyTo.Controls.Add(this.buttonAdvancedSelection);
             this.groupBoxApplyTo.Controls.Add(this.radioButtonAdvancedSelection);
@@ -203,37 +206,26 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             // 
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
-            // seTextBox1
-            // 
-            this.seTextBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.seTextBox1.BackColor = System.Drawing.SystemColors.WindowFrame;
-            this.seTextBox1.ContextMenuStrip = this.contextMenuStrip1;
-            this.seTextBox1.CurrentLanguage = "";
-            this.seTextBox1.CurrentLineIndex = 0;
-            this.seTextBox1.HideSelection = true;
-            this.seTextBox1.IsDictionaryDownloaded = true;
-            this.seTextBox1.IsSpellCheckerInitialized = false;
-            this.seTextBox1.IsSpellCheckRequested = false;
-            this.seTextBox1.IsWrongWord = false;
-            this.seTextBox1.LanguageChanged = false;
-            this.seTextBox1.Location = new System.Drawing.Point(12, 40);
-            this.seTextBox1.Multiline = true;
-            this.seTextBox1.Name = "seTextBox1";
-            this.seTextBox1.Padding = new System.Windows.Forms.Padding(1);
-            this.seTextBox1.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
-            this.seTextBox1.SelectedText = "";
-            this.seTextBox1.SelectionLength = 0;
-            this.seTextBox1.SelectionStart = 0;
-            this.seTextBox1.Size = new System.Drawing.Size(522, 156);
-            this.seTextBox1.TabIndex = 0;
-            this.seTextBox1.TextBoxFont = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Bold);
-            // 
             // contextMenuStrip1
             // 
             this.contextMenuStrip1.Name = "contextMenuStrip1";
             this.contextMenuStrip1.Size = new System.Drawing.Size(61, 4);
             this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
+            // 
+            // seTextBox1
+            // 
+            this.seTextBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.seTextBox1.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.seTextBox1.ContextMenuStrip = this.contextMenuStrip1;
+            this.seTextBox1.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.seTextBox1.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Bold);
+            this.seTextBox1.Location = new System.Drawing.Point(12, 40);
+            this.seTextBox1.Multiline = true;
+            this.seTextBox1.Name = "seTextBox1";
+            this.seTextBox1.Size = new System.Drawing.Size(522, 156);
+            this.seTextBox1.TabIndex = 0;
             // 
             // ApplyCustomStyles
             // 
@@ -269,7 +261,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
         #endregion
 
-        private Controls.SETextBox seTextBox1;
+        private Controls.NikseTextBox seTextBox1;
         private System.Windows.Forms.GroupBox groupBoxApplyTo;
         private System.Windows.Forms.GroupBox groupBoxPreview;
         private System.Windows.Forms.Label labelOverrideTags;

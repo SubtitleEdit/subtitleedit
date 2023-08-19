@@ -5,6 +5,7 @@ using Nikse.SubtitleEdit.Logic.VideoPlayers;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
@@ -39,7 +40,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
         private void ButtonDownloadClick(object sender, EventArgs e)
         {
-            _downloadUrl = "https://github.com/SubtitleEdit/support-files/blob/master/mpv/libmpv2-" + IntPtr.Size * 8 + ".zip?raw=true";
+            _downloadUrl = "https://github.com/SubtitleEdit/support-files/releases/download/libmpv-2023-08-13/libmpv2-" + IntPtr.Size * 8 + ".zip";
             try
             {
                 labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait;
@@ -90,6 +91,20 @@ namespace Nikse.SubtitleEdit.Forms.Options
             }
 
             downloadStream.Position = 0;
+            var hash = Utilities.GetSha512Hash(downloadStream.ToArray());
+            string[] validHashes =
+            {
+                "ea31a9599a5f01951debfc8c52b6c961e98a56632fa08ec83e2cbc7194c3e43560a5d889b524a4c930f33028bdf9ef8797dc0df5b2660cd6eb7b19bb125546ca",
+                "5b91fa3b40e4b216dab1719a11dffc897a5110415e3cc9ddfcf9e2d0ae677bbfc5e3c360e09415b7c266ad1e65a601d951a8efcbcb863d63dfabe4f6b5fdd716", // 64-bit
+            };
+            if (!validHashes.Contains(hash))
+            {
+                MessageBox.Show("Whisper SHA-512 hash does not match!"); ;
+                DialogResult = DialogResult.Cancel;
+                return;
+            }
+
+            downloadStream.Position = 0;
             var dictionaryFolder = Configuration.DataDirectory;
             using (ZipExtractor zip = ZipExtractor.Open(downloadStream))
             {
@@ -98,8 +113,8 @@ namespace Nikse.SubtitleEdit.Forms.Options
                 {
                     if (entry.FilenameInZip.EndsWith(".dll", StringComparison.OrdinalIgnoreCase))
                     {
-                        string fileName = Path.GetFileName(entry.FilenameInZip);
-                        string path = Path.Combine(dictionaryFolder, fileName);
+                        var fileName = Path.GetFileName(entry.FilenameInZip);
+                        var path = Path.Combine(dictionaryFolder, fileName);
 
                         try
                         {

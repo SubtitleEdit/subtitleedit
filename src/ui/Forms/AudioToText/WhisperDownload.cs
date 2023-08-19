@@ -18,13 +18,13 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         private readonly CancellationTokenSource _cancellationTokenSource;
         private readonly string _whisperChoice;
 
-        private static readonly string[] Sha512Hashes =
+        private static readonly string[] Sha512HashesCpp =
         {
-            "fc1878c3b7200d0531c376bbe52319a55575e3ceeeacecbee54a366116c30eb1aa3d0a34c742f9fd5a47ffb9f24cba75653d1498e95e4f6f86c00f6d5e593d2a", // 64-bit OpenBLAS
-            "44cb0f326ece26c1b41bd0b20663bc946990a7c3b56150966eebefb783496089289b6002ce93d08f1862bf6600e9912ac62057c268698672397192c55eeb30a2", // 32-bit OpenBLAS
+            "fc1878c3b7200d0531c376bbe52319a55575e3ceeeacecbee54a366116c30eb1aa3d0a34c742f9fd5a47ffb9f24cba75653d1498e95e4f6f86c00f6d5e593d2a", // v1.4.0/whisper-blas-bin-x64.zip
+            "44cb0f326ece26c1b41bd0b20663bc946990a7c3b56150966eebefb783496089289b6002ce93d08f1862bf6600e9912ac62057c268698672397192c55eeb30a2", // v1.4.0/whisper-blas-bin-Win32.zip
         };
 
-        private static readonly string[] OldSha512Hashes =
+        private static readonly string[] OldSha512HashesCpp =
         {
             "e193e845380676b59deade82d3f1de70ac54da3b5ffa70b4eabb3a2a96ad312d8f197403604805cef182c85c3a3370dd74a2b0b7bccf2d95b1022c10ce8c7b79", // 64-bit OpenBLAS
             "4218423f79d856096cdc8d88aad2e361740940e706e0b1d07dc3455571022419ad14cfef717f63e8fc61a7a1ef67b6722cec8b3c4c25ad7f087a23b1b89c5d91", // 32-bit OpenBLAS
@@ -60,15 +60,30 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         };
 
 
-        private const string DownloadUrlPurfviewFasterWhisper = "https://github.com/Purfview/whisper-standalone-win/releases/download/faster-whisper/Whisper-Faster_r141.4.zip";
+        private const string DownloadUrlPurfviewFasterWhisper = "https://github.com/Purfview/whisper-standalone-win/releases/download/faster-whisper/Whisper-Faster_r145.3.zip";
 
         private static readonly string[] Sha512HashesPurfviewFasterWhisper =
         {
-            "5414c15bb1682efc2f737f3ab5f15c4350a70c30a6101b631297420bbc4cb077ef9b88cb6e5512f4adcdafbda85eb894ff92eae07bd70c66efa0b28a08361033", // Whisper-Faster r141.4
+            "fee96c9f8f3a9b67c2e1923fa0f5ef388d645aa3788b1b00c9f12392ef2db4b905d84f5c00ab743a284c8ba2750121e08e9fee1edc76d9c0f12ae51d61b1b12a", // r145.3.zip
         };
 
         private static readonly string[] OldSha512HashesPurfviewFasterWhisper =
         {
+            "b689f5ff7329f0ae8f08e3d42b1a2f71bcbe2717cf1231395791cf3b90e305ba4e92955a62ebe946a73c5ca83f61bc60b2e4cff1065cc0f49cfc1f3c665fa587", // r145.2 
+            "75ba2bcee9fef0846e54ce367df3fb54f3b9f4cb0f8ac33f01bdde44dc313cd01b3263b43c899271af5901f765ef6257358dcf68c11024652299942405afe289", //  r145.1
+            "5414c15bb1682efc2f737f3ab5f15c4350a70c30a6101b631297420bbc4cb077ef9b88cb6e5512f4adcdafbda85eb894ff92eae07bd70c66efa0b28a08361033", // Whisper-Faster r141.4
+        };
+
+        private const string DownloadUrlPurfviewFasterWhisperCuda = "https://github.com/Purfview/whisper-standalone-win/releases/download/libs/cuBLAS.and.cuDNN.zip";
+
+        private static readonly string[] Sha512HashesPurfviewFasterWhisperCuda =
+        {
+            "8d3499298bf4ee227c2587ab7ad80a2a6cbac6b64592a2bb2a887821465d20e19ceec2a7d97a4473a9fb47b477cbbba8c69b8e615a42201a6f5509800056a73b",
+        };
+
+        private static readonly string[] OldSha512HashesPurfviewFasterWhisperCuda =
+        {
+            "",
         };
 
 
@@ -94,6 +109,10 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             else if (_whisperChoice == WhisperChoice.PurfviewFasterWhisper)
             {
                 downloadUrl = DownloadUrlPurfviewFasterWhisper;
+            }
+            else if (_whisperChoice == WhisperChoice.PurfviewFasterWhisperCuda)
+            {
+                downloadUrl = DownloadUrlPurfviewFasterWhisperCuda;
             }
 
             try
@@ -151,14 +170,19 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             {
                 hashes = Sha512HashesPurfviewFasterWhisper;
             }
+            else if (_whisperChoice == WhisperChoice.PurfviewFasterWhisperCuda)
+            {
+                hashes = Sha512HashesPurfviewFasterWhisperCuda;
+            }
             else
             {
-                hashes = Sha512Hashes;
+                hashes = Sha512HashesCpp;
             }
 
             if (!hashes.Contains(hash))
             {
-                MessageBox.Show("Whisper SHA-512 hash does not match!");
+                MessageBox.Show("Whisper SHA-512 hash does not match!");;
+                DialogResult = DialogResult.Cancel;
                 return;
             }
 
@@ -219,6 +243,27 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                     }
                 }
             }
+            else if (_whisperChoice == WhisperChoice.PurfviewFasterWhisperCuda)
+            {
+                folder = Path.Combine(folder, "Purfview-Whisper-Faster");
+                if (!Directory.Exists(folder))
+                {
+                    Directory.CreateDirectory(folder);
+                }
+
+                using (var zip = ZipExtractor.Open(downloadStream))
+                {
+                    var dir = zip.ReadCentralDir();
+                    foreach (var entry in dir)
+                    {
+                        if (entry.FileSize > 0)
+                        {
+                            var path = Path.Combine(folder, Path.GetFileName(entry.FilenameInZip));
+                            zip.ExtractFile(entry, path);
+                        }
+                    }
+                }
+            }
             else
             {
                 var skipFileNames = new[] { "command.exe", "stream.exe", "talk.exe", "bench.exe" };
@@ -236,10 +281,6 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 }
             }
 
-
-
-
-
             Cursor = Cursors.Default;
             labelPleaseWait.Text = string.Empty;
             DialogResult = DialogResult.OK;
@@ -253,12 +294,30 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             {
                 return OldSha512HashesConstMe.Contains(hash);
             }
-            else if (whisperChoice == WhisperChoice.PurfviewFasterWhisper)
+
+            if (whisperChoice == WhisperChoice.PurfviewFasterWhisper)
             {
                 return OldSha512HashesPurfviewFasterWhisper.Contains(hash);
             }
 
-            return OldSha512Hashes.Contains(hash);
+            return OldSha512HashesCpp.Contains(hash);
+        }
+
+        public static bool IsLatestVersion(string fullPath, string whisperChoice)
+        {
+            var hash = Utilities.GetSha512Hash(FileUtil.ReadAllBytesShared(fullPath));
+
+            if (whisperChoice == WhisperChoice.ConstMe)
+            {
+                return hash == "8c354fcc12daee1d1aa755487aa8c53aea521a922f8ec2637c694b06d068ac60637f67bc74c8bc71a8ffee8db7988398de498d752ae4501b786a7ad9f6cd629f";
+            }
+
+            if (whisperChoice == WhisperChoice.PurfviewFasterWhisper)
+            {
+                return hash == "f55f3d7f60ec3a5ba6e1cc59062ad34d5e235f726f12bc8e4d1c5c519d1950fecd3e0386f87d937cabb7041235ef3cff54752d82de9f901690cb227ac4d2c2da";
+            }
+
+            return hash == "c43fed38d1ae99e6fbbd8c842c2d550b4949081c0c7fba72cd2e2e8435ff05eac4f64e659efb09d597c3c062edf1e5026acc375d2a07290fa3c0fca9ac3bd7a2";
         }
     }
 }
