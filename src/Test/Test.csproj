@@ -72,7 +72,7 @@
     <Compile Include="Assa\TagHelperRemoveTagTest.cs" />
     <Compile Include="Assa\ResamplerTest.cs" />
     <Compile Include="Assa\AssaTimeCodes.cs" />
-    <Compile Include="Common\FormattableTextReaderText.cs" />
+    <Compile Include="Common\FormattableTextReaderTest.cs" />
     <Compile Include="Core\AudioToTextTest.cs" />
     <Compile Include="Core\CsvUtilTest.cs" />
     <Compile Include="Core\PluginUpdateCheckerTest.cs" />

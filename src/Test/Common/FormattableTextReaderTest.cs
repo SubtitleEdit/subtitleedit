@@ -5,7 +5,7 @@ namespace Test.Common
 {
     [TestClass]
     // ReSharper disable once IdentifierTypo
-    public class FormattableTextReaderText
+    public class FormattableTextReaderTest
     {
         [TestMethod]
         public void ReadTextTest()
