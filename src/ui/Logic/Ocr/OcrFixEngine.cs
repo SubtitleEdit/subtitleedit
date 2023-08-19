@@ -1385,7 +1385,8 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 words.Add(w.Trim(trimChars));
             }
 
-            for (var i = 0; i < words.Count && i < 1000; i++)
+            var maxWordToProcess = Math.Min(1000, words.Count);
+            for (var i = 0; i < maxWordToProcess; i++)
             {
                 var word = words[i].TrimStart('\'');
                 var wordNotEndTrimmed = word;
