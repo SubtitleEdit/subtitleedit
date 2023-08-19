@@ -132,16 +132,13 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         public static void InitializeWhisperEngines(NikseComboBox cb)
         {
             cb.Items.Clear();
-            var engines = new List<string>
-            {
-                WhisperChoice.OpenAi,
-                WhisperChoice.Cpp
-            };
+            var engines = new List<string> { WhisperChoice.OpenAi };
             if (Configuration.IsRunningOnWindows)
             {
-                engines.Add(WhisperChoice.ConstMe);
                 engines.Add(WhisperChoice.PurfviewFasterWhisper);
+                engines.Add(WhisperChoice.ConstMe);
             }
+            engines.Add(WhisperChoice.Cpp);
             engines.Add(WhisperChoice.CTranslate2);
             //  engines.Add(WhisperChoice.StableTs);
             engines.Add(WhisperChoice.WhisperX);

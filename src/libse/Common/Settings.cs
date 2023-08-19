@@ -668,7 +668,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             GenVideoNonAssaBoxColor = Color.FromArgb(150, 0, 0, 0);
             GenVideoNonAssaTextColor = Color.White;
             VoskPostProcessing = true;
-            WhisperChoice = Configuration.IsRunningOnWindows ? AudioToText.WhisperChoice.Cpp : AudioToText.WhisperChoice.OpenAi;
+            WhisperChoice = Configuration.IsRunningOnWindows ? AudioToText.WhisperChoice.PurfviewFasterWhisper : AudioToText.WhisperChoice.OpenAi;
             WhisperDeleteTempFiles = true;
             WhisperExtraSettings = "";
             WhisperLanguageCode = "en";
