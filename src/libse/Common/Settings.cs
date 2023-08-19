@@ -3397,51 +3397,8 @@ $HorzAlign          =   Center
                 var mergeLinesShorterThan = listNode.SelectSingleNode("MergeLinesShorterThan")?.InnerText;
                 var minimumMillisecondsBetweenLines = listNode.SelectSingleNode("MinimumMillisecondsBetweenLines")?.InnerText;
 
-                var dialogStyle = DialogType.DashBothLinesWithSpace;
-                if (listNode.SelectSingleNode("DialogStyle") == null || !Enum.IsDefined(typeof(DialogType), listNode.SelectSingleNode("DialogStyle").InnerText))
-                { //TODO: Remove after 2022
-                    if (listNode.SelectSingleNode("Name") != null)
-                    {
-                        var lookup = new List<RulesProfile>();
-                        GeneralSettings.AddExtraProfiles(lookup);
-                        var match = lookup.Find(LookupProfile => LookupProfile.Name == listNode.SelectSingleNode("Name").InnerText);
-                        if (match != null)
-                        {
-                            dialogStyle = match.DialogStyle; // update style when upgrading from 3.5.13 or below
-                        }
-                        else
-                        {
-                            dialogStyle = DialogType.DashBothLinesWithSpace;
-                        }
-                    }
-                }
-                else
-                {
-                    dialogStyle = (DialogType)Enum.Parse(typeof(DialogType), listNode.SelectSingleNode("DialogStyle")?.InnerText);
-                }
-
-                var continuationStyle = ContinuationStyle.NoneLeadingTrailingDots;
-                if (listNode.SelectSingleNode("ContinuationStyle") == null || !Enum.IsDefined(typeof(ContinuationStyle), listNode.SelectSingleNode("ContinuationStyle").InnerText))
-                { //TODO: Remove after 2022
-                    if (listNode.SelectSingleNode("Name") != null)
-                    {
-                        var lookup = new List<RulesProfile>();
-                        GeneralSettings.AddExtraProfiles(lookup);
-                        var match = lookup.Find(LookupProfile => LookupProfile.Name == listNode.SelectSingleNode("Name").InnerText);
-                        if (match != null)
-                        {
-                            continuationStyle = match.ContinuationStyle; // update style when upgrading from 3.5.13 or below
-                        }
-                        else
-                        {
-                            continuationStyle = ContinuationStyle.NoneLeadingTrailingDots;
-                        }
-                    }
-                }
-                else
-                {
-                    continuationStyle = (ContinuationStyle)Enum.Parse(typeof(ContinuationStyle), listNode.SelectSingleNode("ContinuationStyle")?.InnerText);
-                }
+                var dialogStyle = (DialogType)Enum.Parse(typeof(DialogType), listNode.SelectSingleNode("DialogStyle")?.InnerText);
+                var continuationStyle = (ContinuationStyle)Enum.Parse(typeof(ContinuationStyle), listNode.SelectSingleNode("ContinuationStyle")?.InnerText);
 
                 settings.General.Profiles.Add(new RulesProfile
                 {

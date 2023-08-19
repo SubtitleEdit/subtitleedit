@@ -60,10 +60,8 @@ namespace Nikse.SubtitleEdit.Forms
             _cancellationTokenSource = new CancellationTokenSource();
         }
 
-        private static string GetPluginXmlFileUrl()
-        {
-            return "https://raw.github.com/SubtitleEdit/plugins/master/Plugins4.xml";
-        }
+        public static string PluginXmlFileUrl = "https://raw.github.com/SubtitleEdit/plugins/master/Plugins4.xml";
+        public bool UpdateAll { get; set; }
 
         private static string GetPluginFolder()
         {
@@ -111,7 +109,7 @@ namespace Nikse.SubtitleEdit.Forms
             _downloadList = new List<PluginInfoItem>();
             listViewGetPlugins.BeginUpdate();
             _updateAllListUrls = new List<string>();
-            var onlinePluginInfo = new OnlinePluginMetadataProvider(GetPluginXmlFileUrl());
+            var onlinePluginInfo = new OnlinePluginMetadataProvider(PluginXmlFileUrl);
             _downloadList = onlinePluginInfo.GetPlugins().ToList();
             LoadAvailablePlugins(installedPlugins, _downloadList);
             ShowAvailablePlugins();
@@ -349,6 +347,12 @@ namespace Nikse.SubtitleEdit.Forms
         {
             GetAndShowAllPluginInfo();
             PluginsGet_ResizeEnd(sender, e);
+
+            if (UpdateAll)
+            {
+                buttonUpdateAll.Visible = false;
+                buttonUpdateAll_Click(sender, e);
+            }
         }
 
         private void buttonRemove_Click(object sender, EventArgs e)

@@ -32,13 +32,13 @@ namespace Nikse.SubtitleEdit.Forms
         {
             this.components = new System.ComponentModel.Container();
             this.labelStatus = new System.Windows.Forms.Label();
-            this.textBoxChangeLog = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonDownloadAndInstall = new System.Windows.Forms.Button();
             this.timerCheckForUpdates = new System.Windows.Forms.Timer(this.components);
             this.buttonDontCheckUpdates = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
-            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
+            this.linkLabelUpdatePlugins = new System.Windows.Forms.LinkLabel();
+            this.labelPluginsHaveUpdates = new System.Windows.Forms.Label();
+            this.textBoxChangeLog = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.SuspendLayout();
             // 
             // labelStatus
@@ -47,23 +47,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelStatus.Location = new System.Drawing.Point(10, 15);
             this.labelStatus.Name = "labelStatus";
-            this.labelStatus.Size = new System.Drawing.Size(41, 13);
+            this.labelStatus.Size = new System.Drawing.Size(70, 13);
             this.labelStatus.TabIndex = 3;
-            this.labelStatus.Text = "label1";
-            // 
-            // textBoxChangeLog
-            // 
-            this.textBoxChangeLog.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxChangeLog.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            this.textBoxChangeLog.Location = new System.Drawing.Point(13, 31);
-            this.textBoxChangeLog.Multiline = true;
-            this.textBoxChangeLog.Name = "textBoxChangeLog";
-            this.textBoxChangeLog.ReadOnly = true;
-            this.textBoxChangeLog.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBoxChangeLog.Size = new System.Drawing.Size(618, 106);
-            this.textBoxChangeLog.TabIndex = 4;
+            this.labelStatus.Text = "labelStatus";
             // 
             // buttonOK
             // 
@@ -105,32 +91,49 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonDontCheckUpdates.UseVisualStyleBackColor = true;
             this.buttonDontCheckUpdates.Click += new System.EventHandler(this.buttonDontCheckUpdates_Click);
             // 
-            // label1
+            // linkLabelUpdatePlugins
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(13, 144);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(35, 13);
-            this.label1.TabIndex = 5;
-            this.label1.Text = "label1";
+            this.linkLabelUpdatePlugins.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.linkLabelUpdatePlugins.AutoSize = true;
+            this.linkLabelUpdatePlugins.Location = new System.Drawing.Point(182, 150);
+            this.linkLabelUpdatePlugins.Name = "linkLabelUpdatePlugins";
+            this.linkLabelUpdatePlugins.Size = new System.Drawing.Size(63, 13);
+            this.linkLabelUpdatePlugins.TabIndex = 6;
+            this.linkLabelUpdatePlugins.TabStop = true;
+            this.linkLabelUpdatePlugins.Text = "update now";
+            this.linkLabelUpdatePlugins.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelUpdatePlugins_LinkClicked);
             // 
-            // linkLabel1
+            // labelPluginsHaveUpdates
             // 
-            this.linkLabel1.AutoSize = true;
-            this.linkLabel1.Location = new System.Drawing.Point(55, 143);
-            this.linkLabel1.Name = "linkLabel1";
-            this.linkLabel1.Size = new System.Drawing.Size(55, 13);
-            this.linkLabel1.TabIndex = 6;
-            this.linkLabel1.TabStop = true;
-            this.linkLabel1.Text = "linkLabel1";
+            this.labelPluginsHaveUpdates.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.labelPluginsHaveUpdates.AutoSize = true;
+            this.labelPluginsHaveUpdates.Location = new System.Drawing.Point(13, 150);
+            this.labelPluginsHaveUpdates.Name = "labelPluginsHaveUpdates";
+            this.labelPluginsHaveUpdates.Size = new System.Drawing.Size(169, 13);
+            this.labelPluginsHaveUpdates.TabIndex = 5;
+            this.labelPluginsHaveUpdates.Text = "X plugins have updates available -";
+            // 
+            // textBoxChangeLog
+            // 
+            this.textBoxChangeLog.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxChangeLog.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.textBoxChangeLog.Location = new System.Drawing.Point(13, 32);
+            this.textBoxChangeLog.Multiline = true;
+            this.textBoxChangeLog.Name = "textBoxChangeLog";
+            this.textBoxChangeLog.ReadOnly = true;
+            this.textBoxChangeLog.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.textBoxChangeLog.Size = new System.Drawing.Size(618, 106);
+            this.textBoxChangeLog.TabIndex = 4;
             // 
             // CheckForUpdates
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(643, 201);
-            this.Controls.Add(this.linkLabel1);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.linkLabelUpdatePlugins);
+            this.Controls.Add(this.labelPluginsHaveUpdates);
             this.Controls.Add(this.buttonDontCheckUpdates);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.buttonDownloadAndInstall);
@@ -157,7 +160,7 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.Button buttonDownloadAndInstall;
         private System.Windows.Forms.Timer timerCheckForUpdates;
         private System.Windows.Forms.Button buttonDontCheckUpdates;
-        private Label label1;
-        private LinkLabel linkLabel1;
+        private LinkLabel linkLabelUpdatePlugins;
+        private Label labelPluginsHaveUpdates;
     }
 }

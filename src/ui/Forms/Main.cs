@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Controls;
+using Nikse.SubtitleEdit.Core.AudioToText;
 using Nikse.SubtitleEdit.Core.BluRaySup;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.ContainerFormats;
@@ -15,6 +16,7 @@ using Nikse.SubtitleEdit.Core.SpellCheck;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Core.VobSub;
 using Nikse.SubtitleEdit.Forms.Assa;
+using Nikse.SubtitleEdit.Forms.AudioToText;
 using Nikse.SubtitleEdit.Forms.FormatProperties;
 using Nikse.SubtitleEdit.Forms.Networking;
 using Nikse.SubtitleEdit.Forms.Ocr;
@@ -23,6 +25,7 @@ using Nikse.SubtitleEdit.Forms.SeJobs;
 using Nikse.SubtitleEdit.Forms.ShotChanges;
 using Nikse.SubtitleEdit.Forms.Styles;
 using Nikse.SubtitleEdit.Forms.Translate;
+using Nikse.SubtitleEdit.Forms.VTT;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.CommandLineConvert;
 using Nikse.SubtitleEdit.Logic.Networking;
@@ -43,13 +46,9 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core.AudioToText;
-using Nikse.SubtitleEdit.Forms.AudioToText;
-using Nikse.SubtitleEdit.Forms.VTT;
-using Nikse.SubtitleEdit.Logic.Plugins;
 using CheckForUpdatesHelper = Nikse.SubtitleEdit.Logic.CheckForUpdatesHelper;
-using Timer = System.Windows.Forms.Timer;
 using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
+using Timer = System.Windows.Forms.Timer;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -25315,7 +25314,7 @@ namespace Nikse.SubtitleEdit.Forms
             else if (Configuration.Settings.General.CheckForUpdates && Configuration.Settings.General.LastCheckForUpdates < DateTime.Now.AddDays(-5))
             {
                 _checkForUpdatesHelper = new CheckForUpdatesHelper();
-                _checkForUpdatesHelper.CheckForUpdates();
+                _checkForUpdatesHelper.CheckForUpdates(false);
                 _timerCheckForUpdates = new Timer();
                 _timerCheckForUpdates.Interval = 7000;
                 _timerCheckForUpdates.Tick += TimerCheckForUpdatesTick;
@@ -25713,10 +25712,7 @@ namespace Nikse.SubtitleEdit.Forms
             _timerCheckForUpdates.Stop();
             if (_checkForUpdatesHelper.IsUpdateAvailable())
             {
-                using (var form = new CheckForUpdates(this, _checkForUpdatesHelper))
-                {
-                    form.ShowDialog(this);
-                }
+                ShowCheckForUpdates();
             }
 
             _checkForUpdatesHelper = null;
@@ -33130,12 +33126,26 @@ namespace Nikse.SubtitleEdit.Forms
                 // ignore
             }
 
+            ShowCheckForUpdates();
+
+            Configuration.Settings.General.LastCheckForUpdates = DateTime.Now;
+        }
+
+        private void ShowCheckForUpdates()
+        {
             using (var form = new CheckForUpdates(this))
             {
                 form.ShowDialog(this);
-            }
+                if (form.UpdatePlugins)
+                {
+                    using (var formGetPlugins = new PluginsGet())
+                    {
+                        formGetPlugins.UpdateAll = true;
+                        formGetPlugins.ShowDialog(this);
+                    }
 
-            Configuration.Settings.General.LastCheckForUpdates = DateTime.Now;
+                }
+            }
         }
 
         private void setVideoOffsetToolStripMenuItem_Click(object sender, EventArgs e)
