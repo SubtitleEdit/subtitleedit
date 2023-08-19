@@ -262,7 +262,7 @@
             // 
             this.buttonSearchClear.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonSearchClear.Enabled = false;
-            this.buttonSearchClear.Location = new System.Drawing.Point(672, 38);
+            this.buttonSearchClear.Location = new System.Drawing.Point(672, 39);
             this.buttonSearchClear.Name = "buttonSearchClear";
             this.buttonSearchClear.Size = new System.Drawing.Size(111, 23);
             this.buttonSearchClear.TabIndex = 8;
@@ -283,7 +283,8 @@
             // textBoxSearch
             // 
             this.textBoxSearch.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxSearch.Location = new System.Drawing.Point(515, 40);
+            this.textBoxSearch.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.textBoxSearch.Location = new System.Drawing.Point(515, 39);
             this.textBoxSearch.Name = "textBoxSearch";
             this.textBoxSearch.Size = new System.Drawing.Size(151, 20);
             this.textBoxSearch.TabIndex = 5;

@@ -1,6 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Http;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.Plugins;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -15,16 +16,6 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class PluginsGet : Form
     {
-
-        public class PluginInfoItem
-        {
-            public string Version { get; set; }
-            public string Name { get; set; }
-            public string Description { get; set; }
-            public string Date { get; set; }
-            public string Url { get; set; }
-        }
-
         private List<PluginInfoItem> _downloadList;
         private string _downloadedPluginName;
         private readonly LanguageStructure.PluginsGet _language;
@@ -33,11 +24,6 @@ namespace Nikse.SubtitleEdit.Forms
         private int _updatingAllPluginsCount;
         private bool _fetchingData;
         private readonly CancellationTokenSource _cancellationTokenSource;
-
-        private static string GetPluginXmlFileUrl()
-        {
-            return "https://raw.github.com/SubtitleEdit/plugins/master/Plugins4.xml";
-        }
 
         public PluginsGet()
         {
@@ -72,87 +58,61 @@ namespace Nikse.SubtitleEdit.Forms
 
             buttonUpdateAll.Visible = false;
             _cancellationTokenSource = new CancellationTokenSource();
-            DownloadPluginMetadataInfos();
         }
 
-        private void DownloadPluginMetadataInfos()
+        private static string GetPluginXmlFileUrl()
         {
-            var url = GetPluginXmlFileUrl();
+            return "https://raw.github.com/SubtitleEdit/plugins/master/Plugins4.xml";
+        }
+
+        private static string GetPluginFolder()
+        {
+            var pluginsFolder = Configuration.PluginsDirectory;
+            if (!Directory.Exists(pluginsFolder))
+            {
+                try
+                {
+                    Directory.CreateDirectory(pluginsFolder);
+                }
+                catch (Exception exception)
+                {
+                    MessageBox.Show($"Unable to create plugin folder {pluginsFolder}: {exception.Message}");
+                    return null;
+                }
+            }
+
+            return pluginsFolder;
+        }
+
+        private void GetAndShowAllPluginInfo()
+        {
             try
             {
+                _fetchingData = true;
                 labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait;
                 Refresh();
                 ShowInstalledPlugins();
-
-                using (var httpClient = DownloaderFactory.MakeHttpClient())
-                using (var downloadStream = new MemoryStream())
-                {
-                    var downloadTask = httpClient.DownloadAsync(url, downloadStream, new Progress<float>((progress) =>
-                    {
-                        var pct = (int)Math.Round(progress * 100.0, MidpointRounding.AwayFromZero);
-                        labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait + "  " + pct + "%";
-                    }), _cancellationTokenSource.Token);
-
-                    while (!downloadTask.IsCompleted && !downloadTask.IsCanceled)
-                    {
-                        Application.DoEvents();
-                    }
-
-                    if (downloadTask.IsCanceled)
-                    {
-                        DialogResult = DialogResult.Cancel;
-                        labelPleaseWait.Refresh();
-                        return;
-                    }
-
-                    CompleteDownloadString(downloadStream);
-                }
+                ShowOnlinePlugins();
+                labelPleaseWait.Text = string.Empty;
             }
             catch (Exception exception)
             {
+                labelPleaseWait.Text = string.Empty;
                 ChangeControlsState(true);
-                MessageBox.Show($"Unable to download {url}!" + Environment.NewLine + Environment.NewLine +
+                MessageBox.Show($"Unable to get plugin list!" + Environment.NewLine + Environment.NewLine +
                                     exception.Message + Environment.NewLine + Environment.NewLine + exception.StackTrace);
             }
+            _fetchingData = false;
         }
 
-        private void CompleteDownloadString(MemoryStream downloadStream)
+        private void ShowOnlinePlugins()
         {
-            if (downloadStream.Length == 0)
-            {
-                throw new Exception("No content downloaded - missing file or no internet connection!");
-            }
-
-            _fetchingData = false;
-            labelPleaseWait.Text = string.Empty;
-            var pluginDoc = new XmlDocument();
             _downloadList = new List<PluginInfoItem>();
             listViewGetPlugins.BeginUpdate();
-            try
-            {
-                downloadStream.Position = 0;
-                pluginDoc.Load(downloadStream);
-                var arr = pluginDoc.DocumentElement.SelectSingleNode("SubtitleEditVersion").InnerText.Split(new[] { '.', ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                var requiredVersion = Convert.ToDouble(arr[0] + "." + arr[1], CultureInfo.InvariantCulture);
-
-                var versionInfo = Utilities.AssemblyVersion.Split('.');
-                var currentVersion = Convert.ToDouble(versionInfo[0] + "." + versionInfo[1], CultureInfo.InvariantCulture);
-
-                if (currentVersion < requiredVersion)
-                {
-                    MessageBox.Show(_language.NewVersionOfSubtitleEditRequired);
-                    DialogResult = DialogResult.Cancel;
-                    return;
-                }
-
-                _updateAllListUrls = new List<string>();
-                LoadAvailablePlugins(pluginDoc);
-                ShowAvailablePlugins();
-            }
-            catch (Exception exception)
-            {
-                MessageBox.Show(string.Format(_language.UnableToDownloadPluginListX, exception.Source + ": " + exception.Message + Environment.NewLine + Environment.NewLine + exception.StackTrace));
-            }
+            _updateAllListUrls = new List<string>();
+            var onlinePluginInfo = new OnlinePluginMetadataProvider(GetPluginXmlFileUrl());
+            LoadAvailablePlugins(onlinePluginInfo.GetPlugins());
+            ShowAvailablePlugins();
             listViewGetPlugins.EndUpdate();
 
             if (_updateAllListUrls.Count > 0)
@@ -171,26 +131,18 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void LoadAvailablePlugins(XmlDocument doc)
+        private void LoadAvailablePlugins(IReadOnlyCollection<PluginInfoItem> plugins)
         {
-            foreach (XmlNode node in doc.DocumentElement.SelectNodes("Plugin"))
+            foreach (var item in plugins)
             {
-                var item = new PluginInfoItem
-                {
-                    Name = node.SelectSingleNode("Name").InnerText.Trim('.'),
-                    Description = node.SelectSingleNode("Description").InnerText.Trim('.'),
-                    Version = node.SelectSingleNode("Version").InnerText,
-                    Date = node.SelectSingleNode("Date").InnerText,
-                    Url = node.SelectSingleNode("Url").InnerText,
-                };
                 _downloadList.Add(item);
 
                 foreach (ListViewItem installed in listViewInstalledPlugins.Items)
                 {
-                    if (string.Compare(installed.Text, node.SelectSingleNode("Name").InnerText.Trim('.'), StringComparison.OrdinalIgnoreCase) == 0)
+                    if (string.Compare(installed.Text, item.Name.Trim('.'), StringComparison.OrdinalIgnoreCase) == 0)
                     {
                         var installedVer = MakeComparableVersionNumber(installed.SubItems[2].Text);
-                        var currentVer = MakeComparableVersionNumber(node.SelectSingleNode("Version").InnerText);
+                        var currentVer = MakeComparableVersionNumber(item.Version.ToString(CultureInfo.InvariantCulture));
                         if (installedVer < currentVer)
                         {
                             installed.BackColor = Configuration.Settings.General.UseDarkTheme ? Color.IndianRed : Color.LightPink;
@@ -245,13 +197,13 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 var item = new ListViewItem(plugin.Name) { Tag = plugin };
                 item.SubItems.Add(plugin.Description);
-                item.SubItems.Add(plugin.Version);
+                item.SubItems.Add(plugin.Version.ToString(CultureInfo.InvariantCulture));
                 item.SubItems.Add(plugin.Date);
 
                 if (!search ||
                     plugin.Name.Contains(searchText, StringComparison.OrdinalIgnoreCase) ||
                     plugin.Description.Contains(searchText, StringComparison.OrdinalIgnoreCase) ||
-                    plugin.Version.Contains(searchText, StringComparison.OrdinalIgnoreCase))
+                    plugin.Version.ToString(CultureInfo.InvariantCulture).Contains(searchText, StringComparison.OrdinalIgnoreCase))
                 {
                     listViewGetPlugins.Items.Add(item);
                 }
@@ -263,24 +215,14 @@ namespace Nikse.SubtitleEdit.Forms
         {
             listViewInstalledPlugins.BeginUpdate();
             listViewInstalledPlugins.Items.Clear();
-            foreach (var pluginFileName in Configuration.GetPlugins())
+            var localPluginInfo = new InstalledPluginMetadataProvider();
+            foreach (var pluginInfo in localPluginInfo.GetPlugins())
             {
-                Main.GetPropertiesAndDoAction(pluginFileName, out var name, out _, out var version, out var description, out var actionType, out _, out var mi);
-                if (!string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(actionType) && mi != null)
-                {
-                    try
-                    {
-                        var item = new ListViewItem(name.Trim('.')) { Tag = pluginFileName };
-                        item.SubItems.Add(description);
-                        item.SubItems.Add(version.ToString(CultureInfo.InvariantCulture));
-                        item.SubItems.Add(actionType);
-                        listViewInstalledPlugins.Items.Add(item);
-                    }
-                    catch (Exception exception)
-                    {
-                        MessageBox.Show($"Error loading plugin \"{pluginFileName}\": {exception.Message}");
-                    }
-                }
+                var item = new ListViewItem(pluginInfo.Name) { Tag = pluginInfo };
+                item.SubItems.Add(pluginInfo.Description);
+                item.SubItems.Add(pluginInfo.Version.ToString(CultureInfo.InvariantCulture));
+                item.SubItems.Add(pluginInfo.ActionType);
+                listViewInstalledPlugins.Items.Add(item);
             }
             listViewInstalledPlugins.EndUpdate();
         }
@@ -344,21 +286,7 @@ namespace Nikse.SubtitleEdit.Forms
                 throw new Exception("No content downloaded - missing file or no internet connection!");
             }
 
-            var pluginsFolder = Configuration.PluginsDirectory;
-            if (!Directory.Exists(pluginsFolder))
-            {
-                try
-                {
-                    Directory.CreateDirectory(pluginsFolder);
-                }
-                catch (Exception exception)
-                {
-                    MessageBox.Show($"Unable to create plugin folder {pluginsFolder}: {exception.Message}");
-                    ChangeControlsState(true);
-                    Cursor = Cursors.Default;
-                    return;
-                }
-            }
+            var pluginsFolder = GetPluginFolder();
 
             downloadStream.Position = 0;
             using (var zip = ZipExtractor.Open(downloadStream))
@@ -419,20 +347,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void linkLabelOpenDictionaryFolder_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            var pluginsFolder = Configuration.PluginsDirectory;
-            if (!Directory.Exists(pluginsFolder))
-            {
-                try
-                {
-                    Directory.CreateDirectory(pluginsFolder);
-                }
-                catch (Exception exception)
-                {
-                    MessageBox.Show($"Unable to create plugin folder {pluginsFolder}: {exception.Message}");
-                    return;
-                }
-            }
-            UiUtil.OpenFolder(pluginsFolder);
+            UiUtil.OpenFolder(GetPluginFolder());
         }
 
         private void PluginsGet_KeyDown(object sender, KeyEventArgs e)
@@ -448,7 +363,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.KeyCode == Keys.F5 && !_fetchingData)
             {
-                DownloadPluginMetadataInfos();
+                GetAndShowAllPluginInfo();
             }
         }
 
@@ -460,6 +375,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void PluginsGet_Shown(object sender, EventArgs e)
         {
+            GetAndShowAllPluginInfo();
             PluginsGet_ResizeEnd(sender, e);
         }
 
@@ -496,7 +412,7 @@ namespace Nikse.SubtitleEdit.Forms
                 listViewInstalledPlugins.Items[index].Focused = true;
             }
             buttonUpdateAll.Visible = false;
-            DownloadPluginMetadataInfos();
+            GetAndShowAllPluginInfo();
         }
 
         private void buttonUpdateAll_Click(object sender, EventArgs e)
