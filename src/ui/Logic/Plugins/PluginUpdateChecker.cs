@@ -1,67 +1,55 @@
-using System;
+using Nikse.SubtitleEdit.Core.Common;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Logic.Plugins
 {
     public class PluginUpdateChecker
     {
-        private readonly IPluginMetadataProvider _localPluginMetadataProvider;
-        private readonly IPluginMetadataProvider _onlinePluginMetadataProvider;
-
-        public PluginUpdateChecker(
-            IPluginMetadataProvider localPluginMetadataProvider,
-            IPluginMetadataProvider onlinePluginMetadataProvider)
+        public class PluginUpdate
         {
-            _localPluginMetadataProvider = localPluginMetadataProvider;
-            _onlinePluginMetadataProvider = onlinePluginMetadataProvider;
+            public PluginInfoItem InstalledPlugin { get; set; }
+            public PluginInfoItem OnlinePlugin { get; set; }
         }
 
-    //    public PluginUpdateCheckResult Check()
-    //    {
-    //        var installedPlugins = _localPluginMetadataProvider.GetPlugins();
-    //        if (!installedPlugins.Any())
-    //        {
-    //            return new PluginUpdateCheckResult();
-    //        }
+        public static List<PluginUpdate> GetAvailableUpdates(IEnumerable<PluginInfoItem> installedPlugins, PluginInfoItem[] onlinePlugins)
+        {
+            var list = new List<PluginUpdate>();
+            foreach (var installedPlugin in installedPlugins)
+            {
+                var onlinePlugin = onlinePlugins.FirstOrDefault(p => p.Name == installedPlugin.Name);
+                if (onlinePlugin != null &&
+                    MakeComparableVersionNumber(installedPlugin.Version) < 
+                    MakeComparableVersionNumber(onlinePlugin.Version))
+                {
+                    list.Add(new PluginUpdate { InstalledPlugin = installedPlugin, OnlinePlugin = onlinePlugin });
+                }
+            }
 
-    //        // plugin repository
-    //        var onlinePlugins = _onlinePluginMetadataProvider.GetPlugins();
-    //        if (!onlinePlugins.Any())
-    //        {
-    //            return new PluginUpdateCheckResult();
-    //        }
+            return list;
+        }
 
-    //        var pluginUpdateCheckResult = new PluginUpdateCheckResult();
-    //        foreach (var installedPlugin in installedPlugins)
-    //        {
-    //            var updateCheckInfo = installedPlugin.CheckUpdate(onlinePlugins);
-    //            if (updateCheckInfo.IsNewUpdateAvailable())
-    //            {
-    //                pluginUpdateCheckResult.Add(updateCheckInfo);
-    //            }
-    //        }
+        private static long MakeComparableVersionNumber(string versionNumber)
+        {
+            var s = versionNumber.Replace(',', '.').Replace(" ", string.Empty);
+            var arr = s.Split('.');
+            if (arr.Length == 1 && long.TryParse(arr[0], out var a0))
+            {
+                return a0 * 1_000_000;
+            }
 
-    //        return pluginUpdateCheckResult;
-    //    }
-    //}
+            if (arr.Length == 2 && long.TryParse(arr[0], out var b0) && long.TryParse(arr[1], out var b1))
+            {
+                return b0 * 1_000_000 + b1 * 1_000;
+            }
 
-    //public class PluginUpdateCheckResult
-    //{
-    //    private ICollection<PluginUpdate> _pluginUpdates;
+            if (arr.Length == 3 && long.TryParse(arr[0], out var c0) && long.TryParse(arr[1], out var c1) && long.TryParse(arr[2], out var c2))
+            {
+                return c0 * 1_000_000 + c1 * 1_000 + c2;
+            }
 
-    //    public bool Available => PluginUpdates.Any();
-
-    //    public IEnumerable<PluginUpdate> PluginUpdates => _pluginUpdates ?? Array.Empty<PluginUpdate>();
-
-    //    /// <summary>
-    //    /// Adds available update information
-    //    /// </summary>
-    //    public void Add(PluginUpdate pluginUpdate)
-    //    {
-    //        _pluginUpdates = _pluginUpdates ?? Array.Empty<PluginUpdate>();
-    //        _pluginUpdates.Add(pluginUpdate);
-    //    }
+            SeLogger.Error("Bad plugin version number: " + versionNumber);
+            return 0;
+        }
     }
 }
