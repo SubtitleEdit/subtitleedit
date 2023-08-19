@@ -21,7 +21,7 @@
         {
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
-            this.textBoxAddName = new Nikse.SubtitleEdit.Controls.SETextBox(true);
+            this.textBoxAddName = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelDescription = new System.Windows.Forms.Label();
             this.comboBoxDictionaries = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelLanguage = new System.Windows.Forms.Label();
@@ -129,7 +129,7 @@
 
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Button buttonCancel;
-        private Nikse.SubtitleEdit.Controls.SETextBox textBoxAddName;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxAddName;
         private System.Windows.Forms.Label labelDescription;
         private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxDictionaries;
         private System.Windows.Forms.Label labelLanguage;

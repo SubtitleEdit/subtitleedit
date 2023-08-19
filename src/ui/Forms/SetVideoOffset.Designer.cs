@@ -46,6 +46,7 @@ namespace Nikse.SubtitleEdit.Forms
             // buttonCancel
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonCancel.Location = new System.Drawing.Point(386, 129);
             this.buttonCancel.Name = "buttonCancel";
@@ -89,13 +90,25 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // timeUpDownVideoPosition
             // 
-            this.timeUpDownVideoPosition.AutoSize = true;
+            this.timeUpDownVideoPosition.BackColor = System.Drawing.SystemColors.Window;
+            this.timeUpDownVideoPosition.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.timeUpDownVideoPosition.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.timeUpDownVideoPosition.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.timeUpDownVideoPosition.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.timeUpDownVideoPosition.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.timeUpDownVideoPosition.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.timeUpDownVideoPosition.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.timeUpDownVideoPosition.Increment = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
             this.timeUpDownVideoPosition.Location = new System.Drawing.Point(13, 39);
             this.timeUpDownVideoPosition.Margin = new System.Windows.Forms.Padding(4);
             this.timeUpDownVideoPosition.Name = "timeUpDownVideoPosition";
-            this.timeUpDownVideoPosition.Size = new System.Drawing.Size(111, 27);
+            this.timeUpDownVideoPosition.Size = new System.Drawing.Size(111, 23);
             this.timeUpDownVideoPosition.TabIndex = 1;
+            this.timeUpDownVideoPosition.TabStop = false;
             timeCode1.Hours = 0;
             timeCode1.Milliseconds = 0;
             timeCode1.Minutes = 0;

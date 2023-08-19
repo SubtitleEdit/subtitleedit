@@ -37,7 +37,7 @@ namespace Nikse.SubtitleEdit.Logic
         private static bool IsWindows10OrGreater(int build = -1) =>
             Configuration.IsRunningOnWindows && Environment.OSVersion.Version.Major >= 10 && Environment.OSVersion.Version.Build >= build;
 
-        private static void SetWindowThemeDark(Control control)
+        public static void SetWindowThemeDark(Control control)
         {
             if (Configuration.IsRunningOnWindows)
             {
@@ -45,7 +45,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-        private static void SetWindowThemeNormal(Control control)
+        public static void SetWindowThemeNormal(Control control)
         {
             if (Configuration.IsRunningOnWindows)
             {
@@ -284,6 +284,17 @@ namespace Nikse.SubtitleEdit.Logic
                 return;
             }
 
+            if (c is NikseTextBox ntb)
+            {
+                ntb.BorderStyle = BorderStyle.Fixed3D;
+            }
+
+            if (c is NikseListBox nikseListBox)
+            {
+                nikseListBox.UndoDarkTheme();
+                return;
+            }
+
             c.BackColor = Control.DefaultBackColor;
             c.ForeColor = Control.DefaultForeColor;
             var buttonBackColor = SystemColors.Window;
@@ -459,6 +470,17 @@ namespace Nikse.SubtitleEdit.Logic
             if (c is SETextBox seTextBox)
             {
                 seTextBox.SetDarkTheme();
+                return;
+            }
+
+            if (c is NikseTextBox ntb)
+            {
+                ntb.BorderStyle = BorderStyle.FixedSingle;
+            }
+
+            if (c is NikseListBox nikseListBox)
+            {
+                nikseListBox.SetDarkTheme();
                 return;
             }
 
@@ -689,13 +711,30 @@ namespace Nikse.SubtitleEdit.Logic
                     e.Graphics.FillRectangle(Brushes.LightBlue, rect);
                 }
 
-                var addX = 0;
+                var b = e.Item.SubItems[e.ColumnIndex].Bounds;
 
-                if (e.ColumnIndex == 0 && lv.CheckBoxes)
+                var addFromCheckBox = 0;
+                if (e.ColumnIndex == 0)
                 {
-                    addX = 16;
-                    var checkBoxState = e.Item.Checked ? System.Windows.Forms.VisualStyles.CheckBoxState.CheckedNormal : System.Windows.Forms.VisualStyles.CheckBoxState.UncheckedNormal;
-                    CheckBoxRenderer.DrawCheckBox(e.Graphics, new Point(e.Bounds.X + 4, e.Bounds.Y + 2), checkBoxState);
+                    var leftImage = 3;
+                    if (lv.CheckBoxes)
+                    {
+                        var checkBoxState = e.Item.Checked ? System.Windows.Forms.VisualStyles.CheckBoxState.CheckedNormal : System.Windows.Forms.VisualStyles.CheckBoxState.UncheckedNormal;
+                        var top = b.Top + ((b.Height - 13) / 2) - 1;
+                        if (b.Height <= 17)
+                        {
+                            top = b.Top + 2;
+                        }
+
+                        CheckBoxRenderer.DrawCheckBox(e.Graphics, new Point(b.Left + 4, top), checkBoxState);
+                        leftImage += 17;
+                        addFromCheckBox = 16;
+                    }
+
+                    if (e.Item.ImageIndex >= 0 && e.Item.ImageList.Images.Count > e.Item.ImageIndex)
+                    {
+                        e.Graphics.DrawImageUnscaled(e.Item.ImageList.Images[e.Item.ImageIndex], new Point(b.Left + leftImage, b.Y));
+                    }
                 }
 
                 var foreColor = e.Item.ForeColor;
@@ -706,7 +745,12 @@ namespace Nikse.SubtitleEdit.Logic
                 }
                 else
                 {
-                    TextRenderer.DrawText(e.Graphics, e.Item.SubItems[e.ColumnIndex].Text, subtitleFont, new Point(e.Bounds.Left + 3 + addX, e.Bounds.Top + 2), foreColor, TextFormatFlags.NoPrefix);
+                    TextRenderer.DrawText(e.Graphics,
+                        e.Item.SubItems[e.ColumnIndex].Text,
+                        subtitleFont,
+                        new Rectangle(b.Left + 3 + addFromCheckBox, b.Top, b.Width - 3 - addFromCheckBox, b.Height),
+                        foreColor,
+                        TextFormatFlags.NoPrefix | TextFormatFlags.VerticalCenter);
                 }
             }
             else
@@ -1138,6 +1182,10 @@ namespace Nikse.SubtitleEdit.Logic
 
             if (item is ToolStripDropDownItem dropDownMenu && dropDownMenu.DropDownItems.Count > 0)
             {
+                dropDownMenu.DropDown.BackColor = BackColor;
+                dropDownMenu.DropDown.ForeColor = ForeColor;
+                dropDownMenu.DropDown.RenderMode = ToolStripRenderMode.Professional;
+
                 foreach (ToolStripItem dropDownItem in dropDownMenu.DropDownItems)
                 {
                     dropDownItem.ForeColor = ForeColor;

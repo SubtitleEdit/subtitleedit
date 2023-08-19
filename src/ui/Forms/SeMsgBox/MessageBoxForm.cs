@@ -14,7 +14,6 @@ namespace Nikse.SubtitleEdit.Forms.SeMsgBox
 
         public MessageBoxForm(string text, string caption, MessageBoxButtons buttons)
         {
-
             var icon = AutoGuessIcon(text, buttons);
             Init(text, caption, buttons, icon);
         }
@@ -45,19 +44,20 @@ namespace Nikse.SubtitleEdit.Forms.SeMsgBox
             InitializeComponent();
             UiUtil.FixFonts(this);
 
-            InitializeIcon(icon);
-            InitializeText(text);
-            InitializeButtons(buttons);
-
+            labelText.Font = new Font(Font.FontFamily, Font.Size + 2);
+            labelText.TextAlign = ContentAlignment.TopLeft;
             Text = caption;
             _text = text;
-            labelText.Font = new Font(Font.FontFamily, Font.Size + 2);
             copyTextToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.ContextMenu.CopyToClipboard;
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             buttonYes.Text = LanguageSettings.Current.General.Yes;
             buttonNo.Text = LanguageSettings.Current.General.No;
             buttonAbort.Text = LanguageSettings.Current.DvdSubRip.Abort;
+
+            InitializeIcon(icon);
+            InitializeText(text);
+            InitializeButtons(buttons);
 
             UiUtil.FixLargeFonts(this, buttonOK);
         }
@@ -68,25 +68,25 @@ namespace Nikse.SubtitleEdit.Forms.SeMsgBox
             pictureBoxIcon.SizeMode = PictureBoxSizeMode.AutoSize;
             if (icon == MessageBoxIcon.Information)
             {
-                pictureBoxIcon.Image = Properties.Resources.MsgBoxInfo;
+                pictureBoxIcon.Image = Properties.Resources.Information;
                 TryLoadIcon(pictureBoxIcon, "Information");
                 pictureBoxIcon.BringToFront();
             }
             else if (icon == MessageBoxIcon.Question)
             {
-                pictureBoxIcon.Image = Properties.Resources.MsgBoxQuestion;
+                pictureBoxIcon.Image = Properties.Resources.Question;
                 TryLoadIcon(pictureBoxIcon, "Question");
                 pictureBoxIcon.BringToFront();
             }
             else if (icon == MessageBoxIcon.Warning)
             {
-                pictureBoxIcon.Image = Properties.Resources.MsgBoxWarning;
+                pictureBoxIcon.Image = Properties.Resources.Warning;
                 TryLoadIcon(pictureBoxIcon, "Warning");
                 pictureBoxIcon.BringToFront();
             }
             else if (icon == MessageBoxIcon.Error)
             {
-                pictureBoxIcon.Image = Properties.Resources.MsgBoError;
+                pictureBoxIcon.Image = Properties.Resources.Error;
                 TryLoadIcon(pictureBoxIcon, "Error");
                 pictureBoxIcon.BringToFront();
             }
@@ -137,9 +137,10 @@ namespace Nikse.SubtitleEdit.Forms.SeMsgBox
             labelText.ContextMenuStrip = contextMenuStrip1;
             using (var g = CreateGraphics())
             {
-                var textSize = g.MeasureString(text, Font);
+                var textSize = g.MeasureString(text, labelText.Font);
                 Height = (int)textSize.Height + 90 + (Height - buttonOK.Top);
-                Width = (int)textSize.Width + 220;
+                var formWidth = (int)textSize.Width + 120;
+                Width = Math.Max(formWidth, 320);
             }
 
             labelText.Text = text;
@@ -179,7 +180,7 @@ namespace Nikse.SubtitleEdit.Forms.SeMsgBox
                 buttonControl.Width = buttonWidth;
                 buttonControl.Visible = true;
                 buttonControl.Left = start;
-                buttonControl.TabIndex = start;
+                buttonControl.TabIndex = Math.Max(0, start);
                 start += buttonWidth + 10;
             }
         }

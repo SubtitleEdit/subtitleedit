@@ -101,5 +101,11 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 DialogResult = DialogResult.Cancel;
             }
         }
+
+        private void WhisperAdvanced_Shown(object sender, EventArgs e)
+        {
+            comboBoxWhisperExtra.Focus();
+            comboBoxWhisperExtra.SelectAll();
+        }
     }
 }

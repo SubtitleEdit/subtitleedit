@@ -75,7 +75,7 @@
       <HintPath>..\..\packages\ncalc.1.3.8\lib\NCalc.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Newtonsoft.Json.13.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="NHunspell, Version=1.2.5554.16953, Culture=neutral, PublicKeyToken=1ac793ea843b4366, processorArchitecture=MSIL">
       <HintPath>..\..\packages\NHunspell.1.2.5554.16953\lib\net\NHunspell.dll</HintPath>
@@ -101,6 +101,7 @@
     <Reference Include="System.Web.Services" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
     <Reference Include="Vosk, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Vosk.0.3.38\lib\netstandard2.0\Vosk.dll</HintPath>
     </Reference>
@@ -120,6 +121,12 @@
       <DependentUpon>NikseComboBoxPopUp.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\NikseLabel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\NikseListBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\NikseTextBox.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Controls\NikseTimeUpDown.cs">
@@ -1487,6 +1494,7 @@
       <DependentUpon>YouTubeAnnotationsImport.cs</DependentUpon>
     </Compile>
     <Compile Include="Logic\AssaTagHelper.cs" />
+    <Compile Include="Logic\CheckForUpdatesHelper.cs" />
     <Compile Include="Logic\ColorChooser\ColorChangedEventArgs.cs" />
     <Compile Include="Logic\ColorChooser\ColorHandler.cs" />
     <Compile Include="Logic\ColorChooser\ColorWheel.cs" />
@@ -1514,6 +1522,7 @@
     <Compile Include="Logic\ListViewHelper.cs" />
     <Compile Include="Logic\Networking\SeNetworkService.cs" />
     <Compile Include="Logic\PathHelper.cs" />
+    <Compile Include="Logic\Plugins\IPluginMetadataProvider.cs" />
     <Compile Include="Logic\ProgressHelper.cs" />
     <Compile Include="Logic\ReplaceAllHelper.cs" />
     <Compile Include="Logic\ShotChangesGenerator.cs" />
@@ -1584,6 +1593,10 @@
     <Compile Include="Logic\VideoPreviewGenerator.cs" />
     <Compile Include="Logic\WindowsHelper.cs" />
     <Compile Include="Logic\WordSpellChecker.cs" />
+    <Compile Include="Logic\Plugins\InstalledPluginMetadataProvider.cs" />
+    <Compile Include="Logic\Plugins\OnlinePluginMetadataProvider.cs" />
+    <Compile Include="Logic\Plugins\PluginInfoItem.cs" />
+    <Compile Include="Logic\Plugins\PluginUpdateChecker.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Forms\SyncPointsSync.cs">
@@ -1651,6 +1664,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\AudioToText\WhisperAdvanced.resx">
       <DependentUpon>WhisperAdvanced.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\AudioToText\WhisperDownload.resx">
       <DependentUpon>WhisperDownload.cs</DependentUpon>
@@ -2317,10 +2331,10 @@
     <None Include="Resources\rec32.png" />
     <None Include="Resources\Help32.png" />
     <Content Include="Icons\BeautifyTimeCodes.png" />
-    <None Include="Resources\MsgBoxInfo.png" />
-    <None Include="Resources\MsgBoxQuestion.png" />
-    <None Include="Resources\MsgBoxWarning.png" />
-    <None Include="Resources\MsgBoError.png" />
+    <None Include="Resources\Error.png" />
+    <None Include="Resources\Information.png" />
+    <None Include="Resources\Question.png" />
+    <None Include="Resources\Warning.png" />
     <Content Include="SE2.ico" />
     <None Include="Resources\SE.ico" />
     <None Include="Hunspellx64.dll">
@@ -2582,7 +2596,6 @@
       <Visible>false</Visible>
     </HunspellAssemblies>
   </ItemGroup>
-  <ItemGroup />
   <Target Name="BeforeCompile">
     <XmlPeek XmlInputPath="$(SolutionDir)\src\ui\packages.config" Query="//package[@id='NHunspell']/@version">
       <Output TaskParameter="Result" PropertyName="HunspellVersion" />

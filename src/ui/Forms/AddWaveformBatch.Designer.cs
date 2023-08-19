@@ -274,6 +274,7 @@
             this.Controls.Add(this.buttonRipWave);
             this.Controls.Add(this.labelProgress);
             this.Controls.Add(this.groupBoxInput);
+            this.KeyPreview = true;
             this.MinimumSize = new System.Drawing.Size(900, 400);
             this.Name = "AddWaveformBatch";
             this.ShowIcon = false;

@@ -374,7 +374,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripButtonWaveformPause = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonWaveformPlay = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonLockCenter = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSplitButtonPlayRate = new System.Windows.Forms.ToolStripSplitButton();
+            this.toolStripSplitButtonPlayRate = new System.Windows.Forms.ToolStripButton();
             this.tabControlModes = new System.Windows.Forms.TabControl();
             this.tabPageTranslate = new System.Windows.Forms.TabPage();
             this.labelTranslateTip = new System.Windows.Forms.Label();
@@ -3401,10 +3401,10 @@ namespace Nikse.SubtitleEdit.Forms
             this.trackBarWaveformPosition.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.trackBarWaveformPosition.AutoSize = false;
-            this.trackBarWaveformPosition.Location = new System.Drawing.Point(674, 267);
+            this.trackBarWaveformPosition.Location = new System.Drawing.Point(704, 267);
             this.trackBarWaveformPosition.Maximum = 1000;
             this.trackBarWaveformPosition.Name = "trackBarWaveformPosition";
-            this.trackBarWaveformPosition.Size = new System.Drawing.Size(297, 20);
+            this.trackBarWaveformPosition.Size = new System.Drawing.Size(267, 20);
             this.trackBarWaveformPosition.TabIndex = 11;
             this.trackBarWaveformPosition.TickStyle = System.Windows.Forms.TickStyle.None;
             this.trackBarWaveformPosition.ValueChanged += new System.EventHandler(this.trackBarWaveformPosition_ValueChanged);
@@ -3433,9 +3433,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripButtonWaveformPlay,
             this.toolStripButtonLockCenter,
             this.toolStripSplitButtonPlayRate});
-            this.toolStripWaveControls.Location = new System.Drawing.Point(0, 2);
+            this.toolStripWaveControls.Location = new System.Drawing.Point(0, -1);
             this.toolStripWaveControls.Name = "toolStripWaveControls";
-            this.toolStripWaveControls.Size = new System.Drawing.Size(195, 26);
+            this.toolStripWaveControls.Size = new System.Drawing.Size(258, 29);
             this.toolStripWaveControls.TabIndex = 0;
             this.toolStripWaveControls.Text = "toolStrip2";
             // 
@@ -3446,7 +3446,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripButtonWaveformZoomOut.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.toolStripButtonWaveformZoomOut.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonWaveformZoomOut.Name = "toolStripButtonWaveformZoomOut";
-            this.toolStripButtonWaveformZoomOut.Size = new System.Drawing.Size(23, 23);
+            this.toolStripButtonWaveformZoomOut.Size = new System.Drawing.Size(26, 26);
             this.toolStripButtonWaveformZoomOut.Text = "toolStripButton3";
             this.toolStripButtonWaveformZoomOut.Click += new System.EventHandler(this.toolStripButtonWaveformZoomOut_Click);
             // 
@@ -3476,14 +3476,14 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripButtonWaveformZoomIn.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.toolStripButtonWaveformZoomIn.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonWaveformZoomIn.Name = "toolStripButtonWaveformZoomIn";
-            this.toolStripButtonWaveformZoomIn.Size = new System.Drawing.Size(23, 23);
+            this.toolStripButtonWaveformZoomIn.Size = new System.Drawing.Size(26, 26);
             this.toolStripButtonWaveformZoomIn.Text = "toolStripButton1";
             this.toolStripButtonWaveformZoomIn.Click += new System.EventHandler(this.toolStripButtonWaveformZoomIn_Click);
             // 
             // toolStripSeparator16
             // 
             this.toolStripSeparator16.Name = "toolStripSeparator16";
-            this.toolStripSeparator16.Size = new System.Drawing.Size(6, 26);
+            this.toolStripSeparator16.Size = new System.Drawing.Size(6, 29);
             // 
             // toolStripButtonWaveformPause
             // 
@@ -3493,7 +3493,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripButtonWaveformPause.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.toolStripButtonWaveformPause.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonWaveformPause.Name = "toolStripButtonWaveformPause";
-            this.toolStripButtonWaveformPause.Size = new System.Drawing.Size(23, 23);
+            this.toolStripButtonWaveformPause.Size = new System.Drawing.Size(26, 26);
             this.toolStripButtonWaveformPause.Text = "toolStripButton1";
             this.toolStripButtonWaveformPause.Visible = false;
             this.toolStripButtonWaveformPause.Click += new System.EventHandler(this.toolStripButtonWaveformPause_Click);
@@ -3506,7 +3506,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripButtonWaveformPlay.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.toolStripButtonWaveformPlay.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonWaveformPlay.Name = "toolStripButtonWaveformPlay";
-            this.toolStripButtonWaveformPlay.Size = new System.Drawing.Size(23, 23);
+            this.toolStripButtonWaveformPlay.Size = new System.Drawing.Size(26, 26);
             this.toolStripButtonWaveformPlay.Text = "toolStripButton1";
             this.toolStripButtonWaveformPlay.Click += new System.EventHandler(this.toolStripButtonWaveformPlay_Click);
             // 
@@ -3517,7 +3517,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripButtonLockCenter.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.toolStripButtonLockCenter.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonLockCenter.Name = "toolStripButtonLockCenter";
-            this.toolStripButtonLockCenter.Size = new System.Drawing.Size(23, 23);
+            this.toolStripButtonLockCenter.Size = new System.Drawing.Size(26, 26);
             this.toolStripButtonLockCenter.Text = "Center";
             this.toolStripButtonLockCenter.Click += new System.EventHandler(this.toolStripButtonLockCenter_Click);
             // 
@@ -3528,9 +3528,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripSplitButtonPlayRate.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.toolStripSplitButtonPlayRate.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripSplitButtonPlayRate.Name = "toolStripSplitButtonPlayRate";
-            this.toolStripSplitButtonPlayRate.Size = new System.Drawing.Size(32, 23);
-            this.toolStripSplitButtonPlayRate.Text = "Play rate (speed)";
-            this.toolStripSplitButtonPlayRate.ButtonClick += new System.EventHandler(this.toolStripSplitButtonPlayRate_ButtonClick);
+            this.toolStripSplitButtonPlayRate.Size = new System.Drawing.Size(26, 26);
+            this.toolStripSplitButtonPlayRate.Text = "Center";
+            this.toolStripSplitButtonPlayRate.Click += new System.EventHandler(this.toolStripSplitButtonPlayRate_Click);
             // 
             // tabControlModes
             // 
@@ -3643,9 +3643,11 @@ namespace Nikse.SubtitleEdit.Forms
             this.textBoxSearchWord.IsWrongWord = false;
             this.textBoxSearchWord.LanguageChanged = false;
             this.textBoxSearchWord.Location = new System.Drawing.Point(6, 18);
+            this.textBoxSearchWord.MaxLength = 32767;
             this.textBoxSearchWord.Multiline = true;
             this.textBoxSearchWord.Name = "textBoxSearchWord";
             this.textBoxSearchWord.Padding = new System.Windows.Forms.Padding(1);
+            this.textBoxSearchWord.ReadOnly = false;
             this.textBoxSearchWord.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
             this.textBoxSearchWord.SelectedText = "";
             this.textBoxSearchWord.SelectionLength = 0;
@@ -3653,6 +3655,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.textBoxSearchWord.Size = new System.Drawing.Size(244, 39);
             this.textBoxSearchWord.TabIndex = 0;
             this.textBoxSearchWord.TextBoxFont = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Bold);
+            this.textBoxSearchWord.UseSystemPasswordChar = false;
             // 
             // groupBoxAutoContinue
             // 
@@ -4866,9 +4869,11 @@ namespace Nikse.SubtitleEdit.Forms
             this.textBoxListViewText.IsWrongWord = false;
             this.textBoxListViewText.LanguageChanged = false;
             this.textBoxListViewText.Location = new System.Drawing.Point(184, 26);
+            this.textBoxListViewText.MaxLength = 32767;
             this.textBoxListViewText.Multiline = true;
             this.textBoxListViewText.Name = "textBoxListViewText";
             this.textBoxListViewText.Padding = new System.Windows.Forms.Padding(1);
+            this.textBoxListViewText.ReadOnly = false;
             this.textBoxListViewText.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Both;
             this.textBoxListViewText.SelectedText = "";
             this.textBoxListViewText.SelectionLength = 0;
@@ -4876,6 +4881,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.textBoxListViewText.Size = new System.Drawing.Size(430, 84);
             this.textBoxListViewText.TabIndex = 5;
             this.textBoxListViewText.TextBoxFont = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Bold);
+            this.textBoxListViewText.UseSystemPasswordChar = false;
             this.textBoxListViewText.TextChanged += new System.EventHandler(this.TextBoxListViewTextTextChanged);
             this.textBoxListViewText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxListViewTextKeyDown);
             this.textBoxListViewText.MouseClick += new System.Windows.Forms.MouseEventHandler(this.TextBoxListViewTextMouseClick);
@@ -5413,9 +5419,11 @@ namespace Nikse.SubtitleEdit.Forms
             this.textBoxListViewTextOriginal.IsWrongWord = false;
             this.textBoxListViewTextOriginal.LanguageChanged = false;
             this.textBoxListViewTextOriginal.Location = new System.Drawing.Point(946, 28);
+            this.textBoxListViewTextOriginal.MaxLength = 32767;
             this.textBoxListViewTextOriginal.Multiline = true;
             this.textBoxListViewTextOriginal.Name = "textBoxListViewTextOriginal";
             this.textBoxListViewTextOriginal.Padding = new System.Windows.Forms.Padding(1);
+            this.textBoxListViewTextOriginal.ReadOnly = false;
             this.textBoxListViewTextOriginal.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Both;
             this.textBoxListViewTextOriginal.SelectedText = "";
             this.textBoxListViewTextOriginal.SelectionLength = 0;
@@ -5423,6 +5431,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.textBoxListViewTextOriginal.Size = new System.Drawing.Size(16, 84);
             this.textBoxListViewTextOriginal.TabIndex = 33;
             this.textBoxListViewTextOriginal.TextBoxFont = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Bold);
+            this.textBoxListViewTextOriginal.UseSystemPasswordChar = false;
             this.textBoxListViewTextOriginal.Visible = false;
             this.textBoxListViewTextOriginal.TextChanged += new System.EventHandler(this.textBoxListViewTextOriginal_TextChanged);
             this.textBoxListViewTextOriginal.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxListViewTextOriginalKeyDown);
@@ -6190,7 +6199,6 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripMenuItem saveOriginalAstoolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openOriginalToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem removeOriginalToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSplitButton toolStripSplitButtonPlayRate;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSetAudioTrack;
         private System.Windows.Forms.Button buttonSplitLine;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemChangeFrameRate2;
@@ -6482,5 +6490,6 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemWebVttStyle;
         private System.Windows.Forms.ToolStripMenuItem beautifyTimeCodesOfSelectedLinesToolStripMenuItem;
         private NikseLabel labelAutoDuration;
+        private System.Windows.Forms.ToolStripButton toolStripSplitButtonPlayRate;
     }
 }

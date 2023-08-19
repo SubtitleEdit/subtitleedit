@@ -38,7 +38,7 @@
             this.numericUpDownDuration = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.checkBoxCaseSensitive = new System.Windows.Forms.CheckBox();
             this.comboBoxRule = new Nikse.SubtitleEdit.Controls.NikseComboBox();
-            this.textBoxText = new System.Windows.Forms.TextBox();
+            this.textBoxText = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.listViewStyles = new System.Windows.Forms.ListView();
             this.columnHeaderStyleName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.buttonCancel = new System.Windows.Forms.Button();
@@ -138,15 +138,40 @@
             // 
             // numericUpDownDuration
             // 
-            this.numericUpDownDuration.Location = new System.Drawing.Point(198, 22);
+            this.numericUpDownDuration.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownDuration.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownDuration.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownDuration.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownDuration.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownDuration.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownDuration.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownDuration.DecimalPlaces = 0;
+            this.numericUpDownDuration.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownDuration.Location = new System.Drawing.Point(198, 20);
             this.numericUpDownDuration.Maximum = new decimal(new int[] {
             10000,
+            0,
+            0,
+            0});
+            this.numericUpDownDuration.Minimum = new decimal(new int[] {
+            0,
             0,
             0,
             0});
             this.numericUpDownDuration.Name = "numericUpDownDuration";
             this.numericUpDownDuration.Size = new System.Drawing.Size(82, 20);
             this.numericUpDownDuration.TabIndex = 4;
+            this.numericUpDownDuration.TabStop = false;
+            this.numericUpDownDuration.ThousandsSeparator = false;
+            this.numericUpDownDuration.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownDuration.ValueChanged += new System.EventHandler(this.numericUpDownDuration_ValueChanged);
             // 
             // checkBoxCaseSensitive
@@ -162,7 +187,16 @@
             // 
             // comboBoxRule
             // 
+            this.comboBoxRule.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxRule.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxRule.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxRule.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxRule.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxRule.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxRule.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxRule.DropDownHeight = 400;
             this.comboBoxRule.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxRule.DropDownWidth = 185;
             this.comboBoxRule.FormattingEnabled = true;
             this.comboBoxRule.Items.AddRange(new object[] {
             "Contains",
@@ -171,7 +205,11 @@
             "Not contains",
             "RegEx"});
             this.comboBoxRule.Location = new System.Drawing.Point(6, 20);
+            this.comboBoxRule.MaxLength = 32767;
             this.comboBoxRule.Name = "comboBoxRule";
+            this.comboBoxRule.SelectedIndex = -1;
+            this.comboBoxRule.SelectedItem = null;
+            this.comboBoxRule.SelectedText = "";
             this.comboBoxRule.Size = new System.Drawing.Size(185, 21);
             this.comboBoxRule.TabIndex = 0;
             this.comboBoxRule.SelectedIndexChanged += new System.EventHandler(this.comboBoxRule_SelectedIndexChanged);
@@ -180,7 +218,8 @@
             // 
             this.textBoxText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxText.Location = new System.Drawing.Point(198, 21);
+            this.textBoxText.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.textBoxText.Location = new System.Drawing.Point(198, 20);
             this.textBoxText.Name = "textBoxText";
             this.textBoxText.Size = new System.Drawing.Size(199, 20);
             this.textBoxText.TabIndex = 1;
@@ -196,7 +235,7 @@
             this.listViewStyles.FullRowSelect = true;
             this.listViewStyles.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
             this.listViewStyles.HideSelection = false;
-            this.listViewStyles.Location = new System.Drawing.Point(198, 21);
+            this.listViewStyles.Location = new System.Drawing.Point(198, 20);
             this.listViewStyles.Name = "listViewStyles";
             this.listViewStyles.Size = new System.Drawing.Size(199, 108);
             this.listViewStyles.TabIndex = 3;
@@ -365,7 +404,7 @@
         private System.Windows.Forms.RadioButton radioButtonAddToSelection;
         private System.Windows.Forms.RadioButton radioButtonNewSelection;
         private System.Windows.Forms.GroupBox groupBoxRule;
-        private System.Windows.Forms.TextBox textBoxText;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxText;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Button buttonApply;

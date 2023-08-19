@@ -1,8 +1,8 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
-using Nikse.SubtitleEdit.Core.Forms;
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Windows.Forms;
+using CheckForUpdatesHelper = Nikse.SubtitleEdit.Logic.CheckForUpdatesHelper;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -12,6 +12,8 @@ namespace Nikse.SubtitleEdit.Forms
         private double _seconds;
         private readonly bool _performCheckOnShown = true;
         private readonly Main _mainForm;
+
+        public bool UpdatePlugins { get; set; }
 
         public CheckForUpdates(Main mainForm)
         {
@@ -36,6 +38,9 @@ namespace Nikse.SubtitleEdit.Forms
             buttonDontCheckUpdates.Text = LanguageSettings.Current.CheckForUpdates.NoUpdates;
             buttonDontCheckUpdates.Visible = false;
 
+            labelPluginsHaveUpdates.Visible = false;
+            linkLabelUpdatePlugins.Visible = false;
+
             Location = new System.Drawing.Point(_mainForm.Location.X + (_mainForm.Width / 2) - (Width / 2), _mainForm.Location.Y + (_mainForm.Height / 2) - (Height / 2) - 200);
         }
 
@@ -48,7 +53,7 @@ namespace Nikse.SubtitleEdit.Forms
             _mainForm = mainForm;
             _updatesHelper = checkForUpdatesHelper;
             InitLanguage();
-            ShowAvailableUpdate(true);
+            ShowAvailableUpdate();
             _performCheckOnShown = false;
             UiUtil.FixLargeFonts(this, buttonOK);
         }
@@ -72,7 +77,7 @@ namespace Nikse.SubtitleEdit.Forms
             _updatesHelper = new CheckForUpdatesHelper();
             Application.DoEvents();
             Refresh();
-            _updatesHelper.CheckForUpdates();
+            _updatesHelper.CheckForUpdates(true);
             timerCheckForUpdates.Start();
 
             buttonOK.Focus();
@@ -96,19 +101,9 @@ namespace Nikse.SubtitleEdit.Forms
             else if (_updatesHelper.Done)
             {
                 timerCheckForUpdates.Stop();
-                if (_updatesHelper.IsUpdateAvailable())
-                {
-                    ShowAvailableUpdate(false);
-                }
-                else
-                {
-                    labelStatus.Text = LanguageSettings.Current.CheckForUpdates.CheckingForUpdatesNoneAvailable;
-                    SetLargeSize();
-                    textBoxChangeLog.Text = _updatesHelper.LatestChangeLog;
-                    textBoxChangeLog.Visible = true;
-                    buttonOK.Visible = true;
-                }
+                ShowAvailableUpdate();
             }
+
             _seconds += timerCheckForUpdates.Interval / TimeCode.BaseUnit;
 
             if (buttonDownloadAndInstall.Visible)
@@ -121,28 +116,81 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void SetLargeSize()
+        private void ShowAvailableUpdate()
         {
-            Height = 600;
-            MinimumSize = new System.Drawing.Size(500, 400);
-        }
+            //TODO: clean this method a little up
 
-        private void ShowAvailableUpdate(bool fromAutoCheck)
-        {
-            SetLargeSize();
-            textBoxChangeLog.Text = _updatesHelper.LatestChangeLog;
-            textBoxChangeLog.Visible = true;
-            labelStatus.Text = LanguageSettings.Current.CheckForUpdates.CheckingForUpdatesNewVersion;
-            buttonDownloadAndInstall.Visible = true;
-            buttonOK.Visible = true;
-            if (Configuration.Settings.General.CheckForUpdates && fromAutoCheck)
+            var hideChangeLog = !_updatesHelper.ManualCheck;
+            if (_updatesHelper.IsNewSubtitleEditAvailable())
             {
-                buttonDontCheckUpdates.Visible = true;
+                hideChangeLog = false;
+            }
+
+            if (_updatesHelper.PluginUpdates > 0)
+            {
+                if (_updatesHelper.PluginUpdates == 1)
+                {
+                    labelPluginsHaveUpdates.Text = LanguageSettings.Current.CheckForUpdates.OnePluginsHasAnUpdate;
+                }
+                else
+                {
+                    labelPluginsHaveUpdates.Text = string.Format(LanguageSettings.Current.CheckForUpdates.XPluginsHasAnUpdate, _updatesHelper.PluginUpdates);
+                }
+
+                linkLabelUpdatePlugins.Text = LanguageSettings.Current.CheckForUpdates.Update;
+                labelPluginsHaveUpdates.Visible = true;
+                linkLabelUpdatePlugins.Visible = true;
+
+                if (hideChangeLog)
+                {
+                    MinimizeBox = false;
+                    MaximizeBox = false;
+                    FormBorderStyle = FormBorderStyle.FixedDialog;
+                    labelStatus.Visible = false;
+                    var w = linkLabelUpdatePlugins.Right + 75;
+                    var h = 120;
+                    MinimumSize = new System.Drawing.Size(w, h);
+                    Height = h;
+                    Width = w;
+                }
+
+                linkLabelUpdatePlugins.Left = labelPluginsHaveUpdates.Right - 2;
+                linkLabelUpdatePlugins.BringToFront();
             }
             else
             {
-                buttonDontCheckUpdates.Visible = false;
-                buttonDownloadAndInstall.Left = buttonOK.Left - 6 - buttonDownloadAndInstall.Width;
+                labelPluginsHaveUpdates.Visible = false;
+                linkLabelUpdatePlugins.Visible = false;
+                textBoxChangeLog.Height += 14;
+            }
+
+            if (!hideChangeLog)
+            {
+                Height = 600;
+                MinimumSize = new System.Drawing.Size(500, 400);
+            }
+
+            buttonDownloadAndInstall.Visible = _updatesHelper.IsNewSubtitleEditAvailable();
+
+            if (_updatesHelper.IsNewSubtitleEditAvailable() || _updatesHelper.ManualCheck)
+            {
+                textBoxChangeLog.Text = _updatesHelper.LatestChangeLog;
+                textBoxChangeLog.Visible = true;
+                labelStatus.Text = LanguageSettings.Current.CheckForUpdates.CheckingForUpdatesNewVersion;
+                buttonOK.Visible = true;
+                if (_updatesHelper.IsNewSubtitleEditAvailable())
+                {
+                    buttonDontCheckUpdates.Visible = true;
+                }
+                else
+                {
+                    buttonDontCheckUpdates.Visible = false;
+                    buttonDownloadAndInstall.Left = buttonOK.Left - 6 - buttonDownloadAndInstall.Width;
+                }
+            }
+            else
+            {
+                textBoxChangeLog.Visible = false;
             }
         }
 
@@ -157,5 +205,10 @@ namespace Nikse.SubtitleEdit.Forms
             DialogResult = DialogResult.Cancel;
         }
 
+        private void linkLabelUpdatePlugins_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            UpdatePlugins = true;
+            DialogResult = DialogResult.OK;
+        }
     }
 }

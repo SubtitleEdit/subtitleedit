@@ -102,6 +102,7 @@
             public string Collapse { get; set; }
             public string ShortcutX { get; set; }
             public string ExampleX { get; set; }
+            public string ViewX { get; set; }
             public string Reset { get; set; }
             public string Error { get; set; }
             public string Warning { get; set; }
@@ -206,6 +207,7 @@
             public string LoadingVoskModel { get; set; }
             public string Transcribing { get; set; }
             public string TranscribingXOfY { get; set; }
+            public string PostProcessing { get; set; }
             public string XFilesSavedToVideoSourceFolder { get; set; }
             public string UsePostProcessing { get; set; }
             public string AutoAdjustTimings { get; set; }
@@ -216,6 +218,7 @@
             public string RemoveTemporaryFiles { get; set; }
             public string SetCppConstMeFolder { get; set; }
             public string OnlyRunPostProcessing { get; set; }
+            public string DownloadFasterWhisperCuda { get; set; }
         }
 
         public class AssaAttachments
@@ -564,6 +567,9 @@
             public string CheckingForUpdatesNewVersion { get; set; }
             public string InstallUpdate { get; set; }
             public string NoUpdates { get; set; }
+            public string XPluginsHasAnUpdate { get; set; }
+            public string OnePluginsHasAnUpdate { get; set; }
+            public string Update { get; set; }
         }
 
         public class ChooseAudioTrack
@@ -1052,9 +1058,11 @@
             public string InfoAssaOn { get; set; }
             public string XGeneratedWithBurnedInSubsInX { get; set; }
             public string TimeRemainingMinutes { get; set; }
+            public string TimeRemainingOneMinute { get; set; }
             public string TimeRemainingSeconds { get; set; }
             public string TimeRemainingAFewSeconds { get; set; }
             public string TimeRemainingMinutesAndSeconds { get; set; }
+            public string TimeRemainingOneMinuteAndSeconds { get; set; }
             public string TargetFileName { get; set; }
             public string TargetFileSize { get; set; }
             public string FileSizeMb { get; set; }
@@ -2458,6 +2466,7 @@
             public string BeautifyTimeCodes { get; set; }
             public string SettingsName { get; set; }
             public string ToggleBookmarks { get; set; }
+            public string FocusTextBox { get; set; }
             public string ToggleBookmarksWithComment { get; set; }
             public string ClearBookmarks { get; set; }
             public string ExportBookmarks { get; set; }
@@ -2981,6 +2990,8 @@
             public string CustomContinuationStyleNote { get; set; }
             public string ResetCustomContinuationStyleWarning { get; set; }
             public string ExportAsHtml { get; set; }
+            public string SetNewActor { get; set; }
+            public string SetActorX { get; set; }
         }
 
         public class SettingsMpv

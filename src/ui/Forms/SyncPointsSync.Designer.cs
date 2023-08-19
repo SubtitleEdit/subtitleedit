@@ -35,7 +35,7 @@
             this.labelOtherSubtitleFileName = new System.Windows.Forms.Label();
             this.labelSubtitleFileName = new System.Windows.Forms.Label();
             this.subtitleListView2 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
-            this.listBoxSyncPoints = new System.Windows.Forms.ListBox();
+            this.listBoxSyncPoints = new Nikse.SubtitleEdit.Controls.NikseListBox();
             this.labelNoOfSyncPoints = new System.Windows.Forms.Label();
             this.buttonRemoveSyncPoint = new System.Windows.Forms.Button();
             this.buttonSetSyncPoint = new System.Windows.Forms.Button();
@@ -301,7 +301,7 @@
         private Controls.SubtitleListView subtitleListView1;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonOK;
-        private System.Windows.Forms.ListBox listBoxSyncPoints;
+        private Nikse.SubtitleEdit.Controls.NikseListBox listBoxSyncPoints;
         private System.Windows.Forms.Label labelOtherSubtitleFileName;
         private System.Windows.Forms.Label labelSubtitleFileName;
         private Controls.SubtitleListView subtitleListView2;

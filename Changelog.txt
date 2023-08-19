@@ -4,11 +4,14 @@
 * NEW:
    * New toolbar/video-player themes - thx jmaraujouy
    * Beautify time codes (via shot changes) - thx  Flitskikker
+   * Add Purfview's Faster-Whisper - thx Purfview
    * Use native styles for WebVTT
    * Add video format ProRes for "Generate video with burned-in sub"
    * Allow setting profile from cmd line - thx emcodem
    * ASSA set layer - thx JonSchram
    * Allow OCR of XML/PNG from MXF - thx Rodney
+   * Add more "Remove formatting" options in "Batch convert"
+   * Add new shortcuts (focuc text box, set actor/voice)
 * IMPROVED:
    * Update German translation - thx Netspark
    * Update Chinese translation - thx nkh0472
@@ -16,12 +19,18 @@
    * Update Russian translation - thx elfriob
    * Update Portuguese translation - thx hugok79
    * Update Korean translation - thx domddol
+   * Update Argentinian/Mexican translation - thx jmaraujouy
+   * Improve "Dark theme" (new controls/message-boxes)
    * Update Tesseract OCR to 5.3.1 (64-bit only)
+   * Update yt-dlp to 2023.07.06
    * Improve convert of SSA to ASSA - thx Emiliano
    * Update burn-in video preview to video - thx Masina86
    * Improve handling of invalid xml in ttml - thx m0ck69
    * Update Whisper Const-me to version 1.12
    * Minor refact/optmize - thx ivandrofly
+   * Restructured Whisper folders
+   * Improved Whisper error messages + log file "whisper_log.txt"
+   * Improve subtitle detection in RTF files - thx Hara
 * FIXED:
    * Fix "Find Double Words" - th uckthis
    * Fix "double dash" issue in "Fix common errors" - thx Joel
@@ -33,6 +42,9 @@
    * Fix export image alignment when using font tag - thx Matt
    * Fix crash in OCR Find - thx przemo20
    * Fix crash generating empty wav for online video - thx Gromko1111 
+   * Fix Spanish "Remove text for HI" issues - thx jmaraujouy
+   * Fix crash in bilingual split - thx Leon
+   * Fix ASSA change resolution for inline margins - thx Nagutos
 
 
 3.6.13 (14th May 2023)

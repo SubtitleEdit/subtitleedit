@@ -28,6 +28,12 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
         public Subtitle TranscribedSubtitle { get; private set; }
 
+        public bool UnknownArgument { get; set; }
+        public bool RunningOnCuda { get; set; }
+        public bool IncompleteModel { get; set; }
+        public string IncompleteModelName { get; set; }
+
+
         public WhisperAudioToTextSelectedLines(List<AudioClipsGet.AudioClip> audioClips, Form parentForm)
         {
             UiUtil.PreInitialize(this);
@@ -236,6 +242,25 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             if (string.IsNullOrWhiteSpace(outLine.Data))
             {
                 return;
+            }
+
+            if (outLine.Data.Contains("not all tensors loaded from model file"))
+            {
+                IncompleteModel = true;
+            }
+
+            if (outLine.Data.Contains("error: unknown argument: ", StringComparison.OrdinalIgnoreCase))
+            {
+                UnknownArgument = true;
+            }
+            else if (outLine.Data.Contains("error: unrecognized argument: ", StringComparison.OrdinalIgnoreCase))
+            {
+                UnknownArgument = true;
+            }
+
+            if (outLine.Data.Contains("running on: CUDA", StringComparison.OrdinalIgnoreCase))
+            {
+                RunningOnCuda = true;
             }
 
             _outputText.Add(outLine.Data.Trim() + Environment.NewLine);
@@ -687,6 +712,11 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 var res = form.ShowDialog(this);
                 labelAdvanced.Text = Configuration.Settings.Tools.WhisperExtraSettings;
             }
+        }
+
+        private void downloadCUDAForPerfviewsWhisperFasterToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            WhisperAudioToText.DownloadCudaForWhisperFaster(this);
         }
     }
 }

@@ -1,4 +1,6 @@
 ﻿
+using System.Windows.Forms;
+
 namespace Nikse.SubtitleEdit.Forms.Assa
 {
     sealed partial class TagHistory
@@ -29,7 +31,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         /// </summary>
         private void InitializeComponent()
         {
-            this.seTextBoxOverrideStyle = new Nikse.SubtitleEdit.Controls.SETextBox(true);
+            this.seTextBoxOverrideStyle = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.listBoxHistory = new System.Windows.Forms.ListBox();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
@@ -41,19 +43,12 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.seTextBoxOverrideStyle.BackColor = System.Drawing.SystemColors.WindowFrame;
-            this.seTextBoxOverrideStyle.CurrentLanguage = "";
-            this.seTextBoxOverrideStyle.CurrentLineIndex = 0;
             this.seTextBoxOverrideStyle.HideSelection = true;
-            this.seTextBoxOverrideStyle.IsDictionaryDownloaded = true;
-            this.seTextBoxOverrideStyle.IsSpellCheckerInitialized = false;
-            this.seTextBoxOverrideStyle.IsSpellCheckRequested = false;
-            this.seTextBoxOverrideStyle.IsWrongWord = false;
-            this.seTextBoxOverrideStyle.LanguageChanged = false;
             this.seTextBoxOverrideStyle.Location = new System.Drawing.Point(12, 254);
             this.seTextBoxOverrideStyle.Multiline = true;
             this.seTextBoxOverrideStyle.Name = "seTextBoxOverrideStyle";
             this.seTextBoxOverrideStyle.Padding = new System.Windows.Forms.Padding(1);
-            this.seTextBoxOverrideStyle.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
+            this.seTextBoxOverrideStyle.ScrollBars = ScrollBars.None;
             this.seTextBoxOverrideStyle.SelectedText = "";
             this.seTextBoxOverrideStyle.SelectionLength = 0;
             this.seTextBoxOverrideStyle.SelectionStart = 0;
@@ -119,7 +114,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
         #endregion
 
-        private Controls.SETextBox seTextBoxOverrideStyle;
+        private Controls.NikseTextBox seTextBoxOverrideStyle;
         private System.Windows.Forms.ListBox listBoxHistory;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonOK;

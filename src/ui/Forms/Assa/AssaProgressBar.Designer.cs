@@ -60,7 +60,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.labelTextHorizontalAlignment = new System.Windows.Forms.Label();
             this.labelYAdjust = new System.Windows.Forms.Label();
             this.numericUpDownYAdjust = new Nikse.SubtitleEdit.Controls.NikseUpDown();
-            this.textBoxChapterText = new System.Windows.Forms.TextBox();
+            this.textBoxChapterText = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelText = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.timeUpDownStartTime = new Nikse.SubtitleEdit.Controls.NikseTimeUpDown();
             this.labelStartTime = new Nikse.SubtitleEdit.Controls.NikseLabel();
@@ -693,7 +693,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         private System.Windows.Forms.Button buttonTextColor;
         private Controls.NikseTimeUpDown timeUpDownStartTime;
         private Nikse.SubtitleEdit.Controls.NikseLabel labelStartTime;
-        private System.Windows.Forms.TextBox textBoxChapterText;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxChapterText;
         private Nikse.SubtitleEdit.Controls.NikseLabel labelText;
         private System.Windows.Forms.Label labelYAdjust;
         private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownYAdjust;

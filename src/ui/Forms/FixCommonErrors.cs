@@ -915,7 +915,37 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.KeyData == _preview && listViewFixes.Items.Count > 0)
             {
-                GenerateDiff();
+                var genConfig = new HtmlDiffGenerator.Configuration()
+                {
+                    LineNumber = _languageGeneral.LineNumber,
+                    Function = _language.Function,
+                    Before = _languageGeneral.Before,
+                    After = _languageGeneral.After,
+                };
+
+                var htmlDiffGenerator = new HtmlDiffGenerator(genConfig);
+
+                // map to gen items
+                var genItemsProjection = listViewFixes.Items.OfType<ListViewItem>()
+                    .Where(item => item.Checked)
+                    .Select(item =>
+                    {
+                        const int whatIndex = 2;
+                        const int beforeIndex = 3;
+                        const int afterIndex = 4;
+
+                        var number = ((Paragraph)item.Tag).Number;
+                        var what = item.SubItems[whatIndex].Text;
+                        var before = item.SubItems[beforeIndex].Text;
+                        var after = item.SubItems[afterIndex].Text;
+
+                        return new HtmlDiffGenerator.DiffGeneratorItem(number, what, before, after);
+                    });
+
+                var htmlFileName = htmlDiffGenerator.Generate(genItemsProjection);
+
+                UiUtil.OpenFile(htmlFileName);
+                
                 e.SuppressKeyPress = true;
             }
             else if (_mainGeneralGoToNextSubtitle == e.KeyData || _mainGeneralGoToNextSubtitlePlayTranslate == e.KeyData)
@@ -989,191 +1019,6 @@ namespace Nikse.SubtitleEdit.Forms
                     subtitleListView1.Items[goToLine.LineNumber - 1].Focused = true;
                 }
             }
-        }
-
-        private void GenerateDiff()
-        {
-            string htmlFileName = FileUtil.GetTempFileName(".html");
-            var sb = new StringBuilder();
-            sb.Append("<html><head><meta charset='utf-8'><title>Subtitle Edit - Fix common errors preview</title><style>body,p,td {font-size:90%; font-family:Tahoma;} td {border:1px solid black;padding:5px} table {border-collapse: collapse;}</style></head><body><table><tbody>");
-            sb.AppendLine($"<tr><td style='font-weight:bold'>{_languageGeneral.LineNumber}</td><td style='font-weight:bold'>{_language.Function}</td><td style='font-weight:bold'>{_languageGeneral.Before}</td><td style='font-weight:bold'>{_languageGeneral.After}</td></tr>");
-            foreach (ListViewItem item in listViewFixes.Items)
-            {
-                if (item.Checked)
-                {
-                    var p = (Paragraph)item.Tag;
-                    string what = item.SubItems[2].Text;
-                    string before = item.SubItems[3].Text;
-                    string after = item.SubItems[4].Text;
-                    var arr = MakeDiffHtml(before, after);
-                    sb.AppendLine($"<tr><td>{p.Number}</td><td>{what}</td><td><pre>{arr[0]}</pre></td><td><pre>{arr[1]}</pre></td></tr>");
-                }
-            }
-            sb.Append("</table></body></html>");
-            File.WriteAllText(htmlFileName, sb.ToString());
-            UiUtil.OpenFile(htmlFileName);
-        }
-
-        private static string[] MakeDiffHtml(string before, string after)
-        {
-            before = before.Replace("<br />", "↲");
-            after = after.Replace("<br />", "↲");
-            before = before.Replace(Environment.NewLine, "↲");
-            after = after.Replace(Environment.NewLine, "↲");
-
-            var beforeColors = new Dictionary<int, Color>();
-            var beforeBackgroundColors = new Dictionary<int, Color>();
-            var afterColors = new Dictionary<int, Color>();
-            var afterBackgroundColors = new Dictionary<int, Color>();
-
-            // from start
-            int minLength = Math.Min(before.Length, after.Length);
-            int startCharactersOk = 0;
-            for (int i = 0; i < minLength; i++)
-            {
-                if (before[i] == after[i])
-                {
-                    startCharactersOk++;
-                }
-                else
-                {
-                    if (before.Length > i + 4 && after.Length > i + 4 &&
-                        before[i + 1] == after[i + 1] &&
-                        before[i + 2] == after[i + 2] &&
-                        before[i + 3] == after[i + 3] &&
-                        before[i + 4] == after[i + 4])
-                    {
-                        startCharactersOk++;
-
-                        if (char.IsWhiteSpace(before[i]))
-                        {
-                            beforeBackgroundColors.Add(i, Color.Red);
-                        }
-                        else
-                        {
-                            beforeColors.Add(i, Color.Red);
-                        }
-
-                        if (char.IsWhiteSpace(after[i]))
-                        {
-                            afterBackgroundColors.Add(i, Color.Red);
-                        }
-                        else
-                        {
-                            afterColors.Add(i, Color.Red);
-                        }
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-            }
-
-            int maxLength = Math.Max(before.Length, after.Length);
-            for (int i = startCharactersOk; i <= maxLength; i++)
-            {
-                if (i < before.Length)
-                {
-                    if (char.IsWhiteSpace(before[i]))
-                    {
-                        beforeBackgroundColors.Add(i, Color.Red);
-                    }
-                    else
-                    {
-                        beforeColors.Add(i, Color.Red);
-                    }
-                }
-                if (i < after.Length)
-                {
-                    if (char.IsWhiteSpace(after[i]))
-                    {
-                        afterBackgroundColors.Add(i, Color.Red);
-                    }
-                    else
-                    {
-                        afterColors.Add(i, Color.Red);
-                    }
-                }
-            }
-
-            // from end
-            for (int i = 1; i < minLength; i++)
-            {
-                int bLength = before.Length - i;
-                int aLength = after.Length - i;
-                if (before[bLength] == after[aLength])
-                {
-                    if (beforeColors.ContainsKey(bLength))
-                    {
-                        beforeColors.Remove(bLength);
-                    }
-
-                    if (beforeBackgroundColors.ContainsKey(bLength))
-                    {
-                        beforeBackgroundColors.Remove(bLength);
-                    }
-
-                    if (afterColors.ContainsKey(aLength))
-                    {
-                        afterColors.Remove(aLength);
-                    }
-
-                    if (afterBackgroundColors.ContainsKey(aLength))
-                    {
-                        afterBackgroundColors.Remove(aLength);
-                    }
-                }
-                else
-                {
-                    break;
-                }
-            }
-
-            var sb = new StringBuilder();
-            for (int i = 0; i < before.Length; i++)
-            {
-                var s = before[i];
-                if (beforeColors.ContainsKey(i) && beforeBackgroundColors.ContainsKey(i))
-                {
-                    sb.AppendFormat("<span style=\"color:{0}; background-color: {1}\">{2}</span>", ColorTranslator.ToHtml(beforeColors[i]), ColorTranslator.ToHtml(beforeBackgroundColors[i]), s);
-                }
-                else if (beforeColors.ContainsKey(i))
-                {
-                    sb.AppendFormat("<span style=\"color:{0}; \">{1}</span>", ColorTranslator.ToHtml(beforeColors[i]), s);
-                }
-                else if (beforeBackgroundColors.ContainsKey(i))
-                {
-                    sb.AppendFormat("<span style=\"background-color: {0}\">{1}</span>", ColorTranslator.ToHtml(beforeBackgroundColors[i]), s);
-                }
-                else
-                {
-                    sb.Append(s);
-                }
-            }
-            var sb2 = new StringBuilder();
-            for (int i = 0; i < after.Length; i++)
-            {
-                var s = after[i];
-                if (afterColors.ContainsKey(i) && afterBackgroundColors.ContainsKey(i))
-                {
-                    sb2.AppendFormat("<span style=\"color:{0}; background-color: {1}\">{2}</span>", ColorTranslator.ToHtml(afterColors[i]), ColorTranslator.ToHtml(afterBackgroundColors[i]), s);
-                }
-                else if (afterColors.ContainsKey(i))
-                {
-                    sb2.AppendFormat("<span style=\"color:{0}; \">{1}</span>", ColorTranslator.ToHtml(afterColors[i]), s);
-                }
-                else if (afterBackgroundColors.ContainsKey(i))
-                {
-                    sb2.AppendFormat("<span style=\"background-color: {0}\">{1}</span>", ColorTranslator.ToHtml(afterBackgroundColors[i]), s);
-                }
-                else
-                {
-                    sb2.Append(s);
-                }
-            }
-
-            return new[] { sb.ToString(), sb2.ToString() };
         }
 
         private void SaveConfiguration()

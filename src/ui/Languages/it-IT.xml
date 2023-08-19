@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.6.13</Version>
-    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 06.08.2023</TranslatedBy>
+    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 18.08.2023</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -98,6 +98,7 @@
     <Collapse>Riduci tutto</Collapse>
     <ShortcutX>Scorciatoia: {0}</ShortcutX>
     <ExampleX>Esempio: {0}</ExampleX>
+    <ViewX>Visualizza {0}</ViewX>
     <Reset>Ripristina</Reset>
     <Error>Errore</Error>
     <Warning>Avviso</Warning>
@@ -133,7 +134,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SourceVideoFile>File video sorgente:</SourceVideoFile>
     <GenerateWaveformData>Genera dati forma d'onda</GenerateWaveformData>
     <PleaseWait>Potrebbero volerci alcuni minuti. Attendi...</PleaseWait>
-    <FfmpegNotFound>A Subtitle Edit per l'estrazione dei dati audio per generare le forme d'onda serve Ffmpeg.
+    <FfmpegNotFound>Per l'estrazione dei dati audio per generare le forme d'onda a  Subtitle Edit serve Ffmpeg.
 
 Vuoi scaricare ed usare Ffmpeg?</FfmpegNotFound>
     <GeneratingPeakFile>Generazione file di picco...</GeneratingPeakFile>
@@ -204,6 +205,7 @@ Vuoi ulteriori informazioni (web)?</WhisperNotFound>
     <LoadingVoskModel>Caricamento modello riconoscimento vocale Vosk...</LoadingVoskModel>
     <Transcribing>Conversione dell'audio in testo...</Transcribing>
     <TranscribingXOfY>Conversione dell'audio in testo - file {0} di {1}...</TranscribingXOfY>
+    <PostProcessing>Post elaborazione...</PostProcessing>
     <XFilesSavedToVideoSourceFolder>{0} file salvati nella cartella sorgente video</XFilesSavedToVideoSourceFolder>
     <UsePostProcessing>Usa la post-elaborazione (unione di righe, correzione di maiuscole e minuscole, punteggiatura e altro)</UsePostProcessing>
     <AutoAdjustTimings>Regola automaticamente i tempi</AutoAdjustTimings>
@@ -214,6 +216,7 @@ Vuoi ulteriori informazioni (web)?</WhisperNotFound>
     <RemoveTemporaryFiles>Rimuovi file temporanei</RemoveTemporaryFiles>
     <SetCppConstMeFolder>Imposta cartella modelli CPP/Const-me...</SetCppConstMeFolder>
     <OnlyRunPostProcessing>Esegui solo la post-elaborazione/regola i tempi</OnlyRunPostProcessing>
+    <DownloadFasterWhisperCuda>Download CUDA per Whisper-Faster di Perfview</DownloadFasterWhisperCuda>
   </AudioToText>
   <AssaAttachments>
     <Title>Allegati alpha sub station avanzati</Title>
@@ -408,7 +411,7 @@ Seleziona "{0}" per generare o importare prima le modifiche alle inquadrature op
     <Gap>Gap:</Gap>
     <GapSuffix>fotogramma (sovrascriverà impostazioni personalizzate)</GapSuffix>
     <InCues>Tagli iniziali</InCues>
-    <SubtitlePreviewText>Testo sittotitoli.</SubtitlePreviewText>
+    <SubtitlePreviewText>Testo sottotitoli.</SubtitlePreviewText>
     <Zones>Zone:</Zones>
     <OutCues>Tagli finali</OutCues>
     <ConnectedSubtitles>Sottotitoli collegati</ConnectedSubtitles>
@@ -766,7 +769,7 @@ Si sfrutta così il ritmo intrinseco dell'immagine.</CreateSimpleChainingToolTip
     <ImageFormat>Formato immagine</ImageFormat>
     <FullFrameImage>Immagine fotogramma completa</FullFrameImage>
     <SimpleRendering>Rendering semplice</SimpleRendering>
-    <AntiAliasingWithTransparency>Anti-aliasing con trasparenza</AntiAliasingWithTransparency>
+    <AntiAliasingWithTransparency>Anti aliasing con trasparenza</AntiAliasingWithTransparency>
     <Text3D>3D</Text3D>
     <ImagePrefix>Prefisso immagine</ImagePrefix>
     <SideBySide3D>Centro-affiancato</SideBySide3D>
@@ -798,7 +801,7 @@ Si sfrutta così il ritmo intrinseco dell'immagine.</CreateSimpleChainingToolTip
 {0}</SomeLinesWereTooLongX>
     <LineHeight>Altezza riga</LineHeight>
     <BoxSingleLine>Riquadro, singola riga</BoxSingleLine>
-    <BoxMultiLine>Riquadro, multilinea</BoxMultiLine>
+    <BoxMultiLine>Riquadro, multi linea</BoxMultiLine>
     <Forced>Forzato</Forced>
     <ChooseBackgroundColor>Scegli colore sfondo</ChooseBackgroundColor>
     <SaveImageAs>Salva immagine come...</SaveImageAs>
@@ -835,7 +838,7 @@ Si sfrutta così il ritmo intrinseco dell'immagine.</CreateSimpleChainingToolTip
   </ExtractDateTimeInfo>
   <FindDialog>
     <Title>Trova</Title>
-    <FindNext>&amp;Trova sucecssivo</FindNext>
+    <FindNext>&amp;Trova successivo</FindNext>
     <FindPrevious>Trova &amp;precedente</FindPrevious>
     <Normal>&amp;Normale</Normal>
     <CaseSensitive>&amp;Sensibile a maiuscole/minuscole</CaseSensitive>
@@ -894,7 +897,7 @@ Si sfrutta così il ritmo intrinseco dell'immagine.</CreateSimpleChainingToolTip
     <BreakDialogsOnOneLine>Dividi i dialoghi in una sola riga</BreakDialogsOnOneLine>
     <RemoveDialogFirstInNonDialogs>Rimuovi trattino iniziale nella prima riga per i non dialoghi</RemoveDialogFirstInNonDialogs>
     <NormalizeStrings>Normalizza stringhe</NormalizeStrings>
-    <FixTurkishAnsi>Correggi ANSI turco (Icelandic) lettere a Unicode</FixTurkishAnsi>
+    <FixTurkishAnsi>Correggi lettere ANSI turco (Islandese) a Unicode</FixTurkishAnsi>
     <FixDanishLetterI>Correggi lettera danese 'i'</FixDanishLetterI>
     <FixSpanishInvertedQuestionAndExclamationMarks>Correggi i marcatori invertiti di domanda ed esclamazione in spagnolo</FixSpanishInvertedQuestionAndExclamationMarks>
     <AddMissingQuote>Aggiungi virgola mancante (")</AddMissingQuote>
@@ -977,9 +980,11 @@ Si sfrutta così il ritmo intrinseco dell'immagine.</CreateSimpleChainingToolTip
     <InfoAssaOn>Nota: verranno usati stili Advanced Substation Alpha :)</InfoAssaOn>
     <XGeneratedWithBurnedInSubs>"{0}" generato con sottotitoli incorporati.</XGeneratedWithBurnedInSubs>
     <TimeRemainingMinutes>Tempo rimanente: {0} minuti</TimeRemainingMinutes>
+    <TimeRemainingOneMinute>Tempo rimanente: un minuto</TimeRemainingOneMinute>
     <TimeRemainingSeconds>Tempo rimanente: {0} secondi</TimeRemainingSeconds>
     <TimeRemainingAFewSeconds>Tempo rimanente: pochi secondi</TimeRemainingAFewSeconds>
     <TimeRemainingMinutesAndSeconds>Tempo rimanente: {0} minuti e {1} secondi</TimeRemainingMinutesAndSeconds>
+    <TimeRemainingOneMinuteAndSeconds>Tempo rimanente: un minuto e {0} secondi</TimeRemainingOneMinuteAndSeconds>
     <TargetFileName>Nome file destinazione: {0}</TargetFileName>
     <TargetFileSize>Dimensione file destinazione (richiede codifica in 2 passaggi)</TargetFileSize>
     <FileSizeMb>Dimensione file (MB)</FileSizeMb>
@@ -1073,7 +1078,7 @@ Per usare una chiave API vai su "Opzioni -&gt; Impostazioni -&gt; Strumenti" per
     <Title>Importa immagini</Title>
     <ImageFiles>File immagine</ImageFiles>
     <Input>Ingresso</Input>
-    <InputDescription>File immagini sorgenti (sfoglia o usa drag-n-drop)</InputDescription>
+    <InputDescription>File immagini sorgenti (sfoglia o usa trascina/rilascia)</InputDescription>
     <Remove>Rimuovi</Remove>
     <RemoveAll>Rimuovi tutto</RemoveAll>
   </ImportImages>
@@ -1624,7 +1629,7 @@ Per usare una chiave API vai su "Opzioni -&gt; Impostazioni -&gt; Strumenti" per
       <SearchTextOnline>Cerca testo online</SearchTextOnline>
       <GoogleTranslate>Traduttore Google</GoogleTranslate>
       <AutoTranslate>Auto-Traduci</AutoTranslate>
-      <GoogleIt>Google it</GoogleIt>
+      <GoogleIt>Usa Google</GoogleIt>
       <SecondsBackShort>&lt;&lt;</SecondsBackShort>
       <SecondsForwardShort>&gt;&gt;</SecondsForwardShort>
       <VideoPosition>Posizione video:</VideoPosition>
@@ -1855,7 +1860,7 @@ Vuoi continuare?</SubtitleAppendPrompt>
     <NetworkInsert>Riga inserita: {0} ({1}): Indice={2}, Testo={3}</NetworkInsert>
     <NetworkDelete>Riga eliminata: {0} ({1}): Indice={2}</NetworkDelete>
     <NetworkNewUser>Nuovo utente: {0} ({1})</NetworkNewUser>
-    <NetworkByeUser>Bye {0} ({1})</NetworkByeUser>
+    <NetworkByeUser>Ciao {0} ({1})</NetworkByeUser>
     <NetworkUnableToConnectToServer>Impossibile connettersi al server: {0}</NetworkUnableToConnectToServer>
     <UserAndAction>Utente/azione</UserAndAction>
     <NetworkMode>Modalità di rete</NetworkMode>
@@ -2014,7 +2019,7 @@ Vuoi scaricare mpv e youtuibe-dl e continuare?</VideoFromUrlRequirements>
     <SquareMiles>Miglia quadrate</SquareMiles>
     <SquareYards>Iarde quadrate</SquareYards>
     <SquareFTs>Piedi quadrati</SquareFTs>
-    <SquareInches>Polici quadrati</SquareInches>
+    <SquareInches>Pollici quadrati</SquareInches>
     <Hectares>Ettari</Hectares>
     <Acres>Acri</Acres>
     <Ares>Are</Ares>
@@ -2030,7 +2035,7 @@ Vuoi scaricare mpv e youtuibe-dl e continuare?</VideoFromUrlRequirements>
     <MetersPerSecond>Metri/secondo</MetersPerSecond>
     <MilesPerHour>Miglia/ora</MilesPerHour>
     <YardsPerMinute>Iarde/minuto</YardsPerMinute>
-    <FTsPerSecond>fts/secondo</FTsPerSecond>
+    <FTsPerSecond>FT/secondo</FTsPerSecond>
     <Knots>Nodi</Knots>
     <PoundsForce>Libbre-forza</PoundsForce>
     <Newtons>Newton</Newtons>
@@ -2254,7 +2259,7 @@ stesso file di sottotitolo (collaborazione)</Information>
     <XFrameYisZMilliseconds>{0} fotogrammi {1} fps sono {2} millisecondi</XFrameYisZMilliseconds>
   </SetMinimumDisplayTimeBetweenParagraphs>
   <SetSyncPoint>
-    <Title>Imposta punto sincr. per riga {0}</Title>
+    <Title>Imposta punto sincr. riga {0}</Title>
     <SyncPointTimeCode>Punto sincr. codice temporale</SyncPointTimeCode>
     <ThreeSecondsBack>&lt;&lt; 3 s</ThreeSecondsBack>
     <HalfASecondBack>&lt;&lt; ½ s</HalfASecondBack>
@@ -2288,6 +2293,7 @@ stesso file di sottotitolo (collaborazione)</Information>
     <BeautifyTimeCodes>Abbellisci time code</BeautifyTimeCodes>
     <SettingsName>Impostazioni</SettingsName>
     <ToggleBookmarks>Attiva/disattiva segnalibri</ToggleBookmarks>
+    <FocusTextBox>Casella testo stato attivo</FocusTextBox>
     <ToggleBookmarksWithComment>Attiva/disattiva segnalibri - Aggiungi commento</ToggleBookmarksWithComment>
     <ClearBookmarks>Azzera segnalibri</ClearBookmarks>
     <ExportBookmarks>Esporta segnalibri...</ExportBookmarks>
@@ -2436,7 +2442,7 @@ stesso file di sottotitolo (collaborazione)</Information>
     <SsaOpaqueBox>Casella opaca</SsaOpaqueBox>
     <Testing123>Esempio 123...</Testing123>
     <Language>Lingua</Language>
-    <NamesIgnoreLists>Ignora elenco nomi/etc (maiusc/minusc)</NamesIgnoreLists>
+    <NamesIgnoreLists>Nomi/elenco ignorati (maiusc/minusc)</NamesIgnoreLists>
     <AddName>Aggiungi nome</AddName>
     <AddWord>Aggiungi parola</AddWord>
     <Remove>Rimuovi</Remove>
@@ -2751,7 +2757,7 @@ stesso file di sottotitolo (collaborazione)</Information>
     <MainTextBoxDictate>Dettatura (tasto giù=inizio registrazione, tasto su=fine registrazione)</MainTextBoxDictate>
     <MainTextBoxUnbreak>Annulla interruzione testo</MainTextBoxUnbreak>
     <MainTextBoxUnbreakNoSpace>Annulla interruzione senza spazio (CJK)</MainTextBoxUnbreakNoSpace>
-    <MainTextBoxAssaIntellisense>Visualizza l'helper tag ASSET</MainTextBoxAssaIntellisense>
+    <MainTextBoxAssaIntellisense>Visualizza tag helper ASSET</MainTextBoxAssaIntellisense>
     <MainTextBoxAssaRemoveTag>Rimuovi tag ASSA al cursore</MainTextBoxAssaRemoveTag>
     <MainFileSaveAll>Salva tutto</MainFileSaveAll>
     <Miscellaneous>Varie</Miscellaneous>
@@ -2809,6 +2815,8 @@ Vuoi continuare?</RestoreDefaultSettingsMsg>
     <CustomContinuationStyleNote>Nota: lo stile continuazione personalizzato è condiviso tra i profili.</CustomContinuationStyleNote>
     <ResetCustomContinuationStyleWarning>Questo sovrascriverà i valori nella finestra di dialogo. Sei sicuro?</ResetCustomContinuationStyleWarning>
     <ExportAsHtml>Esporta come HTML...</ExportAsHtml>
+    <SetNewActor>Imposta nuovo attore/voce</SetNewActor>
+    <SetActorX>Imposta attore/voce {0}</SetActorX>
   </Settings>
   <SettingsMpv>
     <DownloadMpv>Download lib mpv</DownloadMpv>
@@ -2974,7 +2982,7 @@ Vuoi continuare?</RestoreDefaultSettingsMsg>
     <DurationAverage>Durata - media: {0:0.000} secondi</DurationAverage>
     <DurationExceedingMinimum>Durata - inferiore al minimo ({0:0.###} sec): {1} ({2:0.00}%)</DurationExceedingMinimum>
     <DurationExceedingMaximum>Durata - superiore al massimo ({0:0.###} sec): {1} ({2:0.00}%)</DurationExceedingMaximum>
-    <CharactersPerSecondMinimum>Caratteri/sec - minimuo: {0:0.000}</CharactersPerSecondMinimum>
+    <CharactersPerSecondMinimum>Caratteri/sec - minimo: {0:0.000}</CharactersPerSecondMinimum>
     <CharactersPerSecondMaximum>Caratteri/sec - massimo: {0:0.000}</CharactersPerSecondMaximum>
     <CharactersPerSecondAverage>Caratteri/sec - media: {0:0.000}</CharactersPerSecondAverage>
     <CharactersPerSecondExceedingOptimal>Caratteri/sec - superiore ad ottimale ({0:0.##} cps): {1} ({2:0.00}%)</CharactersPerSecondExceedingOptimal>
@@ -2982,7 +2990,7 @@ Vuoi continuare?</RestoreDefaultSettingsMsg>
     <WordsPerMinuteMinimum>Parole/min - minimo: {0:0.000}</WordsPerMinuteMinimum>
     <WordsPerMinuteMaximum>Parole/min - massimo: {0:0.000}</WordsPerMinuteMaximum>
     <WordsPerMinuteAverage>Parole/min - media: {0:0.000}</WordsPerMinuteAverage>
-    <WordsPerMinuteExceedingMaximum>Words/min - exceeding maximum ({0} wpm): {1} ({2:0.00}%)</WordsPerMinuteExceedingMaximum>
+    <WordsPerMinuteExceedingMaximum>Parole/min - eccedono massimo ({0} wpm): {1} ({2:0.00}%)</WordsPerMinuteExceedingMaximum>
     <GapMinimum>Gap - minimo: {0:#,##0} ms</GapMinimum>
     <GapMaximum>Gap - massimo: {0:#,##0} ms</GapMaximum>
     <GapAverage>Gap - media: {0:#,##0.##} ms</GapAverage>
@@ -3112,14 +3120,14 @@ Vuoi continuare?</RestoreDefaultSettingsMsg>
     <NoNever>No, mai</NoNever>
   </TimedTextSmpteTiming>
   <TransportStreamSubtitleChooser>
-    <Title>Scelta sottotitolo Transport Stream - {0}</Title>
+    <Title>Scelta sottotitolo stream tasporto - {0}</Title>
     <PidLineImage>Immagini - Identificatore pacchetto di trasporto (PID) = {0}, linguaggio = {1}, numero di sottotitoli = {2}</PidLineImage>
     <PidLineTeletext>Televideo- Identificatore pacchetto di trasporto (PID) = {1}, pagina {0}, linguaggio = {2}, numero di sottotitoli = {3}</PidLineTeletext>
     <SubLine>{0}: {1} -&gt; {2}, {3} immagini</SubLine>
   </TransportStreamSubtitleChooser>
   <UnknownSubtitle>
     <Title>Tipo di sottotitolo sconosciuto</Title>
-    <Message>Se vuoi risolvere questo problema, invia a mailto:niksedk@gmail.com una copia del sottotitolo.</Message>
+    <Message>Se vuoi risolvere questo problema, invia una copia del sottotitolo a mailto:niksedk@gmail.com.</Message>
     <ImportAsPlainText>Importa come testo semplice...</ImportAsPlainText>
   </UnknownSubtitle>
   <VisualSync>

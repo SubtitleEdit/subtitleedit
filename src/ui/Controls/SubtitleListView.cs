@@ -54,43 +54,9 @@ namespace Nikse.SubtitleEdit.Controls
         public bool IsOriginalTextColumnVisible => ColumnIndexTextOriginal >= 0;
         private string _lineSeparatorString = " || ";
 
-        private Font _subtitleFont = new Font("Tahoma", 8.25F);
-
-        private string _subtitleFontName = "Tahoma";
-
-        public string SubtitleFontName
-        {
-            get => _subtitleFontName;
-            set
-            {
-                _subtitleFontName = value;
-                _subtitleFont = new Font(_subtitleFontName, SubtitleFontSize, GetFontStyle());
-            }
-        }
-
-        private bool _subtitleFontBold;
-
-        public bool SubtitleFontBold
-        {
-            get { return _subtitleFontBold; }
-            set
-            {
-                _subtitleFontBold = value;
-                _subtitleFont = new Font(_subtitleFontName, SubtitleFontSize, GetFontStyle());
-            }
-        }
-
-        private int _subtitleFontSize = 8;
-
-        public int SubtitleFontSize
-        {
-            get => _subtitleFontSize;
-            set
-            {
-                _subtitleFontSize = value;
-                _subtitleFont = new Font(_subtitleFontName, SubtitleFontSize, GetFontStyle());
-            }
-        }
+        public string SubtitleFontName { get; set; } = "Tahoma";
+        public bool SubtitleFontBold { get; set; }
+        public int SubtitleFontSize { get; set; } = 8;
 
         public bool UseSyntaxColoring { get; set; }
         private Settings _settings;
@@ -190,7 +156,7 @@ namespace Nikse.SubtitleEdit.Controls
 
             if (!string.IsNullOrEmpty(settings.General.SubtitleFontName))
             {
-                _subtitleFontName = settings.General.SubtitleFontName;
+                SubtitleFontName = settings.General.SubtitleFontName;
             }
 
             SubtitleFontBold = settings.General.SubtitleListViewFontBold;
@@ -460,7 +426,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         private void SubtitleListView_DrawSubItem(object sender, DrawListViewSubItemEventArgs e)
         {
-            Color backgroundColor = Items[e.ItemIndex].SubItems[e.ColumnIndex].BackColor;
+            var backgroundColor = Items[e.ItemIndex].SubItems[e.ColumnIndex].BackColor;
             if (Focused && backgroundColor == BackColor || RightToLeftLayout)
             {
                 e.DrawDefault = true;
@@ -470,7 +436,7 @@ namespace Nikse.SubtitleEdit.Controls
             if (e.Item.Selected)
             {
 
-                Rectangle rect = e.Bounds;
+                var rect = e.Bounds;
                 if (Configuration.Settings != null)
                 {
                     backgroundColor = backgroundColor == BackColor ? Configuration.Settings.Tools.ListViewUnfocusedSelectedColor : GetCustomColor(backgroundColor);
@@ -482,7 +448,7 @@ namespace Nikse.SubtitleEdit.Controls
                     e.Graphics.FillRectangle(Brushes.LightBlue, rect);
                 }
 
-                int addX = 0;
+                var addX = 0;
 
                 if (e.ColumnIndex == 0 && StateImageList?.Images.Count > 0)
                 {
@@ -494,14 +460,14 @@ namespace Nikse.SubtitleEdit.Controls
                     e.Graphics.DrawImage(StateImageList.Images[e.Item.StateImageIndex], new Rectangle(rect.X + 4, rect.Y + 2, 16, 16));
                 }
 
-                if (Columns[e.ColumnIndex].TextAlign == HorizontalAlignment.Right)
+                // Draw text - impossible to get a precise match with the default list view text :(
+                e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+                e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+                var rectangle = new Rectangle(e.Bounds.Left + 4 + addX, e.Bounds.Top + 2, e.Bounds.Width - 4 - addX, e.Bounds.Height - 2);
+                using (var brush = new SolidBrush(e.Item.SubItems[e.ColumnIndex].ForeColor))
+                using (var stringFormat = CreateStringFormat(this))
                 {
-                    var stringWidth = (int)e.Graphics.MeasureString(e.Item.SubItems[e.ColumnIndex].Text, _subtitleFont).Width;
-                    TextRenderer.DrawText(e.Graphics, e.Item.SubItems[e.ColumnIndex].Text, _subtitleFont, new Point(e.Bounds.Right - stringWidth - 7, e.Bounds.Top + 2), e.Item.ForeColor, TextFormatFlags.NoPrefix);
-                }
-                else
-                {
-                    TextRenderer.DrawText(e.Graphics, e.Item.SubItems[e.ColumnIndex].Text, _subtitleFont, new Point(e.Bounds.Left + 3 + addX, e.Bounds.Top + 2), e.Item.ForeColor, TextFormatFlags.NoPrefix);
+                    e.Graphics.DrawString(e.Item.SubItems[e.ColumnIndex].Text, e.Item.SubItems[e.ColumnIndex].Font, brush, rectangle, stringFormat);
                 }
             }
             else
@@ -510,11 +476,30 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
+        internal static StringFormat CreateStringFormat(Control control)
+        {
+            var stringFormat = new StringFormat();
+            stringFormat.Alignment = StringAlignment.Near;
+            stringFormat.Trimming = StringTrimming.EllipsisCharacter;
+            stringFormat.FormatFlags |= StringFormatFlags.LineLimit;
+            if (control.RightToLeft == RightToLeft.Yes)
+            {
+                stringFormat.FormatFlags |= StringFormatFlags.DirectionRightToLeft;
+            }
+
+            if (control.AutoSize)
+            {
+                stringFormat.FormatFlags |= StringFormatFlags.MeasureTrailingSpaces;
+            }
+
+            return stringFormat;
+        }
+
         private static Color GetCustomColor(Color color)
         {
-            int r = Math.Max(color.R - 39, 0);
-            int g = Math.Max(color.G - 39, 0);
-            int b = Math.Max(color.B - 39, 0);
+            var r = Math.Max(color.R - 39, 0);
+            var g = Math.Max(color.G - 39, 0);
+            var b = Math.Max(color.B - 39, 0);
             return Color.FromArgb(color.A, r, g, b);
         }
 
@@ -1264,7 +1249,7 @@ namespace Nikse.SubtitleEdit.Controls
             Items.Clear();
             var x = ListViewItemSorter;
             ListViewItemSorter = null;
-            var font = new Font(_subtitleFontName, SubtitleFontSize, GetFontStyle());
+            var font = new Font(SubtitleFontName, SubtitleFontSize, GetFontStyle());
             var items = new ListViewItem[paragraphs.Count];
             for (var index = 0; index < paragraphs.Count; index++)
             {
@@ -1306,7 +1291,7 @@ namespace Nikse.SubtitleEdit.Controls
             var x = ListViewItemSorter;
             ListViewItemSorter = null;
             var items = new ListViewItem[paragraphs.Count];
-            var font = new Font(_subtitleFontName, SubtitleFontSize, GetFontStyle());
+            var font = new Font(SubtitleFontName, SubtitleFontSize, GetFontStyle());
             for (var index = 0; index < paragraphs.Count; index++)
             {
                 var paragraph = paragraphs[index];
@@ -1595,7 +1580,11 @@ namespace Nikse.SubtitleEdit.Controls
 
         private ListViewItem MakeListViewItem(Paragraph paragraph, Paragraph next, Paragraph paragraphOriginal, Font font)
         {
-            var item = new ListViewItem(paragraph.Number.ToString(CultureInfo.InvariantCulture)) { Tag = paragraph, UseItemStyleForSubItems = false };
+            var item = new ListViewItem(paragraph.Number.ToString(CultureInfo.InvariantCulture))
+            {
+                Tag = paragraph,
+                UseItemStyleForSubItems = false,
+            };
             foreach (var column in SubtitleColumns)
             {
                 switch (column)
@@ -2112,7 +2101,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        private string GetGap(Paragraph paragraph, Paragraph next)
+        private static string GetGap(Paragraph paragraph, Paragraph next)
         {
             if (next == null || paragraph == null || next.StartTime.IsMaxTime || paragraph.EndTime.IsMaxTime)
             {
@@ -2143,18 +2132,27 @@ namespace Nikse.SubtitleEdit.Controls
         {
             UpdateItem(index, i => i.BackColor = color, si => si.BackColor = color);
         }
-        
+
         public void SetForegroundColor(int index, Color color)
         {
             UpdateItem(index, i => i.ForeColor = color, si => si.ForeColor = color);
         }
-        
-        private void UpdateItem(int index, Action<ListViewItem> itemUpdater,  Action<ListViewItem.ListViewSubItem> subItemUpdater)
+
+        private void UpdateItem(int index, Action<ListViewItem> itemUpdater, Action<ListViewItem.ListViewSubItem> subItemUpdater)
         {
-            if (!IsValidIndex(index)) return;
-            
+            if (!IsValidIndex(index))
+            {
+                return;
+            }
+
             var item = Items[index];
             itemUpdater(item);
+
+            if (ColumnIndexNumber >= 0)
+            {
+                subItemUpdater(Items[index].SubItems[ColumnIndexNumber]);
+            }
+
             if (ColumnIndexStart >= 0)
             {
                 subItemUpdater(Items[index].SubItems[ColumnIndexStart]);
@@ -2203,6 +2201,7 @@ namespace Nikse.SubtitleEdit.Controls
                 ListViewItem item = Items[index];
                 return item.BackColor;
             }
+
             return DefaultBackColor;
         }
 

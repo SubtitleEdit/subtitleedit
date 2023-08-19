@@ -5,7 +5,6 @@ using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
-using Newtonsoft.Json.Linq;
 
 namespace Nikse.SubtitleEdit.Controls
 {
@@ -85,8 +84,8 @@ namespace Nikse.SubtitleEdit.Controls
                 InitializeBackingControl(_simpleTextBox);
                 if (justTextBox)
                 {
-                    _simpleTextBox.ForeColor = DarkTheme.ForeColor;
-                    _simpleTextBox.BackColor = DarkTheme.BackColor;
+                    _simpleTextBox.ForeColor = UiUtil.ForeColor;
+                    _simpleTextBox.BackColor = UiUtil.BackColor;
                     BackColor = Color.DarkGray;
                     _simpleTextBox.VisibleChanged += SimpleTextBox_VisibleChanged;
                 }
@@ -776,6 +775,24 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
+        public string[] Lines
+        {
+            get
+            {
+                if (_simpleTextBox != null)
+                {
+                    return _simpleTextBox.Lines;
+                }
+
+                if (_uiTextBox != null)
+                {
+                    return _uiTextBox.Lines;
+                }
+
+                return Array.Empty<string>();
+            }
+        }
+
         public async Task CheckForLanguageChange(Subtitle subtitle)
         {
             if (_uiTextBox == null)
@@ -810,12 +827,17 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 _uiTextBox.BackColor = DarkTheme.BackColor;
                 _uiTextBox.ForeColor = DarkTheme.ForeColor;
+                _uiTextBox.HandleCreated += SeTextBoxBoxHandleCreated;
+                DarkTheme.SetWindowThemeDark(_uiTextBox);
             }
             if (_simpleTextBox != null)
             {
                 _simpleTextBox.BackColor = DarkTheme.BackColor;
                 _simpleTextBox.ForeColor = DarkTheme.ForeColor;
+                _simpleTextBox.HandleCreated += SeTextBoxBoxHandleCreated;
+                DarkTheme.SetWindowThemeDark(_simpleTextBox);
             }
+            DarkTheme.SetWindowThemeDark(this);
         }
 
         public void UndoDarkTheme()
@@ -824,11 +846,30 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 _uiTextBox.BackColor = SystemColors.Window;
                 _uiTextBox.ForeColor = DefaultForeColor;
+                _uiTextBox.HandleCreated -= SeTextBoxBoxHandleCreated;
+                DarkTheme.SetWindowThemeNormal(_uiTextBox);
             }
             if (_simpleTextBox != null)
             {
                 _simpleTextBox.BackColor = SystemColors.Window;
                 _simpleTextBox.ForeColor = DefaultForeColor;
+                _simpleTextBox.HandleCreated -= SeTextBoxBoxHandleCreated;
+                DarkTheme.SetWindowThemeNormal(this);
+            }
+            DarkTheme.SetWindowThemeNormal(_simpleTextBox);
+        }
+
+        private static void SeTextBoxBoxHandleCreated(object sender, EventArgs e) => DarkTheme.SetWindowThemeDark((Control)sender);
+
+        public void ScrollToCaret()
+        {
+            if (_uiTextBox != null)
+            {
+                _uiTextBox.ScrollToCaret();
+            }
+            if (_simpleTextBox != null)
+            {
+                _simpleTextBox.ScrollToCaret();
             }
         }
     }

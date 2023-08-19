@@ -34,7 +34,7 @@
     <Duration>时长</Duration>
     <CharsPerSec>字/秒</CharsPerSec>
     <WordsPerMin>词/分</WordsPerMin>
-    <Actor>演员</Actor>
+    <Actor>角色</Actor>
     <Gap>间隔</Gap>
     <Region>区域</Region>
     <Layer>层</Layer>
@@ -98,7 +98,9 @@
     <Collapse>收起</Collapse>
     <ShortcutX>快捷键: {0}</ShortcutX>
     <ExampleX>示例: {0}</ExampleX>
+    <ViewX>查看 {0}</ViewX>
     <Reset>重置</Reset>
+    <Error>错误</Error>
     <Warning>警告</Warning>
     <UseLargerFontForThisWindow>在此窗口使用更大的字体</UseLargerFontForThisWindow>
   </General>
@@ -153,8 +155,11 @@ Command line: {1} {2}
   </AddWaveform>
   <AddWaveformBatch>
     <Title>批量生成波形数据</Title>
+    <ExtractTimeCodes>使用 FFprobe 提取时间码</ExtractTimeCodes>
     <ExtractingAudio>正在提取音频...</ExtractingAudio>
     <Calculating>正在计算...</Calculating>
+    <ExtractingTimeCodes>正在提取时间码...</ExtractingTimeCodes>
+    <DetectingShotChanges>检测场景变化...</DetectingShotChanges>
     <Done>已完成</Done>
     <Error>错误</Error>
   </AddWaveformBatch>
@@ -170,11 +175,16 @@ Command line: {1} {2}
     <Fixed>固定</Fixed>
     <Milliseconds>毫秒</Milliseconds>
     <ExtendOnly>仅延伸</ExtendOnly>
+    <EnforceDurationLimits>强制执行最短和最长持续时间</EnforceDurationLimits>
+    <CheckShotChanges>不延续过去的场景变化</CheckShotChanges>
+    <BatchCheckShotChanges>尊重场景变化（如果存在）</BatchCheckShotChanges>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
     <Title>应用时长限制</Title>
+    <CheckShotChanges>不要延续过去的场景变化</CheckShotChanges>
     <FixesAvailable>可用修复: {0}</FixesAvailable>
     <UnableToFix>无法修复 {0}</UnableToFix>
+    <BatchCheckShotChanges>尊重场景变化（如果存在）</BatchCheckShotChanges>
   </ApplyDurationLimits>
   <AudioToText>
     <Title>音频转文字</Title>
@@ -194,6 +204,7 @@ Command line: {1} {2}
     <LoadingVoskModel>正在加载 Vosk 语音识别模型...</LoadingVoskModel>
     <Transcribing>将音频转录为文本...</Transcribing>
     <TranscribingXOfY>将音频转录为文本 - 第{0}/{1}个文件...</TranscribingXOfY>
+    <PostProcessing>后处理...</PostProcessing>
     <XFilesSavedToVideoSourceFolder>{0} 个文件已保存到视频源文件夹</XFilesSavedToVideoSourceFolder>
     <UsePostProcessing>使用后处理（行合并、修复大小写、标点符号等）</UsePostProcessing>
     <AutoAdjustTimings>自动调整时间</AutoAdjustTimings>
@@ -204,6 +215,7 @@ Command line: {1} {2}
     <RemoveTemporaryFiles>移除临时文件</RemoveTemporaryFiles>
     <SetCppConstMeFolder>设置 CPP/Const-me 模型文件夹...</SetCppConstMeFolder>
     <OnlyRunPostProcessing>仅进行后处理/调整时间</OnlyRunPostProcessing>
+    <DownloadFasterWhisperCuda>下载适用于 Perfview 的 Whisper-Faster 的 CUDA 组件</DownloadFasterWhisperCuda>
   </AudioToText>
   <AssaAttachments>
     <Title>Advanced Sub Station Alpha字幕附件</Title>
@@ -293,7 +305,7 @@ Command line: {1} {2}
     <TitleUnbreak>删除所选行的换行符</TitleUnbreak>
     <LinesFoundX>找到行数: {0}</LinesFoundX>
     <OnlyBreakLinesLongerThan>仅断开超过下列长度的行</OnlyBreakLinesLongerThan>
-    <OnlyUnbreakLinesLongerThan>仅不断开超过下列长度的行</OnlyUnbreakLinesLongerThan>
+    <OnlyUnbreakLinesLongerThan>仅取消断开超过下列长度的行</OnlyUnbreakLinesLongerThan>
   </AutoBreakUnbreakLines>
   <BatchConvert>
     <Title>批量转换</Title>
@@ -308,7 +320,7 @@ Command line: {1} {2}
     <UseStyleFromSource>使用来自源文件的样式</UseStyleFromSource>
     <ConvertOptions>转换选项</ConvertOptions>
     <RemoveFormatting>删除格式化标签</RemoveFormatting>
-    <RemoveStyleActor>删除样式/演员</RemoveStyleActor>
+    <RemoveStyleActor>删除样式/角色</RemoveStyleActor>
     <RemoveTextForHI>删除 HI 文本</RemoveTextForHI>
     <ConvertColorsToDialog>将颜色转换为对话框</ConvertColorsToDialog>
     <OverwriteOriginalFiles>覆盖原始文件(若扩展名变更，则使用新的扩展名)</OverwriteOriginalFiles>
@@ -348,7 +360,7 @@ Command line: {1} {2}
     <TransportStreamOverrideVideoSize>覆盖原始视频尺寸</TransportStreamOverrideVideoSize>
     <TransportStreamFileNameEnding>文件名结尾</TransportStreamFileNameEnding>
     <TransportStreamSettingsButton>传输流设定</TransportStreamSettingsButton>
-    <RemoveLineBreaks>移除换行</RemoveLineBreaks>
+    <RemoveLineBreaks>移除断行</RemoveLineBreaks>
     <DeleteLines>删除行</DeleteLines>
     <TryToUseSourceEncoding>尝试使用源编码</TryToUseSourceEncoding>
     <DeleteFirstLines>删除第一行</DeleteFirstLines>
@@ -361,6 +373,96 @@ Command line: {1} {2}
     <MkvLanguageStyleEmpty>无语言代码</MkvLanguageStyleEmpty>
     <SearchFolderScanVideo>同时扫描“搜索文件夹”中的视频文件（慢速）</SearchFolderScanVideo>
   </BatchConvert>
+  <BeautifyTimeCodes>
+    <Title>美化时间码</Title>
+    <TitleSelectedLines>美化时间码（所选的 {0} 行）</TitleSelectedLines>
+    <GroupTimeCodes>时间码</GroupTimeCodes>
+    <AlignTimeCodes>将时间码与帧时间码对齐</AlignTimeCodes>
+    <ExtractExactTimeCodes>使用 FFprobe 提取精确的帧时间码</ExtractExactTimeCodes>
+    <ExtractTimeCodes>提取时间码</ExtractTimeCodes>
+    <CancelTimeCodes>取消</CancelTimeCodes>
+    <GroupShotChanges>场景变化</GroupShotChanges>
+    <SnapToShotChanges>将捕捉提示设置为场景变化</SnapToShotChanges>
+    <ImportShotChanges>生成/导入场景变化...</ImportShotChanges>
+    <EditProfile>编辑配置...</EditProfile>
+    <NoTimeCodesLoaded>未加载时间码</NoTimeCodesLoaded>
+    <XTimeCodesLoaded>已加载 {0} 个时间码</XTimeCodesLoaded>
+    <NoTimeCodesLoadedError>您已选择提取精确的帧时间码，但没有加载时间代码。
+
+请单击“{0}”首先提取时间码，或禁用此选项。</NoTimeCodesLoadedError>
+    <NoShotChangesLoaded>未加载场景变化</NoShotChangesLoaded>
+    <XShotChangesLoaded>已加载 {0} 个场景变化</XShotChangesLoaded>
+    <NoShotChangesLoadedError>您已选择将捕捉提示设置为场景变化，但未加载任何提示。
+
+请单击“{0}”以首先生成或导入场景变化，或禁用此选项。</NoShotChangesLoadedError>
+    <BatchAlignTimeCodes>将时间码与帧时间码对齐</BatchAlignTimeCodes>
+    <BatchUseExactTimeCodes>使用准确的时间码（如果可用）</BatchUseExactTimeCodes>
+    <BatchSnapToShotChanges>捕捉提示的场景变化（如果有）</BatchSnapToShotChanges>
+  </BeautifyTimeCodes>
+  <BeautifyTimeCodesProfile>
+    <Title>编辑配置</Title>
+    <LoadPreset>加载预设...</LoadPreset>
+    <PresetDefault>默认</PresetDefault>
+    <PresetNetflix>Netflix</PresetNetflix>
+    <PresetSDI>SDI</PresetSDI>
+    <CreateSimple>简单模式...</CreateSimple>
+    <General>一般</General>
+    <Gap>间隔：</Gap>
+    <GapSuffix>帧（将覆盖自定义设置）</GapSuffix>
+    <InCues>入点提示</InCues>
+    <SubtitlePreviewText>字幕文本。</SubtitlePreviewText>
+    <Zones>区域：</Zones>
+    <OutCues>出点提示</OutCues>
+    <ConnectedSubtitles>已连接字幕</ConnectedSubtitles>
+    <InCueClosest>入点提示最接近</InCueClosest>
+    <OutCueClosest>出点提示最接近</OutCueClosest>
+    <TreadAsConnected>如果间隙小于以下值，则视为已连接：</TreadAsConnected>
+    <Milliseconds>ms</Milliseconds>
+    <Chaining>链接</Chaining>
+    <InCueOnShot>入点提示处场景变化</InCueOnShot>
+    <OutCueOnShot>出点提示处场景变化</OutCueOnShot>
+    <MaxGap>最大间隔：</MaxGap>
+    <ShotChangeBehavior>如果中间有场景变化：</ShotChangeBehavior>
+    <DontChain>不要链接</DontChain>
+    <ExtendCrossingShotChange>延长、交叉场景变化</ExtendCrossingShotChange>
+    <ExtendUntilShotChange>延长直到场景变化</ExtendUntilShotChange>
+    <ResetWarning>这将重置当前配置文件，并将所有值替换为所选预设值。这是无法撤消的。
+
+是否要继续？</ResetWarning>
+    <CreateSimpleTitle>创建简单标题</CreateSimpleTitle>
+    <CreateSimpleInstruction>输入这些基本规则，当前的配置文件将相应更新。</CreateSimpleInstruction>
+    <CreateSimpleGapInstruction>字幕之间的最小间隔。</CreateSimpleGapInstruction>
+    <CreateSimpleInCues>入点提示应：</CreateSimpleInCues>
+    <CreateSimpleInCues0Frames>在场景变化时</CreateSimpleInCues0Frames>
+    <CreateSimpleInCues1Frames>场景变化后 1 帧</CreateSimpleInCues1Frames>
+    <CreateSimpleInCues2Frames>场景变化后 2 帧</CreateSimpleInCues2Frames>
+    <CreateSimpleInCues3Frames>场景变化后 3 帧</CreateSimpleInCues3Frames>
+    <CreateSimpleOutCues>出点提示应：</CreateSimpleOutCues>
+    <CreateSimpleOutCues0Frames>在场景变化时</CreateSimpleOutCues0Frames>
+    <CreateSimpleOutCues1Frames>场景变化前 1 帧</CreateSimpleOutCues1Frames>
+    <CreateSimpleOutCues2Frames>场景变化前 2 帧</CreateSimpleOutCues2Frames>
+    <CreateSimpleOutCues3Frames>场景变化前 3 帧</CreateSimpleOutCues3Frames>
+    <CreateSimpleOutCuesGap>场景变化前的最小间隔</CreateSimpleOutCuesGap>
+    <CreateSimpleSnapClosestCue>对于已连接的字幕，将较近的字幕入点或出点提示捕捉到镜头变化</CreateSimpleSnapClosestCue>
+    <CreateSimpleMaxOffset>最大偏移：</CreateSimpleMaxOffset>
+    <CreateSimpleMaxOffsetInstruction>距场景变化此距离内的提示将捕捉到镜头变化。</CreateSimpleMaxOffsetInstruction>
+    <CreateSimpleSafeZone>安全区域：</CreateSimpleSafeZone>
+    <CreateSimpleSafeZoneInstruction>距镜头变化此距离内的提示将移除镜头变化。</CreateSimpleSafeZoneInstruction>
+    <CreateSimpleChainingGap>最大链接间隔：</CreateSimpleChainingGap>
+    <CreateSimpleChainingGapInstruction>如果两个字幕之间的间距小于此值，则字幕将被连接。</CreateSimpleChainingGapInstruction>
+    <CreateSimpleChainingGapAfterShotChanges>在场景变化的出点提示后，间隔可能会更小</CreateSimpleChainingGapAfterShotChanges>
+    <CreateSimpleChainingToolTip>建议链接字幕，以确保字幕的“闪烁”具有一致的“节奏”。
+这提供了更轻松的观看体验。
+链接后，字幕要么被连接（即字幕消失，新字幕在轻微停顿后立即出现），要么不被连接。
+这让观众对何时可以将焦点转移回屏幕有了一些感觉。
+在镜头变化时字幕消失后，链接间隔的长度可能会稍短，因为变化的镜头在某种程度上“重置”了图像。
+我们利用图像的内在节奏。</CreateSimpleChainingToolTip>
+    <CreateSimpleLoadNetflixRules>加载Netflix规则</CreateSimpleLoadNetflixRules>
+    <Frames>帧</Frames>
+    <Maximum>最大</Maximum>
+    <GapInMsFormat>{0} ms @ {1} FPS</GapInMsFormat>
+    <OffsetSafeZoneError>The safe zone should be larger than the max. offset.</OffsetSafeZoneError>
+  </BeautifyTimeCodesProfile>
   <BinEdit>
     <ImportImage>导入图片…</ImportImage>
     <ExportImage>导出图片…</ExportImage>
@@ -410,6 +512,7 @@ Command line: {1} {2}
     <Enabled>启用</Enabled>
     <Name>名称</Name>
     <LinesFoundX>找到行: {0}</LinesFoundX>
+    <ExtraNames>添加额外名称（以逗号分隔，仅供一次性使用）</ExtraNames>
   </ChangeCasingNames>
   <ChangeFrameRate>
     <Title>更改帧率</Title>
@@ -708,7 +811,7 @@ Command line: {1} {2}
     <FormatText>格式文本</FormatText>
     <None>无</None>
     <MergeAllLines>合并所有行</MergeAllLines>
-    <UnbreakLines>不断开行</UnbreakLines>
+    <UnbreakLines>取消断行</UnbreakLines>
     <RemoveStyling>删除样式</RemoveStyling>
     <ShowLineNumbers>显示行号</ShowLineNumbers>
     <AddNewLineAfterLineNumber>在行号后添加新行</AddNewLineAfterLineNumber>
@@ -777,6 +880,7 @@ Command line: {1} {2}
     <BreakLongLines>断开长行</BreakLongLines>
     <RemoveLineBreaks>删除只有一个句子的短文本中的换行符</RemoveLineBreaks>
     <RemoveLineBreaksAll>删除除对话外所有短文本中的换行符</RemoveLineBreaksAll>
+    <RemoveLineBreaksPixelWidth>不间断的字幕可以适合一行（像素宽度）</RemoveLineBreaksPixelWidth>
     <FixUppercaseIInsideLowercaseWords>修复小写单词中的 'i' 为大写 (OCR 错误)</FixUppercaseIInsideLowercaseWords>
     <FixDoubleApostrophes>修复两个单引号字符 ('') 为一个双引号 (")</FixDoubleApostrophes>
     <AddPeriods>在下一行以大写字母开头的行后面添加句号</AddPeriods>
@@ -811,6 +915,7 @@ Command line: {1} {2}
     <FixFirstLetterToUppercaseAfterParagraph>修复段落后的首字母为大写</FixFirstLetterToUppercaseAfterParagraph>
     <MergeShortLine>合并短行 (单个句子)</MergeShortLine>
     <MergeShortLineAll>合并短行 (除对话外所有)</MergeShortLineAll>
+    <UnbreakShortLinePixelWidth>对短行取消断行（像素宽度）</UnbreakShortLinePixelWidth>
     <BreakLongLine>断开长行</BreakLongLine>
     <FixLongDisplayTime>修复过长的显示时间</FixLongDisplayTime>
     <FixInvalidItalicTag>修复无效的斜体</FixInvalidItalicTag>
@@ -835,7 +940,7 @@ Command line: {1} {2}
     <RefreshFixes>刷新可用的修复</RefreshFixes>
     <ApplyFixes>应用选择的修复</ApplyFixes>
     <AutoBreak>自动换行(&amp;B)</AutoBreak>
-    <Unbreak>取消换行(&amp;U)</Unbreak>
+    <Unbreak>取消断行(&amp;U)</Unbreak>
     <FixDoubleDash>修复 '-- '为 '...'</FixDoubleDash>
     <FixDoubleGreaterThan>删除 '&gt;&gt;'</FixDoubleGreaterThan>
     <FixEllipsesStart>删除开头的 '...'</FixEllipsesStart>
@@ -872,9 +977,11 @@ Command line: {1} {2}
     <InfoAssaOn>注意：将使用 ASSA 样式:)</InfoAssaOn>
     <XGeneratedWithBurnedInSubsInX>带有内嵌字幕的“{0}”已在{1}生成完毕。</XGeneratedWithBurnedInSubsInX>
     <TimeRemainingMinutes>剩余时间：{0} 分钟</TimeRemainingMinutes>
+    <TimeRemainingOneMinute>剩余时间：1 分钟</TimeRemainingOneMinute>
     <TimeRemainingSeconds>剩余时间: {0} 秒</TimeRemainingSeconds>
     <TimeRemainingAFewSeconds>剩余时间: 几秒钟</TimeRemainingAFewSeconds>
     <TimeRemainingMinutesAndSeconds>剩余时间: {0} 分 {1} 秒</TimeRemainingMinutesAndSeconds>
+    <TimeRemainingOneMinuteAndSeconds>剩余时间：1 分 {0} 秒</TimeRemainingOneMinuteAndSeconds>
     <TargetFileName>目标文件名：{0}</TargetFileName>
     <TargetFileSize>目标文件大小（需要启用2次编码）</TargetFileSize>
     <FileSizeMb>文件大小 (MB)</FileSizeMb>
@@ -1269,6 +1376,7 @@ Command line: {1} {2}
         <Duration>时长</Duration>
         <ListErrors>列出错误...</ListErrors>
         <NetflixQualityCheck>Netflix质量检查...</NetflixQualityCheck>
+        <BeautifyTimeCodes>美化时间码...</BeautifyTimeCodes>
         <TextAlphabetically>文字 - 按字母顺序</TextAlphabetically>
         <TextSingleLineMaximumLength>文字 - 单行最大长度</TextSingleLineMaximumLength>
         <TextTotalLength>文字 - 总长度</TextTotalLength>
@@ -1364,6 +1472,7 @@ Command line: {1} {2}
         <VisualSync>影音对照同步</VisualSync>
         <SpellCheck>拼写检查</SpellCheck>
         <NetflixQualityCheck>Netflix字幕质量检查</NetflixQualityCheck>
+        <BeautifyTimeCodes>美化时间码</BeautifyTimeCodes>
         <Settings>设置</Settings>
         <Help>帮助</Help>
         <ShowHideWaveform>显示/隐藏音频</ShowHideWaveform>
@@ -1373,7 +1482,7 @@ Command line: {1} {2}
       <ContextMenu>
         <SizeAllColumnsToFit>自适应所有的列宽度</SizeAllColumnsToFit>
         <SetStyle>设置样式</SetStyle>
-        <SetActor>设置演员</SetActor>
+        <SetActor>设置角色</SetActor>
         <SetLayer>设置层</SetLayer>
         <AssaTools>ASSA工具</AssaTools>
         <SubStationAlphaStyles>Sub Station Alpha 样式...</SubStationAlphaStyles>
@@ -1440,6 +1549,7 @@ Command line: {1} {2}
         <KaraokeEffect>卡拉 OK 效果...</KaraokeEffect>
         <ShowSelectedLinesEarlierLater>提前/推后 显示所选行...</ShowSelectedLinesEarlierLater>
         <VisualSyncSelectedLines>对所选行进行影音对照同步...</VisualSyncSelectedLines>
+        <BeautifyTimeCodesOfSelectedLines>美化所选行的时间码...</BeautifyTimeCodesOfSelectedLines>
         <GoogleAndMicrosoftTranslateSelectedLine>谷歌/微软 翻译所选行...</GoogleAndMicrosoftTranslateSelectedLine>
         <SelectedLines>所选行</SelectedLines>
         <TranslateSelectedLines>翻译选中的行...</TranslateSelectedLines>
@@ -1456,8 +1566,8 @@ Command line: {1} {2}
         <SaveSelectedLines>所选行另存为...</SaveSelectedLines>
         <WebVTTSetNewVoice>设定新人声...</WebVTTSetNewVoice>
         <WebVTTRemoveVoices>移除人声</WebVTTRemoveVoices>
-        <NewActor>没有演员...</NewActor>
-        <RemoveActors>移除演员...</RemoveActors>
+        <NewActor>没有角色...</NewActor>
+        <RemoveActors>移除角色...</RemoveActors>
         <EditBookmark>编辑书签</EditBookmark>
         <RemoveBookmark>移除书签</RemoveBookmark>
         <GoToSourceView>转到源视图</GoToSourceView>
@@ -1472,7 +1582,7 @@ Command line: {1} {2}
       <Previous>&lt; 上一行</Previous>
       <Next>下一行 &gt;</Next>
       <AutoBreak>自动换行</AutoBreak>
-      <Unbreak>取消换行</Unbreak>
+      <Unbreak>取消断行</Unbreak>
     </Controls>
     <VideoControls>
       <Translate>翻译</Translate>
@@ -1592,6 +1702,10 @@ Command line: {1} {2}
     <CommonErrorsFixed>常规错误已修复</CommonErrorsFixed>
     <BeforeRenumbering>重新编号之前</BeforeRenumbering>
     <RenumberedStartingFromX>重新编号起始位置: {0}</RenumberedStartingFromX>
+    <BeforeBeautifyTimeCodes>美化时间码之前</BeforeBeautifyTimeCodes>
+    <BeforeBeautifyTimeCodesSelectedLines>美化之前的所选行的时间码</BeforeBeautifyTimeCodesSelectedLines>
+    <BeautifiedTimeCodes>时间码已美化</BeautifiedTimeCodes>
+    <BeautifiedTimeCodesSelectedLines>所选行的时间码已美化</BeautifiedTimeCodesSelectedLines>
     <BeforeRemovalOfTextingForHearingImpaired>删除听障辅助文本之前</BeforeRemovalOfTextingForHearingImpaired>
     <TextingForHearingImpairedRemovedOneLine>已删除听障辅助文本: 1 行</TextingForHearingImpairedRemovedOneLine>
     <TextingForHearingImpairedRemovedXLines>已删除听障辅助文本: {0} 行</TextingForHearingImpairedRemovedXLines>
@@ -1622,6 +1736,7 @@ Command line: {1} {2}
     <NothingToUndo>没什么可撤消</NothingToUndo>
     <InvalidLanguageNameX>无效的语言名称: {0}</InvalidLanguageNameX>
     <DoNotDisplayMessageAgain>不再显示此信息</DoNotDisplayMessageAgain>
+    <DoNotAutoLoadVideo>不自动加载视频</DoNotAutoLoadVideo>
     <NumberOfCorrectedWords>已修正单词数量: {0}</NumberOfCorrectedWords>
     <NumberOfSkippedWords>已跳过单词数量: {0}</NumberOfSkippedWords>
     <NumberOfCorrectWords>正确单词数量: {0}</NumberOfCorrectWords>
@@ -2161,8 +2276,10 @@ Command line: {1} {2}
     <BurnIn>内嵌字幕</BurnIn>
     <SpellCheck>拼写检查</SpellCheck>
     <NetflixQualityCheck>Netflix品质检查</NetflixQualityCheck>
+    <BeautifyTimeCodes>美化时间码</BeautifyTimeCodes>
     <SettingsName>设置</SettingsName>
     <ToggleBookmarks>使用书签</ToggleBookmarks>
+    <FocusTextBox>焦点文本框</FocusTextBox>
     <ToggleBookmarksWithComment>使用书签 - 添加注释</ToggleBookmarksWithComment>
     <ClearBookmarks>清空书签</ClearBookmarks>
     <ExportBookmarks>导出书签...</ExportBookmarks>
@@ -2281,6 +2398,7 @@ Command line: {1} {2}
     <WaveformListViewFocusMouseEnter>允许当鼠标经过时将焦点设置到列表视图</WaveformListViewFocusMouseEnter>
     <WaveformSingleClickSelect>单击以选中字幕</WaveformSingleClickSelect>
     <WaveformSnapToShotChanges>吸附到场景切换点 (按住Shift键可临时禁用)</WaveformSnapToShotChanges>
+    <WaveformEditShotChangesProfile>编辑配置...</WaveformEditShotChangesProfile>
     <WaveformAutoGen>打开视频时自动生成波形</WaveformAutoGen>
     <WaveformBorderHitMs1>边界标记线的最短相接间隔需为</WaveformBorderHitMs1>
     <WaveformBorderHitMs2>毫秒</WaveformBorderHitMs2>
@@ -2400,6 +2518,7 @@ Command line: {1} {2}
     <DarkTheme>暗色主题</DarkTheme>
     <DarkThemeEnabled>使用暗色主题</DarkThemeEnabled>
     <DarkThemeShowGridViewLines>显示列表视图网格线</DarkThemeShowGridViewLines>
+    <GraphicsButtons>图形按钮</GraphicsButtons>
     <UpdateShortcut>更新</UpdateShortcut>
     <FoucsSetVideoPosition>将焦点处设为视频位置</FoucsSetVideoPosition>
     <ToggleDockUndockOfVideoControls>切换 停靠/不停靠 视频控件</ToggleDockUndockOfVideoControls>
@@ -2435,21 +2554,23 @@ Command line: {1} {2}
     <AdjustSetEndAndOffsetTheRest>设置结束时间，偏移其后的所有时间</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>设置结束时间，偏移其后的所有时间并转到下一行</AdjustSetEndAndOffsetTheRestAndGoToNext>
     <AdjustSnapStartToNextShotChange>将选定行的开始时间设为下一个场景切换处</AdjustSnapStartToNextShotChange>
-    <AdjustSnapStartToNextShotChangeWithGap>以最小间隔将选定行的开始时间设为下一个场景切换处</AdjustSnapStartToNextShotChangeWithGap>
     <AdjustSnapEndToPreviousShotChange>将选定行的结束时间设为上一个场景切换处</AdjustSnapEndToPreviousShotChange>
-    <AdjustSnapEndToPreviousShotChangeWithGap>以最小间隔将选定行的结束时间设为上一个场景切换处</AdjustSnapEndToPreviousShotChangeWithGap>
     <AdjustExtendToNextShotChange>将所选行延伸至下个场景切换点</AdjustExtendToNextShotChange>
-    <AdjustExtendToNextShotChangeWithGap>以最小间隔将所选行延伸至下个场景切换点</AdjustExtendToNextShotChangeWithGap>
     <AdjustExtendToPreviousShotChange>将所选行延伸至上个场景切换点</AdjustExtendToPreviousShotChange>
-    <AdjustExtendToPreviousShotChangeWithGap>以最小间隔将所选行延伸至上个场景切换点</AdjustExtendToPreviousShotChangeWithGap>
     <AdjustExtendToNextSubtitle>将所选行延伸至下一条字幕</AdjustExtendToNextSubtitle>
     <AdjustExtendToPreviousSubtitle>将所选行延伸至上一条字幕</AdjustExtendToPreviousSubtitle>
+    <AdjustExtendToNextSubtitleMinusChainingGap>使用链接间隔将所选行延伸到下一条字幕</AdjustExtendToNextSubtitleMinusChainingGap>
+    <AdjustExtendToPreviousSubtitleMinusChainingGap>使用链接间隔将所选行延伸到上一条字幕</AdjustExtendToPreviousSubtitleMinusChainingGap>
     <AdjustExtendCurrentSubtitle>将当前行延伸至下一条字幕或最大间隔</AdjustExtendCurrentSubtitle>
     <AdjustExtendPreviousLineEndToCurrentStart>将上一条字幕延伸至所选行起点</AdjustExtendPreviousLineEndToCurrentStart>
     <AdjustExtendNextLineStartToCurrentEnd>将下一条字幕起点延伸至所选行结尾</AdjustExtendNextLineStartToCurrentEnd>
     <RecalculateDurationOfCurrentSubtitle>重新计算当前字幕时长</RecalculateDurationOfCurrentSubtitle>
     <RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed>重新计算当前字幕时长（基于最优阅读速度）</RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed>
     <RecalculateDurationOfCurrentSubtitleByMinReadingSpeed>重新计算当前字幕时长（基于最低阅读速度）</RecalculateDurationOfCurrentSubtitleByMinReadingSpeed>
+    <SetInCueToClosestShotChangeLeftGreenZone>将入点提示设置为最近场景变化之前的最小距离（左侧绿色区域）</SetInCueToClosestShotChangeLeftGreenZone>
+    <SetInCueToClosestShotChangeRightGreenZone>将入点提示设置为最近场景变化之前的最小距离（右侧绿色区域）</SetInCueToClosestShotChangeRightGreenZone>
+    <SetOutCueToClosestShotChangeLeftGreenZone>将出点提示设置为最近场景变化之前的最小距离（左侧绿色区域）</SetOutCueToClosestShotChangeLeftGreenZone>
+    <SetOutCueToClosestShotChangeRightGreenZone>将出点提示设置为最近场景变化之前的最小距离（右侧绿色区域）</SetOutCueToClosestShotChangeRightGreenZone>
     <MainCreateStartDownEndUp>用向下方向键创建新的开始时间，用向上方向键设置结束时间</MainCreateStartDownEndUp>
     <MergeDialog>合并对话 (插入破折号)</MergeDialog>
     <MergeDialogWithNext>与下一条合并对话 (插入破折号)</MergeDialogWithNext>
@@ -2621,7 +2742,7 @@ Command line: {1} {2}
     <MainTextBoxAutoBreakFromPos>在指针后的第一个空格处换行</MainTextBoxAutoBreakFromPos>
     <MainTextBoxAutoBreakFromPosAndGoToNext>在指针后的第一个空格处换行，并转到下一行</MainTextBoxAutoBreakFromPosAndGoToNext>
     <MainTextBoxDictate>听写（向下键=开始录音，向上键=结束录音）</MainTextBoxDictate>
-    <MainTextBoxUnbreak>取消换行</MainTextBoxUnbreak>
+    <MainTextBoxUnbreak>取消断行</MainTextBoxUnbreak>
     <MainTextBoxUnbreakNoSpace>取消断行且不带空格（用于中日韩等语言）</MainTextBoxUnbreakNoSpace>
     <MainTextBoxAssaIntellisense>显示ASSA标签助手</MainTextBoxAssaIntellisense>
     <MainTextBoxAssaRemoveTag>在光标处移除ASSA标签</MainTextBoxAssaRemoveTag>
@@ -2679,6 +2800,8 @@ Command line: {1} {2}
     <CustomContinuationStyleNote>注意：自定义延续样式将在配置文件之间共享。</CustomContinuationStyleNote>
     <ResetCustomContinuationStyleWarning>这将覆盖对话框中的值。 你确定吗？</ResetCustomContinuationStyleWarning>
     <ExportAsHtml>导出为 HTML...</ExportAsHtml>
+    <SetNewActor>设置新角色/配音</SetNewActor>
+    <SetActorX>设置角色/配音 {0}</SetActorX>
   </Settings>
   <SettingsMpv>
     <DownloadMpv>下载 mpv 库</DownloadMpv>
@@ -2834,18 +2957,29 @@ Command line: {1} {2}
     <SingleLineLengthMinimum>单行长度（最短）: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>单行长度（最长）: {0}</SingleLineLengthMaximum>
     <SingleLineLengthAverage>单行长度（平均）: {0}</SingleLineLengthAverage>
+    <SingleLineLengthExceedingMaximum>单行长度 - 超过最大值（{0} 个字符）: {1} ({2:0.00}%)</SingleLineLengthExceedingMaximum>
     <SingleLineWidthMinimum>单行宽度（最短）: {0} 像素</SingleLineWidthMinimum>
     <SingleLineWidthMaximum>单行宽度（最长）: {0} 像素</SingleLineWidthMaximum>
     <SingleLineWidthAverage>单行宽度（平均）: {0} 像素</SingleLineWidthAverage>
+    <SingleLineWidthExceedingMaximum>单行宽度 - 超过最大值（{0} 像素）: {1} ({2:0.00}%)</SingleLineWidthExceedingMaximum>
     <DurationMinimum>时长（最短）: {0:0.000} 秒</DurationMinimum>
     <DurationMaximum>时长（最长）: {0:0.000} 秒</DurationMaximum>
     <DurationAverage>时长（平均）: {0:0.000} 秒</DurationAverage>
+    <DurationExceedingMinimum>时长 - 低于最小值（{0} s）: {1} ({2:0.00}%)</DurationExceedingMinimum>
+    <DurationExceedingMaximum>时长 - 超过最大值（{0} s）: {1} ({2:0.00}%)</DurationExceedingMaximum>
     <CharactersPerSecondMinimum>每秒字符数（最少）: {0:0.000}</CharactersPerSecondMinimum>
     <CharactersPerSecondMaximum>每秒字符数（最多）: {0:0.000}</CharactersPerSecondMaximum>
     <CharactersPerSecondAverage>每秒字符数（平均）: {0:0.000}</CharactersPerSecondAverage>
+    <CharactersPerSecondExceedingOptimal>每秒字符数 - 超过最优值（{0} cps）: {1} ({2:0.00}%)</CharactersPerSecondExceedingOptimal>
+    <CharactersPerSecondExceedingMaximum>每秒字符数 - 超过最大值（{0} cps）: {1} ({2:0.00}%)</CharactersPerSecondExceedingMaximum>
+    <WordsPerMinuteMinimum>每分钟词数（最少）: {0:0.000}</WordsPerMinuteMinimum>
+    <WordsPerMinuteMaximum>每分钟词数（最多）: {0:0.000}</WordsPerMinuteMaximum>
+    <WordsPerMinuteAverage>每分钟词数（平均）: {0:0.000}</WordsPerMinuteAverage>
+    <WordsPerMinuteExceedingMaximum>每分钟词数 - 超过最大值（{0} wpm）: {1} ({2:0.00}%)</WordsPerMinuteExceedingMaximum>
     <GapMinimum>间隔 - 最短: {0:#,##0} ms</GapMinimum>
     <GapMaximum>间隔 - 最长: {0:#,##0} ms</GapMaximum>
     <GapAverage>间隔 - 平均: {0:#,##0.##} ms</GapAverage>
+    <GapExceedingMinimum>间隔 - 低于最小值（{0} s）: {1} ({2:0.00}%)</GapExceedingMinimum>
     <Export>导出...</Export>
   </Statistics>
   <SubStationAlphaProperties>
@@ -3203,7 +3337,16 @@ Command line: {1} {2}
     <Title>WebVTT - 设定新人声</Title>
     <VoiceName>人声名称</VoiceName>
   </WebVttNewVoice>
+  <WebVttProperties>
+    <UseXTimeStamp>使用 X-TIMESTAMP-MAP 标头值</UseXTimeStamp>
+    <MergeLines>加载时合并具有相同文本的行</MergeLines>
+  </WebVttProperties>
   <WebVttStyleManager>
     <Title>WebVTT 样式</Title>
   </WebVttStyleManager>
+  <WhisperAdvanced>
+    <Title>Whisper Advanced - 额外的命令行参数</Title>
+    <CommandLineArguments>Whisper 命令行的额外参数：</CommandLineArguments>
+    <Info>注意：不同的 Whisper 实现有不同的命令行参数！</Info>
+  </WhisperAdvanced>
 </Language>

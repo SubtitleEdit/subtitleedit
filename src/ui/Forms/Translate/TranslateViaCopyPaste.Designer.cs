@@ -1,4 +1,6 @@
 ﻿
+using System.Windows.Forms;
+
 namespace Nikse.SubtitleEdit.Forms.Translate
 {
     partial class TranslateViaCopyPaste
@@ -29,7 +31,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
         /// </summary>
         private void InitializeComponent()
         {
-            this.textBoxLineSeparator = new System.Windows.Forms.TextBox();
+            this.textBoxLineSeparator = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelLineSeparator = new System.Windows.Forms.Label();
             this.checkBoxAutoCopyToClipboard = new System.Windows.Forms.CheckBox();
             this.numericUpDownMaxBytes = new Nikse.SubtitleEdit.Controls.NikseUpDown();
@@ -38,7 +40,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             this.buttonTranslate = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOk = new System.Windows.Forms.Button();
-            this.textBoxLog = new System.Windows.Forms.TextBox();
+            this.textBoxLog = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.columnHeaderTarget = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderSource = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderNumber = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -161,7 +163,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             this.textBoxLog.Location = new System.Drawing.Point(12, 43);
             this.textBoxLog.Multiline = true;
             this.textBoxLog.Name = "textBoxLog";
-            this.textBoxLog.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.textBoxLog.ScrollBars = ScrollBars.Both;
             this.textBoxLog.Size = new System.Drawing.Size(900, 441);
             this.textBoxLog.TabIndex = 20;
             // 
@@ -233,7 +235,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
         #endregion
 
-        private System.Windows.Forms.TextBox textBoxLineSeparator;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxLineSeparator;
         private System.Windows.Forms.Label labelLineSeparator;
         private System.Windows.Forms.CheckBox checkBoxAutoCopyToClipboard;
         private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownMaxBytes;
@@ -242,7 +244,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
         private System.Windows.Forms.Button buttonTranslate;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonOk;
-        private System.Windows.Forms.TextBox textBoxLog;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxLog;
         private System.Windows.Forms.ColumnHeader columnHeaderTarget;
         private System.Windows.Forms.ColumnHeader columnHeaderSource;
         private System.Windows.Forms.ColumnHeader columnHeaderNumber;
