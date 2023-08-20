@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Linq;
 
@@ -17,18 +18,13 @@ namespace Nikse.SubtitleEdit.Logic.Plugins
             _githubUrl = githubUrl ?? throw new ArgumentNullException(nameof(githubUrl));
         }
 
-        public IReadOnlyCollection<PluginInfoItem> GetPlugins()
+        public async Task<IReadOnlyCollection<PluginInfoItem>> GetPlugins()
         {
             XDocument xDocument;
             using (var httpClient = DownloaderFactory.MakeHttpClient())
             using (var downloadStream = new MemoryStream())
             {
-                var downloadTask = httpClient.DownloadAsync(_githubUrl, downloadStream, null, CancellationToken.None);
-                while (!downloadTask.IsCompleted && !downloadTask.IsCanceled)
-                {
-                    Application.DoEvents();
-                }
-
+                await httpClient.DownloadAsync(_githubUrl, downloadStream, null, CancellationToken.None);
                 downloadStream.Position = 0;
                 xDocument = XDocument.Load(downloadStream);
             }

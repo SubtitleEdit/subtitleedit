@@ -1,9 +1,10 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Logic.Plugins
 {
     public interface IPluginMetadataProvider
     {
-       IReadOnlyCollection<PluginInfoItem> GetPlugins();
+       Task<IReadOnlyCollection<PluginInfoItem>> GetPlugins();
     }
 }

@@ -9,6 +9,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
@@ -16,7 +17,7 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class PluginsGet : Form
     {
-        private List<PluginInfoItem> _downloadList;
+        private IReadOnlyCollection<PluginInfoItem> _downloadList;
         private string _downloadedPluginName;
         private readonly LanguageStructure.PluginsGet _language;
         private List<string> _updateAllListUrls;
@@ -82,14 +83,14 @@ namespace Nikse.SubtitleEdit.Forms
             return pluginsFolder;
         }
 
-        private void GetAndShowAllPluginInfo()
+        private async void GetAndShowAllPluginInfo()
         {
             try
             {
                 _fetchingData = true;
                 labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait;
                 Refresh();
-                var installedPlugins = new InstalledPluginMetadataProvider().GetPlugins();
+                var installedPlugins = await new InstalledPluginMetadataProvider().GetPlugins();
                 ShowInstalledPlugins(installedPlugins);
                 ShowOnlinePlugins(installedPlugins);
                 labelPleaseWait.Text = string.Empty;
@@ -104,13 +105,13 @@ namespace Nikse.SubtitleEdit.Forms
             _fetchingData = false;
         }
 
-        private void ShowOnlinePlugins(IEnumerable<PluginInfoItem> installedPlugins)
+        private async void ShowOnlinePlugins(IEnumerable<PluginInfoItem> installedPlugins)
         {
             _downloadList = new List<PluginInfoItem>();
             listViewGetPlugins.BeginUpdate();
             _updateAllListUrls = new List<string>();
             var onlinePluginInfo = new OnlinePluginMetadataProvider(PluginXmlFileUrl);
-            _downloadList = onlinePluginInfo.GetPlugins().ToList();
+            _downloadList = await onlinePluginInfo.GetPlugins();
             LoadAvailablePlugins(installedPlugins, _downloadList);
             ShowAvailablePlugins();
             listViewGetPlugins.EndUpdate();
@@ -195,7 +196,7 @@ namespace Nikse.SubtitleEdit.Forms
             listViewInstalledPlugins.EndUpdate();
         }
 
-        private void buttonDownload_Click(object sender, EventArgs e)
+        private async void buttonDownload_Click(object sender, EventArgs e)
         {
             if (listViewGetPlugins.SelectedItems.Count == 0)
             {
@@ -216,25 +217,20 @@ namespace Nikse.SubtitleEdit.Forms
                 using (var httpClient = DownloaderFactory.MakeHttpClient())
                 using (var downloadStream = new MemoryStream())
                 {
-                    var downloadTask = httpClient.DownloadAsync(url, downloadStream, new Progress<float>((progress) =>
+                    await httpClient.DownloadAsync(url, downloadStream, new Progress<float>((progress) =>
                     {
                         var pct = (int)Math.Round(progress * 100.0, MidpointRounding.AwayFromZero);
                         labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait + "  " + pct + "%";
                     }), _cancellationTokenSource.Token);
 
-                    while (!downloadTask.IsCompleted && !downloadTask.IsCanceled)
-                    {
-                        Application.DoEvents();
-                    }
+                    // if (downloadTask.IsCanceled)
+                    // {
+                    //     DialogResult = DialogResult.Cancel;
+                    //     labelPleaseWait.Refresh();
+                    //     return;
+                    // }
 
-                    if (downloadTask.IsCanceled)
-                    {
-                        DialogResult = DialogResult.Cancel;
-                        labelPleaseWait.Refresh();
-                        return;
-                    }
-
-                    DownloadDataCompleted(downloadStream);
+                    await DownloadDataCompleted(downloadStream);
                 }
             }
             catch (Exception exception)
@@ -246,7 +242,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void DownloadDataCompleted(MemoryStream downloadStream)
+        private async Task DownloadDataCompleted(MemoryStream downloadStream)
         {
             labelPleaseWait.Text = string.Empty;
             if (downloadStream.Length == 0)
@@ -291,7 +287,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     ChangeControlsState(true);
                     MessageBox.Show(string.Format(_language.XPluginsUpdated, _updatingAllPluginsCount));
-                    var installedPlugins = new InstalledPluginMetadataProvider().GetPlugins();
+                    var installedPlugins = await new InstalledPluginMetadataProvider().GetPlugins();
                     ShowInstalledPlugins(installedPlugins);
                 }
             }
@@ -299,7 +295,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 ChangeControlsState(true);
                 MessageBox.Show(string.Format(_language.PluginXDownloaded, _downloadedPluginName));
-                var installedPlugins = new InstalledPluginMetadataProvider().GetPlugins();
+                var installedPlugins = await new InstalledPluginMetadataProvider().GetPlugins();
                 ShowInstalledPlugins(installedPlugins);
             }
         }

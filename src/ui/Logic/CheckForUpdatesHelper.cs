@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Http;
 using Nikse.SubtitleEdit.Forms;
@@ -93,7 +94,7 @@ namespace Nikse.SubtitleEdit.Logic
             return sb.ToString();
         }
 
-        public void CheckForUpdates(bool manualCheck)
+        public async Task CheckForUpdates(bool manualCheck)
         {
             ManualCheck = manualCheck;
 
@@ -101,13 +102,13 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 using (var httpClient = DownloaderFactory.MakeHttpClient())
                 {
-                    _changeLog = httpClient.GetStringAsync(ChangeLogUrl).Result;
+                    _changeLog = await httpClient.GetStringAsync(ChangeLogUrl);
                 }
 
-                var installedPlugins = new InstalledPluginMetadataProvider().GetPlugins();
+                var installedPlugins = await new InstalledPluginMetadataProvider().GetPlugins();
                 if (installedPlugins.Count > 0)
                 {
-                    var onlinePlugins = new OnlinePluginMetadataProvider(PluginsGet.PluginXmlFileUrl).GetPlugins();
+                    var onlinePlugins = await new OnlinePluginMetadataProvider(PluginsGet.PluginXmlFileUrl).GetPlugins();
                     var updates = PluginUpdateChecker.GetAvailableUpdates(installedPlugins, onlinePlugins.ToArray());
                     PluginUpdates = updates.Count;
                 }

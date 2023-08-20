@@ -66,7 +66,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void CheckForUpdates_Shown(object sender, EventArgs e)
+        private async void CheckForUpdates_Shown(object sender, EventArgs e)
         {
             if (!_performCheckOnShown)
             {
@@ -77,7 +77,7 @@ namespace Nikse.SubtitleEdit.Forms
             _updatesHelper = new CheckForUpdatesHelper();
             Application.DoEvents();
             Refresh();
-            _updatesHelper.CheckForUpdates(true);
+            await _updatesHelper.CheckForUpdates(true);
             timerCheckForUpdates.Start();
 
             buttonOK.Focus();
