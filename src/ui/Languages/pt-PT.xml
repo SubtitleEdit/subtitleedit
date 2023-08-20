@@ -543,6 +543,9 @@ Tiramos partido do ritmo intrínseco da imagem.</CreateSimpleChainingToolTip>
     <CheckingForUpdatesNewVersion>Nova versão disponível!</CheckingForUpdatesNewVersion>
     <InstallUpdate>Ir para a página de transferência</InstallUpdate>
     <NoUpdates>Não actualizar</NoUpdates>
+    <XPluginsHasAnUpdate>{0} plugins têm actualizações -</XPluginsHasAnUpdate>
+    <OnePluginsHasAnUpdate>Um plugin tem uma actualização -</OnePluginsHasAnUpdate>
+    <Update>actualizar</Update>
   </CheckForUpdates>
   <ChooseAudioTrack>
     <Title>Escolher a faixa de áudio</Title>
@@ -2294,6 +2297,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <BeautifyTimeCodes>Embelezar tempos</BeautifyTimeCodes>
     <SettingsName>Definições</SettingsName>
     <ToggleBookmarks>Alternar marcadores</ToggleBookmarks>
+    <FocusTextBox>Focar caixa de texto</FocusTextBox>
     <ToggleBookmarksWithComment>Alternar marcadores - adicionar comentário</ToggleBookmarksWithComment>
     <ClearBookmarks>Eliminar marcadores</ClearBookmarks>
     <ExportBookmarks>Exportar marcadores...</ExportBookmarks>
@@ -2815,6 +2819,8 @@ Continuar?</RestoreDefaultSettingsMsg>
     <CustomContinuationStyleNote>Nota: o estilo de continuação personalizado é partilhado entre perfis.</CustomContinuationStyleNote>
     <ResetCustomContinuationStyleWarning>Isto irá substituir os valores no diálogo. Tem a certeza?</ResetCustomContinuationStyleWarning>
     <ExportAsHtml>Exportar como HTML...</ExportAsHtml>
+    <SetNewActor>Definir novo actor/voz</SetNewActor>
+    <SetActorX>Definir actor/voz {0}</SetActorX>
   </Settings>
   <SettingsMpv>
     <DownloadMpv>Transferir o mpv lib</DownloadMpv>
