@@ -539,9 +539,12 @@ Command line: {1} {2}
     <CheckingForUpdatesNewVersion>有新版本可用!</CheckingForUpdatesNewVersion>
     <InstallUpdate>前往下载页面</InstallUpdate>
     <NoUpdates>不要更新</NoUpdates>
+    <XPluginsHasAnUpdate>{0} 个插件有更新 -</XPluginsHasAnUpdate>
+    <OnePluginsHasAnUpdate>1 个插件有更新 -</OnePluginsHasAnUpdate>
+    <Update>更新</Update>
   </CheckForUpdates>
   <ChooseAudioTrack>
-    <Title>标题</Title>
+    <Title>选择音轨</Title>
   </ChooseAudioTrack>
   <ChooseEncoding>
     <Title>选择编码方式</Title>
