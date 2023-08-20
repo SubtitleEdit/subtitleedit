@@ -75,7 +75,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             _updatesHelper = new CheckForUpdatesHelper();
-            Application.DoEvents();
             Refresh();
             await _updatesHelper.CheckForUpdates(true);
             timerCheckForUpdates.Start();
