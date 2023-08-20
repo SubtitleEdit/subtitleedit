@@ -21,8 +21,7 @@ namespace Test.Common
         {
             var text = "<i></i>";
             var reader = new FormattableTextReader(text);
-            Assert.IsTrue(reader.Read());
-            Assert.AreEqual('\0', reader.GetCurrent());
+            Assert.IsFalse(reader.Read());
             Assert.IsFalse(reader.Read());
         }
     }

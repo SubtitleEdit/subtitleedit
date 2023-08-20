@@ -33,7 +33,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     _current = tagCloseIndex + 1;
                 }
 
-                return true;
+                return _current < len;
             }
 
             return false;
@@ -51,17 +51,15 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         private static char GetClosingPair(char openTag)
         {
-            if (openTag == '<')
+            switch (openTag)
             {
-                return '>';
+                case '<':
+                    return '>';
+                case '{':
+                    return '}';
+                default:
+                    return '\0';
             }
-
-            if (openTag == '{')
-            {
-                return '}';
-            }
-
-            return '\0';
         }
 
         private static bool IsTagStartChar(char charAtPosition)
