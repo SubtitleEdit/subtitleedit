@@ -47,7 +47,7 @@ namespace Nikse.SubtitleEdit.Core.Translate.Processor
         {
             public readonly List<TTranslationBaseUnit> TranslationUnits = new List<TTranslationBaseUnit>();
 
-            public int TextSize => TranslationUnits.ConvertAll(e => Utilities.UrlEncode(e.Text).Length).Sum();
+            public int TextSize => TranslationUnits.ConvertAll(e => Utilities.UrlEncodeLength(e.Text)).Sum();
 
             public int ArrayLength => TranslationUnits.Count;
         }
@@ -103,7 +103,7 @@ namespace Nikse.SubtitleEdit.Core.Translate.Processor
 
             foreach (var translationUnit in translationUnits)
             {
-                if (currentChunk.TextSize + Utilities.UrlEncode(translationUnit.Text).Length > maxTextSize
+                if (currentChunk.TextSize + Utilities.UrlEncodeLength(translationUnit.Text) > maxTextSize
                     || currentChunk.ArrayLength + 1 > maximumRequestArrayLength)
                 {
                     yield return currentChunk;

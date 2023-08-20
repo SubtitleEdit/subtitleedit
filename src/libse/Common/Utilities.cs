@@ -1301,11 +1301,35 @@ namespace Nikse.SubtitleEdit.Core.Common
         }
 
         /// <summary>
-        /// UrlEncodes a string without the requirement for System.Web
+        /// UrlEncodes a string without the requirement for System.Web.
+        /// Will crash if text length > 2000.
         /// </summary>
         public static string UrlEncode(string text)
         {
             return Uri.EscapeDataString(text);
+        }
+
+        /// <summary>
+        /// Calculates the length if the text url encoded.
+        /// </summary>
+        public static int UrlEncodeLength(string text)
+        {
+            var urlEncodeLength = 0;
+            foreach (var ch in text)
+            {
+                if (ch >= 'a' && ch <= 'z' ||
+                    ch >= 'A' && ch <= 'Z' ||
+                    ch >= '0' && ch <= '9')
+                {
+                    urlEncodeLength++;
+                }
+                else
+                {
+                    urlEncodeLength += 3;
+                }
+            }
+
+            return urlEncodeLength;
         }
 
         /// <summary>
