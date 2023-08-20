@@ -533,13 +533,16 @@ https://github.com/SubtitleEdit/subtitleedit
     <AllowOverlap>Разрешаване на припокриване</AllowOverlap>
   </ChangeSpeedInPercent>
   <CheckForUpdates>
-    <Title>Проверка за обновяване</Title>
-    <CheckingForUpdates>Проверка за обновяване...</CheckingForUpdates>
-    <CheckingForUpdatesFailedX>Проверката за обновяване е неуспешна: {0}</CheckingForUpdatesFailedX>
+    <Title>Проверка за актуализиране</Title>
+    <CheckingForUpdates>Проверка за актуализиране...</CheckingForUpdates>
+    <CheckingForUpdatesFailedX>Проверката за актуализиране е неуспешна: {0}</CheckingForUpdatesFailedX>
     <CheckingForUpdatesNoneAvailable>Използвате последната версия на Subtitle Edit :)</CheckingForUpdatesNoneAvailable>
     <CheckingForUpdatesNewVersion>Налична е нова версия!</CheckingForUpdatesNewVersion>
     <InstallUpdate>Към страницата за изтегляне</InstallUpdate>
     <NoUpdates>Не обновявай</NoUpdates>
+    <XPluginsHasAnUpdate>{0} приставки (Plugins) имат актуализации -</XPluginsHasAnUpdate>
+    <OnePluginsHasAnUpdate>Една приставка (Plugin) има актуализация -</OnePluginsHasAnUpdate>
+    <Update>обновление</Update>
   </CheckForUpdates>
   <ChooseAudioTrack>
     <Title>Избор на аудио пътечка</Title>
@@ -1460,7 +1463,7 @@ https://github.com/SubtitleEdit/subtitleedit
         <LeaveSession>Прекратяване на сесия</LeaveSession>
       </Networking>
       <Help>
-        <CheckForUpdates>Проверка за обновяване...</CheckForUpdates>
+        <CheckForUpdates>Проверка за актуализиране...</CheckForUpdates>
         <Title>Помощ</Title>
         <Help>Помощ (на Английски)</Help>
         <About>За програмата</About>
@@ -1880,7 +1883,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <BeforeColumnImportText>Преди колоната импорт на текст</BeforeColumnImportText>
     <BeforeColumnShiftCellsDown>Преди местенето на клетка надолу</BeforeColumnShiftCellsDown>
     <BeforeX>Преди: {0}</BeforeX>
-    <LinesUpdatedX>Обновени редове: {0} </LinesUpdatedX>
+    <LinesUpdatedX>Актуализирани редове: {0} </LinesUpdatedX>
     <ErrorLoadingPluginXErrorY>Грешка в зареждането на приставка (Plugins): {0}: {1}</ErrorLoadingPluginXErrorY>
     <BeforeRunningPluginXVersionY>Преди стартирането на приставка (Plugins): {0}: {1}</BeforeRunningPluginXVersionY>
     <UnableToReadPluginResult>Не може да се прочетат субтитрите, в резултат от приставката!</UnableToReadPluginResult>
@@ -2176,12 +2179,12 @@ https://github.com/SubtitleEdit/subtitleedit
     <PluginXDownloaded>Приставката {0} е свалена</PluginXDownloaded>
     <Download>Изтегляне</Download>
     <Remove>Премахване</Remove>
-    <UpdateAllX>Обновяване на всички ({0})</UpdateAllX>
+    <UpdateAllX>Обнови вс.({0})</UpdateAllX>
     <UnableToDownloadPluginListX>Не може да се свали списъка с приставки (Plugins): {0}</UnableToDownloadPluginListX>
     <NewVersionOfSubtitleEditRequired>Изисква се нова версия на Subtitle Edit</NewVersionOfSubtitleEditRequired>
-    <UpdateAvailable>[Налично е обновяване!]</UpdateAvailable>
+    <UpdateAvailable>[Налична е актуализация!]</UpdateAvailable>
     <UpdateAll>Обновяване на всички</UpdateAll>
-    <XPluginsUpdated>{0} приставка/и бяха обновени</XPluginsUpdated>
+    <XPluginsUpdated>{0} приставка(и) бяха актуализирани</XPluginsUpdated>
   </PluginsGet>
   <RegularExpressionContextMenu>
     <WordBoundary>Разстояние между думите (\b)</WordBoundary>
@@ -2371,7 +2374,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <TranslationAutoSuffix>Авт. суфикс на името на файла за превод</TranslationAutoSuffix>
     <AutoBackupDeleteAfterOneMonth>1 месец</AutoBackupDeleteAfterOneMonth>
     <AutoBackupDeleteAfterXMonths>{0} месеца</AutoBackupDeleteAfterXMonths>
-    <CheckForUpdates>Проверка за обновяване</CheckForUpdates>
+    <CheckForUpdates>Проверка за актуализиране</CheckForUpdates>
     <AutoSave>Авт. запазване</AutoSave>
     <AllowEditOfOriginalSubtitle>Разрешаване редактиране на оригиналните субтитри</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>Запитване преди изтриване на редове</PromptDeleteLines>
@@ -2802,7 +2805,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <BDOpensInEdit>Редактиране</BDOpensInEdit>
     <ShortcutsAllowSingleLetterOrNumberInTextBox>Преки пътища: Разрешава единична буква/цифра в текстовото поле</ShortcutsAllowSingleLetterOrNumberInTextBox>
     <ShortcutCustomToggle>Превключване на пряк път по избор за начало/край</ShortcutCustomToggle>
-    <UpdateFileTypeAssociations>Обнови асоциациите типове файлове</UpdateFileTypeAssociations>
+    <UpdateFileTypeAssociations>Обнови асоциациите на типовете файлове</UpdateFileTypeAssociations>
     <FileTypeAssociationsUpdated>Асоциациите на типовете файлове са актуализирани</FileTypeAssociationsUpdated>
     <CustomContinuationStyle>Редактиране на персонализиран стил на продължение</CustomContinuationStyle>
     <LoadStyle>Зареждане на стил...</LoadStyle>
