@@ -538,6 +538,9 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <CheckingForUpdatesNewVersion>새로운 버전이 있습니다!</CheckingForUpdatesNewVersion>
     <InstallUpdate>다운로드 페이지로 이동</InstallUpdate>
     <NoUpdates>업데이트 안 함</NoUpdates>
+    <XPluginsHasAnUpdate>{0} 플러그인에 업데이트가 있습니다 -</XPluginsHasAnUpdate>
+    <OnePluginsHasAnUpdate>플러그인 하나에 업데이트가 있습니다 -</OnePluginsHasAnUpdate>
+    <Update>업데이트</Update>
   </CheckForUpdates>
   <ChooseAudioTrack>
     <Title>오디오 트랙 선택</Title>
