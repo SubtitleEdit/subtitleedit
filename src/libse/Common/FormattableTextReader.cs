@@ -39,15 +39,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             return false;
         }
 
-        public char GetCurrent()
-        {
-            if (_current < _text.Length)
-            {
-                return _text[_current];
-            }
-
-            return '\0';
-        }
+        public char GetCurrent() => _current < _text.Length ? _text[_current] : '\0';
 
         private static char GetClosingPair(char openTag)
         {
