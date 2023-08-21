@@ -78,8 +78,6 @@ namespace Nikse.SubtitleEdit.Controls
 
                 if (MouseButtons == MouseButtons.Left || Control.MouseButtons == MouseButtons.Right)
                 {
-
-
                     if (_hasMouseOver)
                     {
                         return;
@@ -105,7 +103,12 @@ namespace Nikse.SubtitleEdit.Controls
                 Controls.Remove(_listView);
                 DialogResult = DialogResult.Cancel;
                 e.Handled = true;
-                return;
+            }
+            else if (e.KeyCode == Keys.Enter)
+            {
+                Controls.Remove(_listView);
+                DialogResult = DialogResult.OK;
+                e.Handled = true;
             }
         }
     }
