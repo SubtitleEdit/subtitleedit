@@ -31,7 +31,7 @@ namespace Nikse.SubtitleEdit.Controls
         // ReSharper disable once InconsistentNaming
         public new event EventHandler TextChanged;
 
-        private TextBox _textBox;
+        private readonly TextBox _textBox;
 
         private NikseComboBoxPopUp _popUp;
 
@@ -426,7 +426,7 @@ namespace Nikse.SubtitleEdit.Controls
             _textBox = new TextBox();
             _textBox.Visible = false;
             _items = new NikseComboBoxCollection(this);
-            
+
 
             SetStyle(ControlStyles.ResizeRedraw | ControlStyles.OptimizedDoubleBuffer, true);
 
@@ -808,10 +808,10 @@ namespace Nikse.SubtitleEdit.Controls
 
         private void HandleOverflow(List<ListViewItem> listViewItems, int lvHeight)
         {
-            BackColor = DarkTheme.BackColor;
-            ForeColor = DarkTheme.ForeColor;
-            Parent.BackColor = DarkTheme.BackColor;
-            Parent.ForeColor = DarkTheme.ForeColor;
+            BackColor = UiUtil.BackColor;
+            ForeColor = UiUtil.ForeColor;
+            Parent.BackColor = BackColor;
+            Parent.ForeColor = ForeColor;
 
             var hasScrollBar = false;
             if (listViewItems.Count > 0)
@@ -846,7 +846,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
 
             _popUp?.Dispose();
-            _popUp = new NikseComboBoxPopUp(_listView, SelectedIndex, Cursor.Position.X- (DropDownWidth / 2), Cursor.Position.Y);
+            _popUp = new NikseComboBoxPopUp(_listView, SelectedIndex, Cursor.Position.X - (DropDownWidth / 2), Cursor.Position.Y);
             _popUp.ShowDialog(this.Parent);
             _listView?.Dispose();
             _listView = null;
@@ -1063,7 +1063,7 @@ namespace Nikse.SubtitleEdit.Controls
         internal static TextFormatFlags CreateTextFormatFlags(Control control, HorizontalAlignment contentAlignment, bool useMnemonic)
         {
             var textFormatFlags = TextFormatFlags.TextBoxControl | TextFormatFlags.WordBreak | TextFormatFlags.VerticalCenter;
-        
+
             if (contentAlignment == HorizontalAlignment.Left)
             {
                 textFormatFlags |= TextFormatFlags.Left;
@@ -1076,7 +1076,7 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 textFormatFlags |= TextFormatFlags.Right;
             }
-            
+
             if (control.RightToLeft == RightToLeft.Yes)
             {
                 textFormatFlags |= TextFormatFlags.RightToLeft;
@@ -1089,17 +1089,14 @@ namespace Nikse.SubtitleEdit.Controls
 
         private void DrawText(PaintEventArgs e, Color textColor)
         {
-            using (var stringFormat = new StringFormat(StringFormat.GenericDefault))
-            {
-                var textFormatFlags = CreateTextFormatFlags(this, _textBox.TextAlign, false);
+            var textFormatFlags = CreateTextFormatFlags(this, _textBox.TextAlign, false);
 
-                TextRenderer.DrawText(e.Graphics,
-                    _textBox.Text,
-                    _textBox.Font,
-                    new Rectangle(_textBox.Left, _textBox.Top + 1, _textBox.Width, _textBox.Height),
-                    textColor,
-                    textFormatFlags);
-            }
+            TextRenderer.DrawText(e.Graphics,
+                _textBox.Text,
+                _textBox.Font,
+                new Rectangle(_textBox.Left, _textBox.Top + 1, _textBox.Width, _textBox.Height),
+                textColor,
+                textFormatFlags);
         }
 
         public override RightToLeft RightToLeft
@@ -1182,7 +1179,7 @@ namespace Nikse.SubtitleEdit.Controls
         }
 
         private bool _skipPaint;
-        private bool _loading;
+        private readonly bool _loading;
 
         public void BeginUpdate()
         {
