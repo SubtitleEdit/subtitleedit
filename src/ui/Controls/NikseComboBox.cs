@@ -522,7 +522,10 @@ namespace Nikse.SubtitleEdit.Controls
                         KeyDown?.Invoke(this, e);
                     }
                 }
-
+                else
+                {
+                    KeyDown?.Invoke(this, e);
+                }
             };
 
             _textBox.LostFocus += (sender, args) => Invalidate();
