@@ -610,8 +610,8 @@ namespace Nikse.SubtitleEdit.Controls
                 _listViewShown = false;
             }
 
-            var form = FindForm();
-            if (form != null)
+            var form = _listView == null ? FindForm() : _listView.FindForm();
+            if (form != null && _listView != null)
             {
                 form.Controls.Remove(_listView);
                 form.Invalidate();
@@ -812,6 +812,7 @@ namespace Nikse.SubtitleEdit.Controls
             ForeColor = UiUtil.ForeColor;
             Parent.BackColor = BackColor;
             Parent.ForeColor = ForeColor;
+            Parent.Invalidate();
 
             var hasScrollBar = false;
             if (listViewItems.Count > 0)
