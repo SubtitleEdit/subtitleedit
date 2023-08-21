@@ -251,6 +251,53 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         private void ButtonGenerate_Click(object sender, EventArgs e)
         {
             _cancel = false;
+
+            // Check if chosen whisper implementation is installed
+            if (comboBoxWhisperEngine.Text == WhisperChoice.Cpp)
+            {
+                var fileName = WhisperHelper.GetWhisperPathAndFileName(WhisperChoice.Cpp);
+                if (!File.Exists(fileName))
+                {
+                    if (MessageBox.Show(string.Format(LanguageSettings.Current.Settings.DownloadX, "Whisper CPP"), "Subtitle Edit", MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
+                    {
+                        using (var downloadForm = new WhisperDownload(WhisperChoice.Cpp))
+                        {
+                            if (downloadForm.ShowDialog(this) != DialogResult.OK)
+                            {
+                                return;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        return;
+                    }
+                }
+            }
+
+            if (comboBoxWhisperEngine.Text == WhisperChoice.PurfviewFasterWhisper)
+            {
+                var fileName = WhisperHelper.GetWhisperPathAndFileName(WhisperChoice.PurfviewFasterWhisper);
+                if (!File.Exists(fileName))
+                {
+                    if (MessageBox.Show(string.Format(LanguageSettings.Current.Settings.DownloadX, "Purfview Faster-Whisper"), "Subtitle Edit", MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
+                    {
+                        using (var downloadForm = new WhisperDownload(WhisperChoice.PurfviewFasterWhisper))
+                        {
+                            if (downloadForm.ShowDialog(this) != DialogResult.OK)
+                            {
+                                return;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        return;
+                    }
+                }
+            }
+
+            // Model must be installed
             if (comboBoxModels.Items.Count == 0)
             {
                 buttonDownload_Click(null, null);
