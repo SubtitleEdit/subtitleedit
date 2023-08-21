@@ -649,9 +649,13 @@ namespace Nikse.SubtitleEdit.Controls
             e.Graphics.FillPolygon(brush,
                 new[]
                 {
-                    new Point(left + 5, top + 1),
-                    new Point(left + 0, top + height),
-                    new Point(left + 10, top + height),
+                    // arrow head
+                    new Point(left + 5, top + 2), // top
+                    //new Point(left + 6, top + 2), // top right 
+                    //new Point(left + 4, top + 2), // top left
+
+                    new Point(left + 1, top + height), // left bottom
+                    new Point(left + 9, top + height), // right bottom
                 });
         }
 
@@ -660,9 +664,13 @@ namespace Nikse.SubtitleEdit.Controls
             e.Graphics.FillPolygon(brush,
                 new[]
                 {
-                    new Point(left + 0, top),
-                    new Point(left + 10, top),
-                    new Point(left + 5, top + height -1),
+                    new Point(left + 1, top), // left top
+                    new Point(left + 9, top), // right top
+
+                    // arrow head
+                    new Point(left + 5, top + height -2), // bottom
+                    //new Point(left + 6, top + height -2), // bottom right  
+                    //new Point(left + 4, top + height -2), // bottom left
                 });
         }
         
