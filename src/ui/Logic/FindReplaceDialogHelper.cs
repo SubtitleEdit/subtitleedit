@@ -423,6 +423,12 @@ namespace Nikse.SubtitleEdit.Logic
 
                     return Success;
                 }
+
+                if (startIndex <= 0)
+                {
+                    return false;
+                }
+
                 var searchText = text.Substring(0, startIndex);
                 var pos = -1;
                 var comparison = GetComparison();
