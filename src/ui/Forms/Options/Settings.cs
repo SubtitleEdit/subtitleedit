@@ -1662,14 +1662,16 @@ namespace Nikse.SubtitleEdit.Forms.Options
             AddNode(listViewAndTextBoxNode, language.MainTextBoxUnbreak, nameof(Configuration.Settings.Shortcuts.MainTextBoxUnbreak));
             AddNode(listViewAndTextBoxNode, language.MainTextBoxUnbreakNoSpace, nameof(Configuration.Settings.Shortcuts.MainTextBoxUnbreakNoSpace));
             AddNode(listViewAndTextBoxNode, language.SetNewActor, nameof(Configuration.Settings.Shortcuts.MainListViewSetNewActor));
-            AddNode(listViewAndTextBoxNode, string.Format(language.SetActorX, "1"), nameof(Configuration.Settings.Shortcuts.MainListViewSetActor1));
-            AddNode(listViewAndTextBoxNode, string.Format(language.SetActorX, "2"), nameof(Configuration.Settings.Shortcuts.MainListViewSetActor2));
-            AddNode(listViewAndTextBoxNode, string.Format(language.SetActorX, "3"), nameof(Configuration.Settings.Shortcuts.MainListViewSetActor3));
-            AddNode(listViewAndTextBoxNode, string.Format(language.SetActorX, "4"), nameof(Configuration.Settings.Shortcuts.MainListViewSetActor4));
-            AddNode(listViewAndTextBoxNode, string.Format(language.SetActorX, "5"), nameof(Configuration.Settings.Shortcuts.MainListViewSetActor5));
-            AddNode(listViewAndTextBoxNode, string.Format(language.SetActorX, "6"), nameof(Configuration.Settings.Shortcuts.MainListViewSetActor6));
-            AddNode(listViewAndTextBoxNode, string.Format(language.SetActorX, "7"), nameof(Configuration.Settings.Shortcuts.MainListViewSetActor7));
-            AddNode(listViewAndTextBoxNode, string.Format(language.SetActorX, "8"), nameof(Configuration.Settings.Shortcuts.MainListViewSetActor8));
+            AddNode(listViewAndTextBoxNode, string.Format(language.SetActorX, "1"), nameof(Configuration.Settings.Shortcuts.MainListViewSetActor1), true);
+            AddNode(listViewAndTextBoxNode, string.Format(language.SetActorX, "2"), nameof(Configuration.Settings.Shortcuts.MainListViewSetActor2), true);
+            AddNode(listViewAndTextBoxNode, string.Format(language.SetActorX, "3"), nameof(Configuration.Settings.Shortcuts.MainListViewSetActor3), true);
+            AddNode(listViewAndTextBoxNode, string.Format(language.SetActorX, "4"), nameof(Configuration.Settings.Shortcuts.MainListViewSetActor4), true);
+            AddNode(listViewAndTextBoxNode, string.Format(language.SetActorX, "5"), nameof(Configuration.Settings.Shortcuts.MainListViewSetActor5), true);
+            AddNode(listViewAndTextBoxNode, string.Format(language.SetActorX, "6"), nameof(Configuration.Settings.Shortcuts.MainListViewSetActor6), true);
+            AddNode(listViewAndTextBoxNode, string.Format(language.SetActorX, "7"), nameof(Configuration.Settings.Shortcuts.MainListViewSetActor7), true);
+            AddNode(listViewAndTextBoxNode, string.Format(language.SetActorX, "8"), nameof(Configuration.Settings.Shortcuts.MainListViewSetActor8), true);
+            AddNode(listViewAndTextBoxNode, string.Format(language.SetActorX, "9"), nameof(Configuration.Settings.Shortcuts.MainListViewSetActor9), true);
+            AddNode(listViewAndTextBoxNode, string.Format(language.SetActorX, "10"), nameof(Configuration.Settings.Shortcuts.MainListViewSetActor10), true);
             _shortcuts.Nodes.Add(listViewAndTextBoxNode);
 
             var listViewNode = new ShortcutNode(language.ListView);

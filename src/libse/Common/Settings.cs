@@ -2507,6 +2507,8 @@ $HorzAlign          =   Center
         public string MainListViewSetActor6 { get; set; }
         public string MainListViewSetActor7 { get; set; }
         public string MainListViewSetActor8 { get; set; }
+        public string MainListViewSetActor9 { get; set; }
+        public string MainListViewSetActor10 { get; set; }
         public string MainListViewColorChoose { get; set; }
         public string MainRemoveFormatting { get; set; }
         public string MainListViewCopyText { get; set; }
@@ -9958,6 +9960,18 @@ $HorzAlign          =   Center
                     shortcuts.MainListViewSetActor8 = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainListViewSetActor9");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewSetActor9 = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainListViewSetActor10");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewSetActor10 = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainListViewColorChoose");
                 if (subNode != null)
                 {
@@ -12258,6 +12272,8 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("MainListViewSetActor6", shortcuts.MainListViewSetActor6);
             textWriter.WriteElementString("MainListViewSetActor7", shortcuts.MainListViewSetActor7);
             textWriter.WriteElementString("MainListViewSetActor8", shortcuts.MainListViewSetActor8);
+            textWriter.WriteElementString("MainListViewSetActor9", shortcuts.MainListViewSetActor9);
+            textWriter.WriteElementString("MainListViewSetActor10", shortcuts.MainListViewSetActor10);
             textWriter.WriteElementString("MainListViewColorChoose", shortcuts.MainListViewColorChoose);
             textWriter.WriteElementString("MainRemoveFormatting", shortcuts.MainRemoveFormatting);
             textWriter.WriteElementString("MainListViewCopyText", shortcuts.MainListViewCopyText);
