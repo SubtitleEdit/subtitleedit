@@ -99,6 +99,7 @@
     <Collapse>Κατάρρευση</Collapse>
     <ShortcutX>Συντόμευση: {0}</ShortcutX>
     <ExampleX>Παράδειγμα: {0}</ExampleX>
+    <ViewX>Προβολή {0}</ViewX>
     <Reset>Επαναφορά</Reset>
     <Error>Ορισμός επιπέδου</Error>
     <Warning>Προειδοποίηση</Warning>
@@ -202,6 +203,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <LoadingVoskModel>Φόρτωση μοντέλου αναγνώριση ομιλίας Vosk…</LoadingVoskModel>
     <Transcribing>Μετατροπή ήχου σε κείμενο…</Transcribing>
     <TranscribingXOfY>Μετατροπή {0} αρχείου ήχου από {1} σε κείμενο</TranscribingXOfY>
+    <PostProcessing>Μετεπεξεργασία…</PostProcessing>
     <XFilesSavedToVideoSourceFolder>Αποθηκεύτηκαν {0} αρχεία στον φάκελο του βίντεο</XFilesSavedToVideoSourceFolder>
     <UsePostProcessing>Χρήση μετεπεξαργασίας (συγχώνευση γραμμών, διόρθωση πεζών - κεφαλαίων, στίξη κ.α.)</UsePostProcessing>
     <AutoAdjustTimings>Αυτόματη προσαρμογή χρόνων</AutoAdjustTimings>
@@ -211,7 +213,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MaxCharsPerSubtitle>Μέγιστοι χαρακτήρες ανά γραμμή</MaxCharsPerSubtitle>
     <RemoveTemporaryFiles>Αφαίρεση προσωρινών αρχείων</RemoveTemporaryFiles>
     <SetCppConstMeFolder>Διαδρομή φακέλου μοντέλων CPP / Const-me</SetCppConstMeFolder>
-    <OnlyRunPostProcessing>Εκτέλεση μόνο μετα-επεξεργασίας / προσαρμογή χρόνων</OnlyRunPostProcessing>
+    <OnlyRunPostProcessing>Εκτέλεση μόνο μετεπεξεργασίας / προσαρμογή χρόνων</OnlyRunPostProcessing>
+    <DownloadFasterWhisperCuda>Λήψη CUDA για Whisper-Faster</DownloadFasterWhisperCuda>
   </AudioToText>
   <AssaAttachments>
     <Title>Προσαρτήσεις Advanced Sub Station Alpha</Title>
@@ -523,10 +526,13 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Έλεγχος ενημερώσεων</Title>
     <CheckingForUpdates>Έλεγχος για ενημερώσεις…</CheckingForUpdates>
     <CheckingForUpdatesFailedX>Αποτυχία ελέγχου ενημέρωσης: {0}</CheckingForUpdatesFailedX>
-    <CheckingForUpdatesNoneAvailable>Χρήση της τελευταία έκδοσης Subtitle Edit</CheckingForUpdatesNoneAvailable>
+    <CheckingForUpdatesNoneAvailable>Χρησιμοποιείτε την τελευταία έκδοση</CheckingForUpdatesNoneAvailable>
     <CheckingForUpdatesNewVersion>Νέα έκδοση διαθέσιμη.</CheckingForUpdatesNewVersion>
     <InstallUpdate>Μετάβαση στην ιστοσελίδα λήψης</InstallUpdate>
     <NoUpdates>Ακύρωση ενημέρωσης</NoUpdates>
+    <XPluginsHasAnUpdate>{0} πρόσθετα έχουν ενημέρωση</XPluginsHasAnUpdate>
+    <OnePluginsHasAnUpdate>Ένα πρόσθετο έχει ενημέρωση</OnePluginsHasAnUpdate>
+    <Update>ενημέρωση</Update>
   </CheckForUpdates>
   <ChooseAudioTrack>
     <Title>Επιλογή κομματιού ήχου</Title>
@@ -965,9 +971,11 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <InfoAssaOn>Σημείωση: Θα χρησιμοποιηθεί η μορφοποίηση ASSA.</InfoAssaOn>
     <XGeneratedWithBurnedInSubsInX>Το "{0}" δημιουργήθηκε με ενσωματωμένους υποτίτλους σε {1}.</XGeneratedWithBurnedInSubsInX>
     <TimeRemainingMinutes>Υπολειπόμενος χρόνος: {0} λεπτά</TimeRemainingMinutes>
+    <TimeRemainingOneMinute>Υπολειπόμενος χρόνος: Ένα λεπτό</TimeRemainingOneMinute>
     <TimeRemainingSeconds>Υπολειπόμενος χρόνος: {0} δευτερόλεπτα</TimeRemainingSeconds>
     <TimeRemainingAFewSeconds>Υπολειπόμενος χρόνος: Μερικά δευτερόλεπτα</TimeRemainingAFewSeconds>
     <TimeRemainingMinutesAndSeconds>Υπολειπόμενος χρόνος: {0} λεπτά και {1} δευτερόλεπτα</TimeRemainingMinutesAndSeconds>
+    <TimeRemainingOneMinuteAndSeconds>Υπολειπόμενος χρόνος: Ένα λεπτό και {0} δευτερόλεπτα</TimeRemainingOneMinuteAndSeconds>
     <TargetFileName>Καθορισμός ονόματος αρχείου: {0}</TargetFileName>
     <TargetFileSize>Καθορισμός μεγέθους αρχείου (απαιτείται διπλό πέρασμα κωδικοποίησης)</TargetFileSize>
     <FileSizeMb>Μέγεθος αρχείου σε ΜΒ</FileSizeMb>
@@ -2272,6 +2280,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <BeautifyTimeCodes>Ωραιοποίηση χρόνων</BeautifyTimeCodes>
     <SettingsName>Ρυθμίσεις</SettingsName>
     <ToggleBookmarks>Εναλλαγή σημειώσεων</ToggleBookmarks>
+    <FocusTextBox>Εστίαση στο πλαίσιο κειμένου</FocusTextBox>
     <ToggleBookmarksWithComment>Εναλλαγή σημειώσεων - προσθήκη σχόλιου</ToggleBookmarksWithComment>
     <ClearBookmarks>Καθαρισμός σημειώσεων</ClearBookmarks>
     <ExportBookmarks>Εξαγωγή σημειώσεων…</ExportBookmarks>
@@ -2790,6 +2799,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <CustomContinuationStyleNote>Σημείωση: Το προσαρμοσμένο στυλ χρησιμοποιείται σε όλα τα προφίλ.</CustomContinuationStyleNote>
     <ResetCustomContinuationStyleWarning>Θα παρακαμφθούν οι τιμές διαλόγου. Είσαστε σίγουρος;</ResetCustomContinuationStyleWarning>
     <ExportAsHtml>Εξαγωγή ως HTML…</ExportAsHtml>
+    <SetNewActor>Ορισμός νέου ηθοποιού ή φωνής</SetNewActor>
+    <SetActorX>Ορισμός ηθοποιού ή φωνής {0}</SetActorX>
   </Settings>
   <SettingsMpv>
     <DownloadMpv>Λήψη mpv lib</DownloadMpv>
