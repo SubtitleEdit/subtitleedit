@@ -4722,6 +4722,12 @@ $HorzAlign          =   Center
                 settings.General.LastColorPickerColor2 = FromHtml(subNode.InnerText);
             }
 
+            subNode = node.SelectSingleNode("LastColorPickerColor3");
+            if (subNode != null)
+            {
+                settings.General.LastColorPickerColor3 = FromHtml(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("LastColorPickerColor4");
             if (subNode != null)
             {
