@@ -53,7 +53,7 @@ namespace Nikse.SubtitleEdit.Forms
         private TrackBar _tbAlpha;
         private TrackBar _tbBlue;
         private TrackBar _tbGreen;
-        private TextBox _tbHexCode;
+        private Controls.NikseTextBox _tbHexCode;
         private TrackBar _tbHue;
         private TrackBar _tbRed;
         private TrackBar _tbSaturation;
@@ -125,14 +125,10 @@ namespace Nikse.SubtitleEdit.Forms
                 if (!value && ShowAlpha)
                 {
                     Height -= 40;
-                    _buttonOk.Top -= 40;
-                    _buttonCancel.Top -= 40;
                 }
                 else if (value && !ShowAlpha)
                 {
                     Height += 40;
-                    _buttonOk.Top += 40;
-                    _buttonCancel.Top += 40;
                 }
                 _labelAlpha1.Visible = value;
                 _lblAlpha2.Visible = value;
@@ -218,7 +214,10 @@ namespace Nikse.SubtitleEdit.Forms
             RefreshText(_lblGreen, argb.Green);
             RefreshText(_lblAlpha2, argb.Alpha);
 
-            if (!_hexEditOn)
+            if ((_tbHexCode.Text.Length == 6 || _tbHexCode.Text.Length == 8) && _hexEditOn && _tbHexCode.BackColor == Configuration.Settings.Tools.ListViewSyntaxErrorColor)
+            {
+            }
+            else
             {
                 ShowHexColorCode(argb);
             }
@@ -360,7 +359,7 @@ namespace Nikse.SubtitleEdit.Forms
             this._label5 = new System.Windows.Forms.Label();
             this._pnlBrightness = new System.Windows.Forms.Panel();
             this._lblAlpha2 = new System.Windows.Forms.Label();
-            this._tbHexCode = new System.Windows.Forms.TextBox();
+            this._tbHexCode = new Controls.NikseTextBox();
             this._flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this._labelRed = new System.Windows.Forms.Label();
             this._tbRed = new System.Windows.Forms.TrackBar();
@@ -851,6 +850,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Select color";
             this.Load += new System.EventHandler(this.ColorChooserLoad);
+            this.Shown += new System.EventHandler(this.ColorChooser_Shown);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.ColorChooserPaint);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ColorChooser_KeyDown);
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.HandleMouse);
@@ -1077,6 +1077,11 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonColorPicker_Click(object sender, EventArgs e)
         {
             PanelColorClick(buttonColorPicker);
+        }
+
+        private void ColorChooser_Shown(object sender, EventArgs e)
+        {
+            _tbHexCode.MaxLength = _showAlpha ? 9: 7;
         }
     }
 }
