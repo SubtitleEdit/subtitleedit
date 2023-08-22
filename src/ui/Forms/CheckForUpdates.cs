@@ -176,16 +176,17 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 textBoxChangeLog.Text = _updatesHelper.LatestChangeLog;
                 textBoxChangeLog.Visible = true;
-                labelStatus.Text = LanguageSettings.Current.CheckForUpdates.CheckingForUpdatesNewVersion;
                 buttonOK.Visible = true;
                 if (_updatesHelper.IsNewSubtitleEditAvailable())
                 {
                     buttonDontCheckUpdates.Visible = true;
+                    labelStatus.Text = LanguageSettings.Current.CheckForUpdates.CheckingForUpdatesNewVersion;
                 }
                 else
                 {
                     buttonDontCheckUpdates.Visible = false;
                     buttonDownloadAndInstall.Left = buttonOK.Left - 6 - buttonDownloadAndInstall.Width;
+                    labelStatus.Text = LanguageSettings.Current.CheckForUpdates.CheckingForUpdatesNoneAvailable;
                 }
             }
             else
