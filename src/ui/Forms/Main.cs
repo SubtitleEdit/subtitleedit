@@ -35198,7 +35198,7 @@ namespace Nikse.SubtitleEdit.Forms
                     return false;
                 }
 
-                using (var form = new DownloadFfmpeg())
+                using (var form = new DownloadFfmpeg("FFmpeg"))
                 {
                     if (form.ShowDialog(this) == DialogResult.OK && !string.IsNullOrEmpty(form.FFmpegPath))
                     {
@@ -35669,6 +35669,17 @@ namespace Nikse.SubtitleEdit.Forms
             if (!IsSubtitleLoaded)
             {
                 DisplaySubtitleNotLoadedMessage();
+                return;
+            }
+
+            if (string.IsNullOrEmpty(_videoFileName))
+            {
+                MessageBox.Show(LanguageSettings.Current.General.NoVideoLoaded);
+                return;
+            }
+
+            if (!RequireFfmpegOk())
+            {
                 return;
             }
 

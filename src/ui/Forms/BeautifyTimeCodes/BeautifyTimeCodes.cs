@@ -85,7 +85,7 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
                 _shotChanges = shotChanges;
 
                 // Check if ffprobe is available              
-                if (!IsFfProbeAvailable())
+                if (!IsFfProbeAvailable(this))
                 {
                     checkBoxExtractExactTimeCodes.Enabled = false;
                     checkBoxExtractExactTimeCodes.Checked = false;
@@ -322,12 +322,34 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             _abortTimeCodes = true;
         }
 
-        public static bool IsFfProbeAvailable()
+        public static bool IsFfProbeAvailable(Form parentForm)
         {
-            return !Configuration.IsRunningOnWindows || (
-                !string.IsNullOrWhiteSpace(Configuration.Settings.General.FFmpegLocation) 
-                && File.Exists(Path.Combine(Path.GetDirectoryName(Configuration.Settings.General.FFmpegLocation), "ffprobe.exe"))
-            );
+            if (!Configuration.IsRunningOnWindows)
+            {
+                return true;
+            }
+
+            var ffprobeExists = !string.IsNullOrWhiteSpace(Configuration.Settings.General.FFmpegLocation) 
+                            && File.Exists(Path.Combine(Path.GetDirectoryName(Configuration.Settings.General.FFmpegLocation), "ffprobe.exe"));
+
+            if (!ffprobeExists)
+            {
+                if (MessageBox.Show(string.Format(LanguageSettings.Current.Settings.DownloadX, "ffprobe"), "Subtitle Edit", MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
+                {
+                    return false;
+                }
+
+                using (var form = new DownloadFfmpeg("ffprobe"))
+                {
+                    if (form.ShowDialog(parentForm) == DialogResult.OK)
+                    {
+                        return !string.IsNullOrWhiteSpace(Configuration.Settings.General.FFmpegLocation)
+                               && File.Exists(Path.Combine(Path.GetDirectoryName(Configuration.Settings.General.FFmpegLocation), "ffprobe.exe"));
+                    }
+                }
+            }
+
+            return ffprobeExists;
         }
     }
 }
