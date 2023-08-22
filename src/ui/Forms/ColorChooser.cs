@@ -1017,7 +1017,7 @@ namespace Nikse.SubtitleEdit.Forms
             var c = panel.BackColor;
             UpdateRgb($"{c.A:x2}{c.R:x2}{c.G:x2}{c.B:x2}");
             _tbHexCode.TextChanged -= _tbHexCode_TextChanged;
-            ShowHexColorCode(new ColorHandler.Argb { Alpha = c.A, Red = c.R, Green = c.R, Blue = c.B });
+            ShowHexColorCode(new ColorHandler.Argb { Alpha = c.A, Red = c.R, Green = c.G, Blue = c.B });
             _tbHexCode.TextChanged += _tbHexCode_TextChanged;
         }
 
