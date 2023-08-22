@@ -1906,8 +1906,8 @@ namespace Nikse.SubtitleEdit.Core.Common
                 { "ur", Letters.Urbu.Count(ch => charSet.Contains(ch)) }
             };
 
-            var languageWithMaxCount = dictionary.Max(entry => entry.Value);
-            var maxHitsLanguage = dictionary.FirstOrDefault(x => x.Value == languageWithMaxCount);
+            var maxCountFromCultureSet = dictionary.Max(entry => entry.Value);
+            var maxHitsLanguage = dictionary.FirstOrDefault(x => x.Value == maxCountFromCultureSet);
             return maxHitsLanguage.Value > 0 ? maxHitsLanguage.Key : null;
         }
 
