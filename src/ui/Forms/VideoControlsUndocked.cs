@@ -63,5 +63,13 @@ namespace Nikse.SubtitleEdit.Forms
 
             return base.ProcessCmdKey(ref msg, keyData);
         }
+
+        private void VideoControlsUndocked_Shown(object sender, System.EventArgs e)
+        {
+            if (Height < 320)
+            {
+                Height = 320;
+            }
+        }
     }
 }

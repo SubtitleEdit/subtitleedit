@@ -23858,6 +23858,11 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             FixRightToLeftDependingOnLanguage();
+
+            if (tabControlModes.Visible)
+            {
+                tabControlModes.Height = tabControlModes.Parent.Height - 2 - tabControlModes.Top;
+            }
         }
 
         private void FixRightToLeftDependingOnLanguage()
@@ -28587,6 +28592,7 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxVideo.Controls.Remove(control);
             control.Top = 25;
             control.Left = 0;
+            control.Height = _videoControlsUndocked.PanelContainer.Height-4;
             _videoControlsUndocked.PanelContainer.Controls.Add(control);
 
             groupBoxVideo.Controls.Remove(checkBoxSyncListViewWithVideoWhilePlaying);
