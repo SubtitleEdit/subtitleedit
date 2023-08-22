@@ -1886,86 +1886,44 @@ namespace Nikse.SubtitleEdit.Core.Common
             return false;
         }
 
-        public static string KoreanLetters = "가나다라마바사아자차카타파하아야어여오요우유으이대한민국활화산동물들천국의섬유독춤을춥니다";
-        public static string JapaneseLetters = "あいうえおかきくけこがぎぐげごさしすせそざじずぜぞたちつてとだぢづでどなにぬねのはひふへほばびぶべぼぱぴぷぺぽまみむめもやゆよらりるれろわをん";
-
         public static string GetEncodingViaLetter(string text)
         {
-            var dictionary = new Dictionary<string, int>();
-
-            // Arabic
-            int count = 0;
-            foreach (var letter in "غظضذخثتشرقصفعسنملكيطحزوهدجبا")
+            if (string.IsNullOrEmpty(text))
             {
-                if (text.Contains(letter))
-                {
-                    count++;
-                }
+                return null;
             }
-            dictionary.Add("ar", count);
 
-            // Korean
-            count = 0;
-            foreach (var letter in KoreanLetters)
+            // build hash set for faster look up
+            var charSet = text.ToHashSet();
+
+            var dictionary = new Dictionary<string, int>
             {
-                if (text.Contains(letter))
-                {
-                    count++;
-                }
-            }
-            dictionary.Add("ko", count);
+                { "ar", Letters.Arabic.Count(ch => charSet.Contains(ch)) },
+                { "ko", Letters.Korean.Count(ch => charSet.Contains(ch)) },
+                { "ja", Letters.Japanese.Count(ch => charSet.Contains(ch)) },
+                { "th", Letters.Thai.Count(ch => charSet.Contains(ch)) },
+                { "si", Letters.Sinhalese.Count(ch => charSet.Contains(ch)) },
+                { "ur", Letters.Urbu.Count(ch => charSet.Contains(ch)) }
+            };
 
-            // Japanese
-            count = 0;
-            foreach (var letter in JapaneseLetters)
-            {
-                if (text.Contains(letter))
-                {
-                    count++;
-                }
-            }
-            dictionary.Add("ja", count);
-
-            // Thai
-            count = 0;
-            foreach (var letter in "กขฃคฅฆงจฉชซฌญฎฏฐฑฒณดตถทธนบปผฝพฟภมยรลวศษสหฬอฮ")
-            {
-                if (text.Contains(letter))
-                {
-                    count++;
-                }
-            }
-            dictionary.Add("th", count);
-
-            // Sinhalese
-            count = 0;
-            foreach (var letter in "අආඇඈඉඊඋඌඍඎඏඐඑඒඓඔඕඖකඛගඝඞඟචඡජඣඤඥඦටඨඩඪණඬතථදධනඳපඵබභමඹයරලවශෂසහළෆ්ාැෑිීුූෘෙේෛොෝෞෟ෦෧෨෩෪෫෬෭෮෯")
-            {
-                if (text.Contains(letter))
-                {
-                    count++;
-                }
-            }
-            dictionary.Add("si", count);
-
-            // Urdu
-            count = 0;
-            foreach (var letter in "ﺍﺎﺁﺂﺏﺑﺒﺐﭖﭘﭙﭗﺕﺗﺘﺖﭦﭨﭩﭧﺙﺛﺜﺚﺝﺟﺠﺞﭺﭼﭽﭻﺡﺣﺤﺢﺥﺧﺨﺦﺩﺪﺫﺬﺭﺮﮌﮍﺯﺰﮊﮋﺱﺳﺴﺲﺵﺷﺸﺶﺹﺻﺼﺺﺽﺿﻀﺾﻁﻃﻄﻂﻅﻇﻈﻆﻉﻋﻌﻊﻍﻏﻐﻎﻑﻓﻔﻒﻕﻗﻘﻖﻙﻛﻜﻚﻻﻼﻝﻟﻠﻞﻡﻣﻤﻢﻥﻧﻨﻦﻭﻮﮮﮯﮦﮨﮩﮧﯼﯾﯿﯽﮪﮬﮭﮫﴽﴼﺀﺋﺌﹱﹷﹹ")
-            {
-                if (text.Contains(letter))
-                {
-                    count++;
-                }
-            }
-            dictionary.Add("ur", count);
-
-            var maxHitsLanguage = dictionary.FirstOrDefault(x => x.Value == dictionary.Values.Max());
+            var languageWithMaxCount = dictionary.Max(entry => entry.Value);
+            var maxHitsLanguage = dictionary.FirstOrDefault(x => x.Value == languageWithMaxCount);
             return maxHitsLanguage.Value > 0 ? maxHitsLanguage.Key : null;
         }
 
         public static bool IsLanguageWithoutPeriods(string language)
         {
             return language == "ko" || language == "zh" || language == "ja" || language == "th";
+        }
+
+        public static class Letters
+        {
+            public const string Arabic = "غظضذخثتشرقصفعسنملكيطحزوهدجبا";
+            public const string Korean = "가나다라마바사아자차카타파하아야어여오요우유으이대한민국활화산동물들천국의섬유독춤을춥니다";
+            public const string Japanese = "あいうえおかきくけこがぎぐげごさしすせそざじずぜぞたちつてとだぢづでどなにぬねのはひふへほばびぶべぼぱぴぷぺぽまみむめもやゆよらりるれろわをん";
+            public const string Thai = "กขฃคฅฆงจฉชซฌญฎฏฐฑฒณดตถทธนบปผฝพฟภมยรลวศษสหฬอฮ";
+            public const string Urbu = "ﺍﺎﺁﺂﺏﺑﺒﺐﭖﭘﭙﭗﺕﺗﺘﺖﭦﭨﭩﭧﺙﺛﺜﺚﺝﺟﺠﺞﭺﭼﭽﭻﺡﺣﺤﺢﺥﺧﺨﺦﺩﺪﺫﺬﺭﺮﮌﮍﺯﺰﮊﮋﺱﺳﺴﺲﺵﺷﺸﺶﺹﺻﺼﺺﺽﺿﻀﺾﻁﻃﻄﻂﻅﻇﻈﻆﻉﻋﻌﻊﻍﻏﻐﻎﻑﻓﻔﻒﻕﻗﻘﻖﻙﻛﻜﻚﻻﻼﻝﻟﻠﻞﻡﻣﻤﻢﻥﻧﻨﻦﻭﻮﮮﮯﮦﮨﮩﮧﯼﯾﯿﯽﮪﮬﮭﮫﴽﴼﺀﺋﺌﹱﹷﹹ";
+            public const string Sinhalese = "අආඇඈඉඊඋඌඍඎඏඐඑඒඓඔඕඖකඛගඝඞඟචඡජඣඤඥඦටඨඩඪණඬතථදධනඳපඵබභමඹයරලවශෂසහළෆ්ාැෑිීුූෘෙේෛොෝෞෟ෦෧෨෩෪෫෬෭෮෯";
         }
     }
 }
