@@ -62,8 +62,8 @@ namespace Nikse.SubtitleEdit.Core.Common.TextLengthCalculator
                         count += 0.5m;
                     }
                     else if (ChineseFullWidthPunctuations.Contains(ch) ||
-                             LanguageAutoDetect.JapaneseLetters.Contains(ch) ||
-                             LanguageAutoDetect.KoreanLetters.Contains(ch) ||
+                             LanguageAutoDetect.Alphabets.Japanese.Contains(ch) ||
+                             LanguageAutoDetect.Alphabets.Korean.Contains(ch) ||
                              IsCjk(ch))
                     {
                         count++;
