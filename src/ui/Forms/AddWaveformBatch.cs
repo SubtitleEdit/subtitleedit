@@ -53,7 +53,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             checkBoxExtractTimeCodes.Text = LanguageSettings.Current.AddWaveformBatch.ExtractTimeCodes;
             checkBoxExtractTimeCodes.Left = checkBoxGenerateShotChanges.Left - checkBoxExtractTimeCodes.Width - 20;
-            checkBoxExtractTimeCodes.Visible = BeautifyTimeCodes.BeautifyTimeCodes.IsFfProbeAvailable();
+            checkBoxExtractTimeCodes.Visible = BeautifyTimeCodes.BeautifyTimeCodes.IsFfProbeAvailable(this);
 
             if (checkBoxExtractTimeCodes.Visible)
             {
@@ -308,7 +308,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 return;
                             }
 
-                            using (var form = new DownloadFfmpeg())
+                            using (var form = new DownloadFfmpeg("FFmpeg"))
                             {
                                 if (form.ShowDialog(this) == DialogResult.OK && !string.IsNullOrEmpty(form.FFmpegPath))
                                 {

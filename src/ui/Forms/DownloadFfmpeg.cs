@@ -14,13 +14,15 @@ namespace Nikse.SubtitleEdit.Forms
         public string FFmpegPath { get; internal set; }
         public bool AutoClose { get; internal set; }
         private readonly CancellationTokenSource _cancellationTokenSource;
+        private readonly string _title;
 
-        public DownloadFfmpeg()
+        public DownloadFfmpeg(string title)
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
             UiUtil.FixFonts(this);
-            Text = string.Format(LanguageSettings.Current.Settings.DownloadX, "FFmpeg");
+            _title = title;
+            Text = string.Format(LanguageSettings.Current.Settings.DownloadX, title);
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             UiUtil.FixLargeFonts(this, buttonOK);
@@ -49,6 +51,10 @@ namespace Nikse.SubtitleEdit.Forms
         private void DownloadFfmpeg_Shown(object sender, EventArgs e)
         {
             var url = "https://github.com/SubtitleEdit/support-files/raw/master/ffpmeg/ffmpeg-" + IntPtr.Size * 8 + ".zip";
+            if (_title.Contains("ffprobe", StringComparison.OrdinalIgnoreCase))
+            {
+                url = "https://github.com/SubtitleEdit/support-files/releases/download/ffprove-6.0/ffprobe.zip";
+            }
 
             try
             {
@@ -133,7 +139,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             buttonOK.Enabled = true;
-            labelPleaseWait.Text = string.Format(LanguageSettings.Current.SettingsFfmpeg.XDownloadOk, "ffmpeg");
+            labelPleaseWait.Text = string.Format(LanguageSettings.Current.SettingsFfmpeg.XDownloadOk, _title);
         }
     }
 }

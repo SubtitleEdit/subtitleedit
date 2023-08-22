@@ -419,7 +419,7 @@ namespace Nikse.SubtitleEdit.Forms.ShotChanges
 
         private void buttonDownloadFfmpeg_Click(object sender, EventArgs e)
         {
-            using (var form = new DownloadFfmpeg())
+            using (var form = new DownloadFfmpeg("FFmpeg"))
             {
                 if (form.ShowDialog(this) == DialogResult.OK && !string.IsNullOrEmpty(form.FFmpegPath))
                 {
