@@ -536,6 +536,9 @@ Vi udnytter billedets indre rytme.</CreateSimpleChainingToolTip>
     <CheckingForUpdatesNewVersion>Ny version tilgængelig!</CheckingForUpdatesNewVersion>
     <InstallUpdate>Gå til download side</InstallUpdate>
     <NoUpdates>Opdater ikke</NoUpdates>
+    <XPluginsHasAnUpdate>{0} plugins har en opdatering -</XPluginsHasAnUpdate>
+    <OnePluginsHasAnUpdate>En plugin har en opdatering -</OnePluginsHasAnUpdate>
+    <Update>opdater</Update>
   </CheckForUpdates>
   <ChooseAudioTrack>
     <Title>Vælg lydspor</Title>
@@ -974,9 +977,11 @@ Vi udnytter billedets indre rytme.</CreateSimpleChainingToolTip>
     <InfoAssaOn>Bemærk: Avanceret substation Alpha styling vil blive brugt :)</InfoAssaOn>
     <XGeneratedWithBurnedInSubsInX>"{0}" genereret med indbrændt undertekst tog {1}.</XGeneratedWithBurnedInSubsInX>
     <TimeRemainingMinutes>Resterende tid: {0} minutter</TimeRemainingMinutes>
+    <TimeRemainingOneMinute>Resterende tid: Et minut</TimeRemainingOneMinute>
     <TimeRemainingSeconds>Resterende tid: {0} sekunder</TimeRemainingSeconds>
     <TimeRemainingAFewSeconds>Resterende tid: Et par sekunder</TimeRemainingAFewSeconds>
     <TimeRemainingMinutesAndSeconds>Resterende tid: {0} minutter og {1} sekunder</TimeRemainingMinutesAndSeconds>
+    <TimeRemainingOneMinuteAndSeconds>Resterende tid: Et minut og {0} sekunder</TimeRemainingOneMinuteAndSeconds>
     <TargetFileName>Målfilnavn: {0}</TargetFileName>
     <TargetFileSize>Målfilstørrelse (kræver 2 -pass -kodning)</TargetFileSize>
     <FileSizeMb>Filstørrelse i MB</FileSizeMb>
@@ -2281,6 +2286,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <BeautifyTimeCodes>Forskøn tidskoder</BeautifyTimeCodes>
     <SettingsName>Indstillinger</SettingsName>
     <ToggleBookmarks>Tilføj/fjern bogmærker</ToggleBookmarks>
+    <FocusTextBox>Fokus tekstboks</FocusTextBox>
     <ToggleBookmarksWithComment>Tilføj/fjern bogmærker medj kommentar</ToggleBookmarksWithComment>
     <ClearBookmarks>Ryd bogmærker</ClearBookmarks>
     <ExportBookmarks>Eksporter bogmærker...</ExportBookmarks>
@@ -2802,6 +2808,8 @@ Fortsæt?</RestoreDefaultSettingsMsg>
     <CustomContinuationStyleNote>Bemærk: Den tilpassede fortsættelsesstil deles på tværs af profiler.</CustomContinuationStyleNote>
     <ResetCustomContinuationStyleWarning>Dette vil overskrive i dialogen.  Er du sikker?</ResetCustomContinuationStyleWarning>
     <ExportAsHtml>Eksporter som HTML...</ExportAsHtml>
+    <SetNewActor>Sæt ny skuespiller/stemme</SetNewActor>
+    <SetActorX>Sæt skuespiller/stemme {0}</SetActorX>
   </Settings>
   <SettingsMpv>
     <DownloadMpv>Hent MPV lib</DownloadMpv>
