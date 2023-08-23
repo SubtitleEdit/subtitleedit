@@ -1,20 +1,16 @@
 ﻿using System;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Logic
 {
     public static class SyncContextExtensions
     {
+        private static readonly TaskScheduler UiTaskScheduler = TaskScheduler.FromCurrentSynchronizationContext();
+
         public static void Post(this SynchronizationContext context, TimeSpan delay, Action action)
         {
-            var timer = new System.Windows.Forms.Timer { Interval = (int)delay.TotalMilliseconds };
-            timer.Tick += delegate
-            {
-                action.Invoke();
-                timer.Stop();
-                timer.Dispose();
-            };
-            timer.Start();
+            Task.Delay(delay).ContinueWith(task => { action.Invoke(); }, UiTaskScheduler);
         }
     }
 }
