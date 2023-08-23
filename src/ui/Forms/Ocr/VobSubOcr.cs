@@ -8142,6 +8142,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void VobSubOcr_FormClosing(object sender, FormClosingEventArgs e)
         {
+            if (_forceClose)
+            {
+                return;
+            }
+
             if (!_okClicked && HasChangesBeenMade())
             {
                 if (MessageBox.Show(LanguageSettings.Current.VobSubOcr.DiscardText, LanguageSettings.Current.VobSubOcr.DiscardTitle, MessageBoxButtons.YesNo) == DialogResult.No)
@@ -8149,11 +8154,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     e.Cancel = true;
                     return;
                 }
-            }
-
-            if (_forceClose)
-            {
-                return;
             }
 
             _ocrThreadStop = true;
