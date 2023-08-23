@@ -1559,7 +1559,7 @@
     <Compile Include="Logic\SpellCheck\MacHunspell.cs" />
     <Compile Include="Logic\SpellCheck\VoikkoSpellCheck.cs" />
     <Compile Include="Logic\SpellCheck\WindowsHunspell.cs" />
-    <Compile Include="Logic\SyncContextExtensions.cs" />
+    <Compile Include="Logic\TaskDelayHelper.cs" />
     <Compile Include="Logic\TaskbarList.cs" />
     <Compile Include="Logic\TextDesigner.cs" />
     <Compile Include="Logic\TextWidth.cs" />

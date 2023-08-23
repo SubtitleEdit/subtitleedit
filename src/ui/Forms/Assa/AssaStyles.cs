@@ -1845,7 +1845,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
             if (WindowState == FormWindowState.Normal && _lastFormWindowState == FormWindowState.Maximized)
             {
-                System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(25), () =>
+                TaskDelayHelper.RunDelayed(TimeSpan.FromMilliseconds(25), () =>
                 {
                     SubStationAlphaStyles_ResizeEnd(sender, e);
                 });

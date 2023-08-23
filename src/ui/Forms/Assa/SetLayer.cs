@@ -1,7 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Logic;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Core.Common;
-using System.Threading;
 using System;
 
 namespace Nikse.SubtitleEdit.Forms.Assa
@@ -52,7 +51,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         private void SetLayer_Shown(object sender, System.EventArgs e)
         {
             numericUpDownLayer.Focus();
-            SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(10), () => numericUpDownLayer.Focus());
+            TaskDelayHelper.RunDelayed(TimeSpan.FromMilliseconds(10), () => numericUpDownLayer.Focus());
         }
     }
 }

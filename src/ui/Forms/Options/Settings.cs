@@ -3622,7 +3622,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
             labelUpdateFileTypeAssociationsStatus.Text = LanguageSettings.Current.Settings.FileTypeAssociationsUpdated;
             FileTypeAssociations.Refresh();
-            System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(3000), () => labelUpdateFileTypeAssociationsStatus.Text = string.Empty);
+            TaskDelayHelper.RunDelayed(TimeSpan.FromMilliseconds(3000), () => labelUpdateFileTypeAssociationsStatus.Text = string.Empty);
         }
 
         private void buttonEditCustomContinuationStyle_Click(object sender, EventArgs e)

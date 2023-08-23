@@ -213,7 +213,7 @@ namespace Nikse.SubtitleEdit.Controls
             ShowAllControls();
             if (Configuration.IsRunningOnLinux)
             {
-                System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(1500), () =>
+                TaskDelayHelper.RunDelayed(TimeSpan.FromMilliseconds(1500), () =>
                 {
                     if (string.IsNullOrEmpty(_labelVideoPlayerName.Text))
                     {

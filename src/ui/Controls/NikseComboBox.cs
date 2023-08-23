@@ -255,7 +255,7 @@ namespace Nikse.SubtitleEdit.Controls
                 try
                 {
                     Application.DoEvents();
-                    System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(25), () => _textBox.Focus());
+                    TaskDelayHelper.RunDelayed(TimeSpan.FromMilliseconds(25), () => _textBox.Focus());
                 }
                 catch
                 {

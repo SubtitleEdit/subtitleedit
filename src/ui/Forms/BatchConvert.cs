@@ -3380,7 +3380,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 buttonConvert.Text = LanguageSettings.Current.BatchConvert.Convert;
                 Application.DoEvents();
-                SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(25), () => buttonConvert.Enabled = true);
+                TaskDelayHelper.RunDelayed(TimeSpan.FromMilliseconds(25), () => buttonConvert.Enabled = true);
             }
             else
             {
