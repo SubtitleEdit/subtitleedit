@@ -508,9 +508,9 @@ namespace Nikse.SubtitleEdit.Forms
             this._tbHexCode.ReadOnly = true;
             this._tbHexCode.Size = new System.Drawing.Size(96, 22);
             this._tbHexCode.TabIndex = 58;
-            this._tbHexCode.TextChanged += new System.EventHandler(this._tbHexCode_TextChanged);
-            this._tbHexCode.Enter += new System.EventHandler(this._tbHexCode_Enter);
-            this._tbHexCode.Leave += new System.EventHandler(this._tbHexCode_Leave);
+            this._tbHexCode.TextChanged += new System.EventHandler(this.TextBoxHexCodeTextChanged);
+            this._tbHexCode.Enter += new System.EventHandler(this.TextBoxHexCodeEnter);
+            this._tbHexCode.Leave += new System.EventHandler(this.TextBoxHexCodeLeave);
             this._tbHexCode.MouseDown += new System.Windows.Forms.MouseEventHandler(this.TbHexCodeMouseDown);
             this._tbHexCode.MouseUp += new System.Windows.Forms.MouseEventHandler(this._tbHexCode_MouseUp);
             // 
@@ -943,7 +943,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void _tbHexCode_TextChanged(object sender, EventArgs e)
+        private void TextBoxHexCodeTextChanged(object sender, EventArgs e)
         {
             if (_hexEditOn)
             {
@@ -951,13 +951,13 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void _tbHexCode_Enter(object sender, EventArgs e)
+        private void TextBoxHexCodeEnter(object sender, EventArgs e)
         {
             _hexEditOn = true;
             _tbHexCode.ReadOnly = false;
         }
 
-        private void _tbHexCode_Leave(object sender, EventArgs e)
+        private void TextBoxHexCodeLeave(object sender, EventArgs e)
         {
             _hexEditOn = false;
             _tbHexCode.BackColor = UiUtil.BackColor;
@@ -1016,9 +1016,9 @@ namespace Nikse.SubtitleEdit.Forms
         {
             var c = panel.BackColor;
             UpdateRgb($"{c.A:x2}{c.R:x2}{c.G:x2}{c.B:x2}");
-            _tbHexCode.TextChanged -= _tbHexCode_TextChanged;
+            _tbHexCode.TextChanged -= TextBoxHexCodeTextChanged;
             ShowHexColorCode(new ColorHandler.Argb { Alpha = c.A, Red = c.R, Green = c.G, Blue = c.B });
-            _tbHexCode.TextChanged += _tbHexCode_TextChanged;
+            _tbHexCode.TextChanged += TextBoxHexCodeTextChanged;
         }
 
 
