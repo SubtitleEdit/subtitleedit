@@ -285,7 +285,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             labelStatus.Text = text;
             labelStatus.Refresh();
-            System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(1500), () =>
+            TaskDelayHelper.RunDelayed(TimeSpan.FromMilliseconds(1500), () =>
             {
                 if (!IsDisposed)
                 {

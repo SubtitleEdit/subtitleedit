@@ -135,7 +135,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                         }
 
                         intellisenseListBox.Hide();
-                        System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(10), () => tb.Focus());
+                        TaskDelayHelper.RunDelayed(TimeSpan.FromMilliseconds(10), () => tb.Focus());
                     }
                 };
                 intellisenseListBox.KeyDown += (o, args) =>

@@ -724,7 +724,7 @@ namespace Nikse.SubtitleEdit.Forms.VTT
                     var styleNames = "(" + form.ImportExportStyles.Count + ")";
                     labelInfo.Text = string.Format(LanguageSettings.Current.SubStationAlphaStyles.StyleXExportedToFileY, styleNames, form.FileName);
 
-                    System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(3500), () =>
+                    TaskDelayHelper.RunDelayed(TimeSpan.FromMilliseconds(3500), () =>
                     {
                         try
                         {

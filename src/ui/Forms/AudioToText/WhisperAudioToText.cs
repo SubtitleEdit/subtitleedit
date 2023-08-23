@@ -1338,7 +1338,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             buttonGenerate.Focus();
             _initialWidth = Width;
 
-            System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(25), () =>
+            TaskDelayHelper.RunDelayed(TimeSpan.FromMilliseconds(25), () =>
             {
                 CheckIfInstalledAndVersion(Configuration.Settings.Tools.WhisperChoice);
             });
@@ -1479,7 +1479,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         {
             var fileNames = (string[])e.Data.GetData(DataFormats.FileDrop);
 
-            System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(25), () =>
+            TaskDelayHelper.RunDelayed(TimeSpan.FromMilliseconds(25), () =>
             {
                 listViewInputFiles.BeginUpdate();
                 foreach (var fileName in fileNames.OrderBy(Path.GetFileName))
