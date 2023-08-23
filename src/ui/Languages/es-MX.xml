@@ -98,6 +98,7 @@
     <Collapse>Contraer</Collapse>
     <ShortcutX>Atajo: {0}</ShortcutX>
     <ExampleX>Ejemplo: {0}</ExampleX>
+    <ViewX>Ver {0}</ViewX>
     <Reset>Restablecer</Reset>
     <Error>Error</Error>
     <Warning>Advertencia</Warning>
@@ -204,6 +205,7 @@ Nota: comprobar el espacio libre en disco.</WaveFileMalformed>
     <LoadingVoskModel>Cargando modelo de reconocimiento de voz de Vosk...</LoadingVoskModel>
     <Transcribing>Transcribiendo audio a texto...</Transcribing>
     <TranscribingXOfY>Transcribiendo audio a texto - archivo {0} de {1}...</TranscribingXOfY>
+    <PostProcessing>Posprocesamiento...</PostProcessing>
     <XFilesSavedToVideoSourceFolder>{0} archivos guardados en la carpeta de origen del video</XFilesSavedToVideoSourceFolder>
     <UsePostProcessing>Utilizar el posprocesamiento (fusión de líneas, corrección de mayúsculas y minúsculas, puntuación, etc.)</UsePostProcessing>
     <AutoAdjustTimings>Autoajustar tiempos</AutoAdjustTimings>
@@ -214,6 +216,7 @@ Nota: comprobar el espacio libre en disco.</WaveFileMalformed>
     <RemoveTemporaryFiles>Eliminar archivos temporales</RemoveTemporaryFiles>
     <SetCppConstMeFolder>Establecer carpeta de modelos CPP/Const-me...</SetCppConstMeFolder>
     <OnlyRunPostProcessing>Ejecutar solo el procesamiento posterior/ajuste de tiempos</OnlyRunPostProcessing>
+    <DownloadFasterWhisperCuda>Descargar CUDA para Whisper-Faster de Perfview</DownloadFasterWhisperCuda>
   </AudioToText>
   <AssaAttachments>
     <Title>Adjuntos de Advanced Sub Station Alpha</Title>
@@ -977,9 +980,11 @@ Aprovechamos el ritmo intrínseco de la imagen.</CreateSimpleChainingToolTip>
     <InfoAssaOn>Nota: Se utilizará el estilo Advanced Substation Alpha :)</InfoAssaOn>
     <XGeneratedWithBurnedInSubsInX>"{0}" generado con subtítulo incrustado en {1}.</XGeneratedWithBurnedInSubsInX>
     <TimeRemainingMinutes>Tiempo restante: {0} minutos</TimeRemainingMinutes>
+    <TimeRemainingOneMinute>Tiempo restante: Un minuto</TimeRemainingOneMinute>
     <TimeRemainingSeconds>Tiempo restante: {0} segundos</TimeRemainingSeconds>
     <TimeRemainingAFewSeconds>Tiempo restante: unos segundos</TimeRemainingAFewSeconds>
     <TimeRemainingMinutesAndSeconds>Tiempo restante: {0} minutos y {1} segundos</TimeRemainingMinutesAndSeconds>
+    <TimeRemainingOneMinuteAndSeconds>Tiempo restante: Un minuto y {0} segundos</TimeRemainingOneMinuteAndSeconds>
     <TargetFileName>Nombre del archivo de destino: {0}</TargetFileName>
     <TargetFileSize>Tamaño del archivo de destino (requiere codificación de 2 pases)</TargetFileSize>
     <FileSizeMb>Tamaño de archivo en MB</FileSizeMb>
@@ -2288,6 +2293,7 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <BeautifyTimeCodes>Embellecer códigos de tiempo</BeautifyTimeCodes>
     <SettingsName>Configuración</SettingsName>
     <ToggleBookmarks>Alternar marcadores</ToggleBookmarks>
+    <FocusTextBox>Foco en caja de texto</FocusTextBox>
     <ToggleBookmarksWithComment>Alternar marcadores - agregar comentario</ToggleBookmarksWithComment>
     <ClearBookmarks>Limpiar marcadores</ClearBookmarks>
     <ExportBookmarks>Exportar marcadores...</ExportBookmarks>
@@ -2809,6 +2815,8 @@ de subtítulo con información de fuente incorporada como "Advanced Sub Station 
     <CustomContinuationStyleNote>Nota: El estilo de continuación personalizado se comparte en todos los perfiles.</CustomContinuationStyleNote>
     <ResetCustomContinuationStyleWarning>Esto reemplazará los valores del cuadro de diálogo. ¿Estás seguro?</ResetCustomContinuationStyleWarning>
     <ExportAsHtml>Exportar como HTML...</ExportAsHtml>
+    <SetNewActor>Establecer nuevo actor/voz</SetNewActor>
+    <SetActorX>Establecer actor/voz {0}</SetActorX>
   </Settings>
   <SettingsMpv>
     <DownloadMpv>Descargar mpv lib</DownloadMpv>
