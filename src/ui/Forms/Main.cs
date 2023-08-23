@@ -28692,6 +28692,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (_videoControlsUndocked != null && !_videoControlsUndocked.IsDisposed)
             {
                 var control = _videoControlsUndocked.PanelContainer.Controls[0];
+                control.Dock = DockStyle.None;
                 var controlCheckBox = _videoControlsUndocked.PanelContainer.Controls[1];
                 _videoControlsUndocked.PanelContainer.Controls.Clear();
                 ReDockVideoButtons(control, controlCheckBox);
