@@ -70,6 +70,11 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 Height = 320;
             }
+
+            if (panelContainer.Controls.Count > 0)
+            {
+                panelContainer.Controls[0].Dock = DockStyle.Fill;
+            }
         }
     }
 }
