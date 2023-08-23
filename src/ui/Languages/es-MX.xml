@@ -542,6 +542,9 @@ Aprovechamos el ritmo intrínseco de la imagen.</CreateSimpleChainingToolTip>
     <CheckingForUpdatesNewVersion>¡Nueva versión disponible!</CheckingForUpdatesNewVersion>
     <InstallUpdate>Ir a la página de descargas</InstallUpdate>
     <NoUpdates>No actualizar</NoUpdates>
+    <XPluginsHasAnUpdate>Hay nuevas actualizaciones para {0} plugins -</XPluginsHasAnUpdate>
+    <OnePluginsHasAnUpdate>Hay una nueva actualización para un plugin -</OnePluginsHasAnUpdate>
+    <Update>actualiación</Update>
   </CheckForUpdates>
   <ChooseAudioTrack>
     <Title>Elegir pista de audio</Title>
