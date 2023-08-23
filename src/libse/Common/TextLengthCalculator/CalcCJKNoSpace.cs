@@ -61,8 +61,8 @@
                         count += 0.5m;
                     }
                     else if (CalcCjk.ChineseFullWidthPunctuations.Contains(ch) ||
-                             LanguageAutoDetect.Alphabets.Japanese.Contains(ch) ||
-                             LanguageAutoDetect.Alphabets.Korean.Contains(ch) ||
+                             LanguageAutoDetect.Letters.Japanese.Contains(ch) ||
+                             LanguageAutoDetect.Letters.Korean.Contains(ch) ||
                              CalcCjk.IsCjk(ch))
                     {
                         count++;

@@ -1892,7 +1892,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             // Arabic
             var count = 0;
-            foreach (var letter in Alphabets.Arabic)
+            foreach (var letter in Letters.Arabic)
             {
                 if (text.Contains(letter))
                 {
@@ -1903,7 +1903,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             // Korean
             count = 0;
-            foreach (var letter in Alphabets.Korean)
+            foreach (var letter in Letters.Korean)
             {
                 if (text.Contains(letter))
                 {
@@ -1914,7 +1914,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             // Japanese
             count = 0;
-            foreach (var letter in Alphabets.Japanese)
+            foreach (var letter in Letters.Japanese)
             {
                 if (text.Contains(letter))
                 {
@@ -1925,7 +1925,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             // Thai
             count = 0;
-            foreach (var letter in Alphabets.Thai)
+            foreach (var letter in Letters.Thai)
             {
                 if (text.Contains(letter))
                 {
@@ -1936,7 +1936,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             // Sinhalese
             count = 0;
-            foreach (var letter in Alphabets.Sinhalese)
+            foreach (var letter in Letters.Sinhalese)
             {
                 if (text.Contains(letter))
                 {
@@ -1947,7 +1947,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             // Urdu
             count = 0;
-            foreach (var letter in Alphabets.Urdu)
+            foreach (var letter in Letters.Urdu)
             {
                 if (text.Contains(letter))
                 {
@@ -1965,7 +1965,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             return language == "ko" || language == "zh" || language == "ja" || language == "th";
         }
 
-        public static class Alphabets
+        public static class Letters
         {
             public const string Arabic = "غظضذخثتشرقصفعسنملكيطحزوهدجبا";
             public const string Korean = "가나다라마바사아자차카타파하아야어여오요우유으이대한민국활화산동물들천국의섬유독춤을춥니다";
