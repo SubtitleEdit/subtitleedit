@@ -530,7 +530,7 @@ namespace Nikse.SubtitleEdit.Controls
 
             _textBox.LostFocus += (sender, args) => Invalidate();
             _textBox.GotFocus += (sender, args) => Invalidate();
-            _textBox.TextChanged += _textBox_TextChanged;
+            _textBox.TextChanged += TextBoxTextChanged;
 
             Controls.Add(_textBox);
             DropDownStyle = ComboBoxStyle.DropDown;
@@ -630,7 +630,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        private void _textBox_TextChanged(object sender, EventArgs e)
+        private void TextBoxTextChanged(object sender, EventArgs e)
         {
             Invalidate();
             TextChanged?.Invoke(sender, e);

@@ -648,7 +648,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripSelected.Spring = true;
             this.toolStripSelected.Text = "toolStripSelected";
             this.toolStripSelected.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.toolStripSelected.Click += new System.EventHandler(this.toolStripSelected_Click);
+            this.toolStripSelected.Click += new System.EventHandler(this.ToolStripSelectedClick);
             // 
             // toolStripStatusLabelProgress
             // 
@@ -666,7 +666,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripStatusNetworking.Text = "toolStripStatusNetworking";
             this.toolStripStatusNetworking.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.toolStripStatusNetworking.TextImageRelation = System.Windows.Forms.TextImageRelation.TextBeforeImage;
-            this.toolStripStatusNetworking.Click += new System.EventHandler(this.toolStripStatusNetworking_Click);
+            this.toolStripStatusNetworking.Click += new System.EventHandler(this.ToolStripStatusNetworkingClick);
             // 
             // toolStrip1
             // 
@@ -889,7 +889,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripButtonXProperties.Name = "toolStripButtonXProperties";
             this.toolStripButtonXProperties.Size = new System.Drawing.Size(36, 37);
             this.toolStripButtonXProperties.Text = "Properties";
-            this.toolStripButtonXProperties.Click += new System.EventHandler(this.toolStripMenuItemFileFormatProperties_Click);
+            this.toolStripButtonXProperties.Click += new System.EventHandler(this.ToolStripMenuItemFileFormatPropertiesClick);
             // 
             // toolStripButtonAssProperties
             // 
@@ -901,7 +901,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripButtonAssProperties.Size = new System.Drawing.Size(36, 37);
             this.toolStripButtonAssProperties.Text = "ASS properties";
             this.toolStripButtonAssProperties.ToolTipText = "ASS properties";
-            this.toolStripButtonAssProperties.Click += new System.EventHandler(this.toolStripMenuItemFileFormatProperties_Click);
+            this.toolStripButtonAssProperties.Click += new System.EventHandler(this.ToolStripMenuItemFileFormatPropertiesClick);
             // 
             // toolStripButtonAssAttachments
             // 
@@ -1207,7 +1207,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemOpenKeepVideo.Name = "toolStripMenuItemOpenKeepVideo";
             this.toolStripMenuItemOpenKeepVideo.Size = new System.Drawing.Size(269, 22);
             this.toolStripMenuItemOpenKeepVideo.Text = "Open (keep video)";
-            this.toolStripMenuItemOpenKeepVideo.Click += new System.EventHandler(this.toolStripMenuItemOpenKeepVideo_Click);
+            this.toolStripMenuItemOpenKeepVideo.Click += new System.EventHandler(this.ToolStripMenuItemOpenKeepVideoClick);
             // 
             // reopenToolStripMenuItem
             // 
@@ -1235,14 +1235,14 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemRestoreAutoBackup.Name = "toolStripMenuItemRestoreAutoBackup";
             this.toolStripMenuItemRestoreAutoBackup.Size = new System.Drawing.Size(269, 22);
             this.toolStripMenuItemRestoreAutoBackup.Text = "Restore auto-backup...";
-            this.toolStripMenuItemRestoreAutoBackup.Click += new System.EventHandler(this.toolStripMenuItemRestoreAutoBackup_Click);
+            this.toolStripMenuItemRestoreAutoBackup.Click += new System.EventHandler(this.ToolStripMenuItemRestoreAutoBackupClick);
             // 
             // toolStripMenuItemFileFormatProperties
             // 
             this.toolStripMenuItemFileFormatProperties.Name = "toolStripMenuItemFileFormatProperties";
             this.toolStripMenuItemFileFormatProperties.Size = new System.Drawing.Size(269, 22);
             this.toolStripMenuItemFileFormatProperties.Text = "<format> properties...";
-            this.toolStripMenuItemFileFormatProperties.Click += new System.EventHandler(this.toolStripMenuItemFileFormatProperties_Click);
+            this.toolStripMenuItemFileFormatProperties.Click += new System.EventHandler(this.ToolStripMenuItemFileFormatPropertiesClick);
             // 
             // toolStripMenuItemAssaStyles
             // 
@@ -1301,7 +1301,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemOpenContainingFolder.Name = "toolStripMenuItemOpenContainingFolder";
             this.toolStripMenuItemOpenContainingFolder.Size = new System.Drawing.Size(269, 22);
             this.toolStripMenuItemOpenContainingFolder.Text = "Open containing folder";
-            this.toolStripMenuItemOpenContainingFolder.Click += new System.EventHandler(this.toolStripMenuItemOpenContainingFolder_Click);
+            this.toolStripMenuItemOpenContainingFolder.Click += new System.EventHandler(this.ToolStripMenuItemOpenContainingFolderClick);
             // 
             // toolStripMenuItemCompare
             // 
@@ -1315,14 +1315,14 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemStatistics.Name = "toolStripMenuItemStatistics";
             this.toolStripMenuItemStatistics.Size = new System.Drawing.Size(269, 22);
             this.toolStripMenuItemStatistics.Text = "Statistics...";
-            this.toolStripMenuItemStatistics.Click += new System.EventHandler(this.toolStripMenuItemStatistics_Click);
+            this.toolStripMenuItemStatistics.Click += new System.EventHandler(this.ToolStripMenuItemStatisticsClick);
             // 
             // toolStripMenuItemPlugins
             // 
             this.toolStripMenuItemPlugins.Name = "toolStripMenuItemPlugins";
             this.toolStripMenuItemPlugins.Size = new System.Drawing.Size(269, 22);
             this.toolStripMenuItemPlugins.Text = "Plugins...";
-            this.toolStripMenuItemPlugins.Click += new System.EventHandler(this.toolStripMenuItemPlugins_Click);
+            this.toolStripMenuItemPlugins.Click += new System.EventHandler(this.ToolStripMenuItemPluginsClick);
             // 
             // toolStripSeparator1
             // 
@@ -1351,70 +1351,70 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemImportImages.Name = "toolStripMenuItemImportImages";
             this.toolStripMenuItemImportImages.Size = new System.Drawing.Size(330, 22);
             this.toolStripMenuItemImportImages.Text = "Images...";
-            this.toolStripMenuItemImportImages.Click += new System.EventHandler(this.toolStripMenuItemImportImages_Click);
+            this.toolStripMenuItemImportImages.Click += new System.EventHandler(this.ToolStripMenuItemImportImagesClick);
             // 
             // toolStripMenuItemImportText
             // 
             this.toolStripMenuItemImportText.Name = "toolStripMenuItemImportText";
             this.toolStripMenuItemImportText.Size = new System.Drawing.Size(330, 22);
             this.toolStripMenuItemImportText.Text = "Text...";
-            this.toolStripMenuItemImportText.Click += new System.EventHandler(this.toolStripMenuItemImportText_Click);
+            this.toolStripMenuItemImportText.Click += new System.EventHandler(this.ToolStripMenuItemImportTextClick);
             // 
             // toolStripMenuItemImportTimeCodes
             // 
             this.toolStripMenuItemImportTimeCodes.Name = "toolStripMenuItemImportTimeCodes";
             this.toolStripMenuItemImportTimeCodes.Size = new System.Drawing.Size(330, 22);
             this.toolStripMenuItemImportTimeCodes.Text = "Time codes into existing subtitle...";
-            this.toolStripMenuItemImportTimeCodes.Click += new System.EventHandler(this.toolStripMenuItemImportTimeCodes_Click);
+            this.toolStripMenuItemImportTimeCodes.Click += new System.EventHandler(this.ToolStripMenuItemImportTimeCodesClick);
             // 
             // toolStripMenuItemImportFromVideo
             // 
             this.toolStripMenuItemImportFromVideo.Name = "toolStripMenuItemImportFromVideo";
             this.toolStripMenuItemImportFromVideo.Size = new System.Drawing.Size(330, 22);
             this.toolStripMenuItemImportFromVideo.Text = "Subtitle from video file...";
-            this.toolStripMenuItemImportFromVideo.Click += new System.EventHandler(this.toolStripMenuItemImportFromVideo_Click);
+            this.toolStripMenuItemImportFromVideo.Click += new System.EventHandler(this.ToolStripMenuItemImportFromVideoClick);
             // 
             // toolStripMenuItemImportBluRaySup
             // 
             this.toolStripMenuItemImportBluRaySup.Name = "toolStripMenuItemImportBluRaySup";
             this.toolStripMenuItemImportBluRaySup.Size = new System.Drawing.Size(330, 22);
             this.toolStripMenuItemImportBluRaySup.Text = "Blu-ray sup file for OCR...";
-            this.toolStripMenuItemImportBluRaySup.Click += new System.EventHandler(this.toolStripMenuItemImportBluRaySup_Click);
+            this.toolStripMenuItemImportBluRaySup.Click += new System.EventHandler(this.ToolStripMenuItemImportBluRaySupClick);
             // 
             // toolStripMenuItemImportBluraySupFileForEdit
             // 
             this.toolStripMenuItemImportBluraySupFileForEdit.Name = "toolStripMenuItemImportBluraySupFileForEdit";
             this.toolStripMenuItemImportBluraySupFileForEdit.Size = new System.Drawing.Size(330, 22);
             this.toolStripMenuItemImportBluraySupFileForEdit.Text = "Blu-ray sup file for edit...";
-            this.toolStripMenuItemImportBluraySupFileForEdit.Click += new System.EventHandler(this.toolStripMenuItemImportBluraySupFileForEdit_Click);
+            this.toolStripMenuItemImportBluraySupFileForEdit.Click += new System.EventHandler(this.ToolStripMenuItemImportBluraySupFileForEditClick);
             // 
             // toolStripMenuItemImportSubIdx
             // 
             this.toolStripMenuItemImportSubIdx.Name = "toolStripMenuItemImportSubIdx";
             this.toolStripMenuItemImportSubIdx.Size = new System.Drawing.Size(330, 22);
             this.toolStripMenuItemImportSubIdx.Text = "VobSub (sub/idx) subtitle for OCR...";
-            this.toolStripMenuItemImportSubIdx.Click += new System.EventHandler(this.toolStripMenuItemImportSubIdx_Click);
+            this.toolStripMenuItemImportSubIdx.Click += new System.EventHandler(this.ToolStripMenuItemImportSubIdxClick);
             // 
             // toolStripMenuItemImportDvdSubtitles
             // 
             this.toolStripMenuItemImportDvdSubtitles.Name = "toolStripMenuItemImportDvdSubtitles";
             this.toolStripMenuItemImportDvdSubtitles.Size = new System.Drawing.Size(330, 22);
             this.toolStripMenuItemImportDvdSubtitles.Text = "VOB/IFO (DVD)...";
-            this.toolStripMenuItemImportDvdSubtitles.Click += new System.EventHandler(this.toolStripMenuItemImportDvdSubtitles_Click);
+            this.toolStripMenuItemImportDvdSubtitles.Click += new System.EventHandler(this.ToolStripMenuItemImportDvdSubtitlesClick);
             // 
             // toolStripMenuItemImportOcrHardSub
             // 
             this.toolStripMenuItemImportOcrHardSub.Name = "toolStripMenuItemImportOcrHardSub";
             this.toolStripMenuItemImportOcrHardSub.Size = new System.Drawing.Size(330, 22);
             this.toolStripMenuItemImportOcrHardSub.Text = "Import/OCR burned-in subtitles from video file...";
-            this.toolStripMenuItemImportOcrHardSub.Click += new System.EventHandler(this.toolStripMenuItemImportOcrHardSub_Click);
+            this.toolStripMenuItemImportOcrHardSub.Click += new System.EventHandler(this.ToolStripMenuItemImportOcrHardSubClick);
             // 
             // toolStripMenuItemImportManualAnsi
             // 
             this.toolStripMenuItemImportManualAnsi.Name = "toolStripMenuItemImportManualAnsi";
             this.toolStripMenuItemImportManualAnsi.Size = new System.Drawing.Size(330, 22);
             this.toolStripMenuItemImportManualAnsi.Text = "Subtitle file with manually chosen encoding...";
-            this.toolStripMenuItemImportManualAnsi.Click += new System.EventHandler(this.toolStripMenuItemImportManualAnsi_Click);
+            this.toolStripMenuItemImportManualAnsi.Click += new System.EventHandler(this.ToolStripMenuItemImportManualAnsiClick);
             // 
             // toolStripMenuItemExport
             // 
@@ -1599,7 +1599,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemExportTextTimeCodePair.Name = "toolStripMenuItemExportTextTimeCodePair";
             this.toolStripMenuItemExportTextTimeCodePair.Size = new System.Drawing.Size(255, 22);
             this.toolStripMenuItemExportTextTimeCodePair.Text = "Korean ATS file pair...";
-            this.toolStripMenuItemExportTextTimeCodePair.Click += new System.EventHandler(this.toolStripMenuItemExportTextTimeCodePair_Click);
+            this.toolStripMenuItemExportTextTimeCodePair.Click += new System.EventHandler(this.ToolStripMenuItemExportTextTimeCodePairClick);
             // 
             // toolStripMenuItemExportPACScreenElectronics
             // 
@@ -1613,7 +1613,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemExportUniPac.Name = "toolStripMenuItemExportUniPac";
             this.toolStripMenuItemExportUniPac.Size = new System.Drawing.Size(255, 22);
             this.toolStripMenuItemExportUniPac.Text = "PAC Unicode (UniPac)...";
-            this.toolStripMenuItemExportUniPac.Click += new System.EventHandler(this.toolStripMenuItemExportUniPac_Click);
+            this.toolStripMenuItemExportUniPac.Click += new System.EventHandler(this.ToolStripMenuItemExportUniPacClick);
             // 
             // toolStripMenuItemExportPlainText
             // 
@@ -1627,28 +1627,28 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemExportSpumux.Name = "toolStripMenuItemExportSpumux";
             this.toolStripMenuItemExportSpumux.Size = new System.Drawing.Size(255, 22);
             this.toolStripMenuItemExportSpumux.Text = "Spumux...";
-            this.toolStripMenuItemExportSpumux.Click += new System.EventHandler(this.toolStripMenuItemExportSpumux_Click);
+            this.toolStripMenuItemExportSpumux.Click += new System.EventHandler(this.ToolStripMenuItemExportSpumuxClick);
             // 
             // toolStripMenuItemExportTtmlImage
             // 
             this.toolStripMenuItemExportTtmlImage.Name = "toolStripMenuItemExportTtmlImage";
             this.toolStripMenuItemExportTtmlImage.Size = new System.Drawing.Size(255, 22);
             this.toolStripMenuItemExportTtmlImage.Text = "TTML/PNG...";
-            this.toolStripMenuItemExportTtmlImage.Click += new System.EventHandler(this.toolStripMenuItemExportTtmlImage_Click);
+            this.toolStripMenuItemExportTtmlImage.Click += new System.EventHandler(this.ToolStripMenuItemExportTtmlImage_Click);
             // 
             // toolStripMenuItemExportUltech130
             // 
             this.toolStripMenuItemExportUltech130.Name = "toolStripMenuItemExportUltech130";
             this.toolStripMenuItemExportUltech130.Size = new System.Drawing.Size(255, 22);
             this.toolStripMenuItemExportUltech130.Text = "Ultech caption...";
-            this.toolStripMenuItemExportUltech130.Click += new System.EventHandler(this.toolStripMenuItemExportUltech130_Click);
+            this.toolStripMenuItemExportUltech130.Click += new System.EventHandler(this.ToolStripMenuItemExportUltech130Click);
             // 
             // toolStripMenuItemExportVobSubSubIdx
             // 
             this.toolStripMenuItemExportVobSubSubIdx.Name = "toolStripMenuItemExportVobSubSubIdx";
             this.toolStripMenuItemExportVobSubSubIdx.Size = new System.Drawing.Size(255, 22);
             this.toolStripMenuItemExportVobSubSubIdx.Text = "VobSub (sub/idx)...";
-            this.toolStripMenuItemExportVobSubSubIdx.Click += new System.EventHandler(this.toolStripMenuItemExportVobSubSubIdx_Click);
+            this.toolStripMenuItemExportVobSubSubIdx.Click += new System.EventHandler(this.ToolStripMenuItemExportVobSubSubIdxClick);
             // 
             // toolStripSeparatorExportCustomText
             // 
@@ -1708,14 +1708,14 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemUndo.Name = "toolStripMenuItemUndo";
             this.toolStripMenuItemUndo.Size = new System.Drawing.Size(301, 22);
             this.toolStripMenuItemUndo.Text = "Undo";
-            this.toolStripMenuItemUndo.Click += new System.EventHandler(this.toolStripMenuItemUndo_Click);
+            this.toolStripMenuItemUndo.Click += new System.EventHandler(this.ToolStripMenuItemUndoClick);
             // 
             // toolStripMenuItemRedo
             // 
             this.toolStripMenuItemRedo.Name = "toolStripMenuItemRedo";
             this.toolStripMenuItemRedo.Size = new System.Drawing.Size(301, 22);
             this.toolStripMenuItemRedo.Text = "Redo";
-            this.toolStripMenuItemRedo.Click += new System.EventHandler(this.toolStripMenuItemRedo_Click);
+            this.toolStripMenuItemRedo.Click += new System.EventHandler(this.ToolStripMenuItemRedoClick);
             // 
             // showHistoryforUndoToolStripMenuItem
             // 
@@ -1803,21 +1803,21 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemRtlUnicodeControlChars.Name = "toolStripMenuItemRtlUnicodeControlChars";
             this.toolStripMenuItemRtlUnicodeControlChars.Size = new System.Drawing.Size(301, 22);
             this.toolStripMenuItemRtlUnicodeControlChars.Text = "Fix RTL via Unicode tags";
-            this.toolStripMenuItemRtlUnicodeControlChars.Click += new System.EventHandler(this.toolStripMenuItemRtlUnicodeControlChars_Click);
+            this.toolStripMenuItemRtlUnicodeControlChars.Click += new System.EventHandler(this.ToolStripMenuItemRtlUnicodeControlCharsClick);
             // 
             // toolStripMenuItemRemoveUnicodeControlChars
             // 
             this.toolStripMenuItemRemoveUnicodeControlChars.Name = "toolStripMenuItemRemoveUnicodeControlChars";
             this.toolStripMenuItemRemoveUnicodeControlChars.Size = new System.Drawing.Size(301, 22);
             this.toolStripMenuItemRemoveUnicodeControlChars.Text = "Remove Unicode tags";
-            this.toolStripMenuItemRemoveUnicodeControlChars.Click += new System.EventHandler(this.toolStripMenuItemRemoveUnicodeControlChars_Click);
+            this.toolStripMenuItemRemoveUnicodeControlChars.Click += new System.EventHandler(this.ToolStripMenuItemRemoveUnicodeControlCharsClick);
             // 
             // toolStripMenuItemReverseRightToLeftStartEnd
             // 
             this.toolStripMenuItemReverseRightToLeftStartEnd.Name = "toolStripMenuItemReverseRightToLeftStartEnd";
             this.toolStripMenuItemReverseRightToLeftStartEnd.Size = new System.Drawing.Size(301, 22);
             this.toolStripMenuItemReverseRightToLeftStartEnd.Text = "Reverse RTL start/end";
-            this.toolStripMenuItemReverseRightToLeftStartEnd.Click += new System.EventHandler(this.toolStripMenuItemReverseRightToLeftStartEnd_Click);
+            this.toolStripMenuItemReverseRightToLeftStartEnd.Click += new System.EventHandler(this.ToolStripMenuItemReverseRightToLeftStartEndClick);
             // 
             // toolStripSeparator21
             // 
@@ -1829,7 +1829,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemModifySelection.Name = "toolStripMenuItemModifySelection";
             this.toolStripMenuItemModifySelection.Size = new System.Drawing.Size(301, 22);
             this.toolStripMenuItemModifySelection.Text = "Create/modify selection...";
-            this.toolStripMenuItemModifySelection.Click += new System.EventHandler(this.toolStripMenuItemModifySelection_Click);
+            this.toolStripMenuItemModifySelection.Click += new System.EventHandler(this.ToolStripMenuItemModifySelectionClick);
             // 
             // toolStripMenuItemInverseSelection
             // 
@@ -1838,7 +1838,7 @@ namespace Nikse.SubtitleEdit.Forms
             | System.Windows.Forms.Keys.I)));
             this.toolStripMenuItemInverseSelection.Size = new System.Drawing.Size(301, 22);
             this.toolStripMenuItemInverseSelection.Text = "Inverse selection";
-            this.toolStripMenuItemInverseSelection.Click += new System.EventHandler(this.toolStripMenuItemInverseSelection_Click);
+            this.toolStripMenuItemInverseSelection.Click += new System.EventHandler(this.ToolStripMenuItemInverseSelectionClick);
             // 
             // editSelectAllToolStripMenuItem
             // 
@@ -1965,14 +1965,14 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemMergeDuplicateText.Name = "toolStripMenuItemMergeDuplicateText";
             this.toolStripMenuItemMergeDuplicateText.Size = new System.Drawing.Size(338, 22);
             this.toolStripMenuItemMergeDuplicateText.Text = "Merge lines with same text...";
-            this.toolStripMenuItemMergeDuplicateText.Click += new System.EventHandler(this.toolStripMenuItemMergeDuplicateText_Click);
+            this.toolStripMenuItemMergeDuplicateText.Click += new System.EventHandler(this.ToolStripMenuItemMergeDuplicateTextClick);
             // 
             // toolStripMenuItemMergeLinesWithSameTimeCodes
             // 
             this.toolStripMenuItemMergeLinesWithSameTimeCodes.Name = "toolStripMenuItemMergeLinesWithSameTimeCodes";
             this.toolStripMenuItemMergeLinesWithSameTimeCodes.Size = new System.Drawing.Size(338, 22);
             this.toolStripMenuItemMergeLinesWithSameTimeCodes.Text = "Merge lines with same time codes...";
-            this.toolStripMenuItemMergeLinesWithSameTimeCodes.Click += new System.EventHandler(this.toolStripMenuItemMergeLinesWithSameTimeCodes_Click);
+            this.toolStripMenuItemMergeLinesWithSameTimeCodes.Click += new System.EventHandler(this.ToolStripMenuItemMergeLinesWithSameTimeCodesClick);
             // 
             // toolStripMenuItemAutoSplitLongLines
             // 
@@ -2086,7 +2086,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.actorToolStripMenuItem.Name = "actorToolStripMenuItem";
             this.actorToolStripMenuItem.Size = new System.Drawing.Size(240, 22);
             this.actorToolStripMenuItem.Text = "Actor";
-            this.actorToolStripMenuItem.Click += new System.EventHandler(this.actorToolStripMenuItemClick);
+            this.actorToolStripMenuItem.Click += new System.EventHandler(this.ActorToolStripMenuItemClick);
             // 
             // styleToolStripMenuItem
             // 
@@ -2173,7 +2173,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemMeasurementConverter.Name = "toolStripMenuItemMeasurementConverter";
             this.toolStripMenuItemMeasurementConverter.Size = new System.Drawing.Size(338, 22);
             this.toolStripMenuItemMeasurementConverter.Text = "Measurement converter...";
-            this.toolStripMenuItemMeasurementConverter.Click += new System.EventHandler(this.toolStripMenuItemMeasurementConverter_Click);
+            this.toolStripMenuItemMeasurementConverter.Click += new System.EventHandler(this.ToolStripMenuItemMeasurementConverterClick);
             // 
             // toolStripSeparator3
             // 
@@ -2230,7 +2230,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemSpellCheckFromCurrentLine.Name = "toolStripMenuItemSpellCheckFromCurrentLine";
             this.toolStripMenuItemSpellCheckFromCurrentLine.Size = new System.Drawing.Size(267, 22);
             this.toolStripMenuItemSpellCheckFromCurrentLine.Text = "Spell check from current line...";
-            this.toolStripMenuItemSpellCheckFromCurrentLine.Click += new System.EventHandler(this.toolStripMenuItemSpellCheckFromCurrentLine_Click);
+            this.toolStripMenuItemSpellCheckFromCurrentLine.Click += new System.EventHandler(this.ToolStripMenuItemSpellCheckFromCurrentLineClick);
             // 
             // findDoubleWordsToolStripMenuItem
             // 
@@ -2313,14 +2313,14 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemOpenVideoFromUrl.Name = "toolStripMenuItemOpenVideoFromUrl";
             this.toolStripMenuItemOpenVideoFromUrl.Size = new System.Drawing.Size(295, 22);
             this.toolStripMenuItemOpenVideoFromUrl.Text = "Open video from url...";
-            this.toolStripMenuItemOpenVideoFromUrl.Click += new System.EventHandler(this.toolStripMenuItemOpenVideoFromUrl_Click);
+            this.toolStripMenuItemOpenVideoFromUrl.Click += new System.EventHandler(this.ToolStripMenuItemOpenVideoFromUrlClick);
             // 
             // toolStripMenuItemOpenDvd
             // 
             this.toolStripMenuItemOpenDvd.Name = "toolStripMenuItemOpenDvd";
             this.toolStripMenuItemOpenDvd.Size = new System.Drawing.Size(295, 22);
             this.toolStripMenuItemOpenDvd.Text = "Open DVD...";
-            this.toolStripMenuItemOpenDvd.Click += new System.EventHandler(this.toolStripMenuItemOpenDvd_Click);
+            this.toolStripMenuItemOpenDvd.Click += new System.EventHandler(this.ToolStripMenuItemOpenDvdClick);
             // 
             // toolStripMenuItemSetAudioTrack
             // 
@@ -2361,21 +2361,21 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemImportChapters.Name = "toolStripMenuItemImportChapters";
             this.toolStripMenuItemImportChapters.Size = new System.Drawing.Size(295, 22);
             this.toolStripMenuItemImportChapters.Text = "Import chapters from video...";
-            this.toolStripMenuItemImportChapters.Click += new System.EventHandler(this.toolStripMenuItemImportChapters_Click);
+            this.toolStripMenuItemImportChapters.Click += new System.EventHandler(this.ToolStripMenuItemImportChaptersClick);
             // 
             // toolStripMenuItemImportShotChanges
             // 
             this.toolStripMenuItemImportShotChanges.Name = "toolStripMenuItemImportShotChanges";
             this.toolStripMenuItemImportShotChanges.Size = new System.Drawing.Size(295, 22);
             this.toolStripMenuItemImportShotChanges.Text = "Import shot changes...";
-            this.toolStripMenuItemImportShotChanges.Click += new System.EventHandler(this.toolStripMenuItemImportShotChanges_Click);
+            this.toolStripMenuItemImportShotChanges.Click += new System.EventHandler(this.ToolStripMenuItemImportShotChangesClick);
             // 
             // toolStripMenuItemListShotChanges
             // 
             this.toolStripMenuItemListShotChanges.Name = "toolStripMenuItemListShotChanges";
             this.toolStripMenuItemListShotChanges.Size = new System.Drawing.Size(295, 22);
             this.toolStripMenuItemListShotChanges.Text = "List shot changes";
-            this.toolStripMenuItemListShotChanges.Click += new System.EventHandler(this.toolStripMenuItemListShotChanges_Click);
+            this.toolStripMenuItemListShotChanges.Click += new System.EventHandler(this.ToolStripMenuItemListShotChangesClick);
             // 
             // toolStripMenuItemAddWaveformBatch
             // 
@@ -2417,7 +2417,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.videoaudioToTextToolStripMenuItem.Name = "videoaudioToTextToolStripMenuItem";
             this.videoaudioToTextToolStripMenuItem.Size = new System.Drawing.Size(295, 22);
             this.videoaudioToTextToolStripMenuItem.Text = "Audio to text (Vosk/Kaldi)...";
-            this.videoaudioToTextToolStripMenuItem.Click += new System.EventHandler(this.videoaudioToTextToolStripMenuItem_Click);
+            this.videoaudioToTextToolStripMenuItem.Click += new System.EventHandler(this.VideoaudioToTextToolStripMenuItemClick);
             // 
             // toolStripSeparator5
             // 
@@ -2496,7 +2496,7 @@ namespace Nikse.SubtitleEdit.Forms
             | System.Windows.Forms.Keys.P)));
             this.toolStripMenuItemPointSync.Size = new System.Drawing.Size(324, 22);
             this.toolStripMenuItemPointSync.Text = "Point sync...";
-            this.toolStripMenuItemPointSync.Click += new System.EventHandler(this.toolStripMenuItemPointSync_Click);
+            this.toolStripMenuItemPointSync.Click += new System.EventHandler(this.ToolStripMenuItemPointSyncClick);
             // 
             // pointSyncViaOtherSubtitleToolStripMenuItem
             // 
@@ -2586,7 +2586,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.wordListsToolStripMenuItem.Name = "wordListsToolStripMenuItem";
             this.wordListsToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
             this.wordListsToolStripMenuItem.Text = "Word lists...";
-            this.wordListsToolStripMenuItem.Click += new System.EventHandler(this.wordListsToolStripMenuItem_Click);
+            this.wordListsToolStripMenuItem.Click += new System.EventHandler(this.WordListsToolStripMenuItemClick);
             // 
             // changeLanguageToolStripMenuItem
             // 
@@ -2606,7 +2606,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemNetworking.Name = "toolStripMenuItemNetworking";
             this.toolStripMenuItemNetworking.Size = new System.Drawing.Size(81, 20);
             this.toolStripMenuItemNetworking.Text = "Networking";
-            this.toolStripMenuItemNetworking.DropDownOpening += new System.EventHandler(this.toolStripMenuItemNetworking_DropDownOpening);
+            this.toolStripMenuItemNetworking.DropDownOpening += new System.EventHandler(this.ToolStripMenuItemNetworkingDropDownOpening);
             // 
             // startServerToolStripMenuItem
             // 
@@ -2627,14 +2627,14 @@ namespace Nikse.SubtitleEdit.Forms
             this.chatToolStripMenuItem.Name = "chatToolStripMenuItem";
             this.chatToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
             this.chatToolStripMenuItem.Text = "Chat";
-            this.chatToolStripMenuItem.Click += new System.EventHandler(this.chatToolStripMenuItem_Click);
+            this.chatToolStripMenuItem.Click += new System.EventHandler(this.ChatToolStripMenuItemClick);
             // 
             // showSessionKeyLogToolStripMenuItem
             // 
             this.showSessionKeyLogToolStripMenuItem.Name = "showSessionKeyLogToolStripMenuItem";
             this.showSessionKeyLogToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
             this.showSessionKeyLogToolStripMenuItem.Text = "Show session info and log";
-            this.showSessionKeyLogToolStripMenuItem.Click += new System.EventHandler(this.showSessionKeyLogToolStripMenuItem_Click);
+            this.showSessionKeyLogToolStripMenuItem.Click += new System.EventHandler(this.ShowSessionKeyLogToolStripMenuItemClick);
             // 
             // leaveSessionToolStripMenuItem
             // 
@@ -2790,7 +2790,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.videoResolutionResamplerToolStripMenuItem.Name = "videoResolutionResamplerToolStripMenuItem";
             this.videoResolutionResamplerToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
             this.videoResolutionResamplerToolStripMenuItem.Text = "Video resolution resampler...";
-            this.videoResolutionResamplerToolStripMenuItem.Click += new System.EventHandler(this.videoResolutionResamplerToolStripMenuItem_Click);
+            this.videoResolutionResamplerToolStripMenuItem.Click += new System.EventHandler(this.VideoResolutionResamplerToolStripMenuItemClick);
             // 
             // generateBackgroundBoxToolStripMenuItem
             // 
@@ -2835,7 +2835,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemWebVttStyle.Name = "toolStripMenuItemWebVttStyle";
             this.toolStripMenuItemWebVttStyle.Size = new System.Drawing.Size(284, 22);
             this.toolStripMenuItemWebVttStyle.Text = "WebVTT style...";
-            this.toolStripMenuItemWebVttStyle.Click += new System.EventHandler(this.toolStripMenuItemWebVttStyle_Click);
+            this.toolStripMenuItemWebVttStyle.Click += new System.EventHandler(this.TolStripMenuItemWebVttStyleClick);
             // 
             // toolStripMenuItemWebVTT
             // 
@@ -2848,7 +2848,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuWebVttBrowserPreview.Name = "toolStripMenuWebVttBrowserPreview";
             this.toolStripMenuWebVttBrowserPreview.Size = new System.Drawing.Size(284, 22);
             this.toolStripMenuWebVttBrowserPreview.Text = "WebVTT browser preview";
-            this.toolStripMenuWebVttBrowserPreview.Click += new System.EventHandler(this.toolStripMenuItemPreview_Click);
+            this.toolStripMenuWebVttBrowserPreview.Click += new System.EventHandler(this.ToolStripMenuItemPreviewClick);
             // 
             // toolStripMenuItemDelete
             // 
@@ -2928,7 +2928,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemInsertTextFromSub.Name = "toolStripMenuItemInsertTextFromSub";
             this.toolStripMenuItemInsertTextFromSub.Size = new System.Drawing.Size(314, 22);
             this.toolStripMenuItemInsertTextFromSub.Text = "Insert text from subtitle and shift cells down...";
-            this.toolStripMenuItemInsertTextFromSub.Click += new System.EventHandler(this.toolStripMenuItemInsertTextFromSub_Click);
+            this.toolStripMenuItemInsertTextFromSub.Click += new System.EventHandler(this.ToolStripMenuItemInsertTextFromSubClick);
             // 
             // toolStripMenuItemColumnImportText
             // 
@@ -2942,7 +2942,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemPasteSpecial.Name = "toolStripMenuItemPasteSpecial";
             this.toolStripMenuItemPasteSpecial.Size = new System.Drawing.Size(314, 22);
             this.toolStripMenuItemPasteSpecial.Text = "Paste from clipboard...";
-            this.toolStripMenuItemPasteSpecial.Click += new System.EventHandler(this.toolStripMenuItemPasteSpecial_Click);
+            this.toolStripMenuItemPasteSpecial.Click += new System.EventHandler(this.ToolStripMenuItemPasteSpecialClick);
             // 
             // copyOriginalTextToCurrentToolStripMenuItem
             // 
@@ -2977,7 +2977,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemGoToSourceView.Name = "toolStripMenuItemGoToSourceView";
             this.toolStripMenuItemGoToSourceView.Size = new System.Drawing.Size(284, 22);
             this.toolStripMenuItemGoToSourceView.Text = "Go to source view";
-            this.toolStripMenuItemGoToSourceView.Click += new System.EventHandler(this.toolStripMenuItemGoToSourceView_Click);
+            this.toolStripMenuItemGoToSourceView.Click += new System.EventHandler(this.ToolStripMenuItemGoToSourceViewClick);
             // 
             // toolStripSeparator7
             // 
@@ -3146,7 +3146,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemFont.Name = "toolStripMenuItemFont";
             this.toolStripMenuItemFont.Size = new System.Drawing.Size(284, 22);
             this.toolStripMenuItemFont.Text = "Font name...";
-            this.toolStripMenuItemFont.Click += new System.EventHandler(this.toolStripMenuItemFont_Click);
+            this.toolStripMenuItemFont.Click += new System.EventHandler(this.ToolStripMenuItemFontClick);
             // 
             // toolStripMenuItemAlignment
             // 
@@ -3219,7 +3219,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.beautifyTimeCodesOfSelectedLinesToolStripMenuItem.Name = "beautifyTimeCodesOfSelectedLinesToolStripMenuItem";
             this.beautifyTimeCodesOfSelectedLinesToolStripMenuItem.Size = new System.Drawing.Size(275, 22);
             this.beautifyTimeCodesOfSelectedLinesToolStripMenuItem.Text = "Beautify time codes of selected lines...";
-            this.beautifyTimeCodesOfSelectedLinesToolStripMenuItem.Click += new System.EventHandler(this.beautifyTimeCodesOfSelectedLinesToolStripMenuItem_Click);
+            this.beautifyTimeCodesOfSelectedLinesToolStripMenuItem.Click += new System.EventHandler(this.BeautifyTimeCodesOfSelectedLinesToolStripMenuItemClick);
             // 
             // showSelectedLinesEarlierlaterToolStripMenuItem
             // 
@@ -3290,7 +3290,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemEmptyGoToSourceView.Name = "toolStripMenuItemEmptyGoToSourceView";
             this.toolStripMenuItemEmptyGoToSourceView.Size = new System.Drawing.Size(168, 22);
             this.toolStripMenuItemEmptyGoToSourceView.Text = "Go to source view";
-            this.toolStripMenuItemEmptyGoToSourceView.Click += new System.EventHandler(this.toolStripMenuItemGoToSourceView_Click);
+            this.toolStripMenuItemEmptyGoToSourceView.Click += new System.EventHandler(this.ToolStripMenuItemGoToSourceViewClick);
             // 
             // openFileDialog1
             // 
@@ -3407,8 +3407,8 @@ namespace Nikse.SubtitleEdit.Forms
             this.trackBarWaveformPosition.Size = new System.Drawing.Size(279, 20);
             this.trackBarWaveformPosition.TabIndex = 11;
             this.trackBarWaveformPosition.TickStyle = System.Windows.Forms.TickStyle.None;
-            this.trackBarWaveformPosition.ValueChanged += new System.EventHandler(this.trackBarWaveformPosition_ValueChanged);
-            this.trackBarWaveformPosition.KeyDown += new System.Windows.Forms.KeyEventHandler(this.trackBarWaveformPosition_KeyDown);
+            this.trackBarWaveformPosition.ValueChanged += new System.EventHandler(this.TrackBarWaveformPositionValueChanged);
+            this.trackBarWaveformPosition.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TrackBarWaveformPositionKeyDown);
             // 
             // panelWaveformControls
             // 
@@ -3530,7 +3530,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripSplitButtonPlayRate.Name = "toolStripSplitButtonPlayRate";
             this.toolStripSplitButtonPlayRate.Size = new System.Drawing.Size(26, 26);
             this.toolStripSplitButtonPlayRate.Text = "Center";
-            this.toolStripSplitButtonPlayRate.Click += new System.EventHandler(this.toolStripSplitButtonPlayRate_Click);
+            this.toolStripSplitButtonPlayRate.Click += new System.EventHandler(this.ToolStripSplitButtonPlayRateClick);
             // 
             // tabControlModes
             // 
@@ -4494,14 +4494,14 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemSetParagraphAsSelection.Name = "toolStripMenuItemSetParagraphAsSelection";
             this.toolStripMenuItemSetParagraphAsSelection.Size = new System.Drawing.Size(274, 22);
             this.toolStripMenuItemSetParagraphAsSelection.Text = "Set selected paragraph as selection";
-            this.toolStripMenuItemSetParagraphAsSelection.Click += new System.EventHandler(this.toolStripMenuItemSetParagraphAsSelection_Click);
+            this.toolStripMenuItemSetParagraphAsSelection.Click += new System.EventHandler(this.ToolStripMenuItemSetParagraphAsSelectionClick);
             // 
             // toolStripMenuItemFocusTextbox
             // 
             this.toolStripMenuItemFocusTextbox.Name = "toolStripMenuItemFocusTextbox";
             this.toolStripMenuItemFocusTextbox.Size = new System.Drawing.Size(274, 22);
             this.toolStripMenuItemFocusTextbox.Text = "Focus textbox";
-            this.toolStripMenuItemFocusTextbox.Click += new System.EventHandler(this.toolStripMenuItemFocusTextbox_Click);
+            this.toolStripMenuItemFocusTextbox.Click += new System.EventHandler(this.ToolStripMenuItemFocusTextboxClick);
             // 
             // goToPreviousSubtitleStripMenuItem
             // 
@@ -4574,7 +4574,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemWaveformPlaySelection.Name = "toolStripMenuItemWaveformPlaySelection";
             this.toolStripMenuItemWaveformPlaySelection.Size = new System.Drawing.Size(274, 22);
             this.toolStripMenuItemWaveformPlaySelection.Text = "Play selection";
-            this.toolStripMenuItemWaveformPlaySelection.Click += new System.EventHandler(this.toolStripMenuItemWaveformPlaySelection_Click);
+            this.toolStripMenuItemWaveformPlaySelection.Click += new System.EventHandler(this.ToolStripMenuItemWaveformPlaySelectionClick);
             // 
             // toolStripSeparator23
             // 
@@ -4633,7 +4633,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.seekSilenceToolStripMenuItem.Name = "seekSilenceToolStripMenuItem";
             this.seekSilenceToolStripMenuItem.Size = new System.Drawing.Size(274, 22);
             this.seekSilenceToolStripMenuItem.Text = "Seek silence...";
-            this.seekSilenceToolStripMenuItem.Click += new System.EventHandler(this.seekSilenceToolStripMenuItem_Click);
+            this.seekSilenceToolStripMenuItem.Click += new System.EventHandler(this.SeekSilenceToolStripMenuItemClick);
             // 
             // insertSubtitleHereToolStripMenuItem
             // 
@@ -4944,7 +4944,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemSpellCheckSkipOnce.Size = new System.Drawing.Size(273, 22);
             this.toolStripMenuItemSpellCheckSkipOnce.Text = "Skip once";
             this.toolStripMenuItemSpellCheckSkipOnce.Visible = false;
-            this.toolStripMenuItemSpellCheckSkipOnce.Click += new System.EventHandler(this.toolStripMenuItemSpellCheckSkipOnce_Click);
+            this.toolStripMenuItemSpellCheckSkipOnce.Click += new System.EventHandler(this.ToolStripMenuItemSpellCheckSkipOnceClick);
             // 
             // toolStripMenuItemSpellCheckSkipAll
             // 
@@ -4952,7 +4952,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemSpellCheckSkipAll.Size = new System.Drawing.Size(273, 22);
             this.toolStripMenuItemSpellCheckSkipAll.Text = "Skip all";
             this.toolStripMenuItemSpellCheckSkipAll.Visible = false;
-            this.toolStripMenuItemSpellCheckSkipAll.Click += new System.EventHandler(this.toolStripMenuItemSpellCheckSkipAll_Click);
+            this.toolStripMenuItemSpellCheckSkipAll.Click += new System.EventHandler(this.ToolStripMenuItemSpellCheckSkipAllClick);
             // 
             // toolStripMenuItemSpellCheckAddToDictionary
             // 
@@ -4960,7 +4960,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemSpellCheckAddToDictionary.Size = new System.Drawing.Size(273, 22);
             this.toolStripMenuItemSpellCheckAddToDictionary.Text = "Add to dictionary";
             this.toolStripMenuItemSpellCheckAddToDictionary.Visible = false;
-            this.toolStripMenuItemSpellCheckAddToDictionary.Click += new System.EventHandler(this.toolStripMenuItemSpellCheckAddToDictionary_Click);
+            this.toolStripMenuItemSpellCheckAddToDictionary.Click += new System.EventHandler(this.ToolStripMenuItemSpellCheckAddToDictionaryClick);
             // 
             // toolStripMenuItemSpellCheckAddToNames
             // 
@@ -4968,7 +4968,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemSpellCheckAddToNames.Size = new System.Drawing.Size(273, 22);
             this.toolStripMenuItemSpellCheckAddToNames.Text = "Add to names";
             this.toolStripMenuItemSpellCheckAddToNames.Visible = false;
-            this.toolStripMenuItemSpellCheckAddToNames.Click += new System.EventHandler(this.toolStripMenuItemSpellCheckAddToNames_Click);
+            this.toolStripMenuItemSpellCheckAddToNames.Click += new System.EventHandler(this.ToolStripMenuItemSpellCheckAddToNamesClick);
             // 
             // toolStripSeparatorSpellCheck
             // 
@@ -4993,7 +4993,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.cutToolStripMenuItem1.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.X)));
             this.cutToolStripMenuItem1.Size = new System.Drawing.Size(273, 22);
             this.cutToolStripMenuItem1.Text = "Cut";
-            this.cutToolStripMenuItem1.Click += new System.EventHandler(this.cutToolStripMenuItem_Click);
+            this.cutToolStripMenuItem1.Click += new System.EventHandler(this.CutToolStripMenuItemClick);
             // 
             // copyToolStripMenuItem1
             // 
@@ -5023,7 +5023,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemSplitViaWaveform.Name = "toolStripMenuItemSplitViaWaveform";
             this.toolStripMenuItemSplitViaWaveform.Size = new System.Drawing.Size(273, 22);
             this.toolStripMenuItemSplitViaWaveform.Text = "Split text at cursor/waveform position";
-            this.toolStripMenuItemSplitViaWaveform.Click += new System.EventHandler(this.toolStripMenuItemSplitViaWaveform_Click);
+            this.toolStripMenuItemSplitViaWaveform.Click += new System.EventHandler(this.ToolStripMenuItemSplitViaWaveformClick);
             // 
             // toolStripMenuItemSplitTextAtCursor
             // 
@@ -5076,7 +5076,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.boxToolStripMenuItem1.Name = "boxToolStripMenuItem1";
             this.boxToolStripMenuItem1.Size = new System.Drawing.Size(273, 22);
             this.boxToolStripMenuItem1.Text = "Box";
-            this.boxToolStripMenuItem1.Click += new System.EventHandler(this.boxToolStripMenuItem1_Click);
+            this.boxToolStripMenuItem1.Click += new System.EventHandler(this.BoxToolStripMenuItem1Click);
             // 
             // underlineToolStripMenuItem1
             // 
@@ -5097,7 +5097,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemHorizontalDigits.Name = "toolStripMenuItemHorizontalDigits";
             this.toolStripMenuItemHorizontalDigits.Size = new System.Drawing.Size(273, 22);
             this.toolStripMenuItemHorizontalDigits.Text = "Horizontal digits";
-            this.toolStripMenuItemHorizontalDigits.Click += new System.EventHandler(this.toolStripMenuItemHorizontalDigits_Click);
+            this.toolStripMenuItemHorizontalDigits.Click += new System.EventHandler(this.ToolStripMenuItemHorizontalDigitsClick);
             // 
             // toolStripMenuItemBouten
             // 
@@ -5191,7 +5191,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemRuby.Name = "toolStripMenuItemRuby";
             this.toolStripMenuItemRuby.Size = new System.Drawing.Size(273, 22);
             this.toolStripMenuItemRuby.Text = "Ruby...";
-            this.toolStripMenuItemRuby.Click += new System.EventHandler(this.toolStripMenuItemRuby_Click);
+            this.toolStripMenuItemRuby.Click += new System.EventHandler(this.ToolStripMenuItemRubyClick);
             // 
             // fontNameToolStripMenuItem
             // 
@@ -5668,7 +5668,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemGoToListView.Name = "toolStripMenuItemGoToListView";
             this.toolStripMenuItemGoToListView.Size = new System.Drawing.Size(242, 22);
             this.toolStripMenuItemGoToListView.Text = "Go to list view";
-            this.toolStripMenuItemGoToListView.Click += new System.EventHandler(this.toolStripMenuItemGoToListView_Click);
+            this.toolStripMenuItemGoToListView.Click += new System.EventHandler(this.ToolStripMenuItemGoToListViewClick);
             // 
             // toolStripSeparator18
             // 
@@ -5681,7 +5681,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.cutToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.X)));
             this.cutToolStripMenuItem.Size = new System.Drawing.Size(242, 22);
             this.cutToolStripMenuItem.Text = "Cut";
-            this.cutToolStripMenuItem.Click += new System.EventHandler(this.cutToolStripMenuItem_Click);
+            this.cutToolStripMenuItem.Click += new System.EventHandler(this.CutToolStripMenuItemClick);
             // 
             // copyToolStripMenuItem
             // 
@@ -5871,7 +5871,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemShowVideoControls.Name = "toolStripMenuItemShowVideoControls";
             this.toolStripMenuItemShowVideoControls.Size = new System.Drawing.Size(181, 22);
             this.toolStripMenuItemShowVideoControls.Text = "Show video controls";
-            this.toolStripMenuItemShowVideoControls.Click += new System.EventHandler(this.toolStripMenuItemShowVideoControls_Click);
+            this.toolStripMenuItemShowVideoControls.Click += new System.EventHandler(this.ToolStripMenuItemShowVideoControlsClick);
             // 
             // Main
             // 
