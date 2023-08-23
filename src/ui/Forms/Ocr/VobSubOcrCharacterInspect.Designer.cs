@@ -39,7 +39,7 @@
             this.buttonDelete = new System.Windows.Forms.Button();
             this.buttonUpdate = new System.Windows.Forms.Button();
             this.labelImageInfo = new System.Windows.Forms.Label();
-            this.textBoxText = new System.Windows.Forms.TextBox();
+            this.textBoxText = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.contextMenuStripLetters = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.pictureBoxCompareBitmap = new System.Windows.Forms.PictureBox();
             this.buttonOK = new System.Windows.Forms.Button();
@@ -348,7 +348,7 @@
         private System.Windows.Forms.Button buttonDelete;
         private System.Windows.Forms.Button buttonUpdate;
         private System.Windows.Forms.Label labelImageInfo;
-        private System.Windows.Forms.TextBox textBoxText;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxText;
         private System.Windows.Forms.PictureBox pictureBoxCompareBitmap;
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.ListBox listBoxInspectItems;

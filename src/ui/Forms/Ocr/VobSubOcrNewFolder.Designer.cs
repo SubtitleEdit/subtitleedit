@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.label1 = new System.Windows.Forms.Label();
-            this.textBoxFolder = new System.Windows.Forms.TextBox();
+            this.textBoxFolder = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.SuspendLayout();
@@ -100,7 +100,7 @@
         #endregion
 
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox textBoxFolder;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxFolder;
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Button buttonCancel;
     }
