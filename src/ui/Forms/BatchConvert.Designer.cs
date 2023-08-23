@@ -119,7 +119,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.checkBoxConvertColorsToDialogAddNewLines = new System.Windows.Forms.CheckBox();
             this.checkBoxConvertColorsToDialogRemoveColorTags = new System.Windows.Forms.CheckBox();
             this.groupBoxDeleteLines = new System.Windows.Forms.GroupBox();
-            this.textBoxDeleteContains = new System.Windows.Forms.TextBox();
+            this.textBoxDeleteContains = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelDeleteLinesContaining = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.numericUpDownDeleteLast = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelDeleteLastLines = new Nikse.SubtitleEdit.Controls.NikseLabel();
@@ -2261,7 +2261,7 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripMenuItem addFilesToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.GroupBox groupBoxDeleteLines;
-        private System.Windows.Forms.TextBox textBoxDeleteContains;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxDeleteContains;
         private Nikse.SubtitleEdit.Controls.NikseLabel labelDeleteLinesContaining;
         private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownDeleteLast;
         private Nikse.SubtitleEdit.Controls.NikseLabel labelDeleteLastLines;

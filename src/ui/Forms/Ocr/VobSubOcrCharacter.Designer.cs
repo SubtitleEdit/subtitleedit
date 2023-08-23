@@ -48,7 +48,7 @@
             this.buttonSkip = new System.Windows.Forms.Button();
             this.pictureBoxSubtitleImage = new System.Windows.Forms.PictureBox();
             this.labelCharactersAsText = new System.Windows.Forms.Label();
-            this.textBoxCharacters = new System.Windows.Forms.TextBox();
+            this.textBoxCharacters = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.contextMenuStripLetters = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.pictureBoxCharacter = new System.Windows.Forms.PictureBox();
             this.labelCharacters = new System.Windows.Forms.Label();
@@ -559,7 +559,7 @@
         private System.Windows.Forms.Button buttonSkip;
         private System.Windows.Forms.PictureBox pictureBoxSubtitleImage;
         private System.Windows.Forms.Label labelCharactersAsText;
-        private System.Windows.Forms.TextBox textBoxCharacters;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxCharacters;
         private System.Windows.Forms.PictureBox pictureBoxCharacter;
         private System.Windows.Forms.Label labelCharacters;
         private System.Windows.Forms.Button buttonAbort;
