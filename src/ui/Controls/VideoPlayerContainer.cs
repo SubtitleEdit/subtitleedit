@@ -1308,6 +1308,11 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
+        public void UnSetFullFixed()
+        {
+            PanelPlayer.Dock = DockStyle.None;
+        }
+
         public void ShowFullScreenControls()
         {
             _pictureBoxFullscreen.Image = _bitmapNoFullscreen;

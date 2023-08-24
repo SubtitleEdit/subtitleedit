@@ -256,6 +256,7 @@ namespace Nikse.SubtitleEdit.Forms
             _videoPlayerContainer.SubtitleText = string.Empty;
             _videoPlayerContainer.ShowFullscreenButton = Configuration.Settings.General.VideoPlayerShowFullscreenButton;
             _videoPlayerContainer.ShowNonFullScreenControls();
+            _videoPlayerContainer.UnSetFullFixed();
             if (RedockOnFullscreenEnd)
             {
                 Close();
