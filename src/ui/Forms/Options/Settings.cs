@@ -630,9 +630,9 @@ namespace Nikse.SubtitleEdit.Forms.Options
             labelTranslationAutoSuffix.Text = language.TranslationAutoSuffix;
             comboBoxTranslationAutoSuffix.Left = labelTranslationAutoSuffix.Right + 3;
             buttonTranslationAutoSuffix.Left = comboBoxTranslationAutoSuffix.Right + 3;
-            comboBoxAutoBackup.Left = labelAutoBackup.Left + labelAutoBackup.Width + 3;
+            comboBoxAutoBackup.Left = labelAutoBackup.Left + labelAutoBackup.Width + 1;
             labelAutoBackupDeleteAfter.Left = comboBoxAutoBackup.Left + comboBoxAutoBackup.Width + 5;
-            comboBoxAutoBackupDeleteAfter.Left = labelAutoBackupDeleteAfter.Left + labelAutoBackupDeleteAfter.Width + 3;
+            comboBoxAutoBackupDeleteAfter.Left = labelAutoBackupDeleteAfter.Left + labelAutoBackupDeleteAfter.Width + 1;
             checkBoxCheckForUpdates.Text = language.CheckForUpdates;
             checkBoxAutoSave.Text = language.AutoSave;
             checkBoxCheckForUpdates.Left = checkBoxAutoSave.Left + checkBoxAutoSave.Width + 15;

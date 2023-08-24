@@ -781,6 +781,11 @@ namespace Nikse.SubtitleEdit.Controls
 
             _listView.Left = totalX;
             _listView.Top = top;
+            if (form.Width < _listView.Left + _listView.Width)
+            {
+                _listView.Left = Math.Max(0, _listView.Left - (_listView.Left + _listView.Width - form.Width + 20));
+            }
+
             form.Controls.Add(_listView);
             _listView.BringToFront();
 
