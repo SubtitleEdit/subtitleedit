@@ -551,7 +551,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelDuration = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.labelAutoDuration = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.pictureBoxRecord = new System.Windows.Forms.PictureBox();
-            this.textBoxSource = new System.Windows.Forms.TextBox();
+            this.textBoxSource = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.contextMenuStripTextBoxSourceView = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItemGoToListView = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator18 = new System.Windows.Forms.ToolStripSeparator();
@@ -5978,7 +5978,7 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripMenuItem gotoLineNumberToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
         private Nikse.SubtitleEdit.Controls.SubtitleListView SubtitleListview1;
-        private System.Windows.Forms.TextBox textBoxSource;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxSource;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripTextBoxSourceView;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemGoToListView;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
