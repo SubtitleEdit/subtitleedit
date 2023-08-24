@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using Nikse.SubtitleEdit.Logic;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Controls
@@ -7,7 +8,7 @@ namespace Nikse.SubtitleEdit.Controls
     {
         private const int WM_NCPAINT = 0x85;
         private const int WM_PAINT = 0x0f;
-        
+
         Color _focusedColor = Color.FromArgb(0, 120, 215);
         public Color FocusedColor
         {
@@ -18,6 +19,21 @@ namespace Nikse.SubtitleEdit.Controls
                 Invalidate();
             }
         }
+
+        public NikseTextBox()
+        {
+            KeyDown += NikseTextBox_KeyDown;
+        }
+
+        private void NikseTextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Control && e.KeyCode == Keys.Back)
+            {
+                e.SuppressKeyPress = true;
+                UiUtil.ApplyControlBackspace(this);
+            }
+        }
+
         protected override void WndProc(ref Message m)
         {
             base.WndProc(ref m);
