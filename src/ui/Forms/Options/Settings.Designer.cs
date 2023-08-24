@@ -631,7 +631,7 @@
             // 
             // buttonTranslationAutoSuffix
             // 
-            this.buttonTranslationAutoSuffix.Location = new System.Drawing.Point(692, 420);
+            this.buttonTranslationAutoSuffix.Location = new System.Drawing.Point(670, 420);
             this.buttonTranslationAutoSuffix.Name = "buttonTranslationAutoSuffix";
             this.buttonTranslationAutoSuffix.Size = new System.Drawing.Size(28, 23);
             this.buttonTranslationAutoSuffix.TabIndex = 26;
@@ -657,7 +657,7 @@
             "Every minute",
             "Every 5 minutes",
             "Every 15 minutes"});
-            this.comboBoxTranslationAutoSuffix.Location = new System.Drawing.Point(562, 421);
+            this.comboBoxTranslationAutoSuffix.Location = new System.Drawing.Point(540, 421);
             this.comboBoxTranslationAutoSuffix.MaxLength = 32767;
             this.comboBoxTranslationAutoSuffix.Name = "comboBoxTranslationAutoSuffix";
             this.comboBoxTranslationAutoSuffix.SelectedIndex = -1;
@@ -669,7 +669,7 @@
             // labelTranslationAutoSuffix
             // 
             this.labelTranslationAutoSuffix.AutoSize = true;
-            this.labelTranslationAutoSuffix.Location = new System.Drawing.Point(438, 424);
+            this.labelTranslationAutoSuffix.Location = new System.Drawing.Point(416, 424);
             this.labelTranslationAutoSuffix.Name = "labelTranslationAutoSuffix";
             this.labelTranslationAutoSuffix.Size = new System.Drawing.Size(115, 13);
             this.labelTranslationAutoSuffix.TabIndex = 32;
@@ -678,7 +678,7 @@
             // labelSplitBehavior
             // 
             this.labelSplitBehavior.AutoSize = true;
-            this.labelSplitBehavior.Location = new System.Drawing.Point(438, 291);
+            this.labelSplitBehavior.Location = new System.Drawing.Point(416, 291);
             this.labelSplitBehavior.Name = "labelSplitBehavior";
             this.labelSplitBehavior.Size = new System.Drawing.Size(72, 13);
             this.labelSplitBehavior.TabIndex = 20;
@@ -697,7 +697,7 @@
             this.comboBoxSplitBehavior.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxSplitBehavior.DropDownWidth = 207;
             this.comboBoxSplitBehavior.FormattingEnabled = true;
-            this.comboBoxSplitBehavior.Location = new System.Drawing.Point(528, 288);
+            this.comboBoxSplitBehavior.Location = new System.Drawing.Point(506, 288);
             this.comboBoxSplitBehavior.MaxLength = 32767;
             this.comboBoxSplitBehavior.Name = "comboBoxSplitBehavior";
             this.comboBoxSplitBehavior.SelectedIndex = -1;
@@ -709,7 +709,7 @@
             // checkBoxAutoSave
             // 
             this.checkBoxAutoSave.AutoSize = true;
-            this.checkBoxAutoSave.Location = new System.Drawing.Point(443, 491);
+            this.checkBoxAutoSave.Location = new System.Drawing.Point(421, 491);
             this.checkBoxAutoSave.Name = "checkBoxAutoSave";
             this.checkBoxAutoSave.Size = new System.Drawing.Size(75, 17);
             this.checkBoxAutoSave.TabIndex = 30;
@@ -729,7 +729,7 @@
             this.comboBoxSaveAsFileNameFrom.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxSaveAsFileNameFrom.DropDownWidth = 332;
             this.comboBoxSaveAsFileNameFrom.FormattingEnabled = true;
-            this.comboBoxSaveAsFileNameFrom.Location = new System.Drawing.Point(441, 386);
+            this.comboBoxSaveAsFileNameFrom.Location = new System.Drawing.Point(419, 386);
             this.comboBoxSaveAsFileNameFrom.MaxLength = 32767;
             this.comboBoxSaveAsFileNameFrom.Name = "comboBoxSaveAsFileNameFrom";
             this.comboBoxSaveAsFileNameFrom.SelectedIndex = -1;
@@ -741,7 +741,7 @@
             // labelSaveAsFileNameFrom
             // 
             this.labelSaveAsFileNameFrom.AutoSize = true;
-            this.labelSaveAsFileNameFrom.Location = new System.Drawing.Point(438, 370);
+            this.labelSaveAsFileNameFrom.Location = new System.Drawing.Point(416, 370);
             this.labelSaveAsFileNameFrom.Name = "labelSaveAsFileNameFrom";
             this.labelSaveAsFileNameFrom.Size = new System.Drawing.Size(160, 13);
             this.labelSaveAsFileNameFrom.TabIndex = 24;
@@ -780,7 +780,7 @@
             this.groupBoxGeneralRules.Controls.Add(this.numericUpDownSubtitleLineMaximumLength);
             this.groupBoxGeneralRules.Location = new System.Drawing.Point(6, 23);
             this.groupBoxGeneralRules.Name = "groupBoxGeneralRules";
-            this.groupBoxGeneralRules.Size = new System.Drawing.Size(387, 381);
+            this.groupBoxGeneralRules.Size = new System.Drawing.Size(384, 380);
             this.groupBoxGeneralRules.TabIndex = 0;
             this.groupBoxGeneralRules.TabStop = false;
             this.groupBoxGeneralRules.Text = "Rules";
@@ -788,7 +788,7 @@
             // buttonEditCustomContinuationStyle
             // 
             this.buttonEditCustomContinuationStyle.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonEditCustomContinuationStyle.Location = new System.Drawing.Point(346, 323);
+            this.buttonEditCustomContinuationStyle.Location = new System.Drawing.Point(347, 323);
             this.buttonEditCustomContinuationStyle.Name = "buttonEditCustomContinuationStyle";
             this.buttonEditCustomContinuationStyle.Size = new System.Drawing.Size(28, 23);
             this.buttonEditCustomContinuationStyle.TabIndex = 59;
@@ -1375,7 +1375,7 @@
             "1 month",
             "3 months",
             "6 months"});
-            this.comboBoxAutoBackupDeleteAfter.Location = new System.Drawing.Point(709, 459);
+            this.comboBoxAutoBackupDeleteAfter.Location = new System.Drawing.Point(687, 459);
             this.comboBoxAutoBackupDeleteAfter.MaxLength = 32767;
             this.comboBoxAutoBackupDeleteAfter.Name = "comboBoxAutoBackupDeleteAfter";
             this.comboBoxAutoBackupDeleteAfter.SelectedIndex = -1;
@@ -1387,7 +1387,7 @@
             // labelAutoBackupDeleteAfter
             // 
             this.labelAutoBackupDeleteAfter.AutoSize = true;
-            this.labelAutoBackupDeleteAfter.Location = new System.Drawing.Point(641, 462);
+            this.labelAutoBackupDeleteAfter.Location = new System.Drawing.Point(619, 462);
             this.labelAutoBackupDeleteAfter.Name = "labelAutoBackupDeleteAfter";
             this.labelAutoBackupDeleteAfter.Size = new System.Drawing.Size(65, 13);
             this.labelAutoBackupDeleteAfter.TabIndex = 28;
@@ -1396,7 +1396,7 @@
             // checkBoxCheckForUpdates
             // 
             this.checkBoxCheckForUpdates.AutoSize = true;
-            this.checkBoxCheckForUpdates.Location = new System.Drawing.Point(524, 491);
+            this.checkBoxCheckForUpdates.Location = new System.Drawing.Point(502, 491);
             this.checkBoxCheckForUpdates.Name = "checkBoxCheckForUpdates";
             this.checkBoxCheckForUpdates.Size = new System.Drawing.Size(114, 17);
             this.checkBoxCheckForUpdates.TabIndex = 31;
@@ -1406,7 +1406,7 @@
             // labelSpellChecker
             // 
             this.labelSpellChecker.AutoSize = true;
-            this.labelSpellChecker.Location = new System.Drawing.Point(669, 19);
+            this.labelSpellChecker.Location = new System.Drawing.Point(647, 19);
             this.labelSpellChecker.Name = "labelSpellChecker";
             this.labelSpellChecker.Size = new System.Drawing.Size(69, 13);
             this.labelSpellChecker.TabIndex = 30;
@@ -1429,7 +1429,7 @@
             this.comboBoxTimeCodeMode.Items.AddRange(new object[] {
             "HH:MM:SS:MSEC (00:00:00.000)",
             "HH:MM:SS:FF (00:00:00.00)"});
-            this.comboBoxTimeCodeMode.Location = new System.Drawing.Point(528, 261);
+            this.comboBoxTimeCodeMode.Location = new System.Drawing.Point(506, 261);
             this.comboBoxTimeCodeMode.MaxLength = 32767;
             this.comboBoxTimeCodeMode.Name = "comboBoxTimeCodeMode";
             this.comboBoxTimeCodeMode.SelectedIndex = -1;
@@ -1441,7 +1441,7 @@
             // labelTimeCodeMode
             // 
             this.labelTimeCodeMode.AutoSize = true;
-            this.labelTimeCodeMode.Location = new System.Drawing.Point(438, 264);
+            this.labelTimeCodeMode.Location = new System.Drawing.Point(416, 264);
             this.labelTimeCodeMode.Name = "labelTimeCodeMode";
             this.labelTimeCodeMode.Size = new System.Drawing.Size(84, 13);
             this.labelTimeCodeMode.TabIndex = 18;
@@ -1494,7 +1494,7 @@
             this.textBoxShowLineBreaksAs.IsSpellCheckRequested = false;
             this.textBoxShowLineBreaksAs.IsWrongWord = false;
             this.textBoxShowLineBreaksAs.LanguageChanged = false;
-            this.textBoxShowLineBreaksAs.Location = new System.Drawing.Point(594, 233);
+            this.textBoxShowLineBreaksAs.Location = new System.Drawing.Point(572, 233);
             this.textBoxShowLineBreaksAs.MaxLength = 10;
             this.textBoxShowLineBreaksAs.Multiline = true;
             this.textBoxShowLineBreaksAs.Name = "textBoxShowLineBreaksAs";
@@ -1512,7 +1512,7 @@
             // checkBoxAutoWrapWhileTyping
             // 
             this.checkBoxAutoWrapWhileTyping.AutoSize = true;
-            this.checkBoxAutoWrapWhileTyping.Location = new System.Drawing.Point(441, 210);
+            this.checkBoxAutoWrapWhileTyping.Location = new System.Drawing.Point(419, 210);
             this.checkBoxAutoWrapWhileTyping.Name = "checkBoxAutoWrapWhileTyping";
             this.checkBoxAutoWrapWhileTyping.Size = new System.Drawing.Size(137, 17);
             this.checkBoxAutoWrapWhileTyping.TabIndex = 15;
@@ -1522,7 +1522,7 @@
             // checkBoxPromptDeleteLines
             // 
             this.checkBoxPromptDeleteLines.AutoSize = true;
-            this.checkBoxPromptDeleteLines.Location = new System.Drawing.Point(441, 187);
+            this.checkBoxPromptDeleteLines.Location = new System.Drawing.Point(419, 187);
             this.checkBoxPromptDeleteLines.Name = "checkBoxPromptDeleteLines";
             this.checkBoxPromptDeleteLines.Size = new System.Drawing.Size(142, 17);
             this.checkBoxPromptDeleteLines.TabIndex = 14;
@@ -1532,7 +1532,7 @@
             // checkBoxAllowEditOfOriginalSubtitle
             // 
             this.checkBoxAllowEditOfOriginalSubtitle.AutoSize = true;
-            this.checkBoxAllowEditOfOriginalSubtitle.Location = new System.Drawing.Point(441, 164);
+            this.checkBoxAllowEditOfOriginalSubtitle.Location = new System.Drawing.Point(419, 164);
             this.checkBoxAllowEditOfOriginalSubtitle.Name = "checkBoxAllowEditOfOriginalSubtitle";
             this.checkBoxAllowEditOfOriginalSubtitle.Size = new System.Drawing.Size(160, 17);
             this.checkBoxAllowEditOfOriginalSubtitle.TabIndex = 13;
@@ -1555,7 +1555,7 @@
             this.comboBoxSpellChecker.Items.AddRange(new object[] {
             "Hunspell",
             "Word"});
-            this.comboBoxSpellChecker.Location = new System.Drawing.Point(692, 16);
+            this.comboBoxSpellChecker.Location = new System.Drawing.Point(670, 16);
             this.comboBoxSpellChecker.MaxLength = 32767;
             this.comboBoxSpellChecker.Name = "comboBoxSpellChecker";
             this.comboBoxSpellChecker.SelectedIndex = -1;
@@ -1583,7 +1583,7 @@
             "Every minute",
             "Every 5 minutes",
             "Every 15 minutes"});
-            this.comboBoxAutoBackup.Location = new System.Drawing.Point(514, 459);
+            this.comboBoxAutoBackup.Location = new System.Drawing.Point(492, 459);
             this.comboBoxAutoBackup.MaxLength = 32767;
             this.comboBoxAutoBackup.Name = "comboBoxAutoBackup";
             this.comboBoxAutoBackup.SelectedIndex = -1;
@@ -1595,7 +1595,7 @@
             // labelAutoBackup
             // 
             this.labelAutoBackup.AutoSize = true;
-            this.labelAutoBackup.Location = new System.Drawing.Point(440, 462);
+            this.labelAutoBackup.Location = new System.Drawing.Point(418, 462);
             this.labelAutoBackup.Name = "labelAutoBackup";
             this.labelAutoBackup.Size = new System.Drawing.Size(68, 13);
             this.labelAutoBackup.TabIndex = 26;
@@ -1604,7 +1604,7 @@
             // checkBoxRememberSelectedLine
             // 
             this.checkBoxRememberSelectedLine.AutoSize = true;
-            this.checkBoxRememberSelectedLine.Location = new System.Drawing.Point(449, 69);
+            this.checkBoxRememberSelectedLine.Location = new System.Drawing.Point(427, 69);
             this.checkBoxRememberSelectedLine.Name = "checkBoxRememberSelectedLine";
             this.checkBoxRememberSelectedLine.Size = new System.Drawing.Size(139, 17);
             this.checkBoxRememberSelectedLine.TabIndex = 9;
@@ -1614,7 +1614,7 @@
             // checkBoxRemoveBlankLinesWhenOpening
             // 
             this.checkBoxRemoveBlankLinesWhenOpening.AutoSize = true;
-            this.checkBoxRemoveBlankLinesWhenOpening.Location = new System.Drawing.Point(441, 141);
+            this.checkBoxRemoveBlankLinesWhenOpening.Location = new System.Drawing.Point(419, 141);
             this.checkBoxRemoveBlankLinesWhenOpening.Name = "checkBoxRemoveBlankLinesWhenOpening";
             this.checkBoxRemoveBlankLinesWhenOpening.Size = new System.Drawing.Size(225, 17);
             this.checkBoxRemoveBlankLinesWhenOpening.TabIndex = 12;
@@ -1648,7 +1648,7 @@
             "UTF-7",
             "UTF-8",
             "Unicode"});
-            this.comboBoxListViewDoubleClickEvent.Location = new System.Drawing.Point(441, 337);
+            this.comboBoxListViewDoubleClickEvent.Location = new System.Drawing.Point(419, 337);
             this.comboBoxListViewDoubleClickEvent.MaxLength = 32767;
             this.comboBoxListViewDoubleClickEvent.Name = "comboBoxListViewDoubleClickEvent";
             this.comboBoxListViewDoubleClickEvent.SelectedIndex = -1;
@@ -1660,7 +1660,7 @@
             // labelListViewDoubleClickEvent
             // 
             this.labelListViewDoubleClickEvent.AutoSize = true;
-            this.labelListViewDoubleClickEvent.Location = new System.Drawing.Point(438, 321);
+            this.labelListViewDoubleClickEvent.Location = new System.Drawing.Point(416, 321);
             this.labelListViewDoubleClickEvent.Name = "labelListViewDoubleClickEvent";
             this.labelListViewDoubleClickEvent.Size = new System.Drawing.Size(227, 13);
             this.labelListViewDoubleClickEvent.TabIndex = 22;
@@ -1669,7 +1669,7 @@
             // labelShowLineBreaksAs
             // 
             this.labelShowLineBreaksAs.AutoSize = true;
-            this.labelShowLineBreaksAs.Location = new System.Drawing.Point(438, 236);
+            this.labelShowLineBreaksAs.Location = new System.Drawing.Point(416, 236);
             this.labelShowLineBreaksAs.Name = "labelShowLineBreaksAs";
             this.labelShowLineBreaksAs.Size = new System.Drawing.Size(150, 13);
             this.labelShowLineBreaksAs.TabIndex = 16;
@@ -1678,7 +1678,7 @@
             // checkBoxRememberWindowPosition
             // 
             this.checkBoxRememberWindowPosition.AutoSize = true;
-            this.checkBoxRememberWindowPosition.Location = new System.Drawing.Point(441, 95);
+            this.checkBoxRememberWindowPosition.Location = new System.Drawing.Point(419, 95);
             this.checkBoxRememberWindowPosition.Name = "checkBoxRememberWindowPosition";
             this.checkBoxRememberWindowPosition.Size = new System.Drawing.Size(223, 17);
             this.checkBoxRememberWindowPosition.TabIndex = 10;
@@ -1688,7 +1688,7 @@
             // checkBoxStartInSourceView
             // 
             this.checkBoxStartInSourceView.AutoSize = true;
-            this.checkBoxStartInSourceView.Location = new System.Drawing.Point(441, 118);
+            this.checkBoxStartInSourceView.Location = new System.Drawing.Point(419, 118);
             this.checkBoxStartInSourceView.Name = "checkBoxStartInSourceView";
             this.checkBoxStartInSourceView.Size = new System.Drawing.Size(121, 17);
             this.checkBoxStartInSourceView.TabIndex = 11;
@@ -1698,7 +1698,7 @@
             // checkBoxReopenLastOpened
             // 
             this.checkBoxReopenLastOpened.AutoSize = true;
-            this.checkBoxReopenLastOpened.Location = new System.Drawing.Point(449, 46);
+            this.checkBoxReopenLastOpened.Location = new System.Drawing.Point(427, 46);
             this.checkBoxReopenLastOpened.Name = "checkBoxReopenLastOpened";
             this.checkBoxReopenLastOpened.Size = new System.Drawing.Size(145, 17);
             this.checkBoxReopenLastOpened.TabIndex = 8;
@@ -1708,7 +1708,7 @@
             // checkBoxRememberRecentFiles
             // 
             this.checkBoxRememberRecentFiles.AutoSize = true;
-            this.checkBoxRememberRecentFiles.Location = new System.Drawing.Point(441, 22);
+            this.checkBoxRememberRecentFiles.Location = new System.Drawing.Point(419, 22);
             this.checkBoxRememberRecentFiles.Name = "checkBoxRememberRecentFiles";
             this.checkBoxRememberRecentFiles.Size = new System.Drawing.Size(195, 17);
             this.checkBoxRememberRecentFiles.TabIndex = 7;
@@ -3014,7 +3014,7 @@
             0,
             0,
             0});
-            this.numericUpDownMarginVertical.Location = new System.Drawing.Point(380, 153);
+            this.numericUpDownMarginVertical.Location = new System.Drawing.Point(361, 153);
             this.numericUpDownMarginVertical.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -3039,7 +3039,7 @@
             // labelMarginVertical
             // 
             this.labelMarginVertical.AutoSize = true;
-            this.labelMarginVertical.Location = new System.Drawing.Point(325, 155);
+            this.labelMarginVertical.Location = new System.Drawing.Point(306, 155);
             this.labelMarginVertical.Name = "labelMarginVertical";
             this.labelMarginVertical.Size = new System.Drawing.Size(42, 13);
             this.labelMarginVertical.TabIndex = 20;
@@ -3048,7 +3048,7 @@
             // panelMpvBackColor
             // 
             this.panelMpvBackColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelMpvBackColor.Location = new System.Drawing.Point(420, 125);
+            this.panelMpvBackColor.Location = new System.Drawing.Point(401, 125);
             this.panelMpvBackColor.Name = "panelMpvBackColor";
             this.panelMpvBackColor.Size = new System.Drawing.Size(21, 20);
             this.panelMpvBackColor.TabIndex = 19;
@@ -3056,7 +3056,7 @@
             // 
             // buttonMpvBackColor
             // 
-            this.buttonMpvBackColor.Location = new System.Drawing.Point(325, 124);
+            this.buttonMpvBackColor.Location = new System.Drawing.Point(306, 124);
             this.buttonMpvBackColor.Name = "buttonMpvBackColor";
             this.buttonMpvBackColor.Size = new System.Drawing.Size(89, 23);
             this.buttonMpvBackColor.TabIndex = 18;
@@ -3067,7 +3067,7 @@
             // panelMpvOutlineColor
             // 
             this.panelMpvOutlineColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelMpvOutlineColor.Location = new System.Drawing.Point(420, 96);
+            this.panelMpvOutlineColor.Location = new System.Drawing.Point(401, 96);
             this.panelMpvOutlineColor.Name = "panelMpvOutlineColor";
             this.panelMpvOutlineColor.Size = new System.Drawing.Size(21, 20);
             this.panelMpvOutlineColor.TabIndex = 17;
@@ -3075,7 +3075,7 @@
             // 
             // buttonMpvOutlineColor
             // 
-            this.buttonMpvOutlineColor.Location = new System.Drawing.Point(325, 95);
+            this.buttonMpvOutlineColor.Location = new System.Drawing.Point(306, 95);
             this.buttonMpvOutlineColor.Name = "buttonMpvOutlineColor";
             this.buttonMpvOutlineColor.Size = new System.Drawing.Size(89, 23);
             this.buttonMpvOutlineColor.TabIndex = 16;
@@ -3086,7 +3086,7 @@
             // panelMpvPrimaryColor
             // 
             this.panelMpvPrimaryColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelMpvPrimaryColor.Location = new System.Drawing.Point(420, 67);
+            this.panelMpvPrimaryColor.Location = new System.Drawing.Point(401, 67);
             this.panelMpvPrimaryColor.Name = "panelMpvPrimaryColor";
             this.panelMpvPrimaryColor.Size = new System.Drawing.Size(21, 20);
             this.panelMpvPrimaryColor.TabIndex = 15;
@@ -3094,7 +3094,7 @@
             // 
             // buttonMpvPrimaryColor
             // 
-            this.buttonMpvPrimaryColor.Location = new System.Drawing.Point(325, 66);
+            this.buttonMpvPrimaryColor.Location = new System.Drawing.Point(306, 66);
             this.buttonMpvPrimaryColor.Name = "buttonMpvPrimaryColor";
             this.buttonMpvPrimaryColor.Size = new System.Drawing.Size(89, 23);
             this.buttonMpvPrimaryColor.TabIndex = 14;
@@ -3112,9 +3112,9 @@
             this.groupBoxMpvBorder.Controls.Add(this.numericUpDownMpvShadowWidth);
             this.groupBoxMpvBorder.Controls.Add(this.numericUpDownMpvOutline);
             this.groupBoxMpvBorder.Controls.Add(this.labelMpvShadow);
-            this.groupBoxMpvBorder.Location = new System.Drawing.Point(547, 68);
+            this.groupBoxMpvBorder.Location = new System.Drawing.Point(447, 68);
             this.groupBoxMpvBorder.Name = "groupBoxMpvBorder";
-            this.groupBoxMpvBorder.Size = new System.Drawing.Size(285, 105);
+            this.groupBoxMpvBorder.Size = new System.Drawing.Size(394, 105);
             this.groupBoxMpvBorder.TabIndex = 13;
             this.groupBoxMpvBorder.TabStop = false;
             this.groupBoxMpvBorder.Text = "Border";
@@ -3267,7 +3267,7 @@
             // checkBoxVideoPlayerPreviewFontBold
             // 
             this.checkBoxVideoPlayerPreviewFontBold.AutoSize = true;
-            this.checkBoxVideoPlayerPreviewFontBold.Location = new System.Drawing.Point(660, 17);
+            this.checkBoxVideoPlayerPreviewFontBold.Location = new System.Drawing.Point(641, 17);
             this.checkBoxVideoPlayerPreviewFontBold.Name = "checkBoxVideoPlayerPreviewFontBold";
             this.checkBoxVideoPlayerPreviewFontBold.Size = new System.Drawing.Size(46, 17);
             this.checkBoxVideoPlayerPreviewFontBold.TabIndex = 7;
@@ -3297,7 +3297,7 @@
             // labelVideoPlayerPreviewFontName
             // 
             this.labelVideoPlayerPreviewFontName.AutoSize = true;
-            this.labelVideoPlayerPreviewFontName.Location = new System.Drawing.Point(324, 16);
+            this.labelVideoPlayerPreviewFontName.Location = new System.Drawing.Point(305, 16);
             this.labelVideoPlayerPreviewFontName.Name = "labelVideoPlayerPreviewFontName";
             this.labelVideoPlayerPreviewFontName.Size = new System.Drawing.Size(136, 13);
             this.labelVideoPlayerPreviewFontName.TabIndex = 5;
@@ -3316,19 +3316,19 @@
             this.comboBoxVideoPlayerPreviewFontName.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxVideoPlayerPreviewFontName.DropDownWidth = 188;
             this.comboBoxVideoPlayerPreviewFontName.FormattingEnabled = true;
-            this.comboBoxVideoPlayerPreviewFontName.Location = new System.Drawing.Point(465, 13);
+            this.comboBoxVideoPlayerPreviewFontName.Location = new System.Drawing.Point(446, 13);
             this.comboBoxVideoPlayerPreviewFontName.MaxLength = 32767;
             this.comboBoxVideoPlayerPreviewFontName.Name = "comboBoxVideoPlayerPreviewFontName";
             this.comboBoxVideoPlayerPreviewFontName.SelectedIndex = -1;
             this.comboBoxVideoPlayerPreviewFontName.SelectedItem = null;
             this.comboBoxVideoPlayerPreviewFontName.SelectedText = "";
-            this.comboBoxVideoPlayerPreviewFontName.Size = new System.Drawing.Size(188, 21);
+            this.comboBoxVideoPlayerPreviewFontName.Size = new System.Drawing.Size(186, 21);
             this.comboBoxVideoPlayerPreviewFontName.TabIndex = 6;
             // 
             // labelVideoPlayerPreviewFontSize
             // 
             this.labelVideoPlayerPreviewFontSize.AutoSize = true;
-            this.labelVideoPlayerPreviewFontSize.Location = new System.Drawing.Point(324, 43);
+            this.labelVideoPlayerPreviewFontSize.Location = new System.Drawing.Point(305, 43);
             this.labelVideoPlayerPreviewFontSize.Name = "labelVideoPlayerPreviewFontSize";
             this.labelVideoPlayerPreviewFontSize.Size = new System.Drawing.Size(128, 13);
             this.labelVideoPlayerPreviewFontSize.TabIndex = 7;
@@ -3371,7 +3371,7 @@
             "28",
             "29",
             "30"});
-            this.comboBoxlVideoPlayerPreviewFontSize.Location = new System.Drawing.Point(465, 40);
+            this.comboBoxlVideoPlayerPreviewFontSize.Location = new System.Drawing.Point(446, 40);
             this.comboBoxlVideoPlayerPreviewFontSize.MaxLength = 32767;
             this.comboBoxlVideoPlayerPreviewFontSize.Name = "comboBoxlVideoPlayerPreviewFontSize";
             this.comboBoxlVideoPlayerPreviewFontSize.SelectedIndex = -1;
@@ -6525,10 +6525,10 @@
             this.ClientSize = new System.Drawing.Size(1092, 574);
             this.Controls.Add(this.labelUpdateFileTypeAssociationsStatus);
             this.Controls.Add(this.panelGeneral);
+            this.Controls.Add(this.panelVideoPlayer);
             this.Controls.Add(this.panelFont);
             this.Controls.Add(this.panelShortcuts);
             this.Controls.Add(this.panelToolBar);
-            this.Controls.Add(this.panelVideoPlayer);
             this.Controls.Add(this.panelTools);
             this.Controls.Add(this.panelWaveform);
             this.Controls.Add(this.panelNetwork);
