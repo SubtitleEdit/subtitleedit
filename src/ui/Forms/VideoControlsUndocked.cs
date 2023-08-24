@@ -66,14 +66,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void VideoControlsUndocked_Shown(object sender, System.EventArgs e)
         {
-            if (Height < 320)
-            {
-                Height = 320;
-            }
+            Height = 340;
 
             if (panelContainer.Controls.Count > 0)
             {
-                panelContainer.Controls[0].Dock = DockStyle.Fill;
+                panelContainer.Controls[0].Anchor = AnchorStyles.Left | AnchorStyles.Top;
+                panelContainer.Controls[0].Height = 300;
             }
         }
     }
