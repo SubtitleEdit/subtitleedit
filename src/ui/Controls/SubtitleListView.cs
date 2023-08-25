@@ -419,29 +419,30 @@ namespace Nikse.SubtitleEdit.Controls
             ColumnIndexNetwork = GetColumnIndex(SubtitleColumn.Network);
         }
 
-        private void SubtitleListView_DrawColumnHeader(object sender, DrawListViewColumnHeaderEventArgs e)
+        private static void SubtitleListView_DrawColumnHeader(object sender, DrawListViewColumnHeaderEventArgs e)
         {
             e.DrawDefault = true;
         }
 
         private void SubtitleListView_DrawSubItem(object sender, DrawListViewSubItemEventArgs e)
         {
-            var backgroundColor = Items[e.ItemIndex].SubItems[e.ColumnIndex].BackColor;
-            if (Focused && backgroundColor == BackColor || RightToLeftLayout)
+            if (RightToLeftLayout && e.ColumnIndex > 0)
             {
                 e.DrawDefault = true;
                 return;
             }
 
+            var backgroundColor = Items[e.ItemIndex].SubItems[e.ColumnIndex].BackColor;
             if (e.Item.Selected)
             {
-
                 var rect = e.Bounds;
                 if (Configuration.Settings != null)
                 {
                     backgroundColor = backgroundColor == BackColor ? Configuration.Settings.Tools.ListViewUnfocusedSelectedColor : GetCustomColor(backgroundColor);
-                    var sb = new SolidBrush(backgroundColor);
-                    e.Graphics.FillRectangle(sb, rect);
+                    using (var sb = new SolidBrush(backgroundColor))
+                    {
+                        e.Graphics.FillRectangle(sb, rect);
+                    }
                 }
                 else
                 {
@@ -449,7 +450,6 @@ namespace Nikse.SubtitleEdit.Controls
                 }
 
                 var addX = 0;
-
                 if (e.ColumnIndex == 0 && StateImageList?.Images.Count > 0)
                 {
                     addX = 18;
@@ -460,19 +460,26 @@ namespace Nikse.SubtitleEdit.Controls
                     e.Graphics.DrawImage(StateImageList.Images[e.Item.StateImageIndex], new Rectangle(rect.X + 4, rect.Y + 2, 16, 16));
                 }
 
-                using (var f = new Font(e.Item.SubItems[e.ColumnIndex].Font.FontFamily, e.Item.SubItems[e.ColumnIndex].Font.Size - 0.5f))
+                using (var f = new Font(e.Item.SubItems[e.ColumnIndex].Font.FontFamily, e.Item.SubItems[e.ColumnIndex].Font.Size - 0.5f, e.Item.SubItems[e.ColumnIndex].Font.Style))
                 {
                     e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
                     e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+                    var flags = TextFormatFlags.EndEllipsis | TextFormatFlags.Left | TextFormatFlags.TextBoxControl;
                     if (Columns[e.ColumnIndex].TextAlign == HorizontalAlignment.Right)
                     {
-                        var stringWidth = (int)e.Graphics.MeasureString(e.Item.SubItems[e.ColumnIndex].Text, f).Width;
-                        TextRenderer.DrawText(e.Graphics, e.Item.SubItems[e.ColumnIndex].Text, f, new Point(e.Bounds.Right - stringWidth - 7, e.Bounds.Top + 2), e.Item.ForeColor, TextFormatFlags.NoPrefix);
+                        flags |= TextFormatFlags.Right;
                     }
                     else
                     {
-                        TextRenderer.DrawText(e.Graphics, e.Item.SubItems[e.ColumnIndex].Text, f, new Point(e.Bounds.Left + 3 + addX, e.Bounds.Top + 2), e.Item.ForeColor, TextFormatFlags.NoPrefix);
+                        flags |= TextFormatFlags.Left;
                     }
+
+                    if (RightToLeftLayout)
+                    {
+                        flags |= TextFormatFlags.RightToLeft;
+                    }
+
+                    TextRenderer.DrawText(e.Graphics, e.Item.SubItems[e.ColumnIndex].Text, f, new Rectangle(e.Bounds.Left + 3 + addX, e.Bounds.Top + 2, e.Bounds.Width - 7 - addX, e.Bounds.Height - 2), e.Item.ForeColor, flags);
                 }
             }
             else
@@ -516,6 +523,9 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     e.DrawFocusRectangle();
                 }
+            }
+            else if (Focused)
+            {
             }
             else
             {
