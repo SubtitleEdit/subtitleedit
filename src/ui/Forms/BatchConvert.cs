@@ -172,6 +172,8 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxAdjustDuration.Text = LanguageSettings.Current.AdjustDisplayDuration.Title;
             addFilesToolStripMenuItem.Text = l.AddFiles;
             groupBoxDeleteLines.Text = l.DeleteLines;
+            buttonBeautifyTimeCodesEditProfile.Text = LanguageSettings.Current.BeautifyTimeCodes.EditProfile;
+            groupBoxRemoveFormatting.Text = LanguageSettings.Current.Main.Menu.ContextMenu.RemoveFormatting;
             groupBoxAssaChangeRes.Text = LanguageSettings.Current.AssaResolutionChanger.Title;
             groupBoxSortBy.Text = LanguageSettings.Current.Main.Menu.Tools.SortBy;
             comboBoxSortBy.Items.Clear();
