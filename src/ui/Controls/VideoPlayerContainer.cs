@@ -83,6 +83,7 @@ namespace Nikse.SubtitleEdit.Controls
         public int VideoHeight { get; set; }
 
         private bool _isMuted;
+        private readonly bool _loading;
         private double? _muteOldVolume;
         public bool PlayedWithCustomSpeed;
         private readonly System.ComponentModel.ComponentResourceManager _resources;
@@ -198,6 +199,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public VideoPlayerContainer()
         {
+            _loading = true;
             Chapters = Array.Empty<MatroskaChapter>();
             FontSizeFactor = 1.0F;
             BorderStyle = BorderStyle.None;
@@ -238,6 +240,7 @@ namespace Nikse.SubtitleEdit.Controls
             PictureBoxFastForwardOverMouseLeave(null, null);
 
             _labelTimeCode.Click += LabelTimeCodeClick;
+            _loading = false;
         }
 
         private bool _showDuration = true;
@@ -327,8 +330,8 @@ namespace Nikse.SubtitleEdit.Controls
 
         private void ControlMouseWheel(object sender, MouseEventArgs e)
         {
-            int delta = e.Delta;
-            double newPosition = CurrentPosition - delta / 256.0;
+            var delta = e.Delta;
+            var newPosition = CurrentPosition - delta / 256.0;
             if (newPosition < 0)
             {
                 newPosition = 0;
@@ -1050,6 +1053,11 @@ namespace Nikse.SubtitleEdit.Controls
 
         public void VideoPlayerContainerResize(object sender, EventArgs e)
         {
+            if (_loading)
+            {
+                return;
+            }
+
             ControlsHeight = _pictureBoxBackground.Height;
             PanelPlayer.Height = Height - (ControlsHeight + _subtitlesHeight);
             PanelPlayer.Width = Width;
@@ -2153,7 +2161,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
             else
             {
-                _labelVolume.ForeColor = Color.White;
+                _labelVolume.ForeColor = Color.FromArgb(228, 228, 228); ;
             }
 
             if (_labelTimeCode.BackColor.R + _labelTimeCode.BackColor.G + _labelTimeCode.BackColor.B > 255 * 1.5)
@@ -2162,7 +2170,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
             else
             {
-                _labelTimeCode.ForeColor = Color.White;
+                _labelTimeCode.ForeColor = Color.FromArgb(228, 228, 228);
             }
 
             if (_labelVideoPlayerName.BackColor.R + _labelVideoPlayerName.BackColor.G + _labelVideoPlayerName.BackColor.B > 255 * 1.5)
@@ -2171,7 +2179,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
             else
             {
-                _labelVideoPlayerName.ForeColor = Color.White;
+                _labelVideoPlayerName.ForeColor = Color.FromArgb(228, 228, 228);
             }
         }
 
