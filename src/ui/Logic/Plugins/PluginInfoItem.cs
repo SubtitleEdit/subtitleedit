@@ -8,5 +8,6 @@ namespace Nikse.SubtitleEdit.Logic.Plugins
         public string Date { get; set; }
         public string Url { get; set; }
         public string ActionType { get; set; }
+        public string FileName { get; set; }
     }
 }

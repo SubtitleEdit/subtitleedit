@@ -21,6 +21,7 @@ namespace Nikse.SubtitleEdit.Logic.Plugins
                         Description = description,
                         Version = version.ToString(CultureInfo.InvariantCulture),
                         ActionType = actionType,
+                        FileName = pluginFileName,
                     });
                 }
             }
