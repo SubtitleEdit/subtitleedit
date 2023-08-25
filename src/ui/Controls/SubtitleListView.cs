@@ -432,13 +432,25 @@ namespace Nikse.SubtitleEdit.Controls
                 return;
             }
 
-            var backgroundColor = Items[e.ItemIndex].SubItems[e.ColumnIndex].BackColor;
-            if (e.Item.Selected)
+            if (e.Item.Selected && !(Focused && e.ColumnIndex > 0))
             {
                 var rect = e.Bounds;
                 if (Configuration.Settings != null)
                 {
-                    backgroundColor = backgroundColor == BackColor ? Configuration.Settings.Tools.ListViewUnfocusedSelectedColor : GetCustomColor(backgroundColor);
+                    Color backgroundColor;
+                    if (Configuration.Settings.General.UseDarkTheme)
+                    {
+                        backgroundColor = Color.FromArgb(24, 52, 75);
+                    }
+                    else if (Focused)
+                    {
+                        backgroundColor = Color.FromArgb(0, 120, 215);
+                    }
+                    else
+                    {
+                        backgroundColor = Color.FromArgb(204, 232, 255);
+                    }
+
                     using (var sb = new SolidBrush(backgroundColor))
                     {
                         e.Graphics.FillRectangle(sb, rect);
@@ -460,8 +472,15 @@ namespace Nikse.SubtitleEdit.Controls
                     e.Graphics.DrawImage(StateImageList.Images[e.Item.StateImageIndex], new Rectangle(rect.X + 4, rect.Y + 2, 16, 16));
                 }
 
-                using (var f = new Font(e.Item.SubItems[e.ColumnIndex].Font.FontFamily, e.Item.SubItems[e.ColumnIndex].Font.Size - 0.5f, e.Item.SubItems[e.ColumnIndex].Font.Style))
+                using (var f = new Font(e.Item.SubItems[e.ColumnIndex].Font.FontFamily, e.Item.SubItems[e.ColumnIndex].Font.Size - 0.4f, e.Item.SubItems[e.ColumnIndex].Font.Style))
                 {
+                    var c = ForeColor;
+                    if (Configuration.Settings == null && Focused ||
+                        Configuration.Settings != null && Focused && !Configuration.Settings.General.UseDarkTheme)
+                    {
+                        c = Color.White;
+                    }
+
                     e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
                     e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
                     var flags = TextFormatFlags.EndEllipsis | TextFormatFlags.Left | TextFormatFlags.TextBoxControl;
@@ -479,7 +498,7 @@ namespace Nikse.SubtitleEdit.Controls
                         flags |= TextFormatFlags.RightToLeft;
                     }
 
-                    TextRenderer.DrawText(e.Graphics, e.Item.SubItems[e.ColumnIndex].Text, f, new Rectangle(e.Bounds.Left + 3 + addX, e.Bounds.Top + 2, e.Bounds.Width - 7 - addX, e.Bounds.Height - 2), e.Item.ForeColor, flags);
+                    TextRenderer.DrawText(e.Graphics, e.Item.SubItems[e.ColumnIndex].Text, f, new Rectangle(e.Bounds.Left + 3 + addX, e.Bounds.Top + 2, e.Bounds.Width - 7 - addX, e.Bounds.Height - 2), c, flags);
                 }
             }
             else
