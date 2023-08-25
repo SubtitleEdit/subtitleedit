@@ -1031,25 +1031,6 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-        public static void SelectWordAtCaret(SETextBox textBox)
-        {
-            var text = textBox.Text;
-            var endIndex = textBox.SelectionStart;
-            var startIndex = endIndex;
-
-            while (startIndex > 0 && !IsSpaceCategory(CharUnicodeInfo.GetUnicodeCategory(text[startIndex - 1])) && !BreakChars.Contains(text[startIndex - 1]))
-            {
-                startIndex--;
-            }
-            textBox.SelectionStart = startIndex;
-
-            while (endIndex < text.Length && !IsSpaceCategory(CharUnicodeInfo.GetUnicodeCategory(text[endIndex])) && !BreakChars.Contains(text[endIndex]))
-            {
-                endIndex++;
-            }
-            textBox.SelectionLength = endIndex - startIndex;
-        }
-
         public static void SelectWordAtCaret(TextBox textBox)
         {
             var text = textBox.Text;
