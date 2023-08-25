@@ -460,14 +460,19 @@ namespace Nikse.SubtitleEdit.Controls
                     e.Graphics.DrawImage(StateImageList.Images[e.Item.StateImageIndex], new Rectangle(rect.X + 4, rect.Y + 2, 16, 16));
                 }
 
-                // Draw text - impossible to get a precise match with the default list view text :(
-                e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
-                e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
-                var rectangle = new Rectangle(e.Bounds.Left + 4 + addX, e.Bounds.Top + 2, e.Bounds.Width - 4 - addX, e.Bounds.Height - 2);
-                using (var brush = new SolidBrush(e.Item.SubItems[e.ColumnIndex].ForeColor))
-                using (var stringFormat = CreateStringFormat(this))
+                using (var f = new Font(e.Item.SubItems[e.ColumnIndex].Font.FontFamily,  e.Item.SubItems[e.ColumnIndex].Font.Size - 0.5f))
                 {
-                    e.Graphics.DrawString(e.Item.SubItems[e.ColumnIndex].Text, e.Item.SubItems[e.ColumnIndex].Font, brush, rectangle, stringFormat);
+                    e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+                    e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+                    if (Columns[e.ColumnIndex].TextAlign == HorizontalAlignment.Right)
+                    {
+                        var stringWidth = (int)e.Graphics.MeasureString(e.Item.SubItems[e.ColumnIndex].Text, f).Width;
+                        TextRenderer.DrawText(e.Graphics, e.Item.SubItems[e.ColumnIndex].Text, f, new Point(e.Bounds.Right - stringWidth - 7, e.Bounds.Top + 2), e.Item.ForeColor, TextFormatFlags.NoPrefix);
+                    }
+                    else
+                    {
+                        TextRenderer.DrawText(e.Graphics, e.Item.SubItems[e.ColumnIndex].Text, f, new Point(e.Bounds.Left + 3 + addX, e.Bounds.Top + 2), e.Item.ForeColor, TextFormatFlags.NoPrefix);
+                    }
                 }
             }
             else
