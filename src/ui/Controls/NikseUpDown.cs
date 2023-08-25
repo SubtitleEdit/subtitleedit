@@ -34,6 +34,7 @@ namespace Nikse.SubtitleEdit.Controls
                 }
 
                 Invalidate();
+                ValueChanged?.Invoke(this, null);
             }
         }
 
@@ -310,8 +311,6 @@ namespace Nikse.SubtitleEdit.Controls
                     Value = Maximum;
                     Invalidate();
                 }
-
-                ValueChanged?.Invoke(this, null);
             }
         }
 
@@ -349,7 +348,6 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 Value = 0 >= Minimum && 0 <= Maximum ? 0 : Minimum;
                 SetText(true);
-                ValueChanged?.Invoke(this, null);
                 return;
             }
 
@@ -357,7 +355,6 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 Value = Maximum;
                 SetText(true);
-                ValueChanged?.Invoke(this, null);
                 return;
             }
 
@@ -383,13 +380,11 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     Value = newValue;
                     SetText();
-                    ValueChanged?.Invoke(this, null);
                     return;
                 }
             }
 
             SetText();
-            ValueChanged?.Invoke(this, null);
         }
 
         private bool _buttonUpActive;
