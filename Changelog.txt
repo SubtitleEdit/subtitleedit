@@ -27,7 +27,7 @@
    * Update yt-dlp to 2023.07.06
    * Improve convert of SSA to ASSA - thx Emiliano
    * Update burn-in video preview to video - thx Masina86
-   * Improve handling of invalid xml in ttml - thx m0ck69
+   * Improve handling of invalid XML in TTML - thx m0ck69
    * Update Whisper Const-me to version 1.12
    * Minor refact/optimize - thx ivandrofly
    * Restructured Whisper folders
@@ -38,7 +38,7 @@
    * Add FCE option to unbreak short lines based on pixel width
    * "Check for updates" now also checks plugins - thx ivandrofly
 * FIXED:
-   * Fix "Find Double Words" - th uckthis
+   * Fix "Find Double Words" - thx uckthis
    * Fix "double dash" issue in "Fix common errors" - thx Joel
    * Avoid crash on very large TS files - thx Mariusz
    * Do not count Unicode control characters in Auto-br - MichaelYochpaz 
