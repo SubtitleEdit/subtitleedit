@@ -362,7 +362,8 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            var fileName = listViewInstalledPlugins.SelectedItems[0].Tag.ToString();
+            var pluginInfo = (PluginInfoItem)listViewInstalledPlugins.SelectedItems[0].Tag;
+            var fileName = pluginInfo.FileName;
             var index = listViewInstalledPlugins.SelectedItems[0].Index;
             if (File.Exists(fileName))
             {
