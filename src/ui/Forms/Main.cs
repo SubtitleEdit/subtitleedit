@@ -5880,6 +5880,8 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
+            InitializeToolbar();
+
             if (oldSubtitleTextBoxSyntaxColor != Configuration.Settings.General.SubtitleTextBoxSyntaxColor ||
                 oldSubtitleFontSize != Configuration.Settings.General.SubtitleTextBoxFontSize ||
                 oldSubtitleAlignment != Configuration.Settings.General.CenterSubtitleInTextBox ||
@@ -5913,7 +5915,6 @@ namespace Nikse.SubtitleEdit.Forms
             ShowLineInformationListView();
             ShowSourceLineNumber();
             LoadPlugins();
-            InitializeToolbar();
         }
 
         private void SetAudioVisualizerSettings()
