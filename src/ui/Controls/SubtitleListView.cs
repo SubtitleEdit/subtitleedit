@@ -460,7 +460,7 @@ namespace Nikse.SubtitleEdit.Controls
                     e.Graphics.DrawImage(StateImageList.Images[e.Item.StateImageIndex], new Rectangle(rect.X + 4, rect.Y + 2, 16, 16));
                 }
 
-                using (var f = new Font(e.Item.SubItems[e.ColumnIndex].Font.FontFamily,  e.Item.SubItems[e.ColumnIndex].Font.Size - 0.5f))
+                using (var f = new Font(e.Item.SubItems[e.ColumnIndex].Font.FontFamily, e.Item.SubItems[e.ColumnIndex].Font.Size - 0.5f))
                 {
                     e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
                     e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
@@ -1573,7 +1573,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        private string GetDisplayTime(TimeCode timeCode)
+        private static string GetDisplayTime(TimeCode timeCode)
         {
             if (Configuration.Settings.General.CurrentVideoOffsetInMs != 0)
             {
@@ -1589,6 +1589,9 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 Tag = paragraph,
                 UseItemStyleForSubItems = false,
+                StateImageIndex = paragraph.Bookmark != null ? 0 : -1,
+                Font = font,
+                ForeColor = ForeColor,
             };
             foreach (var column in SubtitleColumns)
             {
@@ -1634,8 +1637,6 @@ namespace Nikse.SubtitleEdit.Controls
                 }
             }
 
-            item.StateImageIndex = paragraph.Bookmark != null ? 0 : -1;
-            item.Font = font;
             return item;
         }
 
