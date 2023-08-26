@@ -34,5 +34,11 @@ namespace Test.Logic
             var result = ProgressHelper.ToProgressTime(new TimeCode(0, 0, 1, 0).TotalMilliseconds);
             Assert.AreEqual("Time remaining: A few seconds", result);
         }
+
+        [TestMethod] public void TestOneMinuteAnd19Seconds()
+        {
+            var result = ProgressHelper.ToProgressTime(new TimeCode(0, 1, 19, 0).TotalMilliseconds);
+            Assert.AreEqual("Time remaining: One minute and 19 seconds", result);
+        }
     }
 }

@@ -1230,6 +1230,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             }
 
             labelTime.Text = ProgressHelper.ToProgressTime(msEstimatedLeft);
+            labelTime.Refresh();
             BringToFront();
         }
 
