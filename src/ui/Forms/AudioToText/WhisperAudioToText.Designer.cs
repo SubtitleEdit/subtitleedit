@@ -123,6 +123,7 @@
             this.textBoxLog.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxLog.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxLog.Location = new System.Drawing.Point(465, 9);
             this.textBoxLog.Multiline = true;
             this.textBoxLog.Name = "textBoxLog";
@@ -517,6 +518,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(709, 494);
+            this.Controls.Add(this.labelTime);
             this.Controls.Add(this.labelAdvanced);
             this.Controls.Add(this.buttonAdvanced);
             this.Controls.Add(this.labelEngine);
@@ -524,11 +526,9 @@
             this.Controls.Add(this.labelElapsed);
             this.Controls.Add(this.checkBoxAutoAdjustTimings);
             this.Controls.Add(this.checkBoxTranslateToEnglish);
-            this.Controls.Add(this.labelFC);
             this.Controls.Add(this.groupBoxInputFiles);
             this.Controls.Add(this.buttonBatchMode);
             this.Controls.Add(this.checkBoxUsePostProcessing);
-            this.Controls.Add(this.labelTime);
             this.Controls.Add(this.linkLabeWhisperWebSite);
             this.Controls.Add(this.groupBoxModels);
             this.Controls.Add(this.labelInfo);
@@ -537,6 +537,7 @@
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonGenerate);
             this.Controls.Add(this.textBoxLog);
+            this.Controls.Add(this.labelFC);
             this.KeyPreview = true;
             this.MinimumSize = new System.Drawing.Size(575, 250);
             this.Name = "WhisperAudioToText";
