@@ -381,6 +381,8 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 subtitleListView.OwnerDraw = false;
                 subtitleListView.GridLines = true;
+                subtitleListView.BackColor = Control.DefaultBackColor;
+                subtitleListView.ForeColor = Control.DefaultForeColor;
                 subtitleListView.DrawColumnHeader -= ListView_DrawColumnHeader;
                 subtitleListView.HandleCreated -= ListView_HandleCreated;
                 SetWindowThemeNormal(c);
@@ -568,6 +570,8 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 subtitleListView.OwnerDraw = true;
                 subtitleListView.GridLines = Configuration.Settings.General.DarkThemeShowListViewGridLines;
+                subtitleListView.BackColor = BackColor;
+                subtitleListView.ForeColor = ForeColor;
                 subtitleListView.DrawColumnHeader += ListView_DrawColumnHeader;
                 subtitleListView.HandleCreated += ListView_HandleCreated;
                 SetWindowThemeDark(subtitleListView);

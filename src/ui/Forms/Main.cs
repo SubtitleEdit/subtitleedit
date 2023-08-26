@@ -282,18 +282,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         protected override void OnLoad(EventArgs e)
         {
-            UiUtil.FixFonts(this, 10000);
-            UiUtil.FixFonts(contextMenuStripListView);
-            UiUtil.FixFonts(contextMenuStripTextBoxListView);
-            UiUtil.FixFonts(contextMenuStripWaveform);
-            UiUtil.FixLargeFonts(tabControlModes, buttonAutoBreak);
-            UiUtil.FixLargeFonts(tabControlModes, buttonAutoBreak);
-            UiUtil.FixLargeFonts(groupBoxEdit, buttonAutoBreak);
-            UiUtil.InitializeSubtitleFont(textBoxSource);
-            UiUtil.InitializeSubtitleFont(textBoxListViewText);
-            textBoxListViewTextOriginal.Top = textBoxListViewText.Top;
-            UiUtil.InitializeSubtitleFont(textBoxListViewTextOriginal);
-            UiUtil.InitializeSubtitleFont(SubtitleListview1);
+            FixFonts();
 
             using (var graphics = CreateGraphics())
             {
@@ -343,6 +332,22 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             base.OnLoad(e);
+        }
+
+        private void FixFonts()
+        {
+            UiUtil.FixFonts(this, 10000);
+            UiUtil.FixFonts(contextMenuStripListView);
+            UiUtil.FixFonts(contextMenuStripTextBoxListView);
+            UiUtil.FixFonts(contextMenuStripWaveform);
+            UiUtil.FixLargeFonts(tabControlModes, buttonAutoBreak);
+            UiUtil.FixLargeFonts(tabControlModes, buttonAutoBreak);
+            UiUtil.FixLargeFonts(groupBoxEdit, buttonAutoBreak);
+            UiUtil.InitializeSubtitleFont(textBoxSource);
+            UiUtil.InitializeSubtitleFont(textBoxListViewText);
+            textBoxListViewTextOriginal.Top = textBoxListViewText.Top;
+            UiUtil.InitializeSubtitleFont(textBoxListViewTextOriginal);
+            UiUtil.InitializeSubtitleFont(SubtitleListview1);
         }
 
         private static string GetArgumentAfterColon(IEnumerable<string> commandLineArguments, string requestedArgumentName)
@@ -5521,6 +5526,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ShowSettings()
         {
+            SaveSubtitleListviewIndices();
             FixFfmpegWrongPath();
 
             var oldVideoPlayer = Configuration.Settings.General.VideoPlayer;
@@ -5691,11 +5697,7 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleListview1.ForeColor = Configuration.Settings.General.SubtitleFontColor;
                 SubtitleListview1.BackColor = Configuration.Settings.General.SubtitleBackgroundColor;
 
-                SaveSubtitleListviewIndices();
                 UiUtil.InitializeSubtitleFont(SubtitleListview1);
-                SubtitleListview1.AutoSizeAllColumns(this);
-                SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
-                RestoreSubtitleListviewIndices();
                 mediaPlayer.SetSubtitleFont();
                 ShowSubtitle();
             }
@@ -5709,9 +5711,6 @@ namespace Nikse.SubtitleEdit.Forms
                 oldCpsWhiteSpaceSetting != Configuration.Settings.General.CpsLineLengthStrategy)
             {
                 SubtitleListview1.InitializeLanguage(_languageGeneral, Configuration.Settings);
-                SaveSubtitleListviewIndices();
-                SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
-                RestoreSubtitleListviewIndices();
             }
 
             if (oldAllowEditOfOriginalSubtitle != Configuration.Settings.General.AllowEditOfOriginalSubtitle && _isOriginalActive)
@@ -5802,7 +5801,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (Configuration.Settings.General.UseDarkTheme)
                 {
-                    OnLoad(null);
+                    FixFonts();
 
                     if (oldUseDarkTheme != Configuration.Settings.General.UseDarkTheme)
                     {
@@ -5847,7 +5846,6 @@ namespace Nikse.SubtitleEdit.Forms
                     textBoxListViewTextOriginal.Initialize(Configuration.Settings.General.SubtitleTextBoxSyntaxColor, false);
                     SubtitleListview1.BackColor = darkThemeBackColor;
                     SubtitleListview1.ForeColor = darkThemeForeColor;
-                    RefreshSelectedParagraph();
                     SetAudioVisualizerSettings();
                 }
                 else
@@ -5861,8 +5859,6 @@ namespace Nikse.SubtitleEdit.Forms
                     SubtitleListview1.BackColor = darkThemeBackColor;
                     SubtitleListview1.ForeColor = darkThemeForeColor;
 
-                    RefreshSelectedParagraph();
-
                     Configuration.Settings.VideoControls.WaveformGridColor = defaultWaveformValues.WaveformGridColor;
                     Configuration.Settings.VideoControls.WaveformBackgroundColor = defaultWaveformValues.WaveformBackgroundColor;
                     Configuration.Settings.VideoControls.WaveformColor = defaultWaveformValues.WaveformColor;
@@ -5875,8 +5871,7 @@ namespace Nikse.SubtitleEdit.Forms
                     SetAudioVisualizerSettings();
 
                     DarkTheme.UndoDarkTheme(this, 1500);
-
-                    OnLoad(null);
+                    FixFonts();
                 }
             }
 
@@ -5895,12 +5890,14 @@ namespace Nikse.SubtitleEdit.Forms
 
                 textBoxListViewText.Initialize(Configuration.Settings.General.SubtitleTextBoxSyntaxColor, false);
                 textBoxListViewTextOriginal.Initialize(Configuration.Settings.General.SubtitleTextBoxSyntaxColor, false);
-                RefreshSelectedParagraph();
             }
             else if (oldLiveSpellCheck && oldLiveSpellCheck != Configuration.Settings.Tools.LiveSpellCheck)
             {
                 textBoxListViewText.DisposeHunspellAndDictionaries();
             }
+
+            SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
+            RestoreSubtitleListviewIndices();
 
             StartOrStopLiveSpellCheckTimer();
 
