@@ -1854,7 +1854,7 @@ namespace Nikse.SubtitleEdit.Forms
             menuItem = new ToolStripMenuItem(LanguageSettings.Current.Main.Menu.ContextMenu.RemoveBookmark);
             menuItem.Click += (sender2, e2) =>
             {
-                _mainForm.RemoveBookmark(index, _mainForm);
+                _mainForm.RemoveBookmark(index);
                 pictureBoxBookmark.Hide();
             };
             bookmarkContextMenu.Items.Add(menuItem);

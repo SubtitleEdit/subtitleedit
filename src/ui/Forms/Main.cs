@@ -33857,7 +33857,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             // remove bookmark
             menuItem = new ToolStripMenuItem(LanguageSettings.Current.Main.Menu.ContextMenu.RemoveBookmark);
-            menuItem.Click += (sender2, e2) => { RemoveBookmark(_subtitleListViewIndex, this); };
+            menuItem.Click += (sender2, e2) => { RemoveBookmark(_subtitleListViewIndex); };
             _bookmarkContextMenu.Items.Add(menuItem);
 
             _bookmarkContextMenu.Items.Add("-");
@@ -33881,7 +33881,7 @@ namespace Nikse.SubtitleEdit.Forms
             pictureBoxBookmark.ContextMenuStrip = _bookmarkContextMenu;
         }
 
-        public void RemoveBookmark(int index, Form parentForm)
+        public void RemoveBookmark(int index)
         {
             var p = _subtitle.GetParagraphOrDefault(index);
             if (p != null)
