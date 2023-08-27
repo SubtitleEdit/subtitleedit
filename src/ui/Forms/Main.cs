@@ -35656,17 +35656,6 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            if (string.IsNullOrEmpty(_videoFileName))
-            {
-                MessageBox.Show(LanguageSettings.Current.General.NoVideoLoaded);
-                return;
-            }
-
-            if (!RequireFfmpegOk())
-            {
-                return;
-            }
-
             if (onlySelectedLines)
             {
                 var selectedIndices = SubtitleListview1.GetSelectedIndices();
