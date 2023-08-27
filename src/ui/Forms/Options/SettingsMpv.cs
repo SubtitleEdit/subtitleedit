@@ -40,7 +40,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
         private void ButtonDownloadClick(object sender, EventArgs e)
         {
-            _downloadUrl = "https://github.com/SubtitleEdit/support-files/releases/download/libmpv-2023-08-13/libmpv2-" + IntPtr.Size * 8 + ".zip";
+            _downloadUrl = "https://github.com/SubtitleEdit/support-files/releases/download/libmpv-2023-08-27/libmpv2-" + IntPtr.Size * 8 + ".zip";
             try
             {
                 labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait;
@@ -94,8 +94,8 @@ namespace Nikse.SubtitleEdit.Forms.Options
             var hash = Utilities.GetSha512Hash(downloadStream.ToArray());
             string[] validHashes =
             {
-                "ea31a9599a5f01951debfc8c52b6c961e98a56632fa08ec83e2cbc7194c3e43560a5d889b524a4c930f33028bdf9ef8797dc0df5b2660cd6eb7b19bb125546ca",
-                "5b91fa3b40e4b216dab1719a11dffc897a5110415e3cc9ddfcf9e2d0ae677bbfc5e3c360e09415b7c266ad1e65a601d951a8efcbcb863d63dfabe4f6b5fdd716", // 64-bit
+                "b7ccdf6aa5964a9a7b6287c622f3f3bea1eb1cabe7fb479beb24d5c2f91f914f00baf877eb0320dc6a7c5aece7e652b9b256e9f6c4f85147db3cfac646080c8e",
+                "2c6687651442588d98a39996d15e3ec1e8413a9d8409ab10089d0bfe5b04234904e0c2ebed4305d95eddf81ce79c6328603c7c73b3fd4b8f38980e2fc9066e04", // 64-bit
             };
             if (!validHashes.Contains(hash))
             {
