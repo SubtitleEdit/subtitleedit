@@ -436,25 +436,16 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         public string FixOcrErrors(string input, int index, string lastLine, string lastLastLine, bool logSuggestions, AutoGuessLevel autoGuess)
         {
             var text = input;
-            while (text.Contains(Environment.NewLine + " ", StringComparison.Ordinal))
-            {
-                text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
-            }
-
-            while (text.Contains(" " + Environment.NewLine, StringComparison.Ordinal))
-            {
-                text = text.Replace(" " + Environment.NewLine, Environment.NewLine);
-            }
-
-            text = text.RemoveRecursiveLineBreaks().Trim();
+            
+            text = text.FixExtraSpaces()
+                .RemoveRecursiveLineBreaks()
+                .Trim();
             
             var textNoAssa = Utilities.RemoveSsaTags(text, true);
             if (textNoAssa.Length == 0)
             {
                 return text;
             }
-
-
 
             // Try to prevent resizing when fixing Ocr-hardcoded.
             var sb = new StringBuilder(text.Length + 2);
