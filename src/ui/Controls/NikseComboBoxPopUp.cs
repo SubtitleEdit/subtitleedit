@@ -62,8 +62,8 @@ namespace Nikse.SubtitleEdit.Controls
                 if (DoClose)
                 {
                     timer.Stop();
-                    Controls.Remove(_listView);
                     DialogResult = DialogResult.Cancel;
+                    Controls.Remove(_listView);
                 }
 
                 if (MouseButtons == MouseButtons.Left || MouseButtons == MouseButtons.Right)
@@ -79,8 +79,8 @@ namespace Nikse.SubtitleEdit.Controls
                     }
 
                     timer.Stop();
-                    Controls.Remove(_listView);
                     DialogResult = DialogResult.Cancel;
+                    Controls.Remove(_listView);
                 }
             };
             timer.Start();
@@ -96,15 +96,15 @@ namespace Nikse.SubtitleEdit.Controls
         {
             if (e.KeyCode == Keys.Escape)
             {
-                Controls.Remove(_listView);
                 DialogResult = DialogResult.Cancel;
                 e.Handled = true;
+                Controls.Remove(_listView);
             }
             else if (e.KeyCode == Keys.Enter)
             {
-                Controls.Remove(_listView);
                 DialogResult = DialogResult.OK;
                 e.Handled = true;
+                Controls.Remove(_listView);
             }
         }
     }
