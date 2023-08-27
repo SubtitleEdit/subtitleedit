@@ -131,6 +131,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                 _stdOutWriter.WriteLine("    pattern:");
                 _stdOutWriter.WriteLine("        one or more file name patterns separated by commas");
                 _stdOutWriter.WriteLine("        relative patterns are relative to /inputfolder if specified");
+                _stdOutWriter.WriteLine();
                 _stdOutWriter.WriteLine("    optional-parameters:");
                 _stdOutWriter.WriteLine("        /adjustduration:<ms>");
                 _stdOutWriter.WriteLine("        /deletecontains:<word>");
@@ -153,8 +154,9 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                 _stdOutWriter.WriteLine("        /teletextonly");
                 _stdOutWriter.WriteLine("        /teletextonlypage:<page number>");
                 _stdOutWriter.WriteLine("        /track-number:<comma separated track number list>");
-                _stdOutWriter.WriteLine("        /profile:<profile name");
+                _stdOutWriter.WriteLine("        /profile:<profile name>");
                 //_stdOutWriter.WriteLine("        /ocrdb:<ocr db/dictionary> (e.g. \"eng\" or \"latin\")");
+                _stdOutWriter.WriteLine();
                 _stdOutWriter.WriteLine("      The following operations are applied in command line order");
                 _stdOutWriter.WriteLine("      from left to right, and can be specified multiple times.");
                 _stdOutWriter.WriteLine("        /" + BatchAction.ApplyDurationLimits);
