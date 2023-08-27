@@ -1068,7 +1068,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         internal static TextFormatFlags CreateTextFormatFlags(Control control, HorizontalAlignment contentAlignment, bool useMnemonic)
         {
-            var textFormatFlags = TextFormatFlags.TextBoxControl | TextFormatFlags.WordBreak | TextFormatFlags.VerticalCenter;
+            var textFormatFlags = TextFormatFlags.TextBoxControl | TextFormatFlags.VerticalCenter | TextFormatFlags.EndEllipsis;
 
             if (contentAlignment == HorizontalAlignment.Left)
             {
