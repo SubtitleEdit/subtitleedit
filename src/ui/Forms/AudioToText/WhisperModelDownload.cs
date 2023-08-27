@@ -42,6 +42,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 }
             }
 
+            comboBoxModels.UsePopupWindow = true;
             comboBoxModels.SelectedIndex = selectedIndex;
             labelPleaseWait.Text = string.Empty;
             labelFileName.Text = string.Empty;

@@ -571,18 +571,38 @@ namespace Nikse.SubtitleEdit.Controls
                 }
 
                 var coordinates = form.PointToClient(Cursor.Position);
-                var listViewBounds = new Rectangle(
-                    _listView.Bounds.X,
-                    _listView.Bounds.Y - 25,
-                    _listView.Bounds.Width + 25 + 25,
-                    _listView.Bounds.Height + 50 + 25);
-                if (_hasItemsMouseOver &&
-                    !(listViewBounds.Contains(coordinates) || Bounds.Contains(coordinates)) ||
-                    !_listViewShown)
+                if (_popUp != null)
                 {
-                    HideDropDown();
-                    return;
+                    var listViewBounds = new Rectangle(
+                        _listView.Bounds.X,
+                        _listView.Bounds.Y - 25,
+                        _listView.Bounds.Width + 25 + 25,
+                        _listView.Bounds.Height + 50 + 25);
+                    if (_hasItemsMouseOver &&
+                        !(_popUp.BoundsContainsCursorPosition() || Bounds.Contains(coordinates)) ||
+                        !_listViewShown)
+                    {
+                        HideDropDown();
+                        return;
+                    }
                 }
+                else
+                {
+                    var listViewBounds = new Rectangle(
+                        _listView.Bounds.X,
+                        _listView.Bounds.Y - 25,
+                        _listView.Bounds.Width + 25 + 25,
+                        _listView.Bounds.Height + 50 + 25);
+                    if (_hasItemsMouseOver &&
+                        !(listViewBounds.Contains(coordinates) || Bounds.Contains(coordinates)) ||
+                        !_listViewShown)
+                    {
+                        HideDropDown();
+                        return;
+                    }
+                }
+
+               
 
                 _hasItemsMouseOver = true;
             };
@@ -735,9 +755,9 @@ namespace Nikse.SubtitleEdit.Controls
             var lvHeight = 18;
             var isOverflow = Parent.GetType() == typeof(ToolStripOverflow);
             var form = FindForm();
-            if (isOverflow || form == null)
+            if (isOverflow || form == null || UsePopupWindow)
             {
-                HandleOverflow(listViewItems, lvHeight);
+                HandleOverflow(listViewItems, lvHeight, form);
                 return;
             }
 
@@ -811,7 +831,12 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        private void HandleOverflow(List<ListViewItem> listViewItems, int lvHeight)
+        /// <summary>
+        /// Show picker in a window.
+        /// </summary>
+        public bool UsePopupWindow { get; set; }
+
+        private void HandleOverflow(List<ListViewItem> listViewItems, int lvHeight, Form form)
         {
             BackColor = UiUtil.BackColor;
             ForeColor = UiUtil.ForeColor;
@@ -852,10 +877,31 @@ namespace Nikse.SubtitleEdit.Controls
             }
 
             _popUp?.Dispose();
-            _popUp = new NikseComboBoxPopUp(_listView, SelectedIndex, Cursor.Position.X - (DropDownWidth / 2), Cursor.Position.Y);
-            _popUp.ShowDialog(this.Parent);
+            var x = Cursor.Position.X - (DropDownWidth / 2);
+            var y = Cursor.Position.Y;
+            if (UsePopupWindow && form != null)
+            {
+                var ctl = (Control)this;
+                var totalX = ctl.Left;
+                var totalY = ctl.Top;
+                while (ctl.Parent != form)
+                {
+                    ctl = ctl.Parent;
+                    totalX += ctl.Left;
+                    totalY += ctl.Top;
+                }
+
+                var p = PointToScreen(new Point(Left - totalX, Bottom - totalY));
+                x = p.X;
+                y = p.Y;
+            }
+
+            _popUp = new NikseComboBoxPopUp(_listView, SelectedIndex, x, y);
+            _popUp.ShowDialog(Parent);
             _listView?.Dispose();
             _listView = null;
+            _listViewShown = false;
+            Invalidate();
         }
 
         private void EnsureListViewInitialized()

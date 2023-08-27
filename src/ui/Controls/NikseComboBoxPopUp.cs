@@ -1,32 +1,23 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Logic;
 using System.Drawing;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Controls
 {
-    public partial class NikseComboBoxPopUp : Form
+    public sealed partial class NikseComboBoxPopUp : Form
     {
         private readonly ListView _listView;
-        private bool _hasMouseOver = false;
-        private long _startTicks;
-        private bool _doClose;
+        private bool _hasMouseOver;
 
-        public bool DoClose
-        {
-            get => _doClose;
-            set
-            {
-                _doClose = value;
-            }
-        }
+        public bool DoClose { get; set; }
 
         public NikseComboBoxPopUp(ListView listView, int selectedIndex, int x, int y)
         {
             InitializeComponent();
 
             _listView = listView;
-            var selectedIndex1 = selectedIndex;
             Controls.Add(listView);
+            BackColor = UiUtil.BackColor;
 
             StartPosition = FormStartPosition.Manual;
             FormBorderStyle = FormBorderStyle.None;
@@ -37,15 +28,14 @@ namespace Nikse.SubtitleEdit.Controls
 
             _listView.BringToFront();
 
-            if (selectedIndex1 >= 0)
+            if (selectedIndex >= 0)
             {
                 _listView.Focus();
-                _listView.Items[selectedIndex1].Selected = true;
-                _listView.EnsureVisible(selectedIndex1);
-                _listView.Items[selectedIndex1].Focused = true;
+                _listView.Items[selectedIndex].Selected = true;
+                _listView.EnsureVisible(selectedIndex);
+                _listView.Items[selectedIndex].Focused = true;
             }
 
-            _startTicks = DateTime.UtcNow.Ticks;
             KeyPreview = true;
             KeyDown += NikseComboBoxPopUp_KeyDown;
 
@@ -76,7 +66,7 @@ namespace Nikse.SubtitleEdit.Controls
                     DialogResult = DialogResult.Cancel;
                 }
 
-                if (MouseButtons == MouseButtons.Left || Control.MouseButtons == MouseButtons.Right)
+                if (MouseButtons == MouseButtons.Left || MouseButtons == MouseButtons.Right)
                 {
                     if (_hasMouseOver)
                     {
@@ -94,6 +84,12 @@ namespace Nikse.SubtitleEdit.Controls
                 }
             };
             timer.Start();
+        }
+
+        public bool BoundsContainsCursorPosition()
+        {
+            var coordinates = Cursor.Position;
+            return new Rectangle(Bounds.Left - 25, Bounds.Top - 25, Bounds.Width + 50, Bounds.Height + 50).Contains(coordinates);
         }
 
         private void NikseComboBoxPopUp_KeyDown(object sender, KeyEventArgs e)
