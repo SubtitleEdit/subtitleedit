@@ -1,6 +1,6 @@
 ﻿namespace Nikse.SubtitleEdit.Controls
 {
-    partial class NikseComboBoxPopUp
+    sealed partial class NikseComboBoxPopUp
     {
         /// <summary>
         /// Required designer variable.
