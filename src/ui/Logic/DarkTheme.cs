@@ -191,7 +191,7 @@ namespace Nikse.SubtitleEdit.Logic
                 {
                     cms.BackColor = Control.DefaultBackColor;
                     cms.ForeColor = Control.DefaultForeColor;
-                    cms.Renderer = null;
+                    cms.Renderer = new ToolStripProfessionalRenderer();
                     foreach (Control inner in cms.Controls)
                     {
                         UndoDarkTheme(inner, iterations - 1);
@@ -203,7 +203,7 @@ namespace Nikse.SubtitleEdit.Logic
                 {
                     c.BackColor = Control.DefaultBackColor;
                     c.ForeColor = Control.DefaultForeColor;
-                    c.Renderer = null;
+                    c.Renderer = new ToolStripProfessionalRenderer();
                 }
 
                 var toolStripComboBox = GetSubControls<ToolStripComboBox>(form);
@@ -254,7 +254,7 @@ namespace Nikse.SubtitleEdit.Logic
                     if (c.GetCurrentParent() is ToolStripDropDownMenu p)
                     {
                         p.BackColor = Control.DefaultBackColor;
-                        p.Renderer = null;
+                        p.Renderer = new ToolStripProfessionalRenderer();
                     }
 
                     c.BackColor = Control.DefaultBackColor;
@@ -342,7 +342,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             if (c is ContextMenuStrip cms)
             {
-                cms.Renderer = null;
+                cms.Renderer = new ToolStripProfessionalRenderer(); 
             }
 
             if (c is LinkLabel linkLabel)
@@ -813,10 +813,7 @@ namespace Nikse.SubtitleEdit.Logic
         {
             protected override void OnRenderToolStripBackground(ToolStripRenderEventArgs e)
             {
-                using (var brush = new SolidBrush(BackColor))
-                {
-                    e.Graphics.FillRectangle(brush, e.ConnectedArea);
-                }
+                e.Graphics.Clear(BackColor);
             }
 
             protected override void OnRenderToolStripBorder(ToolStripRenderEventArgs e)
