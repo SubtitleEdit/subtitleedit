@@ -25462,18 +25462,20 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void GroupBoxEdit_MouseClick(object sender, MouseEventArgs e)
-        {
-            if (!textBoxListViewText.Enabled)
-            {
-                InsertLineToolStripMenuItemClick(null, null);
-            }
-        }
-
         private void TextBoxListViewText_MouseDown(object sender, MouseEventArgs e)
         {
             if (!textBoxListViewText.Enabled)
             {
+                if (!string.IsNullOrEmpty(_videoFileName) && 
+                    audioVisualizer.WavePeaks != null &&
+                    audioVisualizer.NewSelectionParagraph != null &&
+                    audioVisualizer.NewSelectionParagraph.Duration.TotalMilliseconds > 100 &&
+                    audioVisualizer.NewSelectionParagraph.Duration.TotalMilliseconds < 10_000)
+                {
+                    AddParagraphHereToolStripMenuItemClick(null, null);
+                    return;
+                }
+
                 InsertLineToolStripMenuItemClick(null, null);
             }
         }
