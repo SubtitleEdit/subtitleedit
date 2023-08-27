@@ -19,7 +19,7 @@ namespace Nikse.SubtitleEdit.Logic
         private const int DWMWA_USE_IMMERSIVE_DARK_MODE = 20;
         private static bool UseImmersiveDarkMode(IntPtr handle, bool enabled)
         {
-            if (IsWindows10OrGreater(17763))
+            if (Configuration.IsRunningOnWindows && IsWindows10OrGreater(17763))
             {
                 var attribute = DWMWA_USE_IMMERSIVE_DARK_MODE_BEFORE_20H1;
                 if (IsWindows10OrGreater(18985))
@@ -39,7 +39,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static void SetWindowThemeDark(Control control)
         {
-            if (Configuration.IsRunningOnWindows)
+            if (Configuration.IsRunningOnWindows && control != null)
             {
                 NativeMethods.SetWindowTheme(control.Handle, "DarkMode_Explorer", null);
             }
@@ -47,7 +47,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static void SetWindowThemeNormal(Control control)
         {
-            if (Configuration.IsRunningOnWindows)
+            if (Configuration.IsRunningOnWindows && control != null)
             {
                 NativeMethods.SetWindowTheme(control.Handle, "Explorer", null);
             }

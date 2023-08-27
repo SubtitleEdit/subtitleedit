@@ -337,9 +337,6 @@ namespace Nikse.SubtitleEdit.Forms
         private void FixFonts()
         {
             UiUtil.FixFonts(this, 10000);
-            UiUtil.FixFonts(contextMenuStripListView);
-            UiUtil.FixFonts(contextMenuStripTextBoxListView);
-            UiUtil.FixFonts(contextMenuStripWaveform);
             UiUtil.FixLargeFonts(tabControlModes, buttonAutoBreak);
             UiUtil.FixLargeFonts(tabControlModes, buttonAutoBreak);
             UiUtil.FixLargeFonts(groupBoxEdit, buttonAutoBreak);
@@ -28576,7 +28573,7 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxVideo.Controls.Remove(control);
             control.Top = 25;
             control.Left = 0;
-            control.Height = _videoControlsUndocked.PanelContainer.Height-4;
+            control.Height = _videoControlsUndocked.PanelContainer.Height - 4;
             _videoControlsUndocked.PanelContainer.Controls.Add(control);
 
             groupBoxVideo.Controls.Remove(checkBoxSyncListViewWithVideoWhilePlaying);
