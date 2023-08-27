@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Logic;
+using System;
 using System.Drawing;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Controls
 {
@@ -16,7 +16,7 @@ namespace Nikse.SubtitleEdit.Controls
             _listBox.BorderStyle = BorderStyle.None;
             _listBox.Padding = new Padding(0);
 
-            base.BorderStyle = BorderStyle.FixedSingle;
+            BorderStyle = BorderStyle.FixedSingle;
             Controls.Clear();
             Controls.Add(_listBox);
             _listBox.Dock = DockStyle.Fill;
@@ -24,10 +24,15 @@ namespace Nikse.SubtitleEdit.Controls
             _loadingDone = true;
         }
 
-        public override Color BackColor
+        public new Color BackColor
         {
             get
             {
+                if (!_loadingDone)
+                {
+                    return DefaultBackColor;
+                }
+
                 if (_listBox != null)
                 {
                     return _listBox.BackColor;
@@ -37,6 +42,11 @@ namespace Nikse.SubtitleEdit.Controls
             }
             set
             {
+                if (!_loadingDone)
+                {
+                    return;
+                }
+
                 if (_listBox != null)
                 {
                     _listBox.BackColor = value;
@@ -44,10 +54,15 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        public override Color ForeColor
+        public new Color ForeColor
         {
             get
             {
+                if (!_loadingDone)
+                {
+                    return DefaultForeColor;
+                }
+
                 if (_listBox != null)
                 {
                     return _listBox.ForeColor;
@@ -57,6 +72,11 @@ namespace Nikse.SubtitleEdit.Controls
             }
             set
             {
+                if (!_loadingDone)
+                {
+                    return;
+                }
+
                 if (_listBox != null)
                 {
                     _listBox.ForeColor = value;
@@ -64,22 +84,9 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        public override Font Font
+        public new Font Font
         {
-            get
-            {
-                if (!_loadingDone)
-                {
-                    return null;
-                }
-
-                //if (_listBox != null)
-                //{
-                //    return _listBox.Font;
-                //}
-
-                return base.Font;
-            }
+            get => !_loadingDone ? DefaultFont : base.Font;
             set
             {
                 if (!_loadingDone)
@@ -178,15 +185,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public object SelectedItem
         {
-            get
-            {
-                if (_listBox != null)
-                {
-                    return _listBox.SelectedItem;
-                }
-
-                return null;
-            }
+            get => _listBox?.SelectedItem;
             set
             {
                 if (_listBox != null)
@@ -198,15 +197,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public bool Sorted
         {
-            get
-            {
-                if (_listBox != null)
-                {
-                    return _listBox.Sorted;
-                }
-
-                return false;
-            }
+            get => _listBox != null && _listBox.Sorted;
             set
             {
                 if (_listBox != null)
@@ -218,15 +209,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public override string Text
         {
-            get
-            {
-                if (_listBox != null)
-                {
-                    return _listBox.Text;
-                }
-
-                return string.Empty;
-            }
+            get => _listBox != null ? _listBox.Text : string.Empty;
             set
             {
                 if (_listBox != null)
@@ -236,6 +219,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
+        // ReSharper disable once InconsistentNaming
         public new event EventHandler TextChanged
         {
             add
@@ -296,6 +280,7 @@ namespace Nikse.SubtitleEdit.Controls
             set => _listBox.ItemHeight = value;
         }
 
+        // ReSharper disable once InconsistentNaming
         public new event EventHandler Click
         {
             add
@@ -314,6 +299,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
+        // ReSharper disable once InconsistentNaming
         public event EventHandler SelectedIndexChanged
         {
             add
@@ -332,6 +318,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
+        // ReSharper disable once InconsistentNaming
         public new event MouseEventHandler MouseClick
         {
             add
