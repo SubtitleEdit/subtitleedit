@@ -27,7 +27,7 @@
     <OpenVideoFile>Videobestand openen...</OpenVideoFile>
     <OpenVideoFileTitle>Videobestand openen</OpenVideoFileTitle>
     <NoVideoLoaded>Geen video geladen</NoVideoLoaded>
-    <OnlineVideoFeatureNotAvailable>Functie niet beschikbaar voor online video</OnlineVideoFeatureNotAvailable>
+    <OnlineVideoFeatureNotAvailable>Functie niet beschikbaar voor online video's</OnlineVideoFeatureNotAvailable>
     <VideoInformation>Video-informatie</VideoInformation>
     <StartTime>Begintĳd</StartTime>
     <EndTime>Eindtĳd</EndTime>
@@ -98,6 +98,7 @@
     <Collapse>Samenvouwen</Collapse>
     <ShortcutX>Sneltoets: {0}</ShortcutX>
     <ExampleX>Voorbeeld: {0}</ExampleX>
+    <ViewX>{0} bekijken</ViewX>
     <Reset>Opnieuw instellen</Reset>
     <Error>Fout</Error>
     <Warning>Waarschuwing</Warning>
@@ -204,6 +205,7 @@ Meer informatie online weergeven?</WhisperNotFound>
     <LoadingVoskModel>Vosk-spraakherkenningsmodel laden...</LoadingVoskModel>
     <Transcribing>Audio omzetten naar tekst...</Transcribing>
     <TranscribingXOfY>Audio omzetten naar tekst – bestand {0} van {1]...</TranscribingXOfY>
+    <PostProcessing>Nabewerking uitvoeren...</PostProcessing>
     <XFilesSavedToVideoSourceFolder>{0} bestanden opgeslagen in videobronmap</XFilesSavedToVideoSourceFolder>
     <UsePostProcessing>Nabewerking inschakelen (samenvoegen, hoofdlettergebruik corrigeren, interpunctie en meer)</UsePostProcessing>
     <AutoAdjustTimings>Tijden automatisch aanpassen</AutoAdjustTimings>
@@ -214,6 +216,7 @@ Meer informatie online weergeven?</WhisperNotFound>
     <RemoveTemporaryFiles>Tijdelijke bestanden verwijderen</RemoveTemporaryFiles>
     <SetCppConstMeFolder>Map CPP/Const-me-modellen instellen...</SetCppConstMeFolder>
     <OnlyRunPostProcessing>Alleen nabewerking uitvoeren/tijden aanpassen</OnlyRunPostProcessing>
+    <DownloadFasterWhisperCuda>CUDA voor Whisper-Faster van Perfview downloaden</DownloadFasterWhisperCuda>
   </AudioToText>
   <AssaAttachments>
     <Title>Advanced Sub Station Alpha-bijlagen</Title>
@@ -510,6 +513,7 @@ We maken dan handig gebruik van het ritme van het beeld zelf.</CreateSimpleChain
     <Enabled>Ingeschakeld</Enabled>
     <Name>Naam</Name>
     <LinesFoundX>Gevonden titels: {0}</LinesFoundX>
+    <ExtraNames>Voeg extra namen toe (gescheiden door komma's, slechts eenmalig gebruikt)</ExtraNames>
   </ChangeCasingNames>
   <ChangeFrameRate>
     <Title>Beeldsnelheid wĳzigen</Title>
@@ -536,6 +540,9 @@ We maken dan handig gebruik van het ritme van het beeld zelf.</CreateSimpleChain
     <CheckingForUpdatesNewVersion>Nieuwe versie beschikbaar!</CheckingForUpdatesNewVersion>
     <InstallUpdate>Naar de downloadpagina</InstallUpdate>
     <NoUpdates>Niet bĳwerken</NoUpdates>
+    <XPluginsHasAnUpdate>Er zijn updates beschikbaar voor {0} plug-ins -</XPluginsHasAnUpdate>
+    <OnePluginsHasAnUpdate>Er is een update beschikbaar voor 1 plug-in -</OnePluginsHasAnUpdate>
+    <Update>update</Update>
   </CheckForUpdates>
   <ChooseAudioTrack>
     <Title>Audiospoor kiezen</Title>
@@ -973,9 +980,11 @@ We maken dan handig gebruik van het ritme van het beeld zelf.</CreateSimpleChain
     <InfoAssaOn>Advanced SubStation Alpha-opmaak wordt gebruikt :)</InfoAssaOn>
     <XGeneratedWithBurnedInSubsInX>'{0}' gegenereerd met ingebrande ondertiteling in {1}.</XGeneratedWithBurnedInSubsInX>
     <TimeRemainingMinutes>Resterende tijd: {0} minuten</TimeRemainingMinutes>
+    <TimeRemainingOneMinute>Resterende tijd: 1 minuut</TimeRemainingOneMinute>
     <TimeRemainingSeconds>Resterende tijd: {0} seconden</TimeRemainingSeconds>
     <TimeRemainingAFewSeconds>Resterende tijd: enkele seconden</TimeRemainingAFewSeconds>
     <TimeRemainingMinutesAndSeconds>Resterende tijd: {0} minuten en {1} seconden</TimeRemainingMinutesAndSeconds>
+    <TimeRemainingOneMinuteAndSeconds>Resterende tijd: 1 minuut en {0} seconden</TimeRemainingOneMinuteAndSeconds>
     <TargetFileName>Doelbestandsnaam: {0}</TargetFileName>
     <TargetFileSize>Doelbestandsgrootte (vereist codering in twee fasen)</TargetFileSize>
     <FileSizeMb>Bestandsgrootte in MB</FileSizeMb>
@@ -2286,6 +2295,7 @@ hetzelfde ondertitelbestand bewerken (samenwerken)</Information>
     <BeautifyTimeCodes>Tijdcodes goedzetten</BeautifyTimeCodes>
     <SettingsName>Voorkeuren</SettingsName>
     <ToggleBookmarks>Bladwĳzers in-/uitschakelen</ToggleBookmarks>
+    <FocusTextBox>Tekstvak activeren</FocusTextBox>
     <ToggleBookmarksWithComment>Bladwĳzers in-/uitschakelen (met omschrĳving)</ToggleBookmarksWithComment>
     <ClearBookmarks>Bladwĳzers wissen</ClearBookmarks>
     <ExportBookmarks>Bladwijzers exporteren...</ExportBookmarks>
@@ -2805,6 +2815,8 @@ of tĳdens het exporteren naar op afbeelding gebaseerde indelingen.</FontNote>
     <CustomContinuationStyleNote>Opmerking: de aangepaste stijl wordt gedeeld door alle profielen.</CustomContinuationStyleNote>
     <ResetCustomContinuationStyleWarning>Hiermee worden de waarden in het dialoogvenster overschreven. Weet u het zeker?</ResetCustomContinuationStyleWarning>
     <ExportAsHtml>Exporteren als HTML...</ExportAsHtml>
+    <SetNewActor>Nieuwe acteur/stem instellen</SetNewActor>
+    <SetActorX>Acteur/stem {0} instellen</SetActorX>
   </Settings>
   <SettingsMpv>
     <DownloadMpv>mpv-bibliotheek downloaden</DownloadMpv>
