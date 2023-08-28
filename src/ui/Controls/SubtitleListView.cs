@@ -432,13 +432,21 @@ namespace Nikse.SubtitleEdit.Controls
                 return;
             }
 
-            if (e.Item.Selected && !(Focused && e.ColumnIndex > 0))
+            var backgroundColor = Items[e.ItemIndex].SubItems[e.ColumnIndex].BackColor;
+            var hasCustomColor = backgroundColor != BackColor;
+            if (e.Item.Selected && !(Focused && e.ColumnIndex > 0) || Focused && hasCustomColor)
             {
                 var rect = e.Bounds;
                 if (Configuration.Settings != null)
                 {
-                    Color backgroundColor;
-                    if (Configuration.Settings.General.UseDarkTheme)
+                    if (hasCustomColor)
+                    {
+                        if (e.Item.Selected)
+                        {
+                            backgroundColor = GetCustomColor(backgroundColor);
+                        }
+                    }
+                    else if (Configuration.Settings.General.UseDarkTheme)
                     {
                         backgroundColor = Color.FromArgb(24, 52, 75);
                     }
