@@ -3,6 +3,7 @@ using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Text;
 using System.Globalization;
 using System.Windows.Forms;
 
@@ -426,7 +427,8 @@ namespace Nikse.SubtitleEdit.Controls
 
         private void SubtitleListView_DrawSubItem(object sender, DrawListViewSubItemEventArgs e)
         {
-            if (RightToLeftLayout && e.ColumnIndex > 0)
+            var rtl = Configuration.Settings?.General.RightToLeftMode == true;
+            if (rtl && e.ColumnIndex > 0)
             {
                 e.DrawDefault = true;
                 return;
@@ -436,7 +438,7 @@ namespace Nikse.SubtitleEdit.Controls
             var hasCustomColor = backgroundColor != BackColor;
             if (e.Item.Selected && !(Focused && e.ColumnIndex > 0) || Focused && hasCustomColor)
             {
-                var rect = e.Bounds;
+                var rect = e.Item.SubItems[e.ColumnIndex].Bounds;
                 if (Configuration.Settings != null)
                 {
                     if (hasCustomColor)
@@ -472,12 +474,16 @@ namespace Nikse.SubtitleEdit.Controls
                 var addX = 0;
                 if (e.ColumnIndex == 0 && StateImageList?.Images.Count > 0)
                 {
-                    addX = 18;
+                    addX = 19;
                 }
 
                 if (e.ColumnIndex == 0 && e.Item.StateImageIndex >= 0 && StateImageList?.Images.Count > e.Item.StateImageIndex)
                 {
-                    e.Graphics.DrawImage(StateImageList.Images[e.Item.StateImageIndex], new Rectangle(rect.X + 4, rect.Y + 2, 16, 16));
+                    var r = rtl 
+                        ? new Rectangle( rect.Width - 21, rect.Y + 3, 16, 16) 
+                        : new Rectangle(rect.X + 4, rect.Y + 3, 16, 16);
+
+                    e.Graphics.DrawImage(StateImageList.Images[e.Item.StateImageIndex], r);
                 }
 
                 using (var f = new Font(e.Item.SubItems[e.ColumnIndex].Font.FontFamily, e.Item.SubItems[e.ColumnIndex].Font.Size - 0.4f, e.Item.SubItems[e.ColumnIndex].Font.Style))
@@ -490,7 +496,7 @@ namespace Nikse.SubtitleEdit.Controls
                     }
 
                     e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
-                    e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+                    e.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
                     var flags = TextFormatFlags.EndEllipsis | TextFormatFlags.Left | TextFormatFlags.TextBoxControl;
                     if (Columns[e.ColumnIndex].TextAlign == HorizontalAlignment.Right)
                     {
@@ -506,7 +512,8 @@ namespace Nikse.SubtitleEdit.Controls
                         flags |= TextFormatFlags.RightToLeft;
                     }
 
-                    TextRenderer.DrawText(e.Graphics, e.Item.SubItems[e.ColumnIndex].Text, f, new Rectangle(e.Bounds.Left + 3 + addX, e.Bounds.Top + 2, e.Bounds.Width - 7 - addX, e.Bounds.Height - 2), c, flags);
+                    var r = new Rectangle(e.Bounds.Left + 2 + addX, e.Bounds.Top + 2, e.Bounds.Width - 7 - addX, e.Bounds.Height - 2);
+                    TextRenderer.DrawText(e.Graphics, e.Item.SubItems[e.ColumnIndex].Text, f, r, c, flags);
                 }
             }
             else
@@ -517,7 +524,14 @@ namespace Nikse.SubtitleEdit.Controls
 
         internal static StringFormat CreateStringFormat(Control control)
         {
-            var stringFormat = new StringFormat();
+            var stringFormat = new StringFormat
+            {
+                FormatFlags = (StringFormatFlags)0,
+                Alignment = StringAlignment.Near,
+                LineAlignment = StringAlignment.Near,
+                HotkeyPrefix = HotkeyPrefix.None,
+                Trimming = StringTrimming.None
+            };
             stringFormat.Alignment = StringAlignment.Near;
             stringFormat.Trimming = StringTrimming.EllipsisCharacter;
             stringFormat.FormatFlags |= StringFormatFlags.LineLimit;
