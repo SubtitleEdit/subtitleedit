@@ -456,7 +456,7 @@ namespace Nikse.SubtitleEdit.Controls
 
             MouseWheel += (sender, e) =>
             {
-                if (_listViewShown)
+                if (!Focused)
                 {
                     return;
                 }
