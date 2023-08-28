@@ -512,7 +512,7 @@ namespace Nikse.SubtitleEdit.Controls
                         flags |= TextFormatFlags.RightToLeft;
                     }
 
-                    var r = new Rectangle(e.Bounds.Left + 2 + addX, e.Bounds.Top + 2, e.Bounds.Width - 7 - addX, e.Bounds.Height - 2);
+                    var r = new Rectangle(rect.Left + 2 + addX, rect.Top + 2, rect.Width - 7 - addX, rect.Height - 2);
                     TextRenderer.DrawText(e.Graphics, e.Item.SubItems[e.ColumnIndex].Text, f, r, c, flags);
                 }
             }
