@@ -15,10 +15,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            if (fileName != null && !fileName.EndsWith(Extension, StringComparison.OrdinalIgnoreCase))
+            if (fileName != null &&
+                !(fileName.EndsWith(Extension, StringComparison.OrdinalIgnoreCase) || 
+                  fileName.EndsWith(".xml", StringComparison.OrdinalIgnoreCase)))
             {
                 return false;
             }
+
             return base.IsMine(lines, fileName);
         }
 
