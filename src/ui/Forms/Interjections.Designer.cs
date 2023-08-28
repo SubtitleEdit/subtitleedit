@@ -31,7 +31,7 @@
             this.groupBoxNamesIgonoreLists = new System.Windows.Forms.GroupBox();
             this.buttonRemove = new System.Windows.Forms.Button();
             this.listBoxInterjections = new System.Windows.Forms.ListBox();
-            this.textBoxInterjection = new System.Windows.Forms.TextBox();
+            this.textBoxInterjection = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.buttonAdd = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
@@ -139,7 +139,7 @@
         private System.Windows.Forms.GroupBox groupBoxNamesIgonoreLists;
         private System.Windows.Forms.Button buttonRemove;
         private System.Windows.Forms.ListBox listBoxInterjections;
-        private System.Windows.Forms.TextBox textBoxInterjection;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxInterjection;
         private System.Windows.Forms.Button buttonAdd;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonOK;
