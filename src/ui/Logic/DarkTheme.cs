@@ -343,7 +343,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             if (c is ContextMenuStrip cms)
             {
-                cms.Renderer = new ToolStripProfessionalRenderer(); 
+                cms.Renderer = new ToolStripProfessionalRenderer();
             }
 
             if (c is LinkLabel linkLabel)
@@ -499,7 +499,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             if (c is CheckBox cb)
             {
-                
+
                 cb.Paint += CheckBox_Paint;
             }
 
@@ -628,7 +628,28 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 button.ForeColor = Color.DimGray;
                 var flags = TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter;
-                TextRenderer.DrawText(e.Graphics, button.Text, button.Font, e.ClipRectangle, button.ForeColor, flags);
+                var textRectangleValue = new Rectangle
+                {
+                    X = e.ClipRectangle.X+2 ,
+                    Y = e.ClipRectangle.Y+2,
+                    Width = e.ClipRectangle.Width - 4,
+                    Height = e.ClipRectangle.Height -4
+                };
+
+                using (var b = new SolidBrush(BackColor))
+                {
+                    e.Graphics.FillRectangle(b, textRectangleValue);
+                }
+
+                e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+                e.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
+                if (button.RightToLeft == RightToLeft.Yes)
+                {
+                    flags |= TextFormatFlags.RightToLeft;
+                }
+
+                var r = new Rectangle(textRectangleValue.Left, textRectangleValue.Y+1, textRectangleValue.Width, textRectangleValue.Height-1);
+                TextRenderer.DrawText(e.Graphics, button.Text, button.Font, r, Color.DimGray, flags);
             }
         }
 
@@ -652,7 +673,7 @@ namespace Nikse.SubtitleEdit.Logic
 
                 e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
                 e.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
-                var flags = TextFormatFlags.Left | TextFormatFlags.TextBoxControl;
+                var flags = TextFormatFlags.Left | TextFormatFlags.TextBoxControl | TextFormatFlags.VerticalCenter; 
                 if (checkBox.RightToLeft == RightToLeft.Yes)
                 {
                     flags |= TextFormatFlags.RightToLeft;
@@ -676,7 +697,21 @@ namespace Nikse.SubtitleEdit.Logic
                     Height = e.ClipRectangle.Height
                 };
 
-                TextRenderer.DrawText(e.Graphics, radioButton.Text, radioButton.Font, textRectangleValue, Color.DimGray, TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
+                using (var b = new SolidBrush(BackColor))
+                {
+                    e.Graphics.FillRectangle(b, textRectangleValue);
+                }
+
+                e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+                e.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
+                var flags = TextFormatFlags.Left | TextFormatFlags.TextBoxControl | TextFormatFlags.VerticalCenter;
+                if (radioButton.RightToLeft == RightToLeft.Yes)
+                {
+                    flags |= TextFormatFlags.RightToLeft;
+                }
+
+                var r = new Rectangle(textRectangleValue.Left + 3, textRectangleValue.Y, textRectangleValue.Width - 3, textRectangleValue.Height);
+                TextRenderer.DrawText(e.Graphics, radioButton.Text, radioButton.Font, r, Color.DimGray, flags);
             }
         }
 
