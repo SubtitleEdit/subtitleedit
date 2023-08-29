@@ -53,23 +53,12 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-        public static IEnumerable<Control> GetAllControlByType(Control control, Type type)
-        {
-            var controls = control.Controls.Cast<Control>().ToList();
-
-            return controls.SelectMany(ctrl => GetAllControlByType(ctrl, type))
-                                      .Concat(controls)
-                                      .Where(c => c.GetType() == type);
-        }
-
-        private static List<T> GetSubControls<T>(Control c)
+        private static IEnumerable<T> GetSubControls<T>(Control c)
         {
             var type = c.GetType();
-            var fields = type.GetFields(BindingFlags.NonPublic | BindingFlags.Instance);
-            var contextMenus = fields.Where(f => f.GetValue(c) != null &&
-            (f.GetValue(c).GetType().IsSubclassOf(typeof(T)) || f.GetValue(c).GetType() == typeof(T)));
-            var menus = contextMenus.Select(f => f.GetValue(c));
-            return menus.Cast<T>().ToList();
+            var controlFields = type.GetFields(BindingFlags.NonPublic | BindingFlags.Instance);
+            var childControls = controlFields.Where(f => (f.FieldType.IsSubclassOf(typeof(T)) || f.FieldType == typeof(T)) && f.GetValue(c) != null);
+            return childControls.Select(f => f.GetValue(c)).Cast<T>();
         }
 
         public static void SetDarkTheme(Control ctrl, int iterations = 5)
@@ -84,8 +73,7 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 UseImmersiveDarkMode(ctrl.Handle, true);
 
-                var contextMenus = GetSubControls<ContextMenuStrip>(form);
-                foreach (ContextMenuStrip cms in contextMenus)
+                foreach (var cms in GetSubControls<ContextMenuStrip>(form))
                 {
                     cms.BackColor = BackColor;
                     cms.ForeColor = ForeColor;
@@ -96,46 +84,40 @@ namespace Nikse.SubtitleEdit.Logic
                     }
                 }
 
-                var toolStrips = GetSubControls<ToolStrip>(form);
-                foreach (ToolStrip c in toolStrips)
+                foreach (var c in GetSubControls<ToolStrip>(form))
                 {
                     c.BackColor = BackColor;
                     c.ForeColor = ForeColor;
                     c.Renderer = new MyRenderer();
                 }
 
-                var toolStripComboBox = GetSubControls<ToolStripComboBox>(form);
-                foreach (ToolStripComboBox c in toolStripComboBox)
+                foreach (var c in GetSubControls<ToolStripComboBox>(form))
                 {
                     c.BackColor = BackColor;
                     c.ForeColor = ForeColor;
                     c.FlatStyle = FlatStyle.Flat;
                 }
 
-                var toolStripNikseComboBox = GetSubControls<ToolStripNikseComboBox>(form);
-                foreach (ToolStripNikseComboBox c in toolStripNikseComboBox)
+                foreach (var c in GetSubControls<ToolStripNikseComboBox>(form))
                 {
                     c.BackColor = BackColor;
                     c.ForeColor = ForeColor;
                     SetDarkTheme(c.ComboBox);
                 }
 
-                var toolStripContentPanels = GetSubControls<ToolStripContentPanel>(form);
-                foreach (ToolStripContentPanel c in toolStripContentPanels)
+                foreach (var c in GetSubControls<ToolStripContentPanel>(form))
                 {
                     c.BackColor = BackColor;
                     c.ForeColor = ForeColor;
                 }
 
-                var toolStripContainers = GetSubControls<ToolStripContainer>(form);
-                foreach (ToolStripContainer c in toolStripContainers)
+                foreach (var c in GetSubControls<ToolStripContainer>(form))
                 {
                     c.BackColor = BackColor;
                     c.ForeColor = ForeColor;
                 }
 
-                var toolStripDropDownMenus = GetSubControls<ToolStripDropDownMenu>(form);
-                foreach (ToolStripDropDownMenu c in toolStripDropDownMenus)
+                foreach (var c in GetSubControls<ToolStripDropDownMenu>(form))
                 {
                     c.BackColor = BackColor;
                     c.ForeColor = ForeColor;
@@ -146,8 +128,7 @@ namespace Nikse.SubtitleEdit.Logic
                     }
                 }
 
-                var toolStripMenuItems = GetSubControls<ToolStripMenuItem>(form);
-                foreach (ToolStripMenuItem c in toolStripMenuItems)
+                foreach (var c in GetSubControls<ToolStripMenuItem>(form))
                 {
                     if (c.GetCurrentParent() is ToolStripDropDownMenu p)
                     {
@@ -159,8 +140,7 @@ namespace Nikse.SubtitleEdit.Logic
                     c.ForeColor = ForeColor;
                 }
 
-                var toolStripSeparators = GetSubControls<ToolStripSeparator>(form);
-                foreach (ToolStripSeparator c in toolStripSeparators)
+                foreach (var c in GetSubControls<ToolStripSeparator>(form))
                 {
                     c.BackColor = BackColor;
                     c.ForeColor = ForeColor;
@@ -168,7 +148,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
 
             FixControl(ctrl);
-            foreach (Control c in GetSubControls<Control>(ctrl))
+            foreach (var c in GetSubControls<Control>(ctrl))
             {
                 FixControl(c);
             }
@@ -186,8 +166,7 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 UseImmersiveDarkMode(ctrl.Handle, false);
 
-                var contextMenus = GetSubControls<ContextMenuStrip>(form);
-                foreach (ContextMenuStrip cms in contextMenus)
+                foreach (var cms in GetSubControls<ContextMenuStrip>(form))
                 {
                     cms.BackColor = Control.DefaultBackColor;
                     cms.ForeColor = Control.DefaultForeColor;
@@ -198,46 +177,40 @@ namespace Nikse.SubtitleEdit.Logic
                     }
                 }
 
-                var toolStrips = GetSubControls<ToolStrip>(form);
-                foreach (ToolStrip c in toolStrips)
+                foreach (var c in GetSubControls<ToolStrip>(form))
                 {
                     c.BackColor = Control.DefaultBackColor;
                     c.ForeColor = Control.DefaultForeColor;
                     c.Renderer = null;
                 }
 
-                var toolStripComboBox = GetSubControls<ToolStripComboBox>(form);
-                foreach (ToolStripComboBox c in toolStripComboBox)
+                foreach (var c in GetSubControls<ToolStripComboBox>(form))
                 {
                     c.BackColor = Control.DefaultBackColor;
                     c.ForeColor = Control.DefaultForeColor;
                     c.FlatStyle = FlatStyle.Flat;
                 }
 
-                var toolStripNikseComboBox = GetSubControls<ToolStripNikseComboBox>(form);
-                foreach (ToolStripNikseComboBox c in toolStripNikseComboBox)
+                foreach (var c in GetSubControls<ToolStripNikseComboBox>(form))
                 {
                     c.BackColor = BackColor;
                     c.ForeColor = ForeColor;
                     UnFixControl(c.ComboBox);
                 }
 
-                var toolStripContentPanels = GetSubControls<ToolStripContentPanel>(form);
-                foreach (ToolStripContentPanel c in toolStripContentPanels)
+                foreach (var c in GetSubControls<ToolStripContentPanel>(form))
                 {
                     c.BackColor = Control.DefaultBackColor;
                     c.ForeColor = Control.DefaultForeColor;
                 }
 
-                var toolStripContainers = GetSubControls<ToolStripContainer>(form);
-                foreach (ToolStripContainer c in toolStripContainers)
+                foreach (var c in GetSubControls<ToolStripContainer>(form))
                 {
                     c.BackColor = Control.DefaultBackColor;
                     c.ForeColor = Control.DefaultForeColor;
                 }
 
-                var toolStripDropDownMenus = GetSubControls<ToolStripDropDownMenu>(form);
-                foreach (ToolStripDropDownMenu c in toolStripDropDownMenus)
+                foreach (var c in GetSubControls<ToolStripDropDownMenu>(form))
                 {
                     c.BackColor = Control.DefaultBackColor;
                     c.ForeColor = Control.DefaultForeColor;
@@ -248,8 +221,7 @@ namespace Nikse.SubtitleEdit.Logic
                     }
                 }
 
-                var toolStripMenuItems = GetSubControls<ToolStripMenuItem>(form);
-                foreach (ToolStripMenuItem c in toolStripMenuItems)
+                foreach (var c in GetSubControls<ToolStripMenuItem>(form))
                 {
                     if (c.GetCurrentParent() is ToolStripDropDownMenu p)
                     {
@@ -261,8 +233,7 @@ namespace Nikse.SubtitleEdit.Logic
                     c.ForeColor = Control.DefaultForeColor;
                 }
 
-                var toolStripSeparators = GetSubControls<ToolStripSeparator>(form);
-                foreach (ToolStripSeparator c in toolStripSeparators)
+                foreach (var c in GetSubControls<ToolStripSeparator>(form))
                 {
                     c.BackColor = Control.DefaultBackColor;
                     c.ForeColor = Control.DefaultForeColor;
@@ -270,7 +241,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
 
             UnFixControl(ctrl);
-            foreach (Control c in GetSubControls<Control>(ctrl))
+            foreach (var c in GetSubControls<Control>(ctrl))
             {
                 UnFixControl(c);
             }
