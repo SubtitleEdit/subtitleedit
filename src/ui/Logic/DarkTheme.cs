@@ -888,13 +888,11 @@ namespace Nikse.SubtitleEdit.Logic
             protected override void OnRenderMenuItemBackground(ToolStripItemRenderEventArgs e)
             {
                 var g = e.Graphics;
-
                 e.Item.ForeColor = e.Item.Enabled ? Color.FromArgb(220, 220, 220) : Color.FromArgb(153, 153, 153);
 
                 if (e.Item.Enabled)
                 {
-
-                    var bgColor = e.Item.Selected ? Color.FromArgb(122, 128, 132) : e.Item.BackColor;
+                    var bgColor = e.Item.Selected ? Color.FromArgb(24, 52, 75) : e.Item.BackColor;
 
                     // Normal item
                     var rect = new Rectangle(2, 0, e.Item.Width - 3, e.Item.Height);
