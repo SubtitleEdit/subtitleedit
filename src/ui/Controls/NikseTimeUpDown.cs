@@ -217,6 +217,8 @@ namespace Nikse.SubtitleEdit.Controls
             };
             _maskedTextBox.BorderStyle = BorderStyle.None;
             _maskedTextBox.Font = UiUtil.GetDefaultFont();
+            _maskedTextBox.Left = 2;
+            _maskedTextBox.Top = (Height - _maskedTextBox.Height) / 2;
             _maskedTextBox.KeyPress += TextBox_KeyPress;
             _maskedTextBox.KeyDown += (sender, e) =>
             {
@@ -741,9 +743,9 @@ namespace Nikse.SubtitleEdit.Controls
             e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
             _maskedTextBox.BackColor = BackColor;
             _maskedTextBox.ForeColor = ButtonForeColor;
-            _maskedTextBox.Top = 2;
+            //_maskedTextBox.Top = 2;
             _maskedTextBox.Left = RightToLeft == RightToLeft.Yes ? ButtonsWidth : 3;
-            _maskedTextBox.Height = Height - 4;
+            //_maskedTextBox.Height = Height - 4;
             _maskedTextBox.Width = Width - ButtonsWidth - 3;
             _maskedTextBox.Invalidate();
 
