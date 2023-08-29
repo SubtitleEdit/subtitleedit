@@ -428,7 +428,7 @@ namespace Nikse.SubtitleEdit.Controls
         private void SubtitleListView_DrawSubItem(object sender, DrawListViewSubItemEventArgs e)
         {
             var rtl = Configuration.Settings?.General.RightToLeftMode == true;
-            if (rtl && e.ColumnIndex > 0)
+            if (rtl)
             {
                 e.DrawDefault = true;
                 return;
@@ -436,9 +436,10 @@ namespace Nikse.SubtitleEdit.Controls
 
             var backgroundColor = Items[e.ItemIndex].SubItems[e.ColumnIndex].BackColor;
             var hasCustomColor = backgroundColor != BackColor;
+            var foreColor = UiUtil.ForeColor;
             if (e.Item.Selected && !(Focused && e.ColumnIndex > 0) || Focused && hasCustomColor)
             {
-                var rect = e.Item.SubItems[e.ColumnIndex].Bounds;
+                var rect = e.Bounds;
                 if (Configuration.Settings != null)
                 {
                     if (hasCustomColor)
@@ -455,6 +456,7 @@ namespace Nikse.SubtitleEdit.Controls
                     else if (Focused)
                     {
                         backgroundColor = Color.FromArgb(0, 120, 215);
+                        foreColor = Color.White;
                     }
                     else
                     {
@@ -488,13 +490,6 @@ namespace Nikse.SubtitleEdit.Controls
 
                 using (var f = new Font(e.Item.SubItems[e.ColumnIndex].Font.FontFamily, e.Item.SubItems[e.ColumnIndex].Font.Size - 0.4f, e.Item.SubItems[e.ColumnIndex].Font.Style))
                 {
-                    var c = ForeColor;
-                    if (Configuration.Settings == null && Focused ||
-                        Configuration.Settings != null && Focused && !Configuration.Settings.General.UseDarkTheme)
-                    {
-                        c = Color.White;
-                    }
-
                     e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
                     e.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
                     var flags = TextFormatFlags.EndEllipsis | TextFormatFlags.Left | TextFormatFlags.TextBoxControl;
@@ -513,7 +508,7 @@ namespace Nikse.SubtitleEdit.Controls
                     }
 
                     var r = new Rectangle(rect.Left + 2 + addX, rect.Top + 2, rect.Width - 7 - addX, rect.Height - 2);
-                    TextRenderer.DrawText(e.Graphics, e.Item.SubItems[e.ColumnIndex].Text, f, r, c, flags);
+                    TextRenderer.DrawText(e.Graphics, e.Item.SubItems[e.ColumnIndex].Text, f, r, foreColor, flags);
                 }
             }
             else
