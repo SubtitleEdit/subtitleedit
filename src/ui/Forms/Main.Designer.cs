@@ -472,7 +472,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.imageListBookmarks = new System.Windows.Forms.ImageList(this.components);
             this.groupBoxEdit = new System.Windows.Forms.GroupBox();
             this.numericUpDownLayer = new Nikse.SubtitleEdit.Controls.NikseUpDown();
-            this.labelLayer = new System.Windows.Forms.Label();
+            this.labelLayer = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.panelBookmark = new System.Windows.Forms.Panel();
             this.labelBookmark = new System.Windows.Forms.Label();
             this.textBoxListViewText = new Nikse.SubtitleEdit.Controls.SETextBox();
@@ -6486,7 +6486,7 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4Extend;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSetLayer;
         private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownLayer;
-        private System.Windows.Forms.Label labelLayer;
+        private Nikse.SubtitleEdit.Controls.NikseLabel labelLayer;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemWebVttStyle;
         private System.Windows.Forms.ToolStripMenuItem beautifyTimeCodesOfSelectedLinesToolStripMenuItem;
         private NikseLabel labelAutoDuration;

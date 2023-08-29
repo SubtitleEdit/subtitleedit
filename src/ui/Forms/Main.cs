@@ -5904,6 +5904,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             SubtitleListview1.SyntaxColorAllLines(_subtitle);
             mediaPlayer.LastParagraph = null;
+            Refresh();
             Application.DoEvents();
             UiUtil.ShowSubtitle(_subtitle, mediaPlayer, GetCurrentSubtitleFormat());
             mediaPlayer.VideoPlayerContainerResize(null, null);
@@ -10083,6 +10084,7 @@ namespace Nikse.SubtitleEdit.Forms
                 buttonUnBreak.Enabled = false;
                 buttonAutoBreak.Enabled = false;
                 numericUpDownLayer.Enabled = false;
+                labelLayer.Enabled = false;
                 labelText.Enabled = false;
                 labelStartTime.Enabled = false;
                 labelDuration.Enabled = false;
@@ -10104,6 +10106,7 @@ namespace Nikse.SubtitleEdit.Forms
                 buttonUnBreak.Enabled = true;
                 buttonAutoBreak.Enabled = true;
                 numericUpDownLayer.Enabled = true;
+                labelLayer.Enabled = true;
                 labelText.Enabled = true;
                 labelStartTime.Enabled = true;
                 labelDuration.Enabled = true;
