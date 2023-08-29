@@ -476,7 +476,7 @@ namespace Nikse.SubtitleEdit.Controls
                 var addX = 0;
                 if (e.ColumnIndex == 0 && StateImageList?.Images.Count > 0)
                 {
-                    addX = 19;
+                    addX = 20;
                 }
 
                 if (e.ColumnIndex == 0 && e.Item.StateImageIndex >= 0 && StateImageList?.Images.Count > e.Item.StateImageIndex)
