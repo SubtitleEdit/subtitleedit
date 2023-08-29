@@ -3,6 +3,7 @@ using Nikse.SubtitleEdit.Core.Common;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Text;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
@@ -498,6 +499,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             if (c is CheckBox cb)
             {
+                
                 cb.Paint += CheckBox_Paint;
             }
 
@@ -643,7 +645,21 @@ namespace Nikse.SubtitleEdit.Logic
                     Height = e.ClipRectangle.Height
                 };
 
-                TextRenderer.DrawText(e.Graphics, checkBox.Text, checkBox.Font, textRectangleValue, Color.DimGray, TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
+                using (var b = new SolidBrush(BackColor))
+                {
+                    e.Graphics.FillRectangle(b, textRectangleValue);
+                }
+
+                e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+                e.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
+                var flags = TextFormatFlags.Left | TextFormatFlags.TextBoxControl;
+                if (checkBox.RightToLeft == RightToLeft.Yes)
+                {
+                    flags |= TextFormatFlags.RightToLeft;
+                }
+
+                var r = new Rectangle(textRectangleValue.Left + 3, textRectangleValue.Y, textRectangleValue.Width - 3, textRectangleValue.Height);
+                TextRenderer.DrawText(e.Graphics, checkBox.Text, checkBox.Font, r, Color.DimGray, flags);
             }
         }
 
