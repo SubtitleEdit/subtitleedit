@@ -69,7 +69,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             this.buttonCancel.Location = new System.Drawing.Point(778, 559);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
-            this.buttonCancel.TabIndex = 216;
+            this.buttonCancel.TabIndex = 30;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
@@ -81,7 +81,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             this.buttonOK.Location = new System.Drawing.Point(697, 559);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
-            this.buttonOK.TabIndex = 215;
+            this.buttonOK.TabIndex = 20;
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
@@ -109,7 +109,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             this.tabControlCommandLineHelp.Name = "tabControlCommandLineHelp";
             this.tabControlCommandLineHelp.SelectedIndex = 0;
             this.tabControlCommandLineHelp.Size = new System.Drawing.Size(838, 445);
-            this.tabControlCommandLineHelp.TabIndex = 219;
+            this.tabControlCommandLineHelp.TabIndex = 10;
             // 
             // TabPageCPP
             // 
@@ -231,8 +231,9 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             this.comboBoxWhisperExtra.SelectedItem = null;
             this.comboBoxWhisperExtra.SelectedText = "";
             this.comboBoxWhisperExtra.Size = new System.Drawing.Size(441, 21);
-            this.comboBoxWhisperExtra.TabIndex = 214;
+            this.comboBoxWhisperExtra.TabIndex = 0;
             this.comboBoxWhisperExtra.TabStop = false;
+            this.comboBoxWhisperExtra.UsePopupWindow = false;
             this.comboBoxWhisperExtra.KeyDown += new System.Windows.Forms.KeyEventHandler(this.comboBoxWhisperExtra_KeyDown);
             // 
             // WhisperAdvanced
