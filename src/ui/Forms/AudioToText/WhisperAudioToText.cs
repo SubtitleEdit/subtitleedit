@@ -342,6 +342,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             buttonGenerate.Enabled = false;
             buttonDownload.Enabled = false;
             buttonBatchMode.Enabled = false;
+            buttonAdvanced.Enabled = false;
             comboBoxLanguages.Enabled = false;
             comboBoxModels.Enabled = false;
             var waveFileName = GenerateWavFile(_videoFileName, _audioTrackNumber);
@@ -442,6 +443,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 buttonGenerate.Enabled = false;
                 buttonDownload.Enabled = false;
                 buttonBatchMode.Enabled = false;
+                buttonAdvanced.Enabled = false;
                 comboBoxModels.Enabled = false;
                 comboBoxLanguages.Enabled = false;
                 var waveFileName = GenerateWavFile(videoFileName, _audioTrackNumber);
@@ -505,6 +507,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             buttonGenerate.Enabled = true;
             buttonDownload.Enabled = true;
             buttonBatchMode.Enabled = true;
+            buttonAdvanced.Enabled = true;
             DialogResult = DialogResult.Cancel;
         }
 
@@ -1881,6 +1884,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 buttonGenerate.Enabled = true;
                 buttonDownload.Enabled = true;
                 buttonBatchMode.Enabled = true;
+                buttonAdvanced.Enabled = true;
                 comboBoxLanguages.Enabled = true;
                 comboBoxModels.Enabled = true;
             }

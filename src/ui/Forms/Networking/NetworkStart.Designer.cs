@@ -55,6 +55,7 @@
             // 
             // textBoxUserName
             // 
+            this.textBoxUserName.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxUserName.Location = new System.Drawing.Point(125, 119);
             this.textBoxUserName.Name = "textBoxUserName";
             this.textBoxUserName.Size = new System.Drawing.Size(262, 20);
@@ -84,14 +85,29 @@
             // 
             // comboBoxWebServiceUrl
             // 
+            this.comboBoxWebServiceUrl.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxWebServiceUrl.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxWebServiceUrl.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxWebServiceUrl.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxWebServiceUrl.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxWebServiceUrl.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxWebServiceUrl.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxWebServiceUrl.DropDownHeight = 400;
+            this.comboBoxWebServiceUrl.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
+            this.comboBoxWebServiceUrl.DropDownWidth = 262;
             this.comboBoxWebServiceUrl.FormattingEnabled = true;
             this.comboBoxWebServiceUrl.Items.AddRange(new object[] {
-            "https://www.nikse.dk/api/senet/",
-            "https://senet20210506190838.azurewebsites.net/senet/"});
+            "https://www.nikse.dk/api/senet/"});
             this.comboBoxWebServiceUrl.Location = new System.Drawing.Point(125, 145);
+            this.comboBoxWebServiceUrl.MaxLength = 32767;
             this.comboBoxWebServiceUrl.Name = "comboBoxWebServiceUrl";
+            this.comboBoxWebServiceUrl.SelectedIndex = -1;
+            this.comboBoxWebServiceUrl.SelectedItem = null;
+            this.comboBoxWebServiceUrl.SelectedText = "";
             this.comboBoxWebServiceUrl.Size = new System.Drawing.Size(262, 21);
             this.comboBoxWebServiceUrl.TabIndex = 20;
+            this.comboBoxWebServiceUrl.TabStop = false;
+            this.comboBoxWebServiceUrl.UsePopupWindow = false;
             // 
             // labelWebServiceUrl
             // 
@@ -134,6 +150,7 @@
             // 
             // textBoxSessionKey
             // 
+            this.textBoxSessionKey.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxSessionKey.Location = new System.Drawing.Point(125, 57);
             this.textBoxSessionKey.Name = "textBoxSessionKey";
             this.textBoxSessionKey.Size = new System.Drawing.Size(262, 20);
