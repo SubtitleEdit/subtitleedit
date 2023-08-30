@@ -35,6 +35,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             FixLargeFonts();
             _dictionaries = TesseractDictionary.List().OrderBy(p=>p.Name).ToList();
             LoadDictionaryList(first);
+            comboBoxDictionaries.UsePopupWindow = true;
             _cancellationTokenSource = new CancellationTokenSource();
         }
 

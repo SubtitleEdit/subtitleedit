@@ -37,6 +37,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             LoadDictionaryList("Nikse.SubtitleEdit.Resources.TesseractDictionaries.xml.gz");
             FixLargeFonts();
             _cancellationTokenSource = new CancellationTokenSource();
+            comboBoxDictionaries.UsePopupWindow = true;
         }
 
         private void LoadDictionaryList(string xmlRessourceName)
