@@ -63,9 +63,19 @@ namespace Nikse.SubtitleEdit.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        public static System.Drawing.Bitmap bookmark22 {
+        public static System.Drawing.Bitmap bookmark22dark {
             get {
-                object obj = ResourceManager.GetObject("bookmark22", resourceCulture);
+                object obj = ResourceManager.GetObject("bookmark22dark", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap bookmark22transparent {
+            get {
+                object obj = ResourceManager.GetObject("bookmark22transparent", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

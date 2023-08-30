@@ -436,7 +436,7 @@ namespace Nikse.SubtitleEdit.Forms
                 numericUpDownLayer.Visible = false;
 
                 UpdateRecentFilesUI();
-                InitializeToolbar();
+                InitializeToolbarAndImages();
 
                 if (Configuration.Settings.General.RightToLeftMode)
                 {
@@ -5872,7 +5872,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            InitializeToolbar();
+            InitializeToolbarAndImages();
 
             if (oldSubtitleTextBoxSyntaxColor != Configuration.Settings.General.SubtitleTextBoxSyntaxColor ||
                 oldSubtitleFontSize != Configuration.Settings.General.SubtitleTextBoxFontSize ||
@@ -6031,8 +6031,18 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void InitializeToolbar()
+        private void InitializeToolbarAndImages()
         {
+            imageListBookmarks.Images.Clear();
+            if (Configuration.Settings.General.UseDarkTheme)
+            {
+                imageListBookmarks.Images.Add(Properties.Resources.bookmark22dark);
+            }
+            else
+            {
+                imageListBookmarks.Images.Add(Properties.Resources.bookmark22transparent);
+            }
+
             var gs = Configuration.Settings.General;
 
             if (Directory.Exists(Configuration.IconsDirectory))
@@ -6060,6 +6070,7 @@ namespace Nikse.SubtitleEdit.Forms
                 TryLoadIcon(toolStripButtonToggleVideo, "VideoToggle");
                 TryLoadIcon(toolStripButtonSourceView, "SourceView");
 
+                // wave form toolbar
                 TryLoadIcon(toolStripButtonWaveformZoomOut, "WaveformZoomOut");
                 TryLoadIcon(toolStripButtonWaveformZoomIn, "WaveformZoomIn");
                 TryLoadIcon(toolStripButtonWaveformPause, "WaveformPause");
@@ -6067,6 +6078,7 @@ namespace Nikse.SubtitleEdit.Forms
                 TryLoadIcon(toolStripButtonLockCenter, "WaveformCenter");
                 TryLoadIcon(toolStripSplitButtonPlayRate, "WaveformPlaybackSpeed");
 
+                // media player gfx
                 mediaPlayer.TryLoadGfx();
 
                 // Other images: IttProperties, WebVttProperties, WebVttStyle, EbuProperties
