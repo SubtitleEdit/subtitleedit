@@ -3249,6 +3249,7 @@
     <LinePart from="ljudska svest" to="ljudska svijest" />
     <LinePart from="li da pričaš" to="pričati" />
     <LinePart from="moći da idemo" to="moći ići" />
+    <LinePart from="mogam da vidiš" to="mogao vidjeti" />
     <LinePart from="moglo da bude" to="moglo biti" />
     <LinePart from="moje saučešće" to="moja sućut" />
     <LinePart from="mora da bude" to="mora biti" />
@@ -4366,6 +4367,7 @@
     <RegEx find="hariz" replaceWith="kariz" />
     <RegEx find="hrono" replaceWith="krono" />
     <RegEx find="hvač" replaceWith="hvać" />
+    <RegEx find="hvatić" replaceWith="hvatit ć" />
     <RegEx find="(?&lt;![MH])ick([eoiu])" replaceWith="ičk$1" />
     <RegEx find="idev" replaceWith="idjev" />
     <RegEx find="ijd" replaceWith="idj" />
