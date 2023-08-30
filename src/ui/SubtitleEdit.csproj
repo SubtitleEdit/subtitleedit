@@ -2524,6 +2524,8 @@
     <None Include="Resources\pictureBoxReverseMouseDown.Image.png" />
     <None Include="Resources\pictureBoxReverseMouseOver.Image.png" />
     <None Include="Resources\Transparent Background.png" />
+    <None Include="Resources\bookmark22dark.png" />
+    <None Include="Resources\bookmark22transparent.png" />
     <Content Include="Resources\TesseractDictionaries.xml">
       <SubType>Designer</SubType>
     </Content>

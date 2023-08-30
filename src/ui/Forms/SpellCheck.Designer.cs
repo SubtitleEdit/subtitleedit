@@ -453,7 +453,7 @@
             // 
             // pictureBoxBookmark
             // 
-            this.pictureBoxBookmark.Image = global::Nikse.SubtitleEdit.Properties.Resources.bookmark22;
+            this.pictureBoxBookmark.Image = global::Nikse.SubtitleEdit.Properties.Resources.bookmark22transparent;
             this.pictureBoxBookmark.Location = new System.Drawing.Point(11, 131);
             this.pictureBoxBookmark.Name = "pictureBoxBookmark";
             this.pictureBoxBookmark.Size = new System.Drawing.Size(22, 22);
