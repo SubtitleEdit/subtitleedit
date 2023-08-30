@@ -379,59 +379,56 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public void AdjustDisplayTimeUsingPercent(double percent, List<int> selectedIndexes, List<double> shotChanges = null, bool enforceDurationLimits = true)
         {
-            for (int i = 0; i < Paragraphs.Count; i++)
+            foreach (var index in TryGetIndexOrAll(selectedIndexes))
             {
-                if (selectedIndexes == null || selectedIndexes.Contains(i))
+                double nextStartMilliseconds = double.MaxValue;
+                if (index + 1 < Paragraphs.Count)
                 {
-                    double nextStartMilliseconds = double.MaxValue;
-                    if (i + 1 < Paragraphs.Count)
-                    {
-                        nextStartMilliseconds = Paragraphs[i + 1].StartTime.TotalMilliseconds;
-                    }
+                    nextStartMilliseconds = Paragraphs[index + 1].StartTime.TotalMilliseconds;
+                }
 
-                    double newEndMilliseconds = Paragraphs[i].EndTime.TotalMilliseconds;
-                    newEndMilliseconds = Paragraphs[i].StartTime.TotalMilliseconds + (((newEndMilliseconds - Paragraphs[i].StartTime.TotalMilliseconds) * percent) / 100.0);
+                double newEndMilliseconds = Paragraphs[index].EndTime.TotalMilliseconds;
+                newEndMilliseconds = Paragraphs[index].StartTime.TotalMilliseconds + (newEndMilliseconds - Paragraphs[index].StartTime.TotalMilliseconds) * percent / 100.0;
 
-                    // fix too short duration
-                    if (enforceDurationLimits)
+                // fix too short duration
+                if (enforceDurationLimits)
+                {
+                    var minDur = Math.Max(Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds, 100);
+                    if (Paragraphs[index].StartTime.TotalMilliseconds + minDur > newEndMilliseconds)
                     {
-                        var minDur = Math.Max(Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds, 100);
-                        if (Paragraphs[i].StartTime.TotalMilliseconds + minDur > newEndMilliseconds)
-                        {
-                            newEndMilliseconds = Paragraphs[i].StartTime.TotalMilliseconds + minDur;
-                        }
+                        newEndMilliseconds = Paragraphs[index].StartTime.TotalMilliseconds + minDur;
                     }
+                }
 
-                    // handle overlap with next
-                    if (newEndMilliseconds > nextStartMilliseconds)
-                    {
-                        newEndMilliseconds = nextStartMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
-                    }
+                // handle overlap with next
+                if (newEndMilliseconds > nextStartMilliseconds)
+                {
+                    newEndMilliseconds = nextStartMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                }
 
-                    // handle shot change if supplied -- keep earliest time
-                    if (shotChanges != null)
+                // handle shot change if supplied -- keep earliest time
+                if (shotChanges != null)
+                {
+                    double nextShotChangeMilliseconds = ShotChangeHelper.GetNextShotChangeMinusGapInMs(shotChanges, Paragraphs[index].EndTime) ?? double.MaxValue;
+                    if (newEndMilliseconds > nextShotChangeMilliseconds)
                     {
-                        double nextShotChangeMilliseconds = ShotChangeHelper.GetNextShotChangeMinusGapInMs(shotChanges, Paragraphs[i].EndTime) ?? double.MaxValue;
-                        if (newEndMilliseconds > nextShotChangeMilliseconds)
-                        {
-                            newEndMilliseconds = nextShotChangeMilliseconds;
-                        }
+                        newEndMilliseconds = nextShotChangeMilliseconds;
                     }
+                }
 
-                    // max duration
-                    if (enforceDurationLimits)
+                // max duration
+                if (enforceDurationLimits)
+                {
+                    var dur = newEndMilliseconds - Paragraphs[index].StartTime.TotalMilliseconds;
+                    if (dur > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
                     {
-                        var dur = newEndMilliseconds - Paragraphs[i].StartTime.TotalMilliseconds;
-                        if (dur > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
-                        {
-                            newEndMilliseconds = Paragraphs[i].StartTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds;
-                        }
+                        newEndMilliseconds = Paragraphs[index].StartTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds;
                     }
+                }
 
-                    if (percent > 100 && newEndMilliseconds > Paragraphs[i].EndTime.TotalMilliseconds || percent < 100)
-                    {
-                        Paragraphs[i].EndTime.TotalMilliseconds = newEndMilliseconds;
-                    }
+                if (percent > 100 && newEndMilliseconds > Paragraphs[index].EndTime.TotalMilliseconds || percent < 100)
+                {
+                    Paragraphs[index].EndTime.TotalMilliseconds = newEndMilliseconds;
                 }
             }
         }
