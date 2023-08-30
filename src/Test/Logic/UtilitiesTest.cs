@@ -918,5 +918,21 @@ namespace Test.Logic
             var result = Utilities.RemoveSsaTags("{\\p2}m 0 0 l 1 1{\\p0}Hallo world!", true);
             Assert.AreEqual("Hallo world!", result);
         }
+
+        [TestMethod]
+        public void UrlEncode()
+        {
+            var result = Utilities.UrlEncode("{\\fs50}Yo{\\Reset}Yo");
+            Assert.AreEqual("%7B%5Cfs50%7DYo%7B%5CReset%7DYo", result);
+        }
+
+        [TestMethod]
+        public void UrlEncodeLength()
+        {
+            var text = @"{\rSubtitle-_2}Blaf,{\RESET}.!? ";
+            var result = Utilities.UrlEncode(text);
+            var resultLength = Utilities.UrlEncodeLength(text);
+            Assert.AreEqual(resultLength, result.Length);
+        }
     }
 }

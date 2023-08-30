@@ -1319,7 +1319,8 @@ namespace Nikse.SubtitleEdit.Core.Common
             {
                 if (ch >= 'a' && ch <= 'z' ||
                     ch >= 'A' && ch <= 'Z' ||
-                    ch >= '0' && ch <= '9')
+                    ch >= '0' && ch <= '9' ||
+                    ch == '-' || ch == '_' || ch == '.')
                 {
                     urlEncodeLength++;
                 }
