@@ -492,7 +492,7 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
                     e.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
-                    var flags = TextFormatFlags.EndEllipsis | TextFormatFlags.Left | TextFormatFlags.TextBoxControl;
+                    var flags = TextFormatFlags.EndEllipsis | TextFormatFlags.Left | TextFormatFlags.TextBoxControl | TextFormatFlags.NoPrefix;
                     if (Columns[e.ColumnIndex].TextAlign == HorizontalAlignment.Right)
                     {
                         flags |= TextFormatFlags.Right;
