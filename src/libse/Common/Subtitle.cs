@@ -444,19 +444,9 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             var adjustMs = seconds * TimeCode.BaseUnit;
-            if (selectedIndexes != null)
+            foreach (var index in TryGetIndexOrAll(selectedIndexes))
             {
-                foreach (var idx in selectedIndexes)
-                {
-                    AdjustDisplayTimeUsingMilliseconds(idx, adjustMs, shotChanges, enforceDurationLimits);
-                }
-            }
-            else
-            {
-                for (int idx = 0; idx < Paragraphs.Count; idx++)
-                {
-                    AdjustDisplayTimeUsingMilliseconds(idx, adjustMs, shotChanges, enforceDurationLimits);
-                }
+                AdjustDisplayTimeUsingMilliseconds(index, adjustMs, shotChanges, enforceDurationLimits);
             }
         }
 
