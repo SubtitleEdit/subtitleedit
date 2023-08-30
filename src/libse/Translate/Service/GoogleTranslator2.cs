@@ -122,7 +122,15 @@ namespace Nikse.SubtitleEdit.Core.Translate.Service
                                     {
                                         if (v2[innerKey2] is string translatedText)
                                         {
-                                            translatedText = Regex.Unescape(translatedText);
+                                            try
+                                            {
+                                                translatedText = Regex.Unescape(translatedText);
+                                            }
+                                            catch
+                                            {
+                                                translatedText = translatedText.Replace("\\n", "\n");
+                                            }
+
                                             translatedText = string.Join(Environment.NewLine, translatedText.SplitToLines());
                                             translatedText = TranslationHelper.PostTranslate(translatedText, targetLanguage);
                                             if (resultList.Count - skipCount < formatList.Count)
