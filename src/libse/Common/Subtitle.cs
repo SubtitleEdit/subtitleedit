@@ -510,24 +510,16 @@ namespace Nikse.SubtitleEdit.Core.Common
             p.EndTime.TotalMilliseconds = newEndTimeInMs;
         }
 
-        public void RecalculateDisplayTimes(double maxCharPerSec, List<int> selectedIndexes, double optimalCharPerSec, bool extendOnly = false, List<double> shotChanges = null, bool enforceDurationLimits = true)
+        public void RecalculateDisplayTimes(double maxCharPerSec, IEnumerable<int> selectedIndexes, double optimalCharPerSec, bool extendOnly = false, List<double> shotChanges = null, bool enforceDurationLimits = true)
         {
-            if (selectedIndexes != null)
+            foreach (var index in TryGetIndexOrAll(selectedIndexes))
             {
-                foreach (var index in selectedIndexes)
-                {
-                    RecalculateDisplayTime(maxCharPerSec, index, optimalCharPerSec, extendOnly, false, shotChanges, enforceDurationLimits);
-                }
-            }
-            else
-            {
-                for (int i = 0; i < Paragraphs.Count; i++)
-                {
-                    RecalculateDisplayTime(maxCharPerSec, i, optimalCharPerSec, extendOnly, false, shotChanges, enforceDurationLimits);
-                }
+                RecalculateDisplayTime(maxCharPerSec, index, optimalCharPerSec, extendOnly, false, shotChanges, enforceDurationLimits);
             }
         }
 
+        private IEnumerable<int> TryGetIndexOrAll(IEnumerable<int> indices) => indices ?? Enumerable.Range(0, Paragraphs.Count);
+        
         public void RecalculateDisplayTime(double maxCharactersPerSecond, int index, double optimalCharactersPerSeconds, bool extendOnly = false, bool onlyOptimal = false, List<double> shotChanges = null, bool enforceDurationLimits = true)
         {
             var p = GetParagraphOrDefault(index);
