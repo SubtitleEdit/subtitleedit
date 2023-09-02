@@ -31,33 +31,20 @@
             this.components = new System.ComponentModel.Container();
             this.groupBoxStyles = new System.Windows.Forms.GroupBox();
             this.labelName = new System.Windows.Forms.Label();
-            this.textBoxName = new System.Windows.Forms.TextBox();
             this.groupBoxGeneralRules = new System.Windows.Forms.GroupBox();
             this.buttonEditCustomContinuationStyle = new System.Windows.Forms.Button();
-            this.comboBoxCpsLineLenCalc = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelCpsLineLenCalc = new System.Windows.Forms.Label();
-            this.comboBoxContinuationStyle = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelContinuationStyle = new System.Windows.Forms.Label();
             this.labelDialogStyle = new System.Windows.Forms.Label();
-            this.comboBoxDialogStyle = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelOptimalCharsPerSecond = new System.Windows.Forms.Label();
-            this.numericUpDownOptimalCharsSec = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelSubMaxLen = new System.Windows.Forms.Label();
-            this.numericUpDownMaxWordsMin = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelMergeShortLines = new System.Windows.Forms.Label();
             this.labelMaxWordsPerMin = new System.Windows.Forms.Label();
             this.labelMinDuration = new System.Windows.Forms.Label();
-            this.numericUpDownMaxNumberOfLines = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelMaxDuration = new System.Windows.Forms.Label();
             this.labelMaxLines = new System.Windows.Forms.Label();
-            this.numericUpDownDurationMin = new Nikse.SubtitleEdit.Controls.NikseUpDown();
-            this.numericUpDownDurationMax = new Nikse.SubtitleEdit.Controls.NikseUpDown();
-            this.comboBoxMergeShortLineLength = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelMaxCharsPerSecond = new System.Windows.Forms.Label();
-            this.numericUpDownMinGapMs = new Nikse.SubtitleEdit.Controls.NikseUpDown();
-            this.numericUpDownMaxCharsSec = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelMinGapMs = new System.Windows.Forms.Label();
-            this.numericUpDownSubtitleLineMaximumLength = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.buttonExport = new System.Windows.Forms.Button();
             this.buttonImport = new System.Windows.Forms.Button();
             this.buttonCopy = new System.Windows.Forms.Button();
@@ -75,6 +62,19 @@
             this.openFileDialogImport = new System.Windows.Forms.OpenFileDialog();
             this.toolTipContinuationPreview = new System.Windows.Forms.ToolTip(this.components);
             this.toolTipDialogStylePreview = new System.Windows.Forms.ToolTip(this.components);
+            this.textBoxName = new Nikse.SubtitleEdit.Controls.NikseTextBox();
+            this.comboBoxCpsLineLenCalc = new Nikse.SubtitleEdit.Controls.NikseComboBox();
+            this.comboBoxContinuationStyle = new Nikse.SubtitleEdit.Controls.NikseComboBox();
+            this.comboBoxDialogStyle = new Nikse.SubtitleEdit.Controls.NikseComboBox();
+            this.comboBoxMergeShortLineLength = new Nikse.SubtitleEdit.Controls.NikseComboBox();
+            this.numericUpDownMaxNumberOfLines = new Nikse.SubtitleEdit.Controls.NikseUpDown();
+            this.numericUpDownMinGapMs = new Nikse.SubtitleEdit.Controls.NikseUpDown();
+            this.numericUpDownDurationMax = new Nikse.SubtitleEdit.Controls.NikseUpDown();
+            this.numericUpDownDurationMin = new Nikse.SubtitleEdit.Controls.NikseUpDown();
+            this.numericUpDownMaxWordsMin = new Nikse.SubtitleEdit.Controls.NikseUpDown();
+            this.numericUpDownMaxCharsSec = new Nikse.SubtitleEdit.Controls.NikseUpDown();
+            this.numericUpDownSubtitleLineMaximumLength = new Nikse.SubtitleEdit.Controls.NikseUpDown();
+            this.numericUpDownOptimalCharsSec = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.groupBoxStyles.SuspendLayout();
             this.groupBoxGeneralRules.SuspendLayout();
             this.SuspendLayout();
@@ -96,7 +96,7 @@
             this.groupBoxStyles.Controls.Add(this.listViewProfiles);
             this.groupBoxStyles.Location = new System.Drawing.Point(12, 12);
             this.groupBoxStyles.Name = "groupBoxStyles";
-            this.groupBoxStyles.Size = new System.Drawing.Size(946, 445);
+            this.groupBoxStyles.Size = new System.Drawing.Size(968, 469);
             this.groupBoxStyles.TabIndex = 1;
             this.groupBoxStyles.TabStop = false;
             // 
@@ -104,53 +104,44 @@
             // 
             this.labelName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.labelName.AutoSize = true;
-            this.labelName.Location = new System.Drawing.Point(635, 19);
+            this.labelName.Location = new System.Drawing.Point(659, 17);
             this.labelName.Name = "labelName";
             this.labelName.Size = new System.Drawing.Size(35, 13);
             this.labelName.TabIndex = 53;
             this.labelName.Text = "Name";
             // 
-            // textBoxName
-            // 
-            this.textBoxName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxName.Location = new System.Drawing.Point(638, 35);
-            this.textBoxName.Name = "textBoxName";
-            this.textBoxName.Size = new System.Drawing.Size(250, 20);
-            this.textBoxName.TabIndex = 80;
-            this.textBoxName.TextChanged += new System.EventHandler(this.textBoxName_TextChanged);
-            // 
             // groupBoxGeneralRules
             // 
             this.groupBoxGeneralRules.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBoxGeneralRules.Controls.Add(this.buttonEditCustomContinuationStyle);
             this.groupBoxGeneralRules.Controls.Add(this.comboBoxCpsLineLenCalc);
-            this.groupBoxGeneralRules.Controls.Add(this.labelCpsLineLenCalc);
+            this.groupBoxGeneralRules.Controls.Add(this.buttonEditCustomContinuationStyle);
             this.groupBoxGeneralRules.Controls.Add(this.comboBoxContinuationStyle);
+            this.groupBoxGeneralRules.Controls.Add(this.comboBoxDialogStyle);
+            this.groupBoxGeneralRules.Controls.Add(this.comboBoxMergeShortLineLength);
+            this.groupBoxGeneralRules.Controls.Add(this.numericUpDownMaxNumberOfLines);
+            this.groupBoxGeneralRules.Controls.Add(this.numericUpDownMinGapMs);
+            this.groupBoxGeneralRules.Controls.Add(this.numericUpDownDurationMax);
+            this.groupBoxGeneralRules.Controls.Add(this.numericUpDownDurationMin);
+            this.groupBoxGeneralRules.Controls.Add(this.numericUpDownMaxWordsMin);
+            this.groupBoxGeneralRules.Controls.Add(this.numericUpDownMaxCharsSec);
+            this.groupBoxGeneralRules.Controls.Add(this.numericUpDownSubtitleLineMaximumLength);
+            this.groupBoxGeneralRules.Controls.Add(this.labelCpsLineLenCalc);
             this.groupBoxGeneralRules.Controls.Add(this.labelContinuationStyle);
             this.groupBoxGeneralRules.Controls.Add(this.labelDialogStyle);
-            this.groupBoxGeneralRules.Controls.Add(this.comboBoxDialogStyle);
             this.groupBoxGeneralRules.Controls.Add(this.labelOptimalCharsPerSecond);
             this.groupBoxGeneralRules.Controls.Add(this.numericUpDownOptimalCharsSec);
             this.groupBoxGeneralRules.Controls.Add(this.labelSubMaxLen);
-            this.groupBoxGeneralRules.Controls.Add(this.numericUpDownMaxWordsMin);
             this.groupBoxGeneralRules.Controls.Add(this.labelMergeShortLines);
             this.groupBoxGeneralRules.Controls.Add(this.labelMaxWordsPerMin);
             this.groupBoxGeneralRules.Controls.Add(this.labelMinDuration);
-            this.groupBoxGeneralRules.Controls.Add(this.numericUpDownMaxNumberOfLines);
             this.groupBoxGeneralRules.Controls.Add(this.labelMaxDuration);
             this.groupBoxGeneralRules.Controls.Add(this.labelMaxLines);
-            this.groupBoxGeneralRules.Controls.Add(this.numericUpDownDurationMin);
-            this.groupBoxGeneralRules.Controls.Add(this.numericUpDownDurationMax);
-            this.groupBoxGeneralRules.Controls.Add(this.comboBoxMergeShortLineLength);
             this.groupBoxGeneralRules.Controls.Add(this.labelMaxCharsPerSecond);
-            this.groupBoxGeneralRules.Controls.Add(this.numericUpDownMinGapMs);
-            this.groupBoxGeneralRules.Controls.Add(this.numericUpDownMaxCharsSec);
             this.groupBoxGeneralRules.Controls.Add(this.labelMinGapMs);
-            this.groupBoxGeneralRules.Controls.Add(this.numericUpDownSubtitleLineMaximumLength);
-            this.groupBoxGeneralRules.Location = new System.Drawing.Point(621, 61);
+            this.groupBoxGeneralRules.Location = new System.Drawing.Point(628, 61);
             this.groupBoxGeneralRules.Name = "groupBoxGeneralRules";
-            this.groupBoxGeneralRules.Size = new System.Drawing.Size(319, 348);
+            this.groupBoxGeneralRules.Size = new System.Drawing.Size(334, 360);
             this.groupBoxGeneralRules.TabIndex = 90;
             this.groupBoxGeneralRules.TabStop = false;
             this.groupBoxGeneralRules.Text = "Rules";
@@ -158,7 +149,7 @@
             // buttonEditCustomContinuationStyle
             // 
             this.buttonEditCustomContinuationStyle.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonEditCustomContinuationStyle.Location = new System.Drawing.Point(279, 284);
+            this.buttonEditCustomContinuationStyle.Location = new System.Drawing.Point(294, 284);
             this.buttonEditCustomContinuationStyle.Name = "buttonEditCustomContinuationStyle";
             this.buttonEditCustomContinuationStyle.Size = new System.Drawing.Size(28, 23);
             this.buttonEditCustomContinuationStyle.TabIndex = 196;
@@ -166,16 +157,6 @@
             this.buttonEditCustomContinuationStyle.UseVisualStyleBackColor = true;
             this.buttonEditCustomContinuationStyle.Visible = false;
             this.buttonEditCustomContinuationStyle.Click += new System.EventHandler(this.buttonEditCustomContinuationStyle_Click);
-            // 
-            // comboBoxCpsLineLenCalc
-            // 
-            this.comboBoxCpsLineLenCalc.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxCpsLineLenCalc.DropDownWidth = 170;
-            this.comboBoxCpsLineLenCalc.FormattingEnabled = true;
-            this.comboBoxCpsLineLenCalc.Location = new System.Drawing.Point(132, 313);
-            this.comboBoxCpsLineLenCalc.Name = "comboBoxCpsLineLenCalc";
-            this.comboBoxCpsLineLenCalc.Size = new System.Drawing.Size(174, 21);
-            this.comboBoxCpsLineLenCalc.TabIndex = 197;
             // 
             // labelCpsLineLenCalc
             // 
@@ -185,17 +166,6 @@
             this.labelCpsLineLenCalc.Size = new System.Drawing.Size(102, 13);
             this.labelCpsLineLenCalc.TabIndex = 196;
             this.labelCpsLineLenCalc.Text = "Cps/line length style";
-            // 
-            // comboBoxContinuationStyle
-            // 
-            this.comboBoxContinuationStyle.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxContinuationStyle.DropDownWidth = 260;
-            this.comboBoxContinuationStyle.FormattingEnabled = true;
-            this.comboBoxContinuationStyle.Location = new System.Drawing.Point(132, 285);
-            this.comboBoxContinuationStyle.Name = "comboBoxContinuationStyle";
-            this.comboBoxContinuationStyle.Size = new System.Drawing.Size(174, 21);
-            this.comboBoxContinuationStyle.TabIndex = 195;
-            this.comboBoxContinuationStyle.SelectedIndexChanged += new System.EventHandler(this.UiElementChanged);
             // 
             // labelContinuationStyle
             // 
@@ -215,22 +185,6 @@
             this.labelDialogStyle.TabIndex = 193;
             this.labelDialogStyle.Text = "Dialog style";
             // 
-            // comboBoxDialogStyle
-            // 
-            this.comboBoxDialogStyle.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxDialogStyle.DropDownWidth = 260;
-            this.comboBoxDialogStyle.FormattingEnabled = true;
-            this.comboBoxDialogStyle.Items.AddRange(new object[] {
-            "Dash both lines with space",
-            "Dash both lines without space",
-            "Dash second line with space",
-            "Dash second line without space"});
-            this.comboBoxDialogStyle.Location = new System.Drawing.Point(103, 257);
-            this.comboBoxDialogStyle.Name = "comboBoxDialogStyle";
-            this.comboBoxDialogStyle.Size = new System.Drawing.Size(203, 21);
-            this.comboBoxDialogStyle.TabIndex = 194;
-            this.comboBoxDialogStyle.SelectedIndexChanged += new System.EventHandler(this.UiElementChanged);
-            // 
             // labelOptimalCharsPerSecond
             // 
             this.labelOptimalCharsPerSecond.AutoSize = true;
@@ -240,30 +194,6 @@
             this.labelOptimalCharsPerSecond.TabIndex = 8;
             this.labelOptimalCharsPerSecond.Text = "Optimal chars/sec";
             // 
-            // numericUpDownOptimalCharsSec
-            // 
-            this.numericUpDownOptimalCharsSec.DecimalPlaces = 1;
-            this.numericUpDownOptimalCharsSec.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            65536});
-            this.numericUpDownOptimalCharsSec.Location = new System.Drawing.Point(233, 41);
-            this.numericUpDownOptimalCharsSec.Minimum = new decimal(new int[] {
-            4,
-            0,
-            0,
-            0});
-            this.numericUpDownOptimalCharsSec.Name = "numericUpDownOptimalCharsSec";
-            this.numericUpDownOptimalCharsSec.Size = new System.Drawing.Size(56, 20);
-            this.numericUpDownOptimalCharsSec.TabIndex = 110;
-            this.numericUpDownOptimalCharsSec.Value = new decimal(new int[] {
-            11,
-            0,
-            0,
-            0});
-            this.numericUpDownOptimalCharsSec.ValueChanged += new System.EventHandler(this.UiElementChanged);
-            // 
             // labelSubMaxLen
             // 
             this.labelSubMaxLen.AutoSize = true;
@@ -272,29 +202,6 @@
             this.labelSubMaxLen.Size = new System.Drawing.Size(99, 13);
             this.labelSubMaxLen.TabIndex = 6;
             this.labelSubMaxLen.Text = "Subtitle max. length";
-            // 
-            // numericUpDownMaxWordsMin
-            // 
-            this.numericUpDownMaxWordsMin.Location = new System.Drawing.Point(233, 95);
-            this.numericUpDownMaxWordsMin.Maximum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
-            this.numericUpDownMaxWordsMin.Minimum = new decimal(new int[] {
-            4,
-            0,
-            0,
-            0});
-            this.numericUpDownMaxWordsMin.Name = "numericUpDownMaxWordsMin";
-            this.numericUpDownMaxWordsMin.Size = new System.Drawing.Size(56, 20);
-            this.numericUpDownMaxWordsMin.TabIndex = 130;
-            this.numericUpDownMaxWordsMin.Value = new decimal(new int[] {
-            300,
-            0,
-            0,
-            0});
-            this.numericUpDownMaxWordsMin.ValueChanged += new System.EventHandler(this.UiElementChanged);
             // 
             // labelMergeShortLines
             // 
@@ -323,29 +230,6 @@
             this.labelMinDuration.TabIndex = 10;
             this.labelMinDuration.Text = "Min. duration, milliseconds";
             // 
-            // numericUpDownMaxNumberOfLines
-            // 
-            this.numericUpDownMaxNumberOfLines.Location = new System.Drawing.Point(233, 201);
-            this.numericUpDownMaxNumberOfLines.Maximum = new decimal(new int[] {
-            25,
-            0,
-            0,
-            0});
-            this.numericUpDownMaxNumberOfLines.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numericUpDownMaxNumberOfLines.Name = "numericUpDownMaxNumberOfLines";
-            this.numericUpDownMaxNumberOfLines.Size = new System.Drawing.Size(56, 20);
-            this.numericUpDownMaxNumberOfLines.TabIndex = 170;
-            this.numericUpDownMaxNumberOfLines.Value = new decimal(new int[] {
-            2,
-            0,
-            0,
-            0});
-            this.numericUpDownMaxNumberOfLines.ValueChanged += new System.EventHandler(this.UiElementChanged);
-            // 
             // labelMaxDuration
             // 
             this.labelMaxDuration.AutoSize = true;
@@ -364,62 +248,6 @@
             this.labelMaxLines.TabIndex = 47;
             this.labelMaxLines.Text = "Max. number of lines";
             // 
-            // numericUpDownDurationMin
-            // 
-            this.numericUpDownDurationMin.Location = new System.Drawing.Point(233, 122);
-            this.numericUpDownDurationMin.Maximum = new decimal(new int[] {
-            2000,
-            0,
-            0,
-            0});
-            this.numericUpDownDurationMin.Minimum = new decimal(new int[] {
-            100,
-            0,
-            0,
-            0});
-            this.numericUpDownDurationMin.Name = "numericUpDownDurationMin";
-            this.numericUpDownDurationMin.Size = new System.Drawing.Size(56, 20);
-            this.numericUpDownDurationMin.TabIndex = 140;
-            this.numericUpDownDurationMin.Value = new decimal(new int[] {
-            100,
-            0,
-            0,
-            0});
-            this.numericUpDownDurationMin.ValueChanged += new System.EventHandler(this.UiElementChanged);
-            // 
-            // numericUpDownDurationMax
-            // 
-            this.numericUpDownDurationMax.Location = new System.Drawing.Point(233, 148);
-            this.numericUpDownDurationMax.Maximum = new decimal(new int[] {
-            50000,
-            0,
-            0,
-            0});
-            this.numericUpDownDurationMax.Minimum = new decimal(new int[] {
-            3000,
-            0,
-            0,
-            0});
-            this.numericUpDownDurationMax.Name = "numericUpDownDurationMax";
-            this.numericUpDownDurationMax.Size = new System.Drawing.Size(56, 20);
-            this.numericUpDownDurationMax.TabIndex = 150;
-            this.numericUpDownDurationMax.Value = new decimal(new int[] {
-            50000,
-            0,
-            0,
-            0});
-            this.numericUpDownDurationMax.ValueChanged += new System.EventHandler(this.UiElementChanged);
-            // 
-            // comboBoxMergeShortLineLength
-            // 
-            this.comboBoxMergeShortLineLength.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxMergeShortLineLength.FormattingEnabled = true;
-            this.comboBoxMergeShortLineLength.Location = new System.Drawing.Point(233, 229);
-            this.comboBoxMergeShortLineLength.Name = "comboBoxMergeShortLineLength";
-            this.comboBoxMergeShortLineLength.Size = new System.Drawing.Size(73, 21);
-            this.comboBoxMergeShortLineLength.TabIndex = 180;
-            this.comboBoxMergeShortLineLength.SelectedIndexChanged += new System.EventHandler(this.UiElementChanged);
-            // 
             // labelMaxCharsPerSecond
             // 
             this.labelMaxCharsPerSecond.AutoSize = true;
@@ -428,48 +256,6 @@
             this.labelMaxCharsPerSecond.Size = new System.Drawing.Size(81, 13);
             this.labelMaxCharsPerSecond.TabIndex = 9;
             this.labelMaxCharsPerSecond.Text = "Max. chars/sec";
-            // 
-            // numericUpDownMinGapMs
-            // 
-            this.numericUpDownMinGapMs.Location = new System.Drawing.Point(233, 174);
-            this.numericUpDownMinGapMs.Maximum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
-            this.numericUpDownMinGapMs.Name = "numericUpDownMinGapMs";
-            this.numericUpDownMinGapMs.Size = new System.Drawing.Size(56, 20);
-            this.numericUpDownMinGapMs.TabIndex = 160;
-            this.numericUpDownMinGapMs.Value = new decimal(new int[] {
-            25,
-            0,
-            0,
-            0});
-            this.numericUpDownMinGapMs.ValueChanged += new System.EventHandler(this.UiElementChanged);
-            // 
-            // numericUpDownMaxCharsSec
-            // 
-            this.numericUpDownMaxCharsSec.DecimalPlaces = 1;
-            this.numericUpDownMaxCharsSec.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            65536});
-            this.numericUpDownMaxCharsSec.Location = new System.Drawing.Point(233, 68);
-            this.numericUpDownMaxCharsSec.Minimum = new decimal(new int[] {
-            4,
-            0,
-            0,
-            0});
-            this.numericUpDownMaxCharsSec.Name = "numericUpDownMaxCharsSec";
-            this.numericUpDownMaxCharsSec.Size = new System.Drawing.Size(56, 20);
-            this.numericUpDownMaxCharsSec.TabIndex = 120;
-            this.numericUpDownMaxCharsSec.Value = new decimal(new int[] {
-            24,
-            0,
-            0,
-            0});
-            this.numericUpDownMaxCharsSec.ValueChanged += new System.EventHandler(this.UiElementChanged);
             // 
             // labelMinGapMs
             // 
@@ -480,34 +266,11 @@
             this.labelMinGapMs.TabIndex = 14;
             this.labelMinGapMs.Text = "Min. gap between subtitles";
             // 
-            // numericUpDownSubtitleLineMaximumLength
-            // 
-            this.numericUpDownSubtitleLineMaximumLength.Location = new System.Drawing.Point(233, 14);
-            this.numericUpDownSubtitleLineMaximumLength.Maximum = new decimal(new int[] {
-            999,
-            0,
-            0,
-            0});
-            this.numericUpDownSubtitleLineMaximumLength.Minimum = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            this.numericUpDownSubtitleLineMaximumLength.Name = "numericUpDownSubtitleLineMaximumLength";
-            this.numericUpDownSubtitleLineMaximumLength.Size = new System.Drawing.Size(56, 20);
-            this.numericUpDownSubtitleLineMaximumLength.TabIndex = 100;
-            this.numericUpDownSubtitleLineMaximumLength.Value = new decimal(new int[] {
-            100,
-            0,
-            0,
-            0});
-            this.numericUpDownSubtitleLineMaximumLength.ValueChanged += new System.EventHandler(this.UiElementChanged);
-            // 
             // buttonExport
             // 
             this.buttonExport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonExport.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonExport.Location = new System.Drawing.Point(6, 414);
+            this.buttonExport.Location = new System.Drawing.Point(6, 428);
             this.buttonExport.Name = "buttonExport";
             this.buttonExport.Size = new System.Drawing.Size(82, 23);
             this.buttonExport.TabIndex = 20;
@@ -519,7 +282,7 @@
             // 
             this.buttonImport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonImport.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonImport.Location = new System.Drawing.Point(94, 414);
+            this.buttonImport.Location = new System.Drawing.Point(94, 428);
             this.buttonImport.Name = "buttonImport";
             this.buttonImport.Size = new System.Drawing.Size(82, 23);
             this.buttonImport.TabIndex = 30;
@@ -531,7 +294,7 @@
             // 
             this.buttonCopy.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonCopy.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCopy.Location = new System.Drawing.Point(182, 414);
+            this.buttonCopy.Location = new System.Drawing.Point(182, 428);
             this.buttonCopy.Name = "buttonCopy";
             this.buttonCopy.Size = new System.Drawing.Size(82, 23);
             this.buttonCopy.TabIndex = 40;
@@ -543,7 +306,7 @@
             // 
             this.buttonRemoveAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonRemoveAll.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonRemoveAll.Location = new System.Drawing.Point(446, 414);
+            this.buttonRemoveAll.Location = new System.Drawing.Point(446, 428);
             this.buttonRemoveAll.Name = "buttonRemoveAll";
             this.buttonRemoveAll.Size = new System.Drawing.Size(123, 23);
             this.buttonRemoveAll.TabIndex = 70;
@@ -555,7 +318,7 @@
             // 
             this.buttonAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonAdd.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonAdd.Location = new System.Drawing.Point(270, 414);
+            this.buttonAdd.Location = new System.Drawing.Point(270, 428);
             this.buttonAdd.Name = "buttonAdd";
             this.buttonAdd.Size = new System.Drawing.Size(82, 23);
             this.buttonAdd.TabIndex = 50;
@@ -567,7 +330,7 @@
             // 
             this.buttonRemove.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonRemove.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonRemove.Location = new System.Drawing.Point(358, 414);
+            this.buttonRemove.Location = new System.Drawing.Point(358, 428);
             this.buttonRemove.Name = "buttonRemove";
             this.buttonRemove.Size = new System.Drawing.Size(82, 23);
             this.buttonRemove.TabIndex = 60;
@@ -592,7 +355,7 @@
             this.listViewProfiles.Location = new System.Drawing.Point(6, 19);
             this.listViewProfiles.MultiSelect = false;
             this.listViewProfiles.Name = "listViewProfiles";
-            this.listViewProfiles.Size = new System.Drawing.Size(609, 390);
+            this.listViewProfiles.Size = new System.Drawing.Size(616, 402);
             this.listViewProfiles.TabIndex = 10;
             this.listViewProfiles.UseCompatibleStateImageBehavior = false;
             this.listViewProfiles.View = System.Windows.Forms.View.Details;
@@ -628,7 +391,7 @@
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(877, 468);
+            this.buttonCancel.Location = new System.Drawing.Point(899, 492);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 205;
@@ -639,7 +402,7 @@
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(796, 468);
+            this.buttonOK.Location = new System.Drawing.Point(818, 492);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 200;
@@ -659,11 +422,425 @@
             this.toolTipDialogStylePreview.InitialDelay = 500;
             this.toolTipDialogStylePreview.ReshowDelay = 100;
             // 
+            // textBoxName
+            // 
+            this.textBoxName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxName.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.textBoxName.Location = new System.Drawing.Point(660, 35);
+            this.textBoxName.Name = "textBoxName";
+            this.textBoxName.Size = new System.Drawing.Size(250, 20);
+            this.textBoxName.TabIndex = 80;
+            this.textBoxName.TextChanged += new System.EventHandler(this.textBoxName_TextChanged);
+            // 
+            // comboBoxCpsLineLenCalc
+            // 
+            this.comboBoxCpsLineLenCalc.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxCpsLineLenCalc.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxCpsLineLenCalc.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxCpsLineLenCalc.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxCpsLineLenCalc.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxCpsLineLenCalc.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxCpsLineLenCalc.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxCpsLineLenCalc.DropDownHeight = 400;
+            this.comboBoxCpsLineLenCalc.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxCpsLineLenCalc.DropDownWidth = 170;
+            this.comboBoxCpsLineLenCalc.FormattingEnabled = true;
+            this.comboBoxCpsLineLenCalc.Location = new System.Drawing.Point(132, 313);
+            this.comboBoxCpsLineLenCalc.MaxLength = 32767;
+            this.comboBoxCpsLineLenCalc.Name = "comboBoxCpsLineLenCalc";
+            this.comboBoxCpsLineLenCalc.SelectedIndex = -1;
+            this.comboBoxCpsLineLenCalc.SelectedItem = null;
+            this.comboBoxCpsLineLenCalc.SelectedText = "";
+            this.comboBoxCpsLineLenCalc.Size = new System.Drawing.Size(174, 21);
+            this.comboBoxCpsLineLenCalc.TabIndex = 197;
+            this.comboBoxCpsLineLenCalc.UsePopupWindow = false;
+            // 
+            // comboBoxContinuationStyle
+            // 
+            this.comboBoxContinuationStyle.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxContinuationStyle.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxContinuationStyle.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxContinuationStyle.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxContinuationStyle.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxContinuationStyle.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxContinuationStyle.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxContinuationStyle.DropDownHeight = 400;
+            this.comboBoxContinuationStyle.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxContinuationStyle.DropDownWidth = 260;
+            this.comboBoxContinuationStyle.FormattingEnabled = true;
+            this.comboBoxContinuationStyle.Location = new System.Drawing.Point(132, 285);
+            this.comboBoxContinuationStyle.MaxLength = 32767;
+            this.comboBoxContinuationStyle.Name = "comboBoxContinuationStyle";
+            this.comboBoxContinuationStyle.SelectedIndex = -1;
+            this.comboBoxContinuationStyle.SelectedItem = null;
+            this.comboBoxContinuationStyle.SelectedText = "";
+            this.comboBoxContinuationStyle.Size = new System.Drawing.Size(157, 21);
+            this.comboBoxContinuationStyle.TabIndex = 195;
+            this.comboBoxContinuationStyle.UsePopupWindow = false;
+            this.comboBoxContinuationStyle.SelectedIndexChanged += new System.EventHandler(this.UiElementChanged);
+            // 
+            // comboBoxDialogStyle
+            // 
+            this.comboBoxDialogStyle.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxDialogStyle.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxDialogStyle.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxDialogStyle.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxDialogStyle.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxDialogStyle.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxDialogStyle.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxDialogStyle.DropDownHeight = 400;
+            this.comboBoxDialogStyle.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxDialogStyle.DropDownWidth = 260;
+            this.comboBoxDialogStyle.FormattingEnabled = true;
+            this.comboBoxDialogStyle.Items.AddRange(new object[] {
+            "Dash both lines with space",
+            "Dash both lines without space",
+            "Dash second line with space",
+            "Dash second line without space"});
+            this.comboBoxDialogStyle.Location = new System.Drawing.Point(103, 257);
+            this.comboBoxDialogStyle.MaxLength = 32767;
+            this.comboBoxDialogStyle.Name = "comboBoxDialogStyle";
+            this.comboBoxDialogStyle.SelectedIndex = -1;
+            this.comboBoxDialogStyle.SelectedItem = null;
+            this.comboBoxDialogStyle.SelectedText = "";
+            this.comboBoxDialogStyle.Size = new System.Drawing.Size(203, 21);
+            this.comboBoxDialogStyle.TabIndex = 194;
+            this.comboBoxDialogStyle.UsePopupWindow = false;
+            this.comboBoxDialogStyle.SelectedIndexChanged += new System.EventHandler(this.UiElementChanged);
+            // 
+            // comboBoxMergeShortLineLength
+            // 
+            this.comboBoxMergeShortLineLength.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxMergeShortLineLength.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxMergeShortLineLength.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxMergeShortLineLength.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxMergeShortLineLength.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxMergeShortLineLength.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxMergeShortLineLength.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxMergeShortLineLength.DropDownHeight = 400;
+            this.comboBoxMergeShortLineLength.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxMergeShortLineLength.DropDownWidth = 73;
+            this.comboBoxMergeShortLineLength.FormattingEnabled = true;
+            this.comboBoxMergeShortLineLength.Location = new System.Drawing.Point(233, 229);
+            this.comboBoxMergeShortLineLength.MaxLength = 32767;
+            this.comboBoxMergeShortLineLength.Name = "comboBoxMergeShortLineLength";
+            this.comboBoxMergeShortLineLength.SelectedIndex = -1;
+            this.comboBoxMergeShortLineLength.SelectedItem = null;
+            this.comboBoxMergeShortLineLength.SelectedText = "";
+            this.comboBoxMergeShortLineLength.Size = new System.Drawing.Size(73, 21);
+            this.comboBoxMergeShortLineLength.TabIndex = 180;
+            this.comboBoxMergeShortLineLength.UsePopupWindow = false;
+            this.comboBoxMergeShortLineLength.SelectedIndexChanged += new System.EventHandler(this.UiElementChanged);
+            // 
+            // numericUpDownMaxNumberOfLines
+            // 
+            this.numericUpDownMaxNumberOfLines.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownMaxNumberOfLines.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownMaxNumberOfLines.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownMaxNumberOfLines.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownMaxNumberOfLines.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownMaxNumberOfLines.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownMaxNumberOfLines.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownMaxNumberOfLines.DecimalPlaces = 0;
+            this.numericUpDownMaxNumberOfLines.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownMaxNumberOfLines.Location = new System.Drawing.Point(233, 201);
+            this.numericUpDownMaxNumberOfLines.Maximum = new decimal(new int[] {
+            25,
+            0,
+            0,
+            0});
+            this.numericUpDownMaxNumberOfLines.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownMaxNumberOfLines.Name = "numericUpDownMaxNumberOfLines";
+            this.numericUpDownMaxNumberOfLines.Size = new System.Drawing.Size(73, 20);
+            this.numericUpDownMaxNumberOfLines.TabIndex = 170;
+            this.numericUpDownMaxNumberOfLines.TabStop = false;
+            this.numericUpDownMaxNumberOfLines.ThousandsSeparator = false;
+            this.numericUpDownMaxNumberOfLines.Value = new decimal(new int[] {
+            2,
+            0,
+            0,
+            0});
+            this.numericUpDownMaxNumberOfLines.ValueChanged += new System.EventHandler(this.UiElementChanged);
+            // 
+            // numericUpDownMinGapMs
+            // 
+            this.numericUpDownMinGapMs.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownMinGapMs.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownMinGapMs.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownMinGapMs.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownMinGapMs.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownMinGapMs.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownMinGapMs.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownMinGapMs.DecimalPlaces = 0;
+            this.numericUpDownMinGapMs.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownMinGapMs.Location = new System.Drawing.Point(233, 176);
+            this.numericUpDownMinGapMs.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.numericUpDownMinGapMs.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+            this.numericUpDownMinGapMs.Name = "numericUpDownMinGapMs";
+            this.numericUpDownMinGapMs.Size = new System.Drawing.Size(73, 20);
+            this.numericUpDownMinGapMs.TabIndex = 160;
+            this.numericUpDownMinGapMs.TabStop = false;
+            this.numericUpDownMinGapMs.ThousandsSeparator = false;
+            this.numericUpDownMinGapMs.Value = new decimal(new int[] {
+            25,
+            0,
+            0,
+            0});
+            this.numericUpDownMinGapMs.ValueChanged += new System.EventHandler(this.UiElementChanged);
+            // 
+            // numericUpDownDurationMax
+            // 
+            this.numericUpDownDurationMax.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownDurationMax.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownDurationMax.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownDurationMax.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownDurationMax.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownDurationMax.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownDurationMax.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownDurationMax.DecimalPlaces = 0;
+            this.numericUpDownDurationMax.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownDurationMax.Location = new System.Drawing.Point(233, 148);
+            this.numericUpDownDurationMax.Maximum = new decimal(new int[] {
+            50000,
+            0,
+            0,
+            0});
+            this.numericUpDownDurationMax.Minimum = new decimal(new int[] {
+            3000,
+            0,
+            0,
+            0});
+            this.numericUpDownDurationMax.Name = "numericUpDownDurationMax";
+            this.numericUpDownDurationMax.Size = new System.Drawing.Size(73, 20);
+            this.numericUpDownDurationMax.TabIndex = 150;
+            this.numericUpDownDurationMax.TabStop = false;
+            this.numericUpDownDurationMax.ThousandsSeparator = false;
+            this.numericUpDownDurationMax.Value = new decimal(new int[] {
+            50000,
+            0,
+            0,
+            0});
+            this.numericUpDownDurationMax.ValueChanged += new System.EventHandler(this.UiElementChanged);
+            // 
+            // numericUpDownDurationMin
+            // 
+            this.numericUpDownDurationMin.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownDurationMin.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownDurationMin.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownDurationMin.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownDurationMin.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownDurationMin.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownDurationMin.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownDurationMin.DecimalPlaces = 0;
+            this.numericUpDownDurationMin.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownDurationMin.Location = new System.Drawing.Point(233, 122);
+            this.numericUpDownDurationMin.Maximum = new decimal(new int[] {
+            2000,
+            0,
+            0,
+            0});
+            this.numericUpDownDurationMin.Minimum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.numericUpDownDurationMin.Name = "numericUpDownDurationMin";
+            this.numericUpDownDurationMin.Size = new System.Drawing.Size(73, 20);
+            this.numericUpDownDurationMin.TabIndex = 140;
+            this.numericUpDownDurationMin.TabStop = false;
+            this.numericUpDownDurationMin.ThousandsSeparator = false;
+            this.numericUpDownDurationMin.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.numericUpDownDurationMin.ValueChanged += new System.EventHandler(this.UiElementChanged);
+            // 
+            // numericUpDownMaxWordsMin
+            // 
+            this.numericUpDownMaxWordsMin.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownMaxWordsMin.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownMaxWordsMin.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownMaxWordsMin.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownMaxWordsMin.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownMaxWordsMin.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownMaxWordsMin.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownMaxWordsMin.DecimalPlaces = 0;
+            this.numericUpDownMaxWordsMin.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownMaxWordsMin.Location = new System.Drawing.Point(233, 95);
+            this.numericUpDownMaxWordsMin.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.numericUpDownMaxWordsMin.Minimum = new decimal(new int[] {
+            4,
+            0,
+            0,
+            0});
+            this.numericUpDownMaxWordsMin.Name = "numericUpDownMaxWordsMin";
+            this.numericUpDownMaxWordsMin.Size = new System.Drawing.Size(73, 20);
+            this.numericUpDownMaxWordsMin.TabIndex = 130;
+            this.numericUpDownMaxWordsMin.TabStop = false;
+            this.numericUpDownMaxWordsMin.ThousandsSeparator = false;
+            this.numericUpDownMaxWordsMin.Value = new decimal(new int[] {
+            300,
+            0,
+            0,
+            0});
+            this.numericUpDownMaxWordsMin.ValueChanged += new System.EventHandler(this.UiElementChanged);
+            // 
+            // numericUpDownMaxCharsSec
+            // 
+            this.numericUpDownMaxCharsSec.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownMaxCharsSec.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownMaxCharsSec.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownMaxCharsSec.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownMaxCharsSec.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownMaxCharsSec.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownMaxCharsSec.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownMaxCharsSec.DecimalPlaces = 1;
+            this.numericUpDownMaxCharsSec.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.numericUpDownMaxCharsSec.Location = new System.Drawing.Point(233, 68);
+            this.numericUpDownMaxCharsSec.Maximum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.numericUpDownMaxCharsSec.Minimum = new decimal(new int[] {
+            4,
+            0,
+            0,
+            0});
+            this.numericUpDownMaxCharsSec.Name = "numericUpDownMaxCharsSec";
+            this.numericUpDownMaxCharsSec.Size = new System.Drawing.Size(73, 20);
+            this.numericUpDownMaxCharsSec.TabIndex = 120;
+            this.numericUpDownMaxCharsSec.TabStop = false;
+            this.numericUpDownMaxCharsSec.ThousandsSeparator = false;
+            this.numericUpDownMaxCharsSec.Value = new decimal(new int[] {
+            24,
+            0,
+            0,
+            0});
+            this.numericUpDownMaxCharsSec.ValueChanged += new System.EventHandler(this.UiElementChanged);
+            // 
+            // numericUpDownSubtitleLineMaximumLength
+            // 
+            this.numericUpDownSubtitleLineMaximumLength.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownSubtitleLineMaximumLength.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownSubtitleLineMaximumLength.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownSubtitleLineMaximumLength.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownSubtitleLineMaximumLength.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownSubtitleLineMaximumLength.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownSubtitleLineMaximumLength.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownSubtitleLineMaximumLength.DecimalPlaces = 0;
+            this.numericUpDownSubtitleLineMaximumLength.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownSubtitleLineMaximumLength.Location = new System.Drawing.Point(233, 14);
+            this.numericUpDownSubtitleLineMaximumLength.Maximum = new decimal(new int[] {
+            999,
+            0,
+            0,
+            0});
+            this.numericUpDownSubtitleLineMaximumLength.Minimum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.numericUpDownSubtitleLineMaximumLength.Name = "numericUpDownSubtitleLineMaximumLength";
+            this.numericUpDownSubtitleLineMaximumLength.Size = new System.Drawing.Size(73, 20);
+            this.numericUpDownSubtitleLineMaximumLength.TabIndex = 100;
+            this.numericUpDownSubtitleLineMaximumLength.TabStop = false;
+            this.numericUpDownSubtitleLineMaximumLength.ThousandsSeparator = false;
+            this.numericUpDownSubtitleLineMaximumLength.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.numericUpDownSubtitleLineMaximumLength.ValueChanged += new System.EventHandler(this.UiElementChanged);
+            // 
+            // numericUpDownOptimalCharsSec
+            // 
+            this.numericUpDownOptimalCharsSec.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownOptimalCharsSec.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownOptimalCharsSec.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownOptimalCharsSec.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownOptimalCharsSec.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownOptimalCharsSec.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownOptimalCharsSec.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownOptimalCharsSec.DecimalPlaces = 1;
+            this.numericUpDownOptimalCharsSec.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.numericUpDownOptimalCharsSec.Location = new System.Drawing.Point(233, 41);
+            this.numericUpDownOptimalCharsSec.Maximum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.numericUpDownOptimalCharsSec.Minimum = new decimal(new int[] {
+            4,
+            0,
+            0,
+            0});
+            this.numericUpDownOptimalCharsSec.Name = "numericUpDownOptimalCharsSec";
+            this.numericUpDownOptimalCharsSec.Size = new System.Drawing.Size(73, 20);
+            this.numericUpDownOptimalCharsSec.TabIndex = 110;
+            this.numericUpDownOptimalCharsSec.TabStop = false;
+            this.numericUpDownOptimalCharsSec.ThousandsSeparator = false;
+            this.numericUpDownOptimalCharsSec.Value = new decimal(new int[] {
+            11,
+            0,
+            0,
+            0});
+            this.numericUpDownOptimalCharsSec.ValueChanged += new System.EventHandler(this.UiElementChanged);
+            // 
             // SettingsProfile
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(964, 503);
+            this.ClientSize = new System.Drawing.Size(986, 527);
             this.Controls.Add(this.groupBoxStyles);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
@@ -702,7 +879,7 @@
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.ColumnHeader columnHeaderMinGap;
         private System.Windows.Forms.Label labelName;
-        private System.Windows.Forms.TextBox textBoxName;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxName;
         private System.Windows.Forms.GroupBox groupBoxGeneralRules;
         private System.Windows.Forms.Label labelOptimalCharsPerSecond;
         private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownOptimalCharsSec;
