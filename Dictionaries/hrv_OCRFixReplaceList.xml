@@ -1752,6 +1752,7 @@
     <Word from="sijaju" to="sjaju" />
     <Word from="sintersajzer" to="synthesizer" />
     <Word from="sitnisajzer" to="synthesizer" />
+    <Word from="sirem" to="sirom" />
     <Word from="sirće" to="ocat" />
     <Word from="sirćeta" to="octa" />
     <Word from="sirćetu" to="octu" />
@@ -2251,7 +2252,6 @@
     <Word from="vaspitavani" to="odgajani" />
     <Word from="vaspitavati" to="odgajati" />
     <Word from="vaške" to="uši" />
-    <Word from="vašljivi" to="ušljivi" />
     <Word from="vaznesenje" to="uznesenje" />
     <Word from="važi" to="vrijedi" />
     <Word from="večan" to="vječan" />
@@ -3310,6 +3310,7 @@
     <LinePart from="sa njim" to="s njim" />
     <LinePart from="sa njima" to="s njima" />
     <LinePart from="sa njom" to="s njom" />
+    <LinePart from="Sa njom" to="S njom" />
     <LinePart from="sa ovim" to="s ovim" />
     <LinePart from="sa tim" to="s tim" />
     <LinePart from="sa tom" to="s tom" />
@@ -4431,6 +4432,7 @@
     <RegEx find="mpz" replaceWith="mož" />
     <RegEx find="mros" replaceWith="mors" />
     <RegEx find="msč" replaceWith="mač" />
+    <RegEx find="msl" replaceWith="misl" />
     <RegEx find="mtić" replaceWith="mtit ć" />
     <RegEx find="mwn" replaceWith="men" />
     <RegEx find="napredi" replaceWith="naprijedi" />
@@ -4635,6 +4637,7 @@
     <RegEx find="urfovan" replaceWith="urfan" />
     <RegEx find="u([šv])ać" replaceWith="u$1at ć" />
     <RegEx find="uzp" replaceWith="usp" />
+    <RegEx find="vašlji" replaceWith="ušlji" />
     <RegEx find="(?&lt;!kr|m)užić" replaceWith="užit ć" />
     <RegEx find="vdr" replaceWith="vrd" />
     <RegEx find="veri([lt])" replaceWith="vjeri$1" />
