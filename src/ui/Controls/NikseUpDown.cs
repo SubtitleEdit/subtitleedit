@@ -109,6 +109,22 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
+
+        public new Font Font
+        {
+            get => base.Font;
+            set
+            {
+                if (_textBox != null)
+                {
+                    _textBox.Font = value;
+                }
+
+                base.Font = value;
+                Invalidate();
+            }
+        }
+
         private Color _buttonForeColorOver;
         private Brush _buttonForeColorOverBrush;
         [Category("NikseUpDown"), Description("Gets or sets the button foreground mouse over color"), RefreshProperties(RefreshProperties.Repaint)]
