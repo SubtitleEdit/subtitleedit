@@ -17,6 +17,7 @@ namespace Nikse.SubtitleEdit.Controls
         public new event KeyEventHandler KeyDown;
 
         private decimal _value;
+        private bool _dirty;
 
         [Category("NikseUpDown"), Description("Gets or sets the default value in textBox"), RefreshProperties(RefreshProperties.Repaint)]
         public decimal Value
@@ -33,6 +34,7 @@ namespace Nikse.SubtitleEdit.Controls
                     _value = Math.Round(value, DecimalPlaces);
                 }
 
+                _dirty = false;
                 Invalidate();
                 ValueChanged?.Invoke(this, null);
             }
@@ -250,6 +252,15 @@ namespace Nikse.SubtitleEdit.Controls
                     AddValue(Increment);
                     e.Handled = true;
                 }
+                else if (e.KeyData != (Keys.Tab | Keys.Shift) &&
+                         e.KeyData != Keys.Tab &&
+                         e.KeyData != Keys.Left &&
+                         e.KeyData != Keys.Right)
+                {
+                    _dirty = true;
+                    KeyDown?.Invoke(sender, e);
+                    Invalidate();
+                }
                 else
                 {
                     KeyDown?.Invoke(sender, e);
@@ -257,6 +268,8 @@ namespace Nikse.SubtitleEdit.Controls
             };
             _textBox.LostFocus += (sender, args) =>
             {
+                _dirty = false;
+                AddValue(0);
                 SetText(true);
                 Invalidate();
             };
@@ -306,6 +319,11 @@ namespace Nikse.SubtitleEdit.Controls
 
         private void _textBox_TextChanged(object sender, EventArgs e)
         {
+            if (_dirty)
+            {
+                return;
+            }
+
             var text = _textBox.Text.Trim();
             if (decimal.TryParse(text, NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.DefaultThreadCurrentCulture, out var result))
             {
@@ -360,6 +378,8 @@ namespace Nikse.SubtitleEdit.Controls
         /// <param name="value">Value to increment/decrement</param>
         private void AddValue(decimal value)
         {
+            _dirty = false;
+
             if (string.IsNullOrEmpty(_textBox.Text))
             {
                 Value = 0 >= Minimum && 0 <= Maximum ? 0 : Minimum;
@@ -539,7 +559,10 @@ namespace Nikse.SubtitleEdit.Controls
             _textBox.Height = Height - 4;
             _textBox.Width = Width - ButtonsWidth - 3;
             _textBox.Invalidate();
-            SetText();
+            if (!_dirty)
+            {
+                SetText();
+            }
 
             if (!Enabled)
             {
