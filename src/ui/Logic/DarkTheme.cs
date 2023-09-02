@@ -936,8 +936,8 @@ namespace Nikse.SubtitleEdit.Logic
             private readonly Size _size;
             private readonly bool _failed;
 
-            private static readonly Color SelectedTabColor = Color.FromArgb(0, 122, 204);
-            private static readonly Color HighlightedTabColor = Color.FromArgb(28, 151, 234);
+            private static readonly Color SelectedTabColor = Color.FromArgb(24, 52, 75);
+            private static readonly Color HighlightedTabColor = Color.FromArgb(27, 41, 53);
 
             private const int ImagePadding = 6;
             private const int SelectedTabPadding = 2;
