@@ -2,6 +2,7 @@
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Forms.FixCommonErrors;
 using System;
+using System.Drawing;
 
 namespace Test.Logic
 {
@@ -933,6 +934,39 @@ namespace Test.Logic
             var result = Utilities.UrlEncode(text);
             var resultLength = Utilities.UrlEncodeLength(text);
             Assert.AreEqual(resultLength, result.Length);
+        }
+
+        [TestMethod]
+        public void GetColorFromString1()
+        {
+            var c = HtmlUtil.GetColorFromString("#010203ff");
+
+            Assert.AreEqual(byte.MaxValue, c.A);
+            Assert.AreEqual(1, c.R);
+            Assert.AreEqual(2, c.G);
+            Assert.AreEqual(3, c.B);
+        }
+
+        [TestMethod]
+        public void GetColorFromString2()
+        {
+            var c = HtmlUtil.GetColorFromString("rgb(1,2,3)");
+
+            Assert.AreEqual(byte.MaxValue, c.A);
+            Assert.AreEqual(1, c.R);
+            Assert.AreEqual(2, c.G);
+            Assert.AreEqual(3, c.B);
+        }
+
+        [TestMethod]
+        public void GetColorFromString3()
+        {
+            var c = HtmlUtil.GetColorFromString("rgba(1,2,3, 1)");
+
+            Assert.AreEqual(byte.MaxValue, c.A);
+            Assert.AreEqual(1, c.R);
+            Assert.AreEqual(2, c.G);
+            Assert.AreEqual(3, c.B);
         }
     }
 }

@@ -129,7 +129,7 @@ namespace Nikse.SubtitleEdit.Logic
                                     s = s.Trim('\'');
                                     try
                                     {
-                                        fontColor = ColorTranslator.FromHtml(s);
+                                        fontColor = HtmlUtil.GetColorFromString(s);
                                         fontFound = true;
                                     }
                                     catch
@@ -139,7 +139,7 @@ namespace Nikse.SubtitleEdit.Logic
                                         {
                                             try
                                             {
-                                                fontColor = ColorTranslator.FromHtml("#" + s);
+                                                fontColor = HtmlUtil.GetColorFromString("#" + s);
                                                 fontFound = true;
                                             }
                                             catch

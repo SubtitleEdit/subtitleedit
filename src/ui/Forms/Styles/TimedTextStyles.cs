@@ -229,24 +229,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
             subItem = new ListViewItem.ListViewSubItem(item, string.Empty);
             subItem.Text = color;
-            Color c = Color.White;
-            try
-            {
-                if (color.StartsWith("rgb(", StringComparison.Ordinal))
-                {
-                    string[] arr = color.Remove(0, 4).TrimEnd(')').Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-                    c = Color.FromArgb(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]));
-                }
-                else
-                {
-                    c = ColorTranslator.FromHtml(color);
-                }
-            }
-            catch
-            {
-                // ignored
-            }
-
+            var c = HtmlUtil.GetColorFromString(color);
             subItem.BackColor = c;
             item.SubItems.Add(subItem);
 
@@ -354,23 +337,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                         comboBoxFontWeight.SelectedIndex = 1;
                     }
 
-                    Color color = Color.White;
-                    try
-                    {
-                        if (fontColor.StartsWith("rgb(", StringComparison.Ordinal))
-                        {
-                            string[] arr = fontColor.Remove(0, 4).TrimEnd(')').Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-                            color = Color.FromArgb(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]));
-                        }
-                        else
-                        {
-                            color = ColorTranslator.FromHtml(fontColor);
-                        }
-                    }
-                    catch (Exception exception)
-                    {
-                        MessageBox.Show("Unable to read color: " + fontColor + " - " + exception.Message);
-                    }
+                    var color = HtmlUtil.GetColorFromString(fontColor);
                     panelFontColor.BackColor = color;
                 }
             }

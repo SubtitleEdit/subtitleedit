@@ -1520,6 +1520,7 @@ $HorzAlign          =   Center
         public bool ShowBetaStuff { get; set; }
         public bool DebugTranslationSync { get; set; }
         public bool UseLegacyDownloader { get; set; }
+        public bool UseLegacyHtmlColor { get; set; } = true;
 
         public GeneralSettings()
         {
@@ -3120,6 +3121,8 @@ $HorzAlign          =   Center
         //    w.Close();
         //}
 
+        public static bool UseLegacyHtmlColor = true;
+
         public static Settings GetSettings()
         {
             var settings = new Settings();
@@ -3136,56 +3139,13 @@ $HorzAlign          =   Center
                         settings.General.DefaultEncoding = TextEncoding.Utf8WithBom;
                     }
 
-                    if (string.IsNullOrEmpty(settings.Version))
-                    {  // 3.5.14 or older
-                        if (string.IsNullOrEmpty(settings.Shortcuts.MainVideoToggleStartEndCurrent))
-                        {
-                            settings.Shortcuts.MainVideoToggleStartEndCurrent = "F4";
-                        }
-                        if (string.IsNullOrEmpty(settings.Shortcuts.MainVideoPlaySelectedLines))
-                        {
-                            settings.Shortcuts.MainVideoPlaySelectedLines = "F5";
-                        }
-                        if (string.IsNullOrEmpty(settings.Shortcuts.MainVideoGoToStartCurrent))
-                        {
-                            settings.Shortcuts.MainVideoGoToStartCurrent = "F6";
-                        }
-                        if (string.IsNullOrEmpty(settings.Shortcuts.MainVideo3000MsLeft))
-                        {
-                            settings.Shortcuts.MainVideo3000MsLeft = "F7";
-                        }
-                        if (string.IsNullOrEmpty(settings.Shortcuts.MainAdjustSetStartAndOffsetTheRest2))
-                        {
-                            settings.Shortcuts.MainAdjustSetStartAndOffsetTheRest2 = "F9";
-                        }
-                        if (string.IsNullOrEmpty(settings.Shortcuts.MainAdjustSetEndAndGotoNext))
-                        {
-                            settings.Shortcuts.MainAdjustSetEndAndGotoNext = "F10";
-                        }
-                        if (string.IsNullOrEmpty(settings.Shortcuts.MainCreateSetStart))
-                        {
-                            settings.Shortcuts.MainCreateSetStart = "F11";
-                        }
-                        if (string.IsNullOrEmpty(settings.Shortcuts.MainCreateSetEnd))
-                        {
-                            settings.Shortcuts.MainCreateSetEnd = "F12";
-                        }
-                        if (string.IsNullOrEmpty(settings.Shortcuts.MainCreateInsertSubAtVideoPos))
-                        {
-                            settings.Shortcuts.MainCreateInsertSubAtVideoPos = "Shift+F9";
-                        }
-                        if (string.IsNullOrEmpty(settings.Shortcuts.MainVideoGoToStartCurrent))
-                        {
-                            settings.Shortcuts.MainVideoGoToStartCurrent = "Shift+F11";
-                        }
-                    }
-                    else if (settings.Version.StartsWith("3.5.15", StringComparison.Ordinal) ||
-                             settings.Version.StartsWith("3.5.14", StringComparison.Ordinal) ||
-                             settings.Version.StartsWith("3.5.13", StringComparison.Ordinal))
-                    {
-                        settings.Shortcuts.MainTranslateAuto = "Control+Shift+G";
-                        settings.Tools.MicrosoftTranslatorTokenEndpoint = "https://api.cognitive.microsoft.com/sts/v1.0/issueToken";
-                    }
+                    //if (settings.Version.StartsWith("3.", StringComparison.Ordinal))
+                    //{
+                    //    UseHexAlphaBefore = true;
+                    //}
+
+                    settings.General.UseLegacyHtmlColor = false;
+                    UseLegacyHtmlColor = false;
                 }
                 catch (Exception exception)
                 {
@@ -4368,7 +4328,7 @@ $HorzAlign          =   Center
             {
                 settings.General.ListViewTextDisplayIndex = Convert.ToInt32(subNode.InnerText.Trim(), CultureInfo.InvariantCulture);
             }
-            
+
 
             subNode = node.SelectSingleNode("DirectShowDoubleLoad");
             if (subNode != null)
@@ -4439,19 +4399,19 @@ $HorzAlign          =   Center
             subNode = node.SelectSingleNode("MpvPreviewTextPrimaryColor");
             if (subNode != null)
             {
-                settings.General.MpvPreviewTextPrimaryColor = ColorTranslator.FromHtml(subNode.InnerText.Trim());
+                settings.General.MpvPreviewTextPrimaryColor = FromHtml(subNode.InnerText.Trim());
             }
 
             subNode = node.SelectSingleNode("MpvPreviewTextOutlineColor");
             if (subNode != null)
             {
-                settings.General.MpvPreviewTextOutlineColor = ColorTranslator.FromHtml(subNode.InnerText.Trim());
+                settings.General.MpvPreviewTextOutlineColor = FromHtml(subNode.InnerText.Trim());
             }
 
             subNode = node.SelectSingleNode("MpvPreviewTextBackgroundColor");
             if (subNode != null)
             {
-                settings.General.MpvPreviewTextBackgroundColor = ColorTranslator.FromHtml(subNode.InnerText.Trim());
+                settings.General.MpvPreviewTextBackgroundColor = FromHtml(subNode.InnerText.Trim());
             }
 
             subNode = node.SelectSingleNode("MpvPreviewTextOutlineWidth");
@@ -4806,6 +4766,13 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.General.UseLegacyDownloader = Convert.ToBoolean(subNode.InnerText.Trim(), CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("UseLegacyHtmlColor");
+            if (subNode != null)
+            {
+                settings.General.UseLegacyHtmlColor = Convert.ToBoolean(subNode.InnerText.Trim(), CultureInfo.InvariantCulture);
+                UseLegacyHtmlColor = settings.General.UseLegacyHtmlColor;
             }
 
             subNode = node.SelectSingleNode("NewEmptyDefaultMs");
@@ -5164,49 +5131,49 @@ $HorzAlign          =   Center
             subNode = node.SelectSingleNode("Color1");
             if (subNode != null)
             {
-                settings.Tools.Color1 = ColorTranslator.FromHtml(subNode.InnerText);
+                settings.Tools.Color1 = FromHtml(subNode.InnerText);
             }
 
             subNode = node.SelectSingleNode("Color2");
             if (subNode != null)
             {
-                settings.Tools.Color2 = ColorTranslator.FromHtml(subNode.InnerText);
+                settings.Tools.Color2 = FromHtml(subNode.InnerText);
             }
 
             subNode = node.SelectSingleNode("Color3");
             if (subNode != null)
             {
-                settings.Tools.Color3 = ColorTranslator.FromHtml(subNode.InnerText);
+                settings.Tools.Color3 = FromHtml(subNode.InnerText);
             }
 
             subNode = node.SelectSingleNode("Color4");
             if (subNode != null)
             {
-                settings.Tools.Color4 = ColorTranslator.FromHtml(subNode.InnerText);
+                settings.Tools.Color4 = FromHtml(subNode.InnerText);
             }
 
             subNode = node.SelectSingleNode("Color5");
             if (subNode != null)
             {
-                settings.Tools.Color5 = ColorTranslator.FromHtml(subNode.InnerText);
+                settings.Tools.Color5 = FromHtml(subNode.InnerText);
             }
 
             subNode = node.SelectSingleNode("Color6");
             if (subNode != null)
             {
-                settings.Tools.Color6 = ColorTranslator.FromHtml(subNode.InnerText);
+                settings.Tools.Color6 = FromHtml(subNode.InnerText);
             }
 
             subNode = node.SelectSingleNode("Color7");
             if (subNode != null)
             {
-                settings.Tools.Color7 = ColorTranslator.FromHtml(subNode.InnerText);
+                settings.Tools.Color7 = FromHtml(subNode.InnerText);
             }
 
             subNode = node.SelectSingleNode("Color8");
             if (subNode != null)
             {
-                settings.Tools.Color8 = ColorTranslator.FromHtml(subNode.InnerText);
+                settings.Tools.Color8 = FromHtml(subNode.InnerText);
             }
 
             subNode = node.SelectSingleNode("ListViewShowColumnStartTime");
@@ -6418,7 +6385,7 @@ $HorzAlign          =   Center
             subNode = node.SelectSingleNode("BlankVideoColor");
             if (subNode != null)
             {
-                settings.Tools.BlankVideoColor = ColorTranslator.FromHtml(subNode.InnerText);
+                settings.Tools.BlankVideoColor = FromHtml(subNode.InnerText);
             }
 
             subNode = node.SelectSingleNode("BlankVideoMinutes");
@@ -6442,19 +6409,19 @@ $HorzAlign          =   Center
             subNode = node.SelectSingleNode("AssaProgressBarBackColor");
             if (subNode != null)
             {
-                settings.Tools.AssaProgressBarBackColor = ColorTranslator.FromHtml(subNode.InnerText);
+                settings.Tools.AssaProgressBarBackColor = FromHtml(subNode.InnerText);
             }
 
             subNode = node.SelectSingleNode("AssaProgressBarForeColor");
             if (subNode != null)
             {
-                settings.Tools.AssaProgressBarForeColor = ColorTranslator.FromHtml(subNode.InnerText);
+                settings.Tools.AssaProgressBarForeColor = FromHtml(subNode.InnerText);
             }
 
             subNode = node.SelectSingleNode("AssaProgressBarTextColor");
             if (subNode != null)
             {
-                settings.Tools.AssaProgressBarTextColor = ColorTranslator.FromHtml(subNode.InnerText);
+                settings.Tools.AssaProgressBarTextColor = FromHtml(subNode.InnerText);
             }
 
             subNode = node.SelectSingleNode("AssaProgressBarHeight");
@@ -9680,7 +9647,7 @@ $HorzAlign          =   Center
                 subNode = node.SelectSingleNode("MainVideoAudioExtractAudioSelectedLines");
                 if (subNode != null)
                 {
-                    shortcuts.MainVideoAudioExtractAudioSelectedLines= subNode.InnerText;
+                    shortcuts.MainVideoAudioExtractAudioSelectedLines = subNode.InnerText;
                 }
 
                 subNode = node.SelectSingleNode("MainSpellCheck");
@@ -11228,6 +11195,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("ShowBetaStuff", settings.General.ShowBetaStuff.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("DebugTranslationSync", settings.General.DebugTranslationSync.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("UseLegacyDownloader", settings.General.UseLegacyDownloader.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("UseLegacyHtmlColor", settings.General.UseLegacyHtmlColor.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("NewEmptyDefaultMs", settings.General.NewEmptyDefaultMs.ToString(CultureInfo.InvariantCulture));
 
                 textWriter.WriteEndElement();
@@ -12036,20 +12004,41 @@ $HorzAlign          =   Center
 
             if (s.Length == 8)
             {
-                if (!int.TryParse(s.Substring(0, 2), NumberStyles.HexNumber, null, out var alpha))
+                if (UseLegacyHtmlColor)
                 {
-                    alpha = 255; // full solid color
-                }
+                    if (!int.TryParse(s.Substring(0, 2), NumberStyles.HexNumber, null, out var alpha))
+                    {
+                        alpha = 255; // full solid color
+                    }
 
-                s = s.Substring(2);
-                try
-                {
-                    var c = ColorTranslator.FromHtml("#" + s);
-                    return Color.FromArgb(alpha, c);
+                    s = s.Substring(2);
+                    try
+                    {
+                        var c = HtmlUtil.GetColorFromString("#" + s);
+                        return Color.FromArgb(alpha, c);
+                    }
+                    catch
+                    {
+                        return Color.White;
+                    }
                 }
-                catch
+                else
                 {
-                    return Color.White;
+                    if (!int.TryParse(s.Substring(6, 2), NumberStyles.HexNumber, null, out var alpha))
+                    {
+                        alpha = 255; // full solid color
+                    }
+
+                    s = s.Substring(0, 6);
+                    try
+                    {
+                        var c = HtmlUtil.GetColorFromString("#" + s);
+                        return Color.FromArgb(alpha, c);
+                    }
+                    catch
+                    {
+                        return Color.White;
+                    }
                 }
             }
 

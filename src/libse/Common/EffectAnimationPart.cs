@@ -64,7 +64,8 @@ namespace Nikse.SubtitleEdit.Core.Common
                                 var arr = s.Remove(0, 4).TrimEnd(')').Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                                 return Color.FromArgb(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]));
                             }
-                            return ColorTranslator.FromHtml(s);
+
+                            return HtmlUtil.GetColorFromString(s);
                         }
                         catch
                         {

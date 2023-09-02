@@ -344,23 +344,7 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                             color = node.Attributes["tts:color"].Value.Trim();
                         }
 
-                        Color c;
-                        try
-                        {
-                            if (color.StartsWith("rgb(", StringComparison.Ordinal))
-                            {
-                                var arr = color.Remove(0, 4).TrimEnd(')').Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-                                c = Color.FromArgb(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]));
-                            }
-                            else
-                            {
-                                c = ColorTranslator.FromHtml(color);
-                            }
-                        }
-                        catch
-                        {
-                            c = Color.White;
-                        }
+                        var c = HtmlUtil.GetColorFromString(color);
 
                         var fontSize = "20";
                         if (node.Attributes["tts:fontSize"] != null)

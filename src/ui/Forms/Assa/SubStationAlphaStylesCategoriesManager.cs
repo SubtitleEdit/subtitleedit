@@ -12,7 +12,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 {
     public sealed partial class SubStationAlphaStylesCategoriesManager : Form
     {
-        internal static readonly Color _defaultCategoryColor = Configuration.Settings.General.UseDarkTheme? Color.LimeGreen : Color.Green;
+        internal static readonly Color DefaultCategoryColor = Configuration.Settings.General.UseDarkTheme? Color.LimeGreen : Color.Green;
 
         internal const string Category = "Category";
         internal const string CategoryName = "Name";
@@ -142,7 +142,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         {
             lvi.UseItemStyleForSubItems = !isDefault;
             lvi.SubItems[lvi.SubItems.Count - 1].Font = new Font(listViewCategories.Font, isDefault ? FontStyle.Bold : FontStyle.Regular);
-            lvi.SubItems[lvi.SubItems.Count - 1].ForeColor = isDefault ? _defaultCategoryColor : UiUtil.ForeColor;
+            lvi.SubItems[lvi.SubItems.Count - 1].ForeColor = isDefault ? DefaultCategoryColor : UiUtil.ForeColor;
         }
 
         private void UpdateSelectedIndices(int startingIndex = -1, int numberOfSelectedItems = 1)
@@ -432,25 +432,25 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                             subNode = styleNode.SelectSingleNode("Primary");
                             if (subNode != null)
                             {
-                                style.Primary = ColorTranslator.FromHtml(subNode.InnerText);
+                                style.Primary = HtmlUtil.GetColorFromString(subNode.InnerText);
                             }
 
                             subNode = styleNode.SelectSingleNode("Secondary");
                             if (subNode != null)
                             {
-                                style.Secondary = ColorTranslator.FromHtml(subNode.InnerText);
+                                style.Secondary = HtmlUtil.GetColorFromString(subNode.InnerText);
                             }
 
                             subNode = styleNode.SelectSingleNode("Outline");
                             if (subNode != null)
                             {
-                                style.Outline = ColorTranslator.FromHtml(subNode.InnerText);
+                                style.Outline = HtmlUtil.GetColorFromString(subNode.InnerText);
                             }
 
                             subNode = styleNode.SelectSingleNode("Background");
                             if (subNode != null)
                             {
-                                style.Background = ColorTranslator.FromHtml(subNode.InnerText);
+                                style.Background = HtmlUtil.GetColorFromString(subNode.InnerText);
                             }
 
                             subNode = styleNode.SelectSingleNode("ShadowWidth");

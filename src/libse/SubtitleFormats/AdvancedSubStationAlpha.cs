@@ -379,10 +379,10 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                 return DefaultHeader;
             }
 
-            return scriptInfo.Trim() + Environment.NewLine + 
+            return scriptInfo.Trim() + Environment.NewLine +
                    Environment.NewLine +
-                   "[V4+ Styles]" + Environment.NewLine + 
-                   SsaStyle.DefaultAssStyleFormat + Environment.NewLine + 
+                   "[V4+ Styles]" + Environment.NewLine +
+                   SsaStyle.DefaultAssStyleFormat + Environment.NewLine +
                    style.ToString().Trim() + Environment.NewLine +
                    Environment.NewLine +
                    "[Events]";
