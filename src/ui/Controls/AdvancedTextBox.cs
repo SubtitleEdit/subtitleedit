@@ -454,17 +454,7 @@ namespace Nikse.SubtitleEdit.Controls
                     var color = text.Substring(colorStart, colorEnd - colorStart);
                     try
                     {
-                        Color c;
-                        if (color.StartsWith("rgb(", StringComparison.Ordinal))
-                        {
-                            var arr = color.Remove(0, 4).TrimEnd(')').Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-                            c = Color.FromArgb(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]));
-                        }
-                        else
-                        {
-                            c = ColorTranslator.FromHtml(color);
-                        }
-
+                        var c = HtmlUtil.GetColorFromString(color);
                         SetForeColorAndChangeBackColorIfClose(colorStart, colorEnd, c);
                     }
                     catch

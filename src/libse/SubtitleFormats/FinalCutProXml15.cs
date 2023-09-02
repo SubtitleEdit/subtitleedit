@@ -263,7 +263,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                         s = s.Trim('\'');
                                         try
                                         {
-                                            var fontColor = ColorTranslator.FromHtml(s);
+                                            var fontColor = HtmlUtil.GetColorFromString(s);
                                             var newStyle = new FcpXmlStyle(styles[styles.Count - 1]);
                                             newStyle.FontColor = fontColor;
                                             styles.Add(newStyle);

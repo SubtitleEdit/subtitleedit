@@ -14037,7 +14037,7 @@ namespace Nikse.SubtitleEdit.Forms
             var format = GetCurrentSubtitleFormat();
             var isAssa = format.GetType() == typeof(AdvancedSubStationAlpha);
             var isWebVtt = format.Name == WebVTT.NameOfFormat || format.Name == WebVTTFileWithLineNumber.NameOfFormat;
-            var c = ColorTranslator.FromHtml(color);
+            var c = HtmlUtil.GetColorFromString(color);
 
             if (selectedText)
             {
@@ -14210,7 +14210,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (IsAssa())
             {
-                var c = ColorTranslator.FromHtml(color);
+                var c = HtmlUtil.GetColorFromString(color);
                 var assaColor = AdvancedSubStationAlpha.GetSsaColorStringForEvent(c);
                 if (allSelected)
                 {
@@ -14234,7 +14234,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (format.Name == WebVTT.NameOfFormat || format.Name == WebVTTFileWithLineNumber.NameOfFormat)
             {
-                var c = ColorTranslator.FromHtml(color);
+                var c = HtmlUtil.GetColorFromString(color);
                 WebVttStyle styleWithColor = WebVttHelper.GetOnlyColorStyle(c, _subtitle.Header);
                 if (styleWithColor == null)
                 {
@@ -14337,7 +14337,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 try
                 {
-                    var c = ColorTranslator.FromHtml(color);
+                    var c = HtmlUtil.GetColorFromString(color);
                     p.Text = HtmlUtil.RemoveAssaColor(p.Text);
                     p.Text = "{\\" + AdvancedSubStationAlpha.GetSsaColorStringForEvent(c) + "&}" + p.Text;
                 }
@@ -14353,7 +14353,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 try
                 {
-                    var c = ColorTranslator.FromHtml(color);
+                    var c = HtmlUtil.GetColorFromString(color);
                     var existingStyle = WebVttHelper.GetOnlyColorStyle(c, _subtitle.Header);
                     if (existingStyle != null)
                     {

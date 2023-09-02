@@ -912,7 +912,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public static string ColorToHexWithTransparency(Color c)
         {
-            return $"#{c.A:x2}{c.R:x2}{c.G:x2}{c.B:x2}";
+            return $"#{c.R:x2}{c.G:x2}{c.B:x2}{c.A:x2}";
         }
 
         public static int GetMaxLineLength(string text)
@@ -1798,8 +1798,38 @@ namespace Nikse.SubtitleEdit.Core.Common
                 var color = text.Substring(start, end - start).TrimStart('\\').TrimStart('1').TrimStart('c');
                 color = color.RemoveChar('&').TrimStart('H');
                 color = color.PadLeft(6, '0');
-                return AdvancedSubStationAlpha.GetSsaColor("h" + color, defaultColor);
-                //TODO: alpha
+                var c= AdvancedSubStationAlpha.GetSsaColor("h" + color, defaultColor);
+
+
+                // alpha
+                start = text.IndexOf(@"\alpha", StringComparison.Ordinal);
+                if (start >= 0)
+                {
+                    end = text.IndexOf('}', start);
+                    if (end < 0)
+                    {
+                        return defaultColor;
+                    }
+
+                    nextTagIdx = text.IndexOf('\\', start + 2);
+                    if (nextTagIdx > 0 && nextTagIdx < end)
+                    {
+                        end = nextTagIdx;
+                    }
+
+                    if (end > 0)
+                    {
+                        var alpha = text.Substring(start, end - start).TrimStart('\\').Trim();
+                        alpha = alpha.Remove(0, "alpha".Length).Trim('&').TrimStart('H');
+                        if (int.TryParse(alpha, NumberStyles.HexNumber, null, out var a))
+                        {
+                            var realAlpha = byte.MaxValue - a;
+                            c = Color.FromArgb(realAlpha, c);
+                        }
+                    }
+                }
+
+                return c;
             }
 
             return defaultColor;
@@ -1833,6 +1863,39 @@ namespace Nikse.SubtitleEdit.Core.Common
                                 var arr = s.Remove(0, 4).TrimEnd(')').Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                                 return Color.FromArgb(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]));
                             }
+
+                            if (s.StartsWith("rgba(", StringComparison.OrdinalIgnoreCase))
+                            {
+                                var arr = s
+                                    .RemoveChar(' ')
+                                    .Remove(0, 5)
+                                    .TrimEnd(')')
+                                    .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+
+                                var alpha = byte.MaxValue;
+                                if (arr.Length == 4 && float.TryParse(arr[3], NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var f2))
+                                {
+                                    if (f2 >= 0 && f2 < 1)
+                                    {
+                                        alpha = (byte)(f2 * byte.MaxValue);
+                                    }
+                                }
+
+                                return Color.FromArgb(alpha, int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]));
+                            }
+
+                            if (s.Length == 9 && s.StartsWith("#"))
+                            {
+                                if (!int.TryParse(s.Substring(7, 2), NumberStyles.HexNumber, null, out var alpha))
+                                {
+                                    alpha = 255; // full solid color
+                                }
+
+                                s = s.Substring(1, 6);
+                                var c = ColorTranslator.FromHtml("#" + s);
+                                return Color.FromArgb(alpha, c);
+                            }
+
                             return ColorTranslator.FromHtml(s);
                         }
                         catch

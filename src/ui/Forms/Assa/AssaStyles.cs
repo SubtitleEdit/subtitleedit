@@ -796,16 +796,9 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             {
                 alpha = $"{255 - a:X2}";
             }
-            c = $"#{alpha}{c.Substring(c.Length - 2, 2)}{c.Substring(c.Length - 4, 2)}{c.Substring(c.Length - 6, 2)}";
+            c = $"#{c.Substring(c.Length - 2, 2)}{c.Substring(c.Length - 4, 2)}{c.Substring(c.Length - 6, 2)}{alpha}";
             c = c.ToLowerInvariant();
-            try
-            {
-                return ColorTranslator.FromHtml(c);
-            }
-            catch
-            {
-                return Color.Yellow;
-            }
+            return HtmlUtil.GetColorFromString(c);
         }
 
         private bool SetSsaStyle(string styleName, string propertyName, string propertyValue)
@@ -2489,7 +2482,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             _currentCategory = focusCategory;
 
             labelStorageCategory.ForeColor = focusCategory.IsDefault ?
-                SubStationAlphaStylesCategoriesManager._defaultCategoryColor :
+                SubStationAlphaStylesCategoriesManager.DefaultCategoryColor :
                 UiUtil.ForeColor;
 
             buttonStorageRemove.Enabled = listViewStorage.SelectedItems.Count > 0;
