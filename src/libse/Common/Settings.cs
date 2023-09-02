@@ -1672,7 +1672,7 @@ $HorzAlign          =   Center
             DefaultVideoOffsetInMsList = "36000000;3600000";
             DarkThemeForeColor = Color.FromArgb(155, 155, 155);
             DarkThemeBackColor = Color.FromArgb(30, 30, 30);
-            DarkThemeDisabledColor = Color.FromArgb(120, 120, 120); ;
+            DarkThemeDisabledColor = Color.FromArgb(120, 120, 120);
             LastColorPickerColor = Color.Yellow;
             LastColorPickerColor1 = Color.Red;
             LastColorPickerColor2 = Color.Green;
@@ -3338,6 +3338,14 @@ $HorzAlign          =   Center
             // General
             node = doc.DocumentElement.SelectSingleNode("General");
 
+            var useLegacyHtmlColorNode = node.SelectSingleNode("UseLegacyHtmlColor");
+            if (useLegacyHtmlColorNode != null)
+            {
+                settings.General.UseLegacyHtmlColor = Convert.ToBoolean(useLegacyHtmlColorNode.InnerText.Trim(), CultureInfo.InvariantCulture);
+                UseLegacyHtmlColor = settings.General.UseLegacyHtmlColor;
+            }
+
+
             // Profiles
             int profileCount = 0;
             foreach (XmlNode listNode in node.SelectNodes("Profiles/Profile"))
@@ -4268,7 +4276,6 @@ $HorzAlign          =   Center
                 settings.General.ListViewTextWidth = Convert.ToInt32(subNode.InnerText.Trim(), CultureInfo.InvariantCulture);
             }
 
-
             subNode = node.SelectSingleNode("ListViewNumberDisplayIndex");
             if (subNode != null)
             {
@@ -4328,7 +4335,6 @@ $HorzAlign          =   Center
             {
                 settings.General.ListViewTextDisplayIndex = Convert.ToInt32(subNode.InnerText.Trim(), CultureInfo.InvariantCulture);
             }
-
 
             subNode = node.SelectSingleNode("DirectShowDoubleLoad");
             if (subNode != null)
@@ -4766,13 +4772,6 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.General.UseLegacyDownloader = Convert.ToBoolean(subNode.InnerText.Trim(), CultureInfo.InvariantCulture);
-            }
-
-            subNode = node.SelectSingleNode("UseLegacyHtmlColor");
-            if (subNode != null)
-            {
-                settings.General.UseLegacyHtmlColor = Convert.ToBoolean(subNode.InnerText.Trim(), CultureInfo.InvariantCulture);
-                UseLegacyHtmlColor = settings.General.UseLegacyHtmlColor;
             }
 
             subNode = node.SelectSingleNode("NewEmptyDefaultMs");
