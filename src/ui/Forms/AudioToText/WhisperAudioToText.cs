@@ -1,4 +1,4 @@
-﻿using Nikse.SubtitleEdit.Core.AudioToText;
+using Nikse.SubtitleEdit.Core.AudioToText;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
@@ -86,7 +86,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             removeTemporaryFilesToolStripMenuItem.Text = LanguageSettings.Current.AudioToText.RemoveTemporaryFiles;
             buttonAdvanced.Text = LanguageSettings.Current.General.Advanced;
             labelAdvanced.Text = Configuration.Settings.Tools.WhisperExtraSettings;
-            downloadCUDAForPerfviewsWhisperFasterToolStripMenuItem.Text = LanguageSettings.Current.AudioToText.DownloadFasterWhisperCuda;
+            downloadCUDAForPurfviewsWhisperFasterToolStripMenuItem.Text = LanguageSettings.Current.AudioToText.DownloadFasterWhisperCuda;
 
             columnHeaderFileName.Text = LanguageSettings.Current.JoinSubtitles.FileName;
 
@@ -1832,7 +1832,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 setCPPConstmeModelsFolderToolStripMenuItem.Visible = false;
             }
 
-            downloadCUDAForPerfviewsWhisperFasterToolStripMenuItem.Visible =
+            downloadCUDAForPurfviewsWhisperFasterToolStripMenuItem.Visible =
                 buttonGenerate.Enabled &&
                 Configuration.Settings.Tools.WhisperChoice == WhisperChoice.PurfviewFasterWhisper;
 
@@ -1899,7 +1899,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             }
         }
 
-        private void downloadCUDAForPerfviewsWhisperFasterToolStripMenuItem_Click(object sender, EventArgs e)
+        private void downloadCUDAForPurfviewsWhisperFasterToolStripMenuItem_Click(object sender, EventArgs e)
         {
             DownloadCudaForWhisperFaster(this);
         }

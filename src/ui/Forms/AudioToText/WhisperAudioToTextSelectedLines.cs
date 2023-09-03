@@ -714,7 +714,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             }
         }
 
-        private void downloadCUDAForPerfviewsWhisperFasterToolStripMenuItem_Click(object sender, EventArgs e)
+        private void downloadCUDAForPurfviewsWhisperFasterToolStripMenuItem_Click(object sender, EventArgs e)
         {
             WhisperAudioToText.DownloadCudaForWhisperFaster(this);
         }
