@@ -7,6 +7,7 @@ using System.Drawing;
 using System.Drawing.Design;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 
 namespace Nikse.SubtitleEdit.Controls
 {
@@ -452,6 +453,54 @@ namespace Nikse.SubtitleEdit.Controls
                 }
                 else
                 {
+                    if (((e.KeyCode >= Keys.A && e.KeyCode <= Keys.Z) ||
+                        e.KeyCode == Keys.D0 ||
+                        e.KeyCode == Keys.D1 ||
+                        e.KeyCode == Keys.D2 ||
+                        e.KeyCode == Keys.D3 ||
+                        e.KeyCode == Keys.D4 ||
+                        e.KeyCode == Keys.D5 ||
+                        e.KeyCode == Keys.D6 ||
+                        e.KeyCode == Keys.D7 ||
+                        e.KeyCode == Keys.D8 ||
+                        e.KeyCode <= Keys.D9)
+                        && _items.Count > 0)
+                    {
+                        var letter = e.KeyCode.ToString();
+                        if (letter.Length == 2 && letter.StartsWith('D'))
+                        {
+                            letter = letter.Remove(0, 1);
+                        }
+
+                        var start = 0;
+                        if (_selectedIndex >= 0 && _items[_selectedIndex].ToString().StartsWith(letter, StringComparison.OrdinalIgnoreCase))
+                        {
+                            start = _selectedIndex + 1;
+                        }
+
+                        for (var idx = start; idx < _items.Count; idx++)
+                        {
+                            if (_items[idx].ToString().StartsWith(letter, StringComparison.OrdinalIgnoreCase))
+                            {
+                                SelectedIndex = idx;
+                                e.SuppressKeyPress = true;
+                                return;
+                            }
+                        }
+
+                        var item = _items.FirstOrDefault(p => p.ToString().StartsWith(letter, StringComparison.OrdinalIgnoreCase));
+                        if (item != null)
+                        {
+                            var idx = _items.IndexOf(item);
+                            if (idx != _selectedIndex)
+                            {
+                                SelectedIndex = idx;
+                                e.SuppressKeyPress = true;
+                                return;
+                            }
+                        }
+                    }
+
                     KeyDown?.Invoke(this, e);
                 }
             };
@@ -604,7 +653,7 @@ namespace Nikse.SubtitleEdit.Controls
                     }
                 }
 
-               
+
 
                 _hasItemsMouseOver = true;
             };
