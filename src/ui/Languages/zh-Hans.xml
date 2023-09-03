@@ -215,7 +215,7 @@ Command line: {1} {2}
     <RemoveTemporaryFiles>移除临时文件</RemoveTemporaryFiles>
     <SetCppConstMeFolder>设置 CPP/Const-me 模型文件夹...</SetCppConstMeFolder>
     <OnlyRunPostProcessing>仅进行后处理/调整时间</OnlyRunPostProcessing>
-    <DownloadFasterWhisperCuda>下载适用于 Perfview 的 Whisper-Faster 的 CUDA 组件</DownloadFasterWhisperCuda>
+    <DownloadFasterWhisperCuda>下载适用于 Purfview 的 Faster-Whisper 的 CUDA 组件</DownloadFasterWhisperCuda>
   </AudioToText>
   <AssaAttachments>
     <Title>Advanced Sub Station Alpha字幕附件</Title>

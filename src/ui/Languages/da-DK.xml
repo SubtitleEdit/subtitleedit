@@ -209,7 +209,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <RemoveTemporaryFiles>Fjern midlertidige filer</RemoveTemporaryFiles>
     <SetCppConstMeFolder>Indstil mappen for CPP/Const-me-modeller...</SetCppConstMeFolder>
     <OnlyRunPostProcessing>Kør kun efterbehandling/juster tider</OnlyRunPostProcessing>
-    <DownloadFasterWhisperCuda>Download CUDA til Perfview's Whisper-Faster</DownloadFasterWhisperCuda>
+    <DownloadFasterWhisperCuda>Download cuBLAS og cuDNN til Faster-Whisper</DownloadFasterWhisperCuda>
   </AudioToText>
   <AssaAttachments>
     <Title>Avancerede Sub Station Alpha vedhæftede filer</Title>
