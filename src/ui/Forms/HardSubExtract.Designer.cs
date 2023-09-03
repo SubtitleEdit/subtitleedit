@@ -44,7 +44,6 @@
             this.label10 = new System.Windows.Forms.Label();
             this.StartStop = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.buttonStop = new System.Windows.Forms.Button();
             this.mediaPlayer = new Nikse.SubtitleEdit.Controls.VideoPlayerContainer();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
@@ -100,10 +99,35 @@
             // 
             // numericUpDownCustomMaxDiff
             // 
+            this.numericUpDownCustomMaxDiff.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownCustomMaxDiff.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownCustomMaxDiff.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownCustomMaxDiff.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownCustomMaxDiff.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownCustomMaxDiff.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownCustomMaxDiff.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownCustomMaxDiff.DecimalPlaces = 0;
+            this.numericUpDownCustomMaxDiff.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownCustomMaxDiff.Location = new System.Drawing.Point(116, 76);
+            this.numericUpDownCustomMaxDiff.Maximum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.numericUpDownCustomMaxDiff.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownCustomMaxDiff.Name = "numericUpDownCustomMaxDiff";
             this.numericUpDownCustomMaxDiff.Size = new System.Drawing.Size(38, 20);
             this.numericUpDownCustomMaxDiff.TabIndex = 2;
+            this.numericUpDownCustomMaxDiff.TabStop = false;
+            this.numericUpDownCustomMaxDiff.ThousandsSeparator = false;
             this.numericUpDownCustomMaxDiff.Value = new decimal(new int[] {
             14,
             0,
@@ -134,15 +158,35 @@
             // 
             // numericUpDownPixelsBottom
             // 
+            this.numericUpDownPixelsBottom.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownPixelsBottom.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownPixelsBottom.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownPixelsBottom.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownPixelsBottom.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownPixelsBottom.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownPixelsBottom.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownPixelsBottom.DecimalPlaces = 0;
+            this.numericUpDownPixelsBottom.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownPixelsBottom.Location = new System.Drawing.Point(192, 16);
             this.numericUpDownPixelsBottom.Maximum = new decimal(new int[] {
             2000,
             0,
             0,
             0});
+            this.numericUpDownPixelsBottom.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownPixelsBottom.Name = "numericUpDownPixelsBottom";
             this.numericUpDownPixelsBottom.Size = new System.Drawing.Size(66, 20);
             this.numericUpDownPixelsBottom.TabIndex = 19;
+            this.numericUpDownPixelsBottom.TabStop = false;
+            this.numericUpDownPixelsBottom.ThousandsSeparator = false;
             this.numericUpDownPixelsBottom.Value = new decimal(new int[] {
             127,
             0,
@@ -273,6 +317,7 @@
             // 
             // tbBlacks
             // 
+            this.tbBlacks.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.tbBlacks.Location = new System.Drawing.Point(229, 236);
             this.tbBlacks.Name = "tbBlacks";
             this.tbBlacks.ReadOnly = true;
@@ -289,6 +334,7 @@
             // 
             // tbFrameNum
             // 
+            this.tbFrameNum.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.tbFrameNum.Location = new System.Drawing.Point(229, 209);
             this.tbFrameNum.Name = "tbFrameNum";
             this.tbFrameNum.ReadOnly = true;
@@ -297,6 +343,7 @@
             // 
             // tbFileName
             // 
+            this.tbFileName.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.tbFileName.Location = new System.Drawing.Point(6, 35);
             this.tbFileName.Name = "tbFileName";
             this.tbFileName.Size = new System.Drawing.Size(285, 20);
@@ -346,6 +393,7 @@
             this.mediaPlayer.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.mediaPlayer.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(18)))), ((int)(((byte)(18)))), ((int)(((byte)(18)))));
+            this.mediaPlayer.Chapters = new Nikse.SubtitleEdit.Core.ContainerFormats.Matroska.MatroskaChapter[0];
             this.mediaPlayer.CurrentPosition = 0D;
             this.mediaPlayer.FontSizeFactor = 1F;
             this.mediaPlayer.LastParagraph = null;
@@ -359,6 +407,7 @@
             this.mediaPlayer.SubtitleText = "";
             this.mediaPlayer.TabIndex = 23;
             this.mediaPlayer.TextRightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.mediaPlayer.UsingFrontCenterAudioChannelOnly = false;
             this.mediaPlayer.VideoHeight = 0;
             this.mediaPlayer.VideoPlayer = null;
             this.mediaPlayer.VideoWidth = 0;
@@ -430,7 +479,6 @@
         private System.Windows.Forms.CheckBox checkBoxYellow;
         private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownCustomMaxDiff;
         private System.Windows.Forms.PictureBox pictureBoxCustomColor;
-        private System.Windows.Forms.ColorDialog colorDialog1;
         private System.Windows.Forms.Button buttonStop;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Label labelCustomRgb;

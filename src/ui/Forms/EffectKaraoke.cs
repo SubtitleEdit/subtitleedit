@@ -46,9 +46,8 @@ namespace Nikse.SubtitleEdit.Forms
             }
             _animation = new List<Paragraph>();
 
-            colorDialog1.Color = Color.Red;
-            labelColor.Text = Utilities.ColorToHex(colorDialog1.Color);
-            panelColor.BackColor = colorDialog1.Color;
+            panelColor.BackColor = Color.Red;
+            labelColor.Text = Utilities.ColorToHex(panelColor.BackColor);
 
             AddToPreview(richTextBoxPreview, paragraph.Text);
             RefreshPreview();
@@ -78,10 +77,13 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonChooseColorClick(object sender, EventArgs e)
         {
-            if (colorDialog1.ShowDialog() == DialogResult.OK)
+            using (var colorChooser = new ColorChooser { Color = panelColor.BackColor, ShowAlpha = false })
             {
-                labelColor.Text = Utilities.ColorToHex(colorDialog1.Color);
-                panelColor.BackColor = colorDialog1.Color;
+                if (colorChooser.ShowDialog() == DialogResult.OK)
+                {
+                    labelColor.Text = Utilities.ColorToHex(colorChooser.Color);
+                    panelColor.BackColor = colorChooser.Color;
+                }
             }
         }
 

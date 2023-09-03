@@ -7429,9 +7429,12 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void PictureBoxColorChooserClick(object sender, EventArgs e)
         {
-            if (colorDialog1.ShowDialog(this) == DialogResult.OK)
+            using (var colorChooser = new ColorChooser { Color = (sender as PictureBox).BackColor, ShowAlpha = false })
             {
-                (sender as PictureBox).BackColor = colorDialog1.Color;
+                if (colorChooser.ShowDialog() == DialogResult.OK)
+                {
+                    (sender as PictureBox).BackColor = colorChooser.Color;
+                }
             }
 
             SubtitleListView1SelectedIndexChanged(null, null);

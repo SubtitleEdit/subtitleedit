@@ -345,14 +345,16 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
         private void buttonFontColor_Click(object sender, EventArgs e)
         {
-            colorDialogStyle.Color = panelFontColor.BackColor;
-            if (colorDialogStyle.ShowDialog() == DialogResult.OK)
+            using (var colorChooser = new ColorChooser { Color = panelFontColor.BackColor, ShowAlpha = false })
             {
-                listViewStyles.SelectedItems[0].SubItems[3].BackColor = colorDialogStyle.Color;
-                listViewStyles.SelectedItems[0].SubItems[3].Text = Utilities.ColorToHex(colorDialogStyle.Color);
-                panelFontColor.BackColor = colorDialogStyle.Color;
-                UpdateHeaderXml(listViewStyles.SelectedItems[0].Text, "tts:color", Utilities.ColorToHex(colorDialogStyle.Color));
-                GeneratePreview();
+                if (colorChooser.ShowDialog() == DialogResult.OK)
+                {
+                    listViewStyles.SelectedItems[0].SubItems[3].BackColor = colorChooser.Color;
+                    listViewStyles.SelectedItems[0].SubItems[3].Text = Utilities.ColorToHex(colorChooser.Color);
+                    panelFontColor.BackColor = colorChooser.Color;
+                    UpdateHeaderXml(listViewStyles.SelectedItems[0].Text, "tts:color", Utilities.ColorToHex(colorChooser.Color));
+                    GeneratePreview();
+                }
             }
         }
 

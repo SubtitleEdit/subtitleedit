@@ -437,7 +437,6 @@
             this.textBoxProxyPassword = new Nikse.SubtitleEdit.Controls.SETextBox();
             this.textBoxProxyAddress = new Nikse.SubtitleEdit.Controls.SETextBox();
             this.labelProxyAddress = new System.Windows.Forms.Label();
-            this.colorDialogSSAStyle = new System.Windows.Forms.ColorDialog();
             this.labelStatus = new System.Windows.Forms.Label();
             this.openFileDialogFFmpeg = new System.Windows.Forms.OpenFileDialog();
             this.buttonReset = new System.Windows.Forms.Button();
@@ -6565,13 +6564,13 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1092, 574);
             this.Controls.Add(this.labelUpdateFileTypeAssociationsStatus);
-            this.Controls.Add(this.panelShortcuts);
+            this.Controls.Add(this.panelWaveform);
             this.Controls.Add(this.panelGeneral);
+            this.Controls.Add(this.panelShortcuts);
             this.Controls.Add(this.panelVideoPlayer);
             this.Controls.Add(this.panelFont);
             this.Controls.Add(this.panelToolBar);
             this.Controls.Add(this.panelTools);
-            this.Controls.Add(this.panelWaveform);
             this.Controls.Add(this.panelNetwork);
             this.Controls.Add(this.panelFileTypeAssociations);
             this.Controls.Add(this.panelSubtitleFormats);
@@ -6746,7 +6745,6 @@
         private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxFrameRate;
         private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxEncoding;
         private System.Windows.Forms.CheckBox checkBoxRememberRecentFiles;
-        private System.Windows.Forms.ColorDialog colorDialogSSAStyle;
         private System.Windows.Forms.CheckBox checkBoxStartInSourceView;
         private System.Windows.Forms.CheckBox checkBoxReopenLastOpened;
         private System.Windows.Forms.Label labelSubMaxLen;
