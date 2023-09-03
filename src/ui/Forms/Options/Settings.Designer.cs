@@ -665,6 +665,7 @@
             this.comboBoxTranslationAutoSuffix.SelectedText = "";
             this.comboBoxTranslationAutoSuffix.Size = new System.Drawing.Size(121, 21);
             this.comboBoxTranslationAutoSuffix.TabIndex = 25;
+            this.comboBoxTranslationAutoSuffix.UsePopupWindow = false;
             // 
             // labelTranslationAutoSuffix
             // 
@@ -705,6 +706,7 @@
             this.comboBoxSplitBehavior.SelectedText = "";
             this.comboBoxSplitBehavior.Size = new System.Drawing.Size(207, 21);
             this.comboBoxSplitBehavior.TabIndex = 21;
+            this.comboBoxSplitBehavior.UsePopupWindow = false;
             // 
             // checkBoxAutoSave
             // 
@@ -737,6 +739,7 @@
             this.comboBoxSaveAsFileNameFrom.SelectedText = "";
             this.comboBoxSaveAsFileNameFrom.Size = new System.Drawing.Size(332, 21);
             this.comboBoxSaveAsFileNameFrom.TabIndex = 24;
+            this.comboBoxSaveAsFileNameFrom.UsePopupWindow = false;
             // 
             // labelSaveAsFileNameFrom
             // 
@@ -818,6 +821,7 @@
             this.comboBoxCpsLineLenCalc.SelectedText = "";
             this.comboBoxCpsLineLenCalc.Size = new System.Drawing.Size(170, 21);
             this.comboBoxCpsLineLenCalc.TabIndex = 65;
+            this.comboBoxCpsLineLenCalc.UsePopupWindow = false;
             this.comboBoxCpsLineLenCalc.SelectedIndexChanged += new System.EventHandler(this.ProfileUiValueChanged);
             // 
             // labelCpsLineLenCalc
@@ -860,6 +864,7 @@
             this.comboBoxContinuationStyle.SelectedText = "";
             this.comboBoxContinuationStyle.Size = new System.Drawing.Size(170, 21);
             this.comboBoxContinuationStyle.TabIndex = 58;
+            this.comboBoxContinuationStyle.UsePopupWindow = false;
             this.comboBoxContinuationStyle.SelectedIndexChanged += new System.EventHandler(this.ProfileUiValueChanged);
             // 
             // labelContinuationStyle
@@ -906,6 +911,7 @@
             this.comboBoxDialogStyle.SelectedText = "";
             this.comboBoxDialogStyle.Size = new System.Drawing.Size(170, 21);
             this.comboBoxDialogStyle.TabIndex = 57;
+            this.comboBoxDialogStyle.UsePopupWindow = false;
             this.comboBoxDialogStyle.SelectedIndexChanged += new System.EventHandler(this.ProfileUiValueChanged);
             // 
             // buttonEditProfile
@@ -939,6 +945,7 @@
             this.comboBoxRulesProfileName.SelectedText = "";
             this.comboBoxRulesProfileName.Size = new System.Drawing.Size(238, 21);
             this.comboBoxRulesProfileName.TabIndex = 5;
+            this.comboBoxRulesProfileName.UsePopupWindow = false;
             this.comboBoxRulesProfileName.SelectedIndexChanged += new System.EventHandler(this.comboBoxRulesProfileName_SelectedIndexChanged);
             // 
             // labelRulesProfileName
@@ -1224,6 +1231,7 @@
             this.comboBoxMergeShortLineLength.SelectedText = "";
             this.comboBoxMergeShortLineLength.Size = new System.Drawing.Size(73, 21);
             this.comboBoxMergeShortLineLength.TabIndex = 55;
+            this.comboBoxMergeShortLineLength.UsePopupWindow = false;
             this.comboBoxMergeShortLineLength.SelectedIndexChanged += new System.EventHandler(this.ProfileUiValueChanged);
             // 
             // labelMaxCharsPerSecond
@@ -1383,6 +1391,7 @@
             this.comboBoxAutoBackupDeleteAfter.SelectedText = "";
             this.comboBoxAutoBackupDeleteAfter.Size = new System.Drawing.Size(88, 21);
             this.comboBoxAutoBackupDeleteAfter.TabIndex = 29;
+            this.comboBoxAutoBackupDeleteAfter.UsePopupWindow = false;
             // 
             // labelAutoBackupDeleteAfter
             // 
@@ -1437,6 +1446,7 @@
             this.comboBoxTimeCodeMode.SelectedText = "";
             this.comboBoxTimeCodeMode.Size = new System.Drawing.Size(207, 21);
             this.comboBoxTimeCodeMode.TabIndex = 19;
+            this.comboBoxTimeCodeMode.UsePopupWindow = false;
             // 
             // labelTimeCodeMode
             // 
@@ -1473,6 +1483,7 @@
             this.comboBoxEncoding.SelectedText = "";
             this.comboBoxEncoding.Size = new System.Drawing.Size(188, 21);
             this.comboBoxEncoding.TabIndex = 4;
+            this.comboBoxEncoding.UsePopupWindow = false;
             // 
             // checkBoxAutoDetectAnsiEncoding
             // 
@@ -1563,6 +1574,7 @@
             this.comboBoxSpellChecker.SelectedText = "";
             this.comboBoxSpellChecker.Size = new System.Drawing.Size(121, 21);
             this.comboBoxSpellChecker.TabIndex = 31;
+            this.comboBoxSpellChecker.UsePopupWindow = false;
             this.comboBoxSpellChecker.Visible = false;
             // 
             // comboBoxAutoBackup
@@ -1591,6 +1603,7 @@
             this.comboBoxAutoBackup.SelectedText = "";
             this.comboBoxAutoBackup.Size = new System.Drawing.Size(121, 21);
             this.comboBoxAutoBackup.TabIndex = 27;
+            this.comboBoxAutoBackup.UsePopupWindow = false;
             // 
             // labelAutoBackup
             // 
@@ -1656,6 +1669,7 @@
             this.comboBoxListViewDoubleClickEvent.SelectedText = "";
             this.comboBoxListViewDoubleClickEvent.Size = new System.Drawing.Size(332, 21);
             this.comboBoxListViewDoubleClickEvent.TabIndex = 23;
+            this.comboBoxListViewDoubleClickEvent.UsePopupWindow = false;
             // 
             // labelListViewDoubleClickEvent
             // 
@@ -1747,6 +1761,7 @@
             this.comboBoxFrameRate.Size = new System.Drawing.Size(121, 21);
             this.comboBoxFrameRate.TabIndex = 2;
             this.comboBoxFrameRate.TabStop = false;
+            this.comboBoxFrameRate.UsePopupWindow = false;
             // 
             // labelDefaultFrameRate
             // 
@@ -2026,6 +2041,7 @@
             this.comboBoxSubtitleSaveAsFormats.SelectedText = "";
             this.comboBoxSubtitleSaveAsFormats.Size = new System.Drawing.Size(200, 21);
             this.comboBoxSubtitleSaveAsFormats.TabIndex = 3;
+            this.comboBoxSubtitleSaveAsFormats.UsePopupWindow = false;
             // 
             // labelDefaultSaveAsFormat
             // 
@@ -2057,6 +2073,7 @@
             this.comboBoxSubtitleFormats.SelectedText = "";
             this.comboBoxSubtitleFormats.Size = new System.Drawing.Size(200, 21);
             this.comboBoxSubtitleFormats.TabIndex = 1;
+            this.comboBoxSubtitleFormats.UsePopupWindow = false;
             // 
             // labelDefaultSubtitleFormat
             // 
@@ -2107,7 +2124,7 @@
             this.buttonShortcutsClear.Location = new System.Drawing.Point(221, 18);
             this.buttonShortcutsClear.Name = "buttonShortcutsClear";
             this.buttonShortcutsClear.Size = new System.Drawing.Size(111, 23);
-            this.buttonShortcutsClear.TabIndex = 38;
+            this.buttonShortcutsClear.TabIndex = 1;
             this.buttonShortcutsClear.Text = "Clear";
             this.buttonShortcutsClear.UseVisualStyleBackColor = true;
             this.buttonShortcutsClear.Click += new System.EventHandler(this.buttonShortcutsClear_Click);
@@ -2143,7 +2160,7 @@
             this.textBoxShortcutSearch.SelectionLength = 0;
             this.textBoxShortcutSearch.SelectionStart = 0;
             this.textBoxShortcutSearch.Size = new System.Drawing.Size(151, 21);
-            this.textBoxShortcutSearch.TabIndex = 36;
+            this.textBoxShortcutSearch.TabIndex = 0;
             this.textBoxShortcutSearch.TextBoxFont = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBoxShortcutSearch.UseSystemPasswordChar = false;
             this.textBoxShortcutSearch.TextChanged += new System.EventHandler(this.textBoxShortcutSearch_TextChanged);
@@ -2155,7 +2172,7 @@
             this.buttonClearShortcut.Location = new System.Drawing.Point(582, 492);
             this.buttonClearShortcut.Name = "buttonClearShortcut";
             this.buttonClearShortcut.Size = new System.Drawing.Size(111, 23);
-            this.buttonClearShortcut.TabIndex = 6;
+            this.buttonClearShortcut.TabIndex = 8;
             this.buttonClearShortcut.Text = "&Clear";
             this.buttonClearShortcut.UseVisualStyleBackColor = true;
             this.buttonClearShortcut.Click += new System.EventHandler(this.buttonClearShortcut_Click);
@@ -2318,7 +2335,8 @@
             this.comboBoxShortcutKey.SelectedItem = null;
             this.comboBoxShortcutKey.SelectedText = "";
             this.comboBoxShortcutKey.Size = new System.Drawing.Size(92, 21);
-            this.comboBoxShortcutKey.TabIndex = 4;
+            this.comboBoxShortcutKey.TabIndex = 6;
+            this.comboBoxShortcutKey.UsePopupWindow = false;
             this.comboBoxShortcutKey.SelectedIndexChanged += new System.EventHandler(this.ValidateShortcut);
             this.comboBoxShortcutKey.KeyDown += new System.Windows.Forms.KeyEventHandler(this.comboBoxShortcutKey_KeyDown);
             // 
@@ -2340,7 +2358,7 @@
             this.checkBoxShortcutsShift.Location = new System.Drawing.Point(245, 494);
             this.checkBoxShortcutsShift.Name = "checkBoxShortcutsShift";
             this.checkBoxShortcutsShift.Size = new System.Drawing.Size(48, 17);
-            this.checkBoxShortcutsShift.TabIndex = 3;
+            this.checkBoxShortcutsShift.TabIndex = 5;
             this.checkBoxShortcutsShift.Text = "Shift";
             this.checkBoxShortcutsShift.UseVisualStyleBackColor = true;
             this.checkBoxShortcutsShift.CheckedChanged += new System.EventHandler(this.ValidateShortcut);
@@ -2353,7 +2371,7 @@
             this.checkBoxShortcutsAlt.Location = new System.Drawing.Point(176, 494);
             this.checkBoxShortcutsAlt.Name = "checkBoxShortcutsAlt";
             this.checkBoxShortcutsAlt.Size = new System.Drawing.Size(39, 17);
-            this.checkBoxShortcutsAlt.TabIndex = 2;
+            this.checkBoxShortcutsAlt.TabIndex = 4;
             this.checkBoxShortcutsAlt.Text = "Alt";
             this.checkBoxShortcutsAlt.UseVisualStyleBackColor = true;
             this.checkBoxShortcutsAlt.CheckedChanged += new System.EventHandler(this.ValidateShortcut);
@@ -2366,7 +2384,7 @@
             this.checkBoxShortcutsControl.Location = new System.Drawing.Point(89, 494);
             this.checkBoxShortcutsControl.Name = "checkBoxShortcutsControl";
             this.checkBoxShortcutsControl.Size = new System.Drawing.Size(61, 17);
-            this.checkBoxShortcutsControl.TabIndex = 1;
+            this.checkBoxShortcutsControl.TabIndex = 3;
             this.checkBoxShortcutsControl.Text = "Control";
             this.checkBoxShortcutsControl.UseVisualStyleBackColor = true;
             this.checkBoxShortcutsControl.CheckedChanged += new System.EventHandler(this.ValidateShortcut);
@@ -2378,7 +2396,7 @@
             this.buttonUpdateShortcut.Location = new System.Drawing.Point(465, 492);
             this.buttonUpdateShortcut.Name = "buttonUpdateShortcut";
             this.buttonUpdateShortcut.Size = new System.Drawing.Size(111, 23);
-            this.buttonUpdateShortcut.TabIndex = 5;
+            this.buttonUpdateShortcut.TabIndex = 7;
             this.buttonUpdateShortcut.Text = "&Update";
             this.buttonUpdateShortcut.UseVisualStyleBackColor = true;
             this.buttonUpdateShortcut.Click += new System.EventHandler(this.buttonUpdateShortcut_Click);
@@ -2393,7 +2411,7 @@
             this.treeViewShortcuts.Location = new System.Drawing.Point(16, 47);
             this.treeViewShortcuts.Name = "treeViewShortcuts";
             this.treeViewShortcuts.Size = new System.Drawing.Size(829, 439);
-            this.treeViewShortcuts.TabIndex = 0;
+            this.treeViewShortcuts.TabIndex = 2;
             this.treeViewShortcuts.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeViewShortcuts_AfterSelect);
             // 
             // contextMenuStripShortcuts
@@ -2687,6 +2705,7 @@
             this.comboBoxCustomSearch5.Size = new System.Drawing.Size(148, 21);
             this.comboBoxCustomSearch5.TabIndex = 13;
             this.comboBoxCustomSearch5.TabStop = false;
+            this.comboBoxCustomSearch5.UsePopupWindow = false;
             this.comboBoxCustomSearch5.SelectedIndexChanged += new System.EventHandler(this.comboBoxCustomSearch_SelectedIndexChanged);
             // 
             // labelCustomSearch4
@@ -2755,6 +2774,7 @@
             this.comboBoxCustomSearch4.Size = new System.Drawing.Size(148, 21);
             this.comboBoxCustomSearch4.TabIndex = 10;
             this.comboBoxCustomSearch4.TabStop = false;
+            this.comboBoxCustomSearch4.UsePopupWindow = false;
             this.comboBoxCustomSearch4.SelectedIndexChanged += new System.EventHandler(this.comboBoxCustomSearch_SelectedIndexChanged);
             // 
             // labelCustomSearch3
@@ -2823,6 +2843,7 @@
             this.comboBoxCustomSearch3.Size = new System.Drawing.Size(148, 21);
             this.comboBoxCustomSearch3.TabIndex = 7;
             this.comboBoxCustomSearch3.TabStop = false;
+            this.comboBoxCustomSearch3.UsePopupWindow = false;
             this.comboBoxCustomSearch3.SelectedIndexChanged += new System.EventHandler(this.comboBoxCustomSearch_SelectedIndexChanged);
             // 
             // labelCustomSearch2
@@ -2891,6 +2912,7 @@
             this.comboBoxCustomSearch2.Size = new System.Drawing.Size(148, 21);
             this.comboBoxCustomSearch2.TabIndex = 4;
             this.comboBoxCustomSearch2.TabStop = false;
+            this.comboBoxCustomSearch2.UsePopupWindow = false;
             this.comboBoxCustomSearch2.SelectedIndexChanged += new System.EventHandler(this.comboBoxCustomSearch_SelectedIndexChanged);
             // 
             // labelCustomSearch1
@@ -2968,6 +2990,7 @@
             this.comboBoxCustomSearch1.Size = new System.Drawing.Size(148, 21);
             this.comboBoxCustomSearch1.TabIndex = 0;
             this.comboBoxCustomSearch1.TabStop = false;
+            this.comboBoxCustomSearch1.UsePopupWindow = false;
             this.comboBoxCustomSearch1.SelectedIndexChanged += new System.EventHandler(this.comboBoxCustomSearch_SelectedIndexChanged);
             // 
             // groupBoxVideoPlayerDefault
@@ -3140,6 +3163,7 @@
             this.comboBoxOpaqueBoxStyle.SelectedText = "";
             this.comboBoxOpaqueBoxStyle.Size = new System.Drawing.Size(212, 21);
             this.comboBoxOpaqueBoxStyle.TabIndex = 5;
+            this.comboBoxOpaqueBoxStyle.UsePopupWindow = false;
             // 
             // radioButtonMpvOpaqueBox
             // 
@@ -3324,6 +3348,7 @@
             this.comboBoxVideoPlayerPreviewFontName.SelectedText = "";
             this.comboBoxVideoPlayerPreviewFontName.Size = new System.Drawing.Size(186, 21);
             this.comboBoxVideoPlayerPreviewFontName.TabIndex = 6;
+            this.comboBoxVideoPlayerPreviewFontName.UsePopupWindow = false;
             // 
             // labelVideoPlayerPreviewFontSize
             // 
@@ -3379,6 +3404,7 @@
             this.comboBoxlVideoPlayerPreviewFontSize.SelectedText = "";
             this.comboBoxlVideoPlayerPreviewFontSize.Size = new System.Drawing.Size(70, 21);
             this.comboBoxlVideoPlayerPreviewFontSize.TabIndex = 7;
+            this.comboBoxlVideoPlayerPreviewFontSize.UsePopupWindow = false;
             // 
             // checkBoxVideoPlayerShowStopButton
             // 
@@ -3748,6 +3774,7 @@
             this.comboBoxSpectrogramAppearance.SelectedText = "";
             this.comboBoxSpectrogramAppearance.Size = new System.Drawing.Size(325, 21);
             this.comboBoxSpectrogramAppearance.TabIndex = 2;
+            this.comboBoxSpectrogramAppearance.UsePopupWindow = false;
             // 
             // checkBoxGenerateSpectrogram
             // 
@@ -3975,6 +4002,7 @@
             this.comboBoxWaveformTextSize.SelectedText = "";
             this.comboBoxWaveformTextSize.Size = new System.Drawing.Size(121, 21);
             this.comboBoxWaveformTextSize.TabIndex = 30;
+            this.comboBoxWaveformTextSize.UsePopupWindow = false;
             // 
             // checkBoxListViewMouseEnterFocus
             // 
@@ -4233,6 +4261,7 @@
             this.comboBoxCustomToggleEnd.Size = new System.Drawing.Size(42, 21);
             this.comboBoxCustomToggleEnd.TabIndex = 64;
             this.comboBoxCustomToggleEnd.TabStop = false;
+            this.comboBoxCustomToggleEnd.UsePopupWindow = false;
             // 
             // comboBoxCustomToggleStart
             // 
@@ -4259,6 +4288,7 @@
             this.comboBoxCustomToggleStart.Size = new System.Drawing.Size(42, 21);
             this.comboBoxCustomToggleStart.TabIndex = 63;
             this.comboBoxCustomToggleStart.TabStop = false;
+            this.comboBoxCustomToggleStart.UsePopupWindow = false;
             // 
             // labelShortcutCustomToggle
             // 
@@ -4303,6 +4333,7 @@
             this.comboBoxBDOpensIn.SelectedText = "";
             this.comboBoxBDOpensIn.Size = new System.Drawing.Size(221, 21);
             this.comboBoxBDOpensIn.TabIndex = 1;
+            this.comboBoxBDOpensIn.UsePopupWindow = false;
             // 
             // labelBDOpensIn
             // 
@@ -4442,6 +4473,7 @@
             this.comboBoxBoxBingTokenEndpoint.Size = new System.Drawing.Size(375, 21);
             this.comboBoxBoxBingTokenEndpoint.TabIndex = 33;
             this.comboBoxBoxBingTokenEndpoint.TabStop = false;
+            this.comboBoxBoxBingTokenEndpoint.UsePopupWindow = false;
             // 
             // labelBingTokenEndpoint
             // 
@@ -4822,6 +4854,7 @@
             this.comboBoxToolsMusicSymbol.SelectedText = "";
             this.comboBoxToolsMusicSymbol.Size = new System.Drawing.Size(86, 21);
             this.comboBoxToolsMusicSymbol.TabIndex = 1;
+            this.comboBoxToolsMusicSymbol.UsePopupWindow = false;
             // 
             // textBoxMusicSymbolsToReplace
             // 
@@ -4919,6 +4952,7 @@
             this.comboBoxToolsEndSceneIndex.SelectedText = "";
             this.comboBoxToolsEndSceneIndex.Size = new System.Drawing.Size(86, 21);
             this.comboBoxToolsEndSceneIndex.TabIndex = 2;
+            this.comboBoxToolsEndSceneIndex.UsePopupWindow = false;
             // 
             // labelToolsStartScene
             // 
@@ -4955,6 +4989,7 @@
             this.comboBoxToolsStartSceneIndex.SelectedText = "";
             this.comboBoxToolsStartSceneIndex.Size = new System.Drawing.Size(86, 21);
             this.comboBoxToolsStartSceneIndex.TabIndex = 1;
+            this.comboBoxToolsStartSceneIndex.UsePopupWindow = false;
             // 
             // comboBoxToolsVerifySeconds
             // 
@@ -4982,6 +5017,7 @@
             this.comboBoxToolsVerifySeconds.SelectedText = "";
             this.comboBoxToolsVerifySeconds.Size = new System.Drawing.Size(86, 21);
             this.comboBoxToolsVerifySeconds.TabIndex = 0;
+            this.comboBoxToolsVerifySeconds.UsePopupWindow = false;
             // 
             // labelVerifyButton
             // 
@@ -5699,6 +5735,7 @@
             this.comboBoxToolbarIconTheme.SelectedText = "";
             this.comboBoxToolbarIconTheme.Size = new System.Drawing.Size(202, 21);
             this.comboBoxToolbarIconTheme.TabIndex = 51;
+            this.comboBoxToolbarIconTheme.UsePopupWindow = false;
             // 
             // groupBoxFontInUI
             // 
@@ -5750,6 +5787,7 @@
             this.comboBoxSubtitleFont.SelectedText = "";
             this.comboBoxSubtitleFont.Size = new System.Drawing.Size(188, 21);
             this.comboBoxSubtitleFont.TabIndex = 29;
+            this.comboBoxSubtitleFont.UsePopupWindow = false;
             // 
             // labelSubtitleFont
             // 
@@ -5877,6 +5915,7 @@
             this.comboBoxSubtitleListViewFontSize.SelectedText = "";
             this.comboBoxSubtitleListViewFontSize.Size = new System.Drawing.Size(73, 21);
             this.comboBoxSubtitleListViewFontSize.TabIndex = 34;
+            this.comboBoxSubtitleListViewFontSize.UsePopupWindow = false;
             // 
             // checkBoxSubtitleListViewFontBold
             // 
@@ -6035,6 +6074,7 @@
             this.comboBoxSubtitleFontSize.SelectedText = "";
             this.comboBoxSubtitleFontSize.Size = new System.Drawing.Size(73, 21);
             this.comboBoxSubtitleFontSize.TabIndex = 31;
+            this.comboBoxSubtitleFontSize.UsePopupWindow = false;
             // 
             // checkBoxSubtitleFontBold
             // 
@@ -6291,6 +6331,7 @@
             this.comboBoxProxyAuthType.Size = new System.Drawing.Size(192, 21);
             this.comboBoxProxyAuthType.TabIndex = 31;
             this.comboBoxProxyAuthType.TabStop = false;
+            this.comboBoxProxyAuthType.UsePopupWindow = false;
             // 
             // textBoxProxyDomain
             // 
@@ -6524,10 +6565,10 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1092, 574);
             this.Controls.Add(this.labelUpdateFileTypeAssociationsStatus);
+            this.Controls.Add(this.panelShortcuts);
             this.Controls.Add(this.panelGeneral);
             this.Controls.Add(this.panelVideoPlayer);
             this.Controls.Add(this.panelFont);
-            this.Controls.Add(this.panelShortcuts);
             this.Controls.Add(this.panelToolBar);
             this.Controls.Add(this.panelTools);
             this.Controls.Add(this.panelWaveform);

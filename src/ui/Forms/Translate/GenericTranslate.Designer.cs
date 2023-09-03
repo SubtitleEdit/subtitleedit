@@ -61,7 +61,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             this.comboBoxSource.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxSource.DropDownWidth = 121;
             this.comboBoxSource.FormattingEnabled = true;
-            this.comboBoxSource.Location = new System.Drawing.Point(327, 34);
+            this.comboBoxSource.Location = new System.Drawing.Point(327, 35);
             this.comboBoxSource.MaxLength = 32767;
             this.comboBoxSource.Name = "comboBoxSource";
             this.comboBoxSource.SelectedIndex = -1;
@@ -69,12 +69,13 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             this.comboBoxSource.SelectedText = "";
             this.comboBoxSource.Size = new System.Drawing.Size(121, 21);
             this.comboBoxSource.TabIndex = 1;
+            this.comboBoxSource.UsePopupWindow = false;
             this.comboBoxSource.TextChanged += new System.EventHandler(this.ComboBoxLanguageChanged);
             // 
             // labelSource
             // 
             this.labelSource.AutoSize = true;
-            this.labelSource.Location = new System.Drawing.Point(285, 41);
+            this.labelSource.Location = new System.Drawing.Point(285, 40);
             this.labelSource.Name = "labelSource";
             this.labelSource.Size = new System.Drawing.Size(35, 13);
             this.labelSource.TabIndex = 1;
@@ -83,7 +84,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             // labelTarget
             // 
             this.labelTarget.AutoSize = true;
-            this.labelTarget.Location = new System.Drawing.Point(468, 37);
+            this.labelTarget.Location = new System.Drawing.Point(468, 40);
             this.labelTarget.Name = "labelTarget";
             this.labelTarget.Size = new System.Drawing.Size(23, 13);
             this.labelTarget.TabIndex = 4;
@@ -102,7 +103,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             this.comboBoxTarget.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxTarget.DropDownWidth = 121;
             this.comboBoxTarget.FormattingEnabled = true;
-            this.comboBoxTarget.Location = new System.Drawing.Point(497, 34);
+            this.comboBoxTarget.Location = new System.Drawing.Point(497, 35);
             this.comboBoxTarget.MaxLength = 32767;
             this.comboBoxTarget.Name = "comboBoxTarget";
             this.comboBoxTarget.SelectedIndex = -1;
@@ -110,6 +111,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             this.comboBoxTarget.SelectedText = "";
             this.comboBoxTarget.Size = new System.Drawing.Size(121, 21);
             this.comboBoxTarget.TabIndex = 2;
+            this.comboBoxTarget.UsePopupWindow = false;
             this.comboBoxTarget.TextChanged += new System.EventHandler(this.ComboBoxLanguageChanged);
             // 
             // buttonTranslate
@@ -230,7 +232,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             this.comboBoxTranslationServices.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxTranslationServices.DropDownWidth = 152;
             this.comboBoxTranslationServices.FormattingEnabled = true;
-            this.comboBoxTranslationServices.Location = new System.Drawing.Point(84, 34);
+            this.comboBoxTranslationServices.Location = new System.Drawing.Point(84, 35);
             this.comboBoxTranslationServices.MaxLength = 32767;
             this.comboBoxTranslationServices.Name = "comboBoxTranslationServices";
             this.comboBoxTranslationServices.SelectedIndex = -1;
@@ -238,12 +240,13 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             this.comboBoxTranslationServices.SelectedText = "";
             this.comboBoxTranslationServices.Size = new System.Drawing.Size(152, 21);
             this.comboBoxTranslationServices.TabIndex = 0;
+            this.comboBoxTranslationServices.UsePopupWindow = false;
             this.comboBoxTranslationServices.SelectedIndexChanged += new System.EventHandler(this.comboBoxTranslationServices_SelectedIndexChanged);
             // 
             // labelTranslationService
             // 
             this.labelTranslationService.AutoSize = true;
-            this.labelTranslationService.Location = new System.Drawing.Point(15, 41);
+            this.labelTranslationService.Location = new System.Drawing.Point(15, 40);
             this.labelTranslationService.Name = "labelTranslationService";
             this.labelTranslationService.Size = new System.Drawing.Size(46, 13);
             this.labelTranslationService.TabIndex = 14;
@@ -281,6 +284,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             this.comboBoxParagraphHandling.SelectedText = "";
             this.comboBoxParagraphHandling.Size = new System.Drawing.Size(165, 21);
             this.comboBoxParagraphHandling.TabIndex = 90;
+            this.comboBoxParagraphHandling.UsePopupWindow = false;
             // 
             // GenericTranslate
             // 
