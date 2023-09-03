@@ -289,6 +289,11 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                                 return;
                             }
                         }
+
+                        if (!IsFasterWhisperCudaInstalled() && IsFasterWhisperCudaSupported())
+                        {
+                            DownloadCudaForWhisperFaster(this);
+                        }
                     }
                     else
                     {
@@ -1973,6 +1978,8 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             {
                 return;
             }
+
+            SeLogger.WhisperInfo("CUDA check reports: " + outLine.Data);
 
             if (!outLine.Data.Contains("CUDA device: 0") && outLine.Data.Contains("CUDA device:"))
             {
