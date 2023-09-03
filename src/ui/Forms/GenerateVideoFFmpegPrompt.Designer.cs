@@ -32,7 +32,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.labelFFmpeg = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.textBox1 = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.SuspendLayout();
             // 
             // buttonOK
@@ -108,6 +108,6 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Label labelFFmpeg;
-        private System.Windows.Forms.TextBox textBox1;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBox1;
     }
 }

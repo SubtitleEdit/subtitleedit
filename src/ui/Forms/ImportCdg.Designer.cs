@@ -39,7 +39,7 @@
             this.groupBoxMkvMerge = new System.Windows.Forms.GroupBox();
             this.buttonDownloadMkvToolNix = new System.Windows.Forms.Button();
             this.buttonBrowseToFFmpeg = new System.Windows.Forms.Button();
-            this.textBoxFFmpegPath = new System.Windows.Forms.TextBox();
+            this.textBoxFFmpegPath = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelFFmpegPath = new System.Windows.Forms.Label();
             this.labelStatus = new System.Windows.Forms.Label();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
@@ -400,7 +400,7 @@
         private System.Windows.Forms.GroupBox groupBoxMkvMerge;
         private System.Windows.Forms.Button buttonDownloadMkvToolNix;
         private System.Windows.Forms.Button buttonBrowseToFFmpeg;
-        private System.Windows.Forms.TextBox textBoxFFmpegPath;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxFFmpegPath;
         private System.Windows.Forms.Label labelFFmpegPath;
         private System.Windows.Forms.Label labelStatus;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;

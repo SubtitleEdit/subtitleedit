@@ -32,7 +32,7 @@
             this.buttonCancel = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.labelCharacterList = new System.Windows.Forms.Label();
-            this.textBoxCharacterFile = new System.Windows.Forms.TextBox();
+            this.textBoxCharacterFile = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.buttonChooseCharacterFile = new System.Windows.Forms.Button();
             this.labelStatus = new System.Windows.Forms.Label();
             this.SuspendLayout();
@@ -131,7 +131,7 @@
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.Label labelCharacterList;
-        private System.Windows.Forms.TextBox textBoxCharacterFile;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxCharacterFile;
         private System.Windows.Forms.Button buttonChooseCharacterFile;
         private System.Windows.Forms.Label labelStatus;
     }

@@ -33,8 +33,8 @@
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.labelDescription = new System.Windows.Forms.Label();
-            this.textBoxOcrFixValue = new System.Windows.Forms.TextBox();
-            this.textBoxOcrFixKey = new System.Windows.Forms.TextBox();
+            this.textBoxOcrFixValue = new Nikse.SubtitleEdit.Controls.NikseTextBox();
+            this.textBoxOcrFixKey = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.SuspendLayout();
             // 
             // comboBoxDictionaries
@@ -138,7 +138,7 @@
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Label labelDescription;
-        private System.Windows.Forms.TextBox textBoxOcrFixValue;
-        private System.Windows.Forms.TextBox textBoxOcrFixKey;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxOcrFixValue;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxOcrFixKey;
     }
 }

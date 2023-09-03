@@ -33,7 +33,7 @@
             this.listViewNames = new System.Windows.Forms.ListView();
             this.columnHeaderNames = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.buttonRemoveNameEtc = new System.Windows.Forms.Button();
-            this.textBoxNameEtc = new System.Windows.Forms.TextBox();
+            this.textBoxNameEtc = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.buttonAddNames = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
@@ -139,7 +139,7 @@
         private System.Windows.Forms.ListView listViewNames;
         private System.Windows.Forms.ColumnHeader columnHeaderNames;
         private System.Windows.Forms.Button buttonRemoveNameEtc;
-        private System.Windows.Forms.TextBox textBoxNameEtc;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxNameEtc;
         private System.Windows.Forms.Button buttonAddNames;
     }
 }

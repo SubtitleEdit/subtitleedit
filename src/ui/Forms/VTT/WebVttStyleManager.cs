@@ -1229,5 +1229,18 @@ namespace Nikse.SubtitleEdit.Forms.VTT
         {
             _mpv?.Dispose();
         }
+
+        private void WebVttStyleManager_Shown(object sender, EventArgs e)
+        {
+            listViewStyles.AutoSizeLastColumn();
+        }
+
+        private void WebVttStyleManager_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape)
+            {
+                DialogResult = DialogResult.Cancel;
+            }
+        }
     }
 }

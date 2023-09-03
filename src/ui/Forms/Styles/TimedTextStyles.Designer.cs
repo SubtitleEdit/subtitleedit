@@ -29,12 +29,12 @@
         private void InitializeComponent()
         {
             this.groupBoxProperties = new System.Windows.Forms.GroupBox();
-            this.textBoxStyleName = new System.Windows.Forms.TextBox();
+            this.textBoxStyleName = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelStyleName = new System.Windows.Forms.Label();
             this.groupBoxPreview = new System.Windows.Forms.GroupBox();
             this.pictureBoxPreview = new System.Windows.Forms.PictureBox();
             this.groupBoxFont = new System.Windows.Forms.GroupBox();
-            this.textBoxFontSize = new System.Windows.Forms.TextBox();
+            this.textBoxFontSize = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.comboBoxFontWeight = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelFontWeight = new System.Windows.Forms.Label();
             this.comboBoxFontStyle = new Nikse.SubtitleEdit.Controls.NikseComboBox();
@@ -398,7 +398,7 @@
         #endregion
 
         private System.Windows.Forms.GroupBox groupBoxProperties;
-        private System.Windows.Forms.TextBox textBoxStyleName;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxStyleName;
         private System.Windows.Forms.Label labelStyleName;
         private System.Windows.Forms.Panel panelFontColor;
         private System.Windows.Forms.Button buttonFontColor;
@@ -423,7 +423,7 @@
         private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxFontStyle;
         private System.Windows.Forms.Label labelFontStyle;
         private System.Windows.Forms.ColorDialog colorDialogStyle;
-        private System.Windows.Forms.TextBox textBoxFontSize;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxFontSize;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonOK;
     }

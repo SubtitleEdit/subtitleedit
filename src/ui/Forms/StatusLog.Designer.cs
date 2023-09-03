@@ -30,7 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             this.buttonOK = new System.Windows.Forms.Button();
-            this.textBoxStatusLog = new System.Windows.Forms.TextBox();
+            this.textBoxStatusLog = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
             // 
@@ -89,7 +89,7 @@
         #endregion
 
         private System.Windows.Forms.Button buttonOK;
-        private System.Windows.Forms.TextBox textBoxStatusLog;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxStatusLog;
         private System.Windows.Forms.Timer timer1;
     }
 }

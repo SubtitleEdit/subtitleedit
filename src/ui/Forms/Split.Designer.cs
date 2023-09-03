@@ -39,14 +39,14 @@
             this.groupBoxOutput = new System.Windows.Forms.GroupBox();
             this.buttonOpenOutputFolder = new System.Windows.Forms.Button();
             this.labelFileName = new System.Windows.Forms.Label();
-            this.textBoxFileName = new System.Windows.Forms.TextBox();
+            this.textBoxFileName = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.comboBoxSubtitleFormats = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelEncoding = new System.Windows.Forms.Label();
             this.comboBoxEncoding = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelOutputFormat = new System.Windows.Forms.Label();
             this.labelChooseOutputFolder = new System.Windows.Forms.Label();
             this.buttonChooseFolder = new System.Windows.Forms.Button();
-            this.textBoxOutputFolder = new System.Windows.Forms.TextBox();
+            this.textBoxOutputFolder = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.groupBoxPreview = new System.Windows.Forms.GroupBox();
             this.listViewParts = new System.Windows.Forms.ListView();
@@ -410,7 +410,7 @@
         private System.Windows.Forms.Label labelOutputFormat;
         private System.Windows.Forms.Label labelChooseOutputFolder;
         private System.Windows.Forms.Button buttonChooseFolder;
-        private System.Windows.Forms.TextBox textBoxOutputFolder;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxOutputFolder;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
         private System.Windows.Forms.GroupBox groupBoxPreview;
         private System.Windows.Forms.Button buttonCancel;
@@ -426,7 +426,7 @@
         private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxSubtitleFormats;
         private System.Windows.Forms.Label labelEncoding;
         private System.Windows.Forms.Label labelFileName;
-        private System.Windows.Forms.TextBox textBoxFileName;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxFileName;
         private System.Windows.Forms.Button buttonOpenOutputFolder;
         private System.Windows.Forms.RadioButton radioButtonTime;
     }

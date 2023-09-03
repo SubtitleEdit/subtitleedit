@@ -31,7 +31,7 @@
             this.labelPleaseWait = new System.Windows.Forms.Label();
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
-            this.textBoxError = new System.Windows.Forms.TextBox();
+            this.textBoxError = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.SuspendLayout();
             // 
             // labelPleaseWait
@@ -110,6 +110,6 @@
         private System.Windows.Forms.Label labelPleaseWait;
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Button buttonCancel;
-        private System.Windows.Forms.TextBox textBoxError;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxError;
     }
 }

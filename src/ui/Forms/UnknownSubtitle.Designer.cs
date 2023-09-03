@@ -33,7 +33,7 @@
             this.richTextBoxMessage = new System.Windows.Forms.RichTextBox();
             this.buttonImportPlainText = new System.Windows.Forms.Button();
             this.LabelPreview = new System.Windows.Forms.Label();
-            this.textBoxPreview = new System.Windows.Forms.TextBox();
+            this.textBoxPreview = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.SuspendLayout();
             // 
             // labelTitle
@@ -141,6 +141,6 @@
         private System.Windows.Forms.RichTextBox richTextBoxMessage;
         private System.Windows.Forms.Button buttonImportPlainText;
         private System.Windows.Forms.Label LabelPreview;
-        private System.Windows.Forms.TextBox textBoxPreview;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxPreview;
     }
 }

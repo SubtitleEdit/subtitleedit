@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.textBoxHeader = new System.Windows.Forms.TextBox();
+            this.textBoxHeader = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelHeader = new System.Windows.Forms.Label();
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
@@ -102,7 +102,7 @@
 
         #endregion
 
-        private System.Windows.Forms.TextBox textBoxHeader;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxHeader;
         private System.Windows.Forms.Label labelHeader;
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Button buttonCancel;

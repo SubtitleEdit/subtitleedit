@@ -54,7 +54,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.buttonExport = new System.Windows.Forms.Button();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.labelInfo = new System.Windows.Forms.Label();
-            this.textBoxInfo = new System.Windows.Forms.TextBox();
+            this.textBoxInfo = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelImageResizedToFit = new System.Windows.Forms.Label();
             this.contextMenuStripPreview = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.setPreviewTextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -384,7 +384,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         private System.Windows.Forms.Button buttonExport;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.Label labelInfo;
-        private System.Windows.Forms.TextBox textBoxInfo;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxInfo;
         private System.Windows.Forms.Label labelImageResizedToFit;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripPreview;
         private System.Windows.Forms.ToolStripMenuItem setPreviewTextToolStripMenuItem;

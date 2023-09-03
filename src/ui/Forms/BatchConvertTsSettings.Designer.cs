@@ -49,7 +49,7 @@
             this.buttonChooseResolution = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.labelFileNameEnding = new System.Windows.Forms.Label();
-            this.textBoxFileNameAppend = new System.Windows.Forms.TextBox();
+            this.textBoxFileNameAppend = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.contextMenuStripFileNameAppend = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.twolettercountrycodeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.threelettercontrycodeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -418,7 +418,7 @@
         private System.Windows.Forms.Button buttonChooseResolution;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.Label labelFileNameEnding;
-        private System.Windows.Forms.TextBox textBoxFileNameAppend;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxFileNameAppend;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripFileNameAppend;
         private System.Windows.Forms.ToolStripMenuItem twolettercountrycodeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem threelettercontrycodeToolStripMenuItem;

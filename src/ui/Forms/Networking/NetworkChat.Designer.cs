@@ -37,7 +37,7 @@
             this.listViewUsers = new System.Windows.Forms.ListView();
             this.columnHeaderNick = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.textBoxChat = new System.Windows.Forms.TextBox();
+            this.textBoxChat = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.buttonSendChat = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
@@ -158,7 +158,7 @@
         private System.Windows.Forms.ListView listViewUsers;
         private System.Windows.Forms.ColumnHeader columnHeaderNick;
         private System.Windows.Forms.ColumnHeader columnHeader2;
-        private System.Windows.Forms.TextBox textBoxChat;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxChat;
         private System.Windows.Forms.Button buttonSendChat;
         private System.Windows.Forms.ImageList imageListUsers;
     }

@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.buttonOpenIfo = new System.Windows.Forms.Button();
-            this.textBoxIfoFileName = new System.Windows.Forms.TextBox();
+            this.textBoxIfoFileName = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelIfoFile = new System.Windows.Forms.Label();
             this.groupBoxDvd = new System.Windows.Forms.GroupBox();
             this.buttonClear = new System.Windows.Forms.Button();
@@ -314,7 +314,7 @@
         #endregion
 
         private System.Windows.Forms.Button buttonOpenIfo;
-        private System.Windows.Forms.TextBox textBoxIfoFileName;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxIfoFileName;
         private System.Windows.Forms.Label labelIfoFile;
         private System.Windows.Forms.GroupBox groupBoxDvd;
         private System.Windows.Forms.ListBox listBoxVobFiles;

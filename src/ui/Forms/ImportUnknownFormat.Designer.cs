@@ -39,7 +39,7 @@
             this.radioButtonTimeCodeFrames = new System.Windows.Forms.RadioButton();
             this.buttonRefresh = new System.Windows.Forms.Button();
             this.groupBoxImportText = new System.Windows.Forms.GroupBox();
-            this.textBoxText = new System.Windows.Forms.TextBox();
+            this.textBoxText = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.buttonOpenText = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.groupBoxImportResult.SuspendLayout();
@@ -256,7 +256,7 @@
         private System.Windows.Forms.GroupBox groupBoxTimeCodes;
         private System.Windows.Forms.Button buttonRefresh;
         private System.Windows.Forms.GroupBox groupBoxImportText;
-        private System.Windows.Forms.TextBox textBoxText;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxText;
         private System.Windows.Forms.Button buttonOpenText;
         private System.Windows.Forms.RadioButton radioButtonTimeCodeFrames;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;

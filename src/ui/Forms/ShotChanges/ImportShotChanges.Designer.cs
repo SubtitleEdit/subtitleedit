@@ -31,21 +31,21 @@
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
             this.groupBoxImportText = new System.Windows.Forms.GroupBox();
-            this.textBoxIImport = new System.Windows.Forms.TextBox();
+            this.textBoxIImport = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.groupBoxTimeCodes = new System.Windows.Forms.GroupBox();
             this.radioButtonMilliseconds = new System.Windows.Forms.RadioButton();
             this.radioButtonSeconds = new System.Windows.Forms.RadioButton();
             this.radioButtonFrames = new System.Windows.Forms.RadioButton();
             this.radioButtonHHMMSSMS = new System.Windows.Forms.RadioButton();
             this.buttonOpenText = new System.Windows.Forms.Button();
-            this.textBoxLog = new System.Windows.Forms.TextBox();
+            this.textBoxLog = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.groupBoxGenerateShotChanges = new System.Windows.Forms.GroupBox();
             this.labelThresholdDescription = new System.Windows.Forms.Label();
             this.numericUpDownThreshold = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelFfmpegThreshold = new System.Windows.Forms.Label();
             this.buttonDownloadFfmpeg = new System.Windows.Forms.Button();
             this.buttonImportWithFfmpeg = new System.Windows.Forms.Button();
-            this.textBoxGenerate = new System.Windows.Forms.TextBox();
+            this.textBoxGenerate = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.labelProgress = new System.Windows.Forms.Label();
@@ -363,17 +363,17 @@
         private System.Windows.Forms.RadioButton radioButtonFrames;
 		private System.Windows.Forms.RadioButton radioButtonHHMMSSMS;
         private System.Windows.Forms.GroupBox groupBoxGenerateShotChanges;
-        private System.Windows.Forms.TextBox textBoxGenerate;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxGenerate;
         private System.Windows.Forms.Button buttonOpenText;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.Button buttonImportWithFfmpeg;
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.Button buttonDownloadFfmpeg;
-        private System.Windows.Forms.TextBox textBoxIImport;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxIImport;
         private System.Windows.Forms.Label labelThresholdDescription;
         private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownThreshold;
         private System.Windows.Forms.Label labelFfmpegThreshold;
-        private System.Windows.Forms.TextBox textBoxLog;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxLog;
         private System.Windows.Forms.Label labelProgress;
     }
 }

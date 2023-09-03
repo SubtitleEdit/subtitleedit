@@ -55,7 +55,7 @@
             this.checkBoxItalic = new System.Windows.Forms.CheckBox();
             this.labelTextAssociatedWithImage = new System.Windows.Forms.Label();
             this.buttonDelete = new System.Windows.Forms.Button();
-            this.textBoxText = new System.Windows.Forms.TextBox();
+            this.textBoxText = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelInfo = new System.Windows.Forms.Label();
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
@@ -445,7 +445,7 @@
         private System.Windows.Forms.CheckBox checkBoxItalic;
         private System.Windows.Forms.Label labelTextAssociatedWithImage;
         private System.Windows.Forms.Button buttonDelete;
-        private System.Windows.Forms.TextBox textBoxText;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxText;
         private System.Windows.Forms.Label labelInfo;
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Button buttonCancel;

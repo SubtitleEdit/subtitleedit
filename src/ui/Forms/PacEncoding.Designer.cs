@@ -31,7 +31,7 @@
             this.comboBoxCodePage = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelCodePage = new System.Windows.Forms.Label();
             this.labelPreview = new System.Windows.Forms.Label();
-            this.textBoxPreview = new System.Windows.Forms.TextBox();
+            this.textBoxPreview = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
             this.SuspendLayout();
@@ -142,7 +142,7 @@
         private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxCodePage;
         private System.Windows.Forms.Label labelCodePage;
         private System.Windows.Forms.Label labelPreview;
-        private System.Windows.Forms.TextBox textBoxPreview;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxPreview;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonOK;
 

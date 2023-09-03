@@ -43,7 +43,7 @@
             this.buttonOK = new System.Windows.Forms.Button();
             this.listBoxSubtitles = new System.Windows.Forms.ListBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.textBoxTeletext = new System.Windows.Forms.TextBox();
+            this.textBoxTeletext = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.contextMenuStripListview.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -237,7 +237,7 @@
         private System.Windows.Forms.ToolStripMenuItem vobSubToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem dOSTToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveAllImagesWithHtmlIndexViewToolStripMenuItem;
-        private System.Windows.Forms.TextBox textBoxTeletext;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxTeletext;
         private System.Windows.Forms.ToolStripMenuItem saveSubtitleAsToolStripMenuItem;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
     }

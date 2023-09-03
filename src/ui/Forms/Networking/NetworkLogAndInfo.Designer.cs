@@ -28,15 +28,15 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.textBoxSessionKey = new System.Windows.Forms.TextBox();
+            this.textBoxSessionKey = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelSessionKey = new System.Windows.Forms.Label();
             this.labelLog = new System.Windows.Forms.Label();
-            this.textBoxLog = new System.Windows.Forms.TextBox();
+            this.textBoxLog = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.buttonOK = new System.Windows.Forms.Button();
             this.labelWebServiceUrl = new System.Windows.Forms.Label();
-            this.textBoxUserName = new System.Windows.Forms.TextBox();
+            this.textBoxUserName = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelUserName = new System.Windows.Forms.Label();
-            this.textBoxWebServiceUrl = new System.Windows.Forms.TextBox();
+            this.textBoxWebServiceUrl = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.SuspendLayout();
             // 
             // textBoxSessionKey
@@ -158,14 +158,14 @@
 
         #endregion
 
-        private System.Windows.Forms.TextBox textBoxSessionKey;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxSessionKey;
         private System.Windows.Forms.Label labelSessionKey;
         private System.Windows.Forms.Label labelLog;
-        private System.Windows.Forms.TextBox textBoxLog;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxLog;
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Label labelWebServiceUrl;
-        private System.Windows.Forms.TextBox textBoxUserName;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxUserName;
         private System.Windows.Forms.Label labelUserName;
-        private System.Windows.Forms.TextBox textBoxWebServiceUrl;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxWebServiceUrl;
     }
 }

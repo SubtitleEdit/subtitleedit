@@ -37,13 +37,13 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             this.labelNote = new System.Windows.Forms.Label();
             this.tabControlCommandLineHelp = new System.Windows.Forms.TabControl();
             this.TabPageCPP = new System.Windows.Forms.TabPage();
-            this.textBoxCpp = new System.Windows.Forms.TextBox();
+            this.textBoxCpp = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.tabPageConstMe = new System.Windows.Forms.TabPage();
-            this.textBoxConstMe = new System.Windows.Forms.TextBox();
+            this.textBoxConstMe = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.tabPageOpenAI = new System.Windows.Forms.TabPage();
-            this.textBoxOpenAI = new System.Windows.Forms.TextBox();
+            this.textBoxOpenAI = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.tabPageFasterWhisper = new System.Windows.Forms.TabPage();
-            this.textBoxPurfviewFasterWhisper = new System.Windows.Forms.TextBox();
+            this.textBoxPurfviewFasterWhisper = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.comboBoxWhisperExtra = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.tabControlCommandLineHelp.SuspendLayout();
             this.TabPageCPP.SuspendLayout();
@@ -279,12 +279,12 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         private System.Windows.Forms.Label labelNote;
         private System.Windows.Forms.TabControl tabControlCommandLineHelp;
         private System.Windows.Forms.TabPage TabPageCPP;
-        private System.Windows.Forms.TextBox textBoxCpp;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxCpp;
         private System.Windows.Forms.TabPage tabPageConstMe;
         private System.Windows.Forms.TabPage tabPageOpenAI;
-        private System.Windows.Forms.TextBox textBoxConstMe;
-        private System.Windows.Forms.TextBox textBoxOpenAI;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxConstMe;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxOpenAI;
         private System.Windows.Forms.TabPage tabPageFasterWhisper;
-        private System.Windows.Forms.TextBox textBoxPurfviewFasterWhisper;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxPurfviewFasterWhisper;
     }
 }

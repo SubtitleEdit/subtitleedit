@@ -74,7 +74,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.columnHeaderStart = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
-            this.textBoxSource = new System.Windows.Forms.TextBox();
+            this.textBoxSource = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.groupBoxStyle.SuspendLayout();
             this.groupBoxChapters.SuspendLayout();
             this.SuspendLayout();
@@ -688,7 +688,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         private System.Windows.Forms.Button buttonPickAttachmentFont;
         private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxFontName;
         private System.Windows.Forms.Label labelFontName;
-        private System.Windows.Forms.TextBox textBoxSource;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxSource;
         private System.Windows.Forms.Panel panelTextColor;
         private System.Windows.Forms.Button buttonTextColor;
         private Controls.NikseTimeUpDown timeUpDownStartTime;

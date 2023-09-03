@@ -38,7 +38,7 @@
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.groupBoxImageSettings = new System.Windows.Forms.GroupBox();
             this.labelImagePrefix = new System.Windows.Forms.Label();
-            this.textBoxImagePrefix = new System.Windows.Forms.TextBox();
+            this.textBoxImagePrefix = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.comboBoxResolution = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelResize = new System.Windows.Forms.Label();
             this.comboBoxResizePercentage = new Nikse.SubtitleEdit.Controls.NikseComboBox();
@@ -1224,7 +1224,7 @@
         private System.Windows.Forms.ToolStripMenuItem adjustDisplayTimeToolStripMenuItem;
         private System.Windows.Forms.CheckBox checkBoxFcpFullPathUrl;
         private System.Windows.Forms.Label labelImagePrefix;
-        private System.Windows.Forms.TextBox textBoxImagePrefix;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxImagePrefix;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripProfile;
         private System.Windows.Forms.ToolStripMenuItem profilesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exportToolStripMenuItem;
