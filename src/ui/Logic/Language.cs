@@ -368,7 +368,7 @@ namespace Nikse.SubtitleEdit.Logic
                 RemoveTemporaryFiles = "Remove temporary files",
                 SetCppConstMeFolder = "Set CPP/Const-me models folder...",
                 OnlyRunPostProcessing = "Run only post-processing/adjust timings",
-                DownloadFasterWhisperCuda = "Download CUDA for Perfview's Whisper-Faster",
+                DownloadFasterWhisperCuda = "Download cuBLAS and cuDNN libs for Faster-Whisper",
             };
 
             AssaAttachments = new LanguageStructure.AssaAttachments
