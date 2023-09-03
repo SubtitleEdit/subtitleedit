@@ -113,6 +113,7 @@
             // textBoxOcrFixValue
             // 
             this.textBoxOcrFixValue.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.textBoxOcrFixValue.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxOcrFixValue.Location = new System.Drawing.Point(99, 309);
             this.textBoxOcrFixValue.Name = "textBoxOcrFixValue";
             this.textBoxOcrFixValue.Size = new System.Drawing.Size(85, 20);
@@ -135,20 +136,27 @@
             this.listBoxOcrFixList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.listBoxOcrFixList.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.listBoxOcrFixList.FormattingEnabled = true;
+            this.listBoxOcrFixList.ItemHeight = 13;
             this.listBoxOcrFixList.Location = new System.Drawing.Point(6, 16);
             this.listBoxOcrFixList.Name = "listBoxOcrFixList";
+            this.listBoxOcrFixList.SelectedIndex = -1;
+            this.listBoxOcrFixList.SelectedItem = null;
             this.listBoxOcrFixList.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
             this.listBoxOcrFixList.Size = new System.Drawing.Size(187, 277);
+            this.listBoxOcrFixList.Sorted = false;
             this.listBoxOcrFixList.TabIndex = 40;
+            this.listBoxOcrFixList.TopIndex = 0;
             this.listBoxOcrFixList.SelectedIndexChanged += new System.EventHandler(this.ListBoxOcrFixListSelectedIndexChanged);
+            this.listBoxOcrFixList.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listBoxOcrFixList_KeyDown);
             this.listBoxOcrFixList.DoubleClick += new System.EventHandler(this.listBoxOcrFixList_DoubleClick);
             this.listBoxOcrFixList.Enter += new System.EventHandler(this.ListBoxSearchReset);
-            this.listBoxOcrFixList.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listBoxOcrFixList_KeyDown);
             // 
             // textBoxOcrFixKey
             // 
             this.textBoxOcrFixKey.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.textBoxOcrFixKey.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxOcrFixKey.Location = new System.Drawing.Point(5, 309);
             this.textBoxOcrFixKey.Name = "textBoxOcrFixKey";
             this.textBoxOcrFixKey.Size = new System.Drawing.Size(88, 20);
@@ -195,20 +203,27 @@
             // 
             this.listBoxUserWordLists.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
+            this.listBoxUserWordLists.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.listBoxUserWordLists.FormattingEnabled = true;
+            this.listBoxUserWordLists.ItemHeight = 13;
             this.listBoxUserWordLists.Location = new System.Drawing.Point(3, 16);
             this.listBoxUserWordLists.Name = "listBoxUserWordLists";
+            this.listBoxUserWordLists.SelectedIndex = -1;
+            this.listBoxUserWordLists.SelectedItem = null;
             this.listBoxUserWordLists.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
             this.listBoxUserWordLists.Size = new System.Drawing.Size(150, 277);
+            this.listBoxUserWordLists.Sorted = false;
             this.listBoxUserWordLists.TabIndex = 30;
+            this.listBoxUserWordLists.TopIndex = 0;
             this.listBoxUserWordLists.SelectedIndexChanged += new System.EventHandler(this.ListBoxUserWordListsSelectedIndexChanged);
+            this.listBoxUserWordLists.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listBoxUserWordLists_KeyDown);
             this.listBoxUserWordLists.DoubleClick += new System.EventHandler(this.listBoxUserWordLists_DoubleClick);
             this.listBoxUserWordLists.Enter += new System.EventHandler(this.ListBoxSearchReset);
-            this.listBoxUserWordLists.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listBoxUserWordLists_KeyDown);
             // 
             // textBoxUserWord
             // 
             this.textBoxUserWord.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.textBoxUserWord.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxUserWord.Location = new System.Drawing.Point(2, 309);
             this.textBoxUserWord.Name = "textBoxUserWord";
             this.textBoxUserWord.Size = new System.Drawing.Size(150, 20);
@@ -251,6 +266,7 @@
             // 
             // textBoxNamesOnline
             // 
+            this.textBoxNamesOnline.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxNamesOnline.Location = new System.Drawing.Point(6, 45);
             this.textBoxNamesOnline.Name = "textBoxNamesOnline";
             this.textBoxNamesOnline.Size = new System.Drawing.Size(764, 20);
@@ -286,7 +302,7 @@
             this.listViewNames.Location = new System.Drawing.Point(3, 21);
             this.listViewNames.Name = "listViewNames";
             this.listViewNames.Size = new System.Drawing.Size(148, 281);
-            this.listViewNames.TabIndex = 27;
+            this.listViewNames.TabIndex = 0;
             this.listViewNames.UseCompatibleStateImageBehavior = false;
             this.listViewNames.View = System.Windows.Forms.View.Details;
             this.listViewNames.SelectedIndexChanged += new System.EventHandler(this.ListViewNamesSelectedIndexChanged);
@@ -302,7 +318,7 @@
             this.buttonRemoveNameEtc.Location = new System.Drawing.Point(159, 16);
             this.buttonRemoveNameEtc.Name = "buttonRemoveNameEtc";
             this.buttonRemoveNameEtc.Size = new System.Drawing.Size(75, 23);
-            this.buttonRemoveNameEtc.TabIndex = 22;
+            this.buttonRemoveNameEtc.TabIndex = 2;
             this.buttonRemoveNameEtc.Text = "Remove";
             this.buttonRemoveNameEtc.UseVisualStyleBackColor = true;
             this.buttonRemoveNameEtc.Click += new System.EventHandler(this.ButtonRemoveNameEtcClick);
@@ -310,10 +326,11 @@
             // textBoxNameEtc
             // 
             this.textBoxNameEtc.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.textBoxNameEtc.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxNameEtc.Location = new System.Drawing.Point(3, 309);
             this.textBoxNameEtc.Name = "textBoxNameEtc";
             this.textBoxNameEtc.Size = new System.Drawing.Size(151, 20);
-            this.textBoxNameEtc.TabIndex = 24;
+            this.textBoxNameEtc.TabIndex = 3;
             this.textBoxNameEtc.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxNameEtcKeyDown);
             // 
             // buttonAddNames
@@ -322,7 +339,7 @@
             this.buttonAddNames.Location = new System.Drawing.Point(157, 307);
             this.buttonAddNames.Name = "buttonAddNames";
             this.buttonAddNames.Size = new System.Drawing.Size(75, 23);
-            this.buttonAddNames.TabIndex = 26;
+            this.buttonAddNames.TabIndex = 4;
             this.buttonAddNames.Text = "Add name";
             this.buttonAddNames.UseVisualStyleBackColor = true;
             this.buttonAddNames.Click += new System.EventHandler(this.ButtonAddNamesClick);
@@ -338,12 +355,26 @@
             // 
             // comboBoxWordListLanguage
             // 
+            this.comboBoxWordListLanguage.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxWordListLanguage.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxWordListLanguage.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxWordListLanguage.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxWordListLanguage.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxWordListLanguage.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxWordListLanguage.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxWordListLanguage.DropDownHeight = 400;
             this.comboBoxWordListLanguage.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxWordListLanguage.DropDownWidth = 155;
             this.comboBoxWordListLanguage.FormattingEnabled = true;
             this.comboBoxWordListLanguage.Location = new System.Drawing.Point(67, 16);
+            this.comboBoxWordListLanguage.MaxLength = 32767;
             this.comboBoxWordListLanguage.Name = "comboBoxWordListLanguage";
+            this.comboBoxWordListLanguage.SelectedIndex = -1;
+            this.comboBoxWordListLanguage.SelectedItem = null;
+            this.comboBoxWordListLanguage.SelectedText = "";
             this.comboBoxWordListLanguage.Size = new System.Drawing.Size(155, 21);
             this.comboBoxWordListLanguage.TabIndex = 0;
+            this.comboBoxWordListLanguage.UsePopupWindow = false;
             this.comboBoxWordListLanguage.SelectedIndexChanged += new System.EventHandler(this.ComboBoxWordListLanguageSelectedIndexChanged);
             // 
             // buttonCancel
