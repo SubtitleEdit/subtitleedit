@@ -35509,7 +35509,7 @@ namespace Nikse.SubtitleEdit.Forms
                              Configuration.Settings.Tools.WhisperChoice == WhisperChoice.PurfviewFasterWhisper &&
                              !WhisperAudioToText.IsFasterWhisperCudaInstalled())
                     {
-                        MessageBox.Show("Faster Whisper CUDA (GPU) seems to be missing.");
+                        MessageBox.Show("cuBLAS or cuDNN seems to be missing.");
                         WhisperAudioToText.DownloadCudaForWhisperFaster(this);
                     }
                     else
