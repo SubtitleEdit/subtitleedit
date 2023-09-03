@@ -25,6 +25,7 @@
    * Improve "Dark theme" (new controls/message-boxes)
    * Update Tesseract OCR to 5.3.1 (64-bit only)
    * Update yt-dlp to 2023.07.06
+   * Update lib mpv to 2023-08-27-git-83c0e98
    * Improve convert of SSA to ASSA - thx Emiliano
    * Update burn-in video preview to video - thx Masina86
    * Improve handling of invalid XML in TTML - thx m0ck69
@@ -54,6 +55,9 @@
    * Ignore ASS tags when converting colors to dialog
    * Fix a few issue with the "Color chooser" dialog - thx Windrider6
    * Fix crash in auto-translate - thx fdfg
+   * Fix crash in Google Translate Cloud V2 - thx Rielaph
+   * Fix alpha in hex color codes - thx Paul
+   * BDN XML - DropFrame="False" to DropFrame="false" - thx Alain
 
 
 3.6.13 (14th May 2023)
