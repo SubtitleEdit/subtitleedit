@@ -214,7 +214,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <RemoveTemporaryFiles>Αφαίρεση προσωρινών αρχείων</RemoveTemporaryFiles>
     <SetCppConstMeFolder>Διαδρομή φακέλου μοντέλων CPP / Const-me</SetCppConstMeFolder>
     <OnlyRunPostProcessing>Εκτέλεση μόνο μετεπεξεργασίας / προσαρμογή χρόνων</OnlyRunPostProcessing>
-    <DownloadFasterWhisperCuda>Λήψη CUDA για Whisper-Faster</DownloadFasterWhisperCuda>
+    <DownloadFasterWhisperCuda>Λήψη βιβλιοθηκών cuBLAS και cuDNN για Faster-Whisper</DownloadFasterWhisperCuda>
   </AudioToText>
   <AssaAttachments>
     <Title>Προσαρτήσεις Advanced Sub Station Alpha</Title>
