@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.6.13</Version>
-    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 18.08.2023</TranslatedBy>
+    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 03.09.2023</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -216,7 +216,7 @@ Vuoi ulteriori informazioni (web)?</WhisperNotFound>
     <RemoveTemporaryFiles>Rimuovi file temporanei</RemoveTemporaryFiles>
     <SetCppConstMeFolder>Imposta cartella modelli CPP/Const-me...</SetCppConstMeFolder>
     <OnlyRunPostProcessing>Esegui solo la post-elaborazione/regola i tempi</OnlyRunPostProcessing>
-    <DownloadFasterWhisperCuda>Download cuBLAS e cuDNN per Faster-Whisper</DownloadFasterWhisperCuda>
+    <DownloadFasterWhisperCuda>Download CUDA per Perfview's Whisper-Faster</DownloadFasterWhisperCuda>
   </AudioToText>
   <AssaAttachments>
     <Title>Allegati alpha sub station avanzati</Title>
@@ -542,6 +542,9 @@ Si sfrutta così il ritmo intrinseco dell'immagine.</CreateSimpleChainingToolTip
     <CheckingForUpdatesNewVersion>Disponibile nuova versione!</CheckingForUpdatesNewVersion>
     <InstallUpdate>Vai alla pagina di download</InstallUpdate>
     <NoUpdates>Non aggiornare</NoUpdates>
+    <XPluginsHasAnUpdate>{0} plugin da aggiornare -</XPluginsHasAnUpdate>
+    <OnePluginsHasAnUpdate>1 plugin da aggiornare -</OnePluginsHasAnUpdate>
+    <Update>Aggiorna</Update>
   </CheckForUpdates>
   <ChooseAudioTrack>
     <Title>Scegli traccia audio</Title>
