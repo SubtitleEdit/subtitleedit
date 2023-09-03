@@ -216,7 +216,7 @@ Meer informatie online weergeven?</WhisperNotFound>
     <RemoveTemporaryFiles>Tijdelijke bestanden verwijderen</RemoveTemporaryFiles>
     <SetCppConstMeFolder>Map CPP/Const-me-modellen instellen...</SetCppConstMeFolder>
     <OnlyRunPostProcessing>Alleen nabewerking uitvoeren/tijden aanpassen</OnlyRunPostProcessing>
-    <DownloadFasterWhisperCuda>CUDA voor Whisper-Faster van Perfview downloaden</DownloadFasterWhisperCuda>
+    <DownloadFasterWhisperCuda>cuBLAS en cuDNN voor Faster-Whisper downloaden</DownloadFasterWhisperCuda>
   </AudioToText>
   <AssaAttachments>
     <Title>Advanced Sub Station Alpha-bijlagen</Title>
