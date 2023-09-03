@@ -1917,7 +1917,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
         public static void DownloadCudaForWhisperFaster(IWin32Window owner)
         {
-            if (MessageBox.Show(string.Format(LanguageSettings.Current.Settings.DownloadX, "Faster-Whisper CUDA (GPU)"), "Subtitle Edit", MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
+            if (MessageBox.Show(string.Format(LanguageSettings.Current.Settings.DownloadX, " cuBLAS and cuDNN libs"), "Subtitle Edit", MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
             {
                 return;
             }
