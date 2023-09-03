@@ -2520,55 +2520,67 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
         private void buttonWaveformSelectedColor_Click(object sender, EventArgs e)
         {
-            colorDialogSSAStyle.Color = panelWaveformSelectedColor.BackColor;
-            if (colorDialogSSAStyle.ShowDialog() == DialogResult.OK)
+            using (var colorChooser = new ColorChooser { Color = panelWaveformSelectedColor.BackColor, ShowAlpha = false })
             {
-                panelWaveformSelectedColor.BackColor = colorDialogSSAStyle.Color;
+                if (colorChooser.ShowDialog() == DialogResult.OK)
+                {
+                    panelWaveformSelectedColor.BackColor = colorChooser.Color;
+                }
             }
         }
 
         private void buttonWaveformColor_Click(object sender, EventArgs e)
         {
-            colorDialogSSAStyle.Color = panelWaveformColor.BackColor;
-            if (colorDialogSSAStyle.ShowDialog() == DialogResult.OK)
+            using (var colorChooser = new ColorChooser { Color = panelWaveformColor.BackColor, ShowAlpha = false })
             {
-                panelWaveformColor.BackColor = colorDialogSSAStyle.Color;
+                if (colorChooser.ShowDialog() == DialogResult.OK)
+                {
+                    panelWaveformColor.BackColor = colorChooser.Color;
+                }
             }
         }
 
         private void buttonWaveformBackgroundColor_Click(object sender, EventArgs e)
         {
-            colorDialogSSAStyle.Color = panelWaveformBackgroundColor.BackColor;
-            if (colorDialogSSAStyle.ShowDialog() == DialogResult.OK)
+            using (var colorChooser = new ColorChooser { Color = panelWaveformBackgroundColor.BackColor, ShowAlpha = false })
             {
-                panelWaveformBackgroundColor.BackColor = colorDialogSSAStyle.Color;
+                if (colorChooser.ShowDialog() == DialogResult.OK)
+                {
+                    panelWaveformBackgroundColor.BackColor = colorChooser.Color;
+                }
             }
         }
 
         private void buttonWaveformGridColor_Click(object sender, EventArgs e)
         {
-            colorDialogSSAStyle.Color = panelWaveformGridColor.BackColor;
-            if (colorDialogSSAStyle.ShowDialog() == DialogResult.OK)
+            using (var colorChooser = new ColorChooser { Color = panelWaveformGridColor.BackColor, ShowAlpha = false })
             {
-                panelWaveformGridColor.BackColor = colorDialogSSAStyle.Color;
+                if (colorChooser.ShowDialog() == DialogResult.OK)
+                {
+                    panelWaveformGridColor.BackColor = colorChooser.Color;
+                }
             }
         }
 
         private void buttonWaveformTextColor_Click(object sender, EventArgs e)
         {
-            colorDialogSSAStyle.Color = panelWaveformTextColor.BackColor;
-            if (colorDialogSSAStyle.ShowDialog() == DialogResult.OK)
+            using (var colorChooser = new ColorChooser { Color = panelWaveformTextColor.BackColor, ShowAlpha = false })
             {
-                panelWaveformTextColor.BackColor = colorDialogSSAStyle.Color;
+                if (colorChooser.ShowDialog() == DialogResult.OK)
+                {
+                    panelWaveformTextColor.BackColor = colorChooser.Color;
+                }
             }
         }
 
         private void buttonWaveformCursorColor_Click(object sender, EventArgs e)
         {
-            colorDialogSSAStyle.Color = panelWaveformCursorColor.BackColor;
-            if (colorDialogSSAStyle.ShowDialog() == DialogResult.OK)
+            using (var colorChooser = new ColorChooser { Color = panelWaveformCursorColor.BackColor, ShowAlpha = false })
             {
-                panelWaveformCursorColor.BackColor = colorDialogSSAStyle.Color;
+                if (colorChooser.ShowDialog() == DialogResult.OK)
+                {
+                    panelWaveformCursorColor.BackColor = colorChooser.Color;
+                }
             }
         }
 
@@ -2631,28 +2643,34 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
         private void buttonWaveformSelectedColor_Click(object sender, MouseEventArgs e)
         {
-            colorDialogSSAStyle.Color = panelWaveformSelectedColor.BackColor;
-            if (colorDialogSSAStyle.ShowDialog() == DialogResult.OK)
+            using (var colorChooser = new ColorChooser { Color = panelWaveformSelectedColor.BackColor, ShowAlpha = false })
             {
-                panelWaveformSelectedColor.BackColor = colorDialogSSAStyle.Color;
+                if (colorChooser.ShowDialog() == DialogResult.OK)
+                {
+                    panelWaveformSelectedColor.BackColor = colorChooser.Color;
+                }
             }
         }
 
         private void panelSubtitleFontColor_Click(object sender, EventArgs e)
         {
-            colorDialogSSAStyle.Color = panelSubtitleFontColor.BackColor;
-            if (colorDialogSSAStyle.ShowDialog() == DialogResult.OK)
+            using (var colorChooser = new ColorChooser { Color = panelSubtitleFontColor.BackColor, ShowAlpha = false })
             {
-                panelSubtitleFontColor.BackColor = colorDialogSSAStyle.Color;
+                if (colorChooser.ShowDialog() == DialogResult.OK)
+                {
+                    panelSubtitleFontColor.BackColor = colorChooser.Color;
+                }
             }
         }
 
         private void panelSubtitleBackgroundColor_Click(object sender, EventArgs e)
         {
-            colorDialogSSAStyle.Color = panelSubtitleBackgroundColor.BackColor;
-            if (colorDialogSSAStyle.ShowDialog() == DialogResult.OK)
+            using (var colorChooser = new ColorChooser { Color = panelSubtitleBackgroundColor.BackColor, ShowAlpha = false })
             {
-                panelSubtitleBackgroundColor.BackColor = colorDialogSSAStyle.Color;
+                if (colorChooser.ShowDialog() == DialogResult.OK)
+                {
+                    panelSubtitleBackgroundColor.BackColor = colorChooser.Color;
+                }
             }
         }
 
@@ -2802,10 +2820,12 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
         private void buttonListViewSyntaxColorError_Click(object sender, EventArgs e)
         {
-            colorDialogSSAStyle.Color = panelListViewSyntaxColorError.BackColor;
-            if (colorDialogSSAStyle.ShowDialog() == DialogResult.OK)
+            using (var colorChooser = new ColorChooser { Color = panelListViewSyntaxColorError.BackColor, ShowAlpha = false })
             {
-                panelListViewSyntaxColorError.BackColor = colorDialogSSAStyle.Color;
+                if (colorChooser.ShowDialog() == DialogResult.OK)
+                {
+                    panelListViewSyntaxColorError.BackColor = colorChooser.Color;
+                }
             }
         }
 
@@ -3736,28 +3756,34 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
         private void buttonMpvPrimaryColor_Click(object sender, EventArgs e)
         {
-            colorDialogSSAStyle.Color = panelMpvPrimaryColor.BackColor;
-            if (colorDialogSSAStyle.ShowDialog() == DialogResult.OK)
+            using (var colorChooser = new ColorChooser { Color = panelMpvPrimaryColor.BackColor, ShowAlpha = false })
             {
-                panelMpvPrimaryColor.BackColor = colorDialogSSAStyle.Color;
+                if (colorChooser.ShowDialog() == DialogResult.OK)
+                {
+                    panelMpvPrimaryColor.BackColor = colorChooser.Color;
+                }
             }
         }
 
         private void buttonMpvOutlineColor_Click(object sender, EventArgs e)
         {
-            colorDialogSSAStyle.Color = panelMpvOutlineColor.BackColor;
-            if (colorDialogSSAStyle.ShowDialog() == DialogResult.OK)
+            using (var colorChooser = new ColorChooser { Color = panelMpvOutlineColor.BackColor, ShowAlpha = false })
             {
-                panelMpvOutlineColor.BackColor = colorDialogSSAStyle.Color;
+                if (colorChooser.ShowDialog() == DialogResult.OK)
+                {
+                    panelMpvOutlineColor.BackColor = colorChooser.Color;
+                }
             }
         }
 
         private void buttonMpvBackColor_Click(object sender, EventArgs e)
         {
-            colorDialogSSAStyle.Color = panelMpvBackColor.BackColor;
-            if (colorDialogSSAStyle.ShowDialog() == DialogResult.OK)
+            using (var colorChooser = new ColorChooser { Color = panelMpvBackColor.BackColor, ShowAlpha = false })
             {
-                panelMpvBackColor.BackColor = colorDialogSSAStyle.Color;
+                if (colorChooser.ShowDialog() == DialogResult.OK)
+                {
+                    panelMpvBackColor.BackColor = colorChooser.Color;
+                }
             }
         }
 

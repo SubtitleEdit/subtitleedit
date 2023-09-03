@@ -40,7 +40,6 @@
             this.panelColor = new System.Windows.Forms.Panel();
             this.labelChooseColor = new System.Windows.Forms.Label();
             this.buttonPreview = new System.Windows.Forms.Button();
-            this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.richTextBoxPreview = new System.Windows.Forms.RichTextBox();
             this.SuspendLayout();
@@ -65,6 +64,13 @@
             // 
             // numericUpDownDelay
             // 
+            this.numericUpDownDelay.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownDelay.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownDelay.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownDelay.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownDelay.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownDelay.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownDelay.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.numericUpDownDelay.DecimalPlaces = 3;
             this.numericUpDownDelay.Increment = new decimal(new int[] {
             1,
@@ -85,6 +91,13 @@
             this.numericUpDownDelay.Name = "numericUpDownDelay";
             this.numericUpDownDelay.Size = new System.Drawing.Size(54, 21);
             this.numericUpDownDelay.TabIndex = 47;
+            this.numericUpDownDelay.TabStop = false;
+            this.numericUpDownDelay.ThousandsSeparator = false;
+            this.numericUpDownDelay.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             // 
             // labelColor
             // 
@@ -231,7 +244,6 @@
         private System.Windows.Forms.Panel panelColor;
         private System.Windows.Forms.Label labelChooseColor;
         private System.Windows.Forms.Button buttonPreview;
-        private System.Windows.Forms.ColorDialog colorDialog1;
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.RichTextBox richTextBoxPreview;
     }

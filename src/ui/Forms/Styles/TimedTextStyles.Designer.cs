@@ -54,7 +54,6 @@
             this.columnHeaderFontSize = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderColor = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderUsed = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.colorDialogStyle = new System.Windows.Forms.ColorDialog();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
             this.groupBoxProperties.SuspendLayout();
@@ -82,6 +81,7 @@
             // 
             // textBoxStyleName
             // 
+            this.textBoxStyleName.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxStyleName.Location = new System.Drawing.Point(49, 22);
             this.textBoxStyleName.Name = "textBoxStyleName";
             this.textBoxStyleName.Size = new System.Drawing.Size(246, 20);
@@ -142,6 +142,7 @@
             // 
             // textBoxFontSize
             // 
+            this.textBoxFontSize.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxFontSize.Location = new System.Drawing.Point(100, 43);
             this.textBoxFontSize.Name = "textBoxFontSize";
             this.textBoxFontSize.Size = new System.Drawing.Size(188, 20);
@@ -150,15 +151,29 @@
             // 
             // comboBoxFontWeight
             // 
+            this.comboBoxFontWeight.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxFontWeight.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxFontWeight.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxFontWeight.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxFontWeight.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxFontWeight.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxFontWeight.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxFontWeight.DropDownHeight = 400;
             this.comboBoxFontWeight.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxFontWeight.DropDownWidth = 188;
             this.comboBoxFontWeight.FormattingEnabled = true;
             this.comboBoxFontWeight.Items.AddRange(new object[] {
             "normal",
             "bold"});
             this.comboBoxFontWeight.Location = new System.Drawing.Point(100, 97);
+            this.comboBoxFontWeight.MaxLength = 32767;
             this.comboBoxFontWeight.Name = "comboBoxFontWeight";
+            this.comboBoxFontWeight.SelectedIndex = -1;
+            this.comboBoxFontWeight.SelectedItem = null;
+            this.comboBoxFontWeight.SelectedText = "";
             this.comboBoxFontWeight.Size = new System.Drawing.Size(188, 21);
             this.comboBoxFontWeight.TabIndex = 3;
+            this.comboBoxFontWeight.UsePopupWindow = false;
             this.comboBoxFontWeight.TextChanged += new System.EventHandler(this.comboBoxFontWeight_TextChanged);
             // 
             // labelFontWeight
@@ -172,16 +187,30 @@
             // 
             // comboBoxFontStyle
             // 
+            this.comboBoxFontStyle.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxFontStyle.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxFontStyle.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxFontStyle.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxFontStyle.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxFontStyle.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxFontStyle.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxFontStyle.DropDownHeight = 400;
             this.comboBoxFontStyle.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxFontStyle.DropDownWidth = 188;
             this.comboBoxFontStyle.FormattingEnabled = true;
             this.comboBoxFontStyle.Items.AddRange(new object[] {
             "normal",
             "italic",
             "oblique"});
             this.comboBoxFontStyle.Location = new System.Drawing.Point(100, 70);
+            this.comboBoxFontStyle.MaxLength = 32767;
             this.comboBoxFontStyle.Name = "comboBoxFontStyle";
+            this.comboBoxFontStyle.SelectedIndex = -1;
+            this.comboBoxFontStyle.SelectedItem = null;
+            this.comboBoxFontStyle.SelectedText = "";
             this.comboBoxFontStyle.Size = new System.Drawing.Size(188, 21);
             this.comboBoxFontStyle.TabIndex = 2;
+            this.comboBoxFontStyle.UsePopupWindow = false;
             this.comboBoxFontStyle.TextChanged += new System.EventHandler(this.comboBoxFontStyle_TextChanged);
             // 
             // labelFontStyle
@@ -195,11 +224,27 @@
             // 
             // comboBoxFontName
             // 
+            this.comboBoxFontName.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxFontName.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxFontName.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxFontName.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxFontName.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxFontName.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxFontName.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxFontName.DropDownHeight = 400;
+            this.comboBoxFontName.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
+            this.comboBoxFontName.DropDownWidth = 188;
             this.comboBoxFontName.FormattingEnabled = true;
             this.comboBoxFontName.Location = new System.Drawing.Point(100, 17);
+            this.comboBoxFontName.MaxLength = 32767;
             this.comboBoxFontName.Name = "comboBoxFontName";
+            this.comboBoxFontName.SelectedIndex = -1;
+            this.comboBoxFontName.SelectedItem = null;
+            this.comboBoxFontName.SelectedText = "";
             this.comboBoxFontName.Size = new System.Drawing.Size(188, 21);
             this.comboBoxFontName.TabIndex = 0;
+            this.comboBoxFontName.TabStop = false;
+            this.comboBoxFontName.UsePopupWindow = false;
             this.comboBoxFontName.TextChanged += new System.EventHandler(this.comboBoxFontName_TextChanged);
             // 
             // panelFontColor
@@ -380,10 +425,10 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Timed Text - Styles";
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TimedTextStyles_KeyDown);
-            this.ResizeEnd += new System.EventHandler(this.TimedTextStyles_ResizeEnd);
             this.Shown += new System.EventHandler(this.TimedTextStyles_Shown);
+            this.ResizeEnd += new System.EventHandler(this.TimedTextStyles_ResizeEnd);
             this.SizeChanged += new System.EventHandler(this.TimedTextStyles_SizeChanged);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TimedTextStyles_KeyDown);
             this.groupBoxProperties.ResumeLayout(false);
             this.groupBoxProperties.PerformLayout();
             this.groupBoxPreview.ResumeLayout(false);
@@ -422,7 +467,6 @@
         private System.Windows.Forms.Label labelFontWeight;
         private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxFontStyle;
         private System.Windows.Forms.Label labelFontStyle;
-        private System.Windows.Forms.ColorDialog colorDialogStyle;
         private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxFontSize;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonOK;

@@ -138,21 +138,25 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void ColorToWhite(object sender, EventArgs e)
         {
-            colorDialog1.Color = panelColorToWhite.BackColor;
-            if (colorDialog1.ShowDialog() == DialogResult.OK)
+            using (var colorChooser = new ColorChooser { Color = panelColorToWhite.BackColor, ShowAlpha = false })
             {
-                panelColorToWhite.BackColor = colorDialog1.Color;
-                RefreshImage();
+                if (colorChooser.ShowDialog() == DialogResult.OK)
+                {
+                    panelColorToWhite.BackColor = colorChooser.Color;
+                    RefreshImage();
+                }
             }
         }
 
         private void buttonColorToRemove_Click(object sender, EventArgs e)
         {
-            colorDialog1.Color = panelColorToRemove.BackColor;
-            if (colorDialog1.ShowDialog() == DialogResult.OK)
+            using (var colorChooser = new ColorChooser { Color = panelColorToRemove.BackColor, ShowAlpha = false })
             {
-                panelColorToRemove.BackColor = colorDialog1.Color;
-                RefreshImage();
+                if (colorChooser.ShowDialog() == DialogResult.OK)
+                {
+                    panelColorToRemove.BackColor = colorChooser.Color;
+                    RefreshImage();
+                }
             }
         }
 
