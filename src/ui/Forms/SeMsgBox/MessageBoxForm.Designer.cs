@@ -198,6 +198,7 @@
             this.seTextBox2.Multiline = true;
             this.seTextBox2.Name = "seTextBox2";
             this.seTextBox2.Padding = new System.Windows.Forms.Padding(1);
+            this.seTextBox2.ReadOnly = false;
             this.seTextBox2.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
             this.seTextBox2.SelectedText = "";
             this.seTextBox2.SelectionLength = 0;
@@ -231,6 +232,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "MessageBoxForm";
+            this.Shown += new System.EventHandler(this.MessageBoxForm_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MessageBoxForm_KeyDown);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxIcon)).EndInit();
             this.contextMenuStrip1.ResumeLayout(false);

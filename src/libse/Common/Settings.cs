@@ -3122,6 +3122,7 @@ $HorzAlign          =   Center
         //}
 
         public static bool UseLegacyHtmlColor = true;
+        public static bool IsVersion3 = false;
 
         public static Settings GetSettings()
         {
@@ -3139,10 +3140,10 @@ $HorzAlign          =   Center
                         settings.General.DefaultEncoding = TextEncoding.Utf8WithBom;
                     }
 
-                    //if (settings.Version.StartsWith("3.", StringComparison.Ordinal))
-                    //{
-                    //    UseHexAlphaBefore = true;
-                    //}
+                    if (settings.Version.StartsWith("3.", StringComparison.Ordinal))
+                    {
+                        IsVersion3 = true;
+                    }
 
                     settings.General.UseLegacyHtmlColor = false;
                     UseLegacyHtmlColor = false;
@@ -12003,7 +12004,7 @@ $HorzAlign          =   Center
 
             if (s.Length == 8)
             {
-                if (UseLegacyHtmlColor)
+                if (UseLegacyHtmlColor && IsVersion3)
                 {
                     if (!int.TryParse(s.Substring(0, 2), NumberStyles.HexNumber, null, out var alpha))
                     {

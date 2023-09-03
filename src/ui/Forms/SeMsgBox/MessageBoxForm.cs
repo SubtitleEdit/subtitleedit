@@ -127,9 +127,11 @@ namespace Nikse.SubtitleEdit.Forms.SeMsgBox
 
             if (text.Length > 500)
             {
+                seTextBox2.ReadOnly = true;
                 seTextBox2.Text = text;
                 labelText.Visible = false;
                 seTextBox2.ContextMenuStrip = contextMenuStrip1;
+                seTextBox2.SelectionLength = 0;
                 return;
             }
 
@@ -240,6 +242,14 @@ namespace Nikse.SubtitleEdit.Forms.SeMsgBox
         private void copyTextToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Clipboard.SetText(_text);
+        }
+
+        private void MessageBoxForm_Shown(object sender, EventArgs e)
+        {
+            if (buttonOK.Visible)
+            {
+                buttonOK.Focus();
+            }
         }
     }
 }
