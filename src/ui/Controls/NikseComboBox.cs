@@ -899,7 +899,11 @@ namespace Nikse.SubtitleEdit.Controls
             }
 
             _popUp = new NikseComboBoxPopUp(_listView, SelectedIndex, x, y);
-            _popUp.ShowDialog(Parent);
+            var result = _popUp.ShowDialog(Parent);
+            if (result == DialogResult.OK && _listView.SelectedItems.Count > 0)
+            {
+                SelectedIndex = _listView.SelectedItems[0].Index;
+            }
             _listView?.Dispose();
             _listView = null;
             _listViewShown = false;
