@@ -7,7 +7,6 @@ using System.Drawing;
 using System.Drawing.Design;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core.SubtitleFormats;
 
 namespace Nikse.SubtitleEdit.Controls
 {
@@ -18,7 +17,7 @@ namespace Nikse.SubtitleEdit.Controls
         public event EventHandler SelectedIndexChanged;
 
         // ReSharper disable once InconsistentNaming
-        public event EventHandler SelectedValueChanged; //TODO: test...
+        public event EventHandler SelectedValueChanged;
 
         // ReSharper disable once InconsistentNaming
         public event EventHandler DropDown;
@@ -463,13 +462,27 @@ namespace Nikse.SubtitleEdit.Controls
                         e.KeyCode == Keys.D6 ||
                         e.KeyCode == Keys.D7 ||
                         e.KeyCode == Keys.D8 ||
-                        e.KeyCode <= Keys.D9)
+                        e.KeyCode == Keys.D9 ||
+                        e.KeyCode == Keys.NumPad0 ||
+                        e.KeyCode == Keys.NumPad1 ||
+                        e.KeyCode == Keys.NumPad2 ||
+                        e.KeyCode == Keys.NumPad3 ||
+                        e.KeyCode == Keys.NumPad4 ||
+                        e.KeyCode == Keys.NumPad5 ||
+                        e.KeyCode == Keys.NumPad6 ||
+                        e.KeyCode == Keys.NumPad7 ||
+                        e.KeyCode == Keys.NumPad8 ||
+                        e.KeyCode <= Keys.NumPad9)
                         && _items.Count > 0)
                     {
                         var letter = e.KeyCode.ToString();
                         if (letter.Length == 2 && letter.StartsWith('D'))
                         {
                             letter = letter.Remove(0, 1);
+                        }
+                        else if (letter.Length == 7 && letter.StartsWith("NumPad", StringComparison.Ordinal))
+                        {
+                            letter = letter.Remove(0, 6);
                         }
 
                         var start = 0;
@@ -624,11 +637,6 @@ namespace Nikse.SubtitleEdit.Controls
                 var coordinates = form.PointToClient(Cursor.Position);
                 if (_popUp != null)
                 {
-                    var listViewBounds = new Rectangle(
-                        _listView.Bounds.X,
-                        _listView.Bounds.Y - 25,
-                        _listView.Bounds.Width + 25 + 25,
-                        _listView.Bounds.Height + 50 + 25);
                     if (_hasItemsMouseOver &&
                         !(_popUp.BoundsContainsCursorPosition() || Bounds.Contains(coordinates)) ||
                         !_listViewShown)
@@ -652,8 +660,6 @@ namespace Nikse.SubtitleEdit.Controls
                         return;
                     }
                 }
-
-
 
                 _hasItemsMouseOver = true;
             };
