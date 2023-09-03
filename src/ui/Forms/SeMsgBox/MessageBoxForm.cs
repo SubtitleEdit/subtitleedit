@@ -49,6 +49,7 @@ namespace Nikse.SubtitleEdit.Forms.SeMsgBox
             Text = caption;
             _text = text;
             copyTextToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.ContextMenu.CopyToClipboard;
+            toolStripMenuItemCopyText.Text = LanguageSettings.Current.Main.Menu.ContextMenu.CopyToClipboard;
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             buttonYes.Text = LanguageSettings.Current.General.Yes;
