@@ -1250,7 +1250,7 @@ namespace Nikse.SubtitleEdit.Forms
                         "<Description>" + Environment.NewLine +
                         "<Name Title=\"subtitle_exp\" Content=\"\"/>" + Environment.NewLine +
                         "<Language Code=\"eng\"/>" + Environment.NewLine +
-                        "<Format VideoFormat=\"" + videoFormat + "\" FrameRate=\"" + FrameRate.ToString(CultureInfo.InvariantCulture) + "\" DropFrame=\"False\"/>" + Environment.NewLine +
+                        "<Format VideoFormat=\"" + videoFormat + "\" FrameRate=\"" + FrameRate.ToString(CultureInfo.InvariantCulture) + "\" DropFrame=\"false\"/>" + Environment.NewLine +
                         "<Events Type=\"Graphic\" FirstEventInTC=\"" + ToHHMMSSFF(first.StartTime) + "\" LastEventOutTC=\"" + ToHHMMSSFF(last.EndTime) + "\" NumberofEvents=\"" + imagesSavedCount.ToString(CultureInfo.InvariantCulture) + "\"/>" + Environment.NewLine +
                         "</Description>" + Environment.NewLine +
                         "<Events>" + Environment.NewLine +
