@@ -946,6 +946,15 @@ namespace Nikse.SubtitleEdit.Controls
                     var item = _listView.SelectedItems[0];
                     _selectedIndex = item.Index;
                     _textBox.Text = item.Text;
+
+                    HideDropDown();
+                    args.SuppressKeyPress = true;
+
+                    if (!_skipPaint)
+                    {
+                        Invalidate();
+                    }
+
                     if (!_loading)
                     {
                         SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
@@ -953,13 +962,6 @@ namespace Nikse.SubtitleEdit.Controls
                         TextChanged?.Invoke(this, EventArgs.Empty);
                     }
 
-                    if (!_skipPaint)
-                    {
-                        Invalidate();
-                    }
-
-                    HideDropDown();
-                    args.SuppressKeyPress = true;
                 }
                 else
                 {
@@ -984,6 +986,10 @@ namespace Nikse.SubtitleEdit.Controls
                         _selectedIndex = i;
                         _textBox.Text = _listView.Items[i].Text;
 
+                        HideDropDown();
+                        _textBox.Focus();
+                        _textBox.SelectionLength = 0;
+
                         if (!_loading)
                         {
                             SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
@@ -991,9 +997,6 @@ namespace Nikse.SubtitleEdit.Controls
                             TextChanged?.Invoke(this, EventArgs.Empty);
                         }
 
-                        HideDropDown();
-                        _textBox.Focus();
-                        _textBox.SelectionLength = 0;
                         return;
                     }
                 }
