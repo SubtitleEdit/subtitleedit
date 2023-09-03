@@ -1430,6 +1430,12 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                                 return;
                             }
                         }
+
+                        if (whisperChoice == WhisperChoice.PurfviewFasterWhisper && 
+                            !IsFasterWhisperCudaInstalled() && IsFasterWhisperCudaSupported() )
+                        {
+                            DownloadCudaForWhisperFaster(this);
+                        }
                     }
                 }
             }
