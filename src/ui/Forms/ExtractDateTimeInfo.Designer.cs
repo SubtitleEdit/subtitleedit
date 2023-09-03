@@ -43,7 +43,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
             this.labelStartFrom = new System.Windows.Forms.Label();
             this.labelExample = new System.Windows.Forms.Label();
-            this.textBoxExample = new System.Windows.Forms.TextBox();
+            this.textBoxExample = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelDuration = new System.Windows.Forms.Label();
             this.timeUpDownDuration = new Nikse.SubtitleEdit.Controls.NikseTimeUpDown();
             this.timeUpDownStartTime = new Nikse.SubtitleEdit.Controls.NikseTimeUpDown();
@@ -264,7 +264,7 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.DateTimePicker dateTimePicker1;
         private System.Windows.Forms.Label labelStartFrom;
         private System.Windows.Forms.Label labelExample;
-        private System.Windows.Forms.TextBox textBoxExample;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxExample;
         private Controls.NikseTimeUpDown timeUpDownStartTime;
         private System.Windows.Forms.Label labelDuration;
         private Controls.NikseTimeUpDown timeUpDownDuration;

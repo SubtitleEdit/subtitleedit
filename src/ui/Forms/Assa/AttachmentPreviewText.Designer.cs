@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.textBoxPreviewText = new System.Windows.Forms.TextBox();
+            this.textBoxPreviewText = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
             this.SuspendLayout();
@@ -91,7 +91,7 @@
 
         #endregion
 
-        private System.Windows.Forms.TextBox textBoxPreviewText;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxPreviewText;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonOK;
     }

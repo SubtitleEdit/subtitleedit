@@ -32,7 +32,7 @@
             this.buttonDownload = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.comboBoxModels = new Nikse.SubtitleEdit.Controls.NikseComboBox();
-            this.textBoxError = new System.Windows.Forms.TextBox();
+            this.textBoxError = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.SuspendLayout();
             // 
             // labelPleaseWait
@@ -121,6 +121,6 @@
         private System.Windows.Forms.Button buttonDownload;
         private System.Windows.Forms.Button buttonCancel;
         private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxModels;
-        private System.Windows.Forms.TextBox textBoxError;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxError;
     }
 }

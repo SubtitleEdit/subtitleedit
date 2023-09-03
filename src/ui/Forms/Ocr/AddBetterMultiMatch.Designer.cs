@@ -32,7 +32,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.checkBoxItalic = new System.Windows.Forms.CheckBox();
             this.labelText = new System.Windows.Forms.Label();
-            this.textBoxText = new System.Windows.Forms.TextBox();
+            this.textBoxText = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.numericUpDownExpandCount = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelImageInfo = new System.Windows.Forms.Label();
             this.pictureBoxInspectItem = new System.Windows.Forms.PictureBox();
@@ -212,6 +212,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.CheckBox checkBoxItalic;
         private System.Windows.Forms.Label labelText;
-        private System.Windows.Forms.TextBox textBoxText;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxText;
     }
 }

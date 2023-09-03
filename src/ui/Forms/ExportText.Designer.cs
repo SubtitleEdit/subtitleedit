@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.textBoxText = new System.Windows.Forms.TextBox();
+            this.textBoxText = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.groupBoxImportOptions = new System.Windows.Forms.GroupBox();
             this.labelEncoding = new System.Windows.Forms.Label();
             this.comboBoxEncoding = new Nikse.SubtitleEdit.Controls.NikseComboBox();
@@ -382,7 +382,7 @@
 
         #endregion
 
-        private System.Windows.Forms.TextBox textBoxText;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxText;
         private System.Windows.Forms.GroupBox groupBoxImportOptions;
         private System.Windows.Forms.CheckBox checkBoxShowLineNumbers;
         private System.Windows.Forms.GroupBox groupBoxTimeCodeFormat;

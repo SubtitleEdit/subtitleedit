@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.groupBoxFont = new System.Windows.Forms.GroupBox();
-            this.textBoxFontName = new System.Windows.Forms.TextBox();
+            this.textBoxFontName = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelFontName = new System.Windows.Forms.Label();
             this.numericUpDownFontSize = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelFontSize = new System.Windows.Forms.Label();
@@ -144,7 +144,7 @@
         private System.Windows.Forms.GroupBox groupBoxFont;
         private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownFontSize;
         private System.Windows.Forms.Label labelFontSize;
-        private System.Windows.Forms.TextBox textBoxFontName;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxFontName;
         private System.Windows.Forms.Label labelFontName;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonOK;

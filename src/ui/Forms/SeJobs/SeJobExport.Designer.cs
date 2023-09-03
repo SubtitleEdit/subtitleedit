@@ -30,14 +30,14 @@
         {
             this.checkBoxIncludeShotChanges = new System.Windows.Forms.CheckBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.textBoxJobId = new System.Windows.Forms.TextBox();
+            this.textBoxJobId = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelSubtitleFileName = new System.Windows.Forms.Label();
-            this.textBoxJobDescription = new System.Windows.Forms.TextBox();
+            this.textBoxJobDescription = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelDescription = new System.Windows.Forms.Label();
             this.checkBoxIncludeRules = new System.Windows.Forms.CheckBox();
             this.checkBoxIncludeWaveform = new System.Windows.Forms.CheckBox();
             this.checkBoxIncludeBookmarks = new System.Windows.Forms.CheckBox();
-            this.textBoxSubtitleFileName = new System.Windows.Forms.TextBox();
+            this.textBoxSubtitleFileName = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.buttonGapChoose = new System.Windows.Forms.Button();
             this.labelOptimalCharsPerSecond = new System.Windows.Forms.Label();
@@ -56,9 +56,9 @@
             this.numericUpDownMaxCharsSec = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelMinGapMs = new System.Windows.Forms.Label();
             this.numericUpDownSubtitleLineMaximumLength = new Nikse.SubtitleEdit.Controls.NikseUpDown();
-            this.textBoxJobName = new System.Windows.Forms.TextBox();
+            this.textBoxJobName = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.label4 = new System.Windows.Forms.Label();
-            this.textBoxVideoUrl = new System.Windows.Forms.TextBox();
+            this.textBoxVideoUrl = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelVideoUrl = new System.Windows.Forms.Label();
             this.labelSubtitleTotalCount = new System.Windows.Forms.Label();
             this.buttonCancel = new System.Windows.Forms.Button();
@@ -567,18 +567,18 @@
 
         private System.Windows.Forms.CheckBox checkBoxIncludeShotChanges;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox textBoxJobId;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxJobId;
         private System.Windows.Forms.Label labelSubtitleFileName;
-        private System.Windows.Forms.TextBox textBoxJobDescription;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxJobDescription;
         private System.Windows.Forms.Label labelDescription;
         private System.Windows.Forms.CheckBox checkBoxIncludeRules;
         private System.Windows.Forms.CheckBox checkBoxIncludeWaveform;
         private System.Windows.Forms.CheckBox checkBoxIncludeBookmarks;
-        private System.Windows.Forms.TextBox textBoxSubtitleFileName;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxSubtitleFileName;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.TextBox textBoxJobName;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxJobName;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.TextBox textBoxVideoUrl;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxVideoUrl;
         private System.Windows.Forms.Label labelVideoUrl;
         private System.Windows.Forms.Label labelSubtitleTotalCount;
         private System.Windows.Forms.Button buttonGapChoose;

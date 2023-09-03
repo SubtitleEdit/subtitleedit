@@ -55,7 +55,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.checkBoxTargetFileSize = new System.Windows.Forms.CheckBox();
             this.buttonPreview = new System.Windows.Forms.Button();
             this.linkLabelHelp = new System.Windows.Forms.LinkLabel();
-            this.textBoxLog = new System.Windows.Forms.TextBox();
+            this.textBoxLog = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.contextMenuStripRes = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.x2160ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.uHD3840x2160ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -1465,7 +1465,7 @@ namespace Nikse.SubtitleEdit.Forms
         private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxAudioSampleRate;
         private Nikse.SubtitleEdit.Controls.NikseLabel labelAudioSampleRate;
         private System.Windows.Forms.CheckBox checkBoxMakeStereo;
-        private System.Windows.Forms.TextBox textBoxLog;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxLog;
         private Nikse.SubtitleEdit.Controls.NikseLabel labelInfo;
         private System.Windows.Forms.LinkLabel linkLabelHelp;
         private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxTune;

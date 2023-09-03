@@ -30,7 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             this.groupBoxPropertiesRoot = new System.Windows.Forms.GroupBox();
-            this.textBoxRoot = new System.Windows.Forms.TextBox();
+            this.textBoxRoot = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.groupBoxTextST = new System.Windows.Forms.GroupBox();
             this.treeView1 = new System.Windows.Forms.TreeView();
             this.buttonCancel = new System.Windows.Forms.Button();
@@ -150,7 +150,7 @@
             this.numericUpDownChangeFontSize = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.label46 = new System.Windows.Forms.Label();
             this.groupBoxSubtitleText = new System.Windows.Forms.GroupBox();
-            this.textBoxSubtitleText = new System.Windows.Forms.TextBox();
+            this.textBoxSubtitleText = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.label44 = new System.Windows.Forms.Label();
             this.contextMenuStripAddSubtitleContent = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
@@ -1904,7 +1904,7 @@
         private System.Windows.Forms.Button buttonImport;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.TreeView treeView1;
-        private System.Windows.Forms.TextBox textBoxRoot;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxRoot;
         private System.Windows.Forms.GroupBox groupBoxPropertiesRegionStyle;
         private System.Windows.Forms.GroupBox groupBoxPropertiesPalette;
         private System.Windows.Forms.GroupBox groupBoxPropertiesUserStyle;
@@ -2014,7 +2014,7 @@
         private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownChangeFontSize;
         private System.Windows.Forms.Label label46;
         private System.Windows.Forms.GroupBox groupBoxSubtitleText;
-        private System.Windows.Forms.TextBox textBoxSubtitleText;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxSubtitleText;
         private System.Windows.Forms.Label label44;
         private System.Windows.Forms.GroupBox groupBoxChangeFontColor;
         private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownChangeFontColor;

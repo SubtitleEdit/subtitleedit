@@ -44,7 +44,7 @@
             this.checkBoxAutoSplitAtEnd = new System.Windows.Forms.CheckBox();
             this.labelSubMaxLen = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.numericUpDownSubtitleLineMaximumLength = new Nikse.SubtitleEdit.Controls.NikseUpDown();
-            this.textBoxAsEnd = new System.Windows.Forms.TextBox();
+            this.textBoxAsEnd = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.checkBoxAutoSplitRemoveLinesNoLetters = new System.Windows.Forms.CheckBox();
             this.checkBoxAutoSplitAtBlankLines = new System.Windows.Forms.CheckBox();
             this.numericUpDownAutoSplitMaxLines = new Nikse.SubtitleEdit.Controls.NikseUpDown();
@@ -823,7 +823,7 @@
         private System.Windows.Forms.ContextMenuStrip contextMenuStripPreview;
         private System.Windows.Forms.ToolStripMenuItem startNumberingFromToolStripMenuItem;
         private System.Windows.Forms.GroupBox groupBoxAutoSplitSettings;
-        private System.Windows.Forms.TextBox textBoxAsEnd;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxAsEnd;
         private System.Windows.Forms.CheckBox checkBoxAutoSplitRemoveLinesNoLetters;
         private System.Windows.Forms.CheckBox checkBoxAutoSplitAtBlankLines;
         private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownAutoSplitMaxLines;

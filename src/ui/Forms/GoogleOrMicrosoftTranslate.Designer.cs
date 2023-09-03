@@ -38,7 +38,7 @@
             this.labelTo = new System.Windows.Forms.Label();
             this.comboBoxTo = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelFrom = new System.Windows.Forms.Label();
-            this.textBoxSourceText = new System.Windows.Forms.TextBox();
+            this.textBoxSourceText = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelSourceText = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
@@ -196,7 +196,7 @@
         private System.Windows.Forms.Label labelTo;
         private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxTo;
         private System.Windows.Forms.Label labelFrom;
-        private System.Windows.Forms.TextBox textBoxSourceText;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxSourceText;
         private System.Windows.Forms.Label labelSourceText;
     }
 }

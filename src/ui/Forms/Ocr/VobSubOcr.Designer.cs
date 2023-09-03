@@ -97,7 +97,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.checkBoxCloudVisionSendOriginalImages = new System.Windows.Forms.CheckBox();
             this.comboBoxCloudVisionLanguage = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelCloudVisionLanguage = new System.Windows.Forms.Label();
-            this.textBoxCloudVisionApiKey = new System.Windows.Forms.TextBox();
+            this.textBoxCloudVisionApiKey = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelCloudVisionApiKey = new System.Windows.Forms.Label();
             this.groupBoxOCRControls = new System.Windows.Forms.GroupBox();
             this.labelStartFrom = new System.Windows.Forms.Label();
@@ -2266,7 +2266,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private System.Windows.Forms.ToolStripMenuItem oCRSelectedLinesToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparatorOcrSelected;
         private System.Windows.Forms.GroupBox groupBoxCloudVision;
-        private System.Windows.Forms.TextBox textBoxCloudVisionApiKey;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxCloudVisionApiKey;
         private System.Windows.Forms.Label labelCloudVisionApiKey;
         private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxCloudVisionLanguage;
         private System.Windows.Forms.Label labelCloudVisionLanguage;

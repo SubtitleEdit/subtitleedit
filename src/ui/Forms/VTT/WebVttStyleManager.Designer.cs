@@ -63,7 +63,7 @@
             this.labelAfter = new System.Windows.Forms.Label();
             this.groupBoxBefore = new System.Windows.Forms.GroupBox();
             this.labelBefore = new System.Windows.Forms.Label();
-            this.textBoxStyleName = new System.Windows.Forms.TextBox();
+            this.textBoxStyleName = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelStyleName = new System.Windows.Forms.Label();
             this.groupBoxPreview = new System.Windows.Forms.GroupBox();
             this.pictureBoxPreview = new System.Windows.Forms.PictureBox();
@@ -421,6 +421,7 @@
             // 
             // textBoxStyleName
             // 
+            this.textBoxStyleName.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxStyleName.Location = new System.Drawing.Point(49, 22);
             this.textBoxStyleName.Name = "textBoxStyleName";
             this.textBoxStyleName.Size = new System.Drawing.Size(336, 20);
@@ -544,6 +545,13 @@
             // 
             // numericUpDownShadowWidth
             // 
+            this.numericUpDownShadowWidth.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownShadowWidth.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownShadowWidth.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownShadowWidth.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownShadowWidth.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownShadowWidth.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownShadowWidth.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.numericUpDownShadowWidth.DecimalPlaces = 1;
             this.numericUpDownShadowWidth.Increment = new decimal(new int[] {
             1,
@@ -551,9 +559,26 @@
             0,
             65536});
             this.numericUpDownShadowWidth.Location = new System.Drawing.Point(286, 152);
+            this.numericUpDownShadowWidth.Maximum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.numericUpDownShadowWidth.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownShadowWidth.Name = "numericUpDownShadowWidth";
             this.numericUpDownShadowWidth.Size = new System.Drawing.Size(52, 20);
             this.numericUpDownShadowWidth.TabIndex = 2;
+            this.numericUpDownShadowWidth.TabStop = false;
+            this.numericUpDownShadowWidth.ThousandsSeparator = false;
+            this.numericUpDownShadowWidth.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             // 
             // panelBackgroundColor
             // 
@@ -628,16 +653,40 @@
             // 
             // numericUpDownFontSize
             // 
+            this.numericUpDownFontSize.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownFontSize.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownFontSize.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownFontSize.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownFontSize.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownFontSize.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownFontSize.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.numericUpDownFontSize.DecimalPlaces = 1;
+            this.numericUpDownFontSize.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownFontSize.Location = new System.Drawing.Point(374, 18);
             this.numericUpDownFontSize.Maximum = new decimal(new int[] {
             200,
             0,
             0,
             0});
+            this.numericUpDownFontSize.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownFontSize.Name = "numericUpDownFontSize";
             this.numericUpDownFontSize.Size = new System.Drawing.Size(51, 20);
             this.numericUpDownFontSize.TabIndex = 4;
+            this.numericUpDownFontSize.TabStop = false;
+            this.numericUpDownFontSize.ThousandsSeparator = false;
+            this.numericUpDownFontSize.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownFontSize.ValueChanged += new System.EventHandler(this.numericUpDownFontSize_ValueChanged);
             // 
             // checkBoxFontItalic
@@ -666,11 +715,27 @@
             // 
             // comboBoxFontName
             // 
+            this.comboBoxFontName.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxFontName.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxFontName.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxFontName.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxFontName.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxFontName.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxFontName.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxFontName.DropDownHeight = 400;
+            this.comboBoxFontName.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
+            this.comboBoxFontName.DropDownWidth = 188;
             this.comboBoxFontName.FormattingEnabled = true;
             this.comboBoxFontName.Location = new System.Drawing.Point(73, 17);
+            this.comboBoxFontName.MaxLength = 32767;
             this.comboBoxFontName.Name = "comboBoxFontName";
+            this.comboBoxFontName.SelectedIndex = -1;
+            this.comboBoxFontName.SelectedItem = null;
+            this.comboBoxFontName.SelectedText = "";
             this.comboBoxFontName.Size = new System.Drawing.Size(188, 21);
             this.comboBoxFontName.TabIndex = 1;
+            this.comboBoxFontName.TabStop = false;
+            this.comboBoxFontName.UsePopupWindow = false;
             this.comboBoxFontName.TextChanged += new System.EventHandler(this.comboBoxFontName_TextChanged);
             // 
             // labelFontSize
@@ -769,6 +834,8 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "WebVttStyleManager";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.WebVttStyleManager_FormClosing);
+            this.Shown += new System.EventHandler(this.WebVttStyleManager_Shown);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.WebVttStyleManager_KeyDown);
             this.groupBoxStyles.ResumeLayout(false);
             this.contextMenuStripStyles.ResumeLayout(false);
             this.groupBoxProperties.ResumeLayout(false);
@@ -805,7 +872,7 @@
         private System.Windows.Forms.GroupBox groupBoxProperties;
         private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownShadowWidth;
         private System.Windows.Forms.Label labelShadow;
-        private System.Windows.Forms.TextBox textBoxStyleName;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxStyleName;
         private System.Windows.Forms.Label labelStyleName;
         private System.Windows.Forms.Panel panelShadowColor;
         private System.Windows.Forms.Button buttonShadowColor;

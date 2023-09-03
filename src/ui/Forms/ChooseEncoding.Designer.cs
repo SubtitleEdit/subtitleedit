@@ -34,11 +34,11 @@
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.textBoxPreview = new System.Windows.Forms.TextBox();
+            this.textBoxPreview = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.LabelPreview = new System.Windows.Forms.Label();
             this.buttonSearchClear = new System.Windows.Forms.Button();
             this.labelShortcutsSearch = new System.Windows.Forms.Label();
-            this.textBoxSearch = new System.Windows.Forms.TextBox();
+            this.textBoxSearch = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.SuspendLayout();
             // 
             // buttonCancel
@@ -187,10 +187,10 @@
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.ColumnHeader columnHeader2;
         private System.Windows.Forms.ColumnHeader columnHeader3;
-        private System.Windows.Forms.TextBox textBoxPreview;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxPreview;
         private System.Windows.Forms.Label LabelPreview;
         private System.Windows.Forms.Button buttonSearchClear;
         private System.Windows.Forms.Label labelShortcutsSearch;
-        private System.Windows.Forms.TextBox textBoxSearch;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxSearch;
     }
 }

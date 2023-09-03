@@ -51,7 +51,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonCancel.Location = new System.Drawing.Point(386, 129);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
-            this.buttonCancel.TabIndex = 5;
+            this.buttonCancel.TabIndex = 22;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
@@ -63,7 +63,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonOK.Location = new System.Drawing.Point(194, 129);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
-            this.buttonOK.TabIndex = 3;
+            this.buttonOK.TabIndex = 20;
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
@@ -107,7 +107,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.timeUpDownVideoPosition.Margin = new System.Windows.Forms.Padding(4);
             this.timeUpDownVideoPosition.Name = "timeUpDownVideoPosition";
             this.timeUpDownVideoPosition.Size = new System.Drawing.Size(111, 23);
-            this.timeUpDownVideoPosition.TabIndex = 1;
+            this.timeUpDownVideoPosition.TabIndex = 0;
             this.timeUpDownVideoPosition.TabStop = false;
             timeCode1.Hours = 0;
             timeCode1.Milliseconds = 0;
@@ -126,7 +126,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonReset.Location = new System.Drawing.Point(275, 129);
             this.buttonReset.Name = "buttonReset";
             this.buttonReset.Size = new System.Drawing.Size(105, 23);
-            this.buttonReset.TabIndex = 4;
+            this.buttonReset.TabIndex = 21;
             this.buttonReset.Text = "Reset";
             this.buttonReset.UseVisualStyleBackColor = true;
             this.buttonReset.Click += new System.EventHandler(this.buttonReset_Click);
@@ -137,7 +137,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.checkBoxKeepTimeCodes.Location = new System.Drawing.Point(15, 94);
             this.checkBoxKeepTimeCodes.Name = "checkBoxKeepTimeCodes";
             this.checkBoxKeepTimeCodes.Size = new System.Drawing.Size(261, 17);
-            this.checkBoxKeepTimeCodes.TabIndex = 6;
+            this.checkBoxKeepTimeCodes.TabIndex = 3;
             this.checkBoxKeepTimeCodes.Text = "Keep existing time codes (do not add video offset)";
             this.checkBoxKeepTimeCodes.UseVisualStyleBackColor = true;
             // 
@@ -146,7 +146,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonPickOffset.Location = new System.Drawing.Point(131, 40);
             this.buttonPickOffset.Name = "buttonPickOffset";
             this.buttonPickOffset.Size = new System.Drawing.Size(25, 23);
-            this.buttonPickOffset.TabIndex = 7;
+            this.buttonPickOffset.TabIndex = 1;
             this.buttonPickOffset.Text = "...";
             this.buttonPickOffset.UseVisualStyleBackColor = true;
             this.buttonPickOffset.Click += new System.EventHandler(this.buttonPickOffset_Click);

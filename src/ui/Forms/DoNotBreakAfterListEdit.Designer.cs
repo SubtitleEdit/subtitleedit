@@ -33,7 +33,7 @@
             this.radioButtonText = new System.Windows.Forms.RadioButton();
             this.buttonRemoveNoBreakAfter = new System.Windows.Forms.Button();
             this.listBoxNoBreakAfter = new System.Windows.Forms.ListBox();
-            this.textBoxNoBreakAfter = new System.Windows.Forms.TextBox();
+            this.textBoxNoBreakAfter = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.buttonAddNoBreakAfter = new System.Windows.Forms.Button();
             this.comboBoxDictionaries = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelLanguage = new System.Windows.Forms.Label();
@@ -202,7 +202,7 @@
         private System.Windows.Forms.GroupBox groupBoxNamesIgonoreLists;
         private System.Windows.Forms.Button buttonRemoveNoBreakAfter;
         private System.Windows.Forms.ListBox listBoxNoBreakAfter;
-        private System.Windows.Forms.TextBox textBoxNoBreakAfter;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxNoBreakAfter;
         private System.Windows.Forms.Button buttonAddNoBreakAfter;
         private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxDictionaries;
         private System.Windows.Forms.Label labelLanguage;

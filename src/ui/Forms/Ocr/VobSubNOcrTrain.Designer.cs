@@ -39,11 +39,11 @@
             this.comboBoxSubtitleFontSize = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelSubtitleFont = new System.Windows.Forms.Label();
             this.labelSubtitleForTraining = new System.Windows.Forms.Label();
-            this.textBoxInputFile = new System.Windows.Forms.TextBox();
+            this.textBoxInputFile = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.buttonInputChoose = new System.Windows.Forms.Button();
             this.groupBoxInput = new System.Windows.Forms.GroupBox();
             this.labelLetterCombi = new System.Windows.Forms.Label();
-            this.textBoxMerged = new System.Windows.Forms.TextBox();
+            this.textBoxMerged = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.buttonTrain = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
@@ -399,7 +399,7 @@
 
         private System.Windows.Forms.GroupBox groupBoxTrainingOptions;
         private System.Windows.Forms.Button buttonInputChoose;
-        private System.Windows.Forms.TextBox textBoxInputFile;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxInputFile;
         private System.Windows.Forms.Label labelSubtitleForTraining;
         private System.Windows.Forms.Label labelSubtitleFontSize;
         private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxSubtitleFontSize;
@@ -416,7 +416,7 @@
         private System.Windows.Forms.CheckBox checkBoxBold;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.Label labelLetterCombi;
-        private System.Windows.Forms.TextBox textBoxMerged;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxMerged;
         private System.Windows.Forms.CheckBox checkBoxItalic;
     }
 }

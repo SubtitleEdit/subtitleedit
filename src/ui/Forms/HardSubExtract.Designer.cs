@@ -37,10 +37,10 @@
             this.button1 = new System.Windows.Forms.Button();
             this.timerRefreshProgressbar = new System.Windows.Forms.Timer(this.components);
             this.label8 = new System.Windows.Forms.Label();
-            this.tbBlacks = new System.Windows.Forms.TextBox();
+            this.tbBlacks = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.label9 = new System.Windows.Forms.Label();
-            this.tbFrameNum = new System.Windows.Forms.TextBox();
-            this.tbFileName = new System.Windows.Forms.TextBox();
+            this.tbFrameNum = new Nikse.SubtitleEdit.Controls.NikseTextBox();
+            this.tbFileName = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.label10 = new System.Windows.Forms.Label();
             this.StartStop = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
@@ -419,10 +419,10 @@
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Timer timerRefreshProgressbar;
         private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.TextBox tbBlacks;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox tbBlacks;
         private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.TextBox tbFrameNum;
-        private System.Windows.Forms.TextBox tbFileName;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox tbFrameNum;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox tbFileName;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Button StartStop;
         private System.Windows.Forms.GroupBox groupBox3;

@@ -35,7 +35,7 @@
             this.labelCharacters = new System.Windows.Forms.Label();
             this.pictureBoxCharacter = new System.Windows.Forms.PictureBox();
             this.labelCharactersAsText = new System.Windows.Forms.Label();
-            this.textBoxCharacters = new System.Windows.Forms.TextBox();
+            this.textBoxCharacters = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.contextMenuStripLetters = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
@@ -529,7 +529,7 @@
         private System.Windows.Forms.Label labelCharacters;
         private System.Windows.Forms.PictureBox pictureBoxCharacter;
         private System.Windows.Forms.Label labelCharactersAsText;
-        private System.Windows.Forms.TextBox textBoxCharacters;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxCharacters;
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Label labelSubtitleImage;

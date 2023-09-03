@@ -86,7 +86,7 @@
             this.groupBoxPreview = new System.Windows.Forms.GroupBox();
             this.pictureBoxPreview = new System.Windows.Forms.PictureBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.textBoxRawHeader = new System.Windows.Forms.TextBox();
+            this.textBoxRawHeader = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.buttonReset = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.colorDialogSSAStyle = new System.Windows.Forms.ColorDialog();
@@ -928,7 +928,7 @@
         private System.Windows.Forms.Label labelCollision;
         private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxWrapStyle;
         private System.Windows.Forms.Label labelWrapStyle;
-        private System.Windows.Forms.TextBox textBoxRawHeader;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxRawHeader;
         private System.Windows.Forms.Button buttonReset;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.ColorDialog colorDialogSSAStyle;

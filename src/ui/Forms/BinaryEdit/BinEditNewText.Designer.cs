@@ -33,7 +33,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.comboBoxHAlign = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelHorizontalAlign = new System.Windows.Forms.Label();
             this.labelText = new System.Windows.Forms.Label();
-            this.textBoxText = new System.Windows.Forms.TextBox();
+            this.textBoxText = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelLineHeight = new System.Windows.Forms.Label();
             this.numericUpDownLineSpacing = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.numericUpDownShadowTransparency = new Nikse.SubtitleEdit.Controls.NikseUpDown();
@@ -587,7 +587,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
         private System.Windows.Forms.Panel panelColor;
         private System.Windows.Forms.Button buttonColor;
         private System.Windows.Forms.Label labelText;
-        private System.Windows.Forms.TextBox textBoxText;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxText;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Button buttonCancel;

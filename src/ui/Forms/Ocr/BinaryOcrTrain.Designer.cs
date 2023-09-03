@@ -31,7 +31,7 @@
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.buttonInputChoose = new System.Windows.Forms.Button();
             this.labelSubtitleForTraining = new System.Windows.Forms.Label();
-            this.textBoxInputFile = new System.Windows.Forms.TextBox();
+            this.textBoxInputFile = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.checkBoxBold = new System.Windows.Forms.CheckBox();
             this.listViewFonts = new System.Windows.Forms.ListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -48,7 +48,7 @@
             this.label4 = new System.Windows.Forms.Label();
             this.groupBoxInput = new System.Windows.Forms.GroupBox();
             this.labelLetterCombi = new System.Windows.Forms.Label();
-            this.textBoxMerged = new System.Windows.Forms.TextBox();
+            this.textBoxMerged = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.groupBoxTrainingOptions.SuspendLayout();
@@ -499,7 +499,7 @@
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.Button buttonInputChoose;
         private System.Windows.Forms.Label labelSubtitleForTraining;
-        private System.Windows.Forms.TextBox textBoxInputFile;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxInputFile;
         private System.Windows.Forms.CheckBox checkBoxBold;
         private System.Windows.Forms.ListView listViewFonts;
         private System.Windows.Forms.ColumnHeader columnHeader1;
@@ -517,7 +517,7 @@
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Label labelLetterCombi;
-        private System.Windows.Forms.TextBox textBoxMerged;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxMerged;
         private System.Windows.Forms.CheckBox checkBoxItalic;
     }
 }

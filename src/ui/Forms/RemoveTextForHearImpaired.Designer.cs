@@ -61,7 +61,7 @@
             this.checkBoxRemoveTextBetweenSquares = new System.Windows.Forms.CheckBox();
             this.labelAnd = new System.Windows.Forms.Label();
             this.buttonApply = new System.Windows.Forms.Button();
-            this.textBoxAfterText = new System.Windows.Forms.TextBox();
+            this.textBoxAfterText = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelText = new System.Windows.Forms.Label();
             this.groupBoxLinesFound.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
@@ -527,7 +527,7 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemInvertSel;
         private System.Windows.Forms.Button buttonApply;
         private System.Windows.Forms.CheckBox checkBoxInterjectionOnlySeparateLine;
-        private System.Windows.Forms.TextBox textBoxAfterText;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxAfterText;
         private System.Windows.Forms.Label labelText;
     }
 }
