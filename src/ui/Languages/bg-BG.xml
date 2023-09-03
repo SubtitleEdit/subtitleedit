@@ -214,7 +214,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <RemoveTemporaryFiles>Премахване на временни файлове</RemoveTemporaryFiles>
     <SetCppConstMeFolder>Задаване на папка с модели CPP/Const-me...</SetCppConstMeFolder>
     <OnlyRunPostProcessing>Изпълнявайте само последваща обработка/коригиране на времената</OnlyRunPostProcessing>
-    <DownloadFasterWhisperCuda>Изтеглете CUDA за Whisper-Faster на Perfview</DownloadFasterWhisperCuda>
+    <DownloadFasterWhisperCuda>Изтеглете cuBLAS и cuDNN за Faster-Whisper</DownloadFasterWhisperCuda>
   </AudioToText>
   <AssaAttachments>
     <Title>Приложения за SSA /Sub Station Alpha/</Title>
