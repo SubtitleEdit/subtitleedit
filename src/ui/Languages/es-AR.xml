@@ -216,7 +216,7 @@ Nota: comprobar el espacio libre en disco.</WaveFileMalformed>
     <RemoveTemporaryFiles>Eliminar archivos temporales</RemoveTemporaryFiles>
     <SetCppConstMeFolder>Establecer carpeta de modelos CPP/Const-me...</SetCppConstMeFolder>
     <OnlyRunPostProcessing>Ejecutar solo el procesamiento posterior/ajuste de tiempos</OnlyRunPostProcessing>
-    <DownloadFasterWhisperCuda>Descargar CUDA para Whisper-Faster de Perfview</DownloadFasterWhisperCuda>
+    <DownloadFasterWhisperCuda>Descargar cuBLAS y cuDNN para Faster-Whisper</DownloadFasterWhisperCuda>
   </AudioToText>
   <AssaAttachments>
     <Title>Adjuntos de Advanced Sub Station Alpha</Title>
