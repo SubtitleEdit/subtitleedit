@@ -343,6 +343,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     return buffer;
                 }
 
+                var rawTextField = TextField;
+
                 if (header.CharacterCodeTableNumber == "00")
                 {
                     // 0xC1—0xCF combines characters - http://en.wikipedia.org/wiki/ISO/IEC_6937
@@ -493,7 +495,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         textBytes.AddRange(new byte[] { 0x0d }); // d=double height
                     }
                 }
-                EncodeText(textBytes, TextField, encoding, header.DisplayStandardCode);
+                EncodeText(textBytes, rawTextField, encoding, header.DisplayStandardCode, header.CharacterCodeTableNumber);
+
+
 
                 TextField = EncodeText(TextField, encoding, header.DisplayStandardCode);
                 TextField = HtmlUtil.RemoveHtmlTags(TextField, true);
@@ -555,7 +559,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
 
                 bytes = textBytes.ToArray(); //TODO: we use new byte list - remove old codd
-                
+
 
                 for (var i = 0; i < 112; i++)
                 {
@@ -732,8 +736,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             //TODO: Use bytes directly and not encoding
-            private static void EncodeText(List<byte> textBytes, string text, Encoding encoding, string displayStandardCode)
+            private static void EncodeText(List<byte> textBytes, string text, Encoding encoding, string displayStandardCode, string characterCodeTableNumber)
             {
+                // italic/underline
+                var italicOn = (byte)0x80;
+                var italicOff = (byte)0x81;
+                var underlineOn = (byte)0x82;
+                var underlineOff = (byte)0x83;
+                var boxingOn = (byte)0x84;
+                var boxingOff = (byte)0x85;
+
                 // newline
                 var newline = new byte[] { 0x8a, 0x8a };
                 if (Configuration.Settings.SubtitleSettings.EbuStlTeletextUseBox && Configuration.Settings.SubtitleSettings.EbuStlTeletextUseDoubleHeight)
@@ -768,14 +780,38 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 byte? lastColor = null;
                 var sb = new StringBuilder();
 
-                // remove tags except "font"
+                // remove tags except "font", "italic", "underline" and "box"
                 var startFont = Guid.NewGuid().ToString();
                 var endFont = Guid.NewGuid().ToString();
+                var startItalic = Guid.NewGuid().ToString();
+                var endItalic = Guid.NewGuid().ToString();
+                var startUnderline = Guid.NewGuid().ToString();
+                var endUnderline = Guid.NewGuid().ToString();
+                var startBox = Guid.NewGuid().ToString();
+                var endBox = Guid.NewGuid().ToString();
                 text = text.Replace("<font", startFont);
                 text = text.Replace("</font>", endFont);
+                text = text.Replace("<i>", startItalic);
+                text = text.Replace("</i>", endItalic);
+                text = text.Replace("<I>", startItalic);
+                text = text.Replace("</I>", endItalic);
+                text = text.Replace("<u>", startUnderline);
+                text = text.Replace("</u>", endUnderline);
+                text = text.Replace("<U>", startUnderline);
+                text = text.Replace("</U>", endUnderline);
+                text = text.Replace("<box>", startBox);
+                text = text.Replace("</box>", endBox);
+                text = text.Replace("<BOX>", startBox);
+                text = text.Replace("</BOX>", endBox);
                 text = HtmlUtil.RemoveHtmlTags(text, true);
                 text = text.Replace(startFont, "<font");
                 text = text.Replace(endFont, "</font>");
+                text = text.Replace(startItalic, "<i>");
+                text = text.Replace(endItalic, "</i>");
+                text = text.Replace(startUnderline, "<u>");
+                text = text.Replace(endUnderline, "</u>");
+                text = text.Replace(startBox, "<box>");
+                text = text.Replace(endBox, "</box>");
 
                 text = text.Replace(" </font>", "</font> ");
                 var lastWasEndColor = false;
@@ -858,8 +894,40 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             lastWasEndColor = true;
                             lastColor = null;
                         }
+                        else if (newStart == "<i>")
+                        {
+                            i += "<i>".Length;
+                            textBytes.Add(italicOn);
+                        }
+                        else if (newStart == "</i>")
+                        {
+                            i += "</i>".Length;
+                            textBytes.Add(italicOff);
+                        }
+                        else if (newStart == "<u>")
+                        {
+                            i += "<u>".Length;
+                            textBytes.Add(underlineOn);
+                        }
+                        else if (newStart == "</u>")
+                        {
+                            i += "</u>".Length;
+                            textBytes.Add(underlineOff);
+                        }
+                        else if (newStart == "<box>")
+                        {
+                            i += "<box>".Length;
+                            textBytes.Add(boxingOn);
+                        }
+                        else if (newStart == "</box>")
+                        {
+                            i += "</box>".Length;
+                            textBytes.Add(boxingOff);
+                        }
                         else
                         {
+                            var ch = line[i];
+
                             var nextCh = line.Substring(i, 1);
                             if (nextCh == " " && lastWasEndColor)
                             {
@@ -886,8 +954,76 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 }
                                 else
                                 {
-                                    sb.Append(nextCh);
-                                    textBytes.AddRange(encoding.GetBytes(nextCh));
+                                    if (characterCodeTableNumber == "00")
+                                    {
+                                        if (newStart.Length > 1 && line[i + 1] == 'ı' && newStart.StartsWith("ı̂")) // extended unicode char - rewritten as simple 'î' - looks the same as "î" but it's not...)
+                                        {
+                                            textBytes.AddRange(new byte[] { 0xc3, 0x69 }); // Ãi - simple î
+                                            i++;
+                                        }
+                                        else if ("ÀÈÌÒÙàèìòù".Contains(ch))
+                                        {
+                                            textBytes.AddRange(ReplaceSpecialCharactersWithTwoByteEncoding(encoding, ch, 0xc1, "ÀÈÌÒÙàèìòù", "AEIOUaeiou"));
+                                        }
+                                        else if ("ÁĆÉÍĹŃÓŔŚÚÝŹáćéģíĺńóŕśúýź".Contains(ch))
+                                        {
+                                            textBytes.AddRange(ReplaceSpecialCharactersWithTwoByteEncoding(encoding, ch, 0xc2, "ÁĆÉÍĹŃÓŔŚÚÝŹáćéģíĺńóŕśúýź", "ACEILNORSUYZacegilnorsuyz"));
+                                        }
+                                        else if ("ÂĈÊĜĤÎĴÔŜÛŴŶâĉêĝĥĵôŝûŵŷîı̂".Contains(ch))
+                                        {
+                                            textBytes.AddRange(ReplaceSpecialCharactersWithTwoByteEncoding(encoding, ch, 0xc3, "ÂĈÊĜĤÎĴÔŜÛŴŶâĉêĝĥîĵôŝûŵŷ", "ACEGHIJOSUWYaceghijosuwy"));
+                                        }
+                                        else if ("ÃĨÑÕŨãĩñõũ".Contains(ch))
+                                        {
+                                            textBytes.AddRange(ReplaceSpecialCharactersWithTwoByteEncoding(encoding, ch, 0xc4, "ÃĨÑÕŨãĩñõũ", "AINOUainou"));
+                                        }
+                                        else if ("ĀĒĪŌŪāēīōū".Contains(ch))
+                                        {
+                                            textBytes.AddRange(ReplaceSpecialCharactersWithTwoByteEncoding(encoding, ch, 0xc5, "ĀĒĪŌŪāēīōū", "AEIOUaeiou"));
+                                        }
+                                        else if ("ĂĞŬăğŭ".Contains(ch))
+                                        {
+                                            textBytes.AddRange(ReplaceSpecialCharactersWithTwoByteEncoding(encoding, ch, 0xc6, "ĂĞŬăğŭ", "AGUagu"));
+                                        }
+                                        else if ("ĊĖĠİŻċėġıż".Contains(ch))
+                                        {
+                                            textBytes.AddRange(ReplaceSpecialCharactersWithTwoByteEncoding(encoding, ch, 0xc7, "ĊĖĠİŻċėġıż", "CEGIZcegiz"));
+                                        }
+                                        else if ("ÄËÏÖÜŸäëïöüÿ".Contains(ch))
+                                        {
+                                            textBytes.AddRange(ReplaceSpecialCharactersWithTwoByteEncoding(encoding, ch, 0xc8, "ÄËÏÖÜŸäëïöüÿ", "AEIOUYaeiouy"));
+                                        }
+                                        else if ("ÅŮåů".Contains(ch))
+                                        {
+                                            textBytes.AddRange(ReplaceSpecialCharactersWithTwoByteEncoding(encoding, ch, 0xca, "ÅŮåů", "AUau"));
+                                        }
+                                        else if ("ÇĢĶĻŅŖŞŢçķļņŗşţ".Contains(ch))
+                                        {
+                                            textBytes.AddRange(ReplaceSpecialCharactersWithTwoByteEncoding(encoding, ch, 0xcb, "ÇĢĶĻŅŖŞŢçķļņŗşţ", "CGKLNRSTcklnrst"));
+                                        }
+                                        else if ("ŐŰőű".Contains(ch))
+                                        {
+                                            textBytes.AddRange(ReplaceSpecialCharactersWithTwoByteEncoding(encoding, ch, 0xcd, "ŐŰőű", "OUou"));
+                                        }
+                                        else if ("ĄĘĮŲąęįų".Contains(ch))
+                                        {
+                                            textBytes.AddRange(ReplaceSpecialCharactersWithTwoByteEncoding(encoding, ch, 0xce, "ĄĘĮŲąęįų", "AEIUaeiu"));
+                                        }
+                                        else if ("ČĎĚĽŇŘŠŤŽčďěľňřšťž".Contains(ch))
+                                        {
+                                            textBytes.AddRange(ReplaceSpecialCharactersWithTwoByteEncoding(encoding, ch, 0xcf, "ČĎĚĽŇŘŠŤŽčďěľňřšťž", "CDELNRSTZcdelnrstz"));
+                                        }
+                                        else
+                                        {
+                                            sb.Append(nextCh);
+                                            textBytes.AddRange(encoding.GetBytes(nextCh));
+                                        }
+                                    }
+                                    else
+                                    {
+                                        sb.Append(nextCh);
+                                        textBytes.AddRange(encoding.GetBytes(nextCh));
+                                    }
                                 }
                             }
 
@@ -1169,6 +1305,26 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
 
                 return ch.ToString();
+            }
+
+            private static byte[] ReplaceSpecialCharactersWithTwoByteEncoding(Encoding encoding, char ch, byte specialCharacter, string originalCharacters, string newCharacters)
+            {
+                if (originalCharacters.Length != newCharacters.Length)
+                {
+                    throw new ArgumentException("originalCharacters and newCharacters must have equal length");
+                }
+
+                for (var i = 0; i < newCharacters.Length; i++)
+                {
+                    if (originalCharacters[i] == ch)
+                    {
+                        var byteArr = new List<byte> { specialCharacter };
+                        byteArr.AddRange(encoding.GetBytes(newCharacters[i].ToString()));
+                        return byteArr.ToArray();
+                    }
+                }
+
+                return encoding.GetBytes(ch.ToString());
             }
 
             public static byte GetFrameFromMilliseconds(int milliseconds, double frameRate, out byte extraSeconds)
