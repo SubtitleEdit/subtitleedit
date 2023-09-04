@@ -736,7 +736,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             //TODO: Use bytes directly and not encoding
-            private static void EncodeText(List<byte> textBytes, string text, Encoding encoding, string displayStandardCode, string characterCodeTableNumber)
+            private static void EncodeText(List<byte> textBytes, string input, Encoding encoding, string displayStandardCode, string characterCodeTableNumber)
             {
                 // italic/underline
                 var italicOn = (byte)0x80;
@@ -789,6 +789,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 var endUnderline = Guid.NewGuid().ToString();
                 var startBox = Guid.NewGuid().ToString();
                 var endBox = Guid.NewGuid().ToString();
+                var text = FixItalics(input);
                 text = text.Replace("<font", startFont);
                 text = text.Replace("</font>", endFont);
                 text = text.Replace("<i>", startItalic);
@@ -894,32 +895,32 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             lastWasEndColor = true;
                             lastColor = null;
                         }
-                        else if (newStart == "<i>")
+                        else if (newStart.StartsWith("<i>", StringComparison.Ordinal))
                         {
                             i += "<i>".Length;
                             textBytes.Add(italicOn);
                         }
-                        else if (newStart == "</i>")
+                        else if (newStart.StartsWith("</i>", StringComparison.Ordinal))
                         {
                             i += "</i>".Length;
                             textBytes.Add(italicOff);
                         }
-                        else if (newStart == "<u>")
+                        else if (newStart.StartsWith("<u>", StringComparison.Ordinal))
                         {
                             i += "<u>".Length;
                             textBytes.Add(underlineOn);
                         }
-                        else if (newStart == "</u>")
+                        else if (newStart.StartsWith("</u>", StringComparison.Ordinal))
                         {
                             i += "</u>".Length;
                             textBytes.Add(underlineOff);
                         }
-                        else if (newStart == "<box>")
+                        else if (newStart.StartsWith("<box>", StringComparison.Ordinal))
                         {
                             i += "<box>".Length;
                             textBytes.Add(boxingOn);
                         }
-                        else if (newStart == "</box>")
+                        else if (newStart.StartsWith("</box>", StringComparison.Ordinal))
                         {
                             i += "</box>".Length;
                             textBytes.Add(boxingOff);
@@ -1012,6 +1013,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                         else if ("ČĎĚĽŇŘŠŤŽčďěľňřšťž".Contains(ch))
                                         {
                                             textBytes.AddRange(ReplaceSpecialCharactersWithTwoByteEncoding(encoding, ch, 0xcf, "ČĎĚĽŇŘŠŤŽčďěľňřšťž", "CDELNRSTZcdelnrstz"));
+                                        }
+                                        else if (SpecialAsciiCodes.ContainsValue(nextCh))
+                                        {
+                                            textBytes.Add((byte)SpecialAsciiCodes.First(p => p.Value == nextCh).Key);
                                         }
                                         else
                                         {
