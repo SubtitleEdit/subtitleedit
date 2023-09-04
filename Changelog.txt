@@ -58,6 +58,7 @@
    * Fix crash in Google Translate Cloud V2 - thx Rielaph
    * Fix alpha in hex color codes - thx Paul
    * BDN XML - DropFrame="False" to DropFrame="false" - thx Alain
+   * Fix EBU STL writing on Linux - thx felagund/PunchaiW
 
 
 3.6.13 (14th May 2023)

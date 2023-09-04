@@ -558,7 +558,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     SeLogger.Error("EBU STL ENCODING DIFF LENGTH: " + TextField);
                 }
 
-                bytes = textBytes.ToArray(); //TODO: we use new byte list - remove old codd
+                bytes = textBytes.ToArray(); //TODO: we use new byte list - remove old code
 
 
                 for (var i = 0; i < 112; i++)
