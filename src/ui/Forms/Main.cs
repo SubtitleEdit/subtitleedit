@@ -5784,7 +5784,8 @@ namespace Nikse.SubtitleEdit.Forms
             if (oldUseDarkTheme != Configuration.Settings.General.UseDarkTheme ||
                 oldUseDarkForeColor != Configuration.Settings.General.DarkThemeForeColor ||
                 oldUseDarkBackColor != Configuration.Settings.General.DarkThemeBackColor ||
-                oldDarkThemeShowListViewGridLines != Configuration.Settings.General.DarkThemeShowListViewGridLines)
+                oldDarkThemeShowListViewGridLines != Configuration.Settings.General.DarkThemeShowListViewGridLines ||
+                (oldUseDarkTheme && Configuration.Settings.General.UseDarkTheme && SubtitleListview1.BackColor == Color.White))
             {
                 var darkThemeBackColor = Configuration.Settings.General.DarkThemeBackColor;
                 var darkThemeForeColor = Configuration.Settings.General.DarkThemeForeColor;
