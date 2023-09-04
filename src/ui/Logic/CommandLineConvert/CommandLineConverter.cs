@@ -238,6 +238,14 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                 {
                     targetFormat = Ebu.NameOfFormat.RemoveChar(' ').ToLowerInvariant();
                 }
+                else if (targetFormat == "pacunicode" || targetFormat == "unipac" || targetFormat == "fpc")
+                {
+                    targetFormat = new PacUnicode().Name.RemoveChar(' ').ToLowerInvariant();
+                }
+                else if (targetFormat == "pac")
+                {
+                    targetFormat = Pac.NameOfFormat.RemoveChar(' ').ToLowerInvariant();
+                }
 
                 var unconsumedArguments = arguments.Skip(4).Select(s => s.Trim()).Where(s => s.Length > 0).ToList();
                 var deleteContains = GetDeleteContains(unconsumedArguments);
