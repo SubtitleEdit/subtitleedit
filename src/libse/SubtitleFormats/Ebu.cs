@@ -476,6 +476,25 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                 }
 
+                //TODO: Use bytes directly and not encoding
+                var textBytes = new List<byte>();
+                if (header.DisplayStandardCode != "0") // 0=Open subtitling
+                {
+                    if (Configuration.Settings.SubtitleSettings.EbuStlTeletextUseBox && Configuration.Settings.SubtitleSettings.EbuStlTeletextUseDoubleHeight)
+                    {
+                        textBytes.AddRange(new byte[] { 0x0d, 0x0b, 0x0b }); // d=double height, b=start box
+                    }
+                    else if (Configuration.Settings.SubtitleSettings.EbuStlTeletextUseBox)
+                    {
+                        textBytes.AddRange(new byte[] { 0x0b, 0x0b }); // b=start box
+                    }
+                    else if (Configuration.Settings.SubtitleSettings.EbuStlTeletextUseDoubleHeight)
+                    {
+                        textBytes.AddRange(new byte[] { 0x0d }); // d=double height
+                    }
+                }
+                EncodeText(textBytes, TextField, encoding, header.DisplayStandardCode);
+
                 TextField = EncodeText(TextField, encoding, header.DisplayStandardCode);
                 TextField = HtmlUtil.RemoveHtmlTags(TextField, true);
 
@@ -517,6 +536,26 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         }
                     }
                 }
+
+                // compare bytes with byte only implementation
+                if (bytes.Length == textBytes.Count)
+                {
+                    for (var idx = 0; idx < textBytes.Count; idx++)
+                    {
+                        if (bytes[idx] != textBytes[idx])
+                        {
+                            SeLogger.Error("EBU STL ENCODING DIFF: " + TextField);
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    SeLogger.Error("EBU STL ENCODING DIFF LENGTH: " + TextField);
+                }
+
+                bytes = textBytes.ToArray(); //TODO: we use new byte list - remove old codd
+                
 
                 for (var i = 0; i < 112; i++)
                 {
@@ -692,6 +731,180 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 return sb.ToString();
             }
 
+            //TODO: Use bytes directly and not encoding
+            private static void EncodeText(List<byte> textBytes, string text, Encoding encoding, string displayStandardCode)
+            {
+                // newline
+                var newline = new byte[] { 0x8a, 0x8a };
+                if (Configuration.Settings.SubtitleSettings.EbuStlTeletextUseBox && Configuration.Settings.SubtitleSettings.EbuStlTeletextUseDoubleHeight)
+                {
+                    newline = new byte[] { 0x0a, 0x0a, 0x8a, 0x8a, 0x0d, 0x0b, 0x0b }; // 0a==end box, 0d==double height, 0b==start box
+                }
+                else if (Configuration.Settings.SubtitleSettings.EbuStlTeletextUseBox)
+                {
+                    var temp = new List<byte>
+                    {
+                        0x0a, // 0a==end box, 
+                        0x0a
+                    };
+                    for (var i = 0; i < Configuration.Settings.SubtitleSettings.EbuStlNewLineRows; i++)
+                    {
+                        temp.Add(0x8a);
+                    }
+                    temp.Add(0x0b); // 0b==start box
+                    temp.Add(0x0b);
+                    newline = temp.ToArray();
+                }
+                else if (Configuration.Settings.SubtitleSettings.EbuStlTeletextUseDoubleHeight)
+                {
+                    newline = new byte[] { 0x8a, 0x8a, 0x0d, 0x0d }; // 0d==double height
+                }
+
+                if (displayStandardCode == "0") // 0=Open subtitling
+                {
+                    newline = new byte[] { 0x8A }; //8Ah=CR/LF
+                }
+
+                byte? lastColor = null;
+                var sb = new StringBuilder();
+
+                // remove tags except "font"
+                var startFont = Guid.NewGuid().ToString();
+                var endFont = Guid.NewGuid().ToString();
+                text = text.Replace("<font", startFont);
+                text = text.Replace("</font>", endFont);
+                text = HtmlUtil.RemoveHtmlTags(text, true);
+                text = text.Replace(startFont, "<font");
+                text = text.Replace(endFont, "</font>");
+
+                text = text.Replace(" </font>", "</font> ");
+                var lastWasEndColor = false;
+                var lastWasStartColor = false;
+                var list = text.SplitToLines();
+                for (var index = 0; index < list.Count; index++)
+                {
+                    if (index > 0)
+                    {
+                        sb.Append(newline);
+                        textBytes.AddRange(newline);
+                        if (displayStandardCode != "0" && lastColor != null)
+                        {
+                            sb.Append(lastColor);
+                            textBytes.Add(lastColor.Value);
+                        }
+                    }
+
+                    var line = list[index];
+                    var i = 0;
+                    while (i < line.Length)
+                    {
+                        var newStart = line.Substring(i);
+                        if (newStart.StartsWith("<font ", StringComparison.OrdinalIgnoreCase))
+                        {
+                            lastWasStartColor = true;
+                            var end = line.IndexOf('>', i);
+                            if (end > 0)
+                            {
+                                if (displayStandardCode != "0")
+                                {
+                                    lastColor = GetColorByte(encoding, line, i);
+                                    if (sb.EndsWith(' '))
+                                    {
+                                        sb = new StringBuilder(sb.ToString().TrimEnd(' '));
+                                        if (textBytes.Count > 0 && textBytes[textBytes.Count - 1] == 32)
+                                        {
+                                            textBytes.RemoveAt(textBytes.Count - 1);
+                                        }
+                                    }
+
+                                    if (lastColor != null)
+                                    {
+                                        sb.Append(lastColor);
+                                        textBytes.Add(lastColor.Value);
+                                    }
+                                }
+
+                                i = end + 1;
+                            }
+                        }
+                        else if (newStart == "</font>")
+                        {
+                            i += "</font>".Length;
+                            lastColor = null;
+                            lastWasEndColor = true;
+                        }
+                        else if (newStart.StartsWith("</font>", StringComparison.OrdinalIgnoreCase))
+                        {
+                            i += "</font>".Length;
+
+                            if (displayStandardCode != "0" && line.Length > i + 1)
+                            {
+                                var part = line.Substring(i);
+                                if (part.StartsWith(" <font "))
+                                {
+                                    i++;
+                                }
+                                else if (part.StartsWith("<font "))
+                                {
+                                    // do nothing
+                                }
+                                else
+                                {
+                                    sb.Append(encoding.GetString(new byte[] { 0x07 })); // white
+                                    textBytes.Add(0x07); // white
+                                }
+                            }
+
+                            lastWasEndColor = true;
+                            lastColor = null;
+                        }
+                        else
+                        {
+                            var nextCh = line.Substring(i, 1);
+                            if (nextCh == " " && lastWasEndColor)
+                            {
+                            }
+                            else if (nextCh == " " && lastWasStartColor)
+                            {
+                            }
+                            else
+                            {
+                                if (nextCh == "#")
+                                {
+                                    sb.Append(nextCh);
+                                    textBytes.Add(0x23);
+                                }
+                                else if (nextCh == "Đ")
+                                {
+                                    sb.Append(nextCh);
+                                    textBytes.Add(0xe2);
+                                }
+                                else if (nextCh == "–") // em dash
+                                {
+                                    sb.Append(nextCh);
+                                    textBytes.Add(0xd0);
+                                }
+                                else
+                                {
+                                    sb.Append(nextCh);
+                                    textBytes.AddRange(encoding.GetBytes(nextCh));
+                                }
+                            }
+
+                            i++;
+                            lastWasEndColor = false;
+                            lastWasStartColor = false;
+                        }
+                    }
+                }
+
+                if (Configuration.Settings.SubtitleSettings.EbuStlTeletextUseBox && displayStandardCode != "0")
+                {
+                    textBytes.AddRange(new byte[] { 0x0a, 0x0a }); //a=end box
+                }
+            }
+
+
             private static string GetColor(Encoding encoding, string line, int i)
             {
                 var end = line.IndexOf('>', i);
@@ -718,6 +931,34 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                 return string.Empty;
             }
+
+            private static byte? GetColorByte(Encoding encoding, string line, int i)
+            {
+                var end = line.IndexOf('>', i);
+                if (end > 0)
+                {
+                    var f = line.Substring(i, end - i);
+                    if (f.Contains(" color=", StringComparison.OrdinalIgnoreCase))
+                    {
+                        var colorStart = f.IndexOf(" color=", StringComparison.OrdinalIgnoreCase);
+                        if (line.IndexOf('"', colorStart + " color=".Length + 1) > 0)
+                        {
+                            var colorEnd = f.IndexOf('"', colorStart + " color=".Length + 1);
+                            if (colorStart > 1)
+                            {
+                                var color = f.Substring(colorStart + 7, colorEnd - (colorStart + 7));
+                                color = color.Trim('\'');
+                                color = color.Trim('\"');
+                                color = color.Trim('#');
+                                return GetNearestEbuColorCodeByte(color, encoding);
+                            }
+                        }
+                    }
+                }
+
+                return null;
+            }
+
 
             private static string GetNearestEbuColorCode(string color, Encoding encoding)
             {
@@ -814,6 +1055,103 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                 return string.Empty;
             }
+
+            private static byte? GetNearestEbuColorCodeByte(string color, Encoding encoding)
+            {
+                color = color.ToLowerInvariant();
+                if (color == "black" || color == "000000")
+                {
+                    return 0x00; // black
+                }
+
+                if (color == "red" || color == "ff0000")
+                {
+                    return 0x01; // red
+                }
+
+                if (color == "green" || color == "00ff00")
+                {
+                    return 0x02; // green
+                }
+
+                if (color == "yellow" || color == "ffff00")
+                {
+                    return 0x03; // yellow
+                }
+
+                if (color == "blue" || color == "0000ff")
+                {
+                    return 0x04; // blue
+                }
+
+                if (color == "magenta" || color == "ff00ff")
+                {
+                    return 0x05; // magenta
+                }
+
+                if (color == "cyan" || color == "00ffff")
+                {
+                    return 0x06; // cyan
+                }
+
+                if (color == "white" || color == "ffffff")
+                {
+                    return 0x07; // white
+                }
+
+                if (color.Length == 6)
+                {
+                    if (RegExprColor.IsMatch(color))
+                    {
+                        const int maxDiff = 130;
+                        var r = int.Parse(color.Substring(0, 2), NumberStyles.HexNumber);
+                        var g = int.Parse(color.Substring(2, 2), NumberStyles.HexNumber);
+                        var b = int.Parse(color.Substring(4, 2), NumberStyles.HexNumber);
+                        if (r < maxDiff && g < maxDiff && b < maxDiff)
+                        {
+                            return 0x00; // black
+                        }
+
+                        if (r > 255 - maxDiff && g < maxDiff && b < maxDiff)
+                        {
+                            return 0x01; // red
+                        }
+
+                        if (r < maxDiff && g > 255 - maxDiff && b < maxDiff)
+                        {
+                            return 0x02; // green
+                        }
+
+                        if (r > 255 - maxDiff && g > 255 - maxDiff && b < maxDiff)
+                        {
+                            return 0x03; // yellow
+                        }
+
+                        if (r < maxDiff && g < maxDiff && b > 255 - maxDiff)
+                        {
+                            return 0x04; // blue
+                        }
+
+                        if (r > 255 - maxDiff && g < maxDiff && b > 255 - maxDiff)
+                        {
+                            return 0x05; // magenta
+                        }
+
+                        if (r < maxDiff && g > 255 - maxDiff && b > 255 - maxDiff)
+                        {
+                            return 0x06; // cyan
+                        }
+
+                        if (r > 255 - maxDiff && g > 255 - maxDiff && b > 255 - maxDiff)
+                        {
+                            return 0x07; // white
+                        }
+                    }
+                }
+
+                return null;
+            }
+
 
             private static string ReplaceSpecialCharactersWithTwoByteEncoding(char ch, string specialCharacter, string originalCharacters, string newCharacters)
             {
