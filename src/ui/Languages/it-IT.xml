@@ -2,7 +2,7 @@
 <Language Name="Italiano">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.13</Version>
+    <Version>4.0.0</Version>
     <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 03.09.2023</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
@@ -886,7 +886,8 @@ Si sfrutta così il ritmo intrinseco dell'immagine.</CreateSimpleChainingToolTip
     <BreakLongLines>Dividi righe lunghe</BreakLongLines>
     <RemoveLineBreaks>Elimina divisioni di riga in testi corti con una sola frase</RemoveLineBreaks>
     <RemoveLineBreaksAll>Elimina divisioni di riga in testi corti (tutti eccetto dialoghi)</RemoveLineBreaksAll>
-    <RemoveLineBreaksPixelWidth>Non interrompere i sottotitoli che possono stare su una riga (larghezza in pixel)</RemoveLineBreaksPixelWidth>    <FixUppercaseIInsideLowercaseWords>Correggi la "i" maiuscola all'interno delle parole minuscole (errore OCR)</FixUppercaseIInsideLowercaseWords>
+    <RemoveLineBreaksPixelWidth>Non interrompere i sottotitoli che possono stare su una riga (larghezza in pixel)</RemoveLineBreaksPixelWidth>
+    <FixUppercaseIInsideLowercaseWords>Correggi la "i" maiuscola all'interno delle parole minuscole (errore OCR)</FixUppercaseIInsideLowercaseWords>
     <FixUppercaseIInsideLowercaseWords>Correggi "i" maiuscola all'interno delle parole minuscole (errore OCR)</FixUppercaseIInsideLowercaseWords>
     <FixDoubleApostrophes>Sostituisci i doppi apici ('') con le virgolette (")</FixDoubleApostrophes>
     <AddPeriods>Aggiungi il punto a fine riga se la seguente inizia con una lettera maiuscola</AddPeriods>
@@ -3358,10 +3359,10 @@ Vuoi mantenere le modifiche?</KeepChangesMessage>
     <VoiceName>Nome voce</VoiceName>
   </WebVttNewVoice>
   <WebVttStyleManager>
-  <WebVttProperties>
-    <UseXTimeStamp>Usa valore intestazione X-TIMESTAMP-MAP</UseXTimeStamp>
-    <MergeLines>Al caricamento unisci righe con lo stesso testo</MergeLines>
-  </WebVttProperties>
+    <WebVttProperties>
+      <UseXTimeStamp>Usa valore intestazione X-TIMESTAMP-MAP</UseXTimeStamp>
+      <MergeLines>Al caricamento unisci righe con lo stesso testo</MergeLines>
+    </WebVttProperties>
     <Title>Stili WebVTT</Title>
   </WebVttStyleManager>
   <WhisperAdvanced>
