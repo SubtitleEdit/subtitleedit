@@ -2348,8 +2348,14 @@ namespace Nikse.SubtitleEdit.Forms.Options
             }
         }
 
+        private int _lastIndex = 0;
         private void ListBoxSectionSelectedIndexChanged(object sender, EventArgs e)
         {
+            if (_lastIndex == listBoxSection.SelectedIndex)
+            {
+                return;
+            }
+
             labelStatus.Text = string.Empty;
 
             panelGeneral.Visible = false;
@@ -2417,6 +2423,8 @@ namespace Nikse.SubtitleEdit.Forms.Options
             }
 
             section.Visible = true;
+
+            _lastIndex = listBoxSection.SelectedIndex;
         }
 
         private void LoadPluginsShortcuts()
