@@ -269,10 +269,10 @@ Source: ..\Icons\DefaultTheme\*.png;               DestDir: {userappdata}\Subtit
 Source: ..\Icons\Legacy\*.png;                     DestDir: {userappdata}\Subtitle Edit\Icons\Legacy;       Flags: ignoreversion onlyifdoesntexist; Components: main
 Source: ..\Icons\Black\*.png;                      DestDir: {userappdata}\Subtitle Edit\Icons\Black;        Flags: ignoreversion onlyifdoesntexist; Components: main
 
-Source: ..\Icons\DarkTheme\VideoPlayer\*.png;      DestDir: {userappdata}\Subtitle Edit\Icons\DarkTheme;    Flags: ignoreversion onlyifdoesntexist; Components: main
-Source: ..\Icons\DefaultTheme\VideoPlayer\*.png;   DestDir: {userappdata}\Subtitle Edit\Icons\DefaultTheme; Flags: ignoreversion onlyifdoesntexist; Components: main
-Source: ..\Icons\Legacy\VideoPlayer\*.png;         DestDir: {userappdata}\Subtitle Edit\Icons\Legacy;       Flags: ignoreversion onlyifdoesntexist; Components: main
-Source: ..\Icons\Black\VideoPlayer\*.png;          DestDir: {userappdata}\Subtitle Edit\Icons\Black;        Flags: ignoreversion onlyifdoesntexist; Components: main
+Source: ..\Icons\DarkTheme\VideoPlayer\*.png;      DestDir: {userappdata}\Subtitle Edit\Icons\DarkTheme\VideoPlayer;    Flags: ignoreversion onlyifdoesntexist; Components: main
+Source: ..\Icons\DefaultTheme\VideoPlayer\*.png;   DestDir: {userappdata}\Subtitle Edit\Icons\DefaultTheme\VideoPlayer; Flags: ignoreversion onlyifdoesntexist; Components: main
+Source: ..\Icons\Legacy\VideoPlayer\*.png;         DestDir: {userappdata}\Subtitle Edit\Icons\Legacy\VideoPlayer;       Flags: ignoreversion onlyifdoesntexist; Components: main
+Source: ..\Icons\Black\VideoPlayer\*.png;          DestDir: {userappdata}\Subtitle Edit\Icons\Black\VideoPlayer;        Flags: ignoreversion onlyifdoesntexist; Components: main
 
 #ifdef localize
 Source: {#bindir}\Languages\ar-EG.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
