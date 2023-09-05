@@ -2348,10 +2348,10 @@ namespace Nikse.SubtitleEdit.Forms.Options
             }
         }
 
-        private int _lastIndex = 0;
+        private int _lastSelectionIndex = -1;
         private void ListBoxSectionSelectedIndexChanged(object sender, EventArgs e)
         {
-            if (_lastIndex == listBoxSection.SelectedIndex)
+            if (_lastSelectionIndex == listBoxSection.SelectedIndex)
             {
                 return;
             }
@@ -2424,7 +2424,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
             section.Visible = true;
 
-            _lastIndex = listBoxSection.SelectedIndex;
+            _lastSelectionIndex = listBoxSection.SelectedIndex;
         }
 
         private void LoadPluginsShortcuts()
@@ -3802,7 +3802,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
                 form.ShowDialog(this);
             }
         }
-        
+
         private void comboBoxToolbarIconTheme_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (_loading)
