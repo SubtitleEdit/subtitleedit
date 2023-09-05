@@ -838,6 +838,24 @@ namespace Nikse.SubtitleEdit.Logic
                 e.Graphics.Clear(BackColor);
             }
 
+            protected override void OnRenderOverflowButtonBackground(ToolStripItemRenderEventArgs e)
+            {
+                e.Graphics.Clear(BackColor);
+                using (var brush = new SolidBrush(ForeColor))
+                {
+                    var top = e.Item.Height - 8;
+                    e.Graphics.FillPolygon(brush,
+                        new[]
+                        {
+                            new Point(0, top), // left top
+                            new Point( + 8, top), // right top
+
+                            // arrow head
+                            new Point(4, top + 6), // bottom
+                        });
+                }
+            }
+
             protected override void OnRenderToolStripBorder(ToolStripRenderEventArgs e)
             {
                 if (e.ToolStrip == null)

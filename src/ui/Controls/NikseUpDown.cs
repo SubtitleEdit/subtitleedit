@@ -586,7 +586,7 @@ namespace Nikse.SubtitleEdit.Controls
                 brush = _buttonLeftIsDown ? _buttonForeColorDownBrush : _buttonForeColorOverBrush;
             }
 
-            DrawArrowUp(e, brush, left, top, height);
+            DrawArrowUp(e.Graphics, brush, left, top, height);
 
             if (_buttonDownActive)
             {
@@ -598,7 +598,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
 
             top = height + 5;
-            DrawArrowDown(e, brush, left, top, height);
+            DrawArrowDown(e.Graphics, brush, left, top, height);
         }
 
         public override RightToLeft RightToLeft
@@ -678,9 +678,9 @@ namespace Nikse.SubtitleEdit.Controls
             _textBox.SelectionStart = selectionStart;
         }
 
-        public static void DrawArrowUp(PaintEventArgs e, Brush brush, int left, int top, int height)
+        public static void DrawArrowUp(Graphics g, Brush brush, int left, int top, int height)
         {
-            e.Graphics.FillPolygon(brush,
+            g.FillPolygon(brush,
                 new[]
                 {
                     // arrow head
@@ -693,9 +693,9 @@ namespace Nikse.SubtitleEdit.Controls
                 });
         }
 
-        public static void DrawArrowDown(PaintEventArgs e, Brush brush, int left, int top, int height)
+        public static void DrawArrowDown(Graphics g, Brush brush, int left, int top, int height)
         {
-            e.Graphics.FillPolygon(brush,
+            g.FillPolygon(brush,
                 new[]
                 {
                     new Point(left + 1, top), // left top
@@ -724,9 +724,9 @@ namespace Nikse.SubtitleEdit.Controls
             var top = 2;
             using (var brush = new SolidBrush(BorderColorDisabled))
             {
-                DrawArrowUp(e, brush, left, top, height);
+                DrawArrowUp(e.Graphics, brush, left, top, height);
                 top = height + 5;
-                DrawArrowDown(e, brush, left, top, height);
+                DrawArrowDown(e.Graphics, brush, left, top, height);
             }
         }
     }

@@ -1260,11 +1260,11 @@ namespace Nikse.SubtitleEdit.Controls
         {
             if (_listViewShown)
             {
-                NikseUpDown.DrawArrowUp(e, brush, left, top - 1, height);
+                NikseUpDown.DrawArrowUp(e.Graphics, brush, left, top - 1, height);
             }
             else
             {
-                NikseUpDown.DrawArrowDown(e, brush, left, top, height);
+                NikseUpDown.DrawArrowDown(e.Graphics, brush, left, top, height);
             }
         }
 
