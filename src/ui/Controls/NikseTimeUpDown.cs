@@ -771,7 +771,7 @@ namespace Nikse.SubtitleEdit.Controls
                 brush = _buttonLeftIsDown ? _buttonForeColorDownBrush : _buttonForeColorOverBrush;
             }
 
-            NikseUpDown.DrawArrowUp(e, brush, left, top, height);
+            NikseUpDown.DrawArrowUp(e.Graphics, brush, left, top, height);
 
             if (_buttonDownActive)
             {
@@ -783,7 +783,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
 
             top = height + 5;
-            NikseUpDown.DrawArrowDown(e, brush, left, top, height);
+            NikseUpDown.DrawArrowDown(e.Graphics, brush, left, top, height);
         }
 
         [RefreshProperties(RefreshProperties.Repaint)]
@@ -836,9 +836,9 @@ namespace Nikse.SubtitleEdit.Controls
             var top = 2;
             using (var brush = new SolidBrush(BorderColorDisabled))
             {
-                NikseUpDown.DrawArrowUp(e, brush, left, top, height);
+                NikseUpDown.DrawArrowUp(e.Graphics, brush, left, top, height);
                 top = height + 5;
-                NikseUpDown.DrawArrowDown(e, brush, left, top, height);
+                NikseUpDown.DrawArrowDown(e.Graphics, brush, left, top, height);
             }
         }
 
