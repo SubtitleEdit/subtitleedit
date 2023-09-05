@@ -6564,6 +6564,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1092, 574);
             this.Controls.Add(this.labelUpdateFileTypeAssociationsStatus);
+            this.Controls.Add(this.panelSubtitleFormats);
             this.Controls.Add(this.panelGeneral);
             this.Controls.Add(this.panelWaveform);
             this.Controls.Add(this.panelShortcuts);
@@ -6573,7 +6574,6 @@
             this.Controls.Add(this.panelTools);
             this.Controls.Add(this.panelNetwork);
             this.Controls.Add(this.panelFileTypeAssociations);
-            this.Controls.Add(this.panelSubtitleFormats);
             this.Controls.Add(this.panelSyntaxColoring);
             this.Controls.Add(this.listBoxSection);
             this.Controls.Add(this.buttonReset);
