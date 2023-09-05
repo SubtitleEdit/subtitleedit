@@ -128,14 +128,14 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 textBoxFind.Visible = false;
                 comboBoxFind.Visible = true;
-                comboBoxFind.Text = selectedText;
-                comboBoxFind.SelectAll();
                 comboBoxFind.Items.Clear();
                 for (var index = 0; index < Configuration.Settings.Tools.FindHistory.Count; index++)
                 {
                     var s = Configuration.Settings.Tools.FindHistory[index];
                     comboBoxFind.Items.Add(s);
                 }
+                comboBoxFind.Text = selectedText;
+                comboBoxFind.SelectAll();
             }
             else
             {
