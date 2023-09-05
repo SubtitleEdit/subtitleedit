@@ -3479,7 +3479,11 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
         private void listBoxSubtitleFormats_SelectedIndexChanged(object sender, EventArgs e)
         {
-            buttonMoveToFavoriteFormats.Enabled = listBoxSubtitleFormats.SelectedItems.Count > 0;
+            var enabled = listBoxSubtitleFormats.SelectedItems.Count > 0;
+            if (!buttonMoveToFavoriteFormats.Enabled)
+            {
+                buttonMoveToFavoriteFormats.Enabled = listBoxSubtitleFormats.SelectedItems.Count > 0;
+            }
         }
 
         private void listBoxSubtitleFormats_LostFocus(object sender, EventArgs e)

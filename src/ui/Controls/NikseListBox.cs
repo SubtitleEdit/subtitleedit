@@ -12,6 +12,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public NikseListBox()
         {
+            SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
             _listBox = new ListBox();
             _listBox.BorderStyle = BorderStyle.None;
             _listBox.Padding = new Padding(0);
@@ -371,6 +372,9 @@ namespace Nikse.SubtitleEdit.Controls
                 _listBox.HandleCreated += NikseListBoxHandleCreated;
                 DarkTheme.SetWindowThemeDark(_listBox);
                 DarkTheme.SetWindowThemeDark(this);
+
+                _listBox.DrawMode = DrawMode.OwnerDrawFixed;
+                _listBox.DrawItem += listBox1_DrawItem;
             }
         }
 
@@ -383,7 +387,38 @@ namespace Nikse.SubtitleEdit.Controls
                 _listBox.HandleCreated -= NikseListBoxHandleCreated;
                 DarkTheme.SetWindowThemeNormal(_listBox);
                 DarkTheme.SetWindowThemeNormal(this);
+
+                _listBox.DrawMode = DrawMode.Normal;
+                _listBox.DrawItem -= listBox1_DrawItem;
             }
+        }
+
+        private void listBox1_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            if (e.Index < 0)
+            {
+                return;
+            }
+
+            if ((e.State & DrawItemState.Selected) == DrawItemState.Selected)
+            {
+                e = new DrawItemEventArgs(e.Graphics,
+                    e.Font,
+                    e.Bounds,
+                    e.Index,
+                    e.State ^ DrawItemState.Selected,
+                    e.ForeColor,
+                    DarkTheme.DarkThemeSelectedBackgroundColor);
+            }
+
+            e.DrawBackground();
+
+            using (var brush = new SolidBrush(DarkTheme.ForeColor))
+            {
+                e.Graphics.DrawString(_listBox.Items[e.Index].ToString(), e.Font, brush, e.Bounds, StringFormat.GenericDefault);
+            }
+
+            // Do not add "e.DrawFocusRectangle();"
         }
 
         private static void NikseListBoxHandleCreated(object sender, EventArgs e) => DarkTheme.SetWindowThemeDark((Control)sender);
