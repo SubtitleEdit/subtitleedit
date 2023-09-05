@@ -98,6 +98,7 @@
     <Collapse>Zwiń</Collapse>
     <ShortcutX>Skrót: {0}</ShortcutX>
     <ExampleX>Przykład: {0}</ExampleX>
+    <ViewX>Podgląd {0}</ViewX>
     <Reset>Resetuj</Reset>
     <Error>Błąd</Error>
     <Warning>Ostrzeżenie</Warning>
@@ -204,6 +205,7 @@ Chcesz przeczytać więcej informacji (w sieci)?</WhisperNotFound>
     <LoadingVoskModel>Wczytuję model rozpoznawania mowy Vosk...</LoadingVoskModel>
     <Transcribing>Transkrypcja audio na tekst...</Transcribing>
     <TranscribingXOfY>Transkrypcja audio na tekst — plik {0} z {1}...</TranscribingXOfY>
+    <PostProcessing>Przetwarzanie końcowe...</PostProcessing>
     <XFilesSavedToVideoSourceFolder>Zapisano {0} plik(i)ów w folderze źródłowym wideo</XFilesSavedToVideoSourceFolder>
     <UsePostProcessing>Użyj przetwarzania końcowego (łączenie linii, poprawianie wielkości liter, interpunkcja i inne)</UsePostProcessing>
     <AutoAdjustTimings>Automatycznie dostosuj czasy</AutoAdjustTimings>
@@ -214,6 +216,7 @@ Chcesz przeczytać więcej informacji (w sieci)?</WhisperNotFound>
     <RemoveTemporaryFiles>Usuń pliki tymczasowe</RemoveTemporaryFiles>
     <SetCppConstMeFolder>Ustaw folder modeli CPP/Const-me...</SetCppConstMeFolder>
     <OnlyRunPostProcessing>Uruchom tylko przetwarzanie końcowe/dostosuj czasy</OnlyRunPostProcessing>
+    <DownloadFasterWhisperCuda>Pobierz cuBLAS i cuDNN dla Faster-Whisper</DownloadFasterWhisperCuda>
   </AudioToText>
   <AssaAttachments>
     <Title>Załączniki Advanced Sub Station Alpha</Title>
@@ -539,6 +542,9 @@ Wykorzystujemy naturalny rytm obrazu.</CreateSimpleChainingToolTip>
     <CheckingForUpdatesNewVersion>Dostępna jest nowa wersja!</CheckingForUpdatesNewVersion>
     <InstallUpdate>Przejdź do strony pobierania</InstallUpdate>
     <NoUpdates>Nie aktualizuj</NoUpdates>
+    <XPluginsHasAnUpdate>{0} wtyczek ma aktualizacje -</XPluginsHasAnUpdate>
+    <OnePluginsHasAnUpdate>Jedna wtyczka ma aktualizację -</OnePluginsHasAnUpdate>
+    <Update>aktualizacja</Update>
   </CheckForUpdates>
   <ChooseAudioTrack>
     <Title>Wybierz ścieżkę dźwiękową</Title>
@@ -977,9 +983,11 @@ Wykorzystujemy naturalny rytm obrazu.</CreateSimpleChainingToolTip>
     <InfoAssaOn>Uwaga: Zostanie zastosowana stylizacja Advanced SubStation Alpha :)</InfoAssaOn>
     <XGeneratedWithBurnedInSubsInX>Wygenerowano "{0}" z wtopionymi napisami w {1}.</XGeneratedWithBurnedInSubsInX>
     <TimeRemainingMinutes>Pozostały czas: {0} minut</TimeRemainingMinutes>
+    <TimeRemainingOneMinute>Pozostały czas: jedna minuta</TimeRemainingOneMinute>
     <TimeRemainingSeconds>Pozostały czas: {0} sekund</TimeRemainingSeconds>
     <TimeRemainingAFewSeconds>Pozostały czas: kilka sekund</TimeRemainingAFewSeconds>
     <TimeRemainingMinutesAndSeconds>Pozostały czas: {0} minut i {1} sekund</TimeRemainingMinutesAndSeconds>
+    <TimeRemainingOneMinuteAndSeconds>Pozostały czas: jedna minuta i {0} sekund</TimeRemainingOneMinuteAndSeconds>
     <TargetFileName>Nazwa pliku docelowego: {0}</TargetFileName>
     <TargetFileSize>Docelowy rozmiar pliku (wymaga 2-przebiegowego kodowania)</TargetFileSize>
     <FileSizeMb>Rozmiar pliku w MB</FileSizeMb>
@@ -2288,6 +2296,7 @@ może edytować ten sam plik napisów (współpraca)</Information>
     <BeautifyTimeCodes>Ulepszanie kodów czasowych</BeautifyTimeCodes>
     <SettingsName>Ustawienia</SettingsName>
     <ToggleBookmarks>Przełączanie zakładek</ToggleBookmarks>
+    <FocusTextBox>Koncentracja na polu tekstowym</FocusTextBox>
     <ToggleBookmarksWithComment>Przełączanie zakładek - dodaj komentarz</ToggleBookmarksWithComment>
     <ClearBookmarks>Wyczyść zakładki</ClearBookmarks>
     <ExportBookmarks>Eksportuj zakładki...</ExportBookmarks>
@@ -2809,6 +2818,8 @@ Kontynuować?</RestoreDefaultSettingsMsg>
     <CustomContinuationStyleNote>Uwaga: Niestandardowy styl kontynuacji jest wspólny dla wszystkich profili.</CustomContinuationStyleNote>
     <ResetCustomContinuationStyleWarning>Zastąpi to wartości w oknie dialogowym. Jesteś pewny?</ResetCustomContinuationStyleWarning>
     <ExportAsHtml>Eksportuj jako HTML...</ExportAsHtml>
+    <SetNewActor>Ustaw nowego aktora/głos</SetNewActor>
+    <SetActorX>Ustaw aktora/głos {0}</SetActorX>
   </Settings>
   <SettingsMpv>
     <DownloadMpv>Pobierz bibliotekę mpv</DownloadMpv>
