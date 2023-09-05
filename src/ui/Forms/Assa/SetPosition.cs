@@ -306,7 +306,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             {
                 if (MessageBox.Show("Download and use \"mpv\" as video player?", "Subtitle Edit", MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
                 {
-                    using (var form = new SettingsMpv(!LibMpvDynamic.IsInstalled))
+                    using (var form = new SettingsMpv())
                     {
                         if (form.ShowDialog(this) != DialogResult.OK)
                         {

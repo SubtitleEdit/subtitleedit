@@ -1,7 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Http;
 using Nikse.SubtitleEdit.Logic;
-using Nikse.SubtitleEdit.Logic.VideoPlayers;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -14,27 +13,19 @@ namespace Nikse.SubtitleEdit.Forms.Options
 {
     public sealed partial class SettingsMpv : Form
     {
-        private readonly bool _justDownload;
         private string _downloadUrl;
         private readonly CancellationTokenSource _cancellationTokenSource;
 
-        public SettingsMpv(bool justDownload)
+        public SettingsMpv()
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
             UiUtil.FixFonts(this);
-            _justDownload = justDownload;
             labelPleaseWait.Text = string.Empty;
 
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
-            buttonOK.Text = LanguageSettings.Current.General.Ok;
             Text = LanguageSettings.Current.SettingsMpv.DownloadMpv;
-            if (!Configuration.IsRunningOnLinux)
-            {
-                buttonDownload.Text = LanguageSettings.Current.SettingsMpv.DownloadMpv;
-            }
-
-            UiUtil.FixLargeFonts(this, buttonOK);
+            UiUtil.FixLargeFonts(this, buttonCancel);
             _cancellationTokenSource = new CancellationTokenSource();
         }
 
@@ -44,8 +35,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
             try
             {
                 labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait;
-                buttonOK.Enabled = false;
-                buttonDownload.Enabled = false;
                 Refresh();
                 Cursor = Cursors.WaitCursor;
                 var httpClient = DownloaderFactory.MakeHttpClient();
@@ -75,7 +64,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
             catch (Exception exception)
             {
                 labelPleaseWait.Text = string.Empty;
-                buttonOK.Enabled = true;
                 Cursor = Cursors.Default;
                 MessageBox.Show($"Unable to download {_downloadUrl}!" + Environment.NewLine + Environment.NewLine +
                                 exception.Message + Environment.NewLine + Environment.NewLine + exception.StackTrace);
@@ -99,7 +87,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             };
             if (!validHashes.Contains(hash))
             {
-                MessageBox.Show("Whisper SHA-512 hash does not match!"); ;
+                MessageBox.Show("Whisper SHA-512 hash does not match!");
                 DialogResult = DialogResult.Cancel;
                 return;
             }
@@ -130,21 +118,18 @@ namespace Nikse.SubtitleEdit.Forms.Options
             }
 
             Cursor = Cursors.Default;
-            labelPleaseWait.Text = string.Empty;
-            buttonOK.Enabled = true;
-            buttonDownload.Enabled = !Configuration.IsRunningOnLinux;
-
-            MessageBox.Show(LanguageSettings.Current.SettingsMpv.DownloadMpvOk);
-            DialogResult = DialogResult.OK;
-        }
-
-        private void buttonOK_Click(object sender, EventArgs e)
-        {
-            DialogResult = DialogResult.OK;
+            labelPleaseWait.Text = LanguageSettings.Current.SettingsMpv.DownloadMpvOk;
+            buttonCancel.Text = LanguageSettings.Current.General.Ok;
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)
         {
+            if (buttonCancel.Text == LanguageSettings.Current.General.Ok)
+            {
+                DialogResult = DialogResult.OK;
+                return;
+            }
+
             _cancellationTokenSource.Cancel();
             DialogResult = DialogResult.Cancel;
         }
@@ -152,7 +137,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
         private void SettingsMpv_Shown(object sender, EventArgs e)
         {
             Application.DoEvents();
-            if (Configuration.IsRunningOnWindows && (!LibMpvDynamic.IsInstalled || _justDownload))
+            if (Configuration.IsRunningOnWindows)
             {
                 ButtonDownloadClick(null, null);
             }

@@ -102,7 +102,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            using (var form = new SettingsMpv(true))
+            using (var form = new SettingsMpv())
             {
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {

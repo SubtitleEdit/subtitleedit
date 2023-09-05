@@ -2952,7 +2952,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
         private void buttonMpvSettings_Click(object sender, EventArgs e)
         {
-            using (var form = new SettingsMpv(!LibMpvDynamic.IsInstalled))
+            using (var form = new SettingsMpv())
             {
                 var oldMpvEnabled = radioButtonVideoPlayerMPV.Enabled;
                 if (form.ShowDialog(this) == DialogResult.OK)

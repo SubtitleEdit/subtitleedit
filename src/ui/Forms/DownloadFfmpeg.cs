@@ -23,9 +23,8 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.FixFonts(this);
             _title = title;
             Text = string.Format(LanguageSettings.Current.Settings.DownloadX, title);
-            buttonOK.Text = LanguageSettings.Current.General.Ok;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
-            UiUtil.FixLargeFonts(this, buttonOK);
+            UiUtil.FixLargeFonts(this, buttonCancel);
             _cancellationTokenSource = new CancellationTokenSource();
         }
 
@@ -44,6 +43,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonCancel_Click(object sender, EventArgs e)
         {
+            if (buttonCancel.Text == LanguageSettings.Current.General.Ok)
+            {
+                DialogResult = DialogResult.OK;
+                return;
+            }
+
             _cancellationTokenSource.Cancel();
             DialogResult = DialogResult.Cancel;
         }
@@ -59,7 +64,6 @@ namespace Nikse.SubtitleEdit.Forms
             try
             {
                 labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait;
-                buttonOK.Enabled = false;
                 Cursor = Cursors.WaitCursor;
                 var httpClient = DownloaderFactory.MakeHttpClient();
                 using (var downloadStream = new MemoryStream())
@@ -88,7 +92,6 @@ namespace Nikse.SubtitleEdit.Forms
             catch (Exception exception)
             {
                 labelPleaseWait.Text = string.Empty;
-                buttonOK.Enabled = true;
                 Cursor = Cursors.Default;
                 MessageBox.Show($"Unable to download {url}!" + Environment.NewLine + Environment.NewLine +
                     exception.Message + Environment.NewLine + Environment.NewLine + exception.StackTrace);
@@ -138,7 +141,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            buttonOK.Enabled = true;
+            buttonCancel.Text = LanguageSettings.Current.General.Ok;
             labelPleaseWait.Text = string.Format(LanguageSettings.Current.SettingsFfmpeg.XDownloadOk, _title);
         }
     }
