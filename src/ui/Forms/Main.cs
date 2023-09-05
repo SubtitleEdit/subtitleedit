@@ -4162,7 +4162,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                         if (!isMpvAvailable)
                         {
-                            using (var form = new SettingsMpv(!LibMpvDynamic.IsInstalled))
+                            using (var form = new SettingsMpv())
                             {
                                 if (form.ShowDialog(this) != DialogResult.OK)
                                 {
@@ -25723,7 +25723,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (Configuration.Settings.General.VideoPlayer != "MPV")
                 {
-                    using (var form = new SettingsMpv(!LibMpvDynamic.IsInstalled))
+                    using (var form = new SettingsMpv())
                     {
                         if (form.ShowDialog(this) != DialogResult.OK)
                         {
@@ -33634,7 +33634,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     if (!isMpvAvailable)
                     {
-                        using (var form = new SettingsMpv(!LibMpvDynamic.IsInstalled))
+                        using (var form = new SettingsMpv())
                         {
                             if (form.ShowDialog(this) != DialogResult.OK)
                             {
