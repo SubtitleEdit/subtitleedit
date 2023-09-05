@@ -216,7 +216,7 @@ Vuoi ulteriori informazioni (web)?</WhisperNotFound>
     <RemoveTemporaryFiles>Rimuovi file temporanei</RemoveTemporaryFiles>
     <SetCppConstMeFolder>Imposta cartella modelli CPP/Const-me...</SetCppConstMeFolder>
     <OnlyRunPostProcessing>Esegui solo la post-elaborazione/regola i tempi</OnlyRunPostProcessing>
-    <DownloadFasterWhisperCuda>Download CUDA per Perfview's Whisper-Faster</DownloadFasterWhisperCuda>
+    <DownloadFasterWhisperCuda>Download cuBLAS e cuDNN per Faster-Whisper</DownloadFasterWhisperCuda>
   </AudioToText>
   <AssaAttachments>
     <Title>Allegati alpha sub station avanzati</Title>
