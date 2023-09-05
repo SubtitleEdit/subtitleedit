@@ -15,6 +15,7 @@ namespace Nikse.SubtitleEdit.Logic
         public static Color BackColor => Configuration.Settings.General.DarkThemeBackColor;
         public static Color ForeColor => Configuration.Settings.General.DarkThemeForeColor;
         public static Color DarkThemeDisabledColor => Configuration.Settings.General.DarkThemeDisabledColor;
+        public static Color DarkThemeSelectedBackgroundColor = Color.FromArgb(24, 52, 75);
 
         private const int DWMWA_USE_IMMERSIVE_DARK_MODE_BEFORE_20H1 = 19;
         private const int DWMWA_USE_IMMERSIVE_DARK_MODE = 20;
@@ -856,6 +857,17 @@ namespace Nikse.SubtitleEdit.Logic
                 }
             }
 
+            protected override void OnRenderButtonBackground(ToolStripItemRenderEventArgs e)
+            {
+                if (e.Item.Selected)
+                {
+                    e.Graphics.Clear(DarkThemeSelectedBackgroundColor);
+                    return;
+                }
+
+                base.OnRenderButtonBackground(e);
+            }
+
             protected override void OnRenderToolStripBorder(ToolStripRenderEventArgs e)
             {
                 if (e.ToolStrip == null)
@@ -910,7 +922,7 @@ namespace Nikse.SubtitleEdit.Logic
 
                 if (e.Item.Enabled)
                 {
-                    var bgColor = e.Item.Selected ? Color.FromArgb(24, 52, 75) : e.Item.BackColor;
+                    var bgColor = e.Item.Selected ? DarkThemeSelectedBackgroundColor : e.Item.BackColor;
 
                     // Normal item
                     var rect = new Rectangle(2, 0, e.Item.Width - 3, e.Item.Height);
