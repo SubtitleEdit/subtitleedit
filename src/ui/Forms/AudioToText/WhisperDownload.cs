@@ -316,8 +316,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
             if (whisperChoice == WhisperChoice.PurfviewFasterWhisper)
             {
-            //    return hash == "f55f3d7f60ec3a5ba6e1cc59062ad34d5e235f726f12bc8e4d1c5c519d1950fecd3e0386f87d937cabb7041235ef3cff54752d82de9f901690cb227ac4d2c2da";
-                return hash == "ac7e72c2ab691d8fef2e22da5d6094b987c321aad8a4e6428e76ffefbb9efead7edb521b06c0c0cb2a69b3b1fbb303803ad5f5b079feadf0f3e16ed20b53360f";
+                return hash == "02363339b3a7d15a78ad2ddb5351302894ec249b21b81cd7e1b98fe7aa7634f39978410841df8daea4898408f10576b1844bf82f0a5baf61766720bb9554915f";
             }
 
             return hash == "c43fed38d1ae99e6fbbd8c842c2d550b4949081c0c7fba72cd2e2e8435ff05eac4f64e659efb09d597c3c062edf1e5026acc375d2a07290fa3c0fca9ac3bd7a2";
