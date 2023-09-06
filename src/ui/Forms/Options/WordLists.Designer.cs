@@ -114,18 +114,18 @@
             // 
             this.textBoxOcrFixValue.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.textBoxOcrFixValue.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            this.textBoxOcrFixValue.Location = new System.Drawing.Point(99, 309);
+            this.textBoxOcrFixValue.Location = new System.Drawing.Point(103, 309);
             this.textBoxOcrFixValue.Name = "textBoxOcrFixValue";
-            this.textBoxOcrFixValue.Size = new System.Drawing.Size(85, 20);
+            this.textBoxOcrFixValue.Size = new System.Drawing.Size(90, 20);
             this.textBoxOcrFixValue.TabIndex = 45;
             this.textBoxOcrFixValue.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxOcrFixValueKeyDown);
             // 
             // buttonRemoveOcrFix
             // 
             this.buttonRemoveOcrFix.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonRemoveOcrFix.Location = new System.Drawing.Point(199, 16);
+            this.buttonRemoveOcrFix.Location = new System.Drawing.Point(199, 21);
             this.buttonRemoveOcrFix.Name = "buttonRemoveOcrFix";
-            this.buttonRemoveOcrFix.Size = new System.Drawing.Size(75, 23);
+            this.buttonRemoveOcrFix.Size = new System.Drawing.Size(83, 24);
             this.buttonRemoveOcrFix.TabIndex = 42;
             this.buttonRemoveOcrFix.Text = "Remove";
             this.buttonRemoveOcrFix.UseVisualStyleBackColor = true;
@@ -139,7 +139,7 @@
             this.listBoxOcrFixList.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.listBoxOcrFixList.FormattingEnabled = true;
             this.listBoxOcrFixList.ItemHeight = 13;
-            this.listBoxOcrFixList.Location = new System.Drawing.Point(6, 16);
+            this.listBoxOcrFixList.Location = new System.Drawing.Point(6, 21);
             this.listBoxOcrFixList.Name = "listBoxOcrFixList";
             this.listBoxOcrFixList.SelectedIndex = -1;
             this.listBoxOcrFixList.SelectedItem = null;
@@ -159,15 +159,15 @@
             this.textBoxOcrFixKey.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxOcrFixKey.Location = new System.Drawing.Point(5, 309);
             this.textBoxOcrFixKey.Name = "textBoxOcrFixKey";
-            this.textBoxOcrFixKey.Size = new System.Drawing.Size(88, 20);
+            this.textBoxOcrFixKey.Size = new System.Drawing.Size(90, 20);
             this.textBoxOcrFixKey.TabIndex = 44;
             // 
             // buttonAddOcrFix
             // 
             this.buttonAddOcrFix.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonAddOcrFix.Location = new System.Drawing.Point(190, 307);
+            this.buttonAddOcrFix.Location = new System.Drawing.Point(199, 308);
             this.buttonAddOcrFix.Name = "buttonAddOcrFix";
-            this.buttonAddOcrFix.Size = new System.Drawing.Size(75, 23);
+            this.buttonAddOcrFix.Size = new System.Drawing.Size(83, 24);
             this.buttonAddOcrFix.TabIndex = 46;
             this.buttonAddOcrFix.Text = "Add pair";
             this.buttonAddOcrFix.UseVisualStyleBackColor = true;
@@ -191,9 +191,9 @@
             // 
             // buttonRemoveUserWord
             // 
-            this.buttonRemoveUserWord.Location = new System.Drawing.Point(159, 16);
+            this.buttonRemoveUserWord.Location = new System.Drawing.Point(159, 21);
             this.buttonRemoveUserWord.Name = "buttonRemoveUserWord";
-            this.buttonRemoveUserWord.Size = new System.Drawing.Size(75, 23);
+            this.buttonRemoveUserWord.Size = new System.Drawing.Size(83, 24);
             this.buttonRemoveUserWord.TabIndex = 32;
             this.buttonRemoveUserWord.Text = "Remove";
             this.buttonRemoveUserWord.UseVisualStyleBackColor = true;
@@ -206,7 +206,7 @@
             this.listBoxUserWordLists.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.listBoxUserWordLists.FormattingEnabled = true;
             this.listBoxUserWordLists.ItemHeight = 13;
-            this.listBoxUserWordLists.Location = new System.Drawing.Point(3, 16);
+            this.listBoxUserWordLists.Location = new System.Drawing.Point(3, 21);
             this.listBoxUserWordLists.Name = "listBoxUserWordLists";
             this.listBoxUserWordLists.SelectedIndex = -1;
             this.listBoxUserWordLists.SelectedItem = null;
@@ -226,16 +226,16 @@
             this.textBoxUserWord.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxUserWord.Location = new System.Drawing.Point(2, 309);
             this.textBoxUserWord.Name = "textBoxUserWord";
-            this.textBoxUserWord.Size = new System.Drawing.Size(150, 20);
+            this.textBoxUserWord.Size = new System.Drawing.Size(151, 20);
             this.textBoxUserWord.TabIndex = 34;
             this.textBoxUserWord.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxUserWordKeyDown);
             // 
             // buttonAddUserWord
             // 
             this.buttonAddUserWord.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonAddUserWord.Location = new System.Drawing.Point(159, 307);
+            this.buttonAddUserWord.Location = new System.Drawing.Point(159, 308);
             this.buttonAddUserWord.Name = "buttonAddUserWord";
-            this.buttonAddUserWord.Size = new System.Drawing.Size(75, 23);
+            this.buttonAddUserWord.Size = new System.Drawing.Size(83, 24);
             this.buttonAddUserWord.TabIndex = 36;
             this.buttonAddUserWord.Text = "Add word";
             this.buttonAddUserWord.UseVisualStyleBackColor = true;
@@ -249,7 +249,7 @@
             this.groupBoxWordListLocation.Controls.Add(this.textBoxNamesOnline);
             this.groupBoxWordListLocation.Location = new System.Drawing.Point(6, 405);
             this.groupBoxWordListLocation.Name = "groupBoxWordListLocation";
-            this.groupBoxWordListLocation.Size = new System.Drawing.Size(805, 74);
+            this.groupBoxWordListLocation.Size = new System.Drawing.Size(805, 76);
             this.groupBoxWordListLocation.TabIndex = 8;
             this.groupBoxWordListLocation.TabStop = false;
             this.groupBoxWordListLocation.Text = "Location";
@@ -315,9 +315,9 @@
             // 
             // buttonRemoveNameEtc
             // 
-            this.buttonRemoveNameEtc.Location = new System.Drawing.Point(159, 16);
+            this.buttonRemoveNameEtc.Location = new System.Drawing.Point(159, 21);
             this.buttonRemoveNameEtc.Name = "buttonRemoveNameEtc";
-            this.buttonRemoveNameEtc.Size = new System.Drawing.Size(75, 23);
+            this.buttonRemoveNameEtc.Size = new System.Drawing.Size(83, 24);
             this.buttonRemoveNameEtc.TabIndex = 2;
             this.buttonRemoveNameEtc.Text = "Remove";
             this.buttonRemoveNameEtc.UseVisualStyleBackColor = true;
@@ -329,16 +329,16 @@
             this.textBoxNameEtc.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxNameEtc.Location = new System.Drawing.Point(3, 309);
             this.textBoxNameEtc.Name = "textBoxNameEtc";
-            this.textBoxNameEtc.Size = new System.Drawing.Size(151, 20);
+            this.textBoxNameEtc.Size = new System.Drawing.Size(148, 20);
             this.textBoxNameEtc.TabIndex = 3;
             this.textBoxNameEtc.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxNameEtcKeyDown);
             // 
             // buttonAddNames
             // 
             this.buttonAddNames.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonAddNames.Location = new System.Drawing.Point(157, 307);
+            this.buttonAddNames.Location = new System.Drawing.Point(157, 308);
             this.buttonAddNames.Name = "buttonAddNames";
-            this.buttonAddNames.Size = new System.Drawing.Size(75, 23);
+            this.buttonAddNames.Size = new System.Drawing.Size(83, 24);
             this.buttonAddNames.TabIndex = 4;
             this.buttonAddNames.Text = "Add name";
             this.buttonAddNames.UseVisualStyleBackColor = true;
