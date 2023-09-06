@@ -1359,7 +1359,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 if (buffer[i] == 0xFE && (buffer[i - 15] == 0x60 || buffer[i - 15] == 0x61 || buffer[i - 12] == 0x60 || buffer[i - 12] == 0x61))
                 {
                     bool secondary = (buffer[i + 1] & 0x08) != 0;
-                    firstIsSecondary = firstIsSecondary ?? secondary;
+                    firstIsSecondary ??= secondary;
                     if (secondary)
                     {
                         secondaryUse++;
@@ -1698,7 +1698,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             // Remove position tags
-            var indexOfPositioningCodes = p.Text.IndexOf("\u002e\u001f");
+            var indexOfPositioningCodes = p.Text.IndexOf("\u002e\u001f", StringComparison.Ordinal);
             if (indexOfPositioningCodes > 0)
             {
                 p.Text = p.Text.Substring(0, indexOfPositioningCodes + 1);
@@ -1724,7 +1724,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     text = text.Remove(0, endIdx + 1);
                 }
             }
-            int index = text.IndexOf('<');
+
+            var index = text.IndexOf('<');
             if (index < 0)
             {
                 return input;
@@ -1741,8 +1742,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     index++;
                 }
 
-                int indexOfNewLine = text.IndexOf(Environment.NewLine, index + 3, StringComparison.Ordinal);
-                int indexOfEnd = text.IndexOf('>', index + 3);
+                var indexOfNewLine = text.IndexOf(Environment.NewLine, index + 3, StringComparison.Ordinal);
+                var indexOfEnd = text.IndexOf('>', index + 3);
                 if (indexOfNewLine < 0 && indexOfEnd < 0)
                 {
                     index = -1;
@@ -1750,7 +1751,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
                 else
                 {
-                    if (indexOfNewLine < 0 || (indexOfEnd > 0 && (indexOfEnd < indexOfNewLine || indexOfEnd == -1)))
+                    if (indexOfNewLine < 0 || (indexOfEnd > 0 && (indexOfEnd < indexOfNewLine)))
                     {
                         insertSpace = indexOfEnd > 1 && text[indexOfEnd - 1] != ' ';
                         text = text.Insert(indexOfEnd, "</i");
@@ -1871,7 +1872,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (buffer != null)
             {
                 var textSample = new byte[200];
-                int textIndex = 0;
+                var textIndex = 0;
                 while (index < buffer.Length && buffer[index] != endDelimiter)
                 {
                     if (buffer[index] == 0xFF)
@@ -1905,7 +1906,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
 
                 previewBuffer = new byte[textIndex];
-                for (int i = 0; i < textIndex; i++)
+                for (var i = 0; i < textIndex; i++)
                 {
                     previewBuffer[i] = textSample[i];
                 }
@@ -1916,9 +1917,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static byte[] GetLatinBytes(Encoding encoding, string text, byte alignment, Dictionary<int, SpecialCharacter> extraCharacters)
         {
-            int i = 0;
+            var i = 0;
             var buffer = new byte[text.Length * 2];
-            int extra = 0;
+            var extra = 0;
             while (i < text.Length)
             {
                 if (text.Substring(i).StartsWith(Environment.NewLine, StringComparison.Ordinal))
@@ -1931,19 +1932,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
                 else
                 {
-                    string letter = text.Substring(i, 1);
+                    var letter = text.Substring(i, 1);
                     var code = Find(extraCharacters, letter) ?? Find(LatinCodes, letter);
                     if (code != null)
                     {
-                        int byteValue = code.Value.Key;
+                        var byteValue = code.Value.Key;
                         if (byteValue < 256)
                         {
                             buffer[i + extra] = (byte)byteValue;
                         }
                         else
                         {
-                            int high = byteValue / 256;
-                            int low = byteValue % 256;
+                            var high = byteValue / 256;
+                            var low = byteValue % 256;
 
                             buffer[i + extra] = (byte)high;
                             extra++;
@@ -1953,9 +1954,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     else
                     {
                         var values = encoding.GetBytes(letter);
-                        for (int k = 0; k < values.Length; k++)
+                        for (var k = 0; k < values.Length; k++)
                         {
-                            byte v = values[k];
+                            var v = values[k];
                             if (k > 0)
                             {
                                 extra++;
@@ -1969,7 +1970,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             var result = new byte[i + extra];
-            for (int j = 0; j < i + extra; j++)
+            for (var j = 0; j < i + extra; j++)
             {
                 result[j] = buffer[j];
             }
@@ -2000,9 +2001,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private static byte[] GetBytesViaLists(string text, Dictionary<int, SpecialCharacter> codes, byte alignment)
         {
             text = text.Replace("’", "'");
-            int i = 0;
+            var i = 0;
             var buffer = new byte[text.Length * 2];
-            int extra = 0;
+            var extra = 0;
             while (i < text.Length)
             {
                 if (text.Substring(i).StartsWith(Environment.NewLine, StringComparison.Ordinal))
@@ -2015,8 +2016,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
                 else
                 {
-                    bool doubleCharacter = false;
-                    string letter = string.Empty;
+                    var doubleCharacter = false;
+                    var letter = string.Empty;
                     KeyValuePair<int, SpecialCharacter>? character = null;
                     if (i + 1 < text.Length)
                     {
@@ -2034,15 +2035,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                     if (character.HasValue)
                     {
-                        int byteValue = character.Value.Key;
+                        var byteValue = character.Value.Key;
                         if (byteValue < 256)
                         {
                             buffer[i + extra] = (byte)byteValue;
                         }
                         else if (byteValue < 65536)
                         {
-                            int high = byteValue / 256;
-                            int low = byteValue % 256;
+                            var high = byteValue / 256;
+                            var low = byteValue % 256;
                             buffer[i + extra] = (byte)high;
                             if (doubleCharacter)
                             {
@@ -2057,9 +2058,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         }
                         else
                         {
-                            int highest = byteValue / 65536;
-                            int high = (byteValue / 256) % 256;
-                            int low = byteValue % 256;
+                            var highest = byteValue / 65536;
+                            var high = (byteValue / 256) % 256;
+                            var low = byteValue % 256;
 
                             buffer[i + extra] = (byte)highest;
                             extra++;
@@ -2071,9 +2072,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     else
                     {
                         var values = Encoding.Default.GetBytes(letter);
-                        for (int k = 0; k < values.Length; k++)
+                        for (var k = 0; k < values.Length; k++)
                         {
-                            byte v = values[k];
+                            var v = values[k];
                             if (k > 0)
                             {
                                 extra++;
@@ -2091,7 +2092,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             var result = new byte[i + extra];
-            for (int j = 0; j < i + extra; j++)
+            for (var j = 0; j < i + extra; j++)
             {
                 result[j] = buffer[j];
             }
@@ -2102,7 +2103,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private static byte[] GetW16Bytes(string text, byte alignment, int encoding)
         {
             var result = new List<byte>();
-            bool firstLine = true;
+            var firstLine = true;
             foreach (var line in text.SplitToLines())
             {
                 if (!firstLine)
@@ -2134,26 +2135,28 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
                 firstLine = false;
             }
+
             return result.ToArray();
         }
 
         private static bool OnlyAnsi(string line)
         {
-            string latin = Utilities.AllLettersAndNumbers + " .!?/%:;=()#$'&\"";
-            foreach (char ch in line)
+            var latin = Utilities.AllLettersAndNumbers + " .!?/%:;=()#$'&\"";
+            foreach (var ch in line)
             {
                 if (!latin.Contains(ch))
                 {
                     return false;
                 }
             }
+
             return true;
         }
 
         private static byte[] GetUnicodeBytes(string text, byte alignment)
         {
             var result = new List<byte>();
-            bool firstLine = true;
+            var firstLine = true;
             foreach (var line in text.SplitToLines())
             {
                 if (!firstLine)
@@ -2170,6 +2173,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 result.Add(MarkerEndOfUnicode);
                 firstLine = false;
             }
+
             return result.ToArray();
         }
 
@@ -2177,7 +2181,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             var arabicCharacter = GetNextArabicCharacter(buffer, ref index);
 
-            if (arabicCharacter.HasValue && arabicCharacter.Value.SwitchOrder)
+            if (arabicCharacter is { SwitchOrder: true })
             {
                 // if we have a special character we must fetch the next one and move it before the current special one
                 var tempIndex = index + 1;
@@ -2207,7 +2211,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 return null;
             }
 
-            byte b = buffer[index];
+            var b = buffer[index];
             SpecialCharacter? arabicCharacter = null;
             if (ArabicCodes.ContainsKey(b))
             {
@@ -2234,7 +2238,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public static string GetHebrewString(byte[] buffer, ref int index)
         {
-            byte b = buffer[index];
+            var b = buffer[index];
             if (b >= 0x20 && b < 0x70 && b != 44)
             {
                 return Encoding.ASCII.GetString(buffer, index, 1);
@@ -2255,7 +2259,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static bool TryGetMappedCharacter(Dictionary<int, SpecialCharacter> map, byte[] buffer, ref int index, out string result)
         {
-            byte b = buffer[index];
+            var b = buffer[index];
 
             result = string.Empty;
             if (map.ContainsKey(b))
@@ -2310,7 +2314,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public static string GetCyrillicString(byte[] buffer, ref int index)
         {
-            byte b = buffer[index];
+            var b = buffer[index];
 
             if (b >= 0x30 && b <= 0x39) // decimal digits
             {
@@ -2342,7 +2346,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public static string GetGreekString(byte[] buffer, ref int index)
         {
-            byte b = buffer[index];
+            var b = buffer[index];
 
             if (b >= 0x30 && b <= 0x39) // decimal digits
             {
@@ -2356,7 +2360,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             if (buffer.Length > index + 2)
             {
-                int code = b * 65536 + buffer[index + 1] * 256 + buffer[index + 2];
+                var code = b * 65536 + buffer[index + 1] * 256 + buffer[index + 2];
                 if (GreekCodes.ContainsKey(code))
                 {
                     index += 2;
@@ -2381,7 +2385,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public static string GetKoreanString(byte[] buffer, ref int index)
         {
-            byte b = buffer[index];
+            var b = buffer[index];
 
             if (b >= 0x30 && b <= 0x39) // decimal digits
             {
@@ -2415,13 +2419,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             if (timeCodeIndex > 0)
             {
-                string highPart = $"{buffer[timeCodeIndex] + buffer[timeCodeIndex + 1] * 256:000000}";
-                string lowPart = $"{buffer[timeCodeIndex + 2] + buffer[timeCodeIndex + 3] * 256:000000}";
+                var highPart = $"{buffer[timeCodeIndex] + buffer[timeCodeIndex + 1] * 256:000000}";
+                var lowPart = $"{buffer[timeCodeIndex + 2] + buffer[timeCodeIndex + 3] * 256:000000}";
 
-                int hours = int.Parse(highPart.Substring(0, 4));
-                int minutes = int.Parse(highPart.Substring(4, 2));
-                int seconds = int.Parse(lowPart.Substring(2, 2));
-                int frames = int.Parse(lowPart.Substring(4, 2));
+                var hours = int.Parse(highPart.Substring(0, 4));
+                var minutes = int.Parse(highPart.Substring(4, 2));
+                var seconds = int.Parse(lowPart.Substring(2, 2));
+                var frames = int.Parse(lowPart.Substring(4, 2));
 
                 return new TimeCode(hours, minutes, seconds, FramesToMillisecondsMax999(frames));
             }
