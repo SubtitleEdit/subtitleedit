@@ -38,6 +38,7 @@ namespace Nikse.SubtitleEdit.Controls
             if (Control is ToolStripNikseComboBoxControl cbc)
             {
                 cbc.Owner = this;
+                BackColor = cbc.BackColor;
             }
 
             Padding = new Padding(2);
