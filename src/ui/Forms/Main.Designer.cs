@@ -3707,6 +3707,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.comboBoxAutoContinue.SelectedText = "";
             this.comboBoxAutoContinue.Size = new System.Drawing.Size(96, 21);
             this.comboBoxAutoContinue.TabIndex = 2;
+            this.comboBoxAutoContinue.UsePopupWindow = false;
             // 
             // labelAutoContinueDelay
             // 
@@ -3782,6 +3783,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.comboBoxAutoRepeat.SelectedText = "";
             this.comboBoxAutoRepeat.Size = new System.Drawing.Size(96, 21);
             this.comboBoxAutoRepeat.TabIndex = 2;
+            this.comboBoxAutoRepeat.UsePopupWindow = false;
             // 
             // labelAutoRepeatCount
             // 
@@ -5301,7 +5303,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // pictureBoxBookmark
             // 
-            this.pictureBoxBookmark.Image = global::Nikse.SubtitleEdit.Properties.Resources.bookmark22transparent ;
+            this.pictureBoxBookmark.Image = global::Nikse.SubtitleEdit.Properties.Resources.bookmark22transparent;
             this.pictureBoxBookmark.Location = new System.Drawing.Point(150, 52);
             this.pictureBoxBookmark.Name = "pictureBoxBookmark";
             this.pictureBoxBookmark.Size = new System.Drawing.Size(22, 22);
@@ -5551,7 +5553,7 @@ namespace Nikse.SubtitleEdit.Forms
             0,
             -2147483648});
             this.numericUpDownDuration.Name = "numericUpDownDuration";
-            this.numericUpDownDuration.Size = new System.Drawing.Size(56, 23);
+            this.numericUpDownDuration.Size = new System.Drawing.Size(60, 23);
             this.numericUpDownDuration.TabIndex = 1;
             this.numericUpDownDuration.TabStop = false;
             this.numericUpDownDuration.ThousandsSeparator = false;
@@ -5559,7 +5561,7 @@ namespace Nikse.SubtitleEdit.Forms
             0,
             0,
             0,
-            196608});
+            0});
             this.numericUpDownDuration.ValueChanged += new System.EventHandler(this.NumericUpDownDurationValueChanged);
             // 
             // buttonPrevious
@@ -5625,6 +5627,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.textBoxSource.AllowDrop = true;
             this.textBoxSource.ContextMenuStrip = this.contextMenuStripTextBoxSourceView;
             this.textBoxSource.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textBoxSource.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxSource.HideSelection = false;
             this.textBoxSource.Location = new System.Drawing.Point(3, 0);
             this.textBoxSource.MaxLength = 0;
