@@ -119,6 +119,11 @@ namespace Nikse.SubtitleEdit.Controls
             get => ComboBox.DropDownHeight;
             set => ComboBox.DropDownHeight = value;
         }
+        public int DropDownWidth
+        {
+            get => ComboBox.DropDownWidth;
+            set => ComboBox.DropDownWidth = value;
+        }
 
         public Color ButtonForeColor
         {
@@ -163,7 +168,6 @@ namespace Nikse.SubtitleEdit.Controls
         }
 
         public bool DroppedDown => ComboBox.DroppedDown;
-        public int DropDownWidth { get; set; } //TODO: use
 
         internal class ToolStripNikseComboBoxControl : NikseComboBox
         {
