@@ -2181,7 +2181,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             var arabicCharacter = GetNextArabicCharacter(buffer, ref index);
 
-            if (arabicCharacter is { SwitchOrder: true })
+            if (arabicCharacter.HasValue && arabicCharacter.Value.SwitchOrder)
             {
                 // if we have a special character we must fetch the next one and move it before the current special one
                 var tempIndex = index + 1;
