@@ -1929,9 +1929,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     buffer[i + extra] = alignment;
                     extra++;
                     buffer[i + extra] = 3;
+
                     if (Environment.NewLine.Length == 1)
                     {
-                        i++;
+                        extra++;
+                        i--;
                     }
                 }
                 else
@@ -2017,9 +2019,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     buffer[i + extra] = alignment;
                     extra++;
                     buffer[i + extra] = 3;
+
                     if (Environment.NewLine.Length == 1)
                     {
-                        i++;
+                        extra++;
+                        i--;
                     }
                 }
                 else
