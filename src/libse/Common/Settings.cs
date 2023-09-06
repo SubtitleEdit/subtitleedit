@@ -326,6 +326,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public string GenerateTimeCodePatterns { get; set; }
         public string MusicSymbolStyle { get; set; }
         public int BridgeGapMilliseconds { get; set; }
+        public int BridgeGapMillisecondsMinGap { get; set; }
         public string ExportCustomTemplates { get; set; }
         public string ChangeCasingChoice { get; set; }
         public bool ChangeCasingNormalFixNames { get; set; }
@@ -574,6 +575,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             BinEditLeftMargin = 10;
             BinEditRightMargin = 10;
             BridgeGapMilliseconds = 100;
+            BridgeGapMillisecondsMinGap = 24;
             ChangeCasingNormalFixNames = true;
             ExportCustomTemplates = "SubRipÆÆ{number}\r\n{start} --> {end}\r\n{text}\r\n\r\nÆhh:mm:ss,zzzÆ[Do not modify]ÆÆsrtæMicroDVDÆÆ{{start}}{{end}}{text}\r\nÆffÆ||ÆÆsub";
             UseNoLineBreakAfter = false;
@@ -6076,6 +6078,12 @@ $HorzAlign          =   Center
                 settings.Tools.BridgeGapMilliseconds = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
+            subNode = node.SelectSingleNode("BridgeGapMillisecondsMinGap");
+            if (subNode != null)
+            {
+                settings.Tools.BridgeGapMillisecondsMinGap  = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("ExportCustomTemplates");
             if (subNode != null)
             {
@@ -11423,6 +11431,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("BinEditLeftMargin", settings.Tools.BinEditLeftMargin.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BinEditRightMargin", settings.Tools.BinEditRightMargin.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BridgeGapMilliseconds", settings.Tools.BridgeGapMilliseconds.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("BridgeGapMillisecondsMinGap", settings.Tools.BridgeGapMillisecondsMinGap.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ExportCustomTemplates", settings.Tools.ExportCustomTemplates);
                 textWriter.WriteElementString("ChangeCasingChoice", settings.Tools.ChangeCasingChoice);
                 textWriter.WriteElementString("ChangeCasingNormalFixNames", settings.Tools.ChangeCasingNormalFixNames.ToString(CultureInfo.InvariantCulture));

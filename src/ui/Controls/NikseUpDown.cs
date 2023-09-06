@@ -25,6 +25,11 @@ namespace Nikse.SubtitleEdit.Controls
             get => _value;
             set
             {
+                if (value == _value)
+                {
+                    return;
+                }
+
                 if (DecimalPlaces == 0)
                 {
                     _value = value;
@@ -34,6 +39,7 @@ namespace Nikse.SubtitleEdit.Controls
                     _value = Math.Round(value, DecimalPlaces);
                 }
 
+                SetText(false);
                 _dirty = false;
                 Invalidate();
                 ValueChanged?.Invoke(this, null);
