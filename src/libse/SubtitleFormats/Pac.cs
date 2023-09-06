@@ -1918,17 +1918,21 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private static byte[] GetLatinBytes(Encoding encoding, string text, byte alignment, Dictionary<int, SpecialCharacter> extraCharacters)
         {
             var i = 0;
-            var buffer = new byte[text.Length * 2];
+            var buffer = new byte[text.Replace(Environment.NewLine, "12").Length * 2];
             var extra = 0;
             while (i < text.Length)
             {
                 if (text.Substring(i).StartsWith(Environment.NewLine, StringComparison.Ordinal))
                 {
                     buffer[i + extra] = 0xfe;
-                    i += Environment.NewLine.Length - 1;
+                    i++;
                     buffer[i + extra] = alignment;
                     extra++;
                     buffer[i + extra] = 3;
+                    if (Environment.NewLine.Length == 1)
+                    {
+                        i++;
+                    }
                 }
                 else
                 {
@@ -2002,17 +2006,21 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             text = text.Replace("’", "'");
             var i = 0;
-            var buffer = new byte[text.Length * 2];
+            var buffer = new byte[text.Replace(Environment.NewLine, "12").Length * 2];
             var extra = 0;
             while (i < text.Length)
             {
                 if (text.Substring(i).StartsWith(Environment.NewLine, StringComparison.Ordinal))
                 {
                     buffer[i + extra] = 0xfe;
-                    i += Environment.NewLine.Length - 1;
+                    i++;
                     buffer[i + extra] = alignment;
                     extra++;
                     buffer[i + extra] = 3;
+                    if (Environment.NewLine.Length == 1)
+                    {
+                        i++;
+                    }
                 }
                 else
                 {
