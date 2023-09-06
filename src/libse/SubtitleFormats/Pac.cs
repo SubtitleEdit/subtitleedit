@@ -2125,7 +2125,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     result.Add(3);
                 }
 
-                if (OnlyAnsi(line))
+                if (line.All(CharUtils.IsAnsi))
                 {
                     foreach (var b in GetLatinBytes(GetEncoding(CodePageLatin), line, alignment, null))
                     {
@@ -2150,21 +2150,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             return result.ToArray();
         }
-
-        private static bool OnlyAnsi(string line)
-        {
-            var latin = Utilities.AllLettersAndNumbers + " .!?/%:;=()#$'&\"";
-            foreach (var ch in line)
-            {
-                if (!latin.Contains(ch))
-                {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
+        
         private static byte[] GetUnicodeBytes(string text, byte alignment)
         {
             var result = new List<byte>();

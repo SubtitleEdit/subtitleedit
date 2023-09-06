@@ -3,6 +3,15 @@
     public static class CharUtils
     {
         /// <summary>
+        /// Determines whether the given character is within the ANSI range.
+        /// </summary>
+        /// <param name="ch">The character to check.</param>
+        /// <returns>
+        /// <c>true</c> if the given character is within the ANSI range (0-127); otherwise, <c>false</c>.
+        /// </returns> 
+        public static bool IsAnsi(char ch) => ch >= 0 && ch <= 127;
+        
+        /// <summary>
         /// Checks if character matches [0-9]
         /// </summary>
         /// <param name="ch"></param>
