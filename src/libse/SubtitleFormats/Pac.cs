@@ -1336,8 +1336,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             subtitle.Paragraphs.Clear();
             subtitle.Header = null;
-            bool usesSecondaryCodePage = UsesSecondaryCodePage(buffer);
-            int index = 0;
+            var usesSecondaryCodePage = UsesSecondaryCodePage(buffer);
+            var index = 0;
             while (index < buffer.Length)
             {
                 var p = GetPacParagraph(ref index, buffer, usesSecondaryCodePage, subtitle.Paragraphs.Count);
@@ -1350,16 +1350,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             subtitle.Renumber();
         }
 
-        private bool UsesSecondaryCodePage(byte[] buffer)
+        private static bool UsesSecondaryCodePage(byte[] buffer)
         {
             bool? firstIsSecondary = null;
-            int secondaryUse = 0;
-            for (int i = 15; i < buffer.Length - 1; i++)
+            var secondaryUse = 0;
+            for (var i = 15; i < buffer.Length - 1; i++)
             {
                 if (buffer[i] == 0xFE && (buffer[i - 15] == 0x60 || buffer[i - 15] == 0x61 || buffer[i - 12] == 0x60 || buffer[i - 12] == 0x61))
                 {
-                    bool secondary = (buffer[i + 1] & 0x08) != 0;
-                    firstIsSecondary ??= secondary;
+                    var secondary = (buffer[i + 1] & 0x08) != 0;
+                    firstIsSecondary = firstIsSecondary ?? secondary;
                     if (secondary)
                     {
                         secondaryUse++;
@@ -1423,13 +1423,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
 
-            int feIndex = index;
+            var feIndex = index;
             const int endDelimiter = 0x00;
-            byte alignment = buffer[feIndex + 1];
-            bool isSecondaryCodePage = (alignment & 0x08) != 0;
+            var alignment = buffer[feIndex + 1];
+            var isSecondaryCodePage = (alignment & 0x08) != 0;
             alignment &= 0x07;
             var p = new Paragraph();
-            int timeStartIndex = feIndex - 15;
+            var timeStartIndex = feIndex - 15;
             if (buffer[timeStartIndex] == 0x60)
             {
                 p.StartTime = GetTimeCode(timeStartIndex + 1, buffer);
@@ -1445,7 +1445,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 p.StartTime = GetTimeCode(timeStartIndex + 1, buffer);
                 p.EndTime = GetTimeCode(timeStartIndex + 5, buffer);
-                int length = buffer[timeStartIndex + 9] + buffer[timeStartIndex + 10] * 256;
+                var length = buffer[timeStartIndex + 9] + buffer[timeStartIndex + 10] * 256;
                 if (length < 1 || length > 200 || (paragraphIndex != 1 &&
                     (p.StartTime.TotalSeconds - _lastStartTotalSeconds < 1 || p.StartTime.TotalSeconds - _lastStartTotalSeconds > 1500 ||
                     p.EndTime.TotalSeconds - _lastEndTotalSeconds < 1 || p.EndTime.TotalSeconds - _lastEndTotalSeconds > 1500)))
@@ -1458,7 +1458,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 timeStartIndex += 3;
                 p.StartTime = GetTimeCode(timeStartIndex + 1, buffer);
                 p.EndTime = GetTimeCode(timeStartIndex + 5, buffer);
-                int length = buffer[timeStartIndex + 9] + buffer[timeStartIndex + 10] * 256;
+                var length = buffer[timeStartIndex + 9] + buffer[timeStartIndex + 10] * 256;
                 if (length < 1 || length > 200 || (paragraphIndex != 1 &&
                    (p.StartTime.TotalSeconds - _lastStartTotalSeconds < 1 || p.StartTime.TotalSeconds - _lastStartTotalSeconds > 1500 ||
                    p.EndTime.TotalSeconds - _lastEndTotalSeconds < 1 || p.EndTime.TotalSeconds - _lastEndTotalSeconds > 1500)))
@@ -1471,7 +1471,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 return null;
             }
 
-            int textLength = buffer[timeStartIndex + 9] + buffer[timeStartIndex + 10] * 256;
+            var textLength = buffer[timeStartIndex + 9] + buffer[timeStartIndex + 10] * 256;
             if (textLength > 500)
             {
                 return null; // probably not correct index
@@ -1489,7 +1489,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 GetCodePage(buffer, index, endDelimiter);
             }
 
-            var overrides = (CodePage == CodePageLatinTurkish) ? LatinTurkishOverrides : null;
+            var overrides = CodePage == CodePageLatinTurkish ? LatinTurkishOverrides : null;
             var sb = new StringBuilder();
             index = feIndex + 3;
             var w16 = buffer[index] == 0x1f && Encoding.ASCII.GetString(buffer, index + 1, 3) == "W16";
@@ -1582,8 +1582,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                     else
                     {
-                        int len = 1;
-                        byte b = buffer[index];
+                        var len = 1;
+                        var b = buffer[index];
                         if (b >= 0xE0)
                         {
                             len = 3;
