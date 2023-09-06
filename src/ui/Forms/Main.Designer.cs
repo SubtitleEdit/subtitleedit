@@ -3435,7 +3435,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripSplitButtonPlayRate});
             this.toolStripWaveControls.Location = new System.Drawing.Point(0, -1);
             this.toolStripWaveControls.Name = "toolStripWaveControls";
-            this.toolStripWaveControls.Size = new System.Drawing.Size(201, 29);
+            this.toolStripWaveControls.Size = new System.Drawing.Size(259, 29);
             this.toolStripWaveControls.TabIndex = 0;
             this.toolStripWaveControls.Text = "toolStrip2";
             // 
@@ -3461,13 +3461,13 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripComboBoxWaveform.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.toolStripComboBoxWaveform.DropDownHeight = 400;
             this.toolStripComboBoxWaveform.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.toolStripComboBoxWaveform.DropDownWidth = 0;
+            this.toolStripComboBoxWaveform.DropDownWidth = 100;
             this.toolStripComboBoxWaveform.Name = "toolStripComboBoxWaveform";
             this.toolStripComboBoxWaveform.Padding = new System.Windows.Forms.Padding(2);
             this.toolStripComboBoxWaveform.SelectedIndex = -1;
             this.toolStripComboBoxWaveform.SelectedItem = null;
             this.toolStripComboBoxWaveform.SelectedText = "";
-            this.toolStripComboBoxWaveform.Size = new System.Drawing.Size(62, 23);
+            this.toolStripComboBoxWaveform.Size = new System.Drawing.Size(63, 24);
             // 
             // toolStripButtonWaveformZoomIn
             // 
