@@ -3344,7 +3344,7 @@ $HorzAlign          =   Center
             var useLegacyHtmlColorNode = node.SelectSingleNode("UseLegacyHtmlColor");
             if (useLegacyHtmlColorNode != null)
             {
-                settings.General.UseLegacyHtmlColor = Convert.ToBoolean(useLegacyHtmlColorNode.InnerText.Trim(), CultureInfo.InvariantCulture);
+                settings.General.UseLegacyHtmlColor = false;
                 UseLegacyHtmlColor = settings.General.UseLegacyHtmlColor;
             }
 
@@ -6081,7 +6081,7 @@ $HorzAlign          =   Center
             subNode = node.SelectSingleNode("BridgeGapMillisecondsMinGap");
             if (subNode != null)
             {
-                settings.Tools.BridgeGapMillisecondsMinGap  = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+                settings.Tools.BridgeGapMillisecondsMinGap = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
             subNode = node.SelectSingleNode("ExportCustomTemplates");
@@ -11140,7 +11140,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("MpvExtraOptions", settings.General.MpvExtraOptions);
                 textWriter.WriteElementString("MpvLogging", settings.General.MpvLogging.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("MpvHandlesPreviewText", settings.General.MpvHandlesPreviewText.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("MpvPreviewTextPrimaryColor", ColorTranslator.ToHtml(settings.General.MpvPreviewTextPrimaryColor));
+                textWriter.WriteElementString("MpvPreviewTextPrimaryColor", ToHtml(settings.General.MpvPreviewTextPrimaryColor));
                 textWriter.WriteElementString("MpvPreviewTextOutlineColor", ToHtml(settings.General.MpvPreviewTextOutlineColor));
                 textWriter.WriteElementString("MpvPreviewTextBackgroundColor", ToHtml(settings.General.MpvPreviewTextBackgroundColor));
                 textWriter.WriteElementString("MpvPreviewTextOutlineWidth", settings.General.MpvPreviewTextOutlineWidth.ToString(CultureInfo.InvariantCulture));
@@ -11203,7 +11203,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("ShowBetaStuff", settings.General.ShowBetaStuff.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("DebugTranslationSync", settings.General.DebugTranslationSync.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("UseLegacyDownloader", settings.General.UseLegacyDownloader.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("UseLegacyHtmlColor", settings.General.UseLegacyHtmlColor.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("UseLegacyHtmlColor", false.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("NewEmptyDefaultMs", settings.General.NewEmptyDefaultMs.ToString(CultureInfo.InvariantCulture));
 
                 textWriter.WriteEndElement();
@@ -11274,14 +11274,14 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("ListViewSyntaxColorGap", settings.Tools.ListViewSyntaxColorGap.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewSyntaxErrorColor", settings.Tools.ListViewSyntaxErrorColor.ToArgb().ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewUnfocusedSelectedColor", settings.Tools.ListViewUnfocusedSelectedColor.ToArgb().ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("Color1", ColorTranslator.ToHtml(settings.Tools.Color1));
-                textWriter.WriteElementString("Color2", ColorTranslator.ToHtml(settings.Tools.Color2));
-                textWriter.WriteElementString("Color3", ColorTranslator.ToHtml(settings.Tools.Color3));
-                textWriter.WriteElementString("Color4", ColorTranslator.ToHtml(settings.Tools.Color4));
-                textWriter.WriteElementString("Color5", ColorTranslator.ToHtml(settings.Tools.Color5));
-                textWriter.WriteElementString("Color6", ColorTranslator.ToHtml(settings.Tools.Color6));
-                textWriter.WriteElementString("Color7", ColorTranslator.ToHtml(settings.Tools.Color7));
-                textWriter.WriteElementString("Color8", ColorTranslator.ToHtml(settings.Tools.Color8));
+                textWriter.WriteElementString("Color1", ToHtml(settings.Tools.Color1));
+                textWriter.WriteElementString("Color2", ToHtml(settings.Tools.Color2));
+                textWriter.WriteElementString("Color3", ToHtml(settings.Tools.Color3));
+                textWriter.WriteElementString("Color4", ToHtml(settings.Tools.Color4));
+                textWriter.WriteElementString("Color5", ToHtml(settings.Tools.Color5));
+                textWriter.WriteElementString("Color6", ToHtml(settings.Tools.Color6));
+                textWriter.WriteElementString("Color7", ToHtml(settings.Tools.Color7));
+                textWriter.WriteElementString("Color8", ToHtml(settings.Tools.Color8));
                 textWriter.WriteElementString("ListViewShowColumnStartTime", settings.Tools.ListViewShowColumnStartTime.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewShowColumnEndTime", settings.Tools.ListViewShowColumnEndTime.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewShowColumnDuration", settings.Tools.ListViewShowColumnDuration.ToString(CultureInfo.InvariantCulture));
@@ -11483,13 +11483,13 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("AssaAttachmentFontTextPreview", settings.Tools.AssaAttachmentFontTextPreview);
                 textWriter.WriteElementString("AssaSetPositionTarget", settings.Tools.AssaSetPositionTarget);
                 textWriter.WriteElementString("VisualSyncStartSize", settings.Tools.VisualSyncStartSize);
-                textWriter.WriteElementString("BlankVideoColor", ColorTranslator.ToHtml(settings.Tools.BlankVideoColor));
+                textWriter.WriteElementString("BlankVideoColor", ToHtml(settings.Tools.BlankVideoColor));
                 textWriter.WriteElementString("BlankVideoUseCheckeredImage", settings.Tools.BlankVideoUseCheckeredImage.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BlankVideoMinutes", settings.Tools.BlankVideoMinutes.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BlankVideoFrameRate", settings.Tools.BlankVideoFrameRate.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("AssaProgressBarBackColor", ColorTranslator.ToHtml(settings.Tools.AssaProgressBarBackColor));
-                textWriter.WriteElementString("AssaProgressBarForeColor", ColorTranslator.ToHtml(settings.Tools.AssaProgressBarForeColor));
-                textWriter.WriteElementString("AssaProgressBarTextColor", ColorTranslator.ToHtml(settings.Tools.AssaProgressBarTextColor));
+                textWriter.WriteElementString("AssaProgressBarBackColor", ToHtml(settings.Tools.AssaProgressBarBackColor));
+                textWriter.WriteElementString("AssaProgressBarForeColor", ToHtml(settings.Tools.AssaProgressBarForeColor));
+                textWriter.WriteElementString("AssaProgressBarTextColor", ToHtml(settings.Tools.AssaProgressBarTextColor));
                 textWriter.WriteElementString("AssaProgressBarHeight", settings.Tools.AssaProgressBarHeight.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AssaProgressBarSplitterWidth", settings.Tools.AssaProgressBarSplitterWidth.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AssaProgressBarSplitterHeight", settings.Tools.AssaProgressBarSplitterHeight.ToString(CultureInfo.InvariantCulture));
