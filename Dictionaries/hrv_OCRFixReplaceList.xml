@@ -539,6 +539,8 @@
     <Word from="iščupaću" to="iščupat ću" />
     <Word from="istp" to="isto" />
     <Word from="iszom" to="istom" />
+    <Word from="ivaj" to="ovaj" />
+    <Word from="inda" to="onda" />
     <Word from="ive" to="ove" />
     <Word from="ivica" to="rub" />
     <Word from="ivice" to="ruba" />
@@ -549,6 +551,7 @@
     <Word from="iznaf" to="iznad" />
     <Word from="izbjeljen" to="izbijeljen" />
     <Word from="izbeljen" to="izbijeljen" />
+    <Word from="izbošću" to="izbost ću" />
     <Word from="izdaće" to="izdat će" />
     <Word from="Izdaće" to="Izdat će" />
     <Word from="izdaću" to="izdat ću" />
@@ -877,6 +880,8 @@
     <Word from="Malopre" to="Malo prije" />
     <Word from="malopre" to="malo prije" />
     <Word from="maloprije" to="malo prije" />
+    <Word from="manevriše" to="manevrira" />
+    <Word from="Manevriše" to="Manevrira" />
     <Word from="manifestuje" to="manifestira" />
     <Word from="manifestuju" to="manifestiraju" />
     <Word from="maram" to="moram" />
@@ -1647,6 +1652,7 @@
     <Word from="redovu" to="vojniku" />
     <Word from="ređe" to="rjeđe" />
     <Word from="ređi" to="rjeđi" />
+    <Word from="rei" to="reći" />
     <Word from="rejv" to="rave" />
     <Word from="rejvu" to="raveu" />
     <Word from="reko" to="rekao" />
