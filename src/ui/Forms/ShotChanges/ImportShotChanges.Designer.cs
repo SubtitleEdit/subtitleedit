@@ -31,27 +31,27 @@
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
             this.groupBoxImportText = new System.Windows.Forms.GroupBox();
-            this.textBoxIImport = new System.Windows.Forms.TextBox();
+            this.textBoxIImport = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.groupBoxTimeCodes = new System.Windows.Forms.GroupBox();
             this.radioButtonMilliseconds = new System.Windows.Forms.RadioButton();
             this.radioButtonSeconds = new System.Windows.Forms.RadioButton();
             this.radioButtonFrames = new System.Windows.Forms.RadioButton();
             this.radioButtonHHMMSSMS = new System.Windows.Forms.RadioButton();
             this.buttonOpenText = new System.Windows.Forms.Button();
-            this.textBoxLog = new System.Windows.Forms.TextBox();
+            this.textBoxLog = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.groupBoxGenerateShotChanges = new System.Windows.Forms.GroupBox();
             this.labelThresholdDescription = new System.Windows.Forms.Label();
-            this.numericUpDownThreshold = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownThreshold = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelFfmpegThreshold = new System.Windows.Forms.Label();
             this.buttonDownloadFfmpeg = new System.Windows.Forms.Button();
             this.buttonImportWithFfmpeg = new System.Windows.Forms.Button();
-            this.textBoxGenerate = new System.Windows.Forms.TextBox();
+            this.textBoxGenerate = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.labelProgress = new System.Windows.Forms.Label();
             this.groupBoxImportText.SuspendLayout();
             this.groupBoxTimeCodes.SuspendLayout();
             this.groupBoxGenerateShotChanges.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownThreshold)).BeginInit();
             this.SuspendLayout();
             // 
             // buttonCancel
@@ -203,20 +203,21 @@
             this.groupBoxGenerateShotChanges.Controls.Add(this.textBoxGenerate);
             this.groupBoxGenerateShotChanges.Location = new System.Drawing.Point(12, 12);
             this.groupBoxGenerateShotChanges.Name = "groupBoxGenerateShotChanges";
-            this.groupBoxGenerateShotChanges.Size = new System.Drawing.Size(349, 413);
+            this.groupBoxGenerateShotChanges.Size = new System.Drawing.Size(349, 412);
             this.groupBoxGenerateShotChanges.TabIndex = 0;
             this.groupBoxGenerateShotChanges.TabStop = false;
             this.groupBoxGenerateShotChanges.Text = "Generate shot changes";
             // 
             // labelThresholdDescription
             // 
-            this.labelThresholdDescription.AutoSize = true;
+            this.labelThresholdDescription.AutoEllipsis = true;
             this.labelThresholdDescription.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.labelThresholdDescription.Location = new System.Drawing.Point(6, 387);
+            this.labelThresholdDescription.Location = new System.Drawing.Point(120, 377);
             this.labelThresholdDescription.Name = "labelThresholdDescription";
-            this.labelThresholdDescription.Size = new System.Drawing.Size(186, 13);
+            this.labelThresholdDescription.Size = new System.Drawing.Size(223, 30);
             this.labelThresholdDescription.TabIndex = 5;
             this.labelThresholdDescription.Text = "Lower value gives more shot changes";
+            this.labelThresholdDescription.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // numericUpDownThreshold
             // 
@@ -226,17 +227,17 @@
             0,
             0,
             131072});
-            this.numericUpDownThreshold.Location = new System.Drawing.Point(66, 364);
+            this.numericUpDownThreshold.Location = new System.Drawing.Point(66, 383);
             this.numericUpDownThreshold.Maximum = new decimal(new int[] {
-            9,
+            95,
             0,
             0,
-            65536});
+            131072});
             this.numericUpDownThreshold.Minimum = new decimal(new int[] {
-            1,
+            5,
             0,
             0,
-            65536});
+            131072});
             this.numericUpDownThreshold.Name = "numericUpDownThreshold";
             this.numericUpDownThreshold.Size = new System.Drawing.Size(48, 20);
             this.numericUpDownThreshold.TabIndex = 4;
@@ -249,7 +250,7 @@
             // labelFfmpegThreshold
             // 
             this.labelFfmpegThreshold.AutoSize = true;
-            this.labelFfmpegThreshold.Location = new System.Drawing.Point(6, 366);
+            this.labelFfmpegThreshold.Location = new System.Drawing.Point(6, 385);
             this.labelFfmpegThreshold.Name = "labelFfmpegThreshold";
             this.labelFfmpegThreshold.Size = new System.Drawing.Size(54, 13);
             this.labelFfmpegThreshold.TabIndex = 3;
@@ -270,7 +271,7 @@
             // 
             this.buttonImportWithFfmpeg.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonImportWithFfmpeg.Location = new System.Drawing.Point(6, 330);
+            this.buttonImportWithFfmpeg.Location = new System.Drawing.Point(6, 351);
             this.buttonImportWithFfmpeg.Name = "buttonImportWithFfmpeg";
             this.buttonImportWithFfmpeg.Size = new System.Drawing.Size(337, 23);
             this.buttonImportWithFfmpeg.TabIndex = 2;
@@ -290,7 +291,7 @@
             this.textBoxGenerate.Name = "textBoxGenerate";
             this.textBoxGenerate.ReadOnly = true;
             this.textBoxGenerate.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBoxGenerate.Size = new System.Drawing.Size(337, 276);
+            this.textBoxGenerate.Size = new System.Drawing.Size(337, 297);
             this.textBoxGenerate.TabIndex = 1;
             // 
             // progressBar1
@@ -299,7 +300,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.progressBar1.Location = new System.Drawing.Point(12, 433);
             this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(528, 23);
+            this.progressBar1.Size = new System.Drawing.Size(407, 23);
             this.progressBar1.TabIndex = 2;
             this.progressBar1.Visible = false;
             // 
@@ -307,11 +308,23 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
+            // labelProgress
+            // 
+            this.labelProgress.AutoSize = true;
+            this.labelProgress.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.labelProgress.Location = new System.Drawing.Point(425, 438);
+            this.labelProgress.Name = "labelProgress";
+            this.labelProgress.Size = new System.Drawing.Size(102, 13);
+            this.labelProgress.TabIndex = 5;
+            this.labelProgress.Text = "00:00:00 / 00:00:00";
+            this.labelProgress.Visible = false;
+            // 
             // ImportShotChanges
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(738, 468);
+            this.Controls.Add(this.labelProgress);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.buttonOK);
@@ -334,8 +347,8 @@
             this.groupBoxTimeCodes.PerformLayout();
             this.groupBoxGenerateShotChanges.ResumeLayout(false);
             this.groupBoxGenerateShotChanges.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownThreshold)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -350,16 +363,17 @@
         private System.Windows.Forms.RadioButton radioButtonFrames;
 		private System.Windows.Forms.RadioButton radioButtonHHMMSSMS;
         private System.Windows.Forms.GroupBox groupBoxGenerateShotChanges;
-        private System.Windows.Forms.TextBox textBoxGenerate;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxGenerate;
         private System.Windows.Forms.Button buttonOpenText;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.Button buttonImportWithFfmpeg;
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.Button buttonDownloadFfmpeg;
-        private System.Windows.Forms.TextBox textBoxIImport;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxIImport;
         private System.Windows.Forms.Label labelThresholdDescription;
-        private System.Windows.Forms.NumericUpDown numericUpDownThreshold;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownThreshold;
         private System.Windows.Forms.Label labelFfmpegThreshold;
-        private System.Windows.Forms.TextBox textBoxLog;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxLog;
+        private System.Windows.Forms.Label labelProgress;
     }
 }

@@ -46,14 +46,13 @@ namespace Nikse.SubtitleEdit.Forms
             }
             _animation = new List<Paragraph>();
 
-            colorDialog1.Color = Color.Red;
-            labelColor.Text = Utilities.ColorToHex(colorDialog1.Color);
-            panelColor.BackColor = colorDialog1.Color;
+            panelColor.BackColor = Color.Red;
+            labelColor.Text = Utilities.ColorToHex(panelColor.BackColor);
 
             AddToPreview(richTextBoxPreview, paragraph.Text);
             RefreshPreview();
-            labelTotalMilliseconds.Text = $"{paragraph.Duration.TotalMilliseconds / TimeCode.BaseUnit:#,##0.000}";
-            numericUpDownDelay.Maximum = (decimal)((paragraph.Duration.TotalMilliseconds - 500) / TimeCode.BaseUnit);
+            labelTotalMilliseconds.Text = $"{paragraph.DurationTotalMilliseconds / TimeCode.BaseUnit:#,##0.000}";
+            numericUpDownDelay.Maximum = (decimal)((paragraph.DurationTotalMilliseconds - 500) / TimeCode.BaseUnit);
             numericUpDownDelay.Minimum = 0;
 
             numericUpDownDelay.Left = labelEndDelay.Left + labelEndDelay.Width + 5;
@@ -78,10 +77,13 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonChooseColorClick(object sender, EventArgs e)
         {
-            if (colorDialog1.ShowDialog() == DialogResult.OK)
+            using (var colorChooser = new ColorChooser { Color = panelColor.BackColor, ShowAlpha = false })
             {
-                labelColor.Text = Utilities.ColorToHex(colorDialog1.Color);
-                panelColor.BackColor = colorDialog1.Color;
+                if (colorChooser.ShowDialog() == DialogResult.OK)
+                {
+                    labelColor.Text = Utilities.ColorToHex(colorChooser.Color);
+                    panelColor.BackColor = colorChooser.Color;
+                }
             }
         }
 
@@ -108,13 +110,13 @@ namespace Nikse.SubtitleEdit.Forms
         {
             _animation = new List<Paragraph>();
 
-            if (HtmlUtil.RemoveHtmlTags(_paragraph.Text, true).Length == 0 || _paragraph.Duration.TotalMilliseconds < 0.001)
+            if (HtmlUtil.RemoveHtmlTags(_paragraph.Text, true).Length == 0 || _paragraph.DurationTotalMilliseconds < 0.001)
             {
                 _animation.Add(new Paragraph(_paragraph));
                 return;
             }
 
-            var duration = _paragraph.Duration.TotalMilliseconds - ((double)numericUpDownDelay.Value * TimeCode.BaseUnit);
+            var duration = _paragraph.DurationTotalMilliseconds - ((double)numericUpDownDelay.Value * TimeCode.BaseUnit);
             var partsBase = EffectAnimationPart.MakeBase(_paragraph.Text);
             var stepsLength = duration / partsBase.Count+1;
             for (var index = 0; index <= partsBase.Count; index++)
@@ -171,32 +173,6 @@ namespace Nikse.SubtitleEdit.Forms
         {
             MakeAnimation();
             DialogResult = DialogResult.OK;
-        }
-
-        public static bool IsTagFollowIndex(string text, int index)
-        {
-            string tag;
-            // <i>, </i>, <font...>, </font>
-            if (text.Length >= index + 7)
-            {
-                tag = text.Substring(index, 7);
-                if (tag.StartsWith("<font", StringComparison.OrdinalIgnoreCase) || tag.StartsWith("</font", StringComparison.Ordinal))
-                {
-                    return true;
-                }
-            }
-
-            if (text.Length >= index + 3)
-            {
-                tag = text.Substring(index, 3);
-                var idx = 1;
-                if ((tag[2] == '>' || tag[idx++] == '/') && (tag[idx] == 'i' || tag[idx] == 'I' || tag[idx] == 'b' || tag[idx] == 'B' || tag[idx] == 'u' || tag[idx] == 'U'))
-                {
-                    return true;
-                }
-            }
-
-            return false;
         }
     }
 }

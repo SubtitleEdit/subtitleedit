@@ -29,27 +29,24 @@
         private void InitializeComponent()
         {
             this.labelDescription = new System.Windows.Forms.Label();
-            this.numericUpDownThreshold = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownThreshold = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.pictureBoxSubtitleImage = new System.Windows.Forms.PictureBox();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.labelOriginalImage = new System.Windows.Forms.Label();
             this.labelPostImage = new System.Windows.Forms.Label();
             this.groupBoxBinaryImageCompareThreshold = new System.Windows.Forms.GroupBox();
             this.label4 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.numericUpDownScaling = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownScaling = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.groupBoxColors = new System.Windows.Forms.GroupBox();
             this.checkBoxInvertColors = new System.Windows.Forms.CheckBox();
             this.groupBoxCropping = new System.Windows.Forms.GroupBox();
             this.checkBoxCropTransparent = new System.Windows.Forms.CheckBox();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownThreshold)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSubtitleImage)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBoxBinaryImageCompareThreshold.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownScaling)).BeginInit();
             this.groupBoxColors.SuspendLayout();
             this.groupBoxCropping.SuspendLayout();
             this.SuspendLayout();
@@ -65,6 +62,19 @@
             // 
             // numericUpDownThreshold
             // 
+            this.numericUpDownThreshold.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownThreshold.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownThreshold.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownThreshold.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownThreshold.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownThreshold.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownThreshold.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownThreshold.DecimalPlaces = 0;
+            this.numericUpDownThreshold.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownThreshold.Location = new System.Drawing.Point(20, 32);
             this.numericUpDownThreshold.Maximum = new decimal(new int[] {
             765,
@@ -79,6 +89,8 @@
             this.numericUpDownThreshold.Name = "numericUpDownThreshold";
             this.numericUpDownThreshold.Size = new System.Drawing.Size(57, 20);
             this.numericUpDownThreshold.TabIndex = 15;
+            this.numericUpDownThreshold.TabStop = false;
+            this.numericUpDownThreshold.ThousandsSeparator = false;
             this.numericUpDownThreshold.Value = new decimal(new int[] {
             200,
             0,
@@ -186,6 +198,19 @@
             // 
             // numericUpDownScaling
             // 
+            this.numericUpDownScaling.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownScaling.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownScaling.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownScaling.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownScaling.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownScaling.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownScaling.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownScaling.DecimalPlaces = 0;
+            this.numericUpDownScaling.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownScaling.Location = new System.Drawing.Point(20, 181);
             this.numericUpDownScaling.Maximum = new decimal(new int[] {
             500,
@@ -200,6 +225,8 @@
             this.numericUpDownScaling.Name = "numericUpDownScaling";
             this.numericUpDownScaling.Size = new System.Drawing.Size(57, 20);
             this.numericUpDownScaling.TabIndex = 17;
+            this.numericUpDownScaling.TabStop = false;
+            this.numericUpDownScaling.ThousandsSeparator = false;
             this.numericUpDownScaling.Value = new decimal(new int[] {
             100,
             0,
@@ -272,12 +299,10 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "OCR image preprocessing";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SetForeColorThreshold_KeyDown);
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownThreshold)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSubtitleImage)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.groupBoxBinaryImageCompareThreshold.ResumeLayout(false);
             this.groupBoxBinaryImageCompareThreshold.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownScaling)).EndInit();
             this.groupBoxColors.ResumeLayout(false);
             this.groupBoxColors.PerformLayout();
             this.groupBoxCropping.ResumeLayout(false);
@@ -290,12 +315,11 @@
         #endregion
 
         private System.Windows.Forms.Label labelDescription;
-        private System.Windows.Forms.NumericUpDown numericUpDownThreshold;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownThreshold;
         private System.Windows.Forms.PictureBox pictureBoxSubtitleImage;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.ColorDialog colorDialog1;
         private System.Windows.Forms.Label labelOriginalImage;
         private System.Windows.Forms.Label labelPostImage;
         private System.Windows.Forms.GroupBox groupBoxBinaryImageCompareThreshold;
@@ -303,7 +327,7 @@
         private System.Windows.Forms.CheckBox checkBoxInvertColors;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.NumericUpDown numericUpDownScaling;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownScaling;
         private System.Windows.Forms.GroupBox groupBoxCropping;
         private System.Windows.Forms.CheckBox checkBoxCropTransparent;
     }

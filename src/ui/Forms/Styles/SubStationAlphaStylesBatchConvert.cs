@@ -36,7 +36,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             }
 
             comboBoxFontName.Items.Clear();
-            foreach (var x in FontFamily.Families)
+            foreach (var x in FontHelper.GetAllSupportedFontFamilies())
             {
                 comboBoxFontName.Items.Add(x.Name);
             }
@@ -293,12 +293,14 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             string name = CurrentStyleName;
             if (_isSubStationAlpha)
             {
-                colorDialogSSAStyle.Color = panelPrimaryColor.BackColor;
-                if (colorDialogSSAStyle.ShowDialog() == DialogResult.OK)
+                using (var colorChooser = new ColorChooser { Color = panelPrimaryColor.BackColor, ShowAlpha = false })
                 {
-                    panelPrimaryColor.BackColor = colorDialogSSAStyle.Color;
-                    SetSsaStyle(name, "primarycolour", GetSsaColorString(colorDialogSSAStyle.Color));
-                    GeneratePreviewAndUpdateRawHeader();
+                    if (colorChooser.ShowDialog() == DialogResult.OK)
+                    {
+                        panelPrimaryColor.BackColor = colorChooser.Color;
+                        SetSsaStyle(name, "primarycolour", GetSsaColorString(colorChooser.Color));
+                        GeneratePreviewAndUpdateRawHeader();
+                    }
                 }
             }
             else
@@ -320,12 +322,14 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             string name = CurrentStyleName;
             if (_isSubStationAlpha)
             {
-                colorDialogSSAStyle.Color = panelSecondaryColor.BackColor;
-                if (colorDialogSSAStyle.ShowDialog() == DialogResult.OK)
+                using (var colorChooser = new ColorChooser { Color = panelSecondaryColor.BackColor, ShowAlpha = false })
                 {
-                    panelSecondaryColor.BackColor = colorDialogSSAStyle.Color;
-                    SetSsaStyle(name, "secondarycolour", GetSsaColorString(colorDialogSSAStyle.Color));
-                    GeneratePreviewAndUpdateRawHeader();
+                    if (colorChooser.ShowDialog() == DialogResult.OK)
+                    {
+                        panelSecondaryColor.BackColor = colorChooser.Color;
+                        SetSsaStyle(name, "secondarycolour", GetSsaColorString(colorChooser.Color));
+                        GeneratePreviewAndUpdateRawHeader();
+                    }
                 }
             }
             else
@@ -347,12 +351,14 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             string name = CurrentStyleName;
             if (_isSubStationAlpha)
             {
-                colorDialogSSAStyle.Color = panelOutlineColor.BackColor;
-                if (colorDialogSSAStyle.ShowDialog() == DialogResult.OK)
+                using (var colorChooser = new ColorChooser { Color = panelOutlineColor.BackColor, ShowAlpha = false })
                 {
-                    panelOutlineColor.BackColor = colorDialogSSAStyle.Color;
-                    SetSsaStyle(name, "tertiarycolour", GetSsaColorString(colorDialogSSAStyle.Color));
-                    GeneratePreviewAndUpdateRawHeader();
+                    if (colorChooser.ShowDialog() == DialogResult.OK)
+                    {
+                        panelOutlineColor.BackColor = colorChooser.Color;
+                        SetSsaStyle(name, "tertiarycolour", GetSsaColorString(colorChooser.Color));
+                        GeneratePreviewAndUpdateRawHeader();
+                    }
                 }
             }
             else
@@ -374,12 +380,14 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             string name = CurrentStyleName;
             if (_isSubStationAlpha)
             {
-                colorDialogSSAStyle.Color = panelBackColor.BackColor;
-                if (colorDialogSSAStyle.ShowDialog() == DialogResult.OK)
+                using (var colorChooser = new ColorChooser { Color = panelBackColor.BackColor, ShowAlpha = false })
                 {
-                    panelBackColor.BackColor = colorDialogSSAStyle.Color;
-                    SetSsaStyle(name, "backcolour", GetSsaColorString(colorDialogSSAStyle.Color));
-                    GeneratePreviewAndUpdateRawHeader();
+                    if (colorChooser.ShowDialog() == DialogResult.OK)
+                    {
+                        panelBackColor.BackColor = colorChooser.Color;
+                        SetSsaStyle(name, "backcolour", GetSsaColorString(colorChooser.Color));
+                        GeneratePreviewAndUpdateRawHeader();
+                    }
                 }
             }
             else

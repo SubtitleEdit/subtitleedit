@@ -64,13 +64,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (subtitle.Header != null && subtitle.Header.StartsWith("WEBVTT", StringComparison.Ordinal))
             {
                 sb.AppendLine(subtitle.Header.Trim());
-                sb.AppendLine();
             }
             else
             {
                 sb.AppendLine("WEBVTT");
-                sb.AppendLine();
             }
+
+            sb.AppendLine();
 
             foreach (var p in subtitle.Paragraphs)
             {
@@ -139,11 +139,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         internal static string FormatText(Paragraph p)
         {
             var text = Utilities.RemoveSsaTags(p.Text);
-            while (text.Contains(Environment.NewLine + Environment.NewLine))
-            {
-                text = text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
-            }
-
+            text = text.RemoveRecursiveLineBreaks();
             text = ColorHtmlToWebVtt(text);
             text = EscapeEncodeText(text);
             return text;
@@ -375,8 +371,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private static string RemoveWeirdRepeatingHeader(string input)
         {
             var text = input;
-            text = text.Replace(" " + Environment.NewLine, Environment.NewLine);
-            text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
+            text = text.FixExtraSpaces();
             if (text.Contains(Environment.NewLine + "WEBVTT"))
             {
                 if (text.TrimEnd().EndsWith('}') && text.Contains("STYLE"))
@@ -438,7 +433,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             for (int i = startIndex + 7; i < s.Length; i++)
             {
                 var ch = s[i];
-                if (char.IsNumber(ch))
+                if (CharUtils.IsDigit(ch))
                 {
                     tsSb.Append(ch);
                 }
@@ -597,7 +592,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             return s.Substring(list.Min(p=>p));
         }
-
 
         internal static string GetRegion(string s)
         {
@@ -769,6 +763,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 if (end > 0)
                 {
                     var content = header.Substring(match.Index + match.Length, end - (match.Index + match.Length));
+
+                    if (dic.ContainsKey(cueName))
+                    {
+                        dic.Remove(cueName);
+                    }
+
                     dic.Add(cueName, content.Trim().Replace(" ", string.Empty));
                 }
             }

@@ -32,7 +32,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            TimeCode timeCode1 = new TimeCode();
+            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode1 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
             this.labelHourMinSecMilliSecond = new System.Windows.Forms.Label();
             this.buttonShowLater = new System.Windows.Forms.Button();
             this.buttonShowEarlier = new System.Windows.Forms.Button();
@@ -40,7 +40,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.radioButtonAllLines = new System.Windows.Forms.RadioButton();
             this.radioButtonSelectedLinesOnly = new System.Windows.Forms.RadioButton();
-            this.timeUpDownAdjust = new Nikse.SubtitleEdit.Controls.TimeUpDown();
+            this.timeUpDownAdjust = new Nikse.SubtitleEdit.Controls.NikseTimeUpDown();
             this.radioButtonSelectedLineAndForward = new System.Windows.Forms.RadioButton();
             this.SuspendLayout();
             // 
@@ -112,14 +112,25 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // timeUpDownAdjust
             // 
-            this.timeUpDownAdjust.AutoSize = true;
-            this.timeUpDownAdjust.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.timeUpDownAdjust.BackColor = System.Drawing.SystemColors.Window;
+            this.timeUpDownAdjust.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.timeUpDownAdjust.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.timeUpDownAdjust.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.timeUpDownAdjust.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.timeUpDownAdjust.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.timeUpDownAdjust.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.timeUpDownAdjust.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.timeUpDownAdjust.Increment = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
             this.timeUpDownAdjust.Location = new System.Drawing.Point(12, 23);
             this.timeUpDownAdjust.Margin = new System.Windows.Forms.Padding(4);
             this.timeUpDownAdjust.Name = "timeUpDownAdjust";
-            this.timeUpDownAdjust.Size = new System.Drawing.Size(96, 27);
+            this.timeUpDownAdjust.Size = new System.Drawing.Size(96, 23);
             this.timeUpDownAdjust.TabIndex = 21;
+            this.timeUpDownAdjust.TabStop = false;
             timeCode1.Hours = 0;
             timeCode1.Milliseconds = 0;
             timeCode1.Minutes = 0;
@@ -172,7 +183,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         #endregion
 
-        private Nikse.SubtitleEdit.Controls.TimeUpDown timeUpDownAdjust;
+        private Nikse.SubtitleEdit.Controls.NikseTimeUpDown timeUpDownAdjust;
         private System.Windows.Forms.Label labelHourMinSecMilliSecond;
         private System.Windows.Forms.Button buttonShowLater;
         private System.Windows.Forms.Button buttonShowEarlier;

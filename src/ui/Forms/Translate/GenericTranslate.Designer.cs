@@ -30,10 +30,10 @@ namespace Nikse.SubtitleEdit.Forms.Translate
         /// </summary>
         private void InitializeComponent()
         {
-            this.comboBoxSource = new System.Windows.Forms.ComboBox();
+            this.comboBoxSource = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelSource = new System.Windows.Forms.Label();
             this.labelTarget = new System.Windows.Forms.Label();
-            this.comboBoxTarget = new System.Windows.Forms.ComboBox();
+            this.comboBoxTarget = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.buttonTranslate = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
@@ -42,26 +42,40 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             this.subtitleListViewTarget = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.subtitleListViewSource = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.labelApiKeyNotFound = new System.Windows.Forms.Label();
-            this.comboBoxTranslationServices = new System.Windows.Forms.ComboBox();
+            this.comboBoxTranslationServices = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelTranslationService = new System.Windows.Forms.Label();
             this.labelParagraphHandling = new System.Windows.Forms.Label();
-            this.comboBoxParagraphHandling = new System.Windows.Forms.ComboBox();
+            this.comboBoxParagraphHandling = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.SuspendLayout();
             // 
             // comboBoxSource
             // 
+            this.comboBoxSource.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxSource.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxSource.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxSource.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxSource.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxSource.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxSource.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxSource.DropDownHeight = 400;
             this.comboBoxSource.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxSource.DropDownWidth = 121;
             this.comboBoxSource.FormattingEnabled = true;
-            this.comboBoxSource.Location = new System.Drawing.Point(327, 34);
+            this.comboBoxSource.Location = new System.Drawing.Point(327, 35);
+            this.comboBoxSource.MaxLength = 32767;
             this.comboBoxSource.Name = "comboBoxSource";
+            this.comboBoxSource.SelectedIndex = -1;
+            this.comboBoxSource.SelectedItem = null;
+            this.comboBoxSource.SelectedText = "";
             this.comboBoxSource.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxSource.TabIndex = 0;
+            this.comboBoxSource.TabIndex = 1;
+            this.comboBoxSource.UsePopupWindow = false;
             this.comboBoxSource.TextChanged += new System.EventHandler(this.ComboBoxLanguageChanged);
             // 
             // labelSource
             // 
             this.labelSource.AutoSize = true;
-            this.labelSource.Location = new System.Drawing.Point(285, 41);
+            this.labelSource.Location = new System.Drawing.Point(285, 40);
             this.labelSource.Name = "labelSource";
             this.labelSource.Size = new System.Drawing.Size(35, 13);
             this.labelSource.TabIndex = 1;
@@ -70,7 +84,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             // labelTarget
             // 
             this.labelTarget.AutoSize = true;
-            this.labelTarget.Location = new System.Drawing.Point(468, 37);
+            this.labelTarget.Location = new System.Drawing.Point(468, 40);
             this.labelTarget.Name = "labelTarget";
             this.labelTarget.Size = new System.Drawing.Size(23, 13);
             this.labelTarget.TabIndex = 4;
@@ -78,12 +92,26 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             // 
             // comboBoxTarget
             // 
+            this.comboBoxTarget.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxTarget.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxTarget.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxTarget.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxTarget.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxTarget.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxTarget.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxTarget.DropDownHeight = 400;
             this.comboBoxTarget.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxTarget.DropDownWidth = 121;
             this.comboBoxTarget.FormattingEnabled = true;
-            this.comboBoxTarget.Location = new System.Drawing.Point(497, 34);
+            this.comboBoxTarget.Location = new System.Drawing.Point(497, 35);
+            this.comboBoxTarget.MaxLength = 32767;
             this.comboBoxTarget.Name = "comboBoxTarget";
+            this.comboBoxTarget.SelectedIndex = -1;
+            this.comboBoxTarget.SelectedItem = null;
+            this.comboBoxTarget.SelectedText = "";
             this.comboBoxTarget.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxTarget.TabIndex = 3;
+            this.comboBoxTarget.TabIndex = 2;
+            this.comboBoxTarget.UsePopupWindow = false;
             this.comboBoxTarget.TextChanged += new System.EventHandler(this.ComboBoxLanguageChanged);
             // 
             // buttonTranslate
@@ -91,7 +119,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             this.buttonTranslate.Location = new System.Drawing.Point(624, 34);
             this.buttonTranslate.Name = "buttonTranslate";
             this.buttonTranslate.Size = new System.Drawing.Size(75, 23);
-            this.buttonTranslate.TabIndex = 5;
+            this.buttonTranslate.TabIndex = 3;
             this.buttonTranslate.Text = "Translate";
             this.buttonTranslate.UseVisualStyleBackColor = true;
             this.buttonTranslate.Click += new System.EventHandler(this.buttonTranslate_Click);
@@ -102,7 +130,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             this.buttonOK.Location = new System.Drawing.Point(882, 529);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
-            this.buttonOK.TabIndex = 6;
+            this.buttonOK.TabIndex = 92;
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.ButtonOkClick);
@@ -114,7 +142,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             this.buttonCancel.Location = new System.Drawing.Point(963, 529);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
-            this.buttonCancel.TabIndex = 7;
+            this.buttonCancel.TabIndex = 93;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             // 
@@ -150,7 +178,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             this.subtitleListViewTarget.SubtitleFontBold = false;
             this.subtitleListViewTarget.SubtitleFontName = "Tahoma";
             this.subtitleListViewTarget.SubtitleFontSize = 8;
-            this.subtitleListViewTarget.TabIndex = 2;
+            this.subtitleListViewTarget.TabIndex = 5;
             this.subtitleListViewTarget.UseCompatibleStateImageBehavior = false;
             this.subtitleListViewTarget.UseSyntaxColoring = true;
             this.subtitleListViewTarget.View = System.Windows.Forms.View.Details;
@@ -173,7 +201,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             this.subtitleListViewSource.SubtitleFontBold = false;
             this.subtitleListViewSource.SubtitleFontName = "Tahoma";
             this.subtitleListViewSource.SubtitleFontSize = 8;
-            this.subtitleListViewSource.TabIndex = 0;
+            this.subtitleListViewSource.TabIndex = 4;
             this.subtitleListViewSource.UseCompatibleStateImageBehavior = false;
             this.subtitleListViewSource.UseSyntaxColoring = true;
             this.subtitleListViewSource.View = System.Windows.Forms.View.Details;
@@ -193,18 +221,32 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             // 
             // comboBoxTranslationServices
             // 
+            this.comboBoxTranslationServices.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxTranslationServices.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxTranslationServices.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxTranslationServices.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxTranslationServices.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxTranslationServices.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxTranslationServices.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxTranslationServices.DropDownHeight = 400;
             this.comboBoxTranslationServices.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxTranslationServices.DropDownWidth = 152;
             this.comboBoxTranslationServices.FormattingEnabled = true;
-            this.comboBoxTranslationServices.Location = new System.Drawing.Point(84, 34);
+            this.comboBoxTranslationServices.Location = new System.Drawing.Point(84, 35);
+            this.comboBoxTranslationServices.MaxLength = 32767;
             this.comboBoxTranslationServices.Name = "comboBoxTranslationServices";
+            this.comboBoxTranslationServices.SelectedIndex = -1;
+            this.comboBoxTranslationServices.SelectedItem = null;
+            this.comboBoxTranslationServices.SelectedText = "";
             this.comboBoxTranslationServices.Size = new System.Drawing.Size(152, 21);
-            this.comboBoxTranslationServices.TabIndex = 13;
+            this.comboBoxTranslationServices.TabIndex = 0;
+            this.comboBoxTranslationServices.UsePopupWindow = false;
             this.comboBoxTranslationServices.SelectedIndexChanged += new System.EventHandler(this.comboBoxTranslationServices_SelectedIndexChanged);
             // 
             // labelTranslationService
             // 
             this.labelTranslationService.AutoSize = true;
-            this.labelTranslationService.Location = new System.Drawing.Point(15, 41);
+            this.labelTranslationService.Location = new System.Drawing.Point(15, 40);
             this.labelTranslationService.Name = "labelTranslationService";
             this.labelTranslationService.Size = new System.Drawing.Size(46, 13);
             this.labelTranslationService.TabIndex = 14;
@@ -223,12 +265,26 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             // comboBoxParagraphHandling
             // 
             this.comboBoxParagraphHandling.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.comboBoxParagraphHandling.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxParagraphHandling.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxParagraphHandling.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxParagraphHandling.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxParagraphHandling.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxParagraphHandling.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxParagraphHandling.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxParagraphHandling.DropDownHeight = 400;
             this.comboBoxParagraphHandling.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxParagraphHandling.DropDownWidth = 165;
             this.comboBoxParagraphHandling.FormattingEnabled = true;
             this.comboBoxParagraphHandling.Location = new System.Drawing.Point(155, 527);
+            this.comboBoxParagraphHandling.MaxLength = 32767;
             this.comboBoxParagraphHandling.Name = "comboBoxParagraphHandling";
+            this.comboBoxParagraphHandling.SelectedIndex = -1;
+            this.comboBoxParagraphHandling.SelectedItem = null;
+            this.comboBoxParagraphHandling.SelectedText = "";
             this.comboBoxParagraphHandling.Size = new System.Drawing.Size(165, 21);
-            this.comboBoxParagraphHandling.TabIndex = 16;
+            this.comboBoxParagraphHandling.TabIndex = 90;
+            this.comboBoxParagraphHandling.UsePopupWindow = false;
             // 
             // GenericTranslate
             // 
@@ -261,6 +317,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Translate";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.GenericTranslate_FormClosing);
+            this.Shown += new System.EventHandler(this.GenericTranslate_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormTranslate_KeyDown);
             this.Resize += new System.EventHandler(this.Translate_Resize);
             this.ResumeLayout(false);
@@ -270,21 +327,21 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
         #endregion
 
-        private System.Windows.Forms.ComboBox comboBoxSource;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxSource;
         private System.Windows.Forms.Label labelSource;
         private SubtitleListView subtitleListViewSource;
         private SubtitleListView subtitleListViewTarget;
         private System.Windows.Forms.Label labelTarget;
-        private System.Windows.Forms.ComboBox comboBoxTarget;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxTarget;
         private System.Windows.Forms.Button buttonTranslate;
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Label labelPleaseWait;
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.Label labelApiKeyNotFound;
-        private System.Windows.Forms.ComboBox comboBoxTranslationServices;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxTranslationServices;
         private System.Windows.Forms.Label labelTranslationService;
         private System.Windows.Forms.Label labelParagraphHandling;
-        private System.Windows.Forms.ComboBox comboBoxParagraphHandling;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxParagraphHandling;
     }
 }

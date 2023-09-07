@@ -27,6 +27,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
 using Nikse.SubtitleEdit.Core.Enums;
+using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms.Ocr
 {
@@ -745,11 +746,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 {
                     text = text.Replace(" " + Environment.NewLine, Environment.NewLine);
                     text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
-                    while (text.Contains(Environment.NewLine + Environment.NewLine))
-                    {
-                        text = text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
-                    }
-
+                    text = text.RemoveRecursiveLineBreaks();
+                    
                     if (Utilities.GetNumberOfLines(text) > 2)
                     {
                         text = Utilities.AutoBreakLine(text);
@@ -1042,11 +1040,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 {
                     text = text.Replace(" " + Environment.NewLine, Environment.NewLine);
                     text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
-                    while (text.Contains(Environment.NewLine + Environment.NewLine))
-                    {
-                        text = text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
-                    }
-
+                    text = text.RemoveRecursiveLineBreaks();
+                    
                     if (Utilities.GetNumberOfLines(text) > 2)
                     {
                         text = Utilities.AutoBreakLine(text);
@@ -1476,7 +1471,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     Paragraph p = new Paragraph(string.Empty, x.StartTime.TotalMilliseconds, x.EndTime.TotalMilliseconds);
                     if (checkBoxUseTimeCodesFromIdx.Checked && x.IdxLine != null)
                     {
-                        double durationMilliseconds = p.Duration.TotalMilliseconds;
+                        double durationMilliseconds = p.DurationTotalMilliseconds;
                         p.StartTime = new TimeCode(x.IdxLine.StartTime.TotalMilliseconds);
                         p.EndTime = new TimeCode(x.IdxLine.StartTime.TotalMilliseconds + durationMilliseconds);
                     }
@@ -4973,11 +4968,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 {
                     text = text.Replace(" " + Environment.NewLine, Environment.NewLine);
                     text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
-                    while (text.Contains(Environment.NewLine + Environment.NewLine))
-                    {
-                        text = text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
-                    }
 
+                    text = text.RemoveRecursiveLineBreaks();
+                    
                     if (Utilities.GetNumberOfLines(text) > 2)
                     {
                         text = Utilities.AutoBreakLine(text);
@@ -5135,10 +5128,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 text = text.Replace(" " + Environment.NewLine, Environment.NewLine);
                 text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
-                while (text.Contains(Environment.NewLine + Environment.NewLine))
-                {
-                    text = text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
-                }
+                text = text.RemoveRecursiveLineBreaks();
 
                 if (Utilities.GetNumberOfLines(text) > 2)
                 {
@@ -7439,9 +7429,12 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void PictureBoxColorChooserClick(object sender, EventArgs e)
         {
-            if (colorDialog1.ShowDialog(this) == DialogResult.OK)
+            using (var colorChooser = new ColorChooser { Color = (sender as PictureBox).BackColor, ShowAlpha = false })
             {
-                (sender as PictureBox).BackColor = colorDialog1.Color;
+                if (colorChooser.ShowDialog() == DialogResult.OK)
+                {
+                    (sender as PictureBox).BackColor = colorChooser.Color;
+                }
             }
 
             SubtitleListView1SelectedIndexChanged(null, null);
@@ -7512,7 +7505,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 foreach (var old in oldSubtitle.Paragraphs)
                 {
                     if (Math.Abs(current.StartTime.TotalMilliseconds - old.StartTime.TotalMilliseconds) < 0.01 &&
-                        Math.Abs(current.Duration.TotalMilliseconds - old.Duration.TotalMilliseconds) < 0.01)
+                        Math.Abs(current.DurationTotalMilliseconds - old.DurationTotalMilliseconds) < 0.01)
                     {
                         current.Text = old.Text;
                         break;
@@ -8147,8 +8140,16 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             return _subtitle != null && _subtitle.Paragraphs.Any(p => !string.IsNullOrWhiteSpace(p.Text));
         }
 
+        private bool _forceClose;
+        private DialogResult _dialogResult;
+
         private void VobSubOcr_FormClosing(object sender, FormClosingEventArgs e)
         {
+            if (_forceClose)
+            {
+                return;
+            }
+
             if (!_okClicked && HasChangesBeenMade())
             {
                 if (MessageBox.Show(LanguageSettings.Current.VobSubOcr.DiscardText, LanguageSettings.Current.VobSubOcr.DiscardTitle, MessageBoxButtons.YesNo) == DialogResult.No)
@@ -8227,6 +8228,18 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 {
                     Configuration.Settings.VobSubOcr.LineOcrLastLanguages = comboBoxNOcrLanguage.Items[comboBoxNOcrLanguage.SelectedIndex].ToString();
                 }
+            }
+
+            if (!e.Cancel)
+            {
+                e.Cancel = true; // Hack as FormClosing will crash if any Forms are created here (e.g. a msgbox). 
+                _forceClose = true;
+                _dialogResult = DialogResult;
+                TaskDelayHelper.RunDelayed(TimeSpan.FromMilliseconds(10), () =>
+                {
+                    DialogResult = _dialogResult;
+                    Close();
+                });
             }
         }
 
@@ -9790,13 +9803,14 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             Configuration.Settings.Tools.OcrGoogleCloudVisionSeHandlesTextMerge = checkBoxSeHandlesTextMerge.Checked;
         }
 
-        public void FindDialogFind(string findText, ReplaceType findReplaceType)
+        public void FindDialogFind(string findText, ReplaceType findReplaceType, Regex regex)
         {
             _findHelper = _findHelper ?? _findDialog.GetFindDialogHelper(_selectedIndex);
             _findHelper.FindText = findText;
             _findHelper.FindTextLength = findText.Length;
             _findHelper.FindReplaceType = findReplaceType;
             _findHelper.InProgress = true;
+            _findHelper.SetRegex(regex);
             if (!string.IsNullOrWhiteSpace(_findHelper.FindText))
             {
                 if (Configuration.Settings.Tools.FindHistory.Count == 0 || Configuration.Settings.Tools.FindHistory[0] != _findHelper.FindText)
@@ -9880,6 +9894,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         public void FindDialogClose()
         {
+            if (_findHelper == null)
+            {
+                return;
+            }
+
             _findHelper.InProgress = false;
         }
 

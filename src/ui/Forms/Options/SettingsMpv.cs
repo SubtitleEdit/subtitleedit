@@ -1,49 +1,40 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Http;
 using Nikse.SubtitleEdit.Logic;
-using Nikse.SubtitleEdit.Logic.VideoPlayers;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
+using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms.Options
 {
     public sealed partial class SettingsMpv : Form
     {
-        private readonly bool _justDownload;
         private string _downloadUrl;
         private readonly CancellationTokenSource _cancellationTokenSource;
 
-        public SettingsMpv(bool justDownload)
+        public SettingsMpv()
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
             UiUtil.FixFonts(this);
-            _justDownload = justDownload;
             labelPleaseWait.Text = string.Empty;
 
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
-            buttonOK.Text = LanguageSettings.Current.General.Ok;
             Text = LanguageSettings.Current.SettingsMpv.DownloadMpv;
-            if (!Configuration.IsRunningOnLinux)
-            {
-                buttonDownload.Text = LanguageSettings.Current.SettingsMpv.DownloadMpv;
-            }
-
-            UiUtil.FixLargeFonts(this, buttonOK);
+            UiUtil.FixLargeFonts(this, buttonCancel);
             _cancellationTokenSource = new CancellationTokenSource();
         }
 
         private void ButtonDownloadClick(object sender, EventArgs e)
         {
-            _downloadUrl = "https://github.com/SubtitleEdit/support-files/blob/master/mpv/libmpv2-" + IntPtr.Size * 8 + ".zip?raw=true";
+            _downloadUrl = "https://github.com/SubtitleEdit/support-files/releases/download/libmpv-2023-08-27/libmpv2-" + IntPtr.Size * 8 + ".zip";
             try
             {
                 labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait;
-                buttonOK.Enabled = false;
-                buttonDownload.Enabled = false;
                 Refresh();
                 Cursor = Cursors.WaitCursor;
                 var httpClient = DownloaderFactory.MakeHttpClient();
@@ -73,7 +64,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
             catch (Exception exception)
             {
                 labelPleaseWait.Text = string.Empty;
-                buttonOK.Enabled = true;
                 Cursor = Cursors.Default;
                 MessageBox.Show($"Unable to download {_downloadUrl}!" + Environment.NewLine + Environment.NewLine +
                                 exception.Message + Environment.NewLine + Environment.NewLine + exception.StackTrace);
@@ -89,6 +79,20 @@ namespace Nikse.SubtitleEdit.Forms.Options
             }
 
             downloadStream.Position = 0;
+            var hash = Utilities.GetSha512Hash(downloadStream.ToArray());
+            string[] validHashes =
+            {
+                "b7ccdf6aa5964a9a7b6287c622f3f3bea1eb1cabe7fb479beb24d5c2f91f914f00baf877eb0320dc6a7c5aece7e652b9b256e9f6c4f85147db3cfac646080c8e",
+                "2c6687651442588d98a39996d15e3ec1e8413a9d8409ab10089d0bfe5b04234904e0c2ebed4305d95eddf81ce79c6328603c7c73b3fd4b8f38980e2fc9066e04", // 64-bit
+            };
+            if (!validHashes.Contains(hash))
+            {
+                MessageBox.Show("Whisper SHA-512 hash does not match!");
+                DialogResult = DialogResult.Cancel;
+                return;
+            }
+
+            downloadStream.Position = 0;
             var dictionaryFolder = Configuration.DataDirectory;
             using (ZipExtractor zip = ZipExtractor.Open(downloadStream))
             {
@@ -97,8 +101,8 @@ namespace Nikse.SubtitleEdit.Forms.Options
                 {
                     if (entry.FilenameInZip.EndsWith(".dll", StringComparison.OrdinalIgnoreCase))
                     {
-                        string fileName = Path.GetFileName(entry.FilenameInZip);
-                        string path = Path.Combine(dictionaryFolder, fileName);
+                        var fileName = Path.GetFileName(entry.FilenameInZip);
+                        var path = Path.Combine(dictionaryFolder, fileName);
 
                         try
                         {
@@ -114,21 +118,18 @@ namespace Nikse.SubtitleEdit.Forms.Options
             }
 
             Cursor = Cursors.Default;
-            labelPleaseWait.Text = string.Empty;
-            buttonOK.Enabled = true;
-            buttonDownload.Enabled = !Configuration.IsRunningOnLinux;
-
-            MessageBox.Show(LanguageSettings.Current.SettingsMpv.DownloadMpvOk);
-            DialogResult = DialogResult.OK;
-        }
-
-        private void buttonOK_Click(object sender, EventArgs e)
-        {
-            DialogResult = DialogResult.OK;
+            labelPleaseWait.Text = LanguageSettings.Current.SettingsMpv.DownloadMpvOk;
+            buttonCancel.Text = LanguageSettings.Current.General.Ok;
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)
         {
+            if (buttonCancel.Text == LanguageSettings.Current.General.Ok)
+            {
+                DialogResult = DialogResult.OK;
+                return;
+            }
+
             _cancellationTokenSource.Cancel();
             DialogResult = DialogResult.Cancel;
         }
@@ -136,7 +137,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
         private void SettingsMpv_Shown(object sender, EventArgs e)
         {
             Application.DoEvents();
-            if (Configuration.IsRunningOnWindows && (!LibMpvDynamic.IsInstalled || _justDownload))
+            if (Configuration.IsRunningOnWindows)
             {
                 ButtonDownloadClick(null, null);
             }

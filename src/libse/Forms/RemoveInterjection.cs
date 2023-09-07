@@ -52,7 +52,33 @@ namespace Nikse.SubtitleEdit.Core.Forms
                         {
                             var index = match.Index;
                             var temp = text.Remove(index, s.Length);
+
                             if (index == 0 && temp.StartsWith("... ", StringComparison.Ordinal))
+                            {
+                                temp = temp.Remove(0, 4);
+                            }
+
+                            if (index == 1 && temp.StartsWith("¿, ", StringComparison.Ordinal))
+                            {
+                                temp = temp.Remove(1, 2);
+                            }
+
+                            if (index == 1 && temp.StartsWith("¿ ", StringComparison.Ordinal))
+                            {
+                                temp = temp.Remove(1, 1);
+                            }
+
+                            if (index == 1 && temp.StartsWith("¡, ", StringComparison.Ordinal))
+                            {
+                                temp = temp.Remove(1, 2);
+                            }
+
+                            if (index == 1 && temp.StartsWith("¡ ", StringComparison.Ordinal))
+                            {
+                                temp = temp.Remove(1, 1);
+                            }
+
+                            if (index == 1 && temp.StartsWith("... ", StringComparison.Ordinal))
                             {
                                 temp = temp.Remove(0, 4);
                             }
@@ -127,6 +153,30 @@ namespace Nikse.SubtitleEdit.Core.Forms
                             else if (index > 3 && (temp.Substring(index - 2) == ".  —" || temp.Substring(index - 2) == "!  —" || temp.Substring(index - 2) == "?  —"))
                             {
                                 temp = temp.Remove(index - 2, 1).Replace("  ", " ");
+                            }
+                            else if (index > 3 && (temp.Substring(index - 2).StartsWith("\n¿? ")))
+                            {
+                                temp = temp.Remove(index - 1, 3);
+                            }
+                            else if (index > 3 && (temp.Substring(index - 2).StartsWith("\n¡! ")))
+                            {
+                                temp = temp.Remove(index - 1, 3);
+                            }
+                            else if (index > 3 && (temp.Substring(index - 2).StartsWith(" ¿? ")))
+                            {
+                                temp = temp.Remove(index - 1, 3);
+                            }
+                            else if (index > 3 && (temp.Substring(index - 2).StartsWith(" ¡! ")))
+                            {
+                                temp = temp.Remove(index - 1, 3);
+                            }
+                            else if (index > 3 && temp.Substring(index - 2) == " ¿?")
+                            {
+                                temp = temp.Remove(index - 2, 3);
+                            }
+                            else if (index > 3 && temp.Substring(index - 2) == " ¡!")
+                            {
+                                temp = temp.Remove(index - 2, 3);
                             }
                             else if (index > 3 && temp.Length == index + 1 && ".!?".Contains(temp[index - 2]) && temp[index - 1] == ' ' && ".!?".Contains(temp[index]))
                             {
@@ -260,12 +310,12 @@ namespace Nikse.SubtitleEdit.Core.Forms
                             if (index == 1 && temp.StartsWith("¿?"))
                             {
                                 removeAfter = false;
-                                temp = temp.Remove(0, 2);
+                                temp = temp.Remove(0, 2).TrimStart();
                             }
                             else if (index == 1 && temp.StartsWith("¡!"))
                             {
                                 removeAfter = false;
-                                temp = temp.Remove(0, 2);
+                                temp = temp.Remove(0, 2).TrimStart();
                             }
 
                             if (removeAfter)
@@ -285,6 +335,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                                 {
                                     pre = text.Substring(0, index);
                                     temp = temp.Remove(0, index);
+
                                     if (temp.StartsWith('-') && pre.EndsWith('-'))
                                     {
                                         temp = temp.Remove(0, 1);
@@ -307,12 +358,17 @@ namespace Nikse.SubtitleEdit.Core.Forms
                                         temp = temp.Remove(0, 1);
                                         doRepeat = true;
                                     }
+
+                                    temp = temp.TrimStart();
                                 }
 
                                 var preNoTags = HtmlUtil.RemoveHtmlTags(pre, true).Trim();
                                 if (temp.Length > 0 &&
                                     (preNoTags.Length == 0 ||
                                      preNoTags == "-" ||
+                                     preNoTags == "" ||
+                                     preNoTags.EndsWith('¡') ||
+                                     preNoTags.EndsWith('¿') ||
                                      preNoTags.EndsWith(". -", StringComparison.Ordinal) ||
                                      preNoTags.EndsWith("! -", StringComparison.Ordinal) ||
                                      preNoTags.EndsWith("? -", StringComparison.Ordinal) ||
@@ -320,7 +376,20 @@ namespace Nikse.SubtitleEdit.Core.Forms
                                      preNoTags.HasSentenceEnding()) &&
                                     s[0].ToString(CultureInfo.InvariantCulture) != s[0].ToString(CultureInfo.InvariantCulture).ToLowerInvariant())
                                 {
-                                    temp = char.ToUpper(temp[0]) + temp.Substring(1);
+                                    if (temp[0] != '¡' && temp[0] != '¿')
+                                    {
+                                        temp = char.ToUpper(temp[0]) + temp.Substring(1);
+                                    }
+
+                                    if (temp[0] == '¡' && temp.Length > 1)
+                                    {
+                                        temp = "¡" + temp.TrimStart('¡').CapitalizeFirstLetter();
+                                    }
+                                    else if (temp[0] == '¿' && temp.Length > 1)
+                                    {
+                                        temp = "¿" + temp.TrimStart('¿').CapitalizeFirstLetter();
+                                    }
+
                                     doRepeat = true;
                                 }
 
@@ -366,6 +435,16 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 if (lines[0] == "-" && lines[1] == "-")
                 {
                     return string.Empty;
+                }
+
+                if (lines[0] == "- …" && lines[1].StartsWith("-"))
+                {
+                    return lines[1].Remove(0, 1).Trim();
+                }
+
+                if (lines[1] == "- …" && lines[0].StartsWith("-"))
+                {
+                    return lines[0].Remove(0, 1).Trim();
                 }
 
                 if (lines[0].Length > 1 && lines[0][0] == '-' && lines[1].Trim() == "-")
@@ -540,7 +619,8 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     {
                         return RemoveStartDashSingleLine(oldLines[1]);
                     }
-                    else if (lineIndexRemoved == 1)
+
+                    if (lineIndexRemoved == 1)
                     {
                         return RemoveStartDashSingleLine(oldLines[0]);
                     }

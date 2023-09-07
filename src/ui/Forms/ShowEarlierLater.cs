@@ -36,7 +36,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (timeUpDownAdjust.GetTotalMilliseconds() < 0)
                 {
                     timeUpDownAdjust.SetTotalMilliseconds(0);
-                    System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(10), () =>
+                    TaskDelayHelper.RunDelayed(TimeSpan.FromMilliseconds(10), () =>
                     {
                         timeUpDownAdjust.SetTotalMilliseconds(0);
                     });
@@ -149,6 +149,5 @@ namespace Nikse.SubtitleEdit.Forms
         {
             Configuration.Settings.Tools.LastShowEarlierOrLaterSelection = GetSelectionChoice().ToString();
         }
-
     }
 }

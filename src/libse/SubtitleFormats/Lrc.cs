@@ -290,7 +290,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
                     }
-                    if (p.Duration.TotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
+                    if (p.DurationTotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
                     {
                         double duration = Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds;
                         p.EndTime = new TimeCode(p.StartTime.TotalMilliseconds + duration);

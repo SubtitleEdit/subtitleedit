@@ -37,16 +37,16 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
             this.labelChooseVideoFile = new System.Windows.Forms.Label();
-            this.comboBoxDateTimeFormats = new System.Windows.Forms.ComboBox();
+            this.comboBoxDateTimeFormats = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelWriteFormat = new System.Windows.Forms.Label();
             this.labelVideoFileName = new System.Windows.Forms.Label();
             this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
             this.labelStartFrom = new System.Windows.Forms.Label();
             this.labelExample = new System.Windows.Forms.Label();
-            this.textBoxExample = new System.Windows.Forms.TextBox();
+            this.textBoxExample = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelDuration = new System.Windows.Forms.Label();
-            this.timeUpDownDuration = new Nikse.SubtitleEdit.Controls.TimeUpDown();
-            this.timeUpDownStartTime = new Nikse.SubtitleEdit.Controls.TimeUpDown();
+            this.timeUpDownDuration = new Nikse.SubtitleEdit.Controls.NikseTimeUpDown();
+            this.timeUpDownStartTime = new Nikse.SubtitleEdit.Controls.NikseTimeUpDown();
             this.SuspendLayout();
             // 
             // openFileDialog1
@@ -182,7 +182,6 @@ namespace Nikse.SubtitleEdit.Forms
             // timeUpDownDuration
             // 
             this.timeUpDownDuration.AutoSize = true;
-            this.timeUpDownDuration.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.timeUpDownDuration.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.timeUpDownDuration.Location = new System.Drawing.Point(252, 87);
             this.timeUpDownDuration.Margin = new System.Windows.Forms.Padding(4);
@@ -202,7 +201,6 @@ namespace Nikse.SubtitleEdit.Forms
             // timeUpDownStartTime
             // 
             this.timeUpDownStartTime.AutoSize = true;
-            this.timeUpDownStartTime.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.timeUpDownStartTime.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.timeUpDownStartTime.Location = new System.Drawing.Point(118, 86);
             this.timeUpDownStartTime.Margin = new System.Windows.Forms.Padding(4);
@@ -260,15 +258,15 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Label labelChooseVideoFile;
-        private System.Windows.Forms.ComboBox comboBoxDateTimeFormats;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxDateTimeFormats;
         private System.Windows.Forms.Label labelWriteFormat;
         private System.Windows.Forms.Label labelVideoFileName;
         private System.Windows.Forms.DateTimePicker dateTimePicker1;
         private System.Windows.Forms.Label labelStartFrom;
         private System.Windows.Forms.Label labelExample;
-        private System.Windows.Forms.TextBox textBoxExample;
-        private Controls.TimeUpDown timeUpDownStartTime;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxExample;
+        private Controls.NikseTimeUpDown timeUpDownStartTime;
         private System.Windows.Forms.Label labelDuration;
-        private Controls.TimeUpDown timeUpDownDuration;
+        private Controls.NikseTimeUpDown timeUpDownDuration;
     }
 }

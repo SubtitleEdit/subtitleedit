@@ -1,6 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using System;
-using System.Xml;
 
 namespace Nikse.SubtitleEdit.Core.Forms
 {
@@ -85,7 +84,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 }
 
                 // calculate milliseconds per char
-                var millisecondsPerChar = oldParagraph.Duration.TotalMilliseconds / (HtmlUtil.RemoveHtmlTags(text, true).Length - Environment.NewLine.Length);
+                var millisecondsPerChar = oldParagraph.DurationTotalMilliseconds / (HtmlUtil.RemoveHtmlTags(text, true).Length - Environment.NewLine.Length);
 
                 oldParagraph.Text = lines[firstLine];
 

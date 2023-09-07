@@ -2,7 +2,7 @@
 <Language Name="Français">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.13</Version>
+    <Version>4.0.0</Version>
     <TranslatedBy>Traduction de Pierre le Lidgeu. (Updated: April,3 2023)</TranslatedBy>
     <CultureName>fr-FR</CultureName>
     <HelpFile />
@@ -344,7 +344,7 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
     <TransportStreamFileNameEnding>Suffixe nom de fichier</TransportStreamFileNameEnding>
     <TransportStreamSettingsButton>Paramètres TS…</TransportStreamSettingsButton>
     <RemoveLineBreaks>Retirer les sauts de lignes</RemoveLineBreaks>
-    <DeleteLines>Supprimer des lines</DeleteLines>
+    <DeleteLines>Supprimer des lignes</DeleteLines>
     <TryToUseSourceEncoding>Essayer d'utiliser l'encodage source</TryToUseSourceEncoding>
     <DeleteFirstLines>Supprimer les premières lignes</DeleteFirstLines>
     <DeleteLastLines>Supprimer les dernières lignes</DeleteLastLines>
@@ -857,7 +857,7 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
     <Background>Arrière-plan</Background>
     <FfmpegParameters>Exécuter FFmpeg avec ces paramètres :</FfmpegParameters>
     <GenerateWithFfmpegParametersPrompt>Générer - invite des paramètres FFmpeg</GenerateWithFfmpegParametersPrompt>
-</GenerateBlankVideo>
+  </GenerateBlankVideo>
   <GenerateVideoWithBurnedInSubs>
     <Title>Générer une vidéo avec les s/titres incrustés</Title>
     <InfoAssaOff>Note : Prise en charge du style Advanced Substation Alpha.</InfoAssaOff>
@@ -889,8 +889,8 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
     <InputVideoFile>Fichier vidéo source</InputVideoFile>
     <SubtitlesX>S/titres ({0})</SubtitlesX>
     <SetLanguage>Langue…</SetLanguage>
-    <ToggleForced>->> forcé</ToggleForced>
-    <ToggleDefault>->> défaut</ToggleDefault>
+    <ToggleForced>-&gt;&gt; forcé</ToggleForced>
+    <ToggleDefault>-&gt;&gt; défaut</ToggleDefault>
     <Default>Défaut</Default>
     <XGeneratedWithEmbeddedSubs>"{0}" généré avec s/titres embarqués</XGeneratedWithEmbeddedSubs>
   </GenerateVideoWithEmbeddedSubs>

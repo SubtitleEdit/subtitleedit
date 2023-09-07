@@ -5,6 +5,7 @@ using System;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
+using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 //using Nikse.SubtitleEdit.Logic.DirectShow.Custom;
 
@@ -214,11 +215,13 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void pictureBoxCustomColor_Click(object sender, EventArgs e)
         {
-            colorDialog1.Color = pictureBoxCustomColor.BackColor;
-            if (colorDialog1.ShowDialog(this) == DialogResult.OK)
+            using (var colorChooser = new ColorChooser { Color = pictureBoxCustomColor.BackColor, ShowAlpha = false })
             {
-                pictureBoxCustomColor.BackColor = colorDialog1.Color;
-                SetCustumRGB();
+                if (colorChooser.ShowDialog() == DialogResult.OK)
+                {
+                    pictureBoxCustomColor.BackColor = colorChooser.Color;
+                    SetCustumRGB();
+                }
             }
         }
 

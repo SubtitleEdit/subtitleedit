@@ -116,8 +116,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
                 }
             }
             comboBoxLanguages.SelectedIndex = index;
-            comboBoxLanguages.AutoCompleteSource = AutoCompleteSource.ListItems;
-            comboBoxLanguages.AutoCompleteMode = AutoCompleteMode.Append;
+            comboBoxLanguages.UsePopupWindow = true;
 
             Text = LanguageSettings.Current.ChooseLanguage.Title;
             labelLanguage.Text = LanguageSettings.Current.ChooseLanguage.Language;

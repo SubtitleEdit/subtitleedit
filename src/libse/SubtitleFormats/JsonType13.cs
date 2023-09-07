@@ -21,7 +21,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var last = subtitle.Paragraphs.LastOrDefault();
             if (last != null)
             {
-                duration = (last.StartTime.TotalSeconds + last.Duration.TotalSeconds).ToString(CultureInfo.InvariantCulture);
+                duration = (last.StartTime.TotalSeconds + last.DurationTotalSeconds).ToString(CultureInfo.InvariantCulture);
             }
 
             var createdAt = "";
@@ -47,7 +47,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
 
                 sb.AppendLine("  {");
-                sb.AppendLine("    \"duration\": \"" + p.Duration.TotalSeconds.ToString(CultureInfo.InvariantCulture) + "\",");
+                sb.AppendLine("    \"duration\": \"" + p.DurationTotalSeconds.ToString(CultureInfo.InvariantCulture) + "\",");
                 sb.AppendLine("    \"confidence\": null,");
                 sb.AppendLine("    \"name\": \"" + Json.EncodeJsonText(p.Text) + "\",");
                 sb.AppendLine("    \"time\": \"" + p.StartTime.TotalSeconds.ToString(CultureInfo.InvariantCulture) + "\"");

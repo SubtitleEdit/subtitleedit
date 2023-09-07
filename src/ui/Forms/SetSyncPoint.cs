@@ -43,6 +43,8 @@ namespace Nikse.SubtitleEdit.Forms
             subtitleListView1.AutoSizeAllColumns(this);
             buttonFindTextEnd.Text = LanguageSettings.Current.VisualSync.FindText;
             UiUtil.FixLargeFonts(this, buttonSetSyncPoint);
+            videoPlayerContainer1.TryLoadGfx();
+            videoPlayerContainer1.HidePlayerName();
         }
 
         public TimeSpan SynchronizationPoint => timeUpDownLine.TimeCode.TimeSpan;

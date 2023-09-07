@@ -54,60 +54,60 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.groupBoxOcrMethod = new System.Windows.Forms.GroupBox();
-            this.comboBoxOcrMethod = new System.Windows.Forms.ComboBox();
-            this.groupBoxNOCR = new System.Windows.Forms.GroupBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.comboBoxNOcrLineSplitMinHeight = new System.Windows.Forms.ComboBox();
-            this.numericUpDownNOcrMaxWrongPixels = new System.Windows.Forms.NumericUpDown();
-            this.labelNOcrMaxWrongPixels = new System.Windows.Forms.Label();
-            this.buttonLineOcrEditLanguage = new System.Windows.Forms.Button();
-            this.buttonLineOcrNewLanguage = new System.Windows.Forms.Button();
-            this.label2 = new System.Windows.Forms.Label();
-            this.comboBoxNOcrLanguage = new System.Windows.Forms.ComboBox();
-            this.checkBoxNOcrItalic = new System.Windows.Forms.CheckBox();
-            this.checkBoxNOcrDrawUnknownLetters = new System.Windows.Forms.CheckBox();
-            this.checkBoxRightToLeftNOCR = new System.Windows.Forms.CheckBox();
-            this.numericUpDownNumberOfPixelsIsSpaceNOCR = new System.Windows.Forms.NumericUpDown();
-            this.labelNumberOfPixelsIsSpaceNOCR = new System.Windows.Forms.Label();
-            this.groupBoxImageCompareMethod = new System.Windows.Forms.GroupBox();
-            this.buttonChooseEditBinaryImageCompareDb = new System.Windows.Forms.Button();
-            this.labelMinLineSplitHeight = new System.Windows.Forms.Label();
-            this.comboBoxLineSplitMinLineHeight = new System.Windows.Forms.ComboBox();
-            this.labelMaxErrorPercent = new System.Windows.Forms.Label();
-            this.numericUpDownMaxErrorPct = new System.Windows.Forms.NumericUpDown();
-            this.checkBoxRightToLeft = new System.Windows.Forms.CheckBox();
-            this.numericUpDownPixelsIsSpace = new System.Windows.Forms.NumericUpDown();
-            this.labelNoOfPixelsIsSpace = new System.Windows.Forms.Label();
-            this.comboBoxCharacterDatabase = new System.Windows.Forms.ComboBox();
-            this.labelImageDatabase = new System.Windows.Forms.Label();
+            this.comboBoxOcrMethod = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.GroupBoxTesseractMethod = new System.Windows.Forms.GroupBox();
             this.checkBoxTesseractFallback = new System.Windows.Forms.CheckBox();
             this.labelTesseractEngineMode = new System.Windows.Forms.Label();
-            this.comboBoxTesseractEngineMode = new System.Windows.Forms.ComboBox();
+            this.comboBoxTesseractEngineMode = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.buttonGetTesseractDictionaries = new System.Windows.Forms.Button();
             this.checkBoxTesseractMusicOn = new System.Windows.Forms.CheckBox();
             this.checkBoxTesseractItalicsOn = new System.Windows.Forms.CheckBox();
             this.labelTesseractLanguage = new System.Windows.Forms.Label();
-            this.comboBoxTesseractLanguages = new System.Windows.Forms.ComboBox();
+            this.comboBoxTesseractLanguages = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.groupBoxModiMethod = new System.Windows.Forms.GroupBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.comboBoxModiLanguage = new System.Windows.Forms.ComboBox();
+            this.comboBoxModiLanguage = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.groupBoxCloudVision = new System.Windows.Forms.GroupBox();
             this.checkBoxSeHandlesTextMerge = new System.Windows.Forms.CheckBox();
             this.checkBoxCloudVisionSendOriginalImages = new System.Windows.Forms.CheckBox();
-            this.comboBoxCloudVisionLanguage = new System.Windows.Forms.ComboBox();
+            this.comboBoxCloudVisionLanguage = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelCloudVisionLanguage = new System.Windows.Forms.Label();
-            this.textBoxCloudVisionApiKey = new System.Windows.Forms.TextBox();
+            this.textBoxCloudVisionApiKey = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelCloudVisionApiKey = new System.Windows.Forms.Label();
+            this.groupBoxNOCR = new System.Windows.Forms.GroupBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.comboBoxNOcrLineSplitMinHeight = new Nikse.SubtitleEdit.Controls.NikseComboBox();
+            this.numericUpDownNOcrMaxWrongPixels = new Nikse.SubtitleEdit.Controls.NikseUpDown();
+            this.labelNOcrMaxWrongPixels = new System.Windows.Forms.Label();
+            this.buttonLineOcrEditLanguage = new System.Windows.Forms.Button();
+            this.buttonLineOcrNewLanguage = new System.Windows.Forms.Button();
+            this.label2 = new System.Windows.Forms.Label();
+            this.comboBoxNOcrLanguage = new Nikse.SubtitleEdit.Controls.NikseComboBox();
+            this.checkBoxNOcrItalic = new System.Windows.Forms.CheckBox();
+            this.checkBoxNOcrDrawUnknownLetters = new System.Windows.Forms.CheckBox();
+            this.checkBoxRightToLeftNOCR = new System.Windows.Forms.CheckBox();
+            this.numericUpDownNumberOfPixelsIsSpaceNOCR = new Nikse.SubtitleEdit.Controls.NikseUpDown();
+            this.labelNumberOfPixelsIsSpaceNOCR = new System.Windows.Forms.Label();
+            this.groupBoxImageCompareMethod = new System.Windows.Forms.GroupBox();
+            this.buttonChooseEditBinaryImageCompareDb = new System.Windows.Forms.Button();
+            this.labelMinLineSplitHeight = new System.Windows.Forms.Label();
+            this.comboBoxLineSplitMinLineHeight = new Nikse.SubtitleEdit.Controls.NikseComboBox();
+            this.labelMaxErrorPercent = new System.Windows.Forms.Label();
+            this.numericUpDownMaxErrorPct = new Nikse.SubtitleEdit.Controls.NikseUpDown();
+            this.checkBoxRightToLeft = new System.Windows.Forms.CheckBox();
+            this.numericUpDownPixelsIsSpace = new Nikse.SubtitleEdit.Controls.NikseUpDown();
+            this.labelNoOfPixelsIsSpace = new System.Windows.Forms.Label();
+            this.comboBoxCharacterDatabase = new Nikse.SubtitleEdit.Controls.NikseComboBox();
+            this.labelImageDatabase = new System.Windows.Forms.Label();
             this.groupBoxOCRControls = new System.Windows.Forms.GroupBox();
             this.labelStartFrom = new System.Windows.Forms.Label();
-            this.numericUpDownStartNumber = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownStartNumber = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.buttonPause = new System.Windows.Forms.Button();
             this.buttonStartOcr = new System.Windows.Forms.Button();
             this.groupBoxOcrAutoFix = new System.Windows.Forms.GroupBox();
             this.buttonSpellCheckDownload = new System.Windows.Forms.Button();
             this.labelFixesMade = new System.Windows.Forms.Label();
-            this.comboBoxDictionaries = new System.Windows.Forms.ComboBox();
+            this.comboBoxDictionaries = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.checkBoxGuessUnknownWords = new System.Windows.Forms.CheckBox();
             this.tabControlLogs = new System.Windows.Forms.TabControl();
             this.contextMenuStripAllFixes = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -142,10 +142,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.pictureBoxEmphasis1 = new System.Windows.Forms.PictureBox();
             this.pictureBoxPattern = new System.Windows.Forms.PictureBox();
             this.checkBoxCustomFourColors = new System.Windows.Forms.CheckBox();
-            this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.groupBoxSubtitleImage = new System.Windows.Forms.GroupBox();
             this.labelMinAlpha = new System.Windows.Forms.Label();
-            this.numericUpDownAutoTransparentAlphaMax = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownAutoTransparentAlphaMax = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.groupBoxTransportStream = new System.Windows.Forms.GroupBox();
             this.checkBoxTransportStreamGetColorAndSplit = new System.Windows.Forms.CheckBox();
             this.checkBoxTransportStreamGrayscale = new System.Windows.Forms.CheckBox();
@@ -180,17 +179,12 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.timerHideStatus = new System.Windows.Forms.Timer(this.components);
             this.contextMenuStripListview.SuspendLayout();
             this.groupBoxOcrMethod.SuspendLayout();
-            this.groupBoxNOCR.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownNOcrMaxWrongPixels)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownNumberOfPixelsIsSpaceNOCR)).BeginInit();
-            this.groupBoxImageCompareMethod.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxErrorPct)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPixelsIsSpace)).BeginInit();
             this.GroupBoxTesseractMethod.SuspendLayout();
             this.groupBoxModiMethod.SuspendLayout();
             this.groupBoxCloudVision.SuspendLayout();
+            this.groupBoxNOCR.SuspendLayout();
+            this.groupBoxImageCompareMethod.SuspendLayout();
             this.groupBoxOCRControls.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownStartNumber)).BeginInit();
             this.groupBoxOcrAutoFix.SuspendLayout();
             this.tabControlLogs.SuspendLayout();
             this.contextMenuStripAllFixes.SuspendLayout();
@@ -205,7 +199,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxEmphasis1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPattern)).BeginInit();
             this.groupBoxSubtitleImage.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownAutoTransparentAlphaMax)).BeginInit();
             this.groupBoxTransportStream.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSubtitleImage)).BeginInit();
             this.contextMenuStripImage.SuspendLayout();
@@ -516,7 +509,16 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // 
             // comboBoxOcrMethod
             // 
+            this.comboBoxOcrMethod.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxOcrMethod.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxOcrMethod.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxOcrMethod.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxOcrMethod.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxOcrMethod.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxOcrMethod.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxOcrMethod.DropDownHeight = 400;
             this.comboBoxOcrMethod.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxOcrMethod.DropDownWidth = 366;
             this.comboBoxOcrMethod.FormattingEnabled = true;
             this.comboBoxOcrMethod.Items.AddRange(new object[] {
             "OCR via Tesseract",
@@ -525,10 +527,278 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             "OCR via nOCR",
             "OCR via Tesseract 3.02"});
             this.comboBoxOcrMethod.Location = new System.Drawing.Point(13, 20);
+            this.comboBoxOcrMethod.MaxLength = 32767;
             this.comboBoxOcrMethod.Name = "comboBoxOcrMethod";
+            this.comboBoxOcrMethod.SelectedIndex = -1;
+            this.comboBoxOcrMethod.SelectedItem = null;
+            this.comboBoxOcrMethod.SelectedText = "";
             this.comboBoxOcrMethod.Size = new System.Drawing.Size(366, 21);
             this.comboBoxOcrMethod.TabIndex = 0;
+            this.comboBoxOcrMethod.UsePopupWindow = false;
             this.comboBoxOcrMethod.SelectedIndexChanged += new System.EventHandler(this.ComboBoxOcrMethodSelectedIndexChanged);
+            // 
+            // GroupBoxTesseractMethod
+            // 
+            this.GroupBoxTesseractMethod.Controls.Add(this.checkBoxTesseractFallback);
+            this.GroupBoxTesseractMethod.Controls.Add(this.labelTesseractEngineMode);
+            this.GroupBoxTesseractMethod.Controls.Add(this.comboBoxTesseractEngineMode);
+            this.GroupBoxTesseractMethod.Controls.Add(this.buttonGetTesseractDictionaries);
+            this.GroupBoxTesseractMethod.Controls.Add(this.checkBoxTesseractMusicOn);
+            this.GroupBoxTesseractMethod.Controls.Add(this.checkBoxTesseractItalicsOn);
+            this.GroupBoxTesseractMethod.Controls.Add(this.labelTesseractLanguage);
+            this.GroupBoxTesseractMethod.Controls.Add(this.comboBoxTesseractLanguages);
+            this.GroupBoxTesseractMethod.Location = new System.Drawing.Point(13, 31);
+            this.GroupBoxTesseractMethod.Name = "GroupBoxTesseractMethod";
+            this.GroupBoxTesseractMethod.Size = new System.Drawing.Size(366, 131);
+            this.GroupBoxTesseractMethod.TabIndex = 1;
+            this.GroupBoxTesseractMethod.TabStop = false;
+            this.GroupBoxTesseractMethod.Text = "Tesseract";
+            // 
+            // checkBoxTesseractFallback
+            // 
+            this.checkBoxTesseractFallback.AutoSize = true;
+            this.checkBoxTesseractFallback.Location = new System.Drawing.Point(21, 104);
+            this.checkBoxTesseractFallback.Name = "checkBoxTesseractFallback";
+            this.checkBoxTesseractFallback.Size = new System.Drawing.Size(152, 17);
+            this.checkBoxTesseractFallback.TabIndex = 7;
+            this.checkBoxTesseractFallback.Text = "Fallback to Tesseract 3.02";
+            this.checkBoxTesseractFallback.UseVisualStyleBackColor = true;
+            // 
+            // labelTesseractEngineMode
+            // 
+            this.labelTesseractEngineMode.AutoSize = true;
+            this.labelTesseractEngineMode.Location = new System.Drawing.Point(18, 50);
+            this.labelTesseractEngineMode.Name = "labelTesseractEngineMode";
+            this.labelTesseractEngineMode.Size = new System.Drawing.Size(68, 13);
+            this.labelTesseractEngineMode.TabIndex = 6;
+            this.labelTesseractEngineMode.Text = "Engine mode";
+            // 
+            // comboBoxTesseractEngineMode
+            // 
+            this.comboBoxTesseractEngineMode.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxTesseractEngineMode.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxTesseractEngineMode.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxTesseractEngineMode.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxTesseractEngineMode.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxTesseractEngineMode.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxTesseractEngineMode.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxTesseractEngineMode.DropDownHeight = 400;
+            this.comboBoxTesseractEngineMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxTesseractEngineMode.DropDownWidth = 195;
+            this.comboBoxTesseractEngineMode.FormattingEnabled = true;
+            this.comboBoxTesseractEngineMode.Items.AddRange(new object[] {
+            "Original Tesseract only (can detect italic)",
+            "Neural nets LSTM only",
+            "Tesseract + LSTM",
+            "Default, based on what is available"});
+            this.comboBoxTesseractEngineMode.Location = new System.Drawing.Point(98, 47);
+            this.comboBoxTesseractEngineMode.MaxLength = 32767;
+            this.comboBoxTesseractEngineMode.Name = "comboBoxTesseractEngineMode";
+            this.comboBoxTesseractEngineMode.SelectedIndex = -1;
+            this.comboBoxTesseractEngineMode.SelectedItem = null;
+            this.comboBoxTesseractEngineMode.SelectedText = "";
+            this.comboBoxTesseractEngineMode.Size = new System.Drawing.Size(195, 21);
+            this.comboBoxTesseractEngineMode.TabIndex = 5;
+            this.comboBoxTesseractEngineMode.UsePopupWindow = false;
+            this.comboBoxTesseractEngineMode.SelectedIndexChanged += new System.EventHandler(this.comboBoxTesseractEngineMode_SelectedIndexChanged);
+            // 
+            // buttonGetTesseractDictionaries
+            // 
+            this.buttonGetTesseractDictionaries.Location = new System.Drawing.Point(300, 18);
+            this.buttonGetTesseractDictionaries.Name = "buttonGetTesseractDictionaries";
+            this.buttonGetTesseractDictionaries.Size = new System.Drawing.Size(29, 23);
+            this.buttonGetTesseractDictionaries.TabIndex = 2;
+            this.buttonGetTesseractDictionaries.Text = "...";
+            this.buttonGetTesseractDictionaries.UseVisualStyleBackColor = true;
+            this.buttonGetTesseractDictionaries.Click += new System.EventHandler(this.buttonGetTesseractDictionaries_Click);
+            // 
+            // checkBoxTesseractMusicOn
+            // 
+            this.checkBoxTesseractMusicOn.AutoSize = true;
+            this.checkBoxTesseractMusicOn.Checked = true;
+            this.checkBoxTesseractMusicOn.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxTesseractMusicOn.Location = new System.Drawing.Point(81, 77);
+            this.checkBoxTesseractMusicOn.Name = "checkBoxTesseractMusicOn";
+            this.checkBoxTesseractMusicOn.Size = new System.Drawing.Size(93, 17);
+            this.checkBoxTesseractMusicOn.TabIndex = 4;
+            this.checkBoxTesseractMusicOn.Text = "Music symbols";
+            this.checkBoxTesseractMusicOn.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxTesseractItalicsOn
+            // 
+            this.checkBoxTesseractItalicsOn.AutoSize = true;
+            this.checkBoxTesseractItalicsOn.Checked = true;
+            this.checkBoxTesseractItalicsOn.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxTesseractItalicsOn.Location = new System.Drawing.Point(21, 77);
+            this.checkBoxTesseractItalicsOn.Name = "checkBoxTesseractItalicsOn";
+            this.checkBoxTesseractItalicsOn.Size = new System.Drawing.Size(54, 17);
+            this.checkBoxTesseractItalicsOn.TabIndex = 3;
+            this.checkBoxTesseractItalicsOn.Text = "Italics";
+            this.checkBoxTesseractItalicsOn.UseVisualStyleBackColor = true;
+            // 
+            // labelTesseractLanguage
+            // 
+            this.labelTesseractLanguage.AutoSize = true;
+            this.labelTesseractLanguage.Location = new System.Drawing.Point(18, 22);
+            this.labelTesseractLanguage.Name = "labelTesseractLanguage";
+            this.labelTesseractLanguage.Size = new System.Drawing.Size(54, 13);
+            this.labelTesseractLanguage.TabIndex = 0;
+            this.labelTesseractLanguage.Text = "Language";
+            // 
+            // comboBoxTesseractLanguages
+            // 
+            this.comboBoxTesseractLanguages.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxTesseractLanguages.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxTesseractLanguages.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxTesseractLanguages.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxTesseractLanguages.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxTesseractLanguages.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxTesseractLanguages.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxTesseractLanguages.DropDownHeight = 400;
+            this.comboBoxTesseractLanguages.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxTesseractLanguages.DropDownWidth = 195;
+            this.comboBoxTesseractLanguages.FormattingEnabled = true;
+            this.comboBoxTesseractLanguages.Location = new System.Drawing.Point(98, 20);
+            this.comboBoxTesseractLanguages.MaxLength = 32767;
+            this.comboBoxTesseractLanguages.Name = "comboBoxTesseractLanguages";
+            this.comboBoxTesseractLanguages.SelectedIndex = -1;
+            this.comboBoxTesseractLanguages.SelectedItem = null;
+            this.comboBoxTesseractLanguages.SelectedText = "";
+            this.comboBoxTesseractLanguages.Size = new System.Drawing.Size(195, 21);
+            this.comboBoxTesseractLanguages.TabIndex = 1;
+            this.comboBoxTesseractLanguages.UsePopupWindow = false;
+            this.comboBoxTesseractLanguages.SelectedIndexChanged += new System.EventHandler(this.ComboBoxTesseractLanguagesSelectedIndexChanged);
+            // 
+            // groupBoxModiMethod
+            // 
+            this.groupBoxModiMethod.Controls.Add(this.label1);
+            this.groupBoxModiMethod.Controls.Add(this.comboBoxModiLanguage);
+            this.groupBoxModiMethod.Location = new System.Drawing.Point(7, 50);
+            this.groupBoxModiMethod.Name = "groupBoxModiMethod";
+            this.groupBoxModiMethod.Size = new System.Drawing.Size(366, 131);
+            this.groupBoxModiMethod.TabIndex = 3;
+            this.groupBoxModiMethod.TabStop = false;
+            this.groupBoxModiMethod.Text = "MODI";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(11, 58);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(54, 13);
+            this.label1.TabIndex = 33;
+            this.label1.Text = "Language";
+            // 
+            // comboBoxModiLanguage
+            // 
+            this.comboBoxModiLanguage.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxModiLanguage.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxModiLanguage.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxModiLanguage.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxModiLanguage.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxModiLanguage.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxModiLanguage.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxModiLanguage.DropDownHeight = 400;
+            this.comboBoxModiLanguage.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxModiLanguage.DropDownWidth = 195;
+            this.comboBoxModiLanguage.FormattingEnabled = true;
+            this.comboBoxModiLanguage.Location = new System.Drawing.Point(108, 55);
+            this.comboBoxModiLanguage.MaxLength = 32767;
+            this.comboBoxModiLanguage.Name = "comboBoxModiLanguage";
+            this.comboBoxModiLanguage.SelectedIndex = -1;
+            this.comboBoxModiLanguage.SelectedItem = null;
+            this.comboBoxModiLanguage.SelectedText = "";
+            this.comboBoxModiLanguage.Size = new System.Drawing.Size(195, 21);
+            this.comboBoxModiLanguage.TabIndex = 0;
+            this.comboBoxModiLanguage.UsePopupWindow = false;
+            this.comboBoxModiLanguage.SelectedIndexChanged += new System.EventHandler(this.ComboBoxModiLanguageSelectedIndexChanged);
+            // 
+            // groupBoxCloudVision
+            // 
+            this.groupBoxCloudVision.Controls.Add(this.checkBoxSeHandlesTextMerge);
+            this.groupBoxCloudVision.Controls.Add(this.checkBoxCloudVisionSendOriginalImages);
+            this.groupBoxCloudVision.Controls.Add(this.comboBoxCloudVisionLanguage);
+            this.groupBoxCloudVision.Controls.Add(this.labelCloudVisionLanguage);
+            this.groupBoxCloudVision.Controls.Add(this.textBoxCloudVisionApiKey);
+            this.groupBoxCloudVision.Controls.Add(this.labelCloudVisionApiKey);
+            this.groupBoxCloudVision.Location = new System.Drawing.Point(7, 38);
+            this.groupBoxCloudVision.Name = "groupBoxCloudVision";
+            this.groupBoxCloudVision.Size = new System.Drawing.Size(372, 143);
+            this.groupBoxCloudVision.TabIndex = 8;
+            this.groupBoxCloudVision.TabStop = false;
+            this.groupBoxCloudVision.Text = "Cloud Vision API";
+            // 
+            // checkBoxSeHandlesTextMerge
+            // 
+            this.checkBoxSeHandlesTextMerge.AutoSize = true;
+            this.checkBoxSeHandlesTextMerge.Location = new System.Drawing.Point(9, 104);
+            this.checkBoxSeHandlesTextMerge.Name = "checkBoxSeHandlesTextMerge";
+            this.checkBoxSeHandlesTextMerge.Size = new System.Drawing.Size(134, 17);
+            this.checkBoxSeHandlesTextMerge.TabIndex = 5;
+            this.checkBoxSeHandlesTextMerge.Text = "SE handles text merge";
+            this.checkBoxSeHandlesTextMerge.UseVisualStyleBackColor = true;
+            this.checkBoxSeHandlesTextMerge.CheckedChanged += new System.EventHandler(this.checkBoxSeHandlesTextMerge_CheckedChanged);
+            // 
+            // checkBoxCloudVisionSendOriginalImages
+            // 
+            this.checkBoxCloudVisionSendOriginalImages.AutoSize = true;
+            this.checkBoxCloudVisionSendOriginalImages.Location = new System.Drawing.Point(9, 80);
+            this.checkBoxCloudVisionSendOriginalImages.Name = "checkBoxCloudVisionSendOriginalImages";
+            this.checkBoxCloudVisionSendOriginalImages.Size = new System.Drawing.Size(123, 17);
+            this.checkBoxCloudVisionSendOriginalImages.TabIndex = 4;
+            this.checkBoxCloudVisionSendOriginalImages.Text = "Send original images";
+            this.checkBoxCloudVisionSendOriginalImages.UseVisualStyleBackColor = true;
+            this.checkBoxCloudVisionSendOriginalImages.Visible = false;
+            this.checkBoxCloudVisionSendOriginalImages.CheckedChanged += new System.EventHandler(this.checkBoxCloudVisionSendOriginalImages_CheckedChanged);
+            // 
+            // comboBoxCloudVisionLanguage
+            // 
+            this.comboBoxCloudVisionLanguage.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxCloudVisionLanguage.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxCloudVisionLanguage.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxCloudVisionLanguage.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxCloudVisionLanguage.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxCloudVisionLanguage.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxCloudVisionLanguage.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxCloudVisionLanguage.DropDownHeight = 400;
+            this.comboBoxCloudVisionLanguage.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxCloudVisionLanguage.DropDownWidth = 279;
+            this.comboBoxCloudVisionLanguage.FormattingEnabled = true;
+            this.comboBoxCloudVisionLanguage.Location = new System.Drawing.Point(87, 49);
+            this.comboBoxCloudVisionLanguage.MaxLength = 32767;
+            this.comboBoxCloudVisionLanguage.Name = "comboBoxCloudVisionLanguage";
+            this.comboBoxCloudVisionLanguage.SelectedIndex = -1;
+            this.comboBoxCloudVisionLanguage.SelectedItem = null;
+            this.comboBoxCloudVisionLanguage.SelectedText = "";
+            this.comboBoxCloudVisionLanguage.Size = new System.Drawing.Size(279, 21);
+            this.comboBoxCloudVisionLanguage.TabIndex = 3;
+            this.comboBoxCloudVisionLanguage.UsePopupWindow = false;
+            // 
+            // labelCloudVisionLanguage
+            // 
+            this.labelCloudVisionLanguage.AutoSize = true;
+            this.labelCloudVisionLanguage.Location = new System.Drawing.Point(6, 52);
+            this.labelCloudVisionLanguage.Name = "labelCloudVisionLanguage";
+            this.labelCloudVisionLanguage.Size = new System.Drawing.Size(54, 13);
+            this.labelCloudVisionLanguage.TabIndex = 2;
+            this.labelCloudVisionLanguage.Text = "Language";
+            // 
+            // textBoxCloudVisionApiKey
+            // 
+            this.textBoxCloudVisionApiKey.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.textBoxCloudVisionApiKey.Location = new System.Drawing.Point(87, 22);
+            this.textBoxCloudVisionApiKey.Name = "textBoxCloudVisionApiKey";
+            this.textBoxCloudVisionApiKey.Size = new System.Drawing.Size(279, 21);
+            this.textBoxCloudVisionApiKey.TabIndex = 1;
+            // 
+            // labelCloudVisionApiKey
+            // 
+            this.labelCloudVisionApiKey.AutoSize = true;
+            this.labelCloudVisionApiKey.Location = new System.Drawing.Point(6, 25);
+            this.labelCloudVisionApiKey.Name = "labelCloudVisionApiKey";
+            this.labelCloudVisionApiKey.Size = new System.Drawing.Size(44, 13);
+            this.labelCloudVisionApiKey.TabIndex = 0;
+            this.labelCloudVisionApiKey.Text = "API key";
             // 
             // groupBoxNOCR
             // 
@@ -563,7 +833,16 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // 
             // comboBoxNOcrLineSplitMinHeight
             // 
+            this.comboBoxNOcrLineSplitMinHeight.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxNOcrLineSplitMinHeight.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxNOcrLineSplitMinHeight.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxNOcrLineSplitMinHeight.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxNOcrLineSplitMinHeight.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxNOcrLineSplitMinHeight.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxNOcrLineSplitMinHeight.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxNOcrLineSplitMinHeight.DropDownHeight = 400;
             this.comboBoxNOcrLineSplitMinHeight.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxNOcrLineSplitMinHeight.DropDownWidth = 103;
             this.comboBoxNOcrLineSplitMinHeight.FormattingEnabled = true;
             this.comboBoxNOcrLineSplitMinHeight.Items.AddRange(new object[] {
             "Auto",
@@ -637,16 +916,46 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             "140",
             "150"});
             this.comboBoxNOcrLineSplitMinHeight.Location = new System.Drawing.Point(247, 74);
+            this.comboBoxNOcrLineSplitMinHeight.MaxLength = 32767;
             this.comboBoxNOcrLineSplitMinHeight.Name = "comboBoxNOcrLineSplitMinHeight";
+            this.comboBoxNOcrLineSplitMinHeight.SelectedIndex = -1;
+            this.comboBoxNOcrLineSplitMinHeight.SelectedItem = null;
+            this.comboBoxNOcrLineSplitMinHeight.SelectedText = "";
             this.comboBoxNOcrLineSplitMinHeight.Size = new System.Drawing.Size(103, 21);
             this.comboBoxNOcrLineSplitMinHeight.TabIndex = 48;
+            this.comboBoxNOcrLineSplitMinHeight.UsePopupWindow = false;
             // 
             // numericUpDownNOcrMaxWrongPixels
             // 
+            this.numericUpDownNOcrMaxWrongPixels.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownNOcrMaxWrongPixels.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownNOcrMaxWrongPixels.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownNOcrMaxWrongPixels.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownNOcrMaxWrongPixels.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownNOcrMaxWrongPixels.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownNOcrMaxWrongPixels.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownNOcrMaxWrongPixels.DecimalPlaces = 0;
+            this.numericUpDownNOcrMaxWrongPixels.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownNOcrMaxWrongPixels.Location = new System.Drawing.Point(123, 45);
+            this.numericUpDownNOcrMaxWrongPixels.Maximum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.numericUpDownNOcrMaxWrongPixels.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownNOcrMaxWrongPixels.Name = "numericUpDownNOcrMaxWrongPixels";
             this.numericUpDownNOcrMaxWrongPixels.Size = new System.Drawing.Size(50, 21);
             this.numericUpDownNOcrMaxWrongPixels.TabIndex = 43;
+            this.numericUpDownNOcrMaxWrongPixels.TabStop = false;
+            this.numericUpDownNOcrMaxWrongPixels.ThousandsSeparator = false;
             this.numericUpDownNOcrMaxWrongPixels.Value = new decimal(new int[] {
             45,
             0,
@@ -693,12 +1002,26 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // 
             // comboBoxNOcrLanguage
             // 
+            this.comboBoxNOcrLanguage.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxNOcrLanguage.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxNOcrLanguage.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxNOcrLanguage.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxNOcrLanguage.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxNOcrLanguage.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxNOcrLanguage.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxNOcrLanguage.DropDownHeight = 400;
             this.comboBoxNOcrLanguage.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxNOcrLanguage.DropDownWidth = 130;
             this.comboBoxNOcrLanguage.FormattingEnabled = true;
             this.comboBoxNOcrLanguage.Location = new System.Drawing.Point(74, 100);
+            this.comboBoxNOcrLanguage.MaxLength = 32767;
             this.comboBoxNOcrLanguage.Name = "comboBoxNOcrLanguage";
+            this.comboBoxNOcrLanguage.SelectedIndex = -1;
+            this.comboBoxNOcrLanguage.SelectedItem = null;
+            this.comboBoxNOcrLanguage.SelectedText = "";
             this.comboBoxNOcrLanguage.Size = new System.Drawing.Size(130, 21);
             this.comboBoxNOcrLanguage.TabIndex = 34;
+            this.comboBoxNOcrLanguage.UsePopupWindow = false;
             this.comboBoxNOcrLanguage.SelectedIndexChanged += new System.EventHandler(this.comboBoxNOcrLanguage_SelectedIndexChanged);
             // 
             // checkBoxNOcrItalic
@@ -733,6 +1056,19 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // 
             // numericUpDownNumberOfPixelsIsSpaceNOCR
             // 
+            this.numericUpDownNumberOfPixelsIsSpaceNOCR.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownNumberOfPixelsIsSpaceNOCR.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownNumberOfPixelsIsSpaceNOCR.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownNumberOfPixelsIsSpaceNOCR.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownNumberOfPixelsIsSpaceNOCR.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownNumberOfPixelsIsSpaceNOCR.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownNumberOfPixelsIsSpaceNOCR.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownNumberOfPixelsIsSpaceNOCR.DecimalPlaces = 0;
+            this.numericUpDownNumberOfPixelsIsSpaceNOCR.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownNumberOfPixelsIsSpaceNOCR.Location = new System.Drawing.Point(122, 17);
             this.numericUpDownNumberOfPixelsIsSpaceNOCR.Maximum = new decimal(new int[] {
             250,
@@ -747,6 +1083,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.numericUpDownNumberOfPixelsIsSpaceNOCR.Name = "numericUpDownNumberOfPixelsIsSpaceNOCR";
             this.numericUpDownNumberOfPixelsIsSpaceNOCR.Size = new System.Drawing.Size(50, 21);
             this.numericUpDownNumberOfPixelsIsSpaceNOCR.TabIndex = 5;
+            this.numericUpDownNumberOfPixelsIsSpaceNOCR.TabStop = false;
+            this.numericUpDownNumberOfPixelsIsSpaceNOCR.ThousandsSeparator = false;
             this.numericUpDownNumberOfPixelsIsSpaceNOCR.Value = new decimal(new int[] {
             12,
             0,
@@ -803,7 +1141,16 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // 
             // comboBoxLineSplitMinLineHeight
             // 
+            this.comboBoxLineSplitMinLineHeight.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxLineSplitMinLineHeight.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxLineSplitMinLineHeight.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxLineSplitMinLineHeight.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxLineSplitMinLineHeight.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxLineSplitMinLineHeight.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxLineSplitMinLineHeight.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxLineSplitMinLineHeight.DropDownHeight = 400;
             this.comboBoxLineSplitMinLineHeight.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxLineSplitMinLineHeight.DropDownWidth = 121;
             this.comboBoxLineSplitMinLineHeight.FormattingEnabled = true;
             this.comboBoxLineSplitMinLineHeight.Items.AddRange(new object[] {
             "Auto",
@@ -877,9 +1224,14 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             "140",
             "150"});
             this.comboBoxLineSplitMinLineHeight.Location = new System.Drawing.Point(239, 102);
+            this.comboBoxLineSplitMinLineHeight.MaxLength = 32767;
             this.comboBoxLineSplitMinLineHeight.Name = "comboBoxLineSplitMinLineHeight";
+            this.comboBoxLineSplitMinLineHeight.SelectedIndex = -1;
+            this.comboBoxLineSplitMinLineHeight.SelectedItem = null;
+            this.comboBoxLineSplitMinLineHeight.SelectedText = "";
             this.comboBoxLineSplitMinLineHeight.Size = new System.Drawing.Size(121, 21);
             this.comboBoxLineSplitMinLineHeight.TabIndex = 46;
+            this.comboBoxLineSplitMinLineHeight.UsePopupWindow = false;
             // 
             // labelMaxErrorPercent
             // 
@@ -892,6 +1244,13 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // 
             // numericUpDownMaxErrorPct
             // 
+            this.numericUpDownMaxErrorPct.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownMaxErrorPct.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownMaxErrorPct.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownMaxErrorPct.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownMaxErrorPct.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownMaxErrorPct.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownMaxErrorPct.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.numericUpDownMaxErrorPct.DecimalPlaces = 1;
             this.numericUpDownMaxErrorPct.Increment = new decimal(new int[] {
             1,
@@ -904,9 +1263,16 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             0,
             0,
             0});
+            this.numericUpDownMaxErrorPct.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownMaxErrorPct.Name = "numericUpDownMaxErrorPct";
             this.numericUpDownMaxErrorPct.Size = new System.Drawing.Size(50, 21);
             this.numericUpDownMaxErrorPct.TabIndex = 44;
+            this.numericUpDownMaxErrorPct.TabStop = false;
+            this.numericUpDownMaxErrorPct.ThousandsSeparator = false;
             this.numericUpDownMaxErrorPct.Value = new decimal(new int[] {
             10,
             0,
@@ -926,6 +1292,19 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // 
             // numericUpDownPixelsIsSpace
             // 
+            this.numericUpDownPixelsIsSpace.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownPixelsIsSpace.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownPixelsIsSpace.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownPixelsIsSpace.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownPixelsIsSpace.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownPixelsIsSpace.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownPixelsIsSpace.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownPixelsIsSpace.DecimalPlaces = 0;
+            this.numericUpDownPixelsIsSpace.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownPixelsIsSpace.Location = new System.Drawing.Point(173, 54);
             this.numericUpDownPixelsIsSpace.Maximum = new decimal(new int[] {
             50,
@@ -940,6 +1319,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.numericUpDownPixelsIsSpace.Name = "numericUpDownPixelsIsSpace";
             this.numericUpDownPixelsIsSpace.Size = new System.Drawing.Size(50, 21);
             this.numericUpDownPixelsIsSpace.TabIndex = 5;
+            this.numericUpDownPixelsIsSpace.TabStop = false;
+            this.numericUpDownPixelsIsSpace.ThousandsSeparator = false;
             this.numericUpDownPixelsIsSpace.Value = new decimal(new int[] {
             1,
             0,
@@ -958,12 +1339,26 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // 
             // comboBoxCharacterDatabase
             // 
+            this.comboBoxCharacterDatabase.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxCharacterDatabase.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxCharacterDatabase.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxCharacterDatabase.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxCharacterDatabase.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxCharacterDatabase.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxCharacterDatabase.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxCharacterDatabase.DropDownHeight = 400;
             this.comboBoxCharacterDatabase.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxCharacterDatabase.DropDownWidth = 182;
             this.comboBoxCharacterDatabase.FormattingEnabled = true;
             this.comboBoxCharacterDatabase.Location = new System.Drawing.Point(130, 19);
+            this.comboBoxCharacterDatabase.MaxLength = 32767;
             this.comboBoxCharacterDatabase.Name = "comboBoxCharacterDatabase";
+            this.comboBoxCharacterDatabase.SelectedIndex = -1;
+            this.comboBoxCharacterDatabase.SelectedItem = null;
+            this.comboBoxCharacterDatabase.SelectedText = "";
             this.comboBoxCharacterDatabase.Size = new System.Drawing.Size(182, 21);
             this.comboBoxCharacterDatabase.TabIndex = 1;
+            this.comboBoxCharacterDatabase.UsePopupWindow = false;
             this.comboBoxCharacterDatabase.SelectedIndexChanged += new System.EventHandler(this.ComboBoxCharacterDatabaseSelectedIndexChanged);
             // 
             // labelImageDatabase
@@ -974,212 +1369,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.labelImageDatabase.Size = new System.Drawing.Size(85, 13);
             this.labelImageDatabase.TabIndex = 0;
             this.labelImageDatabase.Text = "Image database";
-            // 
-            // GroupBoxTesseractMethod
-            // 
-            this.GroupBoxTesseractMethod.Controls.Add(this.checkBoxTesseractFallback);
-            this.GroupBoxTesseractMethod.Controls.Add(this.labelTesseractEngineMode);
-            this.GroupBoxTesseractMethod.Controls.Add(this.comboBoxTesseractEngineMode);
-            this.GroupBoxTesseractMethod.Controls.Add(this.buttonGetTesseractDictionaries);
-            this.GroupBoxTesseractMethod.Controls.Add(this.checkBoxTesseractMusicOn);
-            this.GroupBoxTesseractMethod.Controls.Add(this.checkBoxTesseractItalicsOn);
-            this.GroupBoxTesseractMethod.Controls.Add(this.labelTesseractLanguage);
-            this.GroupBoxTesseractMethod.Controls.Add(this.comboBoxTesseractLanguages);
-            this.GroupBoxTesseractMethod.Location = new System.Drawing.Point(13, 31);
-            this.GroupBoxTesseractMethod.Name = "GroupBoxTesseractMethod";
-            this.GroupBoxTesseractMethod.Size = new System.Drawing.Size(366, 131);
-            this.GroupBoxTesseractMethod.TabIndex = 1;
-            this.GroupBoxTesseractMethod.TabStop = false;
-            this.GroupBoxTesseractMethod.Text = "Tesseract";
-            // 
-            // checkBoxTesseractFallback
-            // 
-            this.checkBoxTesseractFallback.AutoSize = true;
-            this.checkBoxTesseractFallback.Location = new System.Drawing.Point(21, 104);
-            this.checkBoxTesseractFallback.Name = "checkBoxTesseractFallback";
-            this.checkBoxTesseractFallback.Size = new System.Drawing.Size(152, 17);
-            this.checkBoxTesseractFallback.TabIndex = 7;
-            this.checkBoxTesseractFallback.Text = "Fallback to Tesseract 3.02";
-            this.checkBoxTesseractFallback.UseVisualStyleBackColor = true;
-            // 
-            // labelTesseractEngineMode
-            // 
-            this.labelTesseractEngineMode.AutoSize = true;
-            this.labelTesseractEngineMode.Location = new System.Drawing.Point(18, 50);
-            this.labelTesseractEngineMode.Name = "labelTesseractEngineMode";
-            this.labelTesseractEngineMode.Size = new System.Drawing.Size(68, 13);
-            this.labelTesseractEngineMode.TabIndex = 6;
-            this.labelTesseractEngineMode.Text = "Engine mode";
-            // 
-            // comboBoxTesseractEngineMode
-            // 
-            this.comboBoxTesseractEngineMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxTesseractEngineMode.FormattingEnabled = true;
-            this.comboBoxTesseractEngineMode.Items.AddRange(new object[] {
-            "Original Tesseract only (can detect italic)",
-            "Neural nets LSTM only",
-            "Tesseract + LSTM",
-            "Default, based on what is available"});
-            this.comboBoxTesseractEngineMode.Location = new System.Drawing.Point(98, 47);
-            this.comboBoxTesseractEngineMode.Name = "comboBoxTesseractEngineMode";
-            this.comboBoxTesseractEngineMode.Size = new System.Drawing.Size(195, 21);
-            this.comboBoxTesseractEngineMode.TabIndex = 5;
-            this.comboBoxTesseractEngineMode.SelectedIndexChanged += new System.EventHandler(this.comboBoxTesseractEngineMode_SelectedIndexChanged);
-            // 
-            // buttonGetTesseractDictionaries
-            // 
-            this.buttonGetTesseractDictionaries.Location = new System.Drawing.Point(300, 18);
-            this.buttonGetTesseractDictionaries.Name = "buttonGetTesseractDictionaries";
-            this.buttonGetTesseractDictionaries.Size = new System.Drawing.Size(29, 23);
-            this.buttonGetTesseractDictionaries.TabIndex = 2;
-            this.buttonGetTesseractDictionaries.Text = "...";
-            this.buttonGetTesseractDictionaries.UseVisualStyleBackColor = true;
-            this.buttonGetTesseractDictionaries.Click += new System.EventHandler(this.buttonGetTesseractDictionaries_Click);
-            // 
-            // checkBoxTesseractMusicOn
-            // 
-            this.checkBoxTesseractMusicOn.AutoSize = true;
-            this.checkBoxTesseractMusicOn.Checked = true;
-            this.checkBoxTesseractMusicOn.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxTesseractMusicOn.Location = new System.Drawing.Point(81, 77);
-            this.checkBoxTesseractMusicOn.Name = "checkBoxTesseractMusicOn";
-            this.checkBoxTesseractMusicOn.Size = new System.Drawing.Size(93, 17);
-            this.checkBoxTesseractMusicOn.TabIndex = 4;
-            this.checkBoxTesseractMusicOn.Text = "Music symbols";
-            this.checkBoxTesseractMusicOn.UseVisualStyleBackColor = true;
-            // 
-            // checkBoxTesseractItalicsOn
-            // 
-            this.checkBoxTesseractItalicsOn.AutoSize = true;
-            this.checkBoxTesseractItalicsOn.Checked = true;
-            this.checkBoxTesseractItalicsOn.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxTesseractItalicsOn.Location = new System.Drawing.Point(21, 77);
-            this.checkBoxTesseractItalicsOn.Name = "checkBoxTesseractItalicsOn";
-            this.checkBoxTesseractItalicsOn.Size = new System.Drawing.Size(54, 17);
-            this.checkBoxTesseractItalicsOn.TabIndex = 3;
-            this.checkBoxTesseractItalicsOn.Text = "Italics";
-            this.checkBoxTesseractItalicsOn.UseVisualStyleBackColor = true;
-            // 
-            // labelTesseractLanguage
-            // 
-            this.labelTesseractLanguage.AutoSize = true;
-            this.labelTesseractLanguage.Location = new System.Drawing.Point(18, 22);
-            this.labelTesseractLanguage.Name = "labelTesseractLanguage";
-            this.labelTesseractLanguage.Size = new System.Drawing.Size(54, 13);
-            this.labelTesseractLanguage.TabIndex = 0;
-            this.labelTesseractLanguage.Text = "Language";
-            // 
-            // comboBoxTesseractLanguages
-            // 
-            this.comboBoxTesseractLanguages.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxTesseractLanguages.FormattingEnabled = true;
-            this.comboBoxTesseractLanguages.Location = new System.Drawing.Point(98, 20);
-            this.comboBoxTesseractLanguages.Name = "comboBoxTesseractLanguages";
-            this.comboBoxTesseractLanguages.Size = new System.Drawing.Size(195, 21);
-            this.comboBoxTesseractLanguages.TabIndex = 1;
-            this.comboBoxTesseractLanguages.SelectedIndexChanged += new System.EventHandler(this.ComboBoxTesseractLanguagesSelectedIndexChanged);
-            // 
-            // groupBoxModiMethod
-            // 
-            this.groupBoxModiMethod.Controls.Add(this.label1);
-            this.groupBoxModiMethod.Controls.Add(this.comboBoxModiLanguage);
-            this.groupBoxModiMethod.Location = new System.Drawing.Point(7, 50);
-            this.groupBoxModiMethod.Name = "groupBoxModiMethod";
-            this.groupBoxModiMethod.Size = new System.Drawing.Size(366, 131);
-            this.groupBoxModiMethod.TabIndex = 3;
-            this.groupBoxModiMethod.TabStop = false;
-            this.groupBoxModiMethod.Text = "MODI";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(11, 58);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(54, 13);
-            this.label1.TabIndex = 33;
-            this.label1.Text = "Language";
-            // 
-            // comboBoxModiLanguage
-            // 
-            this.comboBoxModiLanguage.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxModiLanguage.FormattingEnabled = true;
-            this.comboBoxModiLanguage.Location = new System.Drawing.Point(108, 55);
-            this.comboBoxModiLanguage.Name = "comboBoxModiLanguage";
-            this.comboBoxModiLanguage.Size = new System.Drawing.Size(195, 21);
-            this.comboBoxModiLanguage.TabIndex = 0;
-            this.comboBoxModiLanguage.SelectedIndexChanged += new System.EventHandler(this.ComboBoxModiLanguageSelectedIndexChanged);
-            // 
-            // groupBoxCloudVision
-            // 
-            this.groupBoxCloudVision.Controls.Add(this.checkBoxSeHandlesTextMerge);
-            this.groupBoxCloudVision.Controls.Add(this.checkBoxCloudVisionSendOriginalImages);
-            this.groupBoxCloudVision.Controls.Add(this.comboBoxCloudVisionLanguage);
-            this.groupBoxCloudVision.Controls.Add(this.labelCloudVisionLanguage);
-            this.groupBoxCloudVision.Controls.Add(this.textBoxCloudVisionApiKey);
-            this.groupBoxCloudVision.Controls.Add(this.labelCloudVisionApiKey);
-            this.groupBoxCloudVision.Location = new System.Drawing.Point(7, 38);
-            this.groupBoxCloudVision.Name = "groupBoxCloudVision";
-            this.groupBoxCloudVision.Size = new System.Drawing.Size(372, 143);
-            this.groupBoxCloudVision.TabIndex = 8;
-            this.groupBoxCloudVision.TabStop = false;
-            this.groupBoxCloudVision.Text = "Cloud Vision API";
-            // 
-            // checkBoxSeHandlesTextMerge
-            // 
-            this.checkBoxSeHandlesTextMerge.AutoSize = true;
-            this.checkBoxSeHandlesTextMerge.Location = new System.Drawing.Point(7, 105);
-            this.checkBoxSeHandlesTextMerge.Name = "checkBoxSeHandlesTextMerge";
-            this.checkBoxSeHandlesTextMerge.Size = new System.Drawing.Size(134, 17);
-            this.checkBoxSeHandlesTextMerge.TabIndex = 5;
-            this.checkBoxSeHandlesTextMerge.Text = "SE handles text merge";
-            this.checkBoxSeHandlesTextMerge.UseVisualStyleBackColor = true;
-            this.checkBoxSeHandlesTextMerge.CheckedChanged += new System.EventHandler(this.checkBoxSeHandlesTextMerge_CheckedChanged);
-            // 
-            // checkBoxCloudVisionSendOriginalImages
-            // 
-            this.checkBoxCloudVisionSendOriginalImages.AutoSize = true;
-            this.checkBoxCloudVisionSendOriginalImages.Location = new System.Drawing.Point(9, 80);
-            this.checkBoxCloudVisionSendOriginalImages.Name = "checkBoxCloudVisionSendOriginalImages";
-            this.checkBoxCloudVisionSendOriginalImages.Size = new System.Drawing.Size(123, 17);
-            this.checkBoxCloudVisionSendOriginalImages.TabIndex = 4;
-            this.checkBoxCloudVisionSendOriginalImages.Text = "Send original images";
-            this.checkBoxCloudVisionSendOriginalImages.UseVisualStyleBackColor = true;
-            this.checkBoxCloudVisionSendOriginalImages.Visible = false;
-            this.checkBoxCloudVisionSendOriginalImages.CheckedChanged += new System.EventHandler(this.checkBoxCloudVisionSendOriginalImages_CheckedChanged);
-            // 
-            // comboBoxCloudVisionLanguage
-            // 
-            this.comboBoxCloudVisionLanguage.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxCloudVisionLanguage.FormattingEnabled = true;
-            this.comboBoxCloudVisionLanguage.Location = new System.Drawing.Point(87, 49);
-            this.comboBoxCloudVisionLanguage.Name = "comboBoxCloudVisionLanguage";
-            this.comboBoxCloudVisionLanguage.Size = new System.Drawing.Size(279, 21);
-            this.comboBoxCloudVisionLanguage.TabIndex = 3;
-            // 
-            // labelCloudVisionLanguage
-            // 
-            this.labelCloudVisionLanguage.AutoSize = true;
-            this.labelCloudVisionLanguage.Location = new System.Drawing.Point(6, 52);
-            this.labelCloudVisionLanguage.Name = "labelCloudVisionLanguage";
-            this.labelCloudVisionLanguage.Size = new System.Drawing.Size(54, 13);
-            this.labelCloudVisionLanguage.TabIndex = 2;
-            this.labelCloudVisionLanguage.Text = "Language";
-            // 
-            // textBoxCloudVisionApiKey
-            // 
-            this.textBoxCloudVisionApiKey.Location = new System.Drawing.Point(87, 22);
-            this.textBoxCloudVisionApiKey.Name = "textBoxCloudVisionApiKey";
-            this.textBoxCloudVisionApiKey.Size = new System.Drawing.Size(279, 21);
-            this.textBoxCloudVisionApiKey.TabIndex = 1;
-            // 
-            // labelCloudVisionApiKey
-            // 
-            this.labelCloudVisionApiKey.AutoSize = true;
-            this.labelCloudVisionApiKey.Location = new System.Drawing.Point(6, 25);
-            this.labelCloudVisionApiKey.Name = "labelCloudVisionApiKey";
-            this.labelCloudVisionApiKey.Size = new System.Drawing.Size(44, 13);
-            this.labelCloudVisionApiKey.TabIndex = 0;
-            this.labelCloudVisionApiKey.Text = "API key";
             // 
             // groupBoxOCRControls
             // 
@@ -1206,6 +1395,19 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // 
             // numericUpDownStartNumber
             // 
+            this.numericUpDownStartNumber.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownStartNumber.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownStartNumber.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownStartNumber.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownStartNumber.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownStartNumber.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownStartNumber.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownStartNumber.DecimalPlaces = 0;
+            this.numericUpDownStartNumber.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownStartNumber.Location = new System.Drawing.Point(123, 47);
             this.numericUpDownStartNumber.Maximum = new decimal(new int[] {
             99999,
@@ -1220,6 +1422,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.numericUpDownStartNumber.Name = "numericUpDownStartNumber";
             this.numericUpDownStartNumber.Size = new System.Drawing.Size(64, 21);
             this.numericUpDownStartNumber.TabIndex = 3;
+            this.numericUpDownStartNumber.TabStop = false;
+            this.numericUpDownStartNumber.ThousandsSeparator = false;
             this.numericUpDownStartNumber.Value = new decimal(new int[] {
             1,
             0,
@@ -1292,12 +1496,26 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // 
             this.comboBoxDictionaries.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxDictionaries.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxDictionaries.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxDictionaries.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxDictionaries.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxDictionaries.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxDictionaries.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxDictionaries.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxDictionaries.DropDownHeight = 400;
             this.comboBoxDictionaries.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxDictionaries.DropDownWidth = 229;
             this.comboBoxDictionaries.FormattingEnabled = true;
             this.comboBoxDictionaries.Location = new System.Drawing.Point(127, 20);
+            this.comboBoxDictionaries.MaxLength = 32767;
             this.comboBoxDictionaries.Name = "comboBoxDictionaries";
+            this.comboBoxDictionaries.SelectedIndex = -1;
+            this.comboBoxDictionaries.SelectedItem = null;
+            this.comboBoxDictionaries.SelectedText = "";
             this.comboBoxDictionaries.Size = new System.Drawing.Size(229, 21);
             this.comboBoxDictionaries.TabIndex = 1;
+            this.comboBoxDictionaries.UsePopupWindow = false;
             this.comboBoxDictionaries.SelectedIndexChanged += new System.EventHandler(this.comboBoxDictionaries_SelectedIndexChanged);
             // 
             // checkBoxGuessUnknownWords
@@ -1701,15 +1919,35 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // numericUpDownAutoTransparentAlphaMax
             // 
             this.numericUpDownAutoTransparentAlphaMax.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownAutoTransparentAlphaMax.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownAutoTransparentAlphaMax.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownAutoTransparentAlphaMax.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownAutoTransparentAlphaMax.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownAutoTransparentAlphaMax.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownAutoTransparentAlphaMax.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownAutoTransparentAlphaMax.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownAutoTransparentAlphaMax.DecimalPlaces = 0;
+            this.numericUpDownAutoTransparentAlphaMax.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownAutoTransparentAlphaMax.Location = new System.Drawing.Point(607, 169);
             this.numericUpDownAutoTransparentAlphaMax.Maximum = new decimal(new int[] {
             255,
             0,
             0,
             0});
+            this.numericUpDownAutoTransparentAlphaMax.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownAutoTransparentAlphaMax.Name = "numericUpDownAutoTransparentAlphaMax";
             this.numericUpDownAutoTransparentAlphaMax.Size = new System.Drawing.Size(44, 21);
             this.numericUpDownAutoTransparentAlphaMax.TabIndex = 37;
+            this.numericUpDownAutoTransparentAlphaMax.TabStop = false;
+            this.numericUpDownAutoTransparentAlphaMax.ThousandsSeparator = false;
             this.numericUpDownAutoTransparentAlphaMax.Value = new decimal(new int[] {
             140,
             0,
@@ -1904,9 +2142,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.textBoxCurrentText.IsWrongWord = false;
             this.textBoxCurrentText.LanguageChanged = false;
             this.textBoxCurrentText.Location = new System.Drawing.Point(8, 214);
+            this.textBoxCurrentText.MaxLength = 32767;
             this.textBoxCurrentText.Multiline = true;
             this.textBoxCurrentText.Name = "textBoxCurrentText";
             this.textBoxCurrentText.Padding = new System.Windows.Forms.Padding(1);
+            this.textBoxCurrentText.ReadOnly = false;
             this.textBoxCurrentText.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Both;
             this.textBoxCurrentText.SelectedText = "";
             this.textBoxCurrentText.SelectionLength = 0;
@@ -1914,6 +2154,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.textBoxCurrentText.Size = new System.Drawing.Size(354, 77);
             this.textBoxCurrentText.TabIndex = 1;
             this.textBoxCurrentText.TextBoxFont = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Bold);
+            this.textBoxCurrentText.UseSystemPasswordChar = false;
             this.textBoxCurrentText.TextChanged += new System.EventHandler(this.TextBoxCurrentTextTextChanged);
             this.textBoxCurrentText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxCurrentText_KeyDown);
             // 
@@ -2072,23 +2313,18 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.Resize += new System.EventHandler(this.VobSubOcr_Resize);
             this.contextMenuStripListview.ResumeLayout(false);
             this.groupBoxOcrMethod.ResumeLayout(false);
-            this.groupBoxNOCR.ResumeLayout(false);
-            this.groupBoxNOCR.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownNOcrMaxWrongPixels)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownNumberOfPixelsIsSpaceNOCR)).EndInit();
-            this.groupBoxImageCompareMethod.ResumeLayout(false);
-            this.groupBoxImageCompareMethod.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxErrorPct)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPixelsIsSpace)).EndInit();
             this.GroupBoxTesseractMethod.ResumeLayout(false);
             this.GroupBoxTesseractMethod.PerformLayout();
             this.groupBoxModiMethod.ResumeLayout(false);
             this.groupBoxModiMethod.PerformLayout();
             this.groupBoxCloudVision.ResumeLayout(false);
             this.groupBoxCloudVision.PerformLayout();
+            this.groupBoxNOCR.ResumeLayout(false);
+            this.groupBoxNOCR.PerformLayout();
+            this.groupBoxImageCompareMethod.ResumeLayout(false);
+            this.groupBoxImageCompareMethod.PerformLayout();
             this.groupBoxOCRControls.ResumeLayout(false);
             this.groupBoxOCRControls.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownStartNumber)).EndInit();
             this.groupBoxOcrAutoFix.ResumeLayout(false);
             this.groupBoxOcrAutoFix.PerformLayout();
             this.tabControlLogs.ResumeLayout(false);
@@ -2106,7 +2342,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPattern)).EndInit();
             this.groupBoxSubtitleImage.ResumeLayout(false);
             this.groupBoxSubtitleImage.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownAutoTransparentAlphaMax)).EndInit();
             this.groupBoxTransportStream.ResumeLayout(false);
             this.groupBoxTransportStream.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSubtitleImage)).EndInit();
@@ -2132,11 +2367,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private System.Windows.Forms.Button buttonCancel;
         private SubtitleListView subtitleListView1;
         private System.Windows.Forms.GroupBox groupBoxOcrMethod;
-        private System.Windows.Forms.ComboBox comboBoxModiLanguage;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxModiLanguage;
         private SETextBox textBoxCurrentText;
         private System.Windows.Forms.GroupBox groupBoxOCRControls;
         private System.Windows.Forms.Label labelStartFrom;
-        private System.Windows.Forms.NumericUpDown numericUpDownStartNumber;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownStartNumber;
         private System.Windows.Forms.Button buttonPause;
         private System.Windows.Forms.Button buttonStartOcr;
         private System.Windows.Forms.GroupBox groupBoxOcrAutoFix;
@@ -2146,17 +2381,17 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private System.Windows.Forms.Label labelDictionaryLoaded;
         private System.Windows.Forms.CheckBox checkBoxPromptForUnknownWords;
         private System.Windows.Forms.ListBox listBoxLog;
-        private System.Windows.Forms.ComboBox comboBoxOcrMethod;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxOcrMethod;
         private System.Windows.Forms.GroupBox groupBoxImageCompareMethod;
-        private System.Windows.Forms.NumericUpDown numericUpDownPixelsIsSpace;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownPixelsIsSpace;
         private System.Windows.Forms.Label labelNoOfPixelsIsSpace;
-        private System.Windows.Forms.ComboBox comboBoxCharacterDatabase;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxCharacterDatabase;
         private System.Windows.Forms.Label labelImageDatabase;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.GroupBox groupBoxModiMethod;
         private System.Windows.Forms.GroupBox GroupBoxTesseractMethod;
         private System.Windows.Forms.Label labelTesseractLanguage;
-        private System.Windows.Forms.ComboBox comboBoxTesseractLanguages;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxTesseractLanguages;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripListview;
         private System.Windows.Forms.ToolStripMenuItem normalToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem italicToolStripMenuItem;
@@ -2175,7 +2410,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private System.Windows.Forms.PictureBox pictureBoxEmphasis1;
         private System.Windows.Forms.PictureBox pictureBoxPattern;
         private System.Windows.Forms.CheckBox checkBoxCustomFourColors;
-        private System.Windows.Forms.ColorDialog colorDialog1;
         private System.Windows.Forms.GroupBox groupBoxSubtitleImage;
         private System.Windows.Forms.CheckBox checkBoxEmphasis2Transparent;
         private System.Windows.Forms.CheckBox checkBoxEmphasis1Transparent;
@@ -2184,7 +2418,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private System.Windows.Forms.CheckBox checkBoxShowOnlyForced;
         private System.Windows.Forms.CheckBox checkBoxUseTimeCodesFromIdx;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
-        private System.Windows.Forms.ComboBox comboBoxDictionaries;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxDictionaries;
         private System.Windows.Forms.CheckBox checkBoxBackgroundTransparent;
         private System.Windows.Forms.PictureBox pictureBoxBackground;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
@@ -2217,35 +2451,35 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemClearGuesses;
         private System.Windows.Forms.GroupBox groupBoxNOCR;
         private System.Windows.Forms.CheckBox checkBoxRightToLeftNOCR;
-        private System.Windows.Forms.NumericUpDown numericUpDownNumberOfPixelsIsSpaceNOCR;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownNumberOfPixelsIsSpaceNOCR;
         private System.Windows.Forms.Label labelNumberOfPixelsIsSpaceNOCR;
         private System.Windows.Forms.CheckBox checkBoxNOcrDrawUnknownLetters;
         private System.Windows.Forms.CheckBox checkBoxNOcrItalic;
         private System.Windows.Forms.Button buttonGetTesseractDictionaries;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemInspectNOcrMatches;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.ComboBox comboBoxNOcrLanguage;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxNOcrLanguage;
         private System.Windows.Forms.Button buttonLineOcrEditLanguage;
         private System.Windows.Forms.Button buttonLineOcrNewLanguage;
         private System.Windows.Forms.Button buttonSpellCheckDownload;
         private System.Windows.Forms.Timer timerHideStatus;
         private System.Windows.Forms.ToolStripMenuItem dOSTToolStripMenuItem;
         private System.Windows.Forms.Label labelMaxErrorPercent;
-        private System.Windows.Forms.NumericUpDown numericUpDownMaxErrorPct;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownMaxErrorPct;
         private System.Windows.Forms.GroupBox groupBoxTransportStream;
         private System.Windows.Forms.CheckBox checkBoxTransportStreamGrayscale;
         private System.Windows.Forms.CheckBox checkBoxTransportStreamGetColorAndSplit;
-        private System.Windows.Forms.NumericUpDown numericUpDownAutoTransparentAlphaMax;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownAutoTransparentAlphaMax;
         private System.Windows.Forms.Label labelMinAlpha;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripImage;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemImageSaveAs;
         private System.Windows.Forms.ToolStripMenuItem OcrTrainingToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem importNewTimeCodesToolStripMenuItem;
         private System.Windows.Forms.Label labelMinLineSplitHeight;
-        private System.Windows.Forms.ComboBox comboBoxLineSplitMinLineHeight;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxLineSplitMinLineHeight;
         private System.Windows.Forms.ToolStripMenuItem ImagePreProcessingToolStripMenuItem;
         private System.Windows.Forms.Label labelTesseractEngineMode;
-        private System.Windows.Forms.ComboBox comboBoxTesseractEngineMode;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxTesseractEngineMode;
         private System.Windows.Forms.CheckBox checkBoxTesseractFallback;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSaveSubtitleAs;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
@@ -2255,11 +2489,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private System.Windows.Forms.ToolStripMenuItem imagePreprocessingToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem setItalicAngleToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem autoTransparentBackgroundToolStripMenuItem;
-        private System.Windows.Forms.NumericUpDown numericUpDownNOcrMaxWrongPixels;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownNOcrMaxWrongPixels;
         private System.Windows.Forms.Label labelNOcrMaxWrongPixels;
         private System.Windows.Forms.Button buttonChooseEditBinaryImageCompareDb;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.ComboBox comboBoxNOcrLineSplitMinHeight;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxNOcrLineSplitMinHeight;
         private System.Windows.Forms.ToolStripMenuItem finalCutProImageToolStripMenuItem;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripTextBox;
         private System.Windows.Forms.ToolStripMenuItem cutToolStripMenuItem;
@@ -2278,9 +2512,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private System.Windows.Forms.ToolStripMenuItem oCRSelectedLinesToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparatorOcrSelected;
         private System.Windows.Forms.GroupBox groupBoxCloudVision;
-        private System.Windows.Forms.TextBox textBoxCloudVisionApiKey;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxCloudVisionApiKey;
         private System.Windows.Forms.Label labelCloudVisionApiKey;
-        private System.Windows.Forms.ComboBox comboBoxCloudVisionLanguage;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxCloudVisionLanguage;
         private System.Windows.Forms.Label labelCloudVisionLanguage;
         private System.Windows.Forms.CheckBox checkBoxCloudVisionSendOriginalImages;
         private System.Windows.Forms.CheckBox checkBoxSeHandlesTextMerge;

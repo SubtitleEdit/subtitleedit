@@ -20,6 +20,8 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.FixLargeFonts(this, buttonCancel);
 
             buttonMpvSettings.Text = LanguageSettings.Current.Main.DownloadAndUseMpv;
+            checkBoxDoNotAutoLoadVideo.Text = LanguageSettings.Current.Main.DoNotAutoLoadVideo;
+            checkBoxDoNotAutoLoadVideo.Visible = Configuration.Settings.General.DisableVideoAutoLoading == false;
         }
 
         public void Initialize(string fileName)
@@ -100,7 +102,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            using (var form = new SettingsMpv(true))
+            using (var form = new SettingsMpv())
             {
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
@@ -108,6 +110,14 @@ namespace Nikse.SubtitleEdit.Forms
                     Configuration.Settings.General.VideoPlayer = "MPV";
                     DialogResult = DialogResult.OK;
                 }
+            }
+        }
+
+        private void VideoError_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (checkBoxDoNotAutoLoadVideo.Checked)
+            {
+                Configuration.Settings.General.DisableVideoAutoLoading = true;
             }
         }
     }

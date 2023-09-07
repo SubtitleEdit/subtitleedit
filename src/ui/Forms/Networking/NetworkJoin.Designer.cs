@@ -31,12 +31,12 @@
             this.labelStatus = new System.Windows.Forms.Label();
             this.labelInfo = new System.Windows.Forms.Label();
             this.labelWebServiceUrl = new System.Windows.Forms.Label();
-            this.comboBoxWebServiceUrl = new System.Windows.Forms.ComboBox();
+            this.comboBoxWebServiceUrl = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.buttonCancel = new System.Windows.Forms.Button();
-            this.textBoxUserName = new System.Windows.Forms.TextBox();
+            this.textBoxUserName = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.buttonJoin = new System.Windows.Forms.Button();
             this.labelUserName = new System.Windows.Forms.Label();
-            this.textBoxSessionKey = new System.Windows.Forms.TextBox();
+            this.textBoxSessionKey = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelSessionKey = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
@@ -169,12 +169,12 @@
         private System.Windows.Forms.Label labelStatus;
         private System.Windows.Forms.Label labelInfo;
         private System.Windows.Forms.Label labelWebServiceUrl;
-        private System.Windows.Forms.ComboBox comboBoxWebServiceUrl;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxWebServiceUrl;
         private System.Windows.Forms.Button buttonCancel;
-        private System.Windows.Forms.TextBox textBoxUserName;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxUserName;
         private System.Windows.Forms.Button buttonJoin;
         private System.Windows.Forms.Label labelUserName;
-        private System.Windows.Forms.TextBox textBoxSessionKey;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxSessionKey;
         private System.Windows.Forms.Label labelSessionKey;
     }
 }

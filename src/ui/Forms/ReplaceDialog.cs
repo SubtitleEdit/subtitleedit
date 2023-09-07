@@ -5,6 +5,7 @@ using System;
 using System.Drawing;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -127,14 +128,14 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 textBoxFind.Visible = false;
                 comboBoxFind.Visible = true;
-                comboBoxFind.Text = selectedText;
-                comboBoxFind.SelectAll();
                 comboBoxFind.Items.Clear();
                 for (var index = 0; index < Configuration.Settings.Tools.FindHistory.Count; index++)
                 {
                     var s = Configuration.Settings.Tools.FindHistory[index];
                     comboBoxFind.Items.Add(s);
                 }
+                comboBoxFind.Text = selectedText;
+                comboBoxFind.SelectAll();
             }
             else
             {
@@ -181,6 +182,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             ReplaceAll = false;
             FindOnly = false;
+            SetRegEx();
 
             Validate(FindText);
             if (DialogResult == DialogResult.OK)
@@ -190,7 +192,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             buttonReplace.Focus();
-            SetRegEx();
         }
 
         private void ButtonReplaceAllClick(object sender, EventArgs e)
@@ -198,6 +199,7 @@ namespace Nikse.SubtitleEdit.Forms
             ReplaceAll = true;
             FindOnly = false;
 
+            SetRegEx();
             Validate(FindText);
             if (DialogResult == DialogResult.OK)
             {
@@ -206,7 +208,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             buttonReplaceAll.Focus();
-            SetRegEx();
         }
 
         private void Validate(string searchText)
@@ -242,9 +243,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonFindClick(object sender, EventArgs e)
         {
+            SetRegEx();
             Find();
             buttonFind.Focus();
-            SetRegEx();
         }
 
         private void SetRegEx()
@@ -304,6 +305,7 @@ namespace Nikse.SubtitleEdit.Forms
             _findHelper.FindReplaceType = GetFindType();
             _findHelper.FindText = FindText;
             _findHelper.FindTextLength = _findHelper.FindText.Length;
+            _findHelper.SetRegex(_regEx);
         }
 
         private void RadioButtonCheckedChanged(object sender, EventArgs e)
@@ -370,7 +372,6 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 Configuration.Settings.Tools.ReplaceIn = nameof(LanguageSettings.Current.ReplaceDialog.TranslationAndOriginal);
             }
-
         }
 
         private void textBoxFind_TextChanged(object sender, EventArgs e)

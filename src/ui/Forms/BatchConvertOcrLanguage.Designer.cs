@@ -32,8 +32,8 @@
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
-            this.comboBoxLanguage = new System.Windows.Forms.ComboBox();
-            this.comboBoxOcrMethod = new System.Windows.Forms.ComboBox();
+            this.comboBoxLanguage = new Nikse.SubtitleEdit.Controls.NikseComboBox();
+            this.comboBoxOcrMethod = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.buttonGetTesseractDictionaries = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
@@ -145,8 +145,8 @@
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.ComboBox comboBoxLanguage;
-        private System.Windows.Forms.ComboBox comboBoxOcrMethod;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxLanguage;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxOcrMethod;
         private System.Windows.Forms.Button buttonGetTesseractDictionaries;
     }
 }

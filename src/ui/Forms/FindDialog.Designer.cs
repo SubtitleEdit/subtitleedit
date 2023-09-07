@@ -28,12 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.textBoxFind = new System.Windows.Forms.TextBox();
+            this.textBoxFind = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.buttonFind = new System.Windows.Forms.Button();
             this.radioButtonNormal = new System.Windows.Forms.RadioButton();
             this.radioButtonCaseSensitive = new System.Windows.Forms.RadioButton();
             this.radioButtonRegEx = new System.Windows.Forms.RadioButton();
-            this.comboBoxFind = new System.Windows.Forms.ComboBox();
+            this.comboBoxFind = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.buttonCount = new System.Windows.Forms.Button();
             this.labelCount = new System.Windows.Forms.Label();
             this.checkBoxWholeWord = new System.Windows.Forms.CheckBox();
@@ -97,13 +97,28 @@
             // 
             // comboBoxFind
             // 
+            this.comboBoxFind.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxFind.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxFind.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxFind.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxFind.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxFind.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxFind.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxFind.DropDownHeight = 400;
+            this.comboBoxFind.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
+            this.comboBoxFind.DropDownWidth = 232;
             this.comboBoxFind.FormattingEnabled = true;
             this.comboBoxFind.Location = new System.Drawing.Point(12, 28);
+            this.comboBoxFind.MaxLength = 32767;
             this.comboBoxFind.Name = "comboBoxFind";
+            this.comboBoxFind.SelectedIndex = -1;
+            this.comboBoxFind.SelectedItem = null;
+            this.comboBoxFind.SelectedText = "";
             this.comboBoxFind.Size = new System.Drawing.Size(232, 21);
             this.comboBoxFind.TabIndex = 0;
-            this.comboBoxFind.TextChanged += new System.EventHandler(this.comboBoxFind_TextChanged);
+            this.comboBoxFind.TabStop = false;
             this.comboBoxFind.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ComboBoxFind_KeyDown);
+            this.comboBoxFind.TextChanged += new System.EventHandler(this.comboBoxFind_TextChanged);
             // 
             // buttonCount
             // 
@@ -168,8 +183,8 @@
             this.Controls.Add(this.radioButtonCaseSensitive);
             this.Controls.Add(this.radioButtonNormal);
             this.Controls.Add(this.buttonFind);
-            this.Controls.Add(this.comboBoxFind);
             this.Controls.Add(this.textBoxFind);
+            this.Controls.Add(this.comboBoxFind);
             this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.KeyPreview = true;
@@ -180,6 +195,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Find";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FindDialog_FormClosing);
+            this.Shown += new System.EventHandler(this.FindDialog_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormFindDialog_KeyDown);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -188,12 +204,12 @@
 
         #endregion
 
-        private System.Windows.Forms.TextBox textBoxFind;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxFind;
         private System.Windows.Forms.Button buttonFind;
         private System.Windows.Forms.RadioButton radioButtonNormal;
         private System.Windows.Forms.RadioButton radioButtonCaseSensitive;
         private System.Windows.Forms.RadioButton radioButtonRegEx;
-        private System.Windows.Forms.ComboBox comboBoxFind;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxFind;
         private System.Windows.Forms.Button buttonCount;
         private System.Windows.Forms.Label labelCount;
         private System.Windows.Forms.CheckBox checkBoxWholeWord;

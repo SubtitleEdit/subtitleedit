@@ -30,14 +30,12 @@
         {
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.labelVideoResolution = new System.Windows.Forms.Label();
-            this.numericUpDownVideoHeight = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownVideoHeight = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.button1 = new System.Windows.Forms.Button();
             this.labelX = new System.Windows.Forms.Label();
-            this.numericUpDownVideoWidth = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownVideoWidth = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownVideoHeight)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownVideoWidth)).BeginInit();
             this.SuspendLayout();
             // 
             // openFileDialog1
@@ -152,8 +150,6 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Choose video resolution";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ChooseResolution_KeyDown);
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownVideoHeight)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownVideoWidth)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -163,10 +159,10 @@
 
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.Label labelVideoResolution;
-        private System.Windows.Forms.NumericUpDown numericUpDownVideoHeight;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownVideoHeight;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Label labelX;
-        private System.Windows.Forms.NumericUpDown numericUpDownVideoWidth;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownVideoWidth;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonOK;
     }

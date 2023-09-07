@@ -31,17 +31,15 @@
             this.labelMilliseconds = new System.Windows.Forms.Label();
             this.groupBoxLinesFound = new System.Windows.Forms.GroupBox();
             this.SubtitleListview1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
-            this.numericUpDownMaxMs = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownMaxMs = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelBridgePart1 = new System.Windows.Forms.Label();
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.radioButtonProlongEndTime = new System.Windows.Forms.RadioButton();
             this.radioButtonDivideEven = new System.Windows.Forms.RadioButton();
             this.labelMinMsBetweenLines = new System.Windows.Forms.Label();
-            this.numericUpDownMinMsBetweenLines = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownMinMsBetweenLines = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.groupBoxLinesFound.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxMs)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMinMsBetweenLines)).BeginInit();
             this.SuspendLayout();
             // 
             // labelMilliseconds
@@ -237,8 +235,6 @@
             this.Shown += new System.EventHandler(this.DurationsBridgeGaps_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.DurationsBridgeGaps_KeyDown);
             this.groupBoxLinesFound.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxMs)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMinMsBetweenLines)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -248,7 +244,7 @@
 
         private System.Windows.Forms.Label labelMilliseconds;
         private System.Windows.Forms.GroupBox groupBoxLinesFound;
-        private System.Windows.Forms.NumericUpDown numericUpDownMaxMs;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownMaxMs;
         private System.Windows.Forms.Label labelBridgePart1;
         private Controls.SubtitleListView SubtitleListview1;
         private System.Windows.Forms.Button buttonOK;
@@ -256,6 +252,6 @@
         private System.Windows.Forms.RadioButton radioButtonProlongEndTime;
         private System.Windows.Forms.RadioButton radioButtonDivideEven;
         private System.Windows.Forms.Label labelMinMsBetweenLines;
-        private System.Windows.Forms.NumericUpDown numericUpDownMinMsBetweenLines;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownMinMsBetweenLines;
     }
 }

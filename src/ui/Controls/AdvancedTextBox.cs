@@ -454,17 +454,7 @@ namespace Nikse.SubtitleEdit.Controls
                     var color = text.Substring(colorStart, colorEnd - colorStart);
                     try
                     {
-                        Color c;
-                        if (color.StartsWith("rgb(", StringComparison.Ordinal))
-                        {
-                            var arr = color.Remove(0, 4).TrimEnd(')').Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-                            c = Color.FromArgb(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]));
-                        }
-                        else
-                        {
-                            c = ColorTranslator.FromHtml(color);
-                        }
-
+                        var c = HtmlUtil.GetColorFromString(color);
                         SetForeColorAndChangeBackColorIfClose(colorStart, colorEnd, c);
                     }
                     catch
@@ -591,6 +581,19 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
+        private static bool IsDictionaryAvailable(string language)
+        {
+            foreach (var downloadedDictionary in Utilities.GetDictionaryLanguagesCultureNeutral())
+            {
+                if (downloadedDictionary.Contains($"[{language}]", StringComparison.OrdinalIgnoreCase))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         public async Task InitializeLiveSpellCheck(Subtitle subtitle, int lineNumber)
         {
             if (lineNumber < 0)
@@ -601,21 +604,9 @@ namespace Nikse.SubtitleEdit.Controls
             if (_spellCheckWordLists is null && _hunspell is null)
             {
                 var detectedLanguage = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle, 300);
-                var downloadedDictionaries = Utilities.GetDictionaryLanguagesCultureNeutral();
-                var isDictionaryAvailable = false;
-                foreach (var downloadedDictionary in downloadedDictionaries)
+                IsDictionaryDownloaded = false;
+                if (IsDictionaryAvailable(detectedLanguage))
                 {
-                    if (downloadedDictionary.Contains($"[{detectedLanguage}]"))
-                    {
-                        isDictionaryAvailable = true;
-                        break;
-                    }
-                }
-
-                if (isDictionaryAvailable)
-                {
-                    IsDictionaryDownloaded = true;
-
                     var languageName = LanguageAutoDetect.AutoDetectLanguageName(string.Empty, subtitle);
                     if (languageName.Split('_', '-')[0] != detectedLanguage)
                     {
@@ -623,13 +614,10 @@ namespace Nikse.SubtitleEdit.Controls
                     }
 
                     await LoadDictionariesAsync(languageName);
+                    IsDictionaryDownloaded = true;
                     IsSpellCheckerInitialized = true;
                     IsSpellCheckRequested = true;
                     TextChangedHighlight(this, EventArgs.Empty);
-                }
-                else
-                {
-                    IsDictionaryDownloaded = false;
                 }
 
                 LanguageChanged = true;
@@ -637,8 +625,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        private async Task LoadDictionariesAsync(string languageName) =>
-            await Task.Run(() => LoadDictionaries(languageName));
+        private Task LoadDictionariesAsync(string languageName) => new Task(() => LoadDictionaries(languageName));
 
         private void LoadDictionaries(string languageName)
         {
@@ -848,7 +835,7 @@ namespace Nikse.SubtitleEdit.Controls
                         continue;
                     }
 
-                    if (CurrentLanguage == "en " && (currentWordText.Equals("a", StringComparison.OrdinalIgnoreCase) || currentWordText == "I"))
+                    if (CurrentLanguage == "en" && (currentWordText.Equals("a", StringComparison.OrdinalIgnoreCase) || currentWordText == "I"))
                     {
                         continue;
                     }

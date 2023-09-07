@@ -15,7 +15,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                     return Configuration.Settings.Tools.WhisperCppModelLocation;
                 }
 
-                return Path.Combine(Configuration.DataDirectory, "Whisper", "Models");
+                return Path.Combine(Configuration.DataDirectory, "Whisper", "Cpp", "Models");
             }
         }
 
@@ -27,13 +27,19 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                 Directory.CreateDirectory(whisperFolder);
             }
 
+            whisperFolder = Path.Combine(whisperFolder, "Cpp");
+            if (!Directory.Exists(whisperFolder))
+            {
+                Directory.CreateDirectory(whisperFolder);
+            }
+
             if (!Directory.Exists(ModelFolder))
             {
                 Directory.CreateDirectory(ModelFolder);
             }
         }
 
-        public WhisperModel[] Models  => new[] 
+        public WhisperModel[] Models => new[]
         {
             new WhisperModel
             {

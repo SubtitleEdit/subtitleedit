@@ -34,10 +34,9 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.labelChangeBrightness = new System.Windows.Forms.Label();
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
-            this.numericUpDownBrightness = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownBrightness = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarBrightness)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPreview)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBrightness)).BeginInit();
             this.SuspendLayout();
             // 
             // trackBarBrightness
@@ -101,16 +100,40 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             // 
             // numericUpDownBrightness
             // 
+            this.numericUpDownBrightness.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownBrightness.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownBrightness.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownBrightness.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownBrightness.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownBrightness.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownBrightness.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.numericUpDownBrightness.DecimalPlaces = 2;
+            this.numericUpDownBrightness.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownBrightness.Location = new System.Drawing.Point(474, 51);
             this.numericUpDownBrightness.Maximum = new decimal(new int[] {
             200,
             0,
             0,
             0});
+            this.numericUpDownBrightness.Minimum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
             this.numericUpDownBrightness.Name = "numericUpDownBrightness";
             this.numericUpDownBrightness.Size = new System.Drawing.Size(120, 20);
             this.numericUpDownBrightness.TabIndex = 2;
+            this.numericUpDownBrightness.TabStop = false;
+            this.numericUpDownBrightness.ThousandsSeparator = false;
+            this.numericUpDownBrightness.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownBrightness.ValueChanged += new System.EventHandler(this.numericUpDownBrightness_ValueChanged);
             // 
             // BinEditBrightness
@@ -134,7 +157,6 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.BinEditBrightness_KeyDown);
             ((System.ComponentModel.ISupportInitialize)(this.trackBarBrightness)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPreview)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBrightness)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -147,6 +169,6 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
         private System.Windows.Forms.Label labelChangeBrightness;
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Button buttonCancel;
-        private System.Windows.Forms.NumericUpDown numericUpDownBrightness;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownBrightness;
     }
 }

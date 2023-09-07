@@ -11,6 +11,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms.VTT
 {
@@ -43,7 +44,7 @@ namespace Nikse.SubtitleEdit.Forms.VTT
             CheckDuplicateStyles();
 
             var fontNames = new List<string>();
-            foreach (var x in FontFamily.Families)
+            foreach (var x in FontHelper.GetAllSupportedFontFamilies())
             {
                 fontNames.Add(x.Name);
             }
@@ -72,9 +73,8 @@ namespace Nikse.SubtitleEdit.Forms.VTT
             checkBoxFontUnderline.Text = LanguageSettings.Current.General.Underline;
             checkBoxStrikeout.Text = LanguageSettings.Current.General.Strikeout;
             buttonPrimaryColor.Text = l.Primary;
-            //buttonSecondaryColor.Text = l.Secondary;
-            //buttonOutlineColor.Text = l.Outline;
-            //buttonBackColor.Text = l.Shadow;
+            buttonShadowColor.Text = l.Shadow;
+            buttonBackgroundColor.Text = l.Back;
             labelShadow.Text = l.Shadow;
             buttonImport.Text = l.Import;
             buttonExport.Text = l.Export;
@@ -111,6 +111,9 @@ namespace Nikse.SubtitleEdit.Forms.VTT
             checkBoxFontItalic.Left = checkBoxFontBold.Right + 15;
             checkBoxFontUnderline.Left = checkBoxFontItalic.Right + 15;
             checkBoxStrikeout.Left = checkBoxFontUnderline.Right + 15;
+
+            groupBoxBefore.Text = LanguageSettings.Current.General.Before;
+            groupBoxAfter.Text = LanguageSettings.Current.General.After;
 
             _backgroundImageDark = Configuration.Settings.General.UseDarkTheme;
             _previewTimer.Interval = 200;
@@ -721,7 +724,7 @@ namespace Nikse.SubtitleEdit.Forms.VTT
                     var styleNames = "(" + form.ImportExportStyles.Count + ")";
                     labelInfo.Text = string.Format(LanguageSettings.Current.SubStationAlphaStyles.StyleXExportedToFileY, styleNames, form.FileName);
 
-                    System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(3500), () =>
+                    TaskDelayHelper.RunDelayed(TimeSpan.FromMilliseconds(3500), () =>
                     {
                         try
                         {
@@ -1225,6 +1228,19 @@ namespace Nikse.SubtitleEdit.Forms.VTT
         private void WebVttStyleManager_FormClosing(object sender, FormClosingEventArgs e)
         {
             _mpv?.Dispose();
+        }
+
+        private void WebVttStyleManager_Shown(object sender, EventArgs e)
+        {
+            listViewStyles.AutoSizeLastColumn();
+        }
+
+        private void WebVttStyleManager_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape)
+            {
+                DialogResult = DialogResult.Cancel;
+            }
         }
     }
 }

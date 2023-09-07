@@ -66,8 +66,8 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.buttonOpenVideoFile = new System.Windows.Forms.Button();
-            this.textBoxInputFileName = new System.Windows.Forms.TextBox();
-            this.textBoxLog = new System.Windows.Forms.TextBox();
+            this.textBoxInputFileName = new Nikse.SubtitleEdit.Controls.NikseTextBox();
+            this.textBoxLog = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.contextMenuStripRes = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.x2160ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.uHD3840x2160ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -602,7 +602,7 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Label labelInputVideoFile;
         private System.Windows.Forms.GroupBox groupBoxSettings;
-        private System.Windows.Forms.TextBox textBoxLog;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxLog;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripRes;
         private System.Windows.Forms.ToolStripMenuItem x2160ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem uHD3840x2160ToolStripMenuItem;
@@ -626,7 +626,7 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ColumnHeader columnHeader4Forced;
         private System.Windows.Forms.ColumnHeader columnHeader5FileName;
         private System.Windows.Forms.Button buttonOpenVideoFile;
-        private System.Windows.Forms.TextBox textBoxInputFileName;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxInputFileName;
         private System.Windows.Forms.Button buttonClear;
         private System.Windows.Forms.Button ButtonRemoveSubtitles;
         private System.Windows.Forms.Button ButtonMoveSubDown;

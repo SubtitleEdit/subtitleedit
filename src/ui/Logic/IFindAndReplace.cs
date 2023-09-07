@@ -1,10 +1,11 @@
-﻿using Nikse.SubtitleEdit.Core.Enums;
+﻿using System.Text.RegularExpressions;
+using Nikse.SubtitleEdit.Core.Enums;
 
 namespace Nikse.SubtitleEdit.Logic
 {
     public interface IFindAndReplace
     {
-        void FindDialogFind(string findText, ReplaceType findReplaceType);
+        void FindDialogFind(string findText, ReplaceType findReplaceType, Regex regex);
         void FindDialogFindPrevious(string findText);
         void FindDialogClose();
 

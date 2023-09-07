@@ -51,7 +51,7 @@ namespace Nikse.SubtitleEdit.Logic
                 StartInfo =
                 {
                     FileName = ffmpegLocation,
-                    Arguments = $"-i \"{videoFileName}\" -vf \"select=gt(scene\\," + threshold.ToString(CultureInfo.InvariantCulture) + "),showinfo\" -vsync vfr -f null -",
+                    Arguments = $"-i \"{videoFileName}\" -vf \"select=gt(scene\\," + threshold.ToString(CultureInfo.InvariantCulture) + "),showinfo\" -threads 0 -vsync vfr -f null -",
                     UseShellExecute = false,
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,

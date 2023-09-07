@@ -41,10 +41,10 @@
             this.buttonDelete = new System.Windows.Forms.Button();
             this.buttonEdit = new System.Windows.Forms.Button();
             this.buttonNew = new System.Windows.Forms.Button();
-            this.textBoxPreview = new System.Windows.Forms.TextBox();
+            this.textBoxPreview = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.groupBoxPreview = new System.Windows.Forms.GroupBox();
             this.labelEncoding = new System.Windows.Forms.Label();
-            this.comboBoxEncoding = new System.Windows.Forms.ComboBox();
+            this.comboBoxEncoding = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonSave = new System.Windows.Forms.Button();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
@@ -279,10 +279,10 @@
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.ColumnHeader columnHeader2;
         private System.Windows.Forms.GroupBox groupBoxFormats;
-        private System.Windows.Forms.TextBox textBoxPreview;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxPreview;
         private System.Windows.Forms.GroupBox groupBoxPreview;
         private System.Windows.Forms.Label labelEncoding;
-        private System.Windows.Forms.ComboBox comboBoxEncoding;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxEncoding;
         private System.Windows.Forms.Button buttonNew;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonSave;

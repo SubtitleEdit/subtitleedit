@@ -58,7 +58,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 XmlNode chapterMarker = xml.CreateElement("chapter-marker");
 
                 var attr = xml.CreateAttribute("duration");
-                attr.Value = Convert.ToInt64(p.Duration.TotalSeconds * 2400000) + "/2400000s";
+                attr.Value = Convert.ToInt64(p.DurationTotalSeconds * 2400000) + "/2400000s";
                 chapterMarker.Attributes.Append(attr);
 
                 attr = xml.CreateAttribute("start");

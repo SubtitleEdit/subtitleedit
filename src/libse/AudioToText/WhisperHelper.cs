@@ -19,6 +19,11 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                 return new WhisperCTranslate2Model();
             }
 
+            if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.PurfviewFasterWhisper)
+            {
+                return new WhisperPurfviewFasterWhisperModel();
+            }
+
             return new WhisperModel();
         }
 
@@ -30,7 +35,8 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                 return ".bin";
             }
 
-            if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.CTranslate2)
+            if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.CTranslate2 ||
+                Configuration.Settings.Tools.WhisperChoice == WhisperChoice.PurfviewFasterWhisper)
             {
                 return string.Empty;
             }
@@ -60,6 +66,11 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                 return "https://github.com/jordimas/whisper-ctranslate2";
             }
 
+            if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.PurfviewFasterWhisper)
+            {
+                return "https://github.com/Purfview/whisper-standalone-win";
+            }
+
             if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.StableTs)
             {
                 return "https://github.com/jianfch/stable-ts";
@@ -80,9 +91,14 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
 
         public static string GetWhisperFolder()
         {
-            if (Configuration.IsRunningOnLinux && Configuration.Settings.Tools.WhisperChoice == WhisperChoice.Cpp)
+            return GetWhisperFolder(Configuration.Settings.Tools.WhisperChoice);
+        }
+
+        public static string GetWhisperFolder(string whisperChoice)
+        {
+            if (Configuration.IsRunningOnLinux && whisperChoice == WhisperChoice.Cpp)
             {
-                var path = Path.Combine(Configuration.DataDirectory, "Whisper");
+                var path = Path.Combine(Configuration.DataDirectory, "Whisper", "Cpp");
                 return Directory.Exists(path) ? path : null;
             }
 
@@ -93,7 +109,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
 
             try
             {
-                if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.OpenAI)
+                if (whisperChoice == WhisperChoice.OpenAi)
                 {
                     var location = Configuration.Settings.Tools.WhisperLocation;
                     if (!string.IsNullOrEmpty(location))
@@ -110,7 +126,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                     }
                 }
 
-                if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.CTranslate2)
+                if (whisperChoice == WhisperChoice.CTranslate2)
                 {
                     var location = Configuration.Settings.Tools.WhisperCtranslate2Location;
                     if (!string.IsNullOrEmpty(location))
@@ -127,13 +143,33 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                     }
                 }
 
-                if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.Cpp)
+                if (whisperChoice == WhisperChoice.PurfviewFasterWhisper)
                 {
-                    var path = Path.Combine(Configuration.DataDirectory, "Whisper");
+                    var location = Configuration.Settings.Tools.WhisperCtranslate2Location;
+                    if (!string.IsNullOrEmpty(location))
+                    {
+                        if (location.EndsWith("whisper-faster.exe", StringComparison.InvariantCultureIgnoreCase) && File.Exists(location))
+                        {
+                            return Path.GetDirectoryName(location);
+                        }
+
+                        if (Directory.Exists(location) && File.Exists(Path.Combine(location, "whisper-faster.exe")))
+                        {
+                            return location;
+                        }
+                    }
+
+                    location = Path.Combine(Configuration.DataDirectory, "Whisper", "Purfview-Whisper-Faster");
+                    return Directory.Exists(location) ? location : null;
+                }
+
+                if (whisperChoice == WhisperChoice.Cpp)
+                {
+                    var path = Path.Combine(Configuration.DataDirectory, "Whisper", "Cpp");
                     return Directory.Exists(path) ? path : null;
                 }
 
-                if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.WhisperX && !string.IsNullOrEmpty(Configuration.Settings.Tools.WhisperXLocation))
+                if (whisperChoice == WhisperChoice.WhisperX && !string.IsNullOrEmpty(Configuration.Settings.Tools.WhisperXLocation))
                 {
                     if (Configuration.Settings.Tools.WhisperXLocation.EndsWith("whisperx.exe", StringComparison.InvariantCultureIgnoreCase) && File.Exists(Configuration.Settings.Tools.WhisperXLocation))
                     {
@@ -146,7 +182,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                     }
                 }
 
-                if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.WhisperX)
+                if (whisperChoice == WhisperChoice.WhisperX)
                 {
                     var path = Path.Combine(
                         Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
@@ -157,7 +193,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                     }
                 }
 
-                if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.StableTs && !string.IsNullOrEmpty(Configuration.Settings.Tools.WhisperStableTsLocation))
+                if (whisperChoice == WhisperChoice.StableTs && !string.IsNullOrEmpty(Configuration.Settings.Tools.WhisperStableTsLocation))
                 {
                     if (Configuration.Settings.Tools.WhisperStableTsLocation.EndsWith("stable-ts.exe", StringComparison.InvariantCultureIgnoreCase) && File.Exists(Configuration.Settings.Tools.WhisperStableTsLocation))
                     {
@@ -170,7 +206,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                     }
                 }
 
-                if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.ConstMe)
+                if (whisperChoice == WhisperChoice.ConstMe)
                 {
                     var path = Path.Combine(Configuration.DataDirectory, "Whisper", "Const-me");
                     return Directory.Exists(path) ? path : null;
@@ -188,7 +224,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                         var dirName = Path.GetFileName(dir);
                         if (dirName != null && dirName.StartsWith("Python3"))
                         {
-                            if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.WhisperX)
+                            if (whisperChoice == WhisperChoice.WhisperX)
                             {
                                 var whisperXFullPath = Path.Combine(dir, "Scripts", "whisperx.exe");
                                 if (File.Exists(whisperXFullPath))
@@ -199,7 +235,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                                 return null;
                             }
 
-                            if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.CTranslate2)
+                            if (whisperChoice == WhisperChoice.CTranslate2)
                             {
                                 var whisperCTranslate2FullPath = Path.Combine(dir, "Scripts", "whisper-ctranslate2.exe");
                                 if (File.Exists(whisperCTranslate2FullPath))
@@ -210,7 +246,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                                 return null;
                             }
 
-                            if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.StableTs)
+                            if (whisperChoice == WhisperChoice.StableTs)
                             {
                                 var whisperCTranslate2FullPath = Path.Combine(dir, "Scripts", "stable-ts.exe");
                                 if (File.Exists(whisperCTranslate2FullPath))
@@ -238,32 +274,42 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
             return null;
         }
 
-        public static string GetWhisperPathAndFileName()
+        public static string GetExecutableFileName()
         {
-            var whisperFolder = GetWhisperFolder();
+            return GetExecutableFileName(Configuration.Settings.Tools.WhisperChoice);
+        }
+
+        public static string GetExecutableFileName(string whisperChoice)
+        {
+            var whisperFolder = GetWhisperFolder(whisperChoice);
             if (string.IsNullOrEmpty(whisperFolder))
             {
-                if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.Cpp)
+                if (whisperChoice == WhisperChoice.Cpp)
                 {
                     return "main";
                 }
 
-                if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.CTranslate2)
+                if (whisperChoice == WhisperChoice.CTranslate2)
                 {
                     return "whisper-ctranslate2";
                 }
 
-                if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.WhisperX)
+                if (whisperChoice == WhisperChoice.PurfviewFasterWhisper)
+                {
+                    return "whisper-faster.exe";
+                }
+
+                if (whisperChoice == WhisperChoice.WhisperX)
                 {
                     return "whisperx";
                 }
 
-                if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.ConstMe)
+                if (whisperChoice == WhisperChoice.ConstMe)
                 {
                     return "main";
                 }
 
-                if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.StableTs)
+                if (whisperChoice == WhisperChoice.StableTs)
                 {
                     return "stable-ts";
                 }
@@ -273,41 +319,124 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
 
             if (Configuration.IsRunningOnWindows)
             {
-                if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.Cpp)
+                if (whisperChoice == WhisperChoice.Cpp)
                 {
-                    var f = Path.Combine(whisperFolder, "main.exe");
+                    return "main.exe";
+                }
+
+                if (whisperChoice == WhisperChoice.WhisperX)
+                {
+                    return "whisperx.exe";
+                }
+
+                if (whisperChoice == WhisperChoice.CTranslate2)
+                {
+                    return "whisper-ctranslate2.exe";
+                }
+
+                if (whisperChoice == WhisperChoice.PurfviewFasterWhisper)
+                {
+                    return "whisper-faster.exe";
+                }
+
+                if (whisperChoice == WhisperChoice.StableTs)
+                {
+                    return "stable-ts.exe";
+                }
+
+                if (whisperChoice == WhisperChoice.ConstMe)
+                {
+                    return "main.exe";
+                }
+
+                return "whisper.exe";
+            }
+
+            if (Configuration.IsRunningOnLinux && whisperChoice == WhisperChoice.Cpp)
+            {
+                return "main";
+            }
+
+            if (Configuration.IsRunningOnLinux && whisperChoice == WhisperChoice.WhisperX)
+            {
+                return "whisperx";
+            }
+
+            if (whisperChoice == WhisperChoice.CTranslate2)
+            {
+                return "whisper-ctranslate2";
+            }
+
+            if (whisperChoice == WhisperChoice.StableTs)
+            {
+                return "stable-ts";
+            }
+
+            return "whisper";
+        }
+
+        public static string GetWhisperPathAndFileName()
+        {
+            return GetWhisperPathAndFileName(Configuration.Settings.Tools.WhisperChoice);
+        }
+
+        /// <summary>
+        /// Get installed path
+        /// </summary>
+        public static string GetWhisperPathAndFileName(string whisperChoice)
+        {
+            var fileNameOnly = GetExecutableFileName(whisperChoice);
+            var whisperFolder = GetWhisperFolder(whisperChoice);
+            if (string.IsNullOrEmpty(whisperFolder))
+            {
+                return fileNameOnly;
+            }
+
+            if (Configuration.IsRunningOnWindows)
+            {
+                if (whisperChoice == WhisperChoice.Cpp)
+                {
+                    var f = Path.Combine(whisperFolder, fileNameOnly);
                     if (File.Exists(f))
                     {
                         return f;
                     }
                 }
-                else if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.WhisperX)
+                else if (whisperChoice == WhisperChoice.WhisperX)
                 {
-                    var f = Path.Combine(whisperFolder, "whisperx.exe");
+                    var f = Path.Combine(whisperFolder, fileNameOnly);
                     if (File.Exists(f))
                     {
                         return f;
                     }
                 }
-                else if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.CTranslate2)
+                else if (whisperChoice == WhisperChoice.CTranslate2)
                 {
-                    var f = Path.Combine(whisperFolder, "whisper-ctranslate2.exe");
+                    var f = Path.Combine(whisperFolder, fileNameOnly);
                     if (File.Exists(f))
                     {
                         return f;
                     }
                 }
-                else if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.StableTs)
+                else if (whisperChoice == WhisperChoice.PurfviewFasterWhisper)
                 {
-                    var f = Path.Combine(whisperFolder, "stable-ts.exe");
+                    var f = Path.Combine(whisperFolder, fileNameOnly);
                     if (File.Exists(f))
                     {
                         return f;
                     }
                 }
-                else if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.ConstMe)
+                else if (whisperChoice == WhisperChoice.StableTs)
                 {
-                    var f = Path.Combine(whisperFolder, "main.exe");
+                    var f = Path.Combine(whisperFolder, fileNameOnly);
+                    if (File.Exists(f))
+                    {
+                        return f;
+                    }
+                }
+                else if (whisperChoice == WhisperChoice.ConstMe)
+                {
+                    var f = Path.Combine(whisperFolder, fileNameOnly);
                     if (File.Exists(f))
                     {
                         return f;
@@ -317,7 +446,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                 }
                 else
                 {
-                    var f = Path.Combine(whisperFolder, "whisper.exe");
+                    var f = Path.Combine(whisperFolder, fileNameOnly);
                     if (File.Exists(f))
                     {
                         return f;
@@ -325,40 +454,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                 }
             }
 
-            if (Configuration.IsRunningOnLinux && Configuration.Settings.Tools.WhisperChoice == WhisperChoice.Cpp)
-            {
-                var f = Path.Combine(whisperFolder, "main");
-                if (File.Exists(f))
-                {
-                    return f;
-                }
-            }
-            else if (Configuration.IsRunningOnLinux && Configuration.Settings.Tools.WhisperChoice == WhisperChoice.WhisperX)
-            {
-                var f = Path.Combine(whisperFolder, "whisperx");
-                if (File.Exists(f))
-                {
-                    return f;
-                }
-            }
-            else if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.CTranslate2)
-            {
-                var f = Path.Combine(whisperFolder, "whisper-ctranslate2");
-                if (File.Exists(f))
-                {
-                    return f;
-                }
-            }
-            else if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.StableTs)
-            {
-                var f = Path.Combine(whisperFolder, "stable-ts");
-                if (File.Exists(f))
-                {
-                    return f;
-                }
-            }
-
-            return "whisper";
+            return fileNameOnly;
         }
 
         public static string GetWhisperModelForCmdLine(string model)
@@ -380,7 +476,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
         {
             return Configuration.Settings.Tools.WhisperChoice == WhisperChoice.Cpp ||
                    Configuration.Settings.Tools.WhisperChoice == WhisperChoice.ConstMe
-                ? "--translate " 
+                ? "--translate "
                 : "--task translate ";
         }
     }

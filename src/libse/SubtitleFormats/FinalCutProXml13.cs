@@ -66,7 +66,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 clip.Attributes.Append(attr);
 
                 attr = xml.CreateAttribute("duration");
-                attr.Value = Convert.ToInt64(p.Duration.TotalSeconds * 2400000) + "/2400000s";
+                attr.Value = Convert.ToInt64(p.DurationTotalSeconds * 2400000) + "/2400000s";
                 clip.Attributes.Append(attr);
 
                 attr = xml.CreateAttribute("start");
@@ -78,7 +78,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 clip.Attributes.Append(attr);
 
                 attr = xml.CreateAttribute("audioDuration");
-                attr.Value = Convert.ToInt64(p.Duration.TotalSeconds * 2400000) + "/2400000s";
+                attr.Value = Convert.ToInt64(p.DurationTotalSeconds * 2400000) + "/2400000s";
                 clip.Attributes.Append(attr);
 
                 attr = xml.CreateAttribute("tcFormat");
@@ -88,7 +88,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 XmlNode titleNode = clip.SelectSingleNode("video");
                 titleNode.Attributes["offset"].Value = Convert.ToInt64(p.StartTime.TotalSeconds * 60000) + "/60000s";
                 titleNode.Attributes["name"].Value = HtmlUtil.RemoveHtmlTags(p.Text);
-                titleNode.Attributes["duration"].Value = Convert.ToInt64(p.Duration.TotalSeconds * 60000) + "/60000s";
+                titleNode.Attributes["duration"].Value = Convert.ToInt64(p.DurationTotalSeconds * 60000) + "/60000s";
                 titleNode.Attributes["start"].Value = Convert.ToInt64(p.StartTime.TotalSeconds * 60000) + "/60000s";
 
                 XmlNode param = clip.SelectSingleNode("video/param");

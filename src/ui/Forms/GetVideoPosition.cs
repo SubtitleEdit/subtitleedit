@@ -1,5 +1,4 @@
-﻿using Nikse.SubtitleEdit.Controls;
-using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
@@ -44,6 +43,8 @@ namespace Nikse.SubtitleEdit.Forms
             Text = title;
 
             AutoSizeWindowRelativeToVideo();
+            videoPlayerContainer1.TryLoadGfx();
+            videoPlayerContainer1.HidePlayerName();
         }
 
         private void AutoSizeWindowRelativeToVideo()

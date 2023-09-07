@@ -34,7 +34,7 @@
             this.radioButtonStartFromPos = new System.Windows.Forms.RadioButton();
             this.radioButtonStartFromStart = new System.Windows.Forms.RadioButton();
             this.labelAbove1 = new System.Windows.Forms.Label();
-            this.numericUpDownMinVol = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownMinVol = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.groupBoxDeleteLines = new System.Windows.Forms.GroupBox();
             this.radioButtonDeleteNone = new System.Windows.Forms.RadioButton();
             this.radioButtonForward = new System.Windows.Forms.RadioButton();
@@ -42,22 +42,18 @@
             this.groupBoxDetectOptions = new System.Windows.Forms.GroupBox();
             this.labelBelow2 = new System.Windows.Forms.Label();
             this.labelAbove2 = new System.Windows.Forms.Label();
-            this.numericUpDownBlockSize = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownBlockSize = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelScanBlocksMs = new System.Windows.Forms.Label();
             this.labelBelow1 = new System.Windows.Forms.Label();
-            this.numericUpDownMaxVol = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownMaxVol = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.groupBoxOther = new System.Windows.Forms.GroupBox();
             this.labelSplit2 = new System.Windows.Forms.Label();
             this.labelSplit1 = new System.Windows.Forms.Label();
-            this.numericUpDownDefaultMilliseconds = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownDefaultMilliseconds = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.groupBoxStartFrom.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMinVol)).BeginInit();
             this.groupBoxDeleteLines.SuspendLayout();
             this.groupBoxDetectOptions.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBlockSize)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxVol)).BeginInit();
             this.groupBoxOther.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDefaultMilliseconds)).BeginInit();
             this.SuspendLayout();
             // 
             // buttonCancel
@@ -358,16 +354,12 @@
             this.Text = "Guess time codes";
             this.groupBoxStartFrom.ResumeLayout(false);
             this.groupBoxStartFrom.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMinVol)).EndInit();
             this.groupBoxDeleteLines.ResumeLayout(false);
             this.groupBoxDeleteLines.PerformLayout();
             this.groupBoxDetectOptions.ResumeLayout(false);
             this.groupBoxDetectOptions.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBlockSize)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxVol)).EndInit();
             this.groupBoxOther.ResumeLayout(false);
             this.groupBoxOther.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDefaultMilliseconds)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -379,7 +371,7 @@
         private System.Windows.Forms.GroupBox groupBoxStartFrom;
         private System.Windows.Forms.RadioButton radioButtonStartFromStart;
         private System.Windows.Forms.Label labelAbove1;
-        private System.Windows.Forms.NumericUpDown numericUpDownMinVol;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownMinVol;
         private System.Windows.Forms.RadioButton radioButtonStartFromPos;
         private System.Windows.Forms.GroupBox groupBoxDeleteLines;
         private System.Windows.Forms.RadioButton radioButtonDeleteNone;
@@ -387,14 +379,14 @@
         private System.Windows.Forms.RadioButton radioButtonDeleteAll;
         private System.Windows.Forms.GroupBox groupBoxDetectOptions;
         private System.Windows.Forms.Label labelBelow1;
-        private System.Windows.Forms.NumericUpDown numericUpDownMaxVol;
-        private System.Windows.Forms.NumericUpDown numericUpDownBlockSize;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownMaxVol;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownBlockSize;
         private System.Windows.Forms.Label labelScanBlocksMs;
         private System.Windows.Forms.Label labelBelow2;
         private System.Windows.Forms.Label labelAbove2;
         private System.Windows.Forms.GroupBox groupBoxOther;
         private System.Windows.Forms.Label labelSplit1;
-        private System.Windows.Forms.NumericUpDown numericUpDownDefaultMilliseconds;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownDefaultMilliseconds;
         private System.Windows.Forms.Label labelSplit2;
     }
 }

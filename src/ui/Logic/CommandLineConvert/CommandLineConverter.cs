@@ -59,6 +59,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
             DeleteLines,
             AssaChangeRes,
             SortBy,
+            BeautifyTimeCodes,
         }
 
         internal static void ConvertOrReturn(string productIdentifier, string[] commandLineArguments)
@@ -130,6 +131,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                 _stdOutWriter.WriteLine("    pattern:");
                 _stdOutWriter.WriteLine("        one or more file name patterns separated by commas");
                 _stdOutWriter.WriteLine("        relative patterns are relative to /inputfolder if specified");
+                _stdOutWriter.WriteLine();
                 _stdOutWriter.WriteLine("    optional-parameters:");
                 _stdOutWriter.WriteLine("        /adjustduration:<ms>");
                 _stdOutWriter.WriteLine("        /deletecontains:<word>");
@@ -152,8 +154,9 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                 _stdOutWriter.WriteLine("        /teletextonly");
                 _stdOutWriter.WriteLine("        /teletextonlypage:<page number>");
                 _stdOutWriter.WriteLine("        /track-number:<comma separated track number list>");
-                _stdOutWriter.WriteLine("        /profile:<profile name");
+                _stdOutWriter.WriteLine("        /profile:<profile name>");
                 //_stdOutWriter.WriteLine("        /ocrdb:<ocr db/dictionary> (e.g. \"eng\" or \"latin\")");
+                _stdOutWriter.WriteLine();
                 _stdOutWriter.WriteLine("      The following operations are applied in command line order");
                 _stdOutWriter.WriteLine("      from left to right, and can be specified multiple times.");
                 _stdOutWriter.WriteLine("        /" + BatchAction.ApplyDurationLimits);
@@ -170,6 +173,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                 _stdOutWriter.WriteLine("        /" + BatchAction.ConvertColorsToDialog);
                 _stdOutWriter.WriteLine("        /" + BatchAction.RedoCasing);
                 _stdOutWriter.WriteLine("        /" + BatchAction.BalanceLines);
+                _stdOutWriter.WriteLine("        /" + BatchAction.BeautifyTimeCodes);
                 _stdOutWriter.WriteLine();
                 _stdOutWriter.WriteLine("    Example: SubtitleEdit /convert *.srt sami");
                 _stdOutWriter.WriteLine("    Show this usage message: SubtitleEdit /help");
@@ -233,6 +237,14 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                 else if (targetFormat == "ebu" || targetFormat == "ebustl")
                 {
                     targetFormat = Ebu.NameOfFormat.RemoveChar(' ').ToLowerInvariant();
+                }
+                else if (targetFormat == "pacunicode" || targetFormat == "unipac" || targetFormat == "fpc")
+                {
+                    targetFormat = new PacUnicode().Name.RemoveChar(' ').ToLowerInvariant();
+                }
+                else if (targetFormat == "pac")
+                {
+                    targetFormat = Pac.NameOfFormat.RemoveChar(' ').ToLowerInvariant();
                 }
 
                 var unconsumedArguments = arguments.Skip(4).Select(s => s.Trim()).Where(s => s.Length > 0).ToList();
@@ -774,7 +786,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                             }
                         }
 
-                        if (!done && fileInfo.Length < 10 * 1024 * 1024) // max 10 mb
+                        if (!done && IsFileLengthOkForTextSubtitle(fileName, fileInfo)) // max 10 mb
                         {
                             format = sub.LoadSubtitle(fileName, out _, null, true, frameRate);
 
@@ -840,7 +852,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
 
                         if (!done && format == null)
                         {
-                            if (fileInfo.Length < 1024 * 1024) // max 1 mb
+                            if (IsFileLengthOkForTextSubtitle(fileName, fileInfo))
                             {
                                 _stdOutWriter.WriteLine($"{fileName}: {targetFormat} - input file format unknown!");
                             }
@@ -884,6 +896,16 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
             }
 
             return (count == converted && errors == 0) ? 0 : 1;
+        }
+
+        private static bool IsFileLengthOkForTextSubtitle(string fileName, FileInfo fileInfo)
+        {
+            if (fileName.EndsWith(".ass", StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+
+            return fileInfo.Length < 33 * 1024 * 1024; // max 33 mb
         }
 
         private static void LoadProfile(string profileName)
@@ -1549,6 +1571,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                         _stdOutWriter?.WriteLine(" done.");
                     }
                 }
+
                 if (!targetFormatFound)
                 {
                     var pac = new Pac();
@@ -1563,6 +1586,20 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                         _stdOutWriter?.WriteLine(" done.");
                     }
                 }
+
+                if (!targetFormatFound)
+                {
+                    var pacUnicode = new PacUnicode();
+                    if (pacUnicode.Name.RemoveChar(' ', '(', ')').Equals(targetFormat.RemoveChar(' ', '(', ')'), StringComparison.OrdinalIgnoreCase) || targetFormat.Equals(".fpc", StringComparison.OrdinalIgnoreCase) || targetFormat.Equals("fpc", StringComparison.OrdinalIgnoreCase))
+                    {
+                        targetFormatFound = true;
+                        outputFileName = FormatOutputFileNameForBatchConvert(fileName, pacUnicode.Extension, outputFolder, overwrite, targetFileName);
+                        _stdOutWriter?.Write($"{count}: {Path.GetFileName(fileName)} -> {outputFileName}...");
+                        pacUnicode.Save(outputFileName, sub);
+                        _stdOutWriter?.WriteLine(" done.");
+                    }
+                }
+
                 if (!targetFormatFound)
                 {
                     var cavena890 = new Cavena890();
@@ -1575,6 +1612,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                         _stdOutWriter?.WriteLine(" done.");
                     }
                 }
+
                 if (!targetFormatFound)
                 {
                     var cheetahCaption = new CheetahCaption();
@@ -1587,6 +1625,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                         _stdOutWriter?.WriteLine(" done.");
                     }
                 }
+
                 if (!targetFormatFound)
                 {
                     var ayato = new Ayato();
@@ -1599,6 +1638,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                         _stdOutWriter?.WriteLine(" done.");
                     }
                 }
+
                 if (!targetFormatFound)
                 {
                     var capMakerPlus = new CapMakerPlus();
@@ -1611,6 +1651,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                         _stdOutWriter?.WriteLine(" done.");
                     }
                 }
+
                 if (!targetFormatFound)
                 {
                     if (LanguageSettings.Current.BatchConvert.PlainText.RemoveChar(' ').Equals(targetFormat.RemoveChar(' '), StringComparison.OrdinalIgnoreCase))
@@ -1637,6 +1678,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                         _stdOutWriter?.WriteLine(" done.");
                     }
                 }
+
                 if (!targetFormatFound)
                 {
                     if (BatchConvert.BluRaySubtitle.RemoveChar(' ').Equals(targetFormat.RemoveChar(' '), StringComparison.OrdinalIgnoreCase))
@@ -1999,14 +2041,14 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
 
                     else if (!targetFormatFound && targetFormat == LanguageSettings.Current.VobSubOcr.ImagesWithTimeCodesInFileName.Trim('.'))
                     {
-                        var path = Path.Combine(outputFolder, Path.GetFileNameWithoutExtension(fileName));
-                        if (!Directory.Exists(path))
-                        {
-                            Directory.CreateDirectory(path);
-                        }
-
                         if (binaryParagraphs.Count > 0)
                         {
+                            var path = Path.Combine(outputFolder, Path.GetFileNameWithoutExtension(fileName));
+                            if (!Directory.Exists(path))
+                            {
+                                Directory.CreateDirectory(path);
+                            }
+
                             targetFormatFound = true;
                             for (var i = 0; i < binaryParagraphs.Count; i++)
                             {
@@ -2121,7 +2163,8 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                    BatchConvert.VobSubSubtitle.RemoveChar(' ').Equals(target, StringComparison.OrdinalIgnoreCase) ||
                    BatchConvert.DostImageSubtitle.RemoveChar(' ').Equals(target, StringComparison.OrdinalIgnoreCase) ||
                    BatchConvert.BdnXmlSubtitle.RemoveChar(' ').Equals(target, StringComparison.OrdinalIgnoreCase) ||
-                   BatchConvert.FcpImageSubtitle.RemoveChar(' ').Equals(target, StringComparison.OrdinalIgnoreCase);
+                   BatchConvert.FcpImageSubtitle.RemoveChar(' ').Equals(target, StringComparison.OrdinalIgnoreCase) ||
+                   target == LanguageSettings.Current.VobSubOcr.ImagesWithTimeCodesInFileName.Trim('.').RemoveChar(' ');
         }
 
         internal static Subtitle RunActions(TextEncoding targetEncoding, Subtitle sub, SubtitleFormat format, List<BatchAction> actions, bool autoDetectLanguage)
@@ -2182,7 +2225,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
 
                             break;
                         case BatchAction.ApplyDurationLimits:
-                            var fixDurationLimits = new FixDurationLimits(Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds, Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds);
+                            var fixDurationLimits = new FixDurationLimits(Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds, Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds, new List<double>());
                             sub = fixDurationLimits.Fix(sub);
                             break;
                         case BatchAction.ReverseRtlStartEnd:
@@ -2252,6 +2295,9 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                             {
                                 p.Text = Utilities.RemoveUnicodeControlChars(p.Text);
                             }
+                            break;
+                        case BatchAction.BeautifyTimeCodes:
+                            BatchConvert.BeautifyTimeCodes(sub, sub.FileName, Configuration.Settings.BeautifyTimeCodes.ExtractExactTimeCodes, Configuration.Settings.BeautifyTimeCodes.SnapToShotChanges);
                             break;
                     }
                 }

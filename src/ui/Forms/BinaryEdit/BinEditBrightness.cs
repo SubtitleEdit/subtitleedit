@@ -29,7 +29,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             Alignment = ContentAlignment.BottomCenter;
 
             Text = LanguageSettings.Current.BinEdit.ChangeBrightnessTitle;
-            labelChangeBrightness.Text = string.Format(LanguageSettings.Current.BinEdit.BrightnessX, trackBarBrightness.Value);
+            labelChangeBrightness.Text = string.Format(LanguageSettings.Current.BinEdit.BrightnessX, numericUpDownBrightness.Value);
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             UiUtil.FixLargeFonts(this, buttonOK);
@@ -38,15 +38,15 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
         private void trackBarBrightness_Scroll(object sender, EventArgs e)
         {
             Factor = trackBarBrightness.Value / 100.0m;
-            UpdatePreview();
             numericUpDownBrightness.ValueChanged -= numericUpDownBrightness_ValueChanged;
             numericUpDownBrightness.Value = trackBarBrightness.Value;
             numericUpDownBrightness.ValueChanged += numericUpDownBrightness_ValueChanged;
+            UpdatePreview();
         }
 
         private void UpdatePreview()
         {
-            labelChangeBrightness.Text = string.Format(LanguageSettings.Current.BinEdit.BrightnessX, trackBarBrightness.Value);
+            labelChangeBrightness.Text = string.Format(LanguageSettings.Current.BinEdit.BrightnessX, numericUpDownBrightness.Value.ToString("0.##"));
             var bmp = ChangeBrightness(_bitmap, Factor);
             pictureBoxPreview.Image?.Dispose();
             pictureBoxPreview.Image = bmp;
@@ -80,10 +80,10 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
         private void numericUpDownBrightness_ValueChanged(object sender, EventArgs e)
         {
             Factor = numericUpDownBrightness.Value / 100.0m;
-            UpdatePreview();
             trackBarBrightness.Scroll -= trackBarBrightness_Scroll;
             trackBarBrightness.Value = (int)Math.Round(numericUpDownBrightness.Value, MidpointRounding.AwayFromZero);
             trackBarBrightness.Scroll += trackBarBrightness_Scroll;
+            UpdatePreview();
         }
     }
 }

@@ -114,7 +114,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     text = tag + text.Substring(tagPlusPeriod.Length);
                     while (text.StartsWith(tag + ".", StringComparison.Ordinal) || text.StartsWith(tag + " ", StringComparison.Ordinal))
                     {
-                        text = tag + text.Substring(tagPlusPeriod.Length + 1);
+                        text = text.Remove(tag.Length, 1);
                     }
                 }
             }
@@ -184,6 +184,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 text = FixEllipsesStartHelper(text);
                 pre += " ";
             }
+
             return pre + text;
         }
 

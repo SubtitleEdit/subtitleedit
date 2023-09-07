@@ -10,6 +10,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml;
+using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -555,7 +556,7 @@ namespace Nikse.SubtitleEdit.Forms
             double millisecondsIndex = millisecondsInterval;
             foreach (Paragraph p in FixedSubtitle.Paragraphs)
             {
-                p.EndTime.TotalMilliseconds = millisecondsIndex + p.Duration.TotalMilliseconds;
+                p.EndTime.TotalMilliseconds = millisecondsIndex + p.DurationTotalMilliseconds;
                 p.StartTime.TotalMilliseconds = millisecondsIndex;
                 millisecondsIndex += (p.EndTime.TotalMilliseconds - p.StartTime.TotalMilliseconds) + millisecondsInterval;
             }

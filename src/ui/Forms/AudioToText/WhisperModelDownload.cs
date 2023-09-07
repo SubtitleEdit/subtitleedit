@@ -4,12 +4,11 @@ using Nikse.SubtitleEdit.Logic;
 using System;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Core.Common;
-using Vosk;
+using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms.AudioToText
 {
@@ -43,6 +42,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 }
             }
 
+            comboBoxModels.UsePopupWindow = true;
             comboBoxModels.SelectedIndex = selectedIndex;
             labelPleaseWait.Text = string.Empty;
             labelFileName.Text = string.Empty;

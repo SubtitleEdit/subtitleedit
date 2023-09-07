@@ -715,23 +715,21 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return lines[0];
             }
 
-            var singleLine = string.Join(" ", lines);
-            while (singleLine.Contains("  "))
-            {
-                singleLine = singleLine.Replace("  ", " ");
-            }
+            var singleLine = string.Join(" ", lines).FixExtraSpaces();
 
             if (singleLine.Contains("</")) // Fix tag
             {
-                singleLine = singleLine.Replace("</i> <i>", " ");
-                singleLine = singleLine.Replace("</i><i>", " ");
+                const string singleWhiteSpace = " ";
+                singleLine = singleLine.Replace("</i> <i>", singleWhiteSpace);
+                singleLine = singleLine.Replace("</i><i>", singleWhiteSpace);
 
-                singleLine = singleLine.Replace("</b> <b>", " ");
-                singleLine = singleLine.Replace("</b><b>", " ");
+                singleLine = singleLine.Replace("</b> <b>", singleWhiteSpace);
+                singleLine = singleLine.Replace("</b><b>", singleWhiteSpace);
 
-                singleLine = singleLine.Replace("</u> <u>", " ");
-                singleLine = singleLine.Replace("</u><u>", " ");
+                singleLine = singleLine.Replace("</u> <u>", singleWhiteSpace);
+                singleLine = singleLine.Replace("</u><u>", singleWhiteSpace);
             }
+
             return singleLine;
         }
 
@@ -869,7 +867,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             return GetOptimalDisplayMilliseconds(text, Configuration.Settings.General.SubtitleOptimalCharactersPerSeconds);
         }
 
-        public static double GetOptimalDisplayMilliseconds(string text, double optimalCharactersPerSecond, bool onlyOptimal = false)
+        public static double GetOptimalDisplayMilliseconds(string text, double optimalCharactersPerSecond, bool onlyOptimal = false, bool enforceDurationLimits = true)
         {
             if (optimalCharactersPerSecond < 2 || optimalCharactersPerSecond > 100)
             {
@@ -894,12 +892,12 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
             }
 
-            if (duration < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
+            if (enforceDurationLimits && duration < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
             {
                 duration = Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds;
             }
 
-            if (duration > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
+            if (enforceDurationLimits && duration > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
             {
                 duration = Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds;
             }
@@ -914,7 +912,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public static string ColorToHexWithTransparency(Color c)
         {
-            return $"#{c.A:x2}{c.R:x2}{c.G:x2}{c.B:x2}";
+            return $"#{c.R:x2}{c.G:x2}{c.B:x2}{c.A:x2}";
         }
 
         public static int GetMaxLineLength(string text)
@@ -933,36 +931,33 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public static double GetCharactersPerSecond(Paragraph paragraph)
         {
-            var duration = paragraph.Duration;
-            if (duration.TotalMilliseconds < 1)
+            if (paragraph.DurationTotalMilliseconds < 1)
             {
                 return 999;
             }
 
-            return (double)paragraph.Text.CountCharacters(true) / duration.TotalSeconds;
+            return (double)paragraph.Text.CountCharacters(true) / paragraph.DurationTotalSeconds;
         }
 
         public static double GetCharactersPerSecond(Paragraph paragraph, double numberOfCharacters)
         {
-            var duration = paragraph.Duration;
-            if (duration.TotalMilliseconds < 1)
+            if (paragraph.DurationTotalMilliseconds < 1)
             {
                 return 999;
             }
 
-            return numberOfCharacters / duration.TotalSeconds;
+            return numberOfCharacters / paragraph.DurationTotalSeconds;
         }
 
 
         public static double GetCharactersPerSecond(Paragraph paragraph, ICalcLength calc)
         {
-            var duration = paragraph.Duration;
-            if (duration.TotalMilliseconds < 1)
+            if (paragraph.DurationTotalMilliseconds < 1)
             {
                 return 999;
             }
 
-            return (double)calc.CountCharacters(paragraph.Text, true) / duration.TotalSeconds;
+            return (double)calc.CountCharacters(paragraph.Text, true) / paragraph.DurationTotalSeconds;
         }
 
         public static bool IsRunningOnMono()
@@ -1259,7 +1254,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return null;
             }
 
-            var middle = paragraph.StartTime.TotalMilliseconds + paragraph.Duration.TotalMilliseconds / 2.0;
+            var middle = paragraph.StartTime.TotalMilliseconds + paragraph.DurationTotalMilliseconds / 2.0;
             if (index < originalParagraphs.Count)
             {
                 var o = originalParagraphs[index];
@@ -1306,11 +1301,36 @@ namespace Nikse.SubtitleEdit.Core.Common
         }
 
         /// <summary>
-        /// UrlEncodes a string without the requirement for System.Web
+        /// UrlEncodes a string without the requirement for System.Web.
+        /// Will crash if text length > 2000.
         /// </summary>
         public static string UrlEncode(string text)
         {
             return Uri.EscapeDataString(text);
+        }
+
+        /// <summary>
+        /// Calculates the length if the text url encoded.
+        /// </summary>
+        public static int UrlEncodeLength(string text)
+        {
+            var urlEncodeLength = 0;
+            foreach (var ch in text)
+            {
+                if (ch >= 'a' && ch <= 'z' ||
+                    ch >= 'A' && ch <= 'Z' ||
+                    ch >= '0' && ch <= '9' ||
+                    ch == '-' || ch == '_' || ch == '.')
+                {
+                    urlEncodeLength++;
+                }
+                else
+                {
+                    urlEncodeLength += 3;
+                }
+            }
+
+            return urlEncodeLength;
         }
 
         /// <summary>
@@ -1778,8 +1798,38 @@ namespace Nikse.SubtitleEdit.Core.Common
                 var color = text.Substring(start, end - start).TrimStart('\\').TrimStart('1').TrimStart('c');
                 color = color.RemoveChar('&').TrimStart('H');
                 color = color.PadLeft(6, '0');
-                return AdvancedSubStationAlpha.GetSsaColor("h" + color, defaultColor);
-                //TODO: alpha
+                var c= AdvancedSubStationAlpha.GetSsaColor("h" + color, defaultColor);
+
+
+                // alpha
+                start = text.IndexOf(@"\alpha", StringComparison.Ordinal);
+                if (start >= 0)
+                {
+                    end = text.IndexOf('}', start);
+                    if (end < 0)
+                    {
+                        return defaultColor;
+                    }
+
+                    nextTagIdx = text.IndexOf('\\', start + 2);
+                    if (nextTagIdx > 0 && nextTagIdx < end)
+                    {
+                        end = nextTagIdx;
+                    }
+
+                    if (end > 0)
+                    {
+                        var alpha = text.Substring(start, end - start).TrimStart('\\').Trim();
+                        alpha = alpha.Remove(0, "alpha".Length).Trim('&').TrimStart('H');
+                        if (int.TryParse(alpha, NumberStyles.HexNumber, null, out var a))
+                        {
+                            var realAlpha = byte.MaxValue - a;
+                            c = Color.FromArgb(realAlpha, c);
+                        }
+                    }
+                }
+
+                return c;
             }
 
             return defaultColor;
@@ -1813,6 +1863,39 @@ namespace Nikse.SubtitleEdit.Core.Common
                                 var arr = s.Remove(0, 4).TrimEnd(')').Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                                 return Color.FromArgb(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]));
                             }
+
+                            if (s.StartsWith("rgba(", StringComparison.OrdinalIgnoreCase))
+                            {
+                                var arr = s
+                                    .RemoveChar(' ')
+                                    .Remove(0, 5)
+                                    .TrimEnd(')')
+                                    .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+
+                                var alpha = byte.MaxValue;
+                                if (arr.Length == 4 && float.TryParse(arr[3], NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var f2))
+                                {
+                                    if (f2 >= 0 && f2 < 1)
+                                    {
+                                        alpha = (byte)(f2 * byte.MaxValue);
+                                    }
+                                }
+
+                                return Color.FromArgb(alpha, int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]));
+                            }
+
+                            if (s.Length == 9 && s.StartsWith("#"))
+                            {
+                                if (!int.TryParse(s.Substring(7, 2), NumberStyles.HexNumber, null, out var alpha))
+                                {
+                                    alpha = 255; // full solid color
+                                }
+
+                                s = s.Substring(1, 6);
+                                var c = ColorTranslator.FromHtml("#" + s);
+                                return Color.FromArgb(alpha, c);
+                            }
+
                             return ColorTranslator.FromHtml(s);
                         }
                         catch
@@ -2661,7 +2744,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
                 subtitle.Paragraphs[i].Text = subtitle.Paragraphs[i].Text.TrimEnd();
-                if (subtitle.Paragraphs[i].Duration.TotalMilliseconds < 1)
+                if (subtitle.Paragraphs[i].DurationTotalMilliseconds < 1)
                 {
                     // fix subtitles without duration
                     FixShortDisplayTime(subtitle, i);
@@ -2676,7 +2759,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         {
             Paragraph p = s.Paragraphs[i];
             var minDisplayTime = Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds;
-            double displayTime = p.Duration.TotalMilliseconds;
+            double displayTime = p.DurationTotalMilliseconds;
             if (displayTime < minDisplayTime)
             {
                 var next = s.GetParagraphOrDefault(i + 1);
@@ -3119,6 +3202,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             return s;
+        }
+
+        public static SubtitleFormat GetSubtitleFormatByFriendlyName(object value)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -29,12 +29,12 @@
         private void InitializeComponent()
         {
             this.buttonOpenIfo = new System.Windows.Forms.Button();
-            this.textBoxIfoFileName = new System.Windows.Forms.TextBox();
+            this.textBoxIfoFileName = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelIfoFile = new System.Windows.Forms.Label();
             this.groupBoxDvd = new System.Windows.Forms.GroupBox();
             this.buttonClear = new System.Windows.Forms.Button();
             this.groupBoxLanguages = new System.Windows.Forms.GroupBox();
-            this.comboBoxLanguages = new System.Windows.Forms.ComboBox();
+            this.comboBoxLanguages = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.groupBoxPalNtsc = new System.Windows.Forms.GroupBox();
             this.radioButtonNtsc = new System.Windows.Forms.RadioButton();
             this.radioButtonPal = new System.Windows.Forms.RadioButton();
@@ -314,7 +314,7 @@
         #endregion
 
         private System.Windows.Forms.Button buttonOpenIfo;
-        private System.Windows.Forms.TextBox textBoxIfoFileName;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxIfoFileName;
         private System.Windows.Forms.Label labelIfoFile;
         private System.Windows.Forms.GroupBox groupBoxDvd;
         private System.Windows.Forms.ListBox listBoxVobFiles;
@@ -327,7 +327,7 @@
         private System.Windows.Forms.ProgressBar progressBarRip;
         private System.Windows.Forms.Label labelStatus;
         private System.Windows.Forms.Button buttonStartRipping;
-        private System.Windows.Forms.ComboBox comboBoxLanguages;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxLanguages;
         private System.Windows.Forms.GroupBox groupBoxLanguages;
         private System.Windows.Forms.GroupBox groupBoxPalNtsc;
         private System.Windows.Forms.RadioButton radioButtonNtsc;

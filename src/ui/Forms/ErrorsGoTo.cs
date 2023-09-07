@@ -78,14 +78,14 @@ namespace Nikse.SubtitleEdit.Forms
                     errors.Add($"CPS: {charactersPerSecond:#,###.00} > {Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds}");
                 }
 
-                if (paragraph.Duration.TotalMilliseconds < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
+                if (paragraph.DurationTotalMilliseconds < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
                 {
-                    errors.Add($"Min duration: {paragraph.Duration.TotalMilliseconds:#,###.00} < {Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds}");
+                    errors.Add($"Min duration: {paragraph.DurationTotalMilliseconds:#,###.00} < {Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds}");
                 }
 
-                if (paragraph.Duration.TotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
+                if (paragraph.DurationTotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
                 {
-                    errors.Add($"Max duration: {paragraph.Duration.TotalMilliseconds:#,###.00} > {Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds}");
+                    errors.Add($"Max duration: {paragraph.DurationTotalMilliseconds:#,###.00} > {Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds}");
                 }
 
                 if (i > 0 && i < paragraphs.Count)

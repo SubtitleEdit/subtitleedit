@@ -5,6 +5,7 @@ using System;
 using System.Drawing;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -157,7 +158,7 @@ namespace Nikse.SubtitleEdit.Forms
             else
             {
                 DialogResult = DialogResult.OK;
-                _findAndReplaceMethods.FindDialogFind(FindText, FindReplaceType);
+                _findAndReplaceMethods.FindDialogFind(FindText, FindReplaceType, _regEx);
             }
         }
 
@@ -217,14 +218,14 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 textBoxFind.Visible = false;
                 comboBoxFind.Visible = true;
-                comboBoxFind.Text = selectedText;
-                comboBoxFind.SelectAll();
                 comboBoxFind.Items.Clear();
                 for (var index = 0; index < Configuration.Settings.Tools.FindHistory.Count; index++)
                 {
                     var s = Configuration.Settings.Tools.FindHistory[index];
                     comboBoxFind.Items.Add(s);
                 }
+                comboBoxFind.Text = selectedText;
+                comboBoxFind.SelectAll();
             }
             else
             {
@@ -312,6 +313,18 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             buttonFindPrev.Focus();
+        }
+
+        private void FindDialog_Shown(object sender, EventArgs e)
+        {
+            if (comboBoxFind.Visible)
+            {
+                comboBoxFind.Focus();
+            }
+            else
+            {
+                textBoxFind.Focus();
+            }
         }
     }
 }

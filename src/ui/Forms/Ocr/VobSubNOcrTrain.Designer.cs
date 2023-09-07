@@ -34,23 +34,22 @@
             this.listViewFonts = new System.Windows.Forms.ListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.labelLineSegments = new System.Windows.Forms.Label();
-            this.numericUpDownSegmentsPerCharacter = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownSegmentsPerCharacter = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelSubtitleFontSize = new System.Windows.Forms.Label();
-            this.comboBoxSubtitleFontSize = new System.Windows.Forms.ComboBox();
+            this.comboBoxSubtitleFontSize = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelSubtitleFont = new System.Windows.Forms.Label();
             this.labelSubtitleForTraining = new System.Windows.Forms.Label();
-            this.textBoxInputFile = new System.Windows.Forms.TextBox();
+            this.textBoxInputFile = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.buttonInputChoose = new System.Windows.Forms.Button();
             this.groupBoxInput = new System.Windows.Forms.GroupBox();
             this.labelLetterCombi = new System.Windows.Forms.Label();
-            this.textBoxMerged = new System.Windows.Forms.TextBox();
+            this.textBoxMerged = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.buttonTrain = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
             this.labelInfo = new System.Windows.Forms.Label();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.groupBoxTrainingOptions.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSegmentsPerCharacter)).BeginInit();
             this.groupBoxInput.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -389,7 +388,6 @@
             this.Shown += new System.EventHandler(this.VobSubNOcrTrain_Shown);
             this.groupBoxTrainingOptions.ResumeLayout(false);
             this.groupBoxTrainingOptions.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSegmentsPerCharacter)).EndInit();
             this.groupBoxInput.ResumeLayout(false);
             this.groupBoxInput.PerformLayout();
             this.ResumeLayout(false);
@@ -401,14 +399,14 @@
 
         private System.Windows.Forms.GroupBox groupBoxTrainingOptions;
         private System.Windows.Forms.Button buttonInputChoose;
-        private System.Windows.Forms.TextBox textBoxInputFile;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxInputFile;
         private System.Windows.Forms.Label labelSubtitleForTraining;
         private System.Windows.Forms.Label labelSubtitleFontSize;
-        private System.Windows.Forms.ComboBox comboBoxSubtitleFontSize;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxSubtitleFontSize;
         private System.Windows.Forms.Label labelSubtitleFont;
         private System.Windows.Forms.ListView listViewFonts;
         private System.Windows.Forms.Label labelLineSegments;
-        private System.Windows.Forms.NumericUpDown numericUpDownSegmentsPerCharacter;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownSegmentsPerCharacter;
         private System.Windows.Forms.GroupBox groupBoxInput;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.Button buttonTrain;
@@ -418,7 +416,7 @@
         private System.Windows.Forms.CheckBox checkBoxBold;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.Label labelLetterCombi;
-        private System.Windows.Forms.TextBox textBoxMerged;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxMerged;
         private System.Windows.Forms.CheckBox checkBoxItalic;
     }
 }
