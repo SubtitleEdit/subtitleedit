@@ -1189,9 +1189,16 @@ namespace Nikse.SubtitleEdit.Forms
         {
             SelectListViewIndexAndEnsureVisible(_subtitle.GetIndex(e.Paragraph));
 
-
             addParagraphHereToolStripMenuItem.Visible = true;
-            addParagraphAndPasteToolStripMenuItem.Visible = Clipboard.ContainsText();
+
+            try
+            {
+                addParagraphAndPasteToolStripMenuItem.Visible = Clipboard.ContainsText();
+            }
+            catch
+            {
+                addParagraphAndPasteToolStripMenuItem.Visible = false;
+            }
 
             if (SubtitleListview1.SelectedIndices.Count == 1)
             {
@@ -9567,7 +9574,15 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            toolStripMenuItemPasteSpecial.Visible = Clipboard.ContainsText();
+            try
+            {
+                toolStripMenuItemPasteSpecial.Visible = Clipboard.ContainsText();
+            }
+            catch
+            {
+                toolStripMenuItemPasteSpecial.Visible = false;
+            }
+
             toolStripMenuItemSurroundWithMusicSymbols.Text = Configuration.Settings.Tools.MusicSymbol;
             if (string.IsNullOrEmpty(Configuration.Settings.Tools.MusicSymbol))
             {
@@ -20987,7 +21002,18 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.KeyCode == Keys.V && e.Modifiers == Keys.Control) //Ctrl+V = Paste from clipboard
             {
-                if (Clipboard.ContainsText())
+                bool containsText ;
+                try
+                {
+                    containsText = Clipboard.ContainsText();
+                }
+                catch
+                {
+                    e.SuppressKeyPress = true;
+                    return;
+                }
+
+                if (containsText)
                 {
                     var isAssa = IsAssa();
                     var text = Clipboard.GetText();
