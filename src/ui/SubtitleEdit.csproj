@@ -8,7 +8,7 @@
 		<AssemblyName>SubtitleEdit</AssemblyName>
 		<StartupObject>Nikse.SubtitleEdit.Program</StartupObject>
 		<AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-		<ApplicationIcon>SE2.ico</ApplicationIcon>
+		<ApplicationIcon>SE.ico</ApplicationIcon>
 		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -27,8 +27,8 @@
 	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Windows.Compatibility" Version="7.0.4" />
-		<PackageReference Include="NAudio.Core" Version="2.1.0" />
-		<PackageReference Include="NAudio.WinMM" Version="2.1.0" />
+		<PackageReference Include="NAudio.Core" Version="2.2.1" />
+		<PackageReference Include="NAudio.WinMM" Version="2.2.1" />
 		<PackageReference Include="ncalc" Version="1.3.8" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 		<PackageReference Include="NHunspell" Version="1.2.5554.16953" />
@@ -100,10 +100,6 @@
 			<ProductName>Windows Installer 3.1</ProductName>
 			<Install>true</Install>
 		</BootstrapperPackage>
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Content Include="SE2.ico" />
 	</ItemGroup>
 
 	<ItemGroup>
