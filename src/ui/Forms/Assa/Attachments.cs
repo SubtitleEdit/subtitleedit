@@ -429,6 +429,9 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 return;
             }
 
+            labelInfo.Visible = false;
+            textBoxInfo.Visible = false;
+
             var idx = listViewAttachments.SelectedItems[0].Index;
             var list = new List<int>();
             foreach (int i in listViewAttachments.SelectedIndices)
