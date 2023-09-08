@@ -473,6 +473,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         }
 
         // 1HD = first HD subtitle, 2SD = second SD subtitle
-        public override List<string> AlternateExtensions => new List<string> { ".2HD", ".1SD", ".2SD" };
+        public override List<string> AlternateExtensions { get; } = new List<string> { ".2hd", ".1sd", ".2sd" };
     }
 }
