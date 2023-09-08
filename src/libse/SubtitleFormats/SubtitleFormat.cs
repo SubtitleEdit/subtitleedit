@@ -272,7 +272,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new UnknownSubtitle22(),
                     new UnknownSubtitle23(),
                     new UnknownSubtitle24(),
-                    new UnknownSubtitle25(),
+                    new MpSub(),
                     new UnknownSubtitle26(),
                     new UnknownSubtitle27(),
                     new UnknownSubtitle28(),
