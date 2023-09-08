@@ -207,6 +207,7 @@
             this.listViewStyles.TabIndex = 0;
             this.listViewStyles.UseCompatibleStateImageBehavior = false;
             this.listViewStyles.View = System.Windows.Forms.View.Details;
+            this.listViewStyles.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.ListViewStylesSortColumnClick);
             this.listViewStyles.SelectedIndexChanged += new System.EventHandler(this.listViewStyles_SelectedIndexChanged);
             this.listViewStyles.ClientSizeChanged += new System.EventHandler(this.listViewStyles_ClientSizeChanged);
             this.listViewStyles.Enter += new System.EventHandler(this.listViewStyles_Enter);
@@ -1606,6 +1607,7 @@
             this.listViewStorage.TabIndex = 6;
             this.listViewStorage.UseCompatibleStateImageBehavior = false;
             this.listViewStorage.View = System.Windows.Forms.View.Details;
+            this.listViewStorage.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.listViewStorage_ColumnClick);
             this.listViewStorage.SelectedIndexChanged += new System.EventHandler(this.listViewStorage_SelectedIndexChanged);
             this.listViewStorage.ClientSizeChanged += new System.EventHandler(this.listViewStorage_ClientSizeChanged);
             this.listViewStorage.Enter += new System.EventHandler(this.listViewStorage_Enter);

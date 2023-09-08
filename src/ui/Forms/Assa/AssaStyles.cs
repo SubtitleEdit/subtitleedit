@@ -446,7 +446,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             }
         }
 
-        private List<string> GetFontNames(byte[] fontBytes)
+        private static List<string> GetFontNames(byte[] fontBytes)
         {
             var privateFontCollection = new PrivateFontCollection();
             var handle = GCHandle.Alloc(fontBytes, GCHandleType.Pinned);
@@ -2924,6 +2924,64 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 UpdateListViewFontStyle(GetSsaStyle(name));
                 GeneratePreview();
             }
+        }
+
+        private void ListViewStylesSortColumnClick(object sender, ColumnClickEventArgs e)
+        {
+            var lv = (ListView)sender;
+            if (!(lv.ListViewItemSorter is ListViewSorter sorter))
+            {
+                sorter = new ListViewSorter
+                {
+                    ColumnNumber = e.Column,
+                    IsNumber = e.Column == 2 || e.Column == 3,
+                    IsDisplayFileSize = false,
+                };
+                lv.ListViewItemSorter = sorter;
+            }
+
+            if (e.Column == sorter.ColumnNumber)
+            {
+                sorter.Descending = !sorter.Descending; // inverse sort direction
+            }
+            else
+            {
+                sorter.ColumnNumber = e.Column;
+                sorter.Descending = false;
+                sorter.IsNumber = e.Column == 2 || e.Column == 3;
+                sorter.IsDisplayFileSize = false;
+            }
+
+            lv.Sort();
+        }
+
+        private void listViewStorage_ColumnClick(object sender, ColumnClickEventArgs e)
+        {
+            var lv = (ListView)sender;
+            if (!(lv.ListViewItemSorter is ListViewSorter sorter))
+            {
+                sorter = new ListViewSorter
+                {
+                    ColumnNumber = e.Column,
+                    IsNumber = e.Column == 2,
+                    IsDisplayFileSize = false,
+                };
+                lv.ListViewItemSorter = sorter;
+            }
+
+            if (e.Column == sorter.ColumnNumber)
+            {
+                sorter.Descending = !sorter.Descending; // inverse sort direction
+            }
+            else
+            {
+                sorter.ColumnNumber = e.Column;
+                sorter.Descending = false;
+                sorter.IsNumber = e.Column == 2;
+                sorter.IsDisplayFileSize = false;
+            }
+
+            lv.Sort();
         }
     }
 }

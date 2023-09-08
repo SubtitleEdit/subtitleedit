@@ -1,5 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using System;
+using System.Globalization;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Logic
@@ -11,6 +13,8 @@ namespace Nikse.SubtitleEdit.Logic
         public bool IsDisplayFileSize { get; set; }
         public bool Descending { get; set; }
 
+        private Regex _invariantNumber = new Regex(@"\d+\.{1,2}", RegexOptions.Compiled);
+
         public int Compare(object o1, object o2)
         {
             if (!(o1 is ListViewItem lvi1) || !(o2 is ListViewItem lvi2))
@@ -20,17 +24,25 @@ namespace Nikse.SubtitleEdit.Logic
 
             if (Descending)
             {
-                var temp = lvi1;
-                lvi1 = lvi2;
-                lvi2 = temp;
+                (lvi1, lvi2) = (lvi2, lvi1);
             }
 
             if (IsNumber)
             {
-                if (int.TryParse(lvi1.SubItems[ColumnNumber].Text, out var i1) &&
-                    int.TryParse(lvi2.SubItems[ColumnNumber].Text, out var i2))
+                var s1 = lvi1.SubItems[ColumnNumber].Text;
+                var s2 = lvi2.SubItems[ColumnNumber].Text;
+
+                if (_invariantNumber.IsMatch(s1) && _invariantNumber.IsMatch(s2) && 
+                    int.TryParse(s1, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var i1) &&
+                    int.TryParse(s2, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var i2))
                 {
                     return i1 > i2 ? 1 : i1 == i2 ? 0 : -1;
+                }
+
+                if (int.TryParse(s1, out var ii1) &&
+                    int.TryParse(s2, out var ii2))
+                {
+                    return ii1 > ii2 ? 1 : ii1 == ii2 ? 0 : -1;
                 }
             }
 
