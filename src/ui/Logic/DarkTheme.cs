@@ -839,6 +839,12 @@ namespace Nikse.SubtitleEdit.Logic
                 e.Graphics.Clear(BackColor);
             }
 
+            protected override void OnRenderItemText(ToolStripItemTextRenderEventArgs e)
+            {
+                e.TextColor = ForeColor;
+                base.OnRenderItemText(e);
+            }
+
             protected override void OnRenderOverflowButtonBackground(ToolStripItemRenderEventArgs e)
             {
                 e.Graphics.Clear(BackColor);
