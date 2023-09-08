@@ -7,7 +7,8 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class UnknownSubtitle25 : SubtitleFormat
+    // https://github.com/larsmagne/mplayer/blob/master/DOCS/tech/mpsub.sub
+    public class MpSub : SubtitleFormat
     {
         //79.29 1.63
         private static readonly Regex RegexTimeCode1 = new Regex(@"^\d+\.[0-9]{1,2} \d+\.[0-9]{1,2}$", RegexOptions.Compiled);
@@ -16,7 +17,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string Extension => ".sub";
 
-        public override string Name => "Unknown 25";
+        public override string Name => "MpSub";
 
         public override string ToText(Subtitle subtitle, string title)
         {
