@@ -20069,6 +20069,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void MoveStartCurrent(int ms, bool keepGapPrevIfClose)
         {
+            StopAutoDuration();
             var i = _subtitleListViewIndex;
             if (i < 0 || i >= _subtitle.Paragraphs.Count || ms == 0)
             {
@@ -20181,6 +20182,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void MoveEndCurrent(int ms, bool keepGapNextIfClose)
         {
+            StopAutoDuration();
             var i = _subtitleListViewIndex;
             if (i < 0 || i >= _subtitle.Paragraphs.Count || ms == 0)
             {
