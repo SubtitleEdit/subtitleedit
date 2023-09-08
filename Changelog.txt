@@ -1,5 +1,24 @@
 ﻿Subtitle Edit Changelog
 
+4.0.1 (xth September 2023) - BETA
+* NEW:
+   * Support for import of Ooona shot change file - thx Eva
+* IMPROVED:
+   * Update Polish translation - thx admas
+   * Update Brazilian Portuguese translation - thx igorruckert
+   * Improve "Dark theme" a little
+   * Improve mpv download UI a little - thx Mishasama
+* FIXED:
+   * Fix video player gfx for installer version - thx David
+   * Fix asking for unneeded Purfview Faster Whisper Update - thx abc16361
+   * Fix keeping colors after restart - thx Cyprien-22
+   * Fix error handling for clip board - thx jmaraujouy
+   * Fix for zoom waveform drop down width - thx oep42
+   * Fix PAC on Linux - thx  PunchaiW
+   * Fix EBU STL on Linux
+   * Fix for using selected text in Find/Replace - thx Daniel
+
+
 4.0.0 (4th September 2023)
 * NEW:
    * New toolbar/video-player themes - thx jmaraujouy
