@@ -14,7 +14,7 @@ namespace Test.Logic
             var tc2 = TimeCode.Zero;
             
             // assert different instance
-            Assert.AreNotEqual(tc, tc2);
+            Assert.AreNotSame(tc, tc2);
         }
         
         [TestMethod]
