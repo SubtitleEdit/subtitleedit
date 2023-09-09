@@ -123,7 +123,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             var milliseconds = int.Parse(parts[2]) * 10;
                             var text = line.Remove(0, 9).Trim().TrimStart(']').Trim();
                             var start = new TimeCode(0, minutes, seconds, milliseconds);
-                            var p = new Paragraph(start, new TimeCode(), text);
+                            var p = new Paragraph(start, TimeCode.Zero, text);
                             subtitle.Paragraphs.Add(p);
                         }
                         catch
@@ -239,7 +239,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         var milliseconds = int.Parse(parts[2]) * 10;
                         var text = GetTextAfterTimeCodes(p.Text);
                         var start = new TimeCode(0, minutes, seconds, milliseconds);
-                        var newParagraph = new Paragraph(start, new TimeCode(), text);
+                        var newParagraph = new Paragraph(start, TimeCode.Zero, text);
                         subtitle.Paragraphs.Add(newParagraph);
                     }
                     catch

@@ -164,7 +164,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 TimeCode end;
                 if (buffer[i + 10] == 0xff && buffer[i + 11] == 0xff && buffer[i + 12] == 0xff && buffer[i + 13] == 0xff)
                 {
-                    end = new TimeCode();
+                    end = TimeCode.Zero;
                 }
                 else
                 {

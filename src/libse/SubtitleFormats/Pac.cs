@@ -2441,7 +2441,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                 return new TimeCode(hours, minutes, seconds, FramesToMillisecondsMax999(frames));
             }
-            return new TimeCode();
+            return TimeCode.Zero;
         }
 
         private static KeyValuePair<int, SpecialCharacter>? Find(Dictionary<int, SpecialCharacter> list, string letter)

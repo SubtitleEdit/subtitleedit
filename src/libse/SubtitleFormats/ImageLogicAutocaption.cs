@@ -77,11 +77,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         string[] arr = s.Split('\t');
                         if (arr.Length > 2)
                         {
-                            p = new Paragraph(DecodeTimeCodeFrames(arr[1], splitChars), new TimeCode(), arr[2].Trim());
+                            p = new Paragraph(DecodeTimeCodeFrames(arr[1], splitChars), TimeCode.Zero, arr[2].Trim());
                         }
                         else
                         {
-                            p = new Paragraph(DecodeTimeCodeFrames(arr[1], splitChars), new TimeCode(), string.Empty);
+                            p = new Paragraph(DecodeTimeCodeFrames(arr[1], splitChars), TimeCode.Zero, string.Empty);
                         }
                     }
                     catch

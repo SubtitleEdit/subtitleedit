@@ -369,7 +369,7 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 if (_loading)
                 {
-                    return new TimeCode();
+                    return TimeCode.Zero;
                 }
 
                 if (string.IsNullOrWhiteSpace(_maskedTextBox.Text.RemoveChar('.').Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, string.Empty).RemoveChar(',', ':')))

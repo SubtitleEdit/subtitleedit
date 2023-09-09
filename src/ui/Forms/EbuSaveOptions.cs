@@ -272,7 +272,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             catch (Exception)
             {
-                timeUpDownStartTime.TimeCode = new TimeCode();
+                timeUpDownStartTime.TimeCode = TimeCode.Zero;
             }
 
             if (int.TryParse(header.RevisionNumber, out int number))

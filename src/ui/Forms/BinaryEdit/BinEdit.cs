@@ -1323,8 +1323,8 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
         {
             if (subtitleListView1.SelectedItems.Count < 1)
             {
-                timeUpDownStartTime.TimeCode = new TimeCode();
-                timeUpDownEndTime.TimeCode = new TimeCode();
+                timeUpDownStartTime.TimeCode = TimeCode.Zero;
+                timeUpDownEndTime.TimeCode = TimeCode.Zero;
                 numericUpDownX.Value = 0;
                 numericUpDownY.Value = 0;
                 labelSyntaxError.Text = string.Empty;

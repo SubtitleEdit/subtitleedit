@@ -113,7 +113,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 p.EndTime.TotalMilliseconds = start.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
                             }
 
-                            TimeCode end = new TimeCode();
+                            TimeCode end = TimeCode.Zero;
                             p = MakeTextParagraph(text, start, end);
                             subtitle.Paragraphs.Add(p);
                             text.Clear();

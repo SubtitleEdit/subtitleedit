@@ -223,7 +223,7 @@ namespace Nikse.SubtitleEdit.Controls
                     }
                     FontSizeFactor = 1.0F;
                     SetSubtitleFont();
-                    _labelTimeCode.Text = $"{new TimeCode().ToDisplayString()} / ?";
+                    _labelTimeCode.Text = $"{TimeCode.Zero.ToDisplayString()} / ?";
                     ShowAllControls();
                     VideoPlayerContainerResize(this, null);
                     ShowAllControls();

@@ -128,7 +128,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private TimeCode DecodeTimeCode(string[] parts)
         {
-            var tc = new TimeCode();
+            var tc = TimeCode.Zero;
             try
             {
                 int hour = int.Parse(parts[0]);

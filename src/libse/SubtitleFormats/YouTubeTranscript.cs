@@ -55,12 +55,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 var s = line.TrimEnd();
                 if (RegexTimeCodes.IsMatch(s))
                 {
-                    p = new Paragraph(DecodeTimeCode(s), new TimeCode(), string.Empty);
+                    p = new Paragraph(DecodeTimeCode(s), TimeCode.Zero, string.Empty);
                     subtitle.Paragraphs.Add(p);
                 }
                 else if (RegexTimeCodesHours.IsMatch(s))
                 {
-                    p = new Paragraph(DecodeTimeCodeWithHours(s), new TimeCode(), string.Empty);
+                    p = new Paragraph(DecodeTimeCodeWithHours(s), TimeCode.Zero, string.Empty);
                     subtitle.Paragraphs.Add(p);
                 }
                 else if (string.IsNullOrWhiteSpace(s))

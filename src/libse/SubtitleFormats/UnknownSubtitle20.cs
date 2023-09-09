@@ -84,7 +84,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 subtitle.Paragraphs.Add(p);
                             }
 
-                            p = new Paragraph(DecodeTimeCodeFrames(s.Substring(5, 11), SplitCharColon), new TimeCode(), s.Remove(0, 37).Trim());
+                            p = new Paragraph(DecodeTimeCodeFrames(s.Substring(5, 11), SplitCharColon), TimeCode.Zero, s.Remove(0, 37).Trim());
                         }
                         catch
                         {
@@ -101,7 +101,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 subtitle.Paragraphs.Add(p);
                             }
 
-                            p = new Paragraph(DecodeTimeCodeFrames(s.Substring(5, 11), SplitCharColon), new TimeCode(), string.Empty);
+                            p = new Paragraph(DecodeTimeCodeFrames(s.Substring(5, 11), SplitCharColon), TimeCode.Zero, string.Empty);
                         }
                         catch
                         {

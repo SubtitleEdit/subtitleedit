@@ -578,7 +578,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                 }
             }
-            return new TimeCode();
+            return TimeCode.Zero;
         }
     }
 }

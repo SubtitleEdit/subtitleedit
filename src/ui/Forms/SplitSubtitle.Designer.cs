@@ -30,7 +30,7 @@ namespace Nikse.SubtitleEdit.Forms
         /// </summary>
         private void InitializeComponent()
         {
-            TimeCode timeCode1 = new TimeCode();
+            TimeCode timeCode1 = TimeCode.Zero;
             this.buttonGetFrameRate = new System.Windows.Forms.Button();
             this.buttonDone = new System.Windows.Forms.Button();
             this.buttonSplit = new System.Windows.Forms.Button();

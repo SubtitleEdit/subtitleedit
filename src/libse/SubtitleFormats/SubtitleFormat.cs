@@ -515,7 +515,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             if (tokens == null)
             {
-                return new TimeCode();
+                return TimeCode.Zero;
             }
 
             if (tokens.Length != 2)
@@ -530,7 +530,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             if (tokens == null)
             {
-                return new TimeCode();
+                return TimeCode.Zero;
             }
 
             if (tokens.Length != 4)
@@ -555,7 +555,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             if (tokens == null)
             {
-                return new TimeCode();
+                return TimeCode.Zero;
             }
 
             if (tokens.Length != 4)

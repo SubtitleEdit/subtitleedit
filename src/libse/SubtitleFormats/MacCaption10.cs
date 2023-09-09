@@ -85,7 +85,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             Configuration.Settings.General.CurrentFrameRate = GetFrameForCalculation(29.97);
 
-            var timeCode = new TimeCode();
+            var timeCode = TimeCode.Zero;
             if (subtitle.Paragraphs.Count > 0 && subtitle.Paragraphs[0].StartTime.Hours > 0)
             {
                 timeCode = new TimeCode(subtitle.Paragraphs[0].StartTime.Hours, 0, 0, 0);

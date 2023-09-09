@@ -30,8 +30,8 @@ namespace Nikse.SubtitleEdit.Forms
         /// </summary>
         private void InitializeComponent()
         {
-            TimeCode timeCode1 = new TimeCode();
-            TimeCode timeCode2 = new TimeCode();
+            TimeCode timeCode1 = TimeCode.Zero;
+            TimeCode timeCode2 = TimeCode.Zero;
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.buttonOpenVideo = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();

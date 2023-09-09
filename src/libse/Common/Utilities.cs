@@ -2818,7 +2818,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                                 if (int.TryParse(arr[0], out var hour) && int.TryParse(arr[1], out var min) &&
                                     int.TryParse(arr[2], out var sec) && int.TryParse(arr[3], out var ms))
                                 {
-                                    comments.Paragraphs.Add(new Paragraph(new TimeCode(hour, min, sec, ms * 10), new TimeCode(), line));
+                                    comments.Paragraphs.Add(new Paragraph(new TimeCode(hour, min, sec, ms * 10), TimeCode.Zero, line));
                                 }
                             }
                         }

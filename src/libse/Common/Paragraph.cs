@@ -54,7 +54,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             return Guid.NewGuid().ToString();
         }
 
-        public Paragraph() : this(new TimeCode(), new TimeCode(), string.Empty)
+        public Paragraph() : this(TimeCode.Zero, TimeCode.Zero, string.Empty)
         {
         }
 

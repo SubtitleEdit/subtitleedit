@@ -60,7 +60,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         {
                             string text = s.Remove(0, 10).Trim();
                             text = text.Replace("  ", Environment.NewLine);
-                            p = new Paragraph(DecodeTimeCode(startParts), new TimeCode(), text);
+                            p = new Paragraph(DecodeTimeCode(startParts), TimeCode.Zero, text);
                             subtitle.Paragraphs.Add(p);
                         }
                         catch (Exception exception)

@@ -65,7 +65,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         {
                             var start = GetTimeCode(arr[0].Trim());
                             var text = s.Remove(0, 8).Trim();
-                            paragraph = new Paragraph(start, new TimeCode(), text);
+                            paragraph = new Paragraph(start, TimeCode.Zero, text);
                             paragraph.EndTime.TotalMilliseconds = paragraph.StartTime.TotalMilliseconds + Utilities.GetOptimalDisplayMilliseconds(paragraph.Text);
                             subtitle.Paragraphs.Add(paragraph);
                         }
@@ -92,7 +92,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 return new TimeCode(hours, minutes, seconds, 0);
             }
-            return new TimeCode();
+            return TimeCode.Zero;
         }
     }
 }

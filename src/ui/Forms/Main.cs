@@ -403,7 +403,7 @@ namespace Nikse.SubtitleEdit.Forms
                 labelSingleLinePixels.Text = string.Empty;
                 labelTextOriginalLineTotal.Text = string.Empty;
                 Text = Title;
-                timeUpDownStartTime.TimeCode = new TimeCode();
+                timeUpDownStartTime.TimeCode = TimeCode.Zero;
                 timeUpDownStartTime.UseVideoOffset = true;
                 timeUpDownVideoPosition.UseVideoOffset = true;
                 timeUpDownVideoPositionAdjust.UseVideoOffset = true;
@@ -503,8 +503,8 @@ namespace Nikse.SubtitleEdit.Forms
                 mediaPlayer.SubtitleText = string.Empty;
                 comboBoxAutoContinue.SelectedIndex = Configuration.Settings.General.AutoContinueDelay;
 
-                timeUpDownVideoPosition.TimeCode = new TimeCode();
-                timeUpDownVideoPositionAdjust.TimeCode = new TimeCode();
+                timeUpDownVideoPosition.TimeCode = TimeCode.Zero;
+                timeUpDownVideoPositionAdjust.TimeCode = TimeCode.Zero;
                 timeUpDownVideoPosition.TimeCodeChanged += VideoPositionChanged;
                 timeUpDownVideoPositionAdjust.TimeCodeChanged += VideoPositionChanged;
                 timeUpDownVideoPosition.Enabled = false;
@@ -5373,12 +5373,12 @@ namespace Nikse.SubtitleEdit.Forms
                     mediaPlayer.PauseAndDisposePlayer();
                 }
 
-                timeUpDownVideoPositionAdjust.TimeCode = new TimeCode();
+                timeUpDownVideoPositionAdjust.TimeCode = TimeCode.Zero;
                 timeUpDownVideoPositionAdjust.Enabled = false;
-                timeUpDownVideoPosition.TimeCode = new TimeCode();
+                timeUpDownVideoPosition.TimeCode = TimeCode.Zero;
                 timeUpDownVideoPosition.Enabled = false;
                 trackBarWaveformPosition.Value = 0;
-                timeUpDownStartTime.TimeCode = new TimeCode();
+                timeUpDownStartTime.TimeCode = TimeCode.Zero;
                 numericUpDownDuration.Value = 0;
                 SetWaveFormNotLoadedText(LanguageSettings.Current.Waveform);
             }
@@ -10085,7 +10085,7 @@ namespace Nikse.SubtitleEdit.Forms
                 textBoxListViewText.Enabled = false;
                 labelSingleLine.Text = string.Empty;
                 labelSingleLinePixels.Text = string.Empty;
-                timeUpDownStartTime.TimeCode = new TimeCode();
+                timeUpDownStartTime.TimeCode = TimeCode.Zero;
                 numericUpDownDuration.Value = 0;
                 ShowHideBookmark(new Paragraph());
                 labelOriginalSingleLine.Text = string.Empty;
@@ -28925,9 +28925,9 @@ namespace Nikse.SubtitleEdit.Forms
             audioVisualizer.ShotChanges = new List<double>();
             audioVisualizer.Chapters = Array.Empty<MatroskaChapter>();
             trackBarWaveformPosition.Value = 0;
-            timeUpDownVideoPositionAdjust.TimeCode = new TimeCode();
+            timeUpDownVideoPositionAdjust.TimeCode = TimeCode.Zero;
             timeUpDownVideoPositionAdjust.Enabled = false;
-            timeUpDownVideoPosition.TimeCode = new TimeCode();
+            timeUpDownVideoPosition.TimeCode = TimeCode.Zero;
             timeUpDownVideoPosition.Enabled = false;
             closeVideoToolStripMenuItem.Enabled = false;
             CheckSecondSubtitleReset();

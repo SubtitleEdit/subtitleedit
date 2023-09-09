@@ -47,7 +47,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     var splitter = line.IndexOf(':') + 3;
                     var text = line.Remove(0, splitter);
-                    var p = new Paragraph(DecodeTimeCode(line.Substring(0, splitter)), new TimeCode(), text);
+                    var p = new Paragraph(DecodeTimeCode(line.Substring(0, splitter)), TimeCode.Zero, text);
                     subtitle.Paragraphs.Add(p);
                     text = text.Trim().Trim(trimChars).Trim();
                     if (text.Length > 0 && char.IsDigit(text[0]))
@@ -59,7 +59,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     var matchHours = RegexTimeCodesHours.Match(line);
                     var text = line.Remove(0, matchHours.Length);
-                    var p = new Paragraph(DecodeTimeCodeHours(line.Substring(0, matchHours.Length)), new TimeCode(), text);
+                    var p = new Paragraph(DecodeTimeCodeHours(line.Substring(0, matchHours.Length)), TimeCode.Zero, text);
                     subtitle.Paragraphs.Add(p);
                     text = text.Trim().Trim(trimChars).Trim();
                     if (text.Length > 0 && char.IsDigit(text[0]))

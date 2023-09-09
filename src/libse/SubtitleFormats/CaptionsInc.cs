@@ -115,7 +115,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             catch (Exception exception)
             {
                 System.Diagnostics.Debug.WriteLine(exception.Message);
-                return new TimeCode();
+                return TimeCode.Zero;
             }
         }
 

@@ -44,7 +44,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             if (tokens.Length != 5)
             {
-                return new TimeCode();
+                return TimeCode.Zero;
             }
 
             return new TimeCode(int.Parse(tokens[0]), int.Parse(tokens[1]), int.Parse(tokens[2]), int.Parse(tokens[3]) * 10 + int.Parse(tokens[4]) / 10);

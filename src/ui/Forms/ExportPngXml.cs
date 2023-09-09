@@ -1933,7 +1933,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         fullSize.Save(fileName2, ImageFormat.Png);
                         fullSize.Dispose();
 
-                        string line = $"{i:000}  {fileName1}  V     C        {new TimeCode().ToHHMMSSFF()} {param.P.Duration.ToHHMMSSFF()} {param.P.StartTime.ToHHMMSSFF()} {param.P.EndTime.ToHHMMSSFF()}";
+                        string line = $"{i:000}  {fileName1}  V     C        {TimeCode.Zero.ToHHMMSSFF()} {param.P.Duration.ToHHMMSSFF()} {param.P.StartTime.ToHHMMSSFF()} {param.P.EndTime.ToHHMMSSFF()}";
                         sb.AppendLine(line);
                         if (_exportType == ExportFormats.EdlClipName)
                         {

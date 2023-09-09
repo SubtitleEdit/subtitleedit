@@ -143,7 +143,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
             catch
             {
-                return new TimeCode();
+                return TimeCode.Zero;
             }
         }
     }

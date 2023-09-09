@@ -88,7 +88,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     </ContentBlock>";
 
             var xml = new XmlDocument();
-            var lastTimeCode = new TimeCode();
+            var lastTimeCode = TimeCode.Zero;
             if (subtitle.Paragraphs.Count > 0)
             {
                 lastTimeCode = subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].StartTime;

@@ -122,7 +122,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         return new TimeCode(hours, minutes, seconds, FramesToMillisecondsMax999(frames));
                     }
                 }
-                return new TimeCode();
+                return TimeCode.Zero;
             }
 
             public TimeCode GetStartTime()
@@ -135,7 +135,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 string trimmed = EraseTiming.Trim();
                 if (trimmed == "F" || trimmed == "0" || trimmed.Length == 0)
                 {
-                    return new TimeCode();
+                    return TimeCode.Zero;
                 }
 
                 return GetTime(EraseTiming, SpecifiedTimingUnit);

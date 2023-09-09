@@ -127,7 +127,7 @@ version=1.1
                 }
 
                 text = text.Replace("\\r", Environment.NewLine).Trim();
-                subtitle.Paragraphs.Add(new Paragraph(start, new TimeCode(), text));
+                subtitle.Paragraphs.Add(new Paragraph(start, TimeCode.Zero, text));
             }
 
             if (subtitle.Paragraphs.Count == 0)

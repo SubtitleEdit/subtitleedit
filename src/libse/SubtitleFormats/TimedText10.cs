@@ -966,7 +966,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             string endAttr = TryGetAttribute(paragraph, "end", TtmlNamespace);
             string durAttr = TryGetAttribute(paragraph, "dur", TtmlNamespace);
 
-            begin = new TimeCode();
+            begin = TimeCode.Zero;
             if (beginAttr.Length > 0)
             {
                 begin = GetTimeCode(beginAttr, IsFrames(beginAttr));

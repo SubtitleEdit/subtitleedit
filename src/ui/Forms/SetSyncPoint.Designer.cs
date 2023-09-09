@@ -31,7 +31,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            TimeCode timeCode1 = new TimeCode();
+            TimeCode timeCode1 = TimeCode.Zero;
             this.groupBoxSyncPointTimeCode = new System.Windows.Forms.GroupBox();
             this.timeUpDownLine = new Nikse.SubtitleEdit.Controls.NikseTimeUpDown();
             this.groupBox2 = new System.Windows.Forms.GroupBox();

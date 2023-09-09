@@ -57,7 +57,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
                 else if (!string.IsNullOrEmpty(s) && char.IsDigit(s[0]) && RegexTimeCodes1.IsMatch(s) || RegexTimeCodes2.IsMatch(s))
                 {
-                    p = new Paragraph(DecodeTimeCode(s), new TimeCode(), string.Empty) { Actor = speaker };
+                    p = new Paragraph(DecodeTimeCode(s), TimeCode.Zero, string.Empty) { Actor = speaker };
                     subtitle.Paragraphs.Add(p);
                     if (string.IsNullOrEmpty(speaker) || Utilities.RemoveNonNumbers(speaker).Length == speaker.Length)
                     {
