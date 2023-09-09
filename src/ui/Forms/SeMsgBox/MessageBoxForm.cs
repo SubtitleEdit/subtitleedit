@@ -186,6 +186,12 @@ namespace Nikse.SubtitleEdit.Forms.SeMsgBox
                 buttonControl.TabIndex = Math.Max(0, start);
                 start += buttonWidth + 10;
             }
+
+            if (buttonControls.Count > 0)
+            {
+                AcceptButton = buttonControls[0];
+                buttonControls[0].NotifyDefault(true);
+            }
         }
 
         private void buttonYes_Click(object sender, EventArgs e)
