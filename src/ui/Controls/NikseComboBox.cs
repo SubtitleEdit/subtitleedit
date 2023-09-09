@@ -520,7 +520,7 @@ namespace Nikse.SubtitleEdit.Controls
 
             MouseWheel += (sender, e) =>
             {
-                if (!Focused)
+                if (_textBox == null || !(_textBox.Focused || base.Focused))
                 {
                     return;
                 }
