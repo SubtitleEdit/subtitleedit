@@ -68,7 +68,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             return 0;
         }
 
-        public TimeCode()
+        private TimeCode()
         {
         }
 
