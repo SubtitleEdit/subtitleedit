@@ -8,6 +8,25 @@ namespace Test.Logic
     public class TimeCodeTest
     {
         [TestMethod]
+        public void TimeCodeZeroReference()
+        {
+            var tc = TimeCode.Zero;
+            var tc2 = TimeCode.Zero;
+            
+            // assert different instance
+            Assert.AreNotEqual(tc, tc2);
+        }
+        
+        [TestMethod]
+        public void TimeCodeZeroValue()
+        {
+            var tc = TimeCode.Zero;
+            var tc2 = TimeCode.Zero;
+            // compare the values
+            Assert.AreEqual(tc, tc2);
+        }
+        
+        [TestMethod]
         public void TimeCodeDaysTest()
         {
             var tc = new TimeCode(24 * 3, 0, 0, 0)

@@ -4,7 +4,7 @@ using System.Globalization;
 
 namespace Nikse.SubtitleEdit.Core.Common
 {
-    public class TimeCode
+    public class TimeCode : IEquatable<TimeCode>
     {
         private static readonly char[] TimeSplitChars = { ':', ',', '.' };
         public const double BaseUnit = 1000.0; // Base unit of time
@@ -327,5 +327,43 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             return ToShortString(true);
         }
+
+        public bool Equals(TimeCode other)
+        {
+            if (ReferenceEquals(null, other))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+
+            const double tolerance = 0.01d;
+            return Math.Abs(TotalMilliseconds - other.TotalMilliseconds) < tolerance;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+
+            return Equals((TimeCode)obj);
+        }
+
+        public override int GetHashCode() => TotalMilliseconds.GetHashCode();
     }
 }

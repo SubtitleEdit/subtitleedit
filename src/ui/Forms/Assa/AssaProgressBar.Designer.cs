@@ -29,7 +29,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         /// </summary>
         private void InitializeComponent()
         {
-            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode1 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
+            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode1 = Nikse.SubtitleEdit.Core.Common.TimeCode.Zero;
             this.groupBoxStyle = new System.Windows.Forms.GroupBox();
             this.comboBoxProgressBarEdge = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelEdgeStyle = new System.Windows.Forms.Label();

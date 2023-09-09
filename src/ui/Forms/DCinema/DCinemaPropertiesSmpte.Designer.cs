@@ -31,7 +31,7 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode1 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
+            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode1 = Nikse.SubtitleEdit.Core.Common.TimeCode.Zero;
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.checkBoxGenerateIdAuto = new System.Windows.Forms.CheckBox();
             this.timeUpDownStartTime = new Nikse.SubtitleEdit.Controls.NikseTimeUpDown();

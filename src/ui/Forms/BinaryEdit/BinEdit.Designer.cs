@@ -30,8 +30,8 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode1 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
-            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode2 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
+            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode1 = Nikse.SubtitleEdit.Core.Common.TimeCode.Zero;
+            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode2 = Nikse.SubtitleEdit.Core.Common.TimeCode.Zero;
             this.groupBoxCurrent = new System.Windows.Forms.GroupBox();
             this.labelSyntaxError = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.buttonSetText = new System.Windows.Forms.Button();
