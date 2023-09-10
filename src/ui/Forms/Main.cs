@@ -323,8 +323,6 @@ namespace Nikse.SubtitleEdit.Forms
 
             textBoxListViewText.BackColor = !IsSubtitleLoaded ? SystemColors.ActiveBorder : SystemColors.WindowFrame;
             textBoxListViewTextOriginal.BackColor = !IsSubtitleLoaded ? SystemColors.ActiveBorder : SystemColors.WindowFrame;
-            UiUtil.FixFonts(timeUpDownVideoPosition, 10);
-            UiUtil.FixFonts(timeUpDownVideoPositionAdjust, 10);
 
             if (Application.RenderWithVisualStyles && !Configuration.Settings.General.UseDarkTheme)
             {
@@ -338,10 +336,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             UiUtil.FixFonts(this, 10000);
             UiUtil.FixLargeFonts(tabControlModes, buttonAutoBreak);
-            UiUtil.FixLargeFonts(tabControlModes, buttonAutoBreak);
             UiUtil.FixLargeFonts(groupBoxEdit, buttonAutoBreak);
-            UiUtil.InitializeSubtitleFont(textBoxSource);
-            UiUtil.InitializeSubtitleFont(textBoxListViewText);
             textBoxListViewTextOriginal.Top = textBoxListViewText.Top;
             UiUtil.InitializeSubtitleFont(textBoxListViewTextOriginal);
             UiUtil.InitializeSubtitleFont(SubtitleListview1);
