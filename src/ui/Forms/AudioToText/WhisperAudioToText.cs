@@ -34,6 +34,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         private readonly Regex _timeRegexShort = new Regex(@"^\[\d\d:\d\d[\.,]\d\d\d --> \d\d:\d\d[\.,]\d\d\d\]", RegexOptions.Compiled);
         private readonly Regex _timeRegexLong = new Regex(@"^\[\d\d:\d\d:\d\d[\.,]\d\d\d --> \d\d:\d\d:\d\d[\.,]\d\d\d]", RegexOptions.Compiled);
         private readonly Regex _pctWhisper = new Regex(@"^\d+%\|", RegexOptions.Compiled);
+        private readonly Regex _pctWhisperFaster = new Regex(@"^ *\d+% *\|", RegexOptions.Compiled);
         private List<ResultText> _resultList;
         private string _languageCode;
         private ConcurrentBag<string> _outputText = new ConcurrentBag<string>();
@@ -857,10 +858,19 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                         }
                     }
                 }
-                else if (_pctWhisper.IsMatch(line))
+                else if (_pctWhisper.IsMatch(line.TrimStart()))
                 {
                     var arr = line.Split('%');
                     if (arr.Length > 1 && double.TryParse(arr[0], NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var pct))
+                    {
+                        _endSeconds = _videoInfo.TotalSeconds * pct / 100.0;
+                        _showProgressPct = pct;
+                    }
+                }
+                else if (_pctWhisperFaster.IsMatch(line))
+                {
+                    var arr = line.Split('%');
+                    if (arr.Length > 1 && double.TryParse(arr[0].Trim(), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var pct))
                     {
                         _endSeconds = _videoInfo.TotalSeconds * pct / 100.0;
                         _showProgressPct = pct;
@@ -1431,8 +1441,8 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                             }
                         }
 
-                        if (whisperChoice == WhisperChoice.PurfviewFasterWhisper && 
-                            !IsFasterWhisperCudaInstalled() && IsFasterWhisperCudaSupported() )
+                        if (whisperChoice == WhisperChoice.PurfviewFasterWhisper &&
+                            !IsFasterWhisperCudaInstalled() && IsFasterWhisperCudaSupported())
                         {
                             DownloadCudaForWhisperFaster(this);
                         }
