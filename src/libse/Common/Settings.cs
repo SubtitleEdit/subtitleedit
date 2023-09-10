@@ -191,6 +191,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public string SplitVia { get; set; }
         public bool JoinCorrectTimeCodes { get; set; }
         public int JoinAddMs { get; set; }
+        public int SplitLongLinesMax { get; set; }
         public string LastShowEarlierOrLaterSelection { get; set; }
         public string NewEmptyTranslationText { get; set; }
         public string BatchConvertOutputFolder { get; set; }
@@ -523,6 +524,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             SplitNumberOfParts = 3;
             SplitVia = "Lines";
             JoinCorrectTimeCodes = true;
+            SplitLongLinesMax = 90;
             NewEmptyTranslationText = string.Empty;
             BatchConvertLanguage = string.Empty;
             BatchConvertTsOverrideBottomMargin = 5; // pct
@@ -5266,6 +5268,12 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.Tools.JoinAddMs = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("SplitLongLinesMax");
+            if (subNode != null)
+            {
+                settings.Tools.SplitLongLinesMax = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
             subNode = node.SelectSingleNode("NewEmptyTranslationText");
@@ -11297,6 +11305,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("SplitVia", settings.Tools.SplitVia);
                 textWriter.WriteElementString("JoinCorrectTimeCodes", settings.Tools.JoinCorrectTimeCodes.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("JoinAddMs", settings.Tools.JoinAddMs.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("SplitLongLinesMax", settings.Tools.SplitLongLinesMax.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("NewEmptyTranslationText", settings.Tools.NewEmptyTranslationText);
                 textWriter.WriteElementString("BatchConvertOutputFolder", settings.Tools.BatchConvertOutputFolder);
                 textWriter.WriteElementString("BatchConvertOverwriteExisting", settings.Tools.BatchConvertOverwriteExisting.ToString(CultureInfo.InvariantCulture));
