@@ -15,6 +15,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Forms.Extensions;
 using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms
@@ -1128,22 +1129,10 @@ namespace Nikse.SubtitleEdit.Forms
             listViewFixes.Sort();
         }
 
-        private void ButtonSelectAllClick(object sender, EventArgs e)
-        {
-            foreach (ListViewItem item in listView1.Items)
-            {
-                item.Checked = true;
-            }
-        }
-
-        private void ButtonInverseSelectionClick(object sender, EventArgs e)
-        {
-            foreach (ListViewItem item in listView1.Items)
-            {
-                item.Checked = !item.Checked;
-            }
-        }
-
+        private void ButtonSelectAllClick(object sender, EventArgs e) => listView1.CheckAll();
+        
+        private void ButtonInverseSelectionClick(object sender, EventArgs e) => listView1.InvertCheck();
+        
         private void ListViewFixesSelectedIndexChanged(object sender, EventArgs e)
         {
             if (listViewFixes.SelectedItems.Count > 0)
@@ -1351,21 +1340,9 @@ namespace Nikse.SubtitleEdit.Forms
             labelTextLineTotal.Text = string.Format(_languageGeneral.TotalLengthX, text.CountCharacters(false));
         }
 
-        private void ButtonFixesSelectAllClick(object sender, EventArgs e)
-        {
-            foreach (ListViewItem item in listViewFixes.Items)
-            {
-                item.Checked = true;
-            }
-        }
+        private void ButtonFixesSelectAllClick(object sender, EventArgs e) => listViewFixes.CheckAll();
 
-        private void ButtonFixesInverseClick(object sender, EventArgs e)
-        {
-            foreach (ListViewItem item in listViewFixes.Items)
-            {
-                item.Checked = !item.Checked;
-            }
-        }
+        private void ButtonFixesInverseClick(object sender, EventArgs e) => listViewFixes.InvertCheck();
 
         private void ButtonFixesApplyClick(object sender, EventArgs e)
         {
@@ -1572,13 +1549,7 @@ namespace Nikse.SubtitleEdit.Forms
             // restore de-selected fixes
             if (deSelectedFixes.Count > 0)
             {
-                foreach (ListViewItem item in listViewFixes.Items)
-                {
-                    if (deSelectedFixes.Contains(item.SubItems[1].Text + item.SubItems[2].Text + item.SubItems[3].Text))
-                    {
-                        item.Checked = false;
-                    }
-                }
+                listViewFixes.UncheckAll(item => deSelectedFixes.Contains(item.SubItems[1].Text + item.SubItems[2].Text + item.SubItems[3].Text));
             }
 
             if (subtitleListView1.Items.Count > firstIndex)
@@ -1867,7 +1838,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (e.KeyCode == Keys.A && e.Modifiers == Keys.Control)
             {
-                subtitleListView1.SelectAll();
+                subtitleListView1.CheckAll();
                 e.SuppressKeyPress = true;
             }
             else if (e.KeyCode == Keys.D && e.Modifiers == Keys.Control)
@@ -1877,7 +1848,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.KeyCode == Keys.I && e.Modifiers == (Keys.Control | Keys.Shift)) //InverseSelection
             {
-                subtitleListView1.InverseSelection();
+                subtitleListView1.InvertCheck();
                 e.SuppressKeyPress = true;
             }
             else if (e.KeyCode == Keys.Delete)
@@ -1915,21 +1886,9 @@ namespace Nikse.SubtitleEdit.Forms
             return _hunspell.Spell(word);
         }
 
-        private void toolStripMenuItemSelectAll_Click(object sender, EventArgs e)
-        {
-            foreach (ListViewItem item in listViewFixes.Items)
-            {
-                item.Checked = true;
-            }
-        }
+        private void toolStripMenuItemSelectAll_Click(object sender, EventArgs e) => listViewFixes.CheckAll();
 
-        private void toolStripMenuItemInverseSelection_Click(object sender, EventArgs e)
-        {
-            foreach (ListViewItem item in listViewFixes.Items)
-            {
-                item.Checked = !item.Checked;
-            }
-        }
+        private void toolStripMenuItemInverseSelection_Click(object sender, EventArgs e) => listViewFixes.InvertCheck();
 
         private void setCurrentFixesAsDefaultToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -1938,72 +1897,34 @@ namespace Nikse.SubtitleEdit.Forms
             AddFixActions(CultureInfo.GetCultureInfo(_autoDetectGoogleLanguage).GetThreeLetterIsoLanguageName());
         }
 
-        private void selectDefaultToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            buttonResetDefault_Click(null, null);
-        }
+        private void selectDefaultToolStripMenuItem_Click(object sender, EventArgs e) => buttonResetDefault_Click(null, null);
 
-        private void listView1_KeyDown(object sender, KeyEventArgs e)
-        {
-            var items = listView1.Items;
-            if (e.KeyCode == Keys.A && e.Modifiers == Keys.Control)
-            {
-                foreach (ListViewItem item in items)
-                {
-                    item.Checked = true;
-                    item.Selected = true;
-                }
-                e.SuppressKeyPress = true;
-            }
-            else if (e.KeyCode == Keys.D && e.Modifiers == Keys.Control)
-            {
-                foreach (ListViewItem item in items)
-                {
-                    item.Checked = false;
-                    item.Selected = false;
-                }
-                e.SuppressKeyPress = true;
-            }
-            else if (e.KeyCode == Keys.I && e.Modifiers == (Keys.Control | Keys.Shift)) //InverseSelection
-            {
-                foreach (ListViewItem item in items)
-                {
-                    item.Checked = !item.Checked;
-                }
-                e.SuppressKeyPress = true;
-                e.SuppressKeyPress = true;
-            }
-        }
+        private void listView1_KeyDown(object sender, KeyEventArgs e) => HandleListViewKeyDown(listView1, e);
 
-        private void listViewFixes_KeyDown(object sender, KeyEventArgs e)
+        private void listViewFixes_KeyDown(object sender, KeyEventArgs e) => HandleListViewKeyDown(listViewFixes, e);
+
+        private void HandleListViewKeyDown(ListView listView, KeyEventArgs e)
         {
-            var items = listViewFixes.Items;
-            if (e.KeyCode == Keys.A && e.Modifiers == Keys.Control)
+            switch (e.KeyCode)
             {
-                foreach (ListViewItem item in items)
+                case Keys.A when e.Modifiers == Keys.Control:
                 {
-                    item.Checked = true;
-                    item.Selected = true;
+                    listView.CheckAll(select: true);
+                    e.SuppressKeyPress = true;
+                    break;
                 }
-                e.SuppressKeyPress = true;
-            }
-            else if (e.KeyCode == Keys.D && e.Modifiers == Keys.Control)
-            {
-                foreach (ListViewItem item in items)
+                case Keys.D when e.Modifiers == Keys.Control:
                 {
-                    item.Checked = false;
-                    item.Selected = false;
+                    listView.UncheckAll();
+                    e.SuppressKeyPress = true;
+                    break;
                 }
-                e.SuppressKeyPress = true;
-            }
-            else if (e.KeyCode == Keys.I && e.Modifiers == (Keys.Control | Keys.Shift)) //InverseSelection
-            {
-                foreach (ListViewItem item in items)
+                case Keys.I when e.Modifiers == (Keys.Control | Keys.Shift):
                 {
-                    item.Checked = !item.Checked;
+                    listView.InvertCheck();
+                    e.SuppressKeyPress = true;
+                    break;
                 }
-                e.SuppressKeyPress = true;
-                e.SuppressKeyPress = true;
             }
         }
     }

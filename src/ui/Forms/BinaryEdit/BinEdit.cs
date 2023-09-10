@@ -23,6 +23,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
+using Nikse.SubtitleEdit.Forms.Extensions;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.ProgressBar;
 using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
@@ -1413,7 +1414,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.A)
             {
                 subtitleListView1.SelectedIndexChanged -= subtitleListView1_SelectedIndexChanged;
-                subtitleListView1.SelectAll();
+                subtitleListView1.CheckAll();
                 subtitleListView1.SelectedIndexChanged += subtitleListView1_SelectedIndexChanged;
                 e.SuppressKeyPress = true;
             }
@@ -1427,7 +1428,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             else if (e.KeyCode == Keys.I && e.Modifiers == (Keys.Control | Keys.Shift)) //InverseSelection
             {
                 subtitleListView1.SelectedIndexChanged -= subtitleListView1_SelectedIndexChanged;
-                subtitleListView1.InverseSelection();
+                subtitleListView1.InvertCheck();
                 subtitleListView1.SelectedIndexChanged += subtitleListView1_SelectedIndexChanged;
                 e.SuppressKeyPress = true;
             }

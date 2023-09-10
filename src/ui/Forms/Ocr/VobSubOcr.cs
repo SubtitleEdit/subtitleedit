@@ -27,6 +27,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
 using Nikse.SubtitleEdit.Core.Enums;
+using Nikse.SubtitleEdit.Forms.Extensions;
 using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms.Ocr
@@ -8248,7 +8249,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             if (e.Modifiers == Keys.Control && e.KeyCode == Keys.A)
             {
                 subtitleListView1.SelectedIndexChanged -= SubtitleListView1SelectedIndexChanged;
-                subtitleListView1.SelectAll();
+                subtitleListView1.CheckAll();
                 subtitleListView1.SelectedIndexChanged += SubtitleListView1SelectedIndexChanged;
                 e.SuppressKeyPress = true;
             }
@@ -8263,7 +8264,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             else if (e.KeyCode == Keys.I && e.Modifiers == (Keys.Control | Keys.Shift)) //InverseSelection
             {
                 subtitleListView1.SelectedIndexChanged -= SubtitleListView1SelectedIndexChanged;
-                subtitleListView1.InverseSelection();
+                subtitleListView1.InvertCheck();
                 subtitleListView1.SelectedIndexChanged += SubtitleListView1SelectedIndexChanged;
                 e.SuppressKeyPress = true;
             }

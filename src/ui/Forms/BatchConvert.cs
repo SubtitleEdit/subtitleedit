@@ -23,6 +23,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Forms.Extensions;
 using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms
@@ -3236,7 +3237,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.KeyCode == Keys.A && e.Modifiers == Keys.Control)
             {
-                listViewInputFiles.SelectAll();
+                listViewInputFiles.CheckAll();
                 e.SuppressKeyPress = true;
             }
             else if (e.KeyCode == Keys.D && e.Modifiers == Keys.Control)
@@ -3246,7 +3247,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.KeyCode == Keys.I && e.Modifiers == (Keys.Control | Keys.Shift)) //InverseSelection
             {
-                listViewInputFiles.InverseSelection();
+                listViewInputFiles.InvertCheck();
                 e.SuppressKeyPress = true;
             }
             else if (e.KeyData == UiUtil.HelpKeys)
@@ -3767,21 +3768,9 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void toolStripMenuItemSelectAll_Click(object sender, EventArgs e)
-        {
-            foreach (ListViewItem item in listViewConvertOptions.Items)
-            {
-                item.Checked = true;
-            }
-        }
+        private void toolStripMenuItemSelectAll_Click(object sender, EventArgs e)=> listViewConvertOptions.CheckAll();
 
-        private void inverseSelectionToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            foreach (ListViewItem item in listViewConvertOptions.Items)
-            {
-                item.Checked = !item.Checked;
-            }
-        }
+        private void inverseSelectionToolStripMenuItem_Click(object sender, EventArgs e) => listViewConvertOptions.InvertCheck();
 
         private void listViewInputFiles_ColumnClick(object sender, ColumnClickEventArgs e)
         {

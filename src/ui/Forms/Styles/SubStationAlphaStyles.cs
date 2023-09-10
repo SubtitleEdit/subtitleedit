@@ -13,6 +13,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Forms.Extensions;
 using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms.Styles
@@ -1743,7 +1744,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             }
             else if (e.KeyCode == Keys.A && e.Modifiers == Keys.Control)
             {
-                listViewStyles.SelectAll();
+                listViewStyles.CheckAll();
                 e.SuppressKeyPress = true;
             }
             else if (e.KeyCode == Keys.D && e.Modifiers == Keys.Control)
@@ -1753,7 +1754,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             }
             else if (e.KeyCode == Keys.I && e.Modifiers == (Keys.Control | Keys.Shift))
             {
-                listViewStyles.InverseSelection();
+                listViewStyles.InvertCheck();
                 e.SuppressKeyPress = true;
             }
         }

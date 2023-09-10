@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Forms.Extensions;
 using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms.Styles
@@ -184,20 +185,8 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             }
         }
 
-        private void toolStripMenuItemSelectAll_Click(object sender, EventArgs e)
-        {
-            foreach (ListViewItem item in listViewExportStyles.Items)
-            {
-                item.Checked = true;
-            }
-        }
+        private void toolStripMenuItemSelectAll_Click(object sender, EventArgs e) => listViewExportStyles.CheckAll();
 
-        private void toolStripMenuItemInverseSelection_Click(object sender, EventArgs e)
-        {
-            foreach (ListViewItem item in listViewExportStyles.Items)
-            {
-                item.Checked = !item.Checked;
-            }
-        }
+        private void toolStripMenuItemInverseSelection_Click(object sender, EventArgs e) => listViewExportStyles.UncheckAll();
     }
 }

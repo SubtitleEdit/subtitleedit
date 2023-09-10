@@ -7,6 +7,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Forms.Extensions;
 using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms.Ocr
@@ -144,10 +145,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             listView1.ItemChecked -= listView1_ItemChecked;
 
-            foreach (ListViewItem item in listView1.Items)
-            {
-                item.Checked = true;
-            }
+            listView1.CheckAll();
 
             foreach (ListViewData d in _data)
             {

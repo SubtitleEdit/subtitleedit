@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows.Forms;
 using System.Xml;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Forms.Extensions;
 using Nikse.SubtitleEdit.Logic;
 using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
@@ -699,7 +700,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         {
             if (e.KeyCode == Keys.A && e.Modifiers == Keys.Control)
             {
-                listViewCategories.SelectAll();
+                listViewCategories.CheckAll();
                 e.SuppressKeyPress = true;
             }
             else if (e.KeyCode == Keys.D && e.Modifiers == Keys.Control)
@@ -709,7 +710,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             }
             else if (e.KeyCode == Keys.I && e.Modifiers == (Keys.Control | Keys.Shift))
             {
-                listViewCategories.InverseSelection();
+                listViewCategories.InvertCheck();
                 e.SuppressKeyPress = true;
             }
             else if (e.KeyData == UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToggleFocus))

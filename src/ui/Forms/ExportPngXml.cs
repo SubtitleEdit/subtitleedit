@@ -22,6 +22,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 using System.Xml;
+using Nikse.SubtitleEdit.Forms.Extensions;
 using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms
@@ -5656,7 +5657,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             }
             else if (e.KeyCode == Keys.A && e.Modifiers == Keys.Control)
             {
-                subtitleListView1.SelectAll();
+                subtitleListView1.CheckAll();
                 e.SuppressKeyPress = true;
             }
             else if (e.KeyCode == Keys.D && e.Modifiers == Keys.Control)
@@ -5666,7 +5667,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             }
             else if (e.KeyCode == Keys.I && e.Modifiers == (Keys.Control | Keys.Shift))
             {
-                subtitleListView1.InverseSelection();
+                subtitleListView1.InvertCheck();
                 e.SuppressKeyPress = true;
             }
         }

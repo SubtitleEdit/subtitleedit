@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Forms.Extensions;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -338,21 +339,9 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void toolStripMenuItemSelectAll_Click(object sender, EventArgs e)
-        {
-            foreach (ListViewItem item in listViewFixes.Items)
-            {
-                item.Checked = true;
-            }
-        }
+        private void toolStripMenuItemSelectAll_Click(object sender, EventArgs e) =>  listViewFixes.CheckAll();
 
-        private void toolStripMenuItemInverseSelection_Click(object sender, EventArgs e)
-        {
-            foreach (ListViewItem item in listViewFixes.Items)
-            {
-                item.Checked = !item.Checked;
-            }
-        }
+        private void toolStripMenuItemInverseSelection_Click(object sender, EventArgs e) => listViewFixes.InvertCheck();
 
         private void checkBoxCheckShotChanges_CheckedChanged(object sender, EventArgs e)
         {

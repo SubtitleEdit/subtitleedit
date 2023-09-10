@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using System.Xml;
+using Nikse.SubtitleEdit.Forms.Extensions;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -134,20 +135,8 @@ namespace Nikse.SubtitleEdit.Forms
             DialogResult = DialogResult.Cancel;
         }
 
-        private void selectAllToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            foreach (ListViewItem item in listViewExportStyles.Items)
-            {
-                item.Checked = true;
-            }
-        }
+        private void selectAllToolStripMenuItem_Click(object sender, EventArgs e) => listViewExportStyles.CheckAll();
 
-        private void inverseSelectionToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            foreach (ListViewItem item in listViewExportStyles.Items)
-            {
-                item.Checked = !item.Checked;
-            }
-        }
+        private void inverseSelectionToolStripMenuItem_Click(object sender, EventArgs e) => listViewExportStyles.InvertCheck();
     }
 }

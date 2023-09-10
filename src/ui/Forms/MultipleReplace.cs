@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml;
+using Nikse.SubtitleEdit.Forms.Extensions;
 using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms
@@ -459,7 +460,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (e.KeyCode == Keys.A && e.Modifiers == Keys.Control)
             {
-                listViewRules.SelectAll();
+                listViewRules.CheckAll();
                 e.SuppressKeyPress = true;
             }
             else if (e.KeyCode == Keys.D && e.Modifiers == Keys.Control)
@@ -469,7 +470,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.KeyCode == Keys.I && e.Modifiers == (Keys.Control | Keys.Shift)) //InverseSelection
             {
-                listViewRules.InverseSelection();
+                listViewRules.InvertCheck();
                 e.SuppressKeyPress = true;
             }
         }
@@ -558,21 +559,9 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void buttonReplacesSelectAll_Click(object sender, EventArgs e)
-        {
-            foreach (ListViewItem item in listViewFixes.Items)
-            {
-                item.Checked = true;
-            }
-        }
+        private void buttonReplacesSelectAll_Click(object sender, EventArgs e) => listViewFixes.CheckAll();
 
-        private void buttonReplacesInverseSelection_Click(object sender, EventArgs e)
-        {
-            foreach (ListViewItem item in listViewFixes.Items)
-            {
-                item.Checked = !item.Checked;
-            }
-        }
+        private void buttonReplacesInverseSelection_Click(object sender, EventArgs e) => listViewFixes.InvertCheck();
 
         private void contextMenuStrip1_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
@@ -1333,7 +1322,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (e.KeyCode == Keys.A && e.Modifiers == Keys.Control)
             {
-                listViewFixes.SelectAll();
+                listViewFixes.CheckAll();
                 e.SuppressKeyPress = true;
             }
             else if (e.KeyCode == Keys.D && e.Modifiers == Keys.Control)
@@ -1343,7 +1332,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.KeyCode == Keys.I && e.Modifiers == (Keys.Control | Keys.Shift)) //InverseSelection
             {
-                listViewFixes.InverseSelection();
+                listViewFixes.InvertCheck();
                 e.SuppressKeyPress = true;
             }
         }
@@ -1430,20 +1419,8 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void toolStripMenuItemGroupsSelectAll_Click(object sender, EventArgs e)
-        {
-            foreach (ListViewItem item in listViewGroups.Items)
-            {
-                item.Checked = true;
-            }
-        }
+        private void toolStripMenuItemGroupsSelectAll_Click(object sender, EventArgs e) => listViewGroups.CheckAll();
 
-        private void toolStripMenuItemGroupsInvertSelection_Click(object sender, EventArgs e)
-        {
-            foreach (ListViewItem item in listViewGroups.Items)
-            {
-                item.Checked = !item.Checked;
-            }
-        }
+        private void toolStripMenuItemGroupsInvertSelection_Click(object sender, EventArgs e) => listViewGroups.InvertCheck();
     }
 }

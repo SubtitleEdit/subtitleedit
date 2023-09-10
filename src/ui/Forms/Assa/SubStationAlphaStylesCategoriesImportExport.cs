@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows.Forms;
 using System.Xml;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Forms.Extensions;
 using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Forms.Assa
@@ -29,9 +30,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 listViewCategories.Items.Add(new ListViewItem(category.Name) { Checked = true });
             }
 
-            Text = export ?
-                LanguageSettings.Current.SubStationAlphaStyles.Export :
-                LanguageSettings.Current.SubStationAlphaStyles.Import;
+            Text = export ? LanguageSettings.Current.SubStationAlphaStyles.Export : LanguageSettings.Current.SubStationAlphaStyles.Import;
             labelCategories.Text = string.Format(LanguageSettings.Current.SubStationAlphaStylesCategoriesManager.ChooseCategories, Text.ToLowerInvariant());
             toolStripMenuItemSelectAll.Text = LanguageSettings.Current.FixCommonErrors.SelectAll;
             toolStripMenuItemInverseSelection.Text = LanguageSettings.Current.FixCommonErrors.InverseSelection;
@@ -111,8 +110,10 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                     textWriter.WriteElementString(SubStationAlphaStylesCategoriesManager.BorderStyle, style.BorderStyle);
                     textWriter.WriteEndElement();
                 }
+
                 textWriter.WriteEndElement();
             }
+
             textWriter.WriteEndElement();
             textWriter.WriteEndElement();
             textWriter.WriteEndDocument();
@@ -139,20 +140,8 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             }
         }
 
-        private void ToolStripMenuItemSelectAll_Click(object sender, EventArgs e)
-        {
-            foreach (ListViewItem item in listViewCategories.Items)
-            {
-                item.Checked = true;
-            }
-        }
+        private void ToolStripMenuItemSelectAll_Click(object sender, EventArgs e) => listViewCategories.CheckAll();
 
-        private void ToolStripMenuItemInverseSelection_Click(object sender, EventArgs e)
-        {
-            foreach (ListViewItem item in listViewCategories.Items)
-            {
-                item.Checked = !item.Checked;
-            }
-        }
+        private void ToolStripMenuItemInverseSelection_Click(object sender, EventArgs e) => listViewCategories.UncheckAll();
     }
 }

@@ -393,6 +393,7 @@
     <Compile Include="Forms\DownloadVosk.Designer.cs">
       <DependentUpon>DownloadVosk.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Extensions\ListViewExtensions.cs" />
     <Compile Include="Forms\GenerateVideoFFmpegPrompt.cs">
       <SubType>Form</SubType>
     </Compile>

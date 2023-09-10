@@ -17,6 +17,7 @@ using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Core.VobSub;
 using Nikse.SubtitleEdit.Forms.Assa;
 using Nikse.SubtitleEdit.Forms.AudioToText;
+using Nikse.SubtitleEdit.Forms.Extensions;
 using Nikse.SubtitleEdit.Forms.FormatProperties;
 using Nikse.SubtitleEdit.Forms.Networking;
 using Nikse.SubtitleEdit.Forms.Ocr;
@@ -21246,7 +21247,7 @@ namespace Nikse.SubtitleEdit.Forms
             else if (e.KeyCode == Keys.A && e.Modifiers == Keys.Control)
             {
                 SubtitleListview1.SelectedIndexChanged -= SubtitleListview1_SelectedIndexChanged;
-                SubtitleListview1.SelectAll();
+                SubtitleListview1.CheckAll();
                 SubtitleListview1.SelectedIndexChanged += SubtitleListview1_SelectedIndexChanged;
                 RefreshSelectedParagraph();
                 e.SuppressKeyPress = true;

@@ -1133,16 +1133,6 @@ namespace Nikse.SubtitleEdit.Logic
         public static void AutoSizeLastColumn(this ListView listView) =>
             listView.Columns[listView.Columns.Count - 1].Width = -2;
 
-        public static void SelectAll(this ListView lv)
-        {
-            lv.BeginUpdate();
-            foreach (ListViewItem item in lv.Items)
-            {
-                item.Selected = true;
-            }
-            lv.EndUpdate();
-        }
-
         public static void SelectFirstSelectedItemOnly(this ListView lv)
         {
             if (lv.SelectedIndices.Count > 1)
@@ -1155,16 +1145,6 @@ namespace Nikse.SubtitleEdit.Logic
                 lv.Items[first].Selected = true;
                 lv.EndUpdate();
             }
-        }
-
-        public static void InverseSelection(this ListView lv)
-        {
-            lv.BeginUpdate();
-            foreach (ListViewItem item in lv.Items)
-            {
-                item.Selected = !item.Selected;
-            }
-            lv.EndUpdate();
         }
 
         public static void SelectAll(this ListBox listbox)

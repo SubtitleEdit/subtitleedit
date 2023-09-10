@@ -11,6 +11,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Forms.Extensions;
 using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms.Ocr
@@ -326,15 +327,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
         }
 
-        private void SelectAll_Click(object sender, EventArgs e)
-        {
-            listViewFonts.BeginUpdate();
-            foreach (ListViewItem fontItem in listViewFonts.Items)
-            {
-                fontItem.Checked = true;
-            }
-            listViewFonts.EndUpdate();
-        }
+        private void SelectAll_Click(object sender, EventArgs e) => listViewFonts.CheckAll();
 
         public void InitializeDetectFont(BinaryOcrBitmap bob, string text)
         {

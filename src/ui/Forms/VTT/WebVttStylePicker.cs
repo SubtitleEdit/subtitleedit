@@ -3,6 +3,7 @@ using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Forms.Extensions;
 
 namespace Nikse.SubtitleEdit.Forms.VTT
 {
@@ -55,21 +56,9 @@ namespace Nikse.SubtitleEdit.Forms.VTT
             }
         }
 
-        private void toolStripMenuItemSelectAll_Click(object sender, EventArgs e)
-        {
-            foreach (ListViewItem item in listViewExportStyles.Items)
-            {
-                item.Checked = true;
-            }
-        }
-
-        private void toolStripMenuItemInverseSelection_Click(object sender, EventArgs e)
-        {
-            foreach (ListViewItem item in listViewExportStyles.Items)
-            {
-                item.Checked = !item.Checked;
-            }
-        }
+        private void toolStripMenuItemSelectAll_Click(object sender, EventArgs e) => listViewExportStyles.CheckAll();
+        
+        private void toolStripMenuItemInverseSelection_Click(object sender, EventArgs e) => listViewExportStyles.InvertCheck();
 
         private void listViewExportStyles_SelectedIndexChanged(object sender, EventArgs e)
         {

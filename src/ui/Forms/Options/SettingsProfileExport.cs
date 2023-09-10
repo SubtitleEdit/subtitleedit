@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Forms.Extensions;
 
 namespace Nikse.SubtitleEdit.Forms.Options
 {
@@ -74,13 +75,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             }
         }
 
-        private void selectAllToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            foreach (ListViewItem item in listViewExportStyles.Items)
-            {
-                item.Checked = true;
-            }
-        }
+        private void selectAllToolStripMenuItem_Click(object sender, EventArgs e) => listViewExportStyles.CheckAll();
 
         private void inverseSelectionToolStripMenuItem_Click(object sender, EventArgs e)
         {

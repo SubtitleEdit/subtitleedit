@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Forms.Extensions;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -296,32 +297,21 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void buttonSelectAll_Click(object sender, EventArgs e)
-        {
-            DoSelection(true);
-        }
+        private void buttonSelectAll_Click(object sender, EventArgs e) => DoSelection(true);
 
-        private void buttonInverseSelection_Click(object sender, EventArgs e)
-        {
-            DoSelection(false);
-        }
+        private void buttonInverseSelection_Click(object sender, EventArgs e) => DoSelection(false);
 
         private void DoSelection(bool selectAll)
         {
             listViewNames.ItemChecked -= ListViewNamesItemChecked;
-            listViewNames.BeginUpdate();
-            foreach (ListViewItem item in listViewNames.Items)
+            if (selectAll)
             {
-                if (selectAll)
-                {
-                    item.Checked = true;
-                }
-                else
-                {
-                    item.Checked = !item.Checked;
-                }
+                listViewNames.CheckAll();
             }
-            listViewNames.EndUpdate();
+            else
+            {
+                listViewNames.InvertCheck();
+            }
             listViewNames.ItemChecked += ListViewNamesItemChecked;
             GeneratePreview();
         }
@@ -333,21 +323,9 @@ namespace Nikse.SubtitleEdit.Forms
             FindAllNames();
         }
 
-        private void toolStripMenuItemSelectAll_Click(object sender, EventArgs e)
-        {
-            foreach (ListViewItem item in listViewFixes.Items)
-            {
-                item.Checked = true;
-            }
-        }
+        private void toolStripMenuItemSelectAll_Click(object sender, EventArgs e) => listViewFixes.CheckAll();
 
-        private void toolStripMenuItemInverseSelection_Click(object sender, EventArgs e)
-        {
-            foreach (ListViewItem item in listViewFixes.Items)
-            {
-                item.Checked = !item.Checked;
-            }
-        }
+        private void toolStripMenuItemInverseSelection_Click(object sender, EventArgs e) => listViewFixes.InvertCheck();
 
         private void toolStripMenuItem1SelectAll_Click(object sender, EventArgs e)
         {
