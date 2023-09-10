@@ -759,21 +759,9 @@ namespace Nikse.SubtitleEdit.Logic
             label.Text = sb.ToString();
         }
 
-        public static void InitializeSubtitleFormatComboBox(ToolStripNikseComboBox comboBox, SubtitleFormat format)
-        {
-            InitializeSubtitleFormatComboBox(comboBox.ComboBox, format);
-            //comboBox.DropDownWidth += 5; // .Net quirk?
-        }
-
         public static void InitializeSubtitleFormatComboBox(NikseComboBox comboBox, SubtitleFormat format)
         {
             InitializeSubtitleFormatComboBox(comboBox, new List<string> { format.FriendlyName }, format.FriendlyName);
-        }
-
-        public static void InitializeSubtitleFormatComboBox(ToolStripNikseComboBox comboBox, string selectedName)
-        {
-            InitializeSubtitleFormatComboBox(comboBox.ComboBox, selectedName);
-            //comboBox.DropDownWidth += 5; // .Net quirk?
         }
 
         public static void InitializeSubtitleFormatComboBox(NikseComboBox comboBox, string selectedName)
