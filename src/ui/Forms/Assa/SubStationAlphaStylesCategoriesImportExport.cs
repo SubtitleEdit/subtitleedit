@@ -142,6 +142,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
         private void ToolStripMenuItemSelectAll_Click(object sender, EventArgs e) => listViewCategories.CheckAll();
 
-        private void ToolStripMenuItemInverseSelection_Click(object sender, EventArgs e) => listViewCategories.UncheckAll();
+        private void ToolStripMenuItemInverseSelection_Click(object sender, EventArgs e) => listViewCategories.InvertCheck();
     }
 }
