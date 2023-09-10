@@ -41,6 +41,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
+            textBoxLog.ScrollBars = ScrollBars.Both;
             UiUtil.FixFonts(this);
 
             _loading = true;
@@ -830,7 +831,6 @@ namespace Nikse.SubtitleEdit.Forms
                 else
                 {
                     textBoxLog.Visible = true;
-                    textBoxLog.ScrollBars = ScrollBars.Both;
                     textBoxLog.BringToFront();
                     textBoxLog.Dock = DockStyle.Fill;
 
@@ -849,6 +849,10 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         textBoxLog.Text = _log.ToString();
                     }
+
+                    textBoxLog.Focus();
+                    textBoxLog.SelectionStart = textBoxLog.Text.Length;
+                    textBoxLog.ScrollToCaret();
                 }
                 e.SuppressKeyPress = true;
             }
