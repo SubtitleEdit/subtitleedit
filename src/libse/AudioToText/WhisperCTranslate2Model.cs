@@ -103,14 +103,14 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
             new WhisperModel
             {
                 Name = "large-v1",
-                Size = "2.9 GB",
+                Size = "3.1 GB",
                 Urls = MakeUrls("https://huggingface.co/guillaumekln/faster-whisper-large-v1/resolve/main"),
                 Folder = "models--guillaumekln--faster-whisper-large-v1/snapshots/e46e40f0408853a954b7ded6683808b7ecd14390",
             },
             new WhisperModel
             {
                 Name = "large-v2",
-                Size = "2.9 GB",
+                Size = "3.1 GB",
                 Urls = MakeUrls("https://huggingface.co/guillaumekln/faster-whisper-large-v2/resolve/main"),
                 Folder = "models--guillaumekln--faster-whisper-large-v2/snapshots/fecb99cc227a240ccd295d99b6c9026e7a179508",
             },
