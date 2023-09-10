@@ -246,7 +246,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (format.IsVobSubIndexFile)
             {
-                UiUtil.InitializeSubtitleFormatComboBox(comboBoxSubtitleFormats, format);
+                UiUtil.InitializeSubtitleFormatComboBox(comboBoxSubtitleFormats.ComboBox, format);
                 SubtitleListview1.HideNonVobSubColumns();
             }
             else if (comboBoxSubtitleFormats.Items.Count == 1)
@@ -2124,7 +2124,7 @@ namespace Nikse.SubtitleEdit.Forms
             var oldFormat = _currentSubtitleFormat;
             comboBoxSubtitleFormats.SelectedIndexChanged -= ComboBoxSubtitleFormatsSelectedIndexChanged;
             _currentSubtitleFormat = null;
-            UiUtil.InitializeSubtitleFormatComboBox(comboBoxSubtitleFormats, subtitleFormat.FriendlyName);
+            UiUtil.InitializeSubtitleFormatComboBox(comboBoxSubtitleFormats.ComboBox, subtitleFormat.FriendlyName);
             _currentSubtitleFormat = GetCurrentSubtitleFormat();
             MakeFormatChange(oldFormat, _currentSubtitleFormat);
             comboBoxSubtitleFormats.SelectedIndexChanged += ComboBoxSubtitleFormatsSelectedIndexChanged;
@@ -5725,7 +5725,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (oldFavoriteFormats != Configuration.Settings.General.FavoriteSubtitleFormats)
             {
-                UiUtil.InitializeSubtitleFormatComboBox(comboBoxSubtitleFormats, string.Empty);
+                UiUtil.InitializeSubtitleFormatComboBox(comboBoxSubtitleFormats.ComboBox, string.Empty);
             }
 
             SetLanguage(Configuration.Settings.General.Language);
@@ -25674,13 +25674,15 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void InitializePlayRateDropDown()
         {
-            _contextMenuStripPlayRate.Items.Clear();
             var foreColor = UiUtil.ForeColor;
             var backColor = UiUtil.BackColor;
+            _contextMenuStripPlayRate.Items.Clear();
+            var items = new List<ToolStripMenuItem>(28);
             for (int i = 30; i <= 300; i += 10)
             {
-                _contextMenuStripPlayRate.Items.Add(new ToolStripMenuItem(i + "%", null, SetPlayRate, i.ToString()) { Checked = i == 100, BackColor = backColor, ForeColor = foreColor });
+                items.Add(new ToolStripMenuItem(i + "%", null, SetPlayRate, i.ToString()) { Checked = i == 100, BackColor = backColor, ForeColor = foreColor });
             }
+            _contextMenuStripPlayRate.Items.AddRange(items.ToArray());
         }
 
         private void MediaPlayer_OnEmptyPlayerClicked(object sender, EventArgs e)
