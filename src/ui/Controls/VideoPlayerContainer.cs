@@ -126,9 +126,9 @@ namespace Nikse.SubtitleEdit.Controls
         private readonly PictureBox _pictureBoxProgressBar = new PictureBox();
         private readonly PictureBox _pictureBoxVolumeBarBackground = new PictureBox();
         private readonly PictureBox _pictureBoxVolumeBar = new PictureBox();
-        private readonly Label _labelTimeCode = new Label();
-        private readonly Label _labelVideoPlayerName = new Label();
-        private readonly Label _labelVolume = new Label();
+        private readonly NikseLabel _labelTimeCode = new NikseLabel();
+        private readonly NikseLabel _labelVideoPlayerName = new NikseLabel();
+        private readonly NikseLabel _labelVolume = new NikseLabel();
         private readonly ToolTip _currentPositionToolTip = new ToolTip();
         private int _lastCurrentPositionToolTipX;
         private int _lastCurrentPositionToolTipY;
