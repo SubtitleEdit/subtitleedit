@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core.Common;
+using System;
 using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Core.Http
 {
@@ -32,7 +33,8 @@ namespace Nikse.SubtitleEdit.Core.Http
 
         public Task<string> GetStringAsync(string url)
         {
-            return _httpClient.GetStringAsync(url);
+            var response = _httpClient.GetByteArrayAsync(url).Result;
+            return Task.FromResult(Encoding.UTF8.GetString(response, 0, response.Length - 1));
         }
 
         public async Task DownloadAsync(string requestUri, Stream destination, IProgress<float> progress = null, CancellationToken cancellationToken = default)
