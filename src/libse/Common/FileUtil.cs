@@ -602,6 +602,22 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
+        public static void WriteAllTextWithDefaultUtf8(string fileName, string contents)
+        {
+            if (Configuration.Settings.General.DefaultEncoding == TextEncoding.Utf8WithoutBom)
+            {
+                var outputEnc = new UTF8Encoding(false); // create encoding with no BOM
+                using (var file = new StreamWriter(fileName, false, outputEnc)) // open file with encoding
+                {
+                    file.Write(contents);
+                }
+            }
+            else
+            {
+                File.WriteAllText(fileName, contents, Encoding.UTF8);
+            }
+        }
+
         public static bool IsMatroskaFile(string fileName)
         {
             using (var validator = new MatroskaFile(fileName))

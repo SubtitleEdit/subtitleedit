@@ -1561,7 +1561,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             XmlNode events = doc.DocumentElement.SelectSingleNode("Events");
             doc.PreserveWhitespace = true;
             events.InnerXml = sb.ToString();
-            File.WriteAllText(fileName, FormatUtf8Xml(doc), Encoding.UTF8);
+            FileUtil.WriteAllTextWithDefaultUtf8(fileName, FormatUtf8Xml(doc));
         }
 
         private void WriteDostParagraph(Bitmap bitmap, StringBuilder sb, string path, string fileNameWithoutExtension, int i, Extra extra, Paragraph p)

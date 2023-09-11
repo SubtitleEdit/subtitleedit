@@ -1259,7 +1259,7 @@ namespace Nikse.SubtitleEdit.Forms
             XmlNode events = doc.DocumentElement.SelectSingleNode("Events");
             doc.PreserveWhitespace = true;
             events.InnerXml = sb.ToString();
-            File.WriteAllText(fileName, FormatUtf8Xml(doc), Encoding.UTF8);
+            FileUtil.WriteAllTextWithDefaultUtf8(fileName, FormatUtf8Xml(doc));
         }
 
         internal void WriteDostFile(string fileName, string body)
