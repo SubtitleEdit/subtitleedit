@@ -39,31 +39,15 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
         }
 
-        private void Import()
+        private void ReloadChosenCategories()
         {
-            ChosenCategories = new List<string>();
-            foreach (ListViewItem item in listViewCategories.Items)
-            {
-                if (item.Checked)
-                {
-                    ChosenCategories.Add(item.Text);
-                }
-            }
-
-            DialogResult = DialogResult.OK;
+            ChosenCategories = listViewCategories.Items.OfType<ListViewItem>()
+                .Where(item => item.Checked)
+                .Select(item => item.Text).ToList();
         }
 
         private void Export()
         {
-            ChosenCategories = new List<string>();
-            foreach (ListViewItem item in listViewCategories.Items)
-            {
-                if (item.Checked)
-                {
-                    ChosenCategories.Add(item.Text);
-                }
-            }
-
             if (ChosenCategories.Count == 0)
             {
                 return;
@@ -121,13 +105,15 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
         private void ButtonOK_Click(object sender, EventArgs e)
         {
+            ReloadChosenCategories();
+            
             if (_export)
             {
                 Export();
             }
             else
             {
-                Import();
+                DialogResult = DialogResult.OK;
             }
         }
 
