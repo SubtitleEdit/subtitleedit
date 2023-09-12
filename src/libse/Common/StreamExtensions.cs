@@ -46,6 +46,8 @@ namespace Nikse.SubtitleEdit.Core.Common
                 // ReSharper disable once PossibleLossOfFraction
                 progress?.Report(readBytes / context.ContentLength);
             }
+
+            progress?.Report(1);
         }
     }
 }

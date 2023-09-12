@@ -21,6 +21,7 @@ namespace Nikse.SubtitleEdit.Core.Http
         public HttpClientAdapter(HttpClient httpClient, Encoding encoding)
         {
             _httpClient = httpClient;
+            // fall back wil always be UTF-8
             _encoding = encoding ?? Encoding.UTF8;
         }
 
@@ -49,17 +50,19 @@ namespace Nikse.SubtitleEdit.Core.Http
             try
             {
                 _httpClient.Timeout = Timeout.InfiniteTimeSpan;
-                using (var response = await _httpClient.GetAsync(requestUri, HttpCompletionOption.ResponseHeadersRead, cancellationToken))
-                using (var downloadStream = await response.Content.ReadAsStreamAsync())
+                using (var response = await _httpClient.GetAsync(requestUri, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false))
+                using (var downloadStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false))
                 {
                     var contentLength = response.Content.Headers.ContentLength;
                     if (progress == null || !contentLength.HasValue)
                     {
-                        await downloadStream.CopyToAsync(destination);
-                        return;
+                        await downloadStream.CopyToAsync(destination).ConfigureAwait(false);
                     }
-                    await downloadStream.CopyToAsync(destination, new StreamCopyContext(81920, contentLength.Value), progress, cancellationToken);
-                    progress.Report(1);
+                    else
+                    {
+                        await downloadStream.CopyToAsync(destination, new StreamCopyContext(81920, contentLength.Value), progress, cancellationToken)
+                            .ConfigureAwait(false);
+                    }
                 }
             }
             catch (Exception e)
