@@ -33,10 +33,7 @@ namespace Nikse.SubtitleEdit.Core.Http
 
         public HttpRequestHeaders DefaultRequestHeaders => _httpClient.DefaultRequestHeaders;
 
-        public Task<HttpResponseMessage> PostAsync(string uri, StringContent stringContent)
-        {
-            return _httpClient.PostAsync(uri, stringContent);
-        }
+        public Task<HttpResponseMessage> PostAsync(string uri, StringContent stringContent) => _httpClient.PostAsync(uri, stringContent);
 
         public async Task<string> GetStringAsync(string url)
         {
@@ -79,9 +76,6 @@ namespace Nikse.SubtitleEdit.Core.Http
             }
         }
         
-        public void Dispose()
-        {
-            _httpClient?.Dispose();
-        }
+        public void Dispose() => _httpClient?.Dispose();
     }
 }
