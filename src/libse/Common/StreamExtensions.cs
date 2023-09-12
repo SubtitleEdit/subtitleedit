@@ -37,14 +37,14 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             var buffer = new byte[context.BufferSize];
-            long totalBytesRead = 0;
+            long readBytes = 0;
             int bytesRead;
             while ((bytesRead = await source.ReadAsync(buffer, 0, buffer.Length, cancellationToken).ConfigureAwait(false)) != 0)
             {
                 await destination.WriteAsync(buffer, 0, bytesRead, cancellationToken).ConfigureAwait(false);
-                totalBytesRead += bytesRead;
+                readBytes += bytesRead;
                 // ReSharper disable once PossibleLossOfFraction
-                progress?.Report(totalBytesRead / context.ContentLength);
+                progress?.Report(readBytes / context.ContentLength);
             }
         }
     }
