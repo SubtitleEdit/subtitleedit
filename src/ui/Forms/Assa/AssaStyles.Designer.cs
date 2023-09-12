@@ -538,7 +538,7 @@
             this.groupBoxBorder.Controls.Add(this.labelShadow);
             this.groupBoxBorder.Location = new System.Drawing.Point(241, 172);
             this.groupBoxBorder.Name = "groupBoxBorder";
-            this.groupBoxBorder.Size = new System.Drawing.Size(228, 93);
+            this.groupBoxBorder.Size = new System.Drawing.Size(228, 106);
             this.groupBoxBorder.TabIndex = 5;
             this.groupBoxBorder.TabStop = false;
             this.groupBoxBorder.Text = "Border";
@@ -556,13 +556,13 @@
             this.comboBoxOpaqueBoxStyle.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxOpaqueBoxStyle.DropDownWidth = 300;
             this.comboBoxOpaqueBoxStyle.FormattingEnabled = true;
-            this.comboBoxOpaqueBoxStyle.Location = new System.Drawing.Point(35, 69);
+            this.comboBoxOpaqueBoxStyle.Location = new System.Drawing.Point(35, 74);
             this.comboBoxOpaqueBoxStyle.MaxLength = 32767;
             this.comboBoxOpaqueBoxStyle.Name = "comboBoxOpaqueBoxStyle";
             this.comboBoxOpaqueBoxStyle.SelectedIndex = -1;
             this.comboBoxOpaqueBoxStyle.SelectedItem = null;
             this.comboBoxOpaqueBoxStyle.SelectedText = "";
-            this.comboBoxOpaqueBoxStyle.Size = new System.Drawing.Size(187, 21);
+            this.comboBoxOpaqueBoxStyle.Size = new System.Drawing.Size(187, 23);
             this.comboBoxOpaqueBoxStyle.TabIndex = 5;
             this.comboBoxOpaqueBoxStyle.UsePopupWindow = false;
             this.comboBoxOpaqueBoxStyle.SelectedIndexChanged += new System.EventHandler(this.radioButtonOpaqueBox_CheckedChanged);
@@ -570,7 +570,7 @@
             // radioButtonOpaqueBox
             // 
             this.radioButtonOpaqueBox.AutoSize = true;
-            this.radioButtonOpaqueBox.Location = new System.Drawing.Point(12, 50);
+            this.radioButtonOpaqueBox.Location = new System.Drawing.Point(12, 54);
             this.radioButtonOpaqueBox.Name = "radioButtonOpaqueBox";
             this.radioButtonOpaqueBox.Size = new System.Drawing.Size(83, 17);
             this.radioButtonOpaqueBox.TabIndex = 4;
@@ -581,7 +581,7 @@
             // radioButtonOutline
             // 
             this.radioButtonOutline.AutoSize = true;
-            this.radioButtonOutline.Location = new System.Drawing.Point(12, 24);
+            this.radioButtonOutline.Location = new System.Drawing.Point(12, 28);
             this.radioButtonOutline.Name = "radioButtonOutline";
             this.radioButtonOutline.Size = new System.Drawing.Size(58, 17);
             this.radioButtonOutline.TabIndex = 0;
@@ -604,7 +604,7 @@
             0,
             0,
             65536});
-            this.numericUpDownShadowWidth.Location = new System.Drawing.Point(134, 24);
+            this.numericUpDownShadowWidth.Location = new System.Drawing.Point(134, 28);
             this.numericUpDownShadowWidth.Maximum = new decimal(new int[] {
             100,
             0,
@@ -616,7 +616,7 @@
             0,
             0});
             this.numericUpDownShadowWidth.Name = "numericUpDownShadowWidth";
-            this.numericUpDownShadowWidth.Size = new System.Drawing.Size(52, 20);
+            this.numericUpDownShadowWidth.Size = new System.Drawing.Size(52, 23);
             this.numericUpDownShadowWidth.TabIndex = 2;
             this.numericUpDownShadowWidth.TabStop = false;
             this.numericUpDownShadowWidth.ThousandsSeparator = false;
@@ -642,7 +642,7 @@
             0,
             0,
             65536});
-            this.numericUpDownOutline.Location = new System.Drawing.Point(76, 24);
+            this.numericUpDownOutline.Location = new System.Drawing.Point(76, 28);
             this.numericUpDownOutline.Maximum = new decimal(new int[] {
             100,
             0,
@@ -654,7 +654,7 @@
             0,
             0});
             this.numericUpDownOutline.Name = "numericUpDownOutline";
-            this.numericUpDownOutline.Size = new System.Drawing.Size(52, 20);
+            this.numericUpDownOutline.Size = new System.Drawing.Size(52, 23);
             this.numericUpDownOutline.TabIndex = 1;
             this.numericUpDownOutline.TabStop = false;
             this.numericUpDownOutline.ThousandsSeparator = false;
@@ -677,7 +677,7 @@
             // textBoxStyleName
             // 
             this.textBoxStyleName.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            this.textBoxStyleName.Location = new System.Drawing.Point(49, 22);
+            this.textBoxStyleName.Location = new System.Drawing.Point(50, 22);
             this.textBoxStyleName.Name = "textBoxStyleName";
             this.textBoxStyleName.Size = new System.Drawing.Size(336, 20);
             this.textBoxStyleName.TabIndex = 1;
@@ -702,7 +702,7 @@
             this.groupBoxMargins.Controls.Add(this.labelMarginLeft);
             this.groupBoxMargins.Location = new System.Drawing.Point(114, 172);
             this.groupBoxMargins.Name = "groupBoxMargins";
-            this.groupBoxMargins.Size = new System.Drawing.Size(123, 93);
+            this.groupBoxMargins.Size = new System.Drawing.Size(123, 104);
             this.groupBoxMargins.TabIndex = 4;
             this.groupBoxMargins.TabStop = false;
             this.groupBoxMargins.Text = "Margins";
@@ -722,7 +722,7 @@
             0,
             0,
             0});
-            this.numericUpDownMarginVertical.Location = new System.Drawing.Point(61, 66);
+            this.numericUpDownMarginVertical.Location = new System.Drawing.Point(61, 68);
             this.numericUpDownMarginVertical.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -734,7 +734,7 @@
             0,
             0});
             this.numericUpDownMarginVertical.Name = "numericUpDownMarginVertical";
-            this.numericUpDownMarginVertical.Size = new System.Drawing.Size(44, 20);
+            this.numericUpDownMarginVertical.Size = new System.Drawing.Size(44, 23);
             this.numericUpDownMarginVertical.TabIndex = 5;
             this.numericUpDownMarginVertical.TabStop = false;
             this.numericUpDownMarginVertical.ThousandsSeparator = false;
@@ -760,7 +760,7 @@
             0,
             0,
             0});
-            this.numericUpDownMarginRight.Location = new System.Drawing.Point(61, 40);
+            this.numericUpDownMarginRight.Location = new System.Drawing.Point(61, 41);
             this.numericUpDownMarginRight.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -772,7 +772,7 @@
             0,
             0});
             this.numericUpDownMarginRight.Name = "numericUpDownMarginRight";
-            this.numericUpDownMarginRight.Size = new System.Drawing.Size(44, 20);
+            this.numericUpDownMarginRight.Size = new System.Drawing.Size(44, 23);
             this.numericUpDownMarginRight.TabIndex = 3;
             this.numericUpDownMarginRight.TabStop = false;
             this.numericUpDownMarginRight.ThousandsSeparator = false;
@@ -810,7 +810,7 @@
             0,
             0});
             this.numericUpDownMarginLeft.Name = "numericUpDownMarginLeft";
-            this.numericUpDownMarginLeft.Size = new System.Drawing.Size(44, 20);
+            this.numericUpDownMarginLeft.Size = new System.Drawing.Size(44, 23);
             this.numericUpDownMarginLeft.TabIndex = 1;
             this.numericUpDownMarginLeft.TabStop = false;
             this.numericUpDownMarginLeft.ThousandsSeparator = false;
@@ -824,7 +824,7 @@
             // labelMarginVertical
             // 
             this.labelMarginVertical.AutoSize = true;
-            this.labelMarginVertical.Location = new System.Drawing.Point(6, 68);
+            this.labelMarginVertical.Location = new System.Drawing.Point(6, 70);
             this.labelMarginVertical.Name = "labelMarginVertical";
             this.labelMarginVertical.Size = new System.Drawing.Size(42, 13);
             this.labelMarginVertical.TabIndex = 4;
@@ -833,7 +833,7 @@
             // labelMarginRight
             // 
             this.labelMarginRight.AutoSize = true;
-            this.labelMarginRight.Location = new System.Drawing.Point(6, 42);
+            this.labelMarginRight.Location = new System.Drawing.Point(6, 43);
             this.labelMarginRight.Name = "labelMarginRight";
             this.labelMarginRight.Size = new System.Drawing.Size(32, 13);
             this.labelMarginRight.TabIndex = 2;
@@ -860,7 +860,7 @@
             this.groupBoxColors.Controls.Add(this.buttonSecondaryColor);
             this.groupBoxColors.Controls.Add(this.panelPrimaryColor);
             this.groupBoxColors.Controls.Add(this.buttonPrimaryColor);
-            this.groupBoxColors.Location = new System.Drawing.Point(6, 271);
+            this.groupBoxColors.Location = new System.Drawing.Point(6, 282);
             this.groupBoxColors.Name = "groupBoxColors";
             this.groupBoxColors.Size = new System.Drawing.Size(465, 58);
             this.groupBoxColors.TabIndex = 6;
@@ -956,7 +956,7 @@
             this.groupBoxAlignment.Controls.Add(this.radioButtonTopLeft);
             this.groupBoxAlignment.Location = new System.Drawing.Point(6, 172);
             this.groupBoxAlignment.Name = "groupBoxAlignment";
-            this.groupBoxAlignment.Size = new System.Drawing.Size(102, 93);
+            this.groupBoxAlignment.Size = new System.Drawing.Size(102, 104);
             this.groupBoxAlignment.TabIndex = 3;
             this.groupBoxAlignment.TabStop = false;
             this.groupBoxAlignment.Text = "Alignment";
@@ -1059,9 +1059,9 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxPreview.Controls.Add(this.pictureBoxPreview);
-            this.groupBoxPreview.Location = new System.Drawing.Point(7, 335);
+            this.groupBoxPreview.Location = new System.Drawing.Point(7, 346);
             this.groupBoxPreview.Name = "groupBoxPreview";
-            this.groupBoxPreview.Size = new System.Drawing.Size(465, 286);
+            this.groupBoxPreview.Size = new System.Drawing.Size(465, 275);
             this.groupBoxPreview.TabIndex = 7;
             this.groupBoxPreview.TabStop = false;
             this.groupBoxPreview.Text = "Preview";
@@ -1072,7 +1072,7 @@
             this.pictureBoxPreview.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pictureBoxPreview.Location = new System.Drawing.Point(3, 16);
             this.pictureBoxPreview.Name = "pictureBoxPreview";
-            this.pictureBoxPreview.Size = new System.Drawing.Size(459, 267);
+            this.pictureBoxPreview.Size = new System.Drawing.Size(459, 256);
             this.pictureBoxPreview.TabIndex = 0;
             this.pictureBoxPreview.TabStop = false;
             this.pictureBoxPreview.Click += new System.EventHandler(this.pictureBoxPreview_Click);
@@ -1146,7 +1146,7 @@
             0,
             -2147483648});
             this.numericUpDownAngle.Name = "numericUpDownAngle";
-            this.numericUpDownAngle.Size = new System.Drawing.Size(52, 20);
+            this.numericUpDownAngle.Size = new System.Drawing.Size(52, 23);
             this.numericUpDownAngle.TabIndex = 16;
             this.numericUpDownAngle.TabStop = false;
             this.numericUpDownAngle.ThousandsSeparator = false;
@@ -1193,7 +1193,7 @@
             0,
             0});
             this.numericUpDownSpacing.Name = "numericUpDownSpacing";
-            this.numericUpDownSpacing.Size = new System.Drawing.Size(52, 20);
+            this.numericUpDownSpacing.Size = new System.Drawing.Size(52, 23);
             this.numericUpDownSpacing.TabIndex = 14;
             this.numericUpDownSpacing.TabStop = false;
             this.numericUpDownSpacing.ThousandsSeparator = false;
@@ -1240,7 +1240,7 @@
             0,
             0});
             this.numericUpDownScaleY.Name = "numericUpDownScaleY";
-            this.numericUpDownScaleY.Size = new System.Drawing.Size(52, 20);
+            this.numericUpDownScaleY.Size = new System.Drawing.Size(52, 23);
             this.numericUpDownScaleY.TabIndex = 12;
             this.numericUpDownScaleY.TabStop = false;
             this.numericUpDownScaleY.ThousandsSeparator = false;
@@ -1287,7 +1287,7 @@
             0,
             0});
             this.numericUpDownScaleX.Name = "numericUpDownScaleX";
-            this.numericUpDownScaleX.Size = new System.Drawing.Size(52, 20);
+            this.numericUpDownScaleX.Size = new System.Drawing.Size(52, 23);
             this.numericUpDownScaleX.TabIndex = 10;
             this.numericUpDownScaleX.TabStop = false;
             this.numericUpDownScaleX.ThousandsSeparator = false;
@@ -1368,7 +1368,7 @@
             0,
             0});
             this.numericUpDownFontSize.Name = "numericUpDownFontSize";
-            this.numericUpDownFontSize.Size = new System.Drawing.Size(51, 20);
+            this.numericUpDownFontSize.Size = new System.Drawing.Size(51, 23);
             this.numericUpDownFontSize.TabIndex = 4;
             this.numericUpDownFontSize.TabStop = false;
             this.numericUpDownFontSize.ThousandsSeparator = false;
@@ -1422,7 +1422,7 @@
             this.comboBoxFontName.SelectedIndex = -1;
             this.comboBoxFontName.SelectedItem = null;
             this.comboBoxFontName.SelectedText = "";
-            this.comboBoxFontName.Size = new System.Drawing.Size(188, 21);
+            this.comboBoxFontName.Size = new System.Drawing.Size(188, 23);
             this.comboBoxFontName.TabIndex = 1;
             this.comboBoxFontName.TabStop = false;
             this.comboBoxFontName.UsePopupWindow = false;
