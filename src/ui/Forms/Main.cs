@@ -8273,25 +8273,25 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private async void LiveSpellCheckTimer_Tick(object sender, EventArgs e)
+        private void LiveSpellCheckTimer_Tick(object sender, EventArgs e)
         {
             _liveSpellCheckTimer.Stop();
-            await InitializeLiveSpellChcek();
+            InitializeLiveSpellChcek();
             _liveSpellCheckTimer.Start();
         }
 
-        private async Task InitializeLiveSpellChcek()
+        private void InitializeLiveSpellChcek()
         {
             if (IsSubtitleLoaded)
             {
                 var hash = _subtitle.GetFastHashCodeTextOnly();
                 if (!textBoxListViewText.IsSpellCheckerInitialized && textBoxListViewText.IsDictionaryDownloaded)
                 {
-                    await textBoxListViewText.InitializeLiveSpellCheck(_subtitle, FirstSelectedIndex);
+                    textBoxListViewText.InitializeLiveSpellCheck(_subtitle, FirstSelectedIndex);
                 }
                 else if (_changeSubtitleTextHash != hash)
                 {
-                    await textBoxListViewText.CheckForLanguageChange(_subtitle);
+                    textBoxListViewText.CheckForLanguageChange(_subtitle);
                     _changeSubtitleTextHash = hash;
                 }
 
@@ -20999,7 +20999,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.KeyCode == Keys.V && e.Modifiers == Keys.Control) //Ctrl+V = Paste from clipboard
             {
-                bool containsText ;
+                bool containsText;
                 try
                 {
                     containsText = Clipboard.ContainsText();
@@ -25505,7 +25505,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (!textBoxListViewText.Enabled)
             {
-                if (!string.IsNullOrEmpty(_videoFileName) && 
+                if (!string.IsNullOrEmpty(_videoFileName) &&
                     audioVisualizer.WavePeaks != null &&
                     audioVisualizer.NewSelectionParagraph != null &&
                     audioVisualizer.NewSelectionParagraph.Duration.TotalMilliseconds > 100 &&
