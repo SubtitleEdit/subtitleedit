@@ -93,7 +93,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
         {
             try
             {
-                using (var httpClient = DownloaderFactory.MakeHttpClient())
+                using (var httpClient = HttpClientFactory.MakeHttpClient())
                 {
                     _changeLog = httpClient.GetStringAsync(ChangeLogUrl).Result;
                 }

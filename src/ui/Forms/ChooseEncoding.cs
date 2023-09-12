@@ -47,7 +47,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             catch
             {
-                _fileBuffer = new byte[0];
+                _fileBuffer = Array.Empty<byte>();
             }
 
             Encoding encoding;

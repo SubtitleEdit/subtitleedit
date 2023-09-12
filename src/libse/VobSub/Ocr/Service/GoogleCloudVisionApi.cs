@@ -20,7 +20,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub.Ocr.Service
     public class GoogleCloudVisionApi : IOcrStrategy
     {
         private readonly string _apiKey;
-        private readonly IDownloader _httpClient;
+        private readonly IHttpClient _httpClient;
 
         public string GetName()
         {
@@ -153,7 +153,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub.Ocr.Service
         public GoogleCloudVisionApi(string apiKey)
         {
             _apiKey = apiKey;
-            _httpClient = DownloaderFactory.MakeHttpClient();
+            _httpClient = HttpClientFactory.MakeHttpClient();
             _httpClient.BaseAddress = new Uri("https://vision.googleapis.com/v1/images:annotate");
             _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }

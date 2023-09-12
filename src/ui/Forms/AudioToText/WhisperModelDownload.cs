@@ -105,7 +105,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
                 foreach (var url in LastDownloadedModel.Urls)
                 {
-                    var httpClient = DownloaderFactory.MakeHttpClient();
+                    var httpClient = HttpClientFactory.MakeHttpClient();
                     currentDownloadUrl = url;
                     _downloadFileName = MakeDownloadFileName(LastDownloadedModel, url) + ".$$$";
                     labelFileName.Text = url.Split('/').Last();

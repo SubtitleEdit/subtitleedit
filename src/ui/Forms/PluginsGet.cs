@@ -213,7 +213,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Refresh();
                 Cursor = Cursors.WaitCursor;
 
-                using (var httpClient = DownloaderFactory.MakeHttpClient())
+                using (var httpClient = HttpClientFactory.MakeHttpClient())
                 using (var downloadStream = new MemoryStream())
                 {
                     var downloadTask = httpClient.DownloadAsync(url, downloadStream, new Progress<float>((progress) =>
@@ -407,7 +407,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _updatingAllPlugins = true;
                 foreach (var url in _updateAllListUrls)
                 {
-                    using (var httpClient = DownloaderFactory.MakeHttpClient())
+                    using (var httpClient = HttpClientFactory.MakeHttpClient())
                     {
                         using (var downloadStream = new MemoryStream())
                         {

@@ -23,7 +23,7 @@ namespace Nikse.SubtitleEdit.Core.Translate.Service
         private static List<TranslationPair> _translationPairs;
         private readonly string _accessToken;
         private readonly string _category;
-        private IDownloader _httpClient;
+        private IHttpClient _httpClient;
 
         public MicrosoftTranslationService(string apiKey, string tokenEndpoint, string category)
         {
@@ -39,11 +39,11 @@ namespace Nikse.SubtitleEdit.Core.Translate.Service
             }
         }
 
-        private IDownloader GetTranslateClient()
+        private IHttpClient GetTranslateClient()
         {
             if (_httpClient == null)
             {
-                _httpClient = DownloaderFactory.MakeHttpClient();
+                _httpClient = HttpClientFactory.MakeHttpClient();
                 _httpClient.BaseAddress = new Uri("https://api.cognitive.microsofttranslator.com/");
                 _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _accessToken);
@@ -54,7 +54,7 @@ namespace Nikse.SubtitleEdit.Core.Translate.Service
 
         private static string GetAccessToken(string apiKey, string tokenEndpoint)
         {
-            var httpClient = DownloaderFactory.MakeHttpClient();
+            var httpClient = HttpClientFactory.MakeHttpClient();
             httpClient.DefaultRequestHeaders
                 .Accept
                 .Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -70,7 +70,7 @@ namespace Nikse.SubtitleEdit.Core.Translate.Service
                 return _translationPairs;
             }
 
-            using (var httpClient = DownloaderFactory.MakeHttpClient())
+            using (var httpClient = HttpClientFactory.MakeHttpClient())
             {
                 httpClient.DefaultRequestHeaders.Add("user-agent", "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36");
                 httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json; charset=UTF-8");

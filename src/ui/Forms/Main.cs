@@ -14435,7 +14435,6 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 using (var form = new ChooseFontName())
                 {
-
                     if (form.ShowDialog(this) == DialogResult.OK)
                     {
                         MakeHistoryForUndo(_language.BeforeSettingFontName);

@@ -9,7 +9,7 @@ using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Core.Http
 {
-    public class LegacyDownloader : IDownloader
+    public class LegacyHttpClient : IHttpClient
     {
         public Task DownloadAsync(string requestUri, Stream destination, IProgress<float> progress = null, CancellationToken cancellationToken = default)
         {
@@ -20,7 +20,7 @@ namespace Nikse.SubtitleEdit.Core.Http
                 try
                 {
                     const int bufferSize = 4096;
-                    var request = (HttpWebRequest)HttpWebRequest.Create(requestUri);
+                    var request = (HttpWebRequest)WebRequest.Create(requestUri);
                     request.Timeout = Timeout.Infinite;
                     var response = (HttpWebResponse)request.GetResponse();
                     var responseStream = response.GetResponseStream();
@@ -44,10 +44,10 @@ namespace Nikse.SubtitleEdit.Core.Http
                     fileStream.Close();
                     responseStream.Close();
 
-                    var fs = new FileStream(tempFileName, FileMode.Open);
-                    CopyTo(fs, destination, 2048);
-                    fs.Close();
-
+                    using (var fs = new FileStream(tempFileName, FileMode.Open))
+                    {
+                        fs.CopyTo(destination, 2048);
+                    }
                     try
                     {
                         File.Delete(tempFileName);
@@ -67,7 +67,7 @@ namespace Nikse.SubtitleEdit.Core.Http
 
         private readonly HttpClient _httpClient;
 
-        public LegacyDownloader(HttpClient httpClient)
+        public LegacyHttpClient(HttpClient httpClient)
         {
             _httpClient = httpClient;
         }
@@ -112,37 +112,7 @@ namespace Nikse.SubtitleEdit.Core.Http
             _httpClient?.Dispose();
         }
 
-        public static void CopyTo(Stream source, Stream destination, int bufferSize)
-        {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-
-            if (destination == null)
-            {
-                throw new ArgumentNullException(nameof(destination));
-            }
-
-            if (bufferSize < 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(bufferSize));
-            }
-
-            var buffer = new byte[bufferSize];
-            var bytesRead = int.MaxValue;
-            while (bytesRead != 0)
-            {
-                if (bytesRead != int.MaxValue)
-                {
-                    destination.Write(buffer, 0, bytesRead);
-                }
-
-                bytesRead = source.Read(buffer, 0, buffer.Length);
-            }
-        }
-
-        public static WebProxy GetProxy()
+        private static WebProxy GetProxy()
         {
             if (string.IsNullOrEmpty(Configuration.Settings.Proxy.ProxyAddress))
             {

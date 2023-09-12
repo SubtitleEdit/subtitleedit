@@ -16,7 +16,7 @@ namespace Nikse.SubtitleEdit.Core.Translate.Service
     public class GoogleTranslator2 : ITranslationStrategy
     {
         private readonly string _apiKey;
-        private readonly IDownloader _httpClient;
+        private readonly IHttpClient _httpClient;
 
         public string GetName()
         {
@@ -36,7 +36,7 @@ namespace Nikse.SubtitleEdit.Core.Translate.Service
         public GoogleTranslator2(string apiKey)
         {
             _apiKey = apiKey;
-            _httpClient = DownloaderFactory.MakeHttpClient();
+            _httpClient = HttpClientFactory.MakeHttpClient();
             _httpClient.BaseAddress = new Uri("https://translation.googleapis.com/language/translate/v2/");
             _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }

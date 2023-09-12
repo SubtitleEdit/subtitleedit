@@ -19,13 +19,13 @@ namespace Nikse.SubtitleEdit.Core.Translate.Service
     {
         private readonly string _apiKey;
         private readonly string _projectNumberOrId;
-        private readonly IDownloader _httpClient;
+        private readonly IHttpClient _httpClient;
 
         public GoogleTranslator3(string apiKey, string projectNumberOrId)
         {
             _apiKey = apiKey;
             _projectNumberOrId = projectNumberOrId;
-            _httpClient = DownloaderFactory.MakeHttpClient();
+            _httpClient = HttpClientFactory.MakeHttpClient();
             _httpClient.BaseAddress = new Uri("https://translation.googleapis.com/v3/");
             _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }

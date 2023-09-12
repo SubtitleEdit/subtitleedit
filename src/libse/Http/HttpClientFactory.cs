@@ -5,21 +5,21 @@ using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Core.Http
 {
-    public static class DownloaderFactory
+    public static class HttpClientFactory
     {
-        public static IDownloader MakeHttpClient()
+        public static IHttpClient MakeHttpClient()
         {
-            var httpClient = new HttpClient(GetHttpClientHandler(Configuration.Settings.Proxy));
+            var httpClient = new HttpClient(CreateHandler(Configuration.Settings.Proxy));
 
             if (Configuration.Settings.General.UseLegacyDownloader)
             {
-                return new LegacyDownloader(httpClient);
+                return new LegacyHttpClient(httpClient);
             }
 
-            return new HttpClientDownloader(httpClient);
+            return new HttpClientAdapter(httpClient);
         }
 
-        public static HttpClientHandler GetHttpClientHandler(ProxySettings proxySettings)
+        private static HttpClientHandler CreateHandler(ProxySettings proxySettings)
         {
             var handler = new HttpClientHandler();
 

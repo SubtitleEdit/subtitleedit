@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Core.Http
 {
-    public interface IDownloader : IDisposable
+    public interface IHttpClient : IDisposable
     {
         Task DownloadAsync(string requestUri, Stream destination, IProgress<float> progress = null, CancellationToken cancellationToken = default);
         Uri BaseAddress { get; set; }

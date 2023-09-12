@@ -20,7 +20,7 @@ namespace Nikse.SubtitleEdit.Logic.Plugins
         public IReadOnlyCollection<PluginInfoItem> GetPlugins()
         {
             XDocument xDocument;
-            using (var httpClient = DownloaderFactory.MakeHttpClient())
+            using (var httpClient = HttpClientFactory.MakeHttpClient())
             using (var downloadStream = new MemoryStream())
             {
                 var downloadTask = httpClient.DownloadAsync(_githubUrl, downloadStream, null, CancellationToken.None);

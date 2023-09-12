@@ -753,7 +753,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             MicrosoftTranslationService microsoftTranslationService = null;
             try
             {
-                microsoftTranslationService = new MicrosoftTranslationService(Configuration.Settings.Tools.MicrosoftTranslatorApiKey, Configuration.Settings.Tools.MicrosoftTranslatorTokenEndpoint, Configuration.Settings.Tools.MicrosoftTranslatorCategory);
+                return new MicrosoftTranslationService(Configuration.Settings.Tools.MicrosoftTranslatorApiKey, Configuration.Settings.Tools.MicrosoftTranslatorTokenEndpoint, Configuration.Settings.Tools.MicrosoftTranslatorCategory);
             }
             catch (Exception e)
             {
