@@ -7,8 +7,11 @@
 * IMPROVED:
    * Update Polish translation - thx admas
    * Update Brazilian Portuguese translation - thx igorruckert
+   * Update Bulgarian translation - thx Калин
    * Improve "Dark theme" a little
    * Improve mpv download UI a little - thx Mishasama
+   * Use UTF encoding from settings when saving BDN/XML - thx nautilus7
+   * Take progress % from cmd line if available for Faster Whisper
 * FIXED:
    * Fix video player gfx for installer version - thx David
    * Fix asking for unneeded Purfview Faster Whisper update - thx abc16361
@@ -18,6 +21,8 @@
    * Fix PAC on Linux - thx PunchaiW
    * Fix EBU STL on Linux
    * Fix for using selected text in Find/Replace - thx Daniel
+   * Fix for live spell check - thx AE-Ismail
+   * Fix non UTF8 encoding in GT - thx Andrebavila/ivandrofly
 
 
 4.0.0 (4th September 2023)
