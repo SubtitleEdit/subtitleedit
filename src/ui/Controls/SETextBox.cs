@@ -1,10 +1,9 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Enums;
+using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Drawing;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Controls
 {
@@ -13,12 +12,19 @@ namespace Nikse.SubtitleEdit.Controls
     /// </summary>
     public sealed class SETextBox : Panel
     {
+        // ReSharper disable once InconsistentNaming
         public new event EventHandler TextChanged;
+        // ReSharper disable once InconsistentNaming
         public new event KeyEventHandler KeyDown;
+        // ReSharper disable once InconsistentNaming
         public new event MouseEventHandler MouseClick;
+        // ReSharper disable once InconsistentNaming
         public new event EventHandler Enter;
+        // ReSharper disable once InconsistentNaming
         public new event KeyEventHandler KeyUp;
+        // ReSharper disable once InconsistentNaming
         public new event EventHandler Leave;
+        // ReSharper disable once InconsistentNaming
         public new event MouseEventHandler MouseMove;
 
         private AdvancedTextBox _uiTextBox;
@@ -746,7 +752,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public bool ReadOnly
         {
-            get 
+            get
             {
                 if (_simpleTextBox != null)
                 {
@@ -793,24 +799,14 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        public async Task CheckForLanguageChange(Subtitle subtitle)
+        public void CheckForLanguageChange(Subtitle subtitle)
         {
-            if (_uiTextBox == null)
-            {
-                return;
-            }
-
-            await _uiTextBox.CheckForLanguageChange(subtitle);
+            _uiTextBox?.CheckForLanguageChange(subtitle);
         }
 
-        public async Task InitializeLiveSpellCheck(Subtitle subtitle, int lineNumber)
+        public void InitializeLiveSpellCheck(Subtitle subtitle, int lineNumber)
         {
-            if (_uiTextBox == null)
-            {
-                return;
-            }
-
-            await _uiTextBox.InitializeLiveSpellCheck(subtitle, lineNumber);
+            _uiTextBox?.InitializeLiveSpellCheck(subtitle, lineNumber);
         }
 
         public void DisposeHunspellAndDictionaries() => _uiTextBox?.DisposeHunspellAndDictionaries();
