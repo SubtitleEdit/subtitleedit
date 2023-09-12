@@ -47,35 +47,5 @@ namespace Nikse.SubtitleEdit.Core.Common
                 progress?.Report(totalBytesRead / context.ContentLength);
             }
         }
-
-        public static void CopyTo(this Stream source, Stream destination, int bufferSize)
-        {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-
-            if (destination == null)
-            {
-                throw new ArgumentNullException(nameof(destination));
-            }
-
-            if (bufferSize < 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(bufferSize));
-            }
-
-            var buffer = new byte[bufferSize];
-            var bytesRead = int.MaxValue;
-            while (bytesRead != 0)
-            {
-                if (bytesRead != int.MaxValue)
-                {
-                    destination.Write(buffer, 0, bytesRead);
-                }
-
-                bytesRead = source.Read(buffer, 0, buffer.Length);
-            }
-        }
     }
 }
