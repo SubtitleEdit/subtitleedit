@@ -657,6 +657,21 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             else if (comboBoxWhisperEngine.Text == WhisperChoice.Cpp)
             {
                 Configuration.Settings.Tools.WhisperChoice = WhisperChoice.Cpp;
+                var fileName = WhisperHelper.GetWhisperPathAndFileName();
+                if (!File.Exists(fileName) || WhisperDownload.IsOld(fileName, WhisperChoice.Cpp))
+                {
+                    if (MessageBox.Show(string.Format(LanguageSettings.Current.Settings.DownloadX, "Whisper CPP"), "Subtitle Edit", MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
+                    {
+                        using (var downloadForm = new WhisperDownload(WhisperChoice.Cpp))
+                        {
+                            if (downloadForm.ShowDialog(this) != DialogResult.OK)
+                            {
+                                return;
+                            }
+                        }
+                    }
+                }
+
                 Init();
             }
             else if (comboBoxWhisperEngine.Text == WhisperChoice.ConstMe)
