@@ -1258,6 +1258,12 @@ namespace Nikse.SubtitleEdit.Core.Common
             if (index < originalParagraphs.Count)
             {
                 var o = originalParagraphs[index];
+                
+                if (paragraph.StartTime.IsMaxTime && o.StartTime.IsMaxTime)
+                {
+                    return o;
+                }
+                
                 if (Math.Abs(o.StartTime.TotalMilliseconds - paragraph.StartTime.TotalMilliseconds) < 50)
                 {
                     return o;
@@ -1273,11 +1279,6 @@ namespace Nikse.SubtitleEdit.Core.Common
                 {
                     return o;
                 }
-            }
-
-            if (paragraph.StartTime.IsMaxTime && index < originalParagraphs.Count && originalParagraphs[index].StartTime.IsMaxTime)
-            {
-                return originalParagraphs[index];
             }
 
             foreach (var p in originalParagraphs)
