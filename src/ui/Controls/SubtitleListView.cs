@@ -35,6 +35,8 @@ namespace Nikse.SubtitleEdit.Controls
             return SubtitleColumns.IndexOf(column);
         }
 
+        private static readonly IReadOnlyList<Paragraph> EmptyParagraphs = new List<Paragraph>();
+
         public const int InvalidIndex = -1;
         public int SelectedIndex => SelectedIndices.Count == 1 ? SelectedIndices[0] : InvalidIndex;
 
@@ -1292,49 +1294,10 @@ namespace Nikse.SubtitleEdit.Controls
                 Fill(subtitle.Paragraphs, subtitleOriginal.Paragraphs);
             }
         }
+        
+        internal void Fill(List<Paragraph> paragraphs) => Fill(paragraphs, EmptyParagraphs);
 
-        internal void Fill(List<Paragraph> paragraphs)
-        {
-            SaveFirstVisibleIndex();
-            BeginUpdate();
-            Items.Clear();
-            var x = ListViewItemSorter;
-            ListViewItemSorter = null;
-            var font = new Font(SubtitleFontName, SubtitleFontSize, GetFontStyle());
-            var items = new ListViewItem[paragraphs.Count];
-            for (var index = 0; index < paragraphs.Count; index++)
-            {
-                var paragraph = paragraphs[index];
-                Paragraph next = null;
-                if (index + 1 < paragraphs.Count)
-                {
-                    next = paragraphs[index + 1];
-                }
-                items[index] = MakeListViewItem(paragraph, next, null, font);
-            }
-
-            Items.AddRange(items);
-
-            if (UseSyntaxColoring && _settings != null)
-            {
-                for (var index = 0; index < paragraphs.Count; index++)
-                {
-                    var paragraph = paragraphs[index];
-                    var item = items[index];
-                    SyntaxColorListViewItem(paragraphs, index, paragraph, item);
-                }
-            }
-
-            ListViewItemSorter = x;
-            EndUpdate();
-
-            if (FirstVisibleIndex == 0)
-            {
-                FirstVisibleIndex = -1;
-            }
-        }
-
-        internal void Fill(List<Paragraph> paragraphs, List<Paragraph> paragraphsOriginal)
+        internal void Fill(List<Paragraph> paragraphs, IReadOnlyList<Paragraph> paragraphsOriginal)
         {
             SaveFirstVisibleIndex();
             BeginUpdate();
@@ -1346,7 +1309,7 @@ namespace Nikse.SubtitleEdit.Controls
             for (var index = 0; index < paragraphs.Count; index++)
             {
                 var paragraph = paragraphs[index];
-                Paragraph original = Utilities.GetOriginalParagraph(index, paragraph, paragraphsOriginal);
+                var original = Utilities.GetOriginalParagraph(index, paragraph, paragraphsOriginal);
                 Paragraph next = null;
                 if (index + 1 < paragraphs.Count)
                 {
