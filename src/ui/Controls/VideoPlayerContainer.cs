@@ -1319,6 +1319,7 @@ namespace Nikse.SubtitleEdit.Controls
         public void UnSetFullFixed()
         {
             PanelPlayer.Dock = DockStyle.None;
+            VideoPlayerContainerResize(null, null);
         }
 
         public void ShowFullScreenControls()
