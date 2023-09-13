@@ -3308,6 +3308,7 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.Tools.BatchConvertSortBy = IsActionEnabled(CommandLineConverter.BatchAction.SortBy);
             Configuration.Settings.Tools.BatchConvertSortByChoice = comboBoxSortBy.Text;
             Configuration.Settings.Tools.MergeShortLinesMaxGap = (int)numericUpDownMaxMillisecondsBetweenLines.Value;
+            Configuration.Settings.Tools.MergeShortLinesMaxChars = (int)numericUpDownMaxCharacters.Value;
             Configuration.Settings.Tools.MergeShortLinesOnlyContinuous = checkBoxOnlyContinuationLines.Checked;
             Configuration.Settings.Tools.BatchConvertDeleteLines = IsActionEnabled(CommandLineConverter.BatchAction.DeleteLines);
             Configuration.Settings.Tools.BatchConvertAssaChangeRes = IsActionEnabled(CommandLineConverter.BatchAction.AssaChangeRes);

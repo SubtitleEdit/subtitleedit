@@ -12,6 +12,7 @@
    * Improve mpv download UI a little - thx Mishasama
    * Use UTF encoding from settings when saving BDN/XML - thx nautilus7
    * Take progress % from cmd line if available for Faster Whisper
+   * Update Purfview's Faster Whisper to r153
 * FIXED:
    * Fix video player gfx for installer version - thx David
    * Fix asking for unneeded Purfview Faster Whisper update - thx abc16361
