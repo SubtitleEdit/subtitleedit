@@ -1247,7 +1247,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             return isStart && isEnd;
         }
 
-        public static Paragraph GetOriginalParagraph(int index, Paragraph paragraph, List<Paragraph> originalParagraphs)
+        public static Paragraph GetOriginalParagraph(int index, Paragraph paragraph, IReadOnlyList<Paragraph> originalParagraphs)
         {
             if (index < 0)
             {
