@@ -9988,6 +9988,9 @@ namespace Nikse.SubtitleEdit.Forms
                     indices.Add(item.Index);
                 }
 
+                var first = true;
+                var toggleOn = true;
+
                 SubtitleListview1.BeginUpdate();
                 var isAssa = IsAssa();
                 foreach (int i in indices)
@@ -9995,17 +9998,39 @@ namespace Nikse.SubtitleEdit.Forms
                     var p = _subtitle.GetParagraphOrDefault(i);
                     if (p != null)
                     {
+                        if (first)
+                        {
+                            toggleOn = !HtmlUtil.IsTagOn(p.Text, tag, true, isAssa);
+                            first = false;
+                        }
+
                         if (IsOriginalEditable)
                         {
                             var original = Utilities.GetOriginalParagraph(i, p, _subtitleOriginal.Paragraphs);
                             if (original != null)
                             {
-                                original.Text = HtmlUtil.ToggleTag(original.Text, tag, true, isAssa);
+                                if (toggleOn)
+                                {
+                                    original.Text = HtmlUtil.TagOn(original.Text, tag, true, isAssa);
+                                }
+                                else
+                                {
+                                    original.Text = HtmlUtil.TagOff(original.Text, tag, true, isAssa);
+                                }
+
                                 SubtitleListview1.SetOriginalText(i, original.Text);
                             }
                         }
 
-                        p.Text = HtmlUtil.ToggleTag(p.Text, tag, true, isAssa);
+                        if (toggleOn)
+                        {
+                            p.Text = HtmlUtil.TagOn(p.Text, tag, true, isAssa);
+                        }
+                        else
+                        {
+                            p.Text = HtmlUtil.TagOff(p.Text, tag, true, isAssa);
+                        }
+
                         SubtitleListview1.SetText(i, p.Text);
                     }
                 }

@@ -993,6 +993,120 @@ namespace Nikse.SubtitleEdit.Core.Common
             return text;
         }
 
+        public static bool IsTagOn(string input, string tag, bool wholeLine, bool assa)
+        {
+            var text = input;
+
+            if (assa)
+            {
+                var onOffTags = new List<string> { "i", "b", "u", "s", "be" };
+                if (onOffTags.Contains(tag))
+                {
+                    return text.Contains($"\\{tag}1");
+                }
+
+                return text.Contains($"\\{tag}");
+            }
+
+            return text.IndexOf("<" + tag + ">", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                   text.IndexOf("</" + tag + ">", StringComparison.OrdinalIgnoreCase) >= 0;
+        }
+
+        public static string TagOn(string input, string tag, bool wholeLine, bool assa)
+        {
+            var text = input;
+
+            if (assa)
+            {
+                var onOffTags = new List<string> { "i", "b", "u", "s", "be" };
+                if (onOffTags.Contains(tag))
+                {
+                    text = text.Replace($"{{\\{tag}1}}", string.Empty);
+                    text = text.Replace($"{{\\{tag}0}}", string.Empty);
+                    text = text.Replace($"\\{tag}1", string.Empty);
+                    text = text.Replace($"\\{tag}0", string.Empty);
+
+                    text = wholeLine ? $"{{\\{tag}1}}{text}" : $"{{\\{tag}1}}{text}{{\\{tag}0}}";
+                }
+                else
+                {
+                    if (text.Contains($"\\{tag}"))
+                    {
+                        text = text.Replace($"{{\\{tag}}}", string.Empty);
+                        text = text.Replace($"\\{tag}", string.Empty);
+                    }
+                    text = $"{{\\{tag}}}{text}";
+                }
+
+                return text;
+            }
+
+            text = text.Replace("<" + tag + ">", string.Empty);
+            text = text.Replace("</" + tag + ">", string.Empty);
+            text = text.Replace("<" + tag.ToUpperInvariant() + ">", string.Empty);
+            text = text.Replace("</" + tag.ToUpperInvariant() + ">", string.Empty);
+            var indexOfEndBracket = text.IndexOf('}');
+            if (text.StartsWith("{\\", StringComparison.Ordinal) && indexOfEndBracket > 1 && indexOfEndBracket < 6)
+            {
+                text = $"{text.Substring(0, indexOfEndBracket + 1)}<{tag}>{text.Remove(0, indexOfEndBracket + 1)}</{tag}>";
+            }
+            else
+            {
+                text = $"<{tag}>{text}</{tag}>";
+            }
+
+            return text;
+        }
+
+        public static string TagOff(string input, string tag, bool wholeLine, bool assa)
+        {
+            var text = input;
+
+            if (assa)
+            {
+                var onOffTags = new List<string> { "i", "b", "u", "s", "be" };
+                if (onOffTags.Contains(tag))
+                {
+                    if (text.Contains($"\\{tag}1"))
+                    {
+                        text = text.Replace($"{{\\{tag}1}}", string.Empty);
+                        text = text.Replace($"{{\\{tag}0}}", string.Empty);
+                        text = text.Replace($"\\{tag}1", string.Empty);
+                        text = text.Replace($"\\{tag}0", string.Empty);
+                    }
+                }
+                else
+                {
+                    if (text.Contains($"\\{tag}"))
+                    {
+                        text = text.Replace($"{{\\{tag}}}", string.Empty);
+                        text = text.Replace($"\\{tag}", string.Empty);
+                    }
+                }
+
+                return text;
+            }
+
+            if (text.IndexOf("<" + tag + ">", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                text.IndexOf("</" + tag + ">", StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                text = text.Replace("<" + tag + ">", string.Empty);
+                text = text.Replace("</" + tag + ">", string.Empty);
+                text = text.Replace("<" + tag.ToUpperInvariant() + ">", string.Empty);
+                text = text.Replace("</" + tag.ToUpperInvariant() + ">", string.Empty);
+            }
+            else
+            {
+                var indexOfEndBracket = text.IndexOf('}');
+                if (text.StartsWith("{\\", StringComparison.Ordinal) && indexOfEndBracket > 1 && indexOfEndBracket < 6)
+                {
+                    text = $"{text.Substring(0, indexOfEndBracket + 1)}<{tag}>{text.Remove(0, indexOfEndBracket + 1)}</{tag}>";
+                }
+            }
+
+            return text;
+        }
+
         public static Color GetColorFromString(string s)
         {
             try
