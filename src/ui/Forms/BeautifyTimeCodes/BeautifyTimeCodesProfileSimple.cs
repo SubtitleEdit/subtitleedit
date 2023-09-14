@@ -184,5 +184,17 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
 
             RefreshControls();
         }
+
+        private void BeautifyTimeCodesProfileSimple_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape)
+            {
+                DialogResult = DialogResult.Cancel;
+            }
+            else if (e.KeyData == UiUtil.HelpKeys)
+            {
+                UiUtil.ShowHelp("#beautify_time_codes");
+            }
+        }
     }
 }
