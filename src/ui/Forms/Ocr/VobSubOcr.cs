@@ -813,11 +813,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             _vobSubMergedPackList = vobSubMergedPackList;
             _palette = palette;
-
-            if (_palette == null)
-            {
-                checkBoxCustomFourColors.Checked = true;
-            }
+            checkBoxCustomFourColors.Checked = _palette == null;
 
             SetTesseractLanguageFromLanguageString(languageString);
             _importLanguageString = languageString;
@@ -4555,10 +4551,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             checkBoxUseTimeCodesFromIdx.Checked = hasIdxTimeCodes;
             checkBoxUseTimeCodesFromIdx.CheckedChanged += checkBoxUseTimeCodesFromIdx_CheckedChanged;
             checkBoxShowOnlyForced.Enabled = _hasForcedSubtitles;
-            if (!hasIdxTimeCodes)
-            {
-                checkBoxCustomFourColors.Checked = true;
-            }
             LoadVobRip();
             return _subtitle;
         }

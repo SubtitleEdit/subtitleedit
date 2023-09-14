@@ -36,11 +36,11 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             this.panelTimeCodes = new System.Windows.Forms.Panel();
             this.checkBoxExtractExactTimeCodes = new System.Windows.Forms.CheckBox();
             this.panelExtractTimeCodes = new System.Windows.Forms.Panel();
-            this.buttonCancelTimeCodes = new System.Windows.Forms.Button();
             this.labelExtractTimeCodesProgress = new System.Windows.Forms.Label();
             this.progressBarExtractTimeCodes = new System.Windows.Forms.ProgressBar();
             this.buttonExtractTimeCodes = new System.Windows.Forms.Button();
             this.labelTimeCodesStatus = new Nikse.SubtitleEdit.Controls.NikseLabel();
+            this.buttonCancelTimeCodes = new System.Windows.Forms.Button();
             this.groupBoxShotChanges = new System.Windows.Forms.GroupBox();
             this.checkBoxSnapToShotChanges = new System.Windows.Forms.CheckBox();
             this.panelShotChanges = new System.Windows.Forms.Panel();
@@ -138,17 +138,6 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             this.panelExtractTimeCodes.Size = new System.Drawing.Size(546, 78);
             this.panelExtractTimeCodes.TabIndex = 2;
             // 
-            // buttonCancelTimeCodes
-            // 
-            this.buttonCancelTimeCodes.Location = new System.Drawing.Point(23, 18);
-            this.buttonCancelTimeCodes.Name = "buttonCancelTimeCodes";
-            this.buttonCancelTimeCodes.Size = new System.Drawing.Size(149, 23);
-            this.buttonCancelTimeCodes.TabIndex = 5;
-            this.buttonCancelTimeCodes.Text = "Cancel";
-            this.buttonCancelTimeCodes.UseVisualStyleBackColor = true;
-            this.buttonCancelTimeCodes.Visible = false;
-            this.buttonCancelTimeCodes.Click += new System.EventHandler(this.buttonCancelTimeCodes_Click);
-            // 
             // labelExtractTimeCodesProgress
             // 
             this.labelExtractTimeCodesProgress.AutoSize = true;
@@ -185,6 +174,17 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             this.labelTimeCodesStatus.Size = new System.Drawing.Size(132, 15);
             this.labelTimeCodesStatus.TabIndex = 1;
             this.labelTimeCodesStatus.Text = "123 time codes loaded";
+            // 
+            // buttonCancelTimeCodes
+            // 
+            this.buttonCancelTimeCodes.Location = new System.Drawing.Point(23, 18);
+            this.buttonCancelTimeCodes.Name = "buttonCancelTimeCodes";
+            this.buttonCancelTimeCodes.Size = new System.Drawing.Size(149, 23);
+            this.buttonCancelTimeCodes.TabIndex = 5;
+            this.buttonCancelTimeCodes.Text = "Cancel";
+            this.buttonCancelTimeCodes.UseVisualStyleBackColor = true;
+            this.buttonCancelTimeCodes.Visible = false;
+            this.buttonCancelTimeCodes.Click += new System.EventHandler(this.buttonCancelTimeCodes_Click);
             // 
             // groupBoxShotChanges
             // 
@@ -279,11 +279,15 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             this.DoubleBuffered = true;
             this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.KeyPreview = true;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "BeautifyTimeCodes";
+            this.ShowIcon = false;
+            this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "BeautifyTimeCodes";
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.BeautifyTimeCodes_KeyDown);
             this.groupBoxTimeCodes.ResumeLayout(false);
             this.groupBoxTimeCodes.PerformLayout();
             this.panelTimeCodes.ResumeLayout(false);
