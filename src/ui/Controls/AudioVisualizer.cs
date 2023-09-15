@@ -437,14 +437,12 @@ namespace Nikse.SubtitleEdit.Controls
             double startVisibleMilliseconds = _startPositionSeconds * TimeCode.BaseUnit;
             double endVisibleMilliseconds = EndPositionSeconds * TimeCode.BaseUnit;
 
-            double bucketSize = 1 / Configuration.Settings.General.CurrentFrameRate;
-
             List<Paragraph> displayableParagraphs = new List<Paragraph>();
             Dictionary<int, List<Paragraph>> visibleBuckets = new Dictionary<int, List<Paragraph>>();
             Dictionary<int, List<Paragraph>> invisibleBuckets = new Dictionary<int, List<Paragraph>>();
 
-            Stopwatch start = Stopwatch.StartNew();
-            DisplayableSubtitleHelper helper = new DisplayableSubtitleHelper(startVisibleMilliseconds, endVisibleMilliseconds, 15);
+            DisplayableSubtitleHelper cachingHelper = new DisplayableSubtitleHelper(startVisibleMilliseconds, endVisibleMilliseconds, 15,true);
+            DisplayableSubtitleHelper noCachingHelper = new DisplayableSubtitleHelper(startVisibleMilliseconds, endVisibleMilliseconds, 15, false);
 
             int visibleParagraphsCount = 0;
             for (var i = 0; i < subtitle.Paragraphs.Count; i++)
@@ -456,19 +454,28 @@ namespace Nikse.SubtitleEdit.Controls
                     continue;
                 }
 
-                helper.Add(p);
+                cachingHelper.Add(p);
+                noCachingHelper.Add(p);
             }
+            Stopwatch cachingTimer = Stopwatch.StartNew();
+            List<Paragraph> selectedParagraphs = cachingHelper.GetParagraphs(100, 20);
+            cachingTimer.Stop();
 
-            List<Paragraph> selectedParagraphs = helper.GetParagraphs(100, 20);
+            Stopwatch noCachingTimer = Stopwatch.StartNew();
+            List<Paragraph> noCacheSelectedParagraphs = noCachingHelper.GetParagraphs(100, 20);
+            noCachingTimer.Stop();
+
+            Console.WriteLine($"Prune time (ms) - Cache: {cachingTimer.ElapsedMilliseconds}\tNo cache: {noCachingTimer.ElapsedMilliseconds}");
+
+
             _displayableParagraphs.AddRange(selectedParagraphs);
+            _displayableParagraphs.AddRange(noCacheSelectedParagraphs);
 
             // TODO: Just assign to displayable paragraphs
             //displayableParagraphs.AddRange(SelectParagraphsFromBuckets(visibleBuckets, maxDisplayableParagraphs, visibleParagraphsCount > maxDisplayableParagraphs));
             //displayableParagraphs.AddRange(SelectParagraphsFromBuckets(invisibleBuckets, 20, true));
             //_displayableParagraphs.AddRange(displayableParagraphs);
 
-            start.Stop();
-            Console.WriteLine("Prune time (ms): " + start.ElapsedMilliseconds);
 
             var primaryParagraph = subtitle.GetParagraphOrDefault(primarySelectedIndex);
             if (primaryParagraph != null && !primaryParagraph.StartTime.IsMaxTime)

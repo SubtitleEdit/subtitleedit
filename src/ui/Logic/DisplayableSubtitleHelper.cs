@@ -23,13 +23,16 @@ namespace Nikse.SubtitleEdit.Logic
         private readonly double _startVisibleMilliseconds;
         private readonly double _endVisibleMilliseconds;
 
-        public DisplayableSubtitleHelper(double startMilliseconds, double endMilliseconds, double additionalSeconds)
+        private bool _useCache;
+
+        public DisplayableSubtitleHelper(double startMilliseconds, double endMilliseconds, double additionalSeconds, bool useCache)
         {
             _startThresholdMilliseconds = startMilliseconds - additionalSeconds * 1000;
             _endThresholdMilliseconds = endMilliseconds + additionalSeconds * 1000;
 
             _startVisibleMilliseconds = startMilliseconds;
             _endVisibleMilliseconds = endMilliseconds;
+            _useCache = useCache;
         }
 
         public void Add(Paragraph p)
@@ -86,6 +89,11 @@ namespace Nikse.SubtitleEdit.Logic
         private bool IsInRange(Paragraph p, double start, double end)
         {
             return p.StartTime.TotalMilliseconds <= end && p.EndTime.TotalMilliseconds >= start;
+        }
+
+        private bool ParagraphsOverlap(Paragraph p1, Paragraph p2)
+        {
+            return IsInRange(p1, p2.StartTime.TotalMilliseconds, p2.EndTime.TotalMilliseconds);
         }
 
         private double CalculateAverageParagraphCoverage()
@@ -187,18 +195,31 @@ namespace Nikse.SubtitleEdit.Logic
             return weightedCoverage / (endRange - startRange);
         }
 
-        private Paragraph ChooseOneParagaph(double averageCoverage,double currentVisibleCoverage, int lowestCoverage, List<Paragraph> candidates, List<CoverageRecord> currentCoverage)
+        private Paragraph ChooseOneParagaph(double averageCoverage, double currentVisibleCoverage, int lowestCoverage, ICollection<Paragraph> candidates,
+            List<CoverageRecord> currentCoverage, Dictionary<Paragraph, double> coverageCache)
         {
 
             double minimumCoverage = double.MaxValue;
-            int indexOfMinimum = -1;
+            //int indexOfMinimum = -1;
             Paragraph bestParagraph = null;
 
-            for(var i =  0; i < candidates.Count;i++)
+            //for(var i =  0; i < candidates.Count;i++)
+            foreach (Paragraph p in candidates)
             {
-                Paragraph p = candidates[i];
-                // TODO: If existing coverage > averageCoverage, allow invisible paragraph.
-                double existingCoverage = CalculateCoverageInRange(currentCoverage, p.StartTime.TotalMilliseconds, p.EndTime.TotalMilliseconds);
+                //Paragraph p = candidates[i];
+                double existingCoverage;
+                if (_useCache)
+                {
+                    if (!coverageCache.TryGetValue(p, out existingCoverage))
+                    {
+                        existingCoverage = CalculateCoverageInRange(currentCoverage, p.StartTime.TotalMilliseconds, p.EndTime.TotalMilliseconds);
+                        coverageCache.Add(p, existingCoverage);
+                    }
+                }
+                else
+                {
+                    existingCoverage = CalculateCoverageInRange(currentCoverage, p.StartTime.TotalMilliseconds, p.EndTime.TotalMilliseconds);
+                }
                 if (existingCoverage < minimumCoverage)
                 {
                     if ((currentVisibleCoverage > averageCoverage / 2 && IsInThreshold(p)) || IsVisible(p))
@@ -206,7 +227,7 @@ namespace Nikse.SubtitleEdit.Logic
                         // Prefer visible paragraphs until the visible range has at least reached the average coverage for the range
                         minimumCoverage = existingCoverage;
                         bestParagraph = p;
-                        indexOfMinimum = i;
+                        //indexOfMinimum = i;
                         if (existingCoverage <= lowestCoverage)
                         {
                             break;
@@ -216,7 +237,8 @@ namespace Nikse.SubtitleEdit.Logic
             }
             if (bestParagraph != null)
             {
-                candidates.RemoveAt(indexOfMinimum);
+                candidates.Remove(bestParagraph);
+                //candidates.RemoveAt(indexOfMinimum);
             }
 
             return bestParagraph;
@@ -328,12 +350,13 @@ namespace Nikse.SubtitleEdit.Logic
 
             // Ensure that longer paragraphs are preferred.
             _paragraphs.Sort(new ParagraphComparer());
+            LinkedList<Paragraph> candidates = new LinkedList<Paragraph>(_paragraphs);
 
             int lowestCoverage = 0;
 
             while (result.Count < limit && _paragraphs.Count > 0)
             {
-                Paragraph selection = ChooseOneParagaph(averageCoverage,currentVisibleCoverage,lowestCoverage, _paragraphs, records);
+                Paragraph selection = ChooseOneParagaph(averageCoverage,currentVisibleCoverage,lowestCoverage, candidates, records, coverageCache);
                 if (selection != null)
                 {
                     result.Add(selection);
@@ -345,10 +368,26 @@ namespace Nikse.SubtitleEdit.Logic
                         //Console.WriteLine($"Paragraph selected, adding {coveragePercent} to current coverage. (for a total of {currentVisibleCoverage})");
                         lowestCoverage = FindLowestCoverage(records);
                     }
+                    if (_useCache)
+                    {
+                        invalidateCache(coverageCache, selection.StartTime.TotalMilliseconds, selection.EndTime.TotalMilliseconds);
+                    }
                 }
             }
 
             return result;
+        }
+
+        private void invalidateCache(Dictionary<Paragraph, double> coverageCache, double startRange, double endRange)
+        {
+            List<Paragraph> keys = coverageCache.Keys.ToList();
+            foreach (var key in keys)
+            {
+                if (IsInRange(key, startRange, endRange))
+                {
+                    coverageCache.Remove(key);
+                }
+            }
         }
 
         private void UpdateCoverageRecords(List<CoverageRecord> records, Paragraph newParagraph)
