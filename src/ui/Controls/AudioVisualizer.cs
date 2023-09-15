@@ -11,6 +11,7 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Core.Forms;
+using System.Diagnostics;
 
 namespace Nikse.SubtitleEdit.Controls
 {
@@ -428,55 +429,46 @@ namespace Nikse.SubtitleEdit.Controls
                 return;
             }
 
+            const int maxDisplayableParagraphs = 100;
             const double additionalSeconds = 15.0; // Helps when scrolling
             var startThresholdMilliseconds = (_startPositionSeconds - additionalSeconds) * TimeCode.BaseUnit;
             var endThresholdMilliseconds = (EndPositionSeconds + additionalSeconds) * TimeCode.BaseUnit;
 
-            List<Paragraph> thresholdParagraphs = subtitle.Paragraphs.Where(p => !p.StartTime.IsMaxTime)
-                .Where(p => p.EndTime.TotalMilliseconds >= startThresholdMilliseconds && p.StartTime.TotalMilliseconds <= endThresholdMilliseconds).ToList();
-            _subtitle.Paragraphs.AddRange(thresholdParagraphs);
-
             double startVisibleMilliseconds = _startPositionSeconds * TimeCode.BaseUnit;
             double endVisibleMilliseconds = EndPositionSeconds * TimeCode.BaseUnit;
-            List<Paragraph> visibleParagraphs = thresholdParagraphs.Where(
-                p => p.EndTime.TotalMilliseconds >= startVisibleMilliseconds && p.StartTime.TotalMilliseconds <= endVisibleMilliseconds).ToList();
-            List<Paragraph> invisibleParagraphs = thresholdParagraphs.Except(visibleParagraphs).ToList();
 
-            const int maxDisplayableParagraphs = 100;
-            IEnumerable<Paragraph> displayableParagraphs = visibleParagraphs;
-            if (visibleParagraphs.Count > maxDisplayableParagraphs)
+            double bucketSize = 1 / Configuration.Settings.General.CurrentFrameRate;
+
+            List<Paragraph> displayableParagraphs = new List<Paragraph>();
+            Dictionary<int, List<Paragraph>> visibleBuckets = new Dictionary<int, List<Paragraph>>();
+            Dictionary<int, List<Paragraph>> invisibleBuckets = new Dictionary<int, List<Paragraph>>();
+
+            Stopwatch start = Stopwatch.StartNew();
+            DisplayableSubtitleHelper helper = new DisplayableSubtitleHelper(startVisibleMilliseconds, endVisibleMilliseconds, 15);
+
+            int visibleParagraphsCount = 0;
+            for (var i = 0; i < subtitle.Paragraphs.Count; i++)
             {
-                /*
-                 * Group & select is done so that it draws paragraphs across the entire timeline before drawing overlapping paragraphs, up to the display limit.
-                 * Materialize to list so that it can be counted below without pruning twice.
-                 */
-                displayableParagraphs = visibleParagraphs.Where(p => p.DurationTotalMilliseconds >= 0.01)
-                    .GroupBy(p => Math.Floor(SecondsToXPosition(p.StartTime.TotalSeconds) / 5.0))
-                    .SelectMany(group => group,
-                        (group, p) =>
-                            {
-                                int index = group.ToList().IndexOf(p);
-                                return new { index, p };
-                            })
-                    .OrderBy(items => items.index)
-                    .Select(item => item.p)
-                    .Take(maxDisplayableParagraphs)
-                    .ToList();
+                var p = subtitle.Paragraphs[i];
+
+                if (p.StartTime.IsMaxTime)
+                {
+                    continue;
+                }
+
+                helper.Add(p);
             }
 
-            if (displayableParagraphs.Count() < maxDisplayableParagraphs && invisibleParagraphs.Count + displayableParagraphs.Count() > maxDisplayableParagraphs)
-            {
-                // These paragraphs won't be visible in the timeline and are in addition to visible paragraphs, so use simpler pruning algorithm to save time.
-                IEnumerable<Paragraph> additionalParagraphs = invisibleParagraphs.Where(p => p.DurationTotalMilliseconds >= 0.01)
-                    .GroupBy(p => Math.Floor(SecondsToXPosition(p.StartTime.TotalSeconds) / 5.0))
-                    .Select(p => p.First());
-                displayableParagraphs = displayableParagraphs.Concat(additionalParagraphs);
-            }
-            else
-            {
-                displayableParagraphs = displayableParagraphs.Concat(invisibleParagraphs);
-            }
-            _displayableParagraphs.AddRange(displayableParagraphs.Take(maxDisplayableParagraphs));
+            List<Paragraph> selectedParagraphs = helper.GetParagraphs(100, 20);
+            _displayableParagraphs.AddRange(selectedParagraphs);
+
+            // TODO: Just assign to displayable paragraphs
+            //displayableParagraphs.AddRange(SelectParagraphsFromBuckets(visibleBuckets, maxDisplayableParagraphs, visibleParagraphsCount > maxDisplayableParagraphs));
+            //displayableParagraphs.AddRange(SelectParagraphsFromBuckets(invisibleBuckets, 20, true));
+            //_displayableParagraphs.AddRange(displayableParagraphs);
+
+            start.Stop();
+            Console.WriteLine("Prune time (ms): " + start.ElapsedMilliseconds);
 
             var primaryParagraph = subtitle.GetParagraphOrDefault(primarySelectedIndex);
             if (primaryParagraph != null && !primaryParagraph.StartTime.IsMaxTime)
@@ -494,6 +486,48 @@ namespace Nikse.SubtitleEdit.Controls
                 }
             }
         }
+
+        private List<Paragraph> SelectParagraphsFromBuckets(Dictionary<int, List<Paragraph>> buckets, int numberOfParagraphs, bool pruneShortParagraphs)
+        {
+            foreach (List<Paragraph> bucket in buckets.Values)
+            {
+                // Sort buckets with longest paragraphs first.
+                bucket.Sort((first, second) => { return (int)(second.DurationTotalSeconds - first.DurationTotalSeconds); });
+            }
+
+            List<Paragraph> result = new List<Paragraph>();
+            while (result.Count < numberOfParagraphs && buckets.Count > 0)
+            {
+                List<int> keys = buckets.Keys.ToList();
+                //// Iterate over keys evenly spread over the timeline
+                //keys.Sort((a, b) => a % numberOfParagraphs - b % numberOfParagraphs);
+                foreach (int key in keys)
+                {
+                    List<Paragraph> bucket = buckets[key];
+                    Paragraph p;
+                    while (bucket.Count > 0 && result.Count < numberOfParagraphs)
+                    {
+                        p = bucket[0];
+                        bucket.RemoveAt(0);
+
+                        if (pruneShortParagraphs && p.DurationTotalMilliseconds < 0.01)
+                        {
+                            continue;
+                        }
+
+                        result.Add(p);
+                        break;
+                    }
+
+                    if (bucket.Count == 0)
+                    {
+                        buckets.Remove(key);
+                    }
+                }
+            }
+            return result;
+        }
+
 
         public void SetPosition(double startPositionSeconds, Subtitle subtitle, double currentVideoPositionSeconds, int subtitleIndex, ListView.SelectedIndexCollection selectedIndexes)
         {
