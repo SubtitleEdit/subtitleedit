@@ -216,7 +216,8 @@ Chcesz przeczytać więcej informacji (w sieci)?</WhisperNotFound>
     <RemoveTemporaryFiles>Usuń pliki tymczasowe</RemoveTemporaryFiles>
     <SetCppConstMeFolder>Ustaw folder modeli CPP/Const-me...</SetCppConstMeFolder>
     <OnlyRunPostProcessing>Uruchom tylko przetwarzanie końcowe/dostosuj czasy</OnlyRunPostProcessing>
-    <DownloadFasterWhisperCuda>Pobierz cuBLAS i cuDNN dla Faster-Whisper</DownloadFasterWhisperCuda>
+    <DownloadFasterWhisperCuda>Pobierz biblioteki cuBLAS i cuDNN dla Faster-Whisper</DownloadFasterWhisperCuda>
+    <NoTextFound>Nie znaleziono tekstu!</NoTextFound>
   </AudioToText>
   <AssaAttachments>
     <Title>Załączniki Advanced Sub Station Alpha</Title>
