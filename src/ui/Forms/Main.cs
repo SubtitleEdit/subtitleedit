@@ -74,6 +74,7 @@ namespace Nikse.SubtitleEdit.Forms
         private int MinGapBetweenLines => Configuration.Settings.General.MinimumMillisecondsBetweenLines;
         private bool _isOriginalActive;
         private bool IsOriginalEditable => _isOriginalActive && Configuration.Settings.General.AllowEditOfOriginalSubtitle;
+        private bool IsVideoVisible => _layout != 7;
 
         private Subtitle _subtitle = new Subtitle();
         private Subtitle _subtitleOriginal = new Subtitle();
@@ -3884,7 +3885,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _findHelper = null;
                 _spellCheckForm = null;
 
-                if (panelVideoPlayer.Visible || groupBoxVideo.Visible)
+                if (IsVideoVisible)
                 {
                     if (!Configuration.Settings.General.DisableVideoAutoLoading)
                     {
@@ -3892,7 +3893,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             OpenVideo(videoFileName, audioTrack);
                         }
-                        else if (!string.IsNullOrEmpty(fileName) && (panelVideoPlayer.Visible || toolStripButtonLayout.Checked))
+                        else if (!string.IsNullOrEmpty(fileName))
                         {
                             TryToFindAndOpenVideoFile(Utilities.GetPathAndFileNameWithoutExtension(fileName));
                         }
@@ -23503,7 +23504,7 @@ namespace Nikse.SubtitleEdit.Forms
                     left = tabControlModes.Left + tabControlModes.Width + 5;
                 }
                 splitContainerMain.Panel2Collapsed = false;
-                if (panelVideoPlayer.Visible)
+                if (IsVideoVisible)
                 {
                     if (audioVisualizer.Visible)
                     {
@@ -23554,7 +23555,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             _videoPlayerUndocked.Visible = false;
-            if (panelVideoPlayer.Visible)
+            if (IsVideoVisible)
             {
                 _videoPlayerUndocked.Show(this);
                 if (_videoPlayerUndocked.WindowState == FormWindowState.Minimized)
@@ -23578,7 +23579,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            if (panelVideoPlayer.Visible || toolStripButtonLayout.Checked)
+            if (IsVideoVisible)
             {
                 if (_videoControlsUndocked == null || _videoControlsUndocked.IsDisposed)
                 {
@@ -24432,7 +24433,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 openFileDialog1.InitialDirectory = Path.GetDirectoryName(openFileDialog1.FileName);
-                if (!panelVideoPlayer.Visible)
+                if (!IsVideoVisible)
                 {
                     _layout = 0;
                     LayoutManager.SetLayout(_layout, Controls, panelVideoPlayer, SubtitleListview1, groupBoxVideo, groupBoxEdit);
@@ -24941,7 +24942,7 @@ namespace Nikse.SubtitleEdit.Forms
                     audioVisualizer.Left = tabControlModes.Left + tabControlModes.Width + 5;
                 }
 
-                if (!toolStripButtonLayout.Checked && panelVideoPlayer.Visible)
+                if (!IsVideoVisible)
                 {
                     panelVideoPlayer.Left = tabControlModes.Left + tabControlModes.Width + 5;
                     panelVideoPlayer.Width = groupBoxVideo.Width - (panelVideoPlayer.Left + 10);
@@ -28502,6 +28503,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         #endregion Networking
 
+
+        private Control _videoPlayerUndockParent;
+
         private void UnDockVideoPlayer()
         {
             bool firstUndock = _videoPlayerUndocked != null && !_videoPlayerUndocked.IsDisposed;
@@ -28514,6 +28518,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             Control control = panelVideoPlayer;
+            _videoPlayerUndockParent = control.Parent;
             if (control.Parent != null)
             {
                 control.Parent.Controls.Remove(control);
@@ -28531,18 +28536,30 @@ namespace Nikse.SubtitleEdit.Forms
 
         public void ReDockVideoPlayer(Control control)
         {
-            groupBoxVideo.Controls.Add(control);
+            if (_videoPlayerUndockParent != null)
+            {
+                _videoPlayerUndockParent.Controls.Add(control);
+                control.Dock = DockStyle.Fill;
+            }
+
             mediaPlayer.FontSizeFactor = 1.0F;
             mediaPlayer.SetSubtitleFont();
             mediaPlayer.SubtitleText = string.Empty;
         }
+
+        private Control _waveformUndockParent;
 
         private void UnDockWaveform()
         {
             _waveformUndocked = new WaveformUndocked(this);
 
             var control = audioVisualizer;
-            groupBoxVideo.Controls.Remove(control);
+            _waveformUndockParent = control.Parent;
+            if (_waveformUndockParent != null)
+            {
+                _waveformUndockParent.Controls.Remove(control);
+            }
+
             control.Top = 0;
             control.Left = 0;
             control.Width = _waveformUndocked.PanelContainer.Width;
@@ -28633,7 +28650,7 @@ namespace Nikse.SubtitleEdit.Forms
                 // ignore
             }
 
-            if (panelVideoPlayer.Visible)
+            if (IsVideoVisible)
             {
                 _videoPlayerUndocked.Show(this);
                 if (_videoPlayerUndocked.Top < 0 || _videoPlayerUndocked.Left < 0)
@@ -28736,7 +28753,7 @@ namespace Nikse.SubtitleEdit.Forms
             audioVisualizer.Visible = toolStripButtonLayout.Checked;
             trackBarWaveformPosition.Visible = toolStripButtonLayout.Checked;
             panelWaveformControls.Visible = toolStripButtonLayout.Checked;
-            if (!panelVideoPlayer.Visible)
+            if (!IsVideoVisible)
             {
                 HideVideoPlayer();
             }
@@ -33660,7 +33677,7 @@ namespace Nikse.SubtitleEdit.Forms
                             audioVisualizer.Chapters = Array.Empty<MatroskaChapter>();
                         }
 
-                        if (!panelVideoPlayer.Visible)
+                        if (!IsVideoVisible)
                         {
                             _layout = 0;
                             LayoutManager.SetLayout(_layout, Controls, panelVideoPlayer, SubtitleListview1, groupBoxVideo, groupBoxEdit);
