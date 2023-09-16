@@ -178,8 +178,12 @@ namespace Nikse.SubtitleEdit.Forms.SeMsgBox
 
             const int buttonWidth = 80;
             var start = (Width - (buttonControls.Count * (buttonWidth + 10)) - 10) / 2;
+
+            var accessKeyDictionary = new HashSet<char>();
             foreach (var buttonControl in buttonControls)
             {
+                AutoAddAccessKey(buttonControl, accessKeyDictionary);
+
                 buttonControl.Width = buttonWidth;
                 buttonControl.Visible = true;
                 buttonControl.Left = start;
@@ -193,6 +197,30 @@ namespace Nikse.SubtitleEdit.Forms.SeMsgBox
                 buttonControls[0].NotifyDefault(true);
 
                 CancelButton = buttonCancel;
+            }
+        }
+
+        private static void AutoAddAccessKey(Button button, HashSet<char> accessKeyDictionary)
+        {
+            if (!button.Text.Contains('&'))
+            {
+                if (button.Text == "Cancel" && !accessKeyDictionary.Contains('a'))
+                {
+                    button.Text = "C&ancel";
+                }
+                else
+                {
+                    foreach (var ch in button.Text)
+                    {
+                        if (char.IsLetter(ch) && !accessKeyDictionary.Contains(ch))
+                        {
+                            accessKeyDictionary.Add(ch);
+                            var idx = button.Text.IndexOf(ch);
+                            button.Text = button.Text.Insert(idx, "&");
+                            return;
+                        }
+                    }
+                }
             }
         }
 
