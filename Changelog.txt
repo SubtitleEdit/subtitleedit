@@ -1,6 +1,6 @@
 ﻿Subtitle Edit Changelog
 
-4.0.1 (xth September 2023) - BETA
+4.0.1 (16th September 2023)
 * NEW:
    * Support for import of Ooona shot change file - thx Eva
    * ASSA styles sortable - thx tormento
