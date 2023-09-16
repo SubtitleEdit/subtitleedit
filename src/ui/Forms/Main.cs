@@ -448,13 +448,11 @@ namespace Nikse.SubtitleEdit.Forms
                     SwitchView(ListView);
                 }
 
-                audioVisualizer.Visible = Configuration.Settings.General.ShowAudioVisualizer;
+                //audioVisualizer.Visible = Configuration.Settings.General.ShowAudioVisualizer;
                 audioVisualizer.ShowWaveform = Configuration.Settings.General.ShowWaveform;
                 audioVisualizer.ShowSpectrogram = Configuration.Settings.General.ShowSpectrogram;
-                panelWaveformControls.Visible = Configuration.Settings.General.ShowAudioVisualizer;
-                trackBarWaveformPosition.Visible = Configuration.Settings.General.ShowAudioVisualizer;
-                toolStripButtonToggleWaveform.Checked = Configuration.Settings.General.ShowAudioVisualizer;
-                toolStripButtonToggleVideo.Checked = Configuration.Settings.General.ShowVideoPlayer;
+                //panelWaveformControls.Visible = Configuration.Settings.General.ShowAudioVisualizer;
+                //trackBarWaveformPosition.Visible = Configuration.Settings.General.ShowAudioVisualizer;
 
                 if (Configuration.Settings.General.UseTimeFormatHHMMSSFF)
                 {
@@ -1852,8 +1850,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripButtonSettings.ToolTipText = _language.Menu.ToolBar.Settings;
             toolStripButtonHelp.ToolTipText = _language.Menu.ToolBar.Help;
             toolStripButtonSourceView.ToolTipText = LanguageSettings.Current.Settings.ToggleView;
-            toolStripButtonToggleWaveform.ToolTipText = _language.Menu.ToolBar.ShowHideWaveform;
-            toolStripButtonToggleVideo.ToolTipText = _language.Menu.ToolBar.ShowHideVideo;
+            toolStripButtonLayout.ToolTipText = _language.Menu.ToolBar.Layout;
 
             toolStripMenuItemAssStyles.Text = _language.Menu.ContextMenu.SubStationAlphaStyles;
             toolStripMenuItemAssaStyles.Text = _language.Menu.ContextMenu.SubStationAlphaStyles;
@@ -3886,7 +3883,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _findHelper = null;
                 _spellCheckForm = null;
 
-                if (Configuration.Settings.General.ShowVideoPlayer || Configuration.Settings.General.ShowAudioVisualizer)
+                if (panelVideoPlayer.Visible || groupBoxVideo.Visible)
                 {
                     if (!Configuration.Settings.General.DisableVideoAutoLoading)
                     {
@@ -3894,7 +3891,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             OpenVideo(videoFileName, audioTrack);
                         }
-                        else if (!string.IsNullOrEmpty(fileName) && (toolStripButtonToggleVideo.Checked || toolStripButtonToggleWaveform.Checked))
+                        else if (!string.IsNullOrEmpty(fileName) && (panelVideoPlayer.Visible || toolStripButtonLayout.Checked))
                         {
                             TryToFindAndOpenVideoFile(Utilities.GetPathAndFileNameWithoutExtension(fileName));
                         }
@@ -6069,8 +6066,7 @@ namespace Nikse.SubtitleEdit.Forms
                 TryLoadIcon(toolStripButtonAssaDraw, "AssaDraw");
                 TryLoadIcon(toolStripButtonSettings, "Settings");
                 TryLoadIcon(toolStripButtonHelp, "Help");
-                TryLoadIcon(toolStripButtonToggleWaveform, "WaveformToggle");
-                TryLoadIcon(toolStripButtonToggleVideo, "VideoToggle");
+                TryLoadIcon(toolStripButtonLayout, "Layout");
                 TryLoadIcon(toolStripButtonSourceView, "SourceView");
 
                 // wave form toolbar
@@ -23498,17 +23494,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
-                if (toolStripButtonToggleVideo.Checked && toolStripButtonToggleWaveform.Checked)
-                {
-                    splitContainer1.Panel2Collapsed = false;
-                    MoveVideoUp();
-                }
-                else
-                {
-                    splitContainer1.Panel2Collapsed = true;
-                    MoveVideoDown();
-                }
-
                 tabControlModes.Visible = Configuration.Settings.General.ShowVideoControls;
                 var left = 5;
                 if (Configuration.Settings.General.ShowVideoControls)
@@ -23516,7 +23501,7 @@ namespace Nikse.SubtitleEdit.Forms
                     left = tabControlModes.Left + tabControlModes.Width + 5;
                 }
                 splitContainerMain.Panel2Collapsed = false;
-                if (toolStripButtonToggleVideo.Checked)
+                if (panelVideoPlayer.Visible)
                 {
                     if (audioVisualizer.Visible)
                     {
@@ -23567,7 +23552,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             _videoPlayerUndocked.Visible = false;
-            if (toolStripButtonToggleVideo.Checked)
+            if (panelVideoPlayer.Visible)
             {
                 _videoPlayerUndocked.Show(this);
                 if (_videoPlayerUndocked.WindowState == FormWindowState.Minimized)
@@ -23582,7 +23567,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             _waveformUndocked.Visible = false;
-            if (toolStripButtonToggleWaveform.Checked)
+            if (toolStripButtonLayout.Checked)
             {
                 _waveformUndocked.Show(this);
                 if (_waveformUndocked.WindowState == FormWindowState.Minimized)
@@ -23591,7 +23576,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            if (toolStripButtonToggleVideo.Checked || toolStripButtonToggleWaveform.Checked)
+            if (panelVideoPlayer.Visible || toolStripButtonLayout.Checked)
             {
                 if (_videoControlsUndocked == null || _videoControlsUndocked.IsDisposed)
                 {
@@ -24447,7 +24432,8 @@ namespace Nikse.SubtitleEdit.Forms
                 openFileDialog1.InitialDirectory = Path.GetDirectoryName(openFileDialog1.FileName);
                 if (!panelVideoPlayer.Visible)
                 {
-                    ToolStripButtonToggleVideoClick(null, null);
+                    _layout = 0;
+                    LayoutManager.SetLayout(_layout, Controls, panelVideoPlayer, SubtitleListview1, groupBoxVideo, groupBoxEdit);
                 }
 
                 OpenVideo(openFileDialog1.FileName);
@@ -24457,41 +24443,9 @@ namespace Nikse.SubtitleEdit.Forms
             return false;
         }
 
-        private void ToolStripButtonToggleVideoClick(object sender, EventArgs e)
-        {
-            _textHeightResize = splitContainerListViewAndText.Height - splitContainerListViewAndText.SplitterDistance;
-            _textHeightResizeIgnoreUpdate = DateTime.UtcNow.Ticks;
-
-            toolStripButtonToggleVideo.Checked = !toolStripButtonToggleVideo.Checked;
-            panelVideoPlayer.Visible = toolStripButtonToggleVideo.Checked;
-            mediaPlayer.BringToFront();
-            if (!toolStripButtonToggleVideo.Checked && !toolStripButtonToggleWaveform.Checked)
-            {
-                if (_isVideoControlsUndocked)
-                {
-                    ShowHideUndockedVideoControls();
-                }
-                else
-                {
-                    HideVideoPlayer();
-                }
-            }
-            else
-            {
-                ShowVideoPlayer();
-            }
-
-            Configuration.Settings.General.ShowVideoPlayer = toolStripButtonToggleVideo.Checked;
-            if (!_loading)
-            {
-                MainResize();
-                Refresh();
-            }
-        }
-
         private void ToolStripButtonToggleWaveformClick(object sender, EventArgs e)
         {
-            using (var form = new LayoutPicker())
+            using (var form = new LayoutPicker(_layout))
             {
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
@@ -24499,36 +24453,6 @@ namespace Nikse.SubtitleEdit.Forms
                     LayoutManager.SetLayout(_layout, Controls, panelVideoPlayer, SubtitleListview1, groupBoxVideo, groupBoxEdit);
                 }
             }
-
-            //_textHeightResize = splitContainerListViewAndText.Height - splitContainerListViewAndText.SplitterDistance;
-            //_textHeightResizeIgnoreUpdate = DateTime.UtcNow.Ticks;
-
-            //toolStripButtonToggleWaveform.Checked = !toolStripButtonToggleWaveform.Checked;
-            //audioVisualizer.Visible = toolStripButtonToggleWaveform.Checked;
-            //trackBarWaveformPosition.Visible = toolStripButtonToggleWaveform.Checked;
-            //panelWaveformControls.Visible = toolStripButtonToggleWaveform.Checked;
-            //if (!toolStripButtonToggleWaveform.Checked && !toolStripButtonToggleVideo.Checked)
-            //{
-            //    if (_isVideoControlsUndocked)
-            //    {
-            //        ShowHideUndockedVideoControls();
-            //    }
-            //    else
-            //    {
-            //        HideVideoPlayer();
-            //    }
-            //}
-            //else
-            //{
-            //    ShowVideoPlayer();
-            //}
-
-            //Configuration.Settings.General.ShowAudioVisualizer = toolStripButtonToggleWaveform.Checked;
-            //if (!_loading)
-            //{
-            //    MainResize();
-            //    Refresh();
-            //}
         }
 
         public void ShowEarlierOrLater(double adjustMilliseconds, SelectionChoice selection)
@@ -25010,12 +24934,12 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (!_isVideoControlsUndocked)
             {
-                if (toolStripButtonToggleWaveform.Checked)
+                if (toolStripButtonLayout.Checked)
                 {
                     audioVisualizer.Left = tabControlModes.Left + tabControlModes.Width + 5;
                 }
 
-                if (!toolStripButtonToggleWaveform.Checked && toolStripButtonToggleVideo.Checked)
+                if (!toolStripButtonLayout.Checked && panelVideoPlayer.Visible)
                 {
                     panelVideoPlayer.Left = tabControlModes.Left + tabControlModes.Width + 5;
                     panelVideoPlayer.Width = groupBoxVideo.Width - (panelVideoPlayer.Left + 10);
@@ -25317,9 +25241,6 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 SubtitleListview1.Columns[SubtitleListview1.ColumnIndexNumber].Width = SubtitleListview1.Columns[SubtitleListview1.ColumnIndexNumber].Width + 18;
             }
-
-            toolStripButtonToggleVideo.Checked = !Configuration.Settings.General.ShowVideoPlayer;
-            ToolStripButtonToggleVideoClick(null, null);
 
             StartOrStopAutoBackup();
             StartOrStopLiveSpellCheckTimer();
@@ -28703,7 +28624,7 @@ namespace Nikse.SubtitleEdit.Forms
                 // ignore
             }
 
-            if (toolStripButtonToggleVideo.Checked)
+            if (panelVideoPlayer.Visible)
             {
                 _videoPlayerUndocked.Show(this);
                 if (_videoPlayerUndocked.Top < 0 || _videoPlayerUndocked.Left < 0)
@@ -28717,7 +28638,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             UnDockWaveform();
-            if (toolStripButtonToggleWaveform.Checked)
+            if (toolStripButtonLayout.Checked)
             {
                 _waveformUndocked.Show(this);
                 if (_waveformUndocked.Top < 0 || _waveformUndocked.Left < 0)
@@ -28803,10 +28724,10 @@ namespace Nikse.SubtitleEdit.Forms
             _videoControlsUndocked = null;
             ShowVideoPlayer();
 
-            audioVisualizer.Visible = toolStripButtonToggleWaveform.Checked;
-            trackBarWaveformPosition.Visible = toolStripButtonToggleWaveform.Checked;
-            panelWaveformControls.Visible = toolStripButtonToggleWaveform.Checked;
-            if (!toolStripButtonToggleVideo.Checked)
+            audioVisualizer.Visible = toolStripButtonLayout.Checked;
+            trackBarWaveformPosition.Visible = toolStripButtonLayout.Checked;
+            panelWaveformControls.Visible = toolStripButtonLayout.Checked;
+            if (!panelVideoPlayer.Visible)
             {
                 HideVideoPlayer();
             }
@@ -28824,12 +28745,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         internal void SetWaveformToggleOff()
         {
-            toolStripButtonToggleWaveform.Checked = false;
-        }
-
-        internal void SetVideoPlayerToggleOff()
-        {
-            toolStripButtonToggleVideo.Checked = false;
+            toolStripButtonLayout.Checked = false;
         }
 
         private void ToolStripMenuItemInsertSubtitleClick(object sender, EventArgs e)
@@ -33737,7 +33653,8 @@ namespace Nikse.SubtitleEdit.Forms
 
                         if (!panelVideoPlayer.Visible)
                         {
-                            ToolStripButtonToggleVideoClick(null, null);
+                            _layout = 0;
+                            LayoutManager.SetLayout(_layout, Controls, panelVideoPlayer, SubtitleListview1, groupBoxVideo, groupBoxEdit);
                         }
 
                         OpenVideoFromUrl(url);
