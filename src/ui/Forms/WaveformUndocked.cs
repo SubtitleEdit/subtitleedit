@@ -35,7 +35,6 @@ namespace Nikse.SubtitleEdit.Forms
                 var controlTrackBar = panelContainer.Controls[2];
                 panelContainer.Controls.Clear();
                 _mainForm.ReDockWaveform(controlWaveform, controlButtons, controlTrackBar);
-                _mainForm.SetWaveformToggleOff();
             }
         }
 

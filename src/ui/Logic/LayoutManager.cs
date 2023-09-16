@@ -6,6 +6,8 @@ namespace Nikse.SubtitleEdit.Logic
 {
     public static class LayoutManager
     {
+        public const int LayoutNoVideo = 7;
+
         public static int ToggleLayout(int layout, Control.ControlCollection controls, Control videoPlayer, SubtitleListView subtitleListView, GroupBox groupBoxWaveform, GroupBox groupBoxEdit)
         {
             layout++;

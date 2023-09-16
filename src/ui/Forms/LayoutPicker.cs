@@ -350,6 +350,34 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void LayoutPicker_Shown(object sender, EventArgs e)
         {
+            switch (_layout)
+            {
+                case 0:
+                    button1.Focus();
+                    break;
+                case 1:
+                    button2.Focus();
+                    break;
+                case 2:
+                    button3.Focus();
+                    break;
+                case 3:
+                    button4.Focus();
+                    break;
+                case 4:
+                    button5.Focus();
+                    break;
+                case 5:
+                    button6.Focus();
+                    break;
+                case 6:
+                    button7.Focus();
+                    break;
+                case 7:
+                    button8.Focus();
+                    break;
+            }
+
             _loading = false;
             SelectLayout(_layout);
         }
