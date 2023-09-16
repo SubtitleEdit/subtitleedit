@@ -1606,11 +1606,6 @@
     <Compile Include="Forms\SyncPointsSync.Designer.cs">
       <DependentUpon>SyncPointsSync.cs</DependentUpon>
     </Compile>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
     <EmbeddedResource Include="Controls\AudioVisualizer.resx">
       <DependentUpon>AudioVisualizer.cs</DependentUpon>
     </EmbeddedResource>
@@ -2302,6 +2297,11 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
@@ -2535,6 +2535,15 @@
     <None Include="Resources\Transparent Background.png" />
     <None Include="Resources\bookmark22dark.png" />
     <None Include="Resources\bookmark22transparent.png" />
+    <None Include="Resources\L8.png" />
+    <None Include="Resources\L3.png" />
+    <None Include="Resources\L4.png" />
+    <None Include="Resources\L5.png" />
+    <None Include="Resources\L6.png" />
+    <None Include="Resources\L2.png" />
+    <None Include="Resources\L1.png" />
+    <None Include="Resources\Layout7.png" />
+    <None Include="Resources\L7.png" />
     <Content Include="Resources\TesseractDictionaries.xml">
       <SubType>Designer</SubType>
     </Content>

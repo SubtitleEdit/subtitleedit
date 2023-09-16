@@ -16,7 +16,6 @@ namespace Nikse.SubtitleEdit.Forms
             CancelButton = buttonCancel;
         }
 
-
         public int GetLayout()
         {
             return _layout;
@@ -24,55 +23,49 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void button1_Click(object sender, System.EventArgs e)
         {
-            _layout = 1;
+            _layout = 0;
             DialogResult = DialogResult.OK;
         }
 
         private void button2_Click(object sender, System.EventArgs e)
         {
-            _layout = 2;
+            _layout = 1;
             DialogResult = DialogResult.OK;
         }
 
         private void button3_Click(object sender, System.EventArgs e)
         {
-            _layout = 3;
+            _layout = 2;
             DialogResult = DialogResult.OK;
         }
 
         private void button4_Click(object sender, System.EventArgs e)
         {
-            _layout = 4;
+            _layout = 3;
             DialogResult = DialogResult.OK;
         }
 
         private void button5_Click(object sender, System.EventArgs e)
         {
-            _layout = 5;
+            _layout = 4;
             DialogResult = DialogResult.OK;
         }
 
         private void button6_Click(object sender, System.EventArgs e)
         {
-            _layout = 6;
+            _layout = 5;
             DialogResult = DialogResult.OK;
         }
 
         private void button7_Click(object sender, System.EventArgs e)
         {
-            _layout = 7;
+            _layout = 6;
             DialogResult = DialogResult.OK;
         }
 
         private void button8_Click(object sender, System.EventArgs e)
         {
-            _layout = 8;
-            DialogResult = DialogResult.OK;
-        }
-
-        private void button9_Click(object sender, System.EventArgs e)
-        {
-            _layout = 9;
+            _layout = 7;
             DialogResult = DialogResult.OK;
         }
     }
