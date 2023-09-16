@@ -13,6 +13,7 @@
    * Use UTF encoding from settings when saving BDN/XML - thx nautilus7
    * Take progress % from cmd line if available for Faster Whisper
    * Update Purfview's Faster Whisper to r153
+   * Remember "Merge short lines" "Max chars" in "Batch convert" - thx despairTK
 * FIXED:
    * Fix video player gfx for installer version - thx David
    * Fix asking for unneeded Purfview Faster Whisper update - thx abc16361
@@ -24,6 +25,7 @@
    * Fix for using selected text in Find/Replace - thx Daniel
    * Fix for live spell check - thx AE-Ismail
    * Fix non UTF8 encoding in GT - thx Andrebavila/ivandrofly
+   * Fix toggle tag in translation mode - thx Leon
 
 
 4.0.0 (4th September 2023)
