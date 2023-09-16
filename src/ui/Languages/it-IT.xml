@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>4.0.1</Version>
-    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 03.09.2023</TranslatedBy>
+    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 16.09.2023</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -217,6 +217,7 @@ Vuoi ulteriori informazioni (web)?</WhisperNotFound>
     <SetCppConstMeFolder>Imposta cartella modelli CPP/Const-me...</SetCppConstMeFolder>
     <OnlyRunPostProcessing>Esegui solo la post-elaborazione/regola i tempi</OnlyRunPostProcessing>
     <DownloadFasterWhisperCuda>Download cuBLAS e cuDNN per Faster-Whisper</DownloadFasterWhisperCuda>
+    <NoTextFound>Nessun testo trovato!</NoTextFound>
   </AudioToText>
   <AssaAttachments>
     <Title>Allegati alpha sub station avanzati</Title>
