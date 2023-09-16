@@ -2077,8 +2077,7 @@ namespace Nikse.SubtitleEdit.Logic
                         BeautifyTimeCodes = "Beautify time codes",
                         Settings = "Settings",
                         Help = "Help",
-                        ShowHideWaveform = "Show/hide waveform",
-                        ShowHideVideo = "Show/hide video",
+                        Layout = "Layout",
                         AssaDraw = "Advanced Sub Station Alpha draw",
                     },
 

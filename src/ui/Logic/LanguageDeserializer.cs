@@ -4795,12 +4795,6 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Main/Menu/ToolBar/Help":
                     language.Main.Menu.ToolBar.Help = reader.Value;
                     break;
-                case "Main/Menu/ToolBar/ShowHideWaveform":
-                    language.Main.Menu.ToolBar.ShowHideWaveform = reader.Value;
-                    break;
-                case "Main/Menu/ToolBar/ShowHideVideo":
-                    language.Main.Menu.ToolBar.ShowHideVideo = reader.Value;
-                    break;
                 case "Main/Menu/ToolBar/AssaDraw":
                     language.Main.Menu.ToolBar.AssaDraw = reader.Value;
                     break;

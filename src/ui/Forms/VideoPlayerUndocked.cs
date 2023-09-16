@@ -61,7 +61,6 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     panelContainer.Controls.Clear();
                     _mainForm.ReDockVideoPlayer(control);
-                    _mainForm.SetVideoPlayerToggleOff();
                 }
             }
         }

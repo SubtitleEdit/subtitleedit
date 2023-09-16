@@ -40,9 +40,9 @@ namespace Nikse.SubtitleEdit.Forms
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
-            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode1 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
-            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode2 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
-            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode3 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
+            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode4 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
+            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode5 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
+            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode6 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.labelStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripSelected = new System.Windows.Forms.ToolStripStatusLabel();
@@ -74,8 +74,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripButtonHelp = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparatorToggle = new Nikse.SubtitleEdit.Controls.ToolStripNikseSeparator();
             this.toolStripButtonSourceView = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButtonToggleWaveform = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButtonToggleVideo = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonLayout = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparatorSubtitleFormat = new Nikse.SubtitleEdit.Controls.ToolStripNikseSeparator();
             this.toolStripLabelSubtitleFormat = new System.Windows.Forms.ToolStripLabel();
             this.comboBoxSubtitleFormats = new Nikse.SubtitleEdit.Controls.ToolStripNikseComboBox();
@@ -699,8 +698,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripButtonHelp,
             this.toolStripSeparatorToggle,
             this.toolStripButtonSourceView,
-            this.toolStripButtonToggleWaveform,
-            this.toolStripButtonToggleVideo,
+            this.toolStripButtonLayout,
             this.toolStripSeparatorSubtitleFormat,
             this.toolStripLabelSubtitleFormat,
             this.comboBoxSubtitleFormats,
@@ -997,29 +995,15 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // toolStripButtonToggleWaveform
             // 
-            this.toolStripButtonToggleWaveform.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonToggleWaveform.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.toolStripButtonToggleWaveform.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonToggleWaveform.Image")));
-            this.toolStripButtonToggleWaveform.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.toolStripButtonToggleWaveform.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonToggleWaveform.Name = "toolStripButtonToggleWaveform";
-            this.toolStripButtonToggleWaveform.Size = new System.Drawing.Size(36, 37);
-            this.toolStripButtonToggleWaveform.Text = "Show/hide waveform";
-            this.toolStripButtonToggleWaveform.Click += new System.EventHandler(this.ToolStripButtonToggleWaveformClick);
-            // 
-            // toolStripButtonToggleVideo
-            // 
-            this.toolStripButtonToggleVideo.Checked = true;
-            this.toolStripButtonToggleVideo.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.toolStripButtonToggleVideo.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonToggleVideo.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.toolStripButtonToggleVideo.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonToggleVideo.Image")));
-            this.toolStripButtonToggleVideo.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.toolStripButtonToggleVideo.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonToggleVideo.Name = "toolStripButtonToggleVideo";
-            this.toolStripButtonToggleVideo.Size = new System.Drawing.Size(36, 37);
-            this.toolStripButtonToggleVideo.Text = "Show/hide video";
-            this.toolStripButtonToggleVideo.Click += new System.EventHandler(this.ToolStripButtonToggleVideoClick);
+            this.toolStripButtonLayout.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonLayout.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.toolStripButtonLayout.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonToggleWaveform.Image")));
+            this.toolStripButtonLayout.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.toolStripButtonLayout.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonLayout.Name = "toolStripButtonLayout";
+            this.toolStripButtonLayout.Size = new System.Drawing.Size(36, 37);
+            this.toolStripButtonLayout.Text = "Show/hide waveform";
+            this.toolStripButtonLayout.Click += new System.EventHandler(this.ToolStripButtonToggleWaveformClick);
             // 
             // toolStripSeparatorSubtitleFormat
             // 
@@ -2430,13 +2414,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.showhideWaveformToolStripMenuItem.Size = new System.Drawing.Size(295, 22);
             this.showhideWaveformToolStripMenuItem.Text = "Show/hide waveform";
             this.showhideWaveformToolStripMenuItem.Click += new System.EventHandler(this.ShowhideWaveformToolStripMenuItemClick);
-            // 
-            // showhideVideoToolStripMenuItem
-            // 
-            this.showhideVideoToolStripMenuItem.Name = "showhideVideoToolStripMenuItem";
-            this.showhideVideoToolStripMenuItem.Size = new System.Drawing.Size(295, 22);
-            this.showhideVideoToolStripMenuItem.Text = "Show/hide video";
-            this.showhideVideoToolStripMenuItem.Click += new System.EventHandler(this.ToolStripButtonToggleVideoClick);
             // 
             // toolStripSeparator19
             // 
@@ -3888,14 +3865,14 @@ namespace Nikse.SubtitleEdit.Forms
             this.timeUpDownVideoPosition.Size = new System.Drawing.Size(113, 23);
             this.timeUpDownVideoPosition.TabIndex = 12;
             this.timeUpDownVideoPosition.TabStop = false;
-            timeCode1.Hours = 0;
-            timeCode1.Milliseconds = 0;
-            timeCode1.Minutes = 0;
-            timeCode1.Seconds = 0;
-            timeCode1.TimeSpan = System.TimeSpan.Parse("00:00:00");
-            timeCode1.TotalMilliseconds = 0D;
-            timeCode1.TotalSeconds = 0D;
-            this.timeUpDownVideoPosition.TimeCode = timeCode1;
+            timeCode4.Hours = 0;
+            timeCode4.Milliseconds = 0;
+            timeCode4.Minutes = 0;
+            timeCode4.Seconds = 0;
+            timeCode4.TimeSpan = System.TimeSpan.Parse("00:00:00");
+            timeCode4.TotalMilliseconds = 0D;
+            timeCode4.TotalSeconds = 0D;
+            this.timeUpDownVideoPosition.TimeCode = timeCode4;
             this.timeUpDownVideoPosition.UseVideoOffset = false;
             // 
             // buttonGotoSub
@@ -4168,14 +4145,14 @@ namespace Nikse.SubtitleEdit.Forms
             this.timeUpDownVideoPositionAdjust.Size = new System.Drawing.Size(113, 23);
             this.timeUpDownVideoPositionAdjust.TabIndex = 13;
             this.timeUpDownVideoPositionAdjust.TabStop = false;
-            timeCode2.Hours = 0;
-            timeCode2.Milliseconds = 0;
-            timeCode2.Minutes = 0;
-            timeCode2.Seconds = 0;
-            timeCode2.TimeSpan = System.TimeSpan.Parse("00:00:00");
-            timeCode2.TotalMilliseconds = 0D;
-            timeCode2.TotalSeconds = 0D;
-            this.timeUpDownVideoPositionAdjust.TimeCode = timeCode2;
+            timeCode5.Hours = 0;
+            timeCode5.Milliseconds = 0;
+            timeCode5.Minutes = 0;
+            timeCode5.Seconds = 0;
+            timeCode5.TimeSpan = System.TimeSpan.Parse("00:00:00");
+            timeCode5.TotalMilliseconds = 0D;
+            timeCode5.TotalSeconds = 0D;
+            this.timeUpDownVideoPositionAdjust.TimeCode = timeCode5;
             this.timeUpDownVideoPositionAdjust.UseVideoOffset = false;
             // 
             // buttonAdjustSetEndTime
@@ -5516,14 +5493,14 @@ namespace Nikse.SubtitleEdit.Forms
             this.timeUpDownStartTime.Size = new System.Drawing.Size(113, 23);
             this.timeUpDownStartTime.TabIndex = 0;
             this.timeUpDownStartTime.TabStop = false;
-            timeCode3.Hours = 0;
-            timeCode3.Milliseconds = 0;
-            timeCode3.Minutes = 0;
-            timeCode3.Seconds = 0;
-            timeCode3.TimeSpan = System.TimeSpan.Parse("00:00:00");
-            timeCode3.TotalMilliseconds = 0D;
-            timeCode3.TotalSeconds = 0D;
-            this.timeUpDownStartTime.TimeCode = timeCode3;
+            timeCode6.Hours = 0;
+            timeCode6.Milliseconds = 0;
+            timeCode6.Minutes = 0;
+            timeCode6.Seconds = 0;
+            timeCode6.TimeSpan = System.TimeSpan.Parse("00:00:00");
+            timeCode6.TotalMilliseconds = 0D;
+            timeCode6.TotalSeconds = 0D;
+            this.timeUpDownStartTime.TimeCode = timeCode6;
             this.timeUpDownStartTime.UseVideoOffset = false;
             // 
             // numericUpDownDuration
@@ -6074,7 +6051,6 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripLabel toolStripLabelSubtitleFormat;
         private System.Windows.Forms.ToolStripLabel toolStripLabelEncoding;
         private Nikse.SubtitleEdit.Controls.ToolStripNikseComboBox comboBoxEncoding;
-        private System.Windows.Forms.ToolStripButton toolStripButtonToggleVideo;
         private Nikse.SubtitleEdit.Controls.ToolStripNikseSeparator toolStripSeparatorEncoding;
         private Nikse.SubtitleEdit.Controls.ToolStripNikseSeparator toolStripSeparatorFrameRate;
         private System.Windows.Forms.ToolStripLabel toolStripLabelFrameRate;
@@ -6149,7 +6125,7 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.Label labelCreateF11;
         private System.Windows.Forms.Label labelCreateF10;
         private System.Windows.Forms.Label labelCreateF9;
-        private System.Windows.Forms.ToolStripButton toolStripButtonToggleWaveform;
+        private System.Windows.Forms.ToolStripButton toolStripButtonLayout;
         private Controls.VideoPlayerContainer mediaPlayer;
         private System.Windows.Forms.Panel panelVideoPlayer;
         private Controls.AudioVisualizer audioVisualizer;
