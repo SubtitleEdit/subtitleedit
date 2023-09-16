@@ -18686,7 +18686,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 SuspendLayout();
                 splitContainerMain.Hide();
-                _layout = LayoutManager.ToggleLayout(_layout, Controls, mediaPlayer, SubtitleListview1, groupBoxVideo, groupBoxEdit);
+                _layout = LayoutManager.ToggleLayout(_layout, Controls, panelVideoPlayer, SubtitleListview1, groupBoxVideo, groupBoxEdit);
                 ResumeLayout();
             }
         }
@@ -28574,16 +28574,10 @@ namespace Nikse.SubtitleEdit.Forms
                 Configuration.Settings.General.UndockedVideoPosition = _videoPlayerUndocked.Left + @";" + _videoPlayerUndocked.Top + @";" + _videoPlayerUndocked.Width + @";" + _videoPlayerUndocked.Height;
             }
 
-            Control control;
-            if (splitContainer1.Panel2.Controls.Count == 0)
+            Control control = panelVideoPlayer;
+            if (control.Parent != null)
             {
-                control = panelVideoPlayer;
-                groupBoxVideo.Controls.Remove(control);
-            }
-            else
-            {
-                control = panelVideoPlayer;
-                splitContainer1.Panel2.Controls.Clear();
+                control.Parent.Controls.Remove(control);
             }
 
             if (control != null)

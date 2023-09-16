@@ -932,7 +932,7 @@
             this.comboBoxRulesProfileName.ButtonForeColor = System.Drawing.SystemColors.ControlText;
             this.comboBoxRulesProfileName.ButtonForeColorDown = System.Drawing.Color.Orange;
             this.comboBoxRulesProfileName.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            this.comboBoxRulesProfileName.DropDownHeight = 400;
+            this.comboBoxRulesProfileName.DropDownHeight = 420;
             this.comboBoxRulesProfileName.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxRulesProfileName.DropDownWidth = 238;
             this.comboBoxRulesProfileName.FormattingEnabled = true;
@@ -6564,8 +6564,8 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1092, 574);
             this.Controls.Add(this.labelUpdateFileTypeAssociationsStatus);
-            this.Controls.Add(this.panelSubtitleFormats);
             this.Controls.Add(this.panelGeneral);
+            this.Controls.Add(this.panelSubtitleFormats);
             this.Controls.Add(this.panelWaveform);
             this.Controls.Add(this.panelShortcuts);
             this.Controls.Add(this.panelVideoPlayer);
