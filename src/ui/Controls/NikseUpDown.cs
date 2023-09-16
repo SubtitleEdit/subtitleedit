@@ -309,6 +309,24 @@ namespace Nikse.SubtitleEdit.Controls
             };
 
             LostFocus += (sender, args) => _repeatTimer.Stop();
+
+            MouseWheel += (sender, e) =>
+            {
+                if (_textBox == null)
+                {
+                    return;
+                }
+
+                if (e.Delta > 0)
+                {
+                    AddValue(-Increment);
+                }
+                else if (e.Delta < 0)
+                {
+                    AddValue(Increment);
+                }
+            };
+
             TabStop = false;
         }
 
