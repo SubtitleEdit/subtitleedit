@@ -369,6 +369,7 @@ namespace Nikse.SubtitleEdit.Logic
                 SetCppConstMeFolder = "Set CPP/Const-me models folder...",
                 OnlyRunPostProcessing = "Run only post-processing/adjust timings",
                 DownloadFasterWhisperCuda = "Download cuBLAS and cuDNN libs for Faster-Whisper",
+                NoTextFound = "No text found!",
             };
 
             AssaAttachments = new LanguageStructure.AssaAttachments

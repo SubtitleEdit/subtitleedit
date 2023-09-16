@@ -35370,7 +35370,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (form.TranscribedSubtitle.Paragraphs.Count == 0)
                 {
-                    MessageBox.Show("No text found!");
+                    MessageBox.Show(LanguageSettings.Current.AudioToText.NoTextFound);
                     return;
                 }
 
@@ -35547,7 +35547,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (form.IncompleteModel)
                     {
-                        MessageBox.Show($"No text found - model incomplete.{Environment.NewLine}" +
+                        MessageBox.Show($"Model incomplete.{Environment.NewLine}" +
                                         $"Please re-download model: {form.IncompleteModelName}", MessageBoxIcon.Error);
                     }
                     else if (form.UnknownArgument)
@@ -35580,8 +35580,8 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             extraMessage = Environment.NewLine + "Note you have a custom argument: " + customArgument;
                         }
-                        extraMessage = extraMessage + Environment.NewLine + Environment.NewLine + "View the log file `whisper_log.txt`?";
-                        var r = MessageBox.Show($"No text found!" + extraMessage, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Error);
+                        extraMessage = extraMessage + Environment.NewLine + Environment.NewLine + string.Format(LanguageSettings.Current.General.ViewX, "`whisper_log.txt`?");
+                        var r = MessageBox.Show(LanguageSettings.Current.AudioToText.NoTextFound + extraMessage, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Error);
                         if (r == DialogResult.Yes)
                         {
                             UiUtil.OpenFile(SeLogger.GetWhisperLogFilePath());
