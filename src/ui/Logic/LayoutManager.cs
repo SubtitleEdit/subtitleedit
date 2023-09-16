@@ -6,7 +6,7 @@ namespace Nikse.SubtitleEdit.Logic
 {
     public static class LayoutManager
     {
-        public static int ToggleLayout(int layout, Control.ControlCollection controls, VideoPlayerContainer videoPlayerContainer, SubtitleListView subtitleListView, GroupBox groupBoxWaveform, GroupBox groupBoxEdit)
+        public static int ToggleLayout(int layout, Control.ControlCollection controls, Control videoPlayer, SubtitleListView subtitleListView, GroupBox groupBoxWaveform, GroupBox groupBoxEdit)
         {
             layout++;
             if (layout > 7 || layout < 0)
@@ -14,11 +14,11 @@ namespace Nikse.SubtitleEdit.Logic
                 layout = 0;
             }
 
-            SetLayout(layout, controls, videoPlayerContainer, subtitleListView, groupBoxWaveform, groupBoxEdit);
+            SetLayout(layout, controls, videoPlayer, subtitleListView, groupBoxWaveform, groupBoxEdit);
             return layout;
         }
 
-        public static void SetLayout(int layout, Control.ControlCollection controls, VideoPlayerContainer videoPlayerContainer, SubtitleListView subtitleListView, GroupBox groupBoxWaveform, GroupBox groupBoxEdit)
+        public static void SetLayout(int layout, Control.ControlCollection controls, Control videoPlayer, SubtitleListView subtitleListView, GroupBox groupBoxWaveform, GroupBox groupBoxEdit)
         {
             if (layout > 7 || layout < 0)
             {
@@ -28,33 +28,33 @@ namespace Nikse.SubtitleEdit.Logic
             switch (layout)
             {
                 case 0:
-                    SetLayout0(controls, videoPlayerContainer, subtitleListView, groupBoxWaveform, groupBoxEdit);
+                    SetLayout0(controls, videoPlayer, subtitleListView, groupBoxWaveform, groupBoxEdit);
                     break;
                 case 1:
-                    SetLayout1(controls, videoPlayerContainer, subtitleListView, groupBoxWaveform, groupBoxEdit);
+                    SetLayout1(controls, videoPlayer, subtitleListView, groupBoxWaveform, groupBoxEdit);
                     break;
                 case 2:
-                    SetLayout2(controls, videoPlayerContainer, subtitleListView, groupBoxWaveform, groupBoxEdit);
+                    SetLayout2(controls, videoPlayer, subtitleListView, groupBoxWaveform, groupBoxEdit);
                     break;
                 case 3:
-                    SetLayout3(controls, videoPlayerContainer, subtitleListView, groupBoxWaveform, groupBoxEdit);
+                    SetLayout3(controls, videoPlayer, subtitleListView, groupBoxWaveform, groupBoxEdit);
                     break;
                 case 4:
-                    SetLayout4(controls, videoPlayerContainer, subtitleListView, groupBoxWaveform, groupBoxEdit);
+                    SetLayout4(controls, videoPlayer, subtitleListView, groupBoxWaveform, groupBoxEdit);
                     break;
                 case 5:
-                    SetLayout5(controls, videoPlayerContainer, subtitleListView, groupBoxWaveform, groupBoxEdit);
+                    SetLayout5(controls, videoPlayer, subtitleListView, groupBoxWaveform, groupBoxEdit);
                     break;
                 case 6:
-                    SetLayout6(controls, videoPlayerContainer, subtitleListView, groupBoxWaveform, groupBoxEdit);
+                    SetLayout6(controls, videoPlayer, subtitleListView, groupBoxWaveform, groupBoxEdit);
                     break;
                 case 7:
-                    SetLayout7(controls, videoPlayerContainer, subtitleListView, groupBoxWaveform, groupBoxEdit);
+                    SetLayout7(controls, videoPlayer, subtitleListView, groupBoxWaveform, groupBoxEdit);
                     break;
             }
         }
 
-        public static void SetLayout0(Control.ControlCollection controls, VideoPlayerContainer videoPlayerContainer, SubtitleListView subtitleListView, GroupBox groupBoxWaveform, GroupBox groupBoxEdit)
+        public static void SetLayout0(Control.ControlCollection controls, Control videoPlayerContainer, SubtitleListView subtitleListView, GroupBox groupBoxWaveform, GroupBox groupBoxEdit)
         {
             var spMain = new SplitContainer();
             spMain.Orientation = Orientation.Horizontal;
@@ -90,7 +90,7 @@ namespace Nikse.SubtitleEdit.Logic
             spMain.BringToFront();
         }
 
-        public static void SetLayout1(Control.ControlCollection controls, VideoPlayerContainer videoPlayerContainer, SubtitleListView subtitleListView, GroupBox groupBoxWaveform, GroupBox groupBoxEdit)
+        public static void SetLayout1(Control.ControlCollection controls, Control videoPlayerContainer, SubtitleListView subtitleListView, GroupBox groupBoxWaveform, GroupBox groupBoxEdit)
         {
             var spMain = new SplitContainer();
             spMain.Orientation = Orientation.Horizontal;
@@ -126,7 +126,7 @@ namespace Nikse.SubtitleEdit.Logic
             spMain.BringToFront();
         }
 
-        public static void SetLayout2(Control.ControlCollection controls, VideoPlayerContainer videoPlayerContainer, SubtitleListView subtitleListView, GroupBox groupBoxWaveform, GroupBox groupBoxEdit)
+        public static void SetLayout2(Control.ControlCollection controls, Control videoPlayerContainer, SubtitleListView subtitleListView, GroupBox groupBoxWaveform, GroupBox groupBoxEdit)
         {
             var spMain = new SplitContainer();
             spMain.Orientation = Orientation.Vertical;
@@ -164,7 +164,7 @@ namespace Nikse.SubtitleEdit.Logic
             spMain.BringToFront();
         }
 
-        public static void SetLayout3(Control.ControlCollection controls, VideoPlayerContainer videoPlayerContainer, SubtitleListView subtitleListView, GroupBox groupBoxWaveform, GroupBox groupBoxEdit)
+        public static void SetLayout3(Control.ControlCollection controls, Control videoPlayerContainer, SubtitleListView subtitleListView, GroupBox groupBoxWaveform, GroupBox groupBoxEdit)
         {
             var spMain = new SplitContainer();
             spMain.Orientation = Orientation.Vertical;
@@ -202,7 +202,7 @@ namespace Nikse.SubtitleEdit.Logic
             spMain.BringToFront();
         }
 
-        public static void SetLayout4(Control.ControlCollection controls, VideoPlayerContainer videoPlayerContainer, SubtitleListView subtitleListView, GroupBox groupBoxWaveform, GroupBox groupBoxEdit)
+        public static void SetLayout4(Control.ControlCollection controls, Control videoPlayerContainer, SubtitleListView subtitleListView, GroupBox groupBoxWaveform, GroupBox groupBoxEdit)
         {
             var spMain = new SplitContainer();
             spMain.Orientation = Orientation.Horizontal;
@@ -244,7 +244,7 @@ namespace Nikse.SubtitleEdit.Logic
         }
 
         // no video player
-        public static void SetLayout5(Control.ControlCollection controls, VideoPlayerContainer videoPlayerContainer, SubtitleListView subtitleListView, GroupBox groupBoxWaveform, GroupBox groupBoxEdit)
+        public static void SetLayout5(Control.ControlCollection controls, Control videoPlayerContainer, SubtitleListView subtitleListView, GroupBox groupBoxWaveform, GroupBox groupBoxEdit)
         {
             var spMain = new SplitContainer();
             spMain.Orientation = Orientation.Horizontal;
@@ -274,7 +274,7 @@ namespace Nikse.SubtitleEdit.Logic
         }
 
         // no waveform
-        public static void SetLayout6(Control.ControlCollection controls, VideoPlayerContainer videoPlayerContainer, SubtitleListView subtitleListView, GroupBox groupBoxWaveform, GroupBox groupBoxEdit)
+        public static void SetLayout6(Control.ControlCollection controls, Control videoPlayerContainer, SubtitleListView subtitleListView, GroupBox groupBoxWaveform, GroupBox groupBoxEdit)
         {
             var spMain = new SplitContainer();
             spMain.Orientation = Orientation.Vertical;
@@ -302,7 +302,7 @@ namespace Nikse.SubtitleEdit.Logic
         }
 
         // no video or waveform
-        public static void SetLayout7(Control.ControlCollection controls, VideoPlayerContainer videoPlayerContainer, SubtitleListView subtitleListView, GroupBox groupBoxWaveform, GroupBox groupBoxEdit)
+        public static void SetLayout7(Control.ControlCollection controls, Control videoPlayerContainer, SubtitleListView subtitleListView, GroupBox groupBoxWaveform, GroupBox groupBoxEdit)
         {
             var spMain = new SplitContainer();
             spMain.Orientation = Orientation.Horizontal;
