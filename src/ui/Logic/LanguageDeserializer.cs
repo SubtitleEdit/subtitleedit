@@ -592,6 +592,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "AudioToText/DownloadFasterWhisperCuda":
                     language.AudioToText.DownloadFasterWhisperCuda = reader.Value;
                     break;
+                case "AudioToText/NoTextFound":
+                    language.AudioToText.NoTextFound = reader.Value;
+                    break;
                 case "AssaAttachments/Title":
                     language.AssaAttachments.Title = reader.Value;
                     break;
