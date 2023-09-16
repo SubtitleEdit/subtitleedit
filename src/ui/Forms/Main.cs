@@ -74,7 +74,7 @@ namespace Nikse.SubtitleEdit.Forms
         private int MinGapBetweenLines => Configuration.Settings.General.MinimumMillisecondsBetweenLines;
         private bool _isOriginalActive;
         private bool IsOriginalEditable => _isOriginalActive && Configuration.Settings.General.AllowEditOfOriginalSubtitle;
-        private bool IsVideoVisible => _layout != 7;
+        private bool IsVideoVisible => _layout != LayoutManager.LayoutNoVideo;
 
         private Subtitle _subtitle = new Subtitle();
         private Subtitle _subtitleOriginal = new Subtitle();
@@ -20527,12 +20527,22 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (_videoPlayerUndocked == null || _videoPlayerUndocked.IsDisposed)
             {
-                UndockVideoControlsToolStripMenuItemClick(null, null);
+                Configuration.Settings.General.Undocked = true;
+                if (!_loading)
+                {
+                    Configuration.Settings.General.SplitContainerMainSplitterDistance = splitContainerMain.SplitterDistance;
+                    Configuration.Settings.General.SplitContainer1SplitterDistance = splitContainer1.SplitterDistance;
+                    Configuration.Settings.General.SplitContainerListViewAndTextSplitterDistance = splitContainerListViewAndText.SplitterDistance;
+                }
+
+                UnDockVideoPlayer();
+
                 setRedockOnFullscreenEnd = true;
             }
 
             if (_videoPlayerUndocked != null && !_videoPlayerUndocked.IsDisposed)
             {
+                _videoPlayerUndocked.Show(this);
                 _videoPlayerUndocked.Focus();
                 _videoPlayerUndocked.GoFullscreen();
                 if (setRedockOnFullscreenEnd)
@@ -23572,7 +23582,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             _waveformUndocked.Visible = false;
-            if (toolStripButtonLayout.Checked)
+            if (IsVideoVisible)
             {
                 _waveformUndocked.Show(this);
                 if (_waveformUndocked.WindowState == FormWindowState.Minimized)
@@ -24939,7 +24949,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (!_isVideoControlsUndocked)
             {
-                if (toolStripButtonLayout.Checked)
+                if (IsVideoVisible)
                 {
                     audioVisualizer.Left = tabControlModes.Left + tabControlModes.Width + 5;
                 }
@@ -28666,7 +28676,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             UnDockWaveform();
-            if (toolStripButtonLayout.Checked)
+            if (IsVideoVisible)
             {
                 _waveformUndocked.Show(this);
                 if (_waveformUndocked.Top < 0 || _waveformUndocked.Left < 0)
@@ -28698,6 +28708,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             TabControlModes_SelectedIndexChanged(null, null);
             _videoControlsUndocked.Refresh();
+
+            LayoutManager.SetLayout(LayoutManager.LayoutNoVideo, Controls, panelVideoPlayer, SubtitleListview1, groupBoxVideo, groupBoxEdit);
         }
 
         public void RedockVideoControlsToolStripMenuItemClick(object sender, EventArgs e)
@@ -28752,13 +28764,7 @@ namespace Nikse.SubtitleEdit.Forms
             _videoControlsUndocked = null;
             ShowVideoPlayer();
 
-            audioVisualizer.Visible = toolStripButtonLayout.Checked;
-            trackBarWaveformPosition.Visible = toolStripButtonLayout.Checked;
-            panelWaveformControls.Visible = toolStripButtonLayout.Checked;
-            if (!IsVideoVisible)
-            {
-                HideVideoPlayer();
-            }
+            LayoutManager.SetLayout(_layout, Controls, panelVideoPlayer, SubtitleListview1, groupBoxVideo, groupBoxEdit);
 
             mediaPlayer.Invalidate();
             Refresh();
@@ -28769,11 +28775,6 @@ namespace Nikse.SubtitleEdit.Forms
 
             _textHeightResizeIgnoreUpdate = 0;
             Main_ResizeEnd(null, null);
-        }
-
-        internal void SetWaveformToggleOff()
-        {
-            toolStripButtonLayout.Checked = false;
         }
 
         private void ToolStripMenuItemInsertSubtitleClick(object sender, EventArgs e)
@@ -35765,6 +35766,18 @@ namespace Nikse.SubtitleEdit.Forms
         private void ToolStripSplitButtonPlayRateClick(object sender, EventArgs e)
         {
             _contextMenuStripPlayRate.Show(MousePosition.X, MousePosition.Y);
+        }
+
+        public void RedockFromFullscreen()
+        {
+            if (_videoPlayerUndocked != null && !_videoPlayerUndocked.IsDisposed)
+            {
+                var control = _videoPlayerUndocked.PanelContainer.Controls[0];
+                control.Parent.Controls.Remove(control);
+                ReDockVideoPlayer(control);
+                _videoPlayerUndocked = null;
+                mediaPlayer.ShowFullscreenButton = Configuration.Settings.General.VideoPlayerShowFullscreenButton;
+            }
         }
     }
 }

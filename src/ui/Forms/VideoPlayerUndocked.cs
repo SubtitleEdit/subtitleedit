@@ -52,7 +52,7 @@ namespace Nikse.SubtitleEdit.Forms
             _videoPlayerContainer.ShowCursor();
             if (RedockOnFullscreenEnd)
             {
-                _mainForm.RedockVideoControlsToolStripMenuItemClick(null, null);
+                _mainForm.RedockFromFullscreen();
             }
             else if (e.CloseReason == CloseReason.UserClosing && panelContainer.Controls.Count > 0)
             {
