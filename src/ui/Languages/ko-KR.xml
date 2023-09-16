@@ -213,6 +213,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <SetCppConstMeFolder>CPP/Const-me 모델 폴더 설정...</SetCppConstMeFolder>
     <OnlyRunPostProcessing>후처리 및 타이밍 조정만 실행</OnlyRunPostProcessing>
     <DownloadFasterWhisperCuda>Faster-Whisper를 위한 cuBLAS 및 cuDNN 라이브러리 다운로드</DownloadFasterWhisperCuda>
+    <NoTextFound>텍스트를 찾을 수 없습니다!</NoTextFound>
   </AudioToText>
   <AssaAttachments>
     <Title>Advanced Sub Station Alpha 첨부파일</Title>
@@ -1053,11 +1054,11 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <AutoCopyToClipboard>클립보드에 자동 복사</AutoCopyToClipboard>
     <AutoCopyLineSeparator>줄 분리기</AutoCopyLineSeparator>
     <TranslateBlockXOfY>{1}의 {0} 블록 번역</TranslateBlockXOfY>
-    <TranslateBlockInfo>번역기로 가서 텍스트를 붙여넣고, 결과를 클립보드에 다시 복사하고 아래 단추를 누릅니다.</TranslateBlockInfo>
+    <TranslateBlockInfo>원본 테스트를 번역기에 붙여넣고 그 결과물을 복사한 다음, 아래 단추를 누르세요</TranslateBlockInfo>
     <TranslateBlockGetFromClipboard>클립보드에서 번역된 텍스트 가져오기 (Ctrl + V)</TranslateBlockGetFromClipboard>
     <TranslateBlockCopySourceText>원본 텍스트 클립보드 복사</TranslateBlockCopySourceText>
     <TranslateBlockClipboardError1>클립보드에 원본 텍스트가 있습니다!</TranslateBlockClipboardError1>
-    <TranslateBlockClipboardError2>번역기로 이동하여 번역한 다음, 그 결과물을 클립보드에 복사하고 이 단추를 다시 클릭합니다.</TranslateBlockClipboardError2>
+    <TranslateBlockClipboardError2>번역기로 번역한 결과물을 클립보드에 복사한 후, 이 단추를 다시 클릭합니다</TranslateBlockClipboardError2>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
     <Title>Google | Microsoft 번역기</Title>
