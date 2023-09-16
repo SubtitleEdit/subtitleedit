@@ -218,6 +218,7 @@ Mais informação online?</WhisperNotFound>
     <SetCppConstMeFolder>Definir pasta de modelos CPP/Const-me...</SetCppConstMeFolder>
     <OnlyRunPostProcessing>Executar apenas os tempos de pós-processamento/ajuste</OnlyRunPostProcessing>
     <DownloadFasterWhisperCuda>Transferir cuBLAS e cuDNN para Faster-Whisper</DownloadFasterWhisperCuda>
+    <NoTextFound>Nenhum texto encontrado!</NoTextFound>
   </AudioToText>
   <AssaAttachments>
     <Title>Anexos Advanced Sub Station Alpha</Title>
@@ -1486,8 +1487,7 @@ Para usar a chave API, vá a "Opções -&gt; Definições -&gt; Ferramentas" par
         <BeautifyTimeCodes>Embelezar tempos</BeautifyTimeCodes>
         <Settings>Definições</Settings>
         <Help>Ajuda</Help>
-        <ShowHideWaveform>Mostrar/ocultar forma de onda</ShowHideWaveform>
-        <ShowHideVideo>Mostrar/ocultar vídeo</ShowHideVideo>
+        <Layout>Esquema</Layout>
         <AssaDraw>Desenho de Advanced Sub Station Alpha</AssaDraw>
       </ToolBar>
       <ContextMenu>
