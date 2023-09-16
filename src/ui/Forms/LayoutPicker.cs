@@ -19,6 +19,8 @@ namespace Nikse.SubtitleEdit.Forms
         private Bitmap _gray7;
         private Bitmap _gray8;
 
+        private bool _loading = true;
+
         public LayoutPicker(int initialLayout)
         {
             UiUtil.PreInitialize(this);
@@ -26,9 +28,7 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.FixFonts(this);
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             CancelButton = buttonCancel;
-
             _layout = initialLayout;
-
             UpdateButtons(initialLayout);
         }
 
@@ -263,52 +263,95 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.KeyCode == Keys.NumPad1 || e.KeyCode == Keys.D1)
             {
-                _layout = 0;
-                UpdateButtons(_layout);
-                Refresh();
+                SelectLayout(0);
             }
             else if (e.KeyCode == Keys.NumPad2 || e.KeyCode == Keys.D2)
             {
-                _layout = 1;
-                UpdateButtons(_layout);
-                Refresh();
+                SelectLayout(1);
             }
             else if (e.KeyCode == Keys.NumPad3 || e.KeyCode == Keys.D3)
             {
-                _layout = 2;
-                UpdateButtons(_layout);
-                Refresh();
+                SelectLayout(2);
             }
             else if (e.KeyCode == Keys.NumPad4 || e.KeyCode == Keys.D4)
             {
-                _layout = 3;
-                UpdateButtons(_layout);
-                Refresh();
+                SelectLayout(3);
             }
             else if (e.KeyCode == Keys.NumPad5 || e.KeyCode == Keys.D5)
             {
-                _layout = 4;
-                UpdateButtons(_layout);
-                Refresh();
+                SelectLayout(4);
             }
             else if (e.KeyCode == Keys.NumPad6 || e.KeyCode == Keys.D6)
             {
-                _layout = 5;
-                UpdateButtons(_layout);
-                Refresh();
+                SelectLayout(5);
             }
             else if (e.KeyCode == Keys.NumPad7 || e.KeyCode == Keys.D7)
             {
-                _layout = 6;
-                UpdateButtons(_layout);
-                Refresh();
+                SelectLayout(6);
             }
             else if (e.KeyCode == Keys.NumPad8 || e.KeyCode == Keys.D8)
             {
-                _layout = 7;
-                UpdateButtons(_layout);
-                Refresh();
+                SelectLayout(7);
             }
+        }
+
+        private void SelectLayout(int layout)
+        {
+            if (_loading)
+            {
+                return;
+            }
+
+            _layout = layout;
+            UpdateButtons(_layout);
+            Refresh();
+        }
+
+        private void button1_Enter(object sender, EventArgs e)
+        {
+            SelectLayout(0);
+        }
+
+
+        private void button2_Enter(object sender, EventArgs e)
+        {
+            SelectLayout(1);
+        }
+
+        private void button3_Enter(object sender, EventArgs e)
+        {
+            SelectLayout(2);
+        }
+
+        private void button4_Enter(object sender, EventArgs e)
+        {
+            SelectLayout(3);
+        }
+
+        private void button5_Enter(object sender, EventArgs e)
+        {
+            SelectLayout(4);
+        }
+
+        private void button6_Enter(object sender, EventArgs e)
+        {
+            SelectLayout(5);
+        }
+
+        private void button7_Enter(object sender, EventArgs e)
+        {
+            SelectLayout(6);
+        }
+
+        private void button8_Enter(object sender, EventArgs e)
+        {
+            SelectLayout(7);
+        }
+
+        private void LayoutPicker_Shown(object sender, EventArgs e)
+        {
+            _loading = false;
+            SelectLayout(_layout);
         }
     }
 }
