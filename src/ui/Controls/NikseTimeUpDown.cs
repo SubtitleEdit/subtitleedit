@@ -7,6 +7,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Globalization;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace Nikse.SubtitleEdit.Controls
 {
@@ -314,6 +315,23 @@ namespace Nikse.SubtitleEdit.Controls
             _maskedTextBox.LostFocus += (sender, args) =>
             {
                 AddValue(0);
+            };
+
+            MouseWheel += (sender, e) =>
+            {
+                if (_maskedTextBox == null)
+                {
+                    return;
+                }
+
+                if (e.Delta > 0)
+                {
+                    AddValue(-Increment);
+                }
+                else if (e.Delta < 0)
+                {
+                    AddValue(Increment);
+                }
             };
 
             TabStop = false;
