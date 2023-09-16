@@ -18682,7 +18682,16 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 new WordSplitDictionaryGenerator().ShowDialog(this);
             }
+            if (e.Modifiers == (Keys.Alt | Keys.Shift | Keys.Control) && e.KeyCode == Keys.L)
+            {
+                SuspendLayout();
+                splitContainerMain.Hide();
+                _layout = LayoutManager.ToggleLayout(_layout, Controls, mediaPlayer, SubtitleListview1, groupBoxVideo, groupBoxEdit);
+                ResumeLayout();
+            }
         }
+
+        private int _layout = 0;
 
         private void SetActorVoice(int index)
         {
