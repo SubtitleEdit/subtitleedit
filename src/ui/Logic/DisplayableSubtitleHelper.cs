@@ -3,11 +3,15 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Logic
 {
     internal class DisplayableSubtitleHelper
     {
+        private const double VisibleSelectionRequirement = 0.5;
+
         // Map associating a time stamp with a number of paragraphs that start at that time stamp.
         private readonly Dictionary<double, int> _startParagraphCounts = new Dictionary<double, int>();
         // Map associating a time stamp with a number of paragraphs that end at that time stamp.
@@ -23,23 +27,17 @@ namespace Nikse.SubtitleEdit.Logic
         private readonly double _startVisibleMilliseconds;
         private readonly double _endVisibleMilliseconds;
 
-        private bool _useCache;
-
-        public DisplayableSubtitleHelper(double startMilliseconds, double endMilliseconds, double additionalSeconds, bool useCache)
+        public DisplayableSubtitleHelper(double startMilliseconds, double endMilliseconds, double additionalSeconds)
         {
             _startThresholdMilliseconds = startMilliseconds - additionalSeconds * 1000;
             _endThresholdMilliseconds = endMilliseconds + additionalSeconds * 1000;
 
             _startVisibleMilliseconds = startMilliseconds;
             _endVisibleMilliseconds = endMilliseconds;
-            _useCache = useCache;
         }
 
         public void Add(Paragraph p)
         {
-            // This should take in all paragraphs and figure out which are important enough to render.
-            // TODO: Filter out visible / invisible paragraphs.
-
             if (IsInThreshold(p))
             {
                 AddStart(p.StartTime.TotalMilliseconds);
@@ -76,21 +74,25 @@ namespace Nikse.SubtitleEdit.Logic
             _endParagraphCounts[endMilliseconds] = endCount;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private bool IsVisible(Paragraph p)
         {
             return IsInRange(p, _startVisibleMilliseconds, _endVisibleMilliseconds);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private bool IsInThreshold(Paragraph p)
         {
             return IsInRange(p, _startThresholdMilliseconds, _endThresholdMilliseconds);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private bool IsInRange(Paragraph p, double start, double end)
         {
             return p.StartTime.TotalMilliseconds <= end && p.EndTime.TotalMilliseconds >= start;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private bool ParagraphsOverlap(Paragraph p1, Paragraph p2)
         {
             return IsInRange(p1, p2.StartTime.TotalMilliseconds, p2.EndTime.TotalMilliseconds);
@@ -127,50 +129,69 @@ namespace Nikse.SubtitleEdit.Logic
 
         private double CalculateCoverageInRange(List<CoverageRecord> currentCoverage, double startRange, double endRange)
         {
-            // TODO: This whole method is ugly, needs refactoring.
-            CoverageRecord startRecord = new CoverageRecord(startRange);
 
-            int startIndex = currentCoverage.BinarySearch(startRecord, new TimestampRecordComparer());
+            if (currentCoverage.Count == 0)
+            {
+                // There are no coverage records, so by default the answer is 0.
+                // Prevents array out-of-bounds exceptions as well.
+                return 0;
+            }
+
+            double previousTimestamp;
+            double previousNumberOfParagraphs;
+
             double weightedCoverage = 0;
-            double previousTimestamp = startRange;
-            double previousNumberOfParagraphs = 0;
 
+            CoverageRecord startRecord = new CoverageRecord(startRange);
+            int startIndex = currentCoverage.BinarySearch(startRecord, new TimestampRecordComparer());
             if (startIndex < 0)
             {
-                // Start of range has no record, need to add the overlap from the previous record.
+                // Start of range has no record, need to build the information from the record we would have found.
                 startIndex = ~startIndex;
                 if (startIndex > 0)
                 {
+                    // TODO: This has a bug. This portion should be calculating the leading coverage. The record at startIndex is skipped over
+                    // and is calculated incorrectly. Also need to take into account that endRange may be before the record at startIndex.
                     if (startIndex >= currentCoverage.Count)
                     {
                         // The start index comes after all paragraphs have ended, so there can't be any coverage.
                         return 0;
                     }
-                    CoverageRecord r = currentCoverage[startIndex - 1];
-                    previousTimestamp = startRange;
-                    previousNumberOfParagraphs = r.numberOfParagraphs;
+                    // Any start record that would have existed at startIndex would have the same number of paragraphs
+                    // as the previous record.
+                    previousNumberOfParagraphs = currentCoverage[startIndex - 1].numberOfParagraphs;
+                    if (endRange <= currentCoverage[startIndex].timestamp)
+                    {
+                        // The start and end both happen before the same record. Average coverage over the entire range is trivial.
+                        return previousNumberOfParagraphs;
+                    }
+                    weightedCoverage = previousNumberOfParagraphs * (currentCoverage[startIndex].timestamp - startRange);
                 }
                 else
                 {
-                    // Start happened before the first record - there is no overlap to count.
-                    startIndex = 0;
-                    previousTimestamp = startRange;
+                    // startIndex is 0.
+                    // The start range is before the first record - there cannot be any paragraph coverage yet.
                     previousNumberOfParagraphs = 0;
                 }
+                // We are guaranteed to have at least one item in the array because of the checks above.
+                previousTimestamp = currentCoverage[startIndex].timestamp;
             }
             else
             {
+                // The start timestamp matches an existing record, so there is no leading coverage to calculate.
                 if (startIndex >= currentCoverage.Count)
                 {
-                    // The start index comes after all paragraphs have ended, so there can't be any coverage.
+                    // We can't combine with the above check because building the previous record data is
+                    // very different depending on the value of startIndex.
                     return 0;
                 }
+                // Prepare for calculating coverage between existing recods.
                 CoverageRecord previousRecord = currentCoverage[startIndex];
                 previousTimestamp = previousRecord.timestamp;
                 previousNumberOfParagraphs = previousRecord.numberOfParagraphs;
             }
 
-
+            
             if (startIndex < currentCoverage.Count - 1)
             {
                 int currentIndex = startIndex + 1;
@@ -195,39 +216,32 @@ namespace Nikse.SubtitleEdit.Logic
             return weightedCoverage / (endRange - startRange);
         }
 
-        private Paragraph ChooseOneParagaph(double averageCoverage, double currentVisibleCoverage, int lowestCoverage, ICollection<Paragraph> candidates,
+        private Paragraph ChooseOneParagaph(double averageCoverage, double currentVisibleCoverage, int lowestCoverage, List<Paragraph> candidates,
             List<CoverageRecord> currentCoverage, Dictionary<Paragraph, double> coverageCache)
         {
 
             double minimumCoverage = double.MaxValue;
-            //int indexOfMinimum = -1;
+            int indexOfMinimum = -1;
             Paragraph bestParagraph = null;
 
-            //for(var i =  0; i < candidates.Count;i++)
-            foreach (Paragraph p in candidates)
+            for (var i = 0; i < candidates.Count; i++)
             {
-                //Paragraph p = candidates[i];
-                double existingCoverage;
-                if (_useCache)
+                Paragraph p = candidates[i];
+                bool paragraphVisible = IsVisible(p);
+                // Only consider visible paragraphs until a minimum portion of the visible area is covered.
+                if (currentVisibleCoverage > averageCoverage * VisibleSelectionRequirement || paragraphVisible)
                 {
+                    double existingCoverage;
                     if (!coverageCache.TryGetValue(p, out existingCoverage))
                     {
                         existingCoverage = CalculateCoverageInRange(currentCoverage, p.StartTime.TotalMilliseconds, p.EndTime.TotalMilliseconds);
                         coverageCache.Add(p, existingCoverage);
                     }
-                }
-                else
-                {
-                    existingCoverage = CalculateCoverageInRange(currentCoverage, p.StartTime.TotalMilliseconds, p.EndTime.TotalMilliseconds);
-                }
-                if (existingCoverage < minimumCoverage)
-                {
-                    if ((currentVisibleCoverage > averageCoverage / 2 && IsInThreshold(p)) || IsVisible(p))
+                    if (existingCoverage < minimumCoverage)
                     {
-                        // Prefer visible paragraphs until the visible range has at least reached the average coverage for the range
                         minimumCoverage = existingCoverage;
                         bestParagraph = p;
-                        //indexOfMinimum = i;
+                        indexOfMinimum = i;
                         if (existingCoverage <= lowestCoverage)
                         {
                             break;
@@ -237,8 +251,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
             if (bestParagraph != null)
             {
-                candidates.Remove(bestParagraph);
-                //candidates.RemoveAt(indexOfMinimum);
+                candidates.RemoveAt(indexOfMinimum);
             }
 
             return bestParagraph;
@@ -332,7 +345,7 @@ namespace Nikse.SubtitleEdit.Logic
             return leastOverlappingParagraph;
         }
 
-        public List<Paragraph> GetParagraphs(int limit, int invisibleLimit)
+        public List<Paragraph> GetParagraphs(int limit)
         {
             //Console.WriteLine($"Getting {limit} paragraphs.");
             if (limit >= _paragraphs.Count)
@@ -346,17 +359,15 @@ namespace Nikse.SubtitleEdit.Logic
             double averageCoverage = CalculateAverageParagraphCoverage();
             double currentVisibleCoverage = 0;
             List<CoverageRecord> records = new List<CoverageRecord>();
-            // How to figure out what to remove from cache?
 
             // Ensure that longer paragraphs are preferred.
             _paragraphs.Sort(new ParagraphComparer());
-            LinkedList<Paragraph> candidates = new LinkedList<Paragraph>(_paragraphs);
 
             int lowestCoverage = 0;
 
             while (result.Count < limit && _paragraphs.Count > 0)
             {
-                Paragraph selection = ChooseOneParagaph(averageCoverage,currentVisibleCoverage,lowestCoverage, candidates, records, coverageCache);
+                Paragraph selection = ChooseOneParagaph(averageCoverage, currentVisibleCoverage, lowestCoverage, _paragraphs, records, coverageCache);
                 if (selection != null)
                 {
                     result.Add(selection);
@@ -368,32 +379,35 @@ namespace Nikse.SubtitleEdit.Logic
                         //Console.WriteLine($"Paragraph selected, adding {coveragePercent} to current coverage. (for a total of {currentVisibleCoverage})");
                         lowestCoverage = FindLowestCoverage(records);
                     }
-                    if (_useCache)
-                    {
-                        invalidateCache(coverageCache, selection.StartTime.TotalMilliseconds, selection.EndTime.TotalMilliseconds);
-                    }
+                    InvalidateCacheForParagraph(coverageCache, selection);
                 }
             }
 
             return result;
         }
 
-        private void invalidateCache(Dictionary<Paragraph, double> coverageCache, double startRange, double endRange)
+        private void InvalidateCacheForParagraph(Dictionary<Paragraph, double> coverageCache, Paragraph p)
         {
-            List<Paragraph> keys = coverageCache.Keys.ToList();
-            foreach (var key in keys)
+            List<Paragraph> keysToRemove = new List<Paragraph>();
+            foreach (var key in coverageCache.Keys)
             {
-                if (IsInRange(key, startRange, endRange))
+                if (ParagraphsOverlap(key, p))
                 {
-                    coverageCache.Remove(key);
+                    // Assume it is faster to save a few items from a longer list and remove them later than it is
+                    // to copy the entire list up front.
+                    keysToRemove.Add(key);
                 }
+            }
+            foreach (Paragraph key in keysToRemove)
+            {
+                coverageCache.Remove(key);
             }
         }
 
         private void UpdateCoverageRecords(List<CoverageRecord> records, Paragraph newParagraph)
         {
             int startIndex = CreateAndGetRecordIndex(records, newParagraph.StartTime.TotalMilliseconds);
-            int endIndex = CreateAndGetRecordIndex(records,newParagraph.EndTime.TotalMilliseconds);
+            int endIndex = CreateAndGetRecordIndex(records, newParagraph.EndTime.TotalMilliseconds);
             for (int i = startIndex; i < endIndex; i++)
             {
                 records[i].numberOfParagraphs++;
@@ -467,7 +481,8 @@ namespace Nikse.SubtitleEdit.Logic
                 if (lengthComparison > 0)
                 {
                     return 1;
-                }else if (lengthComparison < 0)
+                }
+                else if (lengthComparison < 0)
                 {
                     return -1;
                 }

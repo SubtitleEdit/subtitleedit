@@ -441,10 +441,8 @@ namespace Nikse.SubtitleEdit.Controls
             Dictionary<int, List<Paragraph>> visibleBuckets = new Dictionary<int, List<Paragraph>>();
             Dictionary<int, List<Paragraph>> invisibleBuckets = new Dictionary<int, List<Paragraph>>();
 
-            DisplayableSubtitleHelper cachingHelper = new DisplayableSubtitleHelper(startVisibleMilliseconds, endVisibleMilliseconds, 15,true);
-            DisplayableSubtitleHelper noCachingHelper = new DisplayableSubtitleHelper(startVisibleMilliseconds, endVisibleMilliseconds, 15, false);
+            DisplayableSubtitleHelper paragraphHelper = new DisplayableSubtitleHelper(startVisibleMilliseconds, endVisibleMilliseconds, 15);
 
-            int visibleParagraphsCount = 0;
             for (var i = 0; i < subtitle.Paragraphs.Count; i++)
             {
                 var p = subtitle.Paragraphs[i];
@@ -454,22 +452,15 @@ namespace Nikse.SubtitleEdit.Controls
                     continue;
                 }
 
-                cachingHelper.Add(p);
-                noCachingHelper.Add(p);
+                paragraphHelper.Add(p);
             }
-            Stopwatch cachingTimer = Stopwatch.StartNew();
-            List<Paragraph> selectedParagraphs = cachingHelper.GetParagraphs(100, 20);
-            cachingTimer.Stop();
+            Stopwatch timer = Stopwatch.StartNew();
+            List<Paragraph> selectedParagraphs = paragraphHelper.GetParagraphs(50);
+            timer.Stop();
 
-            Stopwatch noCachingTimer = Stopwatch.StartNew();
-            List<Paragraph> noCacheSelectedParagraphs = noCachingHelper.GetParagraphs(100, 20);
-            noCachingTimer.Stop();
-
-            Console.WriteLine($"Prune time (ms) - Cache: {cachingTimer.ElapsedMilliseconds}\tNo cache: {noCachingTimer.ElapsedMilliseconds}");
-
+            Console.WriteLine($"Prune time (ms): {timer.ElapsedMilliseconds}");
 
             _displayableParagraphs.AddRange(selectedParagraphs);
-            _displayableParagraphs.AddRange(noCacheSelectedParagraphs);
 
             // TODO: Just assign to displayable paragraphs
             //displayableParagraphs.AddRange(SelectParagraphsFromBuckets(visibleBuckets, maxDisplayableParagraphs, visibleParagraphsCount > maxDisplayableParagraphs));
