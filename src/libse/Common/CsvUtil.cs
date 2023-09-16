@@ -32,22 +32,23 @@ namespace Nikse.SubtitleEdit.Core.Common
                             continue;
                         case '"' when !quoteOn:
                             item.Append(ch);
-                            continue;
-                        case '"':
-                        {
-                            if (next == '"')
-                            {
-                                item.Append(ch);
-                                index++;
-                            }
-                            else
-                            {
-                                quoteOn = false;
-                            }
-
                             index++;
                             continue;
-                        }
+                        case '"':
+                            {
+                                if (next == '"')
+                                {
+                                    item.Append(ch);
+                                    index++;
+                                }
+                                else
+                                {
+                                    quoteOn = false;
+                                }
+
+                                index++;
+                                continue;
+                            }
                         default:
                             item.Append(ch);
                             break;
