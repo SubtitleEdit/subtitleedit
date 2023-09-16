@@ -21,6 +21,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             labelInfo.Text = LanguageSettings.Current.GoogleTranslate.TranslateBlockInfo;
             buttonGetTargetGet.Text = LanguageSettings.Current.GoogleTranslate.TranslateBlockGetFromClipboard;
             buttonCopySourceTextToClipboard.Text = LanguageSettings.Current.GoogleTranslate.TranslateBlockCopySourceText;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
 
             _sourceBlock = source;
             Text = title;
