@@ -1302,6 +1302,7 @@ $HorzAlign          =   Center
         public bool ShowToolbarSettings { get; set; }
         public bool ShowToolbarHelp { get; set; }
 
+        public int LayoutNumber { get; set; }
         public bool ShowVideoPlayer { get; set; }
         public bool ShowAudioVisualizer { get; set; }
         public bool ShowWaveform { get; set; }
@@ -3529,6 +3530,12 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.General.TextAndOrigianlTextBoxesSwitched = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("LayoutNumber");
+            if (subNode != null)
+            {
+                settings.General.LayoutNumber = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
             subNode = node.SelectSingleNode("ShowVideoPlayer");
@@ -11015,6 +11022,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("ShowFrameRate", settings.General.ShowFrameRate.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ShowVideoControls", settings.General.ShowVideoControls.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("TextAndOrigianlTextBoxesSwitched", settings.General.TextAndOrigianlTextBoxesSwitched.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("LayoutNumber", settings.General.LayoutNumber.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ShowVideoPlayer", settings.General.ShowVideoPlayer.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ShowAudioVisualizer", settings.General.ShowAudioVisualizer.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ShowWaveform", settings.General.ShowWaveform.ToString(CultureInfo.InvariantCulture));

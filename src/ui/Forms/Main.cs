@@ -13375,6 +13375,7 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.General.SyncListViewWithVideoWhilePlaying = checkBoxSyncListViewWithVideoWhilePlaying.Checked;
             Configuration.Settings.General.ShowWaveform = audioVisualizer.ShowWaveform;
             Configuration.Settings.General.ShowSpectrogram = audioVisualizer.ShowSpectrogram;
+            Configuration.Settings.General.LayoutNumber = _layout;
             if (Configuration.Settings.General.ShowRecentFiles)
             {
                 if (!string.IsNullOrEmpty(_fileName))
@@ -25272,6 +25273,13 @@ namespace Nikse.SubtitleEdit.Forms
             SetShortcuts();
             MainResize();
             _loading = false;
+
+            _layout = Configuration.Settings.General.LayoutNumber;
+            if (_layout != 0)
+            {
+                LayoutManager.SetLayout(_layout, Controls, panelVideoPlayer, SubtitleListview1, groupBoxVideo, groupBoxEdit);
+            }
+
             OpenVideo(_videoFileName, VideoAudioTrackNumber);
             ShowSubtitleTimer.Stop();
             lock (_syncUndo)

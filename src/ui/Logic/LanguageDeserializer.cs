@@ -4795,6 +4795,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Main/Menu/ToolBar/Help":
                     language.Main.Menu.ToolBar.Help = reader.Value;
                     break;
+                case "Main/Menu/ToolBar/Layout":
+                    language.Main.Menu.ToolBar.Layout = reader.Value;
+                    break;
                 case "Main/Menu/ToolBar/AssaDraw":
                     language.Main.Menu.ToolBar.AssaDraw = reader.Value;
                     break;
