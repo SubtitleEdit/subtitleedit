@@ -1486,8 +1486,7 @@ To use an API key, go to "Options -&gt; Settings -&gt; Tools" to enter your Goog
         <BeautifyTimeCodes>Beautify time codes</BeautifyTimeCodes>
         <Settings>Settings</Settings>
         <Help>Help</Help>
-        <ShowHideWaveform>Show/hide waveform</ShowHideWaveform>
-        <ShowHideVideo>Show/hide video</ShowHideVideo>
+        <Layout>Layout</Layout>
         <AssaDraw>Advanced Sub Station Alpha draw</AssaDraw>
       </ToolBar>
       <ContextMenu>
