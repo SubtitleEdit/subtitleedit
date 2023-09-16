@@ -13774,12 +13774,14 @@ namespace Nikse.SubtitleEdit.Forms
             if (view == ListView)
             {
                 textBoxSource.Visible = false;
-                splitContainerListViewAndText.Visible = true;
             }
             else
             {
+                textBoxSource.Parent.Controls.Remove(textBoxSource);
+                SubtitleListview1.Parent.Parent.Parent.Controls.Add(textBoxSource);
+                textBoxSource.Dock = DockStyle.Fill;
+                textBoxSource.BringToFront();
                 textBoxSource.Visible = true;
-                splitContainerListViewAndText.Visible = false;
             }
 
             toolStripButtonSourceView.Checked = InSourceView;
