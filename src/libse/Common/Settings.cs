@@ -2085,6 +2085,22 @@ $HorzAlign          =   Center
                 DialogStyle = DialogType.DashBothLinesWithSpace,
                 ContinuationStyle = ContinuationStyle.None
             });
+            profiles.Add(new RulesProfile
+            {
+                Name = "TikTok/YouTube-shorts (9:16)",
+                SubtitleLineMaximumLength = 20,
+                MaxNumberOfLines = 2,
+                MergeLinesShorterThan = 0,
+                SubtitleMaximumCharactersPerSeconds = 25,
+                SubtitleOptimalCharactersPerSeconds = 18,
+                SubtitleMaximumDisplayMilliseconds = 5000,
+                SubtitleMinimumDisplayMilliseconds = 700,
+                SubtitleMaximumWordsPerMinute = 300,
+                CpsLineLengthStrategy = string.Empty,
+                MinimumMillisecondsBetweenLines = 0,
+                DialogStyle = DialogType.DashBothLinesWithSpace,
+                ContinuationStyle = ContinuationStyle.None
+            });
         }
     }
 
