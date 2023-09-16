@@ -212,9 +212,9 @@ namespace Nikse.SubtitleEdit.Forms.SeMsgBox
                 {
                     foreach (var ch in button.Text)
                     {
-                        if (char.IsLetter(ch) && !accessKeyDictionary.Contains(ch))
+                        if (char.IsLetter(ch) && !accessKeyDictionary.Contains(char.ToLowerInvariant(ch)))
                         {
-                            accessKeyDictionary.Add(ch);
+                            accessKeyDictionary.Add(char.ToLowerInvariant(ch));
                             var idx = button.Text.IndexOf(ch);
                             button.Text = button.Text.Insert(idx, "&");
                             return;
