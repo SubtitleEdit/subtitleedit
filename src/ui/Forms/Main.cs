@@ -24491,35 +24491,44 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ToolStripButtonToggleWaveformClick(object sender, EventArgs e)
         {
-            _textHeightResize = splitContainerListViewAndText.Height - splitContainerListViewAndText.SplitterDistance;
-            _textHeightResizeIgnoreUpdate = DateTime.UtcNow.Ticks;
-
-            toolStripButtonToggleWaveform.Checked = !toolStripButtonToggleWaveform.Checked;
-            audioVisualizer.Visible = toolStripButtonToggleWaveform.Checked;
-            trackBarWaveformPosition.Visible = toolStripButtonToggleWaveform.Checked;
-            panelWaveformControls.Visible = toolStripButtonToggleWaveform.Checked;
-            if (!toolStripButtonToggleWaveform.Checked && !toolStripButtonToggleVideo.Checked)
+            using (var form = new LayoutPicker())
             {
-                if (_isVideoControlsUndocked)
+                if (form.ShowDialog(this) == DialogResult.OK)
                 {
-                    ShowHideUndockedVideoControls();
-                }
-                else
-                {
-                    HideVideoPlayer();
+                    _layout = form.GetLayout();
+                    LayoutManager.SetLayout(_layout, Controls, panelVideoPlayer, SubtitleListview1, groupBoxVideo, groupBoxEdit);
                 }
             }
-            else
-            {
-                ShowVideoPlayer();
-            }
 
-            Configuration.Settings.General.ShowAudioVisualizer = toolStripButtonToggleWaveform.Checked;
-            if (!_loading)
-            {
-                MainResize();
-                Refresh();
-            }
+            //_textHeightResize = splitContainerListViewAndText.Height - splitContainerListViewAndText.SplitterDistance;
+            //_textHeightResizeIgnoreUpdate = DateTime.UtcNow.Ticks;
+
+            //toolStripButtonToggleWaveform.Checked = !toolStripButtonToggleWaveform.Checked;
+            //audioVisualizer.Visible = toolStripButtonToggleWaveform.Checked;
+            //trackBarWaveformPosition.Visible = toolStripButtonToggleWaveform.Checked;
+            //panelWaveformControls.Visible = toolStripButtonToggleWaveform.Checked;
+            //if (!toolStripButtonToggleWaveform.Checked && !toolStripButtonToggleVideo.Checked)
+            //{
+            //    if (_isVideoControlsUndocked)
+            //    {
+            //        ShowHideUndockedVideoControls();
+            //    }
+            //    else
+            //    {
+            //        HideVideoPlayer();
+            //    }
+            //}
+            //else
+            //{
+            //    ShowVideoPlayer();
+            //}
+
+            //Configuration.Settings.General.ShowAudioVisualizer = toolStripButtonToggleWaveform.Checked;
+            //if (!_loading)
+            //{
+            //    MainResize();
+            //    Refresh();
+            //}
         }
 
         public void ShowEarlierOrLater(double adjustMilliseconds, SelectionChoice selection)
