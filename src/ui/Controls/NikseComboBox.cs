@@ -450,6 +450,22 @@ namespace Nikse.SubtitleEdit.Controls
                     }
                     e.SuppressKeyPress = true;
                 }
+                else if (e.KeyCode == Keys.PageUp)
+                {
+                    if (_selectedIndex > 0)
+                    {
+                        SelectedIndex = Math.Max(0, SelectedIndex - 10);
+                    }
+                    e.SuppressKeyPress = true;
+                }
+                else if (e.KeyCode == Keys.PageDown)
+                {
+                    if (_selectedIndex < Items.Count - 1)
+                    {
+                        SelectedIndex = Math.Min(Items.Count - 1, SelectedIndex + 10);
+                    }
+                    e.SuppressKeyPress = true;
+                }
                 else
                 {
                     if (((e.KeyCode >= Keys.A && e.KeyCode <= Keys.Z) ||
