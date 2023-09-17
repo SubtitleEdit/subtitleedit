@@ -24450,7 +24450,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (!IsVideoVisible)
                 {
                     _layout = 0;
-                    LayoutManager.SetLayout(_layout, this, panelVideoPlayer, SubtitleListview1, groupBoxVideo, groupBoxEdit);
+                    SetLayout(_layout);
                 }
 
                 OpenVideo(openFileDialog1.FileName);
@@ -24474,15 +24474,31 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
 
-                var oldLayout = _layout;
                 _layout = form.GetLayout();
-                LayoutManager.SetLayout(_layout, this, panelVideoPlayer, SubtitleListview1, groupBoxVideo, groupBoxEdit);
+                SetLayout(_layout);
 
+                RefreshSelectedParagraph();
                 if (Configuration.Settings.General.ShowVideoControls != form.ShowVideoControls)
                 {
                     Configuration.Settings.General.ShowVideoControls = form.ShowVideoControls;
                     ToggleVideoControlsOnOff(form.ShowVideoControls);
                 }
+            }
+        }
+
+        private void SetLayout(int layout)
+        {
+            var isLarge = _subtitle.Paragraphs.Count > 1000;
+            if (isLarge)
+            {
+                SubtitleListview1.Items.Clear(); // for performance
+            }
+
+            LayoutManager.SetLayout(layout, this, panelVideoPlayer, SubtitleListview1, groupBoxVideo, groupBoxEdit);
+
+            if (isLarge)
+            {
+                SubtitleListview1.Fill(_subtitle, _subtitleOriginal); // for performance
             }
         }
 
@@ -25308,7 +25324,7 @@ namespace Nikse.SubtitleEdit.Forms
             _layout = Configuration.Settings.General.LayoutNumber;
             if (_layout != 0)
             {
-                LayoutManager.SetLayout(_layout, this, panelVideoPlayer, SubtitleListview1, groupBoxVideo, groupBoxEdit);
+                SetLayout(_layout);
             }
             if (Configuration.Settings.General.StartRememberPositionAndSize)
             {
@@ -28722,7 +28738,7 @@ namespace Nikse.SubtitleEdit.Forms
             TabControlModes_SelectedIndexChanged(null, null);
             _videoControlsUndocked.Refresh();
 
-            LayoutManager.SetLayout(LayoutManager.LayoutNoVideo, this, panelVideoPlayer, SubtitleListview1, groupBoxVideo, groupBoxEdit);
+            SetLayout(LayoutManager.LayoutNoVideo);
         }
 
         public void RedockVideoControlsToolStripMenuItemClick(object sender, EventArgs e)
@@ -28776,9 +28792,7 @@ namespace Nikse.SubtitleEdit.Forms
             _waveformUndocked = null;
             _videoControlsUndocked = null;
             ShowVideoPlayer();
-
-            LayoutManager.SetLayout(_layout, this, panelVideoPlayer, SubtitleListview1, groupBoxVideo, groupBoxEdit);
-
+            SetLayout(_layout);
             mediaPlayer.Invalidate();
             Refresh();
 
@@ -33696,7 +33710,7 @@ namespace Nikse.SubtitleEdit.Forms
                         if (!IsVideoVisible)
                         {
                             _layout = 0;
-                            LayoutManager.SetLayout(_layout, this, panelVideoPlayer, SubtitleListview1, groupBoxVideo, groupBoxEdit);
+                            SetLayout(_layout);
                         }
 
                         OpenVideoFromUrl(url);
