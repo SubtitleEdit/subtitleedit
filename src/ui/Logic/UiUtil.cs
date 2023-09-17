@@ -297,7 +297,7 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 videoPlayerContainer.VideoWidth = videoInfo.Width;
                 videoPlayerContainer.VideoHeight = videoInfo.Height;
-                videoPlayerContainer.VideoPlayer.Resize(videoPlayerContainer.PanelPlayer.Width, videoPlayerContainer.PanelPlayer.Height);
+                videoPlayerContainer.VideoPlayer?.Resize(videoPlayerContainer.PanelPlayer.Width, videoPlayerContainer.PanelPlayer.Height);
             }
         }
 

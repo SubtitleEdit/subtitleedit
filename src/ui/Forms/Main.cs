@@ -35787,6 +35787,8 @@ namespace Nikse.SubtitleEdit.Forms
                 _videoPlayerUndocked = null;
                 mediaPlayer.ShowFullscreenButton = Configuration.Settings.General.VideoPlayerShowFullscreenButton;
             }
+
+            Configuration.Settings.General.Undocked = false;
         }
     }
 }
