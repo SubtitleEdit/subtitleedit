@@ -6,7 +6,7 @@ using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public partial class LayoutPicker : Form
+    public sealed partial class LayoutPicker : Form
     {
         private int _layout;
 
@@ -21,13 +21,19 @@ namespace Nikse.SubtitleEdit.Forms
 
         private bool _loading = true;
 
-        public LayoutPicker(int initialLayout)
+        public bool ShowVideoControls { get; set; }
+
+        public LayoutPicker(int initialLayout, bool showVideoControls)
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
             UiUtil.FixFonts(this);
+            Text = LanguageSettings.Current.Main.ChooseLayout;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
+            checkBoxHideVideoControls.Text = LanguageSettings.Current.Main.HideVideoControls;
+            checkBoxHideVideoControls.Checked = !showVideoControls;
             CancelButton = buttonCancel;
+            AcceptButton = buttonOk;
             _layout = initialLayout;
             UpdateButtons(initialLayout);
         }
@@ -380,6 +386,16 @@ namespace Nikse.SubtitleEdit.Forms
 
             _loading = false;
             SelectLayout(_layout);
+        }
+
+        private void LayoutPicker_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            ShowVideoControls = !checkBoxHideVideoControls.Checked;
+        }
+
+        private void buttonOk_Click(object sender, EventArgs e)
+        {
+            DialogResult = DialogResult.OK;
         }
     }
 }

@@ -4270,6 +4270,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Main/DownloadAndUseMpv":
                     language.Main.DownloadAndUseMpv = reader.Value;
                     break;
+                case "Main/ChooseLayout":
+                    language.Main.ChooseLayout = reader.Value;
+                    break;
                 case "Main/Menu/File/Title":
                     language.Main.Menu.File.Title = reader.Value;
                     break;

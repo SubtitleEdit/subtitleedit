@@ -1857,6 +1857,7 @@ namespace Nikse.SubtitleEdit.Logic
                 SubtitleEditNeedsVideoPlayer = "Subtitle Edit needs a video player.",
                 UseRecommendMpv = "To use the recommended video player \"mpv\" click on the button below.",
                 DownloadAndUseMpv = "Download and use \"mpv\" as video player",
+                ChooseLayout = "Choose layout",
 
                 Menu = new LanguageStructure.Main.MainMenu
                 {

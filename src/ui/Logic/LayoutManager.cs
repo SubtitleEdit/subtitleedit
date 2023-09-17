@@ -11,7 +11,7 @@ namespace Nikse.SubtitleEdit.Logic
         public static int ToggleLayout(int layout, Control.ControlCollection controls, Control videoPlayer, SubtitleListView subtitleListView, GroupBox groupBoxWaveform, GroupBox groupBoxEdit)
         {
             layout++;
-            if (layout > 7 || layout < 0)
+            if (layout > LayoutNoVideo || layout < 0)
             {
                 layout = 0;
             }
@@ -22,7 +22,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static void SetLayout(int layout, Control.ControlCollection controls, Control videoPlayer, SubtitleListView subtitleListView, GroupBox groupBoxWaveform, GroupBox groupBoxEdit)
         {
-            if (layout > 7 || layout < 0)
+            if (layout > LayoutNoVideo || layout < 0)
             {
                 layout = 0;
             }
