@@ -18687,7 +18687,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 SuspendLayout();
                 splitContainerMain.Hide();
-                _layout = LayoutManager.ToggleLayout(_layout, Controls, panelVideoPlayer, SubtitleListview1, groupBoxVideo, groupBoxEdit);
+                _layout = LayoutManager.ToggleLayout(_layout, this, panelVideoPlayer, SubtitleListview1, groupBoxVideo, groupBoxEdit);
                 ResumeLayout();
             }
         }
@@ -18789,6 +18789,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 return;
             }
+
+            Configuration.Settings.General.ShowVideoControls = on;
 
             groupBoxVideo.SuspendLayout();
             tabControlModes.Visible = on;
@@ -24448,7 +24450,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (!IsVideoVisible)
                 {
                     _layout = 0;
-                    LayoutManager.SetLayout(_layout, Controls, panelVideoPlayer, SubtitleListview1, groupBoxVideo, groupBoxEdit);
+                    LayoutManager.SetLayout(_layout, this, panelVideoPlayer, SubtitleListview1, groupBoxVideo, groupBoxEdit);
                 }
 
                 OpenVideo(openFileDialog1.FileName);
@@ -24462,19 +24464,21 @@ namespace Nikse.SubtitleEdit.Forms
         {
             using (var form = new LayoutPicker(_layout, Configuration.Settings.General.ShowVideoControls))
             {
-                if (form.ShowDialog(this) == DialogResult.OK)
+                if (form.ShowDialog(this) != DialogResult.OK)
                 {
-                    var oldLayout = _layout;
-                    _layout = form.GetLayout();
-                    if (_layout != oldLayout)
-                    {
-                        LayoutManager.SetLayout(_layout, Controls, panelVideoPlayer, SubtitleListview1, groupBoxVideo, groupBoxEdit);
-                    }
+                    return;
+                }
 
-                    if (Configuration.Settings.General.ShowVideoControls != form.ShowVideoControls)
-                    {
-                        ToggleVideoControlsOnOff(form.ShowVideoControls);
-                    }
+                var oldLayout = _layout;
+                _layout = form.GetLayout();
+                if (_layout != oldLayout)
+                {
+                    LayoutManager.SetLayout(_layout, this, panelVideoPlayer, SubtitleListview1, groupBoxVideo, groupBoxEdit);
+                }
+
+                if (Configuration.Settings.General.ShowVideoControls != form.ShowVideoControls)
+                {
+                    ToggleVideoControlsOnOff(form.ShowVideoControls);
                 }
             }
         }
@@ -25300,7 +25304,7 @@ namespace Nikse.SubtitleEdit.Forms
             _layout = Configuration.Settings.General.LayoutNumber;
             if (_layout != 0)
             {
-                LayoutManager.SetLayout(_layout, Controls, panelVideoPlayer, SubtitleListview1, groupBoxVideo, groupBoxEdit);
+                LayoutManager.SetLayout(_layout, this, panelVideoPlayer, SubtitleListview1, groupBoxVideo, groupBoxEdit);
             }
 
             OpenVideo(_videoFileName, VideoAudioTrackNumber);
@@ -28718,7 +28722,7 @@ namespace Nikse.SubtitleEdit.Forms
             TabControlModes_SelectedIndexChanged(null, null);
             _videoControlsUndocked.Refresh();
 
-            LayoutManager.SetLayout(LayoutManager.LayoutNoVideo, Controls, panelVideoPlayer, SubtitleListview1, groupBoxVideo, groupBoxEdit);
+            LayoutManager.SetLayout(LayoutManager.LayoutNoVideo, this, panelVideoPlayer, SubtitleListview1, groupBoxVideo, groupBoxEdit);
         }
 
         public void RedockVideoControlsToolStripMenuItemClick(object sender, EventArgs e)
@@ -28773,7 +28777,7 @@ namespace Nikse.SubtitleEdit.Forms
             _videoControlsUndocked = null;
             ShowVideoPlayer();
 
-            LayoutManager.SetLayout(_layout, Controls, panelVideoPlayer, SubtitleListview1, groupBoxVideo, groupBoxEdit);
+            LayoutManager.SetLayout(_layout, this, panelVideoPlayer, SubtitleListview1, groupBoxVideo, groupBoxEdit);
 
             mediaPlayer.Invalidate();
             Refresh();
@@ -33692,7 +33696,7 @@ namespace Nikse.SubtitleEdit.Forms
                         if (!IsVideoVisible)
                         {
                             _layout = 0;
-                            LayoutManager.SetLayout(_layout, Controls, panelVideoPlayer, SubtitleListview1, groupBoxVideo, groupBoxEdit);
+                            LayoutManager.SetLayout(_layout, this, panelVideoPlayer, SubtitleListview1, groupBoxVideo, groupBoxEdit);
                         }
 
                         OpenVideoFromUrl(url);
