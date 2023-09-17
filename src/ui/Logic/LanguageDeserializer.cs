@@ -6919,6 +6919,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/AdjustSetEndMinusGapAndStartNextHere":
                     language.Settings.AdjustSetEndMinusGapAndStartNextHere = reader.Value;
                     break;
+                case "Settings/AdjustSetStartTimeAndGoToNext":
+                    language.Settings.AdjustSetStartTimeAndGoToNext = reader.Value;
+                    break;
                 case "Settings/AdjustSetEndTimeAndGoToNext":
                     language.Settings.AdjustSetEndTimeAndGoToNext = reader.Value;
                     break;

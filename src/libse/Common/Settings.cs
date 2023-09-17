@@ -1863,7 +1863,7 @@ $HorzAlign          =   Center
             profiles.Add(new RulesProfile
             {
                 Name = "TikTok/YouTube-shorts (9:16)",
-                SubtitleLineMaximumLength = 20,
+                SubtitleLineMaximumLength = 24,
                 MaxNumberOfLines = 2,
                 MergeLinesShorterThan = 0,
                 SubtitleMaximumCharactersPerSeconds = 25,
