@@ -32,6 +32,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             checkBoxHideVideoControls.Text = LanguageSettings.Current.Main.HideVideoControls;
             checkBoxHideVideoControls.Checked = hideVideoControls;
+            ShowVideoControls = !hideVideoControls;
             CancelButton = buttonCancel;
             AcceptButton = buttonOk;
             _layout = initialLayout;
