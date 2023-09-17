@@ -24448,7 +24448,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ToolStripButtonLayoutChooseClick(object sender, EventArgs e)
         {
-            using (var form = new LayoutPicker(_layout, !Configuration.Settings.General.ShowVideoControls))
+            using (var form = new LayoutPicker(_layout, Configuration.Settings.General.ShowVideoControls))
             {
                 if (form.ShowDialog(this) != DialogResult.OK)
                 {
