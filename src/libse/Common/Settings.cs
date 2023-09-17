@@ -2322,6 +2322,7 @@ $HorzAlign          =   Center
         public string GeneralToggleTranslationMode { get; set; }
         public string GeneralSwitchOriginalAndTranslation { get; set; }
         public string GeneralSwitchOriginalAndTranslationTextBoxes { get; set; }
+        public string GeneralLayoutChoose { get; set; }
         public string GeneralPlayFirstSelected { get; set; }
         public string GeneralGoToFirstSelectedLine { get; set; }
         public string GeneralGoToNextEmptyLine { get; set; }
@@ -8861,6 +8862,12 @@ $HorzAlign          =   Center
                     shortcuts.GeneralSwitchOriginalAndTranslationTextBoxes = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("GeneralLayoutChoose");
+                if (subNode != null)
+                {
+                    shortcuts.GeneralLayoutChoose = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("GeneralMergeOriginalAndTranslation");
                 if (subNode != null)
                 {
@@ -12120,6 +12127,7 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("GeneralToggleTranslationMode", shortcuts.GeneralToggleTranslationMode);
             textWriter.WriteElementString("GeneralSwitchOriginalAndTranslation", shortcuts.GeneralSwitchOriginalAndTranslation);
             textWriter.WriteElementString("GeneralSwitchOriginalAndTranslationTextBoxes", shortcuts.GeneralSwitchOriginalAndTranslationTextBoxes);
+            textWriter.WriteElementString("GeneralLayoutChoose", shortcuts.GeneralLayoutChoose);
             textWriter.WriteElementString("GeneralMergeOriginalAndTranslation", shortcuts.GeneralMergeOriginalAndTranslation);
             textWriter.WriteElementString("GeneralGoToNextSubtitle", shortcuts.GeneralGoToNextSubtitle);
             textWriter.WriteElementString("GeneralGoToNextSubtitlePlayTranslate", shortcuts.GeneralGoToNextSubtitlePlayTranslate);

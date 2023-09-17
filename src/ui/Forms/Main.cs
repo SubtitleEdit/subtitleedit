@@ -17727,6 +17727,11 @@ namespace Nikse.SubtitleEdit.Forms
 
                 e.SuppressKeyPress = true;
             }
+            else if (_shortcuts.MainGeneralLayoutChoose == e.KeyData)
+            {
+                ToolStripButtonLayoutChooseClick(null, null);
+                e.SuppressKeyPress = true;
+            }
             else if (_shortcuts.MainGeneralMergeTranslationAndOriginal == e.KeyData) // Merge translation and original
             {
                 if (_subtitleOriginal != null && _subtitleOriginal.Paragraphs.Count > 0 && _networkSession == null)
@@ -18682,13 +18687,6 @@ namespace Nikse.SubtitleEdit.Forms
             if (e.Modifiers == (Keys.Alt | Keys.Shift | Keys.Control) && e.KeyCode == Keys.F12)
             {
                 new WordSplitDictionaryGenerator().ShowDialog(this);
-            }
-            if (e.Modifiers == (Keys.Alt | Keys.Shift | Keys.Control) && e.KeyCode == Keys.L)
-            {
-                SuspendLayout();
-                splitContainerMain.Hide();
-                _layout = LayoutManager.ToggleLayout(_layout, this, panelVideoPlayer, SubtitleListview1, groupBoxVideo, groupBoxEdit);
-                ResumeLayout();
             }
         }
 
@@ -24460,9 +24458,9 @@ namespace Nikse.SubtitleEdit.Forms
             return false;
         }
 
-        private void ToolStripButtonToggleWaveformClick(object sender, EventArgs e)
+        private void ToolStripButtonLayoutChooseClick(object sender, EventArgs e)
         {
-            using (var form = new LayoutPicker(_layout, Configuration.Settings.General.ShowVideoControls))
+            using (var form = new LayoutPicker(_layout, !Configuration.Settings.General.ShowVideoControls))
             {
                 if (form.ShowDialog(this) != DialogResult.OK)
                 {
@@ -25305,6 +25303,11 @@ namespace Nikse.SubtitleEdit.Forms
             if (_layout != 0)
             {
                 LayoutManager.SetLayout(_layout, this, panelVideoPlayer, SubtitleListview1, groupBoxVideo, groupBoxEdit);
+            }
+
+            if (!Configuration.Settings.General.ShowVideoControls)
+            {
+                ToggleVideoControlsOnOff(Configuration.Settings.General.ShowVideoControls);
             }
 
             OpenVideo(_videoFileName, VideoAudioTrackNumber);
@@ -27294,7 +27297,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ShowhideWaveformToolStripMenuItemClick(object sender, EventArgs e)
         {
-            ToolStripButtonToggleWaveformClick(null, null);
+            ToolStripButtonLayoutChooseClick(null, null);
         }
 
         private void AudioWaveformDragEnter(object sender, DragEventArgs e)
