@@ -1482,8 +1482,8 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
         <BeautifyTimeCodes>타임코드 보기좋게 꾸미기</BeautifyTimeCodes>
         <Settings>환경 설정</Settings>
         <Help>도움말</Help>
-        <ShowHideWaveform>파형 표시 | 숨김</ShowHideWaveform>
-        <ShowHideVideo>비디오 표시 | 숨김</ShowHideVideo>
+        <Layout>레이아웃
+</Layout>
         <AssaDraw>Advanced Sub Station Alpha 그리기</AssaDraw>
       </ToolBar>
       <ContextMenu>
@@ -1940,6 +1940,8 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <SubtitleEditNeedsVideoPlayer>SE는 비디오 플레이어가 필요합니다.</SubtitleEditNeedsVideoPlayer>
     <UseRecommendMpv>추천 비디오 플레이어 "mpv"를 사용하려면 아래 버튼을 클릭하십시오.</UseRecommendMpv>
     <DownloadAndUseMpv>"mpv"를 다운로드하여 비디오 플레이어로 사용</DownloadAndUseMpv>
+    <ChooseLayout>레이아웃 선택
+</ChooseLayout>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>MATROSKA 파일 안에 있는 자막 선택하기</Title>
@@ -2537,7 +2539,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <DarkThemeShowGridViewLines>목록 보기 그리드 선 표시</DarkThemeShowGridViewLines>
     <GraphicsButtons>그래픽 버튼</GraphicsButtons>
     <UpdateShortcut>업데이트</UpdateShortcut>
-    <FocusSetVideoPosition>포커스에 비디오 위치 설정</FocusSetVideoPosition>
+    <FocusSetVideoPosition>비디오 위치에 포커스 맞춤</FocusSetVideoPosition>
     <ToggleDockUndockOfVideoControls>비디오 컨트롤 연결 | 해제</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>끝 지점과 새로 추가할 지점을 정하고 새 지점으로 이동</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStart>끝 지점을 통해 조정</AdjustViaEndAutoStart>
