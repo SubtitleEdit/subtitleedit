@@ -1,6 +1,6 @@
 ﻿namespace Nikse.SubtitleEdit.Forms
 {
-    partial class LayoutPicker
+    sealed partial class LayoutPicker
     {
         /// <summary>
         /// Required designer variable.
@@ -38,6 +38,8 @@
             this.button7 = new System.Windows.Forms.Button();
             this.button8 = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
+            this.checkBoxHideVideoControls = new System.Windows.Forms.CheckBox();
+            this.buttonOk = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // button1
@@ -105,7 +107,7 @@
             this.button5.FlatAppearance.BorderSize = 0;
             this.button5.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button5.Image = ((System.Drawing.Image)(resources.GetObject("button5.Image")));
-            this.button5.Location = new System.Drawing.Point(13, 173);
+            this.button5.Location = new System.Drawing.Point(13, 169);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(195, 147);
             this.button5.TabIndex = 4;
@@ -120,7 +122,7 @@
             this.button6.FlatAppearance.BorderSize = 0;
             this.button6.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button6.Image = ((System.Drawing.Image)(resources.GetObject("button6.Image")));
-            this.button6.Location = new System.Drawing.Point(220, 173);
+            this.button6.Location = new System.Drawing.Point(220, 169);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(195, 147);
             this.button6.TabIndex = 5;
@@ -135,7 +137,7 @@
             this.button7.FlatAppearance.BorderSize = 0;
             this.button7.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button7.Image = global::Nikse.SubtitleEdit.Properties.Resources.L7;
-            this.button7.Location = new System.Drawing.Point(428, 174);
+            this.button7.Location = new System.Drawing.Point(428, 170);
             this.button7.Name = "button7";
             this.button7.Size = new System.Drawing.Size(195, 147);
             this.button7.TabIndex = 6;
@@ -150,7 +152,7 @@
             this.button8.FlatAppearance.BorderSize = 0;
             this.button8.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button8.Image = ((System.Drawing.Image)(resources.GetObject("button8.Image")));
-            this.button8.Location = new System.Drawing.Point(635, 174);
+            this.button8.Location = new System.Drawing.Point(635, 170);
             this.button8.Name = "button8";
             this.button8.Size = new System.Drawing.Size(195, 147);
             this.button8.TabIndex = 7;
@@ -167,15 +169,39 @@
             this.buttonCancel.Location = new System.Drawing.Point(740, 339);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(90, 23);
-            this.buttonCancel.TabIndex = 46;
+            this.buttonCancel.TabIndex = 101;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxHideVideoControls
+            // 
+            this.checkBoxHideVideoControls.AutoSize = true;
+            this.checkBoxHideVideoControls.Location = new System.Drawing.Point(13, 337);
+            this.checkBoxHideVideoControls.Name = "checkBoxHideVideoControls";
+            this.checkBoxHideVideoControls.Size = new System.Drawing.Size(161, 17);
+            this.checkBoxHideVideoControls.TabIndex = 47;
+            this.checkBoxHideVideoControls.Text = "checkBoxHideVideoControls";
+            this.checkBoxHideVideoControls.UseVisualStyleBackColor = true;
+            // 
+            // buttonOk
+            // 
+            this.buttonOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonOk.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.buttonOk.Location = new System.Drawing.Point(644, 339);
+            this.buttonOk.Name = "buttonOk";
+            this.buttonOk.Size = new System.Drawing.Size(90, 23);
+            this.buttonOk.TabIndex = 100;
+            this.buttonOk.Text = "&OK";
+            this.buttonOk.UseVisualStyleBackColor = true;
+            this.buttonOk.Click += new System.EventHandler(this.buttonOk_Click);
             // 
             // LayoutPicker
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(842, 374);
+            this.Controls.Add(this.buttonOk);
+            this.Controls.Add(this.checkBoxHideVideoControls);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.button8);
             this.Controls.Add(this.button7);
@@ -194,9 +220,11 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Choose layout";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.LayoutPicker_FormClosing);
             this.Shown += new System.EventHandler(this.LayoutPicker_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.LayoutPicker_KeyDown);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -211,5 +239,7 @@
         private System.Windows.Forms.Button button7;
         private System.Windows.Forms.Button button8;
         private System.Windows.Forms.Button buttonCancel;
+        private System.Windows.Forms.CheckBox checkBoxHideVideoControls;
+        private System.Windows.Forms.Button buttonOk;
     }
 }

@@ -1940,6 +1940,7 @@ Download and continue?</VideoFromUrlRequirements>
     <SubtitleEditNeedsVideoPlayer>Subtitle Edit needs a video player.</SubtitleEditNeedsVideoPlayer>
     <UseRecommendMpv>To use the recommended video player "mpv" click on the button below.</UseRecommendMpv>
     <DownloadAndUseMpv>Download and use "mpv" as video player</DownloadAndUseMpv>
+    <ChooseLayout>Choose layout</ChooseLayout>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Choose subtitle from Matroska file</Title>

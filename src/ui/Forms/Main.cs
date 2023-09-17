@@ -24460,12 +24460,21 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ToolStripButtonToggleWaveformClick(object sender, EventArgs e)
         {
-            using (var form = new LayoutPicker(_layout))
+            using (var form = new LayoutPicker(_layout, Configuration.Settings.General.ShowVideoControls))
             {
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
+                    var oldLayout = _layout;
                     _layout = form.GetLayout();
-                    LayoutManager.SetLayout(_layout, Controls, panelVideoPlayer, SubtitleListview1, groupBoxVideo, groupBoxEdit);
+                    if (_layout != oldLayout)
+                    {
+                        LayoutManager.SetLayout(_layout, Controls, panelVideoPlayer, SubtitleListview1, groupBoxVideo, groupBoxEdit);
+                    }
+
+                    if (Configuration.Settings.General.ShowVideoControls != form.ShowVideoControls)
+                    {
+                        ToggleVideoControlsOnOff(form.ShowVideoControls);
+                    }
                 }
             }
         }

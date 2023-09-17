@@ -1673,6 +1673,7 @@
             public string SubtitleEditNeedsVideoPlayer { get; set; }
             public string UseRecommendMpv { get; set; }
             public string DownloadAndUseMpv { get; set; }
+            public string ChooseLayout { get; set; }
 
             public class MainMenu
             {
