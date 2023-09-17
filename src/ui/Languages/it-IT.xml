@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>4.0.1</Version>
-    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 16.09.2023</TranslatedBy>
+    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 17.09.2023</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -1487,8 +1487,7 @@ Per usare una chiave API vai su "Opzioni -&gt; Impostazioni -&gt; Strumenti" per
         <BeautifyTimeCodes>Time code abbellimento</BeautifyTimeCodes>
         <Settings>Preferenze</Settings>
         <Help>Aiuto</Help>
-        <ShowHideWaveform>Visualizza/nascondi forma onda</ShowHideWaveform>
-        <ShowHideVideo>Visualizza/nascondi video</ShowHideVideo>
+        <Layout>Layout</Layout>
         <AssaDraw>Disegno Advanced Sub Station Alpha</AssaDraw>
       </ToolBar>
       <ContextMenu>
@@ -1942,6 +1941,7 @@ Vuoi scaricare mpv e youtuibe-dl e continuare?</VideoFromUrlRequirements>
     <SubtitleEditNeedsVideoPlayer>Subtitle Edit ha bisogno di un lettore video.</SubtitleEditNeedsVideoPlayer>
     <UseRecommendMpv>Per usare il lettore video consigliato "mpv" fai clic sul pulsante qui sotto.</UseRecommendMpv>
     <DownloadAndUseMpv>Scarica e sua "mpv" come lettore video</DownloadAndUseMpv>
+    <ChooseLayout>Scegli layout</ChooseLayout>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Scegli sottotitolo da file Matroska</Title>
