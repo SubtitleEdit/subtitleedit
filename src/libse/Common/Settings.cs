@@ -1303,6 +1303,7 @@ $HorzAlign          =   Center
         public bool ShowToolbarHelp { get; set; }
 
         public int LayoutNumber { get; set; }
+        public string LayoutSizes { get; set; }
         public bool ShowVideoPlayer { get; set; }
         public bool ShowAudioVisualizer { get; set; }
         public bool ShowWaveform { get; set; }
@@ -1344,9 +1345,6 @@ $HorzAlign          =   Center
         public bool StartRememberPositionAndSize { get; set; }
         public string StartPosition { get; set; }
         public string StartSize { get; set; }
-        public int SplitContainerMainSplitterDistance { get; set; }
-        public int SplitContainer1SplitterDistance { get; set; }
-        public int SplitContainerListViewAndTextSplitterDistance { get; set; }
         public bool StartInSourceView { get; set; }
         public bool RemoveBlankLinesWhenOpening { get; set; }
         public bool RemoveBadCharsWhenOpening { get; set; }
@@ -3539,6 +3537,12 @@ $HorzAlign          =   Center
                 settings.General.LayoutNumber = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
+            subNode = node.SelectSingleNode("LayoutSizes");
+            if (subNode != null)
+            {
+                settings.General.LayoutSizes = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("ShowVideoPlayer");
             if (subNode != null)
             {
@@ -3759,24 +3763,6 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.General.StartSize = subNode.InnerText;
-            }
-
-            subNode = node.SelectSingleNode("SplitContainerMainSplitterDistance");
-            if (subNode != null)
-            {
-                settings.General.SplitContainerMainSplitterDistance = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
-            }
-
-            subNode = node.SelectSingleNode("SplitContainer1SplitterDistance");
-            if (subNode != null)
-            {
-                settings.General.SplitContainer1SplitterDistance = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
-            }
-
-            subNode = node.SelectSingleNode("SplitContainerListViewAndTextSplitterDistance");
-            if (subNode != null)
-            {
-                settings.General.SplitContainerListViewAndTextSplitterDistance = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
             subNode = node.SelectSingleNode("StartInSourceView");
@@ -11030,6 +11016,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("ShowVideoControls", settings.General.ShowVideoControls.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("TextAndOrigianlTextBoxesSwitched", settings.General.TextAndOrigianlTextBoxesSwitched.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("LayoutNumber", settings.General.LayoutNumber.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("LayoutSizes", settings.General.LayoutSizes);
                 textWriter.WriteElementString("ShowVideoPlayer", settings.General.ShowVideoPlayer.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ShowAudioVisualizer", settings.General.ShowAudioVisualizer.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ShowWaveform", settings.General.ShowWaveform.ToString(CultureInfo.InvariantCulture));
@@ -11066,9 +11053,6 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("StartRememberPositionAndSize", settings.General.StartRememberPositionAndSize.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("StartPosition", settings.General.StartPosition);
                 textWriter.WriteElementString("StartSize", settings.General.StartSize);
-                textWriter.WriteElementString("SplitContainerMainSplitterDistance", settings.General.SplitContainerMainSplitterDistance.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("SplitContainer1SplitterDistance", settings.General.SplitContainer1SplitterDistance.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("SplitContainerListViewAndTextSplitterDistance", settings.General.SplitContainerListViewAndTextSplitterDistance.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("StartInSourceView", settings.General.StartInSourceView.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("RemoveBlankLinesWhenOpening", settings.General.RemoveBlankLinesWhenOpening.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("RemoveBadCharsWhenOpening", settings.General.RemoveBadCharsWhenOpening.ToString(CultureInfo.InvariantCulture));
