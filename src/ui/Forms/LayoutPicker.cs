@@ -67,6 +67,15 @@ namespace Nikse.SubtitleEdit.Forms
             button6.Image = _gray6;
             button7.Image = _gray7;
             button8.Image = _gray8;
+
+            button1.Font = new Font(button1.Font.FontFamily, 28);
+            button2.Font = new Font(button1.Font.FontFamily, 28);
+            button3.Font = new Font(button1.Font.FontFamily, 28);
+            button4.Font = new Font(button1.Font.FontFamily, 28);
+            button5.Font = new Font(button1.Font.FontFamily, 28);
+            button6.Font = new Font(button1.Font.FontFamily, 28);
+            button7.Font = new Font(button1.Font.FontFamily, 28);
+            button8.Font = new Font(button1.Font.FontFamily, 28);
         }
 
 
@@ -270,35 +279,35 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.KeyCode == Keys.NumPad1 || e.KeyCode == Keys.D1)
             {
-                SelectLayout(0);
+                FocusLayout(0);
             }
             else if (e.KeyCode == Keys.NumPad2 || e.KeyCode == Keys.D2)
             {
-                SelectLayout(1);
+                FocusLayout(1);
             }
             else if (e.KeyCode == Keys.NumPad3 || e.KeyCode == Keys.D3)
             {
-                SelectLayout(2);
+                FocusLayout(2);
             }
             else if (e.KeyCode == Keys.NumPad4 || e.KeyCode == Keys.D4)
             {
-                SelectLayout(3);
+                FocusLayout(3);
             }
             else if (e.KeyCode == Keys.NumPad5 || e.KeyCode == Keys.D5)
             {
-                SelectLayout(4);
+                FocusLayout(4);
             }
             else if (e.KeyCode == Keys.NumPad6 || e.KeyCode == Keys.D6)
             {
-                SelectLayout(5);
+                FocusLayout(5);
             }
             else if (e.KeyCode == Keys.NumPad7 || e.KeyCode == Keys.D7)
             {
-                SelectLayout(6);
+                FocusLayout(6);
             }
             else if (e.KeyCode == Keys.NumPad8 || e.KeyCode == Keys.D8)
             {
-                SelectLayout(7);
+                FocusLayout(7);
             }
         }
 
@@ -357,6 +366,19 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void LayoutPicker_Shown(object sender, EventArgs e)
         {
+            FocusLayout();
+            _loading = false;
+            SelectLayout(_layout);
+        }
+
+        private void FocusLayout(int layout)
+        {
+            _layout = layout;
+            FocusLayout();
+        }
+
+        private void FocusLayout()
+        {
             switch (_layout)
             {
                 case 0:
@@ -384,9 +406,6 @@ namespace Nikse.SubtitleEdit.Forms
                     button8.Focus();
                     break;
             }
-
-            _loading = false;
-            SelectLayout(_layout);
         }
 
         private void buttonOk_Click(object sender, EventArgs e)
