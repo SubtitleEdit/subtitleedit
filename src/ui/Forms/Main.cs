@@ -18788,8 +18788,6 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            Configuration.Settings.General.ShowVideoControls = on;
-
             groupBoxVideo.SuspendLayout();
             tabControlModes.Visible = on;
             var left = 5;
@@ -24476,6 +24474,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (Configuration.Settings.General.ShowVideoControls != form.ShowVideoControls)
                 {
+                    Configuration.Settings.General.ShowVideoControls = form.ShowVideoControls;
                     ToggleVideoControlsOnOff(form.ShowVideoControls);
                 }
             }
