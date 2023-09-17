@@ -13361,9 +13361,7 @@ namespace Nikse.SubtitleEdit.Forms
                     Configuration.Settings.General.StartSize = Width + ";" + Height;
                 }
 
-                Configuration.Settings.General.SplitContainerMainSplitterDistance = splitContainerMain.SplitterDistance;
-                Configuration.Settings.General.SplitContainer1SplitterDistance = splitContainer1.SplitterDistance;
-                Configuration.Settings.General.SplitContainerListViewAndTextSplitterDistance = splitContainerListViewAndText.SplitterDistance;
+                Configuration.Settings.General.LayoutSizes = LayoutManager.SaveLayout();
             }
 
             Configuration.Settings.General.AutoRepeatOn = checkBoxAutoRepeatOn.Checked;
@@ -20526,15 +20524,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (_videoPlayerUndocked == null || _videoPlayerUndocked.IsDisposed)
             {
                 Configuration.Settings.General.Undocked = true;
-                if (!_loading)
-                {
-                    Configuration.Settings.General.SplitContainerMainSplitterDistance = splitContainerMain.SplitterDistance;
-                    Configuration.Settings.General.SplitContainer1SplitterDistance = splitContainer1.SplitterDistance;
-                    Configuration.Settings.General.SplitContainerListViewAndTextSplitterDistance = splitContainerListViewAndText.SplitterDistance;
-                }
-
                 UnDockVideoPlayer();
-
                 setRedockOnFullscreenEnd = true;
             }
 
@@ -24467,10 +24457,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 var oldLayout = _layout;
                 _layout = form.GetLayout();
-                if (_layout != oldLayout)
-                {
-                    LayoutManager.SetLayout(_layout, this, panelVideoPlayer, SubtitleListview1, groupBoxVideo, groupBoxEdit);
-                }
+                LayoutManager.SetLayout(_layout, this, panelVideoPlayer, SubtitleListview1, groupBoxVideo, groupBoxEdit);
 
                 if (Configuration.Settings.General.ShowVideoControls != form.ShowVideoControls)
                 {
@@ -25298,10 +25285,15 @@ namespace Nikse.SubtitleEdit.Forms
             MainResize();
             _loading = false;
 
+            LayoutManager.MainSplitContainer = splitContainerMain;
             _layout = Configuration.Settings.General.LayoutNumber;
             if (_layout != 0)
             {
                 LayoutManager.SetLayout(_layout, this, panelVideoPlayer, SubtitleListview1, groupBoxVideo, groupBoxEdit);
+            }
+            if (Configuration.Settings.General.StartRememberPositionAndSize)
+            {
+                LayoutManager.RestoreLayout(Configuration.Settings.General.LayoutSizes);
             }
 
             if (!Configuration.Settings.General.ShowVideoControls)
@@ -25339,17 +25331,11 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemImportOcrHardSub.Visible = showBeta;
             toolStripMenuItemOpenDvd.Visible = showBeta;
 
-            if (Configuration.Settings.General.StartRememberPositionAndSize &&
-                Configuration.Settings.General.SplitContainerMainSplitterDistance > 0 &&
-                Configuration.Settings.General.SplitContainer1SplitterDistance > 0 &&
-                Configuration.Settings.General.SplitContainerListViewAndTextSplitterDistance > 0)
+            if (Configuration.Settings.General.StartRememberPositionAndSize)
             {
                 try
                 {
                     _textHeightResizeIgnoreUpdate = DateTime.UtcNow.Ticks;
-                    splitContainerMain.SplitterDistance = Configuration.Settings.General.SplitContainerMainSplitterDistance;
-                    splitContainer1.SplitterDistance = Configuration.Settings.General.SplitContainer1SplitterDistance;
-                    splitContainerListViewAndText.SplitterDistance = Configuration.Settings.General.SplitContainerListViewAndTextSplitterDistance;
                     _textHeightResize = splitContainerListViewAndText.Height - splitContainerListViewAndText.SplitterDistance;
                 }
                 catch
@@ -28658,13 +28644,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             Configuration.Settings.General.Undocked = true;
-            if (!_loading)
-            {
-                Configuration.Settings.General.SplitContainerMainSplitterDistance = splitContainerMain.SplitterDistance;
-                Configuration.Settings.General.SplitContainer1SplitterDistance = splitContainer1.SplitterDistance;
-                Configuration.Settings.General.SplitContainerListViewAndTextSplitterDistance = splitContainerListViewAndText.SplitterDistance;
-            }
-
             var top = Math.Max(Top, 0);
             var left = Math.Max(Left, 0);
             UnDockVideoPlayer();

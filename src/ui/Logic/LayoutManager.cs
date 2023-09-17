@@ -1,5 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
+using System.Linq;
+using System.Text;
 using Nikse.SubtitleEdit.Controls;
 using System.Windows.Forms;
 
@@ -8,18 +12,7 @@ namespace Nikse.SubtitleEdit.Logic
     public static class LayoutManager
     {
         public const int LayoutNoVideo = 7;
-
-        public static int ToggleLayout(int layout, Form form, Control videoPlayer, SubtitleListView subtitleListView, GroupBox groupBoxWaveform, GroupBox groupBoxEdit)
-        {
-            layout++;
-            if (layout > LayoutNoVideo || layout < 0)
-            {
-                layout = 0;
-            }
-
-            SetLayout(layout, form, videoPlayer, subtitleListView, groupBoxWaveform, groupBoxEdit);
-            return layout;
-        }
+        public static SplitContainer MainSplitContainer;
 
         public static void SetLayout(int layout, Form form, Control videoPlayer, SubtitleListView subtitleListView, GroupBox groupBoxWaveform, GroupBox groupBoxEdit)
         {
@@ -61,6 +54,7 @@ namespace Nikse.SubtitleEdit.Logic
         private static void SetLayout0(Form form, Control videoPlayerContainer, SubtitleListView subtitleListView, GroupBox groupBoxWaveform, GroupBox groupBoxEdit)
         {
             var spMain = new SplitContainer();
+            MainSplitContainer = spMain;
             spMain.Orientation = Orientation.Horizontal;
 
             groupBoxWaveform.Parent?.Controls.Remove(groupBoxWaveform);
@@ -127,6 +121,7 @@ namespace Nikse.SubtitleEdit.Logic
         private static void SetLayout1(Form form, Control videoPlayerContainer, SubtitleListView subtitleListView, GroupBox groupBoxWaveform, GroupBox groupBoxEdit)
         {
             var spMain = new SplitContainer();
+            MainSplitContainer = spMain;
             spMain.Orientation = Orientation.Horizontal;
 
             groupBoxWaveform.Parent?.Controls.Remove(groupBoxWaveform);
@@ -169,6 +164,7 @@ namespace Nikse.SubtitleEdit.Logic
         private static void SetLayout2(Form form, Control videoPlayerContainer, SubtitleListView subtitleListView, GroupBox groupBoxWaveform, GroupBox groupBoxEdit)
         {
             var spMain = new SplitContainer();
+            MainSplitContainer = spMain;
             spMain.Orientation = Orientation.Vertical;
 
             videoPlayerContainer.Parent?.Controls.Remove(videoPlayerContainer);
@@ -213,6 +209,7 @@ namespace Nikse.SubtitleEdit.Logic
         private static void SetLayout3(Form form, Control videoPlayerContainer, SubtitleListView subtitleListView, GroupBox groupBoxWaveform, GroupBox groupBoxEdit)
         {
             var spMain = new SplitContainer();
+            MainSplitContainer = spMain;
             spMain.Orientation = Orientation.Vertical;
 
             videoPlayerContainer.Parent?.Controls.Remove(videoPlayerContainer);
@@ -257,6 +254,7 @@ namespace Nikse.SubtitleEdit.Logic
         private static void SetLayout4(Form form, Control videoPlayerContainer, SubtitleListView subtitleListView, GroupBox groupBoxWaveform, GroupBox groupBoxEdit)
         {
             var spMain = new SplitContainer();
+            MainSplitContainer = spMain;
             spMain.Orientation = Orientation.Horizontal;
 
             videoPlayerContainer.Parent?.Controls.Remove(videoPlayerContainer);
@@ -299,6 +297,7 @@ namespace Nikse.SubtitleEdit.Logic
         private static void SetLayout5(Form form, Control videoPlayerContainer, SubtitleListView subtitleListView, GroupBox groupBoxWaveform, GroupBox groupBoxEdit)
         {
             var spMain = new SplitContainer();
+            MainSplitContainer = spMain;
             spMain.Orientation = Orientation.Horizontal;
 
             subtitleListView.Parent?.Controls.Remove(subtitleListView);
@@ -333,6 +332,7 @@ namespace Nikse.SubtitleEdit.Logic
         private static void SetLayout6(Form form, Control videoPlayerContainer, SubtitleListView subtitleListView, GroupBox groupBoxWaveform, GroupBox groupBoxEdit)
         {
             var spMain = new SplitContainer();
+            MainSplitContainer = spMain;
             spMain.Orientation = Orientation.Vertical;
 
             videoPlayerContainer.Parent?.Controls.Remove(videoPlayerContainer);
@@ -365,6 +365,7 @@ namespace Nikse.SubtitleEdit.Logic
         private static void SetLayout7(Form form, Control videoPlayerContainer, SubtitleListView subtitleListView, GroupBox groupBoxWaveform, GroupBox groupBoxEdit)
         {
             var spMain = new SplitContainer();
+            MainSplitContainer = spMain;
             spMain.Orientation = Orientation.Horizontal;
 
             subtitleListView.Parent?.Controls.Remove(subtitleListView);
@@ -381,6 +382,78 @@ namespace Nikse.SubtitleEdit.Logic
 
             // auto size
             spMain.SplitterDistance = Math.Max(0, spMain.Height - 125);
+        }
+
+        public static string SaveLayout()
+        {
+            if (MainSplitContainer == null)
+            {
+                return string.Empty;
+            }
+
+            var sb = new StringBuilder();
+            sb.Append(MainSplitContainer.SplitterDistance.ToString(CultureInfo.InvariantCulture));
+            sb.Append(",");
+            var splitContainers = GetAll(MainSplitContainer, MainSplitContainer.GetType());
+            foreach (var c in splitContainers)
+            {
+                if (c is SplitContainer sc)
+                {
+                    sb.Append(sc.SplitterDistance.ToString(CultureInfo.InvariantCulture));
+                    sb.Append(",");
+                }
+            }
+
+            return sb.ToString().TrimEnd(',');
+        }
+
+        public static void RestoreLayout(string layoutSizes)
+        {
+            if (MainSplitContainer == null || string.IsNullOrEmpty(layoutSizes))
+            {
+                return;
+            }
+
+            var sizes = new List<int>();
+            foreach (var s in layoutSizes.Split(','))
+            {
+                if (int.TryParse(s, out var number))
+                {
+                    sizes.Add(number);
+                }
+            }
+
+            if (sizes.Count == 0)
+            {
+                return;
+            }
+
+            try
+            {
+                MainSplitContainer.SplitterDistance = sizes[0];
+                var splitContainers = GetAll(MainSplitContainer, MainSplitContainer.GetType());
+                for (var index = 0; index < splitContainers.Count; index++)
+                {
+                    var c = splitContainers[index];
+                    if (c is SplitContainer sc)
+                    {
+                        sc.SplitterDistance = sizes[index + 1];
+                    }
+                }
+            }
+            catch
+            {
+                // ignore
+            }
+        }
+
+        public static List<Control> GetAll(Control control, Type type)
+        {
+            var controls = control.Controls.Cast<Control>().ToList();
+            return controls.SelectMany(ctrl => GetAll(ctrl, type))
+                .Concat(controls)
+                .Where(c => c.GetType() == type)
+                .ToList();
         }
     }
 }
