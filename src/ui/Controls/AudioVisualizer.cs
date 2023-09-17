@@ -455,12 +455,13 @@ namespace Nikse.SubtitleEdit.Controls
                 paragraphHelper.Add(p);
             }
             Stopwatch timer = Stopwatch.StartNew();
-            List<Paragraph> selectedParagraphs = paragraphHelper.GetParagraphs(50);
+            List<Paragraph> selectedParagraphs = paragraphHelper.GetParagraphs(100);
             timer.Stop();
 
             Console.WriteLine($"Prune time (ms): {timer.ElapsedMilliseconds}");
 
             _displayableParagraphs.AddRange(selectedParagraphs);
+            //_displayableParagraphs.AddRange(updatingParagraphs);
 
             // TODO: Just assign to displayable paragraphs
             //displayableParagraphs.AddRange(SelectParagraphsFromBuckets(visibleBuckets, maxDisplayableParagraphs, visibleParagraphsCount > maxDisplayableParagraphs));

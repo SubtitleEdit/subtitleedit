@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.NetflixQualityCheck;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -12,14 +13,7 @@ namespace Nikse.SubtitleEdit.Logic
     {
         private const double VisibleSelectionRequirement = 0.5;
 
-        // Map associating a time stamp with a number of paragraphs that start at that time stamp.
-        private readonly Dictionary<double, int> _startParagraphCounts = new Dictionary<double, int>();
-        // Map associating a time stamp with a number of paragraphs that end at that time stamp.
-        private readonly Dictionary<double, int> _endParagraphCounts = new Dictionary<double, int>();
-
-
         private readonly List<Paragraph> _paragraphs = new List<Paragraph>();
-
 
         private readonly double _startThresholdMilliseconds;
         private readonly double _endThresholdMilliseconds;
@@ -40,38 +34,8 @@ namespace Nikse.SubtitleEdit.Logic
         {
             if (IsInThreshold(p))
             {
-                AddStart(p.StartTime.TotalMilliseconds);
-                AddEnd(p.EndTime.TotalMilliseconds);
                 _paragraphs.Add(p);
             }
-        }
-
-        private void AddStart(double startMilliseconds)
-        {
-            if (_startParagraphCounts.TryGetValue(startMilliseconds, out int startCount))
-            {
-                startCount++;
-            }
-            else
-            {
-                startCount = 1;
-            }
-
-            _startParagraphCounts[startMilliseconds] = startCount;
-        }
-
-        private void AddEnd(double endMilliseconds)
-        {
-            if (_endParagraphCounts.TryGetValue(endMilliseconds, out int endCount))
-            {
-                endCount++;
-            }
-            else
-            {
-                endCount = 1;
-            }
-
-            _endParagraphCounts[endMilliseconds] = endCount;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -150,8 +114,6 @@ namespace Nikse.SubtitleEdit.Logic
                 startIndex = ~startIndex;
                 if (startIndex > 0)
                 {
-                    // TODO: This has a bug. This portion should be calculating the leading coverage. The record at startIndex is skipped over
-                    // and is calculated incorrectly. Also need to take into account that endRange may be before the record at startIndex.
                     if (startIndex >= currentCoverage.Count)
                     {
                         // The start index comes after all paragraphs have ended, so there can't be any coverage.
@@ -166,6 +128,7 @@ namespace Nikse.SubtitleEdit.Logic
                         return previousNumberOfParagraphs;
                     }
                     weightedCoverage = previousNumberOfParagraphs * (currentCoverage[startIndex].timestamp - startRange);
+                    previousNumberOfParagraphs = currentCoverage[startIndex].numberOfParagraphs;
                 }
                 else
                 {
@@ -195,7 +158,7 @@ namespace Nikse.SubtitleEdit.Logic
             if (startIndex < currentCoverage.Count - 1)
             {
                 int currentIndex = startIndex + 1;
-                while (currentIndex < currentCoverage.Count && currentCoverage[currentIndex].timestamp < endRange)
+                while (currentIndex < currentCoverage.Count && currentCoverage[currentIndex].timestamp <= endRange)
                 {
                     CoverageRecord currentRecord = currentCoverage[currentIndex];
                     weightedCoverage += previousNumberOfParagraphs * (currentRecord.timestamp - previousTimestamp);
@@ -219,6 +182,10 @@ namespace Nikse.SubtitleEdit.Logic
         private Paragraph ChooseOneParagaph(double averageCoverage, double currentVisibleCoverage, int lowestCoverage, List<Paragraph> candidates,
             List<CoverageRecord> currentCoverage, Dictionary<Paragraph, double> coverageCache)
         {
+            if (candidates.Count == 0)
+            {
+                return null;
+            }
 
             double minimumCoverage = double.MaxValue;
             int indexOfMinimum = -1;
@@ -231,8 +198,7 @@ namespace Nikse.SubtitleEdit.Logic
                 // Only consider visible paragraphs until a minimum portion of the visible area is covered.
                 if (currentVisibleCoverage > averageCoverage * VisibleSelectionRequirement || paragraphVisible)
                 {
-                    double existingCoverage;
-                    if (!coverageCache.TryGetValue(p, out existingCoverage))
+                    if (!coverageCache.TryGetValue(p, out double existingCoverage))
                     {
                         existingCoverage = CalculateCoverageInRange(currentCoverage, p.StartTime.TotalMilliseconds, p.EndTime.TotalMilliseconds);
                         coverageCache.Add(p, existingCoverage);
@@ -240,8 +206,8 @@ namespace Nikse.SubtitleEdit.Logic
                     if (existingCoverage < minimumCoverage)
                     {
                         minimumCoverage = existingCoverage;
-                        bestParagraph = p;
                         indexOfMinimum = i;
+                        bestParagraph = p;
                         if (existingCoverage <= lowestCoverage)
                         {
                             break;
@@ -249,10 +215,12 @@ namespace Nikse.SubtitleEdit.Logic
                     }
                 }
             }
-            if (bestParagraph != null)
+            if (bestParagraph == null)
             {
-                candidates.RemoveAt(indexOfMinimum);
+                bestParagraph = candidates[0];
+                indexOfMinimum = 0;
             }
+            candidates.RemoveAt(indexOfMinimum);
 
             return bestParagraph;
         }
@@ -379,29 +347,41 @@ namespace Nikse.SubtitleEdit.Logic
                         //Console.WriteLine($"Paragraph selected, adding {coveragePercent} to current coverage. (for a total of {currentVisibleCoverage})");
                         lowestCoverage = FindLowestCoverage(records);
                     }
-                    InvalidateCacheForParagraph(coverageCache, selection);
+                    if (result.Count < limit)
+                    {
+                        UpdateCacheForParagraph(coverageCache, selection);
+                    }
                 }
             }
 
             return result;
         }
 
-        private void InvalidateCacheForParagraph(Dictionary<Paragraph, double> coverageCache, Paragraph p)
+        private void UpdateCacheForParagraph(Dictionary<Paragraph, double> coverageCache, Paragraph p)
         {
-            List<Paragraph> keysToRemove = new List<Paragraph>();
+            coverageCache.Remove(p);
+            List<Paragraph> keysToUpdate = new List<Paragraph>();
             foreach (var key in coverageCache.Keys)
             {
                 if (ParagraphsOverlap(key, p))
                 {
                     // Assume it is faster to save a few items from a longer list and remove them later than it is
                     // to copy the entire list up front.
-                    keysToRemove.Add(key);
+                    keysToUpdate.Add(key);
                 }
             }
-            foreach (Paragraph key in keysToRemove)
+            foreach (Paragraph key in keysToUpdate)
             {
-                coverageCache.Remove(key);
+                double overlapMillis = CalculateOverlapLength(key, p);
+                coverageCache[key] += overlapMillis / key.DurationTotalMilliseconds;
             }
+        }
+
+        private double CalculateOverlapLength(Paragraph p1, Paragraph p2)
+        {
+            double overlapStart = Math.Max(p1.StartTime.TotalMilliseconds , p2.StartTime.TotalMilliseconds);
+            double overlapEnd = Math.Min(p1.EndTime.TotalMilliseconds, p2.EndTime.TotalMilliseconds);
+            return overlapEnd - overlapStart;
         }
 
         private void UpdateCoverageRecords(List<CoverageRecord> records, Paragraph newParagraph)
@@ -439,6 +419,13 @@ namespace Nikse.SubtitleEdit.Logic
             if (recordIndex < 0)
             {
                 recordIndex = ~recordIndex;
+
+                if(recordIndex > 0)
+                {
+                    // Carry over the overlap from the previous item to keep layers correct.
+                    newRecord.numberOfParagraphs = records[recordIndex - 1].numberOfParagraphs;
+                }
+
                 records.Insert(recordIndex, newRecord);
             }
 
@@ -455,6 +442,11 @@ namespace Nikse.SubtitleEdit.Logic
             public CoverageRecord(double timestamp)
             {
                 this.timestamp = timestamp;
+            }
+
+            public override string ToString()
+            {
+                return $"Record - {timestamp} millis / {numberOfParagraphs} paragraphs";
             }
 
         }
