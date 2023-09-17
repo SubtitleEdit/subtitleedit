@@ -2538,7 +2538,7 @@ może edytować ten sam plik napisów (współpraca)</Information>
     <DarkThemeShowGridViewLines>Pokaż linie siatki widoku listy</DarkThemeShowGridViewLines>
     <GraphicsButtons>Przyciski graficzne</GraphicsButtons>
     <UpdateShortcut>Aktualizuj</UpdateShortcut>
-    <FoucsSetVideoPosition>Koncentruj się na ustawionej pozycji wideo</FoucsSetVideoPosition>
+    <FocusSetVideoPosition>Koncentruj się na ustawionej pozycji wideo</FocusSetVideoPosition>
     <ToggleDockUndockOfVideoControls>Przełączanie "Przyłącz"/"Odłącz" elementy sterowania wideo</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Ustaw koniec, dodaj nowy i przejdź do nowego</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStart>Dostosuj za pomocą pozycji końcowej</AdjustViaEndAutoStart>

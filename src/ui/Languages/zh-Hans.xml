@@ -2523,7 +2523,7 @@ Command line: {1} {2}
     <DarkThemeShowGridViewLines>显示列表视图网格线</DarkThemeShowGridViewLines>
     <GraphicsButtons>图形按钮</GraphicsButtons>
     <UpdateShortcut>更新</UpdateShortcut>
-    <FoucsSetVideoPosition>将焦点处设为视频位置</FoucsSetVideoPosition>
+    <FocusSetVideoPosition>将焦点处设为视频位置</FocusSetVideoPosition>
     <ToggleDockUndockOfVideoControls>切换 停靠/不停靠 视频控件</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>设置终点，添加新点并转到新点</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStart>根据结束位置调节</AdjustViaEndAutoStart>

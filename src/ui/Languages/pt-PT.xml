@@ -2538,7 +2538,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <DarkThemeShowGridViewLines>Mostrar grelha na Lista</DarkThemeShowGridViewLines>
     <GraphicsButtons>Botões gráficos</GraphicsButtons>
     <UpdateShortcut>Actualizar</UpdateShortcut>
-    <FoucsSetVideoPosition>Evidenciar controlo posição do vídeo</FoucsSetVideoPosition>
+    <FocusSetVideoPosition>Evidenciar controlo posição do vídeo</FocusSetVideoPosition>
     <ToggleDockUndockOfVideoControls>Alternar acoplar/desacoplar controlos de vídeo</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Definir fim, adicionar novo e ir para o novo</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStart>Ajustar através da posição final</AdjustViaEndAutoStart>

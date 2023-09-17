@@ -2535,7 +2535,7 @@ podem editar o mesmo arquivo de legenda (colaboração)</Information>
     <DarkThemeShowGridViewLines>Mostrar linhas de grade na exibição em lista</DarkThemeShowGridViewLines>
     <GraphicsButtons>Botões gráficos</GraphicsButtons>
     <UpdateShortcut>Atualizar</UpdateShortcut>
-    <FoucsSetVideoPosition>Foco define a posição do vídeo</FoucsSetVideoPosition>
+    <FocusSetVideoPosition>Foco define a posição do vídeo</FocusSetVideoPosition>
     <ToggleDockUndockOfVideoControls>Alternar acoplar/desacoplar controles de vídeo</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Definir final, adicionar novo e ir para novo</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStart>Ajustar por posição final</AdjustViaEndAutoStart>

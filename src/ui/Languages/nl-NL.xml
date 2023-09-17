@@ -2536,7 +2536,7 @@ hetzelfde ondertitelbestand bewerken (samenwerken)</Information>
     <DarkThemeShowGridViewLines>Rasterlijnen bij lijstweergave weergeven</DarkThemeShowGridViewLines>
     <GraphicsButtons>Graphics voor knoppen</GraphicsButtons>
     <UpdateShortcut>Bĳwerken</UpdateShortcut>
-    <FoucsSetVideoPosition>'Videopositie instellen' activeren</FoucsSetVideoPosition>
+    <FocusSetVideoPosition>'Videopositie instellen' activeren</FocusSetVideoPosition>
     <ToggleDockUndockOfVideoControls>Besturingselementen video koppelen/loskoppelen</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Einde bepalen, nieuwe toevoegen en naar nieuwe gaan</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStart>Aanpassen via eindpositie</AdjustViaEndAutoStart>

@@ -2539,7 +2539,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <DarkThemeShowGridViewLines>Показване на решетка в изгледа на списъка</DarkThemeShowGridViewLines>
     <GraphicsButtons>Графични бутони</GraphicsButtons>
     <UpdateShortcut>Обнови</UpdateShortcut>
-    <FoucsSetVideoPosition>Задаване на фокус позицията на видеото</FoucsSetVideoPosition>
+    <FocusSetVideoPosition>Задаване на фокус позицията на видеото</FocusSetVideoPosition>
     <ToggleDockUndockOfVideoControls>Превключване положението на видео управлението</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Задаване на край, добавяне на нов и преминаване към него</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStart>Регулиране чрез крайно положение</AdjustViaEndAutoStart>

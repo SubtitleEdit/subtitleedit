@@ -2286,7 +2286,7 @@
     <DarkThemeEnabled>از تم تیره استفاده کنید</DarkThemeEnabled>
     <DarkThemeShowGridViewLines>نمایش خطوط شبکه نمایش لیست</DarkThemeShowGridViewLines>
     <UpdateShortcut>بروزرسانی</UpdateShortcut>
-    <FoucsSetVideoPosition>فوکوس تنظیم موقعیت ویدئو</FoucsSetVideoPosition>
+    <FocusSetVideoPosition>فوکوس تنظیم موقعیت ویدئو</FocusSetVideoPosition>
     <ToggleDockUndockOfVideoControls>کنترل حالت چسبان/غیرچسبان بودن کنترل های ویدئو</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>تنظیم پایان، اضافه کردن جدید و رفتن به جدید</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStart>از طریق موقعیت انتهایی تنظیم کنید</AdjustViaEndAutoStart>

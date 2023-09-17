@@ -2537,7 +2537,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <DarkThemeShowGridViewLines>목록 보기 그리드 선 표시</DarkThemeShowGridViewLines>
     <GraphicsButtons>그래픽 버튼</GraphicsButtons>
     <UpdateShortcut>업데이트</UpdateShortcut>
-    <FoucsSetVideoPosition>포커스에 비디오 위치 설정</FoucsSetVideoPosition>
+    <FocusSetVideoPosition>포커스에 비디오 위치 설정</FocusSetVideoPosition>
     <ToggleDockUndockOfVideoControls>비디오 컨트롤 연결 | 해제</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>끝 지점과 새로 추가할 지점을 정하고 새 지점으로 이동</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStart>끝 지점을 통해 조정</AdjustViaEndAutoStart>

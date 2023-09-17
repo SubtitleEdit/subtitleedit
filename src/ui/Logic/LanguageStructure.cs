@@ -2713,12 +2713,13 @@
             public string DarkThemeShowGridViewLines { get; set; }
             public string GraphicsButtons { get; set; }
             public string UpdateShortcut { get; set; }
-            public string FoucsSetVideoPosition { get; set; }
+            public string FocusSetVideoPosition { get; set; }
             public string ToggleDockUndockOfVideoControls { get; set; }
             public string CreateSetEndAddNewAndGoToNew { get; set; }
             public string AdjustViaEndAutoStart { get; set; }
             public string AdjustViaEndAutoStartAndGoToNext { get; set; }
             public string AdjustSetEndMinusGapAndStartNextHere { get; set; }
+            public string AdjustSetStartTimeAndGoToNext { get; set; }
             public string AdjustSetEndTimeAndGoToNext { get; set; }
             public string AdjustSetEndTimeAndPause { get; set; }
             public string AdjustSetStartAutoDurationAndGoToNext { get; set; }

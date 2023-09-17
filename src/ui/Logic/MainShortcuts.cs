@@ -136,6 +136,7 @@ namespace Nikse.SubtitleEdit.Logic
         public Keys MainAdjustSetStartAndOffsetTheWholeSubtitle { get; set; }
         public Keys MainAdjustSetEndAndOffsetTheRest { get; set; }
         public Keys MainAdjustSetEndAndOffsetTheRestAndGoToNext { get; set; }
+        public Keys MainAdjustSetStartAndGotoNext { get; set; }
         public Keys MainAdjustSetEndAndGotoNext { get; set; }
         public Keys MainAdjustInsertViaEndAutoStart { get; set; }
         public Keys MainAdjustInsertViaEndAutoStartAndGoToNext { get; set; }
@@ -300,7 +301,7 @@ namespace Nikse.SubtitleEdit.Logic
             MainVideoPlayFromBeginning = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoPlayFromBeginning);
             VideoPause = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoPause);
             VideoStop = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoStop);
-            MainVideoFocusSetVideoPosition = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoFoucsSetVideoPosition);
+            MainVideoFocusSetVideoPosition = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoFocusSetVideoPosition);
             ToggleVideoDockUndock = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoToggleVideoControls);
             VideoPlayPauseToggle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoPlayPauseToggle);
             VideoPlay150Speed = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoPlay150Speed);
@@ -439,6 +440,7 @@ namespace Nikse.SubtitleEdit.Logic
             MainAdjustSetStartAndOffsetTheWholeSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetStartAndOffsetTheWholeSubtitle);
             MainAdjustSetEndAndOffsetTheRest = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetEndAndOffsetTheRest);
             MainAdjustSetEndAndOffsetTheRestAndGoToNext = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetEndAndOffsetTheRestAndGoToNext);
+            MainAdjustSetStartAndGotoNext = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetStartAndGotoNext);
             MainAdjustSetEndAndGotoNext = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetEndAndGotoNext);
             MainAdjustInsertViaEndAutoStart = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustViaEndAutoStart);
             MainAdjustInsertViaEndAutoStartAndGoToNext = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustViaEndAutoStartAndGoToNext);

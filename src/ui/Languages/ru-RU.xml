@@ -2420,7 +2420,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <DarkThemeEnabled>Использовать тёмную тему</DarkThemeEnabled>
     <DarkThemeShowGridViewLines>Показать линии сетки отображения списка</DarkThemeShowGridViewLines>
     <UpdateShortcut>Обновить</UpdateShortcut>
-    <FoucsSetVideoPosition>Фокус устанавливает положение видео</FoucsSetVideoPosition>
+    <FocusSetVideoPosition>Фокус устанавливает положение видео</FocusSetVideoPosition>
     <ToggleDockUndockOfVideoControls>Переключить состояние панели управления видео</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Установить конец, добавить новый и перейти к нему</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStart>Настроить через конечную позицию</AdjustViaEndAutoStart>

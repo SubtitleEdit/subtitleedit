@@ -2432,7 +2432,7 @@
     <DarkThemeEnabled>Dunklen Modus verwenden</DarkThemeEnabled>
     <DarkThemeShowGridViewLines>Rasterlinien der Listenansicht anzeigen</DarkThemeShowGridViewLines>
     <UpdateShortcut>Änderung</UpdateShortcut>
-    <FoucsSetVideoPosition>Videoposition fokussieren</FoucsSetVideoPosition>
+    <FocusSetVideoPosition>Videoposition fokussieren</FocusSetVideoPosition>
     <ToggleDockUndockOfVideoControls>An-/Abdocken der Videosteuerung umschalten</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Ende setzen, ergänzen und dahin</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStart>Über Endposition anpassen</AdjustViaEndAutoStart>

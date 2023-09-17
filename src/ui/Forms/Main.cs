@@ -17727,7 +17727,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (_shortcuts.MainGeneralLayoutChoose == e.KeyData)
             {
-                ToolStripButtonLayoutChooseClick(null, null);
+                TaskDelayHelper.RunDelayed(TimeSpan.FromMilliseconds(25), () => ToolStripButtonLayoutChooseClick(null, null));
                 e.SuppressKeyPress = true;
             }
             else if (_shortcuts.MainGeneralMergeTranslationAndOriginal == e.KeyData) // Merge translation and original
@@ -18640,6 +18640,20 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 var pos = mediaPlayer.CurrentPosition;
                 SetStartAndEndOfPrevious(pos, true);
+                e.SuppressKeyPress = true;
+            }
+            else if (mediaPlayer.VideoPlayer != null && _shortcuts.MainAdjustSetStartAndGotoNext == e.KeyData)
+            {
+                var pos = mediaPlayer.CurrentPosition;
+                SetStartTime(false, pos);
+
+                var index = _subtitleListViewIndex;
+                _subtitleListViewIndex = -1;
+                SubtitleListview1.SelectIndexAndEnsureVisible(index + 1, true);
+                if (mediaPlayer.IsPaused && index + 1 < _subtitle.Paragraphs.Count)
+                {
+                    mediaPlayer.CurrentPosition = _subtitle.Paragraphs[index + 1].StartTime.TotalSeconds;
+                }
                 e.SuppressKeyPress = true;
             }
 

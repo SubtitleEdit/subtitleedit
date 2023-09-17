@@ -2527,7 +2527,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <DarkThemeShowGridViewLines>Vis gitterlinjer for listevisning</DarkThemeShowGridViewLines>
     <GraphicsButtons>Grafik knapper</GraphicsButtons>
     <UpdateShortcut>Opdater</UpdateShortcut>
-    <FoucsSetVideoPosition>Fokus, sæt videoposition</FoucsSetVideoPosition>
+    <FocusSetVideoPosition>Fokus, sæt videoposition</FocusSetVideoPosition>
     <ToggleDockUndockOfVideoControls>Skift dok/frigør af video kontrol</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Sæt slut, tilføj ny og gå til ny</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStart>Juster via slut-position</AdjustViaEndAutoStart>

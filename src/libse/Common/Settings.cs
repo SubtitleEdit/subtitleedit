@@ -2436,7 +2436,7 @@ $HorzAlign          =   Center
         public string MainVideoPlay200Speed { get; set; }
         public string MainVideoShowHideVideo { get; set; }
         public string MainVideoShowWaveform { get; set; }
-        public string MainVideoFoucsSetVideoPosition { get; set; }
+        public string MainVideoFocusSetVideoPosition { get; set; }
         public string MainVideoToggleVideoControls { get; set; }
         public string MainVideo1FrameLeft { get; set; }
         public string MainVideo1FrameRight { get; set; }
@@ -2586,6 +2586,7 @@ $HorzAlign          =   Center
         public string MainAdjustSetStartAndOffsetTheWholeSubtitle { get; set; }
         public string MainAdjustSetEndAndOffsetTheRest { get; set; }
         public string MainAdjustSetEndAndOffsetTheRestAndGoToNext { get; set; }
+        public string MainAdjustSetStartAndGotoNext { get; set; }
         public string MainAdjustSetEndAndGotoNext { get; set; }
         public string MainAdjustViaEndAutoStart { get; set; }
         public string MainAdjustViaEndAutoStartAndGoToNext { get; set; }
@@ -9436,10 +9437,10 @@ $HorzAlign          =   Center
                     shortcuts.MainVideoShowWaveform = subNode.InnerText;
                 }
 
-                subNode = node.SelectSingleNode("MainVideoFoucsSetVideoPosition");
+                subNode = node.SelectSingleNode("MainVideoFocusSetVideoPosition");
                 if (subNode != null)
                 {
-                    shortcuts.MainVideoFoucsSetVideoPosition = subNode.InnerText;
+                    shortcuts.MainVideoFocusSetVideoPosition = subNode.InnerText;
                 }
 
                 subNode = node.SelectSingleNode("MainVideoToggleVideoControls");
@@ -10371,6 +10372,12 @@ $HorzAlign          =   Center
                 if (subNode != null)
                 {
                     shortcuts.MainAdjustSetEndAndOffsetTheRestAndGoToNext = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainAdjustSetStartAndGotoNext");
+                if (subNode != null)
+                {
+                    shortcuts.MainAdjustSetStartAndGotoNext = subNode.InnerText;
                 }
 
                 subNode = node.SelectSingleNode("MainAdjustSetEndAndGotoNext");
@@ -12209,7 +12216,7 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("MainVideoPlay200Speed", shortcuts.MainVideoPlay200Speed);
             textWriter.WriteElementString("MainVideoShowHideVideo", shortcuts.MainVideoShowHideVideo);
             textWriter.WriteElementString("MainVideoShowWaveform", shortcuts.MainVideoShowWaveform);
-            textWriter.WriteElementString("MainVideoFoucsSetVideoPosition", shortcuts.MainVideoFoucsSetVideoPosition);
+            textWriter.WriteElementString("MainVideoFocusSetVideoPosition", shortcuts.MainVideoFocusSetVideoPosition);
             textWriter.WriteElementString("MainVideoToggleVideoControls", shortcuts.MainVideoToggleVideoControls);
             textWriter.WriteElementString("MainVideo1FrameLeft", shortcuts.MainVideo1FrameLeft);
             textWriter.WriteElementString("MainVideo1FrameRight", shortcuts.MainVideo1FrameRight);
@@ -12364,6 +12371,7 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("MainAdjustSetStartAndOffsetTheWholeSubtitle", shortcuts.MainAdjustSetStartAndOffsetTheWholeSubtitle);
             textWriter.WriteElementString("MainAdjustSetEndAndOffsetTheRest", shortcuts.MainAdjustSetEndAndOffsetTheRest);
             textWriter.WriteElementString("MainAdjustSetEndAndOffsetTheRestAndGoToNext", shortcuts.MainAdjustSetEndAndOffsetTheRestAndGoToNext);
+            textWriter.WriteElementString("MainAdjustSetStartAndGotoNext", shortcuts.MainAdjustSetStartAndGotoNext);
             textWriter.WriteElementString("MainAdjustSetEndAndGotoNext", shortcuts.MainAdjustSetEndAndGotoNext);
             textWriter.WriteElementString("MainAdjustViaEndAutoStart", shortcuts.MainAdjustViaEndAutoStart);
             textWriter.WriteElementString("MainAdjustViaEndAutoStartAndGoToNext", shortcuts.MainAdjustViaEndAutoStartAndGoToNext);

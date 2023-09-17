@@ -2521,7 +2521,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <DarkThemeShowGridViewLines>Εμφάνιση γραμμών προβολής λίστας</DarkThemeShowGridViewLines>
     <GraphicsButtons>Κουμπί γραφικών</GraphicsButtons>
     <UpdateShortcut>Ενημέρωση</UpdateShortcut>
-    <FoucsSetVideoPosition>Εστίαση ορισμού θέσης βίντεο</FoucsSetVideoPosition>
+    <FocusSetVideoPosition>Εστίαση ορισμού θέσης βίντεο</FocusSetVideoPosition>
     <ToggleDockUndockOfVideoControls>Εναλλαγή αγκύστρωσης/απαγκύστρωσης των στοιχείων ελέγχου βίντεο</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Ορισμός λήξης, προσθήκη νέου και μετάβαση</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStart>Προσαρμογή μέσω θέσης λήξης</AdjustViaEndAutoStart>

@@ -2392,7 +2392,7 @@ peuvent éditer le même fichier sous-titres (collaboration)</Information>
     <DarkThemeEnabled>Utiliser un thème sombre</DarkThemeEnabled>
     <DarkThemeShowGridViewLines>Afficher la grille de la vue Liste</DarkThemeShowGridViewLines>
     <UpdateShortcut>Modifier</UpdateShortcut>
-    <FoucsSetVideoPosition>Le focus établit la position vidéo</FoucsSetVideoPosition>
+    <FocusSetVideoPosition>Le focus établit la position vidéo</FocusSetVideoPosition>
     <ToggleDockUndockOfVideoControls>Attacher/détacher les contrôles vidéos</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Définir la fin, ajouter nouvelle position et y aller</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStart>Ajuster via la position de fin</AdjustViaEndAutoStart>
