@@ -66,7 +66,7 @@
             this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button2.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button2.Image = ((System.Drawing.Image)(resources.GetObject("button2.Image")));
-            this.button2.Location = new System.Drawing.Point(220, 12);
+            this.button2.Location = new System.Drawing.Point(220, 13);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(195, 147);
             this.button2.TabIndex = 1;
@@ -151,7 +151,7 @@
             this.button7.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button7.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button7.Image = global::Nikse.SubtitleEdit.Properties.Resources.L7;
-            this.button7.Location = new System.Drawing.Point(428, 170);
+            this.button7.Location = new System.Drawing.Point(428, 169);
             this.button7.Name = "button7";
             this.button7.Size = new System.Drawing.Size(195, 147);
             this.button7.TabIndex = 6;
@@ -168,7 +168,7 @@
             this.button8.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button8.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button8.Image = ((System.Drawing.Image)(resources.GetObject("button8.Image")));
-            this.button8.Location = new System.Drawing.Point(635, 170);
+            this.button8.Location = new System.Drawing.Point(635, 169);
             this.button8.Name = "button8";
             this.button8.Size = new System.Drawing.Size(195, 147);
             this.button8.TabIndex = 7;
