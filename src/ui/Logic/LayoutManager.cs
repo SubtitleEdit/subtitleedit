@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using Nikse.SubtitleEdit.Controls;
 using System.Windows.Forms;
 
@@ -30,33 +31,34 @@ namespace Nikse.SubtitleEdit.Logic
             switch (layout)
             {
                 case 0:
-                    SetLayout0(form.Controls, videoPlayer, subtitleListView, groupBoxWaveform, groupBoxEdit);
+                    SetLayout0(form, videoPlayer, subtitleListView, groupBoxWaveform, groupBoxEdit);
                     break;
                 case 1:
-                    SetLayout1(form.Controls, videoPlayer, subtitleListView, groupBoxWaveform, groupBoxEdit);
+                    SetLayout1(form, videoPlayer, subtitleListView, groupBoxWaveform, groupBoxEdit);
                     break;
                 case 2:
-                    SetLayout2(form.Controls, videoPlayer, subtitleListView, groupBoxWaveform, groupBoxEdit);
+                    SetLayout2(form, videoPlayer, subtitleListView, groupBoxWaveform, groupBoxEdit);
                     break;
                 case 3:
-                    SetLayout3(form.Controls, videoPlayer, subtitleListView, groupBoxWaveform, groupBoxEdit);
+                    SetLayout3(form, videoPlayer, subtitleListView, groupBoxWaveform, groupBoxEdit);
                     break;
                 case 4:
-                    SetLayout4(form.Controls, videoPlayer, subtitleListView, groupBoxWaveform, groupBoxEdit);
+                    SetLayout4(form, videoPlayer, subtitleListView, groupBoxWaveform, groupBoxEdit);
                     break;
                 case 5:
-                    SetLayout5(form.Controls, videoPlayer, subtitleListView, groupBoxWaveform, groupBoxEdit);
+                    SetLayout5(form, videoPlayer, subtitleListView, groupBoxWaveform, groupBoxEdit);
                     break;
                 case 6:
-                    SetLayout6(form.Controls, videoPlayer, subtitleListView, groupBoxWaveform, groupBoxEdit);
+                    SetLayout6(form, videoPlayer, subtitleListView, groupBoxWaveform, groupBoxEdit);
                     break;
                 case 7:
-                    SetLayout7(form.Controls, videoPlayer, subtitleListView, groupBoxWaveform, groupBoxEdit);
+                    SetLayout7(form, videoPlayer, subtitleListView, groupBoxWaveform, groupBoxEdit);
                     break;
             }
         }
 
-        private static void SetLayout0(Control.ControlCollection controls, Control videoPlayerContainer, SubtitleListView subtitleListView, GroupBox groupBoxWaveform, GroupBox groupBoxEdit)
+        // default layout (video right)
+        private static void SetLayout0(Form form, Control videoPlayerContainer, SubtitleListView subtitleListView, GroupBox groupBoxWaveform, GroupBox groupBoxEdit)
         {
             var spMain = new SplitContainer();
             spMain.Orientation = Orientation.Horizontal;
@@ -87,12 +89,42 @@ namespace Nikse.SubtitleEdit.Logic
             spLeftBottom.Panel2.Controls.Add(groupBoxEdit);
             groupBoxEdit.Dock = DockStyle.Fill;
 
-            controls.Add(spMain);
+            form.Controls.Add(spMain);
             spMain.Dock = DockStyle.Fill;
             spMain.BringToFront();
+
+            // auto size
+            spLeftTop.SplitterDistance = form.Width / 2;
+            spMain.SplitterDistance = CalculateWaveformHeight(form);
+            spLeftBottom.SplitterDistance = CalculateListViewHeight(spLeftBottom);
         }
 
-        private static void SetLayout1(Control.ControlCollection controls, Control videoPlayerContainer, SubtitleListView subtitleListView, GroupBox groupBoxWaveform, GroupBox groupBoxEdit)
+        private static int CalculateWaveformHeight(Control control)
+        {
+            var h = control.Height - 400;
+
+            if (control.Height < 800)
+            {
+                h = control.Height - 300;
+            }
+
+            return h < 0 ? 0 : h;
+        }
+
+        private static int CalculateListViewHeight(Control control)
+        {
+            var h = control.Height - 125;
+
+            if (control.Height < 300)
+            {
+                h = control.Height - 100;
+            }
+
+            return h < 0 ? 0 : h;
+        }
+
+        // like default layout, but video left
+        private static void SetLayout1(Form form, Control videoPlayerContainer, SubtitleListView subtitleListView, GroupBox groupBoxWaveform, GroupBox groupBoxEdit)
         {
             var spMain = new SplitContainer();
             spMain.Orientation = Orientation.Horizontal;
@@ -123,12 +155,18 @@ namespace Nikse.SubtitleEdit.Logic
             spLeftBottom.Panel2.Controls.Add(groupBoxEdit);
             groupBoxEdit.Dock = DockStyle.Fill;
 
-            controls.Add(spMain);
+            form.Controls.Add(spMain);
             spMain.Dock = DockStyle.Fill;
             spMain.BringToFront();
+
+            // auto size
+            spLeftTop.SplitterDistance = form.Width / 2;
+            spMain.SplitterDistance = CalculateWaveformHeight(form);
+            spLeftBottom.SplitterDistance = CalculateListViewHeight(spLeftBottom);
         }
 
-        private static void SetLayout2(Control.ControlCollection controls, Control videoPlayerContainer, SubtitleListView subtitleListView, GroupBox groupBoxWaveform, GroupBox groupBoxEdit)
+        // mobile - video right
+        private static void SetLayout2(Form form, Control videoPlayerContainer, SubtitleListView subtitleListView, GroupBox groupBoxWaveform, GroupBox groupBoxEdit)
         {
             var spMain = new SplitContainer();
             spMain.Orientation = Orientation.Vertical;
@@ -161,12 +199,18 @@ namespace Nikse.SubtitleEdit.Logic
             spLeftBottom.Panel2.Controls.Add(gv);
             gv.Dock = DockStyle.Fill;
 
-            controls.Add(spMain);
+            form.Controls.Add(spMain);
             spMain.Dock = DockStyle.Fill;
             spMain.BringToFront();
+
+            // auto size
+            spMain.SplitterDistance = (int)(form.Width * 0.75);
+            spLeftTop.SplitterDistance = Math.Max(0, spLeftTop.Height - 125 - 270);
+            spLeftBottom.SplitterDistance = Math.Max(0, spLeftBottom.Height - 270);
         }
 
-        private static void SetLayout3(Control.ControlCollection controls, Control videoPlayerContainer, SubtitleListView subtitleListView, GroupBox groupBoxWaveform, GroupBox groupBoxEdit)
+        // mobile - video left
+        private static void SetLayout3(Form form, Control videoPlayerContainer, SubtitleListView subtitleListView, GroupBox groupBoxWaveform, GroupBox groupBoxEdit)
         {
             var spMain = new SplitContainer();
             spMain.Orientation = Orientation.Vertical;
@@ -199,12 +243,18 @@ namespace Nikse.SubtitleEdit.Logic
             spLeftBottom.Panel2.Controls.Add(gv);
             gv.Dock = DockStyle.Fill;
 
-            controls.Add(spMain);
+            form.Controls.Add(spMain);
             spMain.Dock = DockStyle.Fill;
             spMain.BringToFront();
+
+            // auto size
+            spMain.SplitterDistance = (int)(form.Width * 0.25);
+            spLeftTop.SplitterDistance = Math.Max(0, spLeftTop.Height - 125 - 270);
+            spLeftBottom.SplitterDistance = Math.Max(0, spLeftBottom.Height - 270);
         }
 
-        private static void SetLayout4(Control.ControlCollection controls, Control videoPlayerContainer, SubtitleListView subtitleListView, GroupBox groupBoxWaveform, GroupBox groupBoxEdit)
+        // all stacked horizontal
+        private static void SetLayout4(Form form, Control videoPlayerContainer, SubtitleListView subtitleListView, GroupBox groupBoxWaveform, GroupBox groupBoxEdit)
         {
             var spMain = new SplitContainer();
             spMain.Orientation = Orientation.Horizontal;
@@ -240,13 +290,13 @@ namespace Nikse.SubtitleEdit.Logic
             spLeftBottom.Panel2.Controls.Add(gv);
             gv.Dock = DockStyle.Fill;
 
-            controls.Add(spMain);
+            form.Controls.Add(spMain);
             spMain.Dock = DockStyle.Fill;
             spMain.BringToFront();
         }
 
-        // no video player
-        private static void SetLayout5(Control.ControlCollection controls, Control videoPlayerContainer, SubtitleListView subtitleListView, GroupBox groupBoxWaveform, GroupBox groupBoxEdit)
+        // stacked, no video player
+        private static void SetLayout5(Form form, Control videoPlayerContainer, SubtitleListView subtitleListView, GroupBox groupBoxWaveform, GroupBox groupBoxEdit)
         {
             var spMain = new SplitContainer();
             spMain.Orientation = Orientation.Horizontal;
@@ -270,13 +320,17 @@ namespace Nikse.SubtitleEdit.Logic
             spLeftTop.Panel2.Controls.Add(groupBoxWaveform);
             groupBoxWaveform.Dock = DockStyle.Fill;
 
-            controls.Add(spMain);
+            form.Controls.Add(spMain);
             spMain.Dock = DockStyle.Fill;
             spMain.BringToFront();
+
+            // auto size
+            spMain.SplitterDistance = Math.Max(0, spMain.Height - 125 - 270);
+            spLeftTop.SplitterDistance = Math.Max(0, spLeftTop.Height - 270);
         }
 
-        // no waveform
-        private static void SetLayout6(Control.ControlCollection controls, Control videoPlayerContainer, SubtitleListView subtitleListView, GroupBox groupBoxWaveform, GroupBox groupBoxEdit)
+        // no waveform, video right
+        private static void SetLayout6(Form form, Control videoPlayerContainer, SubtitleListView subtitleListView, GroupBox groupBoxWaveform, GroupBox groupBoxEdit)
         {
             var spMain = new SplitContainer();
             spMain.Orientation = Orientation.Vertical;
@@ -298,13 +352,17 @@ namespace Nikse.SubtitleEdit.Logic
             spLeftTop.Panel2.Controls.Add(groupBoxEdit);
             groupBoxEdit.Dock = DockStyle.Fill;
 
-            controls.Add(spMain);
+            form.Controls.Add(spMain);
             spMain.Dock = DockStyle.Fill;
             spMain.BringToFront();
+
+            // auto size
+            spMain.SplitterDistance = (int)(spMain.Width * 0.4);
+            spLeftTop.SplitterDistance = Math.Max(0, spLeftTop.Height - 125);
         }
 
         // no video or waveform
-        private static void SetLayout7(Control.ControlCollection controls, Control videoPlayerContainer, SubtitleListView subtitleListView, GroupBox groupBoxWaveform, GroupBox groupBoxEdit)
+        private static void SetLayout7(Form form, Control videoPlayerContainer, SubtitleListView subtitleListView, GroupBox groupBoxWaveform, GroupBox groupBoxEdit)
         {
             var spMain = new SplitContainer();
             spMain.Orientation = Orientation.Horizontal;
@@ -317,9 +375,12 @@ namespace Nikse.SubtitleEdit.Logic
             spMain.Panel2.Controls.Add(groupBoxEdit);
             groupBoxEdit.Dock = DockStyle.Fill;
 
-            controls.Add(spMain);
+            form.Controls.Add(spMain);
             spMain.Dock = DockStyle.Fill;
             spMain.BringToFront();
+
+            // auto size
+            spMain.SplitterDistance = Math.Max(0, spMain.Height - 125);
         }
     }
 }

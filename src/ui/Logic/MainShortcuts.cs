@@ -18,6 +18,7 @@ namespace Nikse.SubtitleEdit.Logic
         public Keys MainGeneralToggleTranslationMode { get; set; }
         public Keys MainGeneralSwitchTranslationAndOriginal { get; set; }
         public Keys MainGeneralSwitchTranslationAndOriginalTextBoxes { get; set; }
+        public Keys MainGeneralLayoutChoose { get; set; }
         public Keys MainGeneralMergeTranslationAndOriginal { get; set; }
         public Keys MainGeneralMergeWithNext { get; set; }
         public Keys MainGeneralMergeWithPrevious { get; set; }
@@ -277,6 +278,7 @@ namespace Nikse.SubtitleEdit.Logic
             MainGeneralToggleTranslationMode = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralToggleTranslationMode);
             MainGeneralSwitchTranslationAndOriginal = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralSwitchOriginalAndTranslation);
             MainGeneralSwitchTranslationAndOriginalTextBoxes = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralSwitchOriginalAndTranslationTextBoxes);
+            MainGeneralLayoutChoose = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralLayoutChoose);
             MainGeneralMergeTranslationAndOriginal = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralMergeOriginalAndTranslation);
             MainGeneralMergeWithNext = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralMergeWithNext);
             MainGeneralMergeWithPrevious = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralMergeWithPrevious);

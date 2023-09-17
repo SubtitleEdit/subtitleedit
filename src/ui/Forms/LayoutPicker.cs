@@ -23,7 +23,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         public bool ShowVideoControls { get; set; }
 
-        public LayoutPicker(int initialLayout, bool showVideoControls)
+        public LayoutPicker(int initialLayout, bool hideVideoControls)
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
@@ -31,7 +31,7 @@ namespace Nikse.SubtitleEdit.Forms
             Text = LanguageSettings.Current.Main.ChooseLayout;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             checkBoxHideVideoControls.Text = LanguageSettings.Current.Main.HideVideoControls;
-            checkBoxHideVideoControls.Checked = !showVideoControls;
+            checkBoxHideVideoControls.Checked = hideVideoControls;
             CancelButton = buttonCancel;
             AcceptButton = buttonOk;
             _layout = initialLayout;
@@ -388,14 +388,14 @@ namespace Nikse.SubtitleEdit.Forms
             SelectLayout(_layout);
         }
 
-        private void LayoutPicker_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            ShowVideoControls = !checkBoxHideVideoControls.Checked;
-        }
-
         private void buttonOk_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.OK;
+        }
+
+        private void checkBoxHideVideoControls_CheckedChanged(object sender, EventArgs e)
+        {
+            ShowVideoControls = !checkBoxHideVideoControls.Checked;
         }
     }
 }

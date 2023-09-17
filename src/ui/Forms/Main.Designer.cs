@@ -1003,7 +1003,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripButtonLayout.Name = "toolStripButtonLayout";
             this.toolStripButtonLayout.Size = new System.Drawing.Size(36, 37);
             this.toolStripButtonLayout.Text = "Show/hide waveform";
-            this.toolStripButtonLayout.Click += new System.EventHandler(this.ToolStripButtonToggleWaveformClick);
+            this.toolStripButtonLayout.Click += new System.EventHandler(this.ToolStripButtonLayoutChooseClick);
             // 
             // toolStripSeparatorSubtitleFormat
             // 

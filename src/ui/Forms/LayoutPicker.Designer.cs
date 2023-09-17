@@ -182,6 +182,7 @@
             this.checkBoxHideVideoControls.TabIndex = 47;
             this.checkBoxHideVideoControls.Text = "checkBoxHideVideoControls";
             this.checkBoxHideVideoControls.UseVisualStyleBackColor = true;
+            this.checkBoxHideVideoControls.CheckedChanged += new System.EventHandler(this.checkBoxHideVideoControls_CheckedChanged);
             // 
             // buttonOk
             // 
@@ -220,7 +221,6 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Choose layout";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.LayoutPicker_FormClosing);
             this.Shown += new System.EventHandler(this.LayoutPicker_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.LayoutPicker_KeyDown);
             this.ResumeLayout(false);
