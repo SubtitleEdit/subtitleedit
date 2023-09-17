@@ -2537,7 +2537,7 @@ puede editar el mismo archivo de subtítulo (colaboración)</Information>
     <DarkThemeShowGridViewLines>Mostrar las líneas de la cuadrícula de la vista de lista</DarkThemeShowGridViewLines>
     <GraphicsButtons>Botones gráficos</GraphicsButtons>
     <UpdateShortcut>Actualizar</UpdateShortcut>
-    <FoucsSetVideoPosition>Enfocar la posición del video</FoucsSetVideoPosition>
+    <FocusSetVideoPosition>Enfocar la posición del video</FocusSetVideoPosition>
     <ToggleDockUndockOfVideoControls>Cambiar acoplar/desacoplar controles de video</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Ajuste final, añadir nuevo e ir a la nueva</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStart>Ajuste a través de la posición final</AdjustViaEndAutoStart>

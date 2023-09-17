@@ -2539,7 +2539,7 @@ stesso file di sottotitolo (collaborazione)</Information>
     <DarkThemeShowGridViewLines>Visualizza le linee della griglia nella vista elenco</DarkThemeShowGridViewLines>
     <GraphicsButtons>Pulsanti grafici</GraphicsButtons>
     <UpdateShortcut>Aggiorna</UpdateShortcut>
-    <FoucsSetVideoPosition>Imposta la posizione del video</FoucsSetVideoPosition>
+    <FocusSetVideoPosition>Imposta la posizione del video</FocusSetVideoPosition>
     <ToggleDockUndockOfVideoControls>Alterna blocca/sblocca controlli video</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Imposta fine, aggiungi nuovo e vai a nuovo</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStart>Regolazione tramite posizione finale</AdjustViaEndAutoStart>

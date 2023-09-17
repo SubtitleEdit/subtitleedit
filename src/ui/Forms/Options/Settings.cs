@@ -1567,7 +1567,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             AddNode(videoNode, LanguageSettings.Current.Main.VideoControls.PlayFromBeginning, nameof(Configuration.Settings.Shortcuts.MainVideoPlayFromBeginning));
             AddNode(videoNode, LanguageSettings.Current.Main.Menu.Video.ShowHideVideo, nameof(Configuration.Settings.Shortcuts.MainVideoShowHideVideo), true);
             AddNode(videoNode, LanguageSettings.Current.Main.Menu.Video.ShowHideWaveform, nameof(Configuration.Settings.Shortcuts.MainVideoShowWaveform), true);
-            AddNode(videoNode, language.FoucsSetVideoPosition, nameof(Configuration.Settings.Shortcuts.MainVideoFoucsSetVideoPosition));
+            AddNode(videoNode, language.FocusSetVideoPosition, nameof(Configuration.Settings.Shortcuts.MainVideoFocusSetVideoPosition));
             AddNode(videoNode, language.ToggleDockUndockOfVideoControls, nameof(Configuration.Settings.Shortcuts.MainVideoToggleVideoControls), true);
             AddNode(videoNode, language.GoBack1Frame, nameof(Configuration.Settings.Shortcuts.MainVideo1FrameLeft));
             AddNode(videoNode, language.GoForward1Frame, nameof(Configuration.Settings.Shortcuts.MainVideo1FrameRight));
@@ -1763,6 +1763,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             AddNode(createAndAdjustNode, LanguageSettings.Current.Main.VideoControls.SetEndTime, nameof(Configuration.Settings.Shortcuts.MainCreateSetEnd));
             AddNode(createAndAdjustNode, language.AdjustSetEndTimeAndPause, nameof(Configuration.Settings.Shortcuts.MainAdjustSetEndAndPause));
             AddNode(createAndAdjustNode, language.CreateSetEndAddNewAndGoToNew, nameof(Configuration.Settings.Shortcuts.MainCreateSetEndAddNewAndGoToNew));
+            AddNode(createAndAdjustNode, language.AdjustSetStartTimeAndGoToNext, nameof(Configuration.Settings.Shortcuts.MainAdjustSetStartAndGotoNext));
             AddNode(createAndAdjustNode, language.AdjustSetEndTimeAndGoToNext, nameof(Configuration.Settings.Shortcuts.MainAdjustSetEndAndGotoNext));
             AddNode(createAndAdjustNode, language.AdjustSetEndAndOffsetTheRest, nameof(Configuration.Settings.Shortcuts.MainAdjustSetEndAndOffsetTheRest));
             AddNode(createAndAdjustNode, language.AdjustSetEndAndOffsetTheRestAndGoToNext, nameof(Configuration.Settings.Shortcuts.MainAdjustSetEndAndOffsetTheRestAndGoToNext));

@@ -2393,7 +2393,7 @@ lahko ureja v isti datoteki s podnapisi (sodelovanje)</Information>
     <DarkThemeEnabled>Uporabi temno temo</DarkThemeEnabled>
     <DarkThemeShowGridViewLines>Prikaži mrežne črte prikaza seznama</DarkThemeShowGridViewLines>
     <UpdateShortcut>Posodobi</UpdateShortcut>
-    <FoucsSetVideoPosition>Izostritev nastavljenega položaja videa</FoucsSetVideoPosition>
+    <FocusSetVideoPosition>Izostritev nastavljenega položaja videa</FocusSetVideoPosition>
     <ToggleDockUndockOfVideoControls>Preklop zasidranih/odsidranih videokontrol</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Nastavi konec, dodaj novo in pojdi na novo</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStart>Prilagodi preko končnega položaja</AdjustViaEndAutoStart>

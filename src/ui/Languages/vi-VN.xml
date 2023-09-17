@@ -2286,7 +2286,7 @@ có thể chỉnh sửa trong cùng một tập tin phụ đề (hợp tác vớ
     <DarkThemeEnabled>Sử dụng chế độ tối</DarkThemeEnabled>
     <DarkThemeShowGridViewLines>Hiện đường kẻ hàng</DarkThemeShowGridViewLines>
     <UpdateShortcut>Cập nhật phím tắt</UpdateShortcut>
-    <FoucsSetVideoPosition>Tiêu điểm đặt vị trí video</FoucsSetVideoPosition>
+    <FocusSetVideoPosition>Tiêu điểm đặt vị trí video</FocusSetVideoPosition>
     <ToggleDockUndockOfVideoControls>Bật/tắt bảng điều khiển video</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Đặt end time, thêm và đi tới dòng mới</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStart>Chỉnh time thông qua end time</AdjustViaEndAutoStart>
