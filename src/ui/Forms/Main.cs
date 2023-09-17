@@ -24464,9 +24464,8 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (Configuration.Settings.General.Undocked)
             {
-                return false;
+                return;
             }
-
 
             using (var form = new LayoutPicker(_layout, Configuration.Settings.General.ShowVideoControls))
             {
