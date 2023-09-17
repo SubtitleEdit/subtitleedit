@@ -1483,7 +1483,7 @@
     <Compile Include="Logic\CpsLineLength.cs" />
     <Compile Include="Logic\CurrentLanguage.cs" />
     <Compile Include="Logic\DarkTheme.cs" />
-    <Compile Include="Logic\DisplayableSubtitleHelper.cs" />
+    <Compile Include="Logic\DisplayableParagraphHelper.cs" />
     <Compile Include="Logic\DvdSubtitleLanguages.cs" />
     <Compile Include="Logic\FileTypeAssociations.cs" />
     <Compile Include="Logic\FindReplaceDialogHelper.cs" />

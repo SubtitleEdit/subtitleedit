@@ -441,7 +441,7 @@ namespace Nikse.SubtitleEdit.Controls
             Dictionary<int, List<Paragraph>> visibleBuckets = new Dictionary<int, List<Paragraph>>();
             Dictionary<int, List<Paragraph>> invisibleBuckets = new Dictionary<int, List<Paragraph>>();
 
-            DisplayableSubtitleHelper paragraphHelper = new DisplayableSubtitleHelper(startVisibleMilliseconds, endVisibleMilliseconds, 15);
+            DisplayableParagraphHelper paragraphHelper = new DisplayableParagraphHelper(startVisibleMilliseconds, endVisibleMilliseconds, 15 * TimeCode.BaseUnit);
 
             for (var i = 0; i < subtitle.Paragraphs.Count; i++)
             {
