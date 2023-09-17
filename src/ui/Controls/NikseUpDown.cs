@@ -319,11 +319,11 @@ namespace Nikse.SubtitleEdit.Controls
 
                 if (e.Delta > 0)
                 {
-                    AddValue(-Increment);
+                    AddValue(Increment);
                 }
                 else if (e.Delta < 0)
                 {
-                    AddValue(Increment);
+                    AddValue(-Increment);
                 }
             };
 
