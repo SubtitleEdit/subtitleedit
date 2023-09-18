@@ -30,15 +30,15 @@
         {
             this.components = new System.ComponentModel.Container();
             this.groupBoxTemplate = new System.Windows.Forms.GroupBox();
-            this.textBoxFileExtension = new System.Windows.Forms.TextBox();
+            this.textBoxFileExtension = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelFileExt = new System.Windows.Forms.Label();
-            this.textBoxName = new System.Windows.Forms.TextBox();
+            this.textBoxName = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelName = new System.Windows.Forms.Label();
-            this.comboBoxNewLine = new System.Windows.Forms.ComboBox();
-            this.comboBoxTimeCode = new System.Windows.Forms.ComboBox();
+            this.comboBoxNewLine = new Nikse.SubtitleEdit.Controls.NikseComboBox();
+            this.comboBoxTimeCode = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelNewLine = new System.Windows.Forms.Label();
             this.labelTimeCode = new System.Windows.Forms.Label();
-            this.textBoxFooter = new System.Windows.Forms.TextBox();
+            this.textBoxFooter = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.contextMenuStripFooter = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
@@ -48,7 +48,7 @@
             this.mediafilenamewithextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.labelFooter = new System.Windows.Forms.Label();
             this.labelTextLine = new System.Windows.Forms.Label();
-            this.textBoxParagraph = new System.Windows.Forms.TextBox();
+            this.textBoxParagraph = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.contextMenuStripParagraph = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.insertHHMMSSMSToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.insertendToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -74,7 +74,7 @@
             this.toolStripMenuItem6 = new System.Windows.Forms.ToolStripMenuItem();
             this.mediafilenamefullToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.labelHeader = new System.Windows.Forms.Label();
-            this.textBoxHeader = new System.Windows.Forms.TextBox();
+            this.textBoxHeader = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.contextMenuStripHeader = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
@@ -85,7 +85,7 @@
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
             this.groupBoxPreview = new System.Windows.Forms.GroupBox();
-            this.textBoxPreview = new System.Windows.Forms.TextBox();
+            this.textBoxPreview = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.groupBoxTemplate.SuspendLayout();
             this.contextMenuStripFooter.SuspendLayout();
             this.contextMenuStripParagraph.SuspendLayout();
@@ -649,13 +649,13 @@
 
         private System.Windows.Forms.GroupBox groupBoxTemplate;
         private System.Windows.Forms.Label labelHeader;
-        private System.Windows.Forms.TextBox textBoxHeader;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxHeader;
         private System.Windows.Forms.Label labelFooter;
         private System.Windows.Forms.Label labelTextLine;
-        private System.Windows.Forms.TextBox textBoxParagraph;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxParagraph;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonOK;
-        private System.Windows.Forms.TextBox textBoxFooter;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxFooter;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripParagraph;
         private System.Windows.Forms.ToolStripMenuItem insertHHMMSSMSToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem insertendToolStripMenuItem;
@@ -663,13 +663,13 @@
         private System.Windows.Forms.ToolStripMenuItem insertdurationToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem textToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem tabToolStripMenuItem;
-        private System.Windows.Forms.ComboBox comboBoxNewLine;
-        private System.Windows.Forms.ComboBox comboBoxTimeCode;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxNewLine;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxTimeCode;
         private System.Windows.Forms.Label labelNewLine;
         private System.Windows.Forms.Label labelTimeCode;
         private System.Windows.Forms.GroupBox groupBoxPreview;
-        private System.Windows.Forms.TextBox textBoxPreview;
-        private System.Windows.Forms.TextBox textBoxName;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxPreview;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxName;
         private System.Windows.Forms.Label labelName;
         private System.Windows.Forms.ToolStripMenuItem translationToolStripMenuItem;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripHeader;
@@ -689,7 +689,7 @@
         private System.Windows.Forms.ToolStripMenuItem textlengthnobrToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem textlengthbr1ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem textlengthbr2ToolStripMenuItem;
-        private System.Windows.Forms.TextBox textBoxFileExtension;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxFileExtension;
         private System.Windows.Forms.Label labelFileExt;
         private System.Windows.Forms.ToolStripMenuItem gapToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem bookmarkToolStripMenuItem;

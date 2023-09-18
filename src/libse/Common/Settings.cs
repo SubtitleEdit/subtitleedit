@@ -191,12 +191,20 @@ namespace Nikse.SubtitleEdit.Core.Common
         public string SplitVia { get; set; }
         public bool JoinCorrectTimeCodes { get; set; }
         public int JoinAddMs { get; set; }
+        public int SplitLongLinesMax { get; set; }
         public string LastShowEarlierOrLaterSelection { get; set; }
         public string NewEmptyTranslationText { get; set; }
         public string BatchConvertOutputFolder { get; set; }
         public bool BatchConvertOverwriteExisting { get; set; }
         public bool BatchConvertSaveInSourceFolder { get; set; }
         public bool BatchConvertRemoveFormatting { get; set; }
+        public bool BatchConvertRemoveFormattingAll { get; set; }
+        public bool BatchConvertRemoveFormattingItalic { get; set; }
+        public bool BatchConvertRemoveFormattingBold { get; set; }
+        public bool BatchConvertRemoveFormattingUnderline { get; set; }
+        public bool BatchConvertRemoveFormattingFontName { get; set; }
+        public bool BatchConvertRemoveFormattingColor { get; set; }
+        public bool BatchConvertRemoveFormattingAlignment { get; set; }
         public bool BatchConvertRemoveStyle { get; set; }
         public bool BatchConvertBridgeGaps { get; set; }
         public bool BatchConvertFixCasing { get; set; }
@@ -319,6 +327,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public string GenerateTimeCodePatterns { get; set; }
         public string MusicSymbolStyle { get; set; }
         public int BridgeGapMilliseconds { get; set; }
+        public int BridgeGapMillisecondsMinGap { get; set; }
         public string ExportCustomTemplates { get; set; }
         public string ChangeCasingChoice { get; set; }
         public bool ChangeCasingNormalFixNames { get; set; }
@@ -435,11 +444,14 @@ namespace Nikse.SubtitleEdit.Core.Common
         public bool VoskPostProcessing { get; set; }
         public string VoskModel { get; set; }
         public string WhisperChoice { get; set; }
+        public bool WhisperIgnoreVersion { get; set; }
+
         public bool WhisperDeleteTempFiles { get; set; }
         public string WhisperModel { get; set; }
         public string WhisperLanguageCode { get; set; }
         public string WhisperLocation { get; set; }
         public string WhisperCtranslate2Location { get; set; }
+        public string WhisperPurfviewFasterWhisperLocation { get; set; }
         public string WhisperXLocation { get; set; }
         public string WhisperStableTsLocation { get; set; }
         public string WhisperCppModelLocation { get; set; }
@@ -450,6 +462,8 @@ namespace Nikse.SubtitleEdit.Core.Common
         public int AudioToTextLineMaxChars { get; set; }
         public int AudioToTextLineMaxCharsJp { get; set; }
         public int AudioToTextLineMaxCharsCn { get; set; }
+        public int BreakLinesLongerThan { get; set; }
+        public int UnbreakLinesLongerThan { get; set; }
 
         public ToolsSettings()
         {
@@ -512,6 +526,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             SplitNumberOfParts = 3;
             SplitVia = "Lines";
             JoinCorrectTimeCodes = true;
+            SplitLongLinesMax = 90;
             NewEmptyTranslationText = string.Empty;
             BatchConvertLanguage = string.Empty;
             BatchConvertTsOverrideBottomMargin = 5; // pct
@@ -564,6 +579,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             BinEditLeftMargin = 10;
             BinEditRightMargin = 10;
             BridgeGapMilliseconds = 100;
+            BridgeGapMillisecondsMinGap = 24;
             ChangeCasingNormalFixNames = true;
             ExportCustomTemplates = "SubRipÆÆ{number}\r\n{start} --> {end}\r\n{text}\r\n\r\nÆhh:mm:ss,zzzÆ[Do not modify]ÆÆsrtæMicroDVDÆÆ{{start}}{{end}}{text}\r\nÆffÆ||ÆÆsub";
             UseNoLineBreakAfter = false;
@@ -658,7 +674,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             GenVideoNonAssaBoxColor = Color.FromArgb(150, 0, 0, 0);
             GenVideoNonAssaTextColor = Color.White;
             VoskPostProcessing = true;
-            WhisperChoice = Configuration.IsRunningOnWindows ? AudioToText.WhisperChoice.Cpp : AudioToText.WhisperChoice.OpenAI;
+            WhisperChoice = Configuration.IsRunningOnWindows ? AudioToText.WhisperChoice.PurfviewFasterWhisper : AudioToText.WhisperChoice.OpenAi;
             WhisperDeleteTempFiles = true;
             WhisperExtraSettings = "";
             WhisperLanguageCode = "en";
@@ -945,6 +961,7 @@ $HorzAlign          =   Center
         public bool BreakLongLinesTicked { get; set; }
         public bool MergeShortLinesTicked { get; set; }
         public bool MergeShortLinesAllTicked { get; set; }
+        public bool MergeShortLinesPixelWidthTicked { get; set; }
         public bool UnneededSpacesTicked { get; set; }
         public bool UnneededPeriodsTicked { get; set; }
         public bool FixCommasTicked { get; set; }
@@ -1030,6 +1047,11 @@ $HorzAlign          =   Center
             if (MergeShortLinesAllTicked)
             {
                 sb.Append(nameof(MergeShortLinesAllTicked) + ";");
+            }
+
+            if (MergeShortLinesPixelWidthTicked)
+            {
+                sb.Append(nameof(MergeShortLinesPixelWidthTicked) + ";");
             }
 
             if (UnneededSpacesTicked)
@@ -1192,6 +1214,7 @@ $HorzAlign          =   Center
             BreakLongLinesTicked = list.Contains(nameof(BreakLongLinesTicked));
             MergeShortLinesTicked = list.Contains(nameof(MergeShortLinesTicked));
             MergeShortLinesAllTicked = list.Contains(nameof(MergeShortLinesAllTicked));
+            MergeShortLinesPixelWidthTicked = list.Contains(nameof(MergeShortLinesPixelWidthTicked));
             UnneededSpacesTicked = list.Contains(nameof(UnneededSpacesTicked));
             UnneededPeriodsTicked = list.Contains(nameof(UnneededPeriodsTicked));
             FixCommasTicked = list.Contains(nameof(FixCommasTicked));
@@ -1234,6 +1257,7 @@ $HorzAlign          =   Center
             InvalidItalicTagsTicked = true;
             BreakLongLinesTicked = true;
             MergeShortLinesTicked = true;
+            MergeShortLinesPixelWidthTicked = false;
             UnneededPeriodsTicked = true;
             FixCommasTicked = true;
             UnneededSpacesTicked = true;
@@ -1280,6 +1304,8 @@ $HorzAlign          =   Center
         public bool ShowToolbarSettings { get; set; }
         public bool ShowToolbarHelp { get; set; }
 
+        public int LayoutNumber { get; set; }
+        public string LayoutSizes { get; set; }
         public bool ShowVideoPlayer { get; set; }
         public bool ShowAudioVisualizer { get; set; }
         public bool ShowWaveform { get; set; }
@@ -1321,9 +1347,6 @@ $HorzAlign          =   Center
         public bool StartRememberPositionAndSize { get; set; }
         public string StartPosition { get; set; }
         public string StartSize { get; set; }
-        public int SplitContainerMainSplitterDistance { get; set; }
-        public int SplitContainer1SplitterDistance { get; set; }
-        public int SplitContainerListViewAndTextSplitterDistance { get; set; }
         public bool StartInSourceView { get; set; }
         public bool RemoveBlankLinesWhenOpening { get; set; }
         public bool RemoveBadCharsWhenOpening { get; set; }
@@ -1401,6 +1424,7 @@ $HorzAlign          =   Center
         public int LastPacCodePage { get; set; }
         public string OpenSubtitleExtraExtensions { get; set; }
         public bool ListViewColumnsRememberSize { get; set; }
+
         public int ListViewNumberWidth { get; set; }
         public int ListViewStartWidth { get; set; }
         public int ListViewEndWidth { get; set; }
@@ -1411,6 +1435,18 @@ $HorzAlign          =   Center
         public int ListViewActorWidth { get; set; }
         public int ListViewRegionWidth { get; set; }
         public int ListViewTextWidth { get; set; }
+
+        public int ListViewNumberDisplayIndex { get; set; } = -1;
+        public int ListViewStartDisplayIndex { get; set; } = -1;
+        public int ListViewEndDisplayIndex { get; set; } = -1;
+        public int ListViewDurationDisplayIndex { get; set; } = -1;
+        public int ListViewCpsDisplayIndex { get; set; } = -1;
+        public int ListViewWpmDisplayIndex { get; set; } = -1;
+        public int ListViewGapDisplayIndex { get; set; } = -1;
+        public int ListViewActorDisplayIndex { get; set; } = -1;
+        public int ListViewRegionDisplayIndex { get; set; } = -1;
+        public int ListViewTextDisplayIndex { get; set; } = -1;
+
         public bool DirectShowDoubleLoad { get; set; }
         public string VlcWaveTranscodeSettings { get; set; }
         public string VlcLocation { get; set; }
@@ -1473,6 +1509,7 @@ $HorzAlign          =   Center
         public bool AllowLetterShortcutsInTextBox { get; set; }
         public Color DarkThemeForeColor { get; set; }
         public Color DarkThemeBackColor { get; set; }
+        public Color DarkThemeDisabledColor { get; set; }
         public Color LastColorPickerColor { get; set; }
         public Color LastColorPickerColor1 { get; set; }
         public Color LastColorPickerColor2 { get; set; }
@@ -1488,6 +1525,7 @@ $HorzAlign          =   Center
         public bool ShowBetaStuff { get; set; }
         public bool DebugTranslationSync { get; set; }
         public bool UseLegacyDownloader { get; set; }
+        public bool UseLegacyHtmlColor { get; set; } = true;
 
         public GeneralSettings()
         {
@@ -1501,10 +1539,10 @@ $HorzAlign          =   Center
             ShowToolbarVisualSync = true;
             ShowToolbarSpellCheck = true;
             ShowToolbarNetflixGlyphCheck = true;
-            ShowToolbarBeautifyTimeCodes = true;
+            ShowToolbarBeautifyTimeCodes = false;
             ShowToolbarSettings = false;
             ShowToolbarHelp = true;
-            ShowToolbarToggleSourceView = true;
+            ShowToolbarToggleSourceView = false;
             ShowVideoPlayer = true;
             ShowAudioVisualizer = true;
             ShowWaveform = true;
@@ -1639,6 +1677,7 @@ $HorzAlign          =   Center
             DefaultVideoOffsetInMsList = "36000000;3600000";
             DarkThemeForeColor = Color.FromArgb(155, 155, 155);
             DarkThemeBackColor = Color.FromArgb(30, 30, 30);
+            DarkThemeDisabledColor = Color.FromArgb(120, 120, 120);
             LastColorPickerColor = Color.Yellow;
             LastColorPickerColor1 = Color.Red;
             LastColorPickerColor2 = Color.Green;
@@ -1822,6 +1861,22 @@ $HorzAlign          =   Center
                 MinimumMillisecondsBetweenLines = 83, // 2 frames for 23.976 fps videos
                 DialogStyle = DialogType.DashSecondLineWithoutSpace,
                 ContinuationStyle = ContinuationStyle.OnlyTrailingEllipsis,
+            });
+            profiles.Add(new RulesProfile
+            {
+                Name = "TikTok/YouTube-shorts (9:16)",
+                SubtitleLineMaximumLength = 24,
+                MaxNumberOfLines = 2,
+                MergeLinesShorterThan = 0,
+                SubtitleMaximumCharactersPerSeconds = 25,
+                SubtitleOptimalCharactersPerSeconds = 18,
+                SubtitleMaximumDisplayMilliseconds = 5000,
+                SubtitleMinimumDisplayMilliseconds = 700,
+                SubtitleMaximumWordsPerMinute = 300,
+                CpsLineLengthStrategy = string.Empty,
+                MinimumMillisecondsBetweenLines = 0,
+                DialogStyle = DialogType.DashBothLinesWithSpace,
+                ContinuationStyle = ContinuationStyle.None
             });
             profiles.Add(new RulesProfile
             {
@@ -2267,6 +2322,7 @@ $HorzAlign          =   Center
         public string GeneralToggleTranslationMode { get; set; }
         public string GeneralSwitchOriginalAndTranslation { get; set; }
         public string GeneralSwitchOriginalAndTranslationTextBoxes { get; set; }
+        public string GeneralLayoutChoose { get; set; }
         public string GeneralPlayFirstSelected { get; set; }
         public string GeneralGoToFirstSelectedLine { get; set; }
         public string GeneralGoToNextEmptyLine { get; set; }
@@ -2305,6 +2361,7 @@ $HorzAlign          =   Center
         public string GeneralColorPicker { get; set; }
         public string GeneralTakeAutoBackup { get; set; }
         public string GeneralHelp { get; set; }
+        public string GeneralFocusTextBox { get; set; }
 
         // File
         public string MainFileNew { get; set; }
@@ -2381,7 +2438,7 @@ $HorzAlign          =   Center
         public string MainVideoPlay200Speed { get; set; }
         public string MainVideoShowHideVideo { get; set; }
         public string MainVideoShowWaveform { get; set; }
-        public string MainVideoFoucsSetVideoPosition { get; set; }
+        public string MainVideoFocusSetVideoPosition { get; set; }
         public string MainVideoToggleVideoControls { get; set; }
         public string MainVideo1FrameLeft { get; set; }
         public string MainVideo1FrameRight { get; set; }
@@ -2464,6 +2521,17 @@ $HorzAlign          =   Center
         public string MainListViewColor6 { get; set; }
         public string MainListViewColor7 { get; set; }
         public string MainListViewColor8 { get; set; }
+        public string MainListViewSetNewActor { get; set; }
+        public string MainListViewSetActor1 { get; set; }
+        public string MainListViewSetActor2 { get; set; }
+        public string MainListViewSetActor3 { get; set; }
+        public string MainListViewSetActor4 { get; set; }
+        public string MainListViewSetActor5 { get; set; }
+        public string MainListViewSetActor6 { get; set; }
+        public string MainListViewSetActor7 { get; set; }
+        public string MainListViewSetActor8 { get; set; }
+        public string MainListViewSetActor9 { get; set; }
+        public string MainListViewSetActor10 { get; set; }
         public string MainListViewColorChoose { get; set; }
         public string MainRemoveFormatting { get; set; }
         public string MainListViewCopyText { get; set; }
@@ -2520,6 +2588,7 @@ $HorzAlign          =   Center
         public string MainAdjustSetStartAndOffsetTheWholeSubtitle { get; set; }
         public string MainAdjustSetEndAndOffsetTheRest { get; set; }
         public string MainAdjustSetEndAndOffsetTheRestAndGoToNext { get; set; }
+        public string MainAdjustSetStartAndGotoNext { get; set; }
         public string MainAdjustSetEndAndGotoNext { get; set; }
         public string MainAdjustViaEndAutoStart { get; set; }
         public string MainAdjustViaEndAutoStartAndGoToNext { get; set; }
@@ -3075,6 +3144,9 @@ $HorzAlign          =   Center
         //    w.Close();
         //}
 
+        public static bool UseLegacyHtmlColor = true;
+        public static bool IsVersion3 = false;
+
         public static Settings GetSettings()
         {
             var settings = new Settings();
@@ -3091,56 +3163,13 @@ $HorzAlign          =   Center
                         settings.General.DefaultEncoding = TextEncoding.Utf8WithBom;
                     }
 
-                    if (string.IsNullOrEmpty(settings.Version))
-                    {  // 3.5.14 or older
-                        if (string.IsNullOrEmpty(settings.Shortcuts.MainVideoToggleStartEndCurrent))
-                        {
-                            settings.Shortcuts.MainVideoToggleStartEndCurrent = "F4";
-                        }
-                        if (string.IsNullOrEmpty(settings.Shortcuts.MainVideoPlaySelectedLines))
-                        {
-                            settings.Shortcuts.MainVideoPlaySelectedLines = "F5";
-                        }
-                        if (string.IsNullOrEmpty(settings.Shortcuts.MainVideoGoToStartCurrent))
-                        {
-                            settings.Shortcuts.MainVideoGoToStartCurrent = "F6";
-                        }
-                        if (string.IsNullOrEmpty(settings.Shortcuts.MainVideo3000MsLeft))
-                        {
-                            settings.Shortcuts.MainVideo3000MsLeft = "F7";
-                        }
-                        if (string.IsNullOrEmpty(settings.Shortcuts.MainAdjustSetStartAndOffsetTheRest2))
-                        {
-                            settings.Shortcuts.MainAdjustSetStartAndOffsetTheRest2 = "F9";
-                        }
-                        if (string.IsNullOrEmpty(settings.Shortcuts.MainAdjustSetEndAndGotoNext))
-                        {
-                            settings.Shortcuts.MainAdjustSetEndAndGotoNext = "F10";
-                        }
-                        if (string.IsNullOrEmpty(settings.Shortcuts.MainCreateSetStart))
-                        {
-                            settings.Shortcuts.MainCreateSetStart = "F11";
-                        }
-                        if (string.IsNullOrEmpty(settings.Shortcuts.MainCreateSetEnd))
-                        {
-                            settings.Shortcuts.MainCreateSetEnd = "F12";
-                        }
-                        if (string.IsNullOrEmpty(settings.Shortcuts.MainCreateInsertSubAtVideoPos))
-                        {
-                            settings.Shortcuts.MainCreateInsertSubAtVideoPos = "Shift+F9";
-                        }
-                        if (string.IsNullOrEmpty(settings.Shortcuts.MainVideoGoToStartCurrent))
-                        {
-                            settings.Shortcuts.MainVideoGoToStartCurrent = "Shift+F11";
-                        }
-                    }
-                    else if (settings.Version.StartsWith("3.5.15", StringComparison.Ordinal) ||
-                             settings.Version.StartsWith("3.5.14", StringComparison.Ordinal) ||
-                             settings.Version.StartsWith("3.5.13", StringComparison.Ordinal))
+                    if (settings.Version.StartsWith("3.", StringComparison.Ordinal))
                     {
-                        settings.Shortcuts.MainTranslateAuto = "Control+Shift+G";
-                        settings.Tools.MicrosoftTranslatorTokenEndpoint = "https://api.cognitive.microsoft.com/sts/v1.0/issueToken";
+                        IsVersion3 = true;
                     }
+
+                    settings.General.UseLegacyHtmlColor = false;
+                    UseLegacyHtmlColor = false;
                 }
                 catch (Exception exception)
                 {
@@ -3333,6 +3362,14 @@ $HorzAlign          =   Center
             // General
             node = doc.DocumentElement.SelectSingleNode("General");
 
+            var useLegacyHtmlColorNode = node.SelectSingleNode("UseLegacyHtmlColor");
+            if (useLegacyHtmlColorNode != null)
+            {
+                settings.General.UseLegacyHtmlColor = false;
+                UseLegacyHtmlColor = settings.General.UseLegacyHtmlColor;
+            }
+
+
             // Profiles
             int profileCount = 0;
             foreach (XmlNode listNode in node.SelectNodes("Profiles/Profile"))
@@ -3354,51 +3391,8 @@ $HorzAlign          =   Center
                 var mergeLinesShorterThan = listNode.SelectSingleNode("MergeLinesShorterThan")?.InnerText;
                 var minimumMillisecondsBetweenLines = listNode.SelectSingleNode("MinimumMillisecondsBetweenLines")?.InnerText;
 
-                var dialogStyle = DialogType.DashBothLinesWithSpace;
-                if (listNode.SelectSingleNode("DialogStyle") == null || !Enum.IsDefined(typeof(DialogType), listNode.SelectSingleNode("DialogStyle").InnerText))
-                { //TODO: Remove after 2022
-                    if (listNode.SelectSingleNode("Name") != null)
-                    {
-                        var lookup = new List<RulesProfile>();
-                        GeneralSettings.AddExtraProfiles(lookup);
-                        var match = lookup.Find(LookupProfile => LookupProfile.Name == listNode.SelectSingleNode("Name").InnerText);
-                        if (match != null)
-                        {
-                            dialogStyle = match.DialogStyle; // update style when upgrading from 3.5.13 or below
-                        }
-                        else
-                        {
-                            dialogStyle = DialogType.DashBothLinesWithSpace;
-                        }
-                    }
-                }
-                else
-                {
-                    dialogStyle = (DialogType)Enum.Parse(typeof(DialogType), listNode.SelectSingleNode("DialogStyle")?.InnerText);
-                }
-
-                var continuationStyle = ContinuationStyle.NoneLeadingTrailingDots;
-                if (listNode.SelectSingleNode("ContinuationStyle") == null || !Enum.IsDefined(typeof(ContinuationStyle), listNode.SelectSingleNode("ContinuationStyle").InnerText))
-                { //TODO: Remove after 2022
-                    if (listNode.SelectSingleNode("Name") != null)
-                    {
-                        var lookup = new List<RulesProfile>();
-                        GeneralSettings.AddExtraProfiles(lookup);
-                        var match = lookup.Find(LookupProfile => LookupProfile.Name == listNode.SelectSingleNode("Name").InnerText);
-                        if (match != null)
-                        {
-                            continuationStyle = match.ContinuationStyle; // update style when upgrading from 3.5.13 or below
-                        }
-                        else
-                        {
-                            continuationStyle = ContinuationStyle.NoneLeadingTrailingDots;
-                        }
-                    }
-                }
-                else
-                {
-                    continuationStyle = (ContinuationStyle)Enum.Parse(typeof(ContinuationStyle), listNode.SelectSingleNode("ContinuationStyle")?.InnerText);
-                }
+                var dialogStyle = (DialogType)Enum.Parse(typeof(DialogType), listNode.SelectSingleNode("DialogStyle")?.InnerText);
+                var continuationStyle = (ContinuationStyle)Enum.Parse(typeof(ContinuationStyle), listNode.SelectSingleNode("ContinuationStyle")?.InnerText);
 
                 settings.General.Profiles.Add(new RulesProfile
                 {
@@ -3538,6 +3532,18 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.General.TextAndOrigianlTextBoxesSwitched = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("LayoutNumber");
+            if (subNode != null)
+            {
+                settings.General.LayoutNumber = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("LayoutSizes");
+            if (subNode != null)
+            {
+                settings.General.LayoutSizes = subNode.InnerText;
             }
 
             subNode = node.SelectSingleNode("ShowVideoPlayer");
@@ -3760,24 +3766,6 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.General.StartSize = subNode.InnerText;
-            }
-
-            subNode = node.SelectSingleNode("SplitContainerMainSplitterDistance");
-            if (subNode != null)
-            {
-                settings.General.SplitContainerMainSplitterDistance = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
-            }
-
-            subNode = node.SelectSingleNode("SplitContainer1SplitterDistance");
-            if (subNode != null)
-            {
-                settings.General.SplitContainer1SplitterDistance = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
-            }
-
-            subNode = node.SelectSingleNode("SplitContainerListViewAndTextSplitterDistance");
-            if (subNode != null)
-            {
-                settings.General.SplitContainerListViewAndTextSplitterDistance = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
             subNode = node.SelectSingleNode("StartInSourceView");
@@ -4306,6 +4294,66 @@ $HorzAlign          =   Center
                 settings.General.ListViewTextWidth = Convert.ToInt32(subNode.InnerText.Trim(), CultureInfo.InvariantCulture);
             }
 
+            subNode = node.SelectSingleNode("ListViewNumberDisplayIndex");
+            if (subNode != null)
+            {
+                settings.General.ListViewNumberDisplayIndex = Convert.ToInt32(subNode.InnerText.Trim(), CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("ListViewStartDisplayIndex");
+            if (subNode != null)
+            {
+                settings.General.ListViewStartDisplayIndex = Convert.ToInt32(subNode.InnerText.Trim(), CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("ListViewEndDisplayIndex");
+            if (subNode != null)
+            {
+                settings.General.ListViewEndDisplayIndex = Convert.ToInt32(subNode.InnerText.Trim(), CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("ListViewDurationDisplayIndex");
+            if (subNode != null)
+            {
+                settings.General.ListViewDurationDisplayIndex = Convert.ToInt32(subNode.InnerText.Trim(), CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("ListViewCpsDisplayIndex");
+            if (subNode != null)
+            {
+                settings.General.ListViewCpsDisplayIndex = Convert.ToInt32(subNode.InnerText.Trim(), CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("ListViewWpmDisplayIndex");
+            if (subNode != null)
+            {
+                settings.General.ListViewWpmDisplayIndex = Convert.ToInt32(subNode.InnerText.Trim(), CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("ListViewGapDisplayIndex");
+            if (subNode != null)
+            {
+                settings.General.ListViewGapDisplayIndex = Convert.ToInt32(subNode.InnerText.Trim(), CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("ListViewActorDisplayIndex");
+            if (subNode != null)
+            {
+                settings.General.ListViewActorDisplayIndex = Convert.ToInt32(subNode.InnerText.Trim(), CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("ListViewRegionDisplayIndex");
+            if (subNode != null)
+            {
+                settings.General.ListViewRegionDisplayIndex = Convert.ToInt32(subNode.InnerText.Trim(), CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("ListViewTextDisplayIndex");
+            if (subNode != null)
+            {
+                settings.General.ListViewTextDisplayIndex = Convert.ToInt32(subNode.InnerText.Trim(), CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("DirectShowDoubleLoad");
             if (subNode != null)
             {
@@ -4375,19 +4423,19 @@ $HorzAlign          =   Center
             subNode = node.SelectSingleNode("MpvPreviewTextPrimaryColor");
             if (subNode != null)
             {
-                settings.General.MpvPreviewTextPrimaryColor = ColorTranslator.FromHtml(subNode.InnerText.Trim());
+                settings.General.MpvPreviewTextPrimaryColor = FromHtml(subNode.InnerText.Trim());
             }
 
             subNode = node.SelectSingleNode("MpvPreviewTextOutlineColor");
             if (subNode != null)
             {
-                settings.General.MpvPreviewTextOutlineColor = ColorTranslator.FromHtml(subNode.InnerText.Trim());
+                settings.General.MpvPreviewTextOutlineColor = FromHtml(subNode.InnerText.Trim());
             }
 
             subNode = node.SelectSingleNode("MpvPreviewTextBackgroundColor");
             if (subNode != null)
             {
-                settings.General.MpvPreviewTextBackgroundColor = ColorTranslator.FromHtml(subNode.InnerText.Trim());
+                settings.General.MpvPreviewTextBackgroundColor = FromHtml(subNode.InnerText.Trim());
             }
 
             subNode = node.SelectSingleNode("MpvPreviewTextOutlineWidth");
@@ -4660,6 +4708,12 @@ $HorzAlign          =   Center
                 settings.General.LastColorPickerColor2 = FromHtml(subNode.InnerText);
             }
 
+            subNode = node.SelectSingleNode("LastColorPickerColor3");
+            if (subNode != null)
+            {
+                settings.General.LastColorPickerColor3 = FromHtml(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("LastColorPickerColor4");
             if (subNode != null)
             {
@@ -4694,6 +4748,12 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.General.DarkThemeForeColor = Color.FromArgb(int.Parse(subNode.InnerText, CultureInfo.InvariantCulture));
+            }
+
+            subNode = node.SelectSingleNode("DarkThemeDisabledColor");
+            if (subNode != null)
+            {
+                settings.General.DarkThemeDisabledColor = FromHtml(subNode.InnerText);
             }
 
             subNode = node.SelectSingleNode("UseDarkTheme");
@@ -5088,49 +5148,49 @@ $HorzAlign          =   Center
             subNode = node.SelectSingleNode("Color1");
             if (subNode != null)
             {
-                settings.Tools.Color1 = ColorTranslator.FromHtml(subNode.InnerText);
+                settings.Tools.Color1 = FromHtml(subNode.InnerText);
             }
 
             subNode = node.SelectSingleNode("Color2");
             if (subNode != null)
             {
-                settings.Tools.Color2 = ColorTranslator.FromHtml(subNode.InnerText);
+                settings.Tools.Color2 = FromHtml(subNode.InnerText);
             }
 
             subNode = node.SelectSingleNode("Color3");
             if (subNode != null)
             {
-                settings.Tools.Color3 = ColorTranslator.FromHtml(subNode.InnerText);
+                settings.Tools.Color3 = FromHtml(subNode.InnerText);
             }
 
             subNode = node.SelectSingleNode("Color4");
             if (subNode != null)
             {
-                settings.Tools.Color4 = ColorTranslator.FromHtml(subNode.InnerText);
+                settings.Tools.Color4 = FromHtml(subNode.InnerText);
             }
 
             subNode = node.SelectSingleNode("Color5");
             if (subNode != null)
             {
-                settings.Tools.Color5 = ColorTranslator.FromHtml(subNode.InnerText);
+                settings.Tools.Color5 = FromHtml(subNode.InnerText);
             }
 
             subNode = node.SelectSingleNode("Color6");
             if (subNode != null)
             {
-                settings.Tools.Color6 = ColorTranslator.FromHtml(subNode.InnerText);
+                settings.Tools.Color6 = FromHtml(subNode.InnerText);
             }
 
             subNode = node.SelectSingleNode("Color7");
             if (subNode != null)
             {
-                settings.Tools.Color7 = ColorTranslator.FromHtml(subNode.InnerText);
+                settings.Tools.Color7 = FromHtml(subNode.InnerText);
             }
 
             subNode = node.SelectSingleNode("Color8");
             if (subNode != null)
             {
-                settings.Tools.Color8 = ColorTranslator.FromHtml(subNode.InnerText);
+                settings.Tools.Color8 = FromHtml(subNode.InnerText);
             }
 
             subNode = node.SelectSingleNode("ListViewShowColumnStartTime");
@@ -5223,6 +5283,12 @@ $HorzAlign          =   Center
                 settings.Tools.JoinAddMs = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
+            subNode = node.SelectSingleNode("SplitLongLinesMax");
+            if (subNode != null)
+            {
+                settings.Tools.SplitLongLinesMax = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("NewEmptyTranslationText");
             if (subNode != null)
             {
@@ -5251,6 +5317,48 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.Tools.BatchConvertRemoveFormatting = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("BatchConvertRemoveFormattingAll");
+            if (subNode != null)
+            {
+                settings.Tools.BatchConvertRemoveFormattingAll = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("BatchConvertRemoveFormattingItalic");
+            if (subNode != null)
+            {
+                settings.Tools.BatchConvertRemoveFormattingItalic = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("BatchConvertRemoveFormattingBold");
+            if (subNode != null)
+            {
+                settings.Tools.BatchConvertRemoveFormattingBold = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("BatchConvertRemoveFormattingUnderline");
+            if (subNode != null)
+            {
+                settings.Tools.BatchConvertRemoveFormattingUnderline = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("BatchConvertRemoveFormattingFontName");
+            if (subNode != null)
+            {
+                settings.Tools.BatchConvertRemoveFormattingFontName = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("BatchConvertRemoveFormattingColor");
+            if (subNode != null)
+            {
+                settings.Tools.BatchConvertRemoveFormattingColor = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("BatchConvertRemoveFormattingAlignment");
+            if (subNode != null)
+            {
+                settings.Tools.BatchConvertRemoveFormattingAlignment = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
             subNode = node.SelectSingleNode("BatchConvertRemoveStyle");
@@ -5991,6 +6099,12 @@ $HorzAlign          =   Center
                 settings.Tools.BridgeGapMilliseconds = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
+            subNode = node.SelectSingleNode("BridgeGapMillisecondsMinGap");
+            if (subNode != null)
+            {
+                settings.Tools.BridgeGapMillisecondsMinGap = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("ExportCustomTemplates");
             if (subNode != null)
             {
@@ -6300,7 +6414,7 @@ $HorzAlign          =   Center
             subNode = node.SelectSingleNode("BlankVideoColor");
             if (subNode != null)
             {
-                settings.Tools.BlankVideoColor = ColorTranslator.FromHtml(subNode.InnerText);
+                settings.Tools.BlankVideoColor = FromHtml(subNode.InnerText);
             }
 
             subNode = node.SelectSingleNode("BlankVideoMinutes");
@@ -6324,19 +6438,19 @@ $HorzAlign          =   Center
             subNode = node.SelectSingleNode("AssaProgressBarBackColor");
             if (subNode != null)
             {
-                settings.Tools.AssaProgressBarBackColor = ColorTranslator.FromHtml(subNode.InnerText);
+                settings.Tools.AssaProgressBarBackColor = FromHtml(subNode.InnerText);
             }
 
             subNode = node.SelectSingleNode("AssaProgressBarForeColor");
             if (subNode != null)
             {
-                settings.Tools.AssaProgressBarForeColor = ColorTranslator.FromHtml(subNode.InnerText);
+                settings.Tools.AssaProgressBarForeColor = FromHtml(subNode.InnerText);
             }
 
             subNode = node.SelectSingleNode("AssaProgressBarTextColor");
             if (subNode != null)
             {
-                settings.Tools.AssaProgressBarTextColor = ColorTranslator.FromHtml(subNode.InnerText);
+                settings.Tools.AssaProgressBarTextColor = FromHtml(subNode.InnerText);
             }
 
             subNode = node.SelectSingleNode("AssaProgressBarHeight");
@@ -6641,6 +6755,12 @@ $HorzAlign          =   Center
                 settings.Tools.WhisperChoice = subNode.InnerText;
             }
 
+            subNode = node.SelectSingleNode("WhisperIgnoreVersion");
+            if (subNode != null)
+            {
+                settings.Tools.WhisperIgnoreVersion = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("WhisperDeleteTempFiles");
             if (subNode != null)
             {
@@ -6681,6 +6801,12 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.Tools.WhisperCtranslate2Location = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("WhisperPurfviewFasterWhisperLocation");
+            if (subNode != null)
+            {
+                settings.Tools.WhisperPurfviewFasterWhisperLocation = subNode.InnerText;
             }
 
             subNode = node.SelectSingleNode("WhisperExtraSettings");
@@ -6731,6 +6857,17 @@ $HorzAlign          =   Center
                 settings.Tools.AudioToTextLineMaxCharsCn = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
+            subNode = node.SelectSingleNode("BreakLinesLongerThan");
+            if (subNode != null)
+            {
+                settings.Tools.BreakLinesLongerThan = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("UnbreakLinesLongerThan");
+            if (subNode != null)
+            {
+                settings.Tools.UnbreakLinesLongerThan = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
 
             subNode = node.SelectSingleNode("FindHistory");
             if (subNode != null)
@@ -7412,6 +7549,12 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.CommonErrors.MergeShortLinesAllTicked = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("MergeShortLinesPixelWidthTicked");
+            if (subNode != null)
+            {
+                settings.CommonErrors.MergeShortLinesPixelWidthTicked = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
             subNode = node.SelectSingleNode("UnneededSpacesTicked");
@@ -8719,6 +8862,12 @@ $HorzAlign          =   Center
                     shortcuts.GeneralSwitchOriginalAndTranslationTextBoxes = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("GeneralLayoutChoose");
+                if (subNode != null)
+                {
+                    shortcuts.GeneralLayoutChoose = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("GeneralMergeOriginalAndTranslation");
                 if (subNode != null)
                 {
@@ -8915,6 +9064,12 @@ $HorzAlign          =   Center
                 if (subNode != null)
                 {
                     shortcuts.GeneralHelp = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("GeneralFocusTextBox");
+                if (subNode != null)
+                {
+                    shortcuts.GeneralFocusTextBox = subNode.InnerText;
                 }
 
                 subNode = node.SelectSingleNode("MainFileNew");
@@ -9295,10 +9450,10 @@ $HorzAlign          =   Center
                     shortcuts.MainVideoShowWaveform = subNode.InnerText;
                 }
 
-                subNode = node.SelectSingleNode("MainVideoFoucsSetVideoPosition");
+                subNode = node.SelectSingleNode("MainVideoFocusSetVideoPosition");
                 if (subNode != null)
                 {
-                    shortcuts.MainVideoFoucsSetVideoPosition = subNode.InnerText;
+                    shortcuts.MainVideoFocusSetVideoPosition = subNode.InnerText;
                 }
 
                 subNode = node.SelectSingleNode("MainVideoToggleVideoControls");
@@ -9538,7 +9693,7 @@ $HorzAlign          =   Center
                 subNode = node.SelectSingleNode("MainVideoAudioExtractAudioSelectedLines");
                 if (subNode != null)
                 {
-                    shortcuts.MainVideoAudioExtractAudioSelectedLines= subNode.InnerText;
+                    shortcuts.MainVideoAudioExtractAudioSelectedLines = subNode.InnerText;
                 }
 
                 subNode = node.SelectSingleNode("MainSpellCheck");
@@ -9761,6 +9916,73 @@ $HorzAlign          =   Center
                 if (subNode != null)
                 {
                     shortcuts.MainListViewColor8 = subNode.InnerText;
+                }
+
+
+                subNode = node.SelectSingleNode("MainListViewSetNewActor");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewSetNewActor = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainListViewSetActor1");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewSetActor1 = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainListViewSetActor2");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewSetActor2 = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainListViewSetActor3");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewSetActor3 = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainListViewSetActor4");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewSetActor4 = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainListViewSetActor5");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewSetActor5 = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainListViewSetActor6");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewSetActor6 = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainListViewSetActor7");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewSetActor7 = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainListViewSetActor8");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewSetActor8 = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainListViewSetActor9");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewSetActor9 = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainListViewSetActor10");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewSetActor10 = subNode.InnerText;
                 }
 
                 subNode = node.SelectSingleNode("MainListViewColorChoose");
@@ -10163,6 +10385,12 @@ $HorzAlign          =   Center
                 if (subNode != null)
                 {
                     shortcuts.MainAdjustSetEndAndOffsetTheRestAndGoToNext = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainAdjustSetStartAndGotoNext");
+                if (subNode != null)
+                {
+                    shortcuts.MainAdjustSetStartAndGotoNext = subNode.InnerText;
                 }
 
                 subNode = node.SelectSingleNode("MainAdjustSetEndAndGotoNext");
@@ -10807,6 +11035,8 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("ShowFrameRate", settings.General.ShowFrameRate.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ShowVideoControls", settings.General.ShowVideoControls.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("TextAndOrigianlTextBoxesSwitched", settings.General.TextAndOrigianlTextBoxesSwitched.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("LayoutNumber", settings.General.LayoutNumber.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("LayoutSizes", settings.General.LayoutSizes);
                 textWriter.WriteElementString("ShowVideoPlayer", settings.General.ShowVideoPlayer.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ShowAudioVisualizer", settings.General.ShowAudioVisualizer.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ShowWaveform", settings.General.ShowWaveform.ToString(CultureInfo.InvariantCulture));
@@ -10843,9 +11073,6 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("StartRememberPositionAndSize", settings.General.StartRememberPositionAndSize.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("StartPosition", settings.General.StartPosition);
                 textWriter.WriteElementString("StartSize", settings.General.StartSize);
-                textWriter.WriteElementString("SplitContainerMainSplitterDistance", settings.General.SplitContainerMainSplitterDistance.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("SplitContainer1SplitterDistance", settings.General.SplitContainer1SplitterDistance.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("SplitContainerListViewAndTextSplitterDistance", settings.General.SplitContainerListViewAndTextSplitterDistance.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("StartInSourceView", settings.General.StartInSourceView.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("RemoveBlankLinesWhenOpening", settings.General.RemoveBlankLinesWhenOpening.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("RemoveBadCharsWhenOpening", settings.General.RemoveBadCharsWhenOpening.ToString(CultureInfo.InvariantCulture));
@@ -10922,6 +11149,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("LastPacCodePage", settings.General.LastPacCodePage.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("OpenSubtitleExtraExtensions", settings.General.OpenSubtitleExtraExtensions);
                 textWriter.WriteElementString("ListViewColumnsRememberSize", settings.General.ListViewColumnsRememberSize.ToString(CultureInfo.InvariantCulture));
+
                 textWriter.WriteElementString("ListViewNumberWidth", settings.General.ListViewNumberWidth.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewStartWidth", settings.General.ListViewStartWidth.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewEndWidth", settings.General.ListViewEndWidth.ToString(CultureInfo.InvariantCulture));
@@ -10931,6 +11159,19 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("ListViewGapWidth", settings.General.ListViewGapWidth.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewActorWidth", settings.General.ListViewActorWidth.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewRegionWidth", settings.General.ListViewRegionWidth.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ListViewTextWidth", settings.General.ListViewTextWidth.ToString(CultureInfo.InvariantCulture));
+
+                textWriter.WriteElementString("ListViewNumberDisplayIndex", settings.General.ListViewNumberDisplayIndex.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ListViewStartDisplayIndex", settings.General.ListViewStartDisplayIndex.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ListViewEndDisplayIndex", settings.General.ListViewEndDisplayIndex.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ListViewDurationDisplayIndex", settings.General.ListViewDurationDisplayIndex.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ListViewCpsDisplayIndex", settings.General.ListViewCpsDisplayIndex.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ListViewWpmDisplayIndex", settings.General.ListViewWpmDisplayIndex.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ListViewGapDisplayIndex", settings.General.ListViewGapDisplayIndex.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ListViewActorDisplayIndex", settings.General.ListViewActorDisplayIndex.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ListViewRegionDisplayIndex", settings.General.ListViewRegionDisplayIndex.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ListViewTextDisplayIndex", settings.General.ListViewTextDisplayIndex.ToString(CultureInfo.InvariantCulture));
+
                 textWriter.WriteElementString("DirectShowDoubleLoad", settings.General.DirectShowDoubleLoad.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("VlcWaveTranscodeSettings", settings.General.VlcWaveTranscodeSettings);
                 textWriter.WriteElementString("VlcLocation", settings.General.VlcLocation);
@@ -10942,7 +11183,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("MpvExtraOptions", settings.General.MpvExtraOptions);
                 textWriter.WriteElementString("MpvLogging", settings.General.MpvLogging.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("MpvHandlesPreviewText", settings.General.MpvHandlesPreviewText.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("MpvPreviewTextPrimaryColor", ColorTranslator.ToHtml(settings.General.MpvPreviewTextPrimaryColor));
+                textWriter.WriteElementString("MpvPreviewTextPrimaryColor", ToHtml(settings.General.MpvPreviewTextPrimaryColor));
                 textWriter.WriteElementString("MpvPreviewTextOutlineColor", ToHtml(settings.General.MpvPreviewTextOutlineColor));
                 textWriter.WriteElementString("MpvPreviewTextBackgroundColor", ToHtml(settings.General.MpvPreviewTextBackgroundColor));
                 textWriter.WriteElementString("MpvPreviewTextOutlineWidth", settings.General.MpvPreviewTextOutlineWidth.ToString(CultureInfo.InvariantCulture));
@@ -10998,12 +11239,14 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("LastColorPickerColor7", ToHtml(settings.General.LastColorPickerColor7));
                 textWriter.WriteElementString("DarkThemeBackColor", settings.General.DarkThemeBackColor.ToArgb().ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("DarkThemeForeColor", settings.General.DarkThemeForeColor.ToArgb().ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("DarkThemeDisabledColor", ToHtml(settings.General.DarkThemeDisabledColor));
                 textWriter.WriteElementString("ToolbarIconTheme", settings.General.ToolbarIconTheme);
                 textWriter.WriteElementString("UseDarkTheme", settings.General.UseDarkTheme.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("DarkThemeShowListViewGridLines", settings.General.DarkThemeShowListViewGridLines.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ShowBetaStuff", settings.General.ShowBetaStuff.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("DebugTranslationSync", settings.General.DebugTranslationSync.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("UseLegacyDownloader", settings.General.UseLegacyDownloader.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("UseLegacyHtmlColor", false.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("NewEmptyDefaultMs", settings.General.NewEmptyDefaultMs.ToString(CultureInfo.InvariantCulture));
 
                 textWriter.WriteEndElement();
@@ -11074,14 +11317,14 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("ListViewSyntaxColorGap", settings.Tools.ListViewSyntaxColorGap.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewSyntaxErrorColor", settings.Tools.ListViewSyntaxErrorColor.ToArgb().ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewUnfocusedSelectedColor", settings.Tools.ListViewUnfocusedSelectedColor.ToArgb().ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("Color1", ColorTranslator.ToHtml(settings.Tools.Color1));
-                textWriter.WriteElementString("Color2", ColorTranslator.ToHtml(settings.Tools.Color2));
-                textWriter.WriteElementString("Color3", ColorTranslator.ToHtml(settings.Tools.Color3));
-                textWriter.WriteElementString("Color4", ColorTranslator.ToHtml(settings.Tools.Color4));
-                textWriter.WriteElementString("Color5", ColorTranslator.ToHtml(settings.Tools.Color5));
-                textWriter.WriteElementString("Color6", ColorTranslator.ToHtml(settings.Tools.Color6));
-                textWriter.WriteElementString("Color7", ColorTranslator.ToHtml(settings.Tools.Color7));
-                textWriter.WriteElementString("Color8", ColorTranslator.ToHtml(settings.Tools.Color8));
+                textWriter.WriteElementString("Color1", ToHtml(settings.Tools.Color1));
+                textWriter.WriteElementString("Color2", ToHtml(settings.Tools.Color2));
+                textWriter.WriteElementString("Color3", ToHtml(settings.Tools.Color3));
+                textWriter.WriteElementString("Color4", ToHtml(settings.Tools.Color4));
+                textWriter.WriteElementString("Color5", ToHtml(settings.Tools.Color5));
+                textWriter.WriteElementString("Color6", ToHtml(settings.Tools.Color6));
+                textWriter.WriteElementString("Color7", ToHtml(settings.Tools.Color7));
+                textWriter.WriteElementString("Color8", ToHtml(settings.Tools.Color8));
                 textWriter.WriteElementString("ListViewShowColumnStartTime", settings.Tools.ListViewShowColumnStartTime.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewShowColumnEndTime", settings.Tools.ListViewShowColumnEndTime.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewShowColumnDuration", settings.Tools.ListViewShowColumnDuration.ToString(CultureInfo.InvariantCulture));
@@ -11097,11 +11340,19 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("SplitVia", settings.Tools.SplitVia);
                 textWriter.WriteElementString("JoinCorrectTimeCodes", settings.Tools.JoinCorrectTimeCodes.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("JoinAddMs", settings.Tools.JoinAddMs.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("SplitLongLinesMax", settings.Tools.SplitLongLinesMax.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("NewEmptyTranslationText", settings.Tools.NewEmptyTranslationText);
                 textWriter.WriteElementString("BatchConvertOutputFolder", settings.Tools.BatchConvertOutputFolder);
                 textWriter.WriteElementString("BatchConvertOverwriteExisting", settings.Tools.BatchConvertOverwriteExisting.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BatchConvertSaveInSourceFolder", settings.Tools.BatchConvertSaveInSourceFolder.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BatchConvertRemoveFormatting", settings.Tools.BatchConvertRemoveFormatting.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("BatchConvertRemoveFormattingAll", settings.Tools.BatchConvertRemoveFormattingAll.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("BatchConvertRemoveFormattingItalic", settings.Tools.BatchConvertRemoveFormattingItalic.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("BatchConvertRemoveFormattingBold", settings.Tools.BatchConvertRemoveFormattingBold.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("BatchConvertRemoveFormattingUnderline", settings.Tools.BatchConvertRemoveFormattingUnderline.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("BatchConvertRemoveFormattingFontName", settings.Tools.BatchConvertRemoveFormattingFontName.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("BatchConvertRemoveFormattingColor", settings.Tools.BatchConvertRemoveFormattingColor.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("BatchConvertRemoveFormattingAlignment", settings.Tools.BatchConvertRemoveFormattingAlignment.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BatchConvertRemoveStyle", settings.Tools.BatchConvertRemoveStyle.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BatchConvertBridgeGaps", settings.Tools.BatchConvertBridgeGaps.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BatchConvertFixCasing", settings.Tools.BatchConvertFixCasing.ToString(CultureInfo.InvariantCulture));
@@ -11224,6 +11475,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("BinEditLeftMargin", settings.Tools.BinEditLeftMargin.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BinEditRightMargin", settings.Tools.BinEditRightMargin.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BridgeGapMilliseconds", settings.Tools.BridgeGapMilliseconds.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("BridgeGapMillisecondsMinGap", settings.Tools.BridgeGapMillisecondsMinGap.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ExportCustomTemplates", settings.Tools.ExportCustomTemplates);
                 textWriter.WriteElementString("ChangeCasingChoice", settings.Tools.ChangeCasingChoice);
                 textWriter.WriteElementString("ChangeCasingNormalFixNames", settings.Tools.ChangeCasingNormalFixNames.ToString(CultureInfo.InvariantCulture));
@@ -11275,13 +11527,13 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("AssaAttachmentFontTextPreview", settings.Tools.AssaAttachmentFontTextPreview);
                 textWriter.WriteElementString("AssaSetPositionTarget", settings.Tools.AssaSetPositionTarget);
                 textWriter.WriteElementString("VisualSyncStartSize", settings.Tools.VisualSyncStartSize);
-                textWriter.WriteElementString("BlankVideoColor", ColorTranslator.ToHtml(settings.Tools.BlankVideoColor));
+                textWriter.WriteElementString("BlankVideoColor", ToHtml(settings.Tools.BlankVideoColor));
                 textWriter.WriteElementString("BlankVideoUseCheckeredImage", settings.Tools.BlankVideoUseCheckeredImage.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BlankVideoMinutes", settings.Tools.BlankVideoMinutes.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BlankVideoFrameRate", settings.Tools.BlankVideoFrameRate.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("AssaProgressBarBackColor", ColorTranslator.ToHtml(settings.Tools.AssaProgressBarBackColor));
-                textWriter.WriteElementString("AssaProgressBarForeColor", ColorTranslator.ToHtml(settings.Tools.AssaProgressBarForeColor));
-                textWriter.WriteElementString("AssaProgressBarTextColor", ColorTranslator.ToHtml(settings.Tools.AssaProgressBarTextColor));
+                textWriter.WriteElementString("AssaProgressBarBackColor", ToHtml(settings.Tools.AssaProgressBarBackColor));
+                textWriter.WriteElementString("AssaProgressBarForeColor", ToHtml(settings.Tools.AssaProgressBarForeColor));
+                textWriter.WriteElementString("AssaProgressBarTextColor", ToHtml(settings.Tools.AssaProgressBarTextColor));
                 textWriter.WriteElementString("AssaProgressBarHeight", settings.Tools.AssaProgressBarHeight.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AssaProgressBarSplitterWidth", settings.Tools.AssaProgressBarSplitterWidth.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AssaProgressBarSplitterHeight", settings.Tools.AssaProgressBarSplitterHeight.ToString(CultureInfo.InvariantCulture));
@@ -11332,10 +11584,12 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("VoskPostProcessing", settings.Tools.VoskPostProcessing.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("VoskModel", settings.Tools.VoskModel);
                 textWriter.WriteElementString("WhisperChoice", settings.Tools.WhisperChoice);
+                textWriter.WriteElementString("WhisperIgnoreVersion", settings.Tools.WhisperIgnoreVersion.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("WhisperDeleteTempFiles", settings.Tools.WhisperDeleteTempFiles.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("WhisperModel", settings.Tools.WhisperModel);
                 textWriter.WriteElementString("WhisperLocation", settings.Tools.WhisperLocation);
                 textWriter.WriteElementString("WhisperCtranslate2Location", settings.Tools.WhisperCtranslate2Location);
+                textWriter.WriteElementString("WhisperPurfviewFasterWhisperLocation", settings.Tools.WhisperPurfviewFasterWhisperLocation);
                 textWriter.WriteElementString("WhisperXLocation", settings.Tools.WhisperXLocation);
                 textWriter.WriteElementString("WhisperStableTsLocation", settings.Tools.WhisperStableTsLocation);
                 textWriter.WriteElementString("WhisperCppModelLocation", settings.Tools.WhisperCppModelLocation);
@@ -11347,6 +11601,8 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("AudioToTextLineMaxChars", settings.Tools.AudioToTextLineMaxChars.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AudioToTextLineMaxCharsJp", settings.Tools.AudioToTextLineMaxCharsJp.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AudioToTextLineMaxCharsCn", settings.Tools.AudioToTextLineMaxCharsCn.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("UnbreakLinesLongerThan", settings.Tools.UnbreakLinesLongerThan.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("BreakLinesLongerThan", settings.Tools.BreakLinesLongerThan.ToString(CultureInfo.InvariantCulture));
 
                 if (settings.Tools.FindHistory != null && settings.Tools.FindHistory.Count > 0)
                 {
@@ -11514,6 +11770,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("BreakLongLinesTicked", settings.CommonErrors.BreakLongLinesTicked.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("MergeShortLinesTicked", settings.CommonErrors.MergeShortLinesTicked.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("MergeShortLinesAllTicked", settings.CommonErrors.MergeShortLinesAllTicked.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("MergeShortLinesPixelWidthTicked", settings.CommonErrors.MergeShortLinesPixelWidthTicked.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("UnneededSpacesTicked", settings.CommonErrors.UnneededSpacesTicked.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("UnneededPeriodsTicked", settings.CommonErrors.UnneededPeriodsTicked.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("FixCommasTicked", settings.CommonErrors.FixCommasTicked.ToString(CultureInfo.InvariantCulture));
@@ -11802,20 +12059,41 @@ $HorzAlign          =   Center
 
             if (s.Length == 8)
             {
-                if (!int.TryParse(s.Substring(0, 2), NumberStyles.HexNumber, null, out var alpha))
+                if (UseLegacyHtmlColor && IsVersion3)
                 {
-                    alpha = 255; // full solid color
-                }
+                    if (!int.TryParse(s.Substring(0, 2), NumberStyles.HexNumber, null, out var alpha))
+                    {
+                        alpha = 255; // full solid color
+                    }
 
-                s = s.Substring(2);
-                try
-                {
-                    var c = ColorTranslator.FromHtml("#" + s);
-                    return Color.FromArgb(alpha, c);
+                    s = s.Substring(2);
+                    try
+                    {
+                        var c = HtmlUtil.GetColorFromString("#" + s);
+                        return Color.FromArgb(alpha, c);
+                    }
+                    catch
+                    {
+                        return Color.White;
+                    }
                 }
-                catch
+                else
                 {
-                    return Color.White;
+                    if (!int.TryParse(s.Substring(6, 2), NumberStyles.HexNumber, null, out var alpha))
+                    {
+                        alpha = 255; // full solid color
+                    }
+
+                    s = s.Substring(0, 6);
+                    try
+                    {
+                        var c = HtmlUtil.GetColorFromString("#" + s);
+                        return Color.FromArgb(alpha, c);
+                    }
+                    catch
+                    {
+                        return Color.White;
+                    }
                 }
             }
 
@@ -11855,6 +12133,7 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("GeneralToggleTranslationMode", shortcuts.GeneralToggleTranslationMode);
             textWriter.WriteElementString("GeneralSwitchOriginalAndTranslation", shortcuts.GeneralSwitchOriginalAndTranslation);
             textWriter.WriteElementString("GeneralSwitchOriginalAndTranslationTextBoxes", shortcuts.GeneralSwitchOriginalAndTranslationTextBoxes);
+            textWriter.WriteElementString("GeneralLayoutChoose", shortcuts.GeneralLayoutChoose);
             textWriter.WriteElementString("GeneralMergeOriginalAndTranslation", shortcuts.GeneralMergeOriginalAndTranslation);
             textWriter.WriteElementString("GeneralGoToNextSubtitle", shortcuts.GeneralGoToNextSubtitle);
             textWriter.WriteElementString("GeneralGoToNextSubtitlePlayTranslate", shortcuts.GeneralGoToNextSubtitlePlayTranslate);
@@ -11888,6 +12167,7 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("GeneralToggleMode", shortcuts.GeneralToggleMode);
             textWriter.WriteElementString("GeneralTogglePreviewOnVideo", shortcuts.GeneralTogglePreviewOnVideo);
             textWriter.WriteElementString("GeneralHelp", shortcuts.GeneralHelp);
+            textWriter.WriteElementString("GeneralFocusTextBox", shortcuts.GeneralFocusTextBox);
             textWriter.WriteElementString("MainFileNew", shortcuts.MainFileNew);
             textWriter.WriteElementString("MainFileOpen", shortcuts.MainFileOpen);
             textWriter.WriteElementString("MainFileOpenKeepVideo", shortcuts.MainFileOpenKeepVideo);
@@ -11951,7 +12231,7 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("MainVideoPlay200Speed", shortcuts.MainVideoPlay200Speed);
             textWriter.WriteElementString("MainVideoShowHideVideo", shortcuts.MainVideoShowHideVideo);
             textWriter.WriteElementString("MainVideoShowWaveform", shortcuts.MainVideoShowWaveform);
-            textWriter.WriteElementString("MainVideoFoucsSetVideoPosition", shortcuts.MainVideoFoucsSetVideoPosition);
+            textWriter.WriteElementString("MainVideoFocusSetVideoPosition", shortcuts.MainVideoFocusSetVideoPosition);
             textWriter.WriteElementString("MainVideoToggleVideoControls", shortcuts.MainVideoToggleVideoControls);
             textWriter.WriteElementString("MainVideo1FrameLeft", shortcuts.MainVideo1FrameLeft);
             textWriter.WriteElementString("MainVideo1FrameRight", shortcuts.MainVideo1FrameRight);
@@ -12028,6 +12308,17 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("MainListViewColor6", shortcuts.MainListViewColor6);
             textWriter.WriteElementString("MainListViewColor7", shortcuts.MainListViewColor7);
             textWriter.WriteElementString("MainListViewColor8", shortcuts.MainListViewColor8);
+            textWriter.WriteElementString("MainListViewSetNewActor", shortcuts.MainListViewSetNewActor);
+            textWriter.WriteElementString("MainListViewSetActor1", shortcuts.MainListViewSetActor1);
+            textWriter.WriteElementString("MainListViewSetActor2", shortcuts.MainListViewSetActor2);
+            textWriter.WriteElementString("MainListViewSetActor3", shortcuts.MainListViewSetActor3);
+            textWriter.WriteElementString("MainListViewSetActor4", shortcuts.MainListViewSetActor4);
+            textWriter.WriteElementString("MainListViewSetActor5", shortcuts.MainListViewSetActor5);
+            textWriter.WriteElementString("MainListViewSetActor6", shortcuts.MainListViewSetActor6);
+            textWriter.WriteElementString("MainListViewSetActor7", shortcuts.MainListViewSetActor7);
+            textWriter.WriteElementString("MainListViewSetActor8", shortcuts.MainListViewSetActor8);
+            textWriter.WriteElementString("MainListViewSetActor9", shortcuts.MainListViewSetActor9);
+            textWriter.WriteElementString("MainListViewSetActor10", shortcuts.MainListViewSetActor10);
             textWriter.WriteElementString("MainListViewColorChoose", shortcuts.MainListViewColorChoose);
             textWriter.WriteElementString("MainRemoveFormatting", shortcuts.MainRemoveFormatting);
             textWriter.WriteElementString("MainListViewCopyText", shortcuts.MainListViewCopyText);
@@ -12095,6 +12386,7 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("MainAdjustSetStartAndOffsetTheWholeSubtitle", shortcuts.MainAdjustSetStartAndOffsetTheWholeSubtitle);
             textWriter.WriteElementString("MainAdjustSetEndAndOffsetTheRest", shortcuts.MainAdjustSetEndAndOffsetTheRest);
             textWriter.WriteElementString("MainAdjustSetEndAndOffsetTheRestAndGoToNext", shortcuts.MainAdjustSetEndAndOffsetTheRestAndGoToNext);
+            textWriter.WriteElementString("MainAdjustSetStartAndGotoNext", shortcuts.MainAdjustSetStartAndGotoNext);
             textWriter.WriteElementString("MainAdjustSetEndAndGotoNext", shortcuts.MainAdjustSetEndAndGotoNext);
             textWriter.WriteElementString("MainAdjustViaEndAutoStart", shortcuts.MainAdjustViaEndAutoStart);
             textWriter.WriteElementString("MainAdjustViaEndAutoStartAndGoToNext", shortcuts.MainAdjustViaEndAutoStartAndGoToNext);

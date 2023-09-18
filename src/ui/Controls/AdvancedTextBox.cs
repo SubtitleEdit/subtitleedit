@@ -9,7 +9,6 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Controls
@@ -454,17 +453,7 @@ namespace Nikse.SubtitleEdit.Controls
                     var color = text.Substring(colorStart, colorEnd - colorStart);
                     try
                     {
-                        Color c;
-                        if (color.StartsWith("rgb(", StringComparison.Ordinal))
-                        {
-                            var arr = color.Remove(0, 4).TrimEnd(')').Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-                            c = Color.FromArgb(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]));
-                        }
-                        else
-                        {
-                            c = ColorTranslator.FromHtml(color);
-                        }
-
+                        var c = HtmlUtil.GetColorFromString(color);
                         SetForeColorAndChangeBackColorIfClose(colorStart, colorEnd, c);
                     }
                     catch
@@ -581,64 +570,56 @@ namespace Nikse.SubtitleEdit.Controls
 
         #region LiveSpellCheck
 
-        public async Task CheckForLanguageChange(Subtitle subtitle)
+        public void CheckForLanguageChange(Subtitle subtitle)
         {
             var detectedLanguage = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle, 100);
             if (CurrentLanguage != detectedLanguage)
             {
                 DisposeHunspellAndDictionaries();
-                await InitializeLiveSpellCheck(subtitle, CurrentLineIndex);
+                InitializeLiveSpellCheck(subtitle, CurrentLineIndex);
             }
         }
 
-        public async Task InitializeLiveSpellCheck(Subtitle subtitle, int lineNumber)
+        private static bool IsDictionaryAvailable(string language)
         {
-            if (lineNumber < 0)
+            foreach (var downloadedDictionary in Utilities.GetDictionaryLanguagesCultureNeutral())
+            {
+                if (downloadedDictionary.Contains($"[{language}]", StringComparison.OrdinalIgnoreCase))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public void InitializeLiveSpellCheck(Subtitle subtitle, int lineNumber)
+        {
+            if (lineNumber < 0 || !(_spellCheckWordLists is null) || !(_hunspell is null))
             {
                 return;
             }
 
-            if (_spellCheckWordLists is null && _hunspell is null)
+            var detectedLanguage = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle, 300);
+            IsDictionaryDownloaded = false;
+            if (IsDictionaryAvailable(detectedLanguage))
             {
-                var detectedLanguage = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle, 300);
-                var downloadedDictionaries = Utilities.GetDictionaryLanguagesCultureNeutral();
-                var isDictionaryAvailable = false;
-                foreach (var downloadedDictionary in downloadedDictionaries)
+                var languageName = LanguageAutoDetect.AutoDetectLanguageName(string.Empty, subtitle);
+                if (languageName.Split('_', '-')[0] != detectedLanguage)
                 {
-                    if (downloadedDictionary.Contains($"[{detectedLanguage}]"))
-                    {
-                        isDictionaryAvailable = true;
-                        break;
-                    }
+                    return;
                 }
 
-                if (isDictionaryAvailable)
-                {
-                    IsDictionaryDownloaded = true;
-
-                    var languageName = LanguageAutoDetect.AutoDetectLanguageName(string.Empty, subtitle);
-                    if (languageName.Split('_', '-')[0] != detectedLanguage)
-                    {
-                        return;
-                    }
-
-                    await LoadDictionariesAsync(languageName);
-                    IsSpellCheckerInitialized = true;
-                    IsSpellCheckRequested = true;
-                    TextChangedHighlight(this, EventArgs.Empty);
-                }
-                else
-                {
-                    IsDictionaryDownloaded = false;
-                }
-
-                LanguageChanged = true;
-                CurrentLanguage = detectedLanguage;
+                LoadDictionaries(languageName);
+                IsDictionaryDownloaded = true;
+                IsSpellCheckerInitialized = true;
+                IsSpellCheckRequested = true;
+                TextChangedHighlight(this, EventArgs.Empty);
             }
-        }
 
-        private async Task LoadDictionariesAsync(string languageName) =>
-            await Task.Run(() => LoadDictionaries(languageName));
+            LanguageChanged = true;
+            CurrentLanguage = detectedLanguage;
+        }
 
         private void LoadDictionaries(string languageName)
         {
@@ -848,7 +829,7 @@ namespace Nikse.SubtitleEdit.Controls
                         continue;
                     }
 
-                    if (CurrentLanguage == "en " && (currentWordText.Equals("a", StringComparison.OrdinalIgnoreCase) || currentWordText == "I"))
+                    if (CurrentLanguage == "en" && (currentWordText.Equals("a", StringComparison.OrdinalIgnoreCase) || currentWordText == "I"))
                     {
                         continue;
                     }

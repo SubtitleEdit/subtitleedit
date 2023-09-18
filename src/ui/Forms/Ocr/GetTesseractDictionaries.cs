@@ -8,6 +8,7 @@ using System.IO.Compression;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
+using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms.Ocr
 {
@@ -34,6 +35,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             FixLargeFonts();
             _dictionaries = TesseractDictionary.List().OrderBy(p=>p.Name).ToList();
             LoadDictionaryList(first);
+            comboBoxDictionaries.UsePopupWindow = true;
             _cancellationTokenSource = new CancellationTokenSource();
         }
 
@@ -58,8 +60,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 comboBoxDictionaries.SelectedIndex = 0;
             }
             comboBoxDictionaries.EndUpdate();
-            comboBoxDictionaries.AutoCompleteSource = AutoCompleteSource.ListItems;
-            comboBoxDictionaries.AutoCompleteMode = AutoCompleteMode.Append;
         }
 
         private void FixLargeFonts()

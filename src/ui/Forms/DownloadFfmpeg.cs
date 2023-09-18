@@ -5,6 +5,7 @@ using System;
 using System.IO;
 using System.Threading;
 using System.Windows.Forms;
+using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -13,16 +14,17 @@ namespace Nikse.SubtitleEdit.Forms
         public string FFmpegPath { get; internal set; }
         public bool AutoClose { get; internal set; }
         private readonly CancellationTokenSource _cancellationTokenSource;
+        private readonly string _title;
 
-        public DownloadFfmpeg()
+        public DownloadFfmpeg(string title)
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
             UiUtil.FixFonts(this);
-            Text = string.Format(LanguageSettings.Current.Settings.DownloadX, "FFmpeg");
-            buttonOK.Text = LanguageSettings.Current.General.Ok;
+            _title = title;
+            Text = string.Format(LanguageSettings.Current.Settings.DownloadX, title);
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
-            UiUtil.FixLargeFonts(this, buttonOK);
+            UiUtil.FixLargeFonts(this, buttonCancel);
             _cancellationTokenSource = new CancellationTokenSource();
         }
 
@@ -41,6 +43,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonCancel_Click(object sender, EventArgs e)
         {
+            if (buttonCancel.Text == LanguageSettings.Current.General.Ok)
+            {
+                DialogResult = DialogResult.OK;
+                return;
+            }
+
             _cancellationTokenSource.Cancel();
             DialogResult = DialogResult.Cancel;
         }
@@ -48,11 +56,14 @@ namespace Nikse.SubtitleEdit.Forms
         private void DownloadFfmpeg_Shown(object sender, EventArgs e)
         {
             var url = "https://github.com/SubtitleEdit/support-files/raw/master/ffpmeg/ffmpeg-" + IntPtr.Size * 8 + ".zip";
+            if (_title.Contains("ffprobe", StringComparison.OrdinalIgnoreCase))
+            {
+                url = "https://github.com/SubtitleEdit/support-files/releases/download/ffprove-6.0/ffprobe.zip";
+            }
 
             try
             {
                 labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait;
-                buttonOK.Enabled = false;
                 Cursor = Cursors.WaitCursor;
                 var httpClient = DownloaderFactory.MakeHttpClient();
                 using (var downloadStream = new MemoryStream())
@@ -81,7 +92,6 @@ namespace Nikse.SubtitleEdit.Forms
             catch (Exception exception)
             {
                 labelPleaseWait.Text = string.Empty;
-                buttonOK.Enabled = true;
                 Cursor = Cursors.Default;
                 MessageBox.Show($"Unable to download {url}!" + Environment.NewLine + Environment.NewLine +
                     exception.Message + Environment.NewLine + Environment.NewLine + exception.StackTrace);
@@ -131,8 +141,8 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            buttonOK.Enabled = true;
-            labelPleaseWait.Text = string.Format(LanguageSettings.Current.SettingsFfmpeg.XDownloadOk, "ffmpeg");
+            buttonCancel.Text = LanguageSettings.Current.General.Ok;
+            labelPleaseWait.Text = string.Format(LanguageSettings.Current.SettingsFfmpeg.XDownloadOk, _title);
         }
     }
 }

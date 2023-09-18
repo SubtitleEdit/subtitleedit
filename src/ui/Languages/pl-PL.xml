@@ -2,7 +2,7 @@
 <Language Name="Polish">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.13</Version>
+    <Version>4.0.1</Version>
     <TranslatedBy>Tłumaczenie: Adam Malich (mailto:adam_malich@windowslive.com)</TranslatedBy>
     <CultureName>pl-PL</CultureName>
     <HelpFile />
@@ -98,6 +98,7 @@
     <Collapse>Zwiń</Collapse>
     <ShortcutX>Skrót: {0}</ShortcutX>
     <ExampleX>Przykład: {0}</ExampleX>
+    <ViewX>Podgląd {0}</ViewX>
     <Reset>Resetuj</Reset>
     <Error>Błąd</Error>
     <Warning>Ostrzeżenie</Warning>
@@ -155,8 +156,11 @@ Uwaga: Sprawdź ilość wolnego miejsca na dysku.</WaveFileMalformed>
   </AddWaveform>
   <AddWaveformBatch>
     <Title>Wsadowe generowanie wykresów falowych</Title>
+    <ExtractTimeCodes>Wyodrębnij kody czasowe za pomocą FFprobe</ExtractTimeCodes>
     <ExtractingAudio>Wyodrębnianie dźwięku...</ExtractingAudio>
     <Calculating>Obliczanie...</Calculating>
+    <ExtractingTimeCodes>Wyodrębnianie kodów czasowych...</ExtractingTimeCodes>
+    <DetectingShotChanges>Wykrywanie zmian ujęcia...</DetectingShotChanges>
     <Done>Gotowe</Done>
     <Error>Błąd</Error>
   </AddWaveformBatch>
@@ -174,12 +178,14 @@ Uwaga: Sprawdź ilość wolnego miejsca na dysku.</WaveFileMalformed>
     <ExtendOnly>Tylko rozciągnij</ExtendOnly>
     <EnforceDurationLimits>Wymuś minimalny i maksymalny czas trwania</EnforceDurationLimits>
     <CheckShotChanges>Nie rozciągaj poza zmiany ujęcia</CheckShotChanges>
+    <BatchCheckShotChanges>Przestrzegaj zmian ujęć (jeśli są dostępne)</BatchCheckShotChanges>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
     <Title>Zastosuj limity czasu trwania</Title>
     <CheckShotChanges>Nie rozciągaj poza zmiany ujęcia</CheckShotChanges>
     <FixesAvailable>Dostępne poprawki: {0}</FixesAvailable>
     <UnableToFix>Nie można poprawić: {0}</UnableToFix>
+    <BatchCheckShotChanges>Przestrzegaj zmian ujęć (jeśli są dostępne)</BatchCheckShotChanges>
   </ApplyDurationLimits>
   <AudioToText>
     <Title>Audio na tekst</Title>
@@ -199,6 +205,7 @@ Chcesz przeczytać więcej informacji (w sieci)?</WhisperNotFound>
     <LoadingVoskModel>Wczytuję model rozpoznawania mowy Vosk...</LoadingVoskModel>
     <Transcribing>Transkrypcja audio na tekst...</Transcribing>
     <TranscribingXOfY>Transkrypcja audio na tekst — plik {0} z {1}...</TranscribingXOfY>
+    <PostProcessing>Przetwarzanie końcowe...</PostProcessing>
     <XFilesSavedToVideoSourceFolder>Zapisano {0} plik(i)ów w folderze źródłowym wideo</XFilesSavedToVideoSourceFolder>
     <UsePostProcessing>Użyj przetwarzania końcowego (łączenie linii, poprawianie wielkości liter, interpunkcja i inne)</UsePostProcessing>
     <AutoAdjustTimings>Automatycznie dostosuj czasy</AutoAdjustTimings>
@@ -209,6 +216,8 @@ Chcesz przeczytać więcej informacji (w sieci)?</WhisperNotFound>
     <RemoveTemporaryFiles>Usuń pliki tymczasowe</RemoveTemporaryFiles>
     <SetCppConstMeFolder>Ustaw folder modeli CPP/Const-me...</SetCppConstMeFolder>
     <OnlyRunPostProcessing>Uruchom tylko przetwarzanie końcowe/dostosuj czasy</OnlyRunPostProcessing>
+    <DownloadFasterWhisperCuda>Pobierz biblioteki cuBLAS i cuDNN dla Faster-Whisper</DownloadFasterWhisperCuda>
+    <NoTextFound>Nie znaleziono tekstu!</NoTextFound>
   </AudioToText>
   <AssaAttachments>
     <Title>Załączniki Advanced Sub Station Alpha</Title>
@@ -368,13 +377,14 @@ Chcesz przeczytać więcej informacji (w sieci)?</WhisperNotFound>
   </BatchConvert>
   <BeautifyTimeCodes>
     <Title>Ulepszanie kodów czasowych</Title>
+    <TitleSelectedLines>Ulepszanie kodów czasowych ({0} wybranych linii)</TitleSelectedLines>
     <GroupTimeCodes>Kody czasowe</GroupTimeCodes>
     <AlignTimeCodes>Wyrównaj kody czasowe do kodów czasowych klatki</AlignTimeCodes>
-    <ExtractExactTimeCodes>Użyj ffprobe, aby wyodrębnić dokładne kody czasowe klatki</ExtractExactTimeCodes>
+    <ExtractExactTimeCodes>Użyj FFprobe, aby wyodrębnić dokładne kody czasowe klatki</ExtractExactTimeCodes>
     <ExtractTimeCodes>Wyodrębnij kody czasowe</ExtractTimeCodes>
     <CancelTimeCodes>Anuluj</CancelTimeCodes>
     <GroupShotChanges>Zmiany ujęcia</GroupShotChanges>
-    <SnapToShotChanges>Przechwyć wskaźniki do zmian ujęcia</SnapToShotChanges>
+    <SnapToShotChanges>Przyciągaj wskaźniki do zmian ujęcia</SnapToShotChanges>
     <ImportShotChanges>Generuj / Importuj zmiany ujęcia...</ImportShotChanges>
     <EditProfile>Edytuj profil...</EditProfile>
     <NoTimeCodesLoaded>Nie wczytano kodów czasowych</NoTimeCodesLoaded>
@@ -387,6 +397,9 @@ Kliknij "{0}", aby najpierw wyodrębnić kody czasowe lub wyłącz tę opcję.</
     <NoShotChangesLoadedError>Wybrano opcję przechwytywania wskaźników do zmiany ujęć, ale nie wczytano żadnych zmian ujęć.
 
 Kliknij "{0}", aby najpierw wyodrębnić lub zaimportować zmiany ujęć, albo wyłącz tę opcję.</NoShotChangesLoadedError>
+    <BatchAlignTimeCodes>Dopasuj kody czasowe do kodów czasowych klatki</BatchAlignTimeCodes>
+    <BatchUseExactTimeCodes>Użyj dokładnych kodów czasowych (jeśli są dostępne)</BatchUseExactTimeCodes>
+    <BatchSnapToShotChanges>Przyciągaj wskaźniki do zmian ujęcia (jeśli są dostępne)</BatchSnapToShotChanges>
   </BeautifyTimeCodes>
   <BeautifyTimeCodesProfile>
     <Title>Edycja profilu</Title>
@@ -503,6 +516,7 @@ Wykorzystujemy naturalny rytm obrazu.</CreateSimpleChainingToolTip>
     <Enabled>Włącz</Enabled>
     <Name>Nazwa własna</Name>
     <LinesFoundX>Znaleziono linii: {0}</LinesFoundX>
+    <ExtraNames>Dodaj dodatkowe nazwy (oddzielone przecinkiem, tylko do jednorazowego użytku)</ExtraNames>
   </ChangeCasingNames>
   <ChangeFrameRate>
     <Title>Zmień liczbę klatek na sekundę</Title>
@@ -529,6 +543,9 @@ Wykorzystujemy naturalny rytm obrazu.</CreateSimpleChainingToolTip>
     <CheckingForUpdatesNewVersion>Dostępna jest nowa wersja!</CheckingForUpdatesNewVersion>
     <InstallUpdate>Przejdź do strony pobierania</InstallUpdate>
     <NoUpdates>Nie aktualizuj</NoUpdates>
+    <XPluginsHasAnUpdate>{0} wtyczek ma aktualizacje -</XPluginsHasAnUpdate>
+    <OnePluginsHasAnUpdate>Jedna wtyczka ma aktualizację -</OnePluginsHasAnUpdate>
+    <Update>aktualizacja</Update>
   </CheckForUpdates>
   <ChooseAudioTrack>
     <Title>Wybierz ścieżkę dźwiękową</Title>
@@ -870,6 +887,7 @@ Wykorzystujemy naturalny rytm obrazu.</CreateSimpleChainingToolTip>
     <BreakLongLines>Przełam długie linie</BreakLongLines>
     <RemoveLineBreaks>Usuń łamanie linii w krótkich tekstach zawierających tylko jedno zdanie</RemoveLineBreaks>
     <RemoveLineBreaksAll>Usuń łamanie linii w krótkich tekstach (wszystkie, z wyjątkiem dialogów)</RemoveLineBreaksAll>
+    <RemoveLineBreaksPixelWidth>Cofnij łamanie napisów, które mieszczą się w jednej linii (szerokość w pikselach)</RemoveLineBreaksPixelWidth>
     <FixUppercaseIInsideLowercaseWords>Popraw duże 'i' w słowach pisanych małymi literami (błąd OCR)</FixUppercaseIInsideLowercaseWords>
     <FixDoubleApostrophes>Zamień podwójne znaki apostrofu ('') na pojedynczy cudzysłów (")</FixDoubleApostrophes>
     <AddPeriods>Dodaj kropkę po liniach, gdy następna linia rozpoczyna się dużą literą</AddPeriods>
@@ -904,6 +922,7 @@ Wykorzystujemy naturalny rytm obrazu.</CreateSimpleChainingToolTip>
     <FixFirstLetterToUppercaseAfterParagraph>Zmień pierwszą literę na dużą po akapicie</FixFirstLetterToUppercaseAfterParagraph>
     <MergeShortLine>Połącz krótką linię (jedno zdanie)</MergeShortLine>
     <MergeShortLineAll>Połącz krótkie linie (wszystkie, z wyjątkiem dialogów)</MergeShortLineAll>
+    <UnbreakShortLinePixelWidth>Cofnij łamanie krótkiej linii (szerokość w pikselach)</UnbreakShortLinePixelWidth>
     <BreakLongLine>Przełam długą linię</BreakLongLine>
     <FixLongDisplayTime>Popraw zbyt długi czas wyświetlania</FixLongDisplayTime>
     <FixInvalidItalicTag>Popraw nieprawidłowy znacznik kursywy</FixInvalidItalicTag>
@@ -965,9 +984,11 @@ Wykorzystujemy naturalny rytm obrazu.</CreateSimpleChainingToolTip>
     <InfoAssaOn>Uwaga: Zostanie zastosowana stylizacja Advanced SubStation Alpha :)</InfoAssaOn>
     <XGeneratedWithBurnedInSubsInX>Wygenerowano "{0}" z wtopionymi napisami w {1}.</XGeneratedWithBurnedInSubsInX>
     <TimeRemainingMinutes>Pozostały czas: {0} minut</TimeRemainingMinutes>
+    <TimeRemainingOneMinute>Pozostały czas: jedna minuta</TimeRemainingOneMinute>
     <TimeRemainingSeconds>Pozostały czas: {0} sekund</TimeRemainingSeconds>
     <TimeRemainingAFewSeconds>Pozostały czas: kilka sekund</TimeRemainingAFewSeconds>
     <TimeRemainingMinutesAndSeconds>Pozostały czas: {0} minut i {1} sekund</TimeRemainingMinutesAndSeconds>
+    <TimeRemainingOneMinuteAndSeconds>Pozostały czas: jedna minuta i {0} sekund</TimeRemainingOneMinuteAndSeconds>
     <TargetFileName>Nazwa pliku docelowego: {0}</TargetFileName>
     <TargetFileSize>Docelowy rozmiar pliku (wymaga 2-przebiegowego kodowania)</TargetFileSize>
     <FileSizeMb>Rozmiar pliku w MB</FileSizeMb>
@@ -1539,6 +1560,7 @@ Aby użyć klucza API przejdź do "Opcje -&gt; Ustawienia -&gt; Narzędzia", aby
         <KaraokeEffect>Efekt karaoke...</KaraokeEffect>
         <ShowSelectedLinesEarlierLater>Pokaż wybrane linie wcześniej/później...</ShowSelectedLinesEarlierLater>
         <VisualSyncSelectedLines>Synchronizacja wizualna wybranych linii...</VisualSyncSelectedLines>
+        <BeautifyTimeCodesOfSelectedLines>Ulepszanie kodów czasowych wybranych linii...</BeautifyTimeCodesOfSelectedLines>
         <GoogleAndMicrosoftTranslateSelectedLine>Przetłumacz w Google/Microsoft oryginalną linię</GoogleAndMicrosoftTranslateSelectedLine>
         <SelectedLines>Wybrane linie</SelectedLines>
         <TranslateSelectedLines>Przetłumacz wybrane linie...</TranslateSelectedLines>
@@ -1695,7 +1717,9 @@ Czy chcesz zacząć od początku dokumentu i kontynuować wyszukiwanie i zastęp
     <BeforeRenumbering>Przed zmianą numeracji</BeforeRenumbering>
     <RenumberedStartingFromX>Rozpoczęto zmianę numeracji od: {0}</RenumberedStartingFromX>
     <BeforeBeautifyTimeCodes>Przed ulepszaniem kodów czasowych</BeforeBeautifyTimeCodes>
+    <BeforeBeautifyTimeCodesSelectedLines>Przed ulepszeniem kodów czasowych wybranych linii</BeforeBeautifyTimeCodesSelectedLines>
     <BeautifiedTimeCodes>Ulepszono kody czasowe</BeautifiedTimeCodes>
+    <BeautifiedTimeCodesSelectedLines>Ulepszono kody czasowe wybranych linii</BeautifiedTimeCodesSelectedLines>
     <BeforeRemovalOfTextingForHearingImpaired>Przed usunięciem tekstu dla osób niedosłyszących</BeforeRemovalOfTextingForHearingImpaired>
     <TextingForHearingImpairedRemovedOneLine>Usunięcie tekstu dla osób niedosłyszących: Jedna linia</TextingForHearingImpairedRemovedOneLine>
     <TextingForHearingImpairedRemovedXLines>Usunięcie tekstu dla osób niedosłyszących: {0} linii</TextingForHearingImpairedRemovedXLines>
@@ -1726,6 +1750,7 @@ Kontynuować?</SubtitleAppendPrompt>
     <NothingToUndo>Nie ma nic do cofnięcia</NothingToUndo>
     <InvalidLanguageNameX>Nieprawidłowa nazwa języka: {0}</InvalidLanguageNameX>
     <DoNotDisplayMessageAgain>Nie wyświetlaj ponownie tej wiadomości</DoNotDisplayMessageAgain>
+    <DoNotAutoLoadVideo>Nie wczytuj automatycznie wideo</DoNotAutoLoadVideo>
     <NumberOfCorrectedWords>Liczba poprawionych słów: {0}</NumberOfCorrectedWords>
     <NumberOfSkippedWords>Liczba pominiętych słów: {0}</NumberOfSkippedWords>
     <NumberOfCorrectWords>Liczba poprawnych słów: {0}</NumberOfCorrectWords>
@@ -2272,6 +2297,7 @@ może edytować ten sam plik napisów (współpraca)</Information>
     <BeautifyTimeCodes>Ulepszanie kodów czasowych</BeautifyTimeCodes>
     <SettingsName>Ustawienia</SettingsName>
     <ToggleBookmarks>Przełączanie zakładek</ToggleBookmarks>
+    <FocusTextBox>Koncentracja na polu tekstowym</FocusTextBox>
     <ToggleBookmarksWithComment>Przełączanie zakładek - dodaj komentarz</ToggleBookmarksWithComment>
     <ClearBookmarks>Wyczyść zakładki</ClearBookmarks>
     <ExportBookmarks>Eksportuj zakładki...</ExportBookmarks>
@@ -2512,7 +2538,7 @@ może edytować ten sam plik napisów (współpraca)</Information>
     <DarkThemeShowGridViewLines>Pokaż linie siatki widoku listy</DarkThemeShowGridViewLines>
     <GraphicsButtons>Przyciski graficzne</GraphicsButtons>
     <UpdateShortcut>Aktualizuj</UpdateShortcut>
-    <FoucsSetVideoPosition>Koncentruj się na ustawionej pozycji wideo</FoucsSetVideoPosition>
+    <FocusSetVideoPosition>Koncentruj się na ustawionej pozycji wideo</FocusSetVideoPosition>
     <ToggleDockUndockOfVideoControls>Przełączanie "Przyłącz"/"Odłącz" elementy sterowania wideo</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Ustaw koniec, dodaj nowy i przejdź do nowego</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStart>Dostosuj za pomocą pozycji końcowej</AdjustViaEndAutoStart>
@@ -2559,6 +2585,10 @@ może edytować ten sam plik napisów (współpraca)</Information>
     <RecalculateDurationOfCurrentSubtitle>Oblicz ponownie czas trwania bieżących napisów</RecalculateDurationOfCurrentSubtitle>
     <RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed>Oblicz ponownie czas trwania bieżących napisów (w oparciu o optymalną prędkość czytania)</RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed>
     <RecalculateDurationOfCurrentSubtitleByMinReadingSpeed>Ponownie oblicz czas trwania bieżących napisów (na podstawie minimalnej prędkości czytania)</RecalculateDurationOfCurrentSubtitleByMinReadingSpeed>
+    <SetInCueToClosestShotChangeLeftGreenZone>Ustaw znacznik wejściowy na minimalną odległość przed zmianą najbliższego ujęcia (lewa zielona strefa)</SetInCueToClosestShotChangeLeftGreenZone>
+    <SetInCueToClosestShotChangeRightGreenZone>Ustaw znacznik wejściowy na minimalną odległość po zmianie najbliższego ujęcia (prawa zielona strefa)</SetInCueToClosestShotChangeRightGreenZone>
+    <SetOutCueToClosestShotChangeLeftGreenZone>Ustaw znacznik wyjściowy na minimalną odległość przed zmianą najbliższego ujęcia (lewa zielona strefa)</SetOutCueToClosestShotChangeLeftGreenZone>
+    <SetOutCueToClosestShotChangeRightGreenZone>Ustaw znacznik wyjściowy na minimalną odległość po zmianie najbliższego ujęcia (prawa zielona strefa)</SetOutCueToClosestShotChangeRightGreenZone>
     <MainCreateStartDownEndUp>Klawisz ↓ - utwórz nowy, klawisz ↑ - ustaw czas zakończenia</MainCreateStartDownEndUp>
     <MergeDialog>Połącz dialogi (wstaw myślniki)</MergeDialog>
     <MergeDialogWithNext>Połącz dialog z następnym (wstaw myślniki)</MergeDialogWithNext>
@@ -2789,6 +2819,8 @@ Kontynuować?</RestoreDefaultSettingsMsg>
     <CustomContinuationStyleNote>Uwaga: Niestandardowy styl kontynuacji jest wspólny dla wszystkich profili.</CustomContinuationStyleNote>
     <ResetCustomContinuationStyleWarning>Zastąpi to wartości w oknie dialogowym. Jesteś pewny?</ResetCustomContinuationStyleWarning>
     <ExportAsHtml>Eksportuj jako HTML...</ExportAsHtml>
+    <SetNewActor>Ustaw nowego aktora/głos</SetNewActor>
+    <SetActorX>Ustaw aktora/głos {0}</SetActorX>
   </Settings>
   <SettingsMpv>
     <DownloadMpv>Pobierz bibliotekę mpv</DownloadMpv>
@@ -3326,6 +3358,10 @@ Zachować te zmiany?</KeepChangesMessage>
     <Title>WebVTT - ustaw nowy głos</Title>
     <VoiceName>Nazwa głosu</VoiceName>
   </WebVttNewVoice>
+  <WebVttProperties>
+    <UseXTimeStamp>Użyj wartości nagłówka X-TIMESTAMP-MAP</UseXTimeStamp>
+    <MergeLines>Połącz linie z tym samym tekstem podczas wczytywania</MergeLines>
+  </WebVttProperties>
   <WebVttStyleManager>
     <Title>Style WebVTT</Title>
   </WebVttStyleManager>

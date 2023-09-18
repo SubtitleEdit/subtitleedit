@@ -35,14 +35,14 @@
             this.labelCharacters = new System.Windows.Forms.Label();
             this.pictureBoxCharacter = new System.Windows.Forms.PictureBox();
             this.labelCharactersAsText = new System.Windows.Forms.Label();
-            this.textBoxCharacters = new System.Windows.Forms.TextBox();
+            this.textBoxCharacters = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.contextMenuStripLetters = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.labelSubtitleImage = new System.Windows.Forms.Label();
             this.pictureBoxSubtitleImage = new System.Windows.Forms.PictureBox();
             this.groupBoxNewInput = new System.Windows.Forms.GroupBox();
-            this.numericUpDownLinesToDraw = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownLinesToDraw = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelLinestoDraw = new System.Windows.Forms.Label();
             this.buttonGuessAgain = new System.Windows.Forms.Button();
             this.checkBoxAutoSubmitOfFirstChar = new System.Windows.Forms.CheckBox();
@@ -70,7 +70,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCharacter)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSubtitleImage)).BeginInit();
             this.groupBoxNewInput.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownLinesToDraw)).BeginInit();
             this.groupBox2.SuspendLayout();
             this.contextMenuStripLinesBackground.SuspendLayout();
             this.contextMenuLinesForeground.SuspendLayout();
@@ -513,7 +512,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSubtitleImage)).EndInit();
             this.groupBoxNewInput.ResumeLayout(false);
             this.groupBoxNewInput.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownLinesToDraw)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.contextMenuStripLinesBackground.ResumeLayout(false);
@@ -531,7 +529,7 @@
         private System.Windows.Forms.Label labelCharacters;
         private System.Windows.Forms.PictureBox pictureBoxCharacter;
         private System.Windows.Forms.Label labelCharactersAsText;
-        private System.Windows.Forms.TextBox textBoxCharacters;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxCharacters;
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Label labelSubtitleImage;
@@ -558,7 +556,7 @@
         private System.Windows.Forms.CheckBox checkBoxAutoSubmitOfFirstChar;
         private System.Windows.Forms.ToolStripMenuItem clearToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem clearToolStripMenuItem1;
-        private System.Windows.Forms.NumericUpDown numericUpDownLinesToDraw;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownLinesToDraw;
         private System.Windows.Forms.Label labelLinestoDraw;
         private System.Windows.Forms.Button buttonGuessAgain;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripLetters;

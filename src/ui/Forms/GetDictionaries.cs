@@ -9,6 +9,8 @@ using System.IO.Compression;
 using System.Threading;
 using System.Windows.Forms;
 using System.Xml;
+using static Nikse.SubtitleEdit.Forms.Options.Settings;
+using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -47,6 +49,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             labelPleaseWait.Text = string.Empty;
 
+            comboBoxDictionaries.UsePopupWindow = true;
             LoadDictionaryList("Nikse.SubtitleEdit.Resources.HunspellDictionaries.xml.gz");
             FixLargeFonts();
             _cancellationTokenSource = new CancellationTokenSource();
@@ -122,8 +125,6 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxDictionaries.EndUpdate();
                 comboBoxDictionaries.SelectedIndex = 0;
             }
-            comboBoxDictionaries.AutoCompleteSource = AutoCompleteSource.ListItems;
-            comboBoxDictionaries.AutoCompleteMode = AutoCompleteMode.Append;
         }
 
         private void FixLargeFonts()

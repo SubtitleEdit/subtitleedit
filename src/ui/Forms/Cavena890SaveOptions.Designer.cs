@@ -36,16 +36,16 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonImport = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.textBoxComment = new System.Windows.Forms.TextBox();
+            this.textBoxComment = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelComment = new System.Windows.Forms.Label();
-            this.textBoxTranslatedTitle = new System.Windows.Forms.TextBox();
+            this.textBoxTranslatedTitle = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelTranslatedTitle = new System.Windows.Forms.Label();
-            this.textBoxOriginalTitle = new System.Windows.Forms.TextBox();
+            this.textBoxOriginalTitle = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelOriginalTitle = new System.Windows.Forms.Label();
-            this.textBoxTranslator = new System.Windows.Forms.TextBox();
+            this.textBoxTranslator = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelTranslator = new System.Windows.Forms.Label();
             this.timeUpDownStartTime = new Nikse.SubtitleEdit.Controls.NikseTimeUpDown();
-            this.comboBoxLanguage = new System.Windows.Forms.ComboBox();
+            this.comboBoxLanguage = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelLanguage = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
@@ -255,15 +255,15 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonImport;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
-        private System.Windows.Forms.TextBox textBoxComment;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxComment;
         private System.Windows.Forms.Label labelComment;
-        private System.Windows.Forms.TextBox textBoxTranslatedTitle;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxTranslatedTitle;
         private System.Windows.Forms.Label labelTranslatedTitle;
-        private System.Windows.Forms.TextBox textBoxOriginalTitle;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxOriginalTitle;
         private System.Windows.Forms.Label labelOriginalTitle;
-        private System.Windows.Forms.TextBox textBoxTranslator;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxTranslator;
         private System.Windows.Forms.Label labelTranslator;
-        private System.Windows.Forms.ComboBox comboBoxLanguage;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxLanguage;
         private System.Windows.Forms.Label labelLanguage;
     }
 }

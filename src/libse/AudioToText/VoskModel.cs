@@ -238,7 +238,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
             {
                 TwoLetterLanguageCode = "br",
                 LanguageName = "Breton (small, 70 MB)",
-                Url = "https://alphacephei.com/vosk/models/vosk-model-br-0.7.zip",
+                Url = "https://alphacephei.com/vosk/models/vosk-model-br-0.8.zip",
             },
         };
     }

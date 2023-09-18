@@ -35,45 +35,45 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             this.toolStripMenuItemLoadPreset = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBoxGeneral = new System.Windows.Forms.GroupBox();
             this.labelGapSuffix = new System.Windows.Forms.Label();
-            this.numericUpDownGap = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownGap = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelGap = new System.Windows.Forms.Label();
             this.groupBoxInCues = new System.Windows.Forms.GroupBox();
             this.labelInCuesZones = new System.Windows.Forms.Label();
-            this.numericUpDownInCuesLeftGreenZone = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDownInCuesLeftRedZone = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDownInCuesRightGreenZone = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDownInCuesRightRedZone = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDownInCuesGap = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownInCuesLeftGreenZone = new Nikse.SubtitleEdit.Controls.NikseUpDown();
+            this.numericUpDownInCuesLeftRedZone = new Nikse.SubtitleEdit.Controls.NikseUpDown();
+            this.numericUpDownInCuesRightGreenZone = new Nikse.SubtitleEdit.Controls.NikseUpDown();
+            this.numericUpDownInCuesRightRedZone = new Nikse.SubtitleEdit.Controls.NikseUpDown();
+            this.numericUpDownInCuesGap = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelInCuesGap = new System.Windows.Forms.Label();
             this.cuesPreviewViewInCues = new Nikse.SubtitleEdit.Controls.CuesPreviewView();
             this.groupBoxOutCues = new System.Windows.Forms.GroupBox();
             this.labelOutCuesZones = new System.Windows.Forms.Label();
-            this.numericUpDownOutCuesLeftGreenZone = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDownOutCuesLeftRedZone = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDownOutCuesGap = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDownOutCuesRightGreenZone = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDownOutCuesRightRedZone = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownOutCuesLeftGreenZone = new Nikse.SubtitleEdit.Controls.NikseUpDown();
+            this.numericUpDownOutCuesLeftRedZone = new Nikse.SubtitleEdit.Controls.NikseUpDown();
+            this.numericUpDownOutCuesGap = new Nikse.SubtitleEdit.Controls.NikseUpDown();
+            this.numericUpDownOutCuesRightGreenZone = new Nikse.SubtitleEdit.Controls.NikseUpDown();
+            this.numericUpDownOutCuesRightRedZone = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelOutCuesGap = new System.Windows.Forms.Label();
             this.cuesPreviewViewOutCues = new Nikse.SubtitleEdit.Controls.CuesPreviewView();
             this.groupBoxConnectedSubtitles = new System.Windows.Forms.GroupBox();
             this.cuesPreviewViewConnectedSubtitlesInCueClosest = new Nikse.SubtitleEdit.Controls.CuesPreviewView();
             this.cuesPreviewViewConnectedSubtitlesOutCueClosest = new Nikse.SubtitleEdit.Controls.CuesPreviewView();
             this.labelConnectedSubtitlesTreatConnectedSuffix = new System.Windows.Forms.Label();
-            this.numericUpDownConnectedSubtitlesTreatConnected = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownConnectedSubtitlesTreatConnected = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelConnectedSubtitlesTreatConnected = new System.Windows.Forms.Label();
             this.labelConnectedSubtitlesZones = new System.Windows.Forms.Label();
-            this.numericUpDownConnectedSubtitlesLeftGreenZone = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDownConnectedSubtitlesLeftRedZone = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDownConnectedSubtitlesRightGreenZone = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDownConnectedSubtitlesRightRedZone = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownConnectedSubtitlesLeftGreenZone = new Nikse.SubtitleEdit.Controls.NikseUpDown();
+            this.numericUpDownConnectedSubtitlesLeftRedZone = new Nikse.SubtitleEdit.Controls.NikseUpDown();
+            this.numericUpDownConnectedSubtitlesRightGreenZone = new Nikse.SubtitleEdit.Controls.NikseUpDown();
+            this.numericUpDownConnectedSubtitlesRightRedZone = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.tabControlConnectedSubtitles = new System.Windows.Forms.TabControl();
             this.tabPageConnectedSubtitlesInCueClosest = new System.Windows.Forms.TabPage();
-            this.numericUpDownConnectedSubtitlesInCueClosestLeftGap = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDownConnectedSubtitlesInCueClosestRightGap = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownConnectedSubtitlesInCueClosestLeftGap = new Nikse.SubtitleEdit.Controls.NikseUpDown();
+            this.numericUpDownConnectedSubtitlesInCueClosestRightGap = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelConnectedSubtitlesInCueClosestGaps = new System.Windows.Forms.Label();
             this.tabPageConnectedSubtitlesOutCueClosest = new System.Windows.Forms.TabPage();
-            this.numericUpDownConnectedSubtitlesOutCueClosestLeftGap = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDownConnectedSubtitlesOutCueClosestRightGap = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownConnectedSubtitlesOutCueClosestLeftGap = new Nikse.SubtitleEdit.Controls.NikseUpDown();
+            this.numericUpDownConnectedSubtitlesOutCueClosestRightGap = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelConnectedSubtitlesOutCueClosestGaps = new System.Windows.Forms.Label();
             this.groupBoxChaining = new System.Windows.Forms.GroupBox();
             this.cuesPreviewViewChainingGeneral = new Nikse.SubtitleEdit.Controls.CuesPreviewView();
@@ -82,70 +82,41 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             this.tabControlChaining = new System.Windows.Forms.TabControl();
             this.tabPageChainingGeneral = new System.Windows.Forms.TabPage();
             this.labelChainingGeneralShotChangeBehavior = new System.Windows.Forms.Label();
-            this.comboBoxChainingGeneralShotChangeBehavior = new System.Windows.Forms.ComboBox();
-            this.labelChainingGeneralMaxGapSuffix = new System.Windows.Forms.Label();
+            this.comboBoxChainingGeneralShotChangeBehavior = new Nikse.SubtitleEdit.Controls.NikseComboBox();
+            this.labelChainingGeneralMaxGapSuffix = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.radioButtonChainingGeneralZones = new System.Windows.Forms.RadioButton();
             this.radioButtonChainingGeneralMaxGap = new System.Windows.Forms.RadioButton();
-            this.numericUpDownChainingGeneralLeftGreenZone = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDownChainingGeneralLeftRedZone = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDownChainingGeneralMaxGap = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownChainingGeneralLeftGreenZone = new Nikse.SubtitleEdit.Controls.NikseUpDown();
+            this.numericUpDownChainingGeneralLeftRedZone = new Nikse.SubtitleEdit.Controls.NikseUpDown();
+            this.numericUpDownChainingGeneralMaxGap = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.tabPageChainingInCueOnShot = new System.Windows.Forms.TabPage();
             this.labelChainingInCueOnShotMaxGapSuffix = new System.Windows.Forms.Label();
             this.radioButtonChainingInCueOnShotZones = new System.Windows.Forms.RadioButton();
             this.radioButtonChainingInCueOnShotMaxGap = new System.Windows.Forms.RadioButton();
-            this.numericUpDownChainingInCueOnShotLeftGreenZone = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDownChainingInCueOnShotLeftRedZone = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDownChainingInCueOnShotMaxGap = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownChainingInCueOnShotLeftGreenZone = new Nikse.SubtitleEdit.Controls.NikseUpDown();
+            this.numericUpDownChainingInCueOnShotLeftRedZone = new Nikse.SubtitleEdit.Controls.NikseUpDown();
+            this.numericUpDownChainingInCueOnShotMaxGap = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.tabPageChainingOutCueOnShot = new System.Windows.Forms.TabPage();
-            this.numericUpDownChainingOutCueOnShotRightGreenZone = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDownChainingOutCueOnShotRightRedZone = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownChainingOutCueOnShotRightGreenZone = new Nikse.SubtitleEdit.Controls.NikseUpDown();
+            this.numericUpDownChainingOutCueOnShotRightRedZone = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelChainingOutCueOnShotMaxGapSuffix = new System.Windows.Forms.Label();
             this.radioButtonChainingOutCueOnShotZones = new System.Windows.Forms.RadioButton();
             this.radioButtonChainingOutCueOnShotMaxGap = new System.Windows.Forms.RadioButton();
-            this.numericUpDownChainingOutCueOnShotMaxGap = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownChainingOutCueOnShotMaxGap = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.buttonCreateSimple = new System.Windows.Forms.Button();
             this.menuStrip.SuspendLayout();
             this.groupBoxGeneral.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownGap)).BeginInit();
             this.groupBoxInCues.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownInCuesLeftGreenZone)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownInCuesLeftRedZone)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownInCuesRightGreenZone)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownInCuesRightRedZone)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownInCuesGap)).BeginInit();
             this.groupBoxOutCues.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownOutCuesLeftGreenZone)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownOutCuesLeftRedZone)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownOutCuesGap)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownOutCuesRightGreenZone)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownOutCuesRightRedZone)).BeginInit();
             this.groupBoxConnectedSubtitles.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownConnectedSubtitlesTreatConnected)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownConnectedSubtitlesLeftGreenZone)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownConnectedSubtitlesLeftRedZone)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownConnectedSubtitlesRightGreenZone)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownConnectedSubtitlesRightRedZone)).BeginInit();
             this.tabControlConnectedSubtitles.SuspendLayout();
             this.tabPageConnectedSubtitlesInCueClosest.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownConnectedSubtitlesInCueClosestLeftGap)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownConnectedSubtitlesInCueClosestRightGap)).BeginInit();
             this.tabPageConnectedSubtitlesOutCueClosest.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownConnectedSubtitlesOutCueClosestLeftGap)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownConnectedSubtitlesOutCueClosestRightGap)).BeginInit();
             this.groupBoxChaining.SuspendLayout();
             this.tabControlChaining.SuspendLayout();
             this.tabPageChainingGeneral.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownChainingGeneralLeftGreenZone)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownChainingGeneralLeftRedZone)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownChainingGeneralMaxGap)).BeginInit();
             this.tabPageChainingInCueOnShot.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownChainingInCueOnShotLeftGreenZone)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownChainingInCueOnShotLeftRedZone)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownChainingInCueOnShotMaxGap)).BeginInit();
             this.tabPageChainingOutCueOnShot.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownChainingOutCueOnShotRightGreenZone)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownChainingOutCueOnShotRightRedZone)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownChainingOutCueOnShotMaxGap)).BeginInit();
             this.SuspendLayout();
             // 
             // buttonCancel
@@ -211,15 +182,35 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             // 
             // numericUpDownGap
             // 
+            this.numericUpDownGap.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownGap.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownGap.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownGap.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownGap.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownGap.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownGap.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownGap.DecimalPlaces = 0;
+            this.numericUpDownGap.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownGap.Location = new System.Drawing.Point(50, 22);
             this.numericUpDownGap.Maximum = new decimal(new int[] {
             10,
             0,
             0,
             0});
+            this.numericUpDownGap.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownGap.Name = "numericUpDownGap";
             this.numericUpDownGap.Size = new System.Drawing.Size(52, 23);
             this.numericUpDownGap.TabIndex = 2;
+            this.numericUpDownGap.TabStop = false;
+            this.numericUpDownGap.ThousandsSeparator = false;
             this.numericUpDownGap.Value = new decimal(new int[] {
             3,
             0,
@@ -265,15 +256,34 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             // numericUpDownInCuesLeftGreenZone
             // 
             this.numericUpDownInCuesLeftGreenZone.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.numericUpDownInCuesLeftGreenZone.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownInCuesLeftGreenZone.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownInCuesLeftGreenZone.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownInCuesLeftGreenZone.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownInCuesLeftGreenZone.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownInCuesLeftGreenZone.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownInCuesLeftGreenZone.DecimalPlaces = 0;
+            this.numericUpDownInCuesLeftGreenZone.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownInCuesLeftGreenZone.Location = new System.Drawing.Point(93, 127);
             this.numericUpDownInCuesLeftGreenZone.Maximum = new decimal(new int[] {
             50,
             0,
             0,
             0});
+            this.numericUpDownInCuesLeftGreenZone.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownInCuesLeftGreenZone.Name = "numericUpDownInCuesLeftGreenZone";
             this.numericUpDownInCuesLeftGreenZone.Size = new System.Drawing.Size(52, 23);
             this.numericUpDownInCuesLeftGreenZone.TabIndex = 5;
+            this.numericUpDownInCuesLeftGreenZone.TabStop = false;
+            this.numericUpDownInCuesLeftGreenZone.ThousandsSeparator = false;
             this.numericUpDownInCuesLeftGreenZone.Value = new decimal(new int[] {
             12,
             0,
@@ -284,15 +294,34 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             // numericUpDownInCuesLeftRedZone
             // 
             this.numericUpDownInCuesLeftRedZone.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
+            this.numericUpDownInCuesLeftRedZone.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownInCuesLeftRedZone.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownInCuesLeftRedZone.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownInCuesLeftRedZone.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownInCuesLeftRedZone.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownInCuesLeftRedZone.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownInCuesLeftRedZone.DecimalPlaces = 0;
+            this.numericUpDownInCuesLeftRedZone.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownInCuesLeftRedZone.Location = new System.Drawing.Point(151, 127);
             this.numericUpDownInCuesLeftRedZone.Maximum = new decimal(new int[] {
             50,
             0,
             0,
             0});
+            this.numericUpDownInCuesLeftRedZone.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownInCuesLeftRedZone.Name = "numericUpDownInCuesLeftRedZone";
             this.numericUpDownInCuesLeftRedZone.Size = new System.Drawing.Size(52, 23);
             this.numericUpDownInCuesLeftRedZone.TabIndex = 6;
+            this.numericUpDownInCuesLeftRedZone.TabStop = false;
+            this.numericUpDownInCuesLeftRedZone.ThousandsSeparator = false;
             this.numericUpDownInCuesLeftRedZone.Value = new decimal(new int[] {
             7,
             0,
@@ -303,15 +332,34 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             // numericUpDownInCuesRightGreenZone
             // 
             this.numericUpDownInCuesRightGreenZone.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.numericUpDownInCuesRightGreenZone.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownInCuesRightGreenZone.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownInCuesRightGreenZone.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownInCuesRightGreenZone.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownInCuesRightGreenZone.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownInCuesRightGreenZone.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownInCuesRightGreenZone.DecimalPlaces = 0;
+            this.numericUpDownInCuesRightGreenZone.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownInCuesRightGreenZone.Location = new System.Drawing.Point(276, 127);
             this.numericUpDownInCuesRightGreenZone.Maximum = new decimal(new int[] {
             50,
             0,
             0,
             0});
+            this.numericUpDownInCuesRightGreenZone.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownInCuesRightGreenZone.Name = "numericUpDownInCuesRightGreenZone";
             this.numericUpDownInCuesRightGreenZone.Size = new System.Drawing.Size(52, 23);
             this.numericUpDownInCuesRightGreenZone.TabIndex = 8;
+            this.numericUpDownInCuesRightGreenZone.TabStop = false;
+            this.numericUpDownInCuesRightGreenZone.ThousandsSeparator = false;
             this.numericUpDownInCuesRightGreenZone.Value = new decimal(new int[] {
             12,
             0,
@@ -322,15 +370,34 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             // numericUpDownInCuesRightRedZone
             // 
             this.numericUpDownInCuesRightRedZone.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
+            this.numericUpDownInCuesRightRedZone.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownInCuesRightRedZone.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownInCuesRightRedZone.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownInCuesRightRedZone.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownInCuesRightRedZone.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownInCuesRightRedZone.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownInCuesRightRedZone.DecimalPlaces = 0;
+            this.numericUpDownInCuesRightRedZone.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownInCuesRightRedZone.Location = new System.Drawing.Point(218, 127);
             this.numericUpDownInCuesRightRedZone.Maximum = new decimal(new int[] {
             50,
             0,
             0,
             0});
+            this.numericUpDownInCuesRightRedZone.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownInCuesRightRedZone.Name = "numericUpDownInCuesRightRedZone";
             this.numericUpDownInCuesRightRedZone.Size = new System.Drawing.Size(52, 23);
             this.numericUpDownInCuesRightRedZone.TabIndex = 7;
+            this.numericUpDownInCuesRightRedZone.TabStop = false;
+            this.numericUpDownInCuesRightRedZone.ThousandsSeparator = false;
             this.numericUpDownInCuesRightRedZone.Value = new decimal(new int[] {
             7,
             0,
@@ -340,15 +407,40 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             // 
             // numericUpDownInCuesGap
             // 
+            this.numericUpDownInCuesGap.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownInCuesGap.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownInCuesGap.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownInCuesGap.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownInCuesGap.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownInCuesGap.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownInCuesGap.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownInCuesGap.DecimalPlaces = 0;
+            this.numericUpDownInCuesGap.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownInCuesGap.Location = new System.Drawing.Point(218, 98);
             this.numericUpDownInCuesGap.Maximum = new decimal(new int[] {
             10,
             0,
             0,
             0});
+            this.numericUpDownInCuesGap.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownInCuesGap.Name = "numericUpDownInCuesGap";
             this.numericUpDownInCuesGap.Size = new System.Drawing.Size(52, 23);
             this.numericUpDownInCuesGap.TabIndex = 3;
+            this.numericUpDownInCuesGap.TabStop = false;
+            this.numericUpDownInCuesGap.ThousandsSeparator = false;
+            this.numericUpDownInCuesGap.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownInCuesGap.ValueChanged += new System.EventHandler(this.numericUpDown_ValueChanged);
             // 
             // labelInCuesGap
@@ -407,15 +499,34 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             // numericUpDownOutCuesLeftGreenZone
             // 
             this.numericUpDownOutCuesLeftGreenZone.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.numericUpDownOutCuesLeftGreenZone.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownOutCuesLeftGreenZone.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownOutCuesLeftGreenZone.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownOutCuesLeftGreenZone.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownOutCuesLeftGreenZone.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownOutCuesLeftGreenZone.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownOutCuesLeftGreenZone.DecimalPlaces = 0;
+            this.numericUpDownOutCuesLeftGreenZone.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownOutCuesLeftGreenZone.Location = new System.Drawing.Point(93, 127);
             this.numericUpDownOutCuesLeftGreenZone.Maximum = new decimal(new int[] {
             50,
             0,
             0,
             0});
+            this.numericUpDownOutCuesLeftGreenZone.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownOutCuesLeftGreenZone.Name = "numericUpDownOutCuesLeftGreenZone";
             this.numericUpDownOutCuesLeftGreenZone.Size = new System.Drawing.Size(52, 23);
             this.numericUpDownOutCuesLeftGreenZone.TabIndex = 5;
+            this.numericUpDownOutCuesLeftGreenZone.TabStop = false;
+            this.numericUpDownOutCuesLeftGreenZone.ThousandsSeparator = false;
             this.numericUpDownOutCuesLeftGreenZone.Value = new decimal(new int[] {
             12,
             0,
@@ -426,15 +537,34 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             // numericUpDownOutCuesLeftRedZone
             // 
             this.numericUpDownOutCuesLeftRedZone.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
+            this.numericUpDownOutCuesLeftRedZone.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownOutCuesLeftRedZone.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownOutCuesLeftRedZone.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownOutCuesLeftRedZone.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownOutCuesLeftRedZone.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownOutCuesLeftRedZone.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownOutCuesLeftRedZone.DecimalPlaces = 0;
+            this.numericUpDownOutCuesLeftRedZone.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownOutCuesLeftRedZone.Location = new System.Drawing.Point(151, 127);
             this.numericUpDownOutCuesLeftRedZone.Maximum = new decimal(new int[] {
             50,
             0,
             0,
             0});
+            this.numericUpDownOutCuesLeftRedZone.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownOutCuesLeftRedZone.Name = "numericUpDownOutCuesLeftRedZone";
             this.numericUpDownOutCuesLeftRedZone.Size = new System.Drawing.Size(52, 23);
             this.numericUpDownOutCuesLeftRedZone.TabIndex = 6;
+            this.numericUpDownOutCuesLeftRedZone.TabStop = false;
+            this.numericUpDownOutCuesLeftRedZone.ThousandsSeparator = false;
             this.numericUpDownOutCuesLeftRedZone.Value = new decimal(new int[] {
             7,
             0,
@@ -444,29 +574,73 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             // 
             // numericUpDownOutCuesGap
             // 
+            this.numericUpDownOutCuesGap.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownOutCuesGap.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownOutCuesGap.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownOutCuesGap.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownOutCuesGap.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownOutCuesGap.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownOutCuesGap.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownOutCuesGap.DecimalPlaces = 0;
+            this.numericUpDownOutCuesGap.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownOutCuesGap.Location = new System.Drawing.Point(151, 98);
             this.numericUpDownOutCuesGap.Maximum = new decimal(new int[] {
             10,
             0,
             0,
             0});
+            this.numericUpDownOutCuesGap.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownOutCuesGap.Name = "numericUpDownOutCuesGap";
             this.numericUpDownOutCuesGap.Size = new System.Drawing.Size(52, 23);
             this.numericUpDownOutCuesGap.TabIndex = 3;
+            this.numericUpDownOutCuesGap.TabStop = false;
+            this.numericUpDownOutCuesGap.ThousandsSeparator = false;
+            this.numericUpDownOutCuesGap.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownOutCuesGap.ValueChanged += new System.EventHandler(this.numericUpDown_ValueChanged);
             // 
             // numericUpDownOutCuesRightGreenZone
             // 
             this.numericUpDownOutCuesRightGreenZone.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.numericUpDownOutCuesRightGreenZone.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownOutCuesRightGreenZone.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownOutCuesRightGreenZone.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownOutCuesRightGreenZone.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownOutCuesRightGreenZone.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownOutCuesRightGreenZone.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownOutCuesRightGreenZone.DecimalPlaces = 0;
+            this.numericUpDownOutCuesRightGreenZone.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownOutCuesRightGreenZone.Location = new System.Drawing.Point(276, 127);
             this.numericUpDownOutCuesRightGreenZone.Maximum = new decimal(new int[] {
             50,
             0,
             0,
             0});
+            this.numericUpDownOutCuesRightGreenZone.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownOutCuesRightGreenZone.Name = "numericUpDownOutCuesRightGreenZone";
             this.numericUpDownOutCuesRightGreenZone.Size = new System.Drawing.Size(52, 23);
             this.numericUpDownOutCuesRightGreenZone.TabIndex = 8;
+            this.numericUpDownOutCuesRightGreenZone.TabStop = false;
+            this.numericUpDownOutCuesRightGreenZone.ThousandsSeparator = false;
             this.numericUpDownOutCuesRightGreenZone.Value = new decimal(new int[] {
             12,
             0,
@@ -477,15 +651,34 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             // numericUpDownOutCuesRightRedZone
             // 
             this.numericUpDownOutCuesRightRedZone.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
+            this.numericUpDownOutCuesRightRedZone.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownOutCuesRightRedZone.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownOutCuesRightRedZone.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownOutCuesRightRedZone.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownOutCuesRightRedZone.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownOutCuesRightRedZone.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownOutCuesRightRedZone.DecimalPlaces = 0;
+            this.numericUpDownOutCuesRightRedZone.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownOutCuesRightRedZone.Location = new System.Drawing.Point(218, 127);
             this.numericUpDownOutCuesRightRedZone.Maximum = new decimal(new int[] {
             50,
             0,
             0,
             0});
+            this.numericUpDownOutCuesRightRedZone.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownOutCuesRightRedZone.Name = "numericUpDownOutCuesRightRedZone";
             this.numericUpDownOutCuesRightRedZone.Size = new System.Drawing.Size(52, 23);
             this.numericUpDownOutCuesRightRedZone.TabIndex = 7;
+            this.numericUpDownOutCuesRightRedZone.TabStop = false;
+            this.numericUpDownOutCuesRightRedZone.ThousandsSeparator = false;
             this.numericUpDownOutCuesRightRedZone.Value = new decimal(new int[] {
             7,
             0,
@@ -587,15 +780,35 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             // 
             // numericUpDownConnectedSubtitlesTreatConnected
             // 
+            this.numericUpDownConnectedSubtitlesTreatConnected.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownConnectedSubtitlesTreatConnected.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownConnectedSubtitlesTreatConnected.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownConnectedSubtitlesTreatConnected.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownConnectedSubtitlesTreatConnected.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownConnectedSubtitlesTreatConnected.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownConnectedSubtitlesTreatConnected.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownConnectedSubtitlesTreatConnected.DecimalPlaces = 0;
+            this.numericUpDownConnectedSubtitlesTreatConnected.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownConnectedSubtitlesTreatConnected.Location = new System.Drawing.Point(276, 201);
             this.numericUpDownConnectedSubtitlesTreatConnected.Maximum = new decimal(new int[] {
             2000,
             0,
             0,
             0});
+            this.numericUpDownConnectedSubtitlesTreatConnected.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownConnectedSubtitlesTreatConnected.Name = "numericUpDownConnectedSubtitlesTreatConnected";
             this.numericUpDownConnectedSubtitlesTreatConnected.Size = new System.Drawing.Size(52, 23);
             this.numericUpDownConnectedSubtitlesTreatConnected.TabIndex = 26;
+            this.numericUpDownConnectedSubtitlesTreatConnected.TabStop = false;
+            this.numericUpDownConnectedSubtitlesTreatConnected.ThousandsSeparator = false;
             this.numericUpDownConnectedSubtitlesTreatConnected.Value = new decimal(new int[] {
             180,
             0,
@@ -623,15 +836,34 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             // numericUpDownConnectedSubtitlesLeftGreenZone
             // 
             this.numericUpDownConnectedSubtitlesLeftGreenZone.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.numericUpDownConnectedSubtitlesLeftGreenZone.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownConnectedSubtitlesLeftGreenZone.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownConnectedSubtitlesLeftGreenZone.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownConnectedSubtitlesLeftGreenZone.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownConnectedSubtitlesLeftGreenZone.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownConnectedSubtitlesLeftGreenZone.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownConnectedSubtitlesLeftGreenZone.DecimalPlaces = 0;
+            this.numericUpDownConnectedSubtitlesLeftGreenZone.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownConnectedSubtitlesLeftGreenZone.Location = new System.Drawing.Point(93, 156);
             this.numericUpDownConnectedSubtitlesLeftGreenZone.Maximum = new decimal(new int[] {
             50,
             0,
             0,
             0});
+            this.numericUpDownConnectedSubtitlesLeftGreenZone.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownConnectedSubtitlesLeftGreenZone.Name = "numericUpDownConnectedSubtitlesLeftGreenZone";
             this.numericUpDownConnectedSubtitlesLeftGreenZone.Size = new System.Drawing.Size(52, 23);
             this.numericUpDownConnectedSubtitlesLeftGreenZone.TabIndex = 21;
+            this.numericUpDownConnectedSubtitlesLeftGreenZone.TabStop = false;
+            this.numericUpDownConnectedSubtitlesLeftGreenZone.ThousandsSeparator = false;
             this.numericUpDownConnectedSubtitlesLeftGreenZone.Value = new decimal(new int[] {
             12,
             0,
@@ -642,15 +874,34 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             // numericUpDownConnectedSubtitlesLeftRedZone
             // 
             this.numericUpDownConnectedSubtitlesLeftRedZone.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
+            this.numericUpDownConnectedSubtitlesLeftRedZone.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownConnectedSubtitlesLeftRedZone.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownConnectedSubtitlesLeftRedZone.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownConnectedSubtitlesLeftRedZone.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownConnectedSubtitlesLeftRedZone.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownConnectedSubtitlesLeftRedZone.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownConnectedSubtitlesLeftRedZone.DecimalPlaces = 0;
+            this.numericUpDownConnectedSubtitlesLeftRedZone.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownConnectedSubtitlesLeftRedZone.Location = new System.Drawing.Point(151, 156);
             this.numericUpDownConnectedSubtitlesLeftRedZone.Maximum = new decimal(new int[] {
             50,
             0,
             0,
             0});
+            this.numericUpDownConnectedSubtitlesLeftRedZone.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownConnectedSubtitlesLeftRedZone.Name = "numericUpDownConnectedSubtitlesLeftRedZone";
             this.numericUpDownConnectedSubtitlesLeftRedZone.Size = new System.Drawing.Size(52, 23);
             this.numericUpDownConnectedSubtitlesLeftRedZone.TabIndex = 22;
+            this.numericUpDownConnectedSubtitlesLeftRedZone.TabStop = false;
+            this.numericUpDownConnectedSubtitlesLeftRedZone.ThousandsSeparator = false;
             this.numericUpDownConnectedSubtitlesLeftRedZone.Value = new decimal(new int[] {
             7,
             0,
@@ -661,15 +912,34 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             // numericUpDownConnectedSubtitlesRightGreenZone
             // 
             this.numericUpDownConnectedSubtitlesRightGreenZone.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.numericUpDownConnectedSubtitlesRightGreenZone.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownConnectedSubtitlesRightGreenZone.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownConnectedSubtitlesRightGreenZone.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownConnectedSubtitlesRightGreenZone.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownConnectedSubtitlesRightGreenZone.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownConnectedSubtitlesRightGreenZone.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownConnectedSubtitlesRightGreenZone.DecimalPlaces = 0;
+            this.numericUpDownConnectedSubtitlesRightGreenZone.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownConnectedSubtitlesRightGreenZone.Location = new System.Drawing.Point(276, 156);
             this.numericUpDownConnectedSubtitlesRightGreenZone.Maximum = new decimal(new int[] {
             50,
             0,
             0,
             0});
+            this.numericUpDownConnectedSubtitlesRightGreenZone.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownConnectedSubtitlesRightGreenZone.Name = "numericUpDownConnectedSubtitlesRightGreenZone";
             this.numericUpDownConnectedSubtitlesRightGreenZone.Size = new System.Drawing.Size(52, 23);
             this.numericUpDownConnectedSubtitlesRightGreenZone.TabIndex = 24;
+            this.numericUpDownConnectedSubtitlesRightGreenZone.TabStop = false;
+            this.numericUpDownConnectedSubtitlesRightGreenZone.ThousandsSeparator = false;
             this.numericUpDownConnectedSubtitlesRightGreenZone.Value = new decimal(new int[] {
             12,
             0,
@@ -680,15 +950,34 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             // numericUpDownConnectedSubtitlesRightRedZone
             // 
             this.numericUpDownConnectedSubtitlesRightRedZone.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
+            this.numericUpDownConnectedSubtitlesRightRedZone.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownConnectedSubtitlesRightRedZone.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownConnectedSubtitlesRightRedZone.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownConnectedSubtitlesRightRedZone.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownConnectedSubtitlesRightRedZone.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownConnectedSubtitlesRightRedZone.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownConnectedSubtitlesRightRedZone.DecimalPlaces = 0;
+            this.numericUpDownConnectedSubtitlesRightRedZone.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownConnectedSubtitlesRightRedZone.Location = new System.Drawing.Point(218, 156);
             this.numericUpDownConnectedSubtitlesRightRedZone.Maximum = new decimal(new int[] {
             50,
             0,
             0,
             0});
+            this.numericUpDownConnectedSubtitlesRightRedZone.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownConnectedSubtitlesRightRedZone.Name = "numericUpDownConnectedSubtitlesRightRedZone";
             this.numericUpDownConnectedSubtitlesRightRedZone.Size = new System.Drawing.Size(52, 23);
             this.numericUpDownConnectedSubtitlesRightRedZone.TabIndex = 23;
+            this.numericUpDownConnectedSubtitlesRightRedZone.TabStop = false;
+            this.numericUpDownConnectedSubtitlesRightRedZone.ThousandsSeparator = false;
             this.numericUpDownConnectedSubtitlesRightRedZone.Value = new decimal(new int[] {
             7,
             0,
@@ -723,28 +1012,78 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             // 
             // numericUpDownConnectedSubtitlesInCueClosestLeftGap
             // 
+            this.numericUpDownConnectedSubtitlesInCueClosestLeftGap.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownConnectedSubtitlesInCueClosestLeftGap.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownConnectedSubtitlesInCueClosestLeftGap.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownConnectedSubtitlesInCueClosestLeftGap.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownConnectedSubtitlesInCueClosestLeftGap.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownConnectedSubtitlesInCueClosestLeftGap.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownConnectedSubtitlesInCueClosestLeftGap.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownConnectedSubtitlesInCueClosestLeftGap.DecimalPlaces = 0;
+            this.numericUpDownConnectedSubtitlesInCueClosestLeftGap.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownConnectedSubtitlesInCueClosestLeftGap.Location = new System.Drawing.Point(141, 2);
             this.numericUpDownConnectedSubtitlesInCueClosestLeftGap.Maximum = new decimal(new int[] {
             10,
             0,
             0,
             0});
+            this.numericUpDownConnectedSubtitlesInCueClosestLeftGap.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownConnectedSubtitlesInCueClosestLeftGap.Name = "numericUpDownConnectedSubtitlesInCueClosestLeftGap";
             this.numericUpDownConnectedSubtitlesInCueClosestLeftGap.Size = new System.Drawing.Size(52, 23);
             this.numericUpDownConnectedSubtitlesInCueClosestLeftGap.TabIndex = 2;
+            this.numericUpDownConnectedSubtitlesInCueClosestLeftGap.TabStop = false;
+            this.numericUpDownConnectedSubtitlesInCueClosestLeftGap.ThousandsSeparator = false;
+            this.numericUpDownConnectedSubtitlesInCueClosestLeftGap.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownConnectedSubtitlesInCueClosestLeftGap.ValueChanged += new System.EventHandler(this.numericUpDown_ValueChanged);
             // 
             // numericUpDownConnectedSubtitlesInCueClosestRightGap
             // 
+            this.numericUpDownConnectedSubtitlesInCueClosestRightGap.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownConnectedSubtitlesInCueClosestRightGap.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownConnectedSubtitlesInCueClosestRightGap.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownConnectedSubtitlesInCueClosestRightGap.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownConnectedSubtitlesInCueClosestRightGap.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownConnectedSubtitlesInCueClosestRightGap.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownConnectedSubtitlesInCueClosestRightGap.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownConnectedSubtitlesInCueClosestRightGap.DecimalPlaces = 0;
+            this.numericUpDownConnectedSubtitlesInCueClosestRightGap.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownConnectedSubtitlesInCueClosestRightGap.Location = new System.Drawing.Point(208, 2);
             this.numericUpDownConnectedSubtitlesInCueClosestRightGap.Maximum = new decimal(new int[] {
             10,
             0,
             0,
             0});
+            this.numericUpDownConnectedSubtitlesInCueClosestRightGap.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownConnectedSubtitlesInCueClosestRightGap.Name = "numericUpDownConnectedSubtitlesInCueClosestRightGap";
             this.numericUpDownConnectedSubtitlesInCueClosestRightGap.Size = new System.Drawing.Size(52, 23);
             this.numericUpDownConnectedSubtitlesInCueClosestRightGap.TabIndex = 3;
+            this.numericUpDownConnectedSubtitlesInCueClosestRightGap.TabStop = false;
+            this.numericUpDownConnectedSubtitlesInCueClosestRightGap.ThousandsSeparator = false;
+            this.numericUpDownConnectedSubtitlesInCueClosestRightGap.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownConnectedSubtitlesInCueClosestRightGap.ValueChanged += new System.EventHandler(this.numericUpDown_ValueChanged);
             // 
             // labelConnectedSubtitlesInCueClosestGaps
@@ -771,28 +1110,78 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             // 
             // numericUpDownConnectedSubtitlesOutCueClosestLeftGap
             // 
+            this.numericUpDownConnectedSubtitlesOutCueClosestLeftGap.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownConnectedSubtitlesOutCueClosestLeftGap.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownConnectedSubtitlesOutCueClosestLeftGap.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownConnectedSubtitlesOutCueClosestLeftGap.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownConnectedSubtitlesOutCueClosestLeftGap.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownConnectedSubtitlesOutCueClosestLeftGap.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownConnectedSubtitlesOutCueClosestLeftGap.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownConnectedSubtitlesOutCueClosestLeftGap.DecimalPlaces = 0;
+            this.numericUpDownConnectedSubtitlesOutCueClosestLeftGap.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownConnectedSubtitlesOutCueClosestLeftGap.Location = new System.Drawing.Point(141, 2);
             this.numericUpDownConnectedSubtitlesOutCueClosestLeftGap.Maximum = new decimal(new int[] {
             10,
             0,
             0,
             0});
+            this.numericUpDownConnectedSubtitlesOutCueClosestLeftGap.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownConnectedSubtitlesOutCueClosestLeftGap.Name = "numericUpDownConnectedSubtitlesOutCueClosestLeftGap";
             this.numericUpDownConnectedSubtitlesOutCueClosestLeftGap.Size = new System.Drawing.Size(52, 23);
             this.numericUpDownConnectedSubtitlesOutCueClosestLeftGap.TabIndex = 5;
+            this.numericUpDownConnectedSubtitlesOutCueClosestLeftGap.TabStop = false;
+            this.numericUpDownConnectedSubtitlesOutCueClosestLeftGap.ThousandsSeparator = false;
+            this.numericUpDownConnectedSubtitlesOutCueClosestLeftGap.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownConnectedSubtitlesOutCueClosestLeftGap.ValueChanged += new System.EventHandler(this.numericUpDown_ValueChanged);
             // 
             // numericUpDownConnectedSubtitlesOutCueClosestRightGap
             // 
+            this.numericUpDownConnectedSubtitlesOutCueClosestRightGap.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownConnectedSubtitlesOutCueClosestRightGap.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownConnectedSubtitlesOutCueClosestRightGap.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownConnectedSubtitlesOutCueClosestRightGap.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownConnectedSubtitlesOutCueClosestRightGap.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownConnectedSubtitlesOutCueClosestRightGap.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownConnectedSubtitlesOutCueClosestRightGap.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownConnectedSubtitlesOutCueClosestRightGap.DecimalPlaces = 0;
+            this.numericUpDownConnectedSubtitlesOutCueClosestRightGap.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownConnectedSubtitlesOutCueClosestRightGap.Location = new System.Drawing.Point(208, 2);
             this.numericUpDownConnectedSubtitlesOutCueClosestRightGap.Maximum = new decimal(new int[] {
             10,
             0,
             0,
             0});
+            this.numericUpDownConnectedSubtitlesOutCueClosestRightGap.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownConnectedSubtitlesOutCueClosestRightGap.Name = "numericUpDownConnectedSubtitlesOutCueClosestRightGap";
             this.numericUpDownConnectedSubtitlesOutCueClosestRightGap.Size = new System.Drawing.Size(52, 23);
             this.numericUpDownConnectedSubtitlesOutCueClosestRightGap.TabIndex = 6;
+            this.numericUpDownConnectedSubtitlesOutCueClosestRightGap.TabStop = false;
+            this.numericUpDownConnectedSubtitlesOutCueClosestRightGap.ThousandsSeparator = false;
+            this.numericUpDownConnectedSubtitlesOutCueClosestRightGap.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownConnectedSubtitlesOutCueClosestRightGap.ValueChanged += new System.EventHandler(this.numericUpDown_ValueChanged);
             // 
             // labelConnectedSubtitlesOutCueClosestGaps
@@ -918,16 +1307,30 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             // 
             // comboBoxChainingGeneralShotChangeBehavior
             // 
+            this.comboBoxChainingGeneralShotChangeBehavior.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxChainingGeneralShotChangeBehavior.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxChainingGeneralShotChangeBehavior.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxChainingGeneralShotChangeBehavior.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxChainingGeneralShotChangeBehavior.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxChainingGeneralShotChangeBehavior.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxChainingGeneralShotChangeBehavior.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxChainingGeneralShotChangeBehavior.DropDownHeight = 400;
             this.comboBoxChainingGeneralShotChangeBehavior.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxChainingGeneralShotChangeBehavior.DropDownWidth = 192;
             this.comboBoxChainingGeneralShotChangeBehavior.FormattingEnabled = true;
             this.comboBoxChainingGeneralShotChangeBehavior.Items.AddRange(new object[] {
             "Don\'t chain",
             "Extend, crossing shot change",
             "Extend until shot change"});
             this.comboBoxChainingGeneralShotChangeBehavior.Location = new System.Drawing.Point(208, 76);
+            this.comboBoxChainingGeneralShotChangeBehavior.MaxLength = 32767;
             this.comboBoxChainingGeneralShotChangeBehavior.Name = "comboBoxChainingGeneralShotChangeBehavior";
+            this.comboBoxChainingGeneralShotChangeBehavior.SelectedIndex = -1;
+            this.comboBoxChainingGeneralShotChangeBehavior.SelectedItem = null;
+            this.comboBoxChainingGeneralShotChangeBehavior.SelectedText = "";
             this.comboBoxChainingGeneralShotChangeBehavior.Size = new System.Drawing.Size(192, 23);
             this.comboBoxChainingGeneralShotChangeBehavior.TabIndex = 8;
+            this.comboBoxChainingGeneralShotChangeBehavior.UsePopupWindow = false;
             // 
             // labelChainingGeneralMaxGapSuffix
             // 
@@ -965,16 +1368,35 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             // numericUpDownChainingGeneralLeftGreenZone
             // 
             this.numericUpDownChainingGeneralLeftGreenZone.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.numericUpDownChainingGeneralLeftGreenZone.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownChainingGeneralLeftGreenZone.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownChainingGeneralLeftGreenZone.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownChainingGeneralLeftGreenZone.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownChainingGeneralLeftGreenZone.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownChainingGeneralLeftGreenZone.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownChainingGeneralLeftGreenZone.DecimalPlaces = 0;
             this.numericUpDownChainingGeneralLeftGreenZone.Enabled = false;
+            this.numericUpDownChainingGeneralLeftGreenZone.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownChainingGeneralLeftGreenZone.Location = new System.Drawing.Point(83, 31);
             this.numericUpDownChainingGeneralLeftGreenZone.Maximum = new decimal(new int[] {
             50,
             0,
             0,
             0});
+            this.numericUpDownChainingGeneralLeftGreenZone.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownChainingGeneralLeftGreenZone.Name = "numericUpDownChainingGeneralLeftGreenZone";
             this.numericUpDownChainingGeneralLeftGreenZone.Size = new System.Drawing.Size(52, 23);
             this.numericUpDownChainingGeneralLeftGreenZone.TabIndex = 5;
+            this.numericUpDownChainingGeneralLeftGreenZone.TabStop = false;
+            this.numericUpDownChainingGeneralLeftGreenZone.ThousandsSeparator = false;
             this.numericUpDownChainingGeneralLeftGreenZone.Value = new decimal(new int[] {
             25,
             0,
@@ -985,16 +1407,35 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             // numericUpDownChainingGeneralLeftRedZone
             // 
             this.numericUpDownChainingGeneralLeftRedZone.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
+            this.numericUpDownChainingGeneralLeftRedZone.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownChainingGeneralLeftRedZone.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownChainingGeneralLeftRedZone.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownChainingGeneralLeftRedZone.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownChainingGeneralLeftRedZone.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownChainingGeneralLeftRedZone.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownChainingGeneralLeftRedZone.DecimalPlaces = 0;
             this.numericUpDownChainingGeneralLeftRedZone.Enabled = false;
+            this.numericUpDownChainingGeneralLeftRedZone.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownChainingGeneralLeftRedZone.Location = new System.Drawing.Point(141, 31);
             this.numericUpDownChainingGeneralLeftRedZone.Maximum = new decimal(new int[] {
             50,
             0,
             0,
             0});
+            this.numericUpDownChainingGeneralLeftRedZone.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownChainingGeneralLeftRedZone.Name = "numericUpDownChainingGeneralLeftRedZone";
             this.numericUpDownChainingGeneralLeftRedZone.Size = new System.Drawing.Size(52, 23);
             this.numericUpDownChainingGeneralLeftRedZone.TabIndex = 6;
+            this.numericUpDownChainingGeneralLeftRedZone.TabStop = false;
+            this.numericUpDownChainingGeneralLeftRedZone.ThousandsSeparator = false;
             this.numericUpDownChainingGeneralLeftRedZone.Value = new decimal(new int[] {
             24,
             0,
@@ -1004,15 +1445,35 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             // 
             // numericUpDownChainingGeneralMaxGap
             // 
+            this.numericUpDownChainingGeneralMaxGap.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownChainingGeneralMaxGap.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownChainingGeneralMaxGap.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownChainingGeneralMaxGap.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownChainingGeneralMaxGap.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownChainingGeneralMaxGap.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownChainingGeneralMaxGap.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownChainingGeneralMaxGap.DecimalPlaces = 0;
+            this.numericUpDownChainingGeneralMaxGap.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownChainingGeneralMaxGap.Location = new System.Drawing.Point(141, 2);
             this.numericUpDownChainingGeneralMaxGap.Maximum = new decimal(new int[] {
             2000,
             0,
             0,
             0});
+            this.numericUpDownChainingGeneralMaxGap.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownChainingGeneralMaxGap.Name = "numericUpDownChainingGeneralMaxGap";
             this.numericUpDownChainingGeneralMaxGap.Size = new System.Drawing.Size(52, 23);
             this.numericUpDownChainingGeneralMaxGap.TabIndex = 2;
+            this.numericUpDownChainingGeneralMaxGap.TabStop = false;
+            this.numericUpDownChainingGeneralMaxGap.ThousandsSeparator = false;
             this.numericUpDownChainingGeneralMaxGap.Value = new decimal(new int[] {
             1000,
             0,
@@ -1071,16 +1532,35 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             // numericUpDownChainingInCueOnShotLeftGreenZone
             // 
             this.numericUpDownChainingInCueOnShotLeftGreenZone.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.numericUpDownChainingInCueOnShotLeftGreenZone.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownChainingInCueOnShotLeftGreenZone.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownChainingInCueOnShotLeftGreenZone.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownChainingInCueOnShotLeftGreenZone.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownChainingInCueOnShotLeftGreenZone.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownChainingInCueOnShotLeftGreenZone.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownChainingInCueOnShotLeftGreenZone.DecimalPlaces = 0;
             this.numericUpDownChainingInCueOnShotLeftGreenZone.Enabled = false;
+            this.numericUpDownChainingInCueOnShotLeftGreenZone.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownChainingInCueOnShotLeftGreenZone.Location = new System.Drawing.Point(83, 31);
             this.numericUpDownChainingInCueOnShotLeftGreenZone.Maximum = new decimal(new int[] {
             50,
             0,
             0,
             0});
+            this.numericUpDownChainingInCueOnShotLeftGreenZone.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownChainingInCueOnShotLeftGreenZone.Name = "numericUpDownChainingInCueOnShotLeftGreenZone";
             this.numericUpDownChainingInCueOnShotLeftGreenZone.Size = new System.Drawing.Size(52, 23);
             this.numericUpDownChainingInCueOnShotLeftGreenZone.TabIndex = 14;
+            this.numericUpDownChainingInCueOnShotLeftGreenZone.TabStop = false;
+            this.numericUpDownChainingInCueOnShotLeftGreenZone.ThousandsSeparator = false;
             this.numericUpDownChainingInCueOnShotLeftGreenZone.Value = new decimal(new int[] {
             25,
             0,
@@ -1091,16 +1571,35 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             // numericUpDownChainingInCueOnShotLeftRedZone
             // 
             this.numericUpDownChainingInCueOnShotLeftRedZone.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
+            this.numericUpDownChainingInCueOnShotLeftRedZone.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownChainingInCueOnShotLeftRedZone.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownChainingInCueOnShotLeftRedZone.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownChainingInCueOnShotLeftRedZone.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownChainingInCueOnShotLeftRedZone.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownChainingInCueOnShotLeftRedZone.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownChainingInCueOnShotLeftRedZone.DecimalPlaces = 0;
             this.numericUpDownChainingInCueOnShotLeftRedZone.Enabled = false;
+            this.numericUpDownChainingInCueOnShotLeftRedZone.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownChainingInCueOnShotLeftRedZone.Location = new System.Drawing.Point(141, 31);
             this.numericUpDownChainingInCueOnShotLeftRedZone.Maximum = new decimal(new int[] {
             50,
             0,
             0,
             0});
+            this.numericUpDownChainingInCueOnShotLeftRedZone.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownChainingInCueOnShotLeftRedZone.Name = "numericUpDownChainingInCueOnShotLeftRedZone";
             this.numericUpDownChainingInCueOnShotLeftRedZone.Size = new System.Drawing.Size(52, 23);
             this.numericUpDownChainingInCueOnShotLeftRedZone.TabIndex = 15;
+            this.numericUpDownChainingInCueOnShotLeftRedZone.TabStop = false;
+            this.numericUpDownChainingInCueOnShotLeftRedZone.ThousandsSeparator = false;
             this.numericUpDownChainingInCueOnShotLeftRedZone.Value = new decimal(new int[] {
             24,
             0,
@@ -1110,15 +1609,35 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             // 
             // numericUpDownChainingInCueOnShotMaxGap
             // 
+            this.numericUpDownChainingInCueOnShotMaxGap.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownChainingInCueOnShotMaxGap.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownChainingInCueOnShotMaxGap.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownChainingInCueOnShotMaxGap.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownChainingInCueOnShotMaxGap.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownChainingInCueOnShotMaxGap.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownChainingInCueOnShotMaxGap.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownChainingInCueOnShotMaxGap.DecimalPlaces = 0;
+            this.numericUpDownChainingInCueOnShotMaxGap.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownChainingInCueOnShotMaxGap.Location = new System.Drawing.Point(141, 2);
             this.numericUpDownChainingInCueOnShotMaxGap.Maximum = new decimal(new int[] {
             2000,
             0,
             0,
             0});
+            this.numericUpDownChainingInCueOnShotMaxGap.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownChainingInCueOnShotMaxGap.Name = "numericUpDownChainingInCueOnShotMaxGap";
             this.numericUpDownChainingInCueOnShotMaxGap.Size = new System.Drawing.Size(52, 23);
             this.numericUpDownChainingInCueOnShotMaxGap.TabIndex = 11;
+            this.numericUpDownChainingInCueOnShotMaxGap.TabStop = false;
+            this.numericUpDownChainingInCueOnShotMaxGap.ThousandsSeparator = false;
             this.numericUpDownChainingInCueOnShotMaxGap.Value = new decimal(new int[] {
             1000,
             0,
@@ -1144,15 +1663,34 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             // numericUpDownChainingOutCueOnShotRightGreenZone
             // 
             this.numericUpDownChainingOutCueOnShotRightGreenZone.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.numericUpDownChainingOutCueOnShotRightGreenZone.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownChainingOutCueOnShotRightGreenZone.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownChainingOutCueOnShotRightGreenZone.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownChainingOutCueOnShotRightGreenZone.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownChainingOutCueOnShotRightGreenZone.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownChainingOutCueOnShotRightGreenZone.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownChainingOutCueOnShotRightGreenZone.DecimalPlaces = 0;
+            this.numericUpDownChainingOutCueOnShotRightGreenZone.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownChainingOutCueOnShotRightGreenZone.Location = new System.Drawing.Point(266, 31);
             this.numericUpDownChainingOutCueOnShotRightGreenZone.Maximum = new decimal(new int[] {
             50,
             0,
             0,
             0});
+            this.numericUpDownChainingOutCueOnShotRightGreenZone.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownChainingOutCueOnShotRightGreenZone.Name = "numericUpDownChainingOutCueOnShotRightGreenZone";
             this.numericUpDownChainingOutCueOnShotRightGreenZone.Size = new System.Drawing.Size(52, 23);
             this.numericUpDownChainingOutCueOnShotRightGreenZone.TabIndex = 25;
+            this.numericUpDownChainingOutCueOnShotRightGreenZone.TabStop = false;
+            this.numericUpDownChainingOutCueOnShotRightGreenZone.ThousandsSeparator = false;
             this.numericUpDownChainingOutCueOnShotRightGreenZone.Value = new decimal(new int[] {
             13,
             0,
@@ -1163,15 +1701,34 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             // numericUpDownChainingOutCueOnShotRightRedZone
             // 
             this.numericUpDownChainingOutCueOnShotRightRedZone.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
+            this.numericUpDownChainingOutCueOnShotRightRedZone.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownChainingOutCueOnShotRightRedZone.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownChainingOutCueOnShotRightRedZone.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownChainingOutCueOnShotRightRedZone.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownChainingOutCueOnShotRightRedZone.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownChainingOutCueOnShotRightRedZone.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownChainingOutCueOnShotRightRedZone.DecimalPlaces = 0;
+            this.numericUpDownChainingOutCueOnShotRightRedZone.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownChainingOutCueOnShotRightRedZone.Location = new System.Drawing.Point(208, 31);
             this.numericUpDownChainingOutCueOnShotRightRedZone.Maximum = new decimal(new int[] {
             50,
             0,
             0,
             0});
+            this.numericUpDownChainingOutCueOnShotRightRedZone.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownChainingOutCueOnShotRightRedZone.Name = "numericUpDownChainingOutCueOnShotRightRedZone";
             this.numericUpDownChainingOutCueOnShotRightRedZone.Size = new System.Drawing.Size(52, 23);
             this.numericUpDownChainingOutCueOnShotRightRedZone.TabIndex = 24;
+            this.numericUpDownChainingOutCueOnShotRightRedZone.TabStop = false;
+            this.numericUpDownChainingOutCueOnShotRightRedZone.ThousandsSeparator = false;
             this.numericUpDownChainingOutCueOnShotRightRedZone.Value = new decimal(new int[] {
             12,
             0,
@@ -1214,15 +1771,35 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             // 
             // numericUpDownChainingOutCueOnShotMaxGap
             // 
+            this.numericUpDownChainingOutCueOnShotMaxGap.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownChainingOutCueOnShotMaxGap.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownChainingOutCueOnShotMaxGap.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownChainingOutCueOnShotMaxGap.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownChainingOutCueOnShotMaxGap.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownChainingOutCueOnShotMaxGap.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownChainingOutCueOnShotMaxGap.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownChainingOutCueOnShotMaxGap.DecimalPlaces = 0;
+            this.numericUpDownChainingOutCueOnShotMaxGap.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownChainingOutCueOnShotMaxGap.Location = new System.Drawing.Point(208, 2);
             this.numericUpDownChainingOutCueOnShotMaxGap.Maximum = new decimal(new int[] {
             2000,
             0,
             0,
             0});
+            this.numericUpDownChainingOutCueOnShotMaxGap.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownChainingOutCueOnShotMaxGap.Name = "numericUpDownChainingOutCueOnShotMaxGap";
             this.numericUpDownChainingOutCueOnShotMaxGap.Size = new System.Drawing.Size(52, 23);
             this.numericUpDownChainingOutCueOnShotMaxGap.TabIndex = 21;
+            this.numericUpDownChainingOutCueOnShotMaxGap.TabStop = false;
+            this.numericUpDownChainingOutCueOnShotMaxGap.ThousandsSeparator = false;
             this.numericUpDownChainingOutCueOnShotMaxGap.Value = new decimal(new int[] {
             500,
             0,
@@ -1258,64 +1835,39 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             this.DoubleBuffered = true;
             this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.KeyPreview = true;
             this.MainMenuStrip = this.menuStrip;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "BeautifyTimeCodesProfile";
+            this.ShowIcon = false;
+            this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "BeautifyTimeCodesProfile";
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.BeautifyTimeCodesProfile_KeyDown);
             this.menuStrip.ResumeLayout(false);
             this.menuStrip.PerformLayout();
             this.groupBoxGeneral.ResumeLayout(false);
             this.groupBoxGeneral.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownGap)).EndInit();
             this.groupBoxInCues.ResumeLayout(false);
             this.groupBoxInCues.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownInCuesLeftGreenZone)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownInCuesLeftRedZone)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownInCuesRightGreenZone)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownInCuesRightRedZone)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownInCuesGap)).EndInit();
             this.groupBoxOutCues.ResumeLayout(false);
             this.groupBoxOutCues.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownOutCuesLeftGreenZone)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownOutCuesLeftRedZone)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownOutCuesGap)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownOutCuesRightGreenZone)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownOutCuesRightRedZone)).EndInit();
             this.groupBoxConnectedSubtitles.ResumeLayout(false);
             this.groupBoxConnectedSubtitles.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownConnectedSubtitlesTreatConnected)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownConnectedSubtitlesLeftGreenZone)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownConnectedSubtitlesLeftRedZone)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownConnectedSubtitlesRightGreenZone)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownConnectedSubtitlesRightRedZone)).EndInit();
             this.tabControlConnectedSubtitles.ResumeLayout(false);
             this.tabPageConnectedSubtitlesInCueClosest.ResumeLayout(false);
             this.tabPageConnectedSubtitlesInCueClosest.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownConnectedSubtitlesInCueClosestLeftGap)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownConnectedSubtitlesInCueClosestRightGap)).EndInit();
             this.tabPageConnectedSubtitlesOutCueClosest.ResumeLayout(false);
             this.tabPageConnectedSubtitlesOutCueClosest.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownConnectedSubtitlesOutCueClosestLeftGap)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownConnectedSubtitlesOutCueClosestRightGap)).EndInit();
             this.groupBoxChaining.ResumeLayout(false);
             this.tabControlChaining.ResumeLayout(false);
             this.tabPageChainingGeneral.ResumeLayout(false);
             this.tabPageChainingGeneral.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownChainingGeneralLeftGreenZone)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownChainingGeneralLeftRedZone)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownChainingGeneralMaxGap)).EndInit();
             this.tabPageChainingInCueOnShot.ResumeLayout(false);
             this.tabPageChainingInCueOnShot.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownChainingInCueOnShotLeftGreenZone)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownChainingInCueOnShotLeftRedZone)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownChainingInCueOnShotMaxGap)).EndInit();
             this.tabPageChainingOutCueOnShot.ResumeLayout(false);
             this.tabPageChainingOutCueOnShot.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownChainingOutCueOnShotRightGreenZone)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownChainingOutCueOnShotRightRedZone)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownChainingOutCueOnShotMaxGap)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1330,34 +1882,34 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
         private System.Windows.Forms.GroupBox groupBoxGeneral;
         private System.Windows.Forms.GroupBox groupBoxInCues;
         private Controls.CuesPreviewView cuesPreviewViewInCues;
-        private System.Windows.Forms.NumericUpDown numericUpDownInCuesGap;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownInCuesGap;
         private System.Windows.Forms.Label labelInCuesGap;
         private System.Windows.Forms.Label labelGapSuffix;
-        private System.Windows.Forms.NumericUpDown numericUpDownGap;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownGap;
         private System.Windows.Forms.Label labelGap;
         private System.Windows.Forms.Label labelInCuesZones;
-        private System.Windows.Forms.NumericUpDown numericUpDownInCuesLeftGreenZone;
-        private System.Windows.Forms.NumericUpDown numericUpDownInCuesLeftRedZone;
-        private System.Windows.Forms.NumericUpDown numericUpDownInCuesRightGreenZone;
-        private System.Windows.Forms.NumericUpDown numericUpDownInCuesRightRedZone;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownInCuesLeftGreenZone;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownInCuesLeftRedZone;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownInCuesRightGreenZone;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownInCuesRightRedZone;
         private System.Windows.Forms.GroupBox groupBoxOutCues;
         private System.Windows.Forms.Label labelOutCuesZones;
-        private System.Windows.Forms.NumericUpDown numericUpDownOutCuesLeftGreenZone;
-        private System.Windows.Forms.NumericUpDown numericUpDownOutCuesLeftRedZone;
-        private System.Windows.Forms.NumericUpDown numericUpDownOutCuesGap;
-        private System.Windows.Forms.NumericUpDown numericUpDownOutCuesRightGreenZone;
-        private System.Windows.Forms.NumericUpDown numericUpDownOutCuesRightRedZone;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownOutCuesLeftGreenZone;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownOutCuesLeftRedZone;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownOutCuesGap;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownOutCuesRightGreenZone;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownOutCuesRightRedZone;
         private System.Windows.Forms.Label labelOutCuesGap;
         private Controls.CuesPreviewView cuesPreviewViewOutCues;
         private System.Windows.Forms.GroupBox groupBoxConnectedSubtitles;
         private System.Windows.Forms.Label labelConnectedSubtitlesTreatConnectedSuffix;
-        private System.Windows.Forms.NumericUpDown numericUpDownConnectedSubtitlesTreatConnected;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownConnectedSubtitlesTreatConnected;
         private System.Windows.Forms.Label labelConnectedSubtitlesTreatConnected;
         private System.Windows.Forms.Label labelConnectedSubtitlesZones;
-        private System.Windows.Forms.NumericUpDown numericUpDownConnectedSubtitlesLeftGreenZone;
-        private System.Windows.Forms.NumericUpDown numericUpDownConnectedSubtitlesLeftRedZone;
-        private System.Windows.Forms.NumericUpDown numericUpDownConnectedSubtitlesRightGreenZone;
-        private System.Windows.Forms.NumericUpDown numericUpDownConnectedSubtitlesRightRedZone;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownConnectedSubtitlesLeftGreenZone;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownConnectedSubtitlesLeftRedZone;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownConnectedSubtitlesRightGreenZone;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownConnectedSubtitlesRightRedZone;
         private Controls.CuesPreviewView cuesPreviewViewConnectedSubtitlesInCueClosest;
         private System.Windows.Forms.GroupBox groupBoxChaining;
         private System.Windows.Forms.TabControl tabControlChaining;
@@ -1366,35 +1918,35 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
         private Controls.CuesPreviewView cuesPreviewViewChainingGeneral;
         private System.Windows.Forms.RadioButton radioButtonChainingGeneralZones;
         private System.Windows.Forms.RadioButton radioButtonChainingGeneralMaxGap;
-        private System.Windows.Forms.NumericUpDown numericUpDownChainingGeneralLeftGreenZone;
-        private System.Windows.Forms.NumericUpDown numericUpDownChainingGeneralLeftRedZone;
-        private System.Windows.Forms.NumericUpDown numericUpDownChainingGeneralMaxGap;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownChainingGeneralLeftGreenZone;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownChainingGeneralLeftRedZone;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownChainingGeneralMaxGap;
         private System.Windows.Forms.TabPage tabPageChainingOutCueOnShot;
-        private System.Windows.Forms.Label labelChainingGeneralMaxGapSuffix;
+        private Nikse.SubtitleEdit.Controls.NikseLabel labelChainingGeneralMaxGapSuffix;
         private System.Windows.Forms.Label labelChainingGeneralShotChangeBehavior;
-        private System.Windows.Forms.ComboBox comboBoxChainingGeneralShotChangeBehavior;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxChainingGeneralShotChangeBehavior;
         private Controls.CuesPreviewView cuesPreviewViewChainingOutCueOnShot;
         private Controls.CuesPreviewView cuesPreviewViewChainingInCueOnShot;
         private System.Windows.Forms.Label labelChainingInCueOnShotMaxGapSuffix;
         private System.Windows.Forms.RadioButton radioButtonChainingInCueOnShotZones;
         private System.Windows.Forms.RadioButton radioButtonChainingInCueOnShotMaxGap;
-        private System.Windows.Forms.NumericUpDown numericUpDownChainingInCueOnShotLeftGreenZone;
-        private System.Windows.Forms.NumericUpDown numericUpDownChainingInCueOnShotLeftRedZone;
-        private System.Windows.Forms.NumericUpDown numericUpDownChainingInCueOnShotMaxGap;
-        private System.Windows.Forms.NumericUpDown numericUpDownChainingOutCueOnShotRightGreenZone;
-        private System.Windows.Forms.NumericUpDown numericUpDownChainingOutCueOnShotRightRedZone;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownChainingInCueOnShotLeftGreenZone;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownChainingInCueOnShotLeftRedZone;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownChainingInCueOnShotMaxGap;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownChainingOutCueOnShotRightGreenZone;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownChainingOutCueOnShotRightRedZone;
         private System.Windows.Forms.Label labelChainingOutCueOnShotMaxGapSuffix;
         private System.Windows.Forms.RadioButton radioButtonChainingOutCueOnShotZones;
         private System.Windows.Forms.RadioButton radioButtonChainingOutCueOnShotMaxGap;
-        private System.Windows.Forms.NumericUpDown numericUpDownChainingOutCueOnShotMaxGap;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownChainingOutCueOnShotMaxGap;
         private System.Windows.Forms.TabControl tabControlConnectedSubtitles;
         private System.Windows.Forms.TabPage tabPageConnectedSubtitlesInCueClosest;
         private System.Windows.Forms.TabPage tabPageConnectedSubtitlesOutCueClosest;
-        private System.Windows.Forms.NumericUpDown numericUpDownConnectedSubtitlesInCueClosestLeftGap;
-        private System.Windows.Forms.NumericUpDown numericUpDownConnectedSubtitlesInCueClosestRightGap;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownConnectedSubtitlesInCueClosestLeftGap;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownConnectedSubtitlesInCueClosestRightGap;
         private System.Windows.Forms.Label labelConnectedSubtitlesInCueClosestGaps;
-        private System.Windows.Forms.NumericUpDown numericUpDownConnectedSubtitlesOutCueClosestLeftGap;
-        private System.Windows.Forms.NumericUpDown numericUpDownConnectedSubtitlesOutCueClosestRightGap;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownConnectedSubtitlesOutCueClosestLeftGap;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownConnectedSubtitlesOutCueClosestRightGap;
         private System.Windows.Forms.Label labelConnectedSubtitlesOutCueClosestGaps;
         private Controls.CuesPreviewView cuesPreviewViewConnectedSubtitlesOutCueClosest;
         private System.Windows.Forms.Button buttonCreateSimple;

@@ -12,6 +12,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Windows.Forms;
+using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -376,7 +377,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonDownloadFfmpeg_Click(object sender, EventArgs e)
         {
-            using (var form = new DownloadFfmpeg())
+            using (var form = new DownloadFfmpeg("FFmpeg"))
             {
                 if (form.ShowDialog(this) == DialogResult.OK && !string.IsNullOrEmpty(form.FFmpegPath))
                 {

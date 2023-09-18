@@ -2,7 +2,7 @@
 # yaml-language-server: $schema=https://aka.ms/winget-manifest.installer.1.4.0.schema.json
 
 PackageIdentifier: Nikse.SubtitleEdit
-PackageVersion: 3.6.13.0
+PackageVersion: 4.0.1.0
 Scope: machine
 UpgradeBehavior: install
 FileExtensions:
@@ -24,15 +24,15 @@ FileExtensions:
 Installers:
 - Architecture: x64
   InstallerType: inno
-  InstallerUrl: https://github.com/SubtitleEdit/subtitleedit/releases/download/3.6.13/SubtitleEdit-3.6.13-Setup.exe
-  InstallerSha256: C33E246AE512B54F6286678AD587A21BA064840789259D007B2F302B771E471B
+  InstallerUrl: https://github.com/SubtitleEdit/subtitleedit/releases/download/4.0.1/SubtitleEdit-4.0.1-Setup.exe
+  InstallerSha256: 124A9DD46E041ED5FC05DC6341CF9ECC25ED5C7FA0B2512E42C20FF53240F005
   ProductCode: SubtitleEdit_is1
 - Architecture: x86
   InstallerType: inno
-  InstallerUrl: https://github.com/SubtitleEdit/subtitleedit/releases/download/3.6.13/SubtitleEdit-3.6.13-Setup.exe
-  InstallerSha256: C33E246AE512B54F6286678AD587A21BA064840789259D007B2F302B771E471B
+  InstallerUrl: https://github.com/SubtitleEdit/subtitleedit/releases/download/4.0.1/SubtitleEdit-4.0.1-Setup.exe
+  InstallerSha256: 124A9DD46E041ED5FC05DC6341CF9ECC25ED5C7FA0B2512E42C20FF53240F005
   ProductCode: SubtitleEdit_is1
 ManifestType: installer
 ManifestVersion: 1.4.0
-ReleaseDate: 2023-05-14
+ReleaseDate: 2023-09-16
 

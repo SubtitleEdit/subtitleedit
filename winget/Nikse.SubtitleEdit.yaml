@@ -2,7 +2,8 @@
 # yaml-language-server: $schema=https://aka.ms/winget-manifest.version.1.4.0.schema.json
 
 PackageIdentifier: Nikse.SubtitleEdit
-PackageVersion: 3.6.13.0
+PackageVersion: 4.0.1.0
 DefaultLocale: en-US
 ManifestType: version
 ManifestVersion: 1.4.0
+

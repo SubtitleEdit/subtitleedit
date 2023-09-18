@@ -36,10 +36,9 @@
             this.checkBoxHideContinuationCandidatesWithoutName = new System.Windows.Forms.CheckBox();
             this.checkBoxIgnoreLyrics = new System.Windows.Forms.CheckBox();
             this.labelContinuationPause = new System.Windows.Forms.Label();
-            this.numericUpDownContinuationPause = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownContinuationPause = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelMs = new System.Windows.Forms.Label();
             this.buttonEditCustomStyle = new System.Windows.Forms.Button();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownContinuationPause)).BeginInit();
             this.SuspendLayout();
             // 
             // buttonCancel
@@ -189,7 +188,6 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "SettingsFixContinuationStyle";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SettingsFixContinuationStyle_KeyDown);
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownContinuationPause)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -205,7 +203,7 @@
         private System.Windows.Forms.CheckBox checkBoxHideContinuationCandidatesWithoutName;
         private System.Windows.Forms.CheckBox checkBoxIgnoreLyrics;
         private System.Windows.Forms.Label labelContinuationPause;
-        private System.Windows.Forms.NumericUpDown numericUpDownContinuationPause;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownContinuationPause;
         private System.Windows.Forms.Label labelMs;
         private System.Windows.Forms.Button buttonEditCustomStyle;
     }

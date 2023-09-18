@@ -2,7 +2,7 @@
 <Language Name="Slovenščina">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.13</Version>
+    <Version>4.0.1</Version>
     <TranslatedBy>Prevod: Jadran Rudec, Pošta: jrudec@gmail.com</TranslatedBy>
     <CultureName>sl-SI</CultureName>
     <HelpFile />
@@ -666,7 +666,8 @@ Opomba: Preverite prosti prostor na disku.</WaveFileMalformed>
     <XImagesSavedInY>{0:#,##0} slike, shranjene v {1}</XImagesSavedInY>
     <VideoResolution>Video ločljivost</VideoResolution>
     <Align>Poravnaj</Align>
-    <Left></Left>
+    <Left>
+    </Left>
     <Right>Desno</Right>
     <Center>Na sredino</Center>
     <CenterLeftJustify>Na sredino, poravnano levo</CenterLeftJustify>
@@ -2392,7 +2393,7 @@ lahko ureja v isti datoteki s podnapisi (sodelovanje)</Information>
     <DarkThemeEnabled>Uporabi temno temo</DarkThemeEnabled>
     <DarkThemeShowGridViewLines>Prikaži mrežne črte prikaza seznama</DarkThemeShowGridViewLines>
     <UpdateShortcut>Posodobi</UpdateShortcut>
-    <FoucsSetVideoPosition>Izostritev nastavljenega položaja videa</FoucsSetVideoPosition>
+    <FocusSetVideoPosition>Izostritev nastavljenega položaja videa</FocusSetVideoPosition>
     <ToggleDockUndockOfVideoControls>Preklop zasidranih/odsidranih videokontrol</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Nastavi konec, dodaj novo in pojdi na novo</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStart>Prilagodi preko končnega položaja</AdjustViaEndAutoStart>
@@ -2614,7 +2615,8 @@ lahko ureja v isti datoteki s podnapisi (sodelovanje)</Information>
     <MainTextBoxAssaIntellisense>Prikaži pomočnika za oznake ASSA</MainTextBoxAssaIntellisense>
     <MainTextBoxAssaRemoveTag>Odstrani oznako ASSA pri kazalcu</MainTextBoxAssaRemoveTag>
     <MainFileSaveAll>Shrani vse</MainFileSaveAll>
-    <Miscellaneous></Miscellaneous>
+    <Miscellaneous>
+    </Miscellaneous>
     <CpsIncludesSpace>Znakov/s (CPS) vključuje presledke</CpsIncludesSpace>
     <UseDoNotBreakAfterList>Uporabi seznam "do-not-break-after"</UseDoNotBreakAfterList>
     <BreakEarlyForLineEnding>Prelomi predčasno za konec stavka (.!?)</BreakEarlyForLineEnding>

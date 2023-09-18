@@ -15,6 +15,8 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Controls;
+using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms.Assa
 {
@@ -227,7 +229,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             }
         }
 
-        private static void SafeNumericUpDownAssign(NumericUpDown numericUpDown, int value)
+        private static void SafeNumericUpDownAssign(NikseUpDown numericUpDown, int value)
         {
             if (value < numericUpDown.Minimum)
             {
@@ -404,7 +406,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             {
                 if (MessageBox.Show("Download and use \"mpv\" as video player?", "Subtitle Edit", MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
                 {
-                    using (var form = new SettingsMpv(!LibMpvDynamic.IsInstalled))
+                    using (var form = new SettingsMpv())
                     {
                         if (form.ShowDialog(this) != DialogResult.OK)
                         {
@@ -1436,7 +1438,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                         ColorChooser.SetLastColor(form.Color);
                         Configuration.Settings.General.LastColorPickerDropper = form.Color;
                         labelProgress.Text = string.Format(LanguageSettings.Current.AssaSetBackgroundBox.ColorPickerSetLastColor, Utilities.ColorToHexWithTransparency(form.Color));
-                        System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(3500), () =>
+                        TaskDelayHelper.RunDelayed(TimeSpan.FromMilliseconds(3500), () =>
                         {
                             labelProgress.Text = _videoText;
                         });

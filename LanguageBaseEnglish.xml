@@ -2,7 +2,7 @@
 <Language Name="English">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.13</Version>
+    <Version>4.0.1</Version>
     <TranslatedBy>Translated by Nikse</TranslatedBy>
     <CultureName>en-US</CultureName>
     <HelpFile />
@@ -98,6 +98,7 @@
     <Collapse>Collapse</Collapse>
     <ShortcutX>Shortcut: {0}</ShortcutX>
     <ExampleX>Example: {0}</ExampleX>
+    <ViewX>View {0}</ViewX>
     <Reset>Reset</Reset>
     <Error>Error</Error>
     <Warning>Warning</Warning>
@@ -204,6 +205,7 @@ Read more info (web)?</WhisperNotFound>
     <LoadingVoskModel>Loading Vosk speech recognition model...</LoadingVoskModel>
     <Transcribing>Transcribing audio to text...</Transcribing>
     <TranscribingXOfY>Transcribing audio to text - file {0} of {1}...</TranscribingXOfY>
+    <PostProcessing>Post-processing...</PostProcessing>
     <XFilesSavedToVideoSourceFolder>{0} files saved to video source folder</XFilesSavedToVideoSourceFolder>
     <UsePostProcessing>Use post-processing (line merge, fix casing, punctuation, and more)</UsePostProcessing>
     <AutoAdjustTimings>Auto adjust timings</AutoAdjustTimings>
@@ -214,6 +216,8 @@ Read more info (web)?</WhisperNotFound>
     <RemoveTemporaryFiles>Remove temporary files</RemoveTemporaryFiles>
     <SetCppConstMeFolder>Set CPP/Const-me models folder...</SetCppConstMeFolder>
     <OnlyRunPostProcessing>Run only post-processing/adjust timings</OnlyRunPostProcessing>
+    <DownloadFasterWhisperCuda>Download cuBLAS and cuDNN libs for Faster-Whisper</DownloadFasterWhisperCuda>
+    <NoTextFound>No text found!</NoTextFound>
   </AudioToText>
   <AssaAttachments>
     <Title>Advanced Sub Station Alpha attachments</Title>
@@ -512,6 +516,7 @@ We leverage the intrinsic rhythm of the image.</CreateSimpleChainingToolTip>
     <Enabled>Enabled</Enabled>
     <Name>Name</Name>
     <LinesFoundX>Lines found: {0}</LinesFoundX>
+    <ExtraNames>Add extra names (separate by comma, one-time use only)</ExtraNames>
   </ChangeCasingNames>
   <ChangeFrameRate>
     <Title>Change frame rate</Title>
@@ -538,6 +543,9 @@ We leverage the intrinsic rhythm of the image.</CreateSimpleChainingToolTip>
     <CheckingForUpdatesNewVersion>New version available!</CheckingForUpdatesNewVersion>
     <InstallUpdate>Go to download page</InstallUpdate>
     <NoUpdates>Don't update</NoUpdates>
+    <XPluginsHasAnUpdate>{0} plugins have an updates -</XPluginsHasAnUpdate>
+    <OnePluginsHasAnUpdate>One plugin has an update -</OnePluginsHasAnUpdate>
+    <Update>update</Update>
   </CheckForUpdates>
   <ChooseAudioTrack>
     <Title>Choose audio track</Title>
@@ -879,6 +887,7 @@ We leverage the intrinsic rhythm of the image.</CreateSimpleChainingToolTip>
     <BreakLongLines>Break long lines</BreakLongLines>
     <RemoveLineBreaks>Remove line breaks in short texts with only one sentence</RemoveLineBreaks>
     <RemoveLineBreaksAll>Remove line breaks in short texts (all except dialogs)</RemoveLineBreaksAll>
+    <RemoveLineBreaksPixelWidth>Unbreak subtitles that can fit on one line (pixel width)</RemoveLineBreaksPixelWidth>
     <FixUppercaseIInsideLowercaseWords>Fix uppercase 'i' inside lowercase words (OCR error)</FixUppercaseIInsideLowercaseWords>
     <FixDoubleApostrophes>Fix double apostrophe characters ('') to a single quote (")</FixDoubleApostrophes>
     <AddPeriods>Add period after lines where next line starts with uppercase letter</AddPeriods>
@@ -913,6 +922,7 @@ We leverage the intrinsic rhythm of the image.</CreateSimpleChainingToolTip>
     <FixFirstLetterToUppercaseAfterParagraph>Fix first letter to uppercase after paragraph</FixFirstLetterToUppercaseAfterParagraph>
     <MergeShortLine>Merge short line (single sentence)</MergeShortLine>
     <MergeShortLineAll>Merge short line (all except dialogs)</MergeShortLineAll>
+    <UnbreakShortLinePixelWidth>Unbreak short line (pixel width)</UnbreakShortLinePixelWidth>
     <BreakLongLine>Break long line</BreakLongLine>
     <FixLongDisplayTime>Fix long display time</FixLongDisplayTime>
     <FixInvalidItalicTag>Fix invalid italic tag</FixInvalidItalicTag>
@@ -974,9 +984,11 @@ We leverage the intrinsic rhythm of the image.</CreateSimpleChainingToolTip>
     <InfoAssaOn>Note: Advanced SubStation Alpha styling will be used :)</InfoAssaOn>
     <XGeneratedWithBurnedInSubsInX>"{0}" generated with burned-in subtitle in {1}.</XGeneratedWithBurnedInSubsInX>
     <TimeRemainingMinutes>Time remaining: {0} minutes</TimeRemainingMinutes>
+    <TimeRemainingOneMinute>Time remaining: One minute</TimeRemainingOneMinute>
     <TimeRemainingSeconds>Time remaining: {0} seconds</TimeRemainingSeconds>
     <TimeRemainingAFewSeconds>Time remaining: A few seconds</TimeRemainingAFewSeconds>
     <TimeRemainingMinutesAndSeconds>Time remaining: {0} minutes and {1} seconds</TimeRemainingMinutesAndSeconds>
+    <TimeRemainingOneMinuteAndSeconds>Time remaining: One minute and {0} seconds</TimeRemainingOneMinuteAndSeconds>
     <TargetFileName>Target file name: {0}</TargetFileName>
     <TargetFileSize>Target file size (requires 2 pass encoding)</TargetFileSize>
     <FileSizeMb>File size in MB</FileSizeMb>
@@ -1474,8 +1486,7 @@ To use an API key, go to "Options -&gt; Settings -&gt; Tools" to enter your Goog
         <BeautifyTimeCodes>Beautify time codes</BeautifyTimeCodes>
         <Settings>Settings</Settings>
         <Help>Help</Help>
-        <ShowHideWaveform>Show/hide waveform</ShowHideWaveform>
-        <ShowHideVideo>Show/hide video</ShowHideVideo>
+        <Layout>Layout</Layout>
         <AssaDraw>Advanced Sub Station Alpha draw</AssaDraw>
       </ToolBar>
       <ContextMenu>
@@ -1738,6 +1749,7 @@ Continue?</SubtitleAppendPrompt>
     <NothingToUndo>Nothing to undo</NothingToUndo>
     <InvalidLanguageNameX>Invalid language name: {0}</InvalidLanguageNameX>
     <DoNotDisplayMessageAgain>Don't display this message again</DoNotDisplayMessageAgain>
+    <DoNotAutoLoadVideo>Do not autoload video</DoNotAutoLoadVideo>
     <NumberOfCorrectedWords>Number of corrected words: {0}</NumberOfCorrectedWords>
     <NumberOfSkippedWords>Number of skipped words: {0}</NumberOfSkippedWords>
     <NumberOfCorrectWords>Number of correct words: {0}</NumberOfCorrectWords>
@@ -1928,6 +1940,7 @@ Download and continue?</VideoFromUrlRequirements>
     <SubtitleEditNeedsVideoPlayer>Subtitle Edit needs a video player.</SubtitleEditNeedsVideoPlayer>
     <UseRecommendMpv>To use the recommended video player "mpv" click on the button below.</UseRecommendMpv>
     <DownloadAndUseMpv>Download and use "mpv" as video player</DownloadAndUseMpv>
+    <ChooseLayout>Choose layout</ChooseLayout>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Choose subtitle from Matroska file</Title>
@@ -2284,6 +2297,7 @@ can edit in same subtitle file (collaboration)</Information>
     <BeautifyTimeCodes>Beautify time codes</BeautifyTimeCodes>
     <SettingsName>Settings</SettingsName>
     <ToggleBookmarks>Toggle bookmarks</ToggleBookmarks>
+    <FocusTextBox>Focus text box</FocusTextBox>
     <ToggleBookmarksWithComment>Toggle bookmarks - add comment</ToggleBookmarksWithComment>
     <ClearBookmarks>Clear bookmarks</ClearBookmarks>
     <ExportBookmarks>Export bookmarks...</ExportBookmarks>
@@ -2524,12 +2538,13 @@ can edit in same subtitle file (collaboration)</Information>
     <DarkThemeShowGridViewLines>Show list view grid lines</DarkThemeShowGridViewLines>
     <GraphicsButtons>Graphics buttons</GraphicsButtons>
     <UpdateShortcut>Update</UpdateShortcut>
-    <FoucsSetVideoPosition>Focus set video position</FoucsSetVideoPosition>
+    <FocusSetVideoPosition>Focus set video position</FocusSetVideoPosition>
     <ToggleDockUndockOfVideoControls>Toggle dock/undock of video controls</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Set end, add new and go to new</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStart>Adjust via end position</AdjustViaEndAutoStart>
     <AdjustViaEndAutoStartAndGoToNext>Adjust via end position and go to next</AdjustViaEndAutoStartAndGoToNext>
     <AdjustSetEndMinusGapAndStartNextHere>Set end minus gap, go to next and start next here</AdjustSetEndMinusGapAndStartNextHere>
+    <AdjustSetStartTimeAndGoToNext>Set start and go to next</AdjustSetStartTimeAndGoToNext>
     <AdjustSetEndTimeAndGoToNext>Set end and go to next</AdjustSetEndTimeAndGoToNext>
     <AdjustSetEndTimeAndPause>Set end and pause</AdjustSetEndTimeAndPause>
     <AdjustSetStartAutoDurationAndGoToNext>Set start, auto duration and go to next</AdjustSetStartAutoDurationAndGoToNext>
@@ -2805,6 +2820,8 @@ Continue?</RestoreDefaultSettingsMsg>
     <CustomContinuationStyleNote>Note: The custom continuation style is shared across profiles.</CustomContinuationStyleNote>
     <ResetCustomContinuationStyleWarning>This will override the values in the dialog. Are you sure?</ResetCustomContinuationStyleWarning>
     <ExportAsHtml>Export as HTML...</ExportAsHtml>
+    <SetNewActor>Set new actor/voice</SetNewActor>
+    <SetActorX>Set actor/voice {0}</SetActorX>
   </Settings>
   <SettingsMpv>
     <DownloadMpv>Download mpv lib</DownloadMpv>

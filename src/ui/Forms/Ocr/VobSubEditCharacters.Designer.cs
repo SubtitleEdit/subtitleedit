@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.comboBoxTexts = new System.Windows.Forms.ComboBox();
+            this.comboBoxTexts = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.listBoxFileNames = new System.Windows.Forms.ListBox();
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonDelete = new System.Windows.Forms.Button();
@@ -43,7 +43,7 @@
             this.labelTextAssociatedWithImage = new System.Windows.Forms.Label();
             this.buttonUpdate = new System.Windows.Forms.Button();
             this.labelImageInfo = new System.Windows.Forms.Label();
-            this.textBoxText = new System.Windows.Forms.TextBox();
+            this.textBoxText = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.saveImageAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -321,7 +321,7 @@
 
         #endregion
 
-        private System.Windows.Forms.ComboBox comboBoxTexts;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxTexts;
         private System.Windows.Forms.ListBox listBoxFileNames;
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Button buttonDelete;
@@ -333,7 +333,7 @@
         private System.Windows.Forms.Label labelTextAssociatedWithImage;
         private System.Windows.Forms.Button buttonUpdate;
         private System.Windows.Forms.Label labelImageInfo;
-        private System.Windows.Forms.TextBox textBoxText;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxText;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.CheckBox checkBoxItalic;
         private System.Windows.Forms.Button buttonCancel;

@@ -131,6 +131,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                 _stdOutWriter.WriteLine("    pattern:");
                 _stdOutWriter.WriteLine("        one or more file name patterns separated by commas");
                 _stdOutWriter.WriteLine("        relative patterns are relative to /inputfolder if specified");
+                _stdOutWriter.WriteLine();
                 _stdOutWriter.WriteLine("    optional-parameters:");
                 _stdOutWriter.WriteLine("        /adjustduration:<ms>");
                 _stdOutWriter.WriteLine("        /deletecontains:<word>");
@@ -153,8 +154,9 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                 _stdOutWriter.WriteLine("        /teletextonly");
                 _stdOutWriter.WriteLine("        /teletextonlypage:<page number>");
                 _stdOutWriter.WriteLine("        /track-number:<comma separated track number list>");
-                _stdOutWriter.WriteLine("        /profile:<profile name");
+                _stdOutWriter.WriteLine("        /profile:<profile name>");
                 //_stdOutWriter.WriteLine("        /ocrdb:<ocr db/dictionary> (e.g. \"eng\" or \"latin\")");
+                _stdOutWriter.WriteLine();
                 _stdOutWriter.WriteLine("      The following operations are applied in command line order");
                 _stdOutWriter.WriteLine("      from left to right, and can be specified multiple times.");
                 _stdOutWriter.WriteLine("        /" + BatchAction.ApplyDurationLimits);
@@ -235,6 +237,14 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                 else if (targetFormat == "ebu" || targetFormat == "ebustl")
                 {
                     targetFormat = Ebu.NameOfFormat.RemoveChar(' ').ToLowerInvariant();
+                }
+                else if (targetFormat == "pacunicode" || targetFormat == "unipac" || targetFormat == "fpc")
+                {
+                    targetFormat = new PacUnicode().Name.RemoveChar(' ').ToLowerInvariant();
+                }
+                else if (targetFormat == "pac")
+                {
+                    targetFormat = Pac.NameOfFormat.RemoveChar(' ').ToLowerInvariant();
                 }
 
                 var unconsumedArguments = arguments.Skip(4).Select(s => s.Trim()).Where(s => s.Length > 0).ToList();
@@ -776,7 +786,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                             }
                         }
 
-                        if (!done && fileInfo.Length < 10 * 1024 * 1024) // max 10 mb
+                        if (!done && IsFileLengthOkForTextSubtitle(fileName, fileInfo)) // max 10 mb
                         {
                             format = sub.LoadSubtitle(fileName, out _, null, true, frameRate);
 
@@ -842,7 +852,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
 
                         if (!done && format == null)
                         {
-                            if (fileInfo.Length < 1024 * 1024) // max 1 mb
+                            if (IsFileLengthOkForTextSubtitle(fileName, fileInfo))
                             {
                                 _stdOutWriter.WriteLine($"{fileName}: {targetFormat} - input file format unknown!");
                             }
@@ -886,6 +896,16 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
             }
 
             return (count == converted && errors == 0) ? 0 : 1;
+        }
+
+        private static bool IsFileLengthOkForTextSubtitle(string fileName, FileInfo fileInfo)
+        {
+            if (fileName.EndsWith(".ass", StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+
+            return fileInfo.Length < 33 * 1024 * 1024; // max 33 mb
         }
 
         private static void LoadProfile(string profileName)

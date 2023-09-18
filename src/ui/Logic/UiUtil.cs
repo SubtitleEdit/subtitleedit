@@ -297,7 +297,7 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 videoPlayerContainer.VideoWidth = videoInfo.Width;
                 videoPlayerContainer.VideoHeight = videoInfo.Height;
-                videoPlayerContainer.VideoPlayer.Resize(videoPlayerContainer.PanelPlayer.Width, videoPlayerContainer.PanelPlayer.Height);
+                videoPlayerContainer.VideoPlayer?.Resize(videoPlayerContainer.PanelPlayer.Width, videoPlayerContainer.PanelPlayer.Height);
             }
         }
 
@@ -621,15 +621,6 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-        internal static void FixFonts(ToolStripComboBox item)
-        {
-            item.Font = GetDefaultFont();
-            if (Configuration.Settings.General.UseDarkTheme)
-            {
-                DarkTheme.SetDarkTheme(item);
-            }
-        }
-
         private static void FixFontsInner(Control form, int iterations = 5)
         {
             if (iterations < 1 || form is SETextBox)
@@ -768,30 +759,18 @@ namespace Nikse.SubtitleEdit.Logic
             label.Text = sb.ToString();
         }
 
-        public static void InitializeSubtitleFormatComboBox(ToolStripComboBox comboBox, SubtitleFormat format)
-        {
-            InitializeSubtitleFormatComboBox(comboBox.ComboBox, format);
-            comboBox.DropDownWidth += 5; // .Net quirk?
-        }
-
-        public static void InitializeSubtitleFormatComboBox(ComboBox comboBox, SubtitleFormat format)
+        public static void InitializeSubtitleFormatComboBox(NikseComboBox comboBox, SubtitleFormat format)
         {
             InitializeSubtitleFormatComboBox(comboBox, new List<string> { format.FriendlyName }, format.FriendlyName);
         }
 
-        public static void InitializeSubtitleFormatComboBox(ToolStripComboBox comboBox, string selectedName)
-        {
-            InitializeSubtitleFormatComboBox(comboBox.ComboBox, selectedName);
-            comboBox.DropDownWidth += 5; // .Net quirk?
-        }
-
-        public static void InitializeSubtitleFormatComboBox(ComboBox comboBox, string selectedName)
+        public static void InitializeSubtitleFormatComboBox(NikseComboBox comboBox, string selectedName)
         {
             var formatNames = SubtitleFormat.AllSubtitleFormats.Where(format => !format.IsVobSubIndexFile).Select(format => format.FriendlyName);
             InitializeSubtitleFormatComboBox(comboBox, formatNames.ToList(), selectedName);
         }
 
-        public static void InitializeSubtitleFormatComboBox(ComboBox comboBox, List<string> formatNames, string selectedName)
+        public static void InitializeSubtitleFormatComboBox(NikseComboBox comboBox, List<string> formatNames, string selectedName)
         {
             var selectedIndex = 0;
             using (var graphics = comboBox.CreateGraphics())
@@ -815,7 +794,7 @@ namespace Nikse.SubtitleEdit.Logic
                     }
                 }
 
-                comboBox.DropDownWidth = (int)Math.Round(maxWidth + 7.5);
+                comboBox.DropDownWidth = (int)Math.Round(maxWidth + 17.5);
             }
 
             comboBox.BeginUpdate();
@@ -825,7 +804,7 @@ namespace Nikse.SubtitleEdit.Logic
             comboBox.EndUpdate();
         }
 
-        public static void InitializeTextEncodingComboBox(ComboBox comboBox)
+        public static void InitializeTextEncodingComboBox(NikseComboBox comboBox)
         {
             var defaultEncoding = Configuration.Settings.General.DefaultEncoding;
             var selectedItem = (TextEncoding)null;
@@ -891,20 +870,19 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 Configuration.Settings.General.DefaultEncoding = textEncodingListItem.DisplayName;
             }
-            comboBox.AutoCompleteSource = AutoCompleteSource.ListItems;
-            comboBox.AutoCompleteMode = AutoCompleteMode.Append;
         }
 
-        public static TextEncoding GetTextEncodingComboBoxCurrentEncoding(ComboBox comboBox)
+        public static TextEncoding GetTextEncodingComboBoxCurrentEncoding(NikseComboBox comboBox)
         {
             if (comboBox.SelectedIndex > 0 && comboBox.SelectedItem is TextEncoding textEncodingListItem)
             {
                 return textEncodingListItem;
             }
+
             return new TextEncoding(Encoding.UTF8, TextEncoding.Utf8WithBom);
         }
 
-        public static void SetTextEncoding(ToolStripComboBox comboBoxEncoding, string encodingName)
+        public static void SetTextEncoding(NikseComboBox comboBoxEncoding, string encodingName)
         {
             if (encodingName == TextEncoding.Utf8WithBom)
             {
@@ -1039,25 +1017,6 @@ namespace Nikse.SubtitleEdit.Logic
                     }
                 }
             }
-        }
-
-        public static void SelectWordAtCaret(SETextBox textBox)
-        {
-            var text = textBox.Text;
-            var endIndex = textBox.SelectionStart;
-            var startIndex = endIndex;
-
-            while (startIndex > 0 && !IsSpaceCategory(CharUnicodeInfo.GetUnicodeCategory(text[startIndex - 1])) && !BreakChars.Contains(text[startIndex - 1]))
-            {
-                startIndex--;
-            }
-            textBox.SelectionStart = startIndex;
-
-            while (endIndex < text.Length && !IsSpaceCategory(CharUnicodeInfo.GetUnicodeCategory(text[endIndex])) && !BreakChars.Contains(text[endIndex]))
-            {
-                endIndex++;
-            }
-            textBox.SelectionLength = endIndex - startIndex;
         }
 
         public static void SelectWordAtCaret(TextBox textBox)
@@ -1401,7 +1360,7 @@ namespace Nikse.SubtitleEdit.Logic
             return control;
         }
 
-        public static void SetNumericUpDownValue(NumericUpDown numericUpDown, int value)
+        public static void SetNumericUpDownValue(NikseUpDown numericUpDown, int value)
         {
             if (value < numericUpDown.Minimum)
             {

@@ -2,7 +2,7 @@
 <Language Name="euskara">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.13</Version>
+    <Version>4.0.1</Version>
     <TranslatedBy>Itzultzailea: Xabier Aramendi</TranslatedBy>
     <CultureName>eu-ES</CultureName>
     <HelpFile>https://www.nikse.dk/SubtitleEdit/HelpEU</HelpFile>
@@ -2145,7 +2145,7 @@ Jarraitu horrela ere?</PromptInsertSubtitleOverlap>
     <DarkThemeEnabled>Erabili azalgai iluna</DarkThemeEnabled>
     <DarkThemeShowGridViewLines>Erakutsi zerrenda ikuspegiko saretxo lerroak</DarkThemeShowGridViewLines>
     <UpdateShortcut>Eguneratu</UpdateShortcut>
-    <FoucsSetVideoPosition>Ezarri bideo kokap. fokutzen du</FoucsSetVideoPosition>
+    <FocusSetVideoPosition>Ezarri bideo kokap. fokutzen du</FocusSetVideoPosition>
     <ToggleDockUndockOfVideoControls>Aldatu uztartu/uztargabetu bideo aginteak</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Ezarri amaiera, gehitu berria eta joan berrira</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStart>Zehaztu amaiera kokapenaren bidez</AdjustViaEndAutoStart>

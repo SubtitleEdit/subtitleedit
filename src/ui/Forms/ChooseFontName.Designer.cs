@@ -32,7 +32,7 @@
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonSearchClear = new System.Windows.Forms.Button();
             this.labelShortcutsSearch = new System.Windows.Forms.Label();
-            this.textBoxSearch = new System.Windows.Forms.TextBox();
+            this.textBoxSearch = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.groupBoxPreview = new System.Windows.Forms.GroupBox();
             this.labelPreview3 = new System.Windows.Forms.Label();
             this.labelPreview2 = new System.Windows.Forms.Label();
@@ -179,7 +179,7 @@
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Button buttonSearchClear;
         private System.Windows.Forms.Label labelShortcutsSearch;
-        private System.Windows.Forms.TextBox textBoxSearch;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxSearch;
         private System.Windows.Forms.GroupBox groupBoxPreview;
         private System.Windows.Forms.Label labelPreview3;
         private System.Windows.Forms.Label labelPreview2;

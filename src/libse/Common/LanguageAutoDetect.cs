@@ -194,7 +194,9 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         private static readonly string[] AutoDetectWordsHebrew =
         {
-            "אתה", "אולי", "הוא", "בסדר", "יודע", "טוב"
+            "אתה", "אולי", "הוא", "בסדר", "יודע", "טוב", "אֶת", "שֶׁל", "עַל", "הוּא", 
+            "אֲשֶׁר", "הִיא", "הַמְלֶט", "נָסִיךְ", "הֲלֹא", "עוֹד", "אֵין", "אֲנִי", "זֹאת", "וְלֹא",
+            "כָּךְ", "הִנֵּה", "מְאֹד", "אֲדוֹנִי",    
         };
 
         private static readonly string[] AutoDetectWordsVietnamese =
@@ -1884,16 +1886,13 @@ namespace Nikse.SubtitleEdit.Core.Common
             return false;
         }
 
-        public static string KoreanLetters = "가나다라마바사아자차카타파하아야어여오요우유으이대한민국활화산동물들천국의섬유독춤을춥니다";
-        public static string JapaneseLetters = "あいうえおかきくけこがぎぐげごさしすせそざじずぜぞたちつてとだぢづでどなにぬねのはひふへほばびぶべぼぱぴぷぺぽまみむめもやゆよらりるれろわをん";
-
         public static string GetEncodingViaLetter(string text)
         {
-            var dictionary = new Dictionary<string, int>();
+            var dictionary = new Dictionary<string, int>(6);
 
             // Arabic
-            int count = 0;
-            foreach (var letter in "غظضذخثتشرقصفعسنملكيطحزوهدجبا")
+            var count = 0;
+            foreach (var letter in Letters.Arabic)
             {
                 if (text.Contains(letter))
                 {
@@ -1904,7 +1903,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             // Korean
             count = 0;
-            foreach (var letter in KoreanLetters)
+            foreach (var letter in Letters.Korean)
             {
                 if (text.Contains(letter))
                 {
@@ -1915,7 +1914,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             // Japanese
             count = 0;
-            foreach (var letter in JapaneseLetters)
+            foreach (var letter in Letters.Japanese)
             {
                 if (text.Contains(letter))
                 {
@@ -1926,7 +1925,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             // Thai
             count = 0;
-            foreach (var letter in "กขฃคฅฆงจฉชซฌญฎฏฐฑฒณดตถทธนบปผฝพฟภมยรลวศษสหฬอฮ")
+            foreach (var letter in Letters.Thai)
             {
                 if (text.Contains(letter))
                 {
@@ -1937,7 +1936,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             // Sinhalese
             count = 0;
-            foreach (var letter in "අආඇඈඉඊඋඌඍඎඏඐඑඒඓඔඕඖකඛගඝඞඟචඡජඣඤඥඦටඨඩඪණඬතථදධනඳපඵබභමඹයරලවශෂසහළෆ්ාැෑිීුූෘෙේෛොෝෞෟ෦෧෨෩෪෫෬෭෮෯")
+            foreach (var letter in Letters.Sinhalese)
             {
                 if (text.Contains(letter))
                 {
@@ -1948,7 +1947,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             // Urdu
             count = 0;
-            foreach (var letter in "ﺍﺎﺁﺂﺏﺑﺒﺐﭖﭘﭙﭗﺕﺗﺘﺖﭦﭨﭩﭧﺙﺛﺜﺚﺝﺟﺠﺞﭺﭼﭽﭻﺡﺣﺤﺢﺥﺧﺨﺦﺩﺪﺫﺬﺭﺮﮌﮍﺯﺰﮊﮋﺱﺳﺴﺲﺵﺷﺸﺶﺹﺻﺼﺺﺽﺿﻀﺾﻁﻃﻄﻂﻅﻇﻈﻆﻉﻋﻌﻊﻍﻏﻐﻎﻑﻓﻔﻒﻕﻗﻘﻖﻙﻛﻜﻚﻻﻼﻝﻟﻠﻞﻡﻣﻤﻢﻥﻧﻨﻦﻭﻮﮮﮯﮦﮨﮩﮧﯼﯾﯿﯽﮪﮬﮭﮫﴽﴼﺀﺋﺌﹱﹷﹹ")
+            foreach (var letter in Letters.Urdu)
             {
                 if (text.Contains(letter))
                 {
@@ -1964,6 +1963,16 @@ namespace Nikse.SubtitleEdit.Core.Common
         public static bool IsLanguageWithoutPeriods(string language)
         {
             return language == "ko" || language == "zh" || language == "ja" || language == "th";
+        }
+
+        public static class Letters
+        {
+            public const string Arabic = "غظضذخثتشرقصفعسنملكيطحزوهدجبا";
+            public const string Korean = "가나다라마바사아자차카타파하아야어여오요우유으이대한민국활화산동물들천국의섬유독춤을춥니다";
+            public const string Japanese = "あいうえおかきくけこがぎぐげごさしすせそざじずぜぞたちつてとだぢづでどなにぬねのはひふへほばびぶべぼぱぴぷぺぽまみむめもやゆよらりるれろわをん";
+            public const string Thai = "กขฃคฅฆงจฉชซฌญฎฏฐฑฒณดตถทธนบปผฝพฟภมยรลวศษสหฬอฮ";
+            public const string Urdu = "ﺍﺎﺁﺂﺏﺑﺒﺐﭖﭘﭙﭗﺕﺗﺘﺖﭦﭨﭩﭧﺙﺛﺜﺚﺝﺟﺠﺞﭺﭼﭽﭻﺡﺣﺤﺢﺥﺧﺨﺦﺩﺪﺫﺬﺭﺮﮌﮍﺯﺰﮊﮋﺱﺳﺴﺲﺵﺷﺸﺶﺹﺻﺼﺺﺽﺿﻀﺾﻁﻃﻄﻂﻅﻇﻈﻆﻉﻋﻌﻊﻍﻏﻐﻎﻑﻓﻔﻒﻕﻗﻘﻖﻙﻛﻜﻚﻻﻼﻝﻟﻠﻞﻡﻣﻤﻢﻥﻧﻨﻦﻭﻮﮮﮯﮦﮨﮩﮧﯼﯾﯿﯽﮪﮬﮭﮫﴽﴼﺀﺋﺌﹱﹷﹹ";
+            public const string Sinhalese = "අආඇඈඉඊඋඌඍඎඏඐඑඒඓඔඕඖකඛගඝඞඟචඡජඣඤඥඦටඨඩඪණඬතථදධනඳපඵබභමඹයරලවශෂසහළෆ්ාැෑිීුූෘෙේෛොෝෞෟ෦෧෨෩෪෫෬෭෮෯";
         }
     }
 }

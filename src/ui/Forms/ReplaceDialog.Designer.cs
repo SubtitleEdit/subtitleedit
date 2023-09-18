@@ -32,16 +32,16 @@
             this.radioButtonCaseSensitive = new System.Windows.Forms.RadioButton();
             this.radioButtonNormal = new System.Windows.Forms.RadioButton();
             this.buttonReplace = new System.Windows.Forms.Button();
-            this.textBoxFind = new System.Windows.Forms.TextBox();
+            this.textBoxFind = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.buttonReplaceAll = new System.Windows.Forms.Button();
-            this.textBoxReplace = new System.Windows.Forms.TextBox();
+            this.textBoxReplace = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelReplaceWith = new System.Windows.Forms.Label();
             this.labelFindWhat = new System.Windows.Forms.Label();
             this.buttonFind = new System.Windows.Forms.Button();
             this.checkBoxWholeWord = new System.Windows.Forms.CheckBox();
-            this.comboBoxFindReplaceIn = new System.Windows.Forms.ComboBox();
-            this.labelFindReplaceIn = new System.Windows.Forms.Label();
-            this.comboBoxFind = new System.Windows.Forms.ComboBox();
+            this.comboBoxFindReplaceIn = new Nikse.SubtitleEdit.Controls.NikseComboBox();
+            this.labelFindReplaceIn = new Nikse.SubtitleEdit.Controls.NikseLabel();
+            this.comboBoxFind = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.SuspendLayout();
             // 
             // radioButtonRegEx
@@ -230,15 +230,15 @@
         private System.Windows.Forms.RadioButton radioButtonCaseSensitive;
         private System.Windows.Forms.RadioButton radioButtonNormal;
         private System.Windows.Forms.Button buttonReplace;
-        private System.Windows.Forms.TextBox textBoxFind;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxFind;
         private System.Windows.Forms.Button buttonReplaceAll;
-        private System.Windows.Forms.TextBox textBoxReplace;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxReplace;
         private System.Windows.Forms.Label labelReplaceWith;
         private System.Windows.Forms.Label labelFindWhat;
         private System.Windows.Forms.Button buttonFind;
         private System.Windows.Forms.CheckBox checkBoxWholeWord;
-        private System.Windows.Forms.ComboBox comboBoxFindReplaceIn;
-        private System.Windows.Forms.Label labelFindReplaceIn;
-        private System.Windows.Forms.ComboBox comboBoxFind;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxFindReplaceIn;
+        private Nikse.SubtitleEdit.Controls.NikseLabel labelFindReplaceIn;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxFind;
     }
 }

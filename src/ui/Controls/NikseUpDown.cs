@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Globalization;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Controls
@@ -12,7 +13,11 @@ namespace Nikse.SubtitleEdit.Controls
         // ReSharper disable once InconsistentNaming
         public event EventHandler ValueChanged;
 
+        // ReSharper disable once InconsistentNaming
+        public new event KeyEventHandler KeyDown;
+
         private decimal _value;
+        private bool _dirty;
 
         [Category("NikseUpDown"), Description("Gets or sets the default value in textBox"), RefreshProperties(RefreshProperties.Repaint)]
         public decimal Value
@@ -20,6 +25,11 @@ namespace Nikse.SubtitleEdit.Controls
             get => _value;
             set
             {
+                if (value == _value)
+                {
+                    return;
+                }
+
                 if (DecimalPlaces == 0)
                 {
                     _value = value;
@@ -29,7 +39,10 @@ namespace Nikse.SubtitleEdit.Controls
                     _value = Math.Round(value, DecimalPlaces);
                 }
 
+                SetText(false);
+                _dirty = false;
                 Invalidate();
+                ValueChanged?.Invoke(this, null);
             }
         }
 
@@ -70,13 +83,13 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        [Category("NikseUpDown"), Description("Gets or sets the increment value")]
+        [Category("NikseUpDown"), Description("Gets or sets the increment value"), DefaultValue(1)]
         public decimal Increment { get; set; } = 1;
 
-        [Category("NikseUpDown"), Description("Gets or sets the Maximum value (max 25 significant digits)")]
+        [Category("NikseUpDown"), Description("Gets or sets the Maximum value (max 25 significant digits)"), DefaultValue(100)]
         public decimal Maximum { get; set; } = 100;
 
-        [Category("NikseUpDown"), Description("Gets or sets the Minimum value")]
+        [Category("NikseUpDown"), Description("Gets or sets the Minimum value"), DefaultValue(0)]
         public decimal Minimum { get; set; } = 0;
 
         [Category("NikseUpDown"), Description("Allow arrow keys to set increment/decrement value")]
@@ -100,6 +113,22 @@ namespace Nikse.SubtitleEdit.Controls
                 _buttonForeColor = value;
                 _buttonForeColorBrush?.Dispose();
                 _buttonForeColorBrush = new SolidBrush(_buttonForeColor);
+                Invalidate();
+            }
+        }
+
+
+        public new Font Font
+        {
+            get => base.Font;
+            set
+            {
+                if (_textBox != null)
+                {
+                    _textBox.Font = value;
+                }
+
+                base.Font = value;
                 Invalidate();
             }
         }
@@ -164,6 +193,8 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
+        public static Color DefaultBackColorDisabled = Color.FromArgb(240, 240, 240);
+
         private Color _backColorDisabled;
         [Category("NikseUpDown"), Description("Gets or sets the button foreground color"),
          RefreshProperties(RefreshProperties.Repaint)]
@@ -204,7 +235,15 @@ namespace Nikse.SubtitleEdit.Controls
 
         public NikseUpDown()
         {
+            SetStyle(ControlStyles.OptimizedDoubleBuffer |
+                     ControlStyles.UserPaint |
+                     ControlStyles.ResizeRedraw |
+                     ControlStyles.Selectable |
+                     ControlStyles.AllPaintingInWmPaint, true);
+
+            InterceptArrowKeys = true;
             Height = 23;
+
             _textBox = new TextBox();
             _textBox.KeyPress += TextBox_KeyPress;
             _textBox.KeyDown += (sender, e) =>
@@ -219,22 +258,39 @@ namespace Nikse.SubtitleEdit.Controls
                     AddValue(Increment);
                     e.Handled = true;
                 }
+                else if (e.KeyData != (Keys.Tab | Keys.Shift) &&
+                         e.KeyData != Keys.Tab &&
+                         e.KeyData != Keys.Left &&
+                         e.KeyData != Keys.Right)
+                {
+                    _dirty = true;
+                    KeyDown?.Invoke(sender, e);
+                    Invalidate();
+                }
+                else
+                {
+                    KeyDown?.Invoke(sender, e);
+                }
             };
-            _textBox.LostFocus += (sender, args) => Invalidate();
+            _textBox.LostFocus += (sender, args) =>
+            {
+                _dirty = false;
+                AddValue(0);
+                SetText(true);
+                Invalidate();
+            };
             _textBox.GotFocus += (sender, args) => Invalidate();
             _textBox.TextChanged += _textBox_TextChanged;
             _textBox.BorderStyle = BorderStyle.None;
 
             Controls.Add(_textBox);
-            BackColor = new TextBox().BackColor;
+            BackColor = SystemColors.Window;
             ButtonForeColor = DefaultForeColor;
             ButtonForeColorOver = Color.FromArgb(0, 120, 215);
             ButtonForeColorDown = Color.Orange;
             BorderColor = Color.FromArgb(171, 173, 179);
             BorderColorDisabled = Color.FromArgb(120, 120, 120);
-            BackColorDisabled = Color.FromArgb(240, 240, 240);
-            DoubleBuffered = true;
-            InterceptArrowKeys = true;
+            BackColorDisabled = DefaultBackColorDisabled;
 
             _repeatTimer = new Timer();
             _repeatTimer.Tick += (sender, args) =>
@@ -253,14 +309,55 @@ namespace Nikse.SubtitleEdit.Controls
             };
 
             LostFocus += (sender, args) => _repeatTimer.Stop();
+
+            MouseWheel += (sender, e) =>
+            {
+                if (_textBox == null)
+                {
+                    return;
+                }
+
+                if (e.Delta > 0)
+                {
+                    AddValue(Increment);
+                }
+                else if (e.Delta < 0)
+                {
+                    AddValue(-Increment);
+                }
+            };
+
             TabStop = false;
+        }
+
+        protected override void OnGotFocus(EventArgs e)
+        {
+            if (_textBox != null)
+            {
+                _textBox.Focus();
+                return;
+            }
+
+            base.OnGotFocus(e);
         }
 
         private void _textBox_TextChanged(object sender, EventArgs e)
         {
-            if (decimal.TryParse(_textBox.Text, out var result))
+            if (_dirty)
             {
-                Value = Math.Round(result, DecimalPlaces);
+                return;
+            }
+
+            var text = _textBox.Text.Trim();
+            if (decimal.TryParse(text, NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.DefaultThreadCurrentCulture, out var result))
+            {
+                var v = Math.Round(result, DecimalPlaces);
+                if (v == Value)
+                {
+                    return;
+                }
+
+                Value = v;
 
                 if (Value < Minimum)
                 {
@@ -305,44 +402,49 @@ namespace Nikse.SubtitleEdit.Controls
         /// <param name="value">Value to increment/decrement</param>
         private void AddValue(decimal value)
         {
+            _dirty = false;
+
             if (string.IsNullOrEmpty(_textBox.Text))
             {
                 Value = 0 >= Minimum && 0 <= Maximum ? 0 : Minimum;
-                SetText();
-                ValueChanged?.Invoke(this, null);
+                SetText(true);
                 return;
             }
 
             if (_textBox.TextLength > 25)
             {
                 Value = Maximum;
-                SetText();
-                ValueChanged?.Invoke(this, null);
+                SetText(true);
                 return;
             }
 
-            if (decimal.TryParse(_textBox.Text, out var result))
+            var text = _textBox.Text.Trim();
+            if (string.IsNullOrEmpty(text))
             {
-                Value = Math.Round(result + value, DecimalPlaces);
+                text = "0";
+            }
 
-                if (Value < Minimum)
+            if (decimal.TryParse(text, NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.DefaultThreadCurrentCulture, out var result))
+            {
+                var newValue = Math.Round(result + value, DecimalPlaces);
+
+                if (newValue < Minimum)
                 {
                     Value = Minimum;
                 }
-                else if (Value > Maximum)
+                else if (newValue > Maximum)
                 {
                     Value = Maximum;
                 }
                 else
                 {
+                    Value = newValue;
                     SetText();
-                    ValueChanged?.Invoke(this, null);
                     return;
                 }
             }
 
             SetText();
-            ValueChanged?.Invoke(this, null);
         }
 
         private bool _buttonUpActive;
@@ -480,7 +582,11 @@ namespace Nikse.SubtitleEdit.Controls
             _textBox.Left = RightToLeft == RightToLeft.Yes ? ButtonsWidth : 3;
             _textBox.Height = Height - 4;
             _textBox.Width = Width - ButtonsWidth - 3;
-            SetText();
+            _textBox.Invalidate();
+            if (!_dirty)
+            {
+                SetText();
+            }
 
             if (!Enabled)
             {
@@ -488,23 +594,23 @@ namespace Nikse.SubtitleEdit.Controls
                 return;
             }
 
-            base.OnPaint(e);
+            e.Graphics.Clear(BackColor);
             using (var pen = _textBox.Focused ? new Pen(_buttonForeColorOver, 1f) : new Pen(BorderColor, 1f))
             {
-                var borderRectangle = new Rectangle(e.ClipRectangle.X, e.ClipRectangle.Y, e.ClipRectangle.Width - 1, e.ClipRectangle.Height - 1);
+                var borderRectangle = new Rectangle(0, 0, Width - 1, Height - 1);
                 e.Graphics.DrawRectangle(pen, borderRectangle);
             }
 
             var brush = _buttonForeColorBrush;
             var left = RightToLeft == RightToLeft.Yes ? 3 : Width - ButtonsWidth;
-            var height = e.ClipRectangle.Height / 2 - 4;
+            var height = Height / 2 - 4;
             var top = 2;
             if (_buttonUpActive)
             {
                 brush = _buttonLeftIsDown ? _buttonForeColorDownBrush : _buttonForeColorOverBrush;
             }
 
-            DrawArrowUp(e, brush, left, top, height);
+            DrawArrowUp(e.Graphics, brush, left, top, height);
 
             if (_buttonDownActive)
             {
@@ -516,7 +622,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
 
             top = height + 5;
-            DrawArrowDown(e, brush, left, top, height);
+            DrawArrowDown(e.Graphics, brush, left, top, height);
         }
 
         public override RightToLeft RightToLeft
@@ -554,73 +660,97 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        private void SetText()
+        private void SetText(bool leaving = false)
         {
+            var selectionStart = _textBox.SelectionStart;
+
+            string newText;
             if (DecimalPlaces <= 0)
             {
-                _textBox.Text = ThousandsSeparator ? $"{Value:#,###,##0}" : $"{Value:########0}";
+                newText = ThousandsSeparator ? $"{Value:#,###,##0}" : $"{Value:########0}";
             }
             else if (DecimalPlaces == 1)
             {
-                _textBox.Text = ThousandsSeparator ? $"{Value:#,###,##0.0}" : $"{Value:########0.0}";
+                newText = ThousandsSeparator ? $"{Value:#,###,##0.0}" : $"{Value:########0.0}";
             }
             else if (DecimalPlaces == 2)
             {
-                _textBox.Text = ThousandsSeparator ? $"{Value:#,###,##0.00}" : $"{Value:#########0.00}";
+                newText = ThousandsSeparator ? $"{Value:#,###,##0.00}" : $"{Value:#########0.00}";
             }
             else if (DecimalPlaces == 3)
             {
-                _textBox.Text = ThousandsSeparator ? $"{Value:#,###,##0.000}" : $"{Value:#########0.000}";
+                newText = ThousandsSeparator ? $"{Value:#,###,##0.000}" : $"{Value:#########0.000}";
             }
             else
             {
-                _textBox.Text = ThousandsSeparator ? $"{Value:#,###,##0.0000}" : $"{Value:#########0.0000}";
+                newText = ThousandsSeparator ? $"{Value:#,###,##0.0000}" : $"{Value:#########0.0000}";
             }
+
+            if (newText == _textBox.Text)
+            {
+                return;
+            }
+
+            if (!leaving &&
+                (_textBox.Text.StartsWith(",") || _textBox.Text.StartsWith(".")) &&
+                (newText.StartsWith("0,") || newText.StartsWith("0.")))
+            {
+                return;
+            }
+
+            _textBox.Text = newText;
+            _textBox.SelectionStart = selectionStart;
         }
 
-        private static void DrawArrowDown(PaintEventArgs e, Brush brush, int left, int top, int height)
+        public static void DrawArrowUp(Graphics g, Brush brush, int left, int top, int height)
         {
-            e.Graphics.FillPolygon(brush,
+            g.FillPolygon(brush,
                 new[]
                 {
-                    new Point(left + 5, top + height),
-                    new Point(left + 0, top + 0),
-                    new Point(left + 10, top + 0)
+                    // arrow head
+                    new Point(left + 5, top + 2), // top
+                    //new Point(left + 6, top + 2), // top right 
+                    //new Point(left + 4, top + 2), // top left
+
+                    new Point(left + 1, top + height), // left bottom
+                    new Point(left + 9, top + height), // right bottom
                 });
         }
 
-        private static void DrawArrowUp(PaintEventArgs e, Brush brush, int left, int top, int height)
+        public static void DrawArrowDown(Graphics g, Brush brush, int left, int top, int height)
         {
-            e.Graphics.FillPolygon(brush,
+            g.FillPolygon(brush,
                 new[]
                 {
-                    new Point(left + 5, top + 0),
-                    new Point(left + 0, top + height),
-                    new Point(left + 10, top + height)
+                    new Point(left + 1, top), // left top
+                    new Point(left + 9, top), // right top
+
+                    // arrow head
+                    new Point(left + 5, top + height -2), // bottom
+                    //new Point(left + 6, top + height -2), // bottom right  
+                    //new Point(left + 4, top + height -2), // bottom left
                 });
         }
 
         private void DrawDisabled(PaintEventArgs e)
         {
-            using (var brushBg = new SolidBrush(BackColorDisabled))
-            {
-                e.Graphics.FillRectangle(brushBg, e.ClipRectangle);
-            }
+            e.Graphics.Clear(BackColorDisabled);
+
 
             using (var pen = new Pen(BorderColorDisabled, 1f))
             {
-                var borderRectangle = new Rectangle(e.ClipRectangle.X, e.ClipRectangle.Y, e.ClipRectangle.Width - 1, e.ClipRectangle.Height - 1);
+                var borderRectangle = new Rectangle(0, 0, Width - 1, Height - 1);
                 e.Graphics.DrawRectangle(pen, borderRectangle);
             }
 
-            var left = RightToLeft == RightToLeft.Yes ? 3 : e.ClipRectangle.Width - ButtonsWidth;
-            var height = e.ClipRectangle.Height / 2 - 4;
+            var left = RightToLeft == RightToLeft.Yes ? 3 : Width - ButtonsWidth;
+            var height = Height / 2 - 4;
             var top = 2;
             using (var brush = new SolidBrush(BorderColorDisabled))
             {
-                DrawArrowUp(e, brush, left, top, height);
+                DrawArrowUp(e.Graphics, brush, left, top, height);
                 top = height + 5;
-                DrawArrowDown(e, brush, left, top, height);
+                DrawArrowDown(e.Graphics, brush, left, top, height);
             }
         }
     }

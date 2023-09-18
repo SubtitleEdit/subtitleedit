@@ -30,13 +30,12 @@
         {
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
-            this.comboBoxFrameRate = new System.Windows.Forms.ComboBox();
+            this.comboBoxFrameRate = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelFrameRate = new System.Windows.Forms.Label();
-            this.numericUpDownFrames = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownFrames = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelFrames = new System.Windows.Forms.Label();
             this.labelCalcInfo = new System.Windows.Forms.Label();
             this.labelUseCalc = new System.Windows.Forms.Label();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFrames)).BeginInit();
             this.SuspendLayout();
             // 
             // buttonCancel
@@ -153,7 +152,6 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Gap between subtitles";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SettingsGapChoose_KeyDown);
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFrames)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -163,9 +161,9 @@
 
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonOK;
-        private System.Windows.Forms.ComboBox comboBoxFrameRate;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxFrameRate;
         private System.Windows.Forms.Label labelFrameRate;
-        private System.Windows.Forms.NumericUpDown numericUpDownFrames;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownFrames;
         private System.Windows.Forms.Label labelFrames;
         private System.Windows.Forms.Label labelCalcInfo;
         private System.Windows.Forms.Label labelUseCalc;

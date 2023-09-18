@@ -34,11 +34,10 @@
             this.buttonCancel = new System.Windows.Forms.Button();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.labelEndDelay = new System.Windows.Forms.Label();
-            this.numericUpDownDelay = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownDelay = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelTM = new System.Windows.Forms.Label();
             this.labelTotalMilliseconds = new System.Windows.Forms.Label();
             this.richTextBoxPreview = new System.Windows.Forms.RichTextBox();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDelay)).BeginInit();
             this.SuspendLayout();
             // 
             // buttonPreview
@@ -161,7 +160,6 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Typewriter effect";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormEffectTypewriter_KeyDown);
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDelay)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -174,7 +172,7 @@
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.Label labelEndDelay;
-        private System.Windows.Forms.NumericUpDown numericUpDownDelay;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownDelay;
         private System.Windows.Forms.Label labelTM;
         private System.Windows.Forms.Label labelTotalMilliseconds;
         private System.Windows.Forms.RichTextBox richTextBoxPreview;

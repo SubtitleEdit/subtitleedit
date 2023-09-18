@@ -2,7 +2,7 @@
 <Language Name="svenska">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.13</Version>
+    <Version>4.0.1</Version>
     <TranslatedBy>Översätt av Ted</TranslatedBy>
     <CultureName>sv-SE</CultureName>
     <HelpFile />
@@ -2404,7 +2404,7 @@ kan redigera i samma undertextfil (samarbete)</Information>
     <DarkThemeEnabled>Använd mörkt tema</DarkThemeEnabled>
     <DarkThemeShowGridViewLines>Visa listvy rutnätslinjer</DarkThemeShowGridViewLines>
     <UpdateShortcut>Uppdatera</UpdateShortcut>
-    <FoucsSetVideoPosition>Fokus inställd videoposition</FoucsSetVideoPosition>
+    <FocusSetVideoPosition>Fokus inställd videoposition</FocusSetVideoPosition>
     <ToggleDockUndockOfVideoControls>Växla dock/undock av videokontrollen</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Ange slut, lägg till ny och gå till ny</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStart>Justera via ändläge</AdjustViaEndAutoStart>

@@ -31,14 +31,15 @@
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
             this.labelLanguage = new System.Windows.Forms.Label();
-            this.comboBoxLanguages = new System.Windows.Forms.ComboBox();
+            this.comboBoxLanguages = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.SuspendLayout();
             // 
             // buttonCancel
             // 
+            this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(203, 72);
+            this.buttonCancel.Location = new System.Drawing.Point(203, 95);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 2;
@@ -47,9 +48,10 @@
             // 
             // buttonOK
             // 
+            this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(122, 72);
+            this.buttonOK.Location = new System.Drawing.Point(122, 95);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 1;
@@ -67,10 +69,25 @@
             // 
             // comboBoxLanguages
             // 
+            this.comboBoxLanguages.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxLanguages.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxLanguages.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxLanguages.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxLanguages.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxLanguages.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxLanguages.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxLanguages.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxLanguages.DropDownHeight = 400;
             this.comboBoxLanguages.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxLanguages.DropDownWidth = 266;
             this.comboBoxLanguages.FormattingEnabled = true;
             this.comboBoxLanguages.Location = new System.Drawing.Point(12, 31);
+            this.comboBoxLanguages.MaxLength = 32767;
             this.comboBoxLanguages.Name = "comboBoxLanguages";
+            this.comboBoxLanguages.SelectedIndex = -1;
+            this.comboBoxLanguages.SelectedItem = null;
+            this.comboBoxLanguages.SelectedText = "";
             this.comboBoxLanguages.Size = new System.Drawing.Size(266, 21);
             this.comboBoxLanguages.TabIndex = 0;
             // 
@@ -79,7 +96,7 @@
             this.AcceptButton = this.buttonOK;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(290, 105);
+            this.ClientSize = new System.Drawing.Size(290, 130);
             this.Controls.Add(this.labelLanguage);
             this.Controls.Add(this.comboBoxLanguages);
             this.Controls.Add(this.buttonCancel);
@@ -104,6 +121,6 @@
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Label labelLanguage;
-        private System.Windows.Forms.ComboBox comboBoxLanguages;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxLanguages;
     }
 }

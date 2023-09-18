@@ -3,6 +3,7 @@ using Nikse.SubtitleEdit.Core.Common;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Text;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
@@ -13,12 +14,14 @@ namespace Nikse.SubtitleEdit.Logic
     {
         public static Color BackColor => Configuration.Settings.General.DarkThemeBackColor;
         public static Color ForeColor => Configuration.Settings.General.DarkThemeForeColor;
+        public static Color DarkThemeDisabledColor => Configuration.Settings.General.DarkThemeDisabledColor;
+        public static Color DarkThemeSelectedBackgroundColor = Color.FromArgb(24, 52, 75);
 
         private const int DWMWA_USE_IMMERSIVE_DARK_MODE_BEFORE_20H1 = 19;
         private const int DWMWA_USE_IMMERSIVE_DARK_MODE = 20;
         private static bool UseImmersiveDarkMode(IntPtr handle, bool enabled)
         {
-            if (IsWindows10OrGreater(17763))
+            if (Configuration.IsRunningOnWindows && IsWindows10OrGreater(17763))
             {
                 var attribute = DWMWA_USE_IMMERSIVE_DARK_MODE_BEFORE_20H1;
                 if (IsWindows10OrGreater(18985))
@@ -36,39 +39,28 @@ namespace Nikse.SubtitleEdit.Logic
         private static bool IsWindows10OrGreater(int build = -1) =>
             Configuration.IsRunningOnWindows && Environment.OSVersion.Version.Major >= 10 && Environment.OSVersion.Version.Build >= build;
 
-        private static void SetWindowThemeDark(Control control)
+        public static void SetWindowThemeDark(Control control)
         {
-            if (Configuration.IsRunningOnWindows)
+            if (Configuration.IsRunningOnWindows && control != null)
             {
                 NativeMethods.SetWindowTheme(control.Handle, "DarkMode_Explorer", null);
             }
         }
 
-        private static void SetWindowThemeNormal(Control control)
+        public static void SetWindowThemeNormal(Control control)
         {
-            if (Configuration.IsRunningOnWindows)
+            if (Configuration.IsRunningOnWindows && control != null)
             {
                 NativeMethods.SetWindowTheme(control.Handle, "Explorer", null);
             }
         }
 
-        public static IEnumerable<Control> GetAllControlByType(Control control, Type type)
-        {
-            var controls = control.Controls.Cast<Control>().ToList();
-
-            return controls.SelectMany(ctrl => GetAllControlByType(ctrl, type))
-                                      .Concat(controls)
-                                      .Where(c => c.GetType() == type);
-        }
-
-        private static List<T> GetSubControls<T>(Control c)
+        private static IEnumerable<T> GetSubControls<T>(Control c)
         {
             var type = c.GetType();
-            var fields = type.GetFields(BindingFlags.NonPublic | BindingFlags.Instance);
-            var contextMenus = fields.Where(f => f.GetValue(c) != null &&
-            (f.GetValue(c).GetType().IsSubclassOf(typeof(T)) || f.GetValue(c).GetType() == typeof(T)));
-            var menus = contextMenus.Select(f => f.GetValue(c));
-            return menus.Cast<T>().ToList();
+            var controlFields = type.GetFields(BindingFlags.NonPublic | BindingFlags.Instance);
+            var childControls = controlFields.Where(f => (f.FieldType.IsSubclassOf(typeof(T)) || f.FieldType == typeof(T)) && f.GetValue(c) != null);
+            return childControls.Select(f => f.GetValue(c)).Cast<T>();
         }
 
         public static void SetDarkTheme(Control ctrl, int iterations = 5)
@@ -83,8 +75,7 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 UseImmersiveDarkMode(ctrl.Handle, true);
 
-                var contextMenus = GetSubControls<ContextMenuStrip>(form);
-                foreach (ContextMenuStrip cms in contextMenus)
+                foreach (var cms in GetSubControls<ContextMenuStrip>(form))
                 {
                     cms.BackColor = BackColor;
                     cms.ForeColor = ForeColor;
@@ -95,38 +86,40 @@ namespace Nikse.SubtitleEdit.Logic
                     }
                 }
 
-                var toolStrips = GetSubControls<ToolStrip>(form);
-                foreach (ToolStrip c in toolStrips)
+                foreach (var c in GetSubControls<ToolStrip>(form))
                 {
                     c.BackColor = BackColor;
                     c.ForeColor = ForeColor;
                     c.Renderer = new MyRenderer();
                 }
 
-                var toolStripComboBox = GetSubControls<ToolStripComboBox>(form);
-                foreach (ToolStripComboBox c in toolStripComboBox)
+                foreach (var c in GetSubControls<ToolStripComboBox>(form))
                 {
                     c.BackColor = BackColor;
                     c.ForeColor = ForeColor;
                     c.FlatStyle = FlatStyle.Flat;
                 }
 
-                var toolStripContentPanels = GetSubControls<ToolStripContentPanel>(form);
-                foreach (ToolStripContentPanel c in toolStripContentPanels)
+                foreach (var c in GetSubControls<ToolStripNikseComboBox>(form))
+                {
+                    c.BackColor = BackColor;
+                    c.ForeColor = ForeColor;
+                    SetDarkTheme(c.ComboBox);
+                }
+
+                foreach (var c in GetSubControls<ToolStripContentPanel>(form))
                 {
                     c.BackColor = BackColor;
                     c.ForeColor = ForeColor;
                 }
 
-                var toolStripContainers = GetSubControls<ToolStripContainer>(form);
-                foreach (ToolStripContainer c in toolStripContainers)
+                foreach (var c in GetSubControls<ToolStripContainer>(form))
                 {
                     c.BackColor = BackColor;
                     c.ForeColor = ForeColor;
                 }
 
-                var toolStripDropDownMenus = GetSubControls<ToolStripDropDownMenu>(form);
-                foreach (ToolStripDropDownMenu c in toolStripDropDownMenus)
+                foreach (var c in GetSubControls<ToolStripDropDownMenu>(form))
                 {
                     c.BackColor = BackColor;
                     c.ForeColor = ForeColor;
@@ -137,8 +130,7 @@ namespace Nikse.SubtitleEdit.Logic
                     }
                 }
 
-                var toolStripMenuItems = GetSubControls<ToolStripMenuItem>(form);
-                foreach (ToolStripMenuItem c in toolStripMenuItems)
+                foreach (var c in GetSubControls<ToolStripMenuItem>(form))
                 {
                     if (c.GetCurrentParent() is ToolStripDropDownMenu p)
                     {
@@ -150,8 +142,7 @@ namespace Nikse.SubtitleEdit.Logic
                     c.ForeColor = ForeColor;
                 }
 
-                var toolStripSeparators = GetSubControls<ToolStripSeparator>(form);
-                foreach (ToolStripSeparator c in toolStripSeparators)
+                foreach (var c in GetSubControls<ToolStripSeparator>(form))
                 {
                     c.BackColor = BackColor;
                     c.ForeColor = ForeColor;
@@ -159,7 +150,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
 
             FixControl(ctrl);
-            foreach (Control c in GetSubControls<Control>(ctrl))
+            foreach (var c in GetSubControls<Control>(ctrl))
             {
                 FixControl(c);
             }
@@ -177,50 +168,51 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 UseImmersiveDarkMode(ctrl.Handle, false);
 
-                var contextMenus = GetSubControls<ContextMenuStrip>(form);
-                foreach (ContextMenuStrip cms in contextMenus)
+                foreach (var cms in GetSubControls<ContextMenuStrip>(form))
                 {
                     cms.BackColor = Control.DefaultBackColor;
                     cms.ForeColor = Control.DefaultForeColor;
-                    cms.Renderer = null;
+                    cms.Renderer = new ToolStripProfessionalRenderer();
                     foreach (Control inner in cms.Controls)
                     {
                         UndoDarkTheme(inner, iterations - 1);
                     }
                 }
 
-                var toolStrips = GetSubControls<ToolStrip>(form);
-                foreach (ToolStrip c in toolStrips)
+                foreach (var c in GetSubControls<ToolStrip>(form))
                 {
                     c.BackColor = Control.DefaultBackColor;
                     c.ForeColor = Control.DefaultForeColor;
-                    c.Renderer = null;
+                    c.Renderer = new ToolStripProfessionalRenderer();
                 }
 
-                var toolStripComboBox = GetSubControls<ToolStripComboBox>(form);
-                foreach (ToolStripComboBox c in toolStripComboBox)
+                foreach (var c in GetSubControls<ToolStripComboBox>(form))
                 {
                     c.BackColor = Control.DefaultBackColor;
                     c.ForeColor = Control.DefaultForeColor;
                     c.FlatStyle = FlatStyle.Flat;
                 }
 
-                var toolStripContentPanels = GetSubControls<ToolStripContentPanel>(form);
-                foreach (ToolStripContentPanel c in toolStripContentPanels)
+                foreach (var c in GetSubControls<ToolStripNikseComboBox>(form))
+                {
+                    c.BackColor = BackColor;
+                    c.ForeColor = ForeColor;
+                    UnFixControl(c.ComboBox);
+                }
+
+                foreach (var c in GetSubControls<ToolStripContentPanel>(form))
                 {
                     c.BackColor = Control.DefaultBackColor;
                     c.ForeColor = Control.DefaultForeColor;
                 }
 
-                var toolStripContainers = GetSubControls<ToolStripContainer>(form);
-                foreach (ToolStripContainer c in toolStripContainers)
+                foreach (var c in GetSubControls<ToolStripContainer>(form))
                 {
                     c.BackColor = Control.DefaultBackColor;
                     c.ForeColor = Control.DefaultForeColor;
                 }
 
-                var toolStripDropDownMenus = GetSubControls<ToolStripDropDownMenu>(form);
-                foreach (ToolStripDropDownMenu c in toolStripDropDownMenus)
+                foreach (var c in GetSubControls<ToolStripDropDownMenu>(form))
                 {
                     c.BackColor = Control.DefaultBackColor;
                     c.ForeColor = Control.DefaultForeColor;
@@ -231,21 +223,19 @@ namespace Nikse.SubtitleEdit.Logic
                     }
                 }
 
-                var toolStripMenuItems = GetSubControls<ToolStripMenuItem>(form);
-                foreach (ToolStripMenuItem c in toolStripMenuItems)
+                foreach (var c in GetSubControls<ToolStripMenuItem>(form))
                 {
                     if (c.GetCurrentParent() is ToolStripDropDownMenu p)
                     {
                         p.BackColor = Control.DefaultBackColor;
-                        p.Renderer = null;
+                        p.Renderer = new ToolStripProfessionalRenderer();
                     }
 
                     c.BackColor = Control.DefaultBackColor;
                     c.ForeColor = Control.DefaultForeColor;
                 }
 
-                var toolStripSeparators = GetSubControls<ToolStripSeparator>(form);
-                foreach (ToolStripSeparator c in toolStripSeparators)
+                foreach (var c in GetSubControls<ToolStripSeparator>(form))
                 {
                     c.BackColor = Control.DefaultBackColor;
                     c.ForeColor = Control.DefaultForeColor;
@@ -253,7 +243,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
 
             UnFixControl(ctrl);
-            foreach (Control c in GetSubControls<Control>(ctrl))
+            foreach (var c in GetSubControls<Control>(ctrl))
             {
                 UnFixControl(c);
             }
@@ -261,12 +251,26 @@ namespace Nikse.SubtitleEdit.Logic
 
         private static void UnFixControl(Control c)
         {
+            if (c is SETextBox seTextBox)
+            {
+                seTextBox.UndoDarkTheme();
+                return;
+            }
+
+            if (c is NikseTextBox ntb)
+            {
+                ntb.BorderStyle = BorderStyle.Fixed3D;
+            }
+
+            if (c is NikseListBox nikseListBox)
+            {
+                nikseListBox.UndoDarkTheme();
+                return;
+            }
+
             c.BackColor = Control.DefaultBackColor;
             c.ForeColor = Control.DefaultForeColor;
-
-            var newButton = new TextBox();
-            var buttonBackColor = newButton.BackColor;
-            newButton.Dispose();
+            var buttonBackColor = SystemColors.Window;
 
             if (c is Button b)
             {
@@ -311,7 +315,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             if (c is ContextMenuStrip cms)
             {
-                cms.Renderer = null;
+                cms.Renderer = new ToolStripProfessionalRenderer();
             }
 
             if (c is LinkLabel linkLabel)
@@ -342,7 +346,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             if (c is TabControl tc)
             {
-                //SetStyle(tc, ControlStyles.UserPaint | ControlStyles.DoubleBuffer, true);
+                SetStyle(tc, ControlStyles.UserPaint, false);
                 tc.Paint -= TabControl_Paint;
             }
 
@@ -350,6 +354,8 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 subtitleListView.OwnerDraw = false;
                 subtitleListView.GridLines = true;
+                subtitleListView.BackColor = Control.DefaultBackColor;
+                subtitleListView.ForeColor = Control.DefaultForeColor;
                 subtitleListView.DrawColumnHeader -= ListView_DrawColumnHeader;
                 subtitleListView.HandleCreated -= ListView_HandleCreated;
                 SetWindowThemeNormal(c);
@@ -369,18 +375,26 @@ namespace Nikse.SubtitleEdit.Logic
                 ud.BackColor = buttonBackColor;
                 ud.ForeColor = Control.DefaultForeColor;
                 ud.ButtonForeColor = Control.DefaultForeColor;
+                ud.BackColorDisabled = NikseUpDown.DefaultBackColorDisabled;
             }
             else if (c is NikseTimeUpDown tud)
             {
                 tud.BackColor = buttonBackColor;
                 tud.ForeColor = Control.DefaultForeColor;
                 tud.ButtonForeColor = Control.DefaultForeColor;
+                tud.BackColorDisabled = NikseUpDown.DefaultBackColorDisabled;
             }
             else if (c is NikseComboBox ncb)
             {
                 ncb.BackColor = buttonBackColor;
                 ncb.ForeColor = Control.DefaultForeColor;
                 ncb.ButtonForeColor = Control.DefaultForeColor;
+                ncb.BorderColor = Color.LightGray;
+                ncb.BackColorDisabled = NikseUpDown.DefaultBackColorDisabled;
+                if (ncb.DropDownControl != null)
+                {
+                    UnFixControl(ncb.DropDownControl);
+                }
             }
             else if (c is Button bu)
             {
@@ -428,6 +442,23 @@ namespace Nikse.SubtitleEdit.Logic
 
         private static void FixControl(Control c)
         {
+            if (c is SETextBox seTextBox)
+            {
+                seTextBox.SetDarkTheme();
+                return;
+            }
+
+            if (c is NikseTextBox ntb)
+            {
+                ntb.BorderStyle = BorderStyle.FixedSingle;
+            }
+
+            if (c is NikseListBox nikseListBox)
+            {
+                nikseListBox.SetDarkTheme();
+                return;
+            }
+
             c.BackColor = BackColor;
             c.ForeColor = ForeColor;
 
@@ -440,6 +471,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             if (c is CheckBox cb)
             {
+
                 cb.Paint += CheckBox_Paint;
             }
 
@@ -455,7 +487,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             if (c is GroupBox gBox)
             {
-                    gBox.Paint += PaintBorderDarkGray;
+                gBox.Paint += PaintBorderDarkGray;
             }
 
             if (c is NumericUpDown numeric)
@@ -512,6 +544,8 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 subtitleListView.OwnerDraw = true;
                 subtitleListView.GridLines = Configuration.Settings.General.DarkThemeShowListViewGridLines;
+                subtitleListView.BackColor = BackColor;
+                subtitleListView.ForeColor = ForeColor;
                 subtitleListView.DrawColumnHeader += ListView_DrawColumnHeader;
                 subtitleListView.HandleCreated += ListView_HandleCreated;
                 SetWindowThemeDark(subtitleListView);
@@ -546,6 +580,11 @@ namespace Nikse.SubtitleEdit.Logic
                 ncb.ForeColor = ForeColor;
                 ncb.ButtonForeColor = ForeColor;
                 ncb.BackColorDisabled = BackColor;
+                ncb.BorderColor = Color.Gray;
+                if (ncb.DropDownControl != null)
+                {
+                    FixControl(ncb.DropDownControl);
+                }
             }
         }
 
@@ -560,8 +599,29 @@ namespace Nikse.SubtitleEdit.Logic
             if (sender is Button button && !button.Enabled)
             {
                 button.ForeColor = Color.DimGray;
-                TextFormatFlags flags = TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter;
-                TextRenderer.DrawText(e.Graphics, button.Text, button.Font, e.ClipRectangle, button.ForeColor, flags);
+                var flags = TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter;
+                var textRectangleValue = new Rectangle
+                {
+                    X = e.ClipRectangle.X+2 ,
+                    Y = e.ClipRectangle.Y+2,
+                    Width = e.ClipRectangle.Width - 4,
+                    Height = e.ClipRectangle.Height -4
+                };
+
+                using (var b = new SolidBrush(BackColor))
+                {
+                    e.Graphics.FillRectangle(b, textRectangleValue);
+                }
+
+                e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+                e.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
+                if (button.RightToLeft == RightToLeft.Yes)
+                {
+                    flags |= TextFormatFlags.RightToLeft;
+                }
+
+                var r = new Rectangle(textRectangleValue.Left, textRectangleValue.Y+1, textRectangleValue.Width, textRectangleValue.Height-1);
+                TextRenderer.DrawText(e.Graphics, button.Text, button.Font, r, Color.DimGray, flags);
             }
         }
 
@@ -570,7 +630,7 @@ namespace Nikse.SubtitleEdit.Logic
             if (sender is CheckBox checkBox && !checkBox.Enabled)
             {
                 var checkBoxWidth = CheckBoxRenderer.GetGlyphSize(e.Graphics, System.Windows.Forms.VisualStyles.CheckBoxState.CheckedDisabled).Width;
-                Rectangle textRectangleValue = new Rectangle
+                var textRectangleValue = new Rectangle
                 {
                     X = e.ClipRectangle.X + checkBoxWidth,
                     Y = e.ClipRectangle.Y,
@@ -578,7 +638,21 @@ namespace Nikse.SubtitleEdit.Logic
                     Height = e.ClipRectangle.Height
                 };
 
-                TextRenderer.DrawText(e.Graphics, checkBox.Text, checkBox.Font, textRectangleValue, Color.DimGray, TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
+                using (var b = new SolidBrush(BackColor))
+                {
+                    e.Graphics.FillRectangle(b, textRectangleValue);
+                }
+
+                e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+                e.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
+                var flags = TextFormatFlags.Left | TextFormatFlags.TextBoxControl | TextFormatFlags.VerticalCenter; 
+                if (checkBox.RightToLeft == RightToLeft.Yes)
+                {
+                    flags |= TextFormatFlags.RightToLeft;
+                }
+
+                var r = new Rectangle(textRectangleValue.Left + 3, textRectangleValue.Y, textRectangleValue.Width - 3, textRectangleValue.Height);
+                TextRenderer.DrawText(e.Graphics, checkBox.Text, checkBox.Font, r, Color.DimGray, flags);
             }
         }
 
@@ -587,7 +661,7 @@ namespace Nikse.SubtitleEdit.Logic
             if (sender is RadioButton radioButton && !radioButton.Enabled)
             {
                 var radioButtonWidth = RadioButtonRenderer.GetGlyphSize(e.Graphics, System.Windows.Forms.VisualStyles.RadioButtonState.UncheckedDisabled).Width;
-                Rectangle textRectangleValue = new Rectangle
+                var textRectangleValue = new Rectangle
                 {
                     X = e.ClipRectangle.X + radioButtonWidth,
                     Y = e.ClipRectangle.Y,
@@ -595,7 +669,21 @@ namespace Nikse.SubtitleEdit.Logic
                     Height = e.ClipRectangle.Height
                 };
 
-                TextRenderer.DrawText(e.Graphics, radioButton.Text, radioButton.Font, textRectangleValue, Color.DimGray, TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
+                using (var b = new SolidBrush(BackColor))
+                {
+                    e.Graphics.FillRectangle(b, textRectangleValue);
+                }
+
+                e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+                e.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
+                var flags = TextFormatFlags.Left | TextFormatFlags.TextBoxControl | TextFormatFlags.VerticalCenter;
+                if (radioButton.RightToLeft == RightToLeft.Yes)
+                {
+                    flags |= TextFormatFlags.RightToLeft;
+                }
+
+                var r = new Rectangle(textRectangleValue.Left + 3, textRectangleValue.Y, textRectangleValue.Width - 3, textRectangleValue.Height);
+                TextRenderer.DrawText(e.Graphics, radioButton.Text, radioButton.Font, r, Color.DimGray, flags);
             }
         }
 
@@ -624,15 +712,22 @@ namespace Nikse.SubtitleEdit.Logic
                 return;
             }
 
+
             var backgroundColor = lv.Items[e.ItemIndex].SubItems[e.ColumnIndex].BackColor;
             var subBackgroundColor = Color.FromArgb(backgroundColor.A, Math.Max(backgroundColor.R - 39, 0), Math.Max(backgroundColor.G - 39, 0), Math.Max(backgroundColor.B - 39, 0));
-            if (e.Item.Selected || e.Item.Focused)
+            var hot = (e.ItemState & ListViewItemStates.Hot) != 0;
+            if (e.Item.Selected || e.Item.Focused || hot)
             {
+
                 var subtitleFont = e.Item.Font;
                 var rect = e.Bounds;
                 if (Configuration.Settings != null)
                 {
                     backgroundColor = backgroundColor == BackColor ? Configuration.Settings.Tools.ListViewUnfocusedSelectedColor : subBackgroundColor;
+                    if (hot)
+                    {
+                        backgroundColor = Color.FromArgb(27, 41, 53);
+                    }
                     using (var sb = new SolidBrush(backgroundColor))
                     {
                         e.Graphics.FillRectangle(sb, rect);
@@ -643,13 +738,30 @@ namespace Nikse.SubtitleEdit.Logic
                     e.Graphics.FillRectangle(Brushes.LightBlue, rect);
                 }
 
-                var addX = 0;
+                var b = e.Item.SubItems[e.ColumnIndex].Bounds;
 
-                if (e.ColumnIndex == 0 && lv.CheckBoxes)
+                var addFromCheckBox = 0;
+                if (e.ColumnIndex == 0)
                 {
-                    addX = 16;
-                    var checkBoxState = e.Item.Checked ? System.Windows.Forms.VisualStyles.CheckBoxState.CheckedNormal : System.Windows.Forms.VisualStyles.CheckBoxState.UncheckedNormal;
-                    CheckBoxRenderer.DrawCheckBox(e.Graphics, new Point(e.Bounds.X + 4, e.Bounds.Y + 2), checkBoxState);
+                    var leftImage = 3;
+                    if (lv.CheckBoxes)
+                    {
+                        var checkBoxState = e.Item.Checked ? System.Windows.Forms.VisualStyles.CheckBoxState.CheckedNormal : System.Windows.Forms.VisualStyles.CheckBoxState.UncheckedNormal;
+                        var top = b.Top + ((b.Height - 13) / 2) - 1;
+                        if (b.Height <= 17)
+                        {
+                            top = b.Top + 2;
+                        }
+
+                        CheckBoxRenderer.DrawCheckBox(e.Graphics, new Point(b.Left + 4, top), checkBoxState);
+                        leftImage += 17;
+                        addFromCheckBox = 16;
+                    }
+
+                    if (e.Item.ImageIndex >= 0 && e.Item.ImageList.Images.Count > e.Item.ImageIndex)
+                    {
+                        e.Graphics.DrawImageUnscaled(e.Item.ImageList.Images[e.Item.ImageIndex], new Point(b.Left + leftImage, b.Y));
+                    }
                 }
 
                 var foreColor = e.Item.ForeColor;
@@ -660,7 +772,12 @@ namespace Nikse.SubtitleEdit.Logic
                 }
                 else
                 {
-                    TextRenderer.DrawText(e.Graphics, e.Item.SubItems[e.ColumnIndex].Text, subtitleFont, new Point(e.Bounds.Left + 3 + addX, e.Bounds.Top + 2), foreColor, TextFormatFlags.NoPrefix);
+                    TextRenderer.DrawText(e.Graphics,
+                        e.Item.SubItems[e.ColumnIndex].Text,
+                        subtitleFont,
+                        new Rectangle(b.Left + 3 + addFromCheckBox, b.Top, b.Width - 3 - addFromCheckBox, b.Height),
+                        foreColor,
+                        TextFormatFlags.NoPrefix | TextFormatFlags.VerticalCenter);
                 }
             }
             else
@@ -719,18 +836,56 @@ namespace Nikse.SubtitleEdit.Logic
         {
             protected override void OnRenderToolStripBackground(ToolStripRenderEventArgs e)
             {
-                using (var brush = new SolidBrush(BackColor))
+                e.Graphics.Clear(BackColor);
+            }
+
+            protected override void OnRenderItemText(ToolStripItemTextRenderEventArgs e)
+            {
+                e.TextColor = ForeColor;
+                base.OnRenderItemText(e);
+            }
+
+            protected override void OnRenderOverflowButtonBackground(ToolStripItemRenderEventArgs e)
+            {
+                e.Graphics.Clear(BackColor);
+                using (var brush = new SolidBrush(ForeColor))
                 {
-                    e.Graphics.FillRectangle(brush, e.ConnectedArea);
+                    var top = e.Item.Height - 8;
+                    e.Graphics.FillPolygon(brush,
+                        new[]
+                        {
+                            new Point(0, top), // left top
+                            new Point( + 8, top), // right top
+
+                            // arrow head
+                            new Point(4, top + 6), // bottom
+                        });
                 }
+            }
+
+            protected override void OnRenderButtonBackground(ToolStripItemRenderEventArgs e)
+            {
+                if (e.Item.Selected)
+                {
+                    e.Graphics.Clear(DarkThemeSelectedBackgroundColor);
+                    return;
+                }
+
+                base.OnRenderButtonBackground(e);
             }
 
             protected override void OnRenderToolStripBorder(ToolStripRenderEventArgs e)
             {
-                if (!(e.ToolStrip is ToolStrip))
+                if (e.ToolStrip == null)
                 {
                     base.OnRenderToolStripBorder(e);
                 }
+            }
+
+            protected override void OnRenderArrow(ToolStripArrowRenderEventArgs e)
+            {
+                e.ArrowColor = ForeColor;
+                base.OnRenderArrow(e);
             }
 
             protected override void OnRenderImageMargin(ToolStripRenderEventArgs e)
@@ -769,13 +924,11 @@ namespace Nikse.SubtitleEdit.Logic
             protected override void OnRenderMenuItemBackground(ToolStripItemRenderEventArgs e)
             {
                 var g = e.Graphics;
-
                 e.Item.ForeColor = e.Item.Enabled ? Color.FromArgb(220, 220, 220) : Color.FromArgb(153, 153, 153);
 
                 if (e.Item.Enabled)
                 {
-
-                    var bgColor = e.Item.Selected ? Color.FromArgb(122, 128, 132) : e.Item.BackColor;
+                    var bgColor = e.Item.Selected ? DarkThemeSelectedBackgroundColor : e.Item.BackColor;
 
                     // Normal item
                     var rect = new Rectangle(2, 0, e.Item.Width - 3, e.Item.Height);
@@ -819,8 +972,8 @@ namespace Nikse.SubtitleEdit.Logic
             private readonly Size _size;
             private readonly bool _failed;
 
-            private static readonly Color SelectedTabColor = Color.FromArgb(0, 122, 204);
-            private static readonly Color HighlightedTabColor = Color.FromArgb(28, 151, 234);
+            private static readonly Color SelectedTabColor = Color.FromArgb(24, 52, 75);
+            private static readonly Color HighlightedTabColor = Color.FromArgb(27, 41, 53);
 
             private const int ImagePadding = 6;
             private const int SelectedTabPadding = 2;
@@ -1086,10 +1239,18 @@ namespace Nikse.SubtitleEdit.Logic
 
             if (item is ToolStripDropDownItem dropDownMenu && dropDownMenu.DropDownItems.Count > 0)
             {
+                dropDownMenu.DropDown.BackColor = BackColor;
+                dropDownMenu.DropDown.ForeColor = ForeColor;
+                dropDownMenu.DropDown.RenderMode = ToolStripRenderMode.Professional;
+
                 foreach (ToolStripItem dropDownItem in dropDownMenu.DropDownItems)
                 {
                     dropDownItem.ForeColor = ForeColor;
                     dropDownItem.BackColor = BackColor;
+                    if (dropDownItem is ToolStripSeparator)
+                    {
+                        dropDownItem.Paint += ToolStripSeparatorPaint;
+                    }
                 }
             }
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic;
@@ -51,8 +52,6 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             labelConnectedSubtitlesTreatConnectedSuffix.Text = language.Milliseconds;
             groupBoxChaining.Text = language.Chaining;
             tabPageChainingGeneral.Text = language.General;
-            tabPageChainingInCueOnShot.Text = language.InCueOnShot;
-            tabPageChainingOutCueOnShot. Text = language.OutCueOnShot;
             radioButtonChainingGeneralMaxGap.Text = language.MaxGap;
             labelChainingGeneralMaxGapSuffix.Text = language.Milliseconds;
             radioButtonChainingGeneralZones.Text = language.Zones;
@@ -61,9 +60,11 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             comboBoxChainingGeneralShotChangeBehavior.Items.Add(language.DontChain);
             comboBoxChainingGeneralShotChangeBehavior.Items.Add(language.ExtendCrossingShotChange);
             comboBoxChainingGeneralShotChangeBehavior.Items.Add(language.ExtendUntilShotChange);
+            tabPageChainingInCueOnShot.Text = language.InCueOnShot;
             radioButtonChainingInCueOnShotMaxGap.Text = language.MaxGap;
             labelChainingInCueOnShotMaxGapSuffix.Text = language.Milliseconds;
             radioButtonChainingInCueOnShotZones.Text = language.Zones;
+            tabPageChainingOutCueOnShot.Text = language.OutCueOnShot;
             radioButtonChainingOutCueOnShotMaxGap.Text = language.MaxGap;
             labelChainingOutCueOnShotMaxGapSuffix.Text = language.Milliseconds;
             radioButtonChainingOutCueOnShotZones.Text = language.Zones;
@@ -85,6 +86,17 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             var comboBoxRight = comboBoxChainingGeneralShotChangeBehavior.Right;
             comboBoxChainingGeneralShotChangeBehavior.Left = Math.Max(labelChainingGeneralShotChangeBehavior.Left + labelChainingGeneralShotChangeBehavior.Width + 6, comboBoxChainingGeneralShotChangeBehavior.Left);
             comboBoxChainingGeneralShotChangeBehavior.Width = comboBoxRight - comboBoxChainingGeneralShotChangeBehavior.Left;
+
+            var dropDownWidth = comboBoxChainingGeneralShotChangeBehavior.Width;
+            using (var g = Graphics.FromHwnd(IntPtr.Zero))
+            {
+                foreach (var item in comboBoxChainingGeneralShotChangeBehavior.Items)
+                {
+                    var itemWidth = (int)g.MeasureString((string)item, Font).Width + 5;
+                    dropDownWidth = Math.Max(itemWidth, dropDownWidth);
+                }
+            }
+            comboBoxChainingGeneralShotChangeBehavior.DropDownWidth = dropDownWidth;
 
             foreach (BeautifyTimeCodesSettings.BeautifyTimeCodesProfile.Preset preset in Enum.GetValues(typeof(BeautifyTimeCodesSettings.BeautifyTimeCodesProfile.Preset)))
             {
@@ -346,6 +358,18 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
                 {
                     LoadSettings();
                 }
+            }
+        }
+
+        private void BeautifyTimeCodesProfile_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape)
+            {
+                DialogResult = DialogResult.Cancel;
+            }
+            else if (e.KeyData == UiUtil.HelpKeys)
+            {
+                UiUtil.ShowHelp("#beautify_time_codes");
             }
         }
     }

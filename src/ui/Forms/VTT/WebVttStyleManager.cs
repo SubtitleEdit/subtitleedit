@@ -11,6 +11,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms.VTT
 {
@@ -43,7 +44,7 @@ namespace Nikse.SubtitleEdit.Forms.VTT
             CheckDuplicateStyles();
 
             var fontNames = new List<string>();
-            foreach (var x in FontFamily.Families)
+            foreach (var x in FontHelper.GetAllSupportedFontFamilies())
             {
                 fontNames.Add(x.Name);
             }
@@ -723,7 +724,7 @@ namespace Nikse.SubtitleEdit.Forms.VTT
                     var styleNames = "(" + form.ImportExportStyles.Count + ")";
                     labelInfo.Text = string.Format(LanguageSettings.Current.SubStationAlphaStyles.StyleXExportedToFileY, styleNames, form.FileName);
 
-                    System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(3500), () =>
+                    TaskDelayHelper.RunDelayed(TimeSpan.FromMilliseconds(3500), () =>
                     {
                         try
                         {
@@ -1227,6 +1228,19 @@ namespace Nikse.SubtitleEdit.Forms.VTT
         private void WebVttStyleManager_FormClosing(object sender, FormClosingEventArgs e)
         {
             _mpv?.Dispose();
+        }
+
+        private void WebVttStyleManager_Shown(object sender, EventArgs e)
+        {
+            listViewStyles.AutoSizeLastColumn();
+        }
+
+        private void WebVttStyleManager_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape)
+            {
+                DialogResult = DialogResult.Cancel;
+            }
         }
     }
 }

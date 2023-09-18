@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.textBoxBookmarkComment = new System.Windows.Forms.TextBox();
+            this.textBoxBookmarkComment = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.SuspendLayout();
@@ -93,7 +93,7 @@
 
         #endregion
 
-        private System.Windows.Forms.TextBox textBoxBookmarkComment;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxBookmarkComment;
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Button buttonCancel;
     }

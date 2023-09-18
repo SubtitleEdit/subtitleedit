@@ -102,6 +102,7 @@
             public string Collapse { get; set; }
             public string ShortcutX { get; set; }
             public string ExampleX { get; set; }
+            public string ViewX { get; set; }
             public string Reset { get; set; }
             public string Error { get; set; }
             public string Warning { get; set; }
@@ -206,6 +207,7 @@
             public string LoadingVoskModel { get; set; }
             public string Transcribing { get; set; }
             public string TranscribingXOfY { get; set; }
+            public string PostProcessing { get; set; }
             public string XFilesSavedToVideoSourceFolder { get; set; }
             public string UsePostProcessing { get; set; }
             public string AutoAdjustTimings { get; set; }
@@ -216,6 +218,8 @@
             public string RemoveTemporaryFiles { get; set; }
             public string SetCppConstMeFolder { get; set; }
             public string OnlyRunPostProcessing { get; set; }
+            public string DownloadFasterWhisperCuda { get; set; }
+            public string NoTextFound { get; set; }
         }
 
         public class AssaAttachments
@@ -564,6 +568,9 @@
             public string CheckingForUpdatesNewVersion { get; set; }
             public string InstallUpdate { get; set; }
             public string NoUpdates { get; set; }
+            public string XPluginsHasAnUpdate { get; set; }
+            public string OnePluginsHasAnUpdate { get; set; }
+            public string Update { get; set; }
         }
 
         public class ChooseAudioTrack
@@ -951,6 +958,7 @@
             public string BreakLongLines { get; set; }
             public string RemoveLineBreaks { get; set; }
             public string RemoveLineBreaksAll { get; set; }
+            public string RemoveLineBreaksPixelWidth { get; set; }
             public string FixUppercaseIInsideLowercaseWords { get; set; }
             public string FixDoubleApostrophes { get; set; }
             public string AddPeriods { get; set; }
@@ -985,6 +993,7 @@
             public string FixFirstLetterToUppercaseAfterParagraph { get; set; }
             public string MergeShortLine { get; set; }
             public string MergeShortLineAll { get; set; }
+            public string UnbreakShortLinePixelWidth { get; set; }
             public string BreakLongLine { get; set; }
             public string FixLongDisplayTime { get; set; }
             public string FixInvalidItalicTag { get; set; }
@@ -1050,9 +1059,11 @@
             public string InfoAssaOn { get; set; }
             public string XGeneratedWithBurnedInSubsInX { get; set; }
             public string TimeRemainingMinutes { get; set; }
+            public string TimeRemainingOneMinute { get; set; }
             public string TimeRemainingSeconds { get; set; }
             public string TimeRemainingAFewSeconds { get; set; }
             public string TimeRemainingMinutesAndSeconds { get; set; }
+            public string TimeRemainingOneMinuteAndSeconds { get; set; }
             public string TargetFileName { get; set; }
             public string TargetFileSize { get; set; }
             public string FileSizeMb { get; set; }
@@ -1477,6 +1488,7 @@
             public string NothingToUndo { get; set; }
             public string InvalidLanguageNameX { get; set; }
             public string DoNotDisplayMessageAgain { get; set; }
+            public string DoNotAutoLoadVideo { get; set; }
             public string NumberOfCorrectedWords { get; set; }
             public string NumberOfSkippedWords { get; set; }
             public string NumberOfCorrectWords { get; set; }
@@ -1661,6 +1673,7 @@
             public string SubtitleEditNeedsVideoPlayer { get; set; }
             public string UseRecommendMpv { get; set; }
             public string DownloadAndUseMpv { get; set; }
+            public string ChooseLayout { get; set; }
 
             public class MainMenu
             {
@@ -1874,8 +1887,7 @@
                     public string BeautifyTimeCodes { get; set; }
                     public string Settings { get; set; }
                     public string Help { get; set; }
-                    public string ShowHideWaveform { get; set; }
-                    public string ShowHideVideo { get; set; }
+                    public string Layout { get; set; }
                     public string AssaDraw { get; set; }
                 }
 
@@ -2455,6 +2467,7 @@
             public string BeautifyTimeCodes { get; set; }
             public string SettingsName { get; set; }
             public string ToggleBookmarks { get; set; }
+            public string FocusTextBox { get; set; }
             public string ToggleBookmarksWithComment { get; set; }
             public string ClearBookmarks { get; set; }
             public string ExportBookmarks { get; set; }
@@ -2700,12 +2713,13 @@
             public string DarkThemeShowGridViewLines { get; set; }
             public string GraphicsButtons { get; set; }
             public string UpdateShortcut { get; set; }
-            public string FoucsSetVideoPosition { get; set; }
+            public string FocusSetVideoPosition { get; set; }
             public string ToggleDockUndockOfVideoControls { get; set; }
             public string CreateSetEndAddNewAndGoToNew { get; set; }
             public string AdjustViaEndAutoStart { get; set; }
             public string AdjustViaEndAutoStartAndGoToNext { get; set; }
             public string AdjustSetEndMinusGapAndStartNextHere { get; set; }
+            public string AdjustSetStartTimeAndGoToNext { get; set; }
             public string AdjustSetEndTimeAndGoToNext { get; set; }
             public string AdjustSetEndTimeAndPause { get; set; }
             public string AdjustSetStartAutoDurationAndGoToNext { get; set; }
@@ -2978,6 +2992,8 @@
             public string CustomContinuationStyleNote { get; set; }
             public string ResetCustomContinuationStyleWarning { get; set; }
             public string ExportAsHtml { get; set; }
+            public string SetNewActor { get; set; }
+            public string SetActorX { get; set; }
         }
 
         public class SettingsMpv

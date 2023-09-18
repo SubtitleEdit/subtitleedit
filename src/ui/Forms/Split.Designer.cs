@@ -33,20 +33,20 @@
             this.labelCharacters = new System.Windows.Forms.Label();
             this.labelLines = new System.Windows.Forms.Label();
             this.labelNumberOfParts = new System.Windows.Forms.Label();
-            this.numericUpDownParts = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownParts = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.radioButtonCharacters = new System.Windows.Forms.RadioButton();
             this.RadioButtonLines = new System.Windows.Forms.RadioButton();
             this.groupBoxOutput = new System.Windows.Forms.GroupBox();
             this.buttonOpenOutputFolder = new System.Windows.Forms.Button();
             this.labelFileName = new System.Windows.Forms.Label();
-            this.textBoxFileName = new System.Windows.Forms.TextBox();
-            this.comboBoxSubtitleFormats = new System.Windows.Forms.ComboBox();
+            this.textBoxFileName = new Nikse.SubtitleEdit.Controls.NikseTextBox();
+            this.comboBoxSubtitleFormats = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelEncoding = new System.Windows.Forms.Label();
-            this.comboBoxEncoding = new System.Windows.Forms.ComboBox();
+            this.comboBoxEncoding = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelOutputFormat = new System.Windows.Forms.Label();
             this.labelChooseOutputFolder = new System.Windows.Forms.Label();
             this.buttonChooseFolder = new System.Windows.Forms.Button();
-            this.textBoxOutputFolder = new System.Windows.Forms.TextBox();
+            this.textBoxOutputFolder = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.groupBoxPreview = new System.Windows.Forms.GroupBox();
             this.listViewParts = new System.Windows.Forms.ListView();
@@ -59,7 +59,6 @@
             this.radioButtonTime = new System.Windows.Forms.RadioButton();
             this.groupBoxSplitOptions.SuspendLayout();
             this.groupBoxSubtitleInfo.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownParts)).BeginInit();
             this.groupBoxOutput.SuspendLayout();
             this.groupBoxPreview.SuspendLayout();
             this.SuspendLayout();
@@ -392,7 +391,6 @@
             this.groupBoxSplitOptions.PerformLayout();
             this.groupBoxSubtitleInfo.ResumeLayout(false);
             this.groupBoxSubtitleInfo.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownParts)).EndInit();
             this.groupBoxOutput.ResumeLayout(false);
             this.groupBoxOutput.PerformLayout();
             this.groupBoxPreview.ResumeLayout(false);
@@ -404,15 +402,15 @@
 
         private System.Windows.Forms.GroupBox groupBoxSplitOptions;
         private System.Windows.Forms.Label labelNumberOfParts;
-        private System.Windows.Forms.NumericUpDown numericUpDownParts;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownParts;
         private System.Windows.Forms.RadioButton radioButtonCharacters;
         private System.Windows.Forms.RadioButton RadioButtonLines;
         private System.Windows.Forms.GroupBox groupBoxOutput;
-        private System.Windows.Forms.ComboBox comboBoxEncoding;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxEncoding;
         private System.Windows.Forms.Label labelOutputFormat;
         private System.Windows.Forms.Label labelChooseOutputFolder;
         private System.Windows.Forms.Button buttonChooseFolder;
-        private System.Windows.Forms.TextBox textBoxOutputFolder;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxOutputFolder;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
         private System.Windows.Forms.GroupBox groupBoxPreview;
         private System.Windows.Forms.Button buttonCancel;
@@ -425,10 +423,10 @@
         private System.Windows.Forms.GroupBox groupBoxSubtitleInfo;
         private System.Windows.Forms.Label labelCharacters;
         private System.Windows.Forms.Label labelLines;
-        private System.Windows.Forms.ComboBox comboBoxSubtitleFormats;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxSubtitleFormats;
         private System.Windows.Forms.Label labelEncoding;
         private System.Windows.Forms.Label labelFileName;
-        private System.Windows.Forms.TextBox textBoxFileName;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxFileName;
         private System.Windows.Forms.Button buttonOpenOutputFolder;
         private System.Windows.Forms.RadioButton radioButtonTime;
     }

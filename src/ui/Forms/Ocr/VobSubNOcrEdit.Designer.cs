@@ -32,7 +32,7 @@
             this.labelImageCompareFiles = new System.Windows.Forms.Label();
             this.labelChooseCharacters = new System.Windows.Forms.Label();
             this.listBoxFileNames = new System.Windows.Forms.ListBox();
-            this.comboBoxTexts = new System.Windows.Forms.ComboBox();
+            this.comboBoxTexts = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.groupBoxCurrentCompareImage = new System.Windows.Forms.GroupBox();
             this.labelNOcrCharInfo = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
@@ -55,7 +55,7 @@
             this.checkBoxItalic = new System.Windows.Forms.CheckBox();
             this.labelTextAssociatedWithImage = new System.Windows.Forms.Label();
             this.buttonDelete = new System.Windows.Forms.Button();
-            this.textBoxText = new System.Windows.Forms.TextBox();
+            this.textBoxText = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelInfo = new System.Windows.Forms.Label();
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
@@ -436,7 +436,7 @@
         private System.Windows.Forms.Label labelImageCompareFiles;
         private System.Windows.Forms.Label labelChooseCharacters;
         private System.Windows.Forms.ListBox listBoxFileNames;
-        private System.Windows.Forms.ComboBox comboBoxTexts;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxTexts;
         private System.Windows.Forms.GroupBox groupBoxCurrentCompareImage;
         private System.Windows.Forms.Button buttonZoomOut;
         private System.Windows.Forms.Button buttonZoomIn;
@@ -445,7 +445,7 @@
         private System.Windows.Forms.CheckBox checkBoxItalic;
         private System.Windows.Forms.Label labelTextAssociatedWithImage;
         private System.Windows.Forms.Button buttonDelete;
-        private System.Windows.Forms.TextBox textBoxText;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxText;
         private System.Windows.Forms.Label labelInfo;
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Button buttonCancel;

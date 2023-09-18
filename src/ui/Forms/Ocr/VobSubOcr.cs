@@ -27,6 +27,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
 using Nikse.SubtitleEdit.Core.Enums;
+using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms.Ocr
 {
@@ -745,11 +746,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 {
                     text = text.Replace(" " + Environment.NewLine, Environment.NewLine);
                     text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
-                    while (text.Contains(Environment.NewLine + Environment.NewLine))
-                    {
-                        text = text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
-                    }
-
+                    text = text.RemoveRecursiveLineBreaks();
+                    
                     if (Utilities.GetNumberOfLines(text) > 2)
                     {
                         text = Utilities.AutoBreakLine(text);
@@ -815,11 +813,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             _vobSubMergedPackList = vobSubMergedPackList;
             _palette = palette;
-
-            if (_palette == null)
-            {
-                checkBoxCustomFourColors.Checked = true;
-            }
+            checkBoxCustomFourColors.Checked = _palette == null;
 
             SetTesseractLanguageFromLanguageString(languageString);
             _importLanguageString = languageString;
@@ -1042,11 +1036,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 {
                     text = text.Replace(" " + Environment.NewLine, Environment.NewLine);
                     text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
-                    while (text.Contains(Environment.NewLine + Environment.NewLine))
-                    {
-                        text = text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
-                    }
-
+                    text = text.RemoveRecursiveLineBreaks();
+                    
                     if (Utilities.GetNumberOfLines(text) > 2)
                     {
                         text = Utilities.AutoBreakLine(text);
@@ -4560,10 +4551,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             checkBoxUseTimeCodesFromIdx.Checked = hasIdxTimeCodes;
             checkBoxUseTimeCodesFromIdx.CheckedChanged += checkBoxUseTimeCodesFromIdx_CheckedChanged;
             checkBoxShowOnlyForced.Enabled = _hasForcedSubtitles;
-            if (!hasIdxTimeCodes)
-            {
-                checkBoxCustomFourColors.Checked = true;
-            }
             LoadVobRip();
             return _subtitle;
         }
@@ -4973,11 +4960,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 {
                     text = text.Replace(" " + Environment.NewLine, Environment.NewLine);
                     text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
-                    while (text.Contains(Environment.NewLine + Environment.NewLine))
-                    {
-                        text = text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
-                    }
 
+                    text = text.RemoveRecursiveLineBreaks();
+                    
                     if (Utilities.GetNumberOfLines(text) > 2)
                     {
                         text = Utilities.AutoBreakLine(text);
@@ -5135,10 +5120,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 text = text.Replace(" " + Environment.NewLine, Environment.NewLine);
                 text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
-                while (text.Contains(Environment.NewLine + Environment.NewLine))
-                {
-                    text = text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
-                }
+                text = text.RemoveRecursiveLineBreaks();
 
                 if (Utilities.GetNumberOfLines(text) > 2)
                 {
@@ -7439,9 +7421,12 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void PictureBoxColorChooserClick(object sender, EventArgs e)
         {
-            if (colorDialog1.ShowDialog(this) == DialogResult.OK)
+            using (var colorChooser = new ColorChooser { Color = (sender as PictureBox).BackColor, ShowAlpha = false })
             {
-                (sender as PictureBox).BackColor = colorDialog1.Color;
+                if (colorChooser.ShowDialog() == DialogResult.OK)
+                {
+                    (sender as PictureBox).BackColor = colorChooser.Color;
+                }
             }
 
             SubtitleListView1SelectedIndexChanged(null, null);
@@ -8147,8 +8132,16 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             return _subtitle != null && _subtitle.Paragraphs.Any(p => !string.IsNullOrWhiteSpace(p.Text));
         }
 
+        private bool _forceClose;
+        private DialogResult _dialogResult;
+
         private void VobSubOcr_FormClosing(object sender, FormClosingEventArgs e)
         {
+            if (_forceClose)
+            {
+                return;
+            }
+
             if (!_okClicked && HasChangesBeenMade())
             {
                 if (MessageBox.Show(LanguageSettings.Current.VobSubOcr.DiscardText, LanguageSettings.Current.VobSubOcr.DiscardTitle, MessageBoxButtons.YesNo) == DialogResult.No)
@@ -8227,6 +8220,18 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 {
                     Configuration.Settings.VobSubOcr.LineOcrLastLanguages = comboBoxNOcrLanguage.Items[comboBoxNOcrLanguage.SelectedIndex].ToString();
                 }
+            }
+
+            if (!e.Cancel)
+            {
+                e.Cancel = true; // Hack as FormClosing will crash if any Forms are created here (e.g. a msgbox). 
+                _forceClose = true;
+                _dialogResult = DialogResult;
+                TaskDelayHelper.RunDelayed(TimeSpan.FromMilliseconds(10), () =>
+                {
+                    DialogResult = _dialogResult;
+                    Close();
+                });
             }
         }
 
@@ -9881,6 +9886,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         public void FindDialogClose()
         {
+            if (_findHelper == null)
+            {
+                return;
+            }
+
             _findHelper.InProgress = false;
         }
 

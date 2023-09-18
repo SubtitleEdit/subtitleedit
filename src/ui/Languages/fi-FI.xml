@@ -2,7 +2,7 @@
 <Language Name="suomi">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.13</Version>
+    <Version>4.0.1</Version>
     <TranslatedBy>Suomentanut vm, päivittänyt Teijo S. [31-03-2023]</TranslatedBy>
     <CultureName>fi-FI</CultureName>
     <HelpFile />
@@ -2380,7 +2380,7 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <DarkThemeEnabled>Tumma teema käytössä</DarkThemeEnabled>
     <DarkThemeShowGridViewLines>Näytä luetteloissa ruudukko</DarkThemeShowGridViewLines>
     <UpdateShortcut>Päivitä</UpdateShortcut>
-    <FoucsSetVideoPosition>Aseta tarkennus videokohtaan</FoucsSetVideoPosition>
+    <FocusSetVideoPosition>Aseta tarkennus videokohtaan</FocusSetVideoPosition>
     <ToggleDockUndockOfVideoControls>Videovalvonnan telakointi/irrottaminen</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Aseta loppu, lisää uusi ja siirry uuteen</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStart>Säädä lopetuskohdan mukaan</AdjustViaEndAutoStart>

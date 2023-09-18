@@ -53,7 +53,7 @@ namespace Nikse.SubtitleEdit.Forms
         private TrackBar _tbAlpha;
         private TrackBar _tbBlue;
         private TrackBar _tbGreen;
-        private TextBox _tbHexCode;
+        private Controls.NikseTextBox _tbHexCode;
         private TrackBar _tbHue;
         private TrackBar _tbRed;
         private TrackBar _tbSaturation;
@@ -125,14 +125,10 @@ namespace Nikse.SubtitleEdit.Forms
                 if (!value && ShowAlpha)
                 {
                     Height -= 40;
-                    _buttonOk.Top -= 40;
-                    _buttonCancel.Top -= 40;
                 }
                 else if (value && !ShowAlpha)
                 {
                     Height += 40;
-                    _buttonOk.Top += 40;
-                    _buttonCancel.Top += 40;
                 }
                 _labelAlpha1.Visible = value;
                 _lblAlpha2.Visible = value;
@@ -218,7 +214,10 @@ namespace Nikse.SubtitleEdit.Forms
             RefreshText(_lblGreen, argb.Green);
             RefreshText(_lblAlpha2, argb.Alpha);
 
-            if (!_hexEditOn)
+            if ((_tbHexCode.Text.Length == 6 || _tbHexCode.Text.Length == 8) && _hexEditOn && _tbHexCode.BackColor == Configuration.Settings.Tools.ListViewSyntaxErrorColor)
+            {
+            }
+            else
             {
                 ShowHexColorCode(argb);
             }
@@ -228,7 +227,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (_showAlpha)
             {
-                _tbHexCode.Text = $"{argb.Alpha:X2}{argb.Red:X2}{argb.Green:X2}{argb.Blue:X2}";
+                _tbHexCode.Text = $"{argb.Red:X2}{argb.Green:X2}{argb.Blue:X2}{argb.Alpha:X2}";
             }
             else
             {
@@ -313,7 +312,7 @@ namespace Nikse.SubtitleEdit.Forms
             _changeType = ChangeStyle.RGB;
             _alphaRedGreenBlue = new ColorHandler.Argb(_tbAlpha.Value, _tbRed.Value, _tbGreen.Value, _tbBlue.Value);
             RefreshText(_lblAlpha2, _tbAlpha.Value);
-            _tbHexCode.Text = $"{_alphaRedGreenBlue.Alpha:X2}{_alphaRedGreenBlue.Red:X2}{_alphaRedGreenBlue.Green:X2}{_alphaRedGreenBlue.Blue:X2}";
+            _tbHexCode.Text = $"{_alphaRedGreenBlue.Red:X2}{_alphaRedGreenBlue.Green:X2}{_alphaRedGreenBlue.Blue:X2}{_alphaRedGreenBlue.Alpha:X2}";
             Invalidate();
         }
 
@@ -360,7 +359,7 @@ namespace Nikse.SubtitleEdit.Forms
             this._label5 = new System.Windows.Forms.Label();
             this._pnlBrightness = new System.Windows.Forms.Panel();
             this._lblAlpha2 = new System.Windows.Forms.Label();
-            this._tbHexCode = new System.Windows.Forms.TextBox();
+            this._tbHexCode = new Controls.NikseTextBox();
             this._flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this._labelRed = new System.Windows.Forms.Label();
             this._tbRed = new System.Windows.Forms.TrackBar();
@@ -509,9 +508,9 @@ namespace Nikse.SubtitleEdit.Forms
             this._tbHexCode.ReadOnly = true;
             this._tbHexCode.Size = new System.Drawing.Size(96, 22);
             this._tbHexCode.TabIndex = 58;
-            this._tbHexCode.TextChanged += new System.EventHandler(this._tbHexCode_TextChanged);
-            this._tbHexCode.Enter += new System.EventHandler(this._tbHexCode_Enter);
-            this._tbHexCode.Leave += new System.EventHandler(this._tbHexCode_Leave);
+            this._tbHexCode.TextChanged += new System.EventHandler(this.TextBoxHexCodeTextChanged);
+            this._tbHexCode.Enter += new System.EventHandler(this.TextBoxHexCodeEnter);
+            this._tbHexCode.Leave += new System.EventHandler(this.TextBoxHexCodeLeave);
             this._tbHexCode.MouseDown += new System.Windows.Forms.MouseEventHandler(this.TbHexCodeMouseDown);
             this._tbHexCode.MouseUp += new System.Windows.Forms.MouseEventHandler(this._tbHexCode_MouseUp);
             // 
@@ -851,6 +850,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Select color";
             this.Load += new System.EventHandler(this.ColorChooserLoad);
+            this.Shown += new System.EventHandler(this.ColorChooser_Shown);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.ColorChooserPaint);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ColorChooser_KeyDown);
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.HandleMouse);
@@ -943,7 +943,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void _tbHexCode_TextChanged(object sender, EventArgs e)
+        private void TextBoxHexCodeTextChanged(object sender, EventArgs e)
         {
             if (_hexEditOn)
             {
@@ -951,13 +951,13 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void _tbHexCode_Enter(object sender, EventArgs e)
+        private void TextBoxHexCodeEnter(object sender, EventArgs e)
         {
             _hexEditOn = true;
             _tbHexCode.ReadOnly = false;
         }
 
-        private void _tbHexCode_Leave(object sender, EventArgs e)
+        private void TextBoxHexCodeLeave(object sender, EventArgs e)
         {
             _hexEditOn = false;
             _tbHexCode.BackColor = UiUtil.BackColor;
@@ -968,7 +968,7 @@ namespace Nikse.SubtitleEdit.Forms
             var hexString = _tbHexCode.Text.Trim().TrimStart('#');
             if (hexString.Length == 6 && IsValidHexString(hexString))
             {
-                UpdateRgb("ff" + hexString);
+                UpdateRgb(hexString + "ff");
             }
             else if (hexString.Length == 8 && _showAlpha && IsValidHexString(hexString))
             {
@@ -976,7 +976,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (hexString.Length == 8 && IsValidHexString(hexString))
             {
-                UpdateRgb("ff" + hexString.Remove(0, 2));
+                UpdateRgb(hexString.Substring(0, 6) + "ff");
             }
             else
             {
@@ -986,10 +986,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void UpdateRgb(string hexString)
         {
-            _tbAlpha.Value = Convert.ToInt32(hexString.Substring(0, 2), 16);
-            _tbRed.Value = Convert.ToInt32(hexString.Substring(2, 2), 16);
-            _tbGreen.Value = Convert.ToInt32(hexString.Substring(4, 2), 16);
-            _tbBlue.Value = Convert.ToInt32(hexString.Substring(6, 2), 16);
+            _tbRed.Value = Convert.ToInt32(hexString.Substring(0, 2), 16);
+            _tbGreen.Value = Convert.ToInt32(hexString.Substring(2, 2), 16);
+            _tbBlue.Value = Convert.ToInt32(hexString.Substring(4, 2), 16);
+            _tbAlpha.Value = Convert.ToInt32(hexString.Substring(6, 2), 16);
             _tbHexCode.BackColor = UiUtil.BackColor;
             HandleRgbScroll(null, null);
         }
@@ -1015,10 +1015,10 @@ namespace Nikse.SubtitleEdit.Forms
         private void PanelColorClick(Control panel)
         {
             var c = panel.BackColor;
-            UpdateRgb($"{c.A:x2}{c.R:x2}{c.G:x2}{c.B:x2}");
-            _tbHexCode.TextChanged -= _tbHexCode_TextChanged;
-            ShowHexColorCode(new ColorHandler.Argb { Alpha = c.A, Red = c.R, Green = c.R, Blue = c.B });
-            _tbHexCode.TextChanged += _tbHexCode_TextChanged;
+            UpdateRgb($"{c.R:x2}{c.G:x2}{c.B:x2}{c.A:x2}");
+            _tbHexCode.TextChanged -= TextBoxHexCodeTextChanged;
+            ShowHexColorCode(new ColorHandler.Argb { Alpha = c.A, Red = c.R, Green = c.G, Blue = c.B });
+            _tbHexCode.TextChanged += TextBoxHexCodeTextChanged;
         }
 
 
@@ -1077,6 +1077,11 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonColorPicker_Click(object sender, EventArgs e)
         {
             PanelColorClick(buttonColorPicker);
+        }
+
+        private void ColorChooser_Shown(object sender, EventArgs e)
+        {
+            _tbHexCode.MaxLength = _showAlpha ? 9 : 7;
         }
     }
 }

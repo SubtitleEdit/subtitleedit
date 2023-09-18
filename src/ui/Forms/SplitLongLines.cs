@@ -63,6 +63,7 @@ namespace Nikse.SubtitleEdit.Forms
             SubtitleListview1.AutoSizeAllColumns(this);
             NumberOfSplits = 0;
             numericUpDownSingleLineMaxCharacters.Value = Configuration.Settings.General.SubtitleLineMaximumLength;
+            UiUtil.SetNumericUpDownValue(numericUpDownLineMaxCharacters, Configuration.Settings.Tools.SplitLongLinesMax);
             _subtitle = subtitle;
         }
 
@@ -90,8 +91,8 @@ namespace Nikse.SubtitleEdit.Forms
             var autoBreakIndexes = new List<int>();
 
             NumberOfSplits = 0;
-            SubtitleListview1.Items.Clear();
             SubtitleListview1.BeginUpdate();
+            SubtitleListview1.Items.Clear();
             if (checkBoxSplitAtLineBreaks.Checked)
             {
                 SplitSubtitle = SplitAtLineBreak(_subtitle, splitIndexes, out var count, clearFixes);
@@ -622,6 +623,11 @@ namespace Nikse.SubtitleEdit.Forms
             Cursor = Cursors.WaitCursor;
             GeneratePreview(true);
             Cursor = Cursors.Default;
+        }
+
+        private void SplitLongLines_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Configuration.Settings.Tools.SplitLongLinesMax = (int)numericUpDownLineMaxCharacters.Value;
         }
     }
 }

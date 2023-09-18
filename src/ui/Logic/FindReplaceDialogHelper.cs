@@ -3,6 +3,8 @@ using Nikse.SubtitleEdit.Core.Enums;
 using System;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Controls;
+using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Logic
 {
@@ -302,7 +304,26 @@ namespace Nikse.SubtitleEdit.Logic
             return cm;
         }
 
-        public static ContextMenuStrip GetRegExContextMenu(ComboBox comboBox)
+        public static ContextMenuStrip GetRegExContextMenu(SETextBox textBox)
+        {
+            var cm = new ContextMenuStrip();
+            var l = LanguageSettings.Current.RegularExpressionContextMenu;
+            cm.Items.Add(l.WordBoundary, null, delegate { textBox.SelectedText = "\\b"; });
+            cm.Items.Add(l.NonWordBoundary, null, delegate { textBox.SelectedText = "\\B"; });
+            cm.Items.Add(l.NewLine, null, delegate { textBox.SelectedText = "\\r\\n"; });
+            cm.Items.Add(l.AnyDigit, null, delegate { textBox.SelectedText = "\\d"; });
+            cm.Items.Add(l.NonDigit, null, delegate { textBox.SelectedText = "\\D"; });
+            cm.Items.Add(l.AnyCharacter, null, delegate { textBox.SelectedText = "."; });
+            cm.Items.Add(l.AnyWhitespace, null, delegate { textBox.SelectedText = "\\s"; });
+            cm.Items.Add(l.NonSpaceCharacter, null, delegate { textBox.SelectedText = "\\S"; });
+            cm.Items.Add(l.ZeroOrMore, null, delegate { textBox.SelectedText = "*"; });
+            cm.Items.Add(l.OneOrMore, null, delegate { textBox.SelectedText = "+"; });
+            cm.Items.Add(l.InCharacterGroup, null, delegate { textBox.SelectedText = "[test]"; });
+            cm.Items.Add(l.NotInCharacterGroup, null, delegate { textBox.SelectedText = "[^test]"; });
+            return cm;
+        }
+
+        public static ContextMenuStrip GetRegExContextMenu(NikseComboBox comboBox)
         {
             var cm = new ContextMenuStrip();
             var l = LanguageSettings.Current.RegularExpressionContextMenu;
@@ -322,6 +343,13 @@ namespace Nikse.SubtitleEdit.Logic
         }
 
         public static ContextMenuStrip GetReplaceTextContextMenu(TextBox textBox)
+        {
+            var cm = new ContextMenuStrip();
+            cm.Items.Add(LanguageSettings.Current.RegularExpressionContextMenu.NewLineShort, null, delegate { textBox.SelectedText = "\\n"; });
+            return cm;
+        }
+
+        public static ContextMenuStrip GetReplaceTextContextMenu(SETextBox textBox)
         {
             var cm = new ContextMenuStrip();
             cm.Items.Add(LanguageSettings.Current.RegularExpressionContextMenu.NewLineShort, null, delegate { textBox.SelectedText = "\\n"; });
@@ -395,6 +423,12 @@ namespace Nikse.SubtitleEdit.Logic
 
                     return Success;
                 }
+
+                if (startIndex <= 0)
+                {
+                    return false;
+                }
+
                 var searchText = text.Substring(0, startIndex);
                 var pos = -1;
                 var comparison = GetComparison();

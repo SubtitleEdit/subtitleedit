@@ -234,6 +234,7 @@ namespace Nikse.SubtitleEdit.Logic
                 Collapse = "Collapse",
                 ShortcutX = "Shortcut: {0}",
                 ExampleX = "Example: {0}",
+                ViewX = "View {0}",
                 Reset = "Reset",
                 Error = "Error",
                 Warning = "Warning",
@@ -356,6 +357,7 @@ namespace Nikse.SubtitleEdit.Logic
                 LoadingVoskModel = "Loading Vosk speech recognition model...",
                 Transcribing = "Transcribing audio to text...",
                 TranscribingXOfY = "Transcribing audio to text - file {0} of {1}...",
+                PostProcessing = "Post-processing...",
                 UsePostProcessing = "Use post-processing (line merge, fix casing, punctuation, and more)",
                 AutoAdjustTimings = "Auto adjust timings",
                 BatchMode = "Batch mode",
@@ -366,6 +368,8 @@ namespace Nikse.SubtitleEdit.Logic
                 RemoveTemporaryFiles = "Remove temporary files",
                 SetCppConstMeFolder = "Set CPP/Const-me models folder...",
                 OnlyRunPostProcessing = "Run only post-processing/adjust timings",
+                DownloadFasterWhisperCuda = "Download cuBLAS and cuDNN libs for Faster-Whisper",
+                NoTextFound = "No text found!",
             };
 
             AssaAttachments = new LanguageStructure.AssaAttachments
@@ -708,6 +712,7 @@ namespace Nikse.SubtitleEdit.Logic
                 Enabled = "Enabled",
                 Name = "Name",
                 LinesFoundX = "Lines found: {0}",
+                ExtraNames = "Add extra names (separate by comma, one-time use only)",
             };
 
             ChangeFrameRate = new LanguageStructure.ChangeFrameRate
@@ -740,6 +745,9 @@ namespace Nikse.SubtitleEdit.Logic
                 CheckingForUpdatesNewVersion = "New version available!",
                 InstallUpdate = "Go to download page",
                 NoUpdates = "Don't update",
+                OnePluginsHasAnUpdate = "One plugin has an update -",
+                XPluginsHasAnUpdate = "{0} plugins have an updates -",
+                Update = "update",
             };
 
             ChooseAudioTrack = new LanguageStructure.ChooseAudioTrack
@@ -1126,6 +1134,7 @@ namespace Nikse.SubtitleEdit.Logic
                 BreakLongLines = "Break long lines",
                 RemoveLineBreaks = "Remove line breaks in short texts with only one sentence",
                 RemoveLineBreaksAll = "Remove line breaks in short texts (all except dialogs)",
+                RemoveLineBreaksPixelWidth = "Unbreak subtitles that can fit on one line (pixel width)",
                 FixUppercaseIInsideLowercaseWords = "Fix uppercase 'i' inside lowercase words (OCR error)",
                 FixDoubleApostrophes = "Fix double apostrophe characters ('') to a single quote (\")",
                 AddPeriods = "Add period after lines where next line starts with uppercase letter",
@@ -1159,6 +1168,7 @@ namespace Nikse.SubtitleEdit.Logic
                 FixFirstLetterToUppercaseAfterParagraph = "Fix first letter to uppercase after paragraph",
                 MergeShortLine = "Merge short line (single sentence)",
                 MergeShortLineAll = "Merge short line (all except dialogs)",
+                UnbreakShortLinePixelWidth = "Unbreak short line (pixel width)",
                 BreakLongLine = "Break long line",
                 FixLongDisplayTime = "Fix long display time",
                 FixInvalidItalicTag = "Fix invalid italic tag",
@@ -1225,9 +1235,11 @@ namespace Nikse.SubtitleEdit.Logic
                 InfoAssaOn = "Note: Advanced SubStation Alpha styling will be used :)",
                 XGeneratedWithBurnedInSubsInX = "\"{0}\" generated with burned-in subtitle in {1}.",
                 TimeRemainingMinutes = "Time remaining: {0} minutes",
+                TimeRemainingOneMinute = "Time remaining: One minute",
                 TimeRemainingSeconds = "Time remaining: {0} seconds",
                 TimeRemainingAFewSeconds = "Time remaining: A few seconds",
                 TimeRemainingMinutesAndSeconds = "Time remaining: {0} minutes and {1} seconds",
+                TimeRemainingOneMinuteAndSeconds = "Time remaining: One minute and {0} seconds",
                 TargetFileName = "Target file name: {0}",
                 TargetFileSize = "Target file size (requires 2 pass encoding)",
                 FileSizeMb = "File size in MB",
@@ -1658,6 +1670,7 @@ namespace Nikse.SubtitleEdit.Logic
                 NothingToUndo = "Nothing to undo",
                 InvalidLanguageNameX = "Invalid language name: {0}",
                 DoNotDisplayMessageAgain = "Don't display this message again",
+                DoNotAutoLoadVideo = "Do not autoload video",
                 NumberOfCorrectedWords = "Number of corrected words: {0}",
                 NumberOfSkippedWords = "Number of skipped words: {0}",
                 NumberOfCorrectWords = "Number of correct words: {0}",
@@ -1844,6 +1857,7 @@ namespace Nikse.SubtitleEdit.Logic
                 SubtitleEditNeedsVideoPlayer = "Subtitle Edit needs a video player.",
                 UseRecommendMpv = "To use the recommended video player \"mpv\" click on the button below.",
                 DownloadAndUseMpv = "Download and use \"mpv\" as video player",
+                ChooseLayout = "Choose layout",
 
                 Menu = new LanguageStructure.Main.MainMenu
                 {
@@ -2064,8 +2078,7 @@ namespace Nikse.SubtitleEdit.Logic
                         BeautifyTimeCodes = "Beautify time codes",
                         Settings = "Settings",
                         Help = "Help",
-                        ShowHideWaveform = "Show/hide waveform",
-                        ShowHideVideo = "Show/hide video",
+                        Layout = "Layout",
                         AssaDraw = "Advanced Sub Station Alpha draw",
                     },
 
@@ -2644,6 +2657,7 @@ can edit in same subtitle file (collaboration)",
                 BeautifyTimeCodes = "Beautify time codes",
                 SettingsName = "Settings",
                 ToggleBookmarks = "Toggle bookmarks",
+                FocusTextBox = "Focus text box",
                 ToggleBookmarksWithComment = "Toggle bookmarks - add comment",
                 ClearBookmarks = "Clear bookmarks",
                 ExportBookmarks = "Export bookmarks...",
@@ -2882,12 +2896,13 @@ can edit in same subtitle file (collaboration)",
                 GraphicsButtons = "Graphics buttons",
                 ListViewAndTextBox = "List view and text box",
                 UpdateShortcut = "Update",
-                FoucsSetVideoPosition = "Focus set video position",
+                FocusSetVideoPosition = "Focus set video position",
                 ToggleDockUndockOfVideoControls = "Toggle dock/undock of video controls",
                 CreateSetEndAddNewAndGoToNew = "Set end, add new and go to new",
                 AdjustViaEndAutoStart = "Adjust via end position",
                 AdjustViaEndAutoStartAndGoToNext = "Adjust via end position and go to next",
                 AdjustSetEndMinusGapAndStartNextHere = "Set end minus gap, go to next and start next here",
+                AdjustSetStartTimeAndGoToNext = "Set start and go to next",
                 AdjustSetEndTimeAndGoToNext = "Set end and go to next",
                 AdjustSetEndTimeAndPause = "Set end and pause",
                 AdjustSetStartAutoDurationAndGoToNext = "Set start, auto duration and go to next",
@@ -3163,6 +3178,8 @@ can edit in same subtitle file (collaboration)",
                 CustomContinuationStyleNote = "Note: The custom continuation style is shared across profiles.",
                 ResetCustomContinuationStyleWarning = "This will override the values in the dialog. Are you sure?",
                 ExportAsHtml = "Export as HTML...",
+                SetNewActor = "Set new actor/voice",
+                SetActorX = "Set actor/voice {0}",
             };
 
             SettingsMpv = new LanguageStructure.SettingsMpv

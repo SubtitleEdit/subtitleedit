@@ -29,13 +29,12 @@
         private void InitializeComponent()
         {
             this.labelThresholdDescription = new System.Windows.Forms.Label();
-            this.numericUpDownThreshold = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownThreshold = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.pictureBoxSubtitleImage = new System.Windows.Forms.PictureBox();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.panelColorToWhite = new System.Windows.Forms.Panel();
-            this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.labelOriginalImage = new System.Windows.Forms.Label();
             this.labelPostImage = new System.Windows.Forms.Label();
             this.buttonColorToWhite = new System.Windows.Forms.Button();
@@ -48,7 +47,6 @@
             this.groupBoxColors = new System.Windows.Forms.GroupBox();
             this.checkBoxYellowToWhite = new System.Windows.Forms.CheckBox();
             this.checkBoxInvertColors = new System.Windows.Forms.CheckBox();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownThreshold)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSubtitleImage)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBoxBinaryImageCompareThreshold.SuspendLayout();
@@ -68,6 +66,19 @@
             // 
             // numericUpDownThreshold
             // 
+            this.numericUpDownThreshold.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownThreshold.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownThreshold.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownThreshold.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownThreshold.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownThreshold.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownThreshold.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownThreshold.DecimalPlaces = 0;
+            this.numericUpDownThreshold.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownThreshold.Location = new System.Drawing.Point(20, 32);
             this.numericUpDownThreshold.Maximum = new decimal(new int[] {
             765,
@@ -82,6 +93,8 @@
             this.numericUpDownThreshold.Name = "numericUpDownThreshold";
             this.numericUpDownThreshold.Size = new System.Drawing.Size(57, 20);
             this.numericUpDownThreshold.TabIndex = 15;
+            this.numericUpDownThreshold.TabStop = false;
+            this.numericUpDownThreshold.ThousandsSeparator = false;
             this.numericUpDownThreshold.Value = new decimal(new int[] {
             270,
             0,
@@ -299,7 +312,6 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "OCR image preprocessing";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SetForeColorThreshold_KeyDown);
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownThreshold)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSubtitleImage)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.groupBoxBinaryImageCompareThreshold.ResumeLayout(false);
@@ -317,13 +329,12 @@
         #endregion
 
         private System.Windows.Forms.Label labelThresholdDescription;
-        private System.Windows.Forms.NumericUpDown numericUpDownThreshold;
+        private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownThreshold;
         private System.Windows.Forms.PictureBox pictureBoxSubtitleImage;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Panel panelColorToWhite;
-        private System.Windows.Forms.ColorDialog colorDialog1;
         private System.Windows.Forms.Label labelOriginalImage;
         private System.Windows.Forms.Label labelPostImage;
         private System.Windows.Forms.Button buttonColorToWhite;

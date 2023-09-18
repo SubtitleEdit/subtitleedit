@@ -2,7 +2,7 @@
 <Language Name="Türkçe">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.13</Version>
+    <Version>4.0.1</Version>
     <TranslatedBy>Türkçe Çeviri: Falcon006
 Son eklemeler: ismail0100</TranslatedBy>
     <CultureName>tr-TR</CultureName>
@@ -2164,7 +2164,7 @@ Yeni oturum başlatın (işbirliği)</Information>
     <DarkThemeEnabled>Koyu tema kullan</DarkThemeEnabled>
     <DarkThemeShowGridViewLines>Liste görünümü kılavuz çizgilerini göster</DarkThemeShowGridViewLines>
     <UpdateShortcut>Güncelle</UpdateShortcut>
-    <FoucsSetVideoPosition>Odak video konumunu ayarla</FoucsSetVideoPosition>
+    <FocusSetVideoPosition>Odak video konumunu ayarla</FocusSetVideoPosition>
     <ToggleDockUndockOfVideoControls>Video kontrol geçişlerini azalt/azaltma</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Sonunu ayarla, yeni ekle ve yeniye git</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStart>Son konuma göre ayarla</AdjustViaEndAutoStart>

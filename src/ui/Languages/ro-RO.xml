@@ -2,7 +2,7 @@
 <Language Name="română">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.13</Version>
+    <Version>4.0.1</Version>
     <TranslatedBy>Tradus de Mircea Voiculescu</TranslatedBy>
     <CultureName>ro-RO</CultureName>
     <HelpFile />
@@ -2168,7 +2168,7 @@ pot edita aceeași subtitrare (colaborare)</Information>
     <DarkThemeEnabled>Folosește tema întunecată</DarkThemeEnabled>
     <DarkThemeShowGridViewLines>Arată liniile grilă ale listei</DarkThemeShowGridViewLines>
     <UpdateShortcut>Actualizare</UpdateShortcut>
-    <FoucsSetVideoPosition>Focalizarea setării poziției video</FoucsSetVideoPosition>
+    <FocusSetVideoPosition>Focalizarea setării poziției video</FocusSetVideoPosition>
     <ToggleDockUndockOfVideoControls>Comută între cuplarea/decuplarea comenzilor video</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Setează sfârșitul, adaugă Nou și accesează-l</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStart>Setează cu poziția de final</AdjustViaEndAutoStart>

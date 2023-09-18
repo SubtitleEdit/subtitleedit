@@ -3,6 +3,7 @@ using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4;
 using Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream;
+using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.Forms;
 using Nikse.SubtitleEdit.Core.Interfaces;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
@@ -22,7 +23,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core.Enums;
+using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -128,6 +129,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelStatus.Text = string.Empty;
             labelError.Visible = false;
             var l = LanguageSettings.Current.BatchConvert;
+            checkBoxMargins.Checked = true;
             Text = l.Title;
             groupBoxInput.Text = l.Input;
             labelChooseInputFiles.Text = l.InputDescription;
@@ -170,6 +172,8 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxAdjustDuration.Text = LanguageSettings.Current.AdjustDisplayDuration.Title;
             addFilesToolStripMenuItem.Text = l.AddFiles;
             groupBoxDeleteLines.Text = l.DeleteLines;
+            buttonBeautifyTimeCodesEditProfile.Text = LanguageSettings.Current.BeautifyTimeCodes.EditProfile;
+            groupBoxRemoveFormatting.Text = LanguageSettings.Current.Main.Menu.ContextMenu.RemoveFormatting;
             groupBoxAssaChangeRes.Text = LanguageSettings.Current.AssaResolutionChanger.Title;
             groupBoxSortBy.Text = LanguageSettings.Current.Main.Menu.Tools.SortBy;
             comboBoxSortBy.Items.Clear();
@@ -328,9 +332,6 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxUseStyleFromSource.Checked = Configuration.Settings.Tools.BatchConvertUseStyleFromSource;
             _customTextTemplate = Configuration.Settings.Tools.BatchConvertExportCustomTextTemplate;
 
-            comboBoxSubtitleFormats.AutoCompleteSource = AutoCompleteSource.ListItems;
-            comboBoxSubtitleFormats.AutoCompleteMode = AutoCompleteMode.Append;
-
             _bridgeGaps = new DurationsBridgeGaps(null);
             _bridgeGaps.InitializeSettingsOnly();
             buttonTransportStreamSettings.Visible = false;
@@ -488,176 +489,193 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemSelectAll.Text = LanguageSettings.Current.Main.Menu.ContextMenu.SelectAll;
             UpdateNumberOfFiles();
 
+            checkBoxRemoveAllFormatting.Text = LanguageSettings.Current.Main.Menu.ContextMenu.RemoveFormattingAll;
+            checkBoxRemoveItalic.Text = LanguageSettings.Current.Main.Menu.ContextMenu.RemoveFormattingItalic;
+            checkBoxRemoveBold.Text = LanguageSettings.Current.Main.Menu.ContextMenu.RemoveFormattingBold;
+            checkBoxRemoveUnderline.Text = LanguageSettings.Current.Main.Menu.ContextMenu.RemoveFormattingUnderline;
+            checkBoxRemoveFontName.Text = LanguageSettings.Current.Main.Menu.ContextMenu.RemoveFormattingFontName;
+            checkBoxRemoveColor.Text = LanguageSettings.Current.Main.Menu.ContextMenu.RemoveFormattingColor;
+            checkBoxRemoveAlignment.Text = LanguageSettings.Current.Main.Menu.ContextMenu.RemoveFormattingAlignment;
+
+            checkBoxRemoveAllFormatting.Checked = Configuration.Settings.Tools.BatchConvertRemoveFormattingAll;
+            checkBoxRemoveItalic.Checked = Configuration.Settings.Tools.BatchConvertRemoveFormattingItalic;
+            checkBoxRemoveBold.Checked = Configuration.Settings.Tools.BatchConvertRemoveFormattingBold;
+            checkBoxRemoveUnderline.Checked = Configuration.Settings.Tools.BatchConvertRemoveFormattingUnderline;
+            checkBoxRemoveFontName.Checked = Configuration.Settings.Tools.BatchConvertRemoveFormattingFontName;
+            checkBoxRemoveColor.Checked = Configuration.Settings.Tools.BatchConvertRemoveFormattingColor;
+            checkBoxRemoveAlignment.Checked = Configuration.Settings.Tools.BatchConvertRemoveFormattingAlignment;
+
             var fixItems = new List<FixActionItem>
             {
                 new FixActionItem
                 {
                     Text = l.RemoveFormatting,
                     Checked = Configuration.Settings.Tools.BatchConvertRemoveFormatting,
-                    Action = CommandLineConverter.BatchAction.RemoveFormatting
+                    Action = CommandLineConverter.BatchAction.RemoveFormatting,
+                    Control = groupBoxRemoveFormatting,
                 },
                 new FixActionItem
                 {
                     Text = l.RemoveStyleActor,
                     Checked = Configuration.Settings.Tools.BatchConvertRemoveStyle,
                     Action = CommandLineConverter.BatchAction.RemoveStyle,
-                    Control = groupBoxRemoveStyle
+                    Control = groupBoxRemoveStyle,
                 },
                 new FixActionItem
                 {
                     Text = l.RedoCasing,
                     Checked = Configuration.Settings.Tools.BatchConvertFixCasing,
                     Action = CommandLineConverter.BatchAction.RedoCasing,
-                    Control = groupBoxChangeCasing
+                    Control = groupBoxChangeCasing,
                 },
                 new FixActionItem
                 {
                     Text = l.RemoveTextForHI,
                     Checked = Configuration.Settings.Tools.BatchConvertRemoveTextForHI,
                     Action = CommandLineConverter.BatchAction.RemoveTextForHI,
-                    Control = buttonConvertOptionsSettings
+                    Control = buttonConvertOptionsSettings,
                 },
                 new FixActionItem
                 {
                     Text = l.ConvertColorsToDialog,
                     Checked = Configuration.Settings.Tools.BatchConvertConvertColorsToDialog,
                     Action = CommandLineConverter.BatchAction.ConvertColorsToDialog,
-                    Control = groupBoxConvertColorsToDialog
+                    Control = groupBoxConvertColorsToDialog,
                 },
                 new FixActionItem
                 {
                     Text = l.BridgeGaps,
                     Checked = Configuration.Settings.Tools.BatchConvertBridgeGaps,
                     Action = CommandLineConverter.BatchAction.BridgeGaps,
-                    Control = buttonConvertOptionsSettings
+                    Control = buttonConvertOptionsSettings,
                 },
                 new FixActionItem
                 {
                     Text = LanguageSettings.Current.FixCommonErrors.Title,
                     Checked = Configuration.Settings.Tools.BatchConvertFixCommonErrors,
                     Action = CommandLineConverter.BatchAction.FixCommonErrors,
-                    Control = buttonConvertOptionsSettings
+                    Control = buttonConvertOptionsSettings,
                 },
                 new FixActionItem
                 {
                     Text = LanguageSettings.Current.MultipleReplace.Title,
                     Checked = Configuration.Settings.Tools.BatchConvertMultipleReplace,
                     Action = CommandLineConverter.BatchAction.MultipleReplace,
-                    Control = buttonConvertOptionsSettings
+                    Control = buttonConvertOptionsSettings,
                 },
                 new FixActionItem
                 {
                     Text = l.FixRtl,
                     Checked = Configuration.Settings.Tools.BatchConvertFixRtl,
                     Action = CommandLineConverter.BatchAction.FixRtl,
-                    Control = groupBoxFixRtl
+                    Control = groupBoxFixRtl,
                 },
                 new FixActionItem
                 {
                     Text = l.SplitLongLines,
                     Checked = Configuration.Settings.Tools.BatchConvertSplitLongLines,
-                    Action = CommandLineConverter.BatchAction.SplitLongLines
+                    Action = CommandLineConverter.BatchAction.SplitLongLines,
                 },
                 new FixActionItem
                 {
                     Text = l.AutoBalance,
                     Checked = Configuration.Settings.Tools.BatchConvertAutoBalance,
-                    Action = CommandLineConverter.BatchAction.BalanceLines
+                    Action = CommandLineConverter.BatchAction.BalanceLines,
                 },
                 new FixActionItem
                 {
                     Text = LanguageSettings.Current.SetMinimumDisplayTimeBetweenParagraphs.Title,
                     Checked = Configuration.Settings.Tools.BatchConvertSetMinDisplayTimeBetweenSubtitles,
-                    Action = CommandLineConverter.BatchAction.SetMinGap
+                    Action = CommandLineConverter.BatchAction.SetMinGap,
                 },
                 new FixActionItem
                 {
                     Text = LanguageSettings.Current.MergedShortLines.Title,
                     Checked = Configuration.Settings.Tools.BatchConvertMergeShortLines,
                     Action = CommandLineConverter.BatchAction.MergeShortLines,
-                    Control = groupBoxMergeShortLines
+                    Control = groupBoxMergeShortLines,
                 },
                 new FixActionItem
                 {
                     Text = LanguageSettings.Current.BatchConvert.RemoveLineBreaks,
                     Checked = Configuration.Settings.Tools.BatchConvertRemoveLineBreaks,
-                    Action = CommandLineConverter.BatchAction.RemoveLineBreaks
+                    Action = CommandLineConverter.BatchAction.RemoveLineBreaks,
                 },
                 new FixActionItem
                 {
                     Text = LanguageSettings.Current.MergeDoubleLines.Title,
                     Checked = Configuration.Settings.Tools.BatchConvertMergeSameText,
-                    Action = CommandLineConverter.BatchAction.MergeSameTexts
+                    Action = CommandLineConverter.BatchAction.MergeSameTexts,
                 },
                 new FixActionItem
                 {
                     Text = LanguageSettings.Current.MergeTextWithSameTimeCodes.Title,
                     Checked = Configuration.Settings.Tools.BatchConvertMergeSameTimeCodes,
                     Action = CommandLineConverter.BatchAction.MergeSameTimeCodes,
-                    Control = groupBoxMergeSameTimeCodes
+                    Control = groupBoxMergeSameTimeCodes,
                 },
                 new FixActionItem
                 {
                     Text = LanguageSettings.Current.ChangeFrameRate.Title,
                     Checked = Configuration.Settings.Tools.BatchConvertChangeFrameRate,
                     Action = CommandLineConverter.BatchAction.ChangeFrameRate,
-                    Control = groupBoxChangeFrameRate
+                    Control = groupBoxChangeFrameRate,
                 },
                 new FixActionItem
                 {
                     Text = l.OffsetTimeCodes,
                     Checked = Configuration.Settings.Tools.BatchConvertOffsetTimeCodes,
                     Action = CommandLineConverter.BatchAction.OffsetTimeCodes,
-                    Control = groupBoxOffsetTimeCodes
+                    Control = groupBoxOffsetTimeCodes,
                 },
                 new FixActionItem
                 {
                     Text =  LanguageSettings.Current.ChangeSpeedInPercent.TitleShort,
                     Checked = Configuration.Settings.Tools.BatchConvertChangeSpeed,
                     Action = CommandLineConverter.BatchAction.ChangeSpeed,
-                    Control = groupBoxSpeed
+                    Control = groupBoxSpeed,
                 },
                 new FixActionItem
                 {
                     Text =  LanguageSettings.Current.AdjustDisplayDuration.Title,
                     Checked = Configuration.Settings.Tools.BatchConvertAdjustDisplayDuration,
                     Action = CommandLineConverter.BatchAction.AdjustDisplayDuration,
-                    Control = groupBoxAdjustDuration
+                    Control = groupBoxAdjustDuration,
                 },
                 new FixActionItem
                 {
                     Text =  LanguageSettings.Current.ApplyDurationLimits.Title,
                     Checked = Configuration.Settings.Tools.BatchConvertApplyDurationLimits,
                     Action = CommandLineConverter.BatchAction.ApplyDurationLimits,
-                    Control = groupBoxApplyDurationLimits
+                    Control = groupBoxApplyDurationLimits,
                 },
                 new FixActionItem
                 {
                     Text =  l.DeleteLines,
                     Checked = Configuration.Settings.Tools.BatchConvertDeleteLines,
                     Action = CommandLineConverter.BatchAction.DeleteLines,
-                    Control = groupBoxDeleteLines
+                    Control = groupBoxDeleteLines,
                 },
                 new FixActionItem
                 {
                     Text =  LanguageSettings.Current.AssaResolutionChanger.Title,
                     Checked = Configuration.Settings.Tools.BatchConvertAssaChangeRes,
                     Action = CommandLineConverter.BatchAction.AssaChangeRes,
-                    Control = groupBoxAssaChangeRes
+                    Control = groupBoxAssaChangeRes,
                 },
                 new FixActionItem
                 {
                     Text =  LanguageSettings.Current.Main.Menu.Tools.SortBy,
                     Checked = Configuration.Settings.Tools.BatchConvertSortBy,
                     Action = CommandLineConverter.BatchAction.SortBy,
-                    Control = groupBoxSortBy
+                    Control = groupBoxSortBy,
                 },
                 new FixActionItem
                 {
                     Text = LanguageSettings.Current.BeautifyTimeCodes.Title,
                     Checked = Configuration.Settings.Tools.BatchConvertBeautifyTimeCodes,
                     Action = CommandLineConverter.BatchAction.BeautifyTimeCodes,
-                    Control = groupBoxBeautifyTimeCodes
+                    Control = groupBoxBeautifyTimeCodes,
                 },
             };
             foreach (var fixItem in fixItems)
@@ -1217,10 +1235,6 @@ namespace Nikse.SubtitleEdit.Forms
             _errors = 0;
             _abort = false;
 
-            var worker1 = SpawnWorker();
-            var worker2 = SpawnWorker();
-            var worker3 = SpawnWorker();
-
             listViewInputFiles.BeginUpdate();
             foreach (ListViewItem item in listViewInputFiles.Items)
             {
@@ -1554,7 +1568,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                             item.SubItems[3].Text = LanguageSettings.Current.BatchConvert.Converted;
                         }
-                        else if (isVobSub) 
+                        else if (isVobSub)
                         {
                             item.SubItems[3].Text = LanguageSettings.Current.BatchConvert.Ocr;
                             using (var vobSubOcr = new VobSubOcr())
@@ -1782,11 +1796,6 @@ namespace Nikse.SubtitleEdit.Forms
                                 sub = ApplyFixesStep1(sub, bluRaySubtitles);
                             }
 
-                            while (worker1.IsBusy && worker2.IsBusy && worker3.IsBusy)
-                            {
-                                Application.DoEvents();
-                            }
-
                             var parameter = new ThreadDoWorkParameter(
                                 IsActionEnabled(CommandLineConverter.BatchAction.FixCommonErrors),
                                 IsActionEnabled(CommandLineConverter.BatchAction.MultipleReplace),
@@ -1805,18 +1814,8 @@ namespace Nikse.SubtitleEdit.Forms
                                 fromFormat,
                                 binaryParagraphs);
 
-                            if (!worker1.IsBusy)
-                            {
-                                worker1.RunWorkerAsync(parameter);
-                            }
-                            else if (!worker2.IsBusy)
-                            {
-                                worker2.RunWorkerAsync(parameter);
-                            }
-                            else if (!worker3.IsBusy)
-                            {
-                                worker3.RunWorkerAsync(parameter);
-                            }
+                            ApplyFixesStep2(parameter, Configuration.Settings.Tools.BatchConvertFixRtlMode);
+                            ThreadWorkerCompleted(parameter);
                         }
                     }
                 }
@@ -1828,25 +1827,8 @@ namespace Nikse.SubtitleEdit.Forms
 
                 index++;
                 WindowsHelper.PreventStandBy();
+                Application.DoEvents();
             }
-
-            while (worker1.IsBusy || worker2.IsBusy || worker3.IsBusy)
-            {
-                try
-                {
-                    Application.DoEvents();
-                }
-                catch
-                {
-                    // ignored
-                }
-                Thread.Sleep(10);
-            }
-
-            // dispose workers
-            worker1.Dispose();
-            worker2.Dispose();
-            worker3.Dispose();
 
             _converting = false;
             labelStatus.Text = string.Empty;
@@ -1898,7 +1880,7 @@ namespace Nikse.SubtitleEdit.Forms
             var sub = matroska.GetSubtitle(track.TrackNumber, null);
             var subtitleImages = new List<DvbSubPes>();
             var subtitles = new List<IBinaryParagraphWithPosition>();
-            for (int index = 0; index < sub.Count; index++)
+            for (var index = 0; index < sub.Count; index++)
             {
                 try
                 {
@@ -1991,7 +1973,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var minDuration = checkBoxApplyDurationLimitsMinDuration.Checked ? (int)numericUpDownApplyDurationLimitsMinDuration.Value : 0;
                 var maxDuration = checkBoxApplyDurationLimitsMaxDuration.Checked ? (int)numericUpDownApplyDurationLimitsMaxDuration.Value : int.MaxValue;
                 var shotChanges = checkBoxApplyDurationLimitsCheckShotChanges.Checked ? GetShotChangesOrEmpty(sub.FileName) : new List<double>();
-                
+
                 TryUpdateCurrentFrameRate(sub.FileName);
 
                 var fixDurationLimits = new FixDurationLimits(minDuration, maxDuration, shotChanges);
@@ -2056,6 +2038,14 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
+            var removeFormattingAll = checkBoxRemoveAllFormatting.Checked;
+            var removeFormattingBold = checkBoxRemoveBold.Checked;
+            var removeFormattingItalic = checkBoxRemoveItalic.Checked;
+            var removeFormattingUnderline = checkBoxRemoveUnderline.Checked;
+            var removeFormattingColor = checkBoxRemoveColor.Checked;
+            var removeFormattingFontName = checkBoxRemoveFontName.Checked;
+            var removeFormattingAlignment = checkBoxRemoveAlignment.Checked;
+
             var prev = sub.GetParagraphOrDefault(0);
             var first = true;
             foreach (var p in sub.Paragraphs)
@@ -2068,7 +2058,61 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (IsActionEnabled(CommandLineConverter.BatchAction.RemoveFormatting))
                 {
-                    p.Text = HtmlUtil.RemoveHtmlTags(p.Text, true);
+                    if (removeFormattingAll)
+                    {
+                        p.Text = HtmlUtil.RemoveHtmlTags(p.Text, true);
+                    }
+                    else
+                    {
+                        if (removeFormattingBold)
+                        {
+                            p.Text = HtmlUtil.RemoveOpenCloseTags(p.Text, HtmlUtil.TagBold);
+                            p.Text = p.Text
+                                .Replace("{\\b}", string.Empty)
+                                .Replace("{\\b0}", string.Empty)
+                                .Replace("{\\b1}", string.Empty);
+                        }
+
+                        if (removeFormattingItalic)
+                        {
+                            p.Text = HtmlUtil.RemoveOpenCloseTags(p.Text, HtmlUtil.TagItalic);
+                            p.Text = p.Text
+                                .Replace("{\\i}", string.Empty)
+                                .Replace("{\\i0}", string.Empty)
+                                .Replace("{\\i1}", string.Empty);
+                        }
+
+                        if (removeFormattingUnderline)
+                        {
+                            p.Text = HtmlUtil.RemoveOpenCloseTags(p.Text, HtmlUtil.TagUnderline);
+                            p.Text = p.Text
+                                .Replace("{\\u}", string.Empty)
+                                .Replace("{\\u0}", string.Empty)
+                                .Replace("{\\u1}", string.Empty);
+                        }
+
+                        if (removeFormattingColor)
+                        {
+                            p.Text = HtmlUtil.RemoveColorTags(p.Text);
+                            if (p.Text.Contains("\\c") || p.Text.Contains("\\1c"))
+                            {
+                                p.Text = HtmlUtil.RemoveAssaColor(p.Text);
+                            }
+                        }
+
+                        if (removeFormattingFontName)
+                        {
+                            p.Text = HtmlUtil.RemoveFontName(p.Text);
+                        }
+
+                        if (removeFormattingAlignment)
+                        {
+                            if (p.Text.Contains('{'))
+                            {
+                                p.Text = HtmlUtil.RemoveAssAlignmentTags(p.Text);
+                            }
+                        }
+                    }
                 }
 
                 if (!numericUpDownPercent.Value.Equals(100) && IsActionEnabled(CommandLineConverter.BatchAction.ChangeSpeed))
@@ -2266,6 +2310,22 @@ namespace Nikse.SubtitleEdit.Forms
 
             foreach (var p in sub.Paragraphs)
             {
+                if (fixMargins)
+                {
+                    if (p.MarginL != null && int.TryParse(p.MarginL, out var marginL) && marginL != 0)
+                    {
+                        p.MarginL = AssaResampler.Resample(sourceWidth, targetWidth, marginL).ToString(CultureInfo.InvariantCulture);
+                    }
+                    if (p.MarginR != null && int.TryParse(p.MarginR, out var marginR) && marginR != 0)
+                    {
+                        p.MarginR = AssaResampler.Resample(sourceWidth, targetWidth, marginR).ToString(CultureInfo.InvariantCulture);
+                    }
+                    if (p.MarginV != null && int.TryParse(p.MarginV, out var marginV) && marginV != 0)
+                    {
+                        p.MarginV = AssaResampler.Resample(sourceWidth, targetWidth, marginV).ToString(CultureInfo.InvariantCulture);
+                    }
+                }
+
                 if (fixFonts)
                 {
                     p.Text = AssaResampler.ResampleOverrideTagsFont(sourceWidth, targetWidth, sourceHeight, targetHeight, p.Text);
@@ -2359,14 +2419,6 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             return false;
-        }
-
-        private BackgroundWorker SpawnWorker()
-        {
-            var worker = new BackgroundWorker();
-            worker.DoWork += DoThreadWork;
-            worker.RunWorkerCompleted += ThreadWorkerCompleted;
-            return worker;
         }
 
         /// <summary>
@@ -2569,16 +2621,6 @@ namespace Nikse.SubtitleEdit.Forms
             Application.DoEvents();
         }
 
-        private static void DoThreadWork(object sender, DoWorkEventArgs e)
-        {
-            var p = (ThreadDoWorkParameter)e.Argument;
-            var mode = Configuration.Settings.Tools.BatchConvertFixRtlMode;
-
-            ApplyFixesStep2(p, mode);
-
-            e.Result = p;
-        }
-
         private static void ApplyFixesStep2(ThreadDoWorkParameter p, string mode)
         {
             if (p.FixRtl && mode == RemoveUnicode)
@@ -2701,10 +2743,9 @@ namespace Nikse.SubtitleEdit.Forms
             p.Subtitle.Renumber();
         }
 
-        private void ThreadWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        private void ThreadWorkerCompleted(ThreadDoWorkParameter p)
         {
             CommandLineConverter.BatchConvertProgress progressCallback = null;
-            var p = (ThreadDoWorkParameter)e.Result;
             if (p.Item.Index + 2 < listViewInputFiles.Items.Count)
             {
                 listViewInputFiles.EnsureVisible(p.Item.Index + 2);
@@ -2766,7 +2807,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         binaryParagraphs = _binaryParagraphLookup[p.FileName];
                     }
-                    else if (FileUtil.IsVobSub(p.FileName) && p.BinaryParagraphs != null && p.BinaryParagraphs.Count > 0)
+                    else if (p.BinaryParagraphs != null && p.BinaryParagraphs.Count > 0 && File.Exists(p.FileName) && FileUtil.IsVobSub(p.FileName))
                     {
                         binaryParagraphs = p.BinaryParagraphs;
                     }
@@ -3234,6 +3275,15 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.Tools.BatchConvertSplitLongLines = IsActionEnabled(CommandLineConverter.BatchAction.SplitLongLines);
             Configuration.Settings.Tools.BatchConvertAutoBalance = IsActionEnabled(CommandLineConverter.BatchAction.BalanceLines);
             Configuration.Settings.Tools.BatchConvertRemoveFormatting = IsActionEnabled(CommandLineConverter.BatchAction.RemoveFormatting);
+
+            Configuration.Settings.Tools.BatchConvertRemoveFormattingAll = checkBoxRemoveAllFormatting.Checked;
+            Configuration.Settings.Tools.BatchConvertRemoveFormattingItalic = checkBoxRemoveItalic.Checked;
+            Configuration.Settings.Tools.BatchConvertRemoveFormattingBold = checkBoxRemoveBold.Checked;
+            Configuration.Settings.Tools.BatchConvertRemoveFormattingUnderline = checkBoxRemoveUnderline.Checked;
+            Configuration.Settings.Tools.BatchConvertRemoveFormattingFontName = checkBoxRemoveFontName.Checked;
+            Configuration.Settings.Tools.BatchConvertRemoveFormattingColor = checkBoxRemoveColor.Checked;
+            Configuration.Settings.Tools.BatchConvertRemoveFormattingAlignment = checkBoxRemoveAlignment.Checked;
+
             Configuration.Settings.Tools.BatchConvertBridgeGaps = IsActionEnabled(CommandLineConverter.BatchAction.BridgeGaps);
             Configuration.Settings.Tools.BatchConvertRemoveTextForHI = IsActionEnabled(CommandLineConverter.BatchAction.RemoveTextForHI);
             Configuration.Settings.Tools.BatchConvertConvertColorsToDialog = IsActionEnabled(CommandLineConverter.BatchAction.ConvertColorsToDialog);
@@ -3258,6 +3308,7 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.Tools.BatchConvertSortBy = IsActionEnabled(CommandLineConverter.BatchAction.SortBy);
             Configuration.Settings.Tools.BatchConvertSortByChoice = comboBoxSortBy.Text;
             Configuration.Settings.Tools.MergeShortLinesMaxGap = (int)numericUpDownMaxMillisecondsBetweenLines.Value;
+            Configuration.Settings.Tools.MergeShortLinesMaxChars = (int)numericUpDownMaxCharacters.Value;
             Configuration.Settings.Tools.MergeShortLinesOnlyContinuous = checkBoxOnlyContinuationLines.Checked;
             Configuration.Settings.Tools.BatchConvertDeleteLines = IsActionEnabled(CommandLineConverter.BatchAction.DeleteLines);
             Configuration.Settings.Tools.BatchConvertAssaChangeRes = IsActionEnabled(CommandLineConverter.BatchAction.AssaChangeRes);
@@ -3332,7 +3383,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 buttonConvert.Text = LanguageSettings.Current.BatchConvert.Convert;
                 Application.DoEvents();
-                SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(25), () => buttonConvert.Enabled = true);
+                TaskDelayHelper.RunDelayed(TimeSpan.FromMilliseconds(25), () => buttonConvert.Enabled = true);
             }
             else
             {
@@ -3626,7 +3677,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void listViewConvertOptions_SelectedIndexChanged(object sender, EventArgs e)
         {
-            foreach (ListViewItem item in listViewConvertOptions.Items)  
+            foreach (ListViewItem item in listViewConvertOptions.Items)
             {
                 if (item.Tag is FixActionItem fi && fi.Control != null)
                 {
@@ -3914,6 +3965,17 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 form.ShowDialog(this);
             }
+        }
+
+        private void checkBoxRemoveAllFormatting_CheckedChanged(object sender, EventArgs e)
+        {
+            var enabled = !checkBoxRemoveAllFormatting.Checked;
+            checkBoxRemoveBold.Enabled = enabled;
+            checkBoxRemoveItalic.Enabled = enabled;
+            checkBoxRemoveUnderline.Enabled = enabled;
+            checkBoxRemoveColor.Enabled = enabled;
+            checkBoxRemoveFontName.Enabled = enabled;
+            checkBoxRemoveAlignment.Enabled = enabled;
         }
     }
 }

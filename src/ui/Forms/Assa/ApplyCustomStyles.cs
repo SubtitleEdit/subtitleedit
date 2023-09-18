@@ -119,7 +119,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             }
         }
 
-        private ListBox DoIntellisense(SETextBox tb, ListBox intellisenseListBox)
+        private ListBox DoIntellisense(NikseTextBox tb, ListBox intellisenseListBox)
         {
             if (intellisenseListBox == null)
             {
@@ -135,7 +135,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                         }
 
                         intellisenseListBox.Hide();
-                        System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(10), () => tb.Focus());
+                        TaskDelayHelper.RunDelayed(TimeSpan.FromMilliseconds(10), () => tb.Focus());
                     }
                 };
                 intellisenseListBox.KeyDown += (o, args) =>
@@ -439,6 +439,12 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             }
 
             e.Cancel = true;
+        }
+
+        private void ApplyCustomStyles_Shown(object sender, EventArgs e)
+        {
+            seTextBox1.Refresh();
+            seTextBox1.Focus();
         }
     }
 }

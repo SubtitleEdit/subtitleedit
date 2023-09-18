@@ -1,12 +1,12 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Logic;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Globalization;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core.Common;
-using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Controls
 {
@@ -22,10 +22,9 @@ namespace Nikse.SubtitleEdit.Controls
             HHMMSSFF
         }
 
-        private readonly bool _designMode = LicenseManager.UsageMode == LicenseUsageMode.Designtime;
+        private bool _loading = true;
 
         private const int NumericUpDownValue = 50;
-
 
         private bool _forceHHMMSSFF;
 
@@ -44,6 +43,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public void SetAutoWidth()
         {
+            Invalidate();
         }
 
         public TimeMode Mode
@@ -59,8 +59,8 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        [Category("NikseTimeUpDown"), Description("Gets or sets the increment value")]
-        public decimal Increment { get; set; } = 100;
+        [Category("NikseTimeUpDown"), Description("Gets or sets the increment value"), DefaultValue(100)]
+        public decimal Increment { get; set; }
 
         [Category("NikseTimeUpDown"), Description("Allow arrow keys to set increment/decrement value")]
         [DefaultValue(true)]
@@ -189,17 +189,36 @@ namespace Nikse.SubtitleEdit.Controls
         {
             if (!_maskedTextBox.Focused && e.KeyCode == (Keys.Control | Keys.C))
             {
-                Clipboard.SetText(_maskedTextBox.Text);
+                _maskedTextBox.Copy();
                 e.Handled = true;
             }
         }
 
+        protected override void OnFontChanged(EventArgs e)
+        {
+            base.OnFontChanged(e);
+            Invalidate();
+        }
+
         public NikseTimeUpDown()
         {
+            SetStyle(ControlStyles.OptimizedDoubleBuffer |
+                     ControlStyles.UserPaint |
+                     ControlStyles.ResizeRedraw |
+                     ControlStyles.Selectable |
+                     ControlStyles.AllPaintingInWmPaint, true);
+
             _maskedTextBox = new MaskedTextBox();
             Height = 23;
+            _maskedTextBox.FontChanged += (o, args) =>
+            {
+                base.OnFontChanged(args);
+                Invalidate();
+            };
             _maskedTextBox.BorderStyle = BorderStyle.None;
             _maskedTextBox.Font = UiUtil.GetDefaultFont();
+            _maskedTextBox.Left = 2;
+            _maskedTextBox.Top = (Height - _maskedTextBox.Height) / 2;
             _maskedTextBox.KeyPress += TextBox_KeyPress;
             _maskedTextBox.KeyDown += (sender, e) =>
             {
@@ -215,8 +234,12 @@ namespace Nikse.SubtitleEdit.Controls
                 }
                 else if (e.KeyData == Keys.Enter)
                 {
-                    AddValue(0);
-                    e.SuppressKeyPress = true;
+                    if (!_maskedTextBox.MaskCompleted)
+                    {
+                        AddValue(0);
+                    }
+
+                    Invalidate();
                 }
                 if (e.Modifiers == Keys.Control && e.KeyCode == Keys.A)
                 {
@@ -225,7 +248,7 @@ namespace Nikse.SubtitleEdit.Controls
                 }
                 if (e.Modifiers == Keys.Control && e.KeyCode == Keys.C)
                 {
-                    Clipboard.SetText(_maskedTextBox.Text);
+                    _maskedTextBox.Copy();
                     e.SuppressKeyPress = true;
                 }
                 if (e.Modifiers == Keys.Control && e.KeyCode == Keys.V)
@@ -239,10 +262,17 @@ namespace Nikse.SubtitleEdit.Controls
                          e.KeyData != Keys.Right)
                 {
                     _dirty = true;
+                    Invalidate();
                 }
             };
-            _maskedTextBox.LostFocus += (sender, args) => Invalidate();
-            _maskedTextBox.GotFocus += (sender, args) => Invalidate();
+            _maskedTextBox.LostFocus += (sender, args) =>
+            {
+                Invalidate();
+            };
+            _maskedTextBox.GotFocus += (sender, args) =>
+            {
+                Invalidate();
+            };
             _maskedTextBox.MouseDown += (sender, e) =>
             {
                 if (e.Button == MouseButtons.Right)
@@ -252,16 +282,15 @@ namespace Nikse.SubtitleEdit.Controls
             };
 
             Controls.Add(_maskedTextBox);
-            BackColor = new TextBox().BackColor;
             ButtonForeColor = DefaultForeColor;
             ButtonForeColorOver = Color.FromArgb(0, 120, 215);
             ButtonForeColorDown = Color.Orange;
             BorderColor = Color.FromArgb(171, 173, 179);
             BorderColorDisabled = Color.FromArgb(120, 120, 120);
             BackColorDisabled = Color.FromArgb(240, 240, 240);
-            DoubleBuffered = true;
             InterceptArrowKeys = true;
             Increment = 100;
+            BackColor = SystemColors.Window;
 
             _repeatTimer = new Timer();
             _repeatTimer.Tick += (sender, args) =>
@@ -287,7 +316,26 @@ namespace Nikse.SubtitleEdit.Controls
                 AddValue(0);
             };
 
+            MouseWheel += (sender, e) =>
+            {
+                if (_maskedTextBox == null)
+                {
+                    return;
+                }
+
+                if (e.Delta > 0)
+                {
+                    AddValue(Increment);
+                }
+                else if (e.Delta < 0)
+                {
+                    AddValue(-Increment);
+                }
+            };
+
             TabStop = false;
+
+            _loading = false;
         }
 
         public MaskedTextBox MaskedTextBox => _maskedTextBox;
@@ -296,21 +344,33 @@ namespace Nikse.SubtitleEdit.Controls
         {
             _dirty = false;
             _initialTotalMilliseconds = milliseconds;
+            string mask;
             if (UseVideoOffset)
             {
                 milliseconds += Configuration.Settings.General.CurrentVideoOffsetInMs;
             }
+
             if (Mode == TimeMode.HHMMSSMS)
             {
-                _maskedTextBox.Mask = GetMask(milliseconds);
+                mask = GetMask(milliseconds);
+                if (_maskedTextBox.Mask != mask)
+                {
+                    _maskedTextBox.Mask = mask;
+                }
+
                 _maskedTextBox.Text = new TimeCode(milliseconds).ToString();
             }
             else
             {
                 var tc = new TimeCode(milliseconds);
-                _maskedTextBox.Mask = GetMaskFrames(milliseconds);
+                mask = GetMaskFrames(milliseconds);
+                if (_maskedTextBox.Mask != mask)
+                {
+                    _maskedTextBox.Mask = mask;
+                }
                 _maskedTextBox.Text = tc.ToString().Substring(0, 9) + $"{Core.SubtitleFormats.SubtitleFormat.MillisecondsToFrames(tc.Milliseconds):00}";
             }
+
             _dirty = false;
         }
 
@@ -324,7 +384,7 @@ namespace Nikse.SubtitleEdit.Controls
         {
             get
             {
-                if (_designMode)
+                if (_loading)
                 {
                     return new TimeCode();
                 }
@@ -425,7 +485,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
             set
             {
-                if (_designMode)
+                if (_loading)
                 {
                     return;
                 }
@@ -466,29 +526,6 @@ namespace Nikse.SubtitleEdit.Controls
         private static string GetMask(double val) => val >= 0 ? "00:00:00.000" : "-00:00:00.000";
 
         private static string GetMaskFrames(double val) => val >= 0 ? "00:00:00:00" : "-00:00:00:00";
-
-        public void Theme()
-        {
-            var enabled = Enabled;
-            Enabled = true;
-            if (Configuration.Settings.General.UseDarkTheme)
-            {
-                BackColor = DarkTheme.BackColor;
-                MaskedTextBox.BackColor = DarkTheme.BackColor;
-                BackColor = DarkTheme.BackColor;
-            }
-            else
-            {
-                BackColor = DefaultBackColor;
-                using (var tb = new TextBox())
-                {
-                    MaskedTextBox.BackColor = tb.BackColor;
-                    BackColor = tb.BackColor;
-                }
-            }
-
-            Enabled = enabled;
-        }
 
         /// <summary>
         /// Allow only digits, Enter and Backspace key.
@@ -545,6 +582,7 @@ namespace Nikse.SubtitleEdit.Controls
                         SetTotalMilliseconds(milliseconds.Value - Core.SubtitleFormats.SubtitleFormat.FramesToMilliseconds(1));
                     }
                 }
+
                 TimeCodeChanged?.Invoke(this, null);
             }
         }
@@ -670,6 +708,11 @@ namespace Nikse.SubtitleEdit.Controls
             get => base.Enabled;
             set
             {
+                if (value == Enabled)
+                {
+                    return;
+                }
+
                 base.Enabled = value;
                 Invalidate();
             }
@@ -681,20 +724,45 @@ namespace Nikse.SubtitleEdit.Controls
             get => base.Height;
             set
             {
+                if (_maskedTextBox != null)
+                {
+                    _maskedTextBox.Height = value - 4;
+                }
+
                 base.Height = value;
-                _maskedTextBox.Height = value - 4;
+                Invalidate();
+            }
+        }
+
+        [RefreshProperties(RefreshProperties.Repaint)]
+        public new int Width
+        {
+            get => base.Width;
+            set
+            {
+                if (_maskedTextBox != null)
+                {
+                    _maskedTextBox.Width = Width - ButtonsWidth - 3;
+                }
+
+                base.Width = value;
                 Invalidate();
             }
         }
 
         protected override void OnPaint(PaintEventArgs e)
         {
+            if (_loading)
+            {
+                return;
+            }
+
             e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
             _maskedTextBox.BackColor = BackColor;
             _maskedTextBox.ForeColor = ButtonForeColor;
-            _maskedTextBox.Top = 2;
+            //_maskedTextBox.Top = 2;
             _maskedTextBox.Left = RightToLeft == RightToLeft.Yes ? ButtonsWidth : 3;
-            _maskedTextBox.Height = Height - 4;
+            //_maskedTextBox.Height = Height - 4;
             _maskedTextBox.Width = Width - ButtonsWidth - 3;
             _maskedTextBox.Invalidate();
 
@@ -704,23 +772,23 @@ namespace Nikse.SubtitleEdit.Controls
                 return;
             }
 
-            base.OnPaint(e);
+            e.Graphics.Clear(BackColor);
             using (var pen = _maskedTextBox.Focused ? new Pen(_buttonForeColorOver, 1f) : new Pen(BorderColor, 1f))
             {
-                var borderRectangle = new Rectangle(e.ClipRectangle.X, e.ClipRectangle.Y, e.ClipRectangle.Width - 1, e.ClipRectangle.Height - 1);
+                var borderRectangle = new Rectangle(0, 0, Width - 1, Height - 1);
                 e.Graphics.DrawRectangle(pen, borderRectangle);
             }
 
             var brush = _buttonForeColorBrush;
             var left = RightToLeft == RightToLeft.Yes ? 3 : Width - ButtonsWidth;
-            var height = e.ClipRectangle.Height / 2 - 4;
+            var height = Height / 2 - 4;
             var top = 2;
             if (_buttonUpActive)
             {
                 brush = _buttonLeftIsDown ? _buttonForeColorDownBrush : _buttonForeColorOverBrush;
             }
 
-            DrawArrowUp(e, brush, left, top, height);
+            NikseUpDown.DrawArrowUp(e.Graphics, brush, left, top, height);
 
             if (_buttonDownActive)
             {
@@ -732,7 +800,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
 
             top = height + 5;
-            DrawArrowDown(e, brush, left, top, height);
+            NikseUpDown.DrawArrowDown(e.Graphics, brush, left, top, height);
         }
 
         [RefreshProperties(RefreshProperties.Repaint)]
@@ -755,12 +823,11 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 base.ForeColor = value;
                 _maskedTextBox.ForeColor = value;
-                Application.DoEvents();
                 Invalidate();
             }
         }
 
-        [RefreshProperties(RefreshProperties.Repaint)]
+        [RefreshProperties(RefreshProperties.Repaint), DefaultValue(typeof(Color), "0xFFFFFFFF")]
         public override Color BackColor
         {
             get => base.BackColor;
@@ -768,54 +835,27 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 base.BackColor = value;
                 _maskedTextBox.BackColor = value;
-                Application.DoEvents();
                 Invalidate();
             }
         }
 
-        private static void DrawArrowDown(PaintEventArgs e, Brush brush, int left, int top, int height)
-        {
-            e.Graphics.FillPolygon(brush,
-                new[]
-                {
-                    new Point(left + 5, top + height),
-                    new Point(left + 0, top + 0),
-                    new Point(left + 10, top + 0)
-                });
-        }
-
-        private static void DrawArrowUp(PaintEventArgs e, Brush brush, int left, int top, int height)
-        {
-            e.Graphics.FillPolygon(brush,
-                new[]
-                {
-                    new Point(left + 5, top + 0),
-                    new Point(left + 0, top + height),
-                    new Point(left + 10, top + height)
-                });
-        }
-
         private void DrawDisabled(PaintEventArgs e)
         {
-            using (var brushBg = new SolidBrush(BackColorDisabled))
-            {
-                e.Graphics.FillRectangle(brushBg, e.ClipRectangle);
-            }
-
+            e.Graphics.Clear(BackColorDisabled);
             using (var pen = new Pen(BorderColorDisabled, 1f))
             {
-                var borderRectangle = new Rectangle(e.ClipRectangle.X, e.ClipRectangle.Y, e.ClipRectangle.Width - 1, e.ClipRectangle.Height - 1);
+                var borderRectangle = new Rectangle(0, 0, Width - 1, Height - 1);
                 e.Graphics.DrawRectangle(pen, borderRectangle);
             }
 
-            var left = RightToLeft == RightToLeft.Yes ? 3 : e.ClipRectangle.Width - ButtonsWidth;
-            var height = e.ClipRectangle.Height / 2 - 4;
+            var left = RightToLeft == RightToLeft.Yes ? 3 : Width - ButtonsWidth;
+            var height = Height / 2 - 4;
             var top = 2;
             using (var brush = new SolidBrush(BorderColorDisabled))
             {
-                DrawArrowUp(e, brush, left, top, height);
+                NikseUpDown.DrawArrowUp(e.Graphics, brush, left, top, height);
                 top = height + 5;
-                DrawArrowDown(e, brush, left, top, height);
+                NikseUpDown.DrawArrowDown(e.Graphics, brush, left, top, height);
             }
         }
 

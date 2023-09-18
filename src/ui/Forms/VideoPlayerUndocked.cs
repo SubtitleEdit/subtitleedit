@@ -52,7 +52,7 @@ namespace Nikse.SubtitleEdit.Forms
             _videoPlayerContainer.ShowCursor();
             if (RedockOnFullscreenEnd)
             {
-                _mainForm.RedockVideoControlsToolStripMenuItemClick(null, null);
+                _mainForm.RedockFromFullscreen();
             }
             else if (e.CloseReason == CloseReason.UserClosing && panelContainer.Controls.Count > 0)
             {
@@ -61,7 +61,6 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     panelContainer.Controls.Clear();
                     _mainForm.ReDockVideoPlayer(control);
-                    _mainForm.SetVideoPlayerToggleOff();
                 }
             }
         }
@@ -256,6 +255,7 @@ namespace Nikse.SubtitleEdit.Forms
             _videoPlayerContainer.SubtitleText = string.Empty;
             _videoPlayerContainer.ShowFullscreenButton = Configuration.Settings.General.VideoPlayerShowFullscreenButton;
             _videoPlayerContainer.ShowNonFullScreenControls();
+            _videoPlayerContainer.UnSetFullFixed();
             if (RedockOnFullscreenEnd)
             {
                 Close();

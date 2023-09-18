@@ -12,6 +12,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
+using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -40,6 +41,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
+            textBoxLog.ScrollBars = ScrollBars.Both;
             UiUtil.FixFonts(this);
 
             _loading = true;
@@ -181,15 +183,13 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 initialFont = UiUtil.GetDefaultFont().Name;
             }
-            foreach (var x in FontFamily.Families)
+
+            foreach (var x in FontHelper.GetRegularOrBoldCapableFontFamilies())
             {
-                if (x.IsStyleAvailable(FontStyle.Regular) || x.IsStyleAvailable(FontStyle.Bold))
+                comboBoxSubtitleFont.Items.Add(x.Name);
+                if (x.Name.Equals(initialFont, StringComparison.OrdinalIgnoreCase))
                 {
-                    comboBoxSubtitleFont.Items.Add(x.Name);
-                    if (x.Name.Equals(initialFont, StringComparison.OrdinalIgnoreCase))
-                    {
-                        comboBoxSubtitleFont.SelectedIndex = comboBoxSubtitleFont.Items.Count - 1;
-                    }
+                    comboBoxSubtitleFont.SelectedIndex = comboBoxSubtitleFont.Items.Count - 1;
                 }
             }
             if (comboBoxSubtitleFont.SelectedIndex < 0 && comboBoxSubtitleFont.Items.Count > 0)
@@ -831,7 +831,6 @@ namespace Nikse.SubtitleEdit.Forms
                 else
                 {
                     textBoxLog.Visible = true;
-                    textBoxLog.ScrollBars = ScrollBars.Both;
                     textBoxLog.BringToFront();
                     textBoxLog.Dock = DockStyle.Fill;
 
@@ -850,6 +849,10 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         textBoxLog.Text = _log.ToString();
                     }
+
+                    textBoxLog.Focus();
+                    textBoxLog.SelectionStart = textBoxLog.Text.Length;
+                    textBoxLog.ScrollToCaret();
                 }
                 e.SuppressKeyPress = true;
             }

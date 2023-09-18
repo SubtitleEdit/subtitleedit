@@ -7,6 +7,7 @@ using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Forms;
 using Nikse.SubtitleEdit.Forms.ShotChanges;
 using Nikse.SubtitleEdit.Logic;
+using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
 {
@@ -84,7 +85,7 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
                 _shotChanges = shotChanges;
 
                 // Check if ffprobe is available              
-                if (!IsFfProbeAvailable())
+                if (!IsFfProbeAvailable(this))
                 {
                     checkBoxExtractExactTimeCodes.Enabled = false;
                     checkBoxExtractExactTimeCodes.Checked = false;
@@ -210,7 +211,7 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
                     progressBarExtractTimeCodes.Maximum = Convert.ToInt32(_duration);
                 }
 
-                progressBarExtractTimeCodes.Value = Convert.ToInt32(_timeCodesGenerator.LastSeconds);
+                progressBarExtractTimeCodes.Value = Math.Min(Convert.ToInt32(_timeCodesGenerator.LastSeconds), progressBarExtractTimeCodes.Maximum);
                 labelExtractTimeCodesProgress.Text = FormatSeconds(_timeCodesGenerator.LastSeconds) + @" / " + FormatSeconds(_duration);
             }
         }
@@ -274,10 +275,10 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
                 checkBoxExtractExactTimeCodes.Checked ? _timeCodes : new List<double>(), // ditto
                 checkBoxSnapToShotChanges.Checked ? _shotChanges : new List<double>()
             );
-            timeCodesBeautifier.ProgressChanged += delegate (double progress)
+            timeCodesBeautifier.ProgressChanged += delegate (int progress)
             {
-                progressBar.Value = Convert.ToInt32(progress * 100);
-                Application.DoEvents();
+                progressBar.Value = progress;
+                progressBar.Invalidate();
             };
             timeCodesBeautifier.Beautify();
 
@@ -321,12 +322,46 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             _abortTimeCodes = true;
         }
 
-        public static bool IsFfProbeAvailable()
+        public static bool IsFfProbeAvailable(Form parentForm)
         {
-            return !Configuration.IsRunningOnWindows || (
-                !string.IsNullOrWhiteSpace(Configuration.Settings.General.FFmpegLocation) 
-                && File.Exists(Path.Combine(Path.GetDirectoryName(Configuration.Settings.General.FFmpegLocation), "ffprobe.exe"))
-            );
+            if (!Configuration.IsRunningOnWindows)
+            {
+                return true;
+            }
+
+            var ffprobeExists = !string.IsNullOrWhiteSpace(Configuration.Settings.General.FFmpegLocation) 
+                            && File.Exists(Path.Combine(Path.GetDirectoryName(Configuration.Settings.General.FFmpegLocation), "ffprobe.exe"));
+
+            if (!ffprobeExists)
+            {
+                if (MessageBox.Show(string.Format(LanguageSettings.Current.Settings.DownloadX, "ffprobe"), "Subtitle Edit", MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
+                {
+                    return false;
+                }
+
+                using (var form = new DownloadFfmpeg("ffprobe"))
+                {
+                    if (form.ShowDialog(parentForm) == DialogResult.OK)
+                    {
+                        return !string.IsNullOrWhiteSpace(Configuration.Settings.General.FFmpegLocation)
+                               && File.Exists(Path.Combine(Path.GetDirectoryName(Configuration.Settings.General.FFmpegLocation), "ffprobe.exe"));
+                    }
+                }
+            }
+
+            return ffprobeExists;
+        }
+
+        private void BeautifyTimeCodes_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape)
+            {
+                DialogResult = DialogResult.Cancel;
+            }
+            else if (e.KeyData == UiUtil.HelpKeys)
+            {
+                UiUtil.ShowHelp("#beautify_time_codes");
+            }
         }
     }
 }

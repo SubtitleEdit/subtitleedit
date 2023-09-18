@@ -11,7 +11,6 @@ namespace Nikse.SubtitleEdit.Core.Common
 {
     public static class ShotChangeHelper
     {
-
         private static string GetShotChangesFileName(string videoFileName)
         {
             var dir = Configuration.ShotChangesDirectory.TrimEnd(Path.DirectorySeparatorChar);
@@ -89,14 +88,19 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public static double? GetPreviousShotChange(List<double> shotChanges, TimeCode currentTime)
         {
-            try
-            {
-                return shotChanges.Last(x => SubtitleFormat.MillisecondsToFrames(x * 1000) <= SubtitleFormat.MillisecondsToFrames(currentTime.TotalMilliseconds));
-            }
-            catch (InvalidOperationException)
+            if (shotChanges == null || shotChanges.Count == 0)
             {
                 return null;
             }
+
+            var maxDifference = (TimeCodesBeautifierUtils.GetFrameDurationMs() - 1) / 1000;
+            var previousShotChange = shotChanges.FirstOnOrBefore(currentTime.TotalSeconds, maxDifference, -1);
+            if (previousShotChange >= 0)
+            {
+                return previousShotChange;
+            }
+
+            return null;
         }
 
         public static double? GetPreviousShotChangeInMs(List<double> shotChanges, TimeCode currentTime)
@@ -123,14 +127,19 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public static double? GetNextShotChange(List<double> shotChanges, TimeCode currentTime)
         {
-            try
-            {
-                return shotChanges.First(x => SubtitleFormat.MillisecondsToFrames(x * 1000) >= SubtitleFormat.MillisecondsToFrames(currentTime.TotalMilliseconds));
-            }
-            catch (InvalidOperationException)
+            if (shotChanges == null || shotChanges.Count == 0)
             {
                 return null;
             }
+
+            var maxDifference = (TimeCodesBeautifierUtils.GetFrameDurationMs() - 1) / 1000;
+            var nextShotChange = shotChanges.FirstOnOrAfter(currentTime.TotalSeconds, maxDifference, -1);
+            if (nextShotChange >= 0)
+            {
+                return nextShotChange;
+            }
+
+            return null;
         }
 
         public static double? GetNextShotChangeInMs(List<double> shotChanges, TimeCode currentTime)
@@ -154,17 +163,15 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             return null;
         }
-
+        
         public static double? GetClosestShotChange(List<double> shotChanges, TimeCode currentTime)
         {
-            try
-            {
-                return shotChanges.Aggregate((x, y) => Math.Abs(x - currentTime.TotalSeconds) < Math.Abs(y - currentTime.TotalSeconds) ? x : y);
-            }
-            catch (InvalidOperationException)
+            if (shotChanges == null || shotChanges.Count == 0)
             {
                 return null;
             }
+
+            return shotChanges.ClosestTo(currentTime.TotalSeconds);
         }
 
         public static bool IsCueOnShotChange(List<double> shotChanges, TimeCode currentTime, bool isInCue)

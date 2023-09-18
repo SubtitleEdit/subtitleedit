@@ -16,6 +16,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -495,8 +496,6 @@ namespace Nikse.SubtitleEdit.Forms
                     comboBoxDictionaries.SelectedIndex = comboBoxDictionaries.Items.Count - 1;
                 }
             }
-            comboBoxDictionaries.AutoCompleteSource = AutoCompleteSource.ListItems;
-            comboBoxDictionaries.AutoCompleteMode = AutoCompleteMode.Append;
             comboBoxDictionaries.SelectedIndexChanged += ComboBoxDictionariesSelectedIndexChanged;
         }
 
@@ -1855,7 +1854,7 @@ namespace Nikse.SubtitleEdit.Forms
             menuItem = new ToolStripMenuItem(LanguageSettings.Current.Main.Menu.ContextMenu.RemoveBookmark);
             menuItem.Click += (sender2, e2) =>
             {
-                _mainForm.RemoveBookmark(index, _mainForm);
+                _mainForm.RemoveBookmark(index);
                 pictureBoxBookmark.Hide();
             };
             bookmarkContextMenu.Items.Add(menuItem);

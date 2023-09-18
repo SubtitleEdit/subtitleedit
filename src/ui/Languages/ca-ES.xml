@@ -2,7 +2,7 @@
 <Language Name="català">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.13</Version>
+    <Version>4.0.1</Version>
     <TranslatedBy>Traduït per Juansa</TranslatedBy>
     <CultureName>ca-ES</CultureName>
     <HelpFile />
@@ -2073,7 +2073,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ListView>Vista llista</ListView>
     <TextBox>Quadre de text</TextBox>
     <UpdateShortcut>Actualització</UpdateShortcut>
-    <FoucsSetVideoPosition>El focus estableix posició del vídeo</FoucsSetVideoPosition>
+    <FocusSetVideoPosition>El focus estableix posició del vídeo</FocusSetVideoPosition>
     <ToggleDockUndockOfVideoControls>Activa/desactiva acoblament/desacoblament controls vídeo</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Estableix final, afegeix nou i Aneu al nou</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStart>Ajustament via posició final</AdjustViaEndAutoStart>

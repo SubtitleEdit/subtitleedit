@@ -8,6 +8,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -52,7 +53,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             checkBoxExtractTimeCodes.Text = LanguageSettings.Current.AddWaveformBatch.ExtractTimeCodes;
             checkBoxExtractTimeCodes.Left = checkBoxGenerateShotChanges.Left - checkBoxExtractTimeCodes.Width - 20;
-            checkBoxExtractTimeCodes.Visible = BeautifyTimeCodes.BeautifyTimeCodes.IsFfProbeAvailable();
+            checkBoxExtractTimeCodes.Visible = BeautifyTimeCodes.BeautifyTimeCodes.IsFfProbeAvailable(this);
 
             if (checkBoxExtractTimeCodes.Visible)
             {
@@ -307,7 +308,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 return;
                             }
 
-                            using (var form = new DownloadFfmpeg())
+                            using (var form = new DownloadFfmpeg("FFmpeg"))
                             {
                                 if (form.ShowDialog(this) == DialogResult.OK && !string.IsNullOrEmpty(form.FFmpegPath))
                                 {
@@ -375,15 +376,15 @@ namespace Nikse.SubtitleEdit.Forms
                     UpdateStatus(LanguageSettings.Current.AddWaveformBatch.Calculating);
                     MakeWaveformAndSpectrogram(fileName, targetFile, _delayInMilliseconds);
 
-                    UpdateStatus(LanguageSettings.Current.AddWaveformBatch.ExtractingTimeCodes);
                     if (checkBoxExtractTimeCodes.Visible && checkBoxExtractTimeCodes.Checked)
                     {
+                        UpdateStatus(LanguageSettings.Current.AddWaveformBatch.ExtractingTimeCodes);
                         ExtractTimeCodes(fileName);
                     }
 
-                    UpdateStatus(LanguageSettings.Current.AddWaveformBatch.DetectingShotChanges);
                     if (checkBoxGenerateShotChanges.Visible && checkBoxGenerateShotChanges.Checked)
                     {
+                        UpdateStatus(LanguageSettings.Current.AddWaveformBatch.DetectingShotChanges);
                         GenerateShotChanges(fileName);
                     }
 
@@ -501,7 +502,14 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (e.KeyCode == Keys.Escape)
             {
-                _abort = true;
+                if (_converting)
+                {
+                    _abort = true;
+                }
+                else
+                {
+                    DialogResult = DialogResult.Cancel;
+                }
             }
         }
 
