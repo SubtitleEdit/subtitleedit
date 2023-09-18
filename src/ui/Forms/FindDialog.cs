@@ -169,9 +169,12 @@ namespace Nikse.SubtitleEdit.Forms
                 e.SuppressKeyPress = true;
                 e.Handled = true;
 
-                FindNext();
-                Focus();
-                textBoxFind.Focus();
+                TaskDelayHelper.RunDelayed(TimeSpan.FromMilliseconds(25), () =>
+                {
+                    FindNext();
+                    Focus();
+                    textBoxFind.Focus();
+                });
             }
         }
 
@@ -182,9 +185,12 @@ namespace Nikse.SubtitleEdit.Forms
                 e.SuppressKeyPress = true;
                 e.Handled = true;
 
-                FindNext();
-                Focus();
-                comboBoxFind.Focus();
+                TaskDelayHelper.RunDelayed(TimeSpan.FromMilliseconds(25), () =>
+                {
+                    FindNext();
+                    Focus();
+                    comboBoxFind.Focus();
+                });
             }
         }
 
