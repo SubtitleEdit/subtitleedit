@@ -33,7 +33,7 @@ namespace Nikse.SubtitleEdit.Logic
      * </para>
      * </summary>
      */
-    internal class DisplayableParagraphHelper
+    public class DisplayableParagraphHelper
     {
         /// <summary>
         /// The percentage of the visible timeline that must be covered by paragraphs before a paragraph outside the visible area may be chosen.
