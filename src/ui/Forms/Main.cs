@@ -9576,6 +9576,27 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripMenuItemPasteSpecial.Visible = false;
             }
 
+            var selectLinesStatistics = new ToolStripMenuItem(LanguageSettings.Current.Main.Menu.File.Statistics);
+            UiUtil.FixFonts(selectLinesStatistics);
+            selectLinesStatistics.Tag = "(REMOVE)";
+            if (SubtitleListview1.SelectedItems.Count > 1)
+            {
+                toolStripMenuItemSelectedLines.DropDownItems.Insert(1, selectLinesStatistics);
+            }
+            selectLinesStatistics.Click += (senderNew, eNew) =>
+            {
+                var sub = new Subtitle();
+                foreach (var idx in SubtitleListview1.GetSelectedIndices())
+                {
+                    sub.Paragraphs.Add(new Paragraph(_subtitle.Paragraphs[idx], false));
+                }
+
+                using (var form = new Statistics(sub, LanguageSettings.Current.Main.SelectedLines, GetCurrentSubtitleFormat()))
+                {
+                    form.ShowDialog(this);
+                }
+            };
+
             toolStripMenuItemSurroundWithMusicSymbols.Text = Configuration.Settings.Tools.MusicSymbol;
             if (string.IsNullOrEmpty(Configuration.Settings.Tools.MusicSymbol))
             {
