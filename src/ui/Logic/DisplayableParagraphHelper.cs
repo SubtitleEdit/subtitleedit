@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Security.Cryptography.X509Certificates;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Logic
@@ -48,6 +49,8 @@ namespace Nikse.SubtitleEdit.Logic
         /// </summary>
         private readonly List<Paragraph> _paragraphs = new List<Paragraph>();
 
+        private TimelinePartition paragraphPartition;
+
         /// <summary>
         /// The beginning of the invisible area that paragraphs may be chosen from to improve scrolling.
         /// </summary>
@@ -79,6 +82,8 @@ namespace Nikse.SubtitleEdit.Logic
 
             _startVisibleMilliseconds = startMilliseconds;
             _endVisibleMilliseconds = endMilliseconds;
+
+            paragraphPartition = new TimelinePartition(_startThresholdMilliseconds, _endThresholdMilliseconds, 100);
         }
 
         /// <summary>
@@ -90,6 +95,7 @@ namespace Nikse.SubtitleEdit.Logic
             if (IsInThreshold(p))
             {
                 _paragraphs.Add(p);
+                paragraphPartition.Add(p);
             }
         }
 
@@ -251,7 +257,7 @@ namespace Nikse.SubtitleEdit.Logic
                 previousNumberOfParagraphs = previousRecord.numberOfParagraphs;
             }
 
-            
+
             if (startIndex < currentCoverage.Count - 1)
             {
                 int currentIndex = startIndex + 1;
@@ -386,23 +392,41 @@ namespace Nikse.SubtitleEdit.Logic
             // The paragraph has already been selected, so we no longer need its cache entry.
             coverageCache.Remove(p);
             List<Paragraph> keysToUpdate = new List<Paragraph>();
-            foreach (Paragraph key in coverageCache.Keys)
+            HashSet<Paragraph> partitionedParagraphs = paragraphPartition.GetPartitionedParagraphs(p);
+            partitionedParagraphs.Remove(p);
+            //partitionedParagraphs.IntersectWith(coverageCache.Keys);
+
+            foreach (Paragraph key in partitionedParagraphs)
             {
                 if (ParagraphsOverlap(key, p))
                 {
-                    keysToUpdate.Add(key);   
+                    keysToUpdate.Add(key);
                 }
             }
+
+            //List<Paragraph> realKeysToUpdate = new List<Paragraph>();
+            //foreach (Paragraph key in coverageCache.Keys)
+            //{
+            //    if (ParagraphsOverlap(key, p))
+            //    {
+            //        realKeysToUpdate.Add(key);
+            //    }
+            //}
+
             foreach (Paragraph key in keysToUpdate)
             {
-                double overlapMillis = CalculateOverlapLength(key, p);
-                coverageCache[key] += overlapMillis / key.DurationTotalMilliseconds;
+                if (coverageCache.TryGetValue(key, out double coverage))
+                {
+                    double overlapMillis = CalculateOverlapLength(key, p);
+                    coverageCache[key] = coverage + overlapMillis / key.DurationTotalMilliseconds;
+                }
             }
         }
 
+
         private double CalculateOverlapLength(Paragraph p1, Paragraph p2)
         {
-            double overlapStart = Math.Max(p1.StartTime.TotalMilliseconds , p2.StartTime.TotalMilliseconds);
+            double overlapStart = Math.Max(p1.StartTime.TotalMilliseconds, p2.StartTime.TotalMilliseconds);
             double overlapEnd = Math.Min(p1.EndTime.TotalMilliseconds, p2.EndTime.TotalMilliseconds);
             return overlapEnd - overlapStart;
         }
@@ -426,7 +450,7 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 recordIndex = ~recordIndex;
 
-                if(recordIndex > 0)
+                if (recordIndex > 0)
                 {
                     // Carry over the overlap from the previous item to keep layers correct.
                     newRecord.numberOfParagraphs = records[recordIndex - 1].numberOfParagraphs;
@@ -488,6 +512,100 @@ namespace Nikse.SubtitleEdit.Logic
                 // Calculation is (x.start - y.start) so that if x comes first, difference is < 0.
                 return Math.Sign(x.StartTime.TotalMilliseconds - y.StartTime.TotalMilliseconds);
             }
+        }
+
+        private class TimelinePartition
+        {
+
+            private double _startMillis;
+            private double _endMillis;
+            private int _partitionCount;
+
+            private HashSet<Paragraph>[] _partitions;
+
+            public TimelinePartition(double startMillis, double endMillis, int partitionCount)
+            {
+                _startMillis = startMillis;
+                _endMillis = endMillis;
+                _partitionCount = partitionCount;
+
+                _partitions = new HashSet<Paragraph>[_partitionCount];
+            }
+
+            public void Add(Paragraph p)
+            {
+                PartitionRange insertRange = GetPartitionRange(p);
+                for (var i = insertRange.StartIndex; i <= insertRange.EndIndex; i++)
+                {
+                    if (_partitions[i] == null)
+                    {
+                        _partitions[i] = new HashSet<Paragraph>();
+                    }
+                    _partitions[i].Add(p);
+                }
+            }
+
+            public HashSet<Paragraph> GetPartitionedParagraphs(Paragraph p)
+            {
+                PartitionRange range = GetPartitionRange(p);
+                HashSet<Paragraph> result = new HashSet<Paragraph>();
+                for (var i = range.StartIndex; i < range.EndIndex; i++)
+                {
+                    HashSet<Paragraph> partition = _partitions[i];
+                    if (partition != null)
+                    {
+                        result.UnionWith(partition);
+                    }
+                }
+                return result;
+            }
+
+            private int GetPartitionNumber(double timestampMillis, bool roundUp)
+            {
+                double timeSpan = _endMillis - _startMillis;
+                double partitionWidth = timeSpan / _partitionCount;
+                double partitionNumberFraction = (timestampMillis - _startMillis) / partitionWidth;
+                int partitionNumber;
+                if (roundUp)
+                {
+                    partitionNumber = (int)Math.Ceiling(partitionNumberFraction);
+                }
+                else
+                {
+                    partitionNumber = (int)Math.Floor(partitionNumberFraction);
+                }
+
+                if (partitionNumber < 0)
+                {
+                    partitionNumber = 0;
+                }
+                else if (partitionNumber >= _partitionCount)
+                {
+                    partitionNumber = _partitionCount - 1;
+                }
+
+                return partitionNumber;
+            }
+
+            public PartitionRange GetPartitionRange(Paragraph p)
+            {
+                int startPartition = GetPartitionNumber(p.StartTime.TotalMilliseconds, false);
+                int endPartition = GetPartitionNumber(p.EndTime.TotalMilliseconds, true);
+                return new PartitionRange(startPartition, endPartition);
+            }
+
+
+            public class PartitionRange
+            {
+                public PartitionRange(int startIndex, int endIndex)
+                {
+                    StartIndex = startIndex;
+                    EndIndex = endIndex;
+                }
+                public int StartIndex { get; }
+                public int EndIndex { get; }
+            }
+
         }
 
 
