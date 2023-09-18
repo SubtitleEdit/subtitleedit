@@ -462,6 +462,8 @@ namespace Nikse.SubtitleEdit.Core.Common
         public int AudioToTextLineMaxChars { get; set; }
         public int AudioToTextLineMaxCharsJp { get; set; }
         public int AudioToTextLineMaxCharsCn { get; set; }
+        public int BreakLinesLongerThan { get; set; }
+        public int UnbreakLinesLongerThan { get; set; }
 
         public ToolsSettings()
         {
@@ -6855,6 +6857,17 @@ $HorzAlign          =   Center
                 settings.Tools.AudioToTextLineMaxCharsCn = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
+            subNode = node.SelectSingleNode("BreakLinesLongerThan");
+            if (subNode != null)
+            {
+                settings.Tools.BreakLinesLongerThan = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("UnbreakLinesLongerThan");
+            if (subNode != null)
+            {
+                settings.Tools.UnbreakLinesLongerThan = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
 
             subNode = node.SelectSingleNode("FindHistory");
             if (subNode != null)
@@ -11588,6 +11601,8 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("AudioToTextLineMaxChars", settings.Tools.AudioToTextLineMaxChars.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AudioToTextLineMaxCharsJp", settings.Tools.AudioToTextLineMaxCharsJp.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AudioToTextLineMaxCharsCn", settings.Tools.AudioToTextLineMaxCharsCn.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("UnbreakLinesLongerThan", settings.Tools.UnbreakLinesLongerThan.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("BreakLinesLongerThan", settings.Tools.BreakLinesLongerThan.ToString(CultureInfo.InvariantCulture));
 
                 if (settings.Tools.FindHistory != null && settings.Tools.FindHistory.Count > 0)
                 {
