@@ -14,7 +14,7 @@ namespace Nikse.SubtitleEdit.Logic
         public const int LayoutNoVideo = 7;
         public static SplitContainer MainSplitContainer;
 
-        public static void SetLayout(int layout, Form form, Control videoPlayer, SubtitleListView subtitleListView, GroupBox groupBoxWaveform, GroupBox groupBoxEdit)
+        public static void SetLayout(int layout, Form form, Control videoPlayer, SubtitleListView subtitleListView, GroupBox groupBoxWaveform, GroupBox groupBoxEdit, SplitterEventHandler splitMoved)
         {
             if (layout > LayoutNoVideo || layout < 0)
             {
@@ -24,34 +24,34 @@ namespace Nikse.SubtitleEdit.Logic
             switch (layout)
             {
                 case 0:
-                    SetLayout0(form, videoPlayer, subtitleListView, groupBoxWaveform, groupBoxEdit);
+                    SetLayout0(form, videoPlayer, subtitleListView, groupBoxWaveform, groupBoxEdit, splitMoved);
                     break;
                 case 1:
-                    SetLayout1(form, videoPlayer, subtitleListView, groupBoxWaveform, groupBoxEdit);
+                    SetLayout1(form, videoPlayer, subtitleListView, groupBoxWaveform, groupBoxEdit, splitMoved);
                     break;
                 case 2:
-                    SetLayout2(form, videoPlayer, subtitleListView, groupBoxWaveform, groupBoxEdit);
+                    SetLayout2(form, videoPlayer, subtitleListView, groupBoxWaveform, groupBoxEdit, splitMoved);
                     break;
                 case 3:
-                    SetLayout3(form, videoPlayer, subtitleListView, groupBoxWaveform, groupBoxEdit);
+                    SetLayout3(form, videoPlayer, subtitleListView, groupBoxWaveform, groupBoxEdit, splitMoved);
                     break;
                 case 4:
-                    SetLayout4(form, videoPlayer, subtitleListView, groupBoxWaveform, groupBoxEdit);
+                    SetLayout4(form, videoPlayer, subtitleListView, groupBoxWaveform, groupBoxEdit, splitMoved);
                     break;
                 case 5:
-                    SetLayout5(form, videoPlayer, subtitleListView, groupBoxWaveform, groupBoxEdit);
+                    SetLayout5(form, videoPlayer, subtitleListView, groupBoxWaveform, groupBoxEdit, splitMoved);
                     break;
                 case 6:
-                    SetLayout6(form, videoPlayer, subtitleListView, groupBoxWaveform, groupBoxEdit);
+                    SetLayout6(form, videoPlayer, subtitleListView, groupBoxWaveform, groupBoxEdit, splitMoved);
                     break;
                 case 7:
-                    SetLayout7(form, videoPlayer, subtitleListView, groupBoxWaveform, groupBoxEdit);
+                    SetLayout7(form, videoPlayer, subtitleListView, groupBoxWaveform, groupBoxEdit, splitMoved);
                     break;
             }
         }
 
         // default layout (video right)
-        private static void SetLayout0(Form form, Control videoPlayerContainer, SubtitleListView subtitleListView, GroupBox groupBoxWaveform, GroupBox groupBoxEdit)
+        private static void SetLayout0(Form form, Control videoPlayerContainer, SubtitleListView subtitleListView, GroupBox groupBoxWaveform, GroupBox groupBoxEdit, SplitterEventHandler splitMoved)
         {
             var spMain = new SplitContainer();
             MainSplitContainer = spMain;
@@ -91,6 +91,10 @@ namespace Nikse.SubtitleEdit.Logic
             spLeftTop.SplitterDistance = form.Width / 2;
             spMain.SplitterDistance = CalculateWaveformHeight(form);
             spLeftBottom.SplitterDistance = CalculateListViewHeight(spLeftBottom);
+
+            spMain.SplitterMoved += splitMoved;
+            spLeftTop.SplitterMoved += splitMoved;
+            spLeftBottom.SplitterMoved += splitMoved;
         }
 
         private static int CalculateWaveformHeight(Control control)
@@ -118,7 +122,7 @@ namespace Nikse.SubtitleEdit.Logic
         }
 
         // like default layout, but video left
-        private static void SetLayout1(Form form, Control videoPlayerContainer, SubtitleListView subtitleListView, GroupBox groupBoxWaveform, GroupBox groupBoxEdit)
+        private static void SetLayout1(Form form, Control videoPlayerContainer, SubtitleListView subtitleListView, GroupBox groupBoxWaveform, GroupBox groupBoxEdit, SplitterEventHandler splitMoved)
         {
             var spMain = new SplitContainer();
             MainSplitContainer = spMain;
@@ -158,10 +162,14 @@ namespace Nikse.SubtitleEdit.Logic
             spLeftTop.SplitterDistance = form.Width / 2;
             spMain.SplitterDistance = CalculateWaveformHeight(form);
             spLeftBottom.SplitterDistance = CalculateListViewHeight(spLeftBottom);
+
+            spMain.SplitterMoved += splitMoved;
+            spLeftTop.SplitterMoved += splitMoved;
+            spLeftBottom.SplitterMoved += splitMoved;
         }
 
         // mobile - video right
-        private static void SetLayout2(Form form, Control videoPlayerContainer, SubtitleListView subtitleListView, GroupBox groupBoxWaveform, GroupBox groupBoxEdit)
+        private static void SetLayout2(Form form, Control videoPlayerContainer, SubtitleListView subtitleListView, GroupBox groupBoxWaveform, GroupBox groupBoxEdit, SplitterEventHandler splitMoved)
         {
             var spMain = new SplitContainer();
             MainSplitContainer = spMain;
@@ -203,10 +211,14 @@ namespace Nikse.SubtitleEdit.Logic
             spMain.SplitterDistance = (int)(form.Width * 0.75);
             spLeftTop.SplitterDistance = Math.Max(0, spLeftTop.Height - 125 - 270);
             spLeftBottom.SplitterDistance = Math.Max(0, spLeftBottom.Height - 270);
+
+            spMain.SplitterMoved += splitMoved;
+            spLeftTop.SplitterMoved += splitMoved;
+            spLeftBottom.SplitterMoved += splitMoved;
         }
 
         // mobile - video left
-        private static void SetLayout3(Form form, Control videoPlayerContainer, SubtitleListView subtitleListView, GroupBox groupBoxWaveform, GroupBox groupBoxEdit)
+        private static void SetLayout3(Form form, Control videoPlayerContainer, SubtitleListView subtitleListView, GroupBox groupBoxWaveform, GroupBox groupBoxEdit, SplitterEventHandler splitMoved)
         {
             var spMain = new SplitContainer();
             MainSplitContainer = spMain;
@@ -248,10 +260,14 @@ namespace Nikse.SubtitleEdit.Logic
             spMain.SplitterDistance = (int)(form.Width * 0.25);
             spLeftTop.SplitterDistance = Math.Max(0, spLeftTop.Height - 125 - 270);
             spLeftBottom.SplitterDistance = Math.Max(0, spLeftBottom.Height - 270);
+
+            spMain.SplitterMoved += splitMoved;
+            spLeftTop.SplitterMoved += splitMoved;
+            spLeftBottom.SplitterMoved += splitMoved;
         }
 
         // all stacked horizontal
-        private static void SetLayout4(Form form, Control videoPlayerContainer, SubtitleListView subtitleListView, GroupBox groupBoxWaveform, GroupBox groupBoxEdit)
+        private static void SetLayout4(Form form, Control videoPlayerContainer, SubtitleListView subtitleListView, GroupBox groupBoxWaveform, GroupBox groupBoxEdit, SplitterEventHandler splitMoved)
         {
             var spMain = new SplitContainer();
             MainSplitContainer = spMain;
@@ -291,10 +307,14 @@ namespace Nikse.SubtitleEdit.Logic
             form.Controls.Add(spMain);
             spMain.Dock = DockStyle.Fill;
             spMain.BringToFront();
+
+            spMain.SplitterMoved += splitMoved;
+            spLeftTop.SplitterMoved += splitMoved;
+            spLeftBottom.SplitterMoved += splitMoved;
         }
 
         // stacked, no video player
-        private static void SetLayout5(Form form, Control videoPlayerContainer, SubtitleListView subtitleListView, GroupBox groupBoxWaveform, GroupBox groupBoxEdit)
+        private static void SetLayout5(Form form, Control videoPlayerContainer, SubtitleListView subtitleListView, GroupBox groupBoxWaveform, GroupBox groupBoxEdit, SplitterEventHandler splitMoved)
         {
             var spMain = new SplitContainer();
             MainSplitContainer = spMain;
@@ -326,10 +346,14 @@ namespace Nikse.SubtitleEdit.Logic
             // auto size
             spMain.SplitterDistance = Math.Max(0, spMain.Height - 125 - 270);
             spLeftTop.SplitterDistance = Math.Max(0, spLeftTop.Height - 270);
+
+            spMain.SplitterMoved += splitMoved;
+            spLeftTop.SplitterMoved += splitMoved;
+
         }
 
         // no waveform, video right
-        private static void SetLayout6(Form form, Control videoPlayerContainer, SubtitleListView subtitleListView, GroupBox groupBoxWaveform, GroupBox groupBoxEdit)
+        private static void SetLayout6(Form form, Control videoPlayerContainer, SubtitleListView subtitleListView, GroupBox groupBoxWaveform, GroupBox groupBoxEdit, SplitterEventHandler splitMoved)
         {
             var spMain = new SplitContainer();
             MainSplitContainer = spMain;
@@ -359,10 +383,13 @@ namespace Nikse.SubtitleEdit.Logic
             // auto size
             spMain.SplitterDistance = (int)(spMain.Width * 0.4);
             spLeftTop.SplitterDistance = Math.Max(0, spLeftTop.Height - 125);
+
+            spMain.SplitterMoved += splitMoved;
+            spLeftTop.SplitterMoved += splitMoved;
         }
 
         // no video or waveform
-        private static void SetLayout7(Form form, Control videoPlayerContainer, SubtitleListView subtitleListView, GroupBox groupBoxWaveform, GroupBox groupBoxEdit)
+        private static void SetLayout7(Form form, Control videoPlayerContainer, SubtitleListView subtitleListView, GroupBox groupBoxWaveform, GroupBox groupBoxEdit, SplitterEventHandler splitMoved)
         {
             var spMain = new SplitContainer();
             MainSplitContainer = spMain;
