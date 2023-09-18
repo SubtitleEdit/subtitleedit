@@ -1059,26 +1059,28 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
             if (!text.StartsWith('-') && noOfNamesRemoved >= 1 && Utilities.GetNumberOfLines(text) == 2)
             {
-                var lines = text.SplitToLines();
-                var part0 = lines[0].Trim().Replace("</i>", string.Empty).Trim();
-                if (!part0.EndsWith(',') && (!part0.EndsWith('-') || noOfNamesRemovedNotInLineOne > 0))
+                if (input.Contains("-") || noOfNamesRemoved > 1)
                 {
-                    if (part0.Length > 0 && ".?!".Contains(part0[part0.Length - 1]))
+                    var lines = text.SplitToLines();
+                    var part0 = lines[0].Trim().Replace("</i>", string.Empty).Trim();
+                    if (!part0.EndsWith(',') && (!part0.EndsWith('-') || noOfNamesRemovedNotInLineOne > 0))
                     {
-                        if (noOfNamesRemovedNotInLineOne > 0)
+                        if (part0.Length > 0 && ".?!".Contains(part0[part0.Length - 1]))
                         {
-                            if (!st.Pre.Contains('-') && !text.Contains(Environment.NewLine + "-"))
+                            if (noOfNamesRemovedNotInLineOne > 0)
                             {
-
-                                text = "- " + text;
-                                if (!text.Contains(Environment.NewLine + "<i>- "))
+                                if (!st.Pre.Contains('-') && !text.Contains(Environment.NewLine + "-"))
+                                {
+                                    text = "- " + text;
+                                    if (!text.Contains(Environment.NewLine + "<i>- "))
+                                    {
+                                        text = text.Replace(Environment.NewLine, Environment.NewLine + "- ");
+                                    }
+                                }
+                                if (!text.Contains(Environment.NewLine + "-") && !text.Contains(Environment.NewLine + "<i>-"))
                                 {
                                     text = text.Replace(Environment.NewLine, Environment.NewLine + "- ");
                                 }
-                            }
-                            if (!text.Contains(Environment.NewLine + "-") && !text.Contains(Environment.NewLine + "<i>-"))
-                            {
-                                text = text.Replace(Environment.NewLine, Environment.NewLine + "- ");
                             }
                         }
                     }
@@ -1245,6 +1247,8 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
         private static readonly HashSet<string> HiDescriptionWords = new HashSet<string>(new[]
         {
+            "breathes",
+            "breathes deeply",
             "cackles",
             "cheers",
             "chitters",
@@ -1267,12 +1271,13 @@ namespace Nikse.SubtitleEdit.Core.Forms
             "sigh",
             "sighs",
             "snores",
+            "stammers",
             "stutters",
             "thuds",
             "trumpets",
             "whisper",
             "whispers",
-            "whistles"
+            "whistles",
         });
 
         private bool IsHIDescription(string text)

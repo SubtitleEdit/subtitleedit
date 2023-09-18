@@ -2217,5 +2217,22 @@ namespace Test.Logic.Forms
             var actual = target.RemoveTextFromHearImpaired(text);
             Assert.AreEqual(expected, actual);
         }
+
+        [TestMethod]
+        public void Line2Speaker()
+        {
+            var target = GetRemoveTextForHiLib();
+            target.Settings.RemoveIfAllUppercase = false;
+            target.Settings.RemoveTextBeforeColon = true;
+            target.Settings.OnlyIfInSeparateLine = false;
+            target.Settings.OnlyIfInSeparateLine = false;
+            target.Settings.ColonSeparateLine = false;
+            target.Settings.RemoveInterjections = true;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            var text = "and that is gonna take..." + Environment.NewLine + "[STAMMERS] ... real deep pockets.";
+            var expected = "and that is gonna take..." + Environment.NewLine + "... real deep pockets.";
+            var actual = target.RemoveTextFromHearImpaired(text);
+            Assert.AreEqual(expected, actual);
+        }
     }
 }
