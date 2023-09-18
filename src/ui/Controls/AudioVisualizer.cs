@@ -429,19 +429,11 @@ namespace Nikse.SubtitleEdit.Controls
                 return;
             }
 
-            const int maxDisplayableParagraphs = 100;
-            const double additionalSeconds = 15.0; // Helps when scrolling
-            var startThresholdMilliseconds = (_startPositionSeconds - additionalSeconds) * TimeCode.BaseUnit;
-            var endThresholdMilliseconds = (EndPositionSeconds + additionalSeconds) * TimeCode.BaseUnit;
-
             double startVisibleMilliseconds = _startPositionSeconds * TimeCode.BaseUnit;
             double endVisibleMilliseconds = EndPositionSeconds * TimeCode.BaseUnit;
 
-            List<Paragraph> displayableParagraphs = new List<Paragraph>();
-            Dictionary<int, List<Paragraph>> visibleBuckets = new Dictionary<int, List<Paragraph>>();
-            Dictionary<int, List<Paragraph>> invisibleBuckets = new Dictionary<int, List<Paragraph>>();
-
-            DisplayableParagraphHelper paragraphHelper = new DisplayableParagraphHelper(startVisibleMilliseconds, endVisibleMilliseconds, 15 * TimeCode.BaseUnit);
+            DisplayableParagraphHelper paragraphHelper = new DisplayableParagraphHelper(
+                startVisibleMilliseconds, endVisibleMilliseconds, 15 * TimeCode.BaseUnit);
 
             for (var i = 0; i < subtitle.Paragraphs.Count; i++)
             {
@@ -454,19 +446,8 @@ namespace Nikse.SubtitleEdit.Controls
 
                 paragraphHelper.Add(p);
             }
-            Stopwatch timer = Stopwatch.StartNew();
             List<Paragraph> selectedParagraphs = paragraphHelper.GetParagraphs(100);
-            timer.Stop();
-
-            Console.WriteLine($"Prune time (ms): {timer.ElapsedMilliseconds}");
-
             _displayableParagraphs.AddRange(selectedParagraphs);
-            //_displayableParagraphs.AddRange(updatingParagraphs);
-
-            // TODO: Just assign to displayable paragraphs
-            //displayableParagraphs.AddRange(SelectParagraphsFromBuckets(visibleBuckets, maxDisplayableParagraphs, visibleParagraphsCount > maxDisplayableParagraphs));
-            //displayableParagraphs.AddRange(SelectParagraphsFromBuckets(invisibleBuckets, 20, true));
-            //_displayableParagraphs.AddRange(displayableParagraphs);
 
 
             var primaryParagraph = subtitle.GetParagraphOrDefault(primarySelectedIndex);
@@ -485,48 +466,6 @@ namespace Nikse.SubtitleEdit.Controls
                 }
             }
         }
-
-        private List<Paragraph> SelectParagraphsFromBuckets(Dictionary<int, List<Paragraph>> buckets, int numberOfParagraphs, bool pruneShortParagraphs)
-        {
-            foreach (List<Paragraph> bucket in buckets.Values)
-            {
-                // Sort buckets with longest paragraphs first.
-                bucket.Sort((first, second) => { return (int)(second.DurationTotalSeconds - first.DurationTotalSeconds); });
-            }
-
-            List<Paragraph> result = new List<Paragraph>();
-            while (result.Count < numberOfParagraphs && buckets.Count > 0)
-            {
-                List<int> keys = buckets.Keys.ToList();
-                //// Iterate over keys evenly spread over the timeline
-                //keys.Sort((a, b) => a % numberOfParagraphs - b % numberOfParagraphs);
-                foreach (int key in keys)
-                {
-                    List<Paragraph> bucket = buckets[key];
-                    Paragraph p;
-                    while (bucket.Count > 0 && result.Count < numberOfParagraphs)
-                    {
-                        p = bucket[0];
-                        bucket.RemoveAt(0);
-
-                        if (pruneShortParagraphs && p.DurationTotalMilliseconds < 0.01)
-                        {
-                            continue;
-                        }
-
-                        result.Add(p);
-                        break;
-                    }
-
-                    if (bucket.Count == 0)
-                    {
-                        buckets.Remove(key);
-                    }
-                }
-            }
-            return result;
-        }
-
 
         public void SetPosition(double startPositionSeconds, Subtitle subtitle, double currentVideoPositionSeconds, int subtitleIndex, ListView.SelectedIndexCollection selectedIndexes)
         {

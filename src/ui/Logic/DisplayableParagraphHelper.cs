@@ -1,11 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Security.Cryptography.X509Certificates;
-using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Logic
 {
@@ -23,7 +19,8 @@ namespace Nikse.SubtitleEdit.Logic
      * <item>It is more useful to have paragraphs that cover a large area of the timeline rather than a small area with 10 paragraphs layered on top of each other.</item>
      * <item>There are situtations where paragraphs may overlap, but it is useful to see most or all of them
      * (such as dialogue shown at the same time as a paragraph shown next to text in the video).</item>
-     * <item>More predictable behavior is better - pruning a large paragraph is more noticeable than pruning a small one.</item>
+     * <item>More predictable behavior is better - pruning a large paragraph is more noticeable than pruning a small one, and the visible paragraphs should stay
+     * constant as much as possible while scrolling.</item>
      * </list>
      * </para>
      * <para>
@@ -49,7 +46,7 @@ namespace Nikse.SubtitleEdit.Logic
         /// </summary>
         private readonly List<Paragraph> _paragraphs = new List<Paragraph>();
 
-        private TimelinePartition paragraphPartition;
+        private TimelinePartition _cachedParagraphPartitions;
 
         /// <summary>
         /// The beginning of the invisible area that paragraphs may be chosen from to improve scrolling.
@@ -83,7 +80,7 @@ namespace Nikse.SubtitleEdit.Logic
             _startVisibleMilliseconds = startMilliseconds;
             _endVisibleMilliseconds = endMilliseconds;
 
-            paragraphPartition = new TimelinePartition(_startThresholdMilliseconds, _endThresholdMilliseconds, 100);
+            _cachedParagraphPartitions = new TimelinePartition(_startThresholdMilliseconds, _endThresholdMilliseconds, 500);
         }
 
         /// <summary>
@@ -95,7 +92,7 @@ namespace Nikse.SubtitleEdit.Logic
             if (IsInThreshold(p))
             {
                 _paragraphs.Add(p);
-                paragraphPartition.Add(p);
+                //paragraphPartition.Add(p);
             }
         }
 
@@ -310,6 +307,7 @@ namespace Nikse.SubtitleEdit.Logic
                     {
                         existingCoverage = CalculateCoverageInRange(currentCoverage, p.StartTime.TotalMilliseconds, p.EndTime.TotalMilliseconds);
                         coverageCache.Add(p, existingCoverage);
+                        _cachedParagraphPartitions.Add(p);
                     }
                     if (existingCoverage < minimumCoverage)
                     {
@@ -328,7 +326,6 @@ namespace Nikse.SubtitleEdit.Logic
 
         public List<Paragraph> GetParagraphs(int limit)
         {
-            //Console.WriteLine($"Getting {limit} paragraphs.");
             if (limit >= _paragraphs.Count)
             {
                 return _paragraphs;
@@ -361,8 +358,6 @@ namespace Nikse.SubtitleEdit.Logic
                     {
                         double coveragePercent = CalculateVisiblePercentOfTimeline(selection);
                         currentVisibleCoverage += coveragePercent;
-                        //Console.WriteLine($"Paragraph selected, adding {coveragePercent} to current coverage. (for a total of {currentVisibleCoverage})");
-                        //lowestCoverage = 0; // FindLowestCoverage(records);
                     }
                     if (result.Count < limit)
                     {
@@ -379,43 +374,25 @@ namespace Nikse.SubtitleEdit.Logic
         /// new paragraph and adjust the value.
         /// <para>
         /// This is an O(1) operation per cache value, versus an O(n log n) operation to calculate from scratch.
-        /// However, updating the cache requires scanning through all cached paragraphs (worst case is equal to
-        /// the number of paragraphs being loaded), while calculating from scratch only requires a binary search
-        /// followed by a linear search through all paragraphs selected so far. If the cache is really full, updating
-        /// it can be pretty slow.
+        /// As the cache fills up, the number of values to update increases, making the scan for overlapping paragraphs slower.
+        /// This is optimized by checking only those paragraphs from the same partition as the newly added paragraph. This
+        /// is a much smaller set than the set of all cached paragraphs.
         /// </para>
         /// </summary>
         /// <param name="coverageCache"></param>
         /// <param name="p"></param>
         private void UpdateCacheForParagraph(Dictionary<Paragraph, double> coverageCache, Paragraph p)
         {
-            // The paragraph has already been selected, so we no longer need its cache entry.
-            coverageCache.Remove(p);
-            List<Paragraph> keysToUpdate = new List<Paragraph>();
-            HashSet<Paragraph> partitionedParagraphs = paragraphPartition.GetPartitionedParagraphs(p);
+            HashSet<Paragraph> partitionedParagraphs = _cachedParagraphPartitions.GetPartitionedParagraphs(p);
+            // We don't want to update the cache entry for the selected paragraph on this iteration or any further iterations.
             partitionedParagraphs.Remove(p);
-            //partitionedParagraphs.IntersectWith(coverageCache.Keys);
+            coverageCache.Remove(p);
 
             foreach (Paragraph key in partitionedParagraphs)
             {
-                if (ParagraphsOverlap(key, p))
-                {
-                    keysToUpdate.Add(key);
-                }
-            }
-
-            //List<Paragraph> realKeysToUpdate = new List<Paragraph>();
-            //foreach (Paragraph key in coverageCache.Keys)
-            //{
-            //    if (ParagraphsOverlap(key, p))
-            //    {
-            //        realKeysToUpdate.Add(key);
-            //    }
-            //}
-
-            foreach (Paragraph key in keysToUpdate)
-            {
-                if (coverageCache.TryGetValue(key, out double coverage))
+                // The partition may contain paragraphs that have been selected and evicted from the cache,
+                // so this isn't guaranteed to exist.
+                if (ParagraphsOverlap(key, p) && coverageCache.TryGetValue(key, out double coverage))
                 {
                     double overlapMillis = CalculateOverlapLength(key, p);
                     coverageCache[key] = coverage + overlapMillis / key.DurationTotalMilliseconds;
