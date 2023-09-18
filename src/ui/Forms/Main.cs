@@ -24464,6 +24464,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (Configuration.Settings.General.Undocked)
             {
+                MessageBox.Show("Layout cannot be changed in un-docked mode");
                 return;
             }
 
@@ -24494,12 +24495,14 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleListview1.Items.Clear(); // for performance
             }
 
-            LayoutManager.SetLayout(layout, this, panelVideoPlayer, SubtitleListview1, groupBoxVideo, groupBoxEdit);
+            LayoutManager.SetLayout(layout, this, panelVideoPlayer, SubtitleListview1, groupBoxVideo, groupBoxEdit, SplitContainerListViewAndTextSplitterMoved);
 
             if (isLarge)
             {
                 SubtitleListview1.Fill(_subtitle, _subtitleOriginal); // for performance
             }
+
+            MainResize();
         }
 
         public void ShowEarlierOrLater(double adjustMilliseconds, SelectionChoice selection)
@@ -35623,7 +35626,11 @@ namespace Nikse.SubtitleEdit.Forms
                 var selectIndices = SubtitleListview1.GetSelectedIndices();
                 RemoveOriginal(true, true);
                 SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
-                SubtitleListview1.SelectIndexAndEnsureVisible(selectIndices[0], true);
+                if (selectIndices.Length > 0)
+                {
+                    SubtitleListview1.SelectIndexAndEnsureVisible(selectIndices[0], true);
+                }
+
                 RefreshSelectedParagraph();
             }
         }
