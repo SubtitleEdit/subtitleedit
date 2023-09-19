@@ -2048,12 +2048,14 @@ namespace Nikse.SubtitleEdit.Forms
 
             var prev = sub.GetParagraphOrDefault(0);
             var first = true;
+            var lang = LanguageAutoDetect.AutoDetectGoogleLanguage(sub);
+            var interjectionsFileName = RemoveTextForHI.GetInterjectionsFileName(lang);
             foreach (var p in sub.Paragraphs)
             {
                 if (IsActionEnabled(CommandLineConverter.BatchAction.RemoveTextForHI))
                 {
                     _removeTextForHearingImpaired.Settings = _removeTextForHiSettings;
-                    p.Text = _removeTextForHearingImpaired.RemoveTextFromHearImpaired(p.Text, sub, sub.Paragraphs.IndexOf(p));
+                    p.Text = _removeTextForHearingImpaired.RemoveTextFromHearImpaired(p.Text, sub, sub.Paragraphs.IndexOf(p), interjectionsFileName);
                 }
 
                 if (IsActionEnabled(CommandLineConverter.BatchAction.RemoveFormatting))

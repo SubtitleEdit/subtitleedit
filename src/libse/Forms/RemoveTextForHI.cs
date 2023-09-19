@@ -2,7 +2,9 @@
 using Nikse.SubtitleEdit.Core.Forms.FixCommonErrors;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
+using System.Xml;
 
 namespace Nikse.SubtitleEdit.Core.Forms
 {
@@ -847,12 +849,12 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
         private static readonly char[] TrimStartNoiseChar = { '-', ' ' };
 
-        public string RemoveTextFromHearImpaired(string input)
+        public string RemoveTextFromHearImpaired(string input, string interjectionsFileName)
         {
-            return RemoveTextFromHearImpaired(input, null, -1);
+            return RemoveTextFromHearImpaired(input, null, -1, interjectionsFileName);
         }
 
-        public string RemoveTextFromHearImpaired(string inputWithoutUnicodeReplace, Subtitle subtitle, int index)
+        public string RemoveTextFromHearImpaired(string inputWithoutUnicodeReplace, Subtitle subtitle, int index, string interjectionsFileName)
         {
             if (StartsAndEndsWithHearImpairedTags(HtmlUtil.RemoveHtmlTags(inputWithoutUnicodeReplace, true).TrimStart(TrimStartNoiseChar)))
             {
@@ -1021,7 +1023,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
             {
                 if (_interjections == null)
                 {
-                    ReloadInterjection();
+                    ReloadInterjection(interjectionsFileName);
                 }
 
                 // reusable context
@@ -1557,10 +1559,51 @@ namespace Nikse.SubtitleEdit.Core.Forms
             return sb.ToString().Trim();
         }
 
-        public static IList<string> GetInterjectionList()
+        public static List<string> GetInterjections(string fileName)
+        {
+            var words = new List<string>();
+            if (File.Exists(fileName))
+            {
+                try
+                {
+                    var xml = new XmlDocument();
+                    xml.Load(fileName);
+                    if (xml.DocumentElement != null)
+                    {
+                        var nodes = xml.DocumentElement.SelectNodes("word");
+                        if (nodes != null)
+                        {
+                            foreach (XmlNode node in nodes)
+                            {
+                                var w = node.InnerText.Trim();
+                                if (w.Length > 0)
+                                {
+                                    words.Add(w);
+                                }
+                            }
+                        }
+
+                        return words;
+                    }
+                }
+                catch
+                {
+                    // ignore
+                }
+            }
+
+            return words;
+        }
+
+        public static string GetInterjectionsFileName(string twoLetterLanguage)
+        {
+            return Path.Combine(Configuration.DictionariesDirectory, twoLetterLanguage + "_interjections.xml");
+        }
+
+        public static IList<string> GetInterjectionList(string fileName)
         {
             var interjectionList = new HashSet<string>();
-            foreach (var s in Configuration.Settings.Tools.Interjections.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries))
+            foreach (var s in GetInterjections(fileName))
             {
                 if (s.Length <= 0)
                 {
@@ -1578,9 +1621,9 @@ namespace Nikse.SubtitleEdit.Core.Forms
             return sortedList;
         }
 
-        public void ReloadInterjection()
+        public void ReloadInterjection(string fileName)
         {
-            _interjections = GetInterjectionList();
+            _interjections = GetInterjectionList(fileName);
         }
     }
 }

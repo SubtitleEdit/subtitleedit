@@ -19,6 +19,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
+using Nikse.SubtitleEdit.Core.Forms;
 
 namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
 {
@@ -2195,9 +2196,11 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                         case BatchAction.RemoveTextForHI:
                             var hiSettings = new Core.Forms.RemoveTextForHISettings(sub);
                             var hiLib = new Core.Forms.RemoveTextForHI(hiSettings);
+                            var lang = LanguageAutoDetect.AutoDetectGoogleLanguage(sub);
+                            var interjectionsFileName = RemoveTextForHI.GetInterjectionsFileName(lang);
                             foreach (var p in sub.Paragraphs)
                             {
-                                p.Text = hiLib.RemoveTextFromHearImpaired(p.Text, sub, sub.Paragraphs.IndexOf(p));
+                                p.Text = hiLib.RemoveTextFromHearImpaired(p.Text, sub, sub.Paragraphs.IndexOf(p), interjectionsFileName);
                             }
 
                             break;
