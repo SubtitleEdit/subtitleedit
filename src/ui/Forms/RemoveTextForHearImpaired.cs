@@ -86,6 +86,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxRemoveIfAllUppercase.Text = _language.RemoveTextIfAllUppercase;
             checkBoxRemoveInterjections.Text = _language.RemoveInterjections;
             checkBoxInterjectionOnlySeparateLine.Text = _language.OnlyIfInSeparateLine;
+            labelLanguage.Text = LanguageSettings.Current.ChooseLanguage.Language;
             buttonEditInterjections.Text = _language.EditInterjections;
             buttonEditInterjections.Left = checkBoxRemoveInterjections.Left + checkBoxRemoveInterjections.Width;
             listViewFixes.Columns[0].Text = LanguageSettings.Current.General.Apply;
