@@ -7,21 +7,40 @@ using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
+using System.Xml;
 
 namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class FormRemoveTextForHearImpaired : PositionAndSizeForm
     {
+        public class LanguageItem
+        {
+            public CultureInfo Code { get; }
+            public string Name { get; }
+
+            public LanguageItem(CultureInfo code, string name)
+            {
+                Code = code;
+                Name = name;
+            }
+
+            public override string ToString()
+            {
+                return Name;
+            }
+        }
+
         public Subtitle Subtitle;
         public int TotalFixes { get; private set; }
         private readonly LanguageStructure.RemoveTextFromHearImpaired _language;
         private readonly RemoveTextForHI _removeTextForHiLib;
         private Dictionary<Paragraph, string> _fixes;
         private readonly Main _mainForm;
+        private string _interjectionsLanguage;
         private readonly List<Paragraph> _unchecked = new List<Paragraph>();
         private readonly List<Paragraph> _edited = new List<Paragraph>();
         private readonly List<Paragraph> _editedOld = new List<Paragraph>();
-        private static readonly Color ListBackMarkColor = Configuration.Settings.General.UseDarkTheme? Color.PaleVioletRed : Color.PeachPuff;
+        private static readonly Color ListBackMarkColor = Configuration.Settings.General.UseDarkTheme ? Color.PaleVioletRed : Color.PeachPuff;
 
         public FormRemoveTextForHearImpaired(Main main, Subtitle subtitle)
         {
@@ -85,7 +104,31 @@ namespace Nikse.SubtitleEdit.Forms
         {
             comboBoxRemoveIfTextContains.Left = checkBoxRemoveWhereContains.Left + checkBoxRemoveWhereContains.Width;
             Subtitle = new Subtitle(subtitle);
+            InitializeLanguageNames(subtitle);
             GeneratePreview();
+        }
+
+        private void InitializeLanguageNames(Subtitle subtitle)
+        {
+            _interjectionsLanguage = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle);
+
+            comboBoxLanguage.BeginUpdate();
+            comboBoxLanguage.Items.Clear();
+            foreach (var ci in Utilities.GetSubtitleLanguageCultures())
+            {
+                comboBoxLanguage.Items.Add(new LanguageItem(ci, ci.EnglishName));
+                if (ci.TwoLetterISOLanguageName == _interjectionsLanguage)
+                {
+                    comboBoxLanguage.SelectedIndex = comboBoxLanguage.Items.Count - 1;
+                }
+            }
+            comboBoxLanguage.Sorted = true;
+            comboBoxLanguage.EndUpdate();
+
+            if (comboBoxLanguage.SelectedIndex < 0)
+            {
+                comboBoxLanguage.SelectedIndex = 0;
+            }
         }
 
         public void InitializeSettingsOnly()
@@ -124,7 +167,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
-                    var newText = _removeTextForHiLib.RemoveTextFromHearImpaired(p.Text, Subtitle, index);
+                    var newText = _removeTextForHiLib.RemoveTextFromHearImpaired(p.Text, Subtitle, index, GetInterjectionsFileName());
                     if (p.Text.RemoveChar(' ') != newText.RemoveChar(' '))
                     {
                         count++;
@@ -256,17 +299,45 @@ namespace Nikse.SubtitleEdit.Forms
         {
             using (var editInterjections = new Interjections())
             {
-                editInterjections.Initialize(Configuration.Settings.Tools.Interjections);
+                var fileName = GetInterjectionsFileName();
+                editInterjections.Initialize(RemoveTextForHI.GetInterjections(fileName));
                 if (editInterjections.ShowDialog(this) == DialogResult.OK)
                 {
-                    Configuration.Settings.Tools.Interjections = editInterjections.GetInterjectionsSemiColonSeparatedString();
-                    _removeTextForHiLib.ReloadInterjection();
+                    //Configuration.Settings.Tools.Interjections = editInterjections.GetInterjectionsSemiColonSeparatedString();
+                    SaveInterjections(editInterjections.GetInterjectionList());
+
+                    _removeTextForHiLib.ReloadInterjection(fileName);
                     if (checkBoxRemoveInterjections.Checked)
                     {
                         GeneratePreview();
                     }
                 }
             }
+        }
+
+        private void SaveInterjections(List<string> interjections)
+        {
+            var xml = new XmlDocument();
+            xml.LoadXml("<interjections/>");
+            foreach (var s in interjections)
+            {
+                XmlNode node = xml.CreateElement("word");
+                node.InnerText = s;
+                xml.DocumentElement.AppendChild(node);
+            }
+
+            xml.Save(GetInterjectionsFileName());
+        }
+
+        private string GetInterjectionsFileName()
+        {
+            var lang = "en";
+            if (comboBoxLanguage.SelectedIndex >= 0 && comboBoxLanguage.Items[comboBoxLanguage.SelectedIndex] is LanguageItem l)
+            {
+                lang = l.Code.TwoLetterISOLanguageName;
+            }
+
+            return RemoveTextForHI.GetInterjectionsFileName(lang);
         }
 
         private void FormRemoveTextForHearImpaired_Resize(object sender, EventArgs e)

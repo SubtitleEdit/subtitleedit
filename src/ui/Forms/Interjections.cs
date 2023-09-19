@@ -18,16 +18,9 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.FixFonts(this);
         }
 
-        public string GetInterjectionsSemiColonSeparatedString()
+        public List<string> GetInterjectionList()
         {
-            var sb = new StringBuilder();
-            foreach (var s in _interjections)
-            {
-                sb.Append(';');
-                sb.Append(s.Trim());
-            }
-
-            return sb.ToString().Trim(';');
+            return _interjections;
         }
 
         private void Interjections_KeyDown(object sender, KeyEventArgs e)
@@ -42,14 +35,10 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        public void Initialize(string semiColonSeparatedList)
+        public void Initialize(List<string> interjections)
         {
-            _interjections = new List<string>();
-            var arr = semiColonSeparatedList.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-            foreach (var s in arr)
-            {
-                _interjections.Add(s.Trim());
-            }
+            _interjections = interjections;
+
             FillListBox();
             Text = LanguageSettings.Current.Interjections.Title;
 
