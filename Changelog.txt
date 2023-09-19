@@ -10,6 +10,7 @@
    * Update Italian language - thx bovirus
    * Update Portuguese translation - thx hugok79
    * Update Polish translation - thx admas
+   * Update Finnish translation - thx Teijo
    * Interjections are now language specific
    * Save settings from selected lines unbreak/break - thx David
    * Add simple page up/down for combo-boxes
