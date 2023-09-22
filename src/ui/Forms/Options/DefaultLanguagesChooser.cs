@@ -2,6 +2,7 @@
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -9,11 +10,31 @@ namespace Nikse.SubtitleEdit.Forms.Options
 {
     public sealed partial class DefaultLanguagesChooser : Form
     {
-        public string DefaultLanguages { get; set; }
+        public class LanguageItem
+        {
+            public CultureInfo Code { get; }
+            public string Name { get; }
+            public bool Checked { get; set; }
 
-        private readonly List<FormRemoveTextForHearImpaired.LanguageItem> _languageItems;
+            public LanguageItem(CultureInfo code, string name)
+            {
+                Code = code;
+                Name = name;
+            }
+
+            public override string ToString()
+            {
+                return Name;
+            }
+        }
+
+        public string DefaultLanguages { get; set; }
+        private readonly List<string> _defaultLanguageArray;
+
+        private readonly List<LanguageItem> _languageItems;
 
         public DefaultLanguagesChooser(string defaultLanguages)
+
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
@@ -30,16 +51,18 @@ namespace Nikse.SubtitleEdit.Forms.Options
             listView1.BeginUpdate();
             listView1.Items.Clear();
 
-            var languages = defaultLanguages == null ? Array.Empty<string>() : defaultLanguages.Split(';');
-            _languageItems = new List<FormRemoveTextForHearImpaired.LanguageItem>();
+            var languages = defaultLanguages == null ? Array.Empty<string>() : defaultLanguages.Trim(';').Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+            _defaultLanguageArray = languages.ToList();
+            _languageItems = new List<LanguageItem>();
             foreach (var ci in Utilities.GetSubtitleLanguageCultures(false).OrderBy(p => p.EnglishName))
             {
-                var x = new FormRemoveTextForHearImpaired.LanguageItem(ci, ci.EnglishName);
+                var x = new LanguageItem(ci, ci.EnglishName);
+                x.Checked = languages.Contains(ci.TwoLetterISOLanguageName);
                 _languageItems.Add(x);
                 var listViewItem = new ListViewItem(x.ToString())
                 {
                     Tag = x,
-                    Checked = languages.Contains(ci.TwoLetterISOLanguageName),
+                    Checked = x.Checked,
                 };
                 listView1.Items.Add(listViewItem);
             }
@@ -95,21 +118,23 @@ namespace Nikse.SubtitleEdit.Forms.Options
         {
             if (e.Item.Checked)
             {
-                if (e.Item.Tag is FormRemoveTextForHearImpaired.LanguageItem li)
+                if (e.Item.Tag is LanguageItem li)
                 {
-                    DefaultLanguages = DefaultLanguages.TrimEnd(';') + ";" + li.Code.TwoLetterISOLanguageName;
+                    if (!_defaultLanguageArray.Contains(li.Code.TwoLetterISOLanguageName))
+                    {
+                        _defaultLanguageArray.Add(li.Code.TwoLetterISOLanguageName);
+                    }
                 }
             }
             else
             {
-                if (e.Item.Tag is FormRemoveTextForHearImpaired.LanguageItem li)
+                if (e.Item.Tag is LanguageItem li && _defaultLanguageArray.Contains(li.Code.TwoLetterISOLanguageName))
                 {
-                    DefaultLanguages = DefaultLanguages.Replace(";" + li.Code.TwoLetterISOLanguageName, string.Empty);
-                    DefaultLanguages = DefaultLanguages.Replace(li.Code.TwoLetterISOLanguageName, string.Empty);
-                    DefaultLanguages = DefaultLanguages.Replace(";;", ";").Trim(';');
+                    _defaultLanguageArray.Remove(li.Code.TwoLetterISOLanguageName);
                 }
             }
 
+            DefaultLanguages = string.Join(";", _defaultLanguageArray);
             InitLanguageList();
         }
 
@@ -121,14 +146,13 @@ namespace Nikse.SubtitleEdit.Forms.Options
                 return;
             }
 
-            var arr = DefaultLanguages.Split(';');
-            if (DefaultLanguages.Length > 30)
+            if (_defaultLanguageArray.Count > 10)
             {
-                labelDefaultLanguagesList.Text = arr.Length.ToString();
+                labelDefaultLanguagesList.Text = _defaultLanguageArray.Count.ToString();
                 return;
             }
 
-            labelDefaultLanguagesList.Text = string.Join(", ", arr);
+            labelDefaultLanguagesList.Text = string.Join(", ", _defaultLanguageArray);
         }
 
         private void DefaultLanguagesChooser_KeyDown(object sender, KeyEventArgs e)
@@ -156,10 +180,44 @@ namespace Nikse.SubtitleEdit.Forms.Options
                 return;
             }
 
-            foreach (ListViewItem item in listView1.Items)
+            listView1.ItemChecked -= listView1_ItemChecked;
+
+            foreach (var item in _languageItems)
             {
                 item.Checked = selectAll || !item.Checked;
+                if (item.Checked)
+                {
+                    if (!_defaultLanguageArray.Contains(item.Code.TwoLetterISOLanguageName))
+                    {
+                        _defaultLanguageArray.Add(item.Code.TwoLetterISOLanguageName);
+                    }
+                }
+                else
+                {
+                    if (_defaultLanguageArray.Contains(item.Code.TwoLetterISOLanguageName))
+                    {
+                        _defaultLanguageArray.Remove(item.Code.TwoLetterISOLanguageName);
+                    }
+                }
             }
+
+            DefaultLanguages = string.Join(";", _defaultLanguageArray);
+
+            foreach (ListViewItem item in listView1.Items)
+            {
+                if (item.Tag is LanguageItem li)
+                {
+                    item.Checked = li.Checked;
+                }
+            }
+
+            listView1.ItemChecked += listView1_ItemChecked;
+            InitLanguageList();
+        }
+
+        private void DefaultLanguagesChooser_ResizeEnd(object sender, EventArgs e)
+        {
+            listView1.AutoSizeLastColumn();
         }
     }
 }
