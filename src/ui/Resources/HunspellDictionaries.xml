@@ -85,13 +85,13 @@
 	</Dictionary>
 	<Dictionary>
 		<EnglishName>English</EnglishName>
-		<NativeName></NativeName>
+		<NativeName>English/British</NativeName>
 		<DownloadLink>https://github.com/marcoagpinto/aoo-mozilla-en-dict/archive/master.zip</DownloadLink>
 		<Description>All English dictionaries (AU, CA, GB, US, ZA), 2018-04-16+</Description>
 	</Dictionary>
 	<Dictionary>
 		<EnglishName>Estonian</EnglishName>
-		<NativeName></NativeName>
+		<NativeName>Eesti keel</NativeName>
 		<DownloadLink>http://downloads.sourceforge.net/project/aoo-extensions/1328/0/dict-et.oxt?r=http%3A%2F%2Fextensions.openoffice.org%2Fen%2Fproject%2Festonian-spellchecking-and-hyphenation&amp;ts=1435689988&amp;use_mirror=freefr</DownloadLink>
 		<Description>Estonian spellchecking and hyphenation (13 October, 2008)</Description>
 	</Dictionary>

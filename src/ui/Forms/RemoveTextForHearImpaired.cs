@@ -70,6 +70,9 @@ namespace Nikse.SubtitleEdit.Forms
             contextMenuStrip1.Items[0].Text = LanguageSettings.Current.Main.Menu.ContextMenu.SelectAll;
             contextMenuStrip1.Items[1].Text = LanguageSettings.Current.Main.Menu.Edit.InverseSelection;
 
+            toolStripMenuItemSelAll.Text = LanguageSettings.Current.Main.Menu.ContextMenu.SelectAll;
+            toolStripMenuItemInvertSel.Text = LanguageSettings.Current.Main.Menu.Edit.InverseSelection;
+            
             _language = LanguageSettings.Current.RemoveTextFromHearImpaired;
             Text = _language.Title;
             groupBoxRemoveTextConditions.Text = _language.RemoveTextConditions;
