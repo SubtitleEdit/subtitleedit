@@ -5,8 +5,7 @@
     <Version>4.0.1</Version>
     <TranslatedBy>Übersetzt von Christoph Kitsche. Überarbeitet von Netspark</TranslatedBy>
     <CultureName>de-DE</CultureName>
-    <HelpFile>Hilfedatei
-</HelpFile>
+    <HelpFile />
     <Ok>&amp;OK</Ok>
     <Cancel>&amp;Abbrechen</Cancel>
     <Yes>Ja</Yes>
@@ -38,8 +37,7 @@
     <Actor>Darsteller</Actor>
     <Gap>Abstand</Gap>
     <Region>Region</Region>
-    <Layer>Schicht
-</Layer>
+    <Layer>Schicht</Layer>
     <NumberSymbol>#</NumberSymbol>
     <Number>Nummer</Number>
     <Text>Text</Text>
