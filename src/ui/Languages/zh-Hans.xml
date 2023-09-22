@@ -216,6 +216,7 @@ Command line: {1} {2}
     <SetCppConstMeFolder>设置 CPP/Const-me 模型文件夹...</SetCppConstMeFolder>
     <OnlyRunPostProcessing>仅进行后处理/调整时间</OnlyRunPostProcessing>
     <DownloadFasterWhisperCuda>下载适用 Faster-Whisper 的 cuBLAS and cuDNN 组件</DownloadFasterWhisperCuda>
+    <NoTextFound>未找到文字！</NoTextFound>
   </AudioToText>
   <AssaAttachments>
     <Title>Advanced Sub Station Alpha字幕附件</Title>
@@ -1478,8 +1479,7 @@ Command line: {1} {2}
         <BeautifyTimeCodes>美化时间码</BeautifyTimeCodes>
         <Settings>设置</Settings>
         <Help>帮助</Help>
-        <ShowHideWaveform>显示/隐藏音频</ShowHideWaveform>
-        <ShowHideVideo>显示/隐藏视频</ShowHideVideo>
+        <Layout>布局</Layout>
         <AssaDraw>ASSA 绘图</AssaDraw>
       </ToolBar>
       <ContextMenu>
@@ -1928,6 +1928,7 @@ Command line: {1} {2}
     <SubtitleEditNeedsVideoPlayer>Subtitle Edit 需要一个视频播放器组件.</SubtitleEditNeedsVideoPlayer>
     <UseRecommendMpv>要使用推荐的播放组件 "mpv" 请点击下方按钮.</UseRecommendMpv>
     <DownloadAndUseMpv>下载并使用 "mpv" 作为视频播放器</DownloadAndUseMpv>
+    <ChooseLayout>选择布局</ChooseLayout>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>从 Matroska 文件中选择字幕</Title>
@@ -2529,6 +2530,7 @@ Command line: {1} {2}
     <AdjustViaEndAutoStart>根据结束位置调节</AdjustViaEndAutoStart>
     <AdjustViaEndAutoStartAndGoToNext>通过结束位置调整并转到下一条</AdjustViaEndAutoStartAndGoToNext>
     <AdjustSetEndMinusGapAndStartNextHere>设置结束点（减去最小间隔），并转到下一条起点…</AdjustSetEndMinusGapAndStartNextHere>
+    <AdjustSetStartTimeAndGoToNext>设置起点并转到下一条</AdjustSetStartTimeAndGoToNext>
     <AdjustSetEndTimeAndGoToNext>设置结束点并转到下一条</AdjustSetEndTimeAndGoToNext>
     <AdjustSetEndTimeAndPause>设置结束点并暂停</AdjustSetEndTimeAndPause>
     <AdjustSetStartAutoDurationAndGoToNext>调整设置时长起点并转到下一条</AdjustSetStartAutoDurationAndGoToNext>
