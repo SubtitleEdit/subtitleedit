@@ -1,5 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Forms;
+using Nikse.SubtitleEdit.Forms.Options;
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
@@ -30,7 +31,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        public Subtitle Subtitle;
+        public Subtitle Subtitle { get; set; }
         public int TotalFixes { get; private set; }
         private readonly LanguageStructure.RemoveTextFromHearImpaired _language;
         private readonly RemoveTextForHI _removeTextForHiLib;
@@ -115,7 +116,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             comboBoxLanguage.BeginUpdate();
             comboBoxLanguage.Items.Clear();
-            foreach (var ci in Utilities.GetSubtitleLanguageCultures())
+            foreach (var ci in Utilities.GetSubtitleLanguageCultures(true))
             {
                 comboBoxLanguage.Items.Add(new LanguageItem(ci, ci.EnglishName));
                 if (ci.TwoLetterISOLanguageName == _interjectionsLanguage)
@@ -125,8 +126,10 @@ namespace Nikse.SubtitleEdit.Forms
             }
             comboBoxLanguage.Sorted = true;
             comboBoxLanguage.EndUpdate();
+            comboBoxLanguage.Sorted = false;
+            comboBoxLanguage.Items.Add(LanguageSettings.Current.General.ChangeLanguageFilter);
 
-            if (comboBoxLanguage.SelectedIndex < 0)
+            if (comboBoxLanguage.SelectedIndex < 0 && comboBoxLanguage.Items.Count > 0)
             {
                 comboBoxLanguage.SelectedIndex = 0;
             }
@@ -484,6 +487,22 @@ namespace Nikse.SubtitleEdit.Forms
             var o = Subtitle.GetParagraphOrDefaultById(p.Id);
             o.Text = text;
             _edited.Add(p);
+        }
+
+        private void comboBoxLanguage_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (comboBoxLanguage.SelectedIndex > 0 && comboBoxLanguage.Text == LanguageSettings.Current.General.ChangeLanguageFilter)
+            {
+                using (var form = new DefaultLanguagesChooser(Configuration.Settings.General.DefaultLanguages))
+                {
+                    if (form.ShowDialog(this) == DialogResult.OK)
+                    {
+                        Configuration.Settings.General.DefaultLanguages = form.DefaultLanguages;
+                    }
+                }
+
+                InitializeLanguageNames(Subtitle);
+            }
         }
     }
 }

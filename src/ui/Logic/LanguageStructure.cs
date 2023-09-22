@@ -107,6 +107,7 @@
             public string Error { get; set; }
             public string Warning { get; set; }
             public string UseLargerFontForThisWindow { get; set; }
+            public string ChangeLanguageFilter { get; set; }
         }
 
         public class About
@@ -2487,6 +2488,7 @@
             public string DefaultFrameRate { get; set; }
             public string DefaultFileEncoding { get; set; }
             public string AutoDetectAnsiEncoding { get; set; }
+            public string LanguageFilter { get; set; }
             public string Profile { get; set; }
             public string Profiles { get; set; }
             public string ImportProfiles { get; set; }

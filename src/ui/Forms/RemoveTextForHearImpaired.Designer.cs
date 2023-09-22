@@ -238,6 +238,7 @@
             this.comboBoxLanguage.Size = new System.Drawing.Size(196, 21);
             this.comboBoxLanguage.TabIndex = 16;
             this.comboBoxLanguage.UsePopupWindow = false;
+            this.comboBoxLanguage.SelectedIndexChanged += new System.EventHandler(this.comboBoxLanguage_SelectedIndexChanged);
             // 
             // labelLanguage
             // 

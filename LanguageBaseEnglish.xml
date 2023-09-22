@@ -103,6 +103,7 @@
     <Error>Error</Error>
     <Warning>Warning</Warning>
     <UseLargerFontForThisWindow>Use larger font for this window</UseLargerFontForThisWindow>
+    <ChangeLanguageFilter>Change language filter...</ChangeLanguageFilter>
   </General>
   <About>
     <Title>About Subtitle Edit</Title>
@@ -2317,6 +2318,7 @@ can edit in same subtitle file (collaboration)</Information>
     <DefaultFrameRate>Default frame rate</DefaultFrameRate>
     <DefaultFileEncoding>Default file encoding</DefaultFileEncoding>
     <AutoDetectAnsiEncoding>Auto detect ANSI encoding</AutoDetectAnsiEncoding>
+    <LanguageFilter>Language filter</LanguageFilter>
     <Profile>Profile</Profile>
     <Profiles>Profiles</Profiles>
     <ImportProfiles>Import profiles</ImportProfiles>
