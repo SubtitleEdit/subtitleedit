@@ -43,6 +43,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
         private List<PluginShortcut> _pluginShortcuts;
         private readonly bool _loading;
         private readonly BackgroundWorker _shortcutsBackgroundWorker;
+        private string  _defaultLanguages;
 
         private static IEnumerable<string> GetSubtitleFormats() => SubtitleFormat.AllSubtitleFormats.Where(format => !format.IsVobSubIndexFile).Select(format => format.FriendlyName);
 
@@ -528,7 +529,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
             checkBoxTBToggleSourceView.Left = labelTBToggleSourceView.Left;
             checkBoxTBToggleSourceView.TabIndex = tbTabIndex;
 
-
             groupBoxMiscellaneous.Text = language.General;
             groupBoxToolsMisc.Text = language.Miscellaneous;
             groupBoxGeneralRules.Text = language.Rules;
@@ -537,6 +537,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             labelDefaultFrameRate.Text = language.DefaultFrameRate;
             labelDefaultFileEncoding.Text = language.DefaultFileEncoding;
             labelAutoDetectAnsiEncoding.Text = language.AutoDetectAnsiEncoding;
+            labelDefaultLanguages.Text = language.LanguageFilter;
             labelSubMaxLen.Text = language.SubtitleLineMaximumLength;
             labelOptimalCharsPerSecond.Text = language.OptimalCharactersPerSecond;
             labelMaxCharsPerSecond.Text = language.MaximumCharactersPerSecond;
@@ -1274,6 +1275,9 @@ namespace Nikse.SubtitleEdit.Forms.Options
             numericUpDownMpvOutline.Left = radioButtonMpvOutline.Right + 9;
             numericUpDownMpvShadowWidth.Left = numericUpDownMpvOutline.Right + 9;
             labelMpvShadow.Left = numericUpDownMpvShadowWidth.Left;
+
+            _defaultLanguages = Configuration.Settings.General.DefaultLanguages ?? string.Empty;
+            InitLanguageList();
 
             checkBoxDarkThemeEnabled_CheckedChanged(null, null);
 
@@ -2310,6 +2314,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             gs.UseFFmpegForWaveExtraction = checkBoxUseFFmpeg.Checked;
             gs.FFmpegUseCenterChannelOnly = checkBoxFfmpegUseCenterChannel.Checked;
             gs.FFmpegLocation = textBoxFFmpegPath.Text;
+            gs.DefaultLanguages = _defaultLanguages;
 
             gs.ToolbarIconTheme = comboBoxToolbarIconTheme.SelectedIndex > 0 ? comboBoxToolbarIconTheme.Text : "Auto";
 
@@ -2920,17 +2925,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
             {
                 form.ShowDialog(this);
             }
-        }
-
-        private void linkLabelOpenDictionaryFolder_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            string dictionaryFolder = Utilities.DictionaryFolder;
-            if (!Directory.Exists(dictionaryFolder))
-            {
-                Directory.CreateDirectory(dictionaryFolder);
-            }
-
-            UiUtil.OpenFolder(dictionaryFolder);
         }
 
         private void textBoxVlcPath_MouseLeave(object sender, EventArgs e)
@@ -3871,6 +3865,36 @@ namespace Nikse.SubtitleEdit.Forms.Options
             {
                 pictureBox.Image = new Bitmap(fullPath);
             }
+        }
+
+        private void buttonDefaultLanguages_Click(object sender, EventArgs e)
+        {
+            using (var form = new DefaultLanguagesChooser(_defaultLanguages))
+            {
+                if (form.ShowDialog(this) == DialogResult.OK)
+                {
+                    _defaultLanguages = form.DefaultLanguages;
+                    InitLanguageList();
+                }
+            }
+        }
+
+        private void InitLanguageList()
+        {
+            if (string.IsNullOrEmpty(_defaultLanguages))
+            {
+                labelDefaultLanguagesList.Text = LanguageSettings.Current.General.All;
+                return;
+            }
+
+            var arr = _defaultLanguages.Split(';');
+            if (_defaultLanguages.Length > 25)
+            {
+                labelDefaultLanguagesList.Text = arr.Length.ToString();
+                return;
+            }
+
+            labelDefaultLanguagesList.Text = string.Join(", ", arr);
         }
     }
 }

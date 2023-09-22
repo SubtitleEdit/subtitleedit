@@ -34,6 +34,9 @@
             this.listBoxSection = new Nikse.SubtitleEdit.Controls.NikseListBox();
             this.panelGeneral = new System.Windows.Forms.Panel();
             this.groupBoxMiscellaneous = new System.Windows.Forms.GroupBox();
+            this.labelDefaultLanguagesList = new System.Windows.Forms.Label();
+            this.buttonDefaultLanguages = new System.Windows.Forms.Button();
+            this.labelDefaultLanguages = new System.Windows.Forms.Label();
             this.buttonTranslationAutoSuffix = new System.Windows.Forms.Button();
             this.comboBoxTranslationAutoSuffix = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelTranslationAutoSuffix = new System.Windows.Forms.Label();
@@ -584,6 +587,9 @@
             this.groupBoxMiscellaneous.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxMiscellaneous.Controls.Add(this.labelDefaultLanguagesList);
+            this.groupBoxMiscellaneous.Controls.Add(this.buttonDefaultLanguages);
+            this.groupBoxMiscellaneous.Controls.Add(this.labelDefaultLanguages);
             this.groupBoxMiscellaneous.Controls.Add(this.buttonTranslationAutoSuffix);
             this.groupBoxMiscellaneous.Controls.Add(this.comboBoxTranslationAutoSuffix);
             this.groupBoxMiscellaneous.Controls.Add(this.labelTranslationAutoSuffix);
@@ -627,6 +633,34 @@
             this.groupBoxMiscellaneous.TabIndex = 0;
             this.groupBoxMiscellaneous.TabStop = false;
             this.groupBoxMiscellaneous.Text = "Miscellaneous";
+            // 
+            // labelDefaultLanguagesList
+            // 
+            this.labelDefaultLanguagesList.AutoSize = true;
+            this.labelDefaultLanguagesList.Location = new System.Drawing.Point(241, 495);
+            this.labelDefaultLanguagesList.Name = "labelDefaultLanguagesList";
+            this.labelDefaultLanguagesList.Size = new System.Drawing.Size(38, 13);
+            this.labelDefaultLanguagesList.TabIndex = 67;
+            this.labelDefaultLanguagesList.Text = "da, en";
+            // 
+            // buttonDefaultLanguages
+            // 
+            this.buttonDefaultLanguages.Location = new System.Drawing.Point(205, 489);
+            this.buttonDefaultLanguages.Name = "buttonDefaultLanguages";
+            this.buttonDefaultLanguages.Size = new System.Drawing.Size(28, 23);
+            this.buttonDefaultLanguages.TabIndex = 66;
+            this.buttonDefaultLanguages.Text = "...";
+            this.buttonDefaultLanguages.UseVisualStyleBackColor = true;
+            this.buttonDefaultLanguages.Click += new System.EventHandler(this.buttonDefaultLanguages_Click);
+            // 
+            // labelDefaultLanguages
+            // 
+            this.labelDefaultLanguages.AutoSize = true;
+            this.labelDefaultLanguages.Location = new System.Drawing.Point(8, 491);
+            this.labelDefaultLanguages.Name = "labelDefaultLanguages";
+            this.labelDefaultLanguages.Size = new System.Drawing.Size(94, 13);
+            this.labelDefaultLanguages.TabIndex = 33;
+            this.labelDefaultLanguages.Text = "Default languages";
             // 
             // buttonTranslationAutoSuffix
             // 
@@ -1732,7 +1766,7 @@
             // labelDefaultFileEncoding
             // 
             this.labelDefaultFileEncoding.AutoSize = true;
-            this.labelDefaultFileEncoding.Location = new System.Drawing.Point(8, 442);
+            this.labelDefaultFileEncoding.Location = new System.Drawing.Point(8, 441);
             this.labelDefaultFileEncoding.Name = "labelDefaultFileEncoding";
             this.labelDefaultFileEncoding.Size = new System.Drawing.Size(105, 13);
             this.labelDefaultFileEncoding.TabIndex = 3;
@@ -6565,11 +6599,11 @@
             this.ClientSize = new System.Drawing.Size(1092, 574);
             this.Controls.Add(this.labelUpdateFileTypeAssociationsStatus);
             this.Controls.Add(this.panelGeneral);
+            this.Controls.Add(this.panelShortcuts);
+            this.Controls.Add(this.panelFont);
             this.Controls.Add(this.panelSubtitleFormats);
             this.Controls.Add(this.panelWaveform);
-            this.Controls.Add(this.panelShortcuts);
             this.Controls.Add(this.panelVideoPlayer);
-            this.Controls.Add(this.panelFont);
             this.Controls.Add(this.panelToolBar);
             this.Controls.Add(this.panelTools);
             this.Controls.Add(this.panelNetwork);
@@ -7125,5 +7159,8 @@
         private System.Windows.Forms.PictureBox pictureBoxPreview1;
         private System.Windows.Forms.Label labelToolbarIconTheme;
         private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxToolbarIconTheme;
+        private System.Windows.Forms.Button buttonDefaultLanguages;
+        private System.Windows.Forms.Label labelDefaultLanguages;
+        private System.Windows.Forms.Label labelDefaultLanguagesList;
     }
 }

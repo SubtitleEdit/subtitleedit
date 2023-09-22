@@ -364,6 +364,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "General/UseLargerFontForThisWindow":
                     language.General.UseLargerFontForThisWindow = reader.Value;
                     break;
+                case "General/ChangeLanguageFilter":
+                    language.General.ChangeLanguageFilter = reader.Value;
+                    break;
                 case "About/Title":
                     language.About.Title = reader.Value;
                     break;
@@ -6237,6 +6240,9 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "Settings/AutoDetectAnsiEncoding":
                     language.Settings.AutoDetectAnsiEncoding = reader.Value;
+                    break;
+                case "Settings/LanguageFilter":
+                    language.Settings.LanguageFilter = reader.Value;
                     break;
                 case "Settings/Profile":
                     language.Settings.Profile = reader.Value;

@@ -845,17 +845,23 @@ namespace Nikse.SubtitleEdit.Core.Common
             return list;
         }
 
-        public static IEnumerable<CultureInfo> GetSubtitleLanguageCultures()
+        public static IEnumerable<CultureInfo> GetSubtitleLanguageCultures(bool useFilter)
         {
             var prospects = new List<CultureInfo>();
             var excludes = new HashSet<string>();
+
+            var languages = Configuration.Settings.General.DefaultLanguages ?? string.Empty;
+            var languageList = useFilter ? languages.Split(new []{ ';' }, StringSplitOptions.RemoveEmptyEntries) : Array.Empty<string>();
 
             foreach (var ci in CultureInfo.GetCultures(CultureTypes.NeutralCultures))
             {
                 if (ci.Name.Length < 4 && ci.Name == ci.IetfLanguageTag)
                 {
-                    excludes.Add(ci.Parent.Name);
-                    prospects.Add(ci);
+                    if (languageList.Length == 0 || languageList.Contains(ci.TwoLetterISOLanguageName))
+                    {
+                        excludes.Add(ci.Parent.Name);
+                        prospects.Add(ci);
+                    }
                 }
             }
 

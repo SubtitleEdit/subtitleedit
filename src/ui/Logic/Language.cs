@@ -239,6 +239,7 @@ namespace Nikse.SubtitleEdit.Logic
                 Error = "Error",
                 Warning = "Warning",
                 UseLargerFontForThisWindow = "Use larger font for this window",
+                ChangeLanguageFilter = "Change language filter...",
             };
 
             About = new LanguageStructure.About
@@ -2677,6 +2678,7 @@ can edit in same subtitle file (collaboration)",
                 DefaultFrameRate = "Default frame rate",
                 DefaultFileEncoding = "Default file encoding",
                 AutoDetectAnsiEncoding = "Auto detect ANSI encoding",
+                LanguageFilter ="Language filter",
                 Profile = "Profile",
                 Profiles = "Profiles",
                 ImportProfiles = "Import profiles",

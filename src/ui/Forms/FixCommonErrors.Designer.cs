@@ -208,6 +208,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.comboBoxLanguage.SelectedText = "";
             this.comboBoxLanguage.Size = new System.Drawing.Size(196, 21);
             this.comboBoxLanguage.TabIndex = 0;
+            this.comboBoxLanguage.UsePopupWindow = false;
             this.comboBoxLanguage.SelectedIndexChanged += new System.EventHandler(this.comboBoxLanguage_SelectedIndexChanged);
             this.comboBoxLanguage.Enter += new System.EventHandler(this.comboBoxLanguage_Enter);
             // 
@@ -772,20 +773,14 @@ namespace Nikse.SubtitleEdit.Forms
             this.textBoxListViewText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxListViewText.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.textBoxListViewText.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.textBoxListViewText.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBoxListViewText.HideSelection = false;
             this.textBoxListViewText.Location = new System.Drawing.Point(194, 12);
-            this.textBoxListViewText.MaxLength = 32767;
             this.textBoxListViewText.Multiline = true;
             this.textBoxListViewText.Name = "textBoxListViewText";
-            this.textBoxListViewText.Padding = new System.Windows.Forms.Padding(1);
-            this.textBoxListViewText.ScrollBars = ScrollBars.None;
-            this.textBoxListViewText.SelectedText = "";
-            this.textBoxListViewText.SelectionLength = 0;
-            this.textBoxListViewText.SelectionStart = 0;
             this.textBoxListViewText.Size = new System.Drawing.Size(427, 64);
             this.textBoxListViewText.TabIndex = 118;
-            this.textBoxListViewText.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBoxListViewText.UseSystemPasswordChar = false;
             this.textBoxListViewText.TextChanged += new System.EventHandler(this.TextBoxListViewTextTextChanged);
             this.textBoxListViewText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxListViewTextKeyDown);
             // 
@@ -804,6 +799,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.textBoxFixedIssues.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxFixedIssues.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxFixedIssues.Location = new System.Drawing.Point(3, 3);
             this.textBoxFixedIssues.MaxLength = 65767;
             this.textBoxFixedIssues.Multiline = true;
@@ -836,8 +832,8 @@ namespace Nikse.SubtitleEdit.Forms
             this.Controls.Add(this.buttonBack);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonNextFinish);
-            this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBoxStep1);
+            this.Controls.Add(this.groupBox2);
             this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.KeyPreview = true;
             this.MinimizeBox = false;
