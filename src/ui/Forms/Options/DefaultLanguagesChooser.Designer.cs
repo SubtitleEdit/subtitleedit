@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.listView1 = new System.Windows.Forms.ListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.buttonCancel = new System.Windows.Forms.Button();
@@ -36,6 +37,10 @@
             this.labelShortcutsSearch = new System.Windows.Forms.Label();
             this.labelDefaultLanguagesList = new System.Windows.Forms.Label();
             this.textBoxShortcutSearch = new Nikse.SubtitleEdit.Controls.NikseTextBox();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.toolStripMenuItemSelAll = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemInvertSel = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // listView1
@@ -45,6 +50,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader1});
+            this.listView1.ContextMenuStrip = this.contextMenuStrip1;
             this.listView1.FullRowSelect = true;
             this.listView1.HideSelection = false;
             this.listView1.Location = new System.Drawing.Point(12, 52);
@@ -118,6 +124,28 @@
             this.textBoxShortcutSearch.TabIndex = 1;
             this.textBoxShortcutSearch.TextChanged += new System.EventHandler(this.textBoxShortcutSearch_TextChanged);
             // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItemSelAll,
+            this.toolStripMenuItemInvertSel});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(181, 70);
+            // 
+            // toolStripMenuItemSelAll
+            // 
+            this.toolStripMenuItemSelAll.Name = "toolStripMenuItemSelAll";
+            this.toolStripMenuItemSelAll.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItemSelAll.Text = "Select all";
+            this.toolStripMenuItemSelAll.Click += new System.EventHandler(this.toolStripMenuItemSelAll_Click);
+            // 
+            // toolStripMenuItemInvertSel
+            // 
+            this.toolStripMenuItemInvertSel.Name = "toolStripMenuItemInvertSel";
+            this.toolStripMenuItemInvertSel.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItemInvertSel.Text = "Invert selection";
+            this.toolStripMenuItemInvertSel.Click += new System.EventHandler(this.toolStripMenuItemInvertSel_Click);
+            // 
             // DefaultLanguagesChooser
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -139,6 +167,7 @@
             this.Text = "DefaultLanguagesChooser";
             this.Shown += new System.EventHandler(this.DefaultLanguagesChooser_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.DefaultLanguagesChooser_KeyDown);
+            this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -154,5 +183,8 @@
         private System.Windows.Forms.Label labelShortcutsSearch;
         private Controls.NikseTextBox textBoxShortcutSearch;
         private System.Windows.Forms.Label labelDefaultLanguagesList;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSelAll;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemInvertSel;
     }
 }

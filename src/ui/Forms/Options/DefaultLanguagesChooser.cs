@@ -22,6 +22,8 @@ namespace Nikse.SubtitleEdit.Forms.Options
             Text = LanguageSettings.Current.General.ChangeLanguageFilter.TrimEnd('.');
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
+            toolStripMenuItemSelAll.Text = LanguageSettings.Current.Main.Menu.ContextMenu.SelectAll;
+            toolStripMenuItemInvertSel.Text = LanguageSettings.Current.Main.Menu.Edit.InverseSelection;
 
             DefaultLanguages = string.Empty;
             listView1.CheckBoxes = true;
@@ -134,6 +136,29 @@ namespace Nikse.SubtitleEdit.Forms.Options
             if (e.KeyCode == Keys.Escape)
             {
                 DialogResult = DialogResult.Cancel;
+            }
+        }
+
+        private void toolStripMenuItemSelAll_Click(object sender, EventArgs e)
+        {
+            DoSelection(true);
+        }
+
+        private void toolStripMenuItemInvertSel_Click(object sender, EventArgs e)
+        {
+            DoSelection(false);
+        }
+
+        private void DoSelection(bool selectAll)
+        {
+            if (listView1.Items.Count == 0)
+            {
+                return;
+            }
+
+            foreach (ListViewItem item in listView1.Items)
+            {
+                item.Checked = selectAll || !item.Checked;
             }
         }
     }
