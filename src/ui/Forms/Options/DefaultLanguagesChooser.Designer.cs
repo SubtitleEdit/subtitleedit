@@ -36,10 +36,10 @@
             this.toolStripMenuItemInvertSel = new System.Windows.Forms.ToolStripMenuItem();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
-            this.buttonShortcutsClear = new System.Windows.Forms.Button();
-            this.labelShortcutsSearch = new System.Windows.Forms.Label();
+            this.buttonSearchClear = new System.Windows.Forms.Button();
+            this.labelSearch = new System.Windows.Forms.Label();
             this.labelDefaultLanguagesList = new System.Windows.Forms.Label();
-            this.textBoxShortcutSearch = new Nikse.SubtitleEdit.Controls.NikseTextBox();
+            this.textBoxSearch = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -88,9 +88,9 @@
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(335, 538);
+            this.buttonCancel.Location = new System.Drawing.Point(335, 537);
             this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(75, 23);
+            this.buttonCancel.Size = new System.Drawing.Size(75, 24);
             this.buttonCancel.TabIndex = 51;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
@@ -99,9 +99,9 @@
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(254, 538);
+            this.buttonOK.Location = new System.Drawing.Point(254, 537);
             this.buttonOK.Name = "buttonOK";
-            this.buttonOK.Size = new System.Drawing.Size(75, 23);
+            this.buttonOK.Size = new System.Drawing.Size(75, 24);
             this.buttonOK.TabIndex = 50;
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
@@ -109,23 +109,23 @@
             // 
             // buttonShortcutsClear
             // 
-            this.buttonShortcutsClear.Enabled = false;
-            this.buttonShortcutsClear.Location = new System.Drawing.Point(215, 17);
-            this.buttonShortcutsClear.Name = "buttonShortcutsClear";
-            this.buttonShortcutsClear.Size = new System.Drawing.Size(111, 23);
-            this.buttonShortcutsClear.TabIndex = 10;
-            this.buttonShortcutsClear.Text = "Clear";
-            this.buttonShortcutsClear.UseVisualStyleBackColor = true;
-            this.buttonShortcutsClear.Click += new System.EventHandler(this.buttonShortcutsClear_Click);
+            this.buttonSearchClear.Enabled = false;
+            this.buttonSearchClear.Location = new System.Drawing.Point(215, 17);
+            this.buttonSearchClear.Name = "buttonSearchClear";
+            this.buttonSearchClear.Size = new System.Drawing.Size(111, 23);
+            this.buttonSearchClear.TabIndex = 10;
+            this.buttonSearchClear.Text = "Clear";
+            this.buttonSearchClear.UseVisualStyleBackColor = true;
+            this.buttonSearchClear.Click += new System.EventHandler(this.buttonShortcutsClear_Click);
             // 
             // labelShortcutsSearch
             // 
-            this.labelShortcutsSearch.AutoSize = true;
-            this.labelShortcutsSearch.Location = new System.Drawing.Point(12, 21);
-            this.labelShortcutsSearch.Name = "labelShortcutsSearch";
-            this.labelShortcutsSearch.Size = new System.Drawing.Size(41, 13);
-            this.labelShortcutsSearch.TabIndex = 40;
-            this.labelShortcutsSearch.Text = "Search";
+            this.labelSearch.AutoSize = true;
+            this.labelSearch.Location = new System.Drawing.Point(12, 21);
+            this.labelSearch.Name = "labelSearch";
+            this.labelSearch.Size = new System.Drawing.Size(41, 13);
+            this.labelSearch.TabIndex = 40;
+            this.labelSearch.Text = "Search";
             // 
             // labelDefaultLanguagesList
             // 
@@ -139,12 +139,12 @@
             // 
             // textBoxShortcutSearch
             // 
-            this.textBoxShortcutSearch.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            this.textBoxShortcutSearch.Location = new System.Drawing.Point(59, 17);
-            this.textBoxShortcutSearch.Name = "textBoxShortcutSearch";
-            this.textBoxShortcutSearch.Size = new System.Drawing.Size(149, 20);
-            this.textBoxShortcutSearch.TabIndex = 1;
-            this.textBoxShortcutSearch.TextChanged += new System.EventHandler(this.textBoxShortcutSearch_TextChanged);
+            this.textBoxSearch.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.textBoxSearch.Location = new System.Drawing.Point(59, 17);
+            this.textBoxSearch.Name = "textBoxSearch";
+            this.textBoxSearch.Size = new System.Drawing.Size(149, 20);
+            this.textBoxSearch.TabIndex = 1;
+            this.textBoxSearch.TextChanged += new System.EventHandler(this.textBoxShortcutSearch_TextChanged);
             // 
             // DefaultLanguagesChooser
             // 
@@ -152,9 +152,9 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(422, 573);
             this.Controls.Add(this.labelDefaultLanguagesList);
-            this.Controls.Add(this.textBoxShortcutSearch);
-            this.Controls.Add(this.buttonShortcutsClear);
-            this.Controls.Add(this.labelShortcutsSearch);
+            this.Controls.Add(this.textBoxSearch);
+            this.Controls.Add(this.buttonSearchClear);
+            this.Controls.Add(this.labelSearch);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.listView1);
@@ -180,9 +180,9 @@
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.ColumnHeader columnHeader1;
-        private System.Windows.Forms.Button buttonShortcutsClear;
-        private System.Windows.Forms.Label labelShortcutsSearch;
-        private Controls.NikseTextBox textBoxShortcutSearch;
+        private System.Windows.Forms.Button buttonSearchClear;
+        private System.Windows.Forms.Label labelSearch;
+        private Controls.NikseTextBox textBoxSearch;
         private System.Windows.Forms.Label labelDefaultLanguagesList;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSelAll;
