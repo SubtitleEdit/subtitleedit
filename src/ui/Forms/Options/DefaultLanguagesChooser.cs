@@ -72,6 +72,9 @@ namespace Nikse.SubtitleEdit.Forms.Options
             listView1.AutoSizeLastColumn();
 
             InitLanguageList();
+
+            textBoxSearch.Left = labelSearch.Right + 2;
+            buttonSearchClear.Left = textBoxSearch.Right + 2;
         }
 
         private void buttonOK_Click(object sender, EventArgs e)
@@ -87,24 +90,24 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
         private void buttonShortcutsClear_Click(object sender, EventArgs e)
         {
-            textBoxShortcutSearch.Text = string.Empty;
+            textBoxSearch.Text = string.Empty;
         }
 
         private void textBoxShortcutSearch_TextChanged(object sender, EventArgs e)
         {
-            buttonShortcutsClear.Enabled = textBoxShortcutSearch.Text.Length > 0;
+            buttonSearchClear.Enabled = textBoxSearch.Text.Length > 0;
             listView1.BeginUpdate();
             listView1.Items.Clear();
             foreach (var x in _languageItems)
             {
-                if (x.Name.Contains(textBoxShortcutSearch.Text) ||
-                    x.Code.TwoLetterISOLanguageName == textBoxShortcutSearch.Text ||
-                    x.Code.ThreeLetterISOLanguageName == textBoxShortcutSearch.Text)
+                if (x.Name.Contains(textBoxSearch.Text) ||
+                    x.Code.TwoLetterISOLanguageName == textBoxSearch.Text ||
+                    x.Code.ThreeLetterISOLanguageName == textBoxSearch.Text)
                 {
                     var listViewItem = new ListViewItem(x.ToString())
                     {
                         Tag = x,
-                        Checked = DefaultLanguages.Contains(x.Code.TwoLetterISOLanguageName),
+                        Checked = x.Checked,
                     };
                     listView1.Items.Add(listViewItem);
                 }
@@ -120,6 +123,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             {
                 if (e.Item.Tag is LanguageItem li)
                 {
+                    li.Checked = true;
                     if (!_defaultLanguageArray.Contains(li.Code.TwoLetterISOLanguageName))
                     {
                         _defaultLanguageArray.Add(li.Code.TwoLetterISOLanguageName);
@@ -128,9 +132,14 @@ namespace Nikse.SubtitleEdit.Forms.Options
             }
             else
             {
-                if (e.Item.Tag is LanguageItem li && _defaultLanguageArray.Contains(li.Code.TwoLetterISOLanguageName))
+                if (e.Item.Tag is LanguageItem li)
                 {
-                    _defaultLanguageArray.Remove(li.Code.TwoLetterISOLanguageName);
+                    li.Checked = false;
+
+                    if (_defaultLanguageArray.Contains(li.Code.TwoLetterISOLanguageName))
+                    {
+                        _defaultLanguageArray.Remove(li.Code.TwoLetterISOLanguageName);
+                    }
                 }
             }
 

@@ -58,7 +58,7 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             // buttonOK
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonOK.Location = new System.Drawing.Point(415, 350);
+            this.buttonOK.Location = new System.Drawing.Point(415, 362);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 30;
@@ -70,7 +70,7 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(496, 350);
+            this.buttonCancel.Location = new System.Drawing.Point(496, 362);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 31;
@@ -85,7 +85,7 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             this.groupBoxTimeCodes.Controls.Add(this.panelTimeCodes);
             this.groupBoxTimeCodes.Location = new System.Drawing.Point(12, 12);
             this.groupBoxTimeCodes.Name = "groupBoxTimeCodes";
-            this.groupBoxTimeCodes.Size = new System.Drawing.Size(558, 152);
+            this.groupBoxTimeCodes.Size = new System.Drawing.Size(558, 161);
             this.groupBoxTimeCodes.TabIndex = 1;
             this.groupBoxTimeCodes.TabStop = false;
             this.groupBoxTimeCodes.Text = "Time codes";
@@ -135,14 +135,14 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             this.panelExtractTimeCodes.Controls.Add(this.buttonCancelTimeCodes);
             this.panelExtractTimeCodes.Location = new System.Drawing.Point(0, 27);
             this.panelExtractTimeCodes.Name = "panelExtractTimeCodes";
-            this.panelExtractTimeCodes.Size = new System.Drawing.Size(546, 78);
+            this.panelExtractTimeCodes.Size = new System.Drawing.Size(546, 87);
             this.panelExtractTimeCodes.TabIndex = 2;
             // 
             // labelExtractTimeCodesProgress
             // 
             this.labelExtractTimeCodesProgress.AutoSize = true;
             this.labelExtractTimeCodesProgress.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.labelExtractTimeCodesProgress.Location = new System.Drawing.Point(178, 22);
+            this.labelExtractTimeCodesProgress.Location = new System.Drawing.Point(178, 24);
             this.labelExtractTimeCodesProgress.Name = "labelExtractTimeCodesProgress";
             this.labelExtractTimeCodesProgress.Size = new System.Drawing.Size(102, 15);
             this.labelExtractTimeCodesProgress.TabIndex = 3;
@@ -150,14 +150,14 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             // 
             // progressBarExtractTimeCodes
             // 
-            this.progressBarExtractTimeCodes.Location = new System.Drawing.Point(24, 47);
+            this.progressBarExtractTimeCodes.Location = new System.Drawing.Point(24, 52);
             this.progressBarExtractTimeCodes.Name = "progressBarExtractTimeCodes";
             this.progressBarExtractTimeCodes.Size = new System.Drawing.Size(516, 23);
             this.progressBarExtractTimeCodes.TabIndex = 4;
             // 
             // buttonExtractTimeCodes
             // 
-            this.buttonExtractTimeCodes.Location = new System.Drawing.Point(23, 18);
+            this.buttonExtractTimeCodes.Location = new System.Drawing.Point(23, 20);
             this.buttonExtractTimeCodes.Name = "buttonExtractTimeCodes";
             this.buttonExtractTimeCodes.Size = new System.Drawing.Size(149, 23);
             this.buttonExtractTimeCodes.TabIndex = 4;
@@ -169,7 +169,7 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             // 
             this.labelTimeCodesStatus.AutoSize = true;
             this.labelTimeCodesStatus.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelTimeCodesStatus.Location = new System.Drawing.Point(20, 0);
+            this.labelTimeCodesStatus.Location = new System.Drawing.Point(20, 1);
             this.labelTimeCodesStatus.Name = "labelTimeCodesStatus";
             this.labelTimeCodesStatus.Size = new System.Drawing.Size(132, 15);
             this.labelTimeCodesStatus.TabIndex = 1;
@@ -192,7 +192,7 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxShotChanges.Controls.Add(this.checkBoxSnapToShotChanges);
             this.groupBoxShotChanges.Controls.Add(this.panelShotChanges);
-            this.groupBoxShotChanges.Location = new System.Drawing.Point(12, 170);
+            this.groupBoxShotChanges.Location = new System.Drawing.Point(12, 179);
             this.groupBoxShotChanges.Name = "groupBoxShotChanges";
             this.groupBoxShotChanges.Size = new System.Drawing.Size(558, 101);
             this.groupBoxShotChanges.TabIndex = 10;
@@ -246,7 +246,7 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             // 
             // buttonEditProfile
             // 
-            this.buttonEditProfile.Location = new System.Drawing.Point(11, 279);
+            this.buttonEditProfile.Location = new System.Drawing.Point(10, 288);
             this.buttonEditProfile.Name = "buttonEditProfile";
             this.buttonEditProfile.Size = new System.Drawing.Size(178, 28);
             this.buttonEditProfile.TabIndex = 20;
@@ -258,7 +258,7 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             // 
             this.progressBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.progressBar.Location = new System.Drawing.Point(12, 316);
+            this.progressBar.Location = new System.Drawing.Point(11, 327);
             this.progressBar.Name = "progressBar";
             this.progressBar.Size = new System.Drawing.Size(558, 23);
             this.progressBar.TabIndex = 21;
@@ -269,7 +269,7 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.buttonCancel;
-            this.ClientSize = new System.Drawing.Size(582, 385);
+            this.ClientSize = new System.Drawing.Size(582, 397);
             this.Controls.Add(this.progressBar);
             this.Controls.Add(this.groupBoxShotChanges);
             this.Controls.Add(this.buttonEditProfile);
