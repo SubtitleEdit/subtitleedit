@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>4.0.1</Version>
-    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 18.09.2023</TranslatedBy>
+    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 22.09.2023</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -103,6 +103,7 @@
     <Error>Errore</Error>
     <Warning>Avviso</Warning>
     <UseLargerFontForThisWindow>Per questa finestra usa una font più grande </UseLargerFontForThisWindow>
+    <ChangeLanguageFilter>Modifica filtro lingua...</ChangeLanguageFilter>
   </General>
   <About>
     <Title>Informazioni</Title>
@@ -2318,6 +2319,7 @@ stesso file di sottotitolo (collaborazione)</Information>
     <DefaultFrameRate>Frequenza fotogrammi predefinita</DefaultFrameRate>
     <DefaultFileEncoding>Codifica file predefinita</DefaultFileEncoding>
     <AutoDetectAnsiEncoding>Rileva automaticamente codifica ANSI</AutoDetectAnsiEncoding>
+    <LanguageFilter>Filtro lingua</LanguageFilter>
     <Profile>Profilo</Profile>
     <Profiles>Profili</Profiles>
     <ImportProfiles>Importa profili</ImportProfiles>
