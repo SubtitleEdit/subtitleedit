@@ -58,6 +58,13 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
         private void InitComboBoxWordListLanguages()
         {
+            var languageFilter = new List<CultureInfo>();
+            var useAllLanguages = string.IsNullOrEmpty(Configuration.Settings.General.DefaultLanguages);
+            if (!useAllLanguages)
+            {
+                languageFilter = Utilities.GetSubtitleLanguageCultures(true).ToList();
+            }
+
             //Examples: da_DK_user.xml, eng_OCRFixReplaceList.xml, en_names.xml
             var dir = Utilities.DictionaryFolder;
             if (Directory.Exists(dir))
@@ -107,21 +114,35 @@ namespace Nikse.SubtitleEdit.Forms.Options
                 Configuration.Settings.WordLists.LastLanguage = Configuration.Settings.WordLists.LastLanguage ?? "en-US";
                 comboBoxWordListLanguage.BeginUpdate();
                 var list = new List<Settings.ComboBoxLanguage>(cultures.Count);
+                var listAll = new List<Settings.ComboBoxLanguage>(cultures.Count);
                 var idx = 0;
                 for (var index = 0; index < cultures.Count; index++)
                 {
                     var ci = cultures[index];
-                    list.Add(new Settings.ComboBoxLanguage { CultureInfo = ci });
-                    if (ci.Name.Equals(Configuration.Settings.WordLists.LastLanguage, StringComparison.Ordinal))
+                    listAll.Add(new Settings.ComboBoxLanguage { CultureInfo = ci });
+
+                    if (useAllLanguages || IsInLanguageFilter(ci.EnglishName, ci.NativeName, languageFilter))
                     {
-                        idx = index;
+                        list.Add(new Settings.ComboBoxLanguage { CultureInfo = ci });
+                        if (ci.Name.Equals(Configuration.Settings.WordLists.LastLanguage, StringComparison.Ordinal))
+                        {
+                            idx = list.Count-1;
+                        }
                     }
                 }
-                comboBoxWordListLanguage.Items.AddRange(list.ToArray<object>());
+
+                comboBoxWordListLanguage.Items.AddRange(list.Count == 0 ? listAll.ToArray<object>() : list.ToArray<object>());
+                
+                if (list.Count > 0)
+                {
+                    comboBoxWordListLanguage.Items.Add(LanguageSettings.Current.General.ChangeLanguageFilter);
+                }
+
                 if (comboBoxWordListLanguage.Items.Count > 0)
                 {
                     comboBoxWordListLanguage.SelectedIndex = idx;
                 }
+
                 comboBoxWordListLanguage.EndUpdate();
             }
             else
@@ -130,8 +151,54 @@ namespace Nikse.SubtitleEdit.Forms.Options
             }
         }
 
+        private static bool IsInLanguageFilter(string englishName, string nativeName, List<CultureInfo> languageFilter)
+        {
+            foreach (var cultureInfo in languageFilter)
+            {
+                if (!string.IsNullOrEmpty(englishName) &&
+                    cultureInfo.EnglishName.Contains(englishName, StringComparison.OrdinalIgnoreCase))
+                {
+                    return true;
+                }
+
+                if (!string.IsNullOrEmpty(englishName) &&
+                    englishName.Contains(cultureInfo.EnglishName, StringComparison.OrdinalIgnoreCase))
+                {
+                    return true;
+                }
+
+                if (!string.IsNullOrEmpty(nativeName) &&
+                    cultureInfo.NativeName.Contains(nativeName, StringComparison.OrdinalIgnoreCase))
+                {
+                    return true;
+                }
+
+                if (!string.IsNullOrEmpty(nativeName) &&
+                    nativeName.Contains(cultureInfo.NativeName, StringComparison.OrdinalIgnoreCase))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         private async void ComboBoxWordListLanguageSelectedIndexChanged(object sender, EventArgs e)
         {
+            if (comboBoxWordListLanguage.SelectedIndex > 0 && comboBoxWordListLanguage.Text == LanguageSettings.Current.General.ChangeLanguageFilter)
+            {
+                using (var form = new DefaultLanguagesChooser(Configuration.Settings.General.DefaultLanguages))
+                {
+                    if (form.ShowDialog(this) == DialogResult.OK)
+                    {
+                        Configuration.Settings.General.DefaultLanguages = form.DefaultLanguages;
+                    }
+                }
+
+                InitComboBoxWordListLanguages();
+                return;
+            }
+
             buttonRemoveNameEtc.Enabled = false;
             buttonAddNames.Enabled = false;
             buttonRemoveUserWord.Enabled = false;
