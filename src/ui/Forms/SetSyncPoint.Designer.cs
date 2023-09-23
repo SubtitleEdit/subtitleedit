@@ -31,7 +31,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            TimeCode timeCode1 = new TimeCode();
+            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode1 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
             this.groupBoxSyncPointTimeCode = new System.Windows.Forms.GroupBox();
             this.timeUpDownLine = new Nikse.SubtitleEdit.Controls.NikseTimeUpDown();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
@@ -68,13 +68,25 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // timeUpDownLine
             // 
-            this.timeUpDownLine.AutoSize = true;
+            this.timeUpDownLine.BackColor = System.Drawing.SystemColors.Window;
+            this.timeUpDownLine.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.timeUpDownLine.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.timeUpDownLine.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.timeUpDownLine.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.timeUpDownLine.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.timeUpDownLine.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.timeUpDownLine.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.timeUpDownLine.Increment = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
             this.timeUpDownLine.Location = new System.Drawing.Point(18, 19);
             this.timeUpDownLine.Margin = new System.Windows.Forms.Padding(4);
             this.timeUpDownLine.Name = "timeUpDownLine";
-            this.timeUpDownLine.Size = new System.Drawing.Size(111, 27);
+            this.timeUpDownLine.Size = new System.Drawing.Size(111, 23);
             this.timeUpDownLine.TabIndex = 1;
+            this.timeUpDownLine.TabStop = false;
             timeCode1.Hours = 0;
             timeCode1.Milliseconds = 0;
             timeCode1.Minutes = 0;
@@ -251,6 +263,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.videoPlayerContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.videoPlayerContainer1.BackColor = System.Drawing.Color.Black;
+            this.videoPlayerContainer1.Chapters = new Nikse.SubtitleEdit.Core.ContainerFormats.Matroska.MatroskaChapter[0];
             this.videoPlayerContainer1.CurrentPosition = 0D;
             this.videoPlayerContainer1.FontSizeFactor = 1F;
             this.videoPlayerContainer1.LastParagraph = null;
@@ -263,6 +276,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.videoPlayerContainer1.SubtitleText = "";
             this.videoPlayerContainer1.TabIndex = 13;
             this.videoPlayerContainer1.TextRightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.videoPlayerContainer1.UsingFrontCenterAudioChannelOnly = false;
             this.videoPlayerContainer1.VideoHeight = 0;
             this.videoPlayerContainer1.VideoPlayer = null;
             this.videoPlayerContainer1.VideoWidth = 0;

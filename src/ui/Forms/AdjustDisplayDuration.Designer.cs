@@ -195,7 +195,7 @@
             0,
             0});
             this.numericUpDownMaxCharsSec.Name = "numericUpDownMaxCharsSec";
-            this.numericUpDownMaxCharsSec.Size = new System.Drawing.Size(80, 21);
+            this.numericUpDownMaxCharsSec.Size = new System.Drawing.Size(80, 23);
             this.numericUpDownMaxCharsSec.TabIndex = 6;
             this.numericUpDownMaxCharsSec.TabStop = false;
             this.numericUpDownMaxCharsSec.ThousandsSeparator = false;
@@ -241,7 +241,7 @@
             0,
             -2147483648});
             this.numericUpDownSeconds.Name = "numericUpDownSeconds";
-            this.numericUpDownSeconds.Size = new System.Drawing.Size(80, 21);
+            this.numericUpDownSeconds.Size = new System.Drawing.Size(80, 23);
             this.numericUpDownSeconds.TabIndex = 3;
             this.numericUpDownSeconds.TabStop = false;
             this.numericUpDownSeconds.ThousandsSeparator = false;
@@ -278,7 +278,7 @@
             0,
             0});
             this.numericUpDownPercent.Name = "numericUpDownPercent";
-            this.numericUpDownPercent.Size = new System.Drawing.Size(80, 21);
+            this.numericUpDownPercent.Size = new System.Drawing.Size(80, 23);
             this.numericUpDownPercent.TabIndex = 4;
             this.numericUpDownPercent.TabStop = false;
             this.numericUpDownPercent.ThousandsSeparator = false;
@@ -316,7 +316,7 @@
             0,
             0});
             this.numericUpDownOptimalCharsSec.Name = "numericUpDownOptimalCharsSec";
-            this.numericUpDownOptimalCharsSec.Size = new System.Drawing.Size(80, 21);
+            this.numericUpDownOptimalCharsSec.Size = new System.Drawing.Size(80, 23);
             this.numericUpDownOptimalCharsSec.TabIndex = 7;
             this.numericUpDownOptimalCharsSec.TabStop = false;
             this.numericUpDownOptimalCharsSec.ThousandsSeparator = false;
@@ -363,7 +363,7 @@
             0,
             0});
             this.numericUpDownFixedMilliseconds.Name = "numericUpDownFixedMilliseconds";
-            this.numericUpDownFixedMilliseconds.Size = new System.Drawing.Size(80, 21);
+            this.numericUpDownFixedMilliseconds.Size = new System.Drawing.Size(80, 23);
             this.numericUpDownFixedMilliseconds.TabIndex = 9;
             this.numericUpDownFixedMilliseconds.TabStop = false;
             this.numericUpDownFixedMilliseconds.ThousandsSeparator = false;

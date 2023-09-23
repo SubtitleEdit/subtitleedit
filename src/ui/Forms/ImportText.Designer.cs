@@ -31,8 +31,11 @@
             this.components = new System.ComponentModel.Container();
             this.buttonOpenText = new System.Windows.Forms.Button();
             this.groupBoxImportText = new System.Windows.Forms.GroupBox();
+            this.buttonBrowseEncoding = new System.Windows.Forms.Button();
+            this.labelEncoding = new Nikse.SubtitleEdit.Controls.NikseLabel();
+            this.comboBoxEncoding = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.checkBoxMultipleFiles = new System.Windows.Forms.CheckBox();
-            this.textBoxText = new Controls.NikseTextBox();
+            this.textBoxText = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.listViewInputFiles = new System.Windows.Forms.ListView();
             this.columnHeaderFName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderSize = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -71,16 +74,13 @@
             this.checkBoxUseTimeCodeFromCurrentFile = new System.Windows.Forms.CheckBox();
             this.buttonRefresh = new System.Windows.Forms.Button();
             this.groupBoxImportResult = new System.Windows.Forms.GroupBox();
+            this.SubtitleListview1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.contextMenuStripPreview = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.startNumberingFromToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
             this.labelStatus = new Nikse.SubtitleEdit.Controls.NikseLabel();
-            this.buttonBrowseEncoding = new System.Windows.Forms.Button();
-            this.labelEncoding = new Nikse.SubtitleEdit.Controls.NikseLabel();
-            this.comboBoxEncoding = new Nikse.SubtitleEdit.Controls.NikseComboBox();
-            this.SubtitleListview1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.groupBoxImportText.SuspendLayout();
             this.contextMenuStripListView.SuspendLayout();
             this.groupBoxImportOptions.SuspendLayout();
@@ -105,7 +105,7 @@
             // 
             // groupBoxImportText
             // 
-            this.groupBoxImportText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.groupBoxImportText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxImportText.Controls.Add(this.buttonBrowseEncoding);
             this.groupBoxImportText.Controls.Add(this.labelEncoding);
@@ -120,6 +120,51 @@
             this.groupBoxImportText.TabIndex = 0;
             this.groupBoxImportText.TabStop = false;
             this.groupBoxImportText.Text = "Import text";
+            // 
+            // buttonBrowseEncoding
+            // 
+            this.buttonBrowseEncoding.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonBrowseEncoding.Location = new System.Drawing.Point(592, 52);
+            this.buttonBrowseEncoding.Name = "buttonBrowseEncoding";
+            this.buttonBrowseEncoding.Size = new System.Drawing.Size(26, 23);
+            this.buttonBrowseEncoding.TabIndex = 6;
+            this.buttonBrowseEncoding.Text = "...";
+            this.buttonBrowseEncoding.UseVisualStyleBackColor = true;
+            this.buttonBrowseEncoding.Click += new System.EventHandler(this.buttonBrowseEncoding_Click);
+            // 
+            // labelEncoding
+            // 
+            this.labelEncoding.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelEncoding.AutoSize = true;
+            this.labelEncoding.Location = new System.Drawing.Point(302, 56);
+            this.labelEncoding.Name = "labelEncoding";
+            this.labelEncoding.Size = new System.Drawing.Size(50, 13);
+            this.labelEncoding.TabIndex = 13;
+            this.labelEncoding.Text = "Encoding";
+            // 
+            // comboBoxEncoding
+            // 
+            this.comboBoxEncoding.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxEncoding.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxEncoding.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxEncoding.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxEncoding.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxEncoding.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxEncoding.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxEncoding.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxEncoding.DropDownHeight = 400;
+            this.comboBoxEncoding.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxEncoding.DropDownWidth = 214;
+            this.comboBoxEncoding.FormattingEnabled = true;
+            this.comboBoxEncoding.Location = new System.Drawing.Point(372, 53);
+            this.comboBoxEncoding.MaxLength = 32767;
+            this.comboBoxEncoding.Name = "comboBoxEncoding";
+            this.comboBoxEncoding.SelectedIndex = -1;
+            this.comboBoxEncoding.SelectedItem = null;
+            this.comboBoxEncoding.SelectedText = "";
+            this.comboBoxEncoding.Size = new System.Drawing.Size(214, 21);
+            this.comboBoxEncoding.TabIndex = 5;
+            this.comboBoxEncoding.UsePopupWindow = false;
             // 
             // checkBoxMultipleFiles
             // 
@@ -136,8 +181,9 @@
             // textBoxText
             // 
             this.textBoxText.AllowDrop = true;
-            this.textBoxText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.textBoxText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxText.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxText.Location = new System.Drawing.Point(6, 91);
             this.textBoxText.MaxLength = 0;
             this.textBoxText.Multiline = true;
@@ -152,8 +198,8 @@
             // listViewInputFiles
             // 
             this.listViewInputFiles.AllowDrop = true;
-            this.listViewInputFiles.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+            this.listViewInputFiles.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.listViewInputFiles.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeaderFName,
@@ -265,6 +311,19 @@
             // 
             // numericUpDownSubtitleLineMaximumLength
             // 
+            this.numericUpDownSubtitleLineMaximumLength.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownSubtitleLineMaximumLength.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownSubtitleLineMaximumLength.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownSubtitleLineMaximumLength.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownSubtitleLineMaximumLength.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownSubtitleLineMaximumLength.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownSubtitleLineMaximumLength.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownSubtitleLineMaximumLength.DecimalPlaces = 0;
+            this.numericUpDownSubtitleLineMaximumLength.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownSubtitleLineMaximumLength.Location = new System.Drawing.Point(112, 44);
             this.numericUpDownSubtitleLineMaximumLength.Maximum = new decimal(new int[] {
             999,
@@ -277,8 +336,10 @@
             0,
             0});
             this.numericUpDownSubtitleLineMaximumLength.Name = "numericUpDownSubtitleLineMaximumLength";
-            this.numericUpDownSubtitleLineMaximumLength.Size = new System.Drawing.Size(49, 21);
+            this.numericUpDownSubtitleLineMaximumLength.Size = new System.Drawing.Size(49, 23);
             this.numericUpDownSubtitleLineMaximumLength.TabIndex = 20;
+            this.numericUpDownSubtitleLineMaximumLength.TabStop = false;
+            this.numericUpDownSubtitleLineMaximumLength.ThousandsSeparator = false;
             this.numericUpDownSubtitleLineMaximumLength.Value = new decimal(new int[] {
             43,
             0,
@@ -288,6 +349,7 @@
             // 
             // textBoxAsEnd
             // 
+            this.textBoxAsEnd.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxAsEnd.Location = new System.Drawing.Point(118, 117);
             this.textBoxAsEnd.MaxLength = 5;
             this.textBoxAsEnd.Name = "textBoxAsEnd";
@@ -324,6 +386,19 @@
             // 
             // numericUpDownAutoSplitMaxLines
             // 
+            this.numericUpDownAutoSplitMaxLines.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownAutoSplitMaxLines.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownAutoSplitMaxLines.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownAutoSplitMaxLines.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownAutoSplitMaxLines.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownAutoSplitMaxLines.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownAutoSplitMaxLines.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownAutoSplitMaxLines.DecimalPlaces = 0;
+            this.numericUpDownAutoSplitMaxLines.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownAutoSplitMaxLines.Location = new System.Drawing.Point(115, 17);
             this.numericUpDownAutoSplitMaxLines.Maximum = new decimal(new int[] {
             2,
@@ -336,8 +411,10 @@
             0,
             0});
             this.numericUpDownAutoSplitMaxLines.Name = "numericUpDownAutoSplitMaxLines";
-            this.numericUpDownAutoSplitMaxLines.Size = new System.Drawing.Size(46, 21);
+            this.numericUpDownAutoSplitMaxLines.Size = new System.Drawing.Size(46, 23);
             this.numericUpDownAutoSplitMaxLines.TabIndex = 10;
+            this.numericUpDownAutoSplitMaxLines.TabStop = false;
+            this.numericUpDownAutoSplitMaxLines.ThousandsSeparator = false;
             this.numericUpDownAutoSplitMaxLines.Value = new decimal(new int[] {
             2,
             0,
@@ -400,15 +477,35 @@
             // 
             // numericUpDownGapBetweenLines
             // 
+            this.numericUpDownGapBetweenLines.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownGapBetweenLines.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownGapBetweenLines.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownGapBetweenLines.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownGapBetweenLines.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownGapBetweenLines.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownGapBetweenLines.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownGapBetweenLines.DecimalPlaces = 0;
+            this.numericUpDownGapBetweenLines.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownGapBetweenLines.Location = new System.Drawing.Point(192, 20);
             this.numericUpDownGapBetweenLines.Maximum = new decimal(new int[] {
             100000,
             0,
             0,
             0});
+            this.numericUpDownGapBetweenLines.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownGapBetweenLines.Name = "numericUpDownGapBetweenLines";
-            this.numericUpDownGapBetweenLines.Size = new System.Drawing.Size(64, 21);
+            this.numericUpDownGapBetweenLines.Size = new System.Drawing.Size(64, 23);
             this.numericUpDownGapBetweenLines.TabIndex = 1;
+            this.numericUpDownGapBetweenLines.TabStop = false;
+            this.numericUpDownGapBetweenLines.ThousandsSeparator = false;
             this.numericUpDownGapBetweenLines.Value = new decimal(new int[] {
             1000,
             0,
@@ -430,15 +527,35 @@
             // 
             // numericUpDownDurationFixed
             // 
+            this.numericUpDownDurationFixed.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownDurationFixed.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownDurationFixed.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownDurationFixed.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownDurationFixed.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownDurationFixed.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownDurationFixed.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownDurationFixed.DecimalPlaces = 0;
+            this.numericUpDownDurationFixed.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownDurationFixed.Location = new System.Drawing.Point(111, 42);
             this.numericUpDownDurationFixed.Maximum = new decimal(new int[] {
             100000,
             0,
             0,
             0});
+            this.numericUpDownDurationFixed.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownDurationFixed.Name = "numericUpDownDurationFixed";
-            this.numericUpDownDurationFixed.Size = new System.Drawing.Size(64, 21);
+            this.numericUpDownDurationFixed.Size = new System.Drawing.Size(64, 23);
             this.numericUpDownDurationFixed.TabIndex = 2;
+            this.numericUpDownDurationFixed.TabStop = false;
+            this.numericUpDownDurationFixed.ThousandsSeparator = false;
             this.numericUpDownDurationFixed.Value = new decimal(new int[] {
             2000,
             0,
@@ -513,28 +630,58 @@
             // 
             // comboBoxLineMode
             // 
+            this.comboBoxLineMode.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxLineMode.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxLineMode.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxLineMode.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxLineMode.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxLineMode.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxLineMode.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxLineMode.DropDownHeight = 400;
             this.comboBoxLineMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxLineMode.DropDownWidth = 144;
             this.comboBoxLineMode.FormattingEnabled = true;
             this.comboBoxLineMode.Items.AddRange(new object[] {
             "One line is a subtitle",
             "Two lines is a subtitle"});
             this.comboBoxLineMode.Location = new System.Drawing.Point(31, 41);
+            this.comboBoxLineMode.MaxLength = 32767;
             this.comboBoxLineMode.Name = "comboBoxLineMode";
+            this.comboBoxLineMode.SelectedIndex = -1;
+            this.comboBoxLineMode.SelectedItem = null;
+            this.comboBoxLineMode.SelectedText = "";
             this.comboBoxLineMode.Size = new System.Drawing.Size(144, 21);
             this.comboBoxLineMode.TabIndex = 2;
+            this.comboBoxLineMode.UsePopupWindow = false;
             this.comboBoxLineMode.SelectedIndexChanged += new System.EventHandler(this.comboBoxLineMode_SelectedIndexChanged);
             // 
             // comboBoxLineBreak
             // 
+            this.comboBoxLineBreak.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxLineBreak.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxLineBreak.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxLineBreak.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxLineBreak.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxLineBreak.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxLineBreak.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxLineBreak.DropDownHeight = 400;
+            this.comboBoxLineBreak.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
+            this.comboBoxLineBreak.DropDownWidth = 107;
             this.comboBoxLineBreak.FormattingEnabled = true;
             this.comboBoxLineBreak.Items.AddRange(new object[] {
             "|",
             "\\N;\\n",
             "|;\\N;\\n;//;<br>;<br />;<br/>"});
             this.comboBoxLineBreak.Location = new System.Drawing.Point(246, 41);
+            this.comboBoxLineBreak.MaxLength = 32767;
             this.comboBoxLineBreak.Name = "comboBoxLineBreak";
+            this.comboBoxLineBreak.SelectedIndex = -1;
+            this.comboBoxLineBreak.SelectedItem = null;
+            this.comboBoxLineBreak.SelectedText = "";
             this.comboBoxLineBreak.Size = new System.Drawing.Size(107, 21);
             this.comboBoxLineBreak.TabIndex = 5;
+            this.comboBoxLineBreak.TabStop = false;
+            this.comboBoxLineBreak.UsePopupWindow = false;
             this.comboBoxLineBreak.TextChanged += new System.EventHandler(this.comboBoxLineBreak_TextChanged);
             // 
             // labelLineBreak
@@ -619,8 +766,8 @@
             // 
             // groupBoxImportResult
             // 
-            this.groupBoxImportResult.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+            this.groupBoxImportResult.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxImportResult.Controls.Add(this.SubtitleListview1);
             this.groupBoxImportResult.Location = new System.Drawing.Point(12, 428);
@@ -629,6 +776,33 @@
             this.groupBoxImportResult.TabIndex = 2;
             this.groupBoxImportResult.TabStop = false;
             this.groupBoxImportResult.Text = "Preview";
+            // 
+            // SubtitleListview1
+            // 
+            this.SubtitleListview1.AllowColumnReorder = true;
+            this.SubtitleListview1.AllowDrop = true;
+            this.SubtitleListview1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.SubtitleListview1.ContextMenuStrip = this.contextMenuStripPreview;
+            this.SubtitleListview1.FirstVisibleIndex = -1;
+            this.SubtitleListview1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SubtitleListview1.FullRowSelect = true;
+            this.SubtitleListview1.GridLines = true;
+            this.SubtitleListview1.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.SubtitleListview1.HideSelection = false;
+            this.SubtitleListview1.Location = new System.Drawing.Point(6, 20);
+            this.SubtitleListview1.MultiSelect = false;
+            this.SubtitleListview1.Name = "SubtitleListview1";
+            this.SubtitleListview1.OwnerDraw = true;
+            this.SubtitleListview1.Size = new System.Drawing.Size(1020, 257);
+            this.SubtitleListview1.SubtitleFontBold = false;
+            this.SubtitleListview1.SubtitleFontName = "Tahoma";
+            this.SubtitleListview1.SubtitleFontSize = 8;
+            this.SubtitleListview1.TabIndex = 0;
+            this.SubtitleListview1.UseCompatibleStateImageBehavior = false;
+            this.SubtitleListview1.UseSyntaxColoring = true;
+            this.SubtitleListview1.View = System.Windows.Forms.View.Details;
             // 
             // contextMenuStripPreview
             // 
@@ -681,64 +855,6 @@
             this.labelStatus.Size = new System.Drawing.Size(60, 13);
             this.labelStatus.TabIndex = 106;
             this.labelStatus.Text = "labelStatus";
-            // 
-            // buttonBrowseEncoding
-            // 
-            this.buttonBrowseEncoding.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonBrowseEncoding.Location = new System.Drawing.Point(592, 52);
-            this.buttonBrowseEncoding.Name = "buttonBrowseEncoding";
-            this.buttonBrowseEncoding.Size = new System.Drawing.Size(26, 23);
-            this.buttonBrowseEncoding.TabIndex = 6;
-            this.buttonBrowseEncoding.Text = "...";
-            this.buttonBrowseEncoding.UseVisualStyleBackColor = true;
-            this.buttonBrowseEncoding.Click += new System.EventHandler(this.buttonBrowseEncoding_Click);
-            // 
-            // labelEncoding
-            // 
-            this.labelEncoding.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelEncoding.AutoSize = true;
-            this.labelEncoding.Location = new System.Drawing.Point(302, 56);
-            this.labelEncoding.Name = "labelEncoding";
-            this.labelEncoding.Size = new System.Drawing.Size(50, 13);
-            this.labelEncoding.TabIndex = 13;
-            this.labelEncoding.Text = "Encoding";
-            // 
-            // comboBoxEncoding
-            // 
-            this.comboBoxEncoding.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.comboBoxEncoding.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxEncoding.FormattingEnabled = true;
-            this.comboBoxEncoding.Location = new System.Drawing.Point(372, 53);
-            this.comboBoxEncoding.Name = "comboBoxEncoding";
-            this.comboBoxEncoding.Size = new System.Drawing.Size(214, 21);
-            this.comboBoxEncoding.TabIndex = 5;
-            // 
-            // SubtitleListview1
-            // 
-            this.SubtitleListview1.AllowColumnReorder = true;
-            this.SubtitleListview1.AllowDrop = true;
-            this.SubtitleListview1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.SubtitleListview1.ContextMenuStrip = this.contextMenuStripPreview;
-            this.SubtitleListview1.FirstVisibleIndex = -1;
-            this.SubtitleListview1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SubtitleListview1.FullRowSelect = true;
-            this.SubtitleListview1.GridLines = true;
-            this.SubtitleListview1.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this.SubtitleListview1.HideSelection = false;
-            this.SubtitleListview1.Location = new System.Drawing.Point(6, 20);
-            this.SubtitleListview1.MultiSelect = false;
-            this.SubtitleListview1.Name = "SubtitleListview1";
-            this.SubtitleListview1.OwnerDraw = true;
-            this.SubtitleListview1.Size = new System.Drawing.Size(1020, 257);
-            this.SubtitleListview1.SubtitleFontBold = false;
-            this.SubtitleListview1.SubtitleFontName = "Tahoma";
-            this.SubtitleListview1.SubtitleFontSize = 8;
-            this.SubtitleListview1.TabIndex = 0;
-            this.SubtitleListview1.UseCompatibleStateImageBehavior = false;
-            this.SubtitleListview1.UseSyntaxColoring = true;
-            this.SubtitleListview1.View = System.Windows.Forms.View.Details;
             // 
             // ImportText
             // 

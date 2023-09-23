@@ -570,7 +570,7 @@
             0,
             0});
             this.numericUpDownShadowWidth.Name = "numericUpDownShadowWidth";
-            this.numericUpDownShadowWidth.Size = new System.Drawing.Size(52, 20);
+            this.numericUpDownShadowWidth.Size = new System.Drawing.Size(52, 23);
             this.numericUpDownShadowWidth.TabIndex = 2;
             this.numericUpDownShadowWidth.TabStop = false;
             this.numericUpDownShadowWidth.ThousandsSeparator = false;
@@ -678,7 +678,7 @@
             0,
             0});
             this.numericUpDownFontSize.Name = "numericUpDownFontSize";
-            this.numericUpDownFontSize.Size = new System.Drawing.Size(51, 20);
+            this.numericUpDownFontSize.Size = new System.Drawing.Size(51, 23);
             this.numericUpDownFontSize.TabIndex = 4;
             this.numericUpDownFontSize.TabStop = false;
             this.numericUpDownFontSize.ThousandsSeparator = false;
@@ -732,7 +732,7 @@
             this.comboBoxFontName.SelectedIndex = -1;
             this.comboBoxFontName.SelectedItem = null;
             this.comboBoxFontName.SelectedText = "";
-            this.comboBoxFontName.Size = new System.Drawing.Size(188, 21);
+            this.comboBoxFontName.Size = new System.Drawing.Size(188, 23);
             this.comboBoxFontName.TabIndex = 1;
             this.comboBoxFontName.TabStop = false;
             this.comboBoxFontName.UsePopupWindow = false;
