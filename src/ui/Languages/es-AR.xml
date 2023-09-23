@@ -103,6 +103,7 @@
     <Error>Error</Error>
     <Warning>Advertencia</Warning>
     <UseLargerFontForThisWindow>Usar letra más grande para esta ventana</UseLargerFontForThisWindow>
+    <ChangeLanguageFilter>Cambiar filtro de idioma...</ChangeLanguageFilter>
   </General>
   <About>
     <Title>Acerca de Subtitle Edit</Title>
@@ -217,6 +218,7 @@ Nota: comprobar el espacio libre en disco.</WaveFileMalformed>
     <SetCppConstMeFolder>Establecer carpeta de modelos CPP/Const-me...</SetCppConstMeFolder>
     <OnlyRunPostProcessing>Ejecutar solo el procesamiento posterior/ajuste de tiempos</OnlyRunPostProcessing>
     <DownloadFasterWhisperCuda>Descargar cuBLAS y cuDNN para Faster-Whisper</DownloadFasterWhisperCuda>
+    <NoTextFound>¡Texto no encontrado!</NoTextFound>
   </AudioToText>
   <AssaAttachments>
     <Title>Adjuntos de Advanced Sub Station Alpha</Title>
@@ -1485,8 +1487,7 @@ Para usar una clave de API, ve a "Opciones --&gt; Configuración --&gt; Herramie
         <BeautifyTimeCodes>Embellecer códigos de tiempo</BeautifyTimeCodes>
         <Settings>Ajustes</Settings>
         <Help>Ayuda</Help>
-        <ShowHideWaveform>Mostrar/ocultar forma de onda</ShowHideWaveform>
-        <ShowHideVideo>Mostrar/ocultar video</ShowHideVideo>
+        <Layout>Diseño</Layout>
         <AssaDraw>Trazado Advanced Sub Station Alpha</AssaDraw>
       </ToolBar>
       <ContextMenu>
@@ -1560,7 +1561,7 @@ Para usar una clave de API, ve a "Opciones --&gt; Configuración --&gt; Herramie
         <ShowSelectedLinesEarlierLater>Mostrar líneas seleccionadas antes/después...</ShowSelectedLinesEarlierLater>
         <VisualSyncSelectedLines>Sincronización visual líneas seleccionadas...</VisualSyncSelectedLines>
         <BeautifyTimeCodesOfSelectedLines>Embellecer códigos de tiempo de las líneas seleccionadas...</BeautifyTimeCodesOfSelectedLines>
-        <GoogleAndMicrosoftTranslateSelectedLine>Google/Microsoft traducir línea original</GoogleAndMicrosoftTranslateSelectedLine>
+        <GoogleAndMicrosoftTranslateSelectedLine>Traducir línea original con Google/Microsoft</GoogleAndMicrosoftTranslateSelectedLine>
         <SelectedLines>Líneas seleccionadas</SelectedLines>
         <TranslateSelectedLines>Traducir líneas seleccionadas...</TranslateSelectedLines>
         <AdjustDisplayDurationForSelectedLines>Ajustar duración líneas seleccionadas...</AdjustDisplayDurationForSelectedLines>
@@ -1940,6 +1941,7 @@ Si ha editado este archivo con Subtitle Edit es posible que pueda encontrar una 
     <SubtitleEditNeedsVideoPlayer>Subtitle Edit necesita un reproductor de video.</SubtitleEditNeedsVideoPlayer>
     <UseRecommendMpv>Para utilizar el reproductor de video recomendado "mpv", haz clic en el botón de abajo.</UseRecommendMpv>
     <DownloadAndUseMpv>Descargar y utilizar "mpv" como reproductor de video</DownloadAndUseMpv>
+    <ChooseLayout>Elegir el diseño</ChooseLayout>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Seleccionar subtítulos desde archivo Matroska</Title>
@@ -2316,6 +2318,7 @@ puede editar el mismo archivo de subtítulo (colaboración)</Information>
     <DefaultFrameRate>Tasa de cuadros por defecto</DefaultFrameRate>
     <DefaultFileEncoding>Codificación del fichero por defecto</DefaultFileEncoding>
     <AutoDetectAnsiEncoding>Autodetectar codificación ANSI</AutoDetectAnsiEncoding>
+    <LanguageFilter>Filtro de idioma</LanguageFilter>
     <Profile>Perfil</Profile>
     <Profiles>Perfiles</Profiles>
     <ImportProfiles>Importar perfiles</ImportProfiles>
@@ -2543,6 +2546,7 @@ puede editar el mismo archivo de subtítulo (colaboración)</Information>
     <AdjustViaEndAutoStart>Ajuste a través de la posición final</AdjustViaEndAutoStart>
     <AdjustViaEndAutoStartAndGoToNext>Ajustar posición final e ir al siguiente</AdjustViaEndAutoStartAndGoToNext>
     <AdjustSetEndMinusGapAndStartNextHere>Fijar el final menos el intervalo, pasar al siguiente y empezar el siguiente aquí</AdjustSetEndMinusGapAndStartNextHere>
+    <AdjustSetStartTimeAndGoToNext>Ajustar inicio e ir al siguiente</AdjustSetStartTimeAndGoToNext>
     <AdjustSetEndTimeAndGoToNext>Ajustar fin e ir al siguiente</AdjustSetEndTimeAndGoToNext>
     <AdjustSetEndTimeAndPause>Fijar el final y pausar</AdjustSetEndTimeAndPause>
     <AdjustSetStartAutoDurationAndGoToNext>Ajustar inicio de autoduración e ir al siguiente</AdjustSetStartAutoDurationAndGoToNext>
