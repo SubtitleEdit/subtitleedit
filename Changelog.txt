@@ -3,6 +3,8 @@
 4.0.2 (xth November 2023) - BETA
 * NEW:
    * UI layouts with support for TikTok/YouTube-shorts - thx leon/jmaraujouy/LearningJer 
+   * Language filter (to minimize the long list of languages in combo boxes)
+   * Interjections are now language specific
    * Statistics for selected lines
    * Shortcut "Set start time and go to next"
 * IMPROVED:
@@ -11,7 +13,10 @@
    * Update Portuguese translation - thx hugok79
    * Update Polish translation - thx admas
    * Update Finnish translation - thx Teijo
-   * Interjections are now language specific
+   * Update Chinese translation - thx nkh0472
+   * Update French translation - thx Pierre
+   * Update Bulgarian translation - thx Калин
+   * Update German translation - thx Netspark
    * Save settings from selected lines unbreak/break - thx David
    * Add simple page up/down for combo-boxes
    * Add access keys for message box buttons - thx Christophe
