@@ -85,6 +85,13 @@
             // 
             // numericUpDownDelay
             // 
+            this.numericUpDownDelay.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownDelay.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownDelay.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownDelay.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownDelay.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownDelay.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownDelay.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.numericUpDownDelay.DecimalPlaces = 3;
             this.numericUpDownDelay.Increment = new decimal(new int[] {
             1,
@@ -103,8 +110,15 @@
             0,
             -2147483648});
             this.numericUpDownDelay.Name = "numericUpDownDelay";
-            this.numericUpDownDelay.Size = new System.Drawing.Size(54, 21);
+            this.numericUpDownDelay.Size = new System.Drawing.Size(54, 23);
             this.numericUpDownDelay.TabIndex = 35;
+            this.numericUpDownDelay.TabStop = false;
+            this.numericUpDownDelay.ThousandsSeparator = false;
+            this.numericUpDownDelay.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             // 
             // labelTM
             // 

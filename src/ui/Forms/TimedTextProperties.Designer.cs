@@ -135,8 +135,9 @@
             this.comboBoxFileExtensions.SelectedIndex = -1;
             this.comboBoxFileExtensions.SelectedItem = null;
             this.comboBoxFileExtensions.SelectedText = "";
-            this.comboBoxFileExtensions.Size = new System.Drawing.Size(263, 21);
+            this.comboBoxFileExtensions.Size = new System.Drawing.Size(263, 23);
             this.comboBoxFileExtensions.TabIndex = 21;
+            this.comboBoxFileExtensions.UsePopupWindow = false;
             // 
             // labelFileExtension
             // 
@@ -176,8 +177,9 @@
             this.comboBoxTimeCodeFormat.SelectedIndex = -1;
             this.comboBoxTimeCodeFormat.SelectedItem = null;
             this.comboBoxTimeCodeFormat.SelectedText = "";
-            this.comboBoxTimeCodeFormat.Size = new System.Drawing.Size(263, 21);
+            this.comboBoxTimeCodeFormat.Size = new System.Drawing.Size(263, 23);
             this.comboBoxTimeCodeFormat.TabIndex = 9;
+            this.comboBoxTimeCodeFormat.UsePopupWindow = false;
             // 
             // labelTimeCode
             // 
@@ -211,8 +213,10 @@
             this.comboBoxFrameRateMultiplier.SelectedIndex = -1;
             this.comboBoxFrameRateMultiplier.SelectedItem = null;
             this.comboBoxFrameRateMultiplier.SelectedText = "";
-            this.comboBoxFrameRateMultiplier.Size = new System.Drawing.Size(263, 21);
+            this.comboBoxFrameRateMultiplier.Size = new System.Drawing.Size(263, 23);
             this.comboBoxFrameRateMultiplier.TabIndex = 5;
+            this.comboBoxFrameRateMultiplier.TabStop = false;
+            this.comboBoxFrameRateMultiplier.UsePopupWindow = false;
             // 
             // textBoxDescription
             // 
@@ -303,8 +307,9 @@
             this.comboBoxDefaultRegion.SelectedIndex = -1;
             this.comboBoxDefaultRegion.SelectedItem = null;
             this.comboBoxDefaultRegion.SelectedText = "";
-            this.comboBoxDefaultRegion.Size = new System.Drawing.Size(263, 21);
+            this.comboBoxDefaultRegion.Size = new System.Drawing.Size(263, 23);
             this.comboBoxDefaultRegion.TabIndex = 8;
+            this.comboBoxDefaultRegion.UsePopupWindow = false;
             // 
             // labelDefaultRegion
             // 
@@ -339,8 +344,9 @@
             this.comboBoxDropMode.SelectedIndex = -1;
             this.comboBoxDropMode.SelectedItem = null;
             this.comboBoxDropMode.SelectedText = "";
-            this.comboBoxDropMode.Size = new System.Drawing.Size(263, 21);
+            this.comboBoxDropMode.Size = new System.Drawing.Size(263, 23);
             this.comboBoxDropMode.TabIndex = 6;
+            this.comboBoxDropMode.UsePopupWindow = false;
             // 
             // label4
             // 
@@ -379,8 +385,10 @@
             this.comboBoxFrameRate.SelectedIndex = -1;
             this.comboBoxFrameRate.SelectedItem = null;
             this.comboBoxFrameRate.SelectedText = "";
-            this.comboBoxFrameRate.Size = new System.Drawing.Size(263, 21);
+            this.comboBoxFrameRate.Size = new System.Drawing.Size(263, 23);
             this.comboBoxFrameRate.TabIndex = 4;
+            this.comboBoxFrameRate.TabStop = false;
+            this.comboBoxFrameRate.UsePopupWindow = false;
             // 
             // label2
             // 
@@ -415,8 +423,9 @@
             this.comboBoxTimeBase.SelectedIndex = -1;
             this.comboBoxTimeBase.SelectedItem = null;
             this.comboBoxTimeBase.SelectedText = "";
-            this.comboBoxTimeBase.Size = new System.Drawing.Size(263, 21);
+            this.comboBoxTimeBase.Size = new System.Drawing.Size(263, 23);
             this.comboBoxTimeBase.TabIndex = 3;
+            this.comboBoxTimeBase.UsePopupWindow = false;
             // 
             // label1
             // 
@@ -446,8 +455,10 @@
             this.comboBoxLanguage.SelectedIndex = -1;
             this.comboBoxLanguage.SelectedItem = null;
             this.comboBoxLanguage.SelectedText = "";
-            this.comboBoxLanguage.Size = new System.Drawing.Size(263, 21);
+            this.comboBoxLanguage.Size = new System.Drawing.Size(263, 23);
             this.comboBoxLanguage.TabIndex = 2;
+            this.comboBoxLanguage.TabStop = false;
+            this.comboBoxLanguage.UsePopupWindow = false;
             // 
             // labelCollision
             // 
@@ -477,8 +488,9 @@
             this.comboBoxDefaultStyle.SelectedIndex = -1;
             this.comboBoxDefaultStyle.SelectedItem = null;
             this.comboBoxDefaultStyle.SelectedText = "";
-            this.comboBoxDefaultStyle.Size = new System.Drawing.Size(263, 21);
+            this.comboBoxDefaultStyle.Size = new System.Drawing.Size(263, 23);
             this.comboBoxDefaultStyle.TabIndex = 7;
+            this.comboBoxDefaultStyle.UsePopupWindow = false;
             // 
             // labelWrapStyle
             // 

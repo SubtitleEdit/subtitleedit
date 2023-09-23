@@ -89,6 +89,14 @@
             // 
             // numericUpDownMaxMs
             // 
+            this.numericUpDownMaxMs.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownMaxMs.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownMaxMs.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownMaxMs.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownMaxMs.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownMaxMs.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownMaxMs.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownMaxMs.DecimalPlaces = 0;
             this.numericUpDownMaxMs.Increment = new decimal(new int[] {
             25,
             0,
@@ -106,8 +114,10 @@
             0,
             0});
             this.numericUpDownMaxMs.Name = "numericUpDownMaxMs";
-            this.numericUpDownMaxMs.Size = new System.Drawing.Size(50, 20);
+            this.numericUpDownMaxMs.Size = new System.Drawing.Size(50, 23);
             this.numericUpDownMaxMs.TabIndex = 1;
+            this.numericUpDownMaxMs.TabStop = false;
+            this.numericUpDownMaxMs.ThousandsSeparator = false;
             this.numericUpDownMaxMs.Value = new decimal(new int[] {
             100,
             0,
@@ -186,6 +196,14 @@
             // 
             // numericUpDownMinMsBetweenLines
             // 
+            this.numericUpDownMinMsBetweenLines.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownMinMsBetweenLines.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownMinMsBetweenLines.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownMinMsBetweenLines.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownMinMsBetweenLines.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownMinMsBetweenLines.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownMinMsBetweenLines.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownMinMsBetweenLines.DecimalPlaces = 0;
             this.numericUpDownMinMsBetweenLines.Increment = new decimal(new int[] {
             5,
             0,
@@ -197,9 +215,16 @@
             0,
             0,
             0});
+            this.numericUpDownMinMsBetweenLines.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownMinMsBetweenLines.Name = "numericUpDownMinMsBetweenLines";
-            this.numericUpDownMinMsBetweenLines.Size = new System.Drawing.Size(50, 20);
+            this.numericUpDownMinMsBetweenLines.Size = new System.Drawing.Size(50, 23);
             this.numericUpDownMinMsBetweenLines.TabIndex = 4;
+            this.numericUpDownMinMsBetweenLines.TabStop = false;
+            this.numericUpDownMinMsBetweenLines.ThousandsSeparator = false;
             this.numericUpDownMinMsBetweenLines.Value = new decimal(new int[] {
             40,
             0,

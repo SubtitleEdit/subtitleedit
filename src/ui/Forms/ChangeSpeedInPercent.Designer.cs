@@ -72,14 +72,26 @@
             this.checkBoxAllowOverlap.AutoSize = true;
             this.checkBoxAllowOverlap.Location = new System.Drawing.Point(24, 160);
             this.checkBoxAllowOverlap.Name = "checkBoxAllowOverlap";
-            this.checkBoxAllowOverlap.Size = new System.Drawing.Size(109, 21);
+            this.checkBoxAllowOverlap.Size = new System.Drawing.Size(89, 17);
             this.checkBoxAllowOverlap.TabIndex = 3;
             this.checkBoxAllowOverlap.Text = "Allow overlap";
             this.checkBoxAllowOverlap.UseVisualStyleBackColor = true;
             // 
             // numericUpDownPercent
             // 
-            this.numericUpDownPercent.DecimalPlaces = 5;
+            this.numericUpDownPercent.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownPercent.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownPercent.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownPercent.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownPercent.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownPercent.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownPercent.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownPercent.DecimalPlaces = 4;
+            this.numericUpDownPercent.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownPercent.Location = new System.Drawing.Point(12, 40);
             this.numericUpDownPercent.Maximum = new decimal(new int[] {
             200,
@@ -92,8 +104,10 @@
             0,
             0});
             this.numericUpDownPercent.Name = "numericUpDownPercent";
-            this.numericUpDownPercent.Size = new System.Drawing.Size(81, 20);
+            this.numericUpDownPercent.Size = new System.Drawing.Size(81, 23);
             this.numericUpDownPercent.TabIndex = 0;
+            this.numericUpDownPercent.TabStop = false;
+            this.numericUpDownPercent.ThousandsSeparator = false;
             this.numericUpDownPercent.Value = new decimal(new int[] {
             100,
             0,

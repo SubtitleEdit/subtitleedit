@@ -163,7 +163,7 @@
             0,
             0});
             this.numericUpDownDuration.Name = "numericUpDownDuration";
-            this.numericUpDownDuration.Size = new System.Drawing.Size(82, 20);
+            this.numericUpDownDuration.Size = new System.Drawing.Size(82, 23);
             this.numericUpDownDuration.TabIndex = 4;
             this.numericUpDownDuration.TabStop = false;
             this.numericUpDownDuration.ThousandsSeparator = false;
@@ -212,6 +212,7 @@
             this.comboBoxRule.SelectedText = "";
             this.comboBoxRule.Size = new System.Drawing.Size(185, 21);
             this.comboBoxRule.TabIndex = 0;
+            this.comboBoxRule.UsePopupWindow = false;
             this.comboBoxRule.SelectedIndexChanged += new System.EventHandler(this.comboBoxRule_SelectedIndexChanged);
             // 
             // textBoxText

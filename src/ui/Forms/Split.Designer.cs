@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.groupBoxSplitOptions = new System.Windows.Forms.GroupBox();
+            this.radioButtonTime = new System.Windows.Forms.RadioButton();
             this.groupBoxSubtitleInfo = new System.Windows.Forms.GroupBox();
             this.labelCharacters = new System.Windows.Forms.Label();
             this.labelLines = new System.Windows.Forms.Label();
@@ -56,7 +57,6 @@
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonSplit = new System.Windows.Forms.Button();
             this.buttonBasic = new System.Windows.Forms.Button();
-            this.radioButtonTime = new System.Windows.Forms.RadioButton();
             this.groupBoxSplitOptions.SuspendLayout();
             this.groupBoxSubtitleInfo.SuspendLayout();
             this.groupBoxOutput.SuspendLayout();
@@ -79,6 +79,16 @@
             this.groupBoxSplitOptions.TabIndex = 0;
             this.groupBoxSplitOptions.TabStop = false;
             this.groupBoxSplitOptions.Text = "Split options";
+            // 
+            // radioButtonTime
+            // 
+            this.radioButtonTime.AutoSize = true;
+            this.radioButtonTime.Location = new System.Drawing.Point(15, 66);
+            this.radioButtonTime.Name = "radioButtonTime";
+            this.radioButtonTime.Size = new System.Drawing.Size(48, 17);
+            this.radioButtonTime.TabIndex = 0;
+            this.radioButtonTime.Text = "Time";
+            this.radioButtonTime.UseVisualStyleBackColor = true;
             // 
             // groupBoxSubtitleInfo
             // 
@@ -122,15 +132,35 @@
             // 
             // numericUpDownParts
             // 
+            this.numericUpDownParts.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownParts.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownParts.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownParts.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownParts.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownParts.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownParts.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownParts.DecimalPlaces = 0;
+            this.numericUpDownParts.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownParts.Location = new System.Drawing.Point(151, 38);
+            this.numericUpDownParts.Maximum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
             this.numericUpDownParts.Minimum = new decimal(new int[] {
             2,
             0,
             0,
             0});
             this.numericUpDownParts.Name = "numericUpDownParts";
-            this.numericUpDownParts.Size = new System.Drawing.Size(50, 20);
+            this.numericUpDownParts.Size = new System.Drawing.Size(50, 23);
             this.numericUpDownParts.TabIndex = 1;
+            this.numericUpDownParts.TabStop = false;
+            this.numericUpDownParts.ThousandsSeparator = false;
             this.numericUpDownParts.Value = new decimal(new int[] {
             2,
             0,
@@ -204,6 +234,7 @@
             // 
             // textBoxFileName
             // 
+            this.textBoxFileName.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxFileName.Location = new System.Drawing.Point(7, 32);
             this.textBoxFileName.Name = "textBoxFileName";
             this.textBoxFileName.Size = new System.Drawing.Size(529, 20);
@@ -212,12 +243,26 @@
             // 
             // comboBoxSubtitleFormats
             // 
+            this.comboBoxSubtitleFormats.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxSubtitleFormats.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxSubtitleFormats.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxSubtitleFormats.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxSubtitleFormats.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxSubtitleFormats.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxSubtitleFormats.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxSubtitleFormats.DropDownHeight = 400;
             this.comboBoxSubtitleFormats.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxSubtitleFormats.DropDownWidth = 225;
             this.comboBoxSubtitleFormats.FormattingEnabled = true;
             this.comboBoxSubtitleFormats.Location = new System.Drawing.Point(51, 107);
+            this.comboBoxSubtitleFormats.MaxLength = 32767;
             this.comboBoxSubtitleFormats.Name = "comboBoxSubtitleFormats";
+            this.comboBoxSubtitleFormats.SelectedIndex = -1;
+            this.comboBoxSubtitleFormats.SelectedItem = null;
+            this.comboBoxSubtitleFormats.SelectedText = "";
             this.comboBoxSubtitleFormats.Size = new System.Drawing.Size(225, 21);
             this.comboBoxSubtitleFormats.TabIndex = 7;
+            this.comboBoxSubtitleFormats.UsePopupWindow = false;
             this.comboBoxSubtitleFormats.SelectedIndexChanged += new System.EventHandler(this.comboBoxSubtitleFormats_SelectedIndexChanged);
             // 
             // labelEncoding
@@ -231,12 +276,26 @@
             // 
             // comboBoxEncoding
             // 
+            this.comboBoxEncoding.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxEncoding.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxEncoding.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxEncoding.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxEncoding.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxEncoding.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxEncoding.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxEncoding.DropDownHeight = 400;
             this.comboBoxEncoding.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxEncoding.DropDownWidth = 221;
             this.comboBoxEncoding.FormattingEnabled = true;
             this.comboBoxEncoding.Location = new System.Drawing.Point(394, 107);
+            this.comboBoxEncoding.MaxLength = 32767;
             this.comboBoxEncoding.Name = "comboBoxEncoding";
+            this.comboBoxEncoding.SelectedIndex = -1;
+            this.comboBoxEncoding.SelectedItem = null;
+            this.comboBoxEncoding.SelectedText = "";
             this.comboBoxEncoding.Size = new System.Drawing.Size(221, 21);
             this.comboBoxEncoding.TabIndex = 9;
+            this.comboBoxEncoding.UsePopupWindow = false;
             // 
             // labelOutputFormat
             // 
@@ -268,6 +327,7 @@
             // 
             // textBoxOutputFolder
             // 
+            this.textBoxOutputFolder.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxOutputFolder.Location = new System.Drawing.Point(7, 77);
             this.textBoxOutputFolder.Name = "textBoxOutputFolder";
             this.textBoxOutputFolder.Size = new System.Drawing.Size(529, 20);
@@ -353,16 +413,6 @@
             this.buttonBasic.Text = "&Basic";
             this.buttonBasic.UseVisualStyleBackColor = true;
             this.buttonBasic.Click += new System.EventHandler(this.buttonBasic_Click);
-            // 
-            // radioButtonTime
-            // 
-            this.radioButtonTime.AutoSize = true;
-            this.radioButtonTime.Location = new System.Drawing.Point(15, 66);
-            this.radioButtonTime.Name = "radioButtonTime";
-            this.radioButtonTime.Size = new System.Drawing.Size(48, 17);
-            this.radioButtonTime.TabIndex = 0;
-            this.radioButtonTime.Text = "Time";
-            this.radioButtonTime.UseVisualStyleBackColor = true;
             // 
             // Split
             // 

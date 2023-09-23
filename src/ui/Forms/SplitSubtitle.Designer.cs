@@ -30,7 +30,7 @@ namespace Nikse.SubtitleEdit.Forms
         /// </summary>
         private void InitializeComponent()
         {
-            TimeCode timeCode1 = new TimeCode();
+            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode1 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
             this.buttonGetFrameRate = new System.Windows.Forms.Button();
             this.buttonDone = new System.Windows.Forms.Button();
             this.buttonSplit = new System.Windows.Forms.Button();
@@ -108,13 +108,25 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // splitTimeUpDownAdjust
             // 
-            this.splitTimeUpDownAdjust.AutoSize = true;
+            this.splitTimeUpDownAdjust.BackColor = System.Drawing.SystemColors.Window;
+            this.splitTimeUpDownAdjust.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.splitTimeUpDownAdjust.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.splitTimeUpDownAdjust.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.splitTimeUpDownAdjust.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.splitTimeUpDownAdjust.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.splitTimeUpDownAdjust.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.splitTimeUpDownAdjust.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.splitTimeUpDownAdjust.Increment = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
             this.splitTimeUpDownAdjust.Location = new System.Drawing.Point(29, 69);
             this.splitTimeUpDownAdjust.Margin = new System.Windows.Forms.Padding(4);
             this.splitTimeUpDownAdjust.Name = "splitTimeUpDownAdjust";
-            this.splitTimeUpDownAdjust.Size = new System.Drawing.Size(96, 27);
+            this.splitTimeUpDownAdjust.Size = new System.Drawing.Size(96, 23);
             this.splitTimeUpDownAdjust.TabIndex = 21;
+            this.splitTimeUpDownAdjust.TabStop = false;
             timeCode1.Hours = 0;
             timeCode1.Milliseconds = 0;
             timeCode1.Minutes = 0;

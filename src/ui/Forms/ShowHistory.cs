@@ -61,7 +61,7 @@ namespace Nikse.SubtitleEdit.Forms
                 item.Font = new Font(item.Font.FontFamily, item.Font.SizeInPoints, FontStyle.Italic);
                 item.ForeColor = Color.Gray;
             }
-            item.SubItems.Add(hi.Description);
+            item.SubItems.Add(hi.Description.Replace(Environment.NewLine, " "));
             listViewHistory.Items.Add(item);
         }
 
@@ -104,8 +104,8 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (listViewHistory.SelectedItems.Count == 1)
             {
-                HistoryItem h2 = _subtitle.HistoryItems[listViewHistory.SelectedItems[0].Index];
-                string descr2 = h2.ToHHMMSS() + " - " + h2.Description;
+                var h2 = _subtitle.HistoryItems[listViewHistory.SelectedItems[0].Index];
+                var descr2 = h2.ToHHMMSS() + " - " + h2.Description;
                 using (var compareForm = new Compare())
                 {
                     compareForm.Initialize(_subtitle, LanguageSettings.Current.General.CurrentSubtitle, h2.Subtitle, descr2);
@@ -127,10 +127,10 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (listViewHistory.SelectedItems.Count == 2)
             {
-                HistoryItem h1 = _subtitle.HistoryItems[listViewHistory.SelectedItems[0].Index];
-                HistoryItem h2 = _subtitle.HistoryItems[listViewHistory.SelectedItems[1].Index];
-                string descr1 = h1.ToHHMMSS() + " - " + h1.Description;
-                string descr2 = h2.ToHHMMSS() + " - " + h2.Description;
+                var h1 = _subtitle.HistoryItems[listViewHistory.SelectedItems[0].Index];
+                var h2 = _subtitle.HistoryItems[listViewHistory.SelectedItems[1].Index];
+                var descr1 = h1.ToHHMMSS() + " - " + h1.Description;
+                var descr2 = h2.ToHHMMSS() + " - " + h2.Description;
                 using (var compareForm = new Compare())
                 {
                     compareForm.Initialize(h1.Subtitle, descr1, h2.Subtitle, descr2);
@@ -138,6 +138,5 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
         }
-
     }
 }

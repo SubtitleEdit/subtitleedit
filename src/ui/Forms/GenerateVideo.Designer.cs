@@ -183,7 +183,7 @@ namespace Nikse.SubtitleEdit.Forms
             0,
             0});
             this.numericUpDownWidth.Name = "numericUpDownWidth";
-            this.numericUpDownWidth.Size = new System.Drawing.Size(64, 20);
+            this.numericUpDownWidth.Size = new System.Drawing.Size(64, 23);
             this.numericUpDownWidth.TabIndex = 2;
             this.numericUpDownWidth.TabStop = false;
             this.numericUpDownWidth.ThousandsSeparator = false;
@@ -221,7 +221,7 @@ namespace Nikse.SubtitleEdit.Forms
             0,
             0});
             this.numericUpDownHeight.Name = "numericUpDownHeight";
-            this.numericUpDownHeight.Size = new System.Drawing.Size(64, 20);
+            this.numericUpDownHeight.Size = new System.Drawing.Size(64, 23);
             this.numericUpDownHeight.TabIndex = 4;
             this.numericUpDownHeight.TabStop = false;
             this.numericUpDownHeight.ThousandsSeparator = false;
@@ -347,7 +347,7 @@ namespace Nikse.SubtitleEdit.Forms
             0,
             0});
             this.numericUpDownDurationMinutes.Name = "numericUpDownDurationMinutes";
-            this.numericUpDownDurationMinutes.Size = new System.Drawing.Size(64, 20);
+            this.numericUpDownDurationMinutes.Size = new System.Drawing.Size(64, 23);
             this.numericUpDownDurationMinutes.TabIndex = 0;
             this.numericUpDownDurationMinutes.TabStop = false;
             this.numericUpDownDurationMinutes.ThousandsSeparator = false;
@@ -397,6 +397,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.comboBoxFrameRate.SelectedText = "";
             this.comboBoxFrameRate.Size = new System.Drawing.Size(121, 21);
             this.comboBoxFrameRate.TabIndex = 6;
+            this.comboBoxFrameRate.UsePopupWindow = false;
             // 
             // timer1
             // 

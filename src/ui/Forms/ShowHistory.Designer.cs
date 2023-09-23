@@ -40,6 +40,9 @@
             // 
             // listViewHistory
             // 
+            this.listViewHistory.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.listViewHistory.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader1,
             this.columnHeader2});
@@ -47,7 +50,7 @@
             this.listViewHistory.HideSelection = false;
             this.listViewHistory.Location = new System.Drawing.Point(12, 37);
             this.listViewHistory.Name = "listViewHistory";
-            this.listViewHistory.Size = new System.Drawing.Size(472, 324);
+            this.listViewHistory.Size = new System.Drawing.Size(602, 409);
             this.listViewHistory.TabIndex = 0;
             this.listViewHistory.UseCompatibleStateImageBehavior = false;
             this.listViewHistory.View = System.Windows.Forms.View.Details;
@@ -65,8 +68,9 @@
             // 
             // buttonRollback
             // 
+            this.buttonRollback.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonRollback.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonRollback.Location = new System.Drawing.Point(489, 338);
+            this.buttonRollback.Location = new System.Drawing.Point(619, 423);
             this.buttonRollback.Name = "buttonRollback";
             this.buttonRollback.Size = new System.Drawing.Size(98, 23);
             this.buttonRollback.TabIndex = 6;
@@ -76,9 +80,10 @@
             // 
             // buttonCancel
             // 
+            this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(594, 338);
+            this.buttonCancel.Location = new System.Drawing.Point(724, 423);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 8;
@@ -96,9 +101,10 @@
             // 
             // buttonCompare
             // 
+            this.buttonCompare.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCompare.Enabled = false;
             this.buttonCompare.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCompare.Location = new System.Drawing.Point(489, 200);
+            this.buttonCompare.Location = new System.Drawing.Point(619, 285);
             this.buttonCompare.Name = "buttonCompare";
             this.buttonCompare.Size = new System.Drawing.Size(179, 23);
             this.buttonCompare.TabIndex = 4;
@@ -108,9 +114,10 @@
             // 
             // buttonCompareHistory
             // 
+            this.buttonCompareHistory.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCompareHistory.Enabled = false;
             this.buttonCompareHistory.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCompareHistory.Location = new System.Drawing.Point(490, 171);
+            this.buttonCompareHistory.Location = new System.Drawing.Point(620, 256);
             this.buttonCompareHistory.Name = "buttonCompareHistory";
             this.buttonCompareHistory.Size = new System.Drawing.Size(179, 23);
             this.buttonCompareHistory.TabIndex = 2;
@@ -122,7 +129,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(680, 373);
+            this.ClientSize = new System.Drawing.Size(810, 458);
             this.Controls.Add(this.buttonCompareHistory);
             this.Controls.Add(this.buttonCompare);
             this.Controls.Add(this.label1);
@@ -138,9 +145,9 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "History (for undo)";
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormShowHistory_KeyDown);
-            this.ResizeEnd += new System.EventHandler(this.FormShowHistory_ResizeEnd);
             this.Shown += new System.EventHandler(this.FormShowHistory_Shown);
+            this.ResizeEnd += new System.EventHandler(this.FormShowHistory_ResizeEnd);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormShowHistory_KeyDown);
             this.ResumeLayout(false);
             this.PerformLayout();
 

@@ -53,15 +53,35 @@
             // 
             // numericUpDownVideoHeight
             // 
+            this.numericUpDownVideoHeight.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownVideoHeight.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownVideoHeight.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownVideoHeight.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownVideoHeight.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownVideoHeight.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownVideoHeight.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownVideoHeight.DecimalPlaces = 0;
+            this.numericUpDownVideoHeight.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownVideoHeight.Location = new System.Drawing.Point(205, 29);
             this.numericUpDownVideoHeight.Maximum = new decimal(new int[] {
             100000,
             0,
             0,
             0});
+            this.numericUpDownVideoHeight.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownVideoHeight.Name = "numericUpDownVideoHeight";
-            this.numericUpDownVideoHeight.Size = new System.Drawing.Size(47, 20);
+            this.numericUpDownVideoHeight.Size = new System.Drawing.Size(47, 23);
             this.numericUpDownVideoHeight.TabIndex = 3;
+            this.numericUpDownVideoHeight.TabStop = false;
+            this.numericUpDownVideoHeight.ThousandsSeparator = false;
             this.numericUpDownVideoHeight.Value = new decimal(new int[] {
             1080,
             0,
@@ -89,15 +109,35 @@
             // 
             // numericUpDownVideoWidth
             // 
+            this.numericUpDownVideoWidth.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownVideoWidth.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownVideoWidth.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownVideoWidth.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownVideoWidth.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownVideoWidth.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownVideoWidth.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownVideoWidth.DecimalPlaces = 0;
+            this.numericUpDownVideoWidth.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownVideoWidth.Location = new System.Drawing.Point(132, 29);
             this.numericUpDownVideoWidth.Maximum = new decimal(new int[] {
             100000,
             0,
             0,
             0});
+            this.numericUpDownVideoWidth.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownVideoWidth.Name = "numericUpDownVideoWidth";
-            this.numericUpDownVideoWidth.Size = new System.Drawing.Size(47, 20);
+            this.numericUpDownVideoWidth.Size = new System.Drawing.Size(47, 23);
             this.numericUpDownVideoWidth.TabIndex = 1;
+            this.numericUpDownVideoWidth.TabStop = false;
+            this.numericUpDownVideoWidth.ThousandsSeparator = false;
             this.numericUpDownVideoWidth.Value = new decimal(new int[] {
             1920,
             0,
