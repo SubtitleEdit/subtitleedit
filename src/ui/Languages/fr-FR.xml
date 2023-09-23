@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>4.0.1</Version>
-    <TranslatedBy>Traduction de Pierre le Lidgeu. (Updated: Sept.,22 2023)</TranslatedBy>
+    <TranslatedBy>Traduction de Pierre le Lidgeu. (Updated: Sept.,23 2023)</TranslatedBy>
     <CultureName>fr-FR</CultureName>
     <HelpFile />
     <Ok>&amp;OK</Ok>
@@ -103,6 +103,7 @@
     <Error>Erreur</Error>
     <Warning>Attention</Warning>
     <UseLargerFontForThisWindow>Agrandir la police de cette fenêtre</UseLargerFontForThisWindow>
+    <ChangeLanguageFilter>Changer de filtre de langue…</ChangeLanguageFilter>
   </General>
   <About>
     <Title>A propos de Subtitle Edit</Title>
@@ -450,16 +451,16 @@ Voulez-vous continuer ?</ResetWarning>
     <CreateSimpleMaxOffsetInstruction>Les repères + proches des changements de plan seront accrochés au changement.</CreateSimpleMaxOffsetInstruction>
     <CreateSimpleSafeZone>Zone sûre :</CreateSimpleSafeZone>
     <CreateSimpleSafeZoneInstruction>Les repères + proches des changements de plan seront éloignés du changement.</CreateSimpleSafeZoneInstruction>
-    <CreateSimpleChainingGap>Ecart enchaînement max :</CreateSimpleChainingGap>
+    <CreateSimpleChainingGap>Ecart chainage max :</CreateSimpleChainingGap>
     <CreateSimpleChainingGapInstruction>Si deux s/titres sont plus proches, ils seront reliés.</CreateSimpleChainingGapInstruction>
     <CreateSimpleChainingGapAfterShotChanges>Après un repère de sortie à un changement de plan, l'écart peut être plus petit</CreateSimpleChainingGapAfterShotChanges>
-    <CreateSimpleChainingToolTip>L'enchaînement des sous-titres es recommandé pour assurer un rythme cohérent dans l'apparition des sous-titres.
+    <CreateSimpleChainingToolTip>Le chainage des sous-titres est recommandé pour assurer un rythme cohérent dans l'apparition des sous-titres.
 Cela offre un meilleur confort de vision.
 
-Après l'enchaînement, les sous-titres sont reliés (un sous-titre disparaît et un nouveau apparaît immédiatement après une courte pause) ou pas.
+Dès que chainés, les sous-titres sont reliés (un sous-titre disparaît et un nouveau apparaît immédiatement après une courte pause) ou pas.
 Ceci donne au spectateur une idée de quand ils peuvent de re-focaliser sur l'écran.
 
-La durée de l'écart d'enchaînement peut être un peu plus courte après qu'un sous-titre disparaisse lors d'une changement de plan. En effet, changer de plan "réinitialise" en quelque sorte l'image.
+La durée de l'écart de chainage peut être un peu plus courte après qu'un sous-titre disparaisse lors d'une changement de plan. En effet, changer de plan "réinitialise" en quelque sorte l'image.
 Nous tirons parti du rythme intrinsèque de l'image.</CreateSimpleChainingToolTip>
     <CreateSimpleLoadNetflixRules>Règles Netflix</CreateSimpleLoadNetflixRules>
     <Frames>images</Frames>
@@ -2317,6 +2318,7 @@ peuvent éditer le même fichier sous-titres (collaboration)</Information>
     <DefaultFrameRate>Fréquence d'image par défaut</DefaultFrameRate>
     <DefaultFileEncoding>Encodage fichier par défaut</DefaultFileEncoding>
     <AutoDetectAnsiEncoding>Auto-détection encodage ANSI</AutoDetectAnsiEncoding>
+    <LanguageFilter>Filtre de langue</LanguageFilter>
     <Profile>Profil</Profile>
     <Profiles>Profils</Profiles>
     <ImportProfiles>Importer profils</ImportProfiles>
