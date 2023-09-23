@@ -3407,14 +3407,18 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         else
                         {
                             sf.Alignment = StringAlignment.Center;
-                            x = parameter.ScreenWidth / 2;
                             if (parameter.JustifyLeft)
                             {
                                 sf.Alignment = StringAlignment.Near;
                             }
                             else if (parameter.JustifyRight)
                             {
+                                x = parameter.ScreenWidth - 3;
                                 sf.Alignment = StringAlignment.Far;
+                            }
+                            else
+                            {
+                                x = parameter.ScreenWidth / 2;
                             }
                         }
 
