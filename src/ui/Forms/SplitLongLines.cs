@@ -106,14 +106,17 @@ namespace Nikse.SubtitleEdit.Forms
 
             SubtitleListview1.Fill(SplitSubtitle);
 
+            var greenColor = UiUtil.GreenBackgroundColor;
+            var greenColorAlternate = UiUtil.GreenBackgroundColorAlternate;
+
             foreach (var index in splitIndexes)
             {
-                SubtitleListview1.SetBackgroundColor(index, Color.Green);
+                SubtitleListview1.SetBackgroundColor(index, greenColor);
             }
 
             foreach (var index in autoBreakIndexes)
             {
-                SubtitleListview1.SetBackgroundColor(index, Color.LightGreen);
+                SubtitleListview1.SetBackgroundColor(index, greenColorAlternate);
             }
 
             SubtitleListview1.EndUpdate();
