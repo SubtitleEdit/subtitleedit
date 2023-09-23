@@ -25360,23 +25360,15 @@ namespace Nikse.SubtitleEdit.Forms
                 ToggleVideoControlsOnOff(Configuration.Settings.General.ShowVideoControls);
             }
 
+            menuStrip1.Refresh();
+            toolStrip1.Refresh();
+
             OpenVideo(_videoFileName, VideoAudioTrackNumber);
             ShowSubtitleTimer.Stop();
             lock (_syncUndo)
             {
                 timerTextUndo.Start();
                 timerOriginalTextUndo.Start();
-            }
-
-            if (Configuration.IsRunningOnLinux)
-            {
-                numericUpDownDuration.Left = timeUpDownStartTime.Left + timeUpDownStartTime.Width + 10;
-                numericUpDownDuration.Width += 10;
-                numericUpDownSec1.Width += 10;
-                numericUpDownSec2.Width += 10;
-                numericUpDownSecAdjust1.Width += 10;
-                numericUpDownSecAdjust2.Width += 10;
-                labelDuration.Left = numericUpDownDuration.Left;
             }
 
             _timerDoSyntaxColoring.Interval = 100;
@@ -25461,12 +25453,6 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 SubtitleListview1.Focus();
             }
-
-            UiUtil.FixFonts(toolStripComboBoxWaveform);
-            UiUtil.FixFonts(toolStripComboBoxFrameRate);
-            UiUtil.FixFonts(comboBoxSubtitleFormats);
-            UiUtil.FixFonts(comboBoxEncoding);
-            UiUtil.FixFonts(toolStripSplitButtonPlayRate);
 
             _lastTextKeyDownTicks = DateTime.UtcNow.Ticks;
             if (_subtitleOriginal != null && _subtitleOriginal.Paragraphs.Count > 0)

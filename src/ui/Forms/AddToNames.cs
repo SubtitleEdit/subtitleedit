@@ -42,7 +42,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (!string.IsNullOrEmpty(text))
             {
-                textBoxAddName.Text = text.Trim().TrimEnd('.', '!', '?');
+                textBoxAddName.Text = text.Trim().TrimEnd('.', '!', '?', ',');
                 if (textBoxAddName.Text.Length > 1)
                 {
                     textBoxAddName.Text = char.ToUpper(textBoxAddName.Text[0]) + textBoxAddName.Text.Substring(1);
@@ -50,8 +50,8 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             comboBoxDictionaries.Items.Clear();
-            string languageName = LanguageAutoDetect.AutoDetectLanguageName(Configuration.Settings.General.SpellCheckLanguage, _subtitle);
-            int selIndex = -1;
+            var languageName = LanguageAutoDetect.AutoDetectLanguageName(Configuration.Settings.General.SpellCheckLanguage, _subtitle);
+            var selIndex = -1;
             var dictionaries = Utilities.GetDictionaryLanguagesCultureNeutral();
             if (dictionaries.Count == 0)
             {
@@ -87,7 +87,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             comboBoxDictionaries.Items.Clear();
-            foreach (string name in Utilities.GetDictionaryLanguages())
+            foreach (var name in Utilities.GetDictionaryLanguages())
             {
                 comboBoxDictionaries.Items.Add(name);
                 if (hunspellName != null && name.Equals(hunspellName, StringComparison.OrdinalIgnoreCase))
