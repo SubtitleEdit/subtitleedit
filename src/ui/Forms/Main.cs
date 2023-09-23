@@ -22060,6 +22060,7 @@ namespace Nikse.SubtitleEdit.Forms
                     UpdateSourceView();
                     SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
                     RestoreSubtitleListviewIndices();
+                    RefreshSelectedParagraph();
                 }
             }
         }
