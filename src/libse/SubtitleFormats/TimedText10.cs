@@ -962,9 +962,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         internal static void ExtractTimeCodes(XmlNode paragraph, Subtitle subtitle, out TimeCode begin, out TimeCode end)
         {
-            string beginAttr = TryGetAttribute(paragraph, "begin", TtmlNamespace);
-            string endAttr = TryGetAttribute(paragraph, "end", TtmlNamespace);
-            string durAttr = TryGetAttribute(paragraph, "dur", TtmlNamespace);
+            var beginAttr = TryGetAttribute(paragraph, "begin", TtmlNamespace);
+            var endAttr = TryGetAttribute(paragraph, "end", TtmlNamespace);
+            var durAttr = TryGetAttribute(paragraph, "dur", TtmlNamespace);
 
             begin = new TimeCode();
             if (beginAttr.Length > 0)
@@ -1087,6 +1087,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             if (_endsWithTreeDigits.IsMatch(timeCode))
+            {
+                return false;
+            }
+
+            if (timeCode.Split(':', '.', ',', ';').Length < 4)
             {
                 return false;
             }
@@ -1324,6 +1329,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 return new TimeCode(int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), int.Parse(parts[3]) * 10);
             }
             else if (s.Length == 8 && s[2] == ':' && s[5] == ':')
+            {
+                return new TimeCode(int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), 0);
+            }
+            else if (parts.Length == 3)
             {
                 return new TimeCode(int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), 0);
             }
