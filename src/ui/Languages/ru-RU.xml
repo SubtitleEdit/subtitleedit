@@ -38,6 +38,7 @@
     <Actor>Актёр</Actor>
     <Gap>Интервал</Gap>
     <Region>Регион</Region>
+    <Layer>Слой</Layer>
     <NumberSymbol>№</NumberSymbol>
     <Number>Номер</Number>
     <Text>Текст</Text>
@@ -98,9 +99,12 @@
     <Collapse>Свернуть</Collapse>
     <ShortcutX>Горячая клавиша: {0}</ShortcutX>
     <ExampleX>Пример: {0}</ExampleX>
+    <ViewX>Посмотреть {0}</ViewX>
     <Reset>Сбросить</Reset>
+    <Error>Ошибка</Error>
     <Warning>Предупреждение</Warning>
     <UseLargerFontForThisWindow>Используйте более крупный шрифт для этого окна</UseLargerFontForThisWindow>
+    <ChangeLanguageFilter>Изменить языковой фильтр…</ChangeLanguageFilter>
   </General>
   <About>
     <Title>О программе</Title>
@@ -156,8 +160,11 @@ https://github.com/SubtitleEdit/subtitleedit
   </AddWaveform>
   <AddWaveformBatch>
     <Title>Пакетное создание форм сигнала</Title>
+    <ExtractTimeCodes>Извлечение тайм-кодов с помощью FFprobe</ExtractTimeCodes>
     <ExtractingAudio>Извлечение аудио…</ExtractingAudio>
     <Calculating>Вычисляется…</Calculating>
+    <ExtractingTimeCodes>Извлечение тайм-кодов…</ExtractingTimeCodes>
+    <DetectingShotChanges>Обнаружение изменений плана…</DetectingShotChanges>
     <Done>Завершено</Done>
     <Error>Ошибка</Error>
   </AddWaveformBatch>
@@ -174,11 +181,16 @@ https://github.com/SubtitleEdit/subtitleedit
     <Fixed>Фиксировано</Fixed>
     <Milliseconds>Миллисекунд(-ы)</Milliseconds>
     <ExtendOnly>Только продлить</ExtendOnly>
+    <EnforceDurationLimits>Принудительная минимальная и максимальная продолжительность</EnforceDurationLimits>
+    <CheckShotChanges>Не выходить за рамки смены планов</CheckShotChanges>
+    <BatchCheckShotChanges>С учётом изменений плана (если имеются)</BatchCheckShotChanges>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
     <Title>Ограничения продолжительности</Title>
+    <CheckShotChanges>Не продлевать прошлых изменения планов</CheckShotChanges>
     <FixesAvailable>Исправлено: {0}</FixesAvailable>
     <UnableToFix>Не удалось исправить: {0}</UnableToFix>
+    <BatchCheckShotChanges>С учётом изменений плана (если имеются)</BatchCheckShotChanges>
   </ApplyDurationLimits>
   <AudioToText>
     <Title>Аудио в текст</Title>
@@ -197,6 +209,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <LoadingVoskModel>Загрузка модели распознавания речи Vosk…</LoadingVoskModel>
     <Transcribing>Преобразование аудио в текст…</Transcribing>
     <TranscribingXOfY>Преобразование аудио в текст - файл {0} из {1}…</TranscribingXOfY>
+    <PostProcessing>Постобработка…</PostProcessing>
     <XFilesSavedToVideoSourceFolder>{0} файлов сохранено в исходной папке с видео</XFilesSavedToVideoSourceFolder>
     <UsePostProcessing>Постобработка (объединение строк, исправление регистра, пунктуация и т.д.)</UsePostProcessing>
     <AutoAdjustTimings>Автоматическая настройка таймингов</AutoAdjustTimings>
@@ -204,9 +217,11 @@ https://github.com/SubtitleEdit/subtitleedit
     <KeepPartialTranscription>Сохранить частичную транскрипцию</KeepPartialTranscription>
     <TranslateToEnglish>Перевести на английский</TranslateToEnglish>
     <MaxCharsPerSubtitle>Макс. символов в строке</MaxCharsPerSubtitle>
-    <RemoveTemporaryFiles>Удалять временные файлы</RemoveTemporaryFiles>
+    <RemoveTemporaryFiles>Удалить временные файлы</RemoveTemporaryFiles>
     <SetCppConstMeFolder>Установить папку моделей CPP/Const-me…</SetCppConstMeFolder>
-    <OnlyRunPostProcessing>Запускать только постобработку/настраивать тайминги</OnlyRunPostProcessing>
+    <OnlyRunPostProcessing>Запустить только постобработку/настройку таймингов</OnlyRunPostProcessing>
+    <DownloadFasterWhisperCuda>Загрузить библиотеки cuBLAS и cuDNN для Faster-Whisper</DownloadFasterWhisperCuda>
+    <NoTextFound>Текст не найден!</NoTextFound>
   </AudioToText>
   <AssaAttachments>
     <Title>Вложения Advanced SubStation Alpha</Title>
@@ -364,6 +379,98 @@ https://github.com/SubtitleEdit/subtitleedit
     <MkvLanguageStyleEmpty>Код языка отсутствует</MkvLanguageStyleEmpty>
     <SearchFolderScanVideo>Сканировать видеофайлы в «Папке поиска» (медленно)</SearchFolderScanVideo>
   </BatchConvert>
+  <BeautifyTimeCodes>
+    <Title>Украшение тайм-кодов</Title>
+    <TitleSelectedLines>Украшение тайм-кодов ({0} выбранных строк)</TitleSelectedLines>
+    <GroupTimeCodes>Тайм-коды</GroupTimeCodes>
+    <AlignTimeCodes>Согласование тайм-кодов с тайм-кодами кадров</AlignTimeCodes>
+    <ExtractExactTimeCodes>Извлечение тайм-кодов с точностью до кадра с помощью FFprobe</ExtractExactTimeCodes>
+    <ExtractTimeCodes>Извлечь тайм-коды</ExtractTimeCodes>
+    <CancelTimeCodes>Отмена</CancelTimeCodes>
+    <GroupShotChanges>Изменения плана</GroupShotChanges>
+    <SnapToShotChanges>Привязка меток к смене плана</SnapToShotChanges>
+    <ImportShotChanges>Генерировать/импортировать изменения плана…</ImportShotChanges>
+    <EditProfile>Редактировать профиль…</EditProfile>
+    <NoTimeCodesLoaded>Тайм-коды не загружены</NoTimeCodesLoaded>
+    <XTimeCodesLoaded>Загружено {0} тайм-кодов</XTimeCodesLoaded>
+    <NoTimeCodesLoadedError>Вы выбрали извлечение точных тайм-кодов кадров, но нет загруженных тайм-кодов.
+
+Нажмите «{0}», чтобы извлечь тайм-коды или отключить эту опцию.</NoTimeCodesLoadedError>
+    <NoShotChangesLoaded>Изменения плана не загружены</NoShotChangesLoaded>
+    <XShotChangesLoaded>Загружено {0} изменений кадра</XShotChangesLoaded>
+    <NoShotChangesLoadedError>Вы выбрали привязку меток к смене плана, но изменения планов не загружены.
+
+Нажмите «{0}», чтобы сгенерировать/импортировать изменения планов, или отключите эту опцию.</NoShotChangesLoadedError>
+    <BatchAlignTimeCodes>Согласование тайм-кодов с тайм-кодами кадров</BatchAlignTimeCodes>
+    <BatchUseExactTimeCodes>Использовать точные тайм-коды (если доступно)</BatchUseExactTimeCodes>
+    <BatchSnapToShotChanges>Привязка метки к смене плана (если доступно)</BatchSnapToShotChanges>
+  </BeautifyTimeCodes>
+  <BeautifyTimeCodesProfile>
+    <Title>Редактировать профиль</Title>
+    <LoadPreset>Загрузить предустановку…</LoadPreset>
+    <PresetDefault>По умолчанию</PresetDefault>
+    <PresetNetflix>Netflix</PresetNetflix>
+    <PresetSDI>SDI</PresetSDI>
+    <CreateSimple>Простой режим…</CreateSimple>
+    <General>Общие</General>
+    <Gap>Интервал:</Gap>
+    <GapSuffix>кадры (перезапишет пользовательские настройки)</GapSuffix>
+    <InCues>Начальные метки</InCues>
+    <SubtitlePreviewText>Текст субтитров</SubtitlePreviewText>
+    <Zones>Зоны:</Zones>
+    <OutCues>Конечные метки</OutCues>
+    <ConnectedSubtitles>Связанные субтитры</ConnectedSubtitles>
+    <InCueClosest>Ближайшая начальная метка</InCueClosest>
+    <OutCueClosest>Ближайшая конечная метка</OutCueClosest>
+    <TreadAsConnected>Считать связанными, если интервал меньше, чем:</TreadAsConnected>
+    <Milliseconds>мс</Milliseconds>
+    <Chaining>Связывание</Chaining>
+    <InCueOnShot>Нач. метка изм-ния плана</InCueOnShot>
+    <OutCueOnShot>Кон. метка изм-ния плана</OutCueOnShot>
+    <MaxGap>Макс. интервал:</MaxGap>
+    <ShotChangeBehavior>Если происходит изменение плана:</ShotChangeBehavior>
+    <DontChain>Не связывать</DontChain>
+    <ExtendCrossingShotChange>Продлить, пересечение смены плана</ExtendCrossingShotChange>
+    <ExtendUntilShotChange>Продлить до смены плана</ExtendUntilShotChange>
+    <ResetWarning>Сбросит текущий профиль и заменит все значения на значения выбранной предустановки. Это нельзя отменить.
+
+Хотите продолжить?</ResetWarning>
+    <CreateSimpleTitle>Создание упрощённого режима</CreateSimpleTitle>
+    <CreateSimpleInstruction>Введите основные правила и текущий профиль будут обновлен.</CreateSimpleInstruction>
+    <CreateSimpleGapInstruction>Минимальный интервал между субтитрами.</CreateSimpleGapInstruction>
+    <CreateSimpleInCues>Начальные метки:</CreateSimpleInCues>
+    <CreateSimpleInCues0Frames>При смене кадра</CreateSimpleInCues0Frames>
+    <CreateSimpleInCues1Frames>1 кадр после смены плана</CreateSimpleInCues1Frames>
+    <CreateSimpleInCues2Frames>2 кадра после смены плана</CreateSimpleInCues2Frames>
+    <CreateSimpleInCues3Frames>3 кадра после смены плана</CreateSimpleInCues3Frames>
+    <CreateSimpleOutCues>Конечные метки:</CreateSimpleOutCues>
+    <CreateSimpleOutCues0Frames>При смене кадра</CreateSimpleOutCues0Frames>
+    <CreateSimpleOutCues1Frames>1 кадр перед сменой плана</CreateSimpleOutCues1Frames>
+    <CreateSimpleOutCues2Frames>2 кадра перед сменой плана</CreateSimpleOutCues2Frames>
+    <CreateSimpleOutCues3Frames>3 кадра перед сменой плана</CreateSimpleOutCues3Frames>
+    <CreateSimpleOutCuesGap>Минимальный интервал перед сменой плана</CreateSimpleOutCuesGap>
+    <CreateSimpleSnapClosestCue>Для связанных субтитров выровняйте начальную или конечную метку по смене плана, в зависимости от того, какая из них ближе</CreateSimpleSnapClosestCue>
+    <CreateSimpleMaxOffset>Макс. сдвиг:</CreateSimpleMaxOffset>
+    <CreateSimpleMaxOffsetInstruction>Сигналы на этом расстоянии от смены кадров будут привязаны к смене кадров.</CreateSimpleMaxOffsetInstruction>
+    <CreateSimpleSafeZone>Безопасная зона:</CreateSimpleSafeZone>
+    <CreateSimpleSafeZoneInstruction>Метки, расположенные на этом расстоянии от изменения плана, будут привязаны к изменению плана.</CreateSimpleSafeZoneInstruction>
+    <CreateSimpleChainingGap>Макс. интервал связывания:</CreateSimpleChainingGap>
+    <CreateSimpleChainingGapInstruction>Если интервал между двумя субтитрами меньше этого значения, субтитры будут объединены.</CreateSimpleChainingGapInstruction>
+    <CreateSimpleChainingGapAfterShotChanges>После конечной метки при смене плана, интервал может быть короче</CreateSimpleChainingGapAfterShotChanges>
+    <CreateSimpleChainingToolTip>Рекомендуется связывать субтитры, чтобы согласовать «ритм» с «миганием» субтитров.
+Это обеспечивает более комфортные условия просмотра.
+
+После связывания субтитры либо подключаются (т.е. субтитры исчезают, а новые субтитры появляются сразу после небольшой паузы), либо нет.
+Это даёт зрителям некоторое представление о том, когда они могут снова переключить своё внимание на экран.
+
+После того, как субтитры исчезнут при смене плана, интервал связывания может быть немного короче, поскольку смены плана «сбрасывают» изображение.
+Мы используем естественный ритм изображения.</CreateSimpleChainingToolTip>
+    <CreateSimpleLoadNetflixRules>Загрузить правила Netflix</CreateSimpleLoadNetflixRules>
+    <Frames>кадры(-ов)</Frames>
+    <Maximum>Макс.</Maximum>
+    <GapInMsFormat>{0} мс при {1} кадров в секунду</GapInMsFormat>
+    <OffsetSafeZoneError>Безопасная зона должна быть больше макс. сдвига</OffsetSafeZoneError>
+  </BeautifyTimeCodesProfile>
   <BinEdit>
     <ImportImage>Импорт изображения…</ImportImage>
     <ExportImage>Экспорт изображения…</ExportImage>
@@ -413,6 +520,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <Enabled>Вкл.</Enabled>
     <Name>Имя</Name>
     <LinesFoundX>Найдено строк: {0}</LinesFoundX>
+    <ExtraNames>Добавить дополнительные имена (через запятую, только для одноразового использования)</ExtraNames>
   </ChangeCasingNames>
   <ChangeFrameRate>
     <Title>Изменение частоты кадров</Title>
@@ -440,6 +548,9 @@ https://github.com/SubtitleEdit/subtitleedit
     <CheckingForUpdatesNewVersion>Доступна новая версия!</CheckingForUpdatesNewVersion>
     <InstallUpdate>Скачать</InstallUpdate>
     <NoUpdates>Не обновлять</NoUpdates>
+    <XPluginsHasAnUpdate>У {0} плагинов есть обновления -</XPluginsHasAnUpdate>
+    <OnePluginsHasAnUpdate>У одного плагина есть обновление -</OnePluginsHasAnUpdate>
+    <Update>обновить</Update>
   </CheckForUpdates>
   <ChooseAudioTrack>
     <Title>Выбор аудио трека</Title>
@@ -781,6 +892,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <BreakLongLines>Вставить перенос для слишком длинных строк</BreakLongLines>
     <RemoveLineBreaks>Удалить перенос, если короткий субтитр является одним предложением</RemoveLineBreaks>
     <RemoveLineBreaksAll>Удалить переносы в коротких субтитрах (во всех, за исключением диалогов)</RemoveLineBreaksAll>
+    <RemoveLineBreaksPixelWidth>Разбить субтитры, чтобы уместить в одну строку (ширина пикселя)</RemoveLineBreaksPixelWidth>
     <FixUppercaseIInsideLowercaseWords>Исправить заглавные буквы «i» внутри слов (ошибка OCR)</FixUppercaseIInsideLowercaseWords>
     <FixDoubleApostrophes>Исправить удвоенный символ апострофа ('') на кавычки (")</FixDoubleApostrophes>
     <AddPeriods>Добавить точку, если следующая строка начинается с заглавной буквы</AddPeriods>
@@ -815,6 +927,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <FixFirstLetterToUppercaseAfterParagraph>Исправить первую букву на заглавную после абзаца</FixFirstLetterToUppercaseAfterParagraph>
     <MergeShortLine>Объединить короткие строки (одно предложение)</MergeShortLine>
     <MergeShortLineAll>Объединить короткие строки (все, за исключением диалогов)</MergeShortLineAll>
+    <UnbreakShortLinePixelWidth>Разбить короткие строки (ширина пикселя)</UnbreakShortLinePixelWidth>
     <BreakLongLine>Вставить перенос для слишком длинной строки</BreakLongLine>
     <FixLongDisplayTime>Исправить долгое время отображения субтитра</FixLongDisplayTime>
     <FixInvalidItalicTag>Исправить неверные теги отображения курсива</FixInvalidItalicTag>
@@ -876,9 +989,11 @@ https://github.com/SubtitleEdit/subtitleedit
     <InfoAssaOn>Примечание: будет применён стиль Advanced SubStation Alpha :)</InfoAssaOn>
     <XGeneratedWithBurnedInSubsInX>«{0}» создано со встроенными субтитрами в {1}</XGeneratedWithBurnedInSubsInX>
     <TimeRemainingMinutes>Оставшееся время: {0} минут</TimeRemainingMinutes>
+    <TimeRemainingOneMinute>Оставшееся время: одна минута</TimeRemainingOneMinute>
     <TimeRemainingSeconds>Оставшееся время: {0} секунд</TimeRemainingSeconds>
     <TimeRemainingAFewSeconds>Оставшееся время: несколько секунд</TimeRemainingAFewSeconds>
     <TimeRemainingMinutesAndSeconds>Оставшееся время: {0} минут и {1} секунд</TimeRemainingMinutesAndSeconds>
+    <TimeRemainingOneMinuteAndSeconds>Оставшееся время: одна минута и {0} секунд</TimeRemainingOneMinuteAndSeconds>
     <TargetFileName>Имя целевого файла: {0}</TargetFileName>
     <TargetFileSize>Целевой размер файла (требуется 2-проходное кодирование)</TargetFileSize>
     <FileSizeMb>Размер файла в МБ</FileSizeMb>
@@ -979,20 +1094,19 @@ https://github.com/SubtitleEdit/subtitleedit
     <RemoveAll>Удалить все</RemoveAll>
   </ImportImages>
   <ImportShotChanges>
-    <Title>Получение изменений сцен</Title>
-    <OpenTextFile>Открыть файл…</OpenTextFile>
-    <Generate>Создать изменения сцен</Generate>
-    <Import>Открыть изменения сцен</Import>
+    <Title>Получение изменений плана</Title>
+    <OpenTextFile>Открыть текст. файл…</OpenTextFile>
+    <Generate>Генерировать изменения плана</Generate>
+    <Import>Импортировать изменения плана</Import>
     <TextFiles>Текстовые файлы</TextFiles>
-    <TimeCodes>Временные коды</TimeCodes>
+    <TimeCodes>Тайм-коды</TimeCodes>
     <Frames>Кадров</Frames>
     <Seconds>Секунд</Seconds>
     <Milliseconds>Миллисекунд</Milliseconds>
-    <GetShotChangesWithFfmpeg>Получить изменения сцен с помощью FFmpeg</GetShotChangesWithFfmpeg>
+    <GetShotChangesWithFfmpeg>Получить изменения плана с помощью FFmpeg</GetShotChangesWithFfmpeg>
     <Sensitivity>Чув-ность</Sensitivity>
-    <SensitivityDescription>Низкие значения дают больше
-     изменений сцен</SensitivityDescription>
-    <NoShotChangesFound>Изменений в сцене не найдено</NoShotChangesFound>
+    <SensitivityDescription>Низкие значения дают больше изменений плана</SensitivityDescription>
+    <NoShotChangesFound>Изменений плана не найдено</NoShotChangesFound>
   </ImportShotChanges>
   <ImportText>
     <Title>Открыть простой текст</Title>
@@ -1018,7 +1132,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <Refresh>Обновить</Refresh>
     <TextFiles>Текстовые файлы</TextFiles>
     <PreviewLinesModifiedX>Предпросмотр - изменено субтитров: {0}</PreviewLinesModifiedX>
-    <TimeCodes>Временные коды</TimeCodes>
+    <TimeCodes>Тайм-коды</TimeCodes>
     <SplitAtEndChars>Разделять на конечных символах</SplitAtEndChars>
   </ImportText>
   <Interjections>
@@ -1033,7 +1147,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <FileName>Имя файла</FileName>
     <Join>Старт</Join>
     <TotalNumberOfLinesX>Общее число строк: {0:#,###,###}</TotalNumberOfLinesX>
-    <AlreadyCorrectTimeCodes>Файлы уже имеют правильные временные коды</AlreadyCorrectTimeCodes>
+    <AlreadyCorrectTimeCodes>Файлы уже имеют правильные тайм-коды</AlreadyCorrectTimeCodes>
     <AppendTimeCodes>Добавить время окончания предыдущего файла</AppendTimeCodes>
     <AddMs>Добавить миллисекунд после каждого файла</AddMs>
   </JoinSubtitles>
@@ -1270,7 +1384,7 @@ https://github.com/SubtitleEdit/subtitleedit
         <ChangeSpeedInPercent>Изменить скорость (в %)…</ChangeSpeedInPercent>
         <MergeShortLines>Объединить короткие строки…</MergeShortLines>
         <MergeDuplicateText>Объединить строки с одинаковым текстом…</MergeDuplicateText>
-        <MergeSameTimeCodes>Объединить строки с одинаковым таймкодом…</MergeSameTimeCodes>
+        <MergeSameTimeCodes>Объединить строки с одинаковым тайм-кодом…</MergeSameTimeCodes>
         <SplitLongLines>Разделить длинные строки…</SplitLongLines>
         <MinimumDisplayTimeBetweenParagraphs>Временной интервал между субтитрами…</MinimumDisplayTimeBetweenParagraphs>
         <SortBy>Сортировка строк</SortBy>
@@ -1280,6 +1394,7 @@ https://github.com/SubtitleEdit/subtitleedit
         <Duration>Длина</Duration>
         <ListErrors>Список ошибок…</ListErrors>
         <NetflixQualityCheck>Проверка качества Netflix…</NetflixQualityCheck>
+        <BeautifyTimeCodes>Украсить тайм-коды…</BeautifyTimeCodes>
         <TextAlphabetically>Текст - по алфавиту</TextAlphabetically>
         <TextSingleLineMaximumLength>Текст - по длине строк</TextSingleLineMaximumLength>
         <TextTotalLength>Текст - по общей длине</TextTotalLength>
@@ -1313,8 +1428,8 @@ https://github.com/SubtitleEdit/subtitleedit
         <GenerateVideoWithEmbeddedSubs>Создать видео со встроенными субтитрами…</GenerateVideoWithEmbeddedSubs>
         <VideoAudioToTextX>Аудио в текст ({0})…</VideoAudioToTextX>
         <ImportChaptersFromVideo>Импорт глав из видео</ImportChaptersFromVideo>
-        <GenerateImportShotChanges>Создание/Открытие изменений сцен…</GenerateImportShotChanges>
-        <RemoveOrExportShotChanges>Удалить/экспортировать изменения сцен…</RemoveOrExportShotChanges>
+        <GenerateImportShotChanges>Создание/Открытие изменений плана…</GenerateImportShotChanges>
+        <RemoveOrExportShotChanges>Удалить/экспортировать изменения плана…</RemoveOrExportShotChanges>
         <WaveformBatchGenerate>Пакетная обработка форм сигнала…</WaveformBatchGenerate>
         <ShowHideVideo>Показать/Скрыть видео</ShowHideVideo>
         <ShowHideWaveform>Показать/Скрыть форму сигнала</ShowHideWaveform>
@@ -1375,10 +1490,10 @@ https://github.com/SubtitleEdit/subtitleedit
         <VisualSync>Визуальная синхронизация</VisualSync>
         <SpellCheck>Проверка орфографии</SpellCheck>
         <NetflixQualityCheck>Проверка качества Netflix</NetflixQualityCheck>
+        <BeautifyTimeCodes>Украсить тайм-коды</BeautifyTimeCodes>
         <Settings>Настройки</Settings>
         <Help>Справка</Help>
-        <ShowHideWaveform>Показать/Скрыть форму сигнала</ShowHideWaveform>
-        <ShowHideVideo>Показать/Скрыть видео</ShowHideVideo>
+        <Layout>Макет</Layout>
         <AssaDraw>Дизайн Advanced Sub Station Alpha</AssaDraw>
       </ToolBar>
       <ContextMenu>
@@ -1395,6 +1510,9 @@ https://github.com/SubtitleEdit/subtitleedit
         <TimedTextSetLanguage>Синхронный текст - установка языка</TimedTextSetLanguage>
         <SamiSetStyle>Sami - установка класса</SamiSetStyle>
         <NuendoSetStyle>Nuendo - набор символов</NuendoSetStyle>
+        <WebVttSetStyle>WebVTT - установить стиль</WebVttSetStyle>
+        <WebVttSetVoice>WebVTT - установить голос</WebVttSetVoice>
+        <WebVttBrowserPreview>WebVTT - предпросмотр в браузере</WebVttBrowserPreview>
         <Cut>Вырезать</Cut>
         <Copy>Копировать</Copy>
         <Paste>Вставить</Paste>
@@ -1448,6 +1566,7 @@ https://github.com/SubtitleEdit/subtitleedit
         <KaraokeEffect>Эффект караоке…</KaraokeEffect>
         <ShowSelectedLinesEarlierLater>Сдвинуть выбранные строки по времени…</ShowSelectedLinesEarlierLater>
         <VisualSyncSelectedLines>Синхронизация выбранных строк…</VisualSyncSelectedLines>
+        <BeautifyTimeCodesOfSelectedLines>Украсить тайм-коды выбранных строк…</BeautifyTimeCodesOfSelectedLines>
         <GoogleAndMicrosoftTranslateSelectedLine>Перевести в Google/Microsoft исходные строки</GoogleAndMicrosoftTranslateSelectedLine>
         <SelectedLines>Выбранные строки</SelectedLines>
         <TranslateSelectedLines>Перевести выделенные строки…</TranslateSelectedLines>
@@ -1481,7 +1600,6 @@ https://github.com/SubtitleEdit/subtitleedit
       <Next>Далее &gt;</Next>
       <AutoBreak>Автоперенос</AutoBreak>
       <Unbreak>Удалить перенос</Unbreak>
-      <SetLayer>Установить слой</SetLayer>
     </Controls>
     <VideoControls>
       <Translate>Перевод</Translate>
@@ -1604,6 +1722,10 @@ https://github.com/SubtitleEdit/subtitleedit
     <CommonErrorsFixed>Ошибки исправлены</CommonErrorsFixed>
     <BeforeRenumbering>Перед перенумерацией</BeforeRenumbering>
     <RenumberedStartingFromX>Перенумеровано, начиная с: {0}</RenumberedStartingFromX>
+    <BeforeBeautifyTimeCodes>Прежде чем украшать тайм-коды</BeforeBeautifyTimeCodes>
+    <BeforeBeautifyTimeCodesSelectedLines>Перед украшением тайм-кодов выбранных строк</BeforeBeautifyTimeCodesSelectedLines>
+    <BeautifiedTimeCodes>Тайм-коды украшены</BeautifiedTimeCodes>
+    <BeautifiedTimeCodesSelectedLines>Тайм-коды выбранных строк украшены</BeautifiedTimeCodesSelectedLines>
     <BeforeRemovalOfTextingForHearingImpaired>Перед удалением текста для людей с нарушением слуха</BeforeRemovalOfTextingForHearingImpaired>
     <TextingForHearingImpairedRemovedOneLine>Удалён текст для людей с нарушением слуха: Одна строка</TextingForHearingImpairedRemovedOneLine>
     <TextingForHearingImpairedRemovedXLines>Удалён текст для людей с нарушением слуха: {0} строк</TextingForHearingImpairedRemovedXLines>
@@ -1635,6 +1757,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <NothingToUndo>Список изменений пуст!</NothingToUndo>
     <InvalidLanguageNameX>Неверное имя языка: {0}</InvalidLanguageNameX>
     <DoNotDisplayMessageAgain>Больше не показывать это сообщение</DoNotDisplayMessageAgain>
+    <DoNotAutoLoadVideo>Не загружайте видео автоматически</DoNotAutoLoadVideo>
     <NumberOfCorrectedWords>Количество исправленных слов: {0}</NumberOfCorrectedWords>
     <NumberOfSkippedWords>Количество пропущенных слов: {0}</NumberOfSkippedWords>
     <NumberOfCorrectWords>Количество правильных слов: {0}</NumberOfCorrectWords>
@@ -1678,8 +1801,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <ParsingTransportStreamFile>Парсинг файла Transport Stream. Пожалуйста, подождите…</ParsingTransportStreamFile>
     <BeforeImportFromMatroskaFile>Перед импортом субтитров из файла Matroska</BeforeImportFromMatroskaFile>
     <SubtitleImportedFromMatroskaFile>Выполнен импорт субтитров из файла Matroska</SubtitleImportedFromMatroskaFile>
-    <DropFileXNotAccepted>Файл «{0}» не принят — слишком большой</DropFileXNotAccepted>
-    <DropSubtitleFileXNotAccepted>Файл «{0}» не принят — слишком большой для субтитров</DropSubtitleFileXNotAccepted>
+    <DropFileXNotAccepted>Файл «{0}» не принят - слишком большой</DropFileXNotAccepted>
+    <DropSubtitleFileXNotAccepted>Файл «{0}» не принят - слишком большой для субтитров</DropSubtitleFileXNotAccepted>
     <DropOnlyOneFile>Вы можете перетащить сюда только один файл</DropOnlyOneFile>
     <OpenAnsiSubtitle>Открыть субтитры…</OpenAnsiSubtitle>
     <BeforeChangeCasing>Перед изменением регистра</BeforeChangeCasing>
@@ -1764,7 +1887,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <TextFiles>Текстовые файлы</TextFiles>
     <SubtitleExported>Выполнен экспорт субтитров</SubtitleExported>
     <LineNumberXErrorReadingFromSourceLineY>Строка {0} - ошибка чтения: {1}</LineNumberXErrorReadingFromSourceLineY>
-    <LineNumberXErrorReadingTimeCodeFromSourceLineY>Строка {0} - ошибка чтения таймкода: {1}</LineNumberXErrorReadingTimeCodeFromSourceLineY>
+    <LineNumberXErrorReadingTimeCodeFromSourceLineY>Строка {0} - ошибка чтения тайм-кода: {1}</LineNumberXErrorReadingTimeCodeFromSourceLineY>
     <LineNumberXExpectedNumberFromSourceLineY>Строка {0} - ожидаемый номер субтитра: {1}</LineNumberXExpectedNumberFromSourceLineY>
     <LineNumberXExpectedEmptyLine>Строка {0} - ожидаемая строка пуста, но найден номер + временной код (номер пропущен): {1}</LineNumberXExpectedEmptyLine>
     <BeforeGuessingTimeCodes>Перед расстановкой временных кодов</BeforeGuessingTimeCodes>
@@ -1786,7 +1909,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <PluginXExecuted>Плагин «{0}» запущен</PluginXExecuted>
     <NotAValidXSubFile>Не допустимый XSub файл!</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>Перед объединением строк с одинаковым текстом</BeforeMergeLinesWithSameText>
-    <ImportTimeCodesDifferentNumberOfLinesWarning>Субтитры с тайм кодом имеют различное число строк ({0}) в отличии от текущих субтитров ({1}). Вы хотите продолжить?</ImportTimeCodesDifferentNumberOfLinesWarning>
+    <ImportTimeCodesDifferentNumberOfLinesWarning>Субтитры с тайм-кодом имеют различное число строк ({0}) в отличии от текущих субтитров ({1}). Вы хотите продолжить?</ImportTimeCodesDifferentNumberOfLinesWarning>
     <ParsingTransportStream>Анализ потокового носителя - ожидайте…</ParsingTransportStream>
     <XPercentCompleted>{0}% завершено</XPercentCompleted>
     <NextX>Следующих: {0}</NextX>
@@ -1827,6 +1950,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <SubtitleEditNeedsVideoPlayer>Subtitle Edit требуется видеоплеер</SubtitleEditNeedsVideoPlayer>
     <UseRecommendMpv>Нажмите кнопку ниже, чтобы использовать рекомендуемый видеоплеер «mpv»</UseRecommendMpv>
     <DownloadAndUseMpv>Скачать и использовать «mpv»</DownloadAndUseMpv>
+    <ChooseLayout>Выберите макет</ChooseLayout>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Выбор субтитров из файла Matroska</Title>
@@ -1959,7 +2083,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <OnlyMergeContinuationLines>Объединить строки только с многоточием</OnlyMergeContinuationLines>
   </MergedShortLines>
   <MergeTextWithSameTimeCodes>
-    <Title>Объединить строки с одинаковым таймкодом</Title>
+    <Title>Объединить строки с одинаковым тайм-кодом</Title>
     <MaxDifferenceMilliseconds>Максимальная разница в мс</MaxDifferenceMilliseconds>
     <MakeDialog>Создать диалог</MakeDialog>
     <ReBreakLines>Разделить строки заново</ReBreakLines>
@@ -2180,8 +2304,10 @@ https://github.com/SubtitleEdit/subtitleedit
     <BurnIn>Хардсаб</BurnIn>
     <SpellCheck>Орфография</SpellCheck>
     <NetflixQualityCheck>Netflix проверка качества</NetflixQualityCheck>
+    <BeautifyTimeCodes>Украсить тайм-коды</BeautifyTimeCodes>
     <SettingsName>Настройки</SettingsName>
     <ToggleBookmarks>Переключить закладки</ToggleBookmarks>
+    <FocusTextBox>Фокус на текстовом поле</FocusTextBox>
     <ToggleBookmarksWithComment>Переключить закладки - добавить комментарий</ToggleBookmarksWithComment>
     <ClearBookmarks>Очистить закладки</ClearBookmarks>
     <ExportBookmarks>Экспортировать закладки…</ExportBookmarks>
@@ -2201,14 +2327,15 @@ https://github.com/SubtitleEdit/subtitleedit
     <DefaultFrameRate>Частота кадров по умолчанию</DefaultFrameRate>
     <DefaultFileEncoding>Кодировка файла по умолчанию</DefaultFileEncoding>
     <AutoDetectAnsiEncoding>Определение ANSI кодировки</AutoDetectAnsiEncoding>
+    <LanguageFilter>Языковой фильтр</LanguageFilter>
     <Profile>Профиль</Profile>
     <Profiles>Профили</Profiles>
     <ImportProfiles>Импорт профилей</ImportProfiles>
     <ExportProfiles>Экспорт профилей</ExportProfiles>
     <SubtitleLineMaximumLength>Максимум символов в строке</SubtitleLineMaximumLength>
-    <OptimalCharactersPerSecond>Оптимально симв./сек (СвС)</OptimalCharactersPerSecond>
-    <MaximumCharactersPerSecond>Макс. симв./сек</MaximumCharactersPerSecond>
-    <MaximumWordsPerMinute>Макс. слов/мин</MaximumWordsPerMinute>
+    <OptimalCharactersPerSecond>Оптимально симв./сек.</OptimalCharactersPerSecond>
+    <MaximumCharactersPerSecond>Макс. симв./сек.</MaximumCharactersPerSecond>
+    <MaximumWordsPerMinute>Макс. слов/мин.</MaximumWordsPerMinute>
     <AutoWrapWhileTyping>Перенос по словам</AutoWrapWhileTyping>
     <DurationMinimumMilliseconds>Мин. продолжительность, мс</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Макс. продолжительность, мс</DurationMaximumMilliseconds>
@@ -2262,7 +2389,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <AutoSave>Автосохранение</AutoSave>
     <AllowEditOfOriginalSubtitle>Разрешить редактировать исходные субтитры</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>Подтверждение перед удалением строк</PromptDeleteLines>
-    <TimeCodeMode>Режим таймкода:</TimeCodeMode>
+    <TimeCodeMode>Режим тайм-кода:</TimeCodeMode>
     <TimeCodeModeHHMMSSMS>ЧЧ:ММ:СС.МС (00:00:01.500)</TimeCodeModeHHMMSSMS>
     <TimeCodeModeHHMMSSFF>ЧЧ:ММ:СС:ФФ (00:00:01:12)</TimeCodeModeHHMMSSFF>
     <SplitBehavior>Варианты разделения</SplitBehavior>
@@ -2285,6 +2412,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <ShowFullscreenButton>Показывать кнопку «Во весь экран»</ShowFullscreenButton>
     <PreviewFontName>Шрифт предпросмотра</PreviewFontName>
     <PreviewFontSize>Размер шрифта</PreviewFontSize>
+    <PreviewVerticalMargin>Отступ снизу</PreviewVerticalMargin>
     <MainWindowVideoControls>Главное окно панели видео</MainWindowVideoControls>
     <CustomSearchTextAndUrl>Пользовательский поиск текста и адрес:</CustomSearchTextAndUrl>
     <WaveformAppearance>Внешний вид формы сигнала</WaveformAppearance>
@@ -2298,7 +2426,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <WaveformFocusMouseEnter>Установить фокус на курсоре при нажатии</WaveformFocusMouseEnter>
     <WaveformListViewFocusMouseEnter>Установить фокус на списке по курсору мышки</WaveformListViewFocusMouseEnter>
     <WaveformSingleClickSelect>Однократное нажатие фокусирует на выбранной строке (+ на окне видео и текстовом окне)</WaveformSingleClickSelect>
-    <WaveformSnapToShotChanges>Привязка к изменениям сцены (удерживайте Shift для отмены)</WaveformSnapToShotChanges>
+    <WaveformSnapToShotChanges>Привязка к изменениям плана (удерживайте Shift для отмены)</WaveformSnapToShotChanges>
+    <WaveformEditShotChangesProfile>Редактировать профиль…</WaveformEditShotChangesProfile>
     <WaveformAutoGen>Автоматически создавать форму сигнала при открытии видео</WaveformAutoGen>
     <WaveformBorderHitMs1>Только в границах маркера</WaveformBorderHitMs1>
     <WaveformBorderHitMs2>миллисекунд</WaveformBorderHitMs2>
@@ -2379,16 +2508,16 @@ https://github.com/SubtitleEdit/subtitleedit
     <ContinuationStyleLeadingTrailingDash>Тире</ContinuationStyleLeadingTrailingDash>
     <ContinuationStyleLeadingTrailingDashDots>Тире, но точки для пауз</ContinuationStyleLeadingTrailingDashDots>
     <ContinuationStyleCustom>Настройка</ContinuationStyleCustom>
-    <CpsLineLengthStyle>СвС/Длина строки</CpsLineLengthStyle>
+    <CpsLineLengthStyle>cps/Длина строки</CpsLineLengthStyle>
     <CpsLineLengthStyleCalcAll>Все символы</CpsLineLengthStyleCalcAll>
-    <CpsLineLengthStyleCalcNoSpaceCpsOnly>Исключить пробелы, только СвС</CpsLineLengthStyleCalcNoSpaceCpsOnly>
+    <CpsLineLengthStyleCalcNoSpaceCpsOnly>Исключить пробелы, только cps</CpsLineLengthStyleCalcNoSpaceCpsOnly>
     <CpsLineLengthStyleCalcNoSpace>Исключить пробелы</CpsLineLengthStyleCalcNoSpace>
-    <CpsLineLengthStyleCalcCjk>CJK 1, Latin 0.5</CpsLineLengthStyleCalcCjk>
-    <CpsLineLengthStyleCalcCjkNoSpace>CJK 1, Latin 0.5, пробел 0</CpsLineLengthStyleCalcCjkNoSpace>
+    <CpsLineLengthStyleCalcCjk>CJK 1, латиница 0.5</CpsLineLengthStyleCalcCjk>
+    <CpsLineLengthStyleCalcCjkNoSpace>CJK 1, латиница 0.5, пробел 0</CpsLineLengthStyleCalcCjkNoSpace>
     <CpsLineLengthStyleCalcIgnoreArabicDiacritics>Игнор. арабскую диакритику</CpsLineLengthStyleCalcIgnoreArabicDiacritics>
     <CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>Игнор. арабскую диакритику/пробел</CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>
     <CpsLineLengthStyleCalcNoSpaceOrPunctuation>Без пробелов и знак. преп. ()[]-:;,.!?</CpsLineLengthStyleCalcNoSpaceOrPunctuation>
-    <CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>Без пробелов и знак. преп., только СвС</CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>
+    <CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>Без пробелов и знак. преп., только cps</CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>
     <MusicSymbol>Музыкальный символ</MusicSymbol>
     <MusicSymbolsReplace>Символы на замену (через запятую)</MusicSymbolsReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Исправить ошибки OCR - применить жёсткие правила</FixCommonOcrErrorsUseHardcodedRules>
@@ -2419,13 +2548,15 @@ https://github.com/SubtitleEdit/subtitleedit
     <DarkTheme>Тёмная тема</DarkTheme>
     <DarkThemeEnabled>Использовать тёмную тему</DarkThemeEnabled>
     <DarkThemeShowGridViewLines>Показать линии сетки отображения списка</DarkThemeShowGridViewLines>
+    <GraphicsButtons>Графические кнопки</GraphicsButtons>
     <UpdateShortcut>Обновить</UpdateShortcut>
-    <FocusSetVideoPosition>Фокус устанавливает положение видео</FocusSetVideoPosition>
+    <FocusSetVideoPosition>Установить фокус на позиции видео</FocusSetVideoPosition>
     <ToggleDockUndockOfVideoControls>Переключить состояние панели управления видео</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Установить конец, добавить новый и перейти к нему</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStart>Настроить через конечную позицию</AdjustViaEndAutoStart>
     <AdjustViaEndAutoStartAndGoToNext>Установить конечное время в позиции курсора и перейти к следующему субтитру</AdjustViaEndAutoStartAndGoToNext>
     <AdjustSetEndMinusGapAndStartNextHere>Установить конец, минус интервал, перейти к следующему и начать следующий здесь</AdjustSetEndMinusGapAndStartNextHere>
+    <AdjustSetStartTimeAndGoToNext>Установить начало и перейти к следующему</AdjustSetStartTimeAndGoToNext>
     <AdjustSetEndTimeAndGoToNext>Установить конец и перейти к следующему</AdjustSetEndTimeAndGoToNext>
     <AdjustSetEndTimeAndPause>Установить конец (в месте расположения статус-бара) и остановить</AdjustSetEndTimeAndPause>
     <AdjustSetStartAutoDurationAndGoToNext>Установить начало, автопродолжительность и перейти далее</AdjustSetStartAutoDurationAndGoToNext>
@@ -2453,23 +2584,25 @@ https://github.com/SubtitleEdit/subtitleedit
     <AdjustSetStartAndOffsetTheWholeSubtitle>Установить время начала, сместив все субтитры</AdjustSetStartAndOffsetTheWholeSubtitle>
     <AdjustSetEndAndOffsetTheRest>Установить конец, сместить остаток</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Установить конец, сместить остаток и перейти к следующему субтитру</AdjustSetEndAndOffsetTheRestAndGoToNext>
-    <AdjustSnapStartToNextShotChange>Привязать выбранные линии к началу следующего изменения сцены</AdjustSnapStartToNextShotChange>
-    <AdjustSnapStartToNextShotChangeWithGap>Привязать начало выбранных линий к следующей смене сцены с мин. разрывом</AdjustSnapStartToNextShotChangeWithGap>
-    <AdjustSnapEndToPreviousShotChange>Привязать выбранные линии к концу предыдущей смены сцены</AdjustSnapEndToPreviousShotChange>
-    <AdjustSnapEndToPreviousShotChangeWithGap>Привязать конец выбранных линий к предыдущему изменению сцены с мин. разрывом</AdjustSnapEndToPreviousShotChangeWithGap>
-    <AdjustExtendToNextShotChange>Расширить выделенные строки до следующего изменения сцены (или следующей строки)</AdjustExtendToNextShotChange>
-    <AdjustExtendToNextShotChangeWithGap>Расширить выделенные строки до следующего изменения сцены с мин. разрывом (или следующей строки)</AdjustExtendToNextShotChangeWithGap>
-    <AdjustExtendToPreviousShotChange>Расширить выделенные строки до предыдущего изменения сцены (или предыдущей строки)</AdjustExtendToPreviousShotChange>
-    <AdjustExtendToPreviousShotChangeWithGap>Расширить выделенные строки до предыдущего изменения сцены с мин. разрывом (или предыдущей строки)</AdjustExtendToPreviousShotChangeWithGap>
+    <AdjustSnapStartToNextShotChange>Привязать выбранные линии к началу следующего изменения плана</AdjustSnapStartToNextShotChange>
+    <AdjustSnapEndToPreviousShotChange>Привязать выбранные линии к концу предыдущей смены плана</AdjustSnapEndToPreviousShotChange>
+    <AdjustExtendToNextShotChange>Расширить выделенные строки до следующего изменения плана (или следующей строки)</AdjustExtendToNextShotChange>
+    <AdjustExtendToPreviousShotChange>Расширить выделенные строки до предыдущего изменения плана (или предыдущей строки)</AdjustExtendToPreviousShotChange>
     <AdjustExtendToNextSubtitle>Расширить выделенные строки до следующего субтитра</AdjustExtendToNextSubtitle>
     <AdjustExtendToPreviousSubtitle>Расширить выделенные строки до предыдущего субтитра</AdjustExtendToPreviousSubtitle>
+    <AdjustExtendToNextSubtitleMinusChainingGap>Расширить выделенные строки с интервалом связывания до следующего субтитра</AdjustExtendToNextSubtitleMinusChainingGap>
+    <AdjustExtendToPreviousSubtitleMinusChainingGap>Расширить выделенные строки с интервалом связывания до предыдущего субтитра</AdjustExtendToPreviousSubtitleMinusChainingGap>
     <AdjustExtendCurrentSubtitle>Продлить строку до следующего субтитра/задать максимальную длительность</AdjustExtendCurrentSubtitle>
     <AdjustExtendPreviousLineEndToCurrentStart>Расширить конец предыдущей строки до начала текущей</AdjustExtendPreviousLineEndToCurrentStart>
     <AdjustExtendNextLineStartToCurrentEnd>Расширить начало следующей строки до конца текущей</AdjustExtendNextLineStartToCurrentEnd>
     <RecalculateDurationOfCurrentSubtitle>Пересчитать продолжительность текущих субтитров</RecalculateDurationOfCurrentSubtitle>
     <RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed>Пересчитать продолжительность текущих субтитров (на основе оптимальной скорости чтения)</RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed>
     <RecalculateDurationOfCurrentSubtitleByMinReadingSpeed>Пересчитать продолжительность текущих субтитров (на основе минимальной скорости чтения)</RecalculateDurationOfCurrentSubtitleByMinReadingSpeed>
-    <MainCreateStartDownEndUp>Создать новый - ВНИЗ, установить конечное время - ВВЕРХ</MainCreateStartDownEndUp>
+    <SetInCueToClosestShotChangeLeftGreenZone>Установить начальную метку на минимальное расстояние до ближайшей смены плана (левая зелёная зона)</SetInCueToClosestShotChangeLeftGreenZone>
+    <SetInCueToClosestShotChangeRightGreenZone>Установить начальную метку на минимальное расстояние после ближайшей смены плана (правая зелёная зона)</SetInCueToClosestShotChangeRightGreenZone>
+    <SetOutCueToClosestShotChangeLeftGreenZone>Установить выходную метку на минимальное расстояния до ближайшей смены плана (левая зелёная зона)</SetOutCueToClosestShotChangeLeftGreenZone>
+    <SetOutCueToClosestShotChangeRightGreenZone>Установить выходную метку на минимальное расстояния после ближайшей смены плана (правая зелёная зона)</SetOutCueToClosestShotChangeRightGreenZone>
+    <MainCreateStartDownEndUp>Создать новый - ↓, установить конечное время - ↑</MainCreateStartDownEndUp>
     <MergeDialog>Объединить диалог (вставить тире)</MergeDialog>
     <MergeDialogWithNext>Объединить диалог со следующим (вставить тире)
 </MergeDialogWithNext>
@@ -2525,11 +2658,11 @@ https://github.com/SubtitleEdit/subtitleedit
     <WaveformPlayNewSelection>Проиграть новое выделение</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>Воспроизвести конец выделения</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Проиграть первый выделенный субтитр</WaveformPlayFirstSelectedSubtitle>
-    <WaveformGoToPreviousShotChange>Перейти к предыдущему изменению сцены</WaveformGoToPreviousShotChange>
-    <WaveformGoToNextShotChange>Перейти к следующему изменению сцены</WaveformGoToNextShotChange>
-    <WaveformToggleShotChange>Переключить изменение сцен</WaveformToggleShotChange>
-    <WaveformRemoveOrExportShotChanges>Удалить/экспортировать изменения сцен</WaveformRemoveOrExportShotChanges>
-    <WaveformGuessStart>Автоматическая настройка начала с помощью громкости/изменения сцены</WaveformGuessStart>
+    <WaveformGoToPreviousShotChange>Перейти к предыдущему изменению плана</WaveformGoToPreviousShotChange>
+    <WaveformGoToNextShotChange>Перейти к следующему изменению плана</WaveformGoToNextShotChange>
+    <WaveformToggleShotChange>Переключить смену плана</WaveformToggleShotChange>
+    <WaveformRemoveOrExportShotChanges>Удалить/экспортировать изменения плана</WaveformRemoveOrExportShotChanges>
+    <WaveformGuessStart>Автоматическая настройка начала с помощью громкости/изменения плана</WaveformGuessStart>
     <GoBack1Frame>1 кадр назад</GoBack1Frame>
     <GoForward1Frame>1 кадр вперёд</GoForward1Frame>
     <GoBack1FrameWithPlay>Один кадр назад (с воспроизведением)</GoBack1FrameWithPlay>
@@ -2586,7 +2719,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <SyntaxColorTextIfTooLong>Подсвечивать слишком длинный текст</SyntaxColorTextIfTooLong>
     <SyntaxColorTextIfTooWide>Подсвечивать слишком широкие (в пикселях)</SyntaxColorTextIfTooWide>
     <SyntaxColorTextMoreThanMaxLines>Подсвечивать текст, если он превышает {0} строки</SyntaxColorTextMoreThanMaxLines>
-    <SyntaxColorOverlap>Подсвечивать наложение таймкода</SyntaxColorOverlap>
+    <SyntaxColorOverlap>Подсвечивать наложение тайм-кода</SyntaxColorOverlap>
     <SyntaxColorGap>Подсвечивать разрыв если он слишком короткий</SyntaxColorGap>
     <SyntaxErrorColor>Цвет ошибки</SyntaxErrorColor>
     <SyntaxLineWidthSettings>Настройки…</SyntaxLineWidthSettings>
@@ -2599,7 +2732,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <MergeSelectedLines>Объединить выделенные строки</MergeSelectedLines>
     <MergeSelectedLinesAndAutoBreak>Объединить выделенные строки с автопереносом</MergeSelectedLinesAndAutoBreak>
     <MergeSelectedLinesAndUnbreak>Объединить выделенные строки без переноса</MergeSelectedLinesAndUnbreak>
-    <MergeSelectedLinesAndUnbreakCjk>Объединить выделенные строки в одну сплошную (CJK - для Китайского-Японского-Корейского)</MergeSelectedLinesAndUnbreakCjk>
+    <MergeSelectedLinesAndUnbreakCjk>Объединить выделенные строки в одну сплошную (CJK)</MergeSelectedLinesAndUnbreakCjk>
     <MergeSelectedLinesOnlyFirstText>Объединить выбранные строки, сохранив только первый не пустой текст</MergeSelectedLinesOnlyFirstText>
     <MergeSelectedLinesBilingual>Объединить выделенные строки в двуязычную</MergeSelectedLinesBilingual>
     <MergeWithPreviousBilingual>Объединение с предыдущей двуязычной</MergeWithPreviousBilingual>
@@ -2643,12 +2776,12 @@ https://github.com/SubtitleEdit/subtitleedit
     <MainTextBoxAutoBreakFromPosAndGoToNext>Разделить на первом пробеле в расположении курсора и перейти к следующему</MainTextBoxAutoBreakFromPosAndGoToNext>
     <MainTextBoxDictate>Диктовка (↓ = начать запись, ↑ = закончить запись)</MainTextBoxDictate>
     <MainTextBoxUnbreak>Отменить перенос текста</MainTextBoxUnbreak>
-    <MainTextBoxUnbreakNoSpace>Перенос без пробела (СвС)</MainTextBoxUnbreakNoSpace>
+    <MainTextBoxUnbreakNoSpace>Перенос без пробела (CJK)</MainTextBoxUnbreakNoSpace>
     <MainTextBoxAssaIntellisense>Показать помощник по тегам ASSA</MainTextBoxAssaIntellisense>
     <MainTextBoxAssaRemoveTag>Удалить тег ASSA у курсора</MainTextBoxAssaRemoveTag>
     <MainFileSaveAll>Сохранить всё</MainFileSaveAll>
     <Miscellaneous>Разное</Miscellaneous>
-    <CpsIncludesSpace>Символов/сек (СвС), включая пробелы</CpsIncludesSpace>
+    <CpsIncludesSpace>Символов/сек (cps), включая пробелы</CpsIncludesSpace>
     <UseDoNotBreakAfterList>Не переносить после</UseDoNotBreakAfterList>
     <BreakEarlyForLineEnding>Переносить после конца предложения (.!?)</BreakEarlyForLineEnding>
     <BreakByPixelWidth>Переносить, где большое расстояние между символами</BreakByPixelWidth>
@@ -2668,7 +2801,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <RestoreDefaultSettingsMsg>Все настройки будут возвращены к исходным.
 
 Продолжить?</RestoreDefaultSettingsMsg>
-    <RemoveTimeCodes>Удалить временные коды</RemoveTimeCodes>
+    <RemoveTimeCodes>Удалить тайм-коды</RemoveTimeCodes>
     <EditFixContinuationStyleSettings>Настройки для исправления стиля продолжения…</EditFixContinuationStyleSettings>
     <FixContinuationStyleSettings>Настройки для исправления стиля продолжения</FixContinuationStyleSettings>
     <UncheckInsertsAllCaps>Исключать отдельные строки, написанные заглавными буквами (Например: NO ENTRY)</UncheckInsertsAllCaps>
@@ -2702,7 +2835,9 @@ https://github.com/SubtitleEdit/subtitleedit
     <PreviewPause>(пауза)</PreviewPause>
     <CustomContinuationStyleNote>Примечание: пользовательский стиль продолжения общий для всех профилей</CustomContinuationStyleNote>
     <ResetCustomContinuationStyleWarning>Это изменит значения в диалоговом окне. Вы уверены?</ResetCustomContinuationStyleWarning>
-    <ExportAsHtml>Экспортировать как HTML...</ExportAsHtml>
+    <ExportAsHtml>Экспортировать как HTML…</ExportAsHtml>
+    <SetNewActor>Установить нового актёра/голос</SetNewActor>
+    <SetActorX>Установить актёра/голос {0}</SetActorX>
   </Settings>
   <SettingsMpv>
     <DownloadMpv>Загрузить mpv</DownloadMpv>
@@ -2844,32 +2979,43 @@ https://github.com/SubtitleEdit/subtitleedit
     <LengthInFormatXinCharactersY>Число символов для {0}: {1:#,###,##0}</LengthInFormatXinCharactersY>
     <NumberOfCharactersInTextOnly>Число символов в тексте: {0:#,###,##0}</NumberOfCharactersInTextOnly>
     <TotalDuration>Общая продолжительность субтитров: {0}</TotalDuration>
-    <TotalCharsPerSecond>Всего символов/секунду: {0:0.0} секунд</TotalCharsPerSecond>
+    <TotalCharsPerSecond>Всего символов/секунду: {0:0.0} сек.</TotalCharsPerSecond>
     <TotalWords>Всего слов в субтитрах: {0}</TotalWords>
     <NumberOfItalicTags>Число тегов курсива: {0}</NumberOfItalicTags>
     <NumberOfBoldTags>Число тегов полужирного: {0}</NumberOfBoldTags>
     <NumberOfUnderlineTags>Число тегов подчёркивания: {0}</NumberOfUnderlineTags>
     <NumberOfFontTags>Число тегов шрифта: {0}</NumberOfFontTags>
     <NumberOfAlignmentTags>Число тегов выравнивания: {0}</NumberOfAlignmentTags>
-    <LineLengthMinimum>Длина субтитра - минимум: {0}</LineLengthMinimum>
-    <LineLengthMaximum>Длина субтитра - максимум: {0}</LineLengthMaximum>
+    <LineLengthMinimum>Длина субтитра - минимальная: {0}</LineLengthMinimum>
+    <LineLengthMaximum>Длина субтитра - максимальная: {0}</LineLengthMaximum>
     <LineLengthAverage>Длина субтитра - средняя: {0}</LineLengthAverage>
     <LinesPerSubtitleAverage>Субтитр, число строк - среднее: {0:0.0}</LinesPerSubtitleAverage>
-    <SingleLineLengthMinimum>Длина одной строки - минимум: {0}</SingleLineLengthMinimum>
-    <SingleLineLengthMaximum>Длина одной строки - максимум: {0}</SingleLineLengthMaximum>
+    <SingleLineLengthMinimum>Длина одной строки - минимальная: {0}</SingleLineLengthMinimum>
+    <SingleLineLengthMaximum>Длина одной строки - максимальная: {0}</SingleLineLengthMaximum>
     <SingleLineLengthAverage>Длина одной строки - средняя: {0}</SingleLineLengthAverage>
-    <SingleLineWidthMinimum>Ширина одной строки - минимум: {0} пикселей</SingleLineWidthMinimum>
-    <SingleLineWidthMaximum>Ширина одной строки - максимум: {0} пикселей</SingleLineWidthMaximum>
-    <SingleLineWidthAverage>Ширина одной строки - средняя: {0} пикселей</SingleLineWidthAverage>
-    <DurationMinimum>Продолжительность - минимум: {0:0.000} секунд</DurationMinimum>
-    <DurationMaximum>Продолжительность - максимум: {0:0.000} секунд</DurationMaximum>
-    <DurationAverage>Продолжительность - средняя: {0:0.000} секунд</DurationAverage>
-    <CharactersPerSecondMinimum>Символов/сек - минимум: {0:0.000}</CharactersPerSecondMinimum>
-    <CharactersPerSecondMaximum>Символов/сек - максимум: {0:0.000}</CharactersPerSecondMaximum>
-    <CharactersPerSecondAverage>Символов/сек - в среднем: {0:0.000}</CharactersPerSecondAverage>
-    <GapMinimum>Минимальный интервал: {0:#,##0} мс</GapMinimum>
-    <GapMaximum>Максимальный интервал: {0:#,##0} мс</GapMaximum>
-    <GapAverage>Средний интервал: {0:#,##0.##} мс</GapAverage>
+    <SingleLineLengthExceedingMaximum>Длина одной строки - выше максимальной ({0} симв.): {1} ({2:0.00}%)</SingleLineLengthExceedingMaximum>
+    <SingleLineWidthMinimum>Ширина одной строки - минимальная: {0} пикс.</SingleLineWidthMinimum>
+    <SingleLineWidthMaximum>Ширина одной строки - максимальная: {0} пикс.</SingleLineWidthMaximum>
+    <SingleLineWidthAverage>Ширина одной строки - средняя: {0} пикс.</SingleLineWidthAverage>
+    <SingleLineWidthExceedingMaximum>Ширина одной строки - выше максимальной ({0} пикс.): {1} ({2:0.00}%)</SingleLineWidthExceedingMaximum>
+    <DurationMinimum>Продолжительность - минимальная: {0:0.000} сек.</DurationMinimum>
+    <DurationMaximum>Продолжительность - максимальная: {0:0.000} сек.</DurationMaximum>
+    <DurationAverage>Продолжительность - средняя: {0:0.000} сек.</DurationAverage>
+    <DurationExceedingMinimum>Продолжительность - ниже минимальной ({0:0.###} сек.): {1} ({2:0.00}%)</DurationExceedingMinimum>
+    <DurationExceedingMaximum>Продолжительность - выше максимальной ({0:0.###} сек.): {1} ({2:0.00}%)</DurationExceedingMaximum>
+    <CharactersPerSecondMinimum>Символов/сек. - минимум: {0:0.000}</CharactersPerSecondMinimum>
+    <CharactersPerSecondMaximum>Символов/сек. - максимум: {0:0.000}</CharactersPerSecondMaximum>
+    <CharactersPerSecondAverage>Символов/сек. - в среднем: {0:0.000}</CharactersPerSecondAverage>
+    <CharactersPerSecondExceedingOptimal>Символов/сек. - выше оптимальной ({0:0.##} cps): {1} ({2:0.00}%)</CharactersPerSecondExceedingOptimal>
+    <CharactersPerSecondExceedingMaximum>Символов/сек. - выше максимума ({0:0.##} cps): {1} ({2:0.00}%)</CharactersPerSecondExceedingMaximum>
+    <WordsPerMinuteMinimum>Слов/мин. - минимум: {0:0.000}</WordsPerMinuteMinimum>
+    <WordsPerMinuteMaximum>Слов/мин. - максимум: {0:0.000}</WordsPerMinuteMaximum>
+    <WordsPerMinuteAverage>Слов/мин. - среднее: {0:0.000}</WordsPerMinuteAverage>
+    <WordsPerMinuteExceedingMaximum>Слов/мин. - выше максимума ({0} wpm): {1} ({2:0.00}%)</WordsPerMinuteExceedingMaximum>
+    <GapMinimum>Интервал - минимальный: {0:#,##0} мс</GapMinimum>
+    <GapMaximum>Интервал - максимальный: {0:#,##0} мс</GapMaximum>
+    <GapAverage>Интервал - средний: {0:#,##0.##} мс</GapAverage>
+    <GapExceedingMinimum>Интервал - ниже минимального ({0:#,##0} мс): {1} ({2:0.00}%)</GapExceedingMinimum>
     <Export>Экспорт…</Export>
   </Statistics>
   <SubStationAlphaProperties>
@@ -3084,7 +3230,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <OcrAutoCorrectionSpellChecking>Коррекция OCR / Орфография</OcrAutoCorrectionSpellChecking>
     <FixOcrErrors>Исправить OCR ошибки</FixOcrErrors>
     <ImportTextWithMatchingTimeCodes>Добавление текста с подбором временных меток…</ImportTextWithMatchingTimeCodes>
-    <ImportNewTimeCodes>Добавление новых тайм кодов</ImportNewTimeCodes>
+    <ImportNewTimeCodes>Добавление новых тайм-кодов</ImportNewTimeCodes>
     <SaveSubtitleImageAs>Сохранить изображение субтитра как…</SaveSubtitleImageAs>
     <SaveAllSubtitleImagesAsBdnXml>Сохранить все изображения (png/bdn xml)…</SaveAllSubtitleImagesAsBdnXml>
     <SaveAllSubtitleImagesWithHtml>Сохранить все изображения в индексный HTML файл…</SaveAllSubtitleImagesWithHtml>
@@ -3202,17 +3348,17 @@ https://github.com/SubtitleEdit/subtitleedit
     <ShowWaveformAndSpectrogram>Показать форму сигнала и спектрограмму</ShowWaveformAndSpectrogram>
     <ShowWaveformOnly>Показать только форму сигнала</ShowWaveformOnly>
     <ShowSpectrogramOnly>Показать только спектрограмму</ShowSpectrogramOnly>
-    <AddShotChange>Добавить изменение сцены</AddShotChange>
-    <RemoveShotChange>Удалить изменение сцены</RemoveShotChange>
-    <RemoveShotChangesFromSelection>Удалить изменения сцены из выбранного</RemoveShotChangesFromSelection>
-    <GuessTimeCodes>Распознать таймкоды…</GuessTimeCodes>
+    <AddShotChange>Добавить изменение плана</AddShotChange>
+    <RemoveShotChange>Удалить изменение плана</RemoveShotChange>
+    <RemoveShotChangesFromSelection>Удалить изменения плана из выбранного</RemoveShotChangesFromSelection>
+    <GuessTimeCodes>Распознать тайм-коды…</GuessTimeCodes>
     <SeekSilence>Поиск пауз…</SeekSilence>
     <InsertSubtitleHere>Вставить субтитр здесь…</InsertSubtitleHere>
     <CharsSecX>Симв./сек.: {0:0.00}</CharsSecX>
     <WordsMinX>Слов/мин.: {0:0.00}</WordsMinX>
   </Waveform>
   <WaveformGenerateTimeCodes>
-    <Title>Распознавание таймкодов</Title>
+    <Title>Распознавание тайм-кодов</Title>
     <StartFrom>Начальная позиция</StartFrom>
     <CurrentVideoPosition>Текущая позиция курсора</CurrentVideoPosition>
     <Beginning>С самого начала</Beginning>
@@ -3232,4 +3378,16 @@ https://github.com/SubtitleEdit/subtitleedit
     <Title>WebVTT - установить новый голос</Title>
     <VoiceName>Имя голоса</VoiceName>
   </WebVttNewVoice>
+  <WebVttProperties>
+    <UseXTimeStamp>Использовать значение заголовка X-TIMESTAMP-MAP</UseXTimeStamp>
+    <MergeLines>Объединять строки с одинаковым текстом при загрузке</MergeLines>
+  </WebVttProperties>
+  <WebVttStyleManager>
+    <Title>Стили WebVTT</Title>
+  </WebVttStyleManager>
+  <WhisperAdvanced>
+    <Title>Whisper продвинутый - дополнительные аргументы командной строки</Title>
+    <CommandLineArguments>Дополнительные параметры командной строки Whisper:</CommandLineArguments>
+    <Info>Примечание: различные реализации Whisper отличаются параметрами командной строки!</Info>
+  </WhisperAdvanced>
 </Language>
