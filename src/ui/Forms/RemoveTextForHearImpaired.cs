@@ -157,6 +157,10 @@ namespace Nikse.SubtitleEdit.Forms
             Cursor.Current = Cursors.WaitCursor;
             _removeTextForHiLib.Settings = GetSettings(Subtitle);
             _removeTextForHiLib.Warnings = new List<int>();
+
+            var fileName = GetInterjectionsFileName();
+            _removeTextForHiLib.ReloadInterjection(fileName);
+
             listViewFixes.BeginUpdate();
             listViewFixes.Items.Clear();
             var count = 0;
@@ -310,7 +314,6 @@ namespace Nikse.SubtitleEdit.Forms
                 editInterjections.Initialize(RemoveTextForHI.GetInterjections(fileName));
                 if (editInterjections.ShowDialog(this) == DialogResult.OK)
                 {
-                    //Configuration.Settings.Tools.Interjections = editInterjections.GetInterjectionsSemiColonSeparatedString();
                     SaveInterjections(editInterjections.GetInterjectionList());
 
                     _removeTextForHiLib.ReloadInterjection(fileName);
@@ -392,10 +395,12 @@ namespace Nikse.SubtitleEdit.Forms
                 CustomStart = comboBoxCustomStart.Text,
                 CustomEnd = comboBoxCustomEnd.Text
             };
-            foreach (string item in comboBoxRemoveIfTextContains.Text.Split(new[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries))
+
+            foreach (var item in comboBoxRemoveIfTextContains.Text.Split(new[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries))
             {
                 settings.RemoveIfTextContains.Add(item.Trim());
             }
+
             return settings;
         }
 
