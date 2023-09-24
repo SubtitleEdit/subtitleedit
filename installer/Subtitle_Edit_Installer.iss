@@ -245,6 +245,9 @@ Source: ..\Dictionaries\ita_WordSplitList.txt;     DestDir: {userappdata}\Subtit
 Source: ..\Dictionaries\pol_WordSplitList.txt;     DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist; Components: main
 Source: ..\Dictionaries\spa_WordSplitList.txt;     DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist; Components: main
 Source: ..\Dictionaries\deu_Nouns.txt;             DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist; Components: main
+Source: ..\Dictionaries\da_interjections.xml;      DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist; Components: main
+Source: ..\Dictionaries\en_interjections.xml;      DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist; Components: main
+Source: ..\Dictionaries\es_interjections.xml;      DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist; Components: main
 
 
 Source: ..\Ocr\Latin.db;                           DestDir: {userappdata}\Subtitle Edit\Ocr;          Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
@@ -396,6 +399,9 @@ Type: files;      Name: {app}\Dictionaries\ita_WordSplitList.txt;      Check: Is
 Type: files;      Name: {app}\Dictionaries\pol_WordSplitList.txt;      Check: IsUpgrade()
 Type: files;      Name: {app}\Dictionaries\spa_WordSplitList.txt;      Check: IsUpgrade()
 Type: files;      Name: {app}\Dictionaries\deu_Nouns.txt;              Check: IsUpgrade()
+Type: files;      Name: {app}\Dictionaries\da_interjections.txt;       Check: IsUpgrade()
+Type: files;      Name: {app}\Dictionaries\en_interjections.txt;       Check: IsUpgrade()
+Type: files;      Name: {app}\Dictionaries\es_interjections.txt;       Check: IsUpgrade()
 
 Type: dirifempty; Name: {app}\Dictionaries;                            Check: IsUpgrade()
 Type: files;      Name: {app}\TessData\eng.DangAmbigs;                 Check: IsUpgrade()
