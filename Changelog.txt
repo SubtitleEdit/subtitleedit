@@ -20,11 +20,15 @@
    * Save settings from selected lines unbreak/break - thx David
    * Add simple page up/down for combo-boxes
    * Add access keys for message box buttons - thx Christophe
+   * Use split container in "Break/split long lines" - thx oep42
 * FIXED:
    * Fix for text box when not bold - thx Siamak
    * Fix crash in csv reader - thx Waseem
    * Fix bug in "Remove text for HI" - thx Chamallow
    * Fix find/replace pos - thx Omair
+   * Fix 3 part time code in TTML - thx ms2048
+   * Fix image export simple render center left/right align - thx TheFmC
+   * Fix for merge short lines with dialog - thx taxen 
 
 
 4.0.1 (16th September 2023)
