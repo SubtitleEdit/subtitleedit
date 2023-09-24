@@ -103,6 +103,7 @@
     <Error>오류</Error>
     <Warning>경고</Warning>
     <UseLargerFontForThisWindow>이 창에 더 큰 글꼴 사용</UseLargerFontForThisWindow>
+    <ChangeLanguageFilter>언어 필터 변경...</ChangeLanguageFilter>
   </General>
   <About>
     <Title>* Subtitle Edit 정보</Title>
@@ -2318,6 +2319,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <DefaultFrameRate>기본 프레임 속도</DefaultFrameRate>
     <DefaultFileEncoding>기본 파일 인코딩</DefaultFileEncoding>
     <AutoDetectAnsiEncoding>ANSI 인코딩 자동 검색</AutoDetectAnsiEncoding>
+    <LanguageFilter>언어 필터</LanguageFilter>
     <Profile>프로필</Profile>
     <Profiles>프로필</Profiles>
     <ImportProfiles>프로필 가져오기</ImportProfiles>
