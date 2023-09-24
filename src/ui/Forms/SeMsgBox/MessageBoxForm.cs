@@ -18,7 +18,7 @@ namespace Nikse.SubtitleEdit.Forms.SeMsgBox
             Init(text, caption, buttons, icon);
         }
 
-        private MessageBoxIcon AutoGuessIcon(string text, MessageBoxButtons buttons)
+        private static MessageBoxIcon AutoGuessIcon(string text, MessageBoxButtons buttons)
         {
             if (buttons == MessageBoxButtons.YesNoCancel || text.EndsWith("?"))
             {
@@ -266,7 +266,7 @@ namespace Nikse.SubtitleEdit.Forms.SeMsgBox
                 e.SuppressKeyPress = true;
                 DialogResult = DialogResult.Cancel;
             }
-            if (e.Modifiers == Keys.Control && e.KeyCode == Keys.C)
+            else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.C)
             {
                 e.SuppressKeyPress = true;
                 if (!string.IsNullOrEmpty(_text))
@@ -283,6 +283,8 @@ namespace Nikse.SubtitleEdit.Forms.SeMsgBox
 
         private void MessageBoxForm_Shown(object sender, EventArgs e)
         {
+            BringToFront();
+            Activate();
             if (buttonOK.Visible)
             {
                 buttonOK.Focus();
