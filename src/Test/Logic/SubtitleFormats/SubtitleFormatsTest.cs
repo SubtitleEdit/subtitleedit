@@ -1473,6 +1473,16 @@ and astronauts.“...""
         }
 
         [TestMethod]
+        public void TimedTextDifferentTimeCodes()
+        {
+            var target = new TimedText10();
+            var subtitle = new Subtitle();
+            var raw = "<?xml version=\"1.0\" encoding=\"utf-8\"?><tt xml:lang=\"en-US\" xmlns:ttp=\"http://www.w3.org/ns/ttml#parameter\" xmlns:ttm=\"http://www.w3.org/ns/ttml#metadata\" xmlns=\"http://www.w3.org/ns/ttml\" xmlns:tts=\"https://www.w3.org/ns/ttml#styling\" ttp:version=\"2\">\r\n <head>\r\n </head>\r\n <body>\r\n  <div>\r\n   <p begin=\"00:03:58.918\" end=\"00:03:59.918\">Who are you?</p>\r\n   <p begin=\"00:04:0\" end=\"00:04:3\">My name is merely Ducard,&lt;br/>but I speak for Ra&amp;apos;s al Ghul,</p>\r\n   <p begin=\"00:04:3.08\" end=\"00:04:6.479\">a man greatly feared&lt;br/>by the criminal underworld.</p>\r\n  </div>\r\n </body>\r\n</tt>\r\n";
+            target.LoadSubtitle(subtitle, raw.SplitToLines(), null);
+            Assert.AreEqual(3, subtitle.Paragraphs.Count);
+        }
+
+        [TestMethod]
         public void TimedTextKeepReadNewLineAndAmpersand()
         {
             var target = new TimedText10();
