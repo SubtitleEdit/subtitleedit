@@ -106,16 +106,21 @@
     <ChangeLanguageFilter>Changer de filtre de langue…</ChangeLanguageFilter>
   </General>
   <About>
-    <Title>A propos de Subtitle Edit</Title>
+    <Title>À propos de Subtitle-Edit</Title>
     <AboutText1>
-Subtitle Edit est un logiciel gratuiciel distribué sous licence publique GNU.
+Subtitle-Edit est un logiciel gratuiciel distribué sous licence publique GNU.
 Vous pouvez le distribuer, le modifier et l'utiliser librement.
-Le code source C# est disponible sur GitHub : https://github.com/SubtitleEdit/subtitleedit
+Le code source C# est disponible sur GitHub : https://github.com/SubtitleEdit/subtitleedit
 
-Visitez www.nikse.dk pour obtenir la dernière version.
-Les suggestions sont plus que bienvenues.
+Visitez https://www.nikse.dk pour obtenir la dernière version.
+Toutes les suggestions sont les bienvenues.
 
-Courriel : mailto:nikse.dk@gmail.com et www.colok-traductions.com pour le français.
+Courriel : mailto:nikse.dk@gmail.com pour le programme lui même
+et aussi  : mailto:pierre@levosgien.net pour la traduction française.
+
+Cliquez sur ce lien pour mettre à jour la traduction française sur GitHub :
+https://github.com/SubtitleEdit/subtitleedit/blob/main/src/ui/Languages/fr-FR.xml
+PS : Vous devez vous créer un compte GitHub pour pouvoir faire des modifications !
 .<!-- Ce point a été ajouté (31/08/22), pour mieux cadrer l'affichage du texte --></AboutText1>
   </About>
   <AddToNames>
