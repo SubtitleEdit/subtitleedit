@@ -43,9 +43,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             comboBoxDictionaries.BeginUpdate();
             comboBoxDictionaries.Items.Clear();
-            for (int i = 0; i < _dictionaries.Count; i++)
+            for (var i = 0; i < _dictionaries.Count; i++)
             {
-                TesseractDictionary d = _dictionaries[i];
+                var d = _dictionaries[i];
                 if (!string.IsNullOrEmpty(d.Url))
                 {
                     comboBoxDictionaries.Items.Add(d);
@@ -55,10 +55,12 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     }
                 }
             }
+
             if (comboBoxDictionaries.SelectedIndex < 0)
             {
                 comboBoxDictionaries.SelectedIndex = 0;
             }
+
             comboBoxDictionaries.EndUpdate();
         }
 
@@ -74,8 +76,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void buttonDownload_Click(object sender, EventArgs e)
         {
-            int index = comboBoxDictionaries.SelectedIndex;
-            string url = _dictionaries[index].Url;
+            var index = comboBoxDictionaries.SelectedIndex;
+            var url = _dictionaries[index].Url;
             try
             {
                 labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait;
@@ -138,19 +140,19 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 throw new Exception("No content downloaded - missing file or no internet connection!");
             }
 
-            string dictionaryFolder = Configuration.TesseractDataDirectory;
+            var dictionaryFolder = Configuration.TesseractDataDirectory;
             if (!Directory.Exists(dictionaryFolder))
             {
                 Directory.CreateDirectory(dictionaryFolder);
             }
 
-            int index = comboBoxDictionaries.SelectedIndex;
+            var index = comboBoxDictionaries.SelectedIndex;
             downloadStream.Position = 0;
             var tempFileName = FileUtil.GetTempFileName(".tar");
             using (var fs = new FileStream(tempFileName, FileMode.Create))
             using (var zip = new GZipStream(downloadStream, CompressionMode.Decompress))
             {
-                byte[] buffer = new byte[1024];
+                var buffer = new byte[1024];
                 int nRead;
                 while ((nRead = zip.Read(buffer, 0, buffer.Length)) > 0)
                 {
@@ -162,7 +164,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 foreach (var th in tr.Files)
                 {
-                    string fn = Path.Combine(dictionaryFolder, Path.GetFileName(th.FileName.Trim()));
+                    var fn = Path.Combine(dictionaryFolder, Path.GetFileName(th.FileName.Trim()));
                     th.WriteData(fn);
                 }
             }
@@ -189,12 +191,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 Directory.CreateDirectory(dictionaryFolder);
             }
 
-            int index = comboBoxDictionaries.SelectedIndex;
-
+            var index = comboBoxDictionaries.SelectedIndex;
             using (var fs = new FileStream(Path.Combine(dictionaryFolder, _dictionaryFileName), FileMode.Create))
             {
                 downloadStream.Position = 0;
-                byte[] buffer = new byte[1024];
+                var buffer = new byte[1024];
                 int nRead;
                 while ((nRead = downloadStream.Read(buffer, 0, buffer.Length)) > 0)
                 {
