@@ -51,9 +51,9 @@ namespace Nikse.SubtitleEdit.Core.Translate
             .Replace("</ i>", "</i>");
         }
 
-        public static string PreTranslate(string input, string source)
+        public static string ExpandContractions(string input, string source)
         {
-            string s = FixInvalidCarriageReturnLineFeedCharacters(input);
+            var s = input;
 
             if (source == "en")
             {
@@ -79,14 +79,8 @@ namespace Nikse.SubtitleEdit.Core.Translate
                 s = Regex.Replace(s, @"\b(W|w)ho's ", "$1ho is ");
                 s = Regex.Replace(s, @"\B'(C|c)ause ", "$1ecause "); // \b (word boundary) does not work with '
             }
-            return s;
-        }
 
-        private static string FixInvalidCarriageReturnLineFeedCharacters(string input)
-        {
-            // Fix new line chars (avoid "Specified value has invalid CRLF characters")
-            // See https://github.com/SubtitleEdit/subtitleedit/issues/4589
-            return string.Join(Environment.NewLine, input.SplitToLines()).Trim();
+            return s;
         }
     }
 }

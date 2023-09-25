@@ -63,7 +63,8 @@ namespace Nikse.SubtitleEdit.Core.Translate.Service
                     input.Append(" " + SplitChar + " ");
                 }
 
-                var text = f.SetTagsAndReturnTrimmed(TranslationHelper.PreTranslate(p.Text.Replace(SplitChar.ToString(), string.Empty), sourceLanguage), sourceLanguage);
+                var text = TranslationHelper.ExpandContractions(p.Text, sourceLanguage);
+                text = f.SetTagsAndReturnTrimmed(text, sourceLanguage);
                 text = f.UnBreak(text, p.Text);
                 input.Append(text);
             }

@@ -31,7 +31,7 @@ namespace Nikse.SubtitleEdit.Core.Translate
                 var p = _paragraphs[index];
                 var f = new Formatting();
                 _formattings[index - startIndex] = f;
-                var text = f.SetTagsAndReturnTrimmed(TranslationHelper.PreTranslate(p.Text, sourceLanguage), sourceLanguage);
+                var text = f.SetTagsAndReturnTrimmed(TranslationHelper.ExpandContractions(p.Text, sourceLanguage), sourceLanguage);
                 while (text.Contains(Environment.NewLine + Environment.NewLine))
                     text = text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
                 if (input.Length + text.Length + 3 >= maxBlockSize)
@@ -177,7 +177,7 @@ namespace Nikse.SubtitleEdit.Core.Translate
                 _formattings[index] = f;
                 if (input.Length > 0)
                     input.Append(Environment.NewLine + Environment.NewLine);
-                var text = f.SetTagsAndReturnTrimmed(TranslationHelper.PreTranslate(p.Text, sourceLanguage), sourceLanguage);
+                var text = f.SetTagsAndReturnTrimmed(TranslationHelper.ExpandContractions(p.Text, sourceLanguage), sourceLanguage);
                 while (text.Contains(Environment.NewLine + Environment.NewLine))
                     text = text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
                 text = text.Replace(Environment.NewLine, "\n");

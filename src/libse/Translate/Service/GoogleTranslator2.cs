@@ -61,7 +61,7 @@ namespace Nikse.SubtitleEdit.Core.Translate.Service
                     input.Append("&");
                 }
 
-                var text = f.SetTagsAndReturnTrimmed(TranslationHelper.PreTranslate(p.Text, sourceLanguage), sourceLanguage);
+                var text = f.SetTagsAndReturnTrimmed(TranslationHelper.ExpandContractions(p.Text, sourceLanguage), sourceLanguage);
                 text = f.UnBreak(text, p.Text);
 
                 input.Append("q=" + Utilities.UrlEncode(text));
