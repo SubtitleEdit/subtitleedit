@@ -1,11 +1,11 @@
-﻿using Nikse.SubtitleEdit.Logic;
+﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Forms.Ocr;
+using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Ocr;
 using System;
-using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core.Common;
 using System.IO;
 using System.Linq;
-using Nikse.SubtitleEdit.Forms.Ocr;
+using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -156,7 +156,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonGetTesseractDictionaries_Click(object sender, EventArgs e)
         {
-            using (var form = new GetTesseractDictionaries(comboBoxLanguage.Items.Count == 0))
+            using (var form = new GetTesseractDictionaries())
             {
                 form.ShowDialog(this);
                 Configuration.Settings.VobSubOcr.TesseractLastLanguage = form.ChosenLanguage;
