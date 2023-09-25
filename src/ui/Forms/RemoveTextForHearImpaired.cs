@@ -510,6 +510,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 InitializeLanguageNames(Subtitle);
+                GeneratePreview();
             }
         }
     }
