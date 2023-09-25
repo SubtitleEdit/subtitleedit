@@ -1442,7 +1442,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ShowAvailableFixesStatus(bool applied)
         {
-            labelStatus.ForeColor = DarkTheme.ForeColor;
+            labelStatus.ForeColor = UiUtil.ForeColor;
             if (_totalFixes == 0 && _totalErrors == 0)
             {
                 ShowStatus(_language.NothingToFix);
