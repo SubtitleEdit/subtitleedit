@@ -77,7 +77,7 @@ namespace Nikse.SubtitleEdit.Core.Translate
                 s = Regex.Replace(s, @"\b(W|w)hat's ", "$1hat is ");
                 s = Regex.Replace(s, @"\b(W|w)here's ", "$1here is ");
                 s = Regex.Replace(s, @"\b(W|w)ho's ", "$1ho is ");
-                s = Regex.Replace(s, @"\B'(C|c)ause ", "$1ecause "); // \b (word boundry) does not work with '
+                s = Regex.Replace(s, @"\B'(C|c)ause ", "$1ecause "); // \b (word boundary) does not work with '
             }
             return s;
         }
