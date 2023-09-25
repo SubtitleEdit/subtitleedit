@@ -40,21 +40,21 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             comboBoxDictionaries.UsePopupWindow = true;
         }
 
-        private void LoadDictionaryList(string xmlRessourceName)
+        private void LoadDictionaryList(string xmlResourceName)
         {
             _dictionaryDownloadLinks = new List<string>();
-            _xmlName = xmlRessourceName;
+            _xmlName = xmlResourceName;
             System.Reflection.Assembly asm = System.Reflection.Assembly.GetExecutingAssembly();
-            Stream strm = asm.GetManifestResourceStream(_xmlName);
-            if (strm != null)
+            var stream = asm.GetManifestResourceStream(_xmlName);
+            if (stream != null)
             {
                 comboBoxDictionaries.Items.Clear();
-                XmlDocument doc = new XmlDocument();
-                using (var rdr = new StreamReader(strm))
+                var doc = new XmlDocument();
+                using (var rdr = new StreamReader(stream))
                 using (var zip = new GZipStream(rdr.BaseStream, CompressionMode.Decompress))
                 {
-                    byte[] data = new byte[195000];
-                    int bytesRead = zip.Read(data, 0, data.Length);
+                    var data = new byte[195000];
+                    var bytesRead = zip.Read(data, 0, data.Length);
                     var s = System.Text.Encoding.UTF8.GetString(data, 0, bytesRead).Trim();
                     try
                     {
@@ -68,11 +68,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
                 foreach (XmlNode node in doc.DocumentElement.SelectNodes("Dictionary"))
                 {
-                    string englishName = node.SelectSingleNode("EnglishName").InnerText;
-                    string downloadLink = node.SelectSingleNode("DownloadLink").InnerText;
+                    var englishName = node.SelectSingleNode("EnglishName").InnerText;
+                    var downloadLink = node.SelectSingleNode("DownloadLink").InnerText;
                     if (!string.IsNullOrEmpty(downloadLink))
                     {
-                        string name = englishName;
+                        var name = englishName;
 
                         comboBoxDictionaries.Items.Add(name);
                         _dictionaryDownloadLinks.Add(downloadLink);
@@ -101,8 +101,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             Refresh();
             Cursor = Cursors.WaitCursor;
 
-            int index = comboBoxDictionaries.SelectedIndex;
-            string url = _dictionaryDownloadLinks[index];
+            var index = comboBoxDictionaries.SelectedIndex;
+            var url = _dictionaryDownloadLinks[index];
             ChosenLanguage = comboBoxDictionaries.Items[index].ToString();
 
             try
@@ -232,7 +232,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void linkLabelOpenDictionaryFolder_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            string dictionaryFolder = Configuration.Tesseract302DataDirectory;
+            var dictionaryFolder = Configuration.Tesseract302DataDirectory;
             if (!Directory.Exists(dictionaryFolder))
             {
                 Directory.CreateDirectory(dictionaryFolder);
