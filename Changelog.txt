@@ -22,7 +22,7 @@
    * Add access keys for message box buttons - thx Christophe
    * Use split container in "Break/split long lines" - thx oep42
 * FIXED:
-   * Fix remeber text box settings (bold/size) - thx Siamak
+   * Fix remember text box settings (bold/size) - thx Siamak
    * Fix crash in CSV reader - thx Waseem
    * Fix bug in "Remove text for HI" - thx Chamallow
    * Fix find/replace position - thx Omair
