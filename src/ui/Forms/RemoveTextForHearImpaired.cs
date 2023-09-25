@@ -315,8 +315,6 @@ namespace Nikse.SubtitleEdit.Forms
                 if (editInterjections.ShowDialog(this) == DialogResult.OK)
                 {
                     SaveInterjections(editInterjections.GetInterjectionList());
-
-                    _removeTextForHiLib.ReloadInterjection(fileName);
                     if (checkBoxRemoveInterjections.Checked)
                     {
                         GeneratePreview();
