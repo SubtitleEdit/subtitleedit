@@ -3775,7 +3775,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
         private void buttonMpvOutlineColor_Click(object sender, EventArgs e)
         {
-            using (var colorChooser = new ColorChooser { Color = panelMpvOutlineColor.BackColor, ShowAlpha = false })
+            using (var colorChooser = new ColorChooser { Color = panelMpvOutlineColor.BackColor })
             {
                 if (colorChooser.ShowDialog() == DialogResult.OK)
                 {
@@ -3786,7 +3786,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
         private void buttonMpvBackColor_Click(object sender, EventArgs e)
         {
-            using (var colorChooser = new ColorChooser { Color = panelMpvBackColor.BackColor, ShowAlpha = false })
+            using (var colorChooser = new ColorChooser { Color = panelMpvBackColor.BackColor })
             {
                 if (colorChooser.ShowDialog() == DialogResult.OK)
                 {
