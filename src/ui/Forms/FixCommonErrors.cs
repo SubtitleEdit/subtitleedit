@@ -691,7 +691,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
         }
-        
+
         public bool IsName(string candidate)
         {
             MakeSureNameListIsLoaded();
@@ -817,6 +817,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonNextFinish.Text = _languageGeneral.Ok;
             buttonNextFinish.Enabled = _hasFixesBeenMade || _linesDeletedOrMerged;
             groupBoxStep1.Visible = false;
+            comboBoxLanguage.Enabled = false;
             groupBox2.Visible = true;
             listViewFixes.Sort();
             subtitleListView1.Fill(FixedSubtitle);
@@ -954,7 +955,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var htmlFileName = htmlDiffGenerator.Generate(genItemsProjection);
 
                 UiUtil.OpenFile(htmlFileName);
-                
+
                 e.SuppressKeyPress = true;
             }
             else if (_mainGeneralGoToNextSubtitle == e.KeyData || _mainGeneralGoToNextSubtitlePlayTranslate == e.KeyData)
@@ -1105,6 +1106,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void ButtonBackClick(object sender, EventArgs e)
         {
             buttonNextFinish.Enabled = true;
+            comboBoxLanguage.Enabled = true;
             _totalFixes = 0;
             _onlyListFixes = true;
             buttonBack.Enabled = false;
