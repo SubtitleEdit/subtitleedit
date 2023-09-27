@@ -925,9 +925,10 @@
     <Word from="mehur" to="mjehur" />
     <Word from="mejlovi" to="mailovi" />    
     <Word from="menom" to="mnom" />    
-    <Word from="menjanja" to="mijenjanja" />
-    <Word from="menr" to="mene" />
     <Word from="menjajući" to="mijenjajući" />
+    <Word from="menjanja" to="mijenjanja" />
+    <Word from="menjamo" to="mijenjamo" />
+    <Word from="menr" to="mene" />
     <Word from="merač" to="mjerač" />
     <Word from="meri" to="mjeri" />
     <Word from="mere" to="mjere" />
@@ -1004,6 +1005,7 @@
     <Word from="Naseli" to="Nasjeli" />
     <Word from="naselo" to="nasjelo" />
     <Word from="Naselo" to="Nasjelo" />
+    <Word from="nasljedio" to="naslijedio" />
     <Word from="nauka" to="znanost" />
     <Word from="Nauka" to="Znanost" />
     <Word from="nauke" to="znanosti" />
@@ -1155,6 +1157,7 @@
     <Word from="obuči" to="obući" />
     <Word from="obožavateljka" to="obožavateljica" />
     <Word from="obuhvata" to="obuhvaća" />
+    <Word from="Očistiću" to="Očistit ću" />
     <Word from="odandje" to="odande" />
     <Word from="odavdje" to="odavde" />
     <Word from="Odavdje" to="Odavde" />
@@ -1394,6 +1397,7 @@
     <Word from="Pokušaču" to="Pokušat ću" />
     <Word from="Pokušaćemo" to="Pokušat ćemo" />
     <Word from="pokušaćemo" to="pokušat ćemo" />
+    <Word from="Pokušačeš" to="Pokušat ćeš" />
     <Word from="pokolenja" to="pokoljenja" />
     <Word from="pokolenju" to="pokoljenju" />
     <Word from="pokolenjima" to="pokoljenjima" />
@@ -1404,6 +1408,7 @@
     <Word from="pomaći" to="pomaknuti" />
     <Word from="pomaknim" to="pomaknem" />
     <Word from="pomaknio" to="pomaknuo" />
+    <Word from="Pomaknio" to="Pomaknuo" />
     <Word from="pomakniš" to="pomakneš" />
     <Word from="pomakniti" to="pomaknuti" />
     <Word from="pomenu" to="spomenu" />
@@ -2123,6 +2128,7 @@
     <Word from="telom" to="tijelom" />
     <Word from="terajte" to="tjerajte" />
     <Word from="testenina" to="tjestenina" />
+    <Word from="testenine" to="tjestenine" />
     <Word from="testeninu" to="tjesteninu" />
     <Word from="tešio" to="tješio" />
     <Word from="tešiš" to="tješiš" />
@@ -3207,6 +3213,7 @@
 <Word from="pribiižavanju" to="približavanju" />
 <Word from="pričijiva" to="pričljiva" />
 <Word from="prijateijski" to="prijateljski" />
+<Word from="prodavac" to="prodavač" />
 <Word from="prodavaonlca" to="prodavaonica" />
 <Word from="promišijena" to="promišljena" />
 <Word from="prošiost" to="prošlost" />
