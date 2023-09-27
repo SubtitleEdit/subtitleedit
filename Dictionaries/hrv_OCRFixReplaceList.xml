@@ -1025,6 +1025,7 @@
     <Word from="nasreću" to="na sreću" />
     <Word from="neam" to="nema" />
     <Word from="Neam" to="Nema" />
+    <Word from="nebezbedan" to="nesiguran" />
     <Word from="nebezbedno" to="nesigurno" />
     <Word from="nebi" to="ne bi" />
     <Word from="nebih" to="ne bih" />
@@ -1093,6 +1094,7 @@
     <Word from="nikakave" to="nikakve" />
     <Word from="niko" to="nitko" />
     <Word from="Niko" to="Nitko" />
+    <Word from="nipodištava" to="omalovažava" />
     <Word from="nisma" to="nisam" />
     <Word from="Nisma" to="Nisam" />
     <Word from="nećš" to="nećeš" />
@@ -1518,6 +1520,7 @@
     <Word from="preneti" to="prenijeti" />
     <Word from="preporuča" to="preporučuje" />
     <Word from="preseći" to="presjeći" />
+    <Word from="Preseći" to="Presjeći" />   
     <Word from="prestonica" to="prijestolnica" />
     <Word from="prestupnik" to="prijestupnik" />
     <Word from="preti" to="prijeti" />
@@ -1743,6 +1746,7 @@
     <Word from="rokenrol" to="rock'n'roll" />
     <Word from="ronioc" to="ronilac" />
     <Word from="saglasili" to="suglasili" />
+    <Word from="Sagradiću" to="Sagradit ću" />
     <Word from="Sakriću" to="Sakrit ću" />
     <Word from="sakriću" to="sakrit ću" />
     <Word from="samosvest" to="samosvijest" />
@@ -2708,6 +2712,7 @@
     <Word from="Keren" to="Karen" />
     <Word from="Kerol" to="Carol" />
     <Word from="Kerolajn" to="Caroline" />
+    <Word from="Klajd" to="Clide" />
     <Word from="Klajv" to="Clive" />
     <Word from="Klajva" to="Clivea" />
     <Word from="Klajve" to="Clive" />
