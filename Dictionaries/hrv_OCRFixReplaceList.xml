@@ -1895,6 +1895,7 @@
     <Word from="smešiš" to="smiješiš" />
     <Word from="smeškaš" to="smješkaš" />
     <Word from="smeškom" to="smješkom" />
+    <Word from="Smijaću" to="Smijat ću" />
     <Word from="smijaću" to="smijat ću" />
     <Word from="smjeo" to="smio" />
     <Word from="smrdeo" to="smrdio" />
@@ -2218,6 +2219,7 @@
     <Word from="umrijećeš" to="umrijet ćeš" />
     <Word from="umrijećete" to="umrijet ćete" />
     <Word from="Umrijećete" to="Umrijet ćete" />
+    <Word from="umrevši" to="umrijevši" />
     <Word from="Uneću" to="Unijet ću" />
     <Word from="univerzitet" to="sveučilište" />
     <Word from="univerzitetu" to="sveučilištu" />
@@ -2700,6 +2702,7 @@
     <Word from="Ilejn" to="Elaine" />
     <Word from="Isak" to="Isaac" />
     <Word from="Ist" to="East" />
+    <Word from="Istvud" to="Eastwood" />
     <Word from="Židovin" to="Židov" />
     <Word from="Johni" to="Johnny" />
     <Word from="Judžin" to="Eugene" />
