@@ -103,6 +103,7 @@
     <Error>错误</Error>
     <Warning>警告</Warning>
     <UseLargerFontForThisWindow>在此窗口使用更大的字体</UseLargerFontForThisWindow>
+    <ChangeLanguageFilter>修改语言筛选器...</ChangeLanguageFilter>
   </General>
   <About>
     <Title>关于 Subtitle Edit</Title>
