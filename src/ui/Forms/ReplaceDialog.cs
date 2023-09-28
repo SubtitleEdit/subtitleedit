@@ -385,5 +385,25 @@ namespace Nikse.SubtitleEdit.Forms
             labelFindReplaceIn.Enabled = allowReplaceInOriginal;
             comboBoxFindReplaceIn.Enabled = allowReplaceInOriginal;
         }
+
+        private void ReplaceDialog_Shown(object sender, EventArgs e)
+        {
+            BringToFront();
+            Activate();
+            if (comboBoxFind.Visible)
+            {
+                comboBoxFind.Focus();
+            }
+            else
+            {
+                textBoxFind.Focus();
+            }
+
+            TaskDelayHelper.RunDelayed(TimeSpan.FromMilliseconds(10), () =>
+            {
+                BringToFront();
+                Activate();
+            });
+        }
     }
 }
