@@ -305,6 +305,7 @@
     <Word from="Djete" to="Dijete" />
     <Word from="detektuje" to="detektira" />
     <Word from="doadj" to="dodaj" />
+    <Word from="doazi" to="dolazi" />
     <Word from="dobijao" to="dobivao" />
     <Word from="dobijati" to="dobivati" />
     <Word from="docnije" to="kasnije" />
@@ -998,6 +999,7 @@
     <Word from="nalevo" to="nalijevo" />
     <Word from="nanevši" to="nanjevši" />
     <Word from="nanjeli" to="nanijeli" />
+    <Word from="nanjelo" to="nanijelo" />
     <Word from="napastvuje" to="napastuje" />
     <Word from="naplačivati" to="naplaćivati" />
     <Word from="Napolje" to="Van" />
@@ -1566,6 +1568,8 @@
     <Word from="prineo" to="prinio" />
     <Word from="Prineo" to="Prinio" />
     <Word from="pripovetke" to="pripovjetke" />
+    <Word from="pripoveda" to="pripovijeda" />
+    <Word from="pripovedala" to="pripovijedala" />
     <Word from="privilegovan" to="privilegiran" />
     <Word from="privilegovani" to="privilegirani" />
     <Word from="prjevoz" to="prijevoz" />
@@ -2565,6 +2569,8 @@
     <Word from="Alis" to="Alice" />
     <Word from="Ajk" to="Ike" />
     <Word from="Ajku" to="Ikeu" />
+    <Word from="Ajova" to="Iowa" />
+    <Word from="Ajove" to="Iowe" />
     <Word from="Ajrin" to="Irene" />
     <Word from="Ajris" to="Iris" />
     <Word from="Ajron" to="Iron" />
