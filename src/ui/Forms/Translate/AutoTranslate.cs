@@ -1,9 +1,9 @@
 ﻿using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Core.AutoTranslate;
 using Nikse.SubtitleEdit.Core.Common;
-using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Core.Translate;
 using Nikse.SubtitleEdit.Logic;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -14,16 +14,15 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 {
     public sealed partial class AutoTranslate : Form
     {
-        public Subtitle TranslatedSubtitle { get; private set; }
-        private Subtitle _subtitle;
-        private Encoding _encoding;
-        private SubtitleFormat _subtitleFormat;
-        private IAutoTranslator _autoTranslator;
+        public Subtitle TranslatedSubtitle { get; }
+        private readonly Subtitle _subtitle;
+        private readonly Encoding _encoding;
+        private readonly IAutoTranslator _autoTranslator;
         private int _translationProgressIndex = -1;
         private bool _translationProgressDirty = true;
         private bool _breakTranslation;
 
-        public AutoTranslate(Subtitle subtitle, Subtitle selectedLines, string title, Encoding encoding, SubtitleFormat subtitleFormat)
+        public AutoTranslate(Subtitle subtitle, Subtitle selectedLines, string title, Encoding encoding)
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
@@ -62,7 +61,6 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             progressBar1.Visible = false;
             _subtitle = new Subtitle(subtitle);
             _encoding = encoding;
-            _subtitleFormat = subtitleFormat;
 
             if (selectedLines != null)
             {
@@ -211,7 +209,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             return uiCultureTargetLanguage;
         }
 
-        private void AutoTranslate_Resize(object sender, System.EventArgs e)
+        private void AutoTranslate_Resize(object sender, EventArgs e)
         {
             var width = (Width / 2) - (subtitleListViewSource.Left * 3) + 19;
             subtitleListViewSource.Width = width;
@@ -234,7 +232,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             progressBar1.Width = subtitleListViewTarget.Width - (progressBar1.Left - subtitleListViewTarget.Left);
         }
 
-        private async void buttonTranslate_Click(object sender, System.EventArgs e)
+        private async void buttonTranslate_Click(object sender, EventArgs e)
         {
             if (buttonTranslate.Text == LanguageSettings.Current.General.Cancel)
             {
@@ -261,7 +259,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             _autoTranslator.Initialize(nikseComboBoxUrl.Text);
 
             var timerUpdate = new Timer();
-            timerUpdate.Interval = 1000;
+            timerUpdate.Interval = 1500;
             timerUpdate.Tick += TimerUpdate_Tick;
             timerUpdate.Start();
 
@@ -269,11 +267,76 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 comboBoxTarget.SelectedItem is TranslationPair target)
             {
                 var start = subtitleListViewTarget.SelectedIndex >= 0 ? subtitleListViewTarget.SelectedIndex : 0;
-                for (var index = start; index < _subtitle.Paragraphs.Count; index++)
+                var index = start;
+                while (index < _subtitle.Paragraphs.Count)
                 {
                     var p = _subtitle.Paragraphs[index];
+
+                    var mergeCount = 0;
+                    var allItalic = false;
+                    var allBold = false;
+
+                    var text = string.Empty;
+                    if (MergeWithThreeNext(_subtitle, index, source.Code))
+                    {
+                        mergeCount = 3;
+                        allItalic = HasAllLinesTag(_subtitle, index, mergeCount, "i");
+                        allBold = HasAllLinesTag(_subtitle, index, mergeCount, "b");
+                        text = MergeLines(_subtitle, index, mergeCount, allItalic, allBold);
+                    }
+                    else if (MergeWithTwoNext(_subtitle, index, source.Code))
+                    {
+                        mergeCount = 2;
+                        allItalic = HasAllLinesTag(_subtitle, index, mergeCount, "i");
+                        allBold = HasAllLinesTag(_subtitle, index, mergeCount, "b");
+                        text = MergeLines(_subtitle, index, mergeCount, allItalic, allBold);
+                    }
+                    else if (MergeWithNext(_subtitle, index, source.Code))
+                    {
+                        mergeCount = 1;
+                        allItalic = HasAllLinesTag(_subtitle, index, mergeCount, "i");
+                        allBold = HasAllLinesTag(_subtitle, index, mergeCount, "b");
+                        text = MergeLines(_subtitle, index, mergeCount, allItalic, allBold);
+                    }
+
+                    if (mergeCount > 0)
+                    {
+                        var mergedTranslation = await _autoTranslator.Translate(text, source.Code, target.Code);
+                        var result = SplitResult(mergedTranslation.SplitToLines(), mergeCount, source.Code);
+                        if (allItalic)
+                        {
+                            for (var k = 0; k < result.Count; k++)
+                            {
+                                result[k] = "<i>" + result[k] + "</i>";
+                            }
+                        }
+
+                        if (allBold)
+                        {
+                            for (var k = 0; k < result.Count; k++)
+                            {
+                                result[k] = "<b>" + result[k] + "</b>";
+                            }
+                        }
+
+                        if (result.Count == mergeCount + 1 && result.All(t => !string.IsNullOrEmpty(t)))
+                        {
+                            foreach (var line in result)
+                            {
+                                TranslatedSubtitle.Paragraphs[index].Text = line;
+                                index++;
+                            }
+
+                            continue;
+                        }
+                    }
+
                     var translation = await _autoTranslator.Translate(p.Text, source.Code, target.Code);
-                    TranslatedSubtitle.Paragraphs[index].Text = translation;
+                    translation = translation
+                        .Replace("<br />", Environment.NewLine)
+                        .Replace("<br/>", Environment.NewLine);
+                    TranslatedSubtitle.Paragraphs[index].Text = Utilities.AutoBreakLine(translation);
+
                     _translationProgressIndex = index;
                     _translationProgressDirty = true;
                     progressBar1.Value = index;
@@ -282,6 +345,8 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                     {
                         break;
                     }
+
+                    index++;
                 }
             }
 
@@ -292,7 +357,8 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             buttonOK.Enabled = true;
             buttonCancel.Enabled = true;
             _breakTranslation = false;
-            buttonTranslate.Text = LanguageSettings.Current.General.Cancel;
+            buttonTranslate.Enabled = true;
+            buttonTranslate.Text = LanguageSettings.Current.GoogleTranslate.Translate;
 
             timerUpdate.Dispose();
             _translationProgressDirty = true;
@@ -302,7 +368,222 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             buttonOK.Focus();
         }
 
-        private void TimerUpdate_Tick(object sender, System.EventArgs e)
+        private static List<string> SplitResult(List<string> result, int mergeCount, string language)
+        {
+            if (result.Count != 1)
+            {
+                return result;
+            }
+
+            if (mergeCount == 1)
+            {
+                var arr = Utilities.AutoBreakLine(result[0], 84, 1, language).SplitToLines();
+                if (arr.Count == 1)
+                {
+                    arr = Utilities.AutoBreakLine(result[0], 42, 1, language).SplitToLines();
+                }
+
+                if (arr.Count == 1)
+                {
+                    arr = Utilities.AutoBreakLine(result[0], 22, 1, language).SplitToLines();
+                }
+
+                if (arr.Count == 2)
+                {
+                    return new List<string>
+                    {
+                        Utilities.AutoBreakLine(arr[0], 42, language == "zh" ? 0 : 25, language),
+                        Utilities.AutoBreakLine(arr[1], 42, language == "zh" ? 0 : 25, language),
+                    };
+                }
+
+                if (arr.Count == 1)
+                {
+                    return new List<string>
+                    {
+                        Utilities.AutoBreakLine(arr[0], 42, language == "zh" ? 0 : 25, language),
+                        string.Empty,
+                    };
+                }
+
+                return result;
+            }
+
+            if (mergeCount == 2)
+            {
+                var arr = SplitHelper.SplitToXLines(3, result[0], 84).ToArray();
+
+                if (arr.Length == 3)
+                {
+                    return new List<string>
+                    {
+                        Utilities.AutoBreakLine(arr[0], 42, language == "zh" ? 0 : 25, language),
+                        Utilities.AutoBreakLine(arr[1], 42, language == "zh" ? 0 : 25, language),
+                        Utilities.AutoBreakLine(arr[2], 42, language == "zh" ? 0 : 25, language),
+                    };
+                }
+
+                if (arr.Length == 2)
+                {
+                    return new List<string>
+                    {
+                        Utilities.AutoBreakLine(arr[0], 42, language == "zh" ? 0 : 25, language),
+                        Utilities.AutoBreakLine(arr[1], 42, language == "zh" ? 0 : 25, language),
+                        string.Empty,
+                    };
+                }
+
+                if (arr.Length == 1)
+                {
+                    return new List<string>
+                    {
+                        Utilities.AutoBreakLine(arr[0], 42, language == "zh" ? 0 : 25, language),
+                        string.Empty,
+                        string.Empty,
+                    };
+                }
+
+                return result;
+            }
+
+            if (mergeCount == 3)
+            {
+                var arr = SplitHelper.SplitToXLines(4, result[0], 84).ToArray();
+
+                if (arr.Length == 4)
+                {
+                    return new List<string>
+                    {
+                        Utilities.AutoBreakLine(arr[0], 42, language == "zh" ? 0 : 25, language),
+                        Utilities.AutoBreakLine(arr[1], 42, language == "zh" ? 0 : 25, language),
+                        Utilities.AutoBreakLine(arr[2], 42, language == "zh" ? 0 : 25, language),
+                        Utilities.AutoBreakLine(arr[3], 42, language == "zh" ? 0 : 25, language),
+                    };
+                }
+
+                if (arr.Length == 3)
+                {
+                    return new List<string>
+                    {
+                        Utilities.AutoBreakLine(arr[0], 42, language == "zh" ? 0 : 25, language),
+                        Utilities.AutoBreakLine(arr[1], 42, language == "zh" ? 0 : 25, language),
+                        Utilities.AutoBreakLine(arr[2], 42, language == "zh" ? 0 : 25, language),
+                        string.Empty,
+                    };
+                }
+
+                if (arr.Length == 2)
+                {
+                    return new List<string>
+                    {
+                        Utilities.AutoBreakLine(arr[0], 42, language == "zh" ? 0 : 25, language),
+                        Utilities.AutoBreakLine(arr[1], 42, language == "zh" ? 0 : 25, language),
+                        string.Empty,
+                        string.Empty,
+                    };
+                }
+
+                if (arr.Length == 1)
+                {
+                    return new List<string>
+                    {
+                        Utilities.AutoBreakLine(arr[0], 42, language == "zh" ? 0 : 25, language),
+                        string.Empty,
+                        string.Empty,
+                        string.Empty,
+                    };
+                }
+
+                return result;
+            }
+
+            return result;
+        }
+
+        private static bool MergeWithNext(Subtitle subtitle, int i, string source)
+        {
+            if (i + 1 >= subtitle.Paragraphs.Count || source.ToLowerInvariant() == "zh" || source.ToLowerInvariant() == "ja")
+            {
+                return false;
+            }
+
+            var p = subtitle.Paragraphs[i];
+            var text = HtmlUtil.RemoveHtmlTags(p.Text, true).TrimEnd('"');
+            if (text.EndsWith(".", StringComparison.Ordinal) ||
+                text.EndsWith("!", StringComparison.Ordinal) ||
+                text.EndsWith("?", StringComparison.Ordinal))
+            {
+                return false;
+            }
+
+            var next = subtitle.Paragraphs[i + 1];
+            return next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds < 500;
+        }
+
+        private static bool HasAllLinesTag(Subtitle subtitle, int i, int mergeCount, string tag)
+        {
+            for (var j = i; j < subtitle.Paragraphs.Count && j <= i + mergeCount; j++)
+            {
+                var text = subtitle.Paragraphs[j].Text.Trim();
+                if (!text.StartsWith("<" + tag + ">") && !text.EndsWith("</" + tag + ">"))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private static bool MergeWithTwoNext(Subtitle subtitle, int i, string source)
+        {
+            if (i + 2 >= subtitle.Paragraphs.Count || source.ToLowerInvariant() == "zh" || source.ToLowerInvariant() == "ja")
+            {
+                return false;
+            }
+
+            return MergeWithNext(subtitle, i, source) && MergeWithNext(subtitle, i + 1, source);
+        }
+
+        private static bool MergeWithThreeNext(Subtitle subtitle, int i, string source)
+        {
+            if (i + 3 >= subtitle.Paragraphs.Count || source.ToLowerInvariant() == "zh" || source.ToLowerInvariant() == "ja")
+            {
+                return false;
+            }
+
+            return MergeWithNext(subtitle, i, source) && MergeWithNext(subtitle, i + 1, source) && MergeWithNext(subtitle, i + 2, source);
+        }
+
+        private static string MergeLines(Subtitle subtitle, int i, int mergeCount, bool italic, bool bold)
+        {
+            var sb = new StringBuilder();
+            for (var j = i; j < subtitle.Paragraphs.Count && j <= i + mergeCount; j++)
+            {
+                var text = subtitle.Paragraphs[j].Text.Trim();
+                sb.AppendLine(RemoveAllLinesTag(text, italic, bold));
+            }
+
+            return Utilities.RemoveLineBreaks(sb.ToString());
+        }
+
+        private static string RemoveAllLinesTag(string text, bool allItalic, bool allBold)
+        {
+            if (allItalic)
+            {
+                text = text.Replace("<i>", string.Empty);
+                text = text.Replace("</i>", string.Empty);
+            }
+
+            if (allBold)
+            {
+                text = text.Replace("<b>", string.Empty);
+                text = text.Replace("</b>", string.Empty);
+            }
+
+            return text;
+        }
+
+        private void TimerUpdate_Tick(object sender, EventArgs e)
         {
             UpdateTranslation();
         }
@@ -321,18 +602,18 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             subtitleListViewTarget.EndUpdate();
         }
 
-        private void AutoTranslate_ResizeEnd(object sender, System.EventArgs e)
+        private void AutoTranslate_ResizeEnd(object sender, EventArgs e)
         {
             AutoTranslate_Resize(null, null);
         }
 
-        private void buttonOK_Click(object sender, System.EventArgs e)
+        private void buttonOK_Click(object sender, EventArgs e)
         {
             var isEmpty = TranslatedSubtitle == null || TranslatedSubtitle.Paragraphs.All(p => string.IsNullOrEmpty(p.Text));
             DialogResult = isEmpty ? DialogResult.Cancel : DialogResult.OK;
         }
 
-        private void buttonCancel_Click(object sender, System.EventArgs e)
+        private void buttonCancel_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.Cancel;
         }
