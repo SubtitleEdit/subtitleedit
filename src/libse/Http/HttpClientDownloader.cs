@@ -34,7 +34,7 @@ namespace Nikse.SubtitleEdit.Core.Http
         public Task<string> GetStringAsync(string url)
         {
             var response = _httpClient.GetByteArrayAsync(url).Result;
-            return Task.FromResult(Encoding.UTF8.GetString(response, 0, response.Length - 1));
+            return Task.FromResult(Encoding.UTF8.GetString(response, 0, response.Length));
         }
 
         public async Task DownloadAsync(string requestUri, Stream destination, IProgress<float> progress = null, CancellationToken cancellationToken = default)
