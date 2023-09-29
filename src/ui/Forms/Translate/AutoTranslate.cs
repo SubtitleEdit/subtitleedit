@@ -20,7 +20,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
         private SubtitleFormat _subtitleFormat;
         private IAutoTranslator _autoTranslator;
         private int _translationProgressIndex = -1;
-        private bool _translationProgressDirty;
+        private bool _translationProgressDirty = true;
         private bool _breakTranslation;
 
         public AutoTranslate(Subtitle subtitle, Subtitle selectedLines, string title, Encoding encoding, SubtitleFormat subtitleFormat)
@@ -56,6 +56,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             nikseComboBoxUrl.Items.Add("https://winstxnhdw-nllb-api.hf.space/api/v2/");
             nikseComboBoxUrl.Items.Add("http://localhost:7860/api/v2/");
             nikseComboBoxUrl.SelectedIndex = 0;
+            nikseComboBoxUrl.UsePopupWindow = true;
 
             labelPleaseWait.Visible = false;
             progressBar1.Visible = false;
@@ -83,6 +84,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
             _autoTranslator = new AutoTranslator();
             SetupLanguageSettings();
+            UpdateTranslation();
         }
 
         private void SetupLanguageSettings()
@@ -223,6 +225,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             labelSource.Left = comboBoxSource.Left - 5 - labelSource.Width;
 
             subtitleListViewTarget.Left = width + (subtitleListViewSource.Left * 2);
+            subtitleListViewTarget.Width = Width - subtitleListViewTarget.Left - 32;
             labelTarget.Left = subtitleListViewTarget.Left;
             comboBoxTarget.Left = labelTarget.Left + labelTarget.Width + 5;
             buttonTranslate.Left = comboBoxTarget.Left + comboBoxTarget.Width + 9;
@@ -249,6 +252,12 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             _breakTranslation = false;
             buttonTranslate.Text = LanguageSettings.Current.General.Cancel;
 
+            progressBar1.Minimum = 0;
+            progressBar1.Value = 0;
+            progressBar1.Maximum = TranslatedSubtitle.Paragraphs.Count;
+            progressBar1.Visible = true;
+            labelPleaseWait.Visible = true;
+
             _autoTranslator.Initialize(nikseComboBoxUrl.Text);
 
             var timerUpdate = new Timer();
@@ -259,13 +268,15 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             if (comboBoxSource.SelectedItem is TranslationPair source &&
                 comboBoxTarget.SelectedItem is TranslationPair target)
             {
-                for (var index = 0; index < _subtitle.Paragraphs.Count; index++)
+                var start = subtitleListViewTarget.SelectedIndex >= 0 ? subtitleListViewTarget.SelectedIndex : 0;
+                for (var index = start; index < _subtitle.Paragraphs.Count; index++)
                 {
                     var p = _subtitle.Paragraphs[index];
                     var translation = await _autoTranslator.Translate(p.Text, source.Code, target.Code);
                     TranslatedSubtitle.Paragraphs[index].Text = translation;
                     _translationProgressIndex = index;
                     _translationProgressDirty = true;
+                    progressBar1.Value = index;
                     Application.DoEvents();
                     if (_breakTranslation)
                     {
@@ -276,6 +287,8 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
             timerUpdate.Stop();
 
+            progressBar1.Visible = false;
+            labelPleaseWait.Visible = false;
             buttonOK.Enabled = true;
             buttonCancel.Enabled = true;
             _breakTranslation = false;
@@ -306,6 +319,22 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             _translationProgressDirty = true;
             subtitleListViewTarget.SelectIndexAndEnsureVisible(_translationProgressIndex);
             subtitleListViewTarget.EndUpdate();
+        }
+
+        private void AutoTranslate_ResizeEnd(object sender, System.EventArgs e)
+        {
+            AutoTranslate_Resize(null, null);
+        }
+
+        private void buttonOK_Click(object sender, System.EventArgs e)
+        {
+            var isEmpty = TranslatedSubtitle == null || TranslatedSubtitle.Paragraphs.All(p => string.IsNullOrEmpty(p.Text));
+            DialogResult = isEmpty ? DialogResult.Cancel : DialogResult.OK;
+        }
+
+        private void buttonCancel_Click(object sender, System.EventArgs e)
+        {
+            DialogResult = DialogResult.Cancel;
         }
     }
 }

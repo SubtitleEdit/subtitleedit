@@ -63,22 +63,24 @@
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(817, 528);
+            this.buttonCancel.Location = new System.Drawing.Point(971, 528);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 102;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
+            this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
             // 
             // buttonOK
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonOK.Location = new System.Drawing.Point(736, 528);
+            this.buttonOK.Location = new System.Drawing.Point(890, 528);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 101;
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
+            this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
             // 
             // buttonTranslate
             // 
@@ -130,7 +132,7 @@
             this.nikseComboBoxUrl.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.nikseComboBoxUrl.DropDownHeight = 400;
             this.nikseComboBoxUrl.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.nikseComboBoxUrl.DropDownWidth = 121;
+            this.nikseComboBoxUrl.DropDownWidth = 280;
             this.nikseComboBoxUrl.FormattingEnabled = true;
             this.nikseComboBoxUrl.Location = new System.Drawing.Point(56, 528);
             this.nikseComboBoxUrl.MaxLength = 32767;
@@ -138,7 +140,7 @@
             this.nikseComboBoxUrl.SelectedIndex = -1;
             this.nikseComboBoxUrl.SelectedItem = null;
             this.nikseComboBoxUrl.SelectedText = "";
-            this.nikseComboBoxUrl.Size = new System.Drawing.Size(386, 21);
+            this.nikseComboBoxUrl.Size = new System.Drawing.Size(280, 21);
             this.nikseComboBoxUrl.TabIndex = 105;
             this.nikseComboBoxUrl.UsePopupWindow = false;
             // 
@@ -234,7 +236,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(904, 563);
+            this.ClientSize = new System.Drawing.Size(1058, 563);
             this.Controls.Add(this.labelUrl);
             this.Controls.Add(this.nikseComboBoxUrl);
             this.Controls.Add(this.labelTarget);
@@ -249,11 +251,13 @@
             this.Controls.Add(this.subtitleListViewTarget);
             this.Controls.Add(this.subtitleListViewSource);
             this.KeyPreview = true;
+            this.MinimumSize = new System.Drawing.Size(900, 480);
             this.Name = "AutoTranslate";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "AutoTranslate";
+            this.ResizeEnd += new System.EventHandler(this.AutoTranslate_ResizeEnd);
             this.Resize += new System.EventHandler(this.AutoTranslate_Resize);
             this.ResumeLayout(false);
             this.PerformLayout();
