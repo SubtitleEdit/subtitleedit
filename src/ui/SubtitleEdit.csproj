@@ -646,6 +646,12 @@
     <Compile Include="Forms\TimedTextSmpteTiming.Designer.cs">
       <DependentUpon>TimedTextSmpteTiming.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Translate\AutoTranslate.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Translate\AutoTranslate.Designer.cs">
+      <DependentUpon>AutoTranslate.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Translate\GenericTranslate.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1867,6 +1873,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\TimedTextSmpteTiming.resx">
       <DependentUpon>TimedTextSmpteTiming.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Translate\AutoTranslate.resx">
+      <DependentUpon>AutoTranslate.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Translate\GenericTranslate.resx">
       <DependentUpon>GenericTranslate.cs</DependentUpon>
