@@ -35841,7 +35841,7 @@ namespace Nikse.SubtitleEdit.Forms
             bool isOriginalVisible = SubtitleListview1.IsOriginalTextColumnVisible;
             ReloadFromSourceView();
             string title = string.Empty;
-            using (var autoTranslate = new AutoTranslate(_subtitle, null, title, GetCurrentEncoding(), GetCurrentSubtitleFormat()))
+            using (var autoTranslate = new AutoTranslate(_subtitle, null, title, GetCurrentEncoding()))
             {
                 SaveSubtitleListviewIndices();
 
