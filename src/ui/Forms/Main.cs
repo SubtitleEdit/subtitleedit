@@ -35823,5 +35823,96 @@ namespace Nikse.SubtitleEdit.Forms
 
             Configuration.Settings.General.Undocked = false;
         }
+
+        private void autotranslateNLLBToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var onlySelectedLines = false;
+            MakeAutoTranslate(onlySelectedLines);
+        }
+
+        private void MakeAutoTranslate(bool onlySelectedLines)
+        {
+            if (!IsSubtitleLoaded)
+            {
+                DisplaySubtitleNotLoadedMessage();
+                return;
+            }
+
+            bool isOriginalVisible = SubtitleListview1.IsOriginalTextColumnVisible;
+            ReloadFromSourceView();
+            string title = string.Empty;
+            using (var autoTranslate = new AutoTranslate(_subtitle, null, title, GetCurrentEncoding(), GetCurrentSubtitleFormat()))
+            {
+                SaveSubtitleListviewIndices();
+
+                if (autoTranslate.ShowDialog(this) == DialogResult.OK)
+                {
+                    _subtitleListViewIndex = -1;
+                    string oldFileName = _fileName;
+                    MakeHistoryForUndo(_language.BeforeGoogleTranslation);
+                    if (onlySelectedLines)
+                    {
+                        // we only update selected lines
+                        int i = 0;
+                        foreach (int index in SubtitleListview1.SelectedIndices)
+                        {
+                            _subtitle.Paragraphs[index].Text = autoTranslate.TranslatedSubtitle.Paragraphs[i].Text;
+                            i++;
+                        }
+
+                        ShowStatus(_language.SelectedLinesTranslated);
+                    }
+                    else
+                    {
+                        ShowSubtitleTimer.Stop();
+                        var oldHash = _changeSubtitleHash;
+                        _subtitleOriginal = new Subtitle(_subtitle);
+                        _subtitleOriginalFileName = _fileName;
+                        _fileName = null;
+                        _subtitle.Paragraphs.Clear();
+                        foreach (var p in autoTranslate.TranslatedSubtitle.Paragraphs)
+                        {
+                            _subtitle.Paragraphs.Add(new Paragraph(p));
+                        }
+
+                        SetAssaResolution(_subtitleOriginal);
+                        ShowStatus(_language.SubtitleTranslated);
+                        _changeOriginalSubtitleHash = oldHash;
+                        _changeSubtitleHash = -1;
+                        ShowSubtitleTimer.Start();
+                    }
+
+                    ShowSource();
+
+                    if (!onlySelectedLines)
+                    {
+                        SubtitleListview1.ShowOriginalTextColumn(_languageGeneral.OriginalText);
+                        SubtitleListview1.AutoSizeAllColumns(this);
+                        var oldHash = _changeOriginalSubtitleHash;
+                        SetupOriginalEdit();
+                        _changeOriginalSubtitleHash = oldHash;
+                    }
+
+                    SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
+                    if (!onlySelectedLines)
+                    {
+                        ResetHistory();
+                        //TODO: _fileName = autoTranslate.GetFileNameWithTargetLanguage(oldFileName, _videoFileName, _subtitleOriginal, GetCurrentSubtitleFormat());
+                        _converted = true;
+                    }
+
+                    RestoreSubtitleListviewIndices();
+
+                    SetTitle();
+                    SetEncoding(Encoding.UTF8);
+                    if (!isOriginalVisible)
+                    {
+                        toolStripMenuItemShowOriginalInPreview.Checked = false;
+                        Configuration.Settings.General.ShowOriginalAsPreviewIfAvailable = false;
+                        audioVisualizer.Invalidate();
+                    }
+                }
+            }
+        }
     }
 }

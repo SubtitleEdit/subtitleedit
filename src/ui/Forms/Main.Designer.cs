@@ -578,6 +578,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.timerOriginalTextUndo = new System.Windows.Forms.Timer(this.components);
             this.contextMenuStripShowVideoControls = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItemShowVideoControls = new System.Windows.Forms.ToolStripMenuItem();
+            this.autotranslateNLLBToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -993,15 +994,14 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripButtonSourceView.Text = "Toggle list/source view";
             this.toolStripButtonSourceView.Click += new System.EventHandler(this.ToolStripButtonSourceViewClick);
             // 
-            // toolStripButtonToggleWaveform
+            // toolStripButtonLayout
             // 
             this.toolStripButtonLayout.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.toolStripButtonLayout.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.toolStripButtonLayout.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonToggleWaveform.Image")));
             this.toolStripButtonLayout.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.toolStripButtonLayout.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonLayout.Name = "toolStripButtonLayout";
-            this.toolStripButtonLayout.Size = new System.Drawing.Size(36, 37);
+            this.toolStripButtonLayout.Size = new System.Drawing.Size(23, 37);
             this.toolStripButtonLayout.Text = "Show/hide waveform";
             this.toolStripButtonLayout.Click += new System.EventHandler(this.ToolStripButtonLayoutChooseClick);
             // 
@@ -1013,7 +1013,7 @@ namespace Nikse.SubtitleEdit.Forms
             // toolStripLabelSubtitleFormat
             // 
             this.toolStripLabelSubtitleFormat.Name = "toolStripLabelSubtitleFormat";
-            this.toolStripLabelSubtitleFormat.Size = new System.Drawing.Size(86, 15);
+            this.toolStripLabelSubtitleFormat.Size = new System.Drawing.Size(86, 37);
             this.toolStripLabelSubtitleFormat.Text = "Subtitle format";
             // 
             // comboBoxSubtitleFormats
@@ -2415,6 +2415,11 @@ namespace Nikse.SubtitleEdit.Forms
             this.showhideWaveformToolStripMenuItem.Text = "Show/hide waveform";
             this.showhideWaveformToolStripMenuItem.Click += new System.EventHandler(this.ShowhideWaveformToolStripMenuItemClick);
             // 
+            // showhideVideoToolStripMenuItem
+            // 
+            this.showhideVideoToolStripMenuItem.Name = "showhideVideoToolStripMenuItem";
+            this.showhideVideoToolStripMenuItem.Size = new System.Drawing.Size(295, 22);
+            // 
             // toolStripSeparator19
             // 
             this.toolStripSeparator19.Name = "toolStripSeparator19";
@@ -2500,6 +2505,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.toolStripMenuItemAutoTranslate.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.translateToolStripMenuItem,
+            this.autotranslateNLLBToolStripMenuItem,
             this.autotranslateViaCopypasteToolStripMenuItem,
             this.toolStripSeparator26,
             this.mergeSentencesToolStripMenuItem,
@@ -5853,6 +5859,13 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemShowVideoControls.Text = "Show video controls";
             this.toolStripMenuItemShowVideoControls.Click += new System.EventHandler(this.ToolStripMenuItemShowVideoControlsClick);
             // 
+            // autotranslateNLLBToolStripMenuItem
+            // 
+            this.autotranslateNLLBToolStripMenuItem.Name = "autotranslateNLLBToolStripMenuItem";
+            this.autotranslateNLLBToolStripMenuItem.Size = new System.Drawing.Size(238, 22);
+            this.autotranslateNLLBToolStripMenuItem.Text = "Auto-translate (NLLB)...";
+            this.autotranslateNLLBToolStripMenuItem.Click += new System.EventHandler(this.autotranslateNLLBToolStripMenuItem_Click);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -6470,5 +6483,6 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripMenuItem beautifyTimeCodesOfSelectedLinesToolStripMenuItem;
         private NikseLabel labelAutoDuration;
         private System.Windows.Forms.ToolStripButton toolStripSplitButtonPlayRate;
+        private System.Windows.Forms.ToolStripMenuItem autotranslateNLLBToolStripMenuItem;
     }
 }

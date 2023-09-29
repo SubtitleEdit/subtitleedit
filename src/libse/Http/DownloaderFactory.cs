@@ -10,7 +10,6 @@ namespace Nikse.SubtitleEdit.Core.Http
         public static IDownloader MakeHttpClient()
         {
             var httpClient = new HttpClient(GetHttpClientHandler(Configuration.Settings.Proxy));
-
             if (Configuration.Settings.General.UseLegacyDownloader)
             {
                 return new LegacyDownloader(httpClient);
