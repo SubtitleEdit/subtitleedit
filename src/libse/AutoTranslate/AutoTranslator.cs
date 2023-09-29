@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Core.Http;
+﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Http;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Core.Translate;
 using System;
@@ -6,15 +7,12 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using Nikse.SubtitleEdit.Core.Common;
-using System.Net.Http.Headers;
 
 namespace Nikse.SubtitleEdit.Core.AutoTranslate
 {
     public class AutoTranslator : IAutoTranslator
     {
         private IDownloader _httpClient;
-        private const char SplitChar = '\n';
 
         public string Url => "https://winstxnhdw-nllb-api.hf.space/api/v2/";
 
