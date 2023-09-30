@@ -5,11 +5,14 @@ using Nikse.SubtitleEdit.Core.Translate;
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
+using Timer = System.Windows.Forms.Timer;
 
 namespace Nikse.SubtitleEdit.Forms.Translate
 {
@@ -23,6 +26,11 @@ namespace Nikse.SubtitleEdit.Forms.Translate
         private int _translationProgressIndex = -1;
         private bool _translationProgressDirty = true;
         private bool _breakTranslation;
+        private Process _processNllbServe;
+        private Process _processNllbApi;
+        private Process _processLibreTranslate;
+
+
 
         public AutoTranslate(Subtitle subtitle, Subtitle selectedLines, string title, Encoding encoding)
         {
@@ -130,6 +138,13 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             if (engineType == typeof(NoLanguageLeftBehindServe))
             {
                 nikseComboBoxUrl.Items.Clear();
+
+                var url = Configuration.Settings.Tools.AutoTranslateNllbServeUrl;
+                if (!string.IsNullOrEmpty(url))
+                {
+                    nikseComboBoxUrl.Items.Add(url.TrimEnd('/') + "/");
+                }
+
                 nikseComboBoxUrl.Items.Add("http://127.0.0.1:6060/");
                 nikseComboBoxUrl.Items.Add("http://192.168.8.127:6060/");
                 nikseComboBoxUrl.SelectedIndex = 0;
@@ -141,7 +156,15 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             if (engineType == typeof(NoLanguageLeftBehindApi))
             {
                 nikseComboBoxUrl.Items.Clear();
+
+                var url = Configuration.Settings.Tools.AutoTranslateNllbApiUrl;
+                if (!string.IsNullOrEmpty(url))
+                {
+                    nikseComboBoxUrl.Items.Add(url.TrimEnd('/') + "/");
+                }
+
                 nikseComboBoxUrl.Items.Add("http://localhost:7860/api/v2/");
+                nikseComboBoxUrl.Items.Add("https://winstxnhdw-nllb-api.hf.space/api/v2/");
                 nikseComboBoxUrl.SelectedIndex = 0;
                 nikseComboBoxUrl.Visible = true;
                 labelUrl.Visible = true;
@@ -151,6 +174,13 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             if (engineType == typeof(LibreTranslate))
             {
                 nikseComboBoxUrl.Items.Clear();
+
+                var url = Configuration.Settings.Tools.AutoTranslateLibreUrl;
+                if (!string.IsNullOrEmpty(url))
+                {
+                    nikseComboBoxUrl.Items.Add(url.TrimEnd('/') + "/");
+                }
+
                 nikseComboBoxUrl.Items.Add("http://localhost:5000/");
                 nikseComboBoxUrl.SelectedIndex = 0;
                 nikseComboBoxUrl.Visible = true;
@@ -367,6 +397,50 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             _autoTranslator = GetCurrentEngine();
             _autoTranslator.Initialize();
 
+            var engineType = _autoTranslator.GetType();
+            if (_processNllbServe == null &&
+                Configuration.Settings.Tools.AutoTranslateNllbServeAutoStart &&
+                engineType == typeof(NoLanguageLeftBehindServe))
+            {
+                ShowInfo($"Starting {_autoTranslator.Name} web server...");
+                _processNllbServe = StartNoLanguageLeftBehindServe();
+                for (var i = 0; i < 200; i++)
+                {
+                    Thread.Sleep(10);
+                    Application.DoEvents();
+                }
+
+                labelInfo.Visible = false;
+            }
+            else if (_processNllbApi == null &&
+                     Configuration.Settings.Tools.AutoTranslateNllbApiAutoStart &&
+                     engineType == typeof(NoLanguageLeftBehindApi))
+            {
+                ShowInfo($"Starting {_autoTranslator.Name} web server...");
+                _processNllbApi = StartNoLanguageLeftBehindApi();
+                for (var i = 0; i < 200; i++)
+                {
+                    Thread.Sleep(10);
+                    Application.DoEvents();
+                }
+
+                labelInfo.Visible = false;
+            }
+            else if (_processLibreTranslate == null &&
+                     Configuration.Settings.Tools.AutoTranslateLibreAutoStart &&
+                     engineType == typeof(LibreTranslate))
+            {
+                ShowInfo($"Starting {_autoTranslator.Name} web server...");
+                _processLibreTranslate = StartLibreTranslate();
+                for (var i = 0; i < 200; i++)
+                {
+                    Thread.Sleep(10);
+                    Application.DoEvents();
+                }
+
+                labelInfo.Visible = false;
+            }
+
             var timerUpdate = new Timer();
             timerUpdate.Interval = 1500;
             timerUpdate.Tick += TimerUpdate_Tick;
@@ -471,13 +545,11 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                     SeLogger.Error(exception);
                     if (linesTranslate == 0)
                     {
-                        var engine = GetCurrentEngine();
-                        var engineType = engine.GetType();
                         if (engineType == typeof(NoLanguageLeftBehindApi) || engineType == typeof(NoLanguageLeftBehindServe))
                         {
-                            var dr = MessageBox.Show($"Facebook NLLB via {engine.Name} requires an API running locally!" + Environment.NewLine
-                                                                     + Environment.NewLine
-                                                                     + "Read more?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                            var dr = MessageBox.Show($"Facebook NLLB via {_autoTranslator.Name} requires an API running locally!" + Environment.NewLine
+                                                                                                                                  + Environment.NewLine
+                                                                                                                                  + "Read more?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
                             if (dr == DialogResult.Yes)
                             {
                                 UiUtil.ShowHelp("#translation");
@@ -485,7 +557,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                         }
                         else if (engineType == typeof(LibreTranslate))
                         {
-                            var dr = MessageBox.Show($"{engine.Name} requires an API running locally!" + Environment.NewLine
+                            var dr = MessageBox.Show($"{_autoTranslator.Name} requires an API running locally!" + Environment.NewLine
                                                                      + Environment.NewLine
                                                                      + "Read more?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
                             if (dr == DialogResult.Yes)
@@ -517,6 +589,69 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             UpdateTranslation();
 
             buttonOK.Focus();
+        }
+
+        private void ShowInfo(string s)
+        {
+            labelInfo.Left = subtitleListViewTarget.Left;
+            labelInfo.Text = s;
+            labelInfo.Visible = true;
+            labelInfo.Refresh();
+        }
+
+        private Process StartNoLanguageLeftBehindServe()
+        {
+            var modelName = Configuration.Settings.Tools.AutoTranslateNllbServeModel;
+            var arguments = string.IsNullOrEmpty(modelName)
+                ? string.Empty
+                : $"-mi {modelName}";
+            var process = new Process
+            {
+                StartInfo = new ProcessStartInfo("nllb-serve", arguments)
+                {
+                    WindowStyle = ProcessWindowStyle.Hidden,
+                    CreateNoWindow = true,
+                    UseShellExecute = false,
+                }
+            };
+
+            process.StartInfo.EnvironmentVariables["PYTHONIOENCODING"] = "utf-8";
+            process.StartInfo.EnvironmentVariables["PYTHONLEGACYWINDOWSSTDIO"] = "utf-8";
+            process.Start();
+            return process;
+        }
+
+        private Process StartNoLanguageLeftBehindApi()
+        {
+            var arguments = "docker run --rm -e SERVER_PORT=5000 -e APP_PORT=7860 -p 7860:7860 -v C:\\Windows\\Temp\\cache.bin:/home/user/.cache ghcr.io/winstxnhdw/nllb-api:main";
+            var process = new Process
+            {
+                StartInfo = new ProcessStartInfo("docker", arguments)
+                {
+                    WindowStyle = ProcessWindowStyle.Hidden,
+                    CreateNoWindow = true,
+                    UseShellExecute = false,
+                }
+            };
+
+            process.Start();
+            return process;
+        }
+
+        private Process StartLibreTranslate()
+        {
+            var process = new Process
+            {
+                StartInfo = new ProcessStartInfo("libretranslate", string.Empty)
+                {
+                    WindowStyle = ProcessWindowStyle.Hidden,
+                    CreateNoWindow = true,
+                    UseShellExecute = false,
+                }
+            };
+
+            process.Start();
+            return process;
         }
 
         private static List<string> SplitResult(List<string> result, int mergeCount, string language)
@@ -761,10 +896,6 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
-            var engine = GetCurrentEngine();
-            Configuration.Settings.Tools.AutoTranslateLastName = engine.Name;
-            Configuration.Settings.Tools.AutoTranslateLastUrl = nikseComboBoxUrl.Text;
-
             var isEmpty = TranslatedSubtitle == null || TranslatedSubtitle.Paragraphs.All(p => string.IsNullOrEmpty(p.Text));
             DialogResult = isEmpty ? DialogResult.Cancel : DialogResult.OK;
         }
@@ -807,6 +938,22 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 UiUtil.ShowHelp("#translation");
                 e.SuppressKeyPress = true;
             }
+        }
+
+        private void AutoTranslate_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            var engine = GetCurrentEngine();
+            Configuration.Settings.Tools.AutoTranslateLastName = engine.Name;
+            Configuration.Settings.Tools.AutoTranslateLastUrl = nikseComboBoxUrl.Text;
+
+            _processNllbServe?.Kill();
+            _processNllbServe?.Dispose();
+
+            _processNllbApi?.Kill();
+            _processNllbApi?.Dispose();
+
+            _processLibreTranslate?.Kill();
+            _processLibreTranslate?.Dispose();
         }
     }
 }
