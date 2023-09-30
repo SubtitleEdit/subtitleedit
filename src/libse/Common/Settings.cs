@@ -156,6 +156,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public string AutoTranslateLastUrl { get; set; }
         public string AutoTranslateNllbApiUrl { get; set; }
         public string AutoTranslateNllbServeUrl { get; set; }
+        public string AutoTranslateLibreUrl { get; set; }
         public bool TranslateAllowSplit { get; set; }
         public string TranslateLastService { get; set; }
         public string TranslateMergeStrategy { get; set; }
@@ -499,6 +500,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             GoogleTranslateLastTargetLanguage = "en";
             AutoTranslateNllbApiUrl = "https://winstxnhdw-nllb-api.hf.space/api/v2/";
             AutoTranslateNllbServeUrl = "http://127.0.0.1:6060/";
+            AutoTranslateLibreUrl = "https://libretranslate.com/";
             TranslateAllowSplit = true;
             TranslateViaCopyPasteAutoCopyToClipboard = true;
             TranslateViaCopyPasteMaxSize = 5000;
@@ -5082,6 +5084,12 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.Tools.AutoTranslateNllbServeUrl = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("AutoTranslateLibreUrl");
+            if (subNode != null)
+            {
+                settings.Tools.AutoTranslateLibreUrl = subNode.InnerText;
             }
 
             subNode = node.SelectSingleNode("TranslateAllowSplit");
@@ -11342,6 +11350,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("AutoTranslateLastUrl", settings.Tools.AutoTranslateLastUrl);
                 textWriter.WriteElementString("AutoTranslateNllbApiUrl", settings.Tools.AutoTranslateNllbApiUrl);
                 textWriter.WriteElementString("AutoTranslateNllbServeUrl", settings.Tools.AutoTranslateNllbServeUrl);
+                textWriter.WriteElementString("AutoTranslateLibreUrl", settings.Tools.AutoTranslateLibreUrl);
                 textWriter.WriteElementString("TranslateAllowSplit", settings.Tools.TranslateAllowSplit.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("TranslateLastService", settings.Tools.TranslateLastService);
                 textWriter.WriteElementString("TranslateMergeStrategy", settings.Tools.TranslateMergeStrategy);
