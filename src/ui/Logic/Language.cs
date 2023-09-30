@@ -1303,6 +1303,7 @@ namespace Nikse.SubtitleEdit.Logic
                 PleaseWait = "Please wait... this may take a while",
                 PoweredByGoogleTranslate = "Powered by Google translate",
                 PoweredByMicrosoftTranslate = "Powered by Microsoft translate",
+                PoweredByX = "Powered by {0}",
                 MsClientSecretNeeded = "Sorry, you need a Cognitive Services 'Translator Text' key from Microsoft to use the latest Microsoft Translator." + Environment.NewLine +
                                        Environment.NewLine +
                                        "Go to \"Options -> Settings -> Tools\" to enter your key.",

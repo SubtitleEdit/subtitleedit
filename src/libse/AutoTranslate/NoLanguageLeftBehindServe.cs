@@ -1,28 +1,32 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
-using Nikse.SubtitleEdit.Core.Http;
-using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Core.Translate;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Nikse.SubtitleEdit.Core.Http;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using System.Net.Http.Headers;
 
 namespace Nikse.SubtitleEdit.Core.AutoTranslate
 {
-    public class AutoTranslator : IAutoTranslator
+    public class NoLanguageLeftBehindServe : IAutoTranslator
     {
         private IDownloader _httpClient;
 
-        public string Url => "https://winstxnhdw-nllb-api.hf.space/api/v2/";
+        public string Name { get; set; } = "thammegowda-nllb-serve";
+        public string Url => "https://github.com/thammegowda/nllb-serve";
 
-        public void Initialize(string url)
+        public void Initialize()
         {
             _httpClient?.Dispose();
             _httpClient = DownloaderFactory.MakeHttpClient();
             _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json");
             _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("accept", "application/json");
-            _httpClient.BaseAddress = new Uri(url);
+            _httpClient.BaseAddress = new Uri(Configuration.Settings.Tools.AutoTranslateNllbServeUrl);
         }
 
         public List<TranslationPair> GetSupportedSourceLanguages()
@@ -37,21 +41,37 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
 
         public async Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode)
         {
-            var content = new StringContent("{\n  \"text\": \"" + Json.EncodeJsonText(text) + "\",\n  \"source\": \"" + sourceLanguageCode+ "\",\n  \"target\": \"" + targetLanguageCode + "\"\n}", Encoding.UTF8, "application/json");
+            var list = text.SplitToLines();
+            var sb = new StringBuilder();
+            foreach (var line in list)
+            {
+                sb.Append("\"" + Json.EncodeJsonText(text) + "\", ");
+            }
+
+            var src = sb.ToString().TrimEnd().TrimEnd(',').Trim();
+            var input = "{\"source\":[" + src + "], \"src_lang\": \"" + sourceLanguageCode + "\", \"tgt_lang\": \"" + targetLanguageCode + "\"}";
+            var content = new StringContent(input, Encoding.UTF8);
+            content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
+
             var result = _httpClient.PostAsync("translate", content).Result;
             result.EnsureSuccessStatusCode();
             var bytes = await result.Content.ReadAsByteArrayAsync();
-            var resultText = Encoding.UTF8.GetString(bytes).Trim();
+            var json = Encoding.UTF8.GetString(bytes).Trim();
 
-            // error messages are returned as json, translated text are just returned as normal utf-8 text
-            var validator = new SeJsonValidator();
-            var isValidJson = validator.ValidateJson(resultText);
-            if (isValidJson)
+            var parser = new SeJsonParser();
+            var arr = parser.GetArrayElementsByName(json, "translation");
+            if (arr == null || arr.Count == 0)
             {
-                SeLogger.Error($"{this.GetType().Name} got json back which is probably an error: {resultText}");
+                return string.Empty;
             }
 
-            return resultText;
+            var resultText = new StringBuilder();
+            foreach (var item in arr)
+            {
+                resultText.AppendLine(Json.DecodeJsonText(item));
+            }
+
+            return resultText.ToString().Trim();
         }
 
         private static List<TranslationPair> ListLanguages()

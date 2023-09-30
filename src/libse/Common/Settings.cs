@@ -152,6 +152,10 @@ namespace Nikse.SubtitleEdit.Core.Common
         public bool GoogleTranslateNoKeyWarningShow { get; set; }
         public int GoogleApiV1ChunkSize { get; set; }
         public string GoogleTranslateLastTargetLanguage { get; set; }
+        public string AutoTranslateLastName { get; set; }
+        public string AutoTranslateLastUrl { get; set; }
+        public string AutoTranslateNllbApiUrl { get; set; }
+        public string AutoTranslateNllbServeUrl { get; set; }
         public bool TranslateAllowSplit { get; set; }
         public string TranslateLastService { get; set; }
         public string TranslateMergeStrategy { get; set; }
@@ -493,6 +497,8 @@ namespace Nikse.SubtitleEdit.Core.Common
             GoogleTranslateNoKeyWarningShow = true;
             GoogleApiV1ChunkSize = 1500;
             GoogleTranslateLastTargetLanguage = "en";
+            AutoTranslateNllbApiUrl = "https://winstxnhdw-nllb-api.hf.space/api/v2/";
+            AutoTranslateNllbServeUrl = "http://127.0.0.1:6060/";
             TranslateAllowSplit = true;
             TranslateViaCopyPasteAutoCopyToClipboard = true;
             TranslateViaCopyPasteMaxSize = 5000;
@@ -5052,6 +5058,30 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.Tools.GoogleTranslateLastTargetLanguage = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("AutoTranslateLastName");
+            if (subNode != null)
+            {
+                settings.Tools.AutoTranslateLastName = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("AutoTranslateLastUrl");
+            if (subNode != null)
+            {
+                settings.Tools.AutoTranslateLastUrl = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("AutoTranslateNllbApiUrl");
+            if (subNode != null)
+            {
+                settings.Tools.AutoTranslateNllbApiUrl = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("AutoTranslateNllbServeUrl");
+            if (subNode != null)
+            {
+                settings.Tools.AutoTranslateNllbServeUrl = subNode.InnerText;
             }
 
             subNode = node.SelectSingleNode("TranslateAllowSplit");
@@ -11035,7 +11065,8 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("ShowVideoControls", settings.General.ShowVideoControls.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("TextAndOrigianlTextBoxesSwitched", settings.General.TextAndOrigianlTextBoxesSwitched.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("LayoutNumber", settings.General.LayoutNumber.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("LayoutSizes", settings.General.LayoutSizes);
+                textWriter.WriteElementString("LayoutSizes", settings.General.LayoutSizes);
+
                 textWriter.WriteElementString("ShowVideoPlayer", settings.General.ShowVideoPlayer.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ShowAudioVisualizer", settings.General.ShowAudioVisualizer.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ShowWaveform", settings.General.ShowWaveform.ToString(CultureInfo.InvariantCulture));
@@ -11111,7 +11142,8 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("FixContinuationStyleUncheckInsertsLowercase", settings.General.FixContinuationStyleUncheckInsertsLowercase.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("FixContinuationStyleHideContinuationCandidatesWithoutName", settings.General.FixContinuationStyleHideContinuationCandidatesWithoutName.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SpellCheckLanguage", settings.General.SpellCheckLanguage);
-                textWriter.WriteElementString("VideoPlayer", settings.General.VideoPlayer);
+                textWriter.WriteElementString("VideoPlayer", settings.General.VideoPlayer);
+
                 textWriter.WriteElementString("VideoPlayerDefaultVolume", settings.General.VideoPlayerDefaultVolume.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("VideoPlayerPreviewFontName", settings.General.VideoPlayerPreviewFontName);
                 textWriter.WriteElementString("VideoPlayerPreviewFontSize", settings.General.VideoPlayerPreviewFontSize.ToString(CultureInfo.InvariantCulture));
@@ -11175,7 +11207,8 @@ $HorzAlign          =   Center
 
                 textWriter.WriteElementString("DirectShowDoubleLoad", settings.General.DirectShowDoubleLoad.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("VlcWaveTranscodeSettings", settings.General.VlcWaveTranscodeSettings);
-                textWriter.WriteElementString("VlcLocation", settings.General.VlcLocation);
+                textWriter.WriteElementString("VlcLocation", settings.General.VlcLocation);
+
                 textWriter.WriteElementString("VlcLocationRelative", settings.General.VlcLocationRelative);
                 textWriter.WriteElementString("MpvVideoOutputWindows", settings.General.MpvVideoOutputWindows);
                 textWriter.WriteElementString("MpvVideoOutputLinux", settings.General.MpvVideoOutputLinux);
@@ -11305,6 +11338,10 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("GoogleTranslateNoKeyWarningShow", settings.Tools.GoogleTranslateNoKeyWarningShow.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("GoogleApiV1ChunkSize", settings.Tools.GoogleApiV1ChunkSize.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("GoogleTranslateLastTargetLanguage", settings.Tools.GoogleTranslateLastTargetLanguage);
+                textWriter.WriteElementString("AutoTranslateLastName", settings.Tools.AutoTranslateLastName);
+                textWriter.WriteElementString("AutoTranslateLastUrl", settings.Tools.AutoTranslateLastUrl);
+                textWriter.WriteElementString("AutoTranslateNllbApiUrl", settings.Tools.AutoTranslateNllbApiUrl);
+                textWriter.WriteElementString("AutoTranslateNllbServeUrl", settings.Tools.AutoTranslateNllbServeUrl);
                 textWriter.WriteElementString("TranslateAllowSplit", settings.Tools.TranslateAllowSplit.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("TranslateLastService", settings.Tools.TranslateLastService);
                 textWriter.WriteElementString("TranslateMergeStrategy", settings.Tools.TranslateMergeStrategy);

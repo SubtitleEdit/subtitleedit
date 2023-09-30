@@ -1044,6 +1044,7 @@ We leverage the intrinsic rhythm of the image.</CreateSimpleChainingToolTip>
     <PleaseWait>Please wait... this may take a while</PleaseWait>
     <PoweredByGoogleTranslate>Powered by Google translate</PoweredByGoogleTranslate>
     <PoweredByMicrosoftTranslate>Powered by Microsoft translate</PoweredByMicrosoftTranslate>
+    <PoweredByX>Powered by {0}</PoweredByX>
     <MsClientSecretNeeded>Sorry, you need a Cognitive Services 'Translator Text' key from Microsoft to use the latest Microsoft Translator.
 
 Go to "Options -&gt; Settings -&gt; Tools" to enter your key.</MsClientSecretNeeded>

@@ -6,10 +6,34 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
 {
     public interface IAutoTranslator
     {
-        void Initialize(string url);
+        /// <summary>
+        /// Name of auto translator (can be translated).
+        /// </summary>
+        string Name { get; set; }
+
+        /// <summary>
+        /// Url to homepage.
+        /// </summary>
         string Url { get; }
+
+        /// <summary>
+        /// Initialization before calling translate.
+        /// </summary>
+        void Initialize();
+
+        /// <summary>
+        /// Get languages that can be translated from.
+        /// </summary>
         List<TranslationPair> GetSupportedSourceLanguages();
+
+        /// <summary>
+        /// Get languages that can be translated to.
+        /// </summary>
         List<TranslationPair> GetSupportedTargetLanguages();
+
+        /// <summary>
+        /// Do translation.
+        /// </summary>
         Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode);
     }
 }

@@ -1127,6 +1127,7 @@
             public string PleaseWait { get; set; }
             public string PoweredByGoogleTranslate { get; set; }
             public string PoweredByMicrosoftTranslate { get; set; }
+            public string PoweredByX { get; set; }
             public string MsClientSecretNeeded { get; set; }
             public string GoogleNoApiKeyWarning { get; set; }
             public string Service { get; set; }
