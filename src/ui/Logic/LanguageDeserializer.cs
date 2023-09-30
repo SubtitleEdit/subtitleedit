@@ -6127,6 +6127,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/Tools":
                     language.Settings.Tools = reader.Value;
                     break;
+                case "Settings/AutoTranslate":
+                    language.Settings.AutoTranslate = reader.Value;
+                    break;
                 case "Settings/WordLists":
                     language.Settings.WordLists = reader.Value;
                     break;

@@ -30,8 +30,6 @@ namespace Nikse.SubtitleEdit.Forms.Translate
         private Process _processNllbApi;
         private Process _processLibreTranslate;
 
-
-
         public AutoTranslate(Subtitle subtitle, Subtitle selectedLines, string title, Encoding encoding)
         {
             UiUtil.PreInitialize(this);
