@@ -397,8 +397,6 @@ namespace Nikse.SubtitleEdit.Logic
         // stacked, video but no waveform
         private static void SetLayout7(Form form, Control videoPlayerContainer, SubtitleListView subtitleListView, GroupBox groupBoxWaveform, GroupBox groupBoxEdit, SplitterEventHandler splitMoved)
         {
-            groupBoxWaveform.Parent?.Controls.Remove(groupBoxWaveform);
-
             var spMain = new SplitContainer();
             MainSplitContainer = spMain;
             spMain.Orientation = Orientation.Horizontal;
@@ -419,8 +417,9 @@ namespace Nikse.SubtitleEdit.Logic
             groupBoxEdit.Dock = DockStyle.Fill;
 
             videoPlayerContainer.Parent?.Controls.Remove(videoPlayerContainer);
-            spLeftTop.Panel2.Controls.Add(videoPlayerContainer);
-            videoPlayerContainer.Dock = DockStyle.Fill;
+            groupBoxWaveform.Parent?.Controls.Remove(groupBoxWaveform);
+            spLeftTop.Panel2.Controls.Add(groupBoxWaveform);
+            groupBoxWaveform.Dock = DockStyle.Fill;
 
             form.Controls.Add(spMain);
             spMain.Dock = DockStyle.Fill;
