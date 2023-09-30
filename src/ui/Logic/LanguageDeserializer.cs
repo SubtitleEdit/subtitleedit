@@ -2749,6 +2749,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "GoogleTranslate/PoweredByMicrosoftTranslate":
                     language.GoogleTranslate.PoweredByMicrosoftTranslate = reader.Value;
                     break;
+                case "GoogleTranslate/PoweredByX":
+                    language.GoogleTranslate.PoweredByX = reader.Value;
+                    break;
                 case "GoogleTranslate/MsClientSecretNeeded":
                     language.GoogleTranslate.MsClientSecretNeeded = reader.Value;
                     break;

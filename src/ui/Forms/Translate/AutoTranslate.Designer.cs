@@ -36,6 +36,8 @@
             this.labelTarget = new System.Windows.Forms.Label();
             this.labelSource = new System.Windows.Forms.Label();
             this.labelUrl = new System.Windows.Forms.Label();
+            this.linkLabelPoweredBy = new System.Windows.Forms.LinkLabel();
+            this.nikseComboBoxEngine = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.nikseComboBoxUrl = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.comboBoxSource = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.comboBoxTarget = new Nikse.SubtitleEdit.Controls.NikseComboBox();
@@ -45,7 +47,7 @@
             // 
             // progressBar1
             // 
-            this.progressBar1.Location = new System.Drawing.Point(699, 27);
+            this.progressBar1.Location = new System.Drawing.Point(699, 29);
             this.progressBar1.Name = "progressBar1";
             this.progressBar1.Size = new System.Drawing.Size(192, 16);
             this.progressBar1.TabIndex = 100;
@@ -53,7 +55,7 @@
             // labelPleaseWait
             // 
             this.labelPleaseWait.AutoSize = true;
-            this.labelPleaseWait.Location = new System.Drawing.Point(697, 11);
+            this.labelPleaseWait.Location = new System.Drawing.Point(697, 13);
             this.labelPleaseWait.Name = "labelPleaseWait";
             this.labelPleaseWait.Size = new System.Drawing.Size(171, 13);
             this.labelPleaseWait.TabIndex = 99;
@@ -84,7 +86,7 @@
             // 
             // buttonTranslate
             // 
-            this.buttonTranslate.Location = new System.Drawing.Point(618, 22);
+            this.buttonTranslate.Location = new System.Drawing.Point(618, 24);
             this.buttonTranslate.Name = "buttonTranslate";
             this.buttonTranslate.Size = new System.Drawing.Size(75, 23);
             this.buttonTranslate.TabIndex = 96;
@@ -95,7 +97,7 @@
             // labelTarget
             // 
             this.labelTarget.AutoSize = true;
-            this.labelTarget.Location = new System.Drawing.Point(462, 27);
+            this.labelTarget.Location = new System.Drawing.Point(462, 29);
             this.labelTarget.Name = "labelTarget";
             this.labelTarget.Size = new System.Drawing.Size(23, 13);
             this.labelTarget.TabIndex = 104;
@@ -104,7 +106,7 @@
             // labelSource
             // 
             this.labelSource.AutoSize = true;
-            this.labelSource.Location = new System.Drawing.Point(279, 27);
+            this.labelSource.Location = new System.Drawing.Point(279, 29);
             this.labelSource.Name = "labelSource";
             this.labelSource.Size = new System.Drawing.Size(33, 13);
             this.labelSource.TabIndex = 103;
@@ -119,6 +121,41 @@
             this.labelUrl.Size = new System.Drawing.Size(23, 13);
             this.labelUrl.TabIndex = 106;
             this.labelUrl.Text = "Url:";
+            // 
+            // linkLabelPoweredBy
+            // 
+            this.linkLabelPoweredBy.AutoSize = true;
+            this.linkLabelPoweredBy.Location = new System.Drawing.Point(14, 5);
+            this.linkLabelPoweredBy.Name = "linkLabelPoweredBy";
+            this.linkLabelPoweredBy.Size = new System.Drawing.Size(73, 13);
+            this.linkLabelPoweredBy.TabIndex = 109;
+            this.linkLabelPoweredBy.TabStop = true;
+            this.linkLabelPoweredBy.Text = "Powered by X";
+            this.linkLabelPoweredBy.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelPoweredBy_LinkClicked);
+            // 
+            // nikseComboBoxEngine
+            // 
+            this.nikseComboBoxEngine.BackColor = System.Drawing.SystemColors.Window;
+            this.nikseComboBoxEngine.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.nikseComboBoxEngine.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.nikseComboBoxEngine.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.nikseComboBoxEngine.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.nikseComboBoxEngine.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.nikseComboBoxEngine.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.nikseComboBoxEngine.DropDownHeight = 400;
+            this.nikseComboBoxEngine.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.nikseComboBoxEngine.DropDownWidth = 221;
+            this.nikseComboBoxEngine.FormattingEnabled = true;
+            this.nikseComboBoxEngine.Location = new System.Drawing.Point(12, 24);
+            this.nikseComboBoxEngine.MaxLength = 32767;
+            this.nikseComboBoxEngine.Name = "nikseComboBoxEngine";
+            this.nikseComboBoxEngine.SelectedIndex = -1;
+            this.nikseComboBoxEngine.SelectedItem = null;
+            this.nikseComboBoxEngine.SelectedText = "";
+            this.nikseComboBoxEngine.Size = new System.Drawing.Size(221, 21);
+            this.nikseComboBoxEngine.TabIndex = 107;
+            this.nikseComboBoxEngine.UsePopupWindow = false;
+            this.nikseComboBoxEngine.SelectedIndexChanged += new System.EventHandler(this.nikseComboBoxEngine_SelectedIndexChanged);
             // 
             // nikseComboBoxUrl
             // 
@@ -143,6 +180,7 @@
             this.nikseComboBoxUrl.Size = new System.Drawing.Size(280, 21);
             this.nikseComboBoxUrl.TabIndex = 105;
             this.nikseComboBoxUrl.UsePopupWindow = false;
+            this.nikseComboBoxUrl.SelectedIndexChanged += new System.EventHandler(this.nikseComboBoxUrl_SelectedIndexChanged);
             // 
             // comboBoxSource
             // 
@@ -155,9 +193,9 @@
             this.comboBoxSource.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.comboBoxSource.DropDownHeight = 400;
             this.comboBoxSource.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxSource.DropDownWidth = 200;
+            this.comboBoxSource.DropDownWidth = 140;
             this.comboBoxSource.FormattingEnabled = true;
-            this.comboBoxSource.Location = new System.Drawing.Point(321, 23);
+            this.comboBoxSource.Location = new System.Drawing.Point(321, 25);
             this.comboBoxSource.MaxLength = 32767;
             this.comboBoxSource.Name = "comboBoxSource";
             this.comboBoxSource.SelectedIndex = -1;
@@ -178,9 +216,9 @@
             this.comboBoxTarget.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.comboBoxTarget.DropDownHeight = 400;
             this.comboBoxTarget.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxTarget.DropDownWidth = 200;
+            this.comboBoxTarget.DropDownWidth = 140;
             this.comboBoxTarget.FormattingEnabled = true;
-            this.comboBoxTarget.Location = new System.Drawing.Point(491, 23);
+            this.comboBoxTarget.Location = new System.Drawing.Point(491, 25);
             this.comboBoxTarget.MaxLength = 32767;
             this.comboBoxTarget.Name = "comboBoxTarget";
             this.comboBoxTarget.SelectedIndex = -1;
@@ -199,10 +237,10 @@
             this.subtitleListViewTarget.GridLines = true;
             this.subtitleListViewTarget.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.subtitleListViewTarget.HideSelection = false;
-            this.subtitleListViewTarget.Location = new System.Drawing.Point(465, 52);
+            this.subtitleListViewTarget.Location = new System.Drawing.Point(465, 53);
             this.subtitleListViewTarget.Name = "subtitleListViewTarget";
             this.subtitleListViewTarget.OwnerDraw = true;
-            this.subtitleListViewTarget.Size = new System.Drawing.Size(428, 459);
+            this.subtitleListViewTarget.Size = new System.Drawing.Size(428, 458);
             this.subtitleListViewTarget.SubtitleFontBold = false;
             this.subtitleListViewTarget.SubtitleFontName = "Tahoma";
             this.subtitleListViewTarget.SubtitleFontSize = 8;
@@ -220,10 +258,10 @@
             this.subtitleListViewSource.GridLines = true;
             this.subtitleListViewSource.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.subtitleListViewSource.HideSelection = false;
-            this.subtitleListViewSource.Location = new System.Drawing.Point(12, 52);
+            this.subtitleListViewSource.Location = new System.Drawing.Point(12, 53);
             this.subtitleListViewSource.Name = "subtitleListViewSource";
             this.subtitleListViewSource.OwnerDraw = true;
-            this.subtitleListViewSource.Size = new System.Drawing.Size(430, 459);
+            this.subtitleListViewSource.Size = new System.Drawing.Size(430, 458);
             this.subtitleListViewSource.SubtitleFontBold = false;
             this.subtitleListViewSource.SubtitleFontName = "Tahoma";
             this.subtitleListViewSource.SubtitleFontSize = 8;
@@ -237,6 +275,8 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1058, 563);
+            this.Controls.Add(this.linkLabelPoweredBy);
+            this.Controls.Add(this.nikseComboBoxEngine);
             this.Controls.Add(this.labelUrl);
             this.Controls.Add(this.nikseComboBoxUrl);
             this.Controls.Add(this.labelTarget);
@@ -258,6 +298,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "AutoTranslate";
             this.ResizeEnd += new System.EventHandler(this.AutoTranslate_ResizeEnd);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.AutoTranslate_KeyDown);
             this.Resize += new System.EventHandler(this.AutoTranslate_Resize);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -279,5 +320,7 @@
         private System.Windows.Forms.Label labelSource;
         private System.Windows.Forms.Label labelUrl;
         private Controls.NikseComboBox nikseComboBoxUrl;
+        private Controls.NikseComboBox nikseComboBoxEngine;
+        private System.Windows.Forms.LinkLabel linkLabelPoweredBy;
     }
 }
