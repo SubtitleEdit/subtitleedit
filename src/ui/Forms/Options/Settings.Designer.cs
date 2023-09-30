@@ -274,18 +274,6 @@
             this.checkBoxShortcutsAllowLetterOrNumberInTextBox = new System.Windows.Forms.CheckBox();
             this.comboBoxBDOpensIn = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelBDOpensIn = new System.Windows.Forms.Label();
-            this.groupBoxGoogleTranslate = new System.Windows.Forms.GroupBox();
-            this.labelGoogleTranslateApiKey = new System.Windows.Forms.Label();
-            this.textBoxGoogleTransleApiKey = new Nikse.SubtitleEdit.Controls.SETextBox();
-            this.linkLabelGoogleTranslateSignUp = new System.Windows.Forms.LinkLabel();
-            this.label3 = new System.Windows.Forms.Label();
-            this.groupBoxBing = new System.Windows.Forms.GroupBox();
-            this.comboBoxBoxBingTokenEndpoint = new Nikse.SubtitleEdit.Controls.NikseComboBox();
-            this.labelBingTokenEndpoint = new System.Windows.Forms.Label();
-            this.labelBingApiKey = new System.Windows.Forms.Label();
-            this.textBoxBingClientSecret = new Nikse.SubtitleEdit.Controls.SETextBox();
-            this.linkLabelBingSubscribe = new System.Windows.Forms.LinkLabel();
-            this.label1 = new System.Windows.Forms.Label();
             this.groupBoxToolsAutoBr = new System.Windows.Forms.GroupBox();
             this.labelToolsBreakBottomHeavyPercent = new System.Windows.Forms.Label();
             this.numericUpDownToolsBreakPreferBottomHeavy = new Nikse.SubtitleEdit.Controls.NikseUpDown();
@@ -321,6 +309,18 @@
             this.comboBoxToolsStartSceneIndex = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.comboBoxToolsVerifySeconds = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelVerifyButton = new System.Windows.Forms.Label();
+            this.groupBoxGoogleTranslate = new System.Windows.Forms.GroupBox();
+            this.labelGoogleTranslateApiKey = new System.Windows.Forms.Label();
+            this.textBoxGoogleTransleApiKey = new Nikse.SubtitleEdit.Controls.NikseTextBox();
+            this.linkLabelGoogleTranslateSignUp = new System.Windows.Forms.LinkLabel();
+            this.label3 = new System.Windows.Forms.Label();
+            this.groupBoxBing = new System.Windows.Forms.GroupBox();
+            this.comboBoxBoxBingTokenEndpoint = new Nikse.SubtitleEdit.Controls.NikseComboBox();
+            this.labelBingTokenEndpoint = new System.Windows.Forms.Label();
+            this.labelBingApiKey = new System.Windows.Forms.Label();
+            this.textBoxBingClientSecret = new Nikse.SubtitleEdit.Controls.NikseTextBox();
+            this.linkLabelBingSubscribe = new System.Windows.Forms.LinkLabel();
+            this.label1 = new System.Windows.Forms.Label();
             this.panelToolBar = new System.Windows.Forms.Panel();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.checkBoxShowFrameRate = new System.Windows.Forms.CheckBox();
@@ -453,6 +453,27 @@
             this.labelUpdateFileTypeAssociationsStatus = new System.Windows.Forms.Label();
             this.imageListFileTypeAssociations = new System.Windows.Forms.ImageList(this.components);
             this.toolTipDialogStylePreview = new System.Windows.Forms.ToolTip(this.components);
+            this.panelAutoTranslate = new System.Windows.Forms.Panel();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.checkBoxLibreTranslateAutoStart = new System.Windows.Forms.CheckBox();
+            this.nikseTextBoxLibreTranslateUrl = new Nikse.SubtitleEdit.Controls.NikseTextBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.linkLabelLibreTranslateApi = new System.Windows.Forms.LinkLabel();
+            this.label7 = new System.Windows.Forms.Label();
+            this.groupBoxNllbServe = new System.Windows.Forms.GroupBox();
+            this.checkBoxNllbServeAutoStart = new System.Windows.Forms.CheckBox();
+            this.nikseTextBoxNllbServeUrl = new Nikse.SubtitleEdit.Controls.NikseTextBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.linkLabelNllbServe = new System.Windows.Forms.LinkLabel();
+            this.label4 = new System.Windows.Forms.Label();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.checkBoxNllbApiAutoStart = new System.Windows.Forms.CheckBox();
+            this.nikseTextBoxNllbApiUrl = new Nikse.SubtitleEdit.Controls.NikseTextBox();
+            this.labelNllbApiUrl = new System.Windows.Forms.Label();
+            this.linkLabelNllbApi = new System.Windows.Forms.LinkLabel();
+            this.label5 = new System.Windows.Forms.Label();
+            this.labelNllbServeModel = new System.Windows.Forms.Label();
+            this.nikseTextBoxNllbServeModel = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.panelGeneral.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
             this.groupBoxGeneralRules.SuspendLayout();
@@ -477,12 +498,12 @@
             this.groupBoxWaveformAppearence.SuspendLayout();
             this.panelTools.SuspendLayout();
             this.groupBoxToolsMisc.SuspendLayout();
-            this.groupBoxGoogleTranslate.SuspendLayout();
-            this.groupBoxBing.SuspendLayout();
             this.groupBoxToolsAutoBr.SuspendLayout();
             this.groupBoxSpellCheck.SuspendLayout();
             this.groupBoxFixCommonErrors.SuspendLayout();
             this.groupBoxToolsVisualSync.SuspendLayout();
+            this.groupBoxGoogleTranslate.SuspendLayout();
+            this.groupBoxBing.SuspendLayout();
             this.panelToolBar.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBoxShowToolBarButtons.SuspendLayout();
@@ -528,6 +549,10 @@
             this.groupBoxProxySettings.SuspendLayout();
             this.groupBoxProxyAuthentication.SuspendLayout();
             this.panelFileTypeAssociations.SuspendLayout();
+            this.panelAutoTranslate.SuspendLayout();
+            this.groupBox4.SuspendLayout();
+            this.groupBoxNllbServe.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonOK
@@ -4241,8 +4266,6 @@
             // panelTools
             // 
             this.panelTools.Controls.Add(this.groupBoxToolsMisc);
-            this.panelTools.Controls.Add(this.groupBoxGoogleTranslate);
-            this.panelTools.Controls.Add(this.groupBoxBing);
             this.panelTools.Controls.Add(this.groupBoxToolsAutoBr);
             this.panelTools.Controls.Add(this.groupBoxSpellCheck);
             this.panelTools.Controls.Add(this.groupBoxFixCommonErrors);
@@ -4262,7 +4285,7 @@
             this.groupBoxToolsMisc.Controls.Add(this.checkBoxShortcutsAllowLetterOrNumberInTextBox);
             this.groupBoxToolsMisc.Controls.Add(this.comboBoxBDOpensIn);
             this.groupBoxToolsMisc.Controls.Add(this.labelBDOpensIn);
-            this.groupBoxToolsMisc.Location = new System.Drawing.Point(418, 180);
+            this.groupBoxToolsMisc.Location = new System.Drawing.Point(415, 180);
             this.groupBoxToolsMisc.Name = "groupBoxToolsMisc";
             this.groupBoxToolsMisc.Size = new System.Drawing.Size(434, 109);
             this.groupBoxToolsMisc.TabIndex = 6;
@@ -4377,200 +4400,6 @@
             this.labelBDOpensIn.TabIndex = 0;
             this.labelBDOpensIn.Text = "Blu-ray sup/bdn-xml opens in";
             // 
-            // groupBoxGoogleTranslate
-            // 
-            this.groupBoxGoogleTranslate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBoxGoogleTranslate.Controls.Add(this.labelGoogleTranslateApiKey);
-            this.groupBoxGoogleTranslate.Controls.Add(this.textBoxGoogleTransleApiKey);
-            this.groupBoxGoogleTranslate.Controls.Add(this.linkLabelGoogleTranslateSignUp);
-            this.groupBoxGoogleTranslate.Controls.Add(this.label3);
-            this.groupBoxGoogleTranslate.Location = new System.Drawing.Point(414, 293);
-            this.groupBoxGoogleTranslate.Name = "groupBoxGoogleTranslate";
-            this.groupBoxGoogleTranslate.Size = new System.Drawing.Size(436, 78);
-            this.groupBoxGoogleTranslate.TabIndex = 31;
-            this.groupBoxGoogleTranslate.TabStop = false;
-            this.groupBoxGoogleTranslate.Text = "Google translate";
-            // 
-            // labelGoogleTranslateApiKey
-            // 
-            this.labelGoogleTranslateApiKey.AutoSize = true;
-            this.labelGoogleTranslateApiKey.Location = new System.Drawing.Point(13, 47);
-            this.labelGoogleTranslateApiKey.Name = "labelGoogleTranslateApiKey";
-            this.labelGoogleTranslateApiKey.Size = new System.Drawing.Size(44, 13);
-            this.labelGoogleTranslateApiKey.TabIndex = 30;
-            this.labelGoogleTranslateApiKey.Text = "API key";
-            // 
-            // textBoxGoogleTransleApiKey
-            // 
-            this.textBoxGoogleTransleApiKey.BackColor = System.Drawing.SystemColors.WindowFrame;
-            this.textBoxGoogleTransleApiKey.CurrentLanguage = "";
-            this.textBoxGoogleTransleApiKey.CurrentLineIndex = 0;
-            this.textBoxGoogleTransleApiKey.HideSelection = true;
-            this.textBoxGoogleTransleApiKey.IsDictionaryDownloaded = true;
-            this.textBoxGoogleTransleApiKey.IsSpellCheckerInitialized = false;
-            this.textBoxGoogleTransleApiKey.IsSpellCheckRequested = false;
-            this.textBoxGoogleTransleApiKey.IsWrongWord = false;
-            this.textBoxGoogleTransleApiKey.LanguageChanged = false;
-            this.textBoxGoogleTransleApiKey.Location = new System.Drawing.Point(94, 47);
-            this.textBoxGoogleTransleApiKey.MaxLength = 32767;
-            this.textBoxGoogleTransleApiKey.Multiline = true;
-            this.textBoxGoogleTransleApiKey.Name = "textBoxGoogleTransleApiKey";
-            this.textBoxGoogleTransleApiKey.Padding = new System.Windows.Forms.Padding(1);
-            this.textBoxGoogleTransleApiKey.ReadOnly = false;
-            this.textBoxGoogleTransleApiKey.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
-            this.textBoxGoogleTransleApiKey.SelectedText = "";
-            this.textBoxGoogleTransleApiKey.SelectionLength = 0;
-            this.textBoxGoogleTransleApiKey.SelectionStart = 0;
-            this.textBoxGoogleTransleApiKey.Size = new System.Drawing.Size(290, 21);
-            this.textBoxGoogleTransleApiKey.TabIndex = 26;
-            this.textBoxGoogleTransleApiKey.TextBoxFont = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBoxGoogleTransleApiKey.UseSystemPasswordChar = false;
-            // 
-            // linkLabelGoogleTranslateSignUp
-            // 
-            this.linkLabelGoogleTranslateSignUp.AutoSize = true;
-            this.linkLabelGoogleTranslateSignUp.Location = new System.Drawing.Point(306, 19);
-            this.linkLabelGoogleTranslateSignUp.Name = "linkLabelGoogleTranslateSignUp";
-            this.linkLabelGoogleTranslateSignUp.Size = new System.Drawing.Size(78, 13);
-            this.linkLabelGoogleTranslateSignUp.TabIndex = 24;
-            this.linkLabelGoogleTranslateSignUp.TabStop = true;
-            this.linkLabelGoogleTranslateSignUp.Text = "How to sign up";
-            this.linkLabelGoogleTranslateSignUp.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelGoogleTranslateSignUp_LinkClicked);
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(16, 106);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(0, 13);
-            this.label3.TabIndex = 25;
-            // 
-            // groupBoxBing
-            // 
-            this.groupBoxBing.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBoxBing.Controls.Add(this.comboBoxBoxBingTokenEndpoint);
-            this.groupBoxBing.Controls.Add(this.labelBingTokenEndpoint);
-            this.groupBoxBing.Controls.Add(this.labelBingApiKey);
-            this.groupBoxBing.Controls.Add(this.textBoxBingClientSecret);
-            this.groupBoxBing.Controls.Add(this.linkLabelBingSubscribe);
-            this.groupBoxBing.Controls.Add(this.label1);
-            this.groupBoxBing.Location = new System.Drawing.Point(415, 377);
-            this.groupBoxBing.Name = "groupBoxBing";
-            this.groupBoxBing.Size = new System.Drawing.Size(436, 143);
-            this.groupBoxBing.TabIndex = 32;
-            this.groupBoxBing.TabStop = false;
-            this.groupBoxBing.Text = "Bing translator";
-            // 
-            // comboBoxBoxBingTokenEndpoint
-            // 
-            this.comboBoxBoxBingTokenEndpoint.BackColor = System.Drawing.SystemColors.Window;
-            this.comboBoxBoxBingTokenEndpoint.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
-            this.comboBoxBoxBingTokenEndpoint.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
-            this.comboBoxBoxBingTokenEndpoint.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
-            this.comboBoxBoxBingTokenEndpoint.ButtonForeColor = System.Drawing.SystemColors.ControlText;
-            this.comboBoxBoxBingTokenEndpoint.ButtonForeColorDown = System.Drawing.Color.Orange;
-            this.comboBoxBoxBingTokenEndpoint.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            this.comboBoxBoxBingTokenEndpoint.DropDownHeight = 400;
-            this.comboBoxBoxBingTokenEndpoint.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
-            this.comboBoxBoxBingTokenEndpoint.DropDownWidth = 375;
-            this.comboBoxBoxBingTokenEndpoint.FormattingEnabled = true;
-            this.comboBoxBoxBingTokenEndpoint.Items.AddRange(new object[] {
-            "https://api.cognitive.microsoft.com/sts/v1.0/issueToken",
-            "https://australiaeast.api.cognitive.microsoft.com/sts/v1.0/issueToken",
-            "https://canadacentral.api.cognitive.microsoft.com/sts/v1.0/issueToken",
-            "https://centralus.api.cognitive.microsoft.com/sts/v1.0/issueToken",
-            "https://eastasia.api.cognitive.microsoft.com/sts/v1.0/issueToken",
-            "https://eastus.api.cognitive.microsoft.com/sts/v1.0/issueToken",
-            "https://eastus2.api.cognitive.microsoft.com/sts/v1.0/issueToken",
-            "https://francecentral.api.cognitive.microsoft.com/sts/v1.0/issueToken",
-            "https://centralindia.api.cognitive.microsoft.com/sts/v1.0/issueToken",
-            "https://japaneast.api.cognitive.microsoft.com/sts/v1.0/issueToken",
-            "https://koreacentral.api.cognitive.microsoft.com/sts/v1.0/issueToken",
-            "https://northcentralus.api.cognitive.microsoft.com/sts/v1.0/issueToken",
-            "https://northeurope.api.cognitive.microsoft.com/sts/v1.0/issueToken",
-            "https://southcentralus.api.cognitive.microsoft.com/sts/v1.0/issueToken",
-            "https://southeastasia.api.cognitive.microsoft.com/sts/v1.0/issueToken",
-            "https://uksouth.api.cognitive.microsoft.com/sts/v1.0/issueToken",
-            "https://westeurope.api.cognitive.microsoft.com/sts/v1.0/issueToken",
-            "https://westus.api.cognitive.microsoft.com/sts/v1.0/issueToken",
-            "https://westus2.api.cognitive.microsoft.com/sts/v1.0/issueToken"});
-            this.comboBoxBoxBingTokenEndpoint.Location = new System.Drawing.Point(9, 101);
-            this.comboBoxBoxBingTokenEndpoint.MaxLength = 32767;
-            this.comboBoxBoxBingTokenEndpoint.Name = "comboBoxBoxBingTokenEndpoint";
-            this.comboBoxBoxBingTokenEndpoint.SelectedIndex = -1;
-            this.comboBoxBoxBingTokenEndpoint.SelectedItem = null;
-            this.comboBoxBoxBingTokenEndpoint.SelectedText = "";
-            this.comboBoxBoxBingTokenEndpoint.Size = new System.Drawing.Size(375, 21);
-            this.comboBoxBoxBingTokenEndpoint.TabIndex = 33;
-            this.comboBoxBoxBingTokenEndpoint.TabStop = false;
-            this.comboBoxBoxBingTokenEndpoint.UsePopupWindow = false;
-            // 
-            // labelBingTokenEndpoint
-            // 
-            this.labelBingTokenEndpoint.AutoSize = true;
-            this.labelBingTokenEndpoint.Location = new System.Drawing.Point(6, 83);
-            this.labelBingTokenEndpoint.Name = "labelBingTokenEndpoint";
-            this.labelBingTokenEndpoint.Size = new System.Drawing.Size(81, 13);
-            this.labelBingTokenEndpoint.TabIndex = 32;
-            this.labelBingTokenEndpoint.Text = "Token endpoint";
-            // 
-            // labelBingApiKey
-            // 
-            this.labelBingApiKey.AutoSize = true;
-            this.labelBingApiKey.Location = new System.Drawing.Point(6, 29);
-            this.labelBingApiKey.Name = "labelBingApiKey";
-            this.labelBingApiKey.Size = new System.Drawing.Size(44, 13);
-            this.labelBingApiKey.TabIndex = 30;
-            this.labelBingApiKey.Text = "API key";
-            // 
-            // textBoxBingClientSecret
-            // 
-            this.textBoxBingClientSecret.BackColor = System.Drawing.SystemColors.WindowFrame;
-            this.textBoxBingClientSecret.CurrentLanguage = "";
-            this.textBoxBingClientSecret.CurrentLineIndex = 0;
-            this.textBoxBingClientSecret.HideSelection = true;
-            this.textBoxBingClientSecret.IsDictionaryDownloaded = true;
-            this.textBoxBingClientSecret.IsSpellCheckerInitialized = false;
-            this.textBoxBingClientSecret.IsSpellCheckRequested = false;
-            this.textBoxBingClientSecret.IsWrongWord = false;
-            this.textBoxBingClientSecret.LanguageChanged = false;
-            this.textBoxBingClientSecret.Location = new System.Drawing.Point(10, 45);
-            this.textBoxBingClientSecret.MaxLength = 32767;
-            this.textBoxBingClientSecret.Multiline = true;
-            this.textBoxBingClientSecret.Name = "textBoxBingClientSecret";
-            this.textBoxBingClientSecret.Padding = new System.Windows.Forms.Padding(1);
-            this.textBoxBingClientSecret.ReadOnly = false;
-            this.textBoxBingClientSecret.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
-            this.textBoxBingClientSecret.SelectedText = "";
-            this.textBoxBingClientSecret.SelectionLength = 0;
-            this.textBoxBingClientSecret.SelectionStart = 0;
-            this.textBoxBingClientSecret.Size = new System.Drawing.Size(374, 21);
-            this.textBoxBingClientSecret.TabIndex = 26;
-            this.textBoxBingClientSecret.TextBoxFont = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBoxBingClientSecret.UseSystemPasswordChar = false;
-            // 
-            // linkLabelBingSubscribe
-            // 
-            this.linkLabelBingSubscribe.AutoSize = true;
-            this.linkLabelBingSubscribe.Location = new System.Drawing.Point(306, 17);
-            this.linkLabelBingSubscribe.Name = "linkLabelBingSubscribe";
-            this.linkLabelBingSubscribe.Size = new System.Drawing.Size(78, 13);
-            this.linkLabelBingSubscribe.TabIndex = 24;
-            this.linkLabelBingSubscribe.TabStop = true;
-            this.linkLabelBingSubscribe.Text = "How to sign up";
-            this.linkLabelBingSubscribe.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelBingSubscribe_LinkClicked);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(16, 106);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(0, 13);
-            this.label1.TabIndex = 25;
-            // 
             // groupBoxToolsAutoBr
             // 
             this.groupBoxToolsAutoBr.Controls.Add(this.labelToolsBreakBottomHeavyPercent);
@@ -4585,7 +4414,7 @@
             this.groupBoxToolsAutoBr.Controls.Add(this.checkBoxUseDoNotBreakAfterList);
             this.groupBoxToolsAutoBr.Location = new System.Drawing.Point(415, 0);
             this.groupBoxToolsAutoBr.Name = "groupBoxToolsAutoBr";
-            this.groupBoxToolsAutoBr.Size = new System.Drawing.Size(435, 174);
+            this.groupBoxToolsAutoBr.Size = new System.Drawing.Size(434, 174);
             this.groupBoxToolsAutoBr.TabIndex = 5;
             this.groupBoxToolsAutoBr.TabStop = false;
             this.groupBoxToolsAutoBr.Text = "Auto br";
@@ -5060,6 +4889,168 @@
             this.labelVerifyButton.Size = new System.Drawing.Size(147, 13);
             this.labelVerifyButton.TabIndex = 3;
             this.labelVerifyButton.Text = "Play X seconds and back, X is";
+            // 
+            // groupBoxGoogleTranslate
+            // 
+            this.groupBoxGoogleTranslate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxGoogleTranslate.Controls.Add(this.labelGoogleTranslateApiKey);
+            this.groupBoxGoogleTranslate.Controls.Add(this.textBoxGoogleTransleApiKey);
+            this.groupBoxGoogleTranslate.Controls.Add(this.linkLabelGoogleTranslateSignUp);
+            this.groupBoxGoogleTranslate.Controls.Add(this.label3);
+            this.groupBoxGoogleTranslate.Location = new System.Drawing.Point(9, 9);
+            this.groupBoxGoogleTranslate.Name = "groupBoxGoogleTranslate";
+            this.groupBoxGoogleTranslate.Size = new System.Drawing.Size(408, 87);
+            this.groupBoxGoogleTranslate.TabIndex = 31;
+            this.groupBoxGoogleTranslate.TabStop = false;
+            this.groupBoxGoogleTranslate.Text = "Google translate";
+            // 
+            // labelGoogleTranslateApiKey
+            // 
+            this.labelGoogleTranslateApiKey.AutoSize = true;
+            this.labelGoogleTranslateApiKey.Location = new System.Drawing.Point(8, 29);
+            this.labelGoogleTranslateApiKey.Name = "labelGoogleTranslateApiKey";
+            this.labelGoogleTranslateApiKey.Size = new System.Drawing.Size(44, 13);
+            this.labelGoogleTranslateApiKey.TabIndex = 30;
+            this.labelGoogleTranslateApiKey.Text = "API key";
+            // 
+            // textBoxGoogleTransleApiKey
+            // 
+            this.textBoxGoogleTransleApiKey.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.textBoxGoogleTransleApiKey.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.textBoxGoogleTransleApiKey.Location = new System.Drawing.Point(9, 47);
+            this.textBoxGoogleTransleApiKey.Multiline = true;
+            this.textBoxGoogleTransleApiKey.Name = "textBoxGoogleTransleApiKey";
+            this.textBoxGoogleTransleApiKey.Size = new System.Drawing.Size(375, 21);
+            this.textBoxGoogleTransleApiKey.TabIndex = 26;
+            // 
+            // linkLabelGoogleTranslateSignUp
+            // 
+            this.linkLabelGoogleTranslateSignUp.AutoSize = true;
+            this.linkLabelGoogleTranslateSignUp.Location = new System.Drawing.Point(306, 19);
+            this.linkLabelGoogleTranslateSignUp.Name = "linkLabelGoogleTranslateSignUp";
+            this.linkLabelGoogleTranslateSignUp.Size = new System.Drawing.Size(78, 13);
+            this.linkLabelGoogleTranslateSignUp.TabIndex = 24;
+            this.linkLabelGoogleTranslateSignUp.TabStop = true;
+            this.linkLabelGoogleTranslateSignUp.Text = "How to sign up";
+            this.linkLabelGoogleTranslateSignUp.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelGoogleTranslateSignUp_LinkClicked);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(16, 106);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(0, 13);
+            this.label3.TabIndex = 25;
+            // 
+            // groupBoxBing
+            // 
+            this.groupBoxBing.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxBing.Controls.Add(this.comboBoxBoxBingTokenEndpoint);
+            this.groupBoxBing.Controls.Add(this.labelBingTokenEndpoint);
+            this.groupBoxBing.Controls.Add(this.labelBingApiKey);
+            this.groupBoxBing.Controls.Add(this.textBoxBingClientSecret);
+            this.groupBoxBing.Controls.Add(this.linkLabelBingSubscribe);
+            this.groupBoxBing.Controls.Add(this.label1);
+            this.groupBoxBing.Location = new System.Drawing.Point(9, 103);
+            this.groupBoxBing.Name = "groupBoxBing";
+            this.groupBoxBing.Size = new System.Drawing.Size(408, 143);
+            this.groupBoxBing.TabIndex = 32;
+            this.groupBoxBing.TabStop = false;
+            this.groupBoxBing.Text = "Bing translator";
+            // 
+            // comboBoxBoxBingTokenEndpoint
+            // 
+            this.comboBoxBoxBingTokenEndpoint.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxBoxBingTokenEndpoint.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxBoxBingTokenEndpoint.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxBoxBingTokenEndpoint.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxBoxBingTokenEndpoint.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxBoxBingTokenEndpoint.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxBoxBingTokenEndpoint.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxBoxBingTokenEndpoint.DropDownHeight = 400;
+            this.comboBoxBoxBingTokenEndpoint.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
+            this.comboBoxBoxBingTokenEndpoint.DropDownWidth = 375;
+            this.comboBoxBoxBingTokenEndpoint.FormattingEnabled = true;
+            this.comboBoxBoxBingTokenEndpoint.Items.AddRange(new object[] {
+            "https://api.cognitive.microsoft.com/sts/v1.0/issueToken",
+            "https://australiaeast.api.cognitive.microsoft.com/sts/v1.0/issueToken",
+            "https://canadacentral.api.cognitive.microsoft.com/sts/v1.0/issueToken",
+            "https://centralus.api.cognitive.microsoft.com/sts/v1.0/issueToken",
+            "https://eastasia.api.cognitive.microsoft.com/sts/v1.0/issueToken",
+            "https://eastus.api.cognitive.microsoft.com/sts/v1.0/issueToken",
+            "https://eastus2.api.cognitive.microsoft.com/sts/v1.0/issueToken",
+            "https://francecentral.api.cognitive.microsoft.com/sts/v1.0/issueToken",
+            "https://centralindia.api.cognitive.microsoft.com/sts/v1.0/issueToken",
+            "https://japaneast.api.cognitive.microsoft.com/sts/v1.0/issueToken",
+            "https://koreacentral.api.cognitive.microsoft.com/sts/v1.0/issueToken",
+            "https://northcentralus.api.cognitive.microsoft.com/sts/v1.0/issueToken",
+            "https://northeurope.api.cognitive.microsoft.com/sts/v1.0/issueToken",
+            "https://southcentralus.api.cognitive.microsoft.com/sts/v1.0/issueToken",
+            "https://southeastasia.api.cognitive.microsoft.com/sts/v1.0/issueToken",
+            "https://uksouth.api.cognitive.microsoft.com/sts/v1.0/issueToken",
+            "https://westeurope.api.cognitive.microsoft.com/sts/v1.0/issueToken",
+            "https://westus.api.cognitive.microsoft.com/sts/v1.0/issueToken",
+            "https://westus2.api.cognitive.microsoft.com/sts/v1.0/issueToken"});
+            this.comboBoxBoxBingTokenEndpoint.Location = new System.Drawing.Point(9, 101);
+            this.comboBoxBoxBingTokenEndpoint.MaxLength = 32767;
+            this.comboBoxBoxBingTokenEndpoint.Name = "comboBoxBoxBingTokenEndpoint";
+            this.comboBoxBoxBingTokenEndpoint.SelectedIndex = -1;
+            this.comboBoxBoxBingTokenEndpoint.SelectedItem = null;
+            this.comboBoxBoxBingTokenEndpoint.SelectedText = "";
+            this.comboBoxBoxBingTokenEndpoint.Size = new System.Drawing.Size(375, 21);
+            this.comboBoxBoxBingTokenEndpoint.TabIndex = 33;
+            this.comboBoxBoxBingTokenEndpoint.TabStop = false;
+            this.comboBoxBoxBingTokenEndpoint.UsePopupWindow = false;
+            // 
+            // labelBingTokenEndpoint
+            // 
+            this.labelBingTokenEndpoint.AutoSize = true;
+            this.labelBingTokenEndpoint.Location = new System.Drawing.Point(6, 83);
+            this.labelBingTokenEndpoint.Name = "labelBingTokenEndpoint";
+            this.labelBingTokenEndpoint.Size = new System.Drawing.Size(81, 13);
+            this.labelBingTokenEndpoint.TabIndex = 32;
+            this.labelBingTokenEndpoint.Text = "Token endpoint";
+            // 
+            // labelBingApiKey
+            // 
+            this.labelBingApiKey.AutoSize = true;
+            this.labelBingApiKey.Location = new System.Drawing.Point(6, 27);
+            this.labelBingApiKey.Name = "labelBingApiKey";
+            this.labelBingApiKey.Size = new System.Drawing.Size(44, 13);
+            this.labelBingApiKey.TabIndex = 30;
+            this.labelBingApiKey.Text = "API key";
+            // 
+            // textBoxBingClientSecret
+            // 
+            this.textBoxBingClientSecret.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.textBoxBingClientSecret.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.textBoxBingClientSecret.Location = new System.Drawing.Point(10, 45);
+            this.textBoxBingClientSecret.Multiline = true;
+            this.textBoxBingClientSecret.Name = "textBoxBingClientSecret";
+            this.textBoxBingClientSecret.Size = new System.Drawing.Size(374, 21);
+            this.textBoxBingClientSecret.TabIndex = 26;
+            // 
+            // linkLabelBingSubscribe
+            // 
+            this.linkLabelBingSubscribe.AutoSize = true;
+            this.linkLabelBingSubscribe.Location = new System.Drawing.Point(306, 17);
+            this.linkLabelBingSubscribe.Name = "linkLabelBingSubscribe";
+            this.linkLabelBingSubscribe.Size = new System.Drawing.Size(78, 13);
+            this.linkLabelBingSubscribe.TabIndex = 24;
+            this.linkLabelBingSubscribe.TabStop = true;
+            this.linkLabelBingSubscribe.Text = "How to sign up";
+            this.linkLabelBingSubscribe.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelBingSubscribe_LinkClicked);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(16, 106);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(0, 13);
+            this.label1.TabIndex = 25;
             // 
             // panelToolBar
             // 
@@ -6592,20 +6583,243 @@
             this.toolTipDialogStylePreview.InitialDelay = 500;
             this.toolTipDialogStylePreview.ReshowDelay = 100;
             // 
+            // panelAutoTranslate
+            // 
+            this.panelAutoTranslate.Controls.Add(this.groupBox4);
+            this.panelAutoTranslate.Controls.Add(this.groupBoxNllbServe);
+            this.panelAutoTranslate.Controls.Add(this.groupBox1);
+            this.panelAutoTranslate.Controls.Add(this.groupBoxGoogleTranslate);
+            this.panelAutoTranslate.Controls.Add(this.groupBoxBing);
+            this.panelAutoTranslate.Location = new System.Drawing.Point(227, 3);
+            this.panelAutoTranslate.Name = "panelAutoTranslate";
+            this.panelAutoTranslate.Padding = new System.Windows.Forms.Padding(3);
+            this.panelAutoTranslate.Size = new System.Drawing.Size(864, 521);
+            this.panelAutoTranslate.TabIndex = 33;
+            this.panelAutoTranslate.Text = "Tools";
+            // 
+            // groupBox4
+            // 
+            this.groupBox4.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox4.Controls.Add(this.checkBoxLibreTranslateAutoStart);
+            this.groupBox4.Controls.Add(this.nikseTextBoxLibreTranslateUrl);
+            this.groupBox4.Controls.Add(this.label6);
+            this.groupBox4.Controls.Add(this.linkLabelLibreTranslateApi);
+            this.groupBox4.Controls.Add(this.label7);
+            this.groupBox4.Location = new System.Drawing.Point(429, 9);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(408, 117);
+            this.groupBox4.TabIndex = 37;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "LibreTranslate API";
+            // 
+            // checkBoxLibreTranslateAutoStart
+            // 
+            this.checkBoxLibreTranslateAutoStart.AutoSize = true;
+            this.checkBoxLibreTranslateAutoStart.Location = new System.Drawing.Point(9, 79);
+            this.checkBoxLibreTranslateAutoStart.Name = "checkBoxLibreTranslateAutoStart";
+            this.checkBoxLibreTranslateAutoStart.Size = new System.Drawing.Size(132, 17);
+            this.checkBoxLibreTranslateAutoStart.TabIndex = 35;
+            this.checkBoxLibreTranslateAutoStart.Text = "Auto start web server";
+            this.checkBoxLibreTranslateAutoStart.UseVisualStyleBackColor = true;
+            // 
+            // nikseTextBoxLibreTranslateUrl
+            // 
+            this.nikseTextBoxLibreTranslateUrl.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.nikseTextBoxLibreTranslateUrl.Location = new System.Drawing.Point(8, 45);
+            this.nikseTextBoxLibreTranslateUrl.Name = "nikseTextBoxLibreTranslateUrl";
+            this.nikseTextBoxLibreTranslateUrl.Size = new System.Drawing.Size(376, 21);
+            this.nikseTextBoxLibreTranslateUrl.TabIndex = 34;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(6, 27);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(20, 13);
+            this.label6.TabIndex = 30;
+            this.label6.Text = "Url";
+            // 
+            // linkLabelLibreTranslateApi
+            // 
+            this.linkLabelLibreTranslateApi.AutoSize = true;
+            this.linkLabelLibreTranslateApi.Location = new System.Drawing.Point(332, 16);
+            this.linkLabelLibreTranslateApi.Name = "linkLabelLibreTranslateApi";
+            this.linkLabelLibreTranslateApi.Size = new System.Drawing.Size(52, 13);
+            this.linkLabelLibreTranslateApi.TabIndex = 24;
+            this.linkLabelLibreTranslateApi.TabStop = true;
+            this.linkLabelLibreTranslateApi.Text = "More info";
+            this.linkLabelLibreTranslateApi.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelLibreTranslateApi_LinkClicked);
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(16, 106);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(0, 13);
+            this.label7.TabIndex = 25;
+            // 
+            // groupBoxNllbServe
+            // 
+            this.groupBoxNllbServe.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxNllbServe.Controls.Add(this.nikseTextBoxNllbServeModel);
+            this.groupBoxNllbServe.Controls.Add(this.labelNllbServeModel);
+            this.groupBoxNllbServe.Controls.Add(this.checkBoxNllbServeAutoStart);
+            this.groupBoxNllbServe.Controls.Add(this.nikseTextBoxNllbServeUrl);
+            this.groupBoxNllbServe.Controls.Add(this.label2);
+            this.groupBoxNllbServe.Controls.Add(this.linkLabelNllbServe);
+            this.groupBoxNllbServe.Controls.Add(this.label4);
+            this.groupBoxNllbServe.Location = new System.Drawing.Point(10, 252);
+            this.groupBoxNllbServe.Name = "groupBoxNllbServe";
+            this.groupBoxNllbServe.Size = new System.Drawing.Size(408, 145);
+            this.groupBoxNllbServe.TabIndex = 35;
+            this.groupBoxNllbServe.TabStop = false;
+            this.groupBoxNllbServe.Text = "NLLM Serve";
+            // 
+            // checkBoxNllbServeAutoStart
+            // 
+            this.checkBoxNllbServeAutoStart.AutoSize = true;
+            this.checkBoxNllbServeAutoStart.Location = new System.Drawing.Point(13, 110);
+            this.checkBoxNllbServeAutoStart.Name = "checkBoxNllbServeAutoStart";
+            this.checkBoxNllbServeAutoStart.Size = new System.Drawing.Size(132, 17);
+            this.checkBoxNllbServeAutoStart.TabIndex = 35;
+            this.checkBoxNllbServeAutoStart.Text = "Auto start web server";
+            this.checkBoxNllbServeAutoStart.UseVisualStyleBackColor = true;
+            // 
+            // nikseTextBoxNllbServeUrl
+            // 
+            this.nikseTextBoxNllbServeUrl.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.nikseTextBoxNllbServeUrl.Location = new System.Drawing.Point(8, 45);
+            this.nikseTextBoxNllbServeUrl.Name = "nikseTextBoxNllbServeUrl";
+            this.nikseTextBoxNllbServeUrl.Size = new System.Drawing.Size(376, 21);
+            this.nikseTextBoxNllbServeUrl.TabIndex = 34;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(6, 27);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(20, 13);
+            this.label2.TabIndex = 30;
+            this.label2.Text = "Url";
+            // 
+            // linkLabelNllbServe
+            // 
+            this.linkLabelNllbServe.AutoSize = true;
+            this.linkLabelNllbServe.Location = new System.Drawing.Point(332, 16);
+            this.linkLabelNllbServe.Name = "linkLabelNllbServe";
+            this.linkLabelNllbServe.Size = new System.Drawing.Size(52, 13);
+            this.linkLabelNllbServe.TabIndex = 24;
+            this.linkLabelNllbServe.TabStop = true;
+            this.linkLabelNllbServe.Text = "More info";
+            this.linkLabelNllbServe.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelNllbServe_LinkClicked);
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(16, 106);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(0, 13);
+            this.label4.TabIndex = 25;
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Controls.Add(this.checkBoxNllbApiAutoStart);
+            this.groupBox1.Controls.Add(this.nikseTextBoxNllbApiUrl);
+            this.groupBox1.Controls.Add(this.labelNllbApiUrl);
+            this.groupBox1.Controls.Add(this.linkLabelNllbApi);
+            this.groupBox1.Controls.Add(this.label5);
+            this.groupBox1.Location = new System.Drawing.Point(10, 403);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(408, 111);
+            this.groupBox1.TabIndex = 36;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "NLLM API";
+            // 
+            // checkBoxNllbApiAutoStart
+            // 
+            this.checkBoxNllbApiAutoStart.AutoSize = true;
+            this.checkBoxNllbApiAutoStart.Location = new System.Drawing.Point(9, 79);
+            this.checkBoxNllbApiAutoStart.Name = "checkBoxNllbApiAutoStart";
+            this.checkBoxNllbApiAutoStart.Size = new System.Drawing.Size(132, 17);
+            this.checkBoxNllbApiAutoStart.TabIndex = 35;
+            this.checkBoxNllbApiAutoStart.Text = "Auto start web server";
+            this.checkBoxNllbApiAutoStart.UseVisualStyleBackColor = true;
+            // 
+            // nikseTextBoxNllbApiUrl
+            // 
+            this.nikseTextBoxNllbApiUrl.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.nikseTextBoxNllbApiUrl.Location = new System.Drawing.Point(8, 45);
+            this.nikseTextBoxNllbApiUrl.Name = "nikseTextBoxNllbApiUrl";
+            this.nikseTextBoxNllbApiUrl.Size = new System.Drawing.Size(376, 21);
+            this.nikseTextBoxNllbApiUrl.TabIndex = 34;
+            // 
+            // labelNllbApiUrl
+            // 
+            this.labelNllbApiUrl.AutoSize = true;
+            this.labelNllbApiUrl.Location = new System.Drawing.Point(6, 27);
+            this.labelNllbApiUrl.Name = "labelNllbApiUrl";
+            this.labelNllbApiUrl.Size = new System.Drawing.Size(20, 13);
+            this.labelNllbApiUrl.TabIndex = 30;
+            this.labelNllbApiUrl.Text = "Url";
+            // 
+            // linkLabelNllbApi
+            // 
+            this.linkLabelNllbApi.AutoSize = true;
+            this.linkLabelNllbApi.Location = new System.Drawing.Point(332, 16);
+            this.linkLabelNllbApi.Name = "linkLabelNllbApi";
+            this.linkLabelNllbApi.Size = new System.Drawing.Size(52, 13);
+            this.linkLabelNllbApi.TabIndex = 24;
+            this.linkLabelNllbApi.TabStop = true;
+            this.linkLabelNllbApi.Text = "More info";
+            this.linkLabelNllbApi.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelNllbApi_LinkClicked);
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(16, 106);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(0, 13);
+            this.label5.TabIndex = 25;
+            // 
+            // labelNllbServeModel
+            // 
+            this.labelNllbServeModel.AutoSize = true;
+            this.labelNllbServeModel.Location = new System.Drawing.Point(7, 80);
+            this.labelNllbServeModel.Name = "labelNllbServeModel";
+            this.labelNllbServeModel.Size = new System.Drawing.Size(35, 13);
+            this.labelNllbServeModel.TabIndex = 36;
+            this.labelNllbServeModel.Text = "Model";
+            // 
+            // nikseTextBoxNllbServeModel
+            // 
+            this.nikseTextBoxNllbServeModel.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.nikseTextBoxNllbServeModel.Location = new System.Drawing.Point(49, 77);
+            this.nikseTextBoxNllbServeModel.Name = "nikseTextBoxNllbServeModel";
+            this.nikseTextBoxNllbServeModel.Size = new System.Drawing.Size(334, 21);
+            this.nikseTextBoxNllbServeModel.TabIndex = 37;
+            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1092, 574);
             this.Controls.Add(this.labelUpdateFileTypeAssociationsStatus);
+            this.Controls.Add(this.panelAutoTranslate);
             this.Controls.Add(this.panelGeneral);
+            this.Controls.Add(this.panelTools);
             this.Controls.Add(this.panelShortcuts);
             this.Controls.Add(this.panelFont);
             this.Controls.Add(this.panelSubtitleFormats);
             this.Controls.Add(this.panelWaveform);
             this.Controls.Add(this.panelVideoPlayer);
             this.Controls.Add(this.panelToolBar);
-            this.Controls.Add(this.panelTools);
             this.Controls.Add(this.panelNetwork);
             this.Controls.Add(this.panelFileTypeAssociations);
             this.Controls.Add(this.panelSyntaxColoring);
@@ -6663,10 +6877,6 @@
             this.panelTools.ResumeLayout(false);
             this.groupBoxToolsMisc.ResumeLayout(false);
             this.groupBoxToolsMisc.PerformLayout();
-            this.groupBoxGoogleTranslate.ResumeLayout(false);
-            this.groupBoxGoogleTranslate.PerformLayout();
-            this.groupBoxBing.ResumeLayout(false);
-            this.groupBoxBing.PerformLayout();
             this.groupBoxToolsAutoBr.ResumeLayout(false);
             this.groupBoxToolsAutoBr.PerformLayout();
             this.groupBoxSpellCheck.ResumeLayout(false);
@@ -6675,6 +6885,10 @@
             this.groupBoxFixCommonErrors.PerformLayout();
             this.groupBoxToolsVisualSync.ResumeLayout(false);
             this.groupBoxToolsVisualSync.PerformLayout();
+            this.groupBoxGoogleTranslate.ResumeLayout(false);
+            this.groupBoxGoogleTranslate.PerformLayout();
+            this.groupBoxBing.ResumeLayout(false);
+            this.groupBoxBing.PerformLayout();
             this.panelToolBar.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
@@ -6731,6 +6945,13 @@
             this.groupBoxProxyAuthentication.ResumeLayout(false);
             this.groupBoxProxyAuthentication.PerformLayout();
             this.panelFileTypeAssociations.ResumeLayout(false);
+            this.panelAutoTranslate.ResumeLayout(false);
+            this.groupBox4.ResumeLayout(false);
+            this.groupBox4.PerformLayout();
+            this.groupBoxNllbServe.ResumeLayout(false);
+            this.groupBoxNllbServe.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -6957,7 +7178,7 @@
         private System.Windows.Forms.Label labelUserBingApiId;
         private System.Windows.Forms.GroupBox groupBoxBing;
         private System.Windows.Forms.Label labelBingApiKey;
-        private Nikse.SubtitleEdit.Controls.SETextBox textBoxBingClientSecret;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxBingClientSecret;
         private System.Windows.Forms.Label label1;
         private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxAutoBackupDeleteAfter;
         private System.Windows.Forms.Label labelAutoBackupDeleteAfter;
@@ -7006,7 +7227,7 @@
         private Nikse.SubtitleEdit.Controls.SETextBox textBoxShortcutSearch;
         private System.Windows.Forms.GroupBox groupBoxGoogleTranslate;
         private System.Windows.Forms.Label labelGoogleTranslateApiKey;
-        private Nikse.SubtitleEdit.Controls.SETextBox textBoxGoogleTransleApiKey;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxGoogleTransleApiKey;
         private System.Windows.Forms.LinkLabel linkLabelGoogleTranslateSignUp;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.CheckBox checkBoxAutoSave;
@@ -7162,5 +7383,26 @@
         private System.Windows.Forms.Button buttonDefaultLanguages;
         private System.Windows.Forms.Label labelDefaultLanguages;
         private System.Windows.Forms.Label labelDefaultLanguagesList;
+        private System.Windows.Forms.Panel panelAutoTranslate;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.Label labelNllbApiUrl;
+        private System.Windows.Forms.LinkLabel linkLabelNllbApi;
+        private System.Windows.Forms.Label label5;
+        private Controls.NikseTextBox nikseTextBoxNllbApiUrl;
+        private System.Windows.Forms.GroupBox groupBoxNllbServe;
+        private System.Windows.Forms.CheckBox checkBoxNllbServeAutoStart;
+        private Controls.NikseTextBox nikseTextBoxNllbServeUrl;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.LinkLabel linkLabelNllbServe;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.CheckBox checkBoxNllbApiAutoStart;
+        private System.Windows.Forms.GroupBox groupBox4;
+        private System.Windows.Forms.CheckBox checkBoxLibreTranslateAutoStart;
+        private Controls.NikseTextBox nikseTextBoxLibreTranslateUrl;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.LinkLabel linkLabelLibreTranslateApi;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label labelNllbServeModel;
+        private Controls.NikseTextBox nikseTextBoxNllbServeModel;
     }
 }

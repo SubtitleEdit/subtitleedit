@@ -16,6 +16,7 @@ using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Controls;
+using Nikse.SubtitleEdit.Core.AutoTranslate;
 using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms.Options
@@ -29,10 +30,11 @@ namespace Nikse.SubtitleEdit.Forms.Options
         private const int VideoPlayerSection = 4;
         private const int WaveformAndSpectrogramSection = 5;
         private const int ToolsSection = 6;
-        private const int ToolbarSection = 7;
-        private const int AppearanceSection = 8;
-        private const int NetworkSection = 9;
-        private const int FileTypeAssociationSection = 10;
+        private const int AutoTranslateSection = 7;
+        private const int ToolbarSection = 8;
+        private const int AppearanceSection = 9;
+        private const int NetworkSection = 10;
+        private const int FileTypeAssociationSection = 11;
 
         private string _oldVlcLocation;
         private string _oldVlcLocationRelative;
@@ -43,7 +45,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
         private List<PluginShortcut> _pluginShortcuts;
         private readonly bool _loading;
         private readonly BackgroundWorker _shortcutsBackgroundWorker;
-        private string  _defaultLanguages;
+        private string _defaultLanguages;
 
         private static IEnumerable<string> GetSubtitleFormats() => SubtitleFormat.AllSubtitleFormats.Where(format => !format.IsVobSubIndexFile).Select(format => format.FriendlyName);
 
@@ -122,6 +124,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
                 "Video player",
                 "Waveform/spectrogram",
                 "Tools",
+                "Auto translate",
                 "Toolbar",
                 "Font",
                 "Network",
@@ -389,6 +392,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             listBoxSection.Items[VideoPlayerSection] = language.VideoPlayer;
             listBoxSection.Items[WaveformAndSpectrogramSection] = language.WaveformAndSpectrogram;
             listBoxSection.Items[ToolsSection] = language.Tools;
+            listBoxSection.Items[AutoTranslateSection] = language.AutoTranslate;
             listBoxSection.Items[ToolbarSection] = language.Toolbar;
             listBoxSection.Items[AppearanceSection] = language.Appearance;
             listBoxSection.Items[NetworkSection] = language.Network;
@@ -1100,6 +1104,13 @@ namespace Nikse.SubtitleEdit.Forms.Options
             textBoxBingClientSecret.Text = Configuration.Settings.Tools.MicrosoftTranslatorApiKey;
             comboBoxBoxBingTokenEndpoint.Text = Configuration.Settings.Tools.MicrosoftTranslatorTokenEndpoint;
             textBoxGoogleTransleApiKey.Text = toolsSettings.GoogleApiV2Key;
+            nikseTextBoxNllbApiUrl.Text = Configuration.Settings.Tools.AutoTranslateNllbApiUrl;
+            checkBoxNllbApiAutoStart.Checked = Configuration.Settings.Tools.AutoTranslateNllbApiAutoStart;
+            nikseTextBoxNllbServeUrl.Text = Configuration.Settings.Tools.AutoTranslateNllbServeUrl;
+            nikseTextBoxNllbServeModel.Text = Configuration.Settings.Tools.AutoTranslateNllbServeModel;
+            checkBoxNllbServeAutoStart.Checked = Configuration.Settings.Tools.AutoTranslateNllbServeAutoStart;
+            nikseTextBoxLibreTranslateUrl.Text = Configuration.Settings.Tools.AutoTranslateLibreUrl;
+            checkBoxLibreTranslateAutoStart.Checked = Configuration.Settings.Tools.AutoTranslateLibreAutoStart;
 
             buttonReset.Text = LanguageSettings.Current.Settings.RestoreDefaultSettings;
             buttonOK.Text = LanguageSettings.Current.General.Ok;
@@ -2260,6 +2271,13 @@ namespace Nikse.SubtitleEdit.Forms.Options
             toolsSettings.MicrosoftTranslatorApiKey = textBoxBingClientSecret.Text.Trim();
             toolsSettings.MicrosoftTranslatorTokenEndpoint = comboBoxBoxBingTokenEndpoint.Text.Trim();
             toolsSettings.GoogleApiV2Key = textBoxGoogleTransleApiKey.Text.Trim();
+            toolsSettings.AutoTranslateNllbApiUrl = nikseTextBoxNllbApiUrl.Text;
+            toolsSettings.AutoTranslateNllbApiAutoStart = checkBoxNllbApiAutoStart.Checked;
+            toolsSettings.AutoTranslateNllbServeUrl = nikseTextBoxNllbServeUrl.Text;
+            toolsSettings.AutoTranslateNllbServeModel = nikseTextBoxNllbServeModel.Text;
+            toolsSettings.AutoTranslateNllbServeAutoStart = checkBoxNllbServeAutoStart.Checked;
+            toolsSettings.AutoTranslateLibreUrl = nikseTextBoxLibreTranslateUrl.Text;
+            toolsSettings.AutoTranslateLibreAutoStart = checkBoxLibreTranslateAutoStart.Checked;
 
             var proxy = Configuration.Settings.Proxy;
             proxy.ProxyAddress = textBoxProxyAddress.Text;
@@ -2372,6 +2390,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             panelVideoPlayer.Visible = false;
             panelWaveform.Visible = false;
             panelTools.Visible = false;
+            panelAutoTranslate.Visible = false;
             panelToolBar.Visible = false;
             panelFont.Visible = false;
             panelNetwork.Visible = false;
@@ -2407,6 +2426,9 @@ namespace Nikse.SubtitleEdit.Forms.Options
                 case ToolsSection:
                     section = panelTools;
                     break;
+                case AutoTranslateSection:
+                    section = panelAutoTranslate;
+                    break;
                 case ToolbarSection:
                     section = panelToolBar;
                     break;
@@ -2429,6 +2451,10 @@ namespace Nikse.SubtitleEdit.Forms.Options
                     break;
             }
 
+            section.Top = panelGeneral.Top;
+            section.Height = panelGeneral.Height;
+            section.Left = panelGeneral.Left;
+            section.Width = panelGeneral.Width;
             section.Visible = true;
 
             _lastSelectionIndex = listBoxSection.SelectedIndex;
@@ -3895,6 +3921,21 @@ namespace Nikse.SubtitleEdit.Forms.Options
             }
 
             labelDefaultLanguagesList.Text = string.Join(", ", arr);
+        }
+
+        private void linkLabelNllbApi_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            UiUtil.OpenUrl(new NoLanguageLeftBehindApi().Url);
+        }
+
+        private void linkLabelNllbServe_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            UiUtil.OpenUrl(new NoLanguageLeftBehindServe().Url);
+        }
+
+        private void linkLabelLibreTranslateApi_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            UiUtil.OpenUrl(new LibreTranslate().Url);
         }
     }
 }

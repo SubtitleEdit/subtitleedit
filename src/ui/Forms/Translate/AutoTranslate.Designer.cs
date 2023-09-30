@@ -37,6 +37,7 @@
             this.labelSource = new System.Windows.Forms.Label();
             this.labelUrl = new System.Windows.Forms.Label();
             this.linkLabelPoweredBy = new System.Windows.Forms.LinkLabel();
+            this.labelInfo = new System.Windows.Forms.Label();
             this.nikseComboBoxEngine = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.nikseComboBoxUrl = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.comboBoxSource = new Nikse.SubtitleEdit.Controls.NikseComboBox();
@@ -132,6 +133,16 @@
             this.linkLabelPoweredBy.TabStop = true;
             this.linkLabelPoweredBy.Text = "Powered by X";
             this.linkLabelPoweredBy.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelPoweredBy_LinkClicked);
+            // 
+            // labelInfo
+            // 
+            this.labelInfo.AutoSize = true;
+            this.labelInfo.Location = new System.Drawing.Point(465, 528);
+            this.labelInfo.Name = "labelInfo";
+            this.labelInfo.Size = new System.Drawing.Size(47, 13);
+            this.labelInfo.TabIndex = 110;
+            this.labelInfo.Text = "labelInfo";
+            this.labelInfo.Visible = false;
             // 
             // nikseComboBoxEngine
             // 
@@ -275,6 +286,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1058, 563);
+            this.Controls.Add(this.labelInfo);
             this.Controls.Add(this.linkLabelPoweredBy);
             this.Controls.Add(this.nikseComboBoxEngine);
             this.Controls.Add(this.labelUrl);
@@ -297,6 +309,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "AutoTranslate";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.AutoTranslate_FormClosing);
             this.ResizeEnd += new System.EventHandler(this.AutoTranslate_ResizeEnd);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.AutoTranslate_KeyDown);
             this.Resize += new System.EventHandler(this.AutoTranslate_Resize);
@@ -322,5 +335,6 @@
         private Controls.NikseComboBox nikseComboBoxUrl;
         private Controls.NikseComboBox nikseComboBoxEngine;
         private System.Windows.Forms.LinkLabel linkLabelPoweredBy;
+        private System.Windows.Forms.Label labelInfo;
     }
 }
