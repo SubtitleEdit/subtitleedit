@@ -18,6 +18,7 @@ namespace Nikse.SubtitleEdit.Forms
         private Bitmap _gray6;
         private Bitmap _gray7;
         private Bitmap _gray8;
+        private Bitmap _gray9;
 
         private bool _loading = true;
 
@@ -49,6 +50,7 @@ namespace Nikse.SubtitleEdit.Forms
             _gray6?.Dispose();
             _gray7?.Dispose();
             _gray8?.Dispose();
+            _gray9?.Dispose();
 
             _gray1 = GrayScale(Properties.Resources.L1, initialLayout == 0);
             _gray2 = GrayScale(Properties.Resources.L2, initialLayout == 1);
@@ -58,6 +60,7 @@ namespace Nikse.SubtitleEdit.Forms
             _gray6 = GrayScale(Properties.Resources.L6, initialLayout == 5);
             _gray7 = GrayScale(Properties.Resources.L7, initialLayout == 6);
             _gray8 = GrayScale(Properties.Resources.L8, initialLayout == 7);
+            _gray9 = GrayScale(Properties.Resources.L9, initialLayout == 8);
 
             button1.Image = _gray1;
             button2.Image = _gray2;
@@ -67,6 +70,7 @@ namespace Nikse.SubtitleEdit.Forms
             button6.Image = _gray6;
             button7.Image = _gray7;
             button8.Image = _gray8;
+            button9.Image = _gray9;
 
             button1.Font = new Font(button1.Font.FontFamily, 28);
             button2.Font = new Font(button1.Font.FontFamily, 28);
@@ -76,8 +80,8 @@ namespace Nikse.SubtitleEdit.Forms
             button6.Font = new Font(button1.Font.FontFamily, 28);
             button7.Font = new Font(button1.Font.FontFamily, 28);
             button8.Font = new Font(button1.Font.FontFamily, 28);
+            button9.Font = new Font(button1.Font.FontFamily, 28);
         }
-
 
         public static Bitmap GrayScale(Bitmap original, bool selected)
         {
@@ -168,6 +172,11 @@ namespace Nikse.SubtitleEdit.Forms
             _layout = 7;
             DialogResult = DialogResult.OK;
         }
+        private void button9_Click(object sender, EventArgs e)
+        {
+            _layout = 8;
+            DialogResult = DialogResult.OK;
+        }
 
         private void button1_MouseEnter(object sender, EventArgs e)
         {
@@ -249,6 +258,16 @@ namespace Nikse.SubtitleEdit.Forms
             button8.Image = _gray8;
         }
 
+        private void button9_MouseEnter(object sender, EventArgs e)
+        {
+            button9.Image = Properties.Resources.L9;
+        }
+
+        private void button9_MouseLeave(object sender, EventArgs e)
+        {
+            button9.Image = _gray9;
+        }
+
         private void LayoutPicker_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
@@ -270,7 +289,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.KeyCode == Keys.Right || e.KeyCode == Keys.Up)
             {
-                if (_layout < 7)
+                if (_layout < 8)
                 {
                     _layout++;
                     UpdateButtons(_layout);
@@ -364,6 +383,11 @@ namespace Nikse.SubtitleEdit.Forms
             SelectLayout(7);
         }
 
+        private void button9_Enter(object sender, EventArgs e)
+        {
+            SelectLayout(8);
+        }
+
         private void LayoutPicker_Shown(object sender, EventArgs e)
         {
             FocusLayout();
@@ -404,6 +428,9 @@ namespace Nikse.SubtitleEdit.Forms
                     break;
                 case 7:
                     button8.Focus();
+                    break;
+                case 8:
+                    button9.Focus();
                     break;
             }
         }

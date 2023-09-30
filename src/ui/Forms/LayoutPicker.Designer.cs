@@ -40,6 +40,7 @@
             this.buttonCancel = new System.Windows.Forms.Button();
             this.checkBoxHideVideoControls = new System.Windows.Forms.CheckBox();
             this.buttonOk = new System.Windows.Forms.Button();
+            this.button9 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // button1
@@ -48,7 +49,7 @@
             this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button1.Image = global::Nikse.SubtitleEdit.Properties.Resources.L1;
-            this.button1.Location = new System.Drawing.Point(13, 13);
+            this.button1.Location = new System.Drawing.Point(13, 10);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(195, 147);
             this.button1.TabIndex = 0;
@@ -66,7 +67,7 @@
             this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button2.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button2.Image = ((System.Drawing.Image)(resources.GetObject("button2.Image")));
-            this.button2.Location = new System.Drawing.Point(220, 13);
+            this.button2.Location = new System.Drawing.Point(220, 10);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(195, 147);
             this.button2.TabIndex = 1;
@@ -83,7 +84,7 @@
             this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button3.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button3.Image = ((System.Drawing.Image)(resources.GetObject("button3.Image")));
-            this.button3.Location = new System.Drawing.Point(427, 13);
+            this.button3.Location = new System.Drawing.Point(427, 10);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(195, 147);
             this.button3.TabIndex = 2;
@@ -100,7 +101,7 @@
             this.button4.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button4.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button4.Image = ((System.Drawing.Image)(resources.GetObject("button4.Image")));
-            this.button4.Location = new System.Drawing.Point(634, 13);
+            this.button4.Location = new System.Drawing.Point(12, 163);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(195, 147);
             this.button4.TabIndex = 3;
@@ -117,7 +118,7 @@
             this.button5.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button5.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button5.Image = ((System.Drawing.Image)(resources.GetObject("button5.Image")));
-            this.button5.Location = new System.Drawing.Point(13, 169);
+            this.button5.Location = new System.Drawing.Point(220, 163);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(195, 147);
             this.button5.TabIndex = 4;
@@ -134,7 +135,7 @@
             this.button6.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button6.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button6.Image = ((System.Drawing.Image)(resources.GetObject("button6.Image")));
-            this.button6.Location = new System.Drawing.Point(220, 169);
+            this.button6.Location = new System.Drawing.Point(427, 163);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(195, 147);
             this.button6.TabIndex = 5;
@@ -151,7 +152,7 @@
             this.button7.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button7.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button7.Image = global::Nikse.SubtitleEdit.Properties.Resources.L7;
-            this.button7.Location = new System.Drawing.Point(428, 169);
+            this.button7.Location = new System.Drawing.Point(13, 316);
             this.button7.Name = "button7";
             this.button7.Size = new System.Drawing.Size(195, 147);
             this.button7.TabIndex = 6;
@@ -168,7 +169,7 @@
             this.button8.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button8.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button8.Image = ((System.Drawing.Image)(resources.GetObject("button8.Image")));
-            this.button8.Location = new System.Drawing.Point(635, 169);
+            this.button8.Location = new System.Drawing.Point(220, 316);
             this.button8.Name = "button8";
             this.button8.Size = new System.Drawing.Size(195, 147);
             this.button8.TabIndex = 7;
@@ -183,7 +184,7 @@
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(740, 339);
+            this.buttonCancel.Location = new System.Drawing.Point(534, 475);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(90, 23);
             this.buttonCancel.TabIndex = 91;
@@ -192,8 +193,9 @@
             // 
             // checkBoxHideVideoControls
             // 
+            this.checkBoxHideVideoControls.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.checkBoxHideVideoControls.AutoSize = true;
-            this.checkBoxHideVideoControls.Location = new System.Drawing.Point(13, 337);
+            this.checkBoxHideVideoControls.Location = new System.Drawing.Point(13, 475);
             this.checkBoxHideVideoControls.Name = "checkBoxHideVideoControls";
             this.checkBoxHideVideoControls.Size = new System.Drawing.Size(161, 17);
             this.checkBoxHideVideoControls.TabIndex = 47;
@@ -205,7 +207,7 @@
             // 
             this.buttonOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOk.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOk.Location = new System.Drawing.Point(644, 339);
+            this.buttonOk.Location = new System.Drawing.Point(438, 475);
             this.buttonOk.Name = "buttonOk";
             this.buttonOk.Size = new System.Drawing.Size(90, 23);
             this.buttonOk.TabIndex = 90;
@@ -213,11 +215,29 @@
             this.buttonOk.UseVisualStyleBackColor = true;
             this.buttonOk.Click += new System.EventHandler(this.buttonOk_Click);
             // 
+            // button9
+            // 
+            this.button9.FlatAppearance.BorderSize = 0;
+            this.button9.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button9.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button9.Image = global::Nikse.SubtitleEdit.Properties.Resources.L9;
+            this.button9.Location = new System.Drawing.Point(427, 316);
+            this.button9.Name = "button9";
+            this.button9.Size = new System.Drawing.Size(195, 147);
+            this.button9.TabIndex = 92;
+            this.button9.Text = "9";
+            this.button9.UseVisualStyleBackColor = true;
+            this.button9.Click += new System.EventHandler(this.button9_Click);
+            this.button9.Enter += new System.EventHandler(this.button9_Enter);
+            this.button9.MouseEnter += new System.EventHandler(this.button9_MouseEnter);
+            this.button9.MouseLeave += new System.EventHandler(this.button9_MouseLeave);
+            // 
             // LayoutPicker
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(842, 374);
+            this.ClientSize = new System.Drawing.Size(636, 510);
+            this.Controls.Add(this.button9);
             this.Controls.Add(this.buttonOk);
             this.Controls.Add(this.checkBoxHideVideoControls);
             this.Controls.Add(this.buttonCancel);
@@ -258,5 +278,6 @@
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.CheckBox checkBoxHideVideoControls;
         private System.Windows.Forms.Button buttonOk;
+        private System.Windows.Forms.Button button9;
     }
 }
