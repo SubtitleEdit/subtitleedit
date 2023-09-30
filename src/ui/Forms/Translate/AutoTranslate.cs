@@ -9,6 +9,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms.Translate
 {
@@ -347,91 +348,123 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             timerUpdate.Interval = 1500;
             timerUpdate.Tick += TimerUpdate_Tick;
             timerUpdate.Start();
+            var linesTranslate = 0;
 
             if (comboBoxSource.SelectedItem is TranslationPair source &&
                 comboBoxTarget.SelectedItem is TranslationPair target)
             {
-                var start = subtitleListViewTarget.SelectedIndex >= 0 ? subtitleListViewTarget.SelectedIndex : 0;
-                var index = start;
-                while (index < _subtitle.Paragraphs.Count)
+                try
                 {
-                    var p = _subtitle.Paragraphs[index];
 
-                    var mergeCount = 0;
-                    var allItalic = false;
-                    var allBold = false;
 
-                    var text = string.Empty;
-                    if (MergeWithThreeNext(_subtitle, index, source.Code))
+                    var start = subtitleListViewTarget.SelectedIndex >= 0 ? subtitleListViewTarget.SelectedIndex : 0;
+                    var index = start;
+                    while (index < _subtitle.Paragraphs.Count)
                     {
-                        mergeCount = 3;
-                        allItalic = HasAllLinesTag(_subtitle, index, mergeCount, "i");
-                        allBold = HasAllLinesTag(_subtitle, index, mergeCount, "b");
-                        text = MergeLines(_subtitle, index, mergeCount, allItalic, allBold);
-                    }
-                    else if (MergeWithTwoNext(_subtitle, index, source.Code))
-                    {
-                        mergeCount = 2;
-                        allItalic = HasAllLinesTag(_subtitle, index, mergeCount, "i");
-                        allBold = HasAllLinesTag(_subtitle, index, mergeCount, "b");
-                        text = MergeLines(_subtitle, index, mergeCount, allItalic, allBold);
-                    }
-                    else if (MergeWithNext(_subtitle, index, source.Code))
-                    {
-                        mergeCount = 1;
-                        allItalic = HasAllLinesTag(_subtitle, index, mergeCount, "i");
-                        allBold = HasAllLinesTag(_subtitle, index, mergeCount, "b");
-                        text = MergeLines(_subtitle, index, mergeCount, allItalic, allBold);
-                    }
+                        var p = _subtitle.Paragraphs[index];
 
-                    if (mergeCount > 0)
-                    {
-                        var mergedTranslation = await _autoTranslator.Translate(text, source.Code, target.Code);
-                        var result = SplitResult(mergedTranslation.SplitToLines(), mergeCount, source.Code);
-                        if (allItalic)
+                        var mergeCount = 0;
+                        var allItalic = false;
+                        var allBold = false;
+
+                        var text = string.Empty;
+                        if (MergeWithThreeNext(_subtitle, index, source.Code))
                         {
-                            for (var k = 0; k < result.Count; k++)
+                            mergeCount = 3;
+                            allItalic = HasAllLinesTag(_subtitle, index, mergeCount, "i");
+                            allBold = HasAllLinesTag(_subtitle, index, mergeCount, "b");
+                            text = MergeLines(_subtitle, index, mergeCount, allItalic, allBold);
+                        }
+                        else if (MergeWithTwoNext(_subtitle, index, source.Code))
+                        {
+                            mergeCount = 2;
+                            allItalic = HasAllLinesTag(_subtitle, index, mergeCount, "i");
+                            allBold = HasAllLinesTag(_subtitle, index, mergeCount, "b");
+                            text = MergeLines(_subtitle, index, mergeCount, allItalic, allBold);
+                        }
+                        else if (MergeWithNext(_subtitle, index, source.Code))
+                        {
+                            mergeCount = 1;
+                            allItalic = HasAllLinesTag(_subtitle, index, mergeCount, "i");
+                            allBold = HasAllLinesTag(_subtitle, index, mergeCount, "b");
+                            text = MergeLines(_subtitle, index, mergeCount, allItalic, allBold);
+                        }
+
+                        if (mergeCount > 0)
+                        {
+                            var mergedTranslation = await _autoTranslator.Translate(text, source.Code, target.Code);
+                            var result = SplitResult(mergedTranslation.SplitToLines(), mergeCount, source.Code);
+                            if (allItalic)
                             {
-                                result[k] = "<i>" + result[k] + "</i>";
+                                for (var k = 0; k < result.Count; k++)
+                                {
+                                    result[k] = "<i>" + result[k] + "</i>";
+                                }
+                            }
+
+                            if (allBold)
+                            {
+                                for (var k = 0; k < result.Count; k++)
+                                {
+                                    result[k] = "<b>" + result[k] + "</b>";
+                                }
+                            }
+
+                            if (result.Count == mergeCount + 1 && result.All(t => !string.IsNullOrEmpty(t)))
+                            {
+                                foreach (var line in result)
+                                {
+                                    TranslatedSubtitle.Paragraphs[index].Text = line;
+                                    index++;
+                                    linesTranslate++;
+                                }
+
+                                continue;
                             }
                         }
 
-                        if (allBold)
-                        {
-                            for (var k = 0; k < result.Count; k++)
-                            {
-                                result[k] = "<b>" + result[k] + "</b>";
-                            }
-                        }
+                        var translation = await _autoTranslator.Translate(p.Text, source.Code, target.Code);
+                        translation = translation
+                            .Replace("<br />", Environment.NewLine)
+                            .Replace("<br/>", Environment.NewLine);
+                        TranslatedSubtitle.Paragraphs[index].Text = Utilities.AutoBreakLine(translation);
+                        linesTranslate++;
 
-                        if (result.Count == mergeCount + 1 && result.All(t => !string.IsNullOrEmpty(t)))
-                        {
-                            foreach (var line in result)
-                            {
-                                TranslatedSubtitle.Paragraphs[index].Text = line;
-                                index++;
-                            }
+                        _translationProgressIndex = index;
+                        _translationProgressDirty = true;
+                        progressBar1.Value = index;
+                        index++;
 
-                            continue;
+                        Application.DoEvents();
+                        if (_breakTranslation)
+                        {
+                            break;
                         }
                     }
 
-                    var translation = await _autoTranslator.Translate(p.Text, source.Code, target.Code);
-                    translation = translation
-                        .Replace("<br />", Environment.NewLine)
-                        .Replace("<br/>", Environment.NewLine);
-                    TranslatedSubtitle.Paragraphs[index].Text = Utilities.AutoBreakLine(translation);
-
-                    _translationProgressIndex = index;
-                    _translationProgressDirty = true;
-                    progressBar1.Value = index;
-                    Application.DoEvents();
-                    if (_breakTranslation)
+                }
+                catch (Exception exception)
+                {
+                    SeLogger.Error(exception);
+                    if (linesTranslate == 0)
                     {
-                        break;
+                        var engine = GetCurrentEngine();
+                        var engineType = engine.GetType();
+                        if (engineType == typeof(NoLanguageLeftBehindApi) || engineType == typeof(NoLanguageLeftBehindServe))
+                        {
+                            var dr = MessageBox.Show($"Facebook NLLB via {engine.Name} requires an API running locally!" + Environment.NewLine
+                                                                     + Environment.NewLine
+                                                                     + "Read more?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                            if (dr == DialogResult.Yes)
+                            {
+                                UiUtil.ShowHelp("#translation");
+                            }
+                        }
                     }
-
-                    index++;
+                    else
+                    {
+                        throw;
+                    }
                 }
             }
 
