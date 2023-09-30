@@ -5,6 +5,8 @@
    * UI layouts with support for TikTok/YouTube-shorts - thx leon/jmaraujouy/LearningJer 
    * Language filter (to minimize the long list of languages in combo boxes)
    * Interjections are now language specific
+   * Translate via Facebook's NLLB (requires local API) - thx sharadagg
+   * Translate via LibreTranslate (requires local API) - thx AnonymousWebHacker
    * Statistics for selected lines
    * Shortcut "Set start time and go to next"
 * IMPROVED:

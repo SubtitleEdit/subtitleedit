@@ -1,15 +1,13 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Http;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Core.Translate;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
-using Nikse.SubtitleEdit.Core.Http;
-using Nikse.SubtitleEdit.Core.SubtitleFormats;
-using System.Net.Http.Headers;
 
 namespace Nikse.SubtitleEdit.Core.AutoTranslate
 {
@@ -45,7 +43,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             var sb = new StringBuilder();
             foreach (var line in list)
             {
-                sb.Append("\"" + Json.EncodeJsonText(text) + "\", ");
+                sb.Append("\"" + Json.EncodeJsonText(line) + "\", ");
             }
 
             var src = sb.ToString().TrimEnd().TrimEnd(',').Trim();

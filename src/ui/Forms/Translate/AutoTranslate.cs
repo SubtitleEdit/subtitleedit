@@ -57,14 +57,15 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 Text = title;
             }
 
+            _subtitle = new Subtitle(subtitle);
+            _encoding = encoding;
+
             InitializeAutoTranslatorEngines();
 
             nikseComboBoxUrl.UsePopupWindow = true;
 
             labelPleaseWait.Visible = false;
             progressBar1.Visible = false;
-            _subtitle = new Subtitle(subtitle);
-            _encoding = encoding;
 
             if (selectedLines != null)
             {
@@ -83,9 +84,6 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
             subtitleListViewSource.Fill(_subtitle);
             AutoTranslate_Resize(null, null);
-
-            _autoTranslator = new NoLanguageLeftBehindApi();
-            SetupLanguageSettings();
             UpdateTranslation();
         }
 
@@ -95,6 +93,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             {
                 new NoLanguageLeftBehindServe(),
                 new NoLanguageLeftBehindApi(),
+                new LibreTranslate(),
             };
 
             nikseComboBoxEngine.Items.Clear();
@@ -105,12 +104,14 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 var lastEngine = _autoTranslatorEngines.FirstOrDefault(p => p.Name == Configuration.Settings.Tools.AutoTranslateLastName);
                 if (lastEngine != null)
                 {
+                    _autoTranslator = lastEngine;
                     nikseComboBoxEngine.SelectedIndex = _autoTranslatorEngines.IndexOf(lastEngine);
                 }
             }
 
             if (nikseComboBoxEngine.SelectedIndex < 0)
             {
+                _autoTranslator = _autoTranslatorEngines[0];
                 nikseComboBoxEngine.SelectedIndex = 0;
             }
 
@@ -122,9 +123,9 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
         private void SetAutoTranslatorEngine()
         {
-            var engine = GetCurrentEngine();
-            linkLabelPoweredBy.Text = string.Format(LanguageSettings.Current.GoogleTranslate.PoweredByX, engine.Name);
-            var engineType = engine.GetType();
+            _autoTranslator = GetCurrentEngine();
+            linkLabelPoweredBy.Text = string.Format(LanguageSettings.Current.GoogleTranslate.PoweredByX, _autoTranslator.Name);
+            var engineType = _autoTranslator.GetType();
 
             if (engineType == typeof(NoLanguageLeftBehindServe))
             {
@@ -147,7 +148,17 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 return;
             }
 
-            throw new Exception($"Engine {engine.Name} not handled!");
+            if (engineType == typeof(LibreTranslate))
+            {
+                nikseComboBoxUrl.Items.Clear();
+                nikseComboBoxUrl.Items.Add("http://localhost:5000/");
+                nikseComboBoxUrl.SelectedIndex = 0;
+                nikseComboBoxUrl.Visible = true;
+                labelUrl.Visible = true;
+                return;
+            }
+
+            throw new Exception($"Engine {_autoTranslator.Name} not handled!");
         }
 
         private void SetAutoTranslatorUrl(string url)
@@ -163,7 +174,13 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
             if (engineType == typeof(NoLanguageLeftBehindServe))
             {
-                Configuration.Settings.Tools.AutoTranslateNllbApiUrl = url;
+                Configuration.Settings.Tools.AutoTranslateNllbServeUrl = url;
+                return;
+            }
+
+            if (engineType == typeof(LibreTranslate))
+            {
+                Configuration.Settings.Tools.AutoTranslateLibreUrl = url;
                 return;
             }
 
@@ -187,11 +204,17 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             var threeLetterLanguageCode = Iso639Dash2LanguageCode.GetThreeLetterCodeFromTwoLetterCode(languageIsoCode);
             foreach (TranslationPair item in comboBox.Items)
             {
-                if (item.Code.StartsWith(threeLetterLanguageCode))
+                if (languageIsoCode.Length == 2 && item.Code == languageIsoCode)
                 {
                     comboBox.SelectedIndex = i;
                     return;
                 }
+                else if (item.Code.StartsWith(threeLetterLanguageCode) || item.Code == languageIsoCode)
+                {
+                    comboBox.SelectedIndex = i;
+                    return;
+                }
+
                 i++;
             }
 
@@ -460,10 +483,20 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                                 UiUtil.ShowHelp("#translation");
                             }
                         }
+                        else if (engineType == typeof(LibreTranslate))
+                        {
+                            var dr = MessageBox.Show($"{engine.Name} requires an API running locally!" + Environment.NewLine
+                                                                     + Environment.NewLine
+                                                                     + "Read more?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                            if (dr == DialogResult.Yes)
+                            {
+                                UiUtil.ShowHelp("#translation");
+                            }
+                        }
                     }
                     else
                     {
-                        throw;
+                        MessageBox.Show(exception.Message + Environment.NewLine + exception.StackTrace, MessageBoxIcon.Error);
                     }
                 }
             }
@@ -749,6 +782,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
         private void nikseComboBoxEngine_SelectedIndexChanged(object sender, EventArgs e)
         {
             SetAutoTranslatorEngine();
+            SetupLanguageSettings();
         }
 
         private void nikseComboBoxUrl_SelectedIndexChanged(object sender, EventArgs e)
