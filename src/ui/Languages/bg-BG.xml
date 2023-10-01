@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>4.0.1</Version>
-    <TranslatedBy>Последен превод на български 19.09.2023: KalinM</TranslatedBy>
+    <TranslatedBy>Последен превод на български 01.10.2023: KalinM</TranslatedBy>
     <CultureName>bg-BG</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -1042,6 +1042,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <PleaseWait>Моля изчакайте... това може да продължи малко</PleaseWait>
     <PoweredByGoogleTranslate>С помощта на Google преводач</PoweredByGoogleTranslate>
     <PoweredByMicrosoftTranslate>С помощта на Microsoft преводач</PoweredByMicrosoftTranslate>
+    <PoweredByX>С помощта на {0}</PoweredByX>
     <MsClientSecretNeeded>Съжаляваме, но за да използвате най-новия преводач на Microsoft, ви е необходим ключ от Microsoft за когнитивни услуги "Преводач на текст".
 
 Отворете "Опции -&gt; Настройки -&gt; Инструменти", за да въведете вашия ключ.</MsClientSecretNeeded>
@@ -2278,6 +2279,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <VideoPlayer>Видео плеър</VideoPlayer>
     <WaveformAndSpectrogram>Форма на зв. сигнал/спектрограма</WaveformAndSpectrogram>
     <Tools>Инструменти</Tools>
+    <AutoTranslate>Автоматичен превод</AutoTranslate>
     <WordLists>Списък с думи</WordLists>
     <SsaStyle>Стил на SSA</SsaStyle>
     <Network>Мрежа</Network>
