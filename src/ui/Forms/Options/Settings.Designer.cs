@@ -83,7 +83,7 @@
             this.labelTimeCodeMode = new System.Windows.Forms.Label();
             this.comboBoxEncoding = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.checkBoxAutoDetectAnsiEncoding = new System.Windows.Forms.CheckBox();
-            this.textBoxShowLineBreaksAs = new Nikse.SubtitleEdit.Controls.SETextBox();
+            this.textBoxShowLineBreaksAs = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.checkBoxAutoWrapWhileTyping = new System.Windows.Forms.CheckBox();
             this.checkBoxPromptDeleteLines = new System.Windows.Forms.CheckBox();
             this.checkBoxAllowEditOfOriginalSubtitle = new System.Windows.Forms.CheckBox();
@@ -175,7 +175,7 @@
             this.textBoxCustomSearchUrl2 = new Nikse.SubtitleEdit.Controls.SETextBox();
             this.comboBoxCustomSearch2 = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelCustomSearch1 = new System.Windows.Forms.Label();
-            this.textBoxCustomSearchUrl1 = new Nikse.SubtitleEdit.Controls.SETextBox();
+            this.textBoxCustomSearchUrl1 = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelCustomSearch = new System.Windows.Forms.Label();
             this.comboBoxCustomSearch1 = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.groupBoxVideoPlayerDefault = new System.Windows.Forms.GroupBox();
@@ -299,7 +299,7 @@
             this.checkBoxFixShortDisplayTimesAllowMoveStartTime = new System.Windows.Forms.CheckBox();
             this.checkBoxFixCommonOcrErrorsUsingHardcodedRules = new System.Windows.Forms.CheckBox();
             this.comboBoxToolsMusicSymbol = new Nikse.SubtitleEdit.Controls.NikseComboBox();
-            this.textBoxMusicSymbolsToReplace = new Nikse.SubtitleEdit.Controls.SETextBox();
+            this.textBoxMusicSymbolsToReplace = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelToolsMusicSymbolsToReplace = new System.Windows.Forms.Label();
             this.labelToolsMusicSymbol = new System.Windows.Forms.Label();
             this.groupBoxToolsVisualSync = new System.Windows.Forms.GroupBox();
@@ -432,13 +432,13 @@
             this.labelProxyAuthType = new System.Windows.Forms.Label();
             this.checkBoxProxyUseDefaultCredentials = new System.Windows.Forms.CheckBox();
             this.comboBoxProxyAuthType = new Nikse.SubtitleEdit.Controls.NikseComboBox();
-            this.textBoxProxyDomain = new Nikse.SubtitleEdit.Controls.SETextBox();
+            this.textBoxProxyDomain = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelProxyDomain = new System.Windows.Forms.Label();
-            this.textBoxProxyUserName = new Nikse.SubtitleEdit.Controls.SETextBox();
+            this.textBoxProxyUserName = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelProxyPassword = new System.Windows.Forms.Label();
             this.labelProxyUserName = new System.Windows.Forms.Label();
-            this.textBoxProxyPassword = new Nikse.SubtitleEdit.Controls.SETextBox();
-            this.textBoxProxyAddress = new Nikse.SubtitleEdit.Controls.SETextBox();
+            this.textBoxProxyPassword = new Nikse.SubtitleEdit.Controls.NikseTextBox();
+            this.textBoxProxyAddress = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelProxyAddress = new System.Windows.Forms.Label();
             this.labelStatus = new System.Windows.Forms.Label();
             this.openFileDialogFFmpeg = new System.Windows.Forms.OpenFileDialog();
@@ -1552,27 +1552,18 @@
             // textBoxShowLineBreaksAs
             // 
             this.textBoxShowLineBreaksAs.BackColor = System.Drawing.SystemColors.WindowFrame;
-            this.textBoxShowLineBreaksAs.CurrentLanguage = "";
-            this.textBoxShowLineBreaksAs.CurrentLineIndex = 0;
             this.textBoxShowLineBreaksAs.HideSelection = true;
-            this.textBoxShowLineBreaksAs.IsDictionaryDownloaded = true;
-            this.textBoxShowLineBreaksAs.IsSpellCheckerInitialized = false;
-            this.textBoxShowLineBreaksAs.IsSpellCheckRequested = false;
-            this.textBoxShowLineBreaksAs.IsWrongWord = false;
-            this.textBoxShowLineBreaksAs.LanguageChanged = false;
             this.textBoxShowLineBreaksAs.Location = new System.Drawing.Point(572, 233);
             this.textBoxShowLineBreaksAs.MaxLength = 10;
             this.textBoxShowLineBreaksAs.Multiline = true;
             this.textBoxShowLineBreaksAs.Name = "textBoxShowLineBreaksAs";
             this.textBoxShowLineBreaksAs.Padding = new System.Windows.Forms.Padding(1);
             this.textBoxShowLineBreaksAs.ReadOnly = false;
-            this.textBoxShowLineBreaksAs.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
             this.textBoxShowLineBreaksAs.SelectedText = "";
             this.textBoxShowLineBreaksAs.SelectionLength = 0;
             this.textBoxShowLineBreaksAs.SelectionStart = 0;
             this.textBoxShowLineBreaksAs.Size = new System.Drawing.Size(60, 21);
             this.textBoxShowLineBreaksAs.TabIndex = 17;
-            this.textBoxShowLineBreaksAs.TextBoxFont = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBoxShowLineBreaksAs.UseSystemPasswordChar = false;
             // 
             // checkBoxAutoWrapWhileTyping
@@ -2982,27 +2973,18 @@
             // textBoxCustomSearchUrl1
             // 
             this.textBoxCustomSearchUrl1.BackColor = System.Drawing.SystemColors.WindowFrame;
-            this.textBoxCustomSearchUrl1.CurrentLanguage = "";
-            this.textBoxCustomSearchUrl1.CurrentLineIndex = 0;
             this.textBoxCustomSearchUrl1.HideSelection = true;
-            this.textBoxCustomSearchUrl1.IsDictionaryDownloaded = true;
-            this.textBoxCustomSearchUrl1.IsSpellCheckerInitialized = false;
-            this.textBoxCustomSearchUrl1.IsSpellCheckRequested = false;
-            this.textBoxCustomSearchUrl1.IsWrongWord = false;
-            this.textBoxCustomSearchUrl1.LanguageChanged = false;
             this.textBoxCustomSearchUrl1.Location = new System.Drawing.Point(185, 38);
             this.textBoxCustomSearchUrl1.MaxLength = 32767;
             this.textBoxCustomSearchUrl1.Multiline = true;
             this.textBoxCustomSearchUrl1.Name = "textBoxCustomSearchUrl1";
             this.textBoxCustomSearchUrl1.Padding = new System.Windows.Forms.Padding(1);
             this.textBoxCustomSearchUrl1.ReadOnly = false;
-            this.textBoxCustomSearchUrl1.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
             this.textBoxCustomSearchUrl1.SelectedText = "";
             this.textBoxCustomSearchUrl1.SelectionLength = 0;
             this.textBoxCustomSearchUrl1.SelectionStart = 0;
             this.textBoxCustomSearchUrl1.Size = new System.Drawing.Size(574, 21);
             this.textBoxCustomSearchUrl1.TabIndex = 2;
-            this.textBoxCustomSearchUrl1.TextBoxFont = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBoxCustomSearchUrl1.UseSystemPasswordChar = false;
             // 
             // labelCustomSearch
@@ -4718,27 +4700,18 @@
             // textBoxMusicSymbolsToReplace
             // 
             this.textBoxMusicSymbolsToReplace.BackColor = System.Drawing.SystemColors.WindowFrame;
-            this.textBoxMusicSymbolsToReplace.CurrentLanguage = "";
-            this.textBoxMusicSymbolsToReplace.CurrentLineIndex = 0;
             this.textBoxMusicSymbolsToReplace.HideSelection = true;
-            this.textBoxMusicSymbolsToReplace.IsDictionaryDownloaded = true;
-            this.textBoxMusicSymbolsToReplace.IsSpellCheckerInitialized = false;
-            this.textBoxMusicSymbolsToReplace.IsSpellCheckRequested = false;
-            this.textBoxMusicSymbolsToReplace.IsWrongWord = false;
-            this.textBoxMusicSymbolsToReplace.LanguageChanged = false;
             this.textBoxMusicSymbolsToReplace.Location = new System.Drawing.Point(11, 41);
             this.textBoxMusicSymbolsToReplace.MaxLength = 100;
             this.textBoxMusicSymbolsToReplace.Multiline = true;
             this.textBoxMusicSymbolsToReplace.Name = "textBoxMusicSymbolsToReplace";
             this.textBoxMusicSymbolsToReplace.Padding = new System.Windows.Forms.Padding(1);
             this.textBoxMusicSymbolsToReplace.ReadOnly = false;
-            this.textBoxMusicSymbolsToReplace.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
             this.textBoxMusicSymbolsToReplace.SelectedText = "";
             this.textBoxMusicSymbolsToReplace.SelectionLength = 0;
             this.textBoxMusicSymbolsToReplace.SelectionStart = 0;
             this.textBoxMusicSymbolsToReplace.Size = new System.Drawing.Size(275, 21);
             this.textBoxMusicSymbolsToReplace.TabIndex = 0;
-            this.textBoxMusicSymbolsToReplace.TextBoxFont = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBoxMusicSymbolsToReplace.UseSystemPasswordChar = false;
             // 
             // labelToolsMusicSymbolsToReplace
@@ -6357,27 +6330,18 @@
             // textBoxProxyDomain
             // 
             this.textBoxProxyDomain.BackColor = System.Drawing.SystemColors.WindowFrame;
-            this.textBoxProxyDomain.CurrentLanguage = "";
-            this.textBoxProxyDomain.CurrentLineIndex = 0;
             this.textBoxProxyDomain.HideSelection = true;
-            this.textBoxProxyDomain.IsDictionaryDownloaded = true;
-            this.textBoxProxyDomain.IsSpellCheckerInitialized = false;
-            this.textBoxProxyDomain.IsSpellCheckRequested = false;
-            this.textBoxProxyDomain.IsWrongWord = false;
-            this.textBoxProxyDomain.LanguageChanged = false;
             this.textBoxProxyDomain.Location = new System.Drawing.Point(138, 68);
             this.textBoxProxyDomain.MaxLength = 32767;
             this.textBoxProxyDomain.Multiline = true;
             this.textBoxProxyDomain.Name = "textBoxProxyDomain";
             this.textBoxProxyDomain.Padding = new System.Windows.Forms.Padding(1);
             this.textBoxProxyDomain.ReadOnly = false;
-            this.textBoxProxyDomain.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
             this.textBoxProxyDomain.SelectedText = "";
             this.textBoxProxyDomain.SelectionLength = 0;
             this.textBoxProxyDomain.SelectionStart = 0;
             this.textBoxProxyDomain.Size = new System.Drawing.Size(192, 21);
             this.textBoxProxyDomain.TabIndex = 30;
-            this.textBoxProxyDomain.TextBoxFont = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBoxProxyDomain.UseSystemPasswordChar = false;
             // 
             // labelProxyDomain
@@ -6392,27 +6356,18 @@
             // textBoxProxyUserName
             // 
             this.textBoxProxyUserName.BackColor = System.Drawing.SystemColors.WindowFrame;
-            this.textBoxProxyUserName.CurrentLanguage = "";
-            this.textBoxProxyUserName.CurrentLineIndex = 0;
             this.textBoxProxyUserName.HideSelection = true;
-            this.textBoxProxyUserName.IsDictionaryDownloaded = true;
-            this.textBoxProxyUserName.IsSpellCheckerInitialized = false;
-            this.textBoxProxyUserName.IsSpellCheckRequested = false;
-            this.textBoxProxyUserName.IsWrongWord = false;
-            this.textBoxProxyUserName.LanguageChanged = false;
             this.textBoxProxyUserName.Location = new System.Drawing.Point(138, 16);
             this.textBoxProxyUserName.MaxLength = 32767;
             this.textBoxProxyUserName.Multiline = true;
             this.textBoxProxyUserName.Name = "textBoxProxyUserName";
             this.textBoxProxyUserName.Padding = new System.Windows.Forms.Padding(1);
             this.textBoxProxyUserName.ReadOnly = false;
-            this.textBoxProxyUserName.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
             this.textBoxProxyUserName.SelectedText = "";
             this.textBoxProxyUserName.SelectionLength = 0;
             this.textBoxProxyUserName.SelectionStart = 0;
             this.textBoxProxyUserName.Size = new System.Drawing.Size(192, 21);
             this.textBoxProxyUserName.TabIndex = 22;
-            this.textBoxProxyUserName.TextBoxFont = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBoxProxyUserName.UseSystemPasswordChar = false;
             // 
             // labelProxyPassword
@@ -6436,53 +6391,35 @@
             // textBoxProxyPassword
             // 
             this.textBoxProxyPassword.BackColor = System.Drawing.SystemColors.WindowFrame;
-            this.textBoxProxyPassword.CurrentLanguage = "";
-            this.textBoxProxyPassword.CurrentLineIndex = 0;
             this.textBoxProxyPassword.HideSelection = true;
-            this.textBoxProxyPassword.IsDictionaryDownloaded = true;
-            this.textBoxProxyPassword.IsSpellCheckerInitialized = false;
-            this.textBoxProxyPassword.IsSpellCheckRequested = false;
-            this.textBoxProxyPassword.IsWrongWord = false;
-            this.textBoxProxyPassword.LanguageChanged = false;
             this.textBoxProxyPassword.Location = new System.Drawing.Point(138, 42);
             this.textBoxProxyPassword.MaxLength = 32767;
             this.textBoxProxyPassword.Multiline = true;
             this.textBoxProxyPassword.Name = "textBoxProxyPassword";
             this.textBoxProxyPassword.Padding = new System.Windows.Forms.Padding(1);
             this.textBoxProxyPassword.ReadOnly = false;
-            this.textBoxProxyPassword.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
             this.textBoxProxyPassword.SelectedText = "";
             this.textBoxProxyPassword.SelectionLength = 0;
             this.textBoxProxyPassword.SelectionStart = 0;
             this.textBoxProxyPassword.Size = new System.Drawing.Size(192, 21);
             this.textBoxProxyPassword.TabIndex = 24;
-            this.textBoxProxyPassword.TextBoxFont = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBoxProxyPassword.UseSystemPasswordChar = true;
             // 
             // textBoxProxyAddress
             // 
             this.textBoxProxyAddress.BackColor = System.Drawing.SystemColors.WindowFrame;
-            this.textBoxProxyAddress.CurrentLanguage = "";
-            this.textBoxProxyAddress.CurrentLineIndex = 0;
             this.textBoxProxyAddress.HideSelection = true;
-            this.textBoxProxyAddress.IsDictionaryDownloaded = true;
-            this.textBoxProxyAddress.IsSpellCheckerInitialized = false;
-            this.textBoxProxyAddress.IsSpellCheckRequested = false;
-            this.textBoxProxyAddress.IsWrongWord = false;
-            this.textBoxProxyAddress.LanguageChanged = false;
             this.textBoxProxyAddress.Location = new System.Drawing.Point(166, 34);
             this.textBoxProxyAddress.MaxLength = 32767;
             this.textBoxProxyAddress.Multiline = true;
             this.textBoxProxyAddress.Name = "textBoxProxyAddress";
             this.textBoxProxyAddress.Padding = new System.Windows.Forms.Padding(1);
             this.textBoxProxyAddress.ReadOnly = false;
-            this.textBoxProxyAddress.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
             this.textBoxProxyAddress.SelectedText = "";
             this.textBoxProxyAddress.SelectionLength = 0;
             this.textBoxProxyAddress.SelectionStart = 0;
             this.textBoxProxyAddress.Size = new System.Drawing.Size(321, 21);
             this.textBoxProxyAddress.TabIndex = 20;
-            this.textBoxProxyAddress.TextBoxFont = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBoxProxyAddress.UseSystemPasswordChar = false;
             // 
             // labelProxyAddress
@@ -6659,7 +6596,7 @@
             this.groupBoxNllbServe.Controls.Add(this.label4);
             this.groupBoxNllbServe.Location = new System.Drawing.Point(10, 252);
             this.groupBoxNllbServe.Name = "groupBoxNllbServe";
-            this.groupBoxNllbServe.Size = new System.Drawing.Size(408, 145);
+            this.groupBoxNllbServe.Size = new System.Drawing.Size(408, 137);
             this.groupBoxNllbServe.TabIndex = 35;
             this.groupBoxNllbServe.TabStop = false;
             this.groupBoxNllbServe.Text = "NLLM Serve";
@@ -6667,9 +6604,9 @@
             // nikseTextBoxNllbServeModel
             // 
             this.nikseTextBoxNllbServeModel.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            this.nikseTextBoxNllbServeModel.Location = new System.Drawing.Point(49, 77);
+            this.nikseTextBoxNllbServeModel.Location = new System.Drawing.Point(7, 97);
             this.nikseTextBoxNllbServeModel.Name = "nikseTextBoxNllbServeModel";
-            this.nikseTextBoxNllbServeModel.Size = new System.Drawing.Size(334, 21);
+            this.nikseTextBoxNllbServeModel.Size = new System.Drawing.Size(376, 21);
             this.nikseTextBoxNllbServeModel.TabIndex = 37;
             // 
             // labelNllbServeModel
@@ -6726,9 +6663,9 @@
             this.groupBoxNllbApi.Controls.Add(this.labelNllbApiUrl);
             this.groupBoxNllbApi.Controls.Add(this.linkLabelNllbApi);
             this.groupBoxNllbApi.Controls.Add(this.label5);
-            this.groupBoxNllbApi.Location = new System.Drawing.Point(10, 403);
+            this.groupBoxNllbApi.Location = new System.Drawing.Point(11, 396);
             this.groupBoxNllbApi.Name = "groupBoxNllbApi";
-            this.groupBoxNllbApi.Size = new System.Drawing.Size(408, 111);
+            this.groupBoxNllbApi.Size = new System.Drawing.Size(408, 84);
             this.groupBoxNllbApi.TabIndex = 36;
             this.groupBoxNllbApi.TabStop = false;
             this.groupBoxNllbApi.Text = "NLLM API";
@@ -6775,9 +6712,9 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1092, 574);
             this.Controls.Add(this.labelUpdateFileTypeAssociationsStatus);
-            this.Controls.Add(this.panelAutoTranslate);
             this.Controls.Add(this.panelGeneral);
             this.Controls.Add(this.panelTools);
+            this.Controls.Add(this.panelAutoTranslate);
             this.Controls.Add(this.panelShortcuts);
             this.Controls.Add(this.panelFont);
             this.Controls.Add(this.panelSubtitleFormats);
@@ -6977,14 +6914,14 @@
         private System.Windows.Forms.RadioButton radioButtonVideoPlayerDirectShow;
         private System.Windows.Forms.RadioButton radioButtonVideoPlayerMpcHc;
         private System.Windows.Forms.CheckBox checkBoxRememberWindowPosition;
-        private Nikse.SubtitleEdit.Controls.SETextBox textBoxShowLineBreaksAs;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxShowLineBreaksAs;
         private System.Windows.Forms.Label labelShowLineBreaksAs;
         private System.Windows.Forms.Panel panelNetwork;
         private System.Windows.Forms.GroupBox groupBoxProxySettings;
         private System.Windows.Forms.Label labelProxyPassword;
-        private Nikse.SubtitleEdit.Controls.SETextBox textBoxProxyAddress;
-        private Nikse.SubtitleEdit.Controls.SETextBox textBoxProxyUserName;
-        private Nikse.SubtitleEdit.Controls.SETextBox textBoxProxyPassword;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxProxyAddress;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxProxyUserName;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxProxyPassword;
         private System.Windows.Forms.Label labelProxyAddress;
         private System.Windows.Forms.Label labelProxyUserName;
         private System.Windows.Forms.Panel panelTools;
@@ -7000,13 +6937,13 @@
         private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxListViewDoubleClickEvent;
         private System.Windows.Forms.Label labelListViewDoubleClickEvent;
         private System.Windows.Forms.Label labelStatus;
-        private Nikse.SubtitleEdit.Controls.SETextBox textBoxMusicSymbolsToReplace;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxMusicSymbolsToReplace;
         private System.Windows.Forms.Label labelToolsMusicSymbolsToReplace;
         private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxToolsMusicSymbol;
         private System.Windows.Forms.GroupBox groupBoxSpellCheck;
         private System.Windows.Forms.CheckBox checkBoxSpellCheckAutoChangeNames;
         private System.Windows.Forms.GroupBox groupBoxProxyAuthentication;
-        private Nikse.SubtitleEdit.Controls.SETextBox textBoxProxyDomain;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxProxyDomain;
         private System.Windows.Forms.Label labelProxyDomain;
         private System.Windows.Forms.CheckBox checkBoxAutoDetectAnsiEncoding;
         private System.Windows.Forms.Label labelAutoDetectAnsiEncoding;
@@ -7015,7 +6952,7 @@
         private System.Windows.Forms.CheckBox checkBoxRemoveBlankLinesWhenOpening;
         private System.Windows.Forms.GroupBox groupBoxMainWindowVideoControls;
         private System.Windows.Forms.GroupBox groupBoxVideoPlayerDefault;
-        private Nikse.SubtitleEdit.Controls.SETextBox textBoxCustomSearchUrl1;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxCustomSearchUrl1;
         private System.Windows.Forms.Label labelCustomSearch;
         private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxCustomSearch1;
         private System.Windows.Forms.Panel panelWaveform;
