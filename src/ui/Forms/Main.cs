@@ -1927,7 +1927,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             toolStripMenuItemAutoTranslate.Text = _language.Menu.AutoTranslate.Title;
             genericTranslateToolStripMenuItem.Text = _language.Menu.AutoTranslate.AutoTranslate + " (OLD)";
-            autotranslateNLLBToolStripMenuItem.Text = _language.Menu.AutoTranslate.AutoTranslate + " (NEW)";
+            autotranslateNLLBToolStripMenuItem.Text = _language.Menu.AutoTranslate.AutoTranslate;
             autotranslateViaCopypasteToolStripMenuItem.Text = _language.Menu.AutoTranslate.AutoTranslateViaCopyPaste;
             translateToolStripMenuItem.Text = _language.Menu.AutoTranslate.AutoTranslate;
             toolStripMenuItemTranslateSelected.Text = _language.Menu.ContextMenu.TranslateSelectedLines;
@@ -25944,7 +25944,7 @@ namespace Nikse.SubtitleEdit.Forms
             moveTextUpToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewColumnTextUp);
             moveTextDownToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewColumnTextDown);
             toolStripMenuItemReverseRightToLeftStartEnd.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainEditReverseStartAndEndingForRTL);
-            translateToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTranslateAuto);
+            autotranslateNLLBToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTranslateAuto);
             applyCustomStylesToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralApplyAssaOverrideTags);
             setPositionToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralSetAssaPosition);
             colorPickerToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralColorPicker);
