@@ -134,58 +134,56 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
             if (engineType == typeof(NoLanguageLeftBehindServe))
             {
-                nikseComboBoxUrl.Items.Clear();
-
-                var url = Configuration.Settings.Tools.AutoTranslateNllbServeUrl;
-                if (!string.IsNullOrEmpty(url))
+                FillUrls(new List<string>
                 {
-                    nikseComboBoxUrl.Items.Add(url.TrimEnd('/') + "/");
-                }
+                    Configuration.Settings.Tools.AutoTranslateNllbServeUrl,
+                    "http://127.0.0.1:6060/",
+                    "http://192.168.8.127:6060/",
+                });
 
-                nikseComboBoxUrl.Items.Add("http://127.0.0.1:6060/");
-                nikseComboBoxUrl.Items.Add("http://192.168.8.127:6060/");
-                nikseComboBoxUrl.SelectedIndex = 0;
-                nikseComboBoxUrl.Visible = true;
-                labelUrl.Visible = true;
                 return;
             }
 
             if (engineType == typeof(NoLanguageLeftBehindApi))
             {
-                nikseComboBoxUrl.Items.Clear();
-
-                var url = Configuration.Settings.Tools.AutoTranslateNllbApiUrl;
-                if (!string.IsNullOrEmpty(url))
+                FillUrls(new List<string>
                 {
-                    nikseComboBoxUrl.Items.Add(url.TrimEnd('/') + "/");
-                }
-
-                nikseComboBoxUrl.Items.Add("http://localhost:7860/api/v2/");
-                nikseComboBoxUrl.Items.Add("https://winstxnhdw-nllb-api.hf.space/api/v2/");
-                nikseComboBoxUrl.SelectedIndex = 0;
-                nikseComboBoxUrl.Visible = true;
-                labelUrl.Visible = true;
+                    Configuration.Settings.Tools.AutoTranslateNllbApiUrl,
+                    "http://localhost:7860/api/v2/",
+                    "https://winstxnhdw-nllb-api.hf.space/api/v2/",
+                });
                 return;
             }
 
             if (engineType == typeof(LibreTranslate))
             {
-                nikseComboBoxUrl.Items.Clear();
-
-                var url = Configuration.Settings.Tools.AutoTranslateLibreUrl;
-                if (!string.IsNullOrEmpty(url))
+                FillUrls(new List<string>
                 {
-                    nikseComboBoxUrl.Items.Add(url.TrimEnd('/') + "/");
-                }
+                    Configuration.Settings.Tools.AutoTranslateLibreUrl,
+                    "http://localhost:5000/",
+                    "https://libretranslate.com/",
+                });
 
-                nikseComboBoxUrl.Items.Add("http://localhost:5000/");
-                nikseComboBoxUrl.SelectedIndex = 0;
-                nikseComboBoxUrl.Visible = true;
-                labelUrl.Visible = true;
                 return;
             }
 
             throw new Exception($"Engine {_autoTranslator.Name} not handled!");
+        }
+
+        private void FillUrls(List<string> list)
+        {
+            nikseComboBoxUrl.Items.Clear();
+            foreach (var url in list.Distinct())
+            {
+                if (!string.IsNullOrEmpty(url))
+                {
+                    nikseComboBoxUrl.Items.Add(url.TrimEnd('/') + "/");
+                }
+            }
+
+            nikseComboBoxUrl.SelectedIndex = 0;
+            nikseComboBoxUrl.Visible = true;
+            labelUrl.Visible = true;
         }
 
         private void SetAutoTranslatorUrl(string url)

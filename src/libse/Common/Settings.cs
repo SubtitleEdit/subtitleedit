@@ -502,9 +502,9 @@ namespace Nikse.SubtitleEdit.Core.Common
             GoogleTranslateNoKeyWarningShow = true;
             GoogleApiV1ChunkSize = 1500;
             GoogleTranslateLastTargetLanguage = "en";
-            AutoTranslateNllbApiUrl = "https://winstxnhdw-nllb-api.hf.space/api/v2/";
             AutoTranslateNllbServeUrl = "http://127.0.0.1:6060/";
-            AutoTranslateLibreUrl = "https://libretranslate.com/";
+            AutoTranslateNllbApiUrl = "http://localhost:7860/api/v2/";
+            AutoTranslateLibreUrl = "http://localhost:5000/";
             TranslateAllowSplit = true;
             TranslateViaCopyPasteAutoCopyToClipboard = true;
             TranslateViaCopyPasteMaxSize = 5000;
