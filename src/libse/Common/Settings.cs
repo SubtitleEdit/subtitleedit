@@ -158,9 +158,6 @@ namespace Nikse.SubtitleEdit.Core.Common
         public string AutoTranslateNllbServeUrl { get; set; }
         public string AutoTranslateNllbServeModel { get; set; }
         public string AutoTranslateLibreUrl { get; set; }
-        public bool AutoTranslateNllbApiAutoStart { get; set; }
-        public bool AutoTranslateNllbServeAutoStart { get; set; }
-        public bool AutoTranslateLibreAutoStart { get; set; }
         public bool TranslateAllowSplit { get; set; }
         public string TranslateLastService { get; set; }
         public string TranslateMergeStrategy { get; set; }
@@ -5100,24 +5097,6 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.Tools.AutoTranslateLibreUrl = subNode.InnerText;
-            }
-
-            subNode = node.SelectSingleNode("AutoTranslateNllbApiAutoStart");
-            if (subNode != null)
-            {
-                settings.Tools.AutoTranslateNllbApiAutoStart = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
-            }
-
-            subNode = node.SelectSingleNode("AutoTranslateNllbServeAutoStart");
-            if (subNode != null)
-            {
-                settings.Tools.AutoTranslateNllbServeAutoStart = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
-            }
-
-            subNode = node.SelectSingleNode("AutoTranslateLibreAutoStart");
-            if (subNode != null)
-            {
-                settings.Tools.AutoTranslateLibreAutoStart = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
             subNode = node.SelectSingleNode("TranslateAllowSplit");
@@ -11380,9 +11359,6 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("AutoTranslateNllbServeUrl", settings.Tools.AutoTranslateNllbServeUrl);
                 textWriter.WriteElementString("AutoTranslateNllbServeModel", settings.Tools.AutoTranslateNllbServeModel);
                 textWriter.WriteElementString("AutoTranslateLibreUrl", settings.Tools.AutoTranslateLibreUrl);
-                textWriter.WriteElementString("AutoTranslateNllbApiAutoStart", settings.Tools.AutoTranslateNllbApiAutoStart.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("AutoTranslateNllbServeAutoStart", settings.Tools.AutoTranslateNllbServeAutoStart.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("AutoTranslateLibreAutoStart", settings.Tools.AutoTranslateLibreAutoStart.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("TranslateAllowSplit", settings.Tools.TranslateAllowSplit.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("TranslateLastService", settings.Tools.TranslateLastService);
                 textWriter.WriteElementString("TranslateMergeStrategy", settings.Tools.TranslateMergeStrategy);

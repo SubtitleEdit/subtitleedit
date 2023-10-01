@@ -104,6 +104,7 @@
     <Warning>Warning</Warning>
     <UseLargerFontForThisWindow>Use larger font for this window</UseLargerFontForThisWindow>
     <ChangeLanguageFilter>Change language filter...</ChangeLanguageFilter>
+    <MoreInfo>More info</MoreInfo>
   </General>
   <About>
     <Title>About Subtitle Edit</Title>
@@ -198,6 +199,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <WhisperNotFound>Whisper not found.
 
 Read more info (web)?</WhisperNotFound>
+    <Model>Model</Model>
     <Models>Models</Models>
     <LanguagesAndModels>Languages and models</LanguagesAndModels>
     <ChooseModel>Choose model</ChooseModel>
@@ -1066,6 +1068,7 @@ To use an API key, go to "Options -&gt; Settings -&gt; Tools" to enter your Goog
     <TranslateBlockCopySourceText>Copy source text clipboard</TranslateBlockCopySourceText>
     <TranslateBlockClipboardError1>Clipboard contains source text!</TranslateBlockClipboardError1>
     <TranslateBlockClipboardError2>Go to translator and translate, then copy the results to the clipboard and click this button again.</TranslateBlockClipboardError2>
+    <StartWebServerX>Start "{0}" web server</StartWebServerX>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
     <Title>Google vs Microsoft translate</Title>
