@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>4.0.1</Version>
-    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 22.09.2023</TranslatedBy>
+    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 01.10.2023</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -159,9 +159,9 @@ Nota: Controlla lo spazio libero nel disco.</WaveFileMalformed>
     <Title>Generazione dati forma d'onda batch</Title>
     <ExtractTimeCodes>Estrai time code con FFprobe</ExtractTimeCodes>
     <ExtractingAudio>Estrazione audio...</ExtractingAudio>
+    <Calculating>Calcolo...</Calculating>
     <ExtractingTimeCodes>Estrazione time code...</ExtractingTimeCodes>
     <DetectingShotChanges>Rilevamento cambi inquadrature...</DetectingShotChanges>
-    <Calculating>Calcolo...</Calculating>
     <Done>Fatto</Done>
     <Error>Errore</Error>
   </AddWaveformBatch>
@@ -889,7 +889,6 @@ Si sfrutta così il ritmo intrinseco dell'immagine.</CreateSimpleChainingToolTip
     <RemoveLineBreaks>Elimina divisioni di riga in testi corti con una sola frase</RemoveLineBreaks>
     <RemoveLineBreaksAll>Elimina divisioni di riga in testi corti (tutti eccetto dialoghi)</RemoveLineBreaksAll>
     <RemoveLineBreaksPixelWidth>Non interrompere i sottotitoli che possono stare su una riga (larghezza in pixel)</RemoveLineBreaksPixelWidth>
-    <FixUppercaseIInsideLowercaseWords>Correggi la "i" maiuscola all'interno delle parole minuscole (errore OCR)</FixUppercaseIInsideLowercaseWords>
     <FixUppercaseIInsideLowercaseWords>Correggi "i" maiuscola all'interno delle parole minuscole (errore OCR)</FixUppercaseIInsideLowercaseWords>
     <FixDoubleApostrophes>Sostituisci i doppi apici ('') con le virgolette (")</FixDoubleApostrophes>
     <AddPeriods>Aggiungi il punto a fine riga se la seguente inizia con una lettera maiuscola</AddPeriods>
@@ -924,8 +923,8 @@ Si sfrutta così il ritmo intrinseco dell'immagine.</CreateSimpleChainingToolTip
     <FixFirstLetterToUppercaseAfterParagraph>Scrivi la prima lettera in maiuscolo dopo un paragrafo</FixFirstLetterToUppercaseAfterParagraph>
     <MergeShortLine>Unisci riga corta (singola frase)</MergeShortLine>
     <MergeShortLineAll>Unisci riga corta (tutte eccetto dialoghi)</MergeShortLineAll>
-    <BreakLongLine>Dividi riga lunga</BreakLongLine>
     <UnbreakShortLinePixelWidth>Non interrompere linea corta (larghezza in pixel)</UnbreakShortLinePixelWidth>
+    <BreakLongLine>Dividi riga lunga</BreakLongLine>
     <FixLongDisplayTime>Correggi i tempi di visualizzazione lunghi</FixLongDisplayTime>
     <FixInvalidItalicTag>Correggi etichette corsivo non valide</FixInvalidItalicTag>
     <FixShortDisplayTime>Correggi tempi di visualizzazione corti</FixShortDisplayTime>
@@ -1004,9 +1003,9 @@ Si sfrutta così il ritmo intrinseco dell'immagine.</CreateSimpleChainingToolTip
     <Preset>Profilo</Preset>
     <Crf>CRF</Crf>
     <TuneFor>Sintonizzati per</TuneFor>
+    <AlignRight>Allinea a destra</AlignRight>
     <GetStartPosition>Ottieni posizione iniziale</GetStartPosition>
     <GetEndPosition>Ottieni posizione finale</GetEndPosition>
-    <AlignRight>Allinea a destra</AlignRight>
   </GenerateVideoWithBurnedInSubs>
   <GenerateVideoWithEmbeddedSubs>
     <Title>Genera video con sottotitoli incorporati aggiunti/rimossi</Title>
@@ -1044,6 +1043,7 @@ Si sfrutta così il ritmo intrinseco dell'immagine.</CreateSimpleChainingToolTip
     <Translate>Traduci</Translate>
     <PleaseWait>Attendi. Ci potrebbe volere un po di tempo.</PleaseWait>
     <PoweredByGoogleTranslate>Servizio traduzione di Google</PoweredByGoogleTranslate>
+    <PoweredByX>Offerto da {0}</PoweredByX>
     <PoweredByMicrosoftTranslate>Servizio traduzione di Microsoft</PoweredByMicrosoftTranslate>
     <MsClientSecretNeeded>Per usare il traduttore Microsoft più recente, è necessaria una chiave "Testo traduttore" dei servizi cognitivi.
 
@@ -2280,6 +2280,7 @@ stesso file di sottotitolo (collaborazione)</Information>
     <VideoPlayer>Lettore video</VideoPlayer>
     <WaveformAndSpectrogram>Forma onda/spettrogramma</WaveformAndSpectrogram>
     <Tools>Strumenti</Tools>
+    <AutoTranslate>Traduci automaticamente</AutoTranslate>
     <WordLists>Elenchi parole</WordLists>
     <SsaStyle>Stile SSA</SsaStyle>
     <Network>Rete</Network>
@@ -3362,11 +3363,11 @@ Vuoi mantenere le modifiche?</KeepChangesMessage>
     <Title>WebVTT - imposta nuova voce</Title>
     <VoiceName>Nome voce</VoiceName>
   </WebVttNewVoice>
-  <WebVttStyleManager>
     <WebVttProperties>
       <UseXTimeStamp>Usa valore intestazione X-TIMESTAMP-MAP</UseXTimeStamp>
       <MergeLines>Al caricamento unisci righe con lo stesso testo</MergeLines>
     </WebVttProperties>
+  <WebVttStyleManager>
     <Title>Stili WebVTT</Title>
   </WebVttStyleManager>
   <WhisperAdvanced>
