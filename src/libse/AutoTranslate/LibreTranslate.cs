@@ -1,14 +1,13 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Core.Translate;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
-using Nikse.SubtitleEdit.Core.Http;
-using Nikse.SubtitleEdit.Core.SubtitleFormats;
-using System.Net.Http.Headers;
 
 namespace Nikse.SubtitleEdit.Core.AutoTranslate
 {
