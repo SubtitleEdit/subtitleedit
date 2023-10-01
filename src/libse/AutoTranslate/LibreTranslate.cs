@@ -15,7 +15,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
     {
         private HttpClient _httpClient;
 
-        public string Name { get; set; } = " LibreTranslate";
+        public string Name { get; set; } = "LibreTranslate";
         public string Url => "https://github.com/LibreTranslate/LibreTranslate";
 
         public void Initialize()
