@@ -2450,7 +2450,6 @@
             public string VideoPlayer { get; set; }
             public string WaveformAndSpectrogram { get; set; }
             public string Tools { get; set; }
-            public string AutoTranslate { get; set; }
             public string WordLists { get; set; }
             public string SsaStyle { get; set; }
             public string Network { get; set; }

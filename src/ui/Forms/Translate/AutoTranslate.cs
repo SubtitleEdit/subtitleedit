@@ -35,11 +35,14 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             InitializeComponent();
             UiUtil.FixFonts(this);
 
-            Text = LanguageSettings.Current.GoogleTranslate.Title;
+            Text = LanguageSettings.Current.Main.VideoControls.AutoTranslate;
             buttonTranslate.Text = LanguageSettings.Current.GoogleTranslate.Translate;
             labelPleaseWait.Text = LanguageSettings.Current.GoogleTranslate.PleaseWait;
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
+            labelUrl.Text = LanguageSettings.Current.Main.Url;
+            nikseComboBoxUrl.Left = labelUrl.Right + 5;
+
             subtitleListViewSource.InitializeLanguage(LanguageSettings.Current.General, Configuration.Settings);
             subtitleListViewTarget.InitializeLanguage(LanguageSettings.Current.General, Configuration.Settings);
             subtitleListViewSource.HideColumn(SubtitleListView.SubtitleColumn.CharactersPerSeconds);
@@ -96,10 +99,17 @@ namespace Nikse.SubtitleEdit.Forms.Translate
         {
             _autoTranslatorEngines = new List<IAutoTranslator>
             {
+                new GoogleTranslateV1(),
                 new NoLanguageLeftBehindServe(),
                 new NoLanguageLeftBehindApi(),
                 new LibreTranslate(),
             };
+
+            if (!string.IsNullOrEmpty(Configuration.Settings.Tools.MicrosoftTranslatorApiKey) &&
+                !string.IsNullOrEmpty(Configuration.Settings.Tools.MicrosoftTranslatorTokenEndpoint))
+            {
+                _autoTranslatorEngines.Insert(1, new MicrosoftTranslator());
+            }
 
             nikseComboBoxEngine.Items.Clear();
             nikseComboBoxEngine.Items.AddRange(_autoTranslatorEngines.Select(p => p.Name).ToArray<object>());
@@ -131,6 +141,20 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             _autoTranslator = GetCurrentEngine();
             linkLabelPoweredBy.Text = string.Format(LanguageSettings.Current.GoogleTranslate.PoweredByX, _autoTranslator.Name);
             var engineType = _autoTranslator.GetType();
+
+            if (engineType == typeof(GoogleTranslateV1))
+            {
+                labelUrl.Visible = false;
+                nikseComboBoxUrl.Visible = false;
+                return;
+            }
+
+            if (engineType == typeof(MicrosoftTranslator))
+            {
+                labelUrl.Visible = false;
+                nikseComboBoxUrl.Visible = false;
+                return;
+            }
 
             if (engineType == typeof(NoLanguageLeftBehindServe))
             {

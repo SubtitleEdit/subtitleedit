@@ -1926,7 +1926,8 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemSelectedLines.Text = _language.Menu.ContextMenu.SelectedLines;
 
             toolStripMenuItemAutoTranslate.Text = _language.Menu.AutoTranslate.Title;
-            genericTranslateToolStripMenuItem.Text = _language.Menu.AutoTranslate.AutoTranslate;
+            genericTranslateToolStripMenuItem.Text = _language.Menu.AutoTranslate.AutoTranslate + " (OLD)";
+            autotranslateNLLBToolStripMenuItem.Text = _language.Menu.AutoTranslate.AutoTranslate + " (NEW)";
             autotranslateViaCopypasteToolStripMenuItem.Text = _language.Menu.AutoTranslate.AutoTranslateViaCopyPaste;
             translateToolStripMenuItem.Text = _language.Menu.AutoTranslate.AutoTranslate;
             toolStripMenuItemTranslateSelected.Text = _language.Menu.ContextMenu.TranslateSelectedLines;
