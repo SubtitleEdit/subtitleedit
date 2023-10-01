@@ -454,26 +454,23 @@
             this.imageListFileTypeAssociations = new System.Windows.Forms.ImageList(this.components);
             this.toolTipDialogStylePreview = new System.Windows.Forms.ToolTip(this.components);
             this.panelAutoTranslate = new System.Windows.Forms.Panel();
-            this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.checkBoxLibreTranslateAutoStart = new System.Windows.Forms.CheckBox();
+            this.groupBoxLibreTranslate = new System.Windows.Forms.GroupBox();
             this.nikseTextBoxLibreTranslateUrl = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.label6 = new System.Windows.Forms.Label();
             this.linkLabelLibreTranslateApi = new System.Windows.Forms.LinkLabel();
             this.label7 = new System.Windows.Forms.Label();
             this.groupBoxNllbServe = new System.Windows.Forms.GroupBox();
-            this.checkBoxNllbServeAutoStart = new System.Windows.Forms.CheckBox();
+            this.nikseTextBoxNllbServeModel = new Nikse.SubtitleEdit.Controls.NikseTextBox();
+            this.labelNllbServeModel = new System.Windows.Forms.Label();
             this.nikseTextBoxNllbServeUrl = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.linkLabelNllbServe = new System.Windows.Forms.LinkLabel();
             this.label4 = new System.Windows.Forms.Label();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.checkBoxNllbApiAutoStart = new System.Windows.Forms.CheckBox();
+            this.groupBoxNllbApi = new System.Windows.Forms.GroupBox();
             this.nikseTextBoxNllbApiUrl = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelNllbApiUrl = new System.Windows.Forms.Label();
             this.linkLabelNllbApi = new System.Windows.Forms.LinkLabel();
             this.label5 = new System.Windows.Forms.Label();
-            this.labelNllbServeModel = new System.Windows.Forms.Label();
-            this.nikseTextBoxNllbServeModel = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.panelGeneral.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
             this.groupBoxGeneralRules.SuspendLayout();
@@ -550,9 +547,9 @@
             this.groupBoxProxyAuthentication.SuspendLayout();
             this.panelFileTypeAssociations.SuspendLayout();
             this.panelAutoTranslate.SuspendLayout();
-            this.groupBox4.SuspendLayout();
+            this.groupBoxLibreTranslate.SuspendLayout();
             this.groupBoxNllbServe.SuspendLayout();
-            this.groupBox1.SuspendLayout();
+            this.groupBoxNllbApi.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonOK
@@ -6585,9 +6582,9 @@
             // 
             // panelAutoTranslate
             // 
-            this.panelAutoTranslate.Controls.Add(this.groupBox4);
+            this.panelAutoTranslate.Controls.Add(this.groupBoxLibreTranslate);
             this.panelAutoTranslate.Controls.Add(this.groupBoxNllbServe);
-            this.panelAutoTranslate.Controls.Add(this.groupBox1);
+            this.panelAutoTranslate.Controls.Add(this.groupBoxNllbApi);
             this.panelAutoTranslate.Controls.Add(this.groupBoxGoogleTranslate);
             this.panelAutoTranslate.Controls.Add(this.groupBoxBing);
             this.panelAutoTranslate.Location = new System.Drawing.Point(227, 3);
@@ -6597,32 +6594,21 @@
             this.panelAutoTranslate.TabIndex = 33;
             this.panelAutoTranslate.Text = "Tools";
             // 
-            // groupBox4
+            // groupBoxLibreTranslate
             // 
-            this.groupBox4.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.groupBoxLibreTranslate.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox4.Controls.Add(this.checkBoxLibreTranslateAutoStart);
-            this.groupBox4.Controls.Add(this.nikseTextBoxLibreTranslateUrl);
-            this.groupBox4.Controls.Add(this.label6);
-            this.groupBox4.Controls.Add(this.linkLabelLibreTranslateApi);
-            this.groupBox4.Controls.Add(this.label7);
-            this.groupBox4.Location = new System.Drawing.Point(429, 9);
-            this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(408, 117);
-            this.groupBox4.TabIndex = 37;
-            this.groupBox4.TabStop = false;
-            this.groupBox4.Text = "LibreTranslate API";
-            // 
-            // checkBoxLibreTranslateAutoStart
-            // 
-            this.checkBoxLibreTranslateAutoStart.AutoSize = true;
-            this.checkBoxLibreTranslateAutoStart.Location = new System.Drawing.Point(9, 79);
-            this.checkBoxLibreTranslateAutoStart.Name = "checkBoxLibreTranslateAutoStart";
-            this.checkBoxLibreTranslateAutoStart.Size = new System.Drawing.Size(132, 17);
-            this.checkBoxLibreTranslateAutoStart.TabIndex = 35;
-            this.checkBoxLibreTranslateAutoStart.Text = "Auto start web server";
-            this.checkBoxLibreTranslateAutoStart.UseVisualStyleBackColor = true;
+            this.groupBoxLibreTranslate.Controls.Add(this.nikseTextBoxLibreTranslateUrl);
+            this.groupBoxLibreTranslate.Controls.Add(this.label6);
+            this.groupBoxLibreTranslate.Controls.Add(this.linkLabelLibreTranslateApi);
+            this.groupBoxLibreTranslate.Controls.Add(this.label7);
+            this.groupBoxLibreTranslate.Location = new System.Drawing.Point(429, 9);
+            this.groupBoxLibreTranslate.Name = "groupBoxLibreTranslate";
+            this.groupBoxLibreTranslate.Size = new System.Drawing.Size(408, 117);
+            this.groupBoxLibreTranslate.TabIndex = 37;
+            this.groupBoxLibreTranslate.TabStop = false;
+            this.groupBoxLibreTranslate.Text = "LibreTranslate API";
             // 
             // nikseTextBoxLibreTranslateUrl
             // 
@@ -6667,7 +6653,6 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxNllbServe.Controls.Add(this.nikseTextBoxNllbServeModel);
             this.groupBoxNllbServe.Controls.Add(this.labelNllbServeModel);
-            this.groupBoxNllbServe.Controls.Add(this.checkBoxNllbServeAutoStart);
             this.groupBoxNllbServe.Controls.Add(this.nikseTextBoxNllbServeUrl);
             this.groupBoxNllbServe.Controls.Add(this.label2);
             this.groupBoxNllbServe.Controls.Add(this.linkLabelNllbServe);
@@ -6679,15 +6664,22 @@
             this.groupBoxNllbServe.TabStop = false;
             this.groupBoxNllbServe.Text = "NLLM Serve";
             // 
-            // checkBoxNllbServeAutoStart
+            // nikseTextBoxNllbServeModel
             // 
-            this.checkBoxNllbServeAutoStart.AutoSize = true;
-            this.checkBoxNllbServeAutoStart.Location = new System.Drawing.Point(13, 110);
-            this.checkBoxNllbServeAutoStart.Name = "checkBoxNllbServeAutoStart";
-            this.checkBoxNllbServeAutoStart.Size = new System.Drawing.Size(132, 17);
-            this.checkBoxNllbServeAutoStart.TabIndex = 35;
-            this.checkBoxNllbServeAutoStart.Text = "Auto start web server";
-            this.checkBoxNllbServeAutoStart.UseVisualStyleBackColor = true;
+            this.nikseTextBoxNllbServeModel.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.nikseTextBoxNllbServeModel.Location = new System.Drawing.Point(49, 77);
+            this.nikseTextBoxNllbServeModel.Name = "nikseTextBoxNllbServeModel";
+            this.nikseTextBoxNllbServeModel.Size = new System.Drawing.Size(334, 21);
+            this.nikseTextBoxNllbServeModel.TabIndex = 37;
+            // 
+            // labelNllbServeModel
+            // 
+            this.labelNllbServeModel.AutoSize = true;
+            this.labelNllbServeModel.Location = new System.Drawing.Point(7, 80);
+            this.labelNllbServeModel.Name = "labelNllbServeModel";
+            this.labelNllbServeModel.Size = new System.Drawing.Size(35, 13);
+            this.labelNllbServeModel.TabIndex = 36;
+            this.labelNllbServeModel.Text = "Model";
             // 
             // nikseTextBoxNllbServeUrl
             // 
@@ -6725,32 +6717,21 @@
             this.label4.Size = new System.Drawing.Size(0, 13);
             this.label4.TabIndex = 25;
             // 
-            // groupBox1
+            // groupBoxNllbApi
             // 
-            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.groupBoxNllbApi.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox1.Controls.Add(this.checkBoxNllbApiAutoStart);
-            this.groupBox1.Controls.Add(this.nikseTextBoxNllbApiUrl);
-            this.groupBox1.Controls.Add(this.labelNllbApiUrl);
-            this.groupBox1.Controls.Add(this.linkLabelNllbApi);
-            this.groupBox1.Controls.Add(this.label5);
-            this.groupBox1.Location = new System.Drawing.Point(10, 403);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(408, 111);
-            this.groupBox1.TabIndex = 36;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "NLLM API";
-            // 
-            // checkBoxNllbApiAutoStart
-            // 
-            this.checkBoxNllbApiAutoStart.AutoSize = true;
-            this.checkBoxNllbApiAutoStart.Location = new System.Drawing.Point(9, 79);
-            this.checkBoxNllbApiAutoStart.Name = "checkBoxNllbApiAutoStart";
-            this.checkBoxNllbApiAutoStart.Size = new System.Drawing.Size(132, 17);
-            this.checkBoxNllbApiAutoStart.TabIndex = 35;
-            this.checkBoxNllbApiAutoStart.Text = "Auto start web server";
-            this.checkBoxNllbApiAutoStart.UseVisualStyleBackColor = true;
+            this.groupBoxNllbApi.Controls.Add(this.nikseTextBoxNllbApiUrl);
+            this.groupBoxNllbApi.Controls.Add(this.labelNllbApiUrl);
+            this.groupBoxNllbApi.Controls.Add(this.linkLabelNllbApi);
+            this.groupBoxNllbApi.Controls.Add(this.label5);
+            this.groupBoxNllbApi.Location = new System.Drawing.Point(10, 403);
+            this.groupBoxNllbApi.Name = "groupBoxNllbApi";
+            this.groupBoxNllbApi.Size = new System.Drawing.Size(408, 111);
+            this.groupBoxNllbApi.TabIndex = 36;
+            this.groupBoxNllbApi.TabStop = false;
+            this.groupBoxNllbApi.Text = "NLLM API";
             // 
             // nikseTextBoxNllbApiUrl
             // 
@@ -6787,23 +6768,6 @@
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(0, 13);
             this.label5.TabIndex = 25;
-            // 
-            // labelNllbServeModel
-            // 
-            this.labelNllbServeModel.AutoSize = true;
-            this.labelNllbServeModel.Location = new System.Drawing.Point(7, 80);
-            this.labelNllbServeModel.Name = "labelNllbServeModel";
-            this.labelNllbServeModel.Size = new System.Drawing.Size(35, 13);
-            this.labelNllbServeModel.TabIndex = 36;
-            this.labelNllbServeModel.Text = "Model";
-            // 
-            // nikseTextBoxNllbServeModel
-            // 
-            this.nikseTextBoxNllbServeModel.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            this.nikseTextBoxNllbServeModel.Location = new System.Drawing.Point(49, 77);
-            this.nikseTextBoxNllbServeModel.Name = "nikseTextBoxNllbServeModel";
-            this.nikseTextBoxNllbServeModel.Size = new System.Drawing.Size(334, 21);
-            this.nikseTextBoxNllbServeModel.TabIndex = 37;
             // 
             // Settings
             // 
@@ -6946,12 +6910,12 @@
             this.groupBoxProxyAuthentication.PerformLayout();
             this.panelFileTypeAssociations.ResumeLayout(false);
             this.panelAutoTranslate.ResumeLayout(false);
-            this.groupBox4.ResumeLayout(false);
-            this.groupBox4.PerformLayout();
+            this.groupBoxLibreTranslate.ResumeLayout(false);
+            this.groupBoxLibreTranslate.PerformLayout();
             this.groupBoxNllbServe.ResumeLayout(false);
             this.groupBoxNllbServe.PerformLayout();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
+            this.groupBoxNllbApi.ResumeLayout(false);
+            this.groupBoxNllbApi.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -7384,20 +7348,17 @@
         private System.Windows.Forms.Label labelDefaultLanguages;
         private System.Windows.Forms.Label labelDefaultLanguagesList;
         private System.Windows.Forms.Panel panelAutoTranslate;
-        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox groupBoxNllbApi;
         private System.Windows.Forms.Label labelNllbApiUrl;
         private System.Windows.Forms.LinkLabel linkLabelNllbApi;
         private System.Windows.Forms.Label label5;
         private Controls.NikseTextBox nikseTextBoxNllbApiUrl;
         private System.Windows.Forms.GroupBox groupBoxNllbServe;
-        private System.Windows.Forms.CheckBox checkBoxNllbServeAutoStart;
         private Controls.NikseTextBox nikseTextBoxNllbServeUrl;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.LinkLabel linkLabelNllbServe;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.CheckBox checkBoxNllbApiAutoStart;
-        private System.Windows.Forms.GroupBox groupBox4;
-        private System.Windows.Forms.CheckBox checkBoxLibreTranslateAutoStart;
+        private System.Windows.Forms.GroupBox groupBoxLibreTranslate;
         private Controls.NikseTextBox nikseTextBoxLibreTranslateUrl;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.LinkLabel linkLabelLibreTranslateApi;

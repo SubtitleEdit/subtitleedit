@@ -910,6 +910,15 @@ namespace Nikse.SubtitleEdit.Forms.Options
             linkLabelBingSubscribe.Text = language.HowToSignUp;
             linkLabelBingSubscribe.Left = textBoxBingClientSecret.Left + textBoxBingClientSecret.Width - linkLabelGoogleTranslateSignUp.Width;
 
+            groupBoxNllbServe.Text = new NoLanguageLeftBehindServe().Name;
+            groupBoxNllbApi.Text = new NoLanguageLeftBehindApi().Name;
+            groupBoxLibreTranslate.Text = new LibreTranslate().Name;
+
+            linkLabelNllbServe.Text = LanguageSettings.Current.General.MoreInfo;
+            linkLabelNllbApi.Text = LanguageSettings.Current.General.MoreInfo;
+            linkLabelLibreTranslateApi.Text = LanguageSettings.Current.General.MoreInfo;
+            labelNllbServeModel.Text = LanguageSettings.Current.AudioToText.Model;
+
             comboBoxListViewDoubleClickEvent.Items.Clear();
             comboBoxListViewDoubleClickEvent.Items.Add(language.MainListViewNothing);
             comboBoxListViewDoubleClickEvent.Items.Add(language.MainListViewVideoGoToPositionAndPause);
@@ -1105,12 +1114,9 @@ namespace Nikse.SubtitleEdit.Forms.Options
             comboBoxBoxBingTokenEndpoint.Text = Configuration.Settings.Tools.MicrosoftTranslatorTokenEndpoint;
             textBoxGoogleTransleApiKey.Text = toolsSettings.GoogleApiV2Key;
             nikseTextBoxNllbApiUrl.Text = Configuration.Settings.Tools.AutoTranslateNllbApiUrl;
-            checkBoxNllbApiAutoStart.Checked = Configuration.Settings.Tools.AutoTranslateNllbApiAutoStart;
             nikseTextBoxNllbServeUrl.Text = Configuration.Settings.Tools.AutoTranslateNllbServeUrl;
             nikseTextBoxNllbServeModel.Text = Configuration.Settings.Tools.AutoTranslateNllbServeModel;
-            checkBoxNllbServeAutoStart.Checked = Configuration.Settings.Tools.AutoTranslateNllbServeAutoStart;
             nikseTextBoxLibreTranslateUrl.Text = Configuration.Settings.Tools.AutoTranslateLibreUrl;
-            checkBoxLibreTranslateAutoStart.Checked = Configuration.Settings.Tools.AutoTranslateLibreAutoStart;
 
             buttonReset.Text = LanguageSettings.Current.Settings.RestoreDefaultSettings;
             buttonOK.Text = LanguageSettings.Current.General.Ok;
@@ -2272,12 +2278,9 @@ namespace Nikse.SubtitleEdit.Forms.Options
             toolsSettings.MicrosoftTranslatorTokenEndpoint = comboBoxBoxBingTokenEndpoint.Text.Trim();
             toolsSettings.GoogleApiV2Key = textBoxGoogleTransleApiKey.Text.Trim();
             toolsSettings.AutoTranslateNllbApiUrl = nikseTextBoxNllbApiUrl.Text;
-            toolsSettings.AutoTranslateNllbApiAutoStart = checkBoxNllbApiAutoStart.Checked;
             toolsSettings.AutoTranslateNllbServeUrl = nikseTextBoxNllbServeUrl.Text;
             toolsSettings.AutoTranslateNllbServeModel = nikseTextBoxNllbServeModel.Text;
-            toolsSettings.AutoTranslateNllbServeAutoStart = checkBoxNllbServeAutoStart.Checked;
             toolsSettings.AutoTranslateLibreUrl = nikseTextBoxLibreTranslateUrl.Text;
-            toolsSettings.AutoTranslateLibreAutoStart = checkBoxLibreTranslateAutoStart.Checked;
 
             var proxy = Configuration.Settings.Proxy;
             proxy.ProxyAddress = textBoxProxyAddress.Text;

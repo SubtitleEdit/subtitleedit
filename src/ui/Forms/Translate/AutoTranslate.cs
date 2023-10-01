@@ -25,9 +25,6 @@ namespace Nikse.SubtitleEdit.Forms.Translate
         private int _translationProgressIndex = -1;
         private bool _translationProgressDirty = true;
         private bool _breakTranslation;
-        private Process _processNllbServe;
-        private Process _processNllbApi;
-        private Process _processLibreTranslate;
 
         public AutoTranslate(Subtitle subtitle, Subtitle selectedLines, string title, Encoding encoding)
         {
@@ -42,6 +39,13 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             labelUrl.Text = LanguageSettings.Current.Main.Url;
             nikseComboBoxUrl.Left = labelUrl.Right + 5;
+            startLibreTranslateServerToolStripMenuItem.Text = string.Format(LanguageSettings.Current.GoogleTranslate.StartWebServerX, new LibreTranslate().Name);
+            startNLLBServeServerToolStripMenuItem.Text = string.Format(LanguageSettings.Current.GoogleTranslate.StartWebServerX, new NoLanguageLeftBehindServe().Name);
+            startNLLBAPIServerToolStripMenuItem.Text = string.Format(LanguageSettings.Current.GoogleTranslate.StartWebServerX, new NoLanguageLeftBehindApi().Name);
+
+            toolStripMenuItemStartLibre.Text = string.Format(LanguageSettings.Current.GoogleTranslate.StartWebServerX, new LibreTranslate().Name);
+            toolStripMenuItemStartNLLBServe.Text = string.Format(LanguageSettings.Current.GoogleTranslate.StartWebServerX, new NoLanguageLeftBehindServe().Name);
+            toolStripMenuItemStartNLLBApi.Text = string.Format(LanguageSettings.Current.GoogleTranslate.StartWebServerX, new NoLanguageLeftBehindApi().Name);
 
             subtitleListViewSource.InitializeLanguage(LanguageSettings.Current.General, Configuration.Settings);
             subtitleListViewTarget.InitializeLanguage(LanguageSettings.Current.General, Configuration.Settings);
@@ -404,32 +408,6 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
             _autoTranslator = GetCurrentEngine();
             var engineType = _autoTranslator.GetType();
-            if (_processNllbServe == null &&
-                Configuration.Settings.Tools.AutoTranslateNllbServeAutoStart &&
-                engineType == typeof(NoLanguageLeftBehindServe))
-            {
-                ShowInfo($"Starting {_autoTranslator.Name} web server...");
-                _processNllbServe = StartNoLanguageLeftBehindServe();
-                return;
-            }
-
-            if (_processNllbApi == null &&
-                Configuration.Settings.Tools.AutoTranslateNllbApiAutoStart &&
-                engineType == typeof(NoLanguageLeftBehindApi))
-            {
-                ShowInfo($"Starting {_autoTranslator.Name} web server...");
-                _processNllbApi = StartNoLanguageLeftBehindApi();
-                return;
-            }
-
-            if (_processLibreTranslate == null &&
-                Configuration.Settings.Tools.AutoTranslateLibreAutoStart &&
-                engineType == typeof(LibreTranslate))
-            {
-                ShowInfo($"Starting {_autoTranslator.Name} web server...");
-                _processLibreTranslate = StartLibreTranslate();
-                return;
-            }
 
             buttonOK.Enabled = false;
             buttonCancel.Enabled = false;
@@ -595,16 +573,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             buttonOK.Focus();
         }
 
-        private void ShowInfo(string s)
-        {
-            labelInfo.Left = subtitleListViewTarget.Left;
-            labelInfo.Text = s;
-            labelInfo.Visible = true;
-            labelInfo.Refresh();
-            TaskDelayHelper.RunDelayed(TimeSpan.FromMilliseconds(5000), () => labelInfo.Visible = false);
-        }
-
-        private Process StartNoLanguageLeftBehindServe()
+        private void StartNoLanguageLeftBehindServe()
         {
             var modelName = Configuration.Settings.Tools.AutoTranslateNllbServeModel;
             var arguments = string.IsNullOrEmpty(modelName)
@@ -621,10 +590,9 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             process.StartInfo.EnvironmentVariables["PYTHONIOENCODING"] = "utf-8";
             process.StartInfo.EnvironmentVariables["PYTHONLEGACYWINDOWSSTDIO"] = "utf-8";
             process.Start();
-            return process;
         }
 
-        private Process StartNoLanguageLeftBehindApi()
+        private void StartNoLanguageLeftBehindApi()
         {
             var arguments = "docker run --rm -e SERVER_PORT=5000 -e APP_PORT=7860 -p 7860:7860 -v C:\\Windows\\Temp\\cache.bin:/home/user/.cache ghcr.io/winstxnhdw/nllb-api:main";
             var process = new Process
@@ -636,10 +604,9 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             };
 
             process.Start();
-            return process;
         }
 
-        private Process StartLibreTranslate()
+        private void StartLibreTranslate()
         {
             var process = new Process
             {
@@ -650,7 +617,6 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             };
 
             process.Start();
-            return process;
         }
 
         private static List<string> SplitResult(List<string> result, int mergeCount, string language)
@@ -944,6 +910,63 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             var engine = GetCurrentEngine();
             Configuration.Settings.Tools.AutoTranslateLastName = engine.Name;
             Configuration.Settings.Tools.AutoTranslateLastUrl = nikseComboBoxUrl.Text;
+        }
+
+        private void StartLibreTranslateServerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            StartLibreTranslate();
+        }
+
+        private void StartNllbServeServerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            StartNoLanguageLeftBehindServe();
+        }
+
+        private void StartNllbApiServerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            StartNoLanguageLeftBehindApi();
+        }
+
+        private void contextMenuStrip1_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            startLibreTranslateServerToolStripMenuItem.Visible = false;
+            startNLLBServeServerToolStripMenuItem.Visible = false;
+            startNLLBAPIServerToolStripMenuItem.Visible = false;
+
+            var engineType = _autoTranslator.GetType();
+            if (engineType == typeof(NoLanguageLeftBehindServe))
+            {
+                startNLLBServeServerToolStripMenuItem.Visible = true;
+            }
+            else if (engineType == typeof(NoLanguageLeftBehindApi))
+            {
+                startNLLBAPIServerToolStripMenuItem.Visible = true;
+            }
+            else if (engineType == typeof(LibreTranslate))
+            {
+                startLibreTranslateServerToolStripMenuItem.Visible = true;
+            }
+        }
+
+        private void contextMenuStrip2_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            toolStripMenuItemStartLibre.Visible = false;
+            toolStripMenuItemStartNLLBServe.Visible = false;
+            toolStripMenuItemStartNLLBApi.Visible = false;
+
+            var engineType = _autoTranslator.GetType();
+            if (engineType == typeof(NoLanguageLeftBehindServe))
+            {
+                toolStripMenuItemStartNLLBServe.Visible = true;
+            }
+            else if (engineType == typeof(NoLanguageLeftBehindApi))
+            {
+                toolStripMenuItemStartNLLBApi.Visible = true;
+            }
+            else if (engineType == typeof(LibreTranslate))
+            {
+                toolStripMenuItemStartLibre.Visible = true;
+            }
         }
     }
 }

@@ -108,6 +108,7 @@
             public string Warning { get; set; }
             public string UseLargerFontForThisWindow { get; set; }
             public string ChangeLanguageFilter { get; set; }
+            public string MoreInfo { get; set; }
         }
 
         public class About
@@ -200,6 +201,7 @@
             public string VoskWebsite { get; set; }
             public string WhisperWebsite { get; set; }
             public string WhisperNotFound { get; set; }
+            public string Model { get; set; }
             public string Models { get; set; }
             public string LanguagesAndModels { get; set; }
             public string ChooseModel { get; set; }
@@ -1145,6 +1147,7 @@
             public string TranslateBlockCopySourceText { get; set; }
             public string TranslateBlockClipboardError1 { get; set; }
             public string TranslateBlockClipboardError2 { get; set; }
+            public string StartWebServerX { get; set; }
         }
 
         public class GoogleOrMicrosoftTranslate

@@ -240,6 +240,7 @@ namespace Nikse.SubtitleEdit.Logic
                 Warning = "Warning",
                 UseLargerFontForThisWindow = "Use larger font for this window",
                 ChangeLanguageFilter = "Change language filter...",
+                MoreInfo = "More info",
             };
 
             About = new LanguageStructure.About
@@ -350,6 +351,7 @@ namespace Nikse.SubtitleEdit.Logic
                 VoskWebsite = "Vosk website",
                 WhisperWebsite = "Whisper website",
                 WhisperNotFound = "Whisper not found.\r\n\r\nRead more info (web)?",
+                Model = "Model",
                 Models = "Models",
                 LanguagesAndModels = "Languages and models",
                 ChooseModel = "Choose model",
@@ -1323,6 +1325,7 @@ namespace Nikse.SubtitleEdit.Logic
                 TranslateBlockCopySourceText = "Copy source text clipboard",
                 TranslateBlockClipboardError1 = "Clipboard contains source text!",
                 TranslateBlockClipboardError2 = "Go to translator and translate, then copy the results to the clipboard and click this button again.",
+                StartWebServerX = "Start \"{0}\" web server",
             };
 
             GoogleOrMicrosoftTranslate = new LanguageStructure.GoogleOrMicrosoftTranslate

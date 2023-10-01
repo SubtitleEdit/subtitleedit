@@ -367,6 +367,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "General/ChangeLanguageFilter":
                     language.General.ChangeLanguageFilter = reader.Value;
                     break;
+                case "General/MoreInfo":
+                    language.General.MoreInfo = reader.Value;
+                    break;
                 case "About/Title":
                     language.About.Title = reader.Value;
                     break;
@@ -534,6 +537,9 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "AudioToText/WhisperNotFound":
                     language.AudioToText.WhisperNotFound = reader.Value;
+                    break;
+                case "AudioToText/Model":
+                    language.AudioToText.Model = reader.Value;
                     break;
                 case "AudioToText/Models":
                     language.AudioToText.Models = reader.Value;
@@ -2802,6 +2808,9 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "GoogleTranslate/TranslateBlockClipboardError2":
                     language.GoogleTranslate.TranslateBlockClipboardError2 = reader.Value;
+                    break;
+                case "GoogleTranslate/StartWebServerX":
+                    language.GoogleTranslate.StartWebServerX = reader.Value;
                     break;
                 case "GoogleOrMicrosoftTranslate/Title":
                     language.GoogleOrMicrosoftTranslate.Title = reader.Value;
