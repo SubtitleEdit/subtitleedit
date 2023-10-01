@@ -392,7 +392,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             listBoxSection.Items[VideoPlayerSection] = language.VideoPlayer;
             listBoxSection.Items[WaveformAndSpectrogramSection] = language.WaveformAndSpectrogram;
             listBoxSection.Items[ToolsSection] = language.Tools;
-            listBoxSection.Items[AutoTranslateSection] = language.AutoTranslate;
+            listBoxSection.Items[AutoTranslateSection] = LanguageSettings.Current.Main.VideoControls.AutoTranslate;
             listBoxSection.Items[ToolbarSection] = language.Toolbar;
             listBoxSection.Items[AppearanceSection] = language.Appearance;
             listBoxSection.Items[NetworkSection] = language.Network;
