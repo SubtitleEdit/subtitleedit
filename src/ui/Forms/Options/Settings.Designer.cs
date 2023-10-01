@@ -163,16 +163,16 @@
             this.panelVideoPlayer = new System.Windows.Forms.Panel();
             this.groupBoxMainWindowVideoControls = new System.Windows.Forms.GroupBox();
             this.labelCustomSearch5 = new System.Windows.Forms.Label();
-            this.textBoxCustomSearchUrl5 = new Nikse.SubtitleEdit.Controls.SETextBox();
+            this.textBoxCustomSearchUrl5 = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.comboBoxCustomSearch5 = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelCustomSearch4 = new System.Windows.Forms.Label();
-            this.textBoxCustomSearchUrl4 = new Nikse.SubtitleEdit.Controls.SETextBox();
+            this.textBoxCustomSearchUrl4 = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.comboBoxCustomSearch4 = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelCustomSearch3 = new System.Windows.Forms.Label();
-            this.textBoxCustomSearchUrl3 = new Nikse.SubtitleEdit.Controls.SETextBox();
+            this.textBoxCustomSearchUrl3 = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.comboBoxCustomSearch3 = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelCustomSearch2 = new System.Windows.Forms.Label();
-            this.textBoxCustomSearchUrl2 = new Nikse.SubtitleEdit.Controls.SETextBox();
+            this.textBoxCustomSearchUrl2 = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.comboBoxCustomSearch2 = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelCustomSearch1 = new System.Windows.Forms.Label();
             this.textBoxCustomSearchUrl1 = new Nikse.SubtitleEdit.Controls.NikseTextBox();
@@ -2697,27 +2697,18 @@
             // textBoxCustomSearchUrl5
             // 
             this.textBoxCustomSearchUrl5.BackColor = System.Drawing.SystemColors.WindowFrame;
-            this.textBoxCustomSearchUrl5.CurrentLanguage = "";
-            this.textBoxCustomSearchUrl5.CurrentLineIndex = 0;
             this.textBoxCustomSearchUrl5.HideSelection = true;
-            this.textBoxCustomSearchUrl5.IsDictionaryDownloaded = true;
-            this.textBoxCustomSearchUrl5.IsSpellCheckerInitialized = false;
-            this.textBoxCustomSearchUrl5.IsSpellCheckRequested = false;
-            this.textBoxCustomSearchUrl5.IsWrongWord = false;
-            this.textBoxCustomSearchUrl5.LanguageChanged = false;
             this.textBoxCustomSearchUrl5.Location = new System.Drawing.Point(185, 146);
             this.textBoxCustomSearchUrl5.MaxLength = 32767;
             this.textBoxCustomSearchUrl5.Multiline = true;
             this.textBoxCustomSearchUrl5.Name = "textBoxCustomSearchUrl5";
             this.textBoxCustomSearchUrl5.Padding = new System.Windows.Forms.Padding(1);
             this.textBoxCustomSearchUrl5.ReadOnly = false;
-            this.textBoxCustomSearchUrl5.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
             this.textBoxCustomSearchUrl5.SelectedText = "";
             this.textBoxCustomSearchUrl5.SelectionLength = 0;
             this.textBoxCustomSearchUrl5.SelectionStart = 0;
             this.textBoxCustomSearchUrl5.Size = new System.Drawing.Size(574, 21);
             this.textBoxCustomSearchUrl5.TabIndex = 14;
-            this.textBoxCustomSearchUrl5.TextBoxFont = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBoxCustomSearchUrl5.UseSystemPasswordChar = false;
             // 
             // comboBoxCustomSearch5
@@ -2766,27 +2757,18 @@
             // textBoxCustomSearchUrl4
             // 
             this.textBoxCustomSearchUrl4.BackColor = System.Drawing.SystemColors.WindowFrame;
-            this.textBoxCustomSearchUrl4.CurrentLanguage = "";
-            this.textBoxCustomSearchUrl4.CurrentLineIndex = 0;
             this.textBoxCustomSearchUrl4.HideSelection = true;
-            this.textBoxCustomSearchUrl4.IsDictionaryDownloaded = true;
-            this.textBoxCustomSearchUrl4.IsSpellCheckerInitialized = false;
-            this.textBoxCustomSearchUrl4.IsSpellCheckRequested = false;
-            this.textBoxCustomSearchUrl4.IsWrongWord = false;
-            this.textBoxCustomSearchUrl4.LanguageChanged = false;
             this.textBoxCustomSearchUrl4.Location = new System.Drawing.Point(185, 119);
             this.textBoxCustomSearchUrl4.MaxLength = 32767;
             this.textBoxCustomSearchUrl4.Multiline = true;
             this.textBoxCustomSearchUrl4.Name = "textBoxCustomSearchUrl4";
             this.textBoxCustomSearchUrl4.Padding = new System.Windows.Forms.Padding(1);
             this.textBoxCustomSearchUrl4.ReadOnly = false;
-            this.textBoxCustomSearchUrl4.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
             this.textBoxCustomSearchUrl4.SelectedText = "";
             this.textBoxCustomSearchUrl4.SelectionLength = 0;
             this.textBoxCustomSearchUrl4.SelectionStart = 0;
             this.textBoxCustomSearchUrl4.Size = new System.Drawing.Size(574, 21);
             this.textBoxCustomSearchUrl4.TabIndex = 11;
-            this.textBoxCustomSearchUrl4.TextBoxFont = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBoxCustomSearchUrl4.UseSystemPasswordChar = false;
             // 
             // comboBoxCustomSearch4
@@ -2835,27 +2817,18 @@
             // textBoxCustomSearchUrl3
             // 
             this.textBoxCustomSearchUrl3.BackColor = System.Drawing.SystemColors.WindowFrame;
-            this.textBoxCustomSearchUrl3.CurrentLanguage = "";
-            this.textBoxCustomSearchUrl3.CurrentLineIndex = 0;
             this.textBoxCustomSearchUrl3.HideSelection = true;
-            this.textBoxCustomSearchUrl3.IsDictionaryDownloaded = true;
-            this.textBoxCustomSearchUrl3.IsSpellCheckerInitialized = false;
-            this.textBoxCustomSearchUrl3.IsSpellCheckRequested = false;
-            this.textBoxCustomSearchUrl3.IsWrongWord = false;
-            this.textBoxCustomSearchUrl3.LanguageChanged = false;
             this.textBoxCustomSearchUrl3.Location = new System.Drawing.Point(185, 92);
             this.textBoxCustomSearchUrl3.MaxLength = 32767;
             this.textBoxCustomSearchUrl3.Multiline = true;
             this.textBoxCustomSearchUrl3.Name = "textBoxCustomSearchUrl3";
             this.textBoxCustomSearchUrl3.Padding = new System.Windows.Forms.Padding(1);
             this.textBoxCustomSearchUrl3.ReadOnly = false;
-            this.textBoxCustomSearchUrl3.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
             this.textBoxCustomSearchUrl3.SelectedText = "";
             this.textBoxCustomSearchUrl3.SelectionLength = 0;
             this.textBoxCustomSearchUrl3.SelectionStart = 0;
             this.textBoxCustomSearchUrl3.Size = new System.Drawing.Size(574, 21);
             this.textBoxCustomSearchUrl3.TabIndex = 8;
-            this.textBoxCustomSearchUrl3.TextBoxFont = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBoxCustomSearchUrl3.UseSystemPasswordChar = false;
             // 
             // comboBoxCustomSearch3
@@ -2904,27 +2877,18 @@
             // textBoxCustomSearchUrl2
             // 
             this.textBoxCustomSearchUrl2.BackColor = System.Drawing.SystemColors.WindowFrame;
-            this.textBoxCustomSearchUrl2.CurrentLanguage = "";
-            this.textBoxCustomSearchUrl2.CurrentLineIndex = 0;
             this.textBoxCustomSearchUrl2.HideSelection = true;
-            this.textBoxCustomSearchUrl2.IsDictionaryDownloaded = true;
-            this.textBoxCustomSearchUrl2.IsSpellCheckerInitialized = false;
-            this.textBoxCustomSearchUrl2.IsSpellCheckRequested = false;
-            this.textBoxCustomSearchUrl2.IsWrongWord = false;
-            this.textBoxCustomSearchUrl2.LanguageChanged = false;
             this.textBoxCustomSearchUrl2.Location = new System.Drawing.Point(185, 65);
             this.textBoxCustomSearchUrl2.MaxLength = 32767;
             this.textBoxCustomSearchUrl2.Multiline = true;
             this.textBoxCustomSearchUrl2.Name = "textBoxCustomSearchUrl2";
             this.textBoxCustomSearchUrl2.Padding = new System.Windows.Forms.Padding(1);
             this.textBoxCustomSearchUrl2.ReadOnly = false;
-            this.textBoxCustomSearchUrl2.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
             this.textBoxCustomSearchUrl2.SelectedText = "";
             this.textBoxCustomSearchUrl2.SelectionLength = 0;
             this.textBoxCustomSearchUrl2.SelectionStart = 0;
             this.textBoxCustomSearchUrl2.Size = new System.Drawing.Size(574, 21);
             this.textBoxCustomSearchUrl2.TabIndex = 5;
-            this.textBoxCustomSearchUrl2.TextBoxFont = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBoxCustomSearchUrl2.UseSystemPasswordChar = false;
             // 
             // comboBoxCustomSearch2
@@ -7025,16 +6989,16 @@
         private System.Windows.Forms.CheckBox checkBoxVideoPlayerShowMuteButton;
         private System.Windows.Forms.Label labelCustomSearch1;
         private System.Windows.Forms.Label labelCustomSearch2;
-        private Nikse.SubtitleEdit.Controls.SETextBox textBoxCustomSearchUrl2;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxCustomSearchUrl2;
         private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxCustomSearch2;
         private System.Windows.Forms.Label labelCustomSearch5;
-        private Nikse.SubtitleEdit.Controls.SETextBox textBoxCustomSearchUrl5;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxCustomSearchUrl5;
         private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxCustomSearch5;
         private System.Windows.Forms.Label labelCustomSearch4;
-        private Nikse.SubtitleEdit.Controls.SETextBox textBoxCustomSearchUrl4;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxCustomSearchUrl4;
         private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxCustomSearch4;
         private System.Windows.Forms.Label labelCustomSearch3;
-        private Nikse.SubtitleEdit.Controls.SETextBox textBoxCustomSearchUrl3;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxCustomSearchUrl3;
         private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxCustomSearch3;
         private System.Windows.Forms.CheckBox checkBoxAllowOverlap;
         private System.Windows.Forms.Label labelWaveformBorderHitMs2;
