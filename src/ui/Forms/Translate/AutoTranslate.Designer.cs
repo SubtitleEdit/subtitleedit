@@ -260,6 +260,8 @@
             this.subtitleListViewTarget.UseCompatibleStateImageBehavior = false;
             this.subtitleListViewTarget.UseSyntaxColoring = true;
             this.subtitleListViewTarget.View = System.Windows.Forms.View.Details;
+            this.subtitleListViewTarget.Click += new System.EventHandler(this.subtitleListViewTarget_Click);
+            this.subtitleListViewTarget.DoubleClick += new System.EventHandler(this.subtitleListViewTarget_DoubleClick);
             // 
             // contextMenuStrip2
             // 
@@ -268,7 +270,7 @@
             this.toolStripMenuItemStartNLLBServe,
             this.toolStripMenuItemStartNLLBApi});
             this.contextMenuStrip2.Name = "contextMenuStrip1";
-            this.contextMenuStrip2.Size = new System.Drawing.Size(197, 92);
+            this.contextMenuStrip2.Size = new System.Drawing.Size(197, 70);
             this.contextMenuStrip2.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip2_Opening);
             // 
             // toolStripMenuItemStartLibre

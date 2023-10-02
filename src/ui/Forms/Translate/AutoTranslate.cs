@@ -104,9 +104,9 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             _autoTranslatorEngines = new List<IAutoTranslator>
             {
                 new GoogleTranslateV1(),
+                new LibreTranslate(),
                 new NoLanguageLeftBehindServe(),
                 new NoLanguageLeftBehindApi(),
-                new LibreTranslate(),
             };
 
             if (!string.IsNullOrEmpty(Configuration.Settings.Tools.MicrosoftTranslatorApiKey) &&
@@ -434,14 +434,12 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             {
                 try
                 {
-
-
                     var start = subtitleListViewTarget.SelectedIndex >= 0 ? subtitleListViewTarget.SelectedIndex : 0;
                     var index = start;
                     while (index < _subtitle.Paragraphs.Count)
                     {
                         var p = _subtitle.Paragraphs[index];
-
+                        char? splitAtChar = null;
                         var mergeCount = 0;
                         var allItalic = false;
                         var allBold = false;
@@ -469,10 +467,30 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                             text = MergeLines(_subtitle, index, mergeCount, allItalic, allBold);
                         }
 
+                        //  just take next sentence too
+                        var next = _subtitle.GetParagraphOrDefault(index + 1);
+                        if (mergeCount == 0 && MergeWithNextOneLineEnding(_subtitle, index, source.Code, out char splitChar))
+                        {
+                            splitAtChar = splitChar;
+                            mergeCount = 1;
+                            allItalic = HasAllLinesTag(_subtitle, index, mergeCount, "i");
+                            allBold = HasAllLinesTag(_subtitle, index, mergeCount, "b");
+                            text = Utilities.UnbreakLine(p.Text) + Environment.NewLine + Utilities.UnbreakLine(next.Text);
+                        }
+
                         if (mergeCount > 0)
                         {
                             var mergedTranslation = await _autoTranslator.Translate(text, source.Code, target.Code);
-                            var result = SplitResult(mergedTranslation.SplitToLines(), mergeCount, source.Code);
+                            List<string> result;
+                            if (splitAtChar != null && mergeCount == 1)
+                            {
+                                result = SplitResultAtSplitChar(mergedTranslation, splitAtChar.Value);
+                            }
+                            else
+                            {
+                                result = SplitResult(mergedTranslation.SplitToLines(), mergeCount, source.Code);
+                            }
+
                             if (allItalic)
                             {
                                 for (var k = 0; k < result.Count; k++)
@@ -498,15 +516,29 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                                     linesTranslate++;
                                 }
 
+                                _translationProgressIndex = index - 1;
+
                                 continue;
                             }
                         }
 
-                        var translation = await _autoTranslator.Translate(p.Text, source.Code, target.Code);
+                        var f = new Formatting();
+                        var unformattedText = f.SetTagsAndReturnTrimmed(p.Text, source.Code);
+
+                        var translation = await _autoTranslator.Translate(unformattedText, source.Code, target.Code);
                         translation = translation
                             .Replace("<br />", Environment.NewLine)
                             .Replace("<br/>", Environment.NewLine);
-                        TranslatedSubtitle.Paragraphs[index].Text = Utilities.AutoBreakLine(translation);
+
+                        var reFormattedText = f.ReAddFormatting(translation);
+
+                        if (reFormattedText.StartsWith("- ", StringComparison.Ordinal) &&
+                            !p.Text.Contains('-'))
+                        {
+                            reFormattedText = reFormattedText.TrimStart('-').Trim();
+                        }
+
+                        TranslatedSubtitle.Paragraphs[index].Text = Utilities.AutoBreakLine(reFormattedText);
                         linesTranslate++;
 
                         _translationProgressIndex = index;
@@ -520,7 +552,6 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                             break;
                         }
                     }
-
                 }
                 catch (Exception exception)
                 {
@@ -573,7 +604,55 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             buttonOK.Focus();
         }
 
-        private void StartNoLanguageLeftBehindServe()
+        private static List<string> SplitResultAtSplitChar(string translation, char splitAtChar)
+        {
+            var idx = translation.IndexOf(splitAtChar);
+            if (idx < 0 && idx < translation.Length - 1)
+            {
+                return new List<string>();
+            }
+
+            var line1 = Utilities.AutoBreakLine(translation.Substring(0, idx + 1).Trim());
+            var line2 = Utilities.AutoBreakLine(translation.Remove(0, idx + 1).Trim());
+            return new List<string> { line1, line2 };
+        }
+
+        private bool MergeWithNextOneLineEnding(Subtitle subtitle, int index, string sourceCode, out char c)
+        {
+            c = '-';
+
+            if (index + 1 >= subtitle.Paragraphs.Count || IsNonMergeLanguage(sourceCode))
+            {
+                return false;
+            }
+
+            if (MergeWithNext(_subtitle, index, sourceCode))
+            {
+                return false;
+            }
+
+            if (subtitle.Paragraphs[index].Text.EndsWith(".") && Utilities.CountTagInText(subtitle.Paragraphs[index].Text, '.') == 1)
+            {
+                c = '.';
+                return true;
+            }
+
+            if (subtitle.Paragraphs[index].Text.EndsWith("?") && Utilities.CountTagInText(subtitle.Paragraphs[index].Text, '?') == 1)
+            {
+                c = '?';
+                return true;
+            }
+
+            if (subtitle.Paragraphs[index].Text.EndsWith("!") && Utilities.CountTagInText(subtitle.Paragraphs[index].Text, '!') == 1)
+            {
+                c = '!';
+                return true;
+            }
+
+            return false;
+        }
+
+        private static void StartNoLanguageLeftBehindServe()
         {
             var modelName = Configuration.Settings.Tools.AutoTranslateNllbServeModel;
             var arguments = string.IsNullOrEmpty(modelName)
@@ -592,9 +671,9 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             process.Start();
         }
 
-        private void StartNoLanguageLeftBehindApi()
+        private static void StartNoLanguageLeftBehindApi()
         {
-            var arguments = "docker run --rm -e SERVER_PORT=5000 -e APP_PORT=7860 -p 7860:7860 -v C:\\Windows\\Temp\\cache.bin:/home/user/.cache ghcr.io/winstxnhdw/nllb-api:main";
+            const string arguments = "docker run --rm -e SERVER_PORT=5000 -e APP_PORT=7860 -p 7860:7860 -v C:\\Windows\\Temp\\cache.bin:/home/user/.cache ghcr.io/winstxnhdw/nllb-api:main";
             var process = new Process
             {
                 StartInfo = new ProcessStartInfo("docker", arguments)
@@ -606,7 +685,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             process.Start();
         }
 
-        private void StartLibreTranslate()
+        private static void StartLibreTranslate()
         {
             var process = new Process
             {
@@ -753,7 +832,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
         private static bool MergeWithNext(Subtitle subtitle, int i, string source)
         {
-            if (i + 1 >= subtitle.Paragraphs.Count || source.ToLowerInvariant() == "zh" || source.ToLowerInvariant() == "ja")
+            if (i + 1 >= subtitle.Paragraphs.Count || IsNonMergeLanguage(source))
             {
                 return false;
             }
@@ -769,6 +848,18 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
             var next = subtitle.Paragraphs[i + 1];
             return next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds < 500;
+        }
+
+        private static bool IsNonMergeLanguage(string source)
+        {
+            return source.ToLowerInvariant() == "zh" ||
+                   source.ToLowerInvariant() == "zh-CN" ||
+                   source.ToLowerInvariant() == "zh-TW" ||
+                   source.ToLowerInvariant() == "yue_Hant" ||
+                   source.ToLowerInvariant() == "zho_Hans" ||
+                   source.ToLowerInvariant() == "zho_Hant" ||
+                   source.ToLowerInvariant() == "jpn_Jpan" ||
+                   source.ToLowerInvariant() == "ja";
         }
 
         private static bool HasAllLinesTag(Subtitle subtitle, int i, int mergeCount, string tag)
@@ -787,7 +878,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
         private static bool MergeWithTwoNext(Subtitle subtitle, int i, string source)
         {
-            if (i + 2 >= subtitle.Paragraphs.Count || source.ToLowerInvariant() == "zh" || source.ToLowerInvariant() == "ja")
+            if (i + 2 >= subtitle.Paragraphs.Count || IsNonMergeLanguage(source))
             {
                 return false;
             }
@@ -797,7 +888,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
         private static bool MergeWithThreeNext(Subtitle subtitle, int i, string source)
         {
-            if (i + 3 >= subtitle.Paragraphs.Count || source.ToLowerInvariant() == "zh" || source.ToLowerInvariant() == "ja")
+            if (i + 3 >= subtitle.Paragraphs.Count || IsNonMergeLanguage(source))
             {
                 return false;
             }
@@ -849,9 +940,11 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             subtitleListViewTarget.BeginUpdate();
             subtitleListViewTarget.Fill(TranslatedSubtitle);
             _translationProgressDirty = true;
-            subtitleListViewTarget.SelectIndexAndEnsureVisible(_translationProgressIndex);
+            subtitleListViewTarget.SelectIndexAndEnsureVisible(_translationProgressIndex < 0 ? 0 : _translationProgressIndex);
             subtitleListViewTarget.EndUpdate();
-            subtitleListViewSource.SelectIndexAndEnsureVisible(_translationProgressIndex);
+            subtitleListViewSource.SelectIndexAndEnsureVisible(_translationProgressIndex < 0 ? 0 : _translationProgressIndex);
+
+            SyncListViews(subtitleListViewTarget, subtitleListViewSource);
         }
 
         private void AutoTranslate_ResizeEnd(object sender, EventArgs e)
@@ -940,7 +1033,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             }
             else if (engineType == typeof(NoLanguageLeftBehindApi))
             {
-                startNLLBAPIServerToolStripMenuItem.Visible = true;
+                // startNLLBAPIServerToolStripMenuItem.Visible = true;
             }
             else if (engineType == typeof(LibreTranslate))
             {
@@ -961,11 +1054,38 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             }
             else if (engineType == typeof(NoLanguageLeftBehindApi))
             {
-                toolStripMenuItemStartNLLBApi.Visible = true;
+                //  toolStripMenuItemStartNLLBApi.Visible = true;
             }
             else if (engineType == typeof(LibreTranslate))
             {
                 toolStripMenuItemStartLibre.Visible = true;
+            }
+        }
+
+        private void subtitleListViewTarget_Click(object sender, EventArgs e)
+        {
+            SyncListViews(subtitleListViewTarget, subtitleListViewSource);
+        }
+
+        private void subtitleListViewTarget_DoubleClick(object sender, EventArgs e)
+        {
+            SyncListViews(subtitleListViewTarget, subtitleListViewSource);
+        }
+
+        private static void SyncListViews(ListView listViewSelected, SubtitleListView listViewOther)
+        {
+            if (listViewSelected.SelectedItems.Count > 0)
+            {
+                var first = listViewSelected.TopItem.Index;
+                int index = listViewSelected.SelectedItems[0].Index;
+                if (index < listViewOther.Items.Count)
+                {
+                    listViewOther.SelectIndexAndEnsureVisible(index, false);
+                    if (first >= 0)
+                    {
+                        listViewOther.TopItem = listViewOther.Items[first];
+                    }
+                }
             }
         }
     }
