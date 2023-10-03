@@ -104,6 +104,7 @@
     <Warning>警告</Warning>
     <UseLargerFontForThisWindow>在此窗口使用更大的字体</UseLargerFontForThisWindow>
     <ChangeLanguageFilter>修改语言筛选器...</ChangeLanguageFilter>
+    <MoreInfo>更多信息</MoreInfo>
   </General>
   <About>
     <Title>关于 Subtitle Edit</Title>
@@ -197,6 +198,7 @@ Command line: {1} {2}
     <WhisperNotFound>未找到 Whisper。
 
 在线查看更多信息？</WhisperNotFound>
+    <Model>模型</Model>
     <Models>模型</Models>
     <LanguagesAndModels>语言和模型</LanguagesAndModels>
     <ChooseModel>选择模型</ChooseModel>
@@ -1041,6 +1043,7 @@ Command line: {1} {2}
     <PleaseWait>这可能需要一段时间，请稍候...</PleaseWait>
     <PoweredByGoogleTranslate>由谷歌翻译提供</PoweredByGoogleTranslate>
     <PoweredByMicrosoftTranslate>由微软翻译提供</PoweredByMicrosoftTranslate>
+    <PoweredByX>由{0}提供</PoweredByX>
     <MsClientSecretNeeded>抱歉，要想使用最新的微软翻译，你需要微软认知服务“翻译文本”密钥。转到“选项 -&gt; 设置 -&gt; 工具”输入你的密钥。</MsClientSecretNeeded>
     <GoogleNoApiKeyWarning>正在尝试使用API密钥……（慢速且有限的数据）</GoogleNoApiKeyWarning>
     <Service>服务商：</Service>
@@ -1058,6 +1061,9 @@ Command line: {1} {2}
     <TranslateBlockCopySourceText>复制源文本到剪贴板</TranslateBlockCopySourceText>
     <TranslateBlockClipboardError1>剪贴板内包含源文本！</TranslateBlockClipboardError1>
     <TranslateBlockClipboardError2>转到翻译器，将结果复制到剪贴板，然后再次单击此按钮。</TranslateBlockClipboardError2>
+    <StartWebServerX>启动网页服务器 "{0}"</StartWebServerX>
+    <XRequiresALocalWebServer>"{0}" 需要在本地运行的网页服务器!</XRequiresALocalWebServer>
+    <ReadMore>了解更多?</ReadMore>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
     <Title>谷歌 与 微软 翻译</Title>
@@ -2304,6 +2310,7 @@ Command line: {1} {2}
     <DefaultFrameRate>默认帧率</DefaultFrameRate>
     <DefaultFileEncoding>默认文件编码</DefaultFileEncoding>
     <AutoDetectAnsiEncoding>自动检测 ANSI 编码</AutoDetectAnsiEncoding>
+    <LanguageFilter>语言筛选</LanguageFilter>
     <Profile>配置文件</Profile>
     <Profiles>配置文件</Profiles>
     <ImportProfiles>导入配置文件</ImportProfiles>
