@@ -1069,6 +1069,8 @@ To use an API key, go to "Options -&gt; Settings -&gt; Tools" to enter your Goog
     <TranslateBlockClipboardError1>Clipboard contains source text!</TranslateBlockClipboardError1>
     <TranslateBlockClipboardError2>Go to translator and translate, then copy the results to the clipboard and click this button again.</TranslateBlockClipboardError2>
     <StartWebServerX>Start "{0}" web server</StartWebServerX>
+    <XRequiresALocalWebServer>"{0}" requires a web server running locally!</XRequiresALocalWebServer>
+    <ReadMore>Read more?</ReadMore>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
     <Title>Google vs Microsoft translate</Title>

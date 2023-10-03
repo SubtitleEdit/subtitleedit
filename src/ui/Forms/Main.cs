@@ -1926,10 +1926,11 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemSelectedLines.Text = _language.Menu.ContextMenu.SelectedLines;
 
             toolStripMenuItemAutoTranslate.Text = _language.Menu.AutoTranslate.Title;
-            genericTranslateToolStripMenuItem.Text = _language.Menu.AutoTranslate.AutoTranslate + " (OLD)";
+            genericTranslateToolStripMenuItem.Text = _language.Menu.AutoTranslate.AutoTranslate;
             autotranslateNLLBToolStripMenuItem.Text = _language.Menu.AutoTranslate.AutoTranslate;
             autotranslateViaCopypasteToolStripMenuItem.Text = _language.Menu.AutoTranslate.AutoTranslateViaCopyPaste;
             translateToolStripMenuItem.Text = _language.Menu.AutoTranslate.AutoTranslate;
+            translateToolStripMenuItem.Visible = false; //TODO: remove old generic tranlsate in SE 4.0.3 or newer
             toolStripMenuItemTranslateSelected.Text = _language.Menu.ContextMenu.TranslateSelectedLines;
             adjustDisplayTimeForSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.AdjustDisplayDurationForSelectedLines;
             fixCommonErrorsInSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.FixCommonErrorsInSelectedLines;
@@ -24510,8 +24511,17 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private Panel _videoControlsHorizontal;
+        private NikseComboBox _videoControlsHorizontalMode;
+
         private void SetLayout(int layout)
         {
+            if (_videoControlsHorizontal == null && (layout == 7 || layout == 8))
+            {
+                _videoControlsHorizontal = new Panel();
+                _videoControlsHorizontalMode = new NikseComboBox();
+            }
+
             var isLarge = _subtitle.Paragraphs.Count > 1000;
             if (isLarge)
             {

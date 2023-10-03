@@ -2812,6 +2812,12 @@ namespace Nikse.SubtitleEdit.Logic
                 case "GoogleTranslate/StartWebServerX":
                     language.GoogleTranslate.StartWebServerX = reader.Value;
                     break;
+                case "GoogleTranslate/XRequiresALocalWebServer":
+                    language.GoogleTranslate.XRequiresALocalWebServer = reader.Value;
+                    break;
+                case "GoogleTranslate/ReadMore":
+                    language.GoogleTranslate.ReadMore = reader.Value;
+                    break;
                 case "GoogleOrMicrosoftTranslate/Title":
                     language.GoogleOrMicrosoftTranslate.Title = reader.Value;
                     break;
