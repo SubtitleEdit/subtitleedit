@@ -147,7 +147,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 return new TimeCode(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]), 0);
             }
 
-            throw new InvalidOperationException("Too many parts from time-code. Expected 2 or 3 tokens!");
+            throw new InvalidOperationException("Too many parts for time-code. Expected 2 or 3 tokens!");
         }
     }
 }
