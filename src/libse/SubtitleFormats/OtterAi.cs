@@ -1,6 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -59,45 +60,37 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             _errorCount = 0;
-            Paragraph p = null;
-            bool foundTranscribedTag = false;
-            foreach (string line in lines)
+
+            if (!HasSignature(lines))
             {
-                if (line.Contains(Signature))
-                {
-                    foundTranscribedTag = true;
-                    break;
-                }
-            }
-            if (!foundTranscribedTag)
-            {
+                _errorCount = lines.Count;
                 return;
             }
-
+            
+            Paragraph p = null;
             var sb = new StringBuilder();
-            foreach (string line in lines)
+            
+            // skip signature/identifier
+            foreach (var line in lines.Where(line => line != Signature))
             {
-                string s = line.Trim();
-                var match1 = RegexTimeCodes1.Match(s);
-                var match2 = RegexTimeCodes2.Match(s);
-                if (s == Signature)
+                var s = line.Trim();
+
+                var match = TryMatch(s);
+                if (match.Success)
                 {
-                    // Skip
-                }
-                else if (match1.Success || match2.Success)
-                {
-                    var m = match1.Success ? match1 : match2;
                     if (p != null && sb.Length > 0)
                     {
                         p.Text = sb.ToString().Trim();
                         subtitle.Paragraphs.Add(p);
                     }
+
                     p = new Paragraph();
-                    p.StartTime = DecodeTimeCode(m.Value.Trim(), SplitCharColon);
-                    if (m.Index > 0)
+                    p.StartTime = DecodeTimeCode(match.Value.Trim(), SplitCharColon);
+                    if (match.Index > 0)
                     {
-                        p.Actor = s.Substring(0, m.Index).Trim();
+                        p.Actor = s.Substring(0, match.Index).Trim();
                     }
+
                     sb.Clear();
                 }
                 else if (p != null)
@@ -116,6 +109,32 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             subtitle.Renumber();
         }
 
+        private bool HasSignature(IList<string> lines)
+        {
+            // start checking in reverse because the signature is expected to be at last line
+            for (var i = lines.Count - 1; i >= 0; i--)
+            {
+                var line = lines[i];
+                if (line.Contains(Signature))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private Match TryMatch(string s)
+        {
+            var matchFormat = RegexTimeCodes1.Match(s);
+            if (!matchFormat.Success)
+            {
+                return RegexTimeCodes2.Match(s);
+            }
+
+            return matchFormat;
+        }
+
         private static TimeCode DecodeTimeCode(string s, char[] splitCharColon)
         {
             var arr = s.Split(splitCharColon);
@@ -127,7 +146,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 return new TimeCode(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]), 0);
             }
-            throw new InvalidOperationException();
+
+            throw new InvalidOperationException("Too many parts from time-code. Expected 2 or 3 tokens!");
         }
     }
 }
