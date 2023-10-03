@@ -1326,6 +1326,8 @@ namespace Nikse.SubtitleEdit.Logic
                 TranslateBlockClipboardError1 = "Clipboard contains source text!",
                 TranslateBlockClipboardError2 = "Go to translator and translate, then copy the results to the clipboard and click this button again.",
                 StartWebServerX = "Start \"{0}\" web server",
+                XRequiresALocalWebServer = "\"{0}\" requires a web server running locally!",
+                ReadMore = "Read more?",
             };
 
             GoogleOrMicrosoftTranslate = new LanguageStructure.GoogleOrMicrosoftTranslate

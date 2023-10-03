@@ -558,21 +558,14 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                     SeLogger.Error(exception);
                     if (linesTranslate == 0)
                     {
-                        if (engineType == typeof(NoLanguageLeftBehindApi) || engineType == typeof(NoLanguageLeftBehindServe))
+                        if (engineType == typeof(NoLanguageLeftBehindApi) || engineType == typeof(NoLanguageLeftBehindServe) || engineType == typeof(LibreTranslate))
                         {
-                            var dr = MessageBox.Show($"Facebook NLLB via {_autoTranslator.Name} requires an API running locally!" + Environment.NewLine
-                                                                                                                                  + Environment.NewLine
-                                                                                                                                  + "Read more?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
-                            if (dr == DialogResult.Yes)
-                            {
-                                UiUtil.ShowHelp("#translation");
-                            }
-                        }
-                        else if (engineType == typeof(LibreTranslate))
-                        {
-                            var dr = MessageBox.Show($"{_autoTranslator.Name} requires an API running locally!" + Environment.NewLine
-                                                                     + Environment.NewLine
-                                                                     + "Read more?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                            var dr = MessageBox.Show(
+                                string.Format(LanguageSettings.Current.GoogleTranslate.XRequiresALocalWebServer, _autoTranslator.Name) 
+                                + Environment.NewLine
+                                + Environment.NewLine + LanguageSettings.Current.GoogleTranslate.ReadMore,
+                                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Error);
+                                            
                             if (dr == DialogResult.Yes)
                             {
                                 UiUtil.ShowHelp("#translation");

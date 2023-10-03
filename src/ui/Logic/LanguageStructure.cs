@@ -1148,6 +1148,8 @@
             public string TranslateBlockClipboardError1 { get; set; }
             public string TranslateBlockClipboardError2 { get; set; }
             public string StartWebServerX { get; set; }
+            public string XRequiresALocalWebServer { get; set; }
+            public string ReadMore { get; set; }
         }
 
         public class GoogleOrMicrosoftTranslate
