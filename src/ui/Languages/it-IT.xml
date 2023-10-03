@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>4.0.1</Version>
-    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 01.10.2023</TranslatedBy>
+    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 03.10.2023</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -104,6 +104,7 @@
     <Warning>Avviso</Warning>
     <UseLargerFontForThisWindow>Per questa finestra usa una font più grande </UseLargerFontForThisWindow>
     <ChangeLanguageFilter>Modifica filtro lingua...</ChangeLanguageFilter>
+    <MoreInfo>Altre info</MoreInfo>
   </General>
   <About>
     <Title>Informazioni</Title>
@@ -198,6 +199,7 @@ Nota: Controlla lo spazio libero nel disco.</WaveFileMalformed>
     <WhisperNotFound>Whisper non trovato.
 
 Vuoi ulteriori informazioni (web)?</WhisperNotFound>
+    <Model>Modello</Model>
     <Models>Modelli</Models>
     <LanguagesAndModels>Lingue e modelli</LanguagesAndModels>
     <ChooseModel>Scegli modello</ChooseModel>
@@ -1066,6 +1068,9 @@ Per usare una chiave API vai su "Opzioni -&gt; Impostazioni -&gt; Strumenti" per
     <TranslateBlockCopySourceText>Copia Appunti del testo di origine</TranslateBlockCopySourceText>
     <TranslateBlockClipboardError1>Gli Appunti contengono il testo di origine!</TranslateBlockClipboardError1>
     <TranslateBlockClipboardError2>Vai al traduttore e traduci, copia il risultato negli Appunti e fai di nuovo clic su questo pulsante.</TranslateBlockClipboardError2>
+    <StartWebServerX>Avvia server web "{0}"</StartWebServerX>
+    <XRequiresALocalWebServer>"{0}" richiede un server web in esecuzione in locale!</XRequiresALocalWebServer>
+    <ReadMore>Vuoi saperne di più?</ReadMore>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
     <Title>Traduttore Google contro traduttore Microsoft</Title>
@@ -2280,7 +2285,6 @@ stesso file di sottotitolo (collaborazione)</Information>
     <VideoPlayer>Lettore video</VideoPlayer>
     <WaveformAndSpectrogram>Forma onda/spettrogramma</WaveformAndSpectrogram>
     <Tools>Strumenti</Tools>
-    <AutoTranslate>Traduci automaticamente</AutoTranslate>
     <WordLists>Elenchi parole</WordLists>
     <SsaStyle>Stile SSA</SsaStyle>
     <Network>Rete</Network>
