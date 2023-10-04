@@ -654,6 +654,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 new Cmaft(),
                 new Pns(),
                 new PlayCaptionsFreeEditor(),
+                new VideoCdDat(),
             };
         }
 
