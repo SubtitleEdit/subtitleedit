@@ -281,24 +281,28 @@ namespace Nikse.SubtitleEdit.Forms
                 _autoDetectGoogleLanguage = "zh-CHS"; // Note that "zh-CHS" (Simplified Chinese) and "zh-CHT" (Traditional Chinese) are neutral cultures
             }
 
-            CultureInfo ci = CultureInfo.GetCultureInfo(_autoDetectGoogleLanguage);
-            string threeLetterIsoLanguageName = ci.GetThreeLetterIsoLanguageName();
+            var ci = CultureInfo.GetCultureInfo(_autoDetectGoogleLanguage);
+            var threeLetterIsoLanguageName = ci.GetThreeLetterIsoLanguageName();
             InitializeLanguageNames();
-            int languageIndex = 0;
-            int j = 0;
+            var languageIndex = 0;
+            var j = 0;
             foreach (var x in comboBoxLanguage.Items)
             {
-                var xci = (LanguageItem)x;
-                if (xci.Code.TwoLetterISOLanguageName == ci.TwoLetterISOLanguageName)
+                if (x is LanguageItem xci)
                 {
-                    languageIndex = j;
-                    break;
+                    if (xci.Code.TwoLetterISOLanguageName == ci.TwoLetterISOLanguageName)
+                    {
+                        languageIndex = j;
+                        break;
+                    }
+
+                    if (xci.Code.TwoLetterISOLanguageName == "en")
+                    {
+                        languageIndex = j;
+                    }
+
+                    j++;
                 }
-                if (xci.Code.TwoLetterISOLanguageName == "en")
-                {
-                    languageIndex = j;
-                }
-                j++;
             }
             comboBoxLanguage.SelectedIndex = languageIndex;
 
