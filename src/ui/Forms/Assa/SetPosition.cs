@@ -106,14 +106,17 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             if (_subtitle?.Header != null)
             {
                 var playResX = AdvancedSubStationAlpha.GetTagFromHeader("PlayResX", "[Script Info]", _subtitle.Header);
-                playResX = playResX.Trim().Remove(0, 8).TrimStart().TrimStart(':').TrimStart();
                 var playResY = AdvancedSubStationAlpha.GetTagFromHeader("PlayResY", "[Script Info]", _subtitle.Header);
-                playResY = playResY.Trim().Remove(0, 8).TrimStart().TrimStart(':').TrimStart();
-                if (int.TryParse(playResX, NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out var px) &&
-                    int.TryParse(playResY, NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out var py))
+                if (!string.IsNullOrEmpty(playResX) && !string.IsNullOrEmpty(playResY))
                 {
-                    _originalPlayResX = px;
-                    _originalPlayResY = py;
+                    playResX = playResX.Trim().Remove(0, 8).TrimStart().TrimStart(':').TrimStart();
+                    playResY = playResY.Trim().Remove(0, 8).TrimStart().TrimStart(':').TrimStart();
+                    if (int.TryParse(playResX, NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out var px) &&
+                        int.TryParse(playResY, NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out var py))
+                    {
+                        _originalPlayResX = px;
+                        _originalPlayResY = py;
+                    }
                 }
             }
         }
