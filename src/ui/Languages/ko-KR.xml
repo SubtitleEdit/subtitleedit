@@ -104,6 +104,7 @@
     <Warning>경고</Warning>
     <UseLargerFontForThisWindow>이 창에 더 큰 글꼴 사용</UseLargerFontForThisWindow>
     <ChangeLanguageFilter>언어 필터 변경...</ChangeLanguageFilter>
+    <MoreInfo>더 많은 정보</MoreInfo>
   </General>
   <About>
     <Title>* Subtitle Edit 정보</Title>
@@ -194,6 +195,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <WhisperNotFound>Whisper을 찾을 수 없음!
 
 더 많은 정보(웹)를 참조하시겠습니까?</WhisperNotFound>
+    <Model>모델</Model>
     <Models>모델</Models>
     <LanguagesAndModels>언어 및 모델</LanguagesAndModels>
     <ChooseModel>모델 선택</ChooseModel>
@@ -1039,6 +1041,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <PleaseWait>번역 중... 잠시 기다려 주세요.</PleaseWait>
     <PoweredByGoogleTranslate>Google 번역기 실행</PoweredByGoogleTranslate>
     <PoweredByMicrosoftTranslate>Microsoft 번역기 실행</PoweredByMicrosoftTranslate>
+    <PoweredByX>{0}으로 번역 제공</PoweredByX>
     <MsClientSecretNeeded>죄송합니다,  최신 Microsoft 번역기를 사용하려면, Microsoft에서 인지 가능한 'Translator Text' 키 필요합니다.
 
 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구" 로 이동하십시오.</MsClientSecretNeeded>
@@ -1060,6 +1063,9 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <TranslateBlockCopySourceText>원본 텍스트 클립보드 복사</TranslateBlockCopySourceText>
     <TranslateBlockClipboardError1>클립보드에 원본 텍스트가 있습니다!</TranslateBlockClipboardError1>
     <TranslateBlockClipboardError2>번역기로 번역한 결과물을 클립보드에 복사한 후, 이 단추를 다시 클릭합니다</TranslateBlockClipboardError2>
+    <StartWebServerX>"{0}" 웹 서버 시작</StartWebServerX>
+    <XRequiresALocalWebServer>"{0}"를 사용하려면 로컬에서 실행되는 웹 서버가 필요합니다!</XRequiresALocalWebServer>
+    <ReadMore>더 많은 정보를 보시겠습니까?</ReadMore>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
     <Title>Google | Microsoft 번역기</Title>
