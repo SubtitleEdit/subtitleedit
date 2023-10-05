@@ -100,9 +100,9 @@ namespace Nikse.SubtitleEdit.Forms.Options
             listView1.Items.Clear();
             foreach (var x in _languageItems)
             {
-                if (x.Name.Contains(textBoxSearch.Text) ||
-                    x.Code.TwoLetterISOLanguageName == textBoxSearch.Text ||
-                    x.Code.ThreeLetterISOLanguageName == textBoxSearch.Text)
+                if (x.Name.Contains(textBoxSearch.Text, StringComparison.OrdinalIgnoreCase) ||
+                    x.Code.TwoLetterISOLanguageName.Equals(textBoxSearch.Text, StringComparison.OrdinalIgnoreCase) ||
+                    x.Code.ThreeLetterISOLanguageName.Equals(textBoxSearch.Text, StringComparison.OrdinalIgnoreCase))
                 {
                     var listViewItem = new ListViewItem(x.ToString())
                     {
