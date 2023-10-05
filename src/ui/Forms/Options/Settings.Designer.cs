@@ -456,14 +456,14 @@
             this.panelAutoTranslate = new System.Windows.Forms.Panel();
             this.groupBoxLibreTranslate = new System.Windows.Forms.GroupBox();
             this.nikseTextBoxLibreTranslateUrl = new Nikse.SubtitleEdit.Controls.NikseTextBox();
-            this.label6 = new System.Windows.Forms.Label();
+            this.labelLibreUrl = new System.Windows.Forms.Label();
             this.linkLabelLibreTranslateApi = new System.Windows.Forms.LinkLabel();
             this.label7 = new System.Windows.Forms.Label();
             this.groupBoxNllbServe = new System.Windows.Forms.GroupBox();
             this.nikseTextBoxNllbServeModel = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelNllbServeModel = new System.Windows.Forms.Label();
             this.nikseTextBoxNllbServeUrl = new Nikse.SubtitleEdit.Controls.NikseTextBox();
-            this.label2 = new System.Windows.Forms.Label();
+            this.labelNllbServeUrl = new System.Windows.Forms.Label();
             this.linkLabelNllbServe = new System.Windows.Forms.LinkLabel();
             this.label4 = new System.Windows.Forms.Label();
             this.groupBoxNllbApi = new System.Windows.Forms.GroupBox();
@@ -471,6 +471,8 @@
             this.labelNllbApiUrl = new System.Windows.Forms.Label();
             this.linkLabelNllbApi = new System.Windows.Forms.LinkLabel();
             this.label5 = new System.Windows.Forms.Label();
+            this.nikseTextBoxLibreTranslateApiKey = new Nikse.SubtitleEdit.Controls.NikseTextBox();
+            this.labelLibreApiKey = new System.Windows.Forms.Label();
             this.panelGeneral.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
             this.groupBoxGeneralRules.SuspendLayout();
@@ -1552,19 +1554,13 @@
             // textBoxShowLineBreaksAs
             // 
             this.textBoxShowLineBreaksAs.BackColor = System.Drawing.SystemColors.WindowFrame;
-            this.textBoxShowLineBreaksAs.HideSelection = true;
+            this.textBoxShowLineBreaksAs.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxShowLineBreaksAs.Location = new System.Drawing.Point(572, 233);
             this.textBoxShowLineBreaksAs.MaxLength = 10;
             this.textBoxShowLineBreaksAs.Multiline = true;
             this.textBoxShowLineBreaksAs.Name = "textBoxShowLineBreaksAs";
-            this.textBoxShowLineBreaksAs.Padding = new System.Windows.Forms.Padding(1);
-            this.textBoxShowLineBreaksAs.ReadOnly = false;
-            this.textBoxShowLineBreaksAs.SelectedText = "";
-            this.textBoxShowLineBreaksAs.SelectionLength = 0;
-            this.textBoxShowLineBreaksAs.SelectionStart = 0;
             this.textBoxShowLineBreaksAs.Size = new System.Drawing.Size(60, 21);
             this.textBoxShowLineBreaksAs.TabIndex = 17;
-            this.textBoxShowLineBreaksAs.UseSystemPasswordChar = false;
             // 
             // checkBoxAutoWrapWhileTyping
             // 
@@ -2697,19 +2693,12 @@
             // textBoxCustomSearchUrl5
             // 
             this.textBoxCustomSearchUrl5.BackColor = System.Drawing.SystemColors.WindowFrame;
-            this.textBoxCustomSearchUrl5.HideSelection = true;
+            this.textBoxCustomSearchUrl5.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxCustomSearchUrl5.Location = new System.Drawing.Point(185, 146);
-            this.textBoxCustomSearchUrl5.MaxLength = 32767;
             this.textBoxCustomSearchUrl5.Multiline = true;
             this.textBoxCustomSearchUrl5.Name = "textBoxCustomSearchUrl5";
-            this.textBoxCustomSearchUrl5.Padding = new System.Windows.Forms.Padding(1);
-            this.textBoxCustomSearchUrl5.ReadOnly = false;
-            this.textBoxCustomSearchUrl5.SelectedText = "";
-            this.textBoxCustomSearchUrl5.SelectionLength = 0;
-            this.textBoxCustomSearchUrl5.SelectionStart = 0;
             this.textBoxCustomSearchUrl5.Size = new System.Drawing.Size(574, 21);
             this.textBoxCustomSearchUrl5.TabIndex = 14;
-            this.textBoxCustomSearchUrl5.UseSystemPasswordChar = false;
             // 
             // comboBoxCustomSearch5
             // 
@@ -2757,19 +2746,12 @@
             // textBoxCustomSearchUrl4
             // 
             this.textBoxCustomSearchUrl4.BackColor = System.Drawing.SystemColors.WindowFrame;
-            this.textBoxCustomSearchUrl4.HideSelection = true;
+            this.textBoxCustomSearchUrl4.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxCustomSearchUrl4.Location = new System.Drawing.Point(185, 119);
-            this.textBoxCustomSearchUrl4.MaxLength = 32767;
             this.textBoxCustomSearchUrl4.Multiline = true;
             this.textBoxCustomSearchUrl4.Name = "textBoxCustomSearchUrl4";
-            this.textBoxCustomSearchUrl4.Padding = new System.Windows.Forms.Padding(1);
-            this.textBoxCustomSearchUrl4.ReadOnly = false;
-            this.textBoxCustomSearchUrl4.SelectedText = "";
-            this.textBoxCustomSearchUrl4.SelectionLength = 0;
-            this.textBoxCustomSearchUrl4.SelectionStart = 0;
             this.textBoxCustomSearchUrl4.Size = new System.Drawing.Size(574, 21);
             this.textBoxCustomSearchUrl4.TabIndex = 11;
-            this.textBoxCustomSearchUrl4.UseSystemPasswordChar = false;
             // 
             // comboBoxCustomSearch4
             // 
@@ -2817,19 +2799,12 @@
             // textBoxCustomSearchUrl3
             // 
             this.textBoxCustomSearchUrl3.BackColor = System.Drawing.SystemColors.WindowFrame;
-            this.textBoxCustomSearchUrl3.HideSelection = true;
+            this.textBoxCustomSearchUrl3.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxCustomSearchUrl3.Location = new System.Drawing.Point(185, 92);
-            this.textBoxCustomSearchUrl3.MaxLength = 32767;
             this.textBoxCustomSearchUrl3.Multiline = true;
             this.textBoxCustomSearchUrl3.Name = "textBoxCustomSearchUrl3";
-            this.textBoxCustomSearchUrl3.Padding = new System.Windows.Forms.Padding(1);
-            this.textBoxCustomSearchUrl3.ReadOnly = false;
-            this.textBoxCustomSearchUrl3.SelectedText = "";
-            this.textBoxCustomSearchUrl3.SelectionLength = 0;
-            this.textBoxCustomSearchUrl3.SelectionStart = 0;
             this.textBoxCustomSearchUrl3.Size = new System.Drawing.Size(574, 21);
             this.textBoxCustomSearchUrl3.TabIndex = 8;
-            this.textBoxCustomSearchUrl3.UseSystemPasswordChar = false;
             // 
             // comboBoxCustomSearch3
             // 
@@ -2877,19 +2852,12 @@
             // textBoxCustomSearchUrl2
             // 
             this.textBoxCustomSearchUrl2.BackColor = System.Drawing.SystemColors.WindowFrame;
-            this.textBoxCustomSearchUrl2.HideSelection = true;
+            this.textBoxCustomSearchUrl2.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxCustomSearchUrl2.Location = new System.Drawing.Point(185, 65);
-            this.textBoxCustomSearchUrl2.MaxLength = 32767;
             this.textBoxCustomSearchUrl2.Multiline = true;
             this.textBoxCustomSearchUrl2.Name = "textBoxCustomSearchUrl2";
-            this.textBoxCustomSearchUrl2.Padding = new System.Windows.Forms.Padding(1);
-            this.textBoxCustomSearchUrl2.ReadOnly = false;
-            this.textBoxCustomSearchUrl2.SelectedText = "";
-            this.textBoxCustomSearchUrl2.SelectionLength = 0;
-            this.textBoxCustomSearchUrl2.SelectionStart = 0;
             this.textBoxCustomSearchUrl2.Size = new System.Drawing.Size(574, 21);
             this.textBoxCustomSearchUrl2.TabIndex = 5;
-            this.textBoxCustomSearchUrl2.UseSystemPasswordChar = false;
             // 
             // comboBoxCustomSearch2
             // 
@@ -2937,19 +2905,12 @@
             // textBoxCustomSearchUrl1
             // 
             this.textBoxCustomSearchUrl1.BackColor = System.Drawing.SystemColors.WindowFrame;
-            this.textBoxCustomSearchUrl1.HideSelection = true;
+            this.textBoxCustomSearchUrl1.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxCustomSearchUrl1.Location = new System.Drawing.Point(185, 38);
-            this.textBoxCustomSearchUrl1.MaxLength = 32767;
             this.textBoxCustomSearchUrl1.Multiline = true;
             this.textBoxCustomSearchUrl1.Name = "textBoxCustomSearchUrl1";
-            this.textBoxCustomSearchUrl1.Padding = new System.Windows.Forms.Padding(1);
-            this.textBoxCustomSearchUrl1.ReadOnly = false;
-            this.textBoxCustomSearchUrl1.SelectedText = "";
-            this.textBoxCustomSearchUrl1.SelectionLength = 0;
-            this.textBoxCustomSearchUrl1.SelectionStart = 0;
             this.textBoxCustomSearchUrl1.Size = new System.Drawing.Size(574, 21);
             this.textBoxCustomSearchUrl1.TabIndex = 2;
-            this.textBoxCustomSearchUrl1.UseSystemPasswordChar = false;
             // 
             // labelCustomSearch
             // 
@@ -4664,19 +4625,13 @@
             // textBoxMusicSymbolsToReplace
             // 
             this.textBoxMusicSymbolsToReplace.BackColor = System.Drawing.SystemColors.WindowFrame;
-            this.textBoxMusicSymbolsToReplace.HideSelection = true;
+            this.textBoxMusicSymbolsToReplace.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxMusicSymbolsToReplace.Location = new System.Drawing.Point(11, 41);
             this.textBoxMusicSymbolsToReplace.MaxLength = 100;
             this.textBoxMusicSymbolsToReplace.Multiline = true;
             this.textBoxMusicSymbolsToReplace.Name = "textBoxMusicSymbolsToReplace";
-            this.textBoxMusicSymbolsToReplace.Padding = new System.Windows.Forms.Padding(1);
-            this.textBoxMusicSymbolsToReplace.ReadOnly = false;
-            this.textBoxMusicSymbolsToReplace.SelectedText = "";
-            this.textBoxMusicSymbolsToReplace.SelectionLength = 0;
-            this.textBoxMusicSymbolsToReplace.SelectionStart = 0;
             this.textBoxMusicSymbolsToReplace.Size = new System.Drawing.Size(275, 21);
             this.textBoxMusicSymbolsToReplace.TabIndex = 0;
-            this.textBoxMusicSymbolsToReplace.UseSystemPasswordChar = false;
             // 
             // labelToolsMusicSymbolsToReplace
             // 
@@ -6294,19 +6249,12 @@
             // textBoxProxyDomain
             // 
             this.textBoxProxyDomain.BackColor = System.Drawing.SystemColors.WindowFrame;
-            this.textBoxProxyDomain.HideSelection = true;
+            this.textBoxProxyDomain.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxProxyDomain.Location = new System.Drawing.Point(138, 68);
-            this.textBoxProxyDomain.MaxLength = 32767;
             this.textBoxProxyDomain.Multiline = true;
             this.textBoxProxyDomain.Name = "textBoxProxyDomain";
-            this.textBoxProxyDomain.Padding = new System.Windows.Forms.Padding(1);
-            this.textBoxProxyDomain.ReadOnly = false;
-            this.textBoxProxyDomain.SelectedText = "";
-            this.textBoxProxyDomain.SelectionLength = 0;
-            this.textBoxProxyDomain.SelectionStart = 0;
             this.textBoxProxyDomain.Size = new System.Drawing.Size(192, 21);
             this.textBoxProxyDomain.TabIndex = 30;
-            this.textBoxProxyDomain.UseSystemPasswordChar = false;
             // 
             // labelProxyDomain
             // 
@@ -6320,19 +6268,12 @@
             // textBoxProxyUserName
             // 
             this.textBoxProxyUserName.BackColor = System.Drawing.SystemColors.WindowFrame;
-            this.textBoxProxyUserName.HideSelection = true;
+            this.textBoxProxyUserName.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxProxyUserName.Location = new System.Drawing.Point(138, 16);
-            this.textBoxProxyUserName.MaxLength = 32767;
             this.textBoxProxyUserName.Multiline = true;
             this.textBoxProxyUserName.Name = "textBoxProxyUserName";
-            this.textBoxProxyUserName.Padding = new System.Windows.Forms.Padding(1);
-            this.textBoxProxyUserName.ReadOnly = false;
-            this.textBoxProxyUserName.SelectedText = "";
-            this.textBoxProxyUserName.SelectionLength = 0;
-            this.textBoxProxyUserName.SelectionStart = 0;
             this.textBoxProxyUserName.Size = new System.Drawing.Size(192, 21);
             this.textBoxProxyUserName.TabIndex = 22;
-            this.textBoxProxyUserName.UseSystemPasswordChar = false;
             // 
             // labelProxyPassword
             // 
@@ -6355,16 +6296,10 @@
             // textBoxProxyPassword
             // 
             this.textBoxProxyPassword.BackColor = System.Drawing.SystemColors.WindowFrame;
-            this.textBoxProxyPassword.HideSelection = true;
+            this.textBoxProxyPassword.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxProxyPassword.Location = new System.Drawing.Point(138, 42);
-            this.textBoxProxyPassword.MaxLength = 32767;
             this.textBoxProxyPassword.Multiline = true;
             this.textBoxProxyPassword.Name = "textBoxProxyPassword";
-            this.textBoxProxyPassword.Padding = new System.Windows.Forms.Padding(1);
-            this.textBoxProxyPassword.ReadOnly = false;
-            this.textBoxProxyPassword.SelectedText = "";
-            this.textBoxProxyPassword.SelectionLength = 0;
-            this.textBoxProxyPassword.SelectionStart = 0;
             this.textBoxProxyPassword.Size = new System.Drawing.Size(192, 21);
             this.textBoxProxyPassword.TabIndex = 24;
             this.textBoxProxyPassword.UseSystemPasswordChar = true;
@@ -6372,19 +6307,12 @@
             // textBoxProxyAddress
             // 
             this.textBoxProxyAddress.BackColor = System.Drawing.SystemColors.WindowFrame;
-            this.textBoxProxyAddress.HideSelection = true;
+            this.textBoxProxyAddress.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxProxyAddress.Location = new System.Drawing.Point(166, 34);
-            this.textBoxProxyAddress.MaxLength = 32767;
             this.textBoxProxyAddress.Multiline = true;
             this.textBoxProxyAddress.Name = "textBoxProxyAddress";
-            this.textBoxProxyAddress.Padding = new System.Windows.Forms.Padding(1);
-            this.textBoxProxyAddress.ReadOnly = false;
-            this.textBoxProxyAddress.SelectedText = "";
-            this.textBoxProxyAddress.SelectionLength = 0;
-            this.textBoxProxyAddress.SelectionStart = 0;
             this.textBoxProxyAddress.Size = new System.Drawing.Size(321, 21);
             this.textBoxProxyAddress.TabIndex = 20;
-            this.textBoxProxyAddress.UseSystemPasswordChar = false;
             // 
             // labelProxyAddress
             // 
@@ -6500,13 +6428,15 @@
             this.groupBoxLibreTranslate.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxLibreTranslate.Controls.Add(this.nikseTextBoxLibreTranslateApiKey);
+            this.groupBoxLibreTranslate.Controls.Add(this.labelLibreApiKey);
             this.groupBoxLibreTranslate.Controls.Add(this.nikseTextBoxLibreTranslateUrl);
-            this.groupBoxLibreTranslate.Controls.Add(this.label6);
+            this.groupBoxLibreTranslate.Controls.Add(this.labelLibreUrl);
             this.groupBoxLibreTranslate.Controls.Add(this.linkLabelLibreTranslateApi);
             this.groupBoxLibreTranslate.Controls.Add(this.label7);
             this.groupBoxLibreTranslate.Location = new System.Drawing.Point(429, 9);
             this.groupBoxLibreTranslate.Name = "groupBoxLibreTranslate";
-            this.groupBoxLibreTranslate.Size = new System.Drawing.Size(408, 117);
+            this.groupBoxLibreTranslate.Size = new System.Drawing.Size(408, 155);
             this.groupBoxLibreTranslate.TabIndex = 37;
             this.groupBoxLibreTranslate.TabStop = false;
             this.groupBoxLibreTranslate.Text = "LibreTranslate API";
@@ -6519,14 +6449,14 @@
             this.nikseTextBoxLibreTranslateUrl.Size = new System.Drawing.Size(376, 21);
             this.nikseTextBoxLibreTranslateUrl.TabIndex = 34;
             // 
-            // label6
+            // labelLibreUrl
             // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(6, 27);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(20, 13);
-            this.label6.TabIndex = 30;
-            this.label6.Text = "Url";
+            this.labelLibreUrl.AutoSize = true;
+            this.labelLibreUrl.Location = new System.Drawing.Point(6, 27);
+            this.labelLibreUrl.Name = "labelLibreUrl";
+            this.labelLibreUrl.Size = new System.Drawing.Size(20, 13);
+            this.labelLibreUrl.TabIndex = 30;
+            this.labelLibreUrl.Text = "Url";
             // 
             // linkLabelLibreTranslateApi
             // 
@@ -6555,7 +6485,7 @@
             this.groupBoxNllbServe.Controls.Add(this.nikseTextBoxNllbServeModel);
             this.groupBoxNllbServe.Controls.Add(this.labelNllbServeModel);
             this.groupBoxNllbServe.Controls.Add(this.nikseTextBoxNllbServeUrl);
-            this.groupBoxNllbServe.Controls.Add(this.label2);
+            this.groupBoxNllbServe.Controls.Add(this.labelNllbServeUrl);
             this.groupBoxNllbServe.Controls.Add(this.linkLabelNllbServe);
             this.groupBoxNllbServe.Controls.Add(this.label4);
             this.groupBoxNllbServe.Location = new System.Drawing.Point(10, 252);
@@ -6590,14 +6520,14 @@
             this.nikseTextBoxNllbServeUrl.Size = new System.Drawing.Size(376, 21);
             this.nikseTextBoxNllbServeUrl.TabIndex = 34;
             // 
-            // label2
+            // labelNllbServeUrl
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(6, 27);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(20, 13);
-            this.label2.TabIndex = 30;
-            this.label2.Text = "Url";
+            this.labelNllbServeUrl.AutoSize = true;
+            this.labelNllbServeUrl.Location = new System.Drawing.Point(6, 27);
+            this.labelNllbServeUrl.Name = "labelNllbServeUrl";
+            this.labelNllbServeUrl.Size = new System.Drawing.Size(20, 13);
+            this.labelNllbServeUrl.TabIndex = 30;
+            this.labelNllbServeUrl.Text = "Url";
             // 
             // linkLabelNllbServe
             // 
@@ -6670,15 +6600,32 @@
             this.label5.Size = new System.Drawing.Size(0, 13);
             this.label5.TabIndex = 25;
             // 
+            // nikseTextBoxLibreTranslateApiKey
+            // 
+            this.nikseTextBoxLibreTranslateApiKey.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.nikseTextBoxLibreTranslateApiKey.Location = new System.Drawing.Point(8, 102);
+            this.nikseTextBoxLibreTranslateApiKey.Name = "nikseTextBoxLibreTranslateApiKey";
+            this.nikseTextBoxLibreTranslateApiKey.Size = new System.Drawing.Size(376, 21);
+            this.nikseTextBoxLibreTranslateApiKey.TabIndex = 36;
+            // 
+            // labelLibreApiKey
+            // 
+            this.labelLibreApiKey.AutoSize = true;
+            this.labelLibreApiKey.Location = new System.Drawing.Point(6, 84);
+            this.labelLibreApiKey.Name = "labelLibreApiKey";
+            this.labelLibreApiKey.Size = new System.Drawing.Size(44, 13);
+            this.labelLibreApiKey.TabIndex = 35;
+            this.labelLibreApiKey.Text = "API key";
+            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1092, 574);
             this.Controls.Add(this.labelUpdateFileTypeAssociationsStatus);
+            this.Controls.Add(this.panelAutoTranslate);
             this.Controls.Add(this.panelGeneral);
             this.Controls.Add(this.panelTools);
-            this.Controls.Add(this.panelAutoTranslate);
             this.Controls.Add(this.panelShortcuts);
             this.Controls.Add(this.panelFont);
             this.Controls.Add(this.panelSubtitleFormats);
@@ -7256,15 +7203,17 @@
         private Controls.NikseTextBox nikseTextBoxNllbApiUrl;
         private System.Windows.Forms.GroupBox groupBoxNllbServe;
         private Controls.NikseTextBox nikseTextBoxNllbServeUrl;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label labelNllbServeUrl;
         private System.Windows.Forms.LinkLabel linkLabelNllbServe;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.GroupBox groupBoxLibreTranslate;
         private Controls.NikseTextBox nikseTextBoxLibreTranslateUrl;
-        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label labelLibreUrl;
         private System.Windows.Forms.LinkLabel linkLabelLibreTranslateApi;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label labelNllbServeModel;
         private Controls.NikseTextBox nikseTextBoxNllbServeModel;
+        private Controls.NikseTextBox nikseTextBoxLibreTranslateApiKey;
+        private System.Windows.Forms.Label labelLibreApiKey;
     }
 }

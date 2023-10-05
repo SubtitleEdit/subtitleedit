@@ -904,6 +904,11 @@ namespace Nikse.SubtitleEdit.Forms.Options
             linkLabelGoogleTranslateSignUp.Text = language.HowToSignUp;
             linkLabelGoogleTranslateSignUp.Left = textBoxGoogleTransleApiKey.Left + textBoxGoogleTransleApiKey.Width - linkLabelGoogleTranslateSignUp.Width;
 
+            labelLibreApiKey.Text = language.GoogleTranslateApiKey;
+            labelLibreUrl.Text = LanguageSettings.Current.Main.Url;
+            labelNllbApiUrl.Text = LanguageSettings.Current.Main.Url;
+            labelNllbServeUrl.Text = LanguageSettings.Current.Main.Url;
+
             groupBoxBing.Text = language.MicrosoftBingTranslator;
             labelBingApiKey.Text = language.MicrosoftTranslateApiKey;
             labelBingTokenEndpoint.Text = language.MicrosoftTranslateTokenEndpoint;
@@ -1117,6 +1122,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             nikseTextBoxNllbServeUrl.Text = Configuration.Settings.Tools.AutoTranslateNllbServeUrl;
             nikseTextBoxNllbServeModel.Text = Configuration.Settings.Tools.AutoTranslateNllbServeModel;
             nikseTextBoxLibreTranslateUrl.Text = Configuration.Settings.Tools.AutoTranslateLibreUrl;
+            nikseTextBoxLibreTranslateApiKey.Text = Configuration.Settings.Tools.AutoTranslateLibreApiKey;
 
             buttonReset.Text = LanguageSettings.Current.Settings.RestoreDefaultSettings;
             buttonOK.Text = LanguageSettings.Current.General.Ok;
@@ -2281,6 +2287,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             toolsSettings.AutoTranslateNllbServeUrl = nikseTextBoxNllbServeUrl.Text;
             toolsSettings.AutoTranslateNllbServeModel = nikseTextBoxNllbServeModel.Text;
             toolsSettings.AutoTranslateLibreUrl = nikseTextBoxLibreTranslateUrl.Text;
+            toolsSettings.AutoTranslateLibreApiKey = nikseTextBoxLibreTranslateApiKey.Text.Trim();
 
             var proxy = Configuration.Settings.Proxy;
             proxy.ProxyAddress = textBoxProxyAddress.Text;
