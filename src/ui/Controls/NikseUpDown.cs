@@ -39,7 +39,7 @@ namespace Nikse.SubtitleEdit.Controls
                     _value = Math.Round(value, DecimalPlaces);
                 }
 
-                SetText(false);
+                SetText();
                 _dirty = false;
                 Invalidate();
                 ValueChanged?.Invoke(this, null);
@@ -281,6 +281,8 @@ namespace Nikse.SubtitleEdit.Controls
             };
             _textBox.GotFocus += (sender, args) => Invalidate();
             _textBox.TextChanged += _textBox_TextChanged;
+            _textBox.MouseEnter += (sender, args) => { _upDownMouseEntered = true; };
+            _textBox.MouseLeave += (sender, args) => { _upDownMouseEntered = false; };
             _textBox.BorderStyle = BorderStyle.None;
 
             Controls.Add(_textBox);
@@ -458,11 +460,13 @@ namespace Nikse.SubtitleEdit.Controls
         private readonly Timer _repeatTimer;
         private bool _repeatTimerArrowUp;
         private int _repeatCount;
+        private bool _upDownMouseEntered;
 
         protected override void OnMouseEnter(EventArgs e)
         {
             _buttonUpActive = false;
             _buttonDownActive = false;
+            _upDownMouseEntered = true;
             base.OnMouseEnter(e);
             Invalidate();
         }
@@ -471,6 +475,7 @@ namespace Nikse.SubtitleEdit.Controls
         {
             _buttonUpActive = false;
             _buttonDownActive = false;
+            _upDownMouseEntered = false;
             base.OnMouseLeave(e);
             Invalidate();
         }
@@ -595,7 +600,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
 
             e.Graphics.Clear(BackColor);
-            using (var pen = _textBox.Focused ? new Pen(_buttonForeColorOver, 1f) : new Pen(BorderColor, 1f))
+            using (var pen = _textBox.Focused || _upDownMouseEntered ? new Pen(_buttonForeColorOver, 1f) : new Pen(BorderColor, 1f))
             {
                 var borderRectangle = new Rectangle(0, 0, Width - 1, Height - 1);
                 e.Graphics.DrawRectangle(pen, borderRectangle);
