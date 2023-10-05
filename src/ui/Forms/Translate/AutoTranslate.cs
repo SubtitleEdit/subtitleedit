@@ -190,6 +190,8 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                     Configuration.Settings.Tools.AutoTranslateLibreUrl,
                     "http://localhost:5000/",
                     "https://libretranslate.com/",
+                    "https://translate.argosopentech.com/",
+                    "https://translate.terraprint.co/",
                 });
 
                 return;
@@ -556,16 +558,30 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 catch (Exception exception)
                 {
                     SeLogger.Error(exception);
-                    if (linesTranslate == 0)
+                    if (linesTranslate == 0 && engineType == typeof(LibreTranslate) && nikseComboBoxUrl.Text.Contains("https://libretranslate.com", StringComparison.OrdinalIgnoreCase))
+                    {
+                        var dr = MessageBox.Show(
+                            this, 
+                            $"{nikseComboBoxUrl.Text} requires an API key" + Environment.NewLine + Environment.NewLine + LanguageSettings.Current.GoogleTranslate.ReadMore,
+                                this.Text,
+                                MessageBoxButtons.YesNoCancel, 
+                                MessageBoxIcon.Error);
+
+                        if (dr == DialogResult.Yes)
+                        {
+                            UiUtil.ShowHelp("#translation");
+                        }
+                    }
+                    else if (linesTranslate == 0 || !nikseComboBoxUrl.Text.Contains(".co", StringComparison.OrdinalIgnoreCase))
                     {
                         if (engineType == typeof(NoLanguageLeftBehindApi) || engineType == typeof(NoLanguageLeftBehindServe) || engineType == typeof(LibreTranslate))
                         {
                             var dr = MessageBox.Show(
-                                string.Format(LanguageSettings.Current.GoogleTranslate.XRequiresALocalWebServer, _autoTranslator.Name) 
+                                string.Format(LanguageSettings.Current.GoogleTranslate.XRequiresALocalWebServer, _autoTranslator.Name)
                                 + Environment.NewLine
                                 + Environment.NewLine + LanguageSettings.Current.GoogleTranslate.ReadMore,
                                 MessageBoxButtons.YesNoCancel, MessageBoxIcon.Error);
-                                            
+
                             if (dr == DialogResult.Yes)
                             {
                                 UiUtil.ShowHelp("#translation");

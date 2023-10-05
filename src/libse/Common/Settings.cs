@@ -158,6 +158,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public string AutoTranslateNllbServeUrl { get; set; }
         public string AutoTranslateNllbServeModel { get; set; }
         public string AutoTranslateLibreUrl { get; set; }
+        public string AutoTranslateLibreApiKey { get; set; }
         public bool TranslateAllowSplit { get; set; }
         public string TranslateLastService { get; set; }
         public string TranslateMergeStrategy { get; set; }
@@ -5097,6 +5098,12 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.Tools.AutoTranslateLibreUrl = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("AutoTranslateLibreApiKey");
+            if (subNode != null)
+            {
+                settings.Tools.AutoTranslateLibreApiKey = subNode.InnerText;
             }
 
             subNode = node.SelectSingleNode("TranslateAllowSplit");
@@ -11359,6 +11366,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("AutoTranslateNllbServeUrl", settings.Tools.AutoTranslateNllbServeUrl);
                 textWriter.WriteElementString("AutoTranslateNllbServeModel", settings.Tools.AutoTranslateNllbServeModel);
                 textWriter.WriteElementString("AutoTranslateLibreUrl", settings.Tools.AutoTranslateLibreUrl);
+                textWriter.WriteElementString("AutoTranslateLibreApiKey", settings.Tools.AutoTranslateLibreApiKey);
                 textWriter.WriteElementString("TranslateAllowSplit", settings.Tools.TranslateAllowSplit.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("TranslateLastService", settings.Tools.TranslateLastService);
                 textWriter.WriteElementString("TranslateMergeStrategy", settings.Tools.TranslateMergeStrategy);
