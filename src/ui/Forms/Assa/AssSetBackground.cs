@@ -848,8 +848,21 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                     Application.DoEvents();
                 }
 
+                if (!File.Exists(outputVideoFileName))
+                {
+                    MessageBox.Show(this, "Unable to generate video with FFmpeg." + Environment.NewLine + process.StartInfo.Arguments, this.Text, MessageBoxButtons.OKCancel, MessageBoxIcon.Error);
+                    return;
+                }
+
                 Cursor = Cursors.Default;
                 var bmpFileName = VideoPreviewGenerator.GetScreenShot(outputVideoFileName, "00:00:01");
+
+                if (!File.Exists(bmpFileName))
+                {
+                    MessageBox.Show(this, "Unable to get bitmap from video via FFmpeg.", this.Text, MessageBoxButtons.OKCancel, MessageBoxIcon.Error);
+                    return;
+                }
+
                 using (var bmp = new Bitmap(bmpFileName))
                 {
                     var nBmp = new NikseBitmap(bmp);
