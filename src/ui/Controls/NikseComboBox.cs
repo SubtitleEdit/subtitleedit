@@ -149,7 +149,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        public override bool Focused => _listViewShown || (_textBox != null && _textBox.Focused) || base.Focused;
+        public override bool Focused => _comboBoxMouseEntered || _listViewShown || (_textBox != null && _textBox.Focused) || base.Focused;
 
         public object SelectedItem
         {
@@ -738,17 +738,20 @@ namespace Nikse.SubtitleEdit.Controls
         private readonly Timer _mouseLeaveTimer;
         private readonly Timer _listViewMouseLeaveTimer;
         private bool _hasItemsMouseOver;
+        private bool _comboBoxMouseEntered;
 
 
         protected override void OnMouseEnter(EventArgs e)
         {
             _buttonDownActive = false;
+            _comboBoxMouseEntered = true;
             base.OnMouseEnter(e);
             Invalidate();
         }
 
         protected override void OnMouseLeave(EventArgs e)
         {
+            _comboBoxMouseEntered = false;
             _buttonDownActive = false;
             if (_listView != null)
             {

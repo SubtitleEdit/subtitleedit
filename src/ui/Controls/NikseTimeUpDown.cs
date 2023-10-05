@@ -7,6 +7,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Globalization;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace Nikse.SubtitleEdit.Controls
 {
@@ -280,6 +281,9 @@ namespace Nikse.SubtitleEdit.Controls
                     _dirty = true;
                 }
             };
+            _maskedTextBox.MouseEnter += (sender, args) => { _upDownMouseEntered = true; };
+            _maskedTextBox.MouseLeave += (sender, args) => { _upDownMouseEntered = false; };
+
 
             Controls.Add(_maskedTextBox);
             ButtonForeColor = DefaultForeColor;
@@ -598,11 +602,13 @@ namespace Nikse.SubtitleEdit.Controls
         private readonly Timer _repeatTimer;
         private bool _repeatTimerArrowUp;
         private int _repeatCount;
+        private bool _upDownMouseEntered;
 
         protected override void OnMouseEnter(EventArgs e)
         {
             _buttonUpActive = false;
             _buttonDownActive = false;
+            _upDownMouseEntered = true;
             base.OnMouseEnter(e);
             Invalidate();
         }
@@ -611,6 +617,7 @@ namespace Nikse.SubtitleEdit.Controls
         {
             _buttonUpActive = false;
             _buttonDownActive = false;
+            _upDownMouseEntered = false;
             base.OnMouseLeave(e);
             Invalidate();
         }
@@ -773,7 +780,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
 
             e.Graphics.Clear(BackColor);
-            using (var pen = _maskedTextBox.Focused ? new Pen(_buttonForeColorOver, 1f) : new Pen(BorderColor, 1f))
+            using (var pen = _maskedTextBox.Focused || _upDownMouseEntered ? new Pen(_buttonForeColorOver, 1f) : new Pen(BorderColor, 1f))
             {
                 var borderRectangle = new Rectangle(0, 0, Width - 1, Height - 1);
                 e.Graphics.DrawRectangle(pen, borderRectangle);
