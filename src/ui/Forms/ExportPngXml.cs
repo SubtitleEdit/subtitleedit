@@ -190,7 +190,14 @@ namespace Nikse.SubtitleEdit.Forms
 
         private string ToHHMMSSFF(TimeCode timeCode)
         {
-            return $"{timeCode.Hours:00}:{timeCode.Minutes:00}:{timeCode.Seconds:00}:{MillisecondsToFramesMaxFrameRate(timeCode.Milliseconds):00}";
+            var ms = timeCode.TotalMilliseconds;
+            if (!Configuration.Settings.General.CurrentVideoIsSmpte && ((decimal)FrameRate) % 1 != 0)
+            {
+                ms /= 1.001;
+            }
+
+            var tc = new TimeCode(ms);
+            return $"{tc.Hours:00}:{tc.Minutes:00}:{tc.Seconds:00}:{MillisecondsToFramesMaxFrameRate(tc.Milliseconds):00}";
         }
 
         private static ContentAlignment GetAlignmentFromParagraph(MakeBitmapParameter p, SubtitleFormat format, Subtitle subtitle)
