@@ -119,7 +119,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             comboBoxLanguage.BeginUpdate();
             comboBoxLanguage.Items.Clear();
-            foreach (var ci in Utilities.GetSubtitleLanguageCultures(true))
+            foreach (var ci in Utilities.GetSubtitleLanguageCultures(true).OrderBy(p=>p.EnglishName))
             {
                 comboBoxLanguage.Items.Add(new LanguageItem(ci, ci.EnglishName));
                 if (ci.TwoLetterISOLanguageName == _interjectionsLanguage)
@@ -127,9 +127,7 @@ namespace Nikse.SubtitleEdit.Forms
                     comboBoxLanguage.SelectedIndex = comboBoxLanguage.Items.Count - 1;
                 }
             }
-            comboBoxLanguage.Sorted = true;
             comboBoxLanguage.EndUpdate();
-            comboBoxLanguage.Sorted = false;
             comboBoxLanguage.Items.Add(LanguageSettings.Current.General.ChangeLanguageFilter);
 
             if (comboBoxLanguage.SelectedIndex < 0 && comboBoxLanguage.Items.Count > 0)
@@ -308,13 +306,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonEditInterjections_Click(object sender, EventArgs e)
         {
-            using (var editInterjections = new Interjections())
+            var fileName = GetInterjectionsFileName();
+            using (var editInterjections = new InterjectionsEditList(RemoveTextForHI.GetInterjections(fileName)))
             {
-                var fileName = GetInterjectionsFileName();
-                editInterjections.Initialize(RemoveTextForHI.GetInterjections(fileName));
                 if (editInterjections.ShowDialog(this) == DialogResult.OK)
                 {
-                    SaveInterjections(editInterjections.GetInterjectionList());
+                    SaveInterjections(editInterjections.Interjections);
                     if (checkBoxRemoveInterjections.Checked)
                     {
                         GeneratePreview();

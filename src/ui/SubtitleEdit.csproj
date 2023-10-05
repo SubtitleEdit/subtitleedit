@@ -405,6 +405,12 @@
     <Compile Include="Forms\GenerateVideoWithSoftSubs.Designer.cs">
       <DependentUpon>GenerateVideoWithSoftSubs.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\InterjectionsEditList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\InterjectionsEditList.Designer.cs">
+      <DependentUpon>InterjectionsEditList.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\LayoutPicker.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1754,6 +1760,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\GetVideoPosition.resx">
       <DependentUpon>GetVideoPosition.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\InterjectionsEditList.resx">
+      <DependentUpon>InterjectionsEditList.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\LayoutPicker.resx">
       <DependentUpon>LayoutPicker.cs</DependentUpon>
