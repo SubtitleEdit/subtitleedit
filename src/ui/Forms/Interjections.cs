@@ -1,7 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Windows.Forms;
 using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
@@ -142,6 +141,20 @@ namespace Nikse.SubtitleEdit.Forms
         private void textBoxInterjection_TextChanged(object sender, EventArgs e)
         {
             buttonAdd.Enabled = textBoxInterjection.Text.Trim().Length > 0;
+        }
+
+        private void buttonEditList_Click(object sender, EventArgs e)
+        {
+            using (var form = new InterjectionsEditList(_interjections))
+            {
+                if (form.ShowDialog(this) != DialogResult.OK)
+                {
+                    return;
+                }
+
+                _interjections = form.Interjections;
+                FillListBox();
+            }
         }
     }
 }
