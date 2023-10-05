@@ -455,6 +455,8 @@
             this.toolTipDialogStylePreview = new System.Windows.Forms.ToolTip(this.components);
             this.panelAutoTranslate = new System.Windows.Forms.Panel();
             this.groupBoxLibreTranslate = new System.Windows.Forms.GroupBox();
+            this.nikseTextBoxLibreTranslateApiKey = new Nikse.SubtitleEdit.Controls.NikseTextBox();
+            this.labelLibreApiKey = new System.Windows.Forms.Label();
             this.nikseTextBoxLibreTranslateUrl = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelLibreUrl = new System.Windows.Forms.Label();
             this.linkLabelLibreTranslateApi = new System.Windows.Forms.LinkLabel();
@@ -471,8 +473,6 @@
             this.labelNllbApiUrl = new System.Windows.Forms.Label();
             this.linkLabelNllbApi = new System.Windows.Forms.LinkLabel();
             this.label5 = new System.Windows.Forms.Label();
-            this.nikseTextBoxLibreTranslateApiKey = new Nikse.SubtitleEdit.Controls.NikseTextBox();
-            this.labelLibreApiKey = new System.Windows.Forms.Label();
             this.panelGeneral.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
             this.groupBoxGeneralRules.SuspendLayout();
@@ -6441,6 +6441,23 @@
             this.groupBoxLibreTranslate.TabStop = false;
             this.groupBoxLibreTranslate.Text = "LibreTranslate API";
             // 
+            // nikseTextBoxLibreTranslateApiKey
+            // 
+            this.nikseTextBoxLibreTranslateApiKey.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.nikseTextBoxLibreTranslateApiKey.Location = new System.Drawing.Point(8, 102);
+            this.nikseTextBoxLibreTranslateApiKey.Name = "nikseTextBoxLibreTranslateApiKey";
+            this.nikseTextBoxLibreTranslateApiKey.Size = new System.Drawing.Size(376, 21);
+            this.nikseTextBoxLibreTranslateApiKey.TabIndex = 36;
+            // 
+            // labelLibreApiKey
+            // 
+            this.labelLibreApiKey.AutoSize = true;
+            this.labelLibreApiKey.Location = new System.Drawing.Point(6, 84);
+            this.labelLibreApiKey.Name = "labelLibreApiKey";
+            this.labelLibreApiKey.Size = new System.Drawing.Size(44, 13);
+            this.labelLibreApiKey.TabIndex = 35;
+            this.labelLibreApiKey.Text = "API key";
+            // 
             // nikseTextBoxLibreTranslateUrl
             // 
             this.nikseTextBoxLibreTranslateUrl.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
@@ -6600,31 +6617,14 @@
             this.label5.Size = new System.Drawing.Size(0, 13);
             this.label5.TabIndex = 25;
             // 
-            // nikseTextBoxLibreTranslateApiKey
-            // 
-            this.nikseTextBoxLibreTranslateApiKey.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            this.nikseTextBoxLibreTranslateApiKey.Location = new System.Drawing.Point(8, 102);
-            this.nikseTextBoxLibreTranslateApiKey.Name = "nikseTextBoxLibreTranslateApiKey";
-            this.nikseTextBoxLibreTranslateApiKey.Size = new System.Drawing.Size(376, 21);
-            this.nikseTextBoxLibreTranslateApiKey.TabIndex = 36;
-            // 
-            // labelLibreApiKey
-            // 
-            this.labelLibreApiKey.AutoSize = true;
-            this.labelLibreApiKey.Location = new System.Drawing.Point(6, 84);
-            this.labelLibreApiKey.Name = "labelLibreApiKey";
-            this.labelLibreApiKey.Size = new System.Drawing.Size(44, 13);
-            this.labelLibreApiKey.TabIndex = 35;
-            this.labelLibreApiKey.Text = "API key";
-            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1092, 574);
             this.Controls.Add(this.labelUpdateFileTypeAssociationsStatus);
-            this.Controls.Add(this.panelAutoTranslate);
             this.Controls.Add(this.panelGeneral);
+            this.Controls.Add(this.panelAutoTranslate);
             this.Controls.Add(this.panelTools);
             this.Controls.Add(this.panelShortcuts);
             this.Controls.Add(this.panelFont);
