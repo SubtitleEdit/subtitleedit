@@ -988,12 +988,6 @@
     <Compile Include="Forms\HardSubExtract.Designer.cs">
       <DependentUpon>HardSubExtract.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Interjections.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\Interjections.Designer.cs">
-      <DependentUpon>Interjections.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\JoinSubtitles.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -2045,9 +2039,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\HardSubExtract.resx">
       <DependentUpon>HardSubExtract.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Interjections.resx">
-      <DependentUpon>Interjections.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\JoinSubtitles.resx">
       <DependentUpon>JoinSubtitles.cs</DependentUpon>
