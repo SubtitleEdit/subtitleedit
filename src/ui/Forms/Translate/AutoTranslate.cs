@@ -561,10 +561,10 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                     if (linesTranslate == 0 && engineType == typeof(LibreTranslate) && nikseComboBoxUrl.Text.Contains("https://libretranslate.com", StringComparison.OrdinalIgnoreCase))
                     {
                         var dr = MessageBox.Show(
-                            this, 
+                            this,
                             $"{nikseComboBoxUrl.Text} requires an API key" + Environment.NewLine + Environment.NewLine + LanguageSettings.Current.GoogleTranslate.ReadMore,
                                 this.Text,
-                                MessageBoxButtons.YesNoCancel, 
+                                MessageBoxButtons.YesNoCancel,
                                 MessageBoxIcon.Error);
 
                         if (dr == DialogResult.Yes)
@@ -572,7 +572,10 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                             UiUtil.ShowHelp("#translation");
                         }
                     }
-                    else if (linesTranslate == 0 || !nikseComboBoxUrl.Text.Contains(".co", StringComparison.OrdinalIgnoreCase))
+                    else if (linesTranslate == 0 &&
+                             (nikseComboBoxUrl.Text.Contains("//192.", StringComparison.OrdinalIgnoreCase) ||
+                              nikseComboBoxUrl.Text.Contains("//127.", StringComparison.OrdinalIgnoreCase) ||
+                              nikseComboBoxUrl.Text.Contains("//localhost", StringComparison.OrdinalIgnoreCase)))
                     {
                         if (engineType == typeof(NoLanguageLeftBehindApi) || engineType == typeof(NoLanguageLeftBehindServe) || engineType == typeof(LibreTranslate))
                         {

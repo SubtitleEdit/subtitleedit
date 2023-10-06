@@ -418,8 +418,8 @@ namespace Nikse.SubtitleEdit.Logic
 
             videoPlayerContainer.Parent?.Controls.Remove(videoPlayerContainer);
             groupBoxWaveform.Parent?.Controls.Remove(groupBoxWaveform);
-            spLeftTop.Panel2.Controls.Add(groupBoxWaveform);
-            groupBoxWaveform.Dock = DockStyle.Fill;
+            spLeftTop.Panel2.Controls.Add(videoPlayerContainer);
+            videoPlayerContainer.Dock = DockStyle.Fill;
 
             form.Controls.Add(spMain);
             spMain.Dock = DockStyle.Fill;
