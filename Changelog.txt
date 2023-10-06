@@ -10,6 +10,7 @@
    * Statistics for selected lines
    * Shortcut "Set start time and go to next"
    * Add new json subtitle format - thx Neven
+   * Add Video CD DAT subtitle format - thx Flitskikker
 * IMPROVED:
    * Update Korean translation - thx domddol
    * Update Italian language - thx bovirus
@@ -25,6 +26,7 @@
    * Add access keys for message box buttons - thx Christophe
    * Use split container in "Break/split long lines" - thx oep42
    * Change max font size in ASSA style from 200 to 500 - thx Jim
+   * Edit interjection is now a text box - thx Andrebavila
 * FIXED:
    * Fix remember text box settings (bold/size) - thx Siamak
    * Fix crash in CSV reader - thx Waseem

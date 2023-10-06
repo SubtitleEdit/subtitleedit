@@ -424,7 +424,6 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
             _autoTranslator.Initialize();
 
-
             var timerUpdate = new Timer();
             timerUpdate.Interval = 1500;
             timerUpdate.Tick += TimerUpdate_Tick;
@@ -563,7 +562,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                         var dr = MessageBox.Show(
                             this,
                             $"{nikseComboBoxUrl.Text} requires an API key" + Environment.NewLine + Environment.NewLine + LanguageSettings.Current.GoogleTranslate.ReadMore,
-                                this.Text,
+                                Text,
                                 MessageBoxButtons.YesNoCancel,
                                 MessageBoxIcon.Error);
 
