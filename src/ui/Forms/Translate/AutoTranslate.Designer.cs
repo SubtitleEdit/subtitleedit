@@ -179,7 +179,7 @@
             this.nikseComboBoxUrl.ButtonForeColorDown = System.Drawing.Color.Orange;
             this.nikseComboBoxUrl.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.nikseComboBoxUrl.DropDownHeight = 400;
-            this.nikseComboBoxUrl.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.nikseComboBoxUrl.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
             this.nikseComboBoxUrl.DropDownWidth = 280;
             this.nikseComboBoxUrl.FormattingEnabled = true;
             this.nikseComboBoxUrl.Location = new System.Drawing.Point(56, 528);
@@ -190,6 +190,7 @@
             this.nikseComboBoxUrl.SelectedText = "";
             this.nikseComboBoxUrl.Size = new System.Drawing.Size(280, 21);
             this.nikseComboBoxUrl.TabIndex = 105;
+            this.nikseComboBoxUrl.TabStop = false;
             this.nikseComboBoxUrl.UsePopupWindow = false;
             this.nikseComboBoxUrl.SelectedIndexChanged += new System.EventHandler(this.nikseComboBoxUrl_SelectedIndexChanged);
             // 
