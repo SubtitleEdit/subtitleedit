@@ -173,6 +173,16 @@ namespace Nikse.SubtitleEdit.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap L12 {
+            get {
+                object obj = ResourceManager.GetObject("L12", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap L2 {
             get {
                 object obj = ResourceManager.GetObject("L2", resourceCulture);
@@ -246,6 +256,16 @@ namespace Nikse.SubtitleEdit.Properties {
         public static System.Drawing.Bitmap L9 {
             get {
                 object obj = ResourceManager.GetObject("L9", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap L91 {
+            get {
+                object obj = ResourceManager.GetObject("L91", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

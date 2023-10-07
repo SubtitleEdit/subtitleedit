@@ -50,6 +50,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case 8:
                     SetLayout8(form, videoPlayer, subtitleListView, groupBoxWaveform, groupBoxEdit, splitMoved);
                     break;
+                case 9:
+                    SetLayout9(form, videoPlayer, subtitleListView, groupBoxWaveform, groupBoxEdit, splitMoved);
+                    break;
             }
         }
 
@@ -394,7 +397,7 @@ namespace Nikse.SubtitleEdit.Logic
             spLeftTop.SplitterMoved += splitMoved;
         }
 
-        // stacked, video but no waveform
+        // stacked, video but no waveform (video bottom)
         private static void SetLayout7(Form form, Control videoPlayerContainer, SubtitleListView subtitleListView, GroupBox groupBoxWaveform, GroupBox groupBoxEdit, SplitterEventHandler splitMoved)
         {
             var spMain = new SplitContainer();
@@ -433,8 +436,48 @@ namespace Nikse.SubtitleEdit.Logic
             spLeftTop.SplitterMoved += splitMoved;
         }
 
-        // no video or waveform
+        // stacked, video but no waveform (video top)
         private static void SetLayout8(Form form, Control videoPlayerContainer, SubtitleListView subtitleListView, GroupBox groupBoxWaveform, GroupBox groupBoxEdit, SplitterEventHandler splitMoved)
+        {
+            groupBoxWaveform.Parent?.Controls.Remove(groupBoxWaveform);
+
+            var spMain = new SplitContainer();
+            MainSplitContainer = spMain;
+            spMain.Orientation = Orientation.Horizontal;
+
+            videoPlayerContainer.Parent?.Controls.Remove(videoPlayerContainer);
+            spMain.Panel1.Controls.Add(videoPlayerContainer);
+            videoPlayerContainer.Dock = DockStyle.Fill;
+            spMain.SplitterDistance = 20;
+
+            var spLeftTop = new SplitContainer();
+            spLeftTop.Orientation = Orientation.Horizontal;
+            spMain.Panel2.Controls.Add(spLeftTop);
+            spLeftTop.MinimumSize = new Size(0, 0);
+            spLeftTop.Dock = DockStyle.Fill;
+
+            subtitleListView.Parent?.Controls.Remove(subtitleListView);
+            spLeftTop.Panel1.Controls.Add(subtitleListView);
+            subtitleListView.Dock = DockStyle.Fill;
+
+            groupBoxEdit.Parent?.Controls.Remove(groupBoxEdit);
+            spLeftTop.Panel2.Controls.Add(groupBoxEdit);
+            groupBoxEdit.Dock = DockStyle.Fill;
+
+            form.Controls.Add(spMain);
+            spMain.Dock = DockStyle.Fill;
+            spMain.BringToFront();
+
+            // auto size
+            spMain.SplitterDistance = Math.Max(0, spMain.Height / 3);
+            spLeftTop.SplitterDistance = Math.Max(0, spLeftTop.Height - 125);
+
+            spMain.SplitterMoved += splitMoved;
+            spLeftTop.SplitterMoved += splitMoved;
+        }
+
+        // no video or waveform
+        private static void SetLayout9(Form form, Control videoPlayerContainer, SubtitleListView subtitleListView, GroupBox groupBoxWaveform, GroupBox groupBoxEdit, SplitterEventHandler splitMoved)
         {
             videoPlayerContainer.Parent?.Controls.Remove(videoPlayerContainer);
             groupBoxWaveform.Parent?.Controls.Remove(groupBoxWaveform);

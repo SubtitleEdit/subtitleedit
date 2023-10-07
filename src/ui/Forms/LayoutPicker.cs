@@ -19,6 +19,9 @@ namespace Nikse.SubtitleEdit.Forms
         private Bitmap _gray7;
         private Bitmap _gray8;
         private Bitmap _gray9;
+        private Bitmap _gray10;
+        private Bitmap _gray11;
+        private Bitmap _gray12;
 
         private bool _loading = true;
 
@@ -51,6 +54,9 @@ namespace Nikse.SubtitleEdit.Forms
             _gray7?.Dispose();
             _gray8?.Dispose();
             _gray9?.Dispose();
+            _gray10?.Dispose();
+            _gray11?.Dispose();
+            _gray12?.Dispose();
 
             _gray1 = GrayScale(Properties.Resources.L1, initialLayout == 0);
             _gray2 = GrayScale(Properties.Resources.L2, initialLayout == 1);
@@ -61,6 +67,9 @@ namespace Nikse.SubtitleEdit.Forms
             _gray7 = GrayScale(Properties.Resources.L7, initialLayout == 6);
             _gray8 = GrayScale(Properties.Resources.L8, initialLayout == 7);
             _gray9 = GrayScale(Properties.Resources.L9, initialLayout == 8);
+            _gray10 = GrayScale(Properties.Resources.L9, initialLayout == 9);
+            _gray11 = GrayScale(Properties.Resources.L9, initialLayout == 10);
+            _gray12 = GrayScale(Properties.Resources.L12, initialLayout == 11);
 
             button1.Image = _gray1;
             button2.Image = _gray2;
@@ -71,6 +80,7 @@ namespace Nikse.SubtitleEdit.Forms
             button7.Image = _gray7;
             button8.Image = _gray8;
             button9.Image = _gray9;
+            button12.Image = _gray9;
 
             button1.Font = new Font(button1.Font.FontFamily, 28);
             button2.Font = new Font(button1.Font.FontFamily, 28);
@@ -81,6 +91,7 @@ namespace Nikse.SubtitleEdit.Forms
             button7.Font = new Font(button1.Font.FontFamily, 28);
             button8.Font = new Font(button1.Font.FontFamily, 28);
             button9.Font = new Font(button1.Font.FontFamily, 28);
+            button12.Font = new Font(button1.Font.FontFamily, 28);
         }
 
         public static Bitmap GrayScale(Bitmap original, bool selected)
@@ -172,9 +183,16 @@ namespace Nikse.SubtitleEdit.Forms
             _layout = 7;
             DialogResult = DialogResult.OK;
         }
+
         private void button9_Click(object sender, EventArgs e)
         {
             _layout = 8;
+            DialogResult = DialogResult.OK;
+        }
+
+        private void button12_Click(object sender, EventArgs e)
+        {
+            _layout = 9;
             DialogResult = DialogResult.OK;
         }
 
@@ -258,14 +276,14 @@ namespace Nikse.SubtitleEdit.Forms
             button8.Image = _gray8;
         }
 
-        private void button9_MouseEnter(object sender, EventArgs e)
+        private void button12_MouseEnter(object sender, EventArgs e)
         {
-            button9.Image = Properties.Resources.L9;
+            button12.Image = Properties.Resources.L9;
         }
 
-        private void button9_MouseLeave(object sender, EventArgs e)
+        private void button12_MouseLeave(object sender, EventArgs e)
         {
-            button9.Image = _gray9;
+            button12.Image = _gray9;
         }
 
         private void LayoutPicker_KeyDown(object sender, KeyEventArgs e)
@@ -328,6 +346,10 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 FocusLayout(7);
             }
+            else if (e.KeyCode == Keys.NumPad9 || e.KeyCode == Keys.D9)
+            {
+                FocusLayout(8);
+            }
         }
 
         private void SelectLayout(int layout)
@@ -346,7 +368,6 @@ namespace Nikse.SubtitleEdit.Forms
         {
             SelectLayout(0);
         }
-
 
         private void button2_Enter(object sender, EventArgs e)
         {
@@ -386,6 +407,11 @@ namespace Nikse.SubtitleEdit.Forms
         private void button9_Enter(object sender, EventArgs e)
         {
             SelectLayout(8);
+        }
+
+        private void button12_Enter(object sender, EventArgs e)
+        {
+            SelectLayout(9);
         }
 
         private void LayoutPicker_Shown(object sender, EventArgs e)
@@ -431,6 +457,9 @@ namespace Nikse.SubtitleEdit.Forms
                     break;
                 case 8:
                     button9.Focus();
+                    break;
+                case 9:
+                    button12.Focus();
                     break;
             }
         }
