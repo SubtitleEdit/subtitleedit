@@ -80,7 +80,7 @@ namespace Nikse.SubtitleEdit.Forms
             button7.Image = _gray7;
             button8.Image = _gray8;
             button9.Image = _gray9;
-            button12.Image = _gray9;
+            button12.Image = _gray12;
 
             button1.Font = new Font(button1.Font.FontFamily, 28);
             button2.Font = new Font(button1.Font.FontFamily, 28);
@@ -278,12 +278,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void button12_MouseEnter(object sender, EventArgs e)
         {
-            button12.Image = Properties.Resources.L9;
+            button12.Image = Properties.Resources.L12;
         }
 
         private void button12_MouseLeave(object sender, EventArgs e)
         {
-            button12.Image = _gray9;
+            button12.Image = _gray12;
         }
 
         private void LayoutPicker_KeyDown(object sender, KeyEventArgs e)
