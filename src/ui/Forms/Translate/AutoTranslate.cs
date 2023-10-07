@@ -107,6 +107,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 new LibreTranslate(),
                 new NoLanguageLeftBehindServe(),
                 new NoLanguageLeftBehindApi(),
+                new MyMemoryApi(),
             };
 
             if (!string.IsNullOrEmpty(Configuration.Settings.Tools.MicrosoftTranslatorApiKey) &&
@@ -197,6 +198,13 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 return;
             }
 
+            if (engineType == typeof(MyMemoryApi))
+            {
+                labelUrl.Visible = false;
+                nikseComboBoxUrl.Visible = false;
+                return;
+            }
+
             throw new Exception($"Engine {_autoTranslator.Name} not handled!");
         }
 
@@ -238,8 +246,6 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 Configuration.Settings.Tools.AutoTranslateLibreUrl = url;
                 return;
             }
-
-            throw new Exception($"Engine {engine.Name} not handled!");
         }
 
         private void SetupLanguageSettings()
@@ -259,12 +265,41 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             var threeLetterLanguageCode = Iso639Dash2LanguageCode.GetThreeLetterCodeFromTwoLetterCode(languageIsoCode);
             foreach (TranslationPair item in comboBox.Items)
             {
+                if (item.Code.Contains('-'))
+                {
+                    var arr = item.Code.ToLowerInvariant().Split('-');
+                    if (arr[0].Length == 2 && arr[0] == languageIsoCode)
+                    {
+                        comboBox.SelectedIndex = i;
+                        return;
+                    }
+
+                    if (arr[0].Length == 3 && arr[0] == languageIsoCode)
+                    {
+                        comboBox.SelectedIndex = i;
+                        return;
+                    }
+
+                    if (arr[1].Length == 2 && arr[1] == languageIsoCode)
+                    {
+                        comboBox.SelectedIndex = i;
+                        return;
+                    }
+
+                    if (arr[1].Length == 3 && arr[1] == languageIsoCode)
+                    {
+                        comboBox.SelectedIndex = i;
+                        return;
+                    }
+                }
+
                 if (languageIsoCode.Length == 2 && item.Code == languageIsoCode)
                 {
                     comboBox.SelectedIndex = i;
                     return;
                 }
-                else if (item.Code.StartsWith(threeLetterLanguageCode) || item.Code == languageIsoCode)
+
+                if (item.Code.StartsWith(threeLetterLanguageCode) || item.Code == languageIsoCode)
                 {
                     comboBox.SelectedIndex = i;
                     return;

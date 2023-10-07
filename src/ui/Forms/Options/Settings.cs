@@ -908,6 +908,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             labelLibreUrl.Text = LanguageSettings.Current.Main.Url;
             labelNllbApiUrl.Text = LanguageSettings.Current.Main.Url;
             labelNllbServeUrl.Text = LanguageSettings.Current.Main.Url;
+            labelMyMemoryApiKey.Text = language.GoogleTranslateApiKey;
 
             groupBoxBing.Text = language.MicrosoftBingTranslator;
             labelBingApiKey.Text = language.MicrosoftTranslateApiKey;
@@ -1123,6 +1124,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             nikseTextBoxNllbServeModel.Text = Configuration.Settings.Tools.AutoTranslateNllbServeModel;
             nikseTextBoxLibreTranslateUrl.Text = Configuration.Settings.Tools.AutoTranslateLibreUrl;
             nikseTextBoxLibreTranslateApiKey.Text = Configuration.Settings.Tools.AutoTranslateLibreApiKey;
+            nikseTextBoxMyMemoryApiKey.Text = Configuration.Settings.Tools.AutoTranslateMyMemoryApiKey;
 
             buttonReset.Text = LanguageSettings.Current.Settings.RestoreDefaultSettings;
             buttonOK.Text = LanguageSettings.Current.General.Ok;
@@ -2288,6 +2290,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             toolsSettings.AutoTranslateNllbServeModel = nikseTextBoxNllbServeModel.Text;
             toolsSettings.AutoTranslateLibreUrl = nikseTextBoxLibreTranslateUrl.Text;
             toolsSettings.AutoTranslateLibreApiKey = nikseTextBoxLibreTranslateApiKey.Text.Trim();
+            toolsSettings.AutoTranslateMyMemoryApiKey = nikseTextBoxMyMemoryApiKey.Text;
 
             var proxy = Configuration.Settings.Proxy;
             proxy.ProxyAddress = textBoxProxyAddress.Text;
@@ -3946,6 +3949,11 @@ namespace Nikse.SubtitleEdit.Forms.Options
         private void linkLabelLibreTranslateApi_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             UiUtil.OpenUrl(new LibreTranslate().Url);
+        }
+
+        private void linkLabelMyMemoryTranslate_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            UiUtil.OpenUrl(new MyMemoryApi().Url);
         }
     }
 }

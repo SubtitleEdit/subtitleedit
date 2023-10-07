@@ -37,11 +37,29 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             text = text.Replace("<br />", Environment.NewLine);
             text = text.Replace("<br>", Environment.NewLine);
             text = text.Replace("<br/>", Environment.NewLine);
+            text = text.Replace("\\r\\n", Environment.NewLine);
             text = text.Replace("\\n", Environment.NewLine);
-            bool keepNext = false;
             var sb = new StringBuilder(text.Length);
+            var list = text.SplitToLines();
+            for (var index = 0; index < list.Count; index++)
+            {
+                var line = list[index];
+                DecodeJsonText(line, sb);
+                if (index <  list.Count - 1)
+                {
+                    sb.AppendLine();
+                }
+            }
+
+            return sb.ToString();
+        }
+
+        private static void DecodeJsonText(string text, StringBuilder sb)
+        {
+            text = string.Join(Environment.NewLine, text.SplitToLines());
+            var keepNext = false;
             var hexLetters = "01234567890abcdef";
-            int i = 0;
+            var i = 0;
             while (i < text.Length)
             {
                 char c = text[i];
@@ -68,8 +86,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                 i++;
             }
-
-            return sb.ToString();
         }
 
         public override string ToText(Subtitle subtitle, string title)
