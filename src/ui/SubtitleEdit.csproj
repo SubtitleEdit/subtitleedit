@@ -2560,9 +2560,9 @@
     <None Include="Resources\L6.png" />
     <None Include="Resources\L2.png" />
     <None Include="Resources\L1.png" />
-    <None Include="Resources\Layout7.png" />
     <None Include="Resources\L7.png" />
     <None Include="Resources\L9.png" />
+    <None Include="Resources\L12.png" />
     <Content Include="Resources\TesseractDictionaries.xml">
       <SubType>Designer</SubType>
     </Content>
