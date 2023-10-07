@@ -220,6 +220,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new TimedText200604CData(),
                     new TimedText200604Ooyala(),
                     new TimedText(),
+                    new TimeLineAscii(),
                     new TitleExchangePro(),
                     new Titra(),
                     new TmpegEncText(),
@@ -666,7 +667,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 new DlDd(),
                 new Ted20(),
                 new Captionate(),
-                new TimeLineAscii(),
+                new TimeLineAscii(), // TODO: remove from here?
                 new TimeLineFootageAscii(),
                 new TimedTextImage(),
                 new FinalCutProImage(),

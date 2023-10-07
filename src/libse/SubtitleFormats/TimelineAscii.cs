@@ -1,6 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -25,7 +26,50 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     /// </summary>
     public class TimeLineAscii : SubtitleFormat
     {
+        private class TimeLineAsciiTextWriter : IDisposable
+        {
+            // private readonly StringBuilder _stringBuilder;
+            private readonly StringWriter _stringWriter;
+            private int _lineNumberTrack = 1;
+            public TimeLineAsciiTextWriter(bool useWindowStyleNewline)
+            {
+                _stringWriter = new StringWriter(new StringBuilder(), CultureInfo.InvariantCulture);
+                _stringWriter.NewLine = useWindowStyleNewline ? "\r\n" : "\n";
+                _stringWriter.WriteLine("<summary>");
+                _stringWriter.WriteLine("Timeline Ascii export - THE MOVIE TITRE EDITOR - http://www.pld.ttu.ee/~priidu/timeline/ by priidu@pld.ttu.ee");
+            }
 
+            private void WriteInternal(Paragraph paragraph)
+            {
+                _stringWriter.WriteLine($"{_lineNumberTrack++}.");
+                _stringWriter.WriteLine(paragraph.StartTime.ToHHMMSSPeriodFF());
+                _stringWriter.WriteLine(paragraph.EndTime.ToHHMMSSPeriodFF());
+                _stringWriter.WriteLine(paragraph.Text);
+            }
+            
+            public void Write(IReadOnlyList<Paragraph> paragraphs)
+            {
+                var count = paragraphs.Count;
+                for (var i = 0; i < count; i++)
+                {
+                    var p = paragraphs[i];
+                    WriteInternal(p);
+                    if (i + 1 < count)
+                    {
+                        _stringWriter.WriteLine();
+                    }
+                }
+            }
+
+            public override string ToString()
+            {
+                _stringWriter.WriteLine("</summary>"); // close the stream
+                return _stringWriter.ToString();
+            }
+
+            public void Dispose() => _stringWriter?.Dispose();
+        }
+        
         private static readonly Regex RegexTimeCode = new Regex(@"^\d\d:\d\d:\d\d\.\d\d$", RegexOptions.Compiled);
 
         private enum ExpectingLine
@@ -52,7 +96,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
-            return string.Empty;
+            using (var timelineTextWriter = new TimeLineAsciiTextWriter(useWindowStyleNewline: true))
+            {
+                timelineTextWriter.Write(subtitle.Paragraphs);
+                return timelineTextWriter.ToString();
+            }
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
@@ -211,6 +259,5 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             return Encoding.GetEncoding(1252);
         }
-
     }
 }
