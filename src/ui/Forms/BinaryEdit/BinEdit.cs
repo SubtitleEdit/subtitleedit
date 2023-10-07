@@ -1507,7 +1507,24 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             var numberString = $"{i:0000}";
             var fileName = Path.Combine(path, numberString + ".png");
             bitmap.Save(fileName, ImageFormat.Png);
-            sb.AppendLine("<Event InTC=\"" + ToHHMMSSFF(p.StartTime) + "\" OutTC=\"" + ToHHMMSSFF(p.EndTime) + "\" Forced=\"" + extra.IsForced.ToString().ToLowerInvariant() + "\">");
+
+            var convertToSmpte = false;
+            var frameRateText = comboBoxFrameRate.Text.Replace(',', '.');
+            if (!string.IsNullOrEmpty(frameRateText) && decimal.TryParse(frameRateText, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var fr))
+            {
+                convertToSmpte = fr % 1 != 0;
+            }
+
+            var startTime = new TimeCode(p.StartTime.TotalMilliseconds);
+            var endTime = new TimeCode(p.EndTime.TotalMilliseconds);
+
+            if (convertToSmpte)
+            {
+                startTime = new TimeCode(startTime.TotalMilliseconds / 1.001);
+                endTime = new TimeCode(startTime.TotalMilliseconds / 1.001);
+            }
+
+            sb.AppendLine("<Event InTC=\"" + ToHHMMSSFF(startTime) + "\" OutTC=\"" + ToHHMMSSFF(endTime) + "\" Forced=\"" + extra.IsForced.ToString().ToLowerInvariant() + "\">");
             sb.AppendLine("  <Graphic Width=\"" + bitmap.Width.ToString(CultureInfo.InvariantCulture) + "\" Height=\"" +
                           bitmap.Height.ToString(CultureInfo.InvariantCulture) + "\" X=\"" + extra.X.ToString(CultureInfo.InvariantCulture) + "\" Y=\"" + extra.Y.ToString(CultureInfo.InvariantCulture) +
                           "\">" + numberString + ".png</Graphic>");
