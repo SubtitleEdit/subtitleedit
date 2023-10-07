@@ -37,6 +37,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 _stringWriter.NewLine = useWindowStyleNewline ? "\r\n" : "\n";
                 _stringWriter.WriteLine("<summary>");
                 _stringWriter.WriteLine("Timeline Ascii export - THE MOVIE TITRE EDITOR - http://www.pld.ttu.ee/~priidu/timeline/ by priidu@pld.ttu.ee");
+                _stringWriter.WriteLine();
             }
 
             private void WriteInternal(Paragraph paragraph)
