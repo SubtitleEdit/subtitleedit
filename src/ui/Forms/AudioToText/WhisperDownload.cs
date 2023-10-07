@@ -60,15 +60,16 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         };
 
 
-        private const string DownloadUrlPurfviewFasterWhisper = "https://github.com/Purfview/whisper-standalone-win/releases/download/faster-whisper/Whisper-Faster_r153.zip";
+        private const string DownloadUrlPurfviewFasterWhisper = "https://github.com/Purfview/whisper-standalone-win/releases/download/faster-whisper/Whisper-Faster_r160.zip";
 
         private static readonly string[] Sha512HashesPurfviewFasterWhisper =
         {
-            "d5d81f3450254f988537bba400b316983fba80142027dbae7ed5abcb06ef6ec367dd2f0699f4096458e783573e02b117d8489b4fa03294dc928b40178d316daa", // r153
+            "6a3a0e2e7ae69ec259a0d347bf0970cb276d1ce271a71e8785729fe4a453e71e807e31599223ce2d65f6d8eb8e52d6eee53c3d1d22c373e407155d7717a45ceb", // r160
         };
 
         private static readonly string[] OldSha512HashesPurfviewFasterWhisper =
         {
+            "d5d81f3450254f988537bba400b316983fba80142027dbae7ed5abcb06ef6ec367dd2f0699f4096458e783573e02b117d8489b4fa03294dc928b40178d316daa", // r153
             "c40229a04f67409bf92b58a5f959a9aed3cb9bf467ae6d7dd313a1dc6bff7ed6a2f583a3fa8913684178bf14df71d49bdb933cf9ef8bb6915e4794fc4a2dff08", // r149.1
             "22e07106f50301b9a7b818791b825a89c823df25e25e760efd45a7b3b1ea5a5d2048ed24e669729f8bd09dade9ea3902e6452564dd90b88d85cd046cc9eb6efc", // r146
             "fee96c9f8f3a9b67c2e1923fa0f5ef388d645aa3788b1b00c9f12392ef2db4b905d84f5c00ab743a284c8ba2750121e08e9fee1edc76d9c0f12ae51d61b1b12a", // r145.3.zip
@@ -317,7 +318,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
             if (whisperChoice == WhisperChoice.PurfviewFasterWhisper)
             {
-                return hash == "5e5822bc2d7a5b0d7e50f35460cbbf5bd145eaef03fa7cb3001d4c43622b7796243692a5ce3261e831b9d935f2441bbf7edbe8f119ea92c53fe077885fd10708";
+                return hash == "e9cedccc096063f0e70eee1ed9fe8e14d57526f9ee4258aec4c8f7198a3a91776122e5290ace9a10fc7b2246e6b9f75b48c1a0a1fd01b6149eedba77496fbedb";
             }
 
             return hash == "c43fed38d1ae99e6fbbd8c842c2d550b4949081c0c7fba72cd2e2e8435ff05eac4f64e659efb09d597c3c062edf1e5026acc375d2a07290fa3c0fca9ac3bd7a2";
