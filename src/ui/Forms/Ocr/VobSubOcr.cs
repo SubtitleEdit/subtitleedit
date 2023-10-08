@@ -2326,9 +2326,13 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 var item = _vobSubMergedPackList[index];
                 left = item.SubPicture.ImageDisplayArea.Left;
                 top = item.SubPicture.ImageDisplayArea.Top;
-                var bmp = item.SubPicture.GetBitmap(_palette, Color.Transparent, Color.Black, Color.White, Color.Black, false);
+                var bmp = item.SubPicture.GetBitmap(_palette, Color.Transparent, Color.Black, Color.White, Color.Black, false, false);
+                var nbmp = new NikseBitmap(bmp);
+                var topCropped = nbmp.CropTopTransparent(0);
+                top += topCropped;
                 width = bmp.Width;
                 height = bmp.Height;
+                height -= topCropped;
                 bmp.Dispose();
                 return;
             }
