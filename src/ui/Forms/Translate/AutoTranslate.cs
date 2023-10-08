@@ -108,6 +108,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 new NoLanguageLeftBehindServe(),
                 new NoLanguageLeftBehindApi(),
                 new MyMemoryApi(),
+                //new SeamlessM4TTranslate(), 
             };
 
             if (!string.IsNullOrEmpty(Configuration.Settings.Tools.MicrosoftTranslatorApiKey) &&
@@ -199,6 +200,13 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             }
 
             if (engineType == typeof(MyMemoryApi))
+            {
+                labelUrl.Visible = false;
+                nikseComboBoxUrl.Visible = false;
+                return;
+            }
+
+            if (engineType == typeof(SeamlessM4TTranslate))
             {
                 labelUrl.Visible = false;
                 nikseComboBoxUrl.Visible = false;
@@ -623,6 +631,10 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                             {
                                 UiUtil.ShowHelp("#translation");
                             }
+                        }
+                        else
+                        {
+                            MessageBox.Show(exception.Message + Environment.NewLine + exception.StackTrace, MessageBoxIcon.Error);
                         }
                     }
                     else
