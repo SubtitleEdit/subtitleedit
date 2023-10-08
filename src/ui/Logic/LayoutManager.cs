@@ -11,7 +11,7 @@ namespace Nikse.SubtitleEdit.Logic
 {
     public static class LayoutManager
     {
-        public const int LayoutNoVideo = 8;
+        public const int LayoutNoVideo = 9;
         public static SplitContainer MainSplitContainer;
 
         public static void SetLayout(int layout, Form form, Control videoPlayer, SubtitleListView subtitleListView, GroupBox groupBoxWaveform, GroupBox groupBoxEdit, SplitterEventHandler splitMoved)
@@ -50,7 +50,7 @@ namespace Nikse.SubtitleEdit.Logic
                 case 8:
                     SetLayout8(form, videoPlayer, subtitleListView, groupBoxWaveform, groupBoxEdit, splitMoved);
                     break;
-                case 9:
+                case LayoutNoVideo:
                     SetLayout9(form, videoPlayer, subtitleListView, groupBoxWaveform, groupBoxEdit, splitMoved);
                     break;
             }
