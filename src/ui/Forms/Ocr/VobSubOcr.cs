@@ -9342,6 +9342,14 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         _fromMenuItem = true;
                         var subBitmap = GetSubtitleBitmap(_selectedIndex, false);
                         _fromMenuItem = false;
+
+                        if (_vobSubMergedPackList != null)
+                        {
+                            var nbmp = new NikseBitmap(subBitmap);
+                            var topCropped = nbmp.CropTopTransparent(0);
+                            top -= topCropped;
+                        }
+
                         g.DrawImageUnscaled(subBitmap, new Point(left, top));
                     }
 
