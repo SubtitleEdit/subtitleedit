@@ -163,7 +163,7 @@ namespace Nikse.SubtitleEdit.Forms
             removeToolStripMenuItem.Text = LanguageSettings.Current.MultipleReplace.Remove;
             removeAllToolStripMenuItem.Text = LanguageSettings.Current.MultipleReplace.RemoveAll;
             groupBoxRemoveStyle.Text = l.RemoveStyleActor;
-            labelStyleName.Text = $"{LanguageSettings.Current.General.Style}/{LanguageSettings.Current.General.Actor}";
+            labelStyleActor.Text = l.StyleActor;
             labelDeleteFirstLines.Text = l.DeleteFirstLines;
             labelDeleteLastLines.Text = l.DeleteLastLines;
             labelDeleteLinesContaining.Text = l.DeleteContaining;

@@ -326,6 +326,7 @@ Read more info (web)?</WhisperNotFound>
     <ConvertOptions>Convert options</ConvertOptions>
     <RemoveFormatting>Remove formatting tags</RemoveFormatting>
     <RemoveStyleActor>Remove lines w style/actor</RemoveStyleActor>
+    <StyleActor>Style/actor (separate with comma)</StyleActor>
     <RemoveTextForHI>Remove text for HI</RemoveTextForHI>
     <ConvertColorsToDialog>Convert colors to dialog</ConvertColorsToDialog>
     <OverwriteOriginalFiles>Overwrite original files (new extension if format is changed)</OverwriteOriginalFiles>

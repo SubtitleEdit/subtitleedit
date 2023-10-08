@@ -497,6 +497,7 @@ namespace Nikse.SubtitleEdit.Logic
                 RedoCasing = "Redo casing",
                 RemoveFormatting = "Remove formatting tags",
                 RemoveStyleActor = "Remove lines w style/actor",
+                StyleActor = "Style/actor (separate with comma)",
                 Status = "Status",
                 Style = "Style...",
                 UseStyleFromSource = "Use style from source",

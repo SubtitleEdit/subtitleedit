@@ -865,6 +865,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "BatchConvert/RemoveStyleActor":
                     language.BatchConvert.RemoveStyleActor = reader.Value;
                     break;
+                case "BatchConvert/StyleActor":
+                    language.BatchConvert.StyleActor = reader.Value;
+                    break;
                 case "BatchConvert/RemoveTextForHI":
                     language.BatchConvert.RemoveTextForHI = reader.Value;
                     break;

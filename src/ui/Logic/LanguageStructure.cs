@@ -346,6 +346,7 @@
             public string ConvertOptions { get; set; }
             public string RemoveFormatting { get; set; }
             public string RemoveStyleActor { get; set; }
+            public string StyleActor { get; set; }
             public string RemoveTextForHI { get; set; }
             public string ConvertColorsToDialog { get; set; }
             public string OverwriteOriginalFiles { get; set; }

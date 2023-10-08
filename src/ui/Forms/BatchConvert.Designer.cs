@@ -127,7 +127,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelDeleteFirstLines = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.groupBoxRemoveStyle = new System.Windows.Forms.GroupBox();
             this.textBoxRemoveStyle = new Nikse.SubtitleEdit.Controls.NikseTextBox();
-            this.labelStyleName = new Nikse.SubtitleEdit.Controls.NikseLabel();
+            this.labelStyleActor = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.groupBoxOffsetTimeCodes = new System.Windows.Forms.GroupBox();
             this.radioButtonShowLater = new System.Windows.Forms.RadioButton();
             this.radioButtonShowEarlier = new System.Windows.Forms.RadioButton();
@@ -248,24 +248,24 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.groupBoxConvertOptions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBoxConvertOptions.Controls.Add(this.groupBoxRemoveFormatting);
-            this.groupBoxConvertOptions.Controls.Add(this.groupBoxApplyDurationLimits);
-            this.groupBoxConvertOptions.Controls.Add(this.groupBoxAdjustDuration);
-            this.groupBoxConvertOptions.Controls.Add(this.groupBoxBeautifyTimeCodes);
             this.groupBoxConvertOptions.Controls.Add(this.listViewConvertOptions);
-            this.groupBoxConvertOptions.Controls.Add(this.groupBoxChangeCasing);
-            this.groupBoxConvertOptions.Controls.Add(this.groupBoxMergeShortLines);
             this.groupBoxConvertOptions.Controls.Add(this.buttonConvertOptionsSettings);
-            this.groupBoxConvertOptions.Controls.Add(this.groupBoxAssaChangeRes);
-            this.groupBoxConvertOptions.Controls.Add(this.groupBoxSortBy);
-            this.groupBoxConvertOptions.Controls.Add(this.groupBoxMergeSameTimeCodes);
-            this.groupBoxConvertOptions.Controls.Add(this.groupBoxConvertColorsToDialog);
             this.groupBoxConvertOptions.Controls.Add(this.groupBoxDeleteLines);
             this.groupBoxConvertOptions.Controls.Add(this.groupBoxRemoveStyle);
             this.groupBoxConvertOptions.Controls.Add(this.groupBoxOffsetTimeCodes);
             this.groupBoxConvertOptions.Controls.Add(this.groupBoxChangeFrameRate);
             this.groupBoxConvertOptions.Controls.Add(this.groupBoxFixRtl);
             this.groupBoxConvertOptions.Controls.Add(this.groupBoxSpeed);
+            this.groupBoxConvertOptions.Controls.Add(this.groupBoxRemoveFormatting);
+            this.groupBoxConvertOptions.Controls.Add(this.groupBoxApplyDurationLimits);
+            this.groupBoxConvertOptions.Controls.Add(this.groupBoxAdjustDuration);
+            this.groupBoxConvertOptions.Controls.Add(this.groupBoxBeautifyTimeCodes);
+            this.groupBoxConvertOptions.Controls.Add(this.groupBoxChangeCasing);
+            this.groupBoxConvertOptions.Controls.Add(this.groupBoxMergeShortLines);
+            this.groupBoxConvertOptions.Controls.Add(this.groupBoxAssaChangeRes);
+            this.groupBoxConvertOptions.Controls.Add(this.groupBoxSortBy);
+            this.groupBoxConvertOptions.Controls.Add(this.groupBoxMergeSameTimeCodes);
+            this.groupBoxConvertOptions.Controls.Add(this.groupBoxConvertColorsToDialog);
             this.groupBoxConvertOptions.Location = new System.Drawing.Point(422, 19);
             this.groupBoxConvertOptions.Name = "groupBoxConvertOptions";
             this.groupBoxConvertOptions.Size = new System.Drawing.Size(583, 275);
@@ -1633,7 +1633,7 @@ namespace Nikse.SubtitleEdit.Forms
             // groupBoxRemoveStyle
             // 
             this.groupBoxRemoveStyle.Controls.Add(this.textBoxRemoveStyle);
-            this.groupBoxRemoveStyle.Controls.Add(this.labelStyleName);
+            this.groupBoxRemoveStyle.Controls.Add(this.labelStyleActor);
             this.groupBoxRemoveStyle.Location = new System.Drawing.Point(307, 12);
             this.groupBoxRemoveStyle.Name = "groupBoxRemoveStyle";
             this.groupBoxRemoveStyle.Size = new System.Drawing.Size(271, 76);
@@ -1644,19 +1644,20 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // textBoxRemoveStyle
             // 
+            this.textBoxRemoveStyle.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxRemoveStyle.Location = new System.Drawing.Point(6, 35);
             this.textBoxRemoveStyle.Name = "textBoxRemoveStyle";
             this.textBoxRemoveStyle.Size = new System.Drawing.Size(257, 20);
             this.textBoxRemoveStyle.TabIndex = 8;
             // 
-            // labelStyleName
+            // labelStyleActor
             // 
-            this.labelStyleName.AutoSize = true;
-            this.labelStyleName.Location = new System.Drawing.Point(6, 20);
-            this.labelStyleName.Name = "labelStyleName";
-            this.labelStyleName.Size = new System.Drawing.Size(59, 13);
-            this.labelStyleName.TabIndex = 0;
-            this.labelStyleName.Text = "Style/actor";
+            this.labelStyleActor.AutoSize = true;
+            this.labelStyleActor.Location = new System.Drawing.Point(6, 20);
+            this.labelStyleActor.Name = "labelStyleActor";
+            this.labelStyleActor.Size = new System.Drawing.Size(59, 13);
+            this.labelStyleActor.TabIndex = 0;
+            this.labelStyleActor.Text = "Style/actor";
             // 
             // groupBoxOffsetTimeCodes
             // 
@@ -2205,6 +2206,7 @@ namespace Nikse.SubtitleEdit.Forms
             // textBoxFilter
             // 
             this.textBoxFilter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.textBoxFilter.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxFilter.Location = new System.Drawing.Point(422, 258);
             this.textBoxFilter.Name = "textBoxFilter";
             this.textBoxFilter.Size = new System.Drawing.Size(158, 20);
@@ -2563,7 +2565,6 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.CheckBox checkBoxScanFolderRecursive;
         private Nikse.SubtitleEdit.Controls.NikseLabel labelFilter;
         private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxFilter;
-        private System.Windows.Forms.TextBox textBoxFilter;
         private System.Windows.Forms.GroupBox groupBoxSpeed;
         private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownPercent;
         private Nikse.SubtitleEdit.Controls.NikseLabel labelPercent;
@@ -2607,8 +2608,7 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem convertMkvSettingsToolStripMenuItem;
         private System.Windows.Forms.GroupBox groupBoxRemoveStyle;
-        private System.Windows.Forms.TextBox textBoxRemoveStyle;
-        private Nikse.SubtitleEdit.Controls.NikseLabel labelStyleName;
+        private Nikse.SubtitleEdit.Controls.NikseLabel labelStyleActor;
         private System.Windows.Forms.GroupBox groupBoxAdjustDuration;
         private Nikse.SubtitleEdit.Controls.NikseLabel labelAdjustDurationVia;
         private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxAdjustDurationVia;
@@ -2686,5 +2686,7 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.CheckBox checkBoxRemoveItalic;
         private System.Windows.Forms.CheckBox checkBoxRemoveBold;
         private System.Windows.Forms.CheckBox checkBoxRemoveAllFormatting;
+        private Controls.NikseTextBox textBoxFilter;
+        private Controls.NikseTextBox textBoxRemoveStyle;
     }
 }
