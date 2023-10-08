@@ -2330,9 +2330,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 var nbmp = new NikseBitmap(bmp);
                 var topCropped = nbmp.CropTopTransparent(0);
                 top += topCropped;
+                var bottomCropped = nbmp.CalcBottomTransparent();
                 width = bmp.Width;
                 height = bmp.Height;
                 height -= topCropped;
+                height -= bottomCropped;
                 bmp.Dispose();
                 return;
             }
