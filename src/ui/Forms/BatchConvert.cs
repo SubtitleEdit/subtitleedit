@@ -2009,7 +2009,15 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (IsActionEnabled(CommandLineConverter.BatchAction.RemoveStyle) && !string.IsNullOrEmpty(textBoxRemoveStyle.Text))
             {
-                sub.Paragraphs.RemoveAll(p => p.Extra == textBoxRemoveStyle.Text || p.Actor == textBoxRemoveStyle.Text);
+                var styleOrActors = textBoxRemoveStyle.Text.Split(',');
+                foreach (var styleOrActor in styleOrActors)
+                {
+                    var s = styleOrActor.Trim();
+                    if (s.Length > 0)
+                    {
+                        sub.Paragraphs.RemoveAll(p => p.Extra == s || p.Actor == s);
+                    }
+                }
                 sub.Renumber();
             }
 
