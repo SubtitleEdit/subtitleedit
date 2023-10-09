@@ -65,9 +65,12 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             foreach (var w in interjections)
             {
-                var node = xmlDocument.CreateElement("word");
-                node.InnerText = w;
-                xmlDocument.DocumentElement.AppendChild(node);
+                if (!se.Contains(w))
+                {
+                    var node = xmlDocument.CreateElement("word");
+                    node.InnerText = w;
+                    xmlDocument.DocumentElement.AppendChild(node);
+                }
             }
 
             var fullFileName = Path.Combine(Configuration.DictionariesDirectory, userFileName);
