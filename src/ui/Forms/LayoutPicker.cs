@@ -301,7 +301,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void button10_MouseLeave(object sender, EventArgs e)
         {
-            button9.Image = _gray10;
+            button10.Image = _gray10;
         }
 
         private void button12_MouseEnter(object sender, EventArgs e)
