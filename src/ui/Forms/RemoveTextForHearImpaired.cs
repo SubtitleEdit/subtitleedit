@@ -156,8 +156,7 @@ namespace Nikse.SubtitleEdit.Forms
             _removeTextForHiLib.Settings = GetSettings(Subtitle);
             _removeTextForHiLib.Warnings = new List<int>();
 
-            var fileName = GetInterjectionsFileName();
-            _removeTextForHiLib.ReloadInterjection(fileName);
+            _removeTextForHiLib.ReloadInterjection(_interjectionsLanguage);
 
             listViewFixes.BeginUpdate();
             listViewFixes.Items.Clear();
@@ -176,7 +175,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
-                    var newText = _removeTextForHiLib.RemoveTextFromHearImpaired(p.Text, Subtitle, index, GetInterjectionsFileName());
+                    var newText = _removeTextForHiLib.RemoveTextFromHearImpaired(p.Text, Subtitle, index, _interjectionsLanguage);
                     if (p.Text.RemoveChar(' ') != newText.RemoveChar(' '))
                     {
                         count++;
@@ -306,8 +305,13 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonEditInterjections_Click(object sender, EventArgs e)
         {
-            var fileName = GetInterjectionsFileName();
-            using (var editInterjections = new InterjectionsEditList(RemoveTextForHI.GetInterjections(fileName)))
+            var lang = "en";
+            if (comboBoxLanguage.SelectedIndex >= 0 && comboBoxLanguage.Items[comboBoxLanguage.SelectedIndex] is LanguageItem l)
+            {
+                lang = l.Code.TwoLetterISOLanguageName;
+            }
+
+            using (var editInterjections = new InterjectionsEditList(InterjectionsRepository.LoadInterjections(lang)))
             {
                 if (editInterjections.ShowDialog(this) == DialogResult.OK)
                 {
@@ -322,27 +326,13 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SaveInterjections(List<string> interjections)
         {
-            var xml = new XmlDocument();
-            xml.LoadXml("<interjections/>");
-            foreach (var s in interjections)
-            {
-                XmlNode node = xml.CreateElement("word");
-                node.InnerText = s;
-                xml.DocumentElement.AppendChild(node);
-            }
-
-            xml.Save(GetInterjectionsFileName());
-        }
-
-        private string GetInterjectionsFileName()
-        {
             var lang = "en";
             if (comboBoxLanguage.SelectedIndex >= 0 && comboBoxLanguage.Items[comboBoxLanguage.SelectedIndex] is LanguageItem l)
             {
                 lang = l.Code.TwoLetterISOLanguageName;
             }
 
-            return RemoveTextForHI.GetInterjectionsFileName(lang);
+            InterjectionsRepository.SaveInterjections(lang, interjections);
         }
 
         private void FormRemoveTextForHearImpaired_Resize(object sender, EventArgs e)

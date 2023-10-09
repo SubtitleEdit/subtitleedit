@@ -849,12 +849,12 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
         private static readonly char[] TrimStartNoiseChar = { '-', ' ' };
 
-        public string RemoveTextFromHearImpaired(string input, string interjectionsFileName)
+        public string RemoveTextFromHearImpaired(string input, string twoLetterIsoLanguageName)
         {
-            return RemoveTextFromHearImpaired(input, null, -1, interjectionsFileName);
+            return RemoveTextFromHearImpaired(input, null, -1, twoLetterIsoLanguageName);
         }
 
-        public string RemoveTextFromHearImpaired(string inputWithoutUnicodeReplace, Subtitle subtitle, int index, string interjectionsFileName)
+        public string RemoveTextFromHearImpaired(string inputWithoutUnicodeReplace, Subtitle subtitle, int index, string twoLetterIsoLanguageName)
         {
             if (StartsAndEndsWithHearImpairedTags(HtmlUtil.RemoveHtmlTags(inputWithoutUnicodeReplace, true).TrimStart(TrimStartNoiseChar)))
             {
@@ -1023,7 +1023,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
             {
                 if (_interjections == null)
                 {
-                    ReloadInterjection(interjectionsFileName);
+                    ReloadInterjection(twoLetterIsoLanguageName);
                 }
 
                 // reusable context
@@ -1595,15 +1595,10 @@ namespace Nikse.SubtitleEdit.Core.Forms
             return words;
         }
 
-        public static string GetInterjectionsFileName(string twoLetterLanguage)
-        {
-            return Path.Combine(Configuration.DictionariesDirectory, twoLetterLanguage + "_interjections.xml");
-        }
-
-        public static IList<string> GetInterjectionList(string fileName)
+        public static IList<string> GetInterjectionList(string twoLetterIsoLanguageName)
         {
             var interjectionList = new HashSet<string>();
-            foreach (var s in GetInterjections(fileName))
+            foreach (var s in InterjectionsRepository.LoadInterjections(twoLetterIsoLanguageName))
             {
                 if (s.Length <= 0)
                 {
@@ -1621,9 +1616,9 @@ namespace Nikse.SubtitleEdit.Core.Forms
             return sortedList;
         }
 
-        public void ReloadInterjection(string fileName)
+        public void ReloadInterjection(string twoLetterIsoLanguageName)
         {
-            _interjections = GetInterjectionList(fileName);
+            _interjections = GetInterjectionList(twoLetterIsoLanguageName);
         }
     }
 }

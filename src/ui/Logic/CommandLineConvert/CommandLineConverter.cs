@@ -2197,10 +2197,9 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                             var hiSettings = new Core.Forms.RemoveTextForHISettings(sub);
                             var hiLib = new Core.Forms.RemoveTextForHI(hiSettings);
                             var lang = LanguageAutoDetect.AutoDetectGoogleLanguage(sub);
-                            var interjectionsFileName = RemoveTextForHI.GetInterjectionsFileName(lang);
                             foreach (var p in sub.Paragraphs)
                             {
-                                p.Text = hiLib.RemoveTextFromHearImpaired(p.Text, sub, sub.Paragraphs.IndexOf(p), interjectionsFileName);
+                                p.Text = hiLib.RemoveTextFromHearImpaired(p.Text, sub, sub.Paragraphs.IndexOf(p), lang);
                             }
 
                             break;
