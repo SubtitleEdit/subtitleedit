@@ -325,6 +325,7 @@ Command line: {1} {2}
     <ConvertOptions>转换选项</ConvertOptions>
     <RemoveFormatting>删除格式化标签</RemoveFormatting>
     <RemoveStyleActor>删除样式/角色</RemoveStyleActor>
+    <StyleActor>样式/角色 (以英文逗号分隔)</StyleActor>
     <RemoveTextForHI>删除 HI 文本</RemoveTextForHI>
     <ConvertColorsToDialog>将颜色转换为对话框</ConvertColorsToDialog>
     <OverwriteOriginalFiles>覆盖原始文件(若扩展名变更，则使用新的扩展名)</OverwriteOriginalFiles>
