@@ -276,6 +276,16 @@ namespace Nikse.SubtitleEdit.Forms
             button8.Image = _gray8;
         }
 
+        private void button9_MouseEnter(object sender, EventArgs e)
+        {
+            button9.Image = Properties.Resources.L9;
+        }
+
+        private void button9_MouseLeave(object sender, EventArgs e)
+        {
+            button9.Image = _gray9;
+        }
+
         private void button12_MouseEnter(object sender, EventArgs e)
         {
             button12.Image = Properties.Resources.L12;
