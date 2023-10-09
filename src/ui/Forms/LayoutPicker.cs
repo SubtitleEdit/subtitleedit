@@ -67,7 +67,7 @@ namespace Nikse.SubtitleEdit.Forms
             _gray7 = GrayScale(Properties.Resources.L7, initialLayout == 6);
             _gray8 = GrayScale(Properties.Resources.L8, initialLayout == 7);
             _gray9 = GrayScale(Properties.Resources.L9, initialLayout == 8);
-            _gray10 = GrayScale(Properties.Resources.L9, initialLayout == 9);
+            _gray10 = GrayScale(Properties.Resources.L10, initialLayout == 9);
             _gray11 = GrayScale(Properties.Resources.L9, initialLayout == 10);
             _gray12 = GrayScale(Properties.Resources.L12, initialLayout == 11);
 
@@ -80,6 +80,7 @@ namespace Nikse.SubtitleEdit.Forms
             button7.Image = _gray7;
             button8.Image = _gray8;
             button9.Image = _gray9;
+            button10.Image = _gray10;
             button12.Image = _gray12;
 
             button1.Font = new Font(button1.Font.FontFamily, 28);
@@ -91,6 +92,7 @@ namespace Nikse.SubtitleEdit.Forms
             button7.Font = new Font(button1.Font.FontFamily, 28);
             button8.Font = new Font(button1.Font.FontFamily, 28);
             button9.Font = new Font(button1.Font.FontFamily, 28);
+            button10.Font = new Font(button1.Font.FontFamily, 28);
             button12.Font = new Font(button1.Font.FontFamily, 28);
         }
 
@@ -190,6 +192,12 @@ namespace Nikse.SubtitleEdit.Forms
             DialogResult = DialogResult.OK;
         }
 
+        private void button10_Click(object sender, EventArgs e)
+        {
+            _layout = 9;
+            DialogResult = DialogResult.OK;
+        }
+
         private void button12_Click(object sender, EventArgs e)
         {
             _layout = 9;
@@ -284,6 +292,16 @@ namespace Nikse.SubtitleEdit.Forms
         private void button9_MouseLeave(object sender, EventArgs e)
         {
             button9.Image = _gray9;
+        }
+
+        private void button10_MouseEnter(object sender, EventArgs e)
+        {
+            button10.Image = Properties.Resources.L10;
+        }
+
+        private void button10_MouseLeave(object sender, EventArgs e)
+        {
+            button9.Image = _gray10;
         }
 
         private void button12_MouseEnter(object sender, EventArgs e)
@@ -483,5 +501,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             ShowVideoControls = checkBoxHideVideoControls.Checked;
         }
+
+        
     }
 }

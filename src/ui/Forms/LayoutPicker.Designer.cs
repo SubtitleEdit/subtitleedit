@@ -42,6 +42,7 @@
             this.buttonOk = new System.Windows.Forms.Button();
             this.button12 = new System.Windows.Forms.Button();
             this.button9 = new System.Windows.Forms.Button();
+            this.button10 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // button1
@@ -226,7 +227,7 @@
             this.button12.Name = "button12";
             this.button12.Size = new System.Drawing.Size(195, 147);
             this.button12.TabIndex = 15;
-            this.button12.Text = "10";
+            this.button12.Text = "12";
             this.button12.UseVisualStyleBackColor = true;
             this.button12.Click += new System.EventHandler(this.button12_Click);
             this.button12.Enter += new System.EventHandler(this.button12_Enter);
@@ -238,7 +239,7 @@
             this.button9.FlatAppearance.BorderSize = 0;
             this.button9.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button9.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button9.Image = global::Nikse.SubtitleEdit.Properties.Resources.L91;
+            this.button9.Image = global::Nikse.SubtitleEdit.Properties.Resources.L9;
             this.button9.Location = new System.Drawing.Point(13, 313);
             this.button9.Name = "button9";
             this.button9.Size = new System.Drawing.Size(195, 147);
@@ -250,11 +251,28 @@
             this.button9.MouseEnter += new System.EventHandler(this.button9_MouseEnter);
             this.button9.MouseLeave += new System.EventHandler(this.button9_MouseLeave);
             // 
+            // button10
+            // 
+            this.button10.FlatAppearance.BorderSize = 0;
+            this.button10.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button10.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button10.Image = global::Nikse.SubtitleEdit.Properties.Resources.L10;
+            this.button10.Location = new System.Drawing.Point(218, 313);
+            this.button10.Name = "button10";
+            this.button10.Size = new System.Drawing.Size(195, 147);
+            this.button10.TabIndex = 93;
+            this.button10.Text = "10";
+            this.button10.UseVisualStyleBackColor = true;
+            this.button10.Click += new System.EventHandler(this.button10_Click);
+            this.button10.MouseEnter += new System.EventHandler(this.button10_MouseEnter);
+            this.button10.MouseLeave += new System.EventHandler(this.button10_MouseLeave);
+            // 
             // LayoutPicker
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(838, 511);
+            this.Controls.Add(this.button10);
             this.Controls.Add(this.button9);
             this.Controls.Add(this.button12);
             this.Controls.Add(this.buttonOk);
@@ -299,5 +317,6 @@
         private System.Windows.Forms.Button buttonOk;
         private System.Windows.Forms.Button button12;
         private System.Windows.Forms.Button button9;
+        private System.Windows.Forms.Button button10;
     }
 }
