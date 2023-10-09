@@ -200,7 +200,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void button12_Click(object sender, EventArgs e)
         {
-            _layout = 9;
+            _layout = LayoutManager.LayoutNoVideo;
             DialogResult = DialogResult.OK;
         }
 
