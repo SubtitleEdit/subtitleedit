@@ -105,6 +105,7 @@
     <Warning>Предупреждение</Warning>
     <UseLargerFontForThisWindow>Используйте более крупный шрифт для этого окна</UseLargerFontForThisWindow>
     <ChangeLanguageFilter>Изменить языковой фильтр…</ChangeLanguageFilter>
+    <MoreInfo>Подробнее</MoreInfo>
   </General>
   <About>
     <Title>О программе</Title>
@@ -201,6 +202,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <WhisperWebsite>Сайт Whisper</WhisperWebsite>
     <WhisperNotFound>Whisper не найден.
  Получить больше информации (сайт)?</WhisperNotFound>
+    <Model>Модель</Model>
     <Models>Модели</Models>
     <LanguagesAndModels>Языки и модели</LanguagesAndModels>
     <ChooseModel>Выберите модель:</ChooseModel>
@@ -327,6 +329,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <ConvertOptions>Параметры конвертирования</ConvertOptions>
     <RemoveFormatting>Удалить теги форматирования</RemoveFormatting>
     <RemoveStyleActor>Удалить стиль/актёра</RemoveStyleActor>
+    <StyleActor>Стиль/актёр (через запятую)</StyleActor>
     <RemoveTextForHI>Удалить текст для слабослышащих</RemoveTextForHI>
     <ConvertColorsToDialog>Преобразование цветов в диалоговое окно</ConvertColorsToDialog>
     <OverwriteOriginalFiles>Заменить оригинальные файлы (с новым расширением, если изменён формат)</OverwriteOriginalFiles>
@@ -1048,6 +1051,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <PleaseWait>Пожалуйста, подождите какое-то время…</PleaseWait>
     <PoweredByGoogleTranslate>Переводчик Google</PoweredByGoogleTranslate>
     <PoweredByMicrosoftTranslate>Переводчик Microsoft</PoweredByMicrosoftTranslate>
+    <PoweredByX>Переводчик {0}</PoweredByX>
     <MsClientSecretNeeded>Извините, вам нужен секретный ключ клиента Bing от Microsoft, чтобы использовать последнюю версию Bing Translate.
 
 Перейдите в «Параметры -&gt; Настройки -&gt; Инструменты», чтобы ввести свой секретный ключ клиенту Bing</MsClientSecretNeeded>
@@ -1069,6 +1073,9 @@ https://github.com/SubtitleEdit/subtitleedit
     <TranslateBlockClipboardError1>Буфер обмена содержит исходный текст!</TranslateBlockClipboardError1>
     <TranslateBlockClipboardError2>Перейдите к переводчику для получения перевода,
 скопируйте результат в буфер обмена и снова нажмите эту кнопку</TranslateBlockClipboardError2>
+    <StartWebServerX>Запустить веб-сервер «{0}»</StartWebServerX>
+    <XRequiresALocalWebServer>Для «{0}» требуется локальный сервер!</XRequiresALocalWebServer>
+    <ReadMore>Прочитать подробнее?</ReadMore>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
     <Title>Сравнительный перевод в Google и Microsoft</Title>
@@ -1757,7 +1764,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <NothingToUndo>Список изменений пуст!</NothingToUndo>
     <InvalidLanguageNameX>Неверное имя языка: {0}</InvalidLanguageNameX>
     <DoNotDisplayMessageAgain>Больше не показывать это сообщение</DoNotDisplayMessageAgain>
-    <DoNotAutoLoadVideo>Не загружайте видео автоматически</DoNotAutoLoadVideo>
+    <DoNotAutoLoadVideo>Не автозагружать видео</DoNotAutoLoadVideo>
     <NumberOfCorrectedWords>Количество исправленных слов: {0}</NumberOfCorrectedWords>
     <NumberOfSkippedWords>Количество пропущенных слов: {0}</NumberOfSkippedWords>
     <NumberOfCorrectWords>Количество правильных слов: {0}</NumberOfCorrectWords>
@@ -2303,7 +2310,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <VisualSync>Синхронизация</VisualSync>
     <BurnIn>Хардсаб</BurnIn>
     <SpellCheck>Орфография</SpellCheck>
-    <NetflixQualityCheck>Netflix проверка качества</NetflixQualityCheck>
+    <NetflixQualityCheck>Проверка качества Netflix</NetflixQualityCheck>
     <BeautifyTimeCodes>Украсить тайм-коды</BeautifyTimeCodes>
     <SettingsName>Настройки</SettingsName>
     <ToggleBookmarks>Переключить закладки</ToggleBookmarks>
@@ -2713,7 +2720,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <CustomSearch4>Перевод, пользовательский поиск 4</CustomSearch4>
     <CustomSearch5>Перевод, пользовательский поиск 5</CustomSearch5>
     <SyntaxColoring>Подсветка синтаксиса</SyntaxColoring>
-    <ListViewSyntaxColoring>Вид списка</ListViewSyntaxColoring>
+    <ListViewSyntaxColoring>Подсветка синтаксиса в списке субтитров</ListViewSyntaxColoring>
     <SyntaxColorDurationIfTooSmall>Подсвечивать слишком короткую продолжительность</SyntaxColorDurationIfTooSmall>
     <SyntaxColorDurationIfTooLarge>Подсвечивать слишком длинную продолжительность</SyntaxColorDurationIfTooLarge>
     <SyntaxColorTextIfTooLong>Подсвечивать слишком длинный текст</SyntaxColorTextIfTooLong>
@@ -2724,7 +2731,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <SyntaxErrorColor>Цвет ошибки</SyntaxErrorColor>
     <SyntaxLineWidthSettings>Настройки…</SyntaxLineWidthSettings>
     <LineWidthSettings>Настройки ширины строки</LineWidthSettings>
-    <MaximumLineWidth>Ширина:</MaximumLineWidth>
+    <MaximumLineWidth>Макс. ширина:</MaximumLineWidth>
     <Pixels>пикселей</Pixels>
     <MeasureFont>Шрифт:</MeasureFont>
     <GoToFirstSelectedLine>Перейти к первой выделенной строке</GoToFirstSelectedLine>
