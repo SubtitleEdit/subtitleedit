@@ -104,6 +104,8 @@ E-mail: mailto:hugokarvalho@hotmail.com</TranslatedBy>
     <Error>Erro</Error>
     <Warning>Aviso</Warning>
     <UseLargerFontForThisWindow>Usar um tipo de letra maior para esta janela</UseLargerFontForThisWindow>
+    <ChangeLanguageFilter>Alterar o filtro de idioma...</ChangeLanguageFilter>
+    <MoreInfo>Mais informação</MoreInfo>
   </General>
   <About>
     <Title>Acerca do Subtitle Edit</Title>
@@ -198,6 +200,7 @@ Nota: verifique o espaço em disco.</WaveFileMalformed>
     <WhisperNotFound>Whisper não encontrado.
 
 Mais informação online?</WhisperNotFound>
+    <Model>Modelo</Model>
     <Models>Modelos</Models>
     <LanguagesAndModels>Idiomas e modelos</LanguagesAndModels>
     <ChooseModel>Escolher modelo</ChooseModel>
@@ -324,6 +327,7 @@ Mais informação online?</WhisperNotFound>
     <ConvertOptions>Opções de conversão</ConvertOptions>
     <RemoveFormatting>Remover etiquetas de formatação</RemoveFormatting>
     <RemoveStyleActor>Remover linhas w estilo/actor</RemoveStyleActor>
+    <StyleActor>Estilo/actor (separar com vírgula)</StyleActor>
     <RemoveTextForHI>Remover texto para Deficientes Auditivos</RemoveTextForHI>
     <ConvertColorsToDialog>Converter cores para diálogos</ConvertColorsToDialog>
     <OverwriteOriginalFiles>Substituir os ficheiros originais (nova extensão se o formato for alterado)</OverwriteOriginalFiles>
@@ -1042,8 +1046,9 @@ Tiramos partido do ritmo intrínseco da imagem.</CreateSimpleChainingToolTip>
     <To>Para:</To>
     <Translate>Traduzir</Translate>
     <PleaseWait>Aguarde... isto pode demorar.</PleaseWait>
-    <PoweredByGoogleTranslate>Powered by Google translate</PoweredByGoogleTranslate>
-    <PoweredByMicrosoftTranslate>Powered by Microsoft translate</PoweredByMicrosoftTranslate>
+    <PoweredByGoogleTranslate>Disponibilizado por Google tradutor</PoweredByGoogleTranslate>
+    <PoweredByMicrosoftTranslate>Disponibilizado por Microsoft tradutor</PoweredByMicrosoftTranslate>
+    <PoweredByX>Disponibilizado por {0}</PoweredByX>
     <MsClientSecretNeeded>Desculpe, precisa de uma chave de 'Tradutor de texto' dos Serviços Cognitivos da Microsoft para usar o mais recente tradutor da Microsoft.
 
 Vá a "Opções -&gt; Definições -&gt; Ferramentas" para inserir a chave.</MsClientSecretNeeded>
@@ -1065,6 +1070,9 @@ Para usar a chave API, vá a "Opções -&gt; Definições -&gt; Ferramentas" par
     <TranslateBlockCopySourceText>Copiar o texto</TranslateBlockCopySourceText>
     <TranslateBlockClipboardError1>A área de transferência contém texto!</TranslateBlockClipboardError1>
     <TranslateBlockClipboardError2>Traduza novamente, depois copie os resultados para a área de transferência e clique novamente neste botão.</TranslateBlockClipboardError2>
+    <StartWebServerX>Iniciar "{0}" servidor Web</StartWebServerX>
+    <XRequiresALocalWebServer>"{0}" requer um servidor Web a funcionar localmente!</XRequiresALocalWebServer>
+    <ReadMore>Ler mais?</ReadMore>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
     <Title>Tradutor do Google vs Microsoft</Title>
@@ -1941,6 +1949,7 @@ Transferir e continuar?</VideoFromUrlRequirements>
     <SubtitleEditNeedsVideoPlayer>O Subtitle Edit precisa de um reprodutor de vídeo.</SubtitleEditNeedsVideoPlayer>
     <UseRecommendMpv>Para usar o reprodutor de vídeo recomendado "mpv" clique no botão abaixo.</UseRecommendMpv>
     <DownloadAndUseMpv>Transferir e usar o "mpv" como reprodutor de vídeo</DownloadAndUseMpv>
+    <ChooseLayout>Escolher esquema</ChooseLayout>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Seleccionar legenda através de um ficheiro Matroska (.mkv)</Title>
@@ -2317,6 +2326,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <DefaultFrameRate>Taxa de fotogramas padrão</DefaultFrameRate>
     <DefaultFileEncoding>Codificação padrão do ficheiro</DefaultFileEncoding>
     <AutoDetectAnsiEncoding>Auto detectar codificação ANSI</AutoDetectAnsiEncoding>
+    <LanguageFilter>Filtro de idiomas</LanguageFilter>
     <Profile>Perfil</Profile>
     <Profiles>Perfis</Profiles>
     <ImportProfiles>Importar perfis</ImportProfiles>
@@ -2544,6 +2554,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <AdjustViaEndAutoStart>Ajustar através da posição final</AdjustViaEndAutoStart>
     <AdjustViaEndAutoStartAndGoToNext>Ajustar pela posição final e ir para o seguinte</AdjustViaEndAutoStartAndGoToNext>
     <AdjustSetEndMinusGapAndStartNextHere>Definir fim sem intervalo, ir para o seguinte e começar aqui</AdjustSetEndMinusGapAndStartNextHere>
+    <AdjustSetStartTimeAndGoToNext>Definir início e ir para o seguinte</AdjustSetStartTimeAndGoToNext>
     <AdjustSetEndTimeAndGoToNext>Definir fim e ir para o seguinte</AdjustSetEndTimeAndGoToNext>
     <AdjustSetEndTimeAndPause>Definir fim e pausar</AdjustSetEndTimeAndPause>
     <AdjustSetStartAutoDurationAndGoToNext>Definir início, duração automática e ir para o seguinte</AdjustSetStartAutoDurationAndGoToNext>
