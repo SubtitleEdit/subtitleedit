@@ -161,6 +161,9 @@ namespace Nikse.SubtitleEdit.Core.Common
         public string AutoTranslateLibreApiKey { get; set; }
         public string AutoTranslateMyMemoryApiKey { get; set; }
         public string AutoTranslateSeamlessM4TUrl { get; set; }
+        public string AutoTranslateDeepLApiKey { get; set; }
+        public string AutoTranslateDeepLUrl { get; set; }
+        public string AutoTranslateDeepLFormality { get; set; }
         public bool TranslateAllowSplit { get; set; }
         public string TranslateLastService { get; set; }
         public string TranslateMergeStrategy { get; set; }
@@ -219,6 +222,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public bool BatchConvertRemoveTextForHI { get; set; }
         public bool BatchConvertConvertColorsToDialog { get; set; }
         public bool BatchConvertBeautifyTimeCodes { get; set; }
+        public bool BatchConvertAutoTranslate { get; set; }
         public bool BatchConvertFixCommonErrors { get; set; }
         public bool BatchConvertMultipleReplace { get; set; }
         public bool BatchConvertFixRtl { get; set; }
@@ -506,6 +510,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             AutoTranslateNllbApiUrl = "http://localhost:7860/api/v2/";
             AutoTranslateLibreUrl = "http://localhost:5000/";
             AutoTranslateSeamlessM4TUrl = "http://localhost:5000/";
+            AutoTranslateDeepLUrl = "https://api-free.deepl.com/";
             TranslateAllowSplit = true;
             TranslateViaCopyPasteAutoCopyToClipboard = true;
             TranslateViaCopyPasteMaxSize = 5000;
@@ -5121,6 +5126,24 @@ $HorzAlign          =   Center
                 settings.Tools.AutoTranslateSeamlessM4TUrl = subNode.InnerText;
             }
 
+            subNode = node.SelectSingleNode("AutoTranslateDeepLApiKey");
+            if (subNode != null)
+            {
+                settings.Tools.AutoTranslateDeepLApiKey = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("AutoTranslateDeepLUrl");
+            if (subNode != null)
+            {
+                settings.Tools.AutoTranslateDeepLUrl = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("AutoTranslateDeepLFormality");
+            if (subNode != null)
+            {
+                settings.Tools.AutoTranslateDeepLFormality = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("TranslateAllowSplit");
             if (subNode != null)
             {
@@ -5461,6 +5484,12 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.Tools.BatchConvertBeautifyTimeCodes = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("BatchConvertAutoTranslate");
+            if (subNode != null)
+            {
+                settings.Tools.BatchConvertAutoTranslate = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
             subNode = node.SelectSingleNode("BatchConvertFixCommonErrors");
@@ -11384,6 +11413,9 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("AutoTranslateLibreApiKey", settings.Tools.AutoTranslateLibreApiKey);
                 textWriter.WriteElementString("AutoTranslateMyMemoryApiKey", settings.Tools.AutoTranslateMyMemoryApiKey);
                 textWriter.WriteElementString("AutoTranslateSeamlessM4TUrl", settings.Tools.AutoTranslateSeamlessM4TUrl);
+                textWriter.WriteElementString("AutoTranslateDeepLApiKey", settings.Tools.AutoTranslateDeepLApiKey);
+                textWriter.WriteElementString("AutoTranslateDeepLUrl", settings.Tools.AutoTranslateDeepLUrl);
+                textWriter.WriteElementString("AutoTranslateDeepLFormality", settings.Tools.AutoTranslateDeepLFormality);
                 textWriter.WriteElementString("TranslateAllowSplit", settings.Tools.TranslateAllowSplit.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("TranslateLastService", settings.Tools.TranslateLastService);
                 textWriter.WriteElementString("TranslateMergeStrategy", settings.Tools.TranslateMergeStrategy);
@@ -11441,6 +11473,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("BatchConvertRemoveTextForHI", settings.Tools.BatchConvertRemoveTextForHI.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BatchConvertConvertColorsToDialog", settings.Tools.BatchConvertConvertColorsToDialog.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BatchConvertBeautifyTimeCodes", settings.Tools.BatchConvertBeautifyTimeCodes.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("BatchConvertAutoTranslate", settings.Tools.BatchConvertAutoTranslate.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BatchConvertSplitLongLines", settings.Tools.BatchConvertSplitLongLines.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BatchConvertFixCommonErrors", settings.Tools.BatchConvertFixCommonErrors.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BatchConvertMultipleReplace", settings.Tools.BatchConvertMultipleReplace.ToString(CultureInfo.InvariantCulture));

@@ -9,7 +9,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
         /// <summary>
         /// Name of auto translator (can be translated).
         /// </summary>
-        string Name { get; set; }
+        string Name { get; }
 
         /// <summary>
         /// Url to homepage.

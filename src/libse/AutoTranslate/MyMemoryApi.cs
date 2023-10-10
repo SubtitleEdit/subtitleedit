@@ -12,7 +12,8 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
     {
         private IDownloader _httpClient;
 
-        public string Name { get; set; } = "MyMemory Translate";
+        public static string StaticName { get; set; } = "MyMemory Translate";
+        public string Name => StaticName;
         public string Url => "https://mymemory.translated.net/";
 
         public void Initialize()

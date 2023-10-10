@@ -454,6 +454,18 @@
             this.imageListFileTypeAssociations = new System.Windows.Forms.ImageList(this.components);
             this.toolTipDialogStylePreview = new System.Windows.Forms.ToolTip(this.components);
             this.panelAutoTranslate = new System.Windows.Forms.Panel();
+            this.groupBoxDeepL = new System.Windows.Forms.GroupBox();
+            this.nikseTextBoxDeepLApiKey = new Nikse.SubtitleEdit.Controls.NikseTextBox();
+            this.labelDeepLApiKey = new System.Windows.Forms.Label();
+            this.nikseTextBoxDeepLUrl = new Nikse.SubtitleEdit.Controls.NikseTextBox();
+            this.labelDeepLUrl = new System.Windows.Forms.Label();
+            this.linkLabelMoreInfoDeepl = new System.Windows.Forms.LinkLabel();
+            this.label9 = new System.Windows.Forms.Label();
+            this.groupBoxMyMemory = new System.Windows.Forms.GroupBox();
+            this.nikseTextBoxMyMemoryApiKey = new Nikse.SubtitleEdit.Controls.NikseTextBox();
+            this.labelMyMemoryApiKey = new System.Windows.Forms.Label();
+            this.linkLabelMyMemoryTranslate = new System.Windows.Forms.LinkLabel();
+            this.label8 = new System.Windows.Forms.Label();
             this.groupBoxLibreTranslate = new System.Windows.Forms.GroupBox();
             this.nikseTextBoxLibreTranslateApiKey = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelLibreApiKey = new System.Windows.Forms.Label();
@@ -473,11 +485,6 @@
             this.labelNllbApiUrl = new System.Windows.Forms.Label();
             this.linkLabelNllbApi = new System.Windows.Forms.LinkLabel();
             this.label5 = new System.Windows.Forms.Label();
-            this.groupBoxMyMemory = new System.Windows.Forms.GroupBox();
-            this.nikseTextBoxMyMemoryApiKey = new Nikse.SubtitleEdit.Controls.NikseTextBox();
-            this.labelMyMemoryApiKey = new System.Windows.Forms.Label();
-            this.linkLabelMyMemoryTranslate = new System.Windows.Forms.LinkLabel();
-            this.label8 = new System.Windows.Forms.Label();
             this.panelGeneral.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
             this.groupBoxGeneralRules.SuspendLayout();
@@ -554,10 +561,11 @@
             this.groupBoxProxyAuthentication.SuspendLayout();
             this.panelFileTypeAssociations.SuspendLayout();
             this.panelAutoTranslate.SuspendLayout();
+            this.groupBoxDeepL.SuspendLayout();
+            this.groupBoxMyMemory.SuspendLayout();
             this.groupBoxLibreTranslate.SuspendLayout();
             this.groupBoxNllbServe.SuspendLayout();
             this.groupBoxNllbApi.SuspendLayout();
-            this.groupBoxMyMemory.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonOK
@@ -6417,6 +6425,7 @@
             // 
             // panelAutoTranslate
             // 
+            this.panelAutoTranslate.Controls.Add(this.groupBoxDeepL);
             this.panelAutoTranslate.Controls.Add(this.groupBoxMyMemory);
             this.panelAutoTranslate.Controls.Add(this.groupBoxLibreTranslate);
             this.panelAutoTranslate.Controls.Add(this.groupBoxNllbServe);
@@ -6430,6 +6439,129 @@
             this.panelAutoTranslate.TabIndex = 33;
             this.panelAutoTranslate.Text = "Tools";
             // 
+            // groupBoxDeepL
+            // 
+            this.groupBoxDeepL.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxDeepL.Controls.Add(this.nikseTextBoxDeepLApiKey);
+            this.groupBoxDeepL.Controls.Add(this.labelDeepLApiKey);
+            this.groupBoxDeepL.Controls.Add(this.nikseTextBoxDeepLUrl);
+            this.groupBoxDeepL.Controls.Add(this.labelDeepLUrl);
+            this.groupBoxDeepL.Controls.Add(this.linkLabelMoreInfoDeepl);
+            this.groupBoxDeepL.Controls.Add(this.label9);
+            this.groupBoxDeepL.Location = new System.Drawing.Point(430, 9);
+            this.groupBoxDeepL.Name = "groupBoxDeepL";
+            this.groupBoxDeepL.Size = new System.Drawing.Size(413, 198);
+            this.groupBoxDeepL.TabIndex = 37;
+            this.groupBoxDeepL.TabStop = false;
+            this.groupBoxDeepL.Text = "DeepL";
+            // 
+            // nikseTextBoxDeepLApiKey
+            // 
+            this.nikseTextBoxDeepLApiKey.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.nikseTextBoxDeepLApiKey.Location = new System.Drawing.Point(8, 102);
+            this.nikseTextBoxDeepLApiKey.Name = "nikseTextBoxDeepLApiKey";
+            this.nikseTextBoxDeepLApiKey.Size = new System.Drawing.Size(376, 21);
+            this.nikseTextBoxDeepLApiKey.TabIndex = 36;
+            // 
+            // labelDeepLApiKey
+            // 
+            this.labelDeepLApiKey.AutoSize = true;
+            this.labelDeepLApiKey.Location = new System.Drawing.Point(6, 84);
+            this.labelDeepLApiKey.Name = "labelDeepLApiKey";
+            this.labelDeepLApiKey.Size = new System.Drawing.Size(44, 13);
+            this.labelDeepLApiKey.TabIndex = 35;
+            this.labelDeepLApiKey.Text = "API key";
+            // 
+            // nikseTextBoxDeepLUrl
+            // 
+            this.nikseTextBoxDeepLUrl.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.nikseTextBoxDeepLUrl.Location = new System.Drawing.Point(8, 45);
+            this.nikseTextBoxDeepLUrl.Name = "nikseTextBoxDeepLUrl";
+            this.nikseTextBoxDeepLUrl.Size = new System.Drawing.Size(376, 21);
+            this.nikseTextBoxDeepLUrl.TabIndex = 34;
+            // 
+            // labelDeepLUrl
+            // 
+            this.labelDeepLUrl.AutoSize = true;
+            this.labelDeepLUrl.Location = new System.Drawing.Point(6, 27);
+            this.labelDeepLUrl.Name = "labelDeepLUrl";
+            this.labelDeepLUrl.Size = new System.Drawing.Size(20, 13);
+            this.labelDeepLUrl.TabIndex = 30;
+            this.labelDeepLUrl.Text = "Url";
+            // 
+            // linkLabelMoreInfoDeepl
+            // 
+            this.linkLabelMoreInfoDeepl.AutoSize = true;
+            this.linkLabelMoreInfoDeepl.Location = new System.Drawing.Point(332, 16);
+            this.linkLabelMoreInfoDeepl.Name = "linkLabelMoreInfoDeepl";
+            this.linkLabelMoreInfoDeepl.Size = new System.Drawing.Size(52, 13);
+            this.linkLabelMoreInfoDeepl.TabIndex = 24;
+            this.linkLabelMoreInfoDeepl.TabStop = true;
+            this.linkLabelMoreInfoDeepl.Text = "More info";
+            this.linkLabelMoreInfoDeepl.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkLabelMoreInfoDeepLLinkClicked);
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(16, 106);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(0, 13);
+            this.label9.TabIndex = 25;
+            // 
+            // groupBoxMyMemory
+            // 
+            this.groupBoxMyMemory.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxMyMemory.Controls.Add(this.nikseTextBoxMyMemoryApiKey);
+            this.groupBoxMyMemory.Controls.Add(this.labelMyMemoryApiKey);
+            this.groupBoxMyMemory.Controls.Add(this.linkLabelMyMemoryTranslate);
+            this.groupBoxMyMemory.Controls.Add(this.label8);
+            this.groupBoxMyMemory.Location = new System.Drawing.Point(429, 389);
+            this.groupBoxMyMemory.Name = "groupBoxMyMemory";
+            this.groupBoxMyMemory.Size = new System.Drawing.Size(412, 95);
+            this.groupBoxMyMemory.TabIndex = 45;
+            this.groupBoxMyMemory.TabStop = false;
+            this.groupBoxMyMemory.Text = "MyMemory API";
+            // 
+            // nikseTextBoxMyMemoryApiKey
+            // 
+            this.nikseTextBoxMyMemoryApiKey.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.nikseTextBoxMyMemoryApiKey.Location = new System.Drawing.Point(8, 55);
+            this.nikseTextBoxMyMemoryApiKey.Name = "nikseTextBoxMyMemoryApiKey";
+            this.nikseTextBoxMyMemoryApiKey.Size = new System.Drawing.Size(376, 21);
+            this.nikseTextBoxMyMemoryApiKey.TabIndex = 36;
+            // 
+            // labelMyMemoryApiKey
+            // 
+            this.labelMyMemoryApiKey.AutoSize = true;
+            this.labelMyMemoryApiKey.Location = new System.Drawing.Point(6, 37);
+            this.labelMyMemoryApiKey.Name = "labelMyMemoryApiKey";
+            this.labelMyMemoryApiKey.Size = new System.Drawing.Size(44, 13);
+            this.labelMyMemoryApiKey.TabIndex = 35;
+            this.labelMyMemoryApiKey.Text = "API key";
+            // 
+            // linkLabelMyMemoryTranslate
+            // 
+            this.linkLabelMyMemoryTranslate.AutoSize = true;
+            this.linkLabelMyMemoryTranslate.Location = new System.Drawing.Point(332, 16);
+            this.linkLabelMyMemoryTranslate.Name = "linkLabelMyMemoryTranslate";
+            this.linkLabelMyMemoryTranslate.Size = new System.Drawing.Size(52, 13);
+            this.linkLabelMyMemoryTranslate.TabIndex = 24;
+            this.linkLabelMyMemoryTranslate.TabStop = true;
+            this.linkLabelMyMemoryTranslate.Text = "More info";
+            this.linkLabelMyMemoryTranslate.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelMyMemoryTranslate_LinkClicked);
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(16, 106);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(0, 13);
+            this.label8.TabIndex = 25;
+            // 
             // groupBoxLibreTranslate
             // 
             this.groupBoxLibreTranslate.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -6441,10 +6573,10 @@
             this.groupBoxLibreTranslate.Controls.Add(this.labelLibreUrl);
             this.groupBoxLibreTranslate.Controls.Add(this.linkLabelLibreTranslateApi);
             this.groupBoxLibreTranslate.Controls.Add(this.label7);
-            this.groupBoxLibreTranslate.Location = new System.Drawing.Point(429, 9);
+            this.groupBoxLibreTranslate.Location = new System.Drawing.Point(430, 224);
             this.groupBoxLibreTranslate.Name = "groupBoxLibreTranslate";
-            this.groupBoxLibreTranslate.Size = new System.Drawing.Size(408, 155);
-            this.groupBoxLibreTranslate.TabIndex = 37;
+            this.groupBoxLibreTranslate.Size = new System.Drawing.Size(411, 155);
+            this.groupBoxLibreTranslate.TabIndex = 40;
             this.groupBoxLibreTranslate.TabStop = false;
             this.groupBoxLibreTranslate.Text = "LibreTranslate API";
             // 
@@ -6583,7 +6715,7 @@
             this.groupBoxNllbApi.Controls.Add(this.label5);
             this.groupBoxNllbApi.Location = new System.Drawing.Point(11, 396);
             this.groupBoxNllbApi.Name = "groupBoxNllbApi";
-            this.groupBoxNllbApi.Size = new System.Drawing.Size(408, 84);
+            this.groupBoxNllbApi.Size = new System.Drawing.Size(408, 87);
             this.groupBoxNllbApi.TabIndex = 36;
             this.groupBoxNllbApi.TabStop = false;
             this.groupBoxNllbApi.Text = "NLLM API";
@@ -6624,66 +6756,14 @@
             this.label5.Size = new System.Drawing.Size(0, 13);
             this.label5.TabIndex = 25;
             // 
-            // groupBoxMyMemory
-            // 
-            this.groupBoxMyMemory.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBoxMyMemory.Controls.Add(this.nikseTextBoxMyMemoryApiKey);
-            this.groupBoxMyMemory.Controls.Add(this.labelMyMemoryApiKey);
-            this.groupBoxMyMemory.Controls.Add(this.linkLabelMyMemoryTranslate);
-            this.groupBoxMyMemory.Controls.Add(this.label8);
-            this.groupBoxMyMemory.Location = new System.Drawing.Point(431, 174);
-            this.groupBoxMyMemory.Name = "groupBoxMyMemory";
-            this.groupBoxMyMemory.Size = new System.Drawing.Size(408, 95);
-            this.groupBoxMyMemory.TabIndex = 38;
-            this.groupBoxMyMemory.TabStop = false;
-            this.groupBoxMyMemory.Text = "MyMemory API";
-            // 
-            // nikseTextBoxMyMemoryApiKey
-            // 
-            this.nikseTextBoxMyMemoryApiKey.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            this.nikseTextBoxMyMemoryApiKey.Location = new System.Drawing.Point(8, 55);
-            this.nikseTextBoxMyMemoryApiKey.Name = "nikseTextBoxMyMemoryApiKey";
-            this.nikseTextBoxMyMemoryApiKey.Size = new System.Drawing.Size(376, 21);
-            this.nikseTextBoxMyMemoryApiKey.TabIndex = 36;
-            // 
-            // labelMyMemoryApiKey
-            // 
-            this.labelMyMemoryApiKey.AutoSize = true;
-            this.labelMyMemoryApiKey.Location = new System.Drawing.Point(6, 37);
-            this.labelMyMemoryApiKey.Name = "labelMyMemoryApiKey";
-            this.labelMyMemoryApiKey.Size = new System.Drawing.Size(44, 13);
-            this.labelMyMemoryApiKey.TabIndex = 35;
-            this.labelMyMemoryApiKey.Text = "API key";
-            // 
-            // linkLabelMyMemoryTranslate
-            // 
-            this.linkLabelMyMemoryTranslate.AutoSize = true;
-            this.linkLabelMyMemoryTranslate.Location = new System.Drawing.Point(332, 16);
-            this.linkLabelMyMemoryTranslate.Name = "linkLabelMyMemoryTranslate";
-            this.linkLabelMyMemoryTranslate.Size = new System.Drawing.Size(52, 13);
-            this.linkLabelMyMemoryTranslate.TabIndex = 24;
-            this.linkLabelMyMemoryTranslate.TabStop = true;
-            this.linkLabelMyMemoryTranslate.Text = "More info";
-            this.linkLabelMyMemoryTranslate.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelMyMemoryTranslate_LinkClicked);
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(16, 106);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(0, 13);
-            this.label8.TabIndex = 25;
-            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1092, 574);
             this.Controls.Add(this.labelUpdateFileTypeAssociationsStatus);
-            this.Controls.Add(this.panelGeneral);
             this.Controls.Add(this.panelAutoTranslate);
+            this.Controls.Add(this.panelGeneral);
             this.Controls.Add(this.panelTools);
             this.Controls.Add(this.panelShortcuts);
             this.Controls.Add(this.panelFont);
@@ -6817,14 +6897,16 @@
             this.groupBoxProxyAuthentication.PerformLayout();
             this.panelFileTypeAssociations.ResumeLayout(false);
             this.panelAutoTranslate.ResumeLayout(false);
+            this.groupBoxDeepL.ResumeLayout(false);
+            this.groupBoxDeepL.PerformLayout();
+            this.groupBoxMyMemory.ResumeLayout(false);
+            this.groupBoxMyMemory.PerformLayout();
             this.groupBoxLibreTranslate.ResumeLayout(false);
             this.groupBoxLibreTranslate.PerformLayout();
             this.groupBoxNllbServe.ResumeLayout(false);
             this.groupBoxNllbServe.PerformLayout();
             this.groupBoxNllbApi.ResumeLayout(false);
             this.groupBoxNllbApi.PerformLayout();
-            this.groupBoxMyMemory.ResumeLayout(false);
-            this.groupBoxMyMemory.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -7281,5 +7363,12 @@
         private System.Windows.Forms.Label labelMyMemoryApiKey;
         private System.Windows.Forms.LinkLabel linkLabelMyMemoryTranslate;
         private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.GroupBox groupBoxDeepL;
+        private Controls.NikseTextBox nikseTextBoxDeepLApiKey;
+        private System.Windows.Forms.Label labelDeepLApiKey;
+        private Controls.NikseTextBox nikseTextBoxDeepLUrl;
+        private System.Windows.Forms.Label labelDeepLUrl;
+        private System.Windows.Forms.LinkLabel linkLabelMoreInfoDeepl;
+        private System.Windows.Forms.Label label9;
     }
 }
