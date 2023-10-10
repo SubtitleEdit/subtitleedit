@@ -322,6 +322,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <ConvertOptions>변환 옵션</ConvertOptions>
     <RemoveFormatting>서식 태그 제거</RemoveFormatting>
     <RemoveStyleActor>스타일/배우 줄 제거</RemoveStyleActor>
+    <StyleActor>스타일/배우 (쉼표로 구분)</StyleActor>
     <RemoveTextForHI>청각 장애인용 텍스트 삭제</RemoveTextForHI>
     <ConvertColorsToDialog>색상을 대화 상자로 변환</ConvertColorsToDialog>
     <OverwriteOriginalFiles>원본 파일 덮어쓰기 (형식이 변경된 경우)</OverwriteOriginalFiles>
