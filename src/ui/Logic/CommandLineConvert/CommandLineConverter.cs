@@ -61,6 +61,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
             AssaChangeRes,
             SortBy,
             BeautifyTimeCodes,
+            AutoTranslate,
         }
 
         internal static void ConvertOrReturn(string productIdentifier, string[] commandLineArguments)

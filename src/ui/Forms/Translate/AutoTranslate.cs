@@ -38,6 +38,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             labelUrl.Text = LanguageSettings.Current.Main.Url;
+            labelApiKey.Text = LanguageSettings.Current.Settings.GoogleTranslateApiKey;
             nikseComboBoxUrl.Left = labelUrl.Right + 5;
             startLibreTranslateServerToolStripMenuItem.Text = string.Format(LanguageSettings.Current.GoogleTranslate.StartWebServerX, new LibreTranslate().Name);
             startNLLBServeServerToolStripMenuItem.Text = string.Format(LanguageSettings.Current.GoogleTranslate.StartWebServerX, new NoLanguageLeftBehindServe().Name);
@@ -104,18 +105,15 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             _autoTranslatorEngines = new List<IAutoTranslator>
             {
                 new GoogleTranslateV1(),
+                new GoogleTranslateV2(),
+                new MicrosoftTranslator(),
+                new DeepLTranslate(),
                 new LibreTranslate(),
                 new NoLanguageLeftBehindServe(),
                 new NoLanguageLeftBehindApi(),
                 new MyMemoryApi(),
                 //new SeamlessM4TTranslate(), 
             };
-
-            if (!string.IsNullOrEmpty(Configuration.Settings.Tools.MicrosoftTranslatorApiKey) &&
-                !string.IsNullOrEmpty(Configuration.Settings.Tools.MicrosoftTranslatorTokenEndpoint))
-            {
-                _autoTranslatorEngines.Insert(1, new MicrosoftTranslator());
-            }
 
             nikseComboBoxEngine.Items.Clear();
             nikseComboBoxEngine.Items.AddRange(_autoTranslatorEngines.Select(p => p.Name).ToArray<object>());
@@ -146,19 +144,45 @@ namespace Nikse.SubtitleEdit.Forms.Translate
         {
             _autoTranslator = GetCurrentEngine();
             linkLabelPoweredBy.Text = string.Format(LanguageSettings.Current.GoogleTranslate.PoweredByX, _autoTranslator.Name);
+            nikseTextBoxApiKey.Visible = false;
+            labelUrl.Visible = false;
+            labelApiKey.Visible = false;
+            nikseComboBoxUrl.Visible = false;
+            nikseTextBoxApiKey.Top = nikseComboBoxUrl.Top;
             var engineType = _autoTranslator.GetType();
 
             if (engineType == typeof(GoogleTranslateV1))
             {
-                labelUrl.Visible = false;
-                nikseComboBoxUrl.Visible = false;
+                return;
+            }
+
+            if (engineType == typeof(GoogleTranslateV2))
+            {
+                labelApiKey.Left = labelUrl.Left;
+                nikseTextBoxApiKey.Text = Configuration.Settings.Tools.GoogleApiV2Key;
+                nikseTextBoxApiKey.Left = labelApiKey.Right + 3;
+                labelApiKey.Visible = true;
+                nikseTextBoxApiKey.Visible = true;
                 return;
             }
 
             if (engineType == typeof(MicrosoftTranslator))
             {
-                labelUrl.Visible = false;
-                nikseComboBoxUrl.Visible = false;
+                labelApiKey.Left = labelUrl.Left;
+                nikseTextBoxApiKey.Text = Configuration.Settings.Tools.MicrosoftTranslatorApiKey;
+                nikseTextBoxApiKey.Left = labelApiKey.Right + 3;
+                labelApiKey.Visible = true;
+                nikseTextBoxApiKey.Visible = true;
+                return;
+            }
+
+            if (engineType == typeof(DeepLTranslate))
+            {
+                labelApiKey.Left = labelUrl.Left;
+                nikseTextBoxApiKey.Text = Configuration.Settings.Tools.AutoTranslateDeepLApiKey;
+                nikseTextBoxApiKey.Left = labelApiKey.Right + 3;
+                labelApiKey.Visible = true;
+                nikseTextBoxApiKey.Visible = true;
                 return;
             }
 
@@ -182,6 +206,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                     "http://localhost:7860/api/v2/",
                     "https://winstxnhdw-nllb-api.hf.space/api/v2/",
                 });
+
                 return;
             }
 
@@ -201,15 +226,17 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
             if (engineType == typeof(MyMemoryApi))
             {
-                labelUrl.Visible = false;
-                nikseComboBoxUrl.Visible = false;
+                labelApiKey.Left = labelUrl.Left;
+                nikseTextBoxApiKey.Text = Configuration.Settings.Tools.AutoTranslateMyMemoryApiKey;
+                nikseTextBoxApiKey.Left = labelApiKey.Right + 3;
+                labelApiKey.Visible = true;
+                nikseTextBoxApiKey.Visible = true;
+
                 return;
             }
 
             if (engineType == typeof(SeamlessM4TTranslate))
             {
-                labelUrl.Visible = false;
-                nikseComboBoxUrl.Visible = false;
                 return;
             }
 
@@ -227,6 +254,8 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 }
             }
 
+            labelUrl.Text = LanguageSettings.Current.Main.Url;
+            nikseComboBoxUrl.Left = labelUrl.Right + 3;
             nikseComboBoxUrl.SelectedIndex = 0;
             nikseComboBoxUrl.Visible = true;
             labelUrl.Visible = true;
@@ -252,7 +281,20 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             if (engineType == typeof(LibreTranslate))
             {
                 Configuration.Settings.Tools.AutoTranslateLibreUrl = url;
-                return;
+
+                if (url.Contains("https://libretranslate.com", StringComparison.OrdinalIgnoreCase))
+                {
+                    labelApiKey.Left = nikseComboBoxUrl.Right + 9;
+                    nikseTextBoxApiKey.Left = labelApiKey.Right + 3;
+                    nikseTextBoxApiKey.Text = Configuration.Settings.Tools.AutoTranslateLibreApiKey;
+                    labelApiKey.Visible = true;
+                    nikseTextBoxApiKey.Visible = true;
+                }
+                else
+                {
+                    labelApiKey.Visible = false;
+                    nikseTextBoxApiKey.Visible = false;
+                }
             }
         }
 
@@ -453,6 +495,33 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
             _autoTranslator = GetCurrentEngine();
             var engineType = _autoTranslator.GetType();
+
+            if (nikseTextBoxApiKey.Visible && string.IsNullOrWhiteSpace(nikseTextBoxApiKey.Text) && engineType != typeof(MyMemoryApi))
+            {
+                MessageBox.Show(this, string.Format("{0} requires an API key", _autoTranslator.Name), Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                nikseTextBoxApiKey.Focus();
+                return;
+            }
+
+            if (engineType == typeof(MicrosoftTranslator) && !string.IsNullOrWhiteSpace(nikseTextBoxApiKey.Text))
+            {
+                Configuration.Settings.Tools.MicrosoftTranslatorApiKey = nikseTextBoxApiKey.Text.Trim();
+            }
+
+            if (engineType == typeof(DeepLTranslate) && !string.IsNullOrWhiteSpace(nikseTextBoxApiKey.Text))
+            {
+                Configuration.Settings.Tools.AutoTranslateDeepLApiKey = nikseTextBoxApiKey.Text.Trim();
+            }
+
+            if (engineType == typeof(LibreTranslate) && nikseTextBoxApiKey.Visible && !string.IsNullOrWhiteSpace(nikseTextBoxApiKey.Text))
+            {
+                Configuration.Settings.Tools.AutoTranslateLibreApiKey = nikseTextBoxApiKey.Text.Trim();
+            }
+
+            if (engineType == typeof(MyMemoryApi) && nikseTextBoxApiKey.Visible && !string.IsNullOrWhiteSpace(nikseTextBoxApiKey.Text))
+            {
+                Configuration.Settings.Tools.AutoTranslateMyMemoryApiKey = nikseTextBoxApiKey.Text.Trim();
+            }
 
             buttonOK.Enabled = false;
             buttonCancel.Enabled = false;
@@ -1012,6 +1081,32 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
+            var engineType = GetCurrentEngine().GetType();
+            if (engineType == typeof(GoogleTranslateV2) && !string.IsNullOrWhiteSpace(nikseTextBoxApiKey.Text))
+            {
+                Configuration.Settings.Tools.GoogleApiV2Key = nikseTextBoxApiKey.Text.Trim();
+            }
+
+            if (engineType == typeof(MicrosoftTranslator) && !string.IsNullOrWhiteSpace(nikseTextBoxApiKey.Text))
+            {
+                Configuration.Settings.Tools.MicrosoftTranslatorApiKey = nikseTextBoxApiKey.Text.Trim();
+            }
+
+            if (engineType == typeof(DeepLTranslate) && !string.IsNullOrWhiteSpace(nikseTextBoxApiKey.Text))
+            {
+                Configuration.Settings.Tools.AutoTranslateDeepLApiKey = nikseTextBoxApiKey.Text.Trim();
+            }
+
+            if (engineType == typeof(LibreTranslate) && nikseTextBoxApiKey.Visible && !string.IsNullOrWhiteSpace(nikseTextBoxApiKey.Text))
+            {
+                Configuration.Settings.Tools.AutoTranslateLibreApiKey = nikseTextBoxApiKey.Text.Trim();
+            }
+
+            if (engineType == typeof(MyMemoryApi) && nikseTextBoxApiKey.Visible && !string.IsNullOrWhiteSpace(nikseTextBoxApiKey.Text))
+            {
+                Configuration.Settings.Tools.AutoTranslateMyMemoryApiKey = nikseTextBoxApiKey.Text.Trim();
+            }
+
             var isEmpty = TranslatedSubtitle == null || TranslatedSubtitle.Paragraphs.All(p => string.IsNullOrEmpty(p.Text));
             DialogResult = isEmpty ? DialogResult.Cancel : DialogResult.OK;
         }

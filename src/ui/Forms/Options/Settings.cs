@@ -909,6 +909,8 @@ namespace Nikse.SubtitleEdit.Forms.Options
             labelNllbApiUrl.Text = LanguageSettings.Current.Main.Url;
             labelNllbServeUrl.Text = LanguageSettings.Current.Main.Url;
             labelMyMemoryApiKey.Text = language.GoogleTranslateApiKey;
+            labelDeepLUrl.Text = LanguageSettings.Current.Main.Url;
+            labelDeepLApiKey.Text = language.GoogleTranslateApiKey;
 
             groupBoxBing.Text = language.MicrosoftBingTranslator;
             labelBingApiKey.Text = language.MicrosoftTranslateApiKey;
@@ -1125,6 +1127,8 @@ namespace Nikse.SubtitleEdit.Forms.Options
             nikseTextBoxLibreTranslateUrl.Text = Configuration.Settings.Tools.AutoTranslateLibreUrl;
             nikseTextBoxLibreTranslateApiKey.Text = Configuration.Settings.Tools.AutoTranslateLibreApiKey;
             nikseTextBoxMyMemoryApiKey.Text = Configuration.Settings.Tools.AutoTranslateMyMemoryApiKey;
+            nikseTextBoxDeepLUrl.Text = Configuration.Settings.Tools.AutoTranslateDeepLUrl;
+            nikseTextBoxDeepLApiKey.Text = Configuration.Settings.Tools.AutoTranslateDeepLApiKey;
 
             buttonReset.Text = LanguageSettings.Current.Settings.RestoreDefaultSettings;
             buttonOK.Text = LanguageSettings.Current.General.Ok;
@@ -2291,6 +2295,8 @@ namespace Nikse.SubtitleEdit.Forms.Options
             toolsSettings.AutoTranslateLibreUrl = nikseTextBoxLibreTranslateUrl.Text;
             toolsSettings.AutoTranslateLibreApiKey = nikseTextBoxLibreTranslateApiKey.Text.Trim();
             toolsSettings.AutoTranslateMyMemoryApiKey = nikseTextBoxMyMemoryApiKey.Text;
+            toolsSettings.AutoTranslateDeepLUrl = nikseTextBoxDeepLUrl.Text;
+            toolsSettings.AutoTranslateDeepLApiKey = nikseTextBoxDeepLApiKey.Text;
 
             var proxy = Configuration.Settings.Proxy;
             proxy.ProxyAddress = textBoxProxyAddress.Text;
@@ -3954,6 +3960,11 @@ namespace Nikse.SubtitleEdit.Forms.Options
         private void linkLabelMyMemoryTranslate_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             UiUtil.OpenUrl(new MyMemoryApi().Url);
+        }
+
+        private void LinkLabelMoreInfoDeepLLinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            UiUtil.OpenUrl(new DeepLTranslate().Url);
         }
     }
 }

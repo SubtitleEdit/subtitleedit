@@ -19,7 +19,8 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
     {
         private IDownloader _httpClient;
 
-        public string Name { get; set; } = "Google Translate V1 API";
+        public static string StaticName { get; set; } = "Google Translate V1 API";
+        public string Name => StaticName;
         public string Url => "https://translate.google.com/";
 
         public void Initialize()

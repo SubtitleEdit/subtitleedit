@@ -23,6 +23,9 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Controls;
+using Nikse.SubtitleEdit.Core.AutoTranslate;
+using Nikse.SubtitleEdit.Core.Translate;
 using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms
@@ -114,6 +117,9 @@ namespace Nikse.SubtitleEdit.Forms
         private Dictionary<string, List<IBinaryParagraphWithPosition>> _binaryParagraphLookup = new Dictionary<string, List<IBinaryParagraphWithPosition>>();
         private RemoveTextForHISettings _removeTextForHiSettings;
         private PreprocessingSettings _preprocessingSettings;
+        private IAutoTranslator _autoTranslator;
+        private List<IAutoTranslator> _autoTranslatorEngines;
+
         private string _ocrEngine = "Tesseract";
         private string _ocrLanguage = "en";
 
@@ -677,6 +683,13 @@ namespace Nikse.SubtitleEdit.Forms
                     Action = CommandLineConverter.BatchAction.BeautifyTimeCodes,
                     Control = groupBoxBeautifyTimeCodes,
                 },
+                new FixActionItem
+                {
+                    Text = LanguageSettings.Current.GoogleTranslate.Title,
+                    Checked = Configuration.Settings.Tools.BatchConvertBeautifyTimeCodes,
+                    Action = CommandLineConverter.BatchAction.AutoTranslate,
+                    Control = groupBoxAutoTranslate,
+                },
             };
             foreach (var fixItem in fixItems)
             {
@@ -701,6 +714,15 @@ namespace Nikse.SubtitleEdit.Forms
 
             SetMkvLanguageMenuItem();
             alsoScanVideoFilesInSearchFolderslowToolStripMenuItem.Checked = Configuration.Settings.Tools.BatchConvertScanFolderIncludeVideo;
+
+            _autoTranslatorEngines = new List<IAutoTranslator>
+            { // only add local APIs
+                new LibreTranslate(),
+                new NoLanguageLeftBehindServe(),
+                new NoLanguageLeftBehindApi(),
+            };
+            nikseComboBoxEngine.Items.Clear();
+            nikseComboBoxEngine.Items.AddRange(_autoTranslatorEngines.Select(p => p.Name).ToArray<object>());
         }
 
         private void SetMkvLanguageMenuItem()
@@ -3985,6 +4007,47 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxRemoveColor.Enabled = enabled;
             checkBoxRemoveFontName.Enabled = enabled;
             checkBoxRemoveAlignment.Enabled = enabled;
+        }
+
+        private void linkLabelPoweredBy_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            var engine = _autoTranslatorEngines.First(p => p.Name == nikseComboBoxEngine.Text);
+            UiUtil.OpenUrl(engine.Url);
+        }
+
+        private void SetupLanguageSettings()
+        {
+            FillComboWithLanguages(comboBoxSource, _autoTranslator.GetSupportedSourceLanguages());
+            comboBoxSource.Items.Insert(0, LanguageSettings.Current.Settings.Automatic);
+            comboBoxSource.SelectedIndex = 0;
+
+            FillComboWithLanguages(comboBoxTarget, _autoTranslator.GetSupportedTargetLanguages());
+        }
+
+        public static void FillComboWithLanguages(NikseComboBox comboBox, IEnumerable<TranslationPair> languages)
+        {
+            comboBox.Items.Clear();
+            foreach (var language in languages)
+            {
+                comboBox.Items.Add(language);
+            }
+        }
+
+        private void nikseComboBoxEngine_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            SetAutoTranslatorEngine();
+            SetupLanguageSettings();
+        }
+
+        private void SetAutoTranslatorEngine()
+        {
+            _autoTranslator = GetCurrentEngine();
+            linkLabelPoweredBy.Text = string.Format(LanguageSettings.Current.GoogleTranslate.PoweredByX, _autoTranslator.Name);
+        }
+
+        private IAutoTranslator GetCurrentEngine()
+        {
+            return _autoTranslatorEngines.First(p => p.Name == nikseComboBoxEngine.Text);
         }
     }
 }

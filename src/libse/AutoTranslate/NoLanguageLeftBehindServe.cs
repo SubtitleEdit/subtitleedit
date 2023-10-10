@@ -14,8 +14,9 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
     public class NoLanguageLeftBehindServe : IAutoTranslator
     {
         private IDownloader _httpClient;
-
-        public string Name { get; set; } = "thammegowda-nllb-serve";
+        
+        public static string StaticName { get; set; } = "thammegowda-nllb-serve";
+        public string Name => StaticName;
         public string Url => "https://github.com/thammegowda/nllb-serve";
 
         public void Initialize()
