@@ -1760,6 +1760,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\LayoutPicker.resx">
       <DependentUpon>LayoutPicker.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Ocr\WordSplitDictionaryGenerator.resx">
       <DependentUpon>WordSplitDictionaryGenerator.cs</DependentUpon>
@@ -2564,6 +2565,7 @@
     <None Include="Resources\L9.png" />
     <None Include="Resources\L12.png" />
     <None Include="Resources\L10.png" />
+    <None Include="Resources\L11.png" />
     <Content Include="Resources\TesseractDictionaries.xml">
       <SubType>Designer</SubType>
     </Content>

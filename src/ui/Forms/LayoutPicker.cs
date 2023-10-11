@@ -68,7 +68,7 @@ namespace Nikse.SubtitleEdit.Forms
             _gray8 = GrayScale(Properties.Resources.L8, initialLayout == 7);
             _gray9 = GrayScale(Properties.Resources.L9, initialLayout == 8);
             _gray10 = GrayScale(Properties.Resources.L10, initialLayout == 9);
-            _gray11 = GrayScale(Properties.Resources.L9, initialLayout == 10);
+            _gray11 = GrayScale(Properties.Resources.L11, initialLayout == 10);
             _gray12 = GrayScale(Properties.Resources.L12, initialLayout == 11);
 
             button1.Image = _gray1;
@@ -81,6 +81,7 @@ namespace Nikse.SubtitleEdit.Forms
             button8.Image = _gray8;
             button9.Image = _gray9;
             button10.Image = _gray10;
+            button11.Image = _gray11;
             button12.Image = _gray12;
 
             button1.Font = new Font(button1.Font.FontFamily, 28);
@@ -93,6 +94,7 @@ namespace Nikse.SubtitleEdit.Forms
             button8.Font = new Font(button1.Font.FontFamily, 28);
             button9.Font = new Font(button1.Font.FontFamily, 28);
             button10.Font = new Font(button1.Font.FontFamily, 28);
+            button11.Font = new Font(button1.Font.FontFamily, 28);
             button12.Font = new Font(button1.Font.FontFamily, 28);
         }
 
@@ -198,6 +200,11 @@ namespace Nikse.SubtitleEdit.Forms
             DialogResult = DialogResult.OK;
         }
 
+        private void button11_Click(object sender, EventArgs e)
+        {
+            _layout = 10;
+            DialogResult = DialogResult.OK;
+        }
         private void button12_Click(object sender, EventArgs e)
         {
             _layout = LayoutManager.LayoutNoVideo;
@@ -304,6 +311,16 @@ namespace Nikse.SubtitleEdit.Forms
             button10.Image = _gray10;
         }
 
+        private void button11_MouseEnter(object sender, EventArgs e)
+        {
+            button11.Image = Properties.Resources.L11;
+        }
+
+        private void button11_MouseLeave(object sender, EventArgs e)
+        {
+            button11.Image = _gray11;
+        }
+
         private void button12_MouseEnter(object sender, EventArgs e)
         {
             button12.Image = Properties.Resources.L12;
@@ -335,7 +352,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.KeyCode == Keys.Right || e.KeyCode == Keys.Up)
             {
-                if (_layout < 8)
+                if (_layout < LayoutManager.LayoutNoVideo)
                 {
                     _layout++;
                     UpdateButtons(_layout);
@@ -437,9 +454,19 @@ namespace Nikse.SubtitleEdit.Forms
             SelectLayout(8);
         }
 
-        private void button12_Enter(object sender, EventArgs e)
+        private void button10_Enter(object sender, EventArgs e)
         {
             SelectLayout(9);
+        }
+
+        private void button11_Enter(object sender, EventArgs e)
+        {
+            SelectLayout(10);
+        }
+
+        private void button12_Enter(object sender, EventArgs e)
+        {
+            SelectLayout(LayoutManager.LayoutNoVideo);
         }
 
         private void LayoutPicker_Shown(object sender, EventArgs e)
@@ -487,6 +514,12 @@ namespace Nikse.SubtitleEdit.Forms
                     button9.Focus();
                     break;
                 case 9:
+                    button10.Focus();
+                    break;
+                case 10:
+                    button11.Focus();
+                    break;
+                case 11:
                     button12.Focus();
                     break;
             }
@@ -501,7 +534,5 @@ namespace Nikse.SubtitleEdit.Forms
         {
             ShowVideoControls = checkBoxHideVideoControls.Checked;
         }
-
-        
     }
 }
