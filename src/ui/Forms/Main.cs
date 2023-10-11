@@ -20548,7 +20548,13 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void GoFullscreen(bool force)
         {
-            if (mediaPlayer.VideoPlayer == null && !force)
+            if (_videoPlayerUndocked != null && Configuration.Settings.General.Undocked)
+            {
+                _videoPlayerUndocked.WindowState = FormWindowState.Maximized;
+                return;
+            }
+
+            if (mediaPlayer.VideoPlayer == null)
             {
                 return;
             }
@@ -28587,7 +28593,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Configuration.Settings.General.UndockedVideoPosition = _videoPlayerUndocked.Left + @";" + _videoPlayerUndocked.Top + @";" + _videoPlayerUndocked.Width + @";" + _videoPlayerUndocked.Height;
             }
 
-            Control control = panelVideoPlayer;
+            Control control = mediaPlayer;
             _videoPlayerUndockParent = control.Parent;
             if (control.Parent != null)
             {
@@ -28600,7 +28606,9 @@ namespace Nikse.SubtitleEdit.Forms
                 control.Left = 0;
                 control.Width = _videoPlayerUndocked.PanelContainer.Width;
                 control.Height = _videoPlayerUndocked.PanelContainer.Height;
+                _videoPlayerUndocked.PanelContainer.Dock = DockStyle.Fill;
                 _videoPlayerUndocked.PanelContainer.Controls.Add(control);
+                control.Dock = DockStyle.Fill;
             }
         }
 
@@ -28801,8 +28809,12 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (_videoPlayerUndocked != null && !_videoPlayerUndocked.IsDisposed)
             {
-                var control = _videoPlayerUndocked.PanelContainer.Controls[0];
-                _videoPlayerUndocked.PanelContainer.Controls.Remove(control);
+                var control = mediaPlayer;
+                if (mediaPlayer.Parent != null)
+                {
+                    mediaPlayer.Parent.Controls.Remove(control);
+                }
+
                 ReDockVideoPlayer(control);
                 _videoPlayerUndocked.Close();
                 _videoPlayerUndocked = null;
