@@ -17,10 +17,11 @@ namespace Nikse.SubtitleEdit.Forms
             textBoxBookmarkComment.Text = p?.Bookmark;
         }
 
-        public string Comment => textBoxBookmarkComment.Text;
+        public string Comment { get; private set; }
 
         private void buttonOK_Click(object sender, System.EventArgs e)
         {
+            Comment = textBoxBookmarkComment.Text;
             DialogResult = DialogResult.OK;
         }
 
@@ -32,7 +33,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.Modifiers == Keys.None && e.KeyCode == Keys.Enter)
             {
-                DialogResult = DialogResult.OK;
+                buttonOK_Click(null, null);
             }
             else if (e.KeyData == UiUtil.HelpKeys)
             {
