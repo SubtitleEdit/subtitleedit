@@ -1230,7 +1230,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             if (listViewSelected.SelectedItems.Count > 0)
             {
                 var first = listViewSelected.TopItem.Index;
-                int index = listViewSelected.SelectedItems[0].Index;
+                var index = listViewSelected.SelectedItems[0].Index;
                 if (index < listViewOther.Items.Count)
                 {
                     listViewOther.SelectIndexAndEnsureVisible(index, false);

@@ -43,7 +43,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            string language = comboBoxDictionaries.Text;
+            var language = comboBoxDictionaries.Text;
             if (language.IndexOf('[') >= 0)
             {
                 language = language.Substring(language.IndexOf('[')).TrimStart('[');
