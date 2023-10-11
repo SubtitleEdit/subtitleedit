@@ -25,6 +25,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
         private int _translationProgressIndex = -1;
         private bool _translationProgressDirty = true;
         private bool _breakTranslation;
+        private TranslationPair _targetLanguage;
 
         public AutoTranslate(Subtitle subtitle, Subtitle selectedLines, string title, Encoding encoding)
         {
@@ -539,6 +540,8 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             if (comboBoxSource.SelectedItem is TranslationPair source &&
                 comboBoxTarget.SelectedItem is TranslationPair target)
             {
+                _targetLanguage = target;
+
                 try
                 {
                     var start = subtitleListViewTarget.SelectedIndex >= 0 ? subtitleListViewTarget.SelectedIndex : 0;
@@ -585,13 +588,13 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                             text = Utilities.UnbreakLine(p.Text) + Environment.NewLine + Utilities.UnbreakLine(next.Text);
                         }
 
-                        if (mergeCount > 0)
+                        if (mergeCount > 0 && !text.Contains("{\\"))
                         {
                             var mergedTranslation = await _autoTranslator.Translate(text, source.Code, target.Code);
                             List<string> result;
                             if (splitAtChar != null && mergeCount == 1)
                             {
-                                result = SplitResultAtSplitChar(mergedTranslation, splitAtChar.Value);
+                                result = SplitResultAtSplitChar(mergedTranslation, splitAtChar.Value, _targetLanguage.Code);
                             }
                             else
                             {
@@ -725,7 +728,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             buttonOK.Focus();
         }
 
-        private static List<string> SplitResultAtSplitChar(string translation, char splitAtChar)
+        private static List<string> SplitResultAtSplitChar(string translation, char splitAtChar, string languageCode)
         {
             var idx = translation.IndexOf(splitAtChar);
             if (idx < 0 && idx < translation.Length - 1)
@@ -733,8 +736,14 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 return new List<string>();
             }
 
-            var line1 = Utilities.AutoBreakLine(translation.Substring(0, idx + 1).Trim());
-            var line2 = Utilities.AutoBreakLine(translation.Remove(0, idx + 1).Trim());
+            var line1 = Utilities.AutoBreakLine(translation.Substring(0, idx + 1).Trim(), 
+                Configuration.Settings.General.SubtitleLineMaximumLength, 
+                Configuration.Settings.General.MergeLinesShorterThan, 
+                languageCode);
+            var line2 = Utilities.AutoBreakLine(translation.Remove(0, idx + 1).Trim(),
+                Configuration.Settings.General.SubtitleLineMaximumLength,
+                Configuration.Settings.General.MergeLinesShorterThan,
+                languageCode);
             return new List<string> { line1, line2 };
         }
 
