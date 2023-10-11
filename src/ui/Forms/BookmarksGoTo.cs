@@ -42,6 +42,11 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
+            UpdateCount();
+        }
+
+        private void UpdateCount()
+        {
             labelCount.Text = $"{LanguageSettings.Current.FindDialog.Count}: {listViewBookmarks.Items.Count}";
         }
 
@@ -202,6 +207,8 @@ namespace Nikse.SubtitleEdit.Forms
                     listViewBookmarks.Items[idx].Focused = true;
                 }
             }
+
+            UpdateCount();
         }
 
         private void deleteAllToolStripMenuItem_Click(object sender, EventArgs e)
@@ -212,6 +219,8 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             listViewBookmarks.Items.Clear();
+
+            UpdateCount();
         }
     }
 }
