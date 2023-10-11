@@ -112,7 +112,6 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 new NoLanguageLeftBehindServe(),
                 new NoLanguageLeftBehindApi(),
                 new MyMemoryApi(),
-                //new SeamlessM4TTranslate(), 
             };
 
             nikseComboBoxEngine.Items.Clear();
@@ -232,11 +231,6 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 labelApiKey.Visible = true;
                 nikseTextBoxApiKey.Visible = true;
 
-                return;
-            }
-
-            if (engineType == typeof(SeamlessM4TTranslate))
-            {
                 return;
             }
 
@@ -798,20 +792,6 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             process.Start();
         }
 
-        private static void StartNoLanguageLeftBehindApi()
-        {
-            const string arguments = "docker run --rm -e SERVER_PORT=5000 -e APP_PORT=7860 -p 7860:7860 -v C:\\Windows\\Temp\\cache.bin:/home/user/.cache ghcr.io/winstxnhdw/nllb-api:main";
-            var process = new Process
-            {
-                StartInfo = new ProcessStartInfo("docker", arguments)
-                {
-                    UseShellExecute = false,
-                }
-            };
-
-            process.Start();
-        }
-
         private static void StartLibreTranslate()
         {
             var process = new Process
@@ -1168,11 +1148,6 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             StartNoLanguageLeftBehindServe();
         }
 
-        private void StartNllbApiServerToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            StartNoLanguageLeftBehindApi();
-        }
-
         private void contextMenuStrip1_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
             startLibreTranslateServerToolStripMenuItem.Visible = false;
@@ -1183,10 +1158,6 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             if (engineType == typeof(NoLanguageLeftBehindServe))
             {
                 startNLLBServeServerToolStripMenuItem.Visible = true;
-            }
-            else if (engineType == typeof(NoLanguageLeftBehindApi))
-            {
-                // startNLLBAPIServerToolStripMenuItem.Visible = true;
             }
             else if (engineType == typeof(LibreTranslate))
             {
@@ -1204,10 +1175,6 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             if (engineType == typeof(NoLanguageLeftBehindServe))
             {
                 toolStripMenuItemStartNLLBServe.Visible = true;
-            }
-            else if (engineType == typeof(NoLanguageLeftBehindApi))
-            {
-                //  toolStripMenuItemStartNLLBApi.Visible = true;
             }
             else if (engineType == typeof(LibreTranslate))
             {

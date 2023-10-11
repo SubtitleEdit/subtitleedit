@@ -170,13 +170,6 @@
             this.toolStripMenuItemStartNLLBServe.Text = "Start NLLB Serve server";
             this.toolStripMenuItemStartNLLBServe.Click += new System.EventHandler(this.StartNllbServeServerToolStripMenuItem_Click);
             // 
-            // toolStripMenuItemStartNLLBApi
-            // 
-            this.toolStripMenuItemStartNLLBApi.Name = "toolStripMenuItemStartNLLBApi";
-            this.toolStripMenuItemStartNLLBApi.Size = new System.Drawing.Size(196, 22);
-            this.toolStripMenuItemStartNLLBApi.Text = "Start NLLB API server";
-            this.toolStripMenuItemStartNLLBApi.Click += new System.EventHandler(this.StartNllbApiServerToolStripMenuItem_Click);
-            // 
             // contextMenuStrip1
             // 
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -200,13 +193,6 @@
             this.startNLLBServeServerToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
             this.startNLLBServeServerToolStripMenuItem.Text = "Start NLLB Serve server";
             this.startNLLBServeServerToolStripMenuItem.Click += new System.EventHandler(this.StartNllbServeServerToolStripMenuItem_Click);
-            // 
-            // startNLLBAPIServerToolStripMenuItem
-            // 
-            this.startNLLBAPIServerToolStripMenuItem.Name = "startNLLBAPIServerToolStripMenuItem";
-            this.startNLLBAPIServerToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
-            this.startNLLBAPIServerToolStripMenuItem.Text = "Start NLLB API server";
-            this.startNLLBAPIServerToolStripMenuItem.Click += new System.EventHandler(this.StartNllbApiServerToolStripMenuItem_Click);
             // 
             // nikseTextBoxApiKey
             // 
