@@ -519,7 +519,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             // auto size
             spMain.SplitterDistance = form.Height / 2;
-            spLeftTop.SplitterDistance = form.Width / 2;
+            spLeftTop.SplitterDistance = (int) (form.Width * 0.4);
             spLeftBottom.SplitterDistance = Math.Max(10, spLeftBottom.Height - 125);
 
             spMain.SplitterMoved += splitMoved;
