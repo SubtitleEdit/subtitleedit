@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LayoutPicker));
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
@@ -43,6 +42,7 @@
             this.button12 = new System.Windows.Forms.Button();
             this.button9 = new System.Windows.Forms.Button();
             this.button10 = new System.Windows.Forms.Button();
+            this.button11 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // button1
@@ -68,7 +68,7 @@
             this.button2.FlatAppearance.BorderSize = 0;
             this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button2.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button2.Image = ((System.Drawing.Image)(resources.GetObject("button2.Image")));
+            this.button2.Image = global::Nikse.SubtitleEdit.Properties.Resources.L2;
             this.button2.Location = new System.Drawing.Point(218, 10);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(195, 147);
@@ -85,7 +85,7 @@
             this.button3.FlatAppearance.BorderSize = 0;
             this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button3.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button3.Image = ((System.Drawing.Image)(resources.GetObject("button3.Image")));
+            this.button3.Image = global::Nikse.SubtitleEdit.Properties.Resources.L3;
             this.button3.Location = new System.Drawing.Point(423, 10);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(195, 147);
@@ -102,7 +102,7 @@
             this.button4.FlatAppearance.BorderSize = 0;
             this.button4.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button4.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button4.Image = ((System.Drawing.Image)(resources.GetObject("button4.Image")));
+            this.button4.Image = global::Nikse.SubtitleEdit.Properties.Resources.L4;
             this.button4.Location = new System.Drawing.Point(628, 10);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(195, 147);
@@ -119,7 +119,7 @@
             this.button5.FlatAppearance.BorderSize = 0;
             this.button5.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button5.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button5.Image = ((System.Drawing.Image)(resources.GetObject("button5.Image")));
+            this.button5.Image = global::Nikse.SubtitleEdit.Properties.Resources.L5;
             this.button5.Location = new System.Drawing.Point(13, 160);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(195, 147);
@@ -136,7 +136,7 @@
             this.button6.FlatAppearance.BorderSize = 0;
             this.button6.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button6.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button6.Image = ((System.Drawing.Image)(resources.GetObject("button6.Image")));
+            this.button6.Image = global::Nikse.SubtitleEdit.Properties.Resources.L6;
             this.button6.Location = new System.Drawing.Point(218, 160);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(195, 147);
@@ -170,7 +170,7 @@
             this.button8.FlatAppearance.BorderSize = 0;
             this.button8.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button8.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button8.Image = ((System.Drawing.Image)(resources.GetObject("button8.Image")));
+            this.button8.Image = global::Nikse.SubtitleEdit.Properties.Resources.L8;
             this.button8.Location = new System.Drawing.Point(628, 160);
             this.button8.Name = "button8";
             this.button8.Size = new System.Drawing.Size(195, 147);
@@ -264,14 +264,33 @@
             this.button10.Text = "10";
             this.button10.UseVisualStyleBackColor = true;
             this.button10.Click += new System.EventHandler(this.button10_Click);
+            this.button10.Enter += new System.EventHandler(this.button10_Enter);
             this.button10.MouseEnter += new System.EventHandler(this.button10_MouseEnter);
             this.button10.MouseLeave += new System.EventHandler(this.button10_MouseLeave);
+            // 
+            // button11
+            // 
+            this.button11.FlatAppearance.BorderSize = 0;
+            this.button11.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button11.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button11.Image = global::Nikse.SubtitleEdit.Properties.Resources.L11;
+            this.button11.Location = new System.Drawing.Point(423, 313);
+            this.button11.Name = "button11";
+            this.button11.Size = new System.Drawing.Size(195, 147);
+            this.button11.TabIndex = 94;
+            this.button11.Text = "11";
+            this.button11.UseVisualStyleBackColor = true;
+            this.button11.Click += new System.EventHandler(this.button11_Click);
+            this.button11.Enter += new System.EventHandler(this.button11_Enter);
+            this.button11.MouseEnter += new System.EventHandler(this.button11_MouseEnter);
+            this.button11.MouseLeave += new System.EventHandler(this.button11_MouseLeave);
             // 
             // LayoutPicker
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(838, 511);
+            this.Controls.Add(this.button11);
             this.Controls.Add(this.button10);
             this.Controls.Add(this.button9);
             this.Controls.Add(this.button12);
@@ -318,5 +337,6 @@
         private System.Windows.Forms.Button button12;
         private System.Windows.Forms.Button button9;
         private System.Windows.Forms.Button button10;
+        private System.Windows.Forms.Button button11;
     }
 }

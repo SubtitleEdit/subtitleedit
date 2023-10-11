@@ -183,6 +183,16 @@ namespace Nikse.SubtitleEdit.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap L11 {
+            get {
+                object obj = ResourceManager.GetObject("L11", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap L12 {
             get {
                 object obj = ResourceManager.GetObject("L12", resourceCulture);
