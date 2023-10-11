@@ -683,14 +683,17 @@ namespace Nikse.SubtitleEdit.Forms
                     Action = CommandLineConverter.BatchAction.BeautifyTimeCodes,
                     Control = groupBoxBeautifyTimeCodes,
                 },
-                new FixActionItem
-                {
-                    Text = LanguageSettings.Current.GoogleTranslate.Title,
-                    Checked = Configuration.Settings.Tools.BatchConvertBeautifyTimeCodes,
-                    Action = CommandLineConverter.BatchAction.AutoTranslate,
-                    Control = groupBoxAutoTranslate,
-                },
+                //new FixActionItem
+                //{
+                //    Text = LanguageSettings.Current.GoogleTranslate.Title,
+                //    Checked = Configuration.Settings.Tools.BatchConvertBeautifyTimeCodes,
+                //    Action = CommandLineConverter.BatchAction.AutoTranslate,
+                //    Control = groupBoxAutoTranslate,
+                //},
             };
+
+            groupBoxAutoTranslate.Visible = false;
+
             foreach (var fixItem in fixItems)
             {
                 var listViewItem = new ListViewItem { Tag = fixItem };

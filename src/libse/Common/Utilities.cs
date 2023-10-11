@@ -1042,7 +1042,16 @@ namespace Nikse.SubtitleEdit.Core.Common
             word = word.Trim();
             if (word.Length > 0)
             {
-                string userWordsXmlFileName = DictionaryFolder + languageName + "_user.xml";
+                var userWordsXmlFileName = DictionaryFolder + languageName + "_user.xml";
+                if (!File.Exists(userWordsXmlFileName) && languageName != null && languageName.Length> 2)
+                {
+                    var newFileName = DictionaryFolder + languageName.Substring(0,2).ToLowerInvariant() + "_user.xml";
+                    if (File.Exists(newFileName))
+                    {
+                        userWordsXmlFileName = newFileName;
+                    }
+                }
+
                 var userWords = new XmlDocument();
                 if (File.Exists(userWordsXmlFileName))
                 {
@@ -1093,7 +1102,17 @@ namespace Nikse.SubtitleEdit.Core.Common
         {
             userWordList.Clear();
             var userWordDictionary = new XmlDocument();
-            string userWordListXmlFileName = DictionaryFolder + languageName + "_user.xml";
+            var userWordListXmlFileName = DictionaryFolder + languageName + "_user.xml";
+
+            if (!File.Exists(userWordListXmlFileName) && languageName != null && languageName.Length > 2)
+            {
+                var newFileName = DictionaryFolder + languageName.Substring(0, 2).ToLowerInvariant() + "_user.xml";
+                if (File.Exists(newFileName))
+                {
+                    userWordListXmlFileName = newFileName;
+                }
+            }
+
             if (File.Exists(userWordListXmlFileName))
             {
                 userWordDictionary.Load(userWordListXmlFileName);
@@ -1106,6 +1125,9 @@ namespace Nikse.SubtitleEdit.Core.Common
                     }
                 }
             }
+
+
+
             return userWordListXmlFileName;
         }
 
