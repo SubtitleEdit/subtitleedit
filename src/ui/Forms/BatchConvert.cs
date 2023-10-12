@@ -120,7 +120,7 @@ namespace Nikse.SubtitleEdit.Forms
         private RemoveTextForHISettings _removeTextForHiSettings;
         private PreprocessingSettings _preprocessingSettings;
         private IAutoTranslator _autoTranslator;
-        private List<IAutoTranslator> _autoTranslatorEngines;
+        private readonly List<IAutoTranslator> _autoTranslatorEngines;
 
         private string _ocrEngine = "Tesseract";
         private string _ocrLanguage = "en";
@@ -407,6 +407,8 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxFontSize.Text = LanguageSettings.Current.AssaResolutionChanger.ChangeResolutionFontSize;
             checkBoxPosition.Text = LanguageSettings.Current.AssaResolutionChanger.ChangeResolutionPositions;
             checkBoxDrawing.Text = LanguageSettings.Current.AssaResolutionChanger.ChangeResolutionDrawing;
+            labelSource.Text = LanguageSettings.Current.GoogleTranslate.From;
+            labelTarget.Text = LanguageSettings.Current.GoogleTranslate.To;
 
             var mode = Configuration.Settings.Tools.BatchConvertFixRtlMode;
             if (mode == RemoveUnicode)
@@ -729,6 +731,8 @@ namespace Nikse.SubtitleEdit.Forms
             nikseComboBoxEngine.Items.Clear();
             nikseComboBoxEngine.Items.AddRange(_autoTranslatorEngines.Select(p => p.Name).ToArray<object>());
             nikseComboBoxEngine.SelectedIndex = 0;
+            var targetLanguageIsoCode = AutoTranslate.EvaluateDefaultTargetLanguageCode(CultureInfo.CurrentCulture.TwoLetterISOLanguageName);
+            AutoTranslate.SelectLanguageCode(comboBoxTarget, targetLanguageIsoCode);
         }
 
         private void SetMkvLanguageMenuItem()

@@ -365,7 +365,7 @@ namespace Nikse.SubtitleEdit.Forms
             // linkLabelPoweredBy
             // 
             this.linkLabelPoweredBy.AutoSize = true;
-            this.linkLabelPoweredBy.Location = new System.Drawing.Point(13, 33);
+            this.linkLabelPoweredBy.Location = new System.Drawing.Point(13, 28);
             this.linkLabelPoweredBy.Name = "linkLabelPoweredBy";
             this.linkLabelPoweredBy.Size = new System.Drawing.Size(73, 13);
             this.linkLabelPoweredBy.TabIndex = 111;
