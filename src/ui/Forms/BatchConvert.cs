@@ -26,7 +26,11 @@ using System.Windows.Forms;
 using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Core.AutoTranslate;
 using Nikse.SubtitleEdit.Core.Translate;
+using Nikse.SubtitleEdit.Forms.Translate;
 using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
+using System.Diagnostics;
+using System.IO.Ports;
+using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -1684,6 +1688,19 @@ namespace Nikse.SubtitleEdit.Forms
                                         // apply fixes step 1
                                         subtitle = ApplyFixesStep1(subtitle, null);
 
+                                        if (IsActionEnabled(CommandLineConverter.BatchAction.AutoTranslate))
+                                        {
+                                            try
+                                            {
+                                                subtitle = RunAutoTranslate(subtitle).Result;
+                                            }
+                                            catch (Exception exception)
+                                            {
+                                                SeLogger.Error(exception, "Batch translate failed");
+                                                item.SubItems[3].Text = "Translate failed";
+                                            }
+                                        }
+
                                         // apply fixes step 2
                                         var parameter = new ThreadDoWorkParameter(
                                             IsActionEnabled(CommandLineConverter.BatchAction.FixCommonErrors),
@@ -1864,6 +1881,49 @@ namespace Nikse.SubtitleEdit.Forms
             _binaryParagraphLookup = new Dictionary<string, List<IBinaryParagraphWithPosition>>();
 
             SeLogger.Error($"Batch convert took {sw.ElapsedMilliseconds}");
+        }
+
+        private async Task<Subtitle> RunAutoTranslate(Subtitle subtitle)
+        {
+            var translatedSubtitle = new Subtitle(subtitle);
+            foreach (var paragraph in translatedSubtitle.Paragraphs)
+            {
+                paragraph.Text = string.Empty;
+            }
+
+            TranslationPair source = new TranslationPair("", "");
+            TranslationPair target = new TranslationPair("", "");
+
+            var engine = GetCurrentEngine();
+            var index = 0;
+            while (index < subtitle.Paragraphs.Count)
+            {
+                var linesMergedAndTranslated = await MergeAndSplitHelper.MergeAndTranslateIfPossible(subtitle, translatedSubtitle, source, target, index, engine);
+                if (linesMergedAndTranslated > 0)
+                {
+                    index += linesMergedAndTranslated;
+                    continue;
+                }
+
+                var p = subtitle.Paragraphs[index];
+                var f = new Formatting();
+                var unformattedText = f.SetTagsAndReturnTrimmed(p.Text, source.Code);
+
+                var translation = await _autoTranslator.Translate(unformattedText, source.Code, target.Code);
+                translation = translation
+                    .Replace("<br />", Environment.NewLine)
+                    .Replace("<br/>", Environment.NewLine);
+
+                var reFormattedText = f.ReAddFormatting(translation);
+                if (reFormattedText.StartsWith("- ", StringComparison.Ordinal) && !p.Text.Contains('-'))
+                {
+                    reFormattedText = reFormattedText.TrimStart('-').Trim();
+                }
+
+                translatedSubtitle.Paragraphs[index].Text = Utilities.AutoBreakLine(reFormattedText);
+            }
+
+            return subtitle;
         }
 
         private List<IBinaryParagraphWithPosition> GetBinaryParagraphsWithPositionFromVobSub(string fileName)
