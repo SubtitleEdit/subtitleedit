@@ -383,7 +383,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             labelProgress.Refresh();
             Application.DoEvents();
 
-            var postProcessor = new AudioToTextPostProcessor(_languageCode)
+            var postProcessor = new AudioToTextPostProcessor(checkBoxTranslateToEnglish.Checked ? "en" : _languageCode)
             {
                 ParagraphMaxChars = Configuration.Settings.General.SubtitleLineMaximumLength * 2,
             };
