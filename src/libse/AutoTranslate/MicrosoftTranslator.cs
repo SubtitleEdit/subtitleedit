@@ -154,7 +154,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                     {
                         if (v[innerKey] is Dictionary<string, object> l)
                         {
-                            list.Add(new TranslationPair(l["name"].ToString(), innerKey));
+                            list.Add(new TranslationPair(l["name"].ToString(), innerKey, innerKey));
                         }
                     }
                 }
