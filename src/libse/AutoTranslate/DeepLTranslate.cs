@@ -52,39 +52,43 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
         {
             return new List<TranslationPair>
             {
-                new TranslationPair("Bulgarian", "bg"),
-                new TranslationPair("Chinese", "zh"),
-                new TranslationPair("Czech", "cs"),
-                new TranslationPair("Danish", "da"),
-                new TranslationPair("Dutch", "nl"),
-                new TranslationPair("English", "en"),
-                new TranslationPair("Estonian", "et"),
-                new TranslationPair("Finnish", "fi"),
-                new TranslationPair("French", "fr"),
-                new TranslationPair("German", "de"),
-                new TranslationPair("Greek", "el"),
-                new TranslationPair("Hungarian", "hu"),
-                new TranslationPair("Indonesian", "id"),
-                new TranslationPair("Italian", "it"),
-                new TranslationPair("Japanese", "ja"),
-                new TranslationPair("Korean", "ko"),
-                new TranslationPair("Latvian", "lv"),
-                new TranslationPair("Lithuanian", "lt"),
-                new TranslationPair("Norwegian (Bokmål)", "nb"),
-                new TranslationPair("Polish", "pl"),
-                new TranslationPair("Portuguese", "pt"),
-                new TranslationPair("Romanian", "ro"),
-                new TranslationPair("Russian", "ru"),
-                new TranslationPair("Slovak", "sk"),
-                new TranslationPair("Slovenian", "sl"),
-                new TranslationPair("Spanish", "es"),
-                new TranslationPair("Swedish", "sv"),
-                new TranslationPair("Turkish", "tr"),
-                new TranslationPair("Ukranian", "uk"),
+                MakeTranslationPair("Bulgarian", "bg"),
+                MakeTranslationPair("Chinese", "zh"),
+                MakeTranslationPair("Czech", "cs"),
+                MakeTranslationPair("Danish", "da"),
+                MakeTranslationPair("Dutch", "nl"),
+                MakeTranslationPair("English", "en"),
+                MakeTranslationPair("Estonian", "et"),
+                MakeTranslationPair("Finnish", "fi"),
+                MakeTranslationPair("French", "fr"),
+                MakeTranslationPair("German", "de"),
+                MakeTranslationPair("Greek", "el"),
+                MakeTranslationPair("Hungarian", "hu"),
+                MakeTranslationPair("Indonesian", "id"),
+                MakeTranslationPair("Italian", "it"),
+                MakeTranslationPair("Japanese", "ja"),
+                MakeTranslationPair("Korean", "ko"),
+                MakeTranslationPair("Latvian", "lv"),
+                MakeTranslationPair("Lithuanian", "lt"),
+                MakeTranslationPair("Norwegian (Bokmål)", "nb"),
+                MakeTranslationPair("Polish", "pl"),
+                MakeTranslationPair("Portuguese", "pt"),
+                MakeTranslationPair("Romanian", "ro"),
+                MakeTranslationPair("Russian", "ru"),
+                MakeTranslationPair("Slovak", "sk"),
+                MakeTranslationPair("Slovenian", "sl"),
+                MakeTranslationPair("Spanish", "es"),
+                MakeTranslationPair("Swedish", "sv"),
+                MakeTranslationPair("Turkish", "tr"),
+                MakeTranslationPair("Ukranian", "uk"),
             };
         }
 
-        //public List<string> Translate(string sourceLanguage, string targetLanguage, Paragraph paragraph, StringBuilder log)
+        private static TranslationPair MakeTranslationPair(string name, string code)
+        {
+            return new TranslationPair(name, code, code);
+        }
+
         public Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode)
         {
             var postContent = new FormUrlEncodedContent(new[]

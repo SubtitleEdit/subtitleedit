@@ -1,4 +1,6 @@
-﻿using Nikse.SubtitleEdit.Core.BluRaySup;
+﻿using Nikse.SubtitleEdit.Controls;
+using Nikse.SubtitleEdit.Core.AutoTranslate;
+using Nikse.SubtitleEdit.Core.BluRaySup;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4;
@@ -7,9 +9,11 @@ using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.Forms;
 using Nikse.SubtitleEdit.Core.Interfaces;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Core.Translate;
 using Nikse.SubtitleEdit.Core.VobSub;
 using Nikse.SubtitleEdit.Forms.Ocr;
 using Nikse.SubtitleEdit.Forms.Styles;
+using Nikse.SubtitleEdit.Forms.Translate;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.CommandLineConvert;
 using Nikse.SubtitleEdit.Logic.Ocr;
@@ -22,15 +26,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
-using System.Windows.Forms;
-using Nikse.SubtitleEdit.Controls;
-using Nikse.SubtitleEdit.Core.AutoTranslate;
-using Nikse.SubtitleEdit.Core.Translate;
-using Nikse.SubtitleEdit.Forms.Translate;
-using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
-using System.Diagnostics;
-using System.IO.Ports;
 using System.Threading.Tasks;
+using System.Windows.Forms;
+using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -687,13 +685,13 @@ namespace Nikse.SubtitleEdit.Forms
                     Action = CommandLineConverter.BatchAction.BeautifyTimeCodes,
                     Control = groupBoxBeautifyTimeCodes,
                 },
-                //new FixActionItem
-                //{
-                //    Text = LanguageSettings.Current.GoogleTranslate.Title,
-                //    Checked = Configuration.Settings.Tools.BatchConvertBeautifyTimeCodes,
-                //    Action = CommandLineConverter.BatchAction.AutoTranslate,
-                //    Control = groupBoxAutoTranslate,
-                //},
+                new FixActionItem
+                {
+                    Text = LanguageSettings.Current.GoogleTranslate.Title,
+                    Checked = Configuration.Settings.Tools.BatchConvertAutoTranslate,
+                    Action = CommandLineConverter.BatchAction.AutoTranslate,
+                    Control = groupBoxAutoTranslate,
+                },
             };
 
             groupBoxAutoTranslate.Visible = false;
@@ -730,6 +728,7 @@ namespace Nikse.SubtitleEdit.Forms
             };
             nikseComboBoxEngine.Items.Clear();
             nikseComboBoxEngine.Items.AddRange(_autoTranslatorEngines.Select(p => p.Name).ToArray<object>());
+            nikseComboBoxEngine.SelectedIndex = 0;
         }
 
         private void SetMkvLanguageMenuItem()
@@ -1741,6 +1740,19 @@ namespace Nikse.SubtitleEdit.Forms
                                     // apply fixes step 1
                                     subtitle = ApplyFixesStep1(subtitle, null);
 
+                                    if (IsActionEnabled(CommandLineConverter.BatchAction.AutoTranslate))
+                                    {
+                                        try
+                                        {
+                                            subtitle = RunAutoTranslate(subtitle).Result;
+                                        }
+                                        catch (Exception exception)
+                                        {
+                                            SeLogger.Error(exception, "Batch translate failed");
+                                            item.SubItems[3].Text = "Translate failed";
+                                        }
+                                    }
+
                                     // apply fixes step 2
                                     var parameter = new ThreadDoWorkParameter(
                                         IsActionEnabled(CommandLineConverter.BatchAction.FixCommonErrors),
@@ -1856,6 +1868,19 @@ namespace Nikse.SubtitleEdit.Forms
                                 fromFormat,
                                 binaryParagraphs);
 
+                            if (IsActionEnabled(CommandLineConverter.BatchAction.AutoTranslate))
+                            {
+                                try
+                                {
+                                    parameter.Subtitle = RunAutoTranslate(parameter.Subtitle).Result;
+                                }
+                                catch (Exception exception)
+                                {
+                                    SeLogger.Error(exception, "Batch translate failed");
+                                    item.SubItems[3].Text = "Translate failed";
+                                }
+                            }
+
                             ApplyFixesStep2(parameter, Configuration.Settings.Tools.BatchConvertFixRtlMode);
                             ThreadWorkerCompleted(parameter);
                         }
@@ -1885,16 +1910,36 @@ namespace Nikse.SubtitleEdit.Forms
 
         private async Task<Subtitle> RunAutoTranslate(Subtitle subtitle)
         {
+            var engine = GetCurrentEngine();
+            engine.Initialize();
             var translatedSubtitle = new Subtitle(subtitle);
             foreach (var paragraph in translatedSubtitle.Paragraphs)
             {
                 paragraph.Text = string.Empty;
             }
 
-            TranslationPair source = new TranslationPair("", "");
-            TranslationPair target = new TranslationPair("", "");
+            var source = new TranslationPair("English", "en");
+            var target = new TranslationPair("English", "en");
 
-            var engine = GetCurrentEngine();
+            if (comboBoxSource.Items[comboBoxSource.SelectedIndex] is TranslationPair item)
+            {
+                source = item;
+            }
+            if (comboBoxSource.SelectedIndex == 0) // detect language
+            {
+                var language = LanguageAutoDetect.AutoDetectGoogleLanguageOrNull2(subtitle);
+                var tp = engine.GetSupportedSourceLanguages().FirstOrDefault(p => p.TwoLetterIsoLanguageName == language || p.Code == language);
+                if (tp != null)
+                {
+                    target = tp;
+                }
+            }
+
+            if (comboBoxTarget.Items[comboBoxTarget.SelectedIndex] is TranslationPair targetItem)
+            {
+                target = targetItem;
+            }
+
             var index = 0;
             while (index < subtitle.Paragraphs.Count)
             {
@@ -1923,7 +1968,7 @@ namespace Nikse.SubtitleEdit.Forms
                 translatedSubtitle.Paragraphs[index].Text = Utilities.AutoBreakLine(reFormattedText);
             }
 
-            return subtitle;
+            return translatedSubtitle;
         }
 
         private List<IBinaryParagraphWithPosition> GetBinaryParagraphsWithPositionFromVobSub(string fileName)

@@ -6,13 +6,21 @@ namespace Nikse.SubtitleEdit.Core.Translate
     public class TranslationPair : IEquatable<TranslationPair>
     {
         public string Name { get; }
-        
+
         public string Code { get; }
+        public string TwoLetterIsoLanguageName { get; }
 
         public TranslationPair(string name, string code)
         {
             Name = name ?? string.Empty;
             Code = code;
+        }
+
+        public TranslationPair(string name, string code, string twoLetterIsoLanguageName)
+        {
+            Name = name ?? string.Empty;
+            Code = code;
+            TwoLetterIsoLanguageName = twoLetterIsoLanguageName;
         }
 
         public override string ToString() => Name.ToLowerInvariant().Replace('_', ' ').CapitalizeFirstLetter();

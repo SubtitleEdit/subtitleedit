@@ -194,7 +194,8 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
 
         private static TranslationPair MakeLanguage(string code, string name)
         {
-            return new TranslationPair(name, code);
+            var twoLetterIsoName = code.Remove(0, code.Length - 2).ToLowerInvariant();
+            return new TranslationPair(name, code, twoLetterIsoName);
         }
 
         public Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode)

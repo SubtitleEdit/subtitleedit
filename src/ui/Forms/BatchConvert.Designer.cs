@@ -301,7 +301,7 @@ namespace Nikse.SubtitleEdit.Forms
             // labelTarget
             // 
             this.labelTarget.AutoSize = true;
-            this.labelTarget.Location = new System.Drawing.Point(26, 121);
+            this.labelTarget.Location = new System.Drawing.Point(82, 124);
             this.labelTarget.Name = "labelTarget";
             this.labelTarget.Size = new System.Drawing.Size(23, 13);
             this.labelTarget.TabIndex = 115;
@@ -320,7 +320,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.comboBoxTarget.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxTarget.DropDownWidth = 140;
             this.comboBoxTarget.FormattingEnabled = true;
-            this.comboBoxTarget.Location = new System.Drawing.Point(55, 117);
+            this.comboBoxTarget.Location = new System.Drawing.Point(111, 120);
             this.comboBoxTarget.MaxLength = 32767;
             this.comboBoxTarget.Name = "comboBoxTarget";
             this.comboBoxTarget.SelectedIndex = -1;
@@ -333,7 +333,7 @@ namespace Nikse.SubtitleEdit.Forms
             // labelSource
             // 
             this.labelSource.AutoSize = true;
-            this.labelSource.Location = new System.Drawing.Point(13, 92);
+            this.labelSource.Location = new System.Drawing.Point(69, 95);
             this.labelSource.Name = "labelSource";
             this.labelSource.Size = new System.Drawing.Size(33, 13);
             this.labelSource.TabIndex = 113;
@@ -352,7 +352,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.comboBoxSource.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxSource.DropDownWidth = 140;
             this.comboBoxSource.FormattingEnabled = true;
-            this.comboBoxSource.Location = new System.Drawing.Point(55, 88);
+            this.comboBoxSource.Location = new System.Drawing.Point(111, 91);
             this.comboBoxSource.MaxLength = 32767;
             this.comboBoxSource.Name = "comboBoxSource";
             this.comboBoxSource.SelectedIndex = -1;

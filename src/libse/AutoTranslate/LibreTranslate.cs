@@ -107,7 +107,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                 var culture = cultures.FirstOrDefault(p=>p.TwoLetterISOLanguageName == code);
                 if (culture != null)
                 {
-                    result.Add(new TranslationPair(culture.EnglishName, code));
+                    result.Add(new TranslationPair(culture.EnglishName, code, code));
                 }
             }
 
