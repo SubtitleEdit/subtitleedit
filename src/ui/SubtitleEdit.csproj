@@ -1330,6 +1330,7 @@
     <Compile Include="Forms\Styles\TimedTextStyles.Designer.cs">
       <DependentUpon>TimedTextStyles.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Translate\MergeAndSplitHelper.cs" />
     <Compile Include="Forms\Translate\SplitHelper.cs" />
     <Compile Include="Forms\Translate\TranslateBlock.cs">
       <SubType>Form</SubType>
