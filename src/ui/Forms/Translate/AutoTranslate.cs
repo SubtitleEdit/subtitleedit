@@ -515,7 +515,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             timerUpdate.Interval = 1500;
             timerUpdate.Tick += TimerUpdate_Tick;
             timerUpdate.Start();
-            var linesTranslate = 0;
+            var linesTranslated = 0;
 
             if (comboBoxSource.SelectedItem is TranslationPair source && comboBoxTarget.SelectedItem is TranslationPair target)
             {
@@ -529,6 +529,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                         if (linesMergedAndTranslated > 0)
                         {
                             index += linesMergedAndTranslated;
+                            linesTranslated += linesMergedAndTranslated;
                             _translationProgressIndex = index - 1;
                             continue;
                         }
@@ -549,7 +550,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                         }
 
                         TranslatedSubtitle.Paragraphs[index].Text = Utilities.AutoBreakLine(reFormattedText);
-                        linesTranslate++;
+                        linesTranslated++;
 
                         _translationProgressIndex = index;
                         _translationProgressDirty = true;
@@ -565,7 +566,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 }
                 catch (Exception exception)
                 {
-                    HandleError(exception, linesTranslate, engineType);
+                    HandleError(exception, linesTranslated, engineType);
                 }
             }
 
