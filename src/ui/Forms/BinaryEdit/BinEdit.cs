@@ -23,7 +23,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.ProgressBar;
 using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms.BinaryEdit
@@ -2314,6 +2313,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     var idx = subtitleListView1.SelectedItems[0].Index;
                     FillListView(_subtitle);
                     SelectIndexAndEnsureVisible(idx);
+                    comboBoxFrameRate.Text = changeFrameRate.NewFrameRate.ToString(CultureInfo.InvariantCulture);
                 }
             }
         }
