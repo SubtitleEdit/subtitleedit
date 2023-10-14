@@ -502,6 +502,7 @@
             public string BottomAlignSelectedLines { get; set; }
             public string ToggleForcedSelectedLines { get; set; }
             public string SelectForcedLines { get; set; }
+            public string SelectNonForcedLines { get; set; }
             public string SizeXY { get; set; }
             public string SetAspectRatio11 { get; set; }
             public string ChangeBrightnessTitle { get; set; }

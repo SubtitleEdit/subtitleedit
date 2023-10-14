@@ -325,6 +325,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             bottomAlignSelectedLinesToolStripMenuItem.Text = LanguageSettings.Current.BinEdit.BottomAlignSelectedLines;
             toggleforcedForSelectedLinesToolStripMenuItem.Text = LanguageSettings.Current.BinEdit.ToggleForcedSelectedLines;
             selectOnlyForcedLinesToolStripMenuItem.Text = LanguageSettings.Current.BinEdit.SelectForcedLines;
+            toolStripMenuItemSelectNonForced.Text = LanguageSettings.Current.BinEdit.SelectNonForcedLines;
             resizeImagesForSelectedLinesToolStripMenuItem.Text = LanguageSettings.Current.BinEdit.ResizeBitmapsForSelectedLines;
             colorSelectedLinesToolStripMenuItem.Text = LanguageSettings.Current.BinEdit.ChangeColorForSelectedLines;
             changeBrightnessForSelectedLinesToolStripMenuItem.Text = LanguageSettings.Current.BinEdit.ChangeBrightnessForSelectedLines;
@@ -2655,6 +2656,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             insertSubtitleAfterThisLineToolStripMenuItem.Visible = selectedCount == 1 && subtitleListView1.SelectedItems[0].Index == subtitleListView1.Items.Count - 1;
 
             selectOnlyForcedLinesToolStripMenuItem.Visible = _extra.Any(p => p.IsForced);
+            toolStripMenuItemSelectNonForced.Visible = _extra.Any(p => p.IsForced);
 
             quickOCRTextsforOverviewOnlyToolStripMenuItem.Visible = File.Exists(_nOcrFileName);
         }
@@ -3949,8 +3951,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             subtitleListView1.SelectedIndexChanged -= subtitleListView1_SelectedIndexChanged;
             subtitleListView1.SelectedIndices.Clear();
             System.Collections.IList list = subtitleListView1.Items;
-            bool first = true;
-            for (int i = 0; i < list.Count; i++)
+            var first = true;
+            for (var i = 0; i < list.Count; i++)
             {
                 var item = (ListViewItem)list[i];
                 if (_extra[i].IsForced)
@@ -4112,6 +4114,31 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             {
                 bmp.Dispose();
             }
+        }
+
+        private void toolStripMenuItemSelectNonForced_Click(object sender, EventArgs e)
+        {
+            subtitleListView1.BeginUpdate();
+            subtitleListView1.SelectedIndexChanged -= subtitleListView1_SelectedIndexChanged;
+            subtitleListView1.SelectedIndices.Clear();
+            System.Collections.IList list = subtitleListView1.Items;
+            var first = true;
+            for (var i = 0; i < list.Count; i++)
+            {
+                var item = (ListViewItem)list[i];
+                if (!_extra[i].IsForced)
+                {
+                    item.Selected = true;
+                    if (first)
+                    {
+                        SelectIndexAndEnsureVisible(i);
+                        first = false;
+                    }
+                }
+            }
+            subtitleListView1.SelectedIndexChanged += subtitleListView1_SelectedIndexChanged;
+            subtitleListView1.EndUpdate();
+            subtitleListView1_SelectedIndexChanged(null, null);
         }
     }
 }
