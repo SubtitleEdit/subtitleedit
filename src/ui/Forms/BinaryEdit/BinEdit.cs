@@ -1,5 +1,4 @@
-﻿using Nikse.SubtitleEdit.Controls;
-using Nikse.SubtitleEdit.Core.BluRaySup;
+﻿using Nikse.SubtitleEdit.Core.BluRaySup;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 using Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream;
@@ -262,7 +261,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
         private string _lastSaveHash;
         private readonly string _nOcrFileName;
 
-        private int _columnIndexForced = 0;
+        private int _columnIndexForced;
         private int _columnIndexNumber = 1;
         private int _columnIndexStart = 2;
         private int _columnIndexText = -1;
@@ -3905,6 +3904,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 }
 
                 extra.IsForced = toggleValue;
+                subtitleListView1.Items[i].Checked = toggleValue;
                 if (i == idx)
                 {
                     checkBoxIsForced.Checked = extra.IsForced;
@@ -3914,9 +3914,9 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private void startTimeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
+            for (var i = 0; i < _subtitle.Paragraphs.Count; i++)
             {
-                for (int j = 0; j < _subtitle.Paragraphs.Count - 1; j++)
+                for (var j = 0; j < _subtitle.Paragraphs.Count - 1; j++)
                 {
                     if (_subtitle.Paragraphs[j].StartTime.TotalMilliseconds > _subtitle.Paragraphs[j + 1].StartTime.TotalMilliseconds)
                     {
