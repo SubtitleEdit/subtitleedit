@@ -30,8 +30,8 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode1 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
-            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode2 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
+            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode3 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
+            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode4 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
             this.groupBoxCurrent = new System.Windows.Forms.GroupBox();
             this.labelSyntaxError = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.buttonSetText = new System.Windows.Forms.Button();
@@ -131,6 +131,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.columnHeaderDuration = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderText = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.timerSyntaxColor = new System.Windows.Forms.Timer(this.components);
+            this.toolStripMenuItemSelectNonForced = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBoxCurrent.SuspendLayout();
             this.groupBoxVideoInfo.SuspendLayout();
             this.contextMenuStripListView.SuspendLayout();
@@ -350,14 +351,14 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.timeUpDownEndTime.Size = new System.Drawing.Size(111, 23);
             this.timeUpDownEndTime.TabIndex = 3;
             this.timeUpDownEndTime.TabStop = false;
-            timeCode1.Hours = 0;
-            timeCode1.Milliseconds = 0;
-            timeCode1.Minutes = 0;
-            timeCode1.Seconds = 0;
-            timeCode1.TimeSpan = System.TimeSpan.Parse("00:00:00");
-            timeCode1.TotalMilliseconds = 0D;
-            timeCode1.TotalSeconds = 0D;
-            this.timeUpDownEndTime.TimeCode = timeCode1;
+            timeCode3.Hours = 0;
+            timeCode3.Milliseconds = 0;
+            timeCode3.Minutes = 0;
+            timeCode3.Seconds = 0;
+            timeCode3.TimeSpan = System.TimeSpan.Parse("00:00:00");
+            timeCode3.TotalMilliseconds = 0D;
+            timeCode3.TotalSeconds = 0D;
+            this.timeUpDownEndTime.TimeCode = timeCode3;
             this.timeUpDownEndTime.UseVideoOffset = false;
             // 
             // timeUpDownStartTime
@@ -382,14 +383,14 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.timeUpDownStartTime.Size = new System.Drawing.Size(111, 23);
             this.timeUpDownStartTime.TabIndex = 1;
             this.timeUpDownStartTime.TabStop = false;
-            timeCode2.Hours = 0;
-            timeCode2.Milliseconds = 0;
-            timeCode2.Minutes = 0;
-            timeCode2.Seconds = 0;
-            timeCode2.TimeSpan = System.TimeSpan.Parse("00:00:00");
-            timeCode2.TotalMilliseconds = 0D;
-            timeCode2.TotalSeconds = 0D;
-            this.timeUpDownStartTime.TimeCode = timeCode2;
+            timeCode4.Hours = 0;
+            timeCode4.Milliseconds = 0;
+            timeCode4.Minutes = 0;
+            timeCode4.Seconds = 0;
+            timeCode4.TimeSpan = System.TimeSpan.Parse("00:00:00");
+            timeCode4.TotalMilliseconds = 0D;
+            timeCode4.TotalSeconds = 0D;
+            this.timeUpDownStartTime.TimeCode = timeCode4;
             this.timeUpDownStartTime.UseVideoOffset = false;
             // 
             // label1
@@ -447,6 +448,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.comboBoxFrameRate.Size = new System.Drawing.Size(74, 21);
             this.comboBoxFrameRate.TabIndex = 5;
             this.comboBoxFrameRate.TabStop = false;
+            this.comboBoxFrameRate.UsePopupWindow = false;
             this.comboBoxFrameRate.SelectedIndexChanged += new System.EventHandler(this.comboBoxFrameRate_SelectedIndexChanged);
             this.comboBoxFrameRate.SelectedValueChanged += new System.EventHandler(this.comboBoxFrameRate_SelectedValueChanged);
             // 
@@ -557,6 +559,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.bottomAlignSelectedLinesToolStripMenuItem,
             this.toolStripSeparator9,
             this.toggleforcedForSelectedLinesToolStripMenuItem,
+            this.toolStripMenuItemSelectNonForced,
             this.selectOnlyForcedLinesToolStripMenuItem,
             this.toolStripSeparator7,
             this.resizeImagesForSelectedLinesToolStripMenuItem,
@@ -570,7 +573,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.toolStripSeparatorInsertSub,
             this.insertSubtitleAfterThisLineToolStripMenuItem});
             this.contextMenuStripListView.Name = "contextMenuStripListView";
-            this.contextMenuStripListView.Size = new System.Drawing.Size(377, 408);
+            this.contextMenuStripListView.Size = new System.Drawing.Size(377, 452);
             this.contextMenuStripListView.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripListView_Opening);
             // 
             // deleteToolStripMenuItem
@@ -924,21 +927,21 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             // adjustAllTimesToolStripMenuItem
             // 
             this.adjustAllTimesToolStripMenuItem.Name = "adjustAllTimesToolStripMenuItem";
-            this.adjustAllTimesToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            this.adjustAllTimesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.adjustAllTimesToolStripMenuItem.Text = "Adjust all times";
             this.adjustAllTimesToolStripMenuItem.Click += new System.EventHandler(this.adjustAllTimesToolStripMenuItem_Click);
             // 
             // changeFrameRateToolStripMenuItem
             // 
             this.changeFrameRateToolStripMenuItem.Name = "changeFrameRateToolStripMenuItem";
-            this.changeFrameRateToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            this.changeFrameRateToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.changeFrameRateToolStripMenuItem.Text = "Change frame rate";
             this.changeFrameRateToolStripMenuItem.Click += new System.EventHandler(this.changeFrameRateToolStripMenuItem_Click);
             // 
             // changeSpeedToolStripMenuItem
             // 
             this.changeSpeedToolStripMenuItem.Name = "changeSpeedToolStripMenuItem";
-            this.changeSpeedToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            this.changeSpeedToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.changeSpeedToolStripMenuItem.Text = "Change speed";
             this.changeSpeedToolStripMenuItem.Click += new System.EventHandler(this.changeSpeedToolStripMenuItem_Click);
             // 
@@ -1136,6 +1139,13 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.timerSyntaxColor.Interval = 250;
             this.timerSyntaxColor.Tick += new System.EventHandler(this.timerSyntaxColor_Tick);
             // 
+            // toolStripMenuItemSelectNonForced
+            // 
+            this.toolStripMenuItemSelectNonForced.Name = "toolStripMenuItemSelectNonForced";
+            this.toolStripMenuItemSelectNonForced.Size = new System.Drawing.Size(376, 22);
+            this.toolStripMenuItemSelectNonForced.Text = "Select only non-forced lines";
+            this.toolStripMenuItemSelectNonForced.Click += new System.EventHandler(this.toolStripMenuItemSelectNonForced_Click);
+            // 
             // BinEdit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1277,5 +1287,6 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
         private Nikse.SubtitleEdit.Controls.NikseLabel labelSyntaxError;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator11;
         private System.Windows.Forms.ToolStripMenuItem saveImageAsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSelectNonForced;
     }
 }

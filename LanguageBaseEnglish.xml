@@ -489,6 +489,7 @@ We leverage the intrinsic rhythm of the image.</CreateSimpleChainingToolTip>
     <BottomAlignSelectedLines>Bottom align selected lines (keep horizontal position)</BottomAlignSelectedLines>
     <ToggleForcedSelectedLines>Toggle "Forced" for selected lines</ToggleForcedSelectedLines>
     <SelectForcedLines>Select forced lines</SelectForcedLines>
+    <SelectNonForcedLines>Select non-forced lines</SelectNonForcedLines>
     <SizeXY>Size: {0}x{1}</SizeXY>
     <SetAspectRatio11>Set aspect ratio 1:1</SetAspectRatio11>
     <ChangeBrightnessTitle>Adjust brightness</ChangeBrightnessTitle>
