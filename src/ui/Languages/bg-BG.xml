@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>4.0.1</Version>
-    <TranslatedBy>Последен превод на български 03.10.2023: KalinM</TranslatedBy>
+    <TranslatedBy>Последен превод на български 15.10.2023: KalinM</TranslatedBy>
     <CultureName>bg-BG</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -324,6 +324,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <ConvertOptions>Опции при конвертиране</ConvertOptions>
     <RemoveFormatting>Премахване форматирането на тагове</RemoveFormatting>
     <RemoveStyleActor>Премахване на редове със стил/актьор</RemoveStyleActor>
+    <StyleActor>Стил/актьор (разделете със запетая)</StyleActor>
     <RemoveTextForHI>Премахв. текст за глухи</RemoveTextForHI>
     <ConvertColorsToDialog>Конвертиране на цветовете в диалогов режим</ConvertColorsToDialog>
     <OverwriteOriginalFiles>Презаписване на ориг.файлове (с ново разширение, ако формата е променен)</OverwriteOriginalFiles>
@@ -486,6 +487,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <BottomAlignSelectedLines>Подравняване на избраните редове отдолу (запазвайки хоризонталната позиция)</BottomAlignSelectedLines>
     <ToggleForcedSelectedLines>Превключване «Принудително» за избраните редове</ToggleForcedSelectedLines>
     <SelectForcedLines>Избор на принудителните редове</SelectForcedLines>
+    <SelectNonForcedLines>Избор на непринудени редове</SelectNonForcedLines>
     <SizeXY>Размер: {0}x{1}</SizeXY>
     <SetAspectRatio11>Задаване съотношение на пропорциите 1:1</SetAspectRatio11>
     <ChangeBrightnessTitle>Регулиране на яркостта</ChangeBrightnessTitle>
