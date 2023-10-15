@@ -331,7 +331,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         // Dictionaries/spellchecking/fixing
         private OcrFixEngine _ocrFixEngine;
         private int _tesseractOcrAutoFixes;
-        private string Tesseract5Version = "5.3.1";
+        private string Tesseract5Version = "5.3.3";
 
         private Subtitle _bdnXmlOriginal;
         private Subtitle _bdnXmlSubtitle;
@@ -514,7 +514,12 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 _ocrMethodTesseract302 = comboBoxOcrMethod.Items.Add(string.Format(language.OcrViaTesseractVersionX, "3.02"));
             }
-            _ocrMethodTesseract5 = comboBoxOcrMethod.Items.Add(string.Format(language.OcrViaTesseractVersionX, Tesseract5Version));
+
+            if (IntPtr.Size * 8 == 64)
+            {
+                _ocrMethodTesseract5 = comboBoxOcrMethod.Items.Add(string.Format(language.OcrViaTesseractVersionX, Tesseract5Version));
+            }
+
             if (_modiEnabled)
             {
                 _ocrMethodModi = comboBoxOcrMethod.Items.Add(language.OcrViaModi);
