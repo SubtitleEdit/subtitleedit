@@ -18831,6 +18831,12 @@ namespace Nikse.SubtitleEdit.Forms
                 left = tabControlModes.Width + 10;
             }
 
+            if (panelVideoPlayer.Parent == groupBoxVideo)
+            {
+                panelVideoPlayer.Left = left;
+                panelVideoPlayer.Width = groupBoxVideo.Width - (panelVideoPlayer.Left + 10);
+            }
+
             audioVisualizer.Left = left;
             audioVisualizer.Width = groupBoxVideo.Width - (audioVisualizer.Left + 10);
             checkBoxSyncListViewWithVideoWhilePlaying.Left = left;
@@ -24517,17 +24523,8 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private Panel _videoControlsHorizontal;
-        private NikseComboBox _videoControlsHorizontalMode;
-
         private void SetLayout(int layout)
         {
-            if (_videoControlsHorizontal == null && (layout == 7 || layout == 8))
-            {
-                _videoControlsHorizontal = new Panel();
-                _videoControlsHorizontalMode = new NikseComboBox();
-            }
-
             var isLarge = _subtitle.Paragraphs.Count > 1000;
             if (isLarge)
             {
@@ -25028,7 +25025,7 @@ namespace Nikse.SubtitleEdit.Forms
                     audioVisualizer.Left = tabControlModes.Left + tabControlModes.Width + 5;
                 }
 
-                if (!IsVideoVisible)
+                if (panelVideoPlayer.Parent == groupBoxVideo)
                 {
                     panelVideoPlayer.Left = tabControlModes.Left + tabControlModes.Width + 5;
                     panelVideoPlayer.Width = groupBoxVideo.Width - (panelVideoPlayer.Left + 10);
@@ -25039,6 +25036,7 @@ namespace Nikse.SubtitleEdit.Forms
                 trackBarWaveformPosition.Left = panelWaveformControls.Left + panelWaveformControls.Width + 5;
                 trackBarWaveformPosition.Width = groupBoxVideo.Width - (trackBarWaveformPosition.Left + 10);
                 checkBoxSyncListViewWithVideoWhilePlaying.Left = tabControlModes.Left + tabControlModes.Width + 5;
+
                 if (!_loading)
                 {
                     Refresh();
