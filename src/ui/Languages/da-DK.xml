@@ -103,6 +103,8 @@
     <Error>Fejl</Error>
     <Warning>Advarsel</Warning>
     <UseLargerFontForThisWindow>Brug stor skrifttype til dette vindue</UseLargerFontForThisWindow>
+    <ChangeLanguageFilter>Skift sprogfilter...</ChangeLanguageFilter>
+    <MoreInfo>Mere info</MoreInfo>
   </General>
   <About>
     <Title>Om Subtitle Edit</Title>
@@ -190,6 +192,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <VoskWebsite>Vosk hjemmeside</VoskWebsite>
     <WhisperWebsite>Whisper hjemmeside</WhisperWebsite>
     <WhisperNotFound>Whisper ikke fundet - læs mere (web)?</WhisperNotFound>
+    <Model>Model</Model>
     <Models>Modeller</Models>
     <LanguagesAndModels>Sprog og modeller</LanguagesAndModels>
     <ChooseModel>Vælg model</ChooseModel>
@@ -210,6 +213,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <SetCppConstMeFolder>Indstil mappen for CPP/Const-me-modeller...</SetCppConstMeFolder>
     <OnlyRunPostProcessing>Kør kun efterbehandling/juster tider</OnlyRunPostProcessing>
     <DownloadFasterWhisperCuda>Download cuBLAS og cuDNN til Faster-Whisper</DownloadFasterWhisperCuda>
+    <NoTextFound>Ingen tekst fundet!</NoTextFound>
   </AudioToText>
   <AssaAttachments>
     <Title>Avancerede Sub Station Alpha vedhæftede filer</Title>
@@ -316,6 +320,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <ConvertOptions>Konverter indstillinger</ConvertOptions>
     <RemoveFormatting>Fjern formaterings- tags</RemoveFormatting>
     <RemoveStyleActor>Fjern style/skuespiller</RemoveStyleActor>
+    <StyleActor>Stil/skuespiller (adskil med komma)</StyleActor>
     <RemoveTextForHI>Fjern tekst for høre-hæmmede</RemoveTextForHI>
     <ConvertColorsToDialog>Konverter farver til dialog</ConvertColorsToDialog>
     <OverwriteOriginalFiles>Overskriv originale filer (kun hvis format ikke ændres)</OverwriteOriginalFiles>
@@ -478,6 +483,7 @@ Vi udnytter billedets indre rytme.</CreateSimpleChainingToolTip>
     <BottomAlignSelectedLines>Juster til bund for valgte linjer (hold vandret position)</BottomAlignSelectedLines>
     <ToggleForcedSelectedLines>Skift "forced" for valgte linjer</ToggleForcedSelectedLines>
     <SelectForcedLines>Vælg "forced" linjer</SelectForcedLines>
+    <SelectNonForcedLines>Vælg ikke-tvungne linjer</SelectNonForcedLines>
     <SizeXY>Størrelse: {0} x {1}</SizeXY>
     <SetAspectRatio11>Indstil billedformat 1:1</SetAspectRatio11>
     <ChangeBrightnessTitle>Skift lysstyrke</ChangeBrightnessTitle>
@@ -1036,6 +1042,7 @@ Vi udnytter billedets indre rytme.</CreateSimpleChainingToolTip>
     <PleaseWait>Vent venligst... dette kan tage et stykke tid</PleaseWait>
     <PoweredByGoogleTranslate>Powered by Google Translate</PoweredByGoogleTranslate>
     <PoweredByMicrosoftTranslate>Powered by Microsoft Bing Translate</PoweredByMicrosoftTranslate>
+    <PoweredByX>Drevet af {0}</PoweredByX>
     <MsClientSecretNeeded>Der kræver en Bing "client secret" from Microsoft for at benytte Bing Translate.
 
 Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Bing "client secret".</MsClientSecretNeeded>
@@ -1056,6 +1063,9 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Bi
     <TranslateBlockCopySourceText>Kopier kilde text til udklipsholder</TranslateBlockCopySourceText>
     <TranslateBlockClipboardError1>Udklipsholder indeholder kilde tekst!</TranslateBlockClipboardError1>
     <TranslateBlockClipboardError2>Gå til oversætter og oversæt, kopieresultatet til udklipsholder, og klik på denne knap igen.</TranslateBlockClipboardError2>
+    <StartWebServerX>Start "{0}" webserver</StartWebServerX>
+    <XRequiresALocalWebServer>"{0}" kræver en webserver, der kører lokalt!</XRequiresALocalWebServer>
+    <ReadMore>Læs mere?</ReadMore>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
     <Title>Google vs Microsoft oversætter</Title>
@@ -1478,8 +1488,7 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Bi
         <BeautifyTimeCodes>Forskøn tidskoder</BeautifyTimeCodes>
         <Settings>Indstillinger</Settings>
         <Help>Hjælp</Help>
-        <ShowHideWaveform>Vis/skjul kurveform</ShowHideWaveform>
-        <ShowHideVideo>Vis/skjul video</ShowHideVideo>
+        <Layout>Layout</Layout>
         <AssaDraw>Advanced Sub Station Alpha tegn</AssaDraw>
       </ToolBar>
       <ContextMenu>
@@ -1930,6 +1939,7 @@ Hvis du har redigeret denne fil med Subtitle Edit du måske finde en backup via 
     <SubtitleEditNeedsVideoPlayer>Subtitle Edit kræver en videoafspiller.</SubtitleEditNeedsVideoPlayer>
     <UseRecommendMpv>For at bruge den anbefalede videoafspiller "mpv" skal du klikke på knappen nedenfor.</UseRecommendMpv>
     <DownloadAndUseMpv>Download og brug "mpv" som videoafspiller</DownloadAndUseMpv>
+    <ChooseLayout>Vælg layout</ChooseLayout>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Vælg undertekst fra Matroska fil</Title>
@@ -2306,6 +2316,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <DefaultFrameRate>Standard frame rate</DefaultFrameRate>
     <DefaultFileEncoding>Standard filkodningen</DefaultFileEncoding>
     <AutoDetectAnsiEncoding>Auto opdag ANSI-kodning</AutoDetectAnsiEncoding>
+    <LanguageFilter>Sprog filter</LanguageFilter>
     <Profile>Profil</Profile>
     <Profiles>Profiler</Profiles>
     <ImportProfiles>Importer profiler</ImportProfiles>
@@ -2532,14 +2543,15 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <CreateSetEndAddNewAndGoToNew>Sæt slut, tilføj ny og gå til ny</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStart>Juster via slut-position</AdjustViaEndAutoStart>
     <AdjustViaEndAutoStartAndGoToNext>Juster via slutposition og gå til næste</AdjustViaEndAutoStartAndGoToNext>
-    <AdjustSetEndMinusGapAndStartNextHere>Indstil slut minus gap, gå til næste og start næste her</AdjustSetEndMinusGapAndStartNextHere>
-    <AdjustSetEndTimeAndGoToNext>Set slut og gå til næste</AdjustSetEndTimeAndGoToNext>
-    <AdjustSetEndTimeAndPause>Set slut og pause</AdjustSetEndTimeAndPause>
+    <AdjustSetEndMinusGapAndStartNextHere>Sæt slut minus gap, gå til næste og start næste her</AdjustSetEndMinusGapAndStartNextHere>
+    <AdjustSetStartTimeAndGoToNext>Sæt start og gå til næste</AdjustSetStartTimeAndGoToNext>
+    <AdjustSetEndTimeAndGoToNext>Sæt slut og gå til næste</AdjustSetEndTimeAndGoToNext>
+    <AdjustSetEndTimeAndPause>Sæt slut og pause</AdjustSetEndTimeAndPause>
     <AdjustSetStartAutoDurationAndGoToNext>Sæt start, auto varighed og gå til næste</AdjustSetStartAutoDurationAndGoToNext>
     <AdjustSetEndNextStartAndGoToNext>Sæt slut, næste start og gå til næste</AdjustSetEndNextStartAndGoToNext>
     <AdjustStartDownEndUpAndGoToNext>Tast ned = set start, tast op = sæt slut og gå til næste</AdjustStartDownEndUpAndGoToNext>
-    <AdjustSetStartAndEndOfPrevious>Indstil start og indstil slut på forrige (minus min afstand)</AdjustSetStartAndEndOfPrevious>
-    <AdjustSetStartAndEndOfPreviousAndGoToNext>Indstil start og indstil slut på forrige og gå til næste (minus min afstand)</AdjustSetStartAndEndOfPreviousAndGoToNext>
+    <AdjustSetStartAndEndOfPrevious>Sæt start og indstil slut på forrige (minus min afstand)</AdjustSetStartAndEndOfPrevious>
+    <AdjustSetStartAndEndOfPreviousAndGoToNext>Sæt start og indstil slut på forrige og gå til næste (minus min afstand)</AdjustSetStartAndEndOfPreviousAndGoToNext>
     <AdjustSelected100MsForward>Flyt valgte linjer 100 ms frem</AdjustSelected100MsForward>
     <AdjustSelected100MsBack>Flyt valgte linjer 100 ms tilbage</AdjustSelected100MsBack>
     <AdjustStartXMsBack>Flyt start {0} ms tilbage</AdjustStartXMsBack>
