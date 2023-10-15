@@ -486,6 +486,7 @@ Command line: {1} {2}
     <BottomAlignSelectedLines>底部对齐所选行（保持水平位置）</BottomAlignSelectedLines>
     <ToggleForcedSelectedLines>切所选定行的“强制”状态</ToggleForcedSelectedLines>
     <SelectForcedLines>选中“强制”状态的行</SelectForcedLines>
+    <SelectNonForcedLines>选中非“强制”状态的行</SelectNonForcedLines>
     <SizeXY>尺寸：{0}x{1}</SizeXY>
     <SetAspectRatio11>设置纵横比为1：1</SetAspectRatio11>
     <ChangeBrightnessTitle>调整亮度</ChangeBrightnessTitle>
