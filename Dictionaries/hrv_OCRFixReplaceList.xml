@@ -72,6 +72,7 @@
     <Word from="besprekorno" to="besprijekorno" />
     <Word from="beše" to="bješe" />
     <Word from="bežeći" to="bježeći" />
+    <Word from="bie" to="bile" />
     <Word from="bije" to="tuče" />
     <Word from="biješ" to="tučeš" />
     <Word from="biju" to="tuku" />
@@ -315,6 +316,7 @@
     <Word from="doči" to="doći" />
     <Word from="dode" to="dođe" />
     <Word from="dodju" to="dođu" />
+    <Word from="dokumentujem" to="dokumentiram" />
     <Word from="dole" to="dolje" />
     <Word from="Dole" to="Dolje" />
     <Word from="doleću" to="dolijeću" />
@@ -403,6 +405,7 @@
     <Word from="gasova" to="plinova" />
     <Word from="gde" to="gdje" />
     <Word from="Gde" to="Gdje" />
+    <Word from="Gdjo" to="Gđo" />
     <Word from="g-dine" to="gosp." />
     <Word from="gdhe" to="gdje" />
     <Word from="gdke" to="gdje" />
@@ -518,6 +521,7 @@
     <Word from="ignorišući" to="ignorirajući" />
     <Word from="Igraće" to="Igrat će" />
     <Word from="Igraćemo" to="Igrat ćemo" />
+    <Word from="igraćeš" to="igrat ćeš" />
     <Word from="ilustruju" to="ilustriraju" />
     <Word from="inačr" to="inače" />
     <Word from="inspirisao" to="inspirirao" />
@@ -637,6 +641,7 @@
     <Word from="jma" to="ima" />
     <Word from="juče" to="jučer" />
     <Word from="Juče" to="Jučer" />
+    <Word from="kaćem" to="kažem" />
     <Word from="kads" to="kada" />
     <Word from="kađe" to="kaže" />
     <Word from="kakava" to="kakva" />
@@ -2386,6 +2391,7 @@
     <Word from="verena" to="zaručena" />
     <Word from="vereni" to="zaručeni" />
     <Word from="verimo" to="zaručimo" />
+    <Word from="veruje" to="vjeruje" />
     <Word from="Vjerojatnoća" to="Vjerojatnost" />
     <Word from="vest" to="vijest" />
     <Word from="Vest" to="Vijest" />
@@ -2589,6 +2595,7 @@
     <Word from="Beverli" to="Beverly" />
     <Word from="Bitls" to="Beatles" />
     <Word from="Bitlsi" to="Beatlesi" />
+    <Word from="Bradli" to="Bradley" />
     <Word from="Bredli" to="Bradley" />
     <Word from="Bredliju" to="Bradleyu" />
     <Word from="Brejdi" to="Brady" />
@@ -2616,9 +2623,11 @@
     <Word from="Den" to="Dan" />
     <Word from="Dene" to="Dane" />
     <Word from="Deni" to="Danny" />
+    <Word from="Denijels" to="Daniels" />
     <Word from="Deril" to="Daryl" />
     <Word from="Dijaz" to="Diaz" />
     <Word from="Din" to="Dean" />
+    <Word from="Djuk" to="Duke" />
     <Word from="Dru" to="Drew" />
     <Word from="Džared" to="Jared" />
     <Word from="Džaredu" to="Jaredu" />
@@ -3373,8 +3382,10 @@
     <LinePart from="laži me" to="laži mi" />
     <LinePart from="ljudska svest" to="ljudska svijest" />
     <LinePart from="li da pričaš" to="pričati" />
+    <LinePart from="li da budeš" to="li biti" />
     <LinePart from="moći da idemo" to="moći ići" />
-    <LinePart from="mogam da vidiš" to="mogao vidjeti" />
+    <LinePart from="mogao da vidiš" to="mogao vidjeti" />
+    <LinePart from="mogu da idem" to="mogu ići" />
     <LinePart from="moglo da bude" to="moglo biti" />
     <LinePart from="moje saučešće" to="moja sućut" />
     <LinePart from="mora da bude" to="mora biti" />
@@ -3412,6 +3423,7 @@
     <LinePart from="može da uđe" to="može ući" />
     <LinePart from="možeš da odeš" to="možeš otići" />
     <LinePart from="možeš da uđeš" to="možeš ući" />
+    <LinePart from="možemo da budemo" to="možemo biti" />
     <LinePart from="možemo da idemo" to="možemo ići" />
     <LinePart from="možemo da imamo" to="možemo imati" />
     <LinePart from="može da zna" to="može znati" />
@@ -3440,6 +3452,7 @@
     <LinePart from="sa čime" to="s čime" />
     <LinePart from="sa kim" to="s kim" />
     <LinePart from="sa nama" to="s nama" />
+    <LinePart from="Sa njim" to="S njim" />
     <LinePart from="sa njim" to="s njim" />
     <LinePart from="sa njima" to="s njima" />
     <LinePart from="sa njom" to="s njom" />
@@ -3469,6 +3482,7 @@
     <LinePart from="u jutro" to="ujutro" />
     <LinePart from="u reci" to="u rijeci" />
     <LinePart from="ući unutra" to="ući" />
+    <LinePart from="umeju da budu" to="znaju biti" />
     <LinePart from="vas je lagao" to="vam je lagao" />
     <LinePart from="voli da bude" to="volim biti" />
     <LinePart from="volim da budem" to="volim biti" />
