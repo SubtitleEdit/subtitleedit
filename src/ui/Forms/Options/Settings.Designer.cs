@@ -4819,7 +4819,7 @@
             // 
             // textBoxGoogleTransleApiKey
             // 
-            this.textBoxGoogleTransleApiKey.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.textBoxGoogleTransleApiKey.BackColor = System.Drawing.SystemColors.Window;
             this.textBoxGoogleTransleApiKey.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxGoogleTransleApiKey.Location = new System.Drawing.Point(9, 47);
             this.textBoxGoogleTransleApiKey.Multiline = true;
@@ -4928,7 +4928,7 @@
             // 
             // textBoxBingClientSecret
             // 
-            this.textBoxBingClientSecret.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.textBoxBingClientSecret.BackColor = System.Drawing.SystemColors.Window;
             this.textBoxBingClientSecret.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxBingClientSecret.Location = new System.Drawing.Point(10, 45);
             this.textBoxBingClientSecret.Multiline = true;
