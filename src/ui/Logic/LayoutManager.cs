@@ -12,13 +12,31 @@ namespace Nikse.SubtitleEdit.Logic
     public static class LayoutManager
     {
         public const int LayoutNoVideo = 11;
-        public static SplitContainer MainSplitContainer;
+        public static SplitContainer MainSplitContainer { get; set; }
+
+        private static int _lastLayout = -1;
+        private static Dictionary<int, string> LayoutInMemory { get; set; }
 
         public static void SetLayout(int layout, Form form, Control videoPlayer, SubtitleListView subtitleListView, GroupBox groupBoxWaveform, GroupBox groupBoxEdit, SplitterEventHandler splitMoved)
         {
             if (layout > LayoutNoVideo || layout < 0)
             {
                 layout = 0;
+            }
+
+            if (LayoutInMemory == null)
+            {
+                LayoutInMemory = new Dictionary<int, string>();
+            }
+
+            if (_lastLayout >= 0)
+            {
+                if (LayoutInMemory.ContainsKey(_lastLayout))
+                {
+                    LayoutInMemory.Remove(_lastLayout);
+                }
+
+                LayoutInMemory.Add(_lastLayout, SaveLayout());
             }
 
             switch (layout)
@@ -60,6 +78,13 @@ namespace Nikse.SubtitleEdit.Logic
                     SetLayout11(form, videoPlayer, subtitleListView, groupBoxWaveform, groupBoxEdit, splitMoved);
                     break;
             }
+
+            if (LayoutInMemory.ContainsKey(layout))
+            {
+                RestoreLayout(LayoutInMemory[layout]);
+            }
+
+            _lastLayout = layout;
         }
 
         // default layout (video right)
@@ -562,7 +587,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             // auto size
             spMain.SplitterDistance = form.Height / 2;
-            spLeftTop.SplitterDistance = (int) (form.Width * 0.4);
+            spLeftTop.SplitterDistance = (int)(form.Width * 0.4);
             spLeftBottom.SplitterDistance = Math.Max(10, spLeftBottom.Height - 125);
 
             spMain.SplitterMoved += splitMoved;
