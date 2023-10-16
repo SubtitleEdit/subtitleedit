@@ -3584,6 +3584,7 @@
     <RegEx find="činij" replaceWith="zdjel" />
     <RegEx find="čjan" replaceWith="čajn" />
     <RegEx find="č[mn]p" replaceWith="čno" />
+    <RegEx find="čnas" replaceWith="nčas" />
     <RegEx find="([čČ])ovi?j?e([kč])" replaceWith="$1ovje$2" />
     <RegEx find="ćopa" replaceWith="šepa" />
     <RegEx find="ćuti" replaceWith="šuti" />
@@ -3728,6 +3729,7 @@
     <RegEx find="interesantn" replaceWith="zanimljiv" />
     <RegEx find="Interesantn" replaceWith="Zanimljiv" />
     <RegEx find="inuć" replaceWith="inut ć" />
+    <RegEx find="ivso" replaceWith="ivao" />
     <RegEx find="teresova" replaceWith="teresira" />
     <RegEx find="vjuis" replaceWith="vjuir" />
     <RegEx find="vjuiše" replaceWith="vjuira" />
