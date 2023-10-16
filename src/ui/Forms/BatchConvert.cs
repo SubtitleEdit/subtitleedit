@@ -689,7 +689,7 @@ namespace Nikse.SubtitleEdit.Forms
                 },
                 new FixActionItem
                 {
-                    Text = LanguageSettings.Current.GoogleTranslate.Title,
+                    Text = LanguageSettings.Current.Main.VideoControls.AutoTranslate,
                     Checked = Configuration.Settings.Tools.BatchConvertAutoTranslate,
                     Action = CommandLineConverter.BatchAction.AutoTranslate,
                     Control = groupBoxAutoTranslate,
