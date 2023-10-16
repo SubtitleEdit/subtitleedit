@@ -1787,16 +1787,6 @@ namespace Nikse.SubtitleEdit.Forms
 
             toolStripMenuItemAddWaveformBatch.Text = _language.Menu.Video.WaveformBatchGenerate;
 
-            if (Configuration.Settings.VideoControls.GenerateSpectrogram)
-            {
-                showhideWaveformToolStripMenuItem.Text = _language.Menu.Video.ShowHideWaveformAndSpectrogram;
-            }
-            else
-            {
-                showhideWaveformToolStripMenuItem.Text = _language.Menu.Video.ShowHideWaveform;
-            }
-
-            showhideVideoToolStripMenuItem.Text = _language.Menu.Video.ShowHideVideo;
             undockVideoControlsToolStripMenuItem.Text = _language.Menu.Video.UnDockVideoControls;
             redockVideoControlsToolStripMenuItem.Text = _language.Menu.Video.ReDockVideoControls;
 
@@ -5769,12 +5759,10 @@ namespace Nikse.SubtitleEdit.Forms
             if (Configuration.Settings.VideoControls.GenerateSpectrogram)
             {
                 audioVisualizer.WaveformNotLoadedText = LanguageSettings.Current.Waveform.ClickToAddWaveformAndSpectrogram;
-                showhideWaveformToolStripMenuItem.Text = _language.Menu.Video.ShowHideWaveformAndSpectrogram;
             }
             else
             {
                 audioVisualizer.WaveformNotLoadedText = LanguageSettings.Current.Waveform.ClickToAddWaveform;
-                showhideWaveformToolStripMenuItem.Text = _language.Menu.Video.ShowHideWaveform;
             }
 
             audioVisualizer.Invalidate();
@@ -25906,8 +25894,6 @@ namespace Nikse.SubtitleEdit.Forms
 
             openVideoToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoOpen);
             closeVideoToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoClose);
-            showhideVideoToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoShowHideVideo);
-            showhideWaveformToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoShowWaveform);
             toolStripMenuItemListShotChanges.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformListShotChanges);
             toolStripMenuItemBookmark.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralToggleBookmarksWithText);
             toolStripMenuItemGoToSourceView.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralToggleView);

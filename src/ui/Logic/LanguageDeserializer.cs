@@ -4681,12 +4681,6 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Main/Menu/Video/WaveformBatchGenerate":
                     language.Main.Menu.Video.WaveformBatchGenerate = reader.Value;
                     break;
-                case "Main/Menu/Video/ShowHideVideo":
-                    language.Main.Menu.Video.ShowHideVideo = reader.Value;
-                    break;
-                case "Main/Menu/Video/ShowHideWaveform":
-                    language.Main.Menu.Video.ShowHideWaveform = reader.Value;
-                    break;
                 case "Main/Menu/Video/ShowHideWaveformAndSpectrogram":
                     language.Main.Menu.Video.ShowHideWaveformAndSpectrogram = reader.Value;
                     break;

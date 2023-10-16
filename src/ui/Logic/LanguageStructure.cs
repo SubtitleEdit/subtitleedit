@@ -1824,8 +1824,6 @@
                     public string GenerateImportShotChanges { get; set; }
                     public string RemoveOrExportShotChanges { get; set; }
                     public string WaveformBatchGenerate { get; set; }
-                    public string ShowHideVideo { get; set; }
-                    public string ShowHideWaveform { get; set; }
                     public string ShowHideWaveformAndSpectrogram { get; set; }
                     public string UnDockVideoControls { get; set; }
                     public string ReDockVideoControls { get; set; }
