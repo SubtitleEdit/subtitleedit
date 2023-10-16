@@ -2011,8 +2011,6 @@ namespace Nikse.SubtitleEdit.Logic
                         GenerateImportShotChanges = "Generate/import shot changes...",
                         RemoveOrExportShotChanges = "Remove/export shot changes...",
                         WaveformBatchGenerate = "Batch generate waveforms...",
-                        ShowHideVideo = "Show/hide video",
-                        ShowHideWaveform = "Show/hide waveform",
                         ShowHideWaveformAndSpectrogram = "Show/hide waveform and spectrogram",
                         UnDockVideoControls = "Un-dock video controls",
                         ReDockVideoControls = "Re-dock video controls",

@@ -245,9 +245,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.audioToTextWhisperTolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.videoaudioToTextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
-            this.showhideWaveformToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.showhideVideoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator19 = new System.Windows.Forms.ToolStripSeparator();
             this.undockVideoControlsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.redockVideoControlsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemSynchronization = new System.Windows.Forms.ToolStripMenuItem();
@@ -1102,9 +1099,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripComboBoxFrameRate.SelectedItem = null;
             this.toolStripComboBoxFrameRate.SelectedText = "";
             this.toolStripComboBoxFrameRate.Size = new System.Drawing.Size(75, 33);
+            this.toolStripComboBoxFrameRate.TextChanged += new System.EventHandler(this.ToolStripComboBoxFrameRateTextChanged);
             this.toolStripComboBoxFrameRate.DropDown += new System.EventHandler(this.MenuOpened);
             this.toolStripComboBoxFrameRate.DropDownClosed += new System.EventHandler(this.MenuClosed);
-            this.toolStripComboBoxFrameRate.TextChanged += new System.EventHandler(this.ToolStripComboBoxFrameRateTextChanged);
             // 
             // toolStripButtonGetFrameRate
             // 
@@ -2274,9 +2271,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.audioToTextWhisperTolStripMenuItem,
             this.videoaudioToTextToolStripMenuItem,
             this.toolStripSeparator5,
-            this.showhideWaveformToolStripMenuItem,
-            this.showhideVideoToolStripMenuItem,
-            this.toolStripSeparator19,
             this.undockVideoControlsToolStripMenuItem,
             this.redockVideoControlsToolStripMenuItem});
             this.toolStripMenuItemVideo.Name = "toolStripMenuItemVideo";
@@ -2407,23 +2401,6 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
             this.toolStripSeparator5.Size = new System.Drawing.Size(292, 6);
-            // 
-            // showhideWaveformToolStripMenuItem
-            // 
-            this.showhideWaveformToolStripMenuItem.Name = "showhideWaveformToolStripMenuItem";
-            this.showhideWaveformToolStripMenuItem.Size = new System.Drawing.Size(295, 22);
-            this.showhideWaveformToolStripMenuItem.Text = "Show/hide waveform";
-            this.showhideWaveformToolStripMenuItem.Click += new System.EventHandler(this.ShowhideWaveformToolStripMenuItemClick);
-            // 
-            // showhideVideoToolStripMenuItem
-            // 
-            this.showhideVideoToolStripMenuItem.Name = "showhideVideoToolStripMenuItem";
-            this.showhideVideoToolStripMenuItem.Size = new System.Drawing.Size(295, 22);
-            // 
-            // toolStripSeparator19
-            // 
-            this.toolStripSeparator19.Name = "toolStripSeparator19";
-            this.toolStripSeparator19.Size = new System.Drawing.Size(292, 6);
             // 
             // undockVideoControlsToolStripMenuItem
             // 
@@ -6084,7 +6061,6 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemVideo;
         private System.Windows.Forms.ToolStripMenuItem openVideoToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
-        private System.Windows.Forms.ToolStripMenuItem showhideVideoToolStripMenuItem;
         private System.Windows.Forms.Label labelVideoPosition;
         private Controls.NikseTimeUpDown timeUpDownVideoPosition;
         private System.Windows.Forms.TabControl tabControlModes;
@@ -6161,7 +6137,6 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripButton toolStripButtonWaveformPlay;
         private System.Windows.Forms.TrackBar trackBarWaveformPosition;
         private System.Windows.Forms.Label labelVideoInfo;
-        private System.Windows.Forms.ToolStripMenuItem showhideWaveformToolStripMenuItem;
         private System.Windows.Forms.Label labelCharactersPerSecond;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemNetworking;
         private System.Windows.Forms.ToolStripMenuItem startServerToolStripMenuItem;
@@ -6174,7 +6149,6 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.SplitContainer splitContainerMain;
         private System.Windows.Forms.ToolStripMenuItem undockVideoControlsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem redockVideoControlsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator19;
         private System.Windows.Forms.ToolStripButton toolStripButtonLockCenter;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemAutoSplitLongLines;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripEmpty;
