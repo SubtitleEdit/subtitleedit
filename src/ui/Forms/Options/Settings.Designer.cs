@@ -1567,7 +1567,7 @@
             // 
             // textBoxShowLineBreaksAs
             // 
-            this.textBoxShowLineBreaksAs.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.textBoxShowLineBreaksAs.BackColor = System.Drawing.SystemColors.Window;
             this.textBoxShowLineBreaksAs.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxShowLineBreaksAs.Location = new System.Drawing.Point(572, 233);
             this.textBoxShowLineBreaksAs.MaxLength = 10;
@@ -2706,7 +2706,7 @@
             // 
             // textBoxCustomSearchUrl5
             // 
-            this.textBoxCustomSearchUrl5.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.textBoxCustomSearchUrl5.BackColor = System.Drawing.SystemColors.Window;
             this.textBoxCustomSearchUrl5.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxCustomSearchUrl5.Location = new System.Drawing.Point(185, 146);
             this.textBoxCustomSearchUrl5.Multiline = true;
@@ -2759,7 +2759,7 @@
             // 
             // textBoxCustomSearchUrl4
             // 
-            this.textBoxCustomSearchUrl4.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.textBoxCustomSearchUrl4.BackColor = System.Drawing.SystemColors.Window;
             this.textBoxCustomSearchUrl4.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxCustomSearchUrl4.Location = new System.Drawing.Point(185, 119);
             this.textBoxCustomSearchUrl4.Multiline = true;
@@ -2812,7 +2812,7 @@
             // 
             // textBoxCustomSearchUrl3
             // 
-            this.textBoxCustomSearchUrl3.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.textBoxCustomSearchUrl3.BackColor = System.Drawing.SystemColors.Window;
             this.textBoxCustomSearchUrl3.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxCustomSearchUrl3.Location = new System.Drawing.Point(185, 92);
             this.textBoxCustomSearchUrl3.Multiline = true;
@@ -2865,7 +2865,7 @@
             // 
             // textBoxCustomSearchUrl2
             // 
-            this.textBoxCustomSearchUrl2.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.textBoxCustomSearchUrl2.BackColor = System.Drawing.SystemColors.Window;
             this.textBoxCustomSearchUrl2.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxCustomSearchUrl2.Location = new System.Drawing.Point(185, 65);
             this.textBoxCustomSearchUrl2.Multiline = true;
@@ -2918,7 +2918,7 @@
             // 
             // textBoxCustomSearchUrl1
             // 
-            this.textBoxCustomSearchUrl1.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.textBoxCustomSearchUrl1.BackColor = System.Drawing.SystemColors.Window;
             this.textBoxCustomSearchUrl1.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxCustomSearchUrl1.Location = new System.Drawing.Point(185, 38);
             this.textBoxCustomSearchUrl1.Multiline = true;
@@ -4638,7 +4638,7 @@
             // 
             // textBoxMusicSymbolsToReplace
             // 
-            this.textBoxMusicSymbolsToReplace.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.textBoxMusicSymbolsToReplace.BackColor = System.Drawing.SystemColors.Window;
             this.textBoxMusicSymbolsToReplace.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxMusicSymbolsToReplace.Location = new System.Drawing.Point(11, 41);
             this.textBoxMusicSymbolsToReplace.MaxLength = 100;
@@ -6262,7 +6262,7 @@
             // 
             // textBoxProxyDomain
             // 
-            this.textBoxProxyDomain.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.textBoxProxyDomain.BackColor = System.Drawing.SystemColors.Window;
             this.textBoxProxyDomain.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxProxyDomain.Location = new System.Drawing.Point(138, 68);
             this.textBoxProxyDomain.Multiline = true;
@@ -6281,7 +6281,7 @@
             // 
             // textBoxProxyUserName
             // 
-            this.textBoxProxyUserName.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.textBoxProxyUserName.BackColor = System.Drawing.SystemColors.Window;
             this.textBoxProxyUserName.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxProxyUserName.Location = new System.Drawing.Point(138, 16);
             this.textBoxProxyUserName.Multiline = true;
@@ -6309,7 +6309,7 @@
             // 
             // textBoxProxyPassword
             // 
-            this.textBoxProxyPassword.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.textBoxProxyPassword.BackColor = System.Drawing.SystemColors.Window;
             this.textBoxProxyPassword.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxProxyPassword.Location = new System.Drawing.Point(138, 42);
             this.textBoxProxyPassword.Multiline = true;
@@ -6320,7 +6320,7 @@
             // 
             // textBoxProxyAddress
             // 
-            this.textBoxProxyAddress.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.textBoxProxyAddress.BackColor = System.Drawing.SystemColors.Window;
             this.textBoxProxyAddress.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxProxyAddress.Location = new System.Drawing.Point(166, 34);
             this.textBoxProxyAddress.Multiline = true;
@@ -6761,17 +6761,17 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1092, 574);
+            this.Controls.Add(this.panelVideoPlayer);
             this.Controls.Add(this.labelUpdateFileTypeAssociationsStatus);
-            this.Controls.Add(this.panelAutoTranslate);
             this.Controls.Add(this.panelGeneral);
             this.Controls.Add(this.panelTools);
+            this.Controls.Add(this.panelNetwork);
+            this.Controls.Add(this.panelAutoTranslate);
             this.Controls.Add(this.panelShortcuts);
             this.Controls.Add(this.panelFont);
             this.Controls.Add(this.panelSubtitleFormats);
             this.Controls.Add(this.panelWaveform);
-            this.Controls.Add(this.panelVideoPlayer);
             this.Controls.Add(this.panelToolBar);
-            this.Controls.Add(this.panelNetwork);
             this.Controls.Add(this.panelFileTypeAssociations);
             this.Controls.Add(this.panelSyntaxColoring);
             this.Controls.Add(this.listBoxSection);
