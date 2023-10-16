@@ -659,7 +659,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
         private static void StartNoLanguageLeftBehindServe()
         {
             var modelName = Configuration.Settings.Tools.AutoTranslateNllbServeModel;
-            var arguments = string.IsNullOrEmpty(modelName) ? string.Empty                : $"-mi {modelName}";
+            var arguments = string.IsNullOrEmpty(modelName) ? string.Empty : $"-mi {modelName}";
             var process = new Process
             {
                 StartInfo = new ProcessStartInfo("nllb-serve", arguments)
