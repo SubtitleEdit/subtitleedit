@@ -483,8 +483,9 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <CenterSelectedLines>중앙 정렬(수평, 수직 위치 유지)</CenterSelectedLines>
     <TopAlignSelectedLines>상단 정렬(수평 위치 유지)</TopAlignSelectedLines>
     <BottomAlignSelectedLines>하단 정렬(수평 위치 유지)</BottomAlignSelectedLines>
-    <ToggleForcedSelectedLines>선택한 줄의 "적용됨" 전환</ToggleForcedSelectedLines>
+    <ToggleForcedSelectedLines>선택한 줄 "적용됨"으로 전환</ToggleForcedSelectedLines>
     <SelectForcedLines>적용된 줄 선택</SelectForcedLines>
+    <SelectNonForcedLines>적용되지 않은 줄 선택</SelectNonForcedLines>
     <SizeXY>크기: {0}x{1}</SizeXY>
     <SetAspectRatio11>가로세로 비율 1:1 설정</SetAspectRatio11>
     <ChangeBrightnessTitle>밝기 조정</ChangeBrightnessTitle>
