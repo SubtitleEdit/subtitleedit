@@ -34,7 +34,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         private readonly Regex _timeRegexShort = new Regex(@"^\[\d\d:\d\d[\.,]\d\d\d --> \d\d:\d\d[\.,]\d\d\d\]", RegexOptions.Compiled);
         private readonly Regex _timeRegexLong = new Regex(@"^\[\d\d:\d\d:\d\d[\.,]\d\d\d --> \d\d:\d\d:\d\d[\.,]\d\d\d]", RegexOptions.Compiled);
         private readonly Regex _pctWhisper = new Regex(@"^\d+%\|", RegexOptions.Compiled);
-        private readonly Regex _pctWhisperFaster = new Regex(@"^ *\d+% *\|", RegexOptions.Compiled);
+        private readonly Regex _pctWhisperFaster = new Regex(@"^\s*\d+%\s*\|", RegexOptions.Compiled);
         private List<ResultText> _resultList;
         private string _languageCode;
         private ConcurrentBag<string> _outputText = new ConcurrentBag<string>();
