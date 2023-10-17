@@ -170,6 +170,8 @@ namespace Nikse.SubtitleEdit.Core.Common
         public string TranslateViaCopyPasteSeparator { get; set; }
         public int TranslateViaCopyPasteMaxSize { get; set; }
         public bool TranslateViaCopyPasteAutoCopyToClipboard { get; set; }
+        public string ChatGptUrl { get; set; }
+        public string ChatGptApiKey { get; set; }
         public bool ListViewSyntaxColorDurationSmall { get; set; }
         public bool ListViewSyntaxColorDurationBig { get; set; }
         public bool ListViewSyntaxColorOverlap { get; set; }
@@ -5169,6 +5171,18 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.Tools.TranslateViaCopyPasteMaxSize = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("ChatGptUrl");
+            if (subNode != null)
+            {
+                settings.Tools.ChatGptUrl = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("ChatGptApiKey");
+            if (subNode != null)
+            {
+                settings.Tools.ChatGptApiKey = subNode.InnerText;
             }
 
             subNode = node.SelectSingleNode("TranslateViaCopyPasteAutoCopyToClipboard");
@@ -11407,6 +11421,8 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("TranslateViaCopyPasteSeparator", settings.Tools.TranslateViaCopyPasteSeparator);
                 textWriter.WriteElementString("TranslateViaCopyPasteMaxSize", settings.Tools.TranslateViaCopyPasteMaxSize.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("TranslateViaCopyPasteAutoCopyToClipboard", settings.Tools.TranslateViaCopyPasteAutoCopyToClipboard.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ChatGptUrl", settings.Tools.ChatGptUrl);
+                textWriter.WriteElementString("ChatGptApiKey", settings.Tools.ChatGptApiKey);
                 textWriter.WriteElementString("ListViewSyntaxColorDurationSmall", settings.Tools.ListViewSyntaxColorDurationSmall.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewSyntaxColorDurationBig", settings.Tools.ListViewSyntaxColorDurationBig.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewSyntaxColorLongLines", settings.Tools.ListViewSyntaxColorLongLines.ToString(CultureInfo.InvariantCulture));
