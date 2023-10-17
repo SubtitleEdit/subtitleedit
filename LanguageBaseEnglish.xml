@@ -1433,8 +1433,6 @@ To use an API key, go to "Options -&gt; Settings -&gt; Tools" to enter your Goog
         <GenerateImportShotChanges>Generate/import shot changes...</GenerateImportShotChanges>
         <RemoveOrExportShotChanges>Remove/export shot changes...</RemoveOrExportShotChanges>
         <WaveformBatchGenerate>Batch generate waveforms...</WaveformBatchGenerate>
-        <ShowHideVideo>Show/hide video</ShowHideVideo>
-        <ShowHideWaveform>Show/hide waveform</ShowHideWaveform>
         <ShowHideWaveformAndSpectrogram>Show/hide waveform and spectrogram</ShowHideWaveformAndSpectrogram>
         <UnDockVideoControls>Un-dock video controls</UnDockVideoControls>
         <ReDockVideoControls>Re-dock video controls</ReDockVideoControls>
