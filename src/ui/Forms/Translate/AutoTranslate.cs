@@ -113,6 +113,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 new NoLanguageLeftBehindServe(),
                 new NoLanguageLeftBehindApi(),
                 new MyMemoryApi(),
+                new ChatGptTranslate(),
             };
 
             nikseComboBoxEngine.Items.Clear();
@@ -235,6 +236,17 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 return;
             }
 
+            if (engineType == typeof(ChatGptTranslate))
+            {
+                labelApiKey.Left = labelUrl.Left;
+                nikseTextBoxApiKey.Text = Configuration.Settings.Tools.ChatGptApiKey;
+                nikseTextBoxApiKey.Left = labelApiKey.Right + 3;
+                labelApiKey.Visible = true;
+                nikseTextBoxApiKey.Visible = true;
+                return;
+            }
+
+
             throw new Exception($"Engine {_autoTranslator.Name} not handled!");
         }
 
@@ -310,6 +322,12 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             var threeLetterLanguageCode = Iso639Dash2LanguageCode.GetThreeLetterCodeFromTwoLetterCode(languageIsoCode);
             foreach (TranslationPair item in comboBox.Items)
             {
+                if (!string.IsNullOrEmpty(item.TwoLetterIsoLanguageName) && item.TwoLetterIsoLanguageName == languageIsoCode)
+                {
+                    comboBox.SelectedIndex = i;
+                    return;
+                }
+
                 if (item.Code.Contains('-'))
                 {
                     var arr = item.Code.ToLowerInvariant().Split('-');
@@ -653,6 +671,11 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             if (engineType == typeof(MyMemoryApi) && nikseTextBoxApiKey.Visible && !string.IsNullOrWhiteSpace(nikseTextBoxApiKey.Text))
             {
                 Configuration.Settings.Tools.AutoTranslateMyMemoryApiKey = nikseTextBoxApiKey.Text.Trim();
+            }
+
+            if (engineType == typeof(ChatGptTranslate) && !string.IsNullOrWhiteSpace(nikseTextBoxApiKey.Text))
+            {
+                Configuration.Settings.Tools.ChatGptApiKey = nikseTextBoxApiKey.Text.Trim();
             }
         }
 
