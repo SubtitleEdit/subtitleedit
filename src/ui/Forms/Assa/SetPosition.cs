@@ -40,8 +40,9 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         private int _tempYScaled;
         private int _xScaled = -1;
         private int _yScaled = -1;
+        private double _currentPositionSeconds;
 
-        public SetPosition(Subtitle subtitle, int[] selectedIndices, string videoFileName, VideoInfo videoInfo)
+        public SetPosition(Subtitle subtitle, int[] selectedIndices, string videoFileName, VideoInfo videoInfo, double currentPositionSeconds)
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
@@ -50,6 +51,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             _subtitle = subtitle;
             _videoFileName = videoFileName;
             _videoInfo = videoInfo;
+            _currentPositionSeconds = currentPositionSeconds;
 
             _subtitleWithNewHeader = new Subtitle(_subtitle, false);
             if (_subtitleWithNewHeader.Header == null)
@@ -395,7 +397,9 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             {
                 Application.DoEvents();
                 _mpv.Pause();
-                _mpv.CurrentPosition = p.StartTime.TotalSeconds + 0.05;
+
+               _mpv.CurrentPosition = _currentPositionSeconds;
+
                 Application.DoEvents();
                 _videoLoaded = true;
                 timer1.Start();
