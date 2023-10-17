@@ -188,6 +188,12 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 return false;
             }
 
+            var next = subtitle.GetParagraphOrDefault(index + 1);
+            if (next == null || !next.Text.HasSentenceEnding("en"))
+            {
+                return false;
+            }
+
             if (subtitle.Paragraphs[index].Text.EndsWith(".") && Utilities.CountTagInText(subtitle.Paragraphs[index].Text, '.') == 1)
             {
                 c = '.';

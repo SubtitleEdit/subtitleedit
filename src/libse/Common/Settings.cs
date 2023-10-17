@@ -513,6 +513,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             AutoTranslateLibreUrl = "http://localhost:5000/";
             AutoTranslateSeamlessM4TUrl = "http://localhost:5000/";
             AutoTranslateDeepLUrl = "https://api-free.deepl.com/";
+            ChatGptUrl = "https://api.openai.com/v1/chat/completions";
             TranslateAllowSplit = true;
             TranslateViaCopyPasteAutoCopyToClipboard = true;
             TranslateViaCopyPasteMaxSize = 5000;
