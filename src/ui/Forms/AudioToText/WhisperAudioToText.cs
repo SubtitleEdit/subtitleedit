@@ -671,7 +671,15 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
                 if (_cancel)
                 {
-                    process.Kill();
+                    if (comboBoxWhisperEngine.Text == WhisperChoice.PurfviewFasterWhisper && KillProcessHelper.AttachConsole((uint)process.Id))
+                    {
+                        KillProcessHelper.TryToKillProcessViaCtrlC(process);
+                    }
+                    else
+                    {
+                        process.Kill();
+                    }
+
                     progressBar1.Visible = false;
                     buttonCancel.Visible = false;
                     DialogResult = DialogResult.Cancel;
