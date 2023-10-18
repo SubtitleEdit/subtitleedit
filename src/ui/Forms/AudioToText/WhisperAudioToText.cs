@@ -1216,6 +1216,17 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             labelElapsed.Text = new TimeCode(durationMs).ToShortDisplayString();
             if (_endSeconds <= 0 || _videoInfo == null)
             {
+                if (_showProgressPct > 0)
+                {
+                    if (progressBar1.Style != ProgressBarStyle.Blocks)
+                    {
+                        progressBar1.Style = ProgressBarStyle.Blocks;
+                        progressBar1.Maximum = 100;
+                    }
+
+                    SetProgressBarPct(_showProgressPct);
+                }
+
                 return;
             }
 
