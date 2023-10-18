@@ -502,12 +502,16 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
             TaskbarList.StartBlink(_parentForm, 10, 1, 2);
 
+            Activate();
+            Focus();
+            Application.DoEvents();
+
             if (errors.Length > 0)
             {
-                MessageBox.Show($"{errorCount} error(s)!{Environment.NewLine}{errors}");
+                MessageBox.Show(this, $"{errorCount} error(s)!{Environment.NewLine}{errors}", Text, MessageBoxButtons.OK);
             }
 
-            MessageBox.Show(string.Format(LanguageSettings.Current.AudioToText.XFilesSavedToVideoSourceFolder, listViewInputFiles.Items.Count - errorCount));
+            MessageBox.Show(this, string.Format(LanguageSettings.Current.AudioToText.XFilesSavedToVideoSourceFolder, listViewInputFiles.Items.Count - errorCount), Text, MessageBoxButtons.OK);
 
             groupBoxInputFiles.Enabled = true;
             buttonGenerate.Enabled = true;
