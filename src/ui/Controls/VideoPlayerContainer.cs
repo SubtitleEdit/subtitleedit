@@ -485,7 +485,7 @@ namespace Nikse.SubtitleEdit.Controls
                 SubtitleFormat format = new AdvancedSubStationAlpha();
                 string text;
 
-                if (subtitle.Header != null && subtitle.Header.Contains("lang=\"ja\"", StringComparison.Ordinal) && subtitle.Header.Contains("bouten-", StringComparison.Ordinal))
+                if (uiFormat.GetType() == typeof(NetflixImsc11Japanese))
                 {
                     text = NetflixImsc11JapaneseToAss.Convert(subtitle, 1280, 720);
                 }
