@@ -32,6 +32,8 @@
    * Edit interjection is now a text box - thx Andrebavila
    * Bookmark list now has context menu with edit/delete - thx Andrebavila
    * Update Tesseract to 5.3.3 (2023-10-05, 64-bit only)
+   * Auto-translate re-written, so it's easier to add new translators
+   * Close all processes when closing Faster Whisper - thx Purfview
 * FIXED:
    * Fix remember text box settings (bold/size) - thx Siamak
    * Fix crash in CSV reader - thx Waseem
