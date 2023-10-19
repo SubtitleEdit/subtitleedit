@@ -14,6 +14,7 @@ namespace Nikse.SubtitleEdit.Logic
     {
         public const int LayoutNoVideo = 11;
         public const int EditTextPanelMinimumHeight = 124;
+        public const int WaveformPanelMinimumHeight = 124;
         public static SplitContainer MainSplitContainer { get; set; }
 
         private static int _lastLayout = -1;
@@ -138,6 +139,7 @@ namespace Nikse.SubtitleEdit.Logic
             spLeftBottom.SplitterMoved += splitMoved;
 
             spLeftBottom.SplitterMoved += SplitMovedLimitTextBoxPanel2;
+            spMain.SplitterMoved += SplitMovedLimitWaveformPanel2;
         }
 
         private static void SplitMovedLimitTextBoxPanel1(object sender, SplitterEventArgs e)
@@ -179,6 +181,40 @@ namespace Nikse.SubtitleEdit.Logic
                 }
             }
             catch 
+            {
+                // ignore
+            }
+        }
+
+        private static void SplitMovedLimitWaveformPanel1(object sender, SplitterEventArgs e)
+        {
+            try
+            {
+                var sc = (SplitContainer)sender;
+
+                if (sc.Panel1.Height < WaveformPanelMinimumHeight && sc.Height > EditTextPanelMinimumHeight + WaveformPanelMinimumHeight)
+                {
+                    sc.SplitterDistance = WaveformPanelMinimumHeight;
+                }
+            }
+            catch
+            {
+                // ignore
+            }
+        }
+
+        private static void SplitMovedLimitWaveformPanel2(object sender, SplitterEventArgs e)
+        {
+            try
+            {
+                var sc = (SplitContainer)sender;
+
+                if (sc.Panel2.Height < WaveformPanelMinimumHeight && sc.Height > EditTextPanelMinimumHeight + WaveformPanelMinimumHeight)
+                {
+                    sc.SplitterDistance = sc.Height - WaveformPanelMinimumHeight;
+                }
+            }
+            catch
             {
                 // ignore
             }
@@ -256,7 +292,8 @@ namespace Nikse.SubtitleEdit.Logic
             spLeftTop.SplitterMoved += splitMoved;
             spLeftBottom.SplitterMoved += splitMoved;
 
-            spLeftBottom.SplitterMoved += SplitMovedLimitTextBoxPanel2;
+            spLeftBottom.SplitterMoved += SplitMovedLimitTextBoxPanel2; 
+            spMain.SplitterMoved += SplitMovedLimitWaveformPanel2;
         }
 
         // mobile - video right
@@ -310,6 +347,7 @@ namespace Nikse.SubtitleEdit.Logic
             spLeftBottom.SplitterMoved += splitMoved;
 
             spLeftBottom.SplitterMoved += SplitMovedLimitTextBoxPanel1;
+            spLeftBottom.SplitterMoved += SplitMovedLimitWaveformPanel2;
         }
 
         // mobile - video left
@@ -363,6 +401,7 @@ namespace Nikse.SubtitleEdit.Logic
             spLeftBottom.SplitterMoved += splitMoved;
 
             spLeftBottom.SplitterMoved += SplitMovedLimitTextBoxPanel1;
+            spLeftBottom.SplitterMoved += SplitMovedLimitWaveformPanel2;
         }
 
         // all stacked horizontal
@@ -414,6 +453,7 @@ namespace Nikse.SubtitleEdit.Logic
             spLeftBottom.SplitterMoved += splitMoved;
 
             spLeftBottom.SplitterMoved += SplitMovedLimitTextBoxPanel1;
+            spLeftBottom.SplitterMoved += SplitMovedLimitWaveformPanel2;
         }
 
         // stacked, no video player
@@ -458,6 +498,7 @@ namespace Nikse.SubtitleEdit.Logic
             spLeftTop.SplitterMoved += splitMoved;
 
             spLeftTop.SplitterMoved += SplitMovedLimitTextBoxPanel1;
+            spLeftTop.SplitterMoved += SplitMovedLimitWaveformPanel2;
         }
 
         // no waveform, video right
@@ -607,6 +648,7 @@ namespace Nikse.SubtitleEdit.Logic
             spLeftTop.SplitterMoved += SplitMovedLimitTextBoxPanel2;
 
             videoPlayerContainer.Width = groupBoxWaveform.Width - (videoPlayerContainer.Left + 10);
+            spMain.SplitterMoved += SplitMovedLimitWaveformPanel1;
         }
 
         // video left, waveform + text right, list view bottom
