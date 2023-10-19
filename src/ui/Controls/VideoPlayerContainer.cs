@@ -485,11 +485,12 @@ namespace Nikse.SubtitleEdit.Controls
                 SubtitleFormat format = new AdvancedSubStationAlpha();
                 string text;
 
-                if (uiFormat.GetType() == typeof(NetflixImsc11Japanese))
+                var uiFormatType = uiFormat.GetType();
+                if (uiFormatType == typeof(NetflixImsc11Japanese))
                 {
                     text = NetflixImsc11JapaneseToAss.Convert(subtitle, 1280, 720);
                 }
-                else if (uiFormat.Name == WebVTT.NameOfFormat || uiFormat.Name == WebVTTFileWithLineNumber.NameOfFormat)
+                else if (uiFormatType == typeof(WebVTT) || uiFormatType == typeof(WebVTTFileWithLineNumber))
                 {
                     //TODO: add some caching!?
                     var defaultStyle = GetMpvPreviewStyle(Configuration.Settings.General);
@@ -502,9 +503,9 @@ namespace Nikse.SubtitleEdit.Controls
                 }
                 else
                 {
-                    if (subtitle.Header == null || !subtitle.Header.Contains("[V4+ Styles]") || uiFormat.Name != AdvancedSubStationAlpha.NameOfFormat)
+                    if (subtitle.Header == null || !subtitle.Header.Contains("[V4+ Styles]") || uiFormatType != typeof(AdvancedSubStationAlpha))
                     {
-                        if (string.IsNullOrEmpty(subtitle.Header) && uiFormat.Name == SubStationAlpha.NameOfFormat)
+                        if (string.IsNullOrEmpty(subtitle.Header) && uiFormatType == typeof(SubStationAlpha))
                         {
                             subtitle.Header = SubStationAlpha.DefaultHeader;
                         }
@@ -528,7 +529,7 @@ namespace Nikse.SubtitleEdit.Controls
                             }
                         }
 
-                        if (subtitle.Header == null || !(subtitle.Header.Contains("[V4+ Styles]") && uiFormat.Name == SubStationAlpha.NameOfFormat))
+                        if (subtitle.Header == null || !(subtitle.Header.Contains("[V4+ Styles]") && uiFormatType == typeof(SubStationAlpha)))
                         {
                             subtitle.Header = MpvPreviewStyleHeader;
                         }
@@ -2168,7 +2169,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
             else
             {
-                _labelVolume.ForeColor = Color.FromArgb(228, 228, 228); ;
+                _labelVolume.ForeColor = Color.FromArgb(228, 228, 228);
             }
 
             if (_labelTimeCode.BackColor.R + _labelTimeCode.BackColor.G + _labelTimeCode.BackColor.B > 255 * 1.5)
