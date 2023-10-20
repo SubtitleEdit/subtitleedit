@@ -19,6 +19,18 @@ namespace Nikse.SubtitleEdit.Logic
         public Keys MainGeneralSwitchTranslationAndOriginal { get; set; }
         public Keys MainGeneralSwitchTranslationAndOriginalTextBoxes { get; set; }
         public Keys MainGeneralLayoutChoose { get; set; }
+        public Keys MainGeneralLayoutChoose1 { get; set; }
+        public Keys MainGeneralLayoutChoose2 { get; set; }
+        public Keys MainGeneralLayoutChoose3 { get; set; }
+        public Keys MainGeneralLayoutChoose4 { get; set; }
+        public Keys MainGeneralLayoutChoose5 { get; set; }
+        public Keys MainGeneralLayoutChoose6 { get; set; }
+        public Keys MainGeneralLayoutChoose7 { get; set; }
+        public Keys MainGeneralLayoutChoose8 { get; set; }
+        public Keys MainGeneralLayoutChoose9 { get; set; }
+        public Keys MainGeneralLayoutChoose10 { get; set; }
+        public Keys MainGeneralLayoutChoose11 { get; set; }
+        public Keys MainGeneralLayoutChoose12 { get; set; }
         public Keys MainGeneralMergeTranslationAndOriginal { get; set; }
         public Keys MainGeneralMergeWithNext { get; set; }
         public Keys MainGeneralMergeWithPrevious { get; set; }
@@ -280,6 +292,18 @@ namespace Nikse.SubtitleEdit.Logic
             MainGeneralSwitchTranslationAndOriginal = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralSwitchOriginalAndTranslation);
             MainGeneralSwitchTranslationAndOriginalTextBoxes = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralSwitchOriginalAndTranslationTextBoxes);
             MainGeneralLayoutChoose = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralLayoutChoose);
+            MainGeneralLayoutChoose1 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralLayoutChoose1);
+            MainGeneralLayoutChoose2 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralLayoutChoose2);
+            MainGeneralLayoutChoose3 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralLayoutChoose3);
+            MainGeneralLayoutChoose4 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralLayoutChoose4);
+            MainGeneralLayoutChoose5 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralLayoutChoose5);
+            MainGeneralLayoutChoose6 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralLayoutChoose6);
+            MainGeneralLayoutChoose7 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralLayoutChoose7);
+            MainGeneralLayoutChoose8 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralLayoutChoose8);
+            MainGeneralLayoutChoose9 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralLayoutChoose9);
+            MainGeneralLayoutChoose10 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralLayoutChoose10);
+            MainGeneralLayoutChoose11 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralLayoutChoose11);
+            MainGeneralLayoutChoose12 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralLayoutChoose12);
             MainGeneralMergeTranslationAndOriginal = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralMergeOriginalAndTranslation);
             MainGeneralMergeWithNext = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralMergeWithNext);
             MainGeneralMergeWithPrevious = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralMergeWithPrevious);

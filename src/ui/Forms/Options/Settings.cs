@@ -1487,6 +1487,18 @@ namespace Nikse.SubtitleEdit.Forms.Options
             AddNode(generalNode, language.SwitchOriginalAndTranslation, nameof(Configuration.Settings.Shortcuts.GeneralSwitchOriginalAndTranslation));
             AddNode(generalNode, language.SwitchOriginalAndTranslationTextBoxes, nameof(Configuration.Settings.Shortcuts.GeneralSwitchOriginalAndTranslationTextBoxes));
             AddNode(generalNode, LanguageSettings.Current.Main.ChooseLayout, nameof(Configuration.Settings.Shortcuts.GeneralLayoutChoose));
+            AddNode(generalNode, string.Format(language.ChooseLayoutX, 1), nameof(Configuration.Settings.Shortcuts.GeneralLayoutChoose1));
+            AddNode(generalNode, string.Format(language.ChooseLayoutX, 2), nameof(Configuration.Settings.Shortcuts.GeneralLayoutChoose2));
+            AddNode(generalNode, string.Format(language.ChooseLayoutX, 3), nameof(Configuration.Settings.Shortcuts.GeneralLayoutChoose3));
+            AddNode(generalNode, string.Format(language.ChooseLayoutX, 4), nameof(Configuration.Settings.Shortcuts.GeneralLayoutChoose4));
+            AddNode(generalNode, string.Format(language.ChooseLayoutX, 5), nameof(Configuration.Settings.Shortcuts.GeneralLayoutChoose5));
+            AddNode(generalNode, string.Format(language.ChooseLayoutX, 6), nameof(Configuration.Settings.Shortcuts.GeneralLayoutChoose6));
+            AddNode(generalNode, string.Format(language.ChooseLayoutX, 7), nameof(Configuration.Settings.Shortcuts.GeneralLayoutChoose7));
+            AddNode(generalNode, string.Format(language.ChooseLayoutX, 8), nameof(Configuration.Settings.Shortcuts.GeneralLayoutChoose8));
+            AddNode(generalNode, string.Format(language.ChooseLayoutX, 9), nameof(Configuration.Settings.Shortcuts.GeneralLayoutChoose9));
+            AddNode(generalNode, string.Format(language.ChooseLayoutX, 10), nameof(Configuration.Settings.Shortcuts.GeneralLayoutChoose10));
+            AddNode(generalNode, string.Format(language.ChooseLayoutX, 11), nameof(Configuration.Settings.Shortcuts.GeneralLayoutChoose11));
+            AddNode(generalNode, string.Format(language.ChooseLayoutX, 12), nameof(Configuration.Settings.Shortcuts.GeneralLayoutChoose12));
             AddNode(generalNode, language.WaveformPlayFirstSelectedSubtitle, nameof(Configuration.Settings.Shortcuts.GeneralPlayFirstSelected));
             AddNode(generalNode, language.GoToFirstSelectedLine, nameof(Configuration.Settings.Shortcuts.GeneralGoToFirstSelectedLine));
             AddNode(generalNode, language.GoToNextEmptyLine, nameof(Configuration.Settings.Shortcuts.GeneralGoToNextEmptyLine));

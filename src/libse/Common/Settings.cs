@@ -2343,6 +2343,18 @@ $HorzAlign          =   Center
         public string GeneralSwitchOriginalAndTranslation { get; set; }
         public string GeneralSwitchOriginalAndTranslationTextBoxes { get; set; }
         public string GeneralLayoutChoose { get; set; }
+        public string GeneralLayoutChoose1 { get; set; }
+        public string GeneralLayoutChoose2 { get; set; }
+        public string GeneralLayoutChoose3 { get; set; }
+        public string GeneralLayoutChoose4 { get; set; }
+        public string GeneralLayoutChoose5 { get; set; }
+        public string GeneralLayoutChoose6 { get; set; }
+        public string GeneralLayoutChoose7 { get; set; }
+        public string GeneralLayoutChoose8 { get; set; }
+        public string GeneralLayoutChoose9 { get; set; }
+        public string GeneralLayoutChoose10 { get; set; }
+        public string GeneralLayoutChoose11 { get; set; }
+        public string GeneralLayoutChoose12 { get; set; }
         public string GeneralPlayFirstSelected { get; set; }
         public string GeneralGoToFirstSelectedLine { get; set; }
         public string GeneralGoToNextEmptyLine { get; set; }
@@ -8975,6 +8987,78 @@ $HorzAlign          =   Center
                     shortcuts.GeneralLayoutChoose = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("GeneralLayoutChoose1");
+                if (subNode != null)
+                {
+                    shortcuts.GeneralLayoutChoose1 = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("GeneralLayoutChoose2");
+                if (subNode != null)
+                {
+                    shortcuts.GeneralLayoutChoose2 = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("GeneralLayoutChoose3");
+                if (subNode != null)
+                {
+                    shortcuts.GeneralLayoutChoose3 = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("GeneralLayoutChoose4");
+                if (subNode != null)
+                {
+                    shortcuts.GeneralLayoutChoose4 = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("GeneralLayoutChoose5");
+                if (subNode != null)
+                {
+                    shortcuts.GeneralLayoutChoose5 = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("GeneralLayoutChoose6");
+                if (subNode != null)
+                {
+                    shortcuts.GeneralLayoutChoose6 = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("GeneralLayoutChoose7");
+                if (subNode != null)
+                {
+                    shortcuts.GeneralLayoutChoose7 = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("GeneralLayoutChoose8");
+                if (subNode != null)
+                {
+                    shortcuts.GeneralLayoutChoose8 = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("GeneralLayoutChoose9");
+                if (subNode != null)
+                {
+                    shortcuts.GeneralLayoutChoose9 = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("GeneralLayoutChoose10");
+                if (subNode != null)
+                {
+                    shortcuts.GeneralLayoutChoose10 = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("GeneralLayoutChoose11");
+                if (subNode != null)
+                {
+                    shortcuts.GeneralLayoutChoose11 = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("GeneralLayoutChoose12");
+                if (subNode != null)
+                {
+                    shortcuts.GeneralLayoutChoose12 = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("GeneralMergeOriginalAndTranslation");
                 if (subNode != null)
                 {
@@ -12251,6 +12335,18 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("GeneralSwitchOriginalAndTranslation", shortcuts.GeneralSwitchOriginalAndTranslation);
             textWriter.WriteElementString("GeneralSwitchOriginalAndTranslationTextBoxes", shortcuts.GeneralSwitchOriginalAndTranslationTextBoxes);
             textWriter.WriteElementString("GeneralLayoutChoose", shortcuts.GeneralLayoutChoose);
+            textWriter.WriteElementString("GeneralLayoutChoose1", shortcuts.GeneralLayoutChoose1);
+            textWriter.WriteElementString("GeneralLayoutChoose2", shortcuts.GeneralLayoutChoose2);
+            textWriter.WriteElementString("GeneralLayoutChoose3", shortcuts.GeneralLayoutChoose3);
+            textWriter.WriteElementString("GeneralLayoutChoose4", shortcuts.GeneralLayoutChoose4);
+            textWriter.WriteElementString("GeneralLayoutChoose5", shortcuts.GeneralLayoutChoose5);
+            textWriter.WriteElementString("GeneralLayoutChoose6", shortcuts.GeneralLayoutChoose6);
+            textWriter.WriteElementString("GeneralLayoutChoose7", shortcuts.GeneralLayoutChoose7);
+            textWriter.WriteElementString("GeneralLayoutChoose8", shortcuts.GeneralLayoutChoose8);
+            textWriter.WriteElementString("GeneralLayoutChoose9", shortcuts.GeneralLayoutChoose9);
+            textWriter.WriteElementString("GeneralLayoutChoose10", shortcuts.GeneralLayoutChoose10);
+            textWriter.WriteElementString("GeneralLayoutChoose11", shortcuts.GeneralLayoutChoose11);
+            textWriter.WriteElementString("GeneralLayoutChoose12", shortcuts.GeneralLayoutChoose12);
             textWriter.WriteElementString("GeneralMergeOriginalAndTranslation", shortcuts.GeneralMergeOriginalAndTranslation);
             textWriter.WriteElementString("GeneralGoToNextSubtitle", shortcuts.GeneralGoToNextSubtitle);
             textWriter.WriteElementString("GeneralGoToNextSubtitlePlayTranslate", shortcuts.GeneralGoToNextSubtitlePlayTranslate);

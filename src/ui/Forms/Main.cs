@@ -17755,6 +17755,66 @@ namespace Nikse.SubtitleEdit.Forms
                 TaskDelayHelper.RunDelayed(TimeSpan.FromMilliseconds(25), () => ToolStripButtonLayoutChooseClick(null, null));
                 e.SuppressKeyPress = true;
             }
+            else if (_shortcuts.MainGeneralLayoutChoose1 == e.KeyData)
+            {
+                SetLayout(0);
+                e.SuppressKeyPress = true;
+            }
+            else if (_shortcuts.MainGeneralLayoutChoose2 == e.KeyData)
+            {
+                SetLayout(1);
+                e.SuppressKeyPress = true;
+            }
+            else if (_shortcuts.MainGeneralLayoutChoose3 == e.KeyData)
+            {
+                SetLayout(2);
+                e.SuppressKeyPress = true;
+            }
+            else if (_shortcuts.MainGeneralLayoutChoose4 == e.KeyData)
+            {
+                SetLayout(3);
+                e.SuppressKeyPress = true;
+            }
+            else if (_shortcuts.MainGeneralLayoutChoose5 == e.KeyData)
+            {
+                SetLayout(4);
+                e.SuppressKeyPress = true;
+            }
+            else if (_shortcuts.MainGeneralLayoutChoose6 == e.KeyData)
+            {
+                SetLayout(5);
+                e.SuppressKeyPress = true;
+            }
+            else if (_shortcuts.MainGeneralLayoutChoose7 == e.KeyData)
+            {
+                SetLayout(6);
+                e.SuppressKeyPress = true;
+            }
+            else if (_shortcuts.MainGeneralLayoutChoose8 == e.KeyData)
+            {
+                SetLayout(7);
+                e.SuppressKeyPress = true;
+            }
+            else if (_shortcuts.MainGeneralLayoutChoose9 == e.KeyData)
+            {
+                SetLayout(8);
+                e.SuppressKeyPress = true;
+            }
+            else if (_shortcuts.MainGeneralLayoutChoose10 == e.KeyData)
+            {
+                SetLayout(9);
+                e.SuppressKeyPress = true;
+            }
+            else if (_shortcuts.MainGeneralLayoutChoose11 == e.KeyData)
+            {
+                SetLayout(10);
+                e.SuppressKeyPress = true;
+            }
+            else if (_shortcuts.MainGeneralLayoutChoose12 == e.KeyData)
+            {
+                SetLayout(11);
+                e.SuppressKeyPress = true;
+            }
             else if (_shortcuts.MainGeneralMergeTranslationAndOriginal == e.KeyData) // Merge translation and original
             {
                 if (_subtitleOriginal != null && _subtitleOriginal.Paragraphs.Count > 0 && _networkSession == null)

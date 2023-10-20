@@ -2822,6 +2822,7 @@
             public string WaveformSeekSilenceForward { get; set; }
             public string WaveformSeekSilenceBack { get; set; }
             public string WaveformAddTextHere { get; set; }
+            public string ChooseLayoutX { get; set; }
             public string WaveformAddTextHereFromClipboard { get; set; }
             public string SetParagraphAsSelection { get; set; }
             public string WaveformPlayNewSelection { get; set; }
