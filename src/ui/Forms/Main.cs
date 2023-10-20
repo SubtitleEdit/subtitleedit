@@ -23967,6 +23967,9 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 tabControlModes.Height = tabControlModes.Parent.Height - 2 - tabControlModes.Top;
             }
+
+            tbText.Height = groupBoxEdit.Height - tbText.Top - 32;
+            tbOriginal.Height = tbText.Height;
         }
 
         private void FixRightToLeftDependingOnLanguage()
