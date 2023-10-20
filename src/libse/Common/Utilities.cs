@@ -2968,6 +2968,16 @@ namespace Nikse.SubtitleEdit.Core.Common
                                               AllLetters.Contains(s.Substring(s.Length - 1)) ||
                                               CalcCjk.IsCjk(s[s.Length - 1]);
 
+                    if (s.EndsWith('♪') || nextText.StartsWith('♪'))
+                    {
+                        return false;
+                    }
+
+                    if (s.EndsWith('♫') || nextText.StartsWith('♫'))
+                    {
+                        return false;
+                    }
+
                     if (!onlyContinuationLines)
                     {
                         return true;
