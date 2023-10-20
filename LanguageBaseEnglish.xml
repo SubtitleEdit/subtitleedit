@@ -2647,6 +2647,7 @@ can edit in same subtitle file (collaboration)</Information>
     <WaveformSeekSilenceForward>Seek silence forward</WaveformSeekSilenceForward>
     <WaveformSeekSilenceBack>Seek silence back</WaveformSeekSilenceBack>
     <WaveformAddTextHere>Add text here (for new selection)</WaveformAddTextHere>
+    <ChooseLayoutX>Choose layout {0}</ChooseLayoutX>
     <WaveformAddTextHereFromClipboard>Add text here (for new selection from clipboard)</WaveformAddTextHereFromClipboard>
     <SetParagraphAsSelection>Set current as new selection</SetParagraphAsSelection>
     <WaveformPlayNewSelection>Play selection</WaveformPlayNewSelection>
