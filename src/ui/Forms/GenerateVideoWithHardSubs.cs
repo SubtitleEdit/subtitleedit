@@ -412,6 +412,15 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
+            if (Configuration.Settings.General.CurrentVideoIsSmpte && (decimal)_videoInfo.FramesPerSecond % 1 != 0)
+            {
+                foreach (var assaP in _assaSubtitle.Paragraphs)
+                {
+                    assaP.StartTime.TotalMilliseconds /= 1.001;
+                    assaP.EndTime.TotalMilliseconds /= 1.001;
+                }
+            }
+
             FileUtil.WriteAllText(assaTempFileName, format.ToText(_assaSubtitle, null), new TextEncoding(Encoding.UTF8, "UTF8"));
 
             groupBoxSettings.Enabled = false;
