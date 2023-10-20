@@ -404,7 +404,13 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                 }
                 else if (whisperChoice == WhisperChoice.WhisperX)
                 {
-                    var f = Path.Combine(whisperFolder, fileNameOnly);
+                    var f = GetWhisperFolder(whisperChoice);
+                    if (File.Exists(f))
+                    {
+                        return f;
+                    }
+
+                    f = Path.Combine(whisperFolder, fileNameOnly);
                     if (File.Exists(f))
                     {
                         return f;

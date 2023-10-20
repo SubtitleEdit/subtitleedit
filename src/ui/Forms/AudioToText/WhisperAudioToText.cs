@@ -1083,6 +1083,11 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             var whisperFolder = WhisperHelper.GetWhisperFolder();
             if (!string.IsNullOrEmpty(whisperFolder))
             {
+                if (File.Exists(whisperFolder))
+                {
+                    whisperFolder = Path.GetDirectoryName(whisperFolder);
+                }
+
                 process.StartInfo.WorkingDirectory = whisperFolder;
             }
 
