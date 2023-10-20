@@ -7228,6 +7228,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/WaveformAddTextHere":
                     language.Settings.WaveformAddTextHere = reader.Value;
                     break;
+                case "Settings/ChooseLayoutX":
+                    language.Settings.ChooseLayoutX = reader.Value;
+                    break;
                 case "Settings/WaveformAddTextHereFromClipboard":
                     language.Settings.WaveformAddTextHereFromClipboard = reader.Value;
                     break;
