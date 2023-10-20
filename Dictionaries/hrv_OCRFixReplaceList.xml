@@ -1220,6 +1220,7 @@
     <Word from="odoliti" to="odoljeti" />
     <Word from="odoleti" to="odoljeti" />
     <Word from="odneti" to="odnijeti" />
+    <Word from="odrešene" to="odriješene" />
     <Word from="odseo" to="odsjeo" />
     <Word from="odsela" to="odsjela" />
     <Word from="odsesti" to="odsjesti" />
@@ -1421,6 +1422,7 @@
     <Word from="Polcija" to="Policija" />
     <Word from="policja" to="policija" />
     <Word from="poludili" to="poludjeli" />
+    <Word from="Polna" to="Spolna" />
     <Word from="pomaći" to="pomaknuti" />
     <Word from="pomaknim" to="pomaknem" />
     <Word from="pomaknio" to="pomaknuo" />
@@ -1516,7 +1518,6 @@
     <Word from="predamnom" to="preda mnom" />
     <Word from="Predamnom" to="Preda mnom" />
     <Word from="predsjenik" to="predsjednik" />
-    <Word from="prefinjen" to="profinjen" />
     <Word from="preformuliši" to="preformuliraj" />
     <Word from="preklo" to="porijeklo" />
     <Word from="preliv" to="preljev" />
@@ -1771,6 +1772,7 @@
     <Word from="ronioc" to="ronilac" />
     <Word from="saglasili" to="suglasili" />
     <Word from="Sagradiću" to="Sagradit ću" />
+    <Word from="Sajentifik" to="Scientific" />
     <Word from="Sakriću" to="Sakrit ću" />
     <Word from="sakriću" to="sakrit ću" />
     <Word from="samosvest" to="samosvijest" />
@@ -2321,6 +2323,7 @@
     <Word from="usljed" to="uslijed" />
     <Word from="Usljed" to="Uslijed" />
     <Word from="ušunjate" to="ušuljate" />
+    <Word from="uštedeće" to="uštedjet će" />
     <Word from="utehe" to="utjehe" />
     <Word from="utopiće" to="utopit će" />
     <Word from="utopićeš" to="utopit ćeš" />
@@ -2632,6 +2635,7 @@
     <Word from="Džared" to="Jared" />
     <Word from="Džaredu" to="Jaredu" />
     <Word from="Đeni" to="Jenny" />
+    <Word from="Dženi" to="Jenny" />
     <Word from="Đen" to="Jen" />
     <Word from="Đejn" to="Jane" />
     <Word from="Đina" to="Gina" />
@@ -2718,7 +2722,6 @@
     <Word from="Hemingvej" to="Hemingway" />
     <Word from="Henri" to="Henry" />
     <Word from="Hejs" to="Hays" />
-    <Word from="Hejstings" to="Hastings" />
     <Word from="Heri" to="Harry" />
     <Word from="Hejven" to="Haven" />
     <Word from="Hejz" to="Hays" />
@@ -2831,6 +2834,7 @@
     <Word from="Pitera" to="Petera" />
     <Word from="Piteru" to="Peteru" />
     <Word from="Pole" to="Paule" />
+    <Word from="Prajs" to="Price" />
     <Word from="Prinston" to="Princeton" />
     <Word from="Prinstonu" to="Princetonu" />
     <Word from="Redži" to="Reggie" />
@@ -3426,6 +3430,7 @@
     <LinePart from="možemo da budemo" to="možemo biti" />
     <LinePart from="možemo da idemo" to="možemo ići" />
     <LinePart from="možemo da imamo" to="možemo imati" />
+    <LinePart from="možete da idete" to="možete ići" />
     <LinePart from="može da zna" to="može znati" />
     <LinePart from="možeš da znaš" to="možeš znati" />
     <LinePart from="možete da uzmete" to="možete uzeti" />
@@ -3535,6 +3540,7 @@
     <RegEx find="Armij" replaceWith="Vojsk" />
     <RegEx find="asnp" replaceWith="asno" />
     <RegEx find="ašnp" replaceWith="ašno" />
+    <RegEx find="atrijum" replaceWith="atrij" />
     <RegEx find="svalt" replaceWith="sfalt" />
     <RegEx find="zbu[kc]" replaceWith="beced" />
     <RegEx find="akcil" replaceWith="acil" />
@@ -3724,6 +3730,7 @@
     <RegEx find="Hirur" replaceWith="Kirur" />
     <RegEx find="hleb" replaceWith="kruh" />
     <RegEx find="Hleb" replaceWith="Kruh" />
+    <RegEx find="hlor" replaceWith="klor" />
     <RegEx find="\b([hH])oče" replaceWith="$1oće" />
     <!-- [h->k]olesterol -->
     <RegEx find="holest" replaceWith="kolest" />
@@ -4043,6 +4050,7 @@
     <RegEx find="rj?edlo([gz])" replaceWith="rijedlo$1" />
     <RegEx find="repostav" replaceWith="retpostav" />
     <RegEx find="ređaš" replaceWith="rijaš" />
+    <RegEx find="refinj" replaceWith="rofinj" />
     <RegEx find="premić" replaceWith="premit ć" />
     <RegEx find="renje([lt])" replaceWith="renije$1" />
     <RegEx find="rese([čk])" replaceWith="resje$1" />
@@ -4927,6 +4935,7 @@
     <RegEx find="Harvi" replaceWith="Harvey" />
     <RegEx find="Hauard" replaceWith="Howard" />
     <RegEx find="Hejden" replaceWith="Hayden" />
+    <RegEx find="Hejstings" replaceWith="Hastings" />
     <RegEx find="Hemtons" replaceWith="Hamptons" />
     <RegEx find="Henk" replaceWith="Hank" />
     <RegEx find="Hitrou" replaceWith="Heathrow" />
