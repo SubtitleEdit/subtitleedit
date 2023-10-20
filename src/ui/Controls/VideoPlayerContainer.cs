@@ -488,7 +488,7 @@ namespace Nikse.SubtitleEdit.Controls
                 var uiFormatType = uiFormat.GetType();
                 if (uiFormatType == typeof(NetflixImsc11Japanese))
                 {
-                    text = NetflixImsc11JapaneseToAss.Convert(subtitle, 1280, 720);
+                    text = NetflixImsc11JapaneseToAss.Convert(subtitle, VideoWidth, VideoHeight);
                 }
                 else if (uiFormatType == typeof(WebVTT) || uiFormatType == typeof(WebVTTFileWithLineNumber))
                 {
