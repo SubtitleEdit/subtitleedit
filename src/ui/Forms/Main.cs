@@ -2153,12 +2153,26 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                if (_oldSubtitleFormat?.GetType() != format.GetType())
+                if (formatType == typeof(AdvancedSubStationAlpha) && _oldSubtitleFormat.GetType() == typeof(NetflixImsc11Japanese))
+                {
+                    var raw = NetflixImsc11JapaneseToAss.Convert(_subtitle, _videoInfo?.Width ?? 1280, _videoInfo?.Height ?? 720);
+                    var s = new Subtitle();
+                    new AdvancedSubStationAlpha().LoadSubtitle(s, raw.SplitToLines(), null);
+                    _subtitle.Paragraphs.Clear();
+                    _subtitle.Paragraphs.AddRange(s.Paragraphs);
+                    _subtitle.Header = s.Header;
+                    _subtitle.Footer = s.Footer;
+
+                    SaveSubtitleListviewIndices();
+                    SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
+                    RestoreSubtitleListviewIndices();
+                }
+                else if (_oldSubtitleFormat?.GetType() != format.GetType())
                 {
                     _oldSubtitleFormat.RemoveNativeFormatting(_subtitle, format);
                 }
 
-                if (formatType == typeof(AdvancedSubStationAlpha))
+                if (formatType == typeof(AdvancedSubStationAlpha) && _oldSubtitleFormat.GetType() != typeof(NetflixImsc11Japanese))
                 {
                     if (_oldSubtitleFormat?.GetType() == typeof(WebVTT) ||
                         _oldSubtitleFormat?.GetType() == typeof(WebVTTFileWithLineNumber))
@@ -8929,7 +8943,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     var fontSize = PrepareBurn(sub);
 
-                    using (var form = new GenerateVideoWithHardSubs(sub, _videoFileName, _videoInfo, fontSize, true))
+                    using (var form = new GenerateVideoWithHardSubs(sub, GetCurrentSubtitleFormat(), _videoFileName, _videoInfo, fontSize, true))
                     {
                         var result = form.ShowDialog(this);
                         if (result != DialogResult.OK)
@@ -35008,7 +35022,7 @@ namespace Nikse.SubtitleEdit.Forms
             var sub = new Subtitle(_subtitle, false);
             var fontSize = PrepareBurn(sub);
 
-            using (var form = new GenerateVideoWithHardSubs(sub, _videoFileName, _videoInfo, fontSize, false))
+            using (var form = new GenerateVideoWithHardSubs(sub, GetCurrentSubtitleFormat(), _videoFileName, _videoInfo, fontSize, false))
             {
                 var result = form.ShowDialog(this);
                 if (result != DialogResult.OK)

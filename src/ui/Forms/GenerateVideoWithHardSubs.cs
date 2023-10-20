@@ -37,7 +37,7 @@ namespace Nikse.SubtitleEdit.Forms
         public long MillisecondsEncoding { get; private set; }
         private PreviewVideo _previewVideo;
 
-        public GenerateVideoWithHardSubs(Subtitle assaSubtitle, string inputVideoFileName, VideoInfo videoInfo, int? fontSize, bool setStartEndCut)
+        public GenerateVideoWithHardSubs(Subtitle assaSubtitle, SubtitleFormat format, string inputVideoFileName, VideoInfo videoInfo, int? fontSize, bool setStartEndCut)
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
@@ -48,6 +48,14 @@ namespace Nikse.SubtitleEdit.Forms
             _videoInfo = videoInfo;
             _assaSubtitle = new Subtitle(assaSubtitle);
             _inputVideoFileName = inputVideoFileName;
+
+            if (format.GetType() == typeof(NetflixImsc11Japanese))
+            {
+                _assaSubtitle = new Subtitle();
+                var raw = NetflixImsc11JapaneseToAss.Convert(assaSubtitle, _videoInfo.Width, _videoInfo.Height);
+                new AdvancedSubStationAlpha().LoadSubtitle(_assaSubtitle, raw.SplitToLines(), null);
+                fontSize = null;
+            }
 
             Text = LanguageSettings.Current.GenerateVideoWithBurnedInSubs.Title;
             buttonGenerate.Text = LanguageSettings.Current.Watermark.Generate;
