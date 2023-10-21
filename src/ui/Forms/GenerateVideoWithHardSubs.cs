@@ -416,8 +416,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 foreach (var assaP in _assaSubtitle.Paragraphs)
                 {
-                    assaP.StartTime.TotalMilliseconds /= 1.001;
-                    assaP.EndTime.TotalMilliseconds /= 1.001;
+                    assaP.StartTime.TotalMilliseconds *= 1.001;
+                    assaP.EndTime.TotalMilliseconds *= 1.001;
                 }
             }
 
