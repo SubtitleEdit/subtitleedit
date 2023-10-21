@@ -475,6 +475,8 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 return;
             }
 
+            CheckImageMouseMove();
+
             if (_updatePos && (_x != _tempX || _y != _tempY))
             {
                 _x = _tempX;
@@ -482,6 +484,35 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 _xScaled = _tempXScaled;
                 _yScaled = _tempYScaled;
                 VideoLoaded(null, null);
+            }
+        }
+
+        private void CheckImageMouseMove()
+        {
+            var pos = pictureBoxPreview.PointToClient(Cursor.Position);
+            var x = pos.X;
+            var y = pos.Y;
+
+            if (x < -100 || y < -100 || x > pictureBoxPreview.Width + 100 || y > pictureBoxPreview.Height + 100)
+            {
+                return;
+            }
+
+            var xAspectRatio = (double)_videoInfo.Width / pictureBoxPreview.Width;
+            _tempX = (int)Math.Round(x * xAspectRatio);
+
+            var yAspectRatio = (double)_videoInfo.Height / pictureBoxPreview.Height;
+            _tempY = (int)Math.Round(y * yAspectRatio);
+
+            if (_playResScaleOn)
+            {
+                _tempXScaled = AssaResampler.Resample(_videoInfo.Width, _originalPlayResX, _tempX);
+                _tempYScaled = AssaResampler.Resample(_videoInfo.Height, _originalPlayResY, _tempY);
+                labelCurrentPosition.Text = string.Format(LanguageSettings.Current.AssaSetPosition.CurrentMousePositionX, $"{_tempX},{_tempY}  ({_tempXScaled},{_tempYScaled})");
+            }
+            else
+            {
+                labelCurrentPosition.Text = string.Format(LanguageSettings.Current.AssaSetPosition.CurrentMousePositionX, $"{_tempX},{_tempY}");
             }
         }
 
@@ -691,26 +722,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             _updatePos = !_updatePos;
             VideoLoaded(null, null);
             _positionChanged = true;
-        }
-
-        private void pictureBoxPreview_MouseMove(object sender, MouseEventArgs e)
-        {
-            var xAspectRatio = (double)_videoInfo.Width / pictureBoxPreview.Width;
-            _tempX = (int)Math.Round(e.Location.X * xAspectRatio);
-
-            var yAspectRatio = (double)_videoInfo.Height / pictureBoxPreview.Height;
-            _tempY = (int)Math.Round(e.Location.Y * yAspectRatio);
-
-            if (_playResScaleOn)
-            {
-                _tempXScaled = AssaResampler.Resample(_videoInfo.Width, _originalPlayResX, _tempX);
-                _tempYScaled = AssaResampler.Resample(_videoInfo.Height, _originalPlayResY, _tempY);
-                labelCurrentPosition.Text = string.Format(LanguageSettings.Current.AssaSetPosition.CurrentMousePositionX, $"{_tempX},{_tempY}  ({_tempXScaled},{_tempYScaled})");
-            }
-            else
-            {
-                labelCurrentPosition.Text = string.Format(LanguageSettings.Current.AssaSetPosition.CurrentMousePositionX, $"{_tempX},{_tempY}");
-            }
         }
 
         private void SetPosition_ResizeEnd(object sender, EventArgs e)
