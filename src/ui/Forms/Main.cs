@@ -842,6 +842,24 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         var p = tmp.Paragraphs[i];
                         var idx = _subtitle.InsertParagraphInCorrectTimeOrder(p);
+
+                        if (tmp.Paragraphs.Count == 1)
+                        {
+                            var next = _subtitle.GetParagraphOrDefault(idx + 1);
+                            if (next != null && next.StartTime.TotalMilliseconds < p.EndTime.TotalMilliseconds)
+                            {
+                                var newDuration = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines - p.StartTime.TotalMilliseconds;
+                                if (newDuration >= Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
+                                {
+                                    var cps = Utilities.GetCharactersPerSecond(p);
+                                    if (cps <= Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
+                                    {
+                                        p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + newDuration;
+                                    }
+                                }
+                            }
+                        }
+
                         selectIndices.Add(idx);
                         if (IsOriginalEditable && SubtitleListview1.IsOriginalTextColumnVisible)
                         {
@@ -869,6 +887,8 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         SubtitleListview1.SelectIndexAndEnsureVisible(0);
                     }
+
+                    RefreshSelectedParagraph();
                 }
             }
         }
