@@ -345,7 +345,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             foreach (var paragraph in subtitle.Paragraphs)
             {
-              //  paragraph.Text = ColorWebVttToHtml(paragraph.Text);
+                //  paragraph.Text = ColorWebVttToHtml(paragraph.Text);
                 paragraph.Text = EscapeDecodeText(paragraph.Text);
                 paragraph.Text = RemoveWeirdRepeatingHeader(paragraph.Text);
             }
@@ -590,7 +590,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 return string.Empty;
             }
 
-            return s.Substring(list.Min(p=>p));
+            return s.Substring(list.Min(p => p));
         }
 
         internal static string GetRegion(string s)
@@ -601,6 +601,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static string GetTag(string s, string tag)
         {
+            if (s == null)
+            {
+                return null;
+            }
+
             var pos = s.IndexOf(tag, StringComparison.Ordinal);
             if (pos >= 0)
             {
@@ -818,7 +823,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             while (match.Success)
             {
                 var value = match.Value.Substring(3, match.Value.Length - 4);
-                if (match.Value.StartsWith("<c.color", StringComparison.Ordinal) && 
+                if (match.Value.StartsWith("<c.color", StringComparison.Ordinal) &&
                     match.Length == 15 && match.Value.EndsWith('>'))
                 {
                     value = "#" + match.Value.Substring(3 + 5, match.Value.Length - 4 - 5);
