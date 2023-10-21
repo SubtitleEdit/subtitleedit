@@ -34,7 +34,9 @@
    * Update Tesseract to 5.3.3 (2023-10-05, 64-bit only)
    * Auto-translate re-written, so it's easier to add new translators
    * Close all processes when closing Faster Whisper - thx Purfview
+   * Allow drag-n-drop in "Multiple replace" rules - thx Clarencezzh
 * FIXED:
+   * Fix for paste in waveform - thx Ruong
    * Fix remember text box settings (bold/size) - thx Siamak
    * Fix crash in CSV reader - thx Waseem
    * Fix bug in "Remove text for HI" - thx Chamallow
@@ -44,7 +46,9 @@
    * Fix for merge short lines with dialog - thx taxen 
    * Fix duration combo-box frames in frame-time-code-mode - thx JDTR75
    * Fix for BD-SUP edit "toggle forced" - thx manuelrn
-   * Fix Whisper post-processing language using "Translate to English" - thx github-roe 
+   * Fix Whisper post-processing language using "Translate to English" - thx github-roe
+   * Fix "ASSA Tools - Set position" on Linux - thx PascalsHere
+   * Fix for "Generate video with burned-in subtitle" in SMPTE mode - thx Jim
 
 
 4.0.1 (16th September 2023)
