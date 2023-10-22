@@ -1196,6 +1196,11 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
             text = text.Trim();
 
+            if (text.Replace('♪', ' ').Replace('♫', ' ').Trim().Length == 0)
+            {
+                return string.Empty;
+            }
+
             // keep U2010 dashes if no changes
             if (originalAfterU2010Replace == text)
             {
