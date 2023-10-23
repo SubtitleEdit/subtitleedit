@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Language Name="Español (Argentina)">
   <General>
     <Title>Subtitle Edit</Title>
@@ -104,6 +104,7 @@
     <Warning>Advertencia</Warning>
     <UseLargerFontForThisWindow>Usar letra más grande para esta ventana</UseLargerFontForThisWindow>
     <ChangeLanguageFilter>Cambiar filtro de idioma...</ChangeLanguageFilter>
+    <MoreInfo>Más información</MoreInfo>
   </General>
   <About>
     <Title>Acerca de Subtitle Edit</Title>
@@ -198,6 +199,7 @@ Nota: comprobar el espacio libre en disco.</WaveFileMalformed>
     <WhisperNotFound>Whisper no encontrado.
 
 ¿Más información (web)?</WhisperNotFound>
+    <Model>Modelo</Model>
     <Models>Modelos</Models>
     <LanguagesAndModels>Idiomas y modelos</LanguagesAndModels>
     <ChooseModel>Elige un modelo</ChooseModel>
@@ -324,6 +326,7 @@ Nota: comprobar el espacio libre en disco.</WaveFileMalformed>
     <ConvertOptions>Opciones de conversión</ConvertOptions>
     <RemoveFormatting>Quitar las etiquetas de formato</RemoveFormatting>
     <RemoveStyleActor>Eliminar el estilo/actor</RemoveStyleActor>
+    <StyleActor>Estilos/actores (separados por comas)</StyleActor>
     <RemoveTextForHI>Quitar texto para HI</RemoveTextForHI>
     <ConvertColorsToDialog>Convertir colores en diálogo</ConvertColorsToDialog>
     <OverwriteOriginalFiles>Sobrescribir archivos originales (nueva extensión si el formato se cambió)</OverwriteOriginalFiles>
@@ -486,6 +489,7 @@ Aprovechamos el ritmo intrínseco de la imagen.</CreateSimpleChainingToolTip>
     <BottomAlignSelectedLines>Alinear abajo las líneas seleccionadas (mantener la posición horizontal)</BottomAlignSelectedLines>
     <ToggleForcedSelectedLines>Activar "Forzado" para las líneas seleccionadas</ToggleForcedSelectedLines>
     <SelectForcedLines>Seleccionar líneas forzadas</SelectForcedLines>
+    <SelectNonForcedLines>Seleccionar líneas no forzadas</SelectNonForcedLines>
     <SizeXY>Tamaño: {0}x{1}</SizeXY>
     <SetAspectRatio11>Establecer relación de aspecto 1: 1</SetAspectRatio11>
     <ChangeBrightnessTitle>Ajustar el brillo</ChangeBrightnessTitle>
@@ -1044,6 +1048,7 @@ Aprovechamos el ritmo intrínseco de la imagen.</CreateSimpleChainingToolTip>
     <PleaseWait>Por favor, espere... puede tardar unos momentos</PleaseWait>
     <PoweredByGoogleTranslate>Generado por Google translate</PoweredByGoogleTranslate>
     <PoweredByMicrosoftTranslate>Generado por Microsoft translate</PoweredByMicrosoftTranslate>
+    <PoweredByX>Generado por {0}</PoweredByX>
     <MsClientSecretNeeded>Lo siento, necesitas una clave de Servicios Cognitivos 'Translator Text' de Microsoft para usar la última versión de Microsoft Translator.
 
 Ve a "Opciones -&gt; Ajustes -&gt; Herramientas" para introducir tu clave.</MsClientSecretNeeded>
@@ -1065,6 +1070,9 @@ Para usar una clave de API, ve a "Opciones --&gt; Configuración --&gt; Herramie
     <TranslateBlockCopySourceText>Copiar el texto de origen en el portapapeles</TranslateBlockCopySourceText>
     <TranslateBlockClipboardError1>¡El portapapeles contiene texto fuente!</TranslateBlockClipboardError1>
     <TranslateBlockClipboardError2>Ve al traductor y traduce, luego copia el resultado en el portapapeles y haz clic en este botón de nuevo.</TranslateBlockClipboardError2>
+    <StartWebServerX>Iniciar el servidor web "{0}"</StartWebServerX>
+    <XRequiresALocalWebServer>¡"{0}" requiere un servidor web ejecutado localmente!</XRequiresALocalWebServer>
+    <ReadMore>¿Leer más al respecto?</ReadMore>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
     <Title>Traductor Google vs Microsoft</Title>
@@ -1425,8 +1433,6 @@ Para usar una clave de API, ve a "Opciones --&gt; Configuración --&gt; Herramie
         <GenerateImportShotChanges>Generar/importar cambios de escena...</GenerateImportShotChanges>
         <RemoveOrExportShotChanges>Eliminar/exportar cambios de escena...</RemoveOrExportShotChanges>
         <WaveformBatchGenerate>Generando formas de onda por lotes...</WaveformBatchGenerate>
-        <ShowHideVideo>Mostrar/ocultar video</ShowHideVideo>
-        <ShowHideWaveform>Mostrar/ocultar forma de onda</ShowHideWaveform>
         <ShowHideWaveformAndSpectrogram>Mostrar/ocultar forma de onda y espectrograma</ShowHideWaveformAndSpectrogram>
         <UnDockVideoControls>Desacoplar controles de video</UnDockVideoControls>
         <ReDockVideoControls>Acoplar controles de video</ReDockVideoControls>
@@ -2641,6 +2647,7 @@ puede editar el mismo archivo de subtítulo (colaboración)</Information>
     <WaveformSeekSilenceForward>Busque silencio hacia adelante</WaveformSeekSilenceForward>
     <WaveformSeekSilenceBack>Buscar el silencio de nuevo</WaveformSeekSilenceBack>
     <WaveformAddTextHere>Añadir texto aquí (para la selección nueva)</WaveformAddTextHere>
+    <ChooseLayoutX>Elegir el diseño {0}</ChooseLayoutX>
     <WaveformAddTextHereFromClipboard>Añadir texto aquí (para la nueva selección desde el portapapeles)</WaveformAddTextHereFromClipboard>
     <SetParagraphAsSelection>Establecer como nueva selección</SetParagraphAsSelection>
     <WaveformPlayNewSelection>Reproducir nueva selección</WaveformPlayNewSelection>
