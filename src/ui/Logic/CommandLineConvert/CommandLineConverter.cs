@@ -19,7 +19,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
-using Nikse.SubtitleEdit.Core.Forms;
+using static System.Windows.Forms.LinkLabel;
 
 namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
 {
@@ -136,6 +136,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                 _stdOutWriter.WriteLine();
                 _stdOutWriter.WriteLine("    optional-parameters:");
                 _stdOutWriter.WriteLine("        /adjustduration:<ms>");
+                _stdOutWriter.WriteLine("        /assa-style-file:<file name>");
                 _stdOutWriter.WriteLine("        /deletecontains:<word>");
                 _stdOutWriter.WriteLine("        /ebuheaderfile:<file name>");
                 _stdOutWriter.WriteLine("        /encoding:<encoding name>");
@@ -150,13 +151,13 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                 _stdOutWriter.WriteLine("        /outputfolder:<folder name>");
                 _stdOutWriter.WriteLine("        /overwrite");
                 _stdOutWriter.WriteLine("        /pac-codepage:<code page>");
+                _stdOutWriter.WriteLine("        /profile:<profile name>");
                 _stdOutWriter.WriteLine("        /renumber:<starting number>");
                 _stdOutWriter.WriteLine("        /resolution:<width>x<height>");
                 _stdOutWriter.WriteLine("        /targetfps:<frame rate>");
                 _stdOutWriter.WriteLine("        /teletextonly");
                 _stdOutWriter.WriteLine("        /teletextonlypage:<page number>");
                 _stdOutWriter.WriteLine("        /track-number:<comma separated track number list>");
-                _stdOutWriter.WriteLine("        /profile:<profile name>");
                 //_stdOutWriter.WriteLine("        /ocrdb:<ocr db/dictionary> (e.g. \"eng\" or \"latin\")");
                 _stdOutWriter.WriteLine();
                 _stdOutWriter.WriteLine("      The following operations are applied in command line order");
@@ -497,6 +498,25 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
 
                     ebuHeaderFile = ebuHeaderFileTemp;
                 }
+
+                var assaStyleFile = string.Empty;
+                var assaStyleFileTemp = GetArgument(unconsumedArguments, "assa-style-file:");
+                if (assaStyleFileTemp.Length > 0)
+                {
+                    if (!File.Exists(assaStyleFileTemp))
+                    {
+                        throw new FileNotFoundException($"The /assa-style-file '{assaStyleFileTemp}' does not exist.");
+                    }
+
+                    var lines = FileUtil.ReadAllLinesShared(assaStyleFileTemp, Encoding.UTF8);
+                    if (!new AdvancedSubStationAlpha().IsMine(lines, assaStyleFileTemp))
+                    {
+                        throw new FormatException($"The /assa-style-file '{ebuHeaderFileTemp}' is not an Advanced Sub Station Alpha file.");
+                    }
+
+                    assaStyleFile = assaStyleFileTemp;
+                }
+
 
                 if (unconsumedArguments.Count > 0)
                 {
@@ -865,7 +885,10 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                         }
                         else if (!done)
                         {
-                            BatchConvertSave(targetFormat, offset, deleteContains, targetEncoding, outputFolder, targetFileName, count, ref converted, ref errors, formats, fileName, sub, format, null, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, resolution, ebuHeaderFile: ebuHeaderFile, renumber: renumber, adjustDurationMs: adjustDurationMs);
+                            BatchConvertSave(targetFormat, offset, deleteContains, targetEncoding, outputFolder, targetFileName, count, 
+                                ref converted, ref errors, formats, fileName, sub, format, null, overwrite, pacCodePage, 
+                                targetFrameRate, multipleReplaceImportFiles, actions, resolution, ebuHeaderFile: ebuHeaderFile,
+                                assaStyleFile: assaStyleFile, renumber: renumber, adjustDurationMs: adjustDurationMs);
                         }
                     }
                     else
@@ -1314,7 +1337,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
         internal static bool BatchConvertSave(string targetFormat, TimeSpan offset, string deleteContains, TextEncoding targetEncoding, string outputFolder, string targetFileName, int count, ref int converted, ref int errors,
                                               List<SubtitleFormat> formats, string fileName, Subtitle sub, SubtitleFormat format, IList<IBinaryParagraphWithPosition> binaryParagraphs, bool overwrite, int pacCodePage,
                                               double? targetFrameRate, ICollection<string> multipleReplaceImportFiles, List<BatchAction> actions = null,
-                                              Point? resolution = null, bool autoDetectLanguage = false, BatchConvertProgress progressCallback = null, string ebuHeaderFile = null, string ocrEngine = null, string preExt = null, int? renumber = null, double? adjustDurationMs = null, PreprocessingSettings preprocessingSettings = null, CancellationToken cancellationToken = default)
+                                              Point? resolution = null, bool autoDetectLanguage = false, BatchConvertProgress progressCallback = null, string ebuHeaderFile = null, string assaStyleFile = null, string ocrEngine = null, string preExt = null, int? renumber = null, double? adjustDurationMs = null, PreprocessingSettings preprocessingSettings = null, CancellationToken cancellationToken = default)
         {
             if (string.IsNullOrWhiteSpace(preExt))
             {
@@ -1468,6 +1491,15 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
 
                                     sub.Header = AdvancedSubStationAlpha.AddTagToHeader("PlayResX", "PlayResX: " + resolution.Value.X.ToString(CultureInfo.InvariantCulture), "[Script Info]", sub.Header);
                                     sub.Header = AdvancedSubStationAlpha.AddTagToHeader("PlayResY", "PlayResY: " + resolution.Value.Y.ToString(CultureInfo.InvariantCulture), "[Script Info]", sub.Header);
+                                }
+
+                                if (!string.IsNullOrEmpty(assaStyleFile) && sf.Name == AdvancedSubStationAlpha.NameOfFormat)
+                                {
+                                    var styleSub = new Subtitle();
+                                    var lines = FileUtil.ReadAllLinesShared(assaStyleFile, Encoding.UTF8);
+                                    new AdvancedSubStationAlpha().LoadSubtitle(styleSub, lines, assaStyleFile);
+                                    sub.Header = styleSub.Header;
+                                    sub.Footer = styleSub.Footer;
                                 }
 
                                 try
