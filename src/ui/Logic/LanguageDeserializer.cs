@@ -5998,6 +5998,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "RemoveTextFromHearImpaired/RemoveTextIfAllUppercase":
                     language.RemoveTextFromHearImpaired.RemoveTextIfAllUppercase = reader.Value;
                     break;
+                case "RemoveTextFromHearImpaired/RemoveIfOnlyMusicSymbols":
+                    language.RemoveTextFromHearImpaired.RemoveIfOnlyMusicSymbols = reader.Value;
+                    break;
                 case "RemoveTextFromHearImpaired/RemoveInterjections":
                     language.RemoveTextFromHearImpaired.RemoveInterjections = reader.Value;
                     break;

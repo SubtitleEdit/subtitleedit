@@ -2225,6 +2225,7 @@ can edit in same subtitle file (collaboration)</Information>
     <LinesFoundX>Lines found: {0}</LinesFoundX>
     <RemoveTextIfContains>Remove text if it contains:</RemoveTextIfContains>
     <RemoveTextIfAllUppercase>Remove line if UPPERCASE</RemoveTextIfAllUppercase>
+    <RemoveIfOnlyMusicSymbols>Remove if only music symbols</RemoveIfOnlyMusicSymbols>
     <RemoveInterjections>Remove interjections (shh, hmm, etc.)</RemoveInterjections>
     <EditInterjections>Edit...</EditInterjections>
     <Apply>A&amp;pply</Apply>

@@ -64,6 +64,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxRemoveInterjections.Checked = Configuration.Settings.RemoveTextForHearingImpaired.RemoveInterjections;
             checkBoxInterjectionOnlySeparateLine.Checked = Configuration.Settings.RemoveTextForHearingImpaired.RemoveInterjectionsOnlyOnSeparateLine;
             checkBoxRemoveWhereContains.Checked = Configuration.Settings.RemoveTextForHearingImpaired.RemoveIfContains;
+            checkBoxRemoveIfOnlyMusicSymbols.Checked = Configuration.Settings.RemoveTextForHearingImpaired.RemoveIfOnlyMusicSymbols;
             checkBoxRemoveIfAllUppercase.Checked = Configuration.Settings.RemoveTextForHearingImpaired.RemoveIfAllUppercase;
             checkBoxInterjectionOnlySeparateLine.Enabled = checkBoxRemoveInterjections.Checked;
 
@@ -88,6 +89,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxRemoveTextBetweenSquares.Text = _language.SquareBrackets;
             checkBoxRemoveWhereContains.Text = _language.RemoveTextIfContains;
             checkBoxRemoveIfAllUppercase.Text = _language.RemoveTextIfAllUppercase;
+            checkBoxRemoveIfOnlyMusicSymbols.Text = _language.RemoveIfOnlyMusicSymbols;
             checkBoxRemoveInterjections.Text = _language.RemoveInterjections;
             checkBoxInterjectionOnlySeparateLine.Text = _language.OnlyIfInSeparateLine;
             labelLanguage.Text = LanguageSettings.Current.ChooseLanguage.Language;
@@ -234,6 +236,7 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.RemoveTextForHearingImpaired.RemoveIfContains = checkBoxRemoveWhereContains.Checked;
             Configuration.Settings.RemoveTextForHearingImpaired.RemoveIfAllUppercase = checkBoxRemoveIfAllUppercase.Checked;
             Configuration.Settings.RemoveTextForHearingImpaired.RemoveIfContainsText = comboBoxRemoveIfTextContains.Text;
+            Configuration.Settings.RemoveTextForHearingImpaired.RemoveIfOnlyMusicSymbols = checkBoxRemoveIfOnlyMusicSymbols.Checked;
 
             ApplyChanges();
             DialogResult = DialogResult.OK;
@@ -377,6 +380,7 @@ namespace Nikse.SubtitleEdit.Forms
                 RemoveTextBetweenBrackets = checkBoxRemoveTextBetweenBrackets.Checked,
                 RemoveTextBetweenQuestionMarks = checkBoxRemoveTextBetweenQuestionMarks.Checked,
                 RemoveTextBetweenParentheses = checkBoxRemoveTextBetweenParentheses.Checked,
+                RemoveIfOnlyMusicSymbols = checkBoxRemoveIfOnlyMusicSymbols.Checked,
                 CustomStart = comboBoxCustomStart.Text,
                 CustomEnd = comboBoxCustomEnd.Text
             };
@@ -497,6 +501,11 @@ namespace Nikse.SubtitleEdit.Forms
                 InitializeLanguageNames(Subtitle);
             }
 
+            GeneratePreview();
+        }
+
+        private void checkBoxRemoveIfOnlyMusicSymbols_CheckedChanged(object sender, EventArgs e)
+        {
             GeneratePreview();
         }
     }
