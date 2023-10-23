@@ -116,6 +116,7 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
 访问 https://www.nikse.dk 以获得最新版本。
 
 非常欢迎您提出建议，
+
 邮件: mailto:nikse.dk@gmail.com</AboutText1>
   </About>
   <AddToNames>
@@ -2635,6 +2636,7 @@ Command line: {1} {2}
     <WaveformSeekSilenceForward>向前搜索静音</WaveformSeekSilenceForward>
     <WaveformSeekSilenceBack>向后搜索静音</WaveformSeekSilenceBack>
     <WaveformAddTextHere>添加文本到此处 (用于选中的内容)</WaveformAddTextHere>
+    <ChooseLayoutX>选择布局{0}</ChooseLayoutX>
     <WaveformAddTextHereFromClipboard>将文本添加到此处（用剪贴板内容替换选中的内容）</WaveformAddTextHereFromClipboard>
     <SetParagraphAsSelection>将当前对象设为新选中项</SetParagraphAsSelection>
     <WaveformPlayNewSelection>播放新的选中行</WaveformPlayNewSelection>
