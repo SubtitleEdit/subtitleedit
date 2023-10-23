@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>4.0.1</Version>
-    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 18.10.2023</TranslatedBy>
+    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 23.10.2023</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -2647,6 +2647,7 @@ stesso file di sottotitolo (collaborazione)</Information>
     <WaveformSeekSilenceForward>Cerca silenzio avanti</WaveformSeekSilenceForward>
     <WaveformSeekSilenceBack>Cerca silenzio indietro</WaveformSeekSilenceBack>
     <WaveformAddTextHere>Aggiungi testo qui (per nuova selezione)</WaveformAddTextHere>
+    <ChooseLayoutX>Scegli layout {0}</ChooseLayoutX>
     <WaveformAddTextHereFromClipboard>Aggiungi testo qui (per una nuova selezione dagli Appunti)</WaveformAddTextHereFromClipboard>
     <SetParagraphAsSelection>Imposta attuale come nuova selezione</SetParagraphAsSelection>
     <WaveformPlayNewSelection>Riproduci nuova selezione</WaveformPlayNewSelection>
