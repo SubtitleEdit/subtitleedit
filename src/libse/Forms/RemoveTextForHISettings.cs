@@ -21,6 +21,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
         public bool RemoveTextBetweenBrackets { get; set; }
         public bool RemoveTextBetweenQuestionMarks { get; set; }
         public bool RemoveTextBetweenParentheses { get; set; }
+        public bool RemoveIfOnlyMusicSymbols { get; set; }
         public string CustomStart { get; set; }
         public string CustomEnd { get; set; }
         public NameList NameList { get; set; }

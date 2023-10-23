@@ -2863,6 +2863,7 @@ $HorzAlign          =   Center
         public bool RemoveIfContains { get; set; }
         public bool RemoveIfAllUppercase { get; set; }
         public string RemoveIfContainsText { get; set; }
+        public bool RemoveIfOnlyMusicSymbols { get; set; }
 
         public RemoveTextForHearingImpairedSettings()
         {
@@ -2876,6 +2877,7 @@ $HorzAlign          =   Center
             RemoveTextBeforeColon = true;
             RemoveTextBeforeColonOnlyIfUppercase = true;
             RemoveIfContainsText = "¶";
+            RemoveIfOnlyMusicSymbols = true;
         }
     }
 
@@ -8547,16 +8549,22 @@ $HorzAlign          =   Center
                     settings.RemoveTextForHearingImpaired.RemoveInterjectionsOnlyOnSeparateLine = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
                 }
 
-                subNode = node.SelectSingleNode("RemoveIfContains");
+                subNode = node.SelectSingleNode("RemoveIfOnlyMusicSymbols");
                 if (subNode != null)
                 {
-                    settings.RemoveTextForHearingImpaired.RemoveIfContains = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+                    settings.RemoveTextForHearingImpaired.RemoveIfOnlyMusicSymbols = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
                 }
 
                 subNode = node.SelectSingleNode("RemoveIfContainsText");
                 if (subNode != null)
                 {
                     settings.RemoveTextForHearingImpaired.RemoveIfContainsText = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("RemoveIfContains");
+                if (subNode != null)
+                {
+                    settings.RemoveTextForHearingImpaired.RemoveIfContains = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
                 }
             }
 
@@ -12146,6 +12154,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("RemoveIfAllUppercase", settings.RemoveTextForHearingImpaired.RemoveIfAllUppercase.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("RemoveIfContains", settings.RemoveTextForHearingImpaired.RemoveIfContains.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("RemoveIfContainsText", settings.RemoveTextForHearingImpaired.RemoveIfContainsText);
+                textWriter.WriteElementString("RemoveIfOnlyMusicSymbols", settings.RemoveTextForHearingImpaired.RemoveIfOnlyMusicSymbols.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteEndElement();
 
                 textWriter.WriteStartElement("SubtitleBeaming", string.Empty);

@@ -42,6 +42,7 @@
             this.toolStripMenuItemInvertSel = new System.Windows.Forms.ToolStripMenuItem();
             this.checkBoxRemoveTextBeforeColon = new System.Windows.Forms.CheckBox();
             this.groupBoxRemoveTextConditions = new System.Windows.Forms.GroupBox();
+            this.checkBoxRemoveIfOnlyMusicSymbols = new System.Windows.Forms.CheckBox();
             this.comboBoxLanguage = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelLanguage = new System.Windows.Forms.Label();
             this.checkBoxInterjectionOnlySeparateLine = new System.Windows.Forms.CheckBox();
@@ -187,6 +188,7 @@
             // 
             this.groupBoxRemoveTextConditions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxRemoveTextConditions.Controls.Add(this.checkBoxRemoveIfOnlyMusicSymbols);
             this.groupBoxRemoveTextConditions.Controls.Add(this.comboBoxLanguage);
             this.groupBoxRemoveTextConditions.Controls.Add(this.labelLanguage);
             this.groupBoxRemoveTextConditions.Controls.Add(this.checkBoxInterjectionOnlySeparateLine);
@@ -214,6 +216,17 @@
             this.groupBoxRemoveTextConditions.TabIndex = 0;
             this.groupBoxRemoveTextConditions.TabStop = false;
             this.groupBoxRemoveTextConditions.Text = "Remove text conditions";
+            // 
+            // checkBoxRemoveIfOnlyMusicSymbols
+            // 
+            this.checkBoxRemoveIfOnlyMusicSymbols.AutoSize = true;
+            this.checkBoxRemoveIfOnlyMusicSymbols.Location = new System.Drawing.Point(241, 172);
+            this.checkBoxRemoveIfOnlyMusicSymbols.Name = "checkBoxRemoveIfOnlyMusicSymbols";
+            this.checkBoxRemoveIfOnlyMusicSymbols.Size = new System.Drawing.Size(167, 17);
+            this.checkBoxRemoveIfOnlyMusicSymbols.TabIndex = 15;
+            this.checkBoxRemoveIfOnlyMusicSymbols.Text = "Remove if only music symbols";
+            this.checkBoxRemoveIfOnlyMusicSymbols.UseVisualStyleBackColor = true;
+            this.checkBoxRemoveIfOnlyMusicSymbols.CheckedChanged += new System.EventHandler(this.checkBoxRemoveIfOnlyMusicSymbols_CheckedChanged);
             // 
             // comboBoxLanguage
             // 
@@ -616,5 +629,6 @@
         private System.Windows.Forms.Label labelText;
         private Controls.NikseComboBox comboBoxLanguage;
         private System.Windows.Forms.Label labelLanguage;
+        private System.Windows.Forms.CheckBox checkBoxRemoveIfOnlyMusicSymbols;
     }
 }
