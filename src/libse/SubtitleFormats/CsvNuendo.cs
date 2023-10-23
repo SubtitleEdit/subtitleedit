@@ -8,10 +8,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class CsvNuendo : SubtitleFormat
     {
-        private static readonly Regex CsvLine = new Regex("^(\"(.*)\")*,\\d+:\\d+:\\d+:\\d+,\\d+:\\d+:\\d+:\\d+,(\"(.*)\")*", RegexOptions.Compiled);
-        private static readonly Regex CsvLineNoQuotes = new Regex("[^\"][^,]+[^\"],\\d+:\\d+:\\d+:\\d+,\\d+:\\d+:\\d+:\\d+,[^\"][^,]+[^\"]", RegexOptions.Compiled);
-        private static readonly Regex CsvLineNoQuotesFirst = new Regex("[^\"][^,]+[^\"],\\d+:\\d+:\\d+:\\d+,\\d+:\\d+:\\d+:\\d+,(\"(.*)\")*", RegexOptions.Compiled);
-        private static readonly Regex CsvLineAllQuotes = new Regex("^(\"(.*)\")*,\"\\d+:\\d+:\\d+:\\d+\",\"\\d+:\\d+:\\d+:\\d+\",(\"(.*)\")*", RegexOptions.Compiled);
+        private static readonly Regex CsvLine = new Regex("^(\"(.*)\")*,\\d+:\\d+:\\d+:\\d+,\\d+:\\d+:\\d+:\\d+,(\"(.*)\")*", RegexOptions.Compiled, TimeSpan.FromSeconds(2));
+        private static readonly Regex CsvLineNoQuotes = new Regex("[^\"][^,]+[^\"],\\d+:\\d+:\\d+:\\d+,\\d+:\\d+:\\d+:\\d+,[^\"][^,]+[^\"]", RegexOptions.Compiled, TimeSpan.FromSeconds(2));
+        private static readonly Regex CsvLineNoQuotesFirst = new Regex("[^\"][^,]+[^\"],\\d+:\\d+:\\d+:\\d+,\\d+:\\d+:\\d+:\\d+,(\"(.*)\")*", RegexOptions.Compiled, TimeSpan.FromSeconds(2));
+        private static readonly Regex CsvLineAllQuotes = new Regex("^(\"(.*)\")*,\"\\d+:\\d+:\\d+:\\d+\",\"\\d+:\\d+:\\d+:\\d+\",(\"(.*)\")*", RegexOptions.Compiled, TimeSpan.FromSeconds(2));
         private const string LineFormat = "{1}{0}{2}{0}{3}{0}{4}";
         private static readonly string Header = string.Format(LineFormat, ",", "\"Character\"", "\"Timecode In\"", "\"Timecode Out\"", "\"Dialogue\"");
 
@@ -27,7 +27,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             for (var index = 0; index < lines.Count; index++)
             {
                 var line = lines[index];
-                if (index == 0 && 
+                if (index == 0 &&
                     (line.StartsWith("<tt xmlns", StringComparison.Ordinal) ||
                      line.StartsWith("<?xml version", StringComparison.Ordinal)))
                 {
@@ -35,21 +35,29 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
 
                 sb.Append(line);
-                if (line.IndexOf(':') > 0 &&
-                    (CsvLine.IsMatch(line) ||
-                     CsvLineNoQuotes.IsMatch(line) ||
-                     CsvLineAllQuotes.IsMatch(line) ||
-                     CsvLineNoQuotesFirst.IsMatch(line)))
+
+                try
                 {
-                    fine++;
-                }
-                else
-                {
-                    errors++;
-                    if (fine == 0 && errors > 10)
+                    if (line.IndexOf(':') > 0 &&
+                        (CsvLine.IsMatch(line) ||
+                         CsvLineNoQuotes.IsMatch(line) ||
+                         CsvLineAllQuotes.IsMatch(line) ||
+                         CsvLineNoQuotesFirst.IsMatch(line)))
                     {
-                        return false;
+                        fine++;
                     }
+                    else
+                    {
+                        errors++;
+                        if (fine == 0 && errors > 10)
+                        {
+                            return false;
+                        }
+                    }
+                }
+                catch
+                {
+                    return false;
                 }
             }
 
@@ -79,7 +87,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             Paragraph p = null;
             foreach (var line in lines)
             {
-                if (line.Contains(':') && 
+                if (line.Contains(':') &&
                     CsvLine.IsMatch(line) ||
                     CsvLineNoQuotes.IsMatch(line) ||
                     CsvLineAllQuotes.IsMatch(line) ||
