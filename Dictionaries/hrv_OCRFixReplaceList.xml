@@ -2884,11 +2884,13 @@
     <Word from="Rej" to="Ray" />
     <Word from="Rejmond" to="Raymond" />
     <Word from="Rejmonda" to="Raymonda" />
+    <Word from="Rejmondu" to="Raymondu" />
     <Word from="Rejčel" to="Rachel" />
     <Word from="Rič" to="Rich" />
     <Word from="Rid" to="Reed" />
     <Word from="Ridž" to="Ridge" />
     <Word from="Rouz" to="Rose" />
+    <Word from="Rouč" to="Roach" />
     <Word from="Sanset" to="Sunset" />
     <Word from="Sejdi" to="Sadie" />
     <Word from="Sejmur" to="Seymour" />
@@ -2900,6 +2902,7 @@
     <Word from="Sete" to="Sethe" />
     <Word from="Sidni" to="Sidney" />
     <Word from="Sindi" to="Cindy" />
+    <Word from="Sloun" to="Sloane" />
     <Word from="Sojer" to="Sawyer" />
     <Word from="Sojeru" to="Sawyeru" />
     <Word from="Sola" to="Saula" />
@@ -4736,7 +4739,7 @@
     <RegEx find="prouk" replaceWith="poruk" />
     <RegEx find="ptv" replaceWith="otv" />
     <RegEx find="ralijs" replaceWith="rals" />
-    <RegEx find="resjedav" replaceWith="prdsjedav" />
+    <RegEx find="resjedav" replaceWith="redsjedav" />
     <RegEx find="kratij" replaceWith="kracij" />
     <RegEx find="(?&lt;![is]|S)redić" replaceWith="rjedit ć" />
     <RegEx find="(?&lt;![mr])ejt" replaceWith="ate" />
