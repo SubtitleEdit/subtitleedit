@@ -2213,7 +2213,8 @@ Command line: {1} {2}
     <OnlyIfInSeparateLine>仅当在单独行内</OnlyIfInSeparateLine>
     <LinesFoundX>找到行数: {0}</LinesFoundX>
     <RemoveTextIfContains>删除文本，如果它包含:</RemoveTextIfContains>
-    <RemoveTextIfAllUppercase>如果大写就删除行</RemoveTextIfAllUppercase>
+    <RemoveTextIfAllUppercase>如果全大写就删除行</RemoveTextIfAllUppercase>
+    <RemoveIfOnlyMusicSymbols>如果只有音乐符号就删除行</RemoveIfOnlyMusicSymbols>
     <RemoveInterjections>删除感叹词</RemoveInterjections>
     <EditInterjections>编辑...</EditInterjections>
     <Apply>应用</Apply>
