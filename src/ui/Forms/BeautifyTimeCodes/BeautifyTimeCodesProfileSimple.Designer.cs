@@ -34,9 +34,9 @@
             this.buttonOK = new System.Windows.Forms.Button();
             this.labelInstructions = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.labelChainingGapAfterShotChangesPrefix = new System.Windows.Forms.Label();
+            this.labelChainingGapAfterShotChangesPrefix = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.numericUpDownChainingGapAfterShotChanges = new Nikse.SubtitleEdit.Controls.NikseUpDown();
-            this.labelChainingGapAfterShotChangesSuffix = new System.Windows.Forms.Label();
+            this.labelChainingGapAfterShotChangesSuffix = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.pictureBoxChainingInfo = new System.Windows.Forms.PictureBox();
             this.checkBoxSnapClosestCue = new System.Windows.Forms.CheckBox();
             this.checkBoxChainingGapAfterShotChanges = new System.Windows.Forms.CheckBox();
@@ -680,8 +680,8 @@
         private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownChainingGap;
         private System.Windows.Forms.CheckBox checkBoxChainingGapAfterShotChanges;
         private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownChainingGapAfterShotChanges;
-        private System.Windows.Forms.Label labelChainingGapAfterShotChangesSuffix;
-        private System.Windows.Forms.Label labelChainingGapAfterShotChangesPrefix;
+        private Nikse.SubtitleEdit.Controls.NikseLabel labelChainingGapAfterShotChangesSuffix;
+        private Nikse.SubtitleEdit.Controls.NikseLabel labelChainingGapAfterShotChangesPrefix;
         private System.Windows.Forms.PictureBox pictureBoxChainingInfo;
         private System.Windows.Forms.ToolTip toolTipChaining;
         private System.Windows.Forms.CheckBox checkBoxSnapClosestCue;
