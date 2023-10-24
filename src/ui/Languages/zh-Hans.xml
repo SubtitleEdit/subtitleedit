@@ -1066,6 +1066,7 @@ Command line: {1} {2}
     <TranslateBlockClipboardError2>转到翻译器，将结果复制到剪贴板，然后再次单击此按钮。</TranslateBlockClipboardError2>
     <StartWebServerX>启动网页服务器 "{0}"</StartWebServerX>
     <XRequiresALocalWebServer>"{0}" 需要在本地运行的网页服务器!</XRequiresALocalWebServer>
+    <XRequiresAnApiKey>"{0}"需要一个API密钥。</XRequiresAnApiKey>
     <ReadMore>了解更多?</ReadMore>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
