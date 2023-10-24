@@ -33,6 +33,7 @@ namespace Nikse.SubtitleEdit.Forms
             InitializeComponent();
             UiUtil.FixFonts(this);
             Text = LanguageSettings.Current.Main.ChooseLayout;
+            buttonOk.Text = LanguageSettings.Current.General.Ok;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             checkBoxHideVideoControls.Text = LanguageSettings.Current.Main.ShowVideoControls;
             checkBoxHideVideoControls.Checked = showVideoControls;

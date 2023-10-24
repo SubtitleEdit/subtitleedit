@@ -2821,6 +2821,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "GoogleTranslate/XRequiresALocalWebServer":
                     language.GoogleTranslate.XRequiresALocalWebServer = reader.Value;
                     break;
+                case "GoogleTranslate/XRequiresAnApiKey":
+                    language.GoogleTranslate.XRequiresAnApiKey = reader.Value;
+                    break;
                 case "GoogleTranslate/ReadMore":
                     language.GoogleTranslate.ReadMore = reader.Value;
                     break;

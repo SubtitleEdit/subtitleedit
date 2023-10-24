@@ -1072,6 +1072,7 @@ To use an API key, go to "Options -&gt; Settings -&gt; Tools" to enter your Goog
     <TranslateBlockClipboardError2>Go to translator and translate, then copy the results to the clipboard and click this button again.</TranslateBlockClipboardError2>
     <StartWebServerX>Start "{0}" web server</StartWebServerX>
     <XRequiresALocalWebServer>"{0}" requires a web server running locally!</XRequiresALocalWebServer>
+    <XRequiresAnApiKey>"{0}" requires an API key.</XRequiresAnApiKey>
     <ReadMore>Read more?</ReadMore>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>

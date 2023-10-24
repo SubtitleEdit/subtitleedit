@@ -511,7 +511,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
             if (nikseTextBoxApiKey.Visible && string.IsNullOrWhiteSpace(nikseTextBoxApiKey.Text) && engineType != typeof(MyMemoryApi))
             {
-                MessageBox.Show(this, string.Format("{0} requires an API key", _autoTranslator.Name), Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(this, string.Format(LanguageSettings.Current.GoogleTranslate.XRequiresAnApiKey, _autoTranslator.Name), Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 nikseTextBoxApiKey.Focus();
                 return;
             }
@@ -611,8 +611,9 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             if (linesTranslate == 0 && engineType == typeof(LibreTranslate) && nikseComboBoxUrl.Text.Contains("https://libretranslate.com", StringComparison.OrdinalIgnoreCase))
             {
                 var dr = MessageBox.Show(
-                    this,
-                    $"{nikseComboBoxUrl.Text} requires an API key" + Environment.NewLine + Environment.NewLine + LanguageSettings.Current.GoogleTranslate.ReadMore,
+                    this, string.Format(LanguageSettings.Current.GoogleTranslate.XRequiresAnApiKey, nikseComboBoxUrl.Text) + Environment.NewLine +
+                          Environment.NewLine +
+                          LanguageSettings.Current.GoogleTranslate.ReadMore,
                     Text,
                     MessageBoxButtons.YesNoCancel,
                     MessageBoxIcon.Error);

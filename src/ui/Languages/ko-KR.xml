@@ -1429,8 +1429,6 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
         <GenerateImportShotChanges>장면전환 생성/가져오기...</GenerateImportShotChanges>
         <RemoveOrExportShotChanges>장면전환 제거/내보내기...</RemoveOrExportShotChanges>
         <WaveformBatchGenerate>파형 일괄 생성...</WaveformBatchGenerate>
-        <ShowHideVideo>비디오 표시 | 숨김</ShowHideVideo>
-        <ShowHideWaveform>오디오 표시 | 숨김</ShowHideWaveform>
         <ShowHideWaveformAndSpectrogram>파형 및 스펙트로그램 표시 | 숨김</ShowHideWaveformAndSpectrogram>
         <UnDockVideoControls>비디오 컨트롤 분리</UnDockVideoControls>
         <ReDockVideoControls>비디오 컨트롤 연결</ReDockVideoControls>
@@ -2228,6 +2226,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <LinesFoundX>발견한 줄: {0}개</LinesFoundX>
     <RemoveTextIfContains>다음을 포함하는 텍스트 삭제:</RemoveTextIfContains>
     <RemoveTextIfAllUppercase>줄이 모두 대문자인 경우</RemoveTextIfAllUppercase>
+    <RemoveIfOnlyMusicSymbols>음표만 있는 경우 제거</RemoveIfOnlyMusicSymbols>
     <RemoveInterjections>감탄사 제거 (shh,hmm등)</RemoveInterjections>
     <EditInterjections>편집</EditInterjections>
     <Apply>적용(&amp;P)</Apply>
@@ -2626,7 +2625,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <ToggleQuotes>따옴표 전환</ToggleQuotes>
     <ToggleHiTags>HI 태그 전환</ToggleHiTags>
     <ToggleCustomTags>사용자 지정 태그 전환 (서라운드 포함)</ToggleCustomTags>
-    <ToggleMusicSymbols>음악 기호 전환</ToggleMusicSymbols>
+    <ToggleMusicSymbols>음표 전환</ToggleMusicSymbols>
     <Alignment>정렬 (선택한 줄)</Alignment>
     <AlignmentN1>좌측 하단 정렬 - {\an1}</AlignmentN1>
     <AlignmentN2>중앙 하단 정렬 - {\an2}</AlignmentN2>
@@ -2650,6 +2649,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <WaveformSeekSilenceForward>이후 무음 탐색</WaveformSeekSilenceForward>
     <WaveformSeekSilenceBack>이전 무음 탐색</WaveformSeekSilenceBack>
     <WaveformAddTextHere>여기에 텍스트 추가 (새로운 선택)</WaveformAddTextHere>
+    <ChooseLayoutX>레이아웃 {0} 선택</ChooseLayoutX>
     <WaveformAddTextHereFromClipboard>여기에 텍스트 추가 (클립보드에서 새로운 선택)</WaveformAddTextHereFromClipboard>
     <SetParagraphAsSelection>현재를 새로운 선택으로 설정</SetParagraphAsSelection>
     <WaveformPlayNewSelection>선택을 재생</WaveformPlayNewSelection>
@@ -2804,7 +2804,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <UncheckInsertsItalic>기울임꼴 제목 또는 가사 감지 및 선택 취소</UncheckInsertsItalic>
     <UncheckInsertsLowercase>소문자 단일 제목 또는 가사 감지 및 선택 취소</UncheckInsertsLowercase>
     <HideContinuationCandidatesWithoutName>가능성 없는 연속 문장 숨기기</HideContinuationCandidatesWithoutName>
-    <IgnoreLyrics>음악 기호 사이의 가사 무시</IgnoreLyrics>
+    <IgnoreLyrics>음표 사이의 가사 무시</IgnoreLyrics>
     <ContinuationPause>일시 중지 임계값:</ContinuationPause>
     <Milliseconds>밀리초</Milliseconds>
     <EditCustomContinuationStyle>사용자 지정 연속 스타일 편집...</EditCustomContinuationStyle>
