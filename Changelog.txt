@@ -13,6 +13,9 @@
    * Add Video CD DAT subtitle format - thx Flitskikker
    * Add Italian SE word dictionary file - thx HG3112
    * BD SUP edit: Add "Select non-forced lines" - thx manuelrn
+   * Take ASSA style from file in CLI - thx Ninelpienel
+   * Split long lines in CLI - thx BenJamesAndo
+   * Add new "Remove text for HI" option "only music symbols" - thx fraternl
 * IMPROVED:
    * Update Korean translation - thx domddol
    * Update Italian language - thx bovirus
@@ -24,6 +27,7 @@
    * Update Bulgarian translation - thx Калин
    * Update German translation - thx Netspark
    * Update Russian translation - thx elfriob
+   * Update Spanish translations - thx jmaraujouy
    * Save settings from selected lines unbreak/break - thx David
    * Add simple page up/down for combo-boxes
    * Add access keys for message box buttons - thx Christophe
@@ -49,6 +53,8 @@
    * Fix Whisper post-processing language using "Translate to English" - thx github-roe
    * Fix "ASSA Tools - Set position" on Linux - thx PascalsHere
    * Fix for "Generate video with burned-in subtitle" in SMPTE mode - thx Jim
+   * Fix remove of font name in ASSA/SSA - thx PureOcean
+   * Fix possible freeze when loading XML files - thx Dvid
 
 
 4.0.1 (16th September 2023)
