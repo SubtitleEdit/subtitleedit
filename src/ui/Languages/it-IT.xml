@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>4.0.1</Version>
-    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 23.10.2023</TranslatedBy>
+    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 24.10.2023</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -1072,6 +1072,7 @@ Per usare una chiave API vai su "Opzioni -&gt; Impostazioni -&gt; Strumenti" per
     <TranslateBlockClipboardError2>Vai al traduttore e traduci, copia il risultato negli Appunti e fai di nuovo clic su questo pulsante.</TranslateBlockClipboardError2>
     <StartWebServerX>Avvia server web "{0}"</StartWebServerX>
     <XRequiresALocalWebServer>"{0}" richiede un server web in esecuzione in locale!</XRequiresALocalWebServer>
+    <XRequiresAnApiKey>"{0}" richiede una chiave API.</XRequiresAnApiKey>
     <ReadMore>Vuoi saperne di più?</ReadMore>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
@@ -2225,6 +2226,7 @@ stesso file di sottotitolo (collaborazione)</Information>
     <LinesFoundX>righe trovate: {0}</LinesFoundX>
     <RemoveTextIfContains>Elimina il testo se contiene:</RemoveTextIfContains>
     <RemoveTextIfAllUppercase>Elimina la riga se è MAIUSCOLA</RemoveTextIfAllUppercase>
+    <RemoveIfOnlyMusicSymbols>Rimuovi solo i simboli musicali</RemoveIfOnlyMusicSymbols>
     <RemoveInterjections>Elimina le interiezioni (shh, hmm, ecc.)</RemoveInterjections>
     <EditInterjections>Modifica...</EditInterjections>
     <Apply>Applica</Apply>
