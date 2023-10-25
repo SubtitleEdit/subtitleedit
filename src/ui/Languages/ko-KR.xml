@@ -1067,6 +1067,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <TranslateBlockClipboardError2>번역기로 번역한 결과물을 클립보드에 복사한 후, 이 단추를 다시 클릭합니다</TranslateBlockClipboardError2>
     <StartWebServerX>"{0}" 웹 서버 시작</StartWebServerX>
     <XRequiresALocalWebServer>"{0}"를 사용하려면 로컬에서 실행되는 웹 서버가 필요합니다!</XRequiresALocalWebServer>
+    <XRequiresAnApiKey>"{0}"에는 API 키가 필요합니다.</XRequiresAnApiKey>
     <ReadMore>더 많은 정보를 보시겠습니까?</ReadMore>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
