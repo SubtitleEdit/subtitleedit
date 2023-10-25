@@ -71,19 +71,25 @@ namespace Nikse.SubtitleEdit.Logic
                 return;
             }
 
-            if (line.StartsWith("frame,") && !line.Contains("N/A"))
+            if (!line.StartsWith("frame,") || line.Contains("N/A"))
             {
-                string timeString = line.Replace("frame,", "").Trim();
-                if (timeString.Contains("side_data")) timeString = timeString.Substring(0, timeString.IndexOf("side_data", StringComparison.Ordinal));
-                var timeCode = timeString.Replace(",", ".").Replace("٫", ".").Replace("⠨", ".");
-                if (double.TryParse(timeCode, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var seconds))
+                return;
+            }
+
+            var timeString = line.Replace("frame,", "").Trim();
+            if (timeString.Contains("side_data"))
+            {
+                timeString = timeString.Substring(0, timeString.IndexOf("side_data", StringComparison.Ordinal)).TrimEnd(',');
+            }
+
+            var timeCode = timeString.Replace(",", ".").Replace("٫", ".").Replace("⠨", ".");
+            if (double.TryParse(timeCode, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var seconds))
+            {
+                lock (TimeCodesLock)
                 {
-                    lock (TimeCodesLock)
-                    {
-                        _timeCodes.Add(seconds);
-                    }
-                    LastSeconds = seconds;
+                    _timeCodes.Add(seconds);
                 }
+                LastSeconds = seconds;
             }
         }
     }
