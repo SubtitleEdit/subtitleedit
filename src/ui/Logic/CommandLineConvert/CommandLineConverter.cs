@@ -3,6 +3,7 @@ using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4;
 using Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream;
+using Nikse.SubtitleEdit.Core.Forms;
 using Nikse.SubtitleEdit.Core.Interfaces;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Core.VobSub;
@@ -19,7 +20,6 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
-using static System.Windows.Forms.LinkLabel;
 
 namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
 {
@@ -163,20 +163,21 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                 _stdOutWriter.WriteLine("      The following operations are applied in command line order");
                 _stdOutWriter.WriteLine("      from left to right, and can be specified multiple times.");
                 _stdOutWriter.WriteLine("        /" + BatchAction.ApplyDurationLimits);
-                _stdOutWriter.WriteLine("        /" + BatchAction.FixCommonErrors);
-                _stdOutWriter.WriteLine("        /" + BatchAction.RemoveLineBreaks);
-                _stdOutWriter.WriteLine("        /" + BatchAction.MergeSameTimeCodes);
-                _stdOutWriter.WriteLine("        /" + BatchAction.MergeSameTexts);
-                _stdOutWriter.WriteLine("        /" + BatchAction.MergeShortLines);
-                _stdOutWriter.WriteLine("        /" + BatchAction.FixRtlViaUnicodeChars);
-                _stdOutWriter.WriteLine("        /" + BatchAction.RemoveUnicodeControlChars);
-                _stdOutWriter.WriteLine("        /" + BatchAction.ReverseRtlStartEnd);
-                _stdOutWriter.WriteLine("        /" + BatchAction.RemoveFormatting);
-                _stdOutWriter.WriteLine("        /" + BatchAction.RemoveTextForHI);
-                _stdOutWriter.WriteLine("        /" + BatchAction.ConvertColorsToDialog);
-                _stdOutWriter.WriteLine("        /" + BatchAction.RedoCasing);
                 _stdOutWriter.WriteLine("        /" + BatchAction.BalanceLines);
                 _stdOutWriter.WriteLine("        /" + BatchAction.BeautifyTimeCodes);
+                _stdOutWriter.WriteLine("        /" + BatchAction.ConvertColorsToDialog);
+                _stdOutWriter.WriteLine("        /" + BatchAction.FixCommonErrors);
+                _stdOutWriter.WriteLine("        /" + BatchAction.FixRtlViaUnicodeChars);
+                _stdOutWriter.WriteLine("        /" + BatchAction.MergeSameTexts);
+                _stdOutWriter.WriteLine("        /" + BatchAction.MergeSameTimeCodes);
+                _stdOutWriter.WriteLine("        /" + BatchAction.MergeShortLines);
+                _stdOutWriter.WriteLine("        /" + BatchAction.RedoCasing);
+                _stdOutWriter.WriteLine("        /" + BatchAction.RemoveFormatting);
+                _stdOutWriter.WriteLine("        /" + BatchAction.RemoveLineBreaks);
+                _stdOutWriter.WriteLine("        /" + BatchAction.RemoveTextForHI);
+                _stdOutWriter.WriteLine("        /" + BatchAction.RemoveUnicodeControlChars);
+                _stdOutWriter.WriteLine("        /" + BatchAction.ReverseRtlStartEnd);
+                _stdOutWriter.WriteLine("        /" + BatchAction.SplitLongLines);
                 _stdOutWriter.WriteLine();
                 _stdOutWriter.WriteLine("    Example: SubtitleEdit /convert *.srt sami");
                 _stdOutWriter.WriteLine("    Show this usage message: SubtitleEdit /help");
@@ -885,8 +886,8 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                         }
                         else if (!done)
                         {
-                            BatchConvertSave(targetFormat, offset, deleteContains, targetEncoding, outputFolder, targetFileName, count, 
-                                ref converted, ref errors, formats, fileName, sub, format, null, overwrite, pacCodePage, 
+                            BatchConvertSave(targetFormat, offset, deleteContains, targetEncoding, outputFolder, targetFileName, count,
+                                ref converted, ref errors, formats, fileName, sub, format, null, overwrite, pacCodePage,
                                 targetFrameRate, multipleReplaceImportFiles, actions, resolution, ebuHeaderFile: ebuHeaderFile,
                                 assaStyleFile: assaStyleFile, renumber: renumber, adjustDurationMs: adjustDurationMs);
                         }
@@ -1252,7 +1253,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
         {
             var actions = new List<BatchAction>();
             var actionNames = typeof(BatchAction).GetEnumNames();
-            for (int i = commandLineArguments.Count - 1; i >= 0; i--)
+            for (var i = commandLineArguments.Count - 1; i >= 0; i--)
             {
                 var argument = commandLineArguments[i];
                 foreach (var actionName in actionNames)
@@ -2312,6 +2313,17 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                                 {
                                     p.Text = Utilities.AutoBreakLine(p.Text, l ?? "en");
                                 }
+                            }
+                            catch
+                            {
+                                // ignore
+                            }
+
+                            break;
+                        case BatchAction.SplitLongLines:
+                            try
+                            {
+                                sub = SplitLongLinesHelper.SplitLongLinesInSubtitle(sub, Configuration.Settings.General.SubtitleLineMaximumLength * 2, Configuration.Settings.General.SubtitleLineMaximumLength);
                             }
                             catch
                             {
