@@ -1217,8 +1217,8 @@ namespace Nikse.SubtitleEdit.Core.Common
                 var x = input;
                 if (x.Contains("\\fn"))
                 {
-                    x = Regex.Replace(x, "{\\\\fn[a-zA-Z \\d]*}", string.Empty);
-                    x = Regex.Replace(x, "\\\\fn[a-zA-Z \\d]\\\\", string.Empty);
+                    x = Regex.Replace(x, "{\\\\fn[a-zA-Z \\d]+}", string.Empty);
+                    x = Regex.Replace(x, "\\\\fn[a-zA-Z \\d]+\\\\", "\\");
                 }
 
                 return x;
