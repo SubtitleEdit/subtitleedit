@@ -1210,6 +1210,9 @@ namespace Nikse.SubtitleEdit.Core.Common
             return s.Trim();
         }
 
+        /// <summary>
+        /// Remove font tag from HTML or ASSA.
+        /// </summary>
         public static string RemoveFontName(string input)
         {
             if (!input.Contains("<font", StringComparison.OrdinalIgnoreCase))
@@ -1218,6 +1221,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 if (x.Contains("\\fn"))
                 {
                     x = Regex.Replace(x, "{\\\\fn[a-zA-Z \\d]+}", string.Empty);
+                    x = Regex.Replace(x, "\\\\fn[a-zA-Z \\d]+}", "}");
                     x = Regex.Replace(x, "\\\\fn[a-zA-Z \\d]+\\\\", "\\");
                 }
 
