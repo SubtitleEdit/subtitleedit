@@ -120,11 +120,33 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             Configuration.Settings.BeautifyTimeCodes.Profile.ConnectedSubtitlesRightRedZone = redZone;
             Configuration.Settings.BeautifyTimeCodes.Profile.ConnectedSubtitlesRightGreenZone = greenZone;
 
-            SeLogger.Error("BeautifyTimeCodesProfileSimple.buttonOK_Click: Gap is " + gap);
-            SeLogger.Error("BeautifyTimeCodesProfileSimple.buttonOK_Click: FrameRate is " + _frameRate);
-            var treadConnectedMs = Math.Round(SubtitleFormat.FramesToMilliseconds(gap, _frameRate) * 1.5);
-            SeLogger.Error("BeautifyTimeCodesProfileSimple.buttonOK_Click: treadConnectedMs is " + treadConnectedMs);
-            Configuration.Settings.BeautifyTimeCodes.Profile.ConnectedSubtitlesTreatConnected = Convert.ToInt32(treadConnectedMs);
+
+            double treadConnectedMs = 0;
+            try
+            {
+                treadConnectedMs = Math.Round(SubtitleFormat.FramesToMilliseconds(gap, _frameRate) * 1.5);
+            }
+            catch (Exception exception)
+            {
+                SeLogger.Error(exception, "Error when executing: treadConnectedMs = Math.Round(SubtitleFormat.FramesToMilliseconds(gap, _frameRate) * 1.5); );");
+                SeLogger.Error("BeautifyTimeCodesProfileSimple.buttonOK_Click: Gap is " + gap);
+                SeLogger.Error("BeautifyTimeCodesProfileSimple.buttonOK_Click: FrameRate is " + _frameRate);
+                SeLogger.Error("BeautifyTimeCodesProfileSimple.buttonOK_Click: treadConnectedMs is " + treadConnectedMs);
+                throw;
+            }
+
+            try
+            {
+                Configuration.Settings.BeautifyTimeCodes.Profile.ConnectedSubtitlesTreatConnected = Convert.ToInt32(treadConnectedMs);
+            }
+            catch (Exception exception)
+            {
+                SeLogger.Error(exception, "Error when executing: Configuration.Settings.BeautifyTimeCodes.Profile.ConnectedSubtitlesTreatConnected = Convert.ToInt32(treadConnectedMs);");
+                SeLogger.Error("BeautifyTimeCodesProfileSimple.buttonOK_Click: Gap is " + gap);
+                SeLogger.Error("BeautifyTimeCodesProfileSimple.buttonOK_Click: FrameRate is " + _frameRate);
+                SeLogger.Error("BeautifyTimeCodesProfileSimple.buttonOK_Click: treadConnectedMs is " + treadConnectedMs);
+                throw;
+            }
 
             Configuration.Settings.BeautifyTimeCodes.Profile.ChainingGeneralUseZones = false;
             Configuration.Settings.BeautifyTimeCodes.Profile.ChainingGeneralMaxGap = Convert.ToInt32(numericUpDownChainingGap.Value);
