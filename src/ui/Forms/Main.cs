@@ -18555,24 +18555,25 @@ namespace Nikse.SubtitleEdit.Forms
                     }
 
                     int index = SubtitleListview1.SelectedItems[0].Index;
-                    MakeHistoryForUndoOnlyIfNotRecent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveformX, "#" + _subtitle.Paragraphs[index].Number + " " + _subtitle.Paragraphs[index].Text));
-
                     var p = _subtitle.Paragraphs[index];
-                    p.EndTime = TimeCode.FromSeconds(videoPosition);
-                    if (p.DurationTotalMilliseconds - MinGapBetweenLines > Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
+                    var videoTimeCode = TimeCode.FromSeconds(videoPosition);
+                    var duration = videoTimeCode.TotalMilliseconds - p.StartTime.TotalMilliseconds - MinGapBetweenLines;
+                    if (duration >= Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds &&
+                        duration <= Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
                     {
-                        var newEndTime = new TimeCode(p.EndTime.TotalMilliseconds - MinGapBetweenLines);
+                        MakeHistoryForUndoOnlyIfNotRecent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveformX, "#" + _subtitle.Paragraphs[index].Number + " " + _subtitle.Paragraphs[index].Text));
+                        var newEndTime = new TimeCode(videoTimeCode.TotalMilliseconds - MinGapBetweenLines);
                         double charactersPerSecond = Utilities.GetCharactersPerSecond(new Paragraph(p) { EndTime = newEndTime });
                         if (charactersPerSecond <= Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
                         {
                             p.EndTime = newEndTime;
                         }
-                    }
 
-                    SubtitleListview1.SetStartTimeAndDuration(index, _subtitle.Paragraphs[index], _subtitle.GetParagraphOrDefault(index + 1), _subtitle.GetParagraphOrDefault(index - 1));
-                    SetDurationInSeconds(_subtitle.Paragraphs[index].DurationTotalSeconds);
-                    ButtonInsertNewTextClick(null, null);
-                    UpdateSourceView();
+                        SubtitleListview1.SetStartTimeAndDuration(index, _subtitle.Paragraphs[index], _subtitle.GetParagraphOrDefault(index + 1), _subtitle.GetParagraphOrDefault(index - 1));
+                        SetDurationInSeconds(_subtitle.Paragraphs[index].DurationTotalSeconds);
+                        ButtonInsertNewTextClick(null, null);
+                        UpdateSourceView();
+                    }
                 }
             }
             else if (_shortcuts.MainCreateStartDownEndUp == e.KeyData)
