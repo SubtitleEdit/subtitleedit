@@ -134,7 +134,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         {
             cb.Items.Clear();
             var engines = new List<string> { WhisperChoice.OpenAi };
-            if (Configuration.IsRunningOnWindows)
+            if (Configuration.IsRunningOnWindows && IntPtr.Size * 8 == 64)
             {
                 engines.Add(WhisperChoice.PurfviewFasterWhisper);
                 engines.Add(WhisperChoice.ConstMe);
