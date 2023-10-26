@@ -81,12 +81,34 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public static List<string> ReadAllLinesShared(string path, Encoding encoding)
         {
-            return encoding.GetString(ReadAllBytesShared(path)).SplitToLines();
+            var bytes = ReadAllBytesShared(path);
+            if (bytes.Length > 3 && Equals(encoding, Encoding.UTF8) && bytes[0] == 0xef && bytes[1] == 0xbb && bytes[2] == 0xbf)
+            {
+                return encoding.GetString(bytes, 3, bytes.Length - 3).SplitToLines();
+            }
+
+            if (bytes.Length > 2 && Equals(encoding, Encoding.Unicode) && bytes[0] == 0xfe && bytes[1] == 0xff)
+            {
+                return encoding.GetString(bytes, 2, bytes.Length - 2).SplitToLines();
+            }
+
+            return encoding.GetString(bytes).SplitToLines();
         }
 
         public static string ReadAllTextShared(string path, Encoding encoding)
         {
-            return encoding.GetString(ReadAllBytesShared(path));
+            var bytes = ReadAllBytesShared(path);
+            if (bytes.Length > 3 && Equals(encoding, Encoding.UTF8) && bytes[0] == 0xef && bytes[1] == 0xbb && bytes[2] == 0xbf)
+            {
+                return encoding.GetString(bytes, 3, bytes.Length - 3);
+            }
+
+            if (bytes.Length > 2 && Equals(encoding, Encoding.Unicode) && bytes[0] == 0xff && bytes[1] == 0xfe)
+            {
+                return encoding.GetString(bytes, 2, bytes.Length - 2);
+            }
+
+            return encoding.GetString(bytes);
         }
 
         public static bool IsZip(string fileName)
