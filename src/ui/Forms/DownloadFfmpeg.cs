@@ -36,11 +36,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void buttonOK_Click(object sender, EventArgs e)
-        {
-            DialogResult = DialogResult.OK;
-        }
-
         private void buttonCancel_Click(object sender, EventArgs e)
         {
             if (buttonCancel.Text == LanguageSettings.Current.General.Ok)
@@ -55,7 +50,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void DownloadFfmpeg_Shown(object sender, EventArgs e)
         {
-            var url = "https://github.com/SubtitleEdit/support-files/raw/master/ffpmeg/ffmpeg-" + IntPtr.Size * 8 + ".zip";
+            var url = "https://github.com/SubtitleEdit/support-files/raw/master/ffpmeg/ffmpeg-64.zip";
+            if (IntPtr.Size == 32)
+            {
+                url = "https://github.com/SubtitleEdit/support-files/releases/download/ffmpegwin32v5.1/ffmpeg-win32-n5.1.zip";
+            }
+
             if (_title.Contains("ffprobe", StringComparison.OrdinalIgnoreCase))
             {
                 url = "https://github.com/SubtitleEdit/support-files/releases/download/ffprove-6.0/ffprobe.zip";
