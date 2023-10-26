@@ -490,6 +490,7 @@ Tiramos partido do ritmo intrínseco da imagem.</CreateSimpleChainingToolTip>
     <BottomAlignSelectedLines>Alinhamento inferior das linhas seleccionadas (manter posição horizontal)</BottomAlignSelectedLines>
     <ToggleForcedSelectedLines>Alternar "Forçado" das linhas seleccionadas</ToggleForcedSelectedLines>
     <SelectForcedLines>Seleccionar linhas forçadas</SelectForcedLines>
+    <SelectNonForcedLines>Seleccionar linhas não forçadas</SelectNonForcedLines>
     <SizeXY>Tamanho: {0}x{1}</SizeXY>
     <SetAspectRatio11>Definir proporção da aparência 1:1</SetAspectRatio11>
     <ChangeBrightnessTitle>Alterar brilho</ChangeBrightnessTitle>
@@ -1072,6 +1073,7 @@ Para usar a chave API, vá a "Opções -&gt; Definições -&gt; Ferramentas" par
     <TranslateBlockClipboardError2>Traduza novamente, depois copie os resultados para a área de transferência e clique novamente neste botão.</TranslateBlockClipboardError2>
     <StartWebServerX>Iniciar "{0}" servidor Web</StartWebServerX>
     <XRequiresALocalWebServer>"{0}" requer um servidor Web a funcionar localmente!</XRequiresALocalWebServer>
+    <XRequiresAnApiKey>"{0}" requer uma chave API.</XRequiresAnApiKey>
     <ReadMore>Ler mais?</ReadMore>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
@@ -1433,8 +1435,6 @@ Para usar a chave API, vá a "Opções -&gt; Definições -&gt; Ferramentas" par
         <GenerateImportShotChanges>Gerar/importar mudanças de cena...</GenerateImportShotChanges>
         <RemoveOrExportShotChanges>Remover/exportar mudanças de cena...</RemoveOrExportShotChanges>
         <WaveformBatchGenerate>Gerar formas de onda em série...</WaveformBatchGenerate>
-        <ShowHideVideo>Mostrar/ocultar vídeo</ShowHideVideo>
-        <ShowHideWaveform>Mostrar/ocultar forma de onda</ShowHideWaveform>
         <ShowHideWaveformAndSpectrogram>Mostrar/ocultar forma de onda e espectrograma</ShowHideWaveformAndSpectrogram>
         <UnDockVideoControls>Separar controlos de vídeo</UnDockVideoControls>
         <ReDockVideoControls>Unir controlos de vídeo</ReDockVideoControls>
@@ -2227,6 +2227,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <LinesFoundX>Linhas encontradas: {0}</LinesFoundX>
     <RemoveTextIfContains>Remover texto se tiver:</RemoveTextIfContains>
     <RemoveTextIfAllUppercase>Remover linha se tiver em MAIÚSCULA</RemoveTextIfAllUppercase>
+    <RemoveIfOnlyMusicSymbols>Remover se só houver símbolos de música</RemoveIfOnlyMusicSymbols>
     <RemoveInterjections>Remover interjeições (shh, hmm, etc.)</RemoveInterjections>
     <EditInterjections>Editar...</EditInterjections>
     <Apply>A&amp;plicar</Apply>
@@ -2649,6 +2650,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <WaveformSeekSilenceForward>Localizar silêncio no áudio para frente</WaveformSeekSilenceForward>
     <WaveformSeekSilenceBack>Localizar silêncio no áudio para atrás</WaveformSeekSilenceBack>
     <WaveformAddTextHere>Adicionar texto aqui (para uma selecção nova)</WaveformAddTextHere>
+    <ChooseLayoutX>Escolher esquema {0}</ChooseLayoutX>
     <WaveformAddTextHereFromClipboard>Adicionar texto aqui (para uma selecção nova a partir da área de transferência)</WaveformAddTextHereFromClipboard>
     <SetParagraphAsSelection>Definir a actual como nova selecção</SetParagraphAsSelection>
     <WaveformPlayNewSelection>Reproduzir selecção</WaveformPlayNewSelection>
