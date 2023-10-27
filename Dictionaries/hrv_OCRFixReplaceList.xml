@@ -123,19 +123,26 @@
     <Word from="budr" to="bude" />
     <Word from="budep" to="budeš" />
     <Word from="buđav" to="pljesniv" />
+    <!-- c -->
     <Word from="cedila" to="cijedila" />
     <Word from="cedilu" to="cjedilu" />
     <Word from="celom" to="cijelom" />
     <Word from="cenzurisan" to="cenzuriran" />
     <Word from="cenzurisana" to="cenzurirana" />
+    <Word from="cenzurisao" to="cenzurirao" />
+    <Word from="cenzurišem" to="cenzuriram" />
+    <Word from="cenzurišemo" to="cenzuriramo" />
     <Word from="cenzurišeš" to="cenzuriraš" />
     <Word from="ceo" to="cijeli" />
     <Word from="Ceo" to="Cijeli" />
     <Word from="cepa" to="cijepa" />
+    <Word from="cepanje" to="cijepanje" />
+    <Word from="cepidlači" to="cjepidlači" />
     <Word from="cev" to="cijev" />
     <Word from="cevi" to="cijevi" />
     <Word from="cjevi" to="cijevi" />
     <Word from="cevima" to="cijevima" />
+    <Word from="cevčicama" to="cjevčicama" />
     <Word from="Cevi" to="Cijevi" />
     <Word from="Cjevi" to="Cijevi" />
     <Word from="Cevima" to="Cijevima" />
@@ -216,6 +223,8 @@
     <Word from="ćorsokaku" to="slijepoj ulici" />
     <Word from="ćošak" to="ugao" />
     <Word from="ćošku" to="uglu" />
+    <Word from="ćelijskoj" to="staničnoj" />
+    <Word from="ćelijskom" to="staničnom" />
     <Word from="ćerka" to="kći" />
     <Word from="Ćerka" to="Kći" />
     <Word from="ćte" to="ćete" />
@@ -231,6 +240,7 @@
     <Word from="Ćutao" to="Šutio" />
     <Word from="ćute" to="šute" />
     <Word from="Ćute" to="Šute" />
+    <!-- d -->
     <Word from="dp" to="do" />
     <Word from="daga" to="da ga" />
     <Word from="damas" to="danas" />
@@ -290,6 +300,7 @@
     <Word from="dešifrujemo" to="dešifriramo" />
     <Word from="dete" to="dijete" />
     <Word from="Dete" to="Dijete" />
+    <Word from="devac" to="djevac" />
     <Word from="dezert" to="desert" />
     <Word from="diluje" to="dila" />
     <Word from="diluju" to="dilaju" />
@@ -354,17 +365,20 @@
     <Word from="duuga" to="dúga" />
     <Word from="duvan" to="duhan" />
     <Word from="duvana" to="duhana" />
+    <Word from="duvanom" to="duhanom" />
     <Word from="duvaj" to="puši" />
     <Word from="duvaš" to="pušeš" />
     <Word from="dve" to="dvije" />
     <Word from="Dve" to="Dvije" />
     <Word from="dvema" to="dvjema" />
+    <Word from="dvosed" to="dvosjed" />
     <Word from="đavo" to="vrag" />
     <Word from="đavola" to="vraga" />
     <Word from="đemper" to="džemper" />
     <Word from="džanki" to="ovisnik" />
     <Word from="dželat" to="krvnik" />
     <Word from="đubre" to="smeće" />
+    <Word from="edukovani" to="educirani" />
     <Word from="edukovat" to="educirat" />
     <Word from="edukovati" to="educirati" />
     <Word from="efekat" to="efekt" />
@@ -406,6 +420,7 @@
     <Word from="foke" to="tuljani" />
     <Word from="fokama" to="tuljanima" />
     <Word from="fotografišu" to="fotografiraju" />
+    <!-- g -->
     <Word from="gasova" to="plinova" />
     <Word from="gde" to="gdje" />
     <Word from="Gde" to="Gdje" />
@@ -454,6 +469,7 @@
     <Word from="Historiju" to="Povijest" />
     <Word from="Historije" to="Povijesti" />
     <Word from="Historiji" to="Povijesti" />
+    <Word from="Htedoh" to="Htjedoh" />
     <Word from="Istorija" to="Povijest" />
     <Word from="Istoriju" to="Povijest" />
     <Word from="Istorije" to="Povijesti" />
@@ -506,6 +522,7 @@
     <Word from="Htijela" to="Htjela" />
     <Word from="htjeo" to="htio" />
     <Word from="hteo" to="htio" />
+    <!-- i -->
     <Word from="iamti" to="imati" />
     <Word from="Ii" to="li" />
     <Word from="iči" to="ići" />
@@ -513,6 +530,7 @@
     <Word from="iduči" to="idući" />
     <Word from="ikavih" to="ikakvih" />
     <Word from="ikat" to="imat" />
+    <Word from="ikda" to="ikad" />
     <Word from="iko" to="itko" />
     <Word from="imq" to="ima" />
     <Word from="imap" to="imao" />
@@ -541,6 +559,7 @@
     <Word from="Interesujemo" to="Zanimamo" />
     <Word from="interesujete" to="zanimate" />
     <Word from="Interesujete" to="Zanimate" />
+    <Word from="interesuješ" to="zanimaš" />
     <Word from="Interesuju" to="Zanimaju" />
     <Word from="interesuju" to="zanimaju" />
     <Word from="iscede" to="iscijede" />
@@ -627,6 +646,7 @@
     <Word from="izvinjenje" to="isprika" />
     <Word from="izvinjenja" to="isprike" />
     <Word from="izvinjenju" to="isprici" />
+    <!-- j -->
     <Word from="jedamput" to="jedanput" />
     <Word from="jedana" to="jedna" />
     <Word from="jedns" to="jedna" />
@@ -643,11 +663,13 @@
     <Word from="Ješću" to="Jest ću" />
     <Word from="ješćeš" to="jest ćeš" />
     <Word from="ješćemo" to="jest ćemo" />
+    <Word from="jos" to="još" />
     <Word from="jr" to="je" />
     <Word from="jw" to="je" />
     <Word from="jma" to="ima" />
     <Word from="juče" to="jučer" />
     <Word from="Juče" to="Jučer" />
+    <!-- k -->
     <Word from="kaćem" to="kažem" />
     <Word from="kads" to="kada" />
     <Word from="kađe" to="kaže" />
@@ -655,6 +677,7 @@
     <Word from="Kakava" to="Kakva" />
     <Word from="kakave" to="kakve" />
     <Word from="Kakave" to="Kakve" />
+    <Word from="kalvir" to="klavir" />
     <Word from="kampovali" to="kampirali" />
     <Word from="kampovati" to="kampirati" />
     <Word from="Kampovao" to="Kampirao" />
@@ -802,6 +825,7 @@
     <Word from="kutevima" to="kutovima" />
     <Word from="Kutevima" to="Kutovima" />
     <Word from="kvalifikuju" to="kvalificiraju" />
+    <!-- l L -->
     <Word from="lenjivci" to="ljenjivci" />
     <Word from="Lažov" to="Lažljivac" />
     <Word from="lažov" to="lažljivac" />
@@ -915,7 +939,10 @@
     <Word from="ljetneg" to="ljetnog" />
     <Word from="ljetnem" to="ljetnom" />
     <Word from="ljetnje" to="ljetne" />
+    <Word from="litijum" to="litij" />   
+    <Word from="litijumu" to="litiju" />
     <Word from="luđaču" to="luđakinju" />
+    <!-- m -->
     <Word from="magnezijuma" to="magnezija" />
     <Word from="magnezijumu" to="magneziju" />
     <Word from="maja" to="svibnja" />
@@ -941,6 +968,7 @@
     <Word from="martom" to="ožujkom" />
     <Word from="matori" to="stari" />
     <Word from="matorom" to="starom" />
+    <Word from="medju" to="među" />
     <Word from="mego" to="nego" />
     <Word from="mehur" to="mjehur" />
     <Word from="mehurić" to="mjehurić" />
@@ -967,8 +995,10 @@
     <Word from="metkovima" to="mecima" />
     <Word from="milijuner" to="milijunaš" />
     <Word from="Milsim" to="Mislim" />
+    <Word from="milsim" to="mislim" />
     <Word from="minut" to="minutu" />
     <Word from="miraš" to="moraš" />
+    <Word from="Mislo" to="Mislio" />
     <Word from="mje" to="moje" />
     <Word from="mleo" to="mljeo" />
     <Word from="Mođe" to="Može" />
@@ -993,6 +1023,7 @@
     <Word from="Muzika" to="Glazba" />
     <Word from="Muzike" to="Glazbe" />
     <Word from="Muzikom" to="Glazbom" />
+    <!-- n -->
     <Word from="na način" to="tako" />
     <Word from="nd" to="ne" />
     <Word from="Nr" to="Ne" />
@@ -1116,6 +1147,8 @@
     <Word from="niasm" to="nisam" />
     <Word from="nigde" to="nigdje" />
     <Word from="Nigde" to="Nigdje" />
+    <Word from="igde" to="igdje" />
+    <Word from="igde" to="igdje" />
     <Word from="nigjde" to="nigdje" />
     <Word from="nikakave" to="nikakve" />
     <Word from="niko" to="nitko" />
@@ -1131,6 +1164,7 @@
     <Word from="nedam" to="ne dam" />
     <Word from="negujem" to="njegujem" />
     <Word from="njegi" to="njezi" />
+    <Word from="njegou" to="njegovu" />
     <Word from="njenum" to="njenim" />
     <Word from="nesmijem" to="ne smijem" />
     <Word from="netreba" to="ne treba" />
@@ -1148,11 +1182,14 @@
     <Word from="Nmeoj" to="Nemoj" />
     <Word from="nmeoj" to="nemoj" />
     <Word from="nominovan" to="nominiran" />
+    <Word from="nominovani" to="nominirani" />
     <Word from="nominovati" to="nominirati" />
     <Word from="nsiam" to="nisam" />
     <Word from="nteko" to="netko" />
     <Word from="nr" to="ne" />
     <Word from="nrgo" to="nego" />
+    <Word from="nuduo" to="nudio" />
+    <!-- o -->
     <Word from="oar" to="par" />
     <Word from="obe" to="obje" />
     <Word from="Obe" to="Obje" />
@@ -1210,6 +1247,7 @@
     <Word from="odeća" to="odjeća" />
     <Word from="odeću" to="odjeću" />
     <Word from="odjećom" to="odećom" />
+    <Word from="odenem" to="odjenem" />
     <Word from="odmerio" to="odmjerio" />
     <Word from="odmeravao" to="odmjeravao" />
     <Word from="Odneću" to="Odnijet ću" />
@@ -1242,6 +1280,7 @@
     <Word from="Oduvek" to="Oduvijek" />
     <Word from="oduvjek" to="oduvijek" />
     <Word from="Oduvjek" to="Oduvijek" />
+    <Word from="oept" to="opet" />
     <Word from="og" to="od" />
     <Word from="ogladneo" to="ogladnio" />
     <Word from="ogrev" to="ogrjev" />
@@ -1302,6 +1341,8 @@
     <Word from="osvjetljen" to="osvijetljen" />
     <Word from="osvjetlila" to="osvijetlila" />
     <Word from="otreznio" to="otrijeznio" />
+    <Word from="otupela" to="otupjela" />
+    <Word from="otupeli" to="otupjeli" />
     <Word from="ovde" to="ovdje" />
     <Word from="Ovde" to="Ovdje" />
     <Word from="ovdej" to="ovdje" />
@@ -1314,6 +1355,7 @@
     <Word from="Ovjde" to="Ovdje" />
     <Word from="ovoje" to="ovo je" />
     <Word from="ozljeđen" to="ozlijeđen" />
+        <!-- p -->
     <Word from="pakuj" to="pakiraj" />
     <Word from="pakuje" to="pakira" />
     <Word from="Pakuje" to="Pakira" />
@@ -1330,6 +1372,7 @@
     <Word from="Pantalone" to="Hlače" />
     <Word from="pantalona" to="hlača" />
     <Word from="pantalonama" to="hlačama" />
+    <Word from="paralisan" to="paraliziran" />
     <Word from="parčad" to="komadiće" />
     <Word from="parčadi" to="komadića" />
     <Word from="parče" to="komadić" />
@@ -1356,6 +1399,7 @@
     <Word from="pertle" to="žnirance" />
     <Word from="pesama" to="pjesama" />
     <Word from="pesnicima" to="pjesnicima" />
+    <Word from="pešače" to="pješače" />
     <Word from="pešice" to="pješice" />
     <Word from="Pešice" to="Pješice" />
     <Word from="peške" to="pješke" />
@@ -1365,6 +1409,7 @@
     <Word from="pijesmu" to="pjesmu" />
     <Word from="piksla" to="pepeljara" />
     <Word from="pikslu" to="pepeljaru" />
+    <Word from="pirinač" to="riž*" />
     <Word from="Plata" to="Plaća" />
     <Word from="plata" to="plaća" />
     <Word from="plača" to="plaća" />
@@ -1537,9 +1582,11 @@
     <Word from="predame" to="preda me" />
     <Word from="predamnom" to="preda mnom" />
     <Word from="Predamnom" to="Preda mnom" />
+    <Word from="predele" to="predjele" />
     <Word from="predsjenik" to="predsjednik" />
     <Word from="preformuliši" to="preformuliraj" />
     <Word from="preklo" to="porijeklo" />
+    <Word from="prekomernom" to="prekomjernom" />
     <Word from="preliv" to="preljev" />
     <Word from="prelivaju" to="prelijevaju" />
     <Word from="prelivom" to="preljevom" />
@@ -1591,6 +1638,7 @@
     <Word from="pribegavale" to="pribjegavale" />
     <Word from="priljepio" to="prilijepio" />
     <Word from="primećen" to="primijećen" />
+    <Word from="primećivala" to="primijećivala" />
     <Word from="prineo" to="prinio" />
     <Word from="Prineo" to="Prinio" />
     <Word from="pripovetke" to="pripovjetke" />
@@ -1653,6 +1701,7 @@
     <Word from="Proje" to="Prije" />
     <Word from="projekat" to="projekt" />
     <Word from="Projekat" to="Projekt" />
+    <Word from="projektovao" to="projektirao" />
     <Word from="proliv" to="proljev" />
     <Word from="proliva" to="proljeva" />
     <Word from="prolivajući" to="prolijevajući" />
@@ -1693,8 +1742,10 @@
     <Word from="punoletan" to="punoljetan" />
     <Word from="Punoletan" to="Punoljetan" />
     <Word from="pušićemo" to="pušit ćemo" />
+    <!-- r -->
     <Word from="računari" to="računala" />
     <Word from="računare" to="računala" />
+    <Word from="radeo" to="radio" />
     <Word from="radijo" to="radio" />
     <Word from="radanju" to="rađanju" />
     <Word from="radanje" to="rađanje" />
@@ -1704,6 +1755,7 @@
     <Word from="rascep" to="rascjep" />
     <Word from="rascepu" to="rascjepu" />
     <Word from="rascepati" to="rascijepati" />
+    <Word from="rasedu" to="rasjedu" />
     <Word from="rasejan" to="rastresen" />
     <Word from="rasejana" to="rastresena" />
     <Word from="raspakovala" to="raspakirala" />
@@ -1725,6 +1777,7 @@
     <Word from="razreši" to="razriješi" />
     <Word from="razume" to="razumije" />
     <Word from="razumeju" to="razumiju" />
+    <Word from="Razumeju" to="Razumiju" />
     <Word from="razumijeti" to="razumjeti" />
     <Word from="recitujte" to="recitirajte" />
     <Word from="recitujem" to="recitiram" />
@@ -1793,6 +1846,7 @@
     <Word from="rješio" to="riješio" />
     <Word from="rokenrol" to="rock'n'roll" />
     <Word from="ronioc" to="ronilac" />
+    <!-- s -->
     <Word from="saglasni" to="suglasni" />
     <Word from="saglasili" to="suglasili" />
     <Word from="Sagradiću" to="Sagradit ću" />
@@ -1804,6 +1858,7 @@
     <Word from="samnom" to="sa mnom" />
     <Word from="Samnom" to="Sa mnom" />
     <Word from="samp" to="samo" />
+    <Word from="saobraćaja" to="prometa" />
     <Word from="saviješću" to="savješću" />
     <Word from="savešću" to="savješću" />
     <Word from="sazrevanju" to="sazrijevanju" />
@@ -1815,6 +1870,7 @@
     <Word from="seckam" to="sjeckam" />
     <Word from="sećanjima" to="sjećanjima" />
     <Word from="seče" to="siječe" />
+    <Word from="sečenjem" to="rezanjem" />
     <Word from="sečivo" to="sječivo" />
     <Word from="sečiva" to="sječiva" />
     <Word from="sedećeš" to="sjedit ćeš" />
@@ -1883,6 +1939,9 @@
     <Word from="sleću" to="slijeću" />
     <Word from="slećemo" to="slijećemo" />
     <Word from="sleđe" to="slijede" />
+    <Word from="slepima" to="slijepima" />
+    <Word from="slepih" to="slijepih" />
+    <Word from="slepoćom" to="sljepoćom" />
     <Word from="sleva" to="slijeva" />
     <Word from="sljedeči" to="sljedeći" />
     <Word from="sljedečih" to="sljedećih" />
@@ -1950,6 +2009,7 @@
     <Word from="Smijaću" to="Smijat ću" />
     <Word from="smijaću" to="smijat ću" />
     <Word from="smjeo" to="smio" />
+    <Word from="Smrdeo" to="Smrdio" />
     <Word from="smrdeo" to="smrdio" />
     <Word from="smrdelo" to="smrdjelo" />
     <Word from="Smršao" to="Smršavio" />
@@ -1975,6 +2035,7 @@
     <Word from="Snjegom" to="Snijegom" />
     <Word from="snjegovima" to="snijegovima" />
     <Word from="Snjegovima" to="Snijegovima" />
+    <Word from="snjim" to="s njim" />
     <Word from="sočiva" to="leće" />
     <Word from="Sočiva" to="Leće" />
     <Word from="sočivima" to="lećama" />
@@ -2071,6 +2132,7 @@
     <Word from="sudije" to="suca" />
     <Word from="sudiji" to="sucu" />
     <Word from="sudijo" to="suče" />
+    <Word from="Sudijo" to="Suče" />
     <Word from="sudiju" to="suca" />
     <Word from="sudijom" to="sucem" />
     <Word from="sudijskog" to="sudskog" />
@@ -2094,6 +2156,7 @@
     <Word from="surfuje" to="surfa" />
     <Word from="surfuješ" to="surfaš" />
     <Word from="surfuju" to="surfaju" />
+    <Word from="susam" to="sezam" />
     <Word from="suština" to="bit" />
     <Word from="suštinski" to="bitni" />
     <Word from="suv" to="suh" />
@@ -2116,6 +2179,7 @@
     <Word from="Suvim" to="Suhim" />
     <Word from="suvu" to="suhu" />
     <Word from="Suvu" to="Suhu" />
+    <Word from="sw" to="se" />
     <Word from="svakavim" to="svakakvim" />
     <Word from="Svestan" to="Svjestan" />
     <Word from="svestan" to="svjestan" />
@@ -2173,6 +2237,7 @@
     <Word from="Talasima" to="Valovima" />
     <Word from="teba" to="treba" />
     <Word from="tebalo" to="trebalo" />
+    <Word from="tečna" to="tekuća" />
     <Word from="tečnost" to="tekućina" />
     <Word from="tečnosti" to="tekućine" />
     <Word from="tečnošću" to="tekućinom" />
@@ -2219,6 +2284,7 @@
     <Word from="tsko" to="tako" />
     <Word from="tugi" to="tuzi" />
     <Word from="tvrtci" to="tvrtki" />
+    <!-- u -->
     <Word from="ua" to="za" />
     <Word from="ubde" to="bude" />
     <Word from="ubede" to="uvjere" />
@@ -2263,14 +2329,15 @@
     <Word from="uleću" to="ulijeću" />
     <Word from="ulevo" to="ulijevo" />
     <Word from="ume" to="zna" />
+    <Word from="umeju" to="umiju" />
+    <Word from="umem" to="umijem" />
+    <Word from="umeš" to="umiješ" />
+    <Word from="umete" to="znate" />
+    <Word from="umesto" to="umjesto" />
+    <Word from="Umesto" to="umjesto" />
     <Word from="umetnik" to="umjetnik" />
     <Word from="umetnine" to="umjetnine" />
     <Word from="umetninama" to="umjetninama" />
-    <Word from="umem" to="umijem" />
-    <Word from="umeš" to="umiješ" />
-    <Word from="umesto" to="umjesto" />
-    <Word from="Umesto" to="umjesto" />
-    <Word from="umete" to="znate" />
     <Word from="umijesto" to="umjesto" />
     <Word from="Umijesto" to="Umjesto" />
     <Word from="umreti" to="umrijeti" />
@@ -2291,14 +2358,18 @@
     <Word from="Uprkos" to="Usprkos" />
     <Word from="uradio" to="učinio" />
     <Word from="Uredu" to="U redu" />
+    <Word from="Usevi" to="Usjevi" />
+    <Word from="usevi" to="usjevi" />
     <Word from="uskrsa" to="Uskrsa" />
     <Word from="uskrse" to="Uskrse" />
     <Word from="uskrsi" to="Uskrsi" />
     <Word from="uskrsu" to="Uskrsu" />
     <Word from="uskrsom" to="Uskrsom" />
     <Word from="uskrsima" to="Uskrsima" />
+    <Word from="Usledili" to="Uslijedili" />
     <Word from="usledilo" to="uslijedilo" />
     <Word from="usljedilo" to="uslijedilo" />
+    <Word from="usledili" to="uslijedili" />
     <Word from="uslov" to="uvjet" />
     <Word from="uslova" to="uvjeta" />
     <Word from="uslovi" to="uvjeti" />
@@ -2355,6 +2426,7 @@
     <Word from="usljed" to="uslijed" />
     <Word from="Usljed" to="Uslijed" />
     <Word from="ušunjate" to="ušuljate" />
+    <Word from="ušutala" to="ušutjela" />
     <Word from="uštedeće" to="uštedjet će" />
     <Word from="utehe" to="utjehe" />
     <Word from="utopiće" to="utopit će" />
@@ -2362,6 +2434,7 @@
     <Word from="uveče" to="navečer" />
     <Word from="uvek" to="uvijek" />
     <Word from="Uvek" to="Uvijek" />
+    <Word from="Uvešču" to="Uvest ću" />
     <Word from="uvjek" to="uvijek" />
     <Word from="Uvjek" to="Uvijek" />
     <Word from="uvijet" to="uvjet" />
@@ -2458,6 +2531,7 @@
     <Word from="voleh" to="voljeh" />
     <Word from="volela" to="voljela" />
     <Word from="voliti" to="voljeti" />
+    <Word from="voz" to="vlak" />
     <Word from="voza" to="vlaka" />
     <Word from="vozu" to="vlaku" />
     <Word from="vozom" to="vlakom" />
@@ -2551,6 +2625,7 @@
     <Word from="zasede" to="zasjede" />
     <Word from="zasedi" to="zasjedi" />
     <Word from="zasedu" to="zasjedu" />
+    <Word from="zaslepe" to="zaslijepe" />
     <Word from="zaslepi" to="zaslijepi" />
     <Word from="zastideo" to="zastidio" />
     <Word from="zatp" to="zato" />
@@ -2569,6 +2644,7 @@
     <Word from="zdelu" to="zdjelu" />
     <Word from="zdrvo" to="zdravo" />
     <Word from="Zdrvo" to="Zdravo" />
+    <Word from="zista" to="zaista" />
     <Word from="zlodela" to="zlodjela" />
     <Word from="znaći" to="znači" />
     <Word from="zs" to="za" />
@@ -2598,6 +2674,8 @@
     <Word from="zvjezdu" to="zvijezdu" />
     <Word from="Zvjezdu" to="Zvijezdu" />
     <Word from="zvjezdom" to="zvijezdom" />
+    <Word from="zvučaće" to="zvučat će" />
+    <!--z-->
     <Word from="žalis" to="žališ" />
     <Word from="ždrao" to="žderao" />
     <Word from="žemo" to="ćemo" />
@@ -2721,6 +2799,7 @@
     <Word from="Džeja" to="Jaya" />
     <Word from="Džejn" to="Jane" />
     <Word from="Džil" to="Jill" />
+    <Word from="Dživs" to="Jeeves" />
     <Word from="Džodi" to="Jody" />
     <Word from="Džud" to="Jude" />
     <Word from="Džuli" to="Julie" />
@@ -2742,6 +2821,7 @@
     <Word from="Ešford" to="Ashford" />
     <Word from="Ešforda" to="Ashforda" />
     <Word from="Ešli" to="Ashley" />
+    <Word from="Fajnman" to="Feynman" />
     <Word from="Fibi" to="Phoebe" />
     <Word from="Fil" to="Phil" />
     <Word from="Fila" to="Phila" />
@@ -2765,6 +2845,8 @@
     <Word from="Hejs" to="Hays" />
     <Word from="Heri" to="Harry" />
     <Word from="Hejven" to="Haven" />
+    <Word from="Hejven" to="Haven" />
+    <Word from="Hejvena" to="Havena" />
     <Word from="Hejz" to="Hays" />
     <Word from="Hju" to="Hugh" />
     <Word from="Hjuh" to="Hugh" />
@@ -2787,6 +2869,7 @@
     <Word from="Kazablanki" to="Casablanci" />
     <Word from="Kejdž" to="Cage" />
     <Word from="Kejn" to="Kane" />
+    <Word from="Kejp" to="Cape" />
     <Word from="Kejsi" to="Casey" />
     <Word from="Kejti" to="Katie" />
     <Word from="Keren" to="Karen" />
@@ -2833,6 +2916,7 @@
     <Word from="Majk" to="Mike" />
     <Word from="Majkeve" to="Mikeove" />
     <Word from="Majlo" to="Milo" />
+    <Word from="Marž" to="Marge" />
     <Word from="Maslou" to="Maslow" />
     <Word from="Medison" to="Madison" />
     <Word from="Medlin" to="Madelaine" />
@@ -2870,6 +2954,7 @@
     <Word from="O'Nil" to="O'Neal" />
     <Word from="Ouk" to="Oak" />
     <Word from="Pajper" to="Piper" />
+    <Word from="Pauers" to="Powers" />
     <Word from="Pem" to="Pam" />
     <Word from="Pejdž" to="Paige" />
     <Word from="Piter" to="Peter" />
@@ -2884,11 +2969,13 @@
     <Word from="Rej" to="Ray" />
     <Word from="Rejmond" to="Raymond" />
     <Word from="Rejmonda" to="Raymonda" />
+    <Word from="Rejmondu" to="Raymondu" />
     <Word from="Rejčel" to="Rachel" />
     <Word from="Rič" to="Rich" />
     <Word from="Rid" to="Reed" />
     <Word from="Ridž" to="Ridge" />
     <Word from="Rouz" to="Rose" />
+    <Word from="Rouč" to="Roach" />
     <Word from="Sanset" to="Sunset" />
     <Word from="Sejdi" to="Sadie" />
     <Word from="Sejmur" to="Seymour" />
@@ -2900,6 +2987,7 @@
     <Word from="Sete" to="Sethe" />
     <Word from="Sidni" to="Sidney" />
     <Word from="Sindi" to="Cindy" />
+    <Word from="Sloun" to="Sloane" />
     <Word from="Sojer" to="Sawyer" />
     <Word from="Sojeru" to="Sawyeru" />
     <Word from="Sola" to="Saula" />
@@ -2917,9 +3005,8 @@
     <Word from="Šona" to="Seana" />
     <Word from="Šone" to="Seane" />
     <Word from="Šonu" to="Seanu" />
-    <Word from="Šopen" to="Chopin" />
-    <Word from="Šopenu" to="Chopinu" />
     <Word from="Španiji" to="Španjolskoj" />
+    <Word from="Tajm" to="Time" />
     <Word from="Tajma" to="Timea" />
     <Word from="Tajms" to="Times" />
     <Word from="Tejlor" to="Taylor" />
@@ -3243,6 +3330,7 @@
 <Word from="moiim" to="molim" />
 <Word from="mozds" to="možda" />
 <Word from="mpzes" to="možeš" />
+<Word from="mozda" to="možda" />
 <Word from="naiazim" to="nalazim" />
 <Word from="naiazimo" to="nalazimo" />
 <Word from="nakašijala" to="nakašljala" />
@@ -3260,6 +3348,7 @@
 <Word from="nlšta" to="ništa" />
 <Word from="nlvo" to="nivo" />
 <Word from="nlje" to="nije" />
+<Word from="oci" to="oči" />
 <Word from="obiastima" to="oblastima" />
 <Word from="oćigiedno" to="očigledno" />
 <Word from="odijeio" to="odijelo" />
@@ -3324,6 +3413,8 @@
 <Word from="stublšte" to="stubište" />
 <Word from="šiic" to="šlic" />
 <Word from="škrlljevac" to="škriljevac" />
+<Word from="Udite" to="Uđite" />
+<Word from="udite" to="uđite" />
 <Word from="uolati" to="uplati" />
 <Word from="upošijavala" to="upošljavala" />
 <Word from="užlvajte" to="uživajte" />
@@ -3432,6 +3523,7 @@
     <LinePart from="li da pričaš" to="pričati" />
     <LinePart from="li da budeš" to="li biti" />
     <LinePart from="moći da idemo" to="moći ići" />
+    <LinePart from="mogao da bude" to="mogao biti" />
     <LinePart from="mogao da vidiš" to="mogao vidjeti" />
     <LinePart from="mogu da idem" to="mogu ići" />
     <LinePart from="moglo da bude" to="moglo biti" />
@@ -3441,6 +3533,7 @@
     <LinePart from="moram da budem" to="moram biti" />
     <LinePart from="Moram da idem" to="Moram ići" />
     <LinePart from="moram da idem" to="moram ići" />
+    <LinePart from="moram da nađem" to="moram naći" />
     <LinePart from="Moramo da idemo" to="Moramo ići" />
     <LinePart from="Moramo da izbavimo" to="Moramo izbaviti" />
     <LinePart from="Moramo da budemo" to="Moramo biti" />
@@ -3455,6 +3548,7 @@
     <LinePart from="moram da odem" to="moram otići" />
     <LinePart from="mora da ode" to="mora otići" />
     <LinePart from="Moram da razgovaram" to="Moram razgovarati" />
+    <LinePart from="moraš da shvatiš" to="moraš shvatiti" />
     <LinePart from="moram da vidim" to="moram vidjeti" />
     <LinePart from="moram da zaboravim" to="moram zaboraviti" />
     <LinePart from="moraš da zaboraviš" to="moraš zaboraviti" />
@@ -4568,6 +4662,7 @@
     <RegEx find="fiskov" replaceWith="fiscir" />
     <RegEx find="frm" replaceWith="form" />
     <RegEx find="frov" replaceWith="frir" />
+    <RegEx find="ftam" replaceWith="ftalm" />
     <RegEx find="gačuj" replaceWith="gaćuj" />
     <RegEx find="glda" replaceWith="gleda" />
     <RegEx find="gpd" replaceWith="god" />
@@ -4641,6 +4736,7 @@
     <RegEx find="mejl" replaceWith="mail" />
     <RegEx find="(?&lt;![Mm])ekd" replaceWith="egd" />
     <RegEx find="([mv])ešten" replaceWith="$1ješten" />
+    <RegEx find="mkes" replaceWith="mjes" />
     <RegEx find="mnet" replaceWith="ment" />
     <RegEx find="miniš[eu]" replaceWith="minira" />
     <RegEx find="m([io]t?)rić" replaceWith="m$1rit ć" />
@@ -4736,7 +4832,7 @@
     <RegEx find="prouk" replaceWith="poruk" />
     <RegEx find="ptv" replaceWith="otv" />
     <RegEx find="ralijs" replaceWith="rals" />
-    <RegEx find="resjedav" replaceWith="prdsjedav" />
+    <RegEx find="resjedav" replaceWith="redsjedav" />
     <RegEx find="kratij" replaceWith="kracij" />
     <RegEx find="(?&lt;![is]|S)redić" replaceWith="rjedit ć" />
     <RegEx find="(?&lt;![mr])ejt" replaceWith="ate" />
@@ -5004,6 +5100,7 @@
     <RegEx find="Holivud" replaceWith="Hollywood" />
     <RegEx find="Holms" replaceWith="Holmes" />
     <RegEx find="Hjuston" replaceWith="Houston" />
+    <RegEx find="Huver" replaceWith="Hoover" />
     <RegEx find="indijan(?!s)" replaceWith="Indijan" />
     <RegEx find="Iraq" replaceWith="Irak" />
     <RegEx find="Itan" replaceWith="Ethan" />
@@ -5011,6 +5108,8 @@
     <RegEx find="Jevrej" replaceWith="Židov" />
     <RegEx find="jevrej" replaceWith="židov" />
     <RegEx find="Jovan" replaceWith="Ivan" />
+    <RegEx find="Judžin" replaceWith="Eugene" />
+    <RegEx find="Judžina" replaceWith="Eugenea" />
     <RegEx find="kadilak" replaceWith="Cadillac" />
     <RegEx find="Kajl" replaceWith="Kyle" />
     <RegEx find="Kavendiš" replaceWith="Cavendish" />
@@ -5069,6 +5168,8 @@
     <RegEx find="Ojler" replaceWith="Euler" />
     <RegEx find="Orlins" replaceWith="Orleans" />
     <RegEx find="Ostin" replaceWith="Austin" />
+    <RegEx find="Rejmond" replaceWith="Raymond" />
+    <RegEx find="Ruzvelt" replaceWith="Roosevelt" />
     <RegEx find="rols rojs" replaceWith="Rolls-Royce" />
     <RegEx find="Sajmon" replaceWith="Simon" />
     <RegEx find="S[ae]mjuel" replaceWith="Samuel" />
@@ -5083,6 +5184,7 @@
     <RegEx find="Šarlot" replaceWith="Charlotte" />
     <RegEx find="Šejn" replaceWith="Shane" />
     <RegEx find="Šerlok" replaceWith="Sherlock" />
+    <RegEx find="Šop[ei]n" replaceWith="Chopin" />
     <RegEx find="Španij([aeou])" replaceWith="Španjolsk$1" />
     <RegEx find="([šŠ])pansk" replaceWith="$1panjolsk" />
     <RegEx find="([šŠ])vetsk" replaceWith="$1vedsk" />
@@ -5097,6 +5199,7 @@
     <RegEx find="V[ao]šington" replaceWith="Washington" />
     <RegEx find="Vavilon" replaceWith="Babilon" />
     <RegEx find="vavilons" replaceWith="babilons" />
+    <RegEx find="Vensan" replaceWith="Vincent" />
     <RegEx find="Vejn" replaceWith="Wayne" />
     <RegEx find="Vejder" replaceWith="Vader" />
     <RegEx find="Vilij[ae]m" replaceWith="William" />
