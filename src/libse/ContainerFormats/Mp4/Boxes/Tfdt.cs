@@ -28,7 +28,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
             var version = Buffer[0];
             //var flags = GetUInt(0) & 0xffffff;
 
-            if (version == 1)
+            if (version == 0)
             {
                 BaseMediaDecodeTime = GetUInt(8);
             }
