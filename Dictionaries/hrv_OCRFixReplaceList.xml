@@ -1644,6 +1644,8 @@
     <Word from="pripovetke" to="pripovjetke" />
     <Word from="pripoveda" to="pripovijeda" />
     <Word from="pripovedala" to="pripovijedala" />
+    <Word from="pripovedanje" to="pripovijedanje" />
+
     <Word from="privilegovan" to="privilegiran" />
     <Word from="privilegovani" to="privilegirani" />
     <Word from="prjevoz" to="prijevoz" />
@@ -1667,6 +1669,7 @@
     <Word from="Prijatan" to="Ugodan" />
     <Word from="prijw" to="prije" />
     <Word from="primećen" to="primijećen" />
+    <Word from="primećenog" to="primijećenog" />
     <Word from="primećivao" to="primjećivao" />
     <Word from="primećivala" to="primjećivala" />
     <Word from="primedbi" to="primjedbi" />
@@ -2803,6 +2806,7 @@
     <Word from="Džodi" to="Jody" />
     <Word from="Džud" to="Jude" />
     <Word from="Džuli" to="Julie" />
+    <Word from="Doroti" to="Dorothy" />
     <Word from="Ebi" to="Abby" />
     <Word from="Efi" to="Effie" />
     <Word from="Ejb" to="Abe" />
@@ -2917,6 +2921,7 @@
     <Word from="Majkeve" to="Mikeove" />
     <Word from="Majlo" to="Milo" />
     <Word from="Marž" to="Marge" />
+    <Word from="Mardžori" to="Marjorie" />
     <Word from="Maslou" to="Maslow" />
     <Word from="Medison" to="Madison" />
     <Word from="Medlin" to="Madelaine" />
@@ -4743,7 +4748,7 @@
     <RegEx find="mi?j?enić" replaceWith="mijenit ć" />
     <RegEx find="mjenim" replaceWith="mijenim" />
     <RegEx find="mpra" replaceWith="mora" />
-    <RegEx find="mpz" replaceWith="mož" />
+    <RegEx find="mp[zž]" replaceWith="mož" />
     <RegEx find="mros" replaceWith="mors" />
     <RegEx find="msč" replaceWith="mač" />
     <RegEx find="([Mm])sl" replaceWith="$1isl" />
@@ -4910,6 +4915,7 @@
     <RegEx find="tarel" replaceWith="tarjel" />
     <RegEx find="tarisa" replaceWith="tira" />
     <RegEx find="taun" replaceWith="town" />
+    <RegEx find="tbe" replaceWith="tve" />
     <RegEx find="tćeš" replaceWith="t ćeš" />
     <RegEx find="tede(?![oć])" replaceWith="tedje" />
     <RegEx find="tedeo" replaceWith="tedio" />
