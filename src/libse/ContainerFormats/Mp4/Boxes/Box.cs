@@ -21,6 +21,11 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
             return (uint)((Buffer[index] << 24) + (Buffer[index + 1] << 16) + (Buffer[index + 2] << 8) + Buffer[index + 3]);
         }
 
+        public int GetInt(int index)
+        {
+            return (int)((Buffer[index] << 24) + (Buffer[index + 1] << 16) + (Buffer[index + 2] << 8) + Buffer[index + 3]);
+        }
+
         public ulong GetUInt64(int index)
         {
             return (ulong)Buffer[index] << 56 | (ulong)Buffer[index + 1] << 48 | (ulong)Buffer[index + 2] << 40 | (ulong)Buffer[index + 3] << 32 |
