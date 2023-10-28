@@ -11,6 +11,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
     public class Trun : Box
     {
         public List<TimeSegment> Samples { get; set; }
+        public uint? DataOffset { get; set; }
 
         public Trun(Stream fs, ulong maximumLength)
         {
@@ -33,6 +34,11 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
             if (sampleCount == 0)
             {
                 return;
+            }
+
+            if ((flags & 0x1) > 0)
+            {
+                DataOffset = GetUInt(8);
             }
 
             var sampleLength = Math.Min(sampleCount * 16 + 24, maximumLength);
