@@ -29,6 +29,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
             }
 
             var versionAndFlags = GetUInt(0);
+            var version = versionAndFlags >> 24;
             var flags = versionAndFlags & 0xFFFFFF;
             var sampleCount = GetUInt(4);
             if (sampleCount == 0)
@@ -105,7 +106,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                 // read "sample_time_offset" if present
                 if ((flags & 0x000800) > 0)
                 {
-                    sample.TimeOffset = GetUInt(pos);
+                    sample.TimeOffset = version == 1 ? GetInt(pos) : (long)GetUInt(pos);
                     pos += 4;
                 }
 
