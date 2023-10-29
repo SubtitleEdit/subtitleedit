@@ -8,6 +8,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
     {
         public byte[] Buffer;
         public ulong Position;
+        public ulong StartPosition;
         public string Name;
         public ulong Size;
 
@@ -65,6 +66,11 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
 
         internal bool InitializeSizeAndName(System.IO.Stream fs)
         {
+            if (StartPosition == 0)
+            {
+                StartPosition = (ulong)fs.Position -8;
+            }
+
             Buffer = new byte[8];
             var bytesRead = fs.Read(Buffer, 0, Buffer.Length);
             if (bytesRead < Buffer.Length)
