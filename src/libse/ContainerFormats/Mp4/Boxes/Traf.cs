@@ -30,6 +30,10 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                 {
                     Tfhd = new Tfhd(fs, Size);
                 }
+                else if (Name == "tfdt")
+                {
+                    Tfdt = new Tfdt(fs, Size);
+                }
 
                 fs.Seek((long)Position, SeekOrigin.Begin);
             }

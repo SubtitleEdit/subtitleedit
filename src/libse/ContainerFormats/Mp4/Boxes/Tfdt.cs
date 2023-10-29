@@ -28,13 +28,13 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
             var version = Buffer[0];
             //var flags = GetUInt(0) & 0xffffff;
 
-            if (version == 0)
+            if (version == 1)
             {
-                BaseMediaDecodeTime = GetUInt(8);
+                BaseMediaDecodeTime = GetUInt64(4);
             }
             else
             {
-                BaseMediaDecodeTime = GetUInt64(8);
+                BaseMediaDecodeTime = GetUInt(4);
             }
         }
     }

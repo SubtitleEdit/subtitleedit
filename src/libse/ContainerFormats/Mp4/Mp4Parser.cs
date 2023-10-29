@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Nikse.SubtitleEdit.Core.Cea608;
 
 namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
 {
@@ -20,6 +21,9 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
         internal Moof Moof { get; private set; }
         public Subtitle VttcSubtitle { get; private set; }
         public string VttcLanguage { get; private set; }
+
+        public Subtitle TrunCea608Subtitle { get; private set; }
+        private List<Cea608.CcData> _trunCea608CcData = new List<Cea608.CcData>();
 
         public List<Trak> GetSubtitleTracks()
         {
@@ -161,6 +165,36 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
                 else if (Name == "moof")
                 {
                     Moof = new Moof(fs, Position);
+
+                    if (Moof.Traf?.Trun?.DataOffset != null && Moof.Traf.Tfdt != null)
+                    {
+                        var dts = Moof.Traf.Tfdt.BaseMediaDecodeTime;
+                        var startPosition = (uint)(Moof.StartPosition + Moof.Traf.Trun.DataOffset.Value);
+                        for (var index = 0; index < Moof.Traf.Trun.Samples.Count; index++)
+                        {
+                            var sample = Moof.Traf.Trun.Samples[index];
+                            if (sample.Size.HasValue)
+                            {
+                                var ccData = GetCcDataHelper.GetCcData(fs, startPosition, sample.Size.Value);
+                                if (ccData.Count > 0)
+                                {
+                                    if (sample.TimeOffset.HasValue)
+                                    {
+                                        ccData[0].Time = (ulong)((long)dts + sample.TimeOffset.Value);
+                                    }
+
+                                    _trunCea608CcData.Add(ccData[0]); //TODO: can there be more than one?
+                                }
+
+                                startPosition += sample.Size.Value;
+                            }
+
+                            if (sample.Duration.HasValue)
+                            {
+                                dts += sample.Duration.Value;
+                            }
+                        }
+                    }
                 }
                 else if (Name == "mdat" && Moof != null && Moof?.Traf?.Trun?.Samples?.Count > 0)
                 {
@@ -216,6 +250,52 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
                 var merged = MergeLinesSameTextUtils.MergeLinesWithSameTextInSubtitle(VttcSubtitle, false, 250);
                 VttcSubtitle = merged;
             }
+
+            CheckForTrunCea608();
+        }
+
+        private void CheckForTrunCea608()
+        {
+            try
+            {
+                TrunCea608Subtitle = new Subtitle();
+                var sortedData = _trunCea608CcData.OrderBy(p => p.Time).ToList();
+                var parser = new CcDataC608Parser();
+                parser.DisplayScreen += DisplayScreen;
+                foreach (var cc in sortedData)
+                {
+                    parser.AddData((int)cc.Time, new[] { cc.Data1, cc.Data2 });
+                }
+            }
+            catch (Exception e)
+            {
+                SeLogger.Error(e, "Error while parsing MP4 TRUN CEA 608");
+            }
+        }
+
+        private void DisplayScreen(DataOutput data)
+        {
+            var timeScale = Moov?.Mvhd?.TimeScale ?? 1000.0;
+            var startMs = data.Start / timeScale * 1000.0;
+            var endMs = data.End / timeScale * 1000.0;
+            var p = new Paragraph(GetText(data.Screen), startMs, endMs);
+            TrunCea608Subtitle.Paragraphs.Add(p);
+        }
+
+        private static string GetText(SerializedRow[] dataScreen)
+        {
+            var sb = new StringBuilder();
+
+            foreach (var row in dataScreen)
+            {
+                foreach (var column in row.Columns)
+                {
+                    sb.Append(column.Character);
+                }
+                sb.AppendLine();
+            }
+
+            return sb.ToString().Trim();
         }
 
         private void ReadVttWithSize(Mdat mdat, List<TimeSegment> trunSamples, ref double timeTotalMs)
