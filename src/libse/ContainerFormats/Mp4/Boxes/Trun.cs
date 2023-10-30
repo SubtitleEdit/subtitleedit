@@ -11,6 +11,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
     public class Trun : Box
     {
         public List<TimeSegment> Samples { get; set; }
+        public uint? DataOffset { get; set; }
 
         public Trun(Stream fs, ulong maximumLength)
         {
@@ -28,11 +29,24 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
             }
 
             var versionAndFlags = GetUInt(0);
+            var version = versionAndFlags >> 24;
             var flags = versionAndFlags & 0xFFFFFF;
             var sampleCount = GetUInt(4);
             if (sampleCount == 0)
             {
                 return;
+            }
+
+            if ((flags & 0x1) > 0)
+            {
+                Buffer = new byte[4];
+                readCount = fs.Read(Buffer, 0, Buffer.Length);
+                if (readCount < Buffer.Length)
+                {
+                    return;
+                }
+
+                DataOffset = GetUInt(0);
             }
 
             var sampleLength = Math.Min(sampleCount * 16 + 24, maximumLength);
@@ -44,11 +58,6 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
             }
 
             var pos = 0;
-
-            if ((flags & 0x000001) > 0)
-            {
-                pos += 4;
-            }
 
             // skip "first_sample_flags" if present
             if ((flags & 0x000004) > 0)
@@ -99,7 +108,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                 // read "sample_time_offset" if present
                 if ((flags & 0x000800) > 0)
                 {
-                    sample.TimeOffset = GetUInt(pos);
+                    sample.TimeOffset = version == 1 ? GetInt(pos) : (long)GetUInt(pos);
                     pos += 4;
                 }
 

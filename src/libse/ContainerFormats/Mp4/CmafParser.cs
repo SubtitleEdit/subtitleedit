@@ -107,7 +107,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
 
                 if (presentation.Duration.HasValue)
                 {
-                    var startTime = presentation.TimeOffset.HasValue ? presentation.BaseMediaDecodeTime + presentation.TimeOffset.Value : presentation.BaseMediaDecodeTime;
+                    var startTime = presentation.TimeOffset.HasValue ? (ulong)((long)presentation.BaseMediaDecodeTime + presentation.TimeOffset.Value) : presentation.BaseMediaDecodeTime;
                     var currentTime = startTime + presentation.Duration.Value;
 
                     // The payload can be null as that would mean that it was a VTTE and
