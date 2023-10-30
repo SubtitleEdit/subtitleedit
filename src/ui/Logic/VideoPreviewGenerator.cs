@@ -183,7 +183,9 @@ namespace Nikse.SubtitleEdit.Logic
 
                 if (pass == "1")
                 {
-                    outputVideoFileName = Configuration.IsRunningOnWindows ? "-f null NUL" : "-f null /dev/null";
+                    var ext = Path.GetExtension(outputVideoFileName.Trim('"')).ToLowerInvariant().TrimStart('.');
+                    var outputType = ext == "mkv" ? "matroska" : ext;
+                    outputVideoFileName = Configuration.IsRunningOnWindows ? $"-f {outputType} NUL" : "-f mp4 /dev/null";
                 }
             }
 
