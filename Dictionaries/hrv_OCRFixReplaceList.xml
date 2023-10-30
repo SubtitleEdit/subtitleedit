@@ -3641,19 +3641,6 @@
     <LinePart from="Plašim se" to="Bojim se" />
     <LinePart from="plašim se" to="bojim se" />
     <LinePart from="pravo u oči" to="ravno u oči" />
-    <LinePart from="sa čime" to="s čime" />
-    <LinePart from="sa kim" to="s kim" />
-    <LinePart from="sa nama" to="s nama" />
-    <LinePart from="Sa njim" to="S njim" />
-    <LinePart from="sa njim" to="s njim" />
-    <LinePart from="sa njima" to="s njima" />
-    <LinePart from="sa njom" to="s njom" />
-    <LinePart from="Sa njom" to="S njom" />
-    <LinePart from="sa ovim" to="s ovim" />
-    <LinePart from="sa tim" to="s tim" />
-    <LinePart from="sa tom" to="s tom" />
-    <LinePart from="sa tobom" to="s tobom" />
-    <LinePart from="sa vama" to="s vama" />
     <LinePart from="sam da budem" to="sam biti" />
     <LinePart from="sići dolje" to="sići" />
     <LinePart from="Si dobro" to="Jesi li dobro" />
@@ -5267,6 +5254,9 @@
 
     <RegEx find=", ili" replaceWith="ili" />
     <RegEx find="ili," replaceWith="ili" />
+
+    <RegEx find="sa(?!\s*[szž])" replaceWith="s" />
+    <RegEx find="s ([szž])" replaceWith="sa $1" />
 
     <!-- 10kg » 10 kg   |  20cm » 20 cm   |  44dag » 44 dag -->
     <RegEx find="\b(\d+)([a-z]{2,4})\b" replaceWith="$1 $2" />
