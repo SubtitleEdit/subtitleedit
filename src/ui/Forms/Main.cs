@@ -18575,8 +18575,8 @@ namespace Nikse.SubtitleEdit.Forms
                     var p = _subtitle.Paragraphs[index];
                     var videoTimeCode = TimeCode.FromSeconds(videoPosition);
                     var duration = videoTimeCode.TotalMilliseconds - p.StartTime.TotalMilliseconds - MinGapBetweenLines;
-                    if (duration >= Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds &&
-                        duration <= Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
+                    if (duration > 0 &&
+                        duration <= 60_000)
                     {
                         MakeHistoryForUndoOnlyIfNotRecent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveformX, "#" + _subtitle.Paragraphs[index].Number + " " + _subtitle.Paragraphs[index].Text));
                         var newEndTime = new TimeCode(videoTimeCode.TotalMilliseconds - MinGapBetweenLines);
