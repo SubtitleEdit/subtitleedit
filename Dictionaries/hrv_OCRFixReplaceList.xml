@@ -1307,6 +1307,8 @@
     <Word from="onde" to="ondje" />
     <Word from="onlajn" to="online" />
     <Word from="opuštano" to="opušteno" />
+    <Word from="organizuj" to="organiziraj" />
+    <Word from="Organizuj" to="Organiziraj" />
     <Word from="organizuju" to="organiziraju" />
     <Word from="Organizuju" to="Organiziraju" />
     <Word from="ortak" to="partner" />
@@ -1494,6 +1496,7 @@
     <Word from="poeni" to="bodovi" />
     <Word from="Poeni" to="Bodovi" />
     <Word from="poenima" to="bodovima" />
+    <Word from="poistovetim" to="poistovjetim" />
     <Word from="pojačaću" to="pojačat ću" />
     <Word from="Pokušaču" to="Pokušat ću" />
     <Word from="Pokušaćemo" to="Pokušat ćemo" />
@@ -1663,6 +1666,7 @@
     <Word from="priljepio" to="prilijepio" />
     <Word from="primećen" to="primijećen" />
     <Word from="primećivala" to="primijećivala" />
+    <Word from="primećivalo" to="primijećivalo" />
     <Word from="prineo" to="prinio" />
     <Word from="Prineo" to="Prinio" />
     <Word from="pripovetke" to="pripovjetke" />
@@ -1984,6 +1988,7 @@
     <Word from="sljedečih" to="sljedećih" />
     <Word from="slušače" to="slušat će" />
     <Word from="slušačemo" to="slušat ćemo" />
+    <Word from="Sedamo" to="Sjedamo" />
     <Word from="seo" to="sjeo" />
     <Word from="Seo" to="Sjeo" />
     <Word from="sem" to="osim" />
@@ -2091,6 +2096,7 @@
     <Word from="spasla" to="spasila" />
     <Word from="spasli" to="spasili" />
     <Word from="spavaćeš" to="spavat ćeš" />
+    <Word from="spavaćete" to="spavat ćete" />
     <Word from="speluje" to="sriče" />
     <Word from="speluju" to="sriču" />
     <Word from="spelujte" to="sričite" />
@@ -2165,6 +2171,7 @@
     <Word from="streljanje" to="strijeljanje" />
     <Word from="strjeljanje" to="strijeljanje" />
     <Word from="stupiću" to="stupit ću" />
+    <Word from="Subjekat" to="Subjekt" />
     <Word from="subjekat" to="subjekt" />
     <Word from="sudija" to="sudac" />
     <Word from="Sudija" to="Sudac" />
