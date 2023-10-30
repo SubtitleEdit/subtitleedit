@@ -5255,7 +5255,7 @@
     <RegEx find=", ili" replaceWith="ili" />
     <RegEx find="ili," replaceWith="ili" />
 
-    <RegEx find="sa(?!\s*[szž])" replaceWith="s" />
+    <RegEx find="([Ss])a(?!\s*[szž])" replaceWith="$1" />
     <RegEx find="s ([szž])" replaceWith="sa $1" />
 
     <!-- 10kg » 10 kg   |  20cm » 20 cm   |  44dag » 44 dag -->
