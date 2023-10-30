@@ -42,6 +42,7 @@
 * FIXED:
    * Fix for paste in waveform - thx Ruong
    * Fix remember text box settings (bold/size) - thx Siamak
+   * Fix for two pass encoding in burn-in subs - thx Nounours
    * Fix crash in CSV reader - thx Waseem
    * Fix bug in "Remove text for HI" - thx Chamallow
    * Fix find/replace position - thx Omair
