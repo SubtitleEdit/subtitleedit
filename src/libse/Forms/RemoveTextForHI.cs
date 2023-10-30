@@ -1198,7 +1198,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
             if (Settings.RemoveIfOnlyMusicSymbols)
             {
-                if (text.Replace('♪', ' ').Replace('♫', ' ').Trim().Length == 0)
+                if (string.IsNullOrWhiteSpace(HtmlUtil.RemoveHtmlTags(text, true).RemoveChar('♪', '♫')))
                 {
                     return string.Empty;
                 }

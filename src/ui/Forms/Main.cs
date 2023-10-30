@@ -15599,6 +15599,23 @@ namespace Nikse.SubtitleEdit.Forms
                     return true;
                 }
 
+                if (mp4Parser.TrunCea608Subtitle?.Paragraphs.Count > 0)
+                {
+                    MakeHistoryForUndo(_language.BeforeImportFromMatroskaFile);
+                    _subtitleListViewIndex = -1;
+                    FileNew();
+                    _subtitle = mp4Parser.TrunCea608Subtitle;
+                    UpdateSourceView();
+                    SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
+                    _subtitleListViewIndex = -1;
+                    SubtitleListview1.FirstVisibleIndex = -1;
+                    SubtitleListview1.SelectIndexAndEnsureVisible(0, true);
+                    _fileName = Utilities.GetPathAndFileNameWithoutExtension(fileName) + GetCurrentSubtitleFormat().Extension;
+                    _converted = true;
+                    SetTitle();
+                    return true;
+                }
+
                 MessageBox.Show(_language.NoSubtitlesFound);
                 return false;
             }
