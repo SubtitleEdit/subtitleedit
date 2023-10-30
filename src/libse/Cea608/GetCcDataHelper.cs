@@ -5,19 +5,18 @@ namespace Nikse.SubtitleEdit.Core.Cea608
 {
     public static class GetCcDataHelper
     {
-        public static List<CcData> GetCcData(Stream fs, uint startPos, ulong size)
+        public static List<CcData> GetCcData(Stream fs, ulong startPos, ulong size)
         {
             var fieldData = new List<CcData>();
             for (var i = startPos; i < startPos + size - 5; i++)
             {
                 var buffer = new byte[4];
-                fs.Seek(i, SeekOrigin.Begin);
+                fs.Seek((long)i, SeekOrigin.Begin);
                 fs.Read(buffer, 0, buffer.Length);
                 var nalSize = GetUInt32(buffer, 0);
                 var flag = fs.ReadByte();
                 if (IsRbspNalUnitType(flag & 0x1F))
                 {
-                    //parseCCDataFromSEI(getSEIData(raw, i + 5, i + nalSize + 3), fieldData);
                     var seiData = GetSeiData(fs, i + 5, i + nalSize + 3);
                     ParseCcDataFromSei(seiData, fieldData);
                 }
@@ -33,11 +32,11 @@ namespace Nikse.SubtitleEdit.Core.Cea608
             return unitType == 0x06;
         }
 
-        private static byte[] GetSeiData(Stream fs, uint startPos, uint endPos)
+        public static byte[] GetSeiData(Stream fs, ulong startPos, ulong endPos)
         {
             var data = new List<byte>();
             var buffer = new byte[endPos - startPos];
-            fs.Seek(startPos, SeekOrigin.Begin);
+            fs.Seek((long)startPos, SeekOrigin.Begin);
             fs.Read(buffer, 0, buffer.Length);
 
             for (var x = startPos; x < endPos; x++)
@@ -59,7 +58,7 @@ namespace Nikse.SubtitleEdit.Core.Cea608
             return data.ToArray();
         }
 
-        private static void ParseCcDataFromSei(byte[] buffer, List<CcData> fieldData)
+        public static void ParseCcDataFromSei(byte[] buffer, List<CcData> fieldData)
         {
             var x = 0;
             while (x < buffer.Length)
