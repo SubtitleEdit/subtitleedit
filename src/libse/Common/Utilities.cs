@@ -530,6 +530,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             var s = RemoveLineBreaks(text);
+            while (s.Contains("  "))
+            {
+                s = s.Replace("  ", " ");
+            }
+
             if (s.CountCharacters(false) < mergeLinesShorterThan)
             {
                 var lastIndexOfDash = s.LastIndexOf(" -", StringComparison.Ordinal);
