@@ -60,6 +60,7 @@
     <Word from="begstvo" to="bijeg" />
     <Word from="Bejaše" to="Bijaše" />
     <Word from="bejaše" to="bijaše" />
+    <Word from="beki" to="neki" />
     <Word from="bekstva" to="bijega" />
     <Word from="bekstvo" to="bijeg" />
     <Word from="bekstvu" to="bijegu" />
@@ -264,6 +265,7 @@
     <Word from="Decom" to="Djecom" />
     <Word from="decu" to="djecu" />
     <Word from="Decu" to="Djecu" />
+    <Word from="deugo" to="drugo" />
     <Word from="dijeca" to="djeca" />
     <Word from="Dijeca" to="Djeca" />
     <Word from="dijece" to="djece" />
@@ -4802,6 +4804,7 @@
     <RegEx find="mjenim" replaceWith="mijenim" />
     <RegEx find="mpra" replaceWith="mora" />
     <RegEx find="mp[zž]" replaceWith="mož" />
+    <RegEx find="mrn" replaceWith="men" />
     <RegEx find="mros" replaceWith="mors" />
     <RegEx find="msč" replaceWith="mač" />
     <RegEx find="([Mm])sl" replaceWith="$1isl" />
