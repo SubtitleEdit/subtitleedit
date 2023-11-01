@@ -39,6 +39,7 @@
    * Auto-translate re-written, so it's easier to add new translators
    * Close all processes when closing Faster Whisper - thx Purfview
    * Allow drag-n-drop in "Multiple replace" rules - thx Clarencezzh
+   * ASSA: "Replace style" now work on multi-selection - thx Leon
 * FIXED:
    * Fix for paste in waveform - thx Ruong
    * Fix remember text box settings (bold/size) - thx Siamak
@@ -56,6 +57,7 @@
    * Fix for "Generate video with burned-in subtitle" in SMPTE mode - thx Jim
    * Fix remove of font name in ASSA/SSA - thx PureOcean
    * Fix possible freeze when loading XML files - thx Dvid
+   * Fix issues with "set end, add new, and go to new" - thx  Lorqu1n/Flitskikker
 
 
 4.0.1 (16th September 2023)
