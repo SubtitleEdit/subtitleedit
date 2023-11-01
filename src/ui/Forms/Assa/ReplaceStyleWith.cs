@@ -9,7 +9,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 {
     public sealed partial class ReplaceStyleWith : Form
     {
-        private readonly SsaStyle _style;
+        private readonly List<SsaStyle> _styles;
         private readonly List<AssaStorageCategory> _storageCategories;
         private readonly List<SsaStyle> _currentFileStyles;
         private readonly Subtitle _subtitle;
@@ -17,13 +17,13 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         public SsaStyle NewStorageStyle { get; set; }
         public SsaStyle NewFileStyle { get; set; }
 
-        public ReplaceStyleWith(SsaStyle style, List<SsaStyle> currentFileStyles, List<AssaStorageCategory> storageCategories, Subtitle subtitle)
+        public ReplaceStyleWith(List<SsaStyle> styles, List<SsaStyle> currentFileStyles, List<AssaStorageCategory> storageCategories, Subtitle subtitle)
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
             UiUtil.FixFonts(this);
 
-            _style = style;
+            _styles = styles;
             _currentFileStyles = currentFileStyles;
             _storageCategories = storageCategories;
             _subtitle = subtitle;
@@ -69,7 +69,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
                 foreach (var style in _currentFileStyles)
                 {
-                    if (style.Name != _style.Name)
+                    if (_styles.All(p => p.Name != style.Name))
                     {
                         comboBoxStyle.Items.Add(style.Name);
                     }
@@ -144,7 +144,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 var style = _currentFileStyles[idx];
                 foreach (var paragraph in NewSubtitle.Paragraphs)
                 {
-                    if (paragraph.Extra == _style.Name)
+                    if (_styles.Any(p=>p.Name == paragraph.Extra))
                     {
                         paragraph.Extra = style.Name;
                     }
@@ -158,7 +158,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 var style = category.Styles[idx];
                 foreach (var paragraph in NewSubtitle.Paragraphs)
                 {
-                    if (paragraph.Extra == _style.Name)
+                    if (_styles.Any(p => p.Name == paragraph.Extra))
                     {
                         paragraph.Extra = style.Name;
                     }
