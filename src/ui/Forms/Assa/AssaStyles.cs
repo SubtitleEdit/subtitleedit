@@ -1522,35 +1522,42 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
         private void buttonRemoveAndReplaceWith_Click(object sender, EventArgs e)
         {
-            if (listViewStyles.SelectedItems.Count != 1)
+            if (listViewStyles.SelectedItems.Count == 0)
             {
                 return;
             }
 
-            var idx = listViewStyles.SelectedIndices[0];
-            var style = _currentFileStyles[idx];
-            using (var form = new ReplaceStyleWith(style, _currentFileStyles, _storageCategories, _subtitle))
+            var styles = new List<SsaStyle>();
+            foreach (int idx in listViewStyles.SelectedIndices)
+            {
+                 styles.Add(_currentFileStyles[idx]);   
+            }
+
+            using (var form = new ReplaceStyleWith(styles, _currentFileStyles, _storageCategories, _subtitle))
             {
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
                     _subtitle.Paragraphs.Clear();
                     _subtitle.Paragraphs.AddRange(form.NewSubtitle.Paragraphs);
 
-                    _currentFileStyles.Remove(style);
-                    if (form.NewStorageStyle != null)
+                    foreach (var style in styles)
                     {
-                        AddStyle(listViewStyles, form.NewStorageStyle, _subtitle, _isSubStationAlpha);
-                        AddStyleToHeader(form.NewStorageStyle);
-                        _doUpdate = true;
-                        UpdateSelectedIndices(listViewStyles);
-                        SetControlsFromStyle(form.NewStorageStyle);
-                        RenameActions.Add(new NameEdit(style.Name, form.NewStorageStyle.Name));
-                        InitializeStylesListView(form.NewStorageStyle.Name);
-                    }
-                    else
-                    {
-                        RenameActions.Add(new NameEdit(style.Name, form.NewFileStyle.Name));
-                        InitializeStylesListView(form.NewFileStyle.Name);
+                        _currentFileStyles.Remove(style);
+                        if (form.NewStorageStyle != null)
+                        {
+                            AddStyle(listViewStyles, form.NewStorageStyle, _subtitle, _isSubStationAlpha);
+                            AddStyleToHeader(form.NewStorageStyle);
+                            _doUpdate = true;
+                            UpdateSelectedIndices(listViewStyles);
+                            SetControlsFromStyle(form.NewStorageStyle);
+                            RenameActions.Add(new NameEdit(style.Name, form.NewStorageStyle.Name));
+                            InitializeStylesListView(form.NewStorageStyle.Name);
+                        }
+                        else
+                        {
+                            RenameActions.Add(new NameEdit(style.Name, form.NewFileStyle.Name));
+                            InitializeStylesListView(form.NewFileStyle.Name);
+                        }
                     }
                 }
             }
@@ -2766,7 +2773,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
             var oneOrMoreSelected = listViewStyles.SelectedItems.Count > 0;
             deleteToolStripMenuItem.Visible = oneOrMoreSelected;
-            removeAndReplaceWithToolStripMenuItem.Visible = listViewStyles.SelectedItems.Count == 1;
+            removeAndReplaceWithToolStripMenuItem.Visible = listViewStyles.SelectedItems.Count > 0;
             addToStorageToolStripMenuItem1.Visible = oneOrMoreSelected;
             toolStripSeparator4.Visible = oneOrMoreSelected;
             copyToolStripMenuItemCopy.Visible = oneOrMoreSelected;
