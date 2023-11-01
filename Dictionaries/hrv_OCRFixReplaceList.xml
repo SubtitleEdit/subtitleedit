@@ -555,7 +555,6 @@
     <Word from="ignorišu" to="ignoriraju" />
     <Word from="ignorišući" to="ignorirajući" />
     <Word from="Igraće" to="Igrat će" />
-    <Word from="Igraćemo" to="Igrat ćemo" />
     <Word from="igraćeš" to="igrat ćeš" />
     <Word from="ilustruju" to="ilustriraju" />
     <Word from="inačr" to="inače" />
@@ -1514,8 +1513,6 @@
     <Word from="poistovetim" to="poistovjetim" />
     <Word from="pojačaću" to="pojačat ću" />
     <Word from="Pokušaču" to="Pokušat ću" />
-    <Word from="Pokušaćemo" to="Pokušat ćemo" />
-    <Word from="pokušaćemo" to="pokušat ćemo" />
     <Word from="Pokušačeš" to="Pokušat ćeš" />
     <Word from="pokolenja" to="pokoljenja" />
     <Word from="pokolenju" to="pokoljenju" />
@@ -1832,8 +1829,6 @@
     <Word from="razdeliti" to="razdijeliti" />
     <Word from="razdeviče" to="razdjeviče" />
     <Word from="razgovrati" to="razgovarati" />
-    <Word from="Razmišljaće" to="Razmišljat će" />
-    <Word from="Razmišljaćemo" to="Razmišljat ćemo" />
     <Word from="razreši" to="razriješi" />
     <Word from="razume" to="razumije" />
     <Word from="razumeju" to="razumiju" />
@@ -2161,8 +2156,6 @@
     <Word from="staću" to="stat ću" />
     <Word from="Staće" to="Stat će" />
     <Word from="staće" to="stat će" />
-    <Word from="Staćemo" to="Stat ćemo" />
-    <Word from="staćemo" to="stat ćemo" />
     <Word from="Staću" to="Stat ću" />
     <Word from="stače" to="stat će" />
     <Word from="staču" to="stat ću" />
@@ -2758,6 +2751,7 @@
     <Word from="zvjezdom" to="zvijezdom" />
     <Word from="zvučaće" to="zvučat će" />
     <!--z-->
+    <Word from="žabcem" to="žapcem" />
     <Word from="žalis" to="žališ" />
     <Word from="ždrao" to="žderao" />
     <Word from="žemo" to="ćemo" />
@@ -3735,6 +3729,7 @@
     <!-- deklinacije imenica i konjugacije glagola -->
     <RegEx find="([0-9])-ogodišnj" replaceWith="$1-godišnj" />
     <RegEx find="(jeda|dva|tri|četr|pet|šes|sedam|osam|devet)najst([aeiou]|i[mh]|o[mgj]|ima)\b" replaceWith="$1naest$2" />
+    <RegEx find="aćemo" replaceWith="at ćemo" />
     <RegEx find="aćutal" replaceWith="ašutjel" />
     <RegEx find="\badvokat(?![si])" replaceWith="odvjetnik" />
     <RegEx find="Advokat(?![si])" replaceWith="Odvjetnik" />
@@ -3796,6 +3791,7 @@
     <RegEx find="ožij" replaceWith="ožj" />
     <RegEx find="boži[čć]([aeiu]|em|ima)?\b" replaceWith="Božić$1" />
     <RegEx find="(?&lt;!\A|[.!?][&quot;”’]?\s+)\bBoži[čć]n([aeiou]|om|im)\b" replaceWith="božićn$1" />
+    <RegEx find="branb" replaceWith="bramb" />
     <RegEx find="[bB]ubašvab" replaceWith="žohar" />
     <RegEx find="bukval" replaceWith="doslov" />
     <RegEx find="Bukval" replaceWith="Doslov" />
@@ -3858,6 +3854,7 @@
     <RegEx find="([dD])obi[čćc](?!i)" replaceWith="$1obit ć" />
     <RegEx find="\b([dD])obij(a|en)" replaceWith="$1obiv$2" />
     <RegEx find="([dD])o[čć]ić([eu])" replaceWith="$1oći ć$2" />
+    <RegEx find="([db])olel" replaceWith="$1oljel" />
     <RegEx find="([dD])ol?j?nj" replaceWith="$1onj" />
     <RegEx find="([dD]o|[NnZz]a|[OoUu]d?)neo" replaceWith="$1nio" />
     <RegEx find="\b([dDpP])o(d?)nj?e([lt])" replaceWith="$1o$2nije$3" />
@@ -5286,6 +5283,7 @@
     <RegEx find="Vensan" replaceWith="Vincent" />
     <RegEx find="Vejn" replaceWith="Wayne" />
     <RegEx find="Vejder" replaceWith="Vader" />
+    <RegEx find="Veston" replaceWith="Weston" />
     <RegEx find="Vilij[ae]m" replaceWith="William" />
     <RegEx find="Vinči" replaceWith="Vinci" />
     <RegEx find="Vinsent" replaceWith="Vincent" />
