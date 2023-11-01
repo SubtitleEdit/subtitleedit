@@ -18575,11 +18575,11 @@ namespace Nikse.SubtitleEdit.Forms
                     var p = _subtitle.Paragraphs[index];
                     var videoTimeCode = new TimeCode(videoPositionMs);
                     var duration = videoTimeCode.TotalMilliseconds - p.StartTime.TotalMilliseconds - MinGapBetweenLines;
-                    if (duration > 0 &&
+                    if (duration > 0.01 &&
                         duration <= 60_000)
                     {
                         MakeHistoryForUndoOnlyIfNotRecent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveformX, "#" + _subtitle.Paragraphs[index].Number + " " + _subtitle.Paragraphs[index].Text));
-                        var newEndTime = new TimeCode(videoTimeCode.TotalMilliseconds - MinGapBetweenLines);
+                        var newEndTime = new TimeCode(videoTimeCode.TotalMilliseconds - (double)MinGapBetweenLines);
                         double charactersPerSecond = Utilities.GetCharactersPerSecond(new Paragraph(p) { EndTime = newEndTime });
                         if (charactersPerSecond <= Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
                         {
@@ -18588,7 +18588,12 @@ namespace Nikse.SubtitleEdit.Forms
 
                         SubtitleListview1.SetStartTimeAndDuration(index, _subtitle.Paragraphs[index], _subtitle.GetParagraphOrDefault(index + 1), _subtitle.GetParagraphOrDefault(index - 1));
                         SetDurationInSeconds(_subtitle.Paragraphs[index].DurationTotalSeconds);
-                        InsertNewParagraphAtPosition(videoPositionMs);
+                        var newP = InsertNewParagraphAtPosition(newEndTime.TotalMilliseconds);
+                        if (audioVisualizer.WavePeaks != null && newP.EndTime.TotalSeconds >= audioVisualizer.EndPositionSeconds - 0.1)
+                        {
+                            audioVisualizer.StartPositionSeconds = Math.Max(0, newP.StartTime.TotalSeconds - 0.1);
+                        }
+
                         UpdateSourceView();
                     }
                 }
