@@ -18565,15 +18565,15 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (SubtitleListview1.SelectedItems.Count == 1)
                 {
-                    double videoPosition = mediaPlayer.CurrentPosition;
+                    double videoPositionMs = mediaPlayer.CurrentPosition * 1000.0;
                     if (!mediaPlayer.IsPaused)
                     {
-                        videoPosition -= Configuration.Settings.General.SetStartEndHumanDelay / TimeCode.BaseUnit;
+                        videoPositionMs -= Configuration.Settings.General.SetStartEndHumanDelay / 1000.0;
                     }
 
                     int index = SubtitleListview1.SelectedItems[0].Index;
                     var p = _subtitle.Paragraphs[index];
-                    var videoTimeCode = TimeCode.FromSeconds(videoPosition);
+                    var videoTimeCode = new TimeCode(videoPositionMs);
                     var duration = videoTimeCode.TotalMilliseconds - p.StartTime.TotalMilliseconds - MinGapBetweenLines;
                     if (duration > 0 &&
                         duration <= 60_000)
@@ -18588,7 +18588,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                         SubtitleListview1.SetStartTimeAndDuration(index, _subtitle.Paragraphs[index], _subtitle.GetParagraphOrDefault(index + 1), _subtitle.GetParagraphOrDefault(index - 1));
                         SetDurationInSeconds(_subtitle.Paragraphs[index].DurationTotalSeconds);
-                        ButtonInsertNewTextClick(null, null);
+                        InsertNewParagraphAtPosition(videoPositionMs);
                         UpdateSourceView();
                     }
                 }
@@ -24400,13 +24400,18 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             var tc = new TimeCode(videoPositionInMilliseconds);
-            MakeHistoryForUndo(_language.BeforeInsertSubtitleAtVideoPosition + "  " + tc);
 
+            MakeHistoryForUndo(_language.BeforeInsertSubtitleAtVideoPosition + "  " + tc);
+            return InsertNewParagraphAtPosition(videoPositionInMilliseconds);
+        }
+
+        private Paragraph InsertNewParagraphAtPosition(double PositionInMilliseconds)
+        {
             // find index where to insert
             int index = 0;
             foreach (var p in _subtitle.Paragraphs)
             {
-                if (p.StartTime.TotalMilliseconds > videoPositionInMilliseconds)
+                if (p.StartTime.TotalMilliseconds > PositionInMilliseconds)
                 {
                     break;
                 }
@@ -24415,7 +24420,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             // prevent overlap
-            var endTotalMilliseconds = videoPositionInMilliseconds + Configuration.Settings.General.NewEmptyDefaultMs;
+            var endTotalMilliseconds = PositionInMilliseconds + Configuration.Settings.General.NewEmptyDefaultMs;
             var next = _subtitle.GetParagraphOrDefault(index);
             if (next != null)
             {
@@ -24426,7 +24431,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             // create and insert
-            var newParagraph = new Paragraph(string.Empty, videoPositionInMilliseconds, endTotalMilliseconds);
+            var newParagraph = new Paragraph(string.Empty, PositionInMilliseconds, endTotalMilliseconds);
             SetStyleForNewParagraph(newParagraph, index);
             if (_networkSession != null)
             {

@@ -170,14 +170,29 @@ namespace Nikse.SubtitleEdit.Core.Common
             if (ts.Minutes == 0 && ts.Hours == 0 && ts.Days == 0)
             {
                 s = $"{ts.Seconds:0}{decimalSeparator}{ts.Milliseconds:000}";
+
+                if (s == $"0{decimalSeparator}000")
+                {
+                    return s; // no sign
+                }
             }
             else if (ts.Hours == 0 && ts.Days == 0)
             {
                 s = $"{ts.Minutes:0}:{ts.Seconds:00}{decimalSeparator}{ts.Milliseconds:000}";
+
+                if (s == $"0:00{decimalSeparator}000")
+                {
+                    return s; // no sign
+                }
             }
             else
             {
                 s = $"{ts.Hours + ts.Days * 24:0}:{ts.Minutes:00}:{ts.Seconds:00}{decimalSeparator}{ts.Milliseconds:000}";
+
+                if (s == $"0:00:00{decimalSeparator}000")
+                {
+                    return s; // no sign
+                }
             }
 
             return PrefixSign(s);
