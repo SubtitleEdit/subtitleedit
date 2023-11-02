@@ -49,7 +49,7 @@
    * Fix find/replace position - thx Omair
    * Fix 3-part time code in TTML - thx ms2048
    * Fix image export simple render center left/right align - thx TheFmC
-   * Fix for Merge short lines" with dialog - thx taxen 
+   * Fix for "Merge short lines" with dialog - thx taxen 
    * Fix duration combo-box frames in frame-time-code-mode - thx JDTR75
    * Fix for BD-SUP edit "toggle forced" - thx manuelrn
    * Fix Whisper post-processing language using "Translate to English" - thx github-roe
@@ -57,7 +57,7 @@
    * Fix for "Generate video with burned-in subtitle" in SMPTE mode - thx Jim
    * Fix remove of font name in ASSA/SSA - thx PureOcean
    * Fix possible freeze when loading XML files - thx Dvid
-   * Fix issues with "set end, add new, and go to new" - thx Lorqu1n/Flitskikker
+   * Fix issues with "Set end, add new, and go to new" - thx Lorqu1n/Flitskikker
 
 
 4.0.1 (16th September 2023)
