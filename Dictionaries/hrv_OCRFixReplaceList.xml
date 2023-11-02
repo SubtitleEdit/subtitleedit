@@ -2015,6 +2015,7 @@
     <Word from="sljedečih" to="sljedećih" />
     <Word from="slušače" to="slušat će" />
     <Word from="slušačemo" to="slušat ćemo" />
+    <Word from="Slušačemo" to="Slušat ćemo" />
     <Word from="Sedamo" to="Sjedamo" />
     <Word from="seo" to="sjeo" />
     <Word from="Seo" to="Sjeo" />
@@ -4239,6 +4240,7 @@
     <RegEx find="\b([pP])o[dt]sj?eti([šmo]|l[aieo]|t[ei])?\b" replaceWith="$1odsjeti$2" />
     <RegEx find="([dDpP])odel" replaceWith="$1odjel" />
     <RegEx find="([dDpP])odj?eli([lto])" replaceWith="$1odijeli$2" />
+    <RegEx find="odstrek" replaceWith="oticaj" />
     <RegEx find="odretl" replaceWith="orijekl" />
     <RegEx find="(?&lt;![mn])o(d?)se([kć])(?!s)" replaceWith="o$1sje$2" />
     <RegEx find="odu?hvat" replaceWith="othvat" />
@@ -5184,6 +5186,7 @@
     <RegEx find="Frenk" replaceWith="Frank" />
     <RegEx find="Gejb" replaceWith="Gabe" />
     <RegEx find="Gejts" replaceWith="Gates" />
+    <RegEx find="Grinv?ič" replaceWith="Greenwich" />
     <RegEx find="\bĐovani" replaceWith="Giovanni" />
     <RegEx find="H[ae]j[sz]enberg" replaceWith="Heisenberg" />
     <RegEx find="Hari" replaceWith="Harry" />
@@ -5314,10 +5317,10 @@
 
     <RegEx find=", ili" replaceWith="ili" />
     <RegEx find="ili," replaceWith="ili" />
-
+<!--
     <RegEx find="([Ss])a (?!\s*[szž])" replaceWith="$1" />
     <RegEx find="s ([szž])" replaceWith="sa $1" />
-
+-->
     <!-- 10kg » 10 kg   |  20cm » 20 cm   |  44dag » 44 dag -->
     <RegEx find="\b(\d+)([a-z]{2,4})\b" replaceWith="$1 $2" />
     <!-- 34m » 34 m -->
