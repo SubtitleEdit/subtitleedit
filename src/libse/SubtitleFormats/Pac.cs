@@ -765,10 +765,193 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             { 0xe5b4, new SpecialCharacter("Ї")},
         };
 
-        private static readonly Dictionary<int, SpecialCharacter> KoreanCodes = new Dictionary<int, SpecialCharacter>
+        private static readonly Dictionary<int, SpecialCharacter> ThaiCodes = new Dictionary<int, SpecialCharacter>
         {
-            { 0x20, new SpecialCharacter(" ")}
+            { 32, new SpecialCharacter(" ")},
+            { 33, new SpecialCharacter("!")},
+            { 34, new SpecialCharacter("\"")},
+            { 35, new SpecialCharacter("#")},
+            { 36, new SpecialCharacter("$")},
+            { 37, new SpecialCharacter("%")},
+            { 38, new SpecialCharacter("&")},
+            { 39, new SpecialCharacter("'")},
+            { 40, new SpecialCharacter("(")},
+            { 41, new SpecialCharacter(")")},
+            { 42, new SpecialCharacter("*")},
+            { 43, new SpecialCharacter("+")},
+            { 44, new SpecialCharacter(",")},
+            { 45, new SpecialCharacter("-")},
+            { 46, new SpecialCharacter(".")},
+            { 47, new SpecialCharacter("/")},
+            { 48, new SpecialCharacter("0")},
+            { 49, new SpecialCharacter("1")},
+            { 50, new SpecialCharacter("2")},
+            { 51, new SpecialCharacter("3")},
+            { 52, new SpecialCharacter("4")},
+            { 53, new SpecialCharacter("5")},
+            { 54, new SpecialCharacter("6")},
+            { 55, new SpecialCharacter("7")},
+            { 56, new SpecialCharacter("8")},
+            { 57, new SpecialCharacter("9")},
+            { 58, new SpecialCharacter(":")},
+            { 59, new SpecialCharacter(";")},
+            { 60, new SpecialCharacter("<")},
+            { 61, new SpecialCharacter("<")},
+            { 62, new SpecialCharacter(">")},
+            { 63, new SpecialCharacter("?")},
+            { 64, new SpecialCharacter("@")},
+            { 65, new SpecialCharacter("A")},
+            { 66, new SpecialCharacter("B")},
+            { 67, new SpecialCharacter("C")},
+            { 68, new SpecialCharacter("D")},
+            { 69, new SpecialCharacter("E")},
+            { 70, new SpecialCharacter("F")},
+            { 71, new SpecialCharacter("G")},
+            { 72, new SpecialCharacter("H")},
+            { 73, new SpecialCharacter("I")},
+            { 74, new SpecialCharacter("J")},
+            { 75, new SpecialCharacter("K")},
+            { 76, new SpecialCharacter("L")},
+            { 77, new SpecialCharacter("M")},
+            { 78, new SpecialCharacter("N")},
+            { 79, new SpecialCharacter("O")},
+            { 80, new SpecialCharacter("P")},
+            { 81, new SpecialCharacter("Q")},
+            { 82, new SpecialCharacter("R")},
+            { 83, new SpecialCharacter("S")},
+            { 84, new SpecialCharacter("T")},
+            { 85, new SpecialCharacter("U")},
+            { 86, new SpecialCharacter("V")},
+            { 87, new SpecialCharacter("W")},
+            { 88, new SpecialCharacter("X")},
+            { 89, new SpecialCharacter("Y")},
+            { 90, new SpecialCharacter("Z")},
+
+            { 97, new SpecialCharacter("a")},
+            { 98, new SpecialCharacter("b")},
+            { 99, new SpecialCharacter("c")},
+            { 100, new SpecialCharacter("d")},
+            { 101, new SpecialCharacter("e")},
+            { 102, new SpecialCharacter("f")},
+            { 103, new SpecialCharacter("g")},
+            { 104, new SpecialCharacter("h")},
+            { 105, new SpecialCharacter("i")},
+            { 106, new SpecialCharacter("j")},
+            { 107, new SpecialCharacter("k")},
+            { 108, new SpecialCharacter("l")},
+            { 109, new SpecialCharacter("m")},
+            { 110, new SpecialCharacter("n")},
+            { 111, new SpecialCharacter("o")},
+            { 112, new SpecialCharacter("p")},
+            { 113, new SpecialCharacter("q")},
+            { 114, new SpecialCharacter("r")},
+            { 115, new SpecialCharacter("s")},
+            { 116, new SpecialCharacter("t")},
+            { 117, new SpecialCharacter("u")},
+            { 118, new SpecialCharacter("v")},
+            { 119, new SpecialCharacter("w")},
+            { 120, new SpecialCharacter("z")},
+            { 121, new SpecialCharacter("y")},
+            { 122, new SpecialCharacter("z")},
+
+            { 128, new SpecialCharacter("เ")}, // 0x80
+            { 129, new SpecialCharacter("แ")}, // 0x81
+            { 130, new SpecialCharacter("โ")}, // 0x82
+            { 131, new SpecialCharacter("ใ")}, // 0x83
+            { 132, new SpecialCharacter("ไ")}, // 0x84
+
+            { 143, new SpecialCharacter("๏")}, // 0x8f
+            { 144, new SpecialCharacter("๐")}, // 0x90
+            { 145, new SpecialCharacter("๑")}, // 0x91
+            { 146, new SpecialCharacter("๒")}, // 0x92
+            { 147, new SpecialCharacter("๓")}, // 0x93
+            { 148, new SpecialCharacter("๔")}, // 0x94
+            { 149, new SpecialCharacter("๕")}, // 0x95
+            { 150, new SpecialCharacter("๖")}, // 0x96
+            { 151, new SpecialCharacter("๗")}, // 0x97
+            { 152, new SpecialCharacter("๘")}, // 0x98
+            { 153, new SpecialCharacter("๙")}, // 0x99
+            { 154, new SpecialCharacter("๚")}, // 0x9a
+            { 155, new SpecialCharacter("๛")}, // 0x9b
+          
+            { 161, new SpecialCharacter("ก")}, // 0xa1
+            { 162, new SpecialCharacter("ข")}, // 0xa2
+            { 163, new SpecialCharacter("ฃ")}, // 0xa3
+            { 164, new SpecialCharacter("ค")}, // 0xa4
+            { 165, new SpecialCharacter("ฅ")}, // 0xa5
+            { 166, new SpecialCharacter("ฆ")}, // 0xa6
+            { 167, new SpecialCharacter("ง")}, // 0xa7
+            { 168, new SpecialCharacter("จ")}, // 0xa8
+            { 169, new SpecialCharacter("ฉ")}, // 0xa9
+            { 170, new SpecialCharacter("ช")}, // 0xaa
+            { 171, new SpecialCharacter("ซ")}, // 0xab
+            { 172, new SpecialCharacter("ฌ")}, // 0xac
+            { 173, new SpecialCharacter("ญ")}, // 0xad
+            { 174, new SpecialCharacter("ฎ")}, // 0xae
+            { 175, new SpecialCharacter("ฏ")}, // 0xaf
+            { 176, new SpecialCharacter("ฐ")}, // 0xb0
+            { 177, new SpecialCharacter("ฑ")}, // 0xb1
+            { 178, new SpecialCharacter("ฒ")}, // 0xb2
+            { 179, new SpecialCharacter("ณ")}, // 0xb3
+            { 180, new SpecialCharacter("ด")}, // 0xb4
+            { 181, new SpecialCharacter("ต")}, // 0xb5
+            { 182, new SpecialCharacter("ถ")}, // 0xb6
+            { 183, new SpecialCharacter("ท")}, // 0xb7
+            { 184, new SpecialCharacter("ธ")}, // 0xb8
+            { 185, new SpecialCharacter("น")}, // 0xb9
+            { 186, new SpecialCharacter("บ")}, // 0xba
+            { 187, new SpecialCharacter("ป")}, // 0xbb
+            { 188, new SpecialCharacter("ผ")}, // 0xbc
+            { 189, new SpecialCharacter("ฝ")}, // 0xbd
+            { 190, new SpecialCharacter("พ")}, // 0xbe
+            { 191, new SpecialCharacter("ฟ")}, // 0xbf
+            { 192, new SpecialCharacter("ภ")}, // 0xc0
+            { 193, new SpecialCharacter("ม")}, // 0xc1
+            { 194, new SpecialCharacter("ย")}, // 0xc2
+            { 195, new SpecialCharacter("ร")}, // 0xc3
+            { 196, new SpecialCharacter("ฤ")}, // 0xc4
+            { 197, new SpecialCharacter("ล")}, // 0xc5
+            { 198, new SpecialCharacter("ฦ")}, // 0xc6
+            { 199, new SpecialCharacter("ว")}, // 0xc7
+            { 200, new SpecialCharacter("ศ")}, // 0xc8
+            { 201, new SpecialCharacter("ษ")}, // 0xc9
+            { 202, new SpecialCharacter("ส")}, // 0xca
+            { 203, new SpecialCharacter("ห")}, // 0xcb
+            { 204, new SpecialCharacter("ฬ")}, // 0xcc
+            { 205, new SpecialCharacter("อ")}, // 0xcd
+            { 206, new SpecialCharacter("ฮ")}, // 0xce
+            { 207, new SpecialCharacter("ฯ")}, // 0xcf
+            { 208, new SpecialCharacter("ะ")}, // 0xd0
+            { 209, new SpecialCharacter("ั")}, // 0xd1
+            { 210, new SpecialCharacter("า")}, // 0xd2
+            { 211, new SpecialCharacter("ำ")}, // 0xd3
+            { 212, new SpecialCharacter("ิ")}, // 0xd4
+            { 213, new SpecialCharacter("ี")}, // 0xd5
+            { 214, new SpecialCharacter("ึ")}, // 0xd6
+            { 223, new SpecialCharacter("฿")}, // 0xdb
+
+            { 0xA688, new SpecialCharacter("ฆ่")},
+            { 0xAA89, new SpecialCharacter("ช้")},
+            { 0xB487, new SpecialCharacter("ด็")},
+            { 0xB589, new SpecialCharacter("ต้")},
+            { 0xB6D9, new SpecialCharacter("ถู")},
+            { 0xB88C, new SpecialCharacter("ธ์")},
+            { 0xB9D1, new SpecialCharacter("นั")},
+            { 0xC188, new SpecialCharacter("ม่")},
+            { 0xC288, new SpecialCharacter("ย่")},
+            { 0xC2D8, new SpecialCharacter("ยุ")},
+            { 0xC38C, new SpecialCharacter("ร์")},
+            { 0xC3D9, new SpecialCharacter("รู")},
+            { 0xC588, new SpecialCharacter("ล่")},
+            { 0xC788, new SpecialCharacter("ว่")},
+            { 0xC78C, new SpecialCharacter("ว์")},
+            { 0xCAD8, new SpecialCharacter("สุ")},
+            { 0xCB89, new SpecialCharacter("ห้")},
+
+            { 0xBED788, new SpecialCharacter("พื่")},
+            { 0xC2D988, new SpecialCharacter("ยู่")},
         };
+
 
         private static readonly Dictionary<int, SpecialCharacter> GreekCodes = new Dictionary<int, SpecialCharacter>
         {
@@ -1161,7 +1344,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
             else if (CodePage == CodePageThai)
             {
-                textBuffer = encoding.GetBytes(text.Replace('ต', '€'));
+                textBuffer = GetThaiBytes(text, alignment);
+                // textBuffer = encoding.GetBytes(text.Replace('ต', '€'));
             }
             else
             {
@@ -1628,7 +1812,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
                 else if (CodePage == CodePageThai)
                 {
-                    sb.Append(GetEncoding(CodePage).GetString(buffer, index, 1).Replace("€", "ต"));
+                    sb.Append(GetThaiString(buffer, ref index));
+                    //sb.Append(GetEncoding(CodePage).GetString(buffer, index, 1).Replace("€", "ต"));
                 }
                 else
                 {
@@ -2002,6 +2187,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private static byte[] GetGreekBytes(string text, byte alignment)
         {
             return GetBytesViaLists(text, GreekCodes, alignment);
+        }
+
+        private static byte[] GetThaiBytes(string text, byte alignment)
+        {
+            return GetBytesViaLists(text, ThaiCodes, alignment);
         }
 
         private static byte[] GetBytesViaLists(string text, Dictionary<int, SpecialCharacter> codes, byte alignment)
@@ -2395,28 +2585,30 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return string.Empty;
         }
 
-        public static string GetKoreanString(byte[] buffer, ref int index)
+        public static string GetThaiString(byte[] buffer, ref int index)
         {
             var b = buffer[index];
 
-            if (b >= 0x30 && b <= 0x39) // decimal digits
+            if (buffer.Length > index + 2)
             {
-                return Encoding.ASCII.GetString(buffer, index, 1);
-            }
+                var code = b * 65536 + buffer[index + 1] * 256 + buffer[index + 2];
+                if (ThaiCodes.ContainsKey(code))
+                {
+                    index += 2;
+                    return ThaiCodes[code].Character;
+                }
 
-            if (KoreanCodes.ContainsKey(b))
-            {
-                return KoreanCodes[b].Character;
-            }
-
-            if (buffer.Length > index + 1)
-            {
-                var code = b * 256 + buffer[index + 1];
-                if (KoreanCodes.ContainsKey(code))
+                code = b * 256 + buffer[index + 1];
+                if (ThaiCodes.ContainsKey(code))
                 {
                     index++;
-                    return KoreanCodes[code].Character;
+                    return ThaiCodes[code].Character;
                 }
+            }
+
+            if (ThaiCodes.ContainsKey(b))
+            {
+                return ThaiCodes[b].Character;
             }
 
             if (ThrowOnError)
