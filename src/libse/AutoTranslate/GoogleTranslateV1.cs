@@ -1,14 +1,14 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Translate;
+using Nikse.SubtitleEdit.Core.Translate.Service;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Nikse.SubtitleEdit.Core.Common;
-using Nikse.SubtitleEdit.Core.Http;
-using Nikse.SubtitleEdit.Core.Translate;
-using Nikse.SubtitleEdit.Core.Translate.Service;
 
 namespace Nikse.SubtitleEdit.Core.AutoTranslate
 {
@@ -17,7 +17,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
     /// </summary>
     public class GoogleTranslateV1 : IAutoTranslator
     {
-        private IDownloader _httpClient;
+        private HttpClient _httpClient;
 
         public static string StaticName { get; set; } = "Google Translate V1 API";
         public string Name => StaticName;
@@ -25,7 +25,8 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
 
         public void Initialize()
         {
-            _httpClient = DownloaderFactory.MakeHttpClient();
+            _httpClient?.Dispose();
+            _httpClient = new HttpClient(); //DownloaderFactory.MakeHttpClient();
             _httpClient.DefaultRequestHeaders.Add("user-agent", "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36");
             _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json; charset=UTF-8");
             _httpClient.BaseAddress = new Uri("https://translate.googleapis.com/");
@@ -48,7 +49,10 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             try
             {
                 var url = $"translate_a/single?client=gtx&sl={sourceLanguageCode}&tl={targetLanguageCode}&dt=t&q={Utilities.UrlEncode(text)}";
-                jsonResultString = _httpClient.GetStringAsync(url).Result;
+
+                var result = _httpClient.GetAsync(url).Result;
+                var bytes = result.Content.ReadAsByteArrayAsync().Result;
+                jsonResultString = Encoding.UTF8.GetString(bytes).Trim();
             }
             catch (WebException webException)
             {
