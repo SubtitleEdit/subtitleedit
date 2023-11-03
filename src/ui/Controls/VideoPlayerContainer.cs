@@ -1170,7 +1170,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         private void PictureBoxPlayOverMouseUp(object sender, MouseEventArgs e)
         {
-            if (IsMouseOverControl((PictureBox)sender, e.Location))
+            if (IsMouseOverControl((PictureBox)sender, e.Location) && !string.IsNullOrEmpty(VideoPlayer?.VideoFileName))
             {
                 HideAllPlayImages();
                 _pictureBoxPause.Visible = true;

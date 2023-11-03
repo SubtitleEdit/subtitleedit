@@ -23561,6 +23561,21 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     labelNextWord.Visible = false;
                 }
+
+                if (audioVisualizer.WavePeaks == null)
+                {
+                    var paused = mediaPlayer.IsPaused;
+                    if (toolStripButtonWaveformPause.Visible && paused)
+                    {
+                        toolStripButtonWaveformPause.Visible = false;
+                        toolStripButtonWaveformPlay.Visible = true;
+                    }
+                    else if (toolStripButtonWaveformPlay.Visible && !paused)
+                    {
+                        toolStripButtonWaveformPause.Visible = true;
+                        toolStripButtonWaveformPlay.Visible = false;
+                    }
+                }
             }
 
             var currentChanged = _changeSubtitleHash != GetFastSubtitleHash();
