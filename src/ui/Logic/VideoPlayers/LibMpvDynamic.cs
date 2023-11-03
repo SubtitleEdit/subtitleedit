@@ -751,6 +751,8 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 _videoLoadedTimer.Start();
 
                 SetVideoOwner(ownerControl);
+
+                VideoFileName = videoFileName;
             }
         }
 
