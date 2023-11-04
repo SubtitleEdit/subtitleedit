@@ -19,6 +19,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
         private readonly InterjectionRemoveContext _interjectionRemoveContext;
         private readonly RemoveInterjection _removeInterjection;
         private IList<string> _interjections;
+        private IList<string> _interjectionsSkipIfStartsWith;
 
         public RemoveTextForHI(RemoveTextForHISettings removeTextForHISettings)
         {
@@ -1030,6 +1031,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 _interjectionRemoveContext.Text = text;
                 _interjectionRemoveContext.OnlySeparatedLines = Settings.RemoveInterjectionsOnlySeparateLine;
                 _interjectionRemoveContext.Interjections = _interjections;
+                _interjectionRemoveContext.InterjectionsSkipIfStartsWith = _interjectionsSkipIfStartsWith;
                 text = _removeInterjection.Invoke(_interjectionRemoveContext);
             }
 
@@ -1603,10 +1605,14 @@ namespace Nikse.SubtitleEdit.Core.Forms
             return words;
         }
 
-        public static IList<string> GetInterjectionList(string twoLetterIsoLanguageName)
+        public static IList<string> GetInterjectionList(string twoLetterIsoLanguageName, out List<string> skipIfStartsWith)
         {
+            var interjections = InterjectionsRepository.LoadInterjections(twoLetterIsoLanguageName);
+
+            skipIfStartsWith = interjections.SkipIfStartsWith;
+
             var interjectionList = new HashSet<string>();
-            foreach (var s in InterjectionsRepository.LoadInterjections(twoLetterIsoLanguageName))
+            foreach (var s in interjections.Interjections)
             {
                 if (s.Length <= 0)
                 {
@@ -1626,7 +1632,8 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
         public void ReloadInterjection(string twoLetterIsoLanguageName)
         {
-            _interjections = GetInterjectionList(twoLetterIsoLanguageName);
+            _interjections = GetInterjectionList(twoLetterIsoLanguageName, out var skipList);
+            _interjectionsSkipIfStartsWith = skipList;
         }
     }
 }

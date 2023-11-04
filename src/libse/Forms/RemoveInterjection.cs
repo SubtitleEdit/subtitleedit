@@ -17,6 +17,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
         /// The check list that will be used to check interjections.
         /// </summary>
         public IList<string> Interjections { get; set; }
+        public IList<string> InterjectionsSkipIfStartsWith { get; set; }
 
         /// <summary>
         /// Text from which the interjections will be removed from.
@@ -26,8 +27,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
     public class RemoveInterjection
     {
-        // https://github.com/SubtitleEdit/subtitleedit/issues/1421
-        private IList<string> _ignoreList = new List<string>();
+        // https://github.com/SubtitleEdit/subtitleedit/issues/1421 + https://github.com/SubtitleEdit/subtitleedit/issues/7563
 
         public string Invoke(InterjectionRemoveContext context)
         {
@@ -51,6 +51,22 @@ namespace Nikse.SubtitleEdit.Core.Forms
                         if (match.Success)
                         {
                             var index = match.Index;
+
+                            var fromIndexPart = text.Substring(match.Index);
+                            var doSkip = false;
+                            foreach (var skipIfStartsWith in context.InterjectionsSkipIfStartsWith)
+                            {
+                                if (fromIndexPart.StartsWith(skipIfStartsWith, StringComparison.OrdinalIgnoreCase))
+                                {
+                                    doSkip = true;
+                                    break;
+                                }
+                            }
+                            if (doSkip)
+                            {
+                                break;
+                            }
+
                             var temp = text.Remove(index, s.Length);
 
                             if (index == 0 && temp.StartsWith("... ", StringComparison.Ordinal))

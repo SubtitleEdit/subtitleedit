@@ -8,7 +8,6 @@ using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
-using System.Xml;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -314,7 +313,7 @@ namespace Nikse.SubtitleEdit.Forms
                 lang = l.Code.TwoLetterISOLanguageName;
             }
 
-            using (var editInterjections = new InterjectionsEditList(InterjectionsRepository.LoadInterjections(lang)))
+            using (var editInterjections = new InterjectionsEditList(InterjectionsRepository.LoadInterjections(lang).Interjections))
             {
                 if (editInterjections.ShowDialog(this) == DialogResult.OK)
                 {

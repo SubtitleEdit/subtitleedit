@@ -77,11 +77,12 @@ namespace Test.Logic.Forms
         private static InterjectionRemoveContext GetRemoveInterjectionContext(string text, bool onlyInSeparatedLine)
         {
             SetInterjections();
-
+            var interjections = RemoveTextForHI.GetInterjectionList(_interjectionsLanguageCode, out var skipList);
             return new InterjectionRemoveContext
             {
                 OnlySeparatedLines = onlyInSeparatedLine,
-                Interjections = RemoveTextForHI.GetInterjectionList(_interjectionsLanguageCode),
+                Interjections = interjections,
+                InterjectionsSkipIfStartsWith = skipList,
                 Text = text,
             };
         }
