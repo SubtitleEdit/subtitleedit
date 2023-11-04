@@ -12,12 +12,15 @@ namespace Nikse.SubtitleEdit.Forms
     public sealed partial class InterjectionsEditList : Form
     {
         public List<string> Interjections { get; set; }
+        public List<string> SkipList { get; set; }
 
-        public InterjectionsEditList(List<string> interjections)
+        public InterjectionsEditList(List<string> interjections, List<string> skipList)
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
             UiUtil.FixFonts(this);
+
+            SkipList = skipList;
             TextBoxInterjections.Text = string.Join(Environment.NewLine, interjections);
             Text = LanguageSettings.Current.Interjections.Title;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
@@ -64,6 +67,20 @@ namespace Nikse.SubtitleEdit.Forms
             TextBoxInterjections.SelectionStart = 0;
             TextBoxInterjections.SelectionLength = 0;
             TextBoxInterjections.Focus();
+        }
+
+        private void EditSkipListStartsWithToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (var form = new InterjectionsEditSkipList(SkipList))
+            {
+                var dr = form.ShowDialog(this);
+                if (dr != DialogResult.OK)
+                {
+                    return;
+                }
+
+                SkipList = form.SkipList;
+            }
         }
     }
 }

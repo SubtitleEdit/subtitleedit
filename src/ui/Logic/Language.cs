@@ -1409,6 +1409,8 @@ namespace Nikse.SubtitleEdit.Logic
             Interjections = new LanguageStructure.Interjections
             {
                 Title = "Interjections",
+                EditSkipList = "Edit skip list...",
+                EditSkipListInfo = "Interjections will be skipped if source text starts with these:",
             };
 
             JoinSubtitles = new LanguageStructure.JoinSubtitles

@@ -2989,6 +2989,12 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Interjections/Title":
                     language.Interjections.Title = reader.Value;
                     break;
+                case "Interjections/EditSkipList":
+                    language.Interjections.EditSkipList = reader.Value;
+                    break;
+                case "Interjections/EditSkipListInfo":
+                    language.Interjections.EditSkipListInfo = reader.Value;
+                    break;
                 case "JoinSubtitles/Title":
                     language.JoinSubtitles.Title = reader.Value;
                     break;
