@@ -1065,6 +1065,7 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Bi
     <TranslateBlockClipboardError2>Gå til oversætter og oversæt, kopieresultatet til udklipsholder, og klik på denne knap igen.</TranslateBlockClipboardError2>
     <StartWebServerX>Start "{0}" webserver</StartWebServerX>
     <XRequiresALocalWebServer>"{0}" kræver en webserver, der kører lokalt!</XRequiresALocalWebServer>
+    <XRequiresAnApiKey>"{0}" kræver en API-nøgle.</XRequiresAnApiKey>
     <ReadMore>Læs mere?</ReadMore>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
@@ -1426,8 +1427,6 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Bi
         <GenerateImportShotChanges>Generer/importer sceneændringer...</GenerateImportShotChanges>
         <RemoveOrExportShotChanges>Fjern/eksporter sceneændringer...</RemoveOrExportShotChanges>
         <WaveformBatchGenerate>Batch generer bølgeformer...</WaveformBatchGenerate>
-        <ShowHideVideo>Vis/skjul video</ShowHideVideo>
-        <ShowHideWaveform>Vis/skjul lyd kurve</ShowHideWaveform>
         <ShowHideWaveformAndSpectrogram>Vis/skjul bølgeform og spektrogram</ShowHideWaveformAndSpectrogram>
         <UnDockVideoControls>Pop video vinduer ud</UnDockVideoControls>
         <ReDockVideoControls>Saml video vinduer</ReDockVideoControls>
@@ -2217,6 +2216,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <LinesFoundX>Linjer fundet: {0}</LinesFoundX>
     <RemoveTextIfContains>Fjern tekst, hvis indeholder:</RemoveTextIfContains>
     <RemoveTextIfAllUppercase>Fjern linje hvis kun med STORE bogstaver</RemoveTextIfAllUppercase>
+    <RemoveIfOnlyMusicSymbols>Fjern hvis kun musiksymboler</RemoveIfOnlyMusicSymbols>
     <RemoveInterjections>Fjern følelsesudbrud (Ahh, hmm, osv.)</RemoveInterjections>
     <EditInterjections>Rediger...</EditInterjections>
     <Apply>Udfør</Apply>
@@ -2639,6 +2639,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <WaveformSeekSilenceForward>Søg stilhed frem</WaveformSeekSilenceForward>
     <WaveformSeekSilenceBack>Søg stilhed tilbage</WaveformSeekSilenceBack>
     <WaveformAddTextHere>Tilføj tekst her (for ny selektion)</WaveformAddTextHere>
+    <ChooseLayoutX>Vælg layout {0}</ChooseLayoutX>
     <WaveformAddTextHereFromClipboard>Tilføj tekst her (fra klippebordet)</WaveformAddTextHereFromClipboard>
     <SetParagraphAsSelection>Sæt aktuelle som nyt valg</SetParagraphAsSelection>
     <WaveformPlayNewSelection>Spil ny markering</WaveformPlayNewSelection>
