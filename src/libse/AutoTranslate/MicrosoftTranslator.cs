@@ -79,7 +79,19 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                 content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
                 var result = httpClient.PostAsync(url, content).Result;
                 var parser = new JsonParser();
-                var x = (List<object>)parser.Parse(result.Content.ReadAsStringAsync().Result);
+                var jsonResult = result.Content.ReadAsStringAsync().Result;
+
+                if (!result.IsSuccessStatusCode)
+                {
+                    if (result.StatusCode == HttpStatusCode.Unauthorized)
+                    {
+                        throw new Exception("API key is not valid!" + Environment.NewLine + Environment.NewLine + jsonResult);
+                    }
+
+                    throw new Exception("An error occurred during translate:" + Environment.NewLine + Environment.NewLine + jsonResult);
+                }
+
+                var x = (List<object>)parser.Parse(jsonResult);
                 foreach (var xElement in x)
                 {
                     var dict = (Dictionary<string, object>)xElement;
