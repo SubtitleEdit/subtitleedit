@@ -1528,6 +1528,7 @@ $HorzAlign          =   Center
         public bool AllowLetterShortcutsInTextBox { get; set; }
         public Color DarkThemeForeColor { get; set; }
         public Color DarkThemeBackColor { get; set; }
+        public Color DarkThemeSelectedBackgroundColor { get; set; }
         public Color DarkThemeDisabledColor { get; set; }
         public Color LastColorPickerColor { get; set; }
         public Color LastColorPickerColor1 { get; set; }
@@ -1697,6 +1698,7 @@ $HorzAlign          =   Center
             DefaultVideoOffsetInMsList = "36000000;3600000";
             DarkThemeForeColor = Color.FromArgb(155, 155, 155);
             DarkThemeBackColor = Color.FromArgb(30, 30, 30);
+            DarkThemeSelectedBackgroundColor = Color.FromArgb(24, 52, 75);
             DarkThemeDisabledColor = Color.FromArgb(120, 120, 120);
             LastColorPickerColor = Color.Yellow;
             LastColorPickerColor1 = Color.Red;
@@ -4772,13 +4774,44 @@ $HorzAlign          =   Center
             subNode = node.SelectSingleNode("DarkThemeBackColor");
             if (subNode != null)
             {
-                settings.General.DarkThemeBackColor = Color.FromArgb(int.Parse(subNode.InnerText, CultureInfo.InvariantCulture));
+                var x = subNode.InnerText;
+                if (x == "-14803426")
+                {
+                    settings.General.DarkThemeBackColor = Color.FromArgb(-14803426); //TODO: remove at some point
+                }
+                else
+                {
+                    settings.General.DarkThemeBackColor = FromHtml(subNode.InnerText);
+                }
+            }
+
+            subNode = node.SelectSingleNode("DarkThemeSelectedBackgroundColor");
+            if (subNode != null)
+            {
+                var x = subNode.InnerText;
+                if (x == "")
+                {
+                    settings.General.DarkThemeSelectedBackgroundColor = Color.FromArgb(1); //TODO: remove at some point
+                }
+                else
+                {
+                    settings.General.DarkThemeSelectedBackgroundColor = FromHtml(subNode.InnerText);
+                }
+
             }
 
             subNode = node.SelectSingleNode("DarkThemeForeColor");
             if (subNode != null)
             {
-                settings.General.DarkThemeForeColor = Color.FromArgb(int.Parse(subNode.InnerText, CultureInfo.InvariantCulture));
+                var x = subNode.InnerText;
+                if (x == "-6579301")
+                {
+                    settings.General.DarkThemeForeColor = Color.FromArgb(-6579301); //TODO: remove at some point
+                }
+                else
+                {
+                    settings.General.DarkThemeForeColor = FromHtml(subNode.InnerText);
+                }
             }
 
             subNode = node.SelectSingleNode("DarkThemeDisabledColor");
@@ -11431,8 +11464,9 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("LastColorPickerColor5", ToHtml(settings.General.LastColorPickerColor5));
                 textWriter.WriteElementString("LastColorPickerColor6", ToHtml(settings.General.LastColorPickerColor6));
                 textWriter.WriteElementString("LastColorPickerColor7", ToHtml(settings.General.LastColorPickerColor7));
-                textWriter.WriteElementString("DarkThemeBackColor", settings.General.DarkThemeBackColor.ToArgb().ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("DarkThemeForeColor", settings.General.DarkThemeForeColor.ToArgb().ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("DarkThemeBackColor", ToHtml(settings.General.DarkThemeBackColor));
+                textWriter.WriteElementString("DarkThemeBackColor", ToHtml(settings.General.DarkThemeSelectedBackgroundColor));
+                textWriter.WriteElementString("DarkThemeForeColor", ToHtml(settings.General.DarkThemeForeColor));
                 textWriter.WriteElementString("DarkThemeDisabledColor", ToHtml(settings.General.DarkThemeDisabledColor));
                 textWriter.WriteElementString("ToolbarIconTheme", settings.General.ToolbarIconTheme);
                 textWriter.WriteElementString("UseDarkTheme", settings.General.UseDarkTheme.ToString(CultureInfo.InvariantCulture));
