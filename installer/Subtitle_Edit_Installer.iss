@@ -258,6 +258,7 @@ Source: ..\preview.mkv;                            DestDir: {userappdata}\Subtit
 
 Source: ..\Icons\ass.ico;                          DestDir: {app}\Icons;                              Flags: ignoreversion onlyifdoesntexist; Components: main
 Source: ..\Icons\dfxp.ico;                         DestDir: {app}\Icons;                              Flags: ignoreversion onlyifdoesntexist; Components: main
+Source: ..\Icons\lrc.ico;                          DestDir: {app}\Icons;                              Flags: ignoreversion onlyifdoesntexist; Components: main
 Source: ..\Icons\sbv.ico;                          DestDir: {app}\Icons;                              Flags: ignoreversion onlyifdoesntexist; Components: main
 Source: ..\Icons\srt.ico;                          DestDir: {app}\Icons;                              Flags: ignoreversion onlyifdoesntexist; Components: main
 Source: ..\Icons\ssa.ico;                          DestDir: {app}\Icons;                              Flags: ignoreversion onlyifdoesntexist; Components: main
@@ -727,6 +728,7 @@ begin
   DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\preview.mkv'));
   DeleteFile(ExpandConstant('{app}\Icons\ass.ico'));
   DeleteFile(ExpandConstant('{app}\Icons\dfxp.ico'));
+  DeleteFile(ExpandConstant('{app}\Icons\lrc.ico'));
   DeleteFile(ExpandConstant('{app}\Icons\sbv.ico'));
   DeleteFile(ExpandConstant('{app}\Icons\srt.ico'));
   DeleteFile(ExpandConstant('{app}\Icons\ssa.ico'));
