@@ -2750,6 +2750,7 @@
     <Word from="zista" to="zaista" />
     <Word from="zlodela" to="zlodjela" />
     <Word from="znaći" to="znači" />
+    <Word from="zovr" to="zove" />
     <Word from="zs" to="za" />
     <Word from="znsm" to="znam" />
     <Word from="zvaničan" to="služben" />
@@ -3564,6 +3565,7 @@
     <LinePart from="biće ti žao" to="bit će ti žao" />
     <LinePart from="Biću ovdje" to="Bit ću ovdje" />
     <LinePart from="Biću tamo" to="Bit ću tamo" />
+    <LinePart from="Biće to" to="Bit će to" />
     <LinePart from="Biću uz" to="Bit ću uz" />
     <LinePart from="Biću u" to="Bit ću u" />
     <LinePart from="bi ja" to="bih ja" />
@@ -3577,6 +3579,7 @@
     <LinePart from="će da bude" to="će biti" />
     <LinePart from="Da li će" to="Hoće li" />
     <LinePart from="Da li ćeš" to="Hoćeš li" />
+    <LinePart from="da li ćeš" to="hoćeš li" />
     <LinePart from="Da li ćemo" to="Hoćemo li" />
     <LinePart from="Da li ćete" to="Hoćete li" />
     <LinePart from="Da li ću" to="Hoću li" />
@@ -3585,9 +3588,14 @@
     <LinePart from="Da li je" to="Je li" />
     <LinePart from="da li je" to="je li" />
     <LinePart from="dali je" to="je li" />
+    <LinePart from="da li ste" to="jeste li" />
+    <LinePart from="Da li su" to="Jesu li" />
+    <LinePart from="Da li sam" to="Jesam li" />
+    <LinePart from="da li sam" to="jesam li" />
     <LinePart from="Da li mi možeš" to="Možeš li mi" />
     <LinePart from="Da li ste" to="Jeste li" />
     <LinePart from="Da li si" to="Jesi li" />
+    <LinePart from="da li si" to="jesi li" />
     <LinePart from="dali si" to="jesi li" />
     <LinePart from="da li će" to="hoće li" />
     <LinePart from="dali će" to="hoće li" />
@@ -3709,6 +3717,7 @@
     <LinePart from="Plašim se" to="Bojim se" />
     <LinePart from="plašim se" to="bojim se" />
     <LinePart from="pravo u oči" to="ravno u oči" />
+    <LinePart from="radi toga što" to="zbog toga što" />
     <LinePart from="sam da budem" to="sam biti" />
     <LinePart from="sići dolje" to="sići" />
     <LinePart from="Si dobro" to="Jesi li dobro" />
@@ -4670,6 +4679,7 @@
     <RegEx find="đt" replaceWith="št" />
     <RegEx find="nw" replaceWith="ne" />
     <RegEx find="zž" replaceWith="ž" />
+    <RegEx find="žz" replaceWith="žu" />
     <RegEx find="([mnrtzpsdfghjkcvb])ls" replaceWith="$1is" />
     <RegEx find="(?&lt;![Hh])abs" replaceWith="aps" />
     <RegEx find="acel" replaceWith="acjel" />
@@ -5005,6 +5015,7 @@
     <RegEx find="sjp" replaceWith="spj" />
     <RegEx find="smeva" replaceWith="smijava" />
     <RegEx find="stać(?!i)" replaceWith="stat ć" />
+    <RegEx find="(?&lt;!star)aćemo" replaceWith="at ćemo" />
     <RegEx find="\bstaral" replaceWith="brinul" />
     <RegEx find="\bStaral" replaceWith="Brinul" />
     <RegEx find="stba" replaceWith="stva" />
