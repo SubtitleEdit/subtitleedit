@@ -43,7 +43,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             };
         }
 
-        public static void SaveInterjections(string twoLetterIsoLanguageName, List<string> interjections)
+        public static void SaveInterjections(string twoLetterIsoLanguageName, List<string> interjections, List<string> skipList)
         {
             var seFileName = twoLetterIsoLanguageName + SeFileName;
             var userFileName = twoLetterIsoLanguageName + UserFileName;
@@ -59,13 +59,22 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             var xmlDocument = new XmlDocument();
-            xmlDocument.LoadXml("<interjections><ignore></ignore></interjections>");
+            xmlDocument.LoadXml("<interjections><ignore></ignore><skipIfStartsWith></skipIfStartsWith></interjections>");
+          
             var ignoreNode = xmlDocument.DocumentElement.SelectSingleNode("ignore");
             foreach (var w in ignoreList)
             {
                 var node = xmlDocument.CreateElement( "word");
                 node.InnerText = w;
                 ignoreNode.AppendChild(node);
+            }
+
+            var skipNode = xmlDocument.DocumentElement.SelectSingleNode("skipIfStartsWith");
+            foreach (var w in skipList)
+            {
+                var node = xmlDocument.CreateElement("text");
+                node.InnerText = w;
+                skipNode.AppendChild(node);
             }
 
             foreach (var w in interjections)

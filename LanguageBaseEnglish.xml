@@ -1140,6 +1140,8 @@ To use an API key, go to "Options -&gt; Settings -&gt; Tools" to enter your Goog
   </ImportText>
   <Interjections>
     <Title>Interjections</Title>
+    <EditSkipList>Edit skip list...</EditSkipList>
+    <EditSkipListInfo>Interjections will be skipped if source text starts with these:</EditSkipListInfo>
   </Interjections>
   <JoinSubtitles>
     <Title>Join subtitles</Title>

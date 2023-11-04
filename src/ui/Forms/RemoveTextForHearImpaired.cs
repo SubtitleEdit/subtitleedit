@@ -313,11 +313,12 @@ namespace Nikse.SubtitleEdit.Forms
                 lang = l.Code.TwoLetterISOLanguageName;
             }
 
-            using (var editInterjections = new InterjectionsEditList(InterjectionsRepository.LoadInterjections(lang).Interjections))
+            var interjections = InterjectionsRepository.LoadInterjections(lang);
+            using (var editInterjections = new InterjectionsEditList(interjections.Interjections, interjections.SkipIfStartsWith))
             {
                 if (editInterjections.ShowDialog(this) == DialogResult.OK)
                 {
-                    SaveInterjections(editInterjections.Interjections);
+                    SaveInterjections(editInterjections.Interjections, editInterjections.SkipList);
                     if (checkBoxRemoveInterjections.Checked)
                     {
                         GeneratePreview();
@@ -326,7 +327,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void SaveInterjections(List<string> interjections)
+        private void SaveInterjections(List<string> interjections, List<string> skipList)
         {
             var lang = "en";
             if (comboBoxLanguage.SelectedIndex >= 0 && comboBoxLanguage.Items[comboBoxLanguage.SelectedIndex] is LanguageItem l)
@@ -334,7 +335,7 @@ namespace Nikse.SubtitleEdit.Forms
                 lang = l.Code.TwoLetterISOLanguageName;
             }
 
-            InterjectionsRepository.SaveInterjections(lang, interjections);
+            InterjectionsRepository.SaveInterjections(lang, interjections, skipList);
         }
 
         private void FormRemoveTextForHearImpaired_Resize(object sender, EventArgs e)

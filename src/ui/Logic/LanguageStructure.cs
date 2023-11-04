@@ -1231,6 +1231,8 @@
         public class Interjections
         {
             public string Title { get; set; }
+            public string EditSkipList { get; set; }
+            public string EditSkipListInfo { get; set; }
         }
 
         public class JoinSubtitles
