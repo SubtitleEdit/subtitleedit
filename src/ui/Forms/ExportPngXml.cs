@@ -2758,15 +2758,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                 try
                                 {
                                     colorStack.Push(c); // save old color
-                                    if (fontColor.StartsWith("rgb(", StringComparison.OrdinalIgnoreCase))
-                                    {
-                                        arr = fontColor.Remove(0, 4).TrimEnd(')').Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-                                        c = Color.FromArgb(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]));
-                                    }
-                                    else
-                                    {
-                                        c = ColorTranslator.FromHtml(fontColor);
-                                    }
+                                    c = Settings.FromHtml(fontColor);
                                 }
                                 catch
                                 {
@@ -3592,15 +3584,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                             try
                                             {
                                                 colorStack.Push(c); // save old color
-                                                if (fontColor.StartsWith("rgb(", StringComparison.OrdinalIgnoreCase))
-                                                {
-                                                    arr = fontColor.Remove(0, 4).TrimEnd(')').Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-                                                    c = Color.FromArgb(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]));
-                                                }
-                                                else
-                                                {
-                                                    c = ColorTranslator.FromHtml(fontColor);
-                                                }
+                                                c = Settings.FromHtml(fontColor);
                                             }
                                             catch
                                             {
@@ -3987,23 +3971,31 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
                 var assTags = s.Substring(k + 1, l - k - 1).Split('\\');
                 var sb = new StringBuilder();
-                foreach (var assTag in assTags)
+                foreach (var assaTag in assTags)
                 {
-                    if (assTag == "i1")
+                    if (assaTag == "i1")
                     {
                         sb.Append("<i>");
                     }
-                    else if (assTag == "i" || assTag == "i0")
+                    else if (assaTag == "i" || assaTag == "i0")
                     {
                         sb.Append("</i>");
                     }
-                    else if (assTag == "b1" || assTag == "b2" || assTag == "b3" || assTag == "b4")
+                    else if (assaTag == "b1" || assaTag == "b2" || assaTag == "b3" || assaTag == "b4")
                     {
                         sb.Append("<b>");
                     }
-                    else if (assTag == "b" || assTag == "b0")
+                    else if (assaTag == "b" || assaTag == "b0")
                     {
                         sb.Append("</b>");
+                    }
+                    else if (assaTag.StartsWith("c&H", StringComparison.OrdinalIgnoreCase) && assaTag.EndsWith('&'))
+                    {
+                        var color = AdvancedSubStationAlpha.GetSsaColor(assaTag.TrimStart('c'), Color.Transparent);
+                        if (color != Color.Transparent)
+                        {
+                            sb.Append($"<font color={Utilities.ColorToHexWithTransparency(color)}>");
+                        }
                     }
                 }
                 s = s.Remove(k, l - k + 1);
