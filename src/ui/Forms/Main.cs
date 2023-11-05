@@ -11391,13 +11391,11 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (timerAutoDuration.Enabled)
                 {
-                    timerAutoDuration.Stop();
-                    labelAutoDuration.Visible = false;
+                    StopAutoDuration();
                 }
                 else
                 {
-                    timerAutoDuration.Start();
-                    labelAutoDuration.Visible = true;
+                    StartAutoDuration();
                 }
 
                 e.SuppressKeyPress = true;
@@ -18579,7 +18577,7 @@ namespace Nikse.SubtitleEdit.Forms
                         duration <= 60_000)
                     {
                         MakeHistoryForUndoOnlyIfNotRecent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveformX, "#" + _subtitle.Paragraphs[index].Number + " " + _subtitle.Paragraphs[index].Text));
-                        var newEndTime = new TimeCode(videoTimeCode.TotalMilliseconds - (double)MinGapBetweenLines);
+                        var newEndTime = new TimeCode(videoTimeCode.TotalMilliseconds - MinGapBetweenLines);
                         double charactersPerSecond = Utilities.GetCharactersPerSecond(new Paragraph(p) { EndTime = newEndTime });
                         if (charactersPerSecond <= Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
                         {
@@ -18588,13 +18586,14 @@ namespace Nikse.SubtitleEdit.Forms
 
                         SubtitleListview1.SetStartTimeAndDuration(index, _subtitle.Paragraphs[index], _subtitle.GetParagraphOrDefault(index + 1), _subtitle.GetParagraphOrDefault(index - 1));
                         SetDurationInSeconds(_subtitle.Paragraphs[index].DurationTotalSeconds);
-                        var newP = InsertNewParagraphAtPosition(newEndTime.TotalMilliseconds);
+                        var newP = InsertNewParagraphAtPosition(newEndTime.TotalMilliseconds + MinGapBetweenLines);
                         if (audioVisualizer.WavePeaks != null && newP.EndTime.TotalSeconds >= audioVisualizer.EndPositionSeconds - 0.1)
                         {
                             audioVisualizer.StartPositionSeconds = Math.Max(0, newP.StartTime.TotalSeconds - 0.1);
                         }
 
                         UpdateSourceView();
+                        StartAutoDuration();
                     }
                 }
             }
@@ -24865,6 +24864,12 @@ namespace Nikse.SubtitleEdit.Forms
         {
             timerAutoDuration.Stop();
             labelAutoDuration.Visible = false;
+        }
+
+        private void StartAutoDuration()
+        {
+            timerAutoDuration.Start();
+            labelAutoDuration.Visible = true;
         }
 
         private void TextBoxListViewTextLeave(object sender, EventArgs e)
