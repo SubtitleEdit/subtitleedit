@@ -860,6 +860,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             { 131, new SpecialCharacter("ใ")}, // 0x83
             { 132, new SpecialCharacter("ไ")}, // 0x84
 
+            { 138, new SpecialCharacter("๊")}, // 0x8A
+            { 139, new SpecialCharacter("๋")}, // 0x8B
+            { 141, new SpecialCharacter("ํ")}, // 0x8D
+            { 142, new SpecialCharacter("๎")}, // 0x8E
+
             { 143, new SpecialCharacter("๏")}, // 0x8f
             { 144, new SpecialCharacter("๐")}, // 0x90
             { 145, new SpecialCharacter("๑")}, // 0x91
@@ -928,6 +933,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             { 212, new SpecialCharacter("ิ")}, // 0xd4
             { 213, new SpecialCharacter("ี")}, // 0xd5
             { 214, new SpecialCharacter("ึ")}, // 0xd6
+            { 218, new SpecialCharacter("ฺ")}, // 0xda
             { 223, new SpecialCharacter("฿")}, // 0xdb
 
             { 0xA688, new SpecialCharacter("ฆ่")},
