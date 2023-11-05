@@ -40,6 +40,7 @@
    * Close all processes when closing Faster Whisper - thx Purfview
    * Allow drag-n-drop in "Multiple replace" rules - thx Clarencezzh
    * ASSA: "Replace style" now works on multi-selection - thx Leon
+   * Add some support for ASSA inline color in bdsup export - thx Adam
 * FIXED:
    * Fix for paste in waveform - thx Ruong
    * Fix remember text box settings (bold/size) - thx Siamak
