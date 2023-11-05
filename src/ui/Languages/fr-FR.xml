@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>4.0.1</Version>
-    <TranslatedBy>Traduction de Pierre le Lidgeu. (Updated: Sept.,23 2023)</TranslatedBy>
+    <TranslatedBy>Traduction de Pierre le Lidgeu. (Updated: Nov.,05 2023)</TranslatedBy>
     <CultureName>fr-FR</CultureName>
     <HelpFile />
     <Ok>&amp;OK</Ok>
@@ -104,6 +104,7 @@
     <Warning>Attention</Warning>
     <UseLargerFontForThisWindow>Agrandir la police de cette fenêtre</UseLargerFontForThisWindow>
     <ChangeLanguageFilter>Changer de filtre de langue…</ChangeLanguageFilter>
+    <MoreInfo>Plus d'infos</MoreInfo>
   </General>
   <About>
     <Title>A propos de Subtitle Edit</Title>
@@ -198,6 +199,7 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
     <WhisperNotFound>Whisper introuvable.
 
 		Plus d'informations (Internet)?</WhisperNotFound>
+    <Model>Modèle</Model>
     <Models>Modèles</Models>
     <LanguagesAndModels>Langues et modèles</LanguagesAndModels>
     <ChooseModel>Choisir le modèle</ChooseModel>
@@ -324,6 +326,7 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
     <ConvertOptions>Options de conversion</ConvertOptions>
     <RemoveFormatting>Retirer balises de mise en forme</RemoveFormatting>
     <RemoveStyleActor>Retirer style/acteur</RemoveStyleActor>
+    <StyleActor>Style/acteur (séparés par &quot;,&quot;)</StyleActor>
     <RemoveTextForHI>Retirer texte "surdité"</RemoveTextForHI>
     <ConvertColorsToDialog>Convertir les couleurs en dialogue</ConvertColorsToDialog>
     <OverwriteOriginalFiles>Remplacer fichiers originaux (nouvelle extension si format modifié)</OverwriteOriginalFiles>
@@ -486,6 +489,7 @@ Nous tirons parti du rythme intrinsèque de l'image.</CreateSimpleChainingToolTi
     <BottomAlignSelectedLines>Aligner en bas les lignes sélectionnées (garder la position horizontale)</BottomAlignSelectedLines>
     <ToggleForcedSelectedLines>Commuter sur (Forcé) pour les lignes sélectionnées</ToggleForcedSelectedLines>
     <SelectForcedLines>Sélectionner les lignes forcées</SelectForcedLines>
+    <SelectNonForcedLines>Sélectionner les lignes non-forcées</SelectNonForcedLines>
     <SizeXY> Taille : {0}x{1}</SizeXY>
     <SetAspectRatio11>Etablir le format d'image 1:1</SetAspectRatio11>
     <ChangeBrightnessTitle>Ajuster la luminosité</ChangeBrightnessTitle>
@@ -1044,6 +1048,7 @@ Nous tirons parti du rythme intrinsèque de l'image.</CreateSimpleChainingToolTi
     <PleaseWait>Patientez… Cela peut prendre un certain temps</PleaseWait>
     <PoweredByGoogleTranslate>Réalisé avec Google Traduction</PoweredByGoogleTranslate>
     <PoweredByMicrosoftTranslate>Réalisé avec Microsoft Translator</PoweredByMicrosoftTranslate>
+    <PoweredByX>Réalisé par {0}</PoweredByX>
     <MsClientSecretNeeded>Désolé, vous devez recevoir de Microsoft une clé 'Texte de traducteur' des "Cognitive Services" pour utiliser la dernière version de Microsoft Translator.
 
 Allez à "Options -&gt; Paramètres -&gt; Outils" pour entrer votre clé.</MsClientSecretNeeded>
@@ -1065,6 +1070,10 @@ Pour utiliser une clé API, allez à \"Options -&gt; Paramètres -&gt; Outils\" 
     <TranslateBlockCopySourceText>Copier le presse-papiers du texte source</TranslateBlockCopySourceText>
     <TranslateBlockClipboardError1>Le presse-papiers contient le texte source !</TranslateBlockClipboardError1>
     <TranslateBlockClipboardError2>Allez au traducteur et traduisez. Copiez le résultat dans le presse-papiers et cliquez à nouveau sur ce bouton.</TranslateBlockClipboardError2>
+    <StartWebServerX>Démarrez le serveur web "{0}"</StartWebServerX>
+    <XRequiresALocalWebServer>"{0}" requiert un serveur web local !</XRequiresALocalWebServer>
+    <XRequiresAnApiKey>"{0}" requiert une clé API.</XRequiresAnApiKey>
+    <ReadMore>Read more?</ReadMore>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
     <Title>Traductions Google vs Microsoft</Title>
@@ -1131,6 +1140,8 @@ Pour utiliser une clé API, allez à \"Options -&gt; Paramètres -&gt; Outils\" 
   </ImportText>
   <Interjections>
     <Title>Interjections</Title>
+    <EditSkipList>Editer la list des ignorés…</EditSkipList>
+    <EditSkipListInfo>Les interjections seront ignorées si le texte source commence par :</EditSkipListInfo>
   </Interjections>
   <JoinSubtitles>
     <Title>Joindre les sous-titres</Title>
@@ -1425,8 +1436,6 @@ Pour utiliser une clé API, allez à \"Options -&gt; Paramètres -&gt; Outils\" 
         <GenerateImportShotChanges>Générer / Importer les changements de scènes…</GenerateImportShotChanges>
         <RemoveOrExportShotChanges>Supprimer/exporter les changements de plans…</RemoveOrExportShotChanges>
         <WaveformBatchGenerate>Générer les ondes sonores par lots…</WaveformBatchGenerate>
-        <ShowHideVideo>Afficher / Masquer la vidéo</ShowHideVideo>
-        <ShowHideWaveform>Afficher / Masquer l'audio</ShowHideWaveform>
         <ShowHideWaveformAndSpectrogram>Afficher / Masquer le spectrogramme</ShowHideWaveformAndSpectrogram>
         <UnDockVideoControls>Détacher la fenêtre vidéo</UnDockVideoControls>
         <ReDockVideoControls>Rattacher la fenêtre vidéo</ReDockVideoControls>
@@ -2219,6 +2228,7 @@ peuvent éditer le même fichier sous-titres (collaboration)</Information>
     <LinesFoundX>Lignes trouvées : {0}</LinesFoundX>
     <RemoveTextIfContains>Le texte contenant :</RemoveTextIfContains>
     <RemoveTextIfAllUppercase>Ligne en MAJUSCULES</RemoveTextIfAllUppercase>
+    <RemoveIfOnlyMusicSymbols>Si uniquement des symboles musicaux</RemoveIfOnlyMusicSymbols>
     <RemoveInterjections>Les interjections (chut, hmm,…)</RemoveInterjections>
     <EditInterjections>Editer…</EditInterjections>
     <Apply>A&amp;ppliquer</Apply>
@@ -2640,6 +2650,7 @@ peuvent éditer le même fichier sous-titres (collaboration)</Information>
     <VerticalZoomOut>Zoom arrière vertical</VerticalZoomOut>
     <WaveformSeekSilenceForward>Recherche de silence avant</WaveformSeekSilenceForward>
     <WaveformSeekSilenceBack>Recherche de silence arrière</WaveformSeekSilenceBack>
+    <ChooseLayoutX>Choisir l'agencement {0}</ChooseLayoutX>
     <WaveformAddTextHere>Ajouter le texte ici (pour une nouvelle sélection)</WaveformAddTextHere>
     <WaveformAddTextHereFromClipboard>Ajouter le texte ici (à partir de presse-papiers)</WaveformAddTextHereFromClipboard>
     <SetParagraphAsSelection>Fixer l'actuel comme nouvelle sélection</SetParagraphAsSelection>
