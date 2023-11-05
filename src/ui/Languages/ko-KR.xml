@@ -1136,6 +1136,8 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
   </ImportText>
   <Interjections>
     <Title>감탄사</Title>
+    <EditSkipList>건너뛰기 목록 편집...</EditSkipList>
+    <EditSkipListInfo>원본 텍스트가 다음과 같이 시작하는 경우 감탄사를 건너뜁니다:</EditSkipListInfo>
   </Interjections>
   <JoinSubtitles>
     <Title>* 새 자막 등록... (하나 이상의 자막을 차례로 연결하여 편집창으로 보냄)</Title>
