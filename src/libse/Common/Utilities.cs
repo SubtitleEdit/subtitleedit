@@ -1870,75 +1870,80 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public static Color GetColorFromFontString(string text, Color defaultColor)
         {
-            string s = text.TrimEnd();
-            int start = s.IndexOf("<font ", StringComparison.OrdinalIgnoreCase);
-            if (start >= 0 && s.EndsWith("</font>", StringComparison.OrdinalIgnoreCase))
+            var s = text.TrimEnd();
+            var start = s.IndexOf("<font ", StringComparison.OrdinalIgnoreCase);
+            if (start < 0 || !s.EndsWith("</font>", StringComparison.OrdinalIgnoreCase))
             {
-                int end = s.IndexOf('>', start);
-                if (end > 0)
+                return defaultColor;
+            }
+
+            var end = s.IndexOf('>', start);
+            if (end <= 0)
+            {
+                return defaultColor;
+            }
+
+            var f = s.Substring(start, end - start);
+            if (!f.Contains(" color=", StringComparison.OrdinalIgnoreCase))
+            {
+                return defaultColor;
+            }
+
+            var colorStart = f.IndexOf(" color=", StringComparison.OrdinalIgnoreCase);
+            if (s.IndexOf('"', colorStart + " color=".Length + 1) > 0)
+            {
+                end = s.IndexOf('"', colorStart + " color=".Length + 1);
+            }
+
+            s = s.Substring(colorStart, end - colorStart);
+            s = s.Replace(" color=", string.Empty);
+            s = s.Trim('\'').Trim('"').Trim('\'');
+            try
+            {
+                if (s.StartsWith("rgb(", StringComparison.OrdinalIgnoreCase))
                 {
-                    string f = s.Substring(start, end - start);
-                    if (f.Contains(" color=", StringComparison.OrdinalIgnoreCase))
+                    var arr = s.Remove(0, 4).TrimEnd(')').Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                    return Color.FromArgb(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]));
+                }
+
+                if (s.StartsWith("rgba(", StringComparison.OrdinalIgnoreCase))
+                {
+                    var arr = s
+                        .RemoveChar(' ')
+                        .Remove(0, 5)
+                        .TrimEnd(')')
+                        .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+
+                    var alpha = byte.MaxValue;
+                    if (arr.Length == 4 && float.TryParse(arr[3], NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var f2))
                     {
-                        int colorStart = f.IndexOf(" color=", StringComparison.OrdinalIgnoreCase);
-                        if (s.IndexOf('"', colorStart + " color=".Length + 1) > 0)
+                        if (f2 >= 0 && f2 < 1)
                         {
-                            end = s.IndexOf('"', colorStart + " color=".Length + 1);
-                        }
-
-                        s = s.Substring(colorStart, end - colorStart);
-                        s = s.Replace(" color=", string.Empty);
-                        s = s.Trim('\'').Trim('"').Trim('\'');
-                        try
-                        {
-                            if (s.StartsWith("rgb(", StringComparison.OrdinalIgnoreCase))
-                            {
-                                var arr = s.Remove(0, 4).TrimEnd(')').Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-                                return Color.FromArgb(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]));
-                            }
-
-                            if (s.StartsWith("rgba(", StringComparison.OrdinalIgnoreCase))
-                            {
-                                var arr = s
-                                    .RemoveChar(' ')
-                                    .Remove(0, 5)
-                                    .TrimEnd(')')
-                                    .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-
-                                var alpha = byte.MaxValue;
-                                if (arr.Length == 4 && float.TryParse(arr[3], NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var f2))
-                                {
-                                    if (f2 >= 0 && f2 < 1)
-                                    {
-                                        alpha = (byte)(f2 * byte.MaxValue);
-                                    }
-                                }
-
-                                return Color.FromArgb(alpha, int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]));
-                            }
-
-                            if (s.Length == 9 && s.StartsWith("#"))
-                            {
-                                if (!int.TryParse(s.Substring(7, 2), NumberStyles.HexNumber, null, out var alpha))
-                                {
-                                    alpha = 255; // full solid color
-                                }
-
-                                s = s.Substring(1, 6);
-                                var c = ColorTranslator.FromHtml("#" + s);
-                                return Color.FromArgb(alpha, c);
-                            }
-
-                            return ColorTranslator.FromHtml(s);
-                        }
-                        catch
-                        {
-                            return defaultColor;
+                            alpha = (byte)(f2 * byte.MaxValue);
                         }
                     }
+
+                    return Color.FromArgb(alpha, int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]));
                 }
+
+                if (s.Length == 9 && s.StartsWith("#"))
+                {
+                    if (!int.TryParse(s.Substring(7, 2), NumberStyles.HexNumber, null, out var alpha))
+                    {
+                        alpha = 255; // full solid color
+                    }
+
+                    s = s.Substring(1, 6);
+                    var c = ColorTranslator.FromHtml("#" + s);
+                    return Color.FromArgb(alpha, c);
+                }
+
+                return ColorTranslator.FromHtml(s);
             }
-            return defaultColor;
+            catch
+            {
+                return defaultColor;
+            }
         }
 
         public static string[] SplitForChangedCalc(string s, bool ignoreLineBreaks, bool ignoreFormatting, bool breakToLetters)
