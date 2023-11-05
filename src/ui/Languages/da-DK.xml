@@ -1133,6 +1133,8 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Bi
   </ImportText>
   <Interjections>
     <Title>Følelsesudbrud</Title>
+    <EditSkipList>Rediger overspringsliste...</EditSkipList>
+    <EditSkipListInfo>Interjektioner vil blive sprunget over, hvis kildeteksten starter med disse:</EditSkipListInfo>
   </Interjections>
   <JoinSubtitles>
     <Title>Flet undertekster</Title>
