@@ -1141,6 +1141,8 @@ Gå till "Alternativ -&gt; Inställningar -&gt; Verktyg" för att ange din nycke
   </ImportText>
   <Interjections>
     <Title>Interjektioner</Title>
+    <EditSkipList>Redigera överhoppningslista...</EditSkipList>
+    <EditSkipListInfo>Interjektioner hoppas över om källtexten börjar med dessa:</EditSkipListInfo>
   </Interjections>
   <JoinSubtitles>
     <Title>Slå ihop texter</Title>
