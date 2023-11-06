@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>4.0.1</Version>
-    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 24.10.2023</TranslatedBy>
+    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 06.11.2023</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -1140,6 +1140,8 @@ Per usare una chiave API vai su "Opzioni -&gt; Impostazioni -&gt; Strumenti" per
   </ImportText>
   <Interjections>
     <Title>Interiezioni</Title>
+    <EditSkipList>Modifica elenco salti...</EditSkipList>
+    <EditSkipListInfo>Le interiezioni verranno saltate se il testo sorgente inizia con:</EditSkipListInfo>
   </Interjections>
   <JoinSubtitles>
     <Title>Unisci sottotitoli</Title>
