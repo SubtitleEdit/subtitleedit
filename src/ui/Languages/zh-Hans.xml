@@ -1134,6 +1134,8 @@ Command line: {1} {2}
   </ImportText>
   <Interjections>
     <Title>感叹词</Title>
+    <EditSkipList>编辑跳过列表...</EditSkipList>
+    <EditSkipListInfo>如果源文本以这些开头，感叹词将被跳过：</EditSkipListInfo>
   </Interjections>
   <JoinSubtitles>
     <Title>合并字幕</Title>
@@ -1428,8 +1430,6 @@ Command line: {1} {2}
         <GenerateImportShotChanges>生成/导入场景切换...</GenerateImportShotChanges>
         <RemoveOrExportShotChanges>删除/导出场景切换...</RemoveOrExportShotChanges>
         <WaveformBatchGenerate>批量生成波形...</WaveformBatchGenerate>
-        <ShowHideVideo>显示/隐藏视频</ShowHideVideo>
-        <ShowHideWaveform>显示/隐藏波形</ShowHideWaveform>
         <ShowHideWaveformAndSpectrogram>显示/隐藏波形和频谱图</ShowHideWaveformAndSpectrogram>
         <UnDockVideoControls>取消内嵌显示视频控件</UnDockVideoControls>
         <ReDockVideoControls>内嵌显示视频控件</ReDockVideoControls>
