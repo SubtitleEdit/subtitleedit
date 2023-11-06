@@ -104,6 +104,8 @@
     <Error>Ορισμός επιπέδου</Error>
     <Warning>Προειδοποίηση</Warning>
     <UseLargerFontForThisWindow>Χρήση μεγαλύτερης γραμματοσειράς για αυτό το παράθυρο</UseLargerFontForThisWindow>
+    <ChangeLanguageFilter>Αλλαγή φίλτρου γλώσσας…</ChangeLanguageFilter>
+    <MoreInfo>Περισσότερες πληροφορίες</MoreInfo>
   </General>
   <About>
     <Title>Πληροφορίες του Subtitle Edit</Title>
@@ -195,6 +197,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <WhisperWebsite>Ιστοσελίδα Whisper</WhisperWebsite>
     <WhisperNotFound>Το Whsiper δεν βρέθηκε.
 Ανάγνωση περισσότερων πληροφοριών στο διαδίκτυο;</WhisperNotFound>
+    <Model>Μοντέλο</Model>
     <Models>Μοντέλα</Models>
     <LanguagesAndModels>Γλώσσες και μοντέλα</LanguagesAndModels>
     <ChooseModel>Επιλογή μοντέλου</ChooseModel>
@@ -215,6 +218,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SetCppConstMeFolder>Διαδρομή φακέλου μοντέλων CPP / Const-me</SetCppConstMeFolder>
     <OnlyRunPostProcessing>Εκτέλεση μόνο μετεπεξεργασίας / προσαρμογή χρόνων</OnlyRunPostProcessing>
     <DownloadFasterWhisperCuda>Λήψη βιβλιοθηκών cuBLAS και cuDNN για Faster-Whisper</DownloadFasterWhisperCuda>
+    <NoTextFound>Δεν βρέθηκε κείμενο.</NoTextFound>
   </AudioToText>
   <AssaAttachments>
     <Title>Προσαρτήσεις Advanced Sub Station Alpha</Title>
@@ -320,6 +324,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ConvertOptions>Επιλογές μετατροπής</ConvertOptions>
     <RemoveFormatting>Αφαίρεση ετικετών μορφοποίησης</RemoveFormatting>
     <RemoveStyleActor>Αφαίρεση στυλ/ηθοποιού</RemoveStyleActor>
+    <StyleActor>Στυλ/ηθοποιός (χωρισμένα με κόμμα)</StyleActor>
     <RemoveTextForHI>Αφαίρεση κειμένου προβλήματος ακοής</RemoveTextForHI>
     <ConvertColorsToDialog>Μετατροπή χρωμάτων σε παύλες διαλόγου</ConvertColorsToDialog>
     <OverwriteOriginalFiles>Αντικατάσταση αρχικών αρχείων (νέα επέκταση, για αλλαγμένη μορφή)</OverwriteOriginalFiles>
@@ -472,6 +477,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <BottomAlignSelectedLines>Κάτω στοίχιση επιλεγμένων γραμμών (διατήρηση οριζόντιας θέσης)</BottomAlignSelectedLines>
     <ToggleForcedSelectedLines>Εναλλαγή "Εξαναγκασμένων" επιλεγμένων γραμμών</ToggleForcedSelectedLines>
     <SelectForcedLines>Επιλογή εξαναγκασμένων γραμμών</SelectForcedLines>
+    <SelectNonForcedLines>Επιλογή μη εξαναγκασμένων γραμμών</SelectNonForcedLines>
     <SizeXY>Μέγεθος: {0}χ{1}</SizeXY>
     <SetAspectRatio11>Ορισμός λόγου διαστάσεων 1:1</SetAspectRatio11>
     <ChangeBrightnessTitle>Προσαρμογή φωτεινότητας</ChangeBrightnessTitle>
@@ -1028,8 +1034,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <To>Σε:</To>
     <Translate>Μετάφραση</Translate>
     <PleaseWait>Παρακαλώ, περιμένετε. Χρειάζεται λίγος χρόνος.</PleaseWait>
-    <PoweredByGoogleTranslate>Τροφοδοσία Google</PoweredByGoogleTranslate>
-    <PoweredByMicrosoftTranslate>Τροφοδοσία Bing</PoweredByMicrosoftTranslate>
+    <PoweredByGoogleTranslate>Μετάφραση μέσω Google</PoweredByGoogleTranslate>
+    <PoweredByMicrosoftTranslate>Μετάφραση μέσω Bing</PoweredByMicrosoftTranslate>
+    <PoweredByX>Μετάφραση μέσω {0}</PoweredByX>
     <MsClientSecretNeeded>Συγγνώμη, χρειάζεστε ένα γνωστικό κλειδί εξυπηρέτησης 'μετάφρασης κειμένου' από τη Microsoft για τη χρήση του.
 Μετάβαση σε "Επιλογές -&gt; Ρυθμίσεις -&gt; Εργαλεία" για την εισαγωγή κλειδιού.</MsClientSecretNeeded>
     <GoogleNoApiKeyWarning>Μετάφραση χωρίς κλειδί API (αργά και περιορισμένα δεδομένα). Εισάγετε ένα στο "Επιλογές -&gt; Ρυθμίσεις -&gt; Εργαλεία".</GoogleNoApiKeyWarning>
@@ -1048,6 +1055,10 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <TranslateBlockCopySourceText>Αντιγραφή κειμένου πρόχειρου</TranslateBlockCopySourceText>
     <TranslateBlockClipboardError1>Το πρόχειρο περιέχει αρχικό κείμενο.</TranslateBlockClipboardError1>
     <TranslateBlockClipboardError2>Μεταφράστε στον μεταφραστή, αντιγράψτε στο πρόχειρο και ξαναπατήστε αυτό το κουμπί.</TranslateBlockClipboardError2>
+    <StartWebServerX>Εκκίνηση διακομηστή "{0}"</StartWebServerX>
+    <XRequiresALocalWebServer>Το "{0}" απαιτεί τοπικό διακομιστή.</XRequiresALocalWebServer>
+    <XRequiresAnApiKey>Το "{0}" απαιτεί κλειδί API.</XRequiresAnApiKey>
+    <ReadMore>Συνέχεια ανάγνωσης;</ReadMore>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
     <Title>Μετάφραση Google vs Bing</Title>
@@ -1114,6 +1125,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   </ImportText>
   <Interjections>
     <Title>Παρεμβολές</Title>
+    <EditSkipList>Επεξεργασία λίστας παράλειψης…</EditSkipList>
+    <EditSkipListInfo>Παράλειψη όσων επιφωνημάτων ξεκινούν με:</EditSkipListInfo>
   </Interjections>
   <JoinSubtitles>
     <Title>Ένωση υποτίτλων</Title>
@@ -1408,8 +1421,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <GenerateImportShotChanges>Δημιουργία/εισαγωγή αλλαγών λήψης…</GenerateImportShotChanges>
         <RemoveOrExportShotChanges>Αφαίρεση/εξαγωγή αλλαγών λήψης…</RemoveOrExportShotChanges>
         <WaveformBatchGenerate>Ομαδική δημιουργία κυματομορφών…</WaveformBatchGenerate>
-        <ShowHideVideo>Εμφάνιση/απόκρυψη βίντεο</ShowHideVideo>
-        <ShowHideWaveform>Εμφάνιση/απόκρυψη κυματομορφής</ShowHideWaveform>
         <ShowHideWaveformAndSpectrogram>Εμφάνιση/απόκρυψη κυματομορφής και φασματογράμματος</ShowHideWaveformAndSpectrogram>
         <UnDockVideoControls>Απαγκύρωση στοιχείων ελέγχου βίντεο</UnDockVideoControls>
         <ReDockVideoControls>Επαναγκύρωση στοιχείων ελέγχου βίντεο</ReDockVideoControls>
@@ -1470,8 +1481,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <BeautifyTimeCodes>Ωραιοποίηση χρόνων</BeautifyTimeCodes>
         <Settings>Ρυθμίσεις</Settings>
         <Help>Βοήθεια</Help>
-        <ShowHideWaveform>Εμφάνιση/απόκρυψη κυματομορφής</ShowHideWaveform>
-        <ShowHideVideo>Εμφάνιση/απόκρυψη βίντεο</ShowHideVideo>
+        <Layout>Διάταξη</Layout>
         <AssaDraw>Σχέδιο ASSA</AssaDraw>
       </ToolBar>
       <ContextMenu>
@@ -1923,6 +1933,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SubtitleEditNeedsVideoPlayer>Το Subtitle Edit χρειάζεται πρόγραμμα αναπαραγωγής βίντεο.</SubtitleEditNeedsVideoPlayer>
     <UseRecommendMpv>Για τη χρήση τού mpv, πατήστε το παρακάτω κουμπί.</UseRecommendMpv>
     <DownloadAndUseMpv>Λήψη και χρήση τού mpv ως πρόγραμμα αναπαραγωγής</DownloadAndUseMpv>
+    <ChooseLayout>Επιλογή διάταξης</ChooseLayout>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Επιλογή υποτίτλου από αρχείο Matroska</Title>
@@ -2201,6 +2212,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <LinesFoundX>Γραμμές που βρέθηκαν: {0}</LinesFoundX>
     <RemoveTextIfContains>Αφαίρεση κειμένου, αν περιέχει:</RemoveTextIfContains>
     <RemoveTextIfAllUppercase>Αφαίρεση γραμμής με κεφαλαία</RemoveTextIfAllUppercase>
+    <RemoveIfOnlyMusicSymbols>Αφαίρεση μουσικών συμβόλων</RemoveIfOnlyMusicSymbols>
     <RemoveInterjections>Αφαίρεση επιφωνημάτων</RemoveInterjections>
     <EditInterjections>Επεξεργασία…</EditInterjections>
     <Apply>Ε&amp;φαρμογή</Apply>
@@ -2300,6 +2312,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <DefaultFrameRate>Προεπιλεγμένος ρυθμός καρέ</DefaultFrameRate>
     <DefaultFileEncoding>Προεπιλεγμένη κωδικοποίηση</DefaultFileEncoding>
     <AutoDetectAnsiEncoding>Ανίχνευση κωδικοποίησης ANSI</AutoDetectAnsiEncoding>
+    <LanguageFilter>Φίλτρο γλώσσας</LanguageFilter>
     <Profile>Προφίλ</Profile>
     <Profiles>Προφίλ</Profiles>
     <ImportProfiles>Εισαγωγή</ImportProfiles>
@@ -2527,6 +2540,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <AdjustViaEndAutoStart>Προσαρμογή μέσω θέσης λήξης</AdjustViaEndAutoStart>
     <AdjustViaEndAutoStartAndGoToNext>Προσαρμογή μέσω θέσης λήξης και επόμενο</AdjustViaEndAutoStartAndGoToNext>
     <AdjustSetEndMinusGapAndStartNextHere>Ορισμός λήξης πλην κενού, μετάβαση σε επόμενο και έναρξη εδώ</AdjustSetEndMinusGapAndStartNextHere>
+    <AdjustSetStartTimeAndGoToNext>Ορισμός έναρξης και επόμενο</AdjustSetStartTimeAndGoToNext>
     <AdjustSetEndTimeAndGoToNext>Ορισμός λήξης και επόμενο</AdjustSetEndTimeAndGoToNext>
     <AdjustSetEndTimeAndPause>Ορισμός λήξης και παύση</AdjustSetEndTimeAndPause>
     <AdjustSetStartAutoDurationAndGoToNext>Ορισμός έναρξης, αυτόματη διάρκεια και επόμενο</AdjustSetStartAutoDurationAndGoToNext>
@@ -2621,6 +2635,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <WaveformSeekSilenceForward>Αναζήτηση σιωπής εμπρός</WaveformSeekSilenceForward>
     <WaveformSeekSilenceBack>Αναζήτηση σιωπής πίσω</WaveformSeekSilenceBack>
     <WaveformAddTextHere>Προσθήκη κειμένου (για νέα επιλογή)</WaveformAddTextHere>
+    <ChooseLayoutX>Επιλογή διάταξης {0}</ChooseLayoutX>
     <WaveformAddTextHereFromClipboard>Προσθήκη κειμένου (για νέα επιλογή από πρόχειρο)</WaveformAddTextHereFromClipboard>
     <SetParagraphAsSelection>Ορισμός επιλεγμένου ως νέα επιλογή</SetParagraphAsSelection>
     <WaveformPlayNewSelection>Αναπαραγωγή επιλεγμένου</WaveformPlayNewSelection>
