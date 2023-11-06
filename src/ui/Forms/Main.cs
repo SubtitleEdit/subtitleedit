@@ -10391,6 +10391,11 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
+            if (newParagraph.Duration.TotalMilliseconds < 100)
+            {
+                newParagraph.EndTime.TotalMilliseconds = newParagraph.StartTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds;
+            }
+
             if (_networkSession != null)
             {
                 _networkSession.TimerStop();
@@ -10513,6 +10518,11 @@ namespace Nikse.SubtitleEdit.Forms
                     newParagraph.EndTime.TotalMilliseconds = newParagraph.StartTime.TotalMilliseconds +
                                                              Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds;
                 }
+            }
+
+            if (newParagraph.Duration.TotalMilliseconds < 100)
+            {
+                newParagraph.EndTime.TotalMilliseconds = newParagraph.StartTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds;
             }
 
             if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleOriginal != null && _subtitleOriginal.Paragraphs.Count > 0)
