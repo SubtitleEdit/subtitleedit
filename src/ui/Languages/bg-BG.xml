@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>4.0.1</Version>
-    <TranslatedBy>Последен превод на български 25.10.2023: KalinM</TranslatedBy>
+    <TranslatedBy>Последен превод на български 06.11.2023: KalinM</TranslatedBy>
     <CultureName>bg-BG</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -1140,6 +1140,8 @@ https://github.com/SubtitleEdit/subtitleedit
   </ImportText>
   <Interjections>
     <Title>Възклицания</Title>
+    <EditSkipList>Редактиране на списъка за пропускане...</EditSkipList>
+    <EditSkipListInfo>Възклицанията ще бъдат пропуснати, ако изходният текст започва с тези:</EditSkipListInfo>
   </Interjections>
   <JoinSubtitles>
     <Title>Настройки за Обединяване на файлове със субтитри</Title>
