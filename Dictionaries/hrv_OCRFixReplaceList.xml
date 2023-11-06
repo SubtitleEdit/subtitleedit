@@ -4793,6 +4793,7 @@
     <RegEx find="frov" replaceWith="frir" />
     <RegEx find="ftam" replaceWith="ftalm" />
     <RegEx find="gačuj" replaceWith="gaćuj" />
+    <RegEx find="gfj" replaceWith="gdj" />
     <RegEx find="glda" replaceWith="gleda" />
     <RegEx find="gpd" replaceWith="god" />
     <RegEx find="gpt" replaceWith="got" />
@@ -4824,6 +4825,7 @@
     <RegEx find="jerm" replaceWith="jem" />
     <RegEx find="jrl" replaceWith="jel" />
     <RegEx find="jrs" replaceWith="jes" />
+    <RegEx find="jwr" replaceWith="jer" />
     <RegEx find="kcj" replaceWith="kcij" />
     <RegEx find="kodnevnic" replaceWith="kodnevic" />
     <RegEx find="([kKpPvVtT])ratić" replaceWith="$1ratit ć" />
@@ -4959,8 +4961,10 @@
     <RegEx find="pendov" replaceWith="pendir" />
     <RegEx find="pisho" replaceWith="psiho" />
     <RegEx find="pord" replaceWith="prod" />
+    <RegEx find="pqn" replaceWith="pon" />
     <RegEx find="prouk" replaceWith="poruk" />
     <RegEx find="ptv" replaceWith="otv" />
+    <RegEx find="pwn" replaceWith="pen" />
     <RegEx find="ralijs" replaceWith="rals" />
     <RegEx find="resjedav" replaceWith="redsjedav" />
     <RegEx find="kratij" replaceWith="kracij" />
