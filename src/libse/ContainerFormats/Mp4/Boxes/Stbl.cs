@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using Nikse.SubtitleEdit.Core.Cea608;
 
 namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
 {
@@ -151,10 +150,10 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
             var max = ChunkOffsets.Count;
             var index = 0;
             double totalTime = 0;
+            var stscLookup = Stsc.ToDictionary(p => p.FirstChunk);
             for (var chunkIndex = 0; chunkIndex < max; chunkIndex++)
             {
-                var newSamplesPerChunk = Stsc.FirstOrDefault(item => item.FirstChunk == chunkIndex + 1);
-                if (newSamplesPerChunk != null)
+                if (stscLookup.TryGetValue((uint)chunkIndex + 1, out var newSamplesPerChunk))
                 {
                     samplesPerChunk = newSamplesPerChunk.SamplesPerChunk;
                 }
