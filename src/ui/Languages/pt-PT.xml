@@ -1141,6 +1141,8 @@ Para usar a chave API, vá a "Opções -&gt; Definições -&gt; Ferramentas" par
   </ImportText>
   <Interjections>
     <Title>Interjeições</Title>
+    <EditSkipList>Editar lista de ignorar...</EditSkipList>
+    <EditSkipListInfo>As interjeições serão ignoradas se o texto fonte começar com estes:</EditSkipListInfo>
   </Interjections>
   <JoinSubtitles>
     <Title>Juntar legendas</Title>
