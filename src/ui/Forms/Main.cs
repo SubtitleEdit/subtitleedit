@@ -3719,6 +3719,24 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
+            // check for mp3 file
+            if (format == null && file.Length > 50 && FileUtil.IsMp3(fileName))
+            {
+                MessageBox.Show("This file seems to be an .mp3 audio file which does not contains subtitles." + Environment.NewLine +
+                Environment.NewLine +
+                "You can open media files via the Video menu.");
+                return;
+            }
+
+            // check for wav file
+            if (format == null && file.Length > 50 && FileUtil.IsWav(fileName))
+            {
+                MessageBox.Show("This file seems to be a .wav audio file which does not contains subtitles." + Environment.NewLine +
+                                Environment.NewLine +
+                                "You can open media files via the Video menu.");
+                return;
+            }
+
             if (format == null && file.Length < 100 * 1000000 && TransportStreamParser.IsDvbSup(fileName))
             {
                 ImportSubtitleFromDvbSupFile(fileName);

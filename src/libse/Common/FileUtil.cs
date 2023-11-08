@@ -149,6 +149,48 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
+        public static bool IsMp3(string fileName)
+        {
+            using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            {
+                var buffer = new byte[3];
+                var count = fs.Read(buffer, 0, buffer.Length);
+                if (count != buffer.Length)
+                {
+                    return false;
+                }
+
+                // 0x49 + 0x44 + 0x33 = ID3
+                return buffer[0] == 0x49 && buffer[1] == 0x44 && buffer[2] == 0x33 && fileName.EndsWith(".mp3", StringComparison.OrdinalIgnoreCase) ||
+                       buffer[0] == 0xff && buffer[1] == 0xfb && fileName.EndsWith(".mp3", StringComparison.OrdinalIgnoreCase);
+            }
+        }
+
+        public static bool IsWav(string fileName)
+        {
+            using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            {
+                var buffer = new byte[12];
+                var count = fs.Read(buffer, 0, buffer.Length);
+                if (count != buffer.Length)
+                {
+                    return false;
+                }
+
+                return buffer[0] == 0x52 && 
+                       buffer[1] == 0x49 &&
+                       buffer[2] == 0x46 &&
+                       buffer[2] == 0x46 &&
+
+                       buffer[8] == 0x57 &&
+                       buffer[9] == 0x41 &&
+                       buffer[10] == 0x56 &&
+                       buffer[11] == 0x45 &&
+
+                       fileName.EndsWith(".wav", StringComparison.OrdinalIgnoreCase);
+            }
+        }
+
         public static bool IsRar(string fileName)
         {
             using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
@@ -257,7 +299,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
 
                 // allow for some random bytes in the beginning
-                for (int i = 0; i < 255; i++)
+                for (var i = 0; i < 255; i++)
                 {
                     if (buffer[i] == Packet.SynchronizationByte && buffer[i + 188] == Packet.SynchronizationByte && buffer[i + 188 * 2] == Packet.SynchronizationByte)
                     {
