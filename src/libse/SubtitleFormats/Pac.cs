@@ -826,7 +826,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             { 88, new SpecialCharacter("X")},
             { 89, new SpecialCharacter("Y")},
             { 90, new SpecialCharacter("Z")},
-
+            { 91, new SpecialCharacter("[")},
+            { 92, new SpecialCharacter("\\")},
+            { 93, new SpecialCharacter("]")},
+            { 94, new SpecialCharacter("^")},
+            { 95, new SpecialCharacter("_")},
+            { 96, new SpecialCharacter("`")},
             { 97, new SpecialCharacter("a")},
             { 98, new SpecialCharacter("b")},
             { 99, new SpecialCharacter("c")},
