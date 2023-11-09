@@ -78,11 +78,12 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             "5414c15bb1682efc2f737f3ab5f15c4350a70c30a6101b631297420bbc4cb077ef9b88cb6e5512f4adcdafbda85eb894ff92eae07bd70c66efa0b28a08361033", // Whisper-Faster r141.4
         };
 
-        private const string DownloadUrlPurfviewFasterWhisperCuda = "https://github.com/Purfview/whisper-standalone-win/releases/download/libs/cuBLAS.and.cuDNN_win_v3.zip";
+        private const string DownloadUrlPurfviewFasterWhisperCuda = "https://github.com/Purfview/whisper-standalone-win/releases/download/libs/cuBLAS.and.cuDNN_win_v2.zip";
 
         private static readonly string[] Sha512HashesPurfviewFasterWhisperCuda =
         {
-            "d5bf3ba7fd8a2af7790ff4349175692f9bdecea81e60abb8ad8b88de9f6892d1bfbbdb5f87dcc2fd9cc355760f2894e4928805e3a833c8b9d77698c0c3e94e8c",
+            "6f3f12162b4537cc8a6dadd51718dc72b3f36dccc27e6c4b5f56d0cfca06bcddaa6877a1984873c0d3ac22ab5fbf56c4cbb87e437d655363b55df4c632574291", // V2
+//            "d5bf3ba7fd8a2af7790ff4349175692f9bdecea81e60abb8ad8b88de9f6892d1bfbbdb5f87dcc2fd9cc355760f2894e4928805e3a833c8b9d77698c0c3e94e8c", // V3
         };
 
         private static readonly string[] OldSha512HashesPurfviewFasterWhisperCuda =
