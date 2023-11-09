@@ -8538,74 +8538,76 @@ namespace Nikse.SubtitleEdit.Forms
 
         public void CorrectWord(string changeWord, Paragraph p, string oldWord, ref bool firstChange, int wordIndex)
         {
-            if (oldWord != changeWord)
+            if (oldWord == changeWord)
             {
-                if (firstChange)
-                {
-                    MakeHistoryForUndo(_language.BeforeSpellCheck);
-                    firstChange = false;
-                }
+                return;
+            }
 
-                int startIndex = p.Text.IndexOf(oldWord, StringComparison.Ordinal);
-                if (wordIndex >= 0)
-                {
-                    startIndex = p.Text.IndexOf(oldWord, GetPositionFromWordIndex(p.Text, wordIndex), StringComparison.Ordinal);
-                }
+            if (firstChange)
+            {
+                MakeHistoryForUndo(_language.BeforeSpellCheck);
+                firstChange = false;
+            }
 
-                while (startIndex >= 0 && startIndex < p.Text.Length && p.Text.Substring(startIndex).Contains(oldWord))
+            int startIndex = p.Text.IndexOf(oldWord, StringComparison.Ordinal);
+            if (wordIndex >= 0)
+            {
+                startIndex = p.Text.IndexOf(oldWord, GetPositionFromWordIndex(p.Text, wordIndex), StringComparison.Ordinal);
+            }
+
+            while (startIndex >= 0 && startIndex < p.Text.Length && p.Text.Substring(startIndex).Contains(oldWord))
+            {
+                bool startOk = startIndex == 0 ||
+                               "«»“” <>-—+/'\"[](){}¿¡….,;:!?%&$£\r\n؛،؟\u200E\u200F\u202A\u202B\u202C\u202D\u202E\u00A0\u200B\uFEFF".Contains(p.Text[startIndex - 1]) ||
+                               char.IsPunctuation(p.Text[startIndex - 1]) ||
+                               startIndex == p.Text.Length - oldWord.Length;
+                if (startOk)
                 {
-                    bool startOk = startIndex == 0 ||
-                                   "«»“” <>-—+/'\"[](){}¿¡….,;:!?%&$£\r\n؛،؟\u200E\u200F\u202A\u202B\u202C\u202D\u202E\u00A0\u200B\uFEFF".Contains(p.Text[startIndex - 1]) ||
-                                   char.IsPunctuation(p.Text[startIndex - 1]) ||
-                                   startIndex == p.Text.Length - oldWord.Length;
-                    if (startOk)
+                    int end = startIndex + oldWord.Length;
+                    if (end == p.Text.Length ||
+                        "«»“” ,.!?:;'()<>\"-—+/[]{}%&$£…\r\n؛،؟\u200E\u200F\u202A\u202B\u202C\u202D\u202E\u00A0\u200B\uFEFF".Contains(p.Text[end]) ||
+                        char.IsPunctuation(p.Text[end]))
                     {
-                        int end = startIndex + oldWord.Length;
-                        if (end == p.Text.Length ||
-                            "«»“” ,.!?:;'()<>\"-—+/[]{}%&$£…\r\n؛،؟\u200E\u200F\u202A\u202B\u202C\u202D\u202E\u00A0\u200B\uFEFF".Contains(p.Text[end]) ||
-                            char.IsPunctuation(p.Text[end]))
+                        var endOk = true;
+
+                        if (changeWord.EndsWith('\'') && end < p.Text.Length && p.Text[end] == '\'')
                         {
-                            var endOk = true;
+                            endOk = false;
+                        }
 
-                            if (changeWord.EndsWith('\'') && p.Text[end] == '\'')
+                        if (endOk)
+                        {
+                            var lengthBefore = p.Text.Length;
+                            p.Text = p.Text.Remove(startIndex, oldWord.Length).Insert(startIndex, changeWord);
+                            var lengthAfter = p.Text.Length;
+                            if (lengthAfter > lengthBefore)
                             {
-                                endOk = false;
-                            }
-
-                            if (endOk)
-                            {
-                                var lengthBefore = p.Text.Length;
-                                p.Text = p.Text.Remove(startIndex, oldWord.Length).Insert(startIndex, changeWord);
-                                var lengthAfter = p.Text.Length;
-                                if (lengthAfter > lengthBefore)
-                                {
-                                    startIndex += (lengthAfter - lengthBefore);
-                                }
+                                startIndex += (lengthAfter - lengthBefore);
                             }
                         }
                     }
-
-                    if (startIndex + 2 >= p.Text.Length)
-                    {
-                        startIndex = -1;
-                    }
-                    else
-                    {
-                        startIndex = p.Text.IndexOf(oldWord, startIndex + 2, StringComparison.Ordinal);
-                    }
-
-                    // stop if using index
-                    if (wordIndex >= 0)
-                    {
-                        startIndex = -1;
-                    }
                 }
 
-                ShowStatus(string.Format(_language.SpellCheckChangedXToY, oldWord, changeWord));
-                SubtitleListview1.SetText(_subtitle.GetIndex(p), p.Text);
-                UpdateSourceView();
-                RefreshSelectedParagraph();
+                if (startIndex + 2 >= p.Text.Length)
+                {
+                    startIndex = -1;
+                }
+                else
+                {
+                    startIndex = p.Text.IndexOf(oldWord, startIndex + 2, StringComparison.Ordinal);
+                }
+
+                // stop if using index
+                if (wordIndex >= 0)
+                {
+                    startIndex = -1;
+                }
             }
+
+            ShowStatus(string.Format(_language.SpellCheckChangedXToY, oldWord, changeWord));
+            SubtitleListview1.SetText(_subtitle.GetIndex(p), p.Text);
+            UpdateSourceView();
+            RefreshSelectedParagraph();
         }
 
         private void GetDictionariesToolStripMenuItem_Click(object sender, EventArgs e)
