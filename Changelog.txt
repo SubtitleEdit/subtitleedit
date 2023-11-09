@@ -41,6 +41,7 @@
    * Allow drag-n-drop in "Multiple replace" rules - thx Clarencezzh
    * ASSA: "Replace style" now works on multi-selection - thx Leon
    * Add some support for ASSA inline color in bdsup export - thx Adam
+   * Update cuBLAS/cuDNN libs for Purfview's Faster Whisper - thx Purfview
 * FIXED:
    * Fix for paste in waveform - thx Ruong
    * Fix remember text box settings (bold/size) - thx Siamak
@@ -59,6 +60,8 @@
    * Fix remove of font name in ASSA/SSA - thx PureOcean
    * Fix possible freeze when loading XML files - thx Dvid
    * Fix issues with "Set end, add new, and go to new" - thx Lorqu1n/Flitskikker
+   * Fix some missing Thai characters in format PAC - thx thehulk
+   * Fix crash in spell check - thx Omair
 
 
 4.0.1 (16th September 2023)
