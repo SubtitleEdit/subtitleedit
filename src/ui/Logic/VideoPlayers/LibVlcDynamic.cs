@@ -962,6 +962,8 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 _mouseTimer = new Timer { Interval = 25 };
                 _mouseTimer.Tick += MouseTimerTick;
                 _mouseTimer.Start();
+
+                VideoFileName = videoFileName;
             }
         }
 
