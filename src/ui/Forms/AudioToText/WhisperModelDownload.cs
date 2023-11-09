@@ -204,6 +204,19 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             if (streamLength < 50)
             {
                 var text = FileUtil.ReadAllTextShared(_downloadFileName, Encoding.UTF8);
+                if (text == "Entry not found" && _downloadFileName.Contains("vocabulary."))
+                {
+                    try
+                    {
+                        File.Delete(_downloadFileName);
+                    }
+                    catch
+                    {
+                        // ignore
+                    }
+                    return;
+                }
+
                 if (text.Contains("Invalid username or password."))
                 {
                     throw new Exception("Unable to download file - Invalid username or password! (Perhaps file has a new location)");

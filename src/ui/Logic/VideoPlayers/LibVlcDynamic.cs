@@ -668,7 +668,14 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 i++;
             }
             Pause();
-            _libvlc_video_set_spu?.Invoke(_mediaPlayer, -1); // turn of embedded subtitles
+            try
+            {
+                _libvlc_video_set_spu?.Invoke(_mediaPlayer, -1); // turn of embedded subtitles
+            }
+            catch 
+            {
+                // ignore
+            }
             OnVideoLoaded?.Invoke(_mediaPlayer, new EventArgs());
         }
 
