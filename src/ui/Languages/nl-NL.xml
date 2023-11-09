@@ -103,6 +103,8 @@
     <Error>Fout</Error>
     <Warning>Waarschuwing</Warning>
     <UseLargerFontForThisWindow>Groter lettertype voor dit venster gebruiken</UseLargerFontForThisWindow>
+    <ChangeLanguageFilter>Taalfilter kiezen...</ChangeLanguageFilter>
+    <MoreInfo>Meer informatie</MoreInfo>
   </General>
   <About>
     <Title>Over Subtitle Edit</Title>
@@ -197,6 +199,7 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
     <WhisperNotFound>Whisper niet gevonden.
 
 Meer informatie online weergeven?</WhisperNotFound>
+    <Model>Model</Model>
     <Models>Modellen</Models>
     <LanguagesAndModels>Talen en modellen</LanguagesAndModels>
     <ChooseModel>Model kiezen</ChooseModel>
@@ -217,6 +220,7 @@ Meer informatie online weergeven?</WhisperNotFound>
     <SetCppConstMeFolder>Map CPP/Const-me-modellen instellen...</SetCppConstMeFolder>
     <OnlyRunPostProcessing>Alleen nabewerking uitvoeren/tijden aanpassen</OnlyRunPostProcessing>
     <DownloadFasterWhisperCuda>cuBLAS en cuDNN voor Faster-Whisper downloaden</DownloadFasterWhisperCuda>
+    <NoTextFound>Geen tekst gevonden!</NoTextFound>
   </AudioToText>
   <AssaAttachments>
     <Title>Advanced Sub Station Alpha-bijlagen</Title>
@@ -322,6 +326,7 @@ Meer informatie online weergeven?</WhisperNotFound>
     <ConvertOptions>Conversieopties</ConvertOptions>
     <RemoveFormatting>Opmaaktekens verwĳderen</RemoveFormatting>
     <RemoveStyleActor>Titels met stijl/acteur verwijderen</RemoveStyleActor>
+    <StyleActor>Stijl/acteur (door komma gescheiden)</StyleActor>
     <RemoveTextForHI>DSH-teksten verwĳderen</RemoveTextForHI>
     <ConvertColorsToDialog>Kleuren omzetten naar dialogen</ConvertColorsToDialog>
     <OverwriteOriginalFiles>Originele bestanden vervangen (nieuwe extensie indien indeling is gewĳzigd)</OverwriteOriginalFiles>
@@ -482,6 +487,7 @@ We maken dan handig gebruik van het ritme van het beeld zelf.</CreateSimpleChain
     <BottomAlignSelectedLines>Geselecteerde titels onderaan uitlijnen (horizontale positie behouden)</BottomAlignSelectedLines>
     <ToggleForcedSelectedLines>Geselecteerde titels markeren als 'geforceerd'</ToggleForcedSelectedLines>
     <SelectForcedLines>Geforceerde titels selecteren</SelectForcedLines>
+    <SelectNonForcedLines>Niet-geforceerde titels selecteren</SelectNonForcedLines>
     <SizeXY>Grootte: {0}x{1}</SizeXY>
     <SetAspectRatio11>Beeldverhouding 1:1 instellen</SetAspectRatio11>
     <ChangeBrightnessTitle>Helderheid aanpassen</ChangeBrightnessTitle>
@@ -1037,8 +1043,9 @@ We maken dan handig gebruik van het ritme van het beeld zelf.</CreateSimpleChain
     <To>Naar:</To>
     <Translate>Vertalen</Translate>
     <PleaseWait>Dit kan enige tĳd duren. Een ogenblik geduld.</PleaseWait>
-    <PoweredByGoogleTranslate>Aangestuurd door Google Vertalen</PoweredByGoogleTranslate>
-    <PoweredByMicrosoftTranslate>Aangestuurd door Microsoft Translator</PoweredByMicrosoftTranslate>
+    <PoweredByGoogleTranslate>Mogelijk gemaakt door Google Vertalen</PoweredByGoogleTranslate>
+    <PoweredByMicrosoftTranslate>Mogelijk gemaakt door Microsoft Translator</PoweredByMicrosoftTranslate>
+    <PoweredByX>Mogelijk gemaakt door {0}</PoweredByX>
     <MsClientSecretNeeded>Voor toegang tot Microsoft Translator is een Cognitive Services ‘Translator Text’-sleutel van Microsoft vereist.
 
 Open ‘Instellingen -&gt; Voorkeuren -&gt; Extra’ voor meer informatie.</MsClientSecretNeeded>
@@ -1058,6 +1065,10 @@ Open ‘Instellingen -&gt; Voorkeuren -&gt; Extra’ voor meer informatie.</MsCl
     <TranslateBlockCopySourceText>Brontekst naar klembord kopiëren</TranslateBlockCopySourceText>
     <TranslateBlockClipboardError1>Klembord bevat brontekst!</TranslateBlockClipboardError1>
     <TranslateBlockClipboardError2>Ga naar Translator en vertaal, kopieer het resultaat naar het klembord en klik nogmaals op deze knop.</TranslateBlockClipboardError2>
+    <StartWebServerX>{0}-webserver starten</StartWebServerX>
+    <XRequiresALocalWebServer>Voor {0} is een webserver vereist die lokaal wordt uitgevoerd.</XRequiresALocalWebServer>
+    <XRequiresAnApiKey>Voor {0} is een API-sleutel vereist.</XRequiresAnApiKey>
+    <ReadMore>Meer informatie weergeven?</ReadMore>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
     <Title>Vertalen met Google of Microsoft</Title>
@@ -1124,6 +1135,8 @@ Open ‘Instellingen -&gt; Voorkeuren -&gt; Extra’ voor meer informatie.</MsCl
   </ImportText>
   <Interjections>
     <Title>Tussenvoegsels</Title>
+    <EditSkipList>Overslaan-lijst bewerken...</EditSkipList>
+    <EditSkipListInfo>Tussenwerpsels worden overgeslagen als de brontekst hiermee begint:</EditSkipListInfo>
   </Interjections>
   <JoinSubtitles>
     <Title>Ondertitels samenvoegen</Title>
@@ -1418,8 +1431,6 @@ Open ‘Instellingen -&gt; Voorkeuren -&gt; Extra’ voor meer informatie.</MsCl
         <GenerateImportShotChanges>Beeldwissels detecteren/importeren...</GenerateImportShotChanges>
         <RemoveOrExportShotChanges>Beeldwissels verwijderen/exporteren...</RemoveOrExportShotChanges>
         <WaveformBatchGenerate>Golfvormen genereren</WaveformBatchGenerate>
-        <ShowHideVideo>Video weergeven/verbergen</ShowHideVideo>
-        <ShowHideWaveform>Golfvorm weergeven/verbergen</ShowHideWaveform>
         <ShowHideWaveformAndSpectrogram>Golfvorm en spectrogram weergeven/verbergen</ShowHideWaveformAndSpectrogram>
         <UnDockVideoControls>Videovenster ontkoppelen</UnDockVideoControls>
         <ReDockVideoControls>Videovenster koppelen</ReDockVideoControls>
@@ -1480,8 +1491,7 @@ Open ‘Instellingen -&gt; Voorkeuren -&gt; Extra’ voor meer informatie.</MsCl
         <BeautifyTimeCodes>Tijdcodes goedzetten</BeautifyTimeCodes>
         <Settings>Voorkeuren</Settings>
         <Help>Help</Help>
-        <ShowHideWaveform>Golfvorm weergeven/verbergen</ShowHideWaveform>
-        <ShowHideVideo>Video weergeven/verbergen</ShowHideVideo>
+        <Layout>Indeling</Layout>
         <AssaDraw>Advanced Sub Station Alpha tekenen</AssaDraw>
       </ToolBar>
       <ContextMenu>
@@ -1939,6 +1949,7 @@ Indien u dit bestand met Subtitle Edit hebt bewerkt, kunt u een vorige versie vi
     <SubtitleEditNeedsVideoPlayer>Subtitle Edit heeft een videospeler nodig.</SubtitleEditNeedsVideoPlayer>
     <UseRecommendMpv>Klik op de onderstaande knop om de aanbevolen videospeler 'mpv' te gebruiken.</UseRecommendMpv>
     <DownloadAndUseMpv>'mpv' als videospeler downloaden en gebruiken</DownloadAndUseMpv>
+    <ChooseLayout>Indeling kiezen</ChooseLayout>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Ondertitel uit Matroska-bestand kiezen</Title>
@@ -2216,6 +2227,7 @@ hetzelfde ondertitelbestand bewerken (samenwerken)</Information>
     <LinesFoundX>Gevonden teksten: {0}</LinesFoundX>
     <RemoveTextIfContains>Tekst verwĳderen als deze bevat:</RemoveTextIfContains>
     <RemoveTextIfAllUppercase>Tekst in HOOFDLETTERS verwĳderen</RemoveTextIfAllUppercase>
+    <RemoveIfOnlyMusicSymbols>Enkele muzieknoten verwijderen</RemoveIfOnlyMusicSymbols>
     <RemoveInterjections>Tussenwerpsels (shh, hmm, enz.) verwĳderen</RemoveInterjections>
     <EditInterjections>Bewerken...</EditInterjections>
     <Apply>Toe&amp;passen</Apply>
@@ -2315,6 +2327,7 @@ hetzelfde ondertitelbestand bewerken (samenwerken)</Information>
     <DefaultFrameRate>Standaardbeeldsnelheid</DefaultFrameRate>
     <DefaultFileEncoding>Standaardbestandscodering</DefaultFileEncoding>
     <AutoDetectAnsiEncoding>Autom. detectie ANSI-codering</AutoDetectAnsiEncoding>
+    <LanguageFilter>Taalfilter</LanguageFilter>
     <Profile>Profiel</Profile>
     <Profiles>Profielen</Profiles>
     <ImportProfiles>Profielen importeren</ImportProfiles>
@@ -2542,6 +2555,7 @@ hetzelfde ondertitelbestand bewerken (samenwerken)</Information>
     <AdjustViaEndAutoStart>Aanpassen via eindpositie</AdjustViaEndAutoStart>
     <AdjustViaEndAutoStartAndGoToNext>Aanpassen via eindpositie en naar volgende gaan</AdjustViaEndAutoStartAndGoToNext>
     <AdjustSetEndMinusGapAndStartNextHere>Einde minus tussenruimte bepalen, naar volgende gaan en volgende beginnen</AdjustSetEndMinusGapAndStartNextHere>
+    <AdjustSetStartTimeAndGoToNext>Begin bepalen en naar volgende gaan</AdjustSetStartTimeAndGoToNext>
     <AdjustSetEndTimeAndGoToNext>Einde bepalen en naar volgende gaan</AdjustSetEndTimeAndGoToNext>
     <AdjustSetEndTimeAndPause>Einde bepalen en pauzeren</AdjustSetEndTimeAndPause>
     <AdjustSetStartAutoDurationAndGoToNext>Begin bepalen, automatische tĳdsduur en naar volgende gaan</AdjustSetStartAutoDurationAndGoToNext>
@@ -2636,6 +2650,7 @@ hetzelfde ondertitelbestand bewerken (samenwerken)</Information>
     <WaveformSeekSilenceForward>Vooruit stilte zoeken</WaveformSeekSilenceForward>
     <WaveformSeekSilenceBack>Achteruit stilte zoeken</WaveformSeekSilenceBack>
     <WaveformAddTextHere>Hier titel toevoegen (voor nieuwe selectie)</WaveformAddTextHere>
+    <ChooseLayoutX>Indeling {0} kiezen</ChooseLayoutX>
     <WaveformAddTextHereFromClipboard>Hier titel toevoegen (voor nieuwe selectie vanuit klembord)</WaveformAddTextHereFromClipboard>
     <SetParagraphAsSelection>Huidige als nieuwe selectie</SetParagraphAsSelection>
     <WaveformPlayNewSelection>Selectie afspelen</WaveformPlayNewSelection>
