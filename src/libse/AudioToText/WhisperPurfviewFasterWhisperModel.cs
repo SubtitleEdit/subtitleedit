@@ -17,7 +17,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
             return $"{(AlreadyDownloaded ? "* " : string.Empty)}{Name} ({Size})";
         }
 
-        private readonly string[] _fileNames = { "model.bin", "config.json", "vocabulary.txt", "tokenizer.json" };
+        private readonly string[] _fileNames = { "model.bin", "config.json", "vocabulary.txt", "vocabulary.json", "tokenizer.json" };
 
 
         public string ModelFolder => Path.Combine(Configuration.DataDirectory, "Whisper", "Purfview-Whisper-Faster", "_models");
@@ -108,6 +108,13 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                 Size = "2.9 GB",
                 Urls = MakeUrls("https://huggingface.co/guillaumekln/faster-whisper-large-v2/resolve/main"),
                 Folder = "faster-whisper-large-v2",
+            },
+            new WhisperModel
+            {
+                Name = "large-v3",
+                Size = "1.5 GB",
+                Urls = MakeUrls("https://huggingface.co/Purfview/faster-whisper-large-v3-int8/resolve/main"),
+                Folder = "faster-whisper-large-v3-int8",
             },
         };
 
