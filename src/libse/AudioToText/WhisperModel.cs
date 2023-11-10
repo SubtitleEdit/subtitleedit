@@ -86,6 +86,12 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
             },
             new WhisperModel
             {
+                Name = "large-v2", // large-v2
+                Size = "2.9 GB",
+                Urls = new []{ "https://openaipublic.azureedge.net/main/whisper/models/81f7c96c852ee8fc832187b0132e569d6c3065a3252ed18e56effd0b6a73e524/large-v2.pt" },
+            },
+            new WhisperModel
+            {
                 Name = "large-v3", // large-v3
                 Size = "2.9 GB",
                 Urls = new []{ "https://openaipublic.azureedge.net/main/whisper/models/e5b1a55b89c1367dacf97e3e19bfd829a01529dbfdeefa8caeb59b3f1b81dadb/large-v3.pt" },
