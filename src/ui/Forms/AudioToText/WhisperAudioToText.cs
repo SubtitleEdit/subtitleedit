@@ -1109,7 +1109,8 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 Configuration.Settings.Tools.WhisperChoice != WhisperChoice.ConstMe)
             {
                 process.StartInfo.EnvironmentVariables["PYTHONIOENCODING"] = "utf-8";
-                process.StartInfo.EnvironmentVariables["PYTHONLEGACYWINDOWSSTDIO"] = "utf-8";
+                process.StartInfo.EnvironmentVariables["PYTHONUTF8"] = "1";
+                //process.StartInfo.EnvironmentVariables["PYTHONLEGACYWINDOWSSTDIO"] = "utf-8";
             }
 
             if (dataReceivedHandler != null)

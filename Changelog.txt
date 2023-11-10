@@ -28,7 +28,7 @@
    * Update German translation - thx Netspark
    * Update Russian translation - thx elfriob
    * Update Spanish translations - thx jmaraujouy
-   * Update Dutch translaton - thx Flitskikker
+   * Update Dutch translation - thx Flitskikker
    * Save settings from selected lines unbreak/break - thx David
    * Add simple page up/down for combo-boxes
    * Add access keys for message box buttons - thx Christophe
