@@ -244,6 +244,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             formatNames.Add("PAC");
+            formatNames.Add(new Cavena890().Name);
             formatNames.Add(new Ayato().Name);
             formatNames.Add(l.PlainText);
             formatNames.Add(BluRaySubtitle);
