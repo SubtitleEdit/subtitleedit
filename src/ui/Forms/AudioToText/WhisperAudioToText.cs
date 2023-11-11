@@ -1417,7 +1417,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 if (File.Exists(targetFile))
                 {
                     if (!Configuration.Settings.Tools.WhisperIgnoreVersion &&
-                        !WhisperDownload.IsLatestVersion(targetFile, whisperChoice))
+                        WhisperDownload.IsOldVersion(targetFile, whisperChoice))
                     {
                         if (MessageBox.Show(string.Format(LanguageSettings.Current.Settings.DownloadX, "Whisper CPP (Update)"), "Subtitle Edit", MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
                         {
@@ -1452,7 +1452,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 if (File.Exists(targetFile))
                 {
                     if (!Configuration.Settings.Tools.WhisperIgnoreVersion &&
-                        !WhisperDownload.IsLatestVersion(targetFile, whisperChoice))
+                        WhisperDownload.IsOldVersion(targetFile, whisperChoice))
                     {
                         if (MessageBox.Show(string.Format(LanguageSettings.Current.Settings.DownloadX, whisperChoice + " (Update)"), "Subtitle Edit", MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
                         {
@@ -1493,7 +1493,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 if (File.Exists(targetFile))
                 {
                     if (!Configuration.Settings.Tools.WhisperIgnoreVersion &&
-                        !WhisperDownload.IsLatestVersion(targetFile, whisperChoice))
+                        WhisperDownload.IsOldVersion(targetFile, whisperChoice))
                     {
                         if (MessageBox.Show(string.Format(LanguageSettings.Current.Settings.DownloadX, "Whisper Const-me (Update)"), "Subtitle Edit", MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
                         {
