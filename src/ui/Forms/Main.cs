@@ -23596,13 +23596,15 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (audioVisualizer.WavePeaks == null)
                 {
-                    var paused = mediaPlayer.IsPaused;
-                    if (toolStripButtonWaveformPause.Visible && paused)
+                    if (mediaPlayer.IsPaused)
                     {
-                        toolStripButtonWaveformPause.Visible = false;
-                        toolStripButtonWaveformPlay.Visible = true;
+                        if (!toolStripButtonWaveformPlay.Visible)
+                        {
+                            toolStripButtonWaveformPause.Visible = false;
+                            toolStripButtonWaveformPlay.Visible = true;
+                        }
                     }
-                    else if (toolStripButtonWaveformPlay.Visible && !paused)
+                    else if (!toolStripButtonWaveformPause.Visible)
                     {
                         toolStripButtonWaveformPause.Visible = true;
                         toolStripButtonWaveformPlay.Visible = false;
@@ -27197,10 +27199,21 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripButtonWaveformPause.Visible = !paused;
                 toolStripButtonWaveformPlay.Visible = paused;
             }
-            else
+            else if (audioVisualizer.WavePeaks != null)
             {
-                toolStripButtonWaveformPlay.Visible = true;
-                toolStripButtonWaveformPause.Visible = false;
+                if (mediaPlayer.IsPaused)
+                {
+                    if (!toolStripButtonWaveformPlay.Visible)
+                    {
+                        toolStripButtonWaveformPause.Visible = false;
+                        toolStripButtonWaveformPlay.Visible = true;
+                    }
+                }
+                else if (!toolStripButtonWaveformPause.Visible)
+                {
+                    toolStripButtonWaveformPause.Visible = true;
+                    toolStripButtonWaveformPlay.Visible = false;
+                }
             }
         }
 
