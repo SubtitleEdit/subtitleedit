@@ -16,6 +16,7 @@
    * Take ASSA style from file in CLI - thx Ninelpienel
    * Split long lines in CLI - thx BenJamesAndo
    * Add new "Remove text for HI" option "only music symbols" - thx fraternl
+   * Add format "Cavena 890" to "Batch convert" - thx Steve
 * IMPROVED:
    * Update Korean translation - thx domddol
    * Update Italian language - thx bovirus
@@ -65,6 +66,7 @@
    * Fix issues with "Set end, add new, and go to new" - thx Lorqu1n/Flitskikker
    * Fix some missing Thai characters in format PAC - thx thehulk
    * Fix crash in spell check - thx Omair
+   * Fix crash minimizing ASSA batch styles - thx Åke
 
 
 4.0.1 (16th September 2023)

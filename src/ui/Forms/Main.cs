@@ -8086,11 +8086,13 @@ namespace Nikse.SubtitleEdit.Forms
 
                 try
                 {
+                    var undoLineIndex = -1;
                     int selectedIndex = FirstSelectedIndex;
                     if (undo)
                     {
                         _subtitle.HistoryItems[_undoIndex].RedoParagraphs = new List<Paragraph>();
                         _subtitle.HistoryItems[_undoIndex].RedoParagraphsOriginal = new List<Paragraph>();
+                        undoLineIndex = _subtitle.HistoryItems[_undoIndex].LineIndex;
 
                         foreach (var p in _subtitle.Paragraphs)
                         {
@@ -8205,6 +8207,11 @@ namespace Nikse.SubtitleEdit.Forms
 
                     UpdateSourceView();
                     SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
+
+                    if (undoLineIndex >= 0 && undoLineIndex < _subtitle.Paragraphs.Count)
+                    {
+                        selectedIndex = undoLineIndex;
+                    }
 
                     if (selectedIndex >= _subtitle.Paragraphs.Count)
                     {
