@@ -89,6 +89,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                     new WhisperLanguage("ur", "urdu"),
                     new WhisperLanguage("hr", "croatian"),
                     new WhisperLanguage("bg", "bulgarian"),
+                    new WhisperLanguage("yue", "cantonese"),
                     new WhisperLanguage("lt", "lithuanian"),
                     new WhisperLanguage("la", "latin"),
                     new WhisperLanguage("mi", "maori"),
