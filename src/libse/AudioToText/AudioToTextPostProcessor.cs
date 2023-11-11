@@ -19,8 +19,8 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
         /// <summary>
         /// Set period if distance to next subtitle is more than this value in milliseconds.
         /// </summary>
-        public double SetPeriodIfDistanceToNextIsMoreThan { get; set; } = 300;
-        public double SetPeriodIfDistanceToNextIsMoreThanAlways { get; set; } = 500;
+        public double SetPeriodIfDistanceToNextIsMoreThan { get; set; } = 400;
+        public double SetPeriodIfDistanceToNextIsMoreThanAlways { get; set; } = 600;
 
         public int ParagraphMaxChars { get; set; }
 
@@ -144,7 +144,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                 return new Subtitle(inputSubtitle);
             }
 
-            var englishSkipLastWords = new[] { "with", "however" };
+            var englishSkipLastWords = new[] { "with", "however", "a" };
             var englishSkipFirstWords = new[] { "to", "and", "but" };
 
             var subtitle = new Subtitle(inputSubtitle);
