@@ -60,15 +60,16 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         };
 
 
-        private const string DownloadUrlPurfviewFasterWhisper = "https://github.com/Purfview/whisper-standalone-win/releases/download/faster-whisper/Whisper-Faster_r160.3_windows.zip";
+        private const string DownloadUrlPurfviewFasterWhisper = "https://github.com/Purfview/whisper-standalone-win/releases/download/faster-whisper/Whisper-Faster_r160.4_windows.zip";
 
         private static readonly string[] Sha512HashesPurfviewFasterWhisper =
         {
-            "f66572f08bd93f684c91e40bf873c9c5207d3558ddbea2edaecd6e673300d0349e26ad41e084b7b8a4b74993fb1fd51acb4b9858f7a7c7e9ef1df4de00d07646", // r160.3
+            "ab2d9f0955a618474cb07141837f280192d6fe9198bab56a62c3e4e76c8bfd6a7a1b8e2d1ce106993e00e00a3305c24f17ec53d5829174dd51a69ad0f82e4b63", // r160.4
         };
 
         private static readonly string[] OldSha512HashesPurfviewFasterWhisper =
         {
+            "f66572f08bd93f684c91e40bf873c9c5207d3558ddbea2edaecd6e673300d0349e26ad41e084b7b8a4b74993fb1fd51acb4b9858f7a7c7e9ef1df4de00d07646", // r160.3
             "6a3a0e2e7ae69ec259a0d347bf0970cb276d1ce271a71e8785729fe4a453e71e807e31599223ce2d65f6d8eb8e52d6eee53c3d1d22c373e407155d7717a45ceb", // r160
             "d5d81f3450254f988537bba400b316983fba80142027dbae7ed5abcb06ef6ec367dd2f0699f4096458e783573e02b117d8489b4fa03294dc928b40178d316daa", // r153
             "c40229a04f67409bf92b58a5f959a9aed3cb9bf467ae6d7dd313a1dc6bff7ed6a2f583a3fa8913684178bf14df71d49bdb933cf9ef8bb6915e4794fc4a2dff08", // r149.1
@@ -322,7 +323,8 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             if (whisperChoice == WhisperChoice.PurfviewFasterWhisper)
             {
                 var hashVersion153 = "5e5822bc2d7a5b0d7e50f35460cbbf5bd145eaef03fa7cb3001d4c43622b7796243692a5ce3261e831b9d935f2441bbf7edbe8f119ea92c53fe077885fd10708";
-                return hash == hashVersion153;
+                var hashVersion160_3 = "104b85753ce74a81cdec13a2f8665d6af8c2974a3ebef8833cccad15624f311ae17a0e9b9325e3c25cf34edf024127f824c5f000069d7e52459123c9546e1266";
+                return hash == hashVersion153 || hash == hashVersion160_3;
             }
 
             if (whisperChoice == WhisperChoice.Cpp)
