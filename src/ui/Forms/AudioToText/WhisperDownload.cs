@@ -1,12 +1,12 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.AudioToText;
+using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Http;
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core.AudioToText;
-using Nikse.SubtitleEdit.Core.Http;
 using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms.AudioToText
@@ -187,7 +187,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
             if (!hashes.Contains(hash))
             {
-                MessageBox.Show("Whisper SHA-512 hash does not match!");;
+                MessageBox.Show("Whisper SHA-512 hash does not match!"); ;
                 DialogResult = DialogResult.Cancel;
                 return;
             }
@@ -222,7 +222,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 {
                     File.WriteAllText(Path.Combine(folder, "models.txt"), "Whisper Const-me uses models from Whisper.cpp");
                 }
-                catch 
+                catch
                 {
                     // ignore
                 }
@@ -309,21 +309,32 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             return OldSha512HashesCpp.Contains(hash);
         }
 
-        public static bool IsLatestVersion(string fullPath, string whisperChoice)
+        public static bool IsOldVersion(string fullPath, string whisperChoice)
         {
             var hash = Utilities.GetSha512Hash(FileUtil.ReadAllBytesShared(fullPath));
 
             if (whisperChoice == WhisperChoice.ConstMe)
             {
-                return hash == "8c354fcc12daee1d1aa755487aa8c53aea521a922f8ec2637c694b06d068ac60637f67bc74c8bc71a8ffee8db7988398de498d752ae4501b786a7ad9f6cd629f";
+                var hashVer111 = "1885a6818287a552e955e4df7876d26810a05acd979e8ca3920f78f434965fe0e2052419a6ea089d8d1fa8158a5f7251935e972bc8dcda76abbb0001782d9ec0";
+                return hash == hashVer111;
             }
 
             if (whisperChoice == WhisperChoice.PurfviewFasterWhisper)
             {
-                return hash == "104b85753ce74a81cdec13a2f8665d6af8c2974a3ebef8833cccad15624f311ae17a0e9b9325e3c25cf34edf024127f824c5f000069d7e52459123c9546e1266";
+                var hashVersion153 = "5e5822bc2d7a5b0d7e50f35460cbbf5bd145eaef03fa7cb3001d4c43622b7796243692a5ce3261e831b9d935f2441bbf7edbe8f119ea92c53fe077885fd10708";
+                return hash == hashVersion153;
             }
 
-            return hash == "c43fed38d1ae99e6fbbd8c842c2d550b4949081c0c7fba72cd2e2e8435ff05eac4f64e659efb09d597c3c062edf1e5026acc375d2a07290fa3c0fca9ac3bd7a2";
+            if (whisperChoice == WhisperChoice.Cpp)
+            {
+                //var version140WhisperBlasBinX64 = "c43fed38d1ae99e6fbbd8c842c2d550b4949081c0c7fba72cd2e2e8435ff05eac4f64e659efb09d597c3c062edf1e5026acc375d2a07290fa3c0fca9ac3bd7a2";
+                //var version140WhisperBlasBinX32 = "2ff76e0bd93837de11617e748a4686aedda22d01d8d0bf5dcd5411c9b78e38b56eab8665882ceee270f9b947030a268f5e6990e4f8f7e968039e943cc956a721";
+                var version130WhisperBlasBinX64 = "9164d033ac8bb9a2f4694da570c9878d24dcaee0bd2eedd26692493a47f916973f3e555c688ba28b337a57dc7effda9a116c1ed5bb8a620ce2c7d5ce42148a64";
+                var version130WhisperBlasBinX32 = "ddf75452afc283ada3d686c4cd3eb8bd79b98a4960549585916c9523dee3f9c1a1176a59fa04ffdb33e070e0eaac12b1a263f790afa1dfd4bcb806c02431469d";
+                return hash == version130WhisperBlasBinX64 || hash == version130WhisperBlasBinX32;
+            }
+
+            return false;
         }
     }
 }
