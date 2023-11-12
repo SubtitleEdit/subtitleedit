@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>4.0.1</Version>
-    <TranslatedBy>Последен превод на български 06.11.2023: KalinM</TranslatedBy>
+    <TranslatedBy>Последен превод на български 12.11.2023: KalinM</TranslatedBy>
     <CultureName>bg-BG</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -486,9 +486,9 @@ https://github.com/SubtitleEdit/subtitleedit
     <CenterSelectedLines>Центриране на избраните редове (хоризонтално, запазвайки вертикалната позиция)</CenterSelectedLines>
     <TopAlignSelectedLines>Подравняване на избраните редове отгоре (запазвайки хоризонталната позиция)</TopAlignSelectedLines>
     <BottomAlignSelectedLines>Подравняване на избраните редове отдолу (запазвайки хоризонталната позиция)</BottomAlignSelectedLines>
-    <ToggleForcedSelectedLines>Превключване «Принудително» за избраните редове</ToggleForcedSelectedLines>
-    <SelectForcedLines>Избор на принудителните редове</SelectForcedLines>
-    <SelectNonForcedLines>Избор на непринудени редове</SelectNonForcedLines>
+    <ToggleForcedSelectedLines>Превключване на «Форсиране» за избраните редове</ToggleForcedSelectedLines>
+    <SelectForcedLines>Избор на Форсирани редове</SelectForcedLines>
+    <SelectNonForcedLines>Избор на неФорсирани редове</SelectNonForcedLines>
     <SizeXY>Размер: {0}x{1}</SizeXY>
     <SetAspectRatio11>Задаване съотношение на пропорциите 1:1</SetAspectRatio11>
     <ChangeBrightnessTitle>Регулиране на яркостта</ChangeBrightnessTitle>
@@ -1113,30 +1113,30 @@ https://github.com/SubtitleEdit/subtitleedit
   </ImportShotChanges>
   <ImportText>
     <Title>Импорт на обикновен текст</Title>
-    <OneSubtitleIsOneFile>Множество файлове - един файл е един субтитър</OneSubtitleIsOneFile>
+    <OneSubtitleIsOneFile>Множество файлове - 1 файл е 1 субтитър</OneSubtitleIsOneFile>
     <OpenTextFile>Отв. текстов файл...</OpenTextFile>
     <OpenTextFiles>Отваряне на текстови файлове...</OpenTextFiles>
     <ImportOptions>Опции при импортиране</ImportOptions>
     <Splitting>Разделяне</Splitting>
-    <AutoSplitText>Автоматично разделяне на текста</AutoSplitText>
-    <OneLineIsOneSubtitle>Един ред текст е един ред субтитри</OneLineIsOneSubtitle>
-    <TwoLinesAreOneSubtitle>Два реда текст са един ред субтитри</TwoLinesAreOneSubtitle>
-    <LineBreak>Разделител на редове</LineBreak>
-    <SplitAtBlankLines>Раздели в празни редове</SplitAtBlankLines>
+    <AutoSplitText>Авт. разделяне на текста</AutoSplitText>
+    <OneLineIsOneSubtitle>1 ред е 1 ред субтитри</OneLineIsOneSubtitle>
+    <TwoLinesAreOneSubtitle>2 реда са 1 ред субтити</TwoLinesAreOneSubtitle>
+    <LineBreak>Разделител на реда</LineBreak>
+    <SplitAtBlankLines>Разделяне на празни редове</SplitAtBlankLines>
     <MergeShortLines>Обединяване на кратки редове с продължение</MergeShortLines>
     <RemoveEmptyLines>Премахване на празни редове</RemoveEmptyLines>
     <RemoveLinesWithoutLetters>Премахване на редове без букви</RemoveLinesWithoutLetters>
     <GenerateTimeCodes>Генериране на тайм кодове</GenerateTimeCodes>
-    <TakeTimeFromCurrentFile>Вземете времето от текущия файл</TakeTimeFromCurrentFile>
-    <TakeTimeFromFileName>Вземете времето от името на файла</TakeTimeFromFileName>
+    <TakeTimeFromCurrentFile>Вземане времето от текущия файл</TakeTimeFromCurrentFile>
+    <TakeTimeFromFileName>Вземане времето от името на файла</TakeTimeFromFileName>
     <GapBetweenSubtitles>Интервал между субтитрите (милисек.)</GapBetweenSubtitles>
     <Auto>Автоматично</Auto>
-    <Fixed>Настрой</Fixed>
+    <Fixed>Настройка</Fixed>
     <Refresh>Обнови</Refresh>
     <TextFiles>Текстови файлове</TextFiles>
     <PreviewLinesModifiedX>Преглед - променени абзаци: {0}</PreviewLinesModifiedX>
     <TimeCodes>Тайм кодове</TimeCodes>
-    <SplitAtEndChars>Разделяне на символите в края</SplitAtEndChars>
+    <SplitAtEndChars>Разделяне след краен символ</SplitAtEndChars>
   </ImportText>
   <Interjections>
     <Title>Възклицания</Title>
@@ -2343,7 +2343,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <DurationMinimumMilliseconds>Мин. времетраене (милисек.)</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Макс. времетраене (милисек.)</DurationMaximumMilliseconds>
     <MinimumGapMilliseconds>Мин. интервал м/у субтитрите (мс.)</MinimumGapMilliseconds>
-    <MaximumLines>Макс. количество редове</MaximumLines>
+    <MaximumLines>Макс. брой редове</MaximumLines>
     <SubtitleFont>Шрифт на субтитрите</SubtitleFont>
     <SubtitleFontSize>Размер на шрифта</SubtitleFontSize>
     <SubtitleBold>Удебелен</SubtitleBold>
@@ -2776,7 +2776,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <MainTextBoxAutoBreakFromPosAndGoToNext>Прекъсване на първото място от позицията на курсора и преминаване към следващото</MainTextBoxAutoBreakFromPosAndGoToNext>
     <MainTextBoxDictate>Диктуване (клавиш надолу=начало на запис, клавиш нагоре=край на записа)</MainTextBoxDictate>
     <MainTextBoxUnbreak>Без прекъсване на текста</MainTextBoxUnbreak>
-    <MainTextBoxUnbreakNoSpace>Прехвърляне без място (CJK) /Chinese, Japanese &amp; Korean символи/</MainTextBoxUnbreakNoSpace>
+    <MainTextBoxUnbreakNoSpace>Непрекъснато без интервал (CJK) /Chinese, Japanese &amp; Korean символи/</MainTextBoxUnbreakNoSpace>
     <MainTextBoxAssaIntellisense>Показване на помощника за ASSA тагове</MainTextBoxAssaIntellisense>
     <MainTextBoxAssaRemoveTag>Премахване на ASSA тага при курсора</MainTextBoxAssaRemoveTag>
     <MainFileSaveAll>Запис на всички</MainFileSaveAll>
