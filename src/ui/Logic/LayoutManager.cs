@@ -794,6 +794,9 @@ namespace Nikse.SubtitleEdit.Logic
 
             var audioVisualizer = GetAll(groupBoxWaveform, typeof(AudioVisualizer)).First();
             audioVisualizer.Show();
+
+            audioVisualizer.Height = panel.Top - audioVisualizer.Top -2;
+            audioVisualizer.Width = groupBoxWaveform.Width - audioVisualizer.Left - 5;
         }
 
         public static string SaveLayout()
