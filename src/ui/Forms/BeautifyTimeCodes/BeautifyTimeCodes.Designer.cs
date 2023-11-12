@@ -128,11 +128,11 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             // 
             // panelExtractTimeCodes
             // 
+            this.panelExtractTimeCodes.Controls.Add(this.buttonCancelTimeCodes);
             this.panelExtractTimeCodes.Controls.Add(this.labelExtractTimeCodesProgress);
             this.panelExtractTimeCodes.Controls.Add(this.progressBarExtractTimeCodes);
             this.panelExtractTimeCodes.Controls.Add(this.buttonExtractTimeCodes);
             this.panelExtractTimeCodes.Controls.Add(this.labelTimeCodesStatus);
-            this.panelExtractTimeCodes.Controls.Add(this.buttonCancelTimeCodes);
             this.panelExtractTimeCodes.Location = new System.Drawing.Point(0, 27);
             this.panelExtractTimeCodes.Name = "panelExtractTimeCodes";
             this.panelExtractTimeCodes.Size = new System.Drawing.Size(546, 87);
@@ -177,7 +177,7 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             // 
             // buttonCancelTimeCodes
             // 
-            this.buttonCancelTimeCodes.Location = new System.Drawing.Point(23, 18);
+            this.buttonCancelTimeCodes.Location = new System.Drawing.Point(23, 20);
             this.buttonCancelTimeCodes.Name = "buttonCancelTimeCodes";
             this.buttonCancelTimeCodes.Size = new System.Drawing.Size(149, 23);
             this.buttonCancelTimeCodes.TabIndex = 5;
