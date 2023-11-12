@@ -490,8 +490,9 @@ https://github.com/SubtitleEdit/subtitleedit
     <CenterSelectedLines>Центрировать выделенные линии (горизонтально, сохранить вертикальное положение)</CenterSelectedLines>
     <TopAlignSelectedLines>Выровнять выбранные строки по верхнему краю (сохранить горизонтальное положение)</TopAlignSelectedLines>
     <BottomAlignSelectedLines>Выровнять выбранные строки по нижнему краю (сохранить горизонтальное положение)</BottomAlignSelectedLines>
-    <ToggleForcedSelectedLines>Переключить в «Принудительно» выбранные строки</ToggleForcedSelectedLines>
-    <SelectForcedLines>Выбрать принудительные строки</SelectForcedLines>
+    <ToggleForcedSelectedLines>Переключить в «Форсированные» выбранные строки</ToggleForcedSelectedLines>
+    <SelectForcedLines>Выбрать форсированные строки</SelectForcedLines>
+    <SelectNonForcedLines>Выбрать нефорсированные строки</SelectNonForcedLines>
     <SizeXY>Размер: {0}x{1}</SizeXY>
     <SetAspectRatio11>Установить соотношение сторон 1:1</SetAspectRatio11>
     <ChangeBrightnessTitle>Отрегулировать яркость</ChangeBrightnessTitle>
@@ -1075,6 +1076,7 @@ https://github.com/SubtitleEdit/subtitleedit
 скопируйте результат в буфер обмена и снова нажмите эту кнопку</TranslateBlockClipboardError2>
     <StartWebServerX>Запустить веб-сервер «{0}»</StartWebServerX>
     <XRequiresALocalWebServer>Для «{0}» требуется локальный сервер!</XRequiresALocalWebServer>
+    <XRequiresAnApiKey>Для «{0}» требуется ключ API</XRequiresAnApiKey>
     <ReadMore>Прочитать подробнее?</ReadMore>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
@@ -1090,7 +1092,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <Title>Перейти к субтитру №</Title>
     <XIsNotAValidNumber>Строки с номером {0} в текущем списке субтитров не существует.
 
-Пожалуйста, введите число в указанном диапазоне</XIsNotAValidNumber>
+Пожалуйста, введите число в указанном диапазоне.</XIsNotAValidNumber>
   </GoToLine>
   <ImportImages>
     <Title>Открыть изображения</Title>
@@ -1144,6 +1146,8 @@ https://github.com/SubtitleEdit/subtitleedit
   </ImportText>
   <Interjections>
     <Title>Междометия</Title>
+    <EditSkipList>Список исключений…</EditSkipList>
+    <EditSkipListInfo>Междометия будут пропущены, если текст начинается с этих слов:</EditSkipListInfo>
   </Interjections>
   <JoinSubtitles>
     <Title>Объединение субтитров</Title>
@@ -1438,8 +1442,6 @@ https://github.com/SubtitleEdit/subtitleedit
         <GenerateImportShotChanges>Создание/Открытие изменений плана…</GenerateImportShotChanges>
         <RemoveOrExportShotChanges>Удалить/экспортировать изменения плана…</RemoveOrExportShotChanges>
         <WaveformBatchGenerate>Пакетная обработка форм сигнала…</WaveformBatchGenerate>
-        <ShowHideVideo>Показать/Скрыть видео</ShowHideVideo>
-        <ShowHideWaveform>Показать/Скрыть форму сигнала</ShowHideWaveform>
         <ShowHideWaveformAndSpectrogram>Показать/Скрыть форму сигнала и спектрограмму</ShowHideWaveformAndSpectrogram>
         <UnDockVideoControls>Отстыковать панели</UnDockVideoControls>
         <ReDockVideoControls>Пристыковать панели</ReDockVideoControls>
@@ -2235,6 +2237,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <LinesFoundX>Найдено строк: {0}</LinesFoundX>
     <RemoveTextIfContains>Удалить текст, если в нём содержится:</RemoveTextIfContains>
     <RemoveTextIfAllUppercase>Удалить строку, если текст в ВЕРХНЕМ РЕГИСТРЕ</RemoveTextIfAllUppercase>
+    <RemoveIfOnlyMusicSymbols>Удалить, если используются только музыкальные символы</RemoveIfOnlyMusicSymbols>
     <RemoveInterjections>Удалить междометия (Ах, Ой, Хм, и т.д.)</RemoveInterjections>
     <EditInterjections>Правка…</EditInterjections>
     <Apply>Применить</Apply>
@@ -2660,6 +2663,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <WaveformSeekSilenceForward>Поиск пауз далее</WaveformSeekSilenceForward>
     <WaveformSeekSilenceBack>Поиск пауз назад</WaveformSeekSilenceBack>
     <WaveformAddTextHere>Добавить здесь текст (для нового выделения)</WaveformAddTextHere>
+    <ChooseLayoutX>Выберите макет {0}</ChooseLayoutX>
     <WaveformAddTextHereFromClipboard>Добавить здесь текст (для нового выделения из буфера обмена)</WaveformAddTextHereFromClipboard>
     <SetParagraphAsSelection>Установить текущий как новый выбор</SetParagraphAsSelection>
     <WaveformPlayNewSelection>Проиграть новое выделение</WaveformPlayNewSelection>
