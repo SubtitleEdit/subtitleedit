@@ -215,9 +215,15 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
             return s;
         }
 
+        private static bool IsNonStandardLineTerminationLanguage(string language)
+        {
+            return language == "jp" || language == "cn" || language == "yue";
+        }
+
         public Subtitle AddPeriods(Subtitle inputSubtitle, string language)
         {
-            if (language == "jp" || language == "cn" || language == "yue")
+            if (IsNonStandardLineTerminationLanguage(language) ||
+                inputSubtitle.Paragraphs.Count == 0)
             {
                 return new Subtitle(inputSubtitle);
             }
@@ -226,44 +232,46 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
             var englishSkipFirstWords = new[] { "to", "and", "but" };
 
             var subtitle = new Subtitle(inputSubtitle);
-            for (var index = 0; index < subtitle.Paragraphs.Count - 1; index++)
+
+            // create default paragraph that will be use as a placeholder for when "next" is not present
+            var nullDuration = subtitle.Paragraphs.Last().StartTime.TotalMilliseconds + SetPeriodIfDistanceToNextIsMoreThan + 1;
+            var defaultParagraph = new Paragraph()
+            {
+                StartTime = new TimeCode(nullDuration),
+                Text = string.Empty
+            };
+
+            for (var index = 0; index < subtitle.Paragraphs.Count; index++)
             {
                 var paragraph = subtitle.Paragraphs[index];
-                var next = subtitle.Paragraphs[index + 1];
-                if (next.StartTime.TotalMilliseconds - paragraph.EndTime.TotalMilliseconds > SetPeriodIfDistanceToNextIsMoreThan &&
-                    !paragraph.Text.EndsWith('.') &&
-                    !paragraph.Text.EndsWith('!') &&
-                    !paragraph.Text.EndsWith('?') &&
-                    !paragraph.Text.EndsWith(',') &&
-                    !paragraph.Text.EndsWith(':'))
+                var next = subtitle.GetParagraphOrDefault(index + 1) ?? defaultParagraph;
+
+                // paragraph is already closed
+                if (paragraph.Text.EndsWith('.') ||
+                    paragraph.Text.EndsWith('!') ||
+                    paragraph.Text.EndsWith('?') ||
+                    paragraph.Text.EndsWith(',') ||
+                    paragraph.Text.EndsWith(':'))
                 {
-                    if (next.StartTime.TotalMilliseconds - paragraph.EndTime.TotalMilliseconds > SetPeriodIfDistanceToNextIsMoreThanAlways)
-                    {
-                        paragraph.Text += ".";
-                    }
-                    else
-                    {
-                        var lastWord = GetLastWord(paragraph.Text);
-                        var nextFirstWord = GetFirstWord(next.Text);
-                        if (TwoLetterLanguageCode == "en" && (englishSkipLastWords.Contains(lastWord) || englishSkipFirstWords.Contains(nextFirstWord)))
-                        {
-                            continue;
-                        }
-
-                        paragraph.Text += ".";
-                    }
+                    continue;
                 }
-            }
 
-            var last = subtitle.GetParagraphOrDefault(subtitle.Paragraphs.Count - 1);
-            if (last != null &&
-                !last.Text.EndsWith('.') &&
-                !last.Text.EndsWith('!') &&
-                !last.Text.EndsWith('?') &&
-                !last.Text.EndsWith(',') &&
-                !last.Text.EndsWith(':'))
-            {
-                subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].Text += ".";
+                var timeDistanceToNextLine = next.StartTime.TotalMilliseconds - paragraph.EndTime.TotalMilliseconds;
+                if (timeDistanceToNextLine > SetPeriodIfDistanceToNextIsMoreThan)
+                {
+                    paragraph.Text += ".";
+                }
+                else
+                {
+                    if (TwoLetterLanguageCode == "en" &&
+                        (englishSkipLastWords.Contains(GetLastWord(paragraph.Text)) ||
+                         englishSkipFirstWords.Contains(GetFirstWord(next.Text))))
+                    {
+                        continue;
+                    }
+
+                    paragraph.Text += ".";
+                }
             }
 
             return subtitle;
