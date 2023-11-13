@@ -67,6 +67,7 @@
    * Fix some missing Thai characters in format PAC - thx thehulk
    * Fix crash in spell check - thx Omair
    * Fix crash minimizing ASSA batch styles - thx Åke
+   * Fix crash in "Replace" window after "File - New" - thx Leon
 
 
 4.0.1 (16th September 2023)
