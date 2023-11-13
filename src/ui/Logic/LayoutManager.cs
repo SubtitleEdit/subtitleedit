@@ -180,7 +180,7 @@ namespace Nikse.SubtitleEdit.Logic
                     sc.SplitterDistance = sc.Height - Configuration.Settings.General.SubtitleTextBoxMaxHeight;
                 }
             }
-            catch 
+            catch
             {
                 // ignore
             }
@@ -292,7 +292,7 @@ namespace Nikse.SubtitleEdit.Logic
             spLeftTop.SplitterMoved += splitMoved;
             spLeftBottom.SplitterMoved += splitMoved;
 
-            spLeftBottom.SplitterMoved += SplitMovedLimitTextBoxPanel2; 
+            spLeftBottom.SplitterMoved += SplitMovedLimitTextBoxPanel2;
             spMain.SplitterMoved += SplitMovedLimitWaveformPanel2;
         }
 
@@ -795,7 +795,7 @@ namespace Nikse.SubtitleEdit.Logic
             var audioVisualizer = GetAll(groupBoxWaveform, typeof(AudioVisualizer)).First();
             audioVisualizer.Show();
 
-            audioVisualizer.Height = panel.Top - audioVisualizer.Top -2;
+            audioVisualizer.Height = panel.Top - audioVisualizer.Top - 2;
             audioVisualizer.Width = groupBoxWaveform.Width - audioVisualizer.Left - 5;
         }
 
