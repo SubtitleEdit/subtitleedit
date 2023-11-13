@@ -7203,8 +7203,9 @@ namespace Nikse.SubtitleEdit.Forms
                 selectedText = _findHelper.FindText;
             }
 
-            if (_replaceDialog == null || _replaceDialog.IsDisposed)
+            if (_replaceDialog == null || _replaceDialog.IsDisposed || _findHelper == null || !_replaceDialog.Visible)
             {
+                _replaceDialog?.Dispose();
                 _replaceDialog = new ReplaceDialog(this);
                 _replaceDialog.Left = Left + Width / 2 - _replaceDialog.Width / 2;
                 _replaceDialog.Top = Left + Height / 2 - _replaceDialog.Height / 2;
@@ -7243,6 +7244,17 @@ namespace Nikse.SubtitleEdit.Forms
             if (!_replaceDialog.Visible)
             {
                 _replaceDialog.Show(this);
+            }
+
+            _replaceDialog.Activate();
+            _replaceDialog.Focus();
+            var scr = Screen.FromControl(this);
+            var x = _replaceDialog.Left + _replaceDialog.Width / 2;
+            var y = _replaceDialog.Top + _replaceDialog.Height / 2;
+            if (x < 0 || x > scr.Bounds.Right || y < 0 || y > scr.Bounds.Bottom)
+            {
+                _replaceDialog.Left = scr.Bounds.Left + scr.Bounds.Width / 2 - _replaceDialog.Width / 2;
+                _replaceDialog.Top = scr.Bounds.Top + scr.Bounds.Height / 2 - _replaceDialog.Height / 2;
             }
         }
 
