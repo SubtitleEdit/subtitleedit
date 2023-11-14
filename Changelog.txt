@@ -10,6 +10,7 @@
    * Statistics for selected lines
    * Shortcut "Set start time and go to next"
    * Add new json subtitle format - thx Neven
+   * Add new json format - thx Tim
    * Add Video CD DAT subtitle format - thx Flitskikker
    * Add Italian SE word dictionary file - thx HG3112
    * BD SUP edit: Add "Select non-forced lines" - thx manuelrn
