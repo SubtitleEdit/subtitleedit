@@ -5398,6 +5398,7 @@
     <RegEx find="Vots" replaceWith="Wats" />
 
     <RegEx find="ćšu" replaceWith="šću" />
+    <RegEx find="kjn" replaceWith="kin" />
     
     <RegEx find=", ili" replaceWith="ili" />
     <RegEx find="ili," replaceWith="ili" />
