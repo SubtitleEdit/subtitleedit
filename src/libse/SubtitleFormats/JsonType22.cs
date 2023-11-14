@@ -1,4 +1,4 @@
-﻿    using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -7,13 +7,13 @@ using System.Text;
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     /// <summary>
-    /// Google Cloud Speech-to-text?
+    /// Google Cloud Speech-to-text V2
     /// </summary>
-    public class JsonType20 : SubtitleFormat
+    public class JsonType22 : SubtitleFormat
     {
         public override string Extension => ".json";
 
-        public override string Name => "JSON Type 20";
+        public override string Name => "JSON Type 22";
 
         public override string ToText(Subtitle subtitle, string title)
         {
@@ -22,7 +22,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             'alternatives': [
                 {
-                    'confidence': 1.0,
                     'transcript': '...', 
                     'words': [".Replace('\'', '"'));
             var count = 0;
@@ -36,8 +35,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 count++;
                 sb.AppendLine();
                 sb.AppendLine("                        {");
-                sb.AppendLine($"                            \"startTime\": {p.StartTime.TotalSeconds.ToString(CultureInfo.InvariantCulture)},");
-                sb.AppendLine($"                            \"endTime\": {p.EndTime.TotalSeconds.ToString(CultureInfo.InvariantCulture)},");
+                sb.AppendLine($"                            \"startOffset\": {p.StartTime.TotalSeconds.ToString(CultureInfo.InvariantCulture)},");
+                sb.AppendLine($"                            \"endOffset\": {p.EndTime.TotalSeconds.ToString(CultureInfo.InvariantCulture)},");
                 sb.AppendLine($"                            \"word\": \"{Json.EncodeJsonText(p.Text, "\\n")}\"");
                 sb.Append("                        }");
             }
@@ -61,7 +60,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             var text = sb.ToString().TrimStart();
-            if (!text.Contains("\"alternatives\"", StringComparison.Ordinal) || !text.Contains("\"words\"", StringComparison.Ordinal))
+            if (!text.Contains("\"alternatives\"", StringComparison.Ordinal) || 
+                !text.Contains("\"words\"", StringComparison.Ordinal))
             {
                 return;
             }
@@ -70,8 +70,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var words = parser.GetArrayElementsByName(text, "words");
             foreach (var word in words)
             {
-                var startTimeObject = parser.GetFirstObject(word, "startTime");
-                var endTimeObject = parser.GetFirstObject(word, "endTime");
+                var startTimeObject = parser.GetFirstObject(word, "startOffset");
+                var endTimeObject = parser.GetFirstObject(word, "endOffset");
                 var s = parser.GetFirstObject(word, "word");
                 if (!string.IsNullOrEmpty(s) && !string.IsNullOrEmpty(startTimeObject) && !string.IsNullOrEmpty(endTimeObject))
                 {
