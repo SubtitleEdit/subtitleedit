@@ -997,7 +997,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
             text = text.Replace("</b>", @"{\b0}");
             text = text.Replace("</b>", @"{\b}");
             var count = 0;
-            while (text.Contains("<font ") && count < 10)
+            while (text.Contains("<font ") && count < 100)
             {
                 var start = text.IndexOf("<font ", StringComparison.Ordinal);
                 var end = text.IndexOf('>', start);
