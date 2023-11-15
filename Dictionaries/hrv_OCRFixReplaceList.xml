@@ -413,6 +413,8 @@
     <Word from="emituju" to="emitiraju" />
     <Word from="emocuja" to="emocija" />
     <Word from="Enterprajz" to="Enterprise" />
+    <Word from="evakuiši" to="evakuiraj" />
+    <Word from="Evakuiši" to="Evakuiraj" />
     <Word from="evakuišu" to="evakuiraju" />
     <Word from="Evakuišu" to="Evakuiraju" />
     <Word from="evro" to="euro" />
@@ -565,6 +567,7 @@
     <Word from="ilustruju" to="ilustriraju" />
     <Word from="inačr" to="inače" />
     <Word from="inspirisao" to="inspirirao" />
+    <Word from="Inspirisao" to="Inspirirao" />
     <Word from="inspirišuća" to="inspirirajuća" />
     <Word from="interesantan" to="zanimljiv" />
     <Word from="Interesantan" to="Zanimljiv" />
@@ -869,7 +872,6 @@
     <Word from="Leči" to="Liječi" />
     <Word from="Lječi" to="Liječi" />
     <Word from="ledja" to="leđa" />
-    <Word from="Lejn" to="Lane" />
     <Word from="Lenja" to="Lijena" />
     <Word from="lenji" to="lijeni" />
     <Word from="lenja" to="lijena" />
@@ -2037,6 +2039,7 @@
     <Word from="Slećem" to="Slijećem" />
     <Word from="slećemo" to="slijećemo" />
     <Word from="sleđe" to="slijede" />
+    <Word from="slepče" to="slijepče" />
     <Word from="slepima" to="slijepima" />
     <Word from="slepih" to="slijepih" />
     <Word from="slepljen" to="sljepljen" />
@@ -2780,6 +2783,7 @@
     <Word from="zdrvo" to="zdravo" />
     <Word from="Zdrvo" to="Zdravo" />
     <Word from="zista" to="zaista" />
+    <Word from="zivot" to="život" />
     <Word from="zlodela" to="zlodjela" />
     <Word from="znaći" to="znači" />
     <Word from="zovr" to="zove" />
@@ -3012,6 +3016,8 @@
     <Word from="Kazablanki" to="Casablanci" />
     <Word from="Kejdž" to="Cage" />
     <Word from="Kejn" to="Kane" />
+    <Word from="Kejna" to="Kanea" />
+    <Word from="Kejne" to="Kane" />
     <Word from="Kejp" to="Cape" />
     <Word from="Kejsi" to="Casey" />
     <Word from="Kejti" to="Katie" />
@@ -3052,6 +3058,7 @@
     <Word from="Lejk" to="Lake" />
     <Word from="Lejka" to="Lakea" />
     <Word from="Lejku" to="Lakeu" />
+    <Word from="Lejn" to="Lane" />
     <Word from="Lindzi" to="Lindsay" />
     <Word from="Linkoln" to="Lincoln" />
     <Word from="Lorejn" to="Loraine" />
