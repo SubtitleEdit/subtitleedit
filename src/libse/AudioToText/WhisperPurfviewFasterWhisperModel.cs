@@ -112,8 +112,8 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
             new WhisperModel
             {
                 Name = "large-v3",
-                Size = "1.5 GB",
-                Urls = MakeUrls("https://huggingface.co/Purfview/faster-whisper-large-v3-int8/resolve/main"),
+                Size = "3.1 GB",
+                Urls = MakeUrls("https://huggingface.co/Purfview/faster-whisper-large-v3-fp16/resolve/main"),
                 Folder = "faster-whisper-large-v3-int8",
             },
         };
