@@ -2857,6 +2857,7 @@
     <Word from="Bitls" to="Beatles" />
     <Word from="Bitlsi" to="Beatlesi" />
     <Word from="Bradli" to="Bradley" />
+    <Word from="Brajton" to="Brighton" />
     <Word from="Bredli" to="Bradley" />
     <Word from="Bredliju" to="Bradleyu" />
     <Word from="Brejdi" to="Brady" />
@@ -5127,6 +5128,7 @@
     <RegEx find="tificire" replaceWith="tificira" />
     <RegEx find="tnas" replaceWith="tans" />
     <RegEx find="tnerk" replaceWith="tneric" />
+    <RegEx find="tnp" replaceWith="tno" />
     <RegEx find="tpv" replaceWith="tov" />
     <RegEx find="trbn" replaceWith="trebn" />
     <RegEx find="trvd" replaceWith="tvrd" />
