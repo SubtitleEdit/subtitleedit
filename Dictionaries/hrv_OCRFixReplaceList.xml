@@ -683,6 +683,8 @@
     <Word from="ješćemo" to="jest ćemo" />
     <Word from="jos" to="još" />
     <Word from="jr" to="je" />
+    <Word from="jerje" to="jer je" />
+
     <Word from="jsi" to="jesi" />
     <Word from="Jsi" to="jesi" />
     <Word from="jma" to="ima" />
@@ -2324,6 +2326,7 @@
     <Word from="štampom" to="tiskom" />
     <Word from="štampi" to="tisku" />
     <Word from="štampati" to="tiskati" />
+    <Word from="štoje" to="što je" />
     <Word from="Šutjeće" to="Šutjet će" />
     <Word from="šutjenja" to="šutnje" />
     <!-- t -->
@@ -3613,6 +3616,7 @@
     <LinePart from="Da li ću" to="Hoću li" />
     <LinePart from="da li ću" to="hoću li" />
     <LinePart from="dali ću" to="hoću li" />
+    <LinePart from="Da li imate" to="Imate li" />
     <LinePart from="Da li je" to="Je li" />
     <LinePart from="da li je" to="je li" />
     <LinePart from="dali je" to="je li" />
@@ -3651,6 +3655,7 @@
     <LinePart from="hoću da živim" to="želim živjeti" />
     <LinePart from="Izvini se" to="Ispričaj se" />
     <LinePart from="izvini se" to="ispričaj se" />
+    <LinePart from="Izvini me" to="Ispričaj me" />
     <LinePart from="Izvinite me" to="Ispričajte me" />
     <LinePart from="izvinite me" to="ispričajte me" />
     <LinePart from="Izvinite nas" to="Ispričajte nas" />
@@ -4772,6 +4777,7 @@
     <RegEx find="citov" replaceWith="citir" />
     <RegEx find="cjenil" replaceWith="cijenil" />
     <RegEx find="coje" replaceWith="cije" />
+    <RegEx find="([čć])eđ" replaceWith="$1eš" />
     <RegEx find="ćnot" replaceWith="ćnost" />
     <RegEx find="čmos" replaceWith="čnos" />
     <RegEx find="dcz" replaceWith="doz" />
@@ -5085,6 +5091,7 @@
     <RegEx find="taun" replaceWith="town" />
     <RegEx find="tb([eo])" replaceWith="tv$1" />
     <RegEx find="tćeš" replaceWith="t ćeš" />
+    <RegEx find="teca" replaceWith="tjeca" />
     <RegEx find="tede(?![oć])" replaceWith="tedje" />
     <RegEx find="tedeo" replaceWith="tedio" />
     <RegEx find="terijum" replaceWith="terij" />
@@ -5200,6 +5207,7 @@
     <!-- osobna imena/prezimena i imena gradova/država itd. -->
     <RegEx find="A[fv]ghanistan" replaceWith="Afganistan" />
     <RegEx find="Ajdah" replaceWith="Idah" />
+    <RegEx find="Ajfel" replaceWith="Eiffel" />
     <RegEx find="Ajl[ae]nd" replaceWith="Island" />
     <RegEx find="Ajvs" replaceWith="Yves" />
     <RegEx find="Ajzak" replaceWith="Isaac" />
