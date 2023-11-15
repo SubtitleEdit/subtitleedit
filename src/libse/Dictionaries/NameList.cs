@@ -1,4 +1,4 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Common;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -258,13 +258,25 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             }
 
             var de = nameListXml.DocumentElement;
-            if (de != null)
-            {
-                var node = nameListXml.CreateElement("name");
-                node.InnerText = name;
-                de.AppendChild(node);
-                nameListXml.Save(fileName);
+            if (de == null) 
+            { 
+                return true; 
             }
+
+            var node = nameListXml.CreateElement("name");
+            node.InnerText = name;
+            de.AppendChild(node);
+            if(LanguageName == "en")
+            {
+                if(!(name.EndsWith("'s") || name.EndsWith("'")))
+                {
+                    var nodeAlt = nameListXml.CreateElement("name");
+                    nodeAlt.InnerText = name.EndsWith("s") ? $"{name}'" : $"{name}'s";
+                    de.AppendChild(nodeAlt);
+                }
+            }
+
+            nameListXml.Save(fileName);
             return true;
         }
 
