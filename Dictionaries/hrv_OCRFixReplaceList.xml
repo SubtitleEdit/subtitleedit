@@ -17,7 +17,6 @@
     <Word from="Ajpodu" to="iPodu" />
     <Word from="akcenat" to="naglasak" />
     <Word from="aki" to="ali" />
-    <Word from="akp" to="ako" />
     <Word from="akcionara" to="dioničara" />
     <Word from="aktuelan" to="aktualan" />
     <Word from="amin" to="amen" />
@@ -816,7 +815,6 @@
     <Word from="Koverta" to="Kuverta" />
     <Word from="koverti" to="kuverti" />
     <Word from="kovertu" to="kuvertu" />
-    <Word from="kp" to="ko" />    
     <Word from="kritikuju" to="kritiziraju" />
     <Word from="Krst" to="Križ" />
     <Word from="krst" to="križ" />
@@ -4874,8 +4872,7 @@
     <!-- doktorica / profesorica -->
     <RegEx find="(kt|s)ork" replaceWith="$1oric" />
     <RegEx find="kovrdžav" replaceWith="kovrčav" />
-    <RegEx find="kpd" replaceWith="kod" />
-    <RegEx find="kpr" replaceWith="kor" />
+    <RegEx find="(?&lt;!o)kp" replaceWith="ko" />
     <RegEx find="ktovan" replaceWith="ktiran" />
     <RegEx find="ktuj" replaceWith="ktiraj" />
     <RegEx find="kzp" replaceWith="kup" />
@@ -5122,7 +5119,6 @@
     <RegEx find="uoa" replaceWith="upa" />
     <RegEx find="uoi" replaceWith="upi" />
     <RegEx find="uzt" replaceWith="ust" />
-    <RegEx find="tkp" replaceWith="tko" />
     <RegEx find="tvd" replaceWith="tvrd" />
     <RegEx find="tvra" replaceWith="tvar" />
     <RegEx find="tvrn" replaceWith="tvarn" />
