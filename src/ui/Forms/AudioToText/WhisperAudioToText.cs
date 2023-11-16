@@ -1941,8 +1941,11 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             }
 
             downloadCUDAForPurfviewsWhisperFasterToolStripMenuItem.Visible =
-                buttonGenerate.Enabled &&
-                (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.PurfviewFasterWhisper); // || Configuration.Settings.Tools.WhisperChoice == WhisperChoice.CppCuBlas);
+                buttonGenerate.Enabled && Configuration.Settings.Tools.WhisperChoice == WhisperChoice.PurfviewFasterWhisper;
+
+            downloadNvidiaCudaForCPPCuBLASToolStripMenuItem.Visible =
+                buttonGenerate.Enabled && Configuration.Settings.Tools.WhisperChoice == WhisperChoice.CppCuBlas;
+
             var whisperLogFile = SeLogger.GetWhisperLogFilePath();
             if (File.Exists(whisperLogFile))
             {
@@ -2115,6 +2118,11 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         private void ShowWhisperLogFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
             UiUtil.OpenFile(SeLogger.GetWhisperLogFilePath());
+        }
+
+        private void downloadNvidiaCudaForCPPCuBLASToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            UiUtil.OpenUrl("https://developer.nvidia.com/cuda-downloads");
         }
     }
 }
