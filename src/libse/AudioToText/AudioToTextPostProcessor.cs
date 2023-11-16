@@ -223,7 +223,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
             }
 
             var englishSkipLastWords = new[] { "with", "however", "a" };
-            var englishSkipFirstWords = new[] { "to", "and", "but" };
+            var englishSkipFirstWords = new[] { "to", "and", "but", "and", "with", "off" };
 
             var subtitle = new Subtitle(inputSubtitle);
             for (var index = 0; index < subtitle.Paragraphs.Count - 1; index++)
@@ -235,7 +235,8 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                     !paragraph.Text.EndsWith('!') &&
                     !paragraph.Text.EndsWith('?') &&
                     !paragraph.Text.EndsWith(',') &&
-                    !paragraph.Text.EndsWith(':'))
+                    !paragraph.Text.EndsWith(':') &&
+                    !paragraph.Text.EndsWith(']'))
                 {
                     if (next.StartTime.TotalMilliseconds - paragraph.EndTime.TotalMilliseconds > SetPeriodIfDistanceToNextIsMoreThanAlways)
                     {
