@@ -215,14 +215,28 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                         comboBoxModels.Items.Add(model);
                         if (model.Name == selectName)
                         {
-                            comboBoxModels.SelectedIndex = comboBoxModels.Items.Count - 1;
+                            try
+                            {
+                                comboBoxModels.SelectedIndex = comboBoxModels.Items.Count - 1;
+                            }
+                            catch
+                            {
+                                // ignore
+                            }
                         }
                     }
                 }
 
                 if (comboBoxModels.SelectedIndex < 0 && comboBoxModels.Items.Count > 0)
                 {
-                    comboBoxModels.SelectedIndex = 0;
+                    try
+                    {
+                        comboBoxModels.SelectedIndex = 0;
+                    }
+                    catch
+                    {
+                        // ignore
+                    }
                 }
 
                 return;
@@ -253,13 +267,27 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 comboBoxModels.Items.Add(model);
                 if (model.Name == selectName)
                 {
-                    comboBoxModels.SelectedIndex = comboBoxModels.Items.Count - 1;
+                    try
+                    {
+                        comboBoxModels.SelectedIndex = comboBoxModels.Items.Count - 1;
+                    }
+                    catch
+                    {
+                        // ignore
+                    }
                 }
             }
 
             if (comboBoxModels.SelectedIndex < 0 && comboBoxModels.Items.Count > 0)
             {
-                comboBoxModels.SelectedIndex = 0;
+                try
+                {
+                    comboBoxModels.SelectedIndex = 0;
+                }
+                catch
+                {
+                    // ignore
+                }
             }
         }
 
@@ -1082,7 +1110,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 translateToEnglish = string.Empty;
             }
 
-            if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.Cpp || Configuration.Settings.Tools.WhisperChoice == WhisperChoice.CppCuBlas) 
+            if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.Cpp || Configuration.Settings.Tools.WhisperChoice == WhisperChoice.CppCuBlas)
             {
                 if (!Configuration.Settings.Tools.WhisperExtraSettings.Contains("--print-progress"))
                 {
@@ -1092,7 +1120,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
             var outputSrt = string.Empty;
             var postParams = string.Empty;
-            if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.Cpp || 
+            if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.Cpp ||
                 Configuration.Settings.Tools.WhisperChoice == WhisperChoice.CppCuBlas ||
                 Configuration.Settings.Tools.WhisperChoice == WhisperChoice.ConstMe)
             {
@@ -1125,7 +1153,10 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                     whisperFolder = Path.GetDirectoryName(whisperFolder);
                 }
 
-                process.StartInfo.WorkingDirectory = whisperFolder;
+                if (whisperFolder != null)
+                {
+                    process.StartInfo.WorkingDirectory = whisperFolder;
+                }
             }
 
             if (!string.IsNullOrEmpty(whisperFolder) && process.StartInfo.EnvironmentVariables["Path"] != null)
@@ -1430,7 +1461,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             });
         }
 
-        private bool _checkedInstalledAndVersion = false;
+        private bool _checkedInstalledAndVersion;
         private void CheckIfInstalledAndVersion(string whisperChoice)
         {
             if (_checkedInstalledAndVersion)
