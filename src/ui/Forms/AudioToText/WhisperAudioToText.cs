@@ -146,9 +146,14 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             if (Configuration.IsRunningOnWindows)
             {
                 engines.Add(WhisperChoice.PurfviewFasterWhisper);
+                engines.Add(WhisperChoice.Cpp);
+                engines.Add(WhisperChoice.CppCuBlas);
                 engines.Add(WhisperChoice.ConstMe);
             }
-            engines.Add(WhisperChoice.Cpp);
+            else
+            {
+                engines.Add(WhisperChoice.Cpp);
+            }
             engines.Add(WhisperChoice.CTranslate2);
             engines.Add(WhisperChoice.StableTs);
             engines.Add(WhisperChoice.WhisperX);
@@ -271,6 +276,28 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                     if (MessageBox.Show(string.Format(LanguageSettings.Current.Settings.DownloadX, "Whisper CPP"), "Subtitle Edit", MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
                     {
                         using (var downloadForm = new WhisperDownload(WhisperChoice.Cpp))
+                        {
+                            if (downloadForm.ShowDialog(this) != DialogResult.OK)
+                            {
+                                return;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        return;
+                    }
+                }
+            }
+
+            if (comboBoxWhisperEngine.Text == WhisperChoice.CppCuBlas)
+            {
+                var fileName = WhisperHelper.GetWhisperPathAndFileName(WhisperChoice.CppCuBlas);
+                if (!File.Exists(fileName))
+                {
+                    if (MessageBox.Show(string.Format(LanguageSettings.Current.Settings.DownloadX, "Whisper " + WhisperChoice.CppCuBlas), "Subtitle Edit", MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
+                    {
+                        using (var downloadForm = new WhisperDownload(WhisperChoice.CppCuBlas))
                         {
                             if (downloadForm.ShowDialog(this) != DialogResult.OK)
                             {
@@ -1055,7 +1082,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 translateToEnglish = string.Empty;
             }
 
-            if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.Cpp)
+            if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.Cpp || Configuration.Settings.Tools.WhisperChoice == WhisperChoice.CppCuBlas) 
             {
                 if (!Configuration.Settings.Tools.WhisperExtraSettings.Contains("--print-progress"))
                 {
@@ -1065,7 +1092,8 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
             var outputSrt = string.Empty;
             var postParams = string.Empty;
-            if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.Cpp ||
+            if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.Cpp || 
+                Configuration.Settings.Tools.WhisperChoice == WhisperChoice.CppCuBlas ||
                 Configuration.Settings.Tools.WhisperChoice == WhisperChoice.ConstMe)
             {
                 outputSrt = "--output-srt ";
@@ -1106,7 +1134,8 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             }
 
             if (Configuration.Settings.Tools.WhisperChoice != WhisperChoice.Cpp &&
-                Configuration.Settings.Tools.WhisperChoice != WhisperChoice.ConstMe)
+                Configuration.Settings.Tools.WhisperChoice != WhisperChoice.CppCuBlas &&
+                 Configuration.Settings.Tools.WhisperChoice != WhisperChoice.ConstMe)
             {
                 process.StartInfo.EnvironmentVariables["PYTHONIOENCODING"] = "utf-8";
                 process.StartInfo.EnvironmentVariables["PYTHONUTF8"] = "1";
@@ -1823,6 +1852,26 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                     if (MessageBox.Show(string.Format(LanguageSettings.Current.Settings.DownloadX, "Whisper CPP"), "Subtitle Edit", MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
                     {
                         using (var downloadForm = new WhisperDownload(WhisperChoice.Cpp))
+                        {
+                            if (downloadForm.ShowDialog(this) != DialogResult.OK)
+                            {
+                                return;
+                            }
+                        }
+                    }
+                }
+
+                Init();
+            }
+            else if (comboBoxWhisperEngine.Text == WhisperChoice.CppCuBlas)
+            {
+                Configuration.Settings.Tools.WhisperChoice = WhisperChoice.CppCuBlas;
+                var fileName = WhisperHelper.GetWhisperPathAndFileName();
+                if (!File.Exists(fileName) || WhisperDownload.IsOld(fileName, WhisperChoice.CppCuBlas))
+                {
+                    if (MessageBox.Show(string.Format(LanguageSettings.Current.Settings.DownloadX, "Whisper " + WhisperChoice.CppCuBlas), "Subtitle Edit", MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
+                    {
+                        using (var downloadForm = new WhisperDownload(WhisperChoice.CppCuBlas))
                         {
                             if (downloadForm.ShowDialog(this) != DialogResult.OK)
                             {

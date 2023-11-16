@@ -4,6 +4,7 @@
     {
         public const string OpenAi = "OpenAI";
         public const string Cpp = "CPP";
+        public const string CppCuBlas = "CPP cuBLAS";
         public const string WhisperX = "WhisperX";
         public const string ConstMe = "Const-me";
         public const string CTranslate2 = "CTranslate2";
