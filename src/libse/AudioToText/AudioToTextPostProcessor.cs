@@ -262,7 +262,8 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                 !last.Text.EndsWith('!') &&
                 !last.Text.EndsWith('?') &&
                 !last.Text.EndsWith(',') &&
-                !last.Text.EndsWith(':'))
+                !last.Text.EndsWith(':') &&
+                !last.Text.EndsWith(']'))
             {
                 subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].Text += ".";
             }
