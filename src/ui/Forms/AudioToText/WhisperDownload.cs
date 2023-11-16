@@ -46,6 +46,14 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             "2a9e10f746a1ebe05dffa86e9f66cd20848faa6e849f3300c2281051c1a17b0fc35c60dc435f07f5974aa1191000aaf2866a4f03a5fe35ecffd4ae0919778e63", // SSE2 32-bit
         };
 
+
+        private const string DownloadUrl64CppCuBlas = "https://github.com/ggerganov/whisper.cpp/releases/download/v1.5.0/whisper-cublas-bin-x64.zip";
+
+        private static readonly string[] Sha512HashesCppCuBlas =
+        {
+            "de5b6fe7487f4cdc5e883ef6825dd0ecfe3ce4f9c914b0e02ba19b89c138e47e76584ae221a75eb7aed1a96893d4764401e065e196e0455a2e72050209252780", // 1.5.0
+        };
+
         private const string DownloadUrlConstMe = "https://github.com/Const-me/Whisper/releases/download/1.12.0/cli.zip";
 
         private static readonly string[] Sha512HashesConstMe =
@@ -113,7 +121,11 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         private void WhisperDownload_Shown(object sender, EventArgs e)
         {
             var downloadUrl = IntPtr.Size * 8 == 32 ? DownloadUrl32Cpp : DownloadUrl64Cpp;
-            if (_whisperChoice == WhisperChoice.ConstMe)
+            if (_whisperChoice == WhisperChoice.CppCuBlas)
+            {
+                downloadUrl = DownloadUrl64CppCuBlas;
+            }
+            else if (_whisperChoice == WhisperChoice.ConstMe)
             {
                 downloadUrl = DownloadUrlConstMe;
             }
@@ -173,7 +185,11 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             downloadStream.Position = 0;
             var hash = Utilities.GetSha512Hash(downloadStream.ToArray());
             string[] hashes;
-            if (_whisperChoice == WhisperChoice.ConstMe)
+            if (_whisperChoice == WhisperChoice.CppCuBlas)
+            {
+                hashes = Sha512HashesCppCuBlas;
+            }
+            else if (_whisperChoice == WhisperChoice.ConstMe)
             {
                 hashes = Sha512HashesConstMe;
             }
@@ -207,6 +223,16 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             if (_whisperChoice == WhisperChoice.Cpp)
             {
                 folder = Path.Combine(folder, "Cpp");
+
+                if (!Directory.Exists(folder))
+                {
+                    Directory.CreateDirectory(folder);
+                }
+            }
+
+            if (_whisperChoice == WhisperChoice.CppCuBlas)
+            {
+                folder = Path.Combine(folder, WhisperChoice.CppCuBlas);
 
                 if (!Directory.Exists(folder))
                 {
