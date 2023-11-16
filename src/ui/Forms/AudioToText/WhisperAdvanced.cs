@@ -34,7 +34,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             comboBoxWhisperExtra.Text = Configuration.Settings.Tools.WhisperExtraSettings;
 
-            if (whisperEngine == WhisperChoice.Cpp)
+            if (whisperEngine == WhisperChoice.Cpp || whisperEngine == WhisperChoice.CppCuBlas)
             {
                 tabControlCommandLineHelp.SelectedTab = TabPageCPP;
             }
@@ -42,8 +42,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             {
                 tabControlCommandLineHelp.SelectedTab = tabPageConstMe;
             }
-            else if (whisperEngine == WhisperChoice.CTranslate2 ||
-                     whisperEngine == WhisperChoice.PurfviewFasterWhisper)
+            else if (whisperEngine == WhisperChoice.CTranslate2 || whisperEngine == WhisperChoice.PurfviewFasterWhisper)
             {
                 tabControlCommandLineHelp.SelectedTab = tabPageFasterWhisper;
             }
