@@ -133,7 +133,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             {
                 downloadUrl = DownloadUrlPurfviewFasterWhisper;
             }
-            else if (_whisperChoice == WhisperChoice.PurfviewFasterWhisperCuda)
+            else if (_whisperChoice == WhisperChoice.PurfviewFasterWhisperCuda || _whisperChoice == WhisperChoice.CppCuBlasLib)
             {
                 downloadUrl = DownloadUrlPurfviewFasterWhisperCuda;
             }
@@ -197,7 +197,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             {
                 hashes = Sha512HashesPurfviewFasterWhisper;
             }
-            else if (_whisperChoice == WhisperChoice.PurfviewFasterWhisperCuda)
+            else if (_whisperChoice == WhisperChoice.PurfviewFasterWhisperCuda || _whisperChoice == WhisperChoice.CppCuBlasLib)
             {
                 hashes = Sha512HashesPurfviewFasterWhisperCuda;
             }
@@ -280,9 +280,19 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                     }
                 }
             }
-            else if (_whisperChoice == WhisperChoice.PurfviewFasterWhisperCuda)
+            else if (_whisperChoice == WhisperChoice.PurfviewFasterWhisperCuda || 
+                     _whisperChoice == WhisperChoice.CppCuBlasLib)
             {
-                folder = Path.Combine(folder, "Purfview-Whisper-Faster");
+                
+                if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.CppCuBlas)
+                {
+                    folder = Path.Combine(folder, WhisperChoice.CppCuBlas);
+                }
+                else
+                {
+                    folder = Path.Combine(folder, "Purfview-Whisper-Faster");
+                }
+
                 if (!Directory.Exists(folder))
                 {
                     Directory.CreateDirectory(folder);

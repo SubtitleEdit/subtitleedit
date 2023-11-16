@@ -1942,8 +1942,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
             downloadCUDAForPurfviewsWhisperFasterToolStripMenuItem.Visible =
                 buttonGenerate.Enabled &&
-                Configuration.Settings.Tools.WhisperChoice == WhisperChoice.PurfviewFasterWhisper;
-
+                (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.PurfviewFasterWhisper); // || Configuration.Settings.Tools.WhisperChoice == WhisperChoice.CppCuBlas);
             var whisperLogFile = SeLogger.GetWhisperLogFilePath();
             if (File.Exists(whisperLogFile))
             {
@@ -2020,7 +2019,6 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             }
 
             var alreadyInstalled = IsFasterWhisperCudaInstalled();
-
             if (alreadyInstalled)
             {
                 if (MessageBox.Show("CUDA is probably already installed - reinstall?", "Subtitle Edit", MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
@@ -2029,7 +2027,13 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 }
             }
 
-            using (var downloadForm = new WhisperDownload(WhisperChoice.PurfviewFasterWhisperCuda))
+            var downloadTarget = WhisperChoice.PurfviewFasterWhisperCuda;
+            if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.CppCuBlas)
+            {
+                downloadTarget = WhisperChoice.CppCuBlasLib;
+            }
+
+            using (var downloadForm = new WhisperDownload(downloadTarget))
             {
                 if (downloadForm.ShowDialog(owner) == DialogResult.OK)
                 {
@@ -2093,6 +2097,11 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         public static bool IsFasterWhisperCudaInstalled()
         {
             var folder = Path.Combine(Configuration.DataDirectory, "Whisper", "Purfview-Whisper-Faster");
+            if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.CppCuBlas)
+            {
+                folder = Path.Combine(Configuration.DataDirectory, "Whisper", WhisperChoice.CppCuBlas);
+            }
+
             if (!Directory.Exists(folder))
             {
                 return false;
