@@ -39,61 +39,129 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
             }
         }
 
+        private const string DownloadUrlPrefix = "https://huggingface.co/ggerganov/whisper.cpp/resolve/main/";
+
         public WhisperModel[] Models => new[]
         {
             new WhisperModel
             {
                 Name = "tiny.en",
                 Size = "74 MB",
-                Urls = new []{ "https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-tiny.en.bin" },
+                Urls = new []{ DownloadUrlPrefix + "ggml-tiny.en.bin" },
             },
             new WhisperModel
             {
                 Name = "tiny",
                 Size = "74 MB",
-                Urls = new []{ "https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-tiny.bin" },
+                Urls = new []{ DownloadUrlPrefix + "ggml-tiny.bin" },
+            },
+            new WhisperModel
+            {
+                Name = "tiny.en-q5_1",
+                Size = "32 MB",
+                Urls = new []{ DownloadUrlPrefix + "ggml-tiny.en-q5_1.bin" },
+            },
+            new WhisperModel
+            {
+                Name = "tiny-q5_1",
+                Size = "32 MB",
+                Urls = new []{ DownloadUrlPrefix + "ggml-tiny-q5_1.bin" },
             },
             new WhisperModel
             {
                 Name = "base.en",
                 Size = "141 MB",
-                Urls = new []{ "https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-base.en.bin" },
+                Urls = new []{ DownloadUrlPrefix + "ggml-base.en.bin" },
             },
             new WhisperModel
             {
                 Name = "base",
                 Size = "141 MB",
-                Urls = new []{ "https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-base.bin" },
+                Urls = new []{ DownloadUrlPrefix + "ggml-base.bin" },
+            },
+            new WhisperModel
+            {
+                Name = "base.en-q5_1",
+                Size = "60 MB",
+                Urls = new []{ DownloadUrlPrefix + "ggml-base.en-q5_1.bin" },
+            },
+            new WhisperModel
+            {
+                Name = "base-q5_1",
+                Size = "60 MB",
+                Urls = new []{ DownloadUrlPrefix + "ggml-base-q5_1.bin" },
             },
             new WhisperModel
             {
                 Name = "small.en",
                 Size = "465 MB",
-                Urls = new []{ "https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-small.en.bin" },
+                Urls = new []{ DownloadUrlPrefix + "ggml-small.en.bin" },
             },
             new WhisperModel
             {
                 Name = "small",
                 Size = "465 MB",
-                Urls = new []{ "https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-small.bin" },
+                Urls = new []{ DownloadUrlPrefix + "ggml-small.bin" },
+            },
+            new WhisperModel
+            {
+                Name = "small-q5_1",
+                Size = "190 MB",
+                Urls = new []{ DownloadUrlPrefix + "ggml-small-q5_1.bin" },
+            },
+            new WhisperModel
+            {
+                Name = "small-q5_1",
+                Size = "190 MB",
+                Urls = new []{ DownloadUrlPrefix + "ggml-small-q5_1.bin" },
             },
             new WhisperModel
             {
                 Name = "medium.en",
                 Size = "1.42 GB",
-                Urls = new []{ "https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-medium.en.bin" },
+                Urls = new []{ DownloadUrlPrefix + "ggml-medium.en.bin" },
             },
             new WhisperModel
             {
                 Name = "medium",
                 Size = "1.42 GB",
-                Urls = new []{ "https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-medium.bin" },
+                Urls = new []{ DownloadUrlPrefix + "ggml-medium.bin" },
+            },
+            new WhisperModel
+            {
+                Name = "medium.en-q5_0",
+                Size = "539 MB",
+                Urls = new []{ DownloadUrlPrefix + "ggml-medium.en-q5_0.bin" },
+            },
+            new WhisperModel
+            {
+                Name = "medium-q5_0",
+                Size = "539 MB",
+                Urls = new []{ DownloadUrlPrefix + "ggml-medium-q5_0.bin" },
+            },
+            new WhisperModel
+            {
+                Name = "large-v1",
+                Size = "2.88 GB",
+                Urls = new []{ DownloadUrlPrefix + "ggml-large-v1.bin" },
+            },
+            new WhisperModel
+            {
+                Name = "large-v2",
+                Size = "2.88 GB",
+                Urls = new []{ DownloadUrlPrefix + "ggml-large-v2.bin" },
             },
             new WhisperModel
             {
                 Name = "large",
                 Size = "2.88 GB",
-                Urls = new []{ "https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-large.bin" },
+                Urls = new []{ DownloadUrlPrefix + "ggml-large.bin" },
+            },
+            new WhisperModel
+            {
+                Name = "large-q5_0",
+                Size = "2.88 GB",
+                Urls = new []{ DownloadUrlPrefix + "ggml-large-q5_0.bin" },
             },
         };
     }
