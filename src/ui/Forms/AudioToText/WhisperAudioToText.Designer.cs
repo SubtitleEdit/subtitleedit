@@ -33,7 +33,6 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             this.buttonGenerate = new System.Windows.Forms.Button();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.labelProgress = new System.Windows.Forms.Label();
-            this.textBoxLog = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelInfo = new System.Windows.Forms.Label();
             this.groupBoxModels = new System.Windows.Forms.GroupBox();
             this.labelChooseLanguage = new System.Windows.Forms.Label();
@@ -62,12 +61,14 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             this.setCPPConstmeModelsFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.removeTemporaryFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.downloadCUDAForPurfviewsWhisperFasterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.downloadNvidiaCudaForCPPCuBLASToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showWhisperlogtxtToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.checkBoxAutoAdjustTimings = new System.Windows.Forms.CheckBox();
-            this.comboBoxWhisperEngine = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelEngine = new System.Windows.Forms.Label();
             this.buttonAdvanced = new System.Windows.Forms.Button();
             this.labelAdvanced = new System.Windows.Forms.Label();
+            this.comboBoxWhisperEngine = new Nikse.SubtitleEdit.Controls.NikseComboBox();
+            this.textBoxLog = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.groupBoxModels.SuspendLayout();
             this.groupBoxInputFiles.SuspendLayout();
             this.contextMenuStripWhisperAdvanced.SuspendLayout();
@@ -117,20 +118,6 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             this.labelProgress.Size = new System.Drawing.Size(70, 13);
             this.labelProgress.TabIndex = 6;
             this.labelProgress.Text = "labelProgress";
-            // 
-            // textBoxLog
-            // 
-            this.textBoxLog.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxLog.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            this.textBoxLog.Location = new System.Drawing.Point(465, 9);
-            this.textBoxLog.Multiline = true;
-            this.textBoxLog.Name = "textBoxLog";
-            this.textBoxLog.ReadOnly = true;
-            this.textBoxLog.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBoxLog.Size = new System.Drawing.Size(168, 65);
-            this.textBoxLog.TabIndex = 0;
             // 
             // labelInfo
             // 
@@ -405,48 +392,56 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             this.setCPPConstmeModelsFolderToolStripMenuItem,
             this.removeTemporaryFilesToolStripMenuItem,
             this.downloadCUDAForPurfviewsWhisperFasterToolStripMenuItem,
+            this.downloadNvidiaCudaForCPPCuBLASToolStripMenuItem,
             this.showWhisperlogtxtToolStripMenuItem});
             this.contextMenuStripWhisperAdvanced.Name = "contextMenuStripWhisperAdvanced";
-            this.contextMenuStripWhisperAdvanced.Size = new System.Drawing.Size(259, 142);
+            this.contextMenuStripWhisperAdvanced.Size = new System.Drawing.Size(284, 164);
             this.contextMenuStripWhisperAdvanced.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripWhisperAdvanced_Opening);
             // 
             // runOnlyPostProcessingToolStripMenuItem
             // 
             this.runOnlyPostProcessingToolStripMenuItem.Name = "runOnlyPostProcessingToolStripMenuItem";
-            this.runOnlyPostProcessingToolStripMenuItem.Size = new System.Drawing.Size(258, 22);
+            this.runOnlyPostProcessingToolStripMenuItem.Size = new System.Drawing.Size(283, 22);
             this.runOnlyPostProcessingToolStripMenuItem.Text = "Run only post processing";
             this.runOnlyPostProcessingToolStripMenuItem.Click += new System.EventHandler(this.runOnlyPostProcessingToolStripMenuItem_Click);
             // 
             // toolStripSeparatorRunOnlyPostprocessing
             // 
             this.toolStripSeparatorRunOnlyPostprocessing.Name = "toolStripSeparatorRunOnlyPostprocessing";
-            this.toolStripSeparatorRunOnlyPostprocessing.Size = new System.Drawing.Size(255, 6);
+            this.toolStripSeparatorRunOnlyPostprocessing.Size = new System.Drawing.Size(280, 6);
             // 
             // setCPPConstmeModelsFolderToolStripMenuItem
             // 
             this.setCPPConstmeModelsFolderToolStripMenuItem.Name = "setCPPConstmeModelsFolderToolStripMenuItem";
-            this.setCPPConstmeModelsFolderToolStripMenuItem.Size = new System.Drawing.Size(258, 22);
+            this.setCPPConstmeModelsFolderToolStripMenuItem.Size = new System.Drawing.Size(283, 22);
             this.setCPPConstmeModelsFolderToolStripMenuItem.Text = "Set CPP/Const-me models folder...";
             this.setCPPConstmeModelsFolderToolStripMenuItem.Click += new System.EventHandler(this.setCPPConstMeModelsFolderToolStripMenuItem_Click);
             // 
             // removeTemporaryFilesToolStripMenuItem
             // 
             this.removeTemporaryFilesToolStripMenuItem.Name = "removeTemporaryFilesToolStripMenuItem";
-            this.removeTemporaryFilesToolStripMenuItem.Size = new System.Drawing.Size(258, 22);
+            this.removeTemporaryFilesToolStripMenuItem.Size = new System.Drawing.Size(283, 22);
             this.removeTemporaryFilesToolStripMenuItem.Text = "Remove temporary files";
             this.removeTemporaryFilesToolStripMenuItem.Click += new System.EventHandler(this.removeTemporaryFilesToolStripMenuItem_Click);
             // 
             // downloadCUDAForPurfviewsWhisperFasterToolStripMenuItem
             // 
             this.downloadCUDAForPurfviewsWhisperFasterToolStripMenuItem.Name = "downloadCUDAForPurfviewsWhisperFasterToolStripMenuItem";
-            this.downloadCUDAForPurfviewsWhisperFasterToolStripMenuItem.Size = new System.Drawing.Size(258, 22);
+            this.downloadCUDAForPurfviewsWhisperFasterToolStripMenuItem.Size = new System.Drawing.Size(283, 22);
             this.downloadCUDAForPurfviewsWhisperFasterToolStripMenuItem.Text = "Download cuBLAS and cuDNN libs";
             this.downloadCUDAForPurfviewsWhisperFasterToolStripMenuItem.Click += new System.EventHandler(this.downloadCUDAForPurfviewsWhisperFasterToolStripMenuItem_Click);
+            // 
+            // downloadNvidiaCudaForCPPCuBLASToolStripMenuItem
+            // 
+            this.downloadNvidiaCudaForCPPCuBLASToolStripMenuItem.Name = "downloadNvidiaCudaForCPPCuBLASToolStripMenuItem";
+            this.downloadNvidiaCudaForCPPCuBLASToolStripMenuItem.Size = new System.Drawing.Size(283, 22);
+            this.downloadNvidiaCudaForCPPCuBLASToolStripMenuItem.Text = "Download Nvidia cuda for Whisper CPP";
+            this.downloadNvidiaCudaForCPPCuBLASToolStripMenuItem.Click += new System.EventHandler(this.downloadNvidiaCudaForCPPCuBLASToolStripMenuItem_Click);
             // 
             // showWhisperlogtxtToolStripMenuItem
             // 
             this.showWhisperlogtxtToolStripMenuItem.Name = "showWhisperlogtxtToolStripMenuItem";
-            this.showWhisperlogtxtToolStripMenuItem.Size = new System.Drawing.Size(258, 22);
+            this.showWhisperlogtxtToolStripMenuItem.Size = new System.Drawing.Size(283, 22);
             this.showWhisperlogtxtToolStripMenuItem.Text = "Show whisper_log.txt";
             this.showWhisperlogtxtToolStripMenuItem.Click += new System.EventHandler(this.ShowWhisperLogFileToolStripMenuItem_Click);
             // 
@@ -459,31 +454,6 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             this.checkBoxAutoAdjustTimings.TabIndex = 21;
             this.checkBoxAutoAdjustTimings.Text = "Auto adjust timings";
             this.checkBoxAutoAdjustTimings.UseVisualStyleBackColor = true;
-            // 
-            // comboBoxWhisperEngine
-            // 
-            this.comboBoxWhisperEngine.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.comboBoxWhisperEngine.BackColor = System.Drawing.SystemColors.Window;
-            this.comboBoxWhisperEngine.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
-            this.comboBoxWhisperEngine.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
-            this.comboBoxWhisperEngine.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
-            this.comboBoxWhisperEngine.ButtonForeColor = System.Drawing.SystemColors.ControlText;
-            this.comboBoxWhisperEngine.ButtonForeColorDown = System.Drawing.Color.Orange;
-            this.comboBoxWhisperEngine.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            this.comboBoxWhisperEngine.DropDownHeight = 400;
-            this.comboBoxWhisperEngine.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxWhisperEngine.DropDownWidth = 180;
-            this.comboBoxWhisperEngine.FormattingEnabled = false;
-            this.comboBoxWhisperEngine.Location = new System.Drawing.Point(521, 9);
-            this.comboBoxWhisperEngine.MaxLength = 32767;
-            this.comboBoxWhisperEngine.Name = "comboBoxWhisperEngine";
-            this.comboBoxWhisperEngine.SelectedIndex = -1;
-            this.comboBoxWhisperEngine.SelectedItem = null;
-            this.comboBoxWhisperEngine.SelectedText = "";
-            this.comboBoxWhisperEngine.Size = new System.Drawing.Size(180, 21);
-            this.comboBoxWhisperEngine.TabIndex = 1;
-            this.comboBoxWhisperEngine.UsePopupWindow = false;
-            this.comboBoxWhisperEngine.SelectedIndexChanged += new System.EventHandler(this.comboBoxWhisperEngine_SelectedIndexChanged);
             // 
             // labelEngine
             // 
@@ -515,6 +485,45 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             this.labelAdvanced.Size = new System.Drawing.Size(65, 13);
             this.labelAdvanced.TabIndex = 29;
             this.labelAdvanced.Text = "Advanced...";
+            // 
+            // comboBoxWhisperEngine
+            // 
+            this.comboBoxWhisperEngine.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxWhisperEngine.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxWhisperEngine.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxWhisperEngine.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxWhisperEngine.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxWhisperEngine.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxWhisperEngine.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxWhisperEngine.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxWhisperEngine.DropDownHeight = 400;
+            this.comboBoxWhisperEngine.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxWhisperEngine.DropDownWidth = 180;
+            this.comboBoxWhisperEngine.FormattingEnabled = false;
+            this.comboBoxWhisperEngine.Location = new System.Drawing.Point(521, 9);
+            this.comboBoxWhisperEngine.MaxLength = 32767;
+            this.comboBoxWhisperEngine.Name = "comboBoxWhisperEngine";
+            this.comboBoxWhisperEngine.SelectedIndex = -1;
+            this.comboBoxWhisperEngine.SelectedItem = null;
+            this.comboBoxWhisperEngine.SelectedText = "";
+            this.comboBoxWhisperEngine.Size = new System.Drawing.Size(180, 21);
+            this.comboBoxWhisperEngine.TabIndex = 1;
+            this.comboBoxWhisperEngine.UsePopupWindow = false;
+            this.comboBoxWhisperEngine.SelectedIndexChanged += new System.EventHandler(this.comboBoxWhisperEngine_SelectedIndexChanged);
+            // 
+            // textBoxLog
+            // 
+            this.textBoxLog.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxLog.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.textBoxLog.Location = new System.Drawing.Point(465, 9);
+            this.textBoxLog.Multiline = true;
+            this.textBoxLog.Name = "textBoxLog";
+            this.textBoxLog.ReadOnly = true;
+            this.textBoxLog.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.textBoxLog.Size = new System.Drawing.Size(168, 65);
+            this.textBoxLog.TabIndex = 0;
             // 
             // WhisperAudioToText
             // 
@@ -603,5 +612,6 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         private System.Windows.Forms.Label labelAdvanced;
         private System.Windows.Forms.ToolStripMenuItem downloadCUDAForPurfviewsWhisperFasterToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showWhisperlogtxtToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem downloadNvidiaCudaForCPPCuBLASToolStripMenuItem;
     }
 }
