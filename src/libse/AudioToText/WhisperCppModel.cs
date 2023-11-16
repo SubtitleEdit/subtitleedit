@@ -155,13 +155,13 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
             {
                 Name = "large",
                 Size = "2.88 GB",
-                Urls = new []{ DownloadUrlPrefix + "ggml-large.bin" },
+                Urls = new []{ DownloadUrlPrefix + "ggml-large-v3.bin" },
             },
             new WhisperModel
             {
                 Name = "large-q5_0",
                 Size = "2.88 GB",
-                Urls = new []{ DownloadUrlPrefix + "ggml-large-q5_0.bin" },
+                Urls = new []{ DownloadUrlPrefix + "ggml-large-v3-q5_0.bin" },
             },
         };
     }

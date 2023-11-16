@@ -13,19 +13,21 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 {
     public sealed partial class WhisperDownload : Form
     {
-        private const string DownloadUrl64Cpp = "https://github.com/ggerganov/whisper.cpp/releases/download/v1.4.0/whisper-blas-bin-x64.zip";
-        private const string DownloadUrl32Cpp = "https://github.com/ggerganov/whisper.cpp/releases/download/v1.4.0/whisper-blas-bin-Win32.zip";
+        private const string DownloadUrl64Cpp = "https://github.com/ggerganov/whisper.cpp/releases/download/v1.5.0/whisper-blas-bin-x64.zip";
+        private const string DownloadUrl32Cpp = "https://github.com/ggerganov/whisper.cpp/releases/download/v1.5.0/whisper-blas-bin-Win32.zip";
         private readonly CancellationTokenSource _cancellationTokenSource;
         private readonly string _whisperChoice;
 
         private static readonly string[] Sha512HashesCpp =
         {
-            "fc1878c3b7200d0531c376bbe52319a55575e3ceeeacecbee54a366116c30eb1aa3d0a34c742f9fd5a47ffb9f24cba75653d1498e95e4f6f86c00f6d5e593d2a", // v1.4.0/whisper-blas-bin-x64.zip
-            "44cb0f326ece26c1b41bd0b20663bc946990a7c3b56150966eebefb783496089289b6002ce93d08f1862bf6600e9912ac62057c268698672397192c55eeb30a2", // v1.4.0/whisper-blas-bin-Win32.zip
+            "102cd250958c3158b96453284f101fadebbb0484762c78145309f7d7499aa2b9c9e01e5926a634bd423aee8701f65c7d851a19cb5468364697e624a2c53a325d", // v1.5.0/whisper-blas-bin-x64.zip
+            "0bc8df7ca4fdd32a80a9f8e7568b8668221a4205ff8fc3d04963081c14677c6a97e4510e7bb12d7b110fc9a88553aeaa53eff558262ff2d725cef52b3100b149", // v1.5.0/whisper-blas-bin-Win32.zip
         };
 
         private static readonly string[] OldSha512HashesCpp =
         {
+            "fc1878c3b7200d0531c376bbe52319a55575e3ceeeacecbee54a366116c30eb1aa3d0a34c742f9fd5a47ffb9f24cba75653d1498e95e4f6f86c00f6d5e593d2a", // v1.4.0/whisper-blas-bin-x64.zip
+            "44cb0f326ece26c1b41bd0b20663bc946990a7c3b56150966eebefb783496089289b6002ce93d08f1862bf6600e9912ac62057c268698672397192c55eeb30a2", // v1.4.0/whisper-blas-bin-Win32.zip
             "e193e845380676b59deade82d3f1de70ac54da3b5ffa70b4eabb3a2a96ad312d8f197403604805cef182c85c3a3370dd74a2b0b7bccf2d95b1022c10ce8c7b79", // 64-bit OpenBLAS
             "4218423f79d856096cdc8d88aad2e361740940e706e0b1d07dc3455571022419ad14cfef717f63e8fc61a7a1ef67b6722cec8b3c4c25ad7f087a23b1b89c5d91", // 32-bit OpenBLAS
             "a6a75a5d63b933c3529a500b7dd8b330530894b09461bb0a715dbedb31bf2e3493238e86af6d7cc64f3af196a6d61d96bb23853f98d21c8172d5d53d7aad33d9", // 64-bit OpenBLAS
@@ -60,15 +62,16 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         };
 
 
-        private const string DownloadUrlPurfviewFasterWhisper = "https://github.com/Purfview/whisper-standalone-win/releases/download/faster-whisper/Whisper-Faster_r160.5_windows.zip";
+        private const string DownloadUrlPurfviewFasterWhisper = "https://github.com/Purfview/whisper-standalone-win/releases/download/faster-whisper/Whisper-Faster_r160.6_windows.zip";
 
         private static readonly string[] Sha512HashesPurfviewFasterWhisper =
         {
-            "9d65922c41a8848e70f04af8deed7279f827264e1fa305c165849e391917713f0336eee07320b2c2cbb6191167953f4d6d1e23a378bfa5a4273c6065a0eba5b3", // r160.5
+            "10ac03f098f991fe9474430a7f44c6fe0574dfb88d37ea4a31b764c540337918c529c4eceaf0524e88975b11b771c61dd67501d2a59fe05008a10195d2768edf", // r160.6
         };
 
         private static readonly string[] OldSha512HashesPurfviewFasterWhisper =
         {
+            "9d65922c41a8848e70f04af8deed7279f827264e1fa305c165849e391917713f0336eee07320b2c2cbb6191167953f4d6d1e23a378bfa5a4273c6065a0eba5b3", // r160.5
             "ab2d9f0955a618474cb07141837f280192d6fe9198bab56a62c3e4e76c8bfd6a7a1b8e2d1ce106993e00e00a3305c24f17ec53d5829174dd51a69ad0f82e4b63", // r160.4
             "f66572f08bd93f684c91e40bf873c9c5207d3558ddbea2edaecd6e673300d0349e26ad41e084b7b8a4b74993fb1fd51acb4b9858f7a7c7e9ef1df4de00d07646", // r160.3
             "6a3a0e2e7ae69ec259a0d347bf0970cb276d1ce271a71e8785729fe4a453e71e807e31599223ce2d65f6d8eb8e52d6eee53c3d1d22c373e407155d7717a45ceb", // r160
@@ -325,8 +328,9 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             {
                 var hashVersion153 = "5e5822bc2d7a5b0d7e50f35460cbbf5bd145eaef03fa7cb3001d4c43622b7796243692a5ce3261e831b9d935f2441bbf7edbe8f119ea92c53fe077885fd10708";
                 var hashVersion160_3 = "104b85753ce74a81cdec13a2f8665d6af8c2974a3ebef8833cccad15624f311ae17a0e9b9325e3c25cf34edf024127f824c5f000069d7e52459123c9546e1266";
-                var hashVersion160_4 = "6983c90c96e47f53fb1451c1f0a32151ef144fe2e549affc7319d0c7666ea44dcbb0d7dc87ccdaaf0b3d8b2abe92060440e151495109f2681b99940f0eec5ad0";
-                return hash == hashVersion153 || hash == hashVersion160_3 || hash == hashVersion160_4;
+                var hashVersion160_4 = "88d1f0c620b0f7c0e87d41da0fd67a3f8b8fb8083e6bb6579d3ca3ee8f7ec919458518965f0071f49068384b86667871213aa90370bcd65c5d9334e7dd1b681e";
+                var hashVersion160_5 = "6983c90c96e47f53fb1451c1f0a32151ef144fe2e549affc7319d0c7666ea44dcbb0d7dc87ccdaaf0b3d8b2abe92060440e151495109f2681b99940f0eec5ad0";
+                return hash == hashVersion153 || hash == hashVersion160_3 || hash == hashVersion160_4 || hash == hashVersion160_5;
             }
 
             if (whisperChoice == WhisperChoice.Cpp)
@@ -335,7 +339,8 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 //var version140WhisperBlasBinX32 = "2ff76e0bd93837de11617e748a4686aedda22d01d8d0bf5dcd5411c9b78e38b56eab8665882ceee270f9b947030a268f5e6990e4f8f7e968039e943cc956a721";
                 var version130WhisperBlasBinX64 = "9164d033ac8bb9a2f4694da570c9878d24dcaee0bd2eedd26692493a47f916973f3e555c688ba28b337a57dc7effda9a116c1ed5bb8a620ce2c7d5ce42148a64";
                 var version130WhisperBlasBinX32 = "ddf75452afc283ada3d686c4cd3eb8bd79b98a4960549585916c9523dee3f9c1a1176a59fa04ffdb33e070e0eaac12b1a263f790afa1dfd4bcb806c02431469d";
-                return hash == version130WhisperBlasBinX64 || hash == version130WhisperBlasBinX32;
+                var version140WhisperBlasBinX64 = "c43fed38d1ae99e6fbbd8c842c2d550b4949081c0c7fba72cd2e2e8435ff05eac4f64e659efb09d597c3c062edf1e5026acc375d2a07290fa3c0fca9ac3bd7a2";
+                return hash == version130WhisperBlasBinX64 || hash == version130WhisperBlasBinX32 || hash == version140WhisperBlasBinX64;
             }
 
             return false;
