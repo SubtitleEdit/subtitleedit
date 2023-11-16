@@ -118,8 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="textBoxCpp.Text" xml:space="preserve">
-    <value>CPP:
-  -t N,      --threads N         [4      ] number of threads to use during computation
+    <value>  -t N,      --threads N         [4      ] number of threads to use during computation
   -p N,      --processors N      [1      ] number of processors to use during computation
   -ot N,     --offset-t N        [0      ] time offset in milliseconds
   -on N,     --offset-n N        [0      ] segment index offset
@@ -127,14 +126,15 @@
   -mc N,     --max-context N     [-1     ] maximum number of text context tokens to store
   -ml N,     --max-len N         [0      ] maximum segment length in characters
   -sow,      --split-on-word     [false  ] split on word rather than on token
-  -bo N,     --best-of N         [2      ] number of best candidates to keep
-  -bs N,     --beam-size N       [-1     ] beam size for beam search
+  -bo N,     --best-of N         [5      ] number of best candidates to keep
+  -bs N,     --beam-size N       [5      ] beam size for beam search
   -wt N,     --word-thold N      [0.01   ] word timestamp probability threshold
   -et N,     --entropy-thold N   [2.40   ] entropy threshold for decoder fail
   -lpt N,    --logprob-thold N   [-1.00  ] log probability threshold for decoder fail
-  -su,       --speed-up          [false  ] speed up audio by x2 (reduced accuracy)
+  -debug,    --debug-mode        [false  ] enable debug mode (eg. dump log_mel)
   -tr,       --translate         [false  ] translate from source language to english
   -di,       --diarize           [false  ] stereo audio diarization
+  -tdrz,     --tinydiarize       [false  ] enable tinydiarize (requires a tdrz model)
   -nf,       --no-fallback       [false  ] do not use temperature fallback while decoding
   -otxt,     --output-txt        [false  ] output result in a text file
   -ovtt,     --output-vtt        [false  ] output result in a vtt file
@@ -144,11 +144,19 @@
   -fp,       --font-path         [/System/Library/Fonts/Supplemental/Courier New Bold.ttf] path to a monospace font for karaoke video
   -ocsv,     --output-csv        [false  ] output result in a CSV file
   -oj,       --output-json       [false  ] output result in a JSON file
+  -ojf,      --output-json-full  [false  ] include more information in the JSON file
   -of FNAME, --output-file FNAME [       ] output file path (without file extension)
   -ps,       --print-special     [false  ] print special tokens
   -pc,       --print-colors      [false  ] print colors
   -pp,       --print-progress    [false  ] print progress
-  -nt,       --no-timestamps     [true   ] do not print timestamps</value>
+  -nt,       --no-timestamps     [false  ] do not print timestamps
+  -l LANG,   --language LANG     [en     ] spoken language ('auto' for auto-detect)
+  -dl,       --detect-language   [false  ] exit after automatically detecting language
+             --prompt PROMPT     [       ] initial prompt
+  -oved D,   --ov-e-device DNAME [CPU    ] the OpenVINO device used for encode inference
+  -ls,       --log-score         [false  ] log best decoder scores of tokens
+  -ng,       --no-gpu            [false  ] disable GPU
+</value>
   </data>
   <data name="textBoxConstMe.Text" xml:space="preserve">
     <value>Const-me:
@@ -230,93 +238,82 @@
 </value>
   </data>
   <data name="textBoxPurfviewFasterWhisper.Text" xml:space="preserve">
-    <value>  --temperature TEMPERATURE
+    <value>  --device DEVICE, -d DEVICE
+                        device to use (default: cpu)
+  --verbose VERBOSE, -v VERBOSE
+                        whether to print out debug messages (default: False)
+  --task {transcribe,translate}
+                        whether to perform X-&gt;X speech recognition ('transcribe') or X-&gt;English translation ('translate') (default: transcribe)
+  --temperature TEMPERATURE
                         temperature to use for sampling (default: 0)
   --best_of BEST_OF, -bo BEST_OF
                         number of candidates when sampling with non-zero temperature (default: 5)
   --beam_size BEAM_SIZE, -bs BEAM_SIZE
-                        number of beams in beam search, only applicable when temperature is zero (default: 1)
+                        number of beams in beam search, only applicable when temperature is zero (default: 5)
   --patience PATIENCE, -p PATIENCE
-                        optional patience value to use in beam decoding, as in https://arxiv.org/abs/2204.05424, the
-                        default (1.0) is equivalent to conventional beam search (default: 1.0)
+                        optional patience value to use in beam decoding, as in https://arxiv.org/abs/2204.05424, the default (1.0) is equivalent to conventional beam search (default: 1.0)
   --length_penalty LENGTH_PENALTY
-                        optional token length penalty coefficient (alpha) as in https://arxiv.org/abs/1609.08144, uses
-                        simple length normalization by default (default: 1.0)
+                        optional token length penalty coefficient (alpha) as in https://arxiv.org/abs/1609.08144, uses simple length normalization by default (default: 1.0)
   --repetition_penalty REPETITION_PENALTY
-                        Penalty applied to the score of previously generated tokens (set &gt; 1.0 to penalize). (default:
-                        1.0)
+                        Penalty applied to the score of previously generated tokens (set &gt; 1.0 to penalize). (default: 1.0)
+  --no_repeat_ngram_size NO_REPEAT_NGRAM_SIZE
+                        Prevent repetitions of ngrams with this size (set 0 to disable). (default: 0)
   --suppress_tokens SUPPRESS_TOKENS
-                        comma-separated list of token ids to suppress during sampling; '-1' will suppress most special
-                        characters except common punctuations (default: -1)
+                        comma-separated list of token ids to suppress during sampling; '-1' will suppress most special characters except common punctuations (default: -1)
   --initial_prompt INITIAL_PROMPT, -prompt INITIAL_PROMPT
-                        optional text to provide as a prompt for the first window. (default: None)
+                        optional text to provide as a prompt for the first window. Use 'None' to disable it (default: ,.?!)
   --condition_on_previous_text CONDITION_ON_PREVIOUS_TEXT
-                        if True, provide the previous output of the model as a prompt for the next window; disabling
-                        may make the text inconsistent across windows, but the model becomes less prone to getting
-                        stuck in a failure loop (default: True)
+                        if True, provide the previous output of the model as a prompt for the next window; disabling may make the text inconsistent across windows, but the model becomes less prone to getting stuck in a failure loop
+                        (default: True)
   --prompt_reset_on_temperature PROMPT_RESET_ON_TEMPERATURE
-                        Resets prompt if temperature is above this value. Arg has effect only if
-                        condition_on_previous_text is True. (default: 0.5)
+                        Resets prompt if temperature is above this value. Arg has effect only if condition_on_previous_text is True. (default: 0.5)
   --temperature_increment_on_fallback TEMPERATURE_INCREMENT_ON_FALLBACK
-                        temperature to increase when falling back when the decoding fails to meet either of the
-                        thresholds below. To disable fallback set it to 'None'. (default: 0.2)
+                        temperature to increase when falling back when the decoding fails to meet either of the thresholds below. To disable fallback set it to 'None'. (default: 0.2)
   --compression_ratio_threshold COMPRESSION_RATIO_THRESHOLD
-                        if the gzip compression ratio is higher than this value, treat the decoding as failed
-                        (default: 2.4)
+                        if the gzip compression ratio is higher than this value, treat the decoding as failed (default: 2.4)
   --logprob_threshold LOGPROB_THRESHOLD
-                        if the average log probability is lower than this value, treat the decoding as failed
-                        (default: -1.0)
+                        if the average log probability is lower than this value, treat the decoding as failed (default: -1.0)
   --no_speech_threshold NO_SPEECH_THRESHOLD
-                        if the probability of the &lt;|nospeech|&gt; token is higher than this value AND the decoding has
-                        failed due to `logprob_threshold`, consider the segment as silence (default: 0.6)
+                        if the probability of the &lt;|nospeech|&gt; token is higher than this value AND the decoding has failed due to `logprob_threshold`, consider the segment as silence (default: 0.6)
   --no_speech_strict_lvl {0,1,2}
-                        Level of stricter actions when no_speech_prob &gt; 0.93. Use beam_size=5 if this is enabled.
-                        Options: 0 - Disabled (do nothing), 1 - Reset propmt (see condition_on_previous_text), 2 -
-                        Invalidate the cached encoder output (if no_speech_threshold is not None). Arg meant to combat
-                        cases where the model is getting stuck in a failure loop or outputs nonsense (default: 0)
-  --word_timestamps WORD_TIMESTAMPS
-                        (experimental) extract word-level timestamps and refine the results based on them (default:
-                        True)
-  --highlight_words HIGHLIGHT_WORDS
+                        (experimental) Level of stricter actions when no_speech_prob &gt; 0.93. Use beam_size=5 if this is enabled. Options: 0 - Disabled (do nothing), 1 - Reset propmt (see condition_on_previous_text), 2 - Invalidate the
+                        cached encoder output (if no_speech_threshold is not None). Arg meant to combat cases where the model is getting stuck in a failure loop or outputs nonsense (default: 0)
+  --word_timestamps WORD_TIMESTAMPS, -wt WORD_TIMESTAMPS
+                        (experimental) extract word-level timestamps and refine the results based on them (default: True)
+  --highlight_words HIGHLIGHT_WORDS, -hw HIGHLIGHT_WORDS
                         underline each word as it is spoken AKA karaoke in srt and vtt output formats (default: False)
   --prepend_punctuations PREPEND_PUNCTUATIONS
-                        if word_timestamps is True, merge these punctuation symbols with the next word (default:
-                        "'“¿([{-)
+                        if word_timestamps is True, merge these punctuation symbols with the next word (default: "'“¿([{-)
   --append_punctuations APPEND_PUNCTUATIONS
-                        if word_timestamps is True, merge these punctuation symbols with the previous word (default:
-                        "'.。,，!！?？:：”)]}、)
-  --threads THREADS     number of threads used for CPU inference; By default number of the real cores but no more that
-                        4 (default: 0)
+                        if word_timestamps is True, merge these punctuation symbols with the previous word (default: "'.。,，!！?？:：”)]}、)
+  --threads THREADS     number of threads used for CPU inference; By default number of the real cores but no more that 4 (default: 0)
   --version             Show Faster-Whisper's version number
   --vad_filter VAD_FILTER, -vad VAD_FILTER
-                        Enable the voice activity detection (VAD) to filter out parts of the audio without speech.
-                        (default: True)
+                        Enable the voice activity detection (VAD) to filter out parts of the audio without speech. (default: True)
   --vad_threshold VAD_THRESHOLD
                         Probabilities above this value are considered as speech. (default: 0.45)
   --vad_min_speech_duration_ms VAD_MIN_SPEECH_DURATION_MS
                         Final speech chunks shorter min_speech_duration_ms are thrown out. (default: 350)
   --vad_max_speech_duration_s VAD_MAX_SPEECH_DURATION_S
-                        Maximum duration of speech chunks in seconds. Longer will be split at the timestamp of the
-                        last silence. (default: None)
+                        Maximum duration of speech chunks in seconds. Longer will be split at the timestamp of the last silence. (default: None)
   --vad_min_silence_duration_ms VAD_MIN_SILENCE_DURATION_MS
                         In the end of each speech chunk time to wait before separating it. (default: 3000)
   --vad_speech_pad_ms VAD_SPEECH_PAD_MS
                         Final speech chunks are padded by speech_pad_ms each side. (default: 900)
   --vad_window_size_samples VAD_WINDOW_SIZE_SAMPLES
-                        Size of audio chunks fed to the silero VAD model. Values other than 512, 1024, 1536 may affect
-                        model perfomance!!! (default: 1536)
+                        Size of audio chunks fed to the silero VAD model. Values other than 512, 1024, 1536 may affect model perfomance!!! (default: 1536)
   --compute_type {default,auto,int8,int8_float16,int8_float32,int8_bfloat16,int16,float16,float32,bfloat16}, -ct {default,auto,int8,int8_float16,int8_float32,int8_bfloat16,int16,float16,float32,bfloat16}
-                        Type of quantization to use (see https://opennmt.net/CTranslate2/quantization.html). (default:
-                        default)
+                        Type of quantization to use (see https://opennmt.net/CTranslate2/quantization.html). (default: auto)
   --batch_recursive, -br
-                        Enables recursive batch processing. Note: If set then it changes defaults of --output_dir.
-                        (default: False)
-  --beep_off            Disables beep sound when operation is finished. (default: False)
-  --skip                Skips files if 'srt' subtitle exists. Works if input is wildcard or directory. (default:
-                        False)
-  --checkcuda, -cc      Check for CUDA devices. (for Subtitle Edit's internal use)
+                        Enables recursive batch processing. Note: If set then it changes defaults of --output_dir. (default: False)
+  --beep_off            Disables the beep sound when operation is finished. (default: False)
+  --skip                Skips files if 'srt' subtitle exists. Works if input is wildcard or directory. (default: False)
+  --checkcuda, -cc      Returns CUDA device count. (for Subtitle Edit's internal use)
   --print_progress, -pp
                         Prints progress bar instead of transcription. (default: False)
-	</value>
+  --postfix             Adds language as a postfix to subtitle's filename. (default: False)
+  --one_word            Outputs srt and vtt subtitles with one word per line. Note: VAD may slightly reduce the accuracy of timestamps on some lines. (default: False)
+  --PR163_off           Disables PR163. For dev experiments. (default: False)
+</value>
   </data>
 </root>

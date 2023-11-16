@@ -125,6 +125,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             // textBoxCpp
             // 
             this.textBoxCpp.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textBoxCpp.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxCpp.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBoxCpp.Location = new System.Drawing.Point(3, 3);
             this.textBoxCpp.Multiline = true;
@@ -150,6 +151,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             // textBoxConstMe
             // 
             this.textBoxConstMe.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textBoxConstMe.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxConstMe.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBoxConstMe.Location = new System.Drawing.Point(3, 3);
             this.textBoxConstMe.Multiline = true;
@@ -175,6 +177,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             // textBoxOpenAI
             // 
             this.textBoxOpenAI.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textBoxOpenAI.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxOpenAI.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBoxOpenAI.Location = new System.Drawing.Point(3, 3);
             this.textBoxOpenAI.Multiline = true;
@@ -200,6 +203,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             // textBoxPurfviewFasterWhisper
             // 
             this.textBoxPurfviewFasterWhisper.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textBoxPurfviewFasterWhisper.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxPurfviewFasterWhisper.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBoxPurfviewFasterWhisper.Location = new System.Drawing.Point(3, 3);
             this.textBoxPurfviewFasterWhisper.Multiline = true;
