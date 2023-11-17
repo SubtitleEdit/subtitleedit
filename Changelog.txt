@@ -48,6 +48,7 @@
    * Update Purfview's Faster Whisper to r160.6 (large v3) - thx Purfview
    * Update Whisper CPP to v1.5.0
    * Update OpenAI Whisper to include large v3 model
+   * Update FFmpeg/FFprobe to version 6.1 (from 6.0)
 * FIXED:
    * Fix for paste in waveform - thx Ruong
    * Fix remember text box settings (bold/size) - thx Siamak
