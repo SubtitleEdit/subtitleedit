@@ -13195,7 +13195,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     numericUpDownDuration.Value = numericUpDownDuration.Minimum;
                 }
-                else
+                else if (numericUpDownDuration.Value != d)
                 {
                     numericUpDownDuration.Value = d;
                 }
@@ -13217,11 +13217,6 @@ namespace Nikse.SubtitleEdit.Forms
                 var currentParagraph = _subtitle.GetParagraphOrDefault(firstSelectedIndex);
                 if (currentParagraph != null)
                 {
-                    if (timerAutoDuration.Enabled)
-                    {
-                        StopAutoDuration();
-                    }
-
                     // update _subtitle + listview
                     var oldDuration = currentParagraph.Duration.ToString();
                     var temp = new Paragraph(currentParagraph);
@@ -24562,6 +24557,11 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             return; // too close to next subtitle
                         }
+                    }
+
+                    if (duration == currentParagraph.Duration.TotalMilliseconds)
+                    {
+                        return;
                     }
 
                     SetDurationInSeconds(duration / TimeCode.BaseUnit);
@@ -36138,6 +36138,14 @@ namespace Nikse.SubtitleEdit.Forms
                         audioVisualizer.Invalidate();
                     }
                 }
+            }
+        }
+
+        private void numericUpDownDuration_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (timerAutoDuration.Enabled)
+            {
+                StopAutoDuration();
             }
         }
     }

@@ -5530,6 +5530,7 @@ namespace Nikse.SubtitleEdit.Forms
             0,
             0});
             this.numericUpDownDuration.ValueChanged += new System.EventHandler(this.NumericUpDownDurationValueChanged);
+            this.numericUpDownDuration.MouseDown += new System.Windows.Forms.MouseEventHandler(this.numericUpDownDuration_MouseDown);
             // 
             // buttonPrevious
             // 
