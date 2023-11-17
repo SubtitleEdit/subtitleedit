@@ -1264,6 +1264,11 @@ namespace Nikse.SubtitleEdit.Forms
             MakeHistoryForUndo(string.Format(_language.VideoControls.BeforeChangingTimeInWaveformX, "#" + p.Number + " " + p.Text));
             _subtitle.Paragraphs[index] = p;
 
+            if (timerAutoDuration.Enabled)
+            {
+                StopAutoDuration();
+            }
+
             p.StartTime.TotalMilliseconds = e.Paragraph.StartTime.TotalMilliseconds;
             if (IsOriginalEditable)
             {
@@ -1288,6 +1293,11 @@ namespace Nikse.SubtitleEdit.Forms
                 Math.Abs(beforeParagraph.EndTime.TotalMilliseconds - paragraph.EndTime.TotalMilliseconds) < 0.01)
             {
                 _makeHistoryPaused = true;
+            }
+
+            if (timerAutoDuration.Enabled)
+            {
+                StopAutoDuration();
             }
 
             int selectedIndex = FirstSelectedIndex;
