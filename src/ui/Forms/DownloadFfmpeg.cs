@@ -50,7 +50,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void DownloadFfmpeg_Shown(object sender, EventArgs e)
         {
-            var url = "https://github.com/SubtitleEdit/support-files/raw/master/ffpmeg/ffmpeg-64.zip";
+            var url = "https://github.com/SubtitleEdit/support-files/releases/download/ffmpeg-v6-1/ffmpeg61.zip";
             if (IntPtr.Size == 32)
             {
                 url = "https://github.com/SubtitleEdit/support-files/releases/download/ffmpegwin32v5.1/ffmpeg-win32-n5.1.zip";
@@ -58,7 +58,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (_title.Contains("ffprobe", StringComparison.OrdinalIgnoreCase))
             {
-                url = "https://github.com/SubtitleEdit/support-files/releases/download/ffprove-6.0/ffprobe.zip";
+                url = "https://github.com/SubtitleEdit/support-files/releases/download/ffmpeg-v6-1/ffprobe61.zip";
             }
 
             try
