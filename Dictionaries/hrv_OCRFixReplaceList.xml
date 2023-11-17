@@ -65,6 +65,7 @@
     <Word from="begstvu" to="bijegu" />
     <!-- <Word from="beo" to="bijel | bio" /> ne može jer su dvije verzije! -->
     <Word from="behu" to="bijahu" />
+    <Word from="berberu" to="brijaču" />
     <Word from="bes" to="bijes" />
     <Word from="besa" to="bijesa" />
     <Word from="besan" to="bijesan" />
@@ -1229,6 +1230,8 @@
     <Word from="negujem" to="njegujem" />
     <Word from="njegi" to="njezi" />
     <Word from="njegou" to="njegovu" />
+    <Word from="negovani" to="njegovani" />
+    <Word from="negovanim" to="njegovanim" />
     <Word from="njenum" to="njenim" />
     <Word from="nesmijem" to="ne smijem" />
     <Word from="netreba" to="ne treba" />
@@ -1431,7 +1434,7 @@
     <Word from="ovsena" to="zobena" />
     <Word from="ovsenu" to="zobenu" />
     <Word from="ozljeđen" to="ozlijeđen" />
-        <!-- p -->
+    <!-- p -->
     <Word from="pakuj" to="pakiraj" />
     <Word from="pakuje" to="pakira" />
     <Word from="Pakuje" to="Pakira" />
@@ -1619,6 +1622,7 @@
     <Word from="porodicu" to="obitelj" />
     <Word from="porudžbine" to="narudžbe" />
     <Word from="porudžbinu" to="narudžbu" />
+    <Word from="posavetuje" to="posavjetuje" />
     <Word from="poslat" to="poslan" />
     <Word from="poslata" to="poslana" />
     <Word from="poslato" to="poslano" />
@@ -2483,6 +2487,7 @@
     <Word from="uleću" to="ulijeću" />
     <Word from="ulevo" to="ulijevo" />
     <Word from="ume" to="zna" />
+    <Word from="umeća" to="umijeća" />
     <Word from="umeju" to="umiju" />
     <Word from="umem" to="umijem" />
     <Word from="umeš" to="umiješ" />
@@ -2897,6 +2902,7 @@
     <Word from="Bredliju" to="Bradleyu" />
     <Word from="Brejdi" to="Brady" />
     <Word from="Bridžit" to="Bridget" />
+    <Word from="Bridžet" to="Bridget" />
     <Word from="Brižit" to="Brigitte" />
     <Word from="Bruks" to="Brooks" />
     <Word from="Buč" to="Butch" />
@@ -5011,10 +5017,8 @@
     <RegEx find="nspirisa([nlt])" replaceWith="nspirira$1" />
     <RegEx find="novj?eta" replaceWith="novijeta" />
     <RegEx find="nović" replaceWith="novit ć" />
-    <RegEx find="npz" replaceWith="noz" />
-    <RegEx find="nrd" replaceWith="ned" />
-    <RegEx find="nrk" replaceWith="nek" />
-    <RegEx find="nrm" replaceWith="nem" />
+    <RegEx find="np([dgsz])" replaceWith="no$1" />
+    <RegEx find="nr([dkm])" replaceWith="ne$1" />
     <RegEx find="nsj" replaceWith="naj" />
     <RegEx find="nskio" replaceWith="nksio" />
     <RegEx find="ntis" replaceWith="ntir" />
