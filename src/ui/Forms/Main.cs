@@ -13217,6 +13217,11 @@ namespace Nikse.SubtitleEdit.Forms
                 var currentParagraph = _subtitle.GetParagraphOrDefault(firstSelectedIndex);
                 if (currentParagraph != null)
                 {
+                    if (timerAutoDuration.Enabled)
+                    {
+                        StopAutoDuration();
+                    }
+
                     // update _subtitle + listview
                     var oldDuration = currentParagraph.Duration.ToString();
                     var temp = new Paragraph(currentParagraph);
