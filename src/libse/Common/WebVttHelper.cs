@@ -488,8 +488,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public static string SetParagraphStyles(Paragraph p, List<WebVttStyle> styles)
         {
-            if (string.IsNullOrEmpty(p.Text) ||
-                !p.Text.Contains("<c.", StringComparison.Ordinal))
+            if (string.IsNullOrEmpty(p.Text))
             {
                 return p.Text;
             }
