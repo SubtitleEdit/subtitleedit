@@ -119,6 +119,7 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             {
                 labelTimeCodesStatus.Text = LanguageSettings.Current.BeautifyTimeCodes.NoTimeCodesLoaded;
                 buttonExtractTimeCodes.Enabled = true;
+                buttonExtractTimeCodes.BringToFront();
                 progressBarExtractTimeCodes.Enabled = true;
                 progressBarExtractTimeCodes.Value = 0;
             }
@@ -181,6 +182,7 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             labelTimeCodesStatus.Enabled = true;
             checkBoxExtractExactTimeCodes.Enabled = true;
             buttonExtractTimeCodes.Enabled = true;
+            buttonExtractTimeCodes.BringToFront();
             buttonCancelTimeCodes.Visible = false;
             Cursor = Cursors.Default;
             buttonOK.Enabled = true;
