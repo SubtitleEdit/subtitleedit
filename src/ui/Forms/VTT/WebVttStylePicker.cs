@@ -44,7 +44,7 @@ namespace Nikse.SubtitleEdit.Forms.VTT
                 }
             }
 
-            DialogResult = ImportExportStyles.Count == 0 ? DialogResult.Cancel : DialogResult.OK;
+            DialogResult = DialogResult.OK;
         }
 
         private void WebVttImportExport_KeyDown(object sender, KeyEventArgs e)
