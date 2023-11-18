@@ -19,8 +19,8 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
         /// <summary>
         /// Set period if distance to next subtitle is more than this value in milliseconds.
         /// </summary>
-        public double SetPeriodIfDistanceToNextIsMoreThan { get; set; } = 400;
-        public double SetPeriodIfDistanceToNextIsMoreThanAlways { get; set; } = 600;
+        public double SetPeriodIfDistanceToNextIsMoreThan { get; set; } = 600;
+        public double SetPeriodIfDistanceToNextIsMoreThanAlways { get; set; } = 1250;
 
         public int ParagraphMaxChars { get; set; }
 
@@ -223,7 +223,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
             }
 
             var englishSkipLastWords = new[] { "with", "however", "a" };
-            var englishSkipFirstWords = new[] { "to", "and", "but", "and", "with", "off" };
+            var englishSkipFirstWords = new[] { "to", "and", "but", "and", "with", "off", "have" };
 
             var subtitle = new Subtitle(inputSubtitle);
             for (var index = 0; index < subtitle.Paragraphs.Count - 1; index++)
@@ -236,9 +236,12 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                     !paragraph.Text.EndsWith('?') &&
                     !paragraph.Text.EndsWith(',') &&
                     !paragraph.Text.EndsWith(':') &&
-                    !paragraph.Text.EndsWith(']'))
+                    !paragraph.Text.EndsWith(')') &&
+                    !paragraph.Text.EndsWith(']') &&
+                    !paragraph.Text.EndsWith('}'))
                 {
-                    if (next.StartTime.TotalMilliseconds - paragraph.EndTime.TotalMilliseconds > SetPeriodIfDistanceToNextIsMoreThanAlways)
+                    var gap = next.StartTime.TotalMilliseconds - paragraph.EndTime.TotalMilliseconds;
+                    if (gap > SetPeriodIfDistanceToNextIsMoreThanAlways)
                     {
                         paragraph.Text += ".";
                     }
@@ -263,7 +266,9 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                 !last.Text.EndsWith('?') &&
                 !last.Text.EndsWith(',') &&
                 !last.Text.EndsWith(':') &&
-                !last.Text.EndsWith(']'))
+                !last.Text.EndsWith(')') &&
+                !last.Text.EndsWith(']') &&
+                !last.Text.EndsWith('}'))
             {
                 subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].Text += ".";
             }
