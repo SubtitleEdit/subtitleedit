@@ -53,11 +53,11 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             this.contextMenuStripWhisperAdvanced = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.setCPPConstmeModelsFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.removeTemporaryFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.downloadCUDAForPurfviewsWhisperFasterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.labelEngine = new System.Windows.Forms.Label();
             this.comboBoxWhisperEngine = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelAdvanced = new System.Windows.Forms.Label();
             this.buttonAdvanced = new System.Windows.Forms.Button();
-            this.downloadCUDAForPurfviewsWhisperFasterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBoxModels.SuspendLayout();
             this.groupBoxInputFiles.SuspendLayout();
             this.contextMenuStripWhisperAdvanced.SuspendLayout();
@@ -113,6 +113,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             this.textBoxLog.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxLog.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxLog.Location = new System.Drawing.Point(469, 9);
             this.textBoxLog.Multiline = true;
             this.textBoxLog.Name = "textBoxLog";
@@ -177,6 +178,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             this.comboBoxLanguages.SelectedText = "";
             this.comboBoxLanguages.Size = new System.Drawing.Size(194, 21);
             this.comboBoxLanguages.TabIndex = 7;
+            this.comboBoxLanguages.UsePopupWindow = false;
             this.comboBoxLanguages.SelectedIndexChanged += new System.EventHandler(this.comboBoxLanguages_SelectedIndexChanged);
             // 
             // buttonDownload
@@ -231,6 +233,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             this.comboBoxModels.SelectedText = "";
             this.comboBoxModels.Size = new System.Drawing.Size(240, 21);
             this.comboBoxModels.TabIndex = 0;
+            this.comboBoxModels.UsePopupWindow = false;
             // 
             // linkLabeWhisperWebSite
             // 
@@ -320,22 +323,29 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             this.removeTemporaryFilesToolStripMenuItem,
             this.downloadCUDAForPurfviewsWhisperFasterToolStripMenuItem});
             this.contextMenuStripWhisperAdvanced.Name = "contextMenuStripWhisperAdvanced";
-            this.contextMenuStripWhisperAdvanced.Size = new System.Drawing.Size(320, 92);
+            this.contextMenuStripWhisperAdvanced.Size = new System.Drawing.Size(358, 70);
             this.contextMenuStripWhisperAdvanced.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripWhisperAdvanced_Opening);
             // 
             // setCPPConstmeModelsFolderToolStripMenuItem
             // 
             this.setCPPConstmeModelsFolderToolStripMenuItem.Name = "setCPPConstmeModelsFolderToolStripMenuItem";
-            this.setCPPConstmeModelsFolderToolStripMenuItem.Size = new System.Drawing.Size(319, 22);
+            this.setCPPConstmeModelsFolderToolStripMenuItem.Size = new System.Drawing.Size(357, 22);
             this.setCPPConstmeModelsFolderToolStripMenuItem.Text = "Set CPP/Const-me models folder...";
             this.setCPPConstmeModelsFolderToolStripMenuItem.Click += new System.EventHandler(this.setCPPConstMeModelsFolderToolStripMenuItem_Click);
             // 
             // removeTemporaryFilesToolStripMenuItem
             // 
             this.removeTemporaryFilesToolStripMenuItem.Name = "removeTemporaryFilesToolStripMenuItem";
-            this.removeTemporaryFilesToolStripMenuItem.Size = new System.Drawing.Size(319, 22);
+            this.removeTemporaryFilesToolStripMenuItem.Size = new System.Drawing.Size(357, 22);
             this.removeTemporaryFilesToolStripMenuItem.Text = "Remove temporary files";
             this.removeTemporaryFilesToolStripMenuItem.Click += new System.EventHandler(this.removeTemporaryFilesToolStripMenuItem_Click);
+            // 
+            // downloadCUDAForPurfviewsWhisperFasterToolStripMenuItem
+            // 
+            this.downloadCUDAForPurfviewsWhisperFasterToolStripMenuItem.Name = "downloadCUDAForPurfviewsWhisperFasterToolStripMenuItem";
+            this.downloadCUDAForPurfviewsWhisperFasterToolStripMenuItem.Size = new System.Drawing.Size(357, 22);
+            this.downloadCUDAForPurfviewsWhisperFasterToolStripMenuItem.Text = "Download cuBLAS and cuDNN libs for Faster-Whisper";
+            this.downloadCUDAForPurfviewsWhisperFasterToolStripMenuItem.Click += new System.EventHandler(this.downloadCUDAForPurfviewsWhisperFasterToolStripMenuItem_Click);
             // 
             // labelEngine
             // 
@@ -369,6 +379,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             this.comboBoxWhisperEngine.SelectedText = "";
             this.comboBoxWhisperEngine.Size = new System.Drawing.Size(154, 21);
             this.comboBoxWhisperEngine.TabIndex = 28;
+            this.comboBoxWhisperEngine.UsePopupWindow = false;
             this.comboBoxWhisperEngine.SelectedIndexChanged += new System.EventHandler(this.comboBoxWhisperEngine_SelectedIndexChanged);
             // 
             // labelAdvanced
@@ -391,13 +402,6 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             this.buttonAdvanced.Text = "Advanced";
             this.buttonAdvanced.UseVisualStyleBackColor = true;
             this.buttonAdvanced.Click += new System.EventHandler(this.buttonAdvanced_Click);
-            // 
-            // downloadCUDAForPurfviewsWhisperFasterToolStripMenuItem
-            // 
-            this.downloadCUDAForPurfviewsWhisperFasterToolStripMenuItem.Name = "downloadCUDAForPurfviewsWhisperFasterToolStripMenuItem";
-            this.downloadCUDAForPurfviewsWhisperFasterToolStripMenuItem.Size = new System.Drawing.Size(319, 22);
-            this.downloadCUDAForPurfviewsWhisperFasterToolStripMenuItem.Text = "Download cuBLAS and cuDNN libs for Faster-Whisper";
-            this.downloadCUDAForPurfviewsWhisperFasterToolStripMenuItem.Click += new System.EventHandler(this.downloadCUDAForPurfviewsWhisperFasterToolStripMenuItem_Click);
             // 
             // WhisperAudioToTextSelectedLines
             // 
