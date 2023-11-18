@@ -1883,6 +1883,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 {
                                     SeLogger.Error(exception, "Batch translate failed");
                                     item.SubItems[3].Text = "Translate failed";
+                                    _errors++;
                                 }
                             }
 
