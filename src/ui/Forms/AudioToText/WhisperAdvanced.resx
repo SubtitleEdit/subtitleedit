@@ -312,8 +312,11 @@
   --print_progress, -pp
                         Prints progress bar instead of transcription. (default: False)
   --postfix             Adds language as a postfix to subtitle's filename. (default: False)
-  --one_word            Outputs srt and vtt subtitles with one word per line. Note: VAD may slightly reduce the accuracy of timestamps on some lines. (default: False)
-  --PR163_off           Disables PR163. For dev experiments. (default: False)
-</value>
+  --one_word {0,1,2}    0) Disabled. 1) Outputs srt and vtt subtitles with one word per line. 2) As `1`, plus removes
+                        whitespace and ensures &gt;= 50ms for sub lines. Note: VAD may slightly reduce the accuracy of
+                        timestamps on some lines. (default: 0)
+  --check_files         Checks input files for errors before passing all them for transcription. Works if input is
+                        wildcard or directory. (default: False)
+  --PR163_off           Disables PR163. For dev experiments. (default: False)</value>
   </data>
 </root>
