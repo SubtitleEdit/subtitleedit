@@ -1,6 +1,6 @@
 ﻿Subtitle Edit Changelog
 
-4.0.2 (xth November 2023) - BETA
+4.0.2 (19th November 2023)
 * NEW:
    * UI layouts with support for TikTok/YouTube-shorts - thx leon/jmaraujouy/LearningJer 
    * Language filter (to minimize the long list of languages in combo boxes)
