@@ -2,7 +2,7 @@
 <Language Name="Français">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.1</Version>
+    <Version>4.0.2</Version>
     <TranslatedBy>Traduction de Pierre le Lidgeu. (Updated: Nov.,05 2023)</TranslatedBy>
     <CultureName>fr-FR</CultureName>
     <HelpFile />
@@ -326,7 +326,7 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
     <ConvertOptions>Options de conversion</ConvertOptions>
     <RemoveFormatting>Retirer balises de mise en forme</RemoveFormatting>
     <RemoveStyleActor>Retirer style/acteur</RemoveStyleActor>
-    <StyleActor>Style/acteur (séparés par &quot;,&quot;)</StyleActor>
+    <StyleActor>Style/acteur (séparés par ",")</StyleActor>
     <RemoveTextForHI>Retirer texte "surdité"</RemoveTextForHI>
     <ConvertColorsToDialog>Convertir les couleurs en dialogue</ConvertColorsToDialog>
     <OverwriteOriginalFiles>Remplacer fichiers originaux (nouvelle extension si format modifié)</OverwriteOriginalFiles>
@@ -471,7 +471,7 @@ Nous tirons parti du rythme intrinsèque de l'image.</CreateSimpleChainingToolTi
     <GapInMsFormat>{0} ms @ {1} FPS (ips)</GapInMsFormat>
     <OffsetSafeZoneError>La zone sûre doit être &gt; le décalage max.</OffsetSafeZoneError>
   </BeautifyTimeCodesProfile>
- <BinEdit>
+  <BinEdit>
     <ImportImage>Importer l'image…</ImportImage>
     <ExportImage>Exporter l'image…</ExportImage>
     <SetText>Définir le texte</SetText>
@@ -521,8 +521,8 @@ Nous tirons parti du rythme intrinsèque de l'image.</CreateSimpleChainingToolTi
     <Enabled>Activé</Enabled>
     <Name>Nom</Name>
     <LinesFoundX>Lignes trouvées : {0}</LinesFoundX>
-      <ExtraNames>Ajouter des noms supplémentaires (séparés par des virgules, usage unique)</ExtraNames>
-</ChangeCasingNames>
+    <ExtraNames>Ajouter des noms supplémentaires (séparés par des virgules, usage unique)</ExtraNames>
+  </ChangeCasingNames>
   <ChangeFrameRate>
     <Title>Modifier la fréquence (fps)</Title>
     <ConvertFrameRateOfSubtitle>Convertir la fréquence d'image du sous-titre</ConvertFrameRateOfSubtitle>
@@ -3003,13 +3003,13 @@ Continuer ?</RestoreDefaultSettingsMsg>
     <CharactersPerSecondMinimum>Caractères/sec - minimum : {0:0.000}</CharactersPerSecondMinimum>
     <CharactersPerSecondMaximum>Caractères/sec - maximum : {0:0.000}</CharactersPerSecondMaximum>
     <CharactersPerSecondAverage>Caractères/sec - moyen : {0:0.000}</CharactersPerSecondAverage>
-     <CharactersPerSecondExceedingOptimal>Caractères/sec - dépassant l'optimum ({0:0.##} cps) : {1} ({2:0.00}%)</CharactersPerSecondExceedingOptimal>
+    <CharactersPerSecondExceedingOptimal>Caractères/sec - dépassant l'optimum ({0:0.##} cps) : {1} ({2:0.00}%)</CharactersPerSecondExceedingOptimal>
     <CharactersPerSecondExceedingMaximum>Caractères/sec - dépassant le maximum ({0:0.##} cps) : {1} ({2:0.00}%)</CharactersPerSecondExceedingMaximum>
     <WordsPerMinuteMinimum>Mots/min - minimum : {0:0.000}</WordsPerMinuteMinimum>
     <WordsPerMinuteMaximum>Mots/min - maximum : {0:0.000}</WordsPerMinuteMaximum>
     <WordsPerMinuteAverage>Mots/min - moyen : {0:0.000}</WordsPerMinuteAverage>
     <WordsPerMinuteExceedingMaximum>Mots/min - dépassant maximum ({0} mpm) : {1} ({2:0.00}%)</WordsPerMinuteExceedingMaximum>
-   <GapMinimum>Ecart - minimum : {0:#,##0} ms</GapMinimum>
+    <GapMinimum>Ecart - minimum : {0:#,##0} ms</GapMinimum>
     <GapMaximum>Ecart - maximum : {0:#,##0} ms</GapMaximum>
     <GapAverage>Ecart - moyen : {0:#,##0.##} ms</GapAverage>
     <GapExceedingMinimum>Ecart - sous le minimum ({0:#,##0} ms) : {1} ({2:0.00}%)</GapExceedingMinimum>

@@ -2,7 +2,7 @@
 <Language Name="Italiano">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.1</Version>
+    <Version>4.0.2</Version>
     <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 06.11.2023</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
@@ -3372,10 +3372,10 @@ Vuoi mantenere le modifiche?</KeepChangesMessage>
     <Title>WebVTT - imposta nuova voce</Title>
     <VoiceName>Nome voce</VoiceName>
   </WebVttNewVoice>
-    <WebVttProperties>
-      <UseXTimeStamp>Usa valore intestazione X-TIMESTAMP-MAP</UseXTimeStamp>
-      <MergeLines>Al caricamento unisci righe con lo stesso testo</MergeLines>
-    </WebVttProperties>
+  <WebVttProperties>
+    <UseXTimeStamp>Usa valore intestazione X-TIMESTAMP-MAP</UseXTimeStamp>
+    <MergeLines>Al caricamento unisci righe con lo stesso testo</MergeLines>
+  </WebVttProperties>
   <WebVttStyleManager>
     <Title>Stili WebVTT</Title>
   </WebVttStyleManager>
