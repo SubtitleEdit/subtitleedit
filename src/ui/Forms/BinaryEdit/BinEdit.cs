@@ -260,6 +260,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
         private int _screenHeight;
         private string _lastSaveHash;
         private readonly string _nOcrFileName;
+        private bool _loading;
 
         private int _columnIndexForced;
         private int _columnIndexNumber = 1;
@@ -288,9 +289,11 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             panelBackground.BackColor = Configuration.Settings.Tools.BinEditBackgroundColor;
             labelSyntaxError.Text = string.Empty;
 
+            _loading = loading;
             if (loading)
             {
                 ShowInTaskbar = true;
+                Configuration.Settings.General.StartRememberPositionAndSize = true;
             }
 
             fileToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.File.Title;
@@ -2116,6 +2119,47 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private void BinEdit_Shown(object sender, EventArgs e)
         {
+            if ((Configuration.Settings.General.StartRememberPositionAndSize || _loading) &&
+                !string.IsNullOrEmpty(Configuration.Settings.Tools.BinEditStartPosition))
+            {
+                StartPosition = FormStartPosition.CenterParent;
+
+                var parts = Configuration.Settings.Tools.BinEditStartPosition.Split(';');
+                if (parts.Length == 2)
+                {
+                    if (int.TryParse(parts[0], out var x) && int.TryParse(parts[1], out var y))
+                    {
+                        if (x > -100 || y > -100)
+                        {
+                            Left = x;
+                            Top = y;
+                        }
+                    }
+                }
+
+                if (Configuration.Settings.Tools.BinEditStartSize == "Maximized")
+                {
+                    WindowState = FormWindowState.Maximized;
+                }
+                else
+                {
+                    var partsSize = Configuration.Settings.Tools.BinEditStartSize.Split(';');
+                    if (partsSize.Length == 2)
+                    {
+                        if (int.TryParse(partsSize[0], out var x) && int.TryParse(partsSize[1], out var y))
+                        {
+                            if (x > -100 || y > -100)
+                            {
+                                Width = x;
+                                Height = y;
+                            }
+                        }
+                    }
+                }
+
+            }
+
+
             timeUpDownStartTime.MaskedTextBox.TextChanged += (o, args) =>
             {
                 if (subtitleListView1.SelectedItems.Count < 1)
@@ -2843,6 +2887,12 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     e.Cancel = true;
                     return;
                 }
+            }
+
+            if (Configuration.Settings.General.StartRememberPositionAndSize || _loading)
+            {
+                Configuration.Settings.Tools.BinEditStartPosition = Left + ";" + Top;
+                Configuration.Settings.Tools.BinEditStartSize = WindowState == FormWindowState.Maximized ? "Maximized" : Width + ";" + Height;
             }
 
             CloseVideo();

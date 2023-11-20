@@ -321,6 +321,8 @@ namespace Nikse.SubtitleEdit.Core.Common
         public int BinEditBottomMargin { get; set; }
         public int BinEditLeftMargin { get; set; }
         public int BinEditRightMargin { get; set; }
+        public string BinEditStartPosition { get; set; }
+        public string BinEditStartSize { get; set; }
         public bool FixCommonErrorsFixOverlapAllowEqualEndStart { get; set; }
         public bool FixCommonErrorsSkipStepOne { get; set; }
         public string ImportTextSplitting { get; set; }
@@ -6248,6 +6250,18 @@ $HorzAlign          =   Center
                 settings.Tools.BinEditRightMargin = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
+            subNode = node.SelectSingleNode("BinEditStartPosition");
+            if (subNode != null)
+            {
+                settings.Tools.BinEditStartPosition = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("BinEditStartSize");
+            if (subNode != null)
+            {
+                settings.Tools.BinEditStartSize = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("BridgeGapMilliseconds");
             if (subNode != null)
             {
@@ -11724,6 +11738,8 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("BinEditBottomMargin", settings.Tools.BinEditBottomMargin.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BinEditLeftMargin", settings.Tools.BinEditLeftMargin.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BinEditRightMargin", settings.Tools.BinEditRightMargin.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("BinEditStartPosition", settings.Tools.BinEditStartPosition);
+                textWriter.WriteElementString("BinEditStartSize", settings.Tools.BinEditStartSize);
                 textWriter.WriteElementString("BridgeGapMilliseconds", settings.Tools.BridgeGapMilliseconds.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BridgeGapMillisecondsMinGap", settings.Tools.BridgeGapMillisecondsMinGap.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ExportCustomTemplates", settings.Tools.ExportCustomTemplates);

@@ -2889,9 +2889,7 @@ namespace Nikse.SubtitleEdit.Forms
                         if (_loading)
                         {
                             _exitWhenLoaded = _loading;
-                            _forceClose = _loading;
                             Opacity = 0;
-                            SuspendLayout();
                         }
                     }
                     else
