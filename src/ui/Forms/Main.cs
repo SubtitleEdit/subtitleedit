@@ -482,6 +482,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (fileName.Equals("/batchconvertui", StringComparison.OrdinalIgnoreCase) || fileName.Equals("-batchconvertui", StringComparison.OrdinalIgnoreCase))
                     {
                         new BatchConvert(this.Icon).ShowDialog();
+                        Opacity = 0;
                         Environment.Exit(0);
                     }
 
@@ -2880,9 +2881,17 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (Configuration.Settings.Tools.BDOpenIn == "EDIT")
                     {
-                        using (var form = new BinaryEdit.BinEdit(fileName))
+                        using (var form = new BinaryEdit.BinEdit(fileName, _loading))
                         {
                             form.ShowDialog(this);
+                        }
+
+                        if (_loading)
+                        {
+                            _exitWhenLoaded = _loading;
+                            _forceClose = _loading;
+                            Opacity = 0;
+                            SuspendLayout();
                         }
                     }
                     else
@@ -34766,7 +34775,7 @@ namespace Nikse.SubtitleEdit.Forms
                                      "All files|*.*";
             if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
             {
-                using (var form = new BinaryEdit.BinEdit(openFileDialog1.FileName))
+                using (var form = new BinaryEdit.BinEdit(openFileDialog1.FileName, false))
                 {
                     form.ShowDialog(this);
                 }
