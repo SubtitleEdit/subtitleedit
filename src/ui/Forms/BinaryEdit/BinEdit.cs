@@ -2662,6 +2662,12 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private void UpdateListViewColumns()
         {
+            var oldIdx = 0;
+            if (subtitleListView1.SelectedItems.Count > 0)
+            {
+                oldIdx = subtitleListView1.SelectedItems[0].Index;
+            }
+
             var index = 0;
             subtitleListView1.BeginUpdate();
             subtitleListView1.Items.Clear();
@@ -2727,6 +2733,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
             FillListView(_subtitle);
             subtitleListView1.EndUpdate();
+            SelectIndexAndEnsureVisible(oldIdx);
+            subtitleListView1.AutoSizeLastColumn();
         }
 
         private void openVideoToolStripMenuItem_Click(object sender, EventArgs e)
