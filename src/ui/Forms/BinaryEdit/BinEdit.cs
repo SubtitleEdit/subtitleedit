@@ -271,7 +271,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
         private int _columnIndexCps = -1;
         private int _columnIndexWpm = -1;
 
-        public BinEdit(string fileName)
+        public BinEdit(string fileName, bool loading)
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
@@ -287,6 +287,11 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             labelVideoInfo.Text = string.Empty;
             panelBackground.BackColor = Configuration.Settings.Tools.BinEditBackgroundColor;
             labelSyntaxError.Text = string.Empty;
+
+            if (loading)
+            {
+                ShowInTaskbar = true;
+            }
 
             fileToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.File.Title;
             openFileToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.File.Open;
