@@ -1558,6 +1558,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             AddNode(fileNode, LanguageSettings.Current.Main.Menu.File.Import + " -> " + LanguageSettings.Current.Main.Menu.File.ImportTimecodes, nameof(Configuration.Settings.Shortcuts.MainFileImportTimeCodes), true);
             AddNode(fileNode, LanguageSettings.Current.Main.Menu.File.Export + " -> " + LanguageSettings.Current.Main.Menu.File.ExportEbu, nameof(Configuration.Settings.Shortcuts.MainFileExportEbu), true);
             AddNode(fileNode, LanguageSettings.Current.Main.Menu.File.Export + " -> " + LanguageSettings.Current.Main.Menu.File.ExportPac, nameof(Configuration.Settings.Shortcuts.MainFileExportPac), true);
+            AddNode(fileNode, LanguageSettings.Current.Main.Menu.File.Export + " -> " + LanguageSettings.Current.Main.Menu.File.ExportBluRaySup, nameof(Configuration.Settings.Shortcuts.MainFileExportBdSup), true);
             AddNode(fileNode, LanguageSettings.Current.Main.Menu.File.Export + " -> EDL/CLIPNAME", nameof(Configuration.Settings.Shortcuts.MainFileExportEdlClip), true);
             AddNode(fileNode, LanguageSettings.Current.Main.Menu.File.Export + " -> " + LanguageSettings.Current.Main.Menu.File.ExportPlainText, nameof(Configuration.Settings.Shortcuts.MainFileExportPlainText), true);
             _shortcuts.Nodes.Add(fileNode);
