@@ -3646,7 +3646,14 @@
   <PartialWordsAlways />
   <PartialWords />
   <WholeLines />
-  <PartialLinesAlways />
+  <PartialLinesAlways>
+    <LinePart from=",.," to="..." />
+    <LinePart from=" l " to=" I " />
+    <LinePart from=" l." to=" I." />
+    <LinePart from=" l?" to=" I?" />
+    <LinePart from=" l!" to=" I!" />
+    <LinePart from=" . " to=". " />
+  </PartialLinesAlways>
   <PartialLines>
     <LinePart from="Ako ej" to="Ako je" />
     <LinePart from="ako ej" to="ako je" />
