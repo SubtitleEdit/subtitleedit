@@ -44,9 +44,14 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             var content = new StringContent(input, Encoding.UTF8);
             content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
             var result = _httpClient.PostAsync(string.Empty, content).Result;
-            result.EnsureSuccessStatusCode();
             var bytes = await result.Content.ReadAsByteArrayAsync();
             var json = Encoding.UTF8.GetString(bytes).Trim();
+            if (!result.IsSuccessStatusCode)
+            {
+                SeLogger.Error("ChatGptTranslate failed calling API: Status code=" + result.StatusCode + Environment.NewLine + json);
+            }
+
+            result.EnsureSuccessStatusCode();
 
             var parser = new SeJsonParser();
             var resultText = parser.GetFirstObject(json, "content");
