@@ -323,6 +323,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public int BinEditRightMargin { get; set; }
         public string BinEditStartPosition { get; set; }
         public string BinEditStartSize { get; set; }
+        public bool BinEditShowColumnGap { get; set; }
         public bool FixCommonErrorsFixOverlapAllowEqualEndStart { get; set; }
         public bool FixCommonErrorsSkipStepOne { get; set; }
         public string ImportTextSplitting { get; set; }
@@ -6094,6 +6095,12 @@ $HorzAlign          =   Center
                 settings.Tools.ExportPenLineJoin = subNode.InnerText;
             }
 
+            subNode = node.SelectSingleNode("BinEditShowColumnGap");
+            if (subNode != null)
+            {
+                settings.Tools.BinEditShowColumnGap = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("FixCommonErrorsFixOverlapAllowEqualEndStart");
             if (subNode != null)
             {
@@ -11713,6 +11720,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("ExportFullFrame", settings.Tools.ExportFullFrame.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ExportFcpFullPathUrl", settings.Tools.ExportFcpFullPathUrl.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ExportPenLineJoin", settings.Tools.ExportPenLineJoin);
+                textWriter.WriteElementString("BinEditShowColumnGap", settings.Tools.BinEditShowColumnGap.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("FixCommonErrorsFixOverlapAllowEqualEndStart", settings.Tools.FixCommonErrorsFixOverlapAllowEqualEndStart.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("FixCommonErrorsSkipStepOne", settings.Tools.FixCommonErrorsSkipStepOne.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ImportTextSplitting", settings.Tools.ImportTextSplitting);
