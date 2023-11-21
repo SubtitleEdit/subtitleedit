@@ -3643,8 +3643,14 @@
 <Word from="živjell" to="živjeli" />
 <Word from="žlvih" to="živih" />    
   </WholeWords>
-  <PartialWordsAlways />
-  <PartialWords />
+  <PartialWordsAlways>
+    <WordPart from="¤" to="o" />
+    <WordPart from="IVI" to="M" />
+    <WordPart from="lVI" to="M" />
+    <WordPart from="IVl" to="M" />
+    <WordPart from="lVl" to="M" />
+  </PartialWordsAlways>
+<PartialWords />
   <WholeLines />
   <PartialLinesAlways>
     <LinePart from=",.," to="..." />
