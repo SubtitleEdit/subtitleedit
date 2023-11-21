@@ -3650,7 +3650,12 @@
     <WordPart from="IVl" to="M" />
     <WordPart from="lVl" to="M" />
   </PartialWordsAlways>
-<PartialWords />
+<PartialWords>
+    <WordPart from="ﬁ" to="fi" />
+    <WordPart from="ﬂ" to="fl" />
+    <WordPart from="/" to="l" />
+    <WordPart from="vv" to="w" />
+</PartialWords>
   <WholeLines />
   <PartialLinesAlways>
     <LinePart from=",.," to="..." />
