@@ -201,7 +201,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             "           <region tts:extent=\"80% 40%\" tts:origin=\"10% 50%\" tts:displayAlign=\"after\" tts:textAlign=\"start\" xml:id=\"bottomLeft\" />" + Environment.NewLine +
             // Middle column
             "           <region tts:extent=\"80% 40%\" tts:origin=\"10% 10%\" tts:displayAlign=\"before\" tts:textAlign=\"center\" xml:id=\"topCenter\" />" + Environment.NewLine +
-            "           <region tts:extent=\"80% 40%\" tts:origin=\"10% 30%\" tts:displayAlign=\"center\" tts:textAlign=\"center\" xml:id=\"centerСenter\" />" + Environment.NewLine +
+            "           <region tts:extent=\"80% 40%\" tts:origin=\"10% 30%\" tts:displayAlign=\"center\" tts:textAlign=\"center\" xml:id=\"centerCenter\" />" + Environment.NewLine +
             "           <region tts:extent=\"80% 40%\" tts:origin=\"10% 50%\" tts:displayAlign=\"after\" tts:textAlign=\"center\" xml:id=\"bottomCenter\" />" + Environment.NewLine +
             // Right column
             "           <region tts:extent=\"80% 40%\" tts:origin=\"10% 10%\" tts:displayAlign=\"before\" tts:textAlign=\"end\" xml:id=\"topRight\" />" + Environment.NewLine +
@@ -448,7 +448,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     region = "centerLeft";
                 }
 
-                if (text.StartsWith("{\\an5}", StringComparison.Ordinal) && AddDefaultRegionIfNotExists(xml, "centerСenter"))
+                if (text.StartsWith("{\\an5}", StringComparison.Ordinal) && AddDefaultRegionIfNotExists(xml, "centerCenter"))
                 {
                     region = "centerСenter";
                 }
@@ -882,7 +882,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             new KeyValuePair<string, string>("bottomCenter", "{\\an2}"),
                             new KeyValuePair<string, string>("bottomRight", "{\\an3}"),
                             new KeyValuePair<string, string>("centerLeft", "{\\an4}"),
-                            new KeyValuePair<string, string>("centerСenter", "{\\an5}"),
+                            new KeyValuePair<string, string>("centerCenter", "{\\an5}"),
                             new KeyValuePair<string, string>("centerRight", "{\\an6}"),
                             new KeyValuePair<string, string>("topLeft", "{\\an7}"),
                             new KeyValuePair<string, string>("topCenter", "{\\an8}"),

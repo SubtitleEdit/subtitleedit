@@ -373,6 +373,12 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
 
             videoPlayerContainer1.TryLoadGfx();
             videoPlayerContainer1.HidePlayerName();
+
+            if (Configuration.Settings.Tools.BinEditShowColumnGap)
+            {
+                _columnIndexGap = 0;
+                UpdateListViewColumns();
+            }
         }
 
         private void OpenBinSubtitle(string fileName)
@@ -616,7 +622,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                 var paragraph = subtitle.Paragraphs[index];
                 var item = new ListViewItem { UseItemStyleForSubItems = false, Checked = extra.IsForced && _columnIndexForced >= 0 };
 
-                int count = startIndex;
+                var count = startIndex;
                 if (_columnIndexNumber >= 0)
                 {
                     count = AddListViewSubItem(item, count, (index + 1).ToString(CultureInfo.InvariantCulture));
@@ -2894,6 +2900,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 Configuration.Settings.Tools.BinEditStartPosition = Left + ";" + Top;
                 Configuration.Settings.Tools.BinEditStartSize = WindowState == FormWindowState.Maximized ? "Maximized" : Width + ";" + Height;
             }
+
+            Configuration.Settings.Tools.BinEditShowColumnGap = _columnIndexGap >= 0;
 
             CloseVideo();
             CleanUp();
