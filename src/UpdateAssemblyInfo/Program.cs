@@ -326,7 +326,7 @@ namespace UpdateAssemblyInfo
             var gitPath = GetGitPath();
             if (clrTags.RunCommandAndGetOutput(gitPath, "describe --long --tags", workingDirectory))
             {
-                if (clrTags.Result.Contains("RC"))
+                if (clrTags.Result != null && clrTags.Result.Contains("RC"))
                 {
                     return true;
                 }
