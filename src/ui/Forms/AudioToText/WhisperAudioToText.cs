@@ -44,6 +44,8 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         private double _lastEstimatedMs = double.MaxValue;
         private VideoInfo _videoInfo;
         private readonly WavePeakData _wavePeaks;
+        private readonly List<string> _outputBatchFileNames = new List<string>();
+
         public bool UnknownArgument { get; set; }
         public bool RunningOnCuda { get; set; }
         public bool IncompleteModel { get; set; }
@@ -575,7 +577,8 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 MessageBox.Show(this, $"{errorCount} error(s)!{Environment.NewLine}{errors}", Text, MessageBoxButtons.OK);
             }
 
-            MessageBox.Show(this, string.Format(LanguageSettings.Current.AudioToText.XFilesSavedToVideoSourceFolder, listViewInputFiles.Items.Count - errorCount), Text, MessageBoxButtons.OK);
+            var fileList = Environment.NewLine + Environment.NewLine + string.Join(Environment.NewLine, _outputBatchFileNames);
+            MessageBox.Show(this, string.Format(LanguageSettings.Current.AudioToText.XFilesSavedToVideoSourceFolder, listViewInputFiles.Items.Count - errorCount) + fileList, Text, MessageBoxButtons.OK);
 
             groupBoxInputFiles.Enabled = true;
             buttonGenerate.Enabled = true;
@@ -671,11 +674,12 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             var fileName = Path.Combine(Utilities.GetPathAndFileNameWithoutExtension(videoFileName)) + format.Extension;
             if (File.Exists(fileName))
             {
-                fileName = $"{Path.Combine(Utilities.GetPathAndFileNameWithoutExtension(videoFileName))}.{Guid.NewGuid().ToByteArray()}.{format.Extension}";
+                fileName = $"{Path.Combine(Utilities.GetPathAndFileNameWithoutExtension(videoFileName))}.{Guid.NewGuid().ToString()}.{format.Extension}";
             }
 
             File.WriteAllText(fileName, text, Encoding.UTF8);
             _outputText.Add("Subtitle written to : " + fileName);
+            _outputBatchFileNames.Add(fileName);
         }
 
         internal static string GetLanguage(string name)
