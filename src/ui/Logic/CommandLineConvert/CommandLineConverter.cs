@@ -2290,7 +2290,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
 
                             break;
                         case BatchAction.MergeShortLines:
-                            var mergedShortLinesSub = MergeShortLinesUtils.MergeShortLinesInSubtitle(sub, Configuration.Settings.Tools.MergeShortLinesMaxGap, Configuration.Settings.General.SubtitleLineMaximumLength, Configuration.Settings.Tools.MergeShortLinesOnlyContinuous);
+                            var mergedShortLinesSub = MergeShortLinesUtils.MergeShortLinesInSubtitle(sub, Configuration.Settings.Tools.MergeShortLinesMaxGap, Configuration.Settings.Tools.MergeShortLinesMaxChars, Configuration.Settings.Tools.MergeShortLinesOnlyContinuous);
                             if (mergedShortLinesSub.Paragraphs.Count != sub.Paragraphs.Count)
                             {
                                 sub.Paragraphs.Clear();
