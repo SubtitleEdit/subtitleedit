@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>4.0.2</Version>
-    <TranslatedBy>Suomentanut vm, päivittänyt Teijo S. [18-09-2023]</TranslatedBy>
+    <TranslatedBy>Suomentanut vm, päivittänyt Teijo S. [23-11-2023]</TranslatedBy>
     <CultureName>fi-FI</CultureName>
     <HelpFile />
     <Ok>&amp;OK</Ok>
@@ -105,6 +105,9 @@
     <Error>Virhe</Error>
     <Warning>Varoitus</Warning>
     <UseLargerFontForThisWindow>Käytä tässä ikkunassa isompaa fonttia</UseLargerFontForThisWindow>
+    <ChangeLanguageFilter>Vaihda kielisuodatin...
+</ChangeLanguageFilter>
+    <MoreInfo>Lisätietoja</MoreInfo>
   </General>
   <About>
     <Title>Tietoja</Title>
@@ -190,6 +193,7 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
     <VoskWebsite>Vosk-kotisivu</VoskWebsite>
     <WhisperWebsite>Whisper-kotisivu</WhisperWebsite>
     <WhisperNotFound>Whisperiä ei löytynyt. Haluatko lisätietoja netistä?</WhisperNotFound>
+    <Model>Malli</Model>
     <Models>Mallit</Models>
     <LanguagesAndModels>Kielet ja mallit</LanguagesAndModels>
     <ChooseModel>Valitse malli</ChooseModel>
@@ -321,6 +325,7 @@ rostiedosto</DrawingFile>
     <ConvertOptions>Muunnosasetukset</ConvertOptions>
     <RemoveFormatting>Poista muotoilutunnisteet</RemoveFormatting>
     <RemoveStyleActor>Poista tyyli/näyttelijä</RemoveStyleActor>
+    <StyleActor>Tyyli/näyttelijä (erota pilkulla)</StyleActor>
     <RemoveTextForHI>Poista HI-teksti</RemoveTextForHI>
     <ConvertColorsToDialog>Muunna keskustelun värit</ConvertColorsToDialog>
     <OverwriteOriginalFiles>Korvaa alkuperäinen tiedosto (uusi tiedostopääte tiedostomuodon muuttuessa)</OverwriteOriginalFiles>
@@ -484,6 +489,7 @@ Hyödynnämme kuvan sisäistä rytmiä.</CreateSimpleChainingToolTip>
     <BottomAlignSelectedLines>Tasaa valitut rivit alas (säilytä vaakasuunta)</BottomAlignSelectedLines>
     <ToggleForcedSelectedLines>Määritä valitut rivit pakotetuiksi / poista määritys</ToggleForcedSelectedLines>
     <SelectForcedLines>Valitse pakotetut rivit</SelectForcedLines>
+    <SelectNonForcedLines></SelectNonForcedLines>
     <SizeXY>Koko: {0}x{1}</SizeXY>
     <SetAspectRatio11>Aseta kuvasuhde 1:1</SetAspectRatio11>
     <ChangeBrightnessTitle>Säädä kirkkaus</ChangeBrightnessTitle>
@@ -1044,6 +1050,7 @@ Hyödynnämme kuvan sisäistä rytmiä.</CreateSimpleChainingToolTip>
     <PleaseWait>Odota... kestää vähän aikaa</PleaseWait>
     <PoweredByGoogleTranslate>Käytetty Google-kääntäjää</PoweredByGoogleTranslate>
     <PoweredByMicrosoftTranslate>Käytetty Microsoft-kääntäjää</PoweredByMicrosoftTranslate>
+    <PoweredByX>Käytetty {0}</PoweredByX>
     <MsClientSecretNeeded>Uusimman Microsoft-kääntäjän käyttö edellyttää Microsoftin "Kääntäjä-teksti" -avainta. Syötä avain käyttämällä valikkopolkua Valinnat -&gt; Asetukset -&gt; Työkalut.
 </MsClientSecretNeeded>
     <GoogleNoApiKeyWarning>Yritä kääntämistä ilman API-avainta (hidas, rajoitettu sanavarasto)</GoogleNoApiKeyWarning>
@@ -1062,6 +1069,10 @@ Hyödynnämme kuvan sisäistä rytmiä.</CreateSimpleChainingToolTip>
     <TranslateBlockCopySourceText>Kopioi käännettävä teksti leikepöydälle</TranslateBlockCopySourceText>
     <TranslateBlockClipboardError1>Leikepöydällä on käännettävä teksti</TranslateBlockClipboardError1>
     <TranslateBlockClipboardError2>Käännä automaattisesti käytettäessä leikkaa-liimaa -toimintoa</TranslateBlockClipboardError2>
+    <StartWebServerX>Käynnistä "{0}" -web-palvelin</StartWebServerX>
+    <XRequiresALocalWebServer>"{0}" vaatii paikallisen web-palvelimen</XRequiresALocalWebServer>
+    <XRequiresAnApiKey>"{0}" vaatii API-avaimen.</XRequiresAnApiKey>
+    <ReadMore>Halautko lisätietoja?</ReadMore>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
     <Title>Google vastaan Microsoft-kääntäjä</Title>
@@ -1129,6 +1140,8 @@ Hyödynnämme kuvan sisäistä rytmiä.</CreateSimpleChainingToolTip>
   </ImportText>
   <Interjections>
     <Title>Huudahdukset</Title>
+    <EditSkipList>Muokkaa ohitettavien luetteloa..</EditSkipList>
+    <EditSkipListInfo>Huudahdukset ohitetaan jos alkuperäisteksti alkaa jollakin seuraavista:</EditSkipListInfo>
   </Interjections>
   <JoinSubtitles>
     <Title>Yhdistä tekstityksiä</Title>
@@ -1423,8 +1436,6 @@ Hyödynnämme kuvan sisäistä rytmiä.</CreateSimpleChainingToolTip>
         <GenerateImportShotChanges>Luo/tuo kohtauksen vaihtoja</GenerateImportShotChanges>
         <RemoveOrExportShotChanges>Poista/vie kohtauksen vaihtoja</RemoveOrExportShotChanges>
         <WaveformBatchGenerate>Luo aaltomuodot eräajona</WaveformBatchGenerate>
-        <ShowHideVideo>Näytä/piilota video</ShowHideVideo>
-        <ShowHideWaveform>Näytä/piilota aaltomuoto</ShowHideWaveform>
         <ShowHideWaveformAndSpectrogram>Näytä/piilota aaltomuoto ja taajuusanalyysi</ShowHideWaveformAndSpectrogram>
         <UnDockVideoControls>Poista video-ohjauksien telakointi</UnDockVideoControls>
         <ReDockVideoControls>Telakoi video-ohjaukset</ReDockVideoControls>
@@ -2205,6 +2216,7 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <LinesFoundX>Rivejä löytyi: {0}</LinesFoundX>
     <RemoveTextIfContains>Poista teksti, jos se sisältää:</RemoveTextIfContains>
     <RemoveTextIfAllUppercase>Poista rivi, jos ISOILLA kirjaimilla</RemoveTextIfAllUppercase>
+    <RemoveIfOnlyMusicSymbols>Poista mikäli vain musiikkisymboleita</RemoveIfOnlyMusicSymbols>
     <RemoveInterjections>Poista huudahdukset (shh, hmm jne.)</RemoveInterjections>
     <EditInterjections>Muokkaa</EditInterjections>
     <Apply>Käytä</Apply>
@@ -2304,6 +2316,7 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <DefaultFrameRate>Kuvataajuus (oletus)</DefaultFrameRate>
     <DefaultFileEncoding>Tiedoston koodaus (oletus)</DefaultFileEncoding>
     <AutoDetectAnsiEncoding>Automaattinen ANSI-koodin tunnistus</AutoDetectAnsiEncoding>
+    <LanguageFilter>Kielisuodatin</LanguageFilter>
     <Profile>Profiili</Profile>
     <Profiles>Profiilit</Profiles>
     <ImportProfiles>Tuo profiilit</ImportProfiles>
@@ -2627,6 +2640,7 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <WaveformSeekSilenceForward>Hae hiljaisuus eteenpäin</WaveformSeekSilenceForward>
     <WaveformSeekSilenceBack>Hae hiljaisuus takaisinpäin</WaveformSeekSilenceBack>
     <WaveformAddTextHere>Lisää tekstiä tähän (uudelle valinnalle)</WaveformAddTextHere>
+    <ChooseLayoutX>Valitse asettelu {0}</ChooseLayoutX>
     <WaveformAddTextHereFromClipboard>Lisää tekstiä tähän (leikepöydältä uudelle valinnalle)</WaveformAddTextHereFromClipboard>
     <SetParagraphAsSelection>Aseta nykyinen uudeksi valinnaksi</SetParagraphAsSelection>
     <WaveformPlayNewSelection>Toista uusi valinta</WaveformPlayNewSelection>
