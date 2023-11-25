@@ -1741,9 +1741,6 @@
     <Word from="prineo" to="prinio" />
     <Word from="Prineo" to="Prinio" />
     <Word from="pripovetke" to="pripovjetke" />
-    <Word from="pripoveda" to="pripovijeda" />
-    <Word from="pripovedala" to="pripovijedala" />
-    <Word from="pripovedanje" to="pripovijedanje" />
     <Word from="privilegovan" to="privilegiran" />
     <Word from="privilegovani" to="privilegirani" />
     <Word from="prjevoz" to="prijevoz" />
@@ -3878,7 +3875,15 @@
     <LinePart from="Želi da zna" to="Želi znati" />
     <LinePart from="želi da zna" to="želi znati" />
   </PartialLines>
-  <BeginLines />
+  <BeginLines>
+    <Beginning from="-] " to="- I " />
+    <Beginning from="- ] " to="- I " />
+    <Beginning from="] " to="I " />
+    <Beginning from="-| " to="- I " />
+    <Beginning from="- | " to="- I " />
+    <Beginning from="l " to="I " />
+    <Beginning from="- l " to="- I " />
+  </BeginLines>
   <EndLines />
   <RegularExpressions>
     <!-- deklinacije imenica i konjugacije glagola -->
@@ -4451,6 +4456,7 @@
     <RegEx find="\b([pP])rimet([aln])" replaceWith="$1rimjet$2" />
     <RegEx find="([pP])rimj?et([ie])" replaceWith="$1rimijet$2" />
     <RegEx find="\b([pP])rimj?eni([lošmt])" replaceWith="$1rimijeni$2" />
+    <RegEx find="([pP])ripovj?eda" replaceWith="$1ripovijeda" />
     <RegEx find="([pP])(ri|od)sj?e[čć]a" replaceWith="$1$2sjeća" />
     <RegEx find="\b([pP])rocen(?!t)" replaceWith="$1rocjen" />
     <RegEx find="([pP])rose([kcč])" replaceWith="$1rosje$2" />
