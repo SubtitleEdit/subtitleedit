@@ -51,7 +51,12 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
         private static readonly string[] Sha512HashesCppCuBlas =
         {
-            "de5b6fe7487f4cdc5e883ef6825dd0ecfe3ce4f9c914b0e02ba19b89c138e47e76584ae221a75eb7aed1a96893d4764401e065e196e0455a2e72050209252780", // 1.5.0
+            "f5bbad24cb99333cb6d9ec95e6797dda9e36f834fc0d4cee84d839637a06b5564df09b49f5ca6c16b2cf681429155b1ceee808d411024da658fba52d503cebdf", // 1.5.0 second upload
+        };
+
+        private static readonly string[] OldSha512HashesCppCuBlas =
+        {
+            "de5b6fe7487f4cdc5e883ef6825dd0ecfe3ce4f9c914b0e02ba19b89c138e47e76584ae221a75eb7aed1a96893d4764401e065e196e0455a2e72050209252780", // 1.5.0 first upload
         };
 
         private const string DownloadUrlConstMe = "https://github.com/Const-me/Whisper/releases/download/1.12.0/cli.zip";
