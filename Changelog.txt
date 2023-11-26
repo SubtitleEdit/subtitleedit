@@ -1,5 +1,21 @@
 ﻿Subtitle Edit Changelog
 
+
+4.0.3 (xth December 2023) BETA
+* NEW:
+   * Add ".opus" as audio file extension - thx vivadavid
+* IMPROVED:
+   * Update Polish translation - thx admas
+   * Update Finnish translation - thx Teijo S
+   * Show file list after Whisper/Vosk batch run - thx Simon
+   * Some improvements for SUP/BDN-XML editor - thx Jack1789
+   * Add Spanish for ChatGPT translate - thx alvarusk
+   * Update libmpv to 2023-11-26
+   * Update yt-dlp to 2023-11-16
+* FIXED:
+   * Fix Whisper CPP cuBLAS new hash (DLL files now included)
+
+
 4.0.2 (19th November 2023)
 * NEW:
    * UI layouts with support for TikTok/YouTube-shorts - thx leon/jmaraujouy/LearningJer 
