@@ -128,6 +128,7 @@
     <Word from="budep" to="budeš" />
     <Word from="budilnkik" to="budilica" />
     <Word from="buđav" to="pljesniv" />
+    <Word from="buldožder" to="buldožer" />
     <!-- c -->
     <Word from="cedila" to="cijedila" />
     <Word from="cedilu" to="cjedilu" />
@@ -2904,6 +2905,7 @@
     <Word from="Brižit" to="Brigitte" />
     <Word from="Bruks" to="Brooks" />
     <Word from="Buč" to="Butch" />
+    <Word from="Cuba" to="Kuba" />
     <Word from="Siti" to="City" />
     <Word from="Sitija" to="Cityja" />
     <Word from="Čarli" to="Charlie" />
@@ -3850,6 +3852,7 @@
     <LinePart from="došli smo ovde" to="došli smo ovamo" />
     <LinePart from="Što ej" to="Što je" />
     <LinePart from="što ej" to="što je" />
+    <LinePart from="što šta" to="štošta" />
     <LinePart from="to da ponavljaš" to="to ponavljati" />
     <LinePart from="to j" to="to je" />
     <LinePart from="to ej" to="to je" />
@@ -3972,6 +3975,7 @@
     <RegEx find="boži[čć]([aeiu]|em|ima)?\b" replaceWith="Božić$1" />
     <RegEx find="(?&lt;!\A|[.!?][&quot;”’]?\s+)\bBoži[čć]n([aeiou]|om|im)\b" replaceWith="božićn$1" />
     <RegEx find="branb" replaceWith="bramb" />
+    <RegEx find="bsor" replaceWith="psor" />
     <RegEx find="[bB]ubašvab" replaceWith="žohar" />
     <RegEx find="bukval" replaceWith="doslov" />
     <RegEx find="Bukval" replaceWith="Doslov" />
@@ -4856,6 +4860,8 @@
     <RegEx find="bqr" replaceWith="bar" />
     <RegEx find="bs([to])" replaceWith="ps$1" />
     <RegEx find="bunić" replaceWith="bunit ć" />
+    <!-- opservacija-->
+    <RegEx find="bzer" replaceWith="pser" />
     <RegEx find="iliše" replaceWith="ilizira" />
     <RegEx find="ilišu" replaceWith="iliziraju" />
     <RegEx find="izc" replaceWith="isc" />
@@ -5220,6 +5226,7 @@
     <RegEx find="trišu" replaceWith="triraju" />
     <RegEx find="trezni" replaceWith="trijezni" />
     <RegEx find="uas" replaceWith="zas" />
+    <RegEx find="udep" replaceWith="udeš" />
     <RegEx find="uej" replaceWith="uje" />
     <RegEx find="ueln" replaceWith="ualn" />
     <RegEx find="uisa" replaceWith="uira" />
