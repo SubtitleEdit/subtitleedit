@@ -239,7 +239,7 @@
   </data>
   <data name="textBoxPurfviewFasterWhisper.Text" xml:space="preserve">
     <value>  --device DEVICE, -d DEVICE
-                        device to use (default: cpu)
+                        Device to use. Default is 'cuda' if CUDA device is detected, else is 'cpu'. If CUDA GPU is a second device then set 'cuda:1'.
   --verbose VERBOSE, -v VERBOSE
                         whether to print out debug messages (default: False)
   --task {transcribe,translate}
