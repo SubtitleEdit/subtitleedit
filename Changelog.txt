@@ -15,7 +15,6 @@
    * Update libmpv to 2023-11-26
    * Update yt-dlp to 2023-11-16
 * FIXED:
-   * Fix Whisper CPP cuBLAS new hash (DLL files now included)
    * Fix minor space issue with "Fix italic tags" - thx Adam
    * Focus text box after "Set end, add new and go to new" - thx aoifeaoibhee
 
