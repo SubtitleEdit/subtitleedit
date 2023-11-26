@@ -18657,6 +18657,8 @@ namespace Nikse.SubtitleEdit.Forms
                         UpdateSourceView();
                         StartAutoDuration();
                     }
+
+                    textBoxListViewText.Focus();
                 }
             }
             else if (_shortcuts.MainCreateStartDownEndUp == e.KeyData)
