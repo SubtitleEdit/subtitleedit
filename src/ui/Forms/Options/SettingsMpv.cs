@@ -82,7 +82,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             var hash = Utilities.GetSha512Hash(downloadStream.ToArray());
             string[] validHashes =
             {
-                "b7ccdf6aa5964a9a7b6287c622f3f3bea1eb1cabe7fb479beb24d5c2f91f914f00baf877eb0320dc6a7c5aece7e652b9b256e9f6c4f85147db3cfac646080c8e",
+                "b7ccdf6aa5964a9a7b6287c622f3f3bea1eb1cabe7fb479beb24d5c2f91f914f00baf877eb0320dc6a7c5aece7e652b9b256e9f6c4f85147db3cfac646080c8e", // 32-bit
                 "2c6687651442588d98a39996d15e3ec1e8413a9d8409ab10089d0bfe5b04234904e0c2ebed4305d95eddf81ce79c6328603c7c73b3fd4b8f38980e2fc9066e04", // 64-bit
             };
             if (!validHashes.Contains(hash))
