@@ -67,8 +67,7 @@ namespace Nikse.SubtitleEdit.Core.Http
 
                 if (Environment.OSVersion.Version.Major < 10)
                 {
-                    Configuration.Settings.General.UseLegacyDownloader = true;
-                    SeLogger.Error("Switching to legacy downloader due to old OS!");
+                    SeLogger.Error("A newer OS might be needed!");
                 }
 
                 throw;
