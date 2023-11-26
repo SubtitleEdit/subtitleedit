@@ -101,6 +101,11 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
             return Fix(subtitle, usePostProcessing, addPeriods, mergeLines, fixCasing, fixShortDuration, splitLines, engine);
         }
 
+        private static bool IsNonStandardLineTerminationLanguage(string language)
+        {
+            return language == "jp" || language == "cn" || language == "yue";
+        }
+
         public Subtitle Fix(Subtitle subtitle, bool usePostProcessing, bool addPeriods, bool mergeLines, bool fixCasing, bool fixShortDuration, bool splitLines, Engine engine)
         {
             if (usePostProcessing)
@@ -120,7 +125,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                     subtitle = FixShortDuration(subtitle);
                 }
 
-                if (splitLines && !new[] { "jp", "cn", "yue" }.Contains(TwoLetterLanguageCode))
+                if (splitLines && !IsNonStandardLineTerminationLanguage(TwoLetterLanguageCode))
                 {
                     var totalMaxChars = Configuration.Settings.General.SubtitleLineMaximumLength * Configuration.Settings.General.MaxNumberOfLines;
                     subtitle = SplitLongLinesHelper.SplitLongLinesInSubtitle(subtitle, totalMaxChars, Configuration.Settings.General.SubtitleLineMaximumLength);
@@ -217,7 +222,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
 
         public Subtitle AddPeriods(Subtitle inputSubtitle, string language)
         {
-            if (language == "jp" || language == "cn" || language == "yue")
+            if (IsNonStandardLineTerminationLanguage(language))
             {
                 return new Subtitle(inputSubtitle);
             }
@@ -326,7 +331,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                     else if (IsNextCloseAndAlone(p, next, nextNext, maxMillisecondsBetweenLines, onlyContinuousLines))
                     {
                         var splitDone = false;
-                        if (language != "jp" && language != "cn" && language != "yue")
+                        if (!IsNonStandardLineTerminationLanguage(language))
                         {
                             var pNew = new Paragraph(p);
                             MergeNextIntoP(language, pNew, next);
@@ -388,7 +393,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
 
         public Subtitle AutoBalanceLines(Subtitle subtitle, string language)
         {
-            if (language == "jp" || language == "cn" || language == "yue")
+            if (IsNonStandardLineTerminationLanguage(language))
             {
                 return subtitle;
             }
@@ -486,7 +491,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
 
             p.EndTime = next.EndTime;
 
-            if (language == "jp" || language == "cn" || language == "yue")
+            if (IsNonStandardLineTerminationLanguage(language))
             {
                 p.Text = p.Text.RemoveChar('\r').RemoveChar('\n').RemoveChar(' ');
             }
