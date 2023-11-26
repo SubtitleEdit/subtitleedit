@@ -5164,6 +5164,7 @@
     <RegEx find="seden" replaceWith="sjeden" />
     <RegEx find="selektuj" replaceWith="odaber" />
     <RegEx find="shvt" replaceWith="shvat" />
+    <RegEx find="slk" replaceWith="slj" />
     <RegEx find="sljen" replaceWith="slen" />
     <RegEx find="sjp" replaceWith="spj" />
     <RegEx find="smeva" replaceWith="smijava" />
