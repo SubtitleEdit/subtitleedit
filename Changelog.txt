@@ -10,6 +10,7 @@
    * Show file list after Whisper/Vosk batch run - thx Simon
    * Some improvements for SUP/BDN-XML editor - thx Jack1789
    * Add Spanish for ChatGPT translate - thx alvarusk
+   * Add some words to SE user dictionary - thx Caleb
    * Update libmpv to 2023-11-26
    * Update yt-dlp to 2023-11-16
 * FIXED:
