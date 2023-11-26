@@ -11,11 +11,13 @@
    * Some improvements for SUP/BDN-XML editor - thx Jack1789
    * Add Spanish for ChatGPT translate - thx alvarusk
    * Add some words to SE user dictionary - thx Caleb
+   * Update Whisper CPP to v1.5.1
    * Update libmpv to 2023-11-26
    * Update yt-dlp to 2023-11-16
 * FIXED:
    * Fix Whisper CPP cuBLAS new hash (DLL files now included)
    * Fix minor space issue with "Fix italic tags" - thx Adam
+   * Focus text box after "Set end, add new and go to new" - thx aoifeaoibhee
 
 
 4.0.2 (19th November 2023)
