@@ -17,6 +17,7 @@
 * FIXED:
    * Fix minor space issue with "Fix italic tags" - thx Adam
    * Focus text box after "Set end, add new and go to new" - thx aoifeaoibhee
+   * Fix for unwanted "<br />" in MS translator - thx Miguel
 
 
 4.0.2 (19th November 2023)
