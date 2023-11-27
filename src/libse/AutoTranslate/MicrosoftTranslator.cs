@@ -100,6 +100,9 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                     {
                         var textDictionary = (Dictionary<string, object>)o;
                         var res = (string)textDictionary["text"];
+                        res = res.Replace("<br />", Environment.NewLine);
+                        res = res.Replace("<br/>", Environment.NewLine);
+                        res = res.Replace("<br>", Environment.NewLine);
                         results.Add(res);
                     }
                 }
