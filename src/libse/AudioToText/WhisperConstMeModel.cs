@@ -89,12 +89,12 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                 Size = "1.42 GB",
                 Urls = new []{ "https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-medium.bin" },
             },
-            //new WhisperModel
-            //{
-            //    Name = "large",
-            //    Size = "2.88 GB",
-            //    Urls = new []{ "https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-large.bin" },
-            //},
+            new WhisperModel
+            {
+                Name = "large",
+                Size = "2.88 GB",
+                Urls = new []{ "https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-large-v2.bin?download=true" },
+            },
         };
     }
 }
