@@ -4939,10 +4939,9 @@
     <RegEx find="frov" replaceWith="frir" />
     <RegEx find="ftam" replaceWith="ftalm" />
     <RegEx find="gačuj" replaceWith="gaćuj" />
-    <RegEx find="gfj" replaceWith="gdj" />
+    <RegEx find="gf" replaceWith="gd" />
     <RegEx find="glda" replaceWith="gleda" />
-    <RegEx find="gpd" replaceWith="god" />
-    <RegEx find="gpt" replaceWith="got" />
+    <RegEx find="gp" replaceWith="go" />
     <RegEx find="grišć" replaceWith="grist ć" />
     <RegEx find="(?&lt;!e)grš" replaceWith="greš" />
     <RegEx find="grutova" replaceWith="grutira" />
