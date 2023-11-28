@@ -29,7 +29,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static string EncodeEndTimeCode(TimeCode time)
         {
-            return $"{time.ToDisplayString()}";
+            return $"{time}";
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
