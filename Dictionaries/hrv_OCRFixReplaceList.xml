@@ -905,6 +905,7 @@
     <Word from="Lek" to="Lijek" />
     <Word from="leka" to="lijeka" />
     <Word from="lekarski" to="liječnički" />
+    <Word from="lekarsku" to="liječničku" />
     <Word from="leku" to="lijeku" />
     <Word from="lekom" to="lijekom" />
     <Word from="lekova" to="lijekova" />
@@ -3826,6 +3827,8 @@
     <LinePart from="možeš da znaš" to="možeš znati" />
     <LinePart from="možete da uzmete" to="možete uzeti" />
     <LinePart from="može da vidi" to="može vidjeti" />
+    <LinePart from="može da živi" to="može živjeti" />
+    <LinePart from="možeš da živiš" to="možeš živjeti" />
     <LinePart from="na taj način" to="tako" />
     <LinePart from="na večer" to="navečer" />
     <LinePart from="Na večer" to="Navečer" />
@@ -5038,6 +5041,7 @@
     <RegEx find="mtić" replaceWith="mtit ć" />
     <RegEx find="mwn" replaceWith="men" />
     <RegEx find="napredi" replaceWith="naprijedi" />
+    <RegEx find="napt" replaceWith="napr" />
     <RegEx find="([^\s]+)nesl" replaceWith="$1nijel" />
     <RegEx find="nimp" replaceWith="nimo" />
     <RegEx find="(?&lt;!a)nks" replaceWith="nsk" />
