@@ -4866,7 +4866,7 @@
     <RegEx find="bsl" replaceWith="bal" />
     <RegEx find="bqr" replaceWith="bar" />
     <RegEx find="bs([to])" replaceWith="ps$1" />
-    <RegEx find="bto" replaceWith="bio" />
+    <RegEx find="bto" replaceWith="bro" />
     <RegEx find="bunić" replaceWith="bunit ć" />
     <!-- opservacija-->
     <RegEx find="bzer" replaceWith="pser" />
