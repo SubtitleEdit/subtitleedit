@@ -1072,6 +1072,7 @@ Para usar una clave de API, ve a "Opciones --&gt; Configuración --&gt; Herramie
     <TranslateBlockClipboardError2>Ve al traductor y traduce, luego copia el resultado en el portapapeles y haz clic en este botón de nuevo.</TranslateBlockClipboardError2>
     <StartWebServerX>Iniciar el servidor web "{0}"</StartWebServerX>
     <XRequiresALocalWebServer>¡"{0}" requiere un servidor web ejecutado localmente!</XRequiresALocalWebServer>
+    <XRequiresAnApiKey>"{0}" requiere una clave API.</XRequiresAnApiKey>
     <ReadMore>¿Leer más al respecto?</ReadMore>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
@@ -1139,6 +1140,8 @@ Para usar una clave de API, ve a "Opciones --&gt; Configuración --&gt; Herramie
   </ImportText>
   <Interjections>
     <Title>Interjecciones</Title>
+    <EditSkipList>Editar lista de omisión...</EditSkipList>
+    <EditSkipListInfo>Se omitirán las interjecciones si el texto fuente comienza con lo siguiente:</EditSkipListInfo>
   </Interjections>
   <JoinSubtitles>
     <Title>Unir subtítulos</Title>
@@ -2225,6 +2228,7 @@ puede editar el mismo archivo de subtítulo (colaboración)</Information>
     <LinesFoundX>Líneas encontradas: {0}</LinesFoundX>
     <RemoveTextIfContains>Eliminar el texto si contiene:</RemoveTextIfContains>
     <RemoveTextIfAllUppercase>Eliminar línea si son MAYÚSCULAS</RemoveTextIfAllUppercase>
+    <RemoveIfOnlyMusicSymbols>Eliminar si solo son símbolos musicales</RemoveIfOnlyMusicSymbols>
     <RemoveInterjections>Eliminar interjecciones (shh, hmm, etc.)</RemoveInterjections>
     <EditInterjections>Editar...</EditInterjections>
     <Apply>A&amp;plicar</Apply>
