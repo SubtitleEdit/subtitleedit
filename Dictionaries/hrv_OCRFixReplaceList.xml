@@ -1527,6 +1527,8 @@
     <Word from="pnovo" to="ponovo" />
     <Word from="pobelela" to="pobjelila" />
     <Word from="pobijedićemo" to="pobijedit ćemo" />
+    <Word from="pobijesnela" to="pobjesnjela" />
+    <Word from="pocepa" to="razdire" />
     <Word from="Pocepaj" to="Poderi" />
     <Word from="pocepaj" to="poderi" />
     <Word from="pocepala" to="poderala" />
@@ -1742,6 +1744,7 @@
     <Word from="prineo" to="prinio" />
     <Word from="Prineo" to="Prinio" />
     <Word from="pripovetke" to="pripovjetke" />
+    <Word from="pripovedanju" to="pripovijedanju" />
     <Word from="privilegovan" to="privilegiran" />
     <Word from="privilegovani" to="privilegirani" />
     <Word from="prjevoz" to="prijevoz" />
@@ -2320,6 +2323,7 @@
     <Word from="Suvoj" to="Suhoj" />
     <Word from="suvim" to="suhim" />
     <Word from="Suvim" to="Suhim" />
+    <Word from="suviše" to="previše" />
     <Word from="suvu" to="suhu" />
     <Word from="Suvu" to="Suhu" />
     <Word from="sw" to="se" />
@@ -3792,11 +3796,13 @@
     <LinePart from="moramo da spasimo" to="moramo spasiti" />
     <LinePart from="moram da odem" to="moram otići" />
     <LinePart from="mora da ode" to="mora otići" />
+    <LinePart from="moram da pobjegnem" to="moram pobjeći" />
     <LinePart from="Moram da razgovaram" to="Moram razgovarati" />
     <LinePart from="moraš da shvatiš" to="moraš shvatiti" />
     <LinePart from="moram da vidim" to="moram vidjeti" />
     <LinePart from="moram da zaboravim" to="moram zaboraviti" />
     <LinePart from="moraš da zaboraviš" to="moraš zaboraviti" />
+    <LinePart from="Moraš da jedeš" to="Moraš jesti" />
     <LinePart from="mora da zna" to="mora znati" />
     <LinePart from="moram da znam" to="moram znati" />
     <LinePart from="Moram da znam" to="Moram znati" />
