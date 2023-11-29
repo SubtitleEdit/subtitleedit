@@ -1,7 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <OCRFixReplaceList>
   <WholeWords>
-    <Word from="()d" to="Od" />
     <Word from="ae" to="se" />
     <Word from="aam" to="sam" />
     <Word from="advokati" to="odvjetnici" />
@@ -3304,6 +3303,7 @@
     <Word from="decembar" to="prosinac" />
     <Word from="Decembar" to="Prosinac" />
         <!-- Common OCR ERRORS -->
+<Word from="()d" to="Od" />    
 <Word from="aieksandre" to="Aleksandre" />
 <Word from="aii" to="ali" />
 <Word from="atlantskl" to="atlantski" />
@@ -4866,6 +4866,7 @@
     <RegEx find="bsl" replaceWith="bal" />
     <RegEx find="bqr" replaceWith="bar" />
     <RegEx find="bs([to])" replaceWith="ps$1" />
+    <RegEx find="bto" replaceWith="bio" />
     <RegEx find="bunić" replaceWith="bunit ć" />
     <!-- opservacija-->
     <RegEx find="bzer" replaceWith="pser" />
