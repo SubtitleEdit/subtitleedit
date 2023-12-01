@@ -4157,6 +4157,7 @@
     <RegEx find="interesantn" replaceWith="zanimljiv" />
     <RegEx find="Interesantn" replaceWith="Zanimljiv" />
     <RegEx find="inuć" replaceWith="inut ć" />
+    <RegEx find="ivap" replaceWith="ivao" />
     <RegEx find="ivso" replaceWith="ivao" />
     <RegEx find="teresova" replaceWith="teresira" />
     <RegEx find="vjuis" replaceWith="vjuir" />
@@ -4169,6 +4170,7 @@
     <RegEx find="zbe([gć])" replaceWith="zbje$1" />
     <RegEx find="spresj?ecan" replaceWith="spresijecan" />
     <RegEx find="spri[čć]ać" replaceWith="spričat ć" />
+    <RegEx find="sqn" replaceWith="san" />
     <RegEx find="italijan" replaceWith="talijan" />
     <RegEx find="Italijan" replaceWith="Talijan" />
     <RegEx find="\b([iI])zmen" replaceWith="$1zmjen" />
@@ -5237,6 +5239,7 @@
     <RegEx find="tarišu" replaceWith="tiraju" />
     <RegEx find="trišu" replaceWith="triraju" />
     <RegEx find="trezni" replaceWith="trijezni" />
+    <RegEx find="twn" replaceWith="ten" />
     <RegEx find="uas" replaceWith="zas" />
     <RegEx find="udep" replaceWith="udeš" />
     <RegEx find="uej" replaceWith="uje" />
