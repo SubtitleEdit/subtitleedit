@@ -144,7 +144,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
             return subtitle;
         }
 
-        private static Subtitle TryForWholeSentences(Subtitle inputSubtitle, string language, int lineMxLength)
+        public static Subtitle TryForWholeSentences(Subtitle inputSubtitle, string language, int lineMxLength)
         {
             var s = new Subtitle(inputSubtitle);
             const int maxMoveChunkSize = 15;

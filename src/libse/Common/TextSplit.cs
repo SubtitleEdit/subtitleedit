@@ -1,6 +1,10 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core.AudioToText;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Nikse.SubtitleEdit.Core.Common
 {
@@ -132,6 +136,72 @@ namespace Nikse.SubtitleEdit.Core.Common
             var line2 = textSplitResult.Lines[1].TrimStart('"', '\'');
             return line2.Length > 0 && line1.Length > 0 &&
                    line2.StartsWith('-') && EndLineChars.Contains(line1[line1.Length - 1]);
+        }
+
+        public static List<string> SplitMulti(string input, int numberOfParts, string language)
+        {
+            var inputText = input.Trim();
+            if (inputText.Split(new char[] { ' ' }, StringSplitOptions.None).Length < numberOfParts)
+            {
+                return new List<string>();
+            }
+
+            var texts = SplitText(inputText, numberOfParts);
+            var subtitle = new Subtitle();
+            var startMs = 0;
+            for (var i = 0; i < texts.Count; i++)
+            {
+                subtitle.Paragraphs.Add(new Paragraph(texts[i], startMs, startMs + 3000));
+                startMs += 3000;
+            }
+
+            subtitle = AudioToTextPostProcessor.TryForWholeSentences(subtitle, language, Configuration.Settings.General.SubtitleLineMaximumLength);
+            subtitle = AudioToTextPostProcessor.TryForWholeSentences(subtitle, language, Configuration.Settings.General.SubtitleLineMaximumLength);
+
+            return subtitle.Paragraphs.Select(p => p.Text).ToList();
+        }
+
+        public static List<string> SplitText(string text, int numberOfParts)
+        {
+            List<string> parts = new List<string>();
+
+            int totalLength = text.Length;
+            int partLength = totalLength / numberOfParts;
+
+            int startIndex = 0;
+
+            for (int i = 0; i < numberOfParts - 1; i++)
+            {
+                int endIndex = FindNearestSpaceIndex(text, startIndex + partLength);
+
+                if (endIndex == -1)
+                {
+                    // If no space is found, break the loop
+                    break;
+                }
+
+                string part = text.Substring(startIndex, endIndex - startIndex);
+                parts.Add(part);
+
+                // Move the start index to the next character after the space
+                startIndex = endIndex + 1;
+            }
+
+            // Add the remaining text as the last part
+            if (startIndex < totalLength)
+            {
+                string lastPart = text.Substring(startIndex);
+                parts.Add(lastPart);
+            }
+
+            return parts;
+        }
+
+        static int FindNearestSpaceIndex(string text, int startIndex)
+        {
+            int spaceIndex = text.LastIndexOf(' ', Math.Min(startIndex, text.Length - 1));
+
+            return spaceIndex;
         }
     }
 }
