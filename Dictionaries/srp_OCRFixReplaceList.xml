@@ -119,6 +119,7 @@
     <RegEx find="Ĺ˝" replaceWith="Ž" />
     <RegEx find="Å½" replaceWith="Ž" />
     <RegEx find="đž" replaceWith="dž" />
+    <RegEx find="gp" replaceWith="go" />
     <RegEx find="ajsmiješnij" replaceWith="ajsmešnij" />
     <RegEx find="boži[čć]([aeiu]|em|ima)?\b" replaceWith="Božić$1" />
     <RegEx find=" g-dine\.$" replaceWith=" gospodine." />
