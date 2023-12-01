@@ -1749,7 +1749,14 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                             using (var binarySubtitleFile = new FileStream(outputFileName, FileMode.Create))
                             {
                                 var isImageBased = IsImageBased(format);
-                                BdSupSaver.SaveBdSup(fileName, sub, binaryParagraphs.Cast<IBinaryParagraph>().ToList(), form, width, height, isImageBased, binarySubtitleFile, format, cancellationToken);
+                                
+                                List<IBinaryParagraph> bin = null;
+                                if (bin != null)
+                                {
+                                    bin =  binaryParagraphs.Cast<IBinaryParagraph>().ToList();
+                                }
+
+                                BdSupSaver.SaveBdSup(fileName, sub, bin, form, width, height, isImageBased, binarySubtitleFile, format, cancellationToken);
                             }
 
                             if (cancellationToken.IsCancellationRequested)
