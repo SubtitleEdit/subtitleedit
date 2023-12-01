@@ -17,6 +17,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
         public static string StaticName { get; set; } = "ChatGPT";
         public string Name => StaticName;
         public string Url => "https://chat.openai.com/";
+        public string Error { get; set; }
 
         public void Initialize()
         {
@@ -48,6 +49,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             var json = Encoding.UTF8.GetString(bytes).Trim();
             if (!result.IsSuccessStatusCode)
             {
+                Error = json;
                 SeLogger.Error("ChatGptTranslate failed calling API: Status code=" + result.StatusCode + Environment.NewLine + json);
             }
 

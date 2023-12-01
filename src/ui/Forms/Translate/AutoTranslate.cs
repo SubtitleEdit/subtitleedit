@@ -114,6 +114,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 new NoLanguageLeftBehindApi(),
                 new MyMemoryApi(),
                 new ChatGptTranslate(),
+                new PapagoTranslate(),
             };
 
             nikseComboBoxEngine.Items.Clear();
@@ -224,6 +225,14 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
                 return;
             }
+
+            if (engineType == typeof(PapagoTranslate))
+            {
+                //TODO: Show settings
+
+                return;
+            }
+
 
             if (engineType == typeof(MyMemoryApi))
             {
@@ -613,11 +622,32 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             {
                 var dr = MessageBox.Show(
                     this, string.Format(LanguageSettings.Current.GoogleTranslate.XRequiresAnApiKey, nikseComboBoxUrl.Text) + Environment.NewLine +
-                          Environment.NewLine +
-                          LanguageSettings.Current.GoogleTranslate.ReadMore,
-                    Text,
-                    MessageBoxButtons.YesNoCancel,
-                    MessageBoxIcon.Error);
+                        Environment.NewLine +
+                        LanguageSettings.Current.GoogleTranslate.ReadMore + Environment.NewLine +
+                        Environment.NewLine +
+                        _autoTranslator.Error,
+                        Text,
+                        MessageBoxButtons.YesNoCancel,
+                        MessageBoxIcon.Error);
+
+                if (dr == DialogResult.Yes)
+                {
+                    UiUtil.ShowHelp("#translation");
+                }
+            }
+            else if (linesTranslate == 0 && engineType == typeof(PapagoTranslate))
+            {
+                var dr = MessageBox.Show(
+                    this, string.Format(LanguageSettings.Current.GoogleTranslate.XRequiresAnApiKey, PapagoTranslate.StaticName) + Environment.NewLine +
+                        Environment.NewLine +
+                        LanguageSettings.Current.GoogleTranslate.ReadMore + Environment.NewLine +
+                        Environment.NewLine +
+                        "AutoTranslatePapagoApiKeyId and AutoTranslatePapagoApiKey needs to be filled out in Settings.xml" + Environment.NewLine + 
+                        Environment.NewLine +
+                        _autoTranslator.Error,
+                        Text,
+                        MessageBoxButtons.YesNoCancel,
+                        MessageBoxIcon.Error);
 
                 if (dr == DialogResult.Yes)
                 {

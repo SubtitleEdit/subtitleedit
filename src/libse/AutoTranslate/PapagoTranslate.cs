@@ -11,22 +11,24 @@ using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Core.AutoTranslate
 {
-    public class LibreTranslate : IAutoTranslator
+    public class PapagoTranslate : IAutoTranslator
     {
         private HttpClient _httpClient;
 
-        public static string StaticName { get; set; } = "LibreTranslate";
+        public static string StaticName { get; set; } = "PapagoTranslate";
         public string Name => StaticName;
-        public string Url => "https://github.com/LibreTranslate/LibreTranslate";
+        public string Url => "https://papago.naver.com/";
         public string Error { get; set; }
 
         public void Initialize()
         {
             _httpClient?.Dispose();
-            _httpClient = new HttpClient(); //DownloaderFactory.MakeHttpClient();
+            _httpClient = new HttpClient(); 
             _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json");
             _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("accept", "application/json");
-            _httpClient.BaseAddress = new Uri(Configuration.Settings.Tools.AutoTranslateLibreUrl);
+            _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("X-NCP-APIGW-API-KEY-ID", Configuration.Settings.Tools.AutoTranslatePapagoApiKeyId);
+            _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("X-NCP-APIGW-API-KEY", Configuration.Settings.Tools.AutoTranslatePapagoApiKeyId);
+            _httpClient.BaseAddress = new Uri("https://naveropenapi.apigw.ntruss.com/nmt/v1/");
         }
 
         public List<TranslationPair> GetSupportedSourceLanguages()
@@ -41,22 +43,16 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
 
         public async Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode)
         {
-            var apiKey = string.Empty;
-            if (!string.IsNullOrEmpty(Configuration.Settings.Tools.AutoTranslateLibreApiKey))
-            {
-                apiKey = " \"api_key\": \"" + Json.EncodeJsonText(Configuration.Settings.Tools.AutoTranslateLibreApiKey) + "\" ";
-            }
-
-            var input = "{\"q\": \"" + Json.EncodeJsonText(text.Trim()) + "\", \"source\": \"" + sourceLanguageCode + "\", \"target\": \"" + targetLanguageCode + "\"" + apiKey + "}";
+            var input = "{\"text\": \"" + Json.EncodeJsonText(text.Trim()) + "\", \"source\": \"" + sourceLanguageCode + "\", \"target\": \"" + targetLanguageCode + "\"}";
             var content = new StringContent(input, Encoding.UTF8);
             content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
-            var result = _httpClient.PostAsync("translate", content).Result;
+            var result = _httpClient.PostAsync("translation", content).Result;
             var bytes = await result.Content.ReadAsByteArrayAsync();
             var json = Encoding.UTF8.GetString(bytes).Trim();
             if (!result.IsSuccessStatusCode)
             {
                 Error = json;
-                SeLogger.Error("LibreTranslate failed calling API: Status code=" + result.StatusCode + Environment.NewLine + json);
+                SeLogger.Error("PapagoTranslate failed calling API: Status code=" + result.StatusCode + Environment.NewLine + json);
             }
             result.EnsureSuccessStatusCode();
             var parser = new SeJsonParser();
@@ -73,42 +69,36 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
         {
             var languageCodes = new List<string>
             {
-                "ar",
-                "az",
-                "cs",
-                "da",
-                "de",
-                "el",
-                "en",
-                "eo",
-                "es",
-                "fa",
-                "fi",
-                "fr",
-                "ga",
-                "he",
-                "hi",
-                "hu",
-                "id",
-                "it",
-                "ja",
                 "ko",
-                "nl",
-                "pl",
-                "pt",
+                "en",
+                "ja",
+                "zh-CN",
+                "zh-TW",
+                "vi",
+                "id",
+                "fr",
+                "es",
                 "ru",
-                "ru",
-                "sk",
-                "sv",
-                "tr",
-                "uk",
-                "zh",
+                "de",
+                "it",
             };
 
             var result = new List<TranslationPair>();
             var cultures = Utilities.GetSubtitleLanguageCultures(false).ToList();
             foreach (var code in languageCodes)
             {
+                if (code == "zh-CN")
+                {
+                    result.Add(new TranslationPair("Chinese (simplified)", code, code));
+                    continue;
+                }
+
+                if (code == "zh-TW")
+                {
+                    result.Add(new TranslationPair("Chinese (traditional)", code, code));
+                    continue;
+                }
+
                 var culture = cultures.FirstOrDefault(p=>p.TwoLetterISOLanguageName == code);
                 if (culture != null)
                 {

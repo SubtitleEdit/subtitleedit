@@ -18,6 +18,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
         public static string StaticName { get; set; } = "thammegowda-nllb-serve";
         public string Name => StaticName;
         public string Url => "https://github.com/thammegowda/nllb-serve";
+        public string Error { get; set; }
 
         public void Initialize()
         {

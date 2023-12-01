@@ -21,6 +21,8 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
         public static string StaticName { get; set; } = "DeepL V2 translate";
         public string Name => StaticName;
         public string Url => "https://www.deepl.com";
+        public string Error { get; set; }
+
         public void Initialize()
         {
             _apiKey = Configuration.Settings.Tools.AutoTranslateDeepLApiKey;
@@ -102,6 +104,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             var resultContent = result.Content.ReadAsStringAsync().Result;
             if (result.StatusCode == HttpStatusCode.Forbidden)
             {
+                Error = resultContent;
                 throw new Exception("Bad API key");
             }
 

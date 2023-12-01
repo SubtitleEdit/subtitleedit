@@ -163,6 +163,8 @@ namespace Nikse.SubtitleEdit.Core.Common
         public string AutoTranslateSeamlessM4TUrl { get; set; }
         public string AutoTranslateDeepLApiKey { get; set; }
         public string AutoTranslateDeepLUrl { get; set; }
+        public string AutoTranslatePapagoApiKeyId { get; set; }
+        public string AutoTranslatePapagoApiKey { get; set; }
         public string AutoTranslateDeepLFormality { get; set; }
         public bool TranslateAllowSplit { get; set; }
         public string TranslateLastService { get; set; }
@@ -5187,6 +5189,18 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.Tools.AutoTranslateDeepLUrl = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("AutoTranslatePapagoApiKeyId");
+            if (subNode != null)
+            {
+                settings.Tools.AutoTranslatePapagoApiKeyId = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("AutoTranslatePapagoApiKey");
+            if (subNode != null)
+            {
+                settings.Tools.AutoTranslatePapagoApiKey = subNode.InnerText;
             }
 
             subNode = node.SelectSingleNode("AutoTranslateDeepLFormality");
@@ -11569,6 +11583,8 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("AutoTranslateSeamlessM4TUrl", settings.Tools.AutoTranslateSeamlessM4TUrl);
                 textWriter.WriteElementString("AutoTranslateDeepLApiKey", settings.Tools.AutoTranslateDeepLApiKey);
                 textWriter.WriteElementString("AutoTranslateDeepLUrl", settings.Tools.AutoTranslateDeepLUrl);
+                textWriter.WriteElementString("AutoTranslatePapagoApiKeyId", settings.Tools.AutoTranslatePapagoApiKeyId);
+                textWriter.WriteElementString("AutoTranslatePapagoApiKey", settings.Tools.AutoTranslatePapagoApiKey);
                 textWriter.WriteElementString("AutoTranslateDeepLFormality", settings.Tools.AutoTranslateDeepLFormality);
                 textWriter.WriteElementString("TranslateAllowSplit", settings.Tools.TranslateAllowSplit.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("TranslateLastService", settings.Tools.TranslateLastService);
