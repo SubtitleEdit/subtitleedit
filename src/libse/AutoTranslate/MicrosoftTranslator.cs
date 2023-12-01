@@ -31,6 +31,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
         public static string StaticName { get; set; } = "Bing Microsoft Translator";
         public string Name => StaticName;
         public string Url => "https://www.bing.com/translator";
+        public string Error { get; set; }
 
         public void Initialize()
         {
@@ -83,6 +84,8 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
 
                 if (!result.IsSuccessStatusCode)
                 {
+                    Error = json;
+
                     if (result.StatusCode == HttpStatusCode.Unauthorized)
                     {
                         throw new Exception("API key is not valid!" + Environment.NewLine + Environment.NewLine + jsonResult);

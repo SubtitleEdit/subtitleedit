@@ -16,6 +16,8 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
         /// </summary>
         string Url { get; }
 
+        string Error { get; set; }
+
         /// <summary>
         /// Initialization before calling translate.
         /// </summary>

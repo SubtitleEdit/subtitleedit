@@ -18,11 +18,12 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
         public static string StaticName { get; set; } = "SeamlessM4T";
         public string Name => StaticName;
         public string Url => "https://replicate.com/cjwbw/seamless_communication/api";
+        public string Error { get; set; }
 
         public void Initialize()
         {
             _httpClient?.Dispose();
-            _httpClient = new HttpClient(); //DownloaderFactory.MakeHttpClient();
+            _httpClient = new HttpClient(); 
             _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json");
             _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("accept", "application/json");
             _httpClient.BaseAddress = new Uri(Configuration.Settings.Tools.AutoTranslateSeamlessM4TUrl.TrimEnd('/') + "/");

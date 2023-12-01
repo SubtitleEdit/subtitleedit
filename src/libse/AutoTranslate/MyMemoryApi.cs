@@ -15,6 +15,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
         public static string StaticName { get; set; } = "MyMemory Translate";
         public string Name => StaticName;
         public string Url => "https://mymemory.translated.net/";
+        public string Error { get; set; }
 
         public void Initialize()
         {

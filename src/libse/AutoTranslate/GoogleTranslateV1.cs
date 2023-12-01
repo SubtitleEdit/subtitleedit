@@ -22,6 +22,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
         public static string StaticName { get; set; } = "Google Translate V1 API";
         public string Name => StaticName;
         public string Url => "https://translate.google.com/";
+        public string Error { get; set; }
 
         public void Initialize()
         {
