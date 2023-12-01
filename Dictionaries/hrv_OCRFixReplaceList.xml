@@ -574,6 +574,7 @@
     <Word from="ignorišući" to="ignorirajući" />
     <Word from="Igraće" to="Igrat će" />
     <Word from="igraćeš" to="igrat ćeš" />
+    <Word from="ilustrujete" to="ilustrirate" />
     <Word from="ilustruju" to="ilustriraju" />
     <Word from="inačr" to="inače" />
     <Word from="inspirisao" to="inspirirao" />
@@ -5324,6 +5325,7 @@
     <RegEx find="znst" replaceWith="znost" />
     <RegEx find="(?&lt;![Oo]bra|o)zova([lton])" replaceWith="zira$1" />
     <RegEx find="zpr" replaceWith="spr" />
+    <RegEx find="zref" replaceWith="zrel" />
     <RegEx find="zsp" replaceWith="zap" />
     <RegEx find="zsn" replaceWith="zan" />
     <RegEx find="zqp" replaceWith="zap" />
