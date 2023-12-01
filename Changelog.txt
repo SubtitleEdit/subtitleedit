@@ -4,9 +4,12 @@
 4.0.3 (xth December 2023) BETA
 * NEW:
    * Add ".opus" as audio file extension - thx vivadavid
+   * Add two TSV subtitle formats - thx Purfview
+   * Add Arabic translation - thx Yahya
 * IMPROVED:
    * Update Polish translation - thx admas
    * Update Finnish translation - thx Teijo S
+   * Update Spanish AR & MX translation - thx jmaraujouy
    * Show file list after Whisper/Vosk batch run - thx Simon
    * Some improvements for SUP/BDN-XML editor - thx Jack1789
    * Add Spanish for ChatGPT translate - thx alvarusk
@@ -14,7 +17,9 @@
    * Update Whisper CPP to v1.5.1
    * Update libmpv to 2023-11-26
    * Update yt-dlp to 2023-11-16
+   * Re-add Whisper Const-me large model v2
 * FIXED:
+   * Fix for BDSUP cmd line convert - thx Jack1789
    * Fix minor space issue with "Fix italic tags" - thx Adam
    * Focus text box after "Set end, add new and go to new" - thx aoifeaoibhee
    * Fix for unwanted "<br />" in MS translator - thx Miguel
