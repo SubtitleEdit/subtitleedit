@@ -108,6 +108,7 @@
     <Word from="blizankinje" to="blizanke" />
     <Word from="Blizankinje" to="Blizanke" />
     <Word from="boki" to="boli" />
+    <Word from="boksovao" to="boksao" />
     <Word from="boksujem" to="boksam" />
     <Word from="Boksujem" to="Boksam" />
     <Word from="boksuješ" to="boksaš" />
@@ -154,6 +155,7 @@
     <Word from="Cjevima" to="Cijevima" />
     <Word from="cevčica" to="cjevčica" />
     <Word from="cevčicu" to="cjevčicu" />
+    <Word from="ckea" to="čeka" />
     <Word from="cjelu" to="cijelu" />
     <Word from="crep" to="crijep" />
     <Word from="crepa" to="crijepa" />
@@ -1258,6 +1260,7 @@
     <Word from="nrgo" to="nego" />
     <Word from="nuduo" to="nudio" />
     <!-- o -->
+    <Word from="oa" to="pa" />
     <Word from="oar" to="par" />
     <Word from="obadva" to="oba" />
     <Word from="obe" to="obje" />
@@ -1827,6 +1830,8 @@
     <Word from="prostituiše" to="prostituira" />
     <Word from="prostituišu" to="prostituiraju" />
     <Word from="prošvercovala" to="prošvercala" />
+    <Word from="prošvercovao" to="prošvercao" />
+    <Word from="Prošvercovao" to="Prošvercao" />
     <Word from="protestovao" to="protestirao" />
     <Word from="protestvovao" to="protestirao" />
     <Word from="protestovat" to="protestirat" />
@@ -5216,6 +5221,7 @@
     <RegEx find="tedeo" replaceWith="tedio" />
     <RegEx find="terijum" replaceWith="terij" />
     <RegEx find="tešn" replaceWith="tješn" />
+    <RegEx find="teud" replaceWith="trud" />
     <RegEx find="tićn" replaceWith="tičn" />
     <!--eksploatira-->
     <RegEx find="tisal" replaceWith="tiral" />
@@ -5270,6 +5276,7 @@
     <RegEx find="uslj?ed" replaceWith="uslijed" />
     <RegEx find="u([šv])ać" replaceWith="u$1at ć" />
     <RegEx find="uzp" replaceWith="usp" />
+    <RegEx find="vapt" replaceWith="vašt" />
     <RegEx find="vašlji" replaceWith="ušlji" />
     <RegEx find="(?&lt;!kr|m)užić" replaceWith="užit ć" />
     <RegEx find="vdr" replaceWith="vrd" />
