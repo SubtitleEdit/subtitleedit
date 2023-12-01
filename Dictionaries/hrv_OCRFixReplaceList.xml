@@ -304,6 +304,7 @@
     <Word from="Dejstvom" to="Djelovanjem" />
     <Word from="dele" to="dijele" />
     <Word from="deleći" to="dijeleći" />
+    <Word from="Deleći" to="Dijeleći" />
     <Word from="deo" to="dio" />
     <Word from="Deo" to="Dio" />
     <Word from="delo" to="djelo" />
@@ -837,6 +838,7 @@
     <Word from="kouj" to="koju" />
     <Word from="koverta" to="kuverta" />
     <Word from="Koverta" to="Kuverta" />
+    <Word from="koverte" to="kuverte" />
     <Word from="koverti" to="kuverti" />
     <Word from="kovertu" to="kuvertu" />
     <Word from="kritikuju" to="kritiziraju" />
@@ -1999,6 +2001,7 @@
     <Word from="seckam" to="sjeckam" />
     <Word from="sećanjima" to="sjećanjima" />
     <Word from="seče" to="siječe" />
+    <Word from="sečeno" to="rezano" />
     <Word from="sečenjem" to="rezanjem" />
     <Word from="sečivo" to="sječivo" />
     <Word from="sečiva" to="sječiva" />
@@ -2262,6 +2265,7 @@
     <Word from="Stideo" to="Stidio" />
     <Word from="stidela" to="stidjela" />
     <Word from="Stidela" to="Stidjela" />
+    <Word from="stideti" to="stidjeti" />
     <Word from="stiditi" to="stidjeti" />
     <Word from="stim" to="s tim" />
     <Word from="stojati" to="stajati" />
@@ -2759,6 +2763,7 @@
     <Word from="zacjele" to="zacijele" />
     <Word from="zaćutala" to="zašutjela" />
     <Word from="zaćutao" to="zašutio" />
+    <Word from="zado" to="zato" />
     <Word from="zagreva" to="zagrijava" />
     <Word from="Zagreva" to="Zagrijava" />
     <Word from="zagrevanja" to="zagrijavanja" />
@@ -4982,6 +4987,7 @@
     <RegEx find="ikustv" replaceWith="iskustv" />
     <RegEx find="ilp" replaceWith="ilo" />
     <RegEx find="iscj?edi" replaceWith="$1scijedi" />
+    <RegEx find="isjk" replaceWith="ijsk" />
     <RegEx find="irać" replaceWith="irat ć" />
     <RegEx find="izovan " replaceWith="iziran" />
     <RegEx find="jći" replaceWith="jući" />
@@ -5021,8 +5027,8 @@
     <RegEx find="lkm" replaceWith="lim" />
     <RegEx find="ljubc" replaceWith="ljupc" />
     <RegEx find="ljutić" replaceWith="ljutit ć" />
-    <RegEx find="lpg" replaceWith="log" />
-    <RegEx find="lrd" replaceWith="led" />
+    <RegEx find="lp([rg])" replaceWith="lo$1" />
+    <RegEx find="lr([dgh])" replaceWith="le$1" />
     <RegEx find="lša" replaceWith="iša" />
     <RegEx find="Lša" replaceWith="Iša" />
     <RegEx find="ltovan" replaceWith="ltiran" />
@@ -5112,6 +5118,7 @@
     <RegEx find="sj?etić" replaceWith="sjetit ć" />
     <RegEx find="osb" replaceWith="osob" />
     <RegEx find="ot[čć]i" replaceWith="odči" />
+    <RegEx find="otse" replaceWith="odsje" />
     <RegEx find="otstak" replaceWith="otak" />
     <RegEx find="ovetn" replaceWith="ovjetn" />
     <RegEx find="ovinova([lt])" replaceWith="okorava$1" />
