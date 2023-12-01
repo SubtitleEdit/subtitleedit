@@ -229,6 +229,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new TMPlayer(),
                     new TranscriberXml(),
                     new Tmx14(),
+                    new Tsv1(),
+                    new Tsv2(),
                     new TurboTitler(),
                     new TwentyThreeJson(),
                     new TwentyThreeJsonEmbed(),
