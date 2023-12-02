@@ -450,7 +450,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static bool IsAllOkay(List<string> lines)
         {
-            return lines.Count <= 4 && lines.All(line => line.Length <= 32);
+            return lines.Count <= 4 && lines.All(line => HtmlUtil.RemoveHtmlTags(line, true).Length <= 32);
         }
 
         private static int GetLastIndexOfSpace(string s, int endCount)
@@ -516,8 +516,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var sb = new StringBuilder();
             sb.AppendLine("Scenarist_SCC V1.0");
             sb.AppendLine();
-            string language = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle);
-            for (int i = 0; i < subtitle.Paragraphs.Count; i++)
+            var language = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle);
+            for (var i = 0; i < subtitle.Paragraphs.Count; i++)
             {
                 var p = subtitle.Paragraphs[i];
                 sb.AppendLine($"{ToTimeCode(p.StartTime.TotalMilliseconds)}\t94ae 94ae 9420 9420 {ToSccText(p.Text, language)} 942f 942f");
@@ -530,6 +530,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     sb.AppendLine();
                 }
             }
+
             return sb.ToString();
         }
 
@@ -565,7 +566,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     sb.Append(' ');
                 }
 
-                var centerCodes = GetCenterCodes(text, count, lines.Count, topAlign, leftAlign, rightAlign, verticalCenter);
+                var centerCodes = GetCenterCodes(HtmlUtil.RemoveHtmlTags(text), count, lines.Count, topAlign, leftAlign, rightAlign, verticalCenter);
                 sb.Append(centerCodes);
                 count++;
                 int i = 0;
