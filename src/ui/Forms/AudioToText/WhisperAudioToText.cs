@@ -677,9 +677,37 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 fileName = $"{Path.Combine(Utilities.GetPathAndFileNameWithoutExtension(videoFileName))}.{Guid.NewGuid().ToString()}.{format.Extension}";
             }
 
-            File.WriteAllText(fileName, text, Encoding.UTF8);
-            _outputText.Add("Subtitle written to : " + fileName);
-            _outputBatchFileNames.Add(fileName);
+            try
+            {
+                File.WriteAllText(fileName, text, Encoding.UTF8);
+                _outputText.Add("Subtitle written to : " + fileName);
+                _outputBatchFileNames.Add(fileName);
+            }
+            catch
+            {
+                var dir = Path.GetDirectoryName(fileName);
+                if (!IsDirectoryWritable(dir))
+                {
+                    MessageBox.Show($"SE does not have write access to the folder '{dir}'", MessageBoxIcon.Error);
+                }
+
+                throw;
+            }
+        }
+
+        public static bool IsDirectoryWritable(string dirPath)
+        {
+            try
+            {
+                using (FileStream fs = File.Create(Path.Combine(dirPath, Path.GetRandomFileName()), 1, FileOptions.DeleteOnClose))
+                {
+                }
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         internal static string GetLanguage(string name)
