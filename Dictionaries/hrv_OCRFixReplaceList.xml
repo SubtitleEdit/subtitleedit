@@ -4992,7 +4992,7 @@
     <RegEx find="izovan " replaceWith="iziran" />
     <RegEx find="jći" replaceWith="jući" />
     <RegEx find="jdm" replaceWith="jem" />
-    <RegEx find="jdin" replaceWith="jedin" />
+    <RegEx find="jdi?n" replaceWith="jedin" />
     <RegEx find="jerm" replaceWith="jem" />
     <RegEx find="jrl" replaceWith="jel" />
     <RegEx find="jrs" replaceWith="jes" />
@@ -5166,7 +5166,6 @@
     <RegEx find="renaduvan" replaceWith="renapuhan" />
     <RegEx find="resed" replaceWith="resjed" />
     <RegEx find="rgv" replaceWith="rgov" />
-    <RegEx find="rqv" replaceWith="rav" />
     <RegEx find="rijedel" replaceWith="rijedil" />
     <RegEx find="r([mv])isa" replaceWith="r$1ira" />
     <RegEx find="rj?evozn" replaceWith="rijevozn" />
@@ -5175,6 +5174,7 @@
     <RegEx find="rql" replaceWith="ral" />
     <RegEx find="rqm" replaceWith="ram" />
     <RegEx find="rqt" replaceWith="rat" />
+    <RegEx find="rqv" replaceWith="rav" />
     <RegEx find="([rv])pd" replaceWith="$1od" />
     <RegEx find="rsd" replaceWith="rad" />
     <RegEx find="rsv" replaceWith="rav" />
@@ -5184,6 +5184,7 @@
     <RegEx find="ržać" replaceWith="ržat ć" />
     <RegEx find="rwd" replaceWith="red" />
     <RegEx find="rwk" replaceWith="rek" />
+    <RegEx find="rwm" replaceWith="rem" />
     <RegEx find="sbe" replaceWith="sve" />
     <RegEx find="sbo" replaceWith="svo" />
     <RegEx find="s([čć])" replaceWith="š$1" />
