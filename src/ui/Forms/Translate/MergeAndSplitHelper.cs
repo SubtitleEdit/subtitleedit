@@ -19,11 +19,6 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             }
 
             var p = sourceSubtitle.Paragraphs[index];
-            if (p.Text.Contains("{\\", StringComparison.Ordinal) || p.Text.EndsWith(')') || p.Text.StartsWith('-'))
-            {
-                return 0;
-            }
-
             char? splitAtChar = null;
             var mergeCount = 0;
             var allItalic = false;
@@ -31,33 +26,52 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             var text = string.Empty;
             var linesTranslate = 0;
 
-            if (MergeWithThreeNext(sourceSubtitle, index, source.Code))
+            MergeResult mergeResult = null;
+            List<Formatting> formattings = null;
+
+            if (mergeCount == 0)
             {
-                mergeCount = 3;
-                allItalic = HasAllLinesTag(sourceSubtitle, index, mergeCount, "i");
-                allBold = HasAllLinesTag(sourceSubtitle, index, mergeCount, "b");
-                text = MergeLines(sourceSubtitle, index, mergeCount, allItalic, allBold);
-            }
-            else if (MergeWithTwoNext(sourceSubtitle, index, source.Code))
-            {
-                mergeCount = 2;
-                allItalic = HasAllLinesTag(sourceSubtitle, index, mergeCount, "i");
-                allBold = HasAllLinesTag(sourceSubtitle, index, mergeCount, "b");
-                text = MergeLines(sourceSubtitle, index, mergeCount, allItalic, allBold);
-            }
-            else if (MergeWithNext(sourceSubtitle, index, source.Code))
-            {
-                mergeCount = 1;
-                allItalic = HasAllLinesTag(sourceSubtitle, index, mergeCount, "i");
-                allBold = HasAllLinesTag(sourceSubtitle, index, mergeCount, "b");
-                text = MergeLines(sourceSubtitle, index, mergeCount, allItalic, allBold);
+                var maxChars =
+                    autoTranslator.Name == GoogleTranslateV1.StaticName ||
+                    autoTranslator.Name == ChatGptTranslate.StaticName ||
+                    autoTranslator.Name == MicrosoftTranslator.StaticName
+                    ? 1500
+                    : 250;
+
+                // Try to handle (remove and save info for later restore) italics, bold, alignment where possible
+                var s = new Subtitle(sourceSubtitle);
+                formattings = HandleFormatting(s, index, target.Code);
+
+                // Merge text for better translation and save info enough to split again later
+                mergeResult = MergeMultipleLines(s, index, maxChars);
+                mergeCount = mergeResult.ParagraphCount;
+                text = mergeResult.Text;
             }
 
-            //if (mergeCount == 0 && autoTranslator.Name == GoogleTranslateV1.StaticName || autoTranslator.Name == ChatGptTranslate.StaticName)
-            //{
-            //    var maxChars = 1500;
-            //    var mergeResult = MergeMultipleLines(sourceSubtitle, index, maxChars);
-            //}
+            if (mergeCount == 0)
+            {
+                if (MergeWithThreeNext(sourceSubtitle, index, source.Code))
+                {
+                    mergeCount = 3;
+                    allItalic = HasAllLinesTag(sourceSubtitle, index, mergeCount, "i");
+                    allBold = HasAllLinesTag(sourceSubtitle, index, mergeCount, "b");
+                    text = MergeLines(sourceSubtitle, index, mergeCount, allItalic, allBold);
+                }
+                else if (MergeWithTwoNext(sourceSubtitle, index, source.Code))
+                {
+                    mergeCount = 2;
+                    allItalic = HasAllLinesTag(sourceSubtitle, index, mergeCount, "i");
+                    allBold = HasAllLinesTag(sourceSubtitle, index, mergeCount, "b");
+                    text = MergeLines(sourceSubtitle, index, mergeCount, allItalic, allBold);
+                }
+                else if (MergeWithNext(sourceSubtitle, index, source.Code))
+                {
+                    mergeCount = 1;
+                    allItalic = HasAllLinesTag(sourceSubtitle, index, mergeCount, "i");
+                    allBold = HasAllLinesTag(sourceSubtitle, index, mergeCount, "b");
+                    text = MergeLines(sourceSubtitle, index, mergeCount, allItalic, allBold);
+                }
+            }
 
             //  just take next sentence too
             var next = sourceSubtitle.GetParagraphOrDefault(index + 1);
@@ -70,10 +84,32 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 text = Utilities.UnbreakLine(p.Text) + Environment.NewLine + Utilities.UnbreakLine(next.Text);
             }
 
-            if (mergeCount > 0 && !text.Contains("{\\", StringComparison.Ordinal))
+            if (mergeResult != null)
             {
                 var mergedTranslation = await autoTranslator.Translate(text, source.Code, target.Code);
+                var splitResult = SplitMultipleLines(mergeResult, mergedTranslation, target.Code);
+                if (splitResult.Count == mergeCount)
+                {
+                    var idx = 0;
+                    foreach (var line in splitResult)
+                    {
+                        var s = formattings[idx].ReAddFormatting(line);
+                        targetSubtitle.Paragraphs[index].Text = s;
+                        index++;
+                        linesTranslate++;
+                        idx++;
+                    }
+
+                    return linesTranslate;
+                }
+            }
+
+            if (mergeCount > 0)
+            {
+                var mergedTranslation = await autoTranslator.Translate(text, source.Code, target.Code);
+
                 List<string> result;
+
                 if (splitAtChar != null && mergeCount == 1)
                 {
                     result = SplitResultAtSplitChar(mergedTranslation, splitAtChar.Value, target.Code);
@@ -113,6 +149,22 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             }
 
             return linesTranslate;
+        }
+
+        private static List<Formatting> HandleFormatting(Subtitle sourceSubtitle, int index, string sourceLanguage)
+        {
+            var formattings = new List<Formatting>();
+
+            for (var i = index; i < sourceSubtitle.Paragraphs.Count; i++)
+            {
+                var p = sourceSubtitle.Paragraphs[i];
+                var f = new Formatting();
+                var text = f.SetTagsAndReturnTrimmed(TranslationHelper.PreTranslate(p.Text, sourceLanguage), sourceLanguage);
+                p.Text = text;
+                formattings.Add(f);
+            }
+
+            return formattings;
         }
 
         public class MergeResultItem
@@ -161,7 +213,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             {
                 var p = sourceSubtitle.Paragraphs[i];
 
-                if (item != null && Utilities.UrlEncodeLength(item.Text + Environment.NewLine + p.Text) > maxTextSize)
+                if (item != null && Utilities.UrlEncodeLength(result.Text + Environment.NewLine + p.Text) > maxTextSize)
                 {
                     break;
                 }

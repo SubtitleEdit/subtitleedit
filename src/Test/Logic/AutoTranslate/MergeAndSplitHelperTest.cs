@@ -28,7 +28,10 @@ namespace Test.Logic.AutoTranslate
 
             var splitResult = MergeAndSplitHelper.SplitMultipleLines(mergeResult, mergeResult.Text, "en");
             Assert.AreEqual(subtitle.Paragraphs.Count, splitResult.Count);
-            Assert.AreEqual(string.Join(" ", subtitle.Paragraphs.Select(p => p.Text)), string.Join(" ", splitResult));
+
+            var inputText = string.Join(" ", subtitle.Paragraphs.Select(p => p.Text)).Replace(Environment.NewLine, " ");
+            var splitResultText = string.Join(" ", splitResult);
+            Assert.AreEqual(inputText, splitResultText);
         }
 
         [TestMethod]
@@ -56,6 +59,36 @@ namespace Test.Logic.AutoTranslate
             var splitResult = MergeAndSplitHelper.SplitMultipleLines(mergeResult, mergeResult.Text, "en");
             Assert.AreEqual(subtitle.Paragraphs.Count, splitResult.Count);
             Assert.AreEqual(string.Join(" ", subtitle.Paragraphs.Select(p => p.Text)), string.Join(" ", splitResult));
+        }
+
+        [TestMethod]
+        public void TestTextForHiWithTextAfter()
+        {
+            var subtitle = new Subtitle();
+            subtitle.Paragraphs.Add(new Paragraph("", 0, 1000));
+            subtitle.Paragraphs.Add(new Paragraph("[Raining]" + Environment.NewLine + "Hallo.", 1, 2000));
+            subtitle.Paragraphs.Add(new Paragraph("How are you?", 3000, 4000));
+
+            var mergeResult = MergeAndSplitHelper.MergeMultipleLines(subtitle, 0, 1500);
+
+            Assert.IsNotNull(mergeResult);
+            Assert.AreEqual("[Raining]" + Environment.NewLine + "Hallo." + Environment.NewLine + "How are you?", mergeResult.Text);
+            Assert.AreEqual(subtitle.Paragraphs.Count, mergeResult.ParagraphCount);
+            Assert.AreEqual(3, mergeResult.MergeResultItems.Count);
+            Assert.AreEqual(true, mergeResult.MergeResultItems[0].IsEmpty);
+            Assert.AreEqual(false, mergeResult.MergeResultItems[1].IsEmpty);
+            Assert.AreEqual(false, mergeResult.MergeResultItems[1].Continious);
+            Assert.AreEqual(1, mergeResult.MergeResultItems[1].StartIndex);
+            Assert.AreEqual(1, mergeResult.MergeResultItems[1].EndIndex);
+            Assert.AreEqual('.', mergeResult.MergeResultItems[1].EndChar);
+            Assert.AreEqual(1, mergeResult.MergeResultItems[1].EndCharOccurences);
+
+            var splitResult = MergeAndSplitHelper.SplitMultipleLines(mergeResult, mergeResult.Text, "en");
+            Assert.AreEqual(subtitle.Paragraphs.Count, splitResult.Count);
+
+            var inputText = string.Join(" ", subtitle.Paragraphs.Select(p => p.Text)).Replace(Environment.NewLine, " ");
+            var splitResultText = string.Join(" ", splitResult);
+            Assert.AreEqual(inputText, splitResultText);
         }
 
         [TestMethod]
@@ -145,6 +178,10 @@ namespace Test.Logic.AutoTranslate
             Assert.AreEqual("My name is Peter. And Jones.", splitResult[5]);
             Assert.AreEqual("", splitResult[6]);
             Assert.AreEqual("Hallo there.", splitResult[7]);
+
+            var inputText = string.Join(" ", subtitle.Paragraphs.Select(p => p.Text)).Replace(Environment.NewLine, " ");
+            var splitResultText = string.Join(" ", splitResult);
+            Assert.AreEqual(inputText, splitResultText);
         }
     }
 }
