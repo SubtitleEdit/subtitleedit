@@ -61,6 +61,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                     try
                     {
                         Error = result.Content.ReadAsStringAsync().Result;
+                        SeLogger.Error($"Error in {StaticName}.Translate: " + Error);
                     }
                     catch
                     {
