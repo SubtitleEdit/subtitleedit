@@ -55,6 +55,12 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                 var result = _httpClient.GetAsync(url).Result;
                 var bytes = result.Content.ReadAsByteArrayAsync().Result;
                 jsonResultString = Encoding.UTF8.GetString(bytes).Trim();
+
+                if (!result.IsSuccessStatusCode)
+                {
+                    Error = jsonResultString;
+                    SeLogger.Error($"Error in {StaticName}.Translate: " + Error);
+                }
             }
             catch (WebException webException)
             {
