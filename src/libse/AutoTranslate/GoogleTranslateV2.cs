@@ -55,8 +55,22 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             try
             {
                 var result = _httpClient.PostAsync(uri, new StringContent(string.Empty)).Result;
-                if ((int)result.StatusCode == 400)
+
+                if (!result.IsSuccessStatusCode)
                 {
+                    try
+                    {
+                        Error = result.Content.ReadAsStringAsync().Result;
+                    }
+                    catch
+                    {
+
+                        // ignore
+                    }
+                }
+
+                if ((int)result.StatusCode == 400)
+                {                   
                     throw new TranslationException("API key invalid (or perhaps billing is not enabled)?");
                 }
                 if ((int)result.StatusCode == 403)
