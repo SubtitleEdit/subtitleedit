@@ -22,6 +22,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
         public string Name => StaticName;
         public string Url => "https://www.deepl.com";
         public string Error { get; set; }
+        public int MaxCharacters => 1500;
 
         public void Initialize()
         {

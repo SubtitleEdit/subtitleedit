@@ -18,6 +18,8 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
 
         string Error { get; set; }
 
+        int MaxCharacters { get; }
+
         /// <summary>
         /// Initialization before calling translate.
         /// </summary>
