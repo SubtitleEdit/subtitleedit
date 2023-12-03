@@ -19,6 +19,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
         public string Name => StaticName;
         public string Url => "https://github.com/LibreTranslate/LibreTranslate";
         public string Error { get; set; }
+        public int MaxCharacters => 250;
 
         public void Initialize()
         {

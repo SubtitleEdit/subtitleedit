@@ -31,19 +31,12 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
             if (mergeCount == 0)
             {
-                var maxChars =
-                    autoTranslator.Name == GoogleTranslateV1.StaticName ||
-                    autoTranslator.Name == ChatGptTranslate.StaticName ||
-                    autoTranslator.Name == MicrosoftTranslator.StaticName
-                    ? 1500
-                    : 250;
-
                 // Try to handle (remove and save info for later restore) italics, bold, alignment where possible
                 var s = new Subtitle(sourceSubtitle);
                 formattings = HandleFormatting(s, index, target.Code);
 
                 // Merge text for better translation and save info enough to split again later
-                mergeResult = MergeMultipleLines(s, index, maxChars);
+                mergeResult = MergeMultipleLines(s, index, autoTranslator.MaxCharacters);
                 mergeCount = mergeResult.ParagraphCount;
                 text = mergeResult.Text;
             }
