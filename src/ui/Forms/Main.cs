@@ -18887,10 +18887,10 @@ namespace Nikse.SubtitleEdit.Forms
 
             // put new entries above tabs
 
-            if (e.Modifiers == (Keys.Alt | Keys.Shift | Keys.Control) && e.KeyCode == Keys.F12)
-            {
-                new WordSplitDictionaryGenerator().ShowDialog(this);
-            }
+            //if (e.Modifiers == (Keys.Alt | Keys.Shift | Keys.Control) && e.KeyCode == Keys.something)
+            //{
+            //    new WordSplitDictionaryGenerator().ShowDialog(this);
+            //}
         }
 
         private int _layout = 0;
