@@ -15,7 +15,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
     {
         private HttpClient _httpClient;
 
-        public static string StaticName { get; set; } = "PapagoTranslate";
+        public static string StaticName { get; set; } = "Papago Translate";
         public string Name => StaticName;
         public string Url => "https://papago.naver.com/";
         public string Error { get; set; }
