@@ -5184,13 +5184,9 @@
     <RegEx find="rj?evozn" replaceWith="rijevozn" />
     <RegEx find="(?&lt;!r)ojd" replaceWith="ojed" />
     <RegEx find="rpeu" replaceWith="preu" />
-    <RegEx find="rql" replaceWith="ral" />
-    <RegEx find="rqm" replaceWith="ram" />
-    <RegEx find="rqt" replaceWith="rat" />
-    <RegEx find="rqv" replaceWith="rav" />
+    <RegEx find="rq([lmtvz])" replaceWith="ra$1" />
     <RegEx find="([rv])pd" replaceWith="$1od" />
-    <RegEx find="rsd" replaceWith="rad" />
-    <RegEx find="rsv" replaceWith="rav" />
+    <RegEx find="rs([dv])" replaceWith="ra$1" />
     <RegEx find="ršč" replaceWith="ršć" />
     <RegEx find="rutuje" replaceWith="rutira" />
     <RegEx find="rviši" replaceWith="rviraj" />
