@@ -40,6 +40,7 @@ namespace Nikse.SubtitleEdit.Core.Translate
         private bool AutoBreak { get; set; }
         private bool SquareBrackets { get; set; }
         private bool SquareBracketsUppercase { get; set; }
+        private bool RemovePeriod { get; set; }
         private int BreakNumberOfLines { get; set; }
         private bool BreakSplitAtLineEnding { get; set; }
         private bool BreakIsDialog { get; set; }
@@ -114,6 +115,12 @@ namespace Nikse.SubtitleEdit.Core.Translate
                 }
 
                 text = text.Replace("[", string.Empty).Replace("]", string.Empty);
+
+                if (!text.HasSentenceEnding() && text.Length > 0)
+                {
+                    text += ".";
+                    RemovePeriod = true;
+                }
             }
 
             // Un-break line
@@ -145,6 +152,11 @@ namespace Nikse.SubtitleEdit.Core.Translate
             if (AutoBreak)
             {
                 text = Utilities.AutoBreakLine(text);
+            }
+
+            if (RemovePeriod && text.EndsWith('.'))
+            {
+                text = text.Remove(text.Length - 1, 1);
             }
 
             // Square brackets
