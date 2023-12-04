@@ -1,10 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Core.AudioToText;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Nikse.SubtitleEdit.Core.Common
 {
@@ -163,16 +160,16 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public static List<string> SplitText(string text, int numberOfParts)
         {
-            List<string> parts = new List<string>();
+            var parts = new List<string>();
 
-            int totalLength = text.Length;
-            int partLength = totalLength / numberOfParts;
+            var totalLength = text.Length;
+            var partLength = totalLength / numberOfParts;
 
-            int startIndex = 0;
+            var startIndex = 0;
 
-            for (int i = 0; i < numberOfParts - 1; i++)
+            for (var i = 0; i < numberOfParts - 1; i++)
             {
-                int endIndex = FindNearestSpaceIndex(text, startIndex + partLength);
+                var endIndex = FindNearestSpaceIndex(text, startIndex + partLength);
 
                 if (endIndex == -1)
                 {
@@ -180,7 +177,14 @@ namespace Nikse.SubtitleEdit.Core.Common
                     break;
                 }
 
-                string part = text.Substring(startIndex, endIndex - startIndex);
+                var length = endIndex - startIndex;
+                if (length <= 0)
+                {
+                    parts.Add(string.Empty);
+                    break;
+                }
+
+                var part = text.Substring(startIndex, length);
                 parts.Add(part);
 
                 // Move the start index to the next character after the space
@@ -190,7 +194,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             // Add the remaining text as the last part
             if (startIndex < totalLength)
             {
-                string lastPart = text.Substring(startIndex);
+                var lastPart = text.Substring(startIndex);
                 parts.Add(lastPart);
             }
 
@@ -199,8 +203,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         static int FindNearestSpaceIndex(string text, int startIndex)
         {
-            int spaceIndex = text.LastIndexOf(' ', Math.Min(startIndex, text.Length - 1));
-
+            var spaceIndex = text.LastIndexOf(' ', Math.Min(startIndex, text.Length - 1));
             return spaceIndex;
         }
     }
