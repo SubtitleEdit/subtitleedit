@@ -292,7 +292,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
                 result.MergeResultItems.Add(item);
 
-                if (result.Text.Length > 0)
+                if (result.Text.Length > 0 && result.Text.HasSentenceEnding())
                 {
                     var endChar = result.Text[result.Text.Length - 1];
                     item.EndChar = endChar;
