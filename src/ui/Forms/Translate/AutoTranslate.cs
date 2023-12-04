@@ -228,7 +228,15 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
             if (engineType == typeof(PapagoTranslate))
             {
-                //TODO: Show settings
+                FillUrls(new List<string> { Configuration.Settings.Tools.AutoTranslatePapagoApiKeyId });
+                labelUrl.Text = "API Key ID";
+                nikseComboBoxUrl.Left = labelUrl.Right + 3;
+
+                labelApiKey.Left = nikseComboBoxUrl.Right + 12;
+                nikseTextBoxApiKey.Text = Configuration.Settings.Tools.AutoTranslatePapagoApiKey;
+                nikseTextBoxApiKey.Left = labelApiKey.Right + 3;
+                labelApiKey.Visible = true;
+                nikseTextBoxApiKey.Visible = true;
 
                 return;
             }
@@ -642,7 +650,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                         Environment.NewLine +
                         LanguageSettings.Current.GoogleTranslate.ReadMore + Environment.NewLine +
                         Environment.NewLine +
-                        "AutoTranslatePapagoApiKeyId and AutoTranslatePapagoApiKey needs to be filled out in Settings.xml" + Environment.NewLine + 
+                        "AutoTranslatePapagoApiKeyId and AutoTranslatePapagoApiKey needs to be filled out in Settings.xml" + Environment.NewLine +
                         Environment.NewLine +
                         _autoTranslator.Error,
                         Text,
@@ -708,6 +716,12 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             if (engineType == typeof(ChatGptTranslate) && !string.IsNullOrWhiteSpace(nikseTextBoxApiKey.Text))
             {
                 Configuration.Settings.Tools.ChatGptApiKey = nikseTextBoxApiKey.Text.Trim();
+            }
+
+            if (engineType == typeof(PapagoTranslate) && !string.IsNullOrWhiteSpace(nikseTextBoxApiKey.Text))
+            {
+                Configuration.Settings.Tools.AutoTranslatePapagoApiKeyId = nikseComboBoxUrl.Text.Trim();
+                Configuration.Settings.Tools.AutoTranslatePapagoApiKey = nikseTextBoxApiKey.Text.Trim();
             }
         }
 
