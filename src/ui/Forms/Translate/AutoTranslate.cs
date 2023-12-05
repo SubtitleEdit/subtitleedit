@@ -552,6 +552,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             timerUpdate.Tick += TimerUpdate_Tick;
             timerUpdate.Start();
             var linesTranslated = 0;
+            var forceSingleLineMode = translateSingleLinesToolStripMenuItem.Checked;
 
             if (comboBoxSource.SelectedItem is TranslationPair source && comboBoxTarget.SelectedItem is TranslationPair target)
             {
@@ -562,7 +563,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                     var index = start;
                     while (index < _subtitle.Paragraphs.Count)
                     {
-                        var linesMergedAndTranslated = await MergeAndSplitHelper.MergeAndTranslateIfPossible(_subtitle, TranslatedSubtitle, source, target, index, _autoTranslator);
+                        var linesMergedAndTranslated = await MergeAndSplitHelper.MergeAndTranslateIfPossible(_subtitle, TranslatedSubtitle, source, target, index, _autoTranslator, forceSingleLineMode);
                         if (linesMergedAndTranslated > 0)
                         {
                             index += linesMergedAndTranslated;
@@ -851,15 +852,18 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             startLibreTranslateServerToolStripMenuItem.Visible = false;
             startNLLBServeServerToolStripMenuItem.Visible = false;
             startNLLBAPIServerToolStripMenuItem.Visible = false;
+            toolStripSeparator2.Visible = false;
 
             var engineType = _autoTranslator.GetType();
             if (engineType == typeof(NoLanguageLeftBehindServe))
             {
                 startNLLBServeServerToolStripMenuItem.Visible = true;
+                toolStripSeparator2.Visible = true;
             }
             else if (engineType == typeof(LibreTranslate))
             {
                 startLibreTranslateServerToolStripMenuItem.Visible = true;
+                toolStripSeparator2.Visible = true;
             }
         }
 
@@ -868,15 +872,18 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             toolStripMenuItemStartLibre.Visible = false;
             toolStripMenuItemStartNLLBServe.Visible = false;
             toolStripMenuItemStartNLLBApi.Visible = false;
+            toolStripSeparator1.Visible = false;
 
             var engineType = _autoTranslator.GetType();
             if (engineType == typeof(NoLanguageLeftBehindServe))
             {
                 toolStripMenuItemStartNLLBServe.Visible = true;
+                toolStripSeparator1.Visible = true;
             }
             else if (engineType == typeof(LibreTranslate))
             {
                 toolStripMenuItemStartLibre.Visible = true;
+                toolStripSeparator1.Visible = true;
             }
         }
 
@@ -905,6 +912,22 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                     }
                 }
             }
+        }
+
+        private void translateSingleLinesToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            ToggleTranslateSingleLines();
+        }
+
+        private void ToggleTranslateSingleLines()
+        {
+            translateSingleLinesToolStripMenuItem.Checked = !translateSingleLinesToolStripMenuItem.Checked;
+            translateSingleLinesToolStripMenuItem1.Checked = !translateSingleLinesToolStripMenuItem1.Checked;
+        }
+
+        private void translateSingleLinesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ToggleTranslateSingleLines();
         }
     }
 }

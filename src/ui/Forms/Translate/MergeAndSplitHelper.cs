@@ -11,11 +11,14 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 {
     public static class MergeAndSplitHelper
     {
-        public static async Task<int> MergeAndTranslateIfPossible(Subtitle sourceSubtitle, Subtitle targetSubtitle, TranslationPair source, TranslationPair target, int index, IAutoTranslator autoTranslator)
+        public static async Task<int> MergeAndTranslateIfPossible(Subtitle sourceSubtitle, Subtitle targetSubtitle, TranslationPair source, TranslationPair target, int index, IAutoTranslator autoTranslator, bool forceSingleLineMode)
         {
-            if (IsNonMergeLanguage(source.Code))
+            var noSentenceEndingSource = IsNonMergeLanguage(source.Code);
+            var noSentenceEndingTarget = IsNonMergeLanguage(target.Code);
+
+            if (forceSingleLineMode)
             {
-                return 0;
+                noSentenceEndingSource = true; // will add separator between lines
             }
 
             var p = sourceSubtitle.Paragraphs[index];
@@ -29,17 +32,18 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             MergeResult mergeResult = null;
             List<Formatting> formattings = null;
 
-            if (mergeCount == 0)
-            {
-                // Try to handle (remove and save info for later restore) italics, bold, alignment where possible
-                var s = new Subtitle(sourceSubtitle);
-                formattings = HandleFormatting(s, index, target.Code);
 
-                // Merge text for better translation and save info enough to split again later
-                mergeResult = MergeMultipleLines(s, index, autoTranslator.MaxCharacters);
-                mergeCount = mergeResult.ParagraphCount;
-                text = mergeResult.Text;
-            }
+            // Try to handle (remove and save info for later restore) italics, bold, alignment, and more where possible
+            var tempSubtitle = new Subtitle(sourceSubtitle);
+            formattings = HandleFormatting(tempSubtitle, index, target.Code);
+
+            // Merge text for better translation and save info enough to split again later
+            mergeResult = MergeMultipleLines(tempSubtitle, index, autoTranslator.MaxCharacters, noSentenceEndingSource, noSentenceEndingTarget);
+            mergeCount = mergeResult.ParagraphCount;
+            text = mergeResult.Text;
+
+            //TODO: handle mergeResult.Error !!!
+
 
             if (mergeCount == 0)
             {
@@ -86,8 +90,8 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                     var idx = 0;
                     foreach (var line in splitResult)
                     {
-                        var s = formattings[idx].ReAddFormatting(line);
-                        targetSubtitle.Paragraphs[index].Text = s;
+                        var reformattedText = formattings[idx].ReAddFormatting(line);
+                        targetSubtitle.Paragraphs[index].Text = reformattedText;
                         index++;
                         linesTranslate++;
                         idx++;
@@ -180,11 +184,19 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             public string Text { get; set; }
             public int ParagraphCount { get; set; }
             public List<MergeResultItem> MergeResultItems { get; set; }
+            public bool HasError { get; set; }
+            public bool NoSentenceEndingSource { get; set; }
+            public bool NoSentenceEndingTarget { get; set; }
         }
 
-        public static MergeResult MergeMultipleLines(Subtitle sourceSubtitle, int index, int maxTextSize)
+        public static MergeResult MergeMultipleLines(Subtitle sourceSubtitle, int index, int maxTextSize, bool noSentenceEndingSource, bool noSentenceEndingTarget)
         {
-            var result = new MergeResult { MergeResultItems = new List<MergeResultItem>() };
+            var result = new MergeResult
+            {
+                MergeResultItems = new List<MergeResultItem>(),
+                NoSentenceEndingSource = noSentenceEndingSource,
+                NoSentenceEndingTarget = noSentenceEndingTarget,
+            };
 
             var item = new MergeResultItem();
             item.StartIndex = index;
@@ -211,7 +223,20 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                     break;
                 }
 
-                if (string.IsNullOrWhiteSpace(p.Text))
+                if (noSentenceEndingSource)
+                {
+                    result.Text += Environment.NewLine + "." + Environment.NewLine + p.Text;
+                    if (item != null)
+                    {
+                        item.StartIndex = i - 1;
+                        item.EndIndex = i - 1;
+                        result.MergeResultItems.Add(item);
+
+                        textBuild = new StringBuilder();
+                        item = new MergeResultItem { StartIndex = i };
+                    }
+                }
+                else if (string.IsNullOrWhiteSpace(p.Text))
                 {
                     var endChar = result.Text[result.Text.Length - 1];
                     if (item != null)
@@ -274,6 +299,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 }
                 else
                 {
+                    result.HasError = true;
                     break; // weird continuation
                 }
 
@@ -287,8 +313,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
             if (item != null)
             {
-                //TODO: skip last item if it does not has sentence ending
-
+                //TODO: skip last item if it does not has sentence ending (or skip early at sentence ending...)
 
                 result.MergeResultItems.Add(item);
 
@@ -310,6 +335,31 @@ namespace Nikse.SubtitleEdit.Forms.Translate
         {
             var lines = new List<string>();
             var text = input;
+
+            if (mergeResult.NoSentenceEndingSource)
+            {
+                var sb = new StringBuilder();
+                var translatedLines = text.SplitToLines();
+                foreach (var translatedLine in translatedLines)
+                {
+                    var s = translatedLine.Trim();
+                    if (s == ".")
+                    {
+                        lines.Add(sb.ToString().Trim());
+                        sb.Clear();
+                        continue;
+                    }
+
+                    sb.AppendLine(s);
+                }
+
+                if (sb.Length > 0)
+                {
+                    lines.Add(sb.ToString().Trim());
+                }
+
+                return lines;
+            }
 
             foreach (var item in mergeResult.MergeResultItems)
             {
