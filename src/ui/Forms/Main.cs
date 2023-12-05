@@ -4702,7 +4702,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (ContinueNewOrExit())
             {
-                if (!string.IsNullOrEmpty(_fileName))
+                if (!string.IsNullOrEmpty(_fileName) && !_converted)
                 {
                     Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, _videoFileName, VideoAudioTrackNumber, _subtitleOriginalFileName, Configuration.Settings.General.CurrentVideoOffsetInMs, Configuration.Settings.General.CurrentVideoIsSmpte);
                 }
