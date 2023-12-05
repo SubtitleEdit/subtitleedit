@@ -16,7 +16,7 @@ namespace Test.Logic.AutoTranslate
             subtitle.Paragraphs.Add(new Paragraph("Hallo", 0, 1000));
             subtitle.Paragraphs.Add(new Paragraph("world.", 1000, 2000));
 
-            var mergeResult = MergeAndSplitHelper.MergeMultipleLines(subtitle, 0, 1500);
+            var mergeResult = MergeAndSplitHelper.MergeMultipleLines(subtitle, 0, 1500, false, false);
 
             Assert.IsNotNull(mergeResult);
             Assert.AreEqual("Hallo world.", mergeResult.Text);
@@ -42,7 +42,7 @@ namespace Test.Logic.AutoTranslate
             subtitle.Paragraphs.Add(new Paragraph("Hallo there.", 1, 2000));
             subtitle.Paragraphs.Add(new Paragraph("How are you?", 3000, 4000));
 
-            var mergeResult = MergeAndSplitHelper.MergeMultipleLines(subtitle, 0, 1500);
+            var mergeResult = MergeAndSplitHelper.MergeMultipleLines(subtitle, 0, 1500, false, false);
 
             Assert.IsNotNull(mergeResult);
             Assert.AreEqual("Hallo there." + Environment.NewLine + "How are you?", mergeResult.Text);
@@ -69,7 +69,7 @@ namespace Test.Logic.AutoTranslate
             subtitle.Paragraphs.Add(new Paragraph("[Raining]" + Environment.NewLine + "Hallo.", 1, 2000));
             subtitle.Paragraphs.Add(new Paragraph("How are you?", 3000, 4000));
 
-            var mergeResult = MergeAndSplitHelper.MergeMultipleLines(subtitle, 0, 1500);
+            var mergeResult = MergeAndSplitHelper.MergeMultipleLines(subtitle, 0, 1500, false, false);
 
             Assert.IsNotNull(mergeResult);
             Assert.AreEqual("[Raining]" + Environment.NewLine + "Hallo." + Environment.NewLine + "How are you?", mergeResult.Text);
@@ -98,7 +98,7 @@ namespace Test.Logic.AutoTranslate
             subtitle.Paragraphs.Add(new Paragraph("Hallo there. In the garden.", 0, 1000));
             subtitle.Paragraphs.Add(new Paragraph("How are you?", 1000, 2000));
 
-            var mergeResult = MergeAndSplitHelper.MergeMultipleLines(subtitle, 0, 1500);
+            var mergeResult = MergeAndSplitHelper.MergeMultipleLines(subtitle, 0, 1500, false, false);
 
             Assert.IsNotNull(mergeResult);
             Assert.AreEqual("Hallo there. In the garden." + Environment.NewLine + "How are you?", mergeResult.Text);
@@ -124,7 +124,7 @@ namespace Test.Logic.AutoTranslate
             subtitle.Paragraphs.Add(new Paragraph("", 20000, 21000));
             subtitle.Paragraphs.Add(new Paragraph("Hallo there.", 21000, 22000));
 
-            var mergeResult = MergeAndSplitHelper.MergeMultipleLines(subtitle, 0, 1500);
+            var mergeResult = MergeAndSplitHelper.MergeMultipleLines(subtitle, 0, 1500, false, false);
 
             Assert.IsNotNull(mergeResult);
             Assert.AreEqual("Hallo there. In the garden today are we? So I will very soon be going home to Sweden." + Environment.NewLine +

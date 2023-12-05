@@ -54,6 +54,10 @@
             this.subtitleListViewTarget = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.subtitleListViewSource = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.labelApiKey = new System.Windows.Forms.Label();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.translateSingleLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.translateSingleLinesToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip2.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -151,9 +155,11 @@
             this.contextMenuStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItemStartLibre,
             this.toolStripMenuItemStartNLLBServe,
-            this.toolStripMenuItemStartNLLBApi});
+            this.toolStripMenuItemStartNLLBApi,
+            this.toolStripSeparator1,
+            this.translateSingleLinesToolStripMenuItem});
             this.contextMenuStrip2.Name = "contextMenuStrip1";
-            this.contextMenuStrip2.Size = new System.Drawing.Size(197, 70);
+            this.contextMenuStrip2.Size = new System.Drawing.Size(197, 120);
             this.contextMenuStrip2.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip2_Opening);
             // 
             // toolStripMenuItemStartLibre
@@ -170,14 +176,22 @@
             this.toolStripMenuItemStartNLLBServe.Text = "Start NLLB Serve server";
             this.toolStripMenuItemStartNLLBServe.Click += new System.EventHandler(this.StartNllbServeServerToolStripMenuItem_Click);
             // 
+            // toolStripMenuItemStartNLLBApi
+            // 
+            this.toolStripMenuItemStartNLLBApi.Name = "toolStripMenuItemStartNLLBApi";
+            this.toolStripMenuItemStartNLLBApi.Size = new System.Drawing.Size(196, 22);
+            this.toolStripMenuItemStartNLLBApi.Text = "Start NLLB API server";
+            // 
             // contextMenuStrip1
             // 
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.startLibreTranslateServerToolStripMenuItem,
             this.startNLLBServeServerToolStripMenuItem,
-            this.startNLLBAPIServerToolStripMenuItem});
+            this.startNLLBAPIServerToolStripMenuItem,
+            this.toolStripSeparator2,
+            this.translateSingleLinesToolStripMenuItem1});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(197, 70);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(197, 98);
             this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
             // 
             // startLibreTranslateServerToolStripMenuItem
@@ -193,6 +207,12 @@
             this.startNLLBServeServerToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
             this.startNLLBServeServerToolStripMenuItem.Text = "Start NLLB Serve server";
             this.startNLLBServeServerToolStripMenuItem.Click += new System.EventHandler(this.StartNllbServeServerToolStripMenuItem_Click);
+            // 
+            // startNLLBAPIServerToolStripMenuItem
+            // 
+            this.startNLLBAPIServerToolStripMenuItem.Name = "startNLLBAPIServerToolStripMenuItem";
+            this.startNLLBAPIServerToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
+            this.startNLLBAPIServerToolStripMenuItem.Text = "Start NLLB API server";
             // 
             // nikseTextBoxApiKey
             // 
@@ -354,6 +374,30 @@
             this.labelApiKey.TabIndex = 111;
             this.labelApiKey.Text = "API key:";
             // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(193, 6);
+            // 
+            // translateSingleLinesToolStripMenuItem
+            // 
+            this.translateSingleLinesToolStripMenuItem.Name = "translateSingleLinesToolStripMenuItem";
+            this.translateSingleLinesToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
+            this.translateSingleLinesToolStripMenuItem.Text = "Translate single lines";
+            this.translateSingleLinesToolStripMenuItem.Click += new System.EventHandler(this.translateSingleLinesToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(193, 6);
+            // 
+            // translateSingleLinesToolStripMenuItem1
+            // 
+            this.translateSingleLinesToolStripMenuItem1.Name = "translateSingleLinesToolStripMenuItem1";
+            this.translateSingleLinesToolStripMenuItem1.Size = new System.Drawing.Size(196, 22);
+            this.translateSingleLinesToolStripMenuItem1.Text = "Translate single lines";
+            this.translateSingleLinesToolStripMenuItem1.Click += new System.EventHandler(this.translateSingleLinesToolStripMenuItem1_Click);
+            // 
             // AutoTranslate
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -422,5 +466,9 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemStartNLLBApi;
         private Controls.NikseTextBox nikseTextBoxApiKey;
         private System.Windows.Forms.Label labelApiKey;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripMenuItem translateSingleLinesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripMenuItem translateSingleLinesToolStripMenuItem1;
     }
 }
