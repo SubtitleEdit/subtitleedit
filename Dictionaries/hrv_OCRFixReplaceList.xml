@@ -379,6 +379,7 @@
     <Word from="drugafije" to="drugačije" />
     <Word from="drugčiji" to="drugačiji" />
     <Word from="drugde" to="drugdje" />
+    <Word from="druze" to="druže" />
     <Word from="drvoseča" to="drvosječa" />
     <Word from="ds" to="da" />
     <Word from="dti" to="dati" />
@@ -394,6 +395,7 @@
     <Word from="dve" to="dvije" />
     <Word from="Dve" to="Dvije" />
     <Word from="dvema" to="dvjema" />
+    <Word from="dvesto" to="dvjesto" />
     <Word from="dvosed" to="dvosjed" />
     <Word from="đavo" to="vrag" />
     <Word from="đavola" to="vraga" />
@@ -791,6 +793,7 @@
     <Word from="klešta" to="kliješta" />
     <Word from="klješta" to="kliješta" />
     <Word from="klještima" to="kliještima" />
+    <Word from="kljuć" to="ključ" />
     <Word from="Kloniću" to="Klonit ću" />
     <Word from="Ko" to="Tko" />
     <Word from="koa" to="kao" />
@@ -1795,6 +1798,7 @@
     <Word from="procent" to="postotak" />
     <Word from="procenta" to="postotka" />
     <Word from="procenata" to="postotaka" />
+    <Word from="Procenata" to="PPostotaka" />
     <Word from="procenti" to="postoci" />
     <Word from="Procenti" to="Postoci" />
     <Word from="procente" to="postotke" />
@@ -3817,6 +3821,7 @@
     <LinePart from="moram da odem" to="moram otići" />
     <LinePart from="mora da ode" to="mora otići" />
     <LinePart from="moram da pobjegnem" to="moram pobjeći" />
+    <LinePart from="moraš da prestaneš" to="moraš prestati" />
     <LinePart from="Moram da razgovaram" to="Moram razgovarati" />
     <LinePart from="moraš da shvatiš" to="moraš shvatiti" />
     <LinePart from="moram da vidim" to="moram vidjeti" />
@@ -3826,6 +3831,7 @@
     <LinePart from="mora da zna" to="mora znati" />
     <LinePart from="moram da znam" to="moram znati" />
     <LinePart from="Moram da znam" to="Moram znati" />
+    <LinePart from="moram da živim" to="moram živjeti" />
     <LinePart from="Moraš da znaš" to="Moraš znati" />
     <LinePart from="moraš da znaš" to="moraš znati" />
     <LinePart from="Morate da nam date" to="Morate nam dati" />
@@ -4018,6 +4024,7 @@
     <RegEx find="([cC])j?eni([lt])" replaceWith="$1ijeni$2" />
     <RegEx find="([cC])rj?ev" replaceWith="$1rijev" />
     <RegEx find="([cCsS])vj?e[ćč]([aeiou]|[oe]m|ama)\b" replaceWith="$1vijeć$2" />
+    <RegEx find="ckq" replaceWith="čka" />
     <!-- časopisa » satopisa NE! - ne diraj te 2 linije! -->
     <RegEx find="čas([au]|om|ov[aei]|ovima)\b" replaceWith="sat$1" />
     <RegEx find="Čas([au]|om|ov[aei]|ovima)\b" replaceWith="Sat$1" />
@@ -4898,6 +4905,7 @@
     <RegEx find="iliše" replaceWith="ilizira" />
     <RegEx find="ilišu" replaceWith="iliziraju" />
     <RegEx find="izc" replaceWith="isc" />
+    <RegEx find="cenk" replaceWith="cjenk" />
     <RegEx find="ćič" replaceWith="čić" />
     <RegEx find="dećag" replaceWith="dećeg" />
     <RegEx find="dilova" replaceWith="dila" />
