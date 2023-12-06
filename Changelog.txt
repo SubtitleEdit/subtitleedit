@@ -21,6 +21,7 @@
    * Update yt-dlp to 2023-11-16
    * Re-add Whisper Const-me large model v2
    * Audio-to-text: Improve error msg if no write access to video source folder
+   * Add delay in seconds to translate via ChatGPT
 * FIXED:
    * Fix for BDSUP cmd line convert - thx Jack1789
    * Do not count HTML tags in SCC in save/load - thx cs127
@@ -28,6 +29,7 @@
    * Focus text box after "Set end, add new and go to new" - thx aoifeaoibhee
    * Fix for unwanted "<br />" in MS translator - thx Miguel
    * Only add recent file if saved - thx F5System
+   * Fix for mouse wheel scroll direction in video player - thx Peter
 
 
 4.0.2 (19th November 2023)
