@@ -210,7 +210,7 @@
             this.buttonMpvSettings = new System.Windows.Forms.Button();
             this.labelPlatform = new System.Windows.Forms.Label();
             this.buttonVlcPathBrowse = new System.Windows.Forms.Button();
-            this.textBoxVlcPath = new Nikse.SubtitleEdit.Controls.SETextBox();
+            this.textBoxVlcPath = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelVlcPath = new System.Windows.Forms.Label();
             this.labelVideoPlayerVLC = new System.Windows.Forms.Label();
             this.radioButtonVideoPlayerVLC = new System.Windows.Forms.RadioButton();
@@ -454,6 +454,22 @@
             this.imageListFileTypeAssociations = new System.Windows.Forms.ImageList(this.components);
             this.toolTipDialogStylePreview = new System.Windows.Forms.ToolTip(this.components);
             this.panelAutoTranslate = new System.Windows.Forms.Panel();
+            this.groupBoxAutoTranslatePapago = new System.Windows.Forms.GroupBox();
+            this.nikseTextBoxPapagoClientSecret = new Nikse.SubtitleEdit.Controls.NikseTextBox();
+            this.labelSecretPapago = new System.Windows.Forms.Label();
+            this.nikseTextBoxPapagoClientId = new Nikse.SubtitleEdit.Controls.NikseTextBox();
+            this.labelApiKeyPapago = new System.Windows.Forms.Label();
+            this.linkLabelPapago = new System.Windows.Forms.LinkLabel();
+            this.label11 = new System.Windows.Forms.Label();
+            this.groupBoxAutoTranslateChatGpt = new System.Windows.Forms.GroupBox();
+            this.nikseComboBoxChatGptDelay = new Nikse.SubtitleEdit.Controls.NikseComboBox();
+            this.labelChatGptDelay = new System.Windows.Forms.Label();
+            this.nikseTextBoxChatGptApiKey = new Nikse.SubtitleEdit.Controls.NikseTextBox();
+            this.labelApiKeyChatGpt = new System.Windows.Forms.Label();
+            this.nikseTextBoxChatGptUrl = new Nikse.SubtitleEdit.Controls.NikseTextBox();
+            this.labelUrlChatGpt = new System.Windows.Forms.Label();
+            this.linkLabelMoreInfoChatGpt = new System.Windows.Forms.LinkLabel();
+            this.label10 = new System.Windows.Forms.Label();
             this.groupBoxDeepL = new System.Windows.Forms.GroupBox();
             this.nikseTextBoxDeepLApiKey = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelDeepLApiKey = new System.Windows.Forms.Label();
@@ -561,6 +577,8 @@
             this.groupBoxProxyAuthentication.SuspendLayout();
             this.panelFileTypeAssociations.SuspendLayout();
             this.panelAutoTranslate.SuspendLayout();
+            this.groupBoxAutoTranslatePapago.SuspendLayout();
+            this.groupBoxAutoTranslateChatGpt.SuspendLayout();
             this.groupBoxDeepL.SuspendLayout();
             this.groupBoxMyMemory.SuspendLayout();
             this.groupBoxLibreTranslate.SuspendLayout();
@@ -3474,29 +3492,14 @@
             // 
             // textBoxVlcPath
             // 
-            this.textBoxVlcPath.BackColor = System.Drawing.SystemColors.WindowFrame;
-            this.textBoxVlcPath.CurrentLanguage = "";
-            this.textBoxVlcPath.CurrentLineIndex = 0;
-            this.textBoxVlcPath.HideSelection = true;
-            this.textBoxVlcPath.IsDictionaryDownloaded = true;
-            this.textBoxVlcPath.IsSpellCheckerInitialized = false;
-            this.textBoxVlcPath.IsSpellCheckRequested = false;
-            this.textBoxVlcPath.IsWrongWord = false;
-            this.textBoxVlcPath.LanguageChanged = false;
+            this.textBoxVlcPath.BackColor = System.Drawing.SystemColors.Window;
+            this.textBoxVlcPath.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxVlcPath.Location = new System.Drawing.Point(411, 105);
             this.textBoxVlcPath.MaxLength = 1000;
             this.textBoxVlcPath.Multiline = true;
             this.textBoxVlcPath.Name = "textBoxVlcPath";
-            this.textBoxVlcPath.Padding = new System.Windows.Forms.Padding(1);
-            this.textBoxVlcPath.ReadOnly = false;
-            this.textBoxVlcPath.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
-            this.textBoxVlcPath.SelectedText = "";
-            this.textBoxVlcPath.SelectionLength = 0;
-            this.textBoxVlcPath.SelectionStart = 0;
             this.textBoxVlcPath.Size = new System.Drawing.Size(362, 21);
             this.textBoxVlcPath.TabIndex = 6;
-            this.textBoxVlcPath.TextBoxFont = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBoxVlcPath.UseSystemPasswordChar = false;
             this.textBoxVlcPath.MouseLeave += new System.EventHandler(this.textBoxVlcPath_MouseLeave);
             // 
             // labelVlcPath
@@ -4803,7 +4806,7 @@
             this.groupBoxGoogleTranslate.Controls.Add(this.label3);
             this.groupBoxGoogleTranslate.Location = new System.Drawing.Point(9, 9);
             this.groupBoxGoogleTranslate.Name = "groupBoxGoogleTranslate";
-            this.groupBoxGoogleTranslate.Size = new System.Drawing.Size(408, 87);
+            this.groupBoxGoogleTranslate.Size = new System.Drawing.Size(410, 79);
             this.groupBoxGoogleTranslate.TabIndex = 31;
             this.groupBoxGoogleTranslate.TabStop = false;
             this.groupBoxGoogleTranslate.Text = "Google translate";
@@ -4811,7 +4814,7 @@
             // labelGoogleTranslateApiKey
             // 
             this.labelGoogleTranslateApiKey.AutoSize = true;
-            this.labelGoogleTranslateApiKey.Location = new System.Drawing.Point(8, 29);
+            this.labelGoogleTranslateApiKey.Location = new System.Drawing.Point(8, 25);
             this.labelGoogleTranslateApiKey.Name = "labelGoogleTranslateApiKey";
             this.labelGoogleTranslateApiKey.Size = new System.Drawing.Size(44, 13);
             this.labelGoogleTranslateApiKey.TabIndex = 30;
@@ -4821,7 +4824,7 @@
             // 
             this.textBoxGoogleTransleApiKey.BackColor = System.Drawing.SystemColors.Window;
             this.textBoxGoogleTransleApiKey.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            this.textBoxGoogleTransleApiKey.Location = new System.Drawing.Point(9, 47);
+            this.textBoxGoogleTransleApiKey.Location = new System.Drawing.Point(9, 43);
             this.textBoxGoogleTransleApiKey.Multiline = true;
             this.textBoxGoogleTransleApiKey.Name = "textBoxGoogleTransleApiKey";
             this.textBoxGoogleTransleApiKey.Size = new System.Drawing.Size(375, 21);
@@ -4857,9 +4860,9 @@
             this.groupBoxBing.Controls.Add(this.textBoxBingClientSecret);
             this.groupBoxBing.Controls.Add(this.linkLabelBingSubscribe);
             this.groupBoxBing.Controls.Add(this.label1);
-            this.groupBoxBing.Location = new System.Drawing.Point(9, 103);
+            this.groupBoxBing.Location = new System.Drawing.Point(9, 95);
             this.groupBoxBing.Name = "groupBoxBing";
-            this.groupBoxBing.Size = new System.Drawing.Size(408, 143);
+            this.groupBoxBing.Size = new System.Drawing.Size(410, 111);
             this.groupBoxBing.TabIndex = 32;
             this.groupBoxBing.TabStop = false;
             this.groupBoxBing.Text = "Bing translator";
@@ -4897,13 +4900,13 @@
             "https://westeurope.api.cognitive.microsoft.com/sts/v1.0/issueToken",
             "https://westus.api.cognitive.microsoft.com/sts/v1.0/issueToken",
             "https://westus2.api.cognitive.microsoft.com/sts/v1.0/issueToken"});
-            this.comboBoxBoxBingTokenEndpoint.Location = new System.Drawing.Point(9, 101);
+            this.comboBoxBoxBingTokenEndpoint.Location = new System.Drawing.Point(90, 77);
             this.comboBoxBoxBingTokenEndpoint.MaxLength = 32767;
             this.comboBoxBoxBingTokenEndpoint.Name = "comboBoxBoxBingTokenEndpoint";
             this.comboBoxBoxBingTokenEndpoint.SelectedIndex = -1;
             this.comboBoxBoxBingTokenEndpoint.SelectedItem = null;
             this.comboBoxBoxBingTokenEndpoint.SelectedText = "";
-            this.comboBoxBoxBingTokenEndpoint.Size = new System.Drawing.Size(375, 21);
+            this.comboBoxBoxBingTokenEndpoint.Size = new System.Drawing.Size(294, 21);
             this.comboBoxBoxBingTokenEndpoint.TabIndex = 33;
             this.comboBoxBoxBingTokenEndpoint.TabStop = false;
             this.comboBoxBoxBingTokenEndpoint.UsePopupWindow = false;
@@ -4911,7 +4914,7 @@
             // labelBingTokenEndpoint
             // 
             this.labelBingTokenEndpoint.AutoSize = true;
-            this.labelBingTokenEndpoint.Location = new System.Drawing.Point(6, 83);
+            this.labelBingTokenEndpoint.Location = new System.Drawing.Point(6, 80);
             this.labelBingTokenEndpoint.Name = "labelBingTokenEndpoint";
             this.labelBingTokenEndpoint.Size = new System.Drawing.Size(81, 13);
             this.labelBingTokenEndpoint.TabIndex = 32;
@@ -4920,7 +4923,7 @@
             // labelBingApiKey
             // 
             this.labelBingApiKey.AutoSize = true;
-            this.labelBingApiKey.Location = new System.Drawing.Point(6, 27);
+            this.labelBingApiKey.Location = new System.Drawing.Point(6, 24);
             this.labelBingApiKey.Name = "labelBingApiKey";
             this.labelBingApiKey.Size = new System.Drawing.Size(44, 13);
             this.labelBingApiKey.TabIndex = 30;
@@ -4930,7 +4933,7 @@
             // 
             this.textBoxBingClientSecret.BackColor = System.Drawing.SystemColors.Window;
             this.textBoxBingClientSecret.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            this.textBoxBingClientSecret.Location = new System.Drawing.Point(10, 45);
+            this.textBoxBingClientSecret.Location = new System.Drawing.Point(10, 42);
             this.textBoxBingClientSecret.Multiline = true;
             this.textBoxBingClientSecret.Name = "textBoxBingClientSecret";
             this.textBoxBingClientSecret.Size = new System.Drawing.Size(374, 21);
@@ -6425,6 +6428,8 @@
             // 
             // panelAutoTranslate
             // 
+            this.panelAutoTranslate.Controls.Add(this.groupBoxAutoTranslatePapago);
+            this.panelAutoTranslate.Controls.Add(this.groupBoxAutoTranslateChatGpt);
             this.panelAutoTranslate.Controls.Add(this.groupBoxDeepL);
             this.panelAutoTranslate.Controls.Add(this.groupBoxMyMemory);
             this.panelAutoTranslate.Controls.Add(this.groupBoxLibreTranslate);
@@ -6439,6 +6444,183 @@
             this.panelAutoTranslate.TabIndex = 33;
             this.panelAutoTranslate.Text = "Tools";
             // 
+            // groupBoxAutoTranslatePapago
+            // 
+            this.groupBoxAutoTranslatePapago.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxAutoTranslatePapago.Controls.Add(this.nikseTextBoxPapagoClientSecret);
+            this.groupBoxAutoTranslatePapago.Controls.Add(this.labelSecretPapago);
+            this.groupBoxAutoTranslatePapago.Controls.Add(this.nikseTextBoxPapagoClientId);
+            this.groupBoxAutoTranslatePapago.Controls.Add(this.labelApiKeyPapago);
+            this.groupBoxAutoTranslatePapago.Controls.Add(this.linkLabelPapago);
+            this.groupBoxAutoTranslatePapago.Controls.Add(this.label11);
+            this.groupBoxAutoTranslatePapago.Location = new System.Drawing.Point(431, 368);
+            this.groupBoxAutoTranslatePapago.Name = "groupBoxAutoTranslatePapago";
+            this.groupBoxAutoTranslatePapago.Size = new System.Drawing.Size(411, 110);
+            this.groupBoxAutoTranslatePapago.TabIndex = 47;
+            this.groupBoxAutoTranslatePapago.TabStop = false;
+            this.groupBoxAutoTranslatePapago.Text = "Papago";
+            // 
+            // nikseTextBoxPapagoClientSecret
+            // 
+            this.nikseTextBoxPapagoClientSecret.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.nikseTextBoxPapagoClientSecret.Location = new System.Drawing.Point(78, 76);
+            this.nikseTextBoxPapagoClientSecret.Name = "nikseTextBoxPapagoClientSecret";
+            this.nikseTextBoxPapagoClientSecret.Size = new System.Drawing.Size(314, 21);
+            this.nikseTextBoxPapagoClientSecret.TabIndex = 36;
+            // 
+            // labelSecretPapago
+            // 
+            this.labelSecretPapago.AutoSize = true;
+            this.labelSecretPapago.Location = new System.Drawing.Point(6, 80);
+            this.labelSecretPapago.Name = "labelSecretPapago";
+            this.labelSecretPapago.Size = new System.Drawing.Size(67, 13);
+            this.labelSecretPapago.TabIndex = 35;
+            this.labelSecretPapago.Text = "Client secret";
+            // 
+            // nikseTextBoxPapagoClientId
+            // 
+            this.nikseTextBoxPapagoClientId.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.nikseTextBoxPapagoClientId.Location = new System.Drawing.Point(8, 41);
+            this.nikseTextBoxPapagoClientId.Name = "nikseTextBoxPapagoClientId";
+            this.nikseTextBoxPapagoClientId.Size = new System.Drawing.Size(384, 21);
+            this.nikseTextBoxPapagoClientId.TabIndex = 34;
+            // 
+            // labelApiKeyPapago
+            // 
+            this.labelApiKeyPapago.AutoSize = true;
+            this.labelApiKeyPapago.Location = new System.Drawing.Point(6, 23);
+            this.labelApiKeyPapago.Name = "labelApiKeyPapago";
+            this.labelApiKeyPapago.Size = new System.Drawing.Size(48, 13);
+            this.labelApiKeyPapago.TabIndex = 30;
+            this.labelApiKeyPapago.Text = "Client ID";
+            // 
+            // linkLabelPapago
+            // 
+            this.linkLabelPapago.AutoSize = true;
+            this.linkLabelPapago.Location = new System.Drawing.Point(340, 17);
+            this.linkLabelPapago.Name = "linkLabelPapago";
+            this.linkLabelPapago.Size = new System.Drawing.Size(52, 13);
+            this.linkLabelPapago.TabIndex = 24;
+            this.linkLabelPapago.TabStop = true;
+            this.linkLabelPapago.Text = "More info";
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(16, 106);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(0, 13);
+            this.label11.TabIndex = 25;
+            // 
+            // groupBoxAutoTranslateChatGpt
+            // 
+            this.groupBoxAutoTranslateChatGpt.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxAutoTranslateChatGpt.Controls.Add(this.nikseComboBoxChatGptDelay);
+            this.groupBoxAutoTranslateChatGpt.Controls.Add(this.labelChatGptDelay);
+            this.groupBoxAutoTranslateChatGpt.Controls.Add(this.nikseTextBoxChatGptApiKey);
+            this.groupBoxAutoTranslateChatGpt.Controls.Add(this.labelApiKeyChatGpt);
+            this.groupBoxAutoTranslateChatGpt.Controls.Add(this.nikseTextBoxChatGptUrl);
+            this.groupBoxAutoTranslateChatGpt.Controls.Add(this.labelUrlChatGpt);
+            this.groupBoxAutoTranslateChatGpt.Controls.Add(this.linkLabelMoreInfoChatGpt);
+            this.groupBoxAutoTranslateChatGpt.Controls.Add(this.label10);
+            this.groupBoxAutoTranslateChatGpt.Location = new System.Drawing.Point(430, 210);
+            this.groupBoxAutoTranslateChatGpt.Name = "groupBoxAutoTranslateChatGpt";
+            this.groupBoxAutoTranslateChatGpt.Size = new System.Drawing.Size(411, 148);
+            this.groupBoxAutoTranslateChatGpt.TabIndex = 46;
+            this.groupBoxAutoTranslateChatGpt.TabStop = false;
+            this.groupBoxAutoTranslateChatGpt.Text = "ChatGPT API";
+            // 
+            // nikseComboBoxChatGptDelay
+            // 
+            this.nikseComboBoxChatGptDelay.BackColor = System.Drawing.SystemColors.Window;
+            this.nikseComboBoxChatGptDelay.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.nikseComboBoxChatGptDelay.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.nikseComboBoxChatGptDelay.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.nikseComboBoxChatGptDelay.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.nikseComboBoxChatGptDelay.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.nikseComboBoxChatGptDelay.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.nikseComboBoxChatGptDelay.DropDownHeight = 400;
+            this.nikseComboBoxChatGptDelay.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.nikseComboBoxChatGptDelay.DropDownWidth = 375;
+            this.nikseComboBoxChatGptDelay.FormattingEnabled = true;
+            this.nikseComboBoxChatGptDelay.Items.AddRange(new object[] {
+            "0",
+            "20"});
+            this.nikseComboBoxChatGptDelay.Location = new System.Drawing.Point(52, 109);
+            this.nikseComboBoxChatGptDelay.MaxLength = 32767;
+            this.nikseComboBoxChatGptDelay.Name = "nikseComboBoxChatGptDelay";
+            this.nikseComboBoxChatGptDelay.SelectedIndex = -1;
+            this.nikseComboBoxChatGptDelay.SelectedItem = null;
+            this.nikseComboBoxChatGptDelay.SelectedText = "";
+            this.nikseComboBoxChatGptDelay.Size = new System.Drawing.Size(340, 21);
+            this.nikseComboBoxChatGptDelay.TabIndex = 38;
+            this.nikseComboBoxChatGptDelay.UsePopupWindow = false;
+            // 
+            // labelChatGptDelay
+            // 
+            this.labelChatGptDelay.AutoSize = true;
+            this.labelChatGptDelay.Location = new System.Drawing.Point(6, 112);
+            this.labelChatGptDelay.Name = "labelChatGptDelay";
+            this.labelChatGptDelay.Size = new System.Drawing.Size(34, 13);
+            this.labelChatGptDelay.TabIndex = 37;
+            this.labelChatGptDelay.Text = "Delay";
+            // 
+            // nikseTextBoxChatGptApiKey
+            // 
+            this.nikseTextBoxChatGptApiKey.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.nikseTextBoxChatGptApiKey.Location = new System.Drawing.Point(52, 76);
+            this.nikseTextBoxChatGptApiKey.Name = "nikseTextBoxChatGptApiKey";
+            this.nikseTextBoxChatGptApiKey.Size = new System.Drawing.Size(340, 21);
+            this.nikseTextBoxChatGptApiKey.TabIndex = 36;
+            // 
+            // labelApiKeyChatGpt
+            // 
+            this.labelApiKeyChatGpt.AutoSize = true;
+            this.labelApiKeyChatGpt.Location = new System.Drawing.Point(6, 80);
+            this.labelApiKeyChatGpt.Name = "labelApiKeyChatGpt";
+            this.labelApiKeyChatGpt.Size = new System.Drawing.Size(44, 13);
+            this.labelApiKeyChatGpt.TabIndex = 35;
+            this.labelApiKeyChatGpt.Text = "API key";
+            // 
+            // nikseTextBoxChatGptUrl
+            // 
+            this.nikseTextBoxChatGptUrl.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.nikseTextBoxChatGptUrl.Location = new System.Drawing.Point(8, 41);
+            this.nikseTextBoxChatGptUrl.Name = "nikseTextBoxChatGptUrl";
+            this.nikseTextBoxChatGptUrl.Size = new System.Drawing.Size(384, 21);
+            this.nikseTextBoxChatGptUrl.TabIndex = 34;
+            // 
+            // labelUrlChatGpt
+            // 
+            this.labelUrlChatGpt.AutoSize = true;
+            this.labelUrlChatGpt.Location = new System.Drawing.Point(6, 23);
+            this.labelUrlChatGpt.Name = "labelUrlChatGpt";
+            this.labelUrlChatGpt.Size = new System.Drawing.Size(20, 13);
+            this.labelUrlChatGpt.TabIndex = 30;
+            this.labelUrlChatGpt.Text = "Url";
+            // 
+            // linkLabelMoreInfoChatGpt
+            // 
+            this.linkLabelMoreInfoChatGpt.AutoSize = true;
+            this.linkLabelMoreInfoChatGpt.Location = new System.Drawing.Point(340, 17);
+            this.linkLabelMoreInfoChatGpt.Name = "linkLabelMoreInfoChatGpt";
+            this.linkLabelMoreInfoChatGpt.Size = new System.Drawing.Size(52, 13);
+            this.linkLabelMoreInfoChatGpt.TabIndex = 24;
+            this.linkLabelMoreInfoChatGpt.TabStop = true;
+            this.linkLabelMoreInfoChatGpt.Text = "More info";
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(16, 106);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(0, 13);
+            this.label10.TabIndex = 25;
+            // 
             // groupBoxDeepL
             // 
             this.groupBoxDeepL.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -6450,9 +6632,9 @@
             this.groupBoxDeepL.Controls.Add(this.labelDeepLUrl);
             this.groupBoxDeepL.Controls.Add(this.linkLabelMoreInfoDeepl);
             this.groupBoxDeepL.Controls.Add(this.label9);
-            this.groupBoxDeepL.Location = new System.Drawing.Point(430, 9);
+            this.groupBoxDeepL.Location = new System.Drawing.Point(9, 399);
             this.groupBoxDeepL.Name = "groupBoxDeepL";
-            this.groupBoxDeepL.Size = new System.Drawing.Size(413, 198);
+            this.groupBoxDeepL.Size = new System.Drawing.Size(410, 110);
             this.groupBoxDeepL.TabIndex = 37;
             this.groupBoxDeepL.TabStop = false;
             this.groupBoxDeepL.Text = "DeepL";
@@ -6460,15 +6642,15 @@
             // nikseTextBoxDeepLApiKey
             // 
             this.nikseTextBoxDeepLApiKey.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            this.nikseTextBoxDeepLApiKey.Location = new System.Drawing.Point(8, 102);
+            this.nikseTextBoxDeepLApiKey.Location = new System.Drawing.Point(54, 76);
             this.nikseTextBoxDeepLApiKey.Name = "nikseTextBoxDeepLApiKey";
-            this.nikseTextBoxDeepLApiKey.Size = new System.Drawing.Size(376, 21);
+            this.nikseTextBoxDeepLApiKey.Size = new System.Drawing.Size(330, 21);
             this.nikseTextBoxDeepLApiKey.TabIndex = 36;
             // 
             // labelDeepLApiKey
             // 
             this.labelDeepLApiKey.AutoSize = true;
-            this.labelDeepLApiKey.Location = new System.Drawing.Point(6, 84);
+            this.labelDeepLApiKey.Location = new System.Drawing.Point(6, 80);
             this.labelDeepLApiKey.Name = "labelDeepLApiKey";
             this.labelDeepLApiKey.Size = new System.Drawing.Size(44, 13);
             this.labelDeepLApiKey.TabIndex = 35;
@@ -6477,7 +6659,7 @@
             // nikseTextBoxDeepLUrl
             // 
             this.nikseTextBoxDeepLUrl.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            this.nikseTextBoxDeepLUrl.Location = new System.Drawing.Point(8, 45);
+            this.nikseTextBoxDeepLUrl.Location = new System.Drawing.Point(8, 41);
             this.nikseTextBoxDeepLUrl.Name = "nikseTextBoxDeepLUrl";
             this.nikseTextBoxDeepLUrl.Size = new System.Drawing.Size(376, 21);
             this.nikseTextBoxDeepLUrl.TabIndex = 34;
@@ -6485,7 +6667,7 @@
             // labelDeepLUrl
             // 
             this.labelDeepLUrl.AutoSize = true;
-            this.labelDeepLUrl.Location = new System.Drawing.Point(6, 27);
+            this.labelDeepLUrl.Location = new System.Drawing.Point(6, 23);
             this.labelDeepLUrl.Name = "labelDeepLUrl";
             this.labelDeepLUrl.Size = new System.Drawing.Size(20, 13);
             this.labelDeepLUrl.TabIndex = 30;
@@ -6494,7 +6676,7 @@
             // linkLabelMoreInfoDeepl
             // 
             this.linkLabelMoreInfoDeepl.AutoSize = true;
-            this.linkLabelMoreInfoDeepl.Location = new System.Drawing.Point(332, 16);
+            this.linkLabelMoreInfoDeepl.Location = new System.Drawing.Point(340, 16);
             this.linkLabelMoreInfoDeepl.Name = "linkLabelMoreInfoDeepl";
             this.linkLabelMoreInfoDeepl.Size = new System.Drawing.Size(52, 13);
             this.linkLabelMoreInfoDeepl.TabIndex = 24;
@@ -6519,9 +6701,9 @@
             this.groupBoxMyMemory.Controls.Add(this.labelMyMemoryApiKey);
             this.groupBoxMyMemory.Controls.Add(this.linkLabelMyMemoryTranslate);
             this.groupBoxMyMemory.Controls.Add(this.label8);
-            this.groupBoxMyMemory.Location = new System.Drawing.Point(429, 389);
+            this.groupBoxMyMemory.Location = new System.Drawing.Point(431, 127);
             this.groupBoxMyMemory.Name = "groupBoxMyMemory";
-            this.groupBoxMyMemory.Size = new System.Drawing.Size(412, 95);
+            this.groupBoxMyMemory.Size = new System.Drawing.Size(410, 73);
             this.groupBoxMyMemory.TabIndex = 45;
             this.groupBoxMyMemory.TabStop = false;
             this.groupBoxMyMemory.Text = "MyMemory API";
@@ -6529,7 +6711,7 @@
             // nikseTextBoxMyMemoryApiKey
             // 
             this.nikseTextBoxMyMemoryApiKey.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            this.nikseTextBoxMyMemoryApiKey.Location = new System.Drawing.Point(8, 55);
+            this.nikseTextBoxMyMemoryApiKey.Location = new System.Drawing.Point(8, 42);
             this.nikseTextBoxMyMemoryApiKey.Name = "nikseTextBoxMyMemoryApiKey";
             this.nikseTextBoxMyMemoryApiKey.Size = new System.Drawing.Size(376, 21);
             this.nikseTextBoxMyMemoryApiKey.TabIndex = 36;
@@ -6537,7 +6719,7 @@
             // labelMyMemoryApiKey
             // 
             this.labelMyMemoryApiKey.AutoSize = true;
-            this.labelMyMemoryApiKey.Location = new System.Drawing.Point(6, 37);
+            this.labelMyMemoryApiKey.Location = new System.Drawing.Point(6, 24);
             this.labelMyMemoryApiKey.Name = "labelMyMemoryApiKey";
             this.labelMyMemoryApiKey.Size = new System.Drawing.Size(44, 13);
             this.labelMyMemoryApiKey.TabIndex = 35;
@@ -6573,9 +6755,9 @@
             this.groupBoxLibreTranslate.Controls.Add(this.labelLibreUrl);
             this.groupBoxLibreTranslate.Controls.Add(this.linkLabelLibreTranslateApi);
             this.groupBoxLibreTranslate.Controls.Add(this.label7);
-            this.groupBoxLibreTranslate.Location = new System.Drawing.Point(430, 224);
+            this.groupBoxLibreTranslate.Location = new System.Drawing.Point(431, 9);
             this.groupBoxLibreTranslate.Name = "groupBoxLibreTranslate";
-            this.groupBoxLibreTranslate.Size = new System.Drawing.Size(411, 155);
+            this.groupBoxLibreTranslate.Size = new System.Drawing.Size(411, 110);
             this.groupBoxLibreTranslate.TabIndex = 40;
             this.groupBoxLibreTranslate.TabStop = false;
             this.groupBoxLibreTranslate.Text = "LibreTranslate API";
@@ -6583,15 +6765,15 @@
             // nikseTextBoxLibreTranslateApiKey
             // 
             this.nikseTextBoxLibreTranslateApiKey.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            this.nikseTextBoxLibreTranslateApiKey.Location = new System.Drawing.Point(8, 102);
+            this.nikseTextBoxLibreTranslateApiKey.Location = new System.Drawing.Point(52, 76);
             this.nikseTextBoxLibreTranslateApiKey.Name = "nikseTextBoxLibreTranslateApiKey";
-            this.nikseTextBoxLibreTranslateApiKey.Size = new System.Drawing.Size(376, 21);
+            this.nikseTextBoxLibreTranslateApiKey.Size = new System.Drawing.Size(340, 21);
             this.nikseTextBoxLibreTranslateApiKey.TabIndex = 36;
             // 
             // labelLibreApiKey
             // 
             this.labelLibreApiKey.AutoSize = true;
-            this.labelLibreApiKey.Location = new System.Drawing.Point(6, 84);
+            this.labelLibreApiKey.Location = new System.Drawing.Point(6, 80);
             this.labelLibreApiKey.Name = "labelLibreApiKey";
             this.labelLibreApiKey.Size = new System.Drawing.Size(44, 13);
             this.labelLibreApiKey.TabIndex = 35;
@@ -6600,15 +6782,15 @@
             // nikseTextBoxLibreTranslateUrl
             // 
             this.nikseTextBoxLibreTranslateUrl.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            this.nikseTextBoxLibreTranslateUrl.Location = new System.Drawing.Point(8, 45);
+            this.nikseTextBoxLibreTranslateUrl.Location = new System.Drawing.Point(8, 41);
             this.nikseTextBoxLibreTranslateUrl.Name = "nikseTextBoxLibreTranslateUrl";
-            this.nikseTextBoxLibreTranslateUrl.Size = new System.Drawing.Size(376, 21);
+            this.nikseTextBoxLibreTranslateUrl.Size = new System.Drawing.Size(384, 21);
             this.nikseTextBoxLibreTranslateUrl.TabIndex = 34;
             // 
             // labelLibreUrl
             // 
             this.labelLibreUrl.AutoSize = true;
-            this.labelLibreUrl.Location = new System.Drawing.Point(6, 27);
+            this.labelLibreUrl.Location = new System.Drawing.Point(6, 23);
             this.labelLibreUrl.Name = "labelLibreUrl";
             this.labelLibreUrl.Size = new System.Drawing.Size(20, 13);
             this.labelLibreUrl.TabIndex = 30;
@@ -6617,7 +6799,7 @@
             // linkLabelLibreTranslateApi
             // 
             this.linkLabelLibreTranslateApi.AutoSize = true;
-            this.linkLabelLibreTranslateApi.Location = new System.Drawing.Point(332, 16);
+            this.linkLabelLibreTranslateApi.Location = new System.Drawing.Point(340, 17);
             this.linkLabelLibreTranslateApi.Name = "linkLabelLibreTranslateApi";
             this.linkLabelLibreTranslateApi.Size = new System.Drawing.Size(52, 13);
             this.linkLabelLibreTranslateApi.TabIndex = 24;
@@ -6644,9 +6826,9 @@
             this.groupBoxNllbServe.Controls.Add(this.labelNllbServeUrl);
             this.groupBoxNllbServe.Controls.Add(this.linkLabelNllbServe);
             this.groupBoxNllbServe.Controls.Add(this.label4);
-            this.groupBoxNllbServe.Location = new System.Drawing.Point(10, 252);
+            this.groupBoxNllbServe.Location = new System.Drawing.Point(9, 213);
             this.groupBoxNllbServe.Name = "groupBoxNllbServe";
-            this.groupBoxNllbServe.Size = new System.Drawing.Size(408, 137);
+            this.groupBoxNllbServe.Size = new System.Drawing.Size(410, 103);
             this.groupBoxNllbServe.TabIndex = 35;
             this.groupBoxNllbServe.TabStop = false;
             this.groupBoxNllbServe.Text = "NLLM Serve";
@@ -6654,15 +6836,15 @@
             // nikseTextBoxNllbServeModel
             // 
             this.nikseTextBoxNllbServeModel.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            this.nikseTextBoxNllbServeModel.Location = new System.Drawing.Point(7, 97);
+            this.nikseTextBoxNllbServeModel.Location = new System.Drawing.Point(53, 71);
             this.nikseTextBoxNllbServeModel.Name = "nikseTextBoxNllbServeModel";
-            this.nikseTextBoxNllbServeModel.Size = new System.Drawing.Size(376, 21);
+            this.nikseTextBoxNllbServeModel.Size = new System.Drawing.Size(331, 21);
             this.nikseTextBoxNllbServeModel.TabIndex = 37;
             // 
             // labelNllbServeModel
             // 
             this.labelNllbServeModel.AutoSize = true;
-            this.labelNllbServeModel.Location = new System.Drawing.Point(7, 80);
+            this.labelNllbServeModel.Location = new System.Drawing.Point(7, 75);
             this.labelNllbServeModel.Name = "labelNllbServeModel";
             this.labelNllbServeModel.Size = new System.Drawing.Size(35, 13);
             this.labelNllbServeModel.TabIndex = 36;
@@ -6671,7 +6853,7 @@
             // nikseTextBoxNllbServeUrl
             // 
             this.nikseTextBoxNllbServeUrl.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            this.nikseTextBoxNllbServeUrl.Location = new System.Drawing.Point(8, 45);
+            this.nikseTextBoxNllbServeUrl.Location = new System.Drawing.Point(8, 40);
             this.nikseTextBoxNllbServeUrl.Name = "nikseTextBoxNllbServeUrl";
             this.nikseTextBoxNllbServeUrl.Size = new System.Drawing.Size(376, 21);
             this.nikseTextBoxNllbServeUrl.TabIndex = 34;
@@ -6679,7 +6861,7 @@
             // labelNllbServeUrl
             // 
             this.labelNllbServeUrl.AutoSize = true;
-            this.labelNllbServeUrl.Location = new System.Drawing.Point(6, 27);
+            this.labelNllbServeUrl.Location = new System.Drawing.Point(6, 22);
             this.labelNllbServeUrl.Name = "labelNllbServeUrl";
             this.labelNllbServeUrl.Size = new System.Drawing.Size(20, 13);
             this.labelNllbServeUrl.TabIndex = 30;
@@ -6713,9 +6895,9 @@
             this.groupBoxNllbApi.Controls.Add(this.labelNllbApiUrl);
             this.groupBoxNllbApi.Controls.Add(this.linkLabelNllbApi);
             this.groupBoxNllbApi.Controls.Add(this.label5);
-            this.groupBoxNllbApi.Location = new System.Drawing.Point(11, 396);
+            this.groupBoxNllbApi.Location = new System.Drawing.Point(9, 322);
             this.groupBoxNllbApi.Name = "groupBoxNllbApi";
-            this.groupBoxNllbApi.Size = new System.Drawing.Size(408, 87);
+            this.groupBoxNllbApi.Size = new System.Drawing.Size(410, 73);
             this.groupBoxNllbApi.TabIndex = 36;
             this.groupBoxNllbApi.TabStop = false;
             this.groupBoxNllbApi.Text = "NLLM API";
@@ -6723,7 +6905,7 @@
             // nikseTextBoxNllbApiUrl
             // 
             this.nikseTextBoxNllbApiUrl.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            this.nikseTextBoxNllbApiUrl.Location = new System.Drawing.Point(8, 45);
+            this.nikseTextBoxNllbApiUrl.Location = new System.Drawing.Point(8, 40);
             this.nikseTextBoxNllbApiUrl.Name = "nikseTextBoxNllbApiUrl";
             this.nikseTextBoxNllbApiUrl.Size = new System.Drawing.Size(376, 21);
             this.nikseTextBoxNllbApiUrl.TabIndex = 34;
@@ -6731,7 +6913,7 @@
             // labelNllbApiUrl
             // 
             this.labelNllbApiUrl.AutoSize = true;
-            this.labelNllbApiUrl.Location = new System.Drawing.Point(6, 27);
+            this.labelNllbApiUrl.Location = new System.Drawing.Point(6, 22);
             this.labelNllbApiUrl.Name = "labelNllbApiUrl";
             this.labelNllbApiUrl.Size = new System.Drawing.Size(20, 13);
             this.labelNllbApiUrl.TabIndex = 30;
@@ -6761,12 +6943,12 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1092, 574);
+            this.Controls.Add(this.panelAutoTranslate);
             this.Controls.Add(this.panelVideoPlayer);
             this.Controls.Add(this.labelUpdateFileTypeAssociationsStatus);
             this.Controls.Add(this.panelGeneral);
             this.Controls.Add(this.panelTools);
             this.Controls.Add(this.panelNetwork);
-            this.Controls.Add(this.panelAutoTranslate);
             this.Controls.Add(this.panelShortcuts);
             this.Controls.Add(this.panelFont);
             this.Controls.Add(this.panelSubtitleFormats);
@@ -6897,6 +7079,10 @@
             this.groupBoxProxyAuthentication.PerformLayout();
             this.panelFileTypeAssociations.ResumeLayout(false);
             this.panelAutoTranslate.ResumeLayout(false);
+            this.groupBoxAutoTranslatePapago.ResumeLayout(false);
+            this.groupBoxAutoTranslatePapago.PerformLayout();
+            this.groupBoxAutoTranslateChatGpt.ResumeLayout(false);
+            this.groupBoxAutoTranslateChatGpt.PerformLayout();
             this.groupBoxDeepL.ResumeLayout(false);
             this.groupBoxDeepL.PerformLayout();
             this.groupBoxMyMemory.ResumeLayout(false);
@@ -7111,7 +7297,7 @@
         private System.Windows.Forms.CheckBox checkBoxTBFixCommonErrors;
         private System.Windows.Forms.CheckBox checkBoxFixShortDisplayTimesAllowMoveStartTime;
         private System.Windows.Forms.Button buttonVlcPathBrowse;
-        private Nikse.SubtitleEdit.Controls.SETextBox textBoxVlcPath;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxVlcPath;
         private System.Windows.Forms.Label labelVlcPath;
         private System.Windows.Forms.GroupBox groupBoxToolsAutoBr;
         private System.Windows.Forms.CheckBox checkBoxUseDoNotBreakAfterList;
@@ -7370,5 +7556,21 @@
         private System.Windows.Forms.Label labelDeepLUrl;
         private System.Windows.Forms.LinkLabel linkLabelMoreInfoDeepl;
         private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.GroupBox groupBoxAutoTranslatePapago;
+        private Controls.NikseTextBox nikseTextBoxPapagoClientSecret;
+        private System.Windows.Forms.Label labelSecretPapago;
+        private Controls.NikseTextBox nikseTextBoxPapagoClientId;
+        private System.Windows.Forms.Label labelApiKeyPapago;
+        private System.Windows.Forms.LinkLabel linkLabelPapago;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.GroupBox groupBoxAutoTranslateChatGpt;
+        private System.Windows.Forms.Label labelChatGptDelay;
+        private Controls.NikseTextBox nikseTextBoxChatGptApiKey;
+        private System.Windows.Forms.Label labelApiKeyChatGpt;
+        private Controls.NikseTextBox nikseTextBoxChatGptUrl;
+        private System.Windows.Forms.Label labelUrlChatGpt;
+        private System.Windows.Forms.LinkLabel linkLabelMoreInfoChatGpt;
+        private System.Windows.Forms.Label label10;
+        private Controls.NikseComboBox nikseComboBoxChatGptDelay;
     }
 }
