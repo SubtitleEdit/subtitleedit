@@ -558,6 +558,11 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             timerUpdate.Start();
             var linesTranslated = 0;
             var forceSingleLineMode = translateSingleLinesToolStripMenuItem.Checked;
+            var delaySeconds = 0;
+            if (_autoTranslator.Name == ChatGptTranslate.StaticName)
+            {
+                delaySeconds = Configuration.Settings.Tools.ChatGptDelaySeconds;
+            }
 
             if (comboBoxSource.SelectedItem is TranslationPair source && comboBoxTarget.SelectedItem is TranslationPair target)
             {
@@ -568,6 +573,29 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                     var index = start;
                     while (index < _subtitle.Paragraphs.Count)
                     {
+                        if (index > start && delaySeconds > 0)
+                        {
+                            for (var i = delaySeconds; i > 0; i--)
+                            {
+                                labelPleaseWait.Text = LanguageSettings.Current.GoogleTranslate.PleaseWait + $" ({i})";
+                                labelPleaseWait.Refresh();
+                                Application.DoEvents();
+                                System.Threading.Thread.Sleep(1000);
+                                if (_breakTranslation)
+                                {
+                                    break;
+                                }
+                            }
+
+                            labelPleaseWait.Text = LanguageSettings.Current.GoogleTranslate.PleaseWait;
+                            Application.DoEvents();
+                        }
+
+                        if (_breakTranslation)
+                        {
+                            break;
+                        }
+
                         var linesMergedAndTranslated = await MergeAndSplitHelper.MergeAndTranslateIfPossible(_subtitle, TranslatedSubtitle, source, target, index, _autoTranslator, forceSingleLineMode);
                         if (linesMergedAndTranslated > 0)
                         {
