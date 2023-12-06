@@ -333,12 +333,7 @@ namespace Nikse.SubtitleEdit.Controls
             var delta = e.Delta;
             if (Configuration.Settings.VideoControls.WaveformMouseWheelScrollUpIsForward)
             {
-                var videoPlayerType = _videoPlayer.GetType();
-
-                if (videoPlayerType == typeof(LibMpvDynamic) || videoPlayerType == typeof(QuartsPlayer))
-                {
-                    delta = -delta;
-                }
+                delta = -delta;
             }
 
             var newPosition = CurrentPosition - delta / 256.0;
