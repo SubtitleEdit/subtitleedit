@@ -331,7 +331,13 @@ namespace Nikse.SubtitleEdit.Controls
         private void ControlMouseWheel(object sender, MouseEventArgs e)
         {
             var delta = e.Delta;
+            if (Configuration.Settings.VideoControls.WaveformMouseWheelScrollUpIsForward)
+            {
+                delta = -delta;
+            }
+
             var newPosition = CurrentPosition - delta / 256.0;
+
             if (newPosition < 0)
             {
                 newPosition = 0;
