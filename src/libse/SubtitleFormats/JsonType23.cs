@@ -32,7 +32,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 sb.Append("    }");
             }
 
-            sb.Append(" ]" + Environment.NewLine +"}");
+            sb.Append(" ]" + Environment.NewLine + "}");
 
             return sb.ToString().Trim();
         }

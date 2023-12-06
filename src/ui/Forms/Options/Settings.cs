@@ -905,16 +905,34 @@ namespace Nikse.SubtitleEdit.Forms.Options
             linkLabelGoogleTranslateSignUp.Left = textBoxGoogleTransleApiKey.Left + textBoxGoogleTransleApiKey.Width - linkLabelGoogleTranslateSignUp.Width;
 
             labelLibreApiKey.Text = language.GoogleTranslateApiKey;
+            nikseTextBoxLibreTranslateApiKey.Left = labelLibreApiKey.Right + 3;
+            nikseTextBoxLibreTranslateApiKey.Width = nikseTextBoxLibreTranslateUrl.Width - labelLibreApiKey.Width - 3;
+
             labelLibreUrl.Text = LanguageSettings.Current.Main.Url;
             labelNllbApiUrl.Text = LanguageSettings.Current.Main.Url;
             labelNllbServeUrl.Text = LanguageSettings.Current.Main.Url;
+            labelUrlChatGpt.Text = LanguageSettings.Current.Main.Url;
             labelMyMemoryApiKey.Text = language.GoogleTranslateApiKey;
             labelDeepLUrl.Text = LanguageSettings.Current.Main.Url;
             labelDeepLApiKey.Text = language.GoogleTranslateApiKey;
+            nikseTextBoxDeepLApiKey.Left = labelDeepLApiKey.Right + 3;
+            nikseTextBoxDeepLApiKey.Width = nikseTextBoxDeepLUrl.Width - labelDeepLApiKey.Width - 3;
+
+            labelApiKeyChatGpt.Text = language.GoogleTranslateApiKey;
+            labelChatGptDelay.Text = LanguageSettings.Current.Main.VideoControls.DelayInSeconds;
+            nikseTextBoxChatGptApiKey.Left = labelApiKeyChatGpt.Right + 3;
+            nikseTextBoxChatGptApiKey.Width = nikseTextBoxChatGptUrl.Width - labelApiKeyChatGpt.Width - 3;
+            nikseComboBoxChatGptDelay.Left = labelChatGptDelay.Right + 3;
+            nikseComboBoxChatGptDelay.Width = nikseTextBoxChatGptUrl.Width - labelChatGptDelay.Width - 3;
+
+            nikseTextBoxPapagoClientSecret.Left = labelSecretPapago.Right + 3;
+            nikseTextBoxPapagoClientSecret.Width = nikseTextBoxPapagoClientId.Width - labelSecretPapago.Width - 3;
 
             groupBoxBing.Text = language.MicrosoftBingTranslator;
             labelBingApiKey.Text = language.MicrosoftTranslateApiKey;
             labelBingTokenEndpoint.Text = language.MicrosoftTranslateTokenEndpoint;
+            comboBoxBoxBingTokenEndpoint.Left = labelBingTokenEndpoint.Right + 3;
+            comboBoxBoxBingTokenEndpoint.Width = textBoxBingClientSecret.Width - labelBingTokenEndpoint.Width - 3;
             linkLabelBingSubscribe.Text = language.HowToSignUp;
             linkLabelBingSubscribe.Left = textBoxBingClientSecret.Left + textBoxBingClientSecret.Width - linkLabelGoogleTranslateSignUp.Width;
 
@@ -926,6 +944,8 @@ namespace Nikse.SubtitleEdit.Forms.Options
             linkLabelNllbApi.Text = LanguageSettings.Current.General.MoreInfo;
             linkLabelLibreTranslateApi.Text = LanguageSettings.Current.General.MoreInfo;
             labelNllbServeModel.Text = LanguageSettings.Current.AudioToText.Model;
+            nikseTextBoxNllbServeModel.Left = labelNllbServeModel.Right + 3;
+            nikseTextBoxNllbServeModel.Width = nikseTextBoxNllbServeUrl.Width - labelNllbServeModel.Width - 3;
 
             comboBoxListViewDoubleClickEvent.Items.Clear();
             comboBoxListViewDoubleClickEvent.Items.Add(language.MainListViewNothing);
@@ -1129,6 +1149,17 @@ namespace Nikse.SubtitleEdit.Forms.Options
             nikseTextBoxMyMemoryApiKey.Text = Configuration.Settings.Tools.AutoTranslateMyMemoryApiKey;
             nikseTextBoxDeepLUrl.Text = Configuration.Settings.Tools.AutoTranslateDeepLUrl;
             nikseTextBoxDeepLApiKey.Text = Configuration.Settings.Tools.AutoTranslateDeepLApiKey;
+            nikseTextBoxChatGptUrl.Text = Configuration.Settings.Tools.ChatGptUrl;
+            nikseTextBoxChatGptApiKey.Text = Configuration.Settings.Tools.ChatGptApiKey;
+
+            nikseComboBoxChatGptDelay.SelectedIndex = 0;
+            if (Configuration.Settings.Tools.ChatGptDelaySeconds == 20)
+            {
+                nikseComboBoxChatGptDelay.SelectedIndex = 1;
+            }
+
+            nikseTextBoxPapagoClientId.Text = Configuration.Settings.Tools.AutoTranslatePapagoApiKeyId;
+            nikseTextBoxPapagoClientSecret.Text = Configuration.Settings.Tools.AutoTranslatePapagoApiKey;
 
             buttonReset.Text = LanguageSettings.Current.Settings.RestoreDefaultSettings;
             buttonOK.Text = LanguageSettings.Current.General.Ok;
@@ -2308,6 +2339,11 @@ namespace Nikse.SubtitleEdit.Forms.Options
             toolsSettings.AutoTranslateMyMemoryApiKey = nikseTextBoxMyMemoryApiKey.Text;
             toolsSettings.AutoTranslateDeepLUrl = nikseTextBoxDeepLUrl.Text;
             toolsSettings.AutoTranslateDeepLApiKey = nikseTextBoxDeepLApiKey.Text;
+            toolsSettings.ChatGptUrl = Configuration.Settings.Tools.ChatGptUrl;
+            toolsSettings.ChatGptApiKey = nikseTextBoxChatGptApiKey.Text;
+            toolsSettings.ChatGptDelaySeconds = int.Parse(nikseComboBoxChatGptDelay.Text.Split()[0]);
+            toolsSettings.AutoTranslatePapagoApiKeyId = nikseTextBoxPapagoClientId.Text.Trim();
+            toolsSettings.AutoTranslatePapagoApiKey = nikseTextBoxPapagoClientSecret.Text.Trim();
 
             var proxy = Configuration.Settings.Proxy;
             proxy.ProxyAddress = textBoxProxyAddress.Text;

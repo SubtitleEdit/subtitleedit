@@ -174,6 +174,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public bool TranslateViaCopyPasteAutoCopyToClipboard { get; set; }
         public string ChatGptUrl { get; set; }
         public string ChatGptApiKey { get; set; }
+        public int ChatGptDelaySeconds { get; set; }
         public bool ListViewSyntaxColorDurationSmall { get; set; }
         public bool ListViewSyntaxColorDurationBig { get; set; }
         public bool ListViewSyntaxColorOverlap { get; set; }
@@ -5249,6 +5250,12 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.Tools.ChatGptApiKey = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("ChatGptDelaySeconds");
+            if (subNode != null)
+            {
+                settings.Tools.ChatGptDelaySeconds = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
             subNode = node.SelectSingleNode("TranslateViaCopyPasteAutoCopyToClipboard");
@@ -11594,6 +11601,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("TranslateViaCopyPasteAutoCopyToClipboard", settings.Tools.TranslateViaCopyPasteAutoCopyToClipboard.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ChatGptUrl", settings.Tools.ChatGptUrl);
                 textWriter.WriteElementString("ChatGptApiKey", settings.Tools.ChatGptApiKey);
+                textWriter.WriteElementString("ChatGptDelaySeconds", settings.Tools.ChatGptDelaySeconds.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewSyntaxColorDurationSmall", settings.Tools.ListViewSyntaxColorDurationSmall.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewSyntaxColorDurationBig", settings.Tools.ListViewSyntaxColorDurationBig.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewSyntaxColorLongLines", settings.Tools.ListViewSyntaxColorLongLines.ToString(CultureInfo.InvariantCulture));

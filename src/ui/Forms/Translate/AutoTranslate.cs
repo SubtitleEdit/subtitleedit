@@ -228,7 +228,12 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
             if (engineType == typeof(PapagoTranslate))
             {
-                FillUrls(new List<string> { Configuration.Settings.Tools.AutoTranslatePapagoApiKeyId });
+                
+                nikseComboBoxUrl.Items.Clear();
+                nikseComboBoxUrl.Items.Add(Configuration.Settings.Tools.AutoTranslatePapagoApiKeyId);
+                nikseComboBoxUrl.SelectedIndex = 0;
+                nikseComboBoxUrl.Visible = true;
+                labelUrl.Visible = true;
                 labelUrl.Text = "API Key ID";
                 nikseComboBoxUrl.Left = labelUrl.Right + 3;
 
