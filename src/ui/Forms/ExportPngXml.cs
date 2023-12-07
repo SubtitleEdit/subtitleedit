@@ -2486,12 +2486,12 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
             if (float.TryParse(comboBoxBorderWidth.SelectedItem.ToString().Replace(',', '.'), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var f))
             {
-                return f;
+                return f * 1.25f;
             }
 
             if (float.TryParse(Utilities.RemoveNonNumbers(comboBoxBorderWidth.SelectedItem.ToString()).Replace(',', '.'), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out f))
             {
-                return f;
+                return f * 1.25f;
             }
 
             return 0;

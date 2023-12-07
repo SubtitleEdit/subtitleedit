@@ -2731,6 +2731,7 @@
             public string AdjustViaEndAutoStart { get; set; }
             public string AdjustViaEndAutoStartAndGoToNext { get; set; }
             public string AdjustSetEndMinusGapAndStartNextHere { get; set; }
+            public string AdjustSetEndAndStartNextAfterGap { get; set; }
             public string AdjustSetStartTimeAndGoToNext { get; set; }
             public string AdjustSetEndTimeAndGoToNext { get; set; }
             public string AdjustSetEndTimeAndPause { get; set; }
