@@ -153,6 +153,7 @@ namespace Nikse.SubtitleEdit.Logic
         public Keys MainAdjustInsertViaEndAutoStart { get; set; }
         public Keys MainAdjustInsertViaEndAutoStartAndGoToNext { get; set; }
         public Keys MainAdjustSetEndMinusGapAndStartNextHere { get; set; }
+        public Keys MainAdjustSetEndAndStartOfNextPlusGap { get; set; }
         public Keys MainAdjustSetStartAutoDurationAndGoToNext { get; set; }
         public Keys MainAdjustSetEndNextStartAndGoToNext { get; set; }
         public Keys MainAdjustStartDownEndUpAndGoToNext { get; set; }
@@ -469,6 +470,7 @@ namespace Nikse.SubtitleEdit.Logic
             MainAdjustInsertViaEndAutoStart = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustViaEndAutoStart);
             MainAdjustInsertViaEndAutoStartAndGoToNext = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustViaEndAutoStartAndGoToNext);
             MainAdjustSetEndMinusGapAndStartNextHere = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetEndMinusGapAndStartNextHere);
+            MainAdjustSetEndAndStartOfNextPlusGap = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetEndAndStartOfNextPlusGap);
             MainAdjustSetStartAutoDurationAndGoToNext = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetStartAutoDurationAndGoToNext);
             MainAdjustSetEndNextStartAndGoToNext = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetEndNextStartAndGoToNext);
             MainAdjustStartDownEndUpAndGoToNext = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustStartDownEndUpAndGoToNext);

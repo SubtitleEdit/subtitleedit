@@ -30,6 +30,7 @@
    * Fix for unwanted "<br />" in MS translator - thx Miguel
    * Only add recent file if saved - thx F5System
    * Fix for mouse wheel scroll direction in video player - thx Peter
+   * Fix for ASSA border width in export to image based format - thx Christian
 
 
 4.0.2 (19th November 2023)
