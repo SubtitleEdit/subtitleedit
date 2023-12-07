@@ -2484,12 +2484,12 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 return 0;
             }
 
-            if (float.TryParse(comboBoxBorderWidth.SelectedItem.ToString(), out var f))
+            if (float.TryParse(comboBoxBorderWidth.SelectedItem.ToString().Replace(',', '.'), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var f))
             {
                 return f;
             }
 
-            if (float.TryParse(Utilities.RemoveNonNumbers(comboBoxBorderWidth.SelectedItem.ToString()), out f))
+            if (float.TryParse(Utilities.RemoveNonNumbers(comboBoxBorderWidth.SelectedItem.ToString()).Replace(',', '.'), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out f))
             {
                 return f;
             }

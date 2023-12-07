@@ -2632,6 +2632,7 @@ $HorzAlign          =   Center
         public string MainAdjustViaEndAutoStart { get; set; }
         public string MainAdjustViaEndAutoStartAndGoToNext { get; set; }
         public string MainAdjustSetEndMinusGapAndStartNextHere { get; set; }
+        public string MainAdjustSetEndAndStartOfNextPlusGap { get; set; }
         public string MainAdjustSetStartAutoDurationAndGoToNext { get; set; }
         public string MainAdjustSetEndNextStartAndGoToNext { get; set; }
         public string MainAdjustStartDownEndUpAndGoToNext { get; set; }
@@ -10686,6 +10687,12 @@ $HorzAlign          =   Center
                     shortcuts.MainAdjustSetEndMinusGapAndStartNextHere = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainAdjustSetEndAndStartOfNextPlusGap");
+                if (subNode != null)
+                {
+                    shortcuts.MainAdjustSetEndAndStartOfNextPlusGap = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainAdjustSetStartAutoDurationAndGoToNext");
                 if (subNode != null)
                 {
@@ -12701,6 +12708,7 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("MainAdjustViaEndAutoStart", shortcuts.MainAdjustViaEndAutoStart);
             textWriter.WriteElementString("MainAdjustViaEndAutoStartAndGoToNext", shortcuts.MainAdjustViaEndAutoStartAndGoToNext);
             textWriter.WriteElementString("MainAdjustSetEndMinusGapAndStartNextHere", shortcuts.MainAdjustSetEndMinusGapAndStartNextHere);
+            textWriter.WriteElementString("MainAdjustSetEndAndStartOfNextPlusGap", shortcuts.MainAdjustSetEndAndStartOfNextPlusGap);
             textWriter.WriteElementString("MainAdjustSetStartAutoDurationAndGoToNext", shortcuts.MainAdjustSetStartAutoDurationAndGoToNext);
             textWriter.WriteElementString("MainAdjustSetEndNextStartAndGoToNext", shortcuts.MainAdjustSetEndNextStartAndGoToNext);
             textWriter.WriteElementString("MainAdjustStartDownEndUpAndGoToNext", shortcuts.MainAdjustStartDownEndUpAndGoToNext);

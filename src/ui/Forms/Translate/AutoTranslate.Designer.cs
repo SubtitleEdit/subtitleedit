@@ -42,10 +42,15 @@
             this.toolStripMenuItemStartLibre = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemStartNLLBServe = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemStartNLLBApi = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.translateSingleLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.startLibreTranslateServerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.startNLLBServeServerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.startNLLBAPIServerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.translateSingleLinesToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.labelApiKey = new System.Windows.Forms.Label();
             this.nikseTextBoxApiKey = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.nikseComboBoxEngine = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.nikseComboBoxUrl = new Nikse.SubtitleEdit.Controls.NikseComboBox();
@@ -53,11 +58,6 @@
             this.comboBoxTarget = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.subtitleListViewTarget = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.subtitleListViewSource = new Nikse.SubtitleEdit.Controls.SubtitleListView();
-            this.labelApiKey = new System.Windows.Forms.Label();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.translateSingleLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.translateSingleLinesToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip2.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -159,7 +159,7 @@
             this.toolStripSeparator1,
             this.translateSingleLinesToolStripMenuItem});
             this.contextMenuStrip2.Name = "contextMenuStrip1";
-            this.contextMenuStrip2.Size = new System.Drawing.Size(197, 120);
+            this.contextMenuStrip2.Size = new System.Drawing.Size(197, 98);
             this.contextMenuStrip2.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip2_Opening);
             // 
             // toolStripMenuItemStartLibre
@@ -181,6 +181,18 @@
             this.toolStripMenuItemStartNLLBApi.Name = "toolStripMenuItemStartNLLBApi";
             this.toolStripMenuItemStartNLLBApi.Size = new System.Drawing.Size(196, 22);
             this.toolStripMenuItemStartNLLBApi.Text = "Start NLLB API server";
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(193, 6);
+            // 
+            // translateSingleLinesToolStripMenuItem
+            // 
+            this.translateSingleLinesToolStripMenuItem.Name = "translateSingleLinesToolStripMenuItem";
+            this.translateSingleLinesToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
+            this.translateSingleLinesToolStripMenuItem.Text = "Translate single lines";
+            this.translateSingleLinesToolStripMenuItem.Click += new System.EventHandler(this.translateSingleLinesToolStripMenuItem_Click);
             // 
             // contextMenuStrip1
             // 
@@ -213,6 +225,28 @@
             this.startNLLBAPIServerToolStripMenuItem.Name = "startNLLBAPIServerToolStripMenuItem";
             this.startNLLBAPIServerToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
             this.startNLLBAPIServerToolStripMenuItem.Text = "Start NLLB API server";
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(193, 6);
+            // 
+            // translateSingleLinesToolStripMenuItem1
+            // 
+            this.translateSingleLinesToolStripMenuItem1.Name = "translateSingleLinesToolStripMenuItem1";
+            this.translateSingleLinesToolStripMenuItem1.Size = new System.Drawing.Size(196, 22);
+            this.translateSingleLinesToolStripMenuItem1.Text = "Translate single lines";
+            this.translateSingleLinesToolStripMenuItem1.Click += new System.EventHandler(this.translateSingleLinesToolStripMenuItem1_Click);
+            // 
+            // labelApiKey
+            // 
+            this.labelApiKey.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.labelApiKey.AutoSize = true;
+            this.labelApiKey.Location = new System.Drawing.Point(360, 533);
+            this.labelApiKey.Name = "labelApiKey";
+            this.labelApiKey.Size = new System.Drawing.Size(47, 13);
+            this.labelApiKey.TabIndex = 111;
+            this.labelApiKey.Text = "API key:";
             // 
             // nikseTextBoxApiKey
             // 
@@ -363,40 +397,8 @@
             this.subtitleListViewSource.UseCompatibleStateImageBehavior = false;
             this.subtitleListViewSource.UseSyntaxColoring = true;
             this.subtitleListViewSource.View = System.Windows.Forms.View.Details;
-            // 
-            // labelApiKey
-            // 
-            this.labelApiKey.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.labelApiKey.AutoSize = true;
-            this.labelApiKey.Location = new System.Drawing.Point(360, 533);
-            this.labelApiKey.Name = "labelApiKey";
-            this.labelApiKey.Size = new System.Drawing.Size(47, 13);
-            this.labelApiKey.TabIndex = 111;
-            this.labelApiKey.Text = "API key:";
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(193, 6);
-            // 
-            // translateSingleLinesToolStripMenuItem
-            // 
-            this.translateSingleLinesToolStripMenuItem.Name = "translateSingleLinesToolStripMenuItem";
-            this.translateSingleLinesToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
-            this.translateSingleLinesToolStripMenuItem.Text = "Translate single lines";
-            this.translateSingleLinesToolStripMenuItem.Click += new System.EventHandler(this.translateSingleLinesToolStripMenuItem_Click);
-            // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(193, 6);
-            // 
-            // translateSingleLinesToolStripMenuItem1
-            // 
-            this.translateSingleLinesToolStripMenuItem1.Name = "translateSingleLinesToolStripMenuItem1";
-            this.translateSingleLinesToolStripMenuItem1.Size = new System.Drawing.Size(196, 22);
-            this.translateSingleLinesToolStripMenuItem1.Text = "Translate single lines";
-            this.translateSingleLinesToolStripMenuItem1.Click += new System.EventHandler(this.translateSingleLinesToolStripMenuItem1_Click);
+            this.subtitleListViewSource.Click += new System.EventHandler(this.subtitleListViewSource_Click);
+            this.subtitleListViewSource.DoubleClick += new System.EventHandler(this.subtitleListViewSource_DoubleClick);
             // 
             // AutoTranslate
             // 

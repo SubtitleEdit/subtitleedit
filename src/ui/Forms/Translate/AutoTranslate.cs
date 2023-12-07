@@ -99,6 +99,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             subtitleListViewSource.Fill(_subtitle);
             AutoTranslate_Resize(null, null);
             UpdateTranslation();
+            MergeAndSplitHelper.MergeSplitProblems = false;
         }
 
         private void InitializeAutoTranslatorEngines()
@@ -151,6 +152,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             labelApiKey.Visible = false;
             nikseComboBoxUrl.Visible = false;
             nikseTextBoxApiKey.Top = nikseComboBoxUrl.Top;
+            labelApiKey.Text = LanguageSettings.Current.Settings.GoogleTranslateApiKey;
             var engineType = _autoTranslator.GetType();
 
             if (engineType == typeof(GoogleTranslateV1))
@@ -228,16 +230,17 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
             if (engineType == typeof(PapagoTranslate))
             {
-                
+
                 nikseComboBoxUrl.Items.Clear();
                 nikseComboBoxUrl.Items.Add(Configuration.Settings.Tools.AutoTranslatePapagoApiKeyId);
                 nikseComboBoxUrl.SelectedIndex = 0;
                 nikseComboBoxUrl.Visible = true;
                 labelUrl.Visible = true;
-                labelUrl.Text = "API Key ID";
+                labelUrl.Text = "Client ID";
                 nikseComboBoxUrl.Left = labelUrl.Right + 3;
 
                 labelApiKey.Left = nikseComboBoxUrl.Right + 12;
+                labelApiKey.Text = "Client secret";
                 nikseTextBoxApiKey.Text = Configuration.Settings.Tools.AutoTranslatePapagoApiKey;
                 nikseTextBoxApiKey.Left = labelApiKey.Right + 3;
                 labelApiKey.Visible = true;
@@ -557,7 +560,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             timerUpdate.Tick += TimerUpdate_Tick;
             timerUpdate.Start();
             var linesTranslated = 0;
-            var forceSingleLineMode = translateSingleLinesToolStripMenuItem.Checked;
+            var forceSingleLineMode = translateSingleLinesToolStripMenuItem.Checked || _autoTranslator.Name == NoLanguageLeftBehindApi.StaticName;
             var delaySeconds = 0;
             if (_autoTranslator.Name == ChatGptTranslate.StaticName)
             {
@@ -566,6 +569,8 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
             if (comboBoxSource.SelectedItem is TranslationPair source && comboBoxTarget.SelectedItem is TranslationPair target)
             {
+                var mergeErrorCount = 0;
+
                 Configuration.Settings.Tools.GoogleTranslateLastTargetLanguage = target.TwoLetterIsoLanguageName ?? target.Code;
                 try
                 {
@@ -573,23 +578,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                     var index = start;
                     while (index < _subtitle.Paragraphs.Count)
                     {
-                        if (index > start && delaySeconds > 0)
-                        {
-                            for (var i = delaySeconds; i > 0; i--)
-                            {
-                                labelPleaseWait.Text = LanguageSettings.Current.GoogleTranslate.PleaseWait + $" ({i})";
-                                labelPleaseWait.Refresh();
-                                Application.DoEvents();
-                                System.Threading.Thread.Sleep(1000);
-                                if (_breakTranslation)
-                                {
-                                    break;
-                                }
-                            }
-
-                            labelPleaseWait.Text = LanguageSettings.Current.GoogleTranslate.PleaseWait;
-                            Application.DoEvents();
-                        }
+                        Delay(delaySeconds, start, index);
 
                         if (_breakTranslation)
                         {
@@ -603,6 +592,12 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                             linesTranslated += linesMergedAndTranslated;
                             _translationProgressIndex = index - 1;
                             continue;
+                        }
+
+                        mergeErrorCount++;
+                        if (mergeErrorCount > 20)
+                        {
+                            forceSingleLineMode = true;
                         }
 
                         var p = _subtitle.Paragraphs[index];
@@ -657,6 +652,27 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             buttonOK.Focus();
         }
 
+        private void Delay(int delaySeconds, int start, int index)
+        {
+            if (index > start && delaySeconds > 0)
+            {
+                for (var i = delaySeconds; i > 0; i--)
+                {
+                    labelPleaseWait.Text = LanguageSettings.Current.GoogleTranslate.PleaseWait + $" ({i})";
+                    labelPleaseWait.Refresh();
+                    Application.DoEvents();
+                    System.Threading.Thread.Sleep(1000);
+                    if (_breakTranslation)
+                    {
+                        break;
+                    }
+                }
+
+                labelPleaseWait.Text = LanguageSettings.Current.GoogleTranslate.PleaseWait;
+                Application.DoEvents();
+            }
+        }
+
         private void HandleError(Exception exception, int linesTranslate, Type engineType)
         {
             SeLogger.Error(exception);
@@ -684,7 +700,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                         Environment.NewLine +
                         LanguageSettings.Current.GoogleTranslate.ReadMore + Environment.NewLine +
                         Environment.NewLine +
-                        "AutoTranslatePapagoApiKeyId and AutoTranslatePapagoApiKey needs to be filled out in Settings.xml" + Environment.NewLine +
+                        "Client ID and Client secrect are required" + Environment.NewLine +
                         Environment.NewLine +
                         _autoTranslator.Error,
                         Text,
@@ -961,6 +977,16 @@ namespace Nikse.SubtitleEdit.Forms.Translate
         private void translateSingleLinesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ToggleTranslateSingleLines();
+        }
+
+        private void subtitleListViewSource_DoubleClick(object sender, EventArgs e)
+        {
+            SyncListViews(subtitleListViewSource, subtitleListViewTarget);
+        }
+
+        private void subtitleListViewSource_Click(object sender, EventArgs e)
+        {
+            SyncListViews(subtitleListViewSource, subtitleListViewTarget);
         }
     }
 }

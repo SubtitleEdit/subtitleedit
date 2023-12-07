@@ -18803,6 +18803,11 @@ namespace Nikse.SubtitleEdit.Forms
                 SetEndMinusGapAndStartNextHere(FirstSelectedIndex);
                 e.SuppressKeyPress = true;
             }
+            else if (mediaPlayer.VideoPlayer != null && _shortcuts.MainAdjustSetEndAndStartOfNextPlusGap == e.KeyData)
+            {
+                MainAdjustSetEndAndStartOfNextPlusGap(FirstSelectedIndex);
+                e.SuppressKeyPress = true;
+            }
             else if (mediaPlayer.VideoPlayer != null && _shortcuts.MainAdjustSetStartAutoDurationAndGoToNext == e.KeyData)
             {
                 SetCurrentStartAutoDurationAndGotoNext(FirstSelectedIndex);
@@ -29754,6 +29759,76 @@ namespace Nikse.SubtitleEdit.Forms
 
             UpdateOriginalTimeCodes(oldParagraph, oldNextParagraph);
             SubtitleListview1.SelectIndexAndEnsureVisible(index + 1, true);
+            SubtitleListview1.SetStartTimeAndDuration(index - 1, _subtitle.GetParagraphOrDefault(index - 1), _subtitle.GetParagraphOrDefault(index), _subtitle.GetParagraphOrDefault(index - 2));
+            SubtitleListview1.SetStartTimeAndDuration(index, _subtitle.GetParagraphOrDefault(index), _subtitle.GetParagraphOrDefault(index + 1), _subtitle.GetParagraphOrDefault(index - 1));
+            SubtitleListview1.SetStartTimeAndDuration(index + 1, _subtitle.GetParagraphOrDefault(index + 1), _subtitle.GetParagraphOrDefault(index + 2), _subtitle.GetParagraphOrDefault(index));
+            RefreshSelectedParagraph();
+            ShowStatus(string.Format(_language.VideoControls.AdjustedViaEndTime, p.StartTime.ToShortString()));
+            audioVisualizer.Invalidate();
+            UpdateSourceView();
+        }
+
+        public void MainAdjustSetEndAndStartOfNextPlusGap(int index)
+        {
+            var p = _subtitle.GetParagraphOrDefault(index);
+            if (p == null)
+            {
+                return;
+            }
+
+            if (mediaPlayer.VideoPlayer == null || string.IsNullOrEmpty(_videoFileName))
+            {
+                MessageBox.Show(_languageGeneral.NoVideoLoaded);
+                return;
+            }
+
+            double totalMillisecondsEnd = mediaPlayer.CurrentPosition * TimeCode.BaseUnit;
+            var oldParagraph = new Paragraph(p, false);
+            var newDurationMs = totalMillisecondsEnd - p.StartTime.TotalMilliseconds;
+            if (!p.StartTime.IsMaxTime &&
+                newDurationMs < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds &&
+                newDurationMs > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
+            {
+                return;
+            }
+
+            var tc = new TimeCode(totalMillisecondsEnd);
+            MakeHistoryForUndo(_language.BeforeSetEndAndVideoPosition + "  " + tc);
+            _makeHistoryPaused = true;
+
+            if (p.StartTime.IsMaxTime)
+            {
+                p.EndTime.TotalMilliseconds = totalMillisecondsEnd;
+                p.StartTime.TotalMilliseconds = p.EndTime.TotalMilliseconds - Utilities.GetOptimalDisplayMilliseconds(p.Text);
+            }
+            else
+            {
+                p.EndTime.TotalMilliseconds = totalMillisecondsEnd;
+            }
+
+            timeUpDownStartTime.TimeCode = p.StartTime;
+            var durationInSeconds = (decimal)p.DurationTotalSeconds;
+            if (durationInSeconds >= numericUpDownDuration.Minimum && durationInSeconds <= numericUpDownDuration.Maximum)
+            {
+                SetDurationInSeconds((double)durationInSeconds);
+            }
+
+            var next = _subtitle.GetParagraphOrDefault(index + 1);
+            Paragraph oldNextParagraph = null;
+            if (next != null && (next.StartTime.IsMaxTime || next.StartTime.TotalMilliseconds - totalMillisecondsEnd < 5_000))
+            {
+                oldNextParagraph = new Paragraph(next, false);
+                next.StartTime.TotalMilliseconds = totalMillisecondsEnd + MinGapBetweenLines;
+
+                if (next.StartTime.IsMaxTime)
+                {
+                    next.EndTime.TotalMilliseconds = totalMillisecondsEnd + MinGapBetweenLines + Configuration.Settings.General.NewEmptyDefaultMs;
+                }
+            }
+
+            RestartHistory();
+
+            UpdateOriginalTimeCodes(oldParagraph, oldNextParagraph);
             SubtitleListview1.SetStartTimeAndDuration(index - 1, _subtitle.GetParagraphOrDefault(index - 1), _subtitle.GetParagraphOrDefault(index), _subtitle.GetParagraphOrDefault(index - 2));
             SubtitleListview1.SetStartTimeAndDuration(index, _subtitle.GetParagraphOrDefault(index), _subtitle.GetParagraphOrDefault(index + 1), _subtitle.GetParagraphOrDefault(index - 1));
             SubtitleListview1.SetStartTimeAndDuration(index + 1, _subtitle.GetParagraphOrDefault(index + 1), _subtitle.GetParagraphOrDefault(index + 2), _subtitle.GetParagraphOrDefault(index));

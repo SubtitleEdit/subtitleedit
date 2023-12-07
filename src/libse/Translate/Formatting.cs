@@ -49,7 +49,7 @@ namespace Nikse.SubtitleEdit.Core.Translate
 
         public string SetTagsAndReturnTrimmed(string input, string sourceLanguage)
         {
-            if (string.IsNullOrEmpty(HtmlUtil.RemoveHtmlTags(input, true)))
+            if (string.IsNullOrWhiteSpace(HtmlUtil.RemoveHtmlTags(input, true).Replace("♪", string.Empty).Replace("♫", string.Empty)))
             {
                 ReplaceAllText = input;
                 return "...";
