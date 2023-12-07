@@ -2340,7 +2340,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             toolsSettings.AutoTranslateMyMemoryApiKey = nikseTextBoxMyMemoryApiKey.Text;
             toolsSettings.AutoTranslateDeepLUrl = nikseTextBoxDeepLUrl.Text;
             toolsSettings.AutoTranslateDeepLApiKey = nikseTextBoxDeepLApiKey.Text;
-            toolsSettings.ChatGptUrl = Configuration.Settings.Tools.ChatGptUrl;
+            toolsSettings.ChatGptUrl = nikseTextBoxChatGptUrl.Text;
             toolsSettings.ChatGptApiKey = nikseTextBoxChatGptApiKey.Text;
             toolsSettings.ChatGptDelaySeconds = int.Parse(nikseComboBoxChatGptDelay.Text.Split()[0]);
             toolsSettings.AutoTranslatePapagoApiKeyId = nikseTextBoxPapagoClientId.Text.Trim();

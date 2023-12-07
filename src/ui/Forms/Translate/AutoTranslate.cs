@@ -560,7 +560,11 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             timerUpdate.Tick += TimerUpdate_Tick;
             timerUpdate.Start();
             var linesTranslated = 0;
-            var forceSingleLineMode = translateSingleLinesToolStripMenuItem.Checked || _autoTranslator.Name == NoLanguageLeftBehindApi.StaticName;
+
+            var forceSingleLineMode = translateSingleLinesToolStripMenuItem.Checked ||
+                _autoTranslator.Name == NoLanguageLeftBehindApi.StaticName ||
+                _autoTranslator.Name == NoLanguageLeftBehindServe.StaticName;
+
             var delaySeconds = 0;
             if (_autoTranslator.Name == ChatGptTranslate.StaticName)
             {
@@ -825,6 +829,10 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             subtitleListViewSource.SelectIndexAndEnsureVisible(_translationProgressIndex < 0 ? 0 : _translationProgressIndex);
 
             SyncListViews(subtitleListViewTarget, subtitleListViewSource);
+
+            subtitleListViewSource.Refresh();
+            subtitleListViewTarget.Refresh();
+            Application.DoEvents();
         }
 
         private void AutoTranslate_ResizeEnd(object sender, EventArgs e)
