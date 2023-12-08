@@ -2543,6 +2543,7 @@ Command line: {1} {2}
     <AdjustViaEndAutoStart>根据结束位置调节</AdjustViaEndAutoStart>
     <AdjustViaEndAutoStartAndGoToNext>通过结束位置调整并转到下一条</AdjustViaEndAutoStartAndGoToNext>
     <AdjustSetEndMinusGapAndStartNextHere>设置结束点（减去最小间隔），并转到下一条起点…</AdjustSetEndMinusGapAndStartNextHere>
+    <AdjustSetEndAndStartNextAfterGap>设置下一个间隔后的起点与结束点</AdjustSetEndAndStartNextAfterGap>
     <AdjustSetStartTimeAndGoToNext>设置起点并转到下一条</AdjustSetStartTimeAndGoToNext>
     <AdjustSetEndTimeAndGoToNext>设置结束点并转到下一条</AdjustSetEndTimeAndGoToNext>
     <AdjustSetEndTimeAndPause>设置结束点并暂停</AdjustSetEndTimeAndPause>
