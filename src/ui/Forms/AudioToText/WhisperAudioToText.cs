@@ -1,3 +1,4 @@
+using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Core.AudioToText;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
@@ -14,7 +15,6 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Controls;
 using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms.AudioToText
@@ -75,6 +75,8 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             linkLabelOpenModelsFolder.Text = LanguageSettings.Current.AudioToText.OpenModelsFolder;
             checkBoxTranslateToEnglish.Text = LanguageSettings.Current.AudioToText.TranslateToEnglish;
             checkBoxUsePostProcessing.Text = LanguageSettings.Current.AudioToText.UsePostProcessing;
+            linkLabelPostProcessingConfigure.Left = checkBoxUsePostProcessing.Right + 1;
+            linkLabelPostProcessingConfigure.Text = LanguageSettings.Current.Settings.Title;
             checkBoxAutoAdjustTimings.Text = LanguageSettings.Current.AudioToText.AutoAdjustTimings;
             buttonGenerate.Text = LanguageSettings.Current.Watermark.Generate;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
@@ -466,7 +468,15 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 transcript = WhisperTimingFixer.ShortenViaWavePeaks(transcript, wavePeaks);
             }
 
-            TranscribedSubtitle = postProcessor.Fix(AudioToTextPostProcessor.Engine.Whisper, transcript, checkBoxUsePostProcessing.Checked, true, true, true, true, true);
+            TranscribedSubtitle = postProcessor.Fix(
+                AudioToTextPostProcessor.Engine.Whisper, 
+                transcript, 
+                checkBoxUsePostProcessing.Checked,
+                Configuration.Settings.Tools.WhisperPostProcessingAddPeriods,
+                Configuration.Settings.Tools.WhisperPostProcessingMergeLines,
+                Configuration.Settings.Tools.WhisperPostProcessingFixCasing,
+                Configuration.Settings.Tools.WhisperPostProcessingFixShortDuration,
+                Configuration.Settings.Tools.WhisperPostProcessingSplitLines);
 
             if (transcript == null || transcript.Paragraphs.Count == 0)
             {
@@ -557,7 +567,16 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 {
                     ParagraphMaxChars = Configuration.Settings.General.SubtitleLineMaximumLength * 2,
                 };
-                TranscribedSubtitle = postProcessor.Fix(AudioToTextPostProcessor.Engine.Whisper, transcript, checkBoxUsePostProcessing.Checked, true, true, true, true, true);
+                TranscribedSubtitle = postProcessor.Fix(
+                    AudioToTextPostProcessor.Engine.Whisper, 
+                    transcript, 
+                    checkBoxUsePostProcessing.Checked,
+                    Configuration.Settings.Tools.WhisperPostProcessingAddPeriods,
+                    Configuration.Settings.Tools.WhisperPostProcessingMergeLines,
+                    Configuration.Settings.Tools.WhisperPostProcessingFixCasing,
+                    Configuration.Settings.Tools.WhisperPostProcessingFixShortDuration,
+                    Configuration.Settings.Tools.WhisperPostProcessingSplitLines);
+
 
                 SaveToSourceFolder(videoFileName);
                 TaskbarList.SetProgressValue(_parentForm.Handle, _batchFileNumber, listViewInputFiles.Items.Count);
@@ -2084,7 +2103,14 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                     return;
                 }
 
-                TranscribedSubtitle = postProcessor.Fix(AudioToTextPostProcessor.Engine.Whisper, _subtitle, checkBoxUsePostProcessing.Checked, true, true, true, true, true);
+                TranscribedSubtitle = postProcessor.Fix(AudioToTextPostProcessor.Engine.Whisper, 
+                    _subtitle, 
+                    checkBoxUsePostProcessing.Checked,
+                    Configuration.Settings.Tools.WhisperPostProcessingAddPeriods,
+                    Configuration.Settings.Tools.WhisperPostProcessingMergeLines,
+                    Configuration.Settings.Tools.WhisperPostProcessingFixCasing,
+                    Configuration.Settings.Tools.WhisperPostProcessingFixShortDuration,
+                    Configuration.Settings.Tools.WhisperPostProcessingSplitLines);
                 DialogResult = DialogResult.OK;
             }
             finally
@@ -2221,6 +2247,32 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         private void downloadNvidiaCudaForCPPCuBLASToolStripMenuItem_Click(object sender, EventArgs e)
         {
             UiUtil.OpenUrl("https://developer.nvidia.com/cuda-downloads");
+        }
+
+        private void linkLabelPostProcessingConfigure_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            ShowPostProcessingSettings(this);
+        }
+
+        public static void ShowPostProcessingSettings(Form owner)
+        {
+            using (var form = new PostProcessingSettings()
+            {
+                AddPeriods = Configuration.Settings.Tools.WhisperPostProcessingAddPeriods,
+                MergeLines = Configuration.Settings.Tools.WhisperPostProcessingMergeLines,
+                SplitLines = Configuration.Settings.Tools.WhisperPostProcessingSplitLines,
+                FixCasing = Configuration.Settings.Tools.WhisperPostProcessingFixCasing,
+                FixShortDuration = Configuration.Settings.Tools.WhisperPostProcessingFixShortDuration,
+            })
+            {
+                if (form.ShowDialog(owner) == DialogResult.OK)
+                {
+                    Configuration.Settings.Tools.WhisperPostProcessingAddPeriods = form.AddPeriods;
+                    Configuration.Settings.Tools.WhisperPostProcessingMergeLines = form.MergeLines;
+                    Configuration.Settings.Tools.WhisperPostProcessingSplitLines = form.SplitLines;
+                    Configuration.Settings.Tools.WhisperPostProcessingFixCasing = form.FixCasing;
+                }
+            }
         }
     }
 }

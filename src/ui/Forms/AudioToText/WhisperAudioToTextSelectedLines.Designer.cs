@@ -58,6 +58,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             this.comboBoxWhisperEngine = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelAdvanced = new System.Windows.Forms.Label();
             this.buttonAdvanced = new System.Windows.Forms.Button();
+            this.linkLabelPostProcessingConfigure = new System.Windows.Forms.LinkLabel();
             this.groupBoxModels.SuspendLayout();
             this.groupBoxInputFiles.SuspendLayout();
             this.contextMenuStripWhisperAdvanced.SuspendLayout();
@@ -403,11 +404,23 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             this.buttonAdvanced.UseVisualStyleBackColor = true;
             this.buttonAdvanced.Click += new System.EventHandler(this.buttonAdvanced_Click);
             // 
+            // linkLabelPostProcessingConfigure
+            // 
+            this.linkLabelPostProcessingConfigure.AutoSize = true;
+            this.linkLabelPostProcessingConfigure.Location = new System.Drawing.Point(333, 173);
+            this.linkLabelPostProcessingConfigure.Name = "linkLabelPostProcessingConfigure";
+            this.linkLabelPostProcessingConfigure.Size = new System.Drawing.Size(45, 13);
+            this.linkLabelPostProcessingConfigure.TabIndex = 32;
+            this.linkLabelPostProcessingConfigure.TabStop = true;
+            this.linkLabelPostProcessingConfigure.Text = "Settings";
+            this.linkLabelPostProcessingConfigure.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelPostProcessingConfigure_LinkClicked);
+            // 
             // WhisperAudioToTextSelectedLines
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(709, 464);
+            this.Controls.Add(this.linkLabelPostProcessingConfigure);
             this.Controls.Add(this.labelAdvanced);
             this.Controls.Add(this.buttonAdvanced);
             this.Controls.Add(this.labelEngine);
@@ -476,5 +489,6 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         private System.Windows.Forms.Label labelAdvanced;
         private System.Windows.Forms.Button buttonAdvanced;
         private System.Windows.Forms.ToolStripMenuItem downloadCUDAForPurfviewsWhisperFasterToolStripMenuItem;
+        private System.Windows.Forms.LinkLabel linkLabelPostProcessingConfigure;
     }
 }

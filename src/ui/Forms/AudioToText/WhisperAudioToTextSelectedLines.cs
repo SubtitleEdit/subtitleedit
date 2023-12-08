@@ -51,6 +51,8 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             linkLabelOpenModelsFolder.Text = LanguageSettings.Current.AudioToText.OpenModelsFolder;
             checkBoxTranslateToEnglish.Text = LanguageSettings.Current.AudioToText.TranslateToEnglish;
             checkBoxUsePostProcessing.Text = LanguageSettings.Current.AudioToText.UsePostProcessing;
+            linkLabelPostProcessingConfigure.Left = checkBoxUsePostProcessing.Right + 1;
+            linkLabelPostProcessingConfigure.Text = LanguageSettings.Current.Settings.Title;
             buttonGenerate.Text = LanguageSettings.Current.Watermark.Generate;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             groupBoxInputFiles.Text = LanguageSettings.Current.BatchConvert.Input;
@@ -158,7 +160,15 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                     return;
                 }
 
-                TranscribedSubtitle = postProcessor.Fix(AudioToTextPostProcessor.Engine.Whisper, transcript, checkBoxUsePostProcessing.Checked, true, true, true, true, false);
+                TranscribedSubtitle = postProcessor.Fix(
+                    AudioToTextPostProcessor.Engine.Whisper,
+                    transcript,
+                    checkBoxUsePostProcessing.Checked,
+                    Configuration.Settings.Tools.WhisperPostProcessingAddPeriods,
+                    Configuration.Settings.Tools.WhisperPostProcessingMergeLines,
+                    Configuration.Settings.Tools.WhisperPostProcessingFixCasing,
+                    Configuration.Settings.Tools.WhisperPostProcessingFixShortDuration,
+                    Configuration.Settings.Tools.WhisperPostProcessingSplitLines);
 
                 SaveToAudioClip(_batchFileNumber - 1);
                 TaskbarList.SetProgressValue(_parentForm.Handle, _batchFileNumber, listViewInputFiles.Items.Count);
@@ -297,7 +307,16 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 postSub.Paragraphs.Add(audioClip.Paragraph);
             }
 
-            var postSubFixed = postProcessor.Fix(postSub, checkBoxUsePostProcessing.Checked, true, false, true, false, false, AudioToTextPostProcessor.Engine.Whisper);
+            var postSubFixed = postProcessor.Fix(
+                postSub,
+                checkBoxUsePostProcessing.Checked,
+                Configuration.Settings.Tools.WhisperPostProcessingAddPeriods,
+                Configuration.Settings.Tools.WhisperPostProcessingMergeLines,
+                Configuration.Settings.Tools.WhisperPostProcessingFixCasing,
+                Configuration.Settings.Tools.WhisperPostProcessingFixShortDuration,
+                Configuration.Settings.Tools.WhisperPostProcessingSplitLines,
+                AudioToTextPostProcessor.Engine.Whisper);
+
             for (var index = 0; index < _audioClips.Count; index++)
             {
                 var audioClip = _audioClips[index];
@@ -753,6 +772,11 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         private void downloadCUDAForPurfviewsWhisperFasterToolStripMenuItem_Click(object sender, EventArgs e)
         {
             WhisperAudioToText.DownloadCudaForWhisperFaster(this);
+        }
+
+        private void linkLabelPostProcessingConfigure_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            WhisperAudioToText.ShowPostProcessingSettings(this);
         }
     }
 }

@@ -479,6 +479,11 @@ namespace Nikse.SubtitleEdit.Core.Common
         public string WhisperExtraSettingsHistory { get; set; }
         public bool WhisperAutoAdjustTimings { get; set; }
         public bool WhisperUseLineMaxChars { get; set; }
+        public bool WhisperPostProcessingAddPeriods { get; set; }
+        public bool WhisperPostProcessingMergeLines { get; set; }
+        public bool WhisperPostProcessingSplitLines { get; set; }
+        public bool WhisperPostProcessingFixCasing { get; set; }
+        public bool WhisperPostProcessingFixShortDuration { get; set; }
         public int AudioToTextLineMaxChars { get; set; }
         public int AudioToTextLineMaxCharsJp { get; set; }
         public int AudioToTextLineMaxCharsCn { get; set; }
@@ -704,6 +709,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             WhisperExtraSettings = "";
             WhisperLanguageCode = "en";
             WhisperAutoAdjustTimings = true;
+            WhisperPostProcessingAddPeriods = false;
+            WhisperPostProcessingMergeLines = true;
+            WhisperPostProcessingSplitLines = true;
+            WhisperPostProcessingFixCasing = false;
+            WhisperPostProcessingFixShortDuration = true;
             AudioToTextLineMaxChars = 86;
             AudioToTextLineMaxCharsJp = 32;
             AudioToTextLineMaxCharsCn = 36;
@@ -6965,6 +6975,36 @@ $HorzAlign          =   Center
                 settings.Tools.WhisperDeleteTempFiles = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
+            subNode = node.SelectSingleNode("WhisperPostProcessingAddPeriods");
+            if (subNode != null)
+            {
+                settings.Tools.WhisperPostProcessingAddPeriods = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("WhisperPostProcessingMergeLines");
+            if (subNode != null)
+            {
+                settings.Tools.WhisperPostProcessingMergeLines = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("WhisperPostProcessingSplitLines");
+            if (subNode != null)
+            {
+                settings.Tools.WhisperPostProcessingSplitLines = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("WhisperPostProcessingFixCasing");
+            if (subNode != null)
+            {
+                settings.Tools.WhisperPostProcessingFixCasing = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("WhisperPostProcessingFixShortDuration");
+            if (subNode != null)
+            {
+                settings.Tools.WhisperPostProcessingFixShortDuration = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("WhisperModel");
             if (subNode != null)
             {
@@ -11903,6 +11943,11 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("WhisperLanguageCode", settings.Tools.WhisperLanguageCode);
                 textWriter.WriteElementString("WhisperAutoAdjustTimings", settings.Tools.WhisperAutoAdjustTimings.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("WhisperUseLineMaxChars", settings.Tools.WhisperUseLineMaxChars.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("WhisperPostProcessingAddPeriods", settings.Tools.WhisperPostProcessingAddPeriods.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("WhisperPostProcessingSplitLines", settings.Tools.WhisperPostProcessingSplitLines.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("WhisperPostProcessingMergeLines", settings.Tools.WhisperPostProcessingMergeLines.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("WhisperPostProcessingFixCasing", settings.Tools.WhisperPostProcessingFixCasing.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("WhisperPostProcessingFixShortDuration", settings.Tools.WhisperPostProcessingFixShortDuration.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AudioToTextLineMaxChars", settings.Tools.AudioToTextLineMaxChars.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AudioToTextLineMaxCharsJp", settings.Tools.AudioToTextLineMaxCharsJp.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AudioToTextLineMaxCharsCn", settings.Tools.AudioToTextLineMaxCharsCn.ToString(CultureInfo.InvariantCulture));

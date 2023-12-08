@@ -244,6 +244,12 @@
       <DependentUpon>AudioClipsGet.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\AudioToText\KillProcessHelper.cs" />
+    <Compile Include="Forms\AudioToText\PostProcessingSettings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\AudioToText\PostProcessingSettings.Designer.cs">
+      <DependentUpon>PostProcessingSettings.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\AudioToText\WhisperAdvanced.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1679,6 +1685,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\AudioClipsGet.resx">
       <DependentUpon>AudioClipsGet.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\AudioToText\PostProcessingSettings.resx">
+      <DependentUpon>PostProcessingSettings.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\AudioToText\WhisperAdvanced.resx">
       <DependentUpon>WhisperAdvanced.cs</DependentUpon>
