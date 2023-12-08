@@ -2271,6 +2271,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                     Configuration.Settings.Tools.WhisperPostProcessingMergeLines = form.MergeLines;
                     Configuration.Settings.Tools.WhisperPostProcessingSplitLines = form.SplitLines;
                     Configuration.Settings.Tools.WhisperPostProcessingFixCasing = form.FixCasing;
+                    Configuration.Settings.Tools.WhisperPostProcessingFixShortDuration = form.FixShortDuration;
                 }
             }
         }
