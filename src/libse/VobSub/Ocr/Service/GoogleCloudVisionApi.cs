@@ -196,12 +196,12 @@ namespace Nikse.SubtitleEdit.Core.VobSub.Ocr.Service
                 var result = _httpClient.PostAsync(uri, new StringContent(requestBodyString)).Result;
                 if ((int)result.StatusCode == 400)
                 {
-                    throw new OcrException("API key invalid (or perhaps billing is not enabled)?");
+                    throw new OcrException("API key invalid (or perhaps billing/API is not enabled)?");
                 }
 
                 if ((int)result.StatusCode == 403)
                 {
-                    throw new OcrException("\"Perhaps billing is not enabled (or API key is invalid)?\"");
+                    throw new OcrException("\"Perhaps billing is not enabled (or API not enabled or API key is invalid)?\"");
                 }
 
                 if (!result.IsSuccessStatusCode)
