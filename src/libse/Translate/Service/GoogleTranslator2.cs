@@ -93,11 +93,11 @@ namespace Nikse.SubtitleEdit.Core.Translate.Service
                 var message = string.Empty;
                 if (webException.Message.Contains("(400) Bad Request"))
                 {
-                    message = "API key invalid (or perhaps billing is not enabled)?";
+                    message = "API key invalid (or perhaps billing/API is not enabled)?";
                 }
                 else if (webException.Message.Contains("(403) Forbidden."))
                 {
-                    message = "Perhaps billing is not enabled (or API key is invalid)?";
+                    message = "Perhaps billing is not enabled (or API not enabled or API key is invalid)?";
                 }
                 throw new TranslationException(message, webException);
             }
