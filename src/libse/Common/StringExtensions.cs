@@ -758,7 +758,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         private static readonly HashSet<char> NeutralSentenceEndingChars = new HashSet<char>
         {
-            '.', '!', '?', ']', ')', '…', '♪', '؟'
+            '.', '!', '?', ']', ')', '…', '♪', '؟', '。', '？'
         };
 
         private static readonly HashSet<char> GreekSentenceEndingChars = new HashSet<char>

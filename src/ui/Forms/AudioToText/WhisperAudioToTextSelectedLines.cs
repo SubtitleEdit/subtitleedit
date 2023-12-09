@@ -128,6 +128,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             groupBoxInputFiles.Enabled = false;
             comboBoxLanguages.Enabled = false;
             comboBoxModels.Enabled = false;
+            linkLabelPostProcessingConfigure.Enabled = false;
             _batchFileNumber = 0;
             var postProcessor = new AudioToTextPostProcessor(_languageCode)
             {
@@ -148,6 +149,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 buttonGenerate.Enabled = false;
                 buttonDownload.Enabled = false;
                 comboBoxModels.Enabled = false;
+                linkLabelPostProcessingConfigure.Enabled = false;
                 comboBoxLanguages.Enabled = false;
                 var waveFileName = videoFileName;
 

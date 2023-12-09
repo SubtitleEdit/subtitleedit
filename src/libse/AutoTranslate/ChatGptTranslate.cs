@@ -27,7 +27,11 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json");
             _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("accept", "application/json");
             _httpClient.BaseAddress = new Uri(Configuration.Settings.Tools.ChatGptUrl);
-            _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", "Bearer " + Configuration.Settings.Tools.ChatGptApiKey);
+
+            if (!string.IsNullOrEmpty(Configuration.Settings.Tools.ChatGptApiKey))
+            {
+                _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", "Bearer " + Configuration.Settings.Tools.ChatGptApiKey);
+            }
         }
 
         public List<TranslationPair> GetSupportedSourceLanguages()
