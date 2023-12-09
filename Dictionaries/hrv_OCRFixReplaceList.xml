@@ -2007,6 +2007,7 @@
     <Word from="saobraćaja" to="prometa" />
     <Word from="saviješću" to="savješću" />
     <Word from="savešću" to="savješću" />
+    <Word from="savetuje" to="savjetuje" />
     <Word from="sazrevanje" to="sazrijevanje" />
     <Word from="sazrevanju" to="sazrijevanju" />
     <Word from="seban" to="sjeban" />
@@ -5136,6 +5137,7 @@
     <RegEx find="ojeh" replaceWith="ojeg" />
     <RegEx find="oješć" replaceWith="ojest ć" />
     <RegEx find="ojtn" replaceWith="ojatn" />
+    <RegEx find="ojz" replaceWith="oju" />
     <RegEx find="okj" replaceWith="koj" />
     <RegEx find="(?&lt;![Pp])oletn" replaceWith="oljetn" />
     <RegEx find="onb" replaceWith="omb" />
