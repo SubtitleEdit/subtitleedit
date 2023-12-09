@@ -177,7 +177,6 @@
     <Word from="Čutanjem" to="Šutnjom" />
     <Word from="Ćutanjem" to="Šutnjom" />
     <Word from="cvetić" to="cvjetić" />
-
     <Word from="cvjet" to="cvijet" />
     <Word from="cvetaju" to="cvjetaju" />
     <Word from="cvetati" to="cvjetati" />
@@ -343,6 +342,7 @@
     <Word from="docnijih" to="kasnijih" />
     <Word from="doči" to="doći" />
     <Word from="dode" to="dođe" />
+    <Word from="dodeš" to="dođeš" />
     <Word from="Dodi" to="Dođi" />
     <Word from="dodju" to="dođu" />
     <Word from="dokumentujem" to="dokumentiram" />
