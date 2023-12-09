@@ -419,6 +419,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             buttonAdvanced.Enabled = false;
             comboBoxLanguages.Enabled = false;
             comboBoxModels.Enabled = false;
+            linkLabelPostProcessingConfigure.Enabled = false;
             var waveFileName = GenerateWavFile(_videoFileName, _audioTrackNumber);
             if (_cancel)
             {
@@ -2121,6 +2122,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 buttonAdvanced.Enabled = true;
                 comboBoxLanguages.Enabled = true;
                 comboBoxModels.Enabled = true;
+                linkLabelPostProcessingConfigure.Enabled = true;
             }
         }
 

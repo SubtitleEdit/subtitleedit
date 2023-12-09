@@ -9,6 +9,7 @@
    * Add new json subtitle format - thx Lucretia
    * Add auto-translate via Papago
    * Add new shortcut "Set end and start of next after gap" - thx rRobis
+   * Allow configure of Whisper post-processing - thx raphaelomoreira
 * IMPROVED:
    * Update Polish translation - thx admas
    * Update Finnish translation - thx Teijo S
@@ -32,6 +33,7 @@
    * Only add recent file if saved - thx F5System
    * Fix for mouse wheel scroll direction in video player - thx Peter
    * Fix for ASSA border width in export to image based format - thx Christian
+   * Fix crash in generating ASSA borders with odd video resolution - thx Leon
 
 
 4.0.2 (19th November 2023)

@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms.SeMsgBox
@@ -126,7 +127,7 @@ namespace Nikse.SubtitleEdit.Forms.SeMsgBox
                 text = string.Empty;
             }
 
-            if (text.Length > 500)
+            if (ShouldSwitchToTextBox(text))
             {
                 seTextBox2.ReadOnly = true;
                 seTextBox2.Text = text;
@@ -147,6 +148,22 @@ namespace Nikse.SubtitleEdit.Forms.SeMsgBox
             }
 
             labelText.Text = text;
+        }
+
+        private bool ShouldSwitchToTextBox(string text)
+        {
+            if (text.Length > 500)
+            {
+                return true;
+            }
+
+            var arr = text.SplitToLines();
+            if (arr.Any(p => p.Length > 140))
+            { 
+                return true;
+            }
+
+            return false;
         }
 
         private void InitializeButtons(MessageBoxButtons buttons)
