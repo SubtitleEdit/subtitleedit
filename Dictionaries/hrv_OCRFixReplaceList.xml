@@ -5083,6 +5083,7 @@
     <RegEx find="msč" replaceWith="mač" />
     <RegEx find="([Mm])sl" replaceWith="$1isl" />
     <RegEx find="mtić" replaceWith="mtit ć" />
+    <RegEx find="mqm" replaceWith="mam" />
     <RegEx find="mwn" replaceWith="men" />
     <RegEx find="napredi" replaceWith="naprijedi" />
     <RegEx find="napt" replaceWith="napr" />
