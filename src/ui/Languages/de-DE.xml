@@ -103,6 +103,8 @@
     <Error>Fehler</Error>
     <Warning>Warnung</Warning>
     <UseLargerFontForThisWindow>Verwende grösseren Font für dieses Fenster</UseLargerFontForThisWindow>
+    <ChangeLanguageFilter>Sprachfilter ändern...</ChangeLanguageFilter>
+    <MoreInfo>Mehr Info</MoreInfo>
   </General>
   <About>
     <Title>Über Subtitle Edit</Title>
@@ -199,6 +201,7 @@
     <VoskWebsite>Vosk-Webseite</VoskWebsite>
     <WhisperWebsite>Whisper-Webseite</WhisperWebsite>
     <WhisperNotFound>Whisper wurde nicht gefunden. Mehr Info lesen (Web)?</WhisperNotFound>
+    <Model>Modell</Model>
     <Models>Modelle</Models>
     <LanguagesAndModels>Sprachen und Modelle</LanguagesAndModels>
     <ChooseModel>Modell auswählen</ChooseModel>
@@ -325,6 +328,7 @@
     <ConvertOptions>Umwandlungsoptionen</ConvertOptions>
     <RemoveFormatting>Formatierung entfernen</RemoveFormatting>
     <RemoveStyleActor>Zeilen mit Stil/Aktoren entfernen</RemoveStyleActor>
+    <StyleActor>Stil/Aktor (durch Komma trennen)</StyleActor>
     <RemoveTextForHI>Text für HI entfernen</RemoveTextForHI>
     <ConvertColorsToDialog>Farben in Dialog umwandeln</ConvertColorsToDialog>
     <OverwriteOriginalFiles>Originaldateien Überschreiben</OverwriteOriginalFiles>
@@ -496,6 +500,7 @@ Wir nutzen den dem Bild innewohnenden Rhythmus.</CreateSimpleChainingToolTip>
     <BottomAlignSelectedLines>Ausgewählte Zeilen unten ausrichten (horizontale Position beibehalten)</BottomAlignSelectedLines>
     <ToggleForcedSelectedLines>„Erzwungen“ für ausgewählte Zeilen de-/aktivieren</ToggleForcedSelectedLines>
     <SelectForcedLines>Erzwungene Zeilen auswählen</SelectForcedLines>
+    <SelectNonForcedLines>Wähle nicht erzwungene Linien aus</SelectNonForcedLines>
     <SizeXY>Größe: {0}x{1}</SizeXY>
     <SetAspectRatio11>Seitenverhältnis 1:1 einstellen</SetAspectRatio11>
     <ChangeBrightnessTitle>Helligkeit anpassen</ChangeBrightnessTitle>
@@ -1054,8 +1059,9 @@ Wir nutzen den dem Bild innewohnenden Rhythmus.</CreateSimpleChainingToolTip>
     <To>Nach:</To>
     <Translate>Übersetzen</Translate>
     <PleaseWait>Bitte warten... das könnte einen Moment dauern</PleaseWait>
-    <PoweredByGoogleTranslate>Powered by Google Übersetzer</PoweredByGoogleTranslate>
-    <PoweredByMicrosoftTranslate>Powered by Microsoft Übersetzer</PoweredByMicrosoftTranslate>
+    <PoweredByGoogleTranslate>Unterstützt durch Google Übersetzer</PoweredByGoogleTranslate>
+    <PoweredByMicrosoftTranslate>Unterstützt durch Microsoft Übersetzer</PoweredByMicrosoftTranslate>
+    <PoweredByX>Unterstützt durch {0}</PoweredByX>
     <MsClientSecretNeeded>
 			Zugriff auf Microsoft Translator erfordert einen Cognitive Services "Translator Text" Schlüssel von Microsoft.
 
@@ -1077,6 +1083,10 @@ Wir nutzen den dem Bild innewohnenden Rhythmus.</CreateSimpleChainingToolTip>
     <TranslateBlockCopySourceText>Kopieren Sie den Quelltext in die Zwischenablage</TranslateBlockCopySourceText>
     <TranslateBlockClipboardError1>Zwischenablage enthält Quelltext!</TranslateBlockClipboardError1>
     <TranslateBlockClipboardError2>Gehen Sie zum Übersetzer und übersetzen Sie, kopieren Sie die Ergebnisse in die Zwischenablage und klicken Sie erneut auf diese Schaltfläche.</TranslateBlockClipboardError2>
+    <StartWebServerX>Starte "{0}" Webserver</StartWebServerX>
+    <XRequiresALocalWebServer>"{0}" benötigt einen lokal laufenden Webserver</XRequiresALocalWebServer>
+    <XRequiresAnApiKey>"{0}" benötigt einen API-Schlüssel</XRequiresAnApiKey>
+    <ReadMore>Mehr lesen?</ReadMore>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
     <Title>Übersetzung Google gegen Microsoft</Title>
@@ -1143,6 +1153,8 @@ Wir nutzen den dem Bild innewohnenden Rhythmus.</CreateSimpleChainingToolTip>
   </ImportText>
   <Interjections>
     <Title>Zwischenlaute</Title>
+    <EditSkipList>Bearbeite Überspringen-Liste</EditSkipList>
+    <EditSkipListInfo>Ausrufewörter werden übersprungen, wenn der Quelltext mit diesen beginnt:</EditSkipListInfo>
   </Interjections>
   <JoinSubtitles>
     <Title>Untertitel verbinden</Title>
@@ -1437,8 +1449,6 @@ Wir nutzen den dem Bild innewohnenden Rhythmus.</CreateSimpleChainingToolTip>
         <GenerateImportShotChanges>Szenenwechsel erstellen/importieren...</GenerateImportShotChanges>
         <RemoveOrExportShotChanges>Einstellungsänderungen entfernen/exportieren...</RemoveOrExportShotChanges>
         <WaveformBatchGenerate>Wellenform im Stapel generieren...</WaveformBatchGenerate>
-        <ShowHideVideo>Video anzeigen/verbergen</ShowHideVideo>
-        <ShowHideWaveform>Wellenform anzeigen/verbergen</ShowHideWaveform>
         <ShowHideWaveformAndSpectrogram>Wellenform und Spektogramm anzeigen/verbergen</ShowHideWaveformAndSpectrogram>
         <UnDockVideoControls>Videosteuerung abdocken</UnDockVideoControls>
         <ReDockVideoControls>Videosteuerung erneut andocken</ReDockVideoControls>
@@ -2254,6 +2264,7 @@ Wir nutzen den dem Bild innewohnenden Rhythmus.</CreateSimpleChainingToolTip>
     <LinesFoundX>Gefundene Texte: {0}</LinesFoundX>
     <RemoveTextIfContains>Entferne Text mit folgenden Inhalt:</RemoveTextIfContains>
     <RemoveTextIfAllUppercase>Text in GROSSBUCHSTABEN entfernen</RemoveTextIfAllUppercase>
+    <RemoveIfOnlyMusicSymbols>Entfernen, wenn nur Musiksymbole</RemoveIfOnlyMusicSymbols>
     <RemoveInterjections>Zwischenlaute (hm, äh, etc.) entfernen</RemoveInterjections>
     <EditInterjections>Bearbeiten...</EditInterjections>
     <Apply>Anwenden</Apply>
@@ -2353,6 +2364,7 @@ Wir nutzen den dem Bild innewohnenden Rhythmus.</CreateSimpleChainingToolTip>
     <DefaultFrameRate>Standard Bildfrequenz</DefaultFrameRate>
     <DefaultFileEncoding>Standard Zeichenkodierung</DefaultFileEncoding>
     <AutoDetectAnsiEncoding>ANSI Kodierung Autoerkennung</AutoDetectAnsiEncoding>
+    <LanguageFilter>Sprachfilter</LanguageFilter>
     <Profile>Profil</Profile>
     <Profiles>Profile</Profiles>
     <ImportProfiles>Profile importieren</ImportProfiles>
@@ -2579,7 +2591,8 @@ Wir nutzen den dem Bild innewohnenden Rhythmus.</CreateSimpleChainingToolTip>
     <CreateSetEndAddNewAndGoToNew>Ende setzen, ergänzen und dahin</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStart>Über Endposition anpassen</AdjustViaEndAutoStart>
     <AdjustViaEndAutoStartAndGoToNext>Über Endposition anpassen und weiter</AdjustViaEndAutoStartAndGoToNext>
-    <AdjustSetEndMinusGapAndStartNextHere>Setze Endstrich-Abstand, gehe zum nächsten und beginne hier als nächstes</AdjustSetEndMinusGapAndStartNextHere>
+    <AdjustSetEndMinusGapAndStartNextHere>Setze End-Abstand minus Lücke, gehe zum nächsten und beginne hier als nächstes</AdjustSetEndMinusGapAndStartNextHere>
+    <AdjustSetEndAndStartNextAfterGap>Setze Ende und Start des Nächsten nach Lücke</AdjustSetEndAndStartNextAfterGap>
     <AdjustSetStartTimeAndGoToNext>Start setzen und weiter</AdjustSetStartTimeAndGoToNext>
     <AdjustSetEndTimeAndGoToNext>Ende setzen und weiter</AdjustSetEndTimeAndGoToNext>
     <AdjustSetEndTimeAndPause>Ende und Pause einstellen</AdjustSetEndTimeAndPause>
@@ -2675,6 +2688,7 @@ Wir nutzen den dem Bild innewohnenden Rhythmus.</CreateSimpleChainingToolTip>
     <WaveformSeekSilenceForward>Suche stumm vor</WaveformSeekSilenceForward>
     <WaveformSeekSilenceBack>Suche stumm zurück</WaveformSeekSilenceBack>
     <WaveformAddTextHere>Text hier ergänzen (für neue Auswahl)</WaveformAddTextHere>
+    <ChooseLayoutX>Wähle Layout {0}</ChooseLayoutX>
     <WaveformAddTextHereFromClipboard>Text hier ergänzen (für neue Auswahl aus Zwischenablage)</WaveformAddTextHereFromClipboard>
     <SetParagraphAsSelection>Aktuelle als neue Auswahl setzen</SetParagraphAsSelection>
     <WaveformPlayNewSelection>Auswahl abspielen</WaveformPlayNewSelection>
