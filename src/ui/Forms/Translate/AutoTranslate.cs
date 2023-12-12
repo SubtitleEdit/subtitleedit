@@ -230,7 +230,6 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
             if (engineType == typeof(PapagoTranslate))
             {
-
                 nikseComboBoxUrl.Items.Clear();
                 nikseComboBoxUrl.Items.Add(Configuration.Settings.Tools.AutoTranslatePapagoApiKeyId);
                 nikseComboBoxUrl.SelectedIndex = 0;
@@ -263,7 +262,12 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
             if (engineType == typeof(ChatGptTranslate))
             {
-                labelApiKey.Left = labelUrl.Left;
+                FillUrls(new List<string>
+                {
+                    Configuration.Settings.Tools.ChatGptUrl,
+                });
+
+                labelApiKey.Left = nikseComboBoxUrl.Right + 12;
                 nikseTextBoxApiKey.Text = Configuration.Settings.Tools.ChatGptApiKey;
                 nikseTextBoxApiKey.Left = labelApiKey.Right + 3;
                 labelApiKey.Visible = true;
