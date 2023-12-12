@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>4.0.2</Version>
-    <TranslatedBy>Последен превод на български 12.11.2023: KalinM</TranslatedBy>
+    <TranslatedBy>Последен превод на български 11.12.2023: KalinM</TranslatedBy>
     <CultureName>bg-BG</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -202,7 +202,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <LanguagesAndModels>Езици и модели</LanguagesAndModels>
     <ChooseModel>Изберете модел</ChooseModel>
     <ChooseLanguage>Изберете език</ChooseLanguage>
-    <OpenModelsFolder>Отвори папката с модели</OpenModelsFolder>
+    <OpenModelsFolder>Папка с модели</OpenModelsFolder>
     <LoadingVoskModel>Моделът за разпознаване на реч Vosk се зарежда...</LoadingVoskModel>
     <Transcribing>Преобразуване и запис на аудио към текст...</Transcribing>
     <TranscribingXOfY>Преобразуване и запис на аудиото към текстов файл {0} от {1}...</TranscribingXOfY>
@@ -575,9 +575,9 @@ https://github.com/SubtitleEdit/subtitleedit
   <ColumnPaste>
     <Title>Поставяне на колона</Title>
     <ChooseColumn>Избиране на колона</ChooseColumn>
-    <OverwriteShiftCellsDown>Презаписване/Местене на клетка надолу</OverwriteShiftCellsDown>
+    <OverwriteShiftCellsDown>Презаписване/Преместване на клетките надолу</OverwriteShiftCellsDown>
     <Overwrite>Презаписване</Overwrite>
-    <ShiftCellsDown>Местене клетка надолу</ShiftCellsDown>
+    <ShiftCellsDown>Преместване на клетките надолу</ShiftCellsDown>
     <TimeCodesOnly>Само тайм кодовете</TimeCodesOnly>
     <TextOnly>Само текста</TextOnly>
     <OriginalTextOnly>Само оригиналния текст</OriginalTextOnly>
@@ -1306,7 +1306,7 @@ https://github.com/SubtitleEdit/subtitleedit
         <Title>Файл</Title>
         <New>Нов</New>
         <Open>Отвори ...</Open>
-        <OpenKeepVideo>Отвори файл със субтитри (запазване на видеото)</OpenKeepVideo>
+        <OpenKeepVideo>Отвори файл със субтитри (запазване на видеото) ...</OpenKeepVideo>
         <Reopen>Отвори предишен файл със субтитри</Reopen>
         <Save>Запиши</Save>
         <SaveAs>Запиши като ...</SaveAs>
@@ -1316,7 +1316,7 @@ https://github.com/SubtitleEdit/subtitleedit
         <SaveOriginal>Запис на оригиналните субтитри</SaveOriginal>
         <CloseOriginal>Затваряне на оригиналните субтитри</CloseOriginal>
         <CloseTranslation>Затваряне на проведените субтитри</CloseTranslation>
-        <OpenContainingFolder>Отвори папката, съдържаща субтитрите</OpenContainingFolder>
+        <OpenContainingFolder>Отвори папката, съдържаща субтитри ...</OpenContainingFolder>
         <Compare>Сравняване ...</Compare>
         <Statistics>Статистика ...</Statistics>
         <Plugins>Приставки (Plugins) ...</Plugins>
@@ -1520,26 +1520,26 @@ https://github.com/SubtitleEdit/subtitleedit
         <Copy>Копиране</Copy>
         <Paste>Вмъкване</Paste>
         <Delete>Изтриване на ред (-ове)</Delete>
-        <SplitLineAtCursorPosition>Разделяне на реда в позицията на курсора</SplitLineAtCursorPosition>
+        <SplitLineAtCursorPosition>Разделяне на реда в позицията на курсора/текста</SplitLineAtCursorPosition>
         <SplitLineAtCursorPositionAndAutoBr>Разделяне на реда в позицията на курсора и авт. прекъсване</SplitLineAtCursorPositionAndAutoBr>
-        <SplitLineAtCursorAndWaveformPosition>Разделяне на реда по курсора/видео позиция</SplitLineAtCursorAndWaveformPosition>
+        <SplitLineAtCursorAndWaveformPosition>Разделяне на реда в позицията на курсора/видеото</SplitLineAtCursorAndWaveformPosition>
         <AutoDurationCurrentLine>Авт. продължителност</AutoDurationCurrentLine>
         <SelectAll>Избери всичко</SelectAll>
         <InsertFirstLine>Вмъкване на ред</InsertFirstLine>
         <InsertBefore>Вмъкване на ред ПРЕДИ този ред</InsertBefore>
         <InsertAfter>Вмъкване на ред СЛЕД този ред</InsertAfter>
-        <InsertSubtitleAfter>Вмъкване на текст от файл със субтитри след този ред ...</InsertSubtitleAfter>
+        <InsertSubtitleAfter>Вмъкване след този ред на текст от файл със субтитри ...</InsertSubtitleAfter>
         <CopyToClipboard>Копиране, като текст в клипборда</CopyToClipboard>
         <Column>Колона</Column>
         <ColumnDeleteText>Изтриване на текст</ColumnDeleteText>
-        <ColumnDeleteTextAndShiftCellsUp>Изтриване на текст и местене клетките нагоре</ColumnDeleteTextAndShiftCellsUp>
-        <ColumnInsertEmptyTextAndShiftCellsDown>Вмъкване на празен ред преди и преместване клетките надолу</ColumnInsertEmptyTextAndShiftCellsDown>
+        <ColumnDeleteTextAndShiftCellsUp>Изтриване на ред с текст и преместване на клетките нагоре</ColumnDeleteTextAndShiftCellsUp>
+        <ColumnInsertEmptyTextAndShiftCellsDown>Вмъкване на празен ред преди този и преместване на клетките надолу</ColumnInsertEmptyTextAndShiftCellsDown>
         <ColumnInsertTextFromSubtitle>Вмъкване на текст след този ред от файл със субтитри ...</ColumnInsertTextFromSubtitle>
-        <ColumnImportTextAndShiftCellsDown>Вмъкване на текст и местене на клетките надолу</ColumnImportTextAndShiftCellsDown>
+        <ColumnImportTextAndShiftCellsDown>Вмъкване на текст и преместване на клетките надолу</ColumnImportTextAndShiftCellsDown>
         <ColumnPasteFromClipboard>Поставяне от клипборда ...</ColumnPasteFromClipboard>
-        <ColumnTextUp>Текста нагоре</ColumnTextUp>
-        <ColumnTextDown>Текста надолу</ColumnTextDown>
-        <ColumnCopyOriginalTextToCurrent>Копиране на текста от оригинал към работните</ColumnCopyOriginalTextToCurrent>
+        <ColumnTextUp>Преместване на ред с текст нагоре</ColumnTextUp>
+        <ColumnTextDown>Преместване на ред с текст надолу</ColumnTextDown>
+        <ColumnCopyOriginalTextToCurrent>Копиране на текст от оригинала в текущия</ColumnCopyOriginalTextToCurrent>
         <OcrSelectedLines>Избрани редове за (OCR) разпознаване на текст</OcrSelectedLines>
         <Split>Разделяне на реда</Split>
         <MergeSelectedLines>Обединяване на избраните редове</MergeSelectedLines>
@@ -1609,7 +1609,7 @@ https://github.com/SubtitleEdit/subtitleedit
       <CreateAndAdjust>Създаване/настройки</CreateAndAdjust>
       <Create>Създаване</Create>
       <Adjust>Настройки</Adjust>
-      <SelectCurrentElementWhilePlaying>Избиране на текущите субтитри при възпроизвеждане</SelectCurrentElementWhilePlaying>
+      <SelectCurrentElementWhilePlaying>Избор (маркиране) на текущите субтитри при възпроизвеждане</SelectCurrentElementWhilePlaying>
       <AutoRepeat>Авт. повторение</AutoRepeat>
       <AutoRepeatOn>Включено авт. повтор.</AutoRepeatOn>
       <AutoRepeatCount>Брой повторения</AutoRepeatCount>
@@ -2156,8 +2156,8 @@ https://github.com/SubtitleEdit/subtitleedit
   </NetworkChat>
   <NetworkJoin>
     <Title>Присъединяване към мрежова интернет сесия</Title>
-    <Information>Присъединете се към съществуваща сесия, където няколко човека
-могат да редактират един файл със субтитри (съвместна работа)</Information>
+    <Information>Присъединете се към съществуваща сесия, където няколко
+човека могат да редактират 1 файл със субтитри(заедно)</Information>
     <Join>ОК</Join>
   </NetworkJoin>
   <NetworkLogAndInfo>
@@ -2557,7 +2557,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <CreateSetEndAddNewAndGoToNew>Задаване на край, добавяне на нов и преминаване към него</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStart>Регулиране чрез крайно положение</AdjustViaEndAutoStart>
     <AdjustViaEndAutoStartAndGoToNext>Задаване на крайно време в позицията на курсора и преминаване на следващия субтитър</AdjustViaEndAutoStartAndGoToNext>
-    <AdjustSetEndMinusGapAndStartNextHere>Задаване на край без интервал, преминаване на следващ ред и започване на следващия тук</AdjustSetEndMinusGapAndStartNextHere>
+    <AdjustSetEndMinusGapAndStartNextHere>Задаване на край без интервал, преминаване на следващия и започване на следващия тук</AdjustSetEndMinusGapAndStartNextHere>
+    <AdjustSetEndAndStartNextAfterGap>Задаване на край и начало на следващия след интервал</AdjustSetEndAndStartNextAfterGap>
     <AdjustSetStartTimeAndGoToNext>Задаване на начало и преминаване на следващия</AdjustSetStartTimeAndGoToNext>
     <AdjustSetEndTimeAndGoToNext>Задаване на край и преминаване на следващия</AdjustSetEndTimeAndGoToNext>
     <AdjustSetEndTimeAndPause>Задаване на край и пауза</AdjustSetEndTimeAndPause>
@@ -3340,7 +3341,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <MergeWithNext>Обединяване със следващия ред</MergeWithNext>
     <ExtendToPrevious>Удължаване до предишния</ExtendToPrevious>
     <ExtendToNext>Удължаване до следващия</ExtendToNext>
-    <PlaySelection>Възпроизведи избрания ред</PlaySelection>
+    <PlaySelection>Възпроизведи избраното</PlaySelection>
     <ShowWaveformAndSpectrogram>Покажи вълновата форма на зв. сигнал и спектрограмата</ShowWaveformAndSpectrogram>
     <ShowWaveformOnly>Покажи само вълновата форма на зв. сигнал</ShowWaveformOnly>
     <ShowSpectrogramOnly>Покажи само спектрограмата</ShowSpectrogramOnly>
