@@ -659,6 +659,7 @@
     <Word from="Izgeda" to="Izgleda" />
     <Word from="izleda" to="izgleda" />
     <Word from="izledao" to="izgledao" />
+    <Word from="izleću" to="izlijeću" />
     <Word from="izliv" to="izljev" />
     <Word from="izlive" to="izljeve" />
     <Word from="izoluje" to="izolira" />
@@ -2276,6 +2277,7 @@
     <Word from="startovali" to="startali" />
     <Word from="startovati" to="startati" />
     <Word from="steni" to="stijeni" />
+    <Word from="stenovit" to="stjenovit" />
     <Word from="stepen" to="stupanj" />
     <Word from="stepena" to="stupnjeva" />
     <Word from="stepeni" to="stupnjeva" />
