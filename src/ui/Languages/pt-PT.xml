@@ -2556,7 +2556,8 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <CreateSetEndAddNewAndGoToNew>Definir fim, adicionar novo e ir para o novo</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStart>Ajustar através da posição final</AdjustViaEndAutoStart>
     <AdjustViaEndAutoStartAndGoToNext>Ajustar pela posição final e ir para o seguinte</AdjustViaEndAutoStartAndGoToNext>
-    <AdjustSetEndMinusGapAndStartNextHere>Definir fim sem intervalo, ir para o seguinte e começar aqui</AdjustSetEndMinusGapAndStartNextHere>
+    <AdjustSetEndMinusGapAndStartNextHere>Definir fim sem intervalo, ir para o seguinte e iniciar o seguinte aqui</AdjustSetEndMinusGapAndStartNextHere>
+    <AdjustSetEndAndStartNextAfterGap>Definir fim e início do intervalo seguinte</AdjustSetEndAndStartNextAfterGap>
     <AdjustSetStartTimeAndGoToNext>Definir início e ir para o seguinte</AdjustSetStartTimeAndGoToNext>
     <AdjustSetEndTimeAndGoToNext>Definir fim e ir para o seguinte</AdjustSetEndTimeAndGoToNext>
     <AdjustSetEndTimeAndPause>Definir fim e pausar</AdjustSetEndTimeAndPause>
