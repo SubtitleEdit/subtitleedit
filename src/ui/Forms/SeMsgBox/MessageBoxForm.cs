@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms.SeMsgBox
@@ -159,7 +160,7 @@ namespace Nikse.SubtitleEdit.Forms.SeMsgBox
 
             var arr = text.SplitToLines();
             if (arr.Any(p => p.Length > 140))
-            { 
+            {
                 return true;
             }
 
@@ -241,37 +242,37 @@ namespace Nikse.SubtitleEdit.Forms.SeMsgBox
             }
         }
 
-        private void buttonYes_Click(object sender, EventArgs e)
+        private void ButtonYes_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.Yes;
         }
 
-        private void buttonNo_Click(object sender, EventArgs e)
+        private void ButtonNo_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.No;
         }
 
-        private void buttonOK_Click(object sender, EventArgs e)
+        private void ButtonOK_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.OK;
         }
 
-        private void buttonCancel_Click(object sender, EventArgs e)
+        private void ButtonCancel_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.Cancel;
         }
 
-        private void buttonAbort_Click(object sender, EventArgs e)
+        private void ButtonAbort_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.Abort;
         }
 
-        private void buttonRetry_Click(object sender, EventArgs e)
+        private void ButtonRetry_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.Retry;
         }
 
-        private void buttonIgnore_Click(object sender, EventArgs e)
+        private void ButtonIgnore_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.Ignore;
         }
@@ -286,16 +287,42 @@ namespace Nikse.SubtitleEdit.Forms.SeMsgBox
             else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.C)
             {
                 e.SuppressKeyPress = true;
-                if (!string.IsNullOrEmpty(_text))
+                SetClipboardText();
+            }
+        }
+
+        private void SetClipboardText()
+        {
+            if (seTextBox2.Visible && seTextBox2.SelectionLength > 0)
+            {
+                ClipboardSetText(seTextBox2.SelectedText);
+            }
+            else if (!string.IsNullOrEmpty(_text))
+            {
+                ClipboardSetText(_text);
+            }
+        }
+
+        private void ClipboardSetText(string text)
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                try
                 {
-                    Clipboard.SetText(_text);
+                    Clipboard.Clear();
+                    Clipboard.SetText(text);
+                    return;
+                }
+                catch
+                {
+                    Thread.Sleep(100);
                 }
             }
         }
 
-        private void copyTextToolStripMenuItem_Click(object sender, EventArgs e)
+        private void CopyTextToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Clipboard.SetText(_text);
+            SetClipboardText();
         }
 
         private void MessageBoxForm_Shown(object sender, EventArgs e)
