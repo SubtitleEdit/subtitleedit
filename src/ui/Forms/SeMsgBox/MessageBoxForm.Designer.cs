@@ -61,7 +61,7 @@
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Visible = false;
-            this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
+            this.buttonCancel.Click += new System.EventHandler(this.ButtonCancel_Click);
             // 
             // buttonOK
             // 
@@ -74,7 +74,7 @@
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Visible = false;
-            this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
+            this.buttonOK.Click += new System.EventHandler(this.ButtonOK_Click);
             // 
             // buttonYes
             // 
@@ -87,7 +87,7 @@
             this.buttonYes.Text = "Yes";
             this.buttonYes.UseVisualStyleBackColor = true;
             this.buttonYes.Visible = false;
-            this.buttonYes.Click += new System.EventHandler(this.buttonYes_Click);
+            this.buttonYes.Click += new System.EventHandler(this.ButtonYes_Click);
             // 
             // buttonNo
             // 
@@ -100,7 +100,7 @@
             this.buttonNo.Text = "No";
             this.buttonNo.UseVisualStyleBackColor = true;
             this.buttonNo.Visible = false;
-            this.buttonNo.Click += new System.EventHandler(this.buttonNo_Click);
+            this.buttonNo.Click += new System.EventHandler(this.ButtonNo_Click);
             // 
             // buttonAbort
             // 
@@ -113,7 +113,7 @@
             this.buttonAbort.Text = "Abort";
             this.buttonAbort.UseVisualStyleBackColor = true;
             this.buttonAbort.Visible = false;
-            this.buttonAbort.Click += new System.EventHandler(this.buttonAbort_Click);
+            this.buttonAbort.Click += new System.EventHandler(this.ButtonAbort_Click);
             // 
             // buttonRetry
             // 
@@ -126,7 +126,7 @@
             this.buttonRetry.Text = "Retry";
             this.buttonRetry.UseVisualStyleBackColor = true;
             this.buttonRetry.Visible = false;
-            this.buttonRetry.Click += new System.EventHandler(this.buttonRetry_Click);
+            this.buttonRetry.Click += new System.EventHandler(this.ButtonRetry_Click);
             // 
             // buttonIgnore
             // 
@@ -139,7 +139,7 @@
             this.buttonIgnore.Text = "Ignore";
             this.buttonIgnore.UseVisualStyleBackColor = true;
             this.buttonIgnore.Visible = false;
-            this.buttonIgnore.Click += new System.EventHandler(this.buttonIgnore_Click);
+            this.buttonIgnore.Click += new System.EventHandler(this.ButtonIgnore_Click);
             // 
             // labelText
             // 
@@ -183,11 +183,11 @@
             this.copyTextToolStripMenuItem.Name = "copyTextToolStripMenuItem";
             this.copyTextToolStripMenuItem.Size = new System.Drawing.Size(125, 22);
             this.copyTextToolStripMenuItem.Text = "Copy text";
-            this.copyTextToolStripMenuItem.Click += new System.EventHandler(this.copyTextToolStripMenuItem_Click);
+            this.copyTextToolStripMenuItem.Click += new System.EventHandler(this.CopyTextToolStripMenuItem_Click);
             // 
             // seTextBox2
             // 
-            this.seTextBox2.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.seTextBox2.BackColor = System.Drawing.SystemColors.Window;
             this.seTextBox2.CurrentLanguage = "";
             this.seTextBox2.CurrentLineIndex = 0;
             this.seTextBox2.HideSelection = true;
@@ -202,7 +202,7 @@
             this.seTextBox2.Name = "seTextBox2";
             this.seTextBox2.Padding = new System.Windows.Forms.Padding(1);
             this.seTextBox2.ReadOnly = false;
-            this.seTextBox2.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
+            this.seTextBox2.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Both;
             this.seTextBox2.SelectedText = "";
             this.seTextBox2.SelectionLength = 0;
             this.seTextBox2.SelectionStart = 0;
@@ -216,12 +216,12 @@
             this.contextMenuStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItemCopyText});
             this.contextMenuStrip2.Name = "contextMenuStrip1";
-            this.contextMenuStrip2.Size = new System.Drawing.Size(181, 48);
+            this.contextMenuStrip2.Size = new System.Drawing.Size(126, 26);
             // 
-            // toolStripMenuItemCopyTxt
+            // toolStripMenuItemCopyText
             // 
             this.toolStripMenuItemCopyText.Name = "toolStripMenuItemCopyText";
-            this.toolStripMenuItemCopyText.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItemCopyText.Size = new System.Drawing.Size(125, 22);
             this.toolStripMenuItemCopyText.Text = "Copy text";
             // 
             // MessageBoxForm
