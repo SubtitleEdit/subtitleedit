@@ -643,6 +643,7 @@
     <Word from="izanf" to="iznad" />
     <Word from="iznaf" to="iznad" />
     <Word from="Izbiće" to="Izbit će" />
+    <Word from="izbelela" to="izbijelila" />
     <Word from="izbjeljen" to="izbijeljen" />
     <Word from="izbeljen" to="izbijeljen" />
     <Word from="izbošću" to="izbost ću" />
@@ -1674,6 +1675,7 @@
     <Word from="Povinuju" to="Pokoravaju" />
     <Word from="povinuju" to="pokoravaju" />
     <Word from="povraćke" to="bljuvotine" />
+    <Word from="povrijeđen" to="povrjeđen" />
     <Word from="pozadi" to="iza" />
     <Word from="poželeo" to="poželio" />
     <Word from="Poželeo" to="Poželio" />
@@ -5015,7 +5017,7 @@
     <RegEx find="(?&lt;!\b[Oo]zlo|\b[Ii]sp(rip)?ov|i)jeđen" replaceWith="ijeđen" />
     <RegEx find="(?&lt;!hva)lisa([olt])" replaceWith="lira$1" />
     <RegEx find="ikustv" replaceWith="iskustv" />
-    <RegEx find="ilp" replaceWith="ilo" />
+    <RegEx find="i([lk])p" replaceWith="i$1o" />
     <RegEx find="iscj?edi" replaceWith="$1scijedi" />
     <RegEx find="isjk" replaceWith="ijsk" />
     <RegEx find="irać" replaceWith="irat ć" />
@@ -5264,6 +5266,7 @@
     <RegEx find="terijum" replaceWith="terij" />
     <RegEx find="tešn" replaceWith="tješn" />
     <RegEx find="teud" replaceWith="trud" />
+    <RegEx find="thel" replaceWith="tjel" />
     <RegEx find="tićn" replaceWith="tičn" />
     <!--eksploatira-->
     <RegEx find="tisal" replaceWith="tiral" />
@@ -5343,8 +5346,7 @@
     <RegEx find="vnsk" replaceWith="vinsk" />
     <RegEx find="voei" replaceWith="vori" />
     <RegEx find="(?&lt;!d)vof" replaceWith="vog" />
-    <RegEx find="vpj" replaceWith="voj" />
-    <RegEx find="vpm" replaceWith="vom" />
+    <RegEx find="(?&lt;!i)vp" replaceWith="vo" />
     <RegEx find="vqn" replaceWith="van" />
     <!-- mijenja u korist češće riječi -->
     <RegEx find="([vV])rača" replaceWith="$1raća" />
