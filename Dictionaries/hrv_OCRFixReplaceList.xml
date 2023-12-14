@@ -3761,6 +3761,7 @@
     <LinePart from="da li misliš" to="Misliš li" />
     <LinePart from="dali mogu" to="mogu li" />
     <LinePart from="dali možete" to="možete li" />
+    <LinePart from="da spasim" to="spasiti" />
     <LinePart from="do srede" to="do srijede" />
     <LinePart from="Dobro veče" to="Dobra večer" />
     <LinePart from="Dobro večer" to="Dobra večer" />
@@ -3912,6 +3913,7 @@
     <LinePart from="Tamo je natrag" to="Tamo je iza" />
     <LinePart from="treba da bude" to="treba biti" />
     <LinePart from="trebalo da ima" to="trebalo imati" />
+    <LinePart from="trebalo da znači" to="trebalo značiti" />
     <LinePart from="u jutro" to="ujutro" />
     <LinePart from="u reci" to="u rijeci" />
     <LinePart from="ući unutra" to="ući" />
@@ -5486,6 +5488,7 @@
     <RegEx find="Kinkejd" replaceWith="Kincaid" />
     <RegEx find="Klej" replaceWith="Clay" />
     <RegEx find="Klif" replaceWith="Cliff" />
+    <RegEx find="Klivlend" replaceWith="Cleveland" />
     <RegEx find="Kluni" replaceWith="Clooney" />
     <RegEx find="Konn?ektik[aeu]t" replaceWith="Connecticut" />
     <RegEx find="Korejan" replaceWith="Korej" />
@@ -5494,7 +5497,7 @@
     <RegEx find="Lajbnic" replaceWith="Leibniz" />
     <RegEx find="Lajonel" replaceWith="Lionel" />
     <RegEx find="Leri" replaceWith="Larry" />
-    <RegEx find="Klivlend" replaceWith="Cleveland" />
+    <RegEx find="Lojd" replaceWith="Lloyd" />
     <RegEx find="(?&lt;![LT])ejl" replaceWith="ale" />
     <RegEx find="Losanđeles" replaceWith="Los Angeles" />
     <RegEx find="Majami" replaceWith="Miami" />
