@@ -243,7 +243,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             return false;
         }
 
-        public string FixOcrErrorViaLineReplaceList(string input)
+        public string FixOcrErrorViaLineReplaceList(string input, Subtitle subtitle, int index)
         {
             // Whole fromLine
             foreach (var from in _wholeLineReplaceList.Keys)
@@ -311,8 +311,13 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             {
                 if (newText.EndsWith(from, StringComparison.Ordinal))
                 {
-                    int position = (newText.Length - from.Length);
-                    newText = newText.Remove(position).Insert(position, _endLineReplaceList[from]);
+                    var position = (newText.Length - from.Length);
+                    var toText = _endLineReplaceList[from];
+
+                    if (!SkipAddLineEnding(subtitle, from, toText, index))
+                    {
+                        newText = newText.Remove(position).Insert(position, toText);
+                    }
                 }
             }
             newText += post;
@@ -355,6 +360,40 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             }
 
             return newText;
+        }
+
+        private bool SkipAddLineEnding(Subtitle subtitle, string from, string toText, int index)
+        {
+            if (!toText.EndsWith('.') || from.EndsWith('.'))
+            {
+                return false;
+            }
+
+            var p = subtitle.GetParagraphOrDefault(index);
+            var next = subtitle.GetParagraphOrDefault(index+1);
+            if (p == null || next == null)
+            {
+                return false;
+            }
+
+            if (next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds > 600) 
+            { 
+                return false;
+            }
+
+            var nextText = HtmlUtil.RemoveHtmlTags(next.Text, true);
+            if (string.IsNullOrEmpty(nextText))
+            {
+                return false;
+            }
+
+            var firstLetter = nextText[0];
+            if (char.IsLetter(firstLetter) && firstLetter == char.ToLowerInvariant(firstLetter))
+            {
+                return true;
+            }
+
+            return false;
         }
 
         private List<Regex> _replaceRegExes;
