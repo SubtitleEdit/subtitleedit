@@ -103,10 +103,16 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             });
             var result = _client.PostAsync("/v2/translate", postContent).Result;
             var resultContent = result.Content.ReadAsStringAsync().Result;
+
+            if (!result.IsSuccessStatusCode)
+            {
+                SeLogger.Error("DeepLTranslate error: " + resultContent);
+            }
+
             if (result.StatusCode == HttpStatusCode.Forbidden)
             {
                 Error = resultContent;
-                throw new Exception("Bad API key");
+                throw new Exception("Forbidden! " + Environment.NewLine + Environment.NewLine + resultContent);
             }
 
             var resultList = new List<string>();
