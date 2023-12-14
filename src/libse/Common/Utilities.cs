@@ -2971,11 +2971,8 @@ namespace Nikse.SubtitleEdit.Core.Common
                         return true;
                     }
 
-                    var isLineContinuation = s.EndsWith(',') ||
-                                              s.EndsWith('-') ||
-                                              s.EndsWith("...", StringComparison.Ordinal) ||
-                                              s.EndsWith("…", StringComparison.Ordinal) ||
-                                              AllLetters.Contains(s.Substring(s.Length - 1)) ||
+                    var isLineContinuation =  s.EndsWith("...", StringComparison.Ordinal) ||
+                                              (AllLetters + "…,-$%").Contains(s.Substring(s.Length - 1)) ||
                                               CalcCjk.IsCjk(s[s.Length - 1]);
 
                     if (s.EndsWith('♪') || nextText.StartsWith('♪'))
