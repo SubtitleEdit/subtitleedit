@@ -768,7 +768,7 @@ namespace Nikse.SubtitleEdit.Forms
                     lastLastLine = lastLastP.Text;
                 }
 
-                var text = _ocrFixEngine.FixOcrErrors(p.Text, i, lastLine, lastLastLine, false, OcrFixEngine.AutoGuessLevel.Cautious);
+                var text = _ocrFixEngine.FixOcrErrors(p.Text, Subtitle, i, lastLine, lastLastLine, false, OcrFixEngine.AutoGuessLevel.Cautious);
                 lastLine = text;
                 if (AllowFix(p, fixAction) && p.Text != text)
                 {
