@@ -254,6 +254,7 @@
     <Word from="Ćute" to="Šute" />
     <!-- d -->
     <Word from="dp" to="do" />
+    <Word from="dq" to="da" />
     <Word from="daga" to="da ga" />
     <Word from="damas" to="danas" />
     <Word from="dase" to="da se" />
@@ -1229,6 +1230,7 @@
     <Word from="nezi" to="njezi" />
     <Word from="nezko" to="netko" />
     <Word from="niasm" to="nisam" />
+    <Word from="nidam" to="nisam" />
     <Word from="nidi" to="nisi" />
     <Word from="nigde" to="nigdje" />
     <Word from="Nigde" to="Nigdje" />
@@ -4912,6 +4914,7 @@
     <RegEx find="(?&lt;!e)bde" replaceWith="bdje" />
     <RegEx find="be[čć]aje" replaceWith="bećava" />
     <RegEx find="beap" replaceWith="besp" />
+    <RegEx find="bei" replaceWith="bri" />
     <RegEx find="beop" replaceWith="besp" />
     <RegEx find="begl" replaceWith="bjegl" />
     <RegEx find="bmi" replaceWith="bni" />
