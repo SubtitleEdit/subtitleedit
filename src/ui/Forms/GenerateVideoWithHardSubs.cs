@@ -335,7 +335,13 @@ namespace Nikse.SubtitleEdit.Forms
             var oldFontSizeEnabled = numericUpDownFontSize.Enabled;
             numericUpDownFontSize.Enabled = false;
 
-            using (var saveDialog = new SaveFileDialog { FileName = SuggestNewVideoFileName(), Filter = "MP4|*.mp4|Matroska|*.mkv|WebM|*.webm", AddExtension = true })
+            using (var saveDialog = new SaveFileDialog 
+            { 
+                FileName = SuggestNewVideoFileName(), 
+                Filter = "MP4|*.mp4|Matroska|*.mkv|WebM|*.webm", 
+                AddExtension = true ,
+                InitialDirectory = Path.GetDirectoryName(_inputVideoFileName),
+            })
             {
                 if (comboBoxVideoEncoding.Text == "prores_ks")
                 {
