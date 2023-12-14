@@ -5338,6 +5338,7 @@
     <RegEx find="visić" replaceWith="visit ć" />
     <RegEx find="visa([lt])" replaceWith="vira$1" />
     <RegEx find="vizuj" replaceWith="viziraj" />
+    <RegEx find="vjeorj" replaceWith="vjeroj" />
     <RegEx find="vkr" replaceWith="vor" />
     <RegEx find="([vV])jeov" replaceWith="$1jerov" />
     <RegEx find="vješč" replaceWith="vješć" />
