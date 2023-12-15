@@ -254,6 +254,7 @@
     <Word from="Ćute" to="Šute" />
     <!-- d -->
     <Word from="dp" to="do" />
+    <Word from="dq" to="da" />
     <Word from="daga" to="da ga" />
     <Word from="damas" to="danas" />
     <Word from="dase" to="da se" />
@@ -643,6 +644,7 @@
     <Word from="izanf" to="iznad" />
     <Word from="iznaf" to="iznad" />
     <Word from="Izbiće" to="Izbit će" />
+    <Word from="izbelela" to="izbijelila" />
     <Word from="izbjeljen" to="izbijeljen" />
     <Word from="izbeljen" to="izbijeljen" />
     <Word from="izbošću" to="izbost ću" />
@@ -658,6 +660,7 @@
     <Word from="Izgeda" to="Izgleda" />
     <Word from="izleda" to="izgleda" />
     <Word from="izledao" to="izgledao" />
+    <Word from="izleću" to="izlijeću" />
     <Word from="izliv" to="izljev" />
     <Word from="izlive" to="izljeve" />
     <Word from="izoluje" to="izolira" />
@@ -1227,6 +1230,7 @@
     <Word from="nezi" to="njezi" />
     <Word from="nezko" to="netko" />
     <Word from="niasm" to="nisam" />
+    <Word from="nidam" to="nisam" />
     <Word from="nidi" to="nisi" />
     <Word from="nigde" to="nigdje" />
     <Word from="Nigde" to="Nigdje" />
@@ -1674,6 +1678,7 @@
     <Word from="Povinuju" to="Pokoravaju" />
     <Word from="povinuju" to="pokoravaju" />
     <Word from="povraćke" to="bljuvotine" />
+    <Word from="povrijeđen" to="povrjeđen" />
     <Word from="pozadi" to="iza" />
     <Word from="poželeo" to="poželio" />
     <Word from="Poželeo" to="Poželio" />
@@ -2274,6 +2279,7 @@
     <Word from="startovali" to="startali" />
     <Word from="startovati" to="startati" />
     <Word from="steni" to="stijeni" />
+    <Word from="stenovit" to="stjenovit" />
     <Word from="stepen" to="stupanj" />
     <Word from="stepena" to="stupnjeva" />
     <Word from="stepeni" to="stupnjeva" />
@@ -3707,6 +3713,7 @@
     <LinePart from="Ako ej" to="Ako je" />
     <LinePart from="ako ej" to="ako je" />
     <LinePart from="bez svesti" to="bez svijesti" />
+    <LinePart from="Biće on" to="Bit će on" />
     <LinePart from="Biće oni" to="Bit će oni" />
     <LinePart from="Biće sve" to="Bit će sve" />
     <LinePart from="biće ti žao" to="bit će ti žao" />
@@ -3756,6 +3763,7 @@
     <LinePart from="da li misliš" to="Misliš li" />
     <LinePart from="dali mogu" to="mogu li" />
     <LinePart from="dali možete" to="možete li" />
+    <LinePart from="da spasim" to="spasiti" />
     <LinePart from="do srede" to="do srijede" />
     <LinePart from="Dobro veče" to="Dobra večer" />
     <LinePart from="Dobro večer" to="Dobra večer" />
@@ -3772,6 +3780,7 @@
     <LinePart from="hoćeš da kažeš" to="želiš reći" />
     <LinePart from="hoće da kaže" to="želi reći" />
     <LinePart from="hoću da živim" to="želim živjeti" />
+    <LinePart from="moram da živim" to="moram živjeti" />
     <LinePart from="i te kako" to="itekako" />
     <LinePart from="Izvini se" to="Ispričaj se" />
     <LinePart from="izvini se" to="ispričaj se" />
@@ -3907,6 +3916,7 @@
     <LinePart from="Tamo je natrag" to="Tamo je iza" />
     <LinePart from="treba da bude" to="treba biti" />
     <LinePart from="trebalo da ima" to="trebalo imati" />
+    <LinePart from="trebalo da znači" to="trebalo značiti" />
     <LinePart from="u jutro" to="ujutro" />
     <LinePart from="u reci" to="u rijeci" />
     <LinePart from="ući unutra" to="ući" />
@@ -4904,6 +4914,7 @@
     <RegEx find="(?&lt;!e)bde" replaceWith="bdje" />
     <RegEx find="be[čć]aje" replaceWith="bećava" />
     <RegEx find="beap" replaceWith="besp" />
+    <RegEx find="bei" replaceWith="bri" />
     <RegEx find="beop" replaceWith="besp" />
     <RegEx find="begl" replaceWith="bjegl" />
     <RegEx find="bmi" replaceWith="bni" />
@@ -5015,7 +5026,7 @@
     <RegEx find="(?&lt;!\b[Oo]zlo|\b[Ii]sp(rip)?ov|i)jeđen" replaceWith="ijeđen" />
     <RegEx find="(?&lt;!hva)lisa([olt])" replaceWith="lira$1" />
     <RegEx find="ikustv" replaceWith="iskustv" />
-    <RegEx find="ilp" replaceWith="ilo" />
+    <RegEx find="i([lk])p" replaceWith="i$1o" />
     <RegEx find="iscj?edi" replaceWith="$1scijedi" />
     <RegEx find="isjk" replaceWith="ijsk" />
     <RegEx find="irać" replaceWith="irat ć" />
@@ -5264,6 +5275,7 @@
     <RegEx find="terijum" replaceWith="terij" />
     <RegEx find="tešn" replaceWith="tješn" />
     <RegEx find="teud" replaceWith="trud" />
+    <RegEx find="thel" replaceWith="tjel" />
     <RegEx find="tićn" replaceWith="tičn" />
     <!--eksploatira-->
     <RegEx find="tisal" replaceWith="tiral" />
@@ -5330,6 +5342,7 @@
     <RegEx find="visić" replaceWith="visit ć" />
     <RegEx find="visa([lt])" replaceWith="vira$1" />
     <RegEx find="vizuj" replaceWith="viziraj" />
+    <RegEx find="vjeorj" replaceWith="vjeroj" />
     <RegEx find="vkr" replaceWith="vor" />
     <RegEx find="([vV])jeov" replaceWith="$1jerov" />
     <RegEx find="vješč" replaceWith="vješć" />
@@ -5343,8 +5356,7 @@
     <RegEx find="vnsk" replaceWith="vinsk" />
     <RegEx find="voei" replaceWith="vori" />
     <RegEx find="(?&lt;!d)vof" replaceWith="vog" />
-    <RegEx find="vpj" replaceWith="voj" />
-    <RegEx find="vpm" replaceWith="vom" />
+    <RegEx find="(?&lt;!i)vp" replaceWith="vo" />
     <RegEx find="vqn" replaceWith="van" />
     <!-- mijenja u korist češće riječi -->
     <RegEx find="([vV])rača" replaceWith="$1raća" />
@@ -5481,6 +5493,7 @@
     <RegEx find="Kinkejd" replaceWith="Kincaid" />
     <RegEx find="Klej" replaceWith="Clay" />
     <RegEx find="Klif" replaceWith="Cliff" />
+    <RegEx find="Klivlend" replaceWith="Cleveland" />
     <RegEx find="Kluni" replaceWith="Clooney" />
     <RegEx find="Konn?ektik[aeu]t" replaceWith="Connecticut" />
     <RegEx find="Korejan" replaceWith="Korej" />
@@ -5489,7 +5502,7 @@
     <RegEx find="Lajbnic" replaceWith="Leibniz" />
     <RegEx find="Lajonel" replaceWith="Lionel" />
     <RegEx find="Leri" replaceWith="Larry" />
-    <RegEx find="Klivlend" replaceWith="Cleveland" />
+    <RegEx find="Lojd" replaceWith="Lloyd" />
     <RegEx find="(?&lt;![LT])ejl" replaceWith="ale" />
     <RegEx find="Losanđeles" replaceWith="Los Angeles" />
     <RegEx find="Majami" replaceWith="Miami" />
