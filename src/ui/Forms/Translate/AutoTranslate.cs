@@ -182,7 +182,13 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
             if (engineType == typeof(DeepLTranslate))
             {
-                labelApiKey.Left = labelUrl.Left;
+                FillUrls(new List<string>
+                {
+                    Configuration.Settings.Tools.AutoTranslateDeepLUrl,
+                    Configuration.Settings.Tools.AutoTranslateDeepLUrl.Contains("api-free.deepl.com") ? "https://api.deepl.com/" : "https://api-free.deepl.com/",
+                });
+
+                labelApiKey.Left = nikseComboBoxUrl.Right + 12;
                 nikseTextBoxApiKey.Text = Configuration.Settings.Tools.AutoTranslateDeepLApiKey;
                 nikseTextBoxApiKey.Left = labelApiKey.Right + 3;
                 labelApiKey.Visible = true;
@@ -710,6 +716,30 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                     UiUtil.ShowHelp("#translation");
                 }
             }
+            else if (linesTranslate == 0 && engineType == typeof(DeepLTranslate) && _autoTranslator.Error.Contains("Wrong endpoint. Use https://api.deepl.com"))
+            {
+                nikseComboBoxUrl.Text = "https://api.deepl.com/";
+
+                MessageBox.Show(
+                    this, "Possible you are using a wrong url - switching to https://api.deepl.com/ - please retry." + Environment.NewLine +
+                        Environment.NewLine +
+                        _autoTranslator.Error,
+                        Text,
+                        MessageBoxButtons.OKCancel,
+                        MessageBoxIcon.Error);
+            }
+            else if (linesTranslate == 0 && engineType == typeof(DeepLTranslate) && _autoTranslator.Error.Contains("Wrong endpoint. Use https://api-free.deepl.com"))
+            {
+                nikseComboBoxUrl.Text = "https://api-free.deepl.com/";
+
+                MessageBox.Show(
+                    this, "Possible you are using a wrong url - switching to https://api-free.deepl.com/ - please retry." + Environment.NewLine +
+                        Environment.NewLine +
+                        _autoTranslator.Error,
+                        Text,
+                        MessageBoxButtons.OKCancel,
+                        MessageBoxIcon.Error);
+            }
             else if (linesTranslate == 0 && engineType == typeof(PapagoTranslate))
             {
                 var dr = MessageBox.Show(
@@ -771,6 +801,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
             if (engineType == typeof(DeepLTranslate) && !string.IsNullOrWhiteSpace(nikseTextBoxApiKey.Text))
             {
+                Configuration.Settings.Tools.AutoTranslateDeepLUrl = nikseComboBoxUrl.Text.Trim();
                 Configuration.Settings.Tools.AutoTranslateDeepLApiKey = nikseTextBoxApiKey.Text.Trim();
             }
 
