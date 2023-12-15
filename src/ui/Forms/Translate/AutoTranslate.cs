@@ -721,7 +721,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 nikseComboBoxUrl.Text = "https://api.deepl.com/";
 
                 MessageBox.Show(
-                    this, "Possible you are using a wrong url - switching to https://api.deepl.com/ - please retry." + Environment.NewLine +
+                    this, "You might be using a wrong url - switching to https://api.deepl.com/ - please retry." + Environment.NewLine +
                         Environment.NewLine +
                         _autoTranslator.Error,
                         Text,
@@ -733,7 +733,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 nikseComboBoxUrl.Text = "https://api-free.deepl.com/";
 
                 MessageBox.Show(
-                    this, "Possible you are using a wrong url - switching to https://api-free.deepl.com/ - please retry." + Environment.NewLine +
+                    this, "You might be using a wrong url - switching to https://api-free.deepl.com/ - please retry." + Environment.NewLine +
                         Environment.NewLine +
                         _autoTranslator.Error,
                         Text,
@@ -747,7 +747,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                         Environment.NewLine +
                         LanguageSettings.Current.GoogleTranslate.ReadMore + Environment.NewLine +
                         Environment.NewLine +
-                        "Client ID and Client secrect are required" + Environment.NewLine +
+                        "Client ID and Client secret are required" + Environment.NewLine +
                         Environment.NewLine +
                         _autoTranslator.Error,
                         Text,
