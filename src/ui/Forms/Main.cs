@@ -16625,7 +16625,7 @@ namespace Nikse.SubtitleEdit.Forms
                 // do not check for shortcuts if text is being entered and a textbox is focused
                 var textBoxTypes = new List<string> { "AdvancedTextBox", "SimpleTextBox", "SETextBox", "TextBox", "RichTextBox" };
                 if (textBoxTypes.Contains(typeName) &&
-                    ((e.KeyCode >= Keys.A && e.KeyCode <= Keys.Z) || 
+                    ((e.KeyCode >= Keys.A && e.KeyCode <= Keys.Z) ||
                      (e.KeyCode >= Keys.OemSemicolon && e.KeyCode <= Keys.OemBackslash) ||
                       e.KeyCode >= Keys.NumPad0 && e.KeyCode <= Keys.NumPad9 ||
                       e.KeyCode == Keys.Multiply ||
@@ -31230,7 +31230,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 int selectionStart = tb.SelectionStart;
-                text = Utilities.ToggleSymbols(tag, text, endTag);
+                text = Utilities.ToggleSymbols(tag, text, endTag, out var _);
                 tb.SelectedText = text;
                 tb.SelectionStart = selectionStart;
                 tb.SelectionLength = text.Length;
@@ -31254,20 +31254,46 @@ namespace Nikse.SubtitleEdit.Forms
                     }
 
                     SubtitleListview1.BeginUpdate();
+                    var first = true;
+                    var addTags = true;
                     foreach (int i in indices)
                     {
+                        if (first)
+                        {
+                            _subtitle.Paragraphs[i].Text = Utilities.ToggleSymbols(tag, _subtitle.Paragraphs[i].Text, endTag, out var added);
+                            addTags = added;
+                            first = false;
+                        }
+
+
+                        if (addTags)
+                        {
+                            _subtitle.Paragraphs[i].Text = Utilities.AddSymbols(tag, _subtitle.Paragraphs[i].Text, endTag);
+                        }
+                        else
+                        {
+                            _subtitle.Paragraphs[i].Text = Utilities.RemoveSymbols(tag, _subtitle.Paragraphs[i].Text, endTag);
+                        }
+
+                        SubtitleListview1.SetText(i, _subtitle.Paragraphs[i].Text);
+
                         if (IsOriginalEditable)
                         {
                             var original = Utilities.GetOriginalParagraph(i, _subtitle.Paragraphs[i], _subtitleOriginal.Paragraphs);
                             if (original != null)
                             {
-                                original.Text = Utilities.ToggleSymbols(tag, original.Text, endTag);
+                                if (addTags)
+                                {
+                                    original.Text = Utilities.AddSymbols(tag, original.Text, endTag);
+                                }
+                                else
+                                {
+                                    original.Text = Utilities.RemoveSymbols(tag, original.Text, endTag);
+                                }
+
                                 SubtitleListview1.SetOriginalText(i, original.Text);
                             }
                         }
-
-                        _subtitle.Paragraphs[i].Text = Utilities.ToggleSymbols(tag, _subtitle.Paragraphs[i].Text, endTag);
-                        SubtitleListview1.SetText(i, _subtitle.Paragraphs[i].Text);
                     }
 
                     SubtitleListview1.EndUpdate();
