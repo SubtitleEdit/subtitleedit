@@ -856,7 +856,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             var excludes = new HashSet<string>();
 
             var languages = Configuration.Settings.General.DefaultLanguages ?? string.Empty;
-            var languageList = useFilter ? languages.Split(new []{ ';' }, StringSplitOptions.RemoveEmptyEntries) : Array.Empty<string>();
+            var languageList = useFilter ? languages.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries) : Array.Empty<string>();
 
             foreach (var ci in CultureInfo.GetCultures(CultureTypes.NeutralCultures))
             {
@@ -1048,9 +1048,9 @@ namespace Nikse.SubtitleEdit.Core.Common
             if (word.Length > 0)
             {
                 var userWordsXmlFileName = DictionaryFolder + languageName + "_user.xml";
-                if (!File.Exists(userWordsXmlFileName) && languageName != null && languageName.Length> 2)
+                if (!File.Exists(userWordsXmlFileName) && languageName != null && languageName.Length > 2)
                 {
-                    var newFileName = DictionaryFolder + languageName.Substring(0,2).ToLowerInvariant() + "_user.xml";
+                    var newFileName = DictionaryFolder + languageName.Substring(0, 2).ToLowerInvariant() + "_user.xml";
                     if (File.Exists(newFileName))
                     {
                         userWordsXmlFileName = newFileName;
@@ -1831,7 +1831,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 var color = text.Substring(start, end - start).TrimStart('\\').TrimStart('1').TrimStart('c');
                 color = color.RemoveChar('&').TrimStart('H');
                 color = color.PadLeft(6, '0');
-                var c= AdvancedSubStationAlpha.GetSsaColor("h" + color, defaultColor);
+                var c = AdvancedSubStationAlpha.GetSsaColor("h" + color, defaultColor);
 
 
                 // alpha
@@ -2971,7 +2971,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                         return true;
                     }
 
-                    var isLineContinuation =  s.EndsWith("...", StringComparison.Ordinal) ||
+                    var isLineContinuation = s.EndsWith("...", StringComparison.Ordinal) ||
                                               (AllLetters + "…,-$%").Contains(s.Substring(s.Length - 1)) ||
                                               CalcCjk.IsCjk(s[s.Length - 1]);
 
@@ -3124,7 +3124,55 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
-        public static string ToggleSymbols(string tag, string text, string endTag = null)
+        public static string ToggleSymbols(string tag, string text, string endTag, out bool added)
+        {
+            var pre = string.Empty;
+            var post = string.Empty;
+            text = SplitStartTags(text, ref pre);
+            text = SplitEndTags(text, ref post);
+
+            if (!string.IsNullOrEmpty(tag) && text.Contains(tag) || string.IsNullOrEmpty(tag) && !string.IsNullOrEmpty(endTag) && text.Contains(endTag))
+            {
+                if (!string.IsNullOrEmpty(endTag) && !string.IsNullOrEmpty(tag))
+                {
+                    text = pre + text.Replace(tag, string.Empty).Replace(endTag, string.Empty).Replace(Environment.NewLine + " ", Environment.NewLine).Replace(" " + Environment.NewLine, Environment.NewLine).Trim() + post;
+                }
+                else if (string.IsNullOrEmpty(endTag) && !string.IsNullOrEmpty(tag))
+                {
+                    text = pre + text.Replace(tag, string.Empty).Replace(Environment.NewLine + " ", Environment.NewLine).Replace(" " + Environment.NewLine, Environment.NewLine).Trim() + post;
+                }
+                else if (!string.IsNullOrEmpty(endTag))
+                {
+                    text = pre + text.Replace(endTag, string.Empty).Replace(Environment.NewLine + " ", Environment.NewLine).Replace(" " + Environment.NewLine, Environment.NewLine).Trim() + post;
+                }
+
+                added = false;
+            }
+            else
+            {
+                if (tag == Configuration.Settings.Tools.MusicSymbol)
+                {
+                    if (Configuration.Settings.Tools.MusicSymbolStyle.Equals("single", StringComparison.OrdinalIgnoreCase))
+                    {
+                        text = string.Format("{0}{1} {2}{3}", pre, tag, text.Replace(Environment.NewLine, Environment.NewLine + tag + " "), post);
+                    }
+                    else
+                    {
+                        text = string.Format("{0}{1} {2} {1}{3}", pre, tag, text.Replace(Environment.NewLine, " " + tag + Environment.NewLine + tag + " "), post);
+                    }
+                }
+                else
+                {
+                    text = string.Format("{0}{1}{2}{3}{4}", pre, tag, text, endTag ?? tag, post);
+                }
+
+                added = true;
+            }
+
+            return text;
+        }
+
+        public static string RemoveSymbols(string tag, string text, string endTag)
         {
             var pre = string.Empty;
             var post = string.Empty;
@@ -3146,23 +3194,34 @@ namespace Nikse.SubtitleEdit.Core.Common
                     text = pre + text.Replace(endTag, string.Empty).Replace(Environment.NewLine + " ", Environment.NewLine).Replace(" " + Environment.NewLine, Environment.NewLine).Trim() + post;
                 }
             }
-            else
+
+            return text;
+        }
+
+
+        public static string AddSymbols(string tag, string text, string endTag)
+        {
+            text = RemoveSymbols(tag, text, endTag);
+
+            var pre = string.Empty;
+            var post = string.Empty;
+            text = SplitStartTags(text, ref pre);
+            text = SplitEndTags(text, ref post);
+
+            if (tag == Configuration.Settings.Tools.MusicSymbol)
             {
-                if (tag == Configuration.Settings.Tools.MusicSymbol)
+                if (Configuration.Settings.Tools.MusicSymbolStyle.Equals("single", StringComparison.OrdinalIgnoreCase))
                 {
-                    if (Configuration.Settings.Tools.MusicSymbolStyle.Equals("single", StringComparison.OrdinalIgnoreCase))
-                    {
-                        text = string.Format("{0}{1} {2}{3}", pre, tag, text.Replace(Environment.NewLine, Environment.NewLine + tag + " "), post);
-                    }
-                    else
-                    {
-                        text = string.Format("{0}{1} {2} {1}{3}", pre, tag, text.Replace(Environment.NewLine, " " + tag + Environment.NewLine + tag + " "), post);
-                    }
+                    text = string.Format("{0}{1} {2}{3}", pre, tag, text.Replace(Environment.NewLine, Environment.NewLine + tag + " "), post);
                 }
                 else
                 {
-                    text = string.Format("{0}{1}{2}{3}{4}", pre, tag, text, endTag ?? tag, post);
+                    text = string.Format("{0}{1} {2} {1}{3}", pre, tag, text.Replace(Environment.NewLine, " " + tag + Environment.NewLine + tag + " "), post);
                 }
+            }
+            else
+            {
+                text = string.Format("{0}{1}{2}{3}{4}", pre, tag, text, endTag ?? tag, post);
             }
 
             return text;
