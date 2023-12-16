@@ -146,6 +146,7 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             checkBoxExtractExactTimeCodes.Enabled = false;
             buttonExtractTimeCodes.Enabled = false;
             buttonCancelTimeCodes.Visible = true;
+            buttonCancelTimeCodes.BringToFront();
             progressBarExtractTimeCodes.Style = ProgressBarStyle.Marquee;
             labelExtractTimeCodesProgress.Visible = true;
             Cursor = Cursors.WaitCursor;
