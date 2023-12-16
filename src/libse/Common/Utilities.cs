@@ -847,6 +847,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     }
                 }
             }
+
             return list;
         }
 
