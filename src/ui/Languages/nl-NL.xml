@@ -2555,6 +2555,7 @@ hetzelfde ondertitelbestand bewerken (samenwerken)</Information>
     <AdjustViaEndAutoStart>Aanpassen via eindpositie</AdjustViaEndAutoStart>
     <AdjustViaEndAutoStartAndGoToNext>Aanpassen via eindpositie en naar volgende gaan</AdjustViaEndAutoStartAndGoToNext>
     <AdjustSetEndMinusGapAndStartNextHere>Einde minus tussenruimte bepalen, naar volgende gaan en volgende beginnen</AdjustSetEndMinusGapAndStartNextHere>
+    <AdjustSetEndAndStartNextAfterGap>Einde bepalen en volgende beginnen na minimale tussenruimte</AdjustSetEndAndStartNextAfterGap>
     <AdjustSetStartTimeAndGoToNext>Begin bepalen en naar volgende gaan</AdjustSetStartTimeAndGoToNext>
     <AdjustSetEndTimeAndGoToNext>Einde bepalen en naar volgende gaan</AdjustSetEndTimeAndGoToNext>
     <AdjustSetEndTimeAndPause>Einde bepalen en pauzeren</AdjustSetEndTimeAndPause>
