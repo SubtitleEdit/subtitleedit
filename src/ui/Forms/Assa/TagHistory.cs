@@ -1,4 +1,4 @@
-﻿ on using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic;
@@ -86,12 +86,12 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         private void removeToolStripMenuItem_Click(object sender, System.EventArgs e)
         {
             var indices = new List<int>();
-            foreach (int idx in listBoxHistory.SelectedIndices) 
+            foreach (int idx in listBoxHistory.SelectedIndices)
             {
                 indices.Add(idx);
             }
 
-            foreach (var idx in indices.OrderByDescending(p=>p))
+            foreach (var idx in indices.OrderByDescending(p => p))
             {
                 Configuration.Settings.SubtitleSettings.AssaOverrideTagHistory.RemoveAt(idx);
             }
