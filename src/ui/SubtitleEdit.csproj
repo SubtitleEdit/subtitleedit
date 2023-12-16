@@ -448,6 +448,12 @@
     <Compile Include="Forms\Options\DefaultLanguagesChooser.Designer.cs">
       <DependentUpon>DefaultLanguagesChooser.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Options\DoNotBreakAfterListNew.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Options\DoNotBreakAfterListNew.Designer.cs">
+      <DependentUpon>DoNotBreakAfterListNew.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Options\SettingsCustomContinuationStyle.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -542,10 +548,10 @@
     <Compile Include="Forms\DCinema\DCinemaPropertiesSmpte.Designer.cs">
       <DependentUpon>DCinemaPropertiesSmpte.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\DoNotBreakAfterListEdit.cs">
+    <Compile Include="Forms\Options\DoNotBreakAfterListEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\DoNotBreakAfterListEdit.Designer.cs">
+    <Compile Include="Forms\Options\DoNotBreakAfterListEdit.Designer.cs">
       <DependentUpon>DoNotBreakAfterListEdit.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\About.cs">
@@ -1794,6 +1800,9 @@
     <EmbeddedResource Include="Forms\Options\DefaultLanguagesChooser.resx">
       <DependentUpon>DefaultLanguagesChooser.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Options\DoNotBreakAfterListNew.resx">
+      <DependentUpon>DoNotBreakAfterListNew.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Options\SettingsCustomContinuationStyle.resx">
       <DependentUpon>SettingsCustomContinuationStyle.cs</DependentUpon>
     </EmbeddedResource>
@@ -1839,7 +1848,7 @@
     <EmbeddedResource Include="Forms\DCinema\DCinemaPropertiesSmpte.resx">
       <DependentUpon>DCinemaPropertiesSmpte.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\DoNotBreakAfterListEdit.resx">
+    <EmbeddedResource Include="Forms\Options\DoNotBreakAfterListEdit.resx">
       <DependentUpon>DoNotBreakAfterListEdit.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\About.resx">

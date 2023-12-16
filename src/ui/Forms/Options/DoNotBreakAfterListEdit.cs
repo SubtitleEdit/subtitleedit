@@ -1,15 +1,15 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
-using Nikse.SubtitleEdit.Logic;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml;
+using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Logic;
 using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
-namespace Nikse.SubtitleEdit.Forms
+namespace Nikse.SubtitleEdit.Forms.Options
 {
     public sealed partial class DoNotBreakAfterListEdit : Form
     {
@@ -24,6 +24,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             Text = LanguageSettings.Current.Settings.UseDoNotBreakAfterList;
             labelLanguage.Text = LanguageSettings.Current.ChooseLanguage.Language;
+            buttonNew.Text = LanguageSettings.Current.ExportCustomText.New;
             buttonRemoveNoBreakAfter.Text = LanguageSettings.Current.DvdSubRip.Remove;
             buttonAddNoBreakAfter.Text = LanguageSettings.Current.DvdSubRip.Add;
             radioButtonText.Text = LanguageSettings.Current.General.Text;
@@ -32,19 +33,35 @@ namespace Nikse.SubtitleEdit.Forms
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
 
             radioButtonRegEx.Left = radioButtonText.Left + radioButtonText.Width + 10;
+            InitLanguages(string.Empty);
+        }
+
+        private void InitLanguages(string selectTwoLetterCode)
+        {
             var idx = 0;
-            foreach (string fileName in Directory.GetFiles(Configuration.DictionariesDirectory, "*_NoBreakAfterList.xml"))
+            _languages.Clear();
+            comboBoxDictionaries.Items.Clear();
+            foreach (var fileName in Directory.GetFiles(Configuration.DictionariesDirectory, "*_NoBreakAfterList.xml"))
             {
                 try
                 {
-                    string s = Path.GetFileName(fileName);
-                    string languageId = s.Substring(0, s.IndexOf('_'));
+                    var s = Path.GetFileName(fileName);
+                    var languageId = s.Substring(0, s.IndexOf('_'));
                     var ci = CultureInfo.GetCultureInfoByIetfLanguageTag(languageId);
                     comboBoxDictionaries.Items.Add(ci.EnglishName + " (" + ci.NativeName + ")");
-                    if ((Configuration.Settings.WordLists.LastLanguage ?? "en-US").StartsWith(languageId, StringComparison.OrdinalIgnoreCase))
+
+                    if (!string.IsNullOrEmpty(selectTwoLetterCode))
+                    {
+                        if (ci.TwoLetterISOLanguageName == selectTwoLetterCode)
+                        {
+                            idx = _languages.Count;
+                        }
+                    }
+                    else if ((Configuration.Settings.WordLists.LastLanguage ?? "en-US").StartsWith(languageId, StringComparison.OrdinalIgnoreCase))
                     {
                         idx = _languages.Count;
                     }
+
                     _languages.Add(fileName);
                 }
                 catch
@@ -52,6 +69,7 @@ namespace Nikse.SubtitleEdit.Forms
                     // ignored
                 }
             }
+
             if (comboBoxDictionaries.Items.Count > 0 && idx < comboBoxDictionaries.Items.Count)
             {
                 comboBoxDictionaries.SelectedIndex = idx;
@@ -242,5 +260,24 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private void buttonNew_Click(object sender, EventArgs e)
+        {
+            using (var form = new DoNotBreakAfterListNew())
+            {
+                var dr = form.ShowDialog();
+                if (dr != DialogResult.OK)
+                {
+                    return;
+                }
+
+                var fileName = Path.Combine(Configuration.DictionariesDirectory, form.ChosenLanguage.TwoLetterISOLanguageName + "_NoBreakAfterList.xml");
+                if (!File.Exists(fileName))
+                {
+                    File.WriteAllText(fileName, "<NoBreakAfterList><Item>Dr</Item><Item>Dr.</Item><Item>Mr.</Item><Item>Mrs.</Item><Item>Ms.</Item></NoBreakAfterList>");
+                }
+
+                InitLanguages(form.ChosenLanguage.TwoLetterISOLanguageName);
+            }
+        }
     }
 }
