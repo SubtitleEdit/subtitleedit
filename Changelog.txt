@@ -10,6 +10,7 @@
    * Add auto-translate via Papago
    * Add new shortcut "Set end and start of next after gap" - thx rRobis
    * Allow configure of Whisper post-processing - thx raphaelomoreira
+   * Allow create of new "no-break-after-list" from UI - thx lambdacore12
 * IMPROVED:
    * Update Polish translation - thx admas
    * Update Finnish translation - thx Teijo S
