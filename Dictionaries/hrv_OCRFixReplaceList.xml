@@ -5369,6 +5369,7 @@
     <RegEx find="zankin" replaceWith="zank" />
     <RegEx find="zaklać" replaceWith="zaklat ć" />
     <RegEx find="zbat" replaceWith="znat" />
+    <RegEx find="zfr" replaceWith="zdr" />
     <!-- rizikuj - riskiraj -->
     <RegEx find="zikuj" replaceWith="skiraj" />
     <RegEx find="zleč([ei])" replaceWith="zliječ$1" />
