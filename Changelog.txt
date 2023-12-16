@@ -18,6 +18,7 @@
    * Update Chinese translation - thx nkh0472
    * Update German translation - thx Netspark
    * Update Italian language - thx bovirus
+   * Update Dutch translation - thx Flitskikker
    * Show file list after Whisper/Vosk batch run - thx Simon
    * Some improvements for SUP/BDN-XML editor - thx Jack1789
    * Add Spanish for ChatGPT translate - thx alvarusk
@@ -40,6 +41,7 @@
    * Fix for mouse wheel scroll direction in video player - thx Peter
    * Fix for ASSA border width in export to image based format - thx Christian
    * Fix crash in generating ASSA borders with odd video resolution - thx Leon
+   * Fix crash in "Beautify time codes" - thx Flitskikker
 
 
 4.0.2 (19th November 2023)
