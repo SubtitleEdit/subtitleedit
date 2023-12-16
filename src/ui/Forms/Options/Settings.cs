@@ -3890,7 +3890,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
         private void buttonEditShotChangesProfile_Click(object sender, EventArgs e)
         {
-            using (var form = new BeautifyTimeCodesProfile(0))
+            using (var form = new BeautifyTimeCodesProfile(Configuration.Settings.General.CurrentFrameRate))
             {
                 form.ShowDialog(this);
             }
