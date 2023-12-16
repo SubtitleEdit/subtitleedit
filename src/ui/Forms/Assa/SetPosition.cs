@@ -40,7 +40,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         private int _tempYScaled;
         private int _xScaled = -1;
         private int _yScaled = -1;
-        private double _currentPositionSeconds;
+        private readonly double _currentPositionSeconds;
 
         public SetPosition(Subtitle subtitle, int[] selectedIndices, string videoFileName, VideoInfo videoInfo, double currentPositionSeconds)
         {

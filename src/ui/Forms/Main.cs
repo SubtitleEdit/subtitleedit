@@ -35194,6 +35194,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ApplyCustomStylesToolStripMenuItemClick(object sender, EventArgs e)
         {
+            if (GetCurrentSubtitleFormat().GetType() != typeof(AdvancedSubStationAlpha))
+            {
+                return;
+            }
+
             using (var form = new ApplyCustomStyles(_subtitle, SubtitleListview1.GetSelectedIndices()))
             {
                 if (form.ShowDialog(this) != DialogResult.OK)
@@ -35212,12 +35217,16 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SetPositionToolStripMenuItemClick(object sender, EventArgs e)
         {
+            if (GetCurrentSubtitleFormat().GetType() != typeof(AdvancedSubStationAlpha))
+            {
+                return;
+            }
+
             if (string.IsNullOrEmpty(_videoFileName))
             {
                 MessageBox.Show(LanguageSettings.Current.General.NoVideoLoaded);
                 return;
             }
-
 
             using (var form = new SetPosition(_subtitle, SubtitleListview1.GetSelectedIndices(), _videoFileName, _videoInfo, mediaPlayer.CurrentPosition))
             {
@@ -35434,6 +35443,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ProgressBarToolStripMenuItemClick(object sender, EventArgs e)
         {
+            if (GetCurrentSubtitleFormat().GetType() != typeof(AdvancedSubStationAlpha))
+            {
+                return;
+            }
+
+
             if (string.IsNullOrEmpty(_videoFileName) || _videoInfo == null || _videoInfo.Width == 0 || _videoInfo.Height == 0)
             {
                 MessageBox.Show(LanguageSettings.Current.General.NoVideoLoaded);
@@ -35463,6 +35478,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ShowAssaResolutionChanger(bool showNeverButton)
         {
+            if (GetCurrentSubtitleFormat().GetType() != typeof(AdvancedSubStationAlpha))
+            {
+                return;
+            }
+
             using (var form = new ResolutionResampler(_subtitle, _videoFileName, _videoInfo, showNeverButton))
             {
                 var result = form.ShowDialog(this);
