@@ -3,7 +3,7 @@
 
 4.0.3 (xth December 2023) BETA
 * NEW:
-   * Add ".opus" audio file extension - thx vivadavid
+   * Add ".opus" / ".adts" audio file extensions - thx vivadavid/Lyubomir71
    * Add two TSV subtitle formats - thx Purfview
    * Add Arabic translation - thx Yahya
    * Add new json subtitle format - thx Lucretia
@@ -27,6 +27,8 @@
    * Re-add Whisper Const-me large model v2
    * Audio-to-text: Improve error msg if no write access to video source folder
    * Add delay in seconds to translate via ChatGPT
+   * Toggle music symbols, now toggles via first text - thx Leon
+   * Use source video folder when saving hard-sub video - thx Leon
 * FIXED:
    * Fix for BDSUP cmd line convert - thx Jack1789
    * Do not count HTML tags in SCC in save/load - thx cs127
