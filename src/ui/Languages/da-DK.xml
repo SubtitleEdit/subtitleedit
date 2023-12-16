@@ -2546,6 +2546,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <AdjustViaEndAutoStart>Juster via slut-position</AdjustViaEndAutoStart>
     <AdjustViaEndAutoStartAndGoToNext>Juster via slutposition og gå til næste</AdjustViaEndAutoStartAndGoToNext>
     <AdjustSetEndMinusGapAndStartNextHere>Sæt slut minus gap, gå til næste og start næste her</AdjustSetEndMinusGapAndStartNextHere>
+    <AdjustSetEndAndStartNextAfterGap>Sætl slut og start på næste efter min. afstand</AdjustSetEndAndStartNextAfterGap>
     <AdjustSetStartTimeAndGoToNext>Sæt start og gå til næste</AdjustSetStartTimeAndGoToNext>
     <AdjustSetEndTimeAndGoToNext>Sæt slut og gå til næste</AdjustSetEndTimeAndGoToNext>
     <AdjustSetEndTimeAndPause>Sæt slut og pause</AdjustSetEndTimeAndPause>
