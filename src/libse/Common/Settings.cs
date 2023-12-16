@@ -330,6 +330,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public bool FixCommonErrorsFixOverlapAllowEqualEndStart { get; set; }
         public bool FixCommonErrorsSkipStepOne { get; set; }
         public string ImportTextSplitting { get; set; }
+        public string ImportTextSplittingLineMode { get; set; }
         public string ImportTextLineBreak { get; set; }
         public bool ImportTextMergeShortLines { get; set; }
         public bool ImportTextRemoveEmptyLines { get; set; }
@@ -6151,6 +6152,12 @@ $HorzAlign          =   Center
                 settings.Tools.ImportTextSplitting = subNode.InnerText;
             }
 
+            subNode = node.SelectSingleNode("ImportTextSplittingLineMode");
+            if (subNode != null)
+            {
+                settings.Tools.ImportTextSplittingLineMode = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("ImportTextMergeShortLines");
             if (subNode != null)
             {
@@ -11795,6 +11802,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("FixCommonErrorsFixOverlapAllowEqualEndStart", settings.Tools.FixCommonErrorsFixOverlapAllowEqualEndStart.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("FixCommonErrorsSkipStepOne", settings.Tools.FixCommonErrorsSkipStepOne.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ImportTextSplitting", settings.Tools.ImportTextSplitting);
+                textWriter.WriteElementString("ImportTextSplittingLineMode", settings.Tools.ImportTextSplittingLineMode);
                 textWriter.WriteElementString("ImportTextMergeShortLines", settings.Tools.ImportTextMergeShortLines.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ImportTextLineBreak", settings.Tools.ImportTextLineBreak);
                 textWriter.WriteElementString("ImportTextRemoveEmptyLines", settings.Tools.ImportTextRemoveEmptyLines.ToString(CultureInfo.InvariantCulture));
