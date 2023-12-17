@@ -214,7 +214,10 @@ namespace Nikse.SubtitleEdit.Forms.SeMsgBox
                 AcceptButton = buttonControls[0];
                 buttonControls[0].NotifyDefault(true);
 
-                CancelButton = buttonCancel;
+                if (buttonCancel.Visible)
+                {
+                    CancelButton = buttonCancel;
+                }
             }
         }
 
@@ -333,6 +336,8 @@ namespace Nikse.SubtitleEdit.Forms.SeMsgBox
             {
                 buttonOK.Focus();
             }
+
+            KeyPreview = true;
         }
     }
 }
