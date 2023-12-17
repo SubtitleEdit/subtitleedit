@@ -23020,18 +23020,18 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
+            labelVideoInfo.Text = Path.GetFileName(fileName) + " ";
+            if (_videoInfo.Width > 0 && _videoInfo.Height > 0)
+            {
+                labelVideoInfo.Text += _videoInfo.Width + "x" + _videoInfo.Height + " ";
+            }
             if (_videoInfo.VideoCodec != null)
             {
-                labelVideoInfo.Text = Path.GetFileName(fileName) + " " + _videoInfo.Width + "x" + _videoInfo.Height + " " + _videoInfo.VideoCodec.Trim();
+                labelVideoInfo.Text += _videoInfo.VideoCodec.Trim() + " ";
             }
-            else
-            {
-                labelVideoInfo.Text = Path.GetFileName(fileName) + " " + _videoInfo.Width + "x" + _videoInfo.Height;
-            }
-
             if (_videoInfo.FramesPerSecond > 0)
             {
-                labelVideoInfo.Text = labelVideoInfo.Text + " " + string.Format("{0:0.0##}", _videoInfo.FramesPerSecond);
+                labelVideoInfo.Text += string.Format("{0:0.0##}", _videoInfo.FramesPerSecond);
             }
 
             if (audioTrack > 0 && mediaPlayer.VideoPlayer is LibMpvDynamic libMpv)
@@ -36333,50 +36333,85 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
+            var sbTrackInfo = new StringBuilder();
             var sb = new StringBuilder();
-            var trackNo = 0;
 
-            sb.AppendLine($"File name: {_videoFileName}");
-            sb.AppendLine($"Duration: {new TimeCode(_videoInfo.TotalSeconds * 1000.0).ToShortDisplayString()}");
-            sb.AppendLine($"Resolution: {_videoInfo.Width}x{_videoInfo.Height}");
-            sb.AppendLine($"Framerate: {_videoInfo.FramesPerSecond:0.###}");
-            sb.AppendLine($"Codec: {_videoInfo.VideoCodec}");
-
-            var mkvParser = new MatroskaFile(_videoFileName);
-            if (mkvParser.IsValid)
+            try
             {
-                sb.AppendLine($"Container: Matroska (mkv/webm)");
-                var chapters = mkvParser.GetChapters();
-                if (chapters.Count > 0)
+                Cursor = Cursors.WaitCursor;
+
+                var trackNo = 1;
+                if (RequireFfmpegOk())
                 {
-                    sb.AppendLine($" - Chapters: {chapters.Count}");
+                    var ffmpegMediaInfo = FfmpegMediaInfo.Parse(_videoFileName);
+                    sbTrackInfo.AppendLine("Tracks:");
+                    foreach (var ffmpegTrackInfo in ffmpegMediaInfo.Tracks)
+                    {
+                        sbTrackInfo.AppendLine($"#{trackNo} - {ffmpegTrackInfo.TrackType}");
+                        sbTrackInfo.AppendLine(ffmpegTrackInfo.TrackInfo);
+                        sbTrackInfo.AppendLine();
+                        trackNo++;
+                    }
                 }
+
+                sb.AppendLine($"File name: {_videoFileName}");
+                sb.AppendLine($"File size: {Utilities.FormatBytesToDisplayFileSize(new FileInfo(_videoFileName).Length)}");
+                sb.AppendLine($"Duration: {new TimeCode(_videoInfo.TotalSeconds * 1000.0).ToShortDisplayString()}");
+
+                if (_videoInfo.Width > 0 && _videoInfo.Height > 0)
+                {
+                    sb.AppendLine($"Resolution: {_videoInfo.Width}x{_videoInfo.Height}");
+                }
+
+                if (_videoInfo.FramesPerSecond > 0)
+                {
+                    sb.AppendLine($"Framerate: {_videoInfo.FramesPerSecond:0.###}");
+                }
+
+                if (string.IsNullOrEmpty(_videoInfo.VideoCodec) && FileUtil.IsWav(_videoFileName))
+                {
+                    _videoInfo.VideoCodec = "WAV";
+                }
+
+                if (string.IsNullOrEmpty(_videoInfo.VideoCodec) && FileUtil.IsMp3(_videoFileName))
+                {
+                    _videoInfo.VideoCodec = "MP3";
+                }
+
+                sb.AppendLine($"Codec: {_videoInfo.VideoCodec}");
+
+                var mkvParser = new MatroskaFile(_videoFileName);
+                if (mkvParser.IsValid)
+                {
+                    sb.AppendLine($"Container: Matroska (mkv/webm)");
+                    var chapters = mkvParser.GetChapters();
+                    if (chapters.Count > 0)
+                    {
+                        sb.AppendLine($" - Chapters: {chapters.Count}");
+                    }
+                }
+                else
+                {
+                    var mp4Parser = new MP4Parser(_videoFileName);
+                    if (mp4Parser.Duration.TotalMilliseconds > 0)
+                    {
+                        sb.AppendLine($"Container: MP4");
+                    }
+                }
+
+                sb.AppendLine();
             }
-            else
+            catch
             {
-                var mp4Parser = new MP4Parser(_videoFileName);
-                if (mp4Parser.Duration.TotalMilliseconds > 0)
-                {
-                    sb.AppendLine($"Container: MP4");
-                }
+                sb.AppendLine();
+                sb.AppendLine("AN ERROR OCCURRED DURING MEDIA SCANNING!");
             }
-
-            sb.AppendLine();
-
-            if (RequireFfmpegOk())
+            finally
             {
-                var ffmpegMediaInfo = FfmpegMediaInfo.Parse(_videoFileName);
-                sb.AppendLine("Tracks:");
-                foreach (var ffmpegTrackInfo in ffmpegMediaInfo.Tracks)
-                {
-                    sb.AppendLine($"#{trackNo} - {ffmpegTrackInfo.TrackType.ToString()}");
-                    sb.AppendLine(ffmpegTrackInfo.TrackInfo);
-                    sb.AppendLine();
-                    trackNo++;
-                }
+                Cursor = Cursors.Default;
             }
 
-            MessageBox.Show(sb.ToString());
+            MessageBox.Show(sb.ToString() + sbTrackInfo.ToString());
         }
     }
 }
