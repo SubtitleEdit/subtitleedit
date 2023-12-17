@@ -23025,7 +23025,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 labelVideoInfo.Text += _videoInfo.Width + "x" + _videoInfo.Height + " ";
             }
-            if (_videoInfo.VideoCodec != null)
+            if (_videoInfo.VideoCodec != null && Configuration.Settings.VideoControls.WaveformLabelShowCodec)
             {
                 labelVideoInfo.Text += _videoInfo.VideoCodec.Trim() + " ";
             }
