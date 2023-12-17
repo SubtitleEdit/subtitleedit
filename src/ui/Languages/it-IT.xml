@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>4.0.2</Version>
-    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 07.12.2023</TranslatedBy>
+    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 17.12.2023</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -1074,6 +1074,7 @@ Per usare una chiave API vai su "Opzioni -&gt; Impostazioni -&gt; Strumenti" per
     <XRequiresALocalWebServer>"{0}" richiede un server web in esecuzione in locale!</XRequiresALocalWebServer>
     <XRequiresAnApiKey>"{0}" richiede una chiave API.</XRequiresAnApiKey>
     <ReadMore>Vuoi saperne di più?</ReadMore>
+    <Formality>Formalità</Formality>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
     <Title>Traduttore Google contro traduttore Microsoft</Title>
