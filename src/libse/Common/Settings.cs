@@ -2183,6 +2183,7 @@ $HorzAlign          =   Center
         public string WaveformDoubleClickOnNonParagraphAction { get; set; }
         public string WaveformRightClickOnNonParagraphAction { get; set; }
         public bool WaveformMouseWheelScrollUpIsForward { get; set; }
+        public bool WaveformLabelShowCodec { get; set; }
         public bool GenerateSpectrogram { get; set; }
         public string SpectrogramAppearance { get; set; }
         public int WaveformMinimumSampleRate { get; set; }
@@ -2217,6 +2218,7 @@ $HorzAlign          =   Center
             WaveformDoubleClickOnNonParagraphAction = "PlayPause";
             WaveformDoubleClickOnNonParagraphAction = string.Empty;
             WaveformMouseWheelScrollUpIsForward = true;
+            WaveformLabelShowCodec = true;
             SpectrogramAppearance = "OneColorGradient";
             WaveformMinimumSampleRate = 126;
             WaveformSeeksSilenceDurationSeconds = 0.3;
@@ -8224,6 +8226,12 @@ $HorzAlign          =   Center
                 settings.VideoControls.GenerateSpectrogram = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
+            subNode = node.SelectSingleNode("WaveformLabelShowCodec");
+            if (subNode != null)
+            {
+                settings.VideoControls.WaveformLabelShowCodec = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("SpectrogramAppearance");
             if (subNode != null)
             {
@@ -12201,6 +12209,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("WaveformRightClickOnNonParagraphAction", settings.VideoControls.WaveformRightClickOnNonParagraphAction);
                 textWriter.WriteElementString("WaveformMouseWheelScrollUpIsForward", settings.VideoControls.WaveformMouseWheelScrollUpIsForward.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("GenerateSpectrogram", settings.VideoControls.GenerateSpectrogram.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("WaveformLabelShowCodec", settings.VideoControls.WaveformLabelShowCodec.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SpectrogramAppearance", settings.VideoControls.SpectrogramAppearance);
                 textWriter.WriteElementString("WaveformMinimumSampleRate", settings.VideoControls.WaveformMinimumSampleRate.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("WaveformSeeksSilenceDurationSeconds", settings.VideoControls.WaveformSeeksSilenceDurationSeconds.ToString(CultureInfo.InvariantCulture));
