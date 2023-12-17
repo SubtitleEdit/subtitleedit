@@ -153,7 +153,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         }
 
 
-        // First within (int)
+        // First / last within (int)
 
         public static int? FirstWithin(this List<int> orderedList, int start, int end)
         {
@@ -176,6 +176,29 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             return orderedList[startIndex];
+        }
+
+        public static int? LastWithin(this List<int> orderedList, int start, int end)
+        {
+            int startIndex = orderedList.BinarySearch(start);
+            int endIndex = orderedList.BinarySearch(end);
+
+            if (startIndex < 0)
+            {
+                startIndex = ~startIndex;
+            }
+
+            if (endIndex < 0)
+            {
+                endIndex = ~endIndex - 1;
+            }
+
+            if (startIndex > endIndex || startIndex >= orderedList.Count || orderedList[startIndex] > end || endIndex >= orderedList.Count)
+            {
+                return null;
+            }
+
+            return orderedList[endIndex];
         }
     }
 }
