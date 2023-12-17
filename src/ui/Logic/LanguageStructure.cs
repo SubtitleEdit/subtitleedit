@@ -1153,6 +1153,7 @@
             public string XRequiresALocalWebServer { get; set; }
             public string XRequiresAnApiKey { get; set; }
             public string ReadMore { get; set; }
+            public string Formality { get; set; }
         }
 
         public class GoogleOrMicrosoftTranslate

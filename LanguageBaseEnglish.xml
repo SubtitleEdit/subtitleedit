@@ -1074,6 +1074,7 @@ To use an API key, go to "Options -&gt; Settings -&gt; Tools" to enter your Goog
     <XRequiresALocalWebServer>"{0}" requires a web server running locally!</XRequiresALocalWebServer>
     <XRequiresAnApiKey>"{0}" requires an API key.</XRequiresAnApiKey>
     <ReadMore>Read more?</ReadMore>
+    <Formality>Formality</Formality>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
     <Title>Google vs Microsoft translate</Title>

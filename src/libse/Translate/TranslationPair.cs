@@ -9,6 +9,7 @@ namespace Nikse.SubtitleEdit.Core.Translate
 
         public string Code { get; }
         public string TwoLetterIsoLanguageName { get; }
+        public bool? HasFormality { get; set; }
 
         public TranslationPair(string name, string code)
         {
@@ -21,6 +22,14 @@ namespace Nikse.SubtitleEdit.Core.Translate
             Name = name ?? string.Empty;
             Code = code;
             TwoLetterIsoLanguageName = twoLetterIsoLanguageName;
+        }
+
+        public TranslationPair(string name, string code, bool hasFormality)
+        {
+            Name = name ?? string.Empty;
+            Code = code;
+            TwoLetterIsoLanguageName = code;
+            HasFormality = hasFormality;
         }
 
         public override string ToString() => Name.ToLowerInvariant().Replace('_', ' ').CapitalizeFirstLetter();

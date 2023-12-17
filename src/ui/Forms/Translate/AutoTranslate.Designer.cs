@@ -58,6 +58,8 @@
             this.comboBoxTarget = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.subtitleListViewTarget = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.subtitleListViewSource = new Nikse.SubtitleEdit.Controls.SubtitleListView();
+            this.comboBoxFormality = new Nikse.SubtitleEdit.Controls.NikseComboBox();
+            this.labelFormality = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.contextMenuStrip2.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -133,7 +135,7 @@
             // 
             this.labelUrl.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelUrl.AutoSize = true;
-            this.labelUrl.Location = new System.Drawing.Point(14, 533);
+            this.labelUrl.Location = new System.Drawing.Point(14, 513);
             this.labelUrl.Name = "labelUrl";
             this.labelUrl.Size = new System.Drawing.Size(23, 13);
             this.labelUrl.TabIndex = 106;
@@ -242,7 +244,7 @@
             // 
             this.labelApiKey.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelApiKey.AutoSize = true;
-            this.labelApiKey.Location = new System.Drawing.Point(360, 533);
+            this.labelApiKey.Location = new System.Drawing.Point(360, 513);
             this.labelApiKey.Name = "labelApiKey";
             this.labelApiKey.Size = new System.Drawing.Size(47, 13);
             this.labelApiKey.TabIndex = 111;
@@ -252,7 +254,7 @@
             // 
             this.nikseTextBoxApiKey.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.nikseTextBoxApiKey.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            this.nikseTextBoxApiKey.Location = new System.Drawing.Point(409, 532);
+            this.nikseTextBoxApiKey.Location = new System.Drawing.Point(409, 512);
             this.nikseTextBoxApiKey.Name = "nikseTextBoxApiKey";
             this.nikseTextBoxApiKey.Size = new System.Drawing.Size(360, 20);
             this.nikseTextBoxApiKey.TabIndex = 110;
@@ -295,7 +297,7 @@
             this.nikseComboBoxUrl.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
             this.nikseComboBoxUrl.DropDownWidth = 280;
             this.nikseComboBoxUrl.FormattingEnabled = true;
-            this.nikseComboBoxUrl.Location = new System.Drawing.Point(56, 528);
+            this.nikseComboBoxUrl.Location = new System.Drawing.Point(56, 508);
             this.nikseComboBoxUrl.MaxLength = 32767;
             this.nikseComboBoxUrl.Name = "nikseComboBoxUrl";
             this.nikseComboBoxUrl.SelectedIndex = -1;
@@ -352,6 +354,7 @@
             this.comboBoxTarget.Size = new System.Drawing.Size(121, 23);
             this.comboBoxTarget.TabIndex = 95;
             this.comboBoxTarget.UsePopupWindow = false;
+            this.comboBoxTarget.SelectedIndexChanged += new System.EventHandler(this.comboBoxTarget_SelectedIndexChanged);
             // 
             // subtitleListViewTarget
             // 
@@ -366,7 +369,7 @@
             this.subtitleListViewTarget.Location = new System.Drawing.Point(465, 53);
             this.subtitleListViewTarget.Name = "subtitleListViewTarget";
             this.subtitleListViewTarget.OwnerDraw = true;
-            this.subtitleListViewTarget.Size = new System.Drawing.Size(428, 458);
+            this.subtitleListViewTarget.Size = new System.Drawing.Size(428, 446);
             this.subtitleListViewTarget.SubtitleFontBold = false;
             this.subtitleListViewTarget.SubtitleFontName = "Tahoma";
             this.subtitleListViewTarget.SubtitleFontSize = 8;
@@ -389,7 +392,7 @@
             this.subtitleListViewSource.Location = new System.Drawing.Point(12, 53);
             this.subtitleListViewSource.Name = "subtitleListViewSource";
             this.subtitleListViewSource.OwnerDraw = true;
-            this.subtitleListViewSource.Size = new System.Drawing.Size(430, 458);
+            this.subtitleListViewSource.Size = new System.Drawing.Size(430, 446);
             this.subtitleListViewSource.SubtitleFontBold = false;
             this.subtitleListViewSource.SubtitleFontName = "Tahoma";
             this.subtitleListViewSource.SubtitleFontSize = 8;
@@ -400,12 +403,54 @@
             this.subtitleListViewSource.Click += new System.EventHandler(this.subtitleListViewSource_Click);
             this.subtitleListViewSource.DoubleClick += new System.EventHandler(this.subtitleListViewSource_DoubleClick);
             // 
+            // comboBoxFormality
+            // 
+            this.comboBoxFormality.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.comboBoxFormality.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxFormality.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxFormality.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxFormality.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxFormality.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxFormality.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxFormality.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxFormality.DropDownHeight = 400;
+            this.comboBoxFormality.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxFormality.DropDownWidth = 280;
+            this.comboBoxFormality.FormattingEnabled = true;
+            this.comboBoxFormality.Items.AddRange(new object[] {
+            "default",
+            "more",
+            "less",
+            "prefer_more",
+            "prefer_less"});
+            this.comboBoxFormality.Location = new System.Drawing.Point(71, 537);
+            this.comboBoxFormality.MaxLength = 32767;
+            this.comboBoxFormality.Name = "comboBoxFormality";
+            this.comboBoxFormality.SelectedIndex = -1;
+            this.comboBoxFormality.SelectedItem = null;
+            this.comboBoxFormality.SelectedText = "";
+            this.comboBoxFormality.Size = new System.Drawing.Size(280, 21);
+            this.comboBoxFormality.TabIndex = 112;
+            this.comboBoxFormality.UsePopupWindow = false;
+            // 
+            // labelFormality
+            // 
+            this.labelFormality.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.labelFormality.AutoSize = true;
+            this.labelFormality.Location = new System.Drawing.Point(14, 540);
+            this.labelFormality.Name = "labelFormality";
+            this.labelFormality.Size = new System.Drawing.Size(51, 13);
+            this.labelFormality.TabIndex = 113;
+            this.labelFormality.Text = "Formality:";
+            // 
             // AutoTranslate
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1058, 563);
             this.ContextMenuStrip = this.contextMenuStrip1;
+            this.Controls.Add(this.labelFormality);
+            this.Controls.Add(this.comboBoxFormality);
             this.Controls.Add(this.labelApiKey);
             this.Controls.Add(this.nikseTextBoxApiKey);
             this.Controls.Add(this.linkLabelPoweredBy);
@@ -472,5 +517,7 @@
         private System.Windows.Forms.ToolStripMenuItem translateSingleLinesToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem translateSingleLinesToolStripMenuItem1;
+        private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxFormality;
+        private Nikse.SubtitleEdit.Controls.NikseLabel labelFormality;
     }
 }
