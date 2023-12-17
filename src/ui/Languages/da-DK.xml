@@ -1067,6 +1067,7 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Bi
     <XRequiresALocalWebServer>"{0}" kræver en webserver, der kører lokalt!</XRequiresALocalWebServer>
     <XRequiresAnApiKey>"{0}" kræver en API-nøgle.</XRequiresAnApiKey>
     <ReadMore>Læs mere?</ReadMore>
+    <Formality>Formalitet</Formality>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
     <Title>Google vs Microsoft oversætter</Title>

@@ -1075,6 +1075,7 @@ Gå till "Alternativ -&gt; Inställningar -&gt; Verktyg" för att ange din nycke
     <XRequiresALocalWebServer>"{0}" kräver en webbserver som körs lokalt!</XRequiresALocalWebServer>
     <XRequiresAnApiKey>"{0}" kräver en API-nyckel.</XRequiresAnApiKey>
     <ReadMore>Läs mer?</ReadMore>
+    <Formality>Formalitet</Formality>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
     <Title>Google mot Microsoft translate</Title>
@@ -2557,6 +2558,7 @@ kan redigera i samma undertextfil (samarbete)</Information>
     <AdjustViaEndAutoStart>Justera via ändläge</AdjustViaEndAutoStart>
     <AdjustViaEndAutoStartAndGoToNext>Justera via ändläge och gå till nästa</AdjustViaEndAutoStartAndGoToNext>
     <AdjustSetEndMinusGapAndStartNextHere>Ställ in slut minus gap, gå till nästa och börja nästa här</AdjustSetEndMinusGapAndStartNextHere>
+    <AdjustSetEndAndStartNextAfterGap>Ställ in slutet och början av nästa efter lucka</AdjustSetEndAndStartNextAfterGap>
     <AdjustSetStartTimeAndGoToNext>Ställ in start och gå till nästa</AdjustSetStartTimeAndGoToNext>
     <AdjustSetEndTimeAndGoToNext>Ange slut och gå till nästa</AdjustSetEndTimeAndGoToNext>
     <AdjustSetEndTimeAndPause>Sätt slut och paus</AdjustSetEndTimeAndPause>
