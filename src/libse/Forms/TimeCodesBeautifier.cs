@@ -108,6 +108,13 @@ namespace Nikse.SubtitleEdit.Core.Forms
             }
 
             var distance = rightParagraph.StartTime.TotalMilliseconds - leftParagraph.EndTime.TotalMilliseconds;
+
+            // If an overlap threshold is set, don't connect if threshold exceeded
+            if (distance < 0 && Configuration.Settings.BeautifyTimeCodes.OverlapThreshold > 0 && Math.Abs(distance) >= Configuration.Settings.BeautifyTimeCodes.OverlapThreshold)
+            {
+                return false;
+            }
+
             var subtitlesAreConnected = distance < Configuration.Settings.BeautifyTimeCodes.Profile.ConnectedSubtitlesTreatConnected;
 
             if (subtitlesAreConnected)
@@ -422,6 +429,14 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 return false;
             }
 
+            var distance = rightParagraph.StartTime.TotalMilliseconds - leftParagraph.EndTime.TotalMilliseconds;
+
+            // If an overlap threshold is set, don't chain if threshold exceeded
+            if (distance < 0 && Configuration.Settings.BeautifyTimeCodes.OverlapThreshold > 0 && Math.Abs(distance) >= Configuration.Settings.BeautifyTimeCodes.OverlapThreshold)
+            {
+                return false;
+            }
+
             var newLeftOutCueFrame = MillisecondsToFrames(leftParagraph.EndTime.TotalMilliseconds);
             var newRightInCueFrame = MillisecondsToFrames(rightParagraph.StartTime.TotalMilliseconds);
 
@@ -716,8 +731,19 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     var previousParagraph = _subtitle.Paragraphs.ElementAtOrDefault(index - 1);
                     if (previousParagraph != null)
                     {
-                        var previousOutCueFrame = MillisecondsToFrames(previousParagraph.EndTime.TotalMilliseconds);
-                        newCueFrame = Math.Max(bestCueFrame, previousOutCueFrame + Configuration.Settings.BeautifyTimeCodes.Profile.Gap);
+                        var distance = previousParagraph.StartTime.TotalMilliseconds - paragraph.EndTime.TotalMilliseconds;
+
+                        // If an overlap threshold is set, don't fix if threshold exceeded
+                        if (distance < 0 && Configuration.Settings.BeautifyTimeCodes.OverlapThreshold > 0 && Math.Abs(distance) >= Configuration.Settings.BeautifyTimeCodes.OverlapThreshold)
+                        {
+                            newCueFrame = bestCueFrame;
+                        }
+                        else
+                        {
+                            // Else, limit to adjacent subtitle
+                            var previousOutCueFrame = MillisecondsToFrames(previousParagraph.EndTime.TotalMilliseconds);
+                            newCueFrame = Math.Max(bestCueFrame, previousOutCueFrame + Configuration.Settings.BeautifyTimeCodes.Profile.Gap);                            
+                        }
                     }
                     else
                     {
@@ -729,8 +755,19 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     var nextParagraph = _subtitle.Paragraphs.ElementAtOrDefault(index + 1);
                     if (nextParagraph != null)
                     {
-                        var nextInCueFrame = MillisecondsToFrames(nextParagraph.StartTime.TotalMilliseconds);
-                        newCueFrame = Math.Min(bestCueFrame, nextInCueFrame - Configuration.Settings.BeautifyTimeCodes.Profile.Gap);
+                        var distance = paragraph.StartTime.TotalMilliseconds - nextParagraph.EndTime.TotalMilliseconds;
+
+                        // If an overlap threshold is set, don't fix if threshold exceeded
+                        if (distance < 0 && Configuration.Settings.BeautifyTimeCodes.OverlapThreshold > 0 && Math.Abs(distance) >= Configuration.Settings.BeautifyTimeCodes.OverlapThreshold)
+                        {
+                            newCueFrame = bestCueFrame;
+                        }
+                        else
+                        {
+                            // Else, limit to adjacent subtitle
+                            var nextInCueFrame = MillisecondsToFrames(nextParagraph.StartTime.TotalMilliseconds);
+                            newCueFrame = Math.Min(bestCueFrame, nextInCueFrame - Configuration.Settings.BeautifyTimeCodes.Profile.Gap);
+                        }
                     }
                     else
                     {
