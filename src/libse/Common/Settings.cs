@@ -2925,6 +2925,7 @@ $HorzAlign          =   Center
         public bool AlignTimeCodes { get; set; }
         public bool ExtractExactTimeCodes { get; set; }
         public bool SnapToShotChanges { get; set; }
+        public int OverlapThreshold { get; set; }
         public BeautifyTimeCodesProfile Profile { get; set; }
 
         public BeautifyTimeCodesSettings()
@@ -2932,6 +2933,7 @@ $HorzAlign          =   Center
             AlignTimeCodes = true;
             ExtractExactTimeCodes = false;
             SnapToShotChanges = true;
+            OverlapThreshold = 0;
             Profile = new BeautifyTimeCodesProfile();
         }
 
@@ -8749,6 +8751,12 @@ $HorzAlign          =   Center
                     settings.BeautifyTimeCodes.SnapToShotChanges = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
                 }
 
+                subNode = node.SelectSingleNode("OverlapThreshold");
+                if (subNode != null)
+                {
+                    settings.BeautifyTimeCodes.OverlapThreshold = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+                }
+
                 var profileNode = node.SelectSingleNode("Profile");
                 if (profileNode != null)
                 {
@@ -12318,6 +12326,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("AlignTimeCodes", settings.BeautifyTimeCodes.AlignTimeCodes.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ExtractExactTimeCodes", settings.BeautifyTimeCodes.ExtractExactTimeCodes.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SnapToShotChanges", settings.BeautifyTimeCodes.SnapToShotChanges.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("OverlapThreshold", settings.BeautifyTimeCodes.OverlapThreshold.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteStartElement("Profile", string.Empty);
                 textWriter.WriteElementString("Gap", settings.BeautifyTimeCodes.Profile.Gap.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("InCuesGap", settings.BeautifyTimeCodes.Profile.InCuesGap.ToString(CultureInfo.InvariantCulture));
