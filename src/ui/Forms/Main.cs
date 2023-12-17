@@ -36289,5 +36289,58 @@ namespace Nikse.SubtitleEdit.Forms
                 StopAutoDuration();
             }
         }
+
+        private void labelVideoInfo_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(_videoFileName) || _videoInfo == null)
+            {
+                return;
+            }
+
+            var sb = new StringBuilder();
+            var trackNo = 0;
+
+            sb.AppendLine($"File name: {_videoFileName}");
+            sb.AppendLine($"Duration: {new TimeCode(_videoInfo.TotalSeconds * 1000.0).ToShortDisplayString()}");
+            sb.AppendLine($"Resolution: {_videoInfo.Width}x{_videoInfo.Height}");
+            sb.AppendLine($"Framerate: {_videoInfo.FramesPerSecond:0.###}");
+            sb.AppendLine($"Codec: {_videoInfo.VideoCodec}");
+
+            var mkvParser = new MatroskaFile(_videoFileName);
+            if (mkvParser.IsValid)
+            {
+                sb.AppendLine($"Container: Matroska (mkv/webm)");
+                var chapters = mkvParser.GetChapters();
+                if (chapters.Count > 0)
+                {
+                    sb.AppendLine($" - Chapters: {chapters.Count}");
+                }
+            }
+            else 
+            {
+                var mp4Parser = new MP4Parser(_videoFileName);
+                if (mp4Parser.Duration.TotalMilliseconds > 0)
+                {
+                    sb.AppendLine($"Container: MP4");
+                }
+            }
+
+            sb.AppendLine();
+
+            if (RequireFfmpegOk())
+            {
+                var ffmpegMediaInfo = FfmpegMediaInfo.Parse(_videoFileName);
+                sb.AppendLine("Tracks:");
+                foreach (var ffmpegTrackInfo in ffmpegMediaInfo.Tracks)
+                {
+                    sb.AppendLine($"#{trackNo} - {ffmpegTrackInfo.TrackType.ToString()}");
+                    sb.AppendLine(ffmpegTrackInfo.TrackInfo);
+                    sb.AppendLine();
+                    trackNo++;
+                }
+            }
+
+            MessageBox.Show(sb.ToString());
+        }
     }
 }

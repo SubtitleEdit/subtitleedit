@@ -3362,6 +3362,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelVideoInfo.TabIndex = 12;
             this.labelVideoInfo.Text = "No video file loaded";
             this.labelVideoInfo.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.labelVideoInfo.Click += new System.EventHandler(this.labelVideoInfo_Click);
             // 
             // trackBarWaveformPosition
             // 

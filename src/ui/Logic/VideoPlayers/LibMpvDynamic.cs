@@ -180,6 +180,25 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             }
         }
 
+        public double VideoBitrate
+        {
+            get
+            {
+                lock (_lockObj)
+                {
+                    if (_mpvHandle == IntPtr.Zero)
+                    {
+                        return 0;
+                    }
+
+                    var mpvFormatDouble = 5;
+                    double d = 0;
+                    _mpvGetPropertyDouble(_mpvHandle, GetUtf8Bytes("video-bitrate"), mpvFormatDouble, ref d);
+                    return d;
+                }
+            }
+        }
+
         public override double CurrentPosition
         {
             get
