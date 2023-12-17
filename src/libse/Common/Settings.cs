@@ -2933,7 +2933,7 @@ $HorzAlign          =   Center
             AlignTimeCodes = true;
             ExtractExactTimeCodes = false;
             SnapToShotChanges = true;
-            OverlapThreshold = 0;
+            OverlapThreshold = 1000;
             Profile = new BeautifyTimeCodesProfile();
         }
 
