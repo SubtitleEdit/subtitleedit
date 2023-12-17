@@ -24165,6 +24165,9 @@ namespace Nikse.SubtitleEdit.Forms
 
             tbText.Height = groupBoxEdit.Height - tbText.Top - 32;
             tbOriginal.Height = tbText.Height;
+
+            labelVideoInfo.Left = checkBoxSyncListViewWithVideoWhilePlaying.Right;
+            labelVideoInfo.Width = labelVideoInfo.Parent.Width - labelVideoInfo.Left - 10;
         }
 
         private void FixRightToLeftDependingOnLanguage()
