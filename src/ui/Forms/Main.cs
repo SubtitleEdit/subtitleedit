@@ -7732,6 +7732,24 @@ namespace Nikse.SubtitleEdit.Forms
                         fixErrors.Initialize(_subtitle, GetCurrentSubtitleFormat(), GetCurrentEncoding());
                     }
 
+                    // save original paragraphs
+                    var oldSub = new Subtitle(_subtitle, false);
+                    var listOldList = new Dictionary<string, Paragraph>();
+                    if (_subtitleOriginal != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle && SubtitleListview1.IsOriginalTextColumnVisible)
+                    {
+                        var i = 0;
+                        foreach (var x in _subtitle.Paragraphs)
+                        {
+                            var original = Utilities.GetOriginalParagraph(i, x, _subtitleOriginal.Paragraphs);
+                            if (original != null)
+                            {
+                                listOldList.Add(x.Id, original);
+                            }
+
+                            i++;
+                        }
+                    }
+
                     if (fixErrors.ShowDialog(this) == DialogResult.OK)
                     {
                         MakeHistoryForUndo(_language.BeforeCommonErrorFixes);
@@ -7790,6 +7808,24 @@ namespace Nikse.SubtitleEdit.Forms
                             }
 
                             ShowStatus(_language.CommonErrorsFixed);
+                        }
+
+                        // make time codes changes in original
+                        if (listOldList.Count > 0)
+                        {
+                            foreach (var x in fixErrors.FixedSubtitle.Paragraphs)
+                            {
+                                var oldP = oldSub.Paragraphs.FirstOrDefault(p => p.Id == x.Id);
+                                if (oldP != null && listOldList.TryGetValue(x.Id, out var orgP))
+                                {
+                                    if (oldP.StartTime.TotalMilliseconds != x.StartTime.TotalMilliseconds ||
+                                        oldP.EndTime.TotalMilliseconds != x.EndTime.TotalMilliseconds)
+                                    {
+                                        orgP.StartTime.TotalMilliseconds = x.StartTime.TotalMilliseconds;
+                                        orgP.EndTime.TotalMilliseconds = x.EndTime.TotalMilliseconds;
+                                    }
+                                }
+                            }
                         }
 
                         _subtitle.Renumber();
@@ -36316,7 +36352,7 @@ namespace Nikse.SubtitleEdit.Forms
                     sb.AppendLine($" - Chapters: {chapters.Count}");
                 }
             }
-            else 
+            else
             {
                 var mp4Parser = new MP4Parser(_videoFileName);
                 if (mp4Parser.Duration.TotalMilliseconds > 0)
