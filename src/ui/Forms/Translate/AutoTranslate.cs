@@ -48,6 +48,8 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             toolStripMenuItemStartLibre.Text = string.Format(LanguageSettings.Current.GoogleTranslate.StartWebServerX, new LibreTranslate().Name);
             toolStripMenuItemStartNLLBServe.Text = string.Format(LanguageSettings.Current.GoogleTranslate.StartWebServerX, new NoLanguageLeftBehindServe().Name);
             toolStripMenuItemStartNLLBApi.Text = string.Format(LanguageSettings.Current.GoogleTranslate.StartWebServerX, new NoLanguageLeftBehindApi().Name);
+            labelFormality.Text = LanguageSettings.Current.GoogleTranslate.Formality;
+            comboBoxFormality.Left = labelFormality.Right + 3;
 
             subtitleListViewSource.InitializeLanguage(LanguageSettings.Current.General, Configuration.Settings);
             subtitleListViewTarget.InitializeLanguage(LanguageSettings.Current.General, Configuration.Settings);
@@ -153,6 +155,8 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             nikseComboBoxUrl.Visible = false;
             nikseTextBoxApiKey.Top = nikseComboBoxUrl.Top;
             labelApiKey.Text = LanguageSettings.Current.Settings.GoogleTranslateApiKey;
+            labelFormality.Visible = false;
+            comboBoxFormality.Visible = false;
             var engineType = _autoTranslator.GetType();
 
             if (engineType == typeof(GoogleTranslateV1))
@@ -182,6 +186,9 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
             if (engineType == typeof(DeepLTranslate))
             {
+                labelFormality.Visible = true;
+                comboBoxFormality.Visible = true;
+
                 FillUrls(new List<string>
                 {
                     Configuration.Settings.Tools.AutoTranslateDeepLUrl,
@@ -193,6 +200,9 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 nikseTextBoxApiKey.Left = labelApiKey.Right + 3;
                 labelApiKey.Visible = true;
                 nikseTextBoxApiKey.Visible = true;
+
+                SelectFormality();
+
                 return;
             }
 
@@ -283,6 +293,19 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
 
             throw new Exception($"Engine {_autoTranslator.Name} not handled!");
+        }
+
+        private void SelectFormality()
+        {
+            comboBoxFormality.SelectedIndex = 0;
+            for (var i = 0; i < comboBoxFormality.Items.Count; i++)
+            {
+                if (comboBoxFormality.Items[i].ToString() == Configuration.Settings.Tools.AutoTranslateDeepLFormality)
+                {
+                    comboBoxFormality.SelectedIndex = i;
+                    break;
+                }
+            }
         }
 
         private void FillUrls(List<string> list)
@@ -511,7 +534,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             subtitleListViewSource.Width = width;
             subtitleListViewTarget.Width = width;
 
-            var height = Height - (subtitleListViewSource.Top + buttonTranslate.Height + 60);
+            var height = Height - (subtitleListViewSource.Top + buttonTranslate.Height + 80);
             subtitleListViewSource.Height = height;
             subtitleListViewTarget.Height = height;
 
@@ -576,6 +599,8 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
             if (comboBoxSource.SelectedItem is TranslationPair source && comboBoxTarget.SelectedItem is TranslationPair target)
             {
+                SetFormality(target);
+
                 var mergeErrorCount = 0;
 
                 Configuration.Settings.Tools.GoogleTranslateLastTargetLanguage = target.TwoLetterIsoLanguageName ?? target.Code;
@@ -1043,6 +1068,77 @@ namespace Nikse.SubtitleEdit.Forms.Translate
         private void subtitleListViewSource_Click(object sender, EventArgs e)
         {
             SyncListViews(subtitleListViewSource, subtitleListViewTarget);
+        }
+
+        private void SetFormality(TranslationPair target)
+        {
+            if (comboBoxFormality.Visible && target?.HasFormality == true && comboBoxFormality.SelectedIndex > 0)
+            {
+                if (_autoTranslator.Name == DeepLTranslate.StaticName)
+                {
+                    var f = string.Empty;
+                    if (comboBoxFormality.SelectedIndex == 0)
+                    {
+                        f = string.Empty;
+                    }
+                    else if (comboBoxFormality.SelectedIndex == 1)
+                    {
+                        f = "more";
+                    }
+                    else if (comboBoxFormality.SelectedIndex == 2)
+                    {
+                        f = "less";
+                    }
+                    else if (comboBoxFormality.SelectedIndex == 3)
+                    {
+                        f = "prefer_more";
+                    }
+                    else if (comboBoxFormality.SelectedIndex == 4)
+                    {
+                        f = "prefer_less";
+                    }
+
+                    Configuration.Settings.Tools.AutoTranslateDeepLFormality = f;
+                }
+
+            }
+        }
+
+        private void comboBoxTarget_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (_autoTranslator.Name == DeepLTranslate.StaticName && comboBoxTarget.SelectedItem is TranslationPair target)
+            {
+                if (target.HasFormality == null || target.HasFormality == false)
+                {
+                    labelFormality.Enabled = false;
+                    comboBoxFormality.Enabled = false;
+                    return;
+                }
+
+                labelFormality.Enabled = true;
+                comboBoxFormality.Enabled = true;
+
+                if (target.TwoLetterIsoLanguageName == "ja" && comboBoxFormality.Items.Count != 3)
+                {
+                    comboBoxFormality.Items.Clear();
+                    comboBoxFormality.Items.Add("default");
+                    comboBoxFormality.Items.Add("more");
+                    comboBoxFormality.Items.Add("less");
+
+                    SelectFormality();
+                }
+                else if (comboBoxFormality.Items.Count != 3)
+                {
+                    comboBoxFormality.Items.Clear();
+                    comboBoxFormality.Items.Add("default");
+                    comboBoxFormality.Items.Add("more");
+                    comboBoxFormality.Items.Add("less");
+                    comboBoxFormality.Items.Add("prefer_more");
+                    comboBoxFormality.Items.Add("prefer_less");
+
+                    SelectFormality();
+                }
+            }
         }
     }
 }

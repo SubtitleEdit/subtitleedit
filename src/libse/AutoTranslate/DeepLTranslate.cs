@@ -59,28 +59,28 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                 MakeTranslationPair("Chinese", "zh"),
                 MakeTranslationPair("Czech", "cs"),
                 MakeTranslationPair("Danish", "da"),
-                MakeTranslationPair("Dutch", "nl"),
-                MakeTranslationPair("English", "en"),
+                MakeTranslationPair("Dutch", "nl", true),
+                MakeTranslationPair("English", "en", true),
                 MakeTranslationPair("Estonian", "et"),
                 MakeTranslationPair("Finnish", "fi"),
-                MakeTranslationPair("French", "fr"),
-                MakeTranslationPair("German", "de"),
+                MakeTranslationPair("French", "fr", true),
+                MakeTranslationPair("German", "de", true),
                 MakeTranslationPair("Greek", "el"),
                 MakeTranslationPair("Hungarian", "hu"),
                 MakeTranslationPair("Indonesian", "id"),
-                MakeTranslationPair("Italian", "it"),
-                MakeTranslationPair("Japanese", "ja"),
+                MakeTranslationPair("Italian", "it", true),
+                MakeTranslationPair("Japanese", "ja", true),
                 MakeTranslationPair("Korean", "ko"),
                 MakeTranslationPair("Latvian", "lv"),
                 MakeTranslationPair("Lithuanian", "lt"),
                 MakeTranslationPair("Norwegian (Bokmål)", "nb"),
-                MakeTranslationPair("Polish", "pl"),
-                MakeTranslationPair("Portuguese", "pt"),
+                MakeTranslationPair("Polish", "pl", true),
+                MakeTranslationPair("Portuguese", "pt", true),
                 MakeTranslationPair("Romanian", "ro"),
-                MakeTranslationPair("Russian", "ru"),
+                MakeTranslationPair("Russian", "ru", true),
                 MakeTranslationPair("Slovak", "sk"),
                 MakeTranslationPair("Slovenian", "sl"),
-                MakeTranslationPair("Spanish", "es"),
+                MakeTranslationPair("Spanish", "es", true),
                 MakeTranslationPair("Swedish", "sv"),
                 MakeTranslationPair("Turkish", "tr"),
                 MakeTranslationPair("Ukranian", "uk"),
@@ -90,6 +90,11 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
         private static TranslationPair MakeTranslationPair(string name, string code)
         {
             return new TranslationPair(name, code, code);
+        }
+
+        private static TranslationPair MakeTranslationPair(string name, string code, bool hasFormality)
+        {
+            return new TranslationPair(name, code, hasFormality);
         }
 
         public Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode)

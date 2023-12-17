@@ -1331,6 +1331,7 @@ namespace Nikse.SubtitleEdit.Logic
                 XRequiresALocalWebServer = "\"{0}\" requires a web server running locally!",
                 XRequiresAnApiKey = "\"{0}\" requires an API key.",
                 ReadMore = "Read more?",
+                Formality = "Formality",
             };
 
             GoogleOrMicrosoftTranslate = new LanguageStructure.GoogleOrMicrosoftTranslate

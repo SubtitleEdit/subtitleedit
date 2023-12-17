@@ -2827,6 +2827,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "GoogleTranslate/ReadMore":
                     language.GoogleTranslate.ReadMore = reader.Value;
                     break;
+                case "GoogleTranslate/Formality":
+                    language.GoogleTranslate.Formality = reader.Value;
+                    break;
                 case "GoogleOrMicrosoftTranslate/Title":
                     language.GoogleOrMicrosoftTranslate.Title = reader.Value;
                     break;
