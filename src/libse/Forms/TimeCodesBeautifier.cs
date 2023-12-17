@@ -109,10 +109,22 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
             var distance = rightParagraph.StartTime.TotalMilliseconds - leftParagraph.EndTime.TotalMilliseconds;
 
-            // If an overlap threshold is set, don't connect if threshold exceeded
-            if (distance < 0 && Configuration.Settings.BeautifyTimeCodes.OverlapThreshold > 0 && Math.Abs(distance) >= Configuration.Settings.BeautifyTimeCodes.OverlapThreshold)
+            // Check if there is an overlap
+            if (distance < 0)
             {
-                return false;
+                // If an overlap threshold is set, don't connect if threshold exceeded
+                if (Configuration.Settings.BeautifyTimeCodes.OverlapThreshold > 0 && Math.Abs(distance) >= Configuration.Settings.BeautifyTimeCodes.OverlapThreshold)
+                {
+                    return false;
+                } 
+                else
+                {
+                    // We are continuing, but there is still an overlap, so fix that first
+                    leftParagraph.EndTime.TotalMilliseconds = rightParagraph.StartTime.TotalMilliseconds - 1;
+
+                    // Re-calculate distance
+                    distance = rightParagraph.StartTime.TotalMilliseconds - leftParagraph.EndTime.TotalMilliseconds;
+                }
             }
 
             var subtitlesAreConnected = distance < Configuration.Settings.BeautifyTimeCodes.Profile.ConnectedSubtitlesTreatConnected;
@@ -472,10 +484,19 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
             var distance = rightParagraph.StartTime.TotalMilliseconds - leftParagraph.EndTime.TotalMilliseconds;
 
-            // If an overlap threshold is set, don't chain if threshold exceeded
-            if (distance < 0 && Configuration.Settings.BeautifyTimeCodes.OverlapThreshold > 0 && Math.Abs(distance) >= Configuration.Settings.BeautifyTimeCodes.OverlapThreshold)
+            // Check if there is an overlap
+            if (distance < 0)
             {
-                return false;
+                // If an overlap threshold is set, don't chain if threshold exceeded
+                if (Configuration.Settings.BeautifyTimeCodes.OverlapThreshold > 0 && Math.Abs(distance) >= Configuration.Settings.BeautifyTimeCodes.OverlapThreshold)
+                {
+                    return false;
+                }
+                else
+                {
+                    // We are continuing, but there is still an overlap, so fix that first
+                    leftParagraph.EndTime.TotalMilliseconds = rightParagraph.StartTime.TotalMilliseconds - 1;
+                }
             }
 
             var newLeftOutCueFrame = MillisecondsToFrames(leftParagraph.EndTime.TotalMilliseconds);
