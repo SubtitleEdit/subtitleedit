@@ -38,7 +38,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 }
             }
 
-            MergeResult mergeResult = MergeMultipleLines(tempSubtitle, index, maxChars, noSentenceEndingSource, noSentenceEndingTarget);
+            var mergeResult = MergeMultipleLines(tempSubtitle, index, maxChars, noSentenceEndingSource, noSentenceEndingTarget);
             var mergeCount = mergeResult.ParagraphCount;
             var text = mergeResult.Text;
 
@@ -193,10 +193,12 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 NoSentenceEndingTarget = noSentenceEndingTarget,
             };
 
-            var item = new MergeResultItem();
-            item.StartIndex = index;
-            item.EndIndex = index;
-            item.Text = string.Empty;
+            var item = new MergeResultItem
+            {
+                StartIndex = index,
+                EndIndex = index,
+                Text = string.Empty
+            };
 
             result.Text = sourceSubtitle.Paragraphs[index].Text;
             item.Text = sourceSubtitle.Paragraphs[index].Text;
@@ -230,10 +232,11 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                     }
 
                     result.Text += Environment.NewLine + "." + Environment.NewLine + p.Text;
-                    item.Text += Environment.NewLine + "." + Environment.NewLine + p.Text;
 
                     if (item != null)
                     {
+                        item.Text += Environment.NewLine + "." + Environment.NewLine + p.Text;
+
                         item.TextIndexStart = result.Text.Length;
                         item.StartIndex = i - 1;
                         item.EndIndex = i - 1;
@@ -290,8 +293,8 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                         if (item != null)
                         {
                             item.EndChar = endChar;
-                            var endCharOccurences = Utilities.CountTagInText(textBuild.ToString(), endChar);
-                            item.EndCharOccurences = endCharOccurences;
+                            var endCharOccurrences = Utilities.CountTagInText(textBuild.ToString(), endChar);
+                            item.EndCharOccurences = endCharOccurrences;
                             item.TextIndexEnd = result.Text.Length;
                             result.MergeResultItems.Add(item);
                             textBuild = new StringBuilder();
