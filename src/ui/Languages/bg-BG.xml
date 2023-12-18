@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>4.0.2</Version>
-    <TranslatedBy>Последен превод на български 11.12.2023: KalinM</TranslatedBy>
+    <TranslatedBy>Последен превод на български 18.12.2023: KalinM</TranslatedBy>
     <CultureName>bg-BG</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -1074,6 +1074,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <XRequiresALocalWebServer>"{0}" изисква уеб сървър, работещ локално!</XRequiresALocalWebServer>
     <XRequiresAnApiKey>"{0}" изисква API ключ.</XRequiresAnApiKey>
     <ReadMore>Прочетете още?</ReadMore>
+    <Formality>Формалности</Formality>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
     <Title>Превод с Google или Microsoft</Title>
@@ -2814,7 +2815,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <Milliseconds>мс</Milliseconds>
     <EditCustomContinuationStyle>Редакция перс. стил на продълж...</EditCustomContinuationStyle>
     <MinFrameGap>Мин. разлика в кадрите</MinFrameGap>
-    <XFramesAtYFrameRateGivesZMs>{0} кадрите със скорост на кадър от {1} дава {2} милисекунди.</XFramesAtYFrameRateGivesZMs>
+    <XFramesAtYFrameRateGivesZMs>{0} кадъра при кадрова честота от {1} дават {2} милисекунди.</XFramesAtYFrameRateGivesZMs>
     <UseXAsNewGap>Използване "{0}" милисекунди като нова минимална разлика?</UseXAsNewGap>
     <BDOpensIn>BD sup/bdn-xml се отваря в:</BDOpensIn>
     <BDOpensInOcr>OCR (разпознаване на текст)</BDOpensInOcr>
