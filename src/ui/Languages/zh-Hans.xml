@@ -1068,6 +1068,7 @@ Command line: {1} {2}
     <XRequiresALocalWebServer>"{0}" 需要在本地运行的网页服务器!</XRequiresALocalWebServer>
     <XRequiresAnApiKey>"{0}"需要一个API密钥。</XRequiresAnApiKey>
     <ReadMore>了解更多?</ReadMore>
+    <Formality>正式程度</Formality>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
     <Title>谷歌 与 微软 翻译</Title>
