@@ -40,6 +40,7 @@ namespace Nikse.SubtitleEdit.Core.Translate
         private bool AutoBreak { get; set; }
         private bool SquareBrackets { get; set; }
         private bool SquareBracketsUppercase { get; set; }
+        private bool SquareBracketsStartWithLowercase { get; set; }
         private bool RemovePeriod { get; set; }
         private int BreakNumberOfLines { get; set; }
         private bool BreakSplitAtLineEnding { get; set; }
@@ -109,12 +110,21 @@ namespace Nikse.SubtitleEdit.Core.Translate
                 {
                     SquareBracketsUppercase = true;
                 }
-                else
+                else if (text.Length > 0 && char.IsLower(text[0]))
+                {
+                    SquareBracketsStartWithLowercase = true;
+                }
+                else 
                 {
                     SquareBrackets = true;
                 }
 
                 text = text.Replace("[", string.Empty).Replace("]", string.Empty);
+
+                if (SquareBracketsStartWithLowercase)
+                {
+                    text = text.CapitalizeFirstLetter();
+                }
 
                 if (!text.HasSentenceEnding() && text.Length > 0)
                 {
@@ -163,6 +173,15 @@ namespace Nikse.SubtitleEdit.Core.Translate
             if (SquareBracketsUppercase)
             {
                 text = "[" + text.ToUpperInvariant().Trim() + "]";
+            }
+            else if (SquareBracketsUppercase)
+            {
+                if (text.Length > 0)
+                {
+                    text = char.ToUpper(text[0]) + text.Remove(0, 1);
+                }
+
+                text = "[" + text.Trim() + "]";
             }
             else if (SquareBrackets)
             {

@@ -1947,8 +1947,9 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             var index = 0;
-            while (index < subtitle.Paragraphs.Count)
+            while (index < subtitle.Paragraphs.Count && !_abort)
             {
+                Application.DoEvents();
                 var linesMergedAndTranslated = await MergeAndSplitHelper.MergeAndTranslateIfPossible(subtitle, translatedSubtitle, source, target, index, engine, false);
                 if (linesMergedAndTranslated > 0)
                 {
@@ -1972,6 +1973,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 translatedSubtitle.Paragraphs[index].Text = Utilities.AutoBreakLine(reFormattedText);
+                index++;
             }
 
             return translatedSubtitle;

@@ -19,7 +19,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
         public string Name => StaticName;
         public string Url => "https://github.com/LibreTranslate/LibreTranslate";
         public string Error { get; set; }
-        public int MaxCharacters => 250;
+        public int MaxCharacters => 220;
 
         public void Initialize()
         {
@@ -46,6 +46,12 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             if (!string.IsNullOrEmpty(Configuration.Settings.Tools.AutoTranslateLibreApiKey))
             {
                 apiKey = " \"api_key\": \"" + Json.EncodeJsonText(Configuration.Settings.Tools.AutoTranslateLibreApiKey) + "\" ";
+            }
+
+            // LibreTranslate seems to have a problem when starting with lowercase letter
+            if (text.Length > 0 && char.IsLower(text[0]))
+            {
+                text = text.CapitalizeFirstLetter();
             }
 
             var input = "{\"q\": \"" + Json.EncodeJsonText(text.Trim()) + "\", \"source\": \"" + sourceLanguageCode + "\", \"target\": \"" + targetLanguageCode + "\"" + apiKey + "}";
