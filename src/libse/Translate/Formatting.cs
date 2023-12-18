@@ -174,11 +174,11 @@ namespace Nikse.SubtitleEdit.Core.Translate
             {
                 text = "[" + text.ToUpperInvariant().Trim() + "]";
             }
-            else if (SquareBracketsUppercase)
+            else if (SquareBracketsStartWithLowercase)
             {
                 if (text.Length > 0)
                 {
-                    text = char.ToUpper(text[0]) + text.Remove(0, 1);
+                    text = char.ToLower(text[0]) + text.Remove(0, 1);
                 }
 
                 text = "[" + text.Trim() + "]";
