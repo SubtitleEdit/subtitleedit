@@ -1,5 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Core.AudioToText;
+using Nikse.SubtitleEdit.Core.AutoTranslate;
 using Nikse.SubtitleEdit.Core.BluRaySup;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.ContainerFormats;
@@ -36299,8 +36300,8 @@ namespace Nikse.SubtitleEdit.Forms
                     SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
                     if (!onlySelectedLines)
                     {
-                        ResetHistory();
-                        //TODO: _fileName = autoTranslate.GetFileNameWithTargetLanguage(oldFileName, _videoFileName, _subtitleOriginal, GetCurrentSubtitleFormat());
+                        ResetHistory(); 
+                        _fileName = FileNameHelper.GetFileNameWithTargetLanguage(oldFileName, _videoFileName, _subtitleOriginal, GetCurrentSubtitleFormat(), autoTranslate.TwoLetterIsoSource, autoTranslate.TwoLetterIsoTarget);
                         _converted = true;
                     }
 

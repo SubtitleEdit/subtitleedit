@@ -116,7 +116,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             var cultures = Utilities.GetSubtitleLanguageCultures(false).ToList();
             foreach (var code in languageCodes)
             {
-                var culture = cultures.FirstOrDefault(p=>p.TwoLetterISOLanguageName == code);
+                var culture = cultures.FirstOrDefault(p => p.TwoLetterISOLanguageName == code);
                 if (culture != null)
                 {
                     result.Add(new TranslationPair(culture.EnglishName, code, code));
