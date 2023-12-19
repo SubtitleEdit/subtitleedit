@@ -15,6 +15,7 @@ namespace Nikse.SubtitleEdit.Core.Translate
         {
             Name = name ?? string.Empty;
             Code = code;
+            TwoLetterIsoLanguageName = code;
         }
 
         public TranslationPair(string name, string code, string twoLetterIsoLanguageName)

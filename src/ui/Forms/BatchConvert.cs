@@ -57,6 +57,8 @@ namespace Nikse.SubtitleEdit.Forms
             public string ToFormat { get; set; }
             public SubtitleFormat SourceFormat { get; set; }
             public List<IBinaryParagraphWithPosition> BinaryParagraphs { get; set; }
+            public string TargetFileName { get; set; }
+
             public ThreadDoWorkParameter(
                 bool fixCommonErrors,
                 bool multipleReplace,
@@ -1696,7 +1698,8 @@ namespace Nikse.SubtitleEdit.Forms
                                         {
                                             try
                                             {
-                                                subtitle = RunAutoTranslate(subtitle).Result;
+                                                var res = RunAutoTranslate(subtitle).Result;
+                                                subtitle = res.Subtitle;
                                             }
                                             catch (Exception exception)
                                             {
@@ -1726,7 +1729,7 @@ namespace Nikse.SubtitleEdit.Forms
                                         ApplyFixesStep2(parameter, Configuration.Settings.Tools.BatchConvertFixRtlMode);
 
                                         var preExt = TsToBluRaySup.GetFileNameEnding(programMapTableParser, id);
-                                        int dummy = 0;
+                                        var dummy = 0;
                                         CommandLineConverter.BatchConvertSave(toFormat, TimeSpan.Zero, string.Empty, targetEncoding, outputFolder, string.Empty, 0, ref dummy, ref dummy, SubtitleFormat.AllSubtitleFormats.ToList(), fileName, parameter.Subtitle, new SubRip(), null, overwrite, 0, targetFrameRate, null, new List<CommandLineConverter.BatchAction>(), null, true, null, null, null, preExt);
                                         tsConvertedCount++;
                                     }
@@ -1749,7 +1752,8 @@ namespace Nikse.SubtitleEdit.Forms
                                     {
                                         try
                                         {
-                                            subtitle = RunAutoTranslate(subtitle).Result;
+                                            var res = RunAutoTranslate(subtitle).Result;
+                                            subtitle = res.Subtitle;
                                         }
                                         catch (Exception exception)
                                         {
@@ -1877,12 +1881,17 @@ namespace Nikse.SubtitleEdit.Forms
                             {
                                 try
                                 {
-                                    parameter.Subtitle = RunAutoTranslate(parameter.Subtitle).Result;
+                                    var res = RunAutoTranslate(parameter.Subtitle).Result;
+                                    parameter.Subtitle = res.Subtitle;
+
+                                    var newFileName = FileNameHelper.GetFileNameWithTargetLanguage(parameter.FileName, null, null, parameter.Format, res.Source.TwoLetterIsoLanguageName, res.Target.TwoLetterIsoLanguageName);
+                                    parameter.TargetFileName = newFileName;
                                 }
                                 catch (Exception exception)
                                 {
                                     SeLogger.Error(exception, "Batch translate failed");
                                     item.SubItems[3].Text = "Translate failed";
+                                    parameter.Error = "Translate failed";
                                     _errors++;
                                 }
                             }
@@ -1914,7 +1923,14 @@ namespace Nikse.SubtitleEdit.Forms
             SeLogger.Error($"Batch convert took {sw.ElapsedMilliseconds}");
         }
 
-        private async Task<Subtitle> RunAutoTranslate(Subtitle subtitle)
+        public class TranslateResult
+        {
+            public Subtitle Subtitle { get; set; }
+            public TranslationPair Source { get; set; }
+            public TranslationPair Target { get; set; }
+        }
+
+        private async Task<TranslateResult> RunAutoTranslate(Subtitle subtitle)
         {
             var engine = GetCurrentEngine();
             engine.Initialize();
@@ -1937,7 +1953,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var tp = engine.GetSupportedSourceLanguages().FirstOrDefault(p => p.TwoLetterIsoLanguageName == language || p.Code == language);
                 if (tp != null)
                 {
-                    target = tp;
+                    source = tp;
                 }
             }
 
@@ -1946,11 +1962,15 @@ namespace Nikse.SubtitleEdit.Forms
                 target = targetItem;
             }
 
+            var forceSingleLineMode =
+              engine.Name == NoLanguageLeftBehindApi.StaticName ||  // NLLB seems to miss some text...
+              engine.Name == NoLanguageLeftBehindServe.StaticName;
+
             var index = 0;
             while (index < subtitle.Paragraphs.Count && !_abort)
             {
                 Application.DoEvents();
-                var linesMergedAndTranslated = await MergeAndSplitHelper.MergeAndTranslateIfPossible(subtitle, translatedSubtitle, source, target, index, engine, false);
+                var linesMergedAndTranslated = await MergeAndSplitHelper.MergeAndTranslateIfPossible(subtitle, translatedSubtitle, source, target, index, engine, forceSingleLineMode);
                 if (linesMergedAndTranslated > 0)
                 {
                     index += linesMergedAndTranslated;
@@ -1976,7 +1996,12 @@ namespace Nikse.SubtitleEdit.Forms
                 index++;
             }
 
-            return translatedSubtitle;
+            return new TranslateResult
+            {
+                Source = source,
+                Target = target,
+                Subtitle = translatedSubtitle,
+            };
         }
 
         private List<IBinaryParagraphWithPosition> GetBinaryParagraphsWithPositionFromVobSub(string fileName)
@@ -2965,7 +2990,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         dir = Path.GetDirectoryName(p.FileName);
                     }
-                    var success = CommandLineConverter.BatchConvertSave(targetFormat, TimeSpan.Zero, string.Empty, GetCurrentEncoding(p.FileName), dir, string.Empty, _count, ref _converted, ref _errors, _allFormats, p.FileName, p.Subtitle, p.SourceFormat, binaryParagraphs, overwrite, -1, null, null, null, null, false, progressCallback, null, null, null, null, null, null, _preprocessingSettings, _cancellationTokenSource.Token);
+                    var success = CommandLineConverter.BatchConvertSave(targetFormat, TimeSpan.Zero, string.Empty, GetCurrentEncoding(p.FileName), dir, p.TargetFileName, _count, ref _converted, ref _errors, _allFormats, p.FileName, p.Subtitle, p.SourceFormat, binaryParagraphs, overwrite, -1, null, null, null, null, false, progressCallback, null, null, null, null, null, null, _preprocessingSettings, _cancellationTokenSource.Token);
                     if (success)
                     {
                         p.Item.SubItems[3].Text = LanguageSettings.Current.BatchConvert.Converted;

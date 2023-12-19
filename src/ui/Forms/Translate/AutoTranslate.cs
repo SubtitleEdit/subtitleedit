@@ -18,6 +18,9 @@ namespace Nikse.SubtitleEdit.Forms.Translate
     public sealed partial class AutoTranslate : Form
     {
         public Subtitle TranslatedSubtitle { get; }
+        public string TwoLetterIsoSource { get; internal set; }
+        public string TwoLetterIsoTarget { get; internal set; }
+
         private readonly Subtitle _subtitle;
         private readonly Encoding _encoding;
         private IAutoTranslator _autoTranslator;
@@ -600,7 +603,8 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             if (comboBoxSource.SelectedItem is TranslationPair source && comboBoxTarget.SelectedItem is TranslationPair target)
             {
                 SetFormality(target);
-
+                TwoLetterIsoSource = source.TwoLetterIsoLanguageName;
+                TwoLetterIsoTarget = target.TwoLetterIsoLanguageName;
                 var mergeErrorCount = 0;
 
                 Configuration.Settings.Tools.GoogleTranslateLastTargetLanguage = target.TwoLetterIsoLanguageName ?? target.Code;
