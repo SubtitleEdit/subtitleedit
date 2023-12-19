@@ -3,7 +3,7 @@
 
 4.0.3 (xth December 2023) BETA
 * NEW:
-   * Add ".opus" / ".adts" audio file extensions - thx vivadavid/Lyubomir71
+   * Add ".opus" + ".adts" audio file extensions - thx vivadavid/Lyubomir71
    * Add two TSV subtitle formats - thx Purfview
    * Add Arabic translation - thx Yahya
    * Add new json subtitle format - thx Lucretia
@@ -44,6 +44,7 @@
    * Fix for ASSA border width in export to image based format - thx Christian
    * Fix crash in generating ASSA borders with odd video resolution - thx Leon
    * Fix crash in "Beautify time codes" - thx Flitskikker
+   * Fix for "Batch convert" auto-translate - thx Lunchbox209
 
 
 4.0.2 (19th November 2023)

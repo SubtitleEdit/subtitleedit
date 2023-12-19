@@ -36,9 +36,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonCancel = new System.Windows.Forms.Button();
             this.groupBoxConvertOptions = new System.Windows.Forms.GroupBox();
             this.groupBoxAutoTranslate = new System.Windows.Forms.GroupBox();
-            this.labelTarget = new System.Windows.Forms.Label();
+            this.labelTarget = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.comboBoxTarget = new Nikse.SubtitleEdit.Controls.NikseComboBox();
-            this.labelSource = new System.Windows.Forms.Label();
+            this.labelSource = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.comboBoxSource = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.linkLabelPoweredBy = new System.Windows.Forms.LinkLabel();
             this.nikseComboBoxEngine = new Nikse.SubtitleEdit.Controls.NikseComboBox();
@@ -2817,9 +2817,9 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.GroupBox groupBoxAutoTranslate;
         private System.Windows.Forms.LinkLabel linkLabelPoweredBy;
         private Controls.NikseComboBox nikseComboBoxEngine;
-        private System.Windows.Forms.Label labelTarget;
+        private Nikse.SubtitleEdit.Controls.NikseLabel labelTarget;
         private Controls.NikseComboBox comboBoxTarget;
-        private System.Windows.Forms.Label labelSource;
+        private Nikse.SubtitleEdit.Controls.NikseLabel labelSource;
         private Controls.NikseComboBox comboBoxSource;
     }
 }
