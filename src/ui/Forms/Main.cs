@@ -21490,6 +21490,15 @@ namespace Nikse.SubtitleEdit.Forms
                                 };
                                 SetStyleForNewParagraph(newParagraph, firstSelectedIndex);
                                 _subtitle.InsertParagraphInCorrectTimeOrder(newParagraph);
+
+                                if (IsOriginalEditable && SubtitleListview1.IsOriginalTextColumnVisible)
+                                {
+                                    var original = Utilities.GetOriginalParagraph(_subtitle.Paragraphs.Count - 1, newParagraph, _subtitleOriginal.Paragraphs);
+                                    if (original == null)
+                                    {
+                                        _subtitleOriginal.InsertParagraphInCorrectTimeOrder(new Paragraph(string.Empty, newParagraph.StartTime.TotalMilliseconds, newParagraph.EndTime.TotalMilliseconds));
+                                    }
+                                }
                             }
                         }
 
