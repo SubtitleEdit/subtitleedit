@@ -17,7 +17,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
             return $"{(AlreadyDownloaded ? "* " : string.Empty)}{Name} ({Size})";
         }
 
-        private readonly string[] _fileNames = { "model.bin", "config.json", "vocabulary.txt", "vocabulary.json", "tokenizer.json" };
+        private readonly string[] _fileNames = { "model.bin", "config.json", "vocabulary.txt", "vocabulary.json", "tokenizer.json", "preprocessor_config.json" };
 
 
         public string ModelFolder => Path.Combine(Configuration.DataDirectory, "Whisper", "Purfview-Whisper-Faster", "_models");
