@@ -24,6 +24,7 @@
    * Add Spanish for ChatGPT translate - thx alvarusk
    * Add some words to SE user dictionary - thx Caleb
    * Update Whisper CPP to v1.5.2
+   * Update Purfview's Faster Whisper to r167.2
    * Update libmpv to 2023-11-26
    * Update yt-dlp to 2023-11-16
    * Re-add Whisper Const-me large model v2
