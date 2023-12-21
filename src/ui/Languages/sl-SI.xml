@@ -1723,7 +1723,7 @@ Ali želite začeti z vrha dokumenta ter nadaljevati iskanje in zamenjavo?</Repl
     <BeforeSetEndTimeAndOffsetTheRest>Pred nastavitvijo končnega časa in zamikom preostalega</BeforeSetEndTimeAndOffsetTheRest>
     <BeforeSetEndAndVideoPosition>Pred nastavitvijo končnega časa na položaju videa in samodejnim izračunom začetka</BeforeSetEndAndVideoPosition>
     <ContinueWithCurrentSpellCheck>Želite nadaljevati s trenutnim preverjanjem črkovanja?</ContinueWithCurrentSpellCheck>
-    <CharactersPerSecond>Znakov/s: 0:0,00}</CharactersPerSecond>
+    <CharactersPerSecond>Znakov/s: {0:0.00}</CharactersPerSecond>
     <GetFrameRateFromVideoFile>Pridobi hitrost sličic iz video datoteke</GetFrameRateFromVideoFile>
     <NetworkMessage>Novo sporočilo: {0} ({1}): {2}</NetworkMessage>
     <NetworkUpdate>Posodobljena vrstica: {0} ({1}): Index={2}, Text={3}</NetworkUpdate>
