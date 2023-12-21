@@ -423,7 +423,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                     return;
                 }
 
-                if (item.Code.StartsWith(threeLetterLanguageCode) || item.Code == languageIsoCode)
+                if (!string.IsNullOrEmpty(threeLetterLanguageCode) && item.Code.StartsWith(threeLetterLanguageCode) || item.Code == languageIsoCode)
                 {
                     comboBox.SelectedIndex = i;
                     return;
