@@ -368,8 +368,9 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
         private void SetupLanguageSettings()
         {
-            FillComboWithLanguages(comboBoxSource, _autoTranslator.GetSupportedSourceLanguages());
-            var sourceLanguageIsoCode = EvaluateDefaultSourceLanguageCode(_encoding, _subtitle);
+            var sourceLanguages = _autoTranslator.GetSupportedSourceLanguages();
+            FillComboWithLanguages(comboBoxSource, sourceLanguages);
+            var sourceLanguageIsoCode = EvaluateDefaultSourceLanguageCode(_encoding, _subtitle, sourceLanguages);
             SelectLanguageCode(comboBoxSource, sourceLanguageIsoCode);
 
             FillComboWithLanguages(comboBoxTarget, _autoTranslator.GetSupportedTargetLanguages());
@@ -381,6 +382,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
         {
             var i = 0;
             var threeLetterLanguageCode = Iso639Dash2LanguageCode.GetThreeLetterCodeFromTwoLetterCode(languageIsoCode);
+
             foreach (TranslationPair item in comboBox.Items)
             {
                 if (!string.IsNullOrEmpty(item.TwoLetterIsoLanguageName) && item.TwoLetterIsoLanguageName == languageIsoCode)
@@ -447,12 +449,19 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             }
         }
 
-        public static string EvaluateDefaultSourceLanguageCode(Encoding encoding, Subtitle subtitle)
+        public static string EvaluateDefaultSourceLanguageCode(Encoding encoding, Subtitle subtitle, List<TranslationPair> sourceLanguages)
         {
             var defaultSourceLanguageCode = LanguageAutoDetect.AutoDetectGoogleLanguage(encoding); // Guess language via encoding
             if (string.IsNullOrEmpty(defaultSourceLanguageCode))
             {
                 defaultSourceLanguageCode = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle); // Guess language based on subtitle contents
+            }
+
+            if (!string.IsNullOrEmpty(Configuration.Settings.Tools.GoogleTranslateLastSourceLanguage) &&
+                Configuration.Settings.Tools.GoogleTranslateLastTargetLanguage.StartsWith(defaultSourceLanguageCode) &&
+                sourceLanguages.Any(p=>p.Code == Configuration.Settings.Tools.GoogleTranslateLastSourceLanguage))
+            {
+                return Configuration.Settings.Tools.GoogleTranslateLastSourceLanguage;
             }
 
             return defaultSourceLanguageCode;
@@ -607,6 +616,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 TwoLetterIsoTarget = target.TwoLetterIsoLanguageName;
                 var mergeErrorCount = 0;
 
+                Configuration.Settings.Tools.GoogleTranslateLastSourceLanguage = source.TwoLetterIsoLanguageName ?? source.Code;
                 Configuration.Settings.Tools.GoogleTranslateLastTargetLanguage = target.TwoLetterIsoLanguageName ?? target.Code;
                 try
                 {

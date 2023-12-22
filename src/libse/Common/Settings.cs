@@ -151,6 +151,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public string GoogleApiV2Key { get; set; }
         public bool GoogleTranslateNoKeyWarningShow { get; set; }
         public int GoogleApiV1ChunkSize { get; set; }
+        public string GoogleTranslateLastSourceLanguage { get; set; }
         public string GoogleTranslateLastTargetLanguage { get; set; }
         public string AutoTranslateLastName { get; set; }
         public string AutoTranslateLastUrl { get; set; }
@@ -5134,6 +5135,12 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.Tools.GoogleApiV1ChunkSize = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("GoogleTranslateLastSourceLanguage");
+            if (subNode != null)
+            {
+                settings.Tools.GoogleTranslateLastSourceLanguage = subNode.InnerText;
             }
 
             subNode = node.SelectSingleNode("GoogleTranslateLastTargetLanguage");
@@ -11648,6 +11655,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("GoogleApiV2Key", settings.Tools.GoogleApiV2Key);
                 textWriter.WriteElementString("GoogleTranslateNoKeyWarningShow", settings.Tools.GoogleTranslateNoKeyWarningShow.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("GoogleApiV1ChunkSize", settings.Tools.GoogleApiV1ChunkSize.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("GoogleTranslateLastSourceLanguage", settings.Tools.GoogleTranslateLastSourceLanguage);
                 textWriter.WriteElementString("GoogleTranslateLastTargetLanguage", settings.Tools.GoogleTranslateLastTargetLanguage);
                 textWriter.WriteElementString("AutoTranslateLastName", settings.Tools.AutoTranslateLastName);
                 textWriter.WriteElementString("AutoTranslateLastUrl", settings.Tools.AutoTranslateLastUrl);

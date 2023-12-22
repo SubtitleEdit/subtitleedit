@@ -322,13 +322,13 @@
             this.comboBoxSource.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxSource.DropDownWidth = 140;
             this.comboBoxSource.FormattingEnabled = true;
-            this.comboBoxSource.Location = new System.Drawing.Point(321, 25);
+            this.comboBoxSource.Location = new System.Drawing.Point(318, 25);
             this.comboBoxSource.MaxLength = 32767;
             this.comboBoxSource.Name = "comboBoxSource";
             this.comboBoxSource.SelectedIndex = -1;
             this.comboBoxSource.SelectedItem = null;
             this.comboBoxSource.SelectedText = "";
-            this.comboBoxSource.Size = new System.Drawing.Size(121, 23);
+            this.comboBoxSource.Size = new System.Drawing.Size(125, 23);
             this.comboBoxSource.TabIndex = 94;
             this.comboBoxSource.UsePopupWindow = false;
             // 
@@ -351,7 +351,7 @@
             this.comboBoxTarget.SelectedIndex = -1;
             this.comboBoxTarget.SelectedItem = null;
             this.comboBoxTarget.SelectedText = "";
-            this.comboBoxTarget.Size = new System.Drawing.Size(121, 23);
+            this.comboBoxTarget.Size = new System.Drawing.Size(125, 23);
             this.comboBoxTarget.TabIndex = 95;
             this.comboBoxTarget.UsePopupWindow = false;
             this.comboBoxTarget.SelectedIndexChanged += new System.EventHandler(this.comboBoxTarget_SelectedIndexChanged);
