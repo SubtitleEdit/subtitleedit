@@ -1074,6 +1074,7 @@ Para usar una clave de API, ve a "Opciones --&gt; Configuración --&gt; Herramie
     <XRequiresALocalWebServer>¡"{0}" requiere un servidor web ejecutado localmente!</XRequiresALocalWebServer>
     <XRequiresAnApiKey>"{0}" requiere una clave API.</XRequiresAnApiKey>
     <ReadMore>¿Leer más al respecto?</ReadMore>
+    <Formality>Formalidad</Formality>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
     <Title>Traductor Google vs Microsoft</Title>
@@ -2556,6 +2557,7 @@ puede editar el mismo archivo de subtítulo (colaboración)</Information>
     <AdjustViaEndAutoStart>Ajuste a través de la posición final</AdjustViaEndAutoStart>
     <AdjustViaEndAutoStartAndGoToNext>Ajustar posición final e ir al siguiente</AdjustViaEndAutoStartAndGoToNext>
     <AdjustSetEndMinusGapAndStartNextHere>Fijar el final menos el intervalo, pasar al siguiente y empezar el siguiente aquí</AdjustSetEndMinusGapAndStartNextHere>
+    <AdjustSetEndAndStartNextAfterGap>Fijar el final y el inicio del siguiente después del intervalo</AdjustSetEndAndStartNextAfterGap>
     <AdjustSetStartTimeAndGoToNext>Ajustar inicio e ir al siguiente</AdjustSetStartTimeAndGoToNext>
     <AdjustSetEndTimeAndGoToNext>Ajustar fin e ir al siguiente</AdjustSetEndTimeAndGoToNext>
     <AdjustSetEndTimeAndPause>Fijar el final y pausar</AdjustSetEndTimeAndPause>
