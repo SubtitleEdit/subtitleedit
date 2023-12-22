@@ -3,8 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>4.0.2</Version>
-    <TranslatedBy>Μετάφραση: Παναγιώτης Μητσάκης
-Για σχόλια, παρατηρήσεις και διορθώσεις, στείλτε e-mail: panagiotismitsakis91gmail.com</TranslatedBy>
+    <TranslatedBy>Μετάφραση: Παναγιώτης Μητσάκης</TranslatedBy>
     <CultureName>el-GR</CultureName>
     <HelpFile />
     <Ok>&amp;Εντάξει</Ok>
@@ -1059,6 +1058,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <XRequiresALocalWebServer>Το "{0}" απαιτεί τοπικό διακομιστή.</XRequiresALocalWebServer>
     <XRequiresAnApiKey>Το "{0}" απαιτεί κλειδί API.</XRequiresAnApiKey>
     <ReadMore>Συνέχεια ανάγνωσης;</ReadMore>
+    <Formality>Διατύπωση</Formality>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
     <Title>Μετάφραση Google vs Bing</Title>
@@ -2540,6 +2540,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <AdjustViaEndAutoStart>Προσαρμογή μέσω θέσης λήξης</AdjustViaEndAutoStart>
     <AdjustViaEndAutoStartAndGoToNext>Προσαρμογή μέσω θέσης λήξης και επόμενο</AdjustViaEndAutoStartAndGoToNext>
     <AdjustSetEndMinusGapAndStartNextHere>Ορισμός λήξης πλην κενού, μετάβαση σε επόμενο και έναρξη εδώ</AdjustSetEndMinusGapAndStartNextHere>
+    <AdjustSetEndAndStartNextAfterGap>Ορισμός λήξης κι έναρξης του επόμενου μετά το κενό</AdjustSetEndAndStartNextAfterGap>
     <AdjustSetStartTimeAndGoToNext>Ορισμός έναρξης και επόμενο</AdjustSetStartTimeAndGoToNext>
     <AdjustSetEndTimeAndGoToNext>Ορισμός λήξης και επόμενο</AdjustSetEndTimeAndGoToNext>
     <AdjustSetEndTimeAndPause>Ορισμός λήξης και παύση</AdjustSetEndTimeAndPause>
