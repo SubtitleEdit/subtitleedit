@@ -1074,6 +1074,7 @@ Aby użyć klucza API przejdź do "Opcje -&gt; Ustawienia -&gt; Narzędzia", aby
     <XRequiresALocalWebServer>"{0}" wymaga serwera WWW działającego lokalnie!</XRequiresALocalWebServer>
     <XRequiresAnApiKey>"{0}" wymaga klucza API.</XRequiresAnApiKey>
     <ReadMore>Więcej informacji?</ReadMore>
+    <Formality>Stopień formalizmu</Formality>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
     <Title>Tłumaczenie Google vs Tłumaczenie Microsoft</Title>
@@ -2556,6 +2557,7 @@ może edytować ten sam plik napisów (współpraca)</Information>
     <AdjustViaEndAutoStart>Dostosuj za pomocą pozycji końcowej</AdjustViaEndAutoStart>
     <AdjustViaEndAutoStartAndGoToNext>Dostosuj za pomocą pozycji końcowej i przejdź do następnej</AdjustViaEndAutoStartAndGoToNext>
     <AdjustSetEndMinusGapAndStartNextHere>Ustaw koniec minus odstęp, przejdź do następnej i zacznij następną tutaj</AdjustSetEndMinusGapAndStartNextHere>
+    <AdjustSetEndAndStartNextAfterGap>Ustaw koniec i początek następnej po odstępie</AdjustSetEndAndStartNextAfterGap>
     <AdjustSetStartTimeAndGoToNext>Ustaw początek i przejdź do następnej</AdjustSetStartTimeAndGoToNext>
     <AdjustSetEndTimeAndGoToNext>Ustaw koniec i przejdź do następnej</AdjustSetEndTimeAndGoToNext>
     <AdjustSetEndTimeAndPause>Ustaw koniec i wstrzymaj</AdjustSetEndTimeAndPause>
