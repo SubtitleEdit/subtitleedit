@@ -2,7 +2,7 @@
 <Language Name="suomi">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.2</Version>
+    <Version>4.0.3</Version>
     <TranslatedBy>Suomentanut vm, päivittänyt Teijo S. [23-11-2023]</TranslatedBy>
     <CultureName>fi-FI</CultureName>
     <HelpFile />
@@ -489,7 +489,8 @@ Hyödynnämme kuvan sisäistä rytmiä.</CreateSimpleChainingToolTip>
     <BottomAlignSelectedLines>Tasaa valitut rivit alas (säilytä vaakasuunta)</BottomAlignSelectedLines>
     <ToggleForcedSelectedLines>Määritä valitut rivit pakotetuiksi / poista määritys</ToggleForcedSelectedLines>
     <SelectForcedLines>Valitse pakotetut rivit</SelectForcedLines>
-    <SelectNonForcedLines></SelectNonForcedLines>
+    <SelectNonForcedLines>
+    </SelectNonForcedLines>
     <SizeXY>Koko: {0}x{1}</SizeXY>
     <SetAspectRatio11>Aseta kuvasuhde 1:1</SetAspectRatio11>
     <ChangeBrightnessTitle>Säädä kirkkaus</ChangeBrightnessTitle>

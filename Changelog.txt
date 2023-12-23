@@ -1,7 +1,7 @@
 ﻿Subtitle Edit Changelog
 
 
-4.0.3 (xth December 2023) BETA
+4.0.3 (23rd December 2023)
 * NEW:
    * Add ".opus" + ".adts" audio file extensions - thx vivadavid/Lyubomir71
    * Add two TSV subtitle formats - thx Purfview
