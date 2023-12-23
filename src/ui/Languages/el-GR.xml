@@ -2,8 +2,9 @@
 <Language Name="Ελληνικά">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.2</Version>
-    <TranslatedBy>Μετάφραση: Παναγιώτης Μητσάκης</TranslatedBy>
+    <Version>4.0.3</Version>
+    <TranslatedBy>Μετάφραση: Παναγιώτης Μητσάκης
+Για σχόλια, παρατηρήσεις και διορθώσεις, στείλτε e-mail: panagiotismitsakis91gmail.com</TranslatedBy>
     <CultureName>el-GR</CultureName>
     <HelpFile />
     <Ok>&amp;Εντάξει</Ok>
