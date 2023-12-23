@@ -1069,6 +1069,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <XRequiresALocalWebServer>"{0}"를 사용하려면 로컬에서 실행되는 웹 서버가 필요합니다!</XRequiresALocalWebServer>
     <XRequiresAnApiKey>"{0}"에는 API 키가 필요합니다.</XRequiresAnApiKey>
     <ReadMore>더 많은 정보를 보시겠습니까?</ReadMore>
+    <Formality>형식</Formality>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
     <Title>Google | Microsoft 번역기</Title>
@@ -2557,6 +2558,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <AdjustViaEndAutoStart>끝 지점을 통해 조정</AdjustViaEndAutoStart>
     <AdjustViaEndAutoStartAndGoToNext>끝 지점을 통해 조정하고 다음으로 이동</AdjustViaEndAutoStartAndGoToNext>
     <AdjustSetEndMinusGapAndStartNextHere>끝 지점의 음수 간격 조정, 다음으로 이동하고 여기에서 다음 시작</AdjustSetEndMinusGapAndStartNextHere>
+    <AdjustSetEndAndStartNextAfterGap>간격 후 다음의 시작 지점과 끝 지점 설정</AdjustSetEndAndStartNextAfterGap>
     <AdjustSetStartTimeAndGoToNext>시작 지점을 정하고 다음으로 이동</AdjustSetStartTimeAndGoToNext>
     <AdjustSetEndTimeAndGoToNext>끝 지점 정하고 다음으로 이동</AdjustSetEndTimeAndGoToNext>
     <AdjustSetEndTimeAndPause>끝 지점 정하고 일시 중지</AdjustSetEndTimeAndPause>
