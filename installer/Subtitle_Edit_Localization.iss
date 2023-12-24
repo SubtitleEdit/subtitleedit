@@ -684,23 +684,23 @@ vi.types_default=Default installation
 
 ; Chinese Simplified
 [Messages]
-zh.SetupAppTitle=Setup - Subtitle Edit
-zh.SetupWindowTitle=Setup - Subtitle Edit {#app_ver}
+zh.SetupAppTitle=安装程序 - Subtitle Edit
+zh.SetupWindowTitle=安装程序 - Subtitle Edit {#app_ver}
 [CustomMessages]
-zh.comp_translations=Translations
-zh.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 4.8. Please download and install the .NET Framework and run setup again.%n%nDo you want to download the .NET Framework 4.8 now?
-zh.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings and any custom changes you made in the dictionaries?%n%nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
-zh.msg_OptimizingPerformance=Optimizing performance...
-zh.run_VisitWebsite=Visit Subtitle Edit's Website
-zh.sm_com_Changelog=Subtitle Edit's Changelog
-zh.tsk_AllUsers=For all users
-zh.tsk_CurrentUser=For the current user only
-zh.tsk_Other=Other:
-zh.tsk_ResetDictionaries=Reset Dictionaries and delete any custom names
-zh.tsk_ResetSettings=Reset Subtitle Edit's settings
-zh.tsk_SetFileTypes=Associate common subtitle files with Subtitle Edit
-zh.types_custom=Custom installation
-zh.types_default=Default installation
+zh.comp_translations=翻译
+zh.msg_AskToDownNET=Subtitle Edit 需要 .NET Framework 4.8。请下载并安装 .NET Framework，然后重新运行本安装程序。%n%n您现在要下载 .NET Framework 4.8 吗？
+zh.msg_DeleteSettings=您是否还想删除 Subtitle Edit 的设置以及您在词典中进行的任何自定义更改？%n%n如果您打算重新安装 Subtitle Edit，则不必删除它们。
+zh.msg_OptimizingPerformance=优化性能……
+zh.run_VisitWebsite=前往 Subtitle Edit 的网站
+zh.sm_com_Changelog=Subtitle Edit 的更新日志
+zh.tsk_AllUsers=为所有用户安装
+zh.tsk_CurrentUser=仅为当前用户安装
+zh.tsk_Other=其他：
+zh.tsk_ResetDictionaries=重置词典并删除用户词汇表
+zh.tsk_ResetSettings=重置 Subtitle Edit 设置
+zh.tsk_SetFileTypes=将典型字幕文件格式关联到 Subtitle Edit
+zh.types_custom=自定义安装
+zh.types_default=典型安装
 
 ; Chinese Traditional
 [Messages]
