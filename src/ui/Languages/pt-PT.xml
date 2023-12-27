@@ -1075,6 +1075,7 @@ Para usar a chave API, vá a "Opções -&gt; Definições -&gt; Ferramentas" par
     <XRequiresALocalWebServer>"{0}" requer um servidor Web a funcionar localmente!</XRequiresALocalWebServer>
     <XRequiresAnApiKey>"{0}" requer uma chave API.</XRequiresAnApiKey>
     <ReadMore>Ler mais?</ReadMore>
+    <Formality>Formalidade</Formality>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
     <Title>Tradutor do Google vs Microsoft</Title>
