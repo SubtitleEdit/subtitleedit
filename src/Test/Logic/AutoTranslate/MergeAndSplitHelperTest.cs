@@ -22,7 +22,7 @@ namespace Test.Logic.AutoTranslate
             Assert.AreEqual("Hallo world.", mergeResult.Text);
             Assert.AreEqual(subtitle.Paragraphs.Count, mergeResult.ParagraphCount);
             Assert.AreEqual(1, mergeResult.MergeResultItems.Count);
-            Assert.AreEqual(true, mergeResult.MergeResultItems[0].Continious);
+            Assert.AreEqual(true, mergeResult.MergeResultItems[0].Continuous);
             Assert.AreEqual(0, mergeResult.MergeResultItems[0].StartIndex);
             Assert.AreEqual(1, mergeResult.MergeResultItems[0].EndIndex);
 
@@ -50,11 +50,11 @@ namespace Test.Logic.AutoTranslate
             Assert.AreEqual(3, mergeResult.MergeResultItems.Count);
             Assert.AreEqual(true, mergeResult.MergeResultItems[0].IsEmpty);
             Assert.AreEqual(false, mergeResult.MergeResultItems[1].IsEmpty);
-            Assert.AreEqual(false, mergeResult.MergeResultItems[1].Continious);
+            Assert.AreEqual(false, mergeResult.MergeResultItems[1].Continuous);
             Assert.AreEqual(1, mergeResult.MergeResultItems[1].StartIndex);
             Assert.AreEqual(1, mergeResult.MergeResultItems[1].EndIndex);
             Assert.AreEqual('.', mergeResult.MergeResultItems[1].EndChar);
-            Assert.AreEqual(1, mergeResult.MergeResultItems[1].EndCharOccurences);
+            Assert.AreEqual(1, mergeResult.MergeResultItems[1].EndCharOccurrences);
 
             var splitResult = MergeAndSplitHelper.SplitMultipleLines(mergeResult, mergeResult.Text, "en");
             Assert.AreEqual(subtitle.Paragraphs.Count, splitResult.Count);
@@ -77,11 +77,11 @@ namespace Test.Logic.AutoTranslate
             Assert.AreEqual(3, mergeResult.MergeResultItems.Count);
             Assert.AreEqual(true, mergeResult.MergeResultItems[0].IsEmpty);
             Assert.AreEqual(false, mergeResult.MergeResultItems[1].IsEmpty);
-            Assert.AreEqual(false, mergeResult.MergeResultItems[1].Continious);
+            Assert.AreEqual(false, mergeResult.MergeResultItems[1].Continuous);
             Assert.AreEqual(1, mergeResult.MergeResultItems[1].StartIndex);
             Assert.AreEqual(1, mergeResult.MergeResultItems[1].EndIndex);
             Assert.AreEqual('.', mergeResult.MergeResultItems[1].EndChar);
-            Assert.AreEqual(1, mergeResult.MergeResultItems[1].EndCharOccurences);
+            Assert.AreEqual(1, mergeResult.MergeResultItems[1].EndCharOccurrences);
 
             var splitResult = MergeAndSplitHelper.SplitMultipleLines(mergeResult, mergeResult.Text, "en");
             Assert.AreEqual(subtitle.Paragraphs.Count, splitResult.Count);
@@ -104,11 +104,11 @@ namespace Test.Logic.AutoTranslate
             Assert.AreEqual("Hallo there. In the garden." + Environment.NewLine + "How are you?", mergeResult.Text);
             Assert.AreEqual(subtitle.Paragraphs.Count, mergeResult.ParagraphCount);
             Assert.AreEqual(2, mergeResult.MergeResultItems.Count);
-            Assert.AreEqual(false, mergeResult.MergeResultItems[0].Continious);
+            Assert.AreEqual(false, mergeResult.MergeResultItems[0].Continuous);
             Assert.AreEqual(0, mergeResult.MergeResultItems[0].StartIndex);
             Assert.AreEqual(0, mergeResult.MergeResultItems[0].EndIndex);
             Assert.AreEqual('.', mergeResult.MergeResultItems[0].EndChar);
-            Assert.AreEqual(2, mergeResult.MergeResultItems[0].EndCharOccurences);
+            Assert.AreEqual(2, mergeResult.MergeResultItems[0].EndCharOccurrences);
         }
 
         [TestMethod]
@@ -136,36 +136,36 @@ namespace Test.Logic.AutoTranslate
             Assert.AreEqual(6, mergeResult.MergeResultItems.Count);
             Assert.AreEqual(subtitle.Paragraphs.Count, mergeResult.ParagraphCount);
 
-            Assert.AreEqual(true, mergeResult.MergeResultItems[0].Continious);
+            Assert.AreEqual(true, mergeResult.MergeResultItems[0].Continuous);
             Assert.AreEqual(0, mergeResult.MergeResultItems[0].StartIndex);
             Assert.AreEqual(2, mergeResult.MergeResultItems[0].EndIndex);
             Assert.AreEqual('.', mergeResult.MergeResultItems[0].EndChar);
-            Assert.AreEqual(2, mergeResult.MergeResultItems[0].EndCharOccurences);
+            Assert.AreEqual(2, mergeResult.MergeResultItems[0].EndCharOccurrences);
 
-            Assert.AreEqual(false, mergeResult.MergeResultItems[1].Continious);
+            Assert.AreEqual(false, mergeResult.MergeResultItems[1].Continuous);
             Assert.AreEqual(3, mergeResult.MergeResultItems[1].StartIndex);
             Assert.AreEqual(3, mergeResult.MergeResultItems[1].EndIndex);
             Assert.AreEqual('!', mergeResult.MergeResultItems[1].EndChar);
 
-            Assert.AreEqual(false, mergeResult.MergeResultItems[2].Continious);
+            Assert.AreEqual(false, mergeResult.MergeResultItems[2].Continuous);
             Assert.AreEqual(4, mergeResult.MergeResultItems[2].StartIndex);
             Assert.AreEqual(4, mergeResult.MergeResultItems[2].EndIndex);
             Assert.AreEqual('.', mergeResult.MergeResultItems[2].EndChar);
-            Assert.AreEqual(1, mergeResult.MergeResultItems[2].EndCharOccurences);
+            Assert.AreEqual(1, mergeResult.MergeResultItems[2].EndCharOccurrences);
 
-            Assert.AreEqual(false, mergeResult.MergeResultItems[3].Continious);
+            Assert.AreEqual(false, mergeResult.MergeResultItems[3].Continuous);
             Assert.AreEqual(5, mergeResult.MergeResultItems[3].StartIndex);
             Assert.AreEqual(5, mergeResult.MergeResultItems[3].EndIndex);
             Assert.AreEqual('.', mergeResult.MergeResultItems[3].EndChar);
-            Assert.AreEqual(2, mergeResult.MergeResultItems[3].EndCharOccurences);
+            Assert.AreEqual(2, mergeResult.MergeResultItems[3].EndCharOccurrences);
 
             Assert.AreEqual(true, mergeResult.MergeResultItems[4].IsEmpty);
 
-            Assert.AreEqual(false, mergeResult.MergeResultItems[5].Continious);
+            Assert.AreEqual(false, mergeResult.MergeResultItems[5].Continuous);
             Assert.AreEqual(7, mergeResult.MergeResultItems[5].StartIndex);
             Assert.AreEqual(7, mergeResult.MergeResultItems[5].EndIndex);
             Assert.AreEqual('.', mergeResult.MergeResultItems[5].EndChar);
-            Assert.AreEqual(1, mergeResult.MergeResultItems[5].EndCharOccurences);
+            Assert.AreEqual(1, mergeResult.MergeResultItems[5].EndCharOccurrences);
 
             var splitResult = MergeAndSplitHelper.SplitMultipleLines(mergeResult, mergeResult.Text, "en");
             Assert.AreEqual(subtitle.Paragraphs.Count, splitResult.Count);
