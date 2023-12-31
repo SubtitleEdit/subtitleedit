@@ -11790,7 +11790,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SplitSelectedParagraph(double? splitSeconds, int? textIndex, bool autoBreak = false)
         {
-            int maxSingleLineLength = Configuration.Settings.General.SubtitleLineMaximumLength;
+            var maxSingleLineLength = Configuration.Settings.General.SubtitleLineMaximumLength;
             var language = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle);
             int? originalTextIndex = null;
             if (textBoxListViewTextOriginal.Focused)
@@ -15436,7 +15436,13 @@ namespace Nikse.SubtitleEdit.Forms
                     SubtitleListview1.FirstVisibleIndex = -1;
                     SubtitleListview1.SelectIndexAndEnsureVisible(0, true);
                     RefreshSelectedParagraph();
+
                     _fileName = string.Empty;
+                    if (!string.IsNullOrEmpty(matroska.Path))
+                    {
+                        _fileName = Path.GetFileNameWithoutExtension(matroska.Path) + GetCurrentSubtitleFormat().Extension;
+                    }
+
                     _converted = true;
                     SetTitle();
 
