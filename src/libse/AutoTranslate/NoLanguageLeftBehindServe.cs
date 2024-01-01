@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Core.AutoTranslate
@@ -40,7 +41,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             return ListLanguages();
         }
 
-        public async Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode)
+        public async Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
         {
             var list = text.SplitToLines();
             var sb = new StringBuilder();

@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Core.AutoTranslate
@@ -39,7 +40,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             return new NoLanguageLeftBehindServe().GetSupportedTargetLanguages();
         }
 
-        public async Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode)
+        public async Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
         {
             var content = new StringContent("{ \"text\": \"" + Json.EncodeJsonText(text) + "\",  \"source\": \"" + sourceLanguageCode + "\", \"target\": \"" + targetLanguageCode + "\" }", Encoding.UTF8, "application/json");
             var result = _httpClient.PostAsync("translate", content).Result;

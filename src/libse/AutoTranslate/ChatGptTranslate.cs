@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Core.AutoTranslate
@@ -44,7 +45,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             return ListLanguages();
         }
 
-        public async Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode)
+        public async Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
         {
             var input = "{\"model\": \"gpt-3.5-turbo\",\"messages\": [{ \"role\": \"user\", \"content\": \"Please translate the following text from " + sourceLanguageCode + " to " + targetLanguageCode + ", only write the result: \\n\\n" + Json.EncodeJsonText(text.Trim()) + "\" }]}";
             var content = new StringContent(input, Encoding.UTF8);

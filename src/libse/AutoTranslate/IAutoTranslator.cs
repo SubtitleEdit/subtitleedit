@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Nikse.SubtitleEdit.Core.Translate;
 
@@ -38,6 +39,6 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
         /// <summary>
         /// Do translation.
         /// </summary>
-        Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode);
+        Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken);
     }
 }
