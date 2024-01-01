@@ -570,8 +570,10 @@ namespace Nikse.SubtitleEdit.Forms.Translate
         {
             if (_translationInProgress)
             {
+                _translationInProgress = false;
                 _cancellationTokenSource.Cancel();
                 _breakTranslation = true;
+                buttonTranslate.Enabled = false;
                 buttonOK.Enabled = true;
                 buttonCancel.Enabled = true;
                 Application.DoEvents();
