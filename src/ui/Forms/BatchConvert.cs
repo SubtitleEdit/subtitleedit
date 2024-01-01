@@ -1970,7 +1970,7 @@ namespace Nikse.SubtitleEdit.Forms
             while (index < subtitle.Paragraphs.Count && !_abort)
             {
                 Application.DoEvents();
-                var linesMergedAndTranslated = await MergeAndSplitHelper.MergeAndTranslateIfPossible(subtitle, translatedSubtitle, source, target, index, engine, forceSingleLineMode);
+                var linesMergedAndTranslated = await MergeAndSplitHelper.MergeAndTranslateIfPossible(subtitle, translatedSubtitle, source, target, index, engine, forceSingleLineMode, CancellationToken.None);
                 if (linesMergedAndTranslated > 0)
                 {
                     index += linesMergedAndTranslated;
@@ -1981,7 +1981,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var f = new Formatting();
                 var unformattedText = f.SetTagsAndReturnTrimmed(p.Text, source.Code);
 
-                var translation = await _autoTranslator.Translate(unformattedText, source.Code, target.Code);
+                var translation = await _autoTranslator.Translate(unformattedText, source.Code, target.Code, CancellationToken.None);
                 translation = translation
                     .Replace("<br />", Environment.NewLine)
                     .Replace("<br/>", Environment.NewLine);

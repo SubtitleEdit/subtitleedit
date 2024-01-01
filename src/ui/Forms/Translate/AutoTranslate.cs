@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 using Timer = System.Windows.Forms.Timer;
@@ -28,6 +29,8 @@ namespace Nikse.SubtitleEdit.Forms.Translate
         private int _translationProgressIndex = -1;
         private bool _translationProgressDirty = true;
         private bool _breakTranslation;
+        private bool _translationInProgress;
+        private CancellationTokenSource _cancellationTokenSource;
 
         public AutoTranslate(Subtitle subtitle, Subtitle selectedLines, string title, Encoding encoding)
         {
@@ -459,7 +462,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
             if (!string.IsNullOrEmpty(Configuration.Settings.Tools.GoogleTranslateLastSourceLanguage) &&
                 Configuration.Settings.Tools.GoogleTranslateLastTargetLanguage.StartsWith(defaultSourceLanguageCode) &&
-                sourceLanguages.Any(p=>p.Code == Configuration.Settings.Tools.GoogleTranslateLastSourceLanguage))
+                sourceLanguages.Any(p => p.Code == Configuration.Settings.Tools.GoogleTranslateLastSourceLanguage))
             {
                 return Configuration.Settings.Tools.GoogleTranslateLastSourceLanguage;
             }
@@ -565,17 +568,19 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
         private async void buttonTranslate_Click(object sender, EventArgs e)
         {
-            if (buttonTranslate.Text == LanguageSettings.Current.General.Cancel)
+            if (_translationInProgress)
             {
-                buttonTranslate.Enabled = false;
+                _cancellationTokenSource.Cancel();
+                _breakTranslation = true;
                 buttonOK.Enabled = true;
                 buttonCancel.Enabled = true;
-                _breakTranslation = true;
                 Application.DoEvents();
                 buttonOK.Refresh();
                 return;
             }
 
+            _translationInProgress = true;
+            _cancellationTokenSource = new CancellationTokenSource();
             _autoTranslator = GetCurrentEngine();
             var engineType = _autoTranslator.GetType();
 
@@ -631,7 +636,14 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                             break;
                         }
 
-                        var linesMergedAndTranslated = await MergeAndSplitHelper.MergeAndTranslateIfPossible(_subtitle, TranslatedSubtitle, source, target, index, _autoTranslator, forceSingleLineMode);
+                        var linesMergedAndTranslated = await MergeAndSplitHelper.MergeAndTranslateIfPossible(_subtitle, TranslatedSubtitle, source, target, index, _autoTranslator, forceSingleLineMode, _cancellationTokenSource.Token);
+                        Application.DoEvents();
+
+                        if (_breakTranslation)
+                        {
+                            break;
+                        }
+
                         if (linesMergedAndTranslated > 0)
                         {
                             index += linesMergedAndTranslated;
@@ -650,7 +662,13 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                         var f = new Formatting();
                         var unformattedText = f.SetTagsAndReturnTrimmed(p.Text, source.Code);
 
-                        var translation = await _autoTranslator.Translate(unformattedText, source.Code, target.Code);
+                        var translation = await _autoTranslator.Translate(unformattedText, source.Code, target.Code, _cancellationTokenSource.Token);
+
+                        if (_breakTranslation)
+                        {
+                            break;
+                        }
+
                         translation = translation
                             .Replace("<br />", Environment.NewLine)
                             .Replace("<br/>", Environment.NewLine);
@@ -691,6 +709,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             _breakTranslation = false;
             buttonTranslate.Enabled = true;
             buttonTranslate.Text = LanguageSettings.Current.GoogleTranslate.Translate;
+            _translationInProgress = false;
 
             timerUpdate.Dispose();
             _translationProgressDirty = true;

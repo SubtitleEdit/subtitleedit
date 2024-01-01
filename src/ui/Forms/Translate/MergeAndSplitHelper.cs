@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Forms.Translate
@@ -13,7 +14,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
     {
         public static bool MergeSplitProblems { get; set; }
 
-        public static async Task<int> MergeAndTranslateIfPossible(Subtitle sourceSubtitle, Subtitle targetSubtitle, TranslationPair source, TranslationPair target, int index, IAutoTranslator autoTranslator, bool forceSingleLineMode)
+        public static async Task<int> MergeAndTranslateIfPossible(Subtitle sourceSubtitle, Subtitle targetSubtitle, TranslationPair source, TranslationPair target, int index, IAutoTranslator autoTranslator, bool forceSingleLineMode, CancellationToken cancellationToken)
         {
             if (forceSingleLineMode)
             {
@@ -63,7 +64,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             var linesTranslate = 0;
             if (mergeResult != null)
             {
-                var mergedTranslation = await autoTranslator.Translate(text, source.Code, target.Code);
+                var mergedTranslation = await autoTranslator.Translate(text, source.Code, target.Code, cancellationToken);
                 var splitResult = SplitMultipleLines(mergeResult, mergedTranslation, target.Code);
                 if (splitResult.Count == mergeCount && HasSameEmptyLines(splitResult, tempSubtitle, index))
                 {
