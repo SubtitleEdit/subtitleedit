@@ -717,13 +717,13 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                         if (!done && FileUtil.IsBluRaySup(fileName))
                         {
                             _stdOutWriter.WriteLine("Found Blu-Ray subtitle format");
-                            ConvertBluRaySubtitle(fileName, targetFormat, offset, deleteContains, targetEncoding, outputFolder, count, ref converted, ref errors, formats, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, forcedOnly, ocrEngine, ocrDb, resolution, renumber: renumber, adjustDurationMs: adjustDurationMs);
+                            ConvertBluRaySubtitle(fileName, targetFormat, offset, deleteContains, targetEncoding, outputFolder, targetFileName, count, ref converted, ref errors, formats, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, forcedOnly, ocrEngine, ocrDb, resolution, renumber: renumber, adjustDurationMs: adjustDurationMs);
                             done = true;
                         }
                         else if (!done && FileUtil.IsVobSub(fileName))
                         {
                             _stdOutWriter.WriteLine("Found VobSub subtitle format");
-                            ConvertVobSubSubtitle(fileName, targetFormat, offset, deleteContains, targetEncoding, outputFolder, count, ref converted, ref errors, formats, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, forcedOnly, ocrEngine, ocrDb, renumber: renumber, adjustDurationMs: adjustDurationMs);
+                            ConvertVobSubSubtitle(fileName, targetFormat, offset, deleteContains, targetEncoding, outputFolder, targetFileName,  count, ref converted, ref errors, formats, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, forcedOnly, ocrEngine, ocrDb, renumber: renumber, adjustDurationMs: adjustDurationMs);
                             done = true;
                         }
 
@@ -972,7 +972,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
             return null;
         }
 
-        private static void ConvertBluRaySubtitle(string fileName, string targetFormat, TimeSpan offset, string deleteContains, TextEncoding targetEncoding, string outputFolder, int count, ref int converted, ref int errors, List<SubtitleFormat> formats, bool overwrite, int pacCodePage, double? targetFrameRate, ICollection<string> multipleReplaceImportFiles, List<BatchAction> actions, bool forcedOnly, string ocrEngine, string ocrDb, Point? resolution, int? renumber, double? adjustDurationMs)
+        private static void ConvertBluRaySubtitle(string fileName, string targetFormat, TimeSpan offset, string deleteContains, TextEncoding targetEncoding, string outputFolder, string targetFileName, int count, ref int converted, ref int errors, List<SubtitleFormat> formats, bool overwrite, int pacCodePage, double? targetFrameRate, ICollection<string> multipleReplaceImportFiles, List<BatchAction> actions, bool forcedOnly, string ocrEngine, string ocrDb, Point? resolution, int? renumber, double? adjustDurationMs)
         {
             var format = Utilities.GetSubtitleFormatByFriendlyName(targetFormat) ?? new SubRip();
 
@@ -997,11 +997,11 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
             if (sub != null)
             {
                 _stdOutWriter?.WriteLine("Converted subtitle");
-                BatchConvertSave(targetFormat, offset, deleteContains, targetEncoding, outputFolder, string.Empty, count, ref converted, ref errors, formats, fileName, sub, format, null, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, resolution, renumber: renumber, adjustDurationMs: adjustDurationMs);
+                BatchConvertSave(targetFormat, offset, deleteContains, targetEncoding, outputFolder, targetFileName, count, ref converted, ref errors, formats, fileName, sub, format, null, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, resolution, renumber: renumber, adjustDurationMs: adjustDurationMs);
             }
         }
 
-        private static void ConvertVobSubSubtitle(string fileName, string targetFormat, TimeSpan offset, string deleteContains, TextEncoding targetEncoding, string outputFolder, int count, ref int converted, ref int errors, List<SubtitleFormat> formats, bool overwrite, int pacCodePage, double? targetFrameRate, ICollection<string> multipleReplaceImportFiles, List<BatchAction> actions, bool forcedOnly, string ocrEngine, string ocrDb, int? renumber, double? adjustDurationMs)
+        private static void ConvertVobSubSubtitle(string fileName, string targetFormat, TimeSpan offset, string deleteContains, TextEncoding targetEncoding, string outputFolder, string targetFileName, int count, ref int converted, ref int errors, List<SubtitleFormat> formats, bool overwrite, int pacCodePage, double? targetFrameRate, ICollection<string> multipleReplaceImportFiles, List<BatchAction> actions, bool forcedOnly, string ocrEngine, string ocrDb, int? renumber, double? adjustDurationMs)
         {
             var format = Utilities.GetSubtitleFormatByFriendlyName(targetFormat) ?? new SubRip();
 
@@ -1023,7 +1023,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
             if (sub != null)
             {
                 _stdOutWriter?.WriteLine("Converted subtitle");
-                BatchConvertSave(targetFormat, offset, deleteContains, targetEncoding, outputFolder, string.Empty, count, ref converted, ref errors, formats, fileName, sub, format, null, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, renumber: renumber, adjustDurationMs: adjustDurationMs);
+                BatchConvertSave(targetFormat, offset, deleteContains, targetEncoding, outputFolder, targetFileName, count, ref converted, ref errors, formats, fileName, sub, format, null, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, renumber: renumber, adjustDurationMs: adjustDurationMs);
             }
         }
 
