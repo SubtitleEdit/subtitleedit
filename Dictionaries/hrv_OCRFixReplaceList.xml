@@ -698,6 +698,7 @@
     <Word from="izviniš" to="ispričaš" />
     <Word from="izviniti" to="ispričati" />
     <Word from="izvinjava" to="ispričava" />
+    <Word from="izvinjavaju" to="ispričavaju" />
     <Word from="izvinjavam" to="ispričavam" />
     <Word from="Izvinjavaš" to="Ispričavaš" />
     <Word from="izvinjavaš" to="ispričavaš" />
@@ -3851,6 +3852,7 @@
     <LinePart from="mogao da bude" to="mogao biti" />
     <LinePart from="mogao da vidiš" to="mogao vidjeti" />
     <LinePart from="mogu da idem" to="mogu ići" />
+    <LinePart from="mogu da kažem" to="mogu reći" />
     <LinePart from="moglo da bude" to="moglo biti" />
     <LinePart from="moje saučešće" to="moja sućut" />
     <LinePart from="mora da bude" to="mora biti" />
@@ -3939,6 +3941,7 @@
     <LinePart from="sići dolje" to="sići" />
     <LinePart from="Si dobro" to="Jesi li dobro" />
     <LinePart from="Svako ko" to="Svatko tko" />
+    <LinePart from="svako ko" to="svatko tko" />
     <LinePart from="Svo vreme" to="Sve vrijeme" />
     <LinePart from="Svo vrijeme" to="Sve vrijeme" />
     <LinePart from="smeo da" to="smio" />
@@ -5413,6 +5416,7 @@
     <RegEx find="vsn" replaceWith="van" />
     <RegEx find="([zZ])amenit" replaceWith="$1amijenit" />
     <RegEx find="zankin" replaceWith="zank" />
+    <RegEx find="zanš" replaceWith="znaš" />
     <RegEx find="zaklać" replaceWith="zaklat ć" />
     <RegEx find="zbat" replaceWith="znat" />
     <RegEx find="zfr" replaceWith="zdr" />
