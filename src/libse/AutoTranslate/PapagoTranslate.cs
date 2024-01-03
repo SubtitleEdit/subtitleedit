@@ -29,7 +29,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json");
             _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("accept", "application/json");
             _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("X-NCP-APIGW-API-KEY-ID", Configuration.Settings.Tools.AutoTranslatePapagoApiKeyId);
-            _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("X-NCP-APIGW-API-KEY", Configuration.Settings.Tools.AutoTranslatePapagoApiKeyId);
+            _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("X-NCP-APIGW-API-KEY", Configuration.Settings.Tools.AutoTranslatePapagoApiKey);
             _httpClient.BaseAddress = new Uri("https://naveropenapi.apigw.ntruss.com/nmt/v1/");
         }
 
@@ -48,7 +48,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             var input = "{\"text\": \"" + Json.EncodeJsonText(text.Trim()) + "\", \"source\": \"" + sourceLanguageCode + "\", \"target\": \"" + targetLanguageCode + "\"}";
             var content = new StringContent(input, Encoding.UTF8);
             content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
-            var result = _httpClient.PostAsync("translation", content).Result;
+            var result = await _httpClient.PostAsync("translation", content, cancellationToken);
             var bytes = await result.Content.ReadAsByteArrayAsync();
             var json = Encoding.UTF8.GetString(bytes).Trim();
             if (!result.IsSuccessStatusCode)
