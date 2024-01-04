@@ -105,9 +105,9 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
             },
             new WhisperModel
             {
-                Name = "small-q5_1",
+                Name = "small.en-q5_1.bin",
                 Size = "190 MB",
-                Urls = new []{ DownloadUrlPrefix + "ggml-small-q5_1.bin" },
+                Urls = new []{ DownloadUrlPrefix + "ggml-small.en-q5_1.bin" },
             },
             new WhisperModel
             {
