@@ -204,7 +204,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             if (streamLength < 50)
             {
                 var text = FileUtil.ReadAllTextShared(_downloadFileName, Encoding.UTF8);
-                if (text == "Entry not found" && _downloadFileName.Contains("vocabulary."))
+                if (text.StartsWith("Entry not found", StringComparison.OrdinalIgnoreCase))
                 {
                     try
                     {
@@ -214,6 +214,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                     {
                         // ignore
                     }
+
                     return;
                 }
 

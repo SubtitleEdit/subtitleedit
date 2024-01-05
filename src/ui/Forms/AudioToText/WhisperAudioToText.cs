@@ -470,8 +470,8 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             }
 
             TranscribedSubtitle = postProcessor.Fix(
-                AudioToTextPostProcessor.Engine.Whisper, 
-                transcript, 
+                AudioToTextPostProcessor.Engine.Whisper,
+                transcript,
                 checkBoxUsePostProcessing.Checked,
                 Configuration.Settings.Tools.WhisperPostProcessingAddPeriods,
                 Configuration.Settings.Tools.WhisperPostProcessingMergeLines,
@@ -569,8 +569,8 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                     ParagraphMaxChars = Configuration.Settings.General.SubtitleLineMaximumLength * 2,
                 };
                 TranscribedSubtitle = postProcessor.Fix(
-                    AudioToTextPostProcessor.Engine.Whisper, 
-                    transcript, 
+                    AudioToTextPostProcessor.Engine.Whisper,
+                    transcript,
                     checkBoxUsePostProcessing.Checked,
                     Configuration.Settings.Tools.WhisperPostProcessingAddPeriods,
                     Configuration.Settings.Tools.WhisperPostProcessingMergeLines,
@@ -753,6 +753,32 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             else
             {
                 TaskbarList.SetProgressValue(_parentForm.Handle, 1, 100);
+            }
+
+            //Delete invalid preprocessor_config.json file
+            if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.PurfviewFasterWhisper ||
+                Configuration.Settings.Tools.WhisperChoice == WhisperChoice.PurfviewFasterWhisperCuda)
+            {
+                var dir = Path.Combine(WhisperHelper.GetWhisperFolder(), "_models", model.Folder);
+                if (Directory.Exists(dir))
+                {
+                    try
+                    {
+                        var preprocessorFileName = Path.Combine(dir, "preprocessor_config.json");
+                        if (File.Exists(preprocessorFileName))
+                        {
+                            var text = FileUtil.ReadAllTextShared(preprocessorFileName, Encoding.UTF8);
+                            if (text.StartsWith("Entry not found", StringComparison.OrdinalIgnoreCase))
+                            {
+                                File.Delete(preprocessorFileName);
+                            }
+                        }
+                    }
+                    catch
+                    {
+                        // ignore
+                    }
+                }
             }
 
             labelProgress.Refresh();
@@ -2104,8 +2130,8 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                     return;
                 }
 
-                TranscribedSubtitle = postProcessor.Fix(AudioToTextPostProcessor.Engine.Whisper, 
-                    _subtitle, 
+                TranscribedSubtitle = postProcessor.Fix(AudioToTextPostProcessor.Engine.Whisper,
+                    _subtitle,
                     checkBoxUsePostProcessing.Checked,
                     Configuration.Settings.Tools.WhisperPostProcessingAddPeriods,
                     Configuration.Settings.Tools.WhisperPostProcessingMergeLines,

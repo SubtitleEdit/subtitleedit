@@ -8,22 +8,27 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
     {
         public static IWhisperModel GetWhisperModel()
         {
-            if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.Cpp || Configuration.Settings.Tools.WhisperChoice == WhisperChoice.CppCuBlas)
+            return GetWhisperModel(Configuration.Settings.Tools.WhisperChoice);
+        }
+
+        public static IWhisperModel GetWhisperModel(string whisperChoice)
+        {
+            if (whisperChoice == WhisperChoice.Cpp || whisperChoice == WhisperChoice.CppCuBlas)
             {
                 return new WhisperCppModel();
             }
 
-            if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.ConstMe)
+            if (whisperChoice == WhisperChoice.ConstMe)
             {
                 return new WhisperConstMeModel();
             }
 
-            if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.CTranslate2)
+            if (whisperChoice == WhisperChoice.CTranslate2)
             {
                 return new WhisperCTranslate2Model();
             }
 
-            if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.PurfviewFasterWhisper)
+            if (whisperChoice == WhisperChoice.PurfviewFasterWhisper)
             {
                 return new WhisperPurfviewFasterWhisperModel();
             }
