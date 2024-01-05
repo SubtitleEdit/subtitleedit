@@ -764,16 +764,26 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 {
                     try
                     {
-                        var preprocessorFileName = Path.Combine(dir, "preprocessor_config.json");
-                        if (File.Exists(preprocessorFileName))
+                        var jsonFileName = Path.Combine(dir, "preprocessor_config.json");
+                        if (File.Exists(jsonFileName))
                         {
-                            var text = FileUtil.ReadAllTextShared(preprocessorFileName, Encoding.UTF8);
+                            var text = FileUtil.ReadAllTextShared(jsonFileName, Encoding.UTF8);
                             if (text.StartsWith("Entry not found", StringComparison.OrdinalIgnoreCase))
                             {
-                                File.Delete(preprocessorFileName);
+                                File.Delete(jsonFileName);
                             }
                         }
-                    }
+
+                        jsonFileName = Path.Combine(dir, "vocabulary.json");
+                        if (File.Exists(jsonFileName))
+                        {
+                            var text = FileUtil.ReadAllTextShared(jsonFileName, Encoding.UTF8);
+                            if (text.StartsWith("Entry not found", StringComparison.OrdinalIgnoreCase))
+                            {
+                                File.Delete(jsonFileName);
+                            }
+
+                        }
                     catch
                     {
                         // ignore
