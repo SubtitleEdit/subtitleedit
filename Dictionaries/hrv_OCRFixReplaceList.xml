@@ -5348,6 +5348,7 @@
     <RegEx find="tarišu" replaceWith="tiraju" />
     <RegEx find="trišu" replaceWith="triraju" />
     <RegEx find="trezni" replaceWith="trijezni" />
+    <RegEx find="tvp" replaceWith="tvo" />
     <RegEx find="twn" replaceWith="ten" />
     <RegEx find="uas" replaceWith="zas" />
     <RegEx find="udep" replaceWith="udeš" />
