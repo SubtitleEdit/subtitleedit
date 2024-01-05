@@ -4862,6 +4862,15 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SaveAsToolStripMenuItemClick(object sender, EventArgs e)
         {
+            if (InputLanguage.CurrentInputLanguage.Culture.TwoLetterISOLanguageName == "pl" &&
+                Configuration.Settings.Shortcuts.MainFileSaveAs == "Control+Alt+S")
+            {
+                // fix for Polish letter "ś"
+                Configuration.Settings.Shortcuts.MainFileSaveAs = "Control+Shift+S";
+                saveAsToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFileSaveAs);
+                return;
+            }
+
             if (!IsSubtitleLoaded)
             {
                 ShowStatus(_language.CannotSaveEmptySubtitle);
@@ -36315,7 +36324,7 @@ namespace Nikse.SubtitleEdit.Forms
                     SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
                     if (!onlySelectedLines)
                     {
-                        ResetHistory(); 
+                        ResetHistory();
                         _fileName = FileNameHelper.GetFileNameWithTargetLanguage(oldFileName, _videoFileName, _subtitleOriginal, GetCurrentSubtitleFormat(), autoTranslate.TwoLetterIsoSource, autoTranslate.TwoLetterIsoTarget);
                         _converted = true;
                     }

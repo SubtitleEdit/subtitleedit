@@ -782,7 +782,6 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                             {
                                 File.Delete(jsonFileName);
                             }
-
                         }
                     }
                     catch
