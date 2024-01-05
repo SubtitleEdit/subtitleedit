@@ -784,6 +784,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                             }
 
                         }
+                    }
                     catch
                     {
                         // ignore
