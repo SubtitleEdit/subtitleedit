@@ -308,6 +308,8 @@
     <Word from="dele" to="dijele" />
     <Word from="deleći" to="dijeleći" />
     <Word from="Deleći" to="Dijeleći" />
+    <Word from="demantuje" to="demantira" />
+    <Word from="demantujem" to="demantiram" />
     <Word from="deo" to="dio" />
     <Word from="Deo" to="Dio" />
     <Word from="delo" to="djelo" />
@@ -3754,6 +3756,7 @@
     <LinePart from="Biće oni" to="Bit će oni" />
     <LinePart from="Biće sve" to="Bit će sve" />
     <LinePart from="biće ti žao" to="bit će ti žao" />
+    <LinePart from="Biće ovdje" to="Bit će ovdje" />
     <LinePart from="Biću ovdje" to="Bit ću ovdje" />
     <LinePart from="Biću tamo" to="Bit ću tamo" />
     <LinePart from="Biće to" to="Bit će to" />
@@ -5010,6 +5013,7 @@
     <RegEx find="dqj" replaceWith="daj" />
     <RegEx find="dwm" replaceWith="dem" />
     <RegEx find="dsek" replaceWith="dsjek" />
+    <RegEx find="dtal" replaceWith="stal" />
     <RegEx find="[dt]cj?en(i|jen)" replaceWith="dcijen$1" />
     <RegEx find="(?&lt;![dt])cj?enim" replaceWith="cijenim" />
     <RegEx find="eako" replaceWith="ekao" />
