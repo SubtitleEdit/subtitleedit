@@ -308,6 +308,8 @@
     <Word from="dele" to="dijele" />
     <Word from="deleći" to="dijeleći" />
     <Word from="Deleći" to="Dijeleći" />
+    <Word from="demantuje" to="demantira" />
+    <Word from="demantujem" to="demantiram" />
     <Word from="deo" to="dio" />
     <Word from="Deo" to="Dio" />
     <Word from="delo" to="djelo" />
@@ -698,9 +700,11 @@
     <Word from="izviniš" to="ispričaš" />
     <Word from="izviniti" to="ispričati" />
     <Word from="izvinjava" to="ispričava" />
+    <Word from="izvinjavaju" to="ispričavaju" />
     <Word from="izvinjavam" to="ispričavam" />
     <Word from="Izvinjavaš" to="Ispričavaš" />
     <Word from="izvinjavaš" to="ispričavaš" />
+    <Word from="Izvinjenje" to="Isprika" />
     <Word from="izvinjenje" to="isprika" />
     <Word from="izvinjenja" to="isprike" />
     <Word from="izvinjenju" to="isprici" />
@@ -2901,6 +2905,7 @@
     <Word from="zovr" to="zove" />
     <Word from="zs" to="za" />
     <Word from="znsm" to="znam" />
+    <Word from="znma" to="znam" />
     <Word from="zvaničan" to="služben" />
     <Word from="zvezda" to="zvijezda" />
     <Word from="Zvezda" to="Zvijezda" />
@@ -3752,6 +3757,7 @@
     <LinePart from="Biće oni" to="Bit će oni" />
     <LinePart from="Biće sve" to="Bit će sve" />
     <LinePart from="biće ti žao" to="bit će ti žao" />
+    <LinePart from="Biće ovdje" to="Bit će ovdje" />
     <LinePart from="Biću ovdje" to="Bit ću ovdje" />
     <LinePart from="Biću tamo" to="Bit ću tamo" />
     <LinePart from="Biće to" to="Bit će to" />
@@ -3851,6 +3857,7 @@
     <LinePart from="mogao da bude" to="mogao biti" />
     <LinePart from="mogao da vidiš" to="mogao vidjeti" />
     <LinePart from="mogu da idem" to="mogu ići" />
+    <LinePart from="mogu da kažem" to="mogu reći" />
     <LinePart from="moglo da bude" to="moglo biti" />
     <LinePart from="moje saučešće" to="moja sućut" />
     <LinePart from="mora da bude" to="mora biti" />
@@ -3939,6 +3946,7 @@
     <LinePart from="sići dolje" to="sići" />
     <LinePart from="Si dobro" to="Jesi li dobro" />
     <LinePart from="Svako ko" to="Svatko tko" />
+    <LinePart from="svako ko" to="svatko tko" />
     <LinePart from="Svo vreme" to="Sve vrijeme" />
     <LinePart from="Svo vrijeme" to="Sve vrijeme" />
     <LinePart from="smeo da" to="smio" />
@@ -5006,6 +5014,7 @@
     <RegEx find="dqj" replaceWith="daj" />
     <RegEx find="dwm" replaceWith="dem" />
     <RegEx find="dsek" replaceWith="dsjek" />
+    <RegEx find="dtal" replaceWith="stal" />
     <RegEx find="[dt]cj?en(i|jen)" replaceWith="dcijen$1" />
     <RegEx find="(?&lt;![dt])cj?enim" replaceWith="cijenim" />
     <RegEx find="eako" replaceWith="ekao" />
@@ -5345,6 +5354,7 @@
     <RegEx find="tarišu" replaceWith="tiraju" />
     <RegEx find="trišu" replaceWith="triraju" />
     <RegEx find="trezni" replaceWith="trijezni" />
+    <RegEx find="tvp" replaceWith="tvo" />
     <RegEx find="twn" replaceWith="ten" />
     <RegEx find="uas" replaceWith="zas" />
     <RegEx find="udep" replaceWith="udeš" />
@@ -5413,6 +5423,7 @@
     <RegEx find="vsn" replaceWith="van" />
     <RegEx find="([zZ])amenit" replaceWith="$1amijenit" />
     <RegEx find="zankin" replaceWith="zank" />
+    <RegEx find="zanš" replaceWith="znaš" />
     <RegEx find="zaklać" replaceWith="zaklat ć" />
     <RegEx find="zbat" replaceWith="znat" />
     <RegEx find="zfr" replaceWith="zdr" />
