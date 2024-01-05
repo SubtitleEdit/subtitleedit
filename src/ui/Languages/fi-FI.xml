@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>4.0.3</Version>
-    <TranslatedBy>Suomentanut vm, päivittänyt Teijo S. [23-11-2023]</TranslatedBy>
+    <TranslatedBy>Suomentanut vm, päivittänyt Teijo S. [27-12-2023]</TranslatedBy>
     <CultureName>fi-FI</CultureName>
     <HelpFile />
     <Ok>&amp;OK</Ok>
@@ -489,8 +489,7 @@ Hyödynnämme kuvan sisäistä rytmiä.</CreateSimpleChainingToolTip>
     <BottomAlignSelectedLines>Tasaa valitut rivit alas (säilytä vaakasuunta)</BottomAlignSelectedLines>
     <ToggleForcedSelectedLines>Määritä valitut rivit pakotetuiksi / poista määritys</ToggleForcedSelectedLines>
     <SelectForcedLines>Valitse pakotetut rivit</SelectForcedLines>
-    <SelectNonForcedLines>
-    </SelectNonForcedLines>
+    <SelectNonForcedLines>Valitse ei-pakotetut rivit</SelectNonForcedLines>
     <SizeXY>Koko: {0}x{1}</SizeXY>
     <SetAspectRatio11>Aseta kuvasuhde 1:1</SetAspectRatio11>
     <ChangeBrightnessTitle>Säädä kirkkaus</ChangeBrightnessTitle>
@@ -1074,6 +1073,7 @@ Hyödynnämme kuvan sisäistä rytmiä.</CreateSimpleChainingToolTip>
     <XRequiresALocalWebServer>"{0}" vaatii paikallisen web-palvelimen</XRequiresALocalWebServer>
     <XRequiresAnApiKey>"{0}" vaatii API-avaimen.</XRequiresAnApiKey>
     <ReadMore>Halautko lisätietoja?</ReadMore>
+    <Formality>Muodollisuus</Formality>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
     <Title>Google vastaan Microsoft-kääntäjä</Title>
@@ -2546,6 +2546,7 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <AdjustViaEndAutoStart>Säädä lopetuskohdan mukaan</AdjustViaEndAutoStart>
     <AdjustViaEndAutoStartAndGoToNext>Säädä lopetuskohdan mukaan ja siirry seuraavaan</AdjustViaEndAutoStartAndGoToNext>
     <AdjustSetEndMinusGapAndStartNextHere>Aseta loppu miinus väli, siirry seuraavaan ja aloita seuraava tästä</AdjustSetEndMinusGapAndStartNextHere>
+    <AdjustSetEndAndStartNextAfterGap>Aseta loppu ja aloita seuraava välin jälkeen</AdjustSetEndAndStartNextAfterGap>
     <AdjustSetStartTimeAndGoToNext>Aseta alku ja siirry seuraavaan</AdjustSetStartTimeAndGoToNext>
     <AdjustSetEndTimeAndGoToNext>Aseta loppu ja siirry seuraavaan</AdjustSetEndTimeAndGoToNext>
     <AdjustSetEndTimeAndPause>Aseta loppu ja pidä tauko</AdjustSetEndTimeAndPause>
