@@ -1,5 +1,20 @@
 ﻿Subtitle Edit Changelog
 
+4.0.4 (xth February 2024) BETA
+* NEW:
+* IMPROVED:
+   * Update Korean translation - thx domddol
+   * Update Portuguese translation - thx hugok79
+   * Improve auto-translate re-split (two lines only)
+   * Set file name after .MKS file import - thx RedSoxFan04
+   * Faster cancel in auto-translate - thx Siamak
+   * Update Whisper CPP to V1.5.3
+   * Add Whisper CPP model "small.en-q5_1.bin"
+* FIXED:
+   * Fix Papago translate - thx banziseo
+   * Fix for "outputfilename" in cmd line (with SUP source) - thx sapphire-bt
+   * Do not download PFW "preprocessor_config.json" if not exists - thx Purfview
+
 
 4.0.3 (23rd December 2023)
 * NEW:
