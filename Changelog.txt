@@ -6,6 +6,7 @@
 * IMPROVED:
    * Update Korean translation - thx domddol
    * Update Portuguese translation - thx hugok79
+   * Update Finnish translation - thx Teijo S
    * Improve auto-translate re-split (two lines only)
    * Set file name after .MKS file import - thx RedSoxFan04
    * Faster cancel in auto-translate - thx Siamak
