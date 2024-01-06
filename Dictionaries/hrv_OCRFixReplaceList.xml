@@ -5087,6 +5087,7 @@
     <RegEx find="i([lk])p" replaceWith="i$1o" />
     <RegEx find="iscj?edi" replaceWith="$1scijedi" />
     <RegEx find="isjk" replaceWith="ijsk" />
+    <RegEx find="isnk" replaceWith="insk" />
     <RegEx find="irać" replaceWith="irat ć" />
     <RegEx find="izovan " replaceWith="iziran" />
     <RegEx find="jći" replaceWith="jući" />
