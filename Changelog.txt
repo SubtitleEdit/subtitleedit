@@ -10,7 +10,7 @@
    * Improve auto-translate re-split (two lines only)
    * Set file name after .MKS file import - thx RedSoxFan04
    * Faster cancel in auto-translate - thx Siamak
-   * Update Whisper CPP to V1.5.3
+   * Update Whisper CPP to V1.5.4
 * FIXED:
    * Fix Papago translate - thx banziseo
    * Fix for "outputfilename" in cmd line with SUP source - thx sapphire-bt
