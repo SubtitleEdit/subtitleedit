@@ -390,6 +390,7 @@
     <Word from="drugde" to="drugdje" />
     <Word from="druze" to="druže" />
     <Word from="drvoseča" to="drvosječa" />
+    <Word from="drvodelja" to="drvodjelja" />
     <Word from="ds" to="da" />
     <Word from="dti" to="dati" />
     <Word from="dui" to="idu" />
@@ -1076,6 +1077,7 @@
     <Word from="mešavina" to="mješavina" />
     <Word from="mešavine" to="mješavine" />
     <Word from="mešavinu" to="mješavinu" />
+    <Word from="mešovitoj" to="mješovitoj" />
     <Word from="Meštani" to="Mještani" />
     <Word from="meštani" to="mještani" />
     <Word from="metkovima" to="mecima" />
@@ -3753,6 +3755,7 @@
     <LinePart from="Ako ej" to="Ako je" />
     <LinePart from="ako ej" to="ako je" />
     <LinePart from="bez svesti" to="bez svijesti" />
+    <LinePart from="bez obzira što" to="bez obzira na to što" />
     <LinePart from="Biće on" to="Bit će on" />
     <LinePart from="Biće oni" to="Bit će oni" />
     <LinePart from="Biće sve" to="Bit će sve" />
@@ -3760,6 +3763,7 @@
     <LinePart from="Biće ovdje" to="Bit će ovdje" />
     <LinePart from="Biću ovdje" to="Bit ću ovdje" />
     <LinePart from="Biću tamo" to="Bit ću tamo" />
+    <LinePart from="biću tamo" to="bit ću tamo" />
     <LinePart from="Biće to" to="Bit će to" />
     <LinePart from="Biću uz" to="Bit ću uz" />
     <LinePart from="Biću u" to="Bit ću u" />
@@ -5116,6 +5120,7 @@
     <RegEx find="ledov" replaceWith="ljedov" />
     <RegEx find="lječenj" replaceWith="liječenj" />
     <RegEx find="lj?epić" replaceWith="lijepit ć" />
+    <RegEx find="lepk" replaceWith="ljepil" />
     <RegEx find="lepš" replaceWith="ljepš" />
     <RegEx find="lešt" replaceWith="lješt" />
     <RegEx find="levać" replaceWith="lijevat ć" />
