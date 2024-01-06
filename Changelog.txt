@@ -16,6 +16,7 @@
    * Fix for "outputfilename" in cmd line with SUP source - thx sapphire-bt
    * Do not download PFW "preprocessor_config.json" if not exists - thx Purfview
    * Change "Save as" shortcut to "Control+Shift+S" to work with Polish - thx Krystian
+   * Fix crash in "Remove text for HI" - thx darnn
 
 
 4.0.3 (23rd December 2023)

@@ -880,7 +880,9 @@ namespace Nikse.SubtitleEdit.Core.Forms
             var text = RemoveColon(input);
             var pre = " >-\"'‘`´♪¿¡.…—";
             var post = " -\"'`´♪.!?:…—";
-            if (Settings.RemoveTextBetweenCustomTags)
+            if (Settings.RemoveTextBetweenCustomTags &&
+                !string.IsNullOrEmpty(Settings.CustomStart) && 
+                !string.IsNullOrEmpty(Settings.CustomEnd))
             {
                 pre = pre.Replace(Settings.CustomStart, string.Empty);
                 post = post.Replace(Settings.CustomEnd, string.Empty);
