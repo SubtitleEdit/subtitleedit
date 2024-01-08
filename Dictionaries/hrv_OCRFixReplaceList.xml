@@ -1050,6 +1050,7 @@
     <Word from="marta" to="ožujka" />
     <Word from="martu" to="ožujku" />
     <Word from="martom" to="ožujkom" />
+    <Word from="matora" to="stara" />
     <Word from="matori" to="stari" />
     <Word from="matorom" to="starom" />
     <Word from="medju" to="među" />
@@ -2464,6 +2465,7 @@
     <Word from="Tekšo" to="Teško" />
     <Word from="telom" to="tijelom" />
     <Word from="terajte" to="tjerajte" />
+    <Word from="terajući" to="tjerajući" />
     <Word from="teroriše" to="terorizira" />
     <Word from="testenina" to="tjestenina" />
     <Word from="testenine" to="tjestenine" />
@@ -2934,6 +2936,8 @@
     <Word from="Zvjezdu" to="Zvijezdu" />
     <Word from="zvjezdom" to="zvijezdom" />
     <Word from="zvučaće" to="zvučat će" />
+    <Word from="zvući" to="zvuči" />
+
     <!--z-->
     <Word from="žabcem" to="žapcem" />
     <Word from="žalis" to="žališ" />
