@@ -26238,6 +26238,7 @@ namespace Nikse.SubtitleEdit.Forms
             moveTextDownToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewColumnTextDown);
             toolStripMenuItemReverseRightToLeftStartEnd.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainEditReverseStartAndEndingForRTL);
             autotranslateNLLBToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTranslateAuto);
+            genericTranslateToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTranslateAutoSelectedLines);
             applyCustomStylesToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralApplyAssaOverrideTags);
             setPositionToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralSetAssaPosition);
             colorPickerToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralColorPicker);
@@ -34967,138 +34968,13 @@ namespace Nikse.SubtitleEdit.Forms
         private void TranslateSelectedLinesToolStripMenuItemClick(object sender, EventArgs e)
         {
             var onlySelectedLines = true;
-            Translate(onlySelectedLines);
+            MakeAutoTranslate(onlySelectedLines);
         }
 
         private void TranslateToolStripMenuItemClick(object sender, EventArgs e)
         {
             var onlySelectedLines = false;
-            Translate(onlySelectedLines);
-        }
-
-        private void Translate(bool onlySelectedLines)
-        {
-            if (!IsSubtitleLoaded)
-            {
-                DisplaySubtitleNotLoadedMessage();
-                return;
-            }
-
-            bool isOriginalVisible = SubtitleListview1.IsOriginalTextColumnVisible;
-            ReloadFromSourceView();
-            using (var translateDialog = new GenericTranslate())
-            {
-                SaveSubtitleListviewIndices();
-                string title = "";
-
-                if (onlySelectedLines)
-                {
-                    var selectedLines = new Subtitle();
-                    foreach (int index in SubtitleListview1.SelectedIndices)
-                    {
-                        selectedLines.Paragraphs.Add(new Paragraph(_subtitle.Paragraphs[index], false));
-                    }
-
-                    title += " - " + _language.SelectedLines;
-                    if (_subtitleOriginal != null)
-                    {
-                        var paragraphs = new List<Paragraph>();
-                        foreach (int index in SubtitleListview1.SelectedIndices)
-                        {
-                            var original = Utilities.GetOriginalParagraph(index, _subtitle.Paragraphs[index], _subtitleOriginal.Paragraphs);
-                            if (original != null)
-                            {
-                                paragraphs.Add(new Paragraph(original, false));
-                            }
-                        }
-
-                        if (paragraphs.Count == selectedLines.Paragraphs.Count)
-                        {
-                            translateDialog.Initialize(new Subtitle(paragraphs), selectedLines, title, GetCurrentEncoding(), GetCurrentSubtitleFormat());
-                        }
-                        else
-                        {
-                            translateDialog.Initialize(selectedLines, null, title, GetCurrentEncoding(), GetCurrentSubtitleFormat());
-                        }
-                    }
-                    else
-                    {
-                        translateDialog.Initialize(selectedLines, null, title, GetCurrentEncoding(), GetCurrentSubtitleFormat());
-                    }
-                }
-                else
-                {
-                    translateDialog.Initialize(_subtitle, null, title, GetCurrentEncoding(), GetCurrentSubtitleFormat());
-                }
-
-                if (translateDialog.ShowDialog(this) == DialogResult.OK)
-                {
-                    _subtitleListViewIndex = -1;
-                    string oldFileName = _fileName;
-                    MakeHistoryForUndo(_language.BeforeGoogleTranslation);
-                    if (onlySelectedLines)
-                    {
-                        // we only update selected lines
-                        int i = 0;
-                        foreach (int index in SubtitleListview1.SelectedIndices)
-                        {
-                            _subtitle.Paragraphs[index].Text = translateDialog.TranslatedSubtitle.Paragraphs[i].Text;
-                            i++;
-                        }
-
-                        ShowStatus(_language.SelectedLinesTranslated);
-                    }
-                    else
-                    {
-                        ShowSubtitleTimer.Stop();
-                        var oldHash = _changeSubtitleHash;
-                        _subtitleOriginal = new Subtitle(_subtitle);
-                        _subtitleOriginalFileName = _fileName;
-                        _fileName = null;
-                        _subtitle.Paragraphs.Clear();
-                        foreach (var p in translateDialog.TranslatedSubtitle.Paragraphs)
-                        {
-                            _subtitle.Paragraphs.Add(new Paragraph(p));
-                        }
-
-                        SetAssaResolution(_subtitleOriginal);
-                        ShowStatus(_language.SubtitleTranslated);
-                        _changeOriginalSubtitleHash = oldHash;
-                        _changeSubtitleHash = -1;
-                        ShowSubtitleTimer.Start();
-                    }
-
-                    ShowSource();
-
-                    if (!onlySelectedLines)
-                    {
-                        SubtitleListview1.ShowOriginalTextColumn(_languageGeneral.OriginalText);
-                        SubtitleListview1.AutoSizeAllColumns(this);
-                        var oldHash = _changeOriginalSubtitleHash;
-                        SetupOriginalEdit();
-                        _changeOriginalSubtitleHash = oldHash;
-                    }
-
-                    SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
-                    if (!onlySelectedLines)
-                    {
-                        ResetHistory();
-                        _fileName = translateDialog.GetFileNameWithTargetLanguage(oldFileName, _videoFileName, _subtitleOriginal, GetCurrentSubtitleFormat());
-                        _converted = true;
-                    }
-
-                    RestoreSubtitleListviewIndices();
-
-                    SetTitle();
-                    SetEncoding(Encoding.UTF8);
-                    if (!isOriginalVisible)
-                    {
-                        toolStripMenuItemShowOriginalInPreview.Checked = false;
-                        Configuration.Settings.General.ShowOriginalAsPreviewIfAvailable = false;
-                        audioVisualizer.Invalidate();
-                    }
-                }
-            }
+            MakeAutoTranslate(onlySelectedLines);
         }
 
         private void AutotranslateViaCopypasteToolStripMenuItemClick(object sender, EventArgs e)
@@ -36269,23 +36145,65 @@ namespace Nikse.SubtitleEdit.Forms
             bool isOriginalVisible = SubtitleListview1.IsOriginalTextColumnVisible;
             ReloadFromSourceView();
             string title = string.Empty;
-            using (var autoTranslate = new AutoTranslate(_subtitle, null, title, GetCurrentEncoding()))
+            var sub = new Subtitle(_subtitle);
+            Subtitle target = null;
+            if (onlySelectedLines)
+            {
+                title = LanguageSettings.Current.GoogleTranslate.Title + " - " + _language.SelectedLines;
+
+                sub = new Subtitle();
+                foreach (int index in SubtitleListview1.SelectedIndices)
+                {
+                    sub.Paragraphs.Add(new Paragraph(_subtitle.Paragraphs[index], false));
+                }
+
+                if (_subtitleOriginal != null)
+                {
+                    var paragraphs = new List<Paragraph>();
+                    var paragraphsToRemove = new List<Paragraph>();
+                    foreach (int index in SubtitleListview1.SelectedIndices)
+                    {
+                        var original = Utilities.GetOriginalParagraph(index, _subtitle.Paragraphs[index], _subtitleOriginal.Paragraphs);
+                        if (original != null)
+                        {
+                            paragraphs.Add(new Paragraph(original, false));
+                        }
+                        else
+                        {
+                            paragraphsToRemove.Add(_subtitle.Paragraphs[index]);
+                        }
+                    }
+
+                    foreach (var p in paragraphsToRemove)
+                    {
+                        sub.Paragraphs.RemoveAll(x => x.Id == p.Id);
+                    }
+
+                    target = sub;
+                    sub = new Subtitle(paragraphs);
+                }
+            }
+
+            using (var autoTranslate = new AutoTranslate(sub, target, title, GetCurrentEncoding()))
             {
                 SaveSubtitleListviewIndices();
 
                 if (autoTranslate.ShowDialog(this) == DialogResult.OK)
                 {
                     _subtitleListViewIndex = -1;
-                    string oldFileName = _fileName;
+                    var oldFileName = _fileName;
                     MakeHistoryForUndo(_language.BeforeGoogleTranslation);
                     if (onlySelectedLines)
                     {
                         // we only update selected lines
-                        int i = 0;
                         foreach (int index in SubtitleListview1.SelectedIndices)
                         {
-                            _subtitle.Paragraphs[index].Text = autoTranslate.TranslatedSubtitle.Paragraphs[i].Text;
-                            i++;
+                            var p = _subtitle.Paragraphs[index];
+                            var t = autoTranslate.TranslatedSubtitle.Paragraphs.FirstOrDefault(x => x.Id == p.Id);
+                            if (t != null)
+                            {
+                                p.Text = t.Text;
+                            }
                         }
 
                         ShowStatus(_language.SelectedLinesTranslated);

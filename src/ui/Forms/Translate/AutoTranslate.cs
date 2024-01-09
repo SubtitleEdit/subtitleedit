@@ -32,7 +32,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
         private bool _translationInProgress;
         private CancellationTokenSource _cancellationTokenSource;
 
-        public AutoTranslate(Subtitle subtitle, Subtitle selectedLines, string title, Encoding encoding)
+        public AutoTranslate(Subtitle subtitle, Subtitle targetLines, string title, Encoding encoding)
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
@@ -89,15 +89,15 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             labelPleaseWait.Visible = false;
             progressBar1.Visible = false;
 
-            if (selectedLines != null)
+            if (targetLines != null)
             {
-                TranslatedSubtitle = new Subtitle(selectedLines);
+                TranslatedSubtitle = new Subtitle(targetLines, false);
                 TranslatedSubtitle.Renumber();
                 subtitleListViewTarget.Fill(TranslatedSubtitle);
             }
             else
             {
-                TranslatedSubtitle = new Subtitle(_subtitle);
+                TranslatedSubtitle = new Subtitle(_subtitle, false);
                 foreach (var paragraph in TranslatedSubtitle.Paragraphs)
                 {
                     paragraph.Text = string.Empty;
