@@ -3,6 +3,7 @@
 4.0.4 (xth February 2024) BETA
 * NEW:
    * Add Whisper CPP model "small.en-q5_1.bin"
+   * Add shortcut for "Translate selected lines"
 * IMPROVED:
    * Update Korean translation - thx domddol
    * Update Portuguese translation - thx hugok79
@@ -11,6 +12,8 @@
    * Set file name after .MKS file import - thx RedSoxFan04
    * Faster cancel in auto-translate - thx Siamak
    * Update Whisper CPP to V1.5.4
+   * Add Turkish for ChatGPT translate - thx Bel
+   * Improve ANSI encoding auto detect - thx wifi-left
 * FIXED:
    * Fix Papago translate - thx banziseo
    * Fix for "outputfilename" in cmd line with SUP source - thx sapphire-bt
