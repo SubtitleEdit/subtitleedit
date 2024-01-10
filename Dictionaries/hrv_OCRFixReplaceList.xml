@@ -1510,6 +1510,9 @@
     <Word from="pastuv" to="pastuh" />
     <Word from="pastuva" to="pastuha" />
     <Word from="pastuvu" to="pastuhu" />
+    <Word from="patiće" to="patit će" />
+    <Word from="Patiće" to="Patit će" />
+    <Word from="patiću" to="patit ću" />
     <Word from="pd" to="od" />
     <Word from="pečurke" to="gljive" />
     <Word from="pečurki" to="gljiva" />
@@ -2247,6 +2250,8 @@
     <Word from="sočivom" to="lećom" />
     <Word from="sočivu" to="leći" />
     <Word from="sopstvenim" to="vlastitim" />
+    <Word from="sovga" to="svoga" />
+    <Word from="Sovga" to="Svoga" />
     <Word from="Spakuj" to="Spakiraj" />
     <Word from="spakujem" to="spakiram" />
     <Word from="Spakujem" to="Spakiram" />
@@ -3279,6 +3284,7 @@
     <Word from="Sojeru" to="Sawyeru" />
     <Word from="Sola" to="Saula" />
     <Word from="Sole" to="Saule" />
+    <Word from="Spajder" to="Spider" />
     <Word from="Stajls" to="Stiles" />
     <Word from="Stejsi" to="Stacy" />
     <Word from="Stoun" to="Stone" />
@@ -4522,6 +4528,7 @@
     <RegEx find="([pP])luč([an])" replaceWith="$1luć$2" />
     <RegEx find="\b([pP])obj?edi([mštol])" replaceWith="$1obijedi$2" />
     <RegEx find="([pP])obe([đgć])" replaceWith="$1obje$2" />
+    <RegEx find="ocepa" replaceWith="odera" />
     <RegEx find="očastvovan" replaceWith="očašćen" />
     <RegEx find="odst(ica|ak)" replaceWith="ot$1" />
     <RegEx find="([pP])o[dt]stič" replaceWith="$1otič" />
@@ -5323,6 +5330,7 @@
     <RegEx find="svd" replaceWith="svid" />
     <RegEx find="svh" replaceWith="shv" />
     <RegEx find="svk" replaceWith="svj" />
+    <RegEx find="svp" replaceWith="svo" />
     <RegEx find="swb" replaceWith="seb" />
     <RegEx find="([šđ])ać" replaceWith="$1ač" />
     <RegEx find="ši[čć]eš" replaceWith="šit ćeš" />
