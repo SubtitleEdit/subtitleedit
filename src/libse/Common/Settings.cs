@@ -2731,6 +2731,7 @@ $HorzAlign          =   Center
         public string MainTranslateGoogleIt { get; set; }
         public string MainTranslateGoogleTranslateIt { get; set; }
         public string MainTranslateAuto { get; set; }
+        public string MainTranslateAutoSelectedLines { get; set; }
         public string MainTranslateCustomSearch1 { get; set; }
         public string MainTranslateCustomSearch2 { get; set; }
         public string MainTranslateCustomSearch3 { get; set; }
@@ -11249,6 +11250,12 @@ $HorzAlign          =   Center
                     shortcuts.MainTranslateAuto = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainTranslateAutoSelectedLines");
+                if (subNode != null)
+                {
+                    shortcuts.MainTranslateAutoSelectedLines = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainTranslateCustomSearch1");
                 if (subNode != null)
                 {
@@ -12869,6 +12876,7 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("MainTranslateGoogleIt", shortcuts.MainTranslateGoogleIt);
             textWriter.WriteElementString("MainTranslateGoogleTranslateIt", shortcuts.MainTranslateGoogleTranslateIt);
             textWriter.WriteElementString("MainTranslateAuto", shortcuts.MainTranslateAuto);
+            textWriter.WriteElementString("MainTranslateAutoSelectedLines", shortcuts.MainTranslateAutoSelectedLines);
             textWriter.WriteElementString("MainTranslateCustomSearch1", shortcuts.MainTranslateCustomSearch1);
             textWriter.WriteElementString("MainTranslateCustomSearch2", shortcuts.MainTranslateCustomSearch2);
             textWriter.WriteElementString("MainTranslateCustomSearch3", shortcuts.MainTranslateCustomSearch3);
