@@ -8,6 +8,8 @@
     <Word from="advokatima" to="odvjetnicima" />
     <Word from="Advokatima" to="Odvjetnicima" />
     <Word from="afirmiše" to="afirmira" />
+    <Word from="Ajde" to="Hajde" />
+    <Word from="ajde" to="hajde" />
     <Word from="ajpod" to="iPod" />
     <Word from="ajpoda" to="iPoda" />
     <Word from="ajpodu" to="iPodu" />
@@ -1335,6 +1337,7 @@
     <Word from="obuči" to="obući" />
     <Word from="obožavateljka" to="obožavateljica" />
     <Word from="obuhvata" to="obuhvaća" />
+    <Word from="Oćemo" to="Hoćemo" />
     <Word from="Očistiću" to="Očistit ću" />
     <Word from="odandje" to="odande" />
     <Word from="odavdje" to="odavde" />
@@ -2678,6 +2681,7 @@
     <Word from="utehe" to="utjehe" />
     <Word from="utopiće" to="utopit će" />
     <Word from="utopićeš" to="utopit ćeš" />
+    <Word from="Utopićeš" to="Utopit ćeš" />
     <Word from="uveče" to="navečer" />
     <Word from="naveče" to="navečer" />
     <Word from="uvek" to="uvijek" />
@@ -4096,6 +4100,7 @@
     <RegEx find="boleć([eu])" replaceWith="boljet ć$1" />
     <RegEx find="([bBvV])o[Il]e(n|l[aieo]|ti)\b" replaceWith="$1olje$2" />
     <RegEx find="([dbvmBVM])oleo" replaceWith="$1olio" />
+    <RegEx find="boš[čć]e" replaceWith="bost će" />
     <RegEx find="ožij" replaceWith="ožj" />
     <RegEx find="boži[čć]([aeiu]|em|ima)?\b" replaceWith="Božić$1" />
     <RegEx find="(?&lt;!\A|[.!?][&quot;”’]?\s+)\bBoži[čć]n([aeiou]|om|im)\b" replaceWith="božićn$1" />
