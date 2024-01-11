@@ -116,6 +116,8 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
                     case "ko": // Korean
                     case "zh": // Chinese
                         return 16;
+                    case "ru": // Russian
+                        return 39;
                     default:
                         return 42;
                 }
