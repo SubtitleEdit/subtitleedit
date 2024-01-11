@@ -1636,7 +1636,11 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
                 if (spanishCount1252 > wordMinCount && (textEnc1252.Contains('ú') || textEnc1252.Contains('í') || textEnc1252.Contains('ú') || textEnc1252.Contains('ó') || textEnc1252.Contains('é') || textEnc1252.Contains('ñ')))
                 {
-                    return encoding1252;
+                    var weirdChars = CountWeirdCharacters(textEnc1252);
+                    if (weirdChars < 3)
+                    {
+                        return encoding1252;
+                    }
                 }
 
                 var russianEncoding28595 = Encoding.GetEncoding(28595); // Russian
@@ -1724,6 +1728,20 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
+        private static int CountWeirdCharacters(string textEnc1252)
+        {
+            var count = 0;
+            foreach (var c in textEnc1252)
+            {
+                if ("¤÷®¬¦¯".Contains(c))
+                {
+                    count++;
+                }
+            }
+
+            return count;
+        }
+
         public static Encoding GetEncodingFromFile(string fileName, bool skipAnsiAuto = false)
         {
             var encoding = Encoding.Default;
@@ -1743,7 +1761,12 @@ namespace Nikse.SubtitleEdit.Core.Common
                 {
                     var bom = new byte[12]; // Get the byte-order mark, if there is one
                     file.Position = 0;
-                    file.Read(bom, 0, bom.Length);
+                    var readCount = file.Read(bom, 0, bom.Length);
+                    if (readCount < 3)
+                    {
+                        return encoding;
+                    }
+
                     if (bom[0] == 0xef && bom[1] == 0xbb && bom[2] == 0xbf)
                     {
                         encoding = Encoding.UTF8;
@@ -1807,6 +1830,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             {
                 // ignored
             }
+
             return encoding;
         }
 
@@ -1817,8 +1841,8 @@ namespace Nikse.SubtitleEdit.Core.Common
         private static bool IsUtf8(byte[] buffer, out bool couldBeUtf8)
         {
             couldBeUtf8 = false;
-            int utf8Count = 0;
-            int i = 0;
+            var utf8Count = 0;
+            var i = 0;
             while (i < buffer.Length - 3)
             {
                 byte b = buffer[i];
@@ -1849,6 +1873,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
                 i++;
             }
+
             couldBeUtf8 = true;
             if (utf8Count == 0)
             {

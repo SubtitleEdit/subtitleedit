@@ -7411,6 +7411,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/VideoToggleBrightness":
                     language.Settings.VideoToggleBrightness = reader.Value;
                     break;
+                case "Settings/AutoTranslateSelectedLines":
+                    language.Settings.AutoTranslateSelectedLines = reader.Value;
+                    break;
                 case "Settings/CustomSearch1":
                     language.Settings.CustomSearch1 = reader.Value;
                     break;
