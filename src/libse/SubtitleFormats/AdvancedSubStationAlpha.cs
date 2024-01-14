@@ -190,7 +190,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                 {
                     style = p.Extra;
                 }
-                else if (styles.Count > 0 && !styles.Contains(style) && styles.Contains(p.Extra))
+                else if (styles.Count > 0 && !styles.Contains(style) && (string.IsNullOrEmpty(p.Extra) || styles.Contains(p.Extra)))
                 {
                     style = p.Extra;
                 }
