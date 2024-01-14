@@ -178,13 +178,19 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
             else
             {
                 sb.AppendFormat(header, title).AppendLine();
+                styles = GetStylesFromHeader(header);
             }
+
             foreach (var p in subtitle.Paragraphs)
             {
                 var start = MakeTimeCode(timeCodeFormat, p.StartTime);
                 var end = MakeTimeCode(timeCodeFormat, p.EndTime);
                 var style = "Default";
                 if (!string.IsNullOrEmpty(p.Extra) && isValidAssHeader && styles.Contains(p.Extra))
+                {
+                    style = p.Extra;
+                }
+                else if (styles.Count > 0 && !styles.Contains(style) && styles.Contains(p.Extra))
                 {
                     style = p.Extra;
                 }
@@ -241,6 +247,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                 sb.AppendLine();
                 sb.AppendLine(subtitle.Footer);
             }
+
             return sb.ToString().Trim() + Environment.NewLine;
         }
 
