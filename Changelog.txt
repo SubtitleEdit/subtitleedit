@@ -8,6 +8,7 @@
    * Update Korean translation - thx domddol
    * Update Portuguese translation - thx hugok79
    * Update Finnish translation - thx Teijo S
+   * Update Chinese translation - thx nkh0472
    * Improve auto-translate re-split (two lines only)
    * Set file name after .MKS file import - thx RedSoxFan04
    * Faster cancel in auto-translate - thx Siamak
@@ -20,6 +21,8 @@
    * Do not download PFW "preprocessor_config.json" if not exists - thx Purfview
    * Change "Save as" shortcut to "Control+Shift+S" to work with Polish - thx Krystian
    * Fix crash in "Remove text for HI" - thx darnn
+   * Fix single line length to 39 for Netflix Russian - thx Ekaterina
+   * Fix for ASSA new file default style - thx mpr0st
 
 
 4.0.3 (23rd December 2023)

@@ -404,8 +404,8 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 var version152WhisperBlasBinX32 = "03efdfaa1363a4f0dcf6ca1ff2c2f5ec8f6e6a8f412d5648b955c4e882f586dd3c5d58bfb43a2c51a09d3c745dbe4b1c59fc259cebead0ffb96f0484db9aa54b";
                 var version153WhisperX64 = "04250bebd8df314abf5b6cf22f96f1c3ba17a5e8308e12a5416291d12dce971eabc8e533dfbcb0214524ad23f5e1065898dc1fd0fafdf66655d0467f7a8205be";
                 var version153WhisperX32 = "880d0858e26665d6366a7a11c3b5c07f5f5710672b57110c704a4e94c53fbd1a86d6272b50d5d2e86b267f27b5ef76becff82d9f130deb0b5ed261f401324cdb";
-                var version154WhisperX64 = "98d32926e4fbdbe0850f996400204ee62188a88cb5dfe8b182d15c54915f57b7ee4f22c98581c3f45c457241254df041aed49461a7260b84786ba4205dc2a17e";
-                var version154WhisperX32 = "";
+                //var version154WhisperX64 = "98d32926e4fbdbe0850f996400204ee62188a88cb5dfe8b182d15c54915f57b7ee4f22c98581c3f45c457241254df041aed49461a7260b84786ba4205dc2a17e";
+                //var version154WhisperX32 = "";
                 return hash == version130WhisperBlasBinX64 ||
                        hash == version130WhisperBlasBinX32 ||
                        hash == version140WhisperBlasBinX64 ||
@@ -425,7 +425,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 var version151WhisperCppCublass = "3d7f86d816785b980734ccffeb1209b0218bbfbc7cc4e34f6d5b7999d63cf99e36e253db3f88ace0dbfed19ac54c3d04d2fcbb37f39f3df3cc1c3ef1be8bae65";
                 var version152WhisperCppCublass = "4f08846d302cbe4022a13c7d9c0fbd12899768cb64bafd52988169c4d6775f9991440a5ac142069b91277db4f782b3b8eeadf0abd7838712e174f861243d2776";
                 var version153WhisperCppCublass = "129930b4c69c48855a8f21ace3588c2cec2515baf33b9e557ef4f096132c3f4674639fe5d40ef364fcec0a9f1e9d9916ac6d7b9a220f3c9b44a4c1cc6777bd35";
-                var version154WhisperCppCublass = "5bcda2b519193c137fd5b2a3d9c0289bf9afd18bb21239c5f9f8f7196a8fb57179da53b23924dfa06fbda32e19ace203177f87c62759b64cdf6f04c2514aec94";
+//                var version154WhisperCppCublass = "5bcda2b519193c137fd5b2a3d9c0289bf9afd18bb21239c5f9f8f7196a8fb57179da53b23924dfa06fbda32e19ace203177f87c62759b64cdf6f04c2514aec94";
                 return hash == version150WhisperCppCublass ||
                        hash == version151WhisperCppCublass ||
                        hash == version152WhisperCppCublass ||
