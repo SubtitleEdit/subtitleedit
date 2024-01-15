@@ -34488,7 +34488,13 @@ namespace Nikse.SubtitleEdit.Forms
         {
             RunActionOnAllParagraphs((p) =>
             {
-                var s = p.Text.Replace("♪", string.Empty).Replace("♫", string.Empty);
+                var s = p.Text;
+                if (!s.Contains("(♪", StringComparison.Ordinal) && !s.Contains("(♫", StringComparison.Ordinal)  && !s.Contains("[♪", StringComparison.Ordinal) && !s.Contains("[♫", StringComparison.Ordinal) &&
+                    !s.Contains("♪)", StringComparison.Ordinal) && !s.Contains("♫)", StringComparison.Ordinal) && !s.Contains("♪]", StringComparison.Ordinal) && !s.Contains("♫]", StringComparison.Ordinal))
+                {
+                    s = p.Text.Replace("♪", string.Empty).Replace("♫", string.Empty);
+                }
+                
                 s = NetflixImsc11Japanese.RemoveTags(s);
                 return HtmlUtil.RemoveHtmlTags(s, true).Trim();
             }, string.Format(_language.BeforeX, _language.Menu.ContextMenu.RemoveFormattingAll));
