@@ -2642,6 +2642,7 @@
     <Word from="usledilo" to="uslijedilo" />
     <Word from="usljedilo" to="uslijedilo" />
     <Word from="usledili" to="uslijedili" />
+    <Word from="uslediti" to="uslijediti" />
     <Word from="uslov" to="uvjet" />
     <Word from="uslova" to="uvjeta" />
     <Word from="uslovi" to="uvjeti" />
@@ -4980,6 +4981,7 @@
     <RegEx find="Ĺ˝" replaceWith="Ž" />
     <RegEx find="Å½" replaceWith="Ž" />
     <RegEx find="abs" replaceWith="avs" />
+    <RegEx find="akp" replaceWith="ako" />
     <RegEx find="[^e]seda(?!m|tiv)" replaceWith="sjeda" />
     <RegEx find="ii" replaceWith="i" />
     <RegEx find="bp" replaceWith="bo" />
