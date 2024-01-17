@@ -1067,6 +1067,7 @@
     <Word from="matorog" to="starog" />
     <Word from="matorom" to="starom" />
     <Word from="medju" to="među" />
+    <Word from="nedju" to="među" />
     <Word from="mego" to="nego" />
     <Word from="mehur" to="mjehur" />
     <Word from="mehurić" to="mjehurić" />
@@ -2324,6 +2325,7 @@
     <Word from="Srjedama" to="Srijedama" />
     <!-- nisu za regex - ne odgovaraju zbog dodatnog ju na kraju -->
     <Word from="stabilizuju" to="stabiliziraju" />
+    <Word from="sta" to="što" />
     <Word from="staće" to="stat će" />
     <Word from="staću" to="stat ću" />
     <Word from="Staće" to="Stat će" />
@@ -4783,6 +4785,7 @@
     <RegEx find="unđer" replaceWith="pužva" />
     <RegEx find="(?&lt;!k)ulisa" replaceWith="ulira" />
     <RegEx find="used" replaceWith="usjed" />
+    <RegEx find="([sS])ustab" replaceWith="$1ustav" />
     <RegEx find="suštin[eio]" replaceWith="biti" />
     <RegEx find="Suštin[eio]" replaceWith="Biti" />
     <RegEx find="vedo([čkc])" replaceWith="vjedo$1" />
