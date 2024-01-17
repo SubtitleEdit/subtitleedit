@@ -1067,6 +1067,7 @@
     <Word from="matorog" to="starog" />
     <Word from="matorom" to="starom" />
     <Word from="medju" to="među" />
+    <Word from="nedju" to="među" />
     <Word from="mego" to="nego" />
     <Word from="mehur" to="mjehur" />
     <Word from="mehurić" to="mjehurić" />
@@ -2324,6 +2325,8 @@
     <Word from="Srjedama" to="Srijedama" />
     <!-- nisu za regex - ne odgovaraju zbog dodatnog ju na kraju -->
     <Word from="stabilizuju" to="stabiliziraju" />
+    <Word from="sta" to="što" />
+    <Word from="stabri" to="stvari" />
     <Word from="staće" to="stat će" />
     <Word from="staću" to="stat ću" />
     <Word from="Staće" to="Stat će" />
@@ -2642,6 +2645,7 @@
     <Word from="usledilo" to="uslijedilo" />
     <Word from="usljedilo" to="uslijedilo" />
     <Word from="usledili" to="uslijedili" />
+    <Word from="uslediti" to="uslijediti" />
     <Word from="uslov" to="uvjet" />
     <Word from="uslova" to="uvjeta" />
     <Word from="uslovi" to="uvjeti" />
@@ -4782,6 +4786,7 @@
     <RegEx find="unđer" replaceWith="pužva" />
     <RegEx find="(?&lt;!k)ulisa" replaceWith="ulira" />
     <RegEx find="used" replaceWith="usjed" />
+    <RegEx find="([sS])ustab" replaceWith="$1ustav" />
     <RegEx find="suštin[eio]" replaceWith="biti" />
     <RegEx find="Suštin[eio]" replaceWith="Biti" />
     <RegEx find="vedo([čkc])" replaceWith="vjedo$1" />
@@ -4980,6 +4985,7 @@
     <RegEx find="Ĺ˝" replaceWith="Ž" />
     <RegEx find="Å½" replaceWith="Ž" />
     <RegEx find="abs" replaceWith="avs" />
+    <RegEx find="akp" replaceWith="ako" />
     <RegEx find="[^e]seda(?!m|tiv)" replaceWith="sjeda" />
     <RegEx find="ii" replaceWith="i" />
     <RegEx find="bp" replaceWith="bo" />
@@ -5264,6 +5270,7 @@
     <RegEx find="ohev" replaceWith="ojev" />
     <RegEx find="ojeh" replaceWith="ojeg" />
     <RegEx find="oješć" replaceWith="ojest ć" />
+    <RegEx find="ojr" replaceWith="oje" />
     <RegEx find="ojtn" replaceWith="ojatn" />
     <RegEx find="ojz" replaceWith="oju" />
     <RegEx find="okj" replaceWith="koj" />
