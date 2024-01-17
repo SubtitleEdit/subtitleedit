@@ -2326,6 +2326,7 @@
     <!-- nisu za regex - ne odgovaraju zbog dodatnog ju na kraju -->
     <Word from="stabilizuju" to="stabiliziraju" />
     <Word from="sta" to="što" />
+    <Word from="stabri" to="stvari" />
     <Word from="staće" to="stat će" />
     <Word from="staću" to="stat ću" />
     <Word from="Staće" to="Stat će" />
@@ -5269,6 +5270,7 @@
     <RegEx find="ohev" replaceWith="ojev" />
     <RegEx find="ojeh" replaceWith="ojeg" />
     <RegEx find="oješć" replaceWith="ojest ć" />
+    <RegEx find="ojr" replaceWith="oje" />
     <RegEx find="ojtn" replaceWith="ojatn" />
     <RegEx find="ojz" replaceWith="oju" />
     <RegEx find="okj" replaceWith="koj" />
