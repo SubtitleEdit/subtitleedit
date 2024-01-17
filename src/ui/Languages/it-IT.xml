@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>4.0.3</Version>
-    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 17.12.2023</TranslatedBy>
+    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 17.01.2024</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -2708,6 +2708,7 @@ stesso file di sottotitolo (collaborazione)</Information>
     <AudioExtractSelectedLines>Estrai audio (righe selezionate)</AudioExtractSelectedLines>
     <AudioToTextSelectedLinesX>Da audio a testo righe selezionate ({0})</AudioToTextSelectedLinesX>
     <VideoToggleBrightness>Attiva/disattiva luminosità (solo mpv)</VideoToggleBrightness>
+    <AutoTranslateSelectedLines>Traduci automaticamente righe selezionate</AutoTranslateSelectedLines>
     <CustomSearch1>Traduci, ricerca personalizzata 1</CustomSearch1>
     <CustomSearch2>Traduci, ricerca personalizzata 2</CustomSearch2>
     <CustomSearch3>Traduci, ricerca personalizzata 3</CustomSearch3>
