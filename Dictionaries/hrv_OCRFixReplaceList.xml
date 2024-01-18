@@ -3783,10 +3783,17 @@
     <WordPart from="lVl" to="M" />
   </PartialWordsAlways>
 <PartialWords>
+    <WordPart from="€" to="e" />
     <WordPart from="ﬁ" to="fi" />
     <WordPart from="ﬂ" to="fl" />
+    <WordPart from="l-l" to="H" />
+    <WordPart from="l_" to="L" />
     <WordPart from="/" to="l" />
+    <WordPart from="|" to="l" />
     <WordPart from="vv" to="w" />
+    <WordPart from="vx/" to="w" />
+    <WordPart from=")/" to="y" />
+    <WordPart from=")'" to="y" />
 </PartialWords>
   <WholeLines />
   <PartialLinesAlways>
@@ -5729,6 +5736,9 @@
     
     <RegEx find=", ili" replaceWith="ili" />
     <RegEx find="ili," replaceWith="ili" />
+
+    <RegEx find="\b\|\b" replaceWith="I" />
+
 <!--
     <RegEx find="([Ss])a (?!\s*[szž])" replaceWith="$1" />
     <RegEx find="s ([szž])" replaceWith="sa $1" />
