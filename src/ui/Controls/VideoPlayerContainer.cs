@@ -239,6 +239,9 @@ namespace Nikse.SubtitleEdit.Controls
             PictureBoxFastForwardMouseEnter(null, null);
             PictureBoxFastForwardOverMouseLeave(null, null);
 
+            _pictureBoxVolumeBarBackground.BringToFront();
+            _pictureBoxVolumeBar.BringToFront();
+
             _labelTimeCode.Click += LabelTimeCodeClick;
             _loading = false;
         }
