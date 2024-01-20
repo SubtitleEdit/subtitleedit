@@ -5418,7 +5418,11 @@
     <RegEx find="tegri(sa|še)" replaceWith="tegrira" />
     <RegEx find="teriv" replaceWith="tjeriv" />
     <RegEx find="tificire" replaceWith="tificira" />
+
+    <!--no baš krasno-->
     <RegEx find="tnas" replaceWith="tans" />
+    <RegEx find="tnas" replaceWith="tnos" />
+
     <RegEx find="tnerk" replaceWith="tneric" />
     <RegEx find="tnp" replaceWith="tno" />
     <RegEx find="tpv" replaceWith="tov" />
