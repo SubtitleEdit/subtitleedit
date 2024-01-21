@@ -2709,6 +2709,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <AudioExtractSelectedLines>오디오 추출 (선택한 줄)</AudioExtractSelectedLines>
     <AudioToTextSelectedLinesX>선택한 줄 오디오를 텍스트로 ({0})</AudioToTextSelectedLinesX>
     <VideoToggleBrightness>밝기 전환 (mpv 만)</VideoToggleBrightness>
+    <AutoTranslateSelectedLines>선택한 줄 자동 번역</AutoTranslateSelectedLines>
     <CustomSearch1>번역, 사용자 지정 검색 1</CustomSearch1>
     <CustomSearch2>번역, 사용자 지정 검색 2</CustomSearch2>
     <CustomSearch3>번역, 사용자 지정 검색 3</CustomSearch3>
