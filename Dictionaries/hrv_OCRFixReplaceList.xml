@@ -652,7 +652,6 @@
     <Word from="isuviše" to="previše" />
     <Word from="iščupaću" to="iščupat ću" />
     <Word from="ispravka" to="ispravak" />
-    <Word from="istp" to="isto" />
     <Word from="iszom" to="istom" />
     <Word from="ivaj" to="ovaj" />
     <Word from="inda" to="onda" />
@@ -5737,6 +5736,7 @@
     <RegEx find="ćšu" replaceWith="šću" />
     <RegEx find="kjn" replaceWith="kin" />
     <RegEx find="othe" replaceWith="otje" />
+    <RegEx find="stp" replaceWith="sto" />
     
     <RegEx find=", ili" replaceWith="ili" />
     <RegEx find="ili," replaceWith="ili" />
