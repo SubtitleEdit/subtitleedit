@@ -172,6 +172,8 @@
     <Word from="cutanje" to="šutnja" />
     <Word from="cvileo" to="cvilio" />
     <Word from="čutanje" to="šutnja" />
+    <Word from="Ćak" to="Čak" />
+    <Word from="ćak" to="čak" />
     <Word from="ćutanje" to="šutnja" />
     <Word from="Cutanje" to="Šutnja" />
     <Word from="Čutanje" to="Šutnja" />
@@ -1492,6 +1494,7 @@
     <Word from="ovjde" to="ovdje" />
     <Word from="Ovjde" to="Ovdje" />
     <Word from="ovoje" to="ovo je" />
+    <Word from="ovok" to="ovom" />
     <Word from="ovsena" to="zobena" />
     <Word from="ovsenu" to="zobenu" />
     <Word from="ozljeđen" to="ozlijeđen" />
@@ -1949,6 +1952,7 @@
     <Word from="radanje" to="rađanje" />
     <Word from="radiće" to="radit će" />
     <Word from="radiću" to="radit ću" />
+    <Word from="radivi" to="raditi" />
     <Word from="rađe" to="radije" />
     <Word from="ranac" to="ruksak" />
     <Word from="rancu" to="ruksaku" />
@@ -2805,6 +2809,7 @@
     <Word from="videše" to="vidješe" />
     <Word from="vidjeo" to="vidio" />
     <Word from="Vidjeo" to="Vidio" />
+    <Word from="visr" to="više" />
     <Word from="vjerojatnoća" to="vjerojatnost" />
     <Word from="vjerojatnoće" to="vjerojatnosti" />
     <Word from="vješću" to="viješću" />
@@ -5129,6 +5134,7 @@
     <RegEx find="gf" replaceWith="gd" />
     <RegEx find="gicn" replaceWith="gičn" />
     <RegEx find="glda" replaceWith="gleda" />
+    <RegEx find="gof" replaceWith="god" />
     <RegEx find="gp" replaceWith="go" />
     <RegEx find="grišć" replaceWith="grist ć" />
     <RegEx find="(?&lt;!e)grš" replaceWith="greš" />
@@ -5198,6 +5204,7 @@
     <RegEx find="ljutić" replaceWith="ljutit ć" />
     <RegEx find="lp([rg])" replaceWith="lo$1" />
     <RegEx find="lr([dgh])" replaceWith="le$1" />
+    <RegEx find="lsč" replaceWith="lač" />
     <RegEx find="lša" replaceWith="iša" />
     <RegEx find="Lša" replaceWith="Iša" />
     <RegEx find="ltovan" replaceWith="ltiran" />
@@ -5229,6 +5236,7 @@
     <RegEx find="napredi" replaceWith="naprijedi" />
     <RegEx find="napt" replaceWith="napr" />
     <RegEx find="([^\s]+)nesl" replaceWith="$1nijel" />
+    <RegEx find="nešen" replaceWith="nesen" />
     <RegEx find="nimp" replaceWith="nimo" />
     <RegEx find="(?&lt;!a)nks" replaceWith="nsk" />
     <RegEx find="ngažuj" replaceWith="ngažiraj" />
@@ -5272,6 +5280,7 @@
     <RegEx find="očeć([eu])" replaceWith="očet ć$1" />
     <RegEx find="odseč" replaceWith="odsječ" />
     <RegEx find="odsetni" replaceWith="odsjetni" />
+    <RegEx find="oei" replaceWith="ori" />
     <RegEx find="oež" replaceWith="ože" />
     <RegEx find="ohev" replaceWith="ojev" />
     <RegEx find="ojeh" replaceWith="ojeg" />
@@ -5352,6 +5361,7 @@
     <RegEx find="([rv])pd" replaceWith="$1od" />
     <RegEx find="rs([dv])" replaceWith="ra$1" />
     <RegEx find="ršč" replaceWith="ršć" />
+    <RegEx find="rtsv" replaceWith="rstv" />
     <RegEx find="rutuje" replaceWith="rutira" />
     <RegEx find="rviši" replaceWith="rviraj" />
     <RegEx find="ržać" replaceWith="ržat ć" />
@@ -5434,9 +5444,11 @@
     <RegEx find="tarišu" replaceWith="tiraju" />
     <RegEx find="trišu" replaceWith="triraju" />
     <RegEx find="trezni" replaceWith="trijezni" />
+    <RegEx find="ts([nm])" replaceWith="ta$1" />
     <RegEx find="tvp" replaceWith="tvo" />
     <RegEx find="twn" replaceWith="ten" />
     <RegEx find="uas" replaceWith="zas" />
+    <RegEx find="uato" replaceWith="usto" />
     <RegEx find="udep" replaceWith="udeš" />
     <RegEx find="uej" replaceWith="uje" />
     <RegEx find="ueln" replaceWith="ualn" />
@@ -5463,6 +5475,7 @@
     <RegEx find="upoce" replaceWith="upocje" />
     <RegEx find="upuče" replaceWith="upuće" />
     <RegEx find="urfovan" replaceWith="urfan" />
+    <RegEx find="urzo" replaceWith="uzro" />
     <RegEx find="uslj?ed" replaceWith="uslijed" />
     <RegEx find="u([šv])ać" replaceWith="u$1at ć" />
     <RegEx find="uzp" replaceWith="usp" />
@@ -5520,8 +5533,9 @@
     <RegEx find="(?&lt;![Oo]bra|o)zova([lton])" replaceWith="zira$1" />
     <RegEx find="zpr" replaceWith="spr" />
     <RegEx find="zref" replaceWith="zrel" />
-    <RegEx find="zsp" replaceWith="zap" />
+    <RegEx find="zsk" replaceWith="zak" />
     <RegEx find="zsn" replaceWith="zan" />
+    <RegEx find="zsp" replaceWith="zap" />
     <RegEx find="zqp" replaceWith="zap" />
     <RegEx find="zuslov" replaceWith="zuvjet" />
     <RegEx find="zvešć" replaceWith="zvest ć" />
