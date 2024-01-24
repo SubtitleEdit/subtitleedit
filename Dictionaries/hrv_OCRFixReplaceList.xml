@@ -137,6 +137,8 @@
     <Word from="buđav" to="pljesniv" />
     <Word from="buldožder" to="buldožer" />
     <Word from="buse" to="bude" />
+    <Word from="buvu" to="buhu" />
+
     <!-- c -->
     <Word from="cedila" to="cijedila" />
     <Word from="cedilu" to="cjedilu" />
@@ -1464,6 +1466,7 @@
     <Word from="osvetlila" to="osvijetlila" />
     <Word from="osvetlite" to="osvijetlite" />
     <Word from="osvjetlite" to="osvijetlite" />
+    <Word from="osvetliti" to="osvijetliti" />
     <Word from="osvežava" to="osvježava" />
     <Word from="osvežavanja" to="osvježavanja" />
     <Word from="osvežen" to="osvježen" />
@@ -1909,6 +1912,7 @@
     <Word from="prosleđena" to="proslijeđena" />
     <Word from="prostituiše" to="prostituira" />
     <Word from="prostituišu" to="prostituiraju" />
+    <Word from="proosvetliti" to="prosvijetliti" />
     <Word from="prošvercovala" to="prošvercala" />
     <Word from="prošvercovao" to="prošvercao" />
     <Word from="Prošvercovao" to="Prošvercao" />
@@ -5592,6 +5596,7 @@
     <RegEx find="Džejms" replaceWith="James" />
     <RegEx find="Džejson" replaceWith="Jason" />
     <RegEx find="Džek" replaceWith="Jack" />
+    <RegEx find="Džerald" replaceWith="Gerald" />
     <RegEx find="Džeremi" replaceWith="Jeremy" />
     <RegEx find="Džesik" replaceWith="Jessic" />
     <RegEx find="Džim" replaceWith="Jim" />
@@ -5642,6 +5647,7 @@
     <RegEx find="Jovan" replaceWith="Ivan" />
     <RegEx find="Judžin" replaceWith="Eugene" />
     <RegEx find="Judžina" replaceWith="Eugenea" />
+    <RegEx find="Junajtid" replaceWith="United" />
     <RegEx find="kadilak" replaceWith="Cadillac" />
     <RegEx find="Kajl" replaceWith="Kyle" />
     <RegEx find="Kavendiš" replaceWith="Cavendish" />
@@ -5659,6 +5665,7 @@
     <RegEx find="Lajbnic" replaceWith="Leibniz" />
     <RegEx find="Lajonel" replaceWith="Lionel" />
     <RegEx find="Leri" replaceWith="Larry" />
+    <RegEx find="Liverpul" replaceWith="Liverpool" />
     <RegEx find="Lojd" replaceWith="Lloyd" />
     <RegEx find="(?&lt;![LT])ejl" replaceWith="ale" />
     <RegEx find="Losanđeles" replaceWith="Los Angeles" />
