@@ -1969,15 +1969,12 @@
     <Word from="raspust" to="odmor" />
     <Word from="rasterao" to="rastjerao" />
     <Word from="rasteruje" to="rastjeruje" />
-    <Word from="rašće" to="rast će" />
-    <Word from="rašče" to="rast će" />
     <Word from="ravnomerno" to="ravnomjerno" />
     <Word from="razbiću" to="razbit ću" />
     <Word from="razbijesneo" to="razbjesnio" />
     <Word from="razbolila" to="razboljela" />
     <Word from="razrešili" to="razriješili" />
     <Word from="razrešiti" to="razriješiti" />
-    <Word from="rašće" to="rast će" />
     <Word from="Razbiću" to="Razbit ću" />
     <Word from="razdeli" to="razdjeli" />
     <Word from="razdeliti" to="razdijeliti" />
@@ -5328,6 +5325,7 @@
     <RegEx find="ralijs" replaceWith="rals" />
     <RegEx find="resjedav" replaceWith="redsjedav" />
     <RegEx find="kratij" replaceWith="kracij" />
+    <RegEx find="(?&lt;!h)rašće" replaceWith="rast će" />
     <RegEx find="rećn" replaceWith="retn" />
     <RegEx find="(?&lt;![is]|S)redić" replaceWith="rjedit ć" />
     <RegEx find="(?&lt;![mr])ejt" replaceWith="ate" />
