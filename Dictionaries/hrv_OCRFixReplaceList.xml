@@ -1116,7 +1116,6 @@
     <Word from="moč" to="moć" />
     <Word from="motiviši" to="motiviraj" />
     <Word from="Motiviši" to="Motiviraj" />
-    <Word from="mođe" to="može" />
     <Word from="moea" to="mora" />
     <Word from="mofu" to="mogu" />
     <Word from="molekulima" to="molekulama" />
@@ -1315,7 +1314,6 @@
     <Word from="noćeš" to="hoćeš" />
     <Word from="nsiam" to="nisam" />
     <Word from="nteko" to="netko" />
-    <Word from="nr" to="ne" />
     <Word from="nrgo" to="nego" />
     <Word from="nuduo" to="nudio" />
     <!-- o -->
@@ -2522,7 +2520,6 @@
     <Word from="tijesnac" to="tjesnac" />
     <Word from="tiraniše" to="tiranizira" />
     <Word from="tki" to="tko" />
-    <Word from="tofa" to="toga" />
     <Word from="toag" to="toga" />
     <Word from="točak" to="kotač" />
     <Word from="Točak" to="Kotač" />
@@ -4343,7 +4340,6 @@
     <RegEx find="znj?el" replaceWith="znijel" />
     <RegEx find="zolova" replaceWith="zolira" />
     <RegEx find="zume([ltv])" replaceWith="zumje$1" />
-    <RegEx find="zvesn" replaceWith="zvjesn" />
     <RegEx find="zvinjava([mojlt]) se" replaceWith="spričava$1 se" />
     <RegEx find="([iI])zvin[iu]([lo])" replaceWith="$1spriča$2" />
     <RegEx find="jaket" replaceWith="jakn" />
@@ -5056,6 +5052,7 @@
     <RegEx find="ilišu" replaceWith="iliziraju" />
     <RegEx find="izc" replaceWith="isc" />
     <RegEx find="cenk" replaceWith="cjenk" />
+    <RegEx find="crb" replaceWith="crv" />
     <RegEx find="ćič" replaceWith="čić" />
     <RegEx find="dećag" replaceWith="dećeg" />
     <RegEx find="dilova" replaceWith="dila" />
@@ -5213,7 +5210,6 @@
     <RegEx find="luparenj" replaceWith="lupiranj" />
     <RegEx find="lwn" replaceWith="lan" />
     <RegEx find="mpz" replaceWith="mož" />
-    <RegEx find="mwn" replaceWith="men" />
     <RegEx find="mbog" replaceWith="mnog" />
     <RegEx find="mejl" replaceWith="mail" />
     <RegEx find="(?&lt;![Mm])ekd" replaceWith="egd" />
