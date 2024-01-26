@@ -5040,6 +5040,7 @@
     <RegEx find="bei" replaceWith="bri" />
     <RegEx find="beop" replaceWith="besp" />
     <RegEx find="begl" replaceWith="bjegl" />
+    <RegEx find="bijasn" replaceWith="bjasn" />
     <RegEx find="bmi" replaceWith="bni" />
     <RegEx find="bsl" replaceWith="bal" />
     <RegEx find="bqr" replaceWith="bar" />
@@ -5317,6 +5318,7 @@
     <RegEx find="pendov" replaceWith="pendir" />
     <RegEx find="pisho" replaceWith="psiho" />
     <RegEx find="pišačk" replaceWith="pišalin" />
+    <RegEx find="plst" replaceWith="plat" />
     <RegEx find="pord" replaceWith="prod" />
     <RegEx find="pqn" replaceWith="pon" />
     <RegEx find="prouk" replaceWith="poruk" />
