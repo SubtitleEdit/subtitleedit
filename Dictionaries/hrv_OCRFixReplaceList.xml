@@ -5169,6 +5169,7 @@
     <RegEx find="jho" replaceWith="jno" />
     <RegEx find="jr([dgls])" replaceWith="je$1" />
     <RegEx find="jw" replaceWith="je" />
+    <RegEx find="kba" replaceWith="kva" />
     <RegEx find="kcj" replaceWith="kcij" />
     <RegEx find="knjug" replaceWith="knjig" />
     <RegEx find="kodnevnic" replaceWith="kodnevic" />
