@@ -5304,6 +5304,7 @@
     <RegEx find="otstak" replaceWith="otak" />
     <RegEx find="ovetn" replaceWith="ovjetn" />
     <RegEx find="ovinova([lt])" replaceWith="okorava$1" />
+    <RegEx find="ovrn" replaceWith="ovorn" />
     <RegEx find="posel" replaceWith="posjel" />
     <RegEx find="\([pP])otc" replaceWith="$1odc" />
     <RegEx find="produkova" replaceWith="producira" />
