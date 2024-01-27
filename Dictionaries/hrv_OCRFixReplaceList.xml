@@ -344,6 +344,7 @@
     <Word from="Diskutuje" to="Raspravlja" />
     <Word from="diskutujemo" to="raspravljamo" />
     <Word from="Diskutujemo" to="Raspravljamo" />
+    <Word from="dječiji" to="dječji" />
     <Word from="djete" to="dijete" />
     <Word from="Djete" to="Dijete" />
     <Word from="detektuje" to="detektira" />
@@ -1116,7 +1117,6 @@
     <Word from="moč" to="moć" />
     <Word from="motiviši" to="motiviraj" />
     <Word from="Motiviši" to="Motiviraj" />
-    <Word from="mođe" to="može" />
     <Word from="moea" to="mora" />
     <Word from="mofu" to="mogu" />
     <Word from="molekulima" to="molekulama" />
@@ -1315,7 +1315,6 @@
     <Word from="noćeš" to="hoćeš" />
     <Word from="nsiam" to="nisam" />
     <Word from="nteko" to="netko" />
-    <Word from="nr" to="ne" />
     <Word from="nrgo" to="nego" />
     <Word from="nuduo" to="nudio" />
     <!-- o -->
@@ -2522,7 +2521,6 @@
     <Word from="tijesnac" to="tjesnac" />
     <Word from="tiraniše" to="tiranizira" />
     <Word from="tki" to="tko" />
-    <Word from="tofa" to="toga" />
     <Word from="toag" to="toga" />
     <Word from="točak" to="kotač" />
     <Word from="Točak" to="Kotač" />
@@ -4343,7 +4341,6 @@
     <RegEx find="znj?el" replaceWith="znijel" />
     <RegEx find="zolova" replaceWith="zolira" />
     <RegEx find="zume([ltv])" replaceWith="zumje$1" />
-    <RegEx find="zvesn" replaceWith="zvjesn" />
     <RegEx find="zvinjava([mojlt]) se" replaceWith="spričava$1 se" />
     <RegEx find="([iI])zvin[iu]([lo])" replaceWith="$1spriča$2" />
     <RegEx find="jaket" replaceWith="jakn" />
@@ -5044,6 +5041,7 @@
     <RegEx find="bei" replaceWith="bri" />
     <RegEx find="beop" replaceWith="besp" />
     <RegEx find="begl" replaceWith="bjegl" />
+    <RegEx find="bijasn" replaceWith="bjasn" />
     <RegEx find="bmi" replaceWith="bni" />
     <RegEx find="bsl" replaceWith="bal" />
     <RegEx find="bqr" replaceWith="bar" />
@@ -5056,6 +5054,7 @@
     <RegEx find="ilišu" replaceWith="iliziraju" />
     <RegEx find="izc" replaceWith="isc" />
     <RegEx find="cenk" replaceWith="cjenk" />
+    <RegEx find="crb" replaceWith="crv" />
     <RegEx find="ćič" replaceWith="čić" />
     <RegEx find="dećag" replaceWith="dećeg" />
     <RegEx find="dilova" replaceWith="dila" />
@@ -5170,6 +5169,7 @@
     <RegEx find="jho" replaceWith="jno" />
     <RegEx find="jr([dgls])" replaceWith="je$1" />
     <RegEx find="jw" replaceWith="je" />
+    <RegEx find="kba" replaceWith="kva" />
     <RegEx find="kcj" replaceWith="kcij" />
     <RegEx find="knjug" replaceWith="knjig" />
     <RegEx find="kodnevnic" replaceWith="kodnevic" />
@@ -5213,7 +5213,6 @@
     <RegEx find="luparenj" replaceWith="lupiranj" />
     <RegEx find="lwn" replaceWith="lan" />
     <RegEx find="mpz" replaceWith="mož" />
-    <RegEx find="mwn" replaceWith="men" />
     <RegEx find="mbog" replaceWith="mnog" />
     <RegEx find="mejl" replaceWith="mail" />
     <RegEx find="(?&lt;![Mm])ekd" replaceWith="egd" />
@@ -5308,6 +5307,7 @@
     <RegEx find="otstak" replaceWith="otak" />
     <RegEx find="ovetn" replaceWith="ovjetn" />
     <RegEx find="ovinova([lt])" replaceWith="okorava$1" />
+    <RegEx find="ovrn" replaceWith="ovorn" />
     <RegEx find="posel" replaceWith="posjel" />
     <RegEx find="\([pP])otc" replaceWith="$1odc" />
     <RegEx find="produkova" replaceWith="producira" />
@@ -5320,6 +5320,7 @@
     <RegEx find="pendov" replaceWith="pendir" />
     <RegEx find="pisho" replaceWith="psiho" />
     <RegEx find="pišačk" replaceWith="pišalin" />
+    <RegEx find="plst" replaceWith="plat" />
     <RegEx find="pord" replaceWith="prod" />
     <RegEx find="pqn" replaceWith="pon" />
     <RegEx find="prouk" replaceWith="poruk" />
@@ -5480,6 +5481,7 @@
     <RegEx find="urzo" replaceWith="uzro" />
     <RegEx find="uslj?ed" replaceWith="uslijed" />
     <RegEx find="u([šv])ać" replaceWith="u$1at ć" />
+    <RegEx find="uturn" replaceWith="ulturn" />
     <RegEx find="uzp" replaceWith="usp" />
     <RegEx find="vapt" replaceWith="vašt" />
     <RegEx find="vašlji" replaceWith="ušlji" />
