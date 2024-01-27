@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>4.0.3</Version>
-    <TranslatedBy>Traduction de Pierre le Lidgeu. (Updated: Nov.,05 2023)</TranslatedBy>
+    <TranslatedBy>Traduction de Pierre le Lidgeu. (Updated: Jan, 25 2024)</TranslatedBy>
     <CultureName>fr-FR</CultureName>
     <HelpFile />
     <Ok>&amp;OK</Ok>
@@ -831,7 +831,7 @@ Nous tirons parti du rythme intrinsèque de l'image.</CreateSimpleChainingToolTi
     <AddNewLineAfterTimeCode>Ajouter un saut de ligne après l'horodatage</AddNewLineAfterTimeCode>
     <AddNewLineAfterTexts>Ajouter saut de ligne après le texte</AddNewLineAfterTexts>
     <AddNewLineBetweenSubtitles>Ajouter un saut de ligne entre les sous-titres</AddNewLineBetweenSubtitles>
-    <TimeCodeFormat>Paramètres de l'horodatage</TimeCodeFormat>
+    <TimeCodeFormat>Paramètres d'horodatage</TimeCodeFormat>
     <Srt>Format ".srt"</Srt>
     <Milliseconds>Millisecondes</Milliseconds>
     <HHMMSSFF>HH:MM:SS:FF</HHMMSSFF>
@@ -1073,7 +1073,8 @@ Pour utiliser une clé API, allez à \"Options -&gt; Paramètres -&gt; Outils\" 
     <StartWebServerX>Démarrez le serveur web "{0}"</StartWebServerX>
     <XRequiresALocalWebServer>"{0}" requiert un serveur web local !</XRequiresALocalWebServer>
     <XRequiresAnApiKey>"{0}" requiert une clé API.</XRequiresAnApiKey>
-    <ReadMore>Read more?</ReadMore>
+    <ReadMore>En savoir plus ?</ReadMore>
+    <Formality>Formalités</Formality>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
     <Title>Traductions Google vs Microsoft</Title>
@@ -1362,12 +1363,12 @@ Pour utiliser une clé API, allez à \"Options -&gt; Paramètres -&gt; Outils\" 
         <InsertUnicodeControlCharactersRLE>Incrustation droite-à-gauche (RLE)</InsertUnicodeControlCharactersRLE>
         <InsertUnicodeControlCharactersLRO>Forçage gauche-à-droite (LRO)</InsertUnicodeControlCharactersLRO>
         <InsertUnicodeControlCharactersRLO>Forçage droite-à-gauche (RLO)</InsertUnicodeControlCharactersRLO>
-        <Find>Rechercher</Find>
-        <FindNext>Rechercher le suivant</FindNext>
+        <Find>Chercher</Find>
+        <FindNext>Chercher le suivant</FindNext>
         <Replace>Remplacer</Replace>
         <MultipleReplace>Remplacements multiples…</MultipleReplace>
         <GoToSubtitleNumber>Aller au sous-titre numéro…</GoToSubtitleNumber>
-        <RightToLeftMode>Mode de droite à gauche (Right To Left)</RightToLeftMode>
+        <RightToLeftMode>Mode de droite à gauche (RTL)</RightToLeftMode>
         <FixRtlViaUnicodeControlCharacters>Corriger RTL via caractères de contrôle Unicode (lignes sélectionnées)</FixRtlViaUnicodeControlCharacters>
         <RemoveUnicodeControlCharacters>Retirer les caractères de contrôle (lignes sélectionnées)</RemoveUnicodeControlCharacters>
         <ReverseRightToLeftStartEnd>Inverser début/fin RTL (lignes sélectionnées)</ReverseRightToLeftStartEnd>
@@ -2556,6 +2557,7 @@ peuvent éditer le même fichier sous-titres (collaboration)</Information>
     <AdjustViaEndAutoStart>Ajuster via la position de fin</AdjustViaEndAutoStart>
     <AdjustViaEndAutoStartAndGoToNext>Ajuster via la position de fin et aller au suivant</AdjustViaEndAutoStartAndGoToNext>
     <AdjustSetEndMinusGapAndStartNextHere>Définir la fin moins l'écart, Aller au suivant et le commencer ici</AdjustSetEndMinusGapAndStartNextHere>
+    <AdjustSetEndAndStartNextAfterGap>Définir début et fin du suivant après l'écart</AdjustSetEndAndStartNextAfterGap>
     <AdjustSetStartTimeAndGoToNext>Définir le début et aller au suivant</AdjustSetStartTimeAndGoToNext>
     <AdjustSetEndTimeAndGoToNext>Définir la fin et aller au suivant</AdjustSetEndTimeAndGoToNext>
     <AdjustSetEndTimeAndPause>Définir la fin et suspendre</AdjustSetEndTimeAndPause>
@@ -2706,6 +2708,7 @@ peuvent éditer le même fichier sous-titres (collaboration)</Information>
     <AudioExtractSelectedLines>Extraire audio (lignes sélectionnées)</AudioExtractSelectedLines>
     <AudioToTextSelectedLinesX>Audio -&gt; lignes texte sélectionnées ({0})</AudioToTextSelectedLinesX>
     <VideoToggleBrightness>Commuter luminosité (mpv seul)</VideoToggleBrightness>
+    <AutoTranslateSelectedLines>Traduction auto. des lignes sélectionnées</AutoTranslateSelectedLines>
     <CustomSearch1>Traduction, recherche personnalisée 1</CustomSearch1>
     <CustomSearch2>Traduction, recherche personnalisée 2</CustomSearch2>
     <CustomSearch3>Traduction, recherche personnalisée 3</CustomSearch3>
