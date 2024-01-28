@@ -50,7 +50,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             var input = "{\"model\": \"gpt-3.5-turbo\",\"messages\": [{ \"role\": \"user\", \"content\": \"Please translate the following text from " + sourceLanguageCode + " to " + targetLanguageCode + ", only write the result: \\n\\n" + Json.EncodeJsonText(text.Trim()) + "\" }]}";
             var content = new StringContent(input, Encoding.UTF8);
             content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
-            var result = _httpClient.PostAsync(string.Empty, content).Result;
+            var result = await _httpClient.PostAsync(string.Empty, content, cancellationToken);
             var bytes = await result.Content.ReadAsByteArrayAsync();
             var json = Encoding.UTF8.GetString(bytes).Trim();
             if (!result.IsSuccessStatusCode)
