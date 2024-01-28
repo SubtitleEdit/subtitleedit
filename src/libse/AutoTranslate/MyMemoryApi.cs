@@ -4,6 +4,9 @@ using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Core.Translate;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Security.Cryptography;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -214,7 +217,16 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             var parser = new SeJsonParser();
             var textResult = parser.GetFirstObject(jsonResultString, "translatedText");
             var result = Json.DecodeJsonText(textResult);
-            result = Utilities.UrlDecode(result);
+
+            try
+            {
+                result = Regex.Unescape(result);
+            }
+            catch
+            {
+                // ignore
+            }
+
             return Task.FromResult(result);
         }
     }
