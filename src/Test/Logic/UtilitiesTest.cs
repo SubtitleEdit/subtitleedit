@@ -976,5 +976,13 @@ namespace Test.Logic
             Assert.AreEqual(2, c.G);
             Assert.AreEqual(3, c.B);
         }
+
+        [TestMethod]
+        public void UrlDecode1()
+        {
+            var s = Utilities.UrlDecode("В о\u0442е\u043bе");
+
+            Assert.AreEqual("В отеле", s);
+        }
     }
 }

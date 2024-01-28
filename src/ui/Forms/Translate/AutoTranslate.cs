@@ -10,6 +10,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 using Timer = System.Windows.Forms.Timer;
@@ -710,6 +711,11 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                         }
                     }
                 }
+                catch (TaskCanceledException exception)
+                {
+                    SeLogger.Error(exception);
+                    // ignore
+                }
                 catch (Exception exception)
                 {
                     HandleError(exception, linesTranslated, engineType);
@@ -742,7 +748,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                     labelPleaseWait.Text = LanguageSettings.Current.GoogleTranslate.PleaseWait + $" ({i})";
                     labelPleaseWait.Refresh();
                     Application.DoEvents();
-                    System.Threading.Thread.Sleep(1000);
+                    Thread.Sleep(1000);
                     if (_breakTranslation)
                     {
                         break;

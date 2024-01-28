@@ -214,6 +214,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             var parser = new SeJsonParser();
             var textResult = parser.GetFirstObject(jsonResultString, "translatedText");
             var result = Json.DecodeJsonText(textResult);
+            result = Utilities.UrlDecode(result);
             return Task.FromResult(result);
         }
     }

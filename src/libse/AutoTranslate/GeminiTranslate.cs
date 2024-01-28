@@ -81,6 +81,13 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                 outputText = outputText.Trim('"').Trim();
             }
 
+            if (!string.IsNullOrEmpty(outputText))
+            {
+                outputText = outputText.Replace("<br />", Environment.NewLine);
+                outputText = outputText.Replace("<br/>", Environment.NewLine);
+                outputText = outputText.Replace("<br>", Environment.NewLine);
+            }
+
             return outputText;
         }
 

@@ -1372,6 +1372,11 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// </summary>
         public static string UrlDecode(string text)
         {
+            if (string.IsNullOrEmpty(text))
+            {
+                return text;
+            }
+
             // pre-process for + sign space formatting since System.Uri doesn't handle it
             // plus literals are encoded as %2b normally so this should be safe
             text = text.Replace('+', ' ');
