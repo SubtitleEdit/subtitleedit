@@ -939,7 +939,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <FixOverlappingDisplayTime>Исправить наложение субтитров</FixOverlappingDisplayTime>
     <FixShortGap>Исправить короткий разрыв</FixShortGap>
     <FixInvalidItalicTagsExample>&lt;i&gt;Мне всё равно.&lt;i&gt; -&gt; &lt;i&gt;Мне всё равно.&lt;/i&gt;</FixInvalidItalicTagsExample>
-    <RemoveUnneededSpacesExample>Не уходи , постой. -&gt; Не уходи, постой.</RemoveUnneededSpacesExample>
+    <RemoveUnneededSpacesExample>Постой , не уходи. -&gt; Постой, не уходи.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>Эй, ты!. -&gt; Эй, ты!</RemoveUnneededPeriodsExample>
     <FixMissingSpacesExample>Эй.ты. -&gt; Эй. Ты.</FixMissingSpacesExample>
     <FixUppercaseIInsideLowercaseWordsExample>The earth is fIat. -&gt; The earth is flat.</FixUppercaseIInsideLowercaseWordsExample>
@@ -1078,6 +1078,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <XRequiresALocalWebServer>Для «{0}» требуется локальный сервер!</XRequiresALocalWebServer>
     <XRequiresAnApiKey>Для «{0}» требуется ключ API</XRequiresAnApiKey>
     <ReadMore>Прочитать подробнее?</ReadMore>
+    <Formality>Формальность</Formality>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
     <Title>Сравнительный перевод в Google и Microsoft</Title>
@@ -2566,6 +2567,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <AdjustViaEndAutoStart>Настроить через конечную позицию</AdjustViaEndAutoStart>
     <AdjustViaEndAutoStartAndGoToNext>Установить конечное время в позиции курсора и перейти к следующему субтитру</AdjustViaEndAutoStartAndGoToNext>
     <AdjustSetEndMinusGapAndStartNextHere>Установить конец, минус интервал, перейти к следующему и начать следующий здесь</AdjustSetEndMinusGapAndStartNextHere>
+    <AdjustSetEndAndStartNextAfterGap>Установить конец и начало следующего через интервал</AdjustSetEndAndStartNextAfterGap>
     <AdjustSetStartTimeAndGoToNext>Установить начало и перейти к следующему</AdjustSetStartTimeAndGoToNext>
     <AdjustSetEndTimeAndGoToNext>Установить конец и перейти к следующему</AdjustSetEndTimeAndGoToNext>
     <AdjustSetEndTimeAndPause>Установить конец (в месте расположения статус-бара) и остановить</AdjustSetEndTimeAndPause>
@@ -2663,7 +2665,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <WaveformSeekSilenceForward>Поиск пауз далее</WaveformSeekSilenceForward>
     <WaveformSeekSilenceBack>Поиск пауз назад</WaveformSeekSilenceBack>
     <WaveformAddTextHere>Добавить здесь текст (для нового выделения)</WaveformAddTextHere>
-    <ChooseLayoutX>Выберите макет {0}</ChooseLayoutX>
+    <ChooseLayoutX>Выбрать макет {0}</ChooseLayoutX>
     <WaveformAddTextHereFromClipboard>Добавить здесь текст (для нового выделения из буфера обмена)</WaveformAddTextHereFromClipboard>
     <SetParagraphAsSelection>Установить текущий как новый выбор</SetParagraphAsSelection>
     <WaveformPlayNewSelection>Проиграть новое выделение</WaveformPlayNewSelection>
@@ -2718,6 +2720,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <AudioExtractSelectedLines>Извлечь аудио (выделенные строки)</AudioExtractSelectedLines>
     <AudioToTextSelectedLinesX>Аудио в текст выделенных строк ({0})</AudioToTextSelectedLinesX>
     <VideoToggleBrightness>Переключить яркость (только mpv)</VideoToggleBrightness>
+    <AutoTranslateSelectedLines>Автоперевод выбранных строк</AutoTranslateSelectedLines>
     <CustomSearch1>Перевод, пользовательский поиск 1</CustomSearch1>
     <CustomSearch2>Перевод, пользовательский поиск 2</CustomSearch2>
     <CustomSearch3>Перевод, пользовательский поиск 3</CustomSearch3>
