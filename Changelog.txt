@@ -9,6 +9,8 @@
    * Update Portuguese translation - thx hugok79
    * Update Finnish translation - thx Teijo S
    * Update Chinese translation - thx nkh0472
+   * Update French translation - thx Pierre
+   * Update Russian translation - thx elfriob
    * Improve auto-translate re-split (two lines only)
    * Set file name after .MKS file import - thx RedSoxFan04
    * Faster cancel in auto-translate - thx Siamak
@@ -23,6 +25,7 @@
    * Fix crash in "Remove text for HI" - thx darnn
    * Fix single line length to 39 for Netflix Russian - thx Ekaterina
    * Fix for ASSA new file default style - thx mpr0st
+   * Fix for counting string length with extended Unicode characters
 
 
 4.0.3 (23rd December 2023)
