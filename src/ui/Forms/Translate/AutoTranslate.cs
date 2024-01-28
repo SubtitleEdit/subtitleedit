@@ -121,6 +121,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 new LibreTranslate(),
                 new MyMemoryApi(),
                 new ChatGptTranslate(),
+                new GeminiTranslate(),
                 new PapagoTranslate(),
                 new NoLanguageLeftBehindServe(),
                 new NoLanguageLeftBehindApi(),
@@ -297,6 +298,19 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 return;
             }
 
+
+            if (engineType == typeof(GeminiTranslate))
+            {
+                nikseComboBoxUrl.Visible = false;
+                labelUrl.Visible = false;
+
+                labelApiKey.Left = labelUrl.Left;
+                nikseTextBoxApiKey.Text = Configuration.Settings.Tools.GeminiProApiKey;
+                nikseTextBoxApiKey.Left = labelApiKey.Right + 3;
+                labelApiKey.Visible = true;
+                nikseTextBoxApiKey.Visible = true;
+                return;
+            }
 
             throw new Exception($"Engine {_autoTranslator.Name} not handled!");
         }
@@ -878,6 +892,11 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             if (engineType == typeof(ChatGptTranslate) && !string.IsNullOrWhiteSpace(nikseTextBoxApiKey.Text))
             {
                 Configuration.Settings.Tools.ChatGptApiKey = nikseTextBoxApiKey.Text.Trim();
+            }
+
+            if (engineType == typeof(GeminiTranslate) && !string.IsNullOrWhiteSpace(nikseTextBoxApiKey.Text))
+            {
+                Configuration.Settings.Tools.GeminiProApiKey = nikseTextBoxApiKey.Text.Trim();
             }
 
             if (engineType == typeof(PapagoTranslate) && !string.IsNullOrWhiteSpace(nikseTextBoxApiKey.Text))
