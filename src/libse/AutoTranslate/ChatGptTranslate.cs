@@ -115,6 +115,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                MakePair("Gujarati","gu"),
                MakePair("Haryanvi",""),
                MakePair("Hindi","hi"),
+               MakePair("Hebrew","iw"),
                MakePair("Hungarian","hu"),
                MakePair("Indonesian","id"),
                MakePair("Irish","ga"),
