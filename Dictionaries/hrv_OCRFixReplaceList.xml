@@ -5171,6 +5171,7 @@
     <RegEx find="jw" replaceWith="je" />
     <RegEx find="kba" replaceWith="kva" />
     <RegEx find="kcj" replaceWith="kcij" />
+    <RegEx find="kls" replaceWith="kla" />
     <RegEx find="knjug" replaceWith="knjig" />
     <RegEx find="kodnevnic" replaceWith="kodnevic" />
     <RegEx find="konsul" replaceWith="konzul" />
