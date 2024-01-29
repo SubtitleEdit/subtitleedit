@@ -13,6 +13,7 @@ namespace Nikse.SubtitleEdit.Forms
     {
         private readonly IFindAndReplace _findAndReplaceMethods;
         private readonly Keys _findNextShortcut;
+        private readonly Keys _findShortcut;
         private Regex _regEx;
         private readonly Subtitle _subtitle;
 
@@ -42,6 +43,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             UiUtil.FixLargeFonts(this, buttonFind);
             _findNextShortcut = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainEditFindNext);
+            _findShortcut = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainEditFind);
         }
 
         private ReplaceType FindReplaceType
@@ -121,6 +123,21 @@ namespace Nikse.SubtitleEdit.Forms
                 FindNext();
                 Focus();
                 ctrl?.Focus();
+            }
+            else if (e.KeyData == _findShortcut)
+            {
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+                if (comboBoxFind.Visible)
+                {
+                    comboBoxFind.Focus();
+                    comboBoxFind.SelectAll();
+                }
+                else
+                {
+                    textBoxFind.Focus();
+                    textBoxFind.SelectAll();
+                }
             }
         }
 
