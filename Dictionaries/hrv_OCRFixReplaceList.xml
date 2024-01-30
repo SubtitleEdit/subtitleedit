@@ -5152,6 +5152,7 @@
     <RegEx find="hvač" replaceWith="hvać" />
     <RegEx find="hvatić" replaceWith="hvatit ć" />
     <RegEx find="(?&lt;![MH])ick([eoiu])" replaceWith="ičk$1" />
+    <RegEx find="\bicr" replaceWith="ice" />
     <RegEx find="idev" replaceWith="idjev" />
     <RegEx find="ifej" replaceWith="idej" />   
     <RegEx find="ijd" replaceWith="idj" />
