@@ -4792,8 +4792,8 @@
     <RegEx find="([^\s]+)strova" replaceWith="$1strira" />
     <RegEx find="sugeriše" replaceWith="predlaže" />
     <RegEx find="Sugeriše" replaceWith="Predlaže" />
-    <RegEx find="sujever" replaceWith="praznovjer" />
-    <RegEx find="Sujever" replaceWith="Praznovjer" />
+    <RegEx find="sujevj?er" replaceWith="praznovjer" />
+    <RegEx find="Sujevj?er" replaceWith="Praznovjer" />
     <RegEx find="([sS])umlj" replaceWith="$1umnj" />
     <RegEx find="unđer" replaceWith="pužva" />
     <RegEx find="(?&lt;!k)ulisa" replaceWith="ulira" />
