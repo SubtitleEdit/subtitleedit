@@ -2595,6 +2595,7 @@
     <Word from="ulivate" to="ulijevate" />
     <Word from="uljeva" to="ulijeva" />
     <Word from="ujutru" to="ujutro" />
+    <Word from="Ujutru" to="Ujutro" />
     <Word from="Ukoliko" to="Ako" />
     <Word from="ukoliko" to="ako" />
     <Word from="uključiću" to="uključit ću" />
@@ -3812,6 +3813,7 @@
     <LinePart from="ako ej" to="ako je" />
     <LinePart from="bez svesti" to="bez svijesti" />
     <LinePart from="bez obzira što" to="bez obzira na to što" />
+    <LinePart from="Biće mi" to="Bit će mi" />
     <LinePart from="Biće on" to="Bit će on" />
     <LinePart from="Biće oni" to="Bit će oni" />
     <LinePart from="Biće sve" to="Bit će sve" />
@@ -3833,6 +3835,7 @@
     <LinePart from="bogom dan" to="bogomdan" />
     <LinePart from="će da dođe" to="će doći" />
     <LinePart from="će da bude" to="će biti" />
+    <LinePart from="ćeš da pričaš" to="ćeš pričati" />
     <LinePart from="Da li će" to="Hoće li" />
     <LinePart from="Da li ćeš" to="Hoćeš li" />
     <LinePart from="da li ćeš" to="hoćeš li" />
@@ -5078,6 +5081,7 @@
     <RegEx find="dks" replaceWith="dsk" />
     <RegEx find="dnačin" replaceWith="dnadžb" />
     <RegEx find="dnp" replaceWith="dno" />
+    <RegEx find="dnr" replaceWith="dne" />
     <RegEx find="doustal" replaceWith="odustal" />
     <RegEx find="dps" replaceWith="dos" />
     <RegEx find="dpš" replaceWith="doš" />
