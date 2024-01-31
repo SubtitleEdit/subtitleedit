@@ -48,7 +48,7 @@
             // buttonDownload
             // 
             this.buttonDownload.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonDownload.Location = new System.Drawing.Point(258, 22);
+            this.buttonDownload.Location = new System.Drawing.Point(258, 14);
             this.buttonDownload.Name = "buttonDownload";
             this.buttonDownload.Size = new System.Drawing.Size(145, 23);
             this.buttonDownload.TabIndex = 1;
@@ -82,7 +82,7 @@
             this.comboBoxModels.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxModels.DropDownWidth = 237;
             this.comboBoxModels.FormattingEnabled = true;
-            this.comboBoxModels.Location = new System.Drawing.Point(15, 24);
+            this.comboBoxModels.Location = new System.Drawing.Point(15, 16);
             this.comboBoxModels.MaxLength = 32767;
             this.comboBoxModels.Name = "comboBoxModels";
             this.comboBoxModels.SelectedIndex = -1;
