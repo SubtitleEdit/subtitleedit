@@ -222,9 +222,8 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
         {
             var s = new Subtitle(subtitle);
 
-            for (var i = 0; i < subtitle.Paragraphs.Count; i++)
+            foreach (var p in s.Paragraphs)
             {
-                var p = subtitle.Paragraphs[i];
                 if (p.DurationTotalMilliseconds > 8000)
                 {
                     p.StartTime.TotalMilliseconds = p.EndTime.TotalMilliseconds - 5000;
