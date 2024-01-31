@@ -13,6 +13,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
     public class MyMemoryApi : IAutoTranslator
     {
         private IDownloader _httpClient;
+        private readonly SeJsonParser _jsonParser = new SeJsonParser();
 
         public static string StaticName { get; set; } = "MyMemory Translate";
         public string Name => StaticName;
@@ -212,8 +213,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
 
             var url = $"?langpair={sourceLanguageCode}|{targetLanguageCode}{apiKey}&q={Utilities.UrlEncode(text)}";
             var jsonResultString = _httpClient.GetStringAsync(url).Result;
-            var parser = new SeJsonParser();
-            var textResult = parser.GetFirstObject(jsonResultString, "translatedText");
+            var textResult = _jsonParser.GetFirstObject(jsonResultString, "translatedText");
             var result = Json.DecodeJsonText(textResult);
 
             try
