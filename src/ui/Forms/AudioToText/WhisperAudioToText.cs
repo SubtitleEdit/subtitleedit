@@ -465,7 +465,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
             if (checkBoxAutoAdjustTimings.Checked && wavePeaks != null)
             {
-                transcript = WhisperTimingFixer.ShortenLongTexts(transcript);
+                transcript = WhisperTimingFixer.ShortenLongDuration(transcript);
                 transcript = WhisperTimingFixer.ShortenViaWavePeaks(transcript, wavePeaks);
             }
 
@@ -560,7 +560,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
                 if (checkBoxAutoAdjustTimings.Checked && wavePeaks != null)
                 {
-                    transcript = WhisperTimingFixer.ShortenLongTexts(transcript);
+                    transcript = WhisperTimingFixer.ShortenLongDuration(transcript);
                     transcript = WhisperTimingFixer.ShortenViaWavePeaks(transcript, wavePeaks);
                 }
 
@@ -2132,7 +2132,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
                 if (checkBoxAutoAdjustTimings.Checked && wavePeaks != null)
                 {
-                    _subtitle = WhisperTimingFixer.ShortenLongTexts(_subtitle);
+                    _subtitle = WhisperTimingFixer.ShortenLongDuration(_subtitle);
                     _subtitle = WhisperTimingFixer.ShortenViaWavePeaks(_subtitle, wavePeaks);
                 }
                 else if (!checkBoxUsePostProcessing.Checked)

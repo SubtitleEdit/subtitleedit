@@ -174,7 +174,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                     while (pctHere < percentageMax && startPos < p.EndTime.TotalSeconds - 1)
                     {
                         pctHere = FindPercentage(startPosForward - 0.05, startPosForward + 0.05, wavePeaks);
-                        if (Math.Abs(pctHere - (- 1)) < 0.01)
+                        if (Math.Abs(pctHere - (-1)) < 0.01)
                         {
                             if (p.DurationTotalMilliseconds < 1000)
                             {
@@ -218,15 +218,15 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
             return s;
         }
 
-        public static Subtitle ShortenLongTexts(Subtitle subtitle)
+        public static Subtitle ShortenLongDuration(Subtitle subtitle)
         {
             var s = new Subtitle(subtitle);
 
             foreach (var p in s.Paragraphs)
             {
-                if (p.DurationTotalMilliseconds > 8000)
+                if (p.DurationTotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
                 {
-                    p.StartTime.TotalMilliseconds = p.EndTime.TotalMilliseconds - 5000;
+                    p.StartTime.TotalMilliseconds = p.EndTime.TotalMilliseconds - Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds;
                 }
             }
 
