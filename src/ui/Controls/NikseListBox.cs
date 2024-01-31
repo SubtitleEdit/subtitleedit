@@ -338,6 +338,25 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
+        // ReSharper disable once InconsistentNaming
+        public new event MouseEventHandler MouseDoubleClick
+        {
+            add
+            {
+                if (_listBox != null)
+                {
+                    _listBox.MouseDoubleClick += value;
+                }
+            }
+            remove
+            {
+                if (_listBox != null)
+                {
+                    _listBox.MouseDoubleClick -= value;
+                }
+            }
+        }
+
         public void BeginUpdate()
         {
             _listBox?.BeginUpdate();
