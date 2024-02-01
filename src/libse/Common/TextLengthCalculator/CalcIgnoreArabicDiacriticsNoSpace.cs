@@ -35,10 +35,25 @@ namespace Nikse.SubtitleEdit.Core.Common.TextLengthCalculator
                     {
                         length++;
                     }
-                    else
-                    {
-                        length++;
-                    }
+                }
+                else if (element != "\u200E" &&
+                         element != "\u200F" &&
+                         element != "\u202A" &&
+                         element != "\u202B" &&
+                         element != "\u202C" &&
+                         element != "\u202D" &&
+                         element != "\u202E" &&
+                         element != "\u064B" &&
+                         element != "\u064C" &&
+                         element != "\u064D" &&
+                         element != "\u064E" &&
+                         element != "\u064F" &&
+                         element != "\u0650" &&
+                         element != "\u0651" &&
+                         element != "\u0652" &&
+                         element != "\u0653")
+                {
+                    length++;
                 }
             }
 
