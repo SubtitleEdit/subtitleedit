@@ -4486,6 +4486,7 @@
     <RegEx find="arudžbin" replaceWith="arudžb" />
     <RegEx find="([nN]a|[Ii])smej" replaceWith="$1smij" />
     <RegEx find="asle([dđ])" replaceWith="aslje$1" />
+    <RegEx find="nastve?n" replaceWith="nanstven" />
     <RegEx find="([nN])atera" replaceWith="$1atjera" />
     <RegEx find="([nN])atj?erać" replaceWith="$1atjerat ć" />
     <RegEx find="([nN])a(gradi|pravi|tera|uči|zva)ć" replaceWith="$1a$2t ć" />
