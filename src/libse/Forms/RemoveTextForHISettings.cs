@@ -35,7 +35,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
             ColonSeparateLine = Configuration.Settings.RemoveTextForHearingImpaired.RemoveTextBeforeColonOnlyOnSeparateLine;
             RemoveWhereContains = Configuration.Settings.RemoveTextForHearingImpaired.RemoveIfContains;
             RemoveIfTextContains = new List<string>();
-            foreach (string item in Configuration.Settings.RemoveTextForHearingImpaired.RemoveIfContainsText.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+            foreach (var item in Configuration.Settings.RemoveTextForHearingImpaired.RemoveIfContainsText.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
             {
                 RemoveIfTextContains.Add(item.Trim());
             }
@@ -45,6 +45,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
             RemoveTextBetweenBrackets = Configuration.Settings.RemoveTextForHearingImpaired.RemoveTextBetweenCurlyBrackets;
             RemoveTextBetweenQuestionMarks = Configuration.Settings.RemoveTextForHearingImpaired.RemoveTextBetweenQuestionMarks;
             RemoveTextBetweenParentheses = Configuration.Settings.RemoveTextForHearingImpaired.RemoveTextBetweenParentheses;
+            RemoveIfOnlyMusicSymbols = Configuration.Settings.RemoveTextForHearingImpaired.RemoveIfOnlyMusicSymbols;
             CustomStart = Configuration.Settings.RemoveTextForHearingImpaired.RemoveTextBetweenCustomBefore;
             CustomEnd = Configuration.Settings.RemoveTextForHearingImpaired.RemoveTextBetweenCustomAfter;
             var languageName = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle);
