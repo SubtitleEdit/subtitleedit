@@ -19,7 +19,7 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
                     if (p.DurationTotalMilliseconds < 500)
                     {
                         string comment = "Minimum duration: 0.5 second";
-                        controller.AddRecord(p, p.StartTime.ToHHMMSSFF(), comment, p.DurationTotalSeconds.ToString(CultureInfo.InvariantCulture));
+                        controller.AddRecord(p, p.StartTime.ToHHMMSSFF(),  p.DurationTotalSeconds.ToString(CultureInfo.InvariantCulture), comment);
                     }
                     continue;
                 }
