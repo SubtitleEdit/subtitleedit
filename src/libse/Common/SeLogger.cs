@@ -7,7 +7,6 @@ namespace Nikse.SubtitleEdit.Core.Common
 {
     public static class SeLogger
     {
-
         public static string ErrorFile => Path.Combine(Configuration.DataDirectory, "error_log.txt");
 
         public static void Error(Exception exception, string message = null)
@@ -102,7 +101,16 @@ namespace Nikse.SubtitleEdit.Core.Common
             return Path.Combine(Configuration.DataDirectory, "whisper_log.txt");
         }
 
-        private static string GetSeInfo()
+        /// <summary>
+        /// Get information about the machine that is cached and accessed by the SeLogger class.
+        /// </summary>
+        /// <returns>A string representing information about the machine.</returns>
+        private static string GetSeInfo() => CachedMachineInfo.Value;
+
+        /// <summary>
+        /// Represents information about the machine that is cached and accessed by the <see cref="SeLogger"/> class.
+        /// </summary>
+        private static readonly Lazy<string> CachedMachineInfo = new Lazy<string>(() =>
         {
             try
             {
@@ -112,6 +120,6 @@ namespace Nikse.SubtitleEdit.Core.Common
             {
                 return string.Empty;
             }
-        }
+        });
     }
 }
