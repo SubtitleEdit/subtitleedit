@@ -1117,6 +1117,7 @@ namespace Test.Logic.Forms
             target.Settings.RemoveTextBetweenCustomTags = false;
             target.Settings.RemoveTextBetweenBrackets = true;
             target.Settings.RemoveIfTextContains = null;
+            target.Settings.RemoveIfOnlyMusicSymbols = false;
             const string text = "<i>♪♪[Ambient Electronic]</i>";
             const string expected = "<i>♪♪</i>";
             string actual = target.RemoveTextFromHearImpaired(text, _interjectionsLanguageCode);
@@ -1344,6 +1345,7 @@ namespace Test.Logic.Forms
         {
             var target = GetRemoveTextForHiLib();
             target.Settings.RemoveTextBetweenBrackets = true;
+            target.Settings.RemoveIfOnlyMusicSymbols = false;
             const string text = "♪ <font color=\"#000000\">[LIGHT SWITCH CLICKS]</font>";
             const string expected = "♪";
             string actual = target.RemoveTextFromHearImpaired(text, _interjectionsLanguageCode);
