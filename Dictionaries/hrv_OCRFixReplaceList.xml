@@ -5205,6 +5205,7 @@
     <RegEx find="lepš" replaceWith="ljepš" />
     <RegEx find="lešt" replaceWith="lješt" />
     <RegEx find="levać" replaceWith="lijevat ć" />
+    <RegEx find="lhav" replaceWith="ljav" />
     <RegEx find="liget" replaceWith="ligent" />
     <RegEx find="linovan" replaceWith="liniran" />
     <RegEx find="lkm" replaceWith="lim" />
