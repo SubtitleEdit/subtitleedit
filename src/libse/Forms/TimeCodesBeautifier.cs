@@ -568,7 +568,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 }
                 else if (isLeftOutCueOnShotChange)
                 {
-                    // The left out cue in on a shot change
+                    // The left out cue is on a shot change
                     // Try to chain the subtitles
                     var fixedRightInCueFrame = GetFixedChainableSubtitlesRightInCueFrameOutCueOnShot(bestLeftOutCueFrame, bestRightInCueFrame);
                     if (fixedRightInCueFrame != null)
