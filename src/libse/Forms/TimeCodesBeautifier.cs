@@ -525,11 +525,40 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     var fixedLeftOutCueFrame = GetFixedChainableSubtitlesLeftOutCueFrameInCueOnShot(bestLeftOutCueFrame, bestRightInCueFrame);
                     if (fixedLeftOutCueFrame != null)
                     {
-                        newLeftOutCueFrame = fixedLeftOutCueFrame.Value;
-                        newRightInCueFrame = bestRightInCueFrame;
+                        // Check if there are any shot changes in between them
+                        var firstShotChangeInBetween = GetFirstShotChangeFrameInBetween(bestLeftOutCueFrame, bestRightInCueFrame);
+                        if (firstShotChangeInBetween != null)
+                        {
+                            // There are shot changes in between. Check behaviors
+                            switch (Configuration.Settings.BeautifyTimeCodes.Profile.ChainingGeneralShotChangeBehavior)
+                            {
+                                case BeautifyTimeCodesSettings.BeautifyTimeCodesProfile.ChainingGeneralShotChangeBehaviorEnum.DontChain:
+                                    // Don't do anything
+                                    return false;
+                                case BeautifyTimeCodesSettings.BeautifyTimeCodesProfile.ChainingGeneralShotChangeBehaviorEnum.ExtendCrossingShotChange:
+                                    // Apply the chaining
+                                    newLeftOutCueFrame = fixedLeftOutCueFrame.Value;
+                                    newRightInCueFrame = bestRightInCueFrame;
 
-                        // Make sure the newly connected subtitles get fixed
-                        shouldFixConnectedSubtitles = true;
+                                    // Make sure the newly connected subtitles get fixed
+                                    shouldFixConnectedSubtitles = true;
+                                    break;
+                                case BeautifyTimeCodesSettings.BeautifyTimeCodesProfile.ChainingGeneralShotChangeBehaviorEnum.ExtendUntilShotChange:
+                                    // Put the left out cue on the shot change, minus gap
+                                    newLeftOutCueFrame = firstShotChangeInBetween.Value - Configuration.Settings.BeautifyTimeCodes.Profile.OutCuesGap;
+                                    newRightInCueFrame = bestRightInCueFrame;
+                                    break;
+                            }
+                        }
+                        else
+                        {
+                            // Apply the chaining
+                            newLeftOutCueFrame = fixedLeftOutCueFrame.Value;
+                            newRightInCueFrame = bestRightInCueFrame;
+
+                            // Make sure the newly connected subtitles get fixed
+                            shouldFixConnectedSubtitles = true;
+                        }
                     }
                     else
                     {
