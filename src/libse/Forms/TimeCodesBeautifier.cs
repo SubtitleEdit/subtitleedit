@@ -760,7 +760,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
             {
                 var leftOutCueWithGreenZone = leftOutCueFrame + Configuration.Settings.BeautifyTimeCodes.Profile.ChainingOutCueOnShotRightGreenZone;
                 var isInGreenZone = rightInCueFrame < leftOutCueWithGreenZone && rightInCueFrame > (leftOutCueFrame + Configuration.Settings.BeautifyTimeCodes.Profile.ChainingOutCueOnShotRightRedZone);
-                var isInRedZone = rightInCueFrame <= (leftOutCueFrame + Configuration.Settings.BeautifyTimeCodes.Profile.ChainingGeneralLeftRedZone) && rightInCueFrame >= leftOutCueFrame;
+                var isInRedZone = rightInCueFrame <= (leftOutCueFrame + Configuration.Settings.BeautifyTimeCodes.Profile.ChainingOutCueOnShotRightRedZone) && rightInCueFrame >= leftOutCueFrame;
 
                 if (isInRedZone)
                 {
