@@ -5355,7 +5355,7 @@
     <RegEx find="pulis" replaceWith="pulir" />
     <RegEx find="pva" replaceWith="ova" />
     <RegEx find="pzn" replaceWith="pozn" />
-    <RegEx find="rpb" replaceWith="rob" />
+    <RegEx find="rp([bd])" replaceWith="ro$1" />
     <RegEx find="rdk" replaceWith="rek" />
     <RegEx find="riaj" replaceWith="rija" />
     <RegEx find="rićemo" replaceWith="rit ćemo" />
