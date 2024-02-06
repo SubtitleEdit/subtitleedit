@@ -576,6 +576,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.timerOriginalTextUndo = new System.Windows.Forms.Timer(this.components);
             this.contextMenuStripShowVideoControls = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItemShowVideoControls = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemEvenlyDistributeLines = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -3146,6 +3147,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemTranslateSelected,
             this.toolStripMenuItemUnbreakLines,
             this.toolStripMenuItemAutoBreakLines,
+            this.toolStripMenuItemEvenlyDistributeLines,
             this.toolStripMenuItemSaveSelectedLines,
             this.typeEffectToolStripMenuItem,
             this.karaokeEffectToolStripMenuItem});
@@ -5845,6 +5847,13 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemShowVideoControls.Text = "Show video controls";
             this.toolStripMenuItemShowVideoControls.Click += new System.EventHandler(this.ToolStripMenuItemShowVideoControlsClick);
             // 
+            // toolStripMenuItemEvenlyDistributeLines
+            // 
+            this.toolStripMenuItemEvenlyDistributeLines.Name = "toolStripMenuItemEvenlyDistributeLines";
+            this.toolStripMenuItemEvenlyDistributeLines.Size = new System.Drawing.Size(275, 22);
+            this.toolStripMenuItemEvenlyDistributeLines.Text = "Evenly distribute lines (CPS)...";
+            this.toolStripMenuItemEvenlyDistributeLines.Click += new System.EventHandler(this.ToolStripMenuItemEvenlyDistributeLinesClick);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -6460,5 +6469,6 @@ namespace Nikse.SubtitleEdit.Forms
         private NikseLabel labelAutoDuration;
         private System.Windows.Forms.ToolStripButton toolStripSplitButtonPlayRate;
         private System.Windows.Forms.ToolStripMenuItem autotranslateNLLBToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemEvenlyDistributeLines;
     }
 }
