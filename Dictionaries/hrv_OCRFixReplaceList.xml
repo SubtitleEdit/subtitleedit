@@ -5773,6 +5773,8 @@
 
     <RegEx find="\b\|\b" replaceWith="I" />
 
+    <RegEx find="da li se (\w+)" replaceWith="$1 li se" />
+
 <!--
     <RegEx find="([Ss])a (?!\s*[szž])" replaceWith="$1" />
     <RegEx find="s ([szž])" replaceWith="sa $1" />
