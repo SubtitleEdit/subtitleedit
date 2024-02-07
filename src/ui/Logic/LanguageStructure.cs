@@ -14,6 +14,7 @@
             public string Cancel { get; set; }
             public string Yes { get; set; }
             public string No { get; set; }
+            public string Close { get; set; }
             public string Apply { get; set; }
             public string ApplyTo { get; set; }
             public string None { get; set; }
@@ -422,6 +423,11 @@
             public string BatchAlignTimeCodes { get; set; }
             public string BatchUseExactTimeCodes { get; set; }
             public string BatchSnapToShotChanges { get; set; }
+            public string UnfixableParagraphsTitle { get; set; }
+            public string UnfixableParagraphsInstructions { get; set; }
+            public string UnfixableParagraphsColumnParagraphs { get; set; }
+            public string UnfixableParagraphsColumnParagraphsFormat { get; set; }
+            public string UnfixableParagraphsColumnGap { get; set; }
         }
 
         public class BeautifyTimeCodesProfile
@@ -447,6 +453,7 @@
             public string Chaining { get; set; }
             public string InCueOnShot { get; set; }
             public string OutCueOnShot { get; set; }
+            public string CheckGeneral { get; set; }
             public string MaxGap { get; set; }
             public string ShotChangeBehavior { get; set; }
             public string DontChain { get; set; }

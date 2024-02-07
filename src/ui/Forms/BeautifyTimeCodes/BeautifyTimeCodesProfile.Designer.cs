@@ -104,6 +104,8 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             this.radioButtonChainingOutCueOnShotMaxGap = new System.Windows.Forms.RadioButton();
             this.numericUpDownChainingOutCueOnShotMaxGap = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.buttonCreateSimple = new System.Windows.Forms.Button();
+            this.checkBoxChainingInCueOnShotCheckGeneral = new System.Windows.Forms.CheckBox();
+            this.checkBoxChainingOutCueOnShotCheckGeneral = new System.Windows.Forms.CheckBox();
             this.menuStrip.SuspendLayout();
             this.groupBoxGeneral.SuspendLayout();
             this.groupBoxInCues.SuspendLayout();
@@ -1482,6 +1484,7 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             // 
             // tabPageChainingInCueOnShot
             // 
+            this.tabPageChainingInCueOnShot.Controls.Add(this.checkBoxChainingInCueOnShotCheckGeneral);
             this.tabPageChainingInCueOnShot.Controls.Add(this.labelChainingInCueOnShotMaxGapSuffix);
             this.tabPageChainingInCueOnShot.Controls.Add(this.radioButtonChainingInCueOnShotZones);
             this.tabPageChainingInCueOnShot.Controls.Add(this.radioButtonChainingInCueOnShotMaxGap);
@@ -1646,6 +1649,7 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             // 
             // tabPageChainingOutCueOnShot
             // 
+            this.tabPageChainingOutCueOnShot.Controls.Add(this.checkBoxChainingOutCueOnShotCheckGeneral);
             this.tabPageChainingOutCueOnShot.Controls.Add(this.numericUpDownChainingOutCueOnShotRightGreenZone);
             this.tabPageChainingOutCueOnShot.Controls.Add(this.numericUpDownChainingOutCueOnShotRightRedZone);
             this.tabPageChainingOutCueOnShot.Controls.Add(this.labelChainingOutCueOnShotMaxGapSuffix);
@@ -1816,6 +1820,30 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             this.buttonCreateSimple.UseVisualStyleBackColor = true;
             this.buttonCreateSimple.Click += new System.EventHandler(this.buttonCreateSimple_Click);
             // 
+            // checkBoxChainingInCueOnShotCheckGeneral
+            // 
+            this.checkBoxChainingInCueOnShotCheckGeneral.AutoSize = true;
+            this.checkBoxChainingInCueOnShotCheckGeneral.Checked = true;
+            this.checkBoxChainingInCueOnShotCheckGeneral.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxChainingInCueOnShotCheckGeneral.Location = new System.Drawing.Point(0, 78);
+            this.checkBoxChainingInCueOnShotCheckGeneral.Name = "checkBoxChainingInCueOnShotCheckGeneral";
+            this.checkBoxChainingInCueOnShotCheckGeneral.Size = new System.Drawing.Size(251, 19);
+            this.checkBoxChainingInCueOnShotCheckGeneral.TabIndex = 16;
+            this.checkBoxChainingInCueOnShotCheckGeneral.Text = "Still enforce General rules when unaffected";
+            this.checkBoxChainingInCueOnShotCheckGeneral.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxChainingOutCueOnShotCheckGeneral
+            // 
+            this.checkBoxChainingOutCueOnShotCheckGeneral.AutoSize = true;
+            this.checkBoxChainingOutCueOnShotCheckGeneral.Checked = true;
+            this.checkBoxChainingOutCueOnShotCheckGeneral.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxChainingOutCueOnShotCheckGeneral.Location = new System.Drawing.Point(0, 78);
+            this.checkBoxChainingOutCueOnShotCheckGeneral.Name = "checkBoxChainingOutCueOnShotCheckGeneral";
+            this.checkBoxChainingOutCueOnShotCheckGeneral.Size = new System.Drawing.Size(251, 19);
+            this.checkBoxChainingOutCueOnShotCheckGeneral.TabIndex = 26;
+            this.checkBoxChainingOutCueOnShotCheckGeneral.Text = "Still enforce General rules when unaffected";
+            this.checkBoxChainingOutCueOnShotCheckGeneral.UseVisualStyleBackColor = true;
+            // 
             // BeautifyTimeCodesProfile
             // 
             this.AcceptButton = this.buttonOK;
@@ -1950,5 +1978,7 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
         private System.Windows.Forms.Label labelConnectedSubtitlesOutCueClosestGaps;
         private Controls.CuesPreviewView cuesPreviewViewConnectedSubtitlesOutCueClosest;
         private System.Windows.Forms.Button buttonCreateSimple;
+        private System.Windows.Forms.CheckBox checkBoxChainingInCueOnShotCheckGeneral;
+        private System.Windows.Forms.CheckBox checkBoxChainingOutCueOnShotCheckGeneral;
     }
 }
