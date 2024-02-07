@@ -5155,6 +5155,7 @@
     <RegEx find="(?&lt;![MH])ick([eoiu])" replaceWith="ičk$1" />
     <RegEx find="\bicr" replaceWith="ice" />
     <RegEx find="idev" replaceWith="idjev" />
+    <RegEx find="idk" replaceWith="isk" />
     <RegEx find="ifej" replaceWith="idej" />   
     <RegEx find="ijd" replaceWith="idj" />
     <RegEx find="ijo([absdegknptz])" replaceWith="io$1" />
@@ -5558,6 +5559,12 @@
     <RegEx find="žalj?ev" replaceWith="žalijev" />
     <RegEx find="([žzt])ivać" replaceWith="$1ivat ć" />
     <RegEx find="žive([lot])" replaceWith="živi$1" />
+
+    <RegEx find="ćšu" replaceWith="šću" />
+    <RegEx find="kjn" replaceWith="kin" />
+    <RegEx find="othe" replaceWith="otje" />
+    <RegEx find="stp" replaceWith="sto" />
+    
     <!-- osobna imena/prezimena i imena gradova/država itd. -->
     <RegEx find="A[fv]ghanistan" replaceWith="Afganistan" />
     <RegEx find="Ajdah" replaceWith="Idah" />
@@ -5762,11 +5769,6 @@
     <RegEx find="Viskonsin" replaceWith="Wisconsin" />
     <RegEx find="Volter" replaceWith="Walter" />
     <RegEx find="Vots" replaceWith="Wats" />
-
-    <RegEx find="ćšu" replaceWith="šću" />
-    <RegEx find="kjn" replaceWith="kin" />
-    <RegEx find="othe" replaceWith="otje" />
-    <RegEx find="stp" replaceWith="sto" />
     
     <RegEx find=", ili" replaceWith="ili" />
     <RegEx find="ili," replaceWith="ili" />
