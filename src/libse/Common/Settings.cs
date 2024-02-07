@@ -2977,15 +2977,19 @@ $HorzAlign          =   Center
             public int ChainingGeneralMaxGap { get; set; }
             public int ChainingGeneralLeftGreenZone { get; set; }
             public int ChainingGeneralLeftRedZone { get; set; }
-            public ChainingGeneralShotChangeBehaviorEnum ChainingGeneralShotChangeBehavior { get; set; }
+            public ChainingShotChangeBehaviorEnum ChainingGeneralShotChangeBehavior { get; set; }
             public bool ChainingInCueOnShotUseZones { get; set; }
             public int ChainingInCueOnShotMaxGap { get; set; }
             public int ChainingInCueOnShotLeftGreenZone { get; set; }
             public int ChainingInCueOnShotLeftRedZone { get; set; }
+            public ChainingShotChangeBehaviorEnum ChainingInCueOnShotShotChangeBehavior { get; set; }
+            public bool ChainingInCueOnShotCheckGeneral { get; set; }
             public bool ChainingOutCueOnShotUseZones { get; set; }
             public int ChainingOutCueOnShotMaxGap { get; set; }
             public int ChainingOutCueOnShotRightRedZone { get; set; }
             public int ChainingOutCueOnShotRightGreenZone { get; set; }
+            public ChainingShotChangeBehaviorEnum ChainingOutCueOnShotShotChangeBehavior { get; set; }
+            public bool ChainingOutCueOnShotCheckGeneral { get; set; }
 
             public enum Preset : int
             {
@@ -2994,7 +2998,7 @@ $HorzAlign          =   Center
                 SDI = 2,
             }
 
-            public enum ChainingGeneralShotChangeBehaviorEnum : int
+            public enum ChainingShotChangeBehaviorEnum : int
             {
                 DontChain = 0,
                 ExtendCrossingShotChange = 1,
@@ -3034,15 +3038,19 @@ $HorzAlign          =   Center
                         ChainingGeneralMaxGap = 500;
                         ChainingGeneralLeftGreenZone = 12;
                         ChainingGeneralLeftRedZone = 11;
-                        ChainingGeneralShotChangeBehavior = ChainingGeneralShotChangeBehaviorEnum.ExtendUntilShotChange;
+                        ChainingGeneralShotChangeBehavior = ChainingShotChangeBehaviorEnum.ExtendUntilShotChange;
                         ChainingInCueOnShotUseZones = false;
                         ChainingInCueOnShotMaxGap = 500;
                         ChainingInCueOnShotLeftGreenZone = 12;
                         ChainingInCueOnShotLeftRedZone = 11;
+                        ChainingInCueOnShotShotChangeBehavior = ChainingShotChangeBehaviorEnum.ExtendUntilShotChange;
+                        ChainingInCueOnShotCheckGeneral = true;
                         ChainingOutCueOnShotUseZones = false;
                         ChainingOutCueOnShotMaxGap = 500;
                         ChainingOutCueOnShotRightRedZone = 11;
                         ChainingOutCueOnShotRightGreenZone = 12;
+                        ChainingOutCueOnShotShotChangeBehavior = ChainingShotChangeBehaviorEnum.ExtendUntilShotChange;
+                        ChainingOutCueOnShotCheckGeneral = true;
                         break;
                     case Preset.SDI:
                         Gap = 4;
@@ -3073,15 +3081,19 @@ $HorzAlign          =   Center
                         ChainingGeneralMaxGap = 1000;
                         ChainingGeneralLeftGreenZone = 25;
                         ChainingGeneralLeftRedZone = 24;
-                        ChainingGeneralShotChangeBehavior = ChainingGeneralShotChangeBehaviorEnum.ExtendCrossingShotChange;
+                        ChainingGeneralShotChangeBehavior = ChainingShotChangeBehaviorEnum.ExtendCrossingShotChange;
                         ChainingInCueOnShotUseZones = false;
                         ChainingInCueOnShotMaxGap = 1000;
                         ChainingInCueOnShotLeftGreenZone = 25;
                         ChainingInCueOnShotLeftRedZone = 24;
-                        ChainingOutCueOnShotUseZones = false;
-                        ChainingOutCueOnShotMaxGap = 1000;
-                        ChainingOutCueOnShotRightRedZone = 24;
-                        ChainingOutCueOnShotRightGreenZone = 25;
+                        ChainingInCueOnShotShotChangeBehavior = ChainingShotChangeBehaviorEnum.ExtendCrossingShotChange;
+                        ChainingInCueOnShotCheckGeneral = true;
+                        ChainingOutCueOnShotUseZones = true;
+                        ChainingOutCueOnShotMaxGap = 500;
+                        ChainingOutCueOnShotRightRedZone = 7;
+                        ChainingOutCueOnShotRightGreenZone = 12;
+                        ChainingOutCueOnShotShotChangeBehavior = ChainingShotChangeBehaviorEnum.ExtendCrossingShotChange;
+                        ChainingOutCueOnShotCheckGeneral = true;
                         break;
                     default:
                         Gap = 3;
@@ -3112,15 +3124,19 @@ $HorzAlign          =   Center
                         ChainingGeneralMaxGap = 1000;
                         ChainingGeneralLeftGreenZone = 25;
                         ChainingGeneralLeftRedZone = 24;
-                        ChainingGeneralShotChangeBehavior = ChainingGeneralShotChangeBehaviorEnum.ExtendUntilShotChange;
+                        ChainingGeneralShotChangeBehavior = ChainingShotChangeBehaviorEnum.ExtendUntilShotChange;
                         ChainingInCueOnShotUseZones = false;
                         ChainingInCueOnShotMaxGap = 1000;
                         ChainingInCueOnShotLeftGreenZone = 25;
                         ChainingInCueOnShotLeftRedZone = 24;
+                        ChainingInCueOnShotShotChangeBehavior = ChainingShotChangeBehaviorEnum.ExtendUntilShotChange;
+                        ChainingInCueOnShotCheckGeneral = true;
                         ChainingOutCueOnShotUseZones = false;
                         ChainingOutCueOnShotMaxGap = 500;
                         ChainingOutCueOnShotRightRedZone = 11;
                         ChainingOutCueOnShotRightGreenZone = 12;
+                        ChainingOutCueOnShotShotChangeBehavior = ChainingShotChangeBehaviorEnum.ExtendUntilShotChange;
+                        ChainingOutCueOnShotCheckGeneral = true;
                         break;
                 }
             }
@@ -8930,7 +8946,7 @@ $HorzAlign          =   Center
                     subNode = profileNode.SelectSingleNode("ChainingGeneralShotChangeBehavior");
                     if (subNode != null)
                     {
-                        settings.BeautifyTimeCodes.Profile.ChainingGeneralShotChangeBehavior = (BeautifyTimeCodesSettings.BeautifyTimeCodesProfile.ChainingGeneralShotChangeBehaviorEnum)Enum.Parse(typeof(BeautifyTimeCodesSettings.BeautifyTimeCodesProfile.ChainingGeneralShotChangeBehaviorEnum), subNode.InnerText);
+                        settings.BeautifyTimeCodes.Profile.ChainingGeneralShotChangeBehavior = (BeautifyTimeCodesSettings.BeautifyTimeCodesProfile.ChainingShotChangeBehaviorEnum)Enum.Parse(typeof(BeautifyTimeCodesSettings.BeautifyTimeCodesProfile.ChainingShotChangeBehaviorEnum), subNode.InnerText);
                     }
 
                     subNode = profileNode.SelectSingleNode("ChainingInCueOnShotUseZones");
@@ -8957,6 +8973,18 @@ $HorzAlign          =   Center
                         settings.BeautifyTimeCodes.Profile.ChainingInCueOnShotLeftRedZone = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
                     }
 
+                    subNode = profileNode.SelectSingleNode("ChainingInCueOnShotShotChangeBehavior");
+                    if (subNode != null)
+                    {
+                        settings.BeautifyTimeCodes.Profile.ChainingInCueOnShotShotChangeBehavior = (BeautifyTimeCodesSettings.BeautifyTimeCodesProfile.ChainingShotChangeBehaviorEnum)Enum.Parse(typeof(BeautifyTimeCodesSettings.BeautifyTimeCodesProfile.ChainingShotChangeBehaviorEnum), subNode.InnerText);
+                    }
+
+                    subNode = profileNode.SelectSingleNode("ChainingInCueOnShotCheckGeneral");
+                    if (subNode != null)
+                    {
+                        settings.BeautifyTimeCodes.Profile.ChainingInCueOnShotCheckGeneral = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+                    }
+
                     subNode = profileNode.SelectSingleNode("ChainingOutCueOnShotUseZones");
                     if (subNode != null)
                     {
@@ -8979,6 +9007,18 @@ $HorzAlign          =   Center
                     if (subNode != null)
                     {
                         settings.BeautifyTimeCodes.Profile.ChainingOutCueOnShotRightGreenZone = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+                    }
+
+                    subNode = profileNode.SelectSingleNode("ChainingOutCueOnShotShotChangeBehavior");
+                    if (subNode != null)
+                    {
+                        settings.BeautifyTimeCodes.Profile.ChainingOutCueOnShotShotChangeBehavior = (BeautifyTimeCodesSettings.BeautifyTimeCodesProfile.ChainingShotChangeBehaviorEnum)Enum.Parse(typeof(BeautifyTimeCodesSettings.BeautifyTimeCodesProfile.ChainingShotChangeBehaviorEnum), subNode.InnerText);
+                    }
+
+                    subNode = profileNode.SelectSingleNode("ChainingOutCueOnShotCheckGeneral");
+                    if (subNode != null)
+                    {
+                        settings.BeautifyTimeCodes.Profile.ChainingOutCueOnShotCheckGeneral = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
                     }
                 }
             }
@@ -12389,10 +12429,14 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("ChainingInCueOnShotMaxGap", settings.BeautifyTimeCodes.Profile.ChainingInCueOnShotMaxGap.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ChainingInCueOnShotLeftGreenZone", settings.BeautifyTimeCodes.Profile.ChainingInCueOnShotLeftGreenZone.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ChainingInCueOnShotLeftRedZone", settings.BeautifyTimeCodes.Profile.ChainingInCueOnShotLeftRedZone.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ChainingInCueOnShotShotChangeBehavior", settings.BeautifyTimeCodes.Profile.ChainingInCueOnShotShotChangeBehavior.ToString());
+                textWriter.WriteElementString("ChainingInCueOnShotCheckGeneral", settings.BeautifyTimeCodes.Profile.ChainingInCueOnShotCheckGeneral.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ChainingOutCueOnShotUseZones", settings.BeautifyTimeCodes.Profile.ChainingOutCueOnShotUseZones.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ChainingOutCueOnShotMaxGap", settings.BeautifyTimeCodes.Profile.ChainingOutCueOnShotMaxGap.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ChainingOutCueOnShotRightRedZone", settings.BeautifyTimeCodes.Profile.ChainingOutCueOnShotRightRedZone.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ChainingOutCueOnShotRightGreenZone", settings.BeautifyTimeCodes.Profile.ChainingOutCueOnShotRightGreenZone.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ChainingOutCueOnShotShotChangeBehavior", settings.BeautifyTimeCodes.Profile.ChainingOutCueOnShotShotChangeBehavior.ToString());
+                textWriter.WriteElementString("ChainingOutCueOnShotCheckGeneral", settings.BeautifyTimeCodes.Profile.ChainingOutCueOnShotCheckGeneral.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteEndElement();
                 textWriter.WriteEndElement();
 

@@ -518,6 +518,8 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 var isLeftOutCueOnShotChange = IsCueOnShotChange(bestLeftOutCueFrame, false);
                 var isRightInCueOnShotChange = IsCueOnShotChange(bestRightInCueFrame, true);
 
+                var performGeneralChaining = false;
+
                 if (isRightInCueOnShotChange)
                 {
                     // The right in cue is on a shot change
@@ -525,17 +527,16 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     var fixedLeftOutCueFrame = GetFixedChainableSubtitlesLeftOutCueFrameInCueOnShot(bestLeftOutCueFrame, bestRightInCueFrame);
                     if (fixedLeftOutCueFrame != null)
                     {
-                        // Check if there are any shot changes in between them
+                        // Check if there are any other shot changes *before* the shot change we want to chain towards
                         var firstShotChangeInBetween = GetFirstShotChangeFrameInBetween(bestLeftOutCueFrame, bestRightInCueFrame);
-                        if (firstShotChangeInBetween != null)
-                        {
-                            // There are shot changes in between. Check behaviors
-                            switch (Configuration.Settings.BeautifyTimeCodes.Profile.ChainingGeneralShotChangeBehavior)
+                        if (firstShotChangeInBetween != null && !IsCueOnShotChange(bestRightInCueFrame, true, firstShotChangeInBetween.Value)) {
+                            // There is another shot change in between. Check behaviors
+                            switch (Configuration.Settings.BeautifyTimeCodes.Profile.ChainingInCueOnShotShotChangeBehavior)
                             {
-                                case BeautifyTimeCodesSettings.BeautifyTimeCodesProfile.ChainingGeneralShotChangeBehaviorEnum.DontChain:
+                                case BeautifyTimeCodesSettings.BeautifyTimeCodesProfile.ChainingShotChangeBehaviorEnum.DontChain:
                                     // Don't do anything
                                     return false;
-                                case BeautifyTimeCodesSettings.BeautifyTimeCodesProfile.ChainingGeneralShotChangeBehaviorEnum.ExtendCrossingShotChange:
+                                case BeautifyTimeCodesSettings.BeautifyTimeCodesProfile.ChainingShotChangeBehaviorEnum.ExtendCrossingShotChange:
                                     // Apply the chaining
                                     newLeftOutCueFrame = fixedLeftOutCueFrame.Value;
                                     newRightInCueFrame = bestRightInCueFrame;
@@ -543,7 +544,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                                     // Make sure the newly connected subtitles get fixed
                                     shouldFixConnectedSubtitles = true;
                                     break;
-                                case BeautifyTimeCodesSettings.BeautifyTimeCodesProfile.ChainingGeneralShotChangeBehaviorEnum.ExtendUntilShotChange:
+                                case BeautifyTimeCodesSettings.BeautifyTimeCodesProfile.ChainingShotChangeBehaviorEnum.ExtendUntilShotChange:
                                     // Put the left out cue on the shot change, minus gap
                                     newLeftOutCueFrame = firstShotChangeInBetween.Value - Configuration.Settings.BeautifyTimeCodes.Profile.OutCuesGap;
                                     newRightInCueFrame = bestRightInCueFrame;
@@ -552,7 +553,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                         }
                         else
                         {
-                            // Apply the chaining
+                            // No shot changes in between, just apply the chaining
                             newLeftOutCueFrame = fixedLeftOutCueFrame.Value;
                             newRightInCueFrame = bestRightInCueFrame;
 
@@ -563,7 +564,16 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     else
                     {
                         // Chaining wasn't needed
-                        return false;
+                        // If set, we will still check the general rules
+                        if (Configuration.Settings.BeautifyTimeCodes.Profile.ChainingInCueOnShotCheckGeneral)
+                        {
+                            performGeneralChaining = true;
+                        } 
+                        else
+                        {
+                            // Chaining wasn't needed
+                            return false;
+                        }
                     }
                 }
                 else if (isLeftOutCueOnShotChange)
@@ -573,17 +583,17 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     var fixedRightInCueFrame = GetFixedChainableSubtitlesRightInCueFrameOutCueOnShot(bestLeftOutCueFrame, bestRightInCueFrame);
                     if (fixedRightInCueFrame != null)
                     {
-                        // Check if there are any shot changes in between them
+                        // Check if there are any other shot changes *after* the shot change we want to chain towards
                         var lastShotChangeInBetween = GetLastShotChangeFrameInBetween(bestLeftOutCueFrame, bestRightInCueFrame);
-                        if (lastShotChangeInBetween != null)
+                        if (lastShotChangeInBetween != null && !IsCueOnShotChange(bestLeftOutCueFrame, false, lastShotChangeInBetween.Value))
                         {
-                            // There are shot changes in between. Check behaviors
-                            switch (Configuration.Settings.BeautifyTimeCodes.Profile.ChainingGeneralShotChangeBehavior)
+                            // There is another shot change in between. Check behaviors
+                            switch (Configuration.Settings.BeautifyTimeCodes.Profile.ChainingOutCueOnShotShotChangeBehavior)
                             {
-                                case BeautifyTimeCodesSettings.BeautifyTimeCodesProfile.ChainingGeneralShotChangeBehaviorEnum.DontChain:
+                                case BeautifyTimeCodesSettings.BeautifyTimeCodesProfile.ChainingShotChangeBehaviorEnum.DontChain:
                                     // Don't do anything
                                     return false;
-                                case BeautifyTimeCodesSettings.BeautifyTimeCodesProfile.ChainingGeneralShotChangeBehaviorEnum.ExtendCrossingShotChange:
+                                case BeautifyTimeCodesSettings.BeautifyTimeCodesProfile.ChainingShotChangeBehaviorEnum.ExtendCrossingShotChange:
                                     // Apply the chaining
                                     newLeftOutCueFrame = bestLeftOutCueFrame;
                                     newRightInCueFrame = fixedRightInCueFrame.Value;
@@ -591,7 +601,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                                     // Make sure the newly connected subtitles get fixed
                                     shouldFixConnectedSubtitles = true;
                                     break;
-                                case BeautifyTimeCodesSettings.BeautifyTimeCodesProfile.ChainingGeneralShotChangeBehaviorEnum.ExtendUntilShotChange:
+                                case BeautifyTimeCodesSettings.BeautifyTimeCodesProfile.ChainingShotChangeBehaviorEnum.ExtendUntilShotChange:
                                     // Put the right in cue on the shot change, plus gap
                                     newLeftOutCueFrame = bestLeftOutCueFrame;
                                     newRightInCueFrame = lastShotChangeInBetween.Value + Configuration.Settings.BeautifyTimeCodes.Profile.OutCuesGap;
@@ -600,7 +610,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                         }
                         else
                         {
-                            // Apply the chaining
+                            // No shot changes in between, just apply the chaining
                             newLeftOutCueFrame = bestLeftOutCueFrame;
                             newRightInCueFrame = fixedRightInCueFrame.Value;
 
@@ -611,12 +621,27 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     else
                     {
                         // Chaining wasn't needed
-                        return false;
+                        // If set, we will still check the general rules
+                        if (Configuration.Settings.BeautifyTimeCodes.Profile.ChainingOutCueOnShotCheckGeneral)
+                        {
+                            performGeneralChaining = true;
+                        }
+                        else
+                        {
+                            // Chaining wasn't needed
+                            return false;
+                        }
                     }
                 }
                 else
                 {
                     // The cues are not on shot changes
+                    // So, perform general chaining
+                    performGeneralChaining = true;
+                }
+
+                if (performGeneralChaining)
+                {
                     // Try to chain the subtitles already, maybe chaining is not needed
                     var fixedLeftOutCueFrame = GetFixedChainableSubtitlesLeftOutCueFrameGeneral(bestLeftOutCueFrame, bestRightInCueFrame);
                     if (fixedLeftOutCueFrame != null)
@@ -628,18 +653,28 @@ namespace Nikse.SubtitleEdit.Core.Forms
                             // There are shot changes in between. Check behaviors
                             switch (Configuration.Settings.BeautifyTimeCodes.Profile.ChainingGeneralShotChangeBehavior)
                             {
-                                case BeautifyTimeCodesSettings.BeautifyTimeCodesProfile.ChainingGeneralShotChangeBehaviorEnum.DontChain:
+                                case BeautifyTimeCodesSettings.BeautifyTimeCodesProfile.ChainingShotChangeBehaviorEnum.DontChain:
                                     // Don't do anything
                                     return false;
-                                case BeautifyTimeCodesSettings.BeautifyTimeCodesProfile.ChainingGeneralShotChangeBehaviorEnum.ExtendCrossingShotChange:
-                                    // Apply the chaining
-                                    newLeftOutCueFrame = fixedLeftOutCueFrame.Value;
-                                    newRightInCueFrame = bestRightInCueFrame;
+                                case BeautifyTimeCodesSettings.BeautifyTimeCodesProfile.ChainingShotChangeBehaviorEnum.ExtendCrossingShotChange:
+                                    // Check if the right in cue was moved forward
+                                    if (bestRightInCueFrameInfo.result == FindBestCueResult.SnappedToRightGreenZone)
+                                    {
+                                        // Yes, then we'll want to use the original position instead: after chaining, the connected subtitles might partially end up in a red zone,
+                                        // leading to both being snapped to a shot change before (moving backward). Consequently, only the left out cue needs to be changed.
+                                        newLeftOutCueFrame = newRightInCueFrame - Configuration.Settings.BeautifyTimeCodes.Profile.Gap;
+                                    }
+                                    else
+                                    {
+                                        // Apply the chaining normally
+                                        newLeftOutCueFrame = fixedLeftOutCueFrame.Value;
+                                        newRightInCueFrame = bestRightInCueFrame;
+                                    }
 
                                     // Make sure the newly connected subtitles get fixed
                                     shouldFixConnectedSubtitles = true;
                                     break;
-                                case BeautifyTimeCodesSettings.BeautifyTimeCodesProfile.ChainingGeneralShotChangeBehaviorEnum.ExtendUntilShotChange:
+                                case BeautifyTimeCodesSettings.BeautifyTimeCodesProfile.ChainingShotChangeBehaviorEnum.ExtendUntilShotChange:
                                     // Put the left out cue on the shot change, minus gap
                                     newLeftOutCueFrame = firstShotChangeInBetween.Value - Configuration.Settings.BeautifyTimeCodes.Profile.OutCuesGap;
                                     newRightInCueFrame = bestRightInCueFrame;
@@ -648,7 +683,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                         }
                         else
                         {
-                            // Apply the chaining
+                            // No shot changes in between, just apply the chaining
                             newLeftOutCueFrame = fixedLeftOutCueFrame.Value;
                             newRightInCueFrame = bestRightInCueFrame;
                         }
@@ -1084,18 +1119,23 @@ namespace Nikse.SubtitleEdit.Core.Forms
             var closestShotChangeFrame = GetClosestShotChangeFrame(cueFrame);
             if (closestShotChangeFrame != null)
             {
-                if (isInCue)
-                {
-                    return cueFrame >= closestShotChangeFrame.Value && cueFrame <= closestShotChangeFrame.Value + Configuration.Settings.BeautifyTimeCodes.Profile.InCuesGap;
-                }
-                else
-                {
-                    return cueFrame <= closestShotChangeFrame.Value && cueFrame >= closestShotChangeFrame.Value - Configuration.Settings.BeautifyTimeCodes.Profile.OutCuesGap;
-                }
+                return IsCueOnShotChange(cueFrame, isInCue, closestShotChangeFrame.Value);
             }
             else
             {
                 return false;
+            }
+        }
+
+        private bool IsCueOnShotChange(int cueFrame, bool isInCue, int shotChangeFrame)
+        {
+            if (isInCue)
+            {
+                return cueFrame >= shotChangeFrame && cueFrame <= shotChangeFrame + Configuration.Settings.BeautifyTimeCodes.Profile.InCuesGap;
+            }
+            else
+            {
+                return cueFrame <= shotChangeFrame && cueFrame >= shotChangeFrame - Configuration.Settings.BeautifyTimeCodes.Profile.OutCuesGap;
             }
         }
 
@@ -1120,6 +1160,44 @@ namespace Nikse.SubtitleEdit.Core.Forms
         public static double GetOutCuesGapMs(double? frameRate = null)
         {
             return GetFrameDurationMs(frameRate) * Configuration.Settings.BeautifyTimeCodes.Profile.OutCuesGap;
+        }
+
+        public static int GetSmallestMaxGapFrames(double? frameRate = null)
+        {
+            var frameDurationMs = GetFrameDurationMs(frameRate);
+            int smallestMaxGapFrames = int.MaxValue;
+
+            if (Configuration.Settings.BeautifyTimeCodes.Profile.ChainingGeneralUseZones)
+            {
+                smallestMaxGapFrames = Math.Min(smallestMaxGapFrames, Configuration.Settings.BeautifyTimeCodes.Profile.ChainingGeneralLeftGreenZone);
+            }
+            else
+            {
+                var maxGap = Configuration.Settings.BeautifyTimeCodes.Profile.ChainingGeneralMaxGap / frameDurationMs;
+                smallestMaxGapFrames = Math.Min(smallestMaxGapFrames, Convert.ToInt32(Math.Round(maxGap)));
+            }
+
+            if (Configuration.Settings.BeautifyTimeCodes.Profile.ChainingInCueOnShotUseZones)
+            {
+                smallestMaxGapFrames = Math.Min(smallestMaxGapFrames, Configuration.Settings.BeautifyTimeCodes.Profile.ChainingInCueOnShotLeftGreenZone);
+            }
+            else
+            {
+                var maxGap = Configuration.Settings.BeautifyTimeCodes.Profile.ChainingInCueOnShotMaxGap / frameDurationMs;
+                smallestMaxGapFrames = Math.Min(smallestMaxGapFrames, Convert.ToInt32(Math.Round(maxGap)));
+            }
+
+            if (Configuration.Settings.BeautifyTimeCodes.Profile.ChainingOutCueOnShotUseZones)
+            {
+                smallestMaxGapFrames = Math.Min(smallestMaxGapFrames, Configuration.Settings.BeautifyTimeCodes.Profile.ChainingOutCueOnShotRightGreenZone);
+            }
+            else
+            {
+                var maxGap = Configuration.Settings.BeautifyTimeCodes.Profile.ChainingOutCueOnShotMaxGap / frameDurationMs;
+                smallestMaxGapFrames = Math.Min(smallestMaxGapFrames, Convert.ToInt32(Math.Round(maxGap)));
+            }
+
+            return smallestMaxGapFrames;
         }
     }
 }

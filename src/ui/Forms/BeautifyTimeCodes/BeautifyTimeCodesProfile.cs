@@ -64,10 +64,12 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             radioButtonChainingInCueOnShotMaxGap.Text = language.MaxGap;
             labelChainingInCueOnShotMaxGapSuffix.Text = language.Milliseconds;
             radioButtonChainingInCueOnShotZones.Text = language.Zones;
+            checkBoxChainingInCueOnShotCheckGeneral.Text = language.CheckGeneral;
             tabPageChainingOutCueOnShot.Text = language.OutCueOnShot;
             radioButtonChainingOutCueOnShotMaxGap.Text = language.MaxGap;
             labelChainingOutCueOnShotMaxGapSuffix.Text = language.Milliseconds;
             radioButtonChainingOutCueOnShotZones.Text = language.Zones;
+            checkBoxChainingOutCueOnShotCheckGeneral.Text = language.CheckGeneral;
 
             cuesPreviewViewInCues.PreviewText = language.SubtitlePreviewText;
             cuesPreviewViewOutCues.PreviewText = language.SubtitlePreviewText;
@@ -155,12 +157,14 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             numericUpDownChainingInCueOnShotMaxGap.Value = settings.ChainingInCueOnShotMaxGap;
             numericUpDownChainingInCueOnShotLeftRedZone.Value = settings.ChainingInCueOnShotLeftRedZone;
             numericUpDownChainingInCueOnShotLeftGreenZone.Value = settings.ChainingInCueOnShotLeftGreenZone;
+            checkBoxChainingInCueOnShotCheckGeneral.Checked = settings.ChainingInCueOnShotCheckGeneral;
 
             radioButtonChainingOutCueOnShotZones.Checked = settings.ChainingOutCueOnShotUseZones;
             radioButtonChainingOutCueOnShotMaxGap.Checked = !settings.ChainingOutCueOnShotUseZones;
             numericUpDownChainingOutCueOnShotMaxGap.Value = settings.ChainingOutCueOnShotMaxGap;
             numericUpDownChainingOutCueOnShotRightRedZone.Value = settings.ChainingOutCueOnShotRightRedZone;
             numericUpDownChainingOutCueOnShotRightGreenZone.Value = settings.ChainingOutCueOnShotRightGreenZone;
+            checkBoxChainingOutCueOnShotCheckGeneral.Checked = settings.ChainingOutCueOnShotCheckGeneral;
 
             RefreshControls();
         }
@@ -233,6 +237,9 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
+            // Remember value for check later on
+            var previousGeneralShotChangeBehavior = Configuration.Settings.BeautifyTimeCodes.Profile.ChainingGeneralShotChangeBehavior;
+
             // Save settings
             Configuration.Settings.BeautifyTimeCodes.Profile.Gap = Convert.ToInt32(numericUpDownGap.Value);
 
@@ -262,17 +269,26 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             Configuration.Settings.BeautifyTimeCodes.Profile.ChainingGeneralMaxGap = Convert.ToInt32(numericUpDownChainingGeneralMaxGap.Value);
             Configuration.Settings.BeautifyTimeCodes.Profile.ChainingGeneralLeftGreenZone = Convert.ToInt32(numericUpDownChainingGeneralLeftGreenZone.Value);
             Configuration.Settings.BeautifyTimeCodes.Profile.ChainingGeneralLeftRedZone = Convert.ToInt32(numericUpDownChainingGeneralLeftRedZone.Value);
-            Configuration.Settings.BeautifyTimeCodes.Profile.ChainingGeneralShotChangeBehavior = (BeautifyTimeCodesSettings.BeautifyTimeCodesProfile.ChainingGeneralShotChangeBehaviorEnum)comboBoxChainingGeneralShotChangeBehavior.SelectedIndex;
+            Configuration.Settings.BeautifyTimeCodes.Profile.ChainingGeneralShotChangeBehavior = (BeautifyTimeCodesSettings.BeautifyTimeCodesProfile.ChainingShotChangeBehaviorEnum)comboBoxChainingGeneralShotChangeBehavior.SelectedIndex;
 
             Configuration.Settings.BeautifyTimeCodes.Profile.ChainingInCueOnShotUseZones = radioButtonChainingInCueOnShotZones.Checked;
             Configuration.Settings.BeautifyTimeCodes.Profile.ChainingInCueOnShotMaxGap = Convert.ToInt32(numericUpDownChainingInCueOnShotMaxGap.Value);
             Configuration.Settings.BeautifyTimeCodes.Profile.ChainingInCueOnShotLeftGreenZone = Convert.ToInt32(numericUpDownChainingInCueOnShotLeftGreenZone.Value);
             Configuration.Settings.BeautifyTimeCodes.Profile.ChainingInCueOnShotLeftRedZone = Convert.ToInt32(numericUpDownChainingInCueOnShotLeftRedZone.Value);
+            Configuration.Settings.BeautifyTimeCodes.Profile.ChainingInCueOnShotCheckGeneral = checkBoxChainingInCueOnShotCheckGeneral.Checked;
 
             Configuration.Settings.BeautifyTimeCodes.Profile.ChainingOutCueOnShotUseZones = radioButtonChainingOutCueOnShotZones.Checked;
             Configuration.Settings.BeautifyTimeCodes.Profile.ChainingOutCueOnShotMaxGap = Convert.ToInt32(numericUpDownChainingOutCueOnShotMaxGap.Value);
             Configuration.Settings.BeautifyTimeCodes.Profile.ChainingOutCueOnShotRightRedZone = Convert.ToInt32(numericUpDownChainingOutCueOnShotRightRedZone.Value);
             Configuration.Settings.BeautifyTimeCodes.Profile.ChainingOutCueOnShotRightGreenZone = Convert.ToInt32(numericUpDownChainingOutCueOnShotRightGreenZone.Value);
+            Configuration.Settings.BeautifyTimeCodes.Profile.ChainingOutCueOnShotCheckGeneral = checkBoxChainingOutCueOnShotCheckGeneral.Checked;
+
+            // Update hidden shot change behavior settings if value for general bahavior has changed
+            if (previousGeneralShotChangeBehavior != Configuration.Settings.BeautifyTimeCodes.Profile.ChainingGeneralShotChangeBehavior)
+            {
+                Configuration.Settings.BeautifyTimeCodes.Profile.ChainingInCueOnShotShotChangeBehavior = Configuration.Settings.BeautifyTimeCodes.Profile.ChainingGeneralShotChangeBehavior;
+                Configuration.Settings.BeautifyTimeCodes.Profile.ChainingOutCueOnShotShotChangeBehavior = Configuration.Settings.BeautifyTimeCodes.Profile.ChainingGeneralShotChangeBehavior;
+            }
 
             DialogResult = DialogResult.OK;
         }
