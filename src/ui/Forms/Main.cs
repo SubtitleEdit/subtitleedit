@@ -1938,6 +1938,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemFont.Text = _language.Menu.ContextMenu.FontName;
             toolStripMenuItemAlignment.Text = _language.Menu.ContextMenu.Alignment;
             toolStripMenuItemAutoBreakLines.Text = _language.Menu.ContextMenu.AutoBalanceSelectedLines;
+            toolStripMenuItemEvenlyDistributeLines.Text = _language.Menu.ContextMenu.EvenlyDistributeSelectedLines;
             toolStripMenuItemUnbreakLines.Text = _language.Menu.ContextMenu.RemoveLineBreaksFromSelectedLines;
             typeEffectToolStripMenuItem.Text = _language.Menu.ContextMenu.TypewriterEffect;
             karaokeEffectToolStripMenuItem.Text = _language.Menu.ContextMenu.KaraokeEffect;
@@ -9631,6 +9632,7 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripMenuItemGoogleMicrosoftTranslateSelLine.Visible = false;
                 toolStripMenuItemUnbreakLines.Visible = true;
                 toolStripMenuItemAutoBreakLines.Visible = true;
+                toolStripMenuItemEvenlyDistributeLines.Visible = true;
                 toolStripMenuItemSurroundWithMusicSymbols.Visible = IsUnicode || Configuration.Settings.Tools.MusicSymbol == "#" || Configuration.Settings.Tools.MusicSymbol == "*";
                 if (SubtitleListview1.SelectedItems.Count == 1)
                 {
@@ -22010,6 +22012,57 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private void ToolStripMenuItemEvenlyDistributeLinesClick(object sender, EventArgs e)
+        {
+            if (_subtitle.Paragraphs.Count <= 0 || SubtitleListview1.SelectedItems.Count <= 0)
+            {
+                return;
+            }
+
+            var firstParagraph = _subtitle.GetParagraphOrDefault(SubtitleListview1.SelectedIndices[0]);
+            var lastParagraph = _subtitle.GetParagraphOrDefault(SubtitleListview1.SelectedIndices[SubtitleListview1.SelectedItems.Count - 1]);
+            var totalDuration = lastParagraph.EndTime.TotalMilliseconds - firstParagraph.StartTime.TotalMilliseconds;
+            var totalDurationWithGaps = totalDuration - (MinGapBetweenLines * (SubtitleListview1.SelectedItems.Count - 1));
+
+            decimal totalLength = 0;
+
+            foreach (int index in SubtitleListview1.SelectedIndices)
+            {
+                var p = _subtitle.GetParagraphOrDefault(index);
+                if (p != null)
+                {
+                    totalLength += p.Text.CountCharacters(true);
+                }
+            }
+
+            var previousParagraphEndTime = firstParagraph.StartTime.TotalMilliseconds - MinGapBetweenLines;
+
+            MakeHistoryForUndo(_language.BeforeEvenlyDistributeSelectedLines);
+            SubtitleListview1.BeginUpdate();
+            foreach (int index in SubtitleListview1.SelectedIndices)
+            {
+                var p = _subtitle.GetParagraphOrDefault(index);
+                if (p != null)
+                {
+                    var length = p.Text.CountCharacters(true);
+                    var lengthRatio = length / totalLength;
+
+                    var newDuration = Convert.ToDouble(lengthRatio) * totalDurationWithGaps;
+
+                    p.StartTime.TotalMilliseconds = previousParagraphEndTime + MinGapBetweenLines;
+                    p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + newDuration;
+
+                    previousParagraphEndTime = p.EndTime.TotalMilliseconds;
+                }
+            }
+
+            SubtitleListview1.EndUpdate();
+            RefreshSelectedParagraphs();
+            UpdateSourceView();
+            UpdateListSyntaxColoring();
+            ShowStatus(string.Format(_language.NumberOfLinesEvenlyDistributedX, SubtitleListview1.SelectedItems.Count));
+        }
+
         private void ToolStripMenuItemUnbreakLinesClick(object sender, EventArgs e)
         {
             if (!IsSubtitleLoaded)
@@ -26243,6 +26296,7 @@ namespace Nikse.SubtitleEdit.Forms
             setPositionToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralSetAssaPosition);
             colorPickerToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralColorPicker);
             toolStripMenuItemAutoBreakLines.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAutoBalanceSelectedLines);
+            toolStripMenuItemEvenlyDistributeLines.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainEvenlyDistributeSelectedLines);
             generateBackgroundBoxToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralSetAssaBgBox);
             colorToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewColorChoose);
             colorToolStripMenuItem1.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewColorChoose);
