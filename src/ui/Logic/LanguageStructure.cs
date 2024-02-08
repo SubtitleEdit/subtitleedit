@@ -1709,6 +1709,7 @@
                     public string CloseTranslation { get; set; }
                     public string OpenContainingFolder { get; set; }
                     public string Compare { get; set; }
+                    public string VerifyCompleteness { get; set; }
                     public string Statistics { get; set; }
                     public string Plugins { get; set; }
                     public string ImportSubtitleFromVideoFile { get; set; }
@@ -3364,6 +3365,19 @@
             public string Title { get; set; }
             public string Message { get; set; }
             public string ImportAsPlainText { get; set; }
+        }
+
+        public class VerifyCompleteness
+        {
+            public string Title { get; set; }
+            public string OpenControlSubtitle { get; set; }
+            public string ControlSubtitleError { get; set; }
+            public string ControlSubtitleX { get; set; }
+            public string Coverage { get; set; }
+            public string CoveragePercentageX { get; set; }
+            public string Reload { get; set; }
+            public string InsertAndNext { get; set; }
+            public string DismissAndNext { get; set; }
         }
 
         public class VisualSync

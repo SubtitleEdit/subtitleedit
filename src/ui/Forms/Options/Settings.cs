@@ -1584,6 +1584,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             AddNode(fileNode, LanguageSettings.Current.Main.Menu.File.CloseTranslation, nameof(Configuration.Settings.Shortcuts.MainFileCloseTranslation), true);
             AddNode(fileNode, language.MainFileSaveAll, nameof(Configuration.Settings.Shortcuts.MainFileSaveAll));
             AddNode(fileNode, LanguageSettings.Current.Main.Menu.File.Compare, nameof(Configuration.Settings.Shortcuts.MainFileCompare), true);
+            AddNode(fileNode, LanguageSettings.Current.Main.Menu.File.VerifyCompleteness, nameof(Configuration.Settings.Shortcuts.MainFileVerifyCompleteness), true);
             AddNode(fileNode, LanguageSettings.Current.Main.Menu.File.Import + " -> " + LanguageSettings.Current.Main.Menu.File.ImportText, nameof(Configuration.Settings.Shortcuts.MainFileImportPlainText), true);
             AddNode(fileNode, LanguageSettings.Current.Main.Menu.File.Import + " -> " + LanguageSettings.Current.Main.Menu.File.ImportBluRaySupFileEdit, nameof(Configuration.Settings.Shortcuts.MainFileImportBdSupForEdit), true);
             AddNode(fileNode, LanguageSettings.Current.Main.Menu.File.Import + " -> " + LanguageSettings.Current.Main.Menu.File.ImportTimecodes, nameof(Configuration.Settings.Shortcuts.MainFileImportTimeCodes), true);
