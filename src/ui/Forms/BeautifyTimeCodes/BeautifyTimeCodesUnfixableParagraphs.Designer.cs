@@ -40,7 +40,7 @@
             // 
             this.buttonClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonClose.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonClose.Location = new System.Drawing.Point(404, 357);
+            this.buttonClose.Location = new System.Drawing.Point(397, 356);
             this.buttonClose.Name = "buttonClose";
             this.buttonClose.Size = new System.Drawing.Size(75, 23);
             this.buttonClose.TabIndex = 10;
@@ -52,9 +52,10 @@
             // 
             this.labelInstructions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelInstructions.AutoEllipsis = true;
             this.labelInstructions.Location = new System.Drawing.Point(12, 9);
             this.labelInstructions.Name = "labelInstructions";
-            this.labelInstructions.Size = new System.Drawing.Size(467, 80);
+            this.labelInstructions.Size = new System.Drawing.Size(460, 80);
             this.labelInstructions.TabIndex = 1;
             this.labelInstructions.Text = resources.GetString("labelInstructions.Text");
             // 
@@ -72,7 +73,7 @@
             this.listView.Location = new System.Drawing.Point(13, 92);
             this.listView.MultiSelect = false;
             this.listView.Name = "listView";
-            this.listView.Size = new System.Drawing.Size(465, 259);
+            this.listView.Size = new System.Drawing.Size(458, 258);
             this.listView.TabIndex = 2;
             this.listView.UseCompatibleStateImageBehavior = false;
             this.listView.View = System.Windows.Forms.View.Details;
@@ -90,19 +91,18 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(491, 392);
+            this.ClientSize = new System.Drawing.Size(484, 391);
             this.Controls.Add(this.listView);
             this.Controls.Add(this.labelInstructions);
             this.Controls.Add(this.buttonClose);
             this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.MaximizeBox = false;
-            this.MinimizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(460, 250);
             this.Name = "BeautifyTimeCodesUnfixableParagraphs";
             this.ShowIcon = false;
-            this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Check short gaps";
+            this.Text = "Review not fully chained subtitles";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.BeautifyTimeCodesUnfixableParagraphs_KeyDown);
             this.ResumeLayout(false);
 
