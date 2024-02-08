@@ -2431,6 +2431,7 @@ $HorzAlign          =   Center
         public string MainFileCloseOriginal { get; set; }
         public string MainFileCloseTranslation { get; set; }
         public string MainFileCompare { get; set; }
+        public string MainFileVerifyCompleteness { get; set; }
         public string MainFileImportPlainText { get; set; }
         public string MainFileImportBdSupForEdit { get; set; }
         public string MainFileImportTimeCodes { get; set; }
@@ -9493,6 +9494,12 @@ $HorzAlign          =   Center
                     shortcuts.MainFileCompare = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainFileVerifyCompleteness");
+                if (subNode != null)
+                {
+                    shortcuts.MainFileVerifyCompleteness = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainFileOpenOriginal");
                 if (subNode != null)
                 {
@@ -12597,6 +12604,7 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("MainFileCloseOriginal", shortcuts.MainFileCloseOriginal);
             textWriter.WriteElementString("MainFileCloseTranslation", shortcuts.MainFileCloseTranslation);
             textWriter.WriteElementString("MainFileCompare", shortcuts.MainFileCompare);
+            textWriter.WriteElementString("MainFileVerifyCompleteness", shortcuts.MainFileVerifyCompleteness);
             textWriter.WriteElementString("MainFileOpenOriginal", shortcuts.MainFileOpenOriginal);
             textWriter.WriteElementString("MainFileSaveAll", shortcuts.MainFileSaveAll);
             textWriter.WriteElementString("MainFileImportPlainText", shortcuts.MainFileImportPlainText);
