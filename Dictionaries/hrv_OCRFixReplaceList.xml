@@ -5244,6 +5244,7 @@
     <RegEx find="mwn" replaceWith="men" />
     <RegEx find="napredi" replaceWith="naprijedi" />
     <RegEx find="napt" replaceWith="napr" />
+    <RegEx find="(?&lt;!a)ndm" replaceWith="nem" />
     <RegEx find="([^\s]+)nesl" replaceWith="$1nijel" />
     <RegEx find="nešen" replaceWith="nesen" />
     <RegEx find="nimp" replaceWith="nimo" />
