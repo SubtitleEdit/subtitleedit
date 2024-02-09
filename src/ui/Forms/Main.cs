@@ -4700,7 +4700,66 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ReopenSubtitleToolStripMenuItemClick(object sender, EventArgs e)
         {
+            ReloadFromSourceView();
+            var item = sender as ToolStripItem;
 
+            if (ContinueNewOrExit())
+            {
+                if (!string.IsNullOrEmpty(_fileName) && !_converted)
+                {
+                    Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, _videoFileName, VideoAudioTrackNumber, _subtitleOriginalFileName, Configuration.Settings.General.CurrentVideoOffsetInMs, Configuration.Settings.General.CurrentVideoIsSmpte);
+                }
+
+                RecentFileEntry rfe = null;
+                foreach (var file in Configuration.Settings.RecentFiles.Files.Where(p => !string.IsNullOrEmpty(p.OriginalFileName)))
+                {
+                    if ((file.FileName + " + " + file.OriginalFileName).Equals(item.Text, StringComparison.OrdinalIgnoreCase))
+                    {
+                        rfe = file;
+                        break;
+                    }
+                }
+
+                if (rfe == null)
+                {
+                    foreach (var file in Configuration.Settings.RecentFiles.Files.Where(p => string.IsNullOrEmpty(p.OriginalFileName)))
+                    {
+                        if (file.FileName.Equals(item.Text, StringComparison.OrdinalIgnoreCase))
+                        {
+                            rfe = file;
+                            RemoveOriginal(true, false);
+                            break;
+                        }
+                    }
+                }
+
+                CheckSecondSubtitleReset();
+                SubtitleListview1.BeginUpdate();
+                if (rfe == null)
+                {
+                    Interlocked.Increment(ref _openSaveCounter);
+                    OpenSubtitle(item.Text, null);
+                    Interlocked.Decrement(ref _openSaveCounter);
+                }
+                else
+                {
+                    Interlocked.Increment(ref _openSaveCounter);
+                    OpenRecentFile(rfe);
+                    Interlocked.Decrement(ref _openSaveCounter);
+                }
+
+                GotoSubPosAndPause();
+                SetRecentIndices(rfe);
+                SubtitleListview1.EndUpdate();
+                if (rfe != null && !string.IsNullOrEmpty(rfe.VideoFileName))
+                {
+                    var p = _subtitle.GetParagraphOrDefault(rfe.FirstSelectedIndex);
+                    if (p != null)
+                    {
+                        mediaPlayer.CurrentPosition = p.StartTime.TotalSeconds;
+                    }
+                }
+            }
         }
 
         private void OpenRecentFile(RecentFileEntry rfe)
