@@ -21935,9 +21935,9 @@ namespace Nikse.SubtitleEdit.Forms
                 var verifyCompleteness = new VerifyCompleteness(
                     _subtitle,
                     controlSubtitle,
-                    (timeMillis) =>
+                    (timeSeconds) =>
                     {
-                        GoToTimeAndSelectPrecedingParagraph(timeMillis);
+                        GoToTimeAndSelectPrecedingParagraph(timeSeconds);
                     },
                     (newParagraph) =>
                     {
@@ -21953,47 +21953,43 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void GoToTimeAndSelectPrecedingParagraph(double timeMillis)
+        private void GoToTimeAndSelectPrecedingParagraph(double timeSeconds)
         {
-            /*if (mediaPlayer.VideoPlayer is null)
-                        {
-                            return;
-                        }
+            var index = 0;
 
-                        mediaPlayer.Pause();
+            // Select correct paragraph
+            for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
+            {
+                if (timeSeconds > _subtitle.Paragraphs[i].EndTime.TotalSeconds)
+                {
+                    index = i - 1;
+                    SelectListViewIndexAndEnsureVisible(index);
+                    break;
+                }
+            }
 
-                        if (SubtitleListview1.SelectedItems.Count > 0)
-                        {
-                            int index = SubtitleListview1.SelectedItems[0].Index;
-                            if (index == -1 || index >= _subtitle.Paragraphs.Count)
-                            {
-                                return;
-                            }
+            if (index < 0)
+            {
+                index = 0;
+            }
 
-                            var p = _subtitle.Paragraphs[index];
-                            
-                            if (p.StartTime.IsMaxTime)
-                            {
-                                return;
-                            }
+            // Seek in waveform
+            if (mediaPlayer.VideoPlayer is null)
+            {
+                return;
+            }
 
-                            double newPos = p.StartTime.TotalSeconds + adjustSeconds;
-                            if (newPos < 0)
-                            {
-                                newPos = 0;
-                            }
+            mediaPlayer.Pause();
+            mediaPlayer.CurrentPosition = timeSeconds;
+            ShowSubtitle();
 
-                            mediaPlayer.CurrentPosition = newPos;
-                            ShowSubtitle();
+            double startPos = mediaPlayer.CurrentPosition - 1;
+            if (startPos < 0)
+            {
+                startPos = 0;
+            }
 
-                            double startPos = mediaPlayer.CurrentPosition - 1;
-                            if (startPos < 0)
-                            {
-                                startPos = 0;
-                            }
-
-                            SetWaveformPosition(startPos, mediaPlayer.CurrentPosition, index);
-                        }*/
+            SetWaveformPosition(startPos, mediaPlayer.CurrentPosition, index);
         }
 
         private void InsertAndSelectParagraph(Paragraph paragraph, bool selectInsertedParagraph = true)

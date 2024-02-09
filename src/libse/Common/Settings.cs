@@ -3143,11 +3143,28 @@ $HorzAlign          =   Center
         }
     }
 
+    public class VerifyCompletenessSettings
+    {
+        public ListSortEnum ListSort { get; set; }
+
+        public enum ListSortEnum : int
+        {
+            Coverage = 0,
+            Time = 1,
+        }
+
+        public VerifyCompletenessSettings()
+        {
+            ListSort = ListSortEnum.Coverage;
+        }
+    }
+
     public class Settings
     {
         public string Version { get; set; }
         public bool InitialLoad { get; set; }
         public CompareSettings Compare { get; set; }
+        public VerifyCompletenessSettings VerifyCompleteness { get; set; }
         public RecentFilesSettings RecentFiles { get; set; }
         public GeneralSettings General { get; set; }
         public ToolsSettings Tools { get; set; }
@@ -3183,6 +3200,7 @@ $HorzAlign          =   Center
             RemoveTextForHearingImpaired = new RemoveTextForHearingImpairedSettings();
             SubtitleBeaming = new SubtitleBeaming();
             Compare = new CompareSettings();
+            VerifyCompleteness = new VerifyCompletenessSettings();
             BeautifyTimeCodes = new BeautifyTimeCodesSettings();
         }
 
@@ -3368,6 +3386,17 @@ $HorzAlign          =   Center
                 if (xnode != null)
                 {
                     settings.Compare.IgnoreFormatting = Convert.ToBoolean(xnode.InnerText);
+                }
+            }
+
+            // Verify completeness
+            XmlNode nodeVerifyCompleteness = doc.DocumentElement.SelectSingleNode("VerifyCompleteness");
+            if (nodeVerifyCompleteness != null)
+            {
+                XmlNode xnode = nodeVerifyCompleteness.SelectSingleNode("ListSort");
+                if (xnode != null)
+                {
+                    settings.VerifyCompleteness.ListSort = (VerifyCompletenessSettings.ListSortEnum)Enum.Parse(typeof(VerifyCompletenessSettings.ListSortEnum), xnode.InnerText);
                 }
             }
 
@@ -11327,6 +11356,10 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("IgnoreLineBreaks", settings.Compare.IgnoreLineBreaks.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("IgnoreWhitespace", settings.Compare.IgnoreWhitespace.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("IgnoreFormatting", settings.Compare.IgnoreFormatting.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteEndElement();
+
+                textWriter.WriteStartElement("VerifyCompleteness", string.Empty);
+                textWriter.WriteElementString("ListSort", settings.VerifyCompleteness.ListSort.ToString());
                 textWriter.WriteEndElement();
 
                 textWriter.WriteStartElement("RecentFiles", string.Empty);

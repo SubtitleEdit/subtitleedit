@@ -3375,8 +3375,12 @@
             public string ControlSubtitleX { get; set; }
             public string Coverage { get; set; }
             public string CoveragePercentageX { get; set; }
+            public string SortByCoverage { get; set; }
+            public string SortByTime { get; set; }
             public string Reload { get; set; }
+            public string Insert { get; set; }
             public string InsertAndNext { get; set; }
+            public string Dismiss { get; set; }
             public string DismissAndNext { get; set; }
         }
 
