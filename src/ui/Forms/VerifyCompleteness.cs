@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using static Nikse.SubtitleEdit.Core.Common.VerifyCompletenessSettings;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -18,7 +18,7 @@ namespace Nikse.SubtitleEdit.Forms
         private readonly Action<double> _seekAction;
         private readonly Action<Paragraph> _insertAction;
 
-        private Subtitle sortedControlSubtitle = new Subtitle();
+        private List<Tuple<Paragraph, double>> sortedControlParagraphsWithCoverage = new List<Tuple<Paragraph, double>>();
 
         public VerifyCompleteness(Subtitle subtitle, Subtitle controlSubtitle, Action<double> seekAction, Action<Paragraph> insertAction)
         {
@@ -34,8 +34,12 @@ namespace Nikse.SubtitleEdit.Forms
             var language = LanguageSettings.Current.VerifyCompleteness;
             Text = language.Title;
             buttonReload.Text = language.Reload;
+            buttonDismiss.Text = language.Dismiss;
             buttonDismissAndNext.Text = language.DismissAndNext;
+            buttonInsert.Text = language.Insert;
             buttonInsertAndNext.Text = language.InsertAndNext;
+            toolStripMenuItemSortByCoverage.Text = language.SortByCoverage;
+            toolStripMenuItemSortByTime.Text = language.SortByTime;
 
             subtitleListView.HideColumn(SubtitleListView.SubtitleColumn.CharactersPerSeconds);
             subtitleListView.HideColumn(SubtitleListView.SubtitleColumn.WordsPerMinute);
@@ -45,7 +49,13 @@ namespace Nikse.SubtitleEdit.Forms
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             UiUtil.FixLargeFonts(this, buttonOK);
 
+            var settings = Configuration.Settings.VerifyCompleteness;
+            toolStripMenuItemSortByCoverage.Checked = settings.ListSort == ListSortEnum.Coverage;
+            toolStripMenuItemSortByTime.Checked = settings.ListSort == ListSortEnum.Time;
+
+            buttonDismiss.Font = new Font(buttonDismissAndNext.Font, FontStyle.Bold);
             buttonDismissAndNext.Font = new Font(buttonDismissAndNext.Font, FontStyle.Bold);
+            buttonInsert.Font = new Font(buttonInsertAndNext.Font, FontStyle.Bold);
             buttonInsertAndNext.Font = new Font(buttonInsertAndNext.Font, FontStyle.Bold);
 
             subtitleListView.InitializeLanguage(LanguageSettings.Current.General, Configuration.Settings);
@@ -53,19 +63,20 @@ namespace Nikse.SubtitleEdit.Forms
             subtitleListView.ShowExtraColumn(language.Coverage);
             subtitleListView.AutoSizeAllColumns(this);
 
-            PopulateListView();
+            LoadData();
         }
 
-        private void PopulateListView()
+        private void LoadData()
         {
             Cursor = Cursors.WaitCursor;
 
             // Update filename label
             labelControlSubtitleFilename.Text = String.Format(LanguageSettings.Current.VerifyCompleteness.ControlSubtitleX, _controlSubtitle.FileName);
 
-            // Calculate coverages and sort paragraphs
-            List<Tuple<Paragraph, double>> overlapTotals = new List<Tuple<Paragraph, double>>();
+            // Clear previous control paragraphs
+            sortedControlParagraphsWithCoverage.Clear();
 
+            // Calculate coverages and sort paragraphs
             foreach (Paragraph p in _controlSubtitle.Paragraphs)
             {
                 double overlapTotal = 0;
@@ -84,35 +95,45 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                overlapTotals.Add(new Tuple<Paragraph, double>(p, overlapTotal));
+                sortedControlParagraphsWithCoverage.Add(new Tuple<Paragraph, double>(p, overlapTotal));
             }
 
-            overlapTotals = overlapTotals.OrderBy(t => t.Item2).ToList();
+            // Populate list view
+            PopulateListView();
 
-            // Create new sorted subtitle
-            sortedControlSubtitle = new Subtitle(overlapTotals.Select(t => t.Item1).ToList());
+            Cursor = Cursors.Default;
+        }
+
+        private void PopulateListView()
+        {
+            // Sort the paragraphs
+            if (toolStripMenuItemSortByTime.Checked)
+            {
+                sortedControlParagraphsWithCoverage = sortedControlParagraphsWithCoverage.OrderBy(t => t.Item1.StartTime.TotalMilliseconds).ToList();
+            } 
+            else
+            {
+                sortedControlParagraphsWithCoverage = sortedControlParagraphsWithCoverage.OrderBy(t => t.Item2).ToList();
+            }
 
             // Init listview            
             subtitleListView.Items.Clear();
             subtitleListView.BeginUpdate();
 
-            // Fill the listview with the control subtitle
-            subtitleListView.Fill(sortedControlSubtitle);
+            // Fill the listview with the sorted control paragraphs
+            subtitleListView.Fill(sortedControlParagraphsWithCoverage.Select(t => t.Item1).ToList());
 
             // Show coverage
-            for (int i = 0; i < sortedControlSubtitle.Paragraphs.Count; i++)
+            for (int i = 0; i < sortedControlParagraphsWithCoverage.Count; i++)
             {
-                var p = sortedControlSubtitle.Paragraphs[i];
-                var overlap = overlapTotals[i].Item2;
-                
+                var overlap = sortedControlParagraphsWithCoverage[i].Item2;
+
                 subtitleListView.SetExtraText(i, String.Format(LanguageSettings.Current.VerifyCompleteness.CoveragePercentageX, overlap * 100.0), subtitleListView.ForeColor);
                 subtitleListView.SetBackgroundColor(i, CalculateColor(overlap * 100), subtitleListView.ColumnIndexExtra);
             }
 
             // Finalize update
             subtitleListView.EndUpdate();
-
-            Cursor = Cursors.Default;
         }
 
         private Color CalculateColor(double percentage)
@@ -136,11 +157,16 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            var controlSubtitle = LoadSubtitle(openFileDialog.FileName);
+            TryLoadSubtitle(openFileDialog.FileName);
+        }
+
+        private void TryLoadSubtitle(string fileName)
+        {
+            var controlSubtitle = LoadSubtitle(fileName);
             if (controlSubtitle.Paragraphs.Count > 0)
             {
                 _controlSubtitle = controlSubtitle;
-                PopulateListView();
+                LoadData();
             }
             else
             {
@@ -150,25 +176,35 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonReload_Click(object sender, System.EventArgs e)
         {
-            PopulateListView();
+            LoadData();
+        }
+
+        private void buttonDismiss_Click(object sender, EventArgs e)
+        {
+            ProcessParagraph(false, false);
         }
 
         private void buttonDismissAndNext_Click(object sender, System.EventArgs e)
         {
-            RemoveParagraphAndSelectNext(false);
+            ProcessParagraph(false, true);
+        }
+
+        private void buttonInsert_Click(object sender, EventArgs e)
+        {
+            ProcessParagraph(true, false);
         }
 
         private void buttonInsertAndNext_Click(object sender, System.EventArgs e)
         {
-            RemoveParagraphAndSelectNext(true);
+            ProcessParagraph(true, true);
         }
 
-        private void RemoveParagraphAndSelectNext(bool insertIntoSubtitle)
+        private void ProcessParagraph(bool insertIntoSubtitle, bool goToNext)
         {
             if (subtitleListView.SelectedIndices.Count == 1)
             {
                 var index = subtitleListView.SelectedIndices[0];
-                var paragraph = sortedControlSubtitle.Paragraphs[index];
+                var paragraph = sortedControlParagraphsWithCoverage[index].Item1;
 
                 // Insert the paragragh in the parent subtitle if requested
                 if (insertIntoSubtitle)
@@ -177,16 +213,22 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 // Remove the paragragh from the list
-                sortedControlSubtitle.Paragraphs.RemoveAt(index);
+                sortedControlParagraphsWithCoverage.RemoveAt(index);
                 subtitleListView.Items.RemoveAt(index);
 
                 // Select the next paragraph
-                subtitleListView.SelectIndexAndEnsureVisible(index);
+                if (goToNext)
+                {
+                    subtitleListView.SelectIndexAndEnsureVisible(index);
+                }
             }
         }
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
+            // Save settings
+            Configuration.Settings.VerifyCompleteness.ListSort = toolStripMenuItemSortByTime.Checked ? ListSortEnum.Time : ListSortEnum.Coverage;
+
             this.Close();
         }
 
@@ -195,19 +237,30 @@ namespace Nikse.SubtitleEdit.Forms
             if (subtitleListView.SelectedIndices.Count == 1)
             {
                 var index = subtitleListView.SelectedIndices[0];
-                var paragraph = sortedControlSubtitle.Paragraphs[index];
+                var paragraph = sortedControlParagraphsWithCoverage[index].Item1;
 
                 // Tell parent to seek to the paragraph's time
-                _seekAction.Invoke(paragraph.StartTime.TotalMilliseconds);
+                _seekAction.Invoke(paragraph.StartTime.TotalSeconds);
 
-                buttonDismissAndNext.Enabled = true;
-                buttonInsertAndNext.Enabled = true;
+                EnableButtons(true);
             }
             else
             {
-                buttonDismissAndNext.Enabled = false;
-                buttonInsertAndNext.Enabled = false;
+                EnableButtons(false);
             }
+        }
+
+        private void EnableButtons(bool enable)
+        {
+            buttonDismiss.Enabled = enable;
+            buttonDismissAndNext.Enabled = enable;
+            buttonInsert.Enabled = enable;
+            buttonInsertAndNext.Enabled = enable;
+        }
+
+        private void subtitleListView_Click(object sender, EventArgs e)
+        {
+            subtitleListView_SelectedIndexChanged(sender, e);
         }
 
         private void subtitleListView_KeyDown(object sender, KeyEventArgs e)
@@ -229,6 +282,50 @@ namespace Nikse.SubtitleEdit.Forms
             }
             subtitleListView.Columns[columnsCount - 1].Width = subtitleListView.Width - (width + lastColumnWidth);
             subtitleListView.Columns[columnsCount].Width = -2;
+        }
+
+        private void subtitleListView_DragEnter(object sender, DragEventArgs e)
+        {
+            e.Effect = e.Data.GetDataPresent(DataFormats.FileDrop) ? DragDropEffects.Copy : DragDropEffects.None;
+        }
+
+        private void subtitleListView_DragDrop(object sender, DragEventArgs e)
+        {
+            if (!(e.Data.GetData(DataFormats.FileDrop) is string[] files))
+            {
+                return;
+            }
+
+            if (files.Length > 1)
+            {
+                MessageBox.Show(this, LanguageSettings.Current.Main.DropOnlyOneFile, LanguageSettings.Current.General.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            var filePath = files[0];
+            if (FileUtil.IsDirectory(filePath))
+            {
+                MessageBox.Show(this, LanguageSettings.Current.Main.ErrorDirectoryDropNotAllowed, LanguageSettings.Current.General.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            TryLoadSubtitle(filePath);
+        }
+
+        private void toolStripMenuItemSortByCoverage_Click(object sender, EventArgs e)
+        {
+            toolStripMenuItemSortByTime.Checked = false;
+            toolStripMenuItemSortByCoverage.Checked = true;
+
+            PopulateListView();
+        }
+
+        private void toolStripMenuItemSortByTime_Click(object sender, EventArgs e)
+        {
+            toolStripMenuItemSortByCoverage.Checked = false;
+            toolStripMenuItemSortByTime.Checked = true;
+
+            PopulateListView();
         }
 
         private void VerifyCompleteness_Shown(object sender, EventArgs e)
