@@ -25259,6 +25259,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             toolStripMenuItemOpenContainingFolder.Enabled = !string.IsNullOrEmpty(_fileName) && File.Exists(_fileName);
             bool subtitleLoaded = IsSubtitleLoaded;
+            toolStripMenuItemVerifyCompleteness.Enabled = subtitleLoaded;
             toolStripMenuItemStatistics.Enabled = subtitleLoaded;
             toolStripMenuItemExport.Enabled = subtitleLoaded;
             toolStripMenuItemOpenKeepVideo.Enabled = _videoFileName != null;
