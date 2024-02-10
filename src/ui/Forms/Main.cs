@@ -22026,15 +22026,14 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void GoToTimeAndSelectPrecedingParagraph(double timeSeconds)
         {
-            var index = 0;
-
             // Select correct paragraph
+            var index = _subtitle.Paragraphs.Count - 1;
+            
             for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
             {
                 if (_subtitle.Paragraphs[i].EndTime.TotalSeconds > timeSeconds)
                 {
-                    index = i - 1;
-                    SelectListViewIndexAndEnsureVisible(index);
+                    index = i - 1;                    
                     break;
                 }
             }
@@ -22043,6 +22042,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 index = 0;
             }
+
+            SelectListViewIndexAndEnsureVisible(index);
 
             // Seek in waveform
             if (mediaPlayer.VideoPlayer is null)
