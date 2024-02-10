@@ -53,11 +53,6 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemSortByCoverage.Checked = settings.ListSort == ListSortEnum.Coverage;
             toolStripMenuItemSortByTime.Checked = settings.ListSort == ListSortEnum.Time;
 
-            buttonDismiss.Font = new Font(buttonDismissAndNext.Font, FontStyle.Bold);
-            buttonDismissAndNext.Font = new Font(buttonDismissAndNext.Font, FontStyle.Bold);
-            buttonInsert.Font = new Font(buttonInsertAndNext.Font, FontStyle.Bold);
-            buttonInsertAndNext.Font = new Font(buttonInsertAndNext.Font, FontStyle.Bold);
-
             subtitleListView.InitializeLanguage(LanguageSettings.Current.General, Configuration.Settings);
             UiUtil.InitializeSubtitleFont(subtitleListView);
             subtitleListView.ShowExtraColumn(language.Coverage);
@@ -326,12 +321,31 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ChangeListSort(ListSortEnum sort)
         {
+            // Update context menu items checked staed
             toolStripMenuItemSortByCoverage.Checked = sort == ListSortEnum.Coverage;
             toolStripMenuItemSortByTime.Checked = sort == ListSortEnum.Time;
 
+            // Save selected paragraph, if any
+            Paragraph selectedParagraph = null;
+
+            if (subtitleListView.SelectedIndices.Count == 1)
+            {
+                var index = subtitleListView.SelectedIndices[0];
+                var paragraph = sortedControlParagraphsWithCoverage[index].Item1;
+
+                selectedParagraph = paragraph;
+            }
+
+            // Reload listview
             Cursor = Cursors.WaitCursor;
             PopulateListView();
             Cursor = Cursors.Default;
+
+            // Restore selected index
+            if (selectedParagraph != null)
+            {
+                subtitleListView.SelectIndexAndEnsureVisible(selectedParagraph);
+            }
         }
 
         private void subtitleListView_ColumnClick(object sender, ColumnClickEventArgs e)
