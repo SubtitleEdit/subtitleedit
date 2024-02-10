@@ -6612,6 +6612,14 @@ namespace Nikse.SubtitleEdit.Forms
             SubtitleListview1_SelectedIndexChanged(null, null);
         }
 
+        private void SelectListViewIndexAndEnsureVisible(Paragraph p)
+        {
+            SubtitleListview1.SelectedIndexChanged -= SubtitleListview1_SelectedIndexChanged;
+            SubtitleListview1.SelectIndexAndEnsureVisible(p);
+            SubtitleListview1.SelectedIndexChanged += SubtitleListview1_SelectedIndexChanged;
+            SubtitleListview1_SelectedIndexChanged(null, null);
+        }
+
         private void FindPrevious()
         {
             if (_findHelper == null)
@@ -21996,10 +22004,14 @@ namespace Nikse.SubtitleEdit.Forms
                     controlSubtitle,
                     (timeSeconds) =>
                     {
-                        GoToTimeAndSelectPrecedingParagraph(timeSeconds);
+                        // Invoke to not interfere with any inserting
+                        BeginInvoke(new Action(() => {
+                            GoToTimeAndSelectPrecedingParagraph(timeSeconds);
+                        }));
                     },
                     (newParagraph) =>
                     {
+                        // Synchronous, so it's (hopefully) done before the next seek
                         InsertAndSelectParagraph(newParagraph);
                     }
                 );
@@ -22019,7 +22031,7 @@ namespace Nikse.SubtitleEdit.Forms
             // Select correct paragraph
             for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
             {
-                if (timeSeconds > _subtitle.Paragraphs[i].EndTime.TotalSeconds)
+                if (_subtitle.Paragraphs[i].EndTime.TotalSeconds > timeSeconds)
                 {
                     index = i - 1;
                     SelectListViewIndexAndEnsureVisible(index);
@@ -22075,7 +22087,7 @@ namespace Nikse.SubtitleEdit.Forms
             // Select it if needed
             if (selectInsertedParagraph)
             {
-                SubtitleListview1.SelectIndexAndEnsureVisible(paragraph);
+                SelectListViewIndexAndEnsureVisible(paragraph);
             }
 
             UpdateSourceView();
