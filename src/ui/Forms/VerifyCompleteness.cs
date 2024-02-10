@@ -63,6 +63,8 @@ namespace Nikse.SubtitleEdit.Forms
             subtitleListView.ShowExtraColumn(language.Coverage);
             subtitleListView.AutoSizeAllColumns(this);
 
+            subtitleListView.HeaderStyle = ColumnHeaderStyle.Clickable;
+
             LoadData();
         }
 
@@ -314,18 +316,40 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void toolStripMenuItemSortByCoverage_Click(object sender, EventArgs e)
         {
-            toolStripMenuItemSortByTime.Checked = false;
-            toolStripMenuItemSortByCoverage.Checked = true;
-
-            PopulateListView();
+            ChangeListSort(ListSortEnum.Coverage);
         }
 
         private void toolStripMenuItemSortByTime_Click(object sender, EventArgs e)
         {
-            toolStripMenuItemSortByCoverage.Checked = false;
-            toolStripMenuItemSortByTime.Checked = true;
+            ChangeListSort(ListSortEnum.Time);
+        }
 
+        private void ChangeListSort(ListSortEnum sort)
+        {
+            toolStripMenuItemSortByCoverage.Checked = sort == ListSortEnum.Coverage;
+            toolStripMenuItemSortByTime.Checked = sort == ListSortEnum.Time;
+
+            Cursor = Cursors.WaitCursor;
             PopulateListView();
+            Cursor = Cursors.Default;
+        }
+
+        private void subtitleListView_ColumnClick(object sender, ColumnClickEventArgs e)
+        {
+            if (e.Column == subtitleListView.ColumnIndexExtra)
+            {
+                if (!toolStripMenuItemSortByCoverage.Checked)
+                {
+                    ChangeListSort(ListSortEnum.Coverage);
+                }
+            }
+            else if (e.Column == subtitleListView.ColumnIndexNumber || e.Column == subtitleListView.ColumnIndexStart || e.Column == subtitleListView.ColumnIndexEnd)
+            {
+                if (!toolStripMenuItemSortByTime.Checked)
+                {
+                    ChangeListSort(ListSortEnum.Time);
+                }
+            }
         }
 
         private void VerifyCompleteness_Shown(object sender, EventArgs e)

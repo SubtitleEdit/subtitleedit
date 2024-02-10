@@ -189,6 +189,7 @@
             this.subtitleListView.UseCompatibleStateImageBehavior = false;
             this.subtitleListView.UseSyntaxColoring = false;
             this.subtitleListView.View = System.Windows.Forms.View.Details;
+            this.subtitleListView.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.subtitleListView_ColumnClick);
             this.subtitleListView.SelectedIndexChanged += new System.EventHandler(this.subtitleListView_SelectedIndexChanged);
             this.subtitleListView.Click += new System.EventHandler(this.subtitleListView_Click);
             this.subtitleListView.DragDrop += new System.Windows.Forms.DragEventHandler(this.subtitleListView_DragDrop);
