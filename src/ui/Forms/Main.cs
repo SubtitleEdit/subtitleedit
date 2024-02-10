@@ -22031,7 +22031,7 @@ namespace Nikse.SubtitleEdit.Forms
             
             for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
             {
-                if (_subtitle.Paragraphs[i].EndTime.TotalSeconds > timeSeconds)
+                if (_subtitle.Paragraphs[i].StartTime.TotalSeconds > timeSeconds)
                 {
                     index = i - 1;                    
                     break;
