@@ -60,6 +60,7 @@
             // 
             this.labelControlSubtitleFilename.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelControlSubtitleFilename.AutoEllipsis = true;
             this.labelControlSubtitleFilename.Location = new System.Drawing.Point(12, 16);
             this.labelControlSubtitleFilename.Name = "labelControlSubtitleFilename";
             this.labelControlSubtitleFilename.Size = new System.Drawing.Size(824, 15);
@@ -81,7 +82,7 @@
             // 
             this.buttonDismissAndNext.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonDismissAndNext.Enabled = false;
-            this.buttonDismissAndNext.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonDismissAndNext.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.buttonDismissAndNext.Location = new System.Drawing.Point(412, 551);
             this.buttonDismissAndNext.Name = "buttonDismissAndNext";
             this.buttonDismissAndNext.Size = new System.Drawing.Size(170, 36);
@@ -94,7 +95,7 @@
             // 
             this.buttonInsertAndNext.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonInsertAndNext.Enabled = false;
-            this.buttonInsertAndNext.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonInsertAndNext.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.buttonInsertAndNext.Location = new System.Drawing.Point(702, 551);
             this.buttonInsertAndNext.Name = "buttonInsertAndNext";
             this.buttonInsertAndNext.Size = new System.Drawing.Size(170, 36);
@@ -141,7 +142,7 @@
             // 
             this.buttonInsert.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonInsert.Enabled = false;
-            this.buttonInsert.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonInsert.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.buttonInsert.Location = new System.Drawing.Point(588, 551);
             this.buttonInsert.Name = "buttonInsert";
             this.buttonInsert.Size = new System.Drawing.Size(115, 36);
@@ -154,7 +155,7 @@
             // 
             this.buttonDismiss.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonDismiss.Enabled = false;
-            this.buttonDismiss.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonDismiss.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.buttonDismiss.Location = new System.Drawing.Point(298, 551);
             this.buttonDismiss.Name = "buttonDismiss";
             this.buttonDismiss.Size = new System.Drawing.Size(115, 36);
