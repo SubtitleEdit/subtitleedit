@@ -4252,6 +4252,8 @@
     <RegEx find="([dD])ospe(?=[mš]|te\b)" replaceWith="$1ospije" />
     <RegEx find="dostaja[čćc]" replaceWith="dostajat ć" />
     <RegEx find="oveš[čćc]" replaceWith="ovest ć" />
+    <RegEx find="djl" replaceWith="djel" />
+    <RegEx find="\bdrig" replaceWith="drug" />
     <RegEx find="([dD])rj?ema" replaceWith="$1rijema" />
     <RegEx find="drugaric" replaceWith="prijateljic" />
     <RegEx find="Drugaric" replaceWith="Prijateljic" />
