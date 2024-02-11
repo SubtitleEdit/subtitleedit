@@ -2082,9 +2082,6 @@
     <Word from="samosvest" to="samosvijest" />
     <Word from="samnom" to="sa mnom" />
     <Word from="Samnom" to="Sa mnom" />
-    
-    <Word from="sa nama" to="s nama" />
-
     <Word from="samp" to="samo" />
     <Word from="sanke" to="sanjke" />
     <Word from="saobraćaja" to="prometa" />
@@ -5807,11 +5804,10 @@
     <RegEx find="\b\|\b" replaceWith="I" />
 
     <RegEx find="da li se (\w+)" replaceWith="$1 li se" />
+    <RegEx find=" ([Ss])a(?![szš]\b)" replaceWith=" $1 " />
 
-<!--
-    <RegEx find="([Ss])a (?!\s*[szž])" replaceWith="$1" />
-    <RegEx find="s ([szž])" replaceWith="sa $1" />
--->
+    <!--<RegEx find="s ([szž])" replaceWith="sa $1" />-->
+    
     <!-- 10kg » 10 kg   |  20cm » 20 cm   |  44dag » 44 dag -->
     <RegEx find="\b(\d+)([a-z]{2,4})\b" replaceWith="$1 $2" />
     <!-- 34m » 34 m -->
