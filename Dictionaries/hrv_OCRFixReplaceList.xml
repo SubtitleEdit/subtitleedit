@@ -5030,9 +5030,11 @@
     <RegEx find="đž" replaceWith="dž" />
     <RegEx find="đz" replaceWith="dž" />
     <RegEx find="đt" replaceWith="št" />
+    <RegEx find="gf" replaceWith="gd" />
     <RegEx find="nw" replaceWith="ne" />
     <RegEx find="zž" replaceWith="ž" />
     <RegEx find="žz" replaceWith="žu" />
+    <RegEx find="žž" replaceWith="ž" />
     <RegEx find="([mnrtzpsdfghjkcvb])ls" replaceWith="$1is" />
     <RegEx find="(?&lt;![Hh])abs" replaceWith="aps" />
     <RegEx find="acel" replaceWith="acjel" />
@@ -5162,7 +5164,6 @@
     <RegEx find="frov" replaceWith="frir" />
     <RegEx find="ftam" replaceWith="ftalm" />
     <RegEx find="gačuj" replaceWith="gaćuj" />
-    <RegEx find="gf" replaceWith="gd" />
     <RegEx find="gicn" replaceWith="gičn" />
     <RegEx find="glda" replaceWith="gleda" />
     <RegEx find="gof" replaceWith="god" />
