@@ -4097,7 +4097,10 @@
     <Beginning from="l " to="I " />
     <Beginning from="- l " to="- I " />
   </BeginLines>
-  <EndLines />
+    <EndLines>
+    <Ending from=".»." to="»." />
+    <Ending from="itr" to="iti" />
+    </EndLines>
   <RegularExpressions>
     <!-- deklinacije imenica i konjugacije glagola -->
     <RegEx find="([0-9])-ogodišnj" replaceWith="$1-godišnj" />
