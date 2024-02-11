@@ -349,6 +349,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.genericTranslateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemUnbreakLines = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemAutoBreakLines = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemEvenlyDistributeLines = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemSaveSelectedLines = new System.Windows.Forms.ToolStripMenuItem();
             this.typeEffectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.karaokeEffectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -576,7 +577,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.timerOriginalTextUndo = new System.Windows.Forms.Timer(this.components);
             this.contextMenuStripShowVideoControls = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItemShowVideoControls = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemEvenlyDistributeLines = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -996,10 +996,11 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.toolStripButtonLayout.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.toolStripButtonLayout.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.toolStripButtonLayout.Image = global::Nikse.SubtitleEdit.Properties.Resources.Layout;
             this.toolStripButtonLayout.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.toolStripButtonLayout.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonLayout.Name = "toolStripButtonLayout";
-            this.toolStripButtonLayout.Size = new System.Drawing.Size(23, 37);
+            this.toolStripButtonLayout.Size = new System.Drawing.Size(36, 37);
             this.toolStripButtonLayout.Text = "Show/hide waveform";
             this.toolStripButtonLayout.Click += new System.EventHandler(this.ToolStripButtonLayoutChooseClick);
             // 
@@ -3225,6 +3226,13 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemAutoBreakLines.Size = new System.Drawing.Size(275, 22);
             this.toolStripMenuItemAutoBreakLines.Text = "Auto balance selected lines...";
             this.toolStripMenuItemAutoBreakLines.Click += new System.EventHandler(this.ToolStripMenuItemAutoBreakLinesClick);
+            // 
+            // toolStripMenuItemEvenlyDistributeLines
+            // 
+            this.toolStripMenuItemEvenlyDistributeLines.Name = "toolStripMenuItemEvenlyDistributeLines";
+            this.toolStripMenuItemEvenlyDistributeLines.Size = new System.Drawing.Size(275, 22);
+            this.toolStripMenuItemEvenlyDistributeLines.Text = "Evenly distribute lines (CPS)...";
+            this.toolStripMenuItemEvenlyDistributeLines.Click += new System.EventHandler(this.ToolStripMenuItemEvenlyDistributeLinesClick);
             // 
             // toolStripMenuItemSaveSelectedLines
             // 
@@ -5846,13 +5854,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemShowVideoControls.Size = new System.Drawing.Size(181, 22);
             this.toolStripMenuItemShowVideoControls.Text = "Show video controls";
             this.toolStripMenuItemShowVideoControls.Click += new System.EventHandler(this.ToolStripMenuItemShowVideoControlsClick);
-            // 
-            // toolStripMenuItemEvenlyDistributeLines
-            // 
-            this.toolStripMenuItemEvenlyDistributeLines.Name = "toolStripMenuItemEvenlyDistributeLines";
-            this.toolStripMenuItemEvenlyDistributeLines.Size = new System.Drawing.Size(275, 22);
-            this.toolStripMenuItemEvenlyDistributeLines.Text = "Evenly distribute lines (CPS)...";
-            this.toolStripMenuItemEvenlyDistributeLines.Click += new System.EventHandler(this.ToolStripMenuItemEvenlyDistributeLinesClick);
             // 
             // Main
             // 
