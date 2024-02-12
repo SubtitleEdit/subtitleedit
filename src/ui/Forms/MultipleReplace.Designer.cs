@@ -1,4 +1,4 @@
-﻿namespace Nikse.SubtitleEdit.Forms
+namespace Nikse.SubtitleEdit.Forms
 {
     sealed partial class MultipleReplace
     {
@@ -72,6 +72,7 @@
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.selectAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.inverseSelectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.sortToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.radioButtonNormal = new System.Windows.Forms.RadioButton();
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
@@ -329,7 +330,14 @@
             this.labelReplaceWith.Size = new System.Drawing.Size(72, 13);
             this.labelReplaceWith.TabIndex = 3;
             this.labelReplaceWith.Text = "Replace with:";
-            // 
+            //
+            // sortToolStripMenuItem
+            //
+            this.sortToolStripMenuItem.Name = "sortItems";
+            this.sortToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Home)));
+            this.sortToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
+            this.sortToolStripMenuItem.Text = "Sort items";
+            this.sortToolStripMenuItem.Click += new System.EventHandler(this.sortToolStripMenuItem_Click);
             // listViewRules
             // 
             this.listViewRules.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -353,6 +361,7 @@
             this.listViewRules.View = System.Windows.Forms.View.Details;
             this.listViewRules.SelectedIndexChanged += new System.EventHandler(this.ListViewReplaceListSelectedIndexChanged);
             this.listViewRules.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ListViewRulesKeyDown);
+            this.listViewRules.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.listViewSort_ColumnClick);
             // 
             // columnHeader1
             // 
@@ -396,7 +405,8 @@
             this.toolStripMenuItemExport,
             this.toolStripSeparator5,
             this.selectAllToolStripMenuItem,
-            this.inverseSelectionToolStripMenuItem});
+            this.inverseSelectionToolStripMenuItem,
+            this.sortToolStripMenuItem});
             this.contextMenuStripRules.Name = "contextMenuStrip1";
             this.contextMenuStripRules.Size = new System.Drawing.Size(228, 270);
             this.contextMenuStripRules.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
@@ -881,5 +891,6 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemGroupsSelectAll;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemGroupsInvertSelection;
+        private System.Windows.Forms.ToolStripMenuItem sortToolStripMenuItem;
     }
 }
