@@ -5365,6 +5365,7 @@
     <RegEx find="ptv" replaceWith="otv" />
     <RegEx find="pwn" replaceWith="pen" />
     <RegEx find="ralijs" replaceWith="rals" />
+    <RegEx find="(?&lt;!v)rck" replaceWith="rek" />
     <RegEx find="resjedav" replaceWith="redsjedav" />
     <RegEx find="kratij" replaceWith="kracij" />
     <RegEx find="(?&lt;!h)rašće" replaceWith="rast će" />
