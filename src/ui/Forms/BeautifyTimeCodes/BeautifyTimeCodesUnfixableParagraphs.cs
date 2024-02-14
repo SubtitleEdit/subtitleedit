@@ -1,14 +1,7 @@
-﻿using Nikse.SubtitleEdit.Controls;
-using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using static Nikse.SubtitleEdit.Forms.BeautifyTimeCodes.BeautifyTimeCodes;
 
@@ -75,6 +68,11 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
 
                 _selectParagraphAction.Invoke(pair.rightParagraph);
             }
+        }
+
+        private void listView_Click(object sender, EventArgs e)
+        {
+            listView_SelectedIndexChanged(sender, e);
         }
     }
 }
