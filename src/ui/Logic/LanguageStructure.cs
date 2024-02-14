@@ -1584,6 +1584,8 @@
             public string SortedByX { get; set; }
             public string BeforeAutoBalanceSelectedLines { get; set; }
             public string NumberOfLinesAutoBalancedX { get; set; }
+            public string BeforeEvenlyDistributeSelectedLines { get; set; }
+            public string NumberOfLinesEvenlyDistributedX { get; set; }
             public string BeforeRemoveLineBreaksInSelectedLines { get; set; }
             public string NumberOfWithRemovedLineBreakX { get; set; }
             public string BeforeMultipleReplace { get; set; }
@@ -1975,6 +1977,7 @@
                     public string Subscript { get; set; }
                     public string Alignment { get; set; }
                     public string AutoBalanceSelectedLines { get; set; }
+                    public string EvenlyDistributeSelectedLines { get; set; }
                     public string RemoveLineBreaksFromSelectedLines { get; set; }
                     public string TypewriterEffect { get; set; }
                     public string KaraokeEffect { get; set; }
@@ -2791,6 +2794,7 @@
             public string MergeDialogWithNext { get; set; }
             public string MergeDialogWithPrevious { get; set; }
             public string AutoBalanceSelectedLines { get; set; }
+            public string EvenlyDistributeSelectedLines { get; set; }
             public string GoToNext { get; set; }
             public string GoToNextPlayTranslate { get; set; }
             public string GoToNextCursorAtEnd { get; set; }
