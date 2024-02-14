@@ -194,9 +194,9 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         private static readonly string[] AutoDetectWordsHebrew =
         {
-            "אתה", "אולי", "הוא", "בסדר", "יודע", "טוב", "אֶת", "שֶׁל", "עַל", "הוּא", 
+            "אתה", "אולי", "הוא", "בסדר", "יודע", "טוב", "אֶת", "שֶׁל", "עַל", "הוּא",
             "אֲשֶׁר", "הִיא", "הַמְלֶט", "נָסִיךְ", "הֲלֹא", "עוֹד", "אֵין", "אֲנִי", "זֹאת", "וְלֹא",
-            "כָּךְ", "הִנֵּה", "מְאֹד", "אֲדוֹנִי",    
+            "כָּךְ", "הִנֵּה", "מְאֹד", "אֲדוֹנִי",
         };
 
         private static readonly string[] AutoDetectWordsVietnamese =
@@ -270,7 +270,8 @@ namespace Nikse.SubtitleEdit.Core.Common
         {
             "господине", "Нема", "господине", "работа", "вселената", "Може", "треба", "Треба", "слетување", "капсулата", "време", "Френдшип", "Прием", "Добро", "пресметки", "Благодарам", "нешто", "Благодарам", "орбитата", "инженер",
             "Харисон", "Фала", "тоалет", "орбита", "знаеме", "Супервизор", "жени", "Добра", "требаат", "што", "дeкa", "eшe", "кучe", "Руиз", "кучeто", "кучињa", "Бјути", "имa", "многу", "кучињaтa", "AДЗЖ", "Животни", "моЖe", "мaчe",
-            "мecто", "имaмe", "мaчињa", "пpвото", "пpaвaт", "нeшто", "колку"
+            "мecто", "имaмe", "мaчињa", "пpвото", "пpaвaт", "нeшто", "колку",
+            "што", "тоа", "дека", "Што", "Дали", "треба", "беше", "таму"
         };
 
         private static readonly string[] AutoDetectWordsFinnish =
@@ -530,11 +531,17 @@ namespace Nikse.SubtitleEdit.Core.Common
             {
                 var bulgarianCount = GetCount(text, AutoDetectWordsBulgarian);
                 var ukrainianCount = GetCount(text, AutoDetectWordsUkrainian);
+                var macedonianCount = GetCount(text, AutoDetectWordsMacedonian);
                 if (bulgarianCount > count)
                 {
-                    if (ukrainianCount > bulgarianCount)
+                    if (ukrainianCount > bulgarianCount && ukrainianCount > macedonianCount)
                     {
                         return "uk"; // Ukrainian
+                    }
+
+                    if (macedonianCount > bulgarianCount && macedonianCount > ukrainianCount)
+                    {
+                        return "mk"; // Macedonian
                     }
 
                     return "bg"; // Bulgarian
@@ -569,6 +576,12 @@ namespace Nikse.SubtitleEdit.Core.Common
             count = GetCount(text, AutoDetectWordsBulgarian);
             if (count > bestCount)
             {
+                var macedonianCount = GetCount(text, AutoDetectWordsMacedonian);
+                if (macedonianCount > count)
+                {
+                    return "mk";
+                }
+
                 return "bg"; // Bulgarian
             }
 

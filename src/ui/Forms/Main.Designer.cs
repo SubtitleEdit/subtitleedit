@@ -997,10 +997,11 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.toolStripButtonLayout.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.toolStripButtonLayout.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.toolStripButtonLayout.Image = global::Nikse.SubtitleEdit.Properties.Resources.Layout;
             this.toolStripButtonLayout.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.toolStripButtonLayout.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonLayout.Name = "toolStripButtonLayout";
-            this.toolStripButtonLayout.Size = new System.Drawing.Size(23, 37);
+            this.toolStripButtonLayout.Size = new System.Drawing.Size(36, 37);
             this.toolStripButtonLayout.Text = "Show/hide waveform";
             this.toolStripButtonLayout.Click += new System.EventHandler(this.ToolStripButtonLayoutChooseClick);
             // 
