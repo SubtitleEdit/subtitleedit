@@ -5360,6 +5360,7 @@
     <RegEx find="pisho" replaceWith="psiho" />
     <RegEx find="pišačk" replaceWith="pišalin" />
     <RegEx find="plst" replaceWith="plat" />
+    <RegEx find="pnd" replaceWith="ond" />
     <RegEx find="pord" replaceWith="prod" />
     <RegEx find="pqn" replaceWith="pon" />
     <RegEx find="prouk" replaceWith="poruk" />
