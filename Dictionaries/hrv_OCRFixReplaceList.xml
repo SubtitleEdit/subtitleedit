@@ -5187,6 +5187,7 @@
     <RegEx find="ifej" replaceWith="idej" />   
     <RegEx find="ijd" replaceWith="idj" />
     <RegEx find="ijo([absdegknptz])" replaceWith="io$1" />
+    <RegEx find="ihsk" replaceWith="ijsk" />
     <RegEx find="([ai])nić" replaceWith="$1nit ć" />
     <RegEx find="(?&lt;!\b[Oo]zlo|\b[Ii]sp(rip)?ov|i)jeđen" replaceWith="ijeđen" />
     <RegEx find="(?&lt;!hva)lisa([olt])" replaceWith="lira$1" />
