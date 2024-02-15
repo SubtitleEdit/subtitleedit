@@ -2886,6 +2886,7 @@
     <Word from="zaćutala" to="zašutjela" />
     <Word from="zaćutao" to="zašutio" />
     <Word from="zado" to="zato" />
+    <Word from="zago" to="zato" />
     <Word from="zagreva" to="zagrijava" />
     <Word from="Zagreva" to="Zagrijava" />
     <Word from="zagrevanja" to="zagrijavanja" />
@@ -5267,6 +5268,7 @@
     <RegEx find="msč" replaceWith="mač" />
     <RegEx find="([Mm])sl" replaceWith="$1isl" />
     <RegEx find="mtić" replaceWith="mtit ć" />
+    <RegEx find="mzn" replaceWith="mun" />
     <RegEx find="mqm" replaceWith="mam" />
     <RegEx find="mwn" replaceWith="men" />
     <RegEx find="napredi" replaceWith="naprijedi" />
@@ -5551,6 +5553,7 @@
     <RegEx find="(?&lt;!d)vof" replaceWith="vog" />
     <RegEx find="(?&lt;!i)vp" replaceWith="vo" />
     <RegEx find="vqn" replaceWith="van" />
+    <RegEx find="vwg" replaceWith="veg" />
     <!-- mijenja u korist češće riječi -->
     <RegEx find="([vV])rača" replaceWith="$1raća" />
     <RegEx find="vrijedić" replaceWith="vrijedit ć" />
