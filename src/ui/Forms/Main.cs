@@ -1693,6 +1693,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             toolStripMenuItemOpenContainingFolder.Text = _language.Menu.File.OpenContainingFolder;
             toolStripMenuItemCompare.Text = _language.Menu.File.Compare;
+            toolStripMenuItemVerifyCompleteness.Text = _language.Menu.File.VerifyCompleteness;
             toolStripMenuItemStatistics.Text = _language.Menu.File.Statistics;
             toolStripMenuItemPlugins.Text = _language.Menu.File.Plugins;
             toolStripMenuItemImportDvdSubtitles.Text = _language.Menu.File.ImportOcrFromDvd;
@@ -6607,6 +6608,14 @@ namespace Nikse.SubtitleEdit.Forms
         {
             SubtitleListview1.SelectedIndexChanged -= SubtitleListview1_SelectedIndexChanged;
             SubtitleListview1.SelectIndexAndEnsureVisible(index, true);
+            SubtitleListview1.SelectedIndexChanged += SubtitleListview1_SelectedIndexChanged;
+            SubtitleListview1_SelectedIndexChanged(null, null);
+        }
+
+        private void SelectListViewIndexAndEnsureVisible(Paragraph p)
+        {
+            SubtitleListview1.SelectedIndexChanged -= SubtitleListview1_SelectedIndexChanged;
+            SubtitleListview1.SelectIndexAndEnsureVisible(p);
             SubtitleListview1.SelectedIndexChanged += SubtitleListview1_SelectedIndexChanged;
             SubtitleListview1_SelectedIndexChanged(null, null);
         }
@@ -21971,6 +21980,121 @@ namespace Nikse.SubtitleEdit.Forms
             compareForm.Activate();
         }
 
+        private void ToolStripMenuItemVerifyCompletenessClick(object sender, EventArgs e)
+        {
+            if (!IsSubtitleLoaded)
+            {
+                DisplaySubtitleNotLoadedMessage();
+                return;
+            }
+
+            openFileDialog1.Title = LanguageSettings.Current.VerifyCompleteness.OpenControlSubtitle;
+            openFileDialog1.FileName = string.Empty;
+            openFileDialog1.Filter = UiUtil.SubtitleExtensionFilter.Value;
+            if (openFileDialog1.ShowDialog(this) != DialogResult.OK)
+            {
+                return;
+            }
+
+            var controlSubtitle = VerifyCompleteness.LoadSubtitle(openFileDialog1.FileName);
+            if (controlSubtitle.Paragraphs.Count > 0)
+            {
+                var verifyCompleteness = new VerifyCompleteness(
+                    _subtitle,
+                    controlSubtitle,
+                    (timeSeconds) =>
+                    {
+                        // Invoke to not interfere with any inserting
+                        BeginInvoke(new Action(() => {
+                            GoToTimeAndSelectPrecedingParagraph(timeSeconds);
+                        }));
+                    },
+                    (newParagraph) =>
+                    {
+                        // Synchronous, so it's (hopefully) done before the next seek
+                        InsertAndSelectParagraph(newParagraph);
+                    }
+                );
+                verifyCompleteness.Show(this);
+                verifyCompleteness.Activate();
+            }
+            else
+            {
+                MessageBox.Show(this, LanguageSettings.Current.VerifyCompleteness.ControlSubtitleError, _languageGeneral.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void GoToTimeAndSelectPrecedingParagraph(double timeSeconds)
+        {
+            // Select correct paragraph
+            var index = _subtitle.Paragraphs.Count - 1;
+            
+            for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
+            {
+                if (_subtitle.Paragraphs[i].StartTime.TotalSeconds > timeSeconds)
+                {
+                    index = i - 1;                    
+                    break;
+                }
+            }
+
+            if (index < 0)
+            {
+                index = 0;
+            }
+
+            SelectListViewIndexAndEnsureVisible(index);
+
+            // Seek in waveform
+            if (mediaPlayer.VideoPlayer is null)
+            {
+                return;
+            }
+
+            mediaPlayer.Pause();
+            mediaPlayer.CurrentPosition = timeSeconds;
+            ShowSubtitle();
+
+            double startPos = mediaPlayer.CurrentPosition - 1;
+            if (startPos < 0)
+            {
+                startPos = 0;
+            }
+
+            SetWaveformPosition(startPos, mediaPlayer.CurrentPosition, index);
+        }
+
+        private void InsertAndSelectParagraph(Paragraph paragraph, bool selectInsertedParagraph = true)
+        {
+            MakeHistoryForUndo(_language.BeforeInsertLine);
+
+            // Add paragraph to working subtitle
+            _subtitle.InsertParagraphInCorrectTimeOrder(paragraph);
+            _subtitle.Renumber();
+
+            // Add paragraph to original subtitle, if any
+            if (IsOriginalEditable && SubtitleListview1.IsOriginalTextColumnVisible)
+            {
+                _subtitleOriginal.InsertParagraphInCorrectTimeOrder(paragraph);
+                _subtitleOriginal.Renumber();
+
+                SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
+            } 
+            else
+            {
+                SubtitleListview1.Fill(_subtitle);
+            }
+
+            // Select it if needed
+            if (selectInsertedParagraph)
+            {
+                SelectListViewIndexAndEnsureVisible(paragraph);
+            }
+
+            UpdateSourceView();
+            ShowStatus(_language.LineInserted);
+        }
+
         private void ToolStripMenuItemAutoBreakLinesClick(object sender, EventArgs e)
         {
             if (!IsSubtitleLoaded)
@@ -25207,6 +25331,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             toolStripMenuItemOpenContainingFolder.Enabled = !string.IsNullOrEmpty(_fileName) && File.Exists(_fileName);
             bool subtitleLoaded = IsSubtitleLoaded;
+            toolStripMenuItemVerifyCompleteness.Enabled = subtitleLoaded;
             toolStripMenuItemStatistics.Enabled = subtitleLoaded;
             toolStripMenuItemExport.Enabled = subtitleLoaded;
             toolStripMenuItemOpenKeepVideo.Enabled = _videoFileName != null;
@@ -26194,6 +26319,7 @@ namespace Nikse.SubtitleEdit.Forms
             removeTranslationToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFileCloseTranslation);
             toolStripMenuItemOpenContainingFolder.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.OpenContainingFolder);
             toolStripMenuItemCompare.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFileCompare);
+            toolStripMenuItemVerifyCompleteness.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFileVerifyCompleteness);
             toolStripMenuItemImportText.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFileImportPlainText);
             toolStripMenuItemImportBluraySupFileForEdit.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFileImportBdSupForEdit);
             toolStripMenuItemImportTimeCodes.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFileImportTimeCodes);
@@ -28414,6 +28540,7 @@ namespace Nikse.SubtitleEdit.Forms
             reopenToolStripMenuItem.Enabled = enabled;
             toolStripMenuItemOpenContainingFolder.Enabled = enabled;
             toolStripMenuItemCompare.Enabled = enabled;
+            toolStripMenuItemVerifyCompleteness.Enabled = enabled;
             toolStripMenuItemImportFromVideo.Enabled = enabled;
             toolStripMenuItemImportDvdSubtitles.Enabled = enabled;
             toolStripMenuItemImportSubIdx.Enabled = enabled;

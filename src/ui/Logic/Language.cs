@@ -115,6 +115,7 @@ namespace Nikse.SubtitleEdit.Logic
         public LanguageStructure.TimedTextSmpteTiming TimedTextSmpteTiming;
         public LanguageStructure.TransportStreamSubtitleChooser TransportStreamSubtitleChooser;
         public LanguageStructure.UnknownSubtitle UnknownSubtitle;
+        public LanguageStructure.VerifyCompleteness VerifyCompleteness;
         public LanguageStructure.VisualSync VisualSync;
         public LanguageStructure.VobSubEditCharacters VobSubEditCharacters;
         public LanguageStructure.VobSubOcr VobSubOcr;
@@ -1893,6 +1894,7 @@ namespace Nikse.SubtitleEdit.Logic
                         CloseTranslation = "Close translated subtitle",
                         OpenContainingFolder = "Open containing folder",
                         Compare = "&Compare...",
+                        VerifyCompleteness = "Verify completeness...",
                         Statistics = "S&tatistics...",
                         Plugins = "&Plugins...",
                         ImportSubtitleFromVideoFile = "Subtitle from video file...",
@@ -3551,6 +3553,23 @@ can edit in same subtitle file (collaboration)",
                 Title = "Unknown subtitle type",
                 Message = "If you want this fixed, please send an email to mailto:niksedk@gmail.com and include a copy of the subtitle.",
                 ImportAsPlainText = "Import as plain text...",
+            };
+
+            VerifyCompleteness = new LanguageStructure.VerifyCompleteness
+            {
+                Title = "Verify completeness against other subtitle",
+                OpenControlSubtitle = "Open control subtitle",
+                ControlSubtitleError = "Control subtitle is empty or could not be loaded.",
+                ControlSubtitleX = "Control subtitle: {0}",
+                Coverage = "Coverage",
+                CoveragePercentageX = "{0:0.##}%",
+                SortByCoverage = "Sort by coverage",
+                SortByTime = "Sort by time",
+                Reload = "Re-verify",
+                Insert = "Insert",
+                InsertAndNext = "Insert and go to next",
+                Dismiss = "Dismiss",
+                DismissAndNext = "Dismiss and go to next",
             };
 
             VisualSync = new LanguageStructure.VisualSync
