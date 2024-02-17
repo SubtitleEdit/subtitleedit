@@ -3211,6 +3211,8 @@ can edit in same subtitle file (collaboration)",
                 ExportAsHtml = "Export as HTML...",
                 SetNewActor = "Set new actor/voice",
                 SetActorX = "Set actor/voice {0}",
+                Used = "Used",
+                Unused = "Unused",
             };
 
             SettingsMpv = new LanguageStructure.SettingsMpv

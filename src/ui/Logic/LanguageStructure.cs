@@ -3022,6 +3022,8 @@
             public string ExportAsHtml { get; set; }
             public string SetNewActor { get; set; }
             public string SetActorX { get; set; }
+            public string Used { get; set; }
+            public string Unused { get; set; }
         }
 
         public class SettingsMpv
