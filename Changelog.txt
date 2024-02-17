@@ -5,6 +5,7 @@
    * Add Whisper CPP model "small.en-q5_1.bin"
    * Add shortcut for "Translate selected lines"
    * Add Gemini translate (beta, not all regions) - thx darnn
+   * Add sorting of rules in "Multiple replace" - thx caioeverest 
 * IMPROVED:
    * Update Korean translation - thx domddol
    * Update Portuguese translation - thx hugok79
