@@ -26329,6 +26329,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemExportBluraySup.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFileExportBdSup);
             toolStripMenuItemExportEdlClipName.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFileExportEdlClip);
             toolStripMenuItemExportPlainText.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFileExportPlainText);
+            exitToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFileExit);
 
             toolStripMenuItemUndo.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainEditUndo);
             toolStripMenuItemRedo.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainEditRedo);
