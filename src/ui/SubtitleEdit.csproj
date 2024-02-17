@@ -322,6 +322,12 @@
     <Compile Include="Forms\BeautifyTimeCodes\BeautifyTimeCodesProfileSimple.Designer.cs">
       <DependentUpon>BeautifyTimeCodesProfileSimple.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\BeautifyTimeCodes\BeautifyTimeCodesUnfixableParagraphs.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\BeautifyTimeCodes\BeautifyTimeCodesUnfixableParagraphs.Designer.cs">
+      <DependentUpon>BeautifyTimeCodesUnfixableParagraphs.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\BinaryEdit\BinEdit.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1737,6 +1743,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\BeautifyTimeCodes\BeautifyTimeCodesProfileSimple.resx">
       <DependentUpon>BeautifyTimeCodesProfileSimple.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\BeautifyTimeCodes\BeautifyTimeCodesUnfixableParagraphs.resx">
+      <DependentUpon>BeautifyTimeCodesUnfixableParagraphs.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\BinaryEdit\BinEdit.resx">
       <DependentUpon>BinEdit.cs</DependentUpon>
