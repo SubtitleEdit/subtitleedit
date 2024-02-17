@@ -119,6 +119,7 @@ namespace Nikse.SubtitleEdit.Forms
         private FindReplaceDialogHelper _findHelper;
         private FindDialog _findDialog;
         private ReplaceDialog _replaceDialog;
+        private Form _dialog;
         private bool _sourceViewChange;
         private int _changeSubtitleHash = -1;
         private int _changeOriginalSubtitleHash = -1;
@@ -36213,6 +36214,8 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
+            var unfixableParagraphs = new List<BeautifyTimeCodes.BeautifyTimeCodes.UnfixableParagraphsPair>();
+
             if (onlySelectedLines)
             {
                 var selectedIndices = SubtitleListview1.GetSelectedIndices();
@@ -36259,6 +36262,8 @@ namespace Nikse.SubtitleEdit.Forms
                         RestoreSubtitleListviewIndices();
 
                         ShowStatus(_language.BeautifiedTimeCodesSelectedLines);
+
+                        unfixableParagraphs = form.UnfixableParagraphs;
                     }
                 }
             }
@@ -36291,8 +36296,23 @@ namespace Nikse.SubtitleEdit.Forms
                         RestoreSubtitleListviewIndices();
 
                         ShowStatus(_language.BeautifiedTimeCodes);
+
+                        unfixableParagraphs = form.UnfixableParagraphs;
                     }
                 }
+            }
+
+            if (unfixableParagraphs.Count > 0)
+            {
+                BeginInvoke(new Action(() => {
+                    _dialog?.Dispose();
+                    _dialog = new BeautifyTimeCodes.BeautifyTimeCodesUnfixableParagraphs(unfixableParagraphs, (paragraph) =>
+                    {
+                        SubtitleListview1.SelectIndexAndEnsureVisible(paragraph);
+                        GotoSubPositionAndPause();
+                    });
+                    _dialog.Show(this);
+                }));
             }
         }
 

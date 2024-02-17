@@ -147,6 +147,7 @@ namespace Nikse.SubtitleEdit.Logic
                 Cancel = "C&ancel",
                 Yes = "Yes",
                 No = "No",
+                Close = "Close",
                 Apply = "Apply",
                 ApplyTo = "Apply to",
                 None = "None",
@@ -579,6 +580,13 @@ namespace Nikse.SubtitleEdit.Logic
                 BatchAlignTimeCodes = "Align time codes to frame time codes",
                 BatchUseExactTimeCodes = "Use exact time codes (if available)",
                 BatchSnapToShotChanges = "Snap cues to shot changes (if available)",
+                UnfixableParagraphsTitle = "Review not fully chained subtitles",
+                UnfixableParagraphsInstructions = "Some subtitles were not fully chained in accordance with your profile, most likely due to too tightly clustered shot changes (possibly false positives)." +
+                    Environment.NewLine + Environment.NewLine +
+                    "You might want to review these cases manually to ensure your cues are snapped to the correct (real) shot changes.",
+                UnfixableParagraphsColumnParagraphs = "Lines",
+                UnfixableParagraphsColumnParagraphsFormat = "#{0} – #{1}",
+                UnfixableParagraphsColumnGap = "Gap (frames)"
             };
 
             BeautifyTimeCodesProfile = new LanguageStructure.BeautifyTimeCodesProfile
@@ -604,6 +612,7 @@ namespace Nikse.SubtitleEdit.Logic
                 Chaining = "Chaining",
                 InCueOnShot = "In cue on shot change",
                 OutCueOnShot = "Out cue on shot change",
+                CheckGeneral = "Still enforce General rules when unaffected",
                 MaxGap = "Max. gap:",
                 ShotChangeBehavior = "If there is a shot change in between:",
                 DontChain = "Don't chain",
