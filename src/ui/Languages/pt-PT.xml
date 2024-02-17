@@ -105,7 +105,7 @@ E-mail: mailto:hugokarvalho@hotmail.com</TranslatedBy>
     <Warning>Aviso</Warning>
     <UseLargerFontForThisWindow>Usar um tipo de letra maior para esta janela</UseLargerFontForThisWindow>
     <ChangeLanguageFilter>Alterar o filtro de idioma...</ChangeLanguageFilter>
-    <MoreInfo>Mais informação</MoreInfo>
+    <MoreInfo>Mais info.</MoreInfo>
   </General>
   <About>
     <Title>Acerca do Subtitle Edit</Title>
@@ -328,7 +328,7 @@ Mais informação online?</WhisperNotFound>
     <RemoveFormatting>Remover etiquetas de formatação</RemoveFormatting>
     <RemoveStyleActor>Remover linhas w estilo/actor</RemoveStyleActor>
     <StyleActor>Estilo/actor (separar com vírgula)</StyleActor>
-    <RemoveTextForHI>Remover texto para Deficientes Auditivos</RemoveTextForHI>
+    <RemoveTextForHI>Remover texto para deficientes auditivos</RemoveTextForHI>
     <ConvertColorsToDialog>Converter cores para diálogos</ConvertColorsToDialog>
     <OverwriteOriginalFiles>Substituir os ficheiros originais (nova extensão se o formato for alterado)</OverwriteOriginalFiles>
     <RedoCasing>Refazer maiúsculas/minúsculas</RedoCasing>
@@ -381,8 +381,8 @@ Mais informação online?</WhisperNotFound>
     <SearchFolderScanVideo>Verificar também ficheiros de vídeo na "Pasta de pesquisa" (lento)</SearchFolderScanVideo>
   </BatchConvert>
   <BeautifyTimeCodes>
-    <Title>Embelezar tempos</Title>
-    <TitleSelectedLines>Embelezar tempos ({0} linhas seleccionadas)</TitleSelectedLines>
+    <Title>Optimizar tempos</Title>
+    <TitleSelectedLines>Optimizar tempos ({0} linhas seleccionadas)</TitleSelectedLines>
     <GroupTimeCodes>Tempos</GroupTimeCodes>
     <AlignTimeCodes>Alinhar tempos com os tempos do fotograma</AlignTimeCodes>
     <ExtractExactTimeCodes>Usar o FFprobe para extrair tempos de fotogramas exactos</ExtractExactTimeCodes>
@@ -1052,9 +1052,9 @@ Tiramos partido do ritmo intrínseco da imagem.</CreateSimpleChainingToolTip>
     <PoweredByX>Disponibilizado por {0}</PoweredByX>
     <MsClientSecretNeeded>Desculpe, precisa de uma chave de 'Tradutor de texto' dos Serviços Cognitivos da Microsoft para usar o mais recente tradutor da Microsoft.
 
-Vá a "Opções -&gt; Definições -&gt; Ferramentas" para inserir a chave.</MsClientSecretNeeded>
+Vá a "Opções -&gt; Definições -&gt; Tradução automática" para inserir a chave.</MsClientSecretNeeded>
     <GoogleNoApiKeyWarning>A tentar traduzir sem chave API... (tradução lenta e limitada).
-Para usar a chave API, vá a "Opções -&gt; Definições -&gt; Ferramentas" para inserir a chave API do Tradutor do Google.</GoogleNoApiKeyWarning>
+Para usar a chave API, vá a "Opções -&gt; Definições -&gt; Tradução automática" para inserir a chave API do Tradutor do Google.</GoogleNoApiKeyWarning>
     <Service>Serviço:</Service>
     <LineMergeHandling>Combinação de linhas:</LineMergeHandling>
     <ProcessorMergeNext>Combinar no máximo duas linhas</ProcessorMergeNext>
@@ -1320,7 +1320,7 @@ Para usar a chave API, vá a "Opções -&gt; Definições -&gt; Ferramentas" par
         <CloseTranslation>Fechar legenda traduzida</CloseTranslation>
         <OpenContainingFolder>Abrir pasta</OpenContainingFolder>
         <Compare>&amp;Comparar...</Compare>
-        <Statistics>Estatís&amp;tica...</Statistics>
+        <Statistics>Estatís&amp;ticas...</Statistics>
         <Plugins>&amp;Plugins...</Plugins>
         <ImportSubtitleFromVideoFile>Legenda do ficheiro de vídeo...</ImportSubtitleFromVideoFile>
         <ImportOcrFromDvd>Legenda de VOB/IFO (DVD)...</ImportOcrFromDvd>
@@ -1369,8 +1369,8 @@ Para usar a chave API, vá a "Opções -&gt; Definições -&gt; Ferramentas" par
         <Replace>&amp;Substituir...</Replace>
         <MultipleReplace>&amp;Substituição múltipla</MultipleReplace>
         <GoToSubtitleNumber>&amp;Ir para a linha número...</GoToSubtitleNumber>
-        <RightToLeftMode>Modo Direita-para-esquerda</RightToLeftMode>
-        <FixRtlViaUnicodeControlCharacters>Corrigir RTL via controle de caracteres Unicode (nas linhas seleccionadas)</FixRtlViaUnicodeControlCharacters>
+        <RightToLeftMode>Modo da direita para a esquerda</RightToLeftMode>
+        <FixRtlViaUnicodeControlCharacters>Corrigir RTL via controlo de caracteres Unicode (nas linhas seleccionadas)</FixRtlViaUnicodeControlCharacters>
         <RemoveUnicodeControlCharacters>Remover controlo de caracteres Unicode (nas linhas seleccionadas)</RemoveUnicodeControlCharacters>
         <ReverseRightToLeftStartEnd>Reverter RTL início/fim (para linhas seleccionadas)</ReverseRightToLeftStartEnd>
         <ShowOriginalTextInAudioAndVideoPreview>Mostrar o texto original na pré-visualização de áudio/vídeo</ShowOriginalTextInAudioAndVideoPreview>
@@ -1384,7 +1384,7 @@ Para usar a chave API, vá a "Opções -&gt; Definições -&gt; Ferramentas" par
         <SubtitlesBridgeGaps>Unir os intervalos entre linhas...</SubtitlesBridgeGaps>
         <FixCommonErrors>&amp;Corrigir erros frequentes...</FixCommonErrors>
         <StartNumberingFrom>Renumerar...</StartNumberingFrom>
-        <RemoveTextForHearingImpaired>Remover texto para Deficientes Auditivos...</RemoveTextForHearingImpaired>
+        <RemoveTextForHearingImpaired>Remover texto para deficientes auditivos...</RemoveTextForHearingImpaired>
         <ConvertColorsToDialog>Converter cores para diálogos...</ConvertColorsToDialog>
         <ChangeCasing>Alterar maiúsculas/minúsculas...</ChangeCasing>
         <ChangeFrameRate>Alterar taxa de fotogramas...</ChangeFrameRate>
@@ -1401,7 +1401,7 @@ Para usar a chave API, vá a "Opções -&gt; Definições -&gt; Ferramentas" par
         <Duration>Duração</Duration>
         <ListErrors>Listar erros...</ListErrors>
         <NetflixQualityCheck>Controlo de qualidade Netflix...</NetflixQualityCheck>
-        <BeautifyTimeCodes>Embelezar tempos...</BeautifyTimeCodes>
+        <BeautifyTimeCodes>Optimizar tempos...</BeautifyTimeCodes>
         <TextAlphabetically>Texto - ordem alfabética</TextAlphabetically>
         <TextSingleLineMaximumLength>Texto - comprimento máximo da linha individual</TextSingleLineMaximumLength>
         <TextTotalLength>Texto - comprimento total</TextTotalLength>
@@ -1428,7 +1428,7 @@ Para usar a chave API, vá a "Opções -&gt; Definições -&gt; Ferramentas" par
         <CloseVideo>Fechar ficheiro de vídeo</CloseVideo>
         <OpenSecondSubtitle>Abrir segunda legenda...</OpenSecondSubtitle>
         <SetVideoOffset>Definir o deslocamento do vídeo...</SetVideoOffset>
-        <SmptTimeMode>SMPTE temporização (taxa de fotogramas sem números inteiros)</SmptTimeMode>
+        <SmptTimeMode>Temporização SMPTE (taxa de fotogramas sem números inteiros)</SmptTimeMode>
         <GenerateTextFromVideo>Gerar texto a partir do vídeo...</GenerateTextFromVideo>
         <GenerateBlankVideo>Gerar vídeo em branco...</GenerateBlankVideo>
         <GenerateVideoWithBurnedInSub>Gerar vídeo com a legenda gravada...</GenerateVideoWithBurnedInSub>
@@ -1491,11 +1491,11 @@ Para usar a chave API, vá a "Opções -&gt; Definições -&gt; Ferramentas" par
         <Find>Localizar</Find>
         <Replace>Substituir</Replace>
         <FixCommonErrors>Corrigir erros frequentes</FixCommonErrors>
-        <RemoveTextForHi>Remover texto para Deficientes Auditivos</RemoveTextForHi>
+        <RemoveTextForHi>Remover texto para deficientes auditivos</RemoveTextForHi>
         <VisualSync>Sincronia visual</VisualSync>
         <SpellCheck>Verificação ortográfica</SpellCheck>
         <NetflixQualityCheck>Controlo de qualidade Netflix</NetflixQualityCheck>
-        <BeautifyTimeCodes>Embelezar tempos</BeautifyTimeCodes>
+        <BeautifyTimeCodes>Optimizar tempos</BeautifyTimeCodes>
         <Settings>Definições</Settings>
         <Help>Ajuda</Help>
         <Layout>Esquema</Layout>
@@ -1571,7 +1571,7 @@ Para usar a chave API, vá a "Opções -&gt; Definições -&gt; Ferramentas" par
         <KaraokeEffect>Efeito Karaoke...</KaraokeEffect>
         <ShowSelectedLinesEarlierLater>Mostrar linhas seleccionadas antes/depois...</ShowSelectedLinesEarlierLater>
         <VisualSyncSelectedLines>Sincronia visual das linhas seleccionadas...</VisualSyncSelectedLines>
-        <BeautifyTimeCodesOfSelectedLines>Embelezar tempos das linhas seleccionadas...</BeautifyTimeCodesOfSelectedLines>
+        <BeautifyTimeCodesOfSelectedLines>Optimizar tempos das linhas seleccionadas...</BeautifyTimeCodesOfSelectedLines>
         <GoogleAndMicrosoftTranslateSelectedLine>Google/Microsoft traduzir linha original</GoogleAndMicrosoftTranslateSelectedLine>
         <SelectedLines>Linhas seleccionadas</SelectedLines>
         <TranslateSelectedLines>Traduzir linhas seleccionadas...</TranslateSelectedLines>
@@ -1727,8 +1727,8 @@ Gostaria de começar do início do documento a localizar e substituir?</ReplaceX
     <CommonErrorsFixed>Erros frequentes corrigidos</CommonErrorsFixed>
     <BeforeRenumbering>Antes de renumerar</BeforeRenumbering>
     <RenumberedStartingFromX>Renumerar a partir de: {0}</RenumberedStartingFromX>
-    <BeforeBeautifyTimeCodes>Antes de embelezar tempos</BeforeBeautifyTimeCodes>
-    <BeforeBeautifyTimeCodesSelectedLines>Antes de embelezar tempos das linhas seleccionadas</BeforeBeautifyTimeCodesSelectedLines>
+    <BeforeBeautifyTimeCodes>Antes de optimizar tempos</BeforeBeautifyTimeCodes>
+    <BeforeBeautifyTimeCodesSelectedLines>Antes de optimizar tempos das linhas seleccionadas</BeforeBeautifyTimeCodesSelectedLines>
     <BeautifiedTimeCodes>Tempos embelezados</BeautifiedTimeCodes>
     <BeautifiedTimeCodesSelectedLines>Tempos das linhas seleccionadas embelezados</BeautifiedTimeCodesSelectedLines>
     <BeforeRemovalOfTextingForHearingImpaired>Antes da remoção das mensagens de texto para deficientes auditivos</BeforeRemovalOfTextingForHearingImpaired>
@@ -2216,7 +2216,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <NotInCharacterGroup>Lista negada de caracteres ([^teste])</NotInCharacterGroup>
   </RegularExpressionContextMenu>
   <RemoveTextFromHearImpaired>
-    <Title>Remover texto para Deficientes Auditivos</Title>
+    <Title>Remover texto para deficientes auditivos</Title>
     <RemoveTextConditions>Condições de texto a remover</RemoveTextConditions>
     <RemoveTextBetween>Remover texto entre</RemoveTextBetween>
     <SquareBrackets>'[' e ']'</SquareBrackets>
@@ -2307,7 +2307,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <BurnIn>Integração</BurnIn>
     <SpellCheck>Verificação ortográfica</SpellCheck>
     <NetflixQualityCheck>Controlo de qualidade Netflix</NetflixQualityCheck>
-    <BeautifyTimeCodes>Embelezar tempos</BeautifyTimeCodes>
+    <BeautifyTimeCodes>Optimizar tempos</BeautifyTimeCodes>
     <SettingsName>Definições</SettingsName>
     <ToggleBookmarks>Alternar marcadores</ToggleBookmarks>
     <FocusTextBox>Focar caixa de texto</FocusTextBox>
@@ -2490,7 +2490,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <FirstPlusX>Primeiro + {0}</FirstPlusX>
     <LastMinusX>Último - {0}</LastMinusX>
     <FixCommonerrors>Corrigir erros comuns</FixCommonerrors>
-    <RemoveTextForHi>Remover texto para Deficientes Auditivos</RemoveTextForHi>
+    <RemoveTextForHi>Remover texto para deficientes auditivos</RemoveTextForHi>
     <MergeLinesShorterThan>Eliminar quebra em linha menor que...</MergeLinesShorterThan>
     <DialogStyle>Estilo de diálogo</DialogStyle>
     <DialogStyleDashBothLinesWithSpace>Travessão em ambas as linhas com espaço</DialogStyleDashBothLinesWithSpace>
@@ -2628,7 +2628,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <ToggleFocusWaveformTextBox>Alternar o enfoque entre o quadro de texto e forma de onda/espectrograma</ToggleFocusWaveformTextBox>
     <ToggleDialogDashes>Alternar travessões</ToggleDialogDashes>
     <ToggleQuotes>Alternar aspas</ToggleQuotes>
-    <ToggleHiTags>Alternar etiquetas de Deficientes Auditivos</ToggleHiTags>
+    <ToggleHiTags>Alternar etiquetas de deficientes auditivos</ToggleHiTags>
     <ToggleCustomTags>Alternar etiquetas personalizadas (rodear com)</ToggleCustomTags>
     <ToggleMusicSymbols>Alternar símbolos de música</ToggleMusicSymbols>
     <Alignment>Alinhamento (linhas seleccionadas)</Alignment>
@@ -3085,7 +3085,7 @@ Continuar?</RestoreDefaultSettingsMsg>
     <CopyXOfY>Cópia {0} de {1}</CopyXOfY>
     <New>Novo</New>
     <Remove>Remover</Remove>
-    <ReplaceWith>Substituir com...</ReplaceWith>
+    <ReplaceWith>Substituir por...</ReplaceWith>
     <RemoveAll>Remover tudo</RemoveAll>
     <ImportStyleFromFile>Importar estilo do ficheiro...</ImportStyleFromFile>
     <ExportStyleToFile>Exportar estilo para ficheiro... (adiciona o estilo se já existir o ficheiro)</ExportStyleToFile>
@@ -3135,9 +3135,9 @@ Continuar?</RestoreDefaultSettingsMsg>
     <ApplySync>Aplicar</ApplySync>
   </PointSync>
   <TimedTextSmpteTiming>
-    <Title>SMPTE temporização</Title>
-    <UseSmpteTiming>Usar o SMPTE temporização para a legenda actual?</UseSmpteTiming>
-    <SmpteTimingInfo>Nota: o SMPTE temporização pode ser alterado mais tarde no "Menu de Vídeo"</SmpteTimingInfo>
+    <Title>Temporização SMPTE</Title>
+    <UseSmpteTiming>Usar a temporização SMPTE para a legenda actual?</UseSmpteTiming>
+    <SmpteTimingInfo>Nota: a temporização SMPTE pode ser alterado mais tarde no "Menu de Vídeo"</SmpteTimingInfo>
     <YesAlways>Sim, sempre para taxas de fotogramas sem números inteiros</YesAlways>
     <NoNever>Não, nunca</NoNever>
   </TimedTextSmpteTiming>
@@ -3235,7 +3235,7 @@ Manter as alterações?</KeepChangesMessage>
     <SaveAllSubtitleImagesWithHtml>Guardar todas as imagens com índice HTML...</SaveAllSubtitleImagesWithHtml>
     <XImagesSavedInY>{0} imagens guardadas em {1}</XImagesSavedInY>
     <DictionaryX>Dicionário: {0}</DictionaryX>
-    <RightToLeft>Direita para esquerda</RightToLeft>
+    <RightToLeft>Direita para a esquerda</RightToLeft>
     <ShowOnlyForcedSubtitles>Mostrar apenas linhas forçadas</ShowOnlyForcedSubtitles>
     <UseTimeCodesFromIdx>Usar os tempos do ficheiro (.idx)</UseTimeCodesFromIdx>
     <NoMatch>&lt;Sem correspondências&gt;</NoMatch>
