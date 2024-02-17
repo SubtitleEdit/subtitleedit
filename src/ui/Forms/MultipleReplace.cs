@@ -121,7 +121,6 @@ namespace Nikse.SubtitleEdit.Forms
             inverseSelectionToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.Edit.InverseSelection;
             toolStripMenuItemGroupsSelectAll.Text = LanguageSettings.Current.Main.Menu.ContextMenu.SelectAll;
             toolStripMenuItemGroupsInvertSelection.Text = LanguageSettings.Current.Main.Menu.Edit.InverseSelection;
-            sortToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.Tools.SortBy;
 
             radioButtonCaseSensitive.Left = radioButtonNormal.Left + radioButtonNormal.Width + 40;
             radioButtonRegEx.Left = radioButtonCaseSensitive.Left + radioButtonCaseSensitive.Width + 40;
