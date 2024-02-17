@@ -943,6 +943,11 @@ namespace Nikse.SubtitleEdit.Forms.Options
             linkLabelNllbServe.Text = LanguageSettings.Current.General.MoreInfo;
             linkLabelNllbApi.Text = LanguageSettings.Current.General.MoreInfo;
             linkLabelLibreTranslateApi.Text = LanguageSettings.Current.General.MoreInfo;
+            linkLabelMoreInfoDeepl.Text = LanguageSettings.Current.General.MoreInfo;
+            linkLabelMyMemoryTranslate.Text = LanguageSettings.Current.General.MoreInfo;
+            linkLabelPapago.Text = LanguageSettings.Current.General.MoreInfo;
+            linkLabelMoreInfoChatGpt.Text = LanguageSettings.Current.General.MoreInfo;
+
             labelNllbServeModel.Text = LanguageSettings.Current.AudioToText.Model;
             nikseTextBoxNllbServeModel.Left = labelNllbServeModel.Right + 3;
             nikseTextBoxNllbServeModel.Width = nikseTextBoxNllbServeUrl.Width - labelNllbServeModel.Width - 3;

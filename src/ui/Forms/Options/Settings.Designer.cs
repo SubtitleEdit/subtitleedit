@@ -6449,9 +6449,9 @@
             this.groupBoxAutoTranslatePapago.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxAutoTranslatePapago.Controls.Add(this.nikseTextBoxPapagoClientId);
             this.groupBoxAutoTranslatePapago.Controls.Add(this.nikseTextBoxPapagoClientSecret);
             this.groupBoxAutoTranslatePapago.Controls.Add(this.labelSecretPapago);
-            this.groupBoxAutoTranslatePapago.Controls.Add(this.nikseTextBoxPapagoClientId);
             this.groupBoxAutoTranslatePapago.Controls.Add(this.labelApiKeyPapago);
             this.groupBoxAutoTranslatePapago.Controls.Add(this.linkLabelPapago);
             this.groupBoxAutoTranslatePapago.Controls.Add(this.label11);
@@ -6498,13 +6498,13 @@
             // 
             // linkLabelPapago
             // 
-            this.linkLabelPapago.AutoSize = true;
-            this.linkLabelPapago.Location = new System.Drawing.Point(340, 17);
+            this.linkLabelPapago.Location = new System.Drawing.Point(222, 17);
             this.linkLabelPapago.Name = "linkLabelPapago";
-            this.linkLabelPapago.Size = new System.Drawing.Size(52, 13);
+            this.linkLabelPapago.Size = new System.Drawing.Size(170, 22);
             this.linkLabelPapago.TabIndex = 24;
             this.linkLabelPapago.TabStop = true;
             this.linkLabelPapago.Text = "More info";
+            this.linkLabelPapago.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // label11
             // 
@@ -6519,11 +6519,11 @@
             this.groupBoxAutoTranslateChatGpt.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxAutoTranslateChatGpt.Controls.Add(this.nikseTextBoxChatGptUrl);
             this.groupBoxAutoTranslateChatGpt.Controls.Add(this.nikseComboBoxChatGptDelay);
             this.groupBoxAutoTranslateChatGpt.Controls.Add(this.labelChatGptDelay);
             this.groupBoxAutoTranslateChatGpt.Controls.Add(this.nikseTextBoxChatGptApiKey);
             this.groupBoxAutoTranslateChatGpt.Controls.Add(this.labelApiKeyChatGpt);
-            this.groupBoxAutoTranslateChatGpt.Controls.Add(this.nikseTextBoxChatGptUrl);
             this.groupBoxAutoTranslateChatGpt.Controls.Add(this.labelUrlChatGpt);
             this.groupBoxAutoTranslateChatGpt.Controls.Add(this.linkLabelMoreInfoChatGpt);
             this.groupBoxAutoTranslateChatGpt.Controls.Add(this.label10);
@@ -6605,13 +6605,13 @@
             // 
             // linkLabelMoreInfoChatGpt
             // 
-            this.linkLabelMoreInfoChatGpt.AutoSize = true;
-            this.linkLabelMoreInfoChatGpt.Location = new System.Drawing.Point(340, 17);
+            this.linkLabelMoreInfoChatGpt.Location = new System.Drawing.Point(205, 17);
             this.linkLabelMoreInfoChatGpt.Name = "linkLabelMoreInfoChatGpt";
-            this.linkLabelMoreInfoChatGpt.Size = new System.Drawing.Size(52, 13);
+            this.linkLabelMoreInfoChatGpt.Size = new System.Drawing.Size(187, 21);
             this.linkLabelMoreInfoChatGpt.TabIndex = 24;
             this.linkLabelMoreInfoChatGpt.TabStop = true;
             this.linkLabelMoreInfoChatGpt.Text = "More info";
+            this.linkLabelMoreInfoChatGpt.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // label10
             // 
@@ -6626,9 +6626,9 @@
             this.groupBoxDeepL.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxDeepL.Controls.Add(this.nikseTextBoxDeepLUrl);
             this.groupBoxDeepL.Controls.Add(this.nikseTextBoxDeepLApiKey);
             this.groupBoxDeepL.Controls.Add(this.labelDeepLApiKey);
-            this.groupBoxDeepL.Controls.Add(this.nikseTextBoxDeepLUrl);
             this.groupBoxDeepL.Controls.Add(this.labelDeepLUrl);
             this.groupBoxDeepL.Controls.Add(this.linkLabelMoreInfoDeepl);
             this.groupBoxDeepL.Controls.Add(this.label9);
@@ -6675,13 +6675,13 @@
             // 
             // linkLabelMoreInfoDeepl
             // 
-            this.linkLabelMoreInfoDeepl.AutoSize = true;
-            this.linkLabelMoreInfoDeepl.Location = new System.Drawing.Point(340, 16);
+            this.linkLabelMoreInfoDeepl.Location = new System.Drawing.Point(222, 16);
             this.linkLabelMoreInfoDeepl.Name = "linkLabelMoreInfoDeepl";
-            this.linkLabelMoreInfoDeepl.Size = new System.Drawing.Size(52, 13);
+            this.linkLabelMoreInfoDeepl.Size = new System.Drawing.Size(160, 20);
             this.linkLabelMoreInfoDeepl.TabIndex = 24;
             this.linkLabelMoreInfoDeepl.TabStop = true;
             this.linkLabelMoreInfoDeepl.Text = "More info";
+            this.linkLabelMoreInfoDeepl.TextAlign = System.Drawing.ContentAlignment.TopRight;
             this.linkLabelMoreInfoDeepl.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkLabelMoreInfoDeepLLinkClicked);
             // 
             // label9
@@ -6727,13 +6727,13 @@
             // 
             // linkLabelMyMemoryTranslate
             // 
-            this.linkLabelMyMemoryTranslate.AutoSize = true;
-            this.linkLabelMyMemoryTranslate.Location = new System.Drawing.Point(332, 16);
+            this.linkLabelMyMemoryTranslate.Location = new System.Drawing.Point(246, 17);
             this.linkLabelMyMemoryTranslate.Name = "linkLabelMyMemoryTranslate";
-            this.linkLabelMyMemoryTranslate.Size = new System.Drawing.Size(52, 13);
+            this.linkLabelMyMemoryTranslate.Size = new System.Drawing.Size(138, 19);
             this.linkLabelMyMemoryTranslate.TabIndex = 24;
             this.linkLabelMyMemoryTranslate.TabStop = true;
             this.linkLabelMyMemoryTranslate.Text = "More info";
+            this.linkLabelMyMemoryTranslate.TextAlign = System.Drawing.ContentAlignment.TopRight;
             this.linkLabelMyMemoryTranslate.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelMyMemoryTranslate_LinkClicked);
             // 
             // label8
@@ -6798,13 +6798,13 @@
             // 
             // linkLabelLibreTranslateApi
             // 
-            this.linkLabelLibreTranslateApi.AutoSize = true;
             this.linkLabelLibreTranslateApi.Location = new System.Drawing.Point(340, 17);
             this.linkLabelLibreTranslateApi.Name = "linkLabelLibreTranslateApi";
             this.linkLabelLibreTranslateApi.Size = new System.Drawing.Size(52, 13);
             this.linkLabelLibreTranslateApi.TabIndex = 24;
             this.linkLabelLibreTranslateApi.TabStop = true;
             this.linkLabelLibreTranslateApi.Text = "More info";
+            this.linkLabelLibreTranslateApi.TextAlign = System.Drawing.ContentAlignment.TopRight;
             this.linkLabelLibreTranslateApi.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelLibreTranslateApi_LinkClicked);
             // 
             // label7
@@ -6820,9 +6820,9 @@
             this.groupBoxNllbServe.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxNllbServe.Controls.Add(this.nikseTextBoxNllbServeUrl);
             this.groupBoxNllbServe.Controls.Add(this.nikseTextBoxNllbServeModel);
             this.groupBoxNllbServe.Controls.Add(this.labelNllbServeModel);
-            this.groupBoxNllbServe.Controls.Add(this.nikseTextBoxNllbServeUrl);
             this.groupBoxNllbServe.Controls.Add(this.labelNllbServeUrl);
             this.groupBoxNllbServe.Controls.Add(this.linkLabelNllbServe);
             this.groupBoxNllbServe.Controls.Add(this.label4);
@@ -6869,13 +6869,13 @@
             // 
             // linkLabelNllbServe
             // 
-            this.linkLabelNllbServe.AutoSize = true;
-            this.linkLabelNllbServe.Location = new System.Drawing.Point(332, 16);
+            this.linkLabelNllbServe.Location = new System.Drawing.Point(241, 16);
             this.linkLabelNllbServe.Name = "linkLabelNllbServe";
-            this.linkLabelNllbServe.Size = new System.Drawing.Size(52, 13);
+            this.linkLabelNllbServe.Size = new System.Drawing.Size(143, 19);
             this.linkLabelNllbServe.TabIndex = 24;
             this.linkLabelNllbServe.TabStop = true;
             this.linkLabelNllbServe.Text = "More info";
+            this.linkLabelNllbServe.TextAlign = System.Drawing.ContentAlignment.TopRight;
             this.linkLabelNllbServe.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelNllbServe_LinkClicked);
             // 
             // label4
@@ -6921,13 +6921,13 @@
             // 
             // linkLabelNllbApi
             // 
-            this.linkLabelNllbApi.AutoSize = true;
-            this.linkLabelNllbApi.Location = new System.Drawing.Point(332, 16);
+            this.linkLabelNllbApi.Location = new System.Drawing.Point(221, 16);
             this.linkLabelNllbApi.Name = "linkLabelNllbApi";
-            this.linkLabelNllbApi.Size = new System.Drawing.Size(52, 13);
+            this.linkLabelNllbApi.Size = new System.Drawing.Size(163, 21);
             this.linkLabelNllbApi.TabIndex = 24;
             this.linkLabelNllbApi.TabStop = true;
             this.linkLabelNllbApi.Text = "More info";
+            this.linkLabelNllbApi.TextAlign = System.Drawing.ContentAlignment.TopRight;
             this.linkLabelNllbApi.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelNllbApi_LinkClicked);
             // 
             // label5
