@@ -1320,8 +1320,8 @@ namespace Nikse.SubtitleEdit.Logic
                 PoweredByX = "Powered by {0}",
                 MsClientSecretNeeded = "Sorry, you need a Cognitive Services 'Translator Text' key from Microsoft to use the latest Microsoft Translator." + Environment.NewLine +
                                        Environment.NewLine +
-                                       "Go to \"Options -> Settings -> Tools\" to enter your key.",
-                GoogleNoApiKeyWarning = "Trying to translate without API key... (slow and limited data). " + Environment.NewLine + "To use an API key, go to \"Options -> Settings -> Tools\" to enter your Google translate API key.",
+                                       "Go to \"Options -> Settings -> Auto-translate\" to enter your key.",
+                GoogleNoApiKeyWarning = "Trying to translate without API key... (slow and limited data). " + Environment.NewLine + "To use an API key, go to \"Options -> Settings -> Auto-translate\" to enter your Google translate API key.",
                 Service = "Service:",
                 LineMergeHandling = "Line merge:",
                 ProcessorMergeNext = "Merge max two lines",

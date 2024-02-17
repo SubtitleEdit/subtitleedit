@@ -85,6 +85,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "General/No":
                     language.General.No = reader.Value;
                     break;
+                case "General/Close":
+                    language.General.Close = reader.Value;
+                    break;
                 case "General/Apply":
                     language.General.Apply = reader.Value;
                     break;
@@ -1081,6 +1084,21 @@ namespace Nikse.SubtitleEdit.Logic
                 case "BeautifyTimeCodes/BatchSnapToShotChanges":
                     language.BeautifyTimeCodes.BatchSnapToShotChanges = reader.Value;
                     break;
+                case "BeautifyTimeCodes/UnfixableParagraphsTitle":
+                    language.BeautifyTimeCodes.UnfixableParagraphsTitle = reader.Value;
+                    break;
+                case "BeautifyTimeCodes/UnfixableParagraphsInstructions":
+                    language.BeautifyTimeCodes.UnfixableParagraphsInstructions = reader.Value;
+                    break;
+                case "BeautifyTimeCodes/UnfixableParagraphsColumnParagraphs":
+                    language.BeautifyTimeCodes.UnfixableParagraphsColumnParagraphs = reader.Value;
+                    break;
+                case "BeautifyTimeCodes/UnfixableParagraphsColumnParagraphsFormat":
+                    language.BeautifyTimeCodes.UnfixableParagraphsColumnParagraphsFormat = reader.Value;
+                    break;
+                case "BeautifyTimeCodes/UnfixableParagraphsColumnGap":
+                    language.BeautifyTimeCodes.UnfixableParagraphsColumnGap = reader.Value;
+                    break;
                 case "BeautifyTimeCodesProfile/Title":
                     language.BeautifyTimeCodesProfile.Title = reader.Value;
                     break;
@@ -1143,6 +1161,9 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "BeautifyTimeCodesProfile/OutCueOnShot":
                     language.BeautifyTimeCodesProfile.OutCueOnShot = reader.Value;
+                    break;
+                case "BeautifyTimeCodesProfile/CheckGeneral":
+                    language.BeautifyTimeCodesProfile.CheckGeneral = reader.Value;
                     break;
                 case "BeautifyTimeCodesProfile/MaxGap":
                     language.BeautifyTimeCodesProfile.MaxGap = reader.Value;
@@ -3982,6 +4003,12 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Main/NumberOfLinesAutoBalancedX":
                     language.Main.NumberOfLinesAutoBalancedX = reader.Value;
                     break;
+                case "Main/BeforeEvenlyDistributeSelectedLines":
+                    language.Main.BeforeEvenlyDistributeSelectedLines = reader.Value;
+                    break;
+                case "Main/NumberOfLinesEvenlyDistributedX":
+                    language.Main.NumberOfLinesEvenlyDistributedX = reader.Value;
+                    break;
                 case "Main/BeforeRemoveLineBreaksInSelectedLines":
                     language.Main.BeforeRemoveLineBreaksInSelectedLines = reader.Value;
                     break;
@@ -4356,6 +4383,9 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "Main/Menu/File/Compare":
                     language.Main.Menu.File.Compare = reader.Value;
+                    break;
+                case "Main/Menu/File/VerifyCompleteness":
+                    language.Main.Menu.File.VerifyCompleteness = reader.Value;
                     break;
                 case "Main/Menu/File/Statistics":
                     language.Main.Menu.File.Statistics = reader.Value;
@@ -5028,6 +5058,9 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "Main/Menu/ContextMenu/AutoBalanceSelectedLines":
                     language.Main.Menu.ContextMenu.AutoBalanceSelectedLines = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/EvenlyDistributeSelectedLines":
+                    language.Main.Menu.ContextMenu.EvenlyDistributeSelectedLines = reader.Value;
                     break;
                 case "Main/Menu/ContextMenu/RemoveLineBreaksFromSelectedLines":
                     language.Main.Menu.ContextMenu.RemoveLineBreaksFromSelectedLines = reader.Value;
@@ -7114,6 +7147,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/AutoBalanceSelectedLines":
                     language.Settings.AutoBalanceSelectedLines = reader.Value;
                     break;
+                case "Settings/EvenlyDistributeSelectedLines":
+                    language.Settings.EvenlyDistributeSelectedLines = reader.Value;
+                    break;
                 case "Settings/GoToNext":
                     language.Settings.GoToNext = reader.Value;
                     break;
@@ -8610,6 +8646,45 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "UnknownSubtitle/ImportAsPlainText":
                     language.UnknownSubtitle.ImportAsPlainText = reader.Value;
+                    break;
+                case "VerifyCompleteness/Title":
+                    language.VerifyCompleteness.Title = reader.Value;
+                    break;
+                case "VerifyCompleteness/OpenControlSubtitle":
+                    language.VerifyCompleteness.OpenControlSubtitle = reader.Value;
+                    break;
+                case "VerifyCompleteness/ControlSubtitleError":
+                    language.VerifyCompleteness.ControlSubtitleError = reader.Value;
+                    break;
+                case "VerifyCompleteness/ControlSubtitleX":
+                    language.VerifyCompleteness.ControlSubtitleX = reader.Value;
+                    break;
+                case "VerifyCompleteness/Coverage":
+                    language.VerifyCompleteness.Coverage = reader.Value;
+                    break;
+                case "VerifyCompleteness/CoveragePercentageX":
+                    language.VerifyCompleteness.CoveragePercentageX = reader.Value;
+                    break;
+                case "VerifyCompleteness/SortByCoverage":
+                    language.VerifyCompleteness.SortByCoverage = reader.Value;
+                    break;
+                case "VerifyCompleteness/SortByTime":
+                    language.VerifyCompleteness.SortByTime = reader.Value;
+                    break;
+                case "VerifyCompleteness/Reload":
+                    language.VerifyCompleteness.Reload = reader.Value;
+                    break;
+                case "VerifyCompleteness/Insert":
+                    language.VerifyCompleteness.Insert = reader.Value;
+                    break;
+                case "VerifyCompleteness/InsertAndNext":
+                    language.VerifyCompleteness.InsertAndNext = reader.Value;
+                    break;
+                case "VerifyCompleteness/Dismiss":
+                    language.VerifyCompleteness.Dismiss = reader.Value;
+                    break;
+                case "VerifyCompleteness/DismissAndNext":
+                    language.VerifyCompleteness.DismissAndNext = reader.Value;
                     break;
                 case "VisualSync/Title":
                     language.VisualSync.Title = reader.Value;
