@@ -3,13 +3,14 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>4.0.3</Version>
-    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 17.01.2024</TranslatedBy>
+    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 17.02.2024</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
     <Cancel>Annulla</Cancel>
     <Yes>Sì</Yes>
     <No>No</No>
+    <Close>Chiudi</Close>
     <Apply>Applica</Apply>
     <ApplyTo>Applica a</ApplyTo>
     <None>Nessuno</None>
@@ -404,6 +405,13 @@ Seleziona "{0}" per generare o importare prima le modifiche alle inquadrature op
     <BatchAlignTimeCodes>Allinea time code ai time code fotogrammi</BatchAlignTimeCodes>
     <BatchUseExactTimeCodes>Usa time code esatti (se disponibili)</BatchUseExactTimeCodes>
     <BatchSnapToShotChanges>Allinea time code ai cambi inquadrature (se disponibili)</BatchSnapToShotChanges>
+    <UnfixableParagraphsTitle>Rivedi sottotitoli non completamente concatenati</UnfixableParagraphsTitle>
+    <UnfixableParagraphsInstructions>Alcuni sottotitoli non sono stati completamente concatenati in base al profilo, molto probabilmente a causa di modifiche alle inquadrature troppo raggruppate (probabilmente falsi positivi).
+
+Potresti voler rivedere questi casi manualmente per assicurarti che le indicazioni siano agganciate alle modifiche corrette (reali) dell'inquadratura.</UnfixableParagraphsInstructions>
+    <UnfixableParagraphsColumnParagraphs>Linee</UnfixableParagraphsColumnParagraphs>
+    <UnfixableParagraphsColumnParagraphsFormat>#{0} – #{1}</UnfixableParagraphsColumnParagraphsFormat>
+    <UnfixableParagraphsColumnGap>Gap (fotogrammi)</UnfixableParagraphsColumnGap>
   </BeautifyTimeCodes>
   <BeautifyTimeCodesProfile>
     <Title>Modifica profilo</Title>
@@ -427,6 +435,7 @@ Seleziona "{0}" per generare o importare prima le modifiche alle inquadrature op
     <Chaining>Concatenamento</Chaining>
     <InCueOnShot>Taglio iniziale al cambio inquadratura</InCueOnShot>
     <OutCueOnShot>Taglio finale al cambio inquadratura</OutCueOnShot>
+    <CheckGeneral>Applica comunque regole generali quando non vengono influenzate</CheckGeneral>
     <MaxGap>Gap max:</MaxGap>
     <ShotChangeBehavior>Se c'è un cambio inquadratura:</ShotChangeBehavior>
     <DontChain>Non unire</DontChain>
@@ -1051,9 +1060,9 @@ Si sfrutta così il ritmo intrinseco dell'immagine.</CreateSimpleChainingToolTip
     <PoweredByMicrosoftTranslate>Servizio traduzione di Microsoft</PoweredByMicrosoftTranslate>
     <MsClientSecretNeeded>Per usare il traduttore Microsoft più recente, è necessaria una chiave "Testo traduttore" dei servizi cognitivi.
 
-Vai in "Opzioni -&gt; Impostazioni -&gt; Strumenti" per inserire la chiave.</MsClientSecretNeeded>
+Per inserire la chiave vai in "Opzioni" -&gt; "Impostazioni" -&gt; "Traduzione automatica" .</MsClientSecretNeeded>
     <GoogleNoApiKeyWarning>Tentativo di tradurre senza chiave API... (dati lenti e limitati). 
-Per usare una chiave API vai su "Opzioni -&gt; Impostazioni -&gt; Strumenti" per inserire la chiave API di traduzione di Google.</GoogleNoApiKeyWarning>
+Per usare una chiave API inserisci la chiave API di traduzione di Google in "Opzioni" -&gt; "Impostazioni" -&gt; "Traduzione automatica".</GoogleNoApiKeyWarning>
     <Service>Servizio:</Service>
     <LineMergeHandling>Unione righe:</LineMergeHandling>
     <ProcessorMergeNext>Unisci massimo due righe</ProcessorMergeNext>
@@ -1319,6 +1328,7 @@ Per usare una chiave API vai su "Opzioni -&gt; Impostazioni -&gt; Strumenti" per
         <CloseTranslation>Chiudi sottotitoli tradotti</CloseTranslation>
         <OpenContainingFolder>Apri cartella contenente</OpenContainingFolder>
         <Compare>Confronta...</Compare>
+        <VerifyCompleteness>Verifica completezza...</VerifyCompleteness>
         <Statistics>Statistiche...</Statistics>
         <Plugins>Plugin...</Plugins>
         <ImportSubtitleFromVideoFile>Sottotitolo dal file video...</ImportSubtitleFromVideoFile>
@@ -1565,6 +1575,7 @@ Per usare una chiave API vai su "Opzioni -&gt; Impostazioni -&gt; Strumenti" per
         <Subscript>Pedice</Subscript>
         <Alignment>Allineamento...</Alignment>
         <AutoBalanceSelectedLines>Bilancia automaticamente le righe selezionate...</AutoBalanceSelectedLines>
+        <EvenlyDistributeSelectedLines>Distribuisci uniformemente linee selezionate (CPS)</EvenlyDistributeSelectedLines>
         <RemoveLineBreaksFromSelectedLines>Rimuovi divisioni per le righe selezionate...</RemoveLineBreaksFromSelectedLines>
         <TypewriterEffect>Effetto macchina da scrivere...</TypewriterEffect>
         <KaraokeEffect>Effetto karaoke...</KaraokeEffect>
@@ -1836,6 +1847,8 @@ Vuoi continuare?</SubtitleAppendPrompt>
     <SortedByX>Ordinato da: {0}</SortedByX>
     <BeforeAutoBalanceSelectedLines>Prima di bilancia automaticamente righe selezionate</BeforeAutoBalanceSelectedLines>
     <NumberOfLinesAutoBalancedX>Numero di righe bilanciate automaticamente: {0}</NumberOfLinesAutoBalancedX>
+    <BeforeEvenlyDistributeSelectedLines>Prima di distribuire uniformemente le linee selezionate</BeforeEvenlyDistributeSelectedLines>
+    <NumberOfLinesEvenlyDistributedX>Numero linee uniformemente distribuite: {0}</NumberOfLinesEvenlyDistributedX>
     <BeforeRemoveLineBreaksInSelectedLines>Prima di rimuovi divisione-riga dalle righe selezionate</BeforeRemoveLineBreaksInSelectedLines>
     <NumberOfWithRemovedLineBreakX>Numero di righe con divisione-riga rimossa: {0}</NumberOfWithRemovedLineBreakX>
     <BeforeMultipleReplace>Prima di sostituzione multipla</BeforeMultipleReplace>
@@ -2609,6 +2622,7 @@ stesso file di sottotitolo (collaborazione)</Information>
     <MergeDialogWithNext>Unisci la finestra di dialogo con il successivo (inserisci trattini)</MergeDialogWithNext>
     <MergeDialogWithPrevious>Unisci la finestra di dialogo con il precedente (inserisci trattini)</MergeDialogWithPrevious>
     <AutoBalanceSelectedLines>Bilanciamento automatico linee selezionate</AutoBalanceSelectedLines>
+    <EvenlyDistributeSelectedLines>Distribuisci uniformemente linee selezionate (CPS)</EvenlyDistributeSelectedLines>
     <GoToNext>Vai alla riga successiva</GoToNext>
     <GoToNextPlayTranslate>Vai alla riga successiva (e riproduci in modalità di traduzione)</GoToNextPlayTranslate>
     <GoToNextCursorAtEnd>Vai alla riga successiva e imposta il cursore alla fine</GoToNextCursorAtEnd>
@@ -3151,6 +3165,21 @@ Vuoi continuare?</RestoreDefaultSettingsMsg>
     <Message>Se vuoi risolvere questo problema, invia una copia del sottotitolo a mailto:niksedk@gmail.com.</Message>
     <ImportAsPlainText>Importa come testo semplice...</ImportAsPlainText>
   </UnknownSubtitle>
+  <VerifyCompleteness>
+    <Title>Verifica completezza rispetto ad altri sottotitoli</Title>
+    <OpenControlSubtitle>Apri controllo sottotitolo</OpenControlSubtitle>
+    <ControlSubtitleError>Il controllo sottotitolo è vuoto o non può essere caricato.</ControlSubtitleError>
+    <ControlSubtitleX>Controllo sottotitolo: {0}</ControlSubtitleX>
+    <Coverage>Copertura</Coverage>
+    <CoveragePercentageX>{0:0.##}%</CoveragePercentageX>
+    <SortByCoverage>Ordina per copertura</SortByCoverage>
+    <SortByTime>Ordina per tempo</SortByTime>
+    <Reload>Ri-Verifica</Reload>
+    <Insert>Inserisci</Insert>
+    <InsertAndNext>Inserisci e vai al successivo</InsertAndNext>
+    <Dismiss>Ignora</Dismiss>
+    <DismissAndNext>Ignora e vai al successivo</DismissAndNext>
+  </VerifyCompleteness>
   <VisualSync>
     <Title>Sincronizzazione visiva</Title>
     <StartScene>Inizio scena</StartScene>
