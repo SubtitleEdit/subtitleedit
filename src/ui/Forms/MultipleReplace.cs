@@ -31,6 +31,7 @@ namespace Nikse.SubtitleEdit.Forms
         private Subtitle _subtitle;
         private IReloadSubtitle _reloadSubtitle;
         private Subtitle _original;
+        private bool _sortAscending;
         public Subtitle FixedSubtitle { get; private set; }
         public int FixCount { get; private set; }
         public List<int> DeleteIndices { get; }
@@ -1536,7 +1537,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SortItems(int column)
         {
-            var items = new List<MultipleSearchAndReplaceSetting>();
+            List<MultipleSearchAndReplaceSetting> items;
+
+            _sortAscending = !_sortAscending;
 
             switch (column)
             {
@@ -1546,6 +1549,11 @@ namespace Nikse.SubtitleEdit.Forms
                 case 3: items = _currentGroup.Rules.OrderBy(i => i.SearchType).ToList(); break;
                 case 4: items = _currentGroup.Rules.OrderBy(i => i.Description).ToList(); break;
                 default: items = _currentGroup.Rules.OrderBy(i => i.FindWhat).ToList(); break;
+            }
+
+            if (!_sortAscending)
+            {
+                items.Reverse();
             }
 
             _currentGroup.Rules.Clear();
