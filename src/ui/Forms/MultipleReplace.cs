@@ -120,6 +120,7 @@ namespace Nikse.SubtitleEdit.Forms
             inverseSelectionToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.Edit.InverseSelection;
             toolStripMenuItemGroupsSelectAll.Text = LanguageSettings.Current.Main.Menu.ContextMenu.SelectAll;
             toolStripMenuItemGroupsInvertSelection.Text = LanguageSettings.Current.Main.Menu.Edit.InverseSelection;
+            sortToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.Tools.SortBy;
 
             radioButtonCaseSensitive.Left = radioButtonNormal.Left + radioButtonNormal.Width + 40;
             radioButtonRegEx.Left = radioButtonCaseSensitive.Left + radioButtonCaseSensitive.Width + 40;
@@ -1531,6 +1532,36 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 item.Checked = !item.Checked;
             }
+        }
+
+        private void SortItems(int column)
+        {
+            var items = new List<MultipleSearchAndReplaceSetting>();
+
+            switch (column)
+            {
+                case 0: items = _currentGroup.Rules.OrderBy(i => i.Enabled).ToList(); break;
+                case 1: items = _currentGroup.Rules.OrderBy(i => i.FindWhat).ToList(); break;
+                case 2: items = _currentGroup.Rules.OrderBy(i => i.ReplaceWith).ToList(); break;
+                case 3: items = _currentGroup.Rules.OrderBy(i => i.SearchType).ToList(); break;
+                case 4: items = _currentGroup.Rules.OrderBy(i => i.Description).ToList(); break;
+                default: items = _currentGroup.Rules.OrderBy(i => i.FindWhat).ToList(); break;
+            }
+
+            _currentGroup.Rules.Clear();
+            _currentGroup.Rules.AddRange(items);
+            UpdateViewFromModel(Configuration.Settings.MultipleSearchAndReplaceGroups, _currentGroup);
+            GeneratePreview();
+        }
+
+        private void sortToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SortItems(1);
+        }
+
+        private void listViewSort_ColumnClick(object sender, ColumnClickEventArgs e)
+        {
+            SortItems(e.Column);
         }
     }
 }
