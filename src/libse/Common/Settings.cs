@@ -2431,6 +2431,7 @@ $HorzAlign          =   Center
         public string MainFileCloseOriginal { get; set; }
         public string MainFileCloseTranslation { get; set; }
         public string MainFileCompare { get; set; }
+        public string MainFileVerifyCompleteness { get; set; }
         public string MainFileImportPlainText { get; set; }
         public string MainFileImportBdSupForEdit { get; set; }
         public string MainFileImportTimeCodes { get; set; }
@@ -3142,11 +3143,28 @@ $HorzAlign          =   Center
         }
     }
 
+    public class VerifyCompletenessSettings
+    {
+        public ListSortEnum ListSort { get; set; }
+
+        public enum ListSortEnum : int
+        {
+            Coverage = 0,
+            Time = 1,
+        }
+
+        public VerifyCompletenessSettings()
+        {
+            ListSort = ListSortEnum.Coverage;
+        }
+    }
+
     public class Settings
     {
         public string Version { get; set; }
         public bool InitialLoad { get; set; }
         public CompareSettings Compare { get; set; }
+        public VerifyCompletenessSettings VerifyCompleteness { get; set; }
         public RecentFilesSettings RecentFiles { get; set; }
         public GeneralSettings General { get; set; }
         public ToolsSettings Tools { get; set; }
@@ -3182,6 +3200,7 @@ $HorzAlign          =   Center
             RemoveTextForHearingImpaired = new RemoveTextForHearingImpairedSettings();
             SubtitleBeaming = new SubtitleBeaming();
             Compare = new CompareSettings();
+            VerifyCompleteness = new VerifyCompletenessSettings();
             BeautifyTimeCodes = new BeautifyTimeCodesSettings();
         }
 
@@ -3367,6 +3386,17 @@ $HorzAlign          =   Center
                 if (xnode != null)
                 {
                     settings.Compare.IgnoreFormatting = Convert.ToBoolean(xnode.InnerText);
+                }
+            }
+
+            // Verify completeness
+            XmlNode nodeVerifyCompleteness = doc.DocumentElement.SelectSingleNode("VerifyCompleteness");
+            if (nodeVerifyCompleteness != null)
+            {
+                XmlNode xnode = nodeVerifyCompleteness.SelectSingleNode("ListSort");
+                if (xnode != null)
+                {
+                    settings.VerifyCompleteness.ListSort = (VerifyCompletenessSettings.ListSortEnum)Enum.Parse(typeof(VerifyCompletenessSettings.ListSortEnum), xnode.InnerText);
                 }
             }
 
@@ -9493,6 +9523,12 @@ $HorzAlign          =   Center
                     shortcuts.MainFileCompare = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainFileVerifyCompleteness");
+                if (subNode != null)
+                {
+                    shortcuts.MainFileVerifyCompleteness = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainFileOpenOriginal");
                 if (subNode != null)
                 {
@@ -11322,6 +11358,10 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("IgnoreFormatting", settings.Compare.IgnoreFormatting.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteEndElement();
 
+                textWriter.WriteStartElement("VerifyCompleteness", string.Empty);
+                textWriter.WriteElementString("ListSort", settings.VerifyCompleteness.ListSort.ToString());
+                textWriter.WriteEndElement();
+
                 textWriter.WriteStartElement("RecentFiles", string.Empty);
                 textWriter.WriteStartElement("FileNames", string.Empty);
                 foreach (var item in settings.RecentFiles.Files)
@@ -12597,6 +12637,7 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("MainFileCloseOriginal", shortcuts.MainFileCloseOriginal);
             textWriter.WriteElementString("MainFileCloseTranslation", shortcuts.MainFileCloseTranslation);
             textWriter.WriteElementString("MainFileCompare", shortcuts.MainFileCompare);
+            textWriter.WriteElementString("MainFileVerifyCompleteness", shortcuts.MainFileVerifyCompleteness);
             textWriter.WriteElementString("MainFileOpenOriginal", shortcuts.MainFileOpenOriginal);
             textWriter.WriteElementString("MainFileSaveAll", shortcuts.MainFileSaveAll);
             textWriter.WriteElementString("MainFileImportPlainText", shortcuts.MainFileImportPlainText);
