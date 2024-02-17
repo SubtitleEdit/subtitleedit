@@ -33,11 +33,11 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonReplacesInverseSelection = new System.Windows.Forms.Button();
             this.buttonReplacesSelectAll = new System.Windows.Forms.Button();
             this.listViewFixes = new System.Windows.Forms.ListView();
-            this.contextMenuStripListViewFixes = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.contextMenuStripListViewFixes = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.columnHeader10 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.groupBoxReplaces = new System.Windows.Forms.GroupBox();
             this.labelDescription = new System.Windows.Forms.Label();
@@ -72,7 +72,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.selectAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.inverseSelectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.sortToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.radioButtonNormal = new System.Windows.Forms.RadioButton();
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
@@ -95,12 +94,12 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripSeparatorGroupImportExport = new System.Windows.Forms.ToolStripSeparator();
             this.importToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.buttonApply = new System.Windows.Forms.Button();
-            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemGroupsSelectAll = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemGroupsInvertSelection = new System.Windows.Forms.ToolStripMenuItem();
+            this.buttonApply = new System.Windows.Forms.Button();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.groupBoxLinesFound.SuspendLayout();
             this.groupBoxReplaces.SuspendLayout();
             this.contextMenuStripRules.SuspendLayout();
@@ -174,12 +173,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.listViewFixes.ClientSizeChanged += new System.EventHandler(this.listViewFixes_ClientSizeChanged);
             this.listViewFixes.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listViewFixes_KeyDown);
             // 
-            // contextMenuStripListViewFixes
-            // 
-            this.contextMenuStripListViewFixes.Name = "contextMenuStripListViewFixes";
-            this.contextMenuStripListViewFixes.Size = new System.Drawing.Size(61, 4);
-            this.contextMenuStripListViewFixes.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripListViewFixesOpening);
-            // 
             // columnHeader4
             // 
             this.columnHeader4.Text = "Apply";
@@ -199,6 +192,12 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.columnHeader8.Text = "After";
             this.columnHeader8.Width = 440;
+            // 
+            // contextMenuStripListViewFixes
+            // 
+            this.contextMenuStripListViewFixes.Name = "contextMenuStripListViewFixes";
+            this.contextMenuStripListViewFixes.Size = new System.Drawing.Size(61, 4);
+            this.contextMenuStripListViewFixes.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripListViewFixesOpening);
             // 
             // columnHeader10
             // 
@@ -243,6 +242,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.textBoxDescription.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxDescription.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxDescription.Location = new System.Drawing.Point(403, 202);
             this.textBoxDescription.Name = "textBoxDescription";
             this.textBoxDescription.Size = new System.Drawing.Size(190, 21);
@@ -275,6 +275,7 @@ namespace Nikse.SubtitleEdit.Forms
             // textBoxFind
             // 
             this.textBoxFind.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.textBoxFind.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxFind.Location = new System.Drawing.Point(9, 203);
             this.textBoxFind.Name = "textBoxFind";
             this.textBoxFind.Size = new System.Drawing.Size(211, 21);
@@ -283,6 +284,7 @@ namespace Nikse.SubtitleEdit.Forms
             // textBoxReplace
             // 
             this.textBoxReplace.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.textBoxReplace.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxReplace.Location = new System.Drawing.Point(226, 203);
             this.textBoxReplace.Name = "textBoxReplace";
             this.textBoxReplace.Size = new System.Drawing.Size(171, 21);
@@ -330,14 +332,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelReplaceWith.Size = new System.Drawing.Size(72, 13);
             this.labelReplaceWith.TabIndex = 3;
             this.labelReplaceWith.Text = "Replace with:";
-            //
-            // sortToolStripMenuItem
-            //
-            this.sortToolStripMenuItem.Name = "sortItems";
-            this.sortToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Home)));
-            this.sortToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
-            this.sortToolStripMenuItem.Text = "Sort items";
-            this.sortToolStripMenuItem.Click += new System.EventHandler(this.sortToolStripMenuItem_Click);
+            // 
             // listViewRules
             // 
             this.listViewRules.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -359,9 +354,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.listViewRules.TabIndex = 0;
             this.listViewRules.UseCompatibleStateImageBehavior = false;
             this.listViewRules.View = System.Windows.Forms.View.Details;
+            this.listViewRules.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.listViewSort_ColumnClick);
             this.listViewRules.SelectedIndexChanged += new System.EventHandler(this.ListViewReplaceListSelectedIndexChanged);
             this.listViewRules.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ListViewRulesKeyDown);
-            this.listViewRules.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.listViewSort_ColumnClick);
             // 
             // columnHeader1
             // 
@@ -405,10 +400,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemExport,
             this.toolStripSeparator5,
             this.selectAllToolStripMenuItem,
-            this.inverseSelectionToolStripMenuItem,
-            this.sortToolStripMenuItem});
+            this.inverseSelectionToolStripMenuItem});
             this.contextMenuStripRules.Name = "contextMenuStrip1";
-            this.contextMenuStripRules.Size = new System.Drawing.Size(228, 270);
+            this.contextMenuStripRules.Size = new System.Drawing.Size(228, 292);
             this.contextMenuStripRules.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
             // 
             // deleteToolStripMenuItem
@@ -666,7 +660,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemGroupsSelectAll,
             this.toolStripMenuItemGroupsInvertSelection});
             this.contextMenuStripGroups.Name = "contextMenuStripGroups";
-            this.contextMenuStripGroups.Size = new System.Drawing.Size(216, 286);
+            this.contextMenuStripGroups.Size = new System.Drawing.Size(216, 264);
             this.contextMenuStripGroups.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripGroups_Opening);
             // 
             // newToolStripMenuItem
@@ -752,21 +746,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.exportToolStripMenuItem.Text = "Export...";
             this.exportToolStripMenuItem.Click += new System.EventHandler(this.exportToolStripMenuItem_Click);
             // 
-            // buttonApply
-            // 
-            this.buttonApply.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonApply.Location = new System.Drawing.Point(970, 254);
-            this.buttonApply.Name = "buttonApply";
-            this.buttonApply.Size = new System.Drawing.Size(75, 23);
-            this.buttonApply.TabIndex = 16;
-            this.buttonApply.Text = "Apply";
-            this.buttonApply.UseVisualStyleBackColor = true;
-            this.buttonApply.Click += new System.EventHandler(this.buttonApply_Click);
-            // 
-            // openFileDialog1
-            // 
-            this.openFileDialog1.FileName = "openFileDialog1";
-            // 
             // toolStripSeparator6
             // 
             this.toolStripSeparator6.Name = "toolStripSeparator6";
@@ -785,6 +764,21 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemGroupsInvertSelection.Size = new System.Drawing.Size(215, 22);
             this.toolStripMenuItemGroupsInvertSelection.Text = "Inverse selection";
             this.toolStripMenuItemGroupsInvertSelection.Click += new System.EventHandler(this.toolStripMenuItemGroupsInvertSelection_Click);
+            // 
+            // buttonApply
+            // 
+            this.buttonApply.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonApply.Location = new System.Drawing.Point(970, 254);
+            this.buttonApply.Name = "buttonApply";
+            this.buttonApply.Size = new System.Drawing.Size(75, 23);
+            this.buttonApply.TabIndex = 16;
+            this.buttonApply.Text = "Apply";
+            this.buttonApply.UseVisualStyleBackColor = true;
+            this.buttonApply.Click += new System.EventHandler(this.buttonApply_Click);
+            // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.FileName = "openFileDialog1";
             // 
             // MultipleReplace
             // 
@@ -891,6 +885,5 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemGroupsSelectAll;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemGroupsInvertSelection;
-        private System.Windows.Forms.ToolStripMenuItem sortToolStripMenuItem;
     }
 }
