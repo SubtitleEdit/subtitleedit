@@ -130,6 +130,8 @@
             this.labelDefaultSubtitleFormat = new System.Windows.Forms.Label();
             this.panelShortcuts = new System.Windows.Forms.Panel();
             this.groupBoxShortcuts = new System.Windows.Forms.GroupBox();
+            this.nikseComboBoxShortcutsFilter = new Nikse.SubtitleEdit.Controls.NikseComboBox();
+            this.labelShortcutsFilter = new System.Windows.Forms.Label();
             this.buttonShortcutsClear = new System.Windows.Forms.Button();
             this.labelShortcutsSearch = new System.Windows.Forms.Label();
             this.textBoxShortcutSearch = new Nikse.SubtitleEdit.Controls.SETextBox();
@@ -455,25 +457,25 @@
             this.toolTipDialogStylePreview = new System.Windows.Forms.ToolTip(this.components);
             this.panelAutoTranslate = new System.Windows.Forms.Panel();
             this.groupBoxAutoTranslatePapago = new System.Windows.Forms.GroupBox();
+            this.nikseTextBoxPapagoClientId = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.nikseTextBoxPapagoClientSecret = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelSecretPapago = new System.Windows.Forms.Label();
-            this.nikseTextBoxPapagoClientId = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelApiKeyPapago = new System.Windows.Forms.Label();
             this.linkLabelPapago = new System.Windows.Forms.LinkLabel();
             this.label11 = new System.Windows.Forms.Label();
             this.groupBoxAutoTranslateChatGpt = new System.Windows.Forms.GroupBox();
+            this.nikseTextBoxChatGptUrl = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.nikseComboBoxChatGptDelay = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelChatGptDelay = new System.Windows.Forms.Label();
             this.nikseTextBoxChatGptApiKey = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelApiKeyChatGpt = new System.Windows.Forms.Label();
-            this.nikseTextBoxChatGptUrl = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelUrlChatGpt = new System.Windows.Forms.Label();
             this.linkLabelMoreInfoChatGpt = new System.Windows.Forms.LinkLabel();
             this.label10 = new System.Windows.Forms.Label();
             this.groupBoxDeepL = new System.Windows.Forms.GroupBox();
+            this.nikseTextBoxDeepLUrl = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.nikseTextBoxDeepLApiKey = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelDeepLApiKey = new System.Windows.Forms.Label();
-            this.nikseTextBoxDeepLUrl = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelDeepLUrl = new System.Windows.Forms.Label();
             this.linkLabelMoreInfoDeepl = new System.Windows.Forms.LinkLabel();
             this.label9 = new System.Windows.Forms.Label();
@@ -490,9 +492,9 @@
             this.linkLabelLibreTranslateApi = new System.Windows.Forms.LinkLabel();
             this.label7 = new System.Windows.Forms.Label();
             this.groupBoxNllbServe = new System.Windows.Forms.GroupBox();
+            this.nikseTextBoxNllbServeUrl = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.nikseTextBoxNllbServeModel = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelNllbServeModel = new System.Windows.Forms.Label();
-            this.nikseTextBoxNllbServeUrl = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelNllbServeUrl = new System.Windows.Forms.Label();
             this.linkLabelNllbServe = new System.Windows.Forms.LinkLabel();
             this.label4 = new System.Windows.Forms.Label();
@@ -2173,6 +2175,8 @@
             this.groupBoxShortcuts.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxShortcuts.Controls.Add(this.nikseComboBoxShortcutsFilter);
+            this.groupBoxShortcuts.Controls.Add(this.labelShortcutsFilter);
             this.groupBoxShortcuts.Controls.Add(this.buttonShortcutsClear);
             this.groupBoxShortcuts.Controls.Add(this.labelShortcutsSearch);
             this.groupBoxShortcuts.Controls.Add(this.textBoxShortcutSearch);
@@ -2191,6 +2195,45 @@
             this.groupBoxShortcuts.TabIndex = 2;
             this.groupBoxShortcuts.TabStop = false;
             this.groupBoxShortcuts.Text = "Shortcuts";
+            // 
+            // nikseComboBoxShortcutsFilter
+            // 
+            this.nikseComboBoxShortcutsFilter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.nikseComboBoxShortcutsFilter.BackColor = System.Drawing.SystemColors.Window;
+            this.nikseComboBoxShortcutsFilter.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.nikseComboBoxShortcutsFilter.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.nikseComboBoxShortcutsFilter.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.nikseComboBoxShortcutsFilter.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.nikseComboBoxShortcutsFilter.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.nikseComboBoxShortcutsFilter.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.nikseComboBoxShortcutsFilter.DropDownHeight = 400;
+            this.nikseComboBoxShortcutsFilter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.nikseComboBoxShortcutsFilter.DropDownWidth = 92;
+            this.nikseComboBoxShortcutsFilter.Enabled = false;
+            this.nikseComboBoxShortcutsFilter.FormattingEnabled = true;
+            this.nikseComboBoxShortcutsFilter.Items.AddRange(new object[] {
+            "All",
+            "Used",
+            "Unused"});
+            this.nikseComboBoxShortcutsFilter.Location = new System.Drawing.Point(449, 19);
+            this.nikseComboBoxShortcutsFilter.MaxLength = 32767;
+            this.nikseComboBoxShortcutsFilter.Name = "nikseComboBoxShortcutsFilter";
+            this.nikseComboBoxShortcutsFilter.SelectedIndex = -1;
+            this.nikseComboBoxShortcutsFilter.SelectedItem = null;
+            this.nikseComboBoxShortcutsFilter.SelectedText = "";
+            this.nikseComboBoxShortcutsFilter.Size = new System.Drawing.Size(199, 21);
+            this.nikseComboBoxShortcutsFilter.TabIndex = 2;
+            this.nikseComboBoxShortcutsFilter.UsePopupWindow = false;
+            this.nikseComboBoxShortcutsFilter.SelectedIndexChanged += new System.EventHandler(this.nikseComboBoxShortcutsFilter_SelectedIndexChanged);
+            // 
+            // labelShortcutsFilter
+            // 
+            this.labelShortcutsFilter.AutoSize = true;
+            this.labelShortcutsFilter.Location = new System.Drawing.Point(406, 22);
+            this.labelShortcutsFilter.Name = "labelShortcutsFilter";
+            this.labelShortcutsFilter.Size = new System.Drawing.Size(31, 13);
+            this.labelShortcutsFilter.TabIndex = 38;
+            this.labelShortcutsFilter.Text = "Filter";
             // 
             // buttonShortcutsClear
             // 
@@ -2214,7 +2257,7 @@
             // 
             // textBoxShortcutSearch
             // 
-            this.textBoxShortcutSearch.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.textBoxShortcutSearch.BackColor = System.Drawing.SystemColors.Window;
             this.textBoxShortcutSearch.CurrentLanguage = "";
             this.textBoxShortcutSearch.CurrentLineIndex = 0;
             this.textBoxShortcutSearch.HideSelection = true;
@@ -2246,7 +2289,7 @@
             this.buttonClearShortcut.Location = new System.Drawing.Point(582, 492);
             this.buttonClearShortcut.Name = "buttonClearShortcut";
             this.buttonClearShortcut.Size = new System.Drawing.Size(111, 23);
-            this.buttonClearShortcut.TabIndex = 8;
+            this.buttonClearShortcut.TabIndex = 9;
             this.buttonClearShortcut.Text = "&Clear";
             this.buttonClearShortcut.UseVisualStyleBackColor = true;
             this.buttonClearShortcut.Click += new System.EventHandler(this.buttonClearShortcut_Click);
@@ -2409,7 +2452,7 @@
             this.comboBoxShortcutKey.SelectedItem = null;
             this.comboBoxShortcutKey.SelectedText = "";
             this.comboBoxShortcutKey.Size = new System.Drawing.Size(92, 21);
-            this.comboBoxShortcutKey.TabIndex = 6;
+            this.comboBoxShortcutKey.TabIndex = 7;
             this.comboBoxShortcutKey.UsePopupWindow = false;
             this.comboBoxShortcutKey.SelectedIndexChanged += new System.EventHandler(this.ValidateShortcut);
             this.comboBoxShortcutKey.KeyDown += new System.Windows.Forms.KeyEventHandler(this.comboBoxShortcutKey_KeyDown);
@@ -2432,7 +2475,7 @@
             this.checkBoxShortcutsShift.Location = new System.Drawing.Point(245, 494);
             this.checkBoxShortcutsShift.Name = "checkBoxShortcutsShift";
             this.checkBoxShortcutsShift.Size = new System.Drawing.Size(48, 17);
-            this.checkBoxShortcutsShift.TabIndex = 5;
+            this.checkBoxShortcutsShift.TabIndex = 6;
             this.checkBoxShortcutsShift.Text = "Shift";
             this.checkBoxShortcutsShift.UseVisualStyleBackColor = true;
             this.checkBoxShortcutsShift.CheckedChanged += new System.EventHandler(this.ValidateShortcut);
@@ -2445,7 +2488,7 @@
             this.checkBoxShortcutsAlt.Location = new System.Drawing.Point(176, 494);
             this.checkBoxShortcutsAlt.Name = "checkBoxShortcutsAlt";
             this.checkBoxShortcutsAlt.Size = new System.Drawing.Size(39, 17);
-            this.checkBoxShortcutsAlt.TabIndex = 4;
+            this.checkBoxShortcutsAlt.TabIndex = 5;
             this.checkBoxShortcutsAlt.Text = "Alt";
             this.checkBoxShortcutsAlt.UseVisualStyleBackColor = true;
             this.checkBoxShortcutsAlt.CheckedChanged += new System.EventHandler(this.ValidateShortcut);
@@ -2458,7 +2501,7 @@
             this.checkBoxShortcutsControl.Location = new System.Drawing.Point(89, 494);
             this.checkBoxShortcutsControl.Name = "checkBoxShortcutsControl";
             this.checkBoxShortcutsControl.Size = new System.Drawing.Size(61, 17);
-            this.checkBoxShortcutsControl.TabIndex = 3;
+            this.checkBoxShortcutsControl.TabIndex = 4;
             this.checkBoxShortcutsControl.Text = "Control";
             this.checkBoxShortcutsControl.UseVisualStyleBackColor = true;
             this.checkBoxShortcutsControl.CheckedChanged += new System.EventHandler(this.ValidateShortcut);
@@ -2470,7 +2513,7 @@
             this.buttonUpdateShortcut.Location = new System.Drawing.Point(465, 492);
             this.buttonUpdateShortcut.Name = "buttonUpdateShortcut";
             this.buttonUpdateShortcut.Size = new System.Drawing.Size(111, 23);
-            this.buttonUpdateShortcut.TabIndex = 7;
+            this.buttonUpdateShortcut.TabIndex = 8;
             this.buttonUpdateShortcut.Text = "&Update";
             this.buttonUpdateShortcut.UseVisualStyleBackColor = true;
             this.buttonUpdateShortcut.Click += new System.EventHandler(this.buttonUpdateShortcut_Click);
@@ -2485,7 +2528,7 @@
             this.treeViewShortcuts.Location = new System.Drawing.Point(16, 47);
             this.treeViewShortcuts.Name = "treeViewShortcuts";
             this.treeViewShortcuts.Size = new System.Drawing.Size(829, 439);
-            this.treeViewShortcuts.TabIndex = 2;
+            this.treeViewShortcuts.TabIndex = 3;
             this.treeViewShortcuts.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeViewShortcuts_AfterSelect);
             // 
             // contextMenuStripShortcuts
@@ -6462,6 +6505,14 @@
             this.groupBoxAutoTranslatePapago.TabStop = false;
             this.groupBoxAutoTranslatePapago.Text = "Papago";
             // 
+            // nikseTextBoxPapagoClientId
+            // 
+            this.nikseTextBoxPapagoClientId.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.nikseTextBoxPapagoClientId.Location = new System.Drawing.Point(8, 41);
+            this.nikseTextBoxPapagoClientId.Name = "nikseTextBoxPapagoClientId";
+            this.nikseTextBoxPapagoClientId.Size = new System.Drawing.Size(384, 21);
+            this.nikseTextBoxPapagoClientId.TabIndex = 34;
+            // 
             // nikseTextBoxPapagoClientSecret
             // 
             this.nikseTextBoxPapagoClientSecret.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
@@ -6478,14 +6529,6 @@
             this.labelSecretPapago.Size = new System.Drawing.Size(67, 13);
             this.labelSecretPapago.TabIndex = 35;
             this.labelSecretPapago.Text = "Client secret";
-            // 
-            // nikseTextBoxPapagoClientId
-            // 
-            this.nikseTextBoxPapagoClientId.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            this.nikseTextBoxPapagoClientId.Location = new System.Drawing.Point(8, 41);
-            this.nikseTextBoxPapagoClientId.Name = "nikseTextBoxPapagoClientId";
-            this.nikseTextBoxPapagoClientId.Size = new System.Drawing.Size(384, 21);
-            this.nikseTextBoxPapagoClientId.TabIndex = 34;
             // 
             // labelApiKeyPapago
             // 
@@ -6533,6 +6576,14 @@
             this.groupBoxAutoTranslateChatGpt.TabIndex = 46;
             this.groupBoxAutoTranslateChatGpt.TabStop = false;
             this.groupBoxAutoTranslateChatGpt.Text = "ChatGPT API";
+            // 
+            // nikseTextBoxChatGptUrl
+            // 
+            this.nikseTextBoxChatGptUrl.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.nikseTextBoxChatGptUrl.Location = new System.Drawing.Point(8, 41);
+            this.nikseTextBoxChatGptUrl.Name = "nikseTextBoxChatGptUrl";
+            this.nikseTextBoxChatGptUrl.Size = new System.Drawing.Size(384, 21);
+            this.nikseTextBoxChatGptUrl.TabIndex = 34;
             // 
             // nikseComboBoxChatGptDelay
             // 
@@ -6586,14 +6637,6 @@
             this.labelApiKeyChatGpt.TabIndex = 35;
             this.labelApiKeyChatGpt.Text = "API key";
             // 
-            // nikseTextBoxChatGptUrl
-            // 
-            this.nikseTextBoxChatGptUrl.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            this.nikseTextBoxChatGptUrl.Location = new System.Drawing.Point(8, 41);
-            this.nikseTextBoxChatGptUrl.Name = "nikseTextBoxChatGptUrl";
-            this.nikseTextBoxChatGptUrl.Size = new System.Drawing.Size(384, 21);
-            this.nikseTextBoxChatGptUrl.TabIndex = 34;
-            // 
             // labelUrlChatGpt
             // 
             this.labelUrlChatGpt.AutoSize = true;
@@ -6639,6 +6682,14 @@
             this.groupBoxDeepL.TabStop = false;
             this.groupBoxDeepL.Text = "DeepL";
             // 
+            // nikseTextBoxDeepLUrl
+            // 
+            this.nikseTextBoxDeepLUrl.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.nikseTextBoxDeepLUrl.Location = new System.Drawing.Point(8, 41);
+            this.nikseTextBoxDeepLUrl.Name = "nikseTextBoxDeepLUrl";
+            this.nikseTextBoxDeepLUrl.Size = new System.Drawing.Size(376, 21);
+            this.nikseTextBoxDeepLUrl.TabIndex = 34;
+            // 
             // nikseTextBoxDeepLApiKey
             // 
             this.nikseTextBoxDeepLApiKey.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
@@ -6655,14 +6706,6 @@
             this.labelDeepLApiKey.Size = new System.Drawing.Size(44, 13);
             this.labelDeepLApiKey.TabIndex = 35;
             this.labelDeepLApiKey.Text = "API key";
-            // 
-            // nikseTextBoxDeepLUrl
-            // 
-            this.nikseTextBoxDeepLUrl.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            this.nikseTextBoxDeepLUrl.Location = new System.Drawing.Point(8, 41);
-            this.nikseTextBoxDeepLUrl.Name = "nikseTextBoxDeepLUrl";
-            this.nikseTextBoxDeepLUrl.Size = new System.Drawing.Size(376, 21);
-            this.nikseTextBoxDeepLUrl.TabIndex = 34;
             // 
             // labelDeepLUrl
             // 
@@ -6833,6 +6876,14 @@
             this.groupBoxNllbServe.TabStop = false;
             this.groupBoxNllbServe.Text = "NLLM Serve";
             // 
+            // nikseTextBoxNllbServeUrl
+            // 
+            this.nikseTextBoxNllbServeUrl.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.nikseTextBoxNllbServeUrl.Location = new System.Drawing.Point(8, 40);
+            this.nikseTextBoxNllbServeUrl.Name = "nikseTextBoxNllbServeUrl";
+            this.nikseTextBoxNllbServeUrl.Size = new System.Drawing.Size(376, 21);
+            this.nikseTextBoxNllbServeUrl.TabIndex = 34;
+            // 
             // nikseTextBoxNllbServeModel
             // 
             this.nikseTextBoxNllbServeModel.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
@@ -6849,14 +6900,6 @@
             this.labelNllbServeModel.Size = new System.Drawing.Size(35, 13);
             this.labelNllbServeModel.TabIndex = 36;
             this.labelNllbServeModel.Text = "Model";
-            // 
-            // nikseTextBoxNllbServeUrl
-            // 
-            this.nikseTextBoxNllbServeUrl.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            this.nikseTextBoxNllbServeUrl.Location = new System.Drawing.Point(8, 40);
-            this.nikseTextBoxNllbServeUrl.Name = "nikseTextBoxNllbServeUrl";
-            this.nikseTextBoxNllbServeUrl.Size = new System.Drawing.Size(376, 21);
-            this.nikseTextBoxNllbServeUrl.TabIndex = 34;
             // 
             // labelNllbServeUrl
             // 
@@ -6943,13 +6986,13 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1092, 574);
+            this.Controls.Add(this.panelShortcuts);
             this.Controls.Add(this.panelAutoTranslate);
             this.Controls.Add(this.panelVideoPlayer);
             this.Controls.Add(this.labelUpdateFileTypeAssociationsStatus);
             this.Controls.Add(this.panelGeneral);
             this.Controls.Add(this.panelTools);
             this.Controls.Add(this.panelNetwork);
-            this.Controls.Add(this.panelShortcuts);
             this.Controls.Add(this.panelFont);
             this.Controls.Add(this.panelSubtitleFormats);
             this.Controls.Add(this.panelWaveform);
@@ -7572,5 +7615,7 @@
         private System.Windows.Forms.LinkLabel linkLabelMoreInfoChatGpt;
         private System.Windows.Forms.Label label10;
         private Controls.NikseComboBox nikseComboBoxChatGptDelay;
+        private System.Windows.Forms.Label labelShortcutsFilter;
+        private Controls.NikseComboBox nikseComboBoxShortcutsFilter;
     }
 }

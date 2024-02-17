@@ -2852,6 +2852,8 @@ Continue?</RestoreDefaultSettingsMsg>
     <ExportAsHtml>Export as HTML...</ExportAsHtml>
     <SetNewActor>Set new actor/voice</SetNewActor>
     <SetActorX>Set actor/voice {0}</SetActorX>
+    <Used>Used</Used>
+    <Unused>Unused</Unused>
   </Settings>
   <SettingsMpv>
     <DownloadMpv>Download mpv lib</DownloadMpv>

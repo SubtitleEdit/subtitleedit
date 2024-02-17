@@ -7825,6 +7825,12 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/SetActorX":
                     language.Settings.SetActorX = reader.Value;
                     break;
+                case "Settings/Used":
+                    language.Settings.Used = reader.Value;
+                    break;
+                case "Settings/Unused":
+                    language.Settings.Unused = reader.Value;
+                    break;
                 case "SettingsMpv/DownloadMpv":
                     language.SettingsMpv.DownloadMpv = reader.Value;
                     break;

@@ -1220,6 +1220,15 @@ namespace Nikse.SubtitleEdit.Forms.Options
             buttonShortcutsClear.Text = LanguageSettings.Current.DvdSubRip.Clear;
             textBoxShortcutSearch.Left = labelShortcutsSearch.Left + labelShortcutsSearch.Width + 5;
             buttonShortcutsClear.Left = textBoxShortcutSearch.Left + textBoxShortcutSearch.Width + 5;
+            labelShortcutsFilter.Text = LanguageSettings.Current.BatchConvert.Filter;
+            nikseComboBoxShortcutsFilter.Left = labelShortcutsFilter.Right + 5;
+            nikseComboBoxShortcutsFilter.SelectedIndex = 0;
+            nikseComboBoxShortcutsFilter.Enabled = true;
+            nikseComboBoxShortcutsFilter.Items[0] = LanguageSettings.Current.General.All;
+            nikseComboBoxShortcutsFilter.Items[1] = LanguageSettings.Current.Settings.Used;
+            nikseComboBoxShortcutsFilter.Items[2] = LanguageSettings.Current.Settings.Unused;
+
+            nikseComboBoxShortcutsFilter.DropDownStyle = ComboBoxStyle.DropDownList;
 
             // Subtitle formats
             groupBoxSubtitleFormats.Text = language.SubtitleFormats;
@@ -1961,6 +1970,24 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
         private void AddNode(TreeNode parentNode, string text, ShortcutHelper shortcut)
         {
+            var emptyText = "[" + LanguageSettings.Current.General.None + "]";
+
+            if (nikseComboBoxShortcutsFilter.SelectedIndex == 1) // used
+            {
+                if (text.Contains(emptyText))
+                {
+                    return;
+                }
+            }
+
+            if (nikseComboBoxShortcutsFilter.SelectedIndex == 2) // unused
+            {
+                if (!text.Contains(emptyText))
+                {
+                    return;
+                }
+            }
+
             var normalizeAmpersand = text.Replace("&&", "@_____@").Replace("&", string.Empty).Replace("@_____@", "&");
             if (textBoxShortcutSearch.Left < 2 || normalizeAmpersand.Contains(textBoxShortcutSearch.Text, StringComparison.OrdinalIgnoreCase))
             {
@@ -4022,6 +4049,11 @@ namespace Nikse.SubtitleEdit.Forms.Options
         private void LinkLabelMoreInfoDeepLLinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             UiUtil.OpenUrl(new DeepLTranslate().Url);
+        }
+
+        private void nikseComboBoxShortcutsFilter_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            textBoxShortcutSearch_TextChanged(null, null);
         }
     }
 }
