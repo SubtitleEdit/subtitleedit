@@ -643,6 +643,8 @@
     <LinePart from=" l?" to=" I?" />
     <LinePart from=" l!" to=" I!" />
     <LinePart from=" . " to=". " />
+    <LinePart from=" | " to=" I " />
+    <LinePart from=" |," to=" I," />
   </PartialLinesAlways>
   <PartialLines />
   <BeginLines>
@@ -653,6 +655,7 @@
     <Beginning from="- | " to="- I " />
     <Beginning from="l " to="I " />
     <Beginning from="- l " to="- I " />
+    <Beginning from="| " to="I " />
   </BeginLines>
   <EndLines />
   <RegularExpressions>
