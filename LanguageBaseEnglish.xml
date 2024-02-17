@@ -10,6 +10,7 @@
     <Cancel>C&amp;ancel</Cancel>
     <Yes>Yes</Yes>
     <No>No</No>
+    <Close>Close</Close>
     <Apply>Apply</Apply>
     <ApplyTo>Apply to</ApplyTo>
     <None>None</None>
@@ -404,6 +405,13 @@ Please click "{0}" to generate or import shot changes first, or disable this opt
     <BatchAlignTimeCodes>Align time codes to frame time codes</BatchAlignTimeCodes>
     <BatchUseExactTimeCodes>Use exact time codes (if available)</BatchUseExactTimeCodes>
     <BatchSnapToShotChanges>Snap cues to shot changes (if available)</BatchSnapToShotChanges>
+    <UnfixableParagraphsTitle>Review not fully chained subtitles</UnfixableParagraphsTitle>
+    <UnfixableParagraphsInstructions>Some subtitles were not fully chained in accordance with your profile, most likely due to too tightly clustered shot changes (possibly false positives).
+
+You might want to review these cases manually to ensure your cues are snapped to the correct (real) shot changes.</UnfixableParagraphsInstructions>
+    <UnfixableParagraphsColumnParagraphs>Lines</UnfixableParagraphsColumnParagraphs>
+    <UnfixableParagraphsColumnParagraphsFormat>#{0} – #{1}</UnfixableParagraphsColumnParagraphsFormat>
+    <UnfixableParagraphsColumnGap>Gap (frames)</UnfixableParagraphsColumnGap>
   </BeautifyTimeCodes>
   <BeautifyTimeCodesProfile>
     <Title>Edit profile</Title>
@@ -427,6 +435,7 @@ Please click "{0}" to generate or import shot changes first, or disable this opt
     <Chaining>Chaining</Chaining>
     <InCueOnShot>In cue on shot change</InCueOnShot>
     <OutCueOnShot>Out cue on shot change</OutCueOnShot>
+    <CheckGeneral>Still enforce General rules when unaffected</CheckGeneral>
     <MaxGap>Max. gap:</MaxGap>
     <ShotChangeBehavior>If there is a shot change in between:</ShotChangeBehavior>
     <DontChain>Don't chain</DontChain>
@@ -1051,9 +1060,9 @@ We leverage the intrinsic rhythm of the image.</CreateSimpleChainingToolTip>
     <PoweredByX>Powered by {0}</PoweredByX>
     <MsClientSecretNeeded>Sorry, you need a Cognitive Services 'Translator Text' key from Microsoft to use the latest Microsoft Translator.
 
-Go to "Options -&gt; Settings -&gt; Tools" to enter your key.</MsClientSecretNeeded>
+Go to "Options -&gt; Settings -&gt; Auto-translate" to enter your key.</MsClientSecretNeeded>
     <GoogleNoApiKeyWarning>Trying to translate without API key... (slow and limited data). 
-To use an API key, go to "Options -&gt; Settings -&gt; Tools" to enter your Google translate API key.</GoogleNoApiKeyWarning>
+To use an API key, go to "Options -&gt; Settings -&gt; Auto-translate" to enter your Google translate API key.</GoogleNoApiKeyWarning>
     <Service>Service:</Service>
     <LineMergeHandling>Line merge:</LineMergeHandling>
     <ProcessorMergeNext>Merge max two lines</ProcessorMergeNext>
@@ -1319,6 +1328,7 @@ To use an API key, go to "Options -&gt; Settings -&gt; Tools" to enter your Goog
         <CloseTranslation>Close translated subtitle</CloseTranslation>
         <OpenContainingFolder>Open containing folder</OpenContainingFolder>
         <Compare>&amp;Compare...</Compare>
+        <VerifyCompleteness>Verify completeness...</VerifyCompleteness>
         <Statistics>S&amp;tatistics...</Statistics>
         <Plugins>&amp;Plugins...</Plugins>
         <ImportSubtitleFromVideoFile>Subtitle from video file...</ImportSubtitleFromVideoFile>
@@ -1565,6 +1575,7 @@ To use an API key, go to "Options -&gt; Settings -&gt; Tools" to enter your Goog
         <Subscript>Subscript</Subscript>
         <Alignment>Alignment...</Alignment>
         <AutoBalanceSelectedLines>Auto balance selected lines...</AutoBalanceSelectedLines>
+        <EvenlyDistributeSelectedLines>Evenly distribute selected lines (CPS)</EvenlyDistributeSelectedLines>
         <RemoveLineBreaksFromSelectedLines>Remove line-breaks from selected lines...</RemoveLineBreaksFromSelectedLines>
         <TypewriterEffect>Typewriter effect...</TypewriterEffect>
         <KaraokeEffect>Karaoke effect...</KaraokeEffect>
@@ -1836,6 +1847,8 @@ Continue?</SubtitleAppendPrompt>
     <SortedByX>Sorted by: {0}</SortedByX>
     <BeforeAutoBalanceSelectedLines>Before auto balance selected lines</BeforeAutoBalanceSelectedLines>
     <NumberOfLinesAutoBalancedX>Number of auto balanced lines: {0}</NumberOfLinesAutoBalancedX>
+    <BeforeEvenlyDistributeSelectedLines>Before evenly distribute selected lines</BeforeEvenlyDistributeSelectedLines>
+    <NumberOfLinesEvenlyDistributedX>Number of evenly distributed lines: {0}</NumberOfLinesEvenlyDistributedX>
     <BeforeRemoveLineBreaksInSelectedLines>Before remove line-breaks from selected lines</BeforeRemoveLineBreaksInSelectedLines>
     <NumberOfWithRemovedLineBreakX>Number of lines with removed line-break: {0}</NumberOfWithRemovedLineBreakX>
     <BeforeMultipleReplace>Before multiple replace</BeforeMultipleReplace>
@@ -2609,6 +2622,7 @@ can edit in same subtitle file (collaboration)</Information>
     <MergeDialogWithNext>Merge dialog with next (insert dashes)</MergeDialogWithNext>
     <MergeDialogWithPrevious>Merge dialog with previous (insert dashes)</MergeDialogWithPrevious>
     <AutoBalanceSelectedLines>Auto balance selected lines</AutoBalanceSelectedLines>
+    <EvenlyDistributeSelectedLines>Evenly distribute selected lines (CPS)</EvenlyDistributeSelectedLines>
     <GoToNext>Go to next line</GoToNext>
     <GoToNextPlayTranslate>Go to next line (and play in 'Translate mode')</GoToNextPlayTranslate>
     <GoToNextCursorAtEnd>Go to next line and set cursor at end</GoToNextCursorAtEnd>
@@ -3151,6 +3165,21 @@ Continue?</RestoreDefaultSettingsMsg>
     <Message>If you want this fixed, please send an email to mailto:niksedk@gmail.com and include a copy of the subtitle.</Message>
     <ImportAsPlainText>Import as plain text...</ImportAsPlainText>
   </UnknownSubtitle>
+  <VerifyCompleteness>
+    <Title>Verify completeness against other subtitle</Title>
+    <OpenControlSubtitle>Open control subtitle</OpenControlSubtitle>
+    <ControlSubtitleError>Control subtitle is empty or could not be loaded.</ControlSubtitleError>
+    <ControlSubtitleX>Control subtitle: {0}</ControlSubtitleX>
+    <Coverage>Coverage</Coverage>
+    <CoveragePercentageX>{0:0.##}%</CoveragePercentageX>
+    <SortByCoverage>Sort by coverage</SortByCoverage>
+    <SortByTime>Sort by time</SortByTime>
+    <Reload>Re-verify</Reload>
+    <Insert>Insert</Insert>
+    <InsertAndNext>Insert and go to next</InsertAndNext>
+    <Dismiss>Dismiss</Dismiss>
+    <DismissAndNext>Dismiss and go to next</DismissAndNext>
+  </VerifyCompleteness>
   <VisualSync>
     <Title>Visual sync</Title>
     <StartScene>Start scene</StartScene>
