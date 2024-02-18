@@ -948,7 +948,7 @@ Aproveitamos o ritmo específico da imagem.</CreateSimpleChainingToolTip>
     <FixDoubleDash>Corrigir '--' -&gt; '...'</FixDoubleDash>
     <FixDoubleGreaterThan>Remover &gt;&gt;</FixDoubleGreaterThan>
     <FixEllipsesStart>Remover '...' no início</FixEllipsesStart>
-    <FixMissingOpenBracket>Corrigir [ omitido na linha</FixMissingOpenBracket>
+    <FixMissingOpenBracket>Corrigir [ or ( omitido na linha</FixMissingOpenBracket>
     <FixMusicNotation>Sustituir símbolos musicais (ex.: âTª) por símbolos adequados</FixMusicNotation>
     <FixDoubleDashExample>'Whoa-- um yeah!' -&gt; 'Whoa... um yeah!'</FixDoubleDashExample>
     <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Sup dude!' -&gt; 'Robert: Sup dude!'</FixDoubleGreaterThanExample>
