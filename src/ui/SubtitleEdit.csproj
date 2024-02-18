@@ -2454,9 +2454,11 @@
     <Content Include="Languages\fi-FI.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Languages\fr-BE.xml" />
     <Content Include="Languages\fr-FR.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Languages\he-IL.xml" />
     <Content Include="Languages\hr-HR.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
