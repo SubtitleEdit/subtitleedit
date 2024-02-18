@@ -956,7 +956,7 @@ Nous tirons parti du rythme intrinsèque de l'image.</CreateSimpleChainingToolTi
     <FixDoubleDash>Remplacer '--' par '…'</FixDoubleDash>
     <FixDoubleGreaterThan>Effacer les &gt;&gt;</FixDoubleGreaterThan>
     <FixEllipsesStart>Effacer les '…' en début de ligne</FixEllipsesStart>
-    <FixMissingOpenBracket>Apparier les [ dans une ligne</FixMissingOpenBracket>
+    <FixMissingOpenBracket>Apparier les [ ou ( dans une ligne</FixMissingOpenBracket>
     <FixMusicNotation>Remplacer les symboles musicaux (i.e. âTª) par le symbole préféré</FixMusicNotation>
     <FixDoubleDashExample>'Whoa-- um yeah!' -&gt; 'Whoa… um yeah!'</FixDoubleDashExample>
     <FixDoubleGreaterThanExample>'&gt;&gt; Robert: ça gaze !' -&gt; 'Robert: ça gaze !'</FixDoubleGreaterThanExample>
