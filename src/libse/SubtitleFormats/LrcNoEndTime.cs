@@ -81,22 +81,33 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 sb.AppendLine("[ti:" + title.Replace("[", string.Empty).Replace("]", string.Empty) + "]");
             }
 
-            if (!header.Contains("[re:", StringComparison.Ordinal))
+            if (header != null && !header.Contains("[re:", StringComparison.Ordinal))
             {
                 sb.AppendLine($"[re: {BySeText}]");
             }
 
-            if (!header.Contains("[ve:", StringComparison.Ordinal))
+            if (header != null && !header.Contains("[ve:", StringComparison.Ordinal))
             {
                 sb.AppendLine($"[ve: {Utilities.AssemblyVersion}]");
             }
 
             const string timeCodeFormat = "[{0:00}:{1:00}.{2:00}]{3}";
-            foreach (var p in subtitle.Paragraphs)
+            for (var index = 0; index < subtitle.Paragraphs.Count; index++)
             {
+                var p = subtitle.Paragraphs[index];
                 var text = HtmlUtil.RemoveHtmlTags(p.Text);
                 text = text.Replace(Environment.NewLine, " ");
-                sb.AppendLine(string.Format(timeCodeFormat, p.StartTime.Hours * 60 + p.StartTime.Minutes, p.StartTime.Seconds, (int)Math.Round(p.StartTime.Milliseconds / 10.0), text));
+
+                var fraction = (int)Math.Round(p.StartTime.Milliseconds / 10.0);
+                if (fraction >= 100)
+                {
+                    var ms = new TimeCode(p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, 0).TotalMilliseconds;
+                    ms += 1000;
+                    p = new Paragraph(p.Text, ms, p.EndTime.TotalMilliseconds);
+                    fraction = 0;
+                }
+
+                sb.AppendLine(string.Format(timeCodeFormat, p.StartTime.Hours * 60 + p.StartTime.Minutes, p.StartTime.Seconds, fraction, text));
             }
 
             return sb.ToString().Trim();

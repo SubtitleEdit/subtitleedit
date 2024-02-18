@@ -93,7 +93,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                 var text = HtmlUtil.RemoveHtmlTags(p.Text);
                 text = text.Replace(Environment.NewLine, " ");
-                sb.AppendLine(string.Format(timeCodeFormat, p.StartTime.Hours * 60 + p.StartTime.Minutes, p.StartTime.Seconds, (int)Math.Round(p.StartTime.Milliseconds / 10.0), text));
+                var fraction = (int)Math.Round(p.StartTime.Milliseconds / 10.0);
+                if (fraction >= 100)
+                {
+                    var ms = new TimeCode(p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, 0).TotalMilliseconds;
+                    ms += 1000;
+                    p = new Paragraph(p.Text, ms, p.EndTime.TotalMilliseconds);
+                    fraction = 0;
+                }
+
+                sb.AppendLine(string.Format(timeCodeFormat, p.StartTime.Hours * 60 + p.StartTime.Minutes, p.StartTime.Seconds, fraction, text));
 
                 if (next == null || next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds > 100)
                 {
