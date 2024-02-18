@@ -2,10 +2,12 @@
 
 4.0.4 (xth February 2024) BETA
 * NEW:
+   * Add "Verify completeness" (time covered) feature - thx Flitskikker
    * Add Whisper CPP model "small.en-q5_1.bin"
-   * Add shortcut for "Translate selected lines"
    * Add Gemini translate (beta, not all regions) - thx darnn
    * Add sorting of rules in "Multiple replace" - thx caioeverest 
+   * Add shortcut for "Translate selected lines"
+   * Add custom exit shortcut - thx Onthrax
 * IMPROVED:
    * Update Korean translation - thx domddol
    * Update Portuguese translation - thx hugok79
@@ -14,11 +16,15 @@
    * Update French translation - thx Pierre
    * Update Russian translation - thx elfriob
    * Improve auto-translate re-split (two lines only)
+   * Some "Beautify time codes" improvements - thx Flitskikker
    * Set file name after .MKS file import - thx RedSoxFan04
    * Faster cancel in auto-translate - thx Siamak
    * Update Whisper CPP to V1.5.4
    * Add Turkish for ChatGPT translate - thx Bel
    * Improve ANSI encoding auto detect - thx wifi-left
+   * Update Danish OCR dictionaries - thx Claus
+   * Add default icon for layout - thx PaulVeld
+   * Improve Macedonian language auto detect - thx Aco
 * FIXED:
    * Fix Papago translate - thx banziseo
    * Fix for "outputfilename" in cmd line with SUP source - thx sapphire-bt
@@ -30,6 +36,7 @@
    * Fix for counting string length with extended Unicode characters - thx Looi
    * Fix for MyMemory translate to Russian/Hebrew - thx darnn
    * Fix json text decode bug - thx darnn
+   * Fix for LRC time code bug - thx fineless71
 
 
 4.0.3 (23rd December 2023)
