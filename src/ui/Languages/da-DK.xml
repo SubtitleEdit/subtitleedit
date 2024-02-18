@@ -10,6 +10,7 @@
     <Cancel>&amp;Fortryd</Cancel>
     <Yes>Ja</Yes>
     <No>Nej</No>
+    <Close>Luk</Close>
     <Apply>Anvend</Apply>
     <ApplyTo>Anvend for</ApplyTo>
     <None>Ingen</None>
@@ -398,6 +399,13 @@ Klik venligst på "{0}" for at generere eller importere skudændringer først, e
     <BatchAlignTimeCodes>Juster tidskoder til frame-tidskoder</BatchAlignTimeCodes>
     <BatchUseExactTimeCodes>Brug nøjagtige tidskoder (hvis tilgængelig)</BatchUseExactTimeCodes>
     <BatchSnapToShotChanges>Snap signaler til skudændringer (hvis tilgængelig)</BatchSnapToShotChanges>
+    <UnfixableParagraphsTitle>Gennemgå ikke fuldt kædede undertekster</UnfixableParagraphsTitle>
+    <UnfixableParagraphsInstructions>Nogle undertekster var ikke fuldt kædet i overensstemmelse med din profil, sandsynligvis på grund af for tæt grupperede skudændringer (muligvis falske positiver).
+
+Det kan være en god idé at gennemgå disse manuelt for at sikre, at dine segmenter bliver snappet til de korrekte shot changes.</UnfixableParagraphsInstructions>
+    <UnfixableParagraphsColumnParagraphs>Linjer</UnfixableParagraphsColumnParagraphs>
+    <UnfixableParagraphsColumnParagraphsFormat>#{0} – #{1}</UnfixableParagraphsColumnParagraphsFormat>
+    <UnfixableParagraphsColumnGap>Mellemrum (rammer)</UnfixableParagraphsColumnGap>
   </BeautifyTimeCodes>
   <BeautifyTimeCodesProfile>
     <Title>Rediger profil</Title>
@@ -421,6 +429,7 @@ Klik venligst på "{0}" for at generere eller importere skudændringer først, e
     <Chaining>Kædning</Chaining>
     <InCueOnShot>I kø ved sceneskift</InCueOnShot>
     <OutCueOnShot>Out cue på sceneskift</OutCueOnShot>
+    <CheckGeneral></CheckGeneral>
     <MaxGap>Maks.  gap</MaxGap>
     <ShotChangeBehavior>Hvis der er et skudskifte imellem:</ShotChangeBehavior>
     <DontChain>Sammenkød ikke</DontChain>
@@ -1312,6 +1321,7 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Bi
         <CloseTranslation>Luk oversat undertekst</CloseTranslation>
         <OpenContainingFolder>Åbn indeholdende mappe</OpenContainingFolder>
         <Compare>Sammenlign...</Compare>
+        <VerifyCompleteness>Bekræft fuldstændigheden...</VerifyCompleteness>
         <Statistics>Statistik...</Statistics>
         <Plugins>Plugins...</Plugins>
         <ImportSubtitleFromVideoFile>Undertekst fra videofil...</ImportSubtitleFromVideoFile>
@@ -1558,6 +1568,7 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Bi
         <Subscript>Subscript</Subscript>
         <Alignment>Justering...</Alignment>
         <AutoBalanceSelectedLines>Auto balancer markerede linjer...</AutoBalanceSelectedLines>
+        <EvenlyDistributeSelectedLines>Jævnt fordelt udvalgte linjer (CPS)</EvenlyDistributeSelectedLines>
         <RemoveLineBreaksFromSelectedLines>Fjern line-skift fra valgte linjer...</RemoveLineBreaksFromSelectedLines>
         <TypewriterEffect>Skrivemaskine effekt...</TypewriterEffect>
         <KaraokeEffect>Karaoke effekt...</KaraokeEffect>
@@ -1829,6 +1840,8 @@ Fortsæt?</SubtitleAppendPrompt>
     <SortedByX>Sorteret efter: {0}</SortedByX>
     <BeforeAutoBalanceSelectedLines>Før auto balancer markerede linjer</BeforeAutoBalanceSelectedLines>
     <NumberOfLinesAutoBalancedX>Antal af linjer auto balanceret: {0}</NumberOfLinesAutoBalancedX>
+    <BeforeEvenlyDistributeSelectedLines>Før jævnt fordel udvalgte linjer</BeforeEvenlyDistributeSelectedLines>
+    <NumberOfLinesEvenlyDistributedX>Antal ligeligt fordelte linjer: {0}</NumberOfLinesEvenlyDistributedX>
     <BeforeRemoveLineBreaksInSelectedLines>Før fjern line-skift fra valgte linjer</BeforeRemoveLineBreaksInSelectedLines>
     <NumberOfWithRemovedLineBreakX>Antallet af linjer med fjernet linjeskift: {0}</NumberOfWithRemovedLineBreakX>
     <BeforeMultipleReplace>Før multi søg og erstat</BeforeMultipleReplace>
@@ -2599,6 +2612,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <MergeDialogWithNext>Flet dialog med næste (indsæt bindestreger)</MergeDialogWithNext>
     <MergeDialogWithPrevious>Flet dialog med forrige (indsæt bindestreger)</MergeDialogWithPrevious>
     <AutoBalanceSelectedLines>Autobalancer valgte linjer</AutoBalanceSelectedLines>
+    <EvenlyDistributeSelectedLines>Jævnt fordelt udvalgte linjer (CPS)</EvenlyDistributeSelectedLines>
     <GoToNext>Gå til næste linje</GoToNext>
     <GoToNextPlayTranslate>Gå til næste linje (og spil i 'Oversæt tilstand')</GoToNextPlayTranslate>
     <GoToNextCursorAtEnd>Gå til næste linje, og indstil markøren i slutningen</GoToNextCursorAtEnd>
@@ -2698,6 +2712,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <AudioExtractSelectedLines>Udpak lyd (udvalgte linjer)</AudioExtractSelectedLines>
     <AudioToTextSelectedLinesX>Lyd til tekst valgte linjer ({0})</AudioToTextSelectedLinesX>
     <VideoToggleBrightness>Skift lysstyrke (kun mpv)</VideoToggleBrightness>
+    <AutoTranslateSelectedLines>Auto-oversæt valgte linjer</AutoTranslateSelectedLines>
     <CustomSearch1>Oversæt, brugerdefineret søgning 1</CustomSearch1>
     <CustomSearch2>Oversæt, brugerdefineret søgning 2</CustomSearch2>
     <CustomSearch3>Oversæt, brugerdefineret søgning 3</CustomSearch3>
@@ -2827,6 +2842,8 @@ Fortsæt?</RestoreDefaultSettingsMsg>
     <ExportAsHtml>Eksporter som HTML...</ExportAsHtml>
     <SetNewActor>Sæt ny skuespiller/stemme</SetNewActor>
     <SetActorX>Sæt skuespiller/stemme {0}</SetActorX>
+    <Used>Brugt</Used>
+    <Unused>Ubrugt</Unused>
   </Settings>
   <SettingsMpv>
     <DownloadMpv>Hent MPV lib</DownloadMpv>
@@ -3140,6 +3157,21 @@ Fortsæt?</RestoreDefaultSettingsMsg>
     <Message>Hvis du ønsker, at denne undertekst type skal kunne indlæses, bedes du sende en mail til mailto: niksedk@gmail.com og vedhæfte en kopi af underteksten.</Message>
     <ImportAsPlainText>Import som almindelig tekst...</ImportAsPlainText>
   </UnknownSubtitle>
+  <VerifyCompleteness>
+    <Title>Bekræft fuldstændigheden mod andre undertekster</Title>
+    <OpenControlSubtitle>Åbn kontrol undertekst</OpenControlSubtitle>
+    <ControlSubtitleError>Kontrol undertekst er tom eller kunne ikke indlæses.</ControlSubtitleError>
+    <ControlSubtitleX>Kontrol undertekst: {0}</ControlSubtitleX>
+    <Coverage>Dækning</Coverage>
+    <CoveragePercentageX>{0:0.##}%</CoveragePercentageX>
+    <SortByCoverage>Sorter efter dækning</SortByCoverage>
+    <SortByTime>Sorter efter tid</SortByTime>
+    <Reload>Bekræft igen</Reload>
+    <Insert>Indsæt</Insert>
+    <InsertAndNext>Indsæt og gå til næste</InsertAndNext>
+    <Dismiss>Afskedige</Dismiss>
+    <DismissAndNext>Afvis og gå til næste</DismissAndNext>
+  </VerifyCompleteness>
   <VisualSync>
     <Title>Visual synkroniser</Title>
     <StartScene>Start scene</StartScene>
