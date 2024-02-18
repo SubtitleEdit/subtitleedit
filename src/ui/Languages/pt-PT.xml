@@ -11,6 +11,7 @@ E-mail: mailto:hugokarvalho@hotmail.com</TranslatedBy>
     <Cancel>C&amp;ancelar</Cancel>
     <Yes>Sim</Yes>
     <No>Não</No>
+    <Close>Fechar</Close>
     <Apply>Aplicar</Apply>
     <ApplyTo>Aplicar a</ApplyTo>
     <None>Nenhum</None>
@@ -405,6 +406,13 @@ Clique em "{0}" para gerar ou importar primeiro as mudanças de cena ou desactiv
     <BatchAlignTimeCodes>Alinhar tempos com os tempos do fotograma</BatchAlignTimeCodes>
     <BatchUseExactTimeCodes>Usar tempos exactos (se disponível)</BatchUseExactTimeCodes>
     <BatchSnapToShotChanges>Encaixar deixas nas mudanças de cena (se disponível)</BatchSnapToShotChanges>
+    <UnfixableParagraphsTitle>Rever legendas não totalmente encadeadas</UnfixableParagraphsTitle>
+    <UnfixableParagraphsInstructions>Algumas legendas não foram totalmente encadeadas de acordo com o seu perfil, muito provavelmente devido a mudanças de cenas demasiado agrupadas (possivelmente falsos positivos).
+
+Poderá querer rever estes casos manualmente para garantir que as suas deixas são encaixadas nas alterações correctas (reais) da cena.</UnfixableParagraphsInstructions>
+    <UnfixableParagraphsColumnParagraphs>Linhas</UnfixableParagraphsColumnParagraphs>
+    <UnfixableParagraphsColumnParagraphsFormat>#{0} – #{1}</UnfixableParagraphsColumnParagraphsFormat>
+    <UnfixableParagraphsColumnGap>Intervalo (fotogramas)</UnfixableParagraphsColumnGap>
   </BeautifyTimeCodes>
   <BeautifyTimeCodesProfile>
     <Title>Editar perfil</Title>
@@ -428,6 +436,7 @@ Clique em "{0}" para gerar ou importar primeiro as mudanças de cena ou desactiv
     <Chaining>Encadeamento</Chaining>
     <InCueOnShot>Deixa de entrada na mudança de cena</InCueOnShot>
     <OutCueOnShot>Deixa de saida na mudança de cena</OutCueOnShot>
+    <CheckGeneral>Continuam a aplicar as regras gerais quando não são afectadas</CheckGeneral>
     <MaxGap>Intervalo Máximo:</MaxGap>
     <ShotChangeBehavior>Se houver uma mudança de cena no meio:</ShotChangeBehavior>
     <DontChain>Não encadear</DontChain>
@@ -1320,6 +1329,7 @@ Para usar a chave API, vá a "Opções -&gt; Definições -&gt; Tradução autom
         <CloseTranslation>Fechar legenda traduzida</CloseTranslation>
         <OpenContainingFolder>Abrir pasta</OpenContainingFolder>
         <Compare>&amp;Comparar...</Compare>
+        <VerifyCompleteness>Verificar a integralidade...</VerifyCompleteness>
         <Statistics>Estatís&amp;ticas...</Statistics>
         <Plugins>&amp;Plugins...</Plugins>
         <ImportSubtitleFromVideoFile>Legenda do ficheiro de vídeo...</ImportSubtitleFromVideoFile>
@@ -1566,6 +1576,7 @@ Para usar a chave API, vá a "Opções -&gt; Definições -&gt; Tradução autom
         <Subscript>Subscript</Subscript>
         <Alignment>Alinhamento...</Alignment>
         <AutoBalanceSelectedLines>Auto-ajustar linhas seleccionadas...</AutoBalanceSelectedLines>
+        <EvenlyDistributeSelectedLines>Distribuir uniformemente as linhas seleccionadas (CPS)</EvenlyDistributeSelectedLines>
         <RemoveLineBreaksFromSelectedLines>Remover quebras de linha das linhas seleccionadas...</RemoveLineBreaksFromSelectedLines>
         <TypewriterEffect>Efeito máquina de escrever...</TypewriterEffect>
         <KaraokeEffect>Efeito Karaoke...</KaraokeEffect>
@@ -1837,6 +1848,8 @@ Continuar?</SubtitleAppendPrompt>
     <SortedByX>Ordenado por: {0}</SortedByX>
     <BeforeAutoBalanceSelectedLines>Antes de auto-ajustar linhas seleccionadas</BeforeAutoBalanceSelectedLines>
     <NumberOfLinesAutoBalancedX>Número de linhas ajustadas automaticamente: {0}</NumberOfLinesAutoBalancedX>
+    <BeforeEvenlyDistributeSelectedLines>Antes de distribuir uniformemente as linhas seleccionadas</BeforeEvenlyDistributeSelectedLines>
+    <NumberOfLinesEvenlyDistributedX>Número de linhas distribuídas uniformemente: {0}</NumberOfLinesEvenlyDistributedX>
     <BeforeRemoveLineBreaksInSelectedLines>Antes de remover quebras de linha das linhas seleccionadas</BeforeRemoveLineBreaksInSelectedLines>
     <NumberOfWithRemovedLineBreakX>Número de linhas com quebra removidas: {0}</NumberOfWithRemovedLineBreakX>
     <BeforeMultipleReplace>Antes da substituição múltipla</BeforeMultipleReplace>
@@ -2610,6 +2623,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <MergeDialogWithNext>Combinar os diálogos com a seguinte (inserir travessões)</MergeDialogWithNext>
     <MergeDialogWithPrevious>Combinar os diálogos com a anterior (inserir travessões)</MergeDialogWithPrevious>
     <AutoBalanceSelectedLines>Auto-ajustar linhas seleccionadas</AutoBalanceSelectedLines>
+    <EvenlyDistributeSelectedLines>Distribuir uniformemente as linhas seleccionadas (CPS)</EvenlyDistributeSelectedLines>
     <GoToNext>Ir para a linha seguinte</GoToNext>
     <GoToNextPlayTranslate>Ir para a linha seguinte (e reproduzir no 'Modo de tradução')</GoToNextPlayTranslate>
     <GoToNextCursorAtEnd>Ir para a linha seguinte e pôr o cursor no fim</GoToNextCursorAtEnd>
@@ -2839,6 +2853,8 @@ Continuar?</RestoreDefaultSettingsMsg>
     <ExportAsHtml>Exportar como HTML...</ExportAsHtml>
     <SetNewActor>Definir novo actor/voz</SetNewActor>
     <SetActorX>Definir actor/voz {0}</SetActorX>
+    <Used>Usado</Used>
+    <Unused>Não usado</Unused>
   </Settings>
   <SettingsMpv>
     <DownloadMpv>Transferir o mpv lib</DownloadMpv>
@@ -3152,6 +3168,21 @@ Continuar?</RestoreDefaultSettingsMsg>
     <Message>Se quer que isto seja corrigido, envie um e-mail para mailto:niksedk@gmail.com e inclua uma cópia da legenda.</Message>
     <ImportAsPlainText>Importar como texto sem formatação...</ImportAsPlainText>
   </UnknownSubtitle>
+  <VerifyCompleteness>
+    <Title>Verificar a integralidade em relação a outras legendas</Title>
+    <OpenControlSubtitle>Abrir legenda de controlo</OpenControlSubtitle>
+    <ControlSubtitleError>A legenda de controlo está vazia ou não pôde ser carregada.</ControlSubtitleError>
+    <ControlSubtitleX>Legenda de controlo: {0}</ControlSubtitleX>
+    <Coverage>Cobertura</Coverage>
+    <CoveragePercentageX>{0:0.##}%</CoveragePercentageX>
+    <SortByCoverage>Ordenar por cobertura</SortByCoverage>
+    <SortByTime>Ordenar por tempo</SortByTime>
+    <Reload>Verificar novamente</Reload>
+    <Insert>Inserir</Insert>
+    <InsertAndNext>Inserir e ir para a seguinte</InsertAndNext>
+    <Dismiss>Rejeitar</Dismiss>
+    <DismissAndNext>Rejeitar e ir para a seguinte</DismissAndNext>
+  </VerifyCompleteness>
   <VisualSync>
     <Title>Sincronia visual</Title>
     <StartScene>Cena inicial</StartScene>
