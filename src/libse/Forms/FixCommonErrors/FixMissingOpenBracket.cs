@@ -8,7 +8,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
     {
         public static class Language
         {
-            public static string FixMissingOpenBracket { get; set; } = "Fix missing [ in line";
+            public static string FixMissingOpenBracket { get; set; } = "Fix missing [ or ( in line";
         }
 
         private static string Fix(string text, string openB)
