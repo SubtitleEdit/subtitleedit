@@ -1210,7 +1210,7 @@ namespace Nikse.SubtitleEdit.Logic
                 FixDoubleDash = "Fix '--' -> '...'",
                 FixDoubleGreaterThan = "Remove '>>'",
                 FixEllipsesStart = "Remove leading '...'",
-                FixMissingOpenBracket = "Fix missing [ in line",
+                FixMissingOpenBracket = "Fix missing [ or ( in line",
                 FixMusicNotation = "Replace music symbols (e.g. âTª) with preferred symbol",
                 FixDoubleDashExample = "'Whoa-- um yeah!' -> 'Whoa... um yeah!'",
                 FixDoubleGreaterThanExample = "'>> Robert: Sup dude!' -> 'Robert: Sup dude!'",
