@@ -3874,6 +3874,7 @@
     <LinePart from="da li si" to="jesi li" />
     <LinePart from="Da li su" to="Jesu li" />
     <LinePart from="da li su" to="jesu li" />
+    <LinePart from="Dali si" to="Jesi li" />
     <LinePart from="dali si" to="jesi li" />
     <LinePart from="da li će" to="hoće li" />
     <LinePart from="dali će" to="hoće li" />
@@ -5113,8 +5114,7 @@
     <RegEx find="dnp" replaceWith="dno" />
     <RegEx find="dnr" replaceWith="dne" />
     <RegEx find="doustal" replaceWith="odustal" />
-    <RegEx find="dps" replaceWith="dos" />
-    <RegEx find="dpš" replaceWith="doš" />
+    <RegEx find="dp([nsš])" replaceWith="do$1" />
     <RegEx find="domač" replaceWith="domać" />
     <RegEx find="\bdral" replaceWith="deral" />
     <RegEx find="dranj" replaceWith="deranj" />
@@ -5369,6 +5369,7 @@
     <RegEx find="ptv" replaceWith="otv" />
     <RegEx find="pwn" replaceWith="pen" />
     <RegEx find="ralijs" replaceWith="rals" />
+    <RegEx find="redt" replaceWith="reds" />
     <RegEx find="(?&lt;!v)rck" replaceWith="rek" />
     <RegEx find="resjedav" replaceWith="redsjedav" />
     <RegEx find="kratij" replaceWith="kracij" />
