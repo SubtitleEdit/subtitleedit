@@ -924,6 +924,7 @@
     <Word from="kvalifikuju" to="kvalificiraju" />
     <!-- l L -->
     <Word from="lk" to="li" />
+    <Word from="Lenje" to="Lijene" />
     <Word from="lenjivci" to="ljenjivci" />
     <Word from="laže me" to="laže mi" />
     <Word from="Lažov" to="Lažljivac" />
@@ -1110,6 +1111,7 @@
     <Word from="minut" to="minutu" />
     <Word from="miraš" to="moraš" />
     <Word from="Mislo" to="Mislio" />
+    <Word from="misiliš" to="misliš" />
     <Word from="mje" to="moje" />
     <Word from="mleo" to="mljeo" />
     <Word from="Mođe" to="Može" />
@@ -1647,6 +1649,8 @@
     <Word from="poistovetim" to="poistovjetim" />
     <Word from="pojačaću" to="pojačat ću" />
     <Word from="pokavi" to="pojavi" />
+    <Word from="Pokazaču" to="Pokazat ću" />
+  	<Word from="pokazaču" to="pokazat ću" />
     <Word from="Pokušaču" to="Pokušat ću" />
     <Word from="pokušaču" to="pokušat ću" />
     <Word from="pokušaću" to="pokušat ću" />
@@ -2749,6 +2753,7 @@
     <Word from="Vaistinu" to="Uistinu" />
     <Word from="vajar" to="kipar" />
     <Word from="vakciniše" to="cijepi" />
+    <Word from="vanjskeg" to="vanjskog" />
     <Word from="varaćeš" to="varat ćeš" />
     <Word from="varnica" to="iskra" />
     <Word from="varnicu" to="iskru" />
@@ -5277,6 +5282,7 @@
     <RegEx find="(?&lt;!a)ndm" replaceWith="nem" />
     <RegEx find="([^\s]+)nesl" replaceWith="$1nijel" />
     <RegEx find="nešen" replaceWith="nesen" />
+    <RegEx find="(?&lt;!ku)nićem" replaceWith="nit ćem" />
     <RegEx find="nimp" replaceWith="nimo" />
     <RegEx find="(?&lt;!a)nks" replaceWith="nsk" />
     <RegEx find="ngažuj" replaceWith="ngažiraj" />
@@ -5659,7 +5665,7 @@
     <RegEx find="Džordž" replaceWith="George" />
     <RegEx find="Džoš" replaceWith="Josh" />
     <RegEx find="Džouns" replaceWith="Jones" />
-    <RegEx find="Džulij" replaceWith="Juli" />
+    <RegEx find="Džul" replaceWith="Jul" />
     <RegEx find="Džunior" replaceWith="Junior" />
     <RegEx find="Efrejm" replaceWith="Ephraim" />
     <RegEx find="Ejmos" replaceWith="Amos" />
@@ -5710,6 +5716,7 @@
     <RegEx find="Klej" replaceWith="Clay" />
     <RegEx find="Klif" replaceWith="Cliff" />
     <RegEx find="Klivlend" replaceWith="Cleveland" />
+    <RegEx find="Kloe" replaceWith="Chloe" />
     <RegEx find="Kluni" replaceWith="Clooney" />
     <RegEx find="Konn?ektik[aeu]t" replaceWith="Connecticut" />
     <RegEx find="Korejan" replaceWith="Korej" />
@@ -5738,6 +5745,7 @@
     <RegEx find="Menhetn" replaceWith="Manhattan" />
     <RegEx find="Metju" replaceWith="Matthew" />
     <RegEx find="Mexic" replaceWith="Meksik" />
+    <RegEx find="Mič" replaceWith="Mitch" />
     <RegEx find="ičigen" replaceWith="ichigan" />
     <RegEx find="ilvoki" replaceWith="illwaukee" />
     <RegEx find="Misuri" replaceWith="Missouri" />
@@ -5812,7 +5820,7 @@
     <RegEx find="\b\|\b" replaceWith="I" />
 
     <RegEx find="da li se (\w+)" replaceWith="$1 li se" />
-    <RegEx find=" ([Ss])a(?![szš]\b)" replaceWith=" $1 " />
+    <!-- <RegEx find=" ([Ss])a(?![szš]\b)" replaceWith=" $1 " /> -->
 
     <!--<RegEx find="s ([szž])" replaceWith="sa $1" />-->
     
