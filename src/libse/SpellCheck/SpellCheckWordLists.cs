@@ -517,7 +517,10 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
 
         public bool HasNameExtended(string word, string text)
         {
-            return _namesListUppercase.Contains(word) || _namesListWithApostrophe.Contains(word) || _nameList.IsInNamesMultiWordList(text, word);
+            return _namesListUppercase.Contains(word) || 
+                   _namesListWithApostrophe.Contains(word) ||
+                   _nameList.IsInNamesMultiWordList(text, word) ||
+                   _namesListUppercase.Contains(word);
         }
 
         public bool HasUserWord(string word)

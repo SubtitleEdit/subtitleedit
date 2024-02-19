@@ -1152,6 +1152,15 @@ namespace Nikse.SubtitleEdit.Forms
                                     _noOfNames++;
                                 }
                             }
+
+                            if (!correct && _wordsIndex > 0) // check name concat with previous word
+                            {
+                                var wordConCat = _words[_wordsIndex - 1].Text +  " " + _currentWord;
+                                if (_spellCheckWordLists.HasNameExtended(wordConCat, _currentParagraph.Text))
+                                {
+                                    correct = true;
+                                }
+                            }
                         }
                         else
                         {
