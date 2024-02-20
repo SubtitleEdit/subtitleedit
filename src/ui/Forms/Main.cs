@@ -24972,14 +24972,6 @@ namespace Nikse.SubtitleEdit.Forms
                     Configuration.Settings.General.ShowVideoControls = form.ShowVideoControls;
                     ToggleVideoControlsOnOff(form.ShowVideoControls);
                 }
-
-                if (!string.IsNullOrEmpty(_fileName) && 
-                    string.IsNullOrEmpty(_videoFileName) &&
-                    !Configuration.Settings.General.DisableVideoAutoLoading &&
-                    mediaPlayer.Visible)
-                {
-                    TryToFindAndOpenVideoFile(Utilities.GetPathAndFileNameWithoutExtension(_fileName));
-                }
             }
         }
 
@@ -24999,6 +24991,14 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             MainResize();
+
+            if (!string.IsNullOrEmpty(_fileName) &&
+                string.IsNullOrEmpty(_videoFileName) &&
+                !Configuration.Settings.General.DisableVideoAutoLoading &&
+                mediaPlayer.Visible)
+            {
+                TryToFindAndOpenVideoFile(Utilities.GetPathAndFileNameWithoutExtension(_fileName));
+            }
         }
 
         public void ShowEarlierOrLater(double adjustMilliseconds, SelectionChoice selection)
