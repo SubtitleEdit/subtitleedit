@@ -10,6 +10,7 @@
     <Cancel>取消(&amp;A)</Cancel>
     <Yes>是</Yes>
     <No>否</No>
+    <Close>关闭</Close>
     <Apply>应用</Apply>
     <ApplyTo>应用于</ApplyTo>
     <None>无</None>
@@ -404,6 +405,12 @@ Command line: {1} {2}
     <BatchAlignTimeCodes>将时间码与帧时间码对齐</BatchAlignTimeCodes>
     <BatchUseExactTimeCodes>使用准确的时间码（如果可用）</BatchUseExactTimeCodes>
     <BatchSnapToShotChanges>捕捉提示的场景变化（如果有）</BatchSnapToShotChanges>
+    <UnfixableParagraphsTitle>查看未完全链接的字幕</UnfixableParagraphsTitle>
+    <UnfixableParagraphsInstructions>一些字幕没有根据您的配置完全链接，这很可能是由于过于密集的镜头变化（可能是误报）。
+您可能需要手动查看这些字幕，以确保其与正确的（真实的）镜头变化一致。</UnfixableParagraphsInstructions>
+    <UnfixableParagraphsColumnParagraphs>行</UnfixableParagraphsColumnParagraphs>
+    <UnfixableParagraphsColumnParagraphsFormat>#{0} – #{1}</UnfixableParagraphsColumnParagraphsFormat>
+    <UnfixableParagraphsColumnGap>间隔（帧）</UnfixableParagraphsColumnGap>
   </BeautifyTimeCodes>
   <BeautifyTimeCodesProfile>
     <Title>编辑配置</Title>
@@ -427,6 +434,7 @@ Command line: {1} {2}
     <Chaining>链接</Chaining>
     <InCueOnShot>入点提示处场景变化</InCueOnShot>
     <OutCueOnShot>出点提示处场景变化</OutCueOnShot>
+    <CheckGeneral>在不受影响的情况下仍执行通用规则</CheckGeneral>
     <MaxGap>最大间隔：</MaxGap>
     <ShotChangeBehavior>如果中间有场景变化：</ShotChangeBehavior>
     <DontChain>不要链接</DontChain>
@@ -1313,6 +1321,7 @@ Command line: {1} {2}
         <CloseTranslation>关闭翻译字幕</CloseTranslation>
         <OpenContainingFolder>打开所在文件夹</OpenContainingFolder>
         <Compare>比较(&amp;C)...</Compare>
+        <VerifyCompleteness>验证完整性...</VerifyCompleteness>
         <Statistics>统计(&amp;C)...</Statistics>
         <Plugins>插件(&amp;P)...</Plugins>
         <ImportSubtitleFromVideoFile>从视频文件中导入字幕...</ImportSubtitleFromVideoFile>
@@ -1559,6 +1568,7 @@ Command line: {1} {2}
         <Subscript>下标</Subscript>
         <Alignment>排列...</Alignment>
         <AutoBalanceSelectedLines>自动平衡所选行...</AutoBalanceSelectedLines>
+        <EvenlyDistributeSelectedLines>均匀分布所选行 (CPS)</EvenlyDistributeSelectedLines>
         <RemoveLineBreaksFromSelectedLines>删除所选行的换行符...</RemoveLineBreaksFromSelectedLines>
         <TypewriterEffect>打字机效果...</TypewriterEffect>
         <KaraokeEffect>卡拉 OK 效果...</KaraokeEffect>
@@ -1827,6 +1837,8 @@ Command line: {1} {2}
     <SortedByX>排序方式: {0}</SortedByX>
     <BeforeAutoBalanceSelectedLines>自动平衡所选行之前</BeforeAutoBalanceSelectedLines>
     <NumberOfLinesAutoBalancedX>自动平衡行数: {0}</NumberOfLinesAutoBalancedX>
+    <BeforeEvenlyDistributeSelectedLines>均匀分布所选行之前</BeforeEvenlyDistributeSelectedLines>
+    <NumberOfLinesEvenlyDistributedX>均匀分布的行数：{0}</NumberOfLinesEvenlyDistributedX>
     <BeforeRemoveLineBreaksInSelectedLines>从所选行删除换行符之前</BeforeRemoveLineBreaksInSelectedLines>
     <NumberOfWithRemovedLineBreakX>已删除换行符的行数: {0}</NumberOfWithRemovedLineBreakX>
     <BeforeMultipleReplace>多重替换之前</BeforeMultipleReplace>
@@ -2596,6 +2608,7 @@ Command line: {1} {2}
     <MergeDialogWithNext>与下一条合并对话 (插入破折号)</MergeDialogWithNext>
     <MergeDialogWithPrevious>与上一条合并对话 (插入破折号)</MergeDialogWithPrevious>
     <AutoBalanceSelectedLines>自动平衡选中行</AutoBalanceSelectedLines>
+    <EvenlyDistributeSelectedLines>均匀分布所选行 (CPS)</EvenlyDistributeSelectedLines>
     <GoToNext>转到下一行</GoToNext>
     <GoToNextPlayTranslate>转到下一行（并以“翻译模式”播放）</GoToNextPlayTranslate>
     <GoToNextCursorAtEnd>转到下一行并将光标置于末尾</GoToNextCursorAtEnd>
@@ -2824,6 +2837,8 @@ Command line: {1} {2}
     <ExportAsHtml>导出为 HTML...</ExportAsHtml>
     <SetNewActor>设置新角色/配音</SetNewActor>
     <SetActorX>设置角色/配音 {0}</SetActorX>
+    <Used>已用</Used>
+    <Unused>未用</Unused>
   </Settings>
   <SettingsMpv>
     <DownloadMpv>下载 mpv 库</DownloadMpv>
@@ -3137,6 +3152,21 @@ Command line: {1} {2}
     <Message>如果您要修复这个问题请发送电子邮件到 mailto:niksedk@gmail.com，并附上该字幕的副本。</Message>
     <ImportAsPlainText>以纯文本导入...</ImportAsPlainText>
   </UnknownSubtitle>
+  <VerifyCompleteness>
+    <Title>对照其他字幕验证完整性</Title>
+    <OpenControlSubtitle>打开控制字幕</OpenControlSubtitle>
+    <ControlSubtitleError>控制字幕为空或无法加载。</ControlSubtitleError>
+    <ControlSubtitleX>控制字幕：{0}</ControlSubtitleX>
+    <Coverage>覆盖率</Coverage>
+    <CoveragePercentageX>{0:0.##}%</CoveragePercentageX>
+    <SortByCoverage>按覆盖率排序</SortByCoverage>
+    <SortByTime>按时间排序</SortByTime>
+    <Reload>重新验证</Reload>
+    <Insert>插入</Insert>
+    <InsertAndNext>插入并转到下一条</InsertAndNext>
+    <Dismiss>忽略</Dismiss>
+    <DismissAndNext>忽略并转到下一条</DismissAndNext>
+  </VerifyCompleteness>
   <VisualSync>
     <Title>影音对照同步</Title>
     <StartScene>起始场景</StartScene>
