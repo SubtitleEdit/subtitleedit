@@ -98,6 +98,9 @@
     <Word from="biblijom" to="Biblijom" />
     <Word from="biblijama" to="Biblijama" />
     <Word from="biit" to="biti" />
+    <Word from="bije" to="tuče" />
+    <Word from="bijemo" to="tučemo" />
+
     <Word from="bioje" to="bio je" />
     <Word from="bi smo" to="bismo" />
     <Word from="bi ste" to="biste" />
@@ -504,7 +507,9 @@
     <Word from="gorela" to="gorjela" />
     <Word from="greše" to="griješe" />
     <Word from="grješe" to="griješe" />
+    <Word from="Greši" to="Griješi" />
     <Word from="greši" to="griješi" />
+    <Word from="grešiš" to="griješiš" />
     <Word from="grješi" to="griješi" />
     <Word from="greški" to="grešci" />
     <Word from="grijehova" to="grijeha" />
@@ -2302,6 +2307,7 @@
     <Word from="sovga" to="svoga" />
     <Word from="Sovga" to="Svoga" />
     <Word from="Spakuj" to="Spakiraj" />
+    <Word from="spakuje" to="spakira" />
     <Word from="spakujem" to="spakiram" />
     <Word from="Spakujem" to="Spakiram" />
     <Word from="Spakujte" to="Spakirajte" />
@@ -2724,6 +2730,7 @@
     <Word from="usledila" to="uslijedila" />
     <Word from="usljed" to="uslijed" />
     <Word from="Usljed" to="Uslijed" />
+    <Word from="Ustupiće" to="Ustupit će" />
     <Word from="ušunjate" to="ušuljate" />
     <Word from="ušutala" to="ušutjela" />
     <Word from="ušutao" to="ušutio" />
@@ -5315,6 +5322,7 @@
     <RegEx find="nović" replaceWith="novit ć" />
     <RegEx find="np([dgsz])" replaceWith="no$1" />
     <RegEx find="nr([dkm])" replaceWith="ne$1" />
+    <RegEx find="(?&lt;!a)nsm" replaceWith="nam" />
     <RegEx find="nsj" replaceWith="naj" />
     <RegEx find="nskio" replaceWith="nksio" />
     <RegEx find="ntis" replaceWith="ntir" />
