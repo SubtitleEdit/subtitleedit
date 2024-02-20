@@ -63,6 +63,7 @@
     <Word from="bekstva" to="bijega" />
     <Word from="bekstvo" to="bijeg" />
     <Word from="bekstvu" to="bijegu" />
+    <Word from="belačka" to="bjelačka" />
     <Word from="belački" to="bjelački" />
     <Word from="belačko" to="bjelačko" />
     <Word from="belče" to="bijelče" />
@@ -676,6 +677,8 @@
     <Word from="izbelela" to="izbijelila" />
     <Word from="izbjeljen" to="izbijeljen" />
     <Word from="izbeljen" to="izbijeljen" />
+    <Word from="Izbiću" to="Izbit ću" />
+    <Word from="izbiću" to="izbit ću" />
     <Word from="izbošću" to="izbost ću" />
     <Word from="izdaće" to="izdat će" />
     <Word from="Izdaće" to="Izdat će" />
@@ -786,6 +789,7 @@
     <Word from="kandidujem" to="kandidiram" />
     <Word from="kapar" to="kopar" />
     <Word from="kapra" to="kopra" />
+    <Word from="kapućino" to="kapučino" />
     <Word from="karmin" to="ruž" />
     <Word from="karminom" to="ružem" />
     <Word from="kazino" to="kasino" />
@@ -2865,6 +2869,7 @@
     <Word from="vrednim" to="vrijednim" />
     <Word from="vrednom" to="vrijednom" />
     <Word from="vrednog" to="vrijednog" />
+    <Word from="vrednost" to="vrijednost" />
     <Word from="vreme" to="vrijeme" />
     <Word from="vrjedeo" to="vrijedio" />
     <Word from="vrijedeo" to="vrijedio" />
@@ -3338,6 +3343,7 @@
     <Word from="Sete" to="Sethe" />
     <Word from="Sidni" to="Sidney" />
     <Word from="Sindi" to="Cindy" />
+    <Word from="Skajler" to="Skyler" />
     <Word from="Sloun" to="Sloane" />
     <Word from="Sojer" to="Sawyer" />
     <Word from="Sojeru" to="Sawyeru" />
@@ -3999,6 +4005,7 @@
     <LinePart from="možemo da budemo" to="možemo biti" />
     <LinePart from="možemo da idemo" to="možemo ići" />
     <LinePart from="možemo da imamo" to="možemo imati" />
+    <LinePart from="možemo da prestanemo" to="možemo prestati" />
     <LinePart from="možete da idete" to="možete ići" />
     <LinePart from="Možete da idete" to="Možete ići" />
     <LinePart from="može da zna" to="može znati" />
