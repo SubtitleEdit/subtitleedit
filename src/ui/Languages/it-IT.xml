@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>4.0.3</Version>
-    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 17.02.2024</TranslatedBy>
+    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 20.02.2024</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -2852,6 +2852,8 @@ Vuoi continuare?</RestoreDefaultSettingsMsg>
     <ExportAsHtml>Esporta come HTML...</ExportAsHtml>
     <SetNewActor>Imposta nuovo attore/voce</SetNewActor>
     <SetActorX>Imposta attore/voce {0}</SetActorX>
+    <Used>Usato</Used>
+    <Unused>Non usato</Unused>
   </Settings>
   <SettingsMpv>
     <DownloadMpv>Download lib mpv</DownloadMpv>
