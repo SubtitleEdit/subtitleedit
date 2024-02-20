@@ -5424,7 +5424,7 @@
     <RegEx find="rj?evozn" replaceWith="rijevozn" />
     <RegEx find="(?&lt;!r)ojd" replaceWith="ojed" />
     <RegEx find="rpeu" replaceWith="preu" />
-    <RegEx find="rq([lmtvz])" replaceWith="ra$1" />
+    <RegEx find="rq([dlmtvz])" replaceWith="ra$1" />
     <RegEx find="([rv])pd" replaceWith="$1od" />
     <RegEx find="rs([dv])" replaceWith="ra$1" />
     <RegEx find="ršč" replaceWith="ršć" />
