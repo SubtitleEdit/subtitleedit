@@ -872,6 +872,7 @@
     <Word from="konektovati" to="spojiti" />
     <Word from="konektuje" to="spoji" />
     <Word from="konobarisao" to="konobario" />
+    <Word from="konsultujem" to="konzultiram" />
     <Word from="konsultujete" to="konzultirate" />
     <Word from="Konsultujete" to="Konzultirate" />
     <Word from="konsultuju" to="konzultiraju" />
@@ -3157,6 +3158,9 @@
     <Word from="Ejdrijen" to="Adrian" />
     <Word from="Ejmi" to="Amy" />
     <Word from="Ejpril" to="April" />
+    <Word from="Ejs" to="Ace" />
+    <Word from="Ejsa" to="Acea" />
+    <Word from="Ejsu" to="Aceu" />
     <Word from="Elejn" to="Elaine" />
     <Word from="Empajer" to="Empire" />
     <Word from="Enđel" to="Angel" />
@@ -3960,6 +3964,8 @@
     <LinePart from="moram da nađem" to="moram naći" />
     <LinePart from="Moramo da idemo" to="Moramo ići" />
     <LinePart from="moramo da idemo" to="moramo ići" />
+    <LinePart from="Mora da ima" to="Mora imati" />
+    <LinePart from="mora da ima" to="mora imati" />
     <LinePart from="Moramo da izbavimo" to="Moramo izbaviti" />
     <LinePart from="Moramo da budemo" to="Moramo biti" />
     <LinePart from="moramo da budemo" to="moramo biti" />
@@ -4085,6 +4091,7 @@
     <LinePart from="želim da idem" to="želim ići" />
     <LinePart from="želim da imam" to="želim imati" />
     <LinePart from="želim da odem" to="želim otići" />
+    <LinePart from="želim da radim" to="želim raditi" />
     <LinePart from="želio da idem" to="želio ići" />
     <LinePart from="želi da kaže" to="želi reći" />
     <LinePart from="želiš da odeš" to="želiš otići" />
