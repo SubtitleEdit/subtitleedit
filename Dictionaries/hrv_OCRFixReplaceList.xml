@@ -194,6 +194,7 @@
     <Word from="Cutanjem" to="Šutnjom" />
     <Word from="Čutanjem" to="Šutnjom" />
     <Word from="Ćutanjem" to="Šutnjom" />
+    <Word from="cvetale" to="cvjetale" />
     <Word from="cvetić" to="cvjetić" />
     <Word from="cvjet" to="cvijet" />
     <Word from="cvetaju" to="cvjetaju" />
@@ -346,6 +347,7 @@
     <Word from="dirigentkinja" to="dirigentica" />
     <Word from="dirigovala" to="dirigirala" />
     <Word from="dirigovali" to="dirigirali" />
+    <Word from="dirigovati" to="dirigirati" />
     <Word from="dirigovao" to="dirigirao" />
     <Word from="diriguje" to="dirigira" />
     <Word from="diskutuje" to="raspravlja" />
@@ -483,6 +485,7 @@
     <Word from="fokama" to="tuljanima" />
     <Word from="fotografišu" to="fotografiraju" />
     <!-- g -->
+    <Word from="gasom" to="plinom" />
     <Word from="gasova" to="plinova" />
     <Word from="gasove" to="plinove" />
     <Word from="gde" to="gdje" />
@@ -2771,6 +2774,7 @@
     <Word from="varnicu" to="iskru" />
     <Word from="vaspitala" to="odgojila" />
     <Word from="vaspitavamo" to="odgajamo" />
+    <Word from="vaspitavam" to="odgajam" />
     <Word from="vaspitavan" to="odgajan" />
     <Word from="vaspitavanju" to="odgoju" />
     <Word from="vaspitavao" to="odgajao" />
@@ -3024,6 +3028,7 @@
     <Word from="željeo" to="želio" />
     <Word from="Živeo" to="Živio" />
     <Word from="živeo" to="živio" />
+    <Word from="žleb" to="žlijeb" />
     <Word from="Živjećemo" to="Živjet ćemo" />
     <Word from="žmureo" to="žmirio" />
     <Word from="žvaće" to="žvače" />
@@ -3905,6 +3910,8 @@
     <LinePart from="da li misliš" to="Misliš li" />
     <LinePart from="dali mogu" to="mogu li" />
     <LinePart from="dali možete" to="možete li" />
+    <LinePart from="Da li želiš" to="Želiš li" />
+    <LinePart from="da li želiš" to="želiš li" />
     <LinePart from="da spasim" to="spasiti" />
     <LinePart from="do srede" to="do srijede" />
     <LinePart from="Dobro veče" to="Dobra večer" />
@@ -4013,6 +4020,7 @@
     <LinePart from="možeš da dobiješ" to="možeš dobiti" />
     <LinePart from="možeš da dođeš" to="možeš doći" />
     <LinePart from="može da uđe" to="može ući" />
+    <LinePart from="možeš da imaš" to="možeš imati" />
     <LinePart from="možeš da odeš" to="možeš otići" />
     <LinePart from="možeš da uđeš" to="možeš ući" />
     <LinePart from="možemo da budemo" to="možemo biti" />
