@@ -1626,10 +1626,9 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                                     }
                                 }
 
-                                string wordWithCasingChanged = GetWordWithDominatedCasing(word);
                                 if (DoSpell(word.ToLowerInvariant()))
                                 {
-                                    guesses.Insert(0, wordWithCasingChanged);
+                                    guesses.Insert(0, ConvertToMostDominantCase(word));
                                 }
                             }
                             else if (Configuration.Settings.Tools.OcrFixUseHardcodedRules)
@@ -1762,28 +1761,18 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             return null;
         }
 
-        private static string GetWordWithDominatedCasing(string word)
+        private static string ConvertToMostDominantCase(string word)
         {
-            var lowercase = 0;
-            var uppercase = 0;
-            for (var i = 0; i < word.Length; i++)
+            // lower case is more likely to be in the word so count it first
+            var lowerCount = word.Count(char.IsLower);
+            // check if lower case count is more/equals to half of the letter in word
+            if (lowerCount >= word.Length / 2)
             {
-                var ch = word[i];
-                if (char.IsLower(ch))
-                {
-                    lowercase++;
-                }
-                else if (char.IsUpper(ch))
-                {
-                    uppercase++;
-                }
-            }
-            if (uppercase > lowercase)
-            {
-                return word.ToUpperInvariant();
+                return word.ToLowerInvariant();
             }
 
-            return word.ToLowerInvariant();
+            var upperCount = word.Count(char.IsUpper);
+            return upperCount > lowerCount ? word.ToUpperInvariant() : word.ToLowerInvariant();
         }
 
         /// <summary>
