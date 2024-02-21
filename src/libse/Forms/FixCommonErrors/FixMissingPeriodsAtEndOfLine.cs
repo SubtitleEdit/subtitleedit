@@ -66,7 +66,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     nextText = HtmlUtil.RemoveHtmlTags(next.Text, true).TrimStart('-', '"', '„').TrimStart();
                 }
                 var isNextClose = next != null && next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds < 400;
-                var tempNoHtml = HtmlUtil.RemoveHtmlTags(p.Text)
+                var tempNoHtml = HtmlUtil.RemoveHtmlTags(p.Text, true)
                     .Replace("\u200B", string.Empty) // Zero Width Space
                     .Replace("\uFEFF", string.Empty) // Zero Width No-Break Space
                     .TrimEnd();
@@ -196,6 +196,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     }
                 }
             }
+
             callbacks.UpdateFixStatus(missingPeriodsAtEndOfLine, Language.AddPeriods);
         }
 

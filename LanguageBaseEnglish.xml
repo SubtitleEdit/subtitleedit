@@ -965,7 +965,7 @@ We leverage the intrinsic rhythm of the image.</CreateSimpleChainingToolTip>
     <FixDoubleDash>Fix '--' -&gt; '...'</FixDoubleDash>
     <FixDoubleGreaterThan>Remove '&gt;&gt;'</FixDoubleGreaterThan>
     <FixEllipsesStart>Remove leading '...'</FixEllipsesStart>
-    <FixMissingOpenBracket>Fix missing [ in line</FixMissingOpenBracket>
+    <FixMissingOpenBracket>Fix missing [ or ( in line</FixMissingOpenBracket>
     <FixMusicNotation>Replace music symbols (e.g. âTª) with preferred symbol</FixMusicNotation>
     <FixDoubleDashExample>'Whoa-- um yeah!' -&gt; 'Whoa... um yeah!'</FixDoubleDashExample>
     <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Sup dude!' -&gt; 'Robert: Sup dude!'</FixDoubleGreaterThanExample>
