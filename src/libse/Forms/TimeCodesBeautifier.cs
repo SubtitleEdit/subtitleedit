@@ -81,8 +81,18 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     }
                     else
                     {
-                        // If not, then we have a free out cue
-                        FixOutCue(p);
+                        // If not, check if we have chainable subtitles
+                        result = FixChainableSubtitles(paragraph, nextParagraph);
+                        if (result)
+                        {
+                            // Yes, this means the next subtitle's in cue is now also processed. Skipping in next iteration
+                            skipNextInCue = true;
+                        }
+                        else
+                        {
+                            // If not, then we have a free out cue
+                            FixOutCue(p);
+                        }
                     }
 
                     // Report progress
@@ -514,6 +524,20 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 var bestRightInCueFrameInfo = FindBestCueFrame(newRightInCueFrame, true);
                 var bestRightInCueFrame = bestRightInCueFrameInfo.cueFrame;
 
+                // Check if the left out cue was pushed backward due to a green zone
+                if (bestLeftOutCueFrameInfo.result == FindBestCueResult.SnappedToLeftGreenZone)
+                {
+                    // Yes, then we'll want to use the original position instead: it might be pushed outside of the chaining threshold, but chaining should take precedence.
+                    bestLeftOutCueFrame = newLeftOutCueFrame;
+                }
+
+                // Check if the right in cue was pushed forward due to a green zone
+                if (bestRightInCueFrameInfo.result == FindBestCueResult.SnappedToRightGreenZone)
+                {
+                    // Yes, then we'll want to use the original position instead: it might be pushed outside of the chaining threshold, but chaining should take precedence.
+                    bestRightInCueFrame = newRightInCueFrame;
+                }
+
                 // Check cases
                 var isLeftOutCueOnShotChange = IsCueOnShotChange(bestLeftOutCueFrame, false);
                 var isRightInCueOnShotChange = IsCueOnShotChange(bestRightInCueFrame, true);
@@ -886,7 +910,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     var previousParagraph = _subtitle.Paragraphs.ElementAtOrDefault(index - 1);
                     if (previousParagraph != null)
                     {
-                        var distance = previousParagraph.StartTime.TotalMilliseconds - paragraph.EndTime.TotalMilliseconds;
+                        var distance = paragraph.StartTime.TotalMilliseconds - previousParagraph.EndTime.TotalMilliseconds;
 
                         // If an overlap threshold is set, don't fix if threshold exceeded
                         if (distance < 0 && Configuration.Settings.BeautifyTimeCodes.OverlapThreshold > 0 && Math.Abs(distance) >= Configuration.Settings.BeautifyTimeCodes.OverlapThreshold)
@@ -910,7 +934,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     var nextParagraph = _subtitle.Paragraphs.ElementAtOrDefault(index + 1);
                     if (nextParagraph != null)
                     {
-                        var distance = paragraph.StartTime.TotalMilliseconds - nextParagraph.EndTime.TotalMilliseconds;
+                        var distance = nextParagraph.StartTime.TotalMilliseconds - paragraph.EndTime.TotalMilliseconds;
 
                         // If an overlap threshold is set, don't fix if threshold exceeded
                         if (distance < 0 && Configuration.Settings.BeautifyTimeCodes.OverlapThreshold > 0 && Math.Abs(distance) >= Configuration.Settings.BeautifyTimeCodes.OverlapThreshold)
