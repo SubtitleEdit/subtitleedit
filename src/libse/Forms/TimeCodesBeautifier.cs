@@ -81,8 +81,18 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     }
                     else
                     {
-                        // If not, then we have a free out cue
-                        FixOutCue(p);
+                        // If not, check if we have chainable subtitles
+                        result = FixChainableSubtitles(paragraph, nextParagraph);
+                        if (result)
+                        {
+                            // Yes, this means the next subtitle's in cue is now also processed. Skipping in next iteration
+                            skipNextInCue = true;
+                        }
+                        else
+                        {
+                            // If not, then we have a free out cue
+                            FixOutCue(p);
+                        }
                     }
 
                     // Report progress
