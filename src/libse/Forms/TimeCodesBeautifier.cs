@@ -524,14 +524,14 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 var bestRightInCueFrameInfo = FindBestCueFrame(newRightInCueFrame, true);
                 var bestRightInCueFrame = bestRightInCueFrameInfo.cueFrame;
 
-                // Check if the left out cue was moved backward
+                // Check if the left out cue was pushed backward due to a green zone
                 if (bestLeftOutCueFrameInfo.result == FindBestCueResult.SnappedToLeftGreenZone)
                 {
                     // Yes, then we'll want to use the original position instead: it might be pushed outside of the chaining threshold, but chaining should take precedence.
                     bestLeftOutCueFrame = newLeftOutCueFrame;
                 }
 
-                // Check if the right in cue was moved forward
+                // Check if the right in cue was pushed forward due to a green zone
                 if (bestRightInCueFrameInfo.result == FindBestCueResult.SnappedToRightGreenZone)
                 {
                     // Yes, then we'll want to use the original position instead: it might be pushed outside of the chaining threshold, but chaining should take precedence.
