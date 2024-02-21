@@ -10,6 +10,7 @@
     <Cancel>&amp;Annuleren</Cancel>
     <Yes>Ja</Yes>
     <No>Nee</No>
+    <Close>Sluiten</Close>
     <Apply>Toepassen</Apply>
     <ApplyTo>Toepassen op</ApplyTo>
     <None>Geen</None>
@@ -404,6 +405,13 @@ Klik op '{0}' om eerst beeldwissels te genereren of importeren, of schakel deze 
     <BatchAlignTimeCodes>Tijdcodes op frame-tijdcodes zetten</BatchAlignTimeCodes>
     <BatchUseExactTimeCodes>Exacte tijdcodes gebruiken (indien beschikbaar)</BatchUseExactTimeCodes>
     <BatchSnapToShotChanges>Tijden op beeldwissels zetten (indien beschikbaar)</BatchSnapToShotChanges>
+    <UnfixableParagraphsTitle>Niet volledig aangesloten titels controleren</UnfixableParagraphsTitle>
+    <UnfixableParagraphsInstructions>Sommige titels zijn niet volledig aangesloten conform uw profiel, hoogstwaarschijnlijk vanwege een reeks (mogelijk onjuiste) beeldwissels die te dicht op elkaar zitten.
+
+U kunt deze gevallen handmatig controleren en de tijden op de juiste (echte) beeldwissels zetten.</UnfixableParagraphsInstructions>
+    <UnfixableParagraphsColumnParagraphs>Titels</UnfixableParagraphsColumnParagraphs>
+    <UnfixableParagraphsColumnParagraphsFormat>#{0} – #{1}</UnfixableParagraphsColumnParagraphsFormat>
+    <UnfixableParagraphsColumnGap>Tussenruimte (frames)</UnfixableParagraphsColumnGap>
   </BeautifyTimeCodes>
   <BeautifyTimeCodesProfile>
     <Title>Profiel bewerken</Title>
@@ -427,6 +435,7 @@ Klik op '{0}' om eerst beeldwissels te genereren of importeren, of schakel deze 
     <Chaining>Aansluiten</Chaining>
     <InCueOnShot>In-tijd op beeldwissel</InCueOnShot>
     <OutCueOnShot>Uit-tijd op beeldwissel</OutCueOnShot>
+    <CheckGeneral>Regels voor 'Algemeen' toepassen indien onveranderd</CheckGeneral>
     <MaxGap>Max. tussenruimte:</MaxGap>
     <ShotChangeBehavior>Als ertussenin een beeldwissel zit:</ShotChangeBehavior>
     <DontChain>Niet aansluiten</DontChain>
@@ -1069,6 +1078,7 @@ Open ‘Instellingen -&gt; Voorkeuren -&gt; Extra’ voor meer informatie.</MsCl
     <XRequiresALocalWebServer>Voor {0} is een webserver vereist die lokaal wordt uitgevoerd.</XRequiresALocalWebServer>
     <XRequiresAnApiKey>Voor {0} is een API-sleutel vereist.</XRequiresAnApiKey>
     <ReadMore>Meer informatie weergeven?</ReadMore>
+    <Formality>Aanspreekvorm</Formality>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
     <Title>Vertalen met Google of Microsoft</Title>
@@ -1313,6 +1323,7 @@ Open ‘Instellingen -&gt; Voorkeuren -&gt; Extra’ voor meer informatie.</MsCl
         <CloseTranslation>Vertaalde ondertitel sluiten</CloseTranslation>
         <OpenContainingFolder>Bĳbehorende map openen</OpenContainingFolder>
         <Compare>&amp;Vergelĳken...</Compare>
+        <VerifyCompleteness>Volledigheid controleren...</VerifyCompleteness>
         <Statistics>Statistie&amp;ken...</Statistics>
         <Plugins>&amp;Plug-ins...</Plugins>
         <ImportSubtitleFromVideoFile>Ondertitel uit videobestand importeren...</ImportSubtitleFromVideoFile>
@@ -1559,6 +1570,7 @@ Open ‘Instellingen -&gt; Voorkeuren -&gt; Extra’ voor meer informatie.</MsCl
         <Subscript>Subscript</Subscript>
         <Alignment>Uitlĳnen...</Alignment>
         <AutoBalanceSelectedLines>Geselecteerde titels uitbalanceren...</AutoBalanceSelectedLines>
+        <EvenlyDistributeSelectedLines>Geselecteerde titels gelijkmatig verdelen (CPS)</EvenlyDistributeSelectedLines>
         <RemoveLineBreaksFromSelectedLines>Regeleinden uit tekstselectie verwĳderen...</RemoveLineBreaksFromSelectedLines>
         <TypewriterEffect>Typemachine-effect...</TypewriterEffect>
         <KaraokeEffect>Karaoke-effect...</KaraokeEffect>
@@ -1834,6 +1846,8 @@ Wilt u deze bewerking voortzetten?</SubtitleAppendPrompt>
     <SortedByX>Gesorteerd op: {0}</SortedByX>
     <BeforeAutoBalanceSelectedLines>Vóór uitbalanceren geselecteerde titels</BeforeAutoBalanceSelectedLines>
     <NumberOfLinesAutoBalancedX>Aantal uitgebalanceerde titels: {0}</NumberOfLinesAutoBalancedX>
+    <BeforeEvenlyDistributeSelectedLines>Vóór gelijkmatig verdelen geselecteerde titels</BeforeEvenlyDistributeSelectedLines>
+    <NumberOfLinesEvenlyDistributedX>Aantal gelijkmatig verdeelde titels: {0}</NumberOfLinesEvenlyDistributedX>
     <BeforeRemoveLineBreaksInSelectedLines>Vóór verwĳderen regeleinden van geselecteerde titels</BeforeRemoveLineBreaksInSelectedLines>
     <NumberOfWithRemovedLineBreakX>Aantal titels met verwĳderd regeleinde: {0}</NumberOfWithRemovedLineBreakX>
     <BeforeMultipleReplace>Vóór meerdere vervangen</BeforeMultipleReplace>
@@ -2607,6 +2621,7 @@ hetzelfde ondertitelbestand bewerken (samenwerken)</Information>
     <MergeDialogWithNext>Dialoog samenvoegen met volgende (dialoogstreepjes invoegen)</MergeDialogWithNext>
     <MergeDialogWithPrevious>Dialoog samenvoegen met vorige (dialoogstreepjes invoegen)</MergeDialogWithPrevious>
     <AutoBalanceSelectedLines>Geselecteerde titels automatisch herverdelen</AutoBalanceSelectedLines>
+    <EvenlyDistributeSelectedLines>Geselecteerde titels gelijkmatig verdelen (CPS)</EvenlyDistributeSelectedLines>
     <GoToNext>Naar volgende ondertitel</GoToNext>
     <GoToNextPlayTranslate>Naar volgende ondertitel (en afspelen in vertaalmodus)</GoToNextPlayTranslate>
     <GoToNextCursorAtEnd>Naar volgende ondertitel en cursus aan einde plaatsen</GoToNextCursorAtEnd>
@@ -2704,8 +2719,9 @@ hetzelfde ondertitelbestand bewerken (samenwerken)</Information>
     <VideoToggleContrast>Contrast wisselen (alleen mpv)</VideoToggleContrast>
     <AudioToTextX>Audio naar tekst ({0})</AudioToTextX>
     <AudioExtractSelectedLines>Audio extraheren (geselecteerde titels)</AudioExtractSelectedLines>
-    <AudioToTextSelectedLinesX>Audio naar tekst voor geselecteerde regels ({0})</AudioToTextSelectedLinesX>
+    <AudioToTextSelectedLinesX>Audio naar tekst voor geselecteerde titels ({0})</AudioToTextSelectedLinesX>
     <VideoToggleBrightness>Helderheid wisselen (alleen mpv)</VideoToggleBrightness>
+    <AutoTranslateSelectedLines>Geselecteerde titels automatisch vertalen</AutoTranslateSelectedLines>
     <CustomSearch1>Vertalen, aangepaste zoekopdracht 1</CustomSearch1>
     <CustomSearch2>Vertalen, aangepaste zoekopdracht 2</CustomSearch2>
     <CustomSearch3>Vertalen, aangepaste zoekopdracht 3</CustomSearch3>
@@ -2833,6 +2849,8 @@ of tĳdens het exporteren naar op afbeelding gebaseerde indelingen.</FontNote>
     <ExportAsHtml>Exporteren als HTML...</ExportAsHtml>
     <SetNewActor>Nieuwe acteur/stem instellen</SetNewActor>
     <SetActorX>Acteur/stem {0} instellen</SetActorX>
+    <Used>Gebruikt</Used>
+    <Unused>Niet gebruikt</Unused>
   </Settings>
   <SettingsMpv>
     <DownloadMpv>mpv-bibliotheek downloaden</DownloadMpv>
@@ -3150,6 +3168,21 @@ Probeer het later opnieuw.</XDownloadFailed>
     <Message>Als u wilt dat dit wordt hersteld, stuurt u een e-mail naar mailto: niksedk@gmail.com en stuurt u een kopie van de ondertitel mee.</Message>
     <ImportAsPlainText>Als platte tekst importeren</ImportAsPlainText>
   </UnknownSubtitle>
+  <VerifyCompleteness>
+    <Title>Volledigheid controleren ten opzichte van andere ondertitel</Title>
+    <OpenControlSubtitle>Referentie-ondertitel openen</OpenControlSubtitle>
+    <ControlSubtitleError>Referentie-ondertitel is leeg of kan niet worden geladen.</ControlSubtitleError>
+    <ControlSubtitleX>Referentie-ondertitel: {0}</ControlSubtitleX>
+    <Coverage>Dekking</Coverage>
+    <CoveragePercentageX>{0:0.##}%</CoveragePercentageX>
+    <SortByCoverage>Sorteren op dekking</SortByCoverage>
+    <SortByTime>Sorteren op tijd</SortByTime>
+    <Reload>Opnieuw controleren</Reload>
+    <Insert>Invoegen</Insert>
+    <InsertAndNext>Invoegen en naar volgende</InsertAndNext>
+    <Dismiss>Afwijzen</Dismiss>
+    <DismissAndNext>Afwijzen en naar volgende</DismissAndNext>
+  </VerifyCompleteness>
   <VisualSync>
     <Title>Visuele synchronisatie</Title>
     <StartScene>Beginscène</StartScene>
