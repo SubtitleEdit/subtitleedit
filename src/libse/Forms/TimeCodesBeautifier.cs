@@ -886,7 +886,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     var previousParagraph = _subtitle.Paragraphs.ElementAtOrDefault(index - 1);
                     if (previousParagraph != null)
                     {
-                        var distance = previousParagraph.StartTime.TotalMilliseconds - paragraph.EndTime.TotalMilliseconds;
+                        var distance = paragraph.StartTime.TotalMilliseconds - previousParagraph.EndTime.TotalMilliseconds;
 
                         // If an overlap threshold is set, don't fix if threshold exceeded
                         if (distance < 0 && Configuration.Settings.BeautifyTimeCodes.OverlapThreshold > 0 && Math.Abs(distance) >= Configuration.Settings.BeautifyTimeCodes.OverlapThreshold)
@@ -910,7 +910,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     var nextParagraph = _subtitle.Paragraphs.ElementAtOrDefault(index + 1);
                     if (nextParagraph != null)
                     {
-                        var distance = paragraph.StartTime.TotalMilliseconds - nextParagraph.EndTime.TotalMilliseconds;
+                        var distance = nextParagraph.StartTime.TotalMilliseconds - paragraph.EndTime.TotalMilliseconds;
 
                         // If an overlap threshold is set, don't fix if threshold exceeded
                         if (distance < 0 && Configuration.Settings.BeautifyTimeCodes.OverlapThreshold > 0 && Math.Abs(distance) >= Configuration.Settings.BeautifyTimeCodes.OverlapThreshold)
