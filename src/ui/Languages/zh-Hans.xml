@@ -962,7 +962,7 @@ Command line: {1} {2}
     <FixDoubleDash>修复 '-- '为 '...'</FixDoubleDash>
     <FixDoubleGreaterThan>删除 '&gt;&gt;'</FixDoubleGreaterThan>
     <FixEllipsesStart>删除开头的 '...'</FixEllipsesStart>
-    <FixMissingOpenBracket>修复行内丢失的 '['</FixMissingOpenBracket>
+    <FixMissingOpenBracket>修复行内丢失的 '[' 及 '('</FixMissingOpenBracket>
     <FixMusicNotation>用自己喜欢的符号替换音符 (如 âTª)</FixMusicNotation>
     <FixDoubleDashExample>'Whoa-- um yeah!' -&gt; 'Whoa... um yeah!'</FixDoubleDashExample>
     <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Sup dude!' -&gt; 'Robert: Sup dude!'</FixDoubleGreaterThanExample>
