@@ -28,6 +28,7 @@
     <Word from="apsorbuje" to="apsorbira" />
     <Word from="ate" to="ste" />
     <Word from="autorka" to="autorica" />
+    <Word from="autorke" to="autorice" />
     <Word from="azot" to="dušik" />
     <Word from="azota" to="dušika" />
     <!-- b -->
@@ -492,6 +493,8 @@
     <Word from="Gde" to="Gdje" />
     <Word from="Gdjo" to="Gđo" />
     <Word from="G-đo" to="Gđo" />
+    <Word from="G-đi" to="Gđi" />
+    <Word from="g-đo" to="gđo" />
     <Word from="g-dine" to="gosp." />
     <Word from="gdhe" to="gdje" />
     <Word from="gdke" to="gdje" />
@@ -589,6 +592,7 @@
     <Word from="horovima" to="zborovima" />
     <Word from="Horovima" to="Zborovima" />
     <Word from="Hožeš" to="Hoćeš" />
+    <Word from="hromium" to="krom" />
     <Word from="hteće" to="htjet će" />
     <Word from="htedoh" to="htjedoh" />
     <Word from="Htjeo" to="Htio" />
@@ -3082,6 +3086,7 @@
     <Word from="Dablinu" to="Dublinu" />
     <Word from="Dag" to="Doug" />
     <Word from="Dajen" to="Diane" />
+    <Word from="Darsi" to="Darcy" />
     <Word from="Darvin" to="Darwin" />
     <Word from="Darvina" to="Darwina" />
     <Word from="Darvinu" to="Darwinu" />
@@ -3854,6 +3859,7 @@
     <LinePart from="Ako ej" to="Ako je" />
     <LinePart from="ako ej" to="ako je" />
     <LinePart from="bez svesti" to="bez svijesti" />
+    <LinePart from="Bez obzira što" to="Bez obzira na to što" />
     <LinePart from="bez obzira što" to="bez obzira na to što" />
     <LinePart from="Biće mi" to="Bit će mi" />
     <LinePart from="Biće on" to="Bit će on" />
@@ -5215,7 +5221,7 @@
     <RegEx find="hvač" replaceWith="hvać" />
     <RegEx find="hvatić" replaceWith="hvatit ć" />
     <RegEx find="(?&lt;![MH])ick([eoiu])" replaceWith="ičk$1" />
-    <RegEx find="\bicr" replaceWith="ice" />
+    <RegEx find="\bic([wr])" replaceWith="ice" />
     <RegEx find="idev" replaceWith="idjev" />
     <RegEx find="idk" replaceWith="isk" />
     <RegEx find="ifej" replaceWith="idej" />   
