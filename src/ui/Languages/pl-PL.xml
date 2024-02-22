@@ -10,10 +10,11 @@
     <Cancel>&amp;Anuluj</Cancel>
     <Yes>Tak</Yes>
     <No>Nie</No>
+    <Close>Zamknij</Close>
     <Apply>Zastosuj</Apply>
     <ApplyTo>Zastosuj do</ApplyTo>
     <None>Brak</None>
-    <All>Wszystko</All>
+    <All>Wszystkie</All>
     <Preview>Podgląd</Preview>
     <ShowPreview>Pokaż podgląd</ShowPreview>
     <HidePreview>Ukryj podgląd</HidePreview>
@@ -404,6 +405,11 @@ Kliknij "{0}", aby najpierw wyodrębnić lub zaimportować zmiany ujęć, albo w
     <BatchAlignTimeCodes>Dopasuj kody czasowe do kodów czasowych klatki</BatchAlignTimeCodes>
     <BatchUseExactTimeCodes>Użyj dokładnych kodów czasowych (jeśli są dostępne)</BatchUseExactTimeCodes>
     <BatchSnapToShotChanges>Przyciągaj wskaźniki do zmian ujęcia (jeśli są dostępne)</BatchSnapToShotChanges>
+    <UnfixableParagraphsTitle>Przegląd nie w pełni połączonych napisów</UnfixableParagraphsTitle>
+    <UnfixableParagraphsInstructions>Niektóre napisy nie zostały w pełni połączone zgodnie z profilem użytkownika, najprawdopodobniej z powodu zbyt ciasno zgrupowanych zmian ujęć (możliwe fałszywe alarmy). Możesz przejrzeć te przypadki ręcznie, aby upewnić się, że wskazówki są przyciągane do prawidłowych (rzeczywistych) zmian ujęcia.</UnfixableParagraphsInstructions>
+    <UnfixableParagraphsColumnParagraphs>Linie</UnfixableParagraphsColumnParagraphs>
+    <UnfixableParagraphsColumnParagraphsFormat>#{0} – #{1}</UnfixableParagraphsColumnParagraphsFormat>
+    <UnfixableParagraphsColumnGap>Odstęp (klatki)</UnfixableParagraphsColumnGap>
   </BeautifyTimeCodes>
   <BeautifyTimeCodesProfile>
     <Title>Edycja profilu</Title>
@@ -427,6 +433,7 @@ Kliknij "{0}", aby najpierw wyodrębnić lub zaimportować zmiany ujęć, albo w
     <Chaining>Łączenie</Chaining>
     <InCueOnShot>Wskaźnik wejściowy zmiany ujęcia</InCueOnShot>
     <OutCueOnShot>Wskaźnik wyjściowy zmiany ujęcia</OutCueOnShot>
+    <CheckGeneral>Nadal egzekwuj zasady ogólne, jeśli nie ma to na nie wpływu</CheckGeneral>
     <MaxGap>Maksymalny odstęp:</MaxGap>
     <ShotChangeBehavior>Jeśli w międzyczasie nastąpi zmiana ujęcia:</ShotChangeBehavior>
     <DontChain>Nie łącz</DontChain>
@@ -956,7 +963,7 @@ Wykorzystujemy naturalny rytm obrazu.</CreateSimpleChainingToolTip>
     <FixDoubleDash>Popraw '--' na wielokropek '...'</FixDoubleDash>
     <FixDoubleGreaterThan>Usuń '&gt;&gt;'</FixDoubleGreaterThan>
     <FixEllipsesStart>Usuń wiodący wielokropek '...'</FixEllipsesStart>
-    <FixMissingOpenBracket>Popraw brakujący '[' w linii</FixMissingOpenBracket>
+    <FixMissingOpenBracket>Popraw brakujący '[' lub '(' w linii</FixMissingOpenBracket>
     <FixMusicNotation>Zastąp symbole muzyczne (np. âTª) preferowanym symbolem</FixMusicNotation>
     <FixDoubleDashExample>'Ach-- tak!' -&gt; 'Ach... tak!'</FixDoubleDashExample>
     <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Siema, stary!' -&gt; 'Robert: Siema, stary!'</FixDoubleGreaterThanExample>
@@ -1051,9 +1058,9 @@ Wykorzystujemy naturalny rytm obrazu.</CreateSimpleChainingToolTip>
     <PoweredByX>Obsługiwane przez {0}</PoweredByX>
     <MsClientSecretNeeded>Przepraszamy, potrzebujesz klucza do usług poznawczych "Translator Text" firmy Microsoft, aby móc korzystać z najnowszego programu Microsoft Translator.
 
-Przejdź do "Opcje -&gt; Ustawienia -&gt; Narzędzia", aby wpisać swój klucz.</MsClientSecretNeeded>
+Przejdź do "Opcje -&gt; Ustawienia -&gt; Tłumaczenie automatyczne", aby wpisać swój klucz.</MsClientSecretNeeded>
     <GoogleNoApiKeyWarning>Spróbuję przetłumaczyć bez klucza API... (powolne i z ograniczonymi danymi).
-Aby użyć klucza API przejdź do "Opcje -&gt; Ustawienia -&gt; Narzędzia", aby wprowadzić swój klucz API tłumacza Google.</GoogleNoApiKeyWarning>
+Aby użyć klucza API przejdź do "Opcje -&gt; Ustawienia -&gt; Tłumaczenie automatyczne", aby wprowadzić swój klucz API tłumacza Google.</GoogleNoApiKeyWarning>
     <Service>Usługa:</Service>
     <LineMergeHandling>Połącz linie:</LineMergeHandling>
     <ProcessorMergeNext>Połącz maksymalnie dwie linie</ProcessorMergeNext>
@@ -1319,6 +1326,7 @@ Aby użyć klucza API przejdź do "Opcje -&gt; Ustawienia -&gt; Narzędzia", aby
         <CloseTranslation>Zamknij przetłumaczone napisy</CloseTranslation>
         <OpenContainingFolder>Otwórz folder zawierający wideo</OpenContainingFolder>
         <Compare>&amp;Porównaj...</Compare>
+        <VerifyCompleteness>Zweryfikuj kompletność...</VerifyCompleteness>
         <Statistics>S&amp;tatystyki...</Statistics>
         <Plugins>&amp;Wtyczki...</Plugins>
         <ImportSubtitleFromVideoFile>Napisy z pliku wideo...</ImportSubtitleFromVideoFile>
@@ -1565,6 +1573,7 @@ Aby użyć klucza API przejdź do "Opcje -&gt; Ustawienia -&gt; Narzędzia", aby
         <Subscript>Indeks dolny</Subscript>
         <Alignment>Wyrównanie...</Alignment>
         <AutoBalanceSelectedLines>Automatycznie zrównoważ wybrane linie...</AutoBalanceSelectedLines>
+        <EvenlyDistributeSelectedLines>Równomierne rozmieszczenie wybranych linii (ZNS)</EvenlyDistributeSelectedLines>
         <RemoveLineBreaksFromSelectedLines>Usuń łamanie linii z zaznaczonych linii...</RemoveLineBreaksFromSelectedLines>
         <TypewriterEffect>Efekt maszyny do pisania...</TypewriterEffect>
         <KaraokeEffect>Efekt karaoke...</KaraokeEffect>
@@ -1836,6 +1845,8 @@ Kontynuować?</SubtitleAppendPrompt>
     <SortedByX>Wykonano sortowanie wg: {0}</SortedByX>
     <BeforeAutoBalanceSelectedLines>Przed automatycznym zrównoważeniem wybranych linii</BeforeAutoBalanceSelectedLines>
     <NumberOfLinesAutoBalancedX>Liczba automatycznie zrównoważonych linii: {0}</NumberOfLinesAutoBalancedX>
+    <BeforeEvenlyDistributeSelectedLines>Przed równomiernym rozmieszczeniem wybranych linii</BeforeEvenlyDistributeSelectedLines>
+    <NumberOfLinesEvenlyDistributedX>Liczba równomiernie rozmieszczonych linii: {0}</NumberOfLinesEvenlyDistributedX>
     <BeforeRemoveLineBreaksInSelectedLines>Przed usunięciem łamania linii z wybranych linii</BeforeRemoveLineBreaksInSelectedLines>
     <NumberOfWithRemovedLineBreakX>Liczba linii z usuniętym łamaniem linii: {0}</NumberOfWithRemovedLineBreakX>
     <BeforeMultipleReplace>Przed wielokrotnymi zastąpieniami</BeforeMultipleReplace>
@@ -2609,6 +2620,7 @@ może edytować ten sam plik napisów (współpraca)</Information>
     <MergeDialogWithNext>Połącz dialog z następnym (wstaw myślniki)</MergeDialogWithNext>
     <MergeDialogWithPrevious>Połącz dialog z poprzednim (wstaw myślniki)</MergeDialogWithPrevious>
     <AutoBalanceSelectedLines>Automatyczne równoważenie wybranych linii</AutoBalanceSelectedLines>
+    <EvenlyDistributeSelectedLines>Równomierne rozmieszczenie wybranych linii (ZNS)</EvenlyDistributeSelectedLines>
     <GoToNext>Przejdź do następnej linii</GoToNext>
     <GoToNextPlayTranslate>Przejdź do następnej linii (i odtwarzaj w "Trybie tłumacza")</GoToNextPlayTranslate>
     <GoToNextCursorAtEnd>Przejdź do następnej linii i ustaw kursor na końcu</GoToNextCursorAtEnd>
@@ -2708,6 +2720,7 @@ może edytować ten sam plik napisów (współpraca)</Information>
     <AudioExtractSelectedLines>Wyodrębnij audio (wybrane linie)</AudioExtractSelectedLines>
     <AudioToTextSelectedLinesX>Audio na tekst wybranych linii ({0})</AudioToTextSelectedLinesX>
     <VideoToggleBrightness>Przełącz jasność (tylko mpv)</VideoToggleBrightness>
+    <AutoTranslateSelectedLines>Tłumaczenie automatyczne wybranych linii</AutoTranslateSelectedLines>
     <CustomSearch1>Tłumaczenie, wyszukiwanie niestandardowe 1</CustomSearch1>
     <CustomSearch2>Tłumaczenie, wyszukiwanie niestandardowe 2</CustomSearch2>
     <CustomSearch3>Tłumaczenie, wyszukiwanie niestandardowe 3</CustomSearch3>
@@ -2837,6 +2850,8 @@ Kontynuować?</RestoreDefaultSettingsMsg>
     <ExportAsHtml>Eksportuj jako HTML...</ExportAsHtml>
     <SetNewActor>Ustaw nowego aktora/głos</SetNewActor>
     <SetActorX>Ustaw aktora/głos {0}</SetActorX>
+    <Used>Używane</Used>
+    <Unused>Nieużywane</Unused>
   </Settings>
   <SettingsMpv>
     <DownloadMpv>Pobierz bibliotekę mpv</DownloadMpv>
@@ -3150,6 +3165,21 @@ Kontynuować?</RestoreDefaultSettingsMsg>
     <Message>Jeśli chcesz to naprawić, wyślij e-mail na adres mailto: niksedk@gmail.com i dołącz kopię napisów.</Message>
     <ImportAsPlainText>Importuj jako zwykły tekst...</ImportAsPlainText>
   </UnknownSubtitle>
+  <VerifyCompleteness>
+    <Title>Weryfikacja kompletności na podstawie innych napisów</Title>
+    <OpenControlSubtitle>Otwórz napisy kontrolne</OpenControlSubtitle>
+    <ControlSubtitleError>Napisy kontrolne są puste lub nie można ich wczytać.</ControlSubtitleError>
+    <ControlSubtitleX>Napisy kontrolne: {0}</ControlSubtitleX>
+    <Coverage>Pokrywanie się</Coverage>
+    <CoveragePercentageX>{0:0.##}%</CoveragePercentageX>
+    <SortByCoverage>Sortuj wg stopnia pokrywania się</SortByCoverage>
+    <SortByTime>Sortuj wg czasu</SortByTime>
+    <Reload>Zweryfikuj ponownie</Reload>
+    <Insert>Wstaw</Insert>
+    <InsertAndNext>Wstaw i idź do następnego</InsertAndNext>
+    <Dismiss>Odrzuć</Dismiss>
+    <DismissAndNext>Odrzuć i idź do następnego</DismissAndNext>
+  </VerifyCompleteness>
   <VisualSync>
     <Title>Synchronizacja wizualna</Title>
     <StartScene>Scena początkowa</StartScene>
