@@ -35,8 +35,12 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         text = text.TrimEnd();
                         text = text.Replace("... " + Environment.NewLine, "..." + Environment.NewLine);
                         text = text.Replace("... </", "...</"); // </i>, </font>...
-                        text = text.Replace("... ?", "...?");
-                        text = text.Replace("... !", "...!");
+                        
+                        if (callbacks.Language != "fr")
+                        {
+                            text = text.Replace("... ?", "...?");
+                            text = text.Replace("... !", "...!");
+                        }
 
                         if (text.IndexOf(Environment.NewLine, StringComparison.Ordinal) > 1)
                         {
