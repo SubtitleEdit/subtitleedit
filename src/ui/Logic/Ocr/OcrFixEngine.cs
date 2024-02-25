@@ -1626,9 +1626,9 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                                     }
                                 }
 
-                                string wordWithCasingChanged = GetWordWithDominatedCasing(word);
                                 if (DoSpell(word.ToLowerInvariant()))
                                 {
+                                    var wordWithCasingChanged = GetWordWithDominatedCasing(word);
                                     guesses.Insert(0, wordWithCasingChanged);
                                 }
                             }
