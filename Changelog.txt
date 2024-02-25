@@ -29,6 +29,7 @@
    * Add default icon for layout - thx PaulVeld
    * Improve Macedonian language auto detect - thx Aco
    * Auto load video when switching to layout w video - thx Dave 
+   * Update Libre translate languages - thx thehijacker
 * FIXED:
    * Fix Papago translate - thx banziseo
    * Fix for "outputfilename" in cmd line with SUP source - thx sapphire-bt
@@ -43,6 +44,7 @@
    * Fix for LRC time code bug - thx fineless71
    * Fix possible crash in mkv/ts reading - thx Maknol
    * Fix for "Add missing periods" and ASSA tags - thx Firegloom
+   * Fix Whisper CPP Hebrew language code - thx Udo
 
 
 4.0.3 (23rd December 2023)
