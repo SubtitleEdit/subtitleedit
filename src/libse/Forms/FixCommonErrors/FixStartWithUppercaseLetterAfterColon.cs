@@ -87,7 +87,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             char GetClosingPair(char ch) => ch == '<' ? '>' : '}';
         }
 
-        private bool IsTurkish(string lang) => lang.Equals("tr", StringComparison.OrdinalIgnoreCase);
+        private static bool IsTurkish(string lang) => lang.Equals("tr", StringComparison.OrdinalIgnoreCase);
 
         private static bool CanCapitalize(string input, IFixCallbacks callbacks)
         {
@@ -99,8 +99,13 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
         /// </summary>
         private static bool BeginsWithLetter(string input)
         {
-            if (input.Length == 0) return false;
+            if (input.Length == 0)
+            {
+                return false;
+            }
+
             var ch = input[0];
+
             return char.IsLetter(ch) && char.IsLower(ch);
         }
 
@@ -109,9 +114,17 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
         /// </summary>
         private static bool IsAppleNaming(string input)
         {
-            if (string.IsNullOrEmpty(input)) return false;
+            if (string.IsNullOrEmpty(input))
+            {
+                return false;
+            }
+
             var len = input.Length;
-            if (len < 3) return false;
+            if (len < 3)
+            {
+                return false;
+            }
+
             return input[0] == 'i' && char.IsUpper(input[1]) && char.IsLower(input[2]);
         }
     }
