@@ -36487,7 +36487,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void labelVideoInfo_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(_videoFileName) || _videoInfo == null)
+            if (string.IsNullOrEmpty(_videoFileName) || _videoInfo == null || Configuration.Settings.Tools.DisableVidoInfoViaLabel)
             {
                 return;
             }
