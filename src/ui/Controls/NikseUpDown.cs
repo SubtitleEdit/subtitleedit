@@ -267,6 +267,21 @@ namespace Nikse.SubtitleEdit.Controls
                     KeyDown?.Invoke(sender, e);
                     Invalidate();
                 }
+                else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.A)
+                {
+                    _textBox.SelectAll();
+                    e.SuppressKeyPress = true;
+                }
+                if (e.Modifiers == Keys.Control && e.KeyCode == Keys.C)
+                {
+                    _textBox.Copy();
+                    e.SuppressKeyPress = true;
+                }
+                if (e.Modifiers == Keys.Control && e.KeyCode == Keys.V)
+                {
+                    _textBox.Paste();
+                    e.SuppressKeyPress = true;
+                }
                 else
                 {
                     KeyDown?.Invoke(sender, e);
