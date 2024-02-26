@@ -177,6 +177,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public string ChatGptApiKey { get; set; }
         public int ChatGptDelaySeconds { get; set; }
         public string GeminiProApiKey { get; set; }
+        public bool DisableVidoInfoViaLabel { get; set; }
         public bool ListViewSyntaxColorDurationSmall { get; set; }
         public bool ListViewSyntaxColorDurationBig { get; set; }
         public bool ListViewSyntaxColorOverlap { get; set; }
@@ -5341,6 +5342,12 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.Tools.TranslateViaCopyPasteAutoCopyToClipboard = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("DisableVidoInfoViaLabel");
+            if (subNode != null)
+            {
+                settings.Tools.DisableVidoInfoViaLabel = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
             subNode = node.SelectSingleNode("ListViewSyntaxColorDurationSmall");
@@ -11789,6 +11796,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("ChatGptApiKey", settings.Tools.ChatGptApiKey);
                 textWriter.WriteElementString("ChatGptDelaySeconds", settings.Tools.ChatGptDelaySeconds.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("GeminiProApiKey", settings.Tools.GeminiProApiKey);
+                textWriter.WriteElementString("DisableVidoInfoViaLabel", settings.Tools.DisableVidoInfoViaLabel.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewSyntaxColorDurationSmall", settings.Tools.ListViewSyntaxColorDurationSmall.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewSyntaxColorDurationBig", settings.Tools.ListViewSyntaxColorDurationBig.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewSyntaxColorLongLines", settings.Tools.ListViewSyntaxColorLongLines.ToString(CultureInfo.InvariantCulture));
