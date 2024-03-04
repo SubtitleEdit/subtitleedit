@@ -957,7 +957,7 @@
             public string RemovedEmptyLineAtTop { get; set; }
             public string RemovedEmptyLineAtBottom { get; set; }
             public string RemovedEmptyLineInMiddle { get; set; }
-            public string RemovedEmptyLinesUnsedLineBreaks { get; set; }
+            public string RemovedEmptyLinesUnusedLineBreaks { get; set; }
             public string FixOverlappingDisplayTimes { get; set; }
             public string FixShortDisplayTimes { get; set; }
             public string FixLongDisplayTimes { get; set; }
