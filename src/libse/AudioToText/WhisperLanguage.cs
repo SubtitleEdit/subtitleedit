@@ -64,8 +64,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                     new WhisperLanguage("vi", "vietnamese"),
                 };
 
-                if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.Cpp ||
-                    Configuration.Settings.Tools.WhisperChoice == WhisperChoice.ConstMe)
+                if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.ConstMe)
                 {
                     languages.Add(new WhisperLanguage("iw", "hebrew"));
                 }
