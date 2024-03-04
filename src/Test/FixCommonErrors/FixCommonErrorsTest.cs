@@ -8,6 +8,7 @@ using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace Test.FixCommonErrors
 {
@@ -3531,6 +3532,56 @@ namespace Test.FixCommonErrors
                 new FixShortLinesPixelWidth(TextWidth.CalcPixelWidth).Fix(_subtitle, new EmptyFixCallback());
                 Assert.AreEqual("<i>It is I this illustrious illiteration. It's this...</i>", _subtitle.Paragraphs[0].Text);
             }
+        }
+
+        [TestMethod]
+        public void FixMissingOpenBracketOneTest()
+        {
+            var engine = new FixMissingOpenBracket();
+            var sub = GetGenericSub();
+            sub.Paragraphs.First().Text = "Hey, FOO).";
+            engine.Fix(sub, new EmptyFixCallback());
+            Assert.AreEqual("(Hey, FOO).", sub.Paragraphs.First().Text);
+        }
+
+        [TestMethod]
+        public void FixMissingOpenBracketTwoTest()
+        {
+            var engine = new FixMissingOpenBracket();
+            var sub = GetGenericSub();
+            sub.Paragraphs.First().Text = "Reaper, hostiles, 100 meters\neast. Two hundred meters south).";
+            engine.Fix(sub, new EmptyFixCallback());
+            Assert.AreEqual("(Reaper, hostiles, 100 meters\neast. Two hundred meters south).", sub.Paragraphs.First().Text);
+        }
+
+        [TestMethod]
+        public void FixMissingOpenBracketThreeTest()
+        {
+            var engine = new FixMissingOpenBracket();
+            var sub = GetGenericSub();
+            sub.Paragraphs.First().Text = "- Foobar bar zzz).\n- Foo bar Zz";
+            engine.Fix(sub, new EmptyFixCallback());
+            Assert.AreEqual( "- (Foobar bar zzz).\n- Foo bar Zz", sub.Paragraphs.First().Text);
+        }
+        [TestMethod]
+        public void FixMissingOpenBracketFourTest()
+        {
+            var engine = new FixMissingOpenBracket();
+            var sub = GetGenericSub();
+            sub.Paragraphs.First().Text = "Foobar THIS IS A NOISE)";
+            engine.Fix(sub, new EmptyFixCallback());
+            Assert.AreEqual( "Foobar (THIS IS A NOISE)", sub.Paragraphs.First().Text);
+        }
+
+        private static Subtitle GetGenericSub()
+        {
+            return new Subtitle()
+            {
+                Paragraphs =
+                {
+                    new Paragraph("Hello World!", 1000, 2000)
+                }
+            };
         }
     }
 }

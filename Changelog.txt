@@ -14,7 +14,10 @@
    * Update Finnish translation - thx Teijo S
    * Update Chinese translation - thx nkh0472
    * Update French translation - thx Pierre
+   * Update Italian language - thx bovirus
    * Update Russian translation - thx elfriob
+   * Update Polish translation - thx admas
+   * Update Dutch translation - thx Flitskikker
    * Improve auto-translate re-split (two lines only)
    * Some "Beautify time codes" improvements - thx Flitskikker
    * Set file name after .MKS file import - thx RedSoxFan04
@@ -25,6 +28,8 @@
    * Update Danish OCR dictionaries - thx Claus
    * Add default icon for layout - thx PaulVeld
    * Improve Macedonian language auto detect - thx Aco
+   * Auto load video when switching to layout w video - thx Dave 
+   * Update Libre translate languages - thx thehijacker
 * FIXED:
    * Fix Papago translate - thx banziseo
    * Fix for "outputfilename" in cmd line with SUP source - thx sapphire-bt
@@ -37,7 +42,9 @@
    * Fix for MyMemory translate to Russian/Hebrew - thx darnn
    * Fix json text decode bug - thx darnn
    * Fix for LRC time code bug - thx fineless71
-   * Fix possible crash in mkv/ts reading - thx Maknol
+   * Fix possible crash in MKV/TS reading - thx Maknol
+   * Fix for "Add missing periods" and ASSA tags - thx Firegloom
+   * Fix Whisper CPP Hebrew language code - thx Udo
 
 
 4.0.3 (23rd December 2023)

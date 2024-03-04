@@ -243,14 +243,20 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 return text;
             }
 
-            if (Utilities.CountTagInText(text, "\"") == 1 && Utilities.CountTagInText(text, "”") == 1)
+            const string doubleQuote = "\"";
+            if (Utilities.CountTagInText(text, doubleQuote) == 1)
             {
-                return text.Replace("”", "\"");
+                if (Utilities.CountTagInText(text, "”") == 1)
+                {
+                    return text.Replace("”", doubleQuote);
+                }
+
+                if (Utilities.CountTagInText(text, "“") == 1)
+                {
+                    return text.Replace("“", doubleQuote);
+                }
             }
-            if (Utilities.CountTagInText(text, "\"") == 1 && Utilities.CountTagInText(text, "“") == 1)
-            {
-                return text.Replace("“", "\"");
-            }
+
             return text;
         }
     }
