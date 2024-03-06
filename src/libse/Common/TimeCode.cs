@@ -340,5 +340,20 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             return ToShortString(true);
         }
+
+        /// <summary>
+        /// Calculates the distance between two TimeCode objects.
+        /// </summary>
+        /// <param name="tc">The TimeCode object to calculate the distance to.</param>
+        /// <returns>The distance between the two TimeCode objects in milliseconds.</returns>
+        public double DistanceTo(TimeCode tc)
+        {
+            if (tc == null)
+            {
+                return 0d;
+            }
+
+            return tc.TotalMilliseconds - TotalMilliseconds;
+        }
     }
 }

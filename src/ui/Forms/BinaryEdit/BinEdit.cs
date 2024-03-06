@@ -693,7 +693,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                 return string.Empty;
             }
 
-            return new TimeCode(next.StartTime.TotalMilliseconds - paragraph.EndTime.TotalMilliseconds).ToShortDisplayString();
+            return new TimeCode(paragraph.EndTime.DistanceTo(next.StartTime)).ToShortDisplayString();
         }
 
 
@@ -747,7 +747,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                 var next = _subtitle.GetParagraphOrDefault(i + 1);
                 if (next != null)
                 {
-                    var gap = next.StartTime.TotalMilliseconds - paragraph.EndTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                    var gap = paragraph.EndTime.DistanceTo(next.StartTime) - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
                     if (gap < Configuration.Settings.General.ListViewGapWidth)
                     {
                         colorGap = true;

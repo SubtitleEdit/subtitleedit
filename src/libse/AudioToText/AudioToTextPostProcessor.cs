@@ -220,7 +220,23 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
             return s;
         }
 
-        public Subtitle AddPeriods(Subtitle inputSubtitle, string language)
+        private static bool IsTerminated(string text)
+        {
+            if (text.Length == 0)
+            {
+                return false;
+            }
+
+            var ch = text[0];
+            return ch == '.' && ch == '!' && ch == '?' && ch == ',' && ch == ':' && ch == ')' && ch == ']' && ch == '}';
+        }
+
+        private bool AlwaysSetPeriodNoFurtherValidation(double distance)
+        {
+            return distance > SetPeriodIfDistanceToNextIsMoreThanAlways;
+        }
+
+        private Subtitle AddPeriods(Subtitle inputSubtitle, string language)
         {
             if (IsNonStandardLineTerminationLanguage(language))
             {
@@ -235,45 +251,33 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
             {
                 var paragraph = subtitle.Paragraphs[index];
                 var next = subtitle.Paragraphs[index + 1];
-                if (next.StartTime.TotalMilliseconds - paragraph.EndTime.TotalMilliseconds > SetPeriodIfDistanceToNextIsMoreThan &&
-                    !paragraph.Text.EndsWith('.') &&
-                    !paragraph.Text.EndsWith('!') &&
-                    !paragraph.Text.EndsWith('?') &&
-                    !paragraph.Text.EndsWith(',') &&
-                    !paragraph.Text.EndsWith(':') &&
-                    !paragraph.Text.EndsWith(')') &&
-                    !paragraph.Text.EndsWith(']') &&
-                    !paragraph.Text.EndsWith('}'))
-                {
-                    var gap = next.StartTime.TotalMilliseconds - paragraph.EndTime.TotalMilliseconds;
-                    if (gap > SetPeriodIfDistanceToNextIsMoreThanAlways)
-                    {
-                        paragraph.Text += ".";
-                    }
-                    else
-                    {
-                        var lastWord = GetLastWord(paragraph.Text);
-                        var nextFirstWord = GetFirstWord(next.Text);
-                        if (TwoLetterLanguageCode == "en" && (englishSkipLastWords.Contains(lastWord) || englishSkipFirstWords.Contains(nextFirstWord)))
-                        {
-                            continue;
-                        }
 
-                        paragraph.Text += ".";
+                var distanceToNext = paragraph.EndTime.DistanceTo(next.StartTime);
+                
+                // line already terminated or too close to each other
+                if (distanceToNext <= SetPeriodIfDistanceToNextIsMoreThan || IsTerminated(paragraph.Text))
+                {
+                    continue;
+                }
+
+                if (AlwaysSetPeriodNoFurtherValidation(distanceToNext))
+                {
+                    paragraph.Text += ".";
+                }
+                else
+                {
+                    if (TwoLetterLanguageCode == "en" && (englishSkipLastWords.Contains(GetLastWord(paragraph.Text)) ||
+                                                          englishSkipFirstWords.Contains(GetFirstWord(next.Text))))
+                    {
+                        continue;
                     }
+
+                    paragraph.Text += ".";
                 }
             }
 
             var last = subtitle.GetParagraphOrDefault(subtitle.Paragraphs.Count - 1);
-            if (last != null &&
-                !last.Text.EndsWith('.') &&
-                !last.Text.EndsWith('!') &&
-                !last.Text.EndsWith('?') &&
-                !last.Text.EndsWith(',') &&
-                !last.Text.EndsWith(':') &&
-                !last.Text.EndsWith(')') &&
-                !last.Text.EndsWith(']') &&
-                !last.Text.EndsWith('}'))
+            if (last != null && !IsTerminated(last?.Text ?? string.Empty))
             {
                 subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].Text += ".";
             }

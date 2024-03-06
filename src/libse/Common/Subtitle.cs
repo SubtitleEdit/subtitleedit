@@ -812,8 +812,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                         }
                         else
                         {
-                            var gapMilliseconds = next.StartTime.TotalMilliseconds - paragraph.EndTime.TotalMilliseconds;
-                            lookupDictionary.Add(paragraph.Id, gapMilliseconds);
+                            lookupDictionary.Add(paragraph.Id, paragraph.EndTime.DistanceTo(next.StartTime));
                         }
                     }
 

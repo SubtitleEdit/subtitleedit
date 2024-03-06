@@ -1555,7 +1555,7 @@ namespace Nikse.SubtitleEdit.Controls
             if (_settings.Tools.ListViewSyntaxColorGap && i >= 0 && i < paragraphs.Count - 1 && ColumnIndexGap >= 0 && !paragraph.StartTime.IsMaxTime)
             {
                 var next = paragraphs[i + 1];
-                var gapMilliseconds = (int)Math.Round(next.StartTime.TotalMilliseconds - paragraph.EndTime.TotalMilliseconds);
+                var gapMilliseconds = (int)Math.Round(paragraph.EndTime.DistanceTo(next.StartTime));
                 item.SubItems[ColumnIndexGap].BackColor = gapMilliseconds < Configuration.Settings.General.MinimumMillisecondsBetweenLines ? Configuration.Settings.Tools.ListViewSyntaxErrorColor : BackColor;
             }
 
@@ -2144,7 +2144,7 @@ namespace Nikse.SubtitleEdit.Controls
                     item.SubItems[ColumnIndexGap].Text = gapText;
                     if (!string.IsNullOrEmpty(gapText))
                     {
-                        var gapMilliseconds = (int)Math.Round(next.StartTime.TotalMilliseconds - paragraph.EndTime.TotalMilliseconds);
+                        var gapMilliseconds = (int)Math.Round(paragraph.EndTime.DistanceTo(next.StartTime));
                         item.SubItems[ColumnIndexGap].BackColor = gapMilliseconds < Configuration.Settings.General.MinimumMillisecondsBetweenLines
                             ? Configuration.Settings.Tools.ListViewSyntaxErrorColor
                             : BackColor;
@@ -2160,7 +2160,7 @@ namespace Nikse.SubtitleEdit.Controls
                 return string.Empty;
             }
 
-            return new TimeCode(next.StartTime.TotalMilliseconds - paragraph.EndTime.TotalMilliseconds).ToShortDisplayString();
+            return new TimeCode(paragraph.EndTime.DistanceTo(next.StartTime)).ToShortDisplayString();
         }
 
         public void SetBackgroundColor(int index, Color color, int columnNumber)

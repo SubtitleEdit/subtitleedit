@@ -100,7 +100,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (i >= 0 && i < paragraphs.Count - 1)
                 {
                     var next = paragraphs[i + 1];
-                    var gapMilliseconds = (int)Math.Round(next.StartTime.TotalMilliseconds - paragraph.EndTime.TotalMilliseconds);
+                    var gapMilliseconds = (int)Math.Round(paragraph.EndTime.DistanceTo(next.StartTime));
                     if (gapMilliseconds < 0)
                     {
                         errors.Add("Overlap with next");

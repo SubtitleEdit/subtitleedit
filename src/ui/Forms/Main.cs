@@ -35289,7 +35289,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 next = new Paragraph(_subtitle.Paragraphs[index]);
-                if (paragraph.Text.HasSentenceEnding(language) || next.StartTime.TotalMilliseconds - paragraph.EndTime.TotalMilliseconds > Configuration.Settings.Tools.MergeShortLinesMaxGap)
+                if (paragraph.Text.HasSentenceEnding(language) || paragraph.EndTime.DistanceTo(next.StartTime) > Configuration.Settings.Tools.MergeShortLinesMaxGap)
                 {
                     mergedSubtitle.Paragraphs.Add(paragraph);
                     continue;
