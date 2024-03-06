@@ -4,6 +4,7 @@ using Nikse.SubtitleEdit.Core.Forms;
 using Nikse.SubtitleEdit.Core.Forms.FixCommonErrors;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 namespace Nikse.SubtitleEdit.Core.AudioToText
@@ -263,7 +264,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
 
                 if (AlwaysSetPeriodNoFurtherValidation(distanceToNext))
                 {
-                    paragraph.Text += ".";
+                    paragraph.Text += GetClosingSymbol(paragraph.Text, TwoLetterLanguageCode);
                 }
                 else
                 {
@@ -273,7 +274,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                         continue;
                     }
 
-                    paragraph.Text += ".";
+                    paragraph.Text += GetClosingSymbol(paragraph.Text, TwoLetterLanguageCode);
                 }
             }
 
@@ -284,6 +285,31 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
             }
 
             return subtitle;
+        }
+
+        /// <summary>
+        /// Retrieves the closing symbol based on the last word of the given text and the specified language.
+        /// </summary>
+        /// <param name="text">The text to retrieve the closing symbol for.</param>
+        /// <param name="language">The two-letter language code.</param>
+        /// <returns>The closing symbol.</returns>
+        private string GetClosingSymbol(string text, string language)
+        {
+            const string dot = ".";
+            if (!language.Equals("en", StringComparison.OrdinalIgnoreCase))
+            {
+                return dot;
+            }
+
+            const string exclamation = "!";
+            var exclamationWords = new[]
+            {
+                "wow", "fantastic", "bravo", "incredible", "amazing",
+                "congratulations", "terrific", "unbelievable", "outstanding", "marvelous"
+            };
+
+            var lastWord = GetLastWord(text).ToLower(CultureInfo.GetCultureInfo("en-US"));
+            return exclamationWords.Contains(lastWord) ? exclamation : dot;
         }
 
         private static string GetFirstWord(string text)
