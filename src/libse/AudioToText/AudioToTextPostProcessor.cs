@@ -227,8 +227,9 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                 return false;
             }
 
-            var ch = text[0];
-            return ch == '.' && ch == '!' && ch == '?' && ch == ',' && ch == ':' && ch == ')' && ch == ']' && ch == '}';
+            var lastCh = text[text.Length - 1];
+            return lastCh == '.' || lastCh == '!' || lastCh == '?' || lastCh == ',' || lastCh == ':' ||
+                   lastCh == ')' || lastCh == ']' || lastCh == '}';
         }
 
         private bool AlwaysSetPeriodNoFurtherValidation(double distance)
