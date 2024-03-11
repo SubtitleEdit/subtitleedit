@@ -547,7 +547,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (checkBoxCut.Enabled && checkBoxCut.Checked)
             {
-                fileName += $".{numericUpDownCutFromHours.Text}-{numericUpDownCutFromMinutes.Text}-{numericUpDownCutFromSeconds.Text}_{numericUpDownCutToHours.Text}-{numericUpDownCutToMinutes.Text}-{numericUpDownCutToSeconds.Text}";
+                fileName += $".{numericUpDownCutFromHours.Value}-{numericUpDownCutFromMinutes.Value}-{numericUpDownCutFromSeconds.Value}_{numericUpDownCutToHours.Value}-{numericUpDownCutToMinutes.Value}-{numericUpDownCutToSeconds.Value}";
             }
 
             if (comboBoxVideoEncoding.Text == "prores_ks")
