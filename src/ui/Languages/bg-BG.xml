@@ -10,6 +10,7 @@
     <Cancel>Отказ</Cancel>
     <Yes>Да</Yes>
     <No>Не</No>
+    <Close>Затвори</Close>
     <Apply>Приложи</Apply>
     <ApplyTo>Приложи за</ApplyTo>
     <None>Нищо</None>
@@ -403,6 +404,12 @@ https://github.com/SubtitleEdit/subtitleedit
     <BatchAlignTimeCodes>Изравняване на времевите кодове с времевите кодове на кадрите</BatchAlignTimeCodes>
     <BatchUseExactTimeCodes>Използване на точни часови кодове (ако има такива)</BatchUseExactTimeCodes>
     <BatchSnapToShotChanges>Бързи подсказки за промени в кадите (ако има такива)</BatchSnapToShotChanges>
+    <UnfixableParagraphsTitle>Преглед на не напълно верижни субтитри</UnfixableParagraphsTitle>
+    <UnfixableParagraphsInstructions>Някои субтитри не са били напълно верижно свързани в съответствие с вашия профил, най-вероятно поради твърде плътно групирани промени в кадрите (възможно е да има фалшиви положителни резултати).
+Може би ще искате да прегледате тези случаи ръчно, за да сте сигурни, че подсказките ви са фиксирани към правилните (реални) промени в кадъра.</UnfixableParagraphsInstructions>
+    <UnfixableParagraphsColumnParagraphs>Редове</UnfixableParagraphsColumnParagraphs>
+    <UnfixableParagraphsColumnParagraphsFormat>#{0} – #{1}</UnfixableParagraphsColumnParagraphsFormat>
+    <UnfixableParagraphsColumnGap>Разлика (кадри)</UnfixableParagraphsColumnGap>
   </BeautifyTimeCodes>
   <BeautifyTimeCodesProfile>
     <Title>Редакция на профила</Title>
@@ -426,9 +433,10 @@ https://github.com/SubtitleEdit/subtitleedit
     <Chaining>Верижно свързване</Chaining>
     <InCueOnShot>В подсказката при промяна на кадъра</InCueOnShot>
     <OutCueOnShot>Излизане на подсказка при смяна на кадъра</OutCueOnShot>
+    <CheckGeneral>Все още се прилагат общите правила, когато не са засегнати</CheckGeneral>
     <MaxGap>Макс.  разлика:</MaxGap>
     <ShotChangeBehavior>Ако между тях има промяна на кадъра:</ShotChangeBehavior>
-    <DontChain>Без свързване на вериги</DontChain>
+    <DontChain>Без верижно свързване</DontChain>
     <ExtendCrossingShotChange>Удълж.,промянаНаКръстосанКадър</ExtendCrossingShotChange>
     <ExtendUntilShotChange>Удължаване до смяна на кадъра</ExtendUntilShotChange>
     <ResetWarning>Това ще нулира текущия ви профил и ще замени всички стойности с тези от избраната предварителна настройка. Това не може да бъде отменено.
@@ -462,7 +470,7 @@ https://github.com/SubtitleEdit/subtitleedit
 След верижно свързване субтитрите са или свързани (т.е. субтитрите изчезват и нови субтитри се появяват веднага след лека пауза), или не.
 Това дава на зрителя известна представа кога може да премести фокуса си обратно към екрана.
 
-Дължината на разликата във веригата може да бъде малко по-малка веднага след изчезването на субтитрите при смяна на кадъра, тъй като променящият се кадър "нулира" изображението по някакъв начин.
+Дължината на разликата във верижно свързване може да бъде малко по-малка веднага след изчезването на субтитрите при смяна на кадъра, тъй като променящият се кадър "нулира" изображението по някакъв начин.
 Използваме присъщия ритъм на изображението.</CreateSimpleChainingToolTip>
     <CreateSimpleLoadNetflixRules>Зареждане правилата на Netflix</CreateSimpleLoadNetflixRules>
     <Frames>кадри</Frames>
@@ -956,7 +964,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <FixDoubleDash>Поправяне на символ тирета «--» на многоточие «...»</FixDoubleDash>
     <FixDoubleGreaterThan>Премахване на символ «&gt;&gt;» в началото на реда</FixDoubleGreaterThan>
     <FixEllipsesStart>Изтриване на многоточие «...» в началото на реда</FixEllipsesStart>
-    <FixMissingOpenBracket>Поправяне на липсваща скоба «[» в ред</FixMissingOpenBracket>
+    <FixMissingOpenBracket>Поправяне на липсваща скоба «[» или «(» в ред</FixMissingOpenBracket>
     <FixMusicNotation>Замяна на музикални символи (напр.«âTª») с избрания в «Настройки»/«Инструменти» символ (напр.«♫»)</FixMusicNotation>
     <FixDoubleDashExample>Whoa-- um yeah! -&gt; Whoa... um yeah!</FixDoubleDashExample>
     <FixDoubleGreaterThanExample>&gt;&gt; Robert: Sup dude! -&gt; Robert: Sup dude!</FixDoubleGreaterThanExample>
@@ -1051,9 +1059,9 @@ https://github.com/SubtitleEdit/subtitleedit
     <PoweredByX>С помощта на {0}</PoweredByX>
     <MsClientSecretNeeded>Съжаляваме, но за да използвате най-новия преводач на Microsoft, ви е необходим ключ от Microsoft за когнитивни услуги "Преводач на текст".
 
-Отворете "Опции -&gt; Настройки -&gt; Инструменти", за да въведете вашия ключ.</MsClientSecretNeeded>
+Отворете "Опции -&gt; Настройки -&gt; Автоматичен превод", за да въведете вашия ключ.</MsClientSecretNeeded>
     <GoogleNoApiKeyWarning>Трудно се превежда без API ключ... (бавни и ограничени данни)
-За да използвате API ключ, отворете "Опции -&gt; Настройки -&gt; Инструменти", за да въведете вашия API ключ за преводач на Google.</GoogleNoApiKeyWarning>
+За да използвате API ключ, отворете "Опции -&gt; Настройки -&gt; Автоматичен превод", за да въведете вашия API ключ за преводач на Google.</GoogleNoApiKeyWarning>
     <Service>Услуги:</Service>
     <LineMergeHandling>Обединяване на редове:</LineMergeHandling>
     <ProcessorMergeNext>Обединяване макс. два реда</ProcessorMergeNext>
@@ -1319,6 +1327,7 @@ https://github.com/SubtitleEdit/subtitleedit
         <CloseTranslation>Затваряне на проведените субтитри</CloseTranslation>
         <OpenContainingFolder>Отвори папката, съдържаща субтитри ...</OpenContainingFolder>
         <Compare>Сравняване ...</Compare>
+        <VerifyCompleteness>Проверка на съответствието...</VerifyCompleteness>
         <Statistics>Статистика ...</Statistics>
         <Plugins>Приставки (Plugins) ...</Plugins>
         <ImportSubtitleFromVideoFile>Импорт на субтитри от видео файл ...</ImportSubtitleFromVideoFile>
@@ -1565,6 +1574,7 @@ https://github.com/SubtitleEdit/subtitleedit
         <Subscript>Долен индекс</Subscript>
         <Alignment>Подравняване...</Alignment>
         <AutoBalanceSelectedLines>Авт. подравняване на избраните редове ...</AutoBalanceSelectedLines>
+        <EvenlyDistributeSelectedLines>Равномерно разпределение на избраните редове (CPS-Кликвания в секунда)</EvenlyDistributeSelectedLines>
         <RemoveLineBreaksFromSelectedLines>Премахване прекъсванията на ред в избраните редове...</RemoveLineBreaksFromSelectedLines>
         <TypewriterEffect>Ефект пишеща машина ...</TypewriterEffect>
         <KaraokeEffect>Ефект караоке ...</KaraokeEffect>
@@ -1838,6 +1848,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <SortedByX>Сортиране по: {0}</SortedByX>
     <BeforeAutoBalanceSelectedLines>Преди авт. настройка на избраните редове</BeforeAutoBalanceSelectedLines>
     <NumberOfLinesAutoBalancedX>Брой авт. настроени редове: {0}</NumberOfLinesAutoBalancedX>
+    <BeforeEvenlyDistributeSelectedLines>Преди равномерното разпределение на избраните редове</BeforeEvenlyDistributeSelectedLines>
+    <NumberOfLinesEvenlyDistributedX>Брой равномерно разпределени редове: {0}</NumberOfLinesEvenlyDistributedX>
     <BeforeRemoveLineBreaksInSelectedLines>Преди премахването на прекъсвания на ред в избраните редове</BeforeRemoveLineBreaksInSelectedLines>
     <NumberOfWithRemovedLineBreakX>Брой редове с премахнато прекъсване на ред: {0}</NumberOfWithRemovedLineBreakX>
     <BeforeMultipleReplace>Преди множествената замяна</BeforeMultipleReplace>
@@ -2611,6 +2623,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <MergeDialogWithNext>Обединяване на диалога със следващия (вмъкване на тирета)</MergeDialogWithNext>
     <MergeDialogWithPrevious>Обединяване на диалога с предишния (вмъкване на тирета)</MergeDialogWithPrevious>
     <AutoBalanceSelectedLines>Автоматичен баланс на избраните редове</AutoBalanceSelectedLines>
+    <EvenlyDistributeSelectedLines>Равномерно разпределяне на избраните редове (CPS-Кликвания в секунда)</EvenlyDistributeSelectedLines>
     <GoToNext>Преминаване на следващия ред</GoToNext>
     <GoToNextPlayTranslate>Преминаване на следващия ред (и възпроизв. в „режим на превод“)</GoToNextPlayTranslate>
     <GoToNextCursorAtEnd>Преминаване на следващия ред и задаване на курсора в края</GoToNextCursorAtEnd>
@@ -2710,6 +2723,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <AudioExtractSelectedLines>Извличане на аудио (избрани редове)</AudioExtractSelectedLines>
     <AudioToTextSelectedLinesX>Аудио към текст на избраните редове ({0})</AudioToTextSelectedLinesX>
     <VideoToggleBrightness>Превключване на яркостта (само за mpv)</VideoToggleBrightness>
+    <AutoTranslateSelectedLines>Автоматичен превод на избраните редове</AutoTranslateSelectedLines>
     <CustomSearch1>Превод, лично търсене 1</CustomSearch1>
     <CustomSearch2>Превод, лично търсене 2</CustomSearch2>
     <CustomSearch3>Превод, лично търсене 3</CustomSearch3>
@@ -2839,6 +2853,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <ExportAsHtml>Експортиране като HTML...</ExportAsHtml>
     <SetNewActor>Задаване на нов актьор/глас</SetNewActor>
     <SetActorX>Зададен актьор/глас {0}</SetActorX>
+    <Used>Използван</Used>
+    <Unused>Неизползван</Unused>
   </Settings>
   <SettingsMpv>
     <DownloadMpv>Изтегляне на MPV плеър</DownloadMpv>
@@ -3152,6 +3168,21 @@ https://github.com/SubtitleEdit/subtitleedit
     <Message>Ако искате това да се поправи, изпратете email до mailto:niksedk@gmail.com и включете копие на тези субтитри.</Message>
     <ImportAsPlainText>Импорт като обикновен текст...</ImportAsPlainText>
   </UnknownSubtitle>
+  <VerifyCompleteness>
+    <Title>Проверка на съответствието спрямо други субтитри</Title>
+    <OpenControlSubtitle>Отваряне на субтитрите за контрол</OpenControlSubtitle>
+    <ControlSubtitleError>Контролният субтитър е празен или не може да бъде зареден.</ControlSubtitleError>
+    <ControlSubtitleX>Контролни субтитри: {0}</ControlSubtitleX>
+    <Coverage>Покритие</Coverage>
+    <CoveragePercentageX>{0:0.##}%</CoveragePercentageX>
+    <SortByCoverage>Сортиране по покритие</SortByCoverage>
+    <SortByTime>Сортиране по време</SortByTime>
+    <Reload>Повторна проверка</Reload>
+    <Insert>Вмъкване</Insert>
+    <InsertAndNext>Вмъкни и премини към следващия</InsertAndNext>
+    <Dismiss>Отхвърляне</Dismiss>
+    <DismissAndNext>Отхвърли и премини към следващия</DismissAndNext>
+  </VerifyCompleteness>
   <VisualSync>
     <Title>Визуална синхронизация</Title>
     <StartScene>Начална сцена</StartScene>
