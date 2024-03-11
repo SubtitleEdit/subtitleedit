@@ -909,6 +909,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             input = input.Substring(lineStartIndex, lineEndIndex - lineStartIndex);
 
             var startIndex = input.IndexOf("<", StringComparison.Ordinal);
+            if (startIndex < 0)
+            {
+                return false;
+            }
+
             var endIndex = input.LastIndexOf("</", StringComparison.Ordinal);
             if (endIndex >= 0)
             {
