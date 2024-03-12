@@ -109,6 +109,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             AutoTranslate_Resize(null, null);
             UpdateTranslation();
             MergeAndSplitHelper.MergeSplitProblems = false;
+            ShowDelayLabel();
         }
 
         private void InitializeAutoTranslatorEngines()
@@ -625,11 +626,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 _autoTranslator.Name == NoLanguageLeftBehindApi.StaticName ||  // NLLB seems to miss some text...
                 _autoTranslator.Name == NoLanguageLeftBehindServe.StaticName;
 
-            var delaySeconds = 0;
-            if (_autoTranslator.Name == ChatGptTranslate.StaticName)
-            {
-                delaySeconds = Configuration.Settings.Tools.ChatGptDelaySeconds;
-            }
+            var delaySeconds = Configuration.Settings.Tools.AutoTranslateDelaySeconds;
 
             if (comboBoxSource.SelectedItem is TranslationPair source && comboBoxTarget.SelectedItem is TranslationPair target)
             {
@@ -1199,6 +1196,30 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                     SelectFormality();
                 }
             }
+        }
+
+        private void delayToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            delayToolStripMenuItem_Click(null, null);
+        }
+
+        private void delayToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (Configuration.Settings.Tools.AutoTranslateDelaySeconds == 0)
+            {
+                Configuration.Settings.Tools.AutoTranslateDelaySeconds = 20;
+            }
+            else
+            {
+                Configuration.Settings.Tools.AutoTranslateDelaySeconds = 0;
+            }
+
+            ShowDelayLabel();
+        }
+
+        private void ShowDelayLabel()
+        {
+            delayToolStripMenuItem1.Text = "Delay between API calls in seconds: " + Configuration.Settings.Tools.AutoTranslateDelaySeconds;
         }
     }
 }
