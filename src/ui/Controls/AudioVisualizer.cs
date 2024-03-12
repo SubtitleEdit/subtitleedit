@@ -915,7 +915,7 @@ namespace Nikse.SubtitleEdit.Controls
                 else
                     intervaljaafar = 0.1d;
                 var interval = _zoomFactor >= 0.4d ?
-                    0.1d : // a pixel is 0.1 second
+                    intervaljaafar : // a pixel is 0.1 second
                     1.0d;  // a pixel is 1.0 second
                 using (var pen = new Pen(GridColor))
                 {
