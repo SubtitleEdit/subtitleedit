@@ -476,6 +476,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public string WhisperLocation { get; set; }
         public string WhisperCtranslate2Location { get; set; }
         public string WhisperPurfviewFasterWhisperLocation { get; set; }
+        public string WhisperPurfviewFasterWhisperDefaultCmd { get; set; }
         public string WhisperXLocation { get; set; }
         public string WhisperStableTsLocation { get; set; }
         public string WhisperCppModelLocation { get; set; }
@@ -710,6 +711,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             VoskPostProcessing = true;
             WhisperChoice = Configuration.IsRunningOnWindows ? AudioToText.WhisperChoice.PurfviewFasterWhisper : AudioToText.WhisperChoice.OpenAi;
             WhisperDeleteTempFiles = true;
+            WhisperPurfviewFasterWhisperDefaultCmd = "--standard";
             WhisperExtraSettings = "";
             WhisperLanguageCode = "en";
             WhisperAutoAdjustTimings = true;
@@ -7128,6 +7130,12 @@ $HorzAlign          =   Center
                 settings.Tools.WhisperPurfviewFasterWhisperLocation = subNode.InnerText;
             }
 
+            subNode = node.SelectSingleNode("WhisperPurfviewFasterWhisperDefaultCmd");
+            if (subNode != null)
+            {
+                settings.Tools.WhisperPurfviewFasterWhisperDefaultCmd = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("WhisperExtraSettings");
             if (subNode != null)
             {
@@ -12084,6 +12092,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("WhisperLocation", settings.Tools.WhisperLocation);
                 textWriter.WriteElementString("WhisperCtranslate2Location", settings.Tools.WhisperCtranslate2Location);
                 textWriter.WriteElementString("WhisperPurfviewFasterWhisperLocation", settings.Tools.WhisperPurfviewFasterWhisperLocation);
+                textWriter.WriteElementString("WhisperPurfviewFasterWhisperDefaultCmd", settings.Tools.WhisperPurfviewFasterWhisperDefaultCmd);
                 textWriter.WriteElementString("WhisperXLocation", settings.Tools.WhisperXLocation);
                 textWriter.WriteElementString("WhisperStableTsLocation", settings.Tools.WhisperStableTsLocation);
                 textWriter.WriteElementString("WhisperCppModelLocation", settings.Tools.WhisperCppModelLocation);

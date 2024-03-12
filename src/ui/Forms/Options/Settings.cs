@@ -44,7 +44,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
         private List<RulesProfile> _rulesProfiles;
         private List<PluginShortcut> _pluginShortcuts;
         private readonly bool _loading;
-        private readonly BackgroundWorker _shortcutsBackgroundWorker;
         private string _defaultLanguages;
 
         private static IEnumerable<string> GetSubtitleFormats() => SubtitleFormat.AllSubtitleFormats.Where(format => !format.IsVobSubIndexFile).Select(format => format.FriendlyName);
@@ -130,7 +129,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
                 "Network",
                 "File type associations"});
 
-            _shortcutsBackgroundWorker = new BackgroundWorker();
             Init();
             _loading = false;
 
@@ -139,12 +137,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
         public void Init()
         {
-            _shortcutsBackgroundWorker.DoWork += (sender, args) =>
-            {
-                MakeShortcutsTreeView(LanguageSettings.Current.Settings);
-            };
-            _shortcutsBackgroundWorker.RunWorkerAsync();
-
+            MakeShortcutsTreeView(LanguageSettings.Current.Settings);
             labelStatus.Text = string.Empty;
             _rulesProfiles = new List<RulesProfile>(Configuration.Settings.General.Profiles);
             var gs = Configuration.Settings.General;
@@ -2508,12 +2501,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
                 case ShortcutsSection:
                     section = panelShortcuts;
                     Cursor = Cursors.WaitCursor;
-                    while (_shortcutsBackgroundWorker.IsBusy)
-                    {
-                        System.Threading.Thread.Sleep(10);
-                        Application.DoEvents();
-                    }
-
                     ShowShortcutsTreeView();
                     Cursor = Cursors.Default;
                     break;
