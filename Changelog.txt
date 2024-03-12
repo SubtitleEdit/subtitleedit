@@ -26,6 +26,7 @@
    * Update Whisper CPP to V1.5.4
    * Update Purfview Faster Whisper to r186.1
    * Add Turkish for ChatGPT translate - thx Bel
+   * Allow changing ChatGPT model - thx luannbr
    * Improve ANSI encoding auto detect - thx wifi-left
    * Update Danish OCR dictionaries - thx Claus
    * Add default icon for layout - thx PaulVeld
