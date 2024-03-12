@@ -465,8 +465,8 @@
             this.label11 = new System.Windows.Forms.Label();
             this.groupBoxAutoTranslateChatGpt = new System.Windows.Forms.GroupBox();
             this.nikseTextBoxChatGptUrl = new Nikse.SubtitleEdit.Controls.NikseTextBox();
-            this.nikseComboBoxChatGptDelay = new Nikse.SubtitleEdit.Controls.NikseComboBox();
-            this.labelChatGptDelay = new System.Windows.Forms.Label();
+            this.nikseComboBoxChatGptModel = new Nikse.SubtitleEdit.Controls.NikseComboBox();
+            this.labelChatGptModel = new System.Windows.Forms.Label();
             this.nikseTextBoxChatGptApiKey = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelApiKeyChatGpt = new System.Windows.Forms.Label();
             this.labelUrlChatGpt = new System.Windows.Forms.Label();
@@ -6563,8 +6563,8 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxAutoTranslateChatGpt.Controls.Add(this.nikseTextBoxChatGptUrl);
-            this.groupBoxAutoTranslateChatGpt.Controls.Add(this.nikseComboBoxChatGptDelay);
-            this.groupBoxAutoTranslateChatGpt.Controls.Add(this.labelChatGptDelay);
+            this.groupBoxAutoTranslateChatGpt.Controls.Add(this.nikseComboBoxChatGptModel);
+            this.groupBoxAutoTranslateChatGpt.Controls.Add(this.labelChatGptModel);
             this.groupBoxAutoTranslateChatGpt.Controls.Add(this.nikseTextBoxChatGptApiKey);
             this.groupBoxAutoTranslateChatGpt.Controls.Add(this.labelApiKeyChatGpt);
             this.groupBoxAutoTranslateChatGpt.Controls.Add(this.labelUrlChatGpt);
@@ -6585,40 +6585,40 @@
             this.nikseTextBoxChatGptUrl.Size = new System.Drawing.Size(384, 21);
             this.nikseTextBoxChatGptUrl.TabIndex = 34;
             // 
-            // nikseComboBoxChatGptDelay
+            // nikseComboBoxChatGptModel
             // 
-            this.nikseComboBoxChatGptDelay.BackColor = System.Drawing.SystemColors.Window;
-            this.nikseComboBoxChatGptDelay.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
-            this.nikseComboBoxChatGptDelay.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
-            this.nikseComboBoxChatGptDelay.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
-            this.nikseComboBoxChatGptDelay.ButtonForeColor = System.Drawing.SystemColors.ControlText;
-            this.nikseComboBoxChatGptDelay.ButtonForeColorDown = System.Drawing.Color.Orange;
-            this.nikseComboBoxChatGptDelay.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            this.nikseComboBoxChatGptDelay.DropDownHeight = 400;
-            this.nikseComboBoxChatGptDelay.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.nikseComboBoxChatGptDelay.DropDownWidth = 375;
-            this.nikseComboBoxChatGptDelay.FormattingEnabled = true;
-            this.nikseComboBoxChatGptDelay.Items.AddRange(new object[] {
-            "0",
-            "20"});
-            this.nikseComboBoxChatGptDelay.Location = new System.Drawing.Point(52, 109);
-            this.nikseComboBoxChatGptDelay.MaxLength = 32767;
-            this.nikseComboBoxChatGptDelay.Name = "nikseComboBoxChatGptDelay";
-            this.nikseComboBoxChatGptDelay.SelectedIndex = -1;
-            this.nikseComboBoxChatGptDelay.SelectedItem = null;
-            this.nikseComboBoxChatGptDelay.SelectedText = "";
-            this.nikseComboBoxChatGptDelay.Size = new System.Drawing.Size(340, 21);
-            this.nikseComboBoxChatGptDelay.TabIndex = 38;
-            this.nikseComboBoxChatGptDelay.UsePopupWindow = false;
+            this.nikseComboBoxChatGptModel.BackColor = System.Drawing.SystemColors.Window;
+            this.nikseComboBoxChatGptModel.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.nikseComboBoxChatGptModel.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.nikseComboBoxChatGptModel.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.nikseComboBoxChatGptModel.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.nikseComboBoxChatGptModel.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.nikseComboBoxChatGptModel.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.nikseComboBoxChatGptModel.DropDownHeight = 400;
+            this.nikseComboBoxChatGptModel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.nikseComboBoxChatGptModel.DropDownWidth = 375;
+            this.nikseComboBoxChatGptModel.FormattingEnabled = true;
+            this.nikseComboBoxChatGptModel.Items.AddRange(new object[] {
+            "gpt-3.5-turbo",
+            "gpt-4"});
+            this.nikseComboBoxChatGptModel.Location = new System.Drawing.Point(52, 109);
+            this.nikseComboBoxChatGptModel.MaxLength = 32767;
+            this.nikseComboBoxChatGptModel.Name = "nikseComboBoxChatGptModel";
+            this.nikseComboBoxChatGptModel.SelectedIndex = -1;
+            this.nikseComboBoxChatGptModel.SelectedItem = null;
+            this.nikseComboBoxChatGptModel.SelectedText = "";
+            this.nikseComboBoxChatGptModel.Size = new System.Drawing.Size(340, 21);
+            this.nikseComboBoxChatGptModel.TabIndex = 38;
+            this.nikseComboBoxChatGptModel.UsePopupWindow = false;
             // 
-            // labelChatGptDelay
+            // labelChatGptModel
             // 
-            this.labelChatGptDelay.AutoSize = true;
-            this.labelChatGptDelay.Location = new System.Drawing.Point(6, 112);
-            this.labelChatGptDelay.Name = "labelChatGptDelay";
-            this.labelChatGptDelay.Size = new System.Drawing.Size(34, 13);
-            this.labelChatGptDelay.TabIndex = 37;
-            this.labelChatGptDelay.Text = "Delay";
+            this.labelChatGptModel.AutoSize = true;
+            this.labelChatGptModel.Location = new System.Drawing.Point(6, 112);
+            this.labelChatGptModel.Name = "labelChatGptModel";
+            this.labelChatGptModel.Size = new System.Drawing.Size(35, 13);
+            this.labelChatGptModel.TabIndex = 37;
+            this.labelChatGptModel.Text = "Model";
             // 
             // nikseTextBoxChatGptApiKey
             // 
@@ -6986,8 +6986,8 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1092, 574);
-            this.Controls.Add(this.panelShortcuts);
             this.Controls.Add(this.panelAutoTranslate);
+            this.Controls.Add(this.panelShortcuts);
             this.Controls.Add(this.panelVideoPlayer);
             this.Controls.Add(this.labelUpdateFileTypeAssociationsStatus);
             this.Controls.Add(this.panelGeneral);
@@ -7607,14 +7607,14 @@
         private System.Windows.Forms.LinkLabel linkLabelPapago;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.GroupBox groupBoxAutoTranslateChatGpt;
-        private System.Windows.Forms.Label labelChatGptDelay;
+        private System.Windows.Forms.Label labelChatGptModel;
         private Controls.NikseTextBox nikseTextBoxChatGptApiKey;
         private System.Windows.Forms.Label labelApiKeyChatGpt;
         private Controls.NikseTextBox nikseTextBoxChatGptUrl;
         private System.Windows.Forms.Label labelUrlChatGpt;
         private System.Windows.Forms.LinkLabel linkLabelMoreInfoChatGpt;
         private System.Windows.Forms.Label label10;
-        private Controls.NikseComboBox nikseComboBoxChatGptDelay;
+        private Controls.NikseComboBox nikseComboBoxChatGptModel;
         private System.Windows.Forms.Label labelShortcutsFilter;
         private Controls.NikseComboBox nikseComboBoxShortcutsFilter;
     }

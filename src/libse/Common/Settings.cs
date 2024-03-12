@@ -176,7 +176,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public string ChatGptUrl { get; set; }
         public string ChatGptApiKey { get; set; }
         public string ChatGptModel { get; set; }
-        public int ChatGptDelaySeconds { get; set; }
+        public int AutoTranslateDelaySeconds { get; set; }
         public string GeminiProApiKey { get; set; }
         public bool DisableVidoInfoViaLabel { get; set; }
         public bool ListViewSyntaxColorDurationSmall { get; set; }
@@ -5336,10 +5336,10 @@ $HorzAlign          =   Center
                 settings.Tools.ChatGptModel = subNode.InnerText;
             }
 
-            subNode = node.SelectSingleNode("ChatGptDelaySeconds");
+            subNode = node.SelectSingleNode("AutoTranslateDelaySeconds");
             if (subNode != null)
             {
-                settings.Tools.ChatGptDelaySeconds = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+                settings.Tools.AutoTranslateDelaySeconds = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
             subNode = node.SelectSingleNode("GeminiProApiKey");
@@ -11811,7 +11811,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("ChatGptUrl", settings.Tools.ChatGptUrl);
                 textWriter.WriteElementString("ChatGptApiKey", settings.Tools.ChatGptApiKey);
                 textWriter.WriteElementString("ChatGptModel", settings.Tools.ChatGptModel);
-                textWriter.WriteElementString("ChatGptDelaySeconds", settings.Tools.ChatGptDelaySeconds.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("AutoTranslateDelaySeconds", settings.Tools.AutoTranslateDelaySeconds.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("GeminiProApiKey", settings.Tools.GeminiProApiKey);
                 textWriter.WriteElementString("DisableVidoInfoViaLabel", settings.Tools.DisableVidoInfoViaLabel.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewSyntaxColorDurationSmall", settings.Tools.ListViewSyntaxColorDurationSmall.ToString(CultureInfo.InvariantCulture));

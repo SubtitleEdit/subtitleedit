@@ -60,6 +60,8 @@
             this.subtitleListViewSource = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.comboBoxFormality = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelFormality = new Nikse.SubtitleEdit.Controls.NikseLabel();
+            this.delayToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.delayToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip2.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -159,9 +161,10 @@
             this.toolStripMenuItemStartNLLBServe,
             this.toolStripMenuItemStartNLLBApi,
             this.toolStripSeparator1,
-            this.translateSingleLinesToolStripMenuItem});
+            this.translateSingleLinesToolStripMenuItem,
+            this.delayToolStripMenuItem});
             this.contextMenuStrip2.Name = "contextMenuStrip1";
-            this.contextMenuStrip2.Size = new System.Drawing.Size(197, 98);
+            this.contextMenuStrip2.Size = new System.Drawing.Size(199, 120);
             this.contextMenuStrip2.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip2_Opening);
             // 
             // toolStripMenuItemStartLibre
@@ -203,9 +206,10 @@
             this.startNLLBServeServerToolStripMenuItem,
             this.startNLLBAPIServerToolStripMenuItem,
             this.toolStripSeparator2,
-            this.translateSingleLinesToolStripMenuItem1});
+            this.translateSingleLinesToolStripMenuItem1,
+            this.delayToolStripMenuItem1});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(197, 98);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(199, 142);
             this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
             // 
             // startLibreTranslateServerToolStripMenuItem
@@ -443,6 +447,20 @@
             this.labelFormality.TabIndex = 113;
             this.labelFormality.Text = "Formality:";
             // 
+            // delayToolStripMenuItem
+            // 
+            this.delayToolStripMenuItem.Name = "delayToolStripMenuItem";
+            this.delayToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.delayToolStripMenuItem.Text = "Delay between API calls";
+            this.delayToolStripMenuItem.Click += new System.EventHandler(this.delayToolStripMenuItem_Click);
+            // 
+            // delayToolStripMenuItem1
+            // 
+            this.delayToolStripMenuItem1.Name = "delayToolStripMenuItem1";
+            this.delayToolStripMenuItem1.Size = new System.Drawing.Size(198, 22);
+            this.delayToolStripMenuItem1.Text = "Delay between API calls";
+            this.delayToolStripMenuItem1.Click += new System.EventHandler(this.delayToolStripMenuItem1_Click);
+            // 
             // AutoTranslate
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -519,5 +537,7 @@
         private System.Windows.Forms.ToolStripMenuItem translateSingleLinesToolStripMenuItem1;
         private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxFormality;
         private Nikse.SubtitleEdit.Controls.NikseLabel labelFormality;
+        private System.Windows.Forms.ToolStripMenuItem delayToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem delayToolStripMenuItem1;
     }
 }
