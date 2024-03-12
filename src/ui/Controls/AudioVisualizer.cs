@@ -909,6 +909,11 @@ namespace Nikse.SubtitleEdit.Controls
                 var xPosition = SecondsToXPosition(seconds);
                 var yPosition = 0;
                 var yCounter = 0d;
+                double intervaljaafar=0;
+                if (Configuration.Settings.General.CurrentFrameRate == 25)
+                    intervaljaafar = 0.04d;
+                else
+                    intervaljaafar = 0.1d;
                 var interval = _zoomFactor >= 0.4d ?
                     0.1d : // a pixel is 0.1 second
                     1.0d;  // a pixel is 1.0 second
