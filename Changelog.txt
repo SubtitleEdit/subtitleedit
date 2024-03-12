@@ -18,11 +18,13 @@
    * Update Russian translation - thx elfriob
    * Update Polish translation - thx admas
    * Update Dutch translation - thx Flitskikker
+   * Update Bulgarian translation - thx Калин
    * Improve auto-translate re-split (two lines only)
    * Some "Beautify time codes" improvements - thx Flitskikker
    * Set file name after .MKS file import - thx RedSoxFan04
    * Faster cancel in auto-translate - thx Siamak
    * Update Whisper CPP to V1.5.4
+   * Update Purfview Faster Whisper to r186.1
    * Add Turkish for ChatGPT translate - thx Bel
    * Improve ANSI encoding auto detect - thx wifi-left
    * Update Danish OCR dictionaries - thx Claus
@@ -45,6 +47,9 @@
    * Fix possible crash in MKV/TS reading - thx Maknol
    * Fix for "Add missing periods" and ASSA tags - thx Firegloom
    * Fix Whisper CPP Hebrew language code - thx Udo
+   * Fix minor generate video file file-name - thx LeonCheung
+   * Fix copy/paste in duration field - thx GCRaistlin
+   * Fix crash in "Fix commo errors" - thx dramirvf
 
 
 4.0.3 (23rd December 2023)
