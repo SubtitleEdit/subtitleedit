@@ -73,6 +73,15 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             }
 
             Configuration.Settings.Tools.WhisperExtraSettings = comboBoxWhisperExtra.Text;
+
+            if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.PurfviewFasterWhisper)
+            {
+                if (Configuration.Settings.Tools.WhisperPurfviewFasterWhisperDefaultCmd != comboBoxWhisperExtra.Text)
+                {
+                    Configuration.Settings.Tools.WhisperPurfviewFasterWhisperDefaultCmd = string.Empty;
+                }
+            }
+
             DialogResult = DialogResult.OK;
         }
 
