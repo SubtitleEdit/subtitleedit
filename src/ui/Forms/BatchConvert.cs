@@ -133,6 +133,7 @@ namespace Nikse.SubtitleEdit.Forms
             InitializeComponent();
             UiUtil.FixFonts(this);
             Icon = (Icon)icon.Clone();
+            DoubleBuffered = true;
 
             _cancellationTokenSource = new CancellationTokenSource();
             progressBar1.Visible = false;
@@ -1428,7 +1429,7 @@ namespace Nikse.SubtitleEdit.Forms
                                                             item.SubItems[3].Text = LanguageSettings.Current.BatchConvert.Ocr + "  " + progress;
                                                         };
                                                         vobSubOcr.FileName = Path.GetFileName(fileName);
-                                                        vobSubOcr.InitializeBatch(vobSubs, idx.Palette, Configuration.Settings.VobSubOcr, fileName, false, track.Language, _ocrEngine);
+                                                        vobSubOcr.InitializeBatch(vobSubs, idx.Palette, Configuration.Settings.VobSubOcr, fileName, false, track.Language, _ocrEngine, _cancellationTokenSource.Token);
                                                         sub = vobSubOcr.SubtitleFromOcr;
                                                     }
                                                 }
@@ -1481,7 +1482,7 @@ namespace Nikse.SubtitleEdit.Forms
                                                                 item.SubItems[3].Text = LanguageSettings.Current.BatchConvert.Ocr + "  " + progress;
                                                             };
                                                             vobSubOcr.FileName = Path.GetFileName(fileName);
-                                                            vobSubOcr.InitializeBatch(bluRaySubtitles, Configuration.Settings.VobSubOcr, fileName, false, track.Language, _ocrEngine);
+                                                            vobSubOcr.InitializeBatch(bluRaySubtitles, Configuration.Settings.VobSubOcr, fileName, false, track.Language, _ocrEngine, _cancellationTokenSource.Token);
                                                             sub = vobSubOcr.SubtitleFromOcr;
                                                         }
                                                     }
@@ -1525,7 +1526,7 @@ namespace Nikse.SubtitleEdit.Forms
                                                             vobSubOcr.FileName = Path.GetFileName(fileName);
 
                                                             //TODO: fix
-                                                            vobSubOcr.InitializeBatch(binaryParagraphs.Cast<IBinaryParagraph>().ToList(), Configuration.Settings.VobSubOcr, fileName, false, track.Language, _ocrEngine);
+                                                            vobSubOcr.InitializeBatch(binaryParagraphs.Cast<IBinaryParagraph>().ToList(), Configuration.Settings.VobSubOcr, fileName, false, track.Language, _ocrEngine, _cancellationTokenSource.Token);
                                                             sub = vobSubOcr.SubtitleFromOcr;
                                                         }
                                                     }
@@ -1592,7 +1593,7 @@ namespace Nikse.SubtitleEdit.Forms
                                         }
                                     };
                                     vobSubOcr.FileName = Path.GetFileName(fileName);
-                                    vobSubOcr.InitializeBatch(bluRaySubtitles, Configuration.Settings.VobSubOcr, fileName, false, _ocrLanguage, _ocrEngine);
+                                    vobSubOcr.InitializeBatch(bluRaySubtitles, Configuration.Settings.VobSubOcr, fileName, false, _ocrLanguage, _ocrEngine, _cancellationTokenSource.Token);
                                     sub = vobSubOcr.SubtitleFromOcr;
                                 }
                             }
@@ -1617,7 +1618,7 @@ namespace Nikse.SubtitleEdit.Forms
                                         lastProgress = progress;
                                     }
                                 };
-                                vobSubOcr.InitializeBatch(fileName, Configuration.Settings.VobSubOcr, false, _ocrEngine, _ocrLanguage);
+                                vobSubOcr.InitializeBatch(fileName, Configuration.Settings.VobSubOcr, false, _ocrEngine, _ocrLanguage, _cancellationTokenSource.Token);
                                 sub = vobSubOcr.SubtitleFromOcr;
                             }
                         }
@@ -1687,7 +1688,7 @@ namespace Nikse.SubtitleEdit.Forms
                                             var language = programMapTableParser.GetSubtitleLanguage(id);
                                             language = string.IsNullOrEmpty(language) ? _ocrLanguage : language;
                                             vobSubOcr.FileName = Path.GetFileName(fileName);
-                                            vobSubOcr.InitializeBatch(tsBinaryParagraphs, Configuration.Settings.VobSubOcr, fileName, false, language, _ocrEngine);
+                                            vobSubOcr.InitializeBatch(tsBinaryParagraphs, Configuration.Settings.VobSubOcr, fileName, false, language, _ocrEngine, _cancellationTokenSource.Token);
                                             subtitle = vobSubOcr.SubtitleFromOcr;
                                         }
 
@@ -1851,6 +1852,10 @@ namespace Nikse.SubtitleEdit.Forms
                         if (skip)
                         {
                             item.SubItems[3].Text = LanguageSettings.Current.BatchConvert.FilterSkipped;
+                        }
+                        else if (_abort)
+                        {
+                            item.SubItems[3].Text = "Cancelled";
                         }
                         else
                         {

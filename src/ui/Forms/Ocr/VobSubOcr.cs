@@ -24,10 +24,12 @@ using System.Net;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
 using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
+using Timer = System.Windows.Forms.Timer;
 
 namespace Nikse.SubtitleEdit.Forms.Ocr
 {
@@ -263,6 +265,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private XmlDocument _compareDoc = new XmlDocument();
         private Point _manualOcrDialogPosition = new Point(-1, -1);
         private volatile bool _abort;
+        private CancellationToken _cancellationToken = CancellationToken.None;
         private int _selectedIndex = -1;
         private VobSubOcrSettings _vobSubOcrSettings;
         private bool _italicCheckedLast;
@@ -678,8 +681,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             comboBoxDictionaries.SelectedIndexChanged += comboBoxDictionaries_SelectedIndexChanged;
         }
 
-        internal void InitializeBatch(string vobSubFileName, VobSubOcrSettings vobSubOcrSettings, bool forcedOnly, string ocrEngine, string language = null)
+        internal void InitializeBatch(string vobSubFileName, VobSubOcrSettings vobSubOcrSettings, bool forcedOnly, string ocrEngine, string language, CancellationToken cancellationToken)
         {
+            _cancellationToken = cancellationToken;
             Initialize(vobSubFileName, vobSubOcrSettings, null, true);
             FormVobSubOcr_Shown(null, null);
             checkBoxShowOnlyForced.Checked = forcedOnly;
@@ -768,7 +772,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 _subtitle.Paragraphs[i].Text = text;
 
                 Application.DoEvents();
-                if (_abort)
+                if (_abort || _cancellationToken.IsCancellationRequested)
                 {
                     SetButtonsEnabledAfterOcrDone();
                     return;
@@ -872,12 +876,14 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
         }
 
-        internal void InitializeBatch(IList<IBinaryParagraph> subtitles, VobSubOcrSettings vobSubOcrSettings, string fileName, bool forcedOnly, string language = null, string ocrEngine = null)
+        internal void InitializeBatch(IList<IBinaryParagraph> subtitles, VobSubOcrSettings vobSubOcrSettings, string fileName, bool forcedOnly, string language, string ocrEngine, CancellationToken cancellationToken)
         {
             if (subtitles.Count == 0)
             {
                 return;
             }
+
+            _cancellationToken = cancellationToken;
 
             if (subtitles.First() is TransportStreamSubtitle)
             {
@@ -922,13 +928,14 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             checkBoxNOcrDrawUnknownLetters.Checked = oldNOcrDrawText;
         }
 
-        internal void InitializeBatch(List<BluRaySupParser.PcsData> subtitles, VobSubOcrSettings vobSubOcrSettings, string fileName, bool forcedOnly, string language = null, string ocrEngine = null)
+        internal void InitializeBatch(List<BluRaySupParser.PcsData> subtitles, VobSubOcrSettings vobSubOcrSettings, string fileName, bool forcedOnly, string language, string ocrEngine, CancellationToken cancellationToken)
         {
             Initialize(subtitles, vobSubOcrSettings, fileName);
             _ocrMethodIndex = Configuration.Settings.VobSubOcr.LastOcrMethod == "Tesseract4" ? _ocrMethodTesseract5 : _ocrMethodTesseract302;
             var oldNOcrDrawText = checkBoxNOcrDrawUnknownLetters.Checked;
 
             InitializeOcrEngineBatch(language, ocrEngine);
+            _cancellationToken = cancellationToken;
 
             checkBoxShowOnlyForced.Checked = forcedOnly;
             DoBatch();
@@ -958,11 +965,12 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
         }
 
-        internal void InitializeBatch(List<VobSubMergedPack> vobSubMergedPackList, List<Color> palette, VobSubOcrSettings vobSubOcrSettings, string fileName, bool forcedOnly, string language, string ocrEngine)
+        internal void InitializeBatch(List<VobSubMergedPack> vobSubMergedPackList, List<Color> palette, VobSubOcrSettings vobSubOcrSettings, string fileName, bool forcedOnly, string language, string ocrEngine, CancellationToken cancellationToken)
         {
             Initialize(vobSubMergedPackList, palette, vobSubOcrSettings, language);
             checkBoxShowOnlyForced.Checked = forcedOnly;
             InitializeOcrEngineBatch(language, ocrEngine);
+            _cancellationToken = cancellationToken;
             DoBatch();
         }
 
@@ -1058,7 +1066,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 _subtitle.Paragraphs[i].Text = text;
 
                 Application.DoEvents();
-                if (_abort)
+                if (_abort || _cancellationToken.IsCancellationRequested)
                 {
                     SetButtonsEnabledAfterOcrDone();
                     return;
