@@ -429,7 +429,7 @@ Det kan være en god idé at gennemgå disse manuelt for at sikre, at dine segme
     <Chaining>Kædning</Chaining>
     <InCueOnShot>I kø ved sceneskift</InCueOnShot>
     <OutCueOnShot>Out cue på sceneskift</OutCueOnShot>
-    <CheckGeneral></CheckGeneral>
+    <CheckGeneral>Håndhæv stadig generelle regler, når de ikke påvirkes</CheckGeneral>
     <MaxGap>Maks.  gap</MaxGap>
     <ShotChangeBehavior>Hvis der er et skudskifte imellem:</ShotChangeBehavior>
     <DontChain>Sammenkød ikke</DontChain>

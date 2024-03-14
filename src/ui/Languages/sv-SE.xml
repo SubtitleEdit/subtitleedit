@@ -10,6 +10,7 @@
     <Cancel>Avbryt</Cancel>
     <Yes>Ja</Yes>
     <No>Nej</No>
+    <Close>Stäng</Close>
     <Apply>Verkställ</Apply>
     <ApplyTo>Verkställ på</ApplyTo>
     <None>Ingen</None>
@@ -405,6 +406,13 @@ Klicka på "{0}" för att skapa eller importera bildändringar först, eller ina
     <BatchAlignTimeCodes>Justera tidskoder till ramtidskoder</BatchAlignTimeCodes>
     <BatchUseExactTimeCodes>Använd exakta tidskoder (om tillgängligt)</BatchUseExactTimeCodes>
     <BatchSnapToShotChanges>Snäpp ledtrådar till skottändringar (om tillgängligt)</BatchSnapToShotChanges>
+    <UnfixableParagraphsTitle>Recensionen är inte helt kedjad undertext</UnfixableParagraphsTitle>
+    <UnfixableParagraphsInstructions>Vissa undertexter var inte helt kedjade i enlighet med din profil, troligtvis på grund av för hårt klustrade skottändringar (möjligen falska positiva).
+
+Du kanske vill granska dessa fall manuellt för att säkerställa att dina ledtrådar fästs till de korrekta (riktiga) skottändringarna.</UnfixableParagraphsInstructions>
+    <UnfixableParagraphsColumnParagraphs>Rader</UnfixableParagraphsColumnParagraphs>
+    <UnfixableParagraphsColumnParagraphsFormat>#{0} – #{1}</UnfixableParagraphsColumnParagraphsFormat>
+    <UnfixableParagraphsColumnGap>Gap (ramar)</UnfixableParagraphsColumnGap>
   </BeautifyTimeCodes>
   <BeautifyTimeCodesProfile>
     <Title>Redigera profil</Title>
@@ -428,6 +436,7 @@ Klicka på "{0}" för att skapa eller importera bildändringar först, eller ina
     <Chaining>Kedja</Chaining>
     <InCueOnShot>I kö på skottbyte</InCueOnShot>
     <OutCueOnShot>Ut kö vid skottbyte</OutCueOnShot>
+    <CheckGeneral>Upprätthåll fortfarande allmänna regler när de inte påverkas</CheckGeneral>
     <MaxGap>Max.  glipa:</MaxGap>
     <ShotChangeBehavior>Om det finns ett skottbyte däremellan:</ShotChangeBehavior>
     <DontChain>Kedja inte</DontChain>
@@ -1320,6 +1329,7 @@ Gå till "Alternativ -&gt; Inställningar -&gt; Verktyg" för att ange din nycke
         <CloseTranslation>Stäng översatt undertext</CloseTranslation>
         <OpenContainingFolder>Öppna behållarmappen</OpenContainingFolder>
         <Compare>&amp;Jämför...</Compare>
+        <VerifyCompleteness>Verifiera fullständighet...</VerifyCompleteness>
         <Statistics>Statistik...</Statistics>
         <Plugins>Tillägg...</Plugins>
         <ImportSubtitleFromVideoFile>Undertext från videofil...</ImportSubtitleFromVideoFile>
@@ -1566,6 +1576,7 @@ Gå till "Alternativ -&gt; Inställningar -&gt; Verktyg" för att ange din nycke
         <Subscript>Subskript</Subscript>
         <Alignment>Justering...</Alignment>
         <AutoBalanceSelectedLines>Auto-balansera valda rader...</AutoBalanceSelectedLines>
+        <EvenlyDistributeSelectedLines>Jämnt fördela valda linjer (CPS)</EvenlyDistributeSelectedLines>
         <RemoveLineBreaksFromSelectedLines>Ta bort radbrytning från utvalda rader</RemoveLineBreaksFromSelectedLines>
         <TypewriterEffect>Skrivmaskinseffekt...</TypewriterEffect>
         <KaraokeEffect>Karaoke-effekt...</KaraokeEffect>
@@ -1837,6 +1848,8 @@ Fortsätta?</SubtitleAppendPrompt>
     <SortedByX>Sortera: {0}</SortedByX>
     <BeforeAutoBalanceSelectedLines>Före automatisk utvalda balans rader</BeforeAutoBalanceSelectedLines>
     <NumberOfLinesAutoBalancedX>Antal rader auto balanserad: {0}</NumberOfLinesAutoBalancedX>
+    <BeforeEvenlyDistributeSelectedLines>Före jämnt fördela valda linjer</BeforeEvenlyDistributeSelectedLines>
+    <NumberOfLinesEvenlyDistributedX>Antal jämnt fördelade rader: {0}</NumberOfLinesEvenlyDistributedX>
     <BeforeRemoveLineBreaksInSelectedLines>Före radbrytning av utvalda rader</BeforeRemoveLineBreaksInSelectedLines>
     <NumberOfWithRemovedLineBreakX>Antal rader med borttagna radbrytningar: {0}</NumberOfWithRemovedLineBreakX>
     <BeforeMultipleReplace>Före flera ersätta</BeforeMultipleReplace>
@@ -2610,6 +2623,7 @@ kan redigera i samma undertextfil (samarbete)</Information>
     <MergeDialogWithNext>Slå samman dialog med nästa (infoga bindestreck)</MergeDialogWithNext>
     <MergeDialogWithPrevious>Slå samman dialog med föregående (infoga bindestreck)</MergeDialogWithPrevious>
     <AutoBalanceSelectedLines>Autobalansera valda rader</AutoBalanceSelectedLines>
+    <EvenlyDistributeSelectedLines>Jämnt fördela valda linjer (CPS)</EvenlyDistributeSelectedLines>
     <GoToNext>Gå till nästa rad</GoToNext>
     <GoToNextPlayTranslate>Gå till nästa rad (och spela i "Översättningsläge")</GoToNextPlayTranslate>
     <GoToNextCursorAtEnd>Gå till nästa rad och ställ in markören i slutet</GoToNextCursorAtEnd>
@@ -2709,6 +2723,7 @@ kan redigera i samma undertextfil (samarbete)</Information>
     <AudioExtractSelectedLines>Extrahera ljud (valda rader)</AudioExtractSelectedLines>
     <AudioToTextSelectedLinesX>Ljud till text, markerade rader ({0})</AudioToTextSelectedLinesX>
     <VideoToggleBrightness>Växla ljusstyrka (endast mpv)</VideoToggleBrightness>
+    <AutoTranslateSelectedLines>Auto-översätt valda rader</AutoTranslateSelectedLines>
     <CustomSearch1>Översätt, anpassad sökning 1</CustomSearch1>
     <CustomSearch2>Översätt, anpassad sökning 2</CustomSearch2>
     <CustomSearch3>Översätt, anpassad sökning 3</CustomSearch3>
@@ -2838,6 +2853,8 @@ Fortsätt?</RestoreDefaultSettingsMsg>
     <ExportAsHtml>Exportera som HTML...</ExportAsHtml>
     <SetNewActor>Ställ in ny skådespelare/röst</SetNewActor>
     <SetActorX>Ställ in skådespelare/röst {0}</SetActorX>
+    <Used>I bruk</Used>
+    <Unused>Oanvänd</Unused>
   </Settings>
   <SettingsMpv>
     <DownloadMpv>Ladda ner mpv lib</DownloadMpv>
@@ -3152,6 +3169,21 @@ och N bryter</WrapStyle2>
     <Message>Om du vill ha det här åtgärdat, skicka då ett e-postmeddelande till mailto:niksedk@gmail.com och bifoga en kopia av undertexten.</Message>
     <ImportAsPlainText>Importera som vanlig text</ImportAsPlainText>
   </UnknownSubtitle>
+  <VerifyCompleteness>
+    <Title>Verify completeness against other subtitle</Title>
+    <OpenControlSubtitle>Öppna kontroll undertext</OpenControlSubtitle>
+    <ControlSubtitleError>Kontrollens undertext är tom eller kunde inte laddas.</ControlSubtitleError>
+    <ControlSubtitleX>Kontroll undertext: {0}</ControlSubtitleX>
+    <Coverage>Rapportering</Coverage>
+    <CoveragePercentageX>{0:0.##}%</CoveragePercentageX>
+    <SortByCoverage>Sortera efter täckning</SortByCoverage>
+    <SortByTime>Sortera efter tid</SortByTime>
+    <Reload>Verifiera igen</Reload>
+    <Insert>Föra in</Insert>
+    <InsertAndNext>Infoga och gå till nästa</InsertAndNext>
+    <Dismiss>Avfärda</Dismiss>
+    <DismissAndNext>Avvisa och gå till nästa</DismissAndNext>
+  </VerifyCompleteness>
   <VisualSync>
     <Title>Visuell synk</Title>
     <StartScene>Startscen</StartScene>
