@@ -1,8 +1,9 @@
 ﻿Subtitle Edit Changelog
 
-4.0.4 (xth February 2024) BETA
+4.0.4 (xth March 2024) BETA
 * NEW:
    * Add "Verify completeness" (time covered) feature - thx Flitskikker
+   * Add "Evenly distribute selected lines (CPS)" - thx Flitskikker
    * Add Whisper CPP model "small.en-q5_1.bin"
    * Add Gemini translate (beta, not all regions) - thx darnn
    * Add sorting of rules in "Multiple replace" - thx caioeverest 
