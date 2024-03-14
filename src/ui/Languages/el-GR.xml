@@ -11,6 +11,7 @@
     <Cancel>&amp;Ακύρωση</Cancel>
     <Yes>Ναι</Yes>
     <No>Όχι</No>
+    <Close>Κλείσιμο</Close>
     <Apply>Εφαρμογή</Apply>
     <ApplyTo>Εφαρμογή σε</ApplyTo>
     <None>Κανένα</None>
@@ -400,6 +401,12 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <BatchAlignTimeCodes>Αντιστοίχιση χρόνων σε χρόνους καρέ</BatchAlignTimeCodes>
     <BatchUseExactTimeCodes>Χρήση ακριβών χρόνων</BatchUseExactTimeCodes>
     <BatchSnapToShotChanges>Τοποθέτηση ομιλιών σε αλλαγές λήψης</BatchSnapToShotChanges>
+    <UnfixableParagraphsTitle>Έλεγχος των όχι πλήρως αλυσιδωτών υποτίτλων</UnfixableParagraphsTitle>
+    <UnfixableParagraphsInstructions>Μερικοί υπότιτλοι δεν είναι πλήρως αλυσιδωτοί, σύμφωνα με το προφίλ σας, λόγω συνεχόμενων αλλαγών σκηνής.
+Καλό θα ήταν να τους ελέγξετε, για να σιγουρευτείτε ότι εφάπτονται στη σωστή αλλαγή σκηνής.</UnfixableParagraphsInstructions>
+    <UnfixableParagraphsColumnParagraphs>Γραμμές</UnfixableParagraphsColumnParagraphs>
+    <UnfixableParagraphsColumnParagraphsFormat>#{0} - #{1}</UnfixableParagraphsColumnParagraphsFormat>
+    <UnfixableParagraphsColumnGap>Κενό (καρέ)</UnfixableParagraphsColumnGap>
   </BeautifyTimeCodes>
   <BeautifyTimeCodesProfile>
     <Title>Επεξεργασία προφίλ</Title>
@@ -423,6 +430,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Chaining>Αλυσιδωτά</Chaining>
     <InCueOnShot>Έναρξη κειμένου σε αλλαγή λήψης</InCueOnShot>
     <OutCueOnShot>Λήξη κειμένου σε αλλαγή λήψης</OutCueOnShot>
+    <CheckGeneral>Εξαναγκασμός γενικών κανόνων</CheckGeneral>
     <MaxGap>Μέγιστο κενό:</MaxGap>
     <ShotChangeBehavior>Αν υπάρχει αλλαγή λήψης ανάμεσα:</ShotChangeBehavior>
     <DontChain>Μη αλυσιδωτά</DontChain>
@@ -1304,6 +1312,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <CloseTranslation>Κλείσιμο μεταφρασμένου υποτίτλου</CloseTranslation>
         <OpenContainingFolder>Άνοιγμα φακέλου περιεχομένων</OpenContainingFolder>
         <Compare>&amp;Σύγκριση…</Compare>
+        <VerifyCompleteness>Επαλήθευση πληρότητας…</VerifyCompleteness>
         <Statistics>Στατιστι&amp;κά…</Statistics>
         <Plugins>Πρόσθετα…</Plugins>
         <ImportSubtitleFromVideoFile>Εισαγωγή υποτίτλου από βίντεο…</ImportSubtitleFromVideoFile>
@@ -1550,6 +1559,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <Subscript>Δείκτης</Subscript>
         <Alignment>Στοίχιση…</Alignment>
         <AutoBalanceSelectedLines>Αυτόματη ισορρόπηση γραμμών…</AutoBalanceSelectedLines>
+        <EvenlyDistributeSelectedLines>Ισότιμη μοιρασιά καρέ/δευτ. επιλεγμένων γραμμών</EvenlyDistributeSelectedLines>
         <RemoveLineBreaksFromSelectedLines>Αφαίρεση σπασίματος των γραμμών…</RemoveLineBreaksFromSelectedLines>
         <TypewriterEffect>Εφέ γραφομηχανής…</TypewriterEffect>
         <KaraokeEffect>Εφέ καραόκε…</KaraokeEffect>
@@ -1820,6 +1830,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SortedByX>Ταξινόμηση κατά: {0}</SortedByX>
     <BeforeAutoBalanceSelectedLines>Πριν από αυτόματη ισορρόπηση γραμμών</BeforeAutoBalanceSelectedLines>
     <NumberOfLinesAutoBalancedX>Σύνολο αυτόματων ισορροπημένων γραμμών: {0}</NumberOfLinesAutoBalancedX>
+    <BeforeEvenlyDistributeSelectedLines>Πριν από ισότιμη μοιρασιά καρέ/δευτ. επιλεγμένων γραμμών</BeforeEvenlyDistributeSelectedLines>
+    <NumberOfLinesEvenlyDistributedX>Αριθμός ισότιμης μοιρασιάς γραμμών: {0}</NumberOfLinesEvenlyDistributedX>
     <BeforeRemoveLineBreaksInSelectedLines>Πριν από αφαίρεση σπασίματος επιλεγμένων γραμμών</BeforeRemoveLineBreaksInSelectedLines>
     <NumberOfWithRemovedLineBreakX>Σύνολο γραμμών που αφαιρέθηκε σπάσιμο γραμμής: {0}</NumberOfWithRemovedLineBreakX>
     <BeforeMultipleReplace>Πριν από πολλαπλή αντικατάσταση</BeforeMultipleReplace>
@@ -2593,6 +2605,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MergeDialogWithNext>Συγχώνευση διαλόγου με επόμενο (εισαγωγή παυλών)</MergeDialogWithNext>
     <MergeDialogWithPrevious>Συγχώνευση διαλόγου με προηγούμενο (εισαγωγή παυλών)</MergeDialogWithPrevious>
     <AutoBalanceSelectedLines>Αυτόματη ισορροπία επιλεγμένων γραμμών</AutoBalanceSelectedLines>
+    <EvenlyDistributeSelectedLines>Ισότιμη μοιρασιά καρέ/δευτ. επιλεγμένων γραμμών</EvenlyDistributeSelectedLines>
     <GoToNext>Μετάβαση σε επόμενη γραμμή</GoToNext>
     <GoToNextPlayTranslate>Μετάβαση σε επόμενη γραμμή (και αναπαραγωγή σε λειτουργία μετάφρασης)</GoToNextPlayTranslate>
     <GoToNextCursorAtEnd>Μετάβαση σε επόμενη γραμμή και ορισμός δείκτη στη λήξη</GoToNextCursorAtEnd>
@@ -2692,6 +2705,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <AudioExtractSelectedLines>Εξαγωγή ήχου επιλεγμένων γραμμών</AudioExtractSelectedLines>
     <AudioToTextSelectedLinesX>Ήχος σε κείμενο επιλεγμένων γραμμών ({0})</AudioToTextSelectedLinesX>
     <VideoToggleBrightness>Εναλλαγή φωτεινότητας (μόνο mpv)</VideoToggleBrightness>
+    <AutoTranslateSelectedLines>Αυτόματη μετάφραση επιλεγμένων γραμμών</AutoTranslateSelectedLines>
     <CustomSearch1>Μετάφραση, προσαρμοσμένη αναζήτηση 1</CustomSearch1>
     <CustomSearch2>Μετάφραση, προσαρμοσμένη αναζήτηση 2</CustomSearch2>
     <CustomSearch3>Μετάφραση, προσαρμοσμένη αναζήτηση 3</CustomSearch3>
@@ -2818,6 +2832,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ExportAsHtml>Εξαγωγή ως HTML…</ExportAsHtml>
     <SetNewActor>Ορισμός νέου ηθοποιού ή φωνής</SetNewActor>
     <SetActorX>Ορισμός ηθοποιού ή φωνής {0}</SetActorX>
+    <Used>Χρησιμοποιημένες</Used>
+    <Unused>Αχρησιμοποίητες</Unused>
   </Settings>
   <SettingsMpv>
     <DownloadMpv>Λήψη mpv lib</DownloadMpv>
@@ -3132,6 +3148,21 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
 και συμπεριλάβετε αντίγραφο του υποτίτλου.</Message>
     <ImportAsPlainText>Εισαγωγή ως απλό κείμενο…</ImportAsPlainText>
   </UnknownSubtitle>
+  <VerifyCompleteness>
+    <Title>Επαλήθευση πληρότητας σε σχέση με άλλον υπότιτλο</Title>
+    <OpenControlSubtitle>Άνοιγμα υποτίτλου ελέγχου</OpenControlSubtitle>
+    <ControlSubtitleError>Ο υπότιτλος ελέγχου είναι κενός ή απέτυχε να φορτωθεί.</ControlSubtitleError>
+    <ControlSubtitleX>Υπότιτλος ελέγχου: {0}</ControlSubtitleX>
+    <Coverage>Ολοκληρωμένα</Coverage>
+    <CoveragePercentageX>{0:0.###}%</CoveragePercentageX>
+    <SortByCoverage>Ταξινόμηση κατά ολοκληρωμένα</SortByCoverage>
+    <SortByTime>Ταξινόμηση κατά διάρκεια</SortByTime>
+    <Reload>Επανεπαλήθεση</Reload>
+    <Insert>Εισαγωγή</Insert>
+    <InsertAndNext>Εισαγωγή κι επόμενη</InsertAndNext>
+    <Dismiss>Απόρριψη</Dismiss>
+    <DismissAndNext>Απόρριψη κι επόμενη</DismissAndNext>
+  </VerifyCompleteness>
   <VisualSync>
     <Title>Οπτικός συγχρονισμός</Title>
     <StartScene>Αρχική σκηνή</StartScene>
