@@ -20,7 +20,7 @@
 	<Dictionary>
 		<EnglishName>Basque</EnglishName>
 		<NativeName>Euskara</NativeName>
-		<DownloadLink>http://downloads.sourceforge.net/project/aoo-extensions/1383/2/xuxen_4_ooo3.oxt?r=http%3A%2F%2Fextensions.openoffice.org%2Fen%2Fprojectrelease%2Fxuxen-basque-spell-checking-dictionary-40&amp;ts=1435689769&amp;use_mirror=garr</DownloadLink>
+		<DownloadLink>https://extensions.libreoffice.org/assets/downloads/z/xuxeniv-lo4-1-1.oxt</DownloadLink>
 		<Description>Xuxen: Basque spell checking dictionary - v4.0</Description>
 	</Dictionary>
 	<Dictionary>
@@ -92,7 +92,7 @@
 	<Dictionary>
 		<EnglishName>Estonian</EnglishName>
 		<NativeName>Eesti keel</NativeName>
-		<DownloadLink>http://downloads.sourceforge.net/project/aoo-extensions/1328/0/dict-et.oxt?r=http%3A%2F%2Fextensions.openoffice.org%2Fen%2Fproject%2Festonian-spellchecking-and-hyphenation&amp;ts=1435689988&amp;use_mirror=freefr</DownloadLink>
+		<DownloadLink>https://extensions.openoffice.org/en/download/1329</DownloadLink>
 		<Description>Estonian spellchecking and hyphenation (13 October, 2008)</Description>
 	</Dictionary>
 	<Dictionary>
@@ -252,12 +252,6 @@
 		<Description>Brazilian Portuguese Spelling Dictionary 2009 José João de Almeida - Firefox</Description>
 	</Dictionary>
 	<Dictionary>
-		<EnglishName>Portuguese (European Portuguese Dictionary)</EnglishName>
-		<NativeName>Português</NativeName>
-		<DownloadLink>http://downloads.sourceforge.net/project/aoo-extensions/1196/40/oo3x-pt-pt-16.10.1.2.oxt</DownloadLink>
-		<Description>Corretores Ortográficos para Português de Portugal</Description>
-	</Dictionary>
-	<Dictionary>
 		<EnglishName>Portuguese (European Portuguese Dictionary - PRE AO90)</EnglishName>
 		<NativeName>Português</NativeName>
 		<DownloadLink>http://downloads.sourceforge.net/project/aoo-extensions/17990/9/oo3x-pt-pt-preao-16.10.1.2.oxt</DownloadLink>
@@ -320,7 +314,7 @@
 	<Dictionary>
 		<EnglishName>Swedish</EnglishName>
 		<NativeName>Svenska</NativeName>
-		<DownloadLink>http://downloads.sourceforge.net/project/aoo-extensions/5959/1/dict-sv.oxt?r=http%3A%2F%2Fextensions.openoffice.org%2Fen%2Fproject%2Fswedish-dictionaries-apache-openoffice&amp;ts=1375123584&amp;use_mirror=heanet</DownloadLink>
+		<DownloadLink>http://downloads.sourceforge.net/project/aoo-extensions/5959/1/dict-sv.oxt</DownloadLink>
 		<Description>Swedish 2.16</Description>
 	</Dictionary>
 	<Dictionary>
@@ -344,13 +338,13 @@
 	<Dictionary>
 		<EnglishName>Valencian</EnglishName>
 		<NativeName>valencià</NativeName>
-		<DownloadLink>http://downloads.sourceforge.net/project/aoo-extensions/1475/1/ca-valencia.3.0.0.oxt?r=http%3A%2F%2Fextensions.openoffice.org%2Fen%2Fprojectrelease%2Fspelling-dictionary-catalan-valencian-version-300&amp;ts=1435691121&amp;use_mirror=freefr</DownloadLink>
+		<DownloadLink>http://downloads.sourceforge.net/project/aoo-extensions/1475/1/ca-valencia.3.0.0.oxt</DownloadLink>
 		<Description>Spelling dictionary for Catalan (Valencian version) - v3.0.0 (25/05/2015)</Description>
 	</Dictionary>
 	<Dictionary>
 		<EnglishName>Vietnamese</EnglishName>
 		<NativeName>Tiếng Việt</NativeName>
-		<DownloadLink>http://downloads.sourceforge.net/project/aoo-extensions/917/3/vi_spellchecker_ooo3.oxt?r=http%3A%2F%2Fextensions.services.openoffice.org%2Fen%2Fproject%2Fvietnamese-spellchecker&amp;ts=1373917708&amp;use_mirror=kent</DownloadLink>
+		<DownloadLink>https://downloads.sourceforge.net/project/aoo-extensions/917/3/vi_spellchecker_ooo3.oxt?ts=gAAAAABl8woSclxfXr9wpnYVtNEpNTbz5KrZTMETetNi3tcVaxsJmHo7YC66hYQ9knqcRO317eqyZOCvUsuMyFzTvZwZNk0vZw%3D%3D&amp;r=https%3A%2F%2Fsourceforge.net%2Fprojects%2Faoo-extensions%2Ffiles%2F917%2F3%2Fvi_spellchecker_ooo3.oxt%2Fdownload%3Fuse_mirror%3Dmaster</DownloadLink>
 		<Description>Vietnamese SpellChecker</Description>
 	</Dictionary>
 	<Dictionary>
@@ -374,7 +368,7 @@
 	<Dictionary>
 		<EnglishName>Zulu</EnglishName>
 		<NativeName>IsiZulu</NativeName>
-		<DownloadLink>https://sourceforge.net/projects/aoo-extensions/files/3132/3/dict-zu_za-2010.01.26.oxt/download</DownloadLink>
+		<DownloadLink>https://downloads.sourceforge.net/project/aoo-extensions/3132/3/dict-zu_za-2010.01.26.oxt?ts=gAAAAABl8wwk0LSrL-Co9B6dhwP__TVfnFtKRlLCcpi7LQ95GaviSGizVP6yGTHQpmPbvamIUfkt3Pqx79EvbTFP1GSBGlEdGQ%3D%3D&amp;r=https%3A%2F%2Fsourceforge.net%2Fprojects%2Faoo-extensions%2Ffiles%2F3132%2F3%2Fdict-zu_za-2010.01.26.oxt%2Fdownload</DownloadLink>
 		<Description>Zulu spell checker</Description>
 	</Dictionary>
 </OpenOfficeDictionaries>
