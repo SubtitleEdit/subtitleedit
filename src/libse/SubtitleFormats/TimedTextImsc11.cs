@@ -9,54 +9,33 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     /// <summary>
     /// IMSC 1.1 Viewer: https://www.sandflow.com/imsc1_1/
-    /// More about bouten/furigana: https://www.japanesewithanime.com/2018/03/furigana-dots-bouten.html
-    /// Netflix blog entry: https://medium.com/netflix-techblog/implementing-japanese-subtitles-on-netflix-c165fbe61989
     /// </summary>
-    public class NetflixImsc11Japanese : SubtitleFormat
+    public class TimedTextImsc11 : SubtitleFormat
     {
         public override string Extension => ".xml";
-        public override string Name => "Netflix IMSC 1.1 Japanese";
+        public override string Name => "Timed Text IMSC 1.1";
 
         private static string GetXmlStructure()
         {
             return @"<?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<tt xml:lang='ja' xmlns='http://www.w3.org/ns/ttml' ttp:contentProfiles='http://www.w3.org/ns/ttml/profile/imsc1.1/text' xmlns:tts='http://www.w3.org/ns/ttml#styling' xmlns:ttm='http://www.w3.org/ns/ttml#metadata' xmlns:ttp='http://www.w3.org/ns/ttml#parameter' ttp:timeBase='media' ttp:frameRate='24' ttp:frameRateMultiplier='1000 1001' ttp:tickRate='10000000' xmlns:ebutts='urn:ebu:tt:style' xmlns:itts='http://www.w3.org/ns/ttml/profile/imsc1#styling' xmlns:ittp='http://www.w3.org/ns/ttml/profile/imsc1#parameter' xmlns:ittm='http://www.w3.org/ns/ttml/profile/imsc1#metadata' ittp:aspectRatio='16 9'>
+<tt xml:lang='en' xmlns='http://www.w3.org/ns/ttml' ttp:contentProfiles='http://www.w3.org/ns/ttml/profile/imsc1.1/text' xmlns:tts='http://www.w3.org/ns/ttml#styling' xmlns:ttm='http://www.w3.org/ns/ttml#metadata' xmlns:ttp='http://www.w3.org/ns/ttml#parameter' ttp:timeBase='media' ttp:frameRate='24' ttp:frameRateMultiplier='1000 1001' ttp:tickRate='10000000' xmlns:ebutts='urn:ebu:tt:style' xmlns:itts='http://www.w3.org/ns/ttml/profile/imsc1#styling' xmlns:ittp='http://www.w3.org/ns/ttml/profile/imsc1#parameter' xmlns:ittm='http://www.w3.org/ns/ttml/profile/imsc1#metadata' ittp:aspectRatio='16 9'>
   <head>
     <styling>
-      <initial tts:color='white' tts:fontFamily='proportionalSansSerif' tts:fontSize='100%' tts:rubyReserve='outside' xml:id='initialStyles'/>
-      <style tts:shear='16.6667%' xml:id='italic'/>
-
-      <!-- Variants of bouten styles -->
-      <style tts:textEmphasis='dot before' xml:id='bouten-dot-before'/>
-      <style tts:textEmphasis='dot after' xml:id='bouten-dot-after'/>
-      <style tts:textEmphasis='dot outside' xml:id='bouten-dot-outside'/>
-      <style tts:textEmphasis='filled circle outside' xml:id='bouten-filled-circle-outside'/>
-      <style tts:textEmphasis='open circle outside' xml:id='bouten-open-circle-outside'/>
-      <style tts:textEmphasis='open dot outside' xml:id='bouten-open-dot-outside'/>
-      <style tts:textEmphasis='filled sesame outside' xml:id='bouten-filled-sesame-outside'/>
-      <style tts:textEmphasis='open sesame outside' xml:id='bouten-open-sesame-outside'/>
-      <style tts:textEmphasis='auto outside' xml:id='bouten-auto-outside'/>
-      <style tts:textEmphasis='auto' xml:id='bouten-auto'/>
-
-      <style tts:textCombine='all' xml:id='horizontalDigit'/>
-      <style tts:ruby='base' xml:id='ruby-base'/>
-      <style tts:ruby='text' xml:id='ruby-text'/>
-      <style tts:ruby='text' xml:id='ruby-text-after'/>
-      <style tts:ruby='base' tts:shear='16.6667%' xml:id='ruby-base-italic'/>
-      <style tts:ruby='text' tts:shear='16.6667%' xml:id='ruby-text-italic'/>
-      <style tts:ruby='container' xml:id='ruby-container'/>
+      <style xml:id='style.center' tts:backgroundColor='transparent' tts:color='white' tts:fontFamily='Arial' tts:fontSize='100%' tts:textAlign='center' tts:textOutline='black 2px' />
+      <style xml:id='style.italic' tts:shear='16.6667%' tts:backgroundColor='transparent' tts:color='white' tts:fontFamily='Arial' tts:fontSize='100%' tts:textAlign='center' tts:textOutline='black 2px' />
     </styling>
     <layout>
-      <region ebutts:multiRowAlign='start' tts:displayAlign='after' tts:extent='80.000% 80.000%' tts:origin='10.000% 10.000%' tts:textAlign='center' xml:id='bottom-left-justified'/>
+      <region xml:id='region.topLeft' tts:extent='80% 40%' tts:origin='10% 10%' tts:displayAlign='before' tts:textAlign='start' />
+      <region xml:id='region.centerLeft' tts:extent='80% 40%' tts:origin='10% 30%' tts:displayAlign='center' tts:textAlign='start' />
+      <region xml:id='region.bottomLeft' tts:extent='80% 40%' tts:origin='10% 50%' tts:displayAlign='after' tts:textAlign='start' />
+ 
+      <region xml:id='region.topCenter' tts:extent='80% 40%' tts:origin='10% 10%' tts:displayAlign='before' tts:textAlign='center' />
+      <region xml:id='region.centerCenter' tts:extent='80% 40%' tts:origin='10% 30%' tts:displayAlign='center' tts:textAlign='center' />
+      <region xml:id='region.bottomCenter' tts:extent='80% 40%' tts:origin='10% 50%' tts:displayAlign='after' tts:textAlign='center' />
 
-      <!-- This region is used to display English text events which divide this document into the various sections outlined in Netflix's Japanese Timed-Text Style Guide. Top-center-justified positioning shall not be used for Japanese authoring -->
-      <region tts:displayAlign='before' tts:extent='80.000% 80.000%' tts:origin='10.000% 10.000%' tts:textAlign='center' xml:id='top-center-justified'/>
-
-      <!-- In exceptional cases, some forced narrative events may be positioned creatively to mimic on-screen text as referenced in Section I.3 'Alignment' -->
-      <region ebutts:multiRowAlign='end' tts:displayAlign='before' tts:extent='50.000% 50.000%' tts:origin='30.000% 50.000%' tts:textAlign='center' tts:shear='16.6667%' xml:id='force-narrative-example-region'/>
-
-      <region ebutts:multiRowAlign='start' tts:displayAlign='after' tts:extent='80.000% 80.000%' tts:origin='10.000% 10.000%' tts:textAlign='start' tts:writingMode='tbrl' xml:id='left'/>
-      <region ebutts:multiRowAlign='start' tts:displayAlign='before' tts:extent='80.000% 80.000%' tts:origin='10.000% 10.000%' tts:textAlign='start' tts:writingMode='tbrl' xml:id='right'/>
+      <region xml:id='region.topRight' tts:extent='80% 40%' tts:origin='10% 10%' tts:displayAlign='before' tts:textAlign='end' />
+      <region xml:id='region.centerRight' tts:extent='80% 40%' tts:origin='10% 30%' tts:displayAlign='center' tts:textAlign='end'  />
+      <region xml:id='region.bottomRight' tts:extent='80% 40%' tts:origin='10% 50%' tts:displayAlign='after' tts:textAlign='end'  />
     </layout>
   </head>
   <body>
@@ -77,12 +56,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
             var text = sb.ToString();
-            if (!text.Contains("lang=\"ja\"", StringComparison.Ordinal) || !text.Contains("bouten-", StringComparison.Ordinal))
+            if (text.Contains("lang=\"ja\"", StringComparison.Ordinal) && text.Contains("bouten-", StringComparison.Ordinal))
             {
                 return false;
             }
 
-            return base.IsMine(lines, fileName);
+            return text.Contains("profile/imsc1") && base.IsMine(lines, fileName);
         }
 
         public override string ToText(Subtitle subtitle, string title)
@@ -163,15 +142,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                     ConvertParagraphNodeToTtmlNode(child, ttmlXml, span);
                 }
-                else if (child.Name.StartsWith("bouten-", StringComparison.Ordinal) || child.Name == "horizontalDigit" || child.Name.StartsWith("ruby-", StringComparison.Ordinal))
-                {
-                    var span = ttmlXml.CreateElement("span");
-                    var attr = ttmlXml.CreateAttribute("style");
-                    attr.InnerText = child.Name;
-                    span.Attributes.Append(attr);
-                    ttmlNode.AppendChild(span);
-                    ConvertParagraphNodeToTtmlNode(child, ttmlXml, span);
-                }
                 else // Default - skip node
                 {
                     ConvertParagraphNodeToTtmlNode(child, ttmlXml, ttmlNode);
@@ -181,39 +151,63 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static string GetRegionFromText(string text)
         {
+            if (text.StartsWith(@"{\an7", StringComparison.Ordinal))
+            {
+                return "region.topLeft";
+            }
+
             if (text.StartsWith(@"{\an8", StringComparison.Ordinal))
             {
-                return "top-center-justified";
+                return "region.topCenter";
+            }
+
+            if (text.StartsWith(@"{\an9", StringComparison.Ordinal))
+            {
+                return "region.topRight";
+            }
+
+
+            if (text.StartsWith(@"{\an4", StringComparison.Ordinal))
+            {
+                return "region.centerLeft";
             }
 
             if (text.StartsWith(@"{\an5", StringComparison.Ordinal))
             {
-                return "force-narrative-example-region";
+                return "region.centerCenter";
             }
 
-            if (text.StartsWith(@"{\an4", StringComparison.Ordinal) ||
-                text.StartsWith(@"{\an7", StringComparison.Ordinal))
+            if (text.StartsWith(@"{\an6", StringComparison.Ordinal))
             {
-                return "left";
+                return "region.centerRight";
             }
 
-            if (text.StartsWith(@"{\an6", StringComparison.Ordinal) ||
-                text.StartsWith(@"{\an9", StringComparison.Ordinal))
+
+            if (text.StartsWith(@"{\an1", StringComparison.Ordinal))
             {
-                return "right";
+                return "region.bottomLeft";
             }
 
-            return "bottom-left-justified";
+            if (text.StartsWith(@"{\an3", StringComparison.Ordinal))
+            {
+                return "region.bottomRight";
+            }
+
+            return "region.bottomCenter";
         }
 
         private static string GetAssStyleFromRegion(string region)
         {
             switch (region)
             {
-                case "top-center-justified": return @"{\an8}";
-                case "force-narrative-example-region": return @"{\an5}";
-                case "left": return @"{\an7}";
-                case "right": return @"{\an9}";
+                case "region.topLeft": return @"{\an7}";
+                case "region.topCenter": return @"{\an8}";
+                case "region.topRight": return @"{\an9}";
+                case "region.centerLeft": return @"{\an4}";
+                case "region.centerCenter": return @"{\an5}";
+                case "region.centerRight": return @"{\an6}";
+                case "region.bottomLeft": return @"{\an1}";
+                case "region.bottomRight": return @"{\an3}";
                 default: return string.Empty;
             }
         }
@@ -325,103 +319,20 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
                 else if (child.Name == "span" || child.Name == "tt:span")
                 {
-                    bool isItalic = false;
-                    bool isBold = false;
-                    bool isUnderlined = false;
+                   var isItalic = false;
+                   var isBold = false;
+                   var isUnderlined = false;
                     string fontFamily = null;
                     string color = null;
-                    bool boutenDotBefore = false;
-                    bool boutenDotAfter = false;
-                    bool boutenDotOutside = false;
-                    bool boutenFilledCircleOutside = false;
-                    bool boutenOpenCircleOutside = false;
-                    bool boutenOpenDotOutside = false;
-                    bool boutenFilledSesameOutside = false;
-                    bool boutenOpenSesameOutside = false;
-                    bool boutenAutoOutside = false;
-                    bool boutenAuto = false;
-                    bool horizontalDigit = false;
-                    bool rubyContainer = false;
-                    bool rubyBase = false;
-                    bool rubyBaseItalic = false;
-                    bool rubyText = false;
-                    bool rubyTextAfter = false;
-                    bool rubyTextItalic = false;
+                  
 
                     // Composing styles
 
                     if (child.Attributes["style"] != null)
                     {
-                        string styleName = child.Attributes["style"].Value;
-                        if (styleName == "bouten-dot-before")
-                        {
-                            boutenDotBefore = true;
-                        }
-                        else if (styleName == "bouten-dot-after")
-                        {
-                            boutenDotAfter = true;
-                        }
-                        else if (styleName == "bouten-dot-outside")
-                        {
-                            boutenDotOutside = true;
-                        }
-                        else if (styleName == "bouten-filled-circle-outside")
-                        {
-                            boutenFilledCircleOutside = true;
-                        }
-                        else if (styleName == "bouten-open-circle-outside")
-                        {
-                            boutenOpenCircleOutside = true;
-                        }
-                        else if (styleName == "bouten-open-dot-outside")
-                        {
-                            boutenOpenDotOutside = true;
-                        }
-                        else if (styleName == "bouten-filled-sesame-outside")
-                        {
-                            boutenFilledSesameOutside = true;
-                        }
-                        else if (styleName == "bouten-open-sesame-outside")
-                        {
-                            boutenOpenSesameOutside = true;
-                        }
-                        else if (styleName == "bouten-auto-outside")
-                        {
-                            boutenAutoOutside = true;
-                        }
-                        else if (styleName == "bouten-auto")
-                        {
-                            boutenAuto = true;
-                        }
-                        else if (styleName == "horizontalDigit")
-                        {
-                            horizontalDigit = true;
-                        }
-                        else if (styleName == "ruby-container")
-                        {
-                            rubyContainer = true;
-                        }
-                        else if (styleName == "ruby-base")
-                        {
-                            rubyBase = true;
-                        }
-                        else if (styleName == "ruby-base-italic")
-                        {
-                            rubyBaseItalic = true;
-                        }
-                        else if (styleName == "ruby-text")
-                        {
-                            rubyText = true;
-                        }
-                        else if (styleName == "ruby-text-after")
-                        {
-                            rubyTextAfter = true;
-                        }
-                        else if (styleName == "ruby-text-italic")
-                        {
-                            rubyTextItalic = true;
-                        }
-                        else if (styles.Contains(styleName))
+                        var styleName = child.Attributes["style"].Value;
+                       
+                        if (styles.Contains(styleName))
                         {
                             try
                             {
@@ -542,91 +453,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         pText.Append(">");
                     }
 
-                    if (boutenDotBefore)
-                    {
-                        pText.Append("<bouten-dot-before>");
-                    }
-
-                    if (boutenDotAfter)
-                    {
-                        pText.Append("<bouten-dot-after>");
-                    }
-
-                    if (boutenDotOutside)
-                    {
-                        pText.Append("<bouten-dot-outside>");
-                    }
-
-                    if (boutenFilledCircleOutside)
-                    {
-                        pText.Append("<bouten-filled-circle-outside>");
-                    }
-
-                    if (boutenOpenCircleOutside)
-                    {
-                        pText.Append("<bouten-open-circle-outside>");
-                    }
-
-                    if (boutenOpenDotOutside)
-                    {
-                        pText.Append("<bouten-open-dot-outside>");
-                    }
-
-                    if (boutenFilledSesameOutside)
-                    {
-                        pText.Append("<bouten-filled-sesame-outside>");
-                    }
-
-                    if (boutenOpenSesameOutside)
-                    {
-                        pText.Append("<bouten-open-sesame-outside>");
-                    }
-
-                    if (boutenAutoOutside)
-                    {
-                        pText.Append("<bouten-auto-outside>");
-                    }
-
-                    if (boutenAuto)
-                    {
-                        pText.Append("<bouten-auto>");
-                    }
-
-                    if (horizontalDigit)
-                    {
-                        pText.Append("<horizontalDigit>");
-                    }
-
-                    if (rubyContainer)
-                    {
-                        pText.Append("<ruby-container>");
-                    }
-
-                    if (rubyBase)
-                    {
-                        pText.Append("<ruby-base>");
-                    }
-
-                    if (rubyBaseItalic)
-                    {
-                        pText.Append("<ruby-base-italic>");
-                    }
-
-                    if (rubyText)
-                    {
-                        pText.Append("<ruby-text>");
-                    }
-
-                    if (rubyTextAfter)
-                    {
-                        pText.Append("<ruby-text-after>");
-                    }
-
-                    if (rubyTextItalic)
-                    {
-                        pText.Append("<ruby-text-italic>");
-                    }
-
                     pText.Append(ReadParagraph(child, xml));
 
                     if (!string.IsNullOrEmpty(fontFamily) || !string.IsNullOrEmpty(color))
@@ -647,91 +473,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     if (isItalic)
                     {
                         pText.Append("</i>");
-                    }
-
-                    if (boutenDotBefore)
-                    {
-                        pText.Append("</bouten-dot-before>");
-                    }
-
-                    if (boutenDotAfter)
-                    {
-                        pText.Append("</bouten-dot-after>");
-                    }
-
-                    if (boutenDotOutside)
-                    {
-                        pText.Append("</bouten-dot-outside>");
-                    }
-
-                    if (boutenFilledCircleOutside)
-                    {
-                        pText.Append("</bouten-filled-circle-outside>");
-                    }
-
-                    if (boutenOpenCircleOutside)
-                    {
-                        pText.Append("</bouten-open-circle-outside>");
-                    }
-
-                    if (boutenOpenDotOutside)
-                    {
-                        pText.Append("</bouten-open-dot-outside>");
-                    }
-
-                    if (boutenFilledSesameOutside)
-                    {
-                        pText.Append("</bouten-filled-sesame-outside>");
-                    }
-
-                    if (boutenOpenSesameOutside)
-                    {
-                        pText.Append("</bouten-open-sesame-outside>");
-                    }
-
-                    if (boutenAutoOutside)
-                    {
-                        pText.Append("</bouten-auto-outside>");
-                    }
-
-                    if (boutenAuto)
-                    {
-                        pText.Append("</bouten-auto>");
-                    }
-
-                    if (horizontalDigit)
-                    {
-                        pText.Append("</horizontalDigit>");
-                    }
-
-                    if (rubyBase)
-                    {
-                        pText.Append("</ruby-base>");
-                    }
-
-                    if (rubyBaseItalic)
-                    {
-                        pText.Append("</ruby-base-italic>");
-                    }
-
-                    if (rubyText)
-                    {
-                        pText.Append("</ruby-text>");
-                    }
-
-                    if (rubyTextAfter)
-                    {
-                        pText.Append("</ruby-text-after>");
-                    }
-
-                    if (rubyTextItalic)
-                    {
-                        pText.Append("</ruby-text-italic>");
-                    }
-
-                    if (rubyContainer)
-                    {
-                        pText.Append("</ruby-container>");
                     }
                 }
             }
