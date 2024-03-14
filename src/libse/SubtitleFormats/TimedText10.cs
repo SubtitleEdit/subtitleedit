@@ -31,7 +31,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             var sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
-            string xmlAsString = sb.ToString().Trim();
+            var xmlAsString = sb.ToString().Trim();
 
             if (xmlAsString.Contains("xmlns:tts=\"http://www.w3.org/2006/04"))
             {
@@ -41,6 +41,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (xmlAsString.Contains("http://www.w3.org/ns/ttml"))
             {
                 xmlAsString = xmlAsString.RemoveControlCharactersButWhiteSpace();
+
+                if (xmlAsString.Contains("profile/imsc1"))
+                {
+                    var f = new TimedTextImsc11();
+                    if (f.IsMine(lines, fileName))
+                    {
+                        return false;
+                    }
+                }
+
                 var xml = new XmlDocument { XmlResolver = null };
                 try
                 {
@@ -79,6 +89,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                 }
             }
+
             return false;
         }
 

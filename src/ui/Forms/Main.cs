@@ -2337,7 +2337,7 @@ namespace Nikse.SubtitleEdit.Forms
                         styles = AdvancedSubStationAlpha.GetStylesFromHeader(AdvancedSubStationAlpha.DefaultHeader);
                     }
                 }
-                else if (formatType == typeof(TimedText10) || formatType == typeof(ItunesTimedText))
+                else if (formatType == typeof(TimedText10) || formatType == typeof(ItunesTimedText) || formatType == typeof(TimedTextImsc11))
                 {
                     styles = TimedText10.GetStylesFromHeader(_subtitle.Header);
                 }
@@ -2373,7 +2373,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     SubtitleListview1.ShowExtraColumn(_languageGeneral.Class);
                 }
-                else if (formatType == typeof(TimedText10) || formatType == typeof(ItunesTimedText))
+                else if (formatType == typeof(TimedText10) || formatType == typeof(ItunesTimedText) || formatType == typeof(TimedTextImsc11))
                 {
                     SubtitleListview1.ShowExtraColumn(_languageGeneral.StyleLanguage);
                 }
@@ -9294,7 +9294,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
-            else if (((formatType == typeof(TimedText10) && Configuration.Settings.SubtitleSettings.TimedText10ShowStyleAndLanguage) || formatType == typeof(ItunesTimedText)) && SubtitleListview1.SelectedItems.Count > 0)
+            else if (((formatType == typeof(TimedText10) && Configuration.Settings.SubtitleSettings.TimedText10ShowStyleAndLanguage) || formatType == typeof(ItunesTimedText) || formatType == typeof(TimedTextImsc11)) && SubtitleListview1.SelectedItems.Count > 0)
             {
                 toolStripMenuItemWebVTT.Visible = false;
                 toolStripMenuItemAssStyles.Text = _language.Menu.ContextMenu.TimedTextStyles;
@@ -9857,7 +9857,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 var format = GetCurrentSubtitleFormat();
                 var formatType = format.GetType();
-                if ((formatType == typeof(TimedText10) || formatType == typeof(ItunesTimedText)))
+                if ((formatType == typeof(TimedText10) || formatType == typeof(ItunesTimedText) || formatType == typeof(TimedTextImsc11)))
                 {
                     foreach (int index in SubtitleListview1.SelectedIndices)
                     {
@@ -10684,7 +10684,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 styles = AdvancedSubStationAlpha.GetStylesFromHeader(_subtitle.Header);
             }
-            else if (formatType == typeof(TimedText10) || formatType == typeof(ItunesTimedText))
+            else if (formatType == typeof(TimedText10) || formatType == typeof(ItunesTimedText) || formatType == typeof(TimedTextImsc11))
             {
                 styles = TimedText10.GetStylesFromHeader(_subtitle.Header);
             }
@@ -10702,7 +10702,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (useExtraForStyle)
             {
                 newParagraph.Extra = style;
-                if (format.GetType() == typeof(TimedText10) || format.GetType() == typeof(ItunesTimedText))
+                if (format.GetType() == typeof(TimedText10) || format.GetType() == typeof(ItunesTimedText) || formatType == typeof(TimedTextImsc11))
                 {
                     if (styles.Count > 0)
                     {
@@ -25451,7 +25451,7 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripMenuItemFileFormatProperties.Text = string.Format(_language.Menu.File.FormatXProperties, format.Name);
             }
 
-            if (ft == typeof(TimedText10) || ft == typeof(ItunesTimedText))
+            if (ft == typeof(TimedText10) || ft == typeof(ItunesTimedText) || ft == typeof(TimedTextImsc11))
             {
                 toolStripMenuItemFileFormatProperties.Visible = true;
                 toolStripMenuItemFileFormatProperties.Text = string.Format(_language.Menu.File.FormatXProperties, format.Name);
@@ -31995,7 +31995,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
-            else if (formatType == typeof(TimedText10) || formatType == typeof(ItunesTimedText))
+            else if (formatType == typeof(TimedText10) || formatType == typeof(ItunesTimedText) || formatType == typeof(TimedTextImsc11))
             {
                 using (var styles = new TimedTextStyles(_subtitle))
                 {
@@ -32435,7 +32435,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            if (ft == typeof(TimedText10))
+            if (ft == typeof(TimedText10) || ft == typeof(TimedTextImsc11))
             {
                 using (var properties = new TimedTextProperties(_subtitle))
                 {
