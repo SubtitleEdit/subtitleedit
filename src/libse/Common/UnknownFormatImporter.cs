@@ -35,7 +35,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 subtitle = subTcOnAloneLines;
             }
 
-            bool isJson = IsJson(lines);
+            var isJson = IsJson(lines);
 
             if (subtitle.Paragraphs.Count < 2 && !isJson)
             {
