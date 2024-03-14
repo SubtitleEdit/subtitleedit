@@ -51,6 +51,7 @@
    * Fix minor generate video file file-name - thx LeonCheung
    * Fix copy/paste in duration field - thx GCRaistlin
    * Fix crash in "Fix commo errors" - thx dramirvf
+   * Fix auto generate waveform with video with empty audio - thx LeonCheung
 
 
 4.0.3 (23rd December 2023)
