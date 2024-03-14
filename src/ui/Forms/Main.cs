@@ -22006,7 +22006,8 @@ namespace Nikse.SubtitleEdit.Forms
                     (timeSeconds) =>
                     {
                         // Invoke to not interfere with any inserting
-                        BeginInvoke(new Action(() => {
+                        BeginInvoke(new Action(() =>
+                        {
                             GoToTimeAndSelectPrecedingParagraph(timeSeconds);
                         }));
                     },
@@ -22029,12 +22030,12 @@ namespace Nikse.SubtitleEdit.Forms
         {
             // Select correct paragraph
             var index = _subtitle.Paragraphs.Count - 1;
-            
+
             for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
             {
                 if (_subtitle.Paragraphs[i].StartTime.TotalSeconds > timeSeconds)
                 {
-                    index = i - 1;                    
+                    index = i - 1;
                     break;
                 }
             }
@@ -22080,7 +22081,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _subtitleOriginal.Renumber();
 
                 SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
-            } 
+            }
             else
             {
                 SubtitleListview1.Fill(_subtitle);
@@ -23383,6 +23384,13 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                             else
                             {
+                                var hasAudioTracks = HasAudioTracks(_videoFileName);
+                                if (!hasAudioTracks)
+                                {
+                                    AddEmptyWaveform();
+                                    return;
+                                }
+
                                 ShowStatus("Waveform load failed - install ffmpeg in Options - Settings - Waveform");
                             }
                         };
@@ -23404,6 +23412,33 @@ namespace Nikse.SubtitleEdit.Forms
             SetUndockedWindowsTitle();
             ShowSubtitleTimer.Start();
             SetAssaResolutionWithChecks();
+        }
+
+        private bool HasAudioTracks(string videoFileName)
+        {
+            try
+            {
+                if (FileUtil.IsMatroskaFile(videoFileName))
+                {
+                    var matroska = new MatroskaFile(videoFileName);
+                    if (matroska.IsValid)
+                    {
+                        return matroska.GetTracks().Any(p => p.IsAudio);
+                    }
+                }
+
+                if (mediaPlayer.VideoPlayer is LibMpvDynamic libMpv)
+                {
+                    return libMpv.AudioTracks.Count > 0;
+                }
+
+                var info = FfmpegMediaInfo.Parse(videoFileName);
+                return info.Tracks.Any(p => p.TrackType == FfmpegTrackType.Audio);
+            }
+            catch
+            {
+                return true;
+            }
         }
 
         private void SetAssaResolutionWithChecks()
@@ -34680,12 +34715,12 @@ namespace Nikse.SubtitleEdit.Forms
             RunActionOnAllParagraphs((p) =>
             {
                 var s = p.Text;
-                if (!s.Contains("(♪", StringComparison.Ordinal) && !s.Contains("(♫", StringComparison.Ordinal)  && !s.Contains("[♪", StringComparison.Ordinal) && !s.Contains("[♫", StringComparison.Ordinal) &&
+                if (!s.Contains("(♪", StringComparison.Ordinal) && !s.Contains("(♫", StringComparison.Ordinal) && !s.Contains("[♪", StringComparison.Ordinal) && !s.Contains("[♫", StringComparison.Ordinal) &&
                     !s.Contains("♪)", StringComparison.Ordinal) && !s.Contains("♫)", StringComparison.Ordinal) && !s.Contains("♪]", StringComparison.Ordinal) && !s.Contains("♫]", StringComparison.Ordinal))
                 {
                     s = p.Text.Replace("♪", string.Empty).Replace("♫", string.Empty);
                 }
-                
+
                 s = NetflixImsc11Japanese.RemoveTags(s);
                 return HtmlUtil.RemoveHtmlTags(s, true).Trim();
             }, string.Format(_language.BeforeX, _language.Menu.ContextMenu.RemoveFormattingAll));
@@ -36313,7 +36348,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (unfixableParagraphs.Count > 0)
             {
-                BeginInvoke(new Action(() => {
+                BeginInvoke(new Action(() =>
+                {
                     _dialog?.Dispose();
                     _dialog = new BeautifyTimeCodes.BeautifyTimeCodesUnfixableParagraphs(unfixableParagraphs, (paragraph) =>
                     {
