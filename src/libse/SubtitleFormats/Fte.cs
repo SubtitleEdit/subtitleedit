@@ -69,6 +69,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                     last = ms;
                 }
+                else
+                {
+                    _errorCount++;
+                }
 
                 index += subBufferLength;
             }

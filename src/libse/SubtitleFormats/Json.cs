@@ -91,7 +91,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override string ToText(Subtitle subtitle, string title)
         {
             var sb = new StringBuilder(@"[");
-            int count = 0;
+            var count = 0;
             foreach (var p in subtitle.Paragraphs)
             {
                 if (count > 0)
