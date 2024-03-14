@@ -1993,6 +1993,19 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
         private void comboBoxWhisperEngine_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (comboBoxWhisperEngine.Text != WhisperChoice.PurfviewFasterWhisper && Configuration.Settings.Tools.WhisperExtraSettings.Contains("--standard", StringComparison.Ordinal))
+            {
+                Configuration.Settings.Tools.WhisperExtraSettings = Configuration.Settings.Tools.WhisperExtraSettings.Replace("--standard", string.Empty).Trim();
+                labelAdvanced.Text = Configuration.Settings.Tools.WhisperExtraSettings;
+            }
+            else if (comboBoxWhisperEngine.Text == WhisperChoice.PurfviewFasterWhisper &&
+                     !Configuration.Settings.Tools.WhisperExtraSettings.Contains("--standard", StringComparison.Ordinal) &&
+                     Configuration.Settings.Tools.WhisperPurfviewFasterWhisperDefaultCmd == "--standard")
+            {
+                Configuration.Settings.Tools.WhisperExtraSettings = Configuration.Settings.Tools.WhisperPurfviewFasterWhisperDefaultCmd;
+                labelAdvanced.Text = Configuration.Settings.Tools.WhisperExtraSettings;
+            }
+
             if (comboBoxWhisperEngine.Text == Configuration.Settings.Tools.WhisperChoice)
             {
                 return;
