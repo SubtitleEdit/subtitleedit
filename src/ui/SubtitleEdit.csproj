@@ -665,6 +665,12 @@
     <Compile Include="Forms\SeJobs\SeJobExport.Designer.cs">
       <DependentUpon>SeJobExport.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\TimedTextPropertiesIms11.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\TimedTextPropertiesIms11.Designer.cs">
+      <DependentUpon>TimedTextPropertiesIms11.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\TimedTextPropertiesItunes.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1917,6 +1923,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ShotChanges\AdjustTimingViaShotChanges.resx">
       <DependentUpon>AdjustTimingViaShotChanges.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\TimedTextPropertiesIms11.resx">
+      <DependentUpon>TimedTextPropertiesIms11.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\TimedTextPropertiesItunes.resx">
       <DependentUpon>TimedTextPropertiesItunes.cs</DependentUpon>

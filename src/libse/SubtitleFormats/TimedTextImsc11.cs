@@ -84,15 +84,21 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static XmlNode MakeParagraph(XmlDocument xml, Paragraph p)
         {
+            var timeCodeFormat = Configuration.Settings.SubtitleSettings.TimedTextImsc11TimeCodeFormat;
+            if (string.IsNullOrEmpty(timeCodeFormat))
+            {
+                timeCodeFormat = "hh:mm:ss.ms";
+            }
+
             XmlNode paragraph = xml.CreateElement("p", "http://www.w3.org/ns/ttml");
-            string text = p.Text.RemoveControlCharactersButWhiteSpace();
+            var text = p.Text.RemoveControlCharactersButWhiteSpace();
 
             XmlAttribute start = xml.CreateAttribute("begin");
-            start.InnerText = TimedText10.ConvertToTimeString(p.StartTime);
+            start.InnerText = TimedText10.ConvertToTimeString(p.StartTime, timeCodeFormat);
             paragraph.Attributes.Append(start);
 
             XmlAttribute dur = xml.CreateAttribute("dur");
-            dur.InnerText = TimedText10.ConvertToTimeString(p.Duration);
+            dur.InnerText = TimedText10.ConvertToTimeString(p.Duration, timeCodeFormat);
             paragraph.Attributes.Append(dur);
 
             XmlAttribute region = xml.CreateAttribute("region");

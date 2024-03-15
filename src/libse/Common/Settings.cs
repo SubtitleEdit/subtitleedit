@@ -832,6 +832,8 @@ namespace Nikse.SubtitleEdit.Core.Common
         public string TimedTextItunesBottomExtent { get; set; }
         public string TimedTextItunesTimeCodeFormat { get; set; }
         public string TimedTextItunesStyleAttribute { get; set; }
+        public string TimedTextImsc11TimeCodeFormat { get; set; }
+
 
         public int FcpFontSize { get; set; }
         public string FcpFontName { get; set; }
@@ -918,6 +920,7 @@ $HorzAlign          =   Center
             TimedTextItunesBottomExtent = "100% 15%";
             TimedTextItunesTimeCodeFormat = "Frames";
             TimedTextItunesStyleAttribute = "tts:fontStyle";
+            TimedTextImsc11TimeCodeFormat = "hh:mm:ss.ms";
 
             FcpFontSize = 18;
             FcpFontName = "Lucida Grande";
