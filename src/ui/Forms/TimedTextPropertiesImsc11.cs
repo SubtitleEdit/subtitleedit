@@ -7,13 +7,13 @@ using System.Xml;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public sealed partial class TimedTextPropertiesIms11 : PositionAndSizeForm
+    public sealed partial class TimedTextPropertiesImsc11 : PositionAndSizeForm
     {
         private readonly Subtitle _subtitle;
         private readonly XmlDocument _xml;
         private readonly XmlNamespaceManager _namespaceManager;
 
-        public TimedTextPropertiesIms11(Subtitle subtitle)
+        public TimedTextPropertiesImsc11(Subtitle subtitle)
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
