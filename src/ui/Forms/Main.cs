@@ -32447,7 +32447,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (ft == typeof(TimedTextImsc11))
             {
-                using (var properties = new TimedTextPropertiesIms11(_subtitle))
+                using (var properties = new TimedTextPropertiesImsc11(_subtitle))
                 {
                     properties.ShowDialog(this);
                 }
