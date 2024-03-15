@@ -1,6 +1,6 @@
 ﻿namespace Nikse.SubtitleEdit.Forms
 {
-    partial class TimedTextPropertiesIms11
+    sealed partial class TimedTextPropertiesIms11
     {
         /// <summary>
         /// Required designer variable.

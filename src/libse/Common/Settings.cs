@@ -833,6 +833,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public string TimedTextItunesTimeCodeFormat { get; set; }
         public string TimedTextItunesStyleAttribute { get; set; }
         public string TimedTextImsc11TimeCodeFormat { get; set; }
+        public string TimedTextImsc11FileExtension { get; set; }
 
 
         public int FcpFontSize { get; set; }
@@ -921,6 +922,7 @@ $HorzAlign          =   Center
             TimedTextItunesTimeCodeFormat = "Frames";
             TimedTextItunesStyleAttribute = "tts:fontStyle";
             TimedTextImsc11TimeCodeFormat = "hh:mm:ss.ms";
+            TimedTextImsc11FileExtension = ".xml";
 
             FcpFontSize = 18;
             FcpFontName = "Lucida Grande";
@@ -7523,6 +7525,18 @@ $HorzAlign          =   Center
                     settings.SubtitleSettings.TimedTextItunesStyleAttribute = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("TimedTextImsc11TimeCodeFormat");
+                if (subNode != null)
+                {
+                    settings.SubtitleSettings.TimedTextImsc11TimeCodeFormat = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("TimedTextImsc11FileExtension");
+                if (subNode != null)
+                {
+                    settings.SubtitleSettings.TimedTextImsc11FileExtension = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("FcpFontSize");
                 if (subNode != null)
                 {
@@ -12219,6 +12233,8 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("TimedTextItunesBottomExtent", settings.SubtitleSettings.TimedTextItunesBottomExtent);
                 textWriter.WriteElementString("TimedTextItunesTimeCodeFormat", settings.SubtitleSettings.TimedTextItunesTimeCodeFormat);
                 textWriter.WriteElementString("TimedTextItunesStyleAttribute", settings.SubtitleSettings.TimedTextItunesStyleAttribute);
+                textWriter.WriteElementString("TimedTextImsc11TimeCodeFormat", settings.SubtitleSettings.TimedTextImsc11TimeCodeFormat);
+                textWriter.WriteElementString("TimedTextImsc11FileExtension", settings.SubtitleSettings.TimedTextImsc11FileExtension);
                 textWriter.WriteElementString("FcpFontSize", settings.SubtitleSettings.FcpFontSize.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("FcpFontName", settings.SubtitleSettings.FcpFontName);
                 textWriter.WriteElementString("Cavena890StartOfMessage", settings.SubtitleSettings.Cavena890StartOfMessage);

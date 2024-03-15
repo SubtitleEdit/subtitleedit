@@ -12,7 +12,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     /// </summary>
     public class TimedTextImsc11 : SubtitleFormat
     {
-        public override string Extension => ".xml";
         public override string Name => "Timed Text IMSC 1.1";
 
         private static string GetXmlStructure()
@@ -45,6 +44,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 </tt>
 ".Replace('\'', '"');
         }
+
+        public override string Extension => Configuration.Settings.SubtitleSettings.TimedTextImsc11FileExtension;
 
         public override bool IsMine(List<string> lines, string fileName)
         {

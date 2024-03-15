@@ -8,7 +8,7 @@ using System.Xml;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public partial class TimedTextPropertiesIms11 : PositionAndSizeForm
+    public sealed partial class TimedTextPropertiesIms11 : PositionAndSizeForm
     {
         private readonly Subtitle _subtitle;
         private readonly XmlDocument _xml;
@@ -20,6 +20,8 @@ namespace Nikse.SubtitleEdit.Forms
             InitializeComponent();
             UiUtil.FixFonts(this);
             Application.DoEvents();
+
+            Text = string.Format(LanguageSettings.Current.Main.Menu.File.FormatXProperties, new TimedTextImsc11().Name);
 
             _subtitle = subtitle;
             var notAvailable = "[" + LanguageSettings.Current.General.NotAvailable + "]";
@@ -126,7 +128,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            var ext = Configuration.Settings.SubtitleSettings.TimedText10FileExtension;
+            var ext = Configuration.Settings.SubtitleSettings.TimedTextImsc11FileExtension;
             comboBoxFileExtensions.SelectedIndex = 0;
             for (var index = 0; index < comboBoxFileExtensions.Items.Count; index++)
             {
@@ -313,7 +315,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             Configuration.Settings.SubtitleSettings.TimedTextImsc11TimeCodeFormat = comboBoxTimeCodeFormat.SelectedItem.ToString();
 
-            var currentTimedTextExt = Configuration.Settings.SubtitleSettings.TimedText10FileExtension;
+            var currentTimedTextExt = Configuration.Settings.SubtitleSettings.TimedTextImsc11FileExtension;
             var newTimedTextExt = comboBoxFileExtensions.SelectedItem.ToString();
             if (currentTimedTextExt != newTimedTextExt)
             {
@@ -325,7 +327,7 @@ namespace Nikse.SubtitleEdit.Forms
                     Configuration.Settings.General.FavoriteSubtitleFormats = favoriteFormats.Replace(currentTimedTextWithExt, newTimedTextWithExt);
                 }
 
-                Configuration.Settings.SubtitleSettings.TimedText10FileExtension = newTimedTextExt;
+                Configuration.Settings.SubtitleSettings.TimedTextImsc11FileExtension = newTimedTextExt;
             }
 
             DialogResult = DialogResult.OK;
