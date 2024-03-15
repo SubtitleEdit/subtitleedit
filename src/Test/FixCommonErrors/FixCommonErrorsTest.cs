@@ -2126,6 +2126,17 @@ namespace Test.FixCommonErrors
             }
         }
 
+        [TestMethod]
+        public void StartWithUppercaseAfterColon5()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "TRANSLATION FROM FRENCH:");
+                new FixStartWithUppercaseLetterAfterColon().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual("TRANSLATION FROM FRENCH:", _subtitle.Paragraphs[0].Text);
+            }
+        }
+
         #endregion Start with upppercase after colon
 
         #region Fix Music Notation
