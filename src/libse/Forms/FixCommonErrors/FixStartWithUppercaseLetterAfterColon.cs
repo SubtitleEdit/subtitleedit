@@ -42,7 +42,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         // skip white space before formatting
                         while (k < len && text[k] == ' ') k++;
                         // skip formatting e.g: <i>, <b>,<font..>...
-                        while (k < len && text[k] == '<' || text[k] == '{')
+                        while (k < len && (text[k] == '<' || text[k] == '{'))
                         {
                             var closingPair = GetClosingPair(text[k]);
                             var closeIdx = text.IndexOf(closingPair, k + 1);
