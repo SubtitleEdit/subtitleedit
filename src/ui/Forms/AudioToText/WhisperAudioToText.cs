@@ -137,6 +137,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
             Init();
             InitializeWhisperEngines(comboBoxWhisperEngine);
+            FixPurfviewWhisperStandardArgument(labelAdvanced, comboBoxWhisperEngine.Text);
         }
 
         public static void InitializeWhisperEngines(NikseComboBox cb)
@@ -1993,18 +1994,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
         private void comboBoxWhisperEngine_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (comboBoxWhisperEngine.Text != WhisperChoice.PurfviewFasterWhisper && Configuration.Settings.Tools.WhisperExtraSettings.Contains("--standard", StringComparison.Ordinal))
-            {
-                Configuration.Settings.Tools.WhisperExtraSettings = Configuration.Settings.Tools.WhisperExtraSettings.Replace("--standard", string.Empty).Trim();
-                labelAdvanced.Text = Configuration.Settings.Tools.WhisperExtraSettings;
-            }
-            else if (comboBoxWhisperEngine.Text == WhisperChoice.PurfviewFasterWhisper &&
-                     !Configuration.Settings.Tools.WhisperExtraSettings.Contains("--standard", StringComparison.Ordinal) &&
-                     Configuration.Settings.Tools.WhisperPurfviewFasterWhisperDefaultCmd == "--standard")
-            {
-                Configuration.Settings.Tools.WhisperExtraSettings = Configuration.Settings.Tools.WhisperPurfviewFasterWhisperDefaultCmd;
-                labelAdvanced.Text = Configuration.Settings.Tools.WhisperExtraSettings;
-            }
+            FixPurfviewWhisperStandardArgument(labelAdvanced, comboBoxWhisperEngine.Text);
 
             if (comboBoxWhisperEngine.Text == Configuration.Settings.Tools.WhisperChoice)
             {
@@ -2075,6 +2065,22 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             {
                 WhisperEngineStableTs();
             }
+        }
+
+        internal static void FixPurfviewWhisperStandardArgument(Label label, string engine)
+        {
+            if (engine != WhisperChoice.PurfviewFasterWhisper && Configuration.Settings.Tools.WhisperExtraSettings.Contains("--standard", StringComparison.Ordinal))
+            {
+                Configuration.Settings.Tools.WhisperExtraSettings = Configuration.Settings.Tools.WhisperExtraSettings.Replace("--standard", string.Empty).Trim();
+            }
+            else if (engine == WhisperChoice.PurfviewFasterWhisper &&
+                     !Configuration.Settings.Tools.WhisperExtraSettings.Contains("--standard", StringComparison.Ordinal) &&
+                     Configuration.Settings.Tools.WhisperPurfviewFasterWhisperDefaultCmd == "--standard")
+            {
+                Configuration.Settings.Tools.WhisperExtraSettings = Configuration.Settings.Tools.WhisperPurfviewFasterWhisperDefaultCmd;
+            }
+
+            label.Text = Configuration.Settings.Tools.WhisperExtraSettings;
         }
 
         private void setCPPConstMeModelsFolderToolStripMenuItem_Click(object sender, EventArgs e)

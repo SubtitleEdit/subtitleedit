@@ -77,6 +77,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             }
 
             WhisperAudioToText.InitializeWhisperEngines(comboBoxWhisperEngine);
+            WhisperAudioToText.FixPurfviewWhisperStandardArgument(labelAdvanced, comboBoxWhisperEngine.Text);
         }
 
         private void Init()
@@ -667,6 +668,8 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
         private void comboBoxWhisperEngine_SelectedIndexChanged(object sender, EventArgs e)
         {
+            WhisperAudioToText.FixPurfviewWhisperStandardArgument(labelAdvanced, comboBoxWhisperEngine.Text);
+
             if (comboBoxWhisperEngine.Text == Configuration.Settings.Tools.WhisperChoice)
             {
                 return;
