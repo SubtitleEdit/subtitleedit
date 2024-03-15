@@ -921,7 +921,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                 _stdOutWriter.WriteLine();
             }
 
-            return (count == converted && errors == 0) ? 0 : 1;
+            return errors == 0 ? 0 : 1;
         }
 
         private static bool IsFileLengthOkForTextSubtitle(string fileName, FileInfo fileInfo)
