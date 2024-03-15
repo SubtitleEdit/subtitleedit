@@ -68,7 +68,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override string ToText(Subtitle subtitle, string title)
         {
             var xml = new XmlDocument { XmlResolver = null };
-            xml.LoadXml(GetXmlStructure());
+            var xmlStructure = GetXmlStructure();
+            var language = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle);
+            xmlStructure = xmlStructure.Replace("lang=\"en\"", $"lang=\"{language}\"");
+            xml.LoadXml(xmlStructure);
             var namespaceManager = new XmlNamespaceManager(xml.NameTable);
             namespaceManager.AddNamespace("ttml", "http://www.w3.org/ns/ttml");
             var div = xml.DocumentElement.SelectSingleNode("ttml:body", namespaceManager).SelectSingleNode("ttml:div", namespaceManager);
@@ -326,19 +329,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
                 else if (child.Name == "span" || child.Name == "tt:span")
                 {
-                   var isItalic = false;
-                   var isBold = false;
-                   var isUnderlined = false;
+                    var isItalic = false;
+                    var isBold = false;
+                    var isUnderlined = false;
                     string fontFamily = null;
                     string color = null;
-                  
+
 
                     // Composing styles
 
                     if (child.Attributes["style"] != null)
                     {
                         var styleName = child.Attributes["style"].Value;
-                       
+
                         if (styles.Contains(styleName))
                         {
                             try
