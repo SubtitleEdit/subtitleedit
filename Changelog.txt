@@ -9,6 +9,7 @@
    * Add sorting of rules in "Multiple replace" - thx caioeverest 
    * Add shortcut for "Translate selected lines"
    * Add custom exit shortcut - thx Onthrax
+   * Add new subtitle format "Timed Text IMSC 1.1" - thx Krzysztof
 * IMPROVED:
    * Update Korean translation - thx domddol
    * Update Portuguese translation - thx hugok79
