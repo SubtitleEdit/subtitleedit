@@ -2,7 +2,6 @@
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic;
 using System;
-using System.Globalization;
 using System.Windows.Forms;
 using System.Xml;
 
@@ -46,29 +45,7 @@ namespace Nikse.SubtitleEdit.Forms
             _namespaceManager.AddNamespace("tts", TimedText10.TtmlStylingNamespace);
             _namespaceManager.AddNamespace("ttm", TimedText10.TtmlMetadataNamespace);
 
-            XmlNode node = _xml.DocumentElement.SelectSingleNode("ttml:head/ttml:metadata/ttml:title", _namespaceManager);
-            if (node != null)
-            {
-                textBoxTitle.Text = node.InnerText;
-            }
-
-            node = _xml.DocumentElement.SelectSingleNode("ttml:head/ttml:metadata/ttml:desc", _namespaceManager);
-            if (node != null)
-            {
-                textBoxDescription.Text = node.InnerText;
-            }
-
-            foreach (CultureInfo ci in CultureInfo.GetCultures(CultureTypes.SpecificCultures))
-            {
-                comboBoxLanguage.Items.Add(ci.Name);
-            }
-            XmlAttribute attr = _xml.DocumentElement.Attributes["xml:lang"];
-            if (attr != null)
-            {
-                comboBoxLanguage.Text = attr.InnerText;
-            }
-
-            attr = _xml.DocumentElement.Attributes["ttp:timeBase"];
+            XmlAttribute attr = _xml.DocumentElement.Attributes["ttp:timeBase"];
             if (attr != null)
             {
                 comboBoxTimeBase.Text = attr.InnerText;
@@ -100,7 +77,7 @@ namespace Nikse.SubtitleEdit.Forms
             foreach (string style in TimedText10.GetStylesFromHeader(_subtitle.Header))
             {
                 comboBoxDefaultStyle.Items.Add(style);
-                node = _xml.DocumentElement.SelectSingleNode("ttml:body", _namespaceManager);
+                XmlNode node = _xml.DocumentElement.SelectSingleNode("ttml:body", _namespaceManager);
                 if (node?.Attributes?["style"] != null && style == node.Attributes["style"].Value)
                 {
                     comboBoxDefaultStyle.SelectedIndex = comboBoxDefaultStyle.Items.Count - 1;
@@ -109,7 +86,7 @@ namespace Nikse.SubtitleEdit.Forms
             foreach (string region in TimedText10.GetRegionsFromHeader(_subtitle.Header))
             {
                 comboBoxDefaultRegion.Items.Add(region);
-                node = _xml.DocumentElement.SelectSingleNode("ttml:body", _namespaceManager);
+                XmlNode node = _xml.DocumentElement.SelectSingleNode("ttml:body", _namespaceManager);
                 if (node?.Attributes?["region"] != null && region == node.Attributes["region"].Value)
                 {
                     comboBoxDefaultRegion.SelectedIndex = comboBoxDefaultRegion.Items.Count - 1;
@@ -148,82 +125,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
-            XmlNode node = _xml.DocumentElement.SelectSingleNode("ttml:head/ttml:metadata/ttml:title", _namespaceManager);
-            if (node != null)
-            {
-                if (string.IsNullOrWhiteSpace(textBoxTitle.Text) && string.IsNullOrWhiteSpace(textBoxDescription.Text))
-                {
-                    _xml.DocumentElement.SelectSingleNode("ttml:head", _namespaceManager).RemoveChild(_xml.DocumentElement.SelectSingleNode("ttml:head/ttml:metadata", _namespaceManager));
-                }
-                else
-                {
-                    node.InnerText = textBoxTitle.Text;
-                }
-            }
-            else if (!string.IsNullOrWhiteSpace(textBoxTitle.Text))
-            {
-                var head = _xml.DocumentElement.SelectSingleNode("ttml:head", _namespaceManager);
-                if (head == null)
-                {
-                    head = _xml.CreateElement("ttml", "head", _namespaceManager.LookupNamespace("ttml"));
-                    _xml.DocumentElement.PrependChild(head);
-                }
-
-                var metadata = _xml.DocumentElement.SelectSingleNode("ttml:head/ttml:metadata", _namespaceManager);
-                if (metadata == null)
-                {
-                    metadata = _xml.CreateElement("ttml", "metadata", _namespaceManager.LookupNamespace("ttml"));
-                    head.PrependChild(metadata);
-                }
-
-                var title = _xml.CreateElement("ttml", "title", _namespaceManager.LookupNamespace("ttml"));
-                metadata.InnerText = textBoxTitle.Text;
-                metadata.AppendChild(title);
-            }
-
-            node = _xml.DocumentElement.SelectSingleNode("ttml:head/ttml:metadata/ttml:desc", _namespaceManager);
-            if (node != null)
-            {
-                node.InnerText = textBoxDescription.Text;
-            }
-            else if (!string.IsNullOrWhiteSpace(textBoxDescription.Text))
-            {
-                var head = _xml.DocumentElement.SelectSingleNode("ttml:head", _namespaceManager);
-                if (head == null)
-                {
-                    head = _xml.CreateElement("ttml", "head", _namespaceManager.LookupNamespace("ttml"));
-                    _xml.DocumentElement.PrependChild(head);
-                }
-
-                var metadata = _xml.DocumentElement.SelectSingleNode("ttml:head/ttml:metadata", _namespaceManager);
-                if (metadata == null)
-                {
-                    metadata = _xml.CreateElement("ttml", "metadata", _namespaceManager.LookupNamespace("ttml"));
-                    head.PrependChild(metadata);
-                }
-
-                var desc = _xml.CreateElement("ttml", "desc", _namespaceManager.LookupNamespace("ttml"));
-                desc.InnerText = textBoxDescription.Text;
-                metadata.AppendChild(desc);
-            }
-
-            XmlAttribute attr = _xml.DocumentElement.Attributes["xml:lang"];
-            if (attr != null)
-            {
-                attr.Value = comboBoxLanguage.Text;
-                if (attr.Value.Length == 0)
-                {
-                    _xml.DocumentElement.Attributes.Remove(attr);
-                }
-            }
-            else if (comboBoxLanguage.Text.Length > 0)
-            {
-                attr = _xml.CreateAttribute("xml", "lang", _namespaceManager.LookupNamespace("xml"));
-                attr.Value = comboBoxLanguage.Text;
-                _xml.DocumentElement.Attributes.Prepend(attr);
-            }
-
-            attr = _xml.DocumentElement.Attributes["ttp:timeBase"];
+            XmlAttribute attr = _xml.DocumentElement.Attributes["ttp:timeBase"];
             if (attr != null)
             {
                 attr.InnerText = comboBoxTimeBase.Text;
@@ -287,7 +189,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _xml.DocumentElement.Attributes.Append(attr);
             }
 
-            node = _xml.DocumentElement.SelectSingleNode("ttml:body", _namespaceManager);
+            XmlNode node = _xml.DocumentElement.SelectSingleNode("ttml:body", _namespaceManager);
             if (node != null && node.Attributes["style"] != null)
             {
                 node.Attributes["style"].Value = comboBoxDefaultStyle.Text;
