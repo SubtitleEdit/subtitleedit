@@ -3191,12 +3191,12 @@ namespace Nikse.SubtitleEdit.Core.Common
                 {
                     return pre + text.Replace(tag, string.Empty).Replace(endTag, string.Empty).Replace(Environment.NewLine + " ", Environment.NewLine).Replace(" " + Environment.NewLine, Environment.NewLine).Trim() + post;
                 }
-                
+
                 if (string.IsNullOrEmpty(endTag) && !string.IsNullOrEmpty(tag))
                 {
                     return pre + text.Replace(tag, string.Empty).Replace(Environment.NewLine + " ", Environment.NewLine).Replace(" " + Environment.NewLine, Environment.NewLine).Trim() + post;
                 }
-                
+
                 if (!string.IsNullOrEmpty(endTag))
                 {
                     return pre + text.Replace(endTag, string.Empty).Replace(Environment.NewLine + " ", Environment.NewLine).Replace(" " + Environment.NewLine, Environment.NewLine).Trim() + post;
@@ -3205,7 +3205,6 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             return pre + text + post;
         }
-
 
         public static string AddSymbols(string tag, string text, string endTag)
         {
