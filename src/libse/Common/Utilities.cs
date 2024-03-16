@@ -3178,30 +3178,32 @@ namespace Nikse.SubtitleEdit.Core.Common
             return text;
         }
 
-        public static string RemoveSymbols(string tag, string text, string endTag)
+        public static string RemoveSymbols(string tag, string input, string endTag)
         {
             var pre = string.Empty;
             var post = string.Empty;
-            text = SplitStartTags(text, ref pre);
+            var text = SplitStartTags(input, ref pre);
             text = SplitEndTags(text, ref post);
 
             if (!string.IsNullOrEmpty(tag) && text.Contains(tag) || string.IsNullOrEmpty(tag) && !string.IsNullOrEmpty(endTag) && text.Contains(endTag))
             {
                 if (!string.IsNullOrEmpty(endTag) && !string.IsNullOrEmpty(tag))
                 {
-                    text = pre + text.Replace(tag, string.Empty).Replace(endTag, string.Empty).Replace(Environment.NewLine + " ", Environment.NewLine).Replace(" " + Environment.NewLine, Environment.NewLine).Trim() + post;
+                    return pre + text.Replace(tag, string.Empty).Replace(endTag, string.Empty).Replace(Environment.NewLine + " ", Environment.NewLine).Replace(" " + Environment.NewLine, Environment.NewLine).Trim() + post;
                 }
-                else if (string.IsNullOrEmpty(endTag) && !string.IsNullOrEmpty(tag))
+                
+                if (string.IsNullOrEmpty(endTag) && !string.IsNullOrEmpty(tag))
                 {
-                    text = pre + text.Replace(tag, string.Empty).Replace(Environment.NewLine + " ", Environment.NewLine).Replace(" " + Environment.NewLine, Environment.NewLine).Trim() + post;
+                    return pre + text.Replace(tag, string.Empty).Replace(Environment.NewLine + " ", Environment.NewLine).Replace(" " + Environment.NewLine, Environment.NewLine).Trim() + post;
                 }
-                else if (!string.IsNullOrEmpty(endTag))
+                
+                if (!string.IsNullOrEmpty(endTag))
                 {
-                    text = pre + text.Replace(endTag, string.Empty).Replace(Environment.NewLine + " ", Environment.NewLine).Replace(" " + Environment.NewLine, Environment.NewLine).Trim() + post;
+                    return pre + text.Replace(endTag, string.Empty).Replace(Environment.NewLine + " ", Environment.NewLine).Replace(" " + Environment.NewLine, Environment.NewLine).Trim() + post;
                 }
             }
 
-            return text;
+            return pre + text + post;
         }
 
 
