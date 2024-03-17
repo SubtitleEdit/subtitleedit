@@ -17,7 +17,7 @@ namespace Nikse.SubtitleEdit.Logic
         public const int WaveformPanelMinimumHeight = 124;
         public static SplitContainer MainSplitContainer { get; set; }
 
-        private static int _lastLayout = -1;
+        public static int LastLayout = -1;
         private static Dictionary<int, string> LayoutInMemory { get; set; }
 
         public static void SetLayout(int layout, Form form, Control videoPlayer, SubtitleListView subtitleListView, GroupBox groupBoxWaveform, GroupBox groupBoxEdit, SplitterEventHandler splitMoved)
@@ -32,14 +32,14 @@ namespace Nikse.SubtitleEdit.Logic
                 LayoutInMemory = new Dictionary<int, string>();
             }
 
-            if (_lastLayout >= 0)
+            if (LastLayout >= 0)
             {
-                if (LayoutInMemory.ContainsKey(_lastLayout))
+                if (LayoutInMemory.ContainsKey(LastLayout))
                 {
-                    LayoutInMemory.Remove(_lastLayout);
+                    LayoutInMemory.Remove(LastLayout);
                 }
 
-                LayoutInMemory.Add(_lastLayout, SaveLayout());
+                LayoutInMemory.Add(LastLayout, SaveLayout());
             }
 
             switch (layout)
@@ -87,7 +87,7 @@ namespace Nikse.SubtitleEdit.Logic
                 RestoreLayout(LayoutInMemory[layout]);
             }
 
-            _lastLayout = layout;
+            LastLayout = layout;
         }
 
         // default layout (video right)

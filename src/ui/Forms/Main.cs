@@ -25018,6 +25018,7 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleListview1.Items.Clear(); // for performance
             }
 
+            var oldLayout = LayoutManager.LastLayout;
             LayoutManager.SetLayout(layout, this, panelVideoPlayer, SubtitleListview1, groupBoxVideo, groupBoxEdit, SplitContainerListViewAndTextSplitterMoved);
 
             if (isLarge)
@@ -25033,6 +25034,15 @@ namespace Nikse.SubtitleEdit.Forms
                 mediaPlayer.Visible)
             {
                 TryToFindAndOpenVideoFile(Utilities.GetPathAndFileNameWithoutExtension(_fileName));
+            }
+
+            if (_subtitleListViewIndex >= 0)
+            {
+                SubtitleListview1.SelectIndexAndEnsureVisible(_subtitleListViewIndex, true);
+                if (layout != LayoutManager.LayoutNoVideo && oldLayout == LayoutManager.LayoutNoVideo)
+                {
+                    GotoSubPosAndPause();
+                }
             }
         }
 
