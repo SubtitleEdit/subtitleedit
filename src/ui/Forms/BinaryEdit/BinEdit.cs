@@ -1534,7 +1534,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             if (convertToSmpte)
             {
                 startTime = new TimeCode(startTime.TotalMilliseconds / 1.001);
-                endTime = new TimeCode(startTime.TotalMilliseconds / 1.001);
+                endTime = new TimeCode(endTime.TotalMilliseconds / 1.001);
             }
 
             sb.AppendLine("<Event InTC=\"" + ToHHMMSSFF(startTime) + "\" OutTC=\"" + ToHHMMSSFF(endTime) + "\" Forced=\"" + extra.IsForced.ToString().ToLowerInvariant() + "\">");
