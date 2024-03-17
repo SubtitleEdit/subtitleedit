@@ -55,7 +55,8 @@
    * Fix crash in "Fix commo errors" - thx dramirvf
    * Fix auto generate waveform with video with empty audio - thx LeonCheung
    * Fix a few broken spell check dictionary links
-   * Fix removing italic when toggling music symbols - thx Charvelx04 
+   * Fix removing italic when toggling music symbols - thx Charvelx04
+   * Fix bug in BinEdit BDN/XML writing - thx von Suppé
 
 
 4.0.3 (23rd December 2023)
