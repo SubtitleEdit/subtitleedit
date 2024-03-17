@@ -1,6 +1,6 @@
 ﻿Subtitle Edit Changelog
 
-4.0.4 (xth March 2024) BETA
+4.0.4 (17th March 2024)
 * NEW:
    * Add "Verify completeness" (time covered) feature - thx Flitskikker
    * Add "Evenly distribute selected lines (CPS)" - thx Flitskikker
