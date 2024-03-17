@@ -166,8 +166,6 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void VideoStartLoaded(object sender, EventArgs e)
         {
-            timer1.Start();
-
             videoPlayerContainer1.Pause();
 
             if (_guess.TotalMilliseconds > 0 && _guess.TotalMilliseconds / TimeCode.BaseUnit < videoPlayerContainer1.VideoPlayer.Duration)
@@ -184,6 +182,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 libMpv.AudioTrackNumber = _audioTrackNumber;
             }
+
+            TaskDelayHelper.RunDelayed(TimeSpan.FromMilliseconds(100), () => timer1.Start());
         }
 
         private void timer1_Tick(object sender, EventArgs e)
