@@ -14,7 +14,7 @@
 		<Authors>Nikolaj Olsson</Authors>
 		<PackageIcon>Icon.png</PackageIcon>
 		<RepositoryType>git</RepositoryType>
-		<PackageReleaseNotes>SE 4.0.2</PackageReleaseNotes>
+		<PackageReleaseNotes>SE 4.0.4</PackageReleaseNotes>
 	</PropertyGroup>
 
 	<ItemGroup>
