@@ -16,6 +16,7 @@
     <Word from="Ajpod" to="iPod" />
     <Word from="Ajpoda" to="iPoda" />
     <Word from="Ajpodu" to="iPodu" />
+    <Word from="Ajriš" to="Irish" />
     <Word from="akcenat" to="naglasak" />
     <Word from="aki" to="ali" />
     <Word from="akcionara" to="dioničara" />
@@ -1968,6 +1969,7 @@
     <Word from="protestvuju" to="protestiraju" />
     <Word from="protestujući" to="protestirajući" />
     <Word from="protestujem" to="protestiram" />
+    <Word from="protestujemo" to="protestiramo" />
     <Word from="protestuješ" to="protestiraš" />
     <Word from="protivićeš" to="protivi tćeš" />
     <Word from="Protivićeš" to="Protivit ćeš" />
@@ -1978,6 +1980,7 @@
     <Word from="proznao" to="priznao" />
     <Word from="Proznao" to="Priznao" />
     <Word from="ptišao" to="otišao" />
+    <Word from="pšto" to="pošto" />
     <Word from="pto" to="što" />
     <Word from="ptom" to="potom" />
     <Word from="pubo" to="puno" />
@@ -2139,6 +2142,7 @@
     <Word from="Sedenje" to="Sjedenje" />
     <Word from="sedišta" to="sjedala" />
     <Word from="sedište" to="sjedalo" />
+    <Word from="sedištem" to="sjedištem" />
     <Word from="sedištu" to="sjedalu" />
     <Word from="sedni" to="sjedni" />
     <Word from="Sedni" to="Sjedni" />
@@ -3994,6 +3998,7 @@
     <LinePart from="moram da nađem" to="moram naći" />
     <LinePart from="Moramo da idemo" to="Moramo ići" />
     <LinePart from="moramo da idemo" to="moramo ići" />
+    <LinePart from="Moramo da odemo" to="Moramo otići" />
     <LinePart from="Mora da ima" to="Mora imati" />
     <LinePart from="mora da ima" to="mora imati" />
     <LinePart from="Moramo da izbavimo" to="Moramo izbaviti" />
@@ -4042,6 +4047,7 @@
     <LinePart from="možemo da budemo" to="možemo biti" />
     <LinePart from="možemo da idemo" to="možemo ići" />
     <LinePart from="možemo da imamo" to="možemo imati" />
+    <LinePart from="možemo da počenom" to="možemo početi" />
     <LinePart from="možemo da prestanemo" to="možemo prestati" />
     <LinePart from="možete da idete" to="možete ići" />
     <LinePart from="Možete da idete" to="Možete ići" />
@@ -5092,6 +5098,7 @@
     <RegEx find="(?&lt;![Hh])abs" replaceWith="aps" />
     <RegEx find="acel" replaceWith="acjel" />
     <RegEx find="adji" replaceWith="ađi" />
+    <RegEx find="adje" replaceWith="ađe" />
     <RegEx find="([aeiou])dk" replaceWith="$1tk" />
     <RegEx find="ahd" replaceWith="ajd" />
     <RegEx find="(?&lt;![ml])a([blcrnz])ić" replaceWith="a$1it ć" />
