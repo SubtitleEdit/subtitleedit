@@ -129,7 +129,7 @@ Could be fun.
 
 14
 00:00:29,660 --> 00:00:32,580
-Well, we could get to know each other a
+We could get to know each other a
 little, maybe loosen things up around
 
 15
@@ -138,7 +138,7 @@ here?
 
 16
 00:00:33,680 --> 00:00:39,160
-Well, I've worked with this lot before,
+I've worked with this lot before,
 and, erm... Yeah, this is as loose as they
 
 17
@@ -191,8 +191,8 @@ Wait.";
             var fixedSubtitle = AudioToTextPostProcessor.TryForWholeSentences(subtitle, "en", 42);
 
             Assert.AreEqual(14, fixedSubtitle.Paragraphs.Count);
-            Assert.IsTrue(fixedSubtitle.Paragraphs[2].Text == "Well, we could get to know each other a" + Environment.NewLine + "little, maybe loosen things up around here?");
-            Assert.IsTrue(fixedSubtitle.Paragraphs[3].Text == "Well, I've worked with this lot before, and," + Environment.NewLine + "erm... Yeah, this is as loose as they get.");
+            Assert.IsTrue(fixedSubtitle.Paragraphs[2].Text == "We could get to know each other a" + Environment.NewLine + "little, maybe loosen things up around here?");
+            Assert.IsTrue(fixedSubtitle.Paragraphs[3].Text == "I've worked with this lot before, and," + Environment.NewLine + "erm... Yeah, this is as loose as they get.");
             Assert.IsTrue(fixedSubtitle.Paragraphs[4].Text == "Hmm.");
             Assert.IsTrue(fixedSubtitle.Paragraphs[5].Text == "What's the about that, Bob's?");
         }
@@ -216,6 +216,26 @@ that could be fun indeed my friend.";
             Assert.AreEqual(2, fixedSubtitle.Paragraphs.Count);
             Assert.IsTrue(fixedSubtitle.Paragraphs[0].Text == "Yes, I think this could" + Environment.NewLine + "indeed be very good.");
             Assert.IsTrue(fixedSubtitle.Paragraphs[1].Text == "But also that could be" + Environment.NewLine + "fun indeed my friend.");
+        }
+
+        [TestMethod]
+        public void TryForWholeSentences3()
+        {
+            var raw = @"1
+00:04:23,780 --> 00:04:27,340
+In each of the commercials that I'm in,
+I'm the one who simply can't go on without
+
+2
+00:04:27,340 --> 00:04:27,780
+the product.";
+
+            var subtitle = new Subtitle();
+            new SubRip().LoadSubtitle(subtitle, raw.SplitToLines(), null);
+
+            var fixedSubtitle = AudioToTextPostProcessor.TryForWholeSentences(subtitle, "en", 42);
+
+            Assert.AreEqual(2, fixedSubtitle.Paragraphs.Count);
         }
     }
 }

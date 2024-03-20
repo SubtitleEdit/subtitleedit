@@ -184,8 +184,10 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
 
                     var currentOk = arrayCurrent.Count == 1 || (arrayCurrent.Count == 2 && arrayCurrent[0].Length < lineMaxLength * 2);
                     var nextOk = arrayNext.Count == 1 || (arrayNext.Count == 2 && arrayNext[0].Length < lineMaxLength * 2);
+                    var allOk = newCurrentText.Length < lineMaxLength * 2 &&
+                                     newNextText.Length < lineMaxLength * 2;
 
-                    if (currentOk && nextOk)
+                    if (currentOk && nextOk && allOk)
                     {
                         p.Text = newCurrentText;
                         next.Text = newNextText;
@@ -219,8 +221,10 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
 
                     var currentOk = arrayCurrent.Count == 1 || (arrayCurrent.Count == 2 && arrayCurrent[0].Length < lineMaxLength * 2);
                     var nextOk = arrayNext.Count == 1 || (arrayNext.Count == 2 && arrayNext[0].Length < lineMaxLength * 2);
+                    var allOk = newCurrentText.Length < lineMaxLength * 2 && 
+                                     newNextText.Length < lineMaxLength * 2;
 
-                    if (currentOk && nextOk)
+                    if (currentOk && nextOk && allOk)
                     {
                         p.Text = newCurrentText;
                         next.Text = newNextText;
