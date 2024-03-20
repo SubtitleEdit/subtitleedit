@@ -16,29 +16,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static string GetXmlStructure()
         {
-            return @"<?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<tt xml:lang='en' xmlns='http://www.w3.org/ns/ttml' ttp:contentProfiles='http://www.w3.org/ns/ttml/profile/imsc1.1/text' xmlns:tts='http://www.w3.org/ns/ttml#styling' xmlns:ttm='http://www.w3.org/ns/ttml#metadata' xmlns:ttp='http://www.w3.org/ns/ttml#parameter' ttp:timeBase='media' ttp:frameRate='24' ttp:frameRateMultiplier='1000 1001' ttp:tickRate='10000000' xmlns:ebutts='urn:ebu:tt:style' xmlns:itts='http://www.w3.org/ns/ttml/profile/imsc1#styling' xmlns:ittp='http://www.w3.org/ns/ttml/profile/imsc1#parameter' xmlns:ittm='http://www.w3.org/ns/ttml/profile/imsc1#metadata' ittp:aspectRatio='16 9'>
+            return @"<?xml version='1.0' encoding='UTF-8'?>
+<tt xml:lang='en' xmlns='http://www.w3.org/ns/ttml' xmlns:ttm='http://www.w3.org/ns/ttml#metadata' xmlns:tts='http://www.w3.org/ns/ttml#styling' xmlns:ttp='http://www.w3.org/ns/ttml#parameter' xmlns:ittp='http://www.w3.org/ns/ttml/profile/imsc1#parameter' xmlns:itts='http://www.w3.org/ns/ttml/profile/imsc1#styling' ttp:profile='http://www.w3.org/ns/ttml/profile/imsc1/text' ttp:frameRate='[framerate]' ttp:timeBase='media'>
   <head>
     <styling>
-      <style xml:id='style.center' tts:backgroundColor='transparent' tts:color='white' tts:fontFamily='Arial' tts:fontSize='100%' tts:textAlign='center' tts:textOutline='black 2px' />
-      <style xml:id='style.italic' tts:shear='16.6667%' tts:backgroundColor='transparent' tts:color='white' tts:fontFamily='Arial' tts:fontSize='100%' tts:textAlign='center' tts:textOutline='black 2px' />
+      <style xml:id='style.center' tts:color='#ffffff' tts:opacity='1' tts:fontSize='100%' tts:fontFamily='default' tts:textAlign='center'/>
+      <style xml:id='italic' tts:shear='16.6667%' tts:opacity='1' tts:fontSize='100%' tts:fontFamily='default' tts:textAlign='center'/>
     </styling>
     <layout>
-      <region xml:id='region.topLeft' tts:extent='80% 40%' tts:origin='10% 10%' tts:displayAlign='before' tts:textAlign='start' />
-      <region xml:id='region.centerLeft' tts:extent='80% 40%' tts:origin='10% 30%' tts:displayAlign='center' tts:textAlign='start' />
-      <region xml:id='region.bottomLeft' tts:extent='80% 40%' tts:origin='10% 50%' tts:displayAlign='after' tts:textAlign='start' />
- 
-      <region xml:id='region.topCenter' tts:extent='80% 40%' tts:origin='10% 10%' tts:displayAlign='before' tts:textAlign='center' />
-      <region xml:id='region.centerCenter' tts:extent='80% 40%' tts:origin='10% 30%' tts:displayAlign='center' tts:textAlign='center' />
-      <region xml:id='region.bottomCenter' tts:extent='80% 40%' tts:origin='10% 50%' tts:displayAlign='after' tts:textAlign='center' />
-
-      <region xml:id='region.topRight' tts:extent='80% 40%' tts:origin='10% 10%' tts:displayAlign='before' tts:textAlign='end' />
-      <region xml:id='region.centerRight' tts:extent='80% 40%' tts:origin='10% 30%' tts:displayAlign='center' tts:textAlign='end'  />
-      <region xml:id='region.bottomRight' tts:extent='80% 40%' tts:origin='10% 50%' tts:displayAlign='after' tts:textAlign='end'  />
+      <region xml:id='region.bottomCenter' tts:origin='17.583% 73.414%' tts:extent='64.844% 16.667%' tts:displayAlign='after'/>
     </layout>
   </head>
   <body>
-    <div>
+    <div xml:id='d0' style='style.center'>
     </div>
   </body>
 </tt>
@@ -69,6 +59,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             var xml = new XmlDocument { XmlResolver = null };
             var xmlStructure = GetXmlStructure();
+            xmlStructure = xmlStructure.Replace("[framerate]", ((int)Math.Round(Configuration.Settings.General.CurrentFrameRate, MidpointRounding.AwayFromZero)).ToString());
+
             var language = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle);
             xmlStructure = xmlStructure.Replace("lang=\"en\"", $"lang=\"{language}\"");
             xml.LoadXml(xmlStructure);
@@ -101,9 +93,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             start.InnerText = TimedText10.ConvertToTimeString(p.StartTime, timeCodeFormat);
             paragraph.Attributes.Append(start);
 
-            XmlAttribute dur = xml.CreateAttribute("dur");
-            dur.InnerText = TimedText10.ConvertToTimeString(p.Duration, timeCodeFormat);
-            paragraph.Attributes.Append(dur);
+            XmlAttribute end = xml.CreateAttribute("end");
+            end.InnerText = TimedText10.ConvertToTimeString(p.EndTime, timeCodeFormat);
+            paragraph.Attributes.Append(end);
 
             XmlAttribute region = xml.CreateAttribute("region");
             region.InnerText = GetRegionFromText(p.Text);
@@ -161,47 +153,47 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static string GetRegionFromText(string text)
         {
-            if (text.StartsWith(@"{\an7", StringComparison.Ordinal))
-            {
-                return "region.topLeft";
-            }
+            //if (text.StartsWith(@"{\an7", StringComparison.Ordinal))
+            //{
+            //    return "region.topLeft";
+            //}
 
-            if (text.StartsWith(@"{\an8", StringComparison.Ordinal))
-            {
-                return "region.topCenter";
-            }
+            //if (text.StartsWith(@"{\an8", StringComparison.Ordinal))
+            //{
+            //    return "region.topCenter";
+            //}
 
-            if (text.StartsWith(@"{\an9", StringComparison.Ordinal))
-            {
-                return "region.topRight";
-            }
-
-
-            if (text.StartsWith(@"{\an4", StringComparison.Ordinal))
-            {
-                return "region.centerLeft";
-            }
-
-            if (text.StartsWith(@"{\an5", StringComparison.Ordinal))
-            {
-                return "region.centerCenter";
-            }
-
-            if (text.StartsWith(@"{\an6", StringComparison.Ordinal))
-            {
-                return "region.centerRight";
-            }
+            //if (text.StartsWith(@"{\an9", StringComparison.Ordinal))
+            //{
+            //    return "region.topRight";
+            //}
 
 
-            if (text.StartsWith(@"{\an1", StringComparison.Ordinal))
-            {
-                return "region.bottomLeft";
-            }
+            //if (text.StartsWith(@"{\an4", StringComparison.Ordinal))
+            //{
+            //    return "region.centerLeft";
+            //}
 
-            if (text.StartsWith(@"{\an3", StringComparison.Ordinal))
-            {
-                return "region.bottomRight";
-            }
+            //if (text.StartsWith(@"{\an5", StringComparison.Ordinal))
+            //{
+            //    return "region.centerCenter";
+            //}
+
+            //if (text.StartsWith(@"{\an6", StringComparison.Ordinal))
+            //{
+            //    return "region.centerRight";
+            //}
+
+
+            //if (text.StartsWith(@"{\an1", StringComparison.Ordinal))
+            //{
+            //    return "region.bottomLeft";
+            //}
+
+            //if (text.StartsWith(@"{\an3", StringComparison.Ordinal))
+            //{
+            //    return "region.bottomRight";
+            //}
 
             return "region.bottomCenter";
         }
