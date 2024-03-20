@@ -756,7 +756,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// <returns>Number of lines deleted</returns>
         public int RemoveParagraphsByIndices(IEnumerable<int> indices)
         {
-            int count = 0;
+            var count = 0;
             foreach (var index in indices.OrderByDescending(p => p))
             {
                 if (index >= 0 && index < Paragraphs.Count)
@@ -765,6 +765,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     count++;
                 }
             }
+
             return count;
         }
 

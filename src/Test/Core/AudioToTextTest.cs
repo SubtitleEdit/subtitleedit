@@ -115,5 +115,107 @@ Lexington, Massachusetts.";
             Assert.IsTrue(fixedSubtitle.Paragraphs[4].Text.EndsWith("camp.", StringComparison.Ordinal));
             Assert.IsTrue(fixedSubtitle.Paragraphs[5].Text.StartsWith("Hey there", StringComparison.Ordinal));
         }
+
+        [TestMethod]
+        public void TryForWholeSentences1()
+        {
+            var raw = @"12
+00:00:25,500 --> 00:00:27,060
+Oh, my... Bob, right?
+
+13
+00:00:28,560 --> 00:00:29,220
+Could be fun.
+
+14
+00:00:29,660 --> 00:00:32,580
+Well, we could get to know each other a
+little, maybe loosen things up around
+
+15
+00:00:32,580 --> 00:00:33,060
+here?
+
+16
+00:00:33,680 --> 00:00:39,160
+Well, I've worked with this lot before,
+and, erm... Yeah, this is as loose as they
+
+17
+00:00:39,160 --> 00:00:40,300
+get.
+
+18
+00:00:46,120 --> 00:00:46,340
+Hmm.
+
+19
+00:00:48,160 --> 00:00:49,120
+What's the about that, Bob's?
+
+20
+00:00:49,120 --> 00:00:49,860
+Oh, no.
+
+21
+00:00:50,580 --> 00:00:50,700
+Yep.
+
+22
+00:00:51,240 --> 00:00:52,600
+I felt that soon as I said it.
+
+23
+00:00:54,860 --> 00:00:56,340
+Right, I'm headed out.
+
+24
+00:00:57,460 --> 00:00:58,780
+Everyone have a great day, yeah?
+
+25
+00:00:58,780 --> 00:00:59,600
+Yeah.
+
+26
+00:01:00,600 --> 00:01:01,880
+Wait.
+
+27
+00:01:01,880 --> 00:01:02,480
+Wait.";
+
+            var subtitle = new Subtitle();
+            new SubRip().LoadSubtitle(subtitle, raw.SplitToLines(), null);
+
+            var fixedSubtitle = AudioToTextPostProcessor.TryForWholeSentences(subtitle, "en", 42);
+
+            Assert.AreEqual(14, fixedSubtitle.Paragraphs.Count);
+            Assert.IsTrue(fixedSubtitle.Paragraphs[2].Text == "Well, we could get to know each other a" + Environment.NewLine + "little, maybe loosen things up around here?");
+            Assert.IsTrue(fixedSubtitle.Paragraphs[3].Text == "Well, I've worked with this lot before, and," + Environment.NewLine + "erm... Yeah, this is as loose as they get.");
+            Assert.IsTrue(fixedSubtitle.Paragraphs[4].Text == "Hmm.");
+            Assert.IsTrue(fixedSubtitle.Paragraphs[5].Text == "What's the about that, Bob's?");
+        }
+
+        [TestMethod]
+        public void TryForWholeSentences2()
+        {
+            var raw = @"1
+00:00:26,500 --> 00:00:27,060
+Yes, I think this could indeed be very good. But also
+
+2
+00:00:28,560 --> 00:00:29,220
+that could be fun indeed my friend.";
+
+            var subtitle = new Subtitle();
+            new SubRip().LoadSubtitle(subtitle, raw.SplitToLines(), null);
+
+            var fixedSubtitle = AudioToTextPostProcessor.TryForWholeSentences(subtitle, "en", 42);
+
+            Assert.AreEqual(2, fixedSubtitle.Paragraphs.Count);
+            Assert.IsTrue(fixedSubtitle.Paragraphs[0].Text == "Yes, I think this could" + Environment.NewLine + "indeed be very good.");
+            Assert.IsTrue(fixedSubtitle.Paragraphs[1].Text == "But also that could be" + Environment.NewLine + "fun indeed my friend.");
+        }
     }
 }
