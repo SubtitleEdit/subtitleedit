@@ -172,15 +172,22 @@ namespace Test.Logic.AutoTranslate
             Assert.IsTrue(splitResult[0].Length > 5);
             Assert.IsTrue(splitResult[1].Length > 5);
             Assert.IsTrue(splitResult[2].Length > 5);
-            Assert.AreEqual(string.Join(" ", subtitle.Paragraphs.Select(p => p.Text)), string.Join(" ", splitResult));
+
+            var subtitleText = string.Join("", subtitle.Paragraphs.Select(p => p.Text)).RemoveChar('\n', '\r', ' ');
+            var splitText = string.Join("", splitResult).RemoveChar('\n', '\r', ' ');
+            Assert.AreEqual(subtitleText, splitText);
+
+            Assert.AreEqual("Hallo there. In the" + Environment.NewLine + "garden today are we?", splitResult[0]);
+            Assert.AreEqual("So I will very", splitResult[1]);
+            Assert.AreEqual("soon be going home to Sweden.", splitResult[2]);
             Assert.AreEqual("My name is Peter!", splitResult[3]);
             Assert.AreEqual("My name is Peter! And Jones.", splitResult[4]);
             Assert.AreEqual("My name is Peter. And Jones.", splitResult[5]);
             Assert.AreEqual("", splitResult[6]);
             Assert.AreEqual("Hallo there.", splitResult[7]);
 
-            var inputText = string.Join(" ", subtitle.Paragraphs.Select(p => p.Text)).Replace(Environment.NewLine, " ");
-            var splitResultText = string.Join(" ", splitResult);
+            var inputText = string.Join("", subtitle.Paragraphs.Select(p => p.Text)).RemoveChar('\n', '\r', ' ');
+            var splitResultText = string.Join("", splitResult).RemoveChar('\n', '\r', ' ');
             Assert.AreEqual(inputText, splitResultText);
         }
     }

@@ -64,11 +64,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                         continue;
                     }
 
-                    if (TwoLetterLanguageCode == "en")
-                    {
-                        // anything?
-                    }
-                    else if (TwoLetterLanguageCode == "da")
+                    if (TwoLetterLanguageCode == "da")
                     {
                         if (paragraph.Text.Contains("Danske tekster af nicolai winther", StringComparison.OrdinalIgnoreCase))
                         {
@@ -144,10 +140,12 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
             return subtitle;
         }
 
-        public static Subtitle TryForWholeSentences(Subtitle inputSubtitle, string language, int lineMxLength)
+        public static Subtitle TryForWholeSentences(Subtitle inputSubtitle, string language, int lineMaxLength)
         {
             var s = new Subtitle(inputSubtitle);
             const int maxMoveChunkSize = 15;
+            var deleteIndices = new List<int>();
+
             for (var i = 0; i < s.Paragraphs.Count - 1; i++)
             {
                 var p = s.Paragraphs[i];
@@ -158,14 +156,21 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                     p.EndTime.TotalMilliseconds - next.StartTime.TotalMilliseconds > 100 ||
                     p.Text.Contains('<') ||
                     next.Text.Contains('<') ||
-                    !(p.Text.Contains('.') || next.Text.Contains('.')) ||
-                    p.Text.EndsWith('.'))
+                    !(p.Text.Contains('.') || p.Text.Contains('?') || p.Text.Contains('!') || next.Text.Contains('.') || next.Text.Contains('?') || next.Text.Contains('!')) ||
+                    p.Text.EndsWith('.') ||
+                    p.Text.EndsWith('?') ||
+                    p.Text.EndsWith('!'))
+                {
+                    continue;
+                }
+
+                if (deleteIndices.Contains(i))
                 {
                     continue;
                 }
 
                 // check for period in last part of p
-                var lastPeriodIdx = p.Text.LastIndexOf('.');
+                var lastPeriodIdx = p.Text.LastIndexOfAny(new char[] { '.', '?', '!' });
                 if (lastPeriodIdx > 3 && lastPeriodIdx > p.Text.Length - maxMoveChunkSize)
                 {
                     var newCurrentText = p.Text.Substring(0, lastPeriodIdx + 1).Trim();
@@ -177,23 +182,31 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                     var arrayCurrent = newCurrentText.SplitToLines();
                     var arrayNext = newNextText.SplitToLines();
 
-                    var currentOk = arrayCurrent.Count == 1 || (arrayCurrent.Count == 2 && arrayCurrent[0].Length <= lineMxLength);
-                    var nextOk = arrayNext.Count == 1 || (arrayNext.Count == 2 && arrayNext[0].Length <= lineMxLength);
+                    var currentOk = arrayCurrent.Count == 1 || (arrayCurrent.Count == 2 && arrayCurrent[0].Length < lineMaxLength * 2);
+                    var nextOk = arrayNext.Count == 1 || (arrayNext.Count == 2 && arrayNext[0].Length < lineMaxLength * 2);
 
                     if (currentOk && nextOk)
                     {
                         p.Text = newCurrentText;
                         next.Text = newNextText;
 
-                        //TODO: calc time
+                        if (string.IsNullOrWhiteSpace(newCurrentText))
+                        {
+                            deleteIndices.Add(i);
+                            next.StartTime.TotalMilliseconds = p.StartTime.TotalMilliseconds;
+                        }
+                        else
+                        {
+                            //TODO: calc time
+                        }
 
                         continue;
                     }
                 }
 
                 // check for period in beginning of next
-                var firstPeriodIdx = next.Text.IndexOf('.');
-                if (firstPeriodIdx > 3 && firstPeriodIdx < maxMoveChunkSize)
+                var firstPeriodIdx = next.Text.IndexOfAny(new char[] { '.', '?', '!' });
+                if (firstPeriodIdx >= 3 && firstPeriodIdx < maxMoveChunkSize)
                 {
                     var newCurrentText = next.Text.Substring(0, firstPeriodIdx + 1).Trim();
                     var newNextText = next.Text.Remove(0, firstPeriodIdx + 1).Trim();
@@ -204,18 +217,28 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                     var arrayCurrent = newCurrentText.SplitToLines();
                     var arrayNext = newNextText.SplitToLines();
 
-                    var currentOk = arrayCurrent.Count == 1 || (arrayCurrent.Count == 2 && arrayCurrent[0].Length <= lineMxLength);
-                    var nextOk = arrayNext.Count == 1 || (arrayNext.Count == 2 && arrayNext[0].Length <= lineMxLength);
+                    var currentOk = arrayCurrent.Count == 1 || (arrayCurrent.Count == 2 && arrayCurrent[0].Length < lineMaxLength * 2);
+                    var nextOk = arrayNext.Count == 1 || (arrayNext.Count == 2 && arrayNext[0].Length < lineMaxLength * 2);
 
                     if (currentOk && nextOk)
                     {
                         p.Text = newCurrentText;
                         next.Text = newNextText;
 
-                        //TODO: calc time
+                        if (string.IsNullOrWhiteSpace(newNextText))
+                        {
+                            deleteIndices.Add(i + 1);
+                            p.EndTime.TotalMilliseconds = next.EndTime.TotalMilliseconds;
+                        }
+                        else
+                        {
+                            //TODO: calc time
+                        }
                     }
                 }
             }
+
+            s.RemoveParagraphsByIndices(deleteIndices);
 
             return s;
         }
