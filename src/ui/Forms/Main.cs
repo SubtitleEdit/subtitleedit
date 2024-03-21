@@ -47,6 +47,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
 using CheckForUpdatesHelper = Nikse.SubtitleEdit.Logic.CheckForUpdatesHelper;
 using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 using Timer = System.Windows.Forms.Timer;
@@ -15076,27 +15077,8 @@ namespace Nikse.SubtitleEdit.Forms
             _subtitle.Paragraphs.Clear();
 
             Utilities.LoadMatroskaTextSubtitle(matroskaSubtitleInfo, matroska, sub, _subtitle);
-            for (int index = 0; index < sub.Count; index++)
-            {
-                try
-                {
-                    var msub = sub[index];
-                    int idx = -6; // MakeMKV starts at DialogPresentationSegment
-                    var data = msub.GetData(matroskaSubtitleInfo);
-                    if (VobSubParser.IsPrivateStream2(data, 0))
-                    {
-                        idx = 0; //  starts with MPEG2 private stream 2 (just to be sure)
-                    }
-
-                    var dps = new TextST.DialogPresentationSegment(data, idx);
-                    _subtitle.Paragraphs[index].Text = dps.Text;
-                }
-                catch (Exception exception)
-                {
-                    _subtitle.Paragraphs[index].Text = exception.Message;
-                }
-            }
-
+            Utilities.ParseMatroskaTextSt(matroskaSubtitleInfo, sub, _subtitle);
+          
             if (_networkSession == null)
             {
                 SubtitleListview1.HideColumn(SubtitleListView.SubtitleColumn.Extra);

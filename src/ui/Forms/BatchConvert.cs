@@ -824,6 +824,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var mkvSrt = new List<string>();
                 var mkvSsa = new List<string>();
                 var mkvAss = new List<string>();
+                var mkvTextST = new List<string>();
                 var mkvCount = 0;
                 var isTs = false;
                 var isMp4 = false;
@@ -912,11 +913,15 @@ namespace Nikse.SubtitleEdit.Forms
                                     {
                                         mkvAss.Add(MakeMkvTrackInfoString(track));
                                     }
+                                    else if (track.CodecId.Equals("S_HDMV/TEXTST", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        mkvTextST.Add(MakeMkvTrackInfoString(track));
+                                    }
                                 }
                             }
                         }
 
-                        if (mkvVobSub.Count + mkvPgs.Count + mkvSrt.Count + mkvSsa.Count + mkvAss.Count <= 0)
+                        if (mkvVobSub.Count + mkvPgs.Count + mkvSrt.Count + mkvSsa.Count + mkvAss.Count + mkvTextST.Count <= 0)
                         {
                             item.SubItems.Add(LanguageSettings.Current.UnknownSubtitle.Title);
                         }
@@ -974,7 +979,8 @@ namespace Nikse.SubtitleEdit.Forms
                         { "VobSub", mkvVobSub },
                         { "SRT", mkvSrt },
                         { "SSA", mkvSsa },
-                        { "ASS", mkvAss }
+                        { "ASS", mkvAss },
+                        { "TextST", mkvTextST },
                     };
 
                     foreach (var mkvSubFormat in mkvSubFormats)
@@ -1558,6 +1564,26 @@ namespace Nikse.SubtitleEdit.Forms
                                                 {
                                                     fromFormat = new AdvancedSubStationAlpha();
                                                 }
+
+                                                mkvFileNames.Add(fileName);
+                                                break;
+                                            }
+                                        }
+                                        else if (track.CodecId.Equals("S_HDMV/TEXTST", StringComparison.OrdinalIgnoreCase))
+                                        {
+                                            if (trackId == track.TrackNumber.ToString(CultureInfo.InvariantCulture))
+                                            {
+                                                var mkvSub = matroska.GetSubtitle(track.TrackNumber, null);
+                                                Utilities.LoadMatroskaTextSubtitle(track, matroska, mkvSub, sub);
+                                                Utilities.ParseMatroskaTextSt(track, mkvSub, sub);
+
+                                                fileName = fileName.Substring(0, fileName.LastIndexOf('.')) + "." + GetMkvLanguage(track.Language).Replace("undefined.", string.Empty) + "mkv";
+                                                if (mkvFileNames.Contains(fileName))
+                                                {
+                                                    fileName = fileName.Substring(0, fileName.LastIndexOf('.')) + ".#" + trackId + "." + GetMkvLanguage(track.Language) + "mkv";
+                                                }
+
+                                                fromFormat = new SubRip();
 
                                                 mkvFileNames.Add(fileName);
                                                 break;
