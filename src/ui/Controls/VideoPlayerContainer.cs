@@ -551,29 +551,31 @@ namespace Nikse.SubtitleEdit.Controls
                                 Configuration.Settings.General.VideoPlayerPreviewFontSize + ",&H00FFFFFF,&H0300FFFF,&H00000000,&H02000000," +
                                 (Configuration.Settings.General.VideoPlayerPreviewFontBold ? "-1" : "0") + ",0,0,0,100,100,0,0,3,2,0,2,10,10,10,1" +
                                                                        Environment.NewLine + "Style: Default,");
+
+                            var useBox = false;
+                            if (Configuration.Settings.SubtitleSettings.EbuStlTeletextUseBox)
+                            {
+                                try
+                                {
+                                    var encoding = Ebu.GetEncoding(oldSub.Header.Substring(0, 3));
+                                    var buffer = encoding.GetBytes(oldSub.Header);
+                                    var header = Ebu.ReadHeader(buffer);
+                                    if (header.DisplayStandardCode != "0")
+                                    {
+                                        useBox = true;
+                                    }
+                                }
+                                catch
+                                {
+                                    // ignore
+                                }
+                            }
+
                             for (var index = 0; index < subtitle.Paragraphs.Count; index++)
                             {
                                 var p = subtitle.Paragraphs[index];
 
-                                p.Extra = "Default";
-
-                                if (Configuration.Settings.SubtitleSettings.EbuStlTeletextUseBox)
-                                {
-                                    try
-                                    {
-                                        var encoding = Ebu.GetEncoding(oldSub.Header.Substring(0, 3));
-                                        var buffer = encoding.GetBytes(oldSub.Header);
-                                        var header = Ebu.ReadHeader(buffer);
-                                        if (header.DisplayStandardCode != "0")
-                                        {
-                                            p.Extra = "Box";
-                                        }
-                                    }
-                                    catch 
-                                    {
-                                        // ignore
-                                    }
-                                }
+                                p.Extra = useBox ? "Box" : "Default";
 
                                 if (p.Text.Contains("<box>"))
                                 {
