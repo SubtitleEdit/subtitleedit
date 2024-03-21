@@ -191,10 +191,10 @@ Wait.";
             var fixedSubtitle = AudioToTextPostProcessor.TryForWholeSentences(subtitle, "en", 42);
 
             Assert.AreEqual(14, fixedSubtitle.Paragraphs.Count);
-            Assert.IsTrue(fixedSubtitle.Paragraphs[2].Text == "We could get to know each other a" + Environment.NewLine + "little, maybe loosen things up around here?");
-            Assert.IsTrue(fixedSubtitle.Paragraphs[3].Text == "I've worked with this lot before, and," + Environment.NewLine + "erm... Yeah, this is as loose as they get.");
-            Assert.IsTrue(fixedSubtitle.Paragraphs[4].Text == "Hmm.");
-            Assert.IsTrue(fixedSubtitle.Paragraphs[5].Text == "What's the about that, Bob's?");
+            Assert.AreEqual("We could get to know each other a" + Environment.NewLine + "little, maybe loosen things up around here?", fixedSubtitle.Paragraphs[2].Text);
+            Assert.AreEqual("I've worked with this lot before, and," + Environment.NewLine + "erm... Yeah, this is as loose as they get.", fixedSubtitle.Paragraphs[3].Text);
+            Assert.AreEqual("Hmm.", fixedSubtitle.Paragraphs[4].Text);
+            Assert.AreEqual("What's the about that, Bob's?", fixedSubtitle.Paragraphs[5].Text);
         }
 
         [TestMethod]
@@ -214,8 +214,8 @@ that could be fun indeed my friend.";
             var fixedSubtitle = AudioToTextPostProcessor.TryForWholeSentences(subtitle, "en", 42);
 
             Assert.AreEqual(2, fixedSubtitle.Paragraphs.Count);
-            Assert.IsTrue(fixedSubtitle.Paragraphs[0].Text == "Yes, I think this could" + Environment.NewLine + "indeed be very good.");
-            Assert.IsTrue(fixedSubtitle.Paragraphs[1].Text == "But also that could be" + Environment.NewLine + "fun indeed my friend.");
+            Assert.AreEqual("Yes, I think this could" + Environment.NewLine + "indeed be very good.", fixedSubtitle.Paragraphs[0].Text);
+            Assert.AreEqual("But also that could be" + Environment.NewLine + "fun indeed my friend.", fixedSubtitle.Paragraphs[1].Text);
         }
 
         [TestMethod]
