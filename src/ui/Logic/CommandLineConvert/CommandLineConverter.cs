@@ -13,7 +13,7 @@ using Nikse.SubtitleEdit.Logic.Ocr;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Imaging;   
+using System.Drawing.Imaging;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -671,6 +671,11 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                                                     var ss = matroska.GetSubtitle(track.TrackNumber, null);
                                                     format = Utilities.LoadMatroskaTextSubtitle(track, matroska, ss, sub);
 
+                                                    if (track.CodecId.Contains("S_HDMV/TEXTST", StringComparison.OrdinalIgnoreCase))
+                                                    {
+                                                        Utilities.ParseMatroskaTextSt(track, ss, sub);
+                                                    }
+
                                                     var newFileName = fileName.Substring(0, fileName.LastIndexOf('.')) + "." + lang + ".mkv";
                                                     if (!mkvFileNames.Add(newFileName))
                                                     {
@@ -723,7 +728,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                         else if (!done && FileUtil.IsVobSub(fileName))
                         {
                             _stdOutWriter.WriteLine("Found VobSub subtitle format");
-                            ConvertVobSubSubtitle(fileName, targetFormat, offset, deleteContains, targetEncoding, outputFolder, targetFileName,  count, ref converted, ref errors, formats, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, forcedOnly, ocrEngine, ocrDb, renumber: renumber, adjustDurationMs: adjustDurationMs);
+                            ConvertVobSubSubtitle(fileName, targetFormat, offset, deleteContains, targetEncoding, outputFolder, targetFileName, count, ref converted, ref errors, formats, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, forcedOnly, ocrEngine, ocrDb, renumber: renumber, adjustDurationMs: adjustDurationMs);
                             done = true;
                         }
 
@@ -1749,11 +1754,11 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                             using (var binarySubtitleFile = new FileStream(outputFileName, FileMode.Create))
                             {
                                 var isImageBased = IsImageBased(format);
-                                
+
                                 List<IBinaryParagraph> bin = null;
                                 if (bin != null)
                                 {
-                                    bin =  binaryParagraphs.Cast<IBinaryParagraph>().ToList();
+                                    bin = binaryParagraphs.Cast<IBinaryParagraph>().ToList();
                                 }
 
                                 BdSupSaver.SaveBdSup(fileName, sub, bin, form, width, height, isImageBased, binarySubtitleFile, format, cancellationToken);
