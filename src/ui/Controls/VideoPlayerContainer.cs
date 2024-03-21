@@ -6,6 +6,7 @@ using Nikse.SubtitleEdit.Logic.VideoPlayers;
 using System;
 using System.Drawing;
 using System.IO;
+using System.Text;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Controls
@@ -545,11 +546,35 @@ namespace Nikse.SubtitleEdit.Controls
 
                         if (oldSub.Header != null && oldSub.Header.Length > 20 && oldSub.Header.Substring(3, 3) == "STL")
                         {
-                            subtitle.Header = subtitle.Header.Replace("Style: Default,", "Style: Box,arial,20,&H00FFFFFF,&H0300FFFF,&H00000000,&H02000000,0,0,0,0,100,100,0,0,3,2,0,2,10,10,10,1" +
+                            subtitle.Header = subtitle.Header.Replace("Style: Default,", "Style: Box," +
+                                Configuration.Settings.General.VideoPlayerPreviewFontName + "," +
+                                Configuration.Settings.General.VideoPlayerPreviewFontSize + ",&H00FFFFFF,&H0300FFFF,&H00000000,&H02000000," +
+                                (Configuration.Settings.General.VideoPlayerPreviewFontBold ? "-1" : "0") + ",0,0,0,100,100,0,0,3,2,0,2,10,10,10,1" +
                                                                        Environment.NewLine + "Style: Default,");
                             for (var index = 0; index < subtitle.Paragraphs.Count; index++)
                             {
                                 var p = subtitle.Paragraphs[index];
+
+                                p.Extra = "Default";
+
+                                if (Configuration.Settings.SubtitleSettings.EbuStlTeletextUseBox)
+                                {
+                                    try
+                                    {
+                                        var encoding = Ebu.GetEncoding(oldSub.Header.Substring(0, 3));
+                                        var buffer = encoding.GetBytes(oldSub.Header);
+                                        var header = Ebu.ReadHeader(buffer);
+                                        if (header.DisplayStandardCode != "0")
+                                        {
+                                            p.Extra = "Box";
+                                        }
+                                    }
+                                    catch 
+                                    {
+                                        // ignore
+                                    }
+                                }
+
                                 if (p.Text.Contains("<box>"))
                                 {
                                     p.Extra = "Box";
