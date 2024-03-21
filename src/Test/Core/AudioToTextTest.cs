@@ -191,8 +191,8 @@ Wait.";
             var fixedSubtitle = AudioToTextPostProcessor.TryForWholeSentences(subtitle, "en", 42);
 
             Assert.AreEqual(14, fixedSubtitle.Paragraphs.Count);
-            Assert.AreEqual("We could get to know each other a" + Environment.NewLine + "little, maybe loosen things up around here?", fixedSubtitle.Paragraphs[2].Text);
-            Assert.AreEqual("I've worked with this lot before, and," + Environment.NewLine + "erm... Yeah, this is as loose as they get.", fixedSubtitle.Paragraphs[3].Text);
+            Assert.AreEqual("We could get to know each other a little, maybe loosen things up around here?", Utilities.UnbreakLine(fixedSubtitle.Paragraphs[2].Text));
+            Assert.AreEqual("I've worked with this lot before, and, erm... Yeah, this is as loose as they get.", Utilities.UnbreakLine(fixedSubtitle.Paragraphs[3].Text));
             Assert.AreEqual("Hmm.", fixedSubtitle.Paragraphs[4].Text);
             Assert.AreEqual("What's the about that, Bob's?", fixedSubtitle.Paragraphs[5].Text);
         }
@@ -214,8 +214,8 @@ that could be fun indeed my friend.";
             var fixedSubtitle = AudioToTextPostProcessor.TryForWholeSentences(subtitle, "en", 42);
 
             Assert.AreEqual(2, fixedSubtitle.Paragraphs.Count);
-            Assert.AreEqual("Yes, I think this could" + Environment.NewLine + "indeed be very good.", fixedSubtitle.Paragraphs[0].Text);
-            Assert.AreEqual("But also that could be" + Environment.NewLine + "fun indeed my friend.", fixedSubtitle.Paragraphs[1].Text);
+            Assert.AreEqual("Yes, I think this could indeed be very good.", Utilities.UnbreakLine(fixedSubtitle.Paragraphs[0].Text));
+            Assert.AreEqual("But also that could be fun indeed my friend.", Utilities.UnbreakLine(fixedSubtitle.Paragraphs[1].Text));
         }
 
         [TestMethod]
