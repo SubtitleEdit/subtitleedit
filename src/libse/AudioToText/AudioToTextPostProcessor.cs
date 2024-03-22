@@ -121,7 +121,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                     subtitle = FixShortDuration(subtitle);
                 }
 
-                if (splitLines && !IsNonStandardLineTerminationLanguage(TwoLetterLanguageCode))
+                if (splitLines && !IsNonStandardLineTerminationLanguage(TwoLetterLanguageCode) && !Configuration.Settings.Tools.WhisperExtraSettings.Contains("--highlight_words true", StringComparison.OrdinalIgnoreCase))
                 {
                     var totalMaxChars = Configuration.Settings.General.SubtitleLineMaximumLength * Configuration.Settings.General.MaxNumberOfLines;
                     subtitle = SplitLongLinesHelper.SplitLongLinesInSubtitle(subtitle, totalMaxChars, Configuration.Settings.General.SubtitleLineMaximumLength);
@@ -129,7 +129,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                     subtitle = TryForWholeSentences(subtitle, TwoLetterLanguageCode, Configuration.Settings.General.SubtitleLineMaximumLength);
                 }
 
-                if (mergeLines)
+                if (mergeLines && !Configuration.Settings.Tools.WhisperExtraSettings.Contains("--highlight_words true", StringComparison.OrdinalIgnoreCase))
                 {
                     subtitle = MergeShortLines(subtitle, TwoLetterLanguageCode);
                     subtitle = AutoBalanceLines(subtitle, TwoLetterLanguageCode);
