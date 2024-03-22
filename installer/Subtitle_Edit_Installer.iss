@@ -249,6 +249,7 @@ Source: ..\Dictionaries\deu_Nouns.txt;             DestDir: {userappdata}\Subtit
 Source: ..\Dictionaries\da_interjections_se.xml;   DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist; Components: main
 Source: ..\Dictionaries\en_interjections_se.xml;   DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist; Components: main
 Source: ..\Dictionaries\es_interjections_se.xml;   DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist; Components: main
+Source: ..\Dictionaries\fr_interjections_se.xml;   DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist; Components: main
 
 
 Source: ..\Ocr\Latin.db;                           DestDir: {userappdata}\Subtitle Edit\Ocr;          Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
@@ -404,6 +405,7 @@ Type: files;      Name: {app}\Dictionaries\deu_Nouns.txt;              Check: Is
 Type: files;      Name: {app}\Dictionaries\da_interjections_se.xml;    Check: IsUpgrade()
 Type: files;      Name: {app}\Dictionaries\en_interjections_se.xml;    Check: IsUpgrade()
 Type: files;      Name: {app}\Dictionaries\es_interjections_se.xml;    Check: IsUpgrade()
+Type: files;      Name: {app}\Dictionaries\fr_interjections_se.xml;    Check: IsUpgrade()
 
 Type: dirifempty; Name: {app}\Dictionaries;                            Check: IsUpgrade()
 Type: files;      Name: {app}\TessData\eng.DangAmbigs;                 Check: IsUpgrade()
