@@ -25,20 +25,32 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             while (i < len && input[i] == '{')
             {
                 i = input.IndexOf('}', i + 1) + 1;
-                if (i == 0) break;
+                if (i == 0)
+                {
+                    break;
+                }
             }
 
-            while (i < len && IsIgnorable(input[i])) i++;
+            while (i < len && IsIgnorable(input[i]))
+            {
+                i++;
+            }
 
             // skip html tags
             while (i < len && input[i] == '<')
             {
                 i = input.IndexOf('>', i + 1) + 1;
-                if (i == 0) break;
+                if (i == 0)
+                {
+                    break;
+                }
             }
 
             // skip anything that is not a letter or digit
-            while (i < len && !char.IsLetterOrDigit(input[i])) i++;
+            while (i < len && !char.IsLetterOrDigit(input[i]))
+            {
+                i++;
+            }
 
             return i;
         }
@@ -46,34 +58,56 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
         private static string RestoreMissingOpenParenthesis(string input)
         {
             var len = input.Length;
-            
+
             // empty string
-            if (len == 0) return input;
-            
+            if (len == 0)
+            {
+                return input;
+            }
+
             var closeTags = new[] { ']', ')' };
             // ignore line if contains opening
-            if (input.Any(ch => ch == '(' || ch == '[')) return input;
+            if (input.Any(ch => ch == '(' || ch == '['))
+            {
+                return input;
+            }
 
             var ci = input.IndexOfAny(closeTags);
             // invalid position
-            if (ci < 1) return input;
+            if (ci < 1)
+            {
+                return input;
+            }
 
             var k = ci - 1;
             // jump backward if uppercase or any one of the ignorable chars 
-            while (k > 0 && char.IsUpper(input[k]) || IsIgnorable(input[k])) k--;
-            
+            while (k > 0 && (char.IsUpper(input[k]) || IsIgnorable(input[k])))
+            {
+                k--;
+            }
+
             // note if we have case like: "Hey, FOO)." then we want to insert the open before the "Hey"
             if (k > 0 && input[k] == ',')
             {
                 k--;
-                while (k > 0 && char.IsLetterOrDigit(input[k])) k--;
+                while (k > 0 && char.IsLetterOrDigit(input[k]))
+                {
+                    k--;
+                }
             }
 
             // try landing on white-space char
-            if (k >= 0 && k + 1 < len && input[k] != ' ' && input[k + 1] == ' ') k++;
+            if (k >= 0 && k + 1 < len && input[k] != ' ' && input[k + 1] == ' ')
+            {
+                k++;
+            }
+
             // try finding first valid char (this is used to not insert '(' or '[') in to left of a white-space
-            while (k < ci && char.IsWhiteSpace(input[k])) k++;
-            
+            while (k < ci && char.IsWhiteSpace(input[k]))
+            {
+                k++;
+            }
+
             // FO) => (FO)
             if (ci - k > 1)
             {

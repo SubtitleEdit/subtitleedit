@@ -3574,6 +3574,7 @@ namespace Test.FixCommonErrors
             engine.Fix(sub, new EmptyFixCallback());
             Assert.AreEqual( "- (Foobar bar zzz).\n- Foo bar Zz", sub.Paragraphs.First().Text);
         }
+
         [TestMethod]
         public void FixMissingOpenBracketFourTest()
         {
@@ -3582,6 +3583,16 @@ namespace Test.FixCommonErrors
             sub.Paragraphs.First().Text = "Foobar THIS IS A NOISE)";
             engine.Fix(sub, new EmptyFixCallback());
             Assert.AreEqual( "Foobar (THIS IS A NOISE)", sub.Paragraphs.First().Text);
+        }
+
+        [TestMethod]
+        public void FixMissingOpenBracketFiveTest()
+        {
+            var engine = new FixMissingOpenBracket();
+            var sub = GetGenericSub();
+            sub.Paragraphs.First().Text = "- ]...";
+            engine.Fix(sub, new EmptyFixCallback());
+            Assert.AreEqual("- ]...", sub.Paragraphs.First().Text);
         }
 
         private static Subtitle GetGenericSub()

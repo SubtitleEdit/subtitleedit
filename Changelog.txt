@@ -9,6 +9,7 @@
    * Improve EBU STL preview regarding box - thx BlueMeow7
 * FIXED:
    * Fix for Whisper Post-processing - thx Purfview/cvrle77
+   * Fix crash in "Fix common errors" - thx Joe
 
 
 4.0.4 (17th March 2024)
