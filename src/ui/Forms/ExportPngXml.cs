@@ -993,8 +993,8 @@ namespace Nikse.SubtitleEdit.Forms
                         "  <dcst:IssueDate>2014-01-01T00:00:00.000-00:00</dcst:IssueDate>" + Environment.NewLine +
                         "  <dcst:ReelNumber>1</dcst:ReelNumber>" + Environment.NewLine +
                         "  <dcst:Language>en</dcst:Language>" + Environment.NewLine +
-                        "  <dcst:EditRate>25 1</dcst:EditRate>" + Environment.NewLine +
-                        "  <dcst:TimeCodeRate>25</dcst:TimeCodeRate>" + Environment.NewLine +
+                        "  <dcst:EditRate>[FRAMERATE] 1</dcst:EditRate>" + Environment.NewLine +
+                        "  <dcst:TimeCodeRate>[FRAMERATE]</dcst:TimeCodeRate>" + Environment.NewLine +
                         "  <dcst:StartTime>00:00:00:00</dcst:StartTime> " + Environment.NewLine +
                         "  <dcst:LoadFont ID=\"theFontId\">urn:uuid:3dec6dc0-39d0-498d-97d0-928d2eb78391</dcst:LoadFont>" + Environment.NewLine +
                         "  <dcst:SubtitleList>" + Environment.NewLine +
@@ -1002,6 +1002,7 @@ namespace Nikse.SubtitleEdit.Forms
                         "  </dcst:SubtitleList>" + Environment.NewLine +
                         "</dcst:SubtitleReel>";
 
+                    xml = xml.Replace("[FRAMERATE]", ((int)FrameRate).ToString(CultureInfo.InvariantCulture));
 
                     doc.LoadXml(xml);
                     var fName = saveFileDialog1.FileName;
@@ -4549,6 +4550,20 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 checkBoxFullFrameImage.Top = comboBoxFrameRate.Top + comboBoxFrameRate.Height + 5;
                 panelFullFrameBackground.Top = checkBoxFullFrameImage.Top;
             }
+            else if (exportType == ExportFormats.DCinemaSmpte2014)
+            {
+                labelFrameRate.Visible = true;
+                comboBoxFrameRate.Visible = true;
+
+                comboBoxFrameRate.Items.Add("24");
+                comboBoxFrameRate.Items.Add("25");
+                comboBoxFrameRate.Items.Add("30");
+                comboBoxFrameRate.Items.Add("50");
+                comboBoxFrameRate.Items.Add("60");
+                comboBoxFrameRate.SelectedIndex = 2;
+                comboBoxFrameRate.DropDownStyle = ComboBoxStyle.DropDownList;
+            }
+
             if (comboBoxFrameRate.Items.Count >= 2)
             {
                 SetLastFrameRate(Configuration.Settings.Tools.ExportLastFrameRate);
