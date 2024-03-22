@@ -1,5 +1,16 @@
 ﻿Subtitle Edit Changelog
 
+4.0.5 (xth May 2024) BETA
+* NEW:
+   * Add support for S_HDMV/TEXTST in MKV in batch/cmd-line - thx ipsi
+   * Add French interjections
+* IMPROVED:
+   * Make "Timed Text IMSC 1.1" more compatible
+   * Improve EBU STL preview regarding box - thx BlueMeow7
+* FIXED:
+   * Fix for Whisper Post-processing - thx Purfview/cvrle77
+
+
 4.0.4 (17th March 2024)
 * NEW:
    * Add "Verify completeness" (time covered) feature - thx Flitskikker
