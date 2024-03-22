@@ -1957,7 +1957,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                                     a = a[0] + a.Substring(1).ToLowerInvariant();
                                 }
 
-                                var b = ar[0];
+                                var b = ar[1];
                                 if (b == b.ToUpperInvariant())
                                 {
                                     b = b[0] + b.Substring(1).ToLowerInvariant();
