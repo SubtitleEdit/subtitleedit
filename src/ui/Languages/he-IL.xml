@@ -758,7 +758,7 @@ ames.xml)</FixOnlyNamesCasing>
     <RemovedEmptyLineAtTop>הסר את השורה הריקה למעלה</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>הסר שורה ריקה בתחתית</RemovedEmptyLineAtBottom>
     <RemovedEmptyLineInMiddle>הסר שורה ריקה באמצע</RemovedEmptyLineInMiddle>
-    <RemovedEmptyLinesUnsedLineBreaks>הסר שורות ריקות/מעברי שורות שאינם בשימוש</RemovedEmptyLinesUnsedLineBreaks>
+    <RemovedEmptyLinesUnusedLineBreaks>הסר שורות ריקות/מעברי שורות שאינם בשימוש</RemovedEmptyLinesUnusedLineBreaks>
     <FixOverlappingDisplayTimes>תקן זמני תצוגה חופפים</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>תקן זמני תצוגה קצרים</FixShortDisplayTimes>
     <FixLongDisplayTimes>תקן זמני תצוגה ארוכים</FixLongDisplayTimes>

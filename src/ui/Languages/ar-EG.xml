@@ -881,7 +881,7 @@ ames.xml)</FixOnlyNamesCasing>
     <RemovedEmptyLineAtTop>إزالة السطر الفارغ في الأعلى</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>إزالة السطر الفارغ في الأسفل</RemovedEmptyLineAtBottom>
     <RemovedEmptyLineInMiddle>إزالة السطر الفارغ في المنتصف</RemovedEmptyLineInMiddle>
-    <RemovedEmptyLinesUnsedLineBreaks>إزالة الأسطر الفارغة/فواصل الأسطر غير المستخدمة</RemovedEmptyLinesUnsedLineBreaks>
+    <RemovedEmptyLinesUnusedLineBreaks>إزالة الأسطر الفارغة/فواصل الأسطر غير المستخدمة</RemovedEmptyLinesUnusedLineBreaks>
     <FixOverlappingDisplayTimes>إصلاح أوقات العرض المتداخلة</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>إصلاح أوقات العرض القصيرة</FixShortDisplayTimes>
     <FixLongDisplayTimes>إصلاح أوقات العرض الطويلة</FixLongDisplayTimes>

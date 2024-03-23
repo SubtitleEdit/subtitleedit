@@ -875,7 +875,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <RemovedEmptyLineAtTop>Αφαίρεση κενής γραμμής στην αρχή</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>Αφαίρεση κενής γραμμής στο τέλος</RemovedEmptyLineAtBottom>
     <RemovedEmptyLineInMiddle>Αφαίρεση κενής γραμμής στο κέντρο</RemovedEmptyLineInMiddle>
-    <RemovedEmptyLinesUnsedLineBreaks>Αφαίρεση κενής γραμμής / περιττής αλλαγής γραμμής</RemovedEmptyLinesUnsedLineBreaks>
+    <RemovedEmptyLinesUnusedLineBreaks>Αφαίρεση κενής γραμμής / περιττής αλλαγής γραμμής</RemovedEmptyLinesUnusedLineBreaks>
     <FixOverlappingDisplayTimes>Διόρθωση επικαλυπτόμενου χρόνου</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>Διόρθωση σύντομου χρόνου εμφάνισης</FixShortDisplayTimes>
     <FixLongDisplayTimes>Διόρθωση μεγάλου χρόνου</FixLongDisplayTimes>

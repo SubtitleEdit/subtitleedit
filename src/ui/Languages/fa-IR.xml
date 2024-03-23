@@ -711,7 +711,7 @@
     <RemovedEmptyLineAtTop>خط خالی حذف شده از بالا</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>خط خالی حذف شده از پایین</RemovedEmptyLineAtBottom>
     <RemovedEmptyLineInMiddle>حذف خطوط خالی از وسط</RemovedEmptyLineInMiddle>
-    <RemovedEmptyLinesUnsedLineBreaks>خطهای خالی را حذف کن</RemovedEmptyLinesUnsedLineBreaks>
+    <RemovedEmptyLinesUnusedLineBreaks>خطهای خالی را حذف کن</RemovedEmptyLinesUnusedLineBreaks>
     <FixOverlappingDisplayTimes>زمانهای هم پوشانی را اصلاح کن</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>اصلاح زمانهای کوتاه نمایش</FixShortDisplayTimes>
     <FixLongDisplayTimes>اصلاح زمانهای طولانی نمایش</FixLongDisplayTimes>

@@ -885,7 +885,7 @@ Command line: {1} {2}
     <RemovedEmptyLineAtTop>删除顶部空行</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>删除底部空行</RemovedEmptyLineAtBottom>
     <RemovedEmptyLineInMiddle>删除中部空行</RemovedEmptyLineInMiddle>
-    <RemovedEmptyLinesUnsedLineBreaks>删除 空行/无用换行符</RemovedEmptyLinesUnsedLineBreaks>
+    <RemovedEmptyLinesUnusedLineBreaks>删除 空行/无用换行符</RemovedEmptyLinesUnusedLineBreaks>
     <FixOverlappingDisplayTimes>修复重叠的显示时间</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>修正过短的显示时间</FixShortDisplayTimes>
     <FixLongDisplayTimes>修正过长的显示时间</FixLongDisplayTimes>

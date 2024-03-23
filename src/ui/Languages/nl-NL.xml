@@ -885,7 +885,7 @@ We maken dan handig gebruik van het ritme van het beeld zelf.</CreateSimpleChain
     <RemovedEmptyLineAtTop>Lege regel bovenaan verwĳderen</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>Lege regel onderaan verwĳderen</RemovedEmptyLineAtBottom>
     <RemovedEmptyLineInMiddle>Lege regel middenin verwĳderen</RemovedEmptyLineInMiddle>
-    <RemovedEmptyLinesUnsedLineBreaks>Lege regels/ongebruikte regeleinden verwĳderen</RemovedEmptyLinesUnsedLineBreaks>
+    <RemovedEmptyLinesUnusedLineBreaks>Lege regels/ongebruikte regeleinden verwĳderen</RemovedEmptyLinesUnusedLineBreaks>
     <FixOverlappingDisplayTimes>Overlappende tĳden corrigeren</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>Te korte weergave corrigeren</FixShortDisplayTimes>
     <FixLongDisplayTimes>Te lange weergave corrigeren</FixLongDisplayTimes>

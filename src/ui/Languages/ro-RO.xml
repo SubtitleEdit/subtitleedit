@@ -654,7 +654,7 @@ Notă: Verifică spațiul liber al discului.</WaveFileMalformed>
     <RemovedEmptyLineAtTop>Elimină linia blanc de sus</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>Elimină linia blanc de jos</RemovedEmptyLineAtBottom>
     <RemovedEmptyLineInMiddle>Elim. linia blanc din mijloc</RemovedEmptyLineInMiddle>
-    <RemovedEmptyLinesUnsedLineBreaks>Elimină liniile blanc/întreruperile de linie inutile</RemovedEmptyLinesUnsedLineBreaks>
+    <RemovedEmptyLinesUnusedLineBreaks>Elimină liniile blanc/întreruperile de linie inutile</RemovedEmptyLinesUnusedLineBreaks>
     <FixOverlappingDisplayTimes>Repară suprapunerea timpilor afișați</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>Repară timpii scurți de afișare</FixShortDisplayTimes>
     <FixLongDisplayTimes>Repară timpii lungi de afișare</FixLongDisplayTimes>

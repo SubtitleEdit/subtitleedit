@@ -881,7 +881,7 @@ Hyödynnämme kuvan sisäistä rytmiä.</CreateSimpleChainingToolTip>
     <RemovedEmptyLineAtTop>Tyhjä rivi poistettu alusta</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>Tyhjä rivi poistettu lopusta</RemovedEmptyLineAtBottom>
     <RemovedEmptyLineInMiddle>Tyhjä rivi poistettu keskeltä</RemovedEmptyLineInMiddle>
-    <RemovedEmptyLinesUnsedLineBreaks>Tyhjiä rivejä poistettu/käyttämättömät rivinvaihdot</RemovedEmptyLinesUnsedLineBreaks>
+    <RemovedEmptyLinesUnusedLineBreaks>Tyhjiä rivejä poistettu/käyttämättömät rivinvaihdot</RemovedEmptyLinesUnusedLineBreaks>
     <FixOverlappingDisplayTimes>Korjaa päällekkäiset näyttöajat</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>Korjaa lyhyet näyttöajat</FixShortDisplayTimes>
     <FixLongDisplayTimes>Korjaa pitkät näyttöajat</FixLongDisplayTimes>

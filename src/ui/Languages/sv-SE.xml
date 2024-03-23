@@ -890,7 +890,7 @@ Vi utnyttjar bildens inneboende rytm.</CreateSimpleChainingToolTip>
     <RemovedEmptyLineAtTop>Tog bort tom rad i topp</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>Tog bort tom rad längst ner</RemovedEmptyLineAtBottom>
     <RemovedEmptyLineInMiddle>Ta bort tom rad i mitten</RemovedEmptyLineInMiddle>
-    <RemovedEmptyLinesUnsedLineBreaks>Ta bort tomma rader/oanvända radbrytningar</RemovedEmptyLinesUnsedLineBreaks>
+    <RemovedEmptyLinesUnusedLineBreaks>Ta bort tomma rader/oanvända radbrytningar</RemovedEmptyLinesUnusedLineBreaks>
     <FixOverlappingDisplayTimes>Fixa överlappad visningstid</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>Fixa kort visningstid</FixShortDisplayTimes>
     <FixLongDisplayTimes>Fixa lång visningstid</FixLongDisplayTimes>

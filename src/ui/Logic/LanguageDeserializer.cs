@@ -2311,7 +2311,7 @@ namespace Nikse.SubtitleEdit.Logic
                 case "FixCommonErrors/RemovedEmptyLineInMiddle":
                     language.FixCommonErrors.RemovedEmptyLineInMiddle = reader.Value;
                     break;
-                case "FixCommonErrors/RemovedEmptyLinesUnsedLineBreaks":
+                case "FixCommonErrors/RemovedEmptyLinesUnusedLineBreaks":
                     language.FixCommonErrors.RemovedEmptyLinesUnusedLineBreaks = reader.Value;
                     break;
                 case "FixCommonErrors/FixOverlappingDisplayTimes":

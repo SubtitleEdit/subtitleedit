@@ -585,7 +585,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <RemovedEmptyLineAtTop>Suprimeix línia buida inicial</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>Suprimeix línia buida final</RemovedEmptyLineAtBottom>
     <RemovedEmptyLineInMiddle>Suprimeix línia buida d'enmig</RemovedEmptyLineInMiddle>
-    <RemovedEmptyLinesUnsedLineBreaks>Suprimeix salt de línia línies buides/sense ús</RemovedEmptyLinesUnsedLineBreaks>
+    <RemovedEmptyLinesUnusedLineBreaks>Suprimeix salt de línia línies buides/sense ús</RemovedEmptyLinesUnusedLineBreaks>
     <EmptyLinesRemovedX>Línies buides suprimides: {0}</EmptyLinesRemovedX>
     <FixOverlappingDisplayTimes>Arregla temps solapats</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>Arregla temps curts</FixShortDisplayTimes>

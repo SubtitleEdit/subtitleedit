@@ -892,7 +892,7 @@ Wir nutzen den dem Bild innewohnenden Rhythmus.</CreateSimpleChainingToolTip>
     <RemovedEmptyLineAtTop>Leere Zeilen am Anfang entfernen</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>Leere Zeilen am Ende entfernen</RemovedEmptyLineAtBottom>
     <RemovedEmptyLineInMiddle>Leere Zeilen in der Mitte entfernen</RemovedEmptyLineInMiddle>
-    <RemovedEmptyLinesUnsedLineBreaks>Entferne leere Zeilen/unbenutzte Zeilenumbrüche</RemovedEmptyLinesUnsedLineBreaks>
+    <RemovedEmptyLinesUnusedLineBreaks>Entferne leere Zeilen/unbenutzte Zeilenumbrüche</RemovedEmptyLinesUnusedLineBreaks>
     <FixOverlappingDisplayTimes>Überlappende Anzeigezeiten korrigieren</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>Kurze Anzeigezeiten korrigieren</FixShortDisplayTimes>
     <FixLongDisplayTimes>Lange Anzeigezeiten korrigieren</FixLongDisplayTimes>

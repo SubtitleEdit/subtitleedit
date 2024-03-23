@@ -460,7 +460,7 @@
     <RemovedEmptyLine>บรรทัดว่างที่ถูกลบ</RemovedEmptyLine>
     <RemovedEmptyLineAtTop>บรรทัดว่างด้านบนที่ถูกลบ</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>บรรทัดว่างด้านล่างที่ถูกลบ</RemovedEmptyLineAtBottom>
-    <RemovedEmptyLinesUnsedLineBreaks>จำนวนบรรทัดว่างที่ถูกลบ/ตัวแบ่งบรรทัดที่ไม่ได้ใช้</RemovedEmptyLinesUnsedLineBreaks>
+    <RemovedEmptyLinesUnusedLineBreaks>จำนวนบรรทัดว่างที่ถูกลบ/ตัวแบ่งบรรทัดที่ไม่ได้ใช้</RemovedEmptyLinesUnusedLineBreaks>
     <EmptyLinesRemovedX>บรรทัดว่างที่ถูกลบ: {0}</EmptyLinesRemovedX>
     <FixOverlappingDisplayTimes>แก้เวลาแสดงที่ซ้อนกัน</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>แก้เวลาแสดงที่สั้น</FixShortDisplayTimes>
