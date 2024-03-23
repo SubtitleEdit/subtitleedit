@@ -1,15 +1,23 @@
 <interjections>
-  <word>Aïe</word>
-  <word>Ouïe</word>
-  <word>Ouille</word>
-  <word>Ouf</word>
-  <word>Oups</word>
+  <word>Ah</word>
+  <word>Chut</word>
+  <word>Eh</word>
+  <word>Euh</word>
+  <word>Han-han</word>
   <word>Ho</word>
+  <word>Hum-hum</word>
+  <word>Hum</word>
   <word>Hé</word>
-  <word>Hein</word>
-  <word>Zut</word>
+  <word>Oh-oh</word>
+  <word>Oh</word>
+  <word>Ouf</word>
+  <word>Ouh</word>
+  <word>Ouille</word>
+  <word>Oups</word>
+  <word>Whoa</word>
+  <word>Wouah</word>
+  <word>Wow</word>
+  <skipIfStartsWith>
+    <text>Ah bon</text>
+  </skipIfStartsWith>
 </interjections>
-
-
-
-
