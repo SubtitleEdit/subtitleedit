@@ -166,7 +166,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             }
             engines.Add(WhisperChoice.CTranslate2);
             engines.Add(WhisperChoice.StableTs);
-            engines.Add(WhisperChoice.WhisperX);
+            //engines.Add(WhisperChoice.WhisperX); -- impossible to install...
 
             foreach (var engine in engines)
             {
