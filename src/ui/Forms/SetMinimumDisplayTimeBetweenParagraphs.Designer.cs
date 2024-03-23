@@ -84,15 +84,35 @@
             // 
             // numericUpDownMinMillisecondsBetweenLines
             // 
+            this.numericUpDownMinMillisecondsBetweenLines.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownMinMillisecondsBetweenLines.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownMinMillisecondsBetweenLines.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownMinMillisecondsBetweenLines.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownMinMillisecondsBetweenLines.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownMinMillisecondsBetweenLines.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownMinMillisecondsBetweenLines.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownMinMillisecondsBetweenLines.DecimalPlaces = 0;
+            this.numericUpDownMinMillisecondsBetweenLines.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownMinMillisecondsBetweenLines.Location = new System.Drawing.Point(18, 34);
             this.numericUpDownMinMillisecondsBetweenLines.Maximum = new decimal(new int[] {
             1000,
             0,
             0,
             0});
+            this.numericUpDownMinMillisecondsBetweenLines.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownMinMillisecondsBetweenLines.Name = "numericUpDownMinMillisecondsBetweenLines";
-            this.numericUpDownMinMillisecondsBetweenLines.Size = new System.Drawing.Size(64, 21);
+            this.numericUpDownMinMillisecondsBetweenLines.Size = new System.Drawing.Size(64, 23);
             this.numericUpDownMinMillisecondsBetweenLines.TabIndex = 1;
+            this.numericUpDownMinMillisecondsBetweenLines.TabStop = false;
+            this.numericUpDownMinMillisecondsBetweenLines.ThousandsSeparator = false;
             this.numericUpDownMinMillisecondsBetweenLines.Value = new decimal(new int[] {
             50,
             0,
@@ -147,13 +167,28 @@
             // 
             // comboBoxFrameRate
             // 
+            this.comboBoxFrameRate.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxFrameRate.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxFrameRate.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxFrameRate.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxFrameRate.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxFrameRate.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxFrameRate.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxFrameRate.DropDownHeight = 400;
+            this.comboBoxFrameRate.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
+            this.comboBoxFrameRate.DropDownWidth = 160;
             this.comboBoxFrameRate.FormattingEnabled = true;
             this.comboBoxFrameRate.Location = new System.Drawing.Point(7, 25);
             this.comboBoxFrameRate.Margin = new System.Windows.Forms.Padding(4);
             this.comboBoxFrameRate.MaxLength = 10;
             this.comboBoxFrameRate.Name = "comboBoxFrameRate";
-            this.comboBoxFrameRate.Size = new System.Drawing.Size(160, 21);
+            this.comboBoxFrameRate.SelectedIndex = -1;
+            this.comboBoxFrameRate.SelectedItem = null;
+            this.comboBoxFrameRate.SelectedText = "";
+            this.comboBoxFrameRate.Size = new System.Drawing.Size(160, 23);
             this.comboBoxFrameRate.TabIndex = 0;
+            this.comboBoxFrameRate.TabStop = false;
+            this.comboBoxFrameRate.UsePopupWindow = false;
             this.comboBoxFrameRate.SelectedIndexChanged += new System.EventHandler(this.comboBoxFrameRate_SelectedIndexChanged);
             this.comboBoxFrameRate.KeyUp += new System.Windows.Forms.KeyEventHandler(this.comboBoxFrameRate_KeyUp);
             // 
@@ -162,21 +197,41 @@
             this.labelFrames.AutoSize = true;
             this.labelFrames.Location = new System.Drawing.Point(174, 29);
             this.labelFrames.Name = "labelFrames";
-            this.labelFrames.Size = new System.Drawing.Size(174, 13);
+            this.labelFrames.Size = new System.Drawing.Size(46, 13);
             this.labelFrames.TabIndex = 1;
             this.labelFrames.Text = "Frames:";
             // 
             // numericUpDownFrames
             // 
+            this.numericUpDownFrames.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownFrames.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownFrames.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownFrames.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownFrames.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownFrames.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownFrames.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownFrames.DecimalPlaces = 0;
+            this.numericUpDownFrames.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownFrames.Location = new System.Drawing.Point(220, 25);
             this.numericUpDownFrames.Maximum = new decimal(new int[] {
             25,
             0,
             0,
             0});
+            this.numericUpDownFrames.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownFrames.Name = "numericUpDownFrames";
-            this.numericUpDownFrames.Size = new System.Drawing.Size(56, 20);
+            this.numericUpDownFrames.Size = new System.Drawing.Size(56, 23);
             this.numericUpDownFrames.TabIndex = 52;
+            this.numericUpDownFrames.TabStop = false;
+            this.numericUpDownFrames.ThousandsSeparator = false;
             this.numericUpDownFrames.Value = new decimal(new int[] {
             2,
             0,
@@ -189,7 +244,7 @@
             this.labelXFrameIsXMS.AutoSize = true;
             this.labelXFrameIsXMS.Location = new System.Drawing.Point(6, 57);
             this.labelXFrameIsXMS.Name = "labelXFrameIsXMS";
-            this.labelXFrameIsXMS.Size = new System.Drawing.Size(135, 13);
+            this.labelXFrameIsXMS.Size = new System.Drawing.Size(121, 13);
             this.labelXFrameIsXMS.TabIndex = 3;
             this.labelXFrameIsXMS.Text = "x frame is y milliseconds";
             // 

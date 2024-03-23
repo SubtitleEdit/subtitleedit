@@ -9,7 +9,6 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Controls
@@ -571,13 +570,13 @@ namespace Nikse.SubtitleEdit.Controls
 
         #region LiveSpellCheck
 
-        public async Task CheckForLanguageChange(Subtitle subtitle)
+        public void CheckForLanguageChange(Subtitle subtitle)
         {
             var detectedLanguage = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle, 100);
             if (CurrentLanguage != detectedLanguage)
             {
                 DisposeHunspellAndDictionaries();
-                await InitializeLiveSpellCheck(subtitle, CurrentLineIndex);
+                InitializeLiveSpellCheck(subtitle, CurrentLineIndex);
             }
         }
 
@@ -594,38 +593,33 @@ namespace Nikse.SubtitleEdit.Controls
             return false;
         }
 
-        public async Task InitializeLiveSpellCheck(Subtitle subtitle, int lineNumber)
+        public void InitializeLiveSpellCheck(Subtitle subtitle, int lineNumber)
         {
-            if (lineNumber < 0)
+            if (lineNumber < 0 || !(_spellCheckWordLists is null) || !(_hunspell is null))
             {
                 return;
             }
 
-            if (_spellCheckWordLists is null && _hunspell is null)
+            var detectedLanguage = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle, 300);
+            IsDictionaryDownloaded = false;
+            if (IsDictionaryAvailable(detectedLanguage))
             {
-                var detectedLanguage = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle, 300);
-                IsDictionaryDownloaded = false;
-                if (IsDictionaryAvailable(detectedLanguage))
+                var languageName = LanguageAutoDetect.AutoDetectLanguageName(string.Empty, subtitle);
+                if (languageName.Split('_', '-')[0] != detectedLanguage)
                 {
-                    var languageName = LanguageAutoDetect.AutoDetectLanguageName(string.Empty, subtitle);
-                    if (languageName.Split('_', '-')[0] != detectedLanguage)
-                    {
-                        return;
-                    }
-
-                    await LoadDictionariesAsync(languageName);
-                    IsDictionaryDownloaded = true;
-                    IsSpellCheckerInitialized = true;
-                    IsSpellCheckRequested = true;
-                    TextChangedHighlight(this, EventArgs.Empty);
+                    return;
                 }
 
-                LanguageChanged = true;
-                CurrentLanguage = detectedLanguage;
+                LoadDictionaries(languageName);
+                IsDictionaryDownloaded = true;
+                IsSpellCheckerInitialized = true;
+                IsSpellCheckRequested = true;
+                TextChangedHighlight(this, EventArgs.Empty);
             }
-        }
 
-        private Task LoadDictionariesAsync(string languageName) => new Task(() => LoadDictionaries(languageName));
+            LanguageChanged = true;
+            CurrentLanguage = detectedLanguage;
+        }
 
         private void LoadDictionaries(string languageName)
         {

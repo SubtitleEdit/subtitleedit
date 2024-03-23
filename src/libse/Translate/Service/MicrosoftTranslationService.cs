@@ -15,7 +15,7 @@ namespace Nikse.SubtitleEdit.Core.Translate.Service
     /// </summary>
     public class MicrosoftTranslationService : ITranslationService
     {
-        public const string SignUpUrl = "https://docs.microsoft.com/en-us/azure/cognitive-services/translator/translator-text-how-to-signup";
+        public const string SignUpUrl = "https://learn.microsoft.com/en-us/azure/ai-services/translator/create-translator-resource";
         public const string GoToUrl = "https://www.bing.com/translator";
         private const string LanguagesUrl = "https://api.cognitive.microsofttranslator.com/languages?api-version=3.0&scope=translation";
         private const string TranslateUrl = "translate?api-version=3.0&from={0}&to={1}";

@@ -3,6 +3,7 @@ using Nikse.SubtitleEdit.Core.Http;
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
@@ -36,11 +37,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void buttonOK_Click(object sender, EventArgs e)
-        {
-            DialogResult = DialogResult.OK;
-        }
-
         private void buttonCancel_Click(object sender, EventArgs e)
         {
             if (buttonCancel.Text == LanguageSettings.Current.General.Ok)
@@ -55,10 +51,15 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void DownloadFfmpeg_Shown(object sender, EventArgs e)
         {
-            var url = "https://github.com/SubtitleEdit/support-files/raw/master/ffpmeg/ffmpeg-" + IntPtr.Size * 8 + ".zip";
+            var url = "https://github.com/SubtitleEdit/support-files/releases/download/ffmpeg-v6-1/ffmpeg61.zip";
+            if (IntPtr.Size == 32)
+            {
+                url = "https://github.com/SubtitleEdit/support-files/releases/download/ffmpegwin32v5.1/ffmpeg-win32-n5.1.zip";
+            }
+
             if (_title.Contains("ffprobe", StringComparison.OrdinalIgnoreCase))
             {
-                url = "https://github.com/SubtitleEdit/support-files/releases/download/ffprove-6.0/ffprobe.zip";
+                url = "https://github.com/SubtitleEdit/support-files/releases/download/ffmpeg-v6-1/ffprobe61.zip";
             }
 
             try
@@ -99,7 +100,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void CompleteDownload(Stream downloadStream)
+        private void CompleteDownload(MemoryStream downloadStream)
         {
             if (downloadStream.Length == 0)
             {
@@ -110,6 +111,19 @@ namespace Nikse.SubtitleEdit.Forms
             if (!Directory.Exists(folder))
             {
                 Directory.CreateDirectory(folder);
+            }
+
+            var sha512Hashes = new[]
+            {
+                "08d1a88a6293ad9c66de2f11a029b648bafe7f2a0ebaca6bb863f11e7d80967f6804b8c2b86c2d8381a441857fd7fc52f2a9e95b340295e1b16ed124c6f776f3", // ffmpeg 6.1
+                "d2ee1d3bfa6cfb8c7563cfb8cd641962e7274149458630191a69b689e9c0288608885f51c39f578008e68856ee71bc66a82ed4b3cba2f1411aec2b4da991b974", // ffprobe 6.1
+            };
+            var hash = Utilities.GetSha512Hash(downloadStream.ToArray());
+            if (!sha512Hashes.Contains(hash))
+            {
+                MessageBox.Show("ffmpeg SHA 512 hash does not match - download aborted!"); ;
+                DialogResult = DialogResult.Cancel;
+                return;
             }
 
             downloadStream.Position = 0;

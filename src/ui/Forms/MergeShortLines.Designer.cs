@@ -91,7 +91,7 @@ namespace Nikse.SubtitleEdit.Forms
             0,
             0,
             0});
-            this.numericUpDownMaxCharacters.Location = new System.Drawing.Point(190, 27);
+            this.numericUpDownMaxCharacters.Location = new System.Drawing.Point(190, 26);
             this.numericUpDownMaxCharacters.Maximum = new decimal(new int[] {
             999,
             0,
@@ -103,7 +103,7 @@ namespace Nikse.SubtitleEdit.Forms
             0,
             0});
             this.numericUpDownMaxCharacters.Name = "numericUpDownMaxCharacters";
-            this.numericUpDownMaxCharacters.Size = new System.Drawing.Size(64, 21);
+            this.numericUpDownMaxCharacters.Size = new System.Drawing.Size(64, 23);
             this.numericUpDownMaxCharacters.TabIndex = 0;
             this.numericUpDownMaxCharacters.TabStop = false;
             this.numericUpDownMaxCharacters.ThousandsSeparator = false;
@@ -117,7 +117,7 @@ namespace Nikse.SubtitleEdit.Forms
             // labelMaxCharacters
             // 
             this.labelMaxCharacters.AutoSize = true;
-            this.labelMaxCharacters.Location = new System.Drawing.Point(187, 9);
+            this.labelMaxCharacters.Location = new System.Drawing.Point(187, 8);
             this.labelMaxCharacters.Name = "labelMaxCharacters";
             this.labelMaxCharacters.Size = new System.Drawing.Size(190, 13);
             this.labelMaxCharacters.TabIndex = 32;
@@ -126,7 +126,7 @@ namespace Nikse.SubtitleEdit.Forms
             // labelMaxMillisecondsBetweenLines
             // 
             this.labelMaxMillisecondsBetweenLines.AutoSize = true;
-            this.labelMaxMillisecondsBetweenLines.Location = new System.Drawing.Point(483, 9);
+            this.labelMaxMillisecondsBetweenLines.Location = new System.Drawing.Point(483, 8);
             this.labelMaxMillisecondsBetweenLines.Name = "labelMaxMillisecondsBetweenLines";
             this.labelMaxMillisecondsBetweenLines.Size = new System.Drawing.Size(178, 13);
             this.labelMaxMillisecondsBetweenLines.TabIndex = 33;
@@ -147,7 +147,7 @@ namespace Nikse.SubtitleEdit.Forms
             0,
             0,
             0});
-            this.numericUpDownMaxMillisecondsBetweenLines.Location = new System.Drawing.Point(486, 26);
+            this.numericUpDownMaxMillisecondsBetweenLines.Location = new System.Drawing.Point(486, 25);
             this.numericUpDownMaxMillisecondsBetweenLines.Maximum = new decimal(new int[] {
             10000,
             0,
@@ -159,7 +159,7 @@ namespace Nikse.SubtitleEdit.Forms
             0,
             0});
             this.numericUpDownMaxMillisecondsBetweenLines.Name = "numericUpDownMaxMillisecondsBetweenLines";
-            this.numericUpDownMaxMillisecondsBetweenLines.Size = new System.Drawing.Size(64, 21);
+            this.numericUpDownMaxMillisecondsBetweenLines.Size = new System.Drawing.Size(64, 23);
             this.numericUpDownMaxMillisecondsBetweenLines.TabIndex = 2;
             this.numericUpDownMaxMillisecondsBetweenLines.TabStop = false;
             this.numericUpDownMaxMillisecondsBetweenLines.ThousandsSeparator = false;

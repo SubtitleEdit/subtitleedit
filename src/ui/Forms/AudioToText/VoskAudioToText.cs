@@ -33,6 +33,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         private bool _useCenterChannelOnly;
         private Model _model;
         private int _initialWidth = 725;
+        private readonly List<string> _outputBatchFileNames = new List<string>();
 
         public Subtitle TranscribedSubtitle { get; private set; }
 
@@ -236,7 +237,8 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 MessageBox.Show($"{errorCount} error(s)!{Environment.NewLine}{errors}");
             }
 
-            MessageBox.Show(string.Format(LanguageSettings.Current.AudioToText.XFilesSavedToVideoSourceFolder, listViewInputFiles.Items.Count - errorCount));
+            var fileList = Environment.NewLine + Environment.NewLine + string.Join(Environment.NewLine, _outputBatchFileNames);
+            MessageBox.Show(string.Format(LanguageSettings.Current.AudioToText.XFilesSavedToVideoSourceFolder, listViewInputFiles.Items.Count - errorCount) + fileList);
 
             groupBoxInputFiles.Enabled = true;
             buttonGenerate.Enabled = true;
@@ -253,11 +255,25 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             var fileName = Path.Combine(Utilities.GetPathAndFileNameWithoutExtension(videoFileName)) + format.Extension;
             if (File.Exists(fileName))
             {
-                fileName = $"{Path.Combine(Utilities.GetPathAndFileNameWithoutExtension(videoFileName))}.{Guid.NewGuid().ToByteArray()}.{format.Extension}";
+                fileName = $"{Path.Combine(Utilities.GetPathAndFileNameWithoutExtension(videoFileName))}.{Guid.NewGuid().ToString()}.{format.Extension}";
             }
 
-            File.WriteAllText(fileName, text, Encoding.UTF8);
-            textBoxLog.AppendText("Subtitle written to : " + fileName + Environment.NewLine);
+            try
+            {
+                File.WriteAllText(fileName, text, Encoding.UTF8);
+                textBoxLog.AppendText("Subtitle written to : " + fileName + Environment.NewLine);
+                _outputBatchFileNames.Add(fileName);
+            }
+            catch
+            {
+                var dir = Path.GetDirectoryName(fileName);
+                if (!WhisperAudioToText.IsDirectoryWritable(dir))
+                {
+                    MessageBox.Show($"SE does not have write access to the folder '{dir}'", MessageBoxIcon.Error);
+                }
+
+                throw;
+            }
         }
 
         internal static string GetLanguage(string text)

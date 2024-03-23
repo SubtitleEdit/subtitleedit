@@ -2,7 +2,7 @@
 <Language Name="dansk">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.0</Version>
+    <Version>4.0.4</Version>
     <TranslatedBy>Oversat til dansk af Nikse (mailto:nikse.dk@gmail.com)</TranslatedBy>
     <CultureName>da-DK</CultureName>
     <HelpFile />
@@ -10,6 +10,7 @@
     <Cancel>&amp;Fortryd</Cancel>
     <Yes>Ja</Yes>
     <No>Nej</No>
+    <Close>Luk</Close>
     <Apply>Anvend</Apply>
     <ApplyTo>Anvend for</ApplyTo>
     <None>Ingen</None>
@@ -103,6 +104,8 @@
     <Error>Fejl</Error>
     <Warning>Advarsel</Warning>
     <UseLargerFontForThisWindow>Brug stor skrifttype til dette vindue</UseLargerFontForThisWindow>
+    <ChangeLanguageFilter>Skift sprogfilter...</ChangeLanguageFilter>
+    <MoreInfo>Mere info</MoreInfo>
   </General>
   <About>
     <Title>Om Subtitle Edit</Title>
@@ -190,6 +193,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <VoskWebsite>Vosk hjemmeside</VoskWebsite>
     <WhisperWebsite>Whisper hjemmeside</WhisperWebsite>
     <WhisperNotFound>Whisper ikke fundet - læs mere (web)?</WhisperNotFound>
+    <Model>Model</Model>
     <Models>Modeller</Models>
     <LanguagesAndModels>Sprog og modeller</LanguagesAndModels>
     <ChooseModel>Vælg model</ChooseModel>
@@ -210,6 +214,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <SetCppConstMeFolder>Indstil mappen for CPP/Const-me-modeller...</SetCppConstMeFolder>
     <OnlyRunPostProcessing>Kør kun efterbehandling/juster tider</OnlyRunPostProcessing>
     <DownloadFasterWhisperCuda>Download cuBLAS og cuDNN til Faster-Whisper</DownloadFasterWhisperCuda>
+    <NoTextFound>Ingen tekst fundet!</NoTextFound>
   </AudioToText>
   <AssaAttachments>
     <Title>Avancerede Sub Station Alpha vedhæftede filer</Title>
@@ -316,6 +321,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <ConvertOptions>Konverter indstillinger</ConvertOptions>
     <RemoveFormatting>Fjern formaterings- tags</RemoveFormatting>
     <RemoveStyleActor>Fjern style/skuespiller</RemoveStyleActor>
+    <StyleActor>Stil/skuespiller (adskil med komma)</StyleActor>
     <RemoveTextForHI>Fjern tekst for høre-hæmmede</RemoveTextForHI>
     <ConvertColorsToDialog>Konverter farver til dialog</ConvertColorsToDialog>
     <OverwriteOriginalFiles>Overskriv originale filer (kun hvis format ikke ændres)</OverwriteOriginalFiles>
@@ -393,6 +399,13 @@ Klik venligst på "{0}" for at generere eller importere skudændringer først, e
     <BatchAlignTimeCodes>Juster tidskoder til frame-tidskoder</BatchAlignTimeCodes>
     <BatchUseExactTimeCodes>Brug nøjagtige tidskoder (hvis tilgængelig)</BatchUseExactTimeCodes>
     <BatchSnapToShotChanges>Snap signaler til skudændringer (hvis tilgængelig)</BatchSnapToShotChanges>
+    <UnfixableParagraphsTitle>Gennemgå ikke fuldt kædede undertekster</UnfixableParagraphsTitle>
+    <UnfixableParagraphsInstructions>Nogle undertekster var ikke fuldt kædet i overensstemmelse med din profil, sandsynligvis på grund af for tæt grupperede skudændringer (muligvis falske positiver).
+
+Det kan være en god idé at gennemgå disse manuelt for at sikre, at dine segmenter bliver snappet til de korrekte shot changes.</UnfixableParagraphsInstructions>
+    <UnfixableParagraphsColumnParagraphs>Linjer</UnfixableParagraphsColumnParagraphs>
+    <UnfixableParagraphsColumnParagraphsFormat>#{0} – #{1}</UnfixableParagraphsColumnParagraphsFormat>
+    <UnfixableParagraphsColumnGap>Mellemrum (rammer)</UnfixableParagraphsColumnGap>
   </BeautifyTimeCodes>
   <BeautifyTimeCodesProfile>
     <Title>Rediger profil</Title>
@@ -416,6 +429,7 @@ Klik venligst på "{0}" for at generere eller importere skudændringer først, e
     <Chaining>Kædning</Chaining>
     <InCueOnShot>I kø ved sceneskift</InCueOnShot>
     <OutCueOnShot>Out cue på sceneskift</OutCueOnShot>
+    <CheckGeneral>Håndhæv stadig generelle regler, når de ikke påvirkes</CheckGeneral>
     <MaxGap>Maks.  gap</MaxGap>
     <ShotChangeBehavior>Hvis der er et skudskifte imellem:</ShotChangeBehavior>
     <DontChain>Sammenkød ikke</DontChain>
@@ -478,6 +492,7 @@ Vi udnytter billedets indre rytme.</CreateSimpleChainingToolTip>
     <BottomAlignSelectedLines>Juster til bund for valgte linjer (hold vandret position)</BottomAlignSelectedLines>
     <ToggleForcedSelectedLines>Skift "forced" for valgte linjer</ToggleForcedSelectedLines>
     <SelectForcedLines>Vælg "forced" linjer</SelectForcedLines>
+    <SelectNonForcedLines>Vælg ikke-tvungne linjer</SelectNonForcedLines>
     <SizeXY>Størrelse: {0} x {1}</SizeXY>
     <SetAspectRatio11>Indstil billedformat 1:1</SetAspectRatio11>
     <ChangeBrightnessTitle>Skift lysstyrke</ChangeBrightnessTitle>
@@ -867,7 +882,7 @@ Vi udnytter billedets indre rytme.</CreateSimpleChainingToolTip>
     <RemovedEmptyLineAtTop>Fjernede tom linje øverst</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>Fjernede tom linje i bunden</RemovedEmptyLineAtBottom>
     <RemovedEmptyLineInMiddle>Fjernede tom linje i midten</RemovedEmptyLineInMiddle>
-    <RemovedEmptyLinesUnsedLineBreaks>Fjern tomme linjer/ubrugte linjeskift</RemovedEmptyLinesUnsedLineBreaks>
+    <RemovedEmptyLinesUnusedLineBreaks>Fjern tomme linjer/ubrugte linjeskift</RemovedEmptyLinesUnusedLineBreaks>
     <FixOverlappingDisplayTimes>Ret overlappende visningstider</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>Ret korte visningstider</FixShortDisplayTimes>
     <FixLongDisplayTimes>Ret lange visningstider</FixLongDisplayTimes>
@@ -1036,6 +1051,7 @@ Vi udnytter billedets indre rytme.</CreateSimpleChainingToolTip>
     <PleaseWait>Vent venligst... dette kan tage et stykke tid</PleaseWait>
     <PoweredByGoogleTranslate>Powered by Google Translate</PoweredByGoogleTranslate>
     <PoweredByMicrosoftTranslate>Powered by Microsoft Bing Translate</PoweredByMicrosoftTranslate>
+    <PoweredByX>Drevet af {0}</PoweredByX>
     <MsClientSecretNeeded>Der kræver en Bing "client secret" from Microsoft for at benytte Bing Translate.
 
 Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Bing "client secret".</MsClientSecretNeeded>
@@ -1056,6 +1072,11 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Bi
     <TranslateBlockCopySourceText>Kopier kilde text til udklipsholder</TranslateBlockCopySourceText>
     <TranslateBlockClipboardError1>Udklipsholder indeholder kilde tekst!</TranslateBlockClipboardError1>
     <TranslateBlockClipboardError2>Gå til oversætter og oversæt, kopieresultatet til udklipsholder, og klik på denne knap igen.</TranslateBlockClipboardError2>
+    <StartWebServerX>Start "{0}" webserver</StartWebServerX>
+    <XRequiresALocalWebServer>"{0}" kræver en webserver, der kører lokalt!</XRequiresALocalWebServer>
+    <XRequiresAnApiKey>"{0}" kræver en API-nøgle.</XRequiresAnApiKey>
+    <ReadMore>Læs mere?</ReadMore>
+    <Formality>Formalitet</Formality>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
     <Title>Google vs Microsoft oversætter</Title>
@@ -1122,6 +1143,8 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Bi
   </ImportText>
   <Interjections>
     <Title>Følelsesudbrud</Title>
+    <EditSkipList>Rediger overspringsliste...</EditSkipList>
+    <EditSkipListInfo>Interjektioner vil blive sprunget over, hvis kildeteksten starter med disse:</EditSkipListInfo>
   </Interjections>
   <JoinSubtitles>
     <Title>Flet undertekster</Title>
@@ -1298,6 +1321,7 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Bi
         <CloseTranslation>Luk oversat undertekst</CloseTranslation>
         <OpenContainingFolder>Åbn indeholdende mappe</OpenContainingFolder>
         <Compare>Sammenlign...</Compare>
+        <VerifyCompleteness>Bekræft fuldstændigheden...</VerifyCompleteness>
         <Statistics>Statistik...</Statistics>
         <Plugins>Plugins...</Plugins>
         <ImportSubtitleFromVideoFile>Undertekst fra videofil...</ImportSubtitleFromVideoFile>
@@ -1416,8 +1440,6 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Bi
         <GenerateImportShotChanges>Generer/importer sceneændringer...</GenerateImportShotChanges>
         <RemoveOrExportShotChanges>Fjern/eksporter sceneændringer...</RemoveOrExportShotChanges>
         <WaveformBatchGenerate>Batch generer bølgeformer...</WaveformBatchGenerate>
-        <ShowHideVideo>Vis/skjul video</ShowHideVideo>
-        <ShowHideWaveform>Vis/skjul lyd kurve</ShowHideWaveform>
         <ShowHideWaveformAndSpectrogram>Vis/skjul bølgeform og spektrogram</ShowHideWaveformAndSpectrogram>
         <UnDockVideoControls>Pop video vinduer ud</UnDockVideoControls>
         <ReDockVideoControls>Saml video vinduer</ReDockVideoControls>
@@ -1478,8 +1500,7 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Bi
         <BeautifyTimeCodes>Forskøn tidskoder</BeautifyTimeCodes>
         <Settings>Indstillinger</Settings>
         <Help>Hjælp</Help>
-        <ShowHideWaveform>Vis/skjul kurveform</ShowHideWaveform>
-        <ShowHideVideo>Vis/skjul video</ShowHideVideo>
+        <Layout>Layout</Layout>
         <AssaDraw>Advanced Sub Station Alpha tegn</AssaDraw>
       </ToolBar>
       <ContextMenu>
@@ -1547,6 +1568,7 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Bi
         <Subscript>Subscript</Subscript>
         <Alignment>Justering...</Alignment>
         <AutoBalanceSelectedLines>Auto balancer markerede linjer...</AutoBalanceSelectedLines>
+        <EvenlyDistributeSelectedLines>Jævnt fordelt udvalgte linjer (CPS)</EvenlyDistributeSelectedLines>
         <RemoveLineBreaksFromSelectedLines>Fjern line-skift fra valgte linjer...</RemoveLineBreaksFromSelectedLines>
         <TypewriterEffect>Skrivemaskine effekt...</TypewriterEffect>
         <KaraokeEffect>Karaoke effekt...</KaraokeEffect>
@@ -1818,6 +1840,8 @@ Fortsæt?</SubtitleAppendPrompt>
     <SortedByX>Sorteret efter: {0}</SortedByX>
     <BeforeAutoBalanceSelectedLines>Før auto balancer markerede linjer</BeforeAutoBalanceSelectedLines>
     <NumberOfLinesAutoBalancedX>Antal af linjer auto balanceret: {0}</NumberOfLinesAutoBalancedX>
+    <BeforeEvenlyDistributeSelectedLines>Før jævnt fordel udvalgte linjer</BeforeEvenlyDistributeSelectedLines>
+    <NumberOfLinesEvenlyDistributedX>Antal ligeligt fordelte linjer: {0}</NumberOfLinesEvenlyDistributedX>
     <BeforeRemoveLineBreaksInSelectedLines>Før fjern line-skift fra valgte linjer</BeforeRemoveLineBreaksInSelectedLines>
     <NumberOfWithRemovedLineBreakX>Antallet af linjer med fjernet linjeskift: {0}</NumberOfWithRemovedLineBreakX>
     <BeforeMultipleReplace>Før multi søg og erstat</BeforeMultipleReplace>
@@ -1930,6 +1954,7 @@ Hvis du har redigeret denne fil med Subtitle Edit du måske finde en backup via 
     <SubtitleEditNeedsVideoPlayer>Subtitle Edit kræver en videoafspiller.</SubtitleEditNeedsVideoPlayer>
     <UseRecommendMpv>For at bruge den anbefalede videoafspiller "mpv" skal du klikke på knappen nedenfor.</UseRecommendMpv>
     <DownloadAndUseMpv>Download og brug "mpv" som videoafspiller</DownloadAndUseMpv>
+    <ChooseLayout>Vælg layout</ChooseLayout>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Vælg undertekst fra Matroska fil</Title>
@@ -2207,6 +2232,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <LinesFoundX>Linjer fundet: {0}</LinesFoundX>
     <RemoveTextIfContains>Fjern tekst, hvis indeholder:</RemoveTextIfContains>
     <RemoveTextIfAllUppercase>Fjern linje hvis kun med STORE bogstaver</RemoveTextIfAllUppercase>
+    <RemoveIfOnlyMusicSymbols>Fjern hvis kun musiksymboler</RemoveIfOnlyMusicSymbols>
     <RemoveInterjections>Fjern følelsesudbrud (Ahh, hmm, osv.)</RemoveInterjections>
     <EditInterjections>Rediger...</EditInterjections>
     <Apply>Udfør</Apply>
@@ -2306,6 +2332,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <DefaultFrameRate>Standard frame rate</DefaultFrameRate>
     <DefaultFileEncoding>Standard filkodningen</DefaultFileEncoding>
     <AutoDetectAnsiEncoding>Auto opdag ANSI-kodning</AutoDetectAnsiEncoding>
+    <LanguageFilter>Sprog filter</LanguageFilter>
     <Profile>Profil</Profile>
     <Profiles>Profiler</Profiles>
     <ImportProfiles>Importer profiler</ImportProfiles>
@@ -2527,19 +2554,21 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <DarkThemeShowGridViewLines>Vis gitterlinjer for listevisning</DarkThemeShowGridViewLines>
     <GraphicsButtons>Grafik knapper</GraphicsButtons>
     <UpdateShortcut>Opdater</UpdateShortcut>
-    <FoucsSetVideoPosition>Fokus, sæt videoposition</FoucsSetVideoPosition>
+    <FocusSetVideoPosition>Fokus, sæt videoposition</FocusSetVideoPosition>
     <ToggleDockUndockOfVideoControls>Skift dok/frigør af video kontrol</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Sæt slut, tilføj ny og gå til ny</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStart>Juster via slut-position</AdjustViaEndAutoStart>
     <AdjustViaEndAutoStartAndGoToNext>Juster via slutposition og gå til næste</AdjustViaEndAutoStartAndGoToNext>
-    <AdjustSetEndMinusGapAndStartNextHere>Indstil slut minus gap, gå til næste og start næste her</AdjustSetEndMinusGapAndStartNextHere>
-    <AdjustSetEndTimeAndGoToNext>Set slut og gå til næste</AdjustSetEndTimeAndGoToNext>
-    <AdjustSetEndTimeAndPause>Set slut og pause</AdjustSetEndTimeAndPause>
+    <AdjustSetEndMinusGapAndStartNextHere>Sæt slut minus gap, gå til næste og start næste her</AdjustSetEndMinusGapAndStartNextHere>
+    <AdjustSetEndAndStartNextAfterGap>Sætl slut og start på næste efter min. afstand</AdjustSetEndAndStartNextAfterGap>
+    <AdjustSetStartTimeAndGoToNext>Sæt start og gå til næste</AdjustSetStartTimeAndGoToNext>
+    <AdjustSetEndTimeAndGoToNext>Sæt slut og gå til næste</AdjustSetEndTimeAndGoToNext>
+    <AdjustSetEndTimeAndPause>Sæt slut og pause</AdjustSetEndTimeAndPause>
     <AdjustSetStartAutoDurationAndGoToNext>Sæt start, auto varighed og gå til næste</AdjustSetStartAutoDurationAndGoToNext>
     <AdjustSetEndNextStartAndGoToNext>Sæt slut, næste start og gå til næste</AdjustSetEndNextStartAndGoToNext>
     <AdjustStartDownEndUpAndGoToNext>Tast ned = set start, tast op = sæt slut og gå til næste</AdjustStartDownEndUpAndGoToNext>
-    <AdjustSetStartAndEndOfPrevious>Indstil start og indstil slut på forrige (minus min afstand)</AdjustSetStartAndEndOfPrevious>
-    <AdjustSetStartAndEndOfPreviousAndGoToNext>Indstil start og indstil slut på forrige og gå til næste (minus min afstand)</AdjustSetStartAndEndOfPreviousAndGoToNext>
+    <AdjustSetStartAndEndOfPrevious>Sæt start og indstil slut på forrige (minus min afstand)</AdjustSetStartAndEndOfPrevious>
+    <AdjustSetStartAndEndOfPreviousAndGoToNext>Sæt start og indstil slut på forrige og gå til næste (minus min afstand)</AdjustSetStartAndEndOfPreviousAndGoToNext>
     <AdjustSelected100MsForward>Flyt valgte linjer 100 ms frem</AdjustSelected100MsForward>
     <AdjustSelected100MsBack>Flyt valgte linjer 100 ms tilbage</AdjustSelected100MsBack>
     <AdjustStartXMsBack>Flyt start {0} ms tilbage</AdjustStartXMsBack>
@@ -2583,6 +2612,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <MergeDialogWithNext>Flet dialog med næste (indsæt bindestreger)</MergeDialogWithNext>
     <MergeDialogWithPrevious>Flet dialog med forrige (indsæt bindestreger)</MergeDialogWithPrevious>
     <AutoBalanceSelectedLines>Autobalancer valgte linjer</AutoBalanceSelectedLines>
+    <EvenlyDistributeSelectedLines>Jævnt fordelt udvalgte linjer (CPS)</EvenlyDistributeSelectedLines>
     <GoToNext>Gå til næste linje</GoToNext>
     <GoToNextPlayTranslate>Gå til næste linje (og spil i 'Oversæt tilstand')</GoToNextPlayTranslate>
     <GoToNextCursorAtEnd>Gå til næste linje, og indstil markøren i slutningen</GoToNextCursorAtEnd>
@@ -2627,6 +2657,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <WaveformSeekSilenceForward>Søg stilhed frem</WaveformSeekSilenceForward>
     <WaveformSeekSilenceBack>Søg stilhed tilbage</WaveformSeekSilenceBack>
     <WaveformAddTextHere>Tilføj tekst her (for ny selektion)</WaveformAddTextHere>
+    <ChooseLayoutX>Vælg layout {0}</ChooseLayoutX>
     <WaveformAddTextHereFromClipboard>Tilføj tekst her (fra klippebordet)</WaveformAddTextHereFromClipboard>
     <SetParagraphAsSelection>Sæt aktuelle som nyt valg</SetParagraphAsSelection>
     <WaveformPlayNewSelection>Spil ny markering</WaveformPlayNewSelection>
@@ -2681,6 +2712,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <AudioExtractSelectedLines>Udpak lyd (udvalgte linjer)</AudioExtractSelectedLines>
     <AudioToTextSelectedLinesX>Lyd til tekst valgte linjer ({0})</AudioToTextSelectedLinesX>
     <VideoToggleBrightness>Skift lysstyrke (kun mpv)</VideoToggleBrightness>
+    <AutoTranslateSelectedLines>Auto-oversæt valgte linjer</AutoTranslateSelectedLines>
     <CustomSearch1>Oversæt, brugerdefineret søgning 1</CustomSearch1>
     <CustomSearch2>Oversæt, brugerdefineret søgning 2</CustomSearch2>
     <CustomSearch3>Oversæt, brugerdefineret søgning 3</CustomSearch3>
@@ -2810,6 +2842,8 @@ Fortsæt?</RestoreDefaultSettingsMsg>
     <ExportAsHtml>Eksporter som HTML...</ExportAsHtml>
     <SetNewActor>Sæt ny skuespiller/stemme</SetNewActor>
     <SetActorX>Sæt skuespiller/stemme {0}</SetActorX>
+    <Used>Brugt</Used>
+    <Unused>Ubrugt</Unused>
   </Settings>
   <SettingsMpv>
     <DownloadMpv>Hent MPV lib</DownloadMpv>
@@ -3123,6 +3157,21 @@ Fortsæt?</RestoreDefaultSettingsMsg>
     <Message>Hvis du ønsker, at denne undertekst type skal kunne indlæses, bedes du sende en mail til mailto: niksedk@gmail.com og vedhæfte en kopi af underteksten.</Message>
     <ImportAsPlainText>Import som almindelig tekst...</ImportAsPlainText>
   </UnknownSubtitle>
+  <VerifyCompleteness>
+    <Title>Bekræft fuldstændigheden mod andre undertekster</Title>
+    <OpenControlSubtitle>Åbn kontrol undertekst</OpenControlSubtitle>
+    <ControlSubtitleError>Kontrol undertekst er tom eller kunne ikke indlæses.</ControlSubtitleError>
+    <ControlSubtitleX>Kontrol undertekst: {0}</ControlSubtitleX>
+    <Coverage>Dækning</Coverage>
+    <CoveragePercentageX>{0:0.##}%</CoveragePercentageX>
+    <SortByCoverage>Sorter efter dækning</SortByCoverage>
+    <SortByTime>Sorter efter tid</SortByTime>
+    <Reload>Bekræft igen</Reload>
+    <Insert>Indsæt</Insert>
+    <InsertAndNext>Indsæt og gå til næste</InsertAndNext>
+    <Dismiss>Afskedige</Dismiss>
+    <DismissAndNext>Afvis og gå til næste</DismissAndNext>
+  </VerifyCompleteness>
   <VisualSync>
     <Title>Visual synkroniser</Title>
     <StartScene>Start scene</StartScene>

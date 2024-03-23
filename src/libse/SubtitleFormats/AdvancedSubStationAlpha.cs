@@ -178,7 +178,9 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
             else
             {
                 sb.AppendFormat(header, title).AppendLine();
+                styles = GetStylesFromHeader(header);
             }
+
             foreach (var p in subtitle.Paragraphs)
             {
                 var start = MakeTimeCode(timeCodeFormat, p.StartTime);
@@ -187,6 +189,14 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                 if (!string.IsNullOrEmpty(p.Extra) && isValidAssHeader && styles.Contains(p.Extra))
                 {
                     style = p.Extra;
+                }
+                else if (styles.Count > 0 && !styles.Contains(style) && styles.Contains(p.Extra))
+                {
+                    style = p.Extra;
+                }
+                else if (styles.Count > 0 && string.IsNullOrEmpty(p.Extra))
+                {
+                    style = styles[0];
                 }
 
                 if (fromTtml && !string.IsNullOrEmpty(p.Style) && isValidAssHeader && styles.Contains(p.Style))
@@ -241,6 +251,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                 sb.AppendLine();
                 sb.AppendLine(subtitle.Footer);
             }
+
             return sb.ToString().Trim() + Environment.NewLine;
         }
 
@@ -997,7 +1008,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
             text = text.Replace("</b>", @"{\b0}");
             text = text.Replace("</b>", @"{\b}");
             var count = 0;
-            while (text.Contains("<font ") && count < 10)
+            while (text.Contains("<font ") && count < 100)
             {
                 var start = text.IndexOf("<font ", StringComparison.Ordinal);
                 var end = text.IndexOf('>', start);

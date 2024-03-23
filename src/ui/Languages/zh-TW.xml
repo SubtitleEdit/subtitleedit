@@ -2,7 +2,7 @@
 <Language Name="中文(繁體)">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.0</Version>
+    <Version>4.0.4</Version>
     <TranslatedBy>譯者: BAWAN | 風逸蘭 | Jackie Lam | SiderealArt</TranslatedBy>
     <CultureName>zh-TW</CultureName>
     <HelpFile />
@@ -695,7 +695,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <RemovedEmptyLineAtTop>移除頂部空行</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>移除底部空行</RemovedEmptyLineAtBottom>
     <RemovedEmptyLineInMiddle>移除中間空行</RemovedEmptyLineInMiddle>
-    <RemovedEmptyLinesUnsedLineBreaks>移除 空行/無用換行字元</RemovedEmptyLinesUnsedLineBreaks>
+    <RemovedEmptyLinesUnusedLineBreaks>移除 空行/無用換行字元</RemovedEmptyLinesUnusedLineBreaks>
     <FixOverlappingDisplayTimes>修復重疊的顯示時間</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>修復過短的顯示時間</FixShortDisplayTimes>
     <FixLongDisplayTimes>修復過長的顯示時間</FixLongDisplayTimes>
@@ -2258,7 +2258,7 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <DarkThemeEnabled>使用深色主題</DarkThemeEnabled>
     <DarkThemeShowGridViewLines>Show list view grid lines</DarkThemeShowGridViewLines>
     <UpdateShortcut>更新</UpdateShortcut>
-    <FoucsSetVideoPosition>Focus set video position</FoucsSetVideoPosition>
+    <FocusSetVideoPosition>Focus set video position</FocusSetVideoPosition>
     <ToggleDockUndockOfVideoControls>切換 停靠/不停靠 視訊控制項</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>設定結束時間，加入新的起始時間並移至新的起始時間</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStart>Adjust via end position</AdjustViaEndAutoStart>

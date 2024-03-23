@@ -124,7 +124,7 @@
             0,
             0});
             this.numericUpDownCustomMaxDiff.Name = "numericUpDownCustomMaxDiff";
-            this.numericUpDownCustomMaxDiff.Size = new System.Drawing.Size(38, 20);
+            this.numericUpDownCustomMaxDiff.Size = new System.Drawing.Size(38, 23);
             this.numericUpDownCustomMaxDiff.TabIndex = 2;
             this.numericUpDownCustomMaxDiff.TabStop = false;
             this.numericUpDownCustomMaxDiff.ThousandsSeparator = false;
@@ -171,7 +171,7 @@
             0,
             0,
             0});
-            this.numericUpDownPixelsBottom.Location = new System.Drawing.Point(192, 16);
+            this.numericUpDownPixelsBottom.Location = new System.Drawing.Point(192, 15);
             this.numericUpDownPixelsBottom.Maximum = new decimal(new int[] {
             2000,
             0,
@@ -183,7 +183,7 @@
             0,
             0});
             this.numericUpDownPixelsBottom.Name = "numericUpDownPixelsBottom";
-            this.numericUpDownPixelsBottom.Size = new System.Drawing.Size(66, 20);
+            this.numericUpDownPixelsBottom.Size = new System.Drawing.Size(66, 23);
             this.numericUpDownPixelsBottom.TabIndex = 19;
             this.numericUpDownPixelsBottom.TabStop = false;
             this.numericUpDownPixelsBottom.ThousandsSeparator = false;
@@ -210,9 +210,9 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pictureBox2.ContextMenuStrip = this.contextMenuStripScreenshot;
             this.pictureBox2.Cursor = System.Windows.Forms.Cursors.Cross;
-            this.pictureBox2.Location = new System.Drawing.Point(11, 37);
+            this.pictureBox2.Location = new System.Drawing.Point(11, 43);
             this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(843, 373);
+            this.pictureBox2.Size = new System.Drawing.Size(843, 367);
             this.pictureBox2.TabIndex = 4;
             this.pictureBox2.TabStop = false;
             this.pictureBox2.Paint += new System.Windows.Forms.PaintEventHandler(this.pictureBox2_Paint);

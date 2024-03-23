@@ -11,9 +11,8 @@ namespace Nikse.SubtitleEdit.Core.Common
     {
         public Subtitle AutoGuessImport(List<string> lines)
         {
-
             var sb = new StringBuilder();
-            foreach (string s in lines)
+            foreach (var s in lines)
             {
                 sb.Append(s);
             }
@@ -27,8 +26,8 @@ namespace Nikse.SubtitleEdit.Core.Common
             var subtitle1 = new Subtitle();
             try
             {
-                int count = 0;
-                foreach (string line in allText.Split('{', '}', '[', ']'))
+                var count = 0;
+                foreach (var line in allText.Split('{', '}', '[', ']'))
                 {
                     count++;
                     ReadParagraph(line, subtitle1);
@@ -46,8 +45,8 @@ namespace Nikse.SubtitleEdit.Core.Common
             var subtitle2 = new Subtitle();
             try
             {
-                int count = 0;
-                foreach (string line in allText.Split('{', '}'))
+                var count = 0;
+                foreach (var line in allText.Split('{', '}'))
                 {
                     count++;
                     ReadParagraph(line, subtitle2);
@@ -65,7 +64,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             var subtitle3 = new Subtitle();
             try
             {
-                int count = 0;
+                var count = 0;
                 foreach (var line in Json.ReadObjectArray(allText))
                 {
                     count++;
@@ -97,7 +96,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             return FixTimeCodeMsOrSeconds(subtitle3);
         }
 
-        private Subtitle FixTimeCodeMsOrSeconds(Subtitle subtitle)
+        private static Subtitle FixTimeCodeMsOrSeconds(Subtitle subtitle)
         {
             if (subtitle == null || subtitle.Paragraphs.Count < 5)
             {
@@ -105,11 +104,12 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             double totalDuration = 0;
-            int msFound = 0;
+            var msFound = 0;
             foreach (var p in subtitle.Paragraphs)
             {
                 totalDuration += p.DurationTotalMilliseconds;
-                if (p.Style.Contains("\"startMs\"") ||
+                if (p.Style.Contains("\"start\"") ||
+                    p.Style.Contains("\"startMs\"") ||
                     p.Style.Contains("\"start_ms\"") ||
                     p.Style.Contains("\"startMillis\"") ||
                     p.Style.Contains("\"start_millis\"") ||
@@ -173,10 +173,8 @@ namespace Nikse.SubtitleEdit.Core.Common
             {
                 start = start.TrimEnd('s');
                 end = end.TrimEnd('s');
-                double startSeconds;
-                double endSeconds;
-                if (double.TryParse(start, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out startSeconds) &&
-                    double.TryParse(end, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out endSeconds))
+                if (double.TryParse(start, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var startSeconds) &&
+                    double.TryParse(end, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var endSeconds))
                 {
                     var p = new Paragraph(Json.DecodeJsonText(text), startSeconds * TimeCode.BaseUnit, endSeconds * TimeCode.BaseUnit) { Extra = originalStart, Style = s };
                     subtitle.Paragraphs.Add(p);
@@ -218,7 +216,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         {
             return ReadFirstMultiTag(s, new[]
             {
-                "end", "out",
+                "end", "out", "stop",
                 "endTime", "end_time", "endtime",
                 "endMillis", "end_Millis", "endmillis",
                 "endMs", "end_ms", "startms",
@@ -251,6 +249,10 @@ namespace Nikse.SubtitleEdit.Core.Common
             {
                 idx = s.IndexOf("\"caption", StringComparison.OrdinalIgnoreCase);
             }
+            if (idx < 0)
+            {
+                idx = s.IndexOf("\"sentence", StringComparison.OrdinalIgnoreCase);
+            }
 
             if (idx < 0)
             {
@@ -277,6 +279,15 @@ namespace Nikse.SubtitleEdit.Core.Common
             {
                 text = Json.ReadTag(s, "caption");
             }
+            if (text == null)
+            {
+                text = Json.ReadTag(s, "sentence");
+            }
+
+            if (text != null)
+            {
+                text = Json.DecodeJsonText(text);
+            }
 
             var textLines = Json.ReadArray(s, "text");
             if (textLines == null || textLines.Count == 0)
@@ -284,7 +295,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 textLines = Json.ReadArray(s, "content");
             }
 
-            bool isArray = s.Contains("[");
+            var isArray = s.Contains("[");
             if (isArray && textLines.Any(p => p == "end_time" || p == "endTime" || p == "end" || p == "endMs" || p == "endMilliseconds" || p == "end_ms" || p == "endms" || p == "to" || p == "to_ms" || p == "toms" || p == "from" || p == "from_ms"))
             {
                 isArray = false;

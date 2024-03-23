@@ -914,6 +914,20 @@ namespace Nikse.SubtitleEdit.Core.Common
             return Height - y;
         }
 
+        public int CalcBottomTransparent()
+        {
+            var y = Height - 1;
+            for (; y > 0; y--)
+            {
+                if (!IsHorizontalLineTransparent(y))
+                {
+                    break;
+                }
+            }
+
+            return Height - y;
+        }
+
         public int CalcLeftCropping(Color color)
         {
             var x = 0;
@@ -960,6 +974,19 @@ namespace Nikse.SubtitleEdit.Core.Common
             for (var x = 0; x < Width; x++)
             {
                 if (!IsColorClose(GetPixel(x, y), color, 9))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        public bool IsHorizontalLineTransparent(int y)
+        {
+            for (var x = 0; x < Width; x++)
+            {
+                if (GetAlpha(x, y) > 1)
                 {
                     return false;
                 }

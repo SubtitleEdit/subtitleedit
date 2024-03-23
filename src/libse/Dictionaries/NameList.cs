@@ -12,6 +12,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
         private readonly string _dictionaryFolder;
         private readonly HashSet<string> _namesList;
         private readonly HashSet<string> _namesMultiList;
+        private readonly HashSet<string> _namesMultiListUppercase;
         private readonly HashSet<string> _blackList;
         public string LanguageName { get; private set; }
 
@@ -22,6 +23,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
 
             _namesList = new HashSet<string>();
             _namesMultiList = new HashSet<string>();
+            _namesMultiListUppercase = new HashSet<string>();
             _blackList = new HashSet<string>();
 
             LoadNamesList(GetLocalNamesUserFileName()); // e.g: en_names_user.xml (culture sensitive)
@@ -52,6 +54,11 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                 {
                     _namesMultiList.Remove(name);
                 }
+            }
+
+            foreach (var name in _namesMultiList)
+            {
+                _namesMultiListUppercase.Add(name.ToUpperInvariant());
             }
         }
 
@@ -279,6 +286,11 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             text = text.FixExtraSpaces();
 
             if (_namesMultiList.Contains(word))
+            {
+                return true;
+            }
+
+            if (_namesMultiListUppercase.Contains(word))
             {
                 return true;
             }

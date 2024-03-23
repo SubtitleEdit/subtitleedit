@@ -1,9 +1,9 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Forms;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core.Forms;
-using Nikse.SubtitleEdit.Core.SubtitleFormats;
 
 namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
 {
@@ -18,7 +18,7 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             UiUtil.PreInitialize(this);
             InitializeComponent();
             UiUtil.FixFonts(this);
-            
+
             var language = LanguageSettings.Current.BeautifyTimeCodesProfile;
             Text = language.CreateSimpleTitle;
             labelInstructions.Text = language.CreateSimpleInstruction;
@@ -84,9 +84,18 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
                 DialogResult = DialogResult.None;
                 return;
             }
-            
+
             // Save settings
-            var gap = Convert.ToInt32(numericUpDownGap.Value);
+            int gap;
+            try
+            {
+                gap = Convert.ToInt32(numericUpDownGap.Value);
+            }
+            catch (Exception exception)
+            {
+                throw new Exception($"Unable to set gap from numericUpDownGap.Value to Int32: numericUpDownGap.Value = '{numericUpDownGap.Value}'", exception);
+            }
+
             var inCuesGap = comboBoxInCues.SelectedIndex;
             var outCuesGap = comboBoxOutCues.SelectedIndex;
             if (comboBoxOutCues.SelectedIndex == comboBoxOutCues.Items.Count - 1)
@@ -94,10 +103,28 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
                 outCuesGap = gap;
             }
 
-            var redZone = Convert.ToInt32(numericUpDownOffset.Value);
-            var greenZone = Convert.ToInt32(numericUpDownSafeZone.Value);
+            int redZone;
+            try
+            {
+                redZone = Convert.ToInt32(numericUpDownOffset.Value);
+            }
+            catch (Exception exception)
+            {
+                throw new Exception($"Unable to set redZone from numericUpDownOffset.Value to Int32: numericUpDownOffset.Value = '{numericUpDownOffset.Value}'", exception);
+            }
 
-            Configuration.Settings.BeautifyTimeCodes.Profile.Gap = Convert.ToInt32(numericUpDownGap.Value);
+            int greenZone;
+            try
+            {
+                greenZone = Convert.ToInt32(numericUpDownSafeZone.Value);
+            }
+            catch (Exception exception)
+            {
+                throw new Exception($"Unable to set greenZone from numericUpDownSafeZone.Value to Int32: numericUpDownSafeZone.Value = '{numericUpDownSafeZone.Value}'", exception);
+            }
+
+
+            Configuration.Settings.BeautifyTimeCodes.Profile.Gap = gap;
 
             Configuration.Settings.BeautifyTimeCodes.Profile.InCuesGap = inCuesGap;
             Configuration.Settings.BeautifyTimeCodes.Profile.InCuesLeftGreenZone = greenZone;
@@ -120,14 +147,39 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             Configuration.Settings.BeautifyTimeCodes.Profile.ConnectedSubtitlesRightRedZone = redZone;
             Configuration.Settings.BeautifyTimeCodes.Profile.ConnectedSubtitlesRightGreenZone = greenZone;
 
-            var treadConnectedMs = Math.Round(SubtitleFormat.FramesToMilliseconds(gap, _frameRate) * 1.5);
-            Configuration.Settings.BeautifyTimeCodes.Profile.ConnectedSubtitlesTreatConnected = Convert.ToInt32(treadConnectedMs);
+
+            double treadConnectedMs = 0;
+            try
+            {
+                treadConnectedMs = Math.Round(SubtitleFormat.FramesToMilliseconds(gap, _frameRate) * 1.5);
+            }
+            catch (Exception exception)
+            {
+                SeLogger.Error(exception, "Error when executing: treadConnectedMs = Math.Round(SubtitleFormat.FramesToMilliseconds(gap, _frameRate) * 1.5); );");
+                SeLogger.Error("BeautifyTimeCodesProfileSimple.buttonOK_Click: Gap is " + gap);
+                SeLogger.Error("BeautifyTimeCodesProfileSimple.buttonOK_Click: FrameRate is " + _frameRate);
+                SeLogger.Error("BeautifyTimeCodesProfileSimple.buttonOK_Click: treadConnectedMs is " + treadConnectedMs);
+                throw new Exception($"Unable to calculate treadConnectedMs from gap '{gap}' and frame rate {_frameRate}", exception);
+            }
+
+            try
+            {
+                Configuration.Settings.BeautifyTimeCodes.Profile.ConnectedSubtitlesTreatConnected = Convert.ToInt32(treadConnectedMs);
+            }
+            catch (Exception exception)
+            {
+                SeLogger.Error(exception, "Error when executing: Configuration.Settings.BeautifyTimeCodes.Profile.ConnectedSubtitlesTreatConnected = Convert.ToInt32(treadConnectedMs);");
+                SeLogger.Error("BeautifyTimeCodesProfileSimple.buttonOK_Click: Gap is " + gap);
+                SeLogger.Error("BeautifyTimeCodesProfileSimple.buttonOK_Click: FrameRate is " + _frameRate);
+                SeLogger.Error("BeautifyTimeCodesProfileSimple.buttonOK_Click: treadConnectedMs is " + treadConnectedMs);
+                throw new Exception($"Unable to set ConnectedSubtitlesTreatConnected from treadConnectedMs '{treadConnectedMs}'", exception);
+            }
 
             Configuration.Settings.BeautifyTimeCodes.Profile.ChainingGeneralUseZones = false;
             Configuration.Settings.BeautifyTimeCodes.Profile.ChainingGeneralMaxGap = Convert.ToInt32(numericUpDownChainingGap.Value);
             Configuration.Settings.BeautifyTimeCodes.Profile.ChainingGeneralLeftGreenZone = GetChainingZoneFrames(Configuration.Settings.BeautifyTimeCodes.Profile.ChainingGeneralMaxGap);
             Configuration.Settings.BeautifyTimeCodes.Profile.ChainingGeneralLeftRedZone = GetChainingZoneFrames(Configuration.Settings.BeautifyTimeCodes.Profile.ChainingGeneralMaxGap) - 1;
-            Configuration.Settings.BeautifyTimeCodes.Profile.ChainingGeneralShotChangeBehavior = BeautifyTimeCodesSettings.BeautifyTimeCodesProfile.ChainingGeneralShotChangeBehaviorEnum.ExtendUntilShotChange;
+            Configuration.Settings.BeautifyTimeCodes.Profile.ChainingGeneralShotChangeBehavior = BeautifyTimeCodesSettings.BeautifyTimeCodesProfile.ChainingShotChangeBehaviorEnum.ExtendUntilShotChange;
 
             Configuration.Settings.BeautifyTimeCodes.Profile.ChainingInCueOnShotUseZones = false;
             Configuration.Settings.BeautifyTimeCodes.Profile.ChainingInCueOnShotMaxGap = Convert.ToInt32(numericUpDownChainingGap.Value);
@@ -150,7 +202,7 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
 
         private void numericUpDownGap_ValueChanged(object sender, EventArgs e)
         {
-            int gapFrames = Convert.ToInt32(numericUpDownGap.Value);
+            var gapFrames = Convert.ToInt32(numericUpDownGap.Value);
             double gapMs = SubtitleFormat.FramesToMilliseconds(gapFrames, _frameRate);
 
             labelGapHint.Text = string.Format(LanguageSettings.Current.BeautifyTimeCodesProfile.GapInMsFormat, Math.Round(gapMs), Math.Round(_frameRate, 3));
@@ -183,6 +235,18 @@ namespace Nikse.SubtitleEdit.Forms.BeautifyTimeCodes
             checkBoxChainingGapAfterShotChanges.Checked = false;
 
             RefreshControls();
+        }
+
+        private void BeautifyTimeCodesProfileSimple_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape)
+            {
+                DialogResult = DialogResult.Cancel;
+            }
+            else if (e.KeyData == UiUtil.HelpKeys)
+            {
+                UiUtil.ShowHelp("#beautify_time_codes");
+            }
         }
     }
 }

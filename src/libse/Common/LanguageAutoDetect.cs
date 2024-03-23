@@ -140,14 +140,16 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         private static readonly string[] AutoDetectWordsDutch =
         {
-            "van", "een", "[Hh]et", "m(ij|ĳ)", "z(ij|ĳ)n", "hebben", "alleen", "Waarom"
+            "van", "een", "[Hh]et", "m(ij|ĳ)", "z(ij|ĳ)n", "hebben", "alleen", "Waarom", "stripboeken", "Goed", "geweest"
         };
 
         private static readonly string[] AutoDetectWordsPolish =
         {
-            "Czy", "ale", "ty", "siê", "się", "jest", "mnie", "Proszę", "życie", "statku", "życia", "Czyli", "Wszystko", "Wiem", "Przepraszam", "dobrze", "chciałam", "Dziękuję", "Żołnierzyk", "Łowca", "został", "stało", "dolarów",
-            "wiadomości", "Dobrze", "będzie", "Dzień", "przyszłość", "Uratowałaś", "Cześć", "Trzeba", "zginąć", "walczyć", "ludzkość", "maszyny", "Jeszcze", "okrążenie", "wyścigu", "porządku", "detektywie",
-            "przebieralni", "który"
+            "Czy", "ale", "ty", "siê", "się", "jest", "mnie", "Proszę", "życie", "statku", "życia", "Czyli", "Wszystko", 
+            "Wiem", "Przepraszam", "dobrze", "chciałam", "Dziękuję", "Żołnierzyk", "Łowca", "został", "stało", "dolarów",
+            "wiadomości", "Dobrze", "będzie", "Dzień", "przyszłość", "Uratowałaś", "Cześć", "Trzeba", "zginąć", "walczyć", 
+            "ludzkość", "maszyny", "Jeszcze", "okrążenie", "wyścigu", "porządku", "detektywie", "przebieralni", "który", 
+            "śmierci", "zabić", "wiedźminie", "przeznaczenie",
         };
 
         private static readonly string[] AutoDetectWordsGreek =
@@ -194,9 +196,9 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         private static readonly string[] AutoDetectWordsHebrew =
         {
-            "אתה", "אולי", "הוא", "בסדר", "יודע", "טוב", "אֶת", "שֶׁל", "עַל", "הוּא", 
+            "אתה", "אולי", "הוא", "בסדר", "יודע", "טוב", "אֶת", "שֶׁל", "עַל", "הוּא",
             "אֲשֶׁר", "הִיא", "הַמְלֶט", "נָסִיךְ", "הֲלֹא", "עוֹד", "אֵין", "אֲנִי", "זֹאת", "וְלֹא",
-            "כָּךְ", "הִנֵּה", "מְאֹד", "אֲדוֹנִי",    
+            "כָּךְ", "הִנֵּה", "מְאֹד", "אֲדוֹנִי",
         };
 
         private static readonly string[] AutoDetectWordsVietnamese =
@@ -270,7 +272,8 @@ namespace Nikse.SubtitleEdit.Core.Common
         {
             "господине", "Нема", "господине", "работа", "вселената", "Може", "треба", "Треба", "слетување", "капсулата", "време", "Френдшип", "Прием", "Добро", "пресметки", "Благодарам", "нешто", "Благодарам", "орбитата", "инженер",
             "Харисон", "Фала", "тоалет", "орбита", "знаеме", "Супервизор", "жени", "Добра", "требаат", "што", "дeкa", "eшe", "кучe", "Руиз", "кучeто", "кучињa", "Бјути", "имa", "многу", "кучињaтa", "AДЗЖ", "Животни", "моЖe", "мaчe",
-            "мecто", "имaмe", "мaчињa", "пpвото", "пpaвaт", "нeшто", "колку"
+            "мecто", "имaмe", "мaчињa", "пpвото", "пpaвaт", "нeшто", "колку",
+            "што", "тоа", "дека", "Што", "Дали", "треба", "беше", "таму"
         };
 
         private static readonly string[] AutoDetectWordsFinnish =
@@ -297,7 +300,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         private static readonly string[] AutoDetectWordsCzech =
         {
             ".*[Řř].*", ".*[ůě].*", "[Bb]ýt", "[Jj]sem", "[Jj]si", "[Jj]á", "[Mm]ít", "[Aa]no", "[Nn]e",  "[Nn]ic", "[Dd]en", "[Jj]en", "[Cc]o", "[Jj]ak[o]?", "[Nn]ebo",  "[Pp]ři", "[Pp]ro", "[Pp]řed.*", "[Jj](ít|du|de|deme|dou)",
-            "[Mm]ezi",  "[Jj]eště", "[Čč]lověk", "[Pp]odle", "[Dd]alší"
+            "[Mm]ezi",  "[Jj]eště", "[Čč]lověk", "[Pp]odle", "[Dd]alší", "přejděte", "používat", "obrázky", "obrázek", "vašem", "vygenerovat"
         };
         // differences between Czech and Slovak languages / Slovak words / please keep the words aligned between these languages for better comparison
         private static readonly string[] AutoDetectWordsSlovak =
@@ -516,7 +519,13 @@ namespace Nikse.SubtitleEdit.Core.Common
             count = GetCount(text, AutoDetectWordsPolish);
             if (count > bestCount)
             {
-                return "pl";
+                var czechWordsCount = GetCount(text, AutoDetectWordsCzech);
+                if (czechWordsCount > count)
+                {
+                    return "cs";
+                }
+
+                return "pl"; 
             }
 
             count = GetCount(text, AutoDetectWordsGreek);
@@ -530,11 +539,17 @@ namespace Nikse.SubtitleEdit.Core.Common
             {
                 var bulgarianCount = GetCount(text, AutoDetectWordsBulgarian);
                 var ukrainianCount = GetCount(text, AutoDetectWordsUkrainian);
+                var macedonianCount = GetCount(text, AutoDetectWordsMacedonian);
                 if (bulgarianCount > count)
                 {
-                    if (ukrainianCount > bulgarianCount)
+                    if (ukrainianCount > bulgarianCount && ukrainianCount > macedonianCount)
                     {
                         return "uk"; // Ukrainian
+                    }
+
+                    if (macedonianCount > bulgarianCount && macedonianCount > ukrainianCount)
+                    {
+                        return "mk"; // Macedonian
                     }
 
                     return "bg"; // Bulgarian
@@ -569,6 +584,12 @@ namespace Nikse.SubtitleEdit.Core.Common
             count = GetCount(text, AutoDetectWordsBulgarian);
             if (count > bestCount)
             {
+                var macedonianCount = GetCount(text, AutoDetectWordsMacedonian);
+                if (macedonianCount > count)
+                {
+                    return "mk";
+                }
+
                 return "bg"; // Bulgarian
             }
 
@@ -1636,7 +1657,11 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
                 if (spanishCount1252 > wordMinCount && (textEnc1252.Contains('ú') || textEnc1252.Contains('í') || textEnc1252.Contains('ú') || textEnc1252.Contains('ó') || textEnc1252.Contains('é') || textEnc1252.Contains('ñ')))
                 {
-                    return encoding1252;
+                    var weirdChars = CountWeirdCharacters(textEnc1252);
+                    if (weirdChars < 3)
+                    {
+                        return encoding1252;
+                    }
                 }
 
                 var russianEncoding28595 = Encoding.GetEncoding(28595); // Russian
@@ -1724,6 +1749,20 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
+        private static int CountWeirdCharacters(string textEnc1252)
+        {
+            var count = 0;
+            foreach (var c in textEnc1252)
+            {
+                if ("¤÷®¬¦¯".Contains(c))
+                {
+                    count++;
+                }
+            }
+
+            return count;
+        }
+
         public static Encoding GetEncodingFromFile(string fileName, bool skipAnsiAuto = false)
         {
             var encoding = Encoding.Default;
@@ -1743,7 +1782,12 @@ namespace Nikse.SubtitleEdit.Core.Common
                 {
                     var bom = new byte[12]; // Get the byte-order mark, if there is one
                     file.Position = 0;
-                    file.Read(bom, 0, bom.Length);
+                    var readCount = file.Read(bom, 0, bom.Length);
+                    if (readCount < 3)
+                    {
+                        return encoding;
+                    }
+
                     if (bom[0] == 0xef && bom[1] == 0xbb && bom[2] == 0xbf)
                     {
                         encoding = Encoding.UTF8;
@@ -1807,6 +1851,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             {
                 // ignored
             }
+
             return encoding;
         }
 
@@ -1817,8 +1862,8 @@ namespace Nikse.SubtitleEdit.Core.Common
         private static bool IsUtf8(byte[] buffer, out bool couldBeUtf8)
         {
             couldBeUtf8 = false;
-            int utf8Count = 0;
-            int i = 0;
+            var utf8Count = 0;
+            var i = 0;
             while (i < buffer.Length - 3)
             {
                 byte b = buffer[i];
@@ -1849,6 +1894,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
                 i++;
             }
+
             couldBeUtf8 = true;
             if (utf8Count == 0)
             {

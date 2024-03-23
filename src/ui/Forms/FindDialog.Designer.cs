@@ -43,6 +43,7 @@
             // 
             // textBoxFind
             // 
+            this.textBoxFind.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxFind.Location = new System.Drawing.Point(12, 28);
             this.textBoxFind.Name = "textBoxFind";
             this.textBoxFind.Size = new System.Drawing.Size(232, 21);
@@ -117,6 +118,7 @@
             this.comboBoxFind.Size = new System.Drawing.Size(232, 21);
             this.comboBoxFind.TabIndex = 0;
             this.comboBoxFind.TabStop = false;
+            this.comboBoxFind.UsePopupWindow = false;
             this.comboBoxFind.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ComboBoxFind_KeyDown);
             this.comboBoxFind.TextChanged += new System.EventHandler(this.comboBoxFind_TextChanged);
             // 
@@ -183,8 +185,8 @@
             this.Controls.Add(this.radioButtonCaseSensitive);
             this.Controls.Add(this.radioButtonNormal);
             this.Controls.Add(this.buttonFind);
-            this.Controls.Add(this.textBoxFind);
             this.Controls.Add(this.comboBoxFind);
+            this.Controls.Add(this.textBoxFind);
             this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.KeyPreview = true;

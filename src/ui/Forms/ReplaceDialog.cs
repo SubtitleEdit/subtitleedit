@@ -324,9 +324,12 @@ namespace Nikse.SubtitleEdit.Forms
                 e.SuppressKeyPress = true;
                 e.Handled = true;
 
-                Find();
-                Focus();
-                textBoxFind.Focus();
+                TaskDelayHelper.RunDelayed(TimeSpan.FromMilliseconds(10), () =>
+                {
+                    Find();
+                    Focus();
+                    textBoxFind.Focus();
+                });
             }
         }
 
@@ -337,9 +340,12 @@ namespace Nikse.SubtitleEdit.Forms
                 e.SuppressKeyPress = true;
                 e.Handled = true;
 
-                Find();
-                Focus();
-                comboBoxFind.Focus();
+                TaskDelayHelper.RunDelayed(TimeSpan.FromMilliseconds(10), () =>
+                {
+                    Find();
+                    Focus();
+                    textBoxFind.Focus();
+                });
             }
         }
 
@@ -384,6 +390,26 @@ namespace Nikse.SubtitleEdit.Forms
             var allowReplaceInOriginal = _findAndReplaceMethods.GetAllowReplaceInOriginal();
             labelFindReplaceIn.Enabled = allowReplaceInOriginal;
             comboBoxFindReplaceIn.Enabled = allowReplaceInOriginal;
+        }
+
+        private void ReplaceDialog_Shown(object sender, EventArgs e)
+        {
+            BringToFront();
+            Activate();
+            if (comboBoxFind.Visible)
+            {
+                comboBoxFind.Focus();
+            }
+            else
+            {
+                textBoxFind.Focus();
+            }
+
+            TaskDelayHelper.RunDelayed(TimeSpan.FromMilliseconds(10), () =>
+            {
+                BringToFront();
+                Activate();
+            });
         }
     }
 }

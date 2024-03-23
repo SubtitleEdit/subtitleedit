@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Globalization;
+using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.Common.TextLengthCalculator
 {
@@ -14,70 +15,67 @@ namespace Nikse.SubtitleEdit.Core.Common.TextLengthCalculator
                 return 0;
             }
 
+            var s = HtmlUtil.RemoveHtmlTags(text, true);
+
             const char zeroWidthSpace = '\u200B';
             const char zeroWidthNoBreakSpace = '\uFEFF';
-            var count = 0m;
-            var ssaTagOn = false;
-            var htmlTagOn = false;
-            var max = text.Length;
-            for (var i = 0; i < max; i++)
+            decimal length = 0;
+            for (var en = StringInfo.GetTextElementEnumerator(s); en.MoveNext();)
             {
-                var ch = text[i];
-                if (ssaTagOn)
+                var element = en.GetTextElement();
+                if (element.Length == 1)
                 {
-                    if (ch == '}')
+                    var ch = element[0];
+                    if (!char.IsControl(ch) &&
+                        ch != zeroWidthSpace &&
+                        ch != zeroWidthNoBreakSpace &&
+                        ch != '\u200E' &&
+                        ch != '\u200F' &&
+                        ch != '\u202A' &&
+                        ch != '\u202B' &&
+                        ch != '\u202C' &&
+                        ch != '\u202D' &&
+                        ch != '\u202E')
                     {
-                        ssaTagOn = false;
+                        if (JapaneseHalfWidthCharacters.Contains(ch))
+                        {
+                            length += 0.5m;
+                        }
+                        else if (ChineseFullWidthPunctuations.Contains(ch) ||
+                                 LanguageAutoDetect.Letters.Japanese.Contains(ch) ||
+                                 LanguageAutoDetect.Letters.Korean.Contains(ch) ||
+                                 IsCjk(ch))
+                        {
+                            length++;
+                        }
+                        else
+                        {
+                            length += 0.5m;
+                        }
                     }
                 }
-                else if (htmlTagOn)
+                else
                 {
-                    if (ch == '>')
+                    if (JapaneseHalfWidthCharacters.Contains(element))
                     {
-                        htmlTagOn = false;
+                        length += 0.5m;
                     }
-                }
-                else if (ch == '{' && i < text.Length - 1 && text[i + 1] == '\\')
-                {
-                    ssaTagOn = true;
-                }
-                else if (ch == '<' && i < text.Length - 1 && (text[i + 1] == '/' || char.IsLetter(text[i + 1])) &&
-                         text.IndexOf('>', i) > 0 && TextLengthHelper.IsKnownHtmlTag(text, i))
-                {
-                    htmlTagOn = true;
-                }
-                else if (!char.IsControl(ch) &&
-                         ch != zeroWidthSpace &&
-                         ch != zeroWidthNoBreakSpace &&
-                         ch != '\u200E' &&
-                         ch != '\u200F' &&
-                         ch != '\u202A' &&
-                         ch != '\u202B' &&
-                         ch != '\u202C' &&
-                         ch != '\u202D' &&
-                         ch != '\u202E')
-                {
-                    if (JapaneseHalfWidthCharacters.Contains(ch))
+                    else if (ChineseFullWidthPunctuations.Contains(element) ||
+                             LanguageAutoDetect.Letters.Japanese.Contains(element) ||
+                             LanguageAutoDetect.Letters.Korean.Contains(element) ||
+                             CjkCharRegex.IsMatch(element))
                     {
-                        count += 0.5m;
-                    }
-                    else if (ChineseFullWidthPunctuations.Contains(ch) ||
-                             LanguageAutoDetect.Letters.Japanese.Contains(ch) ||
-                             LanguageAutoDetect.Letters.Korean.Contains(ch) ||
-                             IsCjk(ch))
-                    {
-                        count++;
+                        length++;
                     }
                     else
                     {
-                        count += 0.5m;
+                        length += 0.5m;
                     }
                 }
             }
 
-            return count;
+            return length;
         }
-
 
         public const string JapaneseHalfWidthCharacters = "｡｢｣､･ｦｧｨｩｪｫｬｭｮｯｰｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝﾞﾟ";
         public const string ChineseFullWidthPunctuations = "，。、：；？！…“”—‘’（）【】「」『』〔〕《》〈〉";

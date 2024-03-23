@@ -2,7 +2,7 @@
 <Language Name="українська">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.0</Version>
+    <Version>4.0.4</Version>
     <TranslatedBy>Переклад: Максим Кобєлєв http://mazepa-studio.com</TranslatedBy>
     <CultureName>uk-UA</CultureName>
     <HelpFile />
@@ -502,7 +502,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <RemovedEmptyLine>Видалити порожній рядок</RemovedEmptyLine>
     <RemovedEmptyLineAtTop>Видалити порожній рядок на початку</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>Видалити порожній рядок в кінці</RemovedEmptyLineAtBottom>
-    <RemovedEmptyLinesUnsedLineBreaks>Видалити порожні рядки/невикористовувані розбиття рядків</RemovedEmptyLinesUnsedLineBreaks>
+    <RemovedEmptyLinesUnusedLineBreaks>Видалити порожні рядки/невикористовувані розбиття рядків</RemovedEmptyLinesUnusedLineBreaks>
     <EmptyLinesRemovedX>Порожніх рядків видалено: {0}</EmptyLinesRemovedX>
     <FixOverlappingDisplayTimes>Виправити накладки тривалостей</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>Виправити короткі тривалості</FixShortDisplayTimes>

@@ -2,7 +2,9 @@
 using Nikse.SubtitleEdit.Core.Forms.FixCommonErrors;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
+using System.Xml;
 
 namespace Nikse.SubtitleEdit.Core.Forms
 {
@@ -17,6 +19,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
         private readonly InterjectionRemoveContext _interjectionRemoveContext;
         private readonly RemoveInterjection _removeInterjection;
         private IList<string> _interjections;
+        private IList<string> _interjectionsSkipIfStartsWith;
 
         public RemoveTextForHI(RemoveTextForHISettings removeTextForHISettings)
         {
@@ -847,12 +850,12 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
         private static readonly char[] TrimStartNoiseChar = { '-', ' ' };
 
-        public string RemoveTextFromHearImpaired(string input)
+        public string RemoveTextFromHearImpaired(string input, string twoLetterIsoLanguageName)
         {
-            return RemoveTextFromHearImpaired(input, null, -1);
+            return RemoveTextFromHearImpaired(input, null, -1, twoLetterIsoLanguageName);
         }
 
-        public string RemoveTextFromHearImpaired(string inputWithoutUnicodeReplace, Subtitle subtitle, int index)
+        public string RemoveTextFromHearImpaired(string inputWithoutUnicodeReplace, Subtitle subtitle, int index, string twoLetterIsoLanguageName)
         {
             if (StartsAndEndsWithHearImpairedTags(HtmlUtil.RemoveHtmlTags(inputWithoutUnicodeReplace, true).TrimStart(TrimStartNoiseChar)))
             {
@@ -877,7 +880,9 @@ namespace Nikse.SubtitleEdit.Core.Forms
             var text = RemoveColon(input);
             var pre = " >-\"'‘`´♪¿¡.…—";
             var post = " -\"'`´♪.!?:…—";
-            if (Settings.RemoveTextBetweenCustomTags)
+            if (Settings.RemoveTextBetweenCustomTags &&
+                !string.IsNullOrEmpty(Settings.CustomStart) && 
+                !string.IsNullOrEmpty(Settings.CustomEnd))
             {
                 pre = pre.Replace(Settings.CustomStart, string.Empty);
                 post = post.Replace(Settings.CustomEnd, string.Empty);
@@ -1021,13 +1026,14 @@ namespace Nikse.SubtitleEdit.Core.Forms
             {
                 if (_interjections == null)
                 {
-                    ReloadInterjection();
+                    ReloadInterjection(twoLetterIsoLanguageName);
                 }
 
                 // reusable context
                 _interjectionRemoveContext.Text = text;
                 _interjectionRemoveContext.OnlySeparatedLines = Settings.RemoveInterjectionsOnlySeparateLine;
                 _interjectionRemoveContext.Interjections = _interjections;
+                _interjectionRemoveContext.InterjectionsSkipIfStartsWith = _interjectionsSkipIfStartsWith;
                 text = _removeInterjection.Invoke(_interjectionRemoveContext);
             }
 
@@ -1059,26 +1065,28 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
             if (!text.StartsWith('-') && noOfNamesRemoved >= 1 && Utilities.GetNumberOfLines(text) == 2)
             {
-                var lines = text.SplitToLines();
-                var part0 = lines[0].Trim().Replace("</i>", string.Empty).Trim();
-                if (!part0.EndsWith(',') && (!part0.EndsWith('-') || noOfNamesRemovedNotInLineOne > 0))
+                if (input.Contains("-") || noOfNamesRemoved > 1)
                 {
-                    if (part0.Length > 0 && ".?!".Contains(part0[part0.Length - 1]))
+                    var lines = text.SplitToLines();
+                    var part0 = lines[0].Trim().Replace("</i>", string.Empty).Trim();
+                    if (!part0.EndsWith(',') && (!part0.EndsWith('-') || noOfNamesRemovedNotInLineOne > 0))
                     {
-                        if (noOfNamesRemovedNotInLineOne > 0)
+                        if (part0.Length > 0 && ".?!".Contains(part0[part0.Length - 1]))
                         {
-                            if (!st.Pre.Contains('-') && !text.Contains(Environment.NewLine + "-"))
+                            if (noOfNamesRemovedNotInLineOne > 0)
                             {
-
-                                text = "- " + text;
-                                if (!text.Contains(Environment.NewLine + "<i>- "))
+                                if (!st.Pre.Contains('-') && !text.Contains(Environment.NewLine + "-"))
+                                {
+                                    text = "- " + text;
+                                    if (!text.Contains(Environment.NewLine + "<i>- "))
+                                    {
+                                        text = text.Replace(Environment.NewLine, Environment.NewLine + "- ");
+                                    }
+                                }
+                                if (!text.Contains(Environment.NewLine + "-") && !text.Contains(Environment.NewLine + "<i>-"))
                                 {
                                     text = text.Replace(Environment.NewLine, Environment.NewLine + "- ");
                                 }
-                            }
-                            if (!text.Contains(Environment.NewLine + "-") && !text.Contains(Environment.NewLine + "<i>-"))
-                            {
-                                text = text.Replace(Environment.NewLine, Environment.NewLine + "- ");
                             }
                         }
                     }
@@ -1192,6 +1200,14 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
             text = text.Trim();
 
+            if (Settings.RemoveIfOnlyMusicSymbols)
+            {
+                if (string.IsNullOrWhiteSpace(HtmlUtil.RemoveHtmlTags(text, true).RemoveChar('♪', '♫')))
+                {
+                    return string.Empty;
+                }
+            }
+
             // keep U2010 dashes if no changes
             if (originalAfterU2010Replace == text)
             {
@@ -1245,6 +1261,8 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
         private static readonly HashSet<string> HiDescriptionWords = new HashSet<string>(new[]
         {
+            "breathes",
+            "breathes deeply",
             "cackles",
             "cheers",
             "chitters",
@@ -1267,12 +1285,13 @@ namespace Nikse.SubtitleEdit.Core.Forms
             "sigh",
             "sighs",
             "snores",
+            "stammers",
             "stutters",
             "thuds",
             "trumpets",
             "whisper",
             "whispers",
-            "whistles"
+            "whistles",
         });
 
         private bool IsHIDescription(string text)
@@ -1552,10 +1571,50 @@ namespace Nikse.SubtitleEdit.Core.Forms
             return sb.ToString().Trim();
         }
 
-        public static IList<string> GetInterjectionList()
+        public static List<string> GetInterjections(string fileName)
         {
+            var words = new List<string>();
+            if (File.Exists(fileName))
+            {
+                try
+                {
+                    var xml = new XmlDocument();
+                    xml.Load(fileName);
+                    if (xml.DocumentElement != null)
+                    {
+                        var nodes = xml.DocumentElement.SelectNodes("word");
+                        if (nodes != null)
+                        {
+                            foreach (XmlNode node in nodes)
+                            {
+                                var w = node.InnerText.Trim();
+                                if (w.Length > 0)
+                                {
+                                    words.Add(w);
+                                }
+                            }
+                        }
+
+                        return words;
+                    }
+                }
+                catch
+                {
+                    // ignore
+                }
+            }
+
+            return words;
+        }
+
+        public static IList<string> GetInterjectionList(string twoLetterIsoLanguageName, out List<string> skipIfStartsWith)
+        {
+            var interjections = InterjectionsRepository.LoadInterjections(twoLetterIsoLanguageName);
+
+            skipIfStartsWith = interjections.SkipIfStartsWith;
+
             var interjectionList = new HashSet<string>();
-            foreach (var s in Configuration.Settings.Tools.Interjections.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries))
+            foreach (var s in interjections.Interjections)
             {
                 if (s.Length <= 0)
                 {
@@ -1573,9 +1632,10 @@ namespace Nikse.SubtitleEdit.Core.Forms
             return sortedList;
         }
 
-        public void ReloadInterjection()
+        public void ReloadInterjection(string twoLetterIsoLanguageName)
         {
-            _interjections = GetInterjectionList();
+            _interjections = GetInterjectionList(twoLetterIsoLanguageName, out var skipList);
+            _interjectionsSkipIfStartsWith = skipList;
         }
     }
 }

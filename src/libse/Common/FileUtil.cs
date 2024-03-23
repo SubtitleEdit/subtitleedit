@@ -81,12 +81,34 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public static List<string> ReadAllLinesShared(string path, Encoding encoding)
         {
-            return encoding.GetString(ReadAllBytesShared(path)).SplitToLines();
+            var bytes = ReadAllBytesShared(path);
+            if (bytes.Length > 3 && Equals(encoding, Encoding.UTF8) && bytes[0] == 0xef && bytes[1] == 0xbb && bytes[2] == 0xbf)
+            {
+                return encoding.GetString(bytes, 3, bytes.Length - 3).SplitToLines();
+            }
+
+            if (bytes.Length > 2 && Equals(encoding, Encoding.Unicode) && bytes[0] == 0xfe && bytes[1] == 0xff)
+            {
+                return encoding.GetString(bytes, 2, bytes.Length - 2).SplitToLines();
+            }
+
+            return encoding.GetString(bytes).SplitToLines();
         }
 
         public static string ReadAllTextShared(string path, Encoding encoding)
         {
-            return encoding.GetString(ReadAllBytesShared(path));
+            var bytes = ReadAllBytesShared(path);
+            if (bytes.Length > 3 && Equals(encoding, Encoding.UTF8) && bytes[0] == 0xef && bytes[1] == 0xbb && bytes[2] == 0xbf)
+            {
+                return encoding.GetString(bytes, 3, bytes.Length - 3);
+            }
+
+            if (bytes.Length > 2 && Equals(encoding, Encoding.Unicode) && bytes[0] == 0xff && bytes[1] == 0xfe)
+            {
+                return encoding.GetString(bytes, 2, bytes.Length - 2);
+            }
+
+            return encoding.GetString(bytes);
         }
 
         public static bool IsZip(string fileName)
@@ -124,6 +146,48 @@ namespace Nikse.SubtitleEdit.Core.Common
                        && buffer[3] == 0xaf
                        && buffer[4] == 0x27
                        && buffer[5] == 0x1c;
+            }
+        }
+
+        public static bool IsMp3(string fileName)
+        {
+            using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            {
+                var buffer = new byte[3];
+                var count = fs.Read(buffer, 0, buffer.Length);
+                if (count != buffer.Length)
+                {
+                    return false;
+                }
+
+                // 0x49 + 0x44 + 0x33 = ID3
+                return buffer[0] == 0x49 && buffer[1] == 0x44 && buffer[2] == 0x33 && fileName.EndsWith(".mp3", StringComparison.OrdinalIgnoreCase) ||
+                       buffer[0] == 0xff && buffer[1] == 0xfb && fileName.EndsWith(".mp3", StringComparison.OrdinalIgnoreCase);
+            }
+        }
+
+        public static bool IsWav(string fileName)
+        {
+            using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            {
+                var buffer = new byte[12];
+                var count = fs.Read(buffer, 0, buffer.Length);
+                if (count != buffer.Length)
+                {
+                    return false;
+                }
+
+                return buffer[0] == 0x52 && 
+                       buffer[1] == 0x49 &&
+                       buffer[2] == 0x46 &&
+                       buffer[2] == 0x46 &&
+
+                       buffer[8] == 0x57 &&
+                       buffer[9] == 0x41 &&
+                       buffer[10] == 0x56 &&
+                       buffer[11] == 0x45 &&
+
+                       fileName.EndsWith(".wav", StringComparison.OrdinalIgnoreCase);
             }
         }
 
@@ -235,7 +299,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
 
                 // allow for some random bytes in the beginning
-                for (int i = 0; i < 255; i++)
+                for (var i = 0; i < 255; i++)
                 {
                     if (buffer[i] == Packet.SynchronizationByte && buffer[i + 188] == Packet.SynchronizationByte && buffer[i + 188 * 2] == Packet.SynchronizationByte)
                     {
@@ -599,6 +663,22 @@ namespace Nikse.SubtitleEdit.Core.Common
             else
             {
                 File.WriteAllText(fileName, contents, encoding.Encoding);
+            }
+        }
+
+        public static void WriteAllTextWithDefaultUtf8(string fileName, string contents)
+        {
+            if (Configuration.Settings.General.DefaultEncoding == TextEncoding.Utf8WithoutBom)
+            {
+                var outputEnc = new UTF8Encoding(false); // create encoding with no BOM
+                using (var file = new StreamWriter(fileName, false, outputEnc)) // open file with encoding
+                {
+                    file.Write(contents);
+                }
+            }
+            else
+            {
+                File.WriteAllText(fileName, contents, Encoding.UTF8);
             }
         }
 

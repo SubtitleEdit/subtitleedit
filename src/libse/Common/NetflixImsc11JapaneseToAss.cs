@@ -48,7 +48,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         private static List<Paragraph> MakeHorizontalParagraphs(Paragraph p, int width, int height)
         {
             var lines = p.Text.SplitToLines();
-            var adjustment = 34;
+            const int adjustment = 34;
             var startY = height - lines.Count * 2 * adjustment + 30;
             if (p.Text.StartsWith("{\\an8", StringComparison.Ordinal))
             {
@@ -58,12 +58,12 @@ namespace Nikse.SubtitleEdit.Core.Common
             var list = new List<Paragraph>();
             var furiganaList = new List<Paragraph>();
             var rubyOn = false;
-            var italinOn = false;
+            var italicOn = false;
             int startX;
             using (var g = Graphics.FromHwnd(IntPtr.Zero))
             {
                 var actualText = NetflixImsc11Japanese.RemoveTags(HtmlUtil.RemoveHtmlTags(p.Text, true));
-                var actualTextSize = g.MeasureString(actualText, new Font(SystemFonts.DefaultFont.FontFamily, 20));
+                var actualTextSize = g.MeasureString(actualText, new Font("Arial", 13.8f)); // font size up, move text left
                 startX = (int)(width / 2.0 - actualTextSize.Width / 2.0);
                 if (p.Text.StartsWith("{\\an5", StringComparison.Ordinal))
                 {
@@ -74,12 +74,12 @@ namespace Nikse.SubtitleEdit.Core.Common
             for (var index = 0; index < lines.Count; index++)
             {
                 var line = lines[index];
-                if (italinOn)
+                if (italicOn)
                 {
                     line = "<i>" + line;
                 }
                 var actual = new StringBuilder();
-                int i = 0;
+                var i = 0;
                 while (i < line.Length)
                 {
                     if (line.Substring(i).StartsWith("{\\"))
@@ -96,13 +96,13 @@ namespace Nikse.SubtitleEdit.Core.Common
                     {
                         actual.Append("{\\i1}");
                         i += 3;
-                        italinOn = true;
+                        italicOn = true;
                     }
                     else if (line.Substring(i).StartsWith("</i>", StringComparison.Ordinal) || line.Substring(i).StartsWith("</u>", StringComparison.Ordinal) || line.Substring(i).StartsWith("</b>", StringComparison.Ordinal))
                     {
                         actual.Append("{\\i0}");
                         i += 4;
-                        italinOn = false;
+                        italicOn = false;
                     }
                     else if (line.Substring(i).StartsWith("<bouten-", StringComparison.Ordinal))
                     {
@@ -220,7 +220,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
 
                 var actualText = actual.ToString().TrimEnd();
-                bool displayBefore = lines.Count == 2 && index == 0 || lines.Count == 1;
+                var displayBefore = lines.Count == 2 && index == 0 || lines.Count == 1;
                 if (displayBefore && furiganaList.Count > 0)
                 {
                     foreach (var fp in furiganaList)
@@ -264,7 +264,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         private static List<Paragraph> MakeVerticalParagraphs(Paragraph p, int width)
         {
             var lines = p.Text.SplitToLines();
-            var adjustment = 34;
+            const int adjustment = 34;
             var startX = 9 + lines.Count * 2 * adjustment;
             var leftAlign = p.Text.StartsWith("{\\an7}", StringComparison.Ordinal);
             if (!leftAlign)
@@ -276,13 +276,13 @@ namespace Nikse.SubtitleEdit.Core.Common
             var list = new List<Paragraph>();
             var furiganaList = new List<Paragraph>();
             var rubyOn = false;
-            var italinOn = false;
+            var italicOn = false;
             for (var index = 0; index < lines.Count; index++)
             {
                 var line = lines[index];
                 var actual = new StringBuilder();
-                int i = 0;
-                if (italinOn)
+                var i = 0;
+                if (italicOn)
                 {
                     line = "<i>" + line;
                 }
@@ -302,13 +302,13 @@ namespace Nikse.SubtitleEdit.Core.Common
                     {
                         actual.Append("{\\i1}");
                         i += 3;
-                        italinOn = true;
+                        italicOn = true;
                     }
                     else if (line.Substring(i).StartsWith("</i>", StringComparison.Ordinal) || line.Substring(i).StartsWith("</u>", StringComparison.Ordinal) || line.Substring(i).StartsWith("</b>", StringComparison.Ordinal))
                     {
                         actual.Append("{\\i0}");
                         i += 4;
-                        italinOn = false;
+                        italicOn = false;
                     }
                     else if (line.Substring(i).StartsWith("<horizontalDigit>", StringComparison.Ordinal))
                     {
@@ -470,7 +470,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     }
                 }
 
-                bool displayBefore = lines.Count == 2 && index == 0 || lines.Count == 1;
+                var displayBefore = lines.Count == 2 && index == 0 || lines.Count == 1;
                 if (displayBefore && furiganaList.Count > 0)
                 {
                     foreach (var fp in furiganaList)
@@ -522,11 +522,13 @@ namespace Nikse.SubtitleEdit.Core.Common
                             startX -= 8;
                         }
                     }
+
                     foreach (var fp in furiganaList)
                     {
                         var text = pre + "\\pos(" + startX + ",45)}" + fp.Text.TrimEnd();
                         list.Add(new Paragraph(text, p.StartTime.TotalMilliseconds, p.EndTime.TotalMilliseconds));
                     }
+
                     startX -= adjustment;
                 }
             }
@@ -542,7 +544,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 finalSub.Paragraphs.AddRange(SplitToAssRenderLines(paragraph, width, height));
             }
 
-            var style = new SsaStyle{ FontSize = 40, Bold = false};
+            var style = new SsaStyle { FontSize = 40, Bold = false };
             finalSub.Header = string.Format(AdvancedSubStationAlpha.HeaderNoStyles, string.Empty, style.ToRawAss());
 
             finalSub.Header = finalSub.Header.Replace("PlayDepth: 0", @"PlayDepth: 0

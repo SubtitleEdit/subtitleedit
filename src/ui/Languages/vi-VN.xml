@@ -2,7 +2,7 @@
 <Language Name="Vietnamese">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.0</Version>
+    <Version>4.0.4</Version>
     <TranslatedBy>Ghé thăm www.nikse.dk của chủ phần mềm - Nikse
 thường xuyên để biết thêm thông tin và tải về phiên bản mới nhất.
 Rất hân hạnh chào đón các bạn :))
@@ -711,7 +711,7 @@ Các video hướng dẫn Subtitle Edit
     <RemovedEmptyLineAtTop>Xóa dòng trống ở đầu phụ đề</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>Xóa dòng trống ở cuối phụ đề</RemovedEmptyLineAtBottom>
     <RemovedEmptyLineInMiddle>Xóa dòng trống ở giữa phụ đề</RemovedEmptyLineInMiddle>
-    <RemovedEmptyLinesUnsedLineBreaks>Xóa các dòng trống sau khi xuống hàng</RemovedEmptyLinesUnsedLineBreaks>
+    <RemovedEmptyLinesUnusedLineBreaks>Xóa các dòng trống sau khi xuống hàng</RemovedEmptyLinesUnusedLineBreaks>
     <FixOverlappingDisplayTimes>(TIẾNG VIỆT KHÔNG CHỌN) Sửa lỗi time trùng lặp</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>(TIẾNG VIỆT KHÔNG CHỌN) Sửa lỗi CPS quá cao</FixShortDisplayTimes>
     <FixLongDisplayTimes>Sửa lỗi CPS quá thấp</FixLongDisplayTimes>
@@ -2286,7 +2286,7 @@ có thể chỉnh sửa trong cùng một tập tin phụ đề (hợp tác vớ
     <DarkThemeEnabled>Sử dụng chế độ tối</DarkThemeEnabled>
     <DarkThemeShowGridViewLines>Hiện đường kẻ hàng</DarkThemeShowGridViewLines>
     <UpdateShortcut>Cập nhật phím tắt</UpdateShortcut>
-    <FoucsSetVideoPosition>Tiêu điểm đặt vị trí video</FoucsSetVideoPosition>
+    <FocusSetVideoPosition>Tiêu điểm đặt vị trí video</FocusSetVideoPosition>
     <ToggleDockUndockOfVideoControls>Bật/tắt bảng điều khiển video</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Đặt end time, thêm và đi tới dòng mới</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStart>Chỉnh time thông qua end time</AdjustViaEndAutoStart>

@@ -2,7 +2,7 @@
 <Language Name="Čeština">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.0</Version>
+    <Version>4.0.4</Version>
     <TranslatedBy>Překlad do češtiny: Trottel</TranslatedBy>
     <CultureName>cs-CZ</CultureName>
     <HelpFile />
@@ -687,7 +687,7 @@ Poznámka: Zkontrolujte volné místo na disku.</WaveFileMalformed>
     <RemovedEmptyLineAtTop>Odebrat prázdný řádek na začátku</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>Odebrat prázdný řádek na konci</RemovedEmptyLineAtBottom>
     <RemovedEmptyLineInMiddle>Odebrat prázdný řádek uprostřed</RemovedEmptyLineInMiddle>
-    <RemovedEmptyLinesUnsedLineBreaks>Odebrat prázdné řádky nebo nevyužitá zalomení řádků</RemovedEmptyLinesUnsedLineBreaks>
+    <RemovedEmptyLinesUnusedLineBreaks>Odebrat prázdné řádky nebo nevyužitá zalomení řádků</RemovedEmptyLinesUnusedLineBreaks>
     <FixOverlappingDisplayTimes>Opravit překrývání časů zobrazení</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>Opravit krátké časy zobrazení</FixShortDisplayTimes>
     <FixLongDisplayTimes>Opravit dlouhé časy zobrazení</FixLongDisplayTimes>
@@ -2230,7 +2230,7 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <DarkThemeEnabled>Použít tmavý motiv</DarkThemeEnabled>
     <DarkThemeShowGridViewLines>Zobrazit čáry mřížky v zobrazení seznamu</DarkThemeShowGridViewLines>
     <UpdateShortcut>Aktualizovat</UpdateShortcut>
-    <FoucsSetVideoPosition>Zaměřit nastavenou pozici videa</FoucsSetVideoPosition>
+    <FocusSetVideoPosition>Zaměřit nastavenou pozici videa</FocusSetVideoPosition>
     <ToggleDockUndockOfVideoControls>Ukotvit nebo zrušit ukotvení ovládání videa</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Nastavit konec, přidat nový a přejít na nový</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStart>Nastavit podle pozice konce</AdjustViaEndAutoStart>

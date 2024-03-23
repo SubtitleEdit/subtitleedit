@@ -2,7 +2,7 @@
 <Language Name="euskara">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.0</Version>
+    <Version>4.0.4</Version>
     <TranslatedBy>Itzultzailea: Xabier Aramendi</TranslatedBy>
     <CultureName>eu-ES</CultureName>
     <HelpFile>https://www.nikse.dk/SubtitleEdit/HelpEU</HelpFile>
@@ -639,7 +639,7 @@ Oharra: Egiaztatu diskako toki askea.</WaveFileMalformed>
     <RemovedEmptyLineAtTop>Kenduta goiko lerro hutsa</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>Kenduta beheko lerro hutsa</RemovedEmptyLineAtBottom>
     <RemovedEmptyLineInMiddle>Kendu erdiko lerro hutsa</RemovedEmptyLineInMiddle>
-    <RemovedEmptyLinesUnsedLineBreaks>Kendu lerro hutsak/ez erabilitako lerro hautsiak</RemovedEmptyLinesUnsedLineBreaks>
+    <RemovedEmptyLinesUnusedLineBreaks>Kendu lerro hutsak/ez erabilitako lerro hautsiak</RemovedEmptyLinesUnusedLineBreaks>
     <FixOverlappingDisplayTimes>Zuzendu erakus denbora gainjartzea</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>Zuzendu erakus denbora laburrak</FixShortDisplayTimes>
     <FixLongDisplayTimes>Zuzendu erakus denbora luzeak</FixLongDisplayTimes>
@@ -2145,7 +2145,7 @@ Jarraitu horrela ere?</PromptInsertSubtitleOverlap>
     <DarkThemeEnabled>Erabili azalgai iluna</DarkThemeEnabled>
     <DarkThemeShowGridViewLines>Erakutsi zerrenda ikuspegiko saretxo lerroak</DarkThemeShowGridViewLines>
     <UpdateShortcut>Eguneratu</UpdateShortcut>
-    <FoucsSetVideoPosition>Ezarri bideo kokap. fokutzen du</FoucsSetVideoPosition>
+    <FocusSetVideoPosition>Ezarri bideo kokap. fokutzen du</FocusSetVideoPosition>
     <ToggleDockUndockOfVideoControls>Aldatu uztartu/uztargabetu bideo aginteak</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Ezarri amaiera, gehitu berria eta joan berrira</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStart>Zehaztu amaiera kokapenaren bidez</AdjustViaEndAutoStart>

@@ -2,7 +2,7 @@
 <Language Name="română">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.0</Version>
+    <Version>4.0.4</Version>
     <TranslatedBy>Tradus de Mircea Voiculescu</TranslatedBy>
     <CultureName>ro-RO</CultureName>
     <HelpFile />
@@ -654,7 +654,7 @@ Notă: Verifică spațiul liber al discului.</WaveFileMalformed>
     <RemovedEmptyLineAtTop>Elimină linia blanc de sus</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>Elimină linia blanc de jos</RemovedEmptyLineAtBottom>
     <RemovedEmptyLineInMiddle>Elim. linia blanc din mijloc</RemovedEmptyLineInMiddle>
-    <RemovedEmptyLinesUnsedLineBreaks>Elimină liniile blanc/întreruperile de linie inutile</RemovedEmptyLinesUnsedLineBreaks>
+    <RemovedEmptyLinesUnusedLineBreaks>Elimină liniile blanc/întreruperile de linie inutile</RemovedEmptyLinesUnusedLineBreaks>
     <FixOverlappingDisplayTimes>Repară suprapunerea timpilor afișați</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>Repară timpii scurți de afișare</FixShortDisplayTimes>
     <FixLongDisplayTimes>Repară timpii lungi de afișare</FixLongDisplayTimes>
@@ -2168,7 +2168,7 @@ pot edita aceeași subtitrare (colaborare)</Information>
     <DarkThemeEnabled>Folosește tema întunecată</DarkThemeEnabled>
     <DarkThemeShowGridViewLines>Arată liniile grilă ale listei</DarkThemeShowGridViewLines>
     <UpdateShortcut>Actualizare</UpdateShortcut>
-    <FoucsSetVideoPosition>Focalizarea setării poziției video</FoucsSetVideoPosition>
+    <FocusSetVideoPosition>Focalizarea setării poziției video</FocusSetVideoPosition>
     <ToggleDockUndockOfVideoControls>Comută între cuplarea/decuplarea comenzilor video</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Setează sfârșitul, adaugă Nou și accesează-l</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStart>Setează cu poziția de final</AdjustViaEndAutoStart>

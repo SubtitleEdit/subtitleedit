@@ -2,7 +2,7 @@
 <Language Name="brezhoneg">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.0</Version>
+    <Version>4.0.4</Version>
     <TranslatedBy>Troet gant WaniBzh29.</TranslatedBy>
     <CultureName>br-FR</CultureName>
     <HelpFile />
@@ -508,7 +508,7 @@ Notenn: Gwiriekit spas an disk vak.</WaveFileMalformed>
     <RemovedEmptyLine>Dilemel al linenn c'houllo</RemovedEmptyLine>
     <RemovedEmptyLineAtTop>Dilemel al linenn c'houllo e krec'h</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>Dilemel al linenn c'houllo er fin</RemovedEmptyLineAtBottom>
-    <RemovedEmptyLinesUnsedLineBreaks>Diverkañ al linennoù goullo/lamm linennoù diezhomm</RemovedEmptyLinesUnsedLineBreaks>
+    <RemovedEmptyLinesUnusedLineBreaks>Diverkañ al linennoù goullo/lamm linennoù diezhomm</RemovedEmptyLinesUnusedLineBreaks>
     <EmptyLinesRemovedX>Linennoù goullo lemmet kuit: {0}</EmptyLinesRemovedX>
     <FixOverlappingDisplayTimes>Reizhañ an amzer ziskouez a zo o varc'hañ</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>Reizhañ an amzer ziskouez re verr</FixShortDisplayTimes>

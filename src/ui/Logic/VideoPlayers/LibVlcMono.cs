@@ -127,7 +127,9 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 newVlc._videoLoadedTimer = new Timer { Interval = 500 };
                 newVlc._videoLoadedTimer.Tick += newVlc.VideoLoadedTimer_Tick;
                 newVlc._videoLoadedTimer.Start();
+                VideoFileName = videoFileName;
             }
+
             return newVlc;
         }
 

@@ -194,15 +194,40 @@
             // numericUpDownAddMs
             // 
             this.numericUpDownAddMs.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.numericUpDownAddMs.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownAddMs.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownAddMs.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownAddMs.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownAddMs.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownAddMs.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownAddMs.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownAddMs.DecimalPlaces = 0;
+            this.numericUpDownAddMs.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownAddMs.Location = new System.Drawing.Point(385, 357);
             this.numericUpDownAddMs.Maximum = new decimal(new int[] {
             100000,
             0,
             0,
             0});
+            this.numericUpDownAddMs.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownAddMs.Name = "numericUpDownAddMs";
-            this.numericUpDownAddMs.Size = new System.Drawing.Size(60, 20);
+            this.numericUpDownAddMs.Size = new System.Drawing.Size(60, 23);
             this.numericUpDownAddMs.TabIndex = 34;
+            this.numericUpDownAddMs.TabStop = false;
+            this.numericUpDownAddMs.ThousandsSeparator = false;
+            this.numericUpDownAddMs.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             // 
             // radioButtonJoinAddTime
             // 
@@ -249,9 +274,9 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Join subtitles";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.JoinSubtitles_FormClosing);
+            this.Shown += new System.EventHandler(this.JoinSubtitles_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.JoinSubtitles_KeyDown);
             this.Resize += new System.EventHandler(this.JoinSubtitles_Resize);
-            this.Shown += new System.EventHandler(this.JoinSubtitles_Shown);
             this.groupBoxPreview.ResumeLayout(false);
             this.groupBoxPreview.PerformLayout();
             this.ResumeLayout(false);

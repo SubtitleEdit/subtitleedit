@@ -37,16 +37,25 @@ namespace Nikse.SubtitleEdit.Forms
         public long MillisecondsEncoding { get; private set; }
         private PreviewVideo _previewVideo;
 
-        public GenerateVideoWithHardSubs(Subtitle assaSubtitle, string inputVideoFileName, VideoInfo videoInfo, int? fontSize, bool setStartEndCut)
+        public GenerateVideoWithHardSubs(Subtitle assaSubtitle, SubtitleFormat format, string inputVideoFileName, VideoInfo videoInfo, int? fontSize, bool setStartEndCut)
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
+            textBoxLog.ScrollBars = ScrollBars.Both;
             UiUtil.FixFonts(this);
 
             _loading = true;
             _videoInfo = videoInfo;
             _assaSubtitle = new Subtitle(assaSubtitle);
             _inputVideoFileName = inputVideoFileName;
+
+            if (format.GetType() == typeof(NetflixImsc11Japanese))
+            {
+                _assaSubtitle = new Subtitle();
+                var raw = NetflixImsc11JapaneseToAss.Convert(assaSubtitle, _videoInfo.Width, _videoInfo.Height);
+                new AdvancedSubStationAlpha().LoadSubtitle(_assaSubtitle, raw.SplitToLines(), null);
+                fontSize = null;
+            }
 
             Text = LanguageSettings.Current.GenerateVideoWithBurnedInSubs.Title;
             buttonGenerate.Text = LanguageSettings.Current.Watermark.Generate;
@@ -326,7 +335,13 @@ namespace Nikse.SubtitleEdit.Forms
             var oldFontSizeEnabled = numericUpDownFontSize.Enabled;
             numericUpDownFontSize.Enabled = false;
 
-            using (var saveDialog = new SaveFileDialog { FileName = SuggestNewVideoFileName(), Filter = "MP4|*.mp4|Matroska|*.mkv|WebM|*.webm", AddExtension = true })
+            using (var saveDialog = new SaveFileDialog 
+            { 
+                FileName = SuggestNewVideoFileName(), 
+                Filter = "MP4|*.mp4|Matroska|*.mkv|WebM|*.webm", 
+                AddExtension = true ,
+                InitialDirectory = Path.GetDirectoryName(_inputVideoFileName),
+            })
             {
                 if (comboBoxVideoEncoding.Text == "prores_ks")
                 {
@@ -400,6 +415,15 @@ namespace Nikse.SubtitleEdit.Forms
 
                     _assaSubtitle.Paragraphs.Clear();
                     _assaSubtitle.Paragraphs.AddRange(paragraphs);
+                }
+            }
+
+            if (Configuration.Settings.General.CurrentVideoIsSmpte && (decimal)_videoInfo.FramesPerSecond % 1 != 0)
+            {
+                foreach (var assaP in _assaSubtitle.Paragraphs)
+                {
+                    assaP.StartTime.TotalMilliseconds *= 1.001;
+                    assaP.EndTime.TotalMilliseconds *= 1.001;
                 }
             }
 
@@ -523,7 +547,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (checkBoxCut.Enabled && checkBoxCut.Checked)
             {
-                fileName += $".{numericUpDownCutFromHours.Text}-{numericUpDownCutFromMinutes.Text}-{numericUpDownCutFromSeconds.Text}_{numericUpDownCutToHours.Text}-{numericUpDownCutToMinutes.Text}-{numericUpDownCutToSeconds.Text}";
+                fileName += $".{numericUpDownCutFromHours.Value}-{numericUpDownCutFromMinutes.Value}-{numericUpDownCutFromSeconds.Value}_{numericUpDownCutToHours.Value}-{numericUpDownCutToMinutes.Value}-{numericUpDownCutToSeconds.Value}";
             }
 
             if (comboBoxVideoEncoding.Text == "prores_ks")
@@ -830,7 +854,6 @@ namespace Nikse.SubtitleEdit.Forms
                 else
                 {
                     textBoxLog.Visible = true;
-                    textBoxLog.ScrollBars = ScrollBars.Both;
                     textBoxLog.BringToFront();
                     textBoxLog.Dock = DockStyle.Fill;
 
@@ -849,6 +872,10 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         textBoxLog.Text = _log.ToString();
                     }
+
+                    textBoxLog.Focus();
+                    textBoxLog.SelectionStart = textBoxLog.Text.Length;
+                    textBoxLog.ScrollToCaret();
                 }
                 e.SuppressKeyPress = true;
             }

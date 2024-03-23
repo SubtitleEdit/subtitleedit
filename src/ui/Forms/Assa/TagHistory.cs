@@ -1,4 +1,6 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic;
 using System.Windows.Forms;
 
@@ -19,36 +21,28 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             UiUtil.FixLargeFonts(this, buttonOK);
 
+            FillHistory();
+        }
+
+        private void FillHistory()
+        {
             listBoxHistory.BeginUpdate();
+            listBoxHistory.Items.Clear();
             foreach (var tag in Configuration.Settings.SubtitleSettings.AssaOverrideTagHistory)
             {
                 listBoxHistory.Items.Add(tag);
             }
+
             listBoxHistory.EndUpdate();
 
             if (Configuration.Settings.SubtitleSettings.AssaOverrideTagHistory.Count > 0)
             {
                 listBoxHistory.SelectedIndex = 0;
             }
-
-            seTextBoxOverrideStyle.KeyDown += SeTextBoxOverrideStyle_KeyDown;
-        }
-
-        private void SeTextBoxOverrideStyle_KeyDown(object sender, KeyEventArgs e)
-        {
-            e.SuppressKeyPress = true;
         }
 
         private void listBoxHistory_SelectedIndexChanged(object sender, System.EventArgs e)
         {
-            var idx = listBoxHistory.SelectedIndex;
-            if (idx < 0)
-            {
-                seTextBoxOverrideStyle.Text = string.Empty;
-                return;
-            }
-
-            seTextBoxOverrideStyle.Text = Configuration.Settings.SubtitleSettings.AssaOverrideTagHistory[idx];
         }
 
         private void buttonOK_Click(object sender, System.EventArgs e)
@@ -56,7 +50,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             var idx = listBoxHistory.SelectedIndex;
             if (idx < 0)
             {
-                seTextBoxOverrideStyle.Text = string.Empty;
                 return;
             }
 
@@ -88,6 +81,22 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             {
                 buttonOK_Click(null, null);
             }
+        }
+
+        private void removeToolStripMenuItem_Click(object sender, System.EventArgs e)
+        {
+            var indices = new List<int>();
+            foreach (int idx in listBoxHistory.SelectedIndices)
+            {
+                indices.Add(idx);
+            }
+
+            foreach (var idx in indices.OrderByDescending(p => p))
+            {
+                Configuration.Settings.SubtitleSettings.AssaOverrideTagHistory.RemoveAt(idx);
+            }
+
+            FillHistory();
         }
     }
 }

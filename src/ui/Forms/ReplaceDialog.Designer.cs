@@ -95,6 +95,7 @@
             // 
             // textBoxFind
             // 
+            this.textBoxFind.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxFind.Location = new System.Drawing.Point(15, 25);
             this.textBoxFind.Name = "textBoxFind";
             this.textBoxFind.Size = new System.Drawing.Size(232, 21);
@@ -115,6 +116,7 @@
             // 
             // textBoxReplace
             // 
+            this.textBoxReplace.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxReplace.Location = new System.Drawing.Point(15, 71);
             this.textBoxReplace.Name = "textBoxReplace";
             this.textBoxReplace.Size = new System.Drawing.Size(232, 21);
@@ -163,12 +165,26 @@
             // 
             // comboBoxFindReplaceIn
             // 
+            this.comboBoxFindReplaceIn.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxFindReplaceIn.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxFindReplaceIn.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxFindReplaceIn.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxFindReplaceIn.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxFindReplaceIn.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxFindReplaceIn.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxFindReplaceIn.DropDownHeight = 400;
             this.comboBoxFindReplaceIn.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxFindReplaceIn.DropDownWidth = 232;
             this.comboBoxFindReplaceIn.FormattingEnabled = true;
             this.comboBoxFindReplaceIn.Location = new System.Drawing.Point(15, 120);
+            this.comboBoxFindReplaceIn.MaxLength = 32767;
             this.comboBoxFindReplaceIn.Name = "comboBoxFindReplaceIn";
+            this.comboBoxFindReplaceIn.SelectedIndex = -1;
+            this.comboBoxFindReplaceIn.SelectedItem = null;
+            this.comboBoxFindReplaceIn.SelectedText = "";
             this.comboBoxFindReplaceIn.Size = new System.Drawing.Size(232, 21);
             this.comboBoxFindReplaceIn.TabIndex = 20;
+            this.comboBoxFindReplaceIn.UsePopupWindow = false;
             // 
             // labelFindReplaceIn
             // 
@@ -181,11 +197,27 @@
             // 
             // comboBoxFind
             // 
+            this.comboBoxFind.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxFind.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxFind.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxFind.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxFind.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxFind.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxFind.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxFind.DropDownHeight = 400;
+            this.comboBoxFind.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
+            this.comboBoxFind.DropDownWidth = 232;
             this.comboBoxFind.FormattingEnabled = true;
             this.comboBoxFind.Location = new System.Drawing.Point(15, 25);
+            this.comboBoxFind.MaxLength = 32767;
             this.comboBoxFind.Name = "comboBoxFind";
+            this.comboBoxFind.SelectedIndex = -1;
+            this.comboBoxFind.SelectedItem = null;
+            this.comboBoxFind.SelectedText = "";
             this.comboBoxFind.Size = new System.Drawing.Size(232, 21);
             this.comboBoxFind.TabIndex = 1;
+            this.comboBoxFind.TabStop = false;
+            this.comboBoxFind.UsePopupWindow = false;
             this.comboBoxFind.KeyDown += new System.Windows.Forms.KeyEventHandler(this.comboBoxFind_KeyDown);
             // 
             // ReplaceDialog
@@ -205,8 +237,8 @@
             this.Controls.Add(this.radioButtonCaseSensitive);
             this.Controls.Add(this.radioButtonNormal);
             this.Controls.Add(this.buttonReplace);
-            this.Controls.Add(this.comboBoxFind);
             this.Controls.Add(this.textBoxFind);
+            this.Controls.Add(this.comboBoxFind);
             this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.KeyPreview = true;
@@ -218,6 +250,7 @@
             this.Text = "Replace";
             this.Activated += new System.EventHandler(this.ReplaceDialog_Activated);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ReplaceDialog_FormClosing);
+            this.Shown += new System.EventHandler(this.ReplaceDialog_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormReplaceDialog_KeyDown);
             this.ResumeLayout(false);
             this.PerformLayout();

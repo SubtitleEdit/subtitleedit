@@ -2,7 +2,7 @@
 <Language Name="فارسي">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.0</Version>
+    <Version>4.0.4</Version>
     <TranslatedBy>ترجمه توسط:سید مهدی حسینی، نیما، مجید عبدالهی</TranslatedBy>
     <CultureName>fa-IR</CultureName>
     <HelpFile />
@@ -711,7 +711,7 @@
     <RemovedEmptyLineAtTop>خط خالی حذف شده از بالا</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>خط خالی حذف شده از پایین</RemovedEmptyLineAtBottom>
     <RemovedEmptyLineInMiddle>حذف خطوط خالی از وسط</RemovedEmptyLineInMiddle>
-    <RemovedEmptyLinesUnsedLineBreaks>خطهای خالی را حذف کن</RemovedEmptyLinesUnsedLineBreaks>
+    <RemovedEmptyLinesUnusedLineBreaks>خطهای خالی را حذف کن</RemovedEmptyLinesUnusedLineBreaks>
     <FixOverlappingDisplayTimes>زمانهای هم پوشانی را اصلاح کن</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>اصلاح زمانهای کوتاه نمایش</FixShortDisplayTimes>
     <FixLongDisplayTimes>اصلاح زمانهای طولانی نمایش</FixLongDisplayTimes>
@@ -2286,7 +2286,7 @@
     <DarkThemeEnabled>از تم تیره استفاده کنید</DarkThemeEnabled>
     <DarkThemeShowGridViewLines>نمایش خطوط شبکه نمایش لیست</DarkThemeShowGridViewLines>
     <UpdateShortcut>بروزرسانی</UpdateShortcut>
-    <FoucsSetVideoPosition>فوکوس تنظیم موقعیت ویدئو</FoucsSetVideoPosition>
+    <FocusSetVideoPosition>فوکوس تنظیم موقعیت ویدئو</FocusSetVideoPosition>
     <ToggleDockUndockOfVideoControls>کنترل حالت چسبان/غیرچسبان بودن کنترل های ویدئو</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>تنظیم پایان، اضافه کردن جدید و رفتن به جدید</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStart>از طریق موقعیت انتهایی تنظیم کنید</AdjustViaEndAutoStart>

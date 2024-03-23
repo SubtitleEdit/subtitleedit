@@ -2,7 +2,7 @@
 <Language Name="English">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.0</Version>
+    <Version>4.0.4</Version>
     <TranslatedBy>Translated by Nikse</TranslatedBy>
     <CultureName>en-US</CultureName>
     <HelpFile />
@@ -10,6 +10,7 @@
     <Cancel>C&amp;ancel</Cancel>
     <Yes>Yes</Yes>
     <No>No</No>
+    <Close>Close</Close>
     <Apply>Apply</Apply>
     <ApplyTo>Apply to</ApplyTo>
     <None>None</None>
@@ -103,6 +104,8 @@
     <Error>Error</Error>
     <Warning>Warning</Warning>
     <UseLargerFontForThisWindow>Use larger font for this window</UseLargerFontForThisWindow>
+    <ChangeLanguageFilter>Change language filter...</ChangeLanguageFilter>
+    <MoreInfo>More info</MoreInfo>
   </General>
   <About>
     <Title>About Subtitle Edit</Title>
@@ -197,6 +200,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <WhisperNotFound>Whisper not found.
 
 Read more info (web)?</WhisperNotFound>
+    <Model>Model</Model>
     <Models>Models</Models>
     <LanguagesAndModels>Languages and models</LanguagesAndModels>
     <ChooseModel>Choose model</ChooseModel>
@@ -217,6 +221,7 @@ Read more info (web)?</WhisperNotFound>
     <SetCppConstMeFolder>Set CPP/Const-me models folder...</SetCppConstMeFolder>
     <OnlyRunPostProcessing>Run only post-processing/adjust timings</OnlyRunPostProcessing>
     <DownloadFasterWhisperCuda>Download cuBLAS and cuDNN libs for Faster-Whisper</DownloadFasterWhisperCuda>
+    <NoTextFound>No text found!</NoTextFound>
   </AudioToText>
   <AssaAttachments>
     <Title>Advanced Sub Station Alpha attachments</Title>
@@ -322,6 +327,7 @@ Read more info (web)?</WhisperNotFound>
     <ConvertOptions>Convert options</ConvertOptions>
     <RemoveFormatting>Remove formatting tags</RemoveFormatting>
     <RemoveStyleActor>Remove lines w style/actor</RemoveStyleActor>
+    <StyleActor>Style/actor (separate with comma)</StyleActor>
     <RemoveTextForHI>Remove text for HI</RemoveTextForHI>
     <ConvertColorsToDialog>Convert colors to dialog</ConvertColorsToDialog>
     <OverwriteOriginalFiles>Overwrite original files (new extension if format is changed)</OverwriteOriginalFiles>
@@ -399,6 +405,13 @@ Please click "{0}" to generate or import shot changes first, or disable this opt
     <BatchAlignTimeCodes>Align time codes to frame time codes</BatchAlignTimeCodes>
     <BatchUseExactTimeCodes>Use exact time codes (if available)</BatchUseExactTimeCodes>
     <BatchSnapToShotChanges>Snap cues to shot changes (if available)</BatchSnapToShotChanges>
+    <UnfixableParagraphsTitle>Review not fully chained subtitles</UnfixableParagraphsTitle>
+    <UnfixableParagraphsInstructions>Some subtitles were not fully chained in accordance with your profile, most likely due to too tightly clustered shot changes (possibly false positives).
+
+You might want to review these cases manually to ensure your cues are snapped to the correct (real) shot changes.</UnfixableParagraphsInstructions>
+    <UnfixableParagraphsColumnParagraphs>Lines</UnfixableParagraphsColumnParagraphs>
+    <UnfixableParagraphsColumnParagraphsFormat>#{0} – #{1}</UnfixableParagraphsColumnParagraphsFormat>
+    <UnfixableParagraphsColumnGap>Gap (frames)</UnfixableParagraphsColumnGap>
   </BeautifyTimeCodes>
   <BeautifyTimeCodesProfile>
     <Title>Edit profile</Title>
@@ -422,6 +435,7 @@ Please click "{0}" to generate or import shot changes first, or disable this opt
     <Chaining>Chaining</Chaining>
     <InCueOnShot>In cue on shot change</InCueOnShot>
     <OutCueOnShot>Out cue on shot change</OutCueOnShot>
+    <CheckGeneral>Still enforce General rules when unaffected</CheckGeneral>
     <MaxGap>Max. gap:</MaxGap>
     <ShotChangeBehavior>If there is a shot change in between:</ShotChangeBehavior>
     <DontChain>Don't chain</DontChain>
@@ -484,6 +498,7 @@ We leverage the intrinsic rhythm of the image.</CreateSimpleChainingToolTip>
     <BottomAlignSelectedLines>Bottom align selected lines (keep horizontal position)</BottomAlignSelectedLines>
     <ToggleForcedSelectedLines>Toggle "Forced" for selected lines</ToggleForcedSelectedLines>
     <SelectForcedLines>Select forced lines</SelectForcedLines>
+    <SelectNonForcedLines>Select non-forced lines</SelectNonForcedLines>
     <SizeXY>Size: {0}x{1}</SizeXY>
     <SetAspectRatio11>Set aspect ratio 1:1</SetAspectRatio11>
     <ChangeBrightnessTitle>Adjust brightness</ChangeBrightnessTitle>
@@ -873,7 +888,7 @@ We leverage the intrinsic rhythm of the image.</CreateSimpleChainingToolTip>
     <RemovedEmptyLineAtTop>Remove empty line at top</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>Remove empty line at bottom</RemovedEmptyLineAtBottom>
     <RemovedEmptyLineInMiddle>Remove empty line in middle</RemovedEmptyLineInMiddle>
-    <RemovedEmptyLinesUnsedLineBreaks>Remove empty lines/unused line breaks</RemovedEmptyLinesUnsedLineBreaks>
+    <RemovedEmptyLinesUnusedLineBreaks>Remove empty lines/unused line breaks</RemovedEmptyLinesUnusedLineBreaks>
     <FixOverlappingDisplayTimes>Fix overlapping display times</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>Fix short display times</FixShortDisplayTimes>
     <FixLongDisplayTimes>Fix long display times</FixLongDisplayTimes>
@@ -950,7 +965,7 @@ We leverage the intrinsic rhythm of the image.</CreateSimpleChainingToolTip>
     <FixDoubleDash>Fix '--' -&gt; '...'</FixDoubleDash>
     <FixDoubleGreaterThan>Remove '&gt;&gt;'</FixDoubleGreaterThan>
     <FixEllipsesStart>Remove leading '...'</FixEllipsesStart>
-    <FixMissingOpenBracket>Fix missing [ in line</FixMissingOpenBracket>
+    <FixMissingOpenBracket>Fix missing [ or ( in line</FixMissingOpenBracket>
     <FixMusicNotation>Replace music symbols (e.g. âTª) with preferred symbol</FixMusicNotation>
     <FixDoubleDashExample>'Whoa-- um yeah!' -&gt; 'Whoa... um yeah!'</FixDoubleDashExample>
     <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Sup dude!' -&gt; 'Robert: Sup dude!'</FixDoubleGreaterThanExample>
@@ -1042,11 +1057,12 @@ We leverage the intrinsic rhythm of the image.</CreateSimpleChainingToolTip>
     <PleaseWait>Please wait... this may take a while</PleaseWait>
     <PoweredByGoogleTranslate>Powered by Google translate</PoweredByGoogleTranslate>
     <PoweredByMicrosoftTranslate>Powered by Microsoft translate</PoweredByMicrosoftTranslate>
+    <PoweredByX>Powered by {0}</PoweredByX>
     <MsClientSecretNeeded>Sorry, you need a Cognitive Services 'Translator Text' key from Microsoft to use the latest Microsoft Translator.
 
-Go to "Options -&gt; Settings -&gt; Tools" to enter your key.</MsClientSecretNeeded>
+Go to "Options -&gt; Settings -&gt; Auto-translate" to enter your key.</MsClientSecretNeeded>
     <GoogleNoApiKeyWarning>Trying to translate without API key... (slow and limited data). 
-To use an API key, go to "Options -&gt; Settings -&gt; Tools" to enter your Google translate API key.</GoogleNoApiKeyWarning>
+To use an API key, go to "Options -&gt; Settings -&gt; Auto-translate" to enter your Google translate API key.</GoogleNoApiKeyWarning>
     <Service>Service:</Service>
     <LineMergeHandling>Line merge:</LineMergeHandling>
     <ProcessorMergeNext>Merge max two lines</ProcessorMergeNext>
@@ -1063,6 +1079,11 @@ To use an API key, go to "Options -&gt; Settings -&gt; Tools" to enter your Goog
     <TranslateBlockCopySourceText>Copy source text clipboard</TranslateBlockCopySourceText>
     <TranslateBlockClipboardError1>Clipboard contains source text!</TranslateBlockClipboardError1>
     <TranslateBlockClipboardError2>Go to translator and translate, then copy the results to the clipboard and click this button again.</TranslateBlockClipboardError2>
+    <StartWebServerX>Start "{0}" web server</StartWebServerX>
+    <XRequiresALocalWebServer>"{0}" requires a web server running locally!</XRequiresALocalWebServer>
+    <XRequiresAnApiKey>"{0}" requires an API key.</XRequiresAnApiKey>
+    <ReadMore>Read more?</ReadMore>
+    <Formality>Formality</Formality>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
     <Title>Google vs Microsoft translate</Title>
@@ -1129,6 +1150,8 @@ To use an API key, go to "Options -&gt; Settings -&gt; Tools" to enter your Goog
   </ImportText>
   <Interjections>
     <Title>Interjections</Title>
+    <EditSkipList>Edit skip list...</EditSkipList>
+    <EditSkipListInfo>Interjections will be skipped if source text starts with these:</EditSkipListInfo>
   </Interjections>
   <JoinSubtitles>
     <Title>Join subtitles</Title>
@@ -1305,6 +1328,7 @@ To use an API key, go to "Options -&gt; Settings -&gt; Tools" to enter your Goog
         <CloseTranslation>Close translated subtitle</CloseTranslation>
         <OpenContainingFolder>Open containing folder</OpenContainingFolder>
         <Compare>&amp;Compare...</Compare>
+        <VerifyCompleteness>Verify completeness...</VerifyCompleteness>
         <Statistics>S&amp;tatistics...</Statistics>
         <Plugins>&amp;Plugins...</Plugins>
         <ImportSubtitleFromVideoFile>Subtitle from video file...</ImportSubtitleFromVideoFile>
@@ -1423,8 +1447,6 @@ To use an API key, go to "Options -&gt; Settings -&gt; Tools" to enter your Goog
         <GenerateImportShotChanges>Generate/import shot changes...</GenerateImportShotChanges>
         <RemoveOrExportShotChanges>Remove/export shot changes...</RemoveOrExportShotChanges>
         <WaveformBatchGenerate>Batch generate waveforms...</WaveformBatchGenerate>
-        <ShowHideVideo>Show/hide video</ShowHideVideo>
-        <ShowHideWaveform>Show/hide waveform</ShowHideWaveform>
         <ShowHideWaveformAndSpectrogram>Show/hide waveform and spectrogram</ShowHideWaveformAndSpectrogram>
         <UnDockVideoControls>Un-dock video controls</UnDockVideoControls>
         <ReDockVideoControls>Re-dock video controls</ReDockVideoControls>
@@ -1485,8 +1507,7 @@ To use an API key, go to "Options -&gt; Settings -&gt; Tools" to enter your Goog
         <BeautifyTimeCodes>Beautify time codes</BeautifyTimeCodes>
         <Settings>Settings</Settings>
         <Help>Help</Help>
-        <ShowHideWaveform>Show/hide waveform</ShowHideWaveform>
-        <ShowHideVideo>Show/hide video</ShowHideVideo>
+        <Layout>Layout</Layout>
         <AssaDraw>Advanced Sub Station Alpha draw</AssaDraw>
       </ToolBar>
       <ContextMenu>
@@ -1554,6 +1575,7 @@ To use an API key, go to "Options -&gt; Settings -&gt; Tools" to enter your Goog
         <Subscript>Subscript</Subscript>
         <Alignment>Alignment...</Alignment>
         <AutoBalanceSelectedLines>Auto balance selected lines...</AutoBalanceSelectedLines>
+        <EvenlyDistributeSelectedLines>Evenly distribute selected lines (CPS)</EvenlyDistributeSelectedLines>
         <RemoveLineBreaksFromSelectedLines>Remove line-breaks from selected lines...</RemoveLineBreaksFromSelectedLines>
         <TypewriterEffect>Typewriter effect...</TypewriterEffect>
         <KaraokeEffect>Karaoke effect...</KaraokeEffect>
@@ -1825,6 +1847,8 @@ Continue?</SubtitleAppendPrompt>
     <SortedByX>Sorted by: {0}</SortedByX>
     <BeforeAutoBalanceSelectedLines>Before auto balance selected lines</BeforeAutoBalanceSelectedLines>
     <NumberOfLinesAutoBalancedX>Number of auto balanced lines: {0}</NumberOfLinesAutoBalancedX>
+    <BeforeEvenlyDistributeSelectedLines>Before evenly distribute selected lines</BeforeEvenlyDistributeSelectedLines>
+    <NumberOfLinesEvenlyDistributedX>Number of evenly distributed lines: {0}</NumberOfLinesEvenlyDistributedX>
     <BeforeRemoveLineBreaksInSelectedLines>Before remove line-breaks from selected lines</BeforeRemoveLineBreaksInSelectedLines>
     <NumberOfWithRemovedLineBreakX>Number of lines with removed line-break: {0}</NumberOfWithRemovedLineBreakX>
     <BeforeMultipleReplace>Before multiple replace</BeforeMultipleReplace>
@@ -1940,6 +1964,7 @@ Download and continue?</VideoFromUrlRequirements>
     <SubtitleEditNeedsVideoPlayer>Subtitle Edit needs a video player.</SubtitleEditNeedsVideoPlayer>
     <UseRecommendMpv>To use the recommended video player "mpv" click on the button below.</UseRecommendMpv>
     <DownloadAndUseMpv>Download and use "mpv" as video player</DownloadAndUseMpv>
+    <ChooseLayout>Choose layout</ChooseLayout>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Choose subtitle from Matroska file</Title>
@@ -2217,6 +2242,7 @@ can edit in same subtitle file (collaboration)</Information>
     <LinesFoundX>Lines found: {0}</LinesFoundX>
     <RemoveTextIfContains>Remove text if it contains:</RemoveTextIfContains>
     <RemoveTextIfAllUppercase>Remove line if UPPERCASE</RemoveTextIfAllUppercase>
+    <RemoveIfOnlyMusicSymbols>Remove if only music symbols</RemoveIfOnlyMusicSymbols>
     <RemoveInterjections>Remove interjections (shh, hmm, etc.)</RemoveInterjections>
     <EditInterjections>Edit...</EditInterjections>
     <Apply>A&amp;pply</Apply>
@@ -2316,6 +2342,7 @@ can edit in same subtitle file (collaboration)</Information>
     <DefaultFrameRate>Default frame rate</DefaultFrameRate>
     <DefaultFileEncoding>Default file encoding</DefaultFileEncoding>
     <AutoDetectAnsiEncoding>Auto detect ANSI encoding</AutoDetectAnsiEncoding>
+    <LanguageFilter>Language filter</LanguageFilter>
     <Profile>Profile</Profile>
     <Profiles>Profiles</Profiles>
     <ImportProfiles>Import profiles</ImportProfiles>
@@ -2537,12 +2564,14 @@ can edit in same subtitle file (collaboration)</Information>
     <DarkThemeShowGridViewLines>Show list view grid lines</DarkThemeShowGridViewLines>
     <GraphicsButtons>Graphics buttons</GraphicsButtons>
     <UpdateShortcut>Update</UpdateShortcut>
-    <FoucsSetVideoPosition>Focus set video position</FoucsSetVideoPosition>
+    <FocusSetVideoPosition>Focus set video position</FocusSetVideoPosition>
     <ToggleDockUndockOfVideoControls>Toggle dock/undock of video controls</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Set end, add new and go to new</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStart>Adjust via end position</AdjustViaEndAutoStart>
     <AdjustViaEndAutoStartAndGoToNext>Adjust via end position and go to next</AdjustViaEndAutoStartAndGoToNext>
     <AdjustSetEndMinusGapAndStartNextHere>Set end minus gap, go to next and start next here</AdjustSetEndMinusGapAndStartNextHere>
+    <AdjustSetEndAndStartNextAfterGap>Set end and start of next after gap</AdjustSetEndAndStartNextAfterGap>
+    <AdjustSetStartTimeAndGoToNext>Set start and go to next</AdjustSetStartTimeAndGoToNext>
     <AdjustSetEndTimeAndGoToNext>Set end and go to next</AdjustSetEndTimeAndGoToNext>
     <AdjustSetEndTimeAndPause>Set end and pause</AdjustSetEndTimeAndPause>
     <AdjustSetStartAutoDurationAndGoToNext>Set start, auto duration and go to next</AdjustSetStartAutoDurationAndGoToNext>
@@ -2593,6 +2622,7 @@ can edit in same subtitle file (collaboration)</Information>
     <MergeDialogWithNext>Merge dialog with next (insert dashes)</MergeDialogWithNext>
     <MergeDialogWithPrevious>Merge dialog with previous (insert dashes)</MergeDialogWithPrevious>
     <AutoBalanceSelectedLines>Auto balance selected lines</AutoBalanceSelectedLines>
+    <EvenlyDistributeSelectedLines>Evenly distribute selected lines (CPS)</EvenlyDistributeSelectedLines>
     <GoToNext>Go to next line</GoToNext>
     <GoToNextPlayTranslate>Go to next line (and play in 'Translate mode')</GoToNextPlayTranslate>
     <GoToNextCursorAtEnd>Go to next line and set cursor at end</GoToNextCursorAtEnd>
@@ -2637,6 +2667,7 @@ can edit in same subtitle file (collaboration)</Information>
     <WaveformSeekSilenceForward>Seek silence forward</WaveformSeekSilenceForward>
     <WaveformSeekSilenceBack>Seek silence back</WaveformSeekSilenceBack>
     <WaveformAddTextHere>Add text here (for new selection)</WaveformAddTextHere>
+    <ChooseLayoutX>Choose layout {0}</ChooseLayoutX>
     <WaveformAddTextHereFromClipboard>Add text here (for new selection from clipboard)</WaveformAddTextHereFromClipboard>
     <SetParagraphAsSelection>Set current as new selection</SetParagraphAsSelection>
     <WaveformPlayNewSelection>Play selection</WaveformPlayNewSelection>
@@ -2691,6 +2722,7 @@ can edit in same subtitle file (collaboration)</Information>
     <AudioExtractSelectedLines>Extract audio (selected lines)</AudioExtractSelectedLines>
     <AudioToTextSelectedLinesX>Audio to text selected lines ({0})</AudioToTextSelectedLinesX>
     <VideoToggleBrightness>Toggle brightness (mpv only)</VideoToggleBrightness>
+    <AutoTranslateSelectedLines>Auto-translate selected  lines</AutoTranslateSelectedLines>
     <CustomSearch1>Translate, custom search 1</CustomSearch1>
     <CustomSearch2>Translate, custom search 2</CustomSearch2>
     <CustomSearch3>Translate, custom search 3</CustomSearch3>
@@ -2820,6 +2852,8 @@ Continue?</RestoreDefaultSettingsMsg>
     <ExportAsHtml>Export as HTML...</ExportAsHtml>
     <SetNewActor>Set new actor/voice</SetNewActor>
     <SetActorX>Set actor/voice {0}</SetActorX>
+    <Used>Used</Used>
+    <Unused>Unused</Unused>
   </Settings>
   <SettingsMpv>
     <DownloadMpv>Download mpv lib</DownloadMpv>
@@ -3133,6 +3167,21 @@ Continue?</RestoreDefaultSettingsMsg>
     <Message>If you want this fixed, please send an email to mailto:niksedk@gmail.com and include a copy of the subtitle.</Message>
     <ImportAsPlainText>Import as plain text...</ImportAsPlainText>
   </UnknownSubtitle>
+  <VerifyCompleteness>
+    <Title>Verify completeness against other subtitle</Title>
+    <OpenControlSubtitle>Open control subtitle</OpenControlSubtitle>
+    <ControlSubtitleError>Control subtitle is empty or could not be loaded.</ControlSubtitleError>
+    <ControlSubtitleX>Control subtitle: {0}</ControlSubtitleX>
+    <Coverage>Coverage</Coverage>
+    <CoveragePercentageX>{0:0.##}%</CoveragePercentageX>
+    <SortByCoverage>Sort by coverage</SortByCoverage>
+    <SortByTime>Sort by time</SortByTime>
+    <Reload>Re-verify</Reload>
+    <Insert>Insert</Insert>
+    <InsertAndNext>Insert and go to next</InsertAndNext>
+    <Dismiss>Dismiss</Dismiss>
+    <DismissAndNext>Dismiss and go to next</DismissAndNext>
+  </VerifyCompleteness>
   <VisualSync>
     <Title>Visual sync</Title>
     <StartScene>Start scene</StartScene>

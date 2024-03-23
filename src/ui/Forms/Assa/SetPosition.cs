@@ -40,8 +40,9 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         private int _tempYScaled;
         private int _xScaled = -1;
         private int _yScaled = -1;
+        private readonly double _currentPositionSeconds;
 
-        public SetPosition(Subtitle subtitle, int[] selectedIndices, string videoFileName, VideoInfo videoInfo)
+        public SetPosition(Subtitle subtitle, int[] selectedIndices, string videoFileName, VideoInfo videoInfo, double currentPositionSeconds)
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
@@ -50,6 +51,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             _subtitle = subtitle;
             _videoFileName = videoFileName;
             _videoInfo = videoInfo;
+            _currentPositionSeconds = currentPositionSeconds;
 
             _subtitleWithNewHeader = new Subtitle(_subtitle, false);
             if (_subtitleWithNewHeader.Header == null)
@@ -106,14 +108,17 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             if (_subtitle?.Header != null)
             {
                 var playResX = AdvancedSubStationAlpha.GetTagFromHeader("PlayResX", "[Script Info]", _subtitle.Header);
-                playResX = playResX.Trim().Remove(0, 8).TrimStart().TrimStart(':').TrimStart();
                 var playResY = AdvancedSubStationAlpha.GetTagFromHeader("PlayResY", "[Script Info]", _subtitle.Header);
-                playResY = playResY.Trim().Remove(0, 8).TrimStart().TrimStart(':').TrimStart();
-                if (int.TryParse(playResX, NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out var px) &&
-                    int.TryParse(playResY, NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out var py))
+                if (!string.IsNullOrEmpty(playResX) && !string.IsNullOrEmpty(playResY))
                 {
-                    _originalPlayResX = px;
-                    _originalPlayResY = py;
+                    playResX = playResX.Trim().Remove(0, 8).TrimStart().TrimStart(':').TrimStart();
+                    playResY = playResY.Trim().Remove(0, 8).TrimStart().TrimStart(':').TrimStart();
+                    if (int.TryParse(playResX, NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out var px) &&
+                        int.TryParse(playResY, NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out var py))
+                    {
+                        _originalPlayResX = px;
+                        _originalPlayResY = py;
+                    }
                 }
             }
         }
@@ -392,7 +397,9 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             {
                 Application.DoEvents();
                 _mpv.Pause();
-                _mpv.CurrentPosition = p.StartTime.TotalSeconds + 0.05;
+
+               _mpv.CurrentPosition = _currentPositionSeconds;
+
                 Application.DoEvents();
                 _videoLoaded = true;
                 timer1.Start();
@@ -468,6 +475,8 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 return;
             }
 
+            CheckImageMouseMove();
+
             if (_updatePos && (_x != _tempX || _y != _tempY))
             {
                 _x = _tempX;
@@ -475,6 +484,35 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 _xScaled = _tempXScaled;
                 _yScaled = _tempYScaled;
                 VideoLoaded(null, null);
+            }
+        }
+
+        private void CheckImageMouseMove()
+        {
+            var pos = pictureBoxPreview.PointToClient(Cursor.Position);
+            var x = pos.X;
+            var y = pos.Y;
+
+            if (x < -100 || y < -100 || x > pictureBoxPreview.Width + 100 || y > pictureBoxPreview.Height + 100)
+            {
+                return;
+            }
+
+            var xAspectRatio = (double)_videoInfo.Width / pictureBoxPreview.Width;
+            _tempX = (int)Math.Round(x * xAspectRatio);
+
+            var yAspectRatio = (double)_videoInfo.Height / pictureBoxPreview.Height;
+            _tempY = (int)Math.Round(y * yAspectRatio);
+
+            if (_playResScaleOn)
+            {
+                _tempXScaled = AssaResampler.Resample(_videoInfo.Width, _originalPlayResX, _tempX);
+                _tempYScaled = AssaResampler.Resample(_videoInfo.Height, _originalPlayResY, _tempY);
+                labelCurrentPosition.Text = string.Format(LanguageSettings.Current.AssaSetPosition.CurrentMousePositionX, $"{_tempX},{_tempY}  ({_tempXScaled},{_tempYScaled})");
+            }
+            else
+            {
+                labelCurrentPosition.Text = string.Format(LanguageSettings.Current.AssaSetPosition.CurrentMousePositionX, $"{_tempX},{_tempY}");
             }
         }
 
@@ -684,26 +722,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             _updatePos = !_updatePos;
             VideoLoaded(null, null);
             _positionChanged = true;
-        }
-
-        private void pictureBoxPreview_MouseMove(object sender, MouseEventArgs e)
-        {
-            var xAspectRatio = (double)_videoInfo.Width / pictureBoxPreview.Width;
-            _tempX = (int)Math.Round(e.Location.X * xAspectRatio);
-
-            var yAspectRatio = (double)_videoInfo.Height / pictureBoxPreview.Height;
-            _tempY = (int)Math.Round(e.Location.Y * yAspectRatio);
-
-            if (_playResScaleOn)
-            {
-                _tempXScaled = AssaResampler.Resample(_videoInfo.Width, _originalPlayResX, _tempX);
-                _tempYScaled = AssaResampler.Resample(_videoInfo.Height, _originalPlayResY, _tempY);
-                labelCurrentPosition.Text = string.Format(LanguageSettings.Current.AssaSetPosition.CurrentMousePositionX, $"{_tempX},{_tempY}  ({_tempXScaled},{_tempYScaled})");
-            }
-            else
-            {
-                labelCurrentPosition.Text = string.Format(LanguageSettings.Current.AssaSetPosition.CurrentMousePositionX, $"{_tempX},{_tempY}");
-            }
         }
 
         private void SetPosition_ResizeEnd(object sender, EventArgs e)

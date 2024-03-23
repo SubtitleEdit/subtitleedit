@@ -2,7 +2,7 @@
 <Language Name="Slovenščina">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.0</Version>
+    <Version>4.0.4</Version>
     <TranslatedBy>Prevod: Jadran Rudec, Pošta: jrudec@gmail.com</TranslatedBy>
     <CultureName>sl-SI</CultureName>
     <HelpFile />
@@ -757,7 +757,7 @@ Opomba: Preverite prosti prostor na disku.</WaveFileMalformed>
     <RemovedEmptyLineAtTop>Odstrani prazno vrstico na vrhu</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>Odstrani prazno vrstico na dnu</RemovedEmptyLineAtBottom>
     <RemovedEmptyLineInMiddle>Odstrani prazno vrstico na sredini</RemovedEmptyLineInMiddle>
-    <RemovedEmptyLinesUnsedLineBreaks>Odstrani prazne vrstice/neuporabljene prelome vrstic</RemovedEmptyLinesUnsedLineBreaks>
+    <RemovedEmptyLinesUnusedLineBreaks>Odstrani prazne vrstice/neuporabljene prelome vrstic</RemovedEmptyLinesUnusedLineBreaks>
     <FixOverlappingDisplayTimes>Popravi prekrivajoče se prikazne čase</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>Popravi kratke prikazne čase</FixShortDisplayTimes>
     <FixLongDisplayTimes>Popravi dolge čase prikaza</FixLongDisplayTimes>
@@ -1723,7 +1723,7 @@ Ali želite začeti z vrha dokumenta ter nadaljevati iskanje in zamenjavo?</Repl
     <BeforeSetEndTimeAndOffsetTheRest>Pred nastavitvijo končnega časa in zamikom preostalega</BeforeSetEndTimeAndOffsetTheRest>
     <BeforeSetEndAndVideoPosition>Pred nastavitvijo končnega časa na položaju videa in samodejnim izračunom začetka</BeforeSetEndAndVideoPosition>
     <ContinueWithCurrentSpellCheck>Želite nadaljevati s trenutnim preverjanjem črkovanja?</ContinueWithCurrentSpellCheck>
-    <CharactersPerSecond>Znakov/s: 0:0,00}</CharactersPerSecond>
+    <CharactersPerSecond>Znakov/s: {0:0.00}</CharactersPerSecond>
     <GetFrameRateFromVideoFile>Pridobi hitrost sličic iz video datoteke</GetFrameRateFromVideoFile>
     <NetworkMessage>Novo sporočilo: {0} ({1}): {2}</NetworkMessage>
     <NetworkUpdate>Posodobljena vrstica: {0} ({1}): Index={2}, Text={3}</NetworkUpdate>
@@ -2393,7 +2393,7 @@ lahko ureja v isti datoteki s podnapisi (sodelovanje)</Information>
     <DarkThemeEnabled>Uporabi temno temo</DarkThemeEnabled>
     <DarkThemeShowGridViewLines>Prikaži mrežne črte prikaza seznama</DarkThemeShowGridViewLines>
     <UpdateShortcut>Posodobi</UpdateShortcut>
-    <FoucsSetVideoPosition>Izostritev nastavljenega položaja videa</FoucsSetVideoPosition>
+    <FocusSetVideoPosition>Izostritev nastavljenega položaja videa</FocusSetVideoPosition>
     <ToggleDockUndockOfVideoControls>Preklop zasidranih/odsidranih videokontrol</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Nastavi konec, dodaj novo in pojdi na novo</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStart>Prilagodi preko končnega položaja</AdjustViaEndAutoStart>

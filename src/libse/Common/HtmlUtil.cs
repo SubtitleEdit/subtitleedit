@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -651,6 +652,11 @@ namespace Nikse.SubtitleEdit.Core.Common
                 text = text.Replace("<I/>", string.Empty);
             }
 
+            text = text.Replace("]<i> ", "] <i>");
+            text = text.Replace(")<i> ", ") <i>");
+            text = text.Replace("] </i>", "] </i>");
+            text = text.Replace(") </i>", ") </i>");
+
             text = text.Replace(beginTag + beginTag, beginTag);
             text = text.Replace(endTag + endTag, endTag);
 
@@ -852,14 +858,19 @@ namespace Nikse.SubtitleEdit.Core.Common
                         if (idx > 1)
                         {
                             var pre = text.Substring(0, idx + 1).TrimStart();
-                            text = text.Remove(0, idx + 1);
-                            text = FixInvalidItalicTags(text).Trim();
-                            if (text.StartsWith("<i> ", StringComparison.OrdinalIgnoreCase))
+                            var tempText = text.Remove(0, idx + 1); 
+                            
+                            if (!tempText.StartsWith(']') && !tempText.StartsWith(')'))
                             {
-                                text = Utilities.RemoveSpaceBeforeAfterTag(text, beginTag);
-                            }
+                                text = tempText;
+                                text = FixInvalidItalicTags(text).Trim();
+                                if (text.StartsWith("<i> ", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    text = Utilities.RemoveSpaceBeforeAfterTag(text, beginTag);
+                                }
 
-                            text = pre + " " + text;
+                                text = pre + " " + text;
+                            }
                         }
                     }
                 }
@@ -993,6 +1004,120 @@ namespace Nikse.SubtitleEdit.Core.Common
             return text;
         }
 
+        public static bool IsTagOn(string input, string tag, bool wholeLine, bool assa)
+        {
+            var text = input;
+
+            if (assa)
+            {
+                var onOffTags = new List<string> { "i", "b", "u", "s", "be" };
+                if (onOffTags.Contains(tag))
+                {
+                    return text.Contains($"\\{tag}1");
+                }
+
+                return text.Contains($"\\{tag}");
+            }
+
+            return text.IndexOf("<" + tag + ">", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                   text.IndexOf("</" + tag + ">", StringComparison.OrdinalIgnoreCase) >= 0;
+        }
+
+        public static string TagOn(string input, string tag, bool wholeLine, bool assa)
+        {
+            var text = input;
+
+            if (assa)
+            {
+                var onOffTags = new List<string> { "i", "b", "u", "s", "be" };
+                if (onOffTags.Contains(tag))
+                {
+                    text = text.Replace($"{{\\{tag}1}}", string.Empty);
+                    text = text.Replace($"{{\\{tag}0}}", string.Empty);
+                    text = text.Replace($"\\{tag}1", string.Empty);
+                    text = text.Replace($"\\{tag}0", string.Empty);
+
+                    text = wholeLine ? $"{{\\{tag}1}}{text}" : $"{{\\{tag}1}}{text}{{\\{tag}0}}";
+                }
+                else
+                {
+                    if (text.Contains($"\\{tag}"))
+                    {
+                        text = text.Replace($"{{\\{tag}}}", string.Empty);
+                        text = text.Replace($"\\{tag}", string.Empty);
+                    }
+                    text = $"{{\\{tag}}}{text}";
+                }
+
+                return text;
+            }
+
+            text = text.Replace("<" + tag + ">", string.Empty);
+            text = text.Replace("</" + tag + ">", string.Empty);
+            text = text.Replace("<" + tag.ToUpperInvariant() + ">", string.Empty);
+            text = text.Replace("</" + tag.ToUpperInvariant() + ">", string.Empty);
+            var indexOfEndBracket = text.IndexOf('}');
+            if (text.StartsWith("{\\", StringComparison.Ordinal) && indexOfEndBracket > 1 && indexOfEndBracket < 6)
+            {
+                text = $"{text.Substring(0, indexOfEndBracket + 1)}<{tag}>{text.Remove(0, indexOfEndBracket + 1)}</{tag}>";
+            }
+            else
+            {
+                text = $"<{tag}>{text}</{tag}>";
+            }
+
+            return text;
+        }
+
+        public static string TagOff(string input, string tag, bool wholeLine, bool assa)
+        {
+            var text = input;
+
+            if (assa)
+            {
+                var onOffTags = new List<string> { "i", "b", "u", "s", "be" };
+                if (onOffTags.Contains(tag))
+                {
+                    if (text.Contains($"\\{tag}1"))
+                    {
+                        text = text.Replace($"{{\\{tag}1}}", string.Empty);
+                        text = text.Replace($"{{\\{tag}0}}", string.Empty);
+                        text = text.Replace($"\\{tag}1", string.Empty);
+                        text = text.Replace($"\\{tag}0", string.Empty);
+                    }
+                }
+                else
+                {
+                    if (text.Contains($"\\{tag}"))
+                    {
+                        text = text.Replace($"{{\\{tag}}}", string.Empty);
+                        text = text.Replace($"\\{tag}", string.Empty);
+                    }
+                }
+
+                return text;
+            }
+
+            if (text.IndexOf("<" + tag + ">", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                text.IndexOf("</" + tag + ">", StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                text = text.Replace("<" + tag + ">", string.Empty);
+                text = text.Replace("</" + tag + ">", string.Empty);
+                text = text.Replace("<" + tag.ToUpperInvariant() + ">", string.Empty);
+                text = text.Replace("</" + tag.ToUpperInvariant() + ">", string.Empty);
+            }
+            else
+            {
+                var indexOfEndBracket = text.IndexOf('}');
+                if (text.StartsWith("{\\", StringComparison.Ordinal) && indexOfEndBracket > 1 && indexOfEndBracket < 6)
+                {
+                    text = $"{text.Substring(0, indexOfEndBracket + 1)}<{tag}>{text.Remove(0, indexOfEndBracket + 1)}</{tag}>";
+                }
+            }
+
+            return text;
+        }
+
         public static Color GetColorFromString(string s)
         {
             try
@@ -1096,6 +1221,9 @@ namespace Nikse.SubtitleEdit.Core.Common
             return s.Trim();
         }
 
+        /// <summary>
+        /// Remove font tag from HTML or ASSA.
+        /// </summary>
         public static string RemoveFontName(string input)
         {
             if (!input.Contains("<font", StringComparison.OrdinalIgnoreCase))
@@ -1103,8 +1231,9 @@ namespace Nikse.SubtitleEdit.Core.Common
                 var x = input;
                 if (x.Contains("\\fn"))
                 {
-                    x = Regex.Replace(x, "{\\\\fn[a-zA-Z \\d]*}", string.Empty);
-                    x = Regex.Replace(x, "\\\\fn[a-zA-Z \\d]\\\\", string.Empty);
+                    x = Regex.Replace(x, "{\\\\fn[a-zA-Z \\d]+}", string.Empty);
+                    x = Regex.Replace(x, "\\\\fn[a-zA-Z \\d]+}", "}");
+                    x = Regex.Replace(x, "\\\\fn[a-zA-Z \\d]+\\\\", "\\");
                 }
 
                 return x;

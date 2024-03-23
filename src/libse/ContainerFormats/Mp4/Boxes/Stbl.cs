@@ -11,16 +11,20 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
 {
     public class Stbl : Box
     {
+        public Stsd Stsd { get; set; }
         public List<SubPicture> SubPictures;
         public ulong StszSampleCount;
         public ulong TimeScale { get; set; }
         private readonly Mdia _mdia;
         public List<uint> SampleSizes;
+        public List<uint> Discardable;
         public List<uint> Ssts { get; set; }
         public List<SampleToChunkMap> Stsc { get; set; }
         public List<ulong> ChunkOffsets;
         public List<Paragraph> Paragraphs;
         public List<Paragraph> GetParagraphs() => Paragraphs;
+
+        private List<Cea608.CcData> _cea608CcData = new List<Cea608.CcData>();
 
         public Stbl(Stream fs, ulong maximumLength, ulong timeScale, string handlerType, Mdia mdia)
         {
@@ -30,6 +34,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
             Ssts = new List<uint>();
             Stsc = new List<SampleToChunkMap>();
             SampleSizes = new List<uint>();
+            Discardable = new List<uint>();
             ChunkOffsets = new List<ulong>();
             SubPictures = new List<SubPicture>();
             while (fs.Position < (long)maximumLength)
@@ -39,9 +44,13 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                     return;
                 }
 
-                if (Name == "stco") // 32-bit - chunk offset
+                if (Name == "stsd") // Sample Description Box
                 {
-                    if (handlerType != "vide" && handlerType != "soun")
+                    Stsd = new Stsd(fs, Position);
+                }
+                else if (Name == "stco") // 32-bit - chunk offset
+                {
+                    if (handlerType != "soun")
                     {
                         Buffer = new byte[Size - 4];
                         fs.Read(Buffer, 0, Buffer.Length);
@@ -57,7 +66,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                 }
                 else if (Name == "co64") // 64-bit
                 {
-                    if (handlerType != "vide" && handlerType != "soun")
+                    if (handlerType != "soun")
                     {
                         Buffer = new byte[Size - 4];
                         fs.Read(Buffer, 0, Buffer.Length);
@@ -81,10 +90,11 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                     StszSampleCount = numberOfSampleSizes;
                     for (var i = 0; i < numberOfSampleSizes; i++)
                     {
-                        if (12 + i * 4 + 4 < Buffer.Length)
+                        if (17 + i * 4 < Buffer.Length)
                         {
                             var sampleSize = GetUInt(12 + i * 4);
                             SampleSizes.Add(sampleSize);
+                            Discardable.Add(Buffer[17 + i * 4]);
                         }
                     }
                 }
@@ -127,23 +137,23 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                 fs.Seek((long)Position, SeekOrigin.Begin);
             }
 
-            if (handlerType != "vide" && handlerType != "soun")
+            if (handlerType != "soun")
             {
-                Paragraphs = GetParagraphs(fs, handlerType == "subp");
+                Paragraphs = GetParagraphs(fs, handlerType);
             }
         }
 
-        private List<Paragraph> GetParagraphs(Stream fs, bool subtitlePicture)
+        private List<Paragraph> GetParagraphs(Stream fs, string handlerType)
         {
             var paragraphs = new List<Paragraph>();
             uint samplesPerChunk = 1;
             var max = ChunkOffsets.Count;
             var index = 0;
             double totalTime = 0;
+            var stscLookup = Stsc.ToDictionary(p => p.FirstChunk);
             for (var chunkIndex = 0; chunkIndex < max; chunkIndex++)
             {
-                var newSamplesPerChunk = Stsc.FirstOrDefault(item => item.FirstChunk == chunkIndex + 1);
-                if (newSamplesPerChunk != null)
+                if (stscLookup.TryGetValue((uint)chunkIndex + 1, out var newSamplesPerChunk))
                 {
                     samplesPerChunk = newSamplesPerChunk.SamplesPerChunk;
                 }
@@ -166,38 +176,67 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                     {
                         p.StartTime.TotalSeconds = before;
 
-                        fs.Seek((long)chunkOffset, SeekOrigin.Begin);
-                        var buffer = new byte[2];
-                        fs.Read(buffer, 0, buffer.Length);
-                        var textSize = (uint)GetWord(buffer, 0);
-                        if (textSize == 0 && samplesPerChunk > 1)
+                        if (handlerType == "vide")
                         {
-                            fs.Read(buffer, 0, buffer.Length);
-                            textSize = (uint)GetWord(buffer, 0);
-                        }
-
-                        if (textSize > 0)
-                        {
-                            if (subtitlePicture) // VobSub created with Mp4Box
+                            if (Discardable[index] == 1)
                             {
-                                if (textSize > 100)
-                                {
-                                    buffer = new byte[textSize + 2];
-                                    fs.Seek((long)chunkOffset, SeekOrigin.Begin);
-                                    fs.Read(buffer, 0, buffer.Length);
-                                    SubPictures.Add(new SubPicture(buffer)); // TODO: Where is palette?
-                                    paragraphs.Add(p);
-                                }
+                                //TODO: cea 608 or 708 cc? What is the content?
                             }
-                            else
-                            {
-                                buffer = new byte[textSize];
-                                fs.Read(buffer, 0, buffer.Length);
-                                p.Text = GetString(buffer, 0, (int)textSize).TrimEnd();
+                        }
+                        else if (handlerType == "clcp" && Stsd?.Name == "c608")
+                        {
+                            //TODO: decode cea 608... but what is the content?
 
-                                if (_mdia.IsClosedCaption)
+                            //var ccData = GetCcDataHelper.GetCcData(fs, chunkOffset + 4, sampleSize);
+
+                            //var fieldData = new List<CcData>();
+                            //// var seiData = GetCcDataHelper.GetSeiData(fs, chunkOffset , chunkOffset + sampleSize);
+
+                            //var seiData = new byte[sampleSize];
+                            //fs.Seek((long)chunkOffset, SeekOrigin.Begin);
+                            //fs.Read(seiData, 0, seiData.Length);
+                            //GetCcDataHelper.ParseCcDataFromSei(seiData, fieldData);
+
+                            //if (fieldData.Count > 0)
+                            //{
+                            //    _cea608CcData.AddRange(fieldData);
+                            //}
+                        }
+                        else
+                        {
+                            fs.Seek((long)chunkOffset, SeekOrigin.Begin);
+                            var buffer = new byte[2];
+                            fs.Read(buffer, 0, buffer.Length);
+                            var textSize = (uint)GetWord(buffer, 0);
+                            if (textSize == 0 && samplesPerChunk > 1)
+                            {
+                                fs.Read(buffer, 0, buffer.Length);
+                                textSize = (uint)GetWord(buffer, 0);
+                            }
+
+                            if (textSize > 0)
+                            {
+                                if (handlerType == "subp") // VobSub created with Mp4Box
                                 {
-                                    p.Text = MakeScenaristText(buffer);
+                                    if (textSize > 100)
+                                    {
+                                        buffer = new byte[textSize + 2];
+                                        fs.Seek((long)chunkOffset, SeekOrigin.Begin);
+                                        fs.Read(buffer, 0, buffer.Length);
+                                        SubPictures.Add(new SubPicture(buffer)); // TODO: Where is palette?
+                                        paragraphs.Add(p);
+                                    }
+                                }
+                                else
+                                {
+                                    buffer = new byte[textSize];
+                                    fs.Read(buffer, 0, buffer.Length);
+                                    p.Text = GetString(buffer, 0, (int)textSize).TrimEnd();
+
+                                    if (_mdia.IsClosedCaption)
+                                    {
+                                        p.Text = MakeScenaristText(buffer);
+                                    }
                                 }
                             }
                         }

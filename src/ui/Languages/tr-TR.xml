@@ -2,7 +2,7 @@
 <Language Name="Türkçe">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.0</Version>
+    <Version>4.0.4</Version>
     <TranslatedBy>Türkçe Çeviri: Falcon006
 Son eklemeler: ismail0100</TranslatedBy>
     <CultureName>tr-TR</CultureName>
@@ -645,7 +645,7 @@ Not: Boş disk alanını kontrol edin.</WaveFileMalformed>
     <RemovedEmptyLineAtTop>Üstteki boş satırı kaldır</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>Alttaki boş satırı kaldır</RemovedEmptyLineAtBottom>
     <RemovedEmptyLineInMiddle>Aradaki boş satırı kaldır</RemovedEmptyLineInMiddle>
-    <RemovedEmptyLinesUnsedLineBreaks>Boş satırları/kullanılmayan bölmeleri kaldırın</RemovedEmptyLinesUnsedLineBreaks>
+    <RemovedEmptyLinesUnusedLineBreaks>Boş satırları/kullanılmayan bölmeleri kaldırın</RemovedEmptyLinesUnusedLineBreaks>
     <FixOverlappingDisplayTimes>Üst üste gelen görüntülenme sürelerini düzelt</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>Kısa görüntülenme sürelerini düzelt</FixShortDisplayTimes>
     <FixLongDisplayTimes>Uzun görüntülenme sürelerini düzelt</FixLongDisplayTimes>
@@ -2164,7 +2164,7 @@ Yeni oturum başlatın (işbirliği)</Information>
     <DarkThemeEnabled>Koyu tema kullan</DarkThemeEnabled>
     <DarkThemeShowGridViewLines>Liste görünümü kılavuz çizgilerini göster</DarkThemeShowGridViewLines>
     <UpdateShortcut>Güncelle</UpdateShortcut>
-    <FoucsSetVideoPosition>Odak video konumunu ayarla</FoucsSetVideoPosition>
+    <FocusSetVideoPosition>Odak video konumunu ayarla</FocusSetVideoPosition>
     <ToggleDockUndockOfVideoControls>Video kontrol geçişlerini azalt/azaltma</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Sonunu ayarla, yeni ekle ve yeniye git</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStart>Son konuma göre ayarla</AdjustViaEndAutoStart>

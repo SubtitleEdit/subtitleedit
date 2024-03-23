@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
+﻿using System;
+using Nikse.SubtitleEdit.Core.Common;
 using System.Collections.Generic;
 using System.Drawing;
 
@@ -86,7 +87,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                     y = 500;
                 }
 
-                Image = new Bitmap(width, y + 1);
+                Image = new Bitmap(Math.Max(1, width), y + 1);
                 _fastImage = new FastBitmap(Image);
                 _fastImage.LockImage();
 

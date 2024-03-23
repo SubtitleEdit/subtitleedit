@@ -16,14 +16,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
-            string xmlStructure =
+            var xmlStructure =
                 "<?xml version=\"1.0\" encoding=\"utf-8\" ?>" + Environment.NewLine +
                 "<Subtitle/>";
 
             var xml = new XmlDocument { XmlResolver = null };
             xml.LoadXml(xmlStructure);
 
-            foreach (Paragraph p in subtitle.Paragraphs)
+            foreach (var p in subtitle.Paragraphs)
             {
                 XmlNode paragraph = xml.CreateElement("Paragraph");
 
@@ -62,7 +62,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
 
-            string xmlString = sb.ToString();
+            var xmlString = sb.ToString();
             if (!xmlString.Contains("<BDN"))
             {
                 return;
@@ -78,13 +78,25 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 _errorCount = 1;
                 return;
             }
+
             char[] splitChars = { ':', ';' };
+
+            var convertToSmpte = false;
+            var frameRateElement = xml.DocumentElement.SelectSingleNode("Description/Format");
+            if (frameRateElement?.Attributes["FrameRate"] != null)
+            {
+                if (decimal.TryParse(frameRateElement.Attributes["FrameRate"].InnerText, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var fr))
+                {
+                    convertToSmpte = fr % 1 != 0;
+                }
+            }
+
             foreach (XmlNode node in xml.DocumentElement.SelectNodes("Events/Event"))
             {
                 try
                 {
-                    string start = node.Attributes["InTC"].InnerText;
-                    string end = node.Attributes["OutTC"].InnerText;
+                    var start = node.Attributes["InTC"].InnerText;
+                    var end = node.Attributes["OutTC"].InnerText;
                     var textBuilder = new StringBuilder();
                     var position = string.Empty;
                     foreach (XmlNode graphic in node.SelectNodes("Graphic"))
@@ -116,6 +128,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     _errorCount++;
                 }
             }
+
+            if (convertToSmpte)
+            {
+                foreach (var p in subtitle.Paragraphs)
+                {
+                    p.StartTime.TotalMilliseconds *= 1.001;
+                    p.EndTime.TotalMilliseconds *= 1.001;
+                }
+            }
+
             subtitle.Renumber();
         }
 

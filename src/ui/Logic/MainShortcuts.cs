@@ -18,6 +18,19 @@ namespace Nikse.SubtitleEdit.Logic
         public Keys MainGeneralToggleTranslationMode { get; set; }
         public Keys MainGeneralSwitchTranslationAndOriginal { get; set; }
         public Keys MainGeneralSwitchTranslationAndOriginalTextBoxes { get; set; }
+        public Keys MainGeneralLayoutChoose { get; set; }
+        public Keys MainGeneralLayoutChoose1 { get; set; }
+        public Keys MainGeneralLayoutChoose2 { get; set; }
+        public Keys MainGeneralLayoutChoose3 { get; set; }
+        public Keys MainGeneralLayoutChoose4 { get; set; }
+        public Keys MainGeneralLayoutChoose5 { get; set; }
+        public Keys MainGeneralLayoutChoose6 { get; set; }
+        public Keys MainGeneralLayoutChoose7 { get; set; }
+        public Keys MainGeneralLayoutChoose8 { get; set; }
+        public Keys MainGeneralLayoutChoose9 { get; set; }
+        public Keys MainGeneralLayoutChoose10 { get; set; }
+        public Keys MainGeneralLayoutChoose11 { get; set; }
+        public Keys MainGeneralLayoutChoose12 { get; set; }
         public Keys MainGeneralMergeTranslationAndOriginal { get; set; }
         public Keys MainGeneralMergeWithNext { get; set; }
         public Keys MainGeneralMergeWithPrevious { get; set; }
@@ -135,10 +148,12 @@ namespace Nikse.SubtitleEdit.Logic
         public Keys MainAdjustSetStartAndOffsetTheWholeSubtitle { get; set; }
         public Keys MainAdjustSetEndAndOffsetTheRest { get; set; }
         public Keys MainAdjustSetEndAndOffsetTheRestAndGoToNext { get; set; }
+        public Keys MainAdjustSetStartAndGotoNext { get; set; }
         public Keys MainAdjustSetEndAndGotoNext { get; set; }
         public Keys MainAdjustInsertViaEndAutoStart { get; set; }
         public Keys MainAdjustInsertViaEndAutoStartAndGoToNext { get; set; }
         public Keys MainAdjustSetEndMinusGapAndStartNextHere { get; set; }
+        public Keys MainAdjustSetEndAndStartOfNextPlusGap { get; set; }
         public Keys MainAdjustSetStartAutoDurationAndGoToNext { get; set; }
         public Keys MainAdjustSetEndNextStartAndGoToNext { get; set; }
         public Keys MainAdjustStartDownEndUpAndGoToNext { get; set; }
@@ -277,6 +292,19 @@ namespace Nikse.SubtitleEdit.Logic
             MainGeneralToggleTranslationMode = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralToggleTranslationMode);
             MainGeneralSwitchTranslationAndOriginal = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralSwitchOriginalAndTranslation);
             MainGeneralSwitchTranslationAndOriginalTextBoxes = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralSwitchOriginalAndTranslationTextBoxes);
+            MainGeneralLayoutChoose = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralLayoutChoose);
+            MainGeneralLayoutChoose1 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralLayoutChoose1);
+            MainGeneralLayoutChoose2 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralLayoutChoose2);
+            MainGeneralLayoutChoose3 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralLayoutChoose3);
+            MainGeneralLayoutChoose4 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralLayoutChoose4);
+            MainGeneralLayoutChoose5 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralLayoutChoose5);
+            MainGeneralLayoutChoose6 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralLayoutChoose6);
+            MainGeneralLayoutChoose7 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralLayoutChoose7);
+            MainGeneralLayoutChoose8 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralLayoutChoose8);
+            MainGeneralLayoutChoose9 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralLayoutChoose9);
+            MainGeneralLayoutChoose10 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralLayoutChoose10);
+            MainGeneralLayoutChoose11 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralLayoutChoose11);
+            MainGeneralLayoutChoose12 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralLayoutChoose12);
             MainGeneralMergeTranslationAndOriginal = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralMergeOriginalAndTranslation);
             MainGeneralMergeWithNext = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralMergeWithNext);
             MainGeneralMergeWithPrevious = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralMergeWithPrevious);
@@ -298,7 +326,7 @@ namespace Nikse.SubtitleEdit.Logic
             MainVideoPlayFromBeginning = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoPlayFromBeginning);
             VideoPause = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoPause);
             VideoStop = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoStop);
-            MainVideoFocusSetVideoPosition = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoFoucsSetVideoPosition);
+            MainVideoFocusSetVideoPosition = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoFocusSetVideoPosition);
             ToggleVideoDockUndock = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoToggleVideoControls);
             VideoPlayPauseToggle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoPlayPauseToggle);
             VideoPlay150Speed = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoPlay150Speed);
@@ -437,10 +465,12 @@ namespace Nikse.SubtitleEdit.Logic
             MainAdjustSetStartAndOffsetTheWholeSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetStartAndOffsetTheWholeSubtitle);
             MainAdjustSetEndAndOffsetTheRest = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetEndAndOffsetTheRest);
             MainAdjustSetEndAndOffsetTheRestAndGoToNext = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetEndAndOffsetTheRestAndGoToNext);
+            MainAdjustSetStartAndGotoNext = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetStartAndGotoNext);
             MainAdjustSetEndAndGotoNext = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetEndAndGotoNext);
             MainAdjustInsertViaEndAutoStart = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustViaEndAutoStart);
             MainAdjustInsertViaEndAutoStartAndGoToNext = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustViaEndAutoStartAndGoToNext);
             MainAdjustSetEndMinusGapAndStartNextHere = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetEndMinusGapAndStartNextHere);
+            MainAdjustSetEndAndStartOfNextPlusGap = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainSetEndAndStartNextAfterGap);
             MainAdjustSetStartAutoDurationAndGoToNext = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetStartAutoDurationAndGoToNext);
             MainAdjustSetEndNextStartAndGoToNext = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetEndNextStartAndGoToNext);
             MainAdjustStartDownEndUpAndGoToNext = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustStartDownEndUpAndGoToNext);

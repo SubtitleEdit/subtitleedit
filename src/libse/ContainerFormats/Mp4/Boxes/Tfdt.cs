@@ -30,11 +30,11 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
 
             if (version == 1)
             {
-                BaseMediaDecodeTime = GetUInt(8);
+                BaseMediaDecodeTime = GetUInt64(4);
             }
             else
             {
-                BaseMediaDecodeTime = GetUInt64(8);
+                BaseMediaDecodeTime = GetUInt(4);
             }
         }
     }

@@ -2,7 +2,7 @@
 <Language Name="hrvatski">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.0</Version>
+    <Version>4.0.4</Version>
     <TranslatedBy>Prijevod: Jozo Marić &amp; diomed</TranslatedBy>
     <CultureName>hr-HR</CultureName>
     <HelpFile />
@@ -531,7 +531,7 @@ Napomena: Provjeri slobodan prostor na disku.</WaveFileMalformed>
     <RemovedEmptyLine>Prazna linija je uklonjena.</RemovedEmptyLine>
     <RemovedEmptyLineAtTop>Prazna linija na vrhu je uklonjena.</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>Prazna linija na dnu je uklonjena.</RemovedEmptyLineAtBottom>
-    <RemovedEmptyLinesUnsedLineBreaks>Ukloni prazne linije i nepotrebne razmake</RemovedEmptyLinesUnsedLineBreaks>
+    <RemovedEmptyLinesUnusedLineBreaks>Ukloni prazne linije i nepotrebne razmake</RemovedEmptyLinesUnusedLineBreaks>
     <EmptyLinesRemovedX>Uklonjeno praznih linija: {0}</EmptyLinesRemovedX>
     <FixOverlappingDisplayTimes>Ispravi preklapanje vremena</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>Ispravi kratko vrijeme prikaza</FixShortDisplayTimes>

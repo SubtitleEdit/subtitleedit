@@ -73,7 +73,7 @@
             this.checkBoxIncludeShotChanges.AutoSize = true;
             this.checkBoxIncludeShotChanges.Location = new System.Drawing.Point(166, 315);
             this.checkBoxIncludeShotChanges.Name = "checkBoxIncludeShotChanges";
-            this.checkBoxIncludeShotChanges.Size = new System.Drawing.Size(137, 17);
+            this.checkBoxIncludeShotChanges.Size = new System.Drawing.Size(128, 17);
             this.checkBoxIncludeShotChanges.TabIndex = 13;
             this.checkBoxIncludeShotChanges.Text = "Include shot changes";
             this.checkBoxIncludeShotChanges.UseVisualStyleBackColor = true;
@@ -89,6 +89,7 @@
             // 
             // textBoxJobId
             // 
+            this.textBoxJobId.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxJobId.Location = new System.Drawing.Point(166, 19);
             this.textBoxJobId.Name = "textBoxJobId";
             this.textBoxJobId.ReadOnly = true;
@@ -106,6 +107,7 @@
             // 
             // textBoxJobDescription
             // 
+            this.textBoxJobDescription.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxJobDescription.Location = new System.Drawing.Point(166, 72);
             this.textBoxJobDescription.Multiline = true;
             this.textBoxJobDescription.Name = "textBoxJobDescription";
@@ -153,6 +155,7 @@
             // 
             // textBoxSubtitleFileName
             // 
+            this.textBoxSubtitleFileName.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxSubtitleFileName.Location = new System.Drawing.Point(166, 175);
             this.textBoxSubtitleFileName.Name = "textBoxSubtitleFileName";
             this.textBoxSubtitleFileName.Size = new System.Drawing.Size(391, 20);
@@ -186,7 +189,7 @@
             // 
             // buttonGapChoose
             // 
-            this.buttonGapChoose.Location = new System.Drawing.Point(281, 183);
+            this.buttonGapChoose.Location = new System.Drawing.Point(281, 195);
             this.buttonGapChoose.Name = "buttonGapChoose";
             this.buttonGapChoose.Size = new System.Drawing.Size(28, 23);
             this.buttonGapChoose.TabIndex = 16;
@@ -197,7 +200,7 @@
             // labelOptimalCharsPerSecond
             // 
             this.labelOptimalCharsPerSecond.AutoSize = true;
-            this.labelOptimalCharsPerSecond.Location = new System.Drawing.Point(23, 54);
+            this.labelOptimalCharsPerSecond.Location = new System.Drawing.Point(23, 56);
             this.labelOptimalCharsPerSecond.Name = "labelOptimalCharsPerSecond";
             this.labelOptimalCharsPerSecond.Size = new System.Drawing.Size(93, 13);
             this.labelOptimalCharsPerSecond.TabIndex = 2;
@@ -205,21 +208,35 @@
             // 
             // numericUpDownOptimalCharsSec
             // 
+            this.numericUpDownOptimalCharsSec.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownOptimalCharsSec.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownOptimalCharsSec.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownOptimalCharsSec.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownOptimalCharsSec.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownOptimalCharsSec.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownOptimalCharsSec.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.numericUpDownOptimalCharsSec.DecimalPlaces = 1;
             this.numericUpDownOptimalCharsSec.Increment = new decimal(new int[] {
             1,
             0,
             0,
             65536});
-            this.numericUpDownOptimalCharsSec.Location = new System.Drawing.Point(220, 52);
+            this.numericUpDownOptimalCharsSec.Location = new System.Drawing.Point(220, 54);
+            this.numericUpDownOptimalCharsSec.Maximum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
             this.numericUpDownOptimalCharsSec.Minimum = new decimal(new int[] {
             4,
             0,
             0,
             0});
             this.numericUpDownOptimalCharsSec.Name = "numericUpDownOptimalCharsSec";
-            this.numericUpDownOptimalCharsSec.Size = new System.Drawing.Size(56, 20);
+            this.numericUpDownOptimalCharsSec.Size = new System.Drawing.Size(56, 23);
             this.numericUpDownOptimalCharsSec.TabIndex = 3;
+            this.numericUpDownOptimalCharsSec.TabStop = false;
+            this.numericUpDownOptimalCharsSec.ThousandsSeparator = false;
             this.numericUpDownOptimalCharsSec.Value = new decimal(new int[] {
             11,
             0,
@@ -237,7 +254,20 @@
             // 
             // numericUpDownMaxWordsMin
             // 
-            this.numericUpDownMaxWordsMin.Location = new System.Drawing.Point(220, 106);
+            this.numericUpDownMaxWordsMin.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownMaxWordsMin.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownMaxWordsMin.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownMaxWordsMin.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownMaxWordsMin.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownMaxWordsMin.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownMaxWordsMin.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownMaxWordsMin.DecimalPlaces = 0;
+            this.numericUpDownMaxWordsMin.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownMaxWordsMin.Location = new System.Drawing.Point(220, 112);
             this.numericUpDownMaxWordsMin.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -249,8 +279,10 @@
             0,
             0});
             this.numericUpDownMaxWordsMin.Name = "numericUpDownMaxWordsMin";
-            this.numericUpDownMaxWordsMin.Size = new System.Drawing.Size(56, 20);
+            this.numericUpDownMaxWordsMin.Size = new System.Drawing.Size(56, 23);
             this.numericUpDownMaxWordsMin.TabIndex = 8;
+            this.numericUpDownMaxWordsMin.TabStop = false;
+            this.numericUpDownMaxWordsMin.ThousandsSeparator = false;
             this.numericUpDownMaxWordsMin.Value = new decimal(new int[] {
             300,
             0,
@@ -260,7 +292,7 @@
             // labelMaxWordsPerMin
             // 
             this.labelMaxWordsPerMin.AutoSize = true;
-            this.labelMaxWordsPerMin.Location = new System.Drawing.Point(23, 108);
+            this.labelMaxWordsPerMin.Location = new System.Drawing.Point(23, 114);
             this.labelMaxWordsPerMin.Name = "labelMaxWordsPerMin";
             this.labelMaxWordsPerMin.Size = new System.Drawing.Size(82, 13);
             this.labelMaxWordsPerMin.TabIndex = 6;
@@ -269,7 +301,7 @@
             // labelMinDuration
             // 
             this.labelMinDuration.AutoSize = true;
-            this.labelMinDuration.Location = new System.Drawing.Point(23, 135);
+            this.labelMinDuration.Location = new System.Drawing.Point(23, 143);
             this.labelMinDuration.Name = "labelMinDuration";
             this.labelMinDuration.Size = new System.Drawing.Size(130, 13);
             this.labelMinDuration.TabIndex = 10;
@@ -277,7 +309,20 @@
             // 
             // numericUpDownMaxNumberOfLines
             // 
-            this.numericUpDownMaxNumberOfLines.Location = new System.Drawing.Point(220, 212);
+            this.numericUpDownMaxNumberOfLines.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownMaxNumberOfLines.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownMaxNumberOfLines.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownMaxNumberOfLines.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownMaxNumberOfLines.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownMaxNumberOfLines.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownMaxNumberOfLines.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownMaxNumberOfLines.DecimalPlaces = 0;
+            this.numericUpDownMaxNumberOfLines.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownMaxNumberOfLines.Location = new System.Drawing.Point(220, 226);
             this.numericUpDownMaxNumberOfLines.Maximum = new decimal(new int[] {
             25,
             0,
@@ -289,8 +334,10 @@
             0,
             0});
             this.numericUpDownMaxNumberOfLines.Name = "numericUpDownMaxNumberOfLines";
-            this.numericUpDownMaxNumberOfLines.Size = new System.Drawing.Size(56, 20);
+            this.numericUpDownMaxNumberOfLines.Size = new System.Drawing.Size(56, 23);
             this.numericUpDownMaxNumberOfLines.TabIndex = 1;
+            this.numericUpDownMaxNumberOfLines.TabStop = false;
+            this.numericUpDownMaxNumberOfLines.ThousandsSeparator = false;
             this.numericUpDownMaxNumberOfLines.Value = new decimal(new int[] {
             2,
             0,
@@ -300,7 +347,7 @@
             // labelMaxDuration
             // 
             this.labelMaxDuration.AutoSize = true;
-            this.labelMaxDuration.Location = new System.Drawing.Point(23, 161);
+            this.labelMaxDuration.Location = new System.Drawing.Point(23, 171);
             this.labelMaxDuration.Name = "labelMaxDuration";
             this.labelMaxDuration.Size = new System.Drawing.Size(133, 13);
             this.labelMaxDuration.TabIndex = 12;
@@ -309,7 +356,7 @@
             // labelMaxLines
             // 
             this.labelMaxLines.AutoSize = true;
-            this.labelMaxLines.Location = new System.Drawing.Point(23, 214);
+            this.labelMaxLines.Location = new System.Drawing.Point(23, 228);
             this.labelMaxLines.Name = "labelMaxLines";
             this.labelMaxLines.Size = new System.Drawing.Size(104, 13);
             this.labelMaxLines.TabIndex = 0;
@@ -317,7 +364,20 @@
             // 
             // numericUpDownDurationMin
             // 
-            this.numericUpDownDurationMin.Location = new System.Drawing.Point(220, 133);
+            this.numericUpDownDurationMin.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownDurationMin.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownDurationMin.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownDurationMin.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownDurationMin.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownDurationMin.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownDurationMin.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownDurationMin.DecimalPlaces = 0;
+            this.numericUpDownDurationMin.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownDurationMin.Location = new System.Drawing.Point(220, 141);
             this.numericUpDownDurationMin.Maximum = new decimal(new int[] {
             3000,
             0,
@@ -329,8 +389,10 @@
             0,
             0});
             this.numericUpDownDurationMin.Name = "numericUpDownDurationMin";
-            this.numericUpDownDurationMin.Size = new System.Drawing.Size(56, 20);
+            this.numericUpDownDurationMin.Size = new System.Drawing.Size(56, 23);
             this.numericUpDownDurationMin.TabIndex = 11;
+            this.numericUpDownDurationMin.TabStop = false;
+            this.numericUpDownDurationMin.ThousandsSeparator = false;
             this.numericUpDownDurationMin.Value = new decimal(new int[] {
             100,
             0,
@@ -339,7 +401,20 @@
             // 
             // numericUpDownDurationMax
             // 
-            this.numericUpDownDurationMax.Location = new System.Drawing.Point(220, 159);
+            this.numericUpDownDurationMax.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownDurationMax.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownDurationMax.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownDurationMax.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownDurationMax.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownDurationMax.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownDurationMax.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownDurationMax.DecimalPlaces = 0;
+            this.numericUpDownDurationMax.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownDurationMax.Location = new System.Drawing.Point(220, 169);
             this.numericUpDownDurationMax.Maximum = new decimal(new int[] {
             50000,
             0,
@@ -351,8 +426,10 @@
             0,
             0});
             this.numericUpDownDurationMax.Name = "numericUpDownDurationMax";
-            this.numericUpDownDurationMax.Size = new System.Drawing.Size(56, 20);
+            this.numericUpDownDurationMax.Size = new System.Drawing.Size(56, 23);
             this.numericUpDownDurationMax.TabIndex = 13;
+            this.numericUpDownDurationMax.TabStop = false;
+            this.numericUpDownDurationMax.ThousandsSeparator = false;
             this.numericUpDownDurationMax.Value = new decimal(new int[] {
             50000,
             0,
@@ -362,7 +439,7 @@
             // labelMaxCharsPerSecond
             // 
             this.labelMaxCharsPerSecond.AutoSize = true;
-            this.labelMaxCharsPerSecond.Location = new System.Drawing.Point(23, 81);
+            this.labelMaxCharsPerSecond.Location = new System.Drawing.Point(23, 85);
             this.labelMaxCharsPerSecond.Name = "labelMaxCharsPerSecond";
             this.labelMaxCharsPerSecond.Size = new System.Drawing.Size(81, 13);
             this.labelMaxCharsPerSecond.TabIndex = 4;
@@ -370,15 +447,35 @@
             // 
             // numericUpDownMinGapMs
             // 
-            this.numericUpDownMinGapMs.Location = new System.Drawing.Point(220, 185);
+            this.numericUpDownMinGapMs.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownMinGapMs.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownMinGapMs.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownMinGapMs.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownMinGapMs.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownMinGapMs.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownMinGapMs.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownMinGapMs.DecimalPlaces = 0;
+            this.numericUpDownMinGapMs.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownMinGapMs.Location = new System.Drawing.Point(220, 197);
             this.numericUpDownMinGapMs.Maximum = new decimal(new int[] {
             1000,
             0,
             0,
             0});
+            this.numericUpDownMinGapMs.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.numericUpDownMinGapMs.Name = "numericUpDownMinGapMs";
-            this.numericUpDownMinGapMs.Size = new System.Drawing.Size(56, 20);
+            this.numericUpDownMinGapMs.Size = new System.Drawing.Size(56, 23);
             this.numericUpDownMinGapMs.TabIndex = 15;
+            this.numericUpDownMinGapMs.TabStop = false;
+            this.numericUpDownMinGapMs.ThousandsSeparator = false;
             this.numericUpDownMinGapMs.Value = new decimal(new int[] {
             25,
             0,
@@ -387,21 +484,35 @@
             // 
             // numericUpDownMaxCharsSec
             // 
+            this.numericUpDownMaxCharsSec.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownMaxCharsSec.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownMaxCharsSec.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownMaxCharsSec.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownMaxCharsSec.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownMaxCharsSec.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownMaxCharsSec.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.numericUpDownMaxCharsSec.DecimalPlaces = 1;
             this.numericUpDownMaxCharsSec.Increment = new decimal(new int[] {
             1,
             0,
             0,
             65536});
-            this.numericUpDownMaxCharsSec.Location = new System.Drawing.Point(220, 79);
+            this.numericUpDownMaxCharsSec.Location = new System.Drawing.Point(220, 83);
+            this.numericUpDownMaxCharsSec.Maximum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
             this.numericUpDownMaxCharsSec.Minimum = new decimal(new int[] {
             4,
             0,
             0,
             0});
             this.numericUpDownMaxCharsSec.Name = "numericUpDownMaxCharsSec";
-            this.numericUpDownMaxCharsSec.Size = new System.Drawing.Size(56, 20);
+            this.numericUpDownMaxCharsSec.Size = new System.Drawing.Size(56, 23);
             this.numericUpDownMaxCharsSec.TabIndex = 5;
+            this.numericUpDownMaxCharsSec.TabStop = false;
+            this.numericUpDownMaxCharsSec.ThousandsSeparator = false;
             this.numericUpDownMaxCharsSec.Value = new decimal(new int[] {
             24,
             0,
@@ -411,7 +522,7 @@
             // labelMinGapMs
             // 
             this.labelMinGapMs.AutoSize = true;
-            this.labelMinGapMs.Location = new System.Drawing.Point(23, 187);
+            this.labelMinGapMs.Location = new System.Drawing.Point(23, 199);
             this.labelMinGapMs.Name = "labelMinGapMs";
             this.labelMinGapMs.Size = new System.Drawing.Size(133, 13);
             this.labelMinGapMs.TabIndex = 14;
@@ -419,6 +530,19 @@
             // 
             // numericUpDownSubtitleLineMaximumLength
             // 
+            this.numericUpDownSubtitleLineMaximumLength.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownSubtitleLineMaximumLength.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownSubtitleLineMaximumLength.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownSubtitleLineMaximumLength.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownSubtitleLineMaximumLength.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownSubtitleLineMaximumLength.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownSubtitleLineMaximumLength.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownSubtitleLineMaximumLength.DecimalPlaces = 0;
+            this.numericUpDownSubtitleLineMaximumLength.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownSubtitleLineMaximumLength.Location = new System.Drawing.Point(220, 25);
             this.numericUpDownSubtitleLineMaximumLength.Maximum = new decimal(new int[] {
             999,
@@ -431,8 +555,10 @@
             0,
             0});
             this.numericUpDownSubtitleLineMaximumLength.Name = "numericUpDownSubtitleLineMaximumLength";
-            this.numericUpDownSubtitleLineMaximumLength.Size = new System.Drawing.Size(56, 20);
+            this.numericUpDownSubtitleLineMaximumLength.Size = new System.Drawing.Size(56, 23);
             this.numericUpDownSubtitleLineMaximumLength.TabIndex = 1;
+            this.numericUpDownSubtitleLineMaximumLength.TabStop = false;
+            this.numericUpDownSubtitleLineMaximumLength.ThousandsSeparator = false;
             this.numericUpDownSubtitleLineMaximumLength.Value = new decimal(new int[] {
             100,
             0,
@@ -441,6 +567,7 @@
             // 
             // textBoxJobName
             // 
+            this.textBoxJobName.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxJobName.Location = new System.Drawing.Point(166, 45);
             this.textBoxJobName.Name = "textBoxJobName";
             this.textBoxJobName.Size = new System.Drawing.Size(391, 20);
@@ -457,6 +584,7 @@
             // 
             // textBoxVideoUrl
             // 
+            this.textBoxVideoUrl.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxVideoUrl.Location = new System.Drawing.Point(166, 250);
             this.textBoxVideoUrl.Name = "textBoxVideoUrl";
             this.textBoxVideoUrl.Size = new System.Drawing.Size(391, 20);

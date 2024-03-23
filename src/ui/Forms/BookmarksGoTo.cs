@@ -25,6 +25,11 @@ namespace Nikse.SubtitleEdit.Forms
             columnHeaderStartTime.Text = LanguageSettings.Current.General.StartTime;
             columnHeaderText.Text = LanguageSettings.Current.General.Text;
 
+            toolStripMenuItemRename.Text = LanguageSettings.Current.Bookmarks.EditBookmark;
+            exportToolStripMenuItem.Text = LanguageSettings.Current.MultipleReplace.Export;
+            deleteToolStripMenuItem.Text = LanguageSettings.Current.SubStationAlphaStyles.Remove;
+            deleteAllToolStripMenuItem.Text = LanguageSettings.Current.SubStationAlphaStyles.RemoveAll;
+
             _subtitle = subtitle;
             foreach (var p in subtitle.Paragraphs)
             {
@@ -37,6 +42,11 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
+            UpdateCount();
+        }
+
+        private void UpdateCount()
+        {
             labelCount.Text = $"{LanguageSettings.Current.FindDialog.Count}: {listViewBookmarks.Items.Count}";
         }
 
@@ -146,6 +156,71 @@ namespace Nikse.SubtitleEdit.Forms
             }
             sb.Append("\"");
             return sb.ToString();
+        }
+
+        private void exportToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ExportBookmarksAsCsv(_subtitle, this);
+        }
+
+        private void toolStripMenuItemRename_Click(object sender, EventArgs e)
+        {
+            if (listViewBookmarks.SelectedItems.Count != 1)
+            {
+                return;
+            }
+
+            if (listViewBookmarks.SelectedItems[0].Tag is Paragraph p)
+            {
+                using (var form = new BookmarkAdd(p))
+                {
+                    if (form.ShowDialog() == DialogResult.OK)
+                    {
+                        p.Bookmark = form.Comment;
+                        listViewBookmarks.SelectedItems[0].SubItems[2].Text = p.Bookmark.Replace(Environment.NewLine, "  ");
+                    }
+                }
+            }
+        }
+
+        private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (listViewBookmarks.SelectedItems.Count != 1)
+            {
+                return;
+            }
+
+            var idx = listViewBookmarks.SelectedItems[0].Index;
+            if (listViewBookmarks.Items[idx].Tag is Paragraph p)
+            {
+                p.Bookmark = null;
+                listViewBookmarks.Items.RemoveAt(idx);
+
+                if (idx > 0)
+                {
+                    idx--;
+                }
+
+                if (listViewBookmarks.Items.Count > 0)
+                {
+                    listViewBookmarks.Items[idx].Selected = true;
+                    listViewBookmarks.Items[idx].Focused = true;
+                }
+            }
+
+            UpdateCount();
+        }
+
+        private void deleteAllToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            foreach (var p in _subtitle.Paragraphs.Where(p => p.Bookmark != null))
+            {
+                p.Bookmark = null;
+            }
+
+            listViewBookmarks.Items.Clear();
+
+            UpdateCount();
         }
     }
 }

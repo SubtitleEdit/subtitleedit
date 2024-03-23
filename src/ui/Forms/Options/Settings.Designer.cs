@@ -34,6 +34,9 @@
             this.listBoxSection = new Nikse.SubtitleEdit.Controls.NikseListBox();
             this.panelGeneral = new System.Windows.Forms.Panel();
             this.groupBoxMiscellaneous = new System.Windows.Forms.GroupBox();
+            this.labelDefaultLanguagesList = new System.Windows.Forms.Label();
+            this.buttonDefaultLanguages = new System.Windows.Forms.Button();
+            this.labelDefaultLanguages = new System.Windows.Forms.Label();
             this.buttonTranslationAutoSuffix = new System.Windows.Forms.Button();
             this.comboBoxTranslationAutoSuffix = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelTranslationAutoSuffix = new System.Windows.Forms.Label();
@@ -80,7 +83,7 @@
             this.labelTimeCodeMode = new System.Windows.Forms.Label();
             this.comboBoxEncoding = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.checkBoxAutoDetectAnsiEncoding = new System.Windows.Forms.CheckBox();
-            this.textBoxShowLineBreaksAs = new Nikse.SubtitleEdit.Controls.SETextBox();
+            this.textBoxShowLineBreaksAs = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.checkBoxAutoWrapWhileTyping = new System.Windows.Forms.CheckBox();
             this.checkBoxPromptDeleteLines = new System.Windows.Forms.CheckBox();
             this.checkBoxAllowEditOfOriginalSubtitle = new System.Windows.Forms.CheckBox();
@@ -127,6 +130,8 @@
             this.labelDefaultSubtitleFormat = new System.Windows.Forms.Label();
             this.panelShortcuts = new System.Windows.Forms.Panel();
             this.groupBoxShortcuts = new System.Windows.Forms.GroupBox();
+            this.nikseComboBoxShortcutsFilter = new Nikse.SubtitleEdit.Controls.NikseComboBox();
+            this.labelShortcutsFilter = new System.Windows.Forms.Label();
             this.buttonShortcutsClear = new System.Windows.Forms.Button();
             this.labelShortcutsSearch = new System.Windows.Forms.Label();
             this.textBoxShortcutSearch = new Nikse.SubtitleEdit.Controls.SETextBox();
@@ -160,19 +165,19 @@
             this.panelVideoPlayer = new System.Windows.Forms.Panel();
             this.groupBoxMainWindowVideoControls = new System.Windows.Forms.GroupBox();
             this.labelCustomSearch5 = new System.Windows.Forms.Label();
-            this.textBoxCustomSearchUrl5 = new Nikse.SubtitleEdit.Controls.SETextBox();
+            this.textBoxCustomSearchUrl5 = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.comboBoxCustomSearch5 = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelCustomSearch4 = new System.Windows.Forms.Label();
-            this.textBoxCustomSearchUrl4 = new Nikse.SubtitleEdit.Controls.SETextBox();
+            this.textBoxCustomSearchUrl4 = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.comboBoxCustomSearch4 = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelCustomSearch3 = new System.Windows.Forms.Label();
-            this.textBoxCustomSearchUrl3 = new Nikse.SubtitleEdit.Controls.SETextBox();
+            this.textBoxCustomSearchUrl3 = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.comboBoxCustomSearch3 = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelCustomSearch2 = new System.Windows.Forms.Label();
-            this.textBoxCustomSearchUrl2 = new Nikse.SubtitleEdit.Controls.SETextBox();
+            this.textBoxCustomSearchUrl2 = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.comboBoxCustomSearch2 = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelCustomSearch1 = new System.Windows.Forms.Label();
-            this.textBoxCustomSearchUrl1 = new Nikse.SubtitleEdit.Controls.SETextBox();
+            this.textBoxCustomSearchUrl1 = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelCustomSearch = new System.Windows.Forms.Label();
             this.comboBoxCustomSearch1 = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.groupBoxVideoPlayerDefault = new System.Windows.Forms.GroupBox();
@@ -207,7 +212,7 @@
             this.buttonMpvSettings = new System.Windows.Forms.Button();
             this.labelPlatform = new System.Windows.Forms.Label();
             this.buttonVlcPathBrowse = new System.Windows.Forms.Button();
-            this.textBoxVlcPath = new Nikse.SubtitleEdit.Controls.SETextBox();
+            this.textBoxVlcPath = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelVlcPath = new System.Windows.Forms.Label();
             this.labelVideoPlayerVLC = new System.Windows.Forms.Label();
             this.radioButtonVideoPlayerVLC = new System.Windows.Forms.RadioButton();
@@ -271,18 +276,6 @@
             this.checkBoxShortcutsAllowLetterOrNumberInTextBox = new System.Windows.Forms.CheckBox();
             this.comboBoxBDOpensIn = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelBDOpensIn = new System.Windows.Forms.Label();
-            this.groupBoxGoogleTranslate = new System.Windows.Forms.GroupBox();
-            this.labelGoogleTranslateApiKey = new System.Windows.Forms.Label();
-            this.textBoxGoogleTransleApiKey = new Nikse.SubtitleEdit.Controls.SETextBox();
-            this.linkLabelGoogleTranslateSignUp = new System.Windows.Forms.LinkLabel();
-            this.label3 = new System.Windows.Forms.Label();
-            this.groupBoxBing = new System.Windows.Forms.GroupBox();
-            this.comboBoxBoxBingTokenEndpoint = new Nikse.SubtitleEdit.Controls.NikseComboBox();
-            this.labelBingTokenEndpoint = new System.Windows.Forms.Label();
-            this.labelBingApiKey = new System.Windows.Forms.Label();
-            this.textBoxBingClientSecret = new Nikse.SubtitleEdit.Controls.SETextBox();
-            this.linkLabelBingSubscribe = new System.Windows.Forms.LinkLabel();
-            this.label1 = new System.Windows.Forms.Label();
             this.groupBoxToolsAutoBr = new System.Windows.Forms.GroupBox();
             this.labelToolsBreakBottomHeavyPercent = new System.Windows.Forms.Label();
             this.numericUpDownToolsBreakPreferBottomHeavy = new Nikse.SubtitleEdit.Controls.NikseUpDown();
@@ -308,7 +301,7 @@
             this.checkBoxFixShortDisplayTimesAllowMoveStartTime = new System.Windows.Forms.CheckBox();
             this.checkBoxFixCommonOcrErrorsUsingHardcodedRules = new System.Windows.Forms.CheckBox();
             this.comboBoxToolsMusicSymbol = new Nikse.SubtitleEdit.Controls.NikseComboBox();
-            this.textBoxMusicSymbolsToReplace = new Nikse.SubtitleEdit.Controls.SETextBox();
+            this.textBoxMusicSymbolsToReplace = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelToolsMusicSymbolsToReplace = new System.Windows.Forms.Label();
             this.labelToolsMusicSymbol = new System.Windows.Forms.Label();
             this.groupBoxToolsVisualSync = new System.Windows.Forms.GroupBox();
@@ -318,6 +311,18 @@
             this.comboBoxToolsStartSceneIndex = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.comboBoxToolsVerifySeconds = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelVerifyButton = new System.Windows.Forms.Label();
+            this.groupBoxGoogleTranslate = new System.Windows.Forms.GroupBox();
+            this.labelGoogleTranslateApiKey = new System.Windows.Forms.Label();
+            this.textBoxGoogleTransleApiKey = new Nikse.SubtitleEdit.Controls.NikseTextBox();
+            this.linkLabelGoogleTranslateSignUp = new System.Windows.Forms.LinkLabel();
+            this.label3 = new System.Windows.Forms.Label();
+            this.groupBoxBing = new System.Windows.Forms.GroupBox();
+            this.comboBoxBoxBingTokenEndpoint = new Nikse.SubtitleEdit.Controls.NikseComboBox();
+            this.labelBingTokenEndpoint = new System.Windows.Forms.Label();
+            this.labelBingApiKey = new System.Windows.Forms.Label();
+            this.textBoxBingClientSecret = new Nikse.SubtitleEdit.Controls.NikseTextBox();
+            this.linkLabelBingSubscribe = new System.Windows.Forms.LinkLabel();
+            this.label1 = new System.Windows.Forms.Label();
             this.panelToolBar = new System.Windows.Forms.Panel();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.checkBoxShowFrameRate = new System.Windows.Forms.CheckBox();
@@ -429,13 +434,13 @@
             this.labelProxyAuthType = new System.Windows.Forms.Label();
             this.checkBoxProxyUseDefaultCredentials = new System.Windows.Forms.CheckBox();
             this.comboBoxProxyAuthType = new Nikse.SubtitleEdit.Controls.NikseComboBox();
-            this.textBoxProxyDomain = new Nikse.SubtitleEdit.Controls.SETextBox();
+            this.textBoxProxyDomain = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelProxyDomain = new System.Windows.Forms.Label();
-            this.textBoxProxyUserName = new Nikse.SubtitleEdit.Controls.SETextBox();
+            this.textBoxProxyUserName = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelProxyPassword = new System.Windows.Forms.Label();
             this.labelProxyUserName = new System.Windows.Forms.Label();
-            this.textBoxProxyPassword = new Nikse.SubtitleEdit.Controls.SETextBox();
-            this.textBoxProxyAddress = new Nikse.SubtitleEdit.Controls.SETextBox();
+            this.textBoxProxyPassword = new Nikse.SubtitleEdit.Controls.NikseTextBox();
+            this.textBoxProxyAddress = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelProxyAddress = new System.Windows.Forms.Label();
             this.labelStatus = new System.Windows.Forms.Label();
             this.openFileDialogFFmpeg = new System.Windows.Forms.OpenFileDialog();
@@ -450,6 +455,54 @@
             this.labelUpdateFileTypeAssociationsStatus = new System.Windows.Forms.Label();
             this.imageListFileTypeAssociations = new System.Windows.Forms.ImageList(this.components);
             this.toolTipDialogStylePreview = new System.Windows.Forms.ToolTip(this.components);
+            this.panelAutoTranslate = new System.Windows.Forms.Panel();
+            this.groupBoxAutoTranslatePapago = new System.Windows.Forms.GroupBox();
+            this.nikseTextBoxPapagoClientId = new Nikse.SubtitleEdit.Controls.NikseTextBox();
+            this.nikseTextBoxPapagoClientSecret = new Nikse.SubtitleEdit.Controls.NikseTextBox();
+            this.labelSecretPapago = new System.Windows.Forms.Label();
+            this.labelApiKeyPapago = new System.Windows.Forms.Label();
+            this.linkLabelPapago = new System.Windows.Forms.LinkLabel();
+            this.label11 = new System.Windows.Forms.Label();
+            this.groupBoxAutoTranslateChatGpt = new System.Windows.Forms.GroupBox();
+            this.nikseTextBoxChatGptUrl = new Nikse.SubtitleEdit.Controls.NikseTextBox();
+            this.nikseComboBoxChatGptModel = new Nikse.SubtitleEdit.Controls.NikseComboBox();
+            this.labelChatGptModel = new System.Windows.Forms.Label();
+            this.nikseTextBoxChatGptApiKey = new Nikse.SubtitleEdit.Controls.NikseTextBox();
+            this.labelApiKeyChatGpt = new System.Windows.Forms.Label();
+            this.labelUrlChatGpt = new System.Windows.Forms.Label();
+            this.linkLabelMoreInfoChatGpt = new System.Windows.Forms.LinkLabel();
+            this.label10 = new System.Windows.Forms.Label();
+            this.groupBoxDeepL = new System.Windows.Forms.GroupBox();
+            this.nikseTextBoxDeepLUrl = new Nikse.SubtitleEdit.Controls.NikseTextBox();
+            this.nikseTextBoxDeepLApiKey = new Nikse.SubtitleEdit.Controls.NikseTextBox();
+            this.labelDeepLApiKey = new System.Windows.Forms.Label();
+            this.labelDeepLUrl = new System.Windows.Forms.Label();
+            this.linkLabelMoreInfoDeepl = new System.Windows.Forms.LinkLabel();
+            this.label9 = new System.Windows.Forms.Label();
+            this.groupBoxMyMemory = new System.Windows.Forms.GroupBox();
+            this.nikseTextBoxMyMemoryApiKey = new Nikse.SubtitleEdit.Controls.NikseTextBox();
+            this.labelMyMemoryApiKey = new System.Windows.Forms.Label();
+            this.linkLabelMyMemoryTranslate = new System.Windows.Forms.LinkLabel();
+            this.label8 = new System.Windows.Forms.Label();
+            this.groupBoxLibreTranslate = new System.Windows.Forms.GroupBox();
+            this.nikseTextBoxLibreTranslateApiKey = new Nikse.SubtitleEdit.Controls.NikseTextBox();
+            this.labelLibreApiKey = new System.Windows.Forms.Label();
+            this.nikseTextBoxLibreTranslateUrl = new Nikse.SubtitleEdit.Controls.NikseTextBox();
+            this.labelLibreUrl = new System.Windows.Forms.Label();
+            this.linkLabelLibreTranslateApi = new System.Windows.Forms.LinkLabel();
+            this.label7 = new System.Windows.Forms.Label();
+            this.groupBoxNllbServe = new System.Windows.Forms.GroupBox();
+            this.nikseTextBoxNllbServeUrl = new Nikse.SubtitleEdit.Controls.NikseTextBox();
+            this.nikseTextBoxNllbServeModel = new Nikse.SubtitleEdit.Controls.NikseTextBox();
+            this.labelNllbServeModel = new System.Windows.Forms.Label();
+            this.labelNllbServeUrl = new System.Windows.Forms.Label();
+            this.linkLabelNllbServe = new System.Windows.Forms.LinkLabel();
+            this.label4 = new System.Windows.Forms.Label();
+            this.groupBoxNllbApi = new System.Windows.Forms.GroupBox();
+            this.nikseTextBoxNllbApiUrl = new Nikse.SubtitleEdit.Controls.NikseTextBox();
+            this.labelNllbApiUrl = new System.Windows.Forms.Label();
+            this.linkLabelNllbApi = new System.Windows.Forms.LinkLabel();
+            this.label5 = new System.Windows.Forms.Label();
             this.panelGeneral.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
             this.groupBoxGeneralRules.SuspendLayout();
@@ -474,12 +527,12 @@
             this.groupBoxWaveformAppearence.SuspendLayout();
             this.panelTools.SuspendLayout();
             this.groupBoxToolsMisc.SuspendLayout();
-            this.groupBoxGoogleTranslate.SuspendLayout();
-            this.groupBoxBing.SuspendLayout();
             this.groupBoxToolsAutoBr.SuspendLayout();
             this.groupBoxSpellCheck.SuspendLayout();
             this.groupBoxFixCommonErrors.SuspendLayout();
             this.groupBoxToolsVisualSync.SuspendLayout();
+            this.groupBoxGoogleTranslate.SuspendLayout();
+            this.groupBoxBing.SuspendLayout();
             this.panelToolBar.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBoxShowToolBarButtons.SuspendLayout();
@@ -525,6 +578,14 @@
             this.groupBoxProxySettings.SuspendLayout();
             this.groupBoxProxyAuthentication.SuspendLayout();
             this.panelFileTypeAssociations.SuspendLayout();
+            this.panelAutoTranslate.SuspendLayout();
+            this.groupBoxAutoTranslatePapago.SuspendLayout();
+            this.groupBoxAutoTranslateChatGpt.SuspendLayout();
+            this.groupBoxDeepL.SuspendLayout();
+            this.groupBoxMyMemory.SuspendLayout();
+            this.groupBoxLibreTranslate.SuspendLayout();
+            this.groupBoxNllbServe.SuspendLayout();
+            this.groupBoxNllbApi.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonOK
@@ -584,6 +645,9 @@
             this.groupBoxMiscellaneous.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxMiscellaneous.Controls.Add(this.labelDefaultLanguagesList);
+            this.groupBoxMiscellaneous.Controls.Add(this.buttonDefaultLanguages);
+            this.groupBoxMiscellaneous.Controls.Add(this.labelDefaultLanguages);
             this.groupBoxMiscellaneous.Controls.Add(this.buttonTranslationAutoSuffix);
             this.groupBoxMiscellaneous.Controls.Add(this.comboBoxTranslationAutoSuffix);
             this.groupBoxMiscellaneous.Controls.Add(this.labelTranslationAutoSuffix);
@@ -627,6 +691,34 @@
             this.groupBoxMiscellaneous.TabIndex = 0;
             this.groupBoxMiscellaneous.TabStop = false;
             this.groupBoxMiscellaneous.Text = "Miscellaneous";
+            // 
+            // labelDefaultLanguagesList
+            // 
+            this.labelDefaultLanguagesList.AutoSize = true;
+            this.labelDefaultLanguagesList.Location = new System.Drawing.Point(241, 495);
+            this.labelDefaultLanguagesList.Name = "labelDefaultLanguagesList";
+            this.labelDefaultLanguagesList.Size = new System.Drawing.Size(38, 13);
+            this.labelDefaultLanguagesList.TabIndex = 67;
+            this.labelDefaultLanguagesList.Text = "da, en";
+            // 
+            // buttonDefaultLanguages
+            // 
+            this.buttonDefaultLanguages.Location = new System.Drawing.Point(205, 489);
+            this.buttonDefaultLanguages.Name = "buttonDefaultLanguages";
+            this.buttonDefaultLanguages.Size = new System.Drawing.Size(28, 23);
+            this.buttonDefaultLanguages.TabIndex = 66;
+            this.buttonDefaultLanguages.Text = "...";
+            this.buttonDefaultLanguages.UseVisualStyleBackColor = true;
+            this.buttonDefaultLanguages.Click += new System.EventHandler(this.buttonDefaultLanguages_Click);
+            // 
+            // labelDefaultLanguages
+            // 
+            this.labelDefaultLanguages.AutoSize = true;
+            this.labelDefaultLanguages.Location = new System.Drawing.Point(8, 491);
+            this.labelDefaultLanguages.Name = "labelDefaultLanguages";
+            this.labelDefaultLanguages.Size = new System.Drawing.Size(94, 13);
+            this.labelDefaultLanguages.TabIndex = 33;
+            this.labelDefaultLanguages.Text = "Default languages";
             // 
             // buttonTranslationAutoSuffix
             // 
@@ -932,7 +1024,7 @@
             this.comboBoxRulesProfileName.ButtonForeColor = System.Drawing.SystemColors.ControlText;
             this.comboBoxRulesProfileName.ButtonForeColorDown = System.Drawing.Color.Orange;
             this.comboBoxRulesProfileName.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            this.comboBoxRulesProfileName.DropDownHeight = 400;
+            this.comboBoxRulesProfileName.DropDownHeight = 420;
             this.comboBoxRulesProfileName.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxRulesProfileName.DropDownWidth = 238;
             this.comboBoxRulesProfileName.FormattingEnabled = true;
@@ -1495,29 +1587,14 @@
             // 
             // textBoxShowLineBreaksAs
             // 
-            this.textBoxShowLineBreaksAs.BackColor = System.Drawing.SystemColors.WindowFrame;
-            this.textBoxShowLineBreaksAs.CurrentLanguage = "";
-            this.textBoxShowLineBreaksAs.CurrentLineIndex = 0;
-            this.textBoxShowLineBreaksAs.HideSelection = true;
-            this.textBoxShowLineBreaksAs.IsDictionaryDownloaded = true;
-            this.textBoxShowLineBreaksAs.IsSpellCheckerInitialized = false;
-            this.textBoxShowLineBreaksAs.IsSpellCheckRequested = false;
-            this.textBoxShowLineBreaksAs.IsWrongWord = false;
-            this.textBoxShowLineBreaksAs.LanguageChanged = false;
+            this.textBoxShowLineBreaksAs.BackColor = System.Drawing.SystemColors.Window;
+            this.textBoxShowLineBreaksAs.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxShowLineBreaksAs.Location = new System.Drawing.Point(572, 233);
             this.textBoxShowLineBreaksAs.MaxLength = 10;
             this.textBoxShowLineBreaksAs.Multiline = true;
             this.textBoxShowLineBreaksAs.Name = "textBoxShowLineBreaksAs";
-            this.textBoxShowLineBreaksAs.Padding = new System.Windows.Forms.Padding(1);
-            this.textBoxShowLineBreaksAs.ReadOnly = false;
-            this.textBoxShowLineBreaksAs.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
-            this.textBoxShowLineBreaksAs.SelectedText = "";
-            this.textBoxShowLineBreaksAs.SelectionLength = 0;
-            this.textBoxShowLineBreaksAs.SelectionStart = 0;
             this.textBoxShowLineBreaksAs.Size = new System.Drawing.Size(60, 21);
             this.textBoxShowLineBreaksAs.TabIndex = 17;
-            this.textBoxShowLineBreaksAs.TextBoxFont = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBoxShowLineBreaksAs.UseSystemPasswordChar = false;
             // 
             // checkBoxAutoWrapWhileTyping
             // 
@@ -1732,7 +1809,7 @@
             // labelDefaultFileEncoding
             // 
             this.labelDefaultFileEncoding.AutoSize = true;
-            this.labelDefaultFileEncoding.Location = new System.Drawing.Point(8, 442);
+            this.labelDefaultFileEncoding.Location = new System.Drawing.Point(8, 441);
             this.labelDefaultFileEncoding.Name = "labelDefaultFileEncoding";
             this.labelDefaultFileEncoding.Size = new System.Drawing.Size(105, 13);
             this.labelDefaultFileEncoding.TabIndex = 3;
@@ -2098,6 +2175,8 @@
             this.groupBoxShortcuts.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxShortcuts.Controls.Add(this.nikseComboBoxShortcutsFilter);
+            this.groupBoxShortcuts.Controls.Add(this.labelShortcutsFilter);
             this.groupBoxShortcuts.Controls.Add(this.buttonShortcutsClear);
             this.groupBoxShortcuts.Controls.Add(this.labelShortcutsSearch);
             this.groupBoxShortcuts.Controls.Add(this.textBoxShortcutSearch);
@@ -2116,6 +2195,45 @@
             this.groupBoxShortcuts.TabIndex = 2;
             this.groupBoxShortcuts.TabStop = false;
             this.groupBoxShortcuts.Text = "Shortcuts";
+            // 
+            // nikseComboBoxShortcutsFilter
+            // 
+            this.nikseComboBoxShortcutsFilter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.nikseComboBoxShortcutsFilter.BackColor = System.Drawing.SystemColors.Window;
+            this.nikseComboBoxShortcutsFilter.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.nikseComboBoxShortcutsFilter.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.nikseComboBoxShortcutsFilter.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.nikseComboBoxShortcutsFilter.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.nikseComboBoxShortcutsFilter.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.nikseComboBoxShortcutsFilter.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.nikseComboBoxShortcutsFilter.DropDownHeight = 400;
+            this.nikseComboBoxShortcutsFilter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.nikseComboBoxShortcutsFilter.DropDownWidth = 92;
+            this.nikseComboBoxShortcutsFilter.Enabled = false;
+            this.nikseComboBoxShortcutsFilter.FormattingEnabled = true;
+            this.nikseComboBoxShortcutsFilter.Items.AddRange(new object[] {
+            "All",
+            "Used",
+            "Unused"});
+            this.nikseComboBoxShortcutsFilter.Location = new System.Drawing.Point(449, 19);
+            this.nikseComboBoxShortcutsFilter.MaxLength = 32767;
+            this.nikseComboBoxShortcutsFilter.Name = "nikseComboBoxShortcutsFilter";
+            this.nikseComboBoxShortcutsFilter.SelectedIndex = -1;
+            this.nikseComboBoxShortcutsFilter.SelectedItem = null;
+            this.nikseComboBoxShortcutsFilter.SelectedText = "";
+            this.nikseComboBoxShortcutsFilter.Size = new System.Drawing.Size(199, 21);
+            this.nikseComboBoxShortcutsFilter.TabIndex = 2;
+            this.nikseComboBoxShortcutsFilter.UsePopupWindow = false;
+            this.nikseComboBoxShortcutsFilter.SelectedIndexChanged += new System.EventHandler(this.nikseComboBoxShortcutsFilter_SelectedIndexChanged);
+            // 
+            // labelShortcutsFilter
+            // 
+            this.labelShortcutsFilter.AutoSize = true;
+            this.labelShortcutsFilter.Location = new System.Drawing.Point(406, 22);
+            this.labelShortcutsFilter.Name = "labelShortcutsFilter";
+            this.labelShortcutsFilter.Size = new System.Drawing.Size(31, 13);
+            this.labelShortcutsFilter.TabIndex = 38;
+            this.labelShortcutsFilter.Text = "Filter";
             // 
             // buttonShortcutsClear
             // 
@@ -2139,7 +2257,7 @@
             // 
             // textBoxShortcutSearch
             // 
-            this.textBoxShortcutSearch.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.textBoxShortcutSearch.BackColor = System.Drawing.SystemColors.Window;
             this.textBoxShortcutSearch.CurrentLanguage = "";
             this.textBoxShortcutSearch.CurrentLineIndex = 0;
             this.textBoxShortcutSearch.HideSelection = true;
@@ -2171,7 +2289,7 @@
             this.buttonClearShortcut.Location = new System.Drawing.Point(582, 492);
             this.buttonClearShortcut.Name = "buttonClearShortcut";
             this.buttonClearShortcut.Size = new System.Drawing.Size(111, 23);
-            this.buttonClearShortcut.TabIndex = 8;
+            this.buttonClearShortcut.TabIndex = 9;
             this.buttonClearShortcut.Text = "&Clear";
             this.buttonClearShortcut.UseVisualStyleBackColor = true;
             this.buttonClearShortcut.Click += new System.EventHandler(this.buttonClearShortcut_Click);
@@ -2334,7 +2452,7 @@
             this.comboBoxShortcutKey.SelectedItem = null;
             this.comboBoxShortcutKey.SelectedText = "";
             this.comboBoxShortcutKey.Size = new System.Drawing.Size(92, 21);
-            this.comboBoxShortcutKey.TabIndex = 6;
+            this.comboBoxShortcutKey.TabIndex = 7;
             this.comboBoxShortcutKey.UsePopupWindow = false;
             this.comboBoxShortcutKey.SelectedIndexChanged += new System.EventHandler(this.ValidateShortcut);
             this.comboBoxShortcutKey.KeyDown += new System.Windows.Forms.KeyEventHandler(this.comboBoxShortcutKey_KeyDown);
@@ -2357,7 +2475,7 @@
             this.checkBoxShortcutsShift.Location = new System.Drawing.Point(245, 494);
             this.checkBoxShortcutsShift.Name = "checkBoxShortcutsShift";
             this.checkBoxShortcutsShift.Size = new System.Drawing.Size(48, 17);
-            this.checkBoxShortcutsShift.TabIndex = 5;
+            this.checkBoxShortcutsShift.TabIndex = 6;
             this.checkBoxShortcutsShift.Text = "Shift";
             this.checkBoxShortcutsShift.UseVisualStyleBackColor = true;
             this.checkBoxShortcutsShift.CheckedChanged += new System.EventHandler(this.ValidateShortcut);
@@ -2370,7 +2488,7 @@
             this.checkBoxShortcutsAlt.Location = new System.Drawing.Point(176, 494);
             this.checkBoxShortcutsAlt.Name = "checkBoxShortcutsAlt";
             this.checkBoxShortcutsAlt.Size = new System.Drawing.Size(39, 17);
-            this.checkBoxShortcutsAlt.TabIndex = 4;
+            this.checkBoxShortcutsAlt.TabIndex = 5;
             this.checkBoxShortcutsAlt.Text = "Alt";
             this.checkBoxShortcutsAlt.UseVisualStyleBackColor = true;
             this.checkBoxShortcutsAlt.CheckedChanged += new System.EventHandler(this.ValidateShortcut);
@@ -2383,7 +2501,7 @@
             this.checkBoxShortcutsControl.Location = new System.Drawing.Point(89, 494);
             this.checkBoxShortcutsControl.Name = "checkBoxShortcutsControl";
             this.checkBoxShortcutsControl.Size = new System.Drawing.Size(61, 17);
-            this.checkBoxShortcutsControl.TabIndex = 3;
+            this.checkBoxShortcutsControl.TabIndex = 4;
             this.checkBoxShortcutsControl.Text = "Control";
             this.checkBoxShortcutsControl.UseVisualStyleBackColor = true;
             this.checkBoxShortcutsControl.CheckedChanged += new System.EventHandler(this.ValidateShortcut);
@@ -2395,7 +2513,7 @@
             this.buttonUpdateShortcut.Location = new System.Drawing.Point(465, 492);
             this.buttonUpdateShortcut.Name = "buttonUpdateShortcut";
             this.buttonUpdateShortcut.Size = new System.Drawing.Size(111, 23);
-            this.buttonUpdateShortcut.TabIndex = 7;
+            this.buttonUpdateShortcut.TabIndex = 8;
             this.buttonUpdateShortcut.Text = "&Update";
             this.buttonUpdateShortcut.UseVisualStyleBackColor = true;
             this.buttonUpdateShortcut.Click += new System.EventHandler(this.buttonUpdateShortcut_Click);
@@ -2410,7 +2528,7 @@
             this.treeViewShortcuts.Location = new System.Drawing.Point(16, 47);
             this.treeViewShortcuts.Name = "treeViewShortcuts";
             this.treeViewShortcuts.Size = new System.Drawing.Size(829, 439);
-            this.treeViewShortcuts.TabIndex = 2;
+            this.treeViewShortcuts.TabIndex = 3;
             this.treeViewShortcuts.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeViewShortcuts_AfterSelect);
             // 
             // contextMenuStripShortcuts
@@ -2649,29 +2767,13 @@
             // 
             // textBoxCustomSearchUrl5
             // 
-            this.textBoxCustomSearchUrl5.BackColor = System.Drawing.SystemColors.WindowFrame;
-            this.textBoxCustomSearchUrl5.CurrentLanguage = "";
-            this.textBoxCustomSearchUrl5.CurrentLineIndex = 0;
-            this.textBoxCustomSearchUrl5.HideSelection = true;
-            this.textBoxCustomSearchUrl5.IsDictionaryDownloaded = true;
-            this.textBoxCustomSearchUrl5.IsSpellCheckerInitialized = false;
-            this.textBoxCustomSearchUrl5.IsSpellCheckRequested = false;
-            this.textBoxCustomSearchUrl5.IsWrongWord = false;
-            this.textBoxCustomSearchUrl5.LanguageChanged = false;
+            this.textBoxCustomSearchUrl5.BackColor = System.Drawing.SystemColors.Window;
+            this.textBoxCustomSearchUrl5.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxCustomSearchUrl5.Location = new System.Drawing.Point(185, 146);
-            this.textBoxCustomSearchUrl5.MaxLength = 32767;
             this.textBoxCustomSearchUrl5.Multiline = true;
             this.textBoxCustomSearchUrl5.Name = "textBoxCustomSearchUrl5";
-            this.textBoxCustomSearchUrl5.Padding = new System.Windows.Forms.Padding(1);
-            this.textBoxCustomSearchUrl5.ReadOnly = false;
-            this.textBoxCustomSearchUrl5.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
-            this.textBoxCustomSearchUrl5.SelectedText = "";
-            this.textBoxCustomSearchUrl5.SelectionLength = 0;
-            this.textBoxCustomSearchUrl5.SelectionStart = 0;
             this.textBoxCustomSearchUrl5.Size = new System.Drawing.Size(574, 21);
             this.textBoxCustomSearchUrl5.TabIndex = 14;
-            this.textBoxCustomSearchUrl5.TextBoxFont = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBoxCustomSearchUrl5.UseSystemPasswordChar = false;
             // 
             // comboBoxCustomSearch5
             // 
@@ -2718,29 +2820,13 @@
             // 
             // textBoxCustomSearchUrl4
             // 
-            this.textBoxCustomSearchUrl4.BackColor = System.Drawing.SystemColors.WindowFrame;
-            this.textBoxCustomSearchUrl4.CurrentLanguage = "";
-            this.textBoxCustomSearchUrl4.CurrentLineIndex = 0;
-            this.textBoxCustomSearchUrl4.HideSelection = true;
-            this.textBoxCustomSearchUrl4.IsDictionaryDownloaded = true;
-            this.textBoxCustomSearchUrl4.IsSpellCheckerInitialized = false;
-            this.textBoxCustomSearchUrl4.IsSpellCheckRequested = false;
-            this.textBoxCustomSearchUrl4.IsWrongWord = false;
-            this.textBoxCustomSearchUrl4.LanguageChanged = false;
+            this.textBoxCustomSearchUrl4.BackColor = System.Drawing.SystemColors.Window;
+            this.textBoxCustomSearchUrl4.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxCustomSearchUrl4.Location = new System.Drawing.Point(185, 119);
-            this.textBoxCustomSearchUrl4.MaxLength = 32767;
             this.textBoxCustomSearchUrl4.Multiline = true;
             this.textBoxCustomSearchUrl4.Name = "textBoxCustomSearchUrl4";
-            this.textBoxCustomSearchUrl4.Padding = new System.Windows.Forms.Padding(1);
-            this.textBoxCustomSearchUrl4.ReadOnly = false;
-            this.textBoxCustomSearchUrl4.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
-            this.textBoxCustomSearchUrl4.SelectedText = "";
-            this.textBoxCustomSearchUrl4.SelectionLength = 0;
-            this.textBoxCustomSearchUrl4.SelectionStart = 0;
             this.textBoxCustomSearchUrl4.Size = new System.Drawing.Size(574, 21);
             this.textBoxCustomSearchUrl4.TabIndex = 11;
-            this.textBoxCustomSearchUrl4.TextBoxFont = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBoxCustomSearchUrl4.UseSystemPasswordChar = false;
             // 
             // comboBoxCustomSearch4
             // 
@@ -2787,29 +2873,13 @@
             // 
             // textBoxCustomSearchUrl3
             // 
-            this.textBoxCustomSearchUrl3.BackColor = System.Drawing.SystemColors.WindowFrame;
-            this.textBoxCustomSearchUrl3.CurrentLanguage = "";
-            this.textBoxCustomSearchUrl3.CurrentLineIndex = 0;
-            this.textBoxCustomSearchUrl3.HideSelection = true;
-            this.textBoxCustomSearchUrl3.IsDictionaryDownloaded = true;
-            this.textBoxCustomSearchUrl3.IsSpellCheckerInitialized = false;
-            this.textBoxCustomSearchUrl3.IsSpellCheckRequested = false;
-            this.textBoxCustomSearchUrl3.IsWrongWord = false;
-            this.textBoxCustomSearchUrl3.LanguageChanged = false;
+            this.textBoxCustomSearchUrl3.BackColor = System.Drawing.SystemColors.Window;
+            this.textBoxCustomSearchUrl3.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxCustomSearchUrl3.Location = new System.Drawing.Point(185, 92);
-            this.textBoxCustomSearchUrl3.MaxLength = 32767;
             this.textBoxCustomSearchUrl3.Multiline = true;
             this.textBoxCustomSearchUrl3.Name = "textBoxCustomSearchUrl3";
-            this.textBoxCustomSearchUrl3.Padding = new System.Windows.Forms.Padding(1);
-            this.textBoxCustomSearchUrl3.ReadOnly = false;
-            this.textBoxCustomSearchUrl3.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
-            this.textBoxCustomSearchUrl3.SelectedText = "";
-            this.textBoxCustomSearchUrl3.SelectionLength = 0;
-            this.textBoxCustomSearchUrl3.SelectionStart = 0;
             this.textBoxCustomSearchUrl3.Size = new System.Drawing.Size(574, 21);
             this.textBoxCustomSearchUrl3.TabIndex = 8;
-            this.textBoxCustomSearchUrl3.TextBoxFont = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBoxCustomSearchUrl3.UseSystemPasswordChar = false;
             // 
             // comboBoxCustomSearch3
             // 
@@ -2856,29 +2926,13 @@
             // 
             // textBoxCustomSearchUrl2
             // 
-            this.textBoxCustomSearchUrl2.BackColor = System.Drawing.SystemColors.WindowFrame;
-            this.textBoxCustomSearchUrl2.CurrentLanguage = "";
-            this.textBoxCustomSearchUrl2.CurrentLineIndex = 0;
-            this.textBoxCustomSearchUrl2.HideSelection = true;
-            this.textBoxCustomSearchUrl2.IsDictionaryDownloaded = true;
-            this.textBoxCustomSearchUrl2.IsSpellCheckerInitialized = false;
-            this.textBoxCustomSearchUrl2.IsSpellCheckRequested = false;
-            this.textBoxCustomSearchUrl2.IsWrongWord = false;
-            this.textBoxCustomSearchUrl2.LanguageChanged = false;
+            this.textBoxCustomSearchUrl2.BackColor = System.Drawing.SystemColors.Window;
+            this.textBoxCustomSearchUrl2.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxCustomSearchUrl2.Location = new System.Drawing.Point(185, 65);
-            this.textBoxCustomSearchUrl2.MaxLength = 32767;
             this.textBoxCustomSearchUrl2.Multiline = true;
             this.textBoxCustomSearchUrl2.Name = "textBoxCustomSearchUrl2";
-            this.textBoxCustomSearchUrl2.Padding = new System.Windows.Forms.Padding(1);
-            this.textBoxCustomSearchUrl2.ReadOnly = false;
-            this.textBoxCustomSearchUrl2.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
-            this.textBoxCustomSearchUrl2.SelectedText = "";
-            this.textBoxCustomSearchUrl2.SelectionLength = 0;
-            this.textBoxCustomSearchUrl2.SelectionStart = 0;
             this.textBoxCustomSearchUrl2.Size = new System.Drawing.Size(574, 21);
             this.textBoxCustomSearchUrl2.TabIndex = 5;
-            this.textBoxCustomSearchUrl2.TextBoxFont = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBoxCustomSearchUrl2.UseSystemPasswordChar = false;
             // 
             // comboBoxCustomSearch2
             // 
@@ -2925,29 +2979,13 @@
             // 
             // textBoxCustomSearchUrl1
             // 
-            this.textBoxCustomSearchUrl1.BackColor = System.Drawing.SystemColors.WindowFrame;
-            this.textBoxCustomSearchUrl1.CurrentLanguage = "";
-            this.textBoxCustomSearchUrl1.CurrentLineIndex = 0;
-            this.textBoxCustomSearchUrl1.HideSelection = true;
-            this.textBoxCustomSearchUrl1.IsDictionaryDownloaded = true;
-            this.textBoxCustomSearchUrl1.IsSpellCheckerInitialized = false;
-            this.textBoxCustomSearchUrl1.IsSpellCheckRequested = false;
-            this.textBoxCustomSearchUrl1.IsWrongWord = false;
-            this.textBoxCustomSearchUrl1.LanguageChanged = false;
+            this.textBoxCustomSearchUrl1.BackColor = System.Drawing.SystemColors.Window;
+            this.textBoxCustomSearchUrl1.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxCustomSearchUrl1.Location = new System.Drawing.Point(185, 38);
-            this.textBoxCustomSearchUrl1.MaxLength = 32767;
             this.textBoxCustomSearchUrl1.Multiline = true;
             this.textBoxCustomSearchUrl1.Name = "textBoxCustomSearchUrl1";
-            this.textBoxCustomSearchUrl1.Padding = new System.Windows.Forms.Padding(1);
-            this.textBoxCustomSearchUrl1.ReadOnly = false;
-            this.textBoxCustomSearchUrl1.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
-            this.textBoxCustomSearchUrl1.SelectedText = "";
-            this.textBoxCustomSearchUrl1.SelectionLength = 0;
-            this.textBoxCustomSearchUrl1.SelectionStart = 0;
             this.textBoxCustomSearchUrl1.Size = new System.Drawing.Size(574, 21);
             this.textBoxCustomSearchUrl1.TabIndex = 2;
-            this.textBoxCustomSearchUrl1.TextBoxFont = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBoxCustomSearchUrl1.UseSystemPasswordChar = false;
             // 
             // labelCustomSearch
             // 
@@ -3497,29 +3535,14 @@
             // 
             // textBoxVlcPath
             // 
-            this.textBoxVlcPath.BackColor = System.Drawing.SystemColors.WindowFrame;
-            this.textBoxVlcPath.CurrentLanguage = "";
-            this.textBoxVlcPath.CurrentLineIndex = 0;
-            this.textBoxVlcPath.HideSelection = true;
-            this.textBoxVlcPath.IsDictionaryDownloaded = true;
-            this.textBoxVlcPath.IsSpellCheckerInitialized = false;
-            this.textBoxVlcPath.IsSpellCheckRequested = false;
-            this.textBoxVlcPath.IsWrongWord = false;
-            this.textBoxVlcPath.LanguageChanged = false;
+            this.textBoxVlcPath.BackColor = System.Drawing.SystemColors.Window;
+            this.textBoxVlcPath.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxVlcPath.Location = new System.Drawing.Point(411, 105);
             this.textBoxVlcPath.MaxLength = 1000;
             this.textBoxVlcPath.Multiline = true;
             this.textBoxVlcPath.Name = "textBoxVlcPath";
-            this.textBoxVlcPath.Padding = new System.Windows.Forms.Padding(1);
-            this.textBoxVlcPath.ReadOnly = false;
-            this.textBoxVlcPath.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
-            this.textBoxVlcPath.SelectedText = "";
-            this.textBoxVlcPath.SelectionLength = 0;
-            this.textBoxVlcPath.SelectionStart = 0;
             this.textBoxVlcPath.Size = new System.Drawing.Size(362, 21);
             this.textBoxVlcPath.TabIndex = 6;
-            this.textBoxVlcPath.TextBoxFont = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBoxVlcPath.UseSystemPasswordChar = false;
             this.textBoxVlcPath.MouseLeave += new System.EventHandler(this.textBoxVlcPath_MouseLeave);
             // 
             // labelVlcPath
@@ -4207,8 +4230,6 @@
             // panelTools
             // 
             this.panelTools.Controls.Add(this.groupBoxToolsMisc);
-            this.panelTools.Controls.Add(this.groupBoxGoogleTranslate);
-            this.panelTools.Controls.Add(this.groupBoxBing);
             this.panelTools.Controls.Add(this.groupBoxToolsAutoBr);
             this.panelTools.Controls.Add(this.groupBoxSpellCheck);
             this.panelTools.Controls.Add(this.groupBoxFixCommonErrors);
@@ -4228,7 +4249,7 @@
             this.groupBoxToolsMisc.Controls.Add(this.checkBoxShortcutsAllowLetterOrNumberInTextBox);
             this.groupBoxToolsMisc.Controls.Add(this.comboBoxBDOpensIn);
             this.groupBoxToolsMisc.Controls.Add(this.labelBDOpensIn);
-            this.groupBoxToolsMisc.Location = new System.Drawing.Point(418, 180);
+            this.groupBoxToolsMisc.Location = new System.Drawing.Point(415, 180);
             this.groupBoxToolsMisc.Name = "groupBoxToolsMisc";
             this.groupBoxToolsMisc.Size = new System.Drawing.Size(434, 109);
             this.groupBoxToolsMisc.TabIndex = 6;
@@ -4343,200 +4364,6 @@
             this.labelBDOpensIn.TabIndex = 0;
             this.labelBDOpensIn.Text = "Blu-ray sup/bdn-xml opens in";
             // 
-            // groupBoxGoogleTranslate
-            // 
-            this.groupBoxGoogleTranslate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBoxGoogleTranslate.Controls.Add(this.labelGoogleTranslateApiKey);
-            this.groupBoxGoogleTranslate.Controls.Add(this.textBoxGoogleTransleApiKey);
-            this.groupBoxGoogleTranslate.Controls.Add(this.linkLabelGoogleTranslateSignUp);
-            this.groupBoxGoogleTranslate.Controls.Add(this.label3);
-            this.groupBoxGoogleTranslate.Location = new System.Drawing.Point(414, 293);
-            this.groupBoxGoogleTranslate.Name = "groupBoxGoogleTranslate";
-            this.groupBoxGoogleTranslate.Size = new System.Drawing.Size(436, 78);
-            this.groupBoxGoogleTranslate.TabIndex = 31;
-            this.groupBoxGoogleTranslate.TabStop = false;
-            this.groupBoxGoogleTranslate.Text = "Google translate";
-            // 
-            // labelGoogleTranslateApiKey
-            // 
-            this.labelGoogleTranslateApiKey.AutoSize = true;
-            this.labelGoogleTranslateApiKey.Location = new System.Drawing.Point(13, 47);
-            this.labelGoogleTranslateApiKey.Name = "labelGoogleTranslateApiKey";
-            this.labelGoogleTranslateApiKey.Size = new System.Drawing.Size(44, 13);
-            this.labelGoogleTranslateApiKey.TabIndex = 30;
-            this.labelGoogleTranslateApiKey.Text = "API key";
-            // 
-            // textBoxGoogleTransleApiKey
-            // 
-            this.textBoxGoogleTransleApiKey.BackColor = System.Drawing.SystemColors.WindowFrame;
-            this.textBoxGoogleTransleApiKey.CurrentLanguage = "";
-            this.textBoxGoogleTransleApiKey.CurrentLineIndex = 0;
-            this.textBoxGoogleTransleApiKey.HideSelection = true;
-            this.textBoxGoogleTransleApiKey.IsDictionaryDownloaded = true;
-            this.textBoxGoogleTransleApiKey.IsSpellCheckerInitialized = false;
-            this.textBoxGoogleTransleApiKey.IsSpellCheckRequested = false;
-            this.textBoxGoogleTransleApiKey.IsWrongWord = false;
-            this.textBoxGoogleTransleApiKey.LanguageChanged = false;
-            this.textBoxGoogleTransleApiKey.Location = new System.Drawing.Point(94, 47);
-            this.textBoxGoogleTransleApiKey.MaxLength = 32767;
-            this.textBoxGoogleTransleApiKey.Multiline = true;
-            this.textBoxGoogleTransleApiKey.Name = "textBoxGoogleTransleApiKey";
-            this.textBoxGoogleTransleApiKey.Padding = new System.Windows.Forms.Padding(1);
-            this.textBoxGoogleTransleApiKey.ReadOnly = false;
-            this.textBoxGoogleTransleApiKey.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
-            this.textBoxGoogleTransleApiKey.SelectedText = "";
-            this.textBoxGoogleTransleApiKey.SelectionLength = 0;
-            this.textBoxGoogleTransleApiKey.SelectionStart = 0;
-            this.textBoxGoogleTransleApiKey.Size = new System.Drawing.Size(290, 21);
-            this.textBoxGoogleTransleApiKey.TabIndex = 26;
-            this.textBoxGoogleTransleApiKey.TextBoxFont = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBoxGoogleTransleApiKey.UseSystemPasswordChar = false;
-            // 
-            // linkLabelGoogleTranslateSignUp
-            // 
-            this.linkLabelGoogleTranslateSignUp.AutoSize = true;
-            this.linkLabelGoogleTranslateSignUp.Location = new System.Drawing.Point(306, 19);
-            this.linkLabelGoogleTranslateSignUp.Name = "linkLabelGoogleTranslateSignUp";
-            this.linkLabelGoogleTranslateSignUp.Size = new System.Drawing.Size(78, 13);
-            this.linkLabelGoogleTranslateSignUp.TabIndex = 24;
-            this.linkLabelGoogleTranslateSignUp.TabStop = true;
-            this.linkLabelGoogleTranslateSignUp.Text = "How to sign up";
-            this.linkLabelGoogleTranslateSignUp.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelGoogleTranslateSignUp_LinkClicked);
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(16, 106);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(0, 13);
-            this.label3.TabIndex = 25;
-            // 
-            // groupBoxBing
-            // 
-            this.groupBoxBing.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBoxBing.Controls.Add(this.comboBoxBoxBingTokenEndpoint);
-            this.groupBoxBing.Controls.Add(this.labelBingTokenEndpoint);
-            this.groupBoxBing.Controls.Add(this.labelBingApiKey);
-            this.groupBoxBing.Controls.Add(this.textBoxBingClientSecret);
-            this.groupBoxBing.Controls.Add(this.linkLabelBingSubscribe);
-            this.groupBoxBing.Controls.Add(this.label1);
-            this.groupBoxBing.Location = new System.Drawing.Point(415, 377);
-            this.groupBoxBing.Name = "groupBoxBing";
-            this.groupBoxBing.Size = new System.Drawing.Size(436, 143);
-            this.groupBoxBing.TabIndex = 32;
-            this.groupBoxBing.TabStop = false;
-            this.groupBoxBing.Text = "Bing translator";
-            // 
-            // comboBoxBoxBingTokenEndpoint
-            // 
-            this.comboBoxBoxBingTokenEndpoint.BackColor = System.Drawing.SystemColors.Window;
-            this.comboBoxBoxBingTokenEndpoint.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
-            this.comboBoxBoxBingTokenEndpoint.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
-            this.comboBoxBoxBingTokenEndpoint.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
-            this.comboBoxBoxBingTokenEndpoint.ButtonForeColor = System.Drawing.SystemColors.ControlText;
-            this.comboBoxBoxBingTokenEndpoint.ButtonForeColorDown = System.Drawing.Color.Orange;
-            this.comboBoxBoxBingTokenEndpoint.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            this.comboBoxBoxBingTokenEndpoint.DropDownHeight = 400;
-            this.comboBoxBoxBingTokenEndpoint.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
-            this.comboBoxBoxBingTokenEndpoint.DropDownWidth = 375;
-            this.comboBoxBoxBingTokenEndpoint.FormattingEnabled = true;
-            this.comboBoxBoxBingTokenEndpoint.Items.AddRange(new object[] {
-            "https://api.cognitive.microsoft.com/sts/v1.0/issueToken",
-            "https://australiaeast.api.cognitive.microsoft.com/sts/v1.0/issueToken",
-            "https://canadacentral.api.cognitive.microsoft.com/sts/v1.0/issueToken",
-            "https://centralus.api.cognitive.microsoft.com/sts/v1.0/issueToken",
-            "https://eastasia.api.cognitive.microsoft.com/sts/v1.0/issueToken",
-            "https://eastus.api.cognitive.microsoft.com/sts/v1.0/issueToken",
-            "https://eastus2.api.cognitive.microsoft.com/sts/v1.0/issueToken",
-            "https://francecentral.api.cognitive.microsoft.com/sts/v1.0/issueToken",
-            "https://centralindia.api.cognitive.microsoft.com/sts/v1.0/issueToken",
-            "https://japaneast.api.cognitive.microsoft.com/sts/v1.0/issueToken",
-            "https://koreacentral.api.cognitive.microsoft.com/sts/v1.0/issueToken",
-            "https://northcentralus.api.cognitive.microsoft.com/sts/v1.0/issueToken",
-            "https://northeurope.api.cognitive.microsoft.com/sts/v1.0/issueToken",
-            "https://southcentralus.api.cognitive.microsoft.com/sts/v1.0/issueToken",
-            "https://southeastasia.api.cognitive.microsoft.com/sts/v1.0/issueToken",
-            "https://uksouth.api.cognitive.microsoft.com/sts/v1.0/issueToken",
-            "https://westeurope.api.cognitive.microsoft.com/sts/v1.0/issueToken",
-            "https://westus.api.cognitive.microsoft.com/sts/v1.0/issueToken",
-            "https://westus2.api.cognitive.microsoft.com/sts/v1.0/issueToken"});
-            this.comboBoxBoxBingTokenEndpoint.Location = new System.Drawing.Point(9, 101);
-            this.comboBoxBoxBingTokenEndpoint.MaxLength = 32767;
-            this.comboBoxBoxBingTokenEndpoint.Name = "comboBoxBoxBingTokenEndpoint";
-            this.comboBoxBoxBingTokenEndpoint.SelectedIndex = -1;
-            this.comboBoxBoxBingTokenEndpoint.SelectedItem = null;
-            this.comboBoxBoxBingTokenEndpoint.SelectedText = "";
-            this.comboBoxBoxBingTokenEndpoint.Size = new System.Drawing.Size(375, 21);
-            this.comboBoxBoxBingTokenEndpoint.TabIndex = 33;
-            this.comboBoxBoxBingTokenEndpoint.TabStop = false;
-            this.comboBoxBoxBingTokenEndpoint.UsePopupWindow = false;
-            // 
-            // labelBingTokenEndpoint
-            // 
-            this.labelBingTokenEndpoint.AutoSize = true;
-            this.labelBingTokenEndpoint.Location = new System.Drawing.Point(6, 83);
-            this.labelBingTokenEndpoint.Name = "labelBingTokenEndpoint";
-            this.labelBingTokenEndpoint.Size = new System.Drawing.Size(81, 13);
-            this.labelBingTokenEndpoint.TabIndex = 32;
-            this.labelBingTokenEndpoint.Text = "Token endpoint";
-            // 
-            // labelBingApiKey
-            // 
-            this.labelBingApiKey.AutoSize = true;
-            this.labelBingApiKey.Location = new System.Drawing.Point(6, 29);
-            this.labelBingApiKey.Name = "labelBingApiKey";
-            this.labelBingApiKey.Size = new System.Drawing.Size(44, 13);
-            this.labelBingApiKey.TabIndex = 30;
-            this.labelBingApiKey.Text = "API key";
-            // 
-            // textBoxBingClientSecret
-            // 
-            this.textBoxBingClientSecret.BackColor = System.Drawing.SystemColors.WindowFrame;
-            this.textBoxBingClientSecret.CurrentLanguage = "";
-            this.textBoxBingClientSecret.CurrentLineIndex = 0;
-            this.textBoxBingClientSecret.HideSelection = true;
-            this.textBoxBingClientSecret.IsDictionaryDownloaded = true;
-            this.textBoxBingClientSecret.IsSpellCheckerInitialized = false;
-            this.textBoxBingClientSecret.IsSpellCheckRequested = false;
-            this.textBoxBingClientSecret.IsWrongWord = false;
-            this.textBoxBingClientSecret.LanguageChanged = false;
-            this.textBoxBingClientSecret.Location = new System.Drawing.Point(10, 45);
-            this.textBoxBingClientSecret.MaxLength = 32767;
-            this.textBoxBingClientSecret.Multiline = true;
-            this.textBoxBingClientSecret.Name = "textBoxBingClientSecret";
-            this.textBoxBingClientSecret.Padding = new System.Windows.Forms.Padding(1);
-            this.textBoxBingClientSecret.ReadOnly = false;
-            this.textBoxBingClientSecret.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
-            this.textBoxBingClientSecret.SelectedText = "";
-            this.textBoxBingClientSecret.SelectionLength = 0;
-            this.textBoxBingClientSecret.SelectionStart = 0;
-            this.textBoxBingClientSecret.Size = new System.Drawing.Size(374, 21);
-            this.textBoxBingClientSecret.TabIndex = 26;
-            this.textBoxBingClientSecret.TextBoxFont = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBoxBingClientSecret.UseSystemPasswordChar = false;
-            // 
-            // linkLabelBingSubscribe
-            // 
-            this.linkLabelBingSubscribe.AutoSize = true;
-            this.linkLabelBingSubscribe.Location = new System.Drawing.Point(306, 17);
-            this.linkLabelBingSubscribe.Name = "linkLabelBingSubscribe";
-            this.linkLabelBingSubscribe.Size = new System.Drawing.Size(78, 13);
-            this.linkLabelBingSubscribe.TabIndex = 24;
-            this.linkLabelBingSubscribe.TabStop = true;
-            this.linkLabelBingSubscribe.Text = "How to sign up";
-            this.linkLabelBingSubscribe.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelBingSubscribe_LinkClicked);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(16, 106);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(0, 13);
-            this.label1.TabIndex = 25;
-            // 
             // groupBoxToolsAutoBr
             // 
             this.groupBoxToolsAutoBr.Controls.Add(this.labelToolsBreakBottomHeavyPercent);
@@ -4551,7 +4378,7 @@
             this.groupBoxToolsAutoBr.Controls.Add(this.checkBoxUseDoNotBreakAfterList);
             this.groupBoxToolsAutoBr.Location = new System.Drawing.Point(415, 0);
             this.groupBoxToolsAutoBr.Name = "groupBoxToolsAutoBr";
-            this.groupBoxToolsAutoBr.Size = new System.Drawing.Size(435, 174);
+            this.groupBoxToolsAutoBr.Size = new System.Drawing.Size(434, 174);
             this.groupBoxToolsAutoBr.TabIndex = 5;
             this.groupBoxToolsAutoBr.TabStop = false;
             this.groupBoxToolsAutoBr.Text = "Auto br";
@@ -4857,29 +4684,14 @@
             // 
             // textBoxMusicSymbolsToReplace
             // 
-            this.textBoxMusicSymbolsToReplace.BackColor = System.Drawing.SystemColors.WindowFrame;
-            this.textBoxMusicSymbolsToReplace.CurrentLanguage = "";
-            this.textBoxMusicSymbolsToReplace.CurrentLineIndex = 0;
-            this.textBoxMusicSymbolsToReplace.HideSelection = true;
-            this.textBoxMusicSymbolsToReplace.IsDictionaryDownloaded = true;
-            this.textBoxMusicSymbolsToReplace.IsSpellCheckerInitialized = false;
-            this.textBoxMusicSymbolsToReplace.IsSpellCheckRequested = false;
-            this.textBoxMusicSymbolsToReplace.IsWrongWord = false;
-            this.textBoxMusicSymbolsToReplace.LanguageChanged = false;
+            this.textBoxMusicSymbolsToReplace.BackColor = System.Drawing.SystemColors.Window;
+            this.textBoxMusicSymbolsToReplace.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxMusicSymbolsToReplace.Location = new System.Drawing.Point(11, 41);
             this.textBoxMusicSymbolsToReplace.MaxLength = 100;
             this.textBoxMusicSymbolsToReplace.Multiline = true;
             this.textBoxMusicSymbolsToReplace.Name = "textBoxMusicSymbolsToReplace";
-            this.textBoxMusicSymbolsToReplace.Padding = new System.Windows.Forms.Padding(1);
-            this.textBoxMusicSymbolsToReplace.ReadOnly = false;
-            this.textBoxMusicSymbolsToReplace.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
-            this.textBoxMusicSymbolsToReplace.SelectedText = "";
-            this.textBoxMusicSymbolsToReplace.SelectionLength = 0;
-            this.textBoxMusicSymbolsToReplace.SelectionStart = 0;
             this.textBoxMusicSymbolsToReplace.Size = new System.Drawing.Size(275, 21);
             this.textBoxMusicSymbolsToReplace.TabIndex = 0;
-            this.textBoxMusicSymbolsToReplace.TextBoxFont = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBoxMusicSymbolsToReplace.UseSystemPasswordChar = false;
             // 
             // labelToolsMusicSymbolsToReplace
             // 
@@ -5026,6 +4838,168 @@
             this.labelVerifyButton.Size = new System.Drawing.Size(147, 13);
             this.labelVerifyButton.TabIndex = 3;
             this.labelVerifyButton.Text = "Play X seconds and back, X is";
+            // 
+            // groupBoxGoogleTranslate
+            // 
+            this.groupBoxGoogleTranslate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxGoogleTranslate.Controls.Add(this.labelGoogleTranslateApiKey);
+            this.groupBoxGoogleTranslate.Controls.Add(this.textBoxGoogleTransleApiKey);
+            this.groupBoxGoogleTranslate.Controls.Add(this.linkLabelGoogleTranslateSignUp);
+            this.groupBoxGoogleTranslate.Controls.Add(this.label3);
+            this.groupBoxGoogleTranslate.Location = new System.Drawing.Point(9, 9);
+            this.groupBoxGoogleTranslate.Name = "groupBoxGoogleTranslate";
+            this.groupBoxGoogleTranslate.Size = new System.Drawing.Size(410, 79);
+            this.groupBoxGoogleTranslate.TabIndex = 31;
+            this.groupBoxGoogleTranslate.TabStop = false;
+            this.groupBoxGoogleTranslate.Text = "Google translate";
+            // 
+            // labelGoogleTranslateApiKey
+            // 
+            this.labelGoogleTranslateApiKey.AutoSize = true;
+            this.labelGoogleTranslateApiKey.Location = new System.Drawing.Point(8, 25);
+            this.labelGoogleTranslateApiKey.Name = "labelGoogleTranslateApiKey";
+            this.labelGoogleTranslateApiKey.Size = new System.Drawing.Size(44, 13);
+            this.labelGoogleTranslateApiKey.TabIndex = 30;
+            this.labelGoogleTranslateApiKey.Text = "API key";
+            // 
+            // textBoxGoogleTransleApiKey
+            // 
+            this.textBoxGoogleTransleApiKey.BackColor = System.Drawing.SystemColors.Window;
+            this.textBoxGoogleTransleApiKey.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.textBoxGoogleTransleApiKey.Location = new System.Drawing.Point(9, 43);
+            this.textBoxGoogleTransleApiKey.Multiline = true;
+            this.textBoxGoogleTransleApiKey.Name = "textBoxGoogleTransleApiKey";
+            this.textBoxGoogleTransleApiKey.Size = new System.Drawing.Size(375, 21);
+            this.textBoxGoogleTransleApiKey.TabIndex = 26;
+            // 
+            // linkLabelGoogleTranslateSignUp
+            // 
+            this.linkLabelGoogleTranslateSignUp.AutoSize = true;
+            this.linkLabelGoogleTranslateSignUp.Location = new System.Drawing.Point(306, 19);
+            this.linkLabelGoogleTranslateSignUp.Name = "linkLabelGoogleTranslateSignUp";
+            this.linkLabelGoogleTranslateSignUp.Size = new System.Drawing.Size(78, 13);
+            this.linkLabelGoogleTranslateSignUp.TabIndex = 24;
+            this.linkLabelGoogleTranslateSignUp.TabStop = true;
+            this.linkLabelGoogleTranslateSignUp.Text = "How to sign up";
+            this.linkLabelGoogleTranslateSignUp.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelGoogleTranslateSignUp_LinkClicked);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(16, 106);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(0, 13);
+            this.label3.TabIndex = 25;
+            // 
+            // groupBoxBing
+            // 
+            this.groupBoxBing.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxBing.Controls.Add(this.comboBoxBoxBingTokenEndpoint);
+            this.groupBoxBing.Controls.Add(this.labelBingTokenEndpoint);
+            this.groupBoxBing.Controls.Add(this.labelBingApiKey);
+            this.groupBoxBing.Controls.Add(this.textBoxBingClientSecret);
+            this.groupBoxBing.Controls.Add(this.linkLabelBingSubscribe);
+            this.groupBoxBing.Controls.Add(this.label1);
+            this.groupBoxBing.Location = new System.Drawing.Point(9, 95);
+            this.groupBoxBing.Name = "groupBoxBing";
+            this.groupBoxBing.Size = new System.Drawing.Size(410, 111);
+            this.groupBoxBing.TabIndex = 32;
+            this.groupBoxBing.TabStop = false;
+            this.groupBoxBing.Text = "Bing translator";
+            // 
+            // comboBoxBoxBingTokenEndpoint
+            // 
+            this.comboBoxBoxBingTokenEndpoint.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxBoxBingTokenEndpoint.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxBoxBingTokenEndpoint.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxBoxBingTokenEndpoint.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxBoxBingTokenEndpoint.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxBoxBingTokenEndpoint.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxBoxBingTokenEndpoint.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxBoxBingTokenEndpoint.DropDownHeight = 400;
+            this.comboBoxBoxBingTokenEndpoint.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
+            this.comboBoxBoxBingTokenEndpoint.DropDownWidth = 375;
+            this.comboBoxBoxBingTokenEndpoint.FormattingEnabled = true;
+            this.comboBoxBoxBingTokenEndpoint.Items.AddRange(new object[] {
+            "https://api.cognitive.microsoft.com/sts/v1.0/issueToken",
+            "https://australiaeast.api.cognitive.microsoft.com/sts/v1.0/issueToken",
+            "https://canadacentral.api.cognitive.microsoft.com/sts/v1.0/issueToken",
+            "https://centralus.api.cognitive.microsoft.com/sts/v1.0/issueToken",
+            "https://eastasia.api.cognitive.microsoft.com/sts/v1.0/issueToken",
+            "https://eastus.api.cognitive.microsoft.com/sts/v1.0/issueToken",
+            "https://eastus2.api.cognitive.microsoft.com/sts/v1.0/issueToken",
+            "https://francecentral.api.cognitive.microsoft.com/sts/v1.0/issueToken",
+            "https://centralindia.api.cognitive.microsoft.com/sts/v1.0/issueToken",
+            "https://japaneast.api.cognitive.microsoft.com/sts/v1.0/issueToken",
+            "https://koreacentral.api.cognitive.microsoft.com/sts/v1.0/issueToken",
+            "https://northcentralus.api.cognitive.microsoft.com/sts/v1.0/issueToken",
+            "https://northeurope.api.cognitive.microsoft.com/sts/v1.0/issueToken",
+            "https://southcentralus.api.cognitive.microsoft.com/sts/v1.0/issueToken",
+            "https://southeastasia.api.cognitive.microsoft.com/sts/v1.0/issueToken",
+            "https://uksouth.api.cognitive.microsoft.com/sts/v1.0/issueToken",
+            "https://westeurope.api.cognitive.microsoft.com/sts/v1.0/issueToken",
+            "https://westus.api.cognitive.microsoft.com/sts/v1.0/issueToken",
+            "https://westus2.api.cognitive.microsoft.com/sts/v1.0/issueToken"});
+            this.comboBoxBoxBingTokenEndpoint.Location = new System.Drawing.Point(90, 77);
+            this.comboBoxBoxBingTokenEndpoint.MaxLength = 32767;
+            this.comboBoxBoxBingTokenEndpoint.Name = "comboBoxBoxBingTokenEndpoint";
+            this.comboBoxBoxBingTokenEndpoint.SelectedIndex = -1;
+            this.comboBoxBoxBingTokenEndpoint.SelectedItem = null;
+            this.comboBoxBoxBingTokenEndpoint.SelectedText = "";
+            this.comboBoxBoxBingTokenEndpoint.Size = new System.Drawing.Size(294, 21);
+            this.comboBoxBoxBingTokenEndpoint.TabIndex = 33;
+            this.comboBoxBoxBingTokenEndpoint.TabStop = false;
+            this.comboBoxBoxBingTokenEndpoint.UsePopupWindow = false;
+            // 
+            // labelBingTokenEndpoint
+            // 
+            this.labelBingTokenEndpoint.AutoSize = true;
+            this.labelBingTokenEndpoint.Location = new System.Drawing.Point(6, 80);
+            this.labelBingTokenEndpoint.Name = "labelBingTokenEndpoint";
+            this.labelBingTokenEndpoint.Size = new System.Drawing.Size(81, 13);
+            this.labelBingTokenEndpoint.TabIndex = 32;
+            this.labelBingTokenEndpoint.Text = "Token endpoint";
+            // 
+            // labelBingApiKey
+            // 
+            this.labelBingApiKey.AutoSize = true;
+            this.labelBingApiKey.Location = new System.Drawing.Point(6, 24);
+            this.labelBingApiKey.Name = "labelBingApiKey";
+            this.labelBingApiKey.Size = new System.Drawing.Size(44, 13);
+            this.labelBingApiKey.TabIndex = 30;
+            this.labelBingApiKey.Text = "API key";
+            // 
+            // textBoxBingClientSecret
+            // 
+            this.textBoxBingClientSecret.BackColor = System.Drawing.SystemColors.Window;
+            this.textBoxBingClientSecret.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.textBoxBingClientSecret.Location = new System.Drawing.Point(10, 42);
+            this.textBoxBingClientSecret.Multiline = true;
+            this.textBoxBingClientSecret.Name = "textBoxBingClientSecret";
+            this.textBoxBingClientSecret.Size = new System.Drawing.Size(374, 21);
+            this.textBoxBingClientSecret.TabIndex = 26;
+            // 
+            // linkLabelBingSubscribe
+            // 
+            this.linkLabelBingSubscribe.AutoSize = true;
+            this.linkLabelBingSubscribe.Location = new System.Drawing.Point(306, 17);
+            this.linkLabelBingSubscribe.Name = "linkLabelBingSubscribe";
+            this.linkLabelBingSubscribe.Size = new System.Drawing.Size(78, 13);
+            this.linkLabelBingSubscribe.TabIndex = 24;
+            this.linkLabelBingSubscribe.TabStop = true;
+            this.linkLabelBingSubscribe.Text = "How to sign up";
+            this.linkLabelBingSubscribe.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelBingSubscribe_LinkClicked);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(16, 106);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(0, 13);
+            this.label1.TabIndex = 25;
             // 
             // panelToolBar
             // 
@@ -6334,29 +6308,13 @@
             // 
             // textBoxProxyDomain
             // 
-            this.textBoxProxyDomain.BackColor = System.Drawing.SystemColors.WindowFrame;
-            this.textBoxProxyDomain.CurrentLanguage = "";
-            this.textBoxProxyDomain.CurrentLineIndex = 0;
-            this.textBoxProxyDomain.HideSelection = true;
-            this.textBoxProxyDomain.IsDictionaryDownloaded = true;
-            this.textBoxProxyDomain.IsSpellCheckerInitialized = false;
-            this.textBoxProxyDomain.IsSpellCheckRequested = false;
-            this.textBoxProxyDomain.IsWrongWord = false;
-            this.textBoxProxyDomain.LanguageChanged = false;
+            this.textBoxProxyDomain.BackColor = System.Drawing.SystemColors.Window;
+            this.textBoxProxyDomain.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxProxyDomain.Location = new System.Drawing.Point(138, 68);
-            this.textBoxProxyDomain.MaxLength = 32767;
             this.textBoxProxyDomain.Multiline = true;
             this.textBoxProxyDomain.Name = "textBoxProxyDomain";
-            this.textBoxProxyDomain.Padding = new System.Windows.Forms.Padding(1);
-            this.textBoxProxyDomain.ReadOnly = false;
-            this.textBoxProxyDomain.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
-            this.textBoxProxyDomain.SelectedText = "";
-            this.textBoxProxyDomain.SelectionLength = 0;
-            this.textBoxProxyDomain.SelectionStart = 0;
             this.textBoxProxyDomain.Size = new System.Drawing.Size(192, 21);
             this.textBoxProxyDomain.TabIndex = 30;
-            this.textBoxProxyDomain.TextBoxFont = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBoxProxyDomain.UseSystemPasswordChar = false;
             // 
             // labelProxyDomain
             // 
@@ -6369,29 +6327,13 @@
             // 
             // textBoxProxyUserName
             // 
-            this.textBoxProxyUserName.BackColor = System.Drawing.SystemColors.WindowFrame;
-            this.textBoxProxyUserName.CurrentLanguage = "";
-            this.textBoxProxyUserName.CurrentLineIndex = 0;
-            this.textBoxProxyUserName.HideSelection = true;
-            this.textBoxProxyUserName.IsDictionaryDownloaded = true;
-            this.textBoxProxyUserName.IsSpellCheckerInitialized = false;
-            this.textBoxProxyUserName.IsSpellCheckRequested = false;
-            this.textBoxProxyUserName.IsWrongWord = false;
-            this.textBoxProxyUserName.LanguageChanged = false;
+            this.textBoxProxyUserName.BackColor = System.Drawing.SystemColors.Window;
+            this.textBoxProxyUserName.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxProxyUserName.Location = new System.Drawing.Point(138, 16);
-            this.textBoxProxyUserName.MaxLength = 32767;
             this.textBoxProxyUserName.Multiline = true;
             this.textBoxProxyUserName.Name = "textBoxProxyUserName";
-            this.textBoxProxyUserName.Padding = new System.Windows.Forms.Padding(1);
-            this.textBoxProxyUserName.ReadOnly = false;
-            this.textBoxProxyUserName.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
-            this.textBoxProxyUserName.SelectedText = "";
-            this.textBoxProxyUserName.SelectionLength = 0;
-            this.textBoxProxyUserName.SelectionStart = 0;
             this.textBoxProxyUserName.Size = new System.Drawing.Size(192, 21);
             this.textBoxProxyUserName.TabIndex = 22;
-            this.textBoxProxyUserName.TextBoxFont = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBoxProxyUserName.UseSystemPasswordChar = false;
             // 
             // labelProxyPassword
             // 
@@ -6413,55 +6355,24 @@
             // 
             // textBoxProxyPassword
             // 
-            this.textBoxProxyPassword.BackColor = System.Drawing.SystemColors.WindowFrame;
-            this.textBoxProxyPassword.CurrentLanguage = "";
-            this.textBoxProxyPassword.CurrentLineIndex = 0;
-            this.textBoxProxyPassword.HideSelection = true;
-            this.textBoxProxyPassword.IsDictionaryDownloaded = true;
-            this.textBoxProxyPassword.IsSpellCheckerInitialized = false;
-            this.textBoxProxyPassword.IsSpellCheckRequested = false;
-            this.textBoxProxyPassword.IsWrongWord = false;
-            this.textBoxProxyPassword.LanguageChanged = false;
+            this.textBoxProxyPassword.BackColor = System.Drawing.SystemColors.Window;
+            this.textBoxProxyPassword.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxProxyPassword.Location = new System.Drawing.Point(138, 42);
-            this.textBoxProxyPassword.MaxLength = 32767;
             this.textBoxProxyPassword.Multiline = true;
             this.textBoxProxyPassword.Name = "textBoxProxyPassword";
-            this.textBoxProxyPassword.Padding = new System.Windows.Forms.Padding(1);
-            this.textBoxProxyPassword.ReadOnly = false;
-            this.textBoxProxyPassword.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
-            this.textBoxProxyPassword.SelectedText = "";
-            this.textBoxProxyPassword.SelectionLength = 0;
-            this.textBoxProxyPassword.SelectionStart = 0;
             this.textBoxProxyPassword.Size = new System.Drawing.Size(192, 21);
             this.textBoxProxyPassword.TabIndex = 24;
-            this.textBoxProxyPassword.TextBoxFont = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBoxProxyPassword.UseSystemPasswordChar = true;
             // 
             // textBoxProxyAddress
             // 
-            this.textBoxProxyAddress.BackColor = System.Drawing.SystemColors.WindowFrame;
-            this.textBoxProxyAddress.CurrentLanguage = "";
-            this.textBoxProxyAddress.CurrentLineIndex = 0;
-            this.textBoxProxyAddress.HideSelection = true;
-            this.textBoxProxyAddress.IsDictionaryDownloaded = true;
-            this.textBoxProxyAddress.IsSpellCheckerInitialized = false;
-            this.textBoxProxyAddress.IsSpellCheckRequested = false;
-            this.textBoxProxyAddress.IsWrongWord = false;
-            this.textBoxProxyAddress.LanguageChanged = false;
+            this.textBoxProxyAddress.BackColor = System.Drawing.SystemColors.Window;
+            this.textBoxProxyAddress.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxProxyAddress.Location = new System.Drawing.Point(166, 34);
-            this.textBoxProxyAddress.MaxLength = 32767;
             this.textBoxProxyAddress.Multiline = true;
             this.textBoxProxyAddress.Name = "textBoxProxyAddress";
-            this.textBoxProxyAddress.Padding = new System.Windows.Forms.Padding(1);
-            this.textBoxProxyAddress.ReadOnly = false;
-            this.textBoxProxyAddress.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
-            this.textBoxProxyAddress.SelectedText = "";
-            this.textBoxProxyAddress.SelectionLength = 0;
-            this.textBoxProxyAddress.SelectionStart = 0;
             this.textBoxProxyAddress.Size = new System.Drawing.Size(321, 21);
             this.textBoxProxyAddress.TabIndex = 20;
-            this.textBoxProxyAddress.TextBoxFont = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBoxProxyAddress.UseSystemPasswordChar = false;
             // 
             // labelProxyAddress
             // 
@@ -6558,21 +6469,534 @@
             this.toolTipDialogStylePreview.InitialDelay = 500;
             this.toolTipDialogStylePreview.ReshowDelay = 100;
             // 
+            // panelAutoTranslate
+            // 
+            this.panelAutoTranslate.Controls.Add(this.groupBoxAutoTranslatePapago);
+            this.panelAutoTranslate.Controls.Add(this.groupBoxAutoTranslateChatGpt);
+            this.panelAutoTranslate.Controls.Add(this.groupBoxDeepL);
+            this.panelAutoTranslate.Controls.Add(this.groupBoxMyMemory);
+            this.panelAutoTranslate.Controls.Add(this.groupBoxLibreTranslate);
+            this.panelAutoTranslate.Controls.Add(this.groupBoxNllbServe);
+            this.panelAutoTranslate.Controls.Add(this.groupBoxNllbApi);
+            this.panelAutoTranslate.Controls.Add(this.groupBoxGoogleTranslate);
+            this.panelAutoTranslate.Controls.Add(this.groupBoxBing);
+            this.panelAutoTranslate.Location = new System.Drawing.Point(227, 3);
+            this.panelAutoTranslate.Name = "panelAutoTranslate";
+            this.panelAutoTranslate.Padding = new System.Windows.Forms.Padding(3);
+            this.panelAutoTranslate.Size = new System.Drawing.Size(864, 521);
+            this.panelAutoTranslate.TabIndex = 33;
+            this.panelAutoTranslate.Text = "Tools";
+            // 
+            // groupBoxAutoTranslatePapago
+            // 
+            this.groupBoxAutoTranslatePapago.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxAutoTranslatePapago.Controls.Add(this.nikseTextBoxPapagoClientId);
+            this.groupBoxAutoTranslatePapago.Controls.Add(this.nikseTextBoxPapagoClientSecret);
+            this.groupBoxAutoTranslatePapago.Controls.Add(this.labelSecretPapago);
+            this.groupBoxAutoTranslatePapago.Controls.Add(this.labelApiKeyPapago);
+            this.groupBoxAutoTranslatePapago.Controls.Add(this.linkLabelPapago);
+            this.groupBoxAutoTranslatePapago.Controls.Add(this.label11);
+            this.groupBoxAutoTranslatePapago.Location = new System.Drawing.Point(431, 368);
+            this.groupBoxAutoTranslatePapago.Name = "groupBoxAutoTranslatePapago";
+            this.groupBoxAutoTranslatePapago.Size = new System.Drawing.Size(411, 110);
+            this.groupBoxAutoTranslatePapago.TabIndex = 47;
+            this.groupBoxAutoTranslatePapago.TabStop = false;
+            this.groupBoxAutoTranslatePapago.Text = "Papago";
+            // 
+            // nikseTextBoxPapagoClientId
+            // 
+            this.nikseTextBoxPapagoClientId.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.nikseTextBoxPapagoClientId.Location = new System.Drawing.Point(8, 41);
+            this.nikseTextBoxPapagoClientId.Name = "nikseTextBoxPapagoClientId";
+            this.nikseTextBoxPapagoClientId.Size = new System.Drawing.Size(384, 21);
+            this.nikseTextBoxPapagoClientId.TabIndex = 34;
+            // 
+            // nikseTextBoxPapagoClientSecret
+            // 
+            this.nikseTextBoxPapagoClientSecret.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.nikseTextBoxPapagoClientSecret.Location = new System.Drawing.Point(78, 76);
+            this.nikseTextBoxPapagoClientSecret.Name = "nikseTextBoxPapagoClientSecret";
+            this.nikseTextBoxPapagoClientSecret.Size = new System.Drawing.Size(314, 21);
+            this.nikseTextBoxPapagoClientSecret.TabIndex = 36;
+            // 
+            // labelSecretPapago
+            // 
+            this.labelSecretPapago.AutoSize = true;
+            this.labelSecretPapago.Location = new System.Drawing.Point(6, 80);
+            this.labelSecretPapago.Name = "labelSecretPapago";
+            this.labelSecretPapago.Size = new System.Drawing.Size(67, 13);
+            this.labelSecretPapago.TabIndex = 35;
+            this.labelSecretPapago.Text = "Client secret";
+            // 
+            // labelApiKeyPapago
+            // 
+            this.labelApiKeyPapago.AutoSize = true;
+            this.labelApiKeyPapago.Location = new System.Drawing.Point(6, 23);
+            this.labelApiKeyPapago.Name = "labelApiKeyPapago";
+            this.labelApiKeyPapago.Size = new System.Drawing.Size(48, 13);
+            this.labelApiKeyPapago.TabIndex = 30;
+            this.labelApiKeyPapago.Text = "Client ID";
+            // 
+            // linkLabelPapago
+            // 
+            this.linkLabelPapago.Location = new System.Drawing.Point(222, 17);
+            this.linkLabelPapago.Name = "linkLabelPapago";
+            this.linkLabelPapago.Size = new System.Drawing.Size(170, 22);
+            this.linkLabelPapago.TabIndex = 24;
+            this.linkLabelPapago.TabStop = true;
+            this.linkLabelPapago.Text = "More info";
+            this.linkLabelPapago.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(16, 106);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(0, 13);
+            this.label11.TabIndex = 25;
+            // 
+            // groupBoxAutoTranslateChatGpt
+            // 
+            this.groupBoxAutoTranslateChatGpt.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxAutoTranslateChatGpt.Controls.Add(this.nikseTextBoxChatGptUrl);
+            this.groupBoxAutoTranslateChatGpt.Controls.Add(this.nikseComboBoxChatGptModel);
+            this.groupBoxAutoTranslateChatGpt.Controls.Add(this.labelChatGptModel);
+            this.groupBoxAutoTranslateChatGpt.Controls.Add(this.nikseTextBoxChatGptApiKey);
+            this.groupBoxAutoTranslateChatGpt.Controls.Add(this.labelApiKeyChatGpt);
+            this.groupBoxAutoTranslateChatGpt.Controls.Add(this.labelUrlChatGpt);
+            this.groupBoxAutoTranslateChatGpt.Controls.Add(this.linkLabelMoreInfoChatGpt);
+            this.groupBoxAutoTranslateChatGpt.Controls.Add(this.label10);
+            this.groupBoxAutoTranslateChatGpt.Location = new System.Drawing.Point(430, 210);
+            this.groupBoxAutoTranslateChatGpt.Name = "groupBoxAutoTranslateChatGpt";
+            this.groupBoxAutoTranslateChatGpt.Size = new System.Drawing.Size(411, 148);
+            this.groupBoxAutoTranslateChatGpt.TabIndex = 46;
+            this.groupBoxAutoTranslateChatGpt.TabStop = false;
+            this.groupBoxAutoTranslateChatGpt.Text = "ChatGPT API";
+            // 
+            // nikseTextBoxChatGptUrl
+            // 
+            this.nikseTextBoxChatGptUrl.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.nikseTextBoxChatGptUrl.Location = new System.Drawing.Point(8, 41);
+            this.nikseTextBoxChatGptUrl.Name = "nikseTextBoxChatGptUrl";
+            this.nikseTextBoxChatGptUrl.Size = new System.Drawing.Size(384, 21);
+            this.nikseTextBoxChatGptUrl.TabIndex = 34;
+            // 
+            // nikseComboBoxChatGptModel
+            // 
+            this.nikseComboBoxChatGptModel.BackColor = System.Drawing.SystemColors.Window;
+            this.nikseComboBoxChatGptModel.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.nikseComboBoxChatGptModel.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.nikseComboBoxChatGptModel.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.nikseComboBoxChatGptModel.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.nikseComboBoxChatGptModel.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.nikseComboBoxChatGptModel.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.nikseComboBoxChatGptModel.DropDownHeight = 400;
+            this.nikseComboBoxChatGptModel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.nikseComboBoxChatGptModel.DropDownWidth = 375;
+            this.nikseComboBoxChatGptModel.FormattingEnabled = true;
+            this.nikseComboBoxChatGptModel.Items.AddRange(new object[] {
+            "gpt-3.5-turbo",
+            "gpt-4"});
+            this.nikseComboBoxChatGptModel.Location = new System.Drawing.Point(52, 109);
+            this.nikseComboBoxChatGptModel.MaxLength = 32767;
+            this.nikseComboBoxChatGptModel.Name = "nikseComboBoxChatGptModel";
+            this.nikseComboBoxChatGptModel.SelectedIndex = -1;
+            this.nikseComboBoxChatGptModel.SelectedItem = null;
+            this.nikseComboBoxChatGptModel.SelectedText = "";
+            this.nikseComboBoxChatGptModel.Size = new System.Drawing.Size(340, 21);
+            this.nikseComboBoxChatGptModel.TabIndex = 38;
+            this.nikseComboBoxChatGptModel.UsePopupWindow = false;
+            // 
+            // labelChatGptModel
+            // 
+            this.labelChatGptModel.AutoSize = true;
+            this.labelChatGptModel.Location = new System.Drawing.Point(6, 112);
+            this.labelChatGptModel.Name = "labelChatGptModel";
+            this.labelChatGptModel.Size = new System.Drawing.Size(35, 13);
+            this.labelChatGptModel.TabIndex = 37;
+            this.labelChatGptModel.Text = "Model";
+            // 
+            // nikseTextBoxChatGptApiKey
+            // 
+            this.nikseTextBoxChatGptApiKey.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.nikseTextBoxChatGptApiKey.Location = new System.Drawing.Point(52, 76);
+            this.nikseTextBoxChatGptApiKey.Name = "nikseTextBoxChatGptApiKey";
+            this.nikseTextBoxChatGptApiKey.Size = new System.Drawing.Size(340, 21);
+            this.nikseTextBoxChatGptApiKey.TabIndex = 36;
+            // 
+            // labelApiKeyChatGpt
+            // 
+            this.labelApiKeyChatGpt.AutoSize = true;
+            this.labelApiKeyChatGpt.Location = new System.Drawing.Point(6, 80);
+            this.labelApiKeyChatGpt.Name = "labelApiKeyChatGpt";
+            this.labelApiKeyChatGpt.Size = new System.Drawing.Size(44, 13);
+            this.labelApiKeyChatGpt.TabIndex = 35;
+            this.labelApiKeyChatGpt.Text = "API key";
+            // 
+            // labelUrlChatGpt
+            // 
+            this.labelUrlChatGpt.AutoSize = true;
+            this.labelUrlChatGpt.Location = new System.Drawing.Point(6, 23);
+            this.labelUrlChatGpt.Name = "labelUrlChatGpt";
+            this.labelUrlChatGpt.Size = new System.Drawing.Size(20, 13);
+            this.labelUrlChatGpt.TabIndex = 30;
+            this.labelUrlChatGpt.Text = "Url";
+            // 
+            // linkLabelMoreInfoChatGpt
+            // 
+            this.linkLabelMoreInfoChatGpt.Location = new System.Drawing.Point(205, 17);
+            this.linkLabelMoreInfoChatGpt.Name = "linkLabelMoreInfoChatGpt";
+            this.linkLabelMoreInfoChatGpt.Size = new System.Drawing.Size(187, 21);
+            this.linkLabelMoreInfoChatGpt.TabIndex = 24;
+            this.linkLabelMoreInfoChatGpt.TabStop = true;
+            this.linkLabelMoreInfoChatGpt.Text = "More info";
+            this.linkLabelMoreInfoChatGpt.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(16, 106);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(0, 13);
+            this.label10.TabIndex = 25;
+            // 
+            // groupBoxDeepL
+            // 
+            this.groupBoxDeepL.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxDeepL.Controls.Add(this.nikseTextBoxDeepLUrl);
+            this.groupBoxDeepL.Controls.Add(this.nikseTextBoxDeepLApiKey);
+            this.groupBoxDeepL.Controls.Add(this.labelDeepLApiKey);
+            this.groupBoxDeepL.Controls.Add(this.labelDeepLUrl);
+            this.groupBoxDeepL.Controls.Add(this.linkLabelMoreInfoDeepl);
+            this.groupBoxDeepL.Controls.Add(this.label9);
+            this.groupBoxDeepL.Location = new System.Drawing.Point(9, 399);
+            this.groupBoxDeepL.Name = "groupBoxDeepL";
+            this.groupBoxDeepL.Size = new System.Drawing.Size(410, 110);
+            this.groupBoxDeepL.TabIndex = 37;
+            this.groupBoxDeepL.TabStop = false;
+            this.groupBoxDeepL.Text = "DeepL";
+            // 
+            // nikseTextBoxDeepLUrl
+            // 
+            this.nikseTextBoxDeepLUrl.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.nikseTextBoxDeepLUrl.Location = new System.Drawing.Point(8, 41);
+            this.nikseTextBoxDeepLUrl.Name = "nikseTextBoxDeepLUrl";
+            this.nikseTextBoxDeepLUrl.Size = new System.Drawing.Size(376, 21);
+            this.nikseTextBoxDeepLUrl.TabIndex = 34;
+            // 
+            // nikseTextBoxDeepLApiKey
+            // 
+            this.nikseTextBoxDeepLApiKey.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.nikseTextBoxDeepLApiKey.Location = new System.Drawing.Point(54, 76);
+            this.nikseTextBoxDeepLApiKey.Name = "nikseTextBoxDeepLApiKey";
+            this.nikseTextBoxDeepLApiKey.Size = new System.Drawing.Size(330, 21);
+            this.nikseTextBoxDeepLApiKey.TabIndex = 36;
+            // 
+            // labelDeepLApiKey
+            // 
+            this.labelDeepLApiKey.AutoSize = true;
+            this.labelDeepLApiKey.Location = new System.Drawing.Point(6, 80);
+            this.labelDeepLApiKey.Name = "labelDeepLApiKey";
+            this.labelDeepLApiKey.Size = new System.Drawing.Size(44, 13);
+            this.labelDeepLApiKey.TabIndex = 35;
+            this.labelDeepLApiKey.Text = "API key";
+            // 
+            // labelDeepLUrl
+            // 
+            this.labelDeepLUrl.AutoSize = true;
+            this.labelDeepLUrl.Location = new System.Drawing.Point(6, 23);
+            this.labelDeepLUrl.Name = "labelDeepLUrl";
+            this.labelDeepLUrl.Size = new System.Drawing.Size(20, 13);
+            this.labelDeepLUrl.TabIndex = 30;
+            this.labelDeepLUrl.Text = "Url";
+            // 
+            // linkLabelMoreInfoDeepl
+            // 
+            this.linkLabelMoreInfoDeepl.Location = new System.Drawing.Point(222, 16);
+            this.linkLabelMoreInfoDeepl.Name = "linkLabelMoreInfoDeepl";
+            this.linkLabelMoreInfoDeepl.Size = new System.Drawing.Size(160, 20);
+            this.linkLabelMoreInfoDeepl.TabIndex = 24;
+            this.linkLabelMoreInfoDeepl.TabStop = true;
+            this.linkLabelMoreInfoDeepl.Text = "More info";
+            this.linkLabelMoreInfoDeepl.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.linkLabelMoreInfoDeepl.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkLabelMoreInfoDeepLLinkClicked);
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(16, 106);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(0, 13);
+            this.label9.TabIndex = 25;
+            // 
+            // groupBoxMyMemory
+            // 
+            this.groupBoxMyMemory.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxMyMemory.Controls.Add(this.nikseTextBoxMyMemoryApiKey);
+            this.groupBoxMyMemory.Controls.Add(this.labelMyMemoryApiKey);
+            this.groupBoxMyMemory.Controls.Add(this.linkLabelMyMemoryTranslate);
+            this.groupBoxMyMemory.Controls.Add(this.label8);
+            this.groupBoxMyMemory.Location = new System.Drawing.Point(431, 127);
+            this.groupBoxMyMemory.Name = "groupBoxMyMemory";
+            this.groupBoxMyMemory.Size = new System.Drawing.Size(410, 73);
+            this.groupBoxMyMemory.TabIndex = 45;
+            this.groupBoxMyMemory.TabStop = false;
+            this.groupBoxMyMemory.Text = "MyMemory API";
+            // 
+            // nikseTextBoxMyMemoryApiKey
+            // 
+            this.nikseTextBoxMyMemoryApiKey.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.nikseTextBoxMyMemoryApiKey.Location = new System.Drawing.Point(8, 42);
+            this.nikseTextBoxMyMemoryApiKey.Name = "nikseTextBoxMyMemoryApiKey";
+            this.nikseTextBoxMyMemoryApiKey.Size = new System.Drawing.Size(376, 21);
+            this.nikseTextBoxMyMemoryApiKey.TabIndex = 36;
+            // 
+            // labelMyMemoryApiKey
+            // 
+            this.labelMyMemoryApiKey.AutoSize = true;
+            this.labelMyMemoryApiKey.Location = new System.Drawing.Point(6, 24);
+            this.labelMyMemoryApiKey.Name = "labelMyMemoryApiKey";
+            this.labelMyMemoryApiKey.Size = new System.Drawing.Size(44, 13);
+            this.labelMyMemoryApiKey.TabIndex = 35;
+            this.labelMyMemoryApiKey.Text = "API key";
+            // 
+            // linkLabelMyMemoryTranslate
+            // 
+            this.linkLabelMyMemoryTranslate.Location = new System.Drawing.Point(246, 17);
+            this.linkLabelMyMemoryTranslate.Name = "linkLabelMyMemoryTranslate";
+            this.linkLabelMyMemoryTranslate.Size = new System.Drawing.Size(138, 19);
+            this.linkLabelMyMemoryTranslate.TabIndex = 24;
+            this.linkLabelMyMemoryTranslate.TabStop = true;
+            this.linkLabelMyMemoryTranslate.Text = "More info";
+            this.linkLabelMyMemoryTranslate.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.linkLabelMyMemoryTranslate.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelMyMemoryTranslate_LinkClicked);
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(16, 106);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(0, 13);
+            this.label8.TabIndex = 25;
+            // 
+            // groupBoxLibreTranslate
+            // 
+            this.groupBoxLibreTranslate.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxLibreTranslate.Controls.Add(this.nikseTextBoxLibreTranslateApiKey);
+            this.groupBoxLibreTranslate.Controls.Add(this.labelLibreApiKey);
+            this.groupBoxLibreTranslate.Controls.Add(this.nikseTextBoxLibreTranslateUrl);
+            this.groupBoxLibreTranslate.Controls.Add(this.labelLibreUrl);
+            this.groupBoxLibreTranslate.Controls.Add(this.linkLabelLibreTranslateApi);
+            this.groupBoxLibreTranslate.Controls.Add(this.label7);
+            this.groupBoxLibreTranslate.Location = new System.Drawing.Point(431, 9);
+            this.groupBoxLibreTranslate.Name = "groupBoxLibreTranslate";
+            this.groupBoxLibreTranslate.Size = new System.Drawing.Size(411, 110);
+            this.groupBoxLibreTranslate.TabIndex = 40;
+            this.groupBoxLibreTranslate.TabStop = false;
+            this.groupBoxLibreTranslate.Text = "LibreTranslate API";
+            // 
+            // nikseTextBoxLibreTranslateApiKey
+            // 
+            this.nikseTextBoxLibreTranslateApiKey.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.nikseTextBoxLibreTranslateApiKey.Location = new System.Drawing.Point(52, 76);
+            this.nikseTextBoxLibreTranslateApiKey.Name = "nikseTextBoxLibreTranslateApiKey";
+            this.nikseTextBoxLibreTranslateApiKey.Size = new System.Drawing.Size(340, 21);
+            this.nikseTextBoxLibreTranslateApiKey.TabIndex = 36;
+            // 
+            // labelLibreApiKey
+            // 
+            this.labelLibreApiKey.AutoSize = true;
+            this.labelLibreApiKey.Location = new System.Drawing.Point(6, 80);
+            this.labelLibreApiKey.Name = "labelLibreApiKey";
+            this.labelLibreApiKey.Size = new System.Drawing.Size(44, 13);
+            this.labelLibreApiKey.TabIndex = 35;
+            this.labelLibreApiKey.Text = "API key";
+            // 
+            // nikseTextBoxLibreTranslateUrl
+            // 
+            this.nikseTextBoxLibreTranslateUrl.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.nikseTextBoxLibreTranslateUrl.Location = new System.Drawing.Point(8, 41);
+            this.nikseTextBoxLibreTranslateUrl.Name = "nikseTextBoxLibreTranslateUrl";
+            this.nikseTextBoxLibreTranslateUrl.Size = new System.Drawing.Size(384, 21);
+            this.nikseTextBoxLibreTranslateUrl.TabIndex = 34;
+            // 
+            // labelLibreUrl
+            // 
+            this.labelLibreUrl.AutoSize = true;
+            this.labelLibreUrl.Location = new System.Drawing.Point(6, 23);
+            this.labelLibreUrl.Name = "labelLibreUrl";
+            this.labelLibreUrl.Size = new System.Drawing.Size(20, 13);
+            this.labelLibreUrl.TabIndex = 30;
+            this.labelLibreUrl.Text = "Url";
+            // 
+            // linkLabelLibreTranslateApi
+            // 
+            this.linkLabelLibreTranslateApi.Location = new System.Drawing.Point(340, 17);
+            this.linkLabelLibreTranslateApi.Name = "linkLabelLibreTranslateApi";
+            this.linkLabelLibreTranslateApi.Size = new System.Drawing.Size(52, 13);
+            this.linkLabelLibreTranslateApi.TabIndex = 24;
+            this.linkLabelLibreTranslateApi.TabStop = true;
+            this.linkLabelLibreTranslateApi.Text = "More info";
+            this.linkLabelLibreTranslateApi.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.linkLabelLibreTranslateApi.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelLibreTranslateApi_LinkClicked);
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(16, 106);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(0, 13);
+            this.label7.TabIndex = 25;
+            // 
+            // groupBoxNllbServe
+            // 
+            this.groupBoxNllbServe.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxNllbServe.Controls.Add(this.nikseTextBoxNllbServeUrl);
+            this.groupBoxNllbServe.Controls.Add(this.nikseTextBoxNllbServeModel);
+            this.groupBoxNllbServe.Controls.Add(this.labelNllbServeModel);
+            this.groupBoxNllbServe.Controls.Add(this.labelNllbServeUrl);
+            this.groupBoxNllbServe.Controls.Add(this.linkLabelNllbServe);
+            this.groupBoxNllbServe.Controls.Add(this.label4);
+            this.groupBoxNllbServe.Location = new System.Drawing.Point(9, 213);
+            this.groupBoxNllbServe.Name = "groupBoxNllbServe";
+            this.groupBoxNllbServe.Size = new System.Drawing.Size(410, 103);
+            this.groupBoxNllbServe.TabIndex = 35;
+            this.groupBoxNllbServe.TabStop = false;
+            this.groupBoxNllbServe.Text = "NLLM Serve";
+            // 
+            // nikseTextBoxNllbServeUrl
+            // 
+            this.nikseTextBoxNllbServeUrl.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.nikseTextBoxNllbServeUrl.Location = new System.Drawing.Point(8, 40);
+            this.nikseTextBoxNllbServeUrl.Name = "nikseTextBoxNllbServeUrl";
+            this.nikseTextBoxNllbServeUrl.Size = new System.Drawing.Size(376, 21);
+            this.nikseTextBoxNllbServeUrl.TabIndex = 34;
+            // 
+            // nikseTextBoxNllbServeModel
+            // 
+            this.nikseTextBoxNllbServeModel.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.nikseTextBoxNllbServeModel.Location = new System.Drawing.Point(53, 71);
+            this.nikseTextBoxNllbServeModel.Name = "nikseTextBoxNllbServeModel";
+            this.nikseTextBoxNllbServeModel.Size = new System.Drawing.Size(331, 21);
+            this.nikseTextBoxNllbServeModel.TabIndex = 37;
+            // 
+            // labelNllbServeModel
+            // 
+            this.labelNllbServeModel.AutoSize = true;
+            this.labelNllbServeModel.Location = new System.Drawing.Point(7, 75);
+            this.labelNllbServeModel.Name = "labelNllbServeModel";
+            this.labelNllbServeModel.Size = new System.Drawing.Size(35, 13);
+            this.labelNllbServeModel.TabIndex = 36;
+            this.labelNllbServeModel.Text = "Model";
+            // 
+            // labelNllbServeUrl
+            // 
+            this.labelNllbServeUrl.AutoSize = true;
+            this.labelNllbServeUrl.Location = new System.Drawing.Point(6, 22);
+            this.labelNllbServeUrl.Name = "labelNllbServeUrl";
+            this.labelNllbServeUrl.Size = new System.Drawing.Size(20, 13);
+            this.labelNllbServeUrl.TabIndex = 30;
+            this.labelNllbServeUrl.Text = "Url";
+            // 
+            // linkLabelNllbServe
+            // 
+            this.linkLabelNllbServe.Location = new System.Drawing.Point(241, 16);
+            this.linkLabelNllbServe.Name = "linkLabelNllbServe";
+            this.linkLabelNllbServe.Size = new System.Drawing.Size(143, 19);
+            this.linkLabelNllbServe.TabIndex = 24;
+            this.linkLabelNllbServe.TabStop = true;
+            this.linkLabelNllbServe.Text = "More info";
+            this.linkLabelNllbServe.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.linkLabelNllbServe.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelNllbServe_LinkClicked);
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(16, 106);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(0, 13);
+            this.label4.TabIndex = 25;
+            // 
+            // groupBoxNllbApi
+            // 
+            this.groupBoxNllbApi.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxNllbApi.Controls.Add(this.nikseTextBoxNllbApiUrl);
+            this.groupBoxNllbApi.Controls.Add(this.labelNllbApiUrl);
+            this.groupBoxNllbApi.Controls.Add(this.linkLabelNllbApi);
+            this.groupBoxNllbApi.Controls.Add(this.label5);
+            this.groupBoxNllbApi.Location = new System.Drawing.Point(9, 322);
+            this.groupBoxNllbApi.Name = "groupBoxNllbApi";
+            this.groupBoxNllbApi.Size = new System.Drawing.Size(410, 73);
+            this.groupBoxNllbApi.TabIndex = 36;
+            this.groupBoxNllbApi.TabStop = false;
+            this.groupBoxNllbApi.Text = "NLLM API";
+            // 
+            // nikseTextBoxNllbApiUrl
+            // 
+            this.nikseTextBoxNllbApiUrl.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.nikseTextBoxNllbApiUrl.Location = new System.Drawing.Point(8, 40);
+            this.nikseTextBoxNllbApiUrl.Name = "nikseTextBoxNllbApiUrl";
+            this.nikseTextBoxNllbApiUrl.Size = new System.Drawing.Size(376, 21);
+            this.nikseTextBoxNllbApiUrl.TabIndex = 34;
+            // 
+            // labelNllbApiUrl
+            // 
+            this.labelNllbApiUrl.AutoSize = true;
+            this.labelNllbApiUrl.Location = new System.Drawing.Point(6, 22);
+            this.labelNllbApiUrl.Name = "labelNllbApiUrl";
+            this.labelNllbApiUrl.Size = new System.Drawing.Size(20, 13);
+            this.labelNllbApiUrl.TabIndex = 30;
+            this.labelNllbApiUrl.Text = "Url";
+            // 
+            // linkLabelNllbApi
+            // 
+            this.linkLabelNllbApi.Location = new System.Drawing.Point(221, 16);
+            this.linkLabelNllbApi.Name = "linkLabelNllbApi";
+            this.linkLabelNllbApi.Size = new System.Drawing.Size(163, 21);
+            this.linkLabelNllbApi.TabIndex = 24;
+            this.linkLabelNllbApi.TabStop = true;
+            this.linkLabelNllbApi.Text = "More info";
+            this.linkLabelNllbApi.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.linkLabelNllbApi.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelNllbApi_LinkClicked);
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(16, 106);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(0, 13);
+            this.label5.TabIndex = 25;
+            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1092, 574);
-            this.Controls.Add(this.labelUpdateFileTypeAssociationsStatus);
-            this.Controls.Add(this.panelSubtitleFormats);
-            this.Controls.Add(this.panelGeneral);
-            this.Controls.Add(this.panelWaveform);
+            this.Controls.Add(this.panelAutoTranslate);
             this.Controls.Add(this.panelShortcuts);
             this.Controls.Add(this.panelVideoPlayer);
-            this.Controls.Add(this.panelFont);
-            this.Controls.Add(this.panelToolBar);
+            this.Controls.Add(this.labelUpdateFileTypeAssociationsStatus);
+            this.Controls.Add(this.panelGeneral);
             this.Controls.Add(this.panelTools);
             this.Controls.Add(this.panelNetwork);
+            this.Controls.Add(this.panelFont);
+            this.Controls.Add(this.panelSubtitleFormats);
+            this.Controls.Add(this.panelWaveform);
+            this.Controls.Add(this.panelToolBar);
             this.Controls.Add(this.panelFileTypeAssociations);
             this.Controls.Add(this.panelSyntaxColoring);
             this.Controls.Add(this.listBoxSection);
@@ -6629,10 +7053,6 @@
             this.panelTools.ResumeLayout(false);
             this.groupBoxToolsMisc.ResumeLayout(false);
             this.groupBoxToolsMisc.PerformLayout();
-            this.groupBoxGoogleTranslate.ResumeLayout(false);
-            this.groupBoxGoogleTranslate.PerformLayout();
-            this.groupBoxBing.ResumeLayout(false);
-            this.groupBoxBing.PerformLayout();
             this.groupBoxToolsAutoBr.ResumeLayout(false);
             this.groupBoxToolsAutoBr.PerformLayout();
             this.groupBoxSpellCheck.ResumeLayout(false);
@@ -6641,6 +7061,10 @@
             this.groupBoxFixCommonErrors.PerformLayout();
             this.groupBoxToolsVisualSync.ResumeLayout(false);
             this.groupBoxToolsVisualSync.PerformLayout();
+            this.groupBoxGoogleTranslate.ResumeLayout(false);
+            this.groupBoxGoogleTranslate.PerformLayout();
+            this.groupBoxBing.ResumeLayout(false);
+            this.groupBoxBing.PerformLayout();
             this.panelToolBar.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
@@ -6697,6 +7121,21 @@
             this.groupBoxProxyAuthentication.ResumeLayout(false);
             this.groupBoxProxyAuthentication.PerformLayout();
             this.panelFileTypeAssociations.ResumeLayout(false);
+            this.panelAutoTranslate.ResumeLayout(false);
+            this.groupBoxAutoTranslatePapago.ResumeLayout(false);
+            this.groupBoxAutoTranslatePapago.PerformLayout();
+            this.groupBoxAutoTranslateChatGpt.ResumeLayout(false);
+            this.groupBoxAutoTranslateChatGpt.PerformLayout();
+            this.groupBoxDeepL.ResumeLayout(false);
+            this.groupBoxDeepL.PerformLayout();
+            this.groupBoxMyMemory.ResumeLayout(false);
+            this.groupBoxMyMemory.PerformLayout();
+            this.groupBoxLibreTranslate.ResumeLayout(false);
+            this.groupBoxLibreTranslate.PerformLayout();
+            this.groupBoxNllbServe.ResumeLayout(false);
+            this.groupBoxNllbServe.PerformLayout();
+            this.groupBoxNllbApi.ResumeLayout(false);
+            this.groupBoxNllbApi.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -6758,14 +7197,14 @@
         private System.Windows.Forms.RadioButton radioButtonVideoPlayerDirectShow;
         private System.Windows.Forms.RadioButton radioButtonVideoPlayerMpcHc;
         private System.Windows.Forms.CheckBox checkBoxRememberWindowPosition;
-        private Nikse.SubtitleEdit.Controls.SETextBox textBoxShowLineBreaksAs;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxShowLineBreaksAs;
         private System.Windows.Forms.Label labelShowLineBreaksAs;
         private System.Windows.Forms.Panel panelNetwork;
         private System.Windows.Forms.GroupBox groupBoxProxySettings;
         private System.Windows.Forms.Label labelProxyPassword;
-        private Nikse.SubtitleEdit.Controls.SETextBox textBoxProxyAddress;
-        private Nikse.SubtitleEdit.Controls.SETextBox textBoxProxyUserName;
-        private Nikse.SubtitleEdit.Controls.SETextBox textBoxProxyPassword;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxProxyAddress;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxProxyUserName;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxProxyPassword;
         private System.Windows.Forms.Label labelProxyAddress;
         private System.Windows.Forms.Label labelProxyUserName;
         private System.Windows.Forms.Panel panelTools;
@@ -6781,13 +7220,13 @@
         private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxListViewDoubleClickEvent;
         private System.Windows.Forms.Label labelListViewDoubleClickEvent;
         private System.Windows.Forms.Label labelStatus;
-        private Nikse.SubtitleEdit.Controls.SETextBox textBoxMusicSymbolsToReplace;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxMusicSymbolsToReplace;
         private System.Windows.Forms.Label labelToolsMusicSymbolsToReplace;
         private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxToolsMusicSymbol;
         private System.Windows.Forms.GroupBox groupBoxSpellCheck;
         private System.Windows.Forms.CheckBox checkBoxSpellCheckAutoChangeNames;
         private System.Windows.Forms.GroupBox groupBoxProxyAuthentication;
-        private Nikse.SubtitleEdit.Controls.SETextBox textBoxProxyDomain;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxProxyDomain;
         private System.Windows.Forms.Label labelProxyDomain;
         private System.Windows.Forms.CheckBox checkBoxAutoDetectAnsiEncoding;
         private System.Windows.Forms.Label labelAutoDetectAnsiEncoding;
@@ -6796,7 +7235,7 @@
         private System.Windows.Forms.CheckBox checkBoxRemoveBlankLinesWhenOpening;
         private System.Windows.Forms.GroupBox groupBoxMainWindowVideoControls;
         private System.Windows.Forms.GroupBox groupBoxVideoPlayerDefault;
-        private Nikse.SubtitleEdit.Controls.SETextBox textBoxCustomSearchUrl1;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxCustomSearchUrl1;
         private System.Windows.Forms.Label labelCustomSearch;
         private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxCustomSearch1;
         private System.Windows.Forms.Panel panelWaveform;
@@ -6869,16 +7308,16 @@
         private System.Windows.Forms.CheckBox checkBoxVideoPlayerShowMuteButton;
         private System.Windows.Forms.Label labelCustomSearch1;
         private System.Windows.Forms.Label labelCustomSearch2;
-        private Nikse.SubtitleEdit.Controls.SETextBox textBoxCustomSearchUrl2;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxCustomSearchUrl2;
         private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxCustomSearch2;
         private System.Windows.Forms.Label labelCustomSearch5;
-        private Nikse.SubtitleEdit.Controls.SETextBox textBoxCustomSearchUrl5;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxCustomSearchUrl5;
         private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxCustomSearch5;
         private System.Windows.Forms.Label labelCustomSearch4;
-        private Nikse.SubtitleEdit.Controls.SETextBox textBoxCustomSearchUrl4;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxCustomSearchUrl4;
         private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxCustomSearch4;
         private System.Windows.Forms.Label labelCustomSearch3;
-        private Nikse.SubtitleEdit.Controls.SETextBox textBoxCustomSearchUrl3;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxCustomSearchUrl3;
         private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxCustomSearch3;
         private System.Windows.Forms.CheckBox checkBoxAllowOverlap;
         private System.Windows.Forms.Label labelWaveformBorderHitMs2;
@@ -6901,7 +7340,7 @@
         private System.Windows.Forms.CheckBox checkBoxTBFixCommonErrors;
         private System.Windows.Forms.CheckBox checkBoxFixShortDisplayTimesAllowMoveStartTime;
         private System.Windows.Forms.Button buttonVlcPathBrowse;
-        private Nikse.SubtitleEdit.Controls.SETextBox textBoxVlcPath;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxVlcPath;
         private System.Windows.Forms.Label labelVlcPath;
         private System.Windows.Forms.GroupBox groupBoxToolsAutoBr;
         private System.Windows.Forms.CheckBox checkBoxUseDoNotBreakAfterList;
@@ -6923,7 +7362,7 @@
         private System.Windows.Forms.Label labelUserBingApiId;
         private System.Windows.Forms.GroupBox groupBoxBing;
         private System.Windows.Forms.Label labelBingApiKey;
-        private Nikse.SubtitleEdit.Controls.SETextBox textBoxBingClientSecret;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxBingClientSecret;
         private System.Windows.Forms.Label label1;
         private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxAutoBackupDeleteAfter;
         private System.Windows.Forms.Label labelAutoBackupDeleteAfter;
@@ -6972,7 +7411,7 @@
         private Nikse.SubtitleEdit.Controls.SETextBox textBoxShortcutSearch;
         private System.Windows.Forms.GroupBox groupBoxGoogleTranslate;
         private System.Windows.Forms.Label labelGoogleTranslateApiKey;
-        private Nikse.SubtitleEdit.Controls.SETextBox textBoxGoogleTransleApiKey;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxGoogleTransleApiKey;
         private System.Windows.Forms.LinkLabel linkLabelGoogleTranslateSignUp;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.CheckBox checkBoxAutoSave;
@@ -7125,5 +7564,58 @@
         private System.Windows.Forms.PictureBox pictureBoxPreview1;
         private System.Windows.Forms.Label labelToolbarIconTheme;
         private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxToolbarIconTheme;
+        private System.Windows.Forms.Button buttonDefaultLanguages;
+        private System.Windows.Forms.Label labelDefaultLanguages;
+        private System.Windows.Forms.Label labelDefaultLanguagesList;
+        private System.Windows.Forms.Panel panelAutoTranslate;
+        private System.Windows.Forms.GroupBox groupBoxNllbApi;
+        private System.Windows.Forms.Label labelNllbApiUrl;
+        private System.Windows.Forms.LinkLabel linkLabelNllbApi;
+        private System.Windows.Forms.Label label5;
+        private Controls.NikseTextBox nikseTextBoxNllbApiUrl;
+        private System.Windows.Forms.GroupBox groupBoxNllbServe;
+        private Controls.NikseTextBox nikseTextBoxNllbServeUrl;
+        private System.Windows.Forms.Label labelNllbServeUrl;
+        private System.Windows.Forms.LinkLabel linkLabelNllbServe;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.GroupBox groupBoxLibreTranslate;
+        private Controls.NikseTextBox nikseTextBoxLibreTranslateUrl;
+        private System.Windows.Forms.Label labelLibreUrl;
+        private System.Windows.Forms.LinkLabel linkLabelLibreTranslateApi;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label labelNllbServeModel;
+        private Controls.NikseTextBox nikseTextBoxNllbServeModel;
+        private Controls.NikseTextBox nikseTextBoxLibreTranslateApiKey;
+        private System.Windows.Forms.Label labelLibreApiKey;
+        private System.Windows.Forms.GroupBox groupBoxMyMemory;
+        private Controls.NikseTextBox nikseTextBoxMyMemoryApiKey;
+        private System.Windows.Forms.Label labelMyMemoryApiKey;
+        private System.Windows.Forms.LinkLabel linkLabelMyMemoryTranslate;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.GroupBox groupBoxDeepL;
+        private Controls.NikseTextBox nikseTextBoxDeepLApiKey;
+        private System.Windows.Forms.Label labelDeepLApiKey;
+        private Controls.NikseTextBox nikseTextBoxDeepLUrl;
+        private System.Windows.Forms.Label labelDeepLUrl;
+        private System.Windows.Forms.LinkLabel linkLabelMoreInfoDeepl;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.GroupBox groupBoxAutoTranslatePapago;
+        private Controls.NikseTextBox nikseTextBoxPapagoClientSecret;
+        private System.Windows.Forms.Label labelSecretPapago;
+        private Controls.NikseTextBox nikseTextBoxPapagoClientId;
+        private System.Windows.Forms.Label labelApiKeyPapago;
+        private System.Windows.Forms.LinkLabel linkLabelPapago;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.GroupBox groupBoxAutoTranslateChatGpt;
+        private System.Windows.Forms.Label labelChatGptModel;
+        private Controls.NikseTextBox nikseTextBoxChatGptApiKey;
+        private System.Windows.Forms.Label labelApiKeyChatGpt;
+        private Controls.NikseTextBox nikseTextBoxChatGptUrl;
+        private System.Windows.Forms.Label labelUrlChatGpt;
+        private System.Windows.Forms.LinkLabel linkLabelMoreInfoChatGpt;
+        private System.Windows.Forms.Label label10;
+        private Controls.NikseComboBox nikseComboBoxChatGptModel;
+        private System.Windows.Forms.Label labelShortcutsFilter;
+        private Controls.NikseComboBox nikseComboBoxShortcutsFilter;
     }
 }

@@ -3,7 +3,6 @@ using Nikse.SubtitleEdit.Core.Forms;
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Globalization;
 using System.Windows.Forms;
 
@@ -53,7 +52,7 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxLineContinuationBegin.Text = continuationProfile.Prefix;
             comboBoxLineContinuationEnd.Text = continuationProfile.Suffix;
 
-            checkBoxSplitAtLineBreaks.Text= LanguageSettings.Current.SplitLongLines.SplitAtLineBreaks;;
+            checkBoxSplitAtLineBreaks.Text = LanguageSettings.Current.SplitLongLines.SplitAtLineBreaks; ;
             toolStripMenuItemInverseSelection.Text = LanguageSettings.Current.Main.Menu.Edit.InverseSelection;
             toolStripMenuItemSelectAll.Text = LanguageSettings.Current.Main.Menu.ContextMenu.SelectAll;
             buttonOK.Text = LanguageSettings.Current.General.Ok;
@@ -63,6 +62,7 @@ namespace Nikse.SubtitleEdit.Forms
             SubtitleListview1.AutoSizeAllColumns(this);
             NumberOfSplits = 0;
             numericUpDownSingleLineMaxCharacters.Value = Configuration.Settings.General.SubtitleLineMaximumLength;
+            UiUtil.SetNumericUpDownValue(numericUpDownLineMaxCharacters, Configuration.Settings.Tools.SplitLongLinesMax);
             _subtitle = subtitle;
         }
 
@@ -105,14 +105,17 @@ namespace Nikse.SubtitleEdit.Forms
 
             SubtitleListview1.Fill(SplitSubtitle);
 
+            var greenColor = UiUtil.GreenBackgroundColor;
+            var greenColorAlternate = UiUtil.GreenBackgroundColorAlternate;
+
             foreach (var index in splitIndexes)
             {
-                SubtitleListview1.SetBackgroundColor(index, Color.Green);
+                SubtitleListview1.SetBackgroundColor(index, greenColor);
             }
 
             foreach (var index in autoBreakIndexes)
             {
-                SubtitleListview1.SetBackgroundColor(index, Color.LightGreen);
+                SubtitleListview1.SetBackgroundColor(index, greenColorAlternate);
             }
 
             SubtitleListview1.EndUpdate();
@@ -508,6 +511,126 @@ namespace Nikse.SubtitleEdit.Forms
                                     numberOfSplits++;
                                 }
                             }
+                            else if ((language == "ja" || language == "zh") && !p.Text.Contains(Environment.NewLine))
+                            {
+                                var splitChars = ".!?:;。、；·！…";
+                                var splitPos = (int)Math.Round(p.Text.Length / 2.0 + 0.5);
+                                if (p.Text.Length > 12)
+                                {
+                                    for (var j = 0; j < 5; j++)
+                                    {
+                                        if (splitChars.Contains(p.Text[splitPos - j]))
+                                        {
+                                            splitPos = splitPos - j;
+                                            break;
+                                        }
+
+                                        if (splitChars.Contains(p.Text[splitPos + j]))
+                                        {
+                                            splitPos = splitPos + j;
+                                            break;
+                                        }
+                                    }
+                                }
+
+                                var spacing1 = Configuration.Settings.General.MinimumMillisecondsBetweenLines / 2;
+                                var spacing2 = Configuration.Settings.General.MinimumMillisecondsBetweenLines / 2;
+                                if (Configuration.Settings.General.MinimumMillisecondsBetweenLines % 2 == 1)
+                                {
+                                    spacing2++;
+                                }
+
+                                var newParagraph1 = new Paragraph(p);
+                                var newParagraph2 = new Paragraph(p);
+
+                                newParagraph1.Text = Utilities.AutoBreakLine(p.Text.Substring(0, splitPos + 1), language);
+
+                                var middle = p.StartTime.TotalMilliseconds + p.DurationTotalMilliseconds / 2;
+                                if (!string.IsNullOrWhiteSpace(oldText))
+                                {
+                                    var startFactor = (double)HtmlUtil.RemoveHtmlTags(newParagraph1.Text).Length / oldText.Length;
+                                    if (startFactor < 0.25)
+                                    {
+                                        startFactor = 0.25;
+                                    }
+
+                                    if (startFactor > 0.75)
+                                    {
+                                        startFactor = 0.75;
+                                    }
+
+                                    middle = p.StartTime.TotalMilliseconds + p.DurationTotalMilliseconds * startFactor;
+                                }
+
+                                newParagraph1.EndTime.TotalMilliseconds = middle - spacing1;
+                                newParagraph2.Text = Utilities.AutoBreakLine(p.Text.Substring(splitPos + 1), language);
+                                newParagraph2.StartTime.TotalMilliseconds = newParagraph1.EndTime.TotalMilliseconds + spacing2;
+
+                                if (Configuration.Settings.General.SplitRemovesDashes && isDialog)
+                                {
+                                    newParagraph1.Text = DialogSplitMerge.RemoveStartDash(newParagraph1.Text);
+                                    newParagraph2.Text = DialogSplitMerge.RemoveStartDash(newParagraph2.Text);
+                                }
+
+                                if (clearFixes)
+                                {
+                                    AddToListView(p, (splitSubtitle.Paragraphs.Count + 1).ToString(CultureInfo.InvariantCulture), oldText);
+                                }
+
+                                splitIndexes.Add(splitSubtitle.Paragraphs.Count);
+                                splitIndexes.Add(splitSubtitle.Paragraphs.Count + 1);
+
+                                var p1 = HtmlUtil.RemoveHtmlTags(newParagraph1.Text).TrimEnd();
+                                if (!p1.EndsWith('.') && !p1.EndsWith('!') && !p1.EndsWith('?') && !p1.EndsWith(':') && !p1.EndsWith(')') && !p1.EndsWith(']') && !p1.EndsWith('♪'))
+                                {
+                                    var endsWithComma = newParagraph1.Text.EndsWith(',') || newParagraph1.Text.EndsWith(",</i>", StringComparison.Ordinal);
+
+                                    var post = string.Empty;
+                                    if (newParagraph1.Text.EndsWith("</i>", StringComparison.Ordinal))
+                                    {
+                                        post = "</i>";
+                                        newParagraph1.Text = newParagraph1.Text.Remove(newParagraph1.Text.Length - post.Length);
+                                    }
+
+                                    if (endsWithComma)
+                                    {
+                                        newParagraph1.Text += post;
+                                    }
+                                    else
+                                    {
+                                        newParagraph1.Text += comboBoxLineContinuationEnd.Text.TrimEnd() + post;
+                                    }
+
+                                    var pre = string.Empty;
+                                    if (newParagraph2.Text.StartsWith("<i>", StringComparison.Ordinal))
+                                    {
+                                        pre = "<i>";
+                                        newParagraph2.Text = newParagraph2.Text.Remove(0, pre.Length);
+                                    }
+
+                                    if (endsWithComma)
+                                    {
+                                        newParagraph2.Text = pre + newParagraph2.Text;
+                                    }
+                                    else
+                                    {
+                                        newParagraph2.Text = pre + comboBoxLineContinuationBegin.Text + newParagraph2.Text;
+                                    }
+                                }
+
+                                var italicStart1 = newParagraph1.Text.IndexOf("<i>", StringComparison.Ordinal);
+                                if (italicStart1 >= 0 && italicStart1 < 10 && newParagraph1.Text.IndexOf("</i>", StringComparison.Ordinal) < 0 &&
+                                    newParagraph2.Text.Contains("</i>") && newParagraph2.Text.IndexOf("<i>", StringComparison.Ordinal) < 0)
+                                {
+                                    newParagraph1.Text += "</i>";
+                                    newParagraph2.Text = "<i>" + newParagraph2.Text;
+                                }
+
+                                splitSubtitle.Paragraphs.Add(newParagraph1);
+                                splitSubtitle.Paragraphs.Add(newParagraph2);
+                                added = true;
+                                numberOfSplits++;
+                            }
                         }
                     }
 
@@ -622,6 +745,11 @@ namespace Nikse.SubtitleEdit.Forms
             Cursor = Cursors.WaitCursor;
             GeneratePreview(true);
             Cursor = Cursors.Default;
+        }
+
+        private void SplitLongLines_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Configuration.Settings.Tools.SplitLongLinesMax = (int)numericUpDownLineMaxCharacters.Value;
         }
     }
 }

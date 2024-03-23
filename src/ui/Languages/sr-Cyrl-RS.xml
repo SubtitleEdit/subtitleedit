@@ -252,7 +252,7 @@
     <RemovedEmptyLine>Празна линија је уклоњена.</RemovedEmptyLine>
     <RemovedEmptyLineAtTop>Празна линија на врху је уклоњена.</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>Празна линија на дну је уклоњена.</RemovedEmptyLineAtBottom>
-    <RemovedEmptyLinesUnsedLineBreaks>Уклони празне линије и непотребне размаке</RemovedEmptyLinesUnsedLineBreaks>
+    <RemovedEmptyLinesUnusedLineBreaks>Уклони празне линије и непотребне размаке</RemovedEmptyLinesUnusedLineBreaks>
     <EmptyLinesRemovedX>Уклоњено празних линија: {0}</EmptyLinesRemovedX>
     <FixOverlappingDisplayTimes>Исправи преклапање времена</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>Исправи кратко време приказа</FixShortDisplayTimes>

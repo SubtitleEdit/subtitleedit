@@ -74,8 +74,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripButtonHelp = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparatorToggle = new Nikse.SubtitleEdit.Controls.ToolStripNikseSeparator();
             this.toolStripButtonSourceView = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButtonToggleWaveform = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButtonToggleVideo = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonLayout = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparatorSubtitleFormat = new Nikse.SubtitleEdit.Controls.ToolStripNikseSeparator();
             this.toolStripLabelSubtitleFormat = new System.Windows.Forms.ToolStripLabel();
             this.comboBoxSubtitleFormats = new Nikse.SubtitleEdit.Controls.ToolStripNikseComboBox();
@@ -246,9 +245,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.audioToTextWhisperTolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.videoaudioToTextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
-            this.showhideWaveformToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.showhideVideoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator19 = new System.Windows.Forms.ToolStripSeparator();
             this.undockVideoControlsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.redockVideoControlsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemSynchronization = new System.Windows.Forms.ToolStripMenuItem();
@@ -260,6 +256,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.changeSpeedInPercentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemAutoTranslate = new System.Windows.Forms.ToolStripMenuItem();
             this.translateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.autotranslateNLLBToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.autotranslateViaCopypasteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator26 = new System.Windows.Forms.ToolStripSeparator();
             this.mergeSentencesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -352,6 +349,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.genericTranslateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemUnbreakLines = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemAutoBreakLines = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemEvenlyDistributeLines = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemSaveSelectedLines = new System.Windows.Forms.ToolStripMenuItem();
             this.typeEffectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.karaokeEffectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -579,6 +577,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.timerOriginalTextUndo = new System.Windows.Forms.Timer(this.components);
             this.contextMenuStripShowVideoControls = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItemShowVideoControls = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemVerifyCompleteness = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -699,8 +698,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripButtonHelp,
             this.toolStripSeparatorToggle,
             this.toolStripButtonSourceView,
-            this.toolStripButtonToggleWaveform,
-            this.toolStripButtonToggleVideo,
+            this.toolStripButtonLayout,
             this.toolStripSeparatorSubtitleFormat,
             this.toolStripLabelSubtitleFormat,
             this.comboBoxSubtitleFormats,
@@ -995,31 +993,17 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripButtonSourceView.Text = "Toggle list/source view";
             this.toolStripButtonSourceView.Click += new System.EventHandler(this.ToolStripButtonSourceViewClick);
             // 
-            // toolStripButtonToggleWaveform
+            // toolStripButtonLayout
             // 
-            this.toolStripButtonToggleWaveform.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonToggleWaveform.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.toolStripButtonToggleWaveform.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonToggleWaveform.Image")));
-            this.toolStripButtonToggleWaveform.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.toolStripButtonToggleWaveform.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonToggleWaveform.Name = "toolStripButtonToggleWaveform";
-            this.toolStripButtonToggleWaveform.Size = new System.Drawing.Size(36, 37);
-            this.toolStripButtonToggleWaveform.Text = "Show/hide waveform";
-            this.toolStripButtonToggleWaveform.Click += new System.EventHandler(this.ToolStripButtonToggleWaveformClick);
-            // 
-            // toolStripButtonToggleVideo
-            // 
-            this.toolStripButtonToggleVideo.Checked = true;
-            this.toolStripButtonToggleVideo.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.toolStripButtonToggleVideo.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonToggleVideo.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.toolStripButtonToggleVideo.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonToggleVideo.Image")));
-            this.toolStripButtonToggleVideo.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.toolStripButtonToggleVideo.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonToggleVideo.Name = "toolStripButtonToggleVideo";
-            this.toolStripButtonToggleVideo.Size = new System.Drawing.Size(36, 37);
-            this.toolStripButtonToggleVideo.Text = "Show/hide video";
-            this.toolStripButtonToggleVideo.Click += new System.EventHandler(this.ToolStripButtonToggleVideoClick);
+            this.toolStripButtonLayout.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonLayout.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.toolStripButtonLayout.Image = global::Nikse.SubtitleEdit.Properties.Resources.Layout;
+            this.toolStripButtonLayout.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.toolStripButtonLayout.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonLayout.Name = "toolStripButtonLayout";
+            this.toolStripButtonLayout.Size = new System.Drawing.Size(36, 37);
+            this.toolStripButtonLayout.Text = "Show/hide waveform";
+            this.toolStripButtonLayout.Click += new System.EventHandler(this.ToolStripButtonLayoutChooseClick);
             // 
             // toolStripSeparatorSubtitleFormat
             // 
@@ -1118,9 +1102,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripComboBoxFrameRate.SelectedItem = null;
             this.toolStripComboBoxFrameRate.SelectedText = "";
             this.toolStripComboBoxFrameRate.Size = new System.Drawing.Size(75, 33);
+            this.toolStripComboBoxFrameRate.TextChanged += new System.EventHandler(this.ToolStripComboBoxFrameRateTextChanged);
             this.toolStripComboBoxFrameRate.DropDown += new System.EventHandler(this.MenuOpened);
             this.toolStripComboBoxFrameRate.DropDownClosed += new System.EventHandler(this.MenuClosed);
-            this.toolStripComboBoxFrameRate.TextChanged += new System.EventHandler(this.ToolStripComboBoxFrameRateTextChanged);
             // 
             // toolStripButtonGetFrameRate
             // 
@@ -1174,6 +1158,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripSeparator12,
             this.toolStripMenuItemOpenContainingFolder,
             this.toolStripMenuItemCompare,
+            this.toolStripMenuItemVerifyCompleteness,
             this.toolStripMenuItemStatistics,
             this.toolStripMenuItemPlugins,
             this.toolStripSeparator1,
@@ -2290,9 +2275,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.audioToTextWhisperTolStripMenuItem,
             this.videoaudioToTextToolStripMenuItem,
             this.toolStripSeparator5,
-            this.showhideWaveformToolStripMenuItem,
-            this.showhideVideoToolStripMenuItem,
-            this.toolStripSeparator19,
             this.undockVideoControlsToolStripMenuItem,
             this.redockVideoControlsToolStripMenuItem});
             this.toolStripMenuItemVideo.Name = "toolStripMenuItemVideo";
@@ -2424,25 +2406,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripSeparator5.Name = "toolStripSeparator5";
             this.toolStripSeparator5.Size = new System.Drawing.Size(292, 6);
             // 
-            // showhideWaveformToolStripMenuItem
-            // 
-            this.showhideWaveformToolStripMenuItem.Name = "showhideWaveformToolStripMenuItem";
-            this.showhideWaveformToolStripMenuItem.Size = new System.Drawing.Size(295, 22);
-            this.showhideWaveformToolStripMenuItem.Text = "Show/hide waveform";
-            this.showhideWaveformToolStripMenuItem.Click += new System.EventHandler(this.ShowhideWaveformToolStripMenuItemClick);
-            // 
-            // showhideVideoToolStripMenuItem
-            // 
-            this.showhideVideoToolStripMenuItem.Name = "showhideVideoToolStripMenuItem";
-            this.showhideVideoToolStripMenuItem.Size = new System.Drawing.Size(295, 22);
-            this.showhideVideoToolStripMenuItem.Text = "Show/hide video";
-            this.showhideVideoToolStripMenuItem.Click += new System.EventHandler(this.ToolStripButtonToggleVideoClick);
-            // 
-            // toolStripSeparator19
-            // 
-            this.toolStripSeparator19.Name = "toolStripSeparator19";
-            this.toolStripSeparator19.Size = new System.Drawing.Size(292, 6);
-            // 
             // undockVideoControlsToolStripMenuItem
             // 
             this.undockVideoControlsToolStripMenuItem.Name = "undockVideoControlsToolStripMenuItem";
@@ -2523,6 +2486,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.toolStripMenuItemAutoTranslate.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.translateToolStripMenuItem,
+            this.autotranslateNLLBToolStripMenuItem,
             this.autotranslateViaCopypasteToolStripMenuItem,
             this.toolStripSeparator26,
             this.mergeSentencesToolStripMenuItem,
@@ -2534,33 +2498,40 @@ namespace Nikse.SubtitleEdit.Forms
             // translateToolStripMenuItem
             // 
             this.translateToolStripMenuItem.Name = "translateToolStripMenuItem";
-            this.translateToolStripMenuItem.Size = new System.Drawing.Size(238, 22);
+            this.translateToolStripMenuItem.Size = new System.Drawing.Size(282, 22);
             this.translateToolStripMenuItem.Text = "Auto-translate...";
             this.translateToolStripMenuItem.Click += new System.EventHandler(this.TranslateToolStripMenuItemClick);
+            // 
+            // autotranslateNLLBToolStripMenuItem
+            // 
+            this.autotranslateNLLBToolStripMenuItem.Name = "autotranslateNLLBToolStripMenuItem";
+            this.autotranslateNLLBToolStripMenuItem.Size = new System.Drawing.Size(282, 22);
+            this.autotranslateNLLBToolStripMenuItem.Text = "Auto-translate (NLLB/LibreTranslate)...";
+            this.autotranslateNLLBToolStripMenuItem.Click += new System.EventHandler(this.autotranslateNLLBToolStripMenuItem_Click);
             // 
             // autotranslateViaCopypasteToolStripMenuItem
             // 
             this.autotranslateViaCopypasteToolStripMenuItem.Name = "autotranslateViaCopypasteToolStripMenuItem";
-            this.autotranslateViaCopypasteToolStripMenuItem.Size = new System.Drawing.Size(238, 22);
+            this.autotranslateViaCopypasteToolStripMenuItem.Size = new System.Drawing.Size(282, 22);
             this.autotranslateViaCopypasteToolStripMenuItem.Text = "Auto-translate via copy-paste...";
             this.autotranslateViaCopypasteToolStripMenuItem.Click += new System.EventHandler(this.AutotranslateViaCopypasteToolStripMenuItemClick);
             // 
             // toolStripSeparator26
             // 
             this.toolStripSeparator26.Name = "toolStripSeparator26";
-            this.toolStripSeparator26.Size = new System.Drawing.Size(235, 6);
+            this.toolStripSeparator26.Size = new System.Drawing.Size(279, 6);
             // 
             // mergeSentencesToolStripMenuItem
             // 
             this.mergeSentencesToolStripMenuItem.Name = "mergeSentencesToolStripMenuItem";
-            this.mergeSentencesToolStripMenuItem.Size = new System.Drawing.Size(238, 22);
+            this.mergeSentencesToolStripMenuItem.Size = new System.Drawing.Size(282, 22);
             this.mergeSentencesToolStripMenuItem.Text = "Merge sentences...";
             this.mergeSentencesToolStripMenuItem.Click += new System.EventHandler(this.MergeSentencesToolStripMenuItemClick);
             // 
             // breaksplitLongLinesToolStripMenuItem
             // 
             this.breaksplitLongLinesToolStripMenuItem.Name = "breaksplitLongLinesToolStripMenuItem";
-            this.breaksplitLongLinesToolStripMenuItem.Size = new System.Drawing.Size(238, 22);
+            this.breaksplitLongLinesToolStripMenuItem.Size = new System.Drawing.Size(282, 22);
             this.breaksplitLongLinesToolStripMenuItem.Text = "Break/split long lines...";
             this.breaksplitLongLinesToolStripMenuItem.Click += new System.EventHandler(this.BreaksplitLongLinesToolStripMenuItemClick);
             // 
@@ -3179,6 +3150,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemTranslateSelected,
             this.toolStripMenuItemUnbreakLines,
             this.toolStripMenuItemAutoBreakLines,
+            this.toolStripMenuItemEvenlyDistributeLines,
             this.toolStripMenuItemSaveSelectedLines,
             this.typeEffectToolStripMenuItem,
             this.karaokeEffectToolStripMenuItem});
@@ -3256,6 +3228,13 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemAutoBreakLines.Size = new System.Drawing.Size(275, 22);
             this.toolStripMenuItemAutoBreakLines.Text = "Auto balance selected lines...";
             this.toolStripMenuItemAutoBreakLines.Click += new System.EventHandler(this.ToolStripMenuItemAutoBreakLinesClick);
+            // 
+            // toolStripMenuItemEvenlyDistributeLines
+            // 
+            this.toolStripMenuItemEvenlyDistributeLines.Name = "toolStripMenuItemEvenlyDistributeLines";
+            this.toolStripMenuItemEvenlyDistributeLines.Size = new System.Drawing.Size(275, 22);
+            this.toolStripMenuItemEvenlyDistributeLines.Text = "Evenly distribute lines (CPS)...";
+            this.toolStripMenuItemEvenlyDistributeLines.Click += new System.EventHandler(this.ToolStripMenuItemEvenlyDistributeLinesClick);
             // 
             // toolStripMenuItemSaveSelectedLines
             // 
@@ -3395,6 +3374,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelVideoInfo.TabIndex = 12;
             this.labelVideoInfo.Text = "No video file loaded";
             this.labelVideoInfo.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.labelVideoInfo.Click += new System.EventHandler(this.labelVideoInfo_Click);
             // 
             // trackBarWaveformPosition
             // 
@@ -3435,7 +3415,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripSplitButtonPlayRate});
             this.toolStripWaveControls.Location = new System.Drawing.Point(0, -1);
             this.toolStripWaveControls.Name = "toolStripWaveControls";
-            this.toolStripWaveControls.Size = new System.Drawing.Size(261, 29);
+            this.toolStripWaveControls.Size = new System.Drawing.Size(204, 29);
             this.toolStripWaveControls.TabIndex = 0;
             this.toolStripWaveControls.Text = "toolStrip2";
             // 
@@ -5563,6 +5543,7 @@ namespace Nikse.SubtitleEdit.Forms
             0,
             0});
             this.numericUpDownDuration.ValueChanged += new System.EventHandler(this.NumericUpDownDurationValueChanged);
+            this.numericUpDownDuration.MouseDown += new System.Windows.Forms.MouseEventHandler(this.numericUpDownDuration_MouseDown);
             // 
             // buttonPrevious
             // 
@@ -5876,6 +5857,13 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemShowVideoControls.Text = "Show video controls";
             this.toolStripMenuItemShowVideoControls.Click += new System.EventHandler(this.ToolStripMenuItemShowVideoControlsClick);
             // 
+            // toolStripMenuItemVerifyCompleteness
+            // 
+            this.toolStripMenuItemVerifyCompleteness.Name = "toolStripMenuItemVerifyCompleteness";
+            this.toolStripMenuItemVerifyCompleteness.Size = new System.Drawing.Size(269, 22);
+            this.toolStripMenuItemVerifyCompleteness.Text = "Verify completeness...";
+            this.toolStripMenuItemVerifyCompleteness.Click += new System.EventHandler(this.ToolStripMenuItemVerifyCompletenessClick);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -6074,7 +6062,6 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripLabel toolStripLabelSubtitleFormat;
         private System.Windows.Forms.ToolStripLabel toolStripLabelEncoding;
         private Nikse.SubtitleEdit.Controls.ToolStripNikseComboBox comboBoxEncoding;
-        private System.Windows.Forms.ToolStripButton toolStripButtonToggleVideo;
         private Nikse.SubtitleEdit.Controls.ToolStripNikseSeparator toolStripSeparatorEncoding;
         private Nikse.SubtitleEdit.Controls.ToolStripNikseSeparator toolStripSeparatorFrameRate;
         private System.Windows.Forms.ToolStripLabel toolStripLabelFrameRate;
@@ -6095,7 +6082,6 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemVideo;
         private System.Windows.Forms.ToolStripMenuItem openVideoToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
-        private System.Windows.Forms.ToolStripMenuItem showhideVideoToolStripMenuItem;
         private System.Windows.Forms.Label labelVideoPosition;
         private Controls.NikseTimeUpDown timeUpDownVideoPosition;
         private System.Windows.Forms.TabControl tabControlModes;
@@ -6149,7 +6135,7 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.Label labelCreateF11;
         private System.Windows.Forms.Label labelCreateF10;
         private System.Windows.Forms.Label labelCreateF9;
-        private System.Windows.Forms.ToolStripButton toolStripButtonToggleWaveform;
+        private System.Windows.Forms.ToolStripButton toolStripButtonLayout;
         private Controls.VideoPlayerContainer mediaPlayer;
         private System.Windows.Forms.Panel panelVideoPlayer;
         private Controls.AudioVisualizer audioVisualizer;
@@ -6172,7 +6158,6 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripButton toolStripButtonWaveformPlay;
         private System.Windows.Forms.TrackBar trackBarWaveformPosition;
         private System.Windows.Forms.Label labelVideoInfo;
-        private System.Windows.Forms.ToolStripMenuItem showhideWaveformToolStripMenuItem;
         private System.Windows.Forms.Label labelCharactersPerSecond;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemNetworking;
         private System.Windows.Forms.ToolStripMenuItem startServerToolStripMenuItem;
@@ -6185,7 +6170,6 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.SplitContainer splitContainerMain;
         private System.Windows.Forms.ToolStripMenuItem undockVideoControlsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem redockVideoControlsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator19;
         private System.Windows.Forms.ToolStripButton toolStripButtonLockCenter;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemAutoSplitLongLines;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripEmpty;
@@ -6494,5 +6478,8 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripMenuItem beautifyTimeCodesOfSelectedLinesToolStripMenuItem;
         private NikseLabel labelAutoDuration;
         private System.Windows.Forms.ToolStripButton toolStripSplitButtonPlayRate;
+        private System.Windows.Forms.ToolStripMenuItem autotranslateNLLBToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemEvenlyDistributeLines;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemVerifyCompleteness;
     }
 }

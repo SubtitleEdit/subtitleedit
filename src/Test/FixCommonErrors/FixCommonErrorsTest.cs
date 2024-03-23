@@ -8,6 +8,7 @@ using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace Test.FixCommonErrors
 {
@@ -509,7 +510,9 @@ namespace Test.FixCommonErrors
                 Configuration.Settings.Tools.OcrFixUseHardcodedRules = true;
                 const string input = "i.e., your killer.";
                 var ofe = new Nikse.SubtitleEdit.Logic.Ocr.OcrFixEngine("eng", "not there", form);
-                var res = ofe.FixOcrErrors(input, 1, "Ends with comma,", null, false, Nikse.SubtitleEdit.Logic.Ocr.OcrFixEngine.AutoGuessLevel.Cautious);
+                var subtitle = new Subtitle();
+                subtitle.Paragraphs.Add(new Paragraph(input, 0, 3000));
+                var res = ofe.FixOcrErrors(input, subtitle, 0, "Ends with comma,", null, false, Nikse.SubtitleEdit.Logic.Ocr.OcrFixEngine.AutoGuessLevel.Cautious);
                 Assert.AreEqual(res, "i.e., your killer.");
             }
         }
@@ -2123,6 +2126,17 @@ namespace Test.FixCommonErrors
             }
         }
 
+        [TestMethod]
+        public void StartWithUppercaseAfterColon5()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "TRANSLATION FROM FRENCH:");
+                new FixStartWithUppercaseLetterAfterColon().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual("TRANSLATION FROM FRENCH:", _subtitle.Paragraphs[0].Text);
+            }
+        }
+
         #endregion Start with upppercase after colon
 
         #region Fix Music Notation
@@ -3529,6 +3543,67 @@ namespace Test.FixCommonErrors
                 new FixShortLinesPixelWidth(TextWidth.CalcPixelWidth).Fix(_subtitle, new EmptyFixCallback());
                 Assert.AreEqual("<i>It is I this illustrious illiteration. It's this...</i>", _subtitle.Paragraphs[0].Text);
             }
+        }
+
+        [TestMethod]
+        public void FixMissingOpenBracketOneTest()
+        {
+            var engine = new FixMissingOpenBracket();
+            var sub = GetGenericSub();
+            sub.Paragraphs.First().Text = "Hey, FOO).";
+            engine.Fix(sub, new EmptyFixCallback());
+            Assert.AreEqual("(Hey, FOO).", sub.Paragraphs.First().Text);
+        }
+
+        [TestMethod]
+        public void FixMissingOpenBracketTwoTest()
+        {
+            var engine = new FixMissingOpenBracket();
+            var sub = GetGenericSub();
+            sub.Paragraphs.First().Text = "Reaper, hostiles, 100 meters\neast. Two hundred meters south).";
+            engine.Fix(sub, new EmptyFixCallback());
+            Assert.AreEqual("(Reaper, hostiles, 100 meters\neast. Two hundred meters south).", sub.Paragraphs.First().Text);
+        }
+
+        [TestMethod]
+        public void FixMissingOpenBracketThreeTest()
+        {
+            var engine = new FixMissingOpenBracket();
+            var sub = GetGenericSub();
+            sub.Paragraphs.First().Text = "- Foobar bar zzz).\n- Foo bar Zz";
+            engine.Fix(sub, new EmptyFixCallback());
+            Assert.AreEqual( "- (Foobar bar zzz).\n- Foo bar Zz", sub.Paragraphs.First().Text);
+        }
+
+        [TestMethod]
+        public void FixMissingOpenBracketFourTest()
+        {
+            var engine = new FixMissingOpenBracket();
+            var sub = GetGenericSub();
+            sub.Paragraphs.First().Text = "Foobar THIS IS A NOISE)";
+            engine.Fix(sub, new EmptyFixCallback());
+            Assert.AreEqual( "Foobar (THIS IS A NOISE)", sub.Paragraphs.First().Text);
+        }
+
+        [TestMethod]
+        public void FixMissingOpenBracketFiveTest()
+        {
+            var engine = new FixMissingOpenBracket();
+            var sub = GetGenericSub();
+            sub.Paragraphs.First().Text = "- ]...";
+            engine.Fix(sub, new EmptyFixCallback());
+            Assert.AreEqual("- ]...", sub.Paragraphs.First().Text);
+        }
+
+        private static Subtitle GetGenericSub()
+        {
+            return new Subtitle()
+            {
+                Paragraphs =
+                {
+                    new Paragraph("Hello World!", 1000, 2000)
+                }
+            };
         }
     }
 }

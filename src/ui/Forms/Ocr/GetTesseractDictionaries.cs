@@ -1,8 +1,10 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Http;
+using Nikse.SubtitleEdit.Forms.Options;
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -19,7 +21,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private readonly List<TesseractDictionary> _dictionaries;
         private readonly CancellationTokenSource _cancellationTokenSource;
 
-        public GetTesseractDictionaries(bool first)
+        public GetTesseractDictionaries()
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
@@ -33,33 +35,77 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             labelPleaseWait.Text = string.Empty;
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             FixLargeFonts();
-            _dictionaries = TesseractDictionary.List().OrderBy(p=>p.Name).ToList();
-            LoadDictionaryList(first);
+            _dictionaries = TesseractDictionary.List().OrderBy(p => p.Name).ToList();
+            LoadDictionaryList();
             comboBoxDictionaries.UsePopupWindow = true;
             _cancellationTokenSource = new CancellationTokenSource();
         }
 
-        private void LoadDictionaryList(bool first)
+        private void LoadDictionaryList()
         {
+            var languageFilter = new List<CultureInfo>();
+            var useAllLanguages = string.IsNullOrEmpty(Configuration.Settings.General.DefaultLanguages);
+            if (!useAllLanguages)
+            {
+                languageFilter = Utilities.GetSubtitleLanguageCultures(true).ToList();
+            }
+
+            var dictionaries = new List<TesseractDictionary>();
             comboBoxDictionaries.BeginUpdate();
             comboBoxDictionaries.Items.Clear();
-            for (int i = 0; i < _dictionaries.Count; i++)
+            for (var i = 0; i < _dictionaries.Count; i++)
             {
-                TesseractDictionary d = _dictionaries[i];
+                var d = _dictionaries[i];
                 if (!string.IsNullOrEmpty(d.Url))
                 {
-                    comboBoxDictionaries.Items.Add(d);
-                    if (first && d.Name == "English")
+                    if (useAllLanguages || IsInLanguageFilter(d.Name, d.Code, languageFilter))
                     {
-                        comboBoxDictionaries.SelectedIndex = i;
+                        dictionaries.Add(d);
                     }
                 }
             }
+
+            comboBoxDictionaries.Items.AddRange(dictionaries.Count == 0 ? _dictionaries.ToArray<object>() : dictionaries.ToArray<object>());
+            if (comboBoxDictionaries.Items.Count > 0)
+            {
+                comboBoxDictionaries.Items.Add(LanguageSettings.Current.General.ChangeLanguageFilter);
+            }
+
+            for (var i = 0; i < comboBoxDictionaries.Items.Count; i++)
+            {
+                if (comboBoxDictionaries.Items[i] is string n && n == "English")
+                {
+                    comboBoxDictionaries.SelectedIndex = i;
+                    break;
+                }
+            }
+
             if (comboBoxDictionaries.SelectedIndex < 0)
             {
                 comboBoxDictionaries.SelectedIndex = 0;
             }
+
             comboBoxDictionaries.EndUpdate();
+        }
+
+        private static bool IsInLanguageFilter(string name, string code, List<CultureInfo> languageFilter)
+        {
+            foreach (var cultureInfo in languageFilter)
+            {
+                if (!string.IsNullOrEmpty(name) &&
+                    cultureInfo.EnglishName.Contains(name, StringComparison.OrdinalIgnoreCase))
+                {
+                    return true;
+                }
+
+                if (!string.IsNullOrEmpty(code) &&
+                    cultureInfo.ThreeLetterISOLanguageName.Contains(code, StringComparison.OrdinalIgnoreCase))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private void FixLargeFonts()
@@ -74,8 +120,13 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void buttonDownload_Click(object sender, EventArgs e)
         {
-            int index = comboBoxDictionaries.SelectedIndex;
-            string url = _dictionaries[index].Url;
+            var dictionary = comboBoxDictionaries.Items[comboBoxDictionaries.SelectedIndex] as TesseractDictionary;
+            if (dictionary == null)
+            {
+                return;
+            }
+
+            var url = dictionary.Url;
             try
             {
                 labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait;
@@ -85,7 +136,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 Refresh();
                 Cursor = Cursors.WaitCursor;
 
-                ChosenLanguage = comboBoxDictionaries.Items[index].ToString();
+                ChosenLanguage = dictionary.ToString();
 
                 var httpClient = DownloaderFactory.MakeHttpClient();
                 using (var downloadStream = new MemoryStream())
@@ -138,19 +189,19 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 throw new Exception("No content downloaded - missing file or no internet connection!");
             }
 
-            string dictionaryFolder = Configuration.TesseractDataDirectory;
+            var dictionaryFolder = Configuration.TesseractDataDirectory;
             if (!Directory.Exists(dictionaryFolder))
             {
                 Directory.CreateDirectory(dictionaryFolder);
             }
 
-            int index = comboBoxDictionaries.SelectedIndex;
+            var index = comboBoxDictionaries.SelectedIndex;
             downloadStream.Position = 0;
             var tempFileName = FileUtil.GetTempFileName(".tar");
             using (var fs = new FileStream(tempFileName, FileMode.Create))
             using (var zip = new GZipStream(downloadStream, CompressionMode.Decompress))
             {
-                byte[] buffer = new byte[1024];
+                var buffer = new byte[1024];
                 int nRead;
                 while ((nRead = zip.Read(buffer, 0, buffer.Length)) > 0)
                 {
@@ -162,7 +213,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 foreach (var th in tr.Files)
                 {
-                    string fn = Path.Combine(dictionaryFolder, Path.GetFileName(th.FileName.Trim()));
+                    var fn = Path.Combine(dictionaryFolder, Path.GetFileName(th.FileName.Trim()));
                     th.WriteData(fn);
                 }
             }
@@ -183,18 +234,17 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 throw new Exception("No content downloaded - missing file or no internet connection!");
             }
 
-            string dictionaryFolder = Configuration.TesseractDataDirectory;
+            var dictionaryFolder = Configuration.TesseractDataDirectory;
             if (!Directory.Exists(dictionaryFolder))
             {
                 Directory.CreateDirectory(dictionaryFolder);
             }
 
-            int index = comboBoxDictionaries.SelectedIndex;
-
+            var index = comboBoxDictionaries.SelectedIndex;
             using (var fs = new FileStream(Path.Combine(dictionaryFolder, _dictionaryFileName), FileMode.Create))
             {
                 downloadStream.Position = 0;
-                byte[] buffer = new byte[1024];
+                var buffer = new byte[1024];
                 int nRead;
                 while ((nRead = downloadStream.Read(buffer, 0, buffer.Length)) > 0)
                 {
@@ -230,6 +280,22 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 UiUtil.ShowHelp("#importvobsub");
                 e.SuppressKeyPress = true;
+            }
+        }
+
+        private void comboBoxDictionaries_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (comboBoxDictionaries.SelectedIndex >= 0 && comboBoxDictionaries.Text == LanguageSettings.Current.General.ChangeLanguageFilter)
+            {
+                using (var form = new DefaultLanguagesChooser(Configuration.Settings.General.DefaultLanguages))
+                {
+                    if (form.ShowDialog(this) == DialogResult.OK)
+                    {
+                        Configuration.Settings.General.DefaultLanguages = form.DefaultLanguages;
+                    }
+                }
+
+                LoadDictionaryList();
             }
         }
     }

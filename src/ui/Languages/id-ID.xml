@@ -2,7 +2,7 @@
 <Language Name="Bahasa Indonesia">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.0</Version>
+    <Version>4.0.4</Version>
     <TranslatedBy>Diterjemahkan oleh Nicedward (04/2018)</TranslatedBy>
     <CultureName>id-ID</CultureName>
     <HelpFile />
@@ -541,7 +541,7 @@ Catatan: Periksa ruang kosong disk.</WaveFileMalformed>
     <RemovedEmptyLine>Buang baris kosong</RemovedEmptyLine>
     <RemovedEmptyLineAtTop>Buang baris kosong di teratas</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>Buang baris kosong di ter bawah</RemovedEmptyLineAtBottom>
-    <RemovedEmptyLinesUnsedLineBreaks>Buang baris kosong/jeda baris yg tidak terpakai</RemovedEmptyLinesUnsedLineBreaks>
+    <RemovedEmptyLinesUnusedLineBreaks>Buang baris kosong/jeda baris yg tidak terpakai</RemovedEmptyLinesUnusedLineBreaks>
     <EmptyLinesRemovedX>Baris kosong dibuang: {0}</EmptyLinesRemovedX>
     <FixOverlappingDisplayTimes>Perbaiki waktu tampilan tumpang tindih</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>Perbaiki waktu tampilan singkat</FixShortDisplayTimes>

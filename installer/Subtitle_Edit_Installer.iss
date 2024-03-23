@@ -236,6 +236,7 @@ Source: ..\Dictionaries\fi_FI_se.xml;              DestDir: {userappdata}\Subtit
 Source: ..\Dictionaries\nl_NL_se.xml;              DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist; Components: main
 Source: ..\Dictionaries\pt_PT_se.xml;              DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist; Components: main
 Source: ..\Dictionaries\ru_RU_se.xml;              DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist; Components: main
+Source: ..\Dictionaries\it_IT_se.xml;              DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist; Components: main
 Source: ..\Dictionaries\en_US.aff;                 DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist; Components: main
 Source: ..\Dictionaries\en_US.dic;                 DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist; Components: main
 Source: ..\Dictionaries\dan_WordSplitList.txt;     DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist; Components: main
@@ -245,6 +246,10 @@ Source: ..\Dictionaries\ita_WordSplitList.txt;     DestDir: {userappdata}\Subtit
 Source: ..\Dictionaries\pol_WordSplitList.txt;     DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist; Components: main
 Source: ..\Dictionaries\spa_WordSplitList.txt;     DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist; Components: main
 Source: ..\Dictionaries\deu_Nouns.txt;             DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist; Components: main
+Source: ..\Dictionaries\da_interjections_se.xml;   DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist; Components: main
+Source: ..\Dictionaries\en_interjections_se.xml;   DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist; Components: main
+Source: ..\Dictionaries\es_interjections_se.xml;   DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist; Components: main
+Source: ..\Dictionaries\fr_interjections_se.xml;   DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist; Components: main
 
 
 Source: ..\Ocr\Latin.db;                           DestDir: {userappdata}\Subtitle Edit\Ocr;          Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
@@ -254,6 +259,7 @@ Source: ..\preview.mkv;                            DestDir: {userappdata}\Subtit
 
 Source: ..\Icons\ass.ico;                          DestDir: {app}\Icons;                              Flags: ignoreversion onlyifdoesntexist; Components: main
 Source: ..\Icons\dfxp.ico;                         DestDir: {app}\Icons;                              Flags: ignoreversion onlyifdoesntexist; Components: main
+Source: ..\Icons\lrc.ico;                          DestDir: {app}\Icons;                              Flags: ignoreversion onlyifdoesntexist; Components: main
 Source: ..\Icons\sbv.ico;                          DestDir: {app}\Icons;                              Flags: ignoreversion onlyifdoesntexist; Components: main
 Source: ..\Icons\srt.ico;                          DestDir: {app}\Icons;                              Flags: ignoreversion onlyifdoesntexist; Components: main
 Source: ..\Icons\ssa.ico;                          DestDir: {app}\Icons;                              Flags: ignoreversion onlyifdoesntexist; Components: main
@@ -396,6 +402,10 @@ Type: files;      Name: {app}\Dictionaries\ita_WordSplitList.txt;      Check: Is
 Type: files;      Name: {app}\Dictionaries\pol_WordSplitList.txt;      Check: IsUpgrade()
 Type: files;      Name: {app}\Dictionaries\spa_WordSplitList.txt;      Check: IsUpgrade()
 Type: files;      Name: {app}\Dictionaries\deu_Nouns.txt;              Check: IsUpgrade()
+Type: files;      Name: {app}\Dictionaries\da_interjections_se.xml;    Check: IsUpgrade()
+Type: files;      Name: {app}\Dictionaries\en_interjections_se.xml;    Check: IsUpgrade()
+Type: files;      Name: {app}\Dictionaries\es_interjections_se.xml;    Check: IsUpgrade()
+Type: files;      Name: {app}\Dictionaries\fr_interjections_se.xml;    Check: IsUpgrade()
 
 Type: dirifempty; Name: {app}\Dictionaries;                            Check: IsUpgrade()
 Type: files;      Name: {app}\TessData\eng.DangAmbigs;                 Check: IsUpgrade()
@@ -710,6 +720,7 @@ begin
   DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries\nl_NL_se.xml'));
   DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries\pt_PT_se.xml'));
   DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries\ru_RU_se.xml'));
+  DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries\it_IT_se.xml'));
   DelTree(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries\???_OCRFixReplaceList_User.xml'), False, True, False);
   DelTree(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries\*.dic'), False, True, False);
   DelTree(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries\*.aff'), False, True, False);
@@ -719,6 +730,7 @@ begin
   DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\preview.mkv'));
   DeleteFile(ExpandConstant('{app}\Icons\ass.ico'));
   DeleteFile(ExpandConstant('{app}\Icons\dfxp.ico'));
+  DeleteFile(ExpandConstant('{app}\Icons\lrc.ico'));
   DeleteFile(ExpandConstant('{app}\Icons\sbv.ico'));
   DeleteFile(ExpandConstant('{app}\Icons\srt.ico'));
   DeleteFile(ExpandConstant('{app}\Icons\ssa.ico'));

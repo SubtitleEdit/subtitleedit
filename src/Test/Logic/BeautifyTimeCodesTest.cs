@@ -425,7 +425,7 @@ namespace Test.Logic
         [TestMethod]
         public void TestFirstWithin()
         {
-            var shotChangesFrames = new List<int>() { 1000, 10000, 20000 };
+            var shotChangesFrames = new List<int>() { 50, 1000, 3000, 5000, 10000, 11000, 14000, 15000, 16000, 20000, 22000 };
 
             int? First(int start, int end)
             {
@@ -455,6 +455,47 @@ namespace Test.Logic
             Assert.AreEqual(First(20001, 20001), shotChangesFrames.FirstWithin(20001, 20001));
             Assert.AreEqual(First(30000, 30000), shotChangesFrames.FirstWithin(30000, 30000));
             Assert.AreEqual(First(30000, 40000), shotChangesFrames.FirstWithin(30000, 40000));
+            Assert.AreEqual(First(25000, 5000), shotChangesFrames.FirstWithin(25000, 5000));
+            Assert.AreEqual(First(50, 60), shotChangesFrames.FirstWithin(50, 60));
+            Assert.AreEqual(First(50, 1100), shotChangesFrames.FirstWithin(50, 1100));
+        }
+
+        [TestMethod]
+        public void TestLastWithin()
+        {
+            var shotChangesFrames = new List<int>() { 50, 1000, 3000, 5000, 10000, 11000, 14000, 15000, 16000, 20000, 22000 };
+
+            int? Last(int start, int end)
+            {
+                try
+                {
+                    return shotChangesFrames.Last(x => x >= start && x <= end);
+                }
+                catch (InvalidOperationException)
+                {
+                    return null;
+                }
+            }
+
+            Assert.AreEqual(Last(-100, 100000), shotChangesFrames.LastWithin(-100, 100000));
+            Assert.AreEqual(Last(0, 100), shotChangesFrames.LastWithin(0, 100));
+            Assert.AreEqual(Last(0, 1000), shotChangesFrames.LastWithin(0, 1000));
+            Assert.AreEqual(Last(1000, 1000), shotChangesFrames.LastWithin(1000, 1000));
+            Assert.AreEqual(Last(1000, 1100), shotChangesFrames.LastWithin(1000, 1100));
+            Assert.AreEqual(Last(1100, 900), shotChangesFrames.LastWithin(1100, 900));
+            Assert.AreEqual(Last(900, 15000), shotChangesFrames.LastWithin(900, 15000));
+            Assert.AreEqual(Last(900, 30000), shotChangesFrames.LastWithin(900, 30000));
+            Assert.AreEqual(Last(19999, 19999), shotChangesFrames.LastWithin(19999, 19999));
+            Assert.AreEqual(Last(19999, 20000), shotChangesFrames.LastWithin(19999, 20000));
+            Assert.AreEqual(Last(20000, 20000), shotChangesFrames.LastWithin(20000, 20000));
+            Assert.AreEqual(Last(20000, 20001), shotChangesFrames.LastWithin(20000, 20001));
+            Assert.AreEqual(Last(19999, 20001), shotChangesFrames.LastWithin(19999, 20001));
+            Assert.AreEqual(Last(20001, 20001), shotChangesFrames.LastWithin(20001, 20001));
+            Assert.AreEqual(Last(30000, 30000), shotChangesFrames.LastWithin(30000, 30000));
+            Assert.AreEqual(Last(30000, 40000), shotChangesFrames.LastWithin(30000, 40000));
+            Assert.AreEqual(Last(25000, 5000), shotChangesFrames.LastWithin(25000, 5000));
+            Assert.AreEqual(Last(50, 60), shotChangesFrames.LastWithin(50, 60));
+            Assert.AreEqual(Last(50, 1100), shotChangesFrames.LastWithin(50, 1100));
         }
     }
 }

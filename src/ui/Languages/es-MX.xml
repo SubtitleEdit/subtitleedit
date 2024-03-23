@@ -2,7 +2,7 @@
 <Language Name="Español (México)">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.0</Version>
+    <Version>4.0.4</Version>
     <TranslatedBy>Traducido por Francisco Naranjo (paconaranjo)</TranslatedBy>
     <CultureName>es-MX</CultureName>
     <HelpFile>https://www.nikse.dk/SubtitleEdit/HelpEs</HelpFile>
@@ -103,6 +103,8 @@
     <Error>Error</Error>
     <Warning>Advertencia</Warning>
     <UseLargerFontForThisWindow>Usar letra más grande para esta ventana</UseLargerFontForThisWindow>
+    <ChangeLanguageFilter>Cambiar filtro de idioma...</ChangeLanguageFilter>
+    <MoreInfo>Más información</MoreInfo>
   </General>
   <About>
     <Title>Acerca de Subtitle Edit</Title>
@@ -197,6 +199,7 @@ Nota: comprobar el espacio libre en disco.</WaveFileMalformed>
     <WhisperNotFound>Whisper no encontrado.
 
 ¿Más información (web)?</WhisperNotFound>
+    <Model>Modelo</Model>
     <Models>Modelos</Models>
     <LanguagesAndModels>Idiomas y modelos</LanguagesAndModels>
     <ChooseModel>Elige un modelo</ChooseModel>
@@ -217,6 +220,7 @@ Nota: comprobar el espacio libre en disco.</WaveFileMalformed>
     <SetCppConstMeFolder>Establecer carpeta de modelos CPP/Const-me...</SetCppConstMeFolder>
     <OnlyRunPostProcessing>Ejecutar solo el procesamiento posterior/ajuste de tiempos</OnlyRunPostProcessing>
     <DownloadFasterWhisperCuda>Descargar cuBLAS y cuDNN para Faster-Whisper</DownloadFasterWhisperCuda>
+    <NoTextFound>¡Texto no encontrado!</NoTextFound>
   </AudioToText>
   <AssaAttachments>
     <Title>Adjuntos de Advanced Sub Station Alpha</Title>
@@ -322,6 +326,7 @@ Nota: comprobar el espacio libre en disco.</WaveFileMalformed>
     <ConvertOptions>Opciones de conversión</ConvertOptions>
     <RemoveFormatting>Quitar las etiquetas de formato</RemoveFormatting>
     <RemoveStyleActor>Eliminar el estilo/actor</RemoveStyleActor>
+    <StyleActor>Estilos/actores (separados por comas)</StyleActor>
     <RemoveTextForHI>Quitar texto para sordos</RemoveTextForHI>
     <ConvertColorsToDialog>Convertir colores en diálogo</ConvertColorsToDialog>
     <OverwriteOriginalFiles>Sobrescribir los archivos originales (nueva extensión si se cambia el formato)</OverwriteOriginalFiles>
@@ -484,6 +489,7 @@ Aprovechamos el ritmo intrínseco de la imagen.</CreateSimpleChainingToolTip>
     <BottomAlignSelectedLines>Alinear abajo las líneas seleccionadas (mantener la posición horizontal)</BottomAlignSelectedLines>
     <ToggleForcedSelectedLines>Activar "Forzado" para las líneas seleccionadas</ToggleForcedSelectedLines>
     <SelectForcedLines>Seleccionar líneas forzadas</SelectForcedLines>
+    <SelectNonForcedLines>Seleccionar líneas no forzadas</SelectNonForcedLines>
     <SizeXY>Tamaño: {0}x{1}</SizeXY>
     <SetAspectRatio11>Establecer relación de aspecto 1: 1</SetAspectRatio11>
     <ChangeBrightnessTitle>Ajustar el brillo</ChangeBrightnessTitle>
@@ -873,7 +879,7 @@ Aprovechamos el ritmo intrínseco de la imagen.</CreateSimpleChainingToolTip>
     <RemovedEmptyLineAtTop>Eliminar línea inicial en blanco</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>Eliminar línea final en blanco</RemovedEmptyLineAtBottom>
     <RemovedEmptyLineInMiddle>Eliminar línea vacía en medio</RemovedEmptyLineInMiddle>
-    <RemovedEmptyLinesUnsedLineBreaks>Eliminar saltos de línea de líneas en blanco/sin uso</RemovedEmptyLinesUnsedLineBreaks>
+    <RemovedEmptyLinesUnusedLineBreaks>Eliminar saltos de línea de líneas en blanco/sin uso</RemovedEmptyLinesUnusedLineBreaks>
     <FixOverlappingDisplayTimes>Corregir solapamientos de tiempo</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>Corregir tiempos cortos</FixShortDisplayTimes>
     <FixLongDisplayTimes>Corregir tiempos largos</FixLongDisplayTimes>
@@ -1042,6 +1048,7 @@ Aprovechamos el ritmo intrínseco de la imagen.</CreateSimpleChainingToolTip>
     <PleaseWait>Por favor, espere... puede tardar unos momentos</PleaseWait>
     <PoweredByGoogleTranslate>Generado por Google translate</PoweredByGoogleTranslate>
     <PoweredByMicrosoftTranslate>Generado por Microsoft translate</PoweredByMicrosoftTranslate>
+    <PoweredByX>Generado por {0}</PoweredByX>
     <MsClientSecretNeeded>Lo siento, necesitas una clave de Servicios Cognitivos 'Translatyor Text' de Microsoft para usar la última versión de Microsoft Translator.
 
 Ve a "Opciones -&gt; Ajustes -&gt; Herramientas" para introducir tu clave.</MsClientSecretNeeded>
@@ -1063,6 +1070,11 @@ Para usar una clave de API, ve a "Opciones --&gt; Configuración --&gt; Herramie
     <TranslateBlockCopySourceText>Copiar el texto de origen en el portapapeles</TranslateBlockCopySourceText>
     <TranslateBlockClipboardError1>¡El portapapeles contiene texto fuente!</TranslateBlockClipboardError1>
     <TranslateBlockClipboardError2>Ve al traductor y traduce, luego copia el resultado en el portapapeles y haz clic en este botón de nuevo.</TranslateBlockClipboardError2>
+    <StartWebServerX>Iniciar el servidor web "{0}"</StartWebServerX>
+    <XRequiresALocalWebServer>¡"{0}" requiere un servidor web ejecutado localmente!</XRequiresALocalWebServer>
+    <XRequiresAnApiKey>"{0}" requiere una clave API.</XRequiresAnApiKey>
+    <ReadMore>¿Leer más al respecto?</ReadMore>
+    <Formality>Formalidad</Formality>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
     <Title>Traductor Google vs Microsoft</Title>
@@ -1129,6 +1141,8 @@ Para usar una clave de API, ve a "Opciones --&gt; Configuración --&gt; Herramie
   </ImportText>
   <Interjections>
     <Title>Interjecciones</Title>
+    <EditSkipList>Editar lista de omisión...</EditSkipList>
+    <EditSkipListInfo>Se omitirán las interjecciones si el texto fuente comienza con lo siguiente:</EditSkipListInfo>
   </Interjections>
   <JoinSubtitles>
     <Title>Unir subtítulos</Title>
@@ -1423,8 +1437,6 @@ Para usar una clave de API, ve a "Opciones --&gt; Configuración --&gt; Herramie
         <GenerateImportShotChanges>Generar/importar cambios de escena...</GenerateImportShotChanges>
         <RemoveOrExportShotChanges>Eliminar/exportar cambios de escena...</RemoveOrExportShotChanges>
         <WaveformBatchGenerate>Generar formas de onda por lotes...</WaveformBatchGenerate>
-        <ShowHideVideo>Mostrar/ocultar video</ShowHideVideo>
-        <ShowHideWaveform>Mostrar/ocultar forma de onda</ShowHideWaveform>
         <ShowHideWaveformAndSpectrogram>Mostrar/ocultar forma de onda y espectrograma</ShowHideWaveformAndSpectrogram>
         <UnDockVideoControls>Desacoplar controles de video</UnDockVideoControls>
         <ReDockVideoControls>Acoplar controles de video</ReDockVideoControls>
@@ -1485,8 +1497,7 @@ Para usar una clave de API, ve a "Opciones --&gt; Configuración --&gt; Herramie
         <BeautifyTimeCodes>Embellecer códigos de tiempo</BeautifyTimeCodes>
         <Settings>Ajustes</Settings>
         <Help>Ayuda</Help>
-        <ShowHideWaveform>Mostrar/ocultar forma de onda</ShowHideWaveform>
-        <ShowHideVideo>Mostrar/ocultar video</ShowHideVideo>
+        <Layout>Diseño</Layout>
         <AssaDraw>Trazado Advanced Sub Station Alpha</AssaDraw>
       </ToolBar>
       <ContextMenu>
@@ -1559,8 +1570,8 @@ Para usar una clave de API, ve a "Opciones --&gt; Configuración --&gt; Herramie
         <KaraokeEffect>Efecto Karaoke...</KaraokeEffect>
         <ShowSelectedLinesEarlierLater>Mostrar líneas seleccionadas antes/después...</ShowSelectedLinesEarlierLater>
         <VisualSyncSelectedLines>Sincronización visual líneas seleccionadas...</VisualSyncSelectedLines>
+        <BeautifyTimeCodesOfSelectedLines>Embellecer códigos de tiempo de las líneas seleccionadas...</BeautifyTimeCodesOfSelectedLines>
         <GoogleAndMicrosoftTranslateSelectedLine>Traducir línea original con Google/Microsoft</GoogleAndMicrosoftTranslateSelectedLine>
-        <GoogleAndMicrosoftTranslateSelectedLine>Google/Microsoft traducir línea original</GoogleAndMicrosoftTranslateSelectedLine>
         <SelectedLines>Líneas seleccionadas</SelectedLines>
         <TranslateSelectedLines>Traducir líneas seleccionadas...</TranslateSelectedLines>
         <AdjustDisplayDurationForSelectedLines>Ajustar duración líneas seleccionadas...</AdjustDisplayDurationForSelectedLines>
@@ -1940,6 +1951,7 @@ Si ha editado este archivo con Subtitle Edit es posible que pueda encontrar una 
     <SubtitleEditNeedsVideoPlayer>Subtitle Edit necesita un reproductor de video.</SubtitleEditNeedsVideoPlayer>
     <UseRecommendMpv>Para utilizar el reproductor de video recomendado "mpv", haz clic en el botón de abajo.</UseRecommendMpv>
     <DownloadAndUseMpv>Descargar y utilizar "mpv" como reproductor de video</DownloadAndUseMpv>
+    <ChooseLayout>Elegir el diseño</ChooseLayout>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Seleccionar subtítulo desde archivo Matroska</Title>
@@ -2217,6 +2229,7 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <LinesFoundX>Líneas encontradas: {0}</LinesFoundX>
     <RemoveTextIfContains>Eliminar el texto si contiene:</RemoveTextIfContains>
     <RemoveTextIfAllUppercase>Eliminar línea si son MAYÚSCULAS</RemoveTextIfAllUppercase>
+    <RemoveIfOnlyMusicSymbols>Eliminar si solo son símbolos musicales</RemoveIfOnlyMusicSymbols>
     <RemoveInterjections>Eliminar interjecciones (shh, hmm, etc.)</RemoveInterjections>
     <EditInterjections>Editar...</EditInterjections>
     <Apply>A&amp;plicar</Apply>
@@ -2316,6 +2329,7 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <DefaultFrameRate>Tasa de cuadros por defecto</DefaultFrameRate>
     <DefaultFileEncoding>Codificación del archivo por defecto</DefaultFileEncoding>
     <AutoDetectAnsiEncoding>Autodetectar codificación ANSI</AutoDetectAnsiEncoding>
+    <LanguageFilter>Filtro de idioma</LanguageFilter>
     <Profile>Perfil</Profile>
     <Profiles>Perfiles</Profiles>
     <ImportProfiles>Importar perfiles</ImportProfiles>
@@ -2537,12 +2551,14 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <DarkThemeShowGridViewLines>Mostrar las líneas de la cuadrícula de la vista de lista</DarkThemeShowGridViewLines>
     <GraphicsButtons>Botones gráficos</GraphicsButtons>
     <UpdateShortcut>Actualizar</UpdateShortcut>
-    <FoucsSetVideoPosition>Enfocar la posición del video</FoucsSetVideoPosition>
+    <FocusSetVideoPosition>Enfocar la posición del video</FocusSetVideoPosition>
     <ToggleDockUndockOfVideoControls>Cambiar acoplar/desacoplar controles de video</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Ajustar final, añadir nuevo e ir a la nueva</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStart>Ajuste a través de la posición final</AdjustViaEndAutoStart>
     <AdjustViaEndAutoStartAndGoToNext>Ajustar posición final e ir al siguiente</AdjustViaEndAutoStartAndGoToNext>
     <AdjustSetEndMinusGapAndStartNextHere>Fijar el final menos el intervalo, pasar al siguiente y empezar el siguiente aquí</AdjustSetEndMinusGapAndStartNextHere>
+    <AdjustSetEndAndStartNextAfterGap>Fijar el final y el inicio del siguiente después del intervalo</AdjustSetEndAndStartNextAfterGap>
+    <AdjustSetStartTimeAndGoToNext>Ajustar inicio e ir al siguiente</AdjustSetStartTimeAndGoToNext>
     <AdjustSetEndTimeAndGoToNext>Ajustar fin e ir al siguiente</AdjustSetEndTimeAndGoToNext>
     <AdjustSetEndTimeAndPause>Fijar el final y pausar</AdjustSetEndTimeAndPause>
     <AdjustSetStartAutoDurationAndGoToNext>Ajustar inicio de autoduración e ir al siguiente</AdjustSetStartAutoDurationAndGoToNext>
@@ -2637,6 +2653,7 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <WaveformSeekSilenceForward>Buscar silencio hacia adelante</WaveformSeekSilenceForward>
     <WaveformSeekSilenceBack>Buscar silencio de nuevo</WaveformSeekSilenceBack>
     <WaveformAddTextHere>Añadir texto aquí (para la selección nueva)</WaveformAddTextHere>
+    <ChooseLayoutX>Elegir el diseño {0}</ChooseLayoutX>
     <WaveformAddTextHereFromClipboard>Añadir texto aquí (para la nueva selección desde el portapapeles)</WaveformAddTextHereFromClipboard>
     <SetParagraphAsSelection>Establecer como nueva selección</SetParagraphAsSelection>
     <WaveformPlayNewSelection>Reproducir nueva selección</WaveformPlayNewSelection>

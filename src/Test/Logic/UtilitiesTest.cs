@@ -464,6 +464,14 @@ namespace Test.Logic
         }
 
         [TestMethod]
+        public void FixInvalidItalicColonBracketItalic()
+        {
+            var s1 = "[König:]<i> Ich weiß, dass du dagegen</i>" + Environment.NewLine + "<i>bist.</i>";
+            var s2 = HtmlUtil.FixInvalidItalicTags(s1);
+            Assert.AreEqual("[König:] <i>Ich weiß, dass du dagegen</i>" + Environment.NewLine + "<i>bist.</i>", s2);
+        }
+
+        [TestMethod]
         public void FixUnneededSpacesDoubleSpace1()
         {
             const string s1 = "This is  a test";
@@ -967,6 +975,14 @@ namespace Test.Logic
             Assert.AreEqual(1, c.R);
             Assert.AreEqual(2, c.G);
             Assert.AreEqual(3, c.B);
+        }
+
+        [TestMethod]
+        public void UrlDecode1()
+        {
+            var s = Utilities.UrlDecode("В о\u0442е\u043bе");
+
+            Assert.AreEqual("В отеле", s);
         }
     }
 }

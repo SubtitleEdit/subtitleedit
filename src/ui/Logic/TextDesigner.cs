@@ -10,9 +10,13 @@ namespace Nikse.SubtitleEdit.Logic
         public static Bitmap MakeTextBitmapAssa(string text, int xPos, int yPos, Font font, int width, int height, float outlineWidth, float shadowWidth,
             Bitmap backgroundImage, Color textColor, Color outlineColor, Color shadowColor, bool opaqueBox)
         {
+            if (width <= 0 || height <= 0)
+            {
+                return new Bitmap(1,1);
+            }
+
             // outline width should be about double for SSA/ASSA
             outlineWidth *= 2.0f;
-
             var newImage = new Bitmap(width, height);
             var outlineImage = new Bitmap(width, height);
             var shadowImage = new Bitmap(width, height);

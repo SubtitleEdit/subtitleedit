@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonExport = new System.Windows.Forms.Button();
@@ -36,6 +37,13 @@
             this.columnHeaderNumber = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderStartTime = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderText = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.contextMenuStripBookmarks = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.toolStripMenuItemRename = new System.Windows.Forms.ToolStripMenuItem();
+            this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.deleteAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparatorCategoryImportExport = new System.Windows.Forms.ToolStripSeparator();
+            this.exportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextMenuStripBookmarks.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonCancel
@@ -93,6 +101,7 @@
             this.columnHeaderNumber,
             this.columnHeaderStartTime,
             this.columnHeaderText});
+            this.listViewBookmarks.ContextMenuStrip = this.contextMenuStripBookmarks;
             this.listViewBookmarks.FullRowSelect = true;
             this.listViewBookmarks.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.listViewBookmarks.HideSelection = false;
@@ -116,6 +125,53 @@
             // 
             this.columnHeaderText.Width = 480;
             // 
+            // contextMenuStripBookmarks
+            // 
+            this.contextMenuStripBookmarks.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItemRename,
+            this.deleteToolStripMenuItem,
+            this.deleteAllToolStripMenuItem,
+            this.toolStripSeparatorCategoryImportExport,
+            this.exportToolStripMenuItem});
+            this.contextMenuStripBookmarks.Name = "contextMenuStripCategories";
+            this.contextMenuStripBookmarks.Size = new System.Drawing.Size(181, 120);
+            // 
+            // toolStripMenuItemRename
+            // 
+            this.toolStripMenuItemRename.Name = "toolStripMenuItemRename";
+            this.toolStripMenuItemRename.ShortcutKeys = System.Windows.Forms.Keys.F2;
+            this.toolStripMenuItemRename.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItemRename.Text = "Rename...";
+            this.toolStripMenuItemRename.Click += new System.EventHandler(this.toolStripMenuItemRename_Click);
+            // 
+            // deleteToolStripMenuItem
+            // 
+            this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
+            this.deleteToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.Delete;
+            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.deleteToolStripMenuItem.Text = "Delete...";
+            this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
+            // 
+            // deleteAllToolStripMenuItem
+            // 
+            this.deleteAllToolStripMenuItem.Name = "deleteAllToolStripMenuItem";
+            this.deleteAllToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.deleteAllToolStripMenuItem.Text = "Delete all...";
+            this.deleteAllToolStripMenuItem.Click += new System.EventHandler(this.deleteAllToolStripMenuItem_Click);
+            // 
+            // toolStripSeparatorCategoryImportExport
+            // 
+            this.toolStripSeparatorCategoryImportExport.Name = "toolStripSeparatorCategoryImportExport";
+            this.toolStripSeparatorCategoryImportExport.Size = new System.Drawing.Size(154, 6);
+            // 
+            // exportToolStripMenuItem
+            // 
+            this.exportToolStripMenuItem.Name = "exportToolStripMenuItem";
+            this.exportToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.E)));
+            this.exportToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.exportToolStripMenuItem.Text = "Export...";
+            this.exportToolStripMenuItem.Click += new System.EventHandler(this.exportToolStripMenuItem_Click);
+            // 
             // BookmarksGoTo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -138,6 +194,7 @@
             this.Shown += new System.EventHandler(this.BookmarksGoTo_Shown);
             this.ResizeEnd += new System.EventHandler(this.BookmarksGoTo_ResizeEnd);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.BookmarksGoTo_KeyDown);
+            this.contextMenuStripBookmarks.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -153,5 +210,11 @@
         private System.Windows.Forms.ColumnHeader columnHeaderNumber;
         private System.Windows.Forms.ColumnHeader columnHeaderStartTime;
         private System.Windows.Forms.ColumnHeader columnHeaderText;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripBookmarks;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemRename;
+        private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem deleteAllToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparatorCategoryImportExport;
+        private System.Windows.Forms.ToolStripMenuItem exportToolStripMenuItem;
     }
 }

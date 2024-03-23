@@ -190,7 +190,14 @@ namespace Nikse.SubtitleEdit.Forms
 
         private string ToHHMMSSFF(TimeCode timeCode)
         {
-            return $"{timeCode.Hours:00}:{timeCode.Minutes:00}:{timeCode.Seconds:00}:{MillisecondsToFramesMaxFrameRate(timeCode.Milliseconds):00}";
+            var ms = timeCode.TotalMilliseconds;
+            if (!Configuration.Settings.General.CurrentVideoIsSmpte && ((decimal)FrameRate) % 1 != 0)
+            {
+                ms /= 1.001;
+            }
+
+            var tc = new TimeCode(ms);
+            return $"{tc.Hours:00}:{tc.Minutes:00}:{tc.Seconds:00}:{MillisecondsToFramesMaxFrameRate(tc.Milliseconds):00}";
         }
 
         private static ContentAlignment GetAlignmentFromParagraph(MakeBitmapParameter p, SubtitleFormat format, Subtitle subtitle)
@@ -986,8 +993,8 @@ namespace Nikse.SubtitleEdit.Forms
                         "  <dcst:IssueDate>2014-01-01T00:00:00.000-00:00</dcst:IssueDate>" + Environment.NewLine +
                         "  <dcst:ReelNumber>1</dcst:ReelNumber>" + Environment.NewLine +
                         "  <dcst:Language>en</dcst:Language>" + Environment.NewLine +
-                        "  <dcst:EditRate>25 1</dcst:EditRate>" + Environment.NewLine +
-                        "  <dcst:TimeCodeRate>25</dcst:TimeCodeRate>" + Environment.NewLine +
+                        "  <dcst:EditRate>[FRAMERATE] 1</dcst:EditRate>" + Environment.NewLine +
+                        "  <dcst:TimeCodeRate>[FRAMERATE]</dcst:TimeCodeRate>" + Environment.NewLine +
                         "  <dcst:StartTime>00:00:00:00</dcst:StartTime> " + Environment.NewLine +
                         "  <dcst:LoadFont ID=\"theFontId\">urn:uuid:3dec6dc0-39d0-498d-97d0-928d2eb78391</dcst:LoadFont>" + Environment.NewLine +
                         "  <dcst:SubtitleList>" + Environment.NewLine +
@@ -995,6 +1002,7 @@ namespace Nikse.SubtitleEdit.Forms
                         "  </dcst:SubtitleList>" + Environment.NewLine +
                         "</dcst:SubtitleReel>";
 
+                    xml = xml.Replace("[FRAMERATE]", ((int)FrameRate).ToString(CultureInfo.InvariantCulture));
 
                     doc.LoadXml(xml);
                     var fName = saveFileDialog1.FileName;
@@ -1259,7 +1267,7 @@ namespace Nikse.SubtitleEdit.Forms
             XmlNode events = doc.DocumentElement.SelectSingleNode("Events");
             doc.PreserveWhitespace = true;
             events.InnerXml = sb.ToString();
-            File.WriteAllText(fileName, FormatUtf8Xml(doc), Encoding.UTF8);
+            FileUtil.WriteAllTextWithDefaultUtf8(fileName, FormatUtf8Xml(doc));
         }
 
         internal void WriteDostFile(string fileName, string body)
@@ -2477,14 +2485,14 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 return 0;
             }
 
-            if (float.TryParse(comboBoxBorderWidth.SelectedItem.ToString(), out var f))
+            if (float.TryParse(comboBoxBorderWidth.SelectedItem.ToString().Replace(',', '.'), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var f))
             {
-                return f;
+                return f * 1.25f;
             }
 
-            if (float.TryParse(Utilities.RemoveNonNumbers(comboBoxBorderWidth.SelectedItem.ToString()), out f))
+            if (float.TryParse(Utilities.RemoveNonNumbers(comboBoxBorderWidth.SelectedItem.ToString()).Replace(',', '.'), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out f))
             {
-                return f;
+                return f * 1.25f;
             }
 
             return 0;
@@ -2751,15 +2759,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                 try
                                 {
                                     colorStack.Push(c); // save old color
-                                    if (fontColor.StartsWith("rgb(", StringComparison.OrdinalIgnoreCase))
-                                    {
-                                        arr = fontColor.Remove(0, 4).TrimEnd(')').Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-                                        c = Color.FromArgb(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]));
-                                    }
-                                    else
-                                    {
-                                        c = ColorTranslator.FromHtml(fontColor);
-                                    }
+                                    c = Settings.FromHtml(fontColor);
                                 }
                                 catch
                                 {
@@ -3407,14 +3407,18 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         else
                         {
                             sf.Alignment = StringAlignment.Center;
-                            x = parameter.ScreenWidth / 2;
                             if (parameter.JustifyLeft)
                             {
                                 sf.Alignment = StringAlignment.Near;
                             }
                             else if (parameter.JustifyRight)
                             {
+                                x = parameter.ScreenWidth - 3;
                                 sf.Alignment = StringAlignment.Far;
+                            }
+                            else
+                            {
+                                x = parameter.ScreenWidth / 2;
                             }
                         }
 
@@ -3581,15 +3585,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                             try
                                             {
                                                 colorStack.Push(c); // save old color
-                                                if (fontColor.StartsWith("rgb(", StringComparison.OrdinalIgnoreCase))
-                                                {
-                                                    arr = fontColor.Remove(0, 4).TrimEnd(')').Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-                                                    c = Color.FromArgb(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]));
-                                                }
-                                                else
-                                                {
-                                                    c = ColorTranslator.FromHtml(fontColor);
-                                                }
+                                                c = Settings.FromHtml(fontColor);
                                             }
                                             catch
                                             {
@@ -3976,23 +3972,31 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
                 var assTags = s.Substring(k + 1, l - k - 1).Split('\\');
                 var sb = new StringBuilder();
-                foreach (var assTag in assTags)
+                foreach (var assaTag in assTags)
                 {
-                    if (assTag == "i1")
+                    if (assaTag == "i1")
                     {
                         sb.Append("<i>");
                     }
-                    else if (assTag == "i" || assTag == "i0")
+                    else if (assaTag == "i" || assaTag == "i0")
                     {
                         sb.Append("</i>");
                     }
-                    else if (assTag == "b1" || assTag == "b2" || assTag == "b3" || assTag == "b4")
+                    else if (assaTag == "b1" || assaTag == "b2" || assaTag == "b3" || assaTag == "b4")
                     {
                         sb.Append("<b>");
                     }
-                    else if (assTag == "b" || assTag == "b0")
+                    else if (assaTag == "b" || assaTag == "b0")
                     {
                         sb.Append("</b>");
+                    }
+                    else if (assaTag.StartsWith("c&H", StringComparison.OrdinalIgnoreCase) && assaTag.EndsWith('&'))
+                    {
+                        var color = AdvancedSubStationAlpha.GetSsaColor(assaTag.TrimStart('c'), Color.Transparent);
+                        if (color != Color.Transparent)
+                        {
+                            sb.Append($"<font color={Utilities.ColorToHexWithTransparency(color)}>");
+                        }
                     }
                 }
                 s = s.Remove(k, l - k + 1);
@@ -4546,6 +4550,20 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 checkBoxFullFrameImage.Top = comboBoxFrameRate.Top + comboBoxFrameRate.Height + 5;
                 panelFullFrameBackground.Top = checkBoxFullFrameImage.Top;
             }
+            else if (exportType == ExportFormats.DCinemaSmpte2014)
+            {
+                labelFrameRate.Visible = true;
+                comboBoxFrameRate.Visible = true;
+
+                comboBoxFrameRate.Items.Add("24");
+                comboBoxFrameRate.Items.Add("25");
+                comboBoxFrameRate.Items.Add("30");
+                comboBoxFrameRate.Items.Add("50");
+                comboBoxFrameRate.Items.Add("60");
+                comboBoxFrameRate.SelectedIndex = 2;
+                comboBoxFrameRate.DropDownStyle = ComboBoxStyle.DropDownList;
+            }
+
             if (comboBoxFrameRate.Items.Count >= 2)
             {
                 SetLastFrameRate(Configuration.Settings.Tools.ExportLastFrameRate);

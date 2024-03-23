@@ -2,7 +2,7 @@
 <Language Name="català">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.0</Version>
+    <Version>4.0.4</Version>
     <TranslatedBy>Traduït per Juansa</TranslatedBy>
     <CultureName>ca-ES</CultureName>
     <HelpFile />
@@ -585,7 +585,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <RemovedEmptyLineAtTop>Suprimeix línia buida inicial</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>Suprimeix línia buida final</RemovedEmptyLineAtBottom>
     <RemovedEmptyLineInMiddle>Suprimeix línia buida d'enmig</RemovedEmptyLineInMiddle>
-    <RemovedEmptyLinesUnsedLineBreaks>Suprimeix salt de línia línies buides/sense ús</RemovedEmptyLinesUnsedLineBreaks>
+    <RemovedEmptyLinesUnusedLineBreaks>Suprimeix salt de línia línies buides/sense ús</RemovedEmptyLinesUnusedLineBreaks>
     <EmptyLinesRemovedX>Línies buides suprimides: {0}</EmptyLinesRemovedX>
     <FixOverlappingDisplayTimes>Arregla temps solapats</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>Arregla temps curts</FixShortDisplayTimes>
@@ -2073,7 +2073,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ListView>Vista llista</ListView>
     <TextBox>Quadre de text</TextBox>
     <UpdateShortcut>Actualització</UpdateShortcut>
-    <FoucsSetVideoPosition>El focus estableix posició del vídeo</FoucsSetVideoPosition>
+    <FocusSetVideoPosition>El focus estableix posició del vídeo</FocusSetVideoPosition>
     <ToggleDockUndockOfVideoControls>Activa/desactiva acoblament/desacoblament controls vídeo</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Estableix final, afegeix nou i Aneu al nou</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStart>Ajustament via posició final</AdjustViaEndAutoStart>

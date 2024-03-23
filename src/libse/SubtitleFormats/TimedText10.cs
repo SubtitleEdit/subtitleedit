@@ -31,7 +31,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             var sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
-            string xmlAsString = sb.ToString().Trim();
+            var xmlAsString = sb.ToString().Trim();
 
             if (xmlAsString.Contains("xmlns:tts=\"http://www.w3.org/2006/04"))
             {
@@ -41,6 +41,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (xmlAsString.Contains("http://www.w3.org/ns/ttml"))
             {
                 xmlAsString = xmlAsString.RemoveControlCharactersButWhiteSpace();
+
+                if (xmlAsString.Contains("profile/imsc1"))
+                {
+                    var f = new TimedTextImsc11();
+                    if (f.IsMine(lines, fileName))
+                    {
+                        return false;
+                    }
+                }
+
                 var xml = new XmlDocument { XmlResolver = null };
                 try
                 {
@@ -79,6 +89,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                 }
             }
+
             return false;
         }
 
@@ -201,7 +212,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             "           <region tts:extent=\"80% 40%\" tts:origin=\"10% 50%\" tts:displayAlign=\"after\" tts:textAlign=\"start\" xml:id=\"bottomLeft\" />" + Environment.NewLine +
             // Middle column
             "           <region tts:extent=\"80% 40%\" tts:origin=\"10% 10%\" tts:displayAlign=\"before\" tts:textAlign=\"center\" xml:id=\"topCenter\" />" + Environment.NewLine +
-            "           <region tts:extent=\"80% 40%\" tts:origin=\"10% 30%\" tts:displayAlign=\"center\" tts:textAlign=\"center\" xml:id=\"centerСenter\" />" + Environment.NewLine +
+            "           <region tts:extent=\"80% 40%\" tts:origin=\"10% 30%\" tts:displayAlign=\"center\" tts:textAlign=\"center\" xml:id=\"centerCenter\" />" + Environment.NewLine +
             "           <region tts:extent=\"80% 40%\" tts:origin=\"10% 50%\" tts:displayAlign=\"after\" tts:textAlign=\"center\" xml:id=\"bottomCenter\" />" + Environment.NewLine +
             // Right column
             "           <region tts:extent=\"80% 40%\" tts:origin=\"10% 10%\" tts:displayAlign=\"before\" tts:textAlign=\"end\" xml:id=\"topRight\" />" + Environment.NewLine +
@@ -448,7 +459,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     region = "centerLeft";
                 }
 
-                if (text.StartsWith("{\\an5}", StringComparison.Ordinal) && AddDefaultRegionIfNotExists(xml, "centerСenter"))
+                if (text.StartsWith("{\\an5}", StringComparison.Ordinal) && AddDefaultRegionIfNotExists(xml, "centerCenter"))
                 {
                     region = "centerСenter";
                 }
@@ -882,7 +893,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             new KeyValuePair<string, string>("bottomCenter", "{\\an2}"),
                             new KeyValuePair<string, string>("bottomRight", "{\\an3}"),
                             new KeyValuePair<string, string>("centerLeft", "{\\an4}"),
-                            new KeyValuePair<string, string>("centerСenter", "{\\an5}"),
+                            new KeyValuePair<string, string>("centerCenter", "{\\an5}"),
                             new KeyValuePair<string, string>("centerRight", "{\\an6}"),
                             new KeyValuePair<string, string>("topLeft", "{\\an7}"),
                             new KeyValuePair<string, string>("topCenter", "{\\an8}"),
@@ -962,9 +973,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         internal static void ExtractTimeCodes(XmlNode paragraph, Subtitle subtitle, out TimeCode begin, out TimeCode end)
         {
-            string beginAttr = TryGetAttribute(paragraph, "begin", TtmlNamespace);
-            string endAttr = TryGetAttribute(paragraph, "end", TtmlNamespace);
-            string durAttr = TryGetAttribute(paragraph, "dur", TtmlNamespace);
+            var beginAttr = TryGetAttribute(paragraph, "begin", TtmlNamespace);
+            var endAttr = TryGetAttribute(paragraph, "end", TtmlNamespace);
+            var durAttr = TryGetAttribute(paragraph, "dur", TtmlNamespace);
 
             begin = new TimeCode();
             if (beginAttr.Length > 0)
@@ -1087,6 +1098,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             if (_endsWithTreeDigits.IsMatch(timeCode))
+            {
+                return false;
+            }
+
+            if (timeCode.Split(':', '.', ',', ';').Length < 4)
             {
                 return false;
             }
@@ -1324,6 +1340,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 return new TimeCode(int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), int.Parse(parts[3]) * 10);
             }
             else if (s.Length == 8 && s[2] == ':' && s[5] == ':')
+            {
+                return new TimeCode(int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), 0);
+            }
+            else if (parts.Length == 3)
             {
                 return new TimeCode(int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), 0);
             }

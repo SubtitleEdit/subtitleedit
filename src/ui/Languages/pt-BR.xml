@@ -2,7 +2,7 @@
 <Language Name="Português (Brasil)">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.0</Version>
+    <Version>4.0.4</Version>
     <TranslatedBy>Tradução (Português do Brasil): igorruckert</TranslatedBy>
     <CultureName>pt-BR</CultureName>
     <HelpFile />
@@ -871,7 +871,7 @@ Aproveitamos o ritmo específico da imagem.</CreateSimpleChainingToolTip>
     <RemovedEmptyLineAtTop>Eliminar linha inicial em branco</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>Eliminar linha final em branco</RemovedEmptyLineAtBottom>
     <RemovedEmptyLineInMiddle>Remova linha vazia no meio</RemovedEmptyLineInMiddle>
-    <RemovedEmptyLinesUnsedLineBreaks>Eliminar quebras de linha em branco/sem uso</RemovedEmptyLinesUnsedLineBreaks>
+    <RemovedEmptyLinesUnusedLineBreaks>Eliminar quebras de linha em branco/sem uso</RemovedEmptyLinesUnusedLineBreaks>
     <FixOverlappingDisplayTimes>Corrigir sobreposições de tempo</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>Corrigir tempos curtos</FixShortDisplayTimes>
     <FixLongDisplayTimes>Corrigir tempos longos</FixLongDisplayTimes>
@@ -948,7 +948,7 @@ Aproveitamos o ritmo específico da imagem.</CreateSimpleChainingToolTip>
     <FixDoubleDash>Corrigir '--' -&gt; '...'</FixDoubleDash>
     <FixDoubleGreaterThan>Remover &gt;&gt;</FixDoubleGreaterThan>
     <FixEllipsesStart>Remover '...' no início</FixEllipsesStart>
-    <FixMissingOpenBracket>Corrigir [ omitido na linha</FixMissingOpenBracket>
+    <FixMissingOpenBracket>Corrigir [ or ( omitido na linha</FixMissingOpenBracket>
     <FixMusicNotation>Sustituir símbolos musicais (ex.: âTª) por símbolos adequados</FixMusicNotation>
     <FixDoubleDashExample>'Whoa-- um yeah!' -&gt; 'Whoa... um yeah!'</FixDoubleDashExample>
     <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Sup dude!' -&gt; 'Robert: Sup dude!'</FixDoubleGreaterThanExample>
@@ -2535,7 +2535,7 @@ podem editar o mesmo arquivo de legenda (colaboração)</Information>
     <DarkThemeShowGridViewLines>Mostrar linhas de grade na exibição em lista</DarkThemeShowGridViewLines>
     <GraphicsButtons>Botões gráficos</GraphicsButtons>
     <UpdateShortcut>Atualizar</UpdateShortcut>
-    <FoucsSetVideoPosition>Foco define a posição do vídeo</FoucsSetVideoPosition>
+    <FocusSetVideoPosition>Foco define a posição do vídeo</FocusSetVideoPosition>
     <ToggleDockUndockOfVideoControls>Alternar acoplar/desacoplar controles de vídeo</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Definir final, adicionar novo e ir para novo</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStart>Ajustar por posição final</AdjustViaEndAutoStart>

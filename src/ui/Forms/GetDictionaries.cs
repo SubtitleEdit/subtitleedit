@@ -1,15 +1,16 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Http;
+using Nikse.SubtitleEdit.Forms.Options;
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 using System.Xml;
-using static Nikse.SubtitleEdit.Forms.Options.Settings;
 using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms
@@ -73,6 +74,14 @@ namespace Nikse.SubtitleEdit.Forms
                     doc.Load(reader);
                 }
 
+                var languageFilter = new List<CultureInfo>();
+                var useAllLanguages = string.IsNullOrEmpty(Configuration.Settings.General.DefaultLanguages);
+                if (!useAllLanguages)
+                {
+                    languageFilter = Utilities.GetSubtitleLanguageCultures(true).ToList();
+                }
+
+                var allDictionaryItems = new List<DictionaryItem>();
                 comboBoxDictionaries.BeginUpdate();
                 comboBoxDictionaries.Items.Clear();
                 foreach (XmlNode node in doc.DocumentElement.SelectNodes("Dictionary"))
@@ -89,42 +98,53 @@ namespace Nikse.SubtitleEdit.Forms
 
                     if (!string.IsNullOrEmpty(downloadLink))
                     {
-                        dictionaryItems.Add(new DictionaryItem
+                        var item = new DictionaryItem
                         {
                             EnglishName = englishName,
                             NativeName = nativeName,
                             Description = description,
-                            DownloadLink = downloadLink
-                        });
-                    }
-                }
+                            DownloadLink = downloadLink,
+                            DisplayText = $"{englishName}{(string.IsNullOrEmpty(nativeName) ? "" : $" - {nativeName}")}",
+                        };
 
-                // ensure ellipses suffix on text overlaps
-                using (var graphics = Graphics.FromHwnd(IntPtr.Zero))
-                {
-                    double comboboxWidth = comboBoxDictionaries.DropDownWidth;
-                    // format display value
-                    foreach (var dictionaryItem in dictionaryItems)
-                    {
-                        var text = $"{dictionaryItem.EnglishName}{(string.IsNullOrEmpty(dictionaryItem.NativeName) ? "" : $" - {dictionaryItem.NativeName}")}";
-                        var width = graphics.MeasureString(text, comboBoxDictionaries.Font).Width;
-                        var displayText = text;
-                        if (width > comboboxWidth)
+                        allDictionaryItems.Add(item);
+
+                        if (useAllLanguages || IsInLanguageFilter(englishName, nativeName, languageFilter))
                         {
-                            double pixelChar = width / text.Length;
-                            var charCount = (int)Math.Floor(comboboxWidth / pixelChar);
-                            displayText = text.Substring(0, charCount - 3) + "...";
+                            dictionaryItems.Add(item);
                         }
-
-                        dictionaryItem.DisplayText = displayText;
                     }
                 }
 
-                // ReSharper disable once CoVariantArrayConversion
-                comboBoxDictionaries.Items.AddRange(dictionaryItems.ToArray());
+                comboBoxDictionaries.Items.AddRange(dictionaryItems.Count == 0 ? allDictionaryItems.ToArray<object>() : dictionaryItems.ToArray<object>());
+                if (dictionaryItems.Count > 0)
+                {
+                    comboBoxDictionaries.Items.Add(LanguageSettings.Current.General.ChangeLanguageFilter);
+                }
+
                 comboBoxDictionaries.EndUpdate();
                 comboBoxDictionaries.SelectedIndex = 0;
             }
+        }
+
+        private static bool IsInLanguageFilter(string englishName, string nativeName, List<CultureInfo> languageFilter)
+        {
+            foreach (var cultureInfo in languageFilter)
+            {
+                if (!string.IsNullOrEmpty(englishName) &&
+                    cultureInfo.EnglishName.Contains(englishName, StringComparison.OrdinalIgnoreCase))
+                {
+                    return true;
+                }
+
+                if (!string.IsNullOrEmpty(nativeName) &&
+                    cultureInfo.NativeName.Contains(nativeName, StringComparison.OrdinalIgnoreCase))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private void FixLargeFonts()
@@ -309,6 +329,20 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void comboBoxDictionaries_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (comboBoxDictionaries.SelectedIndex >= 0 && comboBoxDictionaries.Text == LanguageSettings.Current.General.ChangeLanguageFilter)
+            {
+                using (var form = new DefaultLanguagesChooser(Configuration.Settings.General.DefaultLanguages))
+                {
+                    if (form.ShowDialog(this) == DialogResult.OK)
+                    {
+                        Configuration.Settings.General.DefaultLanguages = form.DefaultLanguages;
+                    }
+                }
+
+                LoadDictionaryList("Nikse.SubtitleEdit.Resources.HunspellDictionaries.xml.gz");
+                return;
+            }
+
             var item = (DictionaryItem)comboBoxDictionaries.SelectedItem;
             labelPleaseWait.Text = item.Description;
         }

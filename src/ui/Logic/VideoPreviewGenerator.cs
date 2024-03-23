@@ -40,6 +40,16 @@ namespace Nikse.SubtitleEdit.Logic
         {
             Process processMakeVideo;
 
+            if (width % 2 == 1)
+            {
+                width++;
+            }
+
+            if (height % 2 == 1)
+            {
+                height++;
+            }
+
             if (bitmap != null)
             {
                 var tempImageFileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".png");
@@ -81,6 +91,16 @@ namespace Nikse.SubtitleEdit.Logic
         /// </summary>
         public static Process GenerateHardcodedVideoFile(string inputVideoFileName, string assaSubtitleFileName, string outputVideoFileName, int width, int height, string videoEncoding, string preset, string crf, string audioEncoding, bool forceStereo, string sampleRate, string tune, string audioBitRate, string pass, string twoPassBitRate, DataReceivedEventHandler dataReceivedHandler = null, string cutStart = null, string cutEnd = null)
         {
+            if (width % 2 == 1)
+            {
+                width++;
+            }
+
+            if (height % 2 == 1)
+            {
+                height++;
+            }
+
             var videoEncodingSettings = string.Empty;
             if (!string.IsNullOrEmpty(videoEncoding))
             {
@@ -183,7 +203,9 @@ namespace Nikse.SubtitleEdit.Logic
 
                 if (pass == "1")
                 {
-                    outputVideoFileName = Configuration.IsRunningOnWindows ? "-f null NUL" : "-f null /dev/null";
+                    var ext = Path.GetExtension(outputVideoFileName.Trim('"')).ToLowerInvariant().TrimStart('.');
+                    var outputType = ext == "mkv" ? "matroska" : ext;
+                    outputVideoFileName = Configuration.IsRunningOnWindows ? $"-f {outputType} NUL" : "-f mp4 /dev/null";
                 }
             }
 
@@ -240,6 +262,16 @@ namespace Nikse.SubtitleEdit.Logic
 
         private static Process GetFFmpegProcess(Color color, string outputFileName, int videoWidth, int videoHeight, int seconds, decimal frameRate, bool addTimeCode = false, string addTimeColor = "white")
         {
+            if (videoWidth % 2 == 1)
+            {
+                videoWidth++;
+            }
+
+            if (videoHeight % 2 == 1)
+            {
+                videoHeight++;
+            }
+
             var htmlColor = $"#{(color.R.ToString("X2") + color.G.ToString("X2") + color.B.ToString("X2")).ToUpperInvariant()}";
 
             var drawText = MakeDrawText(addTimeCode, frameRate, addTimeColor);

@@ -2,6 +2,7 @@
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -30,6 +31,7 @@ namespace Nikse.SubtitleEdit.Forms
         private Subtitle _subtitle;
         private IReloadSubtitle _reloadSubtitle;
         private Subtitle _original;
+        private bool _sortAscending;
         public Subtitle FixedSubtitle { get; private set; }
         public int FixCount { get; private set; }
         public List<int> DeleteIndices { get; }
@@ -215,7 +217,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            string findText = textBoxFind.Text.RemoveControlCharacters();
+            var findText = textBoxFind.Text.RemoveControlCharacters();
             if (findText.Length > 0)
             {
                 string searchType = ReplaceExpression.SearchTypeNormal;
@@ -887,6 +889,92 @@ namespace Nikse.SubtitleEdit.Forms
             listViewGroups.SelectedIndexChanged += listViewGroups_SelectedIndexChanged;
             MultipleReplace_ResizeEnd(sender, null);
             listViewGroups_SelectedIndexChanged(null, null);
+
+            listViewRules.AllowDrop = true;
+            listViewRules.DragEnter += ListViewRulesDragEnter;
+            listViewRules.DragDrop += ListViewRulesDragDrop;
+            listViewRules.ItemDrag += listView1_ItemDrag;
+            listViewRules.DragOver += ListViewRulesOnDragOver;
+        }
+
+        private void ListViewRulesOnDragOver(object sender, DragEventArgs e)
+        {
+            if (_privateDrag)
+            {
+                e.Effect = DragDropEffects.Move;
+            }
+        }
+
+        private bool _privateDrag;
+
+        private void listView1_ItemDrag(object sender, ItemDragEventArgs e)
+        {
+            _privateDrag = true;
+            DoDragDrop(e.Item, DragDropEffects.Move);
+            _privateDrag = false;
+        }
+
+        void ListViewRulesDragEnter(object sender, DragEventArgs e)
+        {
+            if (_privateDrag)
+            {
+                e.Effect = DragDropEffects.Move;
+            }
+        }
+
+        void ListViewRulesDragDrop(object sender, DragEventArgs e)
+        {
+            if (!_privateDrag)
+            {
+                return;
+            }
+
+            var x = e.Data.GetData(typeof(ListViewItem));
+            if (x is ListViewItem item)
+            {
+                var hit = listViewRules.HitTest(listViewRules.PointToClient(new Point(e.X, e.Y)));
+                if (hit.Item?.Tag != null)
+                {
+                    var items = new List<MultipleSearchAndReplaceSetting>();
+                    foreach (int index in listViewRules.SelectedIndices)
+                    {
+                        items.Add(_currentGroup.Rules[index]);
+                    }
+
+                    foreach (var removeItem in items)
+                    {
+                        _currentGroup.Rules.Remove(removeItem);
+                    }
+
+                    var insertBeforeElement = _currentGroup.Rules.FirstOrDefault(p => p == hit.Item.Tag);
+                    if (insertBeforeElement == null)
+                    {
+                        foreach (var i in items)
+                        {
+                            _currentGroup.Rules.Add(i);
+                        }
+                    }
+                    else
+                    {
+                        var insertIndex = _currentGroup.Rules.IndexOf(insertBeforeElement);
+                        foreach (var i in items)
+                        {
+                            _currentGroup.Rules.Insert(insertIndex, i);
+                            insertIndex++;
+                        }
+                    }
+
+                    listViewRules.BeginUpdate();
+                    listViewRules.Items.Clear();
+                    foreach (var rule in _currentGroup.Rules)
+                    {
+                        AddToRulesListView(rule);
+                    }
+                    listViewRules.EndUpdate();
+                }
+            }
+
+            _privateDrag = false;
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)
@@ -1444,6 +1532,43 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 item.Checked = !item.Checked;
             }
+        }
+
+        private void SortItems(int column)
+        {
+            List<MultipleSearchAndReplaceSetting> items;
+
+            _sortAscending = !_sortAscending;
+
+            switch (column)
+            {
+                case 0: items = _currentGroup.Rules.OrderBy(i => i.Enabled).ToList(); break;
+                case 1: items = _currentGroup.Rules.OrderBy(i => i.FindWhat).ToList(); break;
+                case 2: items = _currentGroup.Rules.OrderBy(i => i.ReplaceWith).ToList(); break;
+                case 3: items = _currentGroup.Rules.OrderBy(i => i.SearchType).ToList(); break;
+                case 4: items = _currentGroup.Rules.OrderBy(i => i.Description).ToList(); break;
+                default: items = _currentGroup.Rules.OrderBy(i => i.FindWhat).ToList(); break;
+            }
+
+            if (!_sortAscending)
+            {
+                items.Reverse();
+            }
+
+            _currentGroup.Rules.Clear();
+            _currentGroup.Rules.AddRange(items);
+            UpdateViewFromModel(Configuration.Settings.MultipleSearchAndReplaceGroups, _currentGroup);
+            GeneratePreview();
+        }
+
+        private void sortToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SortItems(1);
+        }
+
+        private void listViewSort_ColumnClick(object sender, ColumnClickEventArgs e)
+        {
+            SortItems(e.Column);
         }
     }
 }

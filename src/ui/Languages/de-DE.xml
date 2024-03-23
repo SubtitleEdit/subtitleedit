@@ -2,7 +2,7 @@
 <Language Name="Deutsch">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>4.0.0</Version>
+    <Version>4.0.4</Version>
     <TranslatedBy>Übersetzt von Christoph Kitsche. Überarbeitet von Netspark</TranslatedBy>
     <CultureName>de-DE</CultureName>
     <HelpFile />
@@ -37,6 +37,7 @@
     <Actor>Darsteller</Actor>
     <Gap>Abstand</Gap>
     <Region>Region</Region>
+    <Layer>Schicht</Layer>
     <NumberSymbol>#</NumberSymbol>
     <Number>Nummer</Number>
     <Text>Text</Text>
@@ -97,9 +98,13 @@
     <Collapse>Zusammenklappen</Collapse>
     <ShortcutX>Kürzel: {0}</ShortcutX>
     <ExampleX>Beispiel: {0}</ExampleX>
+    <ViewX>Ansicht {0}</ViewX>
     <Reset>Zurücksetzen</Reset>
+    <Error>Fehler</Error>
     <Warning>Warnung</Warning>
     <UseLargerFontForThisWindow>Verwende grösseren Font für dieses Fenster</UseLargerFontForThisWindow>
+    <ChangeLanguageFilter>Sprachfilter ändern...</ChangeLanguageFilter>
+    <MoreInfo>Mehr Info</MoreInfo>
   </General>
   <About>
     <Title>Über Subtitle Edit</Title>
@@ -157,8 +162,11 @@
   </AddWaveform>
   <AddWaveformBatch>
     <Title>Stapelgenerierung von Wellenformdaten</Title>
+    <ExtractTimeCodes>Extrahiere Zeitstempel mit FFprobe</ExtractTimeCodes>
     <ExtractingAudio>Audio extrahieren...</ExtractingAudio>
     <Calculating>Berechnen...</Calculating>
+    <ExtractingTimeCodes>Extrahiere Zeitstempel...</ExtractingTimeCodes>
+    <DetectingShotChanges>Shotwechsel erkennen...</DetectingShotChanges>
     <Done>Fertig</Done>
     <Error>Fehlgeschlagen</Error>
   </AddWaveformBatch>
@@ -174,11 +182,16 @@
     <Fixed>Korrigiert</Fixed>
     <Milliseconds>Millisekunden</Milliseconds>
     <ExtendOnly>Nur erweitern</ExtendOnly>
+    <EnforceDurationLimits>Erzwinge Mimimal- und Maximaldauer</EnforceDurationLimits>
+    <CheckShotChanges>Nicht über die Shotwechsel verlängern</CheckShotChanges>
+    <BatchCheckShotChanges>Shotwechsel berücksichtigen (wenn verfügbar)</BatchCheckShotChanges>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
     <Title>Längenbegrenzungen anwenden</Title>
+    <CheckShotChanges>Nicht über die Shotwechsel verlängern</CheckShotChanges>
     <FixesAvailable>Korrekturen verfügbar: {0}</FixesAvailable>
     <UnableToFix>Keine Korrekturen verfügbar: {0}</UnableToFix>
+    <BatchCheckShotChanges>Shotwechsel berücksichtigen (wenn verfügbar)</BatchCheckShotChanges>
   </ApplyDurationLimits>
   <AudioToText>
     <Title>Sprache in Text umwandeln</Title>
@@ -188,6 +201,7 @@
     <VoskWebsite>Vosk-Webseite</VoskWebsite>
     <WhisperWebsite>Whisper-Webseite</WhisperWebsite>
     <WhisperNotFound>Whisper wurde nicht gefunden. Mehr Info lesen (Web)?</WhisperNotFound>
+    <Model>Modell</Model>
     <Models>Modelle</Models>
     <LanguagesAndModels>Sprachen und Modelle</LanguagesAndModels>
     <ChooseModel>Modell auswählen</ChooseModel>
@@ -196,6 +210,7 @@
     <LoadingVoskModel>Lade Vosk Spracherkennungsmodell</LoadingVoskModel>
     <Transcribing>Transkribiere Audio zu Text</Transcribing>
     <TranscribingXOfY>Transkribiere Audio zu Text - Datei {0} von {1}...</TranscribingXOfY>
+    <PostProcessing>Nachbearbeitung...</PostProcessing>
     <XFilesSavedToVideoSourceFolder>{0} Dateien in den Quellordner des Videos gespeichert</XFilesSavedToVideoSourceFolder>
     <UsePostProcessing>Verwende Nachbearbeitung (Zeilenzusammenführung, Beheben der Groß-/Kleinschreibung, Interpunktion und mehr)</UsePostProcessing>
     <AutoAdjustTimings>Autoanpassung Zeitstempel</AutoAdjustTimings>
@@ -206,6 +221,8 @@
     <RemoveTemporaryFiles>Temp-Dateien entfernen</RemoveTemporaryFiles>
     <SetCppConstMeFolder>CPP/Const-me Modellordner festlegen...</SetCppConstMeFolder>
     <OnlyRunPostProcessing>Nur Nachbearbeitung durchführen/Timings anpassen</OnlyRunPostProcessing>
+    <DownloadFasterWhisperCuda>cuBLAS und cuDNN-Bibliotheken für Faster-Whisper runterladen</DownloadFasterWhisperCuda>
+    <NoTextFound>Kein Text gefunden!</NoTextFound>
   </AudioToText>
   <AssaAttachments>
     <Title>Erweiterte Sub Station Alpha Anhänge</Title>
@@ -311,6 +328,7 @@
     <ConvertOptions>Umwandlungsoptionen</ConvertOptions>
     <RemoveFormatting>Formatierung entfernen</RemoveFormatting>
     <RemoveStyleActor>Zeilen mit Stil/Aktoren entfernen</RemoveStyleActor>
+    <StyleActor>Stil/Aktor (durch Komma trennen)</StyleActor>
     <RemoveTextForHI>Text für HI entfernen</RemoveTextForHI>
     <ConvertColorsToDialog>Farben in Dialog umwandeln</ConvertColorsToDialog>
     <OverwriteOriginalFiles>Originaldateien Überschreiben</OverwriteOriginalFiles>
@@ -363,6 +381,107 @@
     <MkvLanguageStyleEmpty>Kein Sprachcode</MkvLanguageStyleEmpty>
     <SearchFolderScanVideo>Auch Videodateien im Suchordner prüfen (langsam)</SearchFolderScanVideo>
   </BatchConvert>
+  <BeautifyTimeCodes>
+    <Title>Zeitstempel verschönern</Title>
+    <TitleSelectedLines>Zeitstempel verschönern ({0} ausgewählte Zeilen)</TitleSelectedLines>
+    <GroupTimeCodes>Zeitstempel</GroupTimeCodes>
+    <AlignTimeCodes>Zeitstempel an Frame-Zeitstempel ausrichten</AlignTimeCodes>
+    <ExtractExactTimeCodes>FFprobe zum Extrahieren der exakten Frame-Zeitstempel verwenden.</ExtractExactTimeCodes>
+    <ExtractTimeCodes>Zeitstempel extrahieren</ExtractTimeCodes>
+    <CancelTimeCodes>Abbrechen</CancelTimeCodes>
+    <GroupShotChanges>Shotwechsel</GroupShotChanges>
+    <SnapToShotChanges>Cues an Shotchanges ausrichten</SnapToShotChanges>
+    <ImportShotChanges>Generiere / importiere Shotänderungen...</ImportShotChanges>
+    <EditProfile>Profil anpassen...</EditProfile>
+    <NoTimeCodesLoaded>Keine Zeitstempel geladen</NoTimeCodesLoaded>
+    <XTimeCodesLoaded>{0} Zeitstempel geladen</XTimeCodesLoaded>
+    <NoTimeCodesLoadedError>Sie haben ausgewählt, dass exakte Frame-Zeitcodes extrahiert werden sollen, aber es sind keine Zeitcodes geladen.
+
+Bitte klicken Sie auf "{0}", um zuerst die Zeitcodes zu extrahieren, oder deaktivieren Sie diese Option.</NoTimeCodesLoadedError>
+    <NoShotChangesLoaded>Keine Shotwechsel geladen</NoShotChangesLoaded>
+    <XShotChangesLoaded>{0} Shotwechsel geladen</XShotChangesLoaded>
+    <NoShotChangesLoadedError>Sie haben ausgewählt, dass Cues an Shotwechsel gefangen werden sollen, aber es sind keine Shotwechsel geladen.
+
+Bitte klicken Sie auf "{0}", um zuerst Shotwechsel zu erzeugen oder zu importieren, oder deaktivieren Sie diese Option.</NoShotChangesLoadedError>
+    <BatchAlignTimeCodes>Zeitstempel an Frame-Zeitstempel ausrichten</BatchAlignTimeCodes>
+    <BatchUseExactTimeCodes>Verwende exakte Zeitstempel (wenn vorhanden)</BatchUseExactTimeCodes>
+    <BatchSnapToShotChanges>Cues an Shotwechseln ausrichten (wenn verfügbar)</BatchSnapToShotChanges>
+  </BeautifyTimeCodes>
+  <BeautifyTimeCodesProfile>
+    <Title>Profil anpassen</Title>
+    <LoadPreset>Voreinstellung laden</LoadPreset>
+    <PresetDefault>Standard</PresetDefault>
+    <PresetNetflix>Netflix</PresetNetflix>
+    <PresetSDI>SDI</PresetSDI>
+    <CreateSimple>Einfacher Modus...</CreateSimple>
+    <General>Allgemein</General>
+    <Gap>Lücke:</Gap>
+    <GapSuffix>Frames (überschreibt eigene Einstellungen</GapSuffix>
+    <InCues>In Cues</InCues>
+    <SubtitlePreviewText>Untertiteltext.</SubtitlePreviewText>
+    <Zones>Zonen</Zones>
+    <OutCues>Out-Cues</OutCues>
+    <ConnectedSubtitles>Verbundene Untertitel</ConnectedSubtitles>
+    <InCueClosest>In-Cue ist am nächsten</InCueClosest>
+    <OutCueClosest>Out-Cue ist am nächsten</OutCueClosest>
+    <TreadAsConnected>Als verbunden behandeln, wenn Lücke kleiner ist als:</TreadAsConnected>
+    <Milliseconds>ms</Milliseconds>
+    <Chaining>Verkettung</Chaining>
+    <InCueOnShot>In der Cue bei Shotwechsel</InCueOnShot>
+    <OutCueOnShot>Out-Cue bei Shotwechsel</OutCueOnShot>
+    <MaxGap>Maximale Lücke:</MaxGap>
+    <ShotChangeBehavior>Wenn ein Shotwechsel dazwischen ist:</ShotChangeBehavior>
+    <DontChain>Nicht verketten</DontChain>
+    <ExtendCrossingShotChange>Erweitern, Shotwechsel überqueren</ExtendCrossingShotChange>
+    <ExtendUntilShotChange>Erweitern bis zum Shotwechsel</ExtendUntilShotChange>
+    <ResetWarning>Dies wird ihr momentanes Profil zurücksetzen und alle Werte mit denen der ausgewählten Voreinstellung überschreiben.
+
+Dies kann nicht rückgängig gemacht werden!
+
+Wollen Sie fortsetzen?</ResetWarning>
+    <CreateSimpleTitle>Einfachen erstellen</CreateSimpleTitle>
+    <CreateSimpleInstruction>Geben Sie diese Basisregeln ein und das aktuelle Profil wird entsprechend aktualisiert.</CreateSimpleInstruction>
+    <CreateSimpleGapInstruction>Der minimale Abstand zwischen Untertiteln</CreateSimpleGapInstruction>
+    <CreateSimpleInCues>In-Cues sollten sein:</CreateSimpleInCues>
+    <CreateSimpleInCues0Frames>Beim Shotwechsel</CreateSimpleInCues0Frames>
+    <CreateSimpleInCues1Frames>1 Frame nach dem Shotwechsel</CreateSimpleInCues1Frames>
+    <CreateSimpleInCues2Frames>2 Frames nach dem Shotwechsel</CreateSimpleInCues2Frames>
+    <CreateSimpleInCues3Frames>3 Frames nach dem Shotwechsel</CreateSimpleInCues3Frames>
+    <CreateSimpleOutCues>Out-Cues sollten sein:</CreateSimpleOutCues>
+    <CreateSimpleOutCues0Frames>Beim Shotwechsel</CreateSimpleOutCues0Frames>
+    <CreateSimpleOutCues1Frames>1 Frame nach dem Shotwechsel</CreateSimpleOutCues1Frames>
+    <CreateSimpleOutCues2Frames>2 Frames nach dem Shotwechsel</CreateSimpleOutCues2Frames>
+    <CreateSimpleOutCues3Frames>3 Frames nach dem Shotwechsel</CreateSimpleOutCues3Frames>
+    <CreateSimpleOutCuesGap>Minimalabstand vor dem Shotwechsel</CreateSimpleOutCuesGap>
+    <CreateSimpleSnapClosestCue>Für verbundene Untertitel, richte den In- oder Out-Cue an einem Shotwechsel aus, je nachdem, welcher näher ist.</CreateSimpleSnapClosestCue>
+    <CreateSimpleMaxOffset>Maximaler Versatz:</CreateSimpleMaxOffset>
+    <CreateSimpleMaxOffsetInstruction>Cues innerhalb dieser Distanz von Shotwechseln werden am Shotwechsel ausgerichtet.</CreateSimpleMaxOffsetInstruction>
+    <CreateSimpleSafeZone>Sicherheitszone:</CreateSimpleSafeZone>
+    <CreateSimpleSafeZoneInstruction>Cues innerhalb dieser Distanz von Shotwechseln werden vom Shotwechsel wegbewegt.</CreateSimpleSafeZoneInstruction>
+    <CreateSimpleChainingGap>Maximale Verkettungslücke:</CreateSimpleChainingGap>
+    <CreateSimpleChainingGapInstruction>Wenn der Abstand zwischen zwei Untertiteln kleiner als dieser Wert ist, werden die Untertitel verbunden.</CreateSimpleChainingGapInstruction>
+    <CreateSimpleChainingGapAfterShotChanges>Nach einem Out-Cue während eines Shotwechsels könnte die Lücke kleiner sein</CreateSimpleChainingGapAfterShotChanges>
+    <CreateSimpleChainingToolTip>Die Verkettung von Untertiteln wird empfohlen, um einen gleichmäßigen "Rhythmus" beim "Blinken" der Untertitel zu gewährleisten.
+
+
+Dies bietet ein entspannteres Seherlebnis.
+
+Nach der Verkettung sind die Untertitel entweder miteinander verbunden (d. h. ein Untertitel verschwindet und ein neuer Untertitel erscheint unmittelbar nach einer kleinen Pause) oder nicht.
+
+
+Dies gibt dem Zuschauer ein Gefühl dafür, wann er seine Aufmerksamkeit wieder auf den Bildschirm richten kann.
+
+
+
+Die Länge der Verkettungslücke kann direkt nach dem Verschwinden eines Untertitels bei einem Einstellungswechsel etwas geringer sein, da die Änderung der Einstellung das Bild in gewisser Weise "zurücksetzt".
+
+Wir nutzen den dem Bild innewohnenden Rhythmus.</CreateSimpleChainingToolTip>
+    <CreateSimpleLoadNetflixRules>Netflix-Regeln laden</CreateSimpleLoadNetflixRules>
+    <Frames>Frames</Frames>
+    <Maximum>Maximal</Maximum>
+    <GapInMsFormat>{0} ms @ {1} FPS</GapInMsFormat>
+    <OffsetSafeZoneError>Die Sicherheitszone sollte länger sein, als der maximale Versatz.</OffsetSafeZoneError>
+  </BeautifyTimeCodesProfile>
   <BinEdit>
     <ImportImage>Bild importieren...</ImportImage>
     <ExportImage>Bild exportieren...</ExportImage>
@@ -381,6 +500,7 @@
     <BottomAlignSelectedLines>Ausgewählte Zeilen unten ausrichten (horizontale Position beibehalten)</BottomAlignSelectedLines>
     <ToggleForcedSelectedLines>„Erzwungen“ für ausgewählte Zeilen de-/aktivieren</ToggleForcedSelectedLines>
     <SelectForcedLines>Erzwungene Zeilen auswählen</SelectForcedLines>
+    <SelectNonForcedLines>Wähle nicht erzwungene Linien aus</SelectNonForcedLines>
     <SizeXY>Größe: {0}x{1}</SizeXY>
     <SetAspectRatio11>Seitenverhältnis 1:1 einstellen</SetAspectRatio11>
     <ChangeBrightnessTitle>Helligkeit anpassen</ChangeBrightnessTitle>
@@ -412,6 +532,7 @@
     <Enabled>Aktiviert</Enabled>
     <Name>Name</Name>
     <LinesFoundX>Texte gefunden: {0}</LinesFoundX>
+    <ExtraNames>Extranamen hinzufügen (mit Komma trennen, nur einmalige Verwendung)</ExtraNames>
   </ChangeCasingNames>
   <ChangeFrameRate>
     <Title>Bildfrequenz ändern</Title>
@@ -438,6 +559,9 @@
     <CheckingForUpdatesNewVersion>Neue Version verfügbar!</CheckingForUpdatesNewVersion>
     <InstallUpdate>Zur Downloadseite</InstallUpdate>
     <NoUpdates>Nicht Aktualisieren</NoUpdates>
+    <XPluginsHasAnUpdate>{0} Plugins haben Aktualisierungen - </XPluginsHasAnUpdate>
+    <OnePluginsHasAnUpdate>Ein Plugin hat eine Aktualisierung</OnePluginsHasAnUpdate>
+    <Update>Aktualisierung</Update>
   </CheckForUpdates>
   <ChooseAudioTrack>
     <Title>Audiospur wählen</Title>
@@ -768,7 +892,7 @@
     <RemovedEmptyLineAtTop>Leere Zeilen am Anfang entfernen</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>Leere Zeilen am Ende entfernen</RemovedEmptyLineAtBottom>
     <RemovedEmptyLineInMiddle>Leere Zeilen in der Mitte entfernen</RemovedEmptyLineInMiddle>
-    <RemovedEmptyLinesUnsedLineBreaks>Entferne leere Zeilen/unbenutzte Zeilenumbrüche</RemovedEmptyLinesUnsedLineBreaks>
+    <RemovedEmptyLinesUnusedLineBreaks>Entferne leere Zeilen/unbenutzte Zeilenumbrüche</RemovedEmptyLinesUnusedLineBreaks>
     <FixOverlappingDisplayTimes>Überlappende Anzeigezeiten korrigieren</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>Kurze Anzeigezeiten korrigieren</FixShortDisplayTimes>
     <FixLongDisplayTimes>Lange Anzeigezeiten korrigieren</FixLongDisplayTimes>
@@ -781,6 +905,7 @@
     <BreakLongLines>Lange Texte umbrechen</BreakLongLines>
     <RemoveLineBreaks>Zeilenumbrüche in kurzen Texten mit nur einem Satz entfernen</RemoveLineBreaks>
     <RemoveLineBreaksAll>Zeilenumbrüche in kurzen Texten (außer Dialoge) entfernen</RemoveLineBreaksAll>
+    <RemoveLineBreaksPixelWidth>Zeilenumbrüche aus Untertiteln entfernen, die in eine Zeile passen (Pixelbreite)</RemoveLineBreaksPixelWidth>
     <FixUppercaseIInsideLowercaseWords>Großes 'i' in klein geschriebenen Wörtern (OCR Fehler) korrigieren</FixUppercaseIInsideLowercaseWords>
     <FixDoubleApostrophes>Doppelte Apostrophe ('') zu Anführungszeichen (") korrigieren</FixDoubleApostrophes>
     <AddPeriods>Punkt am Ende einfügen, wenn nächste Zeile mit Großbuchstaben beginnt.</AddPeriods>
@@ -815,6 +940,7 @@
     <FixFirstLetterToUppercaseAfterParagraph>Ersten Buchstaben nach Punkt groß schreiben</FixFirstLetterToUppercaseAfterParagraph>
     <MergeShortLine>Kurze Texte verbinden (einzelner Satz)</MergeShortLine>
     <MergeShortLineAll>Kurze Texte verbinden (außer Dialoge)</MergeShortLineAll>
+    <UnbreakShortLinePixelWidth>Êntferne Zeilenuzmbrüche aus kurzen Zeilen</UnbreakShortLinePixelWidth>
     <BreakLongLine>Lange Texte umbrechen</BreakLongLine>
     <FixLongDisplayTime>Lange Anzeigezeit korrigieren</FixLongDisplayTime>
     <FixInvalidItalicTag>Ungültigen Kursiv Tag korrigieren</FixInvalidItalicTag>
@@ -876,9 +1002,11 @@
     <InfoAssaOn>Hinweis: Erweitertes SubStation Alpha-Styling wird verwendet :)</InfoAssaOn>
     <XGeneratedWithBurnedInSubsInX>"{0}" generiert mit eingebranntem Untertitel in {1}.</XGeneratedWithBurnedInSubsInX>
     <TimeRemainingMinutes>Verbleibende Zeit: {0} Minuten</TimeRemainingMinutes>
+    <TimeRemainingOneMinute>Verbleibende Zeit: Eine Minute</TimeRemainingOneMinute>
     <TimeRemainingSeconds>Verbleibende Zeit: {0} Sekunden</TimeRemainingSeconds>
     <TimeRemainingAFewSeconds>Verbleibende Zeit: Einige Sekunden</TimeRemainingAFewSeconds>
     <TimeRemainingMinutesAndSeconds>Verbleibende Zeit: {0} Minuten und {1} Sekunden</TimeRemainingMinutesAndSeconds>
+    <TimeRemainingOneMinuteAndSeconds>Verbleibende Zeit: Eine Minute und {0} Sekunden</TimeRemainingOneMinuteAndSeconds>
     <TargetFileName>Name der Zieldatei: {0}</TargetFileName>
     <TargetFileSize>Zieldateigröße (erfordert 2-Pass-Codierung)</TargetFileSize>
     <FileSizeMb>Dateigröße in MB</FileSizeMb>
@@ -931,8 +1059,9 @@
     <To>Nach:</To>
     <Translate>Übersetzen</Translate>
     <PleaseWait>Bitte warten... das könnte einen Moment dauern</PleaseWait>
-    <PoweredByGoogleTranslate>Powered by Google Übersetzer</PoweredByGoogleTranslate>
-    <PoweredByMicrosoftTranslate>Powered by Microsoft Übersetzer</PoweredByMicrosoftTranslate>
+    <PoweredByGoogleTranslate>Unterstützt durch Google Übersetzer</PoweredByGoogleTranslate>
+    <PoweredByMicrosoftTranslate>Unterstützt durch Microsoft Übersetzer</PoweredByMicrosoftTranslate>
+    <PoweredByX>Unterstützt durch {0}</PoweredByX>
     <MsClientSecretNeeded>
 			Zugriff auf Microsoft Translator erfordert einen Cognitive Services "Translator Text" Schlüssel von Microsoft.
 
@@ -954,6 +1083,10 @@
     <TranslateBlockCopySourceText>Kopieren Sie den Quelltext in die Zwischenablage</TranslateBlockCopySourceText>
     <TranslateBlockClipboardError1>Zwischenablage enthält Quelltext!</TranslateBlockClipboardError1>
     <TranslateBlockClipboardError2>Gehen Sie zum Übersetzer und übersetzen Sie, kopieren Sie die Ergebnisse in die Zwischenablage und klicken Sie erneut auf diese Schaltfläche.</TranslateBlockClipboardError2>
+    <StartWebServerX>Starte "{0}" Webserver</StartWebServerX>
+    <XRequiresALocalWebServer>"{0}" benötigt einen lokal laufenden Webserver</XRequiresALocalWebServer>
+    <XRequiresAnApiKey>"{0}" benötigt einen API-Schlüssel</XRequiresAnApiKey>
+    <ReadMore>Mehr lesen?</ReadMore>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
     <Title>Übersetzung Google gegen Microsoft</Title>
@@ -1020,6 +1153,8 @@
   </ImportText>
   <Interjections>
     <Title>Zwischenlaute</Title>
+    <EditSkipList>Bearbeite Überspringen-Liste</EditSkipList>
+    <EditSkipListInfo>Ausrufewörter werden übersprungen, wenn der Quelltext mit diesen beginnt:</EditSkipListInfo>
   </Interjections>
   <JoinSubtitles>
     <Title>Untertitel verbinden</Title>
@@ -1277,6 +1412,7 @@
         <Duration>Länge</Duration>
         <ListErrors>Fehler auflisten...</ListErrors>
         <NetflixQualityCheck>Netflix Qualitätsprüfung...</NetflixQualityCheck>
+        <BeautifyTimeCodes>Zeitstempel verschönern...</BeautifyTimeCodes>
         <TextAlphabetically>Text - Alphabetsch</TextAlphabetically>
         <TextSingleLineMaximumLength>Text - Einzelzeilenlänge</TextSingleLineMaximumLength>
         <TextTotalLength>Text - Gesamtlänge</TextTotalLength>
@@ -1313,8 +1449,6 @@
         <GenerateImportShotChanges>Szenenwechsel erstellen/importieren...</GenerateImportShotChanges>
         <RemoveOrExportShotChanges>Einstellungsänderungen entfernen/exportieren...</RemoveOrExportShotChanges>
         <WaveformBatchGenerate>Wellenform im Stapel generieren...</WaveformBatchGenerate>
-        <ShowHideVideo>Video anzeigen/verbergen</ShowHideVideo>
-        <ShowHideWaveform>Wellenform anzeigen/verbergen</ShowHideWaveform>
         <ShowHideWaveformAndSpectrogram>Wellenform und Spektogramm anzeigen/verbergen</ShowHideWaveformAndSpectrogram>
         <UnDockVideoControls>Videosteuerung abdocken</UnDockVideoControls>
         <ReDockVideoControls>Videosteuerung erneut andocken</ReDockVideoControls>
@@ -1372,16 +1506,17 @@
         <VisualSync>Anpassung</VisualSync>
         <SpellCheck>Rechtschreibung</SpellCheck>
         <NetflixQualityCheck>Netflix Qualitätsprüfung</NetflixQualityCheck>
+        <BeautifyTimeCodes>Zeitstempel verschönern</BeautifyTimeCodes>
         <Settings>Einstellungen</Settings>
         <Help>Hilfe</Help>
-        <ShowHideWaveform>Wellenform anzeigen/verbergen</ShowHideWaveform>
-        <ShowHideVideo>Video anzeigen/verbergen</ShowHideVideo>
+        <Layout>Layout</Layout>
         <AssaDraw>Fortgeschrittene Sub Station Alpha zeichnen</AssaDraw>
       </ToolBar>
       <ContextMenu>
         <SizeAllColumnsToFit>Alle Spalten anpassen</SizeAllColumnsToFit>
         <SetStyle>Stil festlegen</SetStyle>
         <SetActor>Darsteller festlegen</SetActor>
+        <SetLayer>Layer setzen</SetLayer>
         <AssaTools>ASSA-Werkzeuge</AssaTools>
         <SubStationAlphaStyles>SSA Formatierungen...</SubStationAlphaStyles>
         <AdvancedSubStationAlphaStyles>Erweiterte SSA Formatierungen...</AdvancedSubStationAlphaStyles>
@@ -1391,6 +1526,9 @@
         <TimedTextSetLanguage>Timed Text – Textsprache</TimedTextSetLanguage>
         <SamiSetStyle>Sami – Klasse festlegen</SamiSetStyle>
         <NuendoSetStyle>Nuendo – Charakter festlegen</NuendoSetStyle>
+        <WebVttSetStyle>WebVTT - Style setzen</WebVttSetStyle>
+        <WebVttSetVoice>WebVTT - Stimme setzen</WebVttSetVoice>
+        <WebVttBrowserPreview>WebVTT - Browservorschau</WebVttBrowserPreview>
         <Cut>Ausschneiden</Cut>
         <Copy>Kopieren</Copy>
         <Paste>Einfügen</Paste>
@@ -1444,6 +1582,7 @@
         <KaraokeEffect>Karaoke Effekt...</KaraokeEffect>
         <ShowSelectedLinesEarlierLater>Ausgewählten Text früher/später anzeigen...</ShowSelectedLinesEarlierLater>
         <VisualSyncSelectedLines>Ausgewählten Text visuell anpassen...</VisualSyncSelectedLines>
+        <BeautifyTimeCodesOfSelectedLines>Zeitstempel der ausgewählten Zeilen verschönern...</BeautifyTimeCodesOfSelectedLines>
         <GoogleAndMicrosoftTranslateSelectedLine>Original Text mit Google/Microsoft übersetzen</GoogleAndMicrosoftTranslateSelectedLine>
         <SelectedLines>Ausgewählte Zeilen</SelectedLines>
         <TranslateSelectedLines>Ausgewählten Text übersetzen...</TranslateSelectedLines>
@@ -1609,6 +1748,10 @@
     <CommonErrorsFixed>Häufige Fehler korrigiert</CommonErrorsFixed>
     <BeforeRenumbering>Vor Neunummerierung</BeforeRenumbering>
     <RenumberedStartingFromX>Neunummerierung begonnen bei: {0}</RenumberedStartingFromX>
+    <BeforeBeautifyTimeCodes>Vor dem Verschönern von Zeitstempeln</BeforeBeautifyTimeCodes>
+    <BeforeBeautifyTimeCodesSelectedLines>Vor dem Verschönern von Zeitstempeln der ausgewählten Zeilen</BeforeBeautifyTimeCodesSelectedLines>
+    <BeautifiedTimeCodes>Zeitstempel verschönert</BeautifiedTimeCodes>
+    <BeautifiedTimeCodesSelectedLines>Zeitstempel der ausgewählten Zeilen verschönert</BeautifiedTimeCodesSelectedLines>
     <BeforeRemovalOfTextingForHearingImpaired>Vor Entfernung des Textes für Hörgeschädigte</BeforeRemovalOfTextingForHearingImpaired>
     <TextingForHearingImpairedRemovedOneLine>Text für Hörgeschädigte entfernt: Ein Text</TextingForHearingImpairedRemovedOneLine>
     <TextingForHearingImpairedRemovedXLines>Text für Hörgeschädigte entfernt: {0} Texte</TextingForHearingImpairedRemovedXLines>
@@ -1642,6 +1785,7 @@
     <NothingToUndo>Nichts rückgängig zu machen</NothingToUndo>
     <InvalidLanguageNameX>Ungültiger Sprachname: {0}</InvalidLanguageNameX>
     <DoNotDisplayMessageAgain>Diese Meldung nicht mehr anzeigen</DoNotDisplayMessageAgain>
+    <DoNotAutoLoadVideo>Video nicht autmatisch laden</DoNotAutoLoadVideo>
     <NumberOfCorrectedWords>Korrigierte Wörter: {0}</NumberOfCorrectedWords>
     <NumberOfSkippedWords>Übersprungene Wörter: {0}</NumberOfSkippedWords>
     <NumberOfCorrectWords>Richtige Wörter: {0}</NumberOfCorrectWords>
@@ -1838,6 +1982,7 @@
     <SubtitleEditNeedsVideoPlayer>Die Untertitelbearbeitung benötigt einen Videoplayer.</SubtitleEditNeedsVideoPlayer>
     <UseRecommendMpv>Um den empfohlenen Videoplayer "mpv" zu verwenden, klicken Sie auf die Schaltfläche unten.</UseRecommendMpv>
     <DownloadAndUseMpv>"mpv" als Videoplayer herunterladen und verwenden</DownloadAndUseMpv>
+    <ChooseLayout>Layout auswählen</ChooseLayout>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Untertitel aus Matroska Datei auswählen</Title>
@@ -2119,6 +2264,7 @@
     <LinesFoundX>Gefundene Texte: {0}</LinesFoundX>
     <RemoveTextIfContains>Entferne Text mit folgenden Inhalt:</RemoveTextIfContains>
     <RemoveTextIfAllUppercase>Text in GROSSBUCHSTABEN entfernen</RemoveTextIfAllUppercase>
+    <RemoveIfOnlyMusicSymbols>Entfernen, wenn nur Musiksymbole</RemoveIfOnlyMusicSymbols>
     <RemoveInterjections>Zwischenlaute (hm, äh, etc.) entfernen</RemoveInterjections>
     <EditInterjections>Bearbeiten...</EditInterjections>
     <Apply>Anwenden</Apply>
@@ -2195,8 +2341,10 @@
     <BurnIn>Einbrennen</BurnIn>
     <SpellCheck>Rechtschreibung</SpellCheck>
     <NetflixQualityCheck>Netflix Qualitätsprüfung</NetflixQualityCheck>
+    <BeautifyTimeCodes>Zeitstempel verschönern</BeautifyTimeCodes>
     <SettingsName>Einstellungen</SettingsName>
     <ToggleBookmarks>Lesezeichen umschalten</ToggleBookmarks>
+    <FocusTextBox>Textbox fokussieren</FocusTextBox>
     <ToggleBookmarksWithComment>Lesezeichen umschalten (mit Beschreibung)</ToggleBookmarksWithComment>
     <ClearBookmarks>Lesezeichen löschen</ClearBookmarks>
     <ExportBookmarks>Lesezeichen exportieren...</ExportBookmarks>
@@ -2216,6 +2364,7 @@
     <DefaultFrameRate>Standard Bildfrequenz</DefaultFrameRate>
     <DefaultFileEncoding>Standard Zeichenkodierung</DefaultFileEncoding>
     <AutoDetectAnsiEncoding>ANSI Kodierung Autoerkennung</AutoDetectAnsiEncoding>
+    <LanguageFilter>Sprachfilter</LanguageFilter>
     <Profile>Profil</Profile>
     <Profiles>Profile</Profiles>
     <ImportProfiles>Profile importieren</ImportProfiles>
@@ -2300,6 +2449,7 @@
     <ShowFullscreenButton>Vollbild Knopf anzeigen</ShowFullscreenButton>
     <PreviewFontName>Schriftartname der Untertitelvorschau</PreviewFontName>
     <PreviewFontSize>Schriftgröße für Untertitelvorschau</PreviewFontSize>
+    <PreviewVerticalMargin>Vertikaler Abstand</PreviewVerticalMargin>
     <MainWindowVideoControls>Hauptfenster Videosteuerung</MainWindowVideoControls>
     <CustomSearchTextAndUrl>Benutzerdefinierter Suchtext und URL</CustomSearchTextAndUrl>
     <WaveformAppearance>Wellenform Darstellung</WaveformAppearance>
@@ -2314,6 +2464,7 @@
     <WaveformListViewFocusMouseEnter>Auch Listenansicht fokussieren bei Mauseingabe in Listenansicht</WaveformListViewFocusMouseEnter>
     <WaveformSingleClickSelect>Einmal klicken, um Untertitel auszuwählen</WaveformSingleClickSelect>
     <WaveformSnapToShotChanges>An Einstellungsänderungen ausrichten (Halten Sie die Umschalttaste gedrückt, um sie zu überschreiben)</WaveformSnapToShotChanges>
+    <WaveformEditShotChangesProfile>Profil bearbeiten...</WaveformEditShotChangesProfile>
     <WaveformAutoGen>Wellenform automatisch generieren, wenn Video geöffnet wird</WaveformAutoGen>
     <WaveformBorderHitMs1>Randmarke erreicht in</WaveformBorderHitMs1>
     <WaveformBorderHitMs2>Millisekunden</WaveformBorderHitMs2>
@@ -2428,16 +2579,21 @@
     <UseSyntaxColoring>Verwende Syntaxfärbung</UseSyntaxColoring>
     <HtmlColor>HTML-Farbe</HtmlColor>
     <AssaColor>ASSA-Farbe</AssaColor>
+    <Theme>Thema</Theme>
+    <Automatic>Automatisch</Automatic>
     <DarkTheme>Dunkler Modus</DarkTheme>
     <DarkThemeEnabled>Dunklen Modus verwenden</DarkThemeEnabled>
     <DarkThemeShowGridViewLines>Rasterlinien der Listenansicht anzeigen</DarkThemeShowGridViewLines>
+    <GraphicsButtons>Grafikschaltflächen</GraphicsButtons>
     <UpdateShortcut>Änderung</UpdateShortcut>
-    <FoucsSetVideoPosition>Videoposition fokussieren</FoucsSetVideoPosition>
+    <FocusSetVideoPosition>Fokussiere gesetzte Videoposition</FocusSetVideoPosition>
     <ToggleDockUndockOfVideoControls>An-/Abdocken der Videosteuerung umschalten</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Ende setzen, ergänzen und dahin</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStart>Über Endposition anpassen</AdjustViaEndAutoStart>
     <AdjustViaEndAutoStartAndGoToNext>Über Endposition anpassen und weiter</AdjustViaEndAutoStartAndGoToNext>
-    <AdjustSetEndMinusGapAndStartNextHere>Setze Endstrich-Abstand, gehe zum nächsten und beginne hier als nächstes</AdjustSetEndMinusGapAndStartNextHere>
+    <AdjustSetEndMinusGapAndStartNextHere>Setze End-Abstand minus Lücke, gehe zum nächsten und beginne hier als nächstes</AdjustSetEndMinusGapAndStartNextHere>
+    <AdjustSetEndAndStartNextAfterGap>Setze Ende und Start des Nächsten nach Lücke</AdjustSetEndAndStartNextAfterGap>
+    <AdjustSetStartTimeAndGoToNext>Start setzen und weiter</AdjustSetStartTimeAndGoToNext>
     <AdjustSetEndTimeAndGoToNext>Ende setzen und weiter</AdjustSetEndTimeAndGoToNext>
     <AdjustSetEndTimeAndPause>Ende und Pause einstellen</AdjustSetEndTimeAndPause>
     <AdjustSetStartAutoDurationAndGoToNext>Start setzen, Autolänge und weiter</AdjustSetStartAutoDurationAndGoToNext>
@@ -2466,21 +2622,23 @@
     <AdjustSetEndAndOffsetTheRest>Ende setzen, Rest verschieben</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Ende setzen, Rest verschieben und zum Nächsten</AdjustSetEndAndOffsetTheRestAndGoToNext>
     <AdjustSnapStartToNextShotChange>Ausgewählte Linien beginnen beim nächsten Einstellungswechsel einrasten</AdjustSnapStartToNextShotChange>
-    <AdjustSnapStartToNextShotChangeWithGap>Ausgewählte Zeilen beginnen bis zum nächsten Einstellungswechsel mit min. Abstand</AdjustSnapStartToNextShotChangeWithGap>
     <AdjustSnapEndToPreviousShotChange>Ausgewählte Zeilen am Ende des vorherigen Einstellungswechsels ausrichten</AdjustSnapEndToPreviousShotChange>
-    <AdjustSnapEndToPreviousShotChangeWithGap>Ausgewählte Linien enden an vorherigem Einstellungswechsel mit min. Abstand</AdjustSnapEndToPreviousShotChangeWithGap>
     <AdjustExtendToNextShotChange>Ausgewählte Zeilen bis zum nächsten Einstellungswechsel (oder nächsten Untertitel) verlängern</AdjustExtendToNextShotChange>
-    <AdjustExtendToNextShotChangeWithGap>Ausgewählte Zeilen bis zum nächsten Einstellungswechsel um min. Abstand (oder nächster Untertitel)</AdjustExtendToNextShotChangeWithGap>
     <AdjustExtendToPreviousShotChange>Ausgewählte Zeilen bis zum vorherigen Einstellungswechsel (oder vorherigen Untertitel) erweitern</AdjustExtendToPreviousShotChange>
-    <AdjustExtendToPreviousShotChangeWithGap>Ausgewählte Zeilen zum vorherigen Einstellungswechsel mit min. Abstand (oder vorheriger Untertitel)</AdjustExtendToPreviousShotChangeWithGap>
     <AdjustExtendToNextSubtitle>Ausgewählte Zeilen zum nächsten Untertitel erweitern</AdjustExtendToNextSubtitle>
     <AdjustExtendToPreviousSubtitle>Ausgewählte Zeilen zum vorherigen Untertitel erweitern</AdjustExtendToPreviousSubtitle>
+    <AdjustExtendToNextSubtitleMinusChainingGap>Erweitere ausgewählte Zeilen zum nächsten Untertitel mit einer Verkettungslücke</AdjustExtendToNextSubtitleMinusChainingGap>
+    <AdjustExtendToPreviousSubtitleMinusChainingGap>Erweitere ausgewählte Zeilen zum vorherigen Untertitel mit einer Verkettungslücke</AdjustExtendToPreviousSubtitleMinusChainingGap>
     <AdjustExtendCurrentSubtitle>Zum nächsten Text oder maximale Länge erweitern</AdjustExtendCurrentSubtitle>
     <AdjustExtendPreviousLineEndToCurrentStart>Erweitere das Ende der vorherigen Zeile bis zum Anfang der aktuellen</AdjustExtendPreviousLineEndToCurrentStart>
     <AdjustExtendNextLineStartToCurrentEnd>Erweitere den Anfang der nächsten Zeile bis zum Ende der aktuellen</AdjustExtendNextLineStartToCurrentEnd>
     <RecalculateDurationOfCurrentSubtitle>Dauer des aktuellen Untertitels neu berechnen</RecalculateDurationOfCurrentSubtitle>
     <RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed>Dauer des aktuellen Untertitels neu berechnen (basierend auf optimaler Lesegeschwindigkeit)</RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed>
     <RecalculateDurationOfCurrentSubtitleByMinReadingSpeed>Dauer des aktuellen Untertitels neu berechnen (basierend auf der Mindestlesegeschwindigkeit)</RecalculateDurationOfCurrentSubtitleByMinReadingSpeed>
+    <SetInCueToClosestShotChangeLeftGreenZone>In-Cue auf minimale Distanz vor nächstem Shotwechsel einstellen (linke grüne Zone)</SetInCueToClosestShotChangeLeftGreenZone>
+    <SetInCueToClosestShotChangeRightGreenZone>In-Cue auf minimale Distanz nach nächstem Shotwechsel einstellen (rechte grüne Zone)</SetInCueToClosestShotChangeRightGreenZone>
+    <SetOutCueToClosestShotChangeLeftGreenZone>Out-Cue auf minimale Distanz vor nächstem Shotwechsel einstellen (linke grüne Zone)</SetOutCueToClosestShotChangeLeftGreenZone>
+    <SetOutCueToClosestShotChangeRightGreenZone>Out-Cue auf minimale Distanz nach nächstem Shotwechsel einstellen (rechte grüne Zone)</SetOutCueToClosestShotChangeRightGreenZone>
     <MainCreateStartDownEndUp>Neue Startzeit mit Pfeil unten, Endzeit mit Pfeil hoch setzen</MainCreateStartDownEndUp>
     <MergeDialog>Dialoge verbinden ('-' einfügen)</MergeDialog>
     <MergeDialogWithNext>Dialog mit nächstem zusammenführen (Bindestriche einfügen)</MergeDialogWithNext>
@@ -2530,6 +2688,7 @@
     <WaveformSeekSilenceForward>Suche stumm vor</WaveformSeekSilenceForward>
     <WaveformSeekSilenceBack>Suche stumm zurück</WaveformSeekSilenceBack>
     <WaveformAddTextHere>Text hier ergänzen (für neue Auswahl)</WaveformAddTextHere>
+    <ChooseLayoutX>Wähle Layout {0}</ChooseLayoutX>
     <WaveformAddTextHereFromClipboard>Text hier ergänzen (für neue Auswahl aus Zwischenablage)</WaveformAddTextHereFromClipboard>
     <SetParagraphAsSelection>Aktuelle als neue Auswahl setzen</SetParagraphAsSelection>
     <WaveformPlayNewSelection>Auswahl abspielen</WaveformPlayNewSelection>
@@ -2581,6 +2740,7 @@
     <MainToggleVideoControls>Videosteuerung umschalten</MainToggleVideoControls>
     <VideoToggleContrast>Kontrast umschalten (nur mpv)</VideoToggleContrast>
     <AudioToTextX>Audio zu Text ({0})</AudioToTextX>
+    <AudioExtractSelectedLines>Audio extrahieren (ausgewählte Zeilen)</AudioExtractSelectedLines>
     <AudioToTextSelectedLinesX>Audio-zu-Text-ausgewählte Zeilen ({0})</AudioToTextSelectedLinesX>
     <VideoToggleBrightness>Helligkeit umschalten (nur mpv)</VideoToggleBrightness>
     <CustomSearch1>Übersetzen, definierte Suche 1</CustomSearch1>
@@ -2709,6 +2869,8 @@
     <CustomContinuationStyleNote>Hinweis: Der benutzerdefinierte Fortsetzungsstil wird von allen Profilen gemeinsam genutzt.</CustomContinuationStyleNote>
     <ResetCustomContinuationStyleWarning>Dadurch werden die Werte im Dialogfeld überschrieben.  Sind Sie sicher?</ResetCustomContinuationStyleWarning>
     <ExportAsHtml>Als HTML exportieren...</ExportAsHtml>
+    <SetNewActor>Neuen Actor/Stimme auswählen</SetNewActor>
+    <SetActorX>Actor/Stimme auswählen {0}</SetActorX>
   </Settings>
   <SettingsMpv>
     <DownloadMpv>Mpv-lib herunterladen</DownloadMpv>
@@ -2868,18 +3030,29 @@
     <SingleLineLengthMinimum>Einzelzeilenlänge - Minimum:          {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Einzelzeilenlänge - Maximum:         {0}</SingleLineLengthMaximum>
     <SingleLineLengthAverage>Einzelzeilenlänge - Durchschnitt:    {0}</SingleLineLengthAverage>
+    <SingleLineLengthExceedingMaximum>Einzelne Zeilenlänge - Überschreitung des Maximums ({0} Zeichen): {1} ({2:0.00}%)</SingleLineLengthExceedingMaximum>
     <SingleLineWidthMinimum>Einzelzeilenbreite - Minimum: {0} Pixel</SingleLineWidthMinimum>
     <SingleLineWidthMaximum>Einzelzeilenbreite - Maximum: {0} Pixel</SingleLineWidthMaximum>
     <SingleLineWidthAverage>Einzelzeilenbreite - Durchschnitt: {0} Pixel</SingleLineWidthAverage>
+    <SingleLineWidthExceedingMaximum>Einzelne Zeilenbreite - Überschreitung des Maximums ({0} Pixel): {1} ({2:0.00}%)</SingleLineWidthExceedingMaximum>
     <DurationMinimum>Dauer - Minimum:                            {0:0.000} Sekunden</DurationMinimum>
     <DurationMaximum>Dauer - Maximum:                           {0:0.000} Sekunden</DurationMaximum>
     <DurationAverage>Dauer - Durchschnitt:                      {0:0.000} Sekunden</DurationAverage>
+    <DurationExceedingMinimum>Dauer - unter Minimum ({0:0.###} sec): {1} ({2:0.00}%)</DurationExceedingMinimum>
+    <DurationExceedingMaximum>Dauer - Überschreitung des Maximums ({0:0.###} sec): {1} ({2:0.00}%)</DurationExceedingMaximum>
     <CharactersPerSecondMinimum>Zeichen/Sek - Minimum:          {0:0.000}</CharactersPerSecondMinimum>
     <CharactersPerSecondMaximum>Zeichen/Sek - Maximum:          {0:0.000}</CharactersPerSecondMaximum>
     <CharactersPerSecondAverage>Zeichen/Sek - Durchschnitt:     {0:0.000}</CharactersPerSecondAverage>
+    <CharactersPerSecondExceedingOptimal>Zeichen/Sek. - mehr als optimal ({0:0.##} cps): {1} ({2:0.00}%)</CharactersPerSecondExceedingOptimal>
+    <CharactersPerSecondExceedingMaximum>Zeichen/Sek. - Überschreitung des Maximums ({0:0.##} cps): {1} ({2:0.00}%)</CharactersPerSecondExceedingMaximum>
+    <WordsPerMinuteMinimum>Wörter/Min. - minimum: {0:0.000}</WordsPerMinuteMinimum>
+    <WordsPerMinuteMaximum>Wörter/Min. - maximum: {0:0.000}</WordsPerMinuteMaximum>
+    <WordsPerMinuteAverage>Wörter/Min. - durchschnittlich: {0:0.000}</WordsPerMinuteAverage>
+    <WordsPerMinuteExceedingMaximum>Wörter/Min. - Maximum überschreitend: {0:0.000}</WordsPerMinuteExceedingMaximum>
     <GapMinimum>Abstand - Minimum: {0:#,##0} ms</GapMinimum>
     <GapMaximum>Abstand - Maximum: {0:#,##0} ms</GapMaximum>
     <GapAverage>Abstand - Durchschnitt: {0:#,##0.##} ms</GapAverage>
+    <GapExceedingMinimum>Lücke - unter Minimum ({0:#,##0} ms): {1} ({2:0.00}%)</GapExceedingMinimum>
     <Export>Exportiere...</Export>
   </Statistics>
   <SubStationAlphaProperties>
@@ -3244,4 +3417,16 @@
     <Title>WebVTT - Neue Sprache</Title>
     <VoiceName>Sprachname</VoiceName>
   </WebVttNewVoice>
+  <WebVttProperties>
+    <UseXTimeStamp>Nutze X-TIMESTAMP-MAP Kopfdaten</UseXTimeStamp>
+    <MergeLines>Verbinde Zeiolen mit selbem Text beim Laden</MergeLines>
+  </WebVttProperties>
+  <WebVttStyleManager>
+    <Title>WebVTT Styles</Title>
+  </WebVttStyleManager>
+  <WhisperAdvanced>
+    <Title>WhisperAdvanced - Extra Kommandozeilenparameter</Title>
+    <CommandLineArguments>Extra Kommandozeilenparameter für Whisper-Kommandozeile:</CommandLineArguments>
+    <Info>Hinweis: Verschiedene Whisper-Implementierungen haben unterschiedliche Kommandozeilenparameter!</Info>
+  </WhisperAdvanced>
 </Language>

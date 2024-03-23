@@ -149,7 +149,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        public override bool Focused => _listViewShown || (_textBox != null && _textBox.Focused) || base.Focused;
+        public override bool Focused => _comboBoxMouseEntered || _listViewShown || (_textBox != null && _textBox.Focused) || base.Focused;
 
         public object SelectedItem
         {
@@ -450,6 +450,22 @@ namespace Nikse.SubtitleEdit.Controls
                     }
                     e.SuppressKeyPress = true;
                 }
+                else if (e.KeyCode == Keys.PageUp)
+                {
+                    if (_selectedIndex > 0)
+                    {
+                        SelectedIndex = Math.Max(0, SelectedIndex - 10);
+                    }
+                    e.SuppressKeyPress = true;
+                }
+                else if (e.KeyCode == Keys.PageDown)
+                {
+                    if (_selectedIndex < Items.Count - 1)
+                    {
+                        SelectedIndex = Math.Min(Items.Count - 1, SelectedIndex + 10);
+                    }
+                    e.SuppressKeyPress = true;
+                }
                 else
                 {
                     if (((e.KeyCode >= Keys.A && e.KeyCode <= Keys.Z) ||
@@ -520,7 +536,7 @@ namespace Nikse.SubtitleEdit.Controls
 
             MouseWheel += (sender, e) =>
             {
-                if (!Focused)
+                if (_textBox == null || _listViewShown)
                 {
                     return;
                 }
@@ -722,17 +738,20 @@ namespace Nikse.SubtitleEdit.Controls
         private readonly Timer _mouseLeaveTimer;
         private readonly Timer _listViewMouseLeaveTimer;
         private bool _hasItemsMouseOver;
+        private bool _comboBoxMouseEntered;
 
 
         protected override void OnMouseEnter(EventArgs e)
         {
             _buttonDownActive = false;
+            _comboBoxMouseEntered = true;
             base.OnMouseEnter(e);
             Invalidate();
         }
 
         protected override void OnMouseLeave(EventArgs e)
         {
+            _comboBoxMouseEntered = false;
             _buttonDownActive = false;
             if (_listView != null)
             {

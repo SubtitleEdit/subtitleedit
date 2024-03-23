@@ -89,7 +89,7 @@
             0,
             -2147483648});
             this.numericUpDownDelay.Name = "numericUpDownDelay";
-            this.numericUpDownDelay.Size = new System.Drawing.Size(54, 21);
+            this.numericUpDownDelay.Size = new System.Drawing.Size(54, 23);
             this.numericUpDownDelay.TabIndex = 47;
             this.numericUpDownDelay.TabStop = false;
             this.numericUpDownDelay.ThousandsSeparator = false;

@@ -433,7 +433,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             }
         }
 
-        public string FixOcrErrors(string input, int index, string lastLine, string lastLastLine, bool logSuggestions, AutoGuessLevel autoGuess)
+        public string FixOcrErrors(string input, Subtitle subtitle, int index, string lastLine, string lastLastLine, bool logSuggestions, AutoGuessLevel autoGuess)
         {
             var text = input;
             while (text.Contains(Environment.NewLine + " ", StringComparison.Ordinal))
@@ -519,7 +519,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
             text = ReplaceWordsBeforeLineFixes(text);
 
-            text = FixCommonOcrLineErrors(text, lastLine, lastLastLine);
+            text = FixCommonOcrLineErrors(text, subtitle, index, lastLine, lastLastLine);
 
             // check words split by only space and new line (as other split chars might by a part of from-replace-string, like "\/\/e're" contains slash)
             sb = new StringBuilder();
@@ -574,7 +574,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 FixOcrErrorsWord(lastWord, word, sb);
             }
 
-            text = FixCommonOcrLineErrors(sb.ToString(), lastLine, lastLastLine);
+            text = FixCommonOcrLineErrors(sb.ToString(), subtitle, index, lastLine, lastLastLine);
             if (Configuration.Settings.Tools.OcrFixUseHardcodedRules)
             {
                 text = FixLowercaseIToUppercaseI(text, lastLine);
@@ -865,12 +865,12 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             return sb.ToString();
         }
 
-        private string FixCommonOcrLineErrors(string input, string lastLine, string lastLastLine)
+        private string FixCommonOcrLineErrors(string input, Subtitle subtitle, int index, string lastLine, string lastLastLine)
         {
             var text = input;
-            text = FixOcrErrorViaLineReplaceList(text);
+            text = _ocrFixReplaceList.FixOcrErrorViaLineReplaceList(input, subtitle, index);
             text = FixOcrErrorsViaHardcodedRules(text, lastLine, lastLastLine, _abbreviationList);
-            text = FixOcrErrorViaLineReplaceList(text);
+            text = _ocrFixReplaceList.FixOcrErrorViaLineReplaceList(input, subtitle, index);
 
             if (Configuration.Settings.Tools.OcrFixUseHardcodedRules)
             {
@@ -1310,11 +1310,6 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             return text;
         }
 
-        public string FixOcrErrorViaLineReplaceList(string input)
-        {
-            return _ocrFixReplaceList.FixOcrErrorViaLineReplaceList(input);
-        }
-
         public string FixUnknownWordsViaGuessOrPrompt(out int wordsNotFound, string line, int index, Bitmap bitmap, bool autoFix, bool promptForFixingErrors, bool log, AutoGuessLevel autoGuess)
         {
             var localIgnoreWords = new List<string>();
@@ -1631,9 +1626,9 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                                     }
                                 }
 
-                                string wordWithCasingChanged = GetWordWithDominatedCasing(word);
                                 if (DoSpell(word.ToLowerInvariant()))
                                 {
+                                    var wordWithCasingChanged = GetWordWithDominatedCasing(word);
                                     guesses.Insert(0, wordWithCasingChanged);
                                 }
                             }
@@ -1962,7 +1957,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                                     a = a[0] + a.Substring(1).ToLowerInvariant();
                                 }
 
-                                var b = ar[0];
+                                var b = ar[1];
                                 if (b == b.ToUpperInvariant())
                                 {
                                     b = b[0] + b.Substring(1).ToLowerInvariant();

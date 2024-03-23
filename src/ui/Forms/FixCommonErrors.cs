@@ -4,6 +4,7 @@ using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.Forms.FixCommonErrors;
 using Nikse.SubtitleEdit.Core.Interfaces;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Forms.Options;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Ocr;
 using Nikse.SubtitleEdit.Logic.SpellCheck;
@@ -145,12 +146,20 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 comboBoxLanguage.Items.Add(firstItem);
             }
-            foreach (var ci in Utilities.GetSubtitleLanguageCultures())
+            foreach (var ci in Utilities.GetSubtitleLanguageCultures(true))
             {
                 comboBoxLanguage.Items.Add(new LanguageItem(ci, ci.EnglishName));
             }
             comboBoxLanguage.Sorted = true;
             comboBoxLanguage.EndUpdate();
+
+            comboBoxLanguage.Sorted = false;
+            comboBoxLanguage.Items.Add(LanguageSettings.Current.General.ChangeLanguageFilter);
+
+            if (comboBoxLanguage.SelectedIndex < 0 && comboBoxLanguage.Items.Count > 0)
+            {
+                comboBoxLanguage.SelectedIndex = 0;
+            }
         }
 
         public void RunBatchSettings(Subtitle subtitle, SubtitleFormat format, TextEncoding encoding, string language)
@@ -272,24 +281,28 @@ namespace Nikse.SubtitleEdit.Forms
                 _autoDetectGoogleLanguage = "zh-CHS"; // Note that "zh-CHS" (Simplified Chinese) and "zh-CHT" (Traditional Chinese) are neutral cultures
             }
 
-            CultureInfo ci = CultureInfo.GetCultureInfo(_autoDetectGoogleLanguage);
-            string threeLetterIsoLanguageName = ci.GetThreeLetterIsoLanguageName();
+            var ci = CultureInfo.GetCultureInfo(_autoDetectGoogleLanguage);
+            var threeLetterIsoLanguageName = ci.GetThreeLetterIsoLanguageName();
             InitializeLanguageNames();
-            int languageIndex = 0;
-            int j = 0;
+            var languageIndex = 0;
+            var j = 0;
             foreach (var x in comboBoxLanguage.Items)
             {
-                var xci = (LanguageItem)x;
-                if (xci.Code.TwoLetterISOLanguageName == ci.TwoLetterISOLanguageName)
+                if (x is LanguageItem xci)
                 {
-                    languageIndex = j;
-                    break;
+                    if (xci.Code.TwoLetterISOLanguageName == ci.TwoLetterISOLanguageName)
+                    {
+                        languageIndex = j;
+                        break;
+                    }
+
+                    if (xci.Code.TwoLetterISOLanguageName == "en")
+                    {
+                        languageIndex = j;
+                    }
+
+                    j++;
                 }
-                if (xci.Code.TwoLetterISOLanguageName == "en")
-                {
-                    languageIndex = j;
-                }
-                j++;
             }
             comboBoxLanguage.SelectedIndex = languageIndex;
 
@@ -379,7 +392,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             _fixActions = new List<FixItem>
             {
-                new FixItem(_language.RemovedEmptyLinesUnsedLineBreaks, "Has only one valid line!</br><i> -> Has only one valid line!", () => new FixEmptyLines().Fix(Subtitle, this), ce.EmptyLinesTicked),
+                new FixItem(_language.RemovedEmptyLinesUnusedLineBreaks, "Has only one valid line!</br><i> -> Has only one valid line!", () => new FixEmptyLines().Fix(Subtitle, this), ce.EmptyLinesTicked),
                 new FixItem(_language.FixOverlappingDisplayTimes, string.Empty, () => new FixOverlappingDisplayTimes().Fix(Subtitle, this), ce.OverlappingDisplayTimeTicked),
                 new FixItem(_language.FixShortDisplayTimes, string.Empty, () => new FixShortDisplayTimes().Fix(Subtitle, this), ce.TooShortDisplayTimeTicked),
                 new FixItem(_language.FixLongDisplayTimes, string.Empty, () => new FixLongDisplayTimes().Fix(Subtitle, this), ce.TooLongDisplayTimeTicked),
@@ -546,7 +559,7 @@ namespace Nikse.SubtitleEdit.Forms
             FixEmptyLines.Language.RemovedEmptyLineAtBottom = LanguageSettings.Current.FixCommonErrors.RemovedEmptyLineAtBottom;
             FixEmptyLines.Language.RemovedEmptyLineAtTop = LanguageSettings.Current.FixCommonErrors.RemovedEmptyLineAtTop;
             FixEmptyLines.Language.RemovedEmptyLineInMiddle = LanguageSettings.Current.FixCommonErrors.RemovedEmptyLineInMiddle;
-            FixEmptyLines.Language.RemovedEmptyLinesUnsedLineBreaks = LanguageSettings.Current.FixCommonErrors.RemovedEmptyLinesUnsedLineBreaks;
+            FixEmptyLines.Language.RemovedEmptyLinesUnusedLineBreaks = LanguageSettings.Current.FixCommonErrors.RemovedEmptyLinesUnusedLineBreaks;
             FixHyphensInDialog.Language.FixHyphensInDialogs = LanguageSettings.Current.FixCommonErrors.FixHyphensInDialogs;
             FixHyphensRemoveDashSingleLine.Language.RemoveHyphensSingleLine = LanguageSettings.Current.FixCommonErrors.RemoveHyphensSingleLine;
             FixInvalidItalicTags.Language.FixInvalidItalicTag = LanguageSettings.Current.FixCommonErrors.FixInvalidItalicTag;
@@ -682,7 +695,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
         }
-        
+
         public bool IsName(string candidate)
         {
             MakeSureNameListIsLoaded();
@@ -755,7 +768,7 @@ namespace Nikse.SubtitleEdit.Forms
                     lastLastLine = lastLastP.Text;
                 }
 
-                var text = _ocrFixEngine.FixOcrErrors(p.Text, i, lastLine, lastLastLine, false, OcrFixEngine.AutoGuessLevel.Cautious);
+                var text = _ocrFixEngine.FixOcrErrors(p.Text, Subtitle, i, lastLine, lastLastLine, false, OcrFixEngine.AutoGuessLevel.Cautious);
                 lastLine = text;
                 if (AllowFix(p, fixAction) && p.Text != text)
                 {
@@ -808,6 +821,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonNextFinish.Text = _languageGeneral.Ok;
             buttonNextFinish.Enabled = _hasFixesBeenMade || _linesDeletedOrMerged;
             groupBoxStep1.Visible = false;
+            comboBoxLanguage.Enabled = false;
             groupBox2.Visible = true;
             listViewFixes.Sort();
             subtitleListView1.Fill(FixedSubtitle);
@@ -877,7 +891,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var typeName = fc.GetType().Name;
 
                 // do not check for shortcuts if text is being entered and a textbox is focused
-                var textBoxTypes = new List<string> { "AdvancedTextBox", "SimpleTextBox", "SETextBox", "TextBox", "RichTextBox" };
+                var textBoxTypes = new List<string> { "AdvancedTextBox", "SimpleTextBox", "SETextBox", "NikseTextBox", "TextBox", "RichTextBox" };
                 if (textBoxTypes.Contains(typeName) &&
                     ((e.KeyCode >= Keys.A && e.KeyCode <= Keys.Z) || (e.KeyCode >= Keys.OemSemicolon && e.KeyCode <= Keys.OemBackslash) || e.KeyCode >= Keys.NumPad0 && e.KeyCode <= Keys.NumPad9 || e.KeyValue >= 48 && e.KeyValue <= 57) &&
                     !Configuration.Settings.General.AllowLetterShortcutsInTextBox)
@@ -945,7 +959,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var htmlFileName = htmlDiffGenerator.Generate(genItemsProjection);
 
                 UiUtil.OpenFile(htmlFileName);
-                
+
                 e.SuppressKeyPress = true;
             }
             else if (_mainGeneralGoToNextSubtitle == e.KeyData || _mainGeneralGoToNextSubtitlePlayTranslate == e.KeyData)
@@ -1096,6 +1110,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void ButtonBackClick(object sender, EventArgs e)
         {
             buttonNextFinish.Enabled = true;
+            comboBoxLanguage.Enabled = true;
             _totalFixes = 0;
             _onlyListFixes = true;
             buttonBack.Enabled = false;
@@ -1433,7 +1448,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ShowAvailableFixesStatus(bool applied)
         {
-            labelStatus.ForeColor = DarkTheme.ForeColor;
+            labelStatus.ForeColor = UiUtil.ForeColor;
             if (_totalFixes == 0 && _totalErrors == 0)
             {
                 ShowStatus(_language.NothingToFix);
@@ -1841,6 +1856,20 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void comboBoxLanguage_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (comboBoxLanguage.SelectedIndex > 0 && comboBoxLanguage.Text == LanguageSettings.Current.General.ChangeLanguageFilter)
+            {
+                using (var form = new DefaultLanguagesChooser(Configuration.Settings.General.DefaultLanguages))
+                {
+                    if (form.ShowDialog(this) == DialogResult.OK)
+                    {
+                        Configuration.Settings.General.DefaultLanguages = form.DefaultLanguages;
+                    }
+                }
+
+                InitializeLanguageNames();
+                return;
+            }
+
             if (Subtitle != null)
             {
                 if (comboBoxLanguage.SelectedItem is LanguageItem ci)
