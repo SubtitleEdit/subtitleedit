@@ -868,9 +868,9 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         private string FixCommonOcrLineErrors(string input, Subtitle subtitle, int index, string lastLine, string lastLastLine)
         {
             var text = input;
-            text = _ocrFixReplaceList.FixOcrErrorViaLineReplaceList(input, subtitle, index);
+            text = _ocrFixReplaceList.FixOcrErrorViaLineReplaceList(text, subtitle, index);
             text = FixOcrErrorsViaHardcodedRules(text, lastLine, lastLastLine, _abbreviationList);
-            text = _ocrFixReplaceList.FixOcrErrorViaLineReplaceList(input, subtitle, index);
+            text = _ocrFixReplaceList.FixOcrErrorViaLineReplaceList(text, subtitle, index);
 
             if (Configuration.Settings.Tools.OcrFixUseHardcodedRules)
             {
