@@ -12,7 +12,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             public static string RemovedEmptyLineAtTop { get; set; } = "Remove empty line at top";
             public static string RemovedEmptyLineAtBottom { get; set; } = "Remove empty line at bottom";
             public static string RemovedEmptyLineInMiddle { get; set; } = "Remove empty line in middle";
-            public static string RemovedEmptyLinesUnsedLineBreaks { get; set; } = "Remove empty lines/unused line breaks";
+            public static string RemovedEmptyLinesUnusedLineBreaks { get; set; } = "Remove empty lines/unused line breaks";
         }
 
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
@@ -174,7 +174,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
             if (emptyLinesRemoved > 0)
             {
-                callbacks.UpdateFixStatus(emptyLinesRemoved, Language.RemovedEmptyLinesUnsedLineBreaks);
+                callbacks.UpdateFixStatus(emptyLinesRemoved, Language.RemovedEmptyLinesUnusedLineBreaks);
                 subtitle.Renumber();
             }
         }

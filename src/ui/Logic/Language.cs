@@ -1136,7 +1136,7 @@ namespace Nikse.SubtitleEdit.Logic
                 RemovedEmptyLineAtTop = "Remove empty line at top",
                 RemovedEmptyLineAtBottom = "Remove empty line at bottom",
                 RemovedEmptyLineInMiddle = "Remove empty line in middle",
-                RemovedEmptyLinesUnsedLineBreaks = "Remove empty lines/unused line breaks",
+                RemovedEmptyLinesUnusedLineBreaks = "Remove empty lines/unused line breaks",
                 FixOverlappingDisplayTimes = "Fix overlapping display times",
                 FixShortDisplayTimes = "Fix short display times",
                 FixLongDisplayTimes = "Fix long display times",

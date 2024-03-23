@@ -392,7 +392,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             _fixActions = new List<FixItem>
             {
-                new FixItem(_language.RemovedEmptyLinesUnsedLineBreaks, "Has only one valid line!</br><i> -> Has only one valid line!", () => new FixEmptyLines().Fix(Subtitle, this), ce.EmptyLinesTicked),
+                new FixItem(_language.RemovedEmptyLinesUnusedLineBreaks, "Has only one valid line!</br><i> -> Has only one valid line!", () => new FixEmptyLines().Fix(Subtitle, this), ce.EmptyLinesTicked),
                 new FixItem(_language.FixOverlappingDisplayTimes, string.Empty, () => new FixOverlappingDisplayTimes().Fix(Subtitle, this), ce.OverlappingDisplayTimeTicked),
                 new FixItem(_language.FixShortDisplayTimes, string.Empty, () => new FixShortDisplayTimes().Fix(Subtitle, this), ce.TooShortDisplayTimeTicked),
                 new FixItem(_language.FixLongDisplayTimes, string.Empty, () => new FixLongDisplayTimes().Fix(Subtitle, this), ce.TooLongDisplayTimeTicked),
@@ -559,7 +559,7 @@ namespace Nikse.SubtitleEdit.Forms
             FixEmptyLines.Language.RemovedEmptyLineAtBottom = LanguageSettings.Current.FixCommonErrors.RemovedEmptyLineAtBottom;
             FixEmptyLines.Language.RemovedEmptyLineAtTop = LanguageSettings.Current.FixCommonErrors.RemovedEmptyLineAtTop;
             FixEmptyLines.Language.RemovedEmptyLineInMiddle = LanguageSettings.Current.FixCommonErrors.RemovedEmptyLineInMiddle;
-            FixEmptyLines.Language.RemovedEmptyLinesUnsedLineBreaks = LanguageSettings.Current.FixCommonErrors.RemovedEmptyLinesUnsedLineBreaks;
+            FixEmptyLines.Language.RemovedEmptyLinesUnusedLineBreaks = LanguageSettings.Current.FixCommonErrors.RemovedEmptyLinesUnusedLineBreaks;
             FixHyphensInDialog.Language.FixHyphensInDialogs = LanguageSettings.Current.FixCommonErrors.FixHyphensInDialogs;
             FixHyphensRemoveDashSingleLine.Language.RemoveHyphensSingleLine = LanguageSettings.Current.FixCommonErrors.RemoveHyphensSingleLine;
             FixInvalidItalicTags.Language.FixInvalidItalicTag = LanguageSettings.Current.FixCommonErrors.FixInvalidItalicTag;
