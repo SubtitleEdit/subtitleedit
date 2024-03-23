@@ -882,7 +882,7 @@ Vi udnytter billedets indre rytme.</CreateSimpleChainingToolTip>
     <RemovedEmptyLineAtTop>Fjernede tom linje øverst</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>Fjernede tom linje i bunden</RemovedEmptyLineAtBottom>
     <RemovedEmptyLineInMiddle>Fjernede tom linje i midten</RemovedEmptyLineInMiddle>
-    <RemovedEmptyLinesUnsedLineBreaks>Fjern tomme linjer/ubrugte linjeskift</RemovedEmptyLinesUnsedLineBreaks>
+    <RemovedEmptyLinesUnusedLineBreaks>Fjern tomme linjer/ubrugte linjeskift</RemovedEmptyLinesUnusedLineBreaks>
     <FixOverlappingDisplayTimes>Ret overlappende visningstider</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>Ret korte visningstider</FixShortDisplayTimes>
     <FixLongDisplayTimes>Ret lange visningstider</FixLongDisplayTimes>

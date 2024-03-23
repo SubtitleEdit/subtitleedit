@@ -446,7 +446,7 @@ C# ソースコードは https://github.com/SubtitleEdit/subtitleedit にあり�
     <RemovedEmptyLineAtTop>先頭の空行を削除しました</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>末尾の空行を削除しました</RemovedEmptyLineAtBottom>
     <RemovedEmptyLineInMiddle>途中の空行を削除しました</RemovedEmptyLineInMiddle>
-    <RemovedEmptyLinesUnsedLineBreaks>空行/未使用の改行を削除しました</RemovedEmptyLinesUnsedLineBreaks>
+    <RemovedEmptyLinesUnusedLineBreaks>空行/未使用の改行を削除しました</RemovedEmptyLinesUnusedLineBreaks>
     <EmptyLinesRemovedX>削除された空行: {0}</EmptyLinesRemovedX>
     <FixOverlappingDisplayTimes>重複する表示時間を修正する</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>短い表示時間を修正する</FixShortDisplayTimes>

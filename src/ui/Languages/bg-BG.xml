@@ -887,7 +887,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <RemovedEmptyLineAtTop>Премахнат празен ред отгоре</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>Премахнат празен ред отдолу</RemovedEmptyLineAtBottom>
     <RemovedEmptyLineInMiddle>Премахнат празен ред в средата</RemovedEmptyLineInMiddle>
-    <RemovedEmptyLinesUnsedLineBreaks>Премахване на празни редове (ненужни прекъсвания на редовете)</RemovedEmptyLinesUnsedLineBreaks>
+    <RemovedEmptyLinesUnusedLineBreaks>Премахване на празни редове (ненужни прекъсвания на редовете)</RemovedEmptyLinesUnusedLineBreaks>
     <FixOverlappingDisplayTimes>Поправяне на застъпващи се времена на показване</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>Поправяне на кратки времена на показване</FixShortDisplayTimes>
     <FixLongDisplayTimes>Поправяне на дълги времена на показване</FixLongDisplayTimes>

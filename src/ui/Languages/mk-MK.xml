@@ -583,7 +583,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <RemovedEmptyLineAtTop>Отстрани празни линија на врв</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>Отстрани празна линија на дно</RemovedEmptyLineAtBottom>
     <RemovedEmptyLineInMiddle>Отстрани празна линија во средина</RemovedEmptyLineInMiddle>
-    <RemovedEmptyLinesUnsedLineBreaks>Отстрани празни линии/неупотребени редови во линија</RemovedEmptyLinesUnsedLineBreaks>
+    <RemovedEmptyLinesUnusedLineBreaks>Отстрани празни линии/неупотребени редови во линија</RemovedEmptyLinesUnusedLineBreaks>
     <EmptyLinesRemovedX>Отстранети празни линии: {0}</EmptyLinesRemovedX>
     <FixOverlappingDisplayTimes>Поправи преклопи</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>Поправи кратки траења</FixShortDisplayTimes>

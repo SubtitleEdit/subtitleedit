@@ -645,7 +645,7 @@ Not: Boş disk alanını kontrol edin.</WaveFileMalformed>
     <RemovedEmptyLineAtTop>Üstteki boş satırı kaldır</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>Alttaki boş satırı kaldır</RemovedEmptyLineAtBottom>
     <RemovedEmptyLineInMiddle>Aradaki boş satırı kaldır</RemovedEmptyLineInMiddle>
-    <RemovedEmptyLinesUnsedLineBreaks>Boş satırları/kullanılmayan bölmeleri kaldırın</RemovedEmptyLinesUnsedLineBreaks>
+    <RemovedEmptyLinesUnusedLineBreaks>Boş satırları/kullanılmayan bölmeleri kaldırın</RemovedEmptyLinesUnusedLineBreaks>
     <FixOverlappingDisplayTimes>Üst üste gelen görüntülenme sürelerini düzelt</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>Kısa görüntülenme sürelerini düzelt</FixShortDisplayTimes>
     <FixLongDisplayTimes>Uzun görüntülenme sürelerini düzelt</FixLongDisplayTimes>

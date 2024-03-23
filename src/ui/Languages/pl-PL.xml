@@ -886,7 +886,7 @@ Wykorzystujemy naturalny rytm obrazu.</CreateSimpleChainingToolTip>
     <RemovedEmptyLineAtTop>Usuń pustą linię na początku napisów</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>Usuń pustą linię na końcu napisów</RemovedEmptyLineAtBottom>
     <RemovedEmptyLineInMiddle>Usuń pustą linię w środku</RemovedEmptyLineInMiddle>
-    <RemovedEmptyLinesUnsedLineBreaks>Usuń puste linie/nieużywane podziały linii</RemovedEmptyLinesUnsedLineBreaks>
+    <RemovedEmptyLinesUnusedLineBreaks>Usuń puste linie/nieużywane podziały linii</RemovedEmptyLinesUnusedLineBreaks>
     <FixOverlappingDisplayTimes>Popraw nakładające się czasy wyświetlania</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>Popraw zbyt krótkie czasy wyświetlania</FixShortDisplayTimes>
     <FixLongDisplayTimes>Popraw zbyt długie czasy wyświetlania</FixLongDisplayTimes>

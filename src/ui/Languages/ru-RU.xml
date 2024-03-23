@@ -891,7 +891,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <RemovedEmptyLineAtTop>Удалена пустая строка сверху</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>Удалена пустая строка снизу</RemovedEmptyLineAtBottom>
     <RemovedEmptyLineInMiddle>Удалена пустая строка по центру</RemovedEmptyLineInMiddle>
-    <RemovedEmptyLinesUnsedLineBreaks>Удалить пустые строки/неиспользуемые разрывы строк</RemovedEmptyLinesUnsedLineBreaks>
+    <RemovedEmptyLinesUnusedLineBreaks>Удалить пустые строки/неиспользуемые разрывы строк</RemovedEmptyLinesUnusedLineBreaks>
     <FixOverlappingDisplayTimes>Исправить временные наложения субтитров</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>Исправить короткое время отображения субтитров</FixShortDisplayTimes>
     <FixLongDisplayTimes>Исправить долгое время отображения субтитров</FixLongDisplayTimes>

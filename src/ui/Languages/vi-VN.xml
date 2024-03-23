@@ -711,7 +711,7 @@ Các video hướng dẫn Subtitle Edit
     <RemovedEmptyLineAtTop>Xóa dòng trống ở đầu phụ đề</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>Xóa dòng trống ở cuối phụ đề</RemovedEmptyLineAtBottom>
     <RemovedEmptyLineInMiddle>Xóa dòng trống ở giữa phụ đề</RemovedEmptyLineInMiddle>
-    <RemovedEmptyLinesUnsedLineBreaks>Xóa các dòng trống sau khi xuống hàng</RemovedEmptyLinesUnsedLineBreaks>
+    <RemovedEmptyLinesUnusedLineBreaks>Xóa các dòng trống sau khi xuống hàng</RemovedEmptyLinesUnusedLineBreaks>
     <FixOverlappingDisplayTimes>(TIẾNG VIỆT KHÔNG CHỌN) Sửa lỗi time trùng lặp</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>(TIẾNG VIỆT KHÔNG CHỌN) Sửa lỗi CPS quá cao</FixShortDisplayTimes>
     <FixLongDisplayTimes>Sửa lỗi CPS quá thấp</FixLongDisplayTimes>

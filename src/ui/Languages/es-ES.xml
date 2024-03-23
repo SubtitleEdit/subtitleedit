@@ -749,7 +749,7 @@ Nota: comprobar el espacio libre en disco.</WaveFileMalformed>
     <RemovedEmptyLineAtTop>Eliminar línea inicial en blanco</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>Eliminar línea final en blanco</RemovedEmptyLineAtBottom>
     <RemovedEmptyLineInMiddle>Eliminar línea vacía en medio</RemovedEmptyLineInMiddle>
-    <RemovedEmptyLinesUnsedLineBreaks>Eliminar saltos de línea de líneas en blanco/sin uso</RemovedEmptyLinesUnsedLineBreaks>
+    <RemovedEmptyLinesUnusedLineBreaks>Eliminar saltos de línea de líneas en blanco/sin uso</RemovedEmptyLinesUnusedLineBreaks>
     <FixOverlappingDisplayTimes>Corregir solapamientos de tiempo</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>Corregir tiempos cortos</FixShortDisplayTimes>
     <FixLongDisplayTimes>Corregir tiempos largos</FixLongDisplayTimes>

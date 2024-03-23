@@ -889,7 +889,7 @@ Tiramos partido do ritmo intrínseco da imagem.</CreateSimpleChainingToolTip>
     <RemovedEmptyLineAtTop>Remover linha inicial em branco</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>Remover linha final em branco</RemovedEmptyLineAtBottom>
     <RemovedEmptyLineInMiddle>Remover linha do meio em branco</RemovedEmptyLineInMiddle>
-    <RemovedEmptyLinesUnsedLineBreaks>Eliminar quebras de linha em branco/sem uso</RemovedEmptyLinesUnsedLineBreaks>
+    <RemovedEmptyLinesUnusedLineBreaks>Eliminar quebras de linha em branco/sem uso</RemovedEmptyLinesUnusedLineBreaks>
     <FixOverlappingDisplayTimes>Corrigir sobreposições de tempo</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>Corrigir tempos curtos</FixShortDisplayTimes>
     <FixLongDisplayTimes>Corrigir tempos longos</FixLongDisplayTimes>

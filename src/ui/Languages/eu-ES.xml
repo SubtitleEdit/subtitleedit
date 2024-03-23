@@ -639,7 +639,7 @@ Oharra: Egiaztatu diskako toki askea.</WaveFileMalformed>
     <RemovedEmptyLineAtTop>Kenduta goiko lerro hutsa</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>Kenduta beheko lerro hutsa</RemovedEmptyLineAtBottom>
     <RemovedEmptyLineInMiddle>Kendu erdiko lerro hutsa</RemovedEmptyLineInMiddle>
-    <RemovedEmptyLinesUnsedLineBreaks>Kendu lerro hutsak/ez erabilitako lerro hautsiak</RemovedEmptyLinesUnsedLineBreaks>
+    <RemovedEmptyLinesUnusedLineBreaks>Kendu lerro hutsak/ez erabilitako lerro hautsiak</RemovedEmptyLinesUnusedLineBreaks>
     <FixOverlappingDisplayTimes>Zuzendu erakus denbora gainjartzea</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>Zuzendu erakus denbora laburrak</FixShortDisplayTimes>
     <FixLongDisplayTimes>Zuzendu erakus denbora luzeak</FixLongDisplayTimes>

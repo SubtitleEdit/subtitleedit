@@ -509,7 +509,7 @@ Tips: Se om du har noe plass igjen på harddisken.</WaveFileMalformed>
     <RemovedEmptyLine>Remove empty line</RemovedEmptyLine>
     <RemovedEmptyLineAtTop>Remove empty line at top</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>Remove empty line at bottom</RemovedEmptyLineAtBottom>
-    <RemovedEmptyLinesUnsedLineBreaks>Remove empty lines/unused line breaks</RemovedEmptyLinesUnsedLineBreaks>
+    <RemovedEmptyLinesUnusedLineBreaks>Remove empty lines/unused line breaks</RemovedEmptyLinesUnusedLineBreaks>
     <EmptyLinesRemovedX>Empty lines removed: {0}</EmptyLinesRemovedX>
     <FixOverlappingDisplayTimes>Fix overlapping display times</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>Fix short display times</FixShortDisplayTimes>

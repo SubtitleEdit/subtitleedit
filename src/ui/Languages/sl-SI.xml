@@ -757,7 +757,7 @@ Opomba: Preverite prosti prostor na disku.</WaveFileMalformed>
     <RemovedEmptyLineAtTop>Odstrani prazno vrstico na vrhu</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>Odstrani prazno vrstico na dnu</RemovedEmptyLineAtBottom>
     <RemovedEmptyLineInMiddle>Odstrani prazno vrstico na sredini</RemovedEmptyLineInMiddle>
-    <RemovedEmptyLinesUnsedLineBreaks>Odstrani prazne vrstice/neuporabljene prelome vrstic</RemovedEmptyLinesUnsedLineBreaks>
+    <RemovedEmptyLinesUnusedLineBreaks>Odstrani prazne vrstice/neuporabljene prelome vrstic</RemovedEmptyLinesUnusedLineBreaks>
     <FixOverlappingDisplayTimes>Popravi prekrivajoče se prikazne čase</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>Popravi kratke prikazne čase</FixShortDisplayTimes>
     <FixLongDisplayTimes>Popravi dolge čase prikaza</FixLongDisplayTimes>

@@ -668,7 +668,7 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
     <RemovedEmptyLineAtTop>Retirer ligne vide en haut</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>Retirer ligne vide en bas</RemovedEmptyLineAtBottom>
     <RemovedEmptyLineInMiddle>Retirer ligne vide au milieu</RemovedEmptyLineInMiddle>
-    <RemovedEmptyLinesUnsedLineBreaks>Retirer les lignes vides/sauts de lignes inutiles</RemovedEmptyLinesUnsedLineBreaks>
+    <RemovedEmptyLinesUnusedLineBreaks>Retirer les lignes vides/sauts de lignes inutiles</RemovedEmptyLinesUnusedLineBreaks>
     <FixOverlappingDisplayTimes>Corriger les durées d'affichage se chevauchant</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>Corriger les durées d'affichage trop courts</FixShortDisplayTimes>
     <FixLongDisplayTimes>Corriger les durées d'affichage trop longs</FixLongDisplayTimes>

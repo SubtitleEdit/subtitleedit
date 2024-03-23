@@ -541,7 +541,7 @@ Catatan: Periksa ruang kosong disk.</WaveFileMalformed>
     <RemovedEmptyLine>Buang baris kosong</RemovedEmptyLine>
     <RemovedEmptyLineAtTop>Buang baris kosong di teratas</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>Buang baris kosong di ter bawah</RemovedEmptyLineAtBottom>
-    <RemovedEmptyLinesUnsedLineBreaks>Buang baris kosong/jeda baris yg tidak terpakai</RemovedEmptyLinesUnsedLineBreaks>
+    <RemovedEmptyLinesUnusedLineBreaks>Buang baris kosong/jeda baris yg tidak terpakai</RemovedEmptyLinesUnusedLineBreaks>
     <EmptyLinesRemovedX>Baris kosong dibuang: {0}</EmptyLinesRemovedX>
     <FixOverlappingDisplayTimes>Perbaiki waktu tampilan tumpang tindih</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>Perbaiki waktu tampilan singkat</FixShortDisplayTimes>

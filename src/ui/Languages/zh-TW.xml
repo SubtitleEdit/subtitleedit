@@ -695,7 +695,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <RemovedEmptyLineAtTop>移除頂部空行</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>移除底部空行</RemovedEmptyLineAtBottom>
     <RemovedEmptyLineInMiddle>移除中間空行</RemovedEmptyLineInMiddle>
-    <RemovedEmptyLinesUnsedLineBreaks>移除 空行/無用換行字元</RemovedEmptyLinesUnsedLineBreaks>
+    <RemovedEmptyLinesUnusedLineBreaks>移除 空行/無用換行字元</RemovedEmptyLinesUnusedLineBreaks>
     <FixOverlappingDisplayTimes>修復重疊的顯示時間</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>修復過短的顯示時間</FixShortDisplayTimes>
     <FixLongDisplayTimes>修復過長的顯示時間</FixLongDisplayTimes>
