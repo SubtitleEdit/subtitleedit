@@ -2312,7 +2312,7 @@ namespace Nikse.SubtitleEdit.Logic
                     language.FixCommonErrors.RemovedEmptyLineInMiddle = reader.Value;
                     break;
                 case "FixCommonErrors/RemovedEmptyLinesUnsedLineBreaks":
-                    language.FixCommonErrors.RemovedEmptyLinesUnsedLineBreaks = reader.Value;
+                    language.FixCommonErrors.RemovedEmptyLinesUnusedLineBreaks = reader.Value;
                     break;
                 case "FixCommonErrors/FixOverlappingDisplayTimes":
                     language.FixCommonErrors.FixOverlappingDisplayTimes = reader.Value;
