@@ -186,6 +186,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
             }
+
             listViewFixes.EndUpdate();
             groupBoxLinesFound.Text = string.Format(_language.LinesFoundX, count);
             Cursor.Current = Cursors.Default;
