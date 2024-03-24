@@ -7,11 +7,12 @@ using System.Drawing;
 using System.Drawing.Design;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Controls.Interfaces;
 
 namespace Nikse.SubtitleEdit.Controls
 {
     [Category("NikseComboBox"), Description("ComboBox with better support for color theme")]
-    public class NikseComboBox : Control
+    public class NikseComboBox : Control, ISelectedText
     {
         // ReSharper disable once InconsistentNaming
         public event EventHandler SelectedIndexChanged;

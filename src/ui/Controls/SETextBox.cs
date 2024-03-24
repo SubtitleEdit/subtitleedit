@@ -4,13 +4,14 @@ using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Controls.Interfaces;
 
 namespace Nikse.SubtitleEdit.Controls
 {
     /// <summary>
     /// TextBox that can be either a normal text box or a rich text box.
     /// </summary>
-    public sealed class SETextBox : Panel
+    public sealed class SETextBox : Panel, ISelectedText
     {
         // ReSharper disable once InconsistentNaming
         public new event EventHandler TextChanged;
