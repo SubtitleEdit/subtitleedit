@@ -608,10 +608,10 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
         public static string FixDoubleGreaterThanHelper(string text)
         {
-            var post = string.Empty;
+            var pre = string.Empty;
             if (text.Length > 3 && text[0] == '<' && text[2] == '>' && (text[1] == 'i' || text[1] == 'b' || text[1] == 'u'))
             {
-                post += "<" + text[1] + ">";
+                pre += "<" + text[1] + ">";
                 text = text.Remove(0, 3).TrimStart();
             }
 
@@ -620,7 +620,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 var endIdx = text.IndexOf('>', 5);
                 if (endIdx >= 5 && endIdx < text.Length - 7)
                 {
-                    post += text.Substring(0, endIdx + 1);
+                    pre += text.Substring(0, endIdx + 1);
                     text = text.Substring(endIdx + 1).TrimStart();
                 }
             }
@@ -630,7 +630,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 text = text.TrimStart('>', ' ').TrimStart();
             }
 
-            return post + text;
+            return pre + text;
         }
 
         private static readonly char[] NoShortLineList = { '.', '?', '!', ':', ';', '…', '♪', '♫' };
