@@ -430,7 +430,6 @@ namespace Nikse.SubtitleEdit.Controls
             _textBox.Visible = false;
             _items = new NikseComboBoxCollection(this);
 
-
             SetStyle(ControlStyles.ResizeRedraw | ControlStyles.OptimizedDoubleBuffer, true);
 
             base.KeyDown += (sender, e) =>
@@ -1333,6 +1332,20 @@ namespace Nikse.SubtitleEdit.Controls
             if (_textBox != null && DropDownStyle == ComboBoxStyle.DropDown)
             {
                 _textBox.SelectAll();
+            }
+        }
+
+        // [SRCategory("CatBehavior")]
+        [DefaultValue(null)]
+        // [SRDescription("ControlContextMenuDescr")]
+        public override ContextMenuStrip ContextMenuStrip
+        {
+            get => base.ContextMenuStrip;
+            set
+            {
+                // once the ContextMenuStrip is set for this control (combobox) also set it to the underlying textbox
+                base.ContextMenuStrip = value;
+                _textBox.ContextMenuStrip = value;
             }
         }
     }
