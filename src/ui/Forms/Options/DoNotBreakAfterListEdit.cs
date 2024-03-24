@@ -5,6 +5,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml;
+using Nikse.SubtitleEdit.Controls.Adapters;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic;
 using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
@@ -229,13 +230,10 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
         private void RadioButtonCheckedChanged(object sender, EventArgs e)
         {
-            if (sender == radioButtonRegEx)
+            textBoxNoBreakAfter.ContextMenuStrip = null;
+            if (sender == radioButtonRegEx && radioButtonRegEx.Checked)
             {
-                textBoxNoBreakAfter.ContextMenuStrip = FindReplaceDialogHelper.GetRegExContextMenu(textBoxNoBreakAfter);
-            }
-            else
-            {
-                textBoxNoBreakAfter.ContextMenuStrip = null;
+                textBoxNoBreakAfter.ContextMenuStrip = FindReplaceDialogHelper.GetRegExContextMenu(new NativeTextBoxAdapter(textBoxNoBreakAfter));
             }
         }
 

@@ -213,24 +213,23 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void RadioButton_CheckedChanged(object sender, EventArgs e)
         {
-            if (sender == radioButtonRegEx)
+            // remove any existing context menu
+            textBoxFind.ContextMenuStrip = null;
+            comboBoxFind.ContextMenuStrip = null;
+            
+            // only hook context menu if regex radio button is checked
+            if (sender == radioButtonRegEx && radioButtonRegEx.Checked)
             {
                 if (textBoxFind.Visible)
                 {
-                    comboBoxFind.ContextMenuStrip = null;
                     textBoxFind.ContextMenuStrip = FindReplaceDialogHelper.GetRegExContextMenu(textBoxFind);
                 }
-                else
+                else if (radioButtonRegEx.Checked)
                 {
-                    textBoxFind.ContextMenuStrip = null;
                     comboBoxFind.ContextMenuStrip = FindReplaceDialogHelper.GetRegExContextMenu(comboBoxFind);
                 }
             }
-            else
-            {
-                textBoxFind.ContextMenuStrip = null;
-                comboBoxFind.ContextMenuStrip = null;
-            }
+
             checkBoxWholeWord.Enabled = !radioButtonRegEx.Checked;
             labelCount.Text = string.Empty;
         }
