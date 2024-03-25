@@ -10,6 +10,7 @@
     <Cancel>C&amp;ancelar</Cancel>
     <Yes>Sí</Yes>
     <No>No</No>
+    <Close>Cerrar</Close>
     <Apply>Aplicar</Apply>
     <ApplyTo>Aplicar a</ApplyTo>
     <None>Cancelar</None>
@@ -404,6 +405,13 @@ Por favor, haz clic en "{0}" para generar o importar los cambios de toma primero
     <BatchAlignTimeCodes>Alinear códigos de tiempo a códigos de tiempo de fotograma</BatchAlignTimeCodes>
     <BatchUseExactTimeCodes>Usar códigos de tiempo exactos (si están disponibles)</BatchUseExactTimeCodes>
     <BatchSnapToShotChanges>Ajustar señales a cambios de toma (si están disponibles)</BatchSnapToShotChanges>
+    <UnfixableParagraphsTitle>Revisar subtítulos no completamente enlazados</UnfixableParagraphsTitle>
+    <UnfixableParagraphsInstructions>Algunos subtítulos no fueron completamente enlazados de acuerdo a tu perfil, muy probablemente debido a cambios de toma demasiado agrupados (posiblemente falsos positivos).
+
+Podrías querer revisar estos casos manualmente para asegurarte de que tus señales estén ajustadas a los cambios de toma correctos (reales).</UnfixableParagraphsInstructions>
+    <UnfixableParagraphsColumnParagraphs>Líneas</UnfixableParagraphsColumnParagraphs>
+    <UnfixableParagraphsColumnParagraphsFormat>#{0} – #{1}</UnfixableParagraphsColumnParagraphsFormat>
+    <UnfixableParagraphsColumnGap>Espacio (fotogramas)</UnfixableParagraphsColumnGap>
   </BeautifyTimeCodes>
   <BeautifyTimeCodesProfile>
     <Title>Editar perfil</Title>
@@ -427,6 +435,7 @@ Por favor, haz clic en "{0}" para generar o importar los cambios de toma primero
     <Chaining>Encadenamiento</Chaining>
     <InCueOnShot>Señal de entrada en cambio de toma</InCueOnShot>
     <OutCueOnShot>Señal de salida en cambio de toma</OutCueOnShot>
+    <CheckGeneral>Aplicar las reglas generales aún cuando no afectado</CheckGeneral>
     <MaxGap>Intervalo máximo:</MaxGap>
     <ShotChangeBehavior>Si hay un cambio de toma entre medio:</ShotChangeBehavior>
     <DontChain>No encadenar</DontChain>
@@ -956,7 +965,7 @@ Aprovechamos el ritmo intrínseco de la imagen.</CreateSimpleChainingToolTip>
     <FixDoubleDash>Corregir '--' -&gt; '...'</FixDoubleDash>
     <FixDoubleGreaterThan>Eliminar &gt;&gt;</FixDoubleGreaterThan>
     <FixEllipsesStart>Eliminar '...' al inicio</FixEllipsesStart>
-    <FixMissingOpenBracket>Corregir '[' omitido en la línea</FixMissingOpenBracket>
+    <FixMissingOpenBracket>Corregir '[' o '(' omitido en la línea</FixMissingOpenBracket>
     <FixMusicNotation>Sustituir símbolos musicales (e.g. âTª) con símbolos adecuados</FixMusicNotation>
     <FixDoubleDashExample>Pero-- -&gt; Pero...</FixDoubleDashExample>
     <FixDoubleGreaterThanExample>«&gt;&gt; Roberto: ¡Maldición!» -&gt; «Roberto: ¡Maldición!»</FixDoubleGreaterThanExample>
@@ -1051,9 +1060,9 @@ Aprovechamos el ritmo intrínseco de la imagen.</CreateSimpleChainingToolTip>
     <PoweredByX>Generado por {0}</PoweredByX>
     <MsClientSecretNeeded>Lo siento, necesitas una clave de Servicios Cognitivos 'Translator Text' de Microsoft para usar la última versión de Microsoft Translator.
 
-Ve a "Opciones -&gt; Ajustes -&gt; Herramientas" para introducir tu clave.</MsClientSecretNeeded>
+Ve a "Opciones -&gt; Ajustes -&gt; Autotraducir" para introducir tu clave.</MsClientSecretNeeded>
     <GoogleNoApiKeyWarning>Intentando traducir sin la clave API... (datos lentos y limitados).
-Para usar una clave de API, ve a "Opciones --&gt; Configuración --&gt; Herramientas" para ingresar tu clave de API de Google Translate.</GoogleNoApiKeyWarning>
+Para usar una clave de API, ve a "Opciones --&gt; Ajustes --&gt; Autotraducir" para ingresar tu clave de API de Google Translate.</GoogleNoApiKeyWarning>
     <Service>Servicio:</Service>
     <LineMergeHandling>Fusión de línea:</LineMergeHandling>
     <ProcessorMergeNext>Fusionar un máximo de dos líneas</ProcessorMergeNext>
@@ -1319,6 +1328,7 @@ Para usar una clave de API, ve a "Opciones --&gt; Configuración --&gt; Herramie
         <CloseTranslation>Cerrar subtítulo traducido</CloseTranslation>
         <OpenContainingFolder>Abrir carpeta contenedora</OpenContainingFolder>
         <Compare>Comparar...</Compare>
+        <VerifyCompleteness>Verifica la integridad...</VerifyCompleteness>
         <Statistics>Estadísticas...</Statistics>
         <Plugins>Plugins...</Plugins>
         <ImportSubtitleFromVideoFile>Subtitular desde un archivo de video...</ImportSubtitleFromVideoFile>
@@ -1565,6 +1575,7 @@ Para usar una clave de API, ve a "Opciones --&gt; Configuración --&gt; Herramie
         <Subscript>Subíndice</Subscript>
         <Alignment>Alineación...</Alignment>
         <AutoBalanceSelectedLines>Autoajustar líneas seleccionadas...</AutoBalanceSelectedLines>
+        <EvenlyDistributeSelectedLines>Distribuir líneas seleccionadas de forma pareja (CPS)</EvenlyDistributeSelectedLines>
         <RemoveLineBreaksFromSelectedLines>Eliminar saltos de línea de las líneas seleccionadas...</RemoveLineBreaksFromSelectedLines>
         <TypewriterEffect>Efecto máquina de escribir...</TypewriterEffect>
         <KaraokeEffect>Efecto Karaoke...</KaraokeEffect>
@@ -1836,6 +1847,8 @@ El subtítulo parece estar vacío; intenta guardar de nuevo si estás trabajando
     <SortedByX>Ordenado por: {0}</SortedByX>
     <BeforeAutoBalanceSelectedLines>Antes de autoajustar líneas seleccionadas</BeforeAutoBalanceSelectedLines>
     <NumberOfLinesAutoBalancedX>Número de líneas autoajustadas: {0}</NumberOfLinesAutoBalancedX>
+    <BeforeEvenlyDistributeSelectedLines>Antes de distribuir líneas seleccionadas de forma pareja</BeforeEvenlyDistributeSelectedLines>
+    <NumberOfLinesEvenlyDistributedX>Número de líneas distribuidas de forma pareja: {0}</NumberOfLinesEvenlyDistributedX>
     <BeforeRemoveLineBreaksInSelectedLines>Antes de eliminar saltos de línea de líneas seleccionadas</BeforeRemoveLineBreaksInSelectedLines>
     <NumberOfWithRemovedLineBreakX>Número de líneas con salto de línea eliminado: {0}</NumberOfWithRemovedLineBreakX>
     <BeforeMultipleReplace>Antes del reemplazo múltiple</BeforeMultipleReplace>
@@ -2609,6 +2622,7 @@ puede editar el mismo archivo de subtítulo (colaboración)</Information>
     <MergeDialogWithNext>Unir diálogo con el siguiente (insertar guiones)</MergeDialogWithNext>
     <MergeDialogWithPrevious>Unir diálogo con el anterior (insertar guiones)</MergeDialogWithPrevious>
     <AutoBalanceSelectedLines>Equilibrar automáticamente las líneas seleccionadas</AutoBalanceSelectedLines>
+    <EvenlyDistributeSelectedLines>Distribuir de forma pareja las líneas seleccionadas (CPS)</EvenlyDistributeSelectedLines>
     <GoToNext>Ir a la siguiente línea</GoToNext>
     <GoToNextPlayTranslate>Ir a la línea siguiente (y reproducir en 'Modo de traducción')</GoToNextPlayTranslate>
     <GoToNextCursorAtEnd>Pasar a la siguiente línea y poner el cursor al final</GoToNextCursorAtEnd>
@@ -2708,6 +2722,7 @@ puede editar el mismo archivo de subtítulo (colaboración)</Information>
     <AudioExtractSelectedLines>Extraer audio (líneas seleccionadas)</AudioExtractSelectedLines>
     <AudioToTextSelectedLinesX>Audio a texto de las líneas seleccionadas ({0})</AudioToTextSelectedLinesX>
     <VideoToggleBrightness>Alternar brillo (solo mpv)</VideoToggleBrightness>
+    <AutoTranslateSelectedLines>Traducir automáticamente las líneas seleccionadas</AutoTranslateSelectedLines>
     <CustomSearch1>Traducir, búsqueda personalizada 1</CustomSearch1>
     <CustomSearch2>Traducir, búsqueda personalizado 2</CustomSearch2>
     <CustomSearch3>Traducir, búsqueda personalizado 3</CustomSearch3>
@@ -2837,6 +2852,8 @@ La configuración de una fuente para un subtítulo se realiza normalmente en el 
     <ExportAsHtml>Exportar como HTML...</ExportAsHtml>
     <SetNewActor>Establecer nuevo actor/voz</SetNewActor>
     <SetActorX>Establecer actor/voz {0}</SetActorX>
+    <Used>En uso</Used>
+    <Unused>Sin utilizar</Unused>
   </Settings>
   <SettingsMpv>
     <DownloadMpv>Descargar mpv lib</DownloadMpv>
@@ -3150,6 +3167,21 @@ La configuración de una fuente para un subtítulo se realiza normalmente en el 
     <Message>Si desea que esto se corrija, por favor envíe un correo electrónico a mailto: niksedk@gmail.com e incluya una copia de los subtítulos.</Message>
     <ImportAsPlainText>Importar como texto sin formato...</ImportAsPlainText>
   </UnknownSubtitle>
+  <VerifyCompleteness>
+    <Title>Verificar la integridad en comparación con otro subtítulo</Title>
+    <OpenControlSubtitle>Abrir subtítulo de control</OpenControlSubtitle>
+    <ControlSubtitleError>El subtítulo de control está vacío o no se pudo cargar.</ControlSubtitleError>
+    <ControlSubtitleX>Subtítulo de control: {0}</ControlSubtitleX>
+    <Coverage>Cobertura</Coverage>
+    <CoveragePercentageX>{0:0.##}%</CoveragePercentageX>
+    <SortByCoverage>Ordenar por cobertura</SortByCoverage>
+    <SortByTime>Ordenar por tiempo</SortByTime>
+    <Reload>Re-verificar</Reload>
+    <Insert>Insertar</Insert>
+    <InsertAndNext>Insertar y pasar al siguiente</InsertAndNext>
+    <Dismiss>Descartar</Dismiss>
+    <DismissAndNext>Descartar y pasar al siguiente</DismissAndNext>
+  </VerifyCompleteness>
   <VisualSync>
     <Title>Sincronización visual</Title>
     <StartScene>Principio de escena</StartScene>
