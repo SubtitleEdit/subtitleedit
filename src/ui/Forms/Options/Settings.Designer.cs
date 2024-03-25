@@ -327,6 +327,9 @@
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.checkBoxShowFrameRate = new System.Windows.Forms.CheckBox();
             this.groupBoxShowToolBarButtons = new System.Windows.Forms.GroupBox();
+            this.labelTBOpenVideo = new System.Windows.Forms.Label();
+            this.pictureBoxTBOpenVideo = new System.Windows.Forms.PictureBox();
+            this.checkBoxTBOpenVideo = new System.Windows.Forms.CheckBox();
             this.pictureBoxWebVttStyle = new System.Windows.Forms.PictureBox();
             this.pictureBoxEbuProperties = new System.Windows.Forms.PictureBox();
             this.pictureBoxWebVttProperties = new System.Windows.Forms.PictureBox();
@@ -503,9 +506,6 @@
             this.labelNllbApiUrl = new System.Windows.Forms.Label();
             this.linkLabelNllbApi = new System.Windows.Forms.LinkLabel();
             this.label5 = new System.Windows.Forms.Label();
-            this.labelTBOpenVideo = new System.Windows.Forms.Label();
-            this.pictureBoxTBOpenVideo = new System.Windows.Forms.PictureBox();
-            this.checkBoxTBOpenVideo = new System.Windows.Forms.CheckBox();
             this.panelGeneral.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
             this.groupBoxGeneralRules.SuspendLayout();
@@ -539,6 +539,7 @@
             this.panelToolBar.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBoxShowToolBarButtons.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxTBOpenVideo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxWebVttStyle)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxEbuProperties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxWebVttProperties)).BeginInit();
@@ -589,7 +590,6 @@
             this.groupBoxLibreTranslate.SuspendLayout();
             this.groupBoxNllbServe.SuspendLayout();
             this.groupBoxNllbApi.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxTBOpenVideo)).BeginInit();
             this.SuspendLayout();
             // 
             // buttonOK
@@ -5110,6 +5110,33 @@
             this.groupBoxShowToolBarButtons.TabStop = false;
             this.groupBoxShowToolBarButtons.Text = "Show toolbar buttons";
             // 
+            // labelTBOpenVideo
+            // 
+            this.labelTBOpenVideo.AutoSize = true;
+            this.labelTBOpenVideo.Location = new System.Drawing.Point(213, 22);
+            this.labelTBOpenVideo.Name = "labelTBOpenVideo";
+            this.labelTBOpenVideo.Size = new System.Drawing.Size(62, 13);
+            this.labelTBOpenVideo.TabIndex = 63;
+            this.labelTBOpenVideo.Text = "Open video";
+            // 
+            // pictureBoxTBOpenVideo
+            // 
+            this.pictureBoxTBOpenVideo.Location = new System.Drawing.Point(212, 41);
+            this.pictureBoxTBOpenVideo.Name = "pictureBoxTBOpenVideo";
+            this.pictureBoxTBOpenVideo.Size = new System.Drawing.Size(32, 32);
+            this.pictureBoxTBOpenVideo.TabIndex = 62;
+            this.pictureBoxTBOpenVideo.TabStop = false;
+            // 
+            // checkBoxTBOpenVideo
+            // 
+            this.checkBoxTBOpenVideo.AutoSize = true;
+            this.checkBoxTBOpenVideo.Location = new System.Drawing.Point(215, 81);
+            this.checkBoxTBOpenVideo.Name = "checkBoxTBOpenVideo";
+            this.checkBoxTBOpenVideo.Size = new System.Drawing.Size(55, 17);
+            this.checkBoxTBOpenVideo.TabIndex = 61;
+            this.checkBoxTBOpenVideo.Text = "Visible";
+            this.checkBoxTBOpenVideo.UseVisualStyleBackColor = true;
+            // 
             // pictureBoxWebVttStyle
             // 
             this.pictureBoxWebVttStyle.Location = new System.Drawing.Point(285, 400);
@@ -5585,7 +5612,7 @@
             this.pictureBoxTBOpen.TabIndex = 5;
             this.pictureBoxTBOpen.TabStop = false;
             // 
-            // checkBoxTBpen
+            // checkBoxTBOpen
             // 
             this.checkBoxTBOpen.AutoSize = true;
             this.checkBoxTBOpen.Location = new System.Drawing.Point(126, 81);
@@ -6988,33 +7015,6 @@
             this.label5.Size = new System.Drawing.Size(0, 13);
             this.label5.TabIndex = 25;
             // 
-            // labelTBOpenVideo
-            // 
-            this.labelTBOpenVideo.AutoSize = true;
-            this.labelTBOpenVideo.Location = new System.Drawing.Point(213, 22);
-            this.labelTBOpenVideo.Name = "labelTBOpenVideo";
-            this.labelTBOpenVideo.Size = new System.Drawing.Size(33, 13);
-            this.labelTBOpenVideo.TabIndex = 63;
-            this.labelTBOpenVideo.Text = "Open";
-            // 
-            // pictureBoxTBOpenVideo
-            // 
-            this.pictureBoxTBOpenVideo.Location = new System.Drawing.Point(212, 41);
-            this.pictureBoxTBOpenVideo.Name = "pictureBoxTBOpenVideo";
-            this.pictureBoxTBOpenVideo.Size = new System.Drawing.Size(32, 32);
-            this.pictureBoxTBOpenVideo.TabIndex = 62;
-            this.pictureBoxTBOpenVideo.TabStop = false;
-            // 
-            // checkBoxTBpenVideo
-            // 
-            this.checkBoxTBOpenVideo.AutoSize = true;
-            this.checkBoxTBOpenVideo.Location = new System.Drawing.Point(215, 81);
-            this.checkBoxTBOpenVideo.Name = "checkBoxTBOpenVideo";
-            this.checkBoxTBOpenVideo.Size = new System.Drawing.Size(55, 17);
-            this.checkBoxTBOpenVideo.TabIndex = 61;
-            this.checkBoxTBOpenVideo.Text = "Visible";
-            this.checkBoxTBOpenVideo.UseVisualStyleBackColor = true;
-            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -7104,6 +7104,7 @@
             this.groupBox2.PerformLayout();
             this.groupBoxShowToolBarButtons.ResumeLayout(false);
             this.groupBoxShowToolBarButtons.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxTBOpenVideo)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxWebVttStyle)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxEbuProperties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxWebVttProperties)).EndInit();
@@ -7170,7 +7171,6 @@
             this.groupBoxNllbServe.PerformLayout();
             this.groupBoxNllbApi.ResumeLayout(false);
             this.groupBoxNllbApi.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxTBOpenVideo)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 

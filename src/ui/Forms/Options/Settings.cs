@@ -146,6 +146,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
             checkBoxToolbarNew.Checked = gs.ShowToolbarNew;
             checkBoxTBOpen.Checked = gs.ShowToolbarOpen;
+            checkBoxTBOpenVideo.Checked = gs.ShowToolbarOpenVideo;
             checkBoxTBSave.Checked = gs.ShowToolbarSave;
             checkBoxTBSaveAs.Checked = gs.ShowToolbarSaveAs;
             checkBoxTBFind.Checked = gs.ShowToolbarFind;
@@ -422,6 +423,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             labelToolbarIconTheme.Text = language.Theme;
             checkBoxToolbarNew.Text = LanguageSettings.Current.General.Visible;
             checkBoxTBOpen.Text = LanguageSettings.Current.General.Visible;
+            checkBoxTBOpenVideo.Text = LanguageSettings.Current.General.Visible;
             checkBoxTBSave.Text = LanguageSettings.Current.General.Visible;
             checkBoxTBSaveAs.Text = LanguageSettings.Current.General.Visible;
             checkBoxTBFind.Text = LanguageSettings.Current.General.Visible;
@@ -448,8 +450,8 @@ namespace Nikse.SubtitleEdit.Forms.Options
             tbTabIndex++;
 
             labelTBOpenVideo.Left = Math.Max(labelTBOpen.Right, checkBoxTBOpen.Right) + 18;
-            pictureBoxTBOpenVideo.Left = labelTBSave.Left;
-            checkBoxTBOpenVideo.Left = labelTBSave.Left;
+            pictureBoxTBOpenVideo.Left = labelTBOpenVideo.Left;
+            checkBoxTBOpenVideo.Left = labelTBOpenVideo.Left;
             checkBoxTBOpenVideo.TabIndex = tbTabIndex;
             tbTabIndex++;
 
@@ -2082,6 +2084,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             pictureBoxFileNew.Image = (Image)newFile.Clone();
             pictureBoxPreview1.Image = (Image)newFile.Clone();
             pictureBoxTBOpen.Image = (Image)openFile.Clone();
+            pictureBoxTBOpenVideo.Image = (Image)openVideo.Clone();
             pictureBoxPreview2.Image = (Image)openFile.Clone();
             pictureBoxTBSave.Image = (Image)saveFile.Clone();
             pictureBoxPreview3.Image = (Image)saveFile.Clone();
@@ -2105,6 +2108,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
             gs.ShowToolbarNew = checkBoxToolbarNew.Checked;
             gs.ShowToolbarOpen = checkBoxTBOpen.Checked;
+            gs.ShowToolbarOpenVideo = checkBoxTBOpenVideo.Checked;
             gs.ShowToolbarSave = checkBoxTBSave.Checked;
             gs.ShowToolbarSaveAs = checkBoxTBSaveAs.Checked;
             gs.ShowToolbarFind = checkBoxTBFind.Checked;
