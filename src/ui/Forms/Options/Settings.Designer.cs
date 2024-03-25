@@ -381,7 +381,7 @@
             this.checkBoxTBSave = new System.Windows.Forms.CheckBox();
             this.labelTBOpen = new System.Windows.Forms.Label();
             this.pictureBoxTBOpen = new System.Windows.Forms.PictureBox();
-            this.checkBoxTBpen = new System.Windows.Forms.CheckBox();
+            this.checkBoxTBOpen = new System.Windows.Forms.CheckBox();
             this.labelTBNew = new System.Windows.Forms.Label();
             this.pictureBoxFileNew = new System.Windows.Forms.PictureBox();
             this.checkBoxToolbarNew = new System.Windows.Forms.CheckBox();
@@ -503,6 +503,9 @@
             this.labelNllbApiUrl = new System.Windows.Forms.Label();
             this.linkLabelNllbApi = new System.Windows.Forms.LinkLabel();
             this.label5 = new System.Windows.Forms.Label();
+            this.labelTBOpenVideo = new System.Windows.Forms.Label();
+            this.pictureBoxTBOpenVideo = new System.Windows.Forms.PictureBox();
+            this.checkBoxTBOpenVideo = new System.Windows.Forms.CheckBox();
             this.panelGeneral.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
             this.groupBoxGeneralRules.SuspendLayout();
@@ -586,6 +589,7 @@
             this.groupBoxLibreTranslate.SuspendLayout();
             this.groupBoxNllbServe.SuspendLayout();
             this.groupBoxNllbApi.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxTBOpenVideo)).BeginInit();
             this.SuspendLayout();
             // 
             // buttonOK
@@ -5038,6 +5042,9 @@
             // 
             this.groupBoxShowToolBarButtons.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxShowToolBarButtons.Controls.Add(this.labelTBOpenVideo);
+            this.groupBoxShowToolBarButtons.Controls.Add(this.pictureBoxTBOpenVideo);
+            this.groupBoxShowToolBarButtons.Controls.Add(this.checkBoxTBOpenVideo);
             this.groupBoxShowToolBarButtons.Controls.Add(this.pictureBoxWebVttStyle);
             this.groupBoxShowToolBarButtons.Controls.Add(this.pictureBoxEbuProperties);
             this.groupBoxShowToolBarButtons.Controls.Add(this.pictureBoxWebVttProperties);
@@ -5092,7 +5099,7 @@
             this.groupBoxShowToolBarButtons.Controls.Add(this.checkBoxTBSave);
             this.groupBoxShowToolBarButtons.Controls.Add(this.labelTBOpen);
             this.groupBoxShowToolBarButtons.Controls.Add(this.pictureBoxTBOpen);
-            this.groupBoxShowToolBarButtons.Controls.Add(this.checkBoxTBpen);
+            this.groupBoxShowToolBarButtons.Controls.Add(this.checkBoxTBOpen);
             this.groupBoxShowToolBarButtons.Controls.Add(this.labelTBNew);
             this.groupBoxShowToolBarButtons.Controls.Add(this.pictureBoxFileNew);
             this.groupBoxShowToolBarButtons.Controls.Add(this.checkBoxToolbarNew);
@@ -5321,7 +5328,7 @@
             // labelTBFixCommonErrors
             // 
             this.labelTBFixCommonErrors.AutoSize = true;
-            this.labelTBFixCommonErrors.Location = new System.Drawing.Point(597, 22);
+            this.labelTBFixCommonErrors.Location = new System.Drawing.Point(675, 22);
             this.labelTBFixCommonErrors.Name = "labelTBFixCommonErrors";
             this.labelTBFixCommonErrors.Size = new System.Drawing.Size(95, 13);
             this.labelTBFixCommonErrors.TabIndex = 36;
@@ -5329,7 +5336,7 @@
             // 
             // pictureBoxTBFixCommonErrors
             // 
-            this.pictureBoxTBFixCommonErrors.Location = new System.Drawing.Point(610, 41);
+            this.pictureBoxTBFixCommonErrors.Location = new System.Drawing.Point(688, 41);
             this.pictureBoxTBFixCommonErrors.Name = "pictureBoxTBFixCommonErrors";
             this.pictureBoxTBFixCommonErrors.Size = new System.Drawing.Size(32, 32);
             this.pictureBoxTBFixCommonErrors.TabIndex = 35;
@@ -5338,7 +5345,7 @@
             // checkBoxTBFixCommonErrors
             // 
             this.checkBoxTBFixCommonErrors.AutoSize = true;
-            this.checkBoxTBFixCommonErrors.Location = new System.Drawing.Point(613, 81);
+            this.checkBoxTBFixCommonErrors.Location = new System.Drawing.Point(691, 81);
             this.checkBoxTBFixCommonErrors.Name = "checkBoxTBFixCommonErrors";
             this.checkBoxTBFixCommonErrors.Size = new System.Drawing.Size(55, 17);
             this.checkBoxTBFixCommonErrors.TabIndex = 17;
@@ -5456,7 +5463,7 @@
             // labelTBReplace
             // 
             this.labelTBReplace.AutoSize = true;
-            this.labelTBReplace.Location = new System.Drawing.Point(521, 22);
+            this.labelTBReplace.Location = new System.Drawing.Point(599, 22);
             this.labelTBReplace.Name = "labelTBReplace";
             this.labelTBReplace.Size = new System.Drawing.Size(45, 13);
             this.labelTBReplace.TabIndex = 18;
@@ -5464,7 +5471,7 @@
             // 
             // pictureBoxTBReplace
             // 
-            this.pictureBoxTBReplace.Location = new System.Drawing.Point(526, 41);
+            this.pictureBoxTBReplace.Location = new System.Drawing.Point(604, 41);
             this.pictureBoxTBReplace.Name = "pictureBoxTBReplace";
             this.pictureBoxTBReplace.Size = new System.Drawing.Size(32, 32);
             this.pictureBoxTBReplace.TabIndex = 17;
@@ -5473,7 +5480,7 @@
             // checkBoxTBReplace
             // 
             this.checkBoxTBReplace.AutoSize = true;
-            this.checkBoxTBReplace.Location = new System.Drawing.Point(529, 81);
+            this.checkBoxTBReplace.Location = new System.Drawing.Point(607, 81);
             this.checkBoxTBReplace.Name = "checkBoxTBReplace";
             this.checkBoxTBReplace.Size = new System.Drawing.Size(55, 17);
             this.checkBoxTBReplace.TabIndex = 16;
@@ -5483,7 +5490,7 @@
             // labelTBFind
             // 
             this.labelTBFind.AutoSize = true;
-            this.labelTBFind.Location = new System.Drawing.Point(425, 22);
+            this.labelTBFind.Location = new System.Drawing.Point(503, 22);
             this.labelTBFind.Name = "labelTBFind";
             this.labelTBFind.Size = new System.Drawing.Size(27, 13);
             this.labelTBFind.TabIndex = 15;
@@ -5491,7 +5498,7 @@
             // 
             // pictureBoxTBFind
             // 
-            this.pictureBoxTBFind.Location = new System.Drawing.Point(423, 41);
+            this.pictureBoxTBFind.Location = new System.Drawing.Point(501, 41);
             this.pictureBoxTBFind.Name = "pictureBoxTBFind";
             this.pictureBoxTBFind.Size = new System.Drawing.Size(32, 32);
             this.pictureBoxTBFind.TabIndex = 14;
@@ -5500,7 +5507,7 @@
             // checkBoxTBFind
             // 
             this.checkBoxTBFind.AutoSize = true;
-            this.checkBoxTBFind.Location = new System.Drawing.Point(426, 81);
+            this.checkBoxTBFind.Location = new System.Drawing.Point(504, 81);
             this.checkBoxTBFind.Name = "checkBoxTBFind";
             this.checkBoxTBFind.Size = new System.Drawing.Size(55, 17);
             this.checkBoxTBFind.TabIndex = 13;
@@ -5510,7 +5517,7 @@
             // labelTBSaveAs
             // 
             this.labelTBSaveAs.AutoSize = true;
-            this.labelTBSaveAs.Location = new System.Drawing.Point(316, 22);
+            this.labelTBSaveAs.Location = new System.Drawing.Point(394, 22);
             this.labelTBSaveAs.Name = "labelTBSaveAs";
             this.labelTBSaveAs.Size = new System.Drawing.Size(45, 13);
             this.labelTBSaveAs.TabIndex = 12;
@@ -5518,7 +5525,7 @@
             // 
             // pictureBoxTBSaveAs
             // 
-            this.pictureBoxTBSaveAs.Location = new System.Drawing.Point(322, 41);
+            this.pictureBoxTBSaveAs.Location = new System.Drawing.Point(400, 41);
             this.pictureBoxTBSaveAs.Name = "pictureBoxTBSaveAs";
             this.pictureBoxTBSaveAs.Size = new System.Drawing.Size(32, 32);
             this.pictureBoxTBSaveAs.TabIndex = 11;
@@ -5527,7 +5534,7 @@
             // checkBoxTBSaveAs
             // 
             this.checkBoxTBSaveAs.AutoSize = true;
-            this.checkBoxTBSaveAs.Location = new System.Drawing.Point(325, 81);
+            this.checkBoxTBSaveAs.Location = new System.Drawing.Point(403, 81);
             this.checkBoxTBSaveAs.Name = "checkBoxTBSaveAs";
             this.checkBoxTBSaveAs.Size = new System.Drawing.Size(55, 17);
             this.checkBoxTBSaveAs.TabIndex = 10;
@@ -5537,7 +5544,7 @@
             // labelTBSave
             // 
             this.labelTBSave.AutoSize = true;
-            this.labelTBSave.Location = new System.Drawing.Point(225, 22);
+            this.labelTBSave.Location = new System.Drawing.Point(303, 22);
             this.labelTBSave.Name = "labelTBSave";
             this.labelTBSave.Size = new System.Drawing.Size(31, 13);
             this.labelTBSave.TabIndex = 9;
@@ -5545,7 +5552,7 @@
             // 
             // pictureBoxTBSave
             // 
-            this.pictureBoxTBSave.Location = new System.Drawing.Point(224, 41);
+            this.pictureBoxTBSave.Location = new System.Drawing.Point(302, 41);
             this.pictureBoxTBSave.Name = "pictureBoxTBSave";
             this.pictureBoxTBSave.Size = new System.Drawing.Size(32, 32);
             this.pictureBoxTBSave.TabIndex = 8;
@@ -5554,7 +5561,7 @@
             // checkBoxTBSave
             // 
             this.checkBoxTBSave.AutoSize = true;
-            this.checkBoxTBSave.Location = new System.Drawing.Point(227, 81);
+            this.checkBoxTBSave.Location = new System.Drawing.Point(305, 81);
             this.checkBoxTBSave.Name = "checkBoxTBSave";
             this.checkBoxTBSave.Size = new System.Drawing.Size(55, 17);
             this.checkBoxTBSave.TabIndex = 7;
@@ -5580,13 +5587,13 @@
             // 
             // checkBoxTBpen
             // 
-            this.checkBoxTBpen.AutoSize = true;
-            this.checkBoxTBpen.Location = new System.Drawing.Point(126, 81);
-            this.checkBoxTBpen.Name = "checkBoxTBpen";
-            this.checkBoxTBpen.Size = new System.Drawing.Size(55, 17);
-            this.checkBoxTBpen.TabIndex = 4;
-            this.checkBoxTBpen.Text = "Visible";
-            this.checkBoxTBpen.UseVisualStyleBackColor = true;
+            this.checkBoxTBOpen.AutoSize = true;
+            this.checkBoxTBOpen.Location = new System.Drawing.Point(126, 81);
+            this.checkBoxTBOpen.Name = "checkBoxTBOpen";
+            this.checkBoxTBOpen.Size = new System.Drawing.Size(55, 17);
+            this.checkBoxTBOpen.TabIndex = 4;
+            this.checkBoxTBOpen.Text = "Visible";
+            this.checkBoxTBOpen.UseVisualStyleBackColor = true;
             // 
             // labelTBNew
             // 
@@ -6981,11 +6988,39 @@
             this.label5.Size = new System.Drawing.Size(0, 13);
             this.label5.TabIndex = 25;
             // 
+            // labelTBOpenVideo
+            // 
+            this.labelTBOpenVideo.AutoSize = true;
+            this.labelTBOpenVideo.Location = new System.Drawing.Point(213, 22);
+            this.labelTBOpenVideo.Name = "labelTBOpenVideo";
+            this.labelTBOpenVideo.Size = new System.Drawing.Size(33, 13);
+            this.labelTBOpenVideo.TabIndex = 63;
+            this.labelTBOpenVideo.Text = "Open";
+            // 
+            // pictureBoxTBOpenVideo
+            // 
+            this.pictureBoxTBOpenVideo.Location = new System.Drawing.Point(212, 41);
+            this.pictureBoxTBOpenVideo.Name = "pictureBoxTBOpenVideo";
+            this.pictureBoxTBOpenVideo.Size = new System.Drawing.Size(32, 32);
+            this.pictureBoxTBOpenVideo.TabIndex = 62;
+            this.pictureBoxTBOpenVideo.TabStop = false;
+            // 
+            // checkBoxTBpenVideo
+            // 
+            this.checkBoxTBOpenVideo.AutoSize = true;
+            this.checkBoxTBOpenVideo.Location = new System.Drawing.Point(215, 81);
+            this.checkBoxTBOpenVideo.Name = "checkBoxTBOpenVideo";
+            this.checkBoxTBOpenVideo.Size = new System.Drawing.Size(55, 17);
+            this.checkBoxTBOpenVideo.TabIndex = 61;
+            this.checkBoxTBOpenVideo.Text = "Visible";
+            this.checkBoxTBOpenVideo.UseVisualStyleBackColor = true;
+            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1092, 574);
+            this.Controls.Add(this.panelToolBar);
             this.Controls.Add(this.panelAutoTranslate);
             this.Controls.Add(this.panelShortcuts);
             this.Controls.Add(this.panelVideoPlayer);
@@ -6996,7 +7031,6 @@
             this.Controls.Add(this.panelFont);
             this.Controls.Add(this.panelSubtitleFormats);
             this.Controls.Add(this.panelWaveform);
-            this.Controls.Add(this.panelToolBar);
             this.Controls.Add(this.panelFileTypeAssociations);
             this.Controls.Add(this.panelSyntaxColoring);
             this.Controls.Add(this.listBoxSection);
@@ -7136,6 +7170,7 @@
             this.groupBoxNllbServe.PerformLayout();
             this.groupBoxNllbApi.ResumeLayout(false);
             this.groupBoxNllbApi.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxTBOpenVideo)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -7171,7 +7206,7 @@
         private System.Windows.Forms.CheckBox checkBoxTBSave;
         private System.Windows.Forms.Label labelTBOpen;
         private System.Windows.Forms.PictureBox pictureBoxTBOpen;
-        private System.Windows.Forms.CheckBox checkBoxTBpen;
+        private System.Windows.Forms.CheckBox checkBoxTBOpen;
         private System.Windows.Forms.Label labelTBNew;
         private System.Windows.Forms.Label labelTBHelp;
         private System.Windows.Forms.PictureBox pictureBoxTBHelp;
@@ -7617,5 +7652,8 @@
         private Controls.NikseComboBox nikseComboBoxChatGptModel;
         private System.Windows.Forms.Label labelShortcutsFilter;
         private Controls.NikseComboBox nikseComboBoxShortcutsFilter;
+        private System.Windows.Forms.Label labelTBOpenVideo;
+        private System.Windows.Forms.PictureBox pictureBoxTBOpenVideo;
+        private System.Windows.Forms.CheckBox checkBoxTBOpenVideo;
     }
 }

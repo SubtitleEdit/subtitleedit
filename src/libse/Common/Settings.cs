@@ -1337,6 +1337,7 @@ $HorzAlign          =   Center
         public string CurrentProfile { get; set; }
         public bool ShowToolbarNew { get; set; }
         public bool ShowToolbarOpen { get; set; }
+        public bool ShowToolbarOpenVideo { get; set; }
         public bool ShowToolbarSave { get; set; }
         public bool ShowToolbarSaveAs { get; set; }
         public bool ShowToolbarFind { get; set; }
@@ -3547,6 +3548,12 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.General.ShowToolbarOpen = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("ShowToolbarOpenVideo");
+            if (subNode != null)
+            {
+                settings.General.ShowToolbarOpenVideo = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
             subNode = node.SelectSingleNode("ShowToolbarSave");
@@ -11512,6 +11519,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("CurrentProfile", settings.General.CurrentProfile);
                 textWriter.WriteElementString("ShowToolbarNew", settings.General.ShowToolbarNew.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ShowToolbarOpen", settings.General.ShowToolbarOpen.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ShowToolbarOpenVideo", settings.General.ShowToolbarOpenVideo.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ShowToolbarSave", settings.General.ShowToolbarSave.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ShowToolbarSaveAs", settings.General.ShowToolbarSaveAs.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ShowToolbarFind", settings.General.ShowToolbarFind.ToString(CultureInfo.InvariantCulture));

@@ -145,7 +145,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             listBoxSection.SelectedIndex = GeneralSection;
 
             checkBoxToolbarNew.Checked = gs.ShowToolbarNew;
-            checkBoxTBpen.Checked = gs.ShowToolbarOpen;
+            checkBoxTBOpen.Checked = gs.ShowToolbarOpen;
             checkBoxTBSave.Checked = gs.ShowToolbarSave;
             checkBoxTBSaveAs.Checked = gs.ShowToolbarSaveAs;
             checkBoxTBFind.Checked = gs.ShowToolbarFind;
@@ -421,7 +421,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             labelTBHelp.Text = language.Help;
             labelToolbarIconTheme.Text = language.Theme;
             checkBoxToolbarNew.Text = LanguageSettings.Current.General.Visible;
-            checkBoxTBpen.Text = LanguageSettings.Current.General.Visible;
+            checkBoxTBOpen.Text = LanguageSettings.Current.General.Visible;
             checkBoxTBSave.Text = LanguageSettings.Current.General.Visible;
             checkBoxTBSaveAs.Text = LanguageSettings.Current.General.Visible;
             checkBoxTBFind.Text = LanguageSettings.Current.General.Visible;
@@ -443,11 +443,17 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
             labelTBOpen.Left = Math.Max(labelTBNew.Right, checkBoxToolbarNew.Right) + 18;
             pictureBoxTBOpen.Left = labelTBOpen.Left;
-            checkBoxTBpen.Left = labelTBOpen.Left;
-            checkBoxTBpen.TabIndex = tbTabIndex;
+            checkBoxTBOpen.Left = labelTBOpen.Left;
+            checkBoxTBOpen.TabIndex = tbTabIndex;
             tbTabIndex++;
 
-            labelTBSave.Left = Math.Max(labelTBOpen.Right, checkBoxTBpen.Right) + 18;
+            labelTBOpenVideo.Left = Math.Max(labelTBOpen.Right, checkBoxTBOpen.Right) + 18;
+            pictureBoxTBOpenVideo.Left = labelTBSave.Left;
+            checkBoxTBOpenVideo.Left = labelTBSave.Left;
+            checkBoxTBOpenVideo.TabIndex = tbTabIndex;
+            tbTabIndex++;
+
+            labelTBSave.Left = Math.Max(labelTBOpenVideo.Right, checkBoxTBOpenVideo.Right) + 18;
             pictureBoxTBSave.Left = labelTBSave.Left;
             checkBoxTBSave.Left = labelTBSave.Left;
             checkBoxTBSave.TabIndex = tbTabIndex;
@@ -2069,7 +2075,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             }
         }
 
-        public void Initialize(Icon icon, Image newFile, Image openFile, Image saveFile, Image saveFileAs, Image find, Image replace, Image fixCommonErrors, Image removeTextForHi,
+        public void Initialize(Icon icon, Image newFile, Image openFile, Image openVideo, Image saveFile, Image saveFileAs, Image find, Image replace, Image fixCommonErrors, Image removeTextForHi,
                                Image visualSync, Image burnIn, Image spellCheck, Image netflixGlyphCheck, Image beautifyTimeCodes, Image settings, Image help, Image toggleSourceView)
         {
             Icon = (Icon)icon.Clone();
@@ -2098,7 +2104,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             var gs = Configuration.Settings.General;
 
             gs.ShowToolbarNew = checkBoxToolbarNew.Checked;
-            gs.ShowToolbarOpen = checkBoxTBpen.Checked;
+            gs.ShowToolbarOpen = checkBoxTBOpen.Checked;
             gs.ShowToolbarSave = checkBoxTBSave.Checked;
             gs.ShowToolbarSaveAs = checkBoxTBSaveAs.Checked;
             gs.ShowToolbarFind = checkBoxTBFind.Checked;
