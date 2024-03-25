@@ -43,8 +43,12 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             this.tabPageOpenAI = new System.Windows.Forms.TabPage();
             this.textBoxOpenAI = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.tabPageFasterWhisper = new System.Windows.Forms.TabPage();
+            this.buttonStandard = new System.Windows.Forms.Button();
+            this.buttonSentence = new System.Windows.Forms.Button();
+            this.buttonSingleWords = new System.Windows.Forms.Button();
             this.textBoxPurfviewFasterWhisper = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.comboBoxWhisperExtra = new Nikse.SubtitleEdit.Controls.NikseComboBox();
+            this.button1 = new System.Windows.Forms.Button();
             this.tabControlCommandLineHelp.SuspendLayout();
             this.TabPageCPP.SuspendLayout();
             this.tabPageConstMe.SuspendLayout();
@@ -191,6 +195,10 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             // 
             // tabPageFasterWhisper
             // 
+            this.tabPageFasterWhisper.Controls.Add(this.button1);
+            this.tabPageFasterWhisper.Controls.Add(this.buttonStandard);
+            this.tabPageFasterWhisper.Controls.Add(this.buttonSentence);
+            this.tabPageFasterWhisper.Controls.Add(this.buttonSingleWords);
             this.tabPageFasterWhisper.Controls.Add(this.textBoxPurfviewFasterWhisper);
             this.tabPageFasterWhisper.Location = new System.Drawing.Point(4, 22);
             this.tabPageFasterWhisper.Name = "tabPageFasterWhisper";
@@ -200,9 +208,44 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             this.tabPageFasterWhisper.Text = "Faster Whisper";
             this.tabPageFasterWhisper.UseVisualStyleBackColor = true;
             // 
+            // buttonStandard
+            // 
+            this.buttonStandard.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonStandard.Location = new System.Drawing.Point(311, 390);
+            this.buttonStandard.Name = "buttonStandard";
+            this.buttonStandard.Size = new System.Drawing.Size(148, 23);
+            this.buttonStandard.TabIndex = 6;
+            this.buttonStandard.Text = "Standard";
+            this.buttonStandard.UseVisualStyleBackColor = true;
+            this.buttonStandard.Click += new System.EventHandler(this.buttonStandard_Click);
+            // 
+            // buttonSentence
+            // 
+            this.buttonSentence.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonSentence.Location = new System.Drawing.Point(157, 390);
+            this.buttonSentence.Name = "buttonSentence";
+            this.buttonSentence.Size = new System.Drawing.Size(148, 23);
+            this.buttonSentence.TabIndex = 5;
+            this.buttonSentence.Text = "Sentence";
+            this.buttonSentence.UseVisualStyleBackColor = true;
+            this.buttonSentence.Click += new System.EventHandler(this.buttonSentence_Click);
+            // 
+            // buttonSingleWords
+            // 
+            this.buttonSingleWords.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonSingleWords.Location = new System.Drawing.Point(3, 390);
+            this.buttonSingleWords.Name = "buttonSingleWords";
+            this.buttonSingleWords.Size = new System.Drawing.Size(148, 23);
+            this.buttonSingleWords.TabIndex = 4;
+            this.buttonSingleWords.Text = "Single word";
+            this.buttonSingleWords.UseVisualStyleBackColor = true;
+            this.buttonSingleWords.Click += new System.EventHandler(this.buttonSingleWords_Click);
+            // 
             // textBoxPurfviewFasterWhisper
             // 
-            this.textBoxPurfviewFasterWhisper.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textBoxPurfviewFasterWhisper.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxPurfviewFasterWhisper.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxPurfviewFasterWhisper.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBoxPurfviewFasterWhisper.Location = new System.Drawing.Point(3, 3);
@@ -210,7 +253,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             this.textBoxPurfviewFasterWhisper.Name = "textBoxPurfviewFasterWhisper";
             this.textBoxPurfviewFasterWhisper.ReadOnly = true;
             this.textBoxPurfviewFasterWhisper.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBoxPurfviewFasterWhisper.Size = new System.Drawing.Size(824, 413);
+            this.textBoxPurfviewFasterWhisper.Size = new System.Drawing.Size(824, 381);
             this.textBoxPurfviewFasterWhisper.TabIndex = 3;
             this.textBoxPurfviewFasterWhisper.Text = resources.GetString("textBoxPurfviewFasterWhisper.Text");
             this.textBoxPurfviewFasterWhisper.WordWrap = false;
@@ -239,6 +282,17 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             this.comboBoxWhisperExtra.TabStop = false;
             this.comboBoxWhisperExtra.UsePopupWindow = false;
             this.comboBoxWhisperExtra.KeyDown += new System.Windows.Forms.KeyEventHandler(this.comboBoxWhisperExtra_KeyDown);
+            // 
+            // button1
+            // 
+            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.button1.Location = new System.Drawing.Point(465, 390);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(180, 23);
+            this.button1.TabIndex = 7;
+            this.button1.Text = "Highlight current word";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // WhisperAdvanced
             // 
@@ -290,5 +344,9 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxOpenAI;
         private System.Windows.Forms.TabPage tabPageFasterWhisper;
         private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxPurfviewFasterWhisper;
+        private Button buttonSingleWords;
+        private Button buttonStandard;
+        private Button buttonSentence;
+        private Button button1;
     }
 }
