@@ -118,7 +118,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
         private void buttonSingleWords_Click(object sender, EventArgs e)
         {
-            comboBoxWhisperExtra.Text = "--one_word 1";
+            comboBoxWhisperExtra.Text = "--one_word 2";
         }
 
         private void buttonSentence_Click(object sender, EventArgs e)
@@ -134,6 +134,11 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         private void button1_Click(object sender, EventArgs e)
         {
             comboBoxWhisperExtra.Text = "--highlight_words true";
+        }
+
+        private void buttonStandardAsia_Click(object sender, EventArgs e)
+        {
+            comboBoxWhisperExtra.Text = "--standard_asia";
         }
     }
 }

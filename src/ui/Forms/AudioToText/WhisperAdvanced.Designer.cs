@@ -43,12 +43,13 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             this.tabPageOpenAI = new System.Windows.Forms.TabPage();
             this.textBoxOpenAI = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.tabPageFasterWhisper = new System.Windows.Forms.TabPage();
+            this.button1 = new System.Windows.Forms.Button();
             this.buttonStandard = new System.Windows.Forms.Button();
             this.buttonSentence = new System.Windows.Forms.Button();
             this.buttonSingleWords = new System.Windows.Forms.Button();
             this.textBoxPurfviewFasterWhisper = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.comboBoxWhisperExtra = new Nikse.SubtitleEdit.Controls.NikseComboBox();
-            this.button1 = new System.Windows.Forms.Button();
+            this.buttonStandardAsia = new System.Windows.Forms.Button();
             this.tabControlCommandLineHelp.SuspendLayout();
             this.TabPageCPP.SuspendLayout();
             this.tabPageConstMe.SuspendLayout();
@@ -195,6 +196,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             // 
             // tabPageFasterWhisper
             // 
+            this.tabPageFasterWhisper.Controls.Add(this.buttonStandardAsia);
             this.tabPageFasterWhisper.Controls.Add(this.button1);
             this.tabPageFasterWhisper.Controls.Add(this.buttonStandard);
             this.tabPageFasterWhisper.Controls.Add(this.buttonSentence);
@@ -208,13 +210,24 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             this.tabPageFasterWhisper.Text = "Faster Whisper";
             this.tabPageFasterWhisper.UseVisualStyleBackColor = true;
             // 
+            // button1
+            // 
+            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.button1.Location = new System.Drawing.Point(622, 390);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(180, 23);
+            this.button1.TabIndex = 18;
+            this.button1.Text = "Highlight current word";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // buttonStandard
             // 
             this.buttonStandard.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonStandard.Location = new System.Drawing.Point(311, 390);
+            this.buttonStandard.Location = new System.Drawing.Point(6, 390);
             this.buttonStandard.Name = "buttonStandard";
             this.buttonStandard.Size = new System.Drawing.Size(148, 23);
-            this.buttonStandard.TabIndex = 6;
+            this.buttonStandard.TabIndex = 10;
             this.buttonStandard.Text = "Standard";
             this.buttonStandard.UseVisualStyleBackColor = true;
             this.buttonStandard.Click += new System.EventHandler(this.buttonStandard_Click);
@@ -222,10 +235,10 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             // buttonSentence
             // 
             this.buttonSentence.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonSentence.Location = new System.Drawing.Point(157, 390);
+            this.buttonSentence.Location = new System.Drawing.Point(314, 390);
             this.buttonSentence.Name = "buttonSentence";
             this.buttonSentence.Size = new System.Drawing.Size(148, 23);
-            this.buttonSentence.TabIndex = 5;
+            this.buttonSentence.TabIndex = 14;
             this.buttonSentence.Text = "Sentence";
             this.buttonSentence.UseVisualStyleBackColor = true;
             this.buttonSentence.Click += new System.EventHandler(this.buttonSentence_Click);
@@ -233,10 +246,10 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             // buttonSingleWords
             // 
             this.buttonSingleWords.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonSingleWords.Location = new System.Drawing.Point(3, 390);
+            this.buttonSingleWords.Location = new System.Drawing.Point(468, 390);
             this.buttonSingleWords.Name = "buttonSingleWords";
             this.buttonSingleWords.Size = new System.Drawing.Size(148, 23);
-            this.buttonSingleWords.TabIndex = 4;
+            this.buttonSingleWords.TabIndex = 16;
             this.buttonSingleWords.Text = "Single word";
             this.buttonSingleWords.UseVisualStyleBackColor = true;
             this.buttonSingleWords.Click += new System.EventHandler(this.buttonSingleWords_Click);
@@ -283,16 +296,16 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             this.comboBoxWhisperExtra.UsePopupWindow = false;
             this.comboBoxWhisperExtra.KeyDown += new System.Windows.Forms.KeyEventHandler(this.comboBoxWhisperExtra_KeyDown);
             // 
-            // button1
+            // buttonStandardAsia
             // 
-            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.button1.Location = new System.Drawing.Point(465, 390);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(180, 23);
-            this.button1.TabIndex = 7;
-            this.button1.Text = "Highlight current word";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.buttonStandardAsia.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonStandardAsia.Location = new System.Drawing.Point(160, 390);
+            this.buttonStandardAsia.Name = "buttonStandardAsia";
+            this.buttonStandardAsia.Size = new System.Drawing.Size(148, 23);
+            this.buttonStandardAsia.TabIndex = 12;
+            this.buttonStandardAsia.Text = "Standard Asia";
+            this.buttonStandardAsia.UseVisualStyleBackColor = true;
+            this.buttonStandardAsia.Click += new System.EventHandler(this.buttonStandardAsia_Click);
             // 
             // WhisperAdvanced
             // 
@@ -348,5 +361,6 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         private Button buttonStandard;
         private Button buttonSentence;
         private Button button1;
+        private Button buttonStandardAsia;
     }
 }
