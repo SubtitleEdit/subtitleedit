@@ -1860,6 +1860,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             toolStripButtonFileNew.ToolTipText = _language.Menu.ToolBar.New;
             toolStripButtonFileOpen.ToolTipText = _language.Menu.ToolBar.Open;
+            toolStripButtonVideoOpen.ToolTipText = _language.Menu.Video.OpenVideo.Replace("&", string.Empty);
             toolStripButtonSave.ToolTipText = _language.Menu.ToolBar.Save;
             toolStripButtonSaveAs.ToolTipText = _language.Menu.ToolBar.SaveAs;
             toolStripButtonFind.ToolTipText = _language.Menu.ToolBar.Find;
@@ -5647,7 +5648,7 @@ namespace Nikse.SubtitleEdit.Forms
             var oldDarkThemeShowListViewGridLines = Configuration.Settings.General.DarkThemeShowListViewGridLines;
             using (var settings = new Options.Settings())
             {
-                settings.Initialize(Icon, toolStripButtonFileNew.Image, toolStripButtonFileOpen.Image, toolStripButtonSave.Image, toolStripButtonSaveAs.Image, toolStripButtonFind.Image,
+                settings.Initialize(Icon, toolStripButtonFileNew.Image, toolStripButtonFileOpen.Image, toolStripButtonVideoOpen.Image, toolStripButtonSave.Image, toolStripButtonSaveAs.Image, toolStripButtonFind.Image,
                     toolStripButtonReplace.Image, toolStripButtonFixCommonErrors.Image, toolStripButtonRemoveTextForHi.Image, toolStripButtonVisualSync.Image, toolStripButtonBurnIn.Image,
                     toolStripButtonSpellCheck.Image, toolStripButtonNetflixQualityCheck.Image, toolStripButtonBeautifyTimeCodes.Image, toolStripButtonSettings.Image, toolStripButtonHelp.Image,
                     toolStripButtonSourceView.Image);
@@ -6124,6 +6125,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 TryLoadIcon(toolStripButtonFileNew, "New");
                 TryLoadIcon(toolStripButtonFileOpen, "Open");
+                TryLoadIcon(toolStripButtonVideoOpen, "OpenVideo");
                 TryLoadIcon(toolStripButtonSave, "Save");
                 TryLoadIcon(toolStripButtonSaveAs, "SaveAs");
                 TryLoadIcon(toolStripButtonFind, "Find");
@@ -6160,6 +6162,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             toolStripButtonFileNew.Visible = gs.ShowToolbarNew;
             toolStripButtonFileOpen.Visible = gs.ShowToolbarOpen;
+            toolStripButtonVideoOpen.Visible = gs.ShowToolbarOpenVideo;
             toolStripButtonSave.Visible = gs.ShowToolbarSave;
             toolStripButtonSaveAs.Visible = gs.ShowToolbarSaveAs;
             toolStripButtonFind.Visible = gs.ShowToolbarFind;
@@ -6185,7 +6188,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripSeparatorFixSyncSpell.Visible = gs.ShowToolbarFixCommonErrors || gs.ShowToolbarVisualSync || gs.ShowToolbarSpellCheck || gs.ShowToolbarSettings;
             toolStripSeparatorHelp.Visible = gs.ShowToolbarHelp;
 
-            toolStrip1.Visible = gs.ShowToolbarNew || gs.ShowToolbarOpen || gs.ShowToolbarSave || gs.ShowToolbarSaveAs || gs.ShowToolbarFind || gs.ShowToolbarReplace ||
+            toolStrip1.Visible = gs.ShowToolbarNew || gs.ShowToolbarOpen || gs.ShowToolbarOpenVideo || gs.ShowToolbarSave || gs.ShowToolbarSaveAs || gs.ShowToolbarFind || gs.ShowToolbarReplace ||
                                  gs.ShowToolbarFixCommonErrors || gs.ShowToolbarVisualSync || gs.ShowToolbarSpellCheck || gs.ShowToolbarNetflixGlyphCheck ||
                                  gs.ShowToolbarBeautifyTimeCodes || gs.ShowToolbarSettings || gs.ShowToolbarHelp;
 
@@ -36609,6 +36612,11 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             MessageBox.Show(sb.ToString() + sbTrackInfo.ToString());
+        }
+
+        private void ToolStripButtonVideoOpenClick(object sender, EventArgs e)
+        {
+            OpenVideoDialog();
         }
     }
 }

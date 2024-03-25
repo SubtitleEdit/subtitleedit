@@ -2,15 +2,17 @@
 
 4.0.5 (xth May 2024) BETA
 * NEW:
+   * Add "Open video" toolbar button/image - thx jmaraujouy/Cyberyoda1411
    * Add support for S_HDMV/TEXTST in MKV in batch/cmd-line - thx ipsi
    * Add French interjections
+   * Add a few quick setting buttons for Purfview's Faster Whisper Advanced
 * IMPROVED:
    * Make "Timed Text IMSC 1.1" more compatible
    * Improve EBU STL preview regarding box - thx BlueMeow7
    * Update libmpv to 2024-03-17
    * Update yt-dlp to 2024-03-10
 * FIXED:
-   * Fix for Whisper Post-processing - thx Purfview/cvrle77
+   * Fix for Whisper post-processing - thx Purfview/cvrle77
    * Fix crash in "Fix common errors" - thx Joe
 
 
