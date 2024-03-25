@@ -115,5 +115,25 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             comboBoxWhisperExtra.Focus();
             comboBoxWhisperExtra.SelectAll();
         }
+
+        private void buttonSingleWords_Click(object sender, EventArgs e)
+        {
+            comboBoxWhisperExtra.Text = "--one_word 1";
+        }
+
+        private void buttonSentence_Click(object sender, EventArgs e)
+        {
+            comboBoxWhisperExtra.Text = "--sentence";
+        }
+
+        private void buttonStandard_Click(object sender, EventArgs e)
+        {
+            comboBoxWhisperExtra.Text = "--standard";
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            comboBoxWhisperExtra.Text = "--highlight_words true";
+        }
     }
 }
