@@ -32,7 +32,7 @@ namespace Nikse.SubtitleEdit.Controls
         // ReSharper disable once InconsistentNaming
         public new event EventHandler TextChanged;
 
-        private readonly TextBox _textBox;
+        private readonly InnerTextBox _textBox;
 
         private NikseComboBoxPopUp _popUp;
 
@@ -426,7 +426,7 @@ namespace Nikse.SubtitleEdit.Controls
         public NikseComboBox()
         {
             _loading = true;
-            _textBox = new TextBox();
+            _textBox = new InnerTextBox(this);
             _textBox.Visible = false;
             _items = new NikseComboBoxCollection(this);
 
@@ -1335,18 +1335,29 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        // [SRCategory("CatBehavior")]
-        [DefaultValue(null)]
-        // [SRDescription("ControlContextMenuDescr")]
-        public override ContextMenuStrip ContextMenuStrip
+        private class InnerTextBox : TextBox
         {
-            get => base.ContextMenuStrip;
-            set
+            private readonly NikseComboBox _owner;
+
+            public InnerTextBox(NikseComboBox owner)
             {
-                // once the ContextMenuStrip is set for this control (combobox) also set it to the underlying textbox
-                base.ContextMenuStrip = value;
-                _textBox.ContextMenuStrip = value;
+                _owner = owner;
             }
+            
+            protected override void WndProc(ref Message m)
+            {
+                if (m.Msg == 0x0204) // WM_RBUTTONDOWN
+                {
+                    var x = _owner.Location.X + (short)m.LParam.ToInt32();
+                    var y = _owner.Location.Y + (short)m.LParam.ToInt32() >> 16;
+                    _owner.ContextMenuStrip?.Show(_owner, new Point(x, y));
+                }
+                else // this "else" is important as we don't want to show the OS default context menu
+                {
+                    base.WndProc(ref m);
+                }
+            }
+            
         }
     }
 }
