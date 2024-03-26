@@ -1457,6 +1457,7 @@
     <Word from="Organizuj" to="Organiziraj" />
     <Word from="organizuju" to="organiziraju" />
     <Word from="Organizuju" to="Organiziraju" />
+    <Word from="orije" to="prije" />
     <Word from="ortak" to="partner" />
     <Word from="ortaku" to="partneru" />
     <Word from="ortakluk" to="partnerstvo" />
@@ -5098,7 +5099,7 @@
     <RegEx find="(?&lt;![Hh])abs" replaceWith="aps" />
     <RegEx find="acel" replaceWith="acjel" />
     <RegEx find="adji" replaceWith="ađi" />
-    <RegEx find="adje" replaceWith="ađe" />
+    <RegEx find="adje(?!v)" replaceWith="ađe" />
     <RegEx find="([aeiou])dk" replaceWith="$1tk" />
     <RegEx find="ahd" replaceWith="ajd" />
     <RegEx find="(?&lt;![ml])a([blcrnz])ić" replaceWith="a$1it ć" />
@@ -5525,7 +5526,7 @@
     <RegEx find="terijum" replaceWith="terij" />
     <RegEx find="tešn" replaceWith="tješn" />
     <RegEx find="teud" replaceWith="trud" />
-    <RegEx find="thel" replaceWith="tjel" />
+    <RegEx find="the([ld])" replaceWith="tje$1" />
     <RegEx find="tićn" replaceWith="tičn" />
     <!--eksploatira-->
     <RegEx find="tisal" replaceWith="tiral" />
