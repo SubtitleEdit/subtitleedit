@@ -7,6 +7,9 @@
    * Add French interjections
    * Add a few quick setting buttons for Purfview's Faster Whisper Advanced
 * IMPROVED:
+   * Update German translation - thx Netspark
+   * Update Spanish AR & MX translation - thx jmaraujouy
+   * Update Brazilian Portuguese translation - thx igorruckert
    * Make "Timed Text IMSC 1.1" more compatible
    * Improve EBU STL preview regarding box - thx BlueMeow7
    * Update libmpv to 2024-03-17
@@ -14,6 +17,7 @@
 * FIXED:
    * Fix for Whisper post-processing - thx Purfview/cvrle77
    * Fix crash in "Fix common errors" - thx Joe
+   * Fix issue with NikseCombobox and ContextMenuStrip - thx ivandrofly
 
 
 4.0.4 (17th March 2024)
