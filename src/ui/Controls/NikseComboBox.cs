@@ -226,22 +226,9 @@ namespace Nikse.SubtitleEdit.Controls
 
         public override string Text
         {
-            get
-            {
-                if (_textBox == null)
-                {
-                    return string.Empty;
-                }
-
-                return GetValue(_textBox.Text);
-            }
+            get => GetValue(_textBox.Text);
             set
             {
-                if (_textBox == null)
-                {
-                    return;
-                }
-
                 if (HasValueChanged(_textBox.Text, value))
                 {
                     _textBox.Text = value;
@@ -252,22 +239,9 @@ namespace Nikse.SubtitleEdit.Controls
 
         public string SelectedText
         {
-            get
-            {
-                if (_textBox == null)
-                {
-                    return string.Empty;
-                }
-
-                return GetValue(_textBox.SelectedText);
-            }
+            get => GetValue(_textBox.SelectedText);
             set
             {
-                if (_textBox == null)
-                {
-                    return;
-                }
-
                 if (HasValueChanged(_textBox.SelectedText, value))
                 {
                     _textBox.SelectedText = value;
