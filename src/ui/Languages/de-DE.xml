@@ -10,6 +10,7 @@
     <Cancel>&amp;Abbrechen</Cancel>
     <Yes>Ja</Yes>
     <No>Nein</No>
+    <Close>Schließen</Close>
     <Apply>Auswahl</Apply>
     <ApplyTo>Anwenden auf</ApplyTo>
     <None>Aus</None>
@@ -406,6 +407,12 @@ Bitte klicken Sie auf "{0}", um zuerst Shotwechsel zu erzeugen oder zu importier
     <BatchAlignTimeCodes>Zeitstempel an Frame-Zeitstempel ausrichten</BatchAlignTimeCodes>
     <BatchUseExactTimeCodes>Verwende exakte Zeitstempel (wenn vorhanden)</BatchUseExactTimeCodes>
     <BatchSnapToShotChanges>Cues an Shotwechseln ausrichten (wenn verfügbar)</BatchSnapToShotChanges>
+    <UnfixableParagraphsTitle>Prüfe nicht vollständig verkettete Untertitel</UnfixableParagraphsTitle>
+    <UnfixableParagraphsInstructions>Einige Untertitel wurden nicht in Einklang mit Ihrem Proofil verkettet, wahrscheinlich aufgrund zu dicht verteilter Szenenwechsel (eventuell false positives). Sie sollten diese Ereignisse manuell prüfen, um sicherzustellen, daß Ihre Cues an die richtigen (echten) Szenenwechsel gebunden sind.</UnfixableParagraphsInstructions>
+    <UnfixableParagraphsColumnParagraphs>Zeilen
+</UnfixableParagraphsColumnParagraphs>
+    <UnfixableParagraphsColumnParagraphsFormat>#{0} – #{1}</UnfixableParagraphsColumnParagraphsFormat>
+    <UnfixableParagraphsColumnGap>Lücke (Frames)</UnfixableParagraphsColumnGap>
   </BeautifyTimeCodes>
   <BeautifyTimeCodesProfile>
     <Title>Profil anpassen</Title>
@@ -429,6 +436,7 @@ Bitte klicken Sie auf "{0}", um zuerst Shotwechsel zu erzeugen oder zu importier
     <Chaining>Verkettung</Chaining>
     <InCueOnShot>In der Cue bei Shotwechsel</InCueOnShot>
     <OutCueOnShot>Out-Cue bei Shotwechsel</OutCueOnShot>
+    <CheckGeneral>Generelle Regeln dennoch anwenden, auch wenn nicht betroffen</CheckGeneral>
     <MaxGap>Maximale Lücke:</MaxGap>
     <ShotChangeBehavior>Wenn ein Shotwechsel dazwischen ist:</ShotChangeBehavior>
     <DontChain>Nicht verketten</DontChain>
@@ -500,7 +508,7 @@ Wir nutzen den dem Bild innewohnenden Rhythmus.</CreateSimpleChainingToolTip>
     <BottomAlignSelectedLines>Ausgewählte Zeilen unten ausrichten (horizontale Position beibehalten)</BottomAlignSelectedLines>
     <ToggleForcedSelectedLines>„Erzwungen“ für ausgewählte Zeilen de-/aktivieren</ToggleForcedSelectedLines>
     <SelectForcedLines>Erzwungene Zeilen auswählen</SelectForcedLines>
-    <SelectNonForcedLines>Wähle nicht erzwungene Linien aus</SelectNonForcedLines>
+    <SelectNonForcedLines>Wähle nicht erzwungene Zeilen aus</SelectNonForcedLines>
     <SizeXY>Größe: {0}x{1}</SizeXY>
     <SetAspectRatio11>Seitenverhältnis 1:1 einstellen</SetAspectRatio11>
     <ChangeBrightnessTitle>Helligkeit anpassen</ChangeBrightnessTitle>
@@ -613,7 +621,7 @@ Wir nutzen den dem Bild innewohnenden Rhythmus.</CreateSimpleChainingToolTip>
     <Title>Farben in Dialog umwandeln</Title>
     <RemoveColorTags>Entferne Farbmarkierungen</RemoveColorTags>
     <AddNewLines>Jeden Bindestrich in eine neue Zeile platzieren</AddNewLines>
-    <ReBreakLines>Linien neu umbrechen</ReBreakLines>
+    <ReBreakLines>Zeilen neu umbrechen</ReBreakLines>
   </ConvertColorsToDialog>
   <DCinemaProperties>
     <Title>D-Cinema Eigenschaften (interop)</Title>
@@ -769,7 +777,7 @@ Wir nutzen den dem Bild innewohnenden Rhythmus.</CreateSimpleChainingToolTip>
     <FontFace>Schriftschnitt</FontFace>
     <FontFaceRegular>Normal</FontFaceRegular>
     <Alignment>Ausrichtung</Alignment>
-    <Baseline>Schriftlinie</Baseline>
+    <Baseline>SchriftZeile</Baseline>
   </ExportFcpXmlAdvanced>
   <ExportPngXml>
     <Title>BDN XML/PNG exportieren</Title>
@@ -892,7 +900,7 @@ Wir nutzen den dem Bild innewohnenden Rhythmus.</CreateSimpleChainingToolTip>
     <RemovedEmptyLineAtTop>Leere Zeilen am Anfang entfernen</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>Leere Zeilen am Ende entfernen</RemovedEmptyLineAtBottom>
     <RemovedEmptyLineInMiddle>Leere Zeilen in der Mitte entfernen</RemovedEmptyLineInMiddle>
-    <RemovedEmptyLinesUnusedLineBreaks>Entferne leere Zeilen/unbenutzte Zeilenumbrüche</RemovedEmptyLinesUnusedLineBreaks>
+    <RemovedEmptyLinesUnusedLineBreaks>Entferne leere Zeilen/nicht verwendete Zeilenumbrüche</RemovedEmptyLinesUnusedLineBreaks>
     <FixOverlappingDisplayTimes>Überlappende Anzeigezeiten korrigieren</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>Kurze Anzeigezeiten korrigieren</FixShortDisplayTimes>
     <FixLongDisplayTimes>Lange Anzeigezeiten korrigieren</FixLongDisplayTimes>
@@ -1087,6 +1095,7 @@ Wir nutzen den dem Bild innewohnenden Rhythmus.</CreateSimpleChainingToolTip>
     <XRequiresALocalWebServer>"{0}" benötigt einen lokal laufenden Webserver</XRequiresALocalWebServer>
     <XRequiresAnApiKey>"{0}" benötigt einen API-Schlüssel</XRequiresAnApiKey>
     <ReadMore>Mehr lesen?</ReadMore>
+    <Formality>Formalität</Formality>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
     <Title>Übersetzung Google gegen Microsoft</Title>
@@ -1331,6 +1340,7 @@ Wir nutzen den dem Bild innewohnenden Rhythmus.</CreateSimpleChainingToolTip>
         <CloseTranslation>Übersetzten Untertitel schließen</CloseTranslation>
         <OpenContainingFolder>Beinhaltenden Ordner öffnen</OpenContainingFolder>
         <Compare>&amp;Vergleichen...</Compare>
+        <VerifyCompleteness>Vollständigkeit prüfen...</VerifyCompleteness>
         <Statistics>Statisti&amp;k...</Statistics>
         <Plugins>Plugins...</Plugins>
         <ImportSubtitleFromVideoFile>Untertitel aus Videodatei...</ImportSubtitleFromVideoFile>
@@ -1534,7 +1544,7 @@ Wir nutzen den dem Bild innewohnenden Rhythmus.</CreateSimpleChainingToolTip>
         <Paste>Einfügen</Paste>
         <Delete>Löschen</Delete>
         <SplitLineAtCursorPosition>Zeile beim Cursor trennen</SplitLineAtCursorPosition>
-        <SplitLineAtCursorPositionAndAutoBr>Linie an Cursorposition teilen und automatisch umbrechen</SplitLineAtCursorPositionAndAutoBr>
+        <SplitLineAtCursorPositionAndAutoBr>Zeile an Cursorposition teilen und automatisch umbrechen</SplitLineAtCursorPositionAndAutoBr>
         <SplitLineAtCursorAndWaveformPosition>Zeile beim Cursor/Wellenform trennen</SplitLineAtCursorAndWaveformPosition>
         <AutoDurationCurrentLine>Auto Dauer (aktuelle Zeile)</AutoDurationCurrentLine>
         <SelectAll>Alle auswählen</SelectAll>
@@ -1559,7 +1569,7 @@ Wir nutzen den dem Bild innewohnenden Rhythmus.</CreateSimpleChainingToolTip>
         <MergeSelectedLinesAsDialog>Ausgewählte Texte als Dialog verbinden</MergeSelectedLinesAsDialog>
         <MergeWithLineBefore>Mit vorherigen Text verbinden</MergeWithLineBefore>
         <MergeWithLineAfter>Mit folgenden Text verbinden</MergeWithLineAfter>
-        <ExtendToLineBefore>Bis zur Linie davor verlängern</ExtendToLineBefore>
+        <ExtendToLineBefore>Bis zur Zeile davor verlängern</ExtendToLineBefore>
         <ExtendToLineAfter>Bis zur Zeile danach erweitern</ExtendToLineAfter>
         <RemoveFormatting>Formatierung entfernen</RemoveFormatting>
         <RemoveFormattingAll>Alle</RemoveFormattingAll>
@@ -1577,6 +1587,7 @@ Wir nutzen den dem Bild innewohnenden Rhythmus.</CreateSimpleChainingToolTip>
         <Subscript>Subskript</Subscript>
         <Alignment>Ausrichtung...</Alignment>
         <AutoBalanceSelectedLines>Ausgewählten Text ausbalancieren...</AutoBalanceSelectedLines>
+        <EvenlyDistributeSelectedLines>Ausgewählte Zeilen gleichmäßig verteilen (CPS)</EvenlyDistributeSelectedLines>
         <RemoveLineBreaksFromSelectedLines>Zeilenumbruch vom ausgewählten Text entfernen...</RemoveLineBreaksFromSelectedLines>
         <TypewriterEffect>Schreibmaschinen Effekt...</TypewriterEffect>
         <KaraokeEffect>Karaoke Effekt...</KaraokeEffect>
@@ -1861,6 +1872,8 @@ Wir nutzen den dem Bild innewohnenden Rhythmus.</CreateSimpleChainingToolTip>
     <SortedByX>Sortiert nach: {0}</SortedByX>
     <BeforeAutoBalanceSelectedLines>Vor Ausbalancieren der ausgewählten Texten</BeforeAutoBalanceSelectedLines>
     <NumberOfLinesAutoBalancedX>Ausbalancierte Texte: {0}</NumberOfLinesAutoBalancedX>
+    <BeforeEvenlyDistributeSelectedLines>Vor gleichmässigem Verteilen ausgewählter Zeilen</BeforeEvenlyDistributeSelectedLines>
+    <NumberOfLinesEvenlyDistributedX>Anzahl gleichmäßig verteilter Zeilen: {0}</NumberOfLinesEvenlyDistributedX>
     <BeforeRemoveLineBreaksInSelectedLines>Vor Entfernen von Zeilenumbrüchen aus ausgewählten Texten</BeforeRemoveLineBreaksInSelectedLines>
     <NumberOfWithRemovedLineBreakX>Texte mit entfernten Zeilenumbruch: {0}</NumberOfWithRemovedLineBreakX>
     <BeforeMultipleReplace>Vor mehrfachem Ersetzen</BeforeMultipleReplace>
@@ -2583,7 +2596,7 @@ Wir nutzen den dem Bild innewohnenden Rhythmus.</CreateSimpleChainingToolTip>
     <Automatic>Automatisch</Automatic>
     <DarkTheme>Dunkler Modus</DarkTheme>
     <DarkThemeEnabled>Dunklen Modus verwenden</DarkThemeEnabled>
-    <DarkThemeShowGridViewLines>Rasterlinien der Listenansicht anzeigen</DarkThemeShowGridViewLines>
+    <DarkThemeShowGridViewLines>RasterZeilen der Listenansicht anzeigen</DarkThemeShowGridViewLines>
     <GraphicsButtons>Grafikschaltflächen</GraphicsButtons>
     <UpdateShortcut>Änderung</UpdateShortcut>
     <FocusSetVideoPosition>Fokussiere gesetzte Videoposition</FocusSetVideoPosition>
@@ -2621,7 +2634,7 @@ Wir nutzen den dem Bild innewohnenden Rhythmus.</CreateSimpleChainingToolTip>
     <AdjustSetStartAndOffsetTheWholeSubtitle>LegeStartzeit fest, verschiebe den gesamten Untertitel</AdjustSetStartAndOffsetTheWholeSubtitle>
     <AdjustSetEndAndOffsetTheRest>Ende setzen, Rest verschieben</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Ende setzen, Rest verschieben und zum Nächsten</AdjustSetEndAndOffsetTheRestAndGoToNext>
-    <AdjustSnapStartToNextShotChange>Ausgewählte Linien beginnen beim nächsten Einstellungswechsel einrasten</AdjustSnapStartToNextShotChange>
+    <AdjustSnapStartToNextShotChange>Ausgewählte Zeilen beginnen beim nächsten Einstellungswechsel einrasten</AdjustSnapStartToNextShotChange>
     <AdjustSnapEndToPreviousShotChange>Ausgewählte Zeilen am Ende des vorherigen Einstellungswechsels ausrichten</AdjustSnapEndToPreviousShotChange>
     <AdjustExtendToNextShotChange>Ausgewählte Zeilen bis zum nächsten Einstellungswechsel (oder nächsten Untertitel) verlängern</AdjustExtendToNextShotChange>
     <AdjustExtendToPreviousShotChange>Ausgewählte Zeilen bis zum vorherigen Einstellungswechsel (oder vorherigen Untertitel) erweitern</AdjustExtendToPreviousShotChange>
@@ -2644,6 +2657,7 @@ Wir nutzen den dem Bild innewohnenden Rhythmus.</CreateSimpleChainingToolTip>
     <MergeDialogWithNext>Dialog mit nächstem zusammenführen (Bindestriche einfügen)</MergeDialogWithNext>
     <MergeDialogWithPrevious>Dialog mit vorherigem zusammenführen (Bindestriche einfügen)</MergeDialogWithPrevious>
     <AutoBalanceSelectedLines>Ausgewählte Zeilen automatisch angleichen</AutoBalanceSelectedLines>
+    <EvenlyDistributeSelectedLines>Ausgewählte Zeilen gleichmäßig verteilen (CPS)</EvenlyDistributeSelectedLines>
     <GoToNext>Zum nächsten Text</GoToNext>
     <GoToNextPlayTranslate>Gehe zur nächsten Zeile (und im „Übersetzungsmodus“ abspielen)</GoToNextPlayTranslate>
     <GoToNextCursorAtEnd>Gehe zur nächsten Zeile und setze den Cursor an das Ende</GoToNextCursorAtEnd>
@@ -2719,7 +2733,7 @@ Wir nutzen den dem Bild innewohnenden Rhythmus.</CreateSimpleChainingToolTip>
     <GoForwardXLSeconds>Große ausgewählte Zeit nach vorne</GoForwardXLSeconds>
     <GoToStartCurrent>Videoposition auf den Beginn des aktuellen Untertitels setzen</GoToStartCurrent>
     <ToggleStartEndCurrent>Videoposition zwischen Start/Ende des aktuellen Untertitels umschalten</ToggleStartEndCurrent>
-    <PlaySelectedLines>Ausgewählte Linien abspielen</PlaySelectedLines>
+    <PlaySelectedLines>Ausgewählte Zeilen abspielen</PlaySelectedLines>
     <LoopSelectedLines>Ausgewählte Zeilen in Schleife abspielen</LoopSelectedLines>
     <WaveformGoToPrevSubtitle>Gehe zum vorherigen Untertitel (von der Videoposition)</WaveformGoToPrevSubtitle>
     <WaveformGoToNextSubtitle>Gehe zum nächsten Untertitel (von der Videoposition)</WaveformGoToNextSubtitle>
@@ -2743,6 +2757,7 @@ Wir nutzen den dem Bild innewohnenden Rhythmus.</CreateSimpleChainingToolTip>
     <AudioExtractSelectedLines>Audio extrahieren (ausgewählte Zeilen)</AudioExtractSelectedLines>
     <AudioToTextSelectedLinesX>Audio-zu-Text-ausgewählte Zeilen ({0})</AudioToTextSelectedLinesX>
     <VideoToggleBrightness>Helligkeit umschalten (nur mpv)</VideoToggleBrightness>
+    <AutoTranslateSelectedLines>Ausgewählte Zeilen automatisch übersetzen</AutoTranslateSelectedLines>
     <CustomSearch1>Übersetzen, definierte Suche 1</CustomSearch1>
     <CustomSearch2>Übersetzen, definierte Suche 2</CustomSearch2>
     <CustomSearch3>Übersetzen, definierte Suche 3</CustomSearch3>
@@ -2871,6 +2886,8 @@ Wir nutzen den dem Bild innewohnenden Rhythmus.</CreateSimpleChainingToolTip>
     <ExportAsHtml>Als HTML exportieren...</ExportAsHtml>
     <SetNewActor>Neuen Actor/Stimme auswählen</SetNewActor>
     <SetActorX>Actor/Stimme auswählen {0}</SetActorX>
+    <Used>Verwendet</Used>
+    <Unused>Nicht verwendet</Unused>
   </Settings>
   <SettingsMpv>
     <DownloadMpv>Mpv-lib herunterladen</DownloadMpv>
@@ -2952,7 +2969,7 @@ Wir nutzen den dem Bild innewohnenden Rhythmus.</CreateSimpleChainingToolTip>
     <WhiteSpaceCheckReport>In Spalte {0} wurde ein ungültiger Leerraum gefunden.</WhiteSpaceCheckReport>
     <ReportPrompt>Den vollständigen Bericht finden Sie hier: {0}.</ReportPrompt>
     <OpenReportInFolder>Bericht im Ordner öffnen</OpenReportInFolder>
-    <FoundXIssues>Netflix quality check found {0:#,##0} issues.</FoundXIssues>
+    <FoundXIssues>Netflix Qualitätscheck hat {0:#,##0} Probleme gefunden.</FoundXIssues>
     <CheckOk>Netflix-Qualitätscheck OK :)</CheckOk>
     <MaximumXCharsPerSecond>Maximal {0} Zeichen pro Sekunde (inkl. Leerzeichen)</MaximumXCharsPerSecond>
     <MaximumLineLength>Maximale Zeilenlänge ({0})</MaximumLineLength>
@@ -3074,7 +3091,7 @@ Wir nutzen den dem Bild innewohnenden Rhythmus.</CreateSimpleChainingToolTip>
     <WrapStyle>Umbruchstil</WrapStyle>
     <Collision>Kollision</Collision>
     <ScaleBorderAndShadow>Ränder und Schatten skalieren</ScaleBorderAndShadow>
-    <WrapStyle0>0: Smart Wrapping, obere Linie ist breiter</WrapStyle0>
+    <WrapStyle0>0: Smart Wrapping, obere Zeile ist breiter</WrapStyle0>
     <WrapStyle1>1: Zeilenende-Wortumbruch, nur N bricht</WrapStyle1>
     <WrapStyle2>
 			2: Kein Zeilenumbruch, sowohl
@@ -3191,6 +3208,21 @@ Wir nutzen den dem Bild innewohnenden Rhythmus.</CreateSimpleChainingToolTip>
     <Message>Wenn dieses Problem behoben werden soll, eine E-Mail an mailto:niksedk@gmail.com schicken und eine Kopie des Untertitels anhängen.</Message>
     <ImportAsPlainText>Als Text importieren</ImportAsPlainText>
   </UnknownSubtitle>
+  <VerifyCompleteness>
+    <Title>Die Vollständigkeit anhand anderer Untertitel überprüfen</Title>
+    <OpenControlSubtitle>Kontrolluntertitel öffnen</OpenControlSubtitle>
+    <ControlSubtitleError>Der Kontrolluntertitel ist leer oder konnte nicht geladen werden.</ControlSubtitleError>
+    <ControlSubtitleX>Kontrolluntertitel: {0}</ControlSubtitleX>
+    <Coverage>Abdeckung</Coverage>
+    <CoveragePercentageX>{0:0.##}%</CoveragePercentageX>
+    <SortByCoverage>Nach Abdeckung sortieren</SortByCoverage>
+    <SortByTime>Nach Zeit sortieren</SortByTime>
+    <Reload>Erneut überprüfen</Reload>
+    <Insert>Einfügen</Insert>
+    <InsertAndNext>Einfügen und zum nächsten springen</InsertAndNext>
+    <Dismiss>Verwerfen</Dismiss>
+    <DismissAndNext>Verwerfen und zum nächsten springen</DismissAndNext>
+  </VerifyCompleteness>
   <VisualSync>
     <Title>Anpassung</Title>
     <StartScene>Anfangsszene</StartScene>
