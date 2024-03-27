@@ -150,7 +150,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
             if (!string.IsNullOrEmpty(Configuration.Settings.Tools.AutoTranslateLastUrl))
             {
-                nikseComboBoxUrl.SelectedText = Configuration.Settings.Tools.AutoTranslateLastUrl;
+                nikseComboBoxUrl.Text = Configuration.Settings.Tools.AutoTranslateLastUrl;
             }
         }
 

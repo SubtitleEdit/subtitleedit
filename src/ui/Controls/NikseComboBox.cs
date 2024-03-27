@@ -177,12 +177,6 @@ namespace Nikse.SubtitleEdit.Controls
 
         public override string Text
         {
-            get => SelectedText;
-            set => SelectedText = value;
-        }
-
-        public string SelectedText
-        {
             get
             {
                 if (_textBox == null)
@@ -239,6 +233,75 @@ namespace Nikse.SubtitleEdit.Controls
                 }
 
                 _textBox.Text = value;
+                _selectedIndex = idx;
+
+                if (!_loading)
+                {
+                    SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
+                    SelectedValueChanged?.Invoke(this, EventArgs.Empty);
+                    TextChanged?.Invoke(this, EventArgs.Empty);
+                }
+            }
+        }
+
+        public string SelectedText
+        {
+            get
+            {
+                if (_textBox == null)
+                {
+                    return string.Empty;
+                }
+
+                if (DropDownStyle == ComboBoxStyle.DropDown)
+                {
+                    return _textBox.SelectedText;
+                }
+
+                if (_selectedIndex < 0)
+                {
+                    return string.Empty;
+                }
+
+                return _items[_selectedIndex].ToString();
+            }
+            set
+            {
+                if (_textBox == null)
+                {
+                    return;
+                }
+
+                if (DropDownStyle == ComboBoxStyle.DropDown)
+                {
+                    if (_textBox.SelectedText != value)
+                    {
+                        _textBox.SelectedText = value;
+
+                        if (!_loading)
+                        {
+                            SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
+                            SelectedValueChanged?.Invoke(this, EventArgs.Empty);
+                            TextChanged?.Invoke(this, EventArgs.Empty);
+                        }
+                    }
+
+                    return;
+                }
+
+                var hit = _items.FirstOrDefault(p => p.ToString() == value);
+                if (hit == null)
+                {
+                    return;
+                }
+
+                var idx = _items.IndexOf(hit);
+                if (idx == _selectedIndex)
+                {
+                    return;
+                }
+
+                _textBox.SelectedText = value;
                 _selectedIndex = idx;
 
                 if (!_loading)
