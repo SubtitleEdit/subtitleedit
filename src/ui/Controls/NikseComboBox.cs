@@ -202,6 +202,7 @@ namespace Nikse.SubtitleEdit.Controls
                     continue;
                 }
 
+                // this means that the new value is present on the list aka '_items' and is not the same as previously selected
                 if (_items[i].ToString().Equals(value, StringComparison.Ordinal))
                 {
                     _selectedIndex = i; // update new selected value
