@@ -1,10 +1,11 @@
 ﻿using Nikse.SubtitleEdit.Logic;
 using System.Drawing;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Controls.Interfaces;
 
 namespace Nikse.SubtitleEdit.Controls
 {
-    public class NikseTextBox : TextBox
+    public class NikseTextBox : TextBox, ISelectedText
     {
         private const int WM_NCPAINT = 0x85;
         private const int WM_PAINT = 0x0f;
