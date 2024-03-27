@@ -101,9 +101,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controls\Adapters\NativeTextBoxAdapter.cs" />
     <Compile Include="Controls\CuesPreviewView.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Controls\Interfaces\ISelectedText.cs" />
     <Compile Include="Controls\NikseComboBox.cs">
       <SubType>Component</SubType>
     </Compile>

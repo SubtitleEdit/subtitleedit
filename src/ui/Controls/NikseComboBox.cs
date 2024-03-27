@@ -7,11 +7,12 @@ using System.Drawing;
 using System.Drawing.Design;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Controls.Interfaces;
 
 namespace Nikse.SubtitleEdit.Controls
 {
     [Category("NikseComboBox"), Description("ComboBox with better support for color theme")]
-    public class NikseComboBox : Control
+    public class NikseComboBox : Control, ISelectedText
     {
         // ReSharper disable once InconsistentNaming
         public event EventHandler SelectedIndexChanged;
@@ -31,7 +32,7 @@ namespace Nikse.SubtitleEdit.Controls
         // ReSharper disable once InconsistentNaming
         public new event EventHandler TextChanged;
 
-        private readonly TextBox _textBox;
+        private readonly InnerTextBox _textBox;
 
         private NikseComboBoxPopUp _popUp;
 
@@ -425,10 +426,9 @@ namespace Nikse.SubtitleEdit.Controls
         public NikseComboBox()
         {
             _loading = true;
-            _textBox = new TextBox();
+            _textBox = new InnerTextBox(this);
             _textBox.Visible = false;
             _items = new NikseComboBoxCollection(this);
-
 
             SetStyle(ControlStyles.ResizeRedraw | ControlStyles.OptimizedDoubleBuffer, true);
 
@@ -1333,6 +1333,31 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 _textBox.SelectAll();
             }
+        }
+
+        private class InnerTextBox : TextBox
+        {
+            private readonly NikseComboBox _owner;
+
+            public InnerTextBox(NikseComboBox owner)
+            {
+                _owner = owner;
+            }
+            
+            protected override void WndProc(ref Message m)
+            {
+                if (m.Msg == 0x0204) // WM_RBUTTONDOWN
+                {
+                    var x = _owner.Location.X + (short)m.LParam.ToInt32();
+                    var y = _owner.Location.Y + (short)m.LParam.ToInt32() >> 16;
+                    _owner.ContextMenuStrip?.Show(_owner, new Point(x, y));
+                }
+                else // this "else" is important as we don't want to show the OS default context menu
+                {
+                    base.WndProc(ref m);
+                }
+            }
+            
         }
     }
 }

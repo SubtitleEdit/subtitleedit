@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml;
+using Nikse.SubtitleEdit.Controls.Adapters;
 using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms
@@ -207,7 +208,14 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void RadioButtonCheckedChanged(object sender, EventArgs e)
         {
-            textBoxFind.ContextMenuStrip = sender == radioButtonRegEx ? FindReplaceDialogHelper.GetRegExContextMenu(textBoxFind) : null;
+            // remove regex context menu from find text box
+            textBoxFind.ContextMenuStrip = null;
+
+            // only get the regex context menu if we select the regex option
+            if (sender == radioButtonRegEx && radioButtonRegEx.Checked)
+            {
+                textBoxFind.ContextMenuStrip = FindReplaceDialogHelper.GetRegExContextMenu(new NativeTextBoxAdapter(textBoxFind));
+            }
         }
 
         private void ButtonAddClick(object sender, EventArgs e)
