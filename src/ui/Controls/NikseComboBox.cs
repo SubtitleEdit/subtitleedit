@@ -424,6 +424,30 @@ namespace Nikse.SubtitleEdit.Controls
             return base.IsInputKey(keyData);
         }
 
+        private void NavigateUp() => Navigate(_selectedIndex - 1);
+
+        private void NavigateDown() => Navigate(_selectedIndex + 1);
+        
+        private void Navigate(int index)
+        {
+            if (index < 0 || index >= _items.Count)
+            {
+                return;
+            }
+
+            _selectedIndex = index;
+            _textBox.Text = Items[_selectedIndex].ToString();
+            
+            if (!_skipPaint)
+            {
+                Invalidate();
+            }
+
+            _textBox.SelectionStart = 0;
+            _textBox.SelectionLength = _textBox.Text.Length;
+            NotifyTextChanged();
+        }
+        
         public NikseComboBox()
         {
             _loading = true;
@@ -560,48 +584,15 @@ namespace Nikse.SubtitleEdit.Controls
 
             _textBox.KeyDown += (sender, e) =>
             {
-                if (DropDownStyle != ComboBoxStyle.DropDown)
+                if (e.KeyCode == Keys.Up)
                 {
-
-                    if (e.KeyCode == Keys.Up)
-                    {
-                        if (_selectedIndex > 0)
-                        {
-                            _selectedIndex--;
-                            _textBox.Text = Items[_selectedIndex].ToString();
-                            Invalidate();
-                            if (!_loading)
-                            {
-                                SelectedIndexChanged?.Invoke(sender, e);
-                                SelectedValueChanged?.Invoke(this, EventArgs.Empty);
-                                TextChanged?.Invoke(this, EventArgs.Empty);
-                            }
-                        }
-                        e.Handled = true;
-                    }
-                    else if (e.KeyCode == Keys.Down)
-                    {
-                        if (_selectedIndex < Items.Count - 1)
-                        {
-                            _selectedIndex++;
-                            _textBox.Text = Items[_selectedIndex].ToString();
-                            if (!_loading)
-                            {
-                                SelectedIndexChanged?.Invoke(sender, e);
-                                SelectedValueChanged?.Invoke(this, EventArgs.Empty);
-                                TextChanged?.Invoke(this, EventArgs.Empty);
-                            }
-                            if (!_skipPaint)
-                            {
-                                Invalidate();
-                            }
-                        }
-                        e.Handled = true;
-                    }
-                    else
-                    {
-                        KeyDown?.Invoke(this, e);
-                    }
+                    NavigateUp();
+                    e.Handled = true;
+                }
+                else if (e.KeyCode == Keys.Down)
+                {
+                    NavigateDown();
+                    e.Handled = true;
                 }
                 else
                 {
@@ -1344,7 +1335,7 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 _owner = owner;
             }
-            
+
             protected override void WndProc(ref Message m)
             {
                 if (m.Msg == 0x0204) // WM_RBUTTONDOWN
@@ -1358,7 +1349,6 @@ namespace Nikse.SubtitleEdit.Controls
                     base.WndProc(ref m);
                 }
             }
-            
         }
     }
 }
