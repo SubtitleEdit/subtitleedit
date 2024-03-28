@@ -14,6 +14,7 @@
    * Improve EBU STL preview regarding box - thx BlueMeow7
    * Update libmpv to 2024-03-17
    * Update yt-dlp to 2024-03-10
+   * Update ffmpeg to 2024-03-25
 * FIXED:
    * Fix for Whisper post-processing - thx Purfview/cvrle77
    * Fix crash in "Fix common errors" - thx Joe
