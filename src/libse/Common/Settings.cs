@@ -462,9 +462,9 @@ namespace Nikse.SubtitleEdit.Core.Common
         public Color GenVideoNonAssaTextColor { get; set; }
         public bool GenVideoNonAssaAlignRight { get; set; }
         public bool GenVideoNonAssaFixRtlUnicode { get; set; }
-
         public string GenVideoEmbedOutputExt { get; set; }
-
+        public string GenVideoEmbedOutputSuffix { get; set; }
+        public bool GenVideoDeleteInputVideoFile { get; set; }
 
         public bool VoskPostProcessing { get; set; }
         public string VoskModel { get; set; }
@@ -710,6 +710,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             GenVideoNonAssaBox = true;
             GenVideoNonAssaBoxColor = Color.FromArgb(150, 0, 0, 0);
             GenVideoNonAssaTextColor = Color.White;
+            GenVideoEmbedOutputSuffix = "embed";
             VoskPostProcessing = true;
             WhisperChoice = Configuration.IsRunningOnWindows ? AudioToText.WhisperChoice.PurfviewFasterWhisper : AudioToText.WhisperChoice.OpenAi;
             WhisperDeleteTempFiles = true;
@@ -7048,6 +7049,19 @@ $HorzAlign          =   Center
                 settings.Tools.GenVideoEmbedOutputExt = subNode.InnerText;
             }
 
+            subNode = node.SelectSingleNode("GenVideoEmbedOutputSuffix");
+            if (subNode != null)
+            {
+                settings.Tools.GenVideoEmbedOutputSuffix = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("GenVideoDeleteInputVideoFile");
+            if (subNode != null)
+            {
+                settings.Tools.GenVideoDeleteInputVideoFile = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+
             subNode = node.SelectSingleNode("VoskPostProcessing");
             if (subNode != null)
             {
@@ -12117,6 +12131,8 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("GenVideoNonAssaAlignRight", settings.Tools.GenVideoNonAssaAlignRight.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("GenVideoNonAssaFixRtlUnicode", settings.Tools.GenVideoNonAssaFixRtlUnicode.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("GenVideoEmbedOutputExt", settings.Tools.GenVideoEmbedOutputExt);
+                textWriter.WriteElementString("GenVideoEmbedOutputSuffix", settings.Tools.GenVideoEmbedOutputSuffix);
+                textWriter.WriteElementString("GenVideoDeleteInputVideoFile", settings.Tools.GenVideoDeleteInputVideoFile.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("VoskPostProcessing", settings.Tools.VoskPostProcessing.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("VoskModel", settings.Tools.VoskModel);
                 textWriter.WriteElementString("WhisperChoice", settings.Tools.WhisperChoice);

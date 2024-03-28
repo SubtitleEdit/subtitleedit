@@ -1104,6 +1104,7 @@
             public string ToggleDefault { get; set; }
             public string Default { get; set; }
             public string XGeneratedWithEmbeddedSubs { get; set; }
+            public string DeleteInputVideo { get; set; }
         }
 
         public class GetDictionaries

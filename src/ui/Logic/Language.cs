@@ -1283,6 +1283,7 @@ namespace Nikse.SubtitleEdit.Logic
                 Default = "Default",
                 SetLanguage = "Set language...",
                 XGeneratedWithEmbeddedSubs = "\"{0}\" generated with embedded subtitles",
+                DeleteInputVideo = "Delete input video file after \"Generate\"",
             };
 
             GetDictionaries = new LanguageStructure.GetDictionaries

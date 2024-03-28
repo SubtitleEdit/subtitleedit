@@ -64,7 +64,7 @@ namespace Nikse.SubtitleEdit.Forms
             columnHeader5FileName.Text = LanguageSettings.Current.JoinSubtitles.FileName;
             buttonGenerate.Text = LanguageSettings.Current.Watermark.Generate;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
-
+            checkBoxDeleteInputVideoAfterGeneration.Text = LanguageSettings.Current.GenerateVideoWithEmbeddedSubs.DeleteInputVideo;
             addToolStripMenuItem.Text = LanguageSettings.Current.DvdSubRip.Add;
             toolStripMenuItemStorageRemove.Text = LanguageSettings.Current.SubStationAlphaStyles.Remove;
             toolStripMenuItemStorageRemoveAll.Text = LanguageSettings.Current.SubStationAlphaStyles.RemoveAll;
@@ -82,6 +82,9 @@ namespace Nikse.SubtitleEdit.Forms
 
             LoadVideo(inputVideoFileName);
             AddCurrentSubtitle();
+
+            checkBoxDeleteInputVideoAfterGeneration.Checked = Configuration.Settings.Tools.GenVideoDeleteInputVideoFile;
+            checkBoxDeleteInputVideoAfterGeneration.Left = buttonGenerate.Left - checkBoxDeleteInputVideoAfterGeneration.Width - 10;
         }
 
         private void AddCurrentSubtitle()
@@ -430,6 +433,18 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
+            if (checkBoxDeleteInputVideoAfterGeneration.Checked && File.Exists(_inputVideoFileName))
+            {
+                try
+                {
+                    File.Delete(_inputVideoFileName);
+                }
+                catch
+                {
+                    MessageBox.Show($"Cannot delete input video file {_inputVideoFileName} - probably in use!");
+                }
+            }
+
             DialogResult = DialogResult.OK;
         }
 
@@ -451,9 +466,24 @@ namespace Nikse.SubtitleEdit.Forms
         private string SuggestNewVideoFileName()
         {
             var fileName = Path.GetFileNameWithoutExtension(_inputVideoFileName);
-            fileName += ".embed";
-            fileName = fileName.Replace(".", "_");
+
+            var postFixesToRemove = new List<string> { "softsub", "SoftSub", "embed", "Embed", Configuration.Settings.Tools.GenVideoEmbedOutputSuffix };
+            foreach (var postFix in postFixesToRemove)
+            {
+                fileName = fileName.Replace("." + postFix, string.Empty);
+                fileName = fileName.Replace("_" + postFix, string.Empty);
+                fileName = fileName.Replace("-" + postFix, string.Empty);
+            }
+
+            if (!string.IsNullOrWhiteSpace(Configuration.Settings.Tools.GenVideoEmbedOutputSuffix))
+            {
+                fileName = fileName.TrimEnd('_', '-', '.') + "-" + Configuration.Settings.Tools.GenVideoEmbedOutputSuffix;
+            }
+
+            fileName = fileName.Replace('.', '-');
+
             fileName += Configuration.Settings.Tools.GenVideoEmbedOutputExt == ".mp4" ? ".mp4" : ".mkv";
+
             return fileName;
         }
 
@@ -577,6 +607,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 Configuration.Settings.Tools.GenVideoEmbedOutputExt = Path.GetExtension(VideoFileName).ToLowerInvariant();
             }
+
+            Configuration.Settings.Tools.GenVideoDeleteInputVideoFile = checkBoxDeleteInputVideoAfterGeneration.Checked;
 
             foreach (var cleanUpFolder in _cleanUpFolders)
             {
