@@ -175,140 +175,78 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
+        private string GetValue(string textOrSelectedText)
+        {
+            if (DropDownStyle == ComboBoxStyle.DropDown)
+            {
+                return textOrSelectedText;
+            }
+
+            return _selectedIndex < 0 ? string.Empty : _items[_selectedIndex].ToString();
+        }
+
+        private bool HasValueChanged(string preValue, string value)
+        {
+            if (DropDownStyle == ComboBoxStyle.DropDown)
+            {
+                return !preValue.Equals(value, StringComparison.Ordinal);
+            }
+
+            var count = _items.Count;
+            for (var i = 0; i < count; i++)
+            {
+                // skip previous-current selected value
+                // as it indicates that the previous and current are same value
+                if (i == _selectedIndex)
+                {
+                    continue;
+                }
+
+                // this means that the new value is present on the list aka '_items' and is not the same as previously selected
+                if (_items[i].ToString().Equals(value, StringComparison.Ordinal))
+                {
+                    _selectedIndex = i; // update new selected value
+                    return true;
+                }
+            }
+
+            return false; // item not found in the list
+        }
+
+        private void NotifyTextChanged()
+        {
+            if (_loading)
+            {
+                return;
+            }
+
+            SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
+            SelectedValueChanged?.Invoke(this, EventArgs.Empty);
+            TextChanged?.Invoke(this, EventArgs.Empty);
+        }
+
         public override string Text
         {
-            get
-            {
-                if (_textBox == null)
-                {
-                    return string.Empty;
-                }
-
-                if (DropDownStyle == ComboBoxStyle.DropDown)
-                {
-                    return _textBox.Text;
-                }
-
-                if (_selectedIndex < 0)
-                {
-                    return string.Empty;
-                }
-
-                return _items[_selectedIndex].ToString();
-            }
+            get => GetValue(_textBox.Text);
             set
             {
-                if (_textBox == null)
+                if (HasValueChanged(_textBox.Text, value))
                 {
-                    return;
-                }
-
-                if (DropDownStyle == ComboBoxStyle.DropDown)
-                {
-                    if (_textBox.Text != value)
-                    {
-                        _textBox.Text = value;
-
-                        if (!_loading)
-                        {
-                            SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
-                            SelectedValueChanged?.Invoke(this, EventArgs.Empty);
-                            TextChanged?.Invoke(this, EventArgs.Empty);
-                        }
-                    }
-
-                    return;
-                }
-
-                var hit = _items.FirstOrDefault(p => p.ToString() == value);
-                if (hit == null)
-                {
-                    return;
-                }
-
-                var idx = _items.IndexOf(hit);
-                if (idx == _selectedIndex)
-                {
-                    return;
-                }
-
-                _textBox.Text = value;
-                _selectedIndex = idx;
-
-                if (!_loading)
-                {
-                    SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
-                    SelectedValueChanged?.Invoke(this, EventArgs.Empty);
-                    TextChanged?.Invoke(this, EventArgs.Empty);
+                    _textBox.Text = value;
+                    NotifyTextChanged();
                 }
             }
         }
 
         public string SelectedText
         {
-            get
-            {
-                if (_textBox == null)
-                {
-                    return string.Empty;
-                }
-
-                if (DropDownStyle == ComboBoxStyle.DropDown)
-                {
-                    return _textBox.SelectedText;
-                }
-
-                if (_selectedIndex < 0)
-                {
-                    return string.Empty;
-                }
-
-                return _items[_selectedIndex].ToString();
-            }
+            get => GetValue(_textBox.SelectedText);
             set
             {
-                if (_textBox == null)
+                if (HasValueChanged(_textBox.SelectedText, value))
                 {
-                    return;
-                }
-
-                if (DropDownStyle == ComboBoxStyle.DropDown)
-                {
-                    if (_textBox.SelectedText != value)
-                    {
-                        _textBox.SelectedText = value;
-
-                        if (!_loading)
-                        {
-                            SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
-                            SelectedValueChanged?.Invoke(this, EventArgs.Empty);
-                            TextChanged?.Invoke(this, EventArgs.Empty);
-                        }
-                    }
-
-                    return;
-                }
-
-                var hit = _items.FirstOrDefault(p => p.ToString() == value);
-                if (hit == null)
-                {
-                    return;
-                }
-
-                var idx = _items.IndexOf(hit);
-                if (idx == _selectedIndex)
-                {
-                    return;
-                }
-
-                _textBox.SelectedText = value;
-                _selectedIndex = idx;
-
-                if (!_loading)
-                {
-                    SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
-                    SelectedValueChanged?.Invoke(this, EventArgs.Empty);
-                    TextChanged?.Invoke(this, EventArgs.Empty);
+                    _textBox.SelectedText = value;
+                    NotifyTextChanged();
                 }
             }
         }
