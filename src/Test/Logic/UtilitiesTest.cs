@@ -438,6 +438,41 @@ namespace Test.Logic
             string s2 = HtmlUtil.FixInvalidItalicTags(s1);
             Assert.AreEqual(s2, "<i>Hallo!" + Environment.NewLine + "Hallo!" + Environment.NewLine + "Hallo!</i>");
         }
+        
+        [TestMethod]
+        public void FixInvalidItalicTags15()
+        {
+            var s1 = "Foo<b><i>bar</b>"; 
+            Assert.AreEqual("Foo<b><i>bar</i></b>", HtmlUtil.FixInvalidItalicTags(s1));
+        }
+        
+        [TestMethod]
+        public void FixInvalidItalicTags16()
+        {
+            var s1 = "Foo <i>bar"; 
+            Assert.AreEqual( "Foo <i>bar</i>", HtmlUtil.FixInvalidItalicTags(s1));
+        }
+
+        [TestMethod]
+        public void FixInvalidItalicTags17()
+        {
+            var s1 = "Foobar<i>";
+            Assert.AreEqual("Foobar", HtmlUtil.FixInvalidItalicTags(s1));
+        }
+
+        [TestMethod]
+        public void FixInvalidItalicTags18()
+        {
+            var s1 = "<u><b><i>Foobar</b></u>";
+            Assert.AreEqual("<u><b><i>Foobar</i></b></u>", HtmlUtil.FixInvalidItalicTags(s1));
+        }
+        
+        [TestMethod]
+        public void FixInvalidItalicTags19()
+        {
+            var s1 = "<i>Foobar";
+            Assert.AreEqual("<i>Foobar</i>", HtmlUtil.FixInvalidItalicTags(s1));
+        }
 
         [TestMethod]
         public void FixInvalidItalicTagsWithAssTag()
