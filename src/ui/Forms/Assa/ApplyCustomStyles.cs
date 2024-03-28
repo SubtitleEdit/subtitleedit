@@ -4,6 +4,7 @@ using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -27,6 +28,20 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         private bool _closing;
         private bool _videoLoaded;
 
+        private readonly Dictionary<string, string> _animations = new Dictionary<string, string>()
+        {
+            { "- Templates -", string.Empty },
+            { "Font size change", "{\\t(\\fs60)}" },
+            { "Move text from left to right", "{\\move(350,350,1500,350)}Move test" },
+            { "Color from white to red", "{\\1c&HFFFFFF&\\t(\\1c&H0000FF&)}" },
+            { "Rotate X (slow)", "{\\t(\\frx25)}" },
+            { "Rotate X", "{\\t(\\frx360)}" },
+            { "Rotate Y", "{\\t(\\fry360)}" },
+            { "Rotate (tilt)", "{\\t(\\fr5\\fr0)}" },
+            { "Fade", "{\\fad(300,300}" },
+            { "Space increase (slow)", "{\\t(\\fsp4)}" },
+        };
+
         public ApplyCustomStyles(Subtitle subtitle, int[] selectedIndices)
         {
             UiUtil.PreInitialize(this);
@@ -35,7 +50,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
             _subtitle = subtitle;
             _selectedIndices = selectedIndices;
-            _advancedIndices = new int[0];
+            _advancedIndices = Array.Empty<int>();
 
             radioButtonSelectedLines.Checked = true;
             labelAdvancedSelection.Text = string.Empty;
@@ -55,6 +70,27 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             buttonTogglePreview.Text = LanguageSettings.Current.General.ShowPreview;
             groupBoxPreview.Text = LanguageSettings.Current.General.Preview;
             UiUtil.FixLargeFonts(this, buttonOK);
+
+            nikseComboBoxTemplate.Items.Clear();
+            nikseComboBoxTemplate.DropDownStyle = ComboBoxStyle.DropDownList;
+            foreach (var animation in _animations)
+            {
+                nikseComboBoxTemplate.Items.Add(animation.Key);
+            }
+
+            nikseComboBoxTemplate.SelectedIndex = 0;
+
+            nikseComboBoxTemplate.SelectedIndexChanged += (sender, args) =>
+            {
+                if (nikseComboBoxTemplate.SelectedIndex > 0)
+                {
+                    var template = _animations[nikseComboBoxTemplate.SelectedText];
+                    if (!string.IsNullOrEmpty(template))
+                    {
+                        seTextBox1.Text = template;
+                    }
+                }
+            };
 
             buttonHistory.Enabled = Configuration.Settings.SubtitleSettings.AssaOverrideTagHistory.Count > 0;
             if (Configuration.Settings.SubtitleSettings.AssaOverrideTagHistory.Count > 0)

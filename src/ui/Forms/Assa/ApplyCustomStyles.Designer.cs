@@ -48,6 +48,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.seTextBox1 = new Nikse.SubtitleEdit.Controls.NikseTextBox();
+            this.nikseComboBoxTemplate = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.groupBoxApplyTo.SuspendLayout();
             this.groupBoxPreview.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPreview)).BeginInit();
@@ -227,11 +228,37 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.seTextBox1.Size = new System.Drawing.Size(522, 156);
             this.seTextBox1.TabIndex = 0;
             // 
+            // nikseComboBoxTemplate
+            // 
+            this.nikseComboBoxTemplate.BackColor = System.Drawing.SystemColors.Window;
+            this.nikseComboBoxTemplate.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.nikseComboBoxTemplate.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.nikseComboBoxTemplate.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.nikseComboBoxTemplate.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.nikseComboBoxTemplate.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.nikseComboBoxTemplate.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.nikseComboBoxTemplate.DropDownHeight = 400;
+            this.nikseComboBoxTemplate.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
+            this.nikseComboBoxTemplate.DropDownWidth = 197;
+            this.nikseComboBoxTemplate.FormattingEnabled = false;
+            this.nikseComboBoxTemplate.Location = new System.Drawing.Point(212, 11);
+            this.nikseComboBoxTemplate.MaxLength = 32767;
+            this.nikseComboBoxTemplate.Name = "nikseComboBoxTemplate";
+            this.nikseComboBoxTemplate.SelectedIndex = -1;
+            this.nikseComboBoxTemplate.SelectedItem = null;
+            this.nikseComboBoxTemplate.SelectedText = "";
+            this.nikseComboBoxTemplate.Size = new System.Drawing.Size(197, 23);
+            this.nikseComboBoxTemplate.TabIndex = 8;
+            this.nikseComboBoxTemplate.TabStop = false;
+            this.nikseComboBoxTemplate.Text = "nikseComboBoxTemplate";
+            this.nikseComboBoxTemplate.UsePopupWindow = false;
+            // 
             // ApplyCustomStyles
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(798, 251);
+            this.Controls.Add(this.nikseComboBoxTemplate);
             this.Controls.Add(this.buttonTogglePreview);
             this.Controls.Add(this.buttonHistory);
             this.Controls.Add(this.buttonOK);
@@ -277,5 +304,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         private System.Windows.Forms.PictureBox pictureBoxPreview;
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private Controls.NikseComboBox nikseComboBoxTemplate;
     }
 }
