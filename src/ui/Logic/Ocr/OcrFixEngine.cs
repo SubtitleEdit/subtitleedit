@@ -665,6 +665,18 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             return word;
         }
 
+        private static bool IsToKeepCasing(string sentence)
+        {
+            // related to https://github.com/SubtitleEdit/subtitleedit/issues/8052
+            if (sentence.Length > 2)
+            {
+                // do not change 'L' to lowercase in text like "L'ASSASSIN"
+                return char.IsUpper(sentence[2]) && (sentence[1] == '\'' || sentence[1] == '’');
+            }
+
+            return false;
+        }
+        
         public static string FixFrenchLApostrophe(string input, string tag, string lastLine)
         {
             var text = input;
@@ -711,7 +723,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                         isPreviousLineClose = beforeThis.EndsWith('.') || beforeThis.EndsWith('!') || beforeThis.EndsWith('?');
                     }
 
-                    if (isPreviousLineClose)
+                    if (isPreviousLineClose || IsToKeepCasing(text.Substring(start + 1)))
                     {
                         text = text.Remove(start + 1, 1).Insert(start + 1, "L");
                     }
