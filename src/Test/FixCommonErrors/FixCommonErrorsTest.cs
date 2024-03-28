@@ -255,7 +255,7 @@ namespace Test.FixCommonErrors
             {
                 InitializeFixCommonErrorsLine(target, "Seems their <i>attackers headed north.");
                 new FixInvalidItalicTags().Fix(_subtitle, new EmptyFixCallback());
-                Assert.AreEqual(_subtitle.Paragraphs[0].Text, "Seems their attackers headed north.");
+                Assert.AreEqual(_subtitle.Paragraphs[0].Text, "Seems their <i>attackers headed north.</i>");
             }
         }
 
