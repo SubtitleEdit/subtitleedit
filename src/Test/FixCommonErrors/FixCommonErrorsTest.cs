@@ -540,6 +540,28 @@ namespace Test.FixCommonErrors
                 Assert.AreEqual("…but never could.", target.Subtitle.Paragraphs[0].Text);
             }
         }
+        
+        [TestMethod]
+        public void FixCommonOcrErrorsFrenchHardCodedRuleNoChange()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "ENCORE UNE VICTIME\r\nDE L'ASSASSIN MYSTERIEUX.");
+                target.FixOcrErrorsViaReplaceList("fra");
+                Assert.AreEqual("ENCORE UNE VICTIME\r\nDE L'ASSASSIN MYSTERIEUX.", target.Subtitle.Paragraphs[0].Text);
+            }
+        }
+        
+        [TestMethod]
+        public void FixCommonOcrErrorsFrenchHardCodedRuleChange()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "Encore une victime\r\nde L'assassin mysterieux.");
+                target.FixOcrErrorsViaReplaceList("fra");
+                Assert.AreEqual("Encore une victime\r\nde l'assassin mysterieux.", target.Subtitle.Paragraphs[0].Text);
+            }
+        }
 
         #endregion Fix OCR errors
 
