@@ -340,7 +340,7 @@ namespace Test.Logic
         {
             const string s1 = "Gledaj prema kameri i rici <i>zdravo!";
             string s2 = HtmlUtil.FixInvalidItalicTags(s1);
-            Assert.AreEqual(s2, "Gledaj prema kameri i rici zdravo!");
+            Assert.AreEqual(s2, "Gledaj prema kameri i rici <i>zdravo!</i>");
         }
 
         [TestMethod]
