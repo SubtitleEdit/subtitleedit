@@ -491,7 +491,13 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             var installedLanguages = new List<string>();
             foreach (InputLanguage language in InputLanguage.InstalledInputLanguages)
             {
-                var iso639 = Iso639Dash2LanguageCode.GetTwoLetterCodeFromEnglishName(language.LayoutName);
+                var layoutName = language.LayoutName;
+                // related to https://github.com/SubtitleEdit/subtitleedit/issues/8084
+                if (string.IsNullOrEmpty(layoutName))
+                {
+                    continue;
+                }
+                var iso639 = Iso639Dash2LanguageCode.GetTwoLetterCodeFromEnglishName(layoutName);
                 if (!string.IsNullOrEmpty(iso639) && !installedLanguages.Contains(iso639))
                 {
                     installedLanguages.Add(iso639.ToLowerInvariant());
