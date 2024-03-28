@@ -502,6 +502,11 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                 return Path.Combine(GetWhisperModel().ModelFolder, model + ModelExtension());
             }
 
+            if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.WhisperX && model == "large-v3")
+            {
+                return "large";
+            }
+
             return model;
         }
 
