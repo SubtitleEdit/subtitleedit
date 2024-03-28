@@ -588,6 +588,49 @@ namespace Nikse.SubtitleEdit.Core.Common
             return text;
         }
 
+        public static bool IsTextFormattable(in string text)
+        {
+            if (string.IsNullOrEmpty(text))
+            {
+                return false;
+            }
+
+            var len = text.Length;
+            int index = 0;
+            while (index < len && text[index] == '<')
+            {
+                index = text.IndexOf('>', index + 1);
+                if (index < 0) break;
+                index += 1;
+            }
+
+            // buggy text of no closing present
+            index = Math.Max(0, index);
+
+            var fromLenIdx = len - 1;
+            while (fromLenIdx >= 0 && text[fromLenIdx] == '>')
+            {
+                fromLenIdx = text.LastIndexOf('<', fromLenIdx);
+                if (fromLenIdx < 0) break;
+                fromLenIdx--;
+            }
+
+            fromLenIdx = fromLenIdx > 0 ? fromLenIdx : len;
+            
+            // no formattable text in between
+            if (fromLenIdx < index) return false;
+
+            for (int i = index; i <= fromLenIdx; i++)
+            {
+                if (char.IsLetterOrDigit(text[i]))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+        
         public static string FixInvalidItalicTags(string input)
         {
             var text = input;
@@ -739,21 +782,44 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             if (italicBeginTagCount == 1 && italicEndTagCount == 0)
             {
-                var lastIndexWithNewLine = text.LastIndexOf(Environment.NewLine + beginTag, StringComparison.Ordinal) + Environment.NewLine.Length;
-                var lastIndex = text.LastIndexOf(beginTag, StringComparison.Ordinal);
+                var lines = text.SplitToLines();
+                var sc = StringComparison.Ordinal;
+                for (int i = 0; i < lines.Count; i++)
+                {
+                    var line = lines[i];
+                    var italicIndex = line.LastIndexOf(beginTag, StringComparison.Ordinal);
+                    
+                    // no italic in current 'i' line, try next
+                    if (italicIndex < 0)
+                    {
+                        continue;
+                    }
 
-                if (text.StartsWith(beginTag, StringComparison.Ordinal) || text.Contains(": <i>"))
-                {
-                    text += endTag;
+                    // try earlier insert if possible e.g: <b><i>foobar</b> => <b><i>foobar</i></b>
+                    lines[i] = IsTextFormattable(line.Substring(italicIndex + 3))
+                        ? line.Insert(CalculateEarlyInsertIndex(line), endTag)
+                        : line.Replace(beginTag, string.Empty);
+
+                    break; // break as soon as we reach here since italicBeginTagCount == 1
+
+                    int CalculateEarlyInsertIndex(string s)
+                    {
+                        var len = s.Length;
+                        var lastClosingTagIndex = s.LastIndexOf("</", len - 1, len - italicIndex - 3, sc);
+                        while (lastClosingTagIndex > italicIndex + 3)
+                        {
+                            var tempClosingIdx = s.LastIndexOf("</", lastClosingTagIndex, lastClosingTagIndex - italicIndex - 3, sc);
+                            if (tempClosingIdx < 0) break;
+                            lastClosingTagIndex = tempClosingIdx;
+                        }
+                        // try finding first closing tag index and insert the new closing there
+                        // to avoid having text with closed tags like <b><i>foo</b></i>
+                        return lastClosingTagIndex > italicIndex ? lastClosingTagIndex : len;
+                    }
                 }
-                else if (noOfLines == 2 && lastIndex == lastIndexWithNewLine)
-                {
-                    text += endTag;
-                }
-                else
-                {
-                    text = text.Replace(beginTag, string.Empty);
-                }
+                
+                // reconstruct the text from lines
+                text = string.Join(Environment.NewLine, lines);
             }
 
             if (italicBeginTagCount == 0 && italicEndTagCount == 1)
