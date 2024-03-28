@@ -47,8 +47,8 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.buttonTogglePreview = new System.Windows.Forms.Button();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.seTextBox1 = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.nikseComboBoxTemplate = new Nikse.SubtitleEdit.Controls.NikseComboBox();
+            this.seTextBox1 = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.groupBoxApplyTo.SuspendLayout();
             this.groupBoxPreview.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPreview)).BeginInit();
@@ -56,8 +56,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             // 
             // groupBoxApplyTo
             // 
-            this.groupBoxApplyTo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxApplyTo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxApplyTo.Controls.Add(this.labelAdvancedSelection);
             this.groupBoxApplyTo.Controls.Add(this.buttonAdvancedSelection);
             this.groupBoxApplyTo.Controls.Add(this.radioButtonAdvancedSelection);
@@ -65,7 +64,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.groupBoxApplyTo.Controls.Add(this.radioButtonSelectedLines);
             this.groupBoxApplyTo.Location = new System.Drawing.Point(540, 40);
             this.groupBoxApplyTo.Name = "groupBoxApplyTo";
-            this.groupBoxApplyTo.Size = new System.Drawing.Size(246, 156);
+            this.groupBoxApplyTo.Size = new System.Drawing.Size(246, 169);
             this.groupBoxApplyTo.TabIndex = 1;
             this.groupBoxApplyTo.TabStop = false;
             this.groupBoxApplyTo.Text = "Apply to";
@@ -132,7 +131,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.groupBoxPreview.Controls.Add(this.pictureBoxPreview);
             this.groupBoxPreview.Location = new System.Drawing.Point(12, 211);
             this.groupBoxPreview.Name = "groupBoxPreview";
-            this.groupBoxPreview.Size = new System.Drawing.Size(774, 0);
+            this.groupBoxPreview.Size = new System.Drawing.Size(774, 8);
             this.groupBoxPreview.TabIndex = 2;
             this.groupBoxPreview.TabStop = false;
             this.groupBoxPreview.Text = "Preview";
@@ -159,7 +158,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(630, 216);
+            this.buttonOK.Location = new System.Drawing.Point(630, 224);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 4;
@@ -172,7 +171,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(711, 216);
+            this.buttonCancel.Location = new System.Drawing.Point(711, 224);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 5;
@@ -195,7 +194,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             // 
             this.buttonTogglePreview.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonTogglePreview.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonTogglePreview.Location = new System.Drawing.Point(481, 216);
+            this.buttonTogglePreview.Location = new System.Drawing.Point(481, 224);
             this.buttonTogglePreview.Name = "buttonTogglePreview";
             this.buttonTogglePreview.Size = new System.Drawing.Size(140, 23);
             this.buttonTogglePreview.TabIndex = 7;
@@ -213,23 +212,9 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.contextMenuStrip1.Size = new System.Drawing.Size(61, 4);
             this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
             // 
-            // seTextBox1
-            // 
-            this.seTextBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.seTextBox1.BackColor = System.Drawing.SystemColors.WindowFrame;
-            this.seTextBox1.ContextMenuStrip = this.contextMenuStrip1;
-            this.seTextBox1.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            this.seTextBox1.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Bold);
-            this.seTextBox1.Location = new System.Drawing.Point(12, 40);
-            this.seTextBox1.Multiline = true;
-            this.seTextBox1.Name = "seTextBox1";
-            this.seTextBox1.Size = new System.Drawing.Size(522, 156);
-            this.seTextBox1.TabIndex = 0;
-            // 
             // nikseComboBoxTemplate
             // 
+            this.nikseComboBoxTemplate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.nikseComboBoxTemplate.BackColor = System.Drawing.SystemColors.Window;
             this.nikseComboBoxTemplate.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
             this.nikseComboBoxTemplate.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
@@ -253,11 +238,25 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.nikseComboBoxTemplate.Text = "nikseComboBoxTemplate";
             this.nikseComboBoxTemplate.UsePopupWindow = false;
             // 
+            // seTextBox1
+            // 
+            this.seTextBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.seTextBox1.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.seTextBox1.ContextMenuStrip = this.contextMenuStrip1;
+            this.seTextBox1.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.seTextBox1.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Bold);
+            this.seTextBox1.Location = new System.Drawing.Point(12, 40);
+            this.seTextBox1.Multiline = true;
+            this.seTextBox1.Name = "seTextBox1";
+            this.seTextBox1.Size = new System.Drawing.Size(522, 169);
+            this.seTextBox1.TabIndex = 0;
+            // 
             // ApplyCustomStyles
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(798, 251);
+            this.ClientSize = new System.Drawing.Size(798, 259);
             this.Controls.Add(this.nikseComboBoxTemplate);
             this.Controls.Add(this.buttonTogglePreview);
             this.Controls.Add(this.buttonHistory);
@@ -267,7 +266,10 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.Controls.Add(this.groupBoxPreview);
             this.Controls.Add(this.groupBoxApplyTo);
             this.Controls.Add(this.seTextBox1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.KeyPreview = true;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(800, 245);
             this.Name = "ApplyCustomStyles";
             this.ShowIcon = false;
