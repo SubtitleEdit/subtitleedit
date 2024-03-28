@@ -84,6 +84,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.x352ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.x272ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.labelPleaseWait = new System.Windows.Forms.Label();
+            this.checkBoxDeleteInputVideoAfterGeneration = new System.Windows.Forms.CheckBox();
             this.contextMenuStripGenerate.SuspendLayout();
             this.groupBoxSettings.SuspendLayout();
             this.contextMenuSubtitles.SuspendLayout();
@@ -437,6 +438,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.textBoxInputFileName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxInputFileName.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxInputFileName.Location = new System.Drawing.Point(22, 44);
             this.textBoxInputFileName.Name = "textBoxInputFileName";
             this.textBoxInputFileName.ReadOnly = true;
@@ -445,6 +447,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // textBoxLog
             // 
+            this.textBoxLog.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxLog.Location = new System.Drawing.Point(12, 13);
             this.textBoxLog.Multiline = true;
             this.textBoxLog.Name = "textBoxLog";
@@ -566,11 +569,22 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelPleaseWait.TabIndex = 32;
             this.labelPleaseWait.Text = "Please wait...";
             // 
+            // checkBoxDeleteInputVideoAfterGeneration
+            // 
+            this.checkBoxDeleteInputVideoAfterGeneration.AutoSize = true;
+            this.checkBoxDeleteInputVideoAfterGeneration.Location = new System.Drawing.Point(531, 445);
+            this.checkBoxDeleteInputVideoAfterGeneration.Name = "checkBoxDeleteInputVideoAfterGeneration";
+            this.checkBoxDeleteInputVideoAfterGeneration.Size = new System.Drawing.Size(209, 17);
+            this.checkBoxDeleteInputVideoAfterGeneration.TabIndex = 3;
+            this.checkBoxDeleteInputVideoAfterGeneration.Text = "Delete input video file after \"Generate\"";
+            this.checkBoxDeleteInputVideoAfterGeneration.UseVisualStyleBackColor = true;
+            // 
             // GenerateVideoWithSoftSubs
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(960, 476);
+            this.Controls.Add(this.checkBoxDeleteInputVideoAfterGeneration);
             this.Controls.Add(this.labelPleaseWait);
             this.Controls.Add(this.groupBoxSettings);
             this.Controls.Add(this.buttonGenerate);
@@ -652,5 +666,6 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripMenuItem promptParameterBeforeGenerateToolStripMenuItem;
         private System.Windows.Forms.Label labelNotSupported;
         private System.Windows.Forms.Label labelPleaseWait;
+        private System.Windows.Forms.CheckBox checkBoxDeleteInputVideoAfterGeneration;
     }
 }
