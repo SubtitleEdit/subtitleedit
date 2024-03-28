@@ -47,11 +47,11 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
 
         public async Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
         {
-            var model = Configuration.Settings.Tools.ChatGptApiKey;
+            var model = Configuration.Settings.Tools.ChatGptModel;
             if (string.IsNullOrEmpty(model))
             {
                 model = "gpt-3.5-turbo";
-                Configuration.Settings.Tools.ChatGptApiKey = model;
+                Configuration.Settings.Tools.ChatGptModel = model;
             }
 
             var input = "{\"model\": \"" + model + "\",\"messages\": [{ \"role\": \"user\", \"content\": \"Please translate the following text from " + sourceLanguageCode + " to " + targetLanguageCode + ", only write the result: \\n\\n" + Json.EncodeJsonText(text.Trim()) + "\" }]}";

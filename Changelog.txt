@@ -1,6 +1,6 @@
 ﻿Subtitle Edit Changelog
 
-4.0.5 (xth May 2024) BETA
+4.0.5 (xth April 2024) BETA
 * NEW:
    * Add "Open video" toolbar button/image - thx jmaraujouy/Cyberyoda1411
    * Add support for S_HDMV/TEXTST in MKV in batch/cmd-line - thx ipsi
@@ -17,7 +17,8 @@
 * FIXED:
    * Fix for Whisper post-processing - thx Purfview/cvrle77
    * Fix crash in "Fix common errors" - thx Joe
-   * Fix issue with NikseCombobox and ContextMenuStrip - thx ivandrofly
+   * Fix issue with Combobox and ContextMenuStrip - thx ivandrofly
+   * Fix ChatGTP translate - thx longhoang1993
 
 
 4.0.4 (17th March 2024)
