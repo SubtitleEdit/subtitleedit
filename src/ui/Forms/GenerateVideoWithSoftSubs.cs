@@ -467,12 +467,12 @@ namespace Nikse.SubtitleEdit.Forms
         {
             var fileName = Path.GetFileNameWithoutExtension(_inputVideoFileName);
 
-            var postFixesToRemove = new List<string> { "softsub", "SoftSub", "embed", "Embed", Configuration.Settings.Tools.GenVideoEmbedOutputSuffix };
-            foreach (var postFix in postFixesToRemove)
+            var suffixesToRemove = new List<string> { "softsub", "SoftSub", "embed", "Embed", Configuration.Settings.Tools.GenVideoEmbedOutputSuffix };
+            foreach (var suffix in suffixesToRemove)
             {
-                fileName = fileName.Replace("." + postFix, string.Empty);
-                fileName = fileName.Replace("_" + postFix, string.Empty);
-                fileName = fileName.Replace("-" + postFix, string.Empty);
+                fileName = fileName.Replace("." + suffix, string.Empty);
+                fileName = fileName.Replace("_" + suffix, string.Empty);
+                fileName = fileName.Replace("-" + suffix, string.Empty);
             }
 
             if (!string.IsNullOrWhiteSpace(Configuration.Settings.Tools.GenVideoEmbedOutputSuffix))
