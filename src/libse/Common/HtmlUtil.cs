@@ -615,7 +615,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 fromLenIdx--;
             }
 
-            fromLenIdx = fromLenIdx > 0 ? fromLenIdx : len;
+            fromLenIdx = fromLenIdx > 0 ? fromLenIdx : len - 1;
             
             // no formattable text in between
             if (fromLenIdx < index)
