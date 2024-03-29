@@ -365,7 +365,8 @@ namespace Nikse.SubtitleEdit.Logic
 
             var subsInput = string.Empty;
             var subsMeta = string.Empty;
-            var map = "-map 0";
+            var isSourceMp4 = inputVideoFileName.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase);
+            var map = isSourceMp4 ? "-map 0:a -map 0:v" : "-map 0";
 
             foreach (var trackToDelete in softSubsToDelete)
             {
@@ -400,6 +401,11 @@ namespace Nikse.SubtitleEdit.Logic
                     if (languageName == null)
                     {
                         languageName = Iso639Dash2LanguageCode.List.FirstOrDefault(p => p.TwoLetterCode == lang || p.EnglishName.ToLowerInvariant() == lang)?.EnglishName;
+                    }
+
+                    if (!string.IsNullOrEmpty(softSub.Title))
+                    {
+                        languageName = softSub.Title;
                     }
 
                     if (!string.IsNullOrEmpty(threeLetterCode) && !string.IsNullOrEmpty(languageName))

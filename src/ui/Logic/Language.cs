@@ -1282,6 +1282,7 @@ namespace Nikse.SubtitleEdit.Logic
                 ToggleDefault = "Toggle default",
                 Default = "Default",
                 SetLanguage = "Set language...",
+                LanguageAndTitle = "Language/title",
                 XGeneratedWithEmbeddedSubs = "\"{0}\" generated with embedded subtitles",
                 DeleteInputVideo = "Delete input video file after \"Generate\"",
             };
