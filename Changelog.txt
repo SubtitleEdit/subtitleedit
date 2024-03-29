@@ -6,6 +6,7 @@
    * Add support for S_HDMV/TEXTST in MKV in batch/cmd-line - thx ipsi
    * Add French interjections
    * Add a few quick setting buttons for Purfview's Faster Whisper Advanced
+   * Add support for Bluray .sup (PGS) embedding in Matroska (.mks) file
 * IMPROVED:
    * Update German translation - thx Netspark
    * Update Spanish AR & MX translation - thx jmaraujouy
@@ -15,11 +16,15 @@
    * Update libmpv to 2024-03-17
    * Update yt-dlp to 2024-03-10
    * Update ffmpeg to 2024-03-25
+   * Add a few settings for embed output file name - thx liam1900
+   * Allow up/down to navigate through combobox - thx ivandrofly/fraternl
+   * Changed fix invalid italics to add more tags - thx ivandrofly/uckthis
 * FIXED:
    * Fix for Whisper post-processing - thx Purfview/cvrle77
    * Fix crash in "Fix common errors" - thx Joe
    * Fix issue with Combobox and ContextMenuStrip - thx ivandrofly
    * Fix ChatGTP translate - thx longhoang1993
+   * Fix "Batch convert" crash on Linux - thx ivandrofly/aggravatedanteater 
 
 
 4.0.4 (17th March 2024)
