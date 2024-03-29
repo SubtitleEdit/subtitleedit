@@ -33,7 +33,7 @@
             this.labelSuffix = new System.Windows.Forms.Label();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
-            this.textBoxReplaceList = new Nikse.SubtitleEdit.Controls.SETextBox();
+            this.textBoxReplaceList = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.SuspendLayout();
             // 
             // textBoxSuffix
@@ -92,29 +92,15 @@
             // 
             // textBoxReplaceList
             // 
-            this.textBoxReplaceList.BackColor = System.Drawing.SystemColors.Window;
-            this.textBoxReplaceList.CurrentLanguage = "";
-            this.textBoxReplaceList.CurrentLineIndex = 0;
-            this.textBoxReplaceList.HideSelection = true;
-            this.textBoxReplaceList.IsDictionaryDownloaded = true;
-            this.textBoxReplaceList.IsSpellCheckerInitialized = false;
-            this.textBoxReplaceList.IsSpellCheckRequested = false;
-            this.textBoxReplaceList.IsWrongWord = false;
-            this.textBoxReplaceList.LanguageChanged = false;
-            this.textBoxReplaceList.Location = new System.Drawing.Point(15, 115);
-            this.textBoxReplaceList.MaxLength = 32767;
+            this.textBoxReplaceList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxReplaceList.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.textBoxReplaceList.Location = new System.Drawing.Point(12, 114);
             this.textBoxReplaceList.Multiline = true;
             this.textBoxReplaceList.Name = "textBoxReplaceList";
-            this.textBoxReplaceList.Padding = new System.Windows.Forms.Padding(1);
-            this.textBoxReplaceList.ReadOnly = false;
-            this.textBoxReplaceList.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
-            this.textBoxReplaceList.SelectedText = "";
-            this.textBoxReplaceList.SelectionLength = 0;
-            this.textBoxReplaceList.SelectionStart = 0;
-            this.textBoxReplaceList.Size = new System.Drawing.Size(351, 213);
-            this.textBoxReplaceList.TabIndex = 20;
-            this.textBoxReplaceList.TextBoxFont = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Bold);
-            this.textBoxReplaceList.UseSystemPasswordChar = false;
+            this.textBoxReplaceList.Size = new System.Drawing.Size(354, 214);
+            this.textBoxReplaceList.TabIndex = 104;
             // 
             // GenerateVideoWithSoftSubsOutFileName
             // 
@@ -128,7 +114,7 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.textBoxSuffix);
             this.KeyPreview = true;
-            this.MaximumSize = new System.Drawing.Size(394, 408);
+            this.MinimumSize = new System.Drawing.Size(394, 408);
             this.Name = "GenerateVideoWithSoftSubsOutFileName";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
@@ -147,6 +133,6 @@
         private System.Windows.Forms.Label labelSuffix;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonOK;
-        private Controls.SETextBox textBoxReplaceList;
+        private Controls.NikseTextBox textBoxReplaceList;
     }
 }

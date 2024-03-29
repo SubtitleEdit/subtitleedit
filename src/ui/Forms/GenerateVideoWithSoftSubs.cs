@@ -565,7 +565,10 @@ namespace Nikse.SubtitleEdit.Forms
             var fileName = Path.GetFileNameWithoutExtension(_inputVideoFileName);
 
             var suffixesToRemove = new List<string> { Configuration.Settings.Tools.GenVideoEmbedOutputSuffix };
-            suffixesToRemove.AddRange(Configuration.Settings.Tools.GenVideoEmbedOutputReplace.SplitToLines());
+            if (Configuration.Settings.Tools.GenVideoEmbedOutputReplace != null)
+            {
+                suffixesToRemove.AddRange(Configuration.Settings.Tools.GenVideoEmbedOutputReplace.SplitToLines());
+            }
 
             foreach (var suffix in suffixesToRemove.Where(p => p.Length > 0).OrderByDescending(p => p.Length))
             {
