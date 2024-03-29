@@ -1106,6 +1106,7 @@
             public string Default { get; set; }
             public string XGeneratedWithEmbeddedSubs { get; set; }
             public string DeleteInputVideo { get; set; }
+            public string OutputFileNameSettings { get; set; }
         }
 
         public class GetDictionaries

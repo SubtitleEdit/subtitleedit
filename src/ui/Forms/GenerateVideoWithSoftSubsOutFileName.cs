@@ -3,7 +3,7 @@ using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public partial class GenerateVideoWithSoftSubsOutFileName : Form
+    public sealed partial class GenerateVideoWithSoftSubsOutFileName : Form
     {
         public string Suffix { get; set; }
         public string ReplaceList { get; set; }
@@ -13,6 +13,11 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.PreInitialize(this);
             InitializeComponent();
             UiUtil.FixFonts(this);
+
+            Text = LanguageSettings.Current.GenerateVideoWithEmbeddedSubs.OutputFileNameSettings.Trim('.');
+            labelSuffix.Text = LanguageSettings.Current.Settings.Suffix;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
 
             textBoxSuffix.Text = suffix;
             textBoxReplaceList.Text = replaceList;
