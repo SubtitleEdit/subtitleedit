@@ -518,6 +518,18 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
+            var inputFileInfo = new FileInfo(_inputVideoFileName);
+            var outputFileInfo = new FileInfo(VideoFileName);
+            if (inputFileInfo.Length > 5_000_000 && outputFileInfo.Length < 9_000)
+            {
+                SeLogger.Error(Environment.NewLine + "Generate embedded video file very small: " + Environment.NewLine + _log);
+                MessageBox.Show("Generate embedded video seems very small - it probably failed!" + Environment.NewLine +
+                                "For more info see the error log: " + SeLogger.ErrorFile, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                buttonGenerate.Enabled = true;
+                groupBoxSettings.Enabled = true;
+                return;
+            }
+
             if (checkBoxDeleteInputVideoAfterGeneration.Checked && File.Exists(_inputVideoFileName))
             {
                 try
