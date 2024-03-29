@@ -1031,6 +1031,7 @@ We leverage the intrinsic rhythm of the image.</CreateSimpleChainingToolTip>
     <Default>Default</Default>
     <XGeneratedWithEmbeddedSubs>"{0}" generated with embedded subtitles</XGeneratedWithEmbeddedSubs>
     <DeleteInputVideo>Delete input video file after "Generate"</DeleteInputVideo>
+    <OutputFileNameSettings>Output file name settings...</OutputFileNameSettings>
   </GenerateVideoWithEmbeddedSubs>
   <GetDictionaries>
     <Title>Need dictionaries?</Title>
