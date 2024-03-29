@@ -596,7 +596,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             var len = text.Length;
-            int index = 0;
+            var index = 0;
             while (index < len && text[index] == '<')
             {
                 index = text.IndexOf('>', index + 1);
@@ -618,9 +618,12 @@ namespace Nikse.SubtitleEdit.Core.Common
             fromLenIdx = fromLenIdx > 0 ? fromLenIdx : len;
             
             // no formattable text in between
-            if (fromLenIdx < index) return false;
+            if (fromLenIdx < index)
+            {
+                return false;
+            }
 
-            for (int i = index; i <= fromLenIdx; i++)
+            for (var i = index; i <= fromLenIdx; i++)
             {
                 if (char.IsLetterOrDigit(text[i]))
                 {
