@@ -564,12 +564,15 @@ namespace Nikse.SubtitleEdit.Forms
         {
             var fileName = Path.GetFileNameWithoutExtension(_inputVideoFileName);
 
-            var suffixesToRemove = new List<string> { "softsub", "SoftSub", "embed", "Embed", Configuration.Settings.Tools.GenVideoEmbedOutputSuffix };
-            foreach (var suffix in suffixesToRemove)
+            var suffixesToRemove = new List<string> { Configuration.Settings.Tools.GenVideoEmbedOutputSuffix };
+            suffixesToRemove.AddRange(Configuration.Settings.Tools.GenVideoEmbedOutputReplace.SplitToLines());
+
+            foreach (var suffix in suffixesToRemove.Where(p => p.Length > 0).OrderByDescending(p => p.Length))
             {
                 fileName = fileName.Replace("." + suffix, string.Empty);
                 fileName = fileName.Replace("_" + suffix, string.Empty);
                 fileName = fileName.Replace("-" + suffix, string.Empty);
+                fileName = fileName.Replace(suffix, string.Empty);
             }
 
             if (!string.IsNullOrWhiteSpace(Configuration.Settings.Tools.GenVideoEmbedOutputSuffix))
@@ -751,8 +754,11 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
 
+                buttonClear_Click(null, null);
                 LoadVideo(openFileDialog1.FileName);
             }
+
+            listViewSubtitles_SelectedIndexChanged(null, null);
         }
 
         private void buttonAddSubtitles_Click(object sender, EventArgs e)
@@ -774,6 +780,8 @@ namespace Nikse.SubtitleEdit.Forms
                     AddListViewItem(fileName);
                 }
             }
+
+            listViewSubtitles_SelectedIndexChanged(null, null);
         }
 
         private static string GetOpenSubtitleDialogFilter()
@@ -1046,7 +1054,7 @@ namespace Nikse.SubtitleEdit.Forms
             var count = listViewSubtitles.SelectedItems.Count;
 
             ButtonRemoveSubtitles.Enabled = count > 0;
-            buttonClear.Enabled = count > 0;
+            buttonClear.Enabled = listViewSubtitles.Items.Count > 0;
             ButtonMoveSubUp.Enabled = count == 1;
             ButtonMoveSubDown.Enabled = count == 1;
             buttonToggleForced.Enabled = count > 0;
@@ -1099,11 +1107,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void setSuffixToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            using (var form = new TextPrompt(string.Empty, "Suffix", Configuration.Settings.Tools.GenVideoEmbedOutputSuffix))
+            using (var form = new GenerateVideoWithSoftSubsOutFileName(Configuration.Settings.Tools.GenVideoEmbedOutputSuffix, Configuration.Settings.Tools.GenVideoEmbedOutputReplace))
             {
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
-                    Configuration.Settings.Tools.GenVideoEmbedOutputSuffix = form.InputText;
+                    Configuration.Settings.Tools.GenVideoEmbedOutputSuffix = form.Suffix;
+                    Configuration.Settings.Tools.GenVideoEmbedOutputReplace = form.ReplaceList;
                 }
             }
         }

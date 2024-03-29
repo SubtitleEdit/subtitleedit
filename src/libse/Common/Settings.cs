@@ -464,6 +464,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public bool GenVideoNonAssaFixRtlUnicode { get; set; }
         public string GenVideoEmbedOutputExt { get; set; }
         public string GenVideoEmbedOutputSuffix { get; set; }
+        public string GenVideoEmbedOutputReplace { get; set; }
         public bool GenVideoDeleteInputVideoFile { get; set; }
 
         public bool VoskPostProcessing { get; set; }
@@ -711,6 +712,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             GenVideoNonAssaBoxColor = Color.FromArgb(150, 0, 0, 0);
             GenVideoNonAssaTextColor = Color.White;
             GenVideoEmbedOutputSuffix = "embed";
+            GenVideoEmbedOutputReplace = "embed" + Environment.NewLine + "SoftSub" + Environment.NewLine + "SoftSubbed";
             VoskPostProcessing = true;
             WhisperChoice = Configuration.IsRunningOnWindows ? AudioToText.WhisperChoice.PurfviewFasterWhisper : AudioToText.WhisperChoice.OpenAi;
             WhisperDeleteTempFiles = true;
@@ -7055,6 +7057,12 @@ $HorzAlign          =   Center
                 settings.Tools.GenVideoEmbedOutputSuffix = subNode.InnerText;
             }
 
+            subNode = node.SelectSingleNode("GenVideoEmbedOutputReplace");
+            if (subNode != null)
+            {
+                settings.Tools.GenVideoEmbedOutputReplace = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("GenVideoDeleteInputVideoFile");
             if (subNode != null)
             {
@@ -12132,6 +12140,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("GenVideoNonAssaFixRtlUnicode", settings.Tools.GenVideoNonAssaFixRtlUnicode.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("GenVideoEmbedOutputExt", settings.Tools.GenVideoEmbedOutputExt);
                 textWriter.WriteElementString("GenVideoEmbedOutputSuffix", settings.Tools.GenVideoEmbedOutputSuffix);
+                textWriter.WriteElementString("GenVideoEmbedOutputReplace", settings.Tools.GenVideoEmbedOutputReplace);
                 textWriter.WriteElementString("GenVideoDeleteInputVideoFile", settings.Tools.GenVideoDeleteInputVideoFile.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("VoskPostProcessing", settings.Tools.VoskPostProcessing.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("VoskModel", settings.Tools.VoskModel);
