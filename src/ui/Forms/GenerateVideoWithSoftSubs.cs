@@ -75,6 +75,8 @@ namespace Nikse.SubtitleEdit.Forms
             toggleDefaultToolStripMenuItem.Text = LanguageSettings.Current.GenerateVideoWithEmbeddedSubs.ToggleDefault;
             setLanguageToolStripMenuItem.Text = LanguageSettings.Current.GenerateVideoWithEmbeddedSubs.SetLanguage;
             viewToolStripMenuItem.Text = LanguageSettings.Current.General.ShowPreview;
+            setSuffixToolStripMenuItem.Text = LanguageSettings.Current.GenerateVideoWithEmbeddedSubs.OutputFileNameSettings;
+            toolStripMenuItemSuffix2.Text = LanguageSettings.Current.GenerateVideoWithEmbeddedSubs.OutputFileNameSettings;
 
             promptParameterBeforeGenerateToolStripMenuItem.Text = LanguageSettings.Current.GenerateBlankVideo.GenerateWithFfmpegParametersPrompt;
             labelSubtitles.Text = string.Format(LanguageSettings.Current.GenerateVideoWithEmbeddedSubs.SubtitlesX, 0);

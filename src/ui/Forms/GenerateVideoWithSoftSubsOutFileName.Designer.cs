@@ -1,6 +1,6 @@
 ﻿namespace Nikse.SubtitleEdit.Forms
 {
-    partial class GenerateVideoWithSoftSubsOutFileName
+    sealed partial class GenerateVideoWithSoftSubsOutFileName
     {
         /// <summary>
         /// Required designer variable.
