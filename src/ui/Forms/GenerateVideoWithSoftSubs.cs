@@ -26,6 +26,7 @@ namespace Nikse.SubtitleEdit.Forms
         private string _inputVideoFileName;
         private StringBuilder _log;
         private readonly List<VideoPreviewGeneratorSub> _softSubs = new List<VideoPreviewGeneratorSub>();
+        private readonly List<VideoPreviewGeneratorSub> _tracksToDelete = new List<VideoPreviewGeneratorSub>();
         private bool _promptFFmpegParameters;
         private readonly List<string> _cleanUpFolders = new List<string>();
 
@@ -132,7 +133,6 @@ namespace Nikse.SubtitleEdit.Forms
             _inputVideoFileName = inputVideoFileName;
             _videoInfo = videoInfo;
 
-
             using (var matroska = new MatroskaFile(inputVideoFileName))
             {
                 if (matroska.IsValid)
@@ -159,6 +159,8 @@ namespace Nikse.SubtitleEdit.Forms
 
                 listViewSubtitles.EndUpdate();
             }
+
+            _tracksToDelete.Clear();
         }
 
         private void AddListViewItem(Trak track)
@@ -185,7 +187,7 @@ namespace Nikse.SubtitleEdit.Forms
             var item = new ListViewItem
             {
                 Tag = sub,
-                Text = sub.SubtitleFormat != null ? sub.SubtitleFormat.Name : sub.Format,
+                Text = sub.SubtitleFormat ?? sub.Format,
             };
             item.SubItems.Add(GetDisplayLanguage(sub.Language));
             item.SubItems.Add(sub.IsDefault.ToString(CultureInfo.InvariantCulture));
@@ -221,8 +223,24 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void AddListViewItem(MatroskaTrackInfo track, MatroskaFile matroska)
         {
+            if (track.CodecId.Equals("S_HDMV/PGS", StringComparison.OrdinalIgnoreCase))
+            {
+                AddListViewItem(new VideoPreviewGeneratorSub
+                {
+                    Name = track.CodecId,
+                    Language = track.Language,
+                    IsNew = false,
+                    IsForced = track.IsForced,
+                    IsDefault = track.IsDefault,
+                    Tag = track,
+                    SubtitleFormat = track.CodecId,
+                });
+
+                return;
+            }
+
+
             if (track.CodecId.Equals("S_VOBSUB", StringComparison.OrdinalIgnoreCase) ||
-                track.CodecId.Equals("S_HDMV/PGS", StringComparison.OrdinalIgnoreCase) ||
                 track.CodecId.Equals("S_HDMV/TEXTST", StringComparison.OrdinalIgnoreCase) ||
                 track.CodecId.Equals("S_DVBSUB", StringComparison.OrdinalIgnoreCase))
             {
@@ -253,7 +271,7 @@ namespace Nikse.SubtitleEdit.Forms
                 IsForced = track.IsForced,
                 IsDefault = track.IsDefault,
                 Tag = track,
-                SubtitleFormat = format,
+                SubtitleFormat = format.GetType().Name,
                 FileName = fileName,
             });
         }
@@ -268,19 +286,17 @@ namespace Nikse.SubtitleEdit.Forms
             if (fileName.EndsWith(".sup", StringComparison.OrdinalIgnoreCase) &&
                 FileUtil.IsBluRaySup(fileName))
             {
-                MessageBox.Show("FFmpeg does not support embedding of PGS/Blu-ray sup :(");
-
-                //AddListViewItem(new VideoPreviewGeneratorSub
-                //{
-                //    Name = Path.GetFileName(fileName),
-                //    Language = "eng", //TODO: get from file name or sup
-                //    Format = "Blu-ray sup",
-                //    SubtitleFormat = null,
-                //    IsNew = true,
-                //    IsForced = false,
-                //    IsDefault = false,
-                //    FileName = fileName,
-                //});
+                AddListViewItem(new VideoPreviewGeneratorSub
+                {
+                    Name = Path.GetFileName(fileName),
+                    Language = GetLanguageFromFileName(fileName),
+                    Format = "Blu-ray sup",
+                    SubtitleFormat = null,
+                    IsNew = true,
+                    IsForced = false,
+                    IsDefault = false,
+                    FileName = fileName,
+                });
                 return;
             }
 
@@ -301,12 +317,47 @@ namespace Nikse.SubtitleEdit.Forms
                 Name = Path.GetFileName(fileName),
                 Language = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle),
                 Format = subtitle.OriginalFormat.FriendlyName,
-                SubtitleFormat = subtitle.OriginalFormat,
+                SubtitleFormat = subtitle.OriginalFormat.GetType().Name,
                 IsNew = true,
                 IsForced = false,
                 IsDefault = false,
                 FileName = fileName,
             });
+        }
+
+        private static string GetLanguageFromFileName(string fileName)
+        {
+            var defaultLanguage = "eng";
+
+            if (string.IsNullOrEmpty(fileName))
+            {
+                return defaultLanguage;
+            }
+
+            var fileNameNoExt = Path.GetFileNameWithoutExtension(fileName);
+            var split = fileNameNoExt.Split('.', '_', '_');
+            var last = split.LastOrDefault();
+
+            if (last == null)
+            {
+                return defaultLanguage;
+            }
+
+            if (last.Length == 3)
+            {
+                return last;
+            }
+
+            if (last.Length == 2)
+            {
+                var threeLetterCode = Iso639Dash2LanguageCode.GetThreeLetterCodeFromTwoLetterCode(last);
+                if (threeLetterCode.Length == 3)
+                {
+                    return threeLetterCode;
+                }
+            }
+
+            return defaultLanguage;
         }
 
         private string GetKnownFileNameOrConvertToSrtOrUtf8(string fileName, Subtitle subtitle)
@@ -388,6 +439,13 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 VideoFileName = saveDialog.FileName;
+            }
+
+            var isMp4 = VideoFileName.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase);
+            if (isMp4 && _softSubs.Any(p => p.SubtitleFormat == "S_HDMV/PGS"))
+            {
+                MessageBox.Show("Cannot embed S_HDMV/PGS in MP4");
+                return;
             }
 
             if (File.Exists(VideoFileName))
@@ -550,6 +608,7 @@ namespace Nikse.SubtitleEdit.Forms
             return VideoPreviewGenerator.GenerateSoftCodedVideoFile(
                 inputVideoFileName,
                 _softSubs,
+                _tracksToDelete,
                 outputVideoFileName,
                 OutputHandler);
         }
@@ -756,6 +815,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             foreach (var index in list.OrderByDescending(p => p))
             {
+                _tracksToDelete.Add(_softSubs[index]);
                 _softSubs.RemoveAt(index);
                 listViewSubtitles.Items.RemoveAt(index);
             }
@@ -780,6 +840,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonClear_Click(object sender, EventArgs e)
         {
             listViewSubtitles.Items.Clear();
+            _tracksToDelete.AddRange(_softSubs);
             _softSubs.Clear();
             labelSubtitles.Text = string.Format(LanguageSettings.Current.GenerateVideoWithEmbeddedSubs.SubtitlesX, listViewSubtitles.Items.Count);
         }

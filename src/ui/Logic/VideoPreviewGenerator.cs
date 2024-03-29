@@ -1,5 +1,4 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
-using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Forms;
 using System;
 using System.Collections.Generic;
@@ -9,6 +8,7 @@ using System.Drawing.Imaging;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 
 namespace Nikse.SubtitleEdit.Logic
 {
@@ -355,17 +355,115 @@ namespace Nikse.SubtitleEdit.Logic
             return ffmpegLocation;
         }
 
-        public static Process GenerateSoftCodedVideoFile(string inputVideoFileName, List<VideoPreviewGeneratorSub> softSubs, string outputVideoFileName, DataReceivedEventHandler outputHandler)
+        public static Process GenerateSoftCodedVideoFile(string inputVideoFileName, List<VideoPreviewGeneratorSub> softSubs, List<VideoPreviewGeneratorSub> softSubsToDelete, string outputVideoFileName, DataReceivedEventHandler outputHandler)
+        {
+            var isMp4 = outputVideoFileName.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase);
+            if (isMp4)
+            {
+                return GenerateSoftCodedVideoFileMp4(inputVideoFileName, softSubs, outputVideoFileName, outputHandler);
+            }
+
+            var subsInput = string.Empty;
+            var subsMeta = string.Empty;
+            var map = "-map 0";
+
+            foreach (var trackToDelete in softSubsToDelete)
+            {
+                if (!trackToDelete.IsNew && trackToDelete.Tag is MatroskaTrackInfo trackInfo)
+                {
+                    map += $" -map -0:{trackInfo.TrackNumber - 1}";
+                }
+            }
+
+            var count = 1;
+            var number = 0;
+            foreach (var softSub in softSubs.Where(p => p.IsNew))
+            {
+                map += $" -map {count}";
+
+                subsInput += $" -i \"{softSub.FileName}\"";
+
+                if (!string.IsNullOrEmpty(softSub.Language))
+                {
+                    var lang = string.IsNullOrEmpty(softSub.Language) ? string.Empty : softSub.Language.ToLowerInvariant();
+                    var threeLetterCode = Iso639Dash2LanguageCode.GetThreeLetterCodeFromTwoLetterCode(lang);
+                    if (lang.Length == 3)
+                    {
+                        threeLetterCode = lang;
+                    }
+                    else if (lang.IndexOf('-') == 2)
+                    {
+                        threeLetterCode = Iso639Dash2LanguageCode.GetThreeLetterCodeFromTwoLetterCode(lang.Substring(0, 2));
+                    }
+
+                    var languageName = Iso639Dash2LanguageCode.List.FirstOrDefault(p => p.ThreeLetterCode == threeLetterCode)?.EnglishName;
+                    if (languageName == null)
+                    {
+                        languageName = Iso639Dash2LanguageCode.List.FirstOrDefault(p => p.TwoLetterCode == lang || p.EnglishName.ToLowerInvariant() == lang)?.EnglishName;
+                    }
+
+                    if (!string.IsNullOrEmpty(threeLetterCode) && !string.IsNullOrEmpty(languageName))
+                    {
+                        subsMeta += $" -metadata:s:s:{number} language=\"{threeLetterCode}\"";
+                        subsMeta += $" -metadata:s:s:{number} title=\"{languageName}\"";
+                    }
+                    else if (!string.IsNullOrEmpty(softSub.Language))
+                    {
+                        subsMeta += $" -metadata:s:s:{number} language=\"{softSub.Language}\"";
+                        subsMeta += $" -metadata:s:s:{number} title=\"{softSub.Language}\"";
+                    }
+                }
+
+                if (softSub.IsDefault)
+                {
+                    subsMeta += $" -disposition:s:s:{number} default";
+                }
+
+                if (softSub.IsForced)
+                {
+                    subsMeta += $" -disposition:s:s:{number} forced";
+                    subsMeta += $" -metadata:s:s:{number} forced=1";
+                }
+
+                count++;
+                number++;
+            }
+
+            subsInput = " " + subsInput.Trim();
+            if (subsInput.Trim().Length == 0)
+            {
+                subsInput = string.Empty;
+            }
+
+            subsMeta = " " + subsMeta.Trim();
+            if (subsMeta.Trim().Length == 0)
+            {
+                subsMeta = string.Empty;
+            }
+
+            var arguments = $"-i \"{inputVideoFileName}\" {subsInput.Trim()} {map.Trim()} -c copy {subsMeta.Trim()} \"{outputVideoFileName}\"".TrimStart();
+            var processMakeVideo = new Process
+            {
+                StartInfo =
+                {
+                    FileName = GetFfmpegLocation(),
+                    Arguments = arguments,
+                    UseShellExecute = false,
+                    CreateNoWindow = true,
+                }
+            };
+
+            processMakeVideo.StartInfo.Arguments = processMakeVideo.StartInfo.Arguments.Trim();
+            SetupDataReceiveHandler(outputHandler, processMakeVideo);
+            return processMakeVideo;
+        }
+
+        private static Process GenerateSoftCodedVideoFileMp4(string inputVideoFileName, List<VideoPreviewGeneratorSub> softSubs, string outputVideoFileName, DataReceivedEventHandler outputHandler)
         {
             var subsInput = string.Empty;
             var subsMap = string.Empty;
             var subsMeta = string.Empty;
             var subsFormat = string.Empty;
-
-            var ffmpegInfo = FfmpegMediaInfo.Parse(inputVideoFileName);
-            var audioTrackCount = ffmpegInfo.Tracks.Count(p => p.TrackType == FfmpegTrackType.Audio);
-
-            var isMp4 = outputVideoFileName.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase);
 
             var count = 1;
             var number = 0;
@@ -416,31 +514,7 @@ namespace Nikse.SubtitleEdit.Logic
                     subsMeta += $" -metadata:s:s:{number} forced=1";
                 }
 
-                if (isMp4)
-                {
-                    subsFormat = " -c:s mov_text";
-                }
-                else if (softSub.SubtitleFormat == null && softSub.Format == "Blu-ray sup")
-                {
-                    subsFormat += $" -c:s:s:{number} copy"; // should be "pgs" or "pgssub" or ?
-                }
-                else if (softSub.SubtitleFormat?.GetType() == typeof(SubRip))
-                {
-                    subsFormat += $" -c:s:s:{number} srt";
-                }
-                else if (softSub.SubtitleFormat?.GetType() == typeof(AdvancedSubStationAlpha))
-                {
-                    subsFormat += $" -c:s:s:{number} ass";
-                }
-                else if (softSub.SubtitleFormat?.GetType() == typeof(SubStationAlpha))
-                {
-                    subsFormat += $" -c:s:s:{number} ssa";
-                }
-                else if (softSub.SubtitleFormat?.GetType() == typeof(WebVTT) ||
-                         softSub.SubtitleFormat?.GetType() == typeof(WebVTTFileWithLineNumber))
-                {
-                    subsFormat += $" -c:s:s:{number} webvtt";
-                }
+                subsFormat = " -c:s mov_text";
 
                 count++;
                 number++;
