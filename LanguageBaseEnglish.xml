@@ -1025,6 +1025,7 @@ We leverage the intrinsic rhythm of the image.</CreateSimpleChainingToolTip>
     <InputVideoFile>Input video file</InputVideoFile>
     <SubtitlesX>Subtitles ({0})</SubtitlesX>
     <SetLanguage>Set language...</SetLanguage>
+    <LanguageAndTitle>Language/title</LanguageAndTitle>
     <ToggleForced>Toggle forced</ToggleForced>
     <ToggleDefault>Toggle default</ToggleDefault>
     <Default>Default</Default>

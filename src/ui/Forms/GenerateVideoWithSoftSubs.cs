@@ -296,13 +296,14 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     Name = Path.GetFileName(fileName),
                     Language = GetLanguageFromFileName(fileName),
-                    Format = "Blu-ray sup",
+                    Format = "S_HDMV/PGS",
                     SubtitleFormat = null,
                     IsNew = true,
                     IsForced = false,
                     IsDefault = false,
                     FileName = fileName,
                 });
+
                 return;
             }
 
