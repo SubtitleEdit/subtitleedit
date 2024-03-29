@@ -2722,6 +2722,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "GenerateVideoWithEmbeddedSubs/DeleteInputVideo":
                     language.GenerateVideoWithEmbeddedSubs.DeleteInputVideo = reader.Value;
                     break;
+                case "GenerateVideoWithEmbeddedSubs/OutputFileNameSettings":
+                    language.GenerateVideoWithEmbeddedSubs.OutputFileNameSettings = reader.Value;
+                    break;
                 case "GetDictionaries/Title":
                     language.GetDictionaries.Title = reader.Value;
                     break;
