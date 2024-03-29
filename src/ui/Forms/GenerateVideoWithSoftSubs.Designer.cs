@@ -66,8 +66,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.buttonOpenVideoFile = new System.Windows.Forms.Button();
-            this.textBoxInputFileName = new Nikse.SubtitleEdit.Controls.NikseTextBox();
-            this.textBoxLog = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.contextMenuStripRes = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.x2160ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.uHD3840x2160ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -85,10 +83,18 @@ namespace Nikse.SubtitleEdit.Forms
             this.x272ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.labelPleaseWait = new System.Windows.Forms.Label();
             this.checkBoxDeleteInputVideoAfterGeneration = new System.Windows.Forms.CheckBox();
+            this.contextMenuStripMain = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.setSuffixToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.textBoxInputFileName = new Nikse.SubtitleEdit.Controls.NikseTextBox();
+            this.textBoxLog = new Nikse.SubtitleEdit.Controls.NikseTextBox();
+            this.contextMenuStripMain2 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.toolStripMenuItemSuffix2 = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStripGenerate.SuspendLayout();
             this.groupBoxSettings.SuspendLayout();
             this.contextMenuSubtitles.SuspendLayout();
             this.contextMenuStripRes.SuspendLayout();
+            this.contextMenuStripMain.SuspendLayout();
+            this.contextMenuStripMain2.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonGenerate
@@ -145,6 +151,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxSettings.ContextMenuStrip = this.contextMenuStripMain;
             this.groupBoxSettings.Controls.Add(this.labelNotSupported);
             this.groupBoxSettings.Controls.Add(this.buttonSetLanguage);
             this.groupBoxSettings.Controls.Add(this.buttonSetDefault);
@@ -305,8 +312,8 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // columnHeader2Language
             // 
-            this.columnHeader2Language.Text = "Language";
-            this.columnHeader2Language.Width = 120;
+            this.columnHeader2Language.Text = "Language/title";
+            this.columnHeader2Language.Width = 125;
             // 
             // columnHeader3Default
             // 
@@ -434,27 +441,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonOpenVideoFile.UseVisualStyleBackColor = true;
             this.buttonOpenVideoFile.Click += new System.EventHandler(this.buttonOpenVideoFile_Click);
             // 
-            // textBoxInputFileName
-            // 
-            this.textBoxInputFileName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxInputFileName.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            this.textBoxInputFileName.Location = new System.Drawing.Point(22, 44);
-            this.textBoxInputFileName.Name = "textBoxInputFileName";
-            this.textBoxInputFileName.ReadOnly = true;
-            this.textBoxInputFileName.Size = new System.Drawing.Size(860, 20);
-            this.textBoxInputFileName.TabIndex = 16;
-            // 
-            // textBoxLog
-            // 
-            this.textBoxLog.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            this.textBoxLog.Location = new System.Drawing.Point(12, 13);
-            this.textBoxLog.Multiline = true;
-            this.textBoxLog.Name = "textBoxLog";
-            this.textBoxLog.ReadOnly = true;
-            this.textBoxLog.Size = new System.Drawing.Size(188, 26);
-            this.textBoxLog.TabIndex = 31;
-            // 
             // contextMenuStripRes
             // 
             this.contextMenuStripRes.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -579,6 +565,55 @@ namespace Nikse.SubtitleEdit.Forms
             this.checkBoxDeleteInputVideoAfterGeneration.Text = "Delete input video file after \"Generate\"";
             this.checkBoxDeleteInputVideoAfterGeneration.UseVisualStyleBackColor = true;
             // 
+            // contextMenuStripMain
+            // 
+            this.contextMenuStripMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.setSuffixToolStripMenuItem});
+            this.contextMenuStripMain.Name = "contextMenuStripMain";
+            this.contextMenuStripMain.Size = new System.Drawing.Size(132, 26);
+            // 
+            // setSuffixToolStripMenuItem
+            // 
+            this.setSuffixToolStripMenuItem.Name = "setSuffixToolStripMenuItem";
+            this.setSuffixToolStripMenuItem.Size = new System.Drawing.Size(131, 22);
+            this.setSuffixToolStripMenuItem.Text = "Set suffix...";
+            this.setSuffixToolStripMenuItem.Click += new System.EventHandler(this.setSuffixToolStripMenuItem_Click);
+            // 
+            // textBoxInputFileName
+            // 
+            this.textBoxInputFileName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxInputFileName.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.textBoxInputFileName.Location = new System.Drawing.Point(22, 44);
+            this.textBoxInputFileName.Name = "textBoxInputFileName";
+            this.textBoxInputFileName.ReadOnly = true;
+            this.textBoxInputFileName.Size = new System.Drawing.Size(860, 20);
+            this.textBoxInputFileName.TabIndex = 16;
+            // 
+            // textBoxLog
+            // 
+            this.textBoxLog.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.textBoxLog.Location = new System.Drawing.Point(12, 13);
+            this.textBoxLog.Multiline = true;
+            this.textBoxLog.Name = "textBoxLog";
+            this.textBoxLog.ReadOnly = true;
+            this.textBoxLog.Size = new System.Drawing.Size(188, 26);
+            this.textBoxLog.TabIndex = 31;
+            // 
+            // contextMenuStripMain2
+            // 
+            this.contextMenuStripMain2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItemSuffix2});
+            this.contextMenuStripMain2.Name = "contextMenuStripMain";
+            this.contextMenuStripMain2.Size = new System.Drawing.Size(181, 48);
+            // 
+            // toolStripMenuItemSuffix2
+            // 
+            this.toolStripMenuItemSuffix2.Name = "toolStripMenuItemSuffix2";
+            this.toolStripMenuItemSuffix2.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItemSuffix2.Text = "Set suffix...";
+            this.toolStripMenuItemSuffix2.Click += new System.EventHandler(this.setSuffixToolStripMenuItem_Click);
+            // 
             // GenerateVideoWithSoftSubs
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -606,6 +641,8 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxSettings.PerformLayout();
             this.contextMenuSubtitles.ResumeLayout(false);
             this.contextMenuStripRes.ResumeLayout(false);
+            this.contextMenuStripMain.ResumeLayout(false);
+            this.contextMenuStripMain2.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -667,5 +704,9 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.Label labelNotSupported;
         private System.Windows.Forms.Label labelPleaseWait;
         private System.Windows.Forms.CheckBox checkBoxDeleteInputVideoAfterGeneration;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripMain;
+        private System.Windows.Forms.ToolStripMenuItem setSuffixToolStripMenuItem;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripMain2;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSuffix2;
     }
 }

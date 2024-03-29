@@ -1100,6 +1100,7 @@
             public string InputVideoFile { get; set; }
             public string SubtitlesX { get; set; }
             public string SetLanguage { get; set; }
+            public string LanguageAndTitle { get; set; }
             public string ToggleForced { get; set; }
             public string ToggleDefault { get; set; }
             public string Default { get; set; }

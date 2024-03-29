@@ -11,6 +11,7 @@ namespace Nikse.SubtitleEdit.Logic
         public string SubtitleFormat { get; set; }
         public string Format { get; set; }
         public string Language { get; set; }
+        public string Title { get; set; }
         public bool IsForced { get; set; }
         public bool IsDefault { get; set; }
         public object Tag { get; set; }
