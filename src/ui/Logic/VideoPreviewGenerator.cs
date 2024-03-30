@@ -467,16 +467,12 @@ namespace Nikse.SubtitleEdit.Logic
         private static Process GenerateSoftCodedVideoFileMp4(string inputVideoFileName, List<VideoPreviewGeneratorSub> softSubs, string outputVideoFileName, DataReceivedEventHandler outputHandler)
         {
             var subsInput = string.Empty;
-            var subsMap = string.Empty;
             var subsMeta = string.Empty;
-            var subsFormat = string.Empty;
 
-            var count = 1;
             var number = 0;
             foreach (var softSub in softSubs)
             {
                 subsInput += $" -i \"{softSub.FileName}\"";
-                subsMap += $" -map {count}";
 
                 if (!string.IsNullOrEmpty(softSub.Language))
                 {
@@ -520,9 +516,6 @@ namespace Nikse.SubtitleEdit.Logic
                     subsMeta += $" -metadata:s:s:{number} forced=1";
                 }
 
-                subsFormat = " -c:s mov_text";
-
-                count++;
                 number++;
             }
 
@@ -530,18 +523,6 @@ namespace Nikse.SubtitleEdit.Logic
             if (subsInput.Trim().Length == 0)
             {
                 subsInput = string.Empty;
-            }
-
-            subsMap = " " + subsMap.Trim();
-            if (subsMap.Trim().Length == 0)
-            {
-                subsMap = string.Empty;
-            }
-
-            subsFormat = " " + subsFormat.Trim();
-            if (subsFormat.Trim().Length == 0)
-            {
-                subsFormat = string.Empty;
             }
 
             subsMeta = " " + subsMeta.Trim();
@@ -555,7 +536,7 @@ namespace Nikse.SubtitleEdit.Logic
                 StartInfo =
                 {
                     FileName = GetFfmpegLocation(),
-                    Arguments = $"-i \"{inputVideoFileName}\"{subsInput} -map 0 -c copy -map -0:s{subsMap}{subsFormat}{subsMeta} \"{outputVideoFileName}\"".TrimStart(),
+                    Arguments = $"-i \"{inputVideoFileName}\"{subsInput} {subsMeta} -c:a copy -c:v copy -c:s mov_text \"{outputVideoFileName}\"".TrimStart(),
                     UseShellExecute = false,
                     CreateNoWindow = true,
                 }
