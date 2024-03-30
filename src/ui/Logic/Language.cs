@@ -2246,6 +2246,7 @@ namespace Nikse.SubtitleEdit.Logic
 
                     InsertNewSubtitleAtVideoPosition = "Insert new subtitle at video pos",
                     InsertNewSubtitleAtVideoPositionNoTextBoxFocus = "Insert new subtitle at video pos (no text box focus)",
+                    InsertNewSubtitleAtVideoPositionMax = "Insert new subtitle at video pos (as long as possible)",
                     Auto = "Auto",
                     PlayFromJustBeforeText = "Play from just before text",
                     PlayFromBeginning = "Play from beginning of video",

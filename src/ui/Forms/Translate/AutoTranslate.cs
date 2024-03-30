@@ -123,6 +123,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 new LibreTranslate(),
                 new MyMemoryApi(),
                 new ChatGptTranslate(),
+                new AnthropicTranslate(),
                 new GeminiTranslate(),
                 new PapagoTranslate(),
                 new NoLanguageLeftBehindServe(),
@@ -196,7 +197,10 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             if (engineType == typeof(DeepLTranslate))
             {
                 labelFormality.Visible = true;
+                labelFormality.Text = LanguageSettings.Current.GoogleTranslate.Formality;
+                comboBoxFormality.Left = labelFormality.Right + 3;
                 comboBoxFormality.Visible = true;
+                comboBoxFormality.DropDownStyle = ComboBoxStyle.DropDownList;
 
                 FillUrls(new List<string>
                 {
@@ -300,6 +304,27 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 return;
             }
 
+            if (engineType == typeof(AnthropicTranslate))
+            {
+                FillUrls(new List<string>
+                {
+                    Configuration.Settings.Tools.AnthropicApiUrl,
+                });
+
+                labelApiKey.Left = nikseComboBoxUrl.Right + 12;
+                nikseTextBoxApiKey.Text = Configuration.Settings.Tools.AnthropicApiKey;
+                nikseTextBoxApiKey.Left = labelApiKey.Right + 3;
+                labelApiKey.Visible = true;
+                nikseTextBoxApiKey.Visible = true;
+
+                labelFormality.Visible = true;
+                comboBoxFormality.Left = labelFormality.Right + 3;
+                comboBoxFormality.Visible = true;
+                comboBoxFormality.DropDownStyle = ComboBoxStyle.DropDown;
+                labelFormality.Text = LanguageSettings.Current.AudioToText.Model;
+
+                return;
+            }
 
             if (engineType == typeof(GeminiTranslate))
             {
@@ -901,6 +926,12 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             if (engineType == typeof(ChatGptTranslate) && !string.IsNullOrWhiteSpace(nikseTextBoxApiKey.Text))
             {
                 Configuration.Settings.Tools.ChatGptApiKey = nikseTextBoxApiKey.Text.Trim();
+            }
+
+            if (engineType == typeof(AnthropicTranslate) && !string.IsNullOrWhiteSpace(nikseTextBoxApiKey.Text))
+            {
+                Configuration.Settings.Tools.AnthropicApiKey = nikseTextBoxApiKey.Text.Trim();
+                Configuration.Settings.Tools.AnthropicApiModel = comboBoxFormality.Text.Trim();
             }
 
             if (engineType == typeof(GeminiTranslate) && !string.IsNullOrWhiteSpace(nikseTextBoxApiKey.Text))
