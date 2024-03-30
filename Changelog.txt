@@ -8,6 +8,7 @@
    * Add a few quick setting buttons for Purfview's Faster Whisper Advanced
    * Add a few animation templates for ASSA tool "Apply custom override tags"
    * Add French interjections
+   * Add new shortcut "Insert new subtitle at video pos (fill)" - thx Leon/AuroraMartell
 * IMPROVED:
    * Update German translation - thx Netspark
    * Update Spanish AR & MX translation - thx jmaraujouy
