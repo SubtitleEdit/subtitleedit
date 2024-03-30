@@ -800,7 +800,16 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             labelProgress.Refresh();
             Application.DoEvents();
             _resultList = new List<ResultText>();
-            var process = GetWhisperProcess(waveFileName, model.Name, _languageCode, checkBoxTranslateToEnglish.Checked, OutputHandler);
+
+            var inputFile = waveFileName;
+            if (!_useCenterChannelOnly && 
+                comboBoxWhisperEngine.Text == WhisperChoice.PurfviewFasterWhisper &&
+                _audioTrackNumber == 0)
+            {
+                inputFile = _videoFileName;
+            }
+
+            var process = GetWhisperProcess(inputFile, model.Name, _languageCode, checkBoxTranslateToEnglish.Checked, OutputHandler);
             var sw = Stopwatch.StartNew();
             _outputText.Add($"Calling whisper ({Configuration.Settings.Tools.WhisperChoice}) with : {process.StartInfo.FileName} {process.StartInfo.Arguments}{Environment.NewLine}");
             _startTicks = DateTime.UtcNow.Ticks;
@@ -867,7 +876,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
             process.Dispose();
 
-            if (GetResultFromSrt(waveFileName, out var resultTexts, _outputText, _filesToDelete))
+            if (GetResultFromSrt(waveFileName, _videoFileName, out var resultTexts, _outputText, _filesToDelete))
             {
                 var subtitle = new Subtitle();
                 subtitle.Paragraphs.AddRange(resultTexts.Select(p => new Paragraph(p.Text, (double)p.Start * 1000.0, (double)p.End * 1000.0)).ToList());
@@ -881,7 +890,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             return sub;
         }
 
-        public static bool GetResultFromSrt(string waveFileName, out List<ResultText> resultTexts, ConcurrentBag<string> outputText, List<string> filesToDelete)
+        public static bool GetResultFromSrt(string waveFileName, string videoFileName, out List<ResultText> resultTexts, ConcurrentBag<string> outputText, List<string> filesToDelete)
         {
             var srtFileName = waveFileName + ".srt";
             if (!File.Exists(srtFileName) && waveFileName.EndsWith(".wav"))
@@ -890,6 +899,11 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             }
 
             var whisperFolder = WhisperHelper.GetWhisperFolder() ?? string.Empty;
+            if (!string.IsNullOrEmpty(whisperFolder) && !File.Exists(whisperFolder) && !string.IsNullOrEmpty(videoFileName))
+            {
+                srtFileName = Path.Combine(whisperFolder, Path.GetFileNameWithoutExtension(videoFileName)) + ".srt";
+            }
+
             if (!File.Exists(srtFileName))
             {
                 srtFileName = Path.Combine(whisperFolder, Path.GetFileNameWithoutExtension(waveFileName)) + ".srt";

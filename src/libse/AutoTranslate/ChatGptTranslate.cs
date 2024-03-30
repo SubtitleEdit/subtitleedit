@@ -84,7 +84,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             return outputText;
         }
 
-        private static List<TranslationPair> ListLanguages()
+        public static List<TranslationPair> ListLanguages()
         {
             return new List<TranslationPair>
             {

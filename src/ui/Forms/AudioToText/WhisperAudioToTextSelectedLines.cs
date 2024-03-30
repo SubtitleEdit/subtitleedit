@@ -155,7 +155,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 var waveFileName = videoFileName;
 
                 _outputText.Add(string.Empty);
-                var transcript = TranscribeViaWhisper(waveFileName);
+                var transcript = TranscribeViaWhisper(waveFileName, videoFileName);
                 if (_cancel)
                 {
                     TaskbarList.SetProgressState(_parentForm.Handle, TaskbarButtonProgressFlags.NoProgress);
@@ -185,7 +185,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             DialogResult = DialogResult.OK;
         }
 
-        public List<ResultText> TranscribeViaWhisper(string waveFileName)
+        public List<ResultText> TranscribeViaWhisper(string waveFileName, string videoFileName)
         {
             var model = comboBoxModels.Items[comboBoxModels.SelectedIndex] as WhisperModel;
             if (model == null)
@@ -242,7 +242,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 System.Threading.Thread.Sleep(50);
             }
 
-            if (WhisperAudioToText.GetResultFromSrt(waveFileName, out var resultTexts, _outputText, null))
+            if (WhisperAudioToText.GetResultFromSrt(waveFileName, videoFileName, out var resultTexts, _outputText, null))
             {
                 return resultTexts;
             }
