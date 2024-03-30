@@ -21,10 +21,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
   <head>
     <styling>
       <style xml:id='style.center' tts:color='#ffffff' tts:opacity='1' tts:fontSize='100%' tts:fontFamily='default' tts:textAlign='center'/>
-      <style xml:id='italic' tts:shear='16.6667%' tts:opacity='1' tts:fontSize='100%' tts:fontFamily='default' tts:textAlign='center'/>
+      <style xml:id='italic' tts:shear='16.6667%' tts:opacity='1' tts:fontSize='100%' tts:fontFamily='default'/>
     </styling>
     <layout>
-      <region xml:id='region.bottomCenter' tts:origin='17.583% 73.414%' tts:extent='64.844% 16.667%' tts:displayAlign='after'/>
+      <region xml:id='region.topLeft' tts:origin='10% 10%' tts:extent='80% 40%' tts:displayAlign='before' tts:textAlign='start'/>
+      <region xml:id='region.topCenter' tts:origin='10% 10%' tts:extent='80% 40%' tts:displayAlign='center'  tts:textAlign='center'/>
+      <region xml:id='region.topRight' tts:origin='10% 10%' tts:extent='80% 40%' tts:displayAlign='after'  tts:textAlign='end'/>
+      <region xml:id='region.centerLeft' tts:origin='10% 30%' tts:extent='80% 40%' tts:displayAlign='before' tts:textAlign='start'/>
+      <region xml:id='region.centerCenter' tts:origin='10% 30%' tts:extent='80% 40%' tts:displayAlign='center'  tts:textAlign='center'/>
+      <region xml:id='region.centerRight' tts:origin='10% 30%' tts:extent='80% 40%' tts:displayAlign='after'  tts:textAlign='end'/>
+      <region xml:id='region.bottomLeft' tts:origin='17.583% 73.414%' tts:extent='64.844% 16.667%' tts:displayAlign='before'  tts:textAlign='start'/>
+      <region xml:id='region.bottomCenter' tts:origin='17.583% 73.414%' tts:extent='64.844% 16.667%' tts:displayAlign='center'  tts:textAlign='center'/>
+      <region xml:id='region.bottomRight' tts:origin='17.583% 73.414%' tts:extent='64.844% 16.667%' tts:displayAlign='after'  tts:textAlign='end'/>
     </layout>
   </head>
   <body>
@@ -153,47 +161,47 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static string GetRegionFromText(string text)
         {
-            //if (text.StartsWith(@"{\an7", StringComparison.Ordinal))
-            //{
-            //    return "region.topLeft";
-            //}
+            if (text.StartsWith(@"{\an7", StringComparison.Ordinal))
+            {
+                return "region.topLeft";
+            }
 
-            //if (text.StartsWith(@"{\an8", StringComparison.Ordinal))
-            //{
-            //    return "region.topCenter";
-            //}
+            if (text.StartsWith(@"{\an8", StringComparison.Ordinal))
+            {
+                return "region.topCenter";
+            }
 
-            //if (text.StartsWith(@"{\an9", StringComparison.Ordinal))
-            //{
-            //    return "region.topRight";
-            //}
-
-
-            //if (text.StartsWith(@"{\an4", StringComparison.Ordinal))
-            //{
-            //    return "region.centerLeft";
-            //}
-
-            //if (text.StartsWith(@"{\an5", StringComparison.Ordinal))
-            //{
-            //    return "region.centerCenter";
-            //}
-
-            //if (text.StartsWith(@"{\an6", StringComparison.Ordinal))
-            //{
-            //    return "region.centerRight";
-            //}
+            if (text.StartsWith(@"{\an9", StringComparison.Ordinal))
+            {
+                return "region.topRight";
+            }
 
 
-            //if (text.StartsWith(@"{\an1", StringComparison.Ordinal))
-            //{
-            //    return "region.bottomLeft";
-            //}
+            if (text.StartsWith(@"{\an4", StringComparison.Ordinal))
+            {
+                return "region.centerLeft";
+            }
 
-            //if (text.StartsWith(@"{\an3", StringComparison.Ordinal))
-            //{
-            //    return "region.bottomRight";
-            //}
+            if (text.StartsWith(@"{\an5", StringComparison.Ordinal))
+            {
+                return "region.centerCenter";
+            }
+
+            if (text.StartsWith(@"{\an6", StringComparison.Ordinal))
+            {
+                return "region.centerRight";
+            }
+
+
+            if (text.StartsWith(@"{\an1", StringComparison.Ordinal))
+            {
+                return "region.bottomLeft";
+            }
+
+            if (text.StartsWith(@"{\an3", StringComparison.Ordinal))
+            {
+                return "region.bottomRight";
+            }
 
             return "region.bottomCenter";
         }
