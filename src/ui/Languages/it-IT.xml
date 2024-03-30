@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>4.0.4</Version>
-    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 22.02.2024</TranslatedBy>
+    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 29.02.2024</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -1025,10 +1025,13 @@ Si sfrutta così il ritmo intrinseco dell'immagine.</CreateSimpleChainingToolTip
     <InputVideoFile>File video sorgente</InputVideoFile>
     <SubtitlesX>Sottotitoli ({0})</SubtitlesX>
     <SetLanguage>Imposta lingua...</SetLanguage>
+    <LanguageAndTitle>Lingua/titolo</LanguageAndTitle>
     <ToggleForced>Attiva/disattiva sottotitoli forzati</ToggleForced>
     <ToggleDefault>Attiva/disattiva impostazione predefinita</ToggleDefault>
     <Default>Predefinita</Default>
     <XGeneratedWithEmbeddedSubs>"{0}" generato con sottotitoli incorporati</XGeneratedWithEmbeddedSubs>
+    <DeleteInputVideo>Elimina file video sorgente dopo "Genera"</DeleteInputVideo>
+    <OutputFileNameSettings>Impostazioni nome file destinazione...</OutputFileNameSettings>
   </GenerateVideoWithEmbeddedSubs>
   <GetDictionaries>
     <Title>Aggiunta dizionari</Title>
@@ -1641,6 +1644,7 @@ Per usare una chiave API inserisci la chiave API di traduzione di Google in "Opz
       <StillTypingAutoContinueStopped>Immissione testo... continua automaticamente fermato</StillTypingAutoContinueStopped>
       <InsertNewSubtitleAtVideoPosition>Inserisci nuovo a posizione video</InsertNewSubtitleAtVideoPosition>
       <InsertNewSubtitleAtVideoPositionNoTextBoxFocus>Inserisci nuovo sottotitolo per il video (non concentrarti sulla casella di testo)</InsertNewSubtitleAtVideoPositionNoTextBoxFocus>
+      <InsertNewSubtitleAtVideoPositionMax>Inserisci nuovo sottotitolo nella posizione del video (il più lungo possibile)</InsertNewSubtitleAtVideoPositionMax>
       <Auto>Automatico</Auto>
       <PlayFromJustBeforeText>Riproduci dal testo precedente</PlayFromJustBeforeText>
       <PlayFromBeginning>Riproduci dall'inizio del video</PlayFromBeginning>
