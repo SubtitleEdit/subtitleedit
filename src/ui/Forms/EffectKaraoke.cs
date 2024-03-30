@@ -4,11 +4,26 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Core.Common.TextEffect;
 
 namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class EffectKaraoke : Form
     {
+        private class ComboboxEffectItem
+        {
+            private readonly string _name;
+            public bool IsMultiStrategy { get; }
+
+            public ComboboxEffectItem(string name, bool isMultiStrategy = false)
+            {
+                _name = name;
+                IsMultiStrategy = isMultiStrategy;
+            }
+
+            public override string ToString() => _name;
+        }
+        
         private Paragraph _paragraph;
         private List<Paragraph> _animation;
         private int _timerCount;
@@ -26,7 +41,19 @@ namespace Nikse.SubtitleEdit.Forms
             buttonPreview.Text = LanguageSettings.Current.General.Preview;
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
+
+            CreateComboboxItems();
+
             UiUtil.FixLargeFonts(this, buttonOK);
+        }
+
+        private void CreateComboboxItems()
+        {
+            comboBoxEffects.BeginUpdate();
+            comboBoxEffects.Items.Add(new ComboboxEffectItem("Legacy effect"));
+            comboBoxEffects.Items.Add(new ComboboxEffectItem("New effect", true));
+            comboBoxEffects.SelectedIndex = 1; // set new as default
+            comboBoxEffects.EndUpdate();
         }
 
         private void FormEffectKaraoke_KeyDown(object sender, KeyEventArgs e)
@@ -109,34 +136,41 @@ namespace Nikse.SubtitleEdit.Forms
         private void MakeAnimation()
         {
             _animation = new List<Paragraph>();
-
             if (HtmlUtil.RemoveHtmlTags(_paragraph.Text, true).Length == 0 || _paragraph.DurationTotalMilliseconds < 0.001)
             {
                 _animation.Add(new Paragraph(_paragraph));
                 return;
             }
 
-            var duration = _paragraph.DurationTotalMilliseconds - ((double)numericUpDownDelay.Value * TimeCode.BaseUnit);
-            var partsBase = EffectAnimationPart.MakeBase(_paragraph.Text);
-            var stepsLength = duration / partsBase.Count+1;
-            for (var index = 0; index <= partsBase.Count; index++)
-            {
-                var list = EffectAnimationPart.MakeEffectKaraoke(partsBase, panelColor.BackColor, index);
-                var text = EffectAnimationPart.ToString(list);
-                var startMilliseconds = index * stepsLength;
-                startMilliseconds += _paragraph.StartTime.TotalMilliseconds;
-                var endMilliseconds = ((index + 1) * stepsLength) - 1;
-                endMilliseconds += _paragraph.StartTime.TotalMilliseconds;
-                var start = new TimeCode(startMilliseconds);
-                var end = new TimeCode(endMilliseconds);
-                _animation.Add(new Paragraph(start, end, text));
-            }
+            var delaySeconds = (double)numericUpDownDelay.Value;
+            _animation.AddRange(GetSelectedFromCombobox().Transform(_paragraph, panelColor.BackColor, delaySeconds * TimeCode.BaseUnit));
 
             // All remaining time should go to the last paragraph.
             if (_animation.Count > 0)
             {
                 _animation[_animation.Count - 1].EndTime.TotalMilliseconds = _paragraph.EndTime.TotalMilliseconds;
             }
+        }
+
+        private ITextKaraokeEffect GetSelectedFromCombobox()
+        {
+            var comboboxEffectItem = (ComboboxEffectItem)comboBoxEffects.SelectedItem;;
+            if (comboboxEffectItem.IsMultiStrategy)
+            {
+                return new KaraokeEffect(SelectStrategy());
+            }
+
+            return new LegacyKaraokeEffect();
+        }
+
+        private TextEffectBase SelectStrategy()
+        {
+            if (radioButtonByCharEffect.Checked)
+            {
+                return new KaraokeCharTransform();
+            }
+
+            return new KaraokeWordTransform();
         }
 
         private void Timer1Tick(object sender, EventArgs e)
