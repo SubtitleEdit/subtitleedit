@@ -536,6 +536,8 @@ namespace Nikse.SubtitleEdit.Core.Common
             AutoTranslateDeepLUrl = "https://api-free.deepl.com/";
             ChatGptUrl = "https://api.openai.com/v1/chat/completions";
             ChatGptModel = "gpt-3.5-turbo";
+            AnthropicApiUrl = "https://api.anthropic.com/v1/messages";
+            AnthropicApiModel = "claude-3-opus-20240229";
             TranslateAllowSplit = true;
             TranslateViaCopyPasteAutoCopyToClipboard = true;
             TranslateViaCopyPasteMaxSize = 5000;
