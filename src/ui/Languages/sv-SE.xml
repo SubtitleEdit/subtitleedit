@@ -1027,10 +1027,13 @@ Vi utnyttjar bildens inneboende rytm.</CreateSimpleChainingToolTip>
     <InputVideoFile>Mata in videofil</InputVideoFile>
     <SubtitlesX>Undertexter ({0})</SubtitlesX>
     <SetLanguage>Ställ in språk...</SetLanguage>
+    <LanguageAndTitle>Språk/titel</LanguageAndTitle>
     <ToggleForced>Växla tvingad</ToggleForced>
     <ToggleDefault>Växla standard</ToggleDefault>
     <Default>Standard</Default>
     <XGeneratedWithEmbeddedSubs>"{0}" genereras med inbäddade undertexter</XGeneratedWithEmbeddedSubs>
+    <DeleteInputVideo>Ta bort ingångsvideofil efter "Generera"</DeleteInputVideo>
+    <OutputFileNameSettings>Inställningar för utdatafilnamn...</OutputFileNameSettings>
   </GenerateVideoWithEmbeddedSubs>
   <GetDictionaries>
     <Title>Behövs ordböcker?</Title>
