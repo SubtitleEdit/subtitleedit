@@ -1019,10 +1019,13 @@ Vi udnytter billedets indre rytme.</CreateSimpleChainingToolTip>
     <InputVideoFile>Input videofil</InputVideoFile>
     <SubtitlesX>Undertekster ({0})</SubtitlesX>
     <SetLanguage>Indstil sprog...</SetLanguage>
+    <LanguageAndTitle>Sprog/titel</LanguageAndTitle>
     <ToggleForced>Skift tvunget</ToggleForced>
     <ToggleDefault>Skift standard</ToggleDefault>
     <Default>Standard</Default>
     <XGeneratedWithEmbeddedSubs>"{0}" genereret med indlejrede undertekster</XGeneratedWithEmbeddedSubs>
+    <DeleteInputVideo>Slet input videofil efter "Generer"</DeleteInputVideo>
+    <OutputFileNameSettings>Indstillinger for outputfilnavn...</OutputFileNameSettings>
   </GenerateVideoWithEmbeddedSubs>
   <GetDictionaries>
     <Title>Mangler ordbøger?</Title>

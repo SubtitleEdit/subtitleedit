@@ -4,9 +4,10 @@
 * NEW:
    * Add "Open video" toolbar button/image - thx jmaraujouy/Cyberyoda1411
    * Add support for S_HDMV/TEXTST in MKV in batch/cmd-line - thx ipsi
-   * Add French interjections
-   * Add a few quick setting buttons for Purfview's Faster Whisper Advanced
    * Add support for Bluray .sup (PGS) embedding in Matroska (.mks) file
+   * Add a few quick setting buttons for Purfview's Faster Whisper Advanced
+   * Add a few animation templates for ASSA tool "Apply custom override tags"
+   * Add French interjections
 * IMPROVED:
    * Update German translation - thx Netspark
    * Update Spanish AR & MX translation - thx jmaraujouy
