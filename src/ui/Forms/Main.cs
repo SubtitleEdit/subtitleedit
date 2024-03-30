@@ -790,7 +790,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void AudioVisualizerInsertAtVideoPosition(object sender, EventArgs e)
         {
-            InsertNewTextAtVideoPosition();
+            InsertNewTextAtVideoPosition(false);
         }
 
         private void AudioVisualizerPasteAtVideoPosition(object sender, EventArgs e)
@@ -15081,7 +15081,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             Utilities.LoadMatroskaTextSubtitle(matroskaSubtitleInfo, matroska, sub, _subtitle);
             Utilities.ParseMatroskaTextSt(matroskaSubtitleInfo, sub, _subtitle);
-          
+
             if (_networkSession == null)
             {
                 SubtitleListview1.HideColumn(SubtitleListView.SubtitleColumn.Extra);
@@ -18638,7 +18638,15 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (_shortcuts.MainCreateInsertSubAtVideoPosNoTextBoxFocus == e.KeyData)
             {
-                var p = InsertNewTextAtVideoPosition();
+                var p = InsertNewTextAtVideoPosition(false);
+                p.Text = string.Empty;
+                SubtitleListview1.SetText(_subtitle.GetIndex(p), p.Text);
+                textBoxListViewText.Text = p.Text;
+                e.SuppressKeyPress = true;
+            }
+            else if (_shortcuts.MainCreateInsertSubAtVideoPosMax == e.KeyData)
+            {
+                var p = InsertNewTextAtVideoPosition(true);
                 p.Text = string.Empty;
                 SubtitleListview1.SetText(_subtitle.GetIndex(p), p.Text);
                 textBoxListViewText.Text = p.Text;
@@ -18704,7 +18712,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                         SubtitleListview1.SetStartTimeAndDuration(index, _subtitle.Paragraphs[index], _subtitle.GetParagraphOrDefault(index + 1), _subtitle.GetParagraphOrDefault(index - 1));
                         SetDurationInSeconds(_subtitle.Paragraphs[index].DurationTotalSeconds);
-                        var newP = InsertNewParagraphAtPosition(newEndTime.TotalMilliseconds + MinGapBetweenLines);
+                        var newP = InsertNewParagraphAtPosition(newEndTime.TotalMilliseconds + MinGapBetweenLines, false);
                         if (audioVisualizer.WavePeaks != null && newP.EndTime.TotalSeconds >= audioVisualizer.EndPositionSeconds - 0.1)
                         {
                             audioVisualizer.StartPositionSeconds = Math.Max(0, newP.StartTime.TotalSeconds - 0.1);
@@ -18721,7 +18729,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (_mainCreateStartDownEndUpParagraph == null)
                 {
-                    _mainCreateStartDownEndUpParagraph = InsertNewTextAtVideoPosition();
+                    _mainCreateStartDownEndUpParagraph = InsertNewTextAtVideoPosition(false);
                 }
 
                 e.SuppressKeyPress = true;
@@ -24735,7 +24743,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             mediaPlayer.Pause();
 
-            var newParagraph = InsertNewTextAtVideoPosition();
+            var newParagraph = InsertNewTextAtVideoPosition(false);
 
             if (!InSourceView)
             {
@@ -24749,7 +24757,7 @@ namespace Nikse.SubtitleEdit.Forms
             ShowStatus(string.Format(_language.VideoControls.NewTextInsertAtX, newParagraph.StartTime.ToShortString()));
         }
 
-        private Paragraph InsertNewTextAtVideoPosition()
+        private Paragraph InsertNewTextAtVideoPosition(bool maxDuration)
         {
             // current movie Position
             double videoPositionInMilliseconds = mediaPlayer.CurrentPosition * TimeCode.BaseUnit;
@@ -24761,16 +24769,16 @@ namespace Nikse.SubtitleEdit.Forms
             var tc = new TimeCode(videoPositionInMilliseconds);
 
             MakeHistoryForUndo(_language.BeforeInsertSubtitleAtVideoPosition + "  " + tc);
-            return InsertNewParagraphAtPosition(videoPositionInMilliseconds);
+            return InsertNewParagraphAtPosition(videoPositionInMilliseconds, maxDuration);
         }
 
-        private Paragraph InsertNewParagraphAtPosition(double PositionInMilliseconds)
+        private Paragraph InsertNewParagraphAtPosition(double positionInMilliseconds, bool maxDuration)
         {
             // find index where to insert
             int index = 0;
             foreach (var p in _subtitle.Paragraphs)
             {
-                if (p.StartTime.TotalMilliseconds > PositionInMilliseconds)
+                if (p.StartTime.TotalMilliseconds > positionInMilliseconds)
                 {
                     break;
                 }
@@ -24779,7 +24787,12 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             // prevent overlap
-            var endTotalMilliseconds = PositionInMilliseconds + Configuration.Settings.General.NewEmptyDefaultMs;
+            var endTotalMilliseconds = positionInMilliseconds + Configuration.Settings.General.NewEmptyDefaultMs;
+            if (maxDuration && mediaPlayer.VideoPlayer != null)
+            {
+                endTotalMilliseconds = mediaPlayer.Duration * 1000.0;
+            }
+
             var next = _subtitle.GetParagraphOrDefault(index);
             if (next != null)
             {
@@ -24790,7 +24803,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             // create and insert
-            var newParagraph = new Paragraph(string.Empty, PositionInMilliseconds, endTotalMilliseconds);
+            var newParagraph = new Paragraph(string.Empty, positionInMilliseconds, endTotalMilliseconds);
             SetStyleForNewParagraph(newParagraph, index);
             if (_networkSession != null)
             {
