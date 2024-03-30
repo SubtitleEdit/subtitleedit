@@ -321,6 +321,11 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 comboBoxFormality.Left = labelFormality.Right + 3;
                 comboBoxFormality.Visible = true;
                 comboBoxFormality.DropDownStyle = ComboBoxStyle.DropDown;
+                comboBoxFormality.Items.Clear();
+                comboBoxFormality.Items.Add("claude-3-opus-20240229");
+                comboBoxFormality.Items.Add("claude-3-sonnet-20240229");
+                comboBoxFormality.Items.Add("claude-3-haiku-20240307");
+                comboBoxFormality.Text = Configuration.Settings.Tools.AnthropicApiModel;
                 labelFormality.Text = LanguageSettings.Current.AudioToText.Model;
 
                 return;
@@ -368,7 +373,11 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
             labelUrl.Text = LanguageSettings.Current.Main.Url;
             nikseComboBoxUrl.Left = labelUrl.Right + 3;
-            nikseComboBoxUrl.SelectedIndex = 0;
+            if (nikseComboBoxUrl.Items.Count > 0)
+            {
+                nikseComboBoxUrl.SelectedIndex = 0;
+            }
+
             nikseComboBoxUrl.Visible = true;
             labelUrl.Visible = true;
         }
@@ -1194,7 +1203,6 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
                     Configuration.Settings.Tools.AutoTranslateDeepLFormality = f;
                 }
-
             }
         }
 
