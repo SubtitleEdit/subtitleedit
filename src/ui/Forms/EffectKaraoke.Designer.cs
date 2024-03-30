@@ -31,7 +31,6 @@
             this.components = new System.ComponentModel.Container();
             this.labelTotalMilliseconds = new System.Windows.Forms.Label();
             this.labelTM = new System.Windows.Forms.Label();
-            this.numericUpDownDelay = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelColor = new System.Windows.Forms.Label();
             this.labelEndDelay = new System.Windows.Forms.Label();
             this.buttonCancel = new System.Windows.Forms.Button();
@@ -42,6 +41,10 @@
             this.buttonPreview = new System.Windows.Forms.Button();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.richTextBoxPreview = new System.Windows.Forms.RichTextBox();
+            this.comboBoxEffects = new System.Windows.Forms.ComboBox();
+            this.radioButtonByWordEffect = new System.Windows.Forms.RadioButton();
+            this.radioButtonByCharEffect = new System.Windows.Forms.RadioButton();
+            this.numericUpDownDelay = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.SuspendLayout();
             // 
             // labelTotalMilliseconds
@@ -61,43 +64,6 @@
             this.labelTM.TabIndex = 48;
             this.labelTM.Text = "Total milliseconds:";
             this.labelTM.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // numericUpDownDelay
-            // 
-            this.numericUpDownDelay.BackColor = System.Drawing.SystemColors.Window;
-            this.numericUpDownDelay.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
-            this.numericUpDownDelay.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
-            this.numericUpDownDelay.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
-            this.numericUpDownDelay.ButtonForeColor = System.Drawing.SystemColors.ControlText;
-            this.numericUpDownDelay.ButtonForeColorDown = System.Drawing.Color.Orange;
-            this.numericUpDownDelay.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            this.numericUpDownDelay.DecimalPlaces = 3;
-            this.numericUpDownDelay.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            65536});
-            this.numericUpDownDelay.Location = new System.Drawing.Point(169, 72);
-            this.numericUpDownDelay.Maximum = new decimal(new int[] {
-            99999,
-            0,
-            0,
-            0});
-            this.numericUpDownDelay.Minimum = new decimal(new int[] {
-            99999,
-            0,
-            0,
-            -2147483648});
-            this.numericUpDownDelay.Name = "numericUpDownDelay";
-            this.numericUpDownDelay.Size = new System.Drawing.Size(54, 23);
-            this.numericUpDownDelay.TabIndex = 47;
-            this.numericUpDownDelay.TabStop = false;
-            this.numericUpDownDelay.ThousandsSeparator = false;
-            this.numericUpDownDelay.Value = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
             // 
             // labelColor
             // 
@@ -199,11 +165,85 @@
             this.richTextBoxPreview.TabStop = false;
             this.richTextBoxPreview.Text = "";
             // 
+            // comboBoxEffects
+            // 
+            this.comboBoxEffects.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxEffects.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxEffects.FormattingEnabled = true;
+            this.comboBoxEffects.Location = new System.Drawing.Point(375, 22);
+            this.comboBoxEffects.Name = "comboBoxEffects";
+            this.comboBoxEffects.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxEffects.TabIndex = 51;
+            // 
+            // radioButtonByWordEffect
+            // 
+            this.radioButtonByWordEffect.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.radioButtonByWordEffect.AutoSize = true;
+            this.radioButtonByWordEffect.Checked = true;
+            this.radioButtonByWordEffect.Location = new System.Drawing.Point(375, 52);
+            this.radioButtonByWordEffect.Name = "radioButtonByWordEffect";
+            this.radioButtonByWordEffect.Size = new System.Drawing.Size(83, 17);
+            this.radioButtonByWordEffect.TabIndex = 52;
+            this.radioButtonByWordEffect.TabStop = true;
+            this.radioButtonByWordEffect.Text = "Word effect";
+            this.radioButtonByWordEffect.UseVisualStyleBackColor = true;
+            // 
+            // radioButtonByCharEffect
+            // 
+            this.radioButtonByCharEffect.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.radioButtonByCharEffect.AutoSize = true;
+            this.radioButtonByCharEffect.Location = new System.Drawing.Point(375, 72);
+            this.radioButtonByCharEffect.Name = "radioButtonByCharEffect";
+            this.radioButtonByCharEffect.Size = new System.Drawing.Size(105, 17);
+            this.radioButtonByCharEffect.TabIndex = 53;
+            this.radioButtonByCharEffect.Text = "Character effect";
+            this.radioButtonByCharEffect.UseVisualStyleBackColor = true;
+            // 
+            // numericUpDownDelay
+            // 
+            this.numericUpDownDelay.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownDelay.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownDelay.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownDelay.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownDelay.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownDelay.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownDelay.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownDelay.DecimalPlaces = 3;
+            this.numericUpDownDelay.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.numericUpDownDelay.Location = new System.Drawing.Point(169, 72);
+            this.numericUpDownDelay.Maximum = new decimal(new int[] {
+            99999,
+            0,
+            0,
+            0});
+            this.numericUpDownDelay.Minimum = new decimal(new int[] {
+            99999,
+            0,
+            0,
+            -2147483648});
+            this.numericUpDownDelay.Name = "numericUpDownDelay";
+            this.numericUpDownDelay.Size = new System.Drawing.Size(54, 23);
+            this.numericUpDownDelay.TabIndex = 47;
+            this.numericUpDownDelay.TabStop = false;
+            this.numericUpDownDelay.ThousandsSeparator = false;
+            this.numericUpDownDelay.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+            // 
             // EffectKaraoke
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(508, 287);
+            this.Controls.Add(this.radioButtonByCharEffect);
+            this.Controls.Add(this.radioButtonByWordEffect);
+            this.Controls.Add(this.comboBoxEffects);
             this.Controls.Add(this.richTextBoxPreview);
             this.Controls.Add(this.labelTotalMilliseconds);
             this.Controls.Add(this.labelTM);
@@ -246,5 +286,8 @@
         private System.Windows.Forms.Button buttonPreview;
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.RichTextBox richTextBoxPreview;
+        private System.Windows.Forms.ComboBox comboBoxEffects;
+        private System.Windows.Forms.RadioButton radioButtonByWordEffect;
+        private System.Windows.Forms.RadioButton radioButtonByCharEffect;
     }
 }

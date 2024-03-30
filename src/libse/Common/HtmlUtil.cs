@@ -1401,5 +1401,22 @@ namespace Nikse.SubtitleEdit.Core.Common
             text = Regex.Replace(text, "\\\\1c&[abcdefghABCDEFGH\\d]*&", string.Empty);
             return text;
         }
+        
+        public static string GetClosingPair(string tag)
+        {
+            switch (tag)
+            {
+                case "<i>" : return "</i>";
+                case "<b>" : return "</b>";
+                case "<u>" : return "</u>";
+            }
+            return tag.StartsWith("<font ", StringComparison.Ordinal) ? "</font>" : string.Empty;
+        }
+        
+        public static char GetClosingPair(char ch) => ch == '<' ? '>' : '}';
+
+        public static bool IsOpenTag(string tag) => tag.Length > 1 && tag[1] != '/';
+
+        public static bool IsStartTagSymbol(char ch) => ch == '<' || ch == '{';
     }
 }
