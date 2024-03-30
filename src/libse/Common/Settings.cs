@@ -176,6 +176,9 @@ namespace Nikse.SubtitleEdit.Core.Common
         public string ChatGptUrl { get; set; }
         public string ChatGptApiKey { get; set; }
         public string ChatGptModel { get; set; }
+        public string AnthropicApiUrl { get; set; }
+        public string AnthropicApiKey { get; set; }
+        public string AnthropicApiModel { get; set; }
         public int AutoTranslateDelaySeconds { get; set; }
         public string GeminiProApiKey { get; set; }
         public bool DisableVidoInfoViaLabel { get; set; }
@@ -5349,6 +5352,24 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.Tools.ChatGptModel = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("AnthropicApiUrl");
+            if (subNode != null)
+            {
+                settings.Tools.AnthropicApiUrl = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("AnthropicApiKey");
+            if (subNode != null)
+            {
+                settings.Tools.AnthropicApiKey = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("AnthropicApiModel");
+            if (subNode != null)
+            {
+                settings.Tools.AnthropicApiModel = subNode.InnerText;
             }
 
             subNode = node.SelectSingleNode("AutoTranslateDelaySeconds");
@@ -11858,6 +11879,9 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("ChatGptUrl", settings.Tools.ChatGptUrl);
                 textWriter.WriteElementString("ChatGptApiKey", settings.Tools.ChatGptApiKey);
                 textWriter.WriteElementString("ChatGptModel", settings.Tools.ChatGptModel);
+                textWriter.WriteElementString("AnthropicApiUrl", settings.Tools.AnthropicApiUrl);
+                textWriter.WriteElementString("AnthropicApiKey", settings.Tools.AnthropicApiKey);
+                textWriter.WriteElementString("AnthropicApiModel", settings.Tools.AnthropicApiModel);
                 textWriter.WriteElementString("AutoTranslateDelaySeconds", settings.Tools.AutoTranslateDelaySeconds.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("GeminiProApiKey", settings.Tools.GeminiProApiKey);
                 textWriter.WriteElementString("DisableVidoInfoViaLabel", settings.Tools.DisableVidoInfoViaLabel.ToString(CultureInfo.InvariantCulture));
