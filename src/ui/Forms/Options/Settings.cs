@@ -406,6 +406,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             groupBoxShowToolBarButtons.Text = language.ShowToolBarButtons;
             labelTBNew.Text = language.New;
             labelTBOpen.Text = language.Open;
+            labelTBOpenVideo.Text = LanguageSettings.Current.Main.Menu.Video.OpenVideo.Trim('.');
             labelTBSave.Text = language.Save;
             labelTBSaveAs.Text = language.SaveAs;
             labelTBFind.Text = language.Find;
