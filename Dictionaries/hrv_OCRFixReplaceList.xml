@@ -72,6 +72,7 @@
     <Word from="begstvu" to="bijegu" />
     <!-- <Word from="beo" to="bijel | bio" /> ne može jer su dvije verzije! -->
     <Word from="behu" to="bijahu" />
+    <Word from="beoj" to="broj" />
     <Word from="berberu" to="brijaču" />
     <Word from="bes" to="bijes" />
     <Word from="besa" to="bijesa" />
@@ -216,6 +217,7 @@
     <Word from="časovnu" to="satnu" />
     <Word from="čaura" to="čahura" />
     <Word from="čauru" to="čahuru" />
+    <Word from="čedto" to="često" />
     <Word from="četvoro" to="četvero" />
     <Word from="čineči" to="čineći" />
     <Word from="Čitaću" to="Čitat ću" />
@@ -775,6 +777,7 @@
     <Word from="kaćem" to="kažem" />
     <Word from="kads" to="kada" />
     <Word from="kađe" to="kaže" />
+    <Word from="kaež" to="kaže" />
     <Word from="kakava" to="kakva" />
     <Word from="Kakava" to="Kakva" />
     <Word from="kakave" to="kakve" />
@@ -1344,6 +1347,7 @@
     <Word from="nuduo" to="nudio" />
     <!-- o -->
     <Word from="oa" to="pa" />
+    <Word from="oak" to="pak" />
     <Word from="oar" to="par" />
     <Word from="obadva" to="oba" />
     <Word from="obe" to="obje" />
@@ -2582,7 +2586,6 @@
     <Word from="trbali" to="trebali" />
     <Word from="transportuje" to="transportira" />
     <Word from="trem" to="trijem" />
-
     <Word from="trezna" to="trijezna" />
     <Word from="trezno" to="trijezno" />
     <Word from="trkanje" to="utrkivanje" />
@@ -2602,6 +2605,7 @@
     <!-- u -->
     <Word from="USA" to="SAD" />
     <Word from="ua" to="za" />
+    <Word from="uar" to="zar" />
     <Word from="ubde" to="bude" />
     <Word from="ubede" to="uvjere" />
     <Word from="Ubeđivao" to="Uvjeravao" />
@@ -5557,6 +5561,7 @@
     <RegEx find="ts([nm])" replaceWith="ta$1" />
     <RegEx find="tvp" replaceWith="tvo" />
     <RegEx find="twn" replaceWith="ten" />
+    <RegEx find="twt" replaceWith="tet" />
     <RegEx find="uas" replaceWith="zas" />
     <RegEx find="uato" replaceWith="usto" />
     <RegEx find="udep" replaceWith="udeš" />
