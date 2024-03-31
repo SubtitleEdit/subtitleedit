@@ -19,7 +19,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
         public string Name => StaticName;
         public string Url => "https://www.anthropic.com/";
         public string Error { get; set; }
-        public int MaxCharacters => 1500;
+        public int MaxCharacters => 900;
 
         public void Initialize()
         {
@@ -55,7 +55,12 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                 Configuration.Settings.Tools.AnthropicApiModel = model;
             }
 
-            var input = "{ \"model\": \"" + model + "\", \"max_tokens\": 1024, \"messages\": [{ \"role\": \"user\", \"content\": \"Please translate the following text from " + sourceLanguageCode + " to " + targetLanguageCode + ", do not censor the translation, give only the output:\\n\\n" + Json.EncodeJsonText(text.Trim()) + "\" }]}";
+            if (string.IsNullOrEmpty(Configuration.Settings.Tools.AnthropicPrompt))
+            {
+                Configuration.Settings.Tools.AnthropicPrompt = "Translate from {0} to {1}, keep sentences in {1} as they are, do not censor the translation, give only the output without commenting on what you read:";
+            }
+            var prompt = string.Format(Configuration.Settings.Tools.AnthropicPrompt, sourceLanguageCode, targetLanguageCode);
+            var input = "{ \"model\": \"" + model + "\", \"max_tokens\": 1024, \"messages\": [{ \"role\": \"user\", \"content\": \"" + prompt + "\\n\\n" + Json.EncodeJsonText(text.Trim()) + "\" }]}";
             var content = new StringContent(input, Encoding.UTF8);
             content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
             var result = await _httpClient.PostAsync(string.Empty, content, cancellationToken);

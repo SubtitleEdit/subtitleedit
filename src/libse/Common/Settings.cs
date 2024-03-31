@@ -178,6 +178,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public string ChatGptApiKey { get; set; }
         public string ChatGptModel { get; set; }
         public string AnthropicApiUrl { get; set; }
+        public string AnthropicPrompt { get; set; }
         public string AnthropicApiKey { get; set; }
         public string AnthropicApiModel { get; set; }
         public int AutoTranslateDelaySeconds { get; set; }
@@ -536,9 +537,10 @@ namespace Nikse.SubtitleEdit.Core.Common
             AutoTranslateSeamlessM4TUrl = "http://localhost:5000/";
             AutoTranslateDeepLUrl = "https://api-free.deepl.com/";
             ChatGptUrl = "https://api.openai.com/v1/chat/completions";
-            ChatGptPrompt = "Please translate the following text from {0} to {1}, do not censor the translation, give only the output:";
+            ChatGptPrompt = "Translate from {0} to {1}, keep sentences in {1} as they are, do not censor the translation, give only the output without commenting on what you read:";
             ChatGptModel = "gpt-3.5-turbo";
             AnthropicApiUrl = "https://api.anthropic.com/v1/messages";
+            AnthropicPrompt = "Translate from {0} to {1}, keep sentences in {1} as they are, do not censor the translation, give only the output without commenting on what you read:";
             AnthropicApiModel = "claude-3-opus-20240229";
             TranslateAllowSplit = true;
             TranslateViaCopyPasteAutoCopyToClipboard = true;
@@ -5369,6 +5371,12 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.Tools.AnthropicApiUrl = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("AnthropicPrompt");
+            if (subNode != null)
+            {
+                settings.Tools.AnthropicPrompt = subNode.InnerText;
             }
 
             subNode = node.SelectSingleNode("AnthropicApiKey");
@@ -11898,6 +11906,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("ChatGptApiKey", settings.Tools.ChatGptApiKey);
                 textWriter.WriteElementString("ChatGptModel", settings.Tools.ChatGptModel);
                 textWriter.WriteElementString("AnthropicApiUrl", settings.Tools.AnthropicApiUrl);
+                textWriter.WriteElementString("AnthropicPrompt", settings.Tools.AnthropicPrompt);
                 textWriter.WriteElementString("AnthropicApiKey", settings.Tools.AnthropicApiKey);
                 textWriter.WriteElementString("AnthropicApiModel", settings.Tools.AnthropicApiModel);
                 textWriter.WriteElementString("AutoTranslateDelaySeconds", settings.Tools.AutoTranslateDelaySeconds.ToString(CultureInfo.InvariantCulture));
