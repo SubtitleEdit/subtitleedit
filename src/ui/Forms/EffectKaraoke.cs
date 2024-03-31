@@ -10,20 +10,6 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class EffectKaraoke : Form
     {
-        private class ComboboxEffectItem
-        {
-            private readonly string _name;
-            public bool IsMultiStrategy { get; }
-
-            public ComboboxEffectItem(string name, bool isMultiStrategy = false)
-            {
-                _name = name;
-                IsMultiStrategy = isMultiStrategy;
-            }
-
-            public override string ToString() => _name;
-        }
-        
         private Paragraph _paragraph;
         private List<Paragraph> _animation;
         private int _timerCount;
@@ -42,18 +28,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
 
-            CreateComboboxItems();
-
             UiUtil.FixLargeFonts(this, buttonOK);
-        }
-
-        private void CreateComboboxItems()
-        {
-            comboBoxEffects.BeginUpdate();
-            comboBoxEffects.Items.Add(new ComboboxEffectItem("Legacy effect"));
-            comboBoxEffects.Items.Add(new ComboboxEffectItem("New effect", true));
-            comboBoxEffects.SelectedIndex = 1; // set new as default
-            comboBoxEffects.EndUpdate();
         }
 
         private void FormEffectKaraoke_KeyDown(object sender, KeyEventArgs e)
@@ -143,24 +118,14 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             var delaySeconds = (double)numericUpDownDelay.Value;
-            _animation.AddRange(GetSelectedFromCombobox().Transform(_paragraph, panelColor.BackColor, delaySeconds * TimeCode.BaseUnit));
+            var karaokeEffect = new KaraokeEffect(SelectStrategy());
+            _animation.AddRange(karaokeEffect.Transform(_paragraph, panelColor.BackColor, delaySeconds * TimeCode.BaseUnit));
 
             // All remaining time should go to the last paragraph.
             if (_animation.Count > 0)
             {
                 _animation[_animation.Count - 1].EndTime.TotalMilliseconds = _paragraph.EndTime.TotalMilliseconds;
             }
-        }
-
-        private ITextKaraokeEffect GetSelectedFromCombobox()
-        {
-            var comboboxEffectItem = (ComboboxEffectItem)comboBoxEffects.SelectedItem;;
-            if (comboboxEffectItem.IsMultiStrategy)
-            {
-                return new KaraokeEffect(SelectStrategy());
-            }
-
-            return new LegacyKaraokeEffect();
         }
 
         private TextEffectBase SelectStrategy()

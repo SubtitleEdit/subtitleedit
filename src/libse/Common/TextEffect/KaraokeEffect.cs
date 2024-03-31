@@ -3,7 +3,7 @@ using System.Drawing;
 
 namespace Nikse.SubtitleEdit.Core.Common.TextEffect
 {
-    public class KaraokeEffect : ITextKaraokeEffect
+    public class KaraokeEffect
     {
         private readonly TextEffectBase _splitStrategy;
 
