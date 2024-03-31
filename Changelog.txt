@@ -24,7 +24,7 @@
    * Update ffmpeg to 2024-03-25
    * Add a few settings for embed output file name - thx liam1900
    * Allow up/down to navigate through combobox - thx ivandrofly/fraternl
-   * Changed fix invalid italics to add more tags - thx ivandrofly/uckthis
+   * Change "Fix invalid italics" to add more tags - thx ivandrofly/uckthis
 * FIXED:
    * Fix for Whisper post-processing - thx Purfview/cvrle77
    * Fix crash in "Fix common errors" - thx Joe
@@ -32,6 +32,7 @@
    * Fix ChatGTP translate - thx longhoang1993
    * Fix "Batch convert" crash on Linux - thx ivandrofly/aggravatedanteater 
    * Fix for missing lines when embedding soft subs in .mp4 files - thx Joe
+   * Fix layout change crash from un-docked state - thx highflowerG
 
 
 4.0.4 (17th March 2024)
