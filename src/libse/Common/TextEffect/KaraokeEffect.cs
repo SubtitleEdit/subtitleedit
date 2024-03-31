@@ -32,6 +32,11 @@ namespace Nikse.SubtitleEdit.Core.Common.TextEffect
                 animations.Add(new Paragraph(startTime, endTime, result[i]));
             }
 
+            if (animations.Count > 0)
+            {
+                animations[animations.Count - 1].EndTime.TotalMilliseconds = paragraph.EndTime.TotalMilliseconds;
+            }
+
             return animations;
         }
 
