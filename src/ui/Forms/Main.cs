@@ -25010,6 +25010,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SetLayout(int layout)
         {
+            if (_isVideoControlsUndocked)
+            {
+                RedockVideoControlsToolStripMenuItemClick(null, null);
+            }
+
             var isLarge = _subtitle.Paragraphs.Count > 1000;
             if (isLarge)
             {
