@@ -4,7 +4,7 @@
 * NEW:
    * Add "Open video" toolbar button/image - thx jmaraujouy/Cyberyoda1411
    * Add support for S_HDMV/TEXTST in MKV in batch/cmd-line - thx ipsi
-   * Add support for Bluray .sup (PGS) embedding in Matroska (.mks) file
+   * Add support for Bluray .sup (PGS) embedding in Matroska (.mkv) file
    * Add a few quick setting buttons for Purfview's Faster Whisper Advanced
    * Add a few animation templates for ASSA tool "Apply custom override tags"
    * Add French interjections
@@ -27,6 +27,7 @@
    * Fix issue with Combobox and ContextMenuStrip - thx ivandrofly
    * Fix ChatGTP translate - thx longhoang1993
    * Fix "Batch convert" crash on Linux - thx ivandrofly/aggravatedanteater 
+   * Fix for missing lines when embedding soft subs in .mp4 files - thx Joe
 
 
 4.0.4 (17th March 2024)
