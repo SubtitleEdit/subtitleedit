@@ -881,7 +881,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <RemovedEmptyLineAtTop>첫번째 빈 줄 제거</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>마지막 빈 줄 제거</RemovedEmptyLineAtBottom>
     <RemovedEmptyLineInMiddle>가운데 빈 줄 제거</RemovedEmptyLineInMiddle>
-    <RemovedEmptyLinesUnusedLineBreaks>빈 줄 및 불필요한 줄의 줄바꿈 제거</RemovedEmptyLinesUnusedLineBreaks>
+    <RemovedEmptyLinesUnusedLineBreaks>빈 줄 및 불필요한 줄바꿈 제거</RemovedEmptyLinesUnusedLineBreaks>
     <FixOverlappingDisplayTimes>중복된 표시시간 수정하기</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>짧은 표시시간 수정하기</FixShortDisplayTimes>
     <FixLongDisplayTimes>긴 표시시간 수정하기</FixLongDisplayTimes>
@@ -958,7 +958,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <FixDoubleDash>'--' -&gt; '...' 로 수정하기</FixDoubleDash>
     <FixDoubleGreaterThan>&gt;&gt; 제거하기</FixDoubleGreaterThan>
     <FixEllipsesStart>말머리에 쓰인 '...' 제거하기</FixEllipsesStart>
-    <FixMissingOpenBracket>줄 안에 누락된 '[' 수정하기</FixMissingOpenBracket>
+    <FixMissingOpenBracket>줄 안에 잘못된 '[' 또는 '(' 수정하기</FixMissingOpenBracket>
     <FixMusicNotation>음표(예: âTª)를 기본으로 바꾸기</FixMusicNotation>
     <FixDoubleDashExample>'음-- 맛있구나!' -&gt; '음... 맛있구나!'</FixDoubleDashExample>
     <FixDoubleGreaterThanExample>'&gt;&gt; 영희: 뛰어!' -&gt; '영희: 뛰어!'</FixDoubleGreaterThanExample>
@@ -1018,10 +1018,13 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <InputVideoFile>비디오 파일</InputVideoFile>
     <SubtitlesX>자막 ({0})</SubtitlesX>
     <SetLanguage>언어 설정...</SetLanguage>
+    <LanguageAndTitle>언어/제목</LanguageAndTitle>
     <ToggleForced>적용값</ToggleForced>
     <ToggleDefault>기본값</ToggleDefault>
     <Default>기본</Default>
     <XGeneratedWithEmbeddedSubs>"{0}"에 자막을 내장했습니다!</XGeneratedWithEmbeddedSubs>
+    <DeleteInputVideo>"생성" 후 입력 비디오 파일 삭제</DeleteInputVideo>
+    <OutputFileNameSettings>출력 파일 이름 설정...</OutputFileNameSettings>
   </GenerateVideoWithEmbeddedSubs>
   <GetDictionaries>
     <Title>* 사전 다운로드</Title>
@@ -1636,6 +1639,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
       <StillTypingAutoContinueStopped>입력하는 중... 자동 진행이 중지되었습니다.</StillTypingAutoContinueStopped>
       <InsertNewSubtitleAtVideoPosition>재생 위치에 새 자막 삽입</InsertNewSubtitleAtVideoPosition>
       <InsertNewSubtitleAtVideoPositionNoTextBoxFocus>비디오 위치에 새 자막 삽입 (포커스 텍스트 상자 없음)</InsertNewSubtitleAtVideoPositionNoTextBoxFocus>
+      <InsertNewSubtitleAtVideoPositionMax>비디오 위치에 새 자막 삽입 (가능한 한 길게)</InsertNewSubtitleAtVideoPositionMax>
       <Auto>자동</Auto>
       <PlayFromJustBeforeText>텍스트 직전부터 재생</PlayFromJustBeforeText>
       <PlayFromBeginning>비디오 시작점에서 재생</PlayFromBeginning>
