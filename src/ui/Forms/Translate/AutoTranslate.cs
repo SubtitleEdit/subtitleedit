@@ -932,9 +932,10 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 Configuration.Settings.Tools.AutoTranslateMyMemoryApiKey = nikseTextBoxApiKey.Text.Trim();
             }
 
-            if (engineType == typeof(ChatGptTranslate) && !string.IsNullOrWhiteSpace(nikseTextBoxApiKey.Text))
+            if (engineType == typeof(ChatGptTranslate))
             {
                 Configuration.Settings.Tools.ChatGptApiKey = nikseTextBoxApiKey.Text.Trim();
+                Configuration.Settings.Tools.ChatGptUrl = nikseComboBoxUrl.Text.Trim();
             }
 
             if (engineType == typeof(AnthropicTranslate) && !string.IsNullOrWhiteSpace(nikseTextBoxApiKey.Text))
