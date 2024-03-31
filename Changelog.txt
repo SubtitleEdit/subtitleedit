@@ -13,6 +13,10 @@
    * Update German translation - thx Netspark
    * Update Spanish AR & MX translation - thx jmaraujouy
    * Update Brazilian Portuguese translation - thx igorruckert
+   * Update Italian language - thx bovirus
+   * Update Russian translation - thx elfriob
+   * Update Korean translation - thx domddol
+   * Improve "Karaoke effect" with new options - thx ivandrofly
    * Make "Timed Text IMSC 1.1" more compatible
    * Improve EBU STL preview regarding box - thx BlueMeow7
    * Update libmpv to 2024-03-17
