@@ -1649,6 +1649,7 @@ https://github.com/SubtitleEdit/subtitleedit
       <StillTypingAutoContinueStopped>Набор текста… переход к следующему субтитру остановлен</StillTypingAutoContinueStopped>
       <InsertNewSubtitleAtVideoPosition>Пустую строку в позиции видео</InsertNewSubtitleAtVideoPosition>
       <InsertNewSubtitleAtVideoPositionNoTextBoxFocus>Вставить пустую строку в позиции видео (без фокуса на текстовом поле) [длина по умолчанию в 2000 мс изменяется в Settings.xml]</InsertNewSubtitleAtVideoPositionNoTextBoxFocus>
+      <InsertNewSubtitleAtVideoPositionMax>Вставьте новый субтитр в позицию видео (как можно дольше)</InsertNewSubtitleAtVideoPositionMax>
       <Auto>Авто</Auto>
       <PlayFromJustBeforeText>Воспроизвести перед текстом</PlayFromJustBeforeText>
       <PlayFromBeginning>Воспроизвести с начала видео</PlayFromBeginning>
