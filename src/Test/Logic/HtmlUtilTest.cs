@@ -68,15 +68,15 @@ namespace Test.Logic
 
             Assert.AreEqual("Hallo!", c);
         }
-        
+
         [TestMethod]
         public void IsTextFormattableFalse()
         {
             Assert.IsFalse(HtmlUtil.IsTextFormattable("<i></i>"));
             Assert.IsFalse(HtmlUtil.IsTextFormattable("<i>!?."));
-            Assert.IsFalse(HtmlUtil.IsTextFormattable("<i>!?."));
+            Assert.IsFalse(HtmlUtil.IsTextFormattable("!?.</i>"));
         }
-        
+
         [TestMethod]
         public void IsTextFormattableTrue()
         {
