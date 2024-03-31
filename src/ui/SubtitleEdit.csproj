@@ -2651,6 +2651,7 @@
     <None Include="Resources\L10.png" />
     <None Include="Resources\L11.png" />
     <None Include="Resources\Layout.png" />
+    <None Include="Resources\OpenVideo.png" />
     <Content Include="Resources\TesseractDictionaries.xml">
       <SubType>Designer</SubType>
     </Content>
