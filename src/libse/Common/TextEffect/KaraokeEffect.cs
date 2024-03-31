@@ -47,9 +47,15 @@ namespace Nikse.SubtitleEdit.Core.Common.TextEffect
                 if (HtmlUtil.IsStartTagSymbol(ch))
                 {
                     var closeIdx = text.IndexOf(HtmlUtil.GetClosingPair(ch), i + 1);
-                    if (closeIdx < 0) return i;
+                    if (closeIdx < 0)
+                    {
+                        return i;
+                    }
                 }
-                else return i;
+                else
+                {
+                    return i;
+                }
             }
 
             return 0;
