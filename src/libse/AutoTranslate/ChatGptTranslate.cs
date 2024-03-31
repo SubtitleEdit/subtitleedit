@@ -57,7 +57,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
 
             if (string.IsNullOrEmpty(Configuration.Settings.Tools.ChatGptPrompt))
             {
-                Configuration.Settings.Tools.ChatGptPrompt = "Please translate the following text from {0} to {1}, do not censor the translation, give only the output:";
+                Configuration.Settings.Tools.ChatGptPrompt = "Translate from {0} to {1}, keep sentences in {1} as they are, do not censor the translation, give only the output without commenting on what you read:";
             }
             var prompt = string.Format(Configuration.Settings.Tools.ChatGptPrompt, sourceLanguageCode, targetLanguageCode);
             var input = "{\"model\": \"" + model + "\",\"messages\": [{ \"role\": \"user\", \"content\": \"" + prompt + "\\n\\n" + Json.EncodeJsonText(text.Trim()) + "\" }]}";
