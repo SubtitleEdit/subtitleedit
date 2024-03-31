@@ -17914,62 +17914,62 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (_shortcuts.MainGeneralLayoutChoose1 == e.KeyData)
             {
-                SetLayout(0);
+                SetLayout(0, false);
                 e.SuppressKeyPress = true;
             }
             else if (_shortcuts.MainGeneralLayoutChoose2 == e.KeyData)
             {
-                SetLayout(1);
+                SetLayout(1, false);
                 e.SuppressKeyPress = true;
             }
             else if (_shortcuts.MainGeneralLayoutChoose3 == e.KeyData)
             {
-                SetLayout(2);
+                SetLayout(2, false);
                 e.SuppressKeyPress = true;
             }
             else if (_shortcuts.MainGeneralLayoutChoose4 == e.KeyData)
             {
-                SetLayout(3);
+                SetLayout(3, false);
                 e.SuppressKeyPress = true;
             }
             else if (_shortcuts.MainGeneralLayoutChoose5 == e.KeyData)
             {
-                SetLayout(4);
+                SetLayout(4, false);
                 e.SuppressKeyPress = true;
             }
             else if (_shortcuts.MainGeneralLayoutChoose6 == e.KeyData)
             {
-                SetLayout(5);
+                SetLayout(5, false);
                 e.SuppressKeyPress = true;
             }
             else if (_shortcuts.MainGeneralLayoutChoose7 == e.KeyData)
             {
-                SetLayout(6);
+                SetLayout(6, false);
                 e.SuppressKeyPress = true;
             }
             else if (_shortcuts.MainGeneralLayoutChoose8 == e.KeyData)
             {
-                SetLayout(7);
+                SetLayout(7, false);
                 e.SuppressKeyPress = true;
             }
             else if (_shortcuts.MainGeneralLayoutChoose9 == e.KeyData)
             {
-                SetLayout(8);
+                SetLayout(8, false);
                 e.SuppressKeyPress = true;
             }
             else if (_shortcuts.MainGeneralLayoutChoose10 == e.KeyData)
             {
-                SetLayout(9);
+                SetLayout(9, false);
                 e.SuppressKeyPress = true;
             }
             else if (_shortcuts.MainGeneralLayoutChoose11 == e.KeyData)
             {
-                SetLayout(10);
+                SetLayout(10, false);
                 e.SuppressKeyPress = true;
             }
             else if (_shortcuts.MainGeneralLayoutChoose12 == e.KeyData)
             {
-                SetLayout(11);
+                SetLayout(11, false);
                 e.SuppressKeyPress = true;
             }
             else if (_shortcuts.MainGeneralMergeTranslationAndOriginal == e.KeyData) // Merge translation and original
@@ -24971,7 +24971,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (!IsVideoVisible)
                 {
                     _layout = 0;
-                    SetLayout(_layout);
+                    SetLayout(_layout, false);
                 }
 
                 OpenVideo(openFileDialog1.FileName);
@@ -24983,12 +24983,6 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ToolStripButtonLayoutChooseClick(object sender, EventArgs e)
         {
-            if (Configuration.Settings.General.Undocked)
-            {
-                MessageBox.Show("Layout cannot be changed in un-docked mode");
-                return;
-            }
-
             using (var form = new LayoutPicker(_layout, Configuration.Settings.General.ShowVideoControls))
             {
                 if (form.ShowDialog(this) != DialogResult.OK)
@@ -24997,7 +24991,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 _layout = form.GetLayout();
-                SetLayout(_layout);
+                SetLayout(_layout, false);
 
                 RefreshSelectedParagraph();
                 if (Configuration.Settings.General.ShowVideoControls != form.ShowVideoControls)
@@ -25008,9 +25002,9 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void SetLayout(int layout)
+        private void SetLayout(int layout, bool undock)
         {
-            if (_isVideoControlsUndocked)
+            if (!undock && _isVideoControlsUndocked)
             {
                 RedockVideoControlsToolStripMenuItemClick(null, null);
             }
@@ -25879,7 +25873,7 @@ namespace Nikse.SubtitleEdit.Forms
             _layout = Configuration.Settings.General.LayoutNumber;
             if (_layout != 0)
             {
-                SetLayout(_layout);
+                SetLayout(_layout, false);
             }
             if (Configuration.Settings.General.StartRememberPositionAndSize)
             {
@@ -29296,7 +29290,7 @@ namespace Nikse.SubtitleEdit.Forms
             TabControlModes_SelectedIndexChanged(null, null);
             _videoControlsUndocked.Refresh();
 
-            SetLayout(LayoutManager.LayoutNoVideo);
+            SetLayout(LayoutManager.LayoutNoVideo, true);
         }
 
         public void RedockVideoControlsToolStripMenuItemClick(object sender, EventArgs e)
@@ -29354,7 +29348,7 @@ namespace Nikse.SubtitleEdit.Forms
             _waveformUndocked = null;
             _videoControlsUndocked = null;
             ShowVideoPlayer();
-            SetLayout(_layout);
+            SetLayout(_layout, true);
             mediaPlayer.Invalidate();
             Refresh();
 
@@ -34378,7 +34372,7 @@ namespace Nikse.SubtitleEdit.Forms
                         if (!IsVideoVisible)
                         {
                             _layout = 0;
-                            SetLayout(_layout);
+                            SetLayout(_layout, false);
                         }
 
                         OpenVideoFromUrl(url);
