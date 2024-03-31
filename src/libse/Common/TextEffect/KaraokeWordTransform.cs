@@ -27,7 +27,10 @@ namespace Nikse.SubtitleEdit.Core.Common.TextEffect
                     lastFontCloseIdx = i;
                     result.Add(karaoke);
                     // skip only whitespace
-                    while (i < len && char.IsWhiteSpace(text[i])) i++;
+                    while (i < len && char.IsWhiteSpace(text[i]))
+                    {
+                        i++;
+                    }
                 }
             }
 
