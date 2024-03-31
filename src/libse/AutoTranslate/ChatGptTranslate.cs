@@ -28,6 +28,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json");
             _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("accept", "application/json");
             _httpClient.BaseAddress = new Uri(Configuration.Settings.Tools.ChatGptUrl);
+            _httpClient.Timeout = TimeSpan.FromMinutes(15);
 
             if (!string.IsNullOrEmpty(Configuration.Settings.Tools.ChatGptApiKey))
             {
