@@ -5,24 +5,24 @@ namespace Nikse.SubtitleEdit.Core.Common.TextEffect
 {
     public class TypeWriterEffect : TextEffectBase
     {
+        private readonly StringBuilder _sb = new StringBuilder();
+        private readonly StringBuilder _sbClosing = new StringBuilder();
+
         public override string[] Transform(string text)
         {
-            // todo: fix this!
-            var closingTags = new List<string>();
+            var closingTags = new List<string>(text.Length / 3 + 1);
             var list = new List<string>();
-            var sb = new StringBuilder();
-            var sbClosing = new StringBuilder();
-            
+
             for (var i = 0; i < text.Length; i++)
             {
                 var ch = text[i];
-                if (ch == '<' || ch == '{')
+                if (HtmlUtil.IsStartTagSymbol(ch))
                 {
                     var closingIdx = text.IndexOf(HtmlUtil.GetClosingPair(ch), i + 1);
                     // invalid tag (no closing)
                     if (closingIdx < 0)
                     {
-                        sb.Append(ch); // < or {
+                        _sb.Append(ch); // < or {
                     }
                     else
                     {
@@ -40,33 +40,30 @@ namespace Nikse.SubtitleEdit.Core.Common.TextEffect
                             }
                         }
 
-                        sb.Append(tag);
+                        _sb.Append(tag);
                         i = closingIdx;
                     }
                 }
                 else // anything else
                 {
-                    sb.Append(ch);
+                    _sb.Append(ch);
 
                     // always have char like white space to be followed by a visible character
                     if (IsVisibleChar(ch))
                     {
-                        sbClosing.Clear();
+                        _sbClosing.Clear();
                         // write closing for all open tag
                         for (var j = closingTags.Count - 1; j >= 0; j--)
                         {
-                            sbClosing.Append(closingTags[j]);
+                            _sbClosing.Append(closingTags[j]);
                         }
 
-                        list.Add(sb + sbClosing.ToString());
+                        list.Add(_sb + _sbClosing.ToString());
                     }
                 }
             }
 
             return list.ToArray();
         }
-
-        private readonly string _fontClose = "</font>";
-        protected string GetTextWithClosedFontTag(in string text, int index) => text.Substring(0, index + 1) + _fontClose + text.Substring(index + 1);
     }
 }

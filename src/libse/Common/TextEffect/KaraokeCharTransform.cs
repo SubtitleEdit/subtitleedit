@@ -33,5 +33,8 @@ namespace Nikse.SubtitleEdit.Core.Common.TextEffect
 
             return result.ToArray();
         }
+        
+        private readonly string _fontClose = "</font>";
+        private string GetTextWithClosedFontTag(in string text, int index) => text.Substring(0, index + 1) + _fontClose + text.Substring(index + 1);
     }
 }
