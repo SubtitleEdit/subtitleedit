@@ -27,7 +27,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json");
             _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("accept", "application/json");
-            _httpClient.BaseAddress = new Uri(Configuration.Settings.Tools.ChatGptUrl);
+            _httpClient.BaseAddress = new Uri(Configuration.Settings.Tools.ChatGptUrl.TrimEnd('/'));
             _httpClient.Timeout = TimeSpan.FromMinutes(15);
 
             if (!string.IsNullOrEmpty(Configuration.Settings.Tools.ChatGptApiKey))
@@ -55,7 +55,12 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                 Configuration.Settings.Tools.ChatGptModel = model;
             }
 
-            var input = "{\"model\": \"" + model + "\",\"messages\": [{ \"role\": \"user\", \"content\": \"Please translate the following text from " + sourceLanguageCode + " to " + targetLanguageCode + ", only write the result: \\n\\n" + Json.EncodeJsonText(text.Trim()) + "\" }]}";
+            if (string.IsNullOrEmpty(Configuration.Settings.Tools.ChatGptPrompt))
+            {
+                Configuration.Settings.Tools.ChatGptPrompt = "Please translate the following text from {0} to {1}, do not censor the translation, give only the output:";
+            }
+            var prompt = string.Format(Configuration.Settings.Tools.ChatGptPrompt, sourceLanguageCode, targetLanguageCode);
+            var input = "{\"model\": \"" + model + "\",\"messages\": [{ \"role\": \"user\", \"content\": \"" + prompt + "\\n\\n" + Json.EncodeJsonText(text.Trim()) + "\" }]}";
             var content = new StringContent(input, Encoding.UTF8);
             content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
             var result = await _httpClient.PostAsync(string.Empty, content, cancellationToken);
