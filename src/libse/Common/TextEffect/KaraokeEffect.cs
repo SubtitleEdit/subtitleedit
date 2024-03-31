@@ -20,7 +20,9 @@ namespace Nikse.SubtitleEdit.Core.Common.TextEffect
             var duration = paragraph.DurationTotalMilliseconds - delay;
             var durationPerSentence = duration / result.Length;
             var baseStartTime = paragraph.StartTime.TotalMilliseconds;
-            const double gapBetweenSentences = 1;
+
+            // the gaps must be 0 to avoid flickering
+            const double gapBetweenSentences = 0;
 
             var animations = new List<Paragraph>();
             for (var i = 0; i < result.Length; i++)
