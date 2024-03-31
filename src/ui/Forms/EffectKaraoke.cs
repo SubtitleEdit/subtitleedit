@@ -120,12 +120,6 @@ namespace Nikse.SubtitleEdit.Forms
             var delaySeconds = (double)numericUpDownDelay.Value;
             var karaokeEffect = new KaraokeEffect(SelectStrategy());
             _animation.AddRange(karaokeEffect.Transform(_paragraph, panelColor.BackColor, delaySeconds * TimeCode.BaseUnit));
-
-            // All remaining time should go to the last paragraph.
-            if (_animation.Count > 0)
-            {
-                _animation[_animation.Count - 1].EndTime.TotalMilliseconds = _paragraph.EndTime.TotalMilliseconds;
-            }
         }
 
         private TextEffectBase SelectStrategy()
