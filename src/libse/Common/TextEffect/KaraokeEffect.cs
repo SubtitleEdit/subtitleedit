@@ -53,6 +53,8 @@ namespace Nikse.SubtitleEdit.Core.Common.TextEffect
                     {
                         return i;
                     }
+
+                    i = closeIdx;
                 }
                 else
                 {
