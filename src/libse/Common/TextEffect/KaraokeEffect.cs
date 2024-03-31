@@ -32,6 +32,7 @@ namespace Nikse.SubtitleEdit.Core.Common.TextEffect
                 animations.Add(new Paragraph(startTime, endTime, result[i]));
             }
 
+            // fixes precision/fraction lost from division
             if (animations.Count > 0)
             {
                 animations[animations.Count - 1].EndTime.TotalMilliseconds = paragraph.EndTime.TotalMilliseconds;
