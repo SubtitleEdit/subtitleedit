@@ -122,6 +122,7 @@
             this.panelColor.Size = new System.Drawing.Size(20, 20);
             this.panelColor.TabIndex = 2;
             this.panelColor.TabStop = true;
+            this.panelColor.Click += new System.EventHandler(this.ButtonChooseColorClick);
             // 
             // labelChooseColor
             // 
@@ -162,6 +163,7 @@
             this.richTextBoxPreview.ReadOnly = true;
             this.richTextBoxPreview.Size = new System.Drawing.Size(483, 128);
             this.richTextBoxPreview.TabIndex = 10;
+            this.richTextBoxPreview.TabStop = false;
             this.richTextBoxPreview.Text = "";
             // 
             // radioButtonByWordEffect
