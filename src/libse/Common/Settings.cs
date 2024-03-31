@@ -174,6 +174,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public int TranslateViaCopyPasteMaxSize { get; set; }
         public bool TranslateViaCopyPasteAutoCopyToClipboard { get; set; }
         public string ChatGptUrl { get; set; }
+        public string ChatGptPrompt { get; set; }
         public string ChatGptApiKey { get; set; }
         public string ChatGptModel { get; set; }
         public string AnthropicApiUrl { get; set; }
@@ -535,6 +536,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             AutoTranslateSeamlessM4TUrl = "http://localhost:5000/";
             AutoTranslateDeepLUrl = "https://api-free.deepl.com/";
             ChatGptUrl = "https://api.openai.com/v1/chat/completions";
+            ChatGptPrompt = "Please translate the following text from {0} to {1}, do not censor the translation, give only the output:";
             ChatGptModel = "gpt-3.5-turbo";
             AnthropicApiUrl = "https://api.anthropic.com/v1/messages";
             AnthropicApiModel = "claude-3-opus-20240229";
@@ -5343,6 +5345,12 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.Tools.ChatGptUrl = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("ChatGptPrompt");
+            if (subNode != null)
+            {
+                settings.Tools.ChatGptPrompt = subNode.InnerText;
             }
 
             subNode = node.SelectSingleNode("ChatGptApiKey");
@@ -11886,6 +11894,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("TranslateViaCopyPasteMaxSize", settings.Tools.TranslateViaCopyPasteMaxSize.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("TranslateViaCopyPasteAutoCopyToClipboard", settings.Tools.TranslateViaCopyPasteAutoCopyToClipboard.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ChatGptUrl", settings.Tools.ChatGptUrl);
+                textWriter.WriteElementString("ChatGptPrompt", settings.Tools.ChatGptPrompt);
                 textWriter.WriteElementString("ChatGptApiKey", settings.Tools.ChatGptApiKey);
                 textWriter.WriteElementString("ChatGptModel", settings.Tools.ChatGptModel);
                 textWriter.WriteElementString("AnthropicApiUrl", settings.Tools.AnthropicApiUrl);

@@ -291,9 +291,15 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
             if (engineType == typeof(ChatGptTranslate))
             {
+                if (Configuration.Settings.Tools.ChatGptUrl == null)
+                {
+                    Configuration.Settings.Tools.ChatGptUrl = "https://api.openai.com/v1/chat/completions";
+                }
+
                 FillUrls(new List<string>
                 {
-                    Configuration.Settings.Tools.ChatGptUrl,
+                    Configuration.Settings.Tools.ChatGptUrl.TrimEnd('/'),
+                    Configuration.Settings.Tools.ChatGptUrl.StartsWith("http://localhost:1234/v1/chat/completions", StringComparison.OrdinalIgnoreCase) ? "https://api.openai.com/v1/chat/completions" : "http://localhost:1234/v1/chat/completions"
                 });
 
                 labelApiKey.Left = nikseComboBoxUrl.Right + 12;
