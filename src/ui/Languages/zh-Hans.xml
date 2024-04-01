@@ -1022,10 +1022,13 @@ Command line: {1} {2}
     <InputVideoFile>输入视频文件</InputVideoFile>
     <SubtitlesX>字幕 ({0})</SubtitlesX>
     <SetLanguage>设置语言...</SetLanguage>
+    <LanguageAndTitle>语言/标题</LanguageAndTitle>
     <ToggleForced>切换强制</ToggleForced>
     <ToggleDefault>切换默认</ToggleDefault>
     <Default>默认</Default>
     <XGeneratedWithEmbeddedSubs>生成带有嵌入式字幕的"{0}"</XGeneratedWithEmbeddedSubs>
+    <DeleteInputVideo>“生成”后删除视频输入文件</DeleteInputVideo>
+    <OutputFileNameSettings>输出文件名设置...</OutputFileNameSettings>
   </GenerateVideoWithEmbeddedSubs>
   <GetDictionaries>
     <Title>获取更多词典</Title>
@@ -1634,6 +1637,7 @@ Command line: {1} {2}
       <StillTypingAutoContinueStopped>仍然输入... 自动继续已停止</StillTypingAutoContinueStopped>
       <InsertNewSubtitleAtVideoPosition>在视频位置插入新字幕</InsertNewSubtitleAtVideoPosition>
       <InsertNewSubtitleAtVideoPositionNoTextBoxFocus>在当前视频位置插入新字幕 (且不将操作焦点定位到文本框)</InsertNewSubtitleAtVideoPositionNoTextBoxFocus>
+      <InsertNewSubtitleAtVideoPositionMax>在当前视频位置插入新字幕（尽可能长）</InsertNewSubtitleAtVideoPositionMax>
       <Auto>自动</Auto>
       <PlayFromJustBeforeText>从文本前播放</PlayFromJustBeforeText>
       <PlayFromBeginning>从视频开头播放</PlayFromBeginning>
