@@ -3617,6 +3617,26 @@ namespace Test.FixCommonErrors
             Assert.AreEqual("- ]...", sub.Paragraphs.First().Text);
         }
 
+        [TestMethod]
+        public void RemoveSpaceBetweenNumbersCommaSpaceTest()
+        {
+            var engine = new RemoveSpaceBetweenNumbers();
+            var sub = GetGenericSub();
+            sub.Paragraphs.First().Text = "<i>their 1, 000-year sleep</i>";
+            engine.Fix(sub, new EmptyFixCallback());
+            Assert.AreEqual("<i>their 1,000-year sleep</i>", sub.Paragraphs.First().Text);
+        }
+
+        [TestMethod]
+        public void RemoveSpaceBetweenNumbersSpaceTest()
+        {
+            var engine = new RemoveSpaceBetweenNumbers();
+            var sub = GetGenericSub();
+            sub.Paragraphs.First().Text = "<i>their 1 000-year sleep</i>";
+            engine.Fix(sub, new EmptyFixCallback());
+            Assert.AreEqual("<i>their 1 000-year sleep</i>", sub.Paragraphs.First().Text);
+        }
+
         private static Subtitle GetGenericSub()
         {
             return new Subtitle()

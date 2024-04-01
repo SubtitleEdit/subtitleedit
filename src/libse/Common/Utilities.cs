@@ -2116,7 +2116,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             return sb.ToString();
         }
 
-        private static readonly Regex RemoveSpaceBetweenNumbersRegex = new Regex(@"(?<=\b\d+) \d(?!/\d)", RegexOptions.Compiled);
+        private static readonly Regex RemoveSpaceBetweenNumbersRegex = new Regex(@"(?<=\b\d+,?) \d(?!/\d)", RegexOptions.Compiled);
 
         public static string RemoveSpaceBetweenNumbers(string text)
         {
@@ -2125,23 +2125,8 @@ namespace Nikse.SubtitleEdit.Core.Common
                 var match = RemoveSpaceBetweenNumbersRegex.Match(text);
                 while (match.Success)
                 {
-                    var skip = false;
-                    var next = text.Substring(match.Index);
-                    if (next.StartsWith(" 000") && next.Length > 4 && next[4] != '0')
-                    {
-                        // keep "35 000 dollars"
-                        skip = true;
-                        if (match.Index > 4)
-                        {
-                            var before = text.Substring(match.Index - 4, 4);
-                            if (int.TryParse(before.Trim(), NumberStyles.None, CultureInfo.InvariantCulture, out var n) && n > 999)
-                            {
-                                skip = false;
-                            }
-                        }
-                    }
-
-                    if (!skip)
+                    // remove space if 1, 000 => ref: https://github.com/SubtitleEdit/subtitleedit/issues/4942
+                    if (IsExtraSpace(text, match.Index))
                     {
                         text = text.Remove(match.Index, 1);
                     }
@@ -2149,7 +2134,20 @@ namespace Nikse.SubtitleEdit.Core.Common
                     match = RemoveSpaceBetweenNumbersRegex.Match(text, match.Index + 1);
                 }
             }
+
             return text;
+
+            bool IsExtraSpace(string s, int whiteSpaceIndex)
+            {
+                var afterWhiteSpaceIndex = whiteSpaceIndex + 1;
+                // check there are 3 numbers [0-9] after the spaces
+                var isThousand = afterWhiteSpaceIndex + 3 < s.Length &&
+                                 !CharUtils.IsDigit(s[afterWhiteSpaceIndex + 3]) &&
+                                 CharUtils.IsDigit(s[afterWhiteSpaceIndex]) &&
+                                 CharUtils.IsDigit(s[afterWhiteSpaceIndex + 1]) &&
+                                 CharUtils.IsDigit(s[afterWhiteSpaceIndex + 2]);
+                return isThousand && text[whiteSpaceIndex - 1] == ',';
+            }
         }
 
         /// <summary>
