@@ -80,7 +80,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 Text = title;
             }
 
-            _subtitle = new Subtitle(subtitle);
+            _subtitle = new Subtitle(subtitle, false);
             _encoding = encoding;
 
             InitializeAutoTranslatorEngines();
