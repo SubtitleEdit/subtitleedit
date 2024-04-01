@@ -22,6 +22,7 @@
    * Update libmpv to 2024-03-17
    * Update yt-dlp to 2024-03-10
    * Update ffmpeg to 2024-03-25
+   * Update Purfview Faster Whisper to r189.1
    * Add a few settings for embed output file name - thx liam1900
    * Allow up/down to navigate through combobox - thx ivandrofly/fraternl
    * Change "Fix invalid italics" to add more tags - thx ivandrofly/uckthis
