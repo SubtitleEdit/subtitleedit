@@ -2140,7 +2140,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             bool IsExtraSpace(string s, int whiteSpaceIndex)
             {
                 var afterWhiteSpaceIndex = whiteSpaceIndex + 1;
-                // check there are 3 numbers [0-9] after the spaces
+                // check if there are 3 numbers from [0-9] after the space
                 var isThousand = afterWhiteSpaceIndex + 3 < s.Length &&
                                  !CharUtils.IsDigit(s[afterWhiteSpaceIndex + 3]) &&
                                  CharUtils.IsDigit(s[afterWhiteSpaceIndex]) &&
