@@ -36405,7 +36405,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void MakeAutoTranslate(bool onlySelectedLines)
         {
-            if (!IsSubtitleLoaded)
+            if (_subtitle != null && _subtitle.Paragraphs.Count == 0)
             {
                 DisplaySubtitleNotLoadedMessage();
                 return;
@@ -36464,6 +36464,20 @@ namespace Nikse.SubtitleEdit.Forms
                     MakeHistoryForUndo(_language.BeforeGoogleTranslation);
                     if (onlySelectedLines)
                     {
+                        if (!SubtitleListview1.IsOriginalTextColumnVisible)
+                        {
+                            SubtitleListview1.ShowOriginalTextColumn(_languageGeneral.OriginalText);
+                            SubtitleListview1.AutoSizeAllColumns(this);
+                            _subtitleOriginal = new Subtitle(_subtitle, false);
+                            _subtitleOriginalFileName = _fileName;
+                            _fileName = null;
+
+                            foreach (var p in _subtitle.Paragraphs)
+                            {
+                                p.Text = string.Empty;
+                            }
+                        }
+
                         // we only update selected lines
                         foreach (int index in SubtitleListview1.SelectedIndices)
                         {
