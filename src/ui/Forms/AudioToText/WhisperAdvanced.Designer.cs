@@ -43,13 +43,13 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             this.tabPageOpenAI = new System.Windows.Forms.TabPage();
             this.textBoxOpenAI = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.tabPageFasterWhisper = new System.Windows.Forms.TabPage();
+            this.buttonStandardAsia = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.buttonStandard = new System.Windows.Forms.Button();
             this.buttonSentence = new System.Windows.Forms.Button();
             this.buttonSingleWords = new System.Windows.Forms.Button();
             this.textBoxPurfviewFasterWhisper = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.comboBoxWhisperExtra = new Nikse.SubtitleEdit.Controls.NikseComboBox();
-            this.buttonStandardAsia = new System.Windows.Forms.Button();
             this.tabControlCommandLineHelp.SuspendLayout();
             this.TabPageCPP.SuspendLayout();
             this.tabPageConstMe.SuspendLayout();
@@ -210,6 +210,17 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             this.tabPageFasterWhisper.Text = "Faster Whisper";
             this.tabPageFasterWhisper.UseVisualStyleBackColor = true;
             // 
+            // buttonStandardAsia
+            // 
+            this.buttonStandardAsia.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonStandardAsia.Location = new System.Drawing.Point(160, 390);
+            this.buttonStandardAsia.Name = "buttonStandardAsia";
+            this.buttonStandardAsia.Size = new System.Drawing.Size(148, 23);
+            this.buttonStandardAsia.TabIndex = 12;
+            this.buttonStandardAsia.Text = "Standard Asia";
+            this.buttonStandardAsia.UseVisualStyleBackColor = true;
+            this.buttonStandardAsia.Click += new System.EventHandler(this.buttonStandardAsia_Click);
+            // 
             // button1
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
@@ -295,17 +306,6 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             this.comboBoxWhisperExtra.TabStop = false;
             this.comboBoxWhisperExtra.UsePopupWindow = false;
             this.comboBoxWhisperExtra.KeyDown += new System.Windows.Forms.KeyEventHandler(this.comboBoxWhisperExtra_KeyDown);
-            // 
-            // buttonStandardAsia
-            // 
-            this.buttonStandardAsia.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonStandardAsia.Location = new System.Drawing.Point(160, 390);
-            this.buttonStandardAsia.Name = "buttonStandardAsia";
-            this.buttonStandardAsia.Size = new System.Drawing.Size(148, 23);
-            this.buttonStandardAsia.TabIndex = 12;
-            this.buttonStandardAsia.Text = "Standard Asia";
-            this.buttonStandardAsia.UseVisualStyleBackColor = true;
-            this.buttonStandardAsia.Click += new System.EventHandler(this.buttonStandardAsia_Click);
             // 
             // WhisperAdvanced
             // 
