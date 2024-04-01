@@ -90,7 +90,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             setCPPConstmeModelsFolderToolStripMenuItem.Text = LanguageSettings.Current.AudioToText.SetCppConstMeFolder;
             removeTemporaryFilesToolStripMenuItem.Text = LanguageSettings.Current.AudioToText.RemoveTemporaryFiles;
             buttonAdvanced.Text = LanguageSettings.Current.General.Advanced;
-            labelAdvanced.Text = Configuration.Settings.Tools.WhisperExtraSettings;
+            SetAdvancedLabel();
             downloadCUDAForPurfviewsWhisperFasterToolStripMenuItem.Text = LanguageSettings.Current.AudioToText.DownloadFasterWhisperCuda;
 
             columnHeaderFileName.Text = LanguageSettings.Current.JoinSubtitles.FileName;
@@ -802,7 +802,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             _resultList = new List<ResultText>();
 
             var inputFile = waveFileName;
-            if (!_useCenterChannelOnly && 
+            if (!_useCenterChannelOnly &&
                 comboBoxWhisperEngine.Text == WhisperChoice.PurfviewFasterWhisper &&
                 _audioTrackNumber == 0)
             {
@@ -2205,7 +2205,18 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             using (var form = new WhisperAdvanced(comboBoxWhisperEngine.Text))
             {
                 var res = form.ShowDialog(this);
-                labelAdvanced.Text = Configuration.Settings.Tools.WhisperExtraSettings;
+                SetAdvancedLabel();
+            }
+        }
+
+        private void SetAdvancedLabel()
+        {
+            labelAdvanced.Left = buttonAdvanced.Left;
+            labelAdvanced.Text = Configuration.Settings.Tools.WhisperExtraSettings;
+
+            if (labelAdvanced.Right > buttonAdvanced.Right + 5)
+            {
+                labelAdvanced.Left = buttonAdvanced.Right + 5 - labelAdvanced.Width;
             }
         }
 
