@@ -2146,7 +2146,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                                  CharUtils.IsDigit(s[afterWhiteSpaceIndex]) &&
                                  CharUtils.IsDigit(s[afterWhiteSpaceIndex + 1]) &&
                                  CharUtils.IsDigit(s[afterWhiteSpaceIndex + 2]);
-                return isThousand && text[whiteSpaceIndex - 1] == ',';
+                return !isThousand || text[whiteSpaceIndex - 1] == ',';
             }
         }
 

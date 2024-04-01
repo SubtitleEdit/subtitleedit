@@ -3632,9 +3632,19 @@ namespace Test.FixCommonErrors
         {
             var engine = new RemoveSpaceBetweenNumbers();
             var sub = GetGenericSub();
-            sub.Paragraphs.First().Text = "<i>their 1 000-year sleep</i>";
+            sub.Paragraphs.First().Text = "<i>their 1 232-year sleep</i>";
             engine.Fix(sub, new EmptyFixCallback());
-            Assert.AreEqual("<i>their 1 000-year sleep</i>", sub.Paragraphs.First().Text);
+            Assert.AreEqual("<i>their 1 232-year sleep</i>", sub.Paragraphs.First().Text);
+        }
+        
+        [TestMethod]
+        public void RemoveSpaceBetweenNumbersRemoveTest()
+        {
+            var engine = new RemoveSpaceBetweenNumbers();
+            var sub = GetGenericSub();
+            sub.Paragraphs.First().Text = "<i>their 1 0000-year sleep</i>";
+            engine.Fix(sub, new EmptyFixCallback());
+            Assert.AreEqual("<i>their 10000-year sleep</i>", sub.Paragraphs.First().Text);
         }
 
         private static Subtitle GetGenericSub()
