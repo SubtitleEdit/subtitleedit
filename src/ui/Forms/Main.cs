@@ -36426,7 +36426,7 @@ namespace Nikse.SubtitleEdit.Forms
                     sub.Paragraphs.Add(new Paragraph(_subtitle.Paragraphs[index], false));
                 }
 
-                if (_subtitleOriginal != null)
+                if (_subtitleOriginal != null && SubtitleListview1.IsOriginalTextColumnVisible)
                 {
                     var paragraphs = new List<Paragraph>();
                     var paragraphsToRemove = new List<Paragraph>();

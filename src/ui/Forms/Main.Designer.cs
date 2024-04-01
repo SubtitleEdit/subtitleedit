@@ -1028,7 +1028,7 @@ namespace Nikse.SubtitleEdit.Forms
             // toolStripLabelSubtitleFormat
             // 
             this.toolStripLabelSubtitleFormat.Name = "toolStripLabelSubtitleFormat";
-            this.toolStripLabelSubtitleFormat.Size = new System.Drawing.Size(86, 15);
+            this.toolStripLabelSubtitleFormat.Size = new System.Drawing.Size(86, 37);
             this.toolStripLabelSubtitleFormat.Text = "Subtitle format";
             // 
             // comboBoxSubtitleFormats
@@ -2721,7 +2721,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemSelectedLines,
             this.toolStripMenuItemGoogleMicrosoftTranslateSelLine});
             this.contextMenuStripListView.Name = "contextMenuStripListView";
-            this.contextMenuStripListView.Size = new System.Drawing.Size(285, 826);
+            this.contextMenuStripListView.Size = new System.Drawing.Size(285, 848);
             this.contextMenuStripListView.Closed += new System.Windows.Forms.ToolStripDropDownClosedEventHandler(this.MenuClosed);
             this.contextMenuStripListView.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripListViewOpening);
             this.contextMenuStripListView.Opened += new System.EventHandler(this.MenuOpened);
@@ -3233,7 +3233,7 @@ namespace Nikse.SubtitleEdit.Forms
             // genericTranslateToolStripMenuItem
             // 
             this.genericTranslateToolStripMenuItem.Name = "genericTranslateToolStripMenuItem";
-            this.genericTranslateToolStripMenuItem.Size = new System.Drawing.Size(128, 22);
+            this.genericTranslateToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.genericTranslateToolStripMenuItem.Text = "translate...";
             this.genericTranslateToolStripMenuItem.Click += new System.EventHandler(this.TranslateSelectedLinesToolStripMenuItemClick);
             // 
