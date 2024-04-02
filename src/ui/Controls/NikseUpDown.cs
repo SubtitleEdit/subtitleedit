@@ -532,7 +532,7 @@ namespace Nikse.SubtitleEdit.Controls
                 _buttonLeftIsDown = false;
                 Invalidate();
             }
-            base.OnMouseDown(e);
+            base.OnMouseUp(e);
         }
 
         protected override void OnMouseMove(MouseEventArgs e)
