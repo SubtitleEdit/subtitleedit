@@ -756,20 +756,22 @@ namespace Nikse.SubtitleEdit.Forms
 
             var fixAction = _language.FixCommonOcrErrors;
             var noOfFixes = 0;
-            var lastLine = string.Empty;
+            var previousLine = string.Empty;
             for (var i = 0; i < Subtitle.Paragraphs.Count; i++)
             {
                 var p = Subtitle.Paragraphs[i];
 
-                var lastLastP = Subtitle.GetParagraphOrDefault(i - 2);
-                string lastLastLine = null;
-                if (lastLastP != null && !string.IsNullOrEmpty(lastLastP.Text))
+                var prePrevParagraph = Subtitle.GetParagraphOrDefault(i - 2);
+                string prePreviousLine = null;
+                if (prePrevParagraph != null && !string.IsNullOrEmpty(prePrevParagraph.Text))
                 {
-                    lastLastLine = lastLastP.Text;
+                    prePreviousLine = prePrevParagraph.Text;
                 }
 
-                var text = _ocrFixEngine.FixOcrErrors(p.Text, Subtitle, i, lastLine, lastLastLine, false, OcrFixEngine.AutoGuessLevel.Cautious);
-                lastLine = text;
+                var text = _ocrFixEngine.FixOcrErrors(p.Text, Subtitle, i, previousLine, prePreviousLine, false, 
+                    OcrFixEngine.AutoGuessLevel.Cautious);
+                
+                previousLine = text;
                 if (AllowFix(p, fixAction) && p.Text != text)
                 {
                     var oldText = p.Text;
