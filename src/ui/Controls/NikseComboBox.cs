@@ -615,29 +615,13 @@ namespace Nikse.SubtitleEdit.Controls
             BackColorDisabled = Color.FromArgb(240, 240, 240);
             BackColor = SystemColors.Window;
 
-            _mouseLeaveTimer = new Timer();
-            _mouseLeaveTimer.Interval = 200;
-            _mouseLeaveTimer.Tick += (sender, args) =>
-            {
-                if (_popUp != null)
-                {
-                    return;
-                }
-
-                if (!_hasItemsMouseOver && _listView != null)
-                {
-                    HideDropDown();
-                }
-
-                _mouseLeaveTimer.Stop();
-            };
-
             _listViewMouseLeaveTimer = new Timer();
-            _listViewMouseLeaveTimer.Interval = 50;
+            _listViewMouseLeaveTimer.Interval = 1500;
             _listViewMouseLeaveTimer.Tick += (sender, args) =>
             {
+                _listViewMouseLeaveTimer.Stop();
                 var form = FindForm();
-                if (form == null || _listView == null)
+                if (form == null || _listView == null || !_listViewShown)
                 {
                     return;
                 }
@@ -645,31 +629,21 @@ namespace Nikse.SubtitleEdit.Controls
                 var coordinates = form.PointToClient(Cursor.Position);
                 if (_popUp != null)
                 {
-                    if (_hasItemsMouseOver &&
-                        !(_popUp.BoundsContainsCursorPosition() || Bounds.Contains(coordinates)) ||
-                        !_listViewShown)
+                    if (_hasItemsMouseOver && !(_popUp.BoundsContainsCursorPosition() || Bounds.Contains(coordinates)))
                     {
                         HideDropDown();
-                        return;
                     }
                 }
                 else
                 {
-                    var listViewBounds = new Rectangle(
-                        _listView.Bounds.X,
-                        _listView.Bounds.Y - 25,
-                        _listView.Bounds.Width + 25 + 25,
-                        _listView.Bounds.Height + 50 + 25);
-                    if (_hasItemsMouseOver &&
-                        !(listViewBounds.Contains(coordinates) || Bounds.Contains(coordinates)) ||
-                        !_listViewShown)
+                    var listViewBounds = new Rectangle(_listView.Bounds.X, _listView.Bounds.Y,
+                        _listView.Bounds.Width, _listView.Bounds.Height);
+                    
+                    if (!(listViewBounds.Contains(coordinates) || Bounds.Contains(coordinates)))
                     {
                         HideDropDown();
-                        return;
                     }
                 }
-
-                _hasItemsMouseOver = true;
             };
 
             LostFocus += (sender, args) =>
@@ -688,7 +662,6 @@ namespace Nikse.SubtitleEdit.Controls
             }
 
             _listViewMouseLeaveTimer?.Stop();
-            _mouseLeaveTimer?.Stop();
             if (_listViewShown)
             {
                 DropDownClosed?.Invoke(this, EventArgs.Empty);
@@ -727,7 +700,6 @@ namespace Nikse.SubtitleEdit.Controls
 
         private int _mouseX;
 
-        private readonly Timer _mouseLeaveTimer;
         private readonly Timer _listViewMouseLeaveTimer;
         private bool _hasItemsMouseOver;
         private bool _comboBoxMouseEntered;
@@ -743,17 +715,20 @@ namespace Nikse.SubtitleEdit.Controls
 
         protected override void OnMouseLeave(EventArgs e)
         {
+            HandleOnMouseLeave(e);
+            base.OnMouseLeave(e);
+            Invalidate();
+        }
+
+        private void HandleOnMouseLeave(EventArgs e)
+        {
             _comboBoxMouseEntered = false;
             _buttonDownActive = false;
             if (_listView != null)
             {
-                _mouseLeaveTimer.Start();
                 _listViewMouseLeaveTimer.Start();
                 _hasItemsMouseOver = false;
             }
-
-            base.OnMouseLeave(e);
-            Invalidate();
         }
 
         private ListView _listView;
@@ -999,8 +974,17 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 DarkTheme.SetDarkTheme(_listView);
             }
-
-            _listView.MouseEnter += (sender, args) => { _hasItemsMouseOver = true; };
+            
+            _listView.MouseEnter += (sender, args) =>
+            {
+                _comboBoxMouseEntered = true;
+                _hasItemsMouseOver = true;
+            };
+            
+            _listView.MouseLeave += (sender, args) =>
+            {
+                HandleOnMouseLeave(args);
+            };
 
             _listView.KeyDown += (sender, args) =>
             {
