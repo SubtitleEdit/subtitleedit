@@ -107,12 +107,7 @@ namespace Nikse.SubtitleEdit.Controls
                     _selectedIndex = value;
                     _textBox.Text = string.Empty;
 
-                    if (!_loading)
-                    {
-                        SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
-                        SelectedValueChanged?.Invoke(this, EventArgs.Empty);
-                        TextChanged?.Invoke(this, EventArgs.Empty);
-                    }
+                    NotifyTextChanged();
 
                     if (!_skipPaint)
                     {
@@ -138,9 +133,7 @@ namespace Nikse.SubtitleEdit.Controls
                         _listView.Items[_selectedIndex].Focused = true;
                     }
 
-                    SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
-                    SelectedValueChanged?.Invoke(this, EventArgs.Empty);
-                    TextChanged?.Invoke(this, EventArgs.Empty);
+                    NotifyTextChanged();
                 }
 
                 if (!_skipPaint)
@@ -1025,13 +1018,7 @@ namespace Nikse.SubtitleEdit.Controls
                         Invalidate();
                     }
 
-                    if (!_loading)
-                    {
-                        SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
-                        SelectedValueChanged?.Invoke(this, EventArgs.Empty);
-                        TextChanged?.Invoke(this, EventArgs.Empty);
-                    }
-
+                    NotifyTextChanged();
                 }
                 else
                 {
@@ -1060,12 +1047,7 @@ namespace Nikse.SubtitleEdit.Controls
                         _textBox.Focus();
                         _textBox.SelectionLength = 0;
 
-                        if (!_loading)
-                        {
-                            SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
-                            SelectedValueChanged?.Invoke(this, EventArgs.Empty);
-                            TextChanged?.Invoke(this, EventArgs.Empty);
-                        }
+                        NotifyTextChanged();
 
                         return;
                     }
