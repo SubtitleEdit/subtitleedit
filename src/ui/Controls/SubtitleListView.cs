@@ -81,8 +81,6 @@ namespace Nikse.SubtitleEdit.Controls
 
         private readonly List<SyntaxColorLineParameter> _syntaxColorList = new List<SyntaxColorLineParameter>();
         private readonly List<SetStartAndDurationParameter> _setStartAndDurationList = new List<SetStartAndDurationParameter>();
-        private static readonly object SyntaxColorListLock = new object();
-        private static readonly object SetStartTimeAndDurationLock = new object();
         private readonly Timer _syntaxColorLineTimer;
         private readonly Timer _setStartAndDurationTimer;
 
@@ -367,10 +365,10 @@ namespace Nikse.SubtitleEdit.Controls
                 ShowGapColumn(LanguageSettings.Current.General.Gap);
             }
 
-            _syntaxColorLineTimer = new Timer { Interval = 41 };
+            _syntaxColorLineTimer = new Timer { Interval = 55 };
             _syntaxColorLineTimer.Tick += SyntaxColorLineTimerTick;
 
-            _setStartAndDurationTimer = new Timer { Interval = 3 };
+            _setStartAndDurationTimer = new Timer { Interval = 55 };
             _setStartAndDurationTimer.Tick += SetStartAndDurationTimerTick;
 
             SubtitleListViewLastColumnFill(this, null);
@@ -1391,51 +1389,45 @@ namespace Nikse.SubtitleEdit.Controls
         private void SyntaxColorLineTimerTick(object sender, EventArgs e)
         {
             var hashSet = new HashSet<int>();
-            lock (SyntaxColorListLock)
+            _syntaxColorLineTimer.Stop();
+            for (int i = _syntaxColorList.Count - 1; i >= 0; i--)
             {
-                _syntaxColorLineTimer.Stop();
-
-                for (int i = _syntaxColorList.Count - 1; i >= 0; i--)
+                var item = _syntaxColorList[i];
+                if (!hashSet.Contains(item.Index))
                 {
-                    var item = _syntaxColorList[i];
-                    if (!hashSet.Contains(item.Index))
+                    if (IsValidIndex(item.Index))
                     {
-                        if (IsValidIndex(item.Index))
-                        {
-                            SyntaxColorListViewItem(item.Paragraphs, item.Index, item.Paragraph, Items[item.Index]);
-                        }
-                        hashSet.Add(item.Index);
+                        SyntaxColorListViewItem(item.Paragraphs, item.Index, item.Paragraph, Items[item.Index]);
                     }
+
+                    hashSet.Add(item.Index);
                 }
-                _syntaxColorList.Clear();
             }
+
+            _syntaxColorList.Clear();
         }
 
         private void SetStartAndDurationTimerTick(object sender, EventArgs e)
         {
             var hashSet = new HashSet<int>();
-            lock (SetStartTimeAndDurationLock)
+            _setStartAndDurationTimer.Stop();
+            for (int i = _setStartAndDurationList.Count - 1; i >= 0; i--)
             {
-                _setStartAndDurationTimer.Stop();
-                for (int i = _setStartAndDurationList.Count - 1; i >= 0; i--)
+                var item = _setStartAndDurationList[i];
+                if (!hashSet.Contains(item.Index))
                 {
-                    var item = _setStartAndDurationList[i];
-                    if (!hashSet.Contains(item.Index))
+                    if (IsValidIndex(item.Index))
                     {
-                        if (IsValidIndex(item.Index))
-                        {
-                            SetStartTimeAndDuration(item.Index, item.Paragraph, item.Next, item.Prev);
-                        }
-                        hashSet.Add(item.Index);
+                        SetStartTimeAndDuration(item.Index, item.Paragraph, item.Next, item.Prev);
                     }
+
+                    hashSet.Add(item.Index);
                 }
-                _setStartAndDurationList.Clear();
             }
+
+            _setStartAndDurationList.Clear();
         }
 
-        /// <summary>
-        /// Can handle multiple events to same line - but not line adding/splitting.
-        /// </summary>
         public void SyntaxColorLineBackground(List<Paragraph> paragraphs, int i, Paragraph paragraph)
         {
             if (!UseSyntaxColoring || _settings == null)
@@ -1443,12 +1435,9 @@ namespace Nikse.SubtitleEdit.Controls
                 return;
             }
 
-            lock (SyntaxColorListLock)
-            {
-                _syntaxColorLineTimer.Stop();
-                _syntaxColorList.Add(new SyntaxColorLineParameter { Index = i, Paragraphs = paragraphs, Paragraph = paragraph });
-                _syntaxColorLineTimer.Start();
-            }
+            _syntaxColorLineTimer.Stop();
+            _syntaxColorList.Add(new SyntaxColorLineParameter { Index = i, Paragraphs = paragraphs, Paragraph = paragraph });
+            _syntaxColorLineTimer.Start();
         }
 
         /// <summary>
@@ -1461,12 +1450,9 @@ namespace Nikse.SubtitleEdit.Controls
                 return;
             }
 
-            lock (SetStartTimeAndDurationLock)
-            {
-                _setStartAndDurationTimer.Stop();
-                _setStartAndDurationList.Add(new SetStartAndDurationParameter { Index = index, Paragraph = paragraph, Next = next, Prev = prev });
-                _setStartAndDurationTimer.Start();
-            }
+            _setStartAndDurationTimer.Stop();
+            _setStartAndDurationList.Add(new SetStartAndDurationParameter { Index = index, Paragraph = paragraph, Next = next, Prev = prev });
+            _setStartAndDurationTimer.Start();
         }
 
         public void SyntaxColorLine(List<Paragraph> paragraphs, int i, Paragraph paragraph)
