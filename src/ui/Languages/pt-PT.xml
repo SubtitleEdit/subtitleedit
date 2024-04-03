@@ -1026,10 +1026,13 @@ Tiramos partido do ritmo intrínseco da imagem.</CreateSimpleChainingToolTip>
     <InputVideoFile>Ficheiro de vídeo de entrada</InputVideoFile>
     <SubtitlesX>Legendas ({0})</SubtitlesX>
     <SetLanguage>Definir idioma...</SetLanguage>
+    <LanguageAndTitle>Idioma/título</LanguageAndTitle>
     <ToggleForced>Alternar forçado</ToggleForced>
     <ToggleDefault>Alternar predefinido</ToggleDefault>
     <Default>Predefinido</Default>
     <XGeneratedWithEmbeddedSubs>"{0}" gerado com legendas embutidas</XGeneratedWithEmbeddedSubs>
+    <DeleteInputVideo>Eliminar o ficheiro de vídeo de entrada após "Gerar"</DeleteInputVideo>
+    <OutputFileNameSettings>Definições do nome do ficheiro de saída...</OutputFileNameSettings>
   </GenerateVideoWithEmbeddedSubs>
   <GetDictionaries>
     <Title>Precisa de dicionários?</Title>
@@ -1642,6 +1645,7 @@ Para usar a chave API, vá a "Opções -&gt; Definições -&gt; Tradução autom
       <StillTypingAutoContinueStopped>Ainda a escrever... auto-continuar interrompido</StillTypingAutoContinueStopped>
       <InsertNewSubtitleAtVideoPosition>Inserir linha nesta posição</InsertNewSubtitleAtVideoPosition>
       <InsertNewSubtitleAtVideoPositionNoTextBoxFocus>Inserir nova linha na posição do vídeo (sem enfoque do quadro de texto)</InsertNewSubtitleAtVideoPositionNoTextBoxFocus>
+      <InsertNewSubtitleAtVideoPositionMax>Inserir uma nova legenda na posição do vídeo (o maior tempo possível)</InsertNewSubtitleAtVideoPositionMax>
       <Auto>Auto</Auto>
       <PlayFromJustBeforeText>Reproduzir antes do texto</PlayFromJustBeforeText>
       <PlayFromBeginning>Reproduzir do início</PlayFromBeginning>
