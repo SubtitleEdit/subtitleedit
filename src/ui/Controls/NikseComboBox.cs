@@ -702,10 +702,6 @@ namespace Nikse.SubtitleEdit.Controls
                 _textBox.Focus();
                 _textBox.SelectionLength = 0;
             }
-            else
-            {
-                Focus();
-            }
         }
 
         private void TextBoxTextChanged(object sender, EventArgs e)
