@@ -127,7 +127,7 @@ namespace Nikse.SubtitleEdit.Controls
 
                 if (!_loading)
                 {
-                    if (_listViewShown && _listView != null)
+                    if (_isListViewVisible && _listView != null)
                     {
                         if (_listView.SelectedItems.Count > 0)
                         {
@@ -150,7 +150,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        public override bool Focused => _comboBoxMouseEntered || _listViewShown || (_textBox != null && _textBox.Focused) || base.Focused;
+        public override bool Focused => _comboBoxMouseEntered || _isListViewVisible || (_textBox != null && _textBox.Focused) || base.Focused;
 
         public object SelectedItem
         {
@@ -561,7 +561,7 @@ namespace Nikse.SubtitleEdit.Controls
 
             MouseWheel += (sender, e) =>
             {
-                if (_textBox == null || _listViewShown)
+                if (_textBox == null || _isListViewVisible)
                 {
                     return;
                 }
@@ -621,7 +621,7 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 _listViewMouseLeaveTimer.Stop();
                 var form = FindForm();
-                if (form == null || _listView == null || !_listViewShown)
+                if (form == null || _listView == null || !_isListViewVisible)
                 {
                     return;
                 }
@@ -662,10 +662,10 @@ namespace Nikse.SubtitleEdit.Controls
             }
 
             _listViewMouseLeaveTimer?.Stop();
-            if (_listViewShown)
+            if (_isListViewVisible)
             {
                 DropDownClosed?.Invoke(this, EventArgs.Empty);
-                _listViewShown = false;
+                _isListViewVisible = false;
             }
 
             var form = _listView == null ? FindForm() : _listView.FindForm();
@@ -732,7 +732,7 @@ namespace Nikse.SubtitleEdit.Controls
         }
 
         private ListView _listView;
-        private bool _listViewShown;
+        private bool _isListViewVisible;
 
         private int? _dropDownWidth;
         private ComboBoxStyle _dropDownStyle;
@@ -761,7 +761,7 @@ namespace Nikse.SubtitleEdit.Controls
                     Invalidate();
                 }
 
-                if (_listViewShown)
+                if (_isListViewVisible)
                 {
                     HideDropDown();
                     return;
@@ -780,7 +780,7 @@ namespace Nikse.SubtitleEdit.Controls
         {
             _textBox.Focus();
 
-            _listViewShown = true;
+            _isListViewVisible = true;
             EnsureListViewInitialized();
 
             _listView.BeginUpdate();
@@ -947,7 +947,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
             _listView?.Dispose();
             _listView = null;
-            _listViewShown = false;
+            _isListViewVisible = false;
             Invalidate();
         }
 
@@ -1058,7 +1058,7 @@ namespace Nikse.SubtitleEdit.Controls
 
             _listView.LostFocus += (sender, e) =>
             {
-                if (_textBox != null & _listViewShown && !Focused && !_textBox.Focused)
+                if (_textBox != null & _isListViewVisible && !Focused && !_textBox.Focused)
                 {
                     HideDropDown();
                 }
@@ -1225,7 +1225,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        public bool DroppedDown => _listViewShown;
+        public bool DroppedDown => _isListViewVisible;
 
         public bool FormattingEnabled { get; set; }
 
@@ -1253,7 +1253,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         private void DrawArrow(PaintEventArgs e, Brush brush, int left, int top, int height)
         {
-            if (_listViewShown)
+            if (_isListViewVisible)
             {
                 NikseUpDown.DrawArrowUp(e.Graphics, brush, left, top - 1, height);
             }
