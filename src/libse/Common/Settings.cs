@@ -177,6 +177,13 @@ namespace Nikse.SubtitleEdit.Core.Common
         public string ChatGptPrompt { get; set; }
         public string ChatGptApiKey { get; set; }
         public string ChatGptModel { get; set; }
+        public string LmStudioApiUrl { get; set; }
+        public string LmStudioModel { get; set; }
+        public string LmStudioPrompt { get; set; }
+        public string OllamaApiUrl { get; set; }
+        public string OllamaModel { get; set; }
+        public string OllamaPrompt { get; set; }
+
         public string AnthropicApiUrl { get; set; }
         public string AnthropicPrompt { get; set; }
         public string AnthropicApiKey { get; set; }
@@ -539,6 +546,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             ChatGptUrl = "https://api.openai.com/v1/chat/completions";
             ChatGptPrompt = "Translate from {0} to {1}, keep sentences in {1} as they are, do not censor the translation, give only the output without commenting on what you read:";
             ChatGptModel = "gpt-3.5-turbo";
+            OllamaApiUrl = "http://localhost:11434/api/generate";
             AnthropicApiUrl = "https://api.anthropic.com/v1/messages";
             AnthropicPrompt = "Translate from {0} to {1}, keep sentences in {1} as they are, do not censor the translation, give only the output without commenting on what you read:";
             AnthropicApiModel = "claude-3-opus-20240229";
@@ -5365,6 +5373,42 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.Tools.ChatGptModel = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("LmStudioApiUrl");
+            if (subNode != null)
+            {
+                settings.Tools.LmStudioApiUrl = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("LmStudioModel");
+            if (subNode != null)
+            {
+                settings.Tools.LmStudioModel = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("LmStudioPrompt");
+            if (subNode != null)
+            {
+                settings.Tools.LmStudioPrompt = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("OllamaApiUrl");
+            if (subNode != null)
+            {
+                settings.Tools.OllamaApiUrl = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("OllamaModel");
+            if (subNode != null)
+            {
+                settings.Tools.OllamaModel = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("OllamaPrompt");
+            if (subNode != null)
+            {
+                settings.Tools.OllamaPrompt = subNode.InnerText;
             }
 
             subNode = node.SelectSingleNode("AnthropicApiUrl");
@@ -11905,7 +11949,13 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("ChatGptPrompt", settings.Tools.ChatGptPrompt);
                 textWriter.WriteElementString("ChatGptApiKey", settings.Tools.ChatGptApiKey);
                 textWriter.WriteElementString("ChatGptModel", settings.Tools.ChatGptModel);
-                textWriter.WriteElementString("AnthropicApiUrl", settings.Tools.AnthropicApiUrl);
+                textWriter.WriteElementString("LmStudioApiUrl", settings.Tools.LmStudioApiUrl);
+                textWriter.WriteElementString("LmStudioModel", settings.Tools.LmStudioModel);
+                textWriter.WriteElementString("LmStudioPrompt", settings.Tools.LmStudioPrompt);
+                textWriter.WriteElementString("LmStudioApiUrl", settings.Tools.LmStudioApiUrl);
+                textWriter.WriteElementString("OllamaModel", settings.Tools.OllamaModel);
+                textWriter.WriteElementString("OllamaPrompt", settings.Tools.OllamaPrompt);
+                textWriter.WriteElementString("OllamaApiUrl", settings.Tools.OllamaApiUrl);
                 textWriter.WriteElementString("AnthropicPrompt", settings.Tools.AnthropicPrompt);
                 textWriter.WriteElementString("AnthropicApiKey", settings.Tools.AnthropicApiKey);
                 textWriter.WriteElementString("AnthropicApiModel", settings.Tools.AnthropicApiModel);
