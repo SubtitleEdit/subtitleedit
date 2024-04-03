@@ -123,6 +123,8 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 new LibreTranslate(),
                 new MyMemoryApi(),
                 new ChatGptTranslate(),
+                new LmStudioTranslate(),
+                new OllamaTranslate(),
                 new AnthropicTranslate(),
                 new GeminiTranslate(),
                 new PapagoTranslate(),
@@ -310,6 +312,59 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 return;
             }
 
+            if (engineType == typeof(LmStudioTranslate))
+            {
+                if (string.IsNullOrEmpty(Configuration.Settings.Tools.LmStudioApiUrl))
+                {
+                    Configuration.Settings.Tools.LmStudioApiUrl = "http://localhost:1234/v1/chat/completions";
+                }
+
+                FillUrls(new List<string>
+                {
+                    Configuration.Settings.Tools.LmStudioApiUrl.TrimEnd('/'),
+                });
+
+                return;
+            }
+
+            if (engineType == typeof(OllamaTranslate))
+            {
+                if (Configuration.Settings.Tools.OllamaApiUrl == null)
+                {
+                    Configuration.Settings.Tools.OllamaApiUrl = "http://localhost:11434/api/generate";
+                }
+
+                FillUrls(new List<string>
+                {
+                    Configuration.Settings.Tools.OllamaApiUrl.TrimEnd('/'),
+                });
+
+                labelFormality.Text = LanguageSettings.Current.AudioToText.Model;
+                labelFormality.Visible = true;
+                comboBoxFormality.Left = labelFormality.Right + 3;
+                comboBoxFormality.Visible = true;
+                comboBoxFormality.DropDownStyle = ComboBoxStyle.DropDown;
+                comboBoxFormality.Items.Clear();
+                comboBoxFormality.Items.Add("llama2");
+                comboBoxFormality.Items.Add("mistral");
+                comboBoxFormality.Items.Add("dolphin-phi");
+                comboBoxFormality.Items.Add("phi");
+                comboBoxFormality.Items.Add("neural-chat");
+                comboBoxFormality.Items.Add("starling-lm");
+                comboBoxFormality.Items.Add("codellama");
+                comboBoxFormality.Items.Add("llama2-uncensored");
+                comboBoxFormality.Items.Add("llama2:13b");
+                comboBoxFormality.Items.Add("llama2:70b");
+                comboBoxFormality.Items.Add("orca-mini");
+                comboBoxFormality.Items.Add("vicuna");
+                comboBoxFormality.Items.Add("llava");
+                comboBoxFormality.Items.Add("gemma:2b");
+                comboBoxFormality.Items.Add("gemma:7b");
+                comboBoxFormality.Text = Configuration.Settings.Tools.OllamaModel;
+
+                return;
+            }
+
             if (engineType == typeof(AnthropicTranslate))
             {
                 FillUrls(new List<string>
@@ -323,6 +378,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 labelApiKey.Visible = true;
                 nikseTextBoxApiKey.Visible = true;
 
+                labelFormality.Text = LanguageSettings.Current.AudioToText.Model;
                 labelFormality.Visible = true;
                 comboBoxFormality.Left = labelFormality.Right + 3;
                 comboBoxFormality.Visible = true;
@@ -331,8 +387,6 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 comboBoxFormality.Items.Add("claude-3-opus-20240229");
                 comboBoxFormality.Items.Add("claude-3-sonnet-20240229");
                 comboBoxFormality.Items.Add("claude-3-haiku-20240307");
-                comboBoxFormality.Text = Configuration.Settings.Tools.AnthropicApiModel;
-                labelFormality.Text = LanguageSettings.Current.AudioToText.Model;
 
                 return;
             }
@@ -887,7 +941,11 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                       nikseComboBoxUrl.Text.Contains("//127.", StringComparison.OrdinalIgnoreCase) ||
                       nikseComboBoxUrl.Text.Contains("//localhost", StringComparison.OrdinalIgnoreCase)))
             {
-                if (engineType == typeof(NoLanguageLeftBehindApi) || engineType == typeof(NoLanguageLeftBehindServe) || engineType == typeof(LibreTranslate))
+                if (engineType == typeof(NoLanguageLeftBehindApi) ||
+                    engineType == typeof(NoLanguageLeftBehindServe) ||
+                    engineType == typeof(LibreTranslate) ||
+                    engineType == typeof(LmStudioTranslate) ||
+                    engineType == typeof(OllamaTranslate))
                 {
                     var dr = MessageBox.Show(
                         string.Format(LanguageSettings.Current.GoogleTranslate.XRequiresALocalWebServer, _autoTranslator.Name)
@@ -942,6 +1000,18 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             {
                 Configuration.Settings.Tools.ChatGptApiKey = nikseTextBoxApiKey.Text.Trim();
                 Configuration.Settings.Tools.ChatGptUrl = nikseComboBoxUrl.Text.Trim();
+            }
+
+            if (engineType == typeof(LmStudioTranslate))
+            {
+                Configuration.Settings.Tools.LmStudioApiUrl = nikseComboBoxUrl.Text.Trim();
+                Configuration.Settings.Tools.LmStudioModel = comboBoxFormality.Text.Trim();
+            }
+
+            if (engineType == typeof(OllamaTranslate))
+            {
+                Configuration.Settings.Tools.OllamaApiUrl = nikseComboBoxUrl.Text.Trim();
+                Configuration.Settings.Tools.OllamaModel = comboBoxFormality.Text.Trim();
             }
 
             if (engineType == typeof(AnthropicTranslate) && !string.IsNullOrWhiteSpace(nikseTextBoxApiKey.Text))
