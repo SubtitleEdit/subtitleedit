@@ -707,16 +707,16 @@ namespace Nikse.SubtitleEdit.Controls
 
         protected override void OnMouseEnter(EventArgs e)
         {
+            base.OnMouseEnter(e);
             _buttonDownActive = false;
             _comboBoxMouseEntered = true;
-            base.OnMouseEnter(e);
             Invalidate();
         }
 
         protected override void OnMouseLeave(EventArgs e)
         {
-            HandleOnMouseLeave(e);
             base.OnMouseLeave(e);
+            HandleOnMouseLeave(e);
             Invalidate();
         }
 
