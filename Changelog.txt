@@ -9,6 +9,9 @@
    * Add a few animation templates for ASSA tool "Apply custom override tags"
    * Add French interjections
    * Add new shortcut "Insert new subtitle at video pos (fill)" - thx Leon/AuroraMartell
+   * Add "LM Studio" translate (local) - thx fznx922
+   * Add Ollama translate (local) - thx despairTK/Copy2Translator
+   * Add Antrophic translate 
 * IMPROVED:
    * Update German translation - thx Netspark
    * Update Spanish AR & MX translation - thx jmaraujouy
@@ -16,7 +19,7 @@
    * Update Italian language - thx bovirus
    * Update Russian translation - thx elfriob
    * Update Korean translation - thx domddol
-   * Improve "Karaoke effect" with new options - thx ivandrofly
+   * Improve "Karaoke effect" + new option - thx ivandrofly
    * Make "Timed Text IMSC 1.1" more compatible
    * Improve EBU STL preview regarding box - thx BlueMeow7
    * Update libmpv to 2024-03-17
