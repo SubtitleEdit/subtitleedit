@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>4.0.4</Version>
-    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 29.02.2024</TranslatedBy>
+    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 04.04.2024</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -3363,7 +3363,7 @@ Vuoi mantenere le modifiche?</KeepChangesMessage>
     <Seconds>secondi</Seconds>
     <ZoomIn>Aumenta zoom</ZoomIn>
     <ZoomOut>Diminuisci zoom</ZoomOut>
-    <AddParagraphHere>Aggiungi testo qui</AddParagraphHere>
+    <AddParagraphHere>Aggiungi testo qui (Invio)</AddParagraphHere>
     <AddParagraphHereAndPasteText>Aggiungi testo qui dagli Appunti</AddParagraphHereAndPasteText>
     <SetParagraphAsSelection>Imposta attuale come nuova selezione</SetParagraphAsSelection>
     <FocusTextBox>Evidenzia Casella di testo</FocusTextBox>
