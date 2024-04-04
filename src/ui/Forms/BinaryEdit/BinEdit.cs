@@ -1016,56 +1016,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             }
 
             CleanUp();
-            var sub = matroska.GetSubtitle(matroskaSubtitleInfo.TrackNumber, null);
-            var subtitles = new List<BluRaySupParser.PcsData>();
-            var log = new StringBuilder();
-            var clusterStream = new MemoryStream();
-            var lastPalettes = new Dictionary<int, List<PaletteInfo>>();
-            var lastBitmapObjects = new Dictionary<int, List<BluRaySupParser.OdsData>>();
-            foreach (var p in sub)
-            {
-                byte[] buffer = p.GetData(matroskaSubtitleInfo);
-                if (buffer != null && buffer.Length > 2)
-                {
-                    clusterStream.Write(buffer, 0, buffer.Length);
-                    if (ContainsBluRayStartSegment(buffer))
-                    {
-                        if (subtitles.Count > 0 && subtitles[subtitles.Count - 1].StartTime == subtitles[subtitles.Count - 1].EndTime)
-                        {
-                            subtitles[subtitles.Count - 1].EndTime = (long)((p.Start - 1) * 90.0);
-                        }
-
-                        clusterStream.Position = 0;
-                        var list = BluRaySupParser.ParseBluRaySup(clusterStream, log, true, lastPalettes, lastBitmapObjects);
-                        foreach (var sup in list)
-                        {
-                            sup.StartTime = (long)((p.Start - 1) * 90.0);
-                            sup.EndTime = (long)((p.End - 1) * 90.0);
-                            subtitles.Add(sup);
-
-                            // fix overlapping
-                            if (subtitles.Count > 1 && sub[subtitles.Count - 2].End > sub[subtitles.Count - 1].Start)
-                            {
-                                subtitles[subtitles.Count - 2].EndTime = subtitles[subtitles.Count - 1].StartTime - 1;
-                            }
-                        }
-
-                        clusterStream = new MemoryStream();
-                    }
-                }
-                else if (subtitles.Count > 0)
-                {
-                    var lastSub = subtitles[subtitles.Count - 1];
-                    if (lastSub.StartTime == lastSub.EndTime)
-                    {
-                        lastSub.EndTime = (long)((p.Start - 1) * 90.0);
-                        if (lastSub.EndTime - lastSub.StartTime > 1000000)
-                        {
-                            lastSub.EndTime = lastSub.StartTime;
-                        }
-                    }
-                }
-            }
+            var subtitles = BluRaySupParser.ParseBluRaySupFromMatroska(matroskaSubtitleInfo, matroska);
 
             _subtitle = new Subtitle();
             _extra = new List<Extra>();
@@ -1095,25 +1046,6 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             }
 
             return true;
-        }
-
-        private static bool ContainsBluRayStartSegment(byte[] buffer)
-        {
-            const int epochStart = 0x80;
-            var position = 0;
-            while (position + 3 <= buffer.Length)
-            {
-                var segmentType = buffer[position];
-                if (segmentType == epochStart)
-                {
-                    return true;
-                }
-
-                var length = BluRaySupParser.BigEndianInt16(buffer, position + 1) + 3;
-                position += length;
-            }
-
-            return false;
         }
 
         private bool LoadDvbFromMatroska(MatroskaTrackInfo matroskaSubtitleInfo, MatroskaFile matroska)
