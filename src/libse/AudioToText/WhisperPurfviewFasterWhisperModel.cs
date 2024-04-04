@@ -1,6 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using System.Collections.Generic;
 using System.IO;
+using static System.Net.WebRequestMethods;
 
 namespace Nikse.SubtitleEdit.Core.AudioToText
 {
@@ -115,6 +116,35 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                 Size = "3.1 GB",
                 Urls = MakeUrls("https://huggingface.co/Systran/faster-whisper-large-v3/resolve/main"),
                 Folder = "faster-whisper-large-v3",
+            },
+
+            new WhisperModel
+            {
+                Name = "distil-small.en",
+                Size = "334 MB",
+                Urls = MakeUrls("https://huggingface.co/Systran/faster-distil-whisper-small.en/resolve/main"),
+                Folder = "faster-distil-whisper-small.en",
+            },
+            new WhisperModel
+            {
+                Name = "distil-medium.en",
+                Size = "755 MB",
+                Urls = MakeUrls("https://huggingface.co/Systran/faster-distil-whisper-medium.en/resolve/main"),
+                Folder = "faster-distil-whisper-medium.en",
+            },
+            new WhisperModel
+            {
+                Name = "distil-large-v2",
+                Size = "1.5 GB",
+                Urls = MakeUrls("https://huggingface.co/Systran/faster-distil-whisper-large-v2/resolve/main"),
+                Folder = "faster-distil-whisper-large-v2",
+            },
+            new WhisperModel
+            {
+                Name = "distil-large-v3",
+                Size = "1.5 GB",
+                Urls = MakeUrls("https://huggingface.co/Systran/faster-distil-whisper-large-v3/resolve/main"),
+                Folder = "faster-distil-whisper-large-v3",
             },
         };
 
