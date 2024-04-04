@@ -384,6 +384,19 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 return;
             }
 
+            _languageCode = GetLanguage(comboBoxLanguages.Text);
+
+            if (comboBoxModels.Items[comboBoxModels.SelectedIndex] is WhisperModel model && 
+                _languageCode != "en" && model.Name.EndsWith(".en", StringComparison.InvariantCulture))
+            {
+                var result = MessageBox.Show("English model should only be used with English language." + Environment.NewLine +
+                "Continue anyway?", Text, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
+                if (result != DialogResult.Yes)
+                {
+                    return;
+                }
+            }
+
             try
             {
                 var f = SeLogger.GetWhisperLogFilePath();
@@ -400,7 +413,6 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             _useCenterChannelOnly = Configuration.Settings.General.FFmpegUseCenterChannelOnly &&
                                     FfmpegMediaInfo.Parse(_videoFileName).HasFrontCenterAudio(_audioTrackNumber);
 
-            _languageCode = GetLanguage(comboBoxLanguages.Text);
             IncompleteModel = false;
             ShowProgressBar();
 
