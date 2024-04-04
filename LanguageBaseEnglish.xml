@@ -3363,7 +3363,7 @@ Keep changes?</KeepChangesMessage>
     <Seconds>seconds</Seconds>
     <ZoomIn>Zoom in</ZoomIn>
     <ZoomOut>Zoom out</ZoomOut>
-    <AddParagraphHere>Add text here</AddParagraphHere>
+    <AddParagraphHere>Add text here (Enter)</AddParagraphHere>
     <AddParagraphHereAndPasteText>Add text from clipboard here</AddParagraphHereAndPasteText>
     <SetParagraphAsSelection>Set current as new selection</SetParagraphAsSelection>
     <FocusTextBox>Focus text box</FocusTextBox>
