@@ -540,7 +540,7 @@ namespace Test.FixCommonErrors
                 Assert.AreEqual("…but never could.", target.Subtitle.Paragraphs[0].Text);
             }
         }
-        
+
         [TestMethod]
         public void FixCommonOcrErrorsFrenchHardCodedRuleNoChange()
         {
@@ -551,7 +551,7 @@ namespace Test.FixCommonErrors
                 Assert.AreEqual("ENCORE UNE VICTIME\r\nDE L'ASSASSIN MYSTERIEUX.", target.Subtitle.Paragraphs[0].Text);
             }
         }
-        
+
         [TestMethod]
         public void FixCommonOcrErrorsFrenchHardCodedRuleChange()
         {
@@ -3594,7 +3594,7 @@ namespace Test.FixCommonErrors
             var sub = GetGenericSub();
             sub.Paragraphs.First().Text = "- Foobar bar zzz).\n- Foo bar Zz";
             engine.Fix(sub, new EmptyFixCallback());
-            Assert.AreEqual( "- (Foobar bar zzz).\n- Foo bar Zz", sub.Paragraphs.First().Text);
+            Assert.AreEqual("- (Foobar bar zzz).\n- Foo bar Zz", sub.Paragraphs.First().Text);
         }
 
         [TestMethod]
@@ -3604,7 +3604,7 @@ namespace Test.FixCommonErrors
             var sub = GetGenericSub();
             sub.Paragraphs.First().Text = "Foobar THIS IS A NOISE)";
             engine.Fix(sub, new EmptyFixCallback());
-            Assert.AreEqual( "Foobar (THIS IS A NOISE)", sub.Paragraphs.First().Text);
+            Assert.AreEqual("Foobar (THIS IS A NOISE)", sub.Paragraphs.First().Text);
         }
 
         [TestMethod]
@@ -3615,6 +3615,53 @@ namespace Test.FixCommonErrors
             sub.Paragraphs.First().Text = "- ]...";
             engine.Fix(sub, new EmptyFixCallback());
             Assert.AreEqual("- ]...", sub.Paragraphs.First().Text);
+        }
+
+        [TestMethod]
+        public void FixShortGapsDoNotTouch()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                _subtitle = new Subtitle();
+                new SubRip().LoadSubtitle(_subtitle, @"1
+00:01:41,620 --> 00:01:43,477
+A las 7, practicar por la mañana
+
+2
+00:01:43,501 --> 00:01:44,920
+[Yoyo]
+
+3
+00:01:43,500 --> 00:01:45,310
+con Issa.".SplitToLines(), null);
+                target.Initialize(_subtitle, new SubRip(), System.Text.Encoding.UTF8);
+                new FixShortGaps().Fix(_subtitle, new EmptyFixCallback());
+                Assert.IsTrue(_subtitle.Paragraphs[0].Duration.TotalMilliseconds > 0, "Gap should not be negative");
+                Assert.IsTrue(_subtitle.Paragraphs[1].Duration.TotalMilliseconds > 0, "Gap should not be negative");
+                Assert.IsTrue(_subtitle.Paragraphs[2].Duration.TotalMilliseconds > 0, "Gap should not be negative");
+            }
+        }
+
+        public void FixShortGapsDoFix()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                _subtitle = new Subtitle();
+                new SubRip().LoadSubtitle(_subtitle, @"1
+00:01:41,000 --> 00:01:43,990
+A las 7, practicar por la mañana
+
+2
+00:01:44,000 --> 00:01:46,000
+[Yoyo]".SplitToLines(), null);
+                target.Initialize(_subtitle, new SubRip(), System.Text.Encoding.UTF8);
+                new FixShortGaps().Fix(_subtitle, new EmptyFixCallback());
+
+                var gap = _subtitle.Paragraphs[1].StartTime.TotalMilliseconds -
+                          _subtitle.Paragraphs[0].EndTime.TotalMilliseconds;
+
+                Assert.IsTrue(Math.Abs(gap - 24) < 0.001);
+            }
         }
 
         private static Subtitle GetGenericSub()
