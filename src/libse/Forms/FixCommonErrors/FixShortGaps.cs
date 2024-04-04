@@ -24,7 +24,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 {
                     double gap = next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds;
                     bool allowFix = callbacks.AllowFix(p, fixAction);
-                    if (allowFix && gap < minGap)
+                    if (allowFix && gap < minGap && gap >= 0)
                     {
                         string oldCurrent = p.ToString();
                         p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - minGap;
