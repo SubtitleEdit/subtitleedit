@@ -9721,7 +9721,7 @@ namespace Nikse.SubtitleEdit.Forms
             var selectLinesStatistics = new ToolStripMenuItem(LanguageSettings.Current.Main.Menu.File.Statistics);
             UiUtil.FixFonts(selectLinesStatistics);
             selectLinesStatistics.Tag = "(REMOVE)";
-            if (SubtitleListview1.SelectedItems.Count > 1)
+            if (SubtitleListview1.SelectedItems.Count > 0)
             {
                 toolStripMenuItemSelectedLines.DropDownItems.Insert(1, selectLinesStatistics);
             }
@@ -9778,6 +9778,37 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             var audioClips = GetAudioClips();
+
+            if (audioClips.Count == 1 && audioClips[0].Paragraph.DurationTotalMilliseconds > 10_000)
+            {
+                using (var form = new VoskAudioToText(audioClips[0].AudioFileName, _videoAudioTrackNumber, this))
+                {
+                    var result = form.ShowDialog(this);
+                    if (result != DialogResult.OK)
+                    {
+                        return;
+                    }
+
+                    if (form.TranscribedSubtitle.Paragraphs.Count == 0)
+                    {
+                        MessageBox.Show(LanguageSettings.Current.AudioToText.NoTextFound);
+                        return;
+                    }
+
+                    _subtitle.Paragraphs.RemoveAll(p => p.Id == audioClips[0].Paragraph.Id);
+
+                    foreach (var p in form.TranscribedSubtitle.Paragraphs)
+                    {
+                        p.Adjust(1, audioClips[0].Paragraph.StartTime.TotalSeconds);
+                        _subtitle.InsertParagraphInCorrectTimeOrder(p);
+                    }
+
+                    SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
+                    RestoreSubtitleListviewIndices();
+                    RefreshSelectedParagraph();
+                }
+            }
+
             using (var form = new VoskAudioToTextSelectedLines(audioClips, this))
             {
                 if (form.ShowDialog(this) == DialogResult.OK)
@@ -9809,6 +9840,41 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             var audioClips = GetAudioClips();
+            if (audioClips.Count == 1 && audioClips[0].Paragraph.DurationTotalMilliseconds > 10_000)
+            {
+                var s = new Subtitle();
+                s.Paragraphs.Add(audioClips[0].Paragraph);
+
+                using (var form = new WhisperAudioToText(audioClips[0].AudioFileName, s, _videoAudioTrackNumber, this, null))
+                {
+                    var result = form.ShowDialog(this);
+                    if (result != DialogResult.OK)
+                    {
+                        return;
+                    }
+
+                    if (form.TranscribedSubtitle.Paragraphs.Count == 0)
+                    {
+                        MessageBox.Show(LanguageSettings.Current.AudioToText.NoTextFound);
+                        return;
+                    }
+
+                    _subtitle.Paragraphs.RemoveAll(p => p.Id == audioClips[0].Paragraph.Id);
+
+                    foreach (var p in form.TranscribedSubtitle.Paragraphs)
+                    {
+                        p.Adjust(1, audioClips[0].Paragraph.StartTime.TotalSeconds);
+                        _subtitle.InsertParagraphInCorrectTimeOrder(p);
+                    }
+
+                    SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
+                    RestoreSubtitleListviewIndices();
+                    RefreshSelectedParagraph();
+                }
+
+                return;
+            }
+
             using (var form = new WhisperAudioToTextSelectedLines(audioClips, this))
             {
                 CheckWhisperCpp();
