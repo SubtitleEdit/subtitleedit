@@ -387,7 +387,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             _languageCode = GetLanguage(comboBoxLanguages.Text);
 
             if (comboBoxModels.Items[comboBoxModels.SelectedIndex] is WhisperModel model && 
-                _languageCode != "en" && model.Name.EndsWith(".en", StringComparison.InvariantCulture))
+                _languageCode != "en" && IsModelEnglishOnly(model))
             {
                 var result = MessageBox.Show("English model should only be used with English language." + Environment.NewLine +
                 "Continue anyway?", Text, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
@@ -512,6 +512,13 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             timer1.Stop();
 
             DialogResult = DialogResult.OK;
+        }
+
+        private static bool IsModelEnglishOnly(WhisperModel model)
+        {
+            return model.Name.EndsWith(".en", StringComparison.InvariantCulture) ||
+                   model.Name == "distil-large-v2" ||
+                   model.Name == "distil-large-v3";
         }
 
         private void ShowProgressBar()
