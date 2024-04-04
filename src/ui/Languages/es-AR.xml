@@ -1025,10 +1025,13 @@ Aprovechamos el ritmo intrínseco de la imagen.</CreateSimpleChainingToolTip>
     <InputVideoFile>Archivo de video de entrada</InputVideoFile>
     <SubtitlesX>Subtítulos ({0})</SubtitlesX>
     <SetLanguage>Establecer idioma...</SetLanguage>
+    <LanguageAndTitle>Idioma/título</LanguageAndTitle>
     <ToggleForced>Alternar forzado</ToggleForced>
     <ToggleDefault>Alternar predeterminado</ToggleDefault>
     <Default>Predeterminado</Default>
     <XGeneratedWithEmbeddedSubs>"{0}" generado con subtítulos incrustados</XGeneratedWithEmbeddedSubs>
+    <DeleteInputVideo>Eliminar el archivo de vídeo de entrada después de "Generar"</DeleteInputVideo>
+    <OutputFileNameSettings>Configuración del nombre de archivo de salida...</OutputFileNameSettings>
   </GenerateVideoWithEmbeddedSubs>
   <GetDictionaries>
     <Title>¿Necesita diccionarios?</Title>
@@ -1641,6 +1644,7 @@ Para usar una clave de API, ve a "Opciones --&gt; Ajustes --&gt; Autotraducir" p
       <StillTypingAutoContinueStopped>Escribiendo... auto continuar detenido</StillTypingAutoContinueStopped>
       <InsertNewSubtitleAtVideoPosition>Insertar subtítulo en posición video</InsertNewSubtitleAtVideoPosition>
       <InsertNewSubtitleAtVideoPositionNoTextBoxFocus>Insertar un nuevo subtítulo en la posición del video (sin enfocar el cuadro de texto)</InsertNewSubtitleAtVideoPositionNoTextBoxFocus>
+      <InsertNewSubtitleAtVideoPositionMax>Insertar nuevo subtítulo en la posición del video (cuando sea posible)</InsertNewSubtitleAtVideoPositionMax>
       <Auto>Auto</Auto>
       <PlayFromJustBeforeText>Reproducir desde justo antes del texto</PlayFromJustBeforeText>
       <PlayFromBeginning>Reproducir desde el principio del video</PlayFromBeginning>
@@ -3359,7 +3363,7 @@ La configuración de una fuente para un subtítulo se realiza normalmente en el 
     <Seconds>segundos</Seconds>
     <ZoomIn>Zoom +</ZoomIn>
     <ZoomOut>Zoom -</ZoomOut>
-    <AddParagraphHere>Añadir texto aquí</AddParagraphHere>
+    <AddParagraphHere>Añadir texto aquí (Intro/Enter)</AddParagraphHere>
     <AddParagraphHereAndPasteText>Añadir texto desde el portapapeles aquí</AddParagraphHereAndPasteText>
     <SetParagraphAsSelection>Establecer actual como nueva selección</SetParagraphAsSelection>
     <FocusTextBox>Centrar cuadro de texto</FocusTextBox>
