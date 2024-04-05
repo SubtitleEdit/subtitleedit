@@ -1645,6 +1645,7 @@ Gå till "Alternativ -&gt; Inställningar -&gt; Verktyg" för att ange din nycke
       <StillTypingAutoContinueStopped>Skriver fortfarande, auto fortsätt stoppad</StillTypingAutoContinueStopped>
       <InsertNewSubtitleAtVideoPosition>Infoga ny text på video pos.</InsertNewSubtitleAtVideoPosition>
       <InsertNewSubtitleAtVideoPositionNoTextBoxFocus>Infoga ny undertext vid videoposition (ingen textrutafokus)</InsertNewSubtitleAtVideoPositionNoTextBoxFocus>
+      <InsertNewSubtitleAtVideoPositionMax>Infoga ny undertext vid videoposition (maximal längd)</InsertNewSubtitleAtVideoPositionMax>
       <Auto>Auto</Auto>
       <PlayFromJustBeforeText>Spela från strax före text</PlayFromJustBeforeText>
       <PlayFromBeginning>Spela upp från början av videon</PlayFromBeginning>
@@ -3364,7 +3365,7 @@ Behålla ändringarna?</KeepChangesMessage>
     <Seconds>sekunder</Seconds>
     <ZoomIn>Zooma in</ZoomIn>
     <ZoomOut>Zooma ut</ZoomOut>
-    <AddParagraphHere>Lägg till text här</AddParagraphHere>
+    <AddParagraphHere>Lägg till text här (Enter)</AddParagraphHere>
     <AddParagraphHereAndPasteText>Lägg till text från urklipp här</AddParagraphHereAndPasteText>
     <SetParagraphAsSelection>Ställ in aktuellt som nytt val</SetParagraphAsSelection>
     <FocusTextBox>Fokusera textrutan</FocusTextBox>
