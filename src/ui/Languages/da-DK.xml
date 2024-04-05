@@ -1637,6 +1637,7 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Bi
       <StillTypingAutoContinueStopped>Stadig skriver... auto fortsæt stoppet</StillTypingAutoContinueStopped>
       <InsertNewSubtitleAtVideoPosition>&amp;Indsæt tekst v. video pos</InsertNewSubtitleAtVideoPosition>
       <InsertNewSubtitleAtVideoPositionNoTextBoxFocus>Indsæt ny undertekst ved videopos (ikke fokus på tekstboks)</InsertNewSubtitleAtVideoPositionNoTextBoxFocus>
+      <InsertNewSubtitleAtVideoPositionMax>Indsæt ny undertekst ved videoposition (max længde mulig)</InsertNewSubtitleAtVideoPositionMax>
       <Auto>Auto</Auto>
       <PlayFromJustBeforeText>Spil fra lige før &amp;tekst</PlayFromJustBeforeText>
       <PlayFromBeginning>Afspil fra starten af ​​video</PlayFromBeginning>
@@ -3350,7 +3351,7 @@ Fortsæt?</RestoreDefaultSettingsMsg>
     <Seconds>sekunder</Seconds>
     <ZoomIn>Zoom ind</ZoomIn>
     <ZoomOut>Zoom ud</ZoomOut>
-    <AddParagraphHere>Tilføj tekst her</AddParagraphHere>
+    <AddParagraphHere>Tilføj tekst her (Enter)</AddParagraphHere>
     <AddParagraphHereAndPasteText>Tilføj tekst fra 'klippebord' her</AddParagraphHereAndPasteText>
     <SetParagraphAsSelection>Sæt Aktuel som nyt valg</SetParagraphAsSelection>
     <FocusTextBox>Gå til tekstboks</FocusTextBox>
