@@ -413,6 +413,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxDrawing.Text = LanguageSettings.Current.AssaResolutionChanger.ChangeResolutionDrawing;
             labelSource.Text = LanguageSettings.Current.GoogleTranslate.From;
             labelTarget.Text = LanguageSettings.Current.GoogleTranslate.To;
+            groupBoxAutoTranslate.Text = LanguageSettings.Current.Main.VideoControls.AutoTranslate;
 
             labelSource.Left = comboBoxSource.Left - labelSource.Width - 5;
             labelTarget.Left = comboBoxTarget.Left - labelTarget.Width - 5;
