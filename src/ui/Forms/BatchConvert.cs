@@ -414,6 +414,9 @@ namespace Nikse.SubtitleEdit.Forms
             labelSource.Text = LanguageSettings.Current.GoogleTranslate.From;
             labelTarget.Text = LanguageSettings.Current.GoogleTranslate.To;
 
+            labelSource.Left = comboBoxSource.Left - labelSource.Width - 5;
+            labelTarget.Left = comboBoxTarget.Left - labelTarget.Width - 5;
+
             var mode = Configuration.Settings.Tools.BatchConvertFixRtlMode;
             if (mode == RemoveUnicode)
             {
