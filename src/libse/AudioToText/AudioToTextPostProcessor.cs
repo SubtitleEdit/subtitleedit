@@ -121,7 +121,9 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                     subtitle = FixShortDuration(subtitle);
                 }
 
-                if (splitLines && !IsNonStandardLineTerminationLanguage(TwoLetterLanguageCode) && !Configuration.Settings.Tools.WhisperExtraSettings.Contains("--highlight_words true", StringComparison.OrdinalIgnoreCase))
+                if (splitLines && !IsNonStandardLineTerminationLanguage(TwoLetterLanguageCode) &&
+                    !Configuration.Settings.Tools.WhisperExtraSettings.Contains("--highlight_words true", StringComparison.OrdinalIgnoreCase) &&
+                    !Configuration.Settings.Tools.WhisperExtraSettings.Contains("--one_word", StringComparison.OrdinalIgnoreCase))
                 {
                     var totalMaxChars = Configuration.Settings.General.SubtitleLineMaximumLength * Configuration.Settings.General.MaxNumberOfLines;
                     subtitle = SplitLongLinesHelper.SplitLongLinesInSubtitle(subtitle, totalMaxChars, Configuration.Settings.General.SubtitleLineMaximumLength);
@@ -129,7 +131,9 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                     subtitle = TryForWholeSentences(subtitle, TwoLetterLanguageCode, Configuration.Settings.General.SubtitleLineMaximumLength);
                 }
 
-                if (mergeLines && !Configuration.Settings.Tools.WhisperExtraSettings.Contains("--highlight_words true", StringComparison.OrdinalIgnoreCase))
+                if (mergeLines &&
+                    !Configuration.Settings.Tools.WhisperExtraSettings.Contains("--highlight_words true", StringComparison.OrdinalIgnoreCase) &&
+                    !Configuration.Settings.Tools.WhisperExtraSettings.Contains("--one_word", StringComparison.OrdinalIgnoreCase))
                 {
                     subtitle = MergeShortLines(subtitle, TwoLetterLanguageCode);
                     subtitle = AutoBalanceLines(subtitle, TwoLetterLanguageCode);
