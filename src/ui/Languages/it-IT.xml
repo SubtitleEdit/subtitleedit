@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>4.0.4</Version>
-    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 04.04.2024</TranslatedBy>
+    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 05.04.2024</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -3374,6 +3374,7 @@ Vuoi mantenere le modifiche?</KeepChangesMessage>
     <SplitAtCursor>Dividi alla posizione del cursore</SplitAtCursor>
     <MergeWithPrevious>Unisci con il precedente</MergeWithPrevious>
     <MergeWithNext>Unisci con il successivo</MergeWithNext>
+    <RunWhisperSelectedParagraph>Esegui Whisper sul paragrafo selezionato...</RunWhisperSelectedParagraph>
     <ExtendToPrevious>Estendi al precedente</ExtendToPrevious>
     <ExtendToNext>Estendi al successivo</ExtendToNext>
     <PlaySelection>Riproduci</PlaySelection>
