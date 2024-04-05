@@ -3602,6 +3602,7 @@
             public string SplitAtCursor { get; set; }
             public string MergeWithPrevious { get; set; }
             public string MergeWithNext { get; set; }
+            public string RunWhisperSelectedParagraph { get; set; }
             public string ExtendToPrevious { get; set; }
             public string ExtendToNext { get; set; }
             public string PlaySelection { get; set; }

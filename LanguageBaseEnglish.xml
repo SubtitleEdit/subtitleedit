@@ -3374,6 +3374,7 @@ Keep changes?</KeepChangesMessage>
     <SplitAtCursor>Split at cursor</SplitAtCursor>
     <MergeWithPrevious>Merge with previous</MergeWithPrevious>
     <MergeWithNext>Merge with next</MergeWithNext>
+    <RunWhisperSelectedParagraph>Run Whisper on selected paragraph...</RunWhisperSelectedParagraph>
     <ExtendToPrevious>Extend to previous</ExtendToPrevious>
     <ExtendToNext>Extend to next</ExtendToNext>
     <PlaySelection>Play selection</PlaySelection>

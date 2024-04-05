@@ -939,6 +939,7 @@ namespace Nikse.SubtitleEdit.Forms
             deleteParagraphToolStripMenuItem.Visible = false;
             toolStripMenuItemFocusTextbox.Visible = true;
             splitToolStripMenuItem1.Visible = false;
+            runWhiperOnParagraphToolStripMenuItem.Visible = false;
             mergeWithPreviousToolStripMenuItem.Visible = false;
             mergeWithNextToolStripMenuItem.Visible = false;
             extendToPreviousToolStripMenuItem.Visible = false;
@@ -1132,6 +1133,7 @@ namespace Nikse.SubtitleEdit.Forms
             deleteParagraphToolStripMenuItem.Visible = true;
             toolStripMenuItemFocusTextbox.Visible = true;
             splitToolStripMenuItem1.Visible = true;
+            runWhiperOnParagraphToolStripMenuItem.Visible = e.Paragraph.DurationTotalMilliseconds > 8000;
             mergeWithPreviousToolStripMenuItem.Visible = true;
             mergeWithNextToolStripMenuItem.Visible = true;
             toolStripSeparator11.Visible = true;
@@ -2089,8 +2091,8 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemFocusTextbox.Text = languageWaveform.FocusTextBox;
             goToPreviousSubtitleStripMenuItem.Text = languageWaveform.GoToPrevious;
             goToNextSubtitleStripMenuItem.Text = languageWaveform.GoToNext;
-
             splitToolStripMenuItem1.Text = languageWaveform.Split;
+            runWhiperOnParagraphToolStripMenuItem.Text = languageWaveform.RunWhisperSelectedParagraph;
             mergeWithPreviousToolStripMenuItem.Text = languageWaveform.MergeWithPrevious;
             mergeWithNextToolStripMenuItem.Text = languageWaveform.MergeWithNext;
             extendToPreviousToolStripMenuItem.Text = languageWaveform.ExtendToPrevious;
@@ -9840,7 +9842,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             var audioClips = GetAudioClips();
-            if (audioClips.Count == 1 && audioClips[0].Paragraph.DurationTotalMilliseconds > 10_000)
+            if (audioClips.Count == 1 && audioClips[0].Paragraph.DurationTotalMilliseconds > 8_000)
             {
                 var s = new Subtitle();
                 s.Paragraphs.Add(audioClips[0].Paragraph);
@@ -36709,6 +36711,11 @@ namespace Nikse.SubtitleEdit.Forms
         private void ToolStripButtonVideoOpenClick(object sender, EventArgs e)
         {
             OpenVideoDialog();
+        }
+
+        private void runWhiperOnParagraphToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AudioToTextWhisperSelectedLines();
         }
     }
 }
