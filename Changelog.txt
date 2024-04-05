@@ -35,7 +35,7 @@
    * Fix for Whisper post-processing - thx Purfview/cvrle77
    * Fix crash in "Fix common errors" - thx Joe
    * Fix issue with Combobox and ContextMenuStrip - thx ivandrofly
-   * Fix ChatGTP translate - thx longhoang1993
+   * Fix ChatGPT translate - thx longhoang1993
    * Fix "Batch convert" crash on Linux - thx ivandrofly/aggravatedanteater 
    * Fix for missing lines when embedding soft subs in .mp4 files - thx Joe
    * Fix layout change crash from un-docked state - thx highflowerG
