@@ -39,6 +39,7 @@
    * Fix "Batch convert" crash on Linux - thx ivandrofly/aggravatedanteater 
    * Fix for missing lines when embedding soft subs in .mp4 files - thx Joe
    * Fix layout change crash from un-docked state - thx highflowerG
+   * Fix crash in export to "Cavena 890" - thx yovelcohen
 
 
 4.0.4 (17th March 2024)

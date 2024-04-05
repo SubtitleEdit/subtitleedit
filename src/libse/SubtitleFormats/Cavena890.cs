@@ -1886,12 +1886,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     sb.Append(s);
                 }
             }
+
             if (fontColorOn)
             {
                 sb.Append("</font>"); // white
             }
+
             return sb.ToString();
         }
-
     }
 }
