@@ -16796,17 +16796,14 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (audioVisualizer.Visible && e.KeyData == _shortcuts.WaveformSplit)
             {
-                if (mediaPlayer.IsPaused)
+                var pos = mediaPlayer.CurrentPosition;
+                var paragraph = _subtitle.GetFirstParagraphOrDefaultByTime(pos * TimeCode.BaseUnit);
+                if (paragraph != null &&
+                    pos * TimeCode.BaseUnit + 100 > paragraph.StartTime.TotalMilliseconds &&
+                    pos * TimeCode.BaseUnit - 100 < paragraph.EndTime.TotalMilliseconds)
                 {
-                    var pos = mediaPlayer.CurrentPosition;
-                    var paragraph = _subtitle.GetFirstParagraphOrDefaultByTime(pos * TimeCode.BaseUnit);
-                    if (paragraph != null &&
-                        pos * TimeCode.BaseUnit + 100 > paragraph.StartTime.TotalMilliseconds &&
-                        pos * TimeCode.BaseUnit - 100 < paragraph.EndTime.TotalMilliseconds)
-                    {
-                        SubtitleListview1.SelectIndexAndEnsureVisible(paragraph);
-                        SplitSelectedParagraph(pos, null);
-                    }
+                    SubtitleListview1.SelectIndexAndEnsureVisible(paragraph);
+                    SplitSelectedParagraph(pos, null);
                 }
 
                 e.SuppressKeyPress = true;
