@@ -169,8 +169,8 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                     continue;
                 }
 
-                // check for period in last part of p
-                var lastPeriodIdx = p.Text.LastIndexOfAny(new char[] { '.', '?', '!' });
+                // check for period in last part of current
+                var lastPeriodIdx = p.Text.LastIndexOfAny(new[] { '.', '?', '!' });
                 if (lastPeriodIdx > 3 && lastPeriodIdx > p.Text.Length - maxMoveChunkSize)
                 {
                     var newCurrentText = p.Text.Substring(0, lastPeriodIdx + 1).Trim();
@@ -189,6 +189,8 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
 
                     if (currentOk && nextOk && allOk)
                     {
+                        var oldP = new Paragraph(p);
+
                         p.Text = newCurrentText;
                         next.Text = newNextText;
 
@@ -199,7 +201,9 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                         }
                         else
                         {
-                            //TODO: calc time
+                            var durationToMove = CalcDurationToMove(oldP, p, next);
+                            p.EndTime.TotalMilliseconds += durationToMove;
+                            next.StartTime.TotalMilliseconds += durationToMove;
                         }
 
                         continue;
@@ -207,7 +211,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                 }
 
                 // check for period in beginning of next
-                var firstPeriodIdx = next.Text.IndexOfAny(new char[] { '.', '?', '!' });
+                var firstPeriodIdx = next.Text.IndexOfAny(new[] { '.', '?', '!' });
                 if (firstPeriodIdx >= 3 && firstPeriodIdx < maxMoveChunkSize)
                 {
                     var newCurrentText = next.Text.Substring(0, firstPeriodIdx + 1).Trim();
@@ -221,11 +225,13 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
 
                     var currentOk = arrayCurrent.Count == 1 || (arrayCurrent.Count == 2 && arrayCurrent[0].Length < lineMaxLength * 2);
                     var nextOk = arrayNext.Count == 1 || (arrayNext.Count == 2 && arrayNext[0].Length < lineMaxLength * 2);
-                    var allOk = newCurrentText.Length < lineMaxLength * 2 && 
+                    var allOk = newCurrentText.Length < lineMaxLength * 2 &&
                                      newNextText.Length < lineMaxLength * 2;
 
                     if (currentOk && nextOk && allOk)
                     {
+                        var oldP = new Paragraph(p);
+
                         p.Text = newCurrentText;
                         next.Text = newNextText;
 
@@ -236,7 +242,9 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                         }
                         else
                         {
-                            //TODO: calc time
+                            var durationToMove = CalcDurationToMove(oldP, p, next);
+                            p.EndTime.TotalMilliseconds += durationToMove;
+                            next.StartTime.TotalMilliseconds += durationToMove;
                         }
                     }
                 }
@@ -372,9 +380,15 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                                     arr = text.SplitToLines();
                                     if (arr.Count == 2)
                                     {
+                                        var oldP = new Paragraph(p);
+
                                         p.Text = Utilities.AutoBreakLine(arr[0], language);
                                         next.Text = Utilities.AutoBreakLine(arr[1], language);
-                                        //TODO: calc time
+
+                                        var durationToMove = CalcDurationToMove(oldP, p, next);
+                                        p.EndTime.TotalMilliseconds += durationToMove;
+                                        next.StartTime.TotalMilliseconds += durationToMove;
+
                                         splitDone = true;
                                     }
 
@@ -465,8 +479,14 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                     }
                     else
                     {
+                        var oldP = new Paragraph(p);
+
                         p.Text = Utilities.AutoBreakLine(arr[0], language);
                         next.Text = Utilities.AutoBreakLine(arr[1], language);
+
+                        var durationToMove = CalcDurationToMove(oldP, p, next);
+                        p.EndTime.TotalMilliseconds += durationToMove;
+                        next.StartTime.TotalMilliseconds += durationToMove;
                     }
                 }
             }
@@ -478,6 +498,22 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
 
             s.Renumber();
             return s;
+        }
+
+        private static double CalcDurationToMove(Paragraph oldCurrent, Paragraph current, Paragraph next)
+        {
+            if (current.DurationTotalMilliseconds < 0 || next.DurationTotalMilliseconds < 0)
+            {
+                return 0;
+            }
+
+            var totalDuration = current.DurationTotalMilliseconds + next.DurationTotalMilliseconds;
+            var totalChars = current.Text.Length + next.Text.Length;
+            var durChar = totalDuration / totalChars;
+
+            var diffLength = current.Text.Length - oldCurrent.Text.Length;
+            var result = durChar * diffLength;
+            return result;
         }
 
         private bool IsNextCloseAndAlone(Paragraph p, Paragraph next, Paragraph nextNext, int maxMillisecondsBetweenLines, bool onlyContinuousLines)
