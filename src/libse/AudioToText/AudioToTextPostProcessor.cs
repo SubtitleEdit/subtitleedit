@@ -121,9 +121,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                     subtitle = FixShortDuration(subtitle);
                 }
 
-                if (splitLines && !IsNonStandardLineTerminationLanguage(TwoLetterLanguageCode) &&
-                    !Configuration.Settings.Tools.WhisperExtraSettings.Contains("--highlight_words true", StringComparison.OrdinalIgnoreCase) &&
-                    !Configuration.Settings.Tools.WhisperExtraSettings.Contains("--one_word", StringComparison.OrdinalIgnoreCase))
+                if (splitLines && !IsNonStandardLineTerminationLanguage(TwoLetterLanguageCode) && AllowLineContentMove(engine))
                 {
                     var totalMaxChars = Configuration.Settings.General.SubtitleLineMaximumLength * Configuration.Settings.General.MaxNumberOfLines;
                     subtitle = SplitLongLinesHelper.SplitLongLinesInSubtitle(subtitle, totalMaxChars, Configuration.Settings.General.SubtitleLineMaximumLength);
@@ -131,9 +129,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                     subtitle = TryForWholeSentences(subtitle, TwoLetterLanguageCode, Configuration.Settings.General.SubtitleLineMaximumLength);
                 }
 
-                if (mergeLines &&
-                    !Configuration.Settings.Tools.WhisperExtraSettings.Contains("--highlight_words true", StringComparison.OrdinalIgnoreCase) &&
-                    !Configuration.Settings.Tools.WhisperExtraSettings.Contains("--one_word", StringComparison.OrdinalIgnoreCase))
+                if (mergeLines && AllowLineContentMove(engine))
                 {
                     subtitle = MergeShortLines(subtitle, TwoLetterLanguageCode);
                     subtitle = AutoBalanceLines(subtitle, TwoLetterLanguageCode);
@@ -142,6 +138,25 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
 
             subtitle.Renumber();
             return subtitle;
+        }
+
+        private static bool AllowLineContentMove(Engine engine)
+        {
+            if (engine != Engine.Whisper)
+            {
+                return true;
+            }
+
+            if (string.IsNullOrEmpty(Configuration.Settings.Tools.WhisperExtraSettings))
+            {
+                return true;
+            }
+
+            var es = Configuration.Settings.Tools.WhisperExtraSettings.ToLowerInvariant();
+            return !es.Contains("--highlight_words", StringComparison.OrdinalIgnoreCase) &&
+                   !es.Contains("-hw ", StringComparison.OrdinalIgnoreCase) &&
+                   !es.Contains("-hw=true", StringComparison.OrdinalIgnoreCase) &&
+                   !es.Contains("--one_word", StringComparison.OrdinalIgnoreCase);
         }
 
         public static Subtitle TryForWholeSentences(Subtitle inputSubtitle, string language, int lineMaxLength)
