@@ -9205,6 +9205,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Waveform/MergeWithNext":
                     language.Waveform.MergeWithNext = reader.Value;
                     break;
+                case "Waveform/RunWhisperSelectedParagraph":
+                    language.Waveform.RunWhisperSelectedParagraph = reader.Value;
+                    break;
                 case "Waveform/ExtendToPrevious":
                     language.Waveform.ExtendToPrevious = reader.Value;
                     break;
