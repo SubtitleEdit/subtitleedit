@@ -620,6 +620,13 @@ namespace Nikse.SubtitleEdit.Forms
                 audioVisualizer.OnZoomedChanged += AudioWaveform_OnZoomedChanged;
                 audioVisualizer.OnInsertAtVideoPosition += AudioVisualizerInsertAtVideoPosition;
                 audioVisualizer.OnPasteAtVideoPosition += AudioVisualizerPasteAtVideoPosition;
+                audioVisualizer.OnSelectAll += (sender, args) =>
+                {
+                    SubtitleListview1.SelectedIndexChanged -= SubtitleListview1_SelectedIndexChanged;
+                    SubtitleListview1.SelectAll();
+                    SubtitleListview1.SelectedIndexChanged += SubtitleListview1_SelectedIndexChanged;
+                    RefreshSelectedParagraph();
+                };
                 audioVisualizer.KeyDown += AudioVisualizer_KeyDown;
                 SetAudioVisualizerSettings();
                 if (Configuration.Settings.General.WaveformUpdateIntervalMs > 0 && Configuration.Settings.General.WaveformUpdateIntervalMs < 200)
