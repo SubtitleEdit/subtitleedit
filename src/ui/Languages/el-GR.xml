@@ -3,8 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>4.0.4</Version>
-    <TranslatedBy>Μετάφραση: Παναγιώτης Μητσάκης
-Για σχόλια, παρατηρήσεις και διορθώσεις, στείλτε e-mail: panagiotismitsakis91gmail.com</TranslatedBy>
+    <TranslatedBy>Μετάφραση: Παναγιώτης Μητσάκης</TranslatedBy>
     <CultureName>el-GR</CultureName>
     <HelpFile />
     <Ok>&amp;Εντάξει</Ok>
@@ -1012,10 +1011,13 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <InputVideoFile>Εισαγωγή αρχείου βίντεο</InputVideoFile>
     <SubtitlesX>Υπότιτλοι ({0})</SubtitlesX>
     <SetLanguage>Ορισμός γλώσσας…</SetLanguage>
+    <LanguageAndTitle>Γλώσσα / τίτλος</LanguageAndTitle>
     <ToggleForced>Εναλλαγή εξαναγκασμένων</ToggleForced>
     <ToggleDefault>Εναλλαγή προκαθορισμένων</ToggleDefault>
     <Default>Προκαθορισμένο</Default>
     <XGeneratedWithEmbeddedSubs>Το "({0})" δημιουργήθηκε με ενσωματωμένους υπότιτλους</XGeneratedWithEmbeddedSubs>
+    <DeleteInputVideo>Διαγραφή αρχείου εισαγωγής, μετά τη δημιουργεία</DeleteInputVideo>
+    <OutputFileNameSettings>Ρυθμίσεις ονόματος αρχείου εξαγωγής…</OutputFileNameSettings>
   </GenerateVideoWithEmbeddedSubs>
   <GetDictionaries>
     <Title>Χρειάζεστε λεξικά;</Title>
@@ -1625,6 +1627,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
       <StillTypingAutoContinueStopped>Πληκτρολόγηση σε εξέλιξη… Διακοπή αυτόματης συνέχειας</StillTypingAutoContinueStopped>
       <InsertNewSubtitleAtVideoPosition>&amp;Εισαγωγή νέου υποτίτλου</InsertNewSubtitleAtVideoPosition>
       <InsertNewSubtitleAtVideoPositionNoTextBoxFocus>Εισαγωγή υποτίτλου στη θέση βίντεο (μη εστίαση πλαισίου)</InsertNewSubtitleAtVideoPositionNoTextBoxFocus>
+      <InsertNewSubtitleAtVideoPositionMax>Εισαγωγή υποτίτλου στη θέση βίντεο (μέγιστη διάρκεια)</InsertNewSubtitleAtVideoPositionMax>
       <Auto>Αυτόματη</Auto>
       <PlayFromJustBeforeText>Αναπαραγωγή &amp;πριν από</PlayFromJustBeforeText>
       <PlayFromBeginning>Αναπαραγωγή από έναρξη</PlayFromBeginning>
@@ -3350,6 +3353,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SplitAtCursor>Χωρισμός στη θέση του δείκτη</SplitAtCursor>
     <MergeWithPrevious>Συγχώνευση με προηγούμενο υπότιτλο</MergeWithPrevious>
     <MergeWithNext>Συγχώνευση με επόμενο υπότιτλο</MergeWithNext>
+    <RunWhisperSelectedParagraph>Εκτέλεση Whisper σε επιλεγμένη παράγραφο…</RunWhisperSelectedParagraph>
     <ExtendToPrevious>Επέκταση μέχρι τον προηγούμενο υπότιτλο</ExtendToPrevious>
     <ExtendToNext>Επέκταση μέχρι τον επόμενο υπότιτλο</ExtendToNext>
     <PlaySelection>Αναπαραγωγή επιλογής</PlaySelection>
