@@ -105,7 +105,7 @@
     <Warning>경고</Warning>
     <UseLargerFontForThisWindow>이 창에 더 큰 글꼴 사용</UseLargerFontForThisWindow>
     <ChangeLanguageFilter>언어 필터 변경...</ChangeLanguageFilter>
-    <MoreInfo>더 많은 정보</MoreInfo>
+    <MoreInfo>자세한 정보</MoreInfo>
   </General>
   <About>
     <Title>* Subtitle Edit 정보</Title>
@@ -3361,7 +3361,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <Seconds>초</Seconds>
     <ZoomIn>확대</ZoomIn>
     <ZoomOut>축소</ZoomOut>
-    <AddParagraphHere>여기에 텍스트 쓰기</AddParagraphHere>
+    <AddParagraphHere>여기에 텍스트 추가 (입력)</AddParagraphHere>
     <AddParagraphHereAndPasteText>여기에 복사한 텍스트 추가...</AddParagraphHereAndPasteText>
     <SetParagraphAsSelection>현재를 새로운 선택으로 설정</SetParagraphAsSelection>
     <FocusTextBox>텍스트 입력 창으로 이동...</FocusTextBox>
@@ -3372,6 +3372,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <SplitAtCursor>커서 위치에서 분할</SplitAtCursor>
     <MergeWithPrevious>이전과 병합</MergeWithPrevious>
     <MergeWithNext>이후와 병합</MergeWithNext>
+    <RunWhisperSelectedParagraph>선택한 단락에서 Whisper 실행...</RunWhisperSelectedParagraph>
     <ExtendToPrevious>이전으로 확장</ExtendToPrevious>
     <ExtendToNext>다음으로 확장</ExtendToNext>
     <PlaySelection>선택한 영역 재생하기</PlaySelection>
