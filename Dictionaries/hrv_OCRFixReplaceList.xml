@@ -5216,6 +5216,7 @@
     <RegEx find="eoni([cč])" replaceWith="ioni$1" />
     <RegEx find="erišu" replaceWith="eriraju" />
     <RegEx find="ermer" replaceWith="ramor" />
+    <RegEx find="erpj" replaceWith="eroj" />
     <!-- bez j zbog nesvjestica npr. -->
     <RegEx find="esvest" replaceWith="esvijest" />
     <RegEx find="etektov" replaceWith="etektir" />
