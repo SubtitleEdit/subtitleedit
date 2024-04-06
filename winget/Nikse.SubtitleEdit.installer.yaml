@@ -25,11 +25,6 @@ Installers:
   InstallerUrl: https://github.com/SubtitleEdit/subtitleedit/releases/download/4.0.4/SubtitleEdit-4.0.4-Setup.exe
   InstallerSha256: 33C867DB90D6596A84BA546C74E27626B72E9A2E4A1FD3B3EEB99298FB816115
   ProductCode: SubtitleEdit_is1
-- Architecture: x86
-  InstallerType: inno
-  InstallerUrl: https://github.com/SubtitleEdit/subtitleedit/releases/download/4.0.4/SubtitleEdit-4.0.4-Setup.exe
-  InstallerSha256: 33C867DB90D6596A84BA546C74E27626B72E9A2E4A1FD3B3EEB99298FB816115
-  ProductCode: SubtitleEdit_is1
 ManifestType: installer
 ManifestVersion: 1.5.0
 ReleaseDate: 2024-03-17

@@ -918,7 +918,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             }
 
             var whisperFolder = WhisperHelper.GetWhisperFolder() ?? string.Empty;
-            if (!string.IsNullOrEmpty(whisperFolder) && !File.Exists(whisperFolder) && !string.IsNullOrEmpty(videoFileName))
+            if (!string.IsNullOrEmpty(whisperFolder) && !File.Exists(srtFileName) && !string.IsNullOrEmpty(videoFileName))
             {
                 srtFileName = Path.Combine(whisperFolder, Path.GetFileNameWithoutExtension(videoFileName)) + ".srt";
             }
