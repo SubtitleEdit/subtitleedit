@@ -201,7 +201,6 @@
             public string Engine { get; set; }
             public string VoskWebsite { get; set; }
             public string WhisperWebsite { get; set; }
-            public string WhisperNotFound { get; set; }
             public string Model { get; set; }
             public string Models { get; set; }
             public string LanguagesAndModels { get; set; }
@@ -218,12 +217,14 @@
             public string BatchMode { get; set; }
             public string KeepPartialTranscription { get; set; }
             public string TranslateToEnglish { get; set; }
-            public string MaxCharsPerSubtitle { get; set; }
             public string RemoveTemporaryFiles { get; set; }
             public string SetCppConstMeFolder { get; set; }
             public string OnlyRunPostProcessing { get; set; }
             public string DownloadFasterWhisperCuda { get; set; }
             public string NoTextFound { get; set; }
+            public string FixCasing { get; set; }
+            public string AddPeriods { get; set; }
+            public string FixShortDuration { get; set; }
         }
 
         public class AssaAttachments
@@ -783,6 +784,8 @@
             public string ChooseColor { get; set; }
             public string TotalSeconds { get; set; }
             public string EndDelayInSeconds { get; set; }
+            public string WordEffect { get; set; }
+            public string CharacterEffect { get; set; }
         }
 
         public class EffectTypewriter
@@ -3660,6 +3663,11 @@
             public string Title { get; set; }
             public string CommandLineArguments { get; set; }
             public string Info { get; set; }
+            public string Standard { get; set; }
+            public string StandardAsia { get; set; }
+            public string HighlightCurrentWord { get; set; }
+            public string SingleWords { get; set; }
+            public string Sentence { get; set; }
         }
     }
 }

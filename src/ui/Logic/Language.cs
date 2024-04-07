@@ -352,7 +352,6 @@ namespace Nikse.SubtitleEdit.Logic
                 Engine = "Engine",
                 VoskWebsite = "Vosk website",
                 WhisperWebsite = "Whisper website",
-                WhisperNotFound = "Whisper not found.\r\n\r\nRead more info (web)?",
                 Model = "Model",
                 Models = "Models",
                 LanguagesAndModels = "Languages and models",
@@ -369,12 +368,14 @@ namespace Nikse.SubtitleEdit.Logic
                 XFilesSavedToVideoSourceFolder = "{0} files saved to video source folder",
                 KeepPartialTranscription = "Keep partial transcription",
                 TranslateToEnglish = "Translate to English",
-                MaxCharsPerSubtitle = "Max. chars per subtitle line",
                 RemoveTemporaryFiles = "Remove temporary files",
                 SetCppConstMeFolder = "Set CPP/Const-me models folder...",
                 OnlyRunPostProcessing = "Run only post-processing/adjust timings",
                 DownloadFasterWhisperCuda = "Download cuBLAS and cuDNN libs for Faster-Whisper",
                 NoTextFound = "No text found!",
+                FixCasing = "Fix casing",
+                AddPeriods = "Add periods",
+                FixShortDuration = "Fix short duration",
             };
 
             AssaAttachments = new LanguageStructure.AssaAttachments
@@ -962,6 +963,8 @@ namespace Nikse.SubtitleEdit.Logic
                 ChooseColor = "Choose color:",
                 TotalSeconds = "Total seconds:",
                 EndDelayInSeconds = "End delay in seconds:",
+                WordEffect = "Word effect",
+                CharacterEffect = "Character effect",
             };
 
             EffectTypewriter = new LanguageStructure.EffectTypewriter
@@ -3852,6 +3855,11 @@ Keep changes?",
                 Title = "Whisper Advanced - extra command line arguments",
                 CommandLineArguments = "Extra parameters for Whisper command line:",
                 Info = "Note: Different Whisper implementations have different command line parameters!",
+                Standard = "Standard",
+                StandardAsia = "Standard Asia",
+                HighlightCurrentWord = "Highlight current word",
+                Sentence = "Sentence",
+                SingleWords = "Single words",
             };
         }
 

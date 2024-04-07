@@ -44,7 +44,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             this.textBoxOpenAI = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.tabPageFasterWhisper = new System.Windows.Forms.TabPage();
             this.buttonStandardAsia = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
+            this.buttonHighlightCurrentWord = new System.Windows.Forms.Button();
             this.buttonStandard = new System.Windows.Forms.Button();
             this.buttonSentence = new System.Windows.Forms.Button();
             this.buttonSingleWords = new System.Windows.Forms.Button();
@@ -197,7 +197,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             // tabPageFasterWhisper
             // 
             this.tabPageFasterWhisper.Controls.Add(this.buttonStandardAsia);
-            this.tabPageFasterWhisper.Controls.Add(this.button1);
+            this.tabPageFasterWhisper.Controls.Add(this.buttonHighlightCurrentWord);
             this.tabPageFasterWhisper.Controls.Add(this.buttonStandard);
             this.tabPageFasterWhisper.Controls.Add(this.buttonSentence);
             this.tabPageFasterWhisper.Controls.Add(this.buttonSingleWords);
@@ -221,16 +221,16 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             this.buttonStandardAsia.UseVisualStyleBackColor = true;
             this.buttonStandardAsia.Click += new System.EventHandler(this.buttonStandardAsia_Click);
             // 
-            // button1
+            // buttonHighlightCurrentWord
             // 
-            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.button1.Location = new System.Drawing.Point(622, 390);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(180, 23);
-            this.button1.TabIndex = 18;
-            this.button1.Text = "Highlight current word";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.buttonHighlightCurrentWord.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonHighlightCurrentWord.Location = new System.Drawing.Point(622, 390);
+            this.buttonHighlightCurrentWord.Name = "buttonHighlightCurrentWord";
+            this.buttonHighlightCurrentWord.Size = new System.Drawing.Size(180, 23);
+            this.buttonHighlightCurrentWord.TabIndex = 18;
+            this.buttonHighlightCurrentWord.Text = "Highlight current word";
+            this.buttonHighlightCurrentWord.UseVisualStyleBackColor = true;
+            this.buttonHighlightCurrentWord.Click += new System.EventHandler(this.button1_Click);
             // 
             // buttonStandard
             // 
@@ -360,7 +360,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         private Button buttonSingleWords;
         private Button buttonStandard;
         private Button buttonSentence;
-        private Button button1;
+        private Button buttonHighlightCurrentWord;
         private Button buttonStandardAsia;
     }
 }

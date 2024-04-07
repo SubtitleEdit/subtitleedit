@@ -27,6 +27,8 @@ namespace Nikse.SubtitleEdit.Forms
             buttonPreview.Text = LanguageSettings.Current.General.Preview;
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
+            radioButtonByWordEffect.Text = LanguageSettings.Current.EffectKaraoke.WordEffect;
+            radioButtonByCharEffect.Text = LanguageSettings.Current.EffectKaraoke.CharacterEffect;
 
             UiUtil.FixLargeFonts(this, buttonOK);
         }

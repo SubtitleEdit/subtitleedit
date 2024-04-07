@@ -32,6 +32,11 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             labelNote.Text = LanguageSettings.Current.WhisperAdvanced.Info;
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
+            buttonStandard.Text = LanguageSettings.Current.WhisperAdvanced.Standard;
+            buttonStandardAsia.Text = LanguageSettings.Current.WhisperAdvanced.StandardAsia;
+            buttonHighlightCurrentWord.Text = LanguageSettings.Current.WhisperAdvanced.HighlightCurrentWord;
+            buttonSingleWords.Text = LanguageSettings.Current.WhisperAdvanced.SingleWords;
+            buttonSentence.Text = LanguageSettings.Current.WhisperAdvanced.Sentence;
             comboBoxWhisperExtra.Text = Configuration.Settings.Tools.WhisperExtraSettings;
 
             if (whisperEngine == WhisperChoice.Cpp || whisperEngine == WhisperChoice.CppCuBlas)
