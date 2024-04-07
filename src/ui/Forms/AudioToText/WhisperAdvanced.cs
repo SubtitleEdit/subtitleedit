@@ -138,7 +138,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
         private void button1_Click(object sender, EventArgs e)
         {
-            comboBoxWhisperExtra.Text = $"--highlight_words true --sentence --max_line_width {Configuration.Settings.General.SubtitleLineMaximumLength} --max_line_count {Configuration.Settings.General.MaxNumberOfLines}";
+            comboBoxWhisperExtra.Text = $"--highlight_words true --max_line_width {Configuration.Settings.General.SubtitleLineMaximumLength} --max_line_count {Configuration.Settings.General.MaxNumberOfLines}";
         }
 
         private void buttonStandardAsia_Click(object sender, EventArgs e)

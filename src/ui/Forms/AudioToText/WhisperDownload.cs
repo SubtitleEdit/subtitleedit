@@ -89,15 +89,17 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         };
 
 
-        private const string DownloadUrlPurfviewFasterWhisper = "https://github.com/Purfview/whisper-standalone-win/releases/download/faster-whisper/Whisper-Faster_r192.1_windows.zip";
+        private const string DownloadUrlPurfviewFasterWhisper = "https://github.com/Purfview/whisper-standalone-win/releases/download/faster-whisper/Whisper-Faster_r192.3_windows.zip";
 
         private static readonly string[] Sha512HashesPurfviewFasterWhisper =
         {
-            "94faae09146e33e0d55d9190d5b3ed79ea3bda0cf9e7f308dd47812827e4f0c24d2037718aa3c647881008eaaa04bbed033ea338aaa8333aae536bb2f2b83256", // r192.1
+            "7e289659ff5622cdf99144602729a714985a7f11ebdc988f3f0721fe433d72e7fb751afeece94029f602b304690ad34f8a35bf5980af5517b2718ba07c163279", // r192.3
         };
 
         private static readonly string[] OldSha512HashesPurfviewFasterWhisper =
         {
+            "3b84e21134b7f24b81d7252fe895299d14087cccc1d8b1e7ae187c190b87b0bf7d84d3ce0a4a2fc5d2f9c436a33003663763fd6f62e7f87da1683df7fbd6d10b", // r192.2
+            "94faae09146e33e0d55d9190d5b3ed79ea3bda0cf9e7f308dd47812827e4f0c24d2037718aa3c647881008eaaa04bbed033ea338aaa8333aae536bb2f2b83256", // r192.1
             "3dee9ece233be4e661bab7555a2b4e7d4c53d823bf2b4032bd75857554a14a04745c57112946e735dc5ab6f8ec832483444cb95a0921f18b5f736787dbbc515c", // r189.1
             "e78616511a92b21cb8ac82e23cdbd06f5b9310751e5f3fa940b5c48743b69bad130aaf6d629ae07c5388326f117be8f181b125ed04aacd23f1a80d8891be889b", // r186.1
             "a16e2b5460d7f4b0d45de3f0e07b231d58ad4c79d077ad6b9c84a4e2ced4bd1cd3a7d9f01689f1d847ec8ff59c8f81cb742fcf2b153291ed6f15ec8b27adb998", // r167.2
@@ -396,6 +398,8 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                     "628dee27ab3030798c42983d0f544668f54e7c8d1c7a433b322b9c07286eedd10666d9b1f89764a75301b334cea9c7ad8bfbfeee00a98113b4730ee5cafe8812",
                     "56faadc85291049b1ad912de8c20fd262288f315d881e517085a15213690f2b242d80aedb2a4c213a7aa26b6ec43d2d26fe3674354a31f816d0e4bca07d002bc",
                     "d53002d273287bfcfcd678d3d9f1faabbbca533ac3fa11867be0e7e365d386bf8fddf591cad41345006406cac663868dd7214d680f36906abe0f7d851d989fa2",
+                    "0f463526879a83b938c315d8ca865db89945beb8ba9fd44e74319ba567affb0fcf223d1ee662bf8be280e736e54f44beec2f1e33aac9d537d7d7ae9ba155b049",
+                    "78365ba55f66ac018aa8ca405bf11bcb93ce0bff44a528e9304be14f99dc4f84f08ce1679c9cf3d135dd56ade79881318833d69397ca55caa062c6214a0d4cff",
                 };
 
                 return oldHashes.Contains(hash);
