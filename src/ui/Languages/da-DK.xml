@@ -192,7 +192,6 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <Engine>Motor</Engine>
     <VoskWebsite>Vosk hjemmeside</VoskWebsite>
     <WhisperWebsite>Whisper hjemmeside</WhisperWebsite>
-    <WhisperNotFound>Whisper ikke fundet - læs mere (web)?</WhisperNotFound>
     <Model>Model</Model>
     <Models>Modeller</Models>
     <LanguagesAndModels>Sprog og modeller</LanguagesAndModels>
@@ -209,12 +208,14 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <BatchMode>Batch-tilstand</BatchMode>
     <KeepPartialTranscription>Behold delvis transskription</KeepPartialTranscription>
     <TranslateToEnglish>Oversæt til engelsk</TranslateToEnglish>
-    <MaxCharsPerSubtitle>Maks.  tegn pr. undertekstlinje</MaxCharsPerSubtitle>
     <RemoveTemporaryFiles>Fjern midlertidige filer</RemoveTemporaryFiles>
     <SetCppConstMeFolder>Indstil mappen for CPP/Const-me-modeller...</SetCppConstMeFolder>
     <OnlyRunPostProcessing>Kør kun efterbehandling/juster tider</OnlyRunPostProcessing>
     <DownloadFasterWhisperCuda>Download cuBLAS og cuDNN til Faster-Whisper</DownloadFasterWhisperCuda>
     <NoTextFound>Ingen tekst fundet!</NoTextFound>
+    <FixCasing>Fix store/små bogstaver</FixCasing>
+    <AddPeriods>Tilføj punktum</AddPeriods>
+    <FixShortDuration>Fix kort varighed</FixShortDuration>
   </AudioToText>
   <AssaAttachments>
     <Title>Avancerede Sub Station Alpha vedhæftede filer</Title>
@@ -727,6 +728,8 @@ Vi udnytter billedets indre rytme.</CreateSimpleChainingToolTip>
     <ChooseColor>Vælg farve:</ChooseColor>
     <TotalSeconds>Total sekunder:</TotalSeconds>
     <EndDelayInSeconds>Afslut forsinkelse i sekunder:</EndDelayInSeconds>
+    <WordEffect>Ord effekt</WordEffect>
+    <CharacterEffect>Bogstav effekt</CharacterEffect>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>Skrivemaskine effekt</Title>
@@ -3362,6 +3365,7 @@ Fortsæt?</RestoreDefaultSettingsMsg>
     <SplitAtCursor>Split ved markør</SplitAtCursor>
     <MergeWithPrevious>Flet med forrige</MergeWithPrevious>
     <MergeWithNext>Flet med næste</MergeWithNext>
+    <RunWhisperSelectedParagraph>Kør Whisper på den valgte undertekst...</RunWhisperSelectedParagraph>
     <ExtendToPrevious>Udvid til forrige</ExtendToPrevious>
     <ExtendToNext>Udvid til næste</ExtendToNext>
     <PlaySelection>Afspil markering</PlaySelection>
@@ -3409,5 +3413,10 @@ Fortsæt?</RestoreDefaultSettingsMsg>
     <Title>Whisper Advanced - ekstra kommandolinjeargumenter</Title>
     <CommandLineArguments>Ekstra parametre til Whisper kommandolinje:</CommandLineArguments>
     <Info>Bemærk: Forskellige Whisper-implementeringer har forskellige kommandolinjeparametre!</Info>
+    <Standard>Standard</Standard>
+    <StandardAsia>Standard Asien</StandardAsia>
+    <HighlightCurrentWord>Fremhæv det aktuelle ord</HighlightCurrentWord>
+    <SingleWords>Enkelte ord</SingleWords>
+    <Sentence>Sætning</Sentence>
   </WhisperAdvanced>
 </Language>

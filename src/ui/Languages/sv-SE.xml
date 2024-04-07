@@ -197,9 +197,6 @@ Obs: Kontrollera ledigt utrymme.</WaveFileMalformed>
     <Engine>Motor</Engine>
     <VoskWebsite>Vosk hemsida</VoskWebsite>
     <WhisperWebsite>Whisper hemsida</WhisperWebsite>
-    <WhisperNotFound>Whisper hittades inte.
-
-Läs mer information (webb)?</WhisperNotFound>
     <Model>Modell</Model>
     <Models>Modeller</Models>
     <LanguagesAndModels>Språk och modeller</LanguagesAndModels>
@@ -216,12 +213,14 @@ Läs mer information (webb)?</WhisperNotFound>
     <BatchMode>Batch-läge</BatchMode>
     <KeepPartialTranscription>Behåll partiell transkription</KeepPartialTranscription>
     <TranslateToEnglish>Översätt till engelska</TranslateToEnglish>
-    <MaxCharsPerSubtitle>Max.  tecken per undertextrad</MaxCharsPerSubtitle>
     <RemoveTemporaryFiles>Ta bort temporära filer</RemoveTemporaryFiles>
     <SetCppConstMeFolder>Ställ in mappen för CPP/Const-me-modeller...</SetCppConstMeFolder>
     <OnlyRunPostProcessing>Kör endast efterbearbetning/justera tider</OnlyRunPostProcessing>
     <DownloadFasterWhisperCuda>Ladda ner cuBLAS och cuDNN libs för Faster-Whisper</DownloadFasterWhisperCuda>
     <NoTextFound>Ingen text hittades!</NoTextFound>
+    <FixCasing>Höger till versaler</FixCasing>
+    <AddPeriods>Lägg till perioder</AddPeriods>
+    <FixShortDuration>Fixa kort varaktighet</FixShortDuration>
   </AudioToText>
   <AssaAttachments>
     <Title>Avancerade Sub Station Alpha-tillbehör</Title>
@@ -735,6 +734,8 @@ Vi utnyttjar bildens inneboende rytm.</CreateSimpleChainingToolTip>
     <ChooseColor>Välj färg:</ChooseColor>
     <TotalSeconds>Totalt antal sekunder:</TotalSeconds>
     <EndDelayInSeconds>Slutfördröjning i sekunder:</EndDelayInSeconds>
+    <WordEffect>Ord effekt</WordEffect>
+    <CharacterEffect>Bokstavseffekt</CharacterEffect>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>Skrivmaskins effekt</Title>
@@ -3376,6 +3377,7 @@ Behålla ändringarna?</KeepChangesMessage>
     <SplitAtCursor>Dela vid markören</SplitAtCursor>
     <MergeWithPrevious>Sammanfoga med tidigare</MergeWithPrevious>
     <MergeWithNext>Sammanfoga med nästa</MergeWithNext>
+    <RunWhisperSelectedParagraph>Kör Whisper på valt stycke...</RunWhisperSelectedParagraph>
     <ExtendToPrevious>Utöka till föregående</ExtendToPrevious>
     <ExtendToNext>Förläng till nästa</ExtendToNext>
     <PlaySelection>Spela urval</PlaySelection>
@@ -3423,5 +3425,10 @@ Behålla ändringarna?</KeepChangesMessage>
     <Title>Whisper Advanced - extra kommandoradsargument</Title>
     <CommandLineArguments>Extra parametrar för Whisper kommandorad:</CommandLineArguments>
     <Info>Obs: Olika Whisper-implementationer har olika kommandoradsparametrar!</Info>
+    <Standard>Standard</Standard>
+    <StandardAsia>Standard Asien</StandardAsia>
+    <HighlightCurrentWord>Markera aktuellt ord</HighlightCurrentWord>
+    <SingleWords>Enstaka ord</SingleWords>
+    <Sentence>Mening</Sentence>
   </WhisperAdvanced>
 </Language>
