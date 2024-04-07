@@ -3,7 +3,7 @@ using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms.AudioToText
 {
-    public partial class PostProcessingSettings : Form
+    public sealed partial class PostProcessingSettings : Form
     {
         public bool AddPeriods { get; set; }
         public bool MergeLines { get; set; }
@@ -19,6 +19,11 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
             Text = LanguageSettings.Current.Settings.Title;
 
+            checkBoxMergeShortLines.Text = LanguageSettings.Current.MergedShortLines.Title;
+            checkBoxFixCasing.Text = LanguageSettings.Current.AudioToText.FixCasing;
+            checkBoxAddPeriods.Text = LanguageSettings.Current.AudioToText.AddPeriods;
+            checkBoxFixShortDuration.Text = LanguageSettings.Current.AudioToText.FixShortDuration;
+            checkBoxSplitLongLines.Text = LanguageSettings.Current.SplitLongLines.Title;
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
         }

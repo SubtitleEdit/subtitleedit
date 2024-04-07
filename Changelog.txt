@@ -21,6 +21,7 @@
    * Update Russian translation - thx elfriob
    * Update Korean translation - thx domddol
    * Update Portuguese translation - thx hugok79
+   * Update Greek translation - thx PMitsakis
    * Improve "Karaoke effect" + new option - thx ivandrofly
    * Make "Timed Text IMSC 1.1" more compatible
    * Improve EBU STL preview regarding box - thx BlueMeow7

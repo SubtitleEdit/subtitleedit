@@ -1,6 +1,6 @@
 ﻿namespace Nikse.SubtitleEdit.Forms.AudioToText
 {
-    partial class PostProcessingSettings
+    sealed partial class PostProcessingSettings
     {
         /// <summary>
         /// Required designer variable.

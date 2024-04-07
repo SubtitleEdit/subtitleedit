@@ -538,9 +538,6 @@ namespace Nikse.SubtitleEdit.Logic
                 case "AudioToText/WhisperWebsite":
                     language.AudioToText.WhisperWebsite = reader.Value;
                     break;
-                case "AudioToText/WhisperNotFound":
-                    language.AudioToText.WhisperNotFound = reader.Value;
-                    break;
                 case "AudioToText/Model":
                     language.AudioToText.Model = reader.Value;
                     break;
@@ -589,9 +586,6 @@ namespace Nikse.SubtitleEdit.Logic
                 case "AudioToText/TranslateToEnglish":
                     language.AudioToText.TranslateToEnglish = reader.Value;
                     break;
-                case "AudioToText/MaxCharsPerSubtitle":
-                    language.AudioToText.MaxCharsPerSubtitle = reader.Value;
-                    break;
                 case "AudioToText/RemoveTemporaryFiles":
                     language.AudioToText.RemoveTemporaryFiles = reader.Value;
                     break;
@@ -606,6 +600,15 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "AudioToText/NoTextFound":
                     language.AudioToText.NoTextFound = reader.Value;
+                    break;
+                case "AudioToText/FixCasing":
+                    language.AudioToText.FixCasing = reader.Value;
+                    break;
+                case "AudioToText/AddPeriods":
+                    language.AudioToText.AddPeriods = reader.Value;
+                    break;
+                case "AudioToText/FixShortDuration":
+                    language.AudioToText.FixShortDuration = reader.Value;
                     break;
                 case "AssaAttachments/Title":
                     language.AssaAttachments.Title = reader.Value;
@@ -1908,6 +1911,12 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "EffectKaraoke/EndDelayInSeconds":
                     language.EffectKaraoke.EndDelayInSeconds = reader.Value;
+                    break;
+                case "EffectKaraoke/WordEffect":
+                    language.EffectKaraoke.WordEffect = reader.Value;
+                    break;
+                case "EffectKaraoke/CharacterEffect":
+                    language.EffectKaraoke.CharacterEffect = reader.Value;
                     break;
                 case "EffectTypewriter/Title":
                     language.EffectTypewriter.Title = reader.Value;
@@ -9318,6 +9327,21 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "WhisperAdvanced/Info":
                     language.WhisperAdvanced.Info = reader.Value;
+                    break;
+                case "WhisperAdvanced/Standard":
+                    language.WhisperAdvanced.Standard = reader.Value;
+                    break;
+                case "WhisperAdvanced/StandardAsia":
+                    language.WhisperAdvanced.StandardAsia = reader.Value;
+                    break;
+                case "WhisperAdvanced/HighlightCurrentWord":
+                    language.WhisperAdvanced.HighlightCurrentWord = reader.Value;
+                    break;
+                case "WhisperAdvanced/SingleWords":
+                    language.WhisperAdvanced.SingleWords = reader.Value;
+                    break;
+                case "WhisperAdvanced/Sentence":
+                    language.WhisperAdvanced.Sentence = reader.Value;
                     break;
 
             }

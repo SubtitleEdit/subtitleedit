@@ -197,9 +197,6 @@ Note: Do check free disk space.</WaveFileMalformed>
     <Engine>Engine</Engine>
     <VoskWebsite>Vosk website</VoskWebsite>
     <WhisperWebsite>Whisper website</WhisperWebsite>
-    <WhisperNotFound>Whisper not found.
-
-Read more info (web)?</WhisperNotFound>
     <Model>Model</Model>
     <Models>Models</Models>
     <LanguagesAndModels>Languages and models</LanguagesAndModels>
@@ -216,12 +213,14 @@ Read more info (web)?</WhisperNotFound>
     <BatchMode>Batch mode</BatchMode>
     <KeepPartialTranscription>Keep partial transcription</KeepPartialTranscription>
     <TranslateToEnglish>Translate to English</TranslateToEnglish>
-    <MaxCharsPerSubtitle>Max. chars per subtitle line</MaxCharsPerSubtitle>
     <RemoveTemporaryFiles>Remove temporary files</RemoveTemporaryFiles>
     <SetCppConstMeFolder>Set CPP/Const-me models folder...</SetCppConstMeFolder>
     <OnlyRunPostProcessing>Run only post-processing/adjust timings</OnlyRunPostProcessing>
     <DownloadFasterWhisperCuda>Download cuBLAS and cuDNN libs for Faster-Whisper</DownloadFasterWhisperCuda>
     <NoTextFound>No text found!</NoTextFound>
+    <FixCasing>Fix casing</FixCasing>
+    <AddPeriods>Add periods</AddPeriods>
+    <FixShortDuration>Fix short duration</FixShortDuration>
   </AudioToText>
   <AssaAttachments>
     <Title>Advanced Sub Station Alpha attachments</Title>
@@ -733,6 +732,8 @@ We leverage the intrinsic rhythm of the image.</CreateSimpleChainingToolTip>
     <ChooseColor>Choose color:</ChooseColor>
     <TotalSeconds>Total seconds:</TotalSeconds>
     <EndDelayInSeconds>End delay in seconds:</EndDelayInSeconds>
+    <WordEffect>Word effect</WordEffect>
+    <CharacterEffect>Character effect</CharacterEffect>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>Typewriter effect</Title>
@@ -3422,5 +3423,10 @@ Keep changes?</KeepChangesMessage>
     <Title>Whisper Advanced - extra command line arguments</Title>
     <CommandLineArguments>Extra parameters for Whisper command line:</CommandLineArguments>
     <Info>Note: Different Whisper implementations have different command line parameters!</Info>
+    <Standard>Standard</Standard>
+    <StandardAsia>Standard Asia</StandardAsia>
+    <HighlightCurrentWord>Highlight current word</HighlightCurrentWord>
+    <SingleWords>Single words</SingleWords>
+    <Sentence>Sentence</Sentence>
   </WhisperAdvanced>
 </Language>
