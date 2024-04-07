@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>4.0.4</Version>
-    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 05.04.2024</TranslatedBy>
+    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 07.04.2024</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -197,9 +197,6 @@ Nota: Controlla lo spazio libero nel disco.</WaveFileMalformed>
     <Engine>Motore</Engine>
     <VoskWebsite>Sito web Vosk</VoskWebsite>
     <WhisperWebsite>Sito web Whisper</WhisperWebsite>
-    <WhisperNotFound>Whisper non trovato.
-
-Vuoi ulteriori informazioni (web)?</WhisperNotFound>
     <Model>Modello</Model>
     <Models>Modelli</Models>
     <LanguagesAndModels>Lingue e modelli</LanguagesAndModels>
@@ -216,12 +213,14 @@ Vuoi ulteriori informazioni (web)?</WhisperNotFound>
     <BatchMode>Modo batch</BatchMode>
     <KeepPartialTranscription>Mantieni la trascrizione parziale</KeepPartialTranscription>
     <TranslateToEnglish>Traduci in inglese</TranslateToEnglish>
-    <MaxCharsPerSubtitle>Caratteri max per riga sottotitoli</MaxCharsPerSubtitle>
     <RemoveTemporaryFiles>Rimuovi file temporanei</RemoveTemporaryFiles>
     <SetCppConstMeFolder>Imposta cartella modelli CPP/Const-me...</SetCppConstMeFolder>
     <OnlyRunPostProcessing>Esegui solo la post-elaborazione/regola i tempi</OnlyRunPostProcessing>
     <DownloadFasterWhisperCuda>Download cuBLAS e cuDNN per Faster-Whisper</DownloadFasterWhisperCuda>
     <NoTextFound>Nessun testo trovato!</NoTextFound>
+    <FixCasing>Correggi maiuscolo/minuscolo</FixCasing>
+    <AddPeriods>Aggiungi periodo</AddPeriods>
+    <FixShortDuration>Correggi breve durata</FixShortDuration>
   </AudioToText>
   <AssaAttachments>
     <Title>Allegati alpha sub station avanzati</Title>
@@ -733,6 +732,8 @@ Si sfrutta così il ritmo intrinseco dell'immagine.</CreateSimpleChainingToolTip
     <ChooseColor>Scegli colore:</ChooseColor>
     <TotalSeconds>Secondi totali:</TotalSeconds>
     <EndDelayInSeconds>Fine ritardo (secondi):</EndDelayInSeconds>
+    <WordEffect>Effetto parola</WordEffect>
+    <CharacterEffect>Effetto carattere</CharacterEffect>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>Effetto macchina da scrivere</Title>
@@ -3422,5 +3423,10 @@ Vuoi mantenere le modifiche?</KeepChangesMessage>
     <Title>Sussurro avanzato - argomenti extra riga di comando</Title>
     <CommandLineArguments>Parametri aggiuntivi riga di comando sussurro:</CommandLineArguments>
     <Info>Nota: diverse implementazioni del sussurro hanno diversi parametri della riga di comando!</Info>
+    <Standard>Standard</Standard>
+    <StandardAsia>Standard Asia</StandardAsia>
+    <HighlightCurrentWord>Evidenzia parola attuale</HighlightCurrentWord>
+    <SingleWords>Singola parola</SingleWords>
+    <Sentence>Frase</Sentence>
   </WhisperAdvanced>
 </Language>
