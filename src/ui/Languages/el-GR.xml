@@ -195,8 +195,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Engine>Μηχανή</Engine>
     <VoskWebsite>Ιστοσελίδα Vosk</VoskWebsite>
     <WhisperWebsite>Ιστοσελίδα Whisper</WhisperWebsite>
-    <WhisperNotFound>Το Whsiper δεν βρέθηκε.
-Ανάγνωση περισσότερων πληροφοριών στο διαδίκτυο;</WhisperNotFound>
     <Model>Μοντέλο</Model>
     <Models>Μοντέλα</Models>
     <LanguagesAndModels>Γλώσσες και μοντέλα</LanguagesAndModels>
@@ -213,12 +211,14 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <BatchMode>Ομαδική λειτουργία</BatchMode>
     <KeepPartialTranscription>Κράτημα μερικής μετατροπής</KeepPartialTranscription>
     <TranslateToEnglish>Μετάφραση στα Αγγλικά</TranslateToEnglish>
-    <MaxCharsPerSubtitle>Μέγιστοι χαρακτήρες ανά γραμμή</MaxCharsPerSubtitle>
     <RemoveTemporaryFiles>Αφαίρεση προσωρινών αρχείων</RemoveTemporaryFiles>
     <SetCppConstMeFolder>Διαδρομή φακέλου μοντέλων CPP / Const-me</SetCppConstMeFolder>
     <OnlyRunPostProcessing>Εκτέλεση μόνο μετεπεξεργασίας / προσαρμογή χρόνων</OnlyRunPostProcessing>
     <DownloadFasterWhisperCuda>Λήψη βιβλιοθηκών cuBLAS και cuDNN για Faster-Whisper</DownloadFasterWhisperCuda>
     <NoTextFound>Δεν βρέθηκε κείμενο.</NoTextFound>
+    <FixCasing>Διόρθωση κεφαλαίων - πεζών</FixCasing>
+    <AddPeriods>Προσθήκη τελείας</AddPeriods>
+    <FixShortDuration>Διόρθωση μικρής διάρκειας</FixShortDuration>
   </AudioToText>
   <AssaAttachments>
     <Title>Προσαρτήσεις Advanced Sub Station Alpha</Title>
@@ -720,6 +720,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ChooseColor>Επιλογή χρώματος:</ChooseColor>
     <TotalSeconds>Συνολικά δευτερόλεπτα:</TotalSeconds>
     <EndDelayInSeconds>Καθυστέρηση λήξης:</EndDelayInSeconds>
+    <WordEffect>Εφέ λέξης</WordEffect>
+    <CharacterEffect>Εφέ χαρακτήρα</CharacterEffect>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>Εφέ γραφομηχανής</Title>
@@ -3401,5 +3403,10 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Επιπλέον παράμετροι γραμμής εντολών για το Whisper</Title>
     <CommandLineArguments>Επιπλέον παράμετροι γραμμής εντολών για το Whisper:</CommandLineArguments>
     <Info>Σημείωση: Οι παράμετροι από εφαρμογή σε εφαρμογή Whisper διαφέρουν.</Info>
+    <Standard>Κανονικό</Standard>
+    <StandardAsia>Κανονικό Ασίας</StandardAsia>
+    <HighlightCurrentWord>Επισήμανση λέξης</HighlightCurrentWord>
+    <SingleWords>Μοναδικές λέξεις</SingleWords>
+    <Sentence>Πρόταση</Sentence>
   </WhisperAdvanced>
 </Language>
