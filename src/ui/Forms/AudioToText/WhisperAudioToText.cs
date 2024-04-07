@@ -446,7 +446,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
             progressBar1.Style = ProgressBarStyle.Blocks;
             timer1.Start();
-            var transcript = TranscribeViaWhisper(waveFileName);
+            var transcript = TranscribeViaWhisper(waveFileName, _videoFileName);
             timer1.Stop();
             if (_cancel && (transcript == null || transcript.Paragraphs.Count == 0 || MessageBox.Show(LanguageSettings.Current.AudioToText.KeepPartialTranscription, Text, MessageBoxButtons.YesNoCancel) != DialogResult.Yes))
             {
@@ -564,7 +564,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
                 _outputText.Add(string.Empty);
                 progressBar1.Style = ProgressBarStyle.Blocks;
-                var transcript = TranscribeViaWhisper(waveFileName);
+                var transcript = TranscribeViaWhisper(waveFileName, videoFileName);
                 if (_cancel)
                 {
                     TaskbarList.SetProgressState(_parentForm.Handle, TaskbarButtonProgressFlags.NoProgress);
@@ -719,7 +719,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             var fileName = Path.Combine(Utilities.GetPathAndFileNameWithoutExtension(videoFileName)) + format.Extension;
             if (File.Exists(fileName))
             {
-                fileName = $"{Path.Combine(Utilities.GetPathAndFileNameWithoutExtension(videoFileName))}.{Guid.NewGuid().ToString()}.{format.Extension}";
+                fileName = $"{Path.Combine(Utilities.GetPathAndFileNameWithoutExtension(videoFileName))}.{Guid.NewGuid().ToString()}{format.Extension}";
             }
 
             try
@@ -761,7 +761,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             return language != null ? language.Code : "en";
         }
 
-        public Subtitle TranscribeViaWhisper(string waveFileName)
+        public Subtitle TranscribeViaWhisper(string waveFileName, string videoFileName)
         {
             _showProgressPct = -1;
             var model = comboBoxModels.Items[comboBoxModels.SelectedIndex] as WhisperModel;
@@ -823,9 +823,9 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             var inputFile = waveFileName;
             if (!_useCenterChannelOnly &&
                 comboBoxWhisperEngine.Text == WhisperChoice.PurfviewFasterWhisper &&
-                _audioTrackNumber == 0)
+                _audioTrackNumber <= 0)
             {
-                inputFile = _videoFileName;
+                inputFile = videoFileName;
             }
 
             var process = GetWhisperProcess(inputFile, model.Name, _languageCode, checkBoxTranslateToEnglish.Checked, OutputHandler);
@@ -895,7 +895,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
             process.Dispose();
 
-            if (GetResultFromSrt(waveFileName, _videoFileName, out var resultTexts, _outputText, _filesToDelete))
+            if (GetResultFromSrt(waveFileName, videoFileName, out var resultTexts, _outputText, _filesToDelete))
             {
                 var subtitle = new Subtitle();
                 subtitle.Paragraphs.AddRange(resultTexts.Select(p => new Paragraph(p.Text, (double)p.Start * 1000.0, (double)p.End * 1000.0)).ToList());

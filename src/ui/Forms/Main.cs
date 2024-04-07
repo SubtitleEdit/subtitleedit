@@ -19025,6 +19025,19 @@ namespace Nikse.SubtitleEdit.Forms
                 RunCustomSearch(Configuration.Settings.VideoControls.CustomSearchUrl5);
                 e.SuppressKeyPress = true;
             }
+            else if (e.Modifiers == (Keys.Alt | Keys.Shift | Keys.Control) && e.KeyCode == Keys.T)
+            {
+                using (var form = new TextToSpeech(_subtitle, _videoFileName))
+                {
+                    if (form.ShowDialog(this) != DialogResult.OK)
+                    {
+                        return;
+                    }
+                }
+
+                e.SuppressKeyPress = true;
+            }
+
 
             // put new entries above tabs
 
