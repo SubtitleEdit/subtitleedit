@@ -75,6 +75,42 @@ namespace Nikse.SubtitleEdit.Logic
             return processMakeVideo;
         }
 
+        public static Process GenerateEmptyAudio(string outputFileName, float seconds, DataReceivedEventHandler dataReceivedHandler = null)
+        {
+            var processMakeVideo = new Process
+            {
+                StartInfo =
+                {
+                    FileName = GetFfmpegLocation(),
+                    Arguments = $"-f lavfi -i anullsrc -t {seconds.ToString(CultureInfo.InvariantCulture)} \"{outputFileName}\"",
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                }
+            };
+
+            SetupDataReceiveHandler(dataReceivedHandler, processMakeVideo);
+
+            return processMakeVideo;
+        }
+
+        public static Process MergeAudioTracks(string inputFileName1, string inputFileName2, string outputFileName, float startSeconds, DataReceivedEventHandler dataReceivedHandler = null)
+        {
+            var processMakeVideo = new Process
+            {
+                StartInfo =
+                {
+                    FileName = GetFfmpegLocation(),
+                    Arguments = $"-i \"{inputFileName1}\" -i \"{inputFileName2}\" -filter_complex \"aevalsrc=0:d={startSeconds.ToString(CultureInfo.InvariantCulture)}[s1];[s1][1:a]concat=n=2:v=0:a=1[ac1];[0:a][ac1]amix=2:normalize=false[aout]\" -map [aout] \"{outputFileName}\"",
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                }
+            };
+
+            SetupDataReceiveHandler(dataReceivedHandler, processMakeVideo);
+
+            return processMakeVideo;
+        }
+
         private static void SetupDataReceiveHandler(DataReceivedEventHandler dataReceivedHandler, Process processMakeVideo)
         {
             if (dataReceivedHandler != null)
@@ -544,6 +580,46 @@ namespace Nikse.SubtitleEdit.Logic
 
             processMakeVideo.StartInfo.Arguments = processMakeVideo.StartInfo.Arguments.Trim();
             SetupDataReceiveHandler(outputHandler, processMakeVideo);
+            return processMakeVideo;
+        }
+
+        public static Process ChangeSpeed(string inputFileName, string outputFileName, float inputSpeed, DataReceivedEventHandler dataReceivedHandler = null)
+        {
+            var speed = Math.Max(0.5f, inputSpeed);
+            speed = Math.Min(100, speed);
+            speed = (float)Math.Round(speed, 3, MidpointRounding.AwayFromZero);
+
+            var processMakeVideo = new Process
+            {
+                StartInfo =
+                {
+                    FileName = GetFfmpegLocation(),
+                    Arguments = $"-i \"{inputFileName}\" -filter:a \"atempo={speed.ToString(CultureInfo.InvariantCulture)}\" \"{outputFileName}\"",
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                }
+            };
+
+            SetupDataReceiveHandler(dataReceivedHandler, processMakeVideo);
+
+            return processMakeVideo;
+        }
+
+        public static Process TrimSilenceStartAndEnd(string inputFileName, string outputFileName, DataReceivedEventHandler dataReceivedHandler = null)
+        {
+            var processMakeVideo = new Process
+            {
+                StartInfo =
+                {
+                    FileName = GetFfmpegLocation(),
+                    Arguments = $"-i \"{inputFileName}\" -af silenceremove=start_periods=1:start_silence=0.01,areverse,silenceremove=start_periods=1:start_silence=0.01,areverse \"{outputFileName}\"",
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                }
+            };
+
+            SetupDataReceiveHandler(dataReceivedHandler, processMakeVideo);
+
             return processMakeVideo;
         }
     }

@@ -19027,7 +19027,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.Modifiers == (Keys.Alt | Keys.Shift | Keys.Control) && e.KeyCode == Keys.T)
             {
-                using (var form = new TextToSpeech(_subtitle, _videoFileName))
+                using (var form = new TextToSpeech(_subtitle, _videoFileName, _videoInfo))
                 {
                     if (form.ShowDialog(this) != DialogResult.OK)
                     {
