@@ -948,10 +948,11 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                     engineType == typeof(LmStudioTranslate) ||
                     engineType == typeof(OllamaTranslate))
                 {
+                    var err = string.IsNullOrEmpty(_autoTranslator.Error) ? string.Empty : _autoTranslator.Error + Environment.NewLine;
                     var dr = MessageBox.Show(
                         string.Format(LanguageSettings.Current.GoogleTranslate.XRequiresALocalWebServer, _autoTranslator.Name)
-                        + Environment.NewLine
-                        + Environment.NewLine + LanguageSettings.Current.GoogleTranslate.ReadMore,
+                        + Environment.NewLine + err
+                        + Environment.NewLine + LanguageSettings.Current.GoogleTranslate.ReadMore + Environment.NewLine,
                         MessageBoxButtons.YesNoCancel, MessageBoxIcon.Error);
 
                     if (dr == DialogResult.Yes)
