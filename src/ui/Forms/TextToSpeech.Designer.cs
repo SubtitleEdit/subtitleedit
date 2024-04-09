@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.buttonOK = new System.Windows.Forms.Button();
             this.labelProgress = new System.Windows.Forms.Label();
             this.buttonGenerateTTS = new System.Windows.Forms.Button();
@@ -35,9 +36,13 @@
             this.labelEngine = new System.Windows.Forms.Label();
             this.groupBoxMsSettings = new System.Windows.Forms.GroupBox();
             this.labelMsVoice = new System.Windows.Forms.Label();
+            this.checkBoxAddToVideoFile = new System.Windows.Forms.CheckBox();
+            this.listView1 = new System.Windows.Forms.ListView();
+            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.contextMenuStripActors = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.nikseComboBoxVoice = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.nikseComboBoxEngine = new Nikse.SubtitleEdit.Controls.NikseComboBox();
-            this.checkBoxAddToVideoFile = new System.Windows.Forms.CheckBox();
             this.groupBoxMsSettings.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -45,7 +50,7 @@
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(724, 407);
+            this.buttonOK.Location = new System.Drawing.Point(767, 456);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 7;
@@ -55,9 +60,10 @@
             // 
             // labelProgress
             // 
+            this.labelProgress.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelProgress.AutoSize = true;
             this.labelProgress.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.labelProgress.Location = new System.Drawing.Point(12, 384);
+            this.labelProgress.Location = new System.Drawing.Point(12, 433);
             this.labelProgress.Name = "labelProgress";
             this.labelProgress.Size = new System.Drawing.Size(70, 13);
             this.labelProgress.TabIndex = 9;
@@ -67,7 +73,7 @@
             // 
             this.buttonGenerateTTS.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonGenerateTTS.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonGenerateTTS.Location = new System.Drawing.Point(571, 374);
+            this.buttonGenerateTTS.Location = new System.Drawing.Point(614, 423);
             this.buttonGenerateTTS.Name = "buttonGenerateTTS";
             this.buttonGenerateTTS.Size = new System.Drawing.Size(228, 23);
             this.buttonGenerateTTS.TabIndex = 11;
@@ -79,9 +85,9 @@
             // 
             this.progressBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.progressBar1.Location = new System.Drawing.Point(12, 407);
+            this.progressBar1.Location = new System.Drawing.Point(12, 456);
             this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(706, 23);
+            this.progressBar1.Size = new System.Drawing.Size(749, 10);
             this.progressBar1.TabIndex = 12;
             // 
             // labelEngine
@@ -89,7 +95,7 @@
             this.labelEngine.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.labelEngine.AutoSize = true;
             this.labelEngine.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.labelEngine.Location = new System.Drawing.Point(405, 12);
+            this.labelEngine.Location = new System.Drawing.Point(448, 12);
             this.labelEngine.Name = "labelEngine";
             this.labelEngine.Size = new System.Drawing.Size(40, 13);
             this.labelEngine.TabIndex = 14;
@@ -101,9 +107,9 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxMsSettings.Controls.Add(this.labelMsVoice);
             this.groupBoxMsSettings.Controls.Add(this.nikseComboBoxVoice);
-            this.groupBoxMsSettings.Location = new System.Drawing.Point(408, 57);
+            this.groupBoxMsSettings.Location = new System.Drawing.Point(451, 57);
             this.groupBoxMsSettings.Name = "groupBoxMsSettings";
-            this.groupBoxMsSettings.Size = new System.Drawing.Size(391, 311);
+            this.groupBoxMsSettings.Size = new System.Drawing.Size(391, 320);
             this.groupBoxMsSettings.TabIndex = 15;
             this.groupBoxMsSettings.TabStop = false;
             this.groupBoxMsSettings.Text = "Settings";
@@ -118,6 +124,51 @@
             this.labelMsVoice.Size = new System.Drawing.Size(34, 13);
             this.labelMsVoice.TabIndex = 16;
             this.labelMsVoice.Text = "Voice";
+            // 
+            // checkBoxAddToVideoFile
+            // 
+            this.checkBoxAddToVideoFile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.checkBoxAddToVideoFile.AutoSize = true;
+            this.checkBoxAddToVideoFile.Location = new System.Drawing.Point(614, 397);
+            this.checkBoxAddToVideoFile.Name = "checkBoxAddToVideoFile";
+            this.checkBoxAddToVideoFile.Size = new System.Drawing.Size(176, 17);
+            this.checkBoxAddToVideoFile.TabIndex = 16;
+            this.checkBoxAddToVideoFile.Text = "Add audio to video file (new file)";
+            this.checkBoxAddToVideoFile.UseVisualStyleBackColor = true;
+            // 
+            // listView1
+            // 
+            this.listView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader1,
+            this.columnHeader2});
+            this.listView1.ContextMenuStrip = this.contextMenuStripActors;
+            this.listView1.FullRowSelect = true;
+            this.listView1.GridLines = true;
+            this.listView1.HideSelection = false;
+            this.listView1.Location = new System.Drawing.Point(12, 28);
+            this.listView1.Name = "listView1";
+            this.listView1.Size = new System.Drawing.Size(421, 349);
+            this.listView1.TabIndex = 17;
+            this.listView1.UseCompatibleStateImageBehavior = false;
+            this.listView1.View = System.Windows.Forms.View.Details;
+            // 
+            // columnHeader1
+            // 
+            this.columnHeader1.Text = "Style";
+            this.columnHeader1.Width = 200;
+            // 
+            // columnHeader2
+            // 
+            this.columnHeader2.Text = "Voice";
+            this.columnHeader2.Width = 200;
+            // 
+            // contextMenuStripActors
+            // 
+            this.contextMenuStripActors.Name = "contextMenuStripActors";
+            this.contextMenuStripActors.Size = new System.Drawing.Size(61, 4);
             // 
             // nikseComboBoxVoice
             // 
@@ -157,7 +208,7 @@
             this.nikseComboBoxEngine.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
             this.nikseComboBoxEngine.DropDownWidth = 195;
             this.nikseComboBoxEngine.FormattingEnabled = false;
-            this.nikseComboBoxEngine.Location = new System.Drawing.Point(408, 28);
+            this.nikseComboBoxEngine.Location = new System.Drawing.Point(451, 28);
             this.nikseComboBoxEngine.MaxLength = 32767;
             this.nikseComboBoxEngine.Name = "nikseComboBoxEngine";
             this.nikseComboBoxEngine.SelectedIndex = -1;
@@ -170,21 +221,12 @@
             this.nikseComboBoxEngine.UsePopupWindow = false;
             this.nikseComboBoxEngine.SelectedIndexChanged += new System.EventHandler(this.nikseComboBoxEngine_SelectedIndexChanged);
             // 
-            // checkBoxAddToVideoFile
-            // 
-            this.checkBoxAddToVideoFile.AutoSize = true;
-            this.checkBoxAddToVideoFile.Location = new System.Drawing.Point(15, 82);
-            this.checkBoxAddToVideoFile.Name = "checkBoxAddToVideoFile";
-            this.checkBoxAddToVideoFile.Size = new System.Drawing.Size(176, 17);
-            this.checkBoxAddToVideoFile.TabIndex = 16;
-            this.checkBoxAddToVideoFile.Text = "Add audio to video file (new file)";
-            this.checkBoxAddToVideoFile.UseVisualStyleBackColor = true;
-            // 
             // TextToSpeech
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(811, 442);
+            this.ClientSize = new System.Drawing.Size(854, 491);
+            this.Controls.Add(this.listView1);
             this.Controls.Add(this.checkBoxAddToVideoFile);
             this.Controls.Add(this.groupBoxMsSettings);
             this.Controls.Add(this.labelEngine);
@@ -218,5 +260,9 @@
         private System.Windows.Forms.Label labelMsVoice;
         private Controls.NikseComboBox nikseComboBoxVoice;
         private System.Windows.Forms.CheckBox checkBoxAddToVideoFile;
+        private System.Windows.Forms.ListView listView1;
+        private System.Windows.Forms.ColumnHeader columnHeader1;
+        private System.Windows.Forms.ColumnHeader columnHeader2;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripActors;
     }
 }
