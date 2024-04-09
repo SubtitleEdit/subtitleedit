@@ -657,17 +657,19 @@ namespace Nikse.SubtitleEdit.Forms
 
                 toolStripMenuItemGrammarCheck.Click += async (sender, args) =>
                 {
-                    var langaugeToolClient = new LanguageToolService();
-                    var isServiceAvailable = await langaugeToolClient.IsAvailableAsync();
-                    if (!isServiceAvailable)
+                    using (var langaugeToolClient = new LanguageToolService())
                     {
-                        MessageBox.Show("Service not availble", MessageBoxIcon.Exclamation);
-                        return;
-                    }
+                        var isServiceAvailable = await langaugeToolClient.IsAvailableAsync();
+                        if (!isServiceAvailable)
+                        {
+                            MessageBox.Show("Service not availble", MessageBoxIcon.Exclamation);
+                            return;
+                        }
 
-                    var selectedParagraph = SubtitleListview1.GetSelectedParagraph(_subtitle);
-                    var message = await langaugeToolClient.CheckAsync(selectedParagraph.Text);
-                    MessageBox.Show(message, MessageBoxIcon.Information);
+                        var selectedParagraph = SubtitleListview1.GetSelectedParagraph(_subtitle);
+                        var message = await langaugeToolClient.CheckAsync(selectedParagraph.Text);
+                        MessageBox.Show(message, MessageBoxIcon.Information);
+                    }
                 };
             }
             catch (Exception exception)
