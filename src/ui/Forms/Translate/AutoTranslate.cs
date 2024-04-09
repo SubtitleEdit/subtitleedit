@@ -341,6 +341,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
                 labelFormality.Text = LanguageSettings.Current.AudioToText.Model;
                 labelFormality.Visible = true;
+                comboBoxFormality.Enabled = true;
                 comboBoxFormality.Left = labelFormality.Right + 3;
                 comboBoxFormality.Visible = true;
                 comboBoxFormality.DropDownStyle = ComboBoxStyle.DropDown;

@@ -622,5 +622,23 @@ namespace Nikse.SubtitleEdit.Logic
 
             return processMakeVideo;
         }
+
+        public static Process AddAudioTrack(string inputFileName, string audioFileName, string outputFileName, DataReceivedEventHandler dataReceivedHandler = null)
+        {
+            var processMakeVideo = new Process
+            {
+                StartInfo =
+                {
+                    FileName = GetFfmpegLocation(),
+                    Arguments = $"-i \"{inputFileName}\" -i \"{audioFileName}\" -c copy -map 0:v:0 -map 1:a:0  \"{outputFileName}\"",
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                }
+            };
+
+            SetupDataReceiveHandler(dataReceivedHandler, processMakeVideo);
+
+            return processMakeVideo;
+        }
     }
 }
