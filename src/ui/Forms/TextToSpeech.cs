@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Speech.Synthesis;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -16,8 +17,17 @@ namespace Nikse.SubtitleEdit.Forms
         private readonly string _videoFileName;
         private readonly VideoInfo _videoInfo;
         private string _waveFolder;
+        private readonly List<ActorAndVoice> _actorAndVoices;
 
-        public TextToSpeech(Subtitle subtitle, string videoFileName, VideoInfo videoInfo)
+        public class ActorAndVoice
+        {
+            public string Actor { get; set; }
+            public int UseCount { get; set; }
+            public string Voice { get; set; }
+            public int VoiceIndex { get; set; }
+        }
+
+        public TextToSpeech(Subtitle subtitle, SubtitleFormat subtitleFormat, string videoFileName, VideoInfo videoInfo)
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
@@ -39,6 +49,81 @@ namespace Nikse.SubtitleEdit.Forms
             nikseComboBoxEngine.Items.Add("Tortoise TTS (very slow/very good)");
             nikseComboBoxEngine.Items.Add("Mimic3");
             nikseComboBoxEngine.SelectedIndex = 0;
+
+            _actorAndVoices = new List<ActorAndVoice>();
+            listView1.Visible = false;
+            if (subtitleFormat.GetType() == typeof(AdvancedSubStationAlpha))
+            {
+                var actors = _subtitle.Paragraphs
+                    .Where(p => !string.IsNullOrEmpty(p.Actor))
+                    .Select(p => p.Actor)
+                    .Distinct()
+                    .ToList();
+                if (actors.Any())
+                {
+                    foreach (var actor in actors)
+                    {
+                        var actorAndVoice = new ActorAndVoice
+                        {
+                            Actor = actor,
+                            UseCount = _subtitle.Paragraphs.Count(p => p.Actor == actor),
+                        };
+
+                        _actorAndVoices.Add(actorAndVoice);
+                    }
+
+                    FillActorListView();
+
+                    for (var index = 0; index < nikseComboBoxVoice.Items.Count; index++)
+                    {
+                        var item = nikseComboBoxVoice.Items[index];
+
+                        var tsi = new ToolStripMenuItem();
+                        tsi.Tag = new ActorAndVoice { Voice = item.ToString(), VoiceIndex = index };
+                        tsi.Text = item.ToString();
+                        tsi.Click += (sender, args) =>
+                        {
+                            var a = (ActorAndVoice)(sender as ToolStripItem).Tag;
+                            SetActor(a);
+                        };
+                        contextMenuStripActors.Items.Add(tsi);
+
+                        listView1.Visible = true;
+
+                    }
+                }
+            }
+        }
+
+
+        private void SetActor(ActorAndVoice actor)
+        {
+            foreach (int index in listView1.SelectedIndices)
+            {
+                ListViewItem item = listView1.Items[index];
+                var itemActor = (ActorAndVoice)item.Tag;
+                itemActor.Voice = actor.Voice;
+                itemActor.VoiceIndex = actor.VoiceIndex;
+                item.SubItems[1].Text = actor.Voice;
+            }
+        }
+
+        private void FillActorListView()
+        {
+            listView1.BeginUpdate();
+            listView1.Items.Clear();
+            foreach (var actor in _actorAndVoices)
+            {
+                var lvi = new ListViewItem
+                {
+                    Tag = actor,
+                    Text = actor.Actor,
+                };
+                lvi.SubItems.Add(actor.Voice);
+                listView1.Items.Add(lvi);
+            }
+
+            listView1.EndUpdate();
         }
 
         private void ButtonGenerateTtsClick(object sender, EventArgs e)
@@ -65,7 +150,7 @@ namespace Nikse.SubtitleEdit.Forms
             var tempAudioFile = MergeAudioParagraphs(fileNames);
             var resultAudioFileName = Path.Combine(Path.GetDirectoryName(tempAudioFile), Path.GetFileNameWithoutExtension(_videoFileName) + ".wav");
             File.Move(tempAudioFile, resultAudioFileName);
-            
+
             Cleanup(_waveFolder, resultAudioFileName);
 
             if (checkBoxAddToVideoFile.Checked)
@@ -226,7 +311,18 @@ namespace Nikse.SubtitleEdit.Forms
                     var builder = new PromptBuilder();
                     if (voiceInfo != null)
                     {
-                        builder.StartVoice(voiceInfo);
+                        var v = voiceInfo;
+                        if (_actorAndVoices.Count > 0 && !string.IsNullOrEmpty(p.Actor))
+                        {
+                            var f = _actorAndVoices.FirstOrDefault(x => x.Actor == p.Actor);
+                            if (f != null && !string.IsNullOrEmpty(f.Voice))
+                            {
+                                var item = vs[f.VoiceIndex];
+                                v = item.VoiceInfo;
+                            }
+                        }
+
+                        builder.StartVoice(v);
                     }
 
                     builder.AppendText(p.Text);
@@ -283,13 +379,23 @@ namespace Nikse.SubtitleEdit.Forms
                 var p = _subtitle.Paragraphs[index];
                 var outputFileName = Path.Combine(_waveFolder, index + ".wav");
 
+                var v = voice;
+                if (_actorAndVoices.Count > 0 && !string.IsNullOrEmpty(p.Actor))
+                {
+                    var f = _actorAndVoices.FirstOrDefault(x => x.Actor == p.Actor);
+                    if (f != null && !string.IsNullOrEmpty(f.Voice))
+                    {
+                        v = f.Voice;
+                    }
+                }
+
                 var processTortoiseTts = new Process
                 {
                     StartInfo =
                     {
                         WorkingDirectory = Path.GetDirectoryName(files[0]),
                         FileName = pythonExe,
-                        Arguments = $"do_tts.py --output_path \"{_waveFolder}\" --preset ultra_fast --voice {voice} --text \"{p.Text.RemoveChar('"')}\"",
+                        Arguments = $"do_tts.py --output_path \"{_waveFolder}\" --preset ultra_fast --voice {v} --text \"{p.Text.RemoveChar('"')}\"",
                         UseShellExecute = false,
                         CreateNoWindow = true,
                     }
@@ -298,7 +404,7 @@ namespace Nikse.SubtitleEdit.Forms
                 processTortoiseTts.Start();
                 processTortoiseTts.WaitForExit();
 
-                var inputFile = Path.Combine(_waveFolder, $"{voice}_0_2.wav");
+                var inputFile = Path.Combine(_waveFolder, $"{v}_0_2.wav");
                 File.Move(inputFile, outputFileName);
 
                 progressBar1.Refresh();
