@@ -200,8 +200,6 @@ https://github.com/SubtitleEdit/subtitleedit
     <Engine>Движок:</Engine>
     <VoskWebsite>Сайт Vosk</VoskWebsite>
     <WhisperWebsite>Сайт Whisper</WhisperWebsite>
-    <WhisperNotFound>Whisper не найден.
- Получить больше информации (сайт)?</WhisperNotFound>
     <Model>Модель</Model>
     <Models>Модели</Models>
     <LanguagesAndModels>Языки и модели</LanguagesAndModels>
@@ -218,12 +216,14 @@ https://github.com/SubtitleEdit/subtitleedit
     <BatchMode>Пакетный режим</BatchMode>
     <KeepPartialTranscription>Сохранить частичную транскрипцию</KeepPartialTranscription>
     <TranslateToEnglish>Перевести на английский</TranslateToEnglish>
-    <MaxCharsPerSubtitle>Макс. символов в строке</MaxCharsPerSubtitle>
     <RemoveTemporaryFiles>Удалять временные файлы</RemoveTemporaryFiles>
     <SetCppConstMeFolder>Установить папку моделей CPP/Const-me…</SetCppConstMeFolder>
     <OnlyRunPostProcessing>Запустить только постобработку/настройку таймингов</OnlyRunPostProcessing>
     <DownloadFasterWhisperCuda>Загрузить библиотеки cuBLAS и cuDNN для Faster-Whisper</DownloadFasterWhisperCuda>
     <NoTextFound>Текст не найден!</NoTextFound>
+    <FixCasing>Исправление регистра</FixCasing>
+    <AddPeriods>Добавление точек</AddPeriods>
+    <FixShortDuration>Исправление короткой продолжительности</FixShortDuration>
   </AudioToText>
   <AssaAttachments>
     <Title>Вложения Advanced SubStation Alpha</Title>
@@ -735,12 +735,14 @@ https://github.com/SubtitleEdit/subtitleedit
     <Title>Эффект караоке</Title>
     <ChooseColor>Выбрать цвет:</ChooseColor>
     <TotalSeconds>Всего секунд:</TotalSeconds>
-    <EndDelayInSeconds>Конечная задержка в секундах:</EndDelayInSeconds>
+    <EndDelayInSeconds>Конечная задержка (сек.):</EndDelayInSeconds>
+    <WordEffect>Словесный эффект</WordEffect>
+    <CharacterEffect>Символьный эффект</CharacterEffect>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>Эффект машинописи</Title>
     <TotalSeconds>Всего секунд:</TotalSeconds>
-    <EndDelayInSeconds>Конечная задержка в секундах:</EndDelayInSeconds>
+    <EndDelayInSeconds>Конечная задержка (сек.):</EndDelayInSeconds>
   </EffectTypewriter>
   <ExportCustomText>
     <Title>Экспорт текста в пользовательский формат</Title>
@@ -924,7 +926,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <AddMissingQuote>Добавить недостающую кавычку (")</AddMissingQuote>
     <AddMissingQuotes>Добавить недостающие кавычки (")</AddMissingQuotes>
     <RemoveHyphensSingleLine>Удалять диалоговые тире в одной строке</RemoveHyphensSingleLine>
-    <FixHyphensInDialogs>Исправлено тире в диалогах через стиль: {0}</FixHyphensInDialogs>
+    <FixHyphensInDialogs>Исправить тире в диалогах через стиль: {0}</FixHyphensInDialogs>
     <AddMissingQuotesExample>"Как дела? -&gt; "Как дела?"</AddMissingQuotesExample>
     <XMissingQuotesAdded>Добавлено недостающих кавычек: {0}</XMissingQuotesAdded>
     <Fix3PlusLine>Исправить субтитр с более чем двумя строками</Fix3PlusLine>
@@ -983,7 +985,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <RemoveDialogFirstInNonDialogsExample>- Как дела? -&gt; Как дела?</RemoveDialogFirstInNonDialogsExample>
     <SelectDefault>По умолчанию</SelectDefault>
     <SetDefault>Установить текущие исправления по умолчанию</SetDefault>
-    <FixContinuationStyleX>Исправление стиля продолжения: {0}</FixContinuationStyleX>
+    <FixContinuationStyleX>Исправить стиль продолжения: {0}</FixContinuationStyleX>
     <FixUnnecessaryLeadingDots>Удаление ненужных ведущих точек</FixUnnecessaryLeadingDots>
   </FixCommonErrors>
   <GenerateBlankVideo>
@@ -1648,8 +1650,8 @@ https://github.com/SubtitleEdit/subtitleedit
       <AutoContinueInXSeconds>Переход к следующему субтитру через {0} с</AutoContinueInXSeconds>
       <StillTypingAutoContinueStopped>Набор текста… переход к следующему субтитру остановлен</StillTypingAutoContinueStopped>
       <InsertNewSubtitleAtVideoPosition>Пустую строку в позиции видео</InsertNewSubtitleAtVideoPosition>
-      <InsertNewSubtitleAtVideoPositionNoTextBoxFocus>Вставить пустую строку в позиции видео (без фокуса на текстовом поле) [длина по умолчанию в 2000 мс изменяется в Settings.xml]</InsertNewSubtitleAtVideoPositionNoTextBoxFocus>
-      <InsertNewSubtitleAtVideoPositionMax>Вставьте новый субтитр в позицию видео (как можно дольше)</InsertNewSubtitleAtVideoPositionMax>
+      <InsertNewSubtitleAtVideoPositionNoTextBoxFocus>Вставить пустую строку в позиции видео (не фокусируясь на текстовом поле)</InsertNewSubtitleAtVideoPositionNoTextBoxFocus>
+      <InsertNewSubtitleAtVideoPositionMax>Вставить новую строку в позицию видео (как можно длиннее)</InsertNewSubtitleAtVideoPositionMax>
       <Auto>Авто</Auto>
       <PlayFromJustBeforeText>Воспроизвести перед текстом</PlayFromJustBeforeText>
       <PlayFromBeginning>Воспроизвести с начала видео</PlayFromBeginning>
@@ -3378,7 +3380,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <Seconds>секунд</Seconds>
     <ZoomIn>Увеличить</ZoomIn>
     <ZoomOut>Уменьшить</ZoomOut>
-    <AddParagraphHere>Добавить текст здесь</AddParagraphHere>
+    <AddParagraphHere>Добавить текст здесь (Ввести)</AddParagraphHere>
     <AddParagraphHereAndPasteText>Добавить текст из буфера обмена</AddParagraphHereAndPasteText>
     <SetParagraphAsSelection>Установить текущий как новый выбор</SetParagraphAsSelection>
     <FocusTextBox>Фокус на текстовое поле</FocusTextBox>
@@ -3389,6 +3391,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <SplitAtCursor>Разделить по курсору</SplitAtCursor>
     <MergeWithPrevious>Объединить с предыдущим</MergeWithPrevious>
     <MergeWithNext>Объединить со следующим</MergeWithNext>
+    <RunWhisperSelectedParagraph>Запустить Whisper для выбранного абзаца…</RunWhisperSelectedParagraph>
     <ExtendToPrevious>Расширить продолжительность до предыдущей строки</ExtendToPrevious>
     <ExtendToNext>Расширить продолжительность до следующей строки</ExtendToNext>
     <PlaySelection>Воспроизвести выбранный</PlaySelection>
@@ -3436,5 +3439,10 @@ https://github.com/SubtitleEdit/subtitleedit
     <Title>Whisper продвинутый - дополнительные аргументы командной строки</Title>
     <CommandLineArguments>Дополнительные параметры командной строки Whisper:</CommandLineArguments>
     <Info>Примечание: различные реализации Whisper отличаются параметрами командной строки!</Info>
+    <Standard>Стандарт</Standard>
+    <StandardAsia>Стандарт Азия</StandardAsia>
+    <HighlightCurrentWord>Выделение текущего слова</HighlightCurrentWord>
+    <SingleWords>Пословно</SingleWords>
+    <Sentence>Предложение</Sentence>
   </WhisperAdvanced>
 </Language>
