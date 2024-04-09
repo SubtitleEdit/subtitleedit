@@ -37,6 +37,7 @@
             this.labelMsVoice = new System.Windows.Forms.Label();
             this.nikseComboBoxVoice = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.nikseComboBoxEngine = new Nikse.SubtitleEdit.Controls.NikseComboBox();
+            this.checkBoxAddToVideoFile = new System.Windows.Forms.CheckBox();
             this.groupBoxMsSettings.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -169,11 +170,22 @@
             this.nikseComboBoxEngine.UsePopupWindow = false;
             this.nikseComboBoxEngine.SelectedIndexChanged += new System.EventHandler(this.nikseComboBoxEngine_SelectedIndexChanged);
             // 
+            // checkBoxAddToVideoFile
+            // 
+            this.checkBoxAddToVideoFile.AutoSize = true;
+            this.checkBoxAddToVideoFile.Location = new System.Drawing.Point(15, 82);
+            this.checkBoxAddToVideoFile.Name = "checkBoxAddToVideoFile";
+            this.checkBoxAddToVideoFile.Size = new System.Drawing.Size(176, 17);
+            this.checkBoxAddToVideoFile.TabIndex = 16;
+            this.checkBoxAddToVideoFile.Text = "Add audio to video file (new file)";
+            this.checkBoxAddToVideoFile.UseVisualStyleBackColor = true;
+            // 
             // TextToSpeech
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(811, 442);
+            this.Controls.Add(this.checkBoxAddToVideoFile);
             this.Controls.Add(this.groupBoxMsSettings);
             this.Controls.Add(this.labelEngine);
             this.Controls.Add(this.nikseComboBoxEngine);
@@ -205,5 +217,6 @@
         private System.Windows.Forms.GroupBox groupBoxMsSettings;
         private System.Windows.Forms.Label labelMsVoice;
         private Controls.NikseComboBox nikseComboBoxVoice;
+        private System.Windows.Forms.CheckBox checkBoxAddToVideoFile;
     }
 }

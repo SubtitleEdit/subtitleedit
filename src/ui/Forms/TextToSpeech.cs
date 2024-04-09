@@ -54,6 +54,10 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 GenerateParagraphAudioTortoiseTts();
             }
+            else if (nikseComboBoxEngine.SelectedIndex == 2)
+            {
+                GenerateParagraphAudioMimic3();
+            }
 
             var fileNames = FixParagraphAudioSpeed();
 
@@ -64,7 +68,29 @@ namespace Nikse.SubtitleEdit.Forms
             
             Cleanup(_waveFolder, resultAudioFileName);
 
+            if (checkBoxAddToVideoFile.Checked)
+            {
+                AddAudioToVideoFile(resultAudioFileName);
+            }
+
             UiUtil.OpenFolder(_waveFolder);
+        }
+
+        private void AddAudioToVideoFile(string audioFileName)
+        {
+            var videoExt = ".mkv";
+            if (_videoFileName.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase))
+            {
+                videoExt = ".mp4";
+            }
+
+            labelProgress.Text = "Add audtio to video file...";
+            var outputFileName = Path.Combine(_waveFolder, Path.GetFileNameWithoutExtension(audioFileName) + videoExt);
+            Process addAudioProcess = VideoPreviewGenerator.AddAudioTrack(_videoFileName, audioFileName, outputFileName);
+            addAudioProcess.Start();
+            addAudioProcess.WaitForExit();
+
+            labelProgress.Text = string.Empty;
         }
 
         private static void Cleanup(string waveFolder, string resultAudioFile)
@@ -97,17 +123,21 @@ namespace Nikse.SubtitleEdit.Forms
                 var next = _subtitle.GetParagraphOrDefault(index + 1);
                 var pFileName = Path.Combine(_waveFolder, index + ".wav");
 
-                var addDuration = 0d;
-                if (next != null && p.EndTime.TotalMilliseconds < next.StartTime.TotalMilliseconds)
-                {
-                    var diff = next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds;
-                    addDuration = Math.Max(1000, diff);
-                }
-
                 var outputFileName1 = Path.Combine(_waveFolder, index + "_u.wav");
                 var trimProcess = VideoPreviewGenerator.TrimSilenceStartAndEnd(pFileName, outputFileName1);
                 trimProcess.Start();
                 trimProcess.WaitForExit();
+
+                var addDuration = 0d;
+                if (next != null && p.EndTime.TotalMilliseconds < next.StartTime.TotalMilliseconds)
+                {
+                    var diff = next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds;
+                    addDuration = Math.Min(1000, diff);
+                    if (addDuration < 0)
+                    {
+                        addDuration = 0;
+                    }
+                }
 
                 var waveInfo = UiUtil.GetVideoInfo(outputFileName1);
                 if (waveInfo.TotalMilliseconds <= p.DurationTotalMilliseconds + addDuration)
@@ -148,6 +178,12 @@ namespace Nikse.SubtitleEdit.Forms
                 labelProgress.Text = $"Merging audio track: {index + 1} / {_subtitle.Paragraphs.Count}...";
                 var p = _subtitle.Paragraphs[index];
                 var pFileName = fileNames[index];
+                if (!File.Exists(pFileName))
+                {
+                    SeLogger.Error($"TextToSpeech: File not found (skipping): {pFileName}");
+                    continue;
+                }
+
                 outputFileName = Path.Combine(_waveFolder, $"silence{index}.wav");
                 var mergeProcess = VideoPreviewGenerator.MergeAudioTracks(inputFileName, pFileName, outputFileName, (float)p.StartTime.TotalSeconds);
                 inputFileName = outputFileName;
@@ -274,6 +310,11 @@ namespace Nikse.SubtitleEdit.Forms
             labelProgress.Text = string.Empty;
 
             return true;
+        }
+
+        private void GenerateParagraphAudioMimic3()
+        {
+            throw new NotImplementedException();
         }
 
         private void buttonOK_Click(object sender, EventArgs e)
