@@ -47,6 +47,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Core.Grammar;
 using Nikse.SubtitleEdit.Forms.Tts;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
 using CheckForUpdatesHelper = Nikse.SubtitleEdit.Logic.CheckForUpdatesHelper;
@@ -653,6 +654,21 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripSelected.Text = string.Empty;
 
                 ListViewHelper.RestoreListViewDisplayIndices(SubtitleListview1);
+
+                toolStripMenuItemGrammarCheck.Click += async (sender, args) =>
+                {
+                    var langaugeToolClient = new LanguageToolService();
+                    var isServiceAvailable = await langaugeToolClient.IsAvailableAsync();
+                    if (!isServiceAvailable)
+                    {
+                        MessageBox.Show("Service not availble", MessageBoxIcon.Exclamation);
+                        return;
+                    }
+
+                    var selectedParagraph = SubtitleListview1.GetSelectedParagraph(_subtitle);
+                    var message = await langaugeToolClient.CheckAsync(selectedParagraph.Text);
+                    MessageBox.Show(message, MessageBoxIcon.Information);
+                };
             }
             catch (Exception exception)
             {

@@ -450,6 +450,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.splitToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.mergeWithPreviousToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mergeWithNextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.runWhiperOnParagraphToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator11 = new System.Windows.Forms.ToolStripSeparator();
             this.extendToPreviousToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.extendToNextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -579,7 +580,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.timerOriginalTextUndo = new System.Windows.Forms.Timer(this.components);
             this.contextMenuStripShowVideoControls = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItemShowVideoControls = new System.Windows.Forms.ToolStripMenuItem();
-            this.runWhiperOnParagraphToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemGrammarCheck = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -2722,7 +2723,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemSelectedLines,
             this.toolStripMenuItemGoogleMicrosoftTranslateSelLine});
             this.contextMenuStripListView.Name = "contextMenuStripListView";
-            this.contextMenuStripListView.Size = new System.Drawing.Size(285, 826);
+            this.contextMenuStripListView.Size = new System.Drawing.Size(285, 848);
             this.contextMenuStripListView.Closed += new System.Windows.Forms.ToolStripDropDownClosedEventHandler(this.MenuClosed);
             this.contextMenuStripListView.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripListViewOpening);
             this.contextMenuStripListView.Opened += new System.EventHandler(this.MenuOpened);
@@ -3176,7 +3177,8 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemEvenlyDistributeLines,
             this.toolStripMenuItemSaveSelectedLines,
             this.typeEffectToolStripMenuItem,
-            this.karaokeEffectToolStripMenuItem});
+            this.karaokeEffectToolStripMenuItem,
+            this.toolStripMenuItemGrammarCheck});
             this.toolStripMenuItemSelectedLines.Name = "toolStripMenuItemSelectedLines";
             this.toolStripMenuItemSelectedLines.Size = new System.Drawing.Size(284, 22);
             this.toolStripMenuItemSelectedLines.Text = "Selected lines";
@@ -4477,7 +4479,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.seekSilenceToolStripMenuItem,
             this.insertSubtitleHereToolStripMenuItem});
             this.contextMenuStripWaveform.Name = "contextMenuStripWaveform";
-            this.contextMenuStripWaveform.Size = new System.Drawing.Size(275, 534);
+            this.contextMenuStripWaveform.Size = new System.Drawing.Size(275, 512);
             this.contextMenuStripWaveform.Closing += new System.Windows.Forms.ToolStripDropDownClosingEventHandler(this.ContextMenuStripWaveformClosing);
             this.contextMenuStripWaveform.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripWaveformOpening);
             // 
@@ -4550,6 +4552,13 @@ namespace Nikse.SubtitleEdit.Forms
             this.mergeWithNextToolStripMenuItem.Size = new System.Drawing.Size(274, 22);
             this.mergeWithNextToolStripMenuItem.Text = "Merge with next";
             this.mergeWithNextToolStripMenuItem.Click += new System.EventHandler(this.MergeWithNextToolStripMenuItemClick);
+            // 
+            // runWhiperOnParagraphToolStripMenuItem
+            // 
+            this.runWhiperOnParagraphToolStripMenuItem.Name = "runWhiperOnParagraphToolStripMenuItem";
+            this.runWhiperOnParagraphToolStripMenuItem.Size = new System.Drawing.Size(274, 22);
+            this.runWhiperOnParagraphToolStripMenuItem.Text = "Run Whiper on paragraph...";
+            this.runWhiperOnParagraphToolStripMenuItem.Click += new System.EventHandler(this.runWhiperOnParagraphToolStripMenuItem_Click);
             // 
             // toolStripSeparator11
             // 
@@ -5881,12 +5890,11 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemShowVideoControls.Text = "Show video controls";
             this.toolStripMenuItemShowVideoControls.Click += new System.EventHandler(this.ToolStripMenuItemShowVideoControlsClick);
             // 
-            // runWhiperOnParagraphToolStripMenuItem
+            // toolStripMenuItemGrammarCheck
             // 
-            this.runWhiperOnParagraphToolStripMenuItem.Name = "runWhiperOnParagraphToolStripMenuItem";
-            this.runWhiperOnParagraphToolStripMenuItem.Size = new System.Drawing.Size(274, 22);
-            this.runWhiperOnParagraphToolStripMenuItem.Text = "Run Whiper on paragraph...";
-            this.runWhiperOnParagraphToolStripMenuItem.Click += new System.EventHandler(this.runWhiperOnParagraphToolStripMenuItem_Click);
+            this.toolStripMenuItemGrammarCheck.Name = "toolStripMenuItemGrammarCheck";
+            this.toolStripMenuItemGrammarCheck.Size = new System.Drawing.Size(275, 22);
+            this.toolStripMenuItemGrammarCheck.Text = "Grammar Check";
             // 
             // Main
             // 
@@ -6507,5 +6515,6 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemVerifyCompleteness;
         private System.Windows.Forms.ToolStripButton toolStripButtonVideoOpen;
         private System.Windows.Forms.ToolStripMenuItem runWhiperOnParagraphToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemGrammarCheck;
     }
 }
