@@ -986,21 +986,20 @@ namespace Nikse.SubtitleEdit.Forms
                     var doc = new XmlDocument();
                     var guid = Guid.NewGuid().ToString().RemoveChar('-').Insert(8, "-").Insert(13, "-").Insert(18, "-").Insert(23, "-");
                     var xml =
-                        "<dcst:SubtitleReel xmlns:dcst=\"http://www.smpte-ra.org/schemas/428-7/2014/DCST\" xmlns:xs=\"http://www.w3.org/2001/XMLSchema\">" + Environment.NewLine +
-                        "  <dcst:Id>urn:uuid:" + guid + "</dcst:Id>" + Environment.NewLine +
-                        "  <dcst:ContentTitleText></dcst:ContentTitleText> " + Environment.NewLine +
-                        "  <dcst:AnnotationText>This is a subtitle file</dcst:AnnotationText>" + Environment.NewLine +
-                        "  <dcst:IssueDate>2014-01-01T00:00:00.000-00:00</dcst:IssueDate>" + Environment.NewLine +
-                        "  <dcst:ReelNumber>1</dcst:ReelNumber>" + Environment.NewLine +
-                        "  <dcst:Language>en</dcst:Language>" + Environment.NewLine +
-                        "  <dcst:EditRate>[FRAMERATE] 1</dcst:EditRate>" + Environment.NewLine +
-                        "  <dcst:TimeCodeRate>[FRAMERATE]</dcst:TimeCodeRate>" + Environment.NewLine +
-                        "  <dcst:StartTime>00:00:00:00</dcst:StartTime> " + Environment.NewLine +
-                        "  <dcst:LoadFont ID=\"theFontId\">urn:uuid:3dec6dc0-39d0-498d-97d0-928d2eb78391</dcst:LoadFont>" + Environment.NewLine +
-                        "  <dcst:SubtitleList>" + Environment.NewLine +
+                        "<SubtitleReel xmlns=\"http://www.smpte-ra.org/schemas/428-7/2014/DCST\">" + Environment.NewLine +
+                        "  <Id>urn:uuid:" + guid + "</Id>" + Environment.NewLine +
+                        "  <ContentTitleText>Movie Title</ContentTitleText>" + Environment.NewLine +
+                        "  <AnnotationText>This is a subtitle file</AnnotationText>" + Environment.NewLine +
+                        "  <IssueDate>" + DateTime.Now.ToString("o") + "</IssueDate>" + Environment.NewLine +
+                        "  <ReelNumber>1</ReelNumber>" + Environment.NewLine +
+                        "  <Language>en</Language>" + Environment.NewLine +
+                        "  <EditRate>[FRAMERATE] 1</EditRate>" + Environment.NewLine +
+                        "  <TimeCodeRate>[FRAMERATE]</TimeCodeRate>" + Environment.NewLine +
+                        "  <StartTime>00:00:00:00</StartTime>" + Environment.NewLine +
+                        "  <SubtitleList>" + Environment.NewLine +
                            sb +
-                        "  </dcst:SubtitleList>" + Environment.NewLine +
-                        "</dcst:SubtitleReel>";
+                        "  </SubtitleList>" + Environment.NewLine +
+                        "</SubtitleReel>";
 
                     xml = xml.Replace("[FRAMERATE]", ((int)FrameRate).ToString(CultureInfo.InvariantCulture));
 
@@ -1847,8 +1846,9 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 {
                     if (!param.Saved)
                     {
-                        string numberString = $"{i:0000}";
-                        string fileName = Path.Combine(Path.GetDirectoryName(saveFileDialog1.FileName), numberString + ".png");
+                        // string numberString = $"{i:0000}";
+                        string uuidString = Guid.NewGuid().ToString().RemoveChar('-').Insert(8, "-").Insert(13, "-").Insert(18, "-").Insert(23, "-");
+                        string fileName = Path.Combine(Path.GetDirectoryName(saveFileDialog1.FileName), uuidString + ".png");
                         param.Bitmap.Save(fileName, ImageFormat.Png);
                         imagesSavedCount++;
                         param.Saved = true;
@@ -1901,14 +1901,14 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                 break;
                         }
 
-                        sb.AppendLine("<Subtitle FadeDownTime=\"" + 0 + "\" FadeUpTime=\"" + 0 + "\" TimeOut=\"" + DCinemaInterop.ConvertToTimeString(param.P.EndTime) + "\" TimeIn=\"" + DCinemaInterop.ConvertToTimeString(param.P.StartTime) + "\" SpotNumber=\"" + param.P.Number + "\">");
+                        sb.AppendLine("<Subtitle SpotNumber=\"" + param.P.Number + "\" FadeUpTime=\"" + "00:00:00:00" + "\" FadeDownTime=\"" + "00:00:00:00" + "\" TimeIn=\"" + param.P.StartTime.ToHHMMSSFF() + "\" TimeOut=\"" + param.P.EndTime.ToHHMMSSFF() + "\">");
                         if (param.Depth3D == 0)
                         {
-                            sb.AppendLine("<Image VPosition=\"" + vPos + "\" HPosition=\"" + hPos + "\" VAlign=\"" + verticalAlignment + "\" HAlign=\"" + horizontalAlignment + "\">" + numberString + ".png" + "</Image>");
+                            sb.AppendLine("<Image Vposition=\"" + vPos + "\" Hposition=\"" + hPos + "\" Valign=\"" + verticalAlignment + "\" Halign=\"" + horizontalAlignment + "\">urn:uuid:" + uuidString + "</Image>");
                         }
                         else
                         {
-                            sb.AppendLine("<Image VPosition=\"" + vPos + "\" HPosition=\"" + hPos + "\" ZPosition=\"" + param.Depth3D + "\" VAlign=\"" + verticalAlignment + "\" HAlign=\"" + horizontalAlignment + "\">" + numberString + ".png" + "</Image>");
+                            sb.AppendLine("<Image Vposition=\"" + vPos + "\" Hposition=\"" + hPos + "\" Zposition=\"" + param.Depth3D + "\" Valign=\"" + verticalAlignment + "\" Halign=\"" + horizontalAlignment + "\">urn:uuid:" + uuidString + "</Image>");
                         }
 
                         sb.AppendLine("</Subtitle>");
