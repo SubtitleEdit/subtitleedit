@@ -680,10 +680,16 @@
     <Compile Include="Forms\SeJobs\SeJobExport.Designer.cs">
       <DependentUpon>SeJobExport.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\TextToSpeech.cs">
+    <Compile Include="Forms\Tts\PiperDownload.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\TextToSpeech.Designer.cs">
+    <Compile Include="Forms\Tts\PiperDownload.Designer.cs">
+      <DependentUpon>PiperDownload.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Tts\TextToSpeech.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Tts\TextToSpeech.Designer.cs">
       <DependentUpon>TextToSpeech.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\TimedTextPropertiesImsc11.cs">
@@ -1951,7 +1957,10 @@
     <EmbeddedResource Include="Forms\ShotChanges\AdjustTimingViaShotChanges.resx">
       <DependentUpon>AdjustTimingViaShotChanges.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\TextToSpeech.resx">
+    <EmbeddedResource Include="Forms\Tts\PiperDownload.resx">
+      <DependentUpon>PiperDownload.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Tts\TextToSpeech.resx">
       <DependentUpon>TextToSpeech.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\TimedTextPropertiesImsc11.resx">
@@ -2725,6 +2734,7 @@
       <Visible>false</Visible>
     </HunspellAssemblies>
   </ItemGroup>
+  <ItemGroup />
   <Target Name="BeforeCompile">
     <XmlPeek XmlInputPath="$(ProjectDir)packages.config" Query="//package[@id='NHunspell']/@version">
       <Output TaskParameter="Result" PropertyName="HunspellVersion" />
