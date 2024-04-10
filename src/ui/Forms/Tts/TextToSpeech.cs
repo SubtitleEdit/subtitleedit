@@ -1,16 +1,17 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
-using Nikse.SubtitleEdit.Logic;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Speech.Synthesis;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Core.TextToSpeech;
+using Nikse.SubtitleEdit.Logic;
+using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
-namespace Nikse.SubtitleEdit.Forms
+namespace Nikse.SubtitleEdit.Forms.Tts
 {
     public partial class TextToSpeech : Form
     {
@@ -19,6 +20,7 @@ namespace Nikse.SubtitleEdit.Forms
         private readonly VideoInfo _videoInfo;
         private string _waveFolder;
         private readonly List<ActorAndVoice> _actorAndVoices;
+        private readonly SubtitleFormat _subtitleFormat;
 
         public class ActorAndVoice
         {
@@ -35,6 +37,7 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.FixFonts(this);
 
             _subtitle = subtitle;
+            _subtitleFormat = subtitleFormat;
             _videoFileName = videoFileName;
             _videoInfo = videoInfo;
 
@@ -44,59 +47,18 @@ namespace Nikse.SubtitleEdit.Forms
             progressBar1.Visible = false;
             labelProgress.Text = string.Empty;
 
+            _actorAndVoices = new List<ActorAndVoice>();
             nikseComboBoxEngine.DropDownStyle = ComboBoxStyle.DropDownList;
             nikseComboBoxEngine.Items.Clear();
-            nikseComboBoxEngine.Items.Add("Microsoft SpeechSynthesizer (fast/robotic)");
-            nikseComboBoxEngine.Items.Add("Piper");
+            nikseComboBoxEngine.Items.Add("Microsoft SpeechSynthesizer (very fast/robotic)");
+            nikseComboBoxEngine.Items.Add("Piper (fast/good)");
             nikseComboBoxEngine.Items.Add("Tortoise TTS (very slow/very good)");
-            nikseComboBoxEngine.Items.Add("Mimic3");
+            //nikseComboBoxEngine.Items.Add("Mimic3");
             nikseComboBoxEngine.SelectedIndex = 0;
 
-            _actorAndVoices = new List<ActorAndVoice>();
             listView1.Visible = false;
-            if (subtitleFormat.GetType() == typeof(AdvancedSubStationAlpha))
-            {
-                var actors = _subtitle.Paragraphs
-                    .Where(p => !string.IsNullOrEmpty(p.Actor))
-                    .Select(p => p.Actor)
-                    .Distinct()
-                    .ToList();
-                if (actors.Any())
-                {
-                    foreach (var actor in actors)
-                    {
-                        var actorAndVoice = new ActorAndVoice
-                        {
-                            Actor = actor,
-                            UseCount = _subtitle.Paragraphs.Count(p => p.Actor == actor),
-                        };
-
-                        _actorAndVoices.Add(actorAndVoice);
-                    }
-
-                    FillActorListView();
-
-                    for (var index = 0; index < nikseComboBoxVoice.Items.Count; index++)
-                    {
-                        var item = nikseComboBoxVoice.Items[index];
-
-                        var tsi = new ToolStripMenuItem();
-                        tsi.Tag = new ActorAndVoice { Voice = item.ToString(), VoiceIndex = index };
-                        tsi.Text = item.ToString();
-                        tsi.Click += (sender, args) =>
-                        {
-                            var a = (ActorAndVoice)(sender as ToolStripItem).Tag;
-                            SetActor(a);
-                        };
-                        contextMenuStripActors.Items.Add(tsi);
-
-                        listView1.Visible = true;
-
-                    }
-                }
-            }
+            nikseComboBoxEngine_SelectedIndexChanged(null, null);
         }
-
 
         private void SetActor(ActorAndVoice actor)
         {
@@ -152,12 +114,13 @@ namespace Nikse.SubtitleEdit.Forms
 
             var fileNames = FixParagraphAudioSpeed();
 
-            // rename result file
             var tempAudioFile = MergeAudioParagraphs(fileNames);
+
+            // rename result file
             var resultAudioFileName = Path.Combine(Path.GetDirectoryName(tempAudioFile), Path.GetFileNameWithoutExtension(_videoFileName) + ".wav");
             File.Move(tempAudioFile, resultAudioFileName);
 
-         //   Cleanup(_waveFolder, resultAudioFileName);
+            Cleanup(_waveFolder, resultAudioFileName);
 
             if (checkBoxAddToVideoFile.Checked)
             {
@@ -177,7 +140,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             labelProgress.Text = "Add audtio to video file...";
             var outputFileName = Path.Combine(_waveFolder, Path.GetFileNameWithoutExtension(audioFileName) + videoExt);
-            Process addAudioProcess = VideoPreviewGenerator.AddAudioTrack(_videoFileName, audioFileName, outputFileName);
+            var addAudioProcess = VideoPreviewGenerator.AddAudioTrack(_videoFileName, audioFileName, outputFileName);
             addAudioProcess.Start();
             addAudioProcess.WaitForExit();
 
@@ -351,11 +314,40 @@ namespace Nikse.SubtitleEdit.Forms
 
         private bool GenerateParagraphAudioPiperTts()
         {
-            var piperExe = "C:\\data\\piper\\piper_windows_amd64\\piper\\piper.exe";
+            var ttsPath = Path.Combine(Configuration.DataDirectory, "TextToSpeech");
+            if (!Directory.Exists(ttsPath))
+            {
+                Directory.CreateDirectory(ttsPath);
+            }
+
+            var piperPath = Path.Combine(ttsPath, "Piper");
+            if (!Directory.Exists(piperPath))
+            {
+                Directory.CreateDirectory(piperPath);
+            }
+
+            var piperExe = Path.Combine(piperPath, "piper.exe");
+
+            if (!File.Exists(piperExe))
+            {
+                if (MessageBox.Show(string.Format(LanguageSettings.Current.Settings.DownloadX, "Piper Text To Speech"), "Subtitle Edit", MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
+                {
+                    return false;
+                }
+
+                using (var form = new PiperDownload("Piper TextToSpeech") { AutoClose = true, PiperPath = piperPath })
+                {
+                    if (form.ShowDialog(this) != DialogResult.OK)
+                    {
+                        return false;
+                    }
+                }
+            }
 
             progressBar1.Value = 0;
             progressBar1.Maximum = _subtitle.Paragraphs.Count;
             progressBar1.Visible = true;
+            var voices = PiperModels.GetVoices();
 
             for (var index = 0; index < _subtitle.Paragraphs.Count; index++)
             {
@@ -364,27 +356,61 @@ namespace Nikse.SubtitleEdit.Forms
                 var p = _subtitle.Paragraphs[index];
                 var outputFileName = Path.Combine(_waveFolder, index + ".wav");
 
+                var voice = voices.First(x => x.ToString() == nikseComboBoxVoice.Text);
+                if (_actorAndVoices.Count > 0 && !string.IsNullOrEmpty(p.Actor))
+                {
+                    var f = _actorAndVoices.FirstOrDefault(x => x.Actor == p.Actor);
+                    if (f != null && !string.IsNullOrEmpty(f.Voice))
+                    {
+                        voice = voices[f.VoiceIndex];
+                    }
+                }
+
+                var modelFileName = Path.Combine(piperPath, voice.ModelShort);
+                if (!File.Exists(modelFileName))
+                {
+                    using (var form = new PiperDownload("Piper TextToSpeech Voice") { AutoClose = true, ModelUrl = voice.Model, ModelFileName = modelFileName, PiperPath = piperPath })
+                    {
+                        if (form.ShowDialog(this) != DialogResult.OK)
+                        {
+                            return false;
+                        }
+                    }
+                }
+
+                var configFileName = Path.Combine(piperPath, voice.ConfigShort);
+                if (!File.Exists(configFileName))
+                {
+                    using (var form = new PiperDownload("Piper TextToSpeech Voice") { AutoClose = true, ModelUrl = voice.Config, ModelFileName = configFileName, PiperPath = piperPath })
+                    {
+                        if (form.ShowDialog(this) != DialogResult.OK)
+                        {
+                            return false;
+                        }
+                    }
+                }
+
                 var processPiper = new Process
                 {
                     StartInfo =
                     {
-                        WorkingDirectory = Path.GetDirectoryName(piperExe),
+                        WorkingDirectory = piperPath,
                         FileName = piperExe,
-                        Arguments = $"-m en_US-amy-medium.onnx -c en_US_amy_medium.onnx.json -f out.wav",
+                        Arguments = $"-m \"{voice.ModelShort}\" -c \"{voice.ConfigShort}\" -f out.wav",
                         UseShellExecute = false,
                         CreateNoWindow = true,
                         RedirectStandardInput = true,
                     }
                 };
-                processPiper.Start();
 
+                processPiper.Start();
                 var streamWriter = processPiper.StandardInput;
                 streamWriter.Write(p.Text);
                 streamWriter.Flush();
                 streamWriter.Close();
                 processPiper.WaitForExit();
 
-                var inputFile = Path.Combine(Path.GetDirectoryName(piperExe), "out.wav");
+                var inputFile = Path.Combine(piperPath, "out.wav");
                 File.Move(inputFile, outputFileName);
 
                 progressBar1.Refresh();
@@ -397,7 +423,6 @@ namespace Nikse.SubtitleEdit.Forms
 
             return true;
         }
-
 
         private bool GenerateParagraphAudioTortoiseTts()
         {
@@ -506,7 +531,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 foreach (var voice in PiperModels.GetVoices())
                 {
-                    nikseComboBoxVoice.Items.Add(voice.Voice + " - " + voice.Language);
+                    nikseComboBoxVoice.Items.Add(voice.ToString());
                 }
             }
 
@@ -539,6 +564,65 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 nikseComboBoxVoice.SelectedIndex = 0;
             }
+
+            _actorAndVoices.Clear();
+
+            if (_subtitleFormat.GetType() == typeof(AdvancedSubStationAlpha))
+            {
+                var actors = _subtitle.Paragraphs
+                    .Where(p => !string.IsNullOrEmpty(p.Actor))
+                    .Select(p => p.Actor)
+                    .Distinct()
+                    .ToList();
+                if (actors.Any())
+                {
+                    foreach (var actor in actors)
+                    {
+                        var actorAndVoice = new ActorAndVoice
+                        {
+                            Actor = actor,
+                            UseCount = _subtitle.Paragraphs.Count(p => p.Actor == actor),
+                        };
+
+                        _actorAndVoices.Add(actorAndVoice);
+                    }
+
+                    FillActorListView();
+
+                    contextMenuStripActors.Items.Clear();
+                    for (var index = 0; index < nikseComboBoxVoice.Items.Count; index++)
+                    {
+                        var item = nikseComboBoxVoice.Items[index];
+
+                        var tsi = new ToolStripMenuItem();
+                        tsi.Tag = new ActorAndVoice { Voice = item.ToString(), VoiceIndex = index };
+                        tsi.Text = item.ToString();
+                        tsi.Click += (x, args) =>
+                        {
+                            var a = (ActorAndVoice)(x as ToolStripItem).Tag;
+                            SetActor(a);
+                        };
+                        contextMenuStripActors.Items.Add(tsi);
+
+                        listView1.Visible = true;
+                    }
+                }
+            }
+        }
+
+        private void TextToSpeech_ResizeEnd(object sender, EventArgs e)
+        {
+            listView1.AutoSizeLastColumn();
+        }
+
+        private void TextToSpeech_Load(object sender, EventArgs e)
+        {
+            listView1.AutoSizeLastColumn();
+        }
+
+        private void TextToSpeech_SizeChanged(object sender, EventArgs e)
+        {
+            listView1.AutoSizeLastColumn();
         }
     }
 }
