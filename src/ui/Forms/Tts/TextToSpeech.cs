@@ -95,22 +95,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             _waveFolder = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
             Directory.CreateDirectory(_waveFolder);
 
-            if (nikseComboBoxEngine.SelectedIndex == 0)
-            {
-                GenerateParagraphAudioMs();
-            }
-            else if (nikseComboBoxEngine.SelectedIndex == 1)
-            {
-                GenerateParagraphAudioPiperTts();
-            }
-            else if (nikseComboBoxEngine.SelectedIndex == 2)
-            {
-                GenerateParagraphAudioTortoiseTts();
-            }
-            else if (nikseComboBoxEngine.SelectedIndex == 3)
-            {
-                GenerateParagraphAudioMimic3();
-            }
+            GenerateParagraphAudio(_subtitle);
 
             var fileNames = FixParagraphAudioSpeed();
 
@@ -128,6 +113,26 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             }
 
             UiUtil.OpenFolder(_waveFolder);
+        }
+
+        private void GenerateParagraphAudio(Subtitle subtitle)
+        {
+            if (nikseComboBoxEngine.SelectedIndex == 0)
+            {
+                GenerateParagraphAudioMs(subtitle, true);
+            }
+            else if (nikseComboBoxEngine.SelectedIndex == 1)
+            {
+                GenerateParagraphAudioPiperTts(subtitle, true);
+            }
+            else if (nikseComboBoxEngine.SelectedIndex == 2)
+            {
+                GenerateParagraphAudioTortoiseTts(subtitle, true);
+            }
+            else if (nikseComboBoxEngine.SelectedIndex == 3)
+            {
+                GenerateParagraphAudioMimic3(subtitle, true);
+            }
         }
 
         private void AddAudioToVideoFile(string audioFileName)
@@ -251,11 +256,11 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             return outputFileName;
         }
 
-        private void GenerateParagraphAudioMs()
+        private void GenerateParagraphAudioMs(Subtitle subtitle, bool showProgressBar)
         {
             progressBar1.Value = 0;
-            progressBar1.Maximum = _subtitle.Paragraphs.Count;
-            progressBar1.Visible = true;
+            progressBar1.Maximum = subtitle.Paragraphs.Count;
+            progressBar1.Visible = showProgressBar;
 
             using (var synthesizer = new SpeechSynthesizer())
             {
@@ -271,11 +276,15 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                     }
                 }
 
-                for (var index = 0; index < _subtitle.Paragraphs.Count; index++)
+                for (var index = 0; index < subtitle.Paragraphs.Count; index++)
                 {
-                    progressBar1.Value = index + 1;
-                    labelProgress.Text = $"Generating audio texts: {index + 1} / {_subtitle.Paragraphs.Count}...";
-                    var p = _subtitle.Paragraphs[index];
+                    if (showProgressBar)
+                    {
+                        progressBar1.Value = index + 1;
+                        labelProgress.Text = $"Generating audio texts: {index + 1} / {subtitle.Paragraphs.Count}...";
+                    }
+
+                    var p = subtitle.Paragraphs[index];
                     synthesizer.SetOutputToWaveFile(Path.Combine(_waveFolder, index + ".wav"));
                     var builder = new PromptBuilder();
                     if (voiceInfo != null)
@@ -312,7 +321,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             labelProgress.Text = string.Empty;
         }
 
-        private bool GenerateParagraphAudioPiperTts()
+        private bool GenerateParagraphAudioPiperTts(Subtitle subtitle, bool showProgressBar)
         {
             var ttsPath = Path.Combine(Configuration.DataDirectory, "TextToSpeech");
             if (!Directory.Exists(ttsPath))
@@ -345,15 +354,19 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             }
 
             progressBar1.Value = 0;
-            progressBar1.Maximum = _subtitle.Paragraphs.Count;
-            progressBar1.Visible = true;
+            progressBar1.Maximum = subtitle.Paragraphs.Count;
+            progressBar1.Visible = showProgressBar;
             var voices = PiperModels.GetVoices();
 
-            for (var index = 0; index < _subtitle.Paragraphs.Count; index++)
+            for (var index = 0; index < subtitle.Paragraphs.Count; index++)
             {
-                progressBar1.Value = index + 1;
-                labelProgress.Text = $"Generating audio texts: {index + 1} / {_subtitle.Paragraphs.Count}...";
-                var p = _subtitle.Paragraphs[index];
+                if (showProgressBar)
+                {
+                    progressBar1.Value = index + 1;
+                    labelProgress.Text = $"Generating audio texts: {index + 1} / {subtitle.Paragraphs.Count}...";
+                }
+
+                var p = subtitle.Paragraphs[index];
                 var outputFileName = Path.Combine(_waveFolder, index + ".wav");
 
                 var voice = voices.First(x => x.ToString() == nikseComboBoxVoice.Text);
@@ -424,7 +437,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             return true;
         }
 
-        private bool GenerateParagraphAudioTortoiseTts()
+        private bool GenerateParagraphAudioTortoiseTts(Subtitle subtitle, bool showProgressBar)
         {
             var pythonFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
                 "AppData",
@@ -449,15 +462,18 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             }
 
             progressBar1.Value = 0;
-            progressBar1.Maximum = _subtitle.Paragraphs.Count;
-            progressBar1.Visible = true;
+            progressBar1.Maximum = subtitle.Paragraphs.Count;
+            progressBar1.Visible = showProgressBar;
 
-
-            for (var index = 0; index < _subtitle.Paragraphs.Count; index++)
+            for (var index = 0; index < subtitle.Paragraphs.Count; index++)
             {
-                progressBar1.Value = index + 1;
-                labelProgress.Text = $"Generating audio texts: {index + 1} / {_subtitle.Paragraphs.Count}...";
-                var p = _subtitle.Paragraphs[index];
+                if (showProgressBar)
+                {
+                    progressBar1.Value = index + 1;
+                    labelProgress.Text = $"Generating audio texts: {index + 1} / {subtitle.Paragraphs.Count}...";
+                }
+
+                var p = subtitle.Paragraphs[index];
                 var outputFileName = Path.Combine(_waveFolder, index + ".wav");
 
                 var v = voice;
@@ -499,7 +515,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             return true;
         }
 
-        private void GenerateParagraphAudioMimic3()
+        private void GenerateParagraphAudioMimic3(Subtitle subtitle, bool showProgressBar)
         {
             throw new NotImplementedException();
         }
@@ -623,6 +639,29 @@ namespace Nikse.SubtitleEdit.Forms.Tts
         private void TextToSpeech_SizeChanged(object sender, EventArgs e)
         {
             listView1.AutoSizeLastColumn();
+        }
+
+        private void buttonTestVoice_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                _waveFolder = Path.GetTempPath();
+                var text = "Hello there, how are you?";
+                var sub = new Subtitle();
+                sub.Paragraphs.Add(new Paragraph(text, 0, 2500));
+                GenerateParagraphAudio(sub);
+                var waveFileName = Path.Combine(_waveFolder, "0.wav");
+                using (var soundPlayer = new System.Media.SoundPlayer(waveFileName))
+                {
+                    soundPlayer.Play();
+                }
+
+                File.Delete(waveFileName);
+            }
+            catch
+            {
+                // ignore
+            }
         }
     }
 }
