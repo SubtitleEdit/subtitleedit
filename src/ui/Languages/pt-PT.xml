@@ -198,9 +198,6 @@ Nota: verifique o espaço em disco.</WaveFileMalformed>
     <Engine>Mecanismo</Engine>
     <VoskWebsite>Website do Vosk</VoskWebsite>
     <WhisperWebsite>Website do Whisper</WhisperWebsite>
-    <WhisperNotFound>Whisper não encontrado.
-
-Mais informação online?</WhisperNotFound>
     <Model>Modelo</Model>
     <Models>Modelos</Models>
     <LanguagesAndModels>Idiomas e modelos</LanguagesAndModels>
@@ -217,12 +214,14 @@ Mais informação online?</WhisperNotFound>
     <BatchMode>Modo múltiplos ficheiros</BatchMode>
     <KeepPartialTranscription>Manter transcrição parcial</KeepPartialTranscription>
     <TranslateToEnglish>Traduzir para Inglês</TranslateToEnglish>
-    <MaxCharsPerSubtitle>Máx. caracteres por linha de legenda</MaxCharsPerSubtitle>
     <RemoveTemporaryFiles>Remover ficheiros temporários</RemoveTemporaryFiles>
     <SetCppConstMeFolder>Definir pasta de modelos CPP/Const-me...</SetCppConstMeFolder>
     <OnlyRunPostProcessing>Executar apenas os tempos de pós-processamento/ajuste</OnlyRunPostProcessing>
     <DownloadFasterWhisperCuda>Transferir cuBLAS e cuDNN para Faster-Whisper</DownloadFasterWhisperCuda>
     <NoTextFound>Nenhum texto encontrado!</NoTextFound>
+    <FixCasing>Corrigir maiúsculas/minúsculas</FixCasing>
+    <AddPeriods>Adicionar pontos</AddPeriods>
+    <FixShortDuration>Corrigir a curta duração</FixShortDuration>
   </AudioToText>
   <AssaAttachments>
     <Title>Anexos Advanced Sub Station Alpha</Title>
@@ -734,6 +733,8 @@ Tiramos partido do ritmo intrínseco da imagem.</CreateSimpleChainingToolTip>
     <ChooseColor>Seleccionar cor:</ChooseColor>
     <TotalSeconds>Total segundos:</TotalSeconds>
     <EndDelayInSeconds>Atraso final em segundos:</EndDelayInSeconds>
+    <WordEffect>Efeito de palavra</WordEffect>
+    <CharacterEffect>Efeito de carácter</CharacterEffect>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>Efeito máquina de escrever</Title>
@@ -3364,7 +3365,7 @@ Manter as alterações?</KeepChangesMessage>
     <Seconds>Segundos</Seconds>
     <ZoomIn>Aumentar</ZoomIn>
     <ZoomOut>Diminuir</ZoomOut>
-    <AddParagraphHere>Adicionar texto aqui</AddParagraphHere>
+    <AddParagraphHere>Adicionar texto aqui (Enter)</AddParagraphHere>
     <AddParagraphHereAndPasteText>Adicionar texto da área de tranferência aqui</AddParagraphHereAndPasteText>
     <SetParagraphAsSelection>Definir a actual como nova selecção</SetParagraphAsSelection>
     <FocusTextBox>Destacar o quadro de texto</FocusTextBox>
@@ -3375,6 +3376,7 @@ Manter as alterações?</KeepChangesMessage>
     <SplitAtCursor>Dividir na posição do cursor</SplitAtCursor>
     <MergeWithPrevious>Combinar com anterior</MergeWithPrevious>
     <MergeWithNext>Combinar com a seguinte</MergeWithNext>
+    <RunWhisperSelectedParagraph>Executar o Whisper no parágrafo seleccionado...</RunWhisperSelectedParagraph>
     <ExtendToPrevious>Prolongar até à anterior</ExtendToPrevious>
     <ExtendToNext>Prolongar até à seguinte</ExtendToNext>
     <PlaySelection>Reporduzir a selecção</PlaySelection>
@@ -3422,5 +3424,10 @@ Manter as alterações?</KeepChangesMessage>
     <Title>Whisper Avançado - argumentos extra na linha de comandos</Title>
     <CommandLineArguments>Parâmetros extra para a linha de comandos do Whisper:</CommandLineArguments>
     <Info>Nota: diferentes implementações do Whisper têm diferentes parâmetros de linha de comandos!</Info>
+    <Standard>Padrão</Standard>
+    <StandardAsia>Padrão da Ásia</StandardAsia>
+    <HighlightCurrentWord>Destacar a palavra actual</HighlightCurrentWord>
+    <SingleWords>Palavras individuais</SingleWords>
+    <Sentence>Frase</Sentence>
   </WhisperAdvanced>
 </Language>
