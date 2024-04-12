@@ -95,7 +95,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             _waveFolder = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
             Directory.CreateDirectory(_waveFolder);
 
-            GenerateParagraphAudio(_subtitle);
+            GenerateParagraphAudio(_subtitle, true);
 
             var fileNames = FixParagraphAudioSpeed();
 
@@ -115,23 +115,23 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             UiUtil.OpenFolder(_waveFolder);
         }
 
-        private void GenerateParagraphAudio(Subtitle subtitle)
+        private void GenerateParagraphAudio(Subtitle subtitle, bool showProgressBar)
         {
             if (nikseComboBoxEngine.SelectedIndex == 0)
             {
-                GenerateParagraphAudioMs(subtitle, true);
+                GenerateParagraphAudioMs(subtitle, showProgressBar);
             }
             else if (nikseComboBoxEngine.SelectedIndex == 1)
             {
-                GenerateParagraphAudioPiperTts(subtitle, true);
+                GenerateParagraphAudioPiperTts(subtitle, showProgressBar);
             }
             else if (nikseComboBoxEngine.SelectedIndex == 2)
             {
-                GenerateParagraphAudioTortoiseTts(subtitle, true);
+                GenerateParagraphAudioTortoiseTts(subtitle, showProgressBar);
             }
             else if (nikseComboBoxEngine.SelectedIndex == 3)
             {
-                GenerateParagraphAudioMimic3(subtitle, true);
+                GenerateParagraphAudioMimic3(subtitle, showProgressBar);
             }
         }
 
@@ -182,6 +182,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 var next = _subtitle.GetParagraphOrDefault(index + 1);
                 var pFileName = Path.Combine(_waveFolder, index + ".wav");
 
+                //TODO: analyse audio and remove silence at start and end (ffmpeg -af silenceremove=1:0:-50dB:1:1:-50dB)
                 var outputFileName1 = Path.Combine(_waveFolder, index + "_u.wav");
                 var trimProcess = VideoPreviewGenerator.TrimSilenceStartAndEnd(pFileName, outputFileName1);
                 trimProcess.Start();
@@ -368,6 +369,17 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
                 var p = subtitle.Paragraphs[index];
                 var outputFileName = Path.Combine(_waveFolder, index + ".wav");
+                if (File.Exists(outputFileName))
+                {
+                    try
+                    {
+                        File.Delete(outputFileName);
+                    }
+                    catch 
+                    {
+                        // ignore
+                    }
+                }
 
                 var voice = voices.First(x => x.ToString() == nikseComboBoxVoice.Text);
                 if (_actorAndVoices.Count > 0 && !string.IsNullOrEmpty(p.Actor))
@@ -645,22 +657,42 @@ namespace Nikse.SubtitleEdit.Forms.Tts
         {
             try
             {
+                if (string.IsNullOrWhiteSpace(TextBoxTest.Text))
+                {
+                    return;
+                }
+
+                buttonTestVoice.Enabled = false;
                 _waveFolder = Path.GetTempPath();
-                var text = "Hello there, how are you?";
+                var text = TextBoxTest.Text;
                 var sub = new Subtitle();
                 sub.Paragraphs.Add(new Paragraph(text, 0, 2500));
-                GenerateParagraphAudio(sub);
+                GenerateParagraphAudio(sub, false);
                 var waveFileName = Path.Combine(_waveFolder, "0.wav");
                 using (var soundPlayer = new System.Media.SoundPlayer(waveFileName))
                 {
                     soundPlayer.Play();
                 }
 
-                File.Delete(waveFileName);
+                TaskDelayHelper.RunDelayed(TimeSpan.FromSeconds(30), () =>
+                {
+                    try
+                    {
+                        File.Delete(waveFileName);
+                    }
+                    catch
+                    {
+                        // ignore
+                    }
+                });
             }
-            catch
+            catch (Exception ex)
             {
-                // ignore
+                MessageBox.Show(ex.Message + Environment.NewLine + ex.StackTrace);
+            }
+            finally
+            {
+                buttonTestVoice.Enabled = true;
             }
         }
     }
