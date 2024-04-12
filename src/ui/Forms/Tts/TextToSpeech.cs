@@ -182,7 +182,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 var next = _subtitle.GetParagraphOrDefault(index + 1);
                 var pFileName = Path.Combine(_waveFolder, index + ".wav");
 
-                //TODO: analyse audio and remove silence at start and end (ffmpeg -af silenceremove=1:0:-50dB:1:1:-50dB)
+                //TODO: analyse audio and remove silence at start and end (ffmpeg -af silenceremove=1:0:-5dB:1:1:-5dB)
                 var outputFileName1 = Path.Combine(_waveFolder, index + "_u.wav");
                 var trimProcess = VideoPreviewGenerator.TrimSilenceStartAndEnd(pFileName, outputFileName1);
                 trimProcess.Start();
