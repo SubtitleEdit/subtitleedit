@@ -1,6 +1,6 @@
 ﻿Subtitle Edit Changelog
 
-4.0.5 (xth April 2024) BETA
+4.0.5 (13th April 2024) 
 * NEW:
    * Add "Open video" toolbar button/image - thx jmaraujouy/Cyberyoda1411
    * Add support for S_HDMV/TEXTST in MKV in batch/cmd-line - thx ipsi
@@ -41,6 +41,7 @@
    * Fix for missing lines when embedding soft subs in .mp4 files - thx Joe
    * Fix layout change crash from un-docked state - thx highflowerG
    * Fix crash in export to "Cavena 890" - thx yovelcohen
+   * Fix D-Cinema SMPTE 2014/png - thx ischeriad
 
 
 4.0.4 (17th March 2024)
