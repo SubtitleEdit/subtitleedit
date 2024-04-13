@@ -197,9 +197,6 @@ Uwaga: Sprawdź ilość wolnego miejsca na dysku.</WaveFileMalformed>
     <Engine>Silnik</Engine>
     <VoskWebsite>Strona internetowa Vosk</VoskWebsite>
     <WhisperWebsite>Strona internetowa Whisper</WhisperWebsite>
-    <WhisperNotFound>Nie znaleziono aplikacji Whisper.
-
-Chcesz przeczytać więcej informacji (w sieci)?</WhisperNotFound>
     <Model>Model</Model>
     <Models>Modele</Models>
     <LanguagesAndModels>Języki i modele</LanguagesAndModels>
@@ -216,12 +213,14 @@ Chcesz przeczytać więcej informacji (w sieci)?</WhisperNotFound>
     <BatchMode>Tryb wsadowy</BatchMode>
     <KeepPartialTranscription>Zachowaj częściową transkrypcję</KeepPartialTranscription>
     <TranslateToEnglish>Przetłumacz na angielski</TranslateToEnglish>
-    <MaxCharsPerSubtitle>Max. znaków na linię napisów</MaxCharsPerSubtitle>
     <RemoveTemporaryFiles>Usuń pliki tymczasowe</RemoveTemporaryFiles>
     <SetCppConstMeFolder>Ustaw folder modeli CPP/Const-me...</SetCppConstMeFolder>
     <OnlyRunPostProcessing>Uruchom tylko przetwarzanie końcowe/dostosuj czasy</OnlyRunPostProcessing>
     <DownloadFasterWhisperCuda>Pobierz biblioteki cuBLAS i cuDNN dla Faster-Whisper</DownloadFasterWhisperCuda>
     <NoTextFound>Nie znaleziono tekstu!</NoTextFound>
+    <FixCasing>Napraw pisownię</FixCasing>
+    <AddPeriods>Dodaj przedziały czasowe</AddPeriods>
+    <FixShortDuration>Napraw krótki czas trwania</FixShortDuration>
   </AudioToText>
   <AssaAttachments>
     <Title>Załączniki Advanced Sub Station Alpha</Title>
@@ -731,6 +730,8 @@ Wykorzystujemy naturalny rytm obrazu.</CreateSimpleChainingToolTip>
     <ChooseColor>Wybierz kolor:</ChooseColor>
     <TotalSeconds>Ogółem sekund:</TotalSeconds>
     <EndDelayInSeconds>Opóźnienie zakończenia w sekundach:</EndDelayInSeconds>
+    <WordEffect>Efekt słowa</WordEffect>
+    <CharacterEffect>Efekt znaku</CharacterEffect>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>Efekt maszyny do pisania</Title>
@@ -1023,10 +1024,13 @@ Wykorzystujemy naturalny rytm obrazu.</CreateSimpleChainingToolTip>
     <InputVideoFile>Wejściowy plik wideo</InputVideoFile>
     <SubtitlesX>Napisy ({0})</SubtitlesX>
     <SetLanguage>Ustaw język...</SetLanguage>
+    <LanguageAndTitle>Język/Nazwa</LanguageAndTitle>
     <ToggleForced>Przeł. wymuszone</ToggleForced>
     <ToggleDefault>Przełącz domyślne</ToggleDefault>
     <Default>Domyślne</Default>
     <XGeneratedWithEmbeddedSubs>Wygenerowano "{0}" z osadzonymi napisami</XGeneratedWithEmbeddedSubs>
+    <DeleteInputVideo>Usuń wejściowy plik wideo po "Wygenerowaniu"</DeleteInputVideo>
+    <OutputFileNameSettings>Ustawienia nazwy pliku wyjściowego...</OutputFileNameSettings>
   </GenerateVideoWithEmbeddedSubs>
   <GetDictionaries>
     <Title>Potrzebujesz słowników?</Title>
@@ -1639,6 +1643,7 @@ Aby użyć klucza API przejdź do "Opcje -&gt; Ustawienia -&gt; Tłumaczenie aut
       <StillTypingAutoContinueStopped>Trwa pisanie... przejście do następnego napisu zostało zatrzymane</StillTypingAutoContinueStopped>
       <InsertNewSubtitleAtVideoPosition>Wstaw nowe napisy w pozycji wideo</InsertNewSubtitleAtVideoPosition>
       <InsertNewSubtitleAtVideoPositionNoTextBoxFocus>Wstaw nowe napisy w pozycji wideo (bez koncentracji na polu tekstowym)</InsertNewSubtitleAtVideoPositionNoTextBoxFocus>
+      <InsertNewSubtitleAtVideoPositionMax>Wstaw nowe napisy w pozycji wideo (tak długie, jak to możliwe)i</InsertNewSubtitleAtVideoPositionMax>
       <Auto>Auto</Auto>
       <PlayFromJustBeforeText>Odtwarzaj tuż przed tekstem</PlayFromJustBeforeText>
       <PlayFromBeginning>Odtwarzaj od początku wideo</PlayFromBeginning>
@@ -3357,7 +3362,7 @@ Zachować te zmiany?</KeepChangesMessage>
     <Seconds>sekund</Seconds>
     <ZoomIn>Powiększ</ZoomIn>
     <ZoomOut>Pomniejsz</ZoomOut>
-    <AddParagraphHere>Dodaj tekst tutaj</AddParagraphHere>
+    <AddParagraphHere>Dodaj tekst tutaj (Enter)</AddParagraphHere>
     <AddParagraphHereAndPasteText>Dodaj tekst z schowka tutaj</AddParagraphHereAndPasteText>
     <SetParagraphAsSelection>Ustaw bieżący jako nowe zaznaczenie</SetParagraphAsSelection>
     <FocusTextBox>Koncentruj uwagę na polu tekstowym</FocusTextBox>
@@ -3368,6 +3373,7 @@ Zachować te zmiany?</KeepChangesMessage>
     <SplitAtCursor>Podziel w pozycji kursora</SplitAtCursor>
     <MergeWithPrevious>Połącz z poprzednią linią napisów</MergeWithPrevious>
     <MergeWithNext>Połącz z następną linią napisów</MergeWithNext>
+    <RunWhisperSelectedParagraph>Uruchom Whisper na wybranym akapicie...</RunWhisperSelectedParagraph>
     <ExtendToPrevious>Rozciągnij do poprzedniej linii</ExtendToPrevious>
     <ExtendToNext>Rozciągnij do następnej linii</ExtendToNext>
     <PlaySelection>Odtwarzaj zaznaczone</PlaySelection>
@@ -3415,5 +3421,10 @@ Zachować te zmiany?</KeepChangesMessage>
     <Title>Zaawansowany Whisper - dodatkowe argumenty wiersza poleceń</Title>
     <CommandLineArguments>Dodatkowe parametry dla wiersza poleceń Whisper:</CommandLineArguments>
     <Info>Uwaga: Różne implementacje Whisper mają różne parametry wiersza poleceń!</Info>
+    <Standard>Standard</Standard>
+    <StandardAsia>Standard azjatycki</StandardAsia>
+    <HighlightCurrentWord>Podświetl bieżące słowo</HighlightCurrentWord>
+    <SingleWords>Pojedyncze słowa</SingleWords>
+    <Sentence>Zdanie</Sentence>
   </WhisperAdvanced>
 </Language>
