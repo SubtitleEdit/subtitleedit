@@ -450,6 +450,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.splitToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.mergeWithPreviousToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mergeWithNextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.runWhiperOnParagraphToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator11 = new System.Windows.Forms.ToolStripSeparator();
             this.extendToPreviousToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.extendToNextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -579,7 +580,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.timerOriginalTextUndo = new System.Windows.Forms.Timer(this.components);
             this.contextMenuStripShowVideoControls = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItemShowVideoControls = new System.Windows.Forms.ToolStripMenuItem();
-            this.runWhiperOnParagraphToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.textToSpeechAndAddToVideoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -2297,6 +2298,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.generateVideoWithHardcodedSubtitleToolStripMenuItem,
             this.audioToTextWhisperTolStripMenuItem,
             this.videoaudioToTextToolStripMenuItem,
+            this.textToSpeechAndAddToVideoToolStripMenuItem,
             this.toolStripSeparator5,
             this.undockVideoControlsToolStripMenuItem,
             this.redockVideoControlsToolStripMenuItem});
@@ -4477,7 +4479,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.seekSilenceToolStripMenuItem,
             this.insertSubtitleHereToolStripMenuItem});
             this.contextMenuStripWaveform.Name = "contextMenuStripWaveform";
-            this.contextMenuStripWaveform.Size = new System.Drawing.Size(275, 534);
+            this.contextMenuStripWaveform.Size = new System.Drawing.Size(275, 512);
             this.contextMenuStripWaveform.Closing += new System.Windows.Forms.ToolStripDropDownClosingEventHandler(this.ContextMenuStripWaveformClosing);
             this.contextMenuStripWaveform.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripWaveformOpening);
             // 
@@ -4550,6 +4552,13 @@ namespace Nikse.SubtitleEdit.Forms
             this.mergeWithNextToolStripMenuItem.Size = new System.Drawing.Size(274, 22);
             this.mergeWithNextToolStripMenuItem.Text = "Merge with next";
             this.mergeWithNextToolStripMenuItem.Click += new System.EventHandler(this.MergeWithNextToolStripMenuItemClick);
+            // 
+            // runWhiperOnParagraphToolStripMenuItem
+            // 
+            this.runWhiperOnParagraphToolStripMenuItem.Name = "runWhiperOnParagraphToolStripMenuItem";
+            this.runWhiperOnParagraphToolStripMenuItem.Size = new System.Drawing.Size(274, 22);
+            this.runWhiperOnParagraphToolStripMenuItem.Text = "Run Whiper on paragraph...";
+            this.runWhiperOnParagraphToolStripMenuItem.Click += new System.EventHandler(this.runWhiperOnParagraphToolStripMenuItem_Click);
             // 
             // toolStripSeparator11
             // 
@@ -5881,12 +5890,12 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemShowVideoControls.Text = "Show video controls";
             this.toolStripMenuItemShowVideoControls.Click += new System.EventHandler(this.ToolStripMenuItemShowVideoControlsClick);
             // 
-            // runWhiperOnParagraphToolStripMenuItem
+            // textToSpeechAndAddToVideoToolStripMenuItem
             // 
-            this.runWhiperOnParagraphToolStripMenuItem.Name = "runWhiperOnParagraphToolStripMenuItem";
-            this.runWhiperOnParagraphToolStripMenuItem.Size = new System.Drawing.Size(274, 22);
-            this.runWhiperOnParagraphToolStripMenuItem.Text = "Run Whiper on paragraph...";
-            this.runWhiperOnParagraphToolStripMenuItem.Click += new System.EventHandler(this.runWhiperOnParagraphToolStripMenuItem_Click);
+            this.textToSpeechAndAddToVideoToolStripMenuItem.Name = "textToSpeechAndAddToVideoToolStripMenuItem";
+            this.textToSpeechAndAddToVideoToolStripMenuItem.Size = new System.Drawing.Size(295, 22);
+            this.textToSpeechAndAddToVideoToolStripMenuItem.Text = "Text to speech and add to video...";
+            this.textToSpeechAndAddToVideoToolStripMenuItem.Click += new System.EventHandler(this.textToSpeechAndAddToVideoToolStripMenuItem_Click);
             // 
             // Main
             // 
@@ -6507,5 +6516,6 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemVerifyCompleteness;
         private System.Windows.Forms.ToolStripButton toolStripButtonVideoOpen;
         private System.Windows.Forms.ToolStripMenuItem runWhiperOnParagraphToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem textToSpeechAndAddToVideoToolStripMenuItem;
     }
 }

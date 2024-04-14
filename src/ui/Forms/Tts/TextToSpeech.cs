@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Speech.Synthesis;
@@ -13,7 +14,7 @@ using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms.Tts
 {
-    public partial class TextToSpeech : Form
+    public sealed partial class TextToSpeech : Form
     {
         private readonly Subtitle _subtitle;
         private readonly string _videoFileName;
@@ -22,6 +23,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
         private readonly List<ActorAndVoice> _actorAndVoices;
         private readonly SubtitleFormat _subtitleFormat;
         private bool _abort;
+        private readonly List<string> _actors;
 
         public class ActorAndVoice
         {
@@ -42,6 +44,12 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             _videoFileName = videoFileName;
             _videoInfo = videoInfo;
 
+            _actors = _subtitle.Paragraphs
+                .Where(p => !string.IsNullOrEmpty(p.Actor))
+                .Select(p => p.Actor)
+                .Distinct()
+                .ToList();
+
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             UiUtil.FixLargeFonts(this, buttonOK);
 
@@ -59,6 +67,19 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
             listView1.Visible = false;
             nikseComboBoxEngine_SelectedIndexChanged(null, null);
+
+            if (!SubtitleFormatHasActors() || !_actors.Any())
+            {
+                var w = groupBoxMsSettings.Width + 100;
+                var right = buttonOK.Right;
+                groupBoxMsSettings.Left = progressBar1.Left;
+                groupBoxMsSettings.Width = right - progressBar1.Left;
+                groupBoxMsSettings.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right | AnchorStyles.Bottom;
+
+                Width = w;
+                MinimumSize = new Size(w, MinimumSize.Height);
+                Width = w;
+            }
         }
 
         private void SetActor(ActorAndVoice actor)
@@ -562,7 +583,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             var pythonExe = Path.Combine(pythonFolder, pythonFolderVersionFolder[0], "python.exe");
             if (!File.Exists(pythonExe))
             {
-                pythonExe = "python.exe";
+                pythonExe = Configuration.IsRunningOnWindows ? "python.exe" : "python";
             }
 
             progressBar1.Value = 0;
@@ -696,16 +717,11 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
             _actorAndVoices.Clear();
 
-            if (_subtitleFormat.GetType() == typeof(AdvancedSubStationAlpha))
+            if (SubtitleFormatHasActors())
             {
-                var actors = _subtitle.Paragraphs
-                    .Where(p => !string.IsNullOrEmpty(p.Actor))
-                    .Select(p => p.Actor)
-                    .Distinct()
-                    .ToList();
-                if (actors.Any())
+                if (_actors.Any())
                 {
-                    foreach (var actor in actors)
+                    foreach (var actor in _actors)
                     {
                         var actorAndVoice = new ActorAndVoice
                         {
@@ -737,6 +753,15 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                     }
                 }
             }
+        }
+
+        private bool SubtitleFormatHasActors()
+        {
+            var formatType = _subtitleFormat.GetType();
+            return formatType == typeof(AdvancedSubStationAlpha) ||
+                   formatType == typeof(SubStationAlpha) ||
+                   formatType == typeof(WebVTTFileWithLineNumber) ||
+                   formatType == typeof(WebVTT);
         }
 
         private void TextToSpeech_ResizeEnd(object sender, EventArgs e)
