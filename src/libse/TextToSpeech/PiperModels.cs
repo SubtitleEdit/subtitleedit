@@ -99,7 +99,7 @@ namespace Nikse.SubtitleEdit.Core.TextToSpeech
                 new PiperModels("huayan", "Chinese", "medium", "https://huggingface.co/rhasspy/piper-voices/resolve/v1.0.0/zh/zh_CN/huayan/medium/zh_CN-huayan-medium.onnx", "https://huggingface.co/rhasspy/piper-voices/resolve/v1.0.0/zh/zh_CN/huayan/medium/zh_CN-huayan-medium.onnx.json"),
             };
 
-            return models;
+            return models.OrderBy(p=>p.ToString()).ToList();
         }
     }
 }
