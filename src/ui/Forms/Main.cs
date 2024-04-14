@@ -1824,6 +1824,7 @@ namespace Nikse.SubtitleEdit.Forms
             generateVideoWithSoftcodedSubtitlesToolStripMenuItem.Text = _language.Menu.Video.GenerateVideoWithEmbeddedSubs;
             videoaudioToTextToolStripMenuItem.Text = string.Format(_language.Menu.Video.VideoAudioToTextX, "Vosk/Kaldi");
             audioToTextWhisperTolStripMenuItem.Text = string.Format(_language.Menu.Video.VideoAudioToTextX, "Whisper");
+            textToSpeechAndAddToVideoToolStripMenuItem.Text = _language.Menu.Video.TextToSpeechAndAddToVideo;
 
             smpteTimeModedropFrameToolStripMenuItem.Text = _language.Menu.Video.SmptTimeMode;
             toolStripMenuItemImportChapters.Text = _language.Menu.Video.ImportChaptersFromVideo;
@@ -19025,30 +19026,6 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 RunCustomSearch(Configuration.Settings.VideoControls.CustomSearchUrl5);
                 e.SuppressKeyPress = true;
-            }
-            else if (e.Modifiers == (Keys.Alt | Keys.Shift | Keys.Control) && e.KeyCode == Keys.T)
-            {
-                e.SuppressKeyPress = true;
-
-                TaskDelayHelper.RunDelayed(TimeSpan.FromMilliseconds(25), () =>
-                {
-                    if (string.IsNullOrEmpty(_videoFileName) || _videoInfo == null)
-                    {
-                        MessageBox.Show(LanguageSettings.Current.General.NoVideoLoaded);
-                        return;
-                    }
-
-                    if (RequireFfmpegOk())
-                    {
-                        using (var form = new TextToSpeech(_subtitle, GetCurrentSubtitleFormat(), _videoFileName, _videoInfo))
-                        {
-                            if (form.ShowDialog(this) != DialogResult.OK)
-                            {
-                                return;
-                            }
-                        }
-                    }
-                });
             }
 
             // put new entries above tabs
@@ -36745,6 +36722,29 @@ namespace Nikse.SubtitleEdit.Forms
         private void runWhiperOnParagraphToolStripMenuItem_Click(object sender, EventArgs e)
         {
             AudioToTextWhisperSelectedLines();
+        }
+
+        private void textToSpeechAndAddToVideoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TaskDelayHelper.RunDelayed(TimeSpan.FromMilliseconds(25), () =>
+            {
+                if (string.IsNullOrEmpty(_videoFileName) || _videoInfo == null)
+                {
+                    MessageBox.Show(LanguageSettings.Current.General.NoVideoLoaded);
+                    return;
+                }
+
+                if (RequireFfmpegOk())
+                {
+                    using (var form = new TextToSpeech(_subtitle, GetCurrentSubtitleFormat(), _videoFileName, _videoInfo))
+                    {
+                        if (form.ShowDialog(this) != DialogResult.OK)
+                        {
+                            return;
+                        }
+                    }
+                }
+            });
         }
     }
 }

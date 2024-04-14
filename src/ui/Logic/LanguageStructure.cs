@@ -1845,6 +1845,7 @@
                     public string RemoveOrExportShotChanges { get; set; }
                     public string WaveformBatchGenerate { get; set; }
                     public string ShowHideWaveformAndSpectrogram { get; set; }
+                    public string TextToSpeechAndAddToVideo { get; set; }
                     public string UnDockVideoControls { get; set; }
                     public string ReDockVideoControls { get; set; }
                 }

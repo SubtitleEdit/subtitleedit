@@ -652,17 +652,17 @@ namespace Nikse.SubtitleEdit.Logic
                 CreateSimpleChainingGapAfterShotChanges = "After an out cue on a shot change, the gap may be smaller",
                 CreateSimpleChainingToolTip =
                     "Chaining subtitles is recommended to ensure a consistent \"rhythm\" in the \"flashing\" of the subtitles." +
-                    Environment.NewLine + 
+                    Environment.NewLine +
                     "This offers a more relaxed viewing experience." +
                     Environment.NewLine +
                     Environment.NewLine +
                     "After chaining, subtitles are either connected (i.e. a subtitle disappears and a new subtitle appears immediately after a slight pause) or not." +
-                    Environment.NewLine + 
+                    Environment.NewLine +
                     "This gives the viewer some sense on when they can shift their focus back to the screen." +
                     Environment.NewLine +
                     Environment.NewLine +
                     "The length of the chaining gap can be a bit smaller right after a subtitle disappears on a shot change, because the changing shot \"resets\" the image in a way." +
-                    Environment.NewLine + 
+                    Environment.NewLine +
                     "We leverage the intrinsic rhythm of the image.",
                 CreateSimpleLoadNetflixRules = "Load Netflix rules",
                 Frames = "frames",
@@ -2035,6 +2035,7 @@ namespace Nikse.SubtitleEdit.Logic
                         RemoveOrExportShotChanges = "Remove/export shot changes...",
                         WaveformBatchGenerate = "Batch generate waveforms...",
                         ShowHideWaveformAndSpectrogram = "Show/hide waveform and spectrogram",
+                        TextToSpeechAndAddToVideo = "Text to speech and add to video...",
                         UnDockVideoControls = "Un-dock video controls",
                         ReDockVideoControls = "Re-dock video controls",
                     },
@@ -2710,7 +2711,7 @@ can edit in same subtitle file (collaboration)",
                 DefaultFrameRate = "Default frame rate",
                 DefaultFileEncoding = "Default file encoding",
                 AutoDetectAnsiEncoding = "Auto detect ANSI encoding",
-                LanguageFilter ="Language filter",
+                LanguageFilter = "Language filter",
                 Profile = "Profile",
                 Profiles = "Profiles",
                 ImportProfiles = "Import profiles",
