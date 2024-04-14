@@ -65,7 +65,8 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             //nikseComboBoxEngine.Items.Add("Mimic3");
             nikseComboBoxEngine.SelectedIndex = 0;
 
-            listView1.Visible = false;
+            labelActors.Visible = false;
+            listViewActors.Visible = false;
             nikseComboBoxEngine_SelectedIndexChanged(null, null);
 
             if (!SubtitleFormatHasActors() || !_actors.Any())
@@ -84,9 +85,9 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
         private void SetActor(ActorAndVoice actor)
         {
-            foreach (int index in listView1.SelectedIndices)
+            foreach (int index in listViewActors.SelectedIndices)
             {
-                ListViewItem item = listView1.Items[index];
+                ListViewItem item = listViewActors.Items[index];
                 var itemActor = (ActorAndVoice)item.Tag;
                 itemActor.Voice = actor.Voice;
                 itemActor.VoiceIndex = actor.VoiceIndex;
@@ -96,8 +97,8 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
         private void FillActorListView()
         {
-            listView1.BeginUpdate();
-            listView1.Items.Clear();
+            listViewActors.BeginUpdate();
+            listViewActors.Items.Clear();
             foreach (var actor in _actorAndVoices)
             {
                 var lvi = new ListViewItem
@@ -106,10 +107,10 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                     Text = actor.Actor,
                 };
                 lvi.SubItems.Add(actor.Voice);
-                listView1.Items.Add(lvi);
+                listViewActors.Items.Add(lvi);
             }
 
-            listView1.EndUpdate();
+            listViewActors.EndUpdate();
         }
 
         private void ButtonGenerateTtsClick(object sender, EventArgs e)
@@ -749,7 +750,8 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                         };
                         contextMenuStripActors.Items.Add(tsi);
 
-                        listView1.Visible = true;
+                        labelActors.Visible = true;
+                        listViewActors.Visible = true;
                     }
                 }
             }
@@ -766,17 +768,17 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
         private void TextToSpeech_ResizeEnd(object sender, EventArgs e)
         {
-            listView1.AutoSizeLastColumn();
+            listViewActors.AutoSizeLastColumn();
         }
 
         private void TextToSpeech_Load(object sender, EventArgs e)
         {
-            listView1.AutoSizeLastColumn();
+            listViewActors.AutoSizeLastColumn();
         }
 
         private void TextToSpeech_SizeChanged(object sender, EventArgs e)
         {
-            listView1.AutoSizeLastColumn();
+            listViewActors.AutoSizeLastColumn();
         }
 
         private void buttonTestVoice_Click(object sender, EventArgs e)
