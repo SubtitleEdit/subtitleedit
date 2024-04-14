@@ -35,17 +35,17 @@
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.labelEngine = new System.Windows.Forms.Label();
             this.groupBoxMsSettings = new System.Windows.Forms.GroupBox();
-            this.TextBoxTest = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.buttonTestVoice = new System.Windows.Forms.Button();
             this.checkBoxAddToVideoFile = new System.Windows.Forms.CheckBox();
-            this.labelMsVoice = new System.Windows.Forms.Label();
-            this.nikseComboBoxVoice = new Nikse.SubtitleEdit.Controls.NikseComboBox();
-            this.nikseComboBoxEngine = new Nikse.SubtitleEdit.Controls.NikseComboBox();
+            this.labelVoice = new System.Windows.Forms.Label();
             this.listViewActors = new System.Windows.Forms.ListView();
-            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeaderActor = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeaderVoice = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.contextMenuStripActors = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.labelActors = new System.Windows.Forms.Label();
+            this.TextBoxTest = new Nikse.SubtitleEdit.Controls.NikseTextBox();
+            this.nikseComboBoxVoice = new Nikse.SubtitleEdit.Controls.NikseComboBox();
+            this.nikseComboBoxEngine = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.groupBoxMsSettings.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -110,7 +110,7 @@
             this.groupBoxMsSettings.Controls.Add(this.TextBoxTest);
             this.groupBoxMsSettings.Controls.Add(this.buttonTestVoice);
             this.groupBoxMsSettings.Controls.Add(this.checkBoxAddToVideoFile);
-            this.groupBoxMsSettings.Controls.Add(this.labelMsVoice);
+            this.groupBoxMsSettings.Controls.Add(this.labelVoice);
             this.groupBoxMsSettings.Controls.Add(this.nikseComboBoxVoice);
             this.groupBoxMsSettings.Controls.Add(this.labelEngine);
             this.groupBoxMsSettings.Controls.Add(this.nikseComboBoxEngine);
@@ -120,17 +120,6 @@
             this.groupBoxMsSettings.TabIndex = 15;
             this.groupBoxMsSettings.TabStop = false;
             this.groupBoxMsSettings.Text = "Settings";
-            // 
-            // TextBoxTest
-            // 
-            this.TextBoxTest.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.TextBoxTest.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            this.TextBoxTest.Location = new System.Drawing.Point(17, 187);
-            this.TextBoxTest.Name = "TextBoxTest";
-            this.TextBoxTest.Size = new System.Drawing.Size(351, 20);
-            this.TextBoxTest.TabIndex = 18;
-            this.TextBoxTest.Text = "Hello, how are you?";
             // 
             // buttonTestVoice
             // 
@@ -144,6 +133,7 @@
             // 
             // checkBoxAddToVideoFile
             // 
+            this.checkBoxAddToVideoFile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.checkBoxAddToVideoFile.AutoSize = true;
             this.checkBoxAddToVideoFile.Checked = true;
             this.checkBoxAddToVideoFile.CheckState = System.Windows.Forms.CheckState.Checked;
@@ -154,15 +144,70 @@
             this.checkBoxAddToVideoFile.Text = "Add audio to video file (new file)";
             this.checkBoxAddToVideoFile.UseVisualStyleBackColor = true;
             // 
-            // labelMsVoice
+            // labelVoice
             // 
-            this.labelMsVoice.AutoSize = true;
-            this.labelMsVoice.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.labelMsVoice.Location = new System.Drawing.Point(14, 108);
-            this.labelMsVoice.Name = "labelMsVoice";
-            this.labelMsVoice.Size = new System.Drawing.Size(34, 13);
-            this.labelMsVoice.TabIndex = 16;
-            this.labelMsVoice.Text = "Voice";
+            this.labelVoice.AutoSize = true;
+            this.labelVoice.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.labelVoice.Location = new System.Drawing.Point(14, 108);
+            this.labelVoice.Name = "labelVoice";
+            this.labelVoice.Size = new System.Drawing.Size(34, 13);
+            this.labelVoice.TabIndex = 16;
+            this.labelVoice.Text = "Voice";
+            // 
+            // listViewActors
+            // 
+            this.listViewActors.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.listViewActors.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeaderActor,
+            this.columnHeaderVoice});
+            this.listViewActors.ContextMenuStrip = this.contextMenuStripActors;
+            this.listViewActors.FullRowSelect = true;
+            this.listViewActors.GridLines = true;
+            this.listViewActors.HideSelection = false;
+            this.listViewActors.Location = new System.Drawing.Point(412, 42);
+            this.listViewActors.Name = "listViewActors";
+            this.listViewActors.Size = new System.Drawing.Size(430, 375);
+            this.listViewActors.TabIndex = 17;
+            this.listViewActors.UseCompatibleStateImageBehavior = false;
+            this.listViewActors.View = System.Windows.Forms.View.Details;
+            // 
+            // columnHeaderActor
+            // 
+            this.columnHeaderActor.Text = "Actor";
+            this.columnHeaderActor.Width = 200;
+            // 
+            // columnHeaderVoice
+            // 
+            this.columnHeaderVoice.Text = "Voice";
+            this.columnHeaderVoice.Width = 200;
+            // 
+            // contextMenuStripActors
+            // 
+            this.contextMenuStripActors.Name = "contextMenuStripActors";
+            this.contextMenuStripActors.Size = new System.Drawing.Size(61, 4);
+            // 
+            // labelActors
+            // 
+            this.labelActors.AutoSize = true;
+            this.labelActors.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.labelActors.Location = new System.Drawing.Point(412, 20);
+            this.labelActors.Name = "labelActors";
+            this.labelActors.Size = new System.Drawing.Size(170, 13);
+            this.labelActors.TabIndex = 19;
+            this.labelActors.Text = "Right-click to assign actor to voice";
+            // 
+            // TextBoxTest
+            // 
+            this.TextBoxTest.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.TextBoxTest.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.TextBoxTest.Location = new System.Drawing.Point(17, 187);
+            this.TextBoxTest.Name = "TextBoxTest";
+            this.TextBoxTest.Size = new System.Drawing.Size(351, 20);
+            this.TextBoxTest.TabIndex = 18;
+            this.TextBoxTest.Text = "Hello, how are you?";
             // 
             // nikseComboBoxVoice
             // 
@@ -217,50 +262,6 @@
             this.nikseComboBoxEngine.UsePopupWindow = false;
             this.nikseComboBoxEngine.SelectedIndexChanged += new System.EventHandler(this.nikseComboBoxEngine_SelectedIndexChanged);
             // 
-            // listViewActors
-            // 
-            this.listViewActors.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.listViewActors.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader1,
-            this.columnHeader2});
-            this.listViewActors.ContextMenuStrip = this.contextMenuStripActors;
-            this.listViewActors.FullRowSelect = true;
-            this.listViewActors.GridLines = true;
-            this.listViewActors.HideSelection = false;
-            this.listViewActors.Location = new System.Drawing.Point(412, 42);
-            this.listViewActors.Name = "listViewActors";
-            this.listViewActors.Size = new System.Drawing.Size(430, 375);
-            this.listViewActors.TabIndex = 17;
-            this.listViewActors.UseCompatibleStateImageBehavior = false;
-            this.listViewActors.View = System.Windows.Forms.View.Details;
-            // 
-            // columnHeader1
-            // 
-            this.columnHeader1.Text = "Style";
-            this.columnHeader1.Width = 200;
-            // 
-            // columnHeader2
-            // 
-            this.columnHeader2.Text = "Voice";
-            this.columnHeader2.Width = 200;
-            // 
-            // contextMenuStripActors
-            // 
-            this.contextMenuStripActors.Name = "contextMenuStripActors";
-            this.contextMenuStripActors.Size = new System.Drawing.Size(61, 4);
-            // 
-            // labelActors
-            // 
-            this.labelActors.AutoSize = true;
-            this.labelActors.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.labelActors.Location = new System.Drawing.Point(412, 20);
-            this.labelActors.Name = "labelActors";
-            this.labelActors.Size = new System.Drawing.Size(170, 13);
-            this.labelActors.TabIndex = 19;
-            this.labelActors.Text = "Right-click to assign actor to voice";
-            // 
             // TextToSpeech
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -298,12 +299,12 @@
         private Controls.NikseComboBox nikseComboBoxEngine;
         private System.Windows.Forms.Label labelEngine;
         private System.Windows.Forms.GroupBox groupBoxMsSettings;
-        private System.Windows.Forms.Label labelMsVoice;
+        private System.Windows.Forms.Label labelVoice;
         private Controls.NikseComboBox nikseComboBoxVoice;
         private System.Windows.Forms.CheckBox checkBoxAddToVideoFile;
         private System.Windows.Forms.ListView listViewActors;
-        private System.Windows.Forms.ColumnHeader columnHeader1;
-        private System.Windows.Forms.ColumnHeader columnHeader2;
+        private System.Windows.Forms.ColumnHeader columnHeaderActor;
+        private System.Windows.Forms.ColumnHeader columnHeaderVoice;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripActors;
         private System.Windows.Forms.Button buttonTestVoice;
         private Controls.NikseTextBox TextBoxTest;

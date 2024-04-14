@@ -3360,6 +3360,20 @@
             public string ApplySync { get; set; }
         }
 
+        public class TextToSpeech
+        {
+            public string Title { get; set; }
+            public string Voice { get; set; }
+            public string TestVoice { get; set; }
+            public string DefaultVoice { get; set; }
+            public string AddAudioToVideo { get; set; }
+            public string GenerateSpeech { get; set; }
+            public string ActorInfo { get; set; }
+            public string AdjustingSpeedXOfY { get; set; }
+            public string MergingAudioTrackXOfY { get; set; }
+            public string GeneratingSpeechFromTextXOfY { get; set; }
+        }
+
         public class TimedTextSmpteTiming
         {
             public string Title { get; set; }

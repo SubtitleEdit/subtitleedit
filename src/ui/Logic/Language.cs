@@ -112,6 +112,7 @@ namespace Nikse.SubtitleEdit.Logic
         public LanguageStructure.SubStationAlphaStyles SubStationAlphaStyles;
         public LanguageStructure.SubStationAlphaStylesCategoriesManager SubStationAlphaStylesCategoriesManager;
         public LanguageStructure.PointSync PointSync;
+        public LanguageStructure.TextToSpeech TextToSpeech;
         public LanguageStructure.TimedTextSmpteTiming TimedTextSmpteTiming;
         public LanguageStructure.TransportStreamSubtitleChooser TransportStreamSubtitleChooser;
         public LanguageStructure.UnknownSubtitle UnknownSubtitle;
@@ -3548,6 +3549,20 @@ can edit in same subtitle file (collaboration)",
                 SyncPointsX = "Sync points: {0}",
                 Info = "One sync point will adjust position, two or more sync points will adjust position and speed",
                 ApplySync = "Apply",
+            };
+
+            TextToSpeech = new LanguageStructure.TextToSpeech
+            {
+                Title = "Text to speech",
+                Voice = "Voice",
+                DefaultVoice = "Default voice",
+                TestVoice = "Text voice",
+                ActorInfo = "Right-click to assign actor to voice",
+                AddAudioToVideo = "Add audio to video file (new file)",
+                GenerateSpeech = "Generate speech from text",
+                AdjustingSpeedXOfY = "Adjusting speed: {0} / {1}...",
+                MergingAudioTrackXOfY = "Merging audio track: {0} / {1}...",
+                GeneratingSpeechFromTextXOfY = "Generating speech from text: {0} / {1}...",
             };
 
             TimedTextSmpteTiming = new LanguageStructure.TimedTextSmpteTiming

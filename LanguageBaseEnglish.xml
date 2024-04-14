@@ -1452,6 +1452,7 @@ To use an API key, go to "Options -&gt; Settings -&gt; Auto-translate" to enter 
         <RemoveOrExportShotChanges>Remove/export shot changes...</RemoveOrExportShotChanges>
         <WaveformBatchGenerate>Batch generate waveforms...</WaveformBatchGenerate>
         <ShowHideWaveformAndSpectrogram>Show/hide waveform and spectrogram</ShowHideWaveformAndSpectrogram>
+        <TextToSpeechAndAddToVideo>Text to speech and add to video...</TextToSpeechAndAddToVideo>
         <UnDockVideoControls>Un-dock video controls</UnDockVideoControls>
         <ReDockVideoControls>Re-dock video controls</ReDockVideoControls>
       </Video>
@@ -3154,6 +3155,18 @@ Continue?</RestoreDefaultSettingsMsg>
     <Info>One sync point will adjust position, two or more sync points will adjust position and speed</Info>
     <ApplySync>Apply</ApplySync>
   </PointSync>
+  <TextToSpeech>
+    <Title>Text to speech</Title>
+    <Voice>Voice</Voice>
+    <TestVoice>Text voice</TestVoice>
+    <DefaultVoice>Default voice</DefaultVoice>
+    <AddAudioToVideo>Add audio to video file (new file)</AddAudioToVideo>
+    <GenerateSpeech>Generate speech from text</GenerateSpeech>
+    <ActorInfo>Right-click to assign actor to voice</ActorInfo>
+    <AdjustingSpeedXOfY>Adjusting speed: {0} / {1}...</AdjustingSpeedXOfY>
+    <MergingAudioTrackXOfY>Merging audio track: {0} / {1}...</MergingAudioTrackXOfY>
+    <GeneratingSpeechFromTextXOfY>Generating speech from text: {0} / {1}...</GeneratingSpeechFromTextXOfY>
+  </TextToSpeech>
   <TimedTextSmpteTiming>
     <Title>SMPTE timing</Title>
     <UseSmpteTiming>Use SMPTE timing for current subtitle?</UseSmpteTiming>
