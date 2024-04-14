@@ -689,10 +689,10 @@
     <Compile Include="Forms\Tts\PiperDownload.Designer.cs">
       <DependentUpon>PiperDownload.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Tts\TextToSpeech.cs">
+    <Compile Condition="'$(OS)' == 'Windows_NT'" Include="Forms\Tts\TextToSpeech.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Tts\TextToSpeech.Designer.cs">
+    <Compile Condition="'$(OS)' == 'Windows_NT'" Include="Forms\Tts\TextToSpeech.Designer.cs">
       <DependentUpon>TextToSpeech.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\TimedTextPropertiesImsc11.cs">
