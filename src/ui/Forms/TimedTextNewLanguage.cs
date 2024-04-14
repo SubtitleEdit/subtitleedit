@@ -40,20 +40,20 @@ namespace Nikse.SubtitleEdit.Forms
 
             comboBoxLanguage.BeginUpdate();
             comboBoxLanguage.Items.Clear();
-            int selctedIndex = 0;
-            for (int i = 0; i < moreLanguages.Count; i++)
+            var selectedIndex = 0;
+            for (var i = 0; i < moreLanguages.Count; i++)
             {
                 var language = moreLanguages[i];
                 var code = language.TwoLetterISOLanguageName.ToLowerInvariant();
                 comboBoxLanguage.Items.Add(new LanguageComboBoxItem(code, language.EnglishName + " / " + language.NativeName));
                 if (code == currentLanguage)
                 {
-                    selctedIndex = i;
+                    selectedIndex = i;
                 }
             }
             if (comboBoxLanguage.Items.Count > 0)
             {
-                comboBoxLanguage.SelectedIndex = selctedIndex;
+                comboBoxLanguage.SelectedIndex = selectedIndex;
             }
             comboBoxLanguage.EndUpdate();
         }

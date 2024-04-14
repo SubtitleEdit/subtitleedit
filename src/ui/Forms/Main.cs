@@ -18678,6 +18678,11 @@ namespace Nikse.SubtitleEdit.Forms
                 e.SuppressKeyPress = true;
                 ExtractAudioSelectedLines();
             }
+            else if (e.KeyData == _shortcuts.MainVideoTextToSpeech)
+            {
+                e.SuppressKeyPress = true;
+                TaskDelayHelper.RunDelayed(TimeSpan.FromMilliseconds(10), () => textToSpeechAndAddToVideoToolStripMenuItem_Click(null, null));
+            }
             else if (e.KeyData == _shortcuts.MainVideoToggleBrightness)
             {
                 if (mediaPlayer.VideoPlayer is LibMpvDynamic libMpv)
