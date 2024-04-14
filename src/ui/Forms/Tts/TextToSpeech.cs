@@ -773,23 +773,70 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                     FillActorListView();
 
                     contextMenuStripActors.Items.Clear();
-                    for (var index = 0; index < nikseComboBoxVoice.Items.Count; index++)
+
+                    if (engine.Id == TextToSpeechEngine.IdPiper)
                     {
-                        var item = nikseComboBoxVoice.Items[index];
-
-                        var tsi = new ToolStripMenuItem();
-                        tsi.Tag = new ActorAndVoice { Voice = item.ToString(), VoiceIndex = index };
-                        tsi.Text = item.ToString();
-                        tsi.Click += (x, args) =>
+                        var voices = PiperModels.GetVoices();
+                        foreach (var voiceLanguage in voices
+                                     .GroupBy(p => p.Language)
+                                     .OrderBy(p => p.Key))
                         {
-                            var a = (ActorAndVoice)(x as ToolStripItem).Tag;
-                            SetActor(a);
-                        };
-                        contextMenuStripActors.Items.Add(tsi);
+                            if (voiceLanguage.Count() == 1)
+                            {
+                                var voice = voiceLanguage.First();
+                                var tsi = new ToolStripMenuItem();
+                                tsi.Tag = new ActorAndVoice { Voice = voice.Voice, VoiceIndex = voices.IndexOf(voice) };
+                                tsi.Text = voice.ToString();
+                                tsi.Click += (x, args) =>
+                                {
+                                    var a = (ActorAndVoice)(x as ToolStripItem).Tag;
+                                    SetActor(a);
+                                };
+                                contextMenuStripActors.Items.Add(tsi);
+                            }
+                            else
+                            {
+                                var parent = new ToolStripMenuItem();
+                                parent.Text = voiceLanguage.Key;
+                                contextMenuStripActors.Items.Add(parent);
 
-                        labelActors.Visible = true;
-                        listViewActors.Visible = true;
+                                foreach (var voice in voiceLanguage.OrderBy(p => p.Voice).ToList())
+                                {
+                                    var tsi = new ToolStripMenuItem();
+                                    tsi.Tag = new ActorAndVoice { Voice = voice.Voice, VoiceIndex = voices.IndexOf(voice) };
+                                    tsi.Text = voice.Voice + " (" + voice.Quality + ")";
+                                    tsi.Click += (x, args) =>
+                                    {
+                                        var a = (ActorAndVoice)(x as ToolStripItem).Tag;
+                                        SetActor(a);
+                                    };
+                                    parent.DropDownItems.Add(tsi);
+                                }
+
+                                DarkTheme.SetDarkTheme(parent);
+                            }
+                        }
                     }
+                    else
+                    {
+                        for (var index = 0; index < nikseComboBoxVoice.Items.Count; index++)
+                        {
+                            var item = nikseComboBoxVoice.Items[index];
+
+                            var tsi = new ToolStripMenuItem();
+                            tsi.Tag = new ActorAndVoice { Voice = item.ToString(), VoiceIndex = index };
+                            tsi.Text = item.ToString();
+                            tsi.Click += (x, args) =>
+                            {
+                                var a = (ActorAndVoice)(x as ToolStripItem).Tag;
+                                SetActor(a);
+                            };
+                            contextMenuStripActors.Items.Add(tsi);
+                        }
+                    }
+
+                    labelActors.Visible = true;
+                    listViewActors.Visible = true;
                 }
             }
         }
