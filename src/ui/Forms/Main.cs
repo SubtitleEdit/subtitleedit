@@ -19026,6 +19026,7 @@ namespace Nikse.SubtitleEdit.Forms
                 RunCustomSearch(Configuration.Settings.VideoControls.CustomSearchUrl5);
                 e.SuppressKeyPress = true;
             }
+#if Windows
             else if (e.Modifiers == (Keys.Alt | Keys.Shift | Keys.Control) && e.KeyCode == Keys.T)
             {
                 e.SuppressKeyPress = true;
@@ -19050,6 +19051,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 });
             }
+#endif
 
             // put new entries above tabs
 
