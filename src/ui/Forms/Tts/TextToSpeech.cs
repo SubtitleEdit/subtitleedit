@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Speech.Synthesis;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
@@ -24,6 +23,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
         private readonly SubtitleFormat _subtitleFormat;
         private bool _abort;
         private readonly List<string> _actors;
+        private readonly List<TextToSpeechEngine> _engines;
 
         public class ActorAndVoice
         {
@@ -31,6 +31,25 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             public int UseCount { get; set; }
             public string Voice { get; set; }
             public int VoiceIndex { get; set; }
+        }
+
+        public class TextToSpeechEngine
+        {
+            public string Id { get; set; }
+            public string Name { get; set; }
+            public int Index { get; set; }
+
+            public TextToSpeechEngine(string id, string name, int index)
+            {
+                Id = id;
+                Name = name;
+                Index = index;
+            }
+
+            public static string IdPiper = "Piper";
+            public static string IdTortoise = "Tortoise";
+            public static string IdMimic3 = "Mimic3";
+            public static string IdSpeechSynthesizer = "SpeechSynthesizer";
         }
 
         public TextToSpeech(Subtitle subtitle, SubtitleFormat subtitleFormat, string videoFileName, VideoInfo videoInfo)
@@ -56,13 +75,23 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             progressBar1.Visible = false;
             labelProgress.Text = string.Empty;
 
+            _engines = new List<TextToSpeechEngine>();
+            _engines.Add(new TextToSpeechEngine(TextToSpeechEngine.IdPiper, "Piper (fast/good)", _engines.Count));
+            _engines.Add(new TextToSpeechEngine(TextToSpeechEngine.IdTortoise, "Tortoise TTS (very slow/very good)", _engines.Count));
+            _engines.Add(new TextToSpeechEngine(TextToSpeechEngine.IdMimic3, "Mimic3", _engines.Count));
+            if (Configuration.IsRunningOnWindows)
+            {
+                _engines.Add(new TextToSpeechEngine(TextToSpeechEngine.IdSpeechSynthesizer, "Microsoft SpeechSynthesizer (very fast/robotic)", _engines.Count));
+            }
+
             _actorAndVoices = new List<ActorAndVoice>();
             nikseComboBoxEngine.DropDownStyle = ComboBoxStyle.DropDownList;
             nikseComboBoxEngine.Items.Clear();
-            nikseComboBoxEngine.Items.Add("Microsoft SpeechSynthesizer (very fast/robotic)");
-            nikseComboBoxEngine.Items.Add("Piper (fast/good)");
-            nikseComboBoxEngine.Items.Add("Tortoise TTS (very slow/very good)");
-            //nikseComboBoxEngine.Items.Add("Mimic3");
+            foreach (var engine in _engines)
+            {
+                nikseComboBoxEngine.Items.Add(engine.Name);
+            }
+
             nikseComboBoxEngine.SelectedIndex = 0;
 
             labelActors.Visible = false;
@@ -186,19 +215,20 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
         private void GenerateParagraphAudio(Subtitle subtitle, bool showProgressBar, string overrideFileName)
         {
-            if (nikseComboBoxEngine.SelectedIndex == 0)
+            var engine = _engines.First(p => p.Index == nikseComboBoxEngine.SelectedIndex);
+            if (engine.Id == TextToSpeechEngine.IdSpeechSynthesizer)
             {
                 GenerateParagraphAudioMs(subtitle, showProgressBar, overrideFileName);
             }
-            else if (nikseComboBoxEngine.SelectedIndex == 1)
+            else if (engine.Id == TextToSpeechEngine.IdPiper)
             {
                 GenerateParagraphAudioPiperTts(subtitle, showProgressBar, overrideFileName);
             }
-            else if (nikseComboBoxEngine.SelectedIndex == 2)
+            else if (engine.Id == TextToSpeechEngine.IdTortoise)
             {
                 GenerateParagraphAudioTortoiseTts(subtitle, showProgressBar, overrideFileName);
             }
-            else if (nikseComboBoxEngine.SelectedIndex == 3)
+            else if (engine.Id == TextToSpeechEngine.IdMimic3)
             {
                 GenerateParagraphAudioMimic3(subtitle, showProgressBar, overrideFileName);
             }
@@ -212,7 +242,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 videoExt = ".mp4";
             }
 
-            labelProgress.Text = "Add audtio to video file...";
+            labelProgress.Text = "Add audio to video file...";
             var outputFileName = Path.Combine(_waveFolder, Path.GetFileNameWithoutExtension(audioFileName) + videoExt);
             var addAudioProcess = VideoPreviewGenerator.AddAudioTrack(_videoFileName, audioFileName, outputFileName);
             addAudioProcess.Start();
@@ -258,7 +288,6 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 var next = _subtitle.GetParagraphOrDefault(index + 1);
                 var pFileName = Path.Combine(_waveFolder, index + ".wav");
 
-                //TODO: analyse audio and remove silence at start and end (ffmpeg -af silenceremove=1:0:-5dB:1:1:-5dB)
                 var outputFileName1 = Path.Combine(_waveFolder, index + "_u.wav");
                 var trimProcess = VideoPreviewGenerator.TrimSilenceStartAndEnd(pFileName, outputFileName1);
                 trimProcess.Start();
@@ -362,13 +391,14 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
         private void GenerateParagraphAudioMs(Subtitle subtitle, bool showProgressBar, string overrideFileName)
         {
+
             progressBar1.Value = 0;
             progressBar1.Maximum = subtitle.Paragraphs.Count;
             progressBar1.Visible = showProgressBar;
 
-            using (var synthesizer = new SpeechSynthesizer())
+            using (var synthesizer = new System.Speech.Synthesis.SpeechSynthesizer())
             {
-                VoiceInfo voiceInfo = null;
+                System.Speech.Synthesis.VoiceInfo voiceInfo = null;
                 var vs = synthesizer.GetInstalledVoices().Where(p => p.Enabled).ToList();
                 for (var index = 0; index < vs.Count; index++)
                 {
@@ -385,13 +415,13 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                     if (showProgressBar)
                     {
                         progressBar1.Value = index + 1;
-                        labelProgress.Text = $"Generating audio texts: {index + 1} / {subtitle.Paragraphs.Count}...";
+                        labelProgress.Text = $"Generating texts from audio: {index + 1} / {subtitle.Paragraphs.Count}...";
                     }
 
                     var p = subtitle.Paragraphs[index];
                     var wavFileName = Path.Combine(_waveFolder, string.IsNullOrEmpty(overrideFileName) ? index + ".wav" : overrideFileName);
                     synthesizer.SetOutputToWaveFile(wavFileName);
-                    var builder = new PromptBuilder();
+                    var builder = new System.Speech.Synthesis.PromptBuilder();
                     if (voiceInfo != null)
                     {
                         var v = voiceInfo;
@@ -664,9 +694,10 @@ namespace Nikse.SubtitleEdit.Forms.Tts
         {
             nikseComboBoxVoice.Items.Clear();
 
-            if (nikseComboBoxEngine.SelectedIndex == 0)
+            var engine = _engines.First(p => p.Index == nikseComboBoxEngine.SelectedIndex);
+            if (engine.Id == TextToSpeechEngine.IdSpeechSynthesizer)
             {
-                using (var synthesizer = new SpeechSynthesizer())
+                using (var synthesizer = new System.Speech.Synthesis.SpeechSynthesizer())
                 {
                     foreach (var v in synthesizer.GetInstalledVoices())
                     {
@@ -678,7 +709,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 }
             }
 
-            if (nikseComboBoxEngine.SelectedIndex == 1) // Piper
+            if (engine.Id == TextToSpeechEngine.IdPiper)
             {
                 foreach (var voice in PiperModels.GetVoices())
                 {
@@ -686,7 +717,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 }
             }
 
-            if (nikseComboBoxEngine.SelectedIndex == 2) // Tortoise TTS
+            if (engine.Id == TextToSpeechEngine.IdTortoise)
             {
                 nikseComboBoxVoice.Items.Add("angie");
                 nikseComboBoxVoice.Items.Add("applejack");
