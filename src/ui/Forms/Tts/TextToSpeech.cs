@@ -69,6 +69,12 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 .Distinct()
                 .ToList();
 
+            Text = LanguageSettings.Current.TextToSpeech.Title;
+            labelVoice.Text = LanguageSettings.Current.TextToSpeech.Voice;
+            buttonTestVoice.Text = LanguageSettings.Current.TextToSpeech.TestVoice;
+            labelActors.Text = LanguageSettings.Current.TextToSpeech.ActorInfo;
+            checkBoxAddToVideoFile.Text = LanguageSettings.Current.TextToSpeech.AddAudioToVideo;
+            buttonGenerateTTS.Text = LanguageSettings.Current.TextToSpeech.GenerateSpeech;
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             UiUtil.FixLargeFonts(this, buttonOK);
 
@@ -273,7 +279,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
         {
             var fileNames = new List<string>(_subtitle.Paragraphs.Count);
 
-            labelProgress.Text = "Adjusting speed...";
+            labelProgress.Text = string.Empty;
             labelProgress.Refresh();
             Application.DoEvents();
 
@@ -283,7 +289,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             for (var index = 0; index < _subtitle.Paragraphs.Count; index++)
             {
                 progressBar1.Value = index + 1;
-                labelProgress.Text = $"Adjusting speed: {index + 1} / {_subtitle.Paragraphs.Count}...";
+                labelProgress.Text = string.Format(LanguageSettings.Current.TextToSpeech.AdjustingSpeedXOfY, index + 1, _subtitle.Paragraphs.Count);
                 var p = _subtitle.Paragraphs[index];
                 var next = _subtitle.GetParagraphOrDefault(index + 1);
                 var pFileName = Path.Combine(_waveFolder, index + ".wav");
@@ -343,7 +349,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
         private string MergeAudioParagraphs(List<string> fileNames)
         {
-            labelProgress.Text = "Merging audio track...";
+            labelProgress.Text = string.Empty;
             labelProgress.Refresh();
             Application.DoEvents();
             var silenceFileName = Path.Combine(_waveFolder, "silence.wav");
@@ -359,7 +365,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             for (var index = 0; index < fileNames.Count; index++)
             {
                 progressBar1.Value = index + 1;
-                labelProgress.Text = $"Merging audio track: {index + 1} / {_subtitle.Paragraphs.Count}...";
+                labelProgress.Text = string.Format(LanguageSettings.Current.TextToSpeech.MergingAudioTrackXOfY, index + 1, _subtitle.Paragraphs.Count);
                 var p = _subtitle.Paragraphs[index];
                 var pFileName = fileNames[index];
                 if (!File.Exists(pFileName))
@@ -415,7 +421,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                     if (showProgressBar)
                     {
                         progressBar1.Value = index + 1;
-                        labelProgress.Text = $"Generating texts from audio: {index + 1} / {subtitle.Paragraphs.Count}...";
+                        labelProgress.Text = string.Format(LanguageSettings.Current.TextToSpeech.GeneratingSpeechFromTextXOfY, index + 1, subtitle.Paragraphs.Count);
                     }
 
                     var p = subtitle.Paragraphs[index];
@@ -498,7 +504,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 if (showProgressBar)
                 {
                     progressBar1.Value = index + 1;
-                    labelProgress.Text = $"Generating audio texts: {index + 1} / {subtitle.Paragraphs.Count}...";
+                    labelProgress.Text = string.Format(LanguageSettings.Current.TextToSpeech.GeneratingSpeechFromTextXOfY, index + 1, subtitle.Paragraphs.Count);
                 }
 
                 var p = subtitle.Paragraphs[index];
@@ -626,7 +632,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 if (showProgressBar)
                 {
                     progressBar1.Value = index + 1;
-                    labelProgress.Text = $"Generating audio texts: {index + 1} / {subtitle.Paragraphs.Count}...";
+                    labelProgress.Text = string.Format(LanguageSettings.Current.TextToSpeech.GeneratingSpeechFromTextXOfY, index + 1, subtitle.Paragraphs.Count);
                 }
 
                 var p = subtitle.Paragraphs[index];

@@ -4744,6 +4744,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Main/Menu/Video/ShowHideWaveformAndSpectrogram":
                     language.Main.Menu.Video.ShowHideWaveformAndSpectrogram = reader.Value;
                     break;
+                case "Main/Menu/Video/TextToSpeechAndAddToVideo":
+                    language.Main.Menu.Video.TextToSpeechAndAddToVideo = reader.Value;
+                    break;
                 case "Main/Menu/Video/UnDockVideoControls":
                     language.Main.Menu.Video.UnDockVideoControls = reader.Value;
                     break;
@@ -8637,6 +8640,36 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "PointSync/ApplySync":
                     language.PointSync.ApplySync = reader.Value;
+                    break;
+                case "TextToSpeech/Title":
+                    language.TextToSpeech.Title = reader.Value;
+                    break;
+                case "TextToSpeech/Voice":
+                    language.TextToSpeech.Voice = reader.Value;
+                    break;
+                case "TextToSpeech/TestVoice":
+                    language.TextToSpeech.TestVoice = reader.Value;
+                    break;
+                case "TextToSpeech/DefaultVoice":
+                    language.TextToSpeech.DefaultVoice = reader.Value;
+                    break;
+                case "TextToSpeech/AddAudioToVideo":
+                    language.TextToSpeech.AddAudioToVideo = reader.Value;
+                    break;
+                case "TextToSpeech/GenerateSpeech":
+                    language.TextToSpeech.GenerateSpeech = reader.Value;
+                    break;
+                case "TextToSpeech/ActorInfo":
+                    language.TextToSpeech.ActorInfo = reader.Value;
+                    break;
+                case "TextToSpeech/AdjustingSpeedXOfY":
+                    language.TextToSpeech.AdjustingSpeedXOfY = reader.Value;
+                    break;
+                case "TextToSpeech/MergingAudioTrackXOfY":
+                    language.TextToSpeech.MergingAudioTrackXOfY = reader.Value;
+                    break;
+                case "TextToSpeech/GeneratingSpeechFromTextXOfY":
+                    language.TextToSpeech.GeneratingSpeechFromTextXOfY = reader.Value;
                     break;
                 case "TimedTextSmpteTiming/Title":
                     language.TimedTextSmpteTiming.Title = reader.Value;
