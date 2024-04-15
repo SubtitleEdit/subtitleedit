@@ -190,6 +190,8 @@ namespace Nikse.SubtitleEdit.Core.Common
         public string AnthropicApiModel { get; set; }
         public int AutoTranslateDelaySeconds { get; set; }
         public string GeminiProApiKey { get; set; }
+        public string TextToSpeechEngine { get; set; }
+        public string TextToSpeechElevenLabsApiKey { get; set; }
         public bool DisableVidoInfoViaLabel { get; set; }
         public bool ListViewSyntaxColorDurationSmall { get; set; }
         public bool ListViewSyntaxColorDurationBig { get; set; }
@@ -5447,6 +5449,18 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.Tools.GeminiProApiKey = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("TextToSpeechEngine");
+            if (subNode != null)
+            {
+                settings.Tools.TextToSpeechEngine = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("TextToSpeechElevenLabsApiKey");
+            if (subNode != null)
+            {
+                settings.Tools.TextToSpeechElevenLabsApiKey = subNode.InnerText;
             }
 
             subNode = node.SelectSingleNode("TranslateViaCopyPasteAutoCopyToClipboard");
@@ -11969,6 +11983,8 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("AnthropicApiModel", settings.Tools.AnthropicApiModel);
                 textWriter.WriteElementString("AutoTranslateDelaySeconds", settings.Tools.AutoTranslateDelaySeconds.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("GeminiProApiKey", settings.Tools.GeminiProApiKey);
+                textWriter.WriteElementString("TextToSpeechEngine", settings.Tools.TextToSpeechEngine);
+                textWriter.WriteElementString("TextToSpeechElevenLabsApiKey", settings.Tools.TextToSpeechElevenLabsApiKey);
                 textWriter.WriteElementString("DisableVidoInfoViaLabel", settings.Tools.DisableVidoInfoViaLabel.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewSyntaxColorDurationSmall", settings.Tools.ListViewSyntaxColorDurationSmall.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewSyntaxColorDurationBig", settings.Tools.ListViewSyntaxColorDurationBig.ToString(CultureInfo.InvariantCulture));
