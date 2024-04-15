@@ -2426,6 +2426,7 @@
     <EmbeddedResource Include="Resources\HunspellDictionaries.xml.gz" />
     <EmbeddedResource Include="Resources\HunspellBackupDictionaries.xml.gz" />
     <EmbeddedResource Include="Resources\TesseractDictionaries.xml.gz" />
+    <EmbeddedResource Include="Resources\eleven-labs-voices.zip" />
     <None Include="Resources\nOCR_TesseractHelper.xml.gz" />
     <None Include="Resources\SMPTE-428-7-2007-DCST.xsd">
       <SubType>Designer</SubType>
