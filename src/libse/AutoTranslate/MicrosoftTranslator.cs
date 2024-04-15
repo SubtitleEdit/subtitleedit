@@ -141,6 +141,12 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                 .Add(new MediaTypeWithQualityHeaderValue("application/json"));
             httpClient.DefaultRequestHeaders.TryAddWithoutValidation(SecurityHeaderName, apiKey);
             var response = httpClient.PostAsync(tokenEndpoint, new StringContent(string.Empty)).Result;
+            var result = response.Content.ReadAsStringAsync().Result;
+            if (!response.IsSuccessStatusCode)
+            {
+                SeLogger.Error($"{StaticName}: Error getting access token via {tokenEndpoint} and API key {apiKey}: {result}");
+            }
+
             return response.Content.ReadAsStringAsync().Result;
         }
 
