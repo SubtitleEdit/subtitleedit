@@ -29,6 +29,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
         private bool _abort;
         private readonly List<string> _actors;
         private readonly List<TextToSpeechEngine> _engines;
+        private readonly List<ElevenLabModel> _elevelLabVoices;
 
         public class ActorAndVoice
         {
@@ -71,7 +72,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             _subtitleFormat = subtitleFormat;
             _videoFileName = videoFileName;
             _videoInfo = videoInfo;
-
+            _elevelLabVoices = new List<ElevenLabModel>();
             _actors = _subtitle.Paragraphs
                 .Where(p => !string.IsNullOrEmpty(p.Actor))
                 .Select(p => p.Actor)
@@ -782,7 +783,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             progressBar1.Maximum = subtitle.Paragraphs.Count;
             progressBar1.Visible = showProgressBar;
 
-            var voices = ElevelLabModels.GetVoices();
+            var voices = _elevelLabVoices;
             var v = nikseComboBoxVoice.Text;
 
             for (var index = 0; index < subtitle.Paragraphs.Count; index++)
@@ -914,7 +915,12 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 labelApiKey.Visible = true;
                 nikseTextBoxApiKey.Visible = true;
 
-                foreach (var voice in ElevelLabModels.GetVoices())
+                if (_elevelLabVoices.Count == 0)
+                {
+                    _elevelLabVoices.AddRange(GetElevelLabVoices());
+                }
+
+                foreach (var voice in _elevelLabVoices)
                 {
                     nikseComboBoxVoice.Items.Add(voice.ToString());
                 }
@@ -991,7 +997,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                     }
                     else if (engine.Id == TextToSpeechEngineId.ElevenLabs)
                     {
-                        var voices = ElevelLabModels.GetVoices();
+                        var voices = _elevelLabVoices;
                         foreach (var voiceLanguage in voices
                                      .GroupBy(p => p.Language)
                                      .OrderBy(p => p.Key))
@@ -1054,6 +1060,67 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                     listViewActors.Visible = true;
                 }
             }
+        }
+
+        private List<ElevenLabModel> GetElevelLabVoices()
+        {
+            var ttsPath = Path.Combine(Configuration.DataDirectory, "TextToSpeech");
+            if (!Directory.Exists(ttsPath))
+            {
+                Directory.CreateDirectory(ttsPath);
+            }
+
+            var elevelLabsPath = Path.Combine(ttsPath, "ElevenLabs");
+            if (!Directory.Exists(elevelLabsPath))
+            {
+                Directory.CreateDirectory(elevelLabsPath);
+            }
+
+            var result = new List<ElevenLabModel>();
+
+            var jsonFileName = Path.Combine(elevelLabsPath, "eleven-labs-voices.json");
+
+            if (!File.Exists(jsonFileName))
+            {
+                var asm = System.Reflection.Assembly.GetExecutingAssembly();
+                var stream = asm.GetManifestResourceStream("Nikse.SubtitleEdit.Resources.eleven-labs-voices.zip");
+                if (stream != null)
+                {
+                    using (var zip = ZipExtractor.Open(stream))
+                    {
+                        var dir = zip.ReadCentralDir();
+                        foreach (var entry in dir)
+                        {
+                            var fileName = Path.GetFileName(entry.FilenameInZip);
+                            if (!string.IsNullOrEmpty(fileName))
+                            {
+                                var name = entry.FilenameInZip;
+                                var path = Path.Combine(elevelLabsPath, name.Replace('/', Path.DirectorySeparatorChar));
+                                zip.ExtractFile(entry, path);
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (File.Exists(jsonFileName))
+            {
+                var json = File.ReadAllText(jsonFileName);
+                var parser = new SeJsonParser();
+                var voices = parser.GetArrayElementsByName(json, "voices");
+                foreach (var voice in voices)
+                {
+                    var name = parser.GetFirstObject(voice, "name");
+                    var voiceId = parser.GetFirstObject(voice, "voice_id");
+                    var gender = parser.GetFirstObject(voice, "gender");
+                    var description = parser.GetFirstObject(voice, "description");
+                    var accent = parser.GetFirstObject(voice, "accent");
+                    var useCase = parser.GetFirstObject(voice, "use case");
+                    result.Add(new ElevenLabModel(string.Empty, name, gender, description, useCase, accent, voiceId));
+                }
+            }
+
+            return result;
         }
 
         private bool SubtitleFormatHasActors()
