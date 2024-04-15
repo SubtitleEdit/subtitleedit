@@ -3158,7 +3158,7 @@ Continue?</RestoreDefaultSettingsMsg>
   <TextToSpeech>
     <Title>Text to speech</Title>
     <Voice>Voice</Voice>
-    <TestVoice>Text voice</TestVoice>
+    <TestVoice>Test voice</TestVoice>
     <DefaultVoice>Default voice</DefaultVoice>
     <AddAudioToVideo>Add audio to video file (new file)</AddAudioToVideo>
     <GenerateSpeech>Generate speech from text</GenerateSpeech>
