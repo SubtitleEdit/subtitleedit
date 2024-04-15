@@ -1,14 +1,16 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Core.TextToSpeech;
+using Nikse.SubtitleEdit.Logic;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
+using System.Threading.Tasks;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core.Common;
-using Nikse.SubtitleEdit.Core.SubtitleFormats;
-using Nikse.SubtitleEdit.Core.TextToSpeech;
-using Nikse.SubtitleEdit.Logic;
 using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms.Tts
@@ -48,7 +50,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
             public static string IdPiper = "Piper";
             public static string IdTortoise = "Tortoise";
-            public static string IdMimic3 = "Mimic3";
+            public static string IdCoqui = "coqui";
             public static string IdSpeechSynthesizer = "SpeechSynthesizer";
         }
 
@@ -84,7 +86,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             _engines = new List<TextToSpeechEngine>();
             _engines.Add(new TextToSpeechEngine(TextToSpeechEngine.IdPiper, "Piper (fast/good)", _engines.Count));
             _engines.Add(new TextToSpeechEngine(TextToSpeechEngine.IdTortoise, "Tortoise TTS (very slow/very good)", _engines.Count));
-            _engines.Add(new TextToSpeechEngine(TextToSpeechEngine.IdMimic3, "Mimic3", _engines.Count));
+            _engines.Add(new TextToSpeechEngine(TextToSpeechEngine.IdCoqui, "coqui TTS", _engines.Count));
             if (Configuration.IsRunningOnWindows)
             {
                 _engines.Add(new TextToSpeechEngine(TextToSpeechEngine.IdSpeechSynthesizer, "Microsoft SpeechSynthesizer (very fast/robotic)", _engines.Count));
@@ -148,7 +150,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             listViewActors.EndUpdate();
         }
 
-        private void ButtonGenerateTtsClick(object sender, EventArgs e)
+        private async void ButtonGenerateTtsClick(object sender, EventArgs e)
         {
             if (buttonGenerateTTS.Text == LanguageSettings.Current.General.Cancel)
             {
@@ -163,7 +165,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             _waveFolder = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
             Directory.CreateDirectory(_waveFolder);
 
-            GenerateParagraphAudio(_subtitle, true, null);
+            await GenerateParagraphAudio(_subtitle, true, null);
             if (_abort)
             {
                 HandleAbort();
@@ -219,25 +221,29 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             _abort = false;
         }
 
-        private void GenerateParagraphAudio(Subtitle subtitle, bool showProgressBar, string overrideFileName)
+        private async Task<bool> GenerateParagraphAudio(Subtitle subtitle, bool showProgressBar, string overrideFileName)
         {
             var engine = _engines.First(p => p.Index == nikseComboBoxEngine.SelectedIndex);
             if (engine.Id == TextToSpeechEngine.IdSpeechSynthesizer)
             {
                 GenerateParagraphAudioMs(subtitle, showProgressBar, overrideFileName);
+                return true;
             }
             else if (engine.Id == TextToSpeechEngine.IdPiper)
             {
-                GenerateParagraphAudioPiperTts(subtitle, showProgressBar, overrideFileName);
+                return GenerateParagraphAudioPiperTts(subtitle, showProgressBar, overrideFileName);
             }
             else if (engine.Id == TextToSpeechEngine.IdTortoise)
             {
-                GenerateParagraphAudioTortoiseTts(subtitle, showProgressBar, overrideFileName);
+                return GenerateParagraphAudioTortoiseTts(subtitle, showProgressBar, overrideFileName);
             }
-            else if (engine.Id == TextToSpeechEngine.IdMimic3)
+            else if (engine.Id == TextToSpeechEngine.IdCoqui)
             {
-                GenerateParagraphAudioMimic3(subtitle, showProgressBar, overrideFileName);
+                var result = await GenerateParagraphAudioCoqui(subtitle, showProgressBar, overrideFileName);
+                return result;
             }
+
+            return false;
         }
 
         private void AddAudioToVideoFile(string audioFileName)
@@ -686,9 +692,45 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             return true;
         }
 
-        private void GenerateParagraphAudioMimic3(Subtitle subtitle, bool showProgressBar, string overrideFileName)
+        private async Task<bool> GenerateParagraphAudioCoqui(Subtitle subtitle, bool showProgressBar, string overrideFileName)
         {
-            throw new NotImplementedException();
+            var httpClient = new HttpClient();
+            httpClient.BaseAddress = new Uri(nikseComboBoxVoice.Text.StartsWith("http", StringComparison.OrdinalIgnoreCase) ? nikseComboBoxVoice.Text : "http://localhost:5002/api/tts");
+
+            progressBar1.Value = 0;
+            progressBar1.Maximum = subtitle.Paragraphs.Count;
+            progressBar1.Visible = showProgressBar;
+
+            for (var index = 0; index < subtitle.Paragraphs.Count; index++)
+            {
+                if (showProgressBar)
+                {
+                    progressBar1.Value = index + 1;
+                    labelProgress.Text = string.Format(LanguageSettings.Current.TextToSpeech.GeneratingSpeechFromTextXOfY, index + 1, subtitle.Paragraphs.Count);
+                }
+
+                var p = subtitle.Paragraphs[index];
+                var outputFileName = Path.Combine(_waveFolder, string.IsNullOrEmpty(overrideFileName) ? index + ".wav" : overrideFileName);
+
+                var result = await httpClient.GetAsync("?text=" + Utilities.UrlEncode(p.Text));
+                var bytes = await result.Content.ReadAsByteArrayAsync();
+
+                if (!result.IsSuccessStatusCode)
+                {
+                    SeLogger.Error($"coqui TTS failed calling API as base address {httpClient.BaseAddress} : Status code={result.StatusCode}");
+                }
+
+                File.WriteAllBytes(outputFileName, bytes);
+
+                progressBar1.Refresh();
+                labelProgress.Refresh();
+                Application.DoEvents();
+            }
+
+            progressBar1.Visible = false;
+            labelProgress.Text = string.Empty;
+
+            return true;
         }
 
         private void buttonOK_Click(object sender, EventArgs e)
@@ -699,6 +741,12 @@ namespace Nikse.SubtitleEdit.Forms.Tts
         private void nikseComboBoxEngine_SelectedIndexChanged(object sender, EventArgs e)
         {
             nikseComboBoxVoice.Items.Clear();
+
+            labelVoice.Text = LanguageSettings.Current.TextToSpeech.Voice;
+            if (SubtitleFormatHasActors() && _actors.Any())
+            {
+                labelVoice.Text = LanguageSettings.Current.TextToSpeech.DefaultVoice;
+            }
 
             var engine = _engines.First(p => p.Index == nikseComboBoxEngine.SelectedIndex);
             if (engine.Id == TextToSpeechEngine.IdSpeechSynthesizer)
@@ -746,6 +794,12 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 nikseComboBoxVoice.Items.Add("tom");
                 nikseComboBoxVoice.Items.Add("weaver");
                 nikseComboBoxVoice.Items.Add("william");
+            }
+
+            if (engine.Id == TextToSpeechEngine.IdCoqui)
+            {
+                labelVoice.Text = LanguageSettings.Current.General.WebServiceUrl;
+                nikseComboBoxVoice.Items.Add("http://localhost:5002/api/tts");
             }
 
             if (nikseComboBoxVoice.Items.Count > 0)
@@ -865,7 +919,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             listViewActors.AutoSizeLastColumn();
         }
 
-        private void buttonTestVoice_Click(object sender, EventArgs e)
+        private async void buttonTestVoice_Click(object sender, EventArgs e)
         {
             try
             {
@@ -880,7 +934,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 var sub = new Subtitle();
                 sub.Paragraphs.Add(new Paragraph(text, 0, 2500));
                 var waveFileNameOnly = Guid.NewGuid() + ".wav";
-                GenerateParagraphAudio(sub, false, waveFileNameOnly);
+                await GenerateParagraphAudio(sub, false, waveFileNameOnly);
                 var waveFileName = Path.Combine(_waveFolder, waveFileNameOnly);
                 using (var soundPlayer = new System.Media.SoundPlayer(waveFileName))
                 {
