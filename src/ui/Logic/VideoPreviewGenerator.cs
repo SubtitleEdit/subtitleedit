@@ -640,5 +640,23 @@ namespace Nikse.SubtitleEdit.Logic
 
             return processMakeVideo;
         }
+
+        public static Process ConvertFormat(string inputFileName, string outputFileName, DataReceivedEventHandler dataReceivedHandler = null)
+        {
+            var processMakeVideo = new Process
+            {
+                StartInfo =
+                {
+                    FileName = GetFfmpegLocation(),
+                    Arguments = $"-i \"{inputFileName}\" \"{outputFileName}\"",
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                }
+            };
+
+            SetupDataReceiveHandler(dataReceivedHandler, processMakeVideo);
+
+            return processMakeVideo;
+        }
     }
 }

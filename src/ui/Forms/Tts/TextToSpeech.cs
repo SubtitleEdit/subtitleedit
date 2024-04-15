@@ -9,6 +9,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -808,7 +809,9 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
                 var url = "https://api.elevenlabs.io/v1/text-to-speech/" + voice.Model;
                 var data = "{ \"text\": \"" + Json.EncodeJsonText(p.Text) + "\", \"model_id\": \"eleven_monolingual_v1\", \"voice_settings\": { \"stability\": 0.5, \"similarity_boost\": 0.5 } }";
-                var result = await httpClient.PostAsync(url, new StringContent(data, Encoding.UTF8), CancellationToken.None);
+                var content = new StringContent(data, Encoding.UTF8);
+                content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
+                var result = await httpClient.PostAsync(url, content, CancellationToken.None);
                 var bytes = await result.Content.ReadAsByteArrayAsync();
 
                 if (!result.IsSuccessStatusCode)
@@ -1100,6 +1103,17 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 }
 
                 var waveFileName = Path.Combine(_waveFolder, waveFileNameOnly);
+                if (!File.Exists(waveFileName))
+                {
+                    var mp3FileName = waveFileName.Replace(".wav", ".mp3");
+                    if (File.Exists(mp3FileName))
+                    {
+                        var process = VideoPreviewGenerator.ConvertFormat(mp3FileName, waveFileName);
+                        process.Start();
+                        process.WaitForExit();
+                    }
+                }
+
                 using (var soundPlayer = new System.Media.SoundPlayer(waveFileName))
                 {
                     soundPlayer.Play();
