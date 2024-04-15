@@ -123,10 +123,11 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                     if (dataUnitLen == 44) // teletext payload has always size 44 bytes
                     {
                         // reverse endianness (via lookup table), ETS 300 706, chapter 7.1
-                        for (var j = 0; j < dataUnitLen; j++)
+                        for (var j = 0; j < dataUnitLen && i + j < _dataBuffer.Length; j++)
                         {
                             _dataBuffer[i + j] = TeletextHamming.Reverse8[_dataBuffer[i + j]];
                         }
+
                         var pageNumber = Teletext.GetPageNumber(new Teletext.TeletextPacketPayload(_dataBuffer, i));
                         if (!pages.Contains(pageNumber) && pageNumber > 0)
                         {
@@ -134,8 +135,10 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                         }
                     }
                 }
+
                 i += dataUnitLen;
             }
+
             return pages;
         }
 
