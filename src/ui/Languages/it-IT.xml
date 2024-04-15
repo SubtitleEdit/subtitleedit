@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>4.0.5</Version>
-    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 07.04.2024</TranslatedBy>
+    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 15.04.2024</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -1452,6 +1452,7 @@ Per usare una chiave API inserisci la chiave API di traduzione di Google in "Opz
         <RemoveOrExportShotChanges>Rimuovi cambi scena...</RemoveOrExportShotChanges>
         <WaveformBatchGenerate>Genera forma d'onda batch...</WaveformBatchGenerate>
         <ShowHideWaveformAndSpectrogram>Visualizza/nascondi onda e spettrogramma</ShowHideWaveformAndSpectrogram>
+        <TextToSpeechAndAddToVideo>Sintesi vocale e aggiunta al video...</TextToSpeechAndAddToVideo>
         <UnDockVideoControls>Sblocca controlli video</UnDockVideoControls>
         <ReDockVideoControls>Blocca controlli video</ReDockVideoControls>
       </Video>
@@ -3154,6 +3155,18 @@ Vuoi continuare?</RestoreDefaultSettingsMsg>
     <Info>Un punto di sincr. regolerà la posizione, due o più punti di sincr. regoleranno posizione e velocità</Info>
     <ApplySync>Applica</ApplySync>
   </PointSync>
+  <TextToSpeech>
+    <Title>Sintesi vocale</Title>
+    <Voice>Voce</Voice>
+    <TestVoice>Test voce</TestVoice>
+    <DefaultVoice>Voce predefinita</DefaultVoice>
+    <AddAudioToVideo>Aggiungi audio al file video (nuovo file)</AddAudioToVideo>
+    <GenerateSpeech>Genera discorso dal testo</GenerateSpeech>
+    <ActorInfo>Clic destro per assegnare l'attore alla voce</ActorInfo>
+    <AdjustingSpeedXOfY>Regolazione velocità: {0} / {1}...</AdjustingSpeedXOfY>
+    <MergingAudioTrackXOfY>Unione traccia audio: {0} / {1}...</MergingAudioTrackXOfY>
+    <GeneratingSpeechFromTextXOfY>Generazione parlato dal testo: {0} / {1}...</GeneratingSpeechFromTextXOfY>
+  </TextToSpeech>
   <TimedTextSmpteTiming>
     <Title>Tempistica SMPTE</Title>
     <UseSmpteTiming>Vuoi usare i tempi SMPTE per sottotitoli attuali?</UseSmpteTiming>
