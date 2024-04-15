@@ -1445,6 +1445,7 @@ Command line: {1} {2}
         <RemoveOrExportShotChanges>删除/导出场景切换...</RemoveOrExportShotChanges>
         <WaveformBatchGenerate>批量生成波形...</WaveformBatchGenerate>
         <ShowHideWaveformAndSpectrogram>显示/隐藏波形和频谱图</ShowHideWaveformAndSpectrogram>
+        <TextToSpeechAndAddToVideo>文本转语音并添加到视频...</TextToSpeechAndAddToVideo>
         <UnDockVideoControls>取消内嵌显示视频控件</UnDockVideoControls>
         <ReDockVideoControls>内嵌显示视频控件</ReDockVideoControls>
       </Video>
@@ -3139,6 +3140,18 @@ Command line: {1} {2}
     <Info>一个同步点可调整位置，两个以上同步点可调整位置和速度</Info>
     <ApplySync>应用</ApplySync>
   </PointSync>
+  <TextToSpeech>
+    <Title>文本转语音</Title>
+    <Voice>语音</Voice>
+    <TestVoice>文本语音</TestVoice>
+    <DefaultVoice>默认语音</DefaultVoice>
+    <AddAudioToVideo>将音频添加到视频文件（新文件）</AddAudioToVideo>
+    <GenerateSpeech>从文本生成语音</GenerateSpeech>
+    <ActorInfo>右键单击将角色分配给声音</ActorInfo>
+    <AdjustingSpeedXOfY>调整速度：{0} / {1}...</AdjustingSpeedXOfY>
+    <MergingAudioTrackXOfY>合并音轨：{0} / {1}...</MergingAudioTrackXOfY>
+    <GeneratingSpeechFromTextXOfY>从文本生成语音：{0} / {1}...</GeneratingSpeechFromTextXOfY>
+  </TextToSpeech>
   <TimedTextSmpteTiming>
     <Title>SMPTE 时序</Title>
     <UseSmpteTiming>对当前字幕使用 SMPTE 时序？</UseSmpteTiming>
