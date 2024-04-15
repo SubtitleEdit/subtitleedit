@@ -74,8 +74,10 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
 
             result.EnsureSuccessStatusCode();
 
+            SeLogger.Error($"{StaticName}: debug json: " + json);
+
             var parser = new SeJsonParser();
-            var resultText = parser.GetFirstObject(json, "content");
+            var resultText = parser.GetFirstObject(json, "text");
             if (resultText == null)
             {
                 return string.Empty;
