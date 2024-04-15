@@ -128,10 +128,13 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                             _dataBuffer[i + j] = TeletextHamming.Reverse8[_dataBuffer[i + j]];
                         }
 
-                        var pageNumber = Teletext.GetPageNumber(new Teletext.TeletextPacketPayload(_dataBuffer, i));
-                        if (!pages.Contains(pageNumber) && pageNumber > 0)
+                        if (_dataBuffer.Length > i + 43)
                         {
-                            pages.Add(pageNumber);
+                            var pageNumber = Teletext.GetPageNumber(new Teletext.TeletextPacketPayload(_dataBuffer, i));
+                            if (!pages.Contains(pageNumber) && pageNumber > 0)
+                            {
+                                pages.Add(pageNumber);
+                            }
                         }
                     }
                 }
