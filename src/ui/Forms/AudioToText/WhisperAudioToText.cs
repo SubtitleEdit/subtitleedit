@@ -386,7 +386,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
             _languageCode = GetLanguage(comboBoxLanguages.Text);
 
-            if (comboBoxModels.Items[comboBoxModels.SelectedIndex] is WhisperModel model && 
+            if (comboBoxModels.Items[comboBoxModels.SelectedIndex] is WhisperModel model &&
                 _languageCode != "en" && IsModelEnglishOnly(model))
             {
                 var result = MessageBox.Show("English model should only be used with English language." + Environment.NewLine +

@@ -234,11 +234,11 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
             if (errors.Length > 0)
             {
-                MessageBox.Show($"{errorCount} error(s)!{Environment.NewLine}{errors}");
+                MessageBox.Show(this, $"{errorCount} error(s)!{Environment.NewLine}{errors}");
             }
 
             var fileList = Environment.NewLine + Environment.NewLine + string.Join(Environment.NewLine, _outputBatchFileNames);
-            MessageBox.Show(string.Format(LanguageSettings.Current.AudioToText.XFilesSavedToVideoSourceFolder, listViewInputFiles.Items.Count - errorCount) + fileList);
+            MessageBox.Show(this, string.Format(LanguageSettings.Current.AudioToText.XFilesSavedToVideoSourceFolder, listViewInputFiles.Items.Count - errorCount) + fileList);
 
             groupBoxInputFiles.Enabled = true;
             buttonGenerate.Enabled = true;
