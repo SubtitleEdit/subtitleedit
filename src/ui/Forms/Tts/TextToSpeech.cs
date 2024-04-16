@@ -648,7 +648,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             var files = Directory.EnumerateFiles(pythonFolder, pyFileName, SearchOption.AllDirectories).ToList();
             if (files.Count == 0)
             {
-                MessageBox.Show($"{pyFileName} not found under {pythonFolder}");
+                MessageBox.Show(this, $"{pyFileName} not found under {pythonFolder}");
                 return false;
             }
 
@@ -819,7 +819,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 {
                     var error = Encoding.UTF8.GetString(bytes).Trim();
                     SeLogger.Error($"ElevenLabs TTS failed calling API as base address {httpClient.BaseAddress} : Status code={result.StatusCode} {error}" + Environment.NewLine + "Data=" + data);
-                    MessageBox.Show("Calling url: " + url + Environment.NewLine + "With: " + data + Environment.NewLine + Environment.NewLine + "Error: " + error);
+                    MessageBox.Show(this, "Calling url: " + url + Environment.NewLine + "With: " + data + Environment.NewLine + Environment.NewLine + "Error: " + error);
                     return false;
                 }
 
@@ -1165,7 +1165,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 var ok = await GenerateParagraphAudio(sub, false, waveFileNameOnly);
                 if (!ok)
                 {
-                    MessageBox.Show("Ups, voice generation failed!");
+                    MessageBox.Show(this, "Ups, voice generation failed!");
                     return;
                 }
 
@@ -1200,12 +1200,24 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message + Environment.NewLine + ex.StackTrace);
+                HandleError(ex);
             }
             finally
             {
                 TaskDelayHelper.RunDelayed(TimeSpan.FromSeconds(1), () => buttonTestVoice.Enabled = true);
             }
+        }
+
+        private void HandleError(Exception ex)
+        {
+            var engine = _engines.First(p => p.Index == nikseComboBoxEngine.SelectedIndex);
+            var msg = "An error occurred while trying to generate speech.";
+            if (engine.Id == TextToSpeechEngineId.Coqui)
+            {
+                msg += Environment.NewLine + "Make sure you have started the Coqui-ai TTS web server locally";
+            }
+
+            MessageBox.Show(this, msg + Environment.NewLine + Environment.NewLine + ex.Message + Environment.NewLine + ex.StackTrace);
         }
 
         private void TextToSpeech_FormClosing(object sender, FormClosingEventArgs e)
@@ -1218,6 +1230,15 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             }
 
             Configuration.Settings.Tools.TextToSpeechEngine = engine.Id.ToString();
+        }
+
+        private void TextToSpeech_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyData == UiUtil.HelpKeys)
+            {
+                UiUtil.ShowHelp("#text_to_speech");
+                e.SuppressKeyPress = true;
+            }
         }
     }
 }
