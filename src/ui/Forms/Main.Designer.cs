@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Controls;
+﻿using System.Windows.Forms;
+using Nikse.SubtitleEdit.Controls;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -246,6 +247,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.generateVideoWithHardcodedSubtitleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.audioToTextWhisperTolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.videoaudioToTextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.textToSpeechAndAddToVideoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.undockVideoControlsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.redockVideoControlsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -383,7 +385,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonCustomUrl1 = new System.Windows.Forms.Button();
             this.buttonGoogleTranslateIt = new System.Windows.Forms.Button();
             this.buttonGoogleIt = new System.Windows.Forms.Button();
-            this.textBoxSearchWord = new Nikse.SubtitleEdit.Controls.SETextBox();
+            this.textBoxSearchWord = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.groupBoxAutoContinue = new System.Windows.Forms.GroupBox();
             this.comboBoxAutoContinue = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelAutoContinueDelay = new System.Windows.Forms.Label();
@@ -580,7 +582,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.timerOriginalTextUndo = new System.Windows.Forms.Timer(this.components);
             this.contextMenuStripShowVideoControls = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItemShowVideoControls = new System.Windows.Forms.ToolStripMenuItem();
-            this.textToSpeechAndAddToVideoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -2426,6 +2427,13 @@ namespace Nikse.SubtitleEdit.Forms
             this.videoaudioToTextToolStripMenuItem.Text = "Audio to text (Vosk/Kaldi)...";
             this.videoaudioToTextToolStripMenuItem.Click += new System.EventHandler(this.VideoaudioToTextToolStripMenuItemClick);
             // 
+            // textToSpeechAndAddToVideoToolStripMenuItem
+            // 
+            this.textToSpeechAndAddToVideoToolStripMenuItem.Name = "textToSpeechAndAddToVideoToolStripMenuItem";
+            this.textToSpeechAndAddToVideoToolStripMenuItem.Size = new System.Drawing.Size(295, 22);
+            this.textToSpeechAndAddToVideoToolStripMenuItem.Text = "Text to speech and add to video...";
+            this.textToSpeechAndAddToVideoToolStripMenuItem.Click += new System.EventHandler(this.textToSpeechAndAddToVideoToolStripMenuItem_Click);
+            // 
             // toolStripSeparator5
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
@@ -3638,28 +3646,21 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // textBoxSearchWord
             // 
-            this.textBoxSearchWord.BackColor = System.Drawing.SystemColors.WindowFrame;
-            this.textBoxSearchWord.CurrentLanguage = "";
-            this.textBoxSearchWord.CurrentLineIndex = 0;
+            this.textBoxSearchWord.BackColor = System.Drawing.SystemColors.Window;
             this.textBoxSearchWord.HideSelection = true;
-            this.textBoxSearchWord.IsDictionaryDownloaded = true;
-            this.textBoxSearchWord.IsSpellCheckerInitialized = false;
-            this.textBoxSearchWord.IsSpellCheckRequested = false;
-            this.textBoxSearchWord.IsWrongWord = false;
-            this.textBoxSearchWord.LanguageChanged = false;
             this.textBoxSearchWord.Location = new System.Drawing.Point(6, 18);
             this.textBoxSearchWord.MaxLength = 32767;
             this.textBoxSearchWord.Multiline = true;
             this.textBoxSearchWord.Name = "textBoxSearchWord";
             this.textBoxSearchWord.Padding = new System.Windows.Forms.Padding(1);
             this.textBoxSearchWord.ReadOnly = false;
-            this.textBoxSearchWord.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
+            this.textBoxSearchWord.ScrollBars = ScrollBars.None;
             this.textBoxSearchWord.SelectedText = "";
             this.textBoxSearchWord.SelectionLength = 0;
             this.textBoxSearchWord.SelectionStart = 0;
             this.textBoxSearchWord.Size = new System.Drawing.Size(244, 39);
             this.textBoxSearchWord.TabIndex = 0;
-            this.textBoxSearchWord.TextBoxFont = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Bold);
+            this.textBoxSearchWord.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Bold);
             this.textBoxSearchWord.UseSystemPasswordChar = false;
             // 
             // groupBoxAutoContinue
@@ -5890,13 +5891,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemShowVideoControls.Text = "Show video controls";
             this.toolStripMenuItemShowVideoControls.Click += new System.EventHandler(this.ToolStripMenuItemShowVideoControlsClick);
             // 
-            // textToSpeechAndAddToVideoToolStripMenuItem
-            // 
-            this.textToSpeechAndAddToVideoToolStripMenuItem.Name = "textToSpeechAndAddToVideoToolStripMenuItem";
-            this.textToSpeechAndAddToVideoToolStripMenuItem.Size = new System.Drawing.Size(295, 22);
-            this.textToSpeechAndAddToVideoToolStripMenuItem.Text = "Text to speech and add to video...";
-            this.textToSpeechAndAddToVideoToolStripMenuItem.Click += new System.EventHandler(this.textToSpeechAndAddToVideoToolStripMenuItem_Click);
-            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -6122,7 +6116,7 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.GroupBox groupBoxTranslateSearch;
         private System.Windows.Forms.Button buttonGoogleTranslateIt;
         private System.Windows.Forms.Button buttonGoogleIt;
-        private Nikse.SubtitleEdit.Controls.SETextBox textBoxSearchWord;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxSearchWord;
         private System.Windows.Forms.GroupBox groupBoxAutoContinue;
         private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxAutoContinue;
         private System.Windows.Forms.Label labelAutoContinueDelay;

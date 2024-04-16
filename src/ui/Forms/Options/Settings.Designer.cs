@@ -109,7 +109,7 @@
             this.labelFavoriteSubtitleFormatsNote = new System.Windows.Forms.Label();
             this.listBoxSubtitleFormats = new Nikse.SubtitleEdit.Controls.NikseListBox();
             this.buttonFormatsSearchClear = new System.Windows.Forms.Button();
-            this.textBoxFormatsSearch = new Nikse.SubtitleEdit.Controls.SETextBox();
+            this.textBoxFormatsSearch = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelFormatsSearch = new System.Windows.Forms.Label();
             this.labelFormats = new System.Windows.Forms.Label();
             this.buttonRemoveFromFavoriteFormats = new System.Windows.Forms.Button();
@@ -134,7 +134,7 @@
             this.labelShortcutsFilter = new System.Windows.Forms.Label();
             this.buttonShortcutsClear = new System.Windows.Forms.Button();
             this.labelShortcutsSearch = new System.Windows.Forms.Label();
-            this.textBoxShortcutSearch = new Nikse.SubtitleEdit.Controls.SETextBox();
+            this.textBoxShortcutSearch = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.buttonClearShortcut = new System.Windows.Forms.Button();
             this.comboBoxShortcutKey = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelShortcutKey = new System.Windows.Forms.Label();
@@ -227,7 +227,7 @@
             this.checkBoxFfmpegUseCenterChannel = new System.Windows.Forms.CheckBox();
             this.buttonDownloadFfmpeg = new System.Windows.Forms.Button();
             this.buttonBrowseToFFmpeg = new System.Windows.Forms.Button();
-            this.textBoxFFmpegPath = new Nikse.SubtitleEdit.Controls.SETextBox();
+            this.textBoxFFmpegPath = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelFFmpegPath = new System.Windows.Forms.Label();
             this.checkBoxUseFFmpeg = new System.Windows.Forms.CheckBox();
             this.groupBoxSpectrogram = new System.Windows.Forms.GroupBox();
@@ -430,7 +430,7 @@
             this.panelNetwork = new System.Windows.Forms.Panel();
             this.groupBoxNetworkSession = new System.Windows.Forms.GroupBox();
             this.buttonNetworkSessionNewMessageSound = new System.Windows.Forms.Button();
-            this.textBoxNetworkSessionNewMessageSound = new Nikse.SubtitleEdit.Controls.SETextBox();
+            this.textBoxNetworkSessionNewMessageSound = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.labelNetworkSessionNewMessageSound = new System.Windows.Forms.Label();
             this.groupBoxProxySettings = new System.Windows.Forms.GroupBox();
             this.groupBoxProxyAuthentication = new System.Windows.Forms.GroupBox();
@@ -1941,28 +1941,20 @@
             // 
             // textBoxFormatsSearch
             // 
-            this.textBoxFormatsSearch.BackColor = System.Drawing.SystemColors.WindowFrame;
-            this.textBoxFormatsSearch.CurrentLanguage = "";
-            this.textBoxFormatsSearch.CurrentLineIndex = 0;
+            this.textBoxFormatsSearch.BackColor = System.Drawing.SystemColors.Window;
             this.textBoxFormatsSearch.HideSelection = true;
-            this.textBoxFormatsSearch.IsDictionaryDownloaded = true;
-            this.textBoxFormatsSearch.IsSpellCheckerInitialized = false;
-            this.textBoxFormatsSearch.IsSpellCheckRequested = false;
-            this.textBoxFormatsSearch.IsWrongWord = false;
-            this.textBoxFormatsSearch.LanguageChanged = false;
             this.textBoxFormatsSearch.Location = new System.Drawing.Point(529, 52);
             this.textBoxFormatsSearch.MaxLength = 32767;
             this.textBoxFormatsSearch.Multiline = true;
             this.textBoxFormatsSearch.Name = "textBoxFormatsSearch";
             this.textBoxFormatsSearch.Padding = new System.Windows.Forms.Padding(1);
             this.textBoxFormatsSearch.ReadOnly = false;
-            this.textBoxFormatsSearch.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
             this.textBoxFormatsSearch.SelectedText = "";
             this.textBoxFormatsSearch.SelectionLength = 0;
             this.textBoxFormatsSearch.SelectionStart = 0;
             this.textBoxFormatsSearch.Size = new System.Drawing.Size(151, 21);
             this.textBoxFormatsSearch.TabIndex = 6;
-            this.textBoxFormatsSearch.TextBoxFont = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBoxFormatsSearch.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBoxFormatsSearch.UseSystemPasswordChar = false;
             this.textBoxFormatsSearch.TextChanged += new System.EventHandler(this.textBoxFormatsSearch_TextChanged);
             // 
@@ -2262,27 +2254,19 @@
             // textBoxShortcutSearch
             // 
             this.textBoxShortcutSearch.BackColor = System.Drawing.SystemColors.Window;
-            this.textBoxShortcutSearch.CurrentLanguage = "";
-            this.textBoxShortcutSearch.CurrentLineIndex = 0;
             this.textBoxShortcutSearch.HideSelection = true;
-            this.textBoxShortcutSearch.IsDictionaryDownloaded = true;
-            this.textBoxShortcutSearch.IsSpellCheckerInitialized = false;
-            this.textBoxShortcutSearch.IsSpellCheckRequested = false;
-            this.textBoxShortcutSearch.IsWrongWord = false;
-            this.textBoxShortcutSearch.LanguageChanged = false;
             this.textBoxShortcutSearch.Location = new System.Drawing.Point(64, 20);
             this.textBoxShortcutSearch.MaxLength = 32767;
             this.textBoxShortcutSearch.Multiline = true;
             this.textBoxShortcutSearch.Name = "textBoxShortcutSearch";
             this.textBoxShortcutSearch.Padding = new System.Windows.Forms.Padding(1);
             this.textBoxShortcutSearch.ReadOnly = false;
-            this.textBoxShortcutSearch.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
             this.textBoxShortcutSearch.SelectedText = "";
             this.textBoxShortcutSearch.SelectionLength = 0;
             this.textBoxShortcutSearch.SelectionStart = 0;
             this.textBoxShortcutSearch.Size = new System.Drawing.Size(151, 21);
             this.textBoxShortcutSearch.TabIndex = 0;
-            this.textBoxShortcutSearch.TextBoxFont = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBoxShortcutSearch.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBoxShortcutSearch.UseSystemPasswordChar = false;
             this.textBoxShortcutSearch.TextChanged += new System.EventHandler(this.textBoxShortcutSearch_TextChanged);
             // 
@@ -3710,28 +3694,20 @@
             // 
             // textBoxFFmpegPath
             // 
-            this.textBoxFFmpegPath.BackColor = System.Drawing.SystemColors.WindowFrame;
-            this.textBoxFFmpegPath.CurrentLanguage = "";
-            this.textBoxFFmpegPath.CurrentLineIndex = 0;
+            this.textBoxFFmpegPath.BackColor = System.Drawing.SystemColors.Window;
             this.textBoxFFmpegPath.HideSelection = true;
-            this.textBoxFFmpegPath.IsDictionaryDownloaded = true;
-            this.textBoxFFmpegPath.IsSpellCheckerInitialized = false;
-            this.textBoxFFmpegPath.IsSpellCheckRequested = false;
-            this.textBoxFFmpegPath.IsWrongWord = false;
-            this.textBoxFFmpegPath.LanguageChanged = false;
             this.textBoxFFmpegPath.Location = new System.Drawing.Point(9, 65);
             this.textBoxFFmpegPath.MaxLength = 1000;
             this.textBoxFFmpegPath.Multiline = true;
             this.textBoxFFmpegPath.Name = "textBoxFFmpegPath";
             this.textBoxFFmpegPath.Padding = new System.Windows.Forms.Padding(1);
             this.textBoxFFmpegPath.ReadOnly = false;
-            this.textBoxFFmpegPath.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
             this.textBoxFFmpegPath.SelectedText = "";
             this.textBoxFFmpegPath.SelectionLength = 0;
             this.textBoxFFmpegPath.SelectionStart = 0;
             this.textBoxFFmpegPath.Size = new System.Drawing.Size(366, 21);
             this.textBoxFFmpegPath.TabIndex = 22;
-            this.textBoxFFmpegPath.TextBoxFont = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBoxFFmpegPath.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBoxFFmpegPath.UseSystemPasswordChar = false;
             // 
             // labelFFmpegPath
@@ -6225,28 +6201,20 @@
             // 
             // textBoxNetworkSessionNewMessageSound
             // 
-            this.textBoxNetworkSessionNewMessageSound.BackColor = System.Drawing.SystemColors.WindowFrame;
-            this.textBoxNetworkSessionNewMessageSound.CurrentLanguage = "";
-            this.textBoxNetworkSessionNewMessageSound.CurrentLineIndex = 0;
+            this.textBoxNetworkSessionNewMessageSound.BackColor = System.Drawing.SystemColors.Window;
             this.textBoxNetworkSessionNewMessageSound.HideSelection = true;
-            this.textBoxNetworkSessionNewMessageSound.IsDictionaryDownloaded = true;
-            this.textBoxNetworkSessionNewMessageSound.IsSpellCheckerInitialized = false;
-            this.textBoxNetworkSessionNewMessageSound.IsSpellCheckRequested = false;
-            this.textBoxNetworkSessionNewMessageSound.IsWrongWord = false;
-            this.textBoxNetworkSessionNewMessageSound.LanguageChanged = false;
             this.textBoxNetworkSessionNewMessageSound.Location = new System.Drawing.Point(28, 50);
             this.textBoxNetworkSessionNewMessageSound.MaxLength = 32767;
             this.textBoxNetworkSessionNewMessageSound.Multiline = true;
             this.textBoxNetworkSessionNewMessageSound.Name = "textBoxNetworkSessionNewMessageSound";
             this.textBoxNetworkSessionNewMessageSound.Padding = new System.Windows.Forms.Padding(1);
             this.textBoxNetworkSessionNewMessageSound.ReadOnly = false;
-            this.textBoxNetworkSessionNewMessageSound.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
             this.textBoxNetworkSessionNewMessageSound.SelectedText = "";
             this.textBoxNetworkSessionNewMessageSound.SelectionLength = 0;
             this.textBoxNetworkSessionNewMessageSound.SelectionStart = 0;
             this.textBoxNetworkSessionNewMessageSound.Size = new System.Drawing.Size(318, 21);
             this.textBoxNetworkSessionNewMessageSound.TabIndex = 20;
-            this.textBoxNetworkSessionNewMessageSound.TextBoxFont = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBoxNetworkSessionNewMessageSound.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBoxNetworkSessionNewMessageSound.UseSystemPasswordChar = false;
             // 
             // labelNetworkSessionNewMessageSound
@@ -7020,9 +6988,9 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1092, 574);
+            this.Controls.Add(this.panelShortcuts);
             this.Controls.Add(this.panelToolBar);
             this.Controls.Add(this.panelAutoTranslate);
-            this.Controls.Add(this.panelShortcuts);
             this.Controls.Add(this.panelVideoPlayer);
             this.Controls.Add(this.labelUpdateFileTypeAssociationsStatus);
             this.Controls.Add(this.panelGeneral);
@@ -7362,7 +7330,7 @@
         private System.Windows.Forms.CheckBox checkBoxTreatINQuoteAsING;
         private System.Windows.Forms.GroupBox groupBoxFfmpeg;
         private System.Windows.Forms.Button buttonBrowseToFFmpeg;
-        private Nikse.SubtitleEdit.Controls.SETextBox textBoxFFmpegPath;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxFFmpegPath;
         private System.Windows.Forms.Label labelFFmpegPath;
         private System.Windows.Forms.CheckBox checkBoxUseFFmpeg;
         private System.Windows.Forms.OpenFileDialog openFileDialogFFmpeg;
@@ -7388,7 +7356,7 @@
         private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxWaveformTextSize;
         private System.Windows.Forms.GroupBox groupBoxNetworkSession;
         private System.Windows.Forms.Button buttonNetworkSessionNewMessageSound;
-        private Nikse.SubtitleEdit.Controls.SETextBox textBoxNetworkSessionNewMessageSound;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxNetworkSessionNewMessageSound;
         private System.Windows.Forms.Label labelNetworkSessionNewMessageSound;
         private System.Windows.Forms.CheckBox checkBoxFceSkipStep1;
         private System.Windows.Forms.Button buttonMpvSettings;
@@ -7443,7 +7411,7 @@
         private System.Windows.Forms.Button buttonDownloadFfmpeg;
         private System.Windows.Forms.Button buttonShortcutsClear;
         private System.Windows.Forms.Label labelShortcutsSearch;
-        private Nikse.SubtitleEdit.Controls.SETextBox textBoxShortcutSearch;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxShortcutSearch;
         private System.Windows.Forms.GroupBox groupBoxGoogleTranslate;
         private System.Windows.Forms.Label labelGoogleTranslateApiKey;
         private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxGoogleTransleApiKey;
@@ -7513,7 +7481,7 @@
         private System.Windows.Forms.Button buttonRemoveFromFavoriteFormats;
         private System.Windows.Forms.Label labelFormats;
         private System.Windows.Forms.Label labelFormatsSearch;
-        private Nikse.SubtitleEdit.Controls.SETextBox textBoxFormatsSearch;
+        private Nikse.SubtitleEdit.Controls.NikseTextBox textBoxFormatsSearch;
         private System.Windows.Forms.Button buttonFormatsSearchClear;
         private Nikse.SubtitleEdit.Controls.NikseListBox listBoxSubtitleFormats;
         private System.Windows.Forms.Label labelFavoriteSubtitleFormatsNote;
