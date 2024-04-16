@@ -28,6 +28,14 @@ namespace Nikse.SubtitleEdit.Forms.SeMsgBox
             }
         }
 
+        public static DialogResult Show(Form form, string text)
+        {
+            using (var msgBox = new MessageBoxForm(text, string.Empty, MessageBoxButtons.OK))
+            {
+                return msgBox.ShowDialog(form);
+            }
+        }
+
         public static DialogResult Show(string text, string caption, MessageBoxButtons buttons)
         {
             using (var msgBox = new MessageBoxForm(text, caption, buttons))
