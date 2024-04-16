@@ -174,7 +174,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                 var dataUnitLen = _dataBuffer[i++];
                 if (dataUnitId == (int)Teletext.DataUnitT.DataUnitEbuTeletextNonSubtitle || dataUnitId == (int)Teletext.DataUnitT.DataUnitEbuTeletextSubtitle)
                 {
-                    if (dataUnitLen == 44) // teletext payload has always size 44 bytes
+                    if (dataUnitLen == 44 && _dataBuffer.Length > i + 43) // teletext payload has always size 44 bytes
                     {
                         Teletext.ProcessTelxPacket((Teletext.DataUnitT)dataUnitId, new Teletext.TeletextPacketPayload(_dataBuffer, i), timestamp, teletextRunSettings, pageNumberBcd, pageNumber);
                     }
