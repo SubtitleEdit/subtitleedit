@@ -3143,7 +3143,7 @@ Command line: {1} {2}
   <TextToSpeech>
     <Title>文本转语音</Title>
     <Voice>语音</Voice>
-    <TestVoice>文本语音</TestVoice>
+    <TestVoice>测试语音</TestVoice>
     <DefaultVoice>默认语音</DefaultVoice>
     <AddAudioToVideo>将音频添加到视频文件（新文件）</AddAudioToVideo>
     <GenerateSpeech>从文本生成语音</GenerateSpeech>
