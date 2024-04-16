@@ -1,5 +1,20 @@
 ﻿Subtitle Edit Changelog
 
+4.0.6 (xth March 2024) BETA
+* NEW:
+   * Add "Text To Speech" - thx darnn
+* IMPROVED:
+   * Update Finnish translation - thx Teijo S
+   * Update Italian language - thx bovirus
+   * Update Chinese translation - thx nkh0472
+   * Update Polish translation - thx admas
+   * Update Korean translation - thx domddol
+   * Show Vosk/Whisper done msgbox modal (also if not focused) - thx jupester 
+* FIXED:
+   * Fix for Antrophic translate  - thx venomousraid 
+   * Fix possible crash in teletext reading - thx yellobyte
+
+
 4.0.5 (13th April 2024) 
 * NEW:
    * Add "Open video" toolbar button/image - thx jmaraujouy/Cyberyoda1411
