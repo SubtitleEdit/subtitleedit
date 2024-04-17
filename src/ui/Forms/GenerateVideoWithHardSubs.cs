@@ -277,7 +277,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 checkBoxRightToLeft.Enabled = false;
                 labelProgress.Text = LanguageSettings.Current.Main.NoSubtitleLoaded;
-                labelProgress.ForeColor = Configuration.Settings.General.UseDarkTheme ? Color.Yellow : Color.DarkGoldenrod;
+                labelProgress.ForeColor = UiUtil.WarningColor;
             }
         }
 
@@ -345,11 +345,11 @@ namespace Nikse.SubtitleEdit.Forms
             var oldFontSizeEnabled = numericUpDownFontSize.Enabled;
             numericUpDownFontSize.Enabled = false;
 
-            using (var saveDialog = new SaveFileDialog 
-            { 
-                FileName = SuggestNewVideoFileName(), 
-                Filter = "MP4|*.mp4|Matroska|*.mkv|WebM|*.webm", 
-                AddExtension = true ,
+            using (var saveDialog = new SaveFileDialog
+            {
+                FileName = SuggestNewVideoFileName(),
+                Filter = "MP4|*.mp4|Matroska|*.mkv|WebM|*.webm",
+                AddExtension = true,
                 InitialDirectory = Path.GetDirectoryName(_inputVideoFileName),
             })
             {

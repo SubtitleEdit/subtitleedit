@@ -1196,6 +1196,8 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static Color ForeColor => Configuration.Settings.General.UseDarkTheme ? Configuration.Settings.General.DarkThemeForeColor : Control.DefaultForeColor;
 
+        public static Color WarningColor => Configuration.Settings.General.UseDarkTheme ? Color.Yellow : Color.DarkGoldenrod;
+
         public static void OpenFolderFromFileName(string fileName)
         {
             string folderName = Path.GetDirectoryName(fileName);
