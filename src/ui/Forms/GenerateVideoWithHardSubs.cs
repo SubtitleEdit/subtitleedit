@@ -33,6 +33,7 @@ namespace Nikse.SubtitleEdit.Forms
         private bool _promptFFmpegParameters;
         private readonly bool _mpvOn;
         private readonly string _mpvSubtitleFileName;
+        private readonly bool _noSubtitles;
         public string VideoFileName { get; private set; }
         public long MillisecondsEncoding { get; private set; }
         private PreviewVideo _previewVideo;
@@ -48,6 +49,10 @@ namespace Nikse.SubtitleEdit.Forms
             _videoInfo = videoInfo;
             _assaSubtitle = new Subtitle(assaSubtitle);
             _inputVideoFileName = inputVideoFileName;
+
+            _noSubtitles = _assaSubtitle == null ||
+                           _assaSubtitle.Paragraphs.Count == 0 ||
+                           (_assaSubtitle.Paragraphs.Count == 1 && string.IsNullOrWhiteSpace(_assaSubtitle.Paragraphs[0].Text));
 
             if (format.GetType() == typeof(NetflixImsc11Japanese))
             {
@@ -148,7 +153,7 @@ namespace Nikse.SubtitleEdit.Forms
             numericUpDownCutToSeconds.Left = numericUpDownCutToMinutes.Right + 1;
 
             _isAssa = !fontSize.HasValue;
-            if (fontSize.HasValue)
+            if (fontSize.HasValue && !_noSubtitles)
             {
                 if (fontSize.Value < numericUpDownFontSize.Minimum)
                 {
@@ -268,9 +273,18 @@ namespace Nikse.SubtitleEdit.Forms
                 videoPlayerContainer1.Visible = false;
             }
 
-            if (_isAssa)
+            if (_noSubtitles)
             {
-
+                checkBoxRightToLeft.Enabled = false;
+                labelProgress.Text = LanguageSettings.Current.Main.NoSubtitleLoaded;
+                if (Configuration.Settings.General.UseDarkTheme)
+                {
+                    labelProgress.ForeColor = Color.Yellow;
+                }
+                else
+                {
+                    labelProgress.ForeColor = Color.DarkGoldenrod;
+                }
             }
         }
 
@@ -312,6 +326,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonGenerate_Click(object sender, EventArgs e)
         {
+            labelProgress.Text = string.Empty;
+            labelProgress.ForeColor = UiUtil.ForeColor;
+
             if (checkBoxCut.Checked)
             {
                 var cutStart = GetCutStart();
@@ -1343,6 +1360,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonPreview_Click(object sender, EventArgs e)
         {
+            labelProgress.Text = string.Empty;
+            labelProgress.ForeColor = UiUtil.ForeColor;
+
             try
             {
                 buttonPreview.Enabled = false;
