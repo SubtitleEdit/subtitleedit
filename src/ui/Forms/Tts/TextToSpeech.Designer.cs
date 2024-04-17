@@ -155,6 +155,7 @@
             this.TextBoxTest.Size = new System.Drawing.Size(351, 20);
             this.TextBoxTest.TabIndex = 20;
             this.TextBoxTest.Text = "Hello, how are you?";
+            this.TextBoxTest.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxTest_KeyDown);
             // 
             // buttonTestVoice
             // 
