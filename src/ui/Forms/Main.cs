@@ -48,7 +48,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Forms.Tts;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
 using CheckForUpdatesHelper = Nikse.SubtitleEdit.Logic.CheckForUpdatesHelper;
 using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 using Timer = System.Windows.Forms.Timer;
@@ -9850,6 +9849,9 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
+            var useOriginal = Configuration.Settings.General.AllowEditOfOriginalSubtitle &&
+                              _subtitleOriginal != null &&
+                              SubtitleListview1.IsOriginalTextColumnVisible;
             var audioClips = GetAudioClips();
             if (audioClips.Count == 1 && audioClips[0].Paragraph.DurationTotalMilliseconds > 8_000)
             {
@@ -9875,9 +9877,18 @@ namespace Nikse.SubtitleEdit.Forms
                     foreach (var p in form.TranscribedSubtitle.Paragraphs)
                     {
                         p.Adjust(1, audioClips[0].Paragraph.StartTime.TotalSeconds);
-                        _subtitle.InsertParagraphInCorrectTimeOrder(p);
+                        if (useOriginal)
+                        {
+                            _subtitleOriginal.InsertParagraphInCorrectTimeOrder(p);
+                        }
+                        else
+                        {
+                            _subtitle.InsertParagraphInCorrectTimeOrder(p);
+                        }
                     }
 
+                    _subtitle.Renumber();
+                    _subtitleOriginal.Renumber();
                     SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
                     RestoreSubtitleListviewIndices();
                     RefreshSelectedParagraph();
@@ -9898,9 +9909,22 @@ namespace Nikse.SubtitleEdit.Forms
                         var p = _subtitle.Paragraphs.FirstOrDefault(pa => pa.Id == ac.Paragraph.Id);
                         if (p != null)
                         {
-                            p.Text = ac.Paragraph.Text;
-                            var idx = _subtitle.Paragraphs.IndexOf(p);
-                            SubtitleListview1.SetText(idx, p.Text);
+                            if (useOriginal)
+                            {
+                                var original = Utilities.GetOriginalParagraph(_subtitle.Paragraphs.IndexOf(p), p, _subtitleOriginal.Paragraphs);
+                                if (original != null)
+                                {
+                                    original.Text = ac.Paragraph.Text;
+                                    var idx = _subtitleOriginal.Paragraphs.IndexOf(original);
+                                    SubtitleListview1.SetOriginalText(idx, original.Text);
+                                }
+                            }
+                            else
+                            {
+                                p.Text = ac.Paragraph.Text;
+                                var idx = _subtitle.Paragraphs.IndexOf(p);
+                                SubtitleListview1.SetText(idx, p.Text);
+                            }
                         }
                     }
 
