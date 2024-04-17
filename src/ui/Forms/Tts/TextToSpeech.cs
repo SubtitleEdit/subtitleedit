@@ -570,7 +570,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 var modelFileName = Path.Combine(piperPath, voice.ModelShort);
                 if (!File.Exists(modelFileName))
                 {
-                    using (var form = new PiperDownload("Piper TextToSpeech Voice") { AutoClose = true, ModelUrl = voice.Model, ModelFileName = modelFileName, PiperPath = piperPath })
+                    using (var form = new PiperDownload("Piper TextToSpeech voice: " + voice.Voice) { AutoClose = true, ModelUrl = voice.Model, ModelFileName = modelFileName, PiperPath = piperPath })
                     {
                         if (form.ShowDialog(this) != DialogResult.OK)
                         {
@@ -582,7 +582,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 var configFileName = Path.Combine(piperPath, voice.ConfigShort);
                 if (!File.Exists(configFileName))
                 {
-                    using (var form = new PiperDownload("Piper TextToSpeech Voice") { AutoClose = true, ModelUrl = voice.Config, ModelFileName = configFileName, PiperPath = piperPath })
+                    using (var form = new PiperDownload("Piper TextToSpeech voice config: " + voice.Voice) { AutoClose = true, ModelUrl = voice.Config, ModelFileName = configFileName, PiperPath = piperPath })
                     {
                         if (form.ShowDialog(this) != DialogResult.OK)
                         {
@@ -1243,6 +1243,14 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             {
                 UiUtil.ShowHelp("#text_to_speech");
                 e.SuppressKeyPress = true;
+            }
+        }
+
+        private void TextBoxTest_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                buttonTestVoice_Click(null, null);
             }
         }
     }
