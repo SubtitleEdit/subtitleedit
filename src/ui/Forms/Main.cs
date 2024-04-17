@@ -1140,7 +1140,7 @@ namespace Nikse.SubtitleEdit.Forms
             deleteParagraphToolStripMenuItem.Visible = true;
             toolStripMenuItemFocusTextbox.Visible = true;
             splitToolStripMenuItem1.Visible = true;
-            runWhiperOnParagraphToolStripMenuItem.Visible = e.Paragraph.DurationTotalMilliseconds > 8000;
+            runWhiperOnParagraphToolStripMenuItem.Visible = true;
             mergeWithPreviousToolStripMenuItem.Visible = true;
             mergeWithNextToolStripMenuItem.Visible = true;
             toolStripSeparator11.Visible = true;
@@ -1242,6 +1242,7 @@ namespace Nikse.SubtitleEdit.Forms
             extendToPreviousToolStripMenuItem.Visible = false;
             extendToNextToolStripMenuItem.Visible = false;
             toolStripSeparator6.Visible = false;
+            runWhiperOnParagraphToolStripMenuItem.Visible = false;
 
             addShotChangeToolStripMenuItem.Visible = false;
             var shotChangeCount = audioVisualizer.ShotChanges?.Count(p => p >= e.Paragraph.StartTime.TotalSeconds && p <= e.Paragraph.EndTime.TotalSeconds);
@@ -9880,6 +9881,18 @@ namespace Nikse.SubtitleEdit.Forms
                         if (useOriginal)
                         {
                             _subtitleOriginal.InsertParagraphInCorrectTimeOrder(p);
+                            if (_subtitle.Paragraphs.Any(x =>
+                                    (p.StartTime.TotalMilliseconds > x.StartTime.TotalMilliseconds  && p.StartTime.TotalMilliseconds < x.EndTime.TotalMilliseconds) ||
+                                    (p.EndTime.TotalMilliseconds > x.EndTime.TotalMilliseconds && p.EndTime.TotalMilliseconds < x.EndTime.TotalMilliseconds)))
+                            {
+                                // overlap
+                            }
+                            else
+                            {
+                                var p2 = new Paragraph(p);
+                                p2.Text = string.Empty;
+                                _subtitle.InsertParagraphInCorrectTimeOrder(p2);
+                            }
                         }
                         else
                         {
