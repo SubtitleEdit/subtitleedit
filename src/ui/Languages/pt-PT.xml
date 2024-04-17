@@ -1453,6 +1453,7 @@ Para usar a chave API, vá a "Opções -&gt; Definições -&gt; Tradução autom
         <RemoveOrExportShotChanges>Remover/exportar mudanças de cena...</RemoveOrExportShotChanges>
         <WaveformBatchGenerate>Gerar formas de onda em série...</WaveformBatchGenerate>
         <ShowHideWaveformAndSpectrogram>Mostrar/ocultar forma de onda e espectrograma</ShowHideWaveformAndSpectrogram>
+        <TextToSpeechAndAddToVideo>Texto para voz e adicionar ao vídeo...</TextToSpeechAndAddToVideo>
         <UnDockVideoControls>Separar controlos de vídeo</UnDockVideoControls>
         <ReDockVideoControls>Unir controlos de vídeo</ReDockVideoControls>
       </Video>
@@ -3155,6 +3156,18 @@ Continuar?</RestoreDefaultSettingsMsg>
     <Info>Um ponto de sincronia ajustará a posição, dois ou mais pontos ajustam a posição e a velocidade</Info>
     <ApplySync>Aplicar</ApplySync>
   </PointSync>
+  <TextToSpeech>
+    <Title>Texto para voz</Title>
+    <Voice>Voz</Voice>
+    <TestVoice>Teste de voz</TestVoice>
+    <DefaultVoice>Voz predefinida</DefaultVoice>
+    <AddAudioToVideo>Adicionar áudio ao ficheiro de vídeo (novo ficheiro)</AddAudioToVideo>
+    <GenerateSpeech>Gerar voz a partir de texto</GenerateSpeech>
+    <ActorInfo>Clique com o botão direito do rato para atribuir um ator à voz</ActorInfo>
+    <AdjustingSpeedXOfY>A regular a velocidade: {0} / {1}...</AdjustingSpeedXOfY>
+    <MergingAudioTrackXOfY>A combinar a faixa de áudio: {0} / {1}...</MergingAudioTrackXOfY>
+    <GeneratingSpeechFromTextXOfY>A gerar voz a partir de texto: {0} / {1}...</GeneratingSpeechFromTextXOfY>
+  </TextToSpeech>
   <TimedTextSmpteTiming>
     <Title>Temporização SMPTE</Title>
     <UseSmpteTiming>Usar a temporização SMPTE para a legenda actual?</UseSmpteTiming>
