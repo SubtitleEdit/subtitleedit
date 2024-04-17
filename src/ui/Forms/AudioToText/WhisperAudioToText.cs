@@ -397,6 +397,18 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 }
             }
 
+            if (comboBoxModels.Items[comboBoxModels.SelectedIndex] is WhisperModel model2 &&
+                _languageCode != "no" && _languageCode != "nb" && IsModelNorwegianOnly(model2))
+            {
+                var result = MessageBox.Show("Norwegian model should only be used with Norwegian language." + Environment.NewLine +
+                                             "Continue anyway?", Text, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
+                if (result != DialogResult.Yes)
+                {
+                    return;
+                }
+            }
+
+
             try
             {
                 var f = SeLogger.GetWhisperLogFilePath();
@@ -519,6 +531,11 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             return model.Name.EndsWith(".en", StringComparison.InvariantCulture) ||
                    model.Name == "distil-large-v2" ||
                    model.Name == "distil-large-v3";
+        }
+
+        private static bool IsModelNorwegianOnly(WhisperModel model)
+        {
+            return model.ToString().Contains("Norwegian", StringComparison.OrdinalIgnoreCase);
         }
 
         private void ShowProgressBar()
