@@ -943,12 +943,14 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             var sub = new Subtitle();
             if (File.Exists(srtFileName))
             {
-                new SubRip().LoadSubtitle(sub, FileUtil.ReadAllLinesShared(srtFileName, Encoding.UTF8), srtFileName);
+                var rawText = FileUtil.ReadAllLinesShared(srtFileName, Encoding.UTF8);
+                new SubRip().LoadSubtitle(sub, rawText, srtFileName);
                 outputText?.Add($"Loading result from {srtFileName}{Environment.NewLine}");
             }
             else
             {
-                new WebVTT().LoadSubtitle(sub, FileUtil.ReadAllLinesShared(vttFileName, Encoding.UTF8), srtFileName);
+                var rawText = FileUtil.ReadAllLinesShared(srtFileName, Encoding.UTF8);
+                new WebVTT().LoadSubtitle(sub, rawText, srtFileName);
                 outputText?.Add($"Loading result from {vttFileName}{Environment.NewLine}");
             }
 
