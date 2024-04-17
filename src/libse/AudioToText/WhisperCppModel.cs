@@ -40,6 +40,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
         }
 
         private const string DownloadUrlPrefix = "https://huggingface.co/ggerganov/whisper.cpp/resolve/main/";
+        private const string DownloadUrlNbPrefix = "https://huggingface.co/NbAiLab/nb-whisper-large-beta/resolve/main/";
 
         public WhisperModel[] Models => new[]
         {
@@ -162,6 +163,12 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                 Name = "large-q5_0",
                 Size = "2.88 GB",
                 Urls = new []{ DownloadUrlPrefix + "ggml-large-v3-q5_0.bin" },
+            },
+            new WhisperModel
+            {
+                Name = "ggml-model",
+                Size = "3.1 GB Norwegian NB, beta",
+                Urls = new []{ DownloadUrlNbPrefix + "ggml-model.bin" },
             },
         };
     }
