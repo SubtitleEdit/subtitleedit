@@ -277,14 +277,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 checkBoxRightToLeft.Enabled = false;
                 labelProgress.Text = LanguageSettings.Current.Main.NoSubtitleLoaded;
-                if (Configuration.Settings.General.UseDarkTheme)
-                {
-                    labelProgress.ForeColor = Color.Yellow;
-                }
-                else
-                {
-                    labelProgress.ForeColor = Color.DarkGoldenrod;
-                }
+                labelProgress.ForeColor = Configuration.Settings.General.UseDarkTheme ? Color.Yellow : Color.DarkGoldenrod;
             }
         }
 
