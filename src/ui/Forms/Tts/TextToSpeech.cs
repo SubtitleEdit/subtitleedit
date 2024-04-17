@@ -94,13 +94,13 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
             _engines = new List<TextToSpeechEngine>();
             _engines.Add(new TextToSpeechEngine(TextToSpeechEngineId.Piper, "Piper (fast/good)", _engines.Count));
-            _engines.Add(new TextToSpeechEngine(TextToSpeechEngineId.Tortoise, "Tortoise TTS (very slow/very good)", _engines.Count));
-            _engines.Add(new TextToSpeechEngine(TextToSpeechEngineId.Coqui, "coqui TTS", _engines.Count));
+            _engines.Add(new TextToSpeechEngine(TextToSpeechEngineId.Tortoise, "Tortoise TTS (very slow/good)", _engines.Count));
+            _engines.Add(new TextToSpeechEngine(TextToSpeechEngineId.Coqui, "Coqui AI TTS (only one voice)", _engines.Count));
             if (Configuration.IsRunningOnWindows)
             {
                 _engines.Add(new TextToSpeechEngine(TextToSpeechEngineId.MsSpeechSynthesizer, "Microsoft SpeechSynthesizer (very fast/robotic)", _engines.Count));
             }
-            _engines.Add(new TextToSpeechEngine(TextToSpeechEngineId.ElevenLabs, "ElevenLabs TTS", _engines.Count));
+            _engines.Add(new TextToSpeechEngine(TextToSpeechEngineId.ElevenLabs, "ElevenLabs TTS (online/pay/good)", _engines.Count));
 
             _actorAndVoices = new List<ActorAndVoice>();
             nikseComboBoxEngine.DropDownStyle = ComboBoxStyle.DropDownList;

@@ -35607,12 +35607,6 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            if (_subtitle == null || _subtitle.Paragraphs.Count == 0)
-            {
-                DisplaySubtitleNotLoadedMessage();
-                return;
-            }
-
             if (!RequireFfmpegOk())
             {
                 return;
