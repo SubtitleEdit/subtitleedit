@@ -314,6 +314,29 @@ namespace Nikse.SubtitleEdit.Forms
             buttonClear.Visible = BatchMode;
             buttonAddFile.Visible = BatchMode;
 
+            var audioTracks = _mediaInfo.Tracks.Where(p => p.TrackType == FfmpegTrackType.Audio).ToList();
+            if (BatchMode)
+            {
+                listViewAudioTracks.Visible = false;
+            }
+            else if (audioTracks.Count > 1)
+            {
+                listViewAudioTracks.Visible = true;
+                for (var index = 0; index < audioTracks.Count; index++)
+                {
+                    var trackInfo = audioTracks[index];
+                    listViewAudioTracks.Items.Add($"#{index}: {trackInfo.TrackInfo}");
+                    listViewAudioTracks.Items[index].Checked = true;
+                }
+
+                listViewAudioTracks.AutoSizeLastColumn();
+            }
+            else
+            {
+                listViewAudioTracks.Visible = false;
+            }
+
+
             if (string.IsNullOrEmpty(inputVideoFileName) || _videoInfo == null || _videoInfo.Width == 0 || _videoInfo.Height == 0)
             {
                 buttonMode_Click(null, null);
@@ -873,6 +896,19 @@ namespace Nikse.SubtitleEdit.Forms
 
         private Process GetFfmpegProcess(string inputVideoFileName, string outputVideoFileName, string assaTempFileName, int? passNumber = null, string twoPassBitRate = null, bool preview = false)
         {
+            var audioCutTracks = string.Empty;
+            if (listViewAudioTracks.Visible)
+            {
+                for (var index = 0; index < listViewAudioTracks.Items.Count; index++)
+                {
+                    var listViewItem = listViewAudioTracks.Items[index];
+                    if (!listViewItem.Checked)
+                    {
+                        audioCutTracks += $"-map 0:a:{index} ";
+                    }
+                }
+            }
+
             var pass = string.Empty;
             if (passNumber.HasValue)
             {
@@ -909,7 +945,8 @@ namespace Nikse.SubtitleEdit.Forms
                 twoPassBitRate,
                 OutputHandler,
                 cutStart,
-                cutEnd);
+                cutEnd,
+                audioCutTracks);
         }
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -1996,6 +2033,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void GenerateVideoWithHardSubs_ResizeEnd(object sender, EventArgs e)
         {
             listViewBatch.AutoSizeLastColumn();
+            listViewAudioTracks.AutoSizeLastColumn();
         }
 
         private void listViewBatch_DragEnter(object sender, DragEventArgs e)
