@@ -125,7 +125,7 @@ namespace Nikse.SubtitleEdit.Logic
         /// <summary>
         /// Generate a video with a burned-in Advanced Sub Station Alpha subtitle.
         /// </summary>
-        public static Process GenerateHardcodedVideoFile(string inputVideoFileName, string assaSubtitleFileName, string outputVideoFileName, int width, int height, string videoEncoding, string preset, string crf, string audioEncoding, bool forceStereo, string sampleRate, string tune, string audioBitRate, string pass, string twoPassBitRate, DataReceivedEventHandler dataReceivedHandler = null, string cutStart = null, string cutEnd = null)
+        public static Process GenerateHardcodedVideoFile(string inputVideoFileName, string assaSubtitleFileName, string outputVideoFileName, int width, int height, string videoEncoding, string preset, string crf, string audioEncoding, bool forceStereo, string sampleRate, string tune, string audioBitRate, string pass, string twoPassBitRate, DataReceivedEventHandler dataReceivedHandler = null, string cutStart = null, string cutEnd = null, string audioCutTrack = "")
         {
             if (width % 2 == 1)
             {
@@ -156,6 +156,9 @@ namespace Nikse.SubtitleEdit.Logic
                     audioSettings += " -ac 2";
                 }
             }
+
+            audioSettings = audioCutTrack + " " + audioSettings;
+
 
             var presetSettings = string.Empty;
             if (!string.IsNullOrEmpty(preset))
