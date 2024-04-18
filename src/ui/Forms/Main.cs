@@ -9099,10 +9099,17 @@ namespace Nikse.SubtitleEdit.Forms
                             return;
                         }
 
-                        var encodingTime = new TimeCode(form.MillisecondsEncoding).ToString();
-                        using (var f = new ExportPngXmlDialogOpenFolder(string.Format(LanguageSettings.Current.GenerateVideoWithBurnedInSubs.XGeneratedWithBurnedInSubsInX, Path.GetFileName(form.VideoFileName), encodingTime), Path.GetDirectoryName(form.VideoFileName), form.VideoFileName))
+                        if (form.BatchMode)
                         {
-                            f.ShowDialog(this);
+                            MessageBox.Show(form.BatchInfo);
+                        }
+                        else
+                        {
+                            var encodingTime = new TimeCode(form.MillisecondsEncoding).ToString();
+                            using (var f = new ExportPngXmlDialogOpenFolder(string.Format(LanguageSettings.Current.GenerateVideoWithBurnedInSubs.XGeneratedWithBurnedInSubsInX, Path.GetFileName(form.VideoFileName), encodingTime), Path.GetDirectoryName(form.VideoFileName), form.VideoFileName))
+                            {
+                                f.ShowDialog(this);
+                            }
                         }
                     }
                 };
@@ -9873,6 +9880,19 @@ namespace Nikse.SubtitleEdit.Forms
                         return;
                     }
 
+                    if (useOriginal)
+                    {
+                        var p2 = _subtitle.GetParagraphOrDefaultById(audioClips[0].Paragraph.Id);
+                        if (p2 != null)
+                        {
+                            var original = Utilities.GetOriginalParagraph(_subtitle.Paragraphs.IndexOf(p2), p2, _subtitleOriginal.Paragraphs);
+                            if (original != null)
+                            {
+                                _subtitleOriginal.Paragraphs.Remove(original);
+                            }
+                        }
+                    }
+
                     _subtitle.Paragraphs.RemoveAll(p => p.Id == audioClips[0].Paragraph.Id);
 
                     foreach (var p in form.TranscribedSubtitle.Paragraphs)
@@ -9882,7 +9902,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             _subtitleOriginal.InsertParagraphInCorrectTimeOrder(p);
                             if (_subtitle.Paragraphs.Any(x =>
-                                    (p.StartTime.TotalMilliseconds > x.StartTime.TotalMilliseconds  && p.StartTime.TotalMilliseconds < x.EndTime.TotalMilliseconds) ||
+                                    (p.StartTime.TotalMilliseconds > x.StartTime.TotalMilliseconds && p.StartTime.TotalMilliseconds < x.EndTime.TotalMilliseconds) ||
                                     (p.EndTime.TotalMilliseconds > x.EndTime.TotalMilliseconds && p.EndTime.TotalMilliseconds < x.EndTime.TotalMilliseconds)))
                             {
                                 // overlap
@@ -35638,12 +35658,6 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            if (string.IsNullOrEmpty(_videoFileName) || _videoInfo == null || _videoInfo.Width == 0 || _videoInfo.Height == 0)
-            {
-                MessageBox.Show(LanguageSettings.Current.General.NoVideoLoaded);
-                return;
-            }
-
             if (!RequireFfmpegOk())
             {
                 return;
@@ -35660,10 +35674,17 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
 
-                var encodingTime = new TimeCode(form.MillisecondsEncoding).ToString();
-                using (var f = new ExportPngXmlDialogOpenFolder(string.Format(LanguageSettings.Current.GenerateVideoWithBurnedInSubs.XGeneratedWithBurnedInSubsInX, Path.GetFileName(form.VideoFileName), encodingTime), Path.GetDirectoryName(form.VideoFileName), form.VideoFileName))
+                if (form.BatchMode)
                 {
-                    f.ShowDialog(this);
+                    MessageBox.Show(form.BatchInfo);
+                }
+                else
+                {
+                    var encodingTime = new TimeCode(form.MillisecondsEncoding).ToString();
+                    using (var f = new ExportPngXmlDialogOpenFolder(string.Format(LanguageSettings.Current.GenerateVideoWithBurnedInSubs.XGeneratedWithBurnedInSubsInX, Path.GetFileName(form.VideoFileName), encodingTime), Path.GetDirectoryName(form.VideoFileName), form.VideoFileName))
+                    {
+                        f.ShowDialog(this);
+                    }
                 }
             }
         }
@@ -35671,6 +35692,12 @@ namespace Nikse.SubtitleEdit.Forms
         private int? PrepareBurn(Subtitle sub)
         {
             int? fontSize = null;
+
+            if (_videoInfo == null)
+            {
+                return fontSize;
+            }
+
             if (string.IsNullOrEmpty(sub.Header) || !IsAssa())
             {
                 sub.Header = AdvancedSubStationAlpha.DefaultHeader;
