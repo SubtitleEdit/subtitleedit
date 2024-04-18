@@ -41,9 +41,9 @@ namespace Nikse.SubtitleEdit.Forms
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
-            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode1 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
-            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode2 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
-            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode3 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
+            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode4 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
+            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode5 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
+            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode6 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.labelStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripSelected = new System.Windows.Forms.ToolStripStatusLabel();
@@ -3647,21 +3647,13 @@ namespace Nikse.SubtitleEdit.Forms
             // textBoxSearchWord
             // 
             this.textBoxSearchWord.BackColor = System.Drawing.SystemColors.Window;
-            this.textBoxSearchWord.HideSelection = true;
+            this.textBoxSearchWord.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.textBoxSearchWord.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Bold);
             this.textBoxSearchWord.Location = new System.Drawing.Point(6, 18);
-            this.textBoxSearchWord.MaxLength = 32767;
             this.textBoxSearchWord.Multiline = true;
             this.textBoxSearchWord.Name = "textBoxSearchWord";
-            this.textBoxSearchWord.Padding = new System.Windows.Forms.Padding(1);
-            this.textBoxSearchWord.ReadOnly = false;
-            this.textBoxSearchWord.ScrollBars = ScrollBars.None;
-            this.textBoxSearchWord.SelectedText = "";
-            this.textBoxSearchWord.SelectionLength = 0;
-            this.textBoxSearchWord.SelectionStart = 0;
             this.textBoxSearchWord.Size = new System.Drawing.Size(244, 39);
             this.textBoxSearchWord.TabIndex = 0;
-            this.textBoxSearchWord.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Bold);
-            this.textBoxSearchWord.UseSystemPasswordChar = false;
             // 
             // groupBoxAutoContinue
             // 
@@ -3894,14 +3886,14 @@ namespace Nikse.SubtitleEdit.Forms
             this.timeUpDownVideoPosition.Size = new System.Drawing.Size(113, 23);
             this.timeUpDownVideoPosition.TabIndex = 12;
             this.timeUpDownVideoPosition.TabStop = false;
-            timeCode1.Hours = 0;
-            timeCode1.Milliseconds = 0;
-            timeCode1.Minutes = 0;
-            timeCode1.Seconds = 0;
-            timeCode1.TimeSpan = System.TimeSpan.Parse("00:00:00");
-            timeCode1.TotalMilliseconds = 0D;
-            timeCode1.TotalSeconds = 0D;
-            this.timeUpDownVideoPosition.TimeCode = timeCode1;
+            timeCode4.Hours = 0;
+            timeCode4.Milliseconds = 0;
+            timeCode4.Minutes = 0;
+            timeCode4.Seconds = 0;
+            timeCode4.TimeSpan = System.TimeSpan.Parse("00:00:00");
+            timeCode4.TotalMilliseconds = 0D;
+            timeCode4.TotalSeconds = 0D;
+            this.timeUpDownVideoPosition.TimeCode = timeCode4;
             this.timeUpDownVideoPosition.UseVideoOffset = false;
             // 
             // buttonGotoSub
@@ -4174,14 +4166,14 @@ namespace Nikse.SubtitleEdit.Forms
             this.timeUpDownVideoPositionAdjust.Size = new System.Drawing.Size(113, 23);
             this.timeUpDownVideoPositionAdjust.TabIndex = 13;
             this.timeUpDownVideoPositionAdjust.TabStop = false;
-            timeCode2.Hours = 0;
-            timeCode2.Milliseconds = 0;
-            timeCode2.Minutes = 0;
-            timeCode2.Seconds = 0;
-            timeCode2.TimeSpan = System.TimeSpan.Parse("00:00:00");
-            timeCode2.TotalMilliseconds = 0D;
-            timeCode2.TotalSeconds = 0D;
-            this.timeUpDownVideoPositionAdjust.TimeCode = timeCode2;
+            timeCode5.Hours = 0;
+            timeCode5.Milliseconds = 0;
+            timeCode5.Minutes = 0;
+            timeCode5.Seconds = 0;
+            timeCode5.TimeSpan = System.TimeSpan.Parse("00:00:00");
+            timeCode5.TotalMilliseconds = 0D;
+            timeCode5.TotalSeconds = 0D;
+            this.timeUpDownVideoPositionAdjust.TimeCode = timeCode5;
             this.timeUpDownVideoPositionAdjust.UseVideoOffset = false;
             // 
             // buttonAdjustSetEndTime
@@ -5530,14 +5522,14 @@ namespace Nikse.SubtitleEdit.Forms
             this.timeUpDownStartTime.Size = new System.Drawing.Size(113, 23);
             this.timeUpDownStartTime.TabIndex = 0;
             this.timeUpDownStartTime.TabStop = false;
-            timeCode3.Hours = 0;
-            timeCode3.Milliseconds = 0;
-            timeCode3.Minutes = 0;
-            timeCode3.Seconds = 0;
-            timeCode3.TimeSpan = System.TimeSpan.Parse("00:00:00");
-            timeCode3.TotalMilliseconds = 0D;
-            timeCode3.TotalSeconds = 0D;
-            this.timeUpDownStartTime.TimeCode = timeCode3;
+            timeCode6.Hours = 0;
+            timeCode6.Milliseconds = 0;
+            timeCode6.Minutes = 0;
+            timeCode6.Seconds = 0;
+            timeCode6.TimeSpan = System.TimeSpan.Parse("00:00:00");
+            timeCode6.TotalMilliseconds = 0D;
+            timeCode6.TotalSeconds = 0D;
+            this.timeUpDownStartTime.TimeCode = timeCode6;
             this.timeUpDownStartTime.UseVideoOffset = false;
             // 
             // numericUpDownDuration
@@ -5932,6 +5924,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.tabPageTranslate.ResumeLayout(false);
             this.tabPageTranslate.PerformLayout();
             this.groupBoxTranslateSearch.ResumeLayout(false);
+            this.groupBoxTranslateSearch.PerformLayout();
             this.groupBoxAutoContinue.ResumeLayout(false);
             this.groupBoxAutoContinue.PerformLayout();
             this.groupBoxAutoRepeat.ResumeLayout(false);
