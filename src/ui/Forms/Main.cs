@@ -36608,6 +36608,9 @@ namespace Nikse.SubtitleEdit.Forms
                             _subtitleOriginal = new Subtitle(_subtitle, false);
                             _subtitleOriginalFileName = _fileName;
                             _fileName = null;
+                            var oldHash = _changeOriginalSubtitleHash;
+                            SetupOriginalEdit();
+                            _changeOriginalSubtitleHash = oldHash;
 
                             foreach (var p in _subtitle.Paragraphs)
                             {
