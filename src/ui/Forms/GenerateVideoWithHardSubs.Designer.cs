@@ -90,9 +90,19 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelFileName = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.numericUpDownFontSize = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelFontSize = new Nikse.SubtitleEdit.Controls.NikseLabel();
+            this.listViewBatch = new System.Windows.Forms.ListView();
+            this.columnHeaderVideoFile = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeaderSize = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeaderSubtitleFile = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeaderStatus = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.contextMenuStripBatch = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.addFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.pickSubtitleFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.clearToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.buttonPreview = new System.Windows.Forms.Button();
             this.linkLabelHelp = new System.Windows.Forms.LinkLabel();
-            this.textBoxLog = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.contextMenuStripRes = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.x2160ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.uHD3840x2160ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -108,15 +118,21 @@ namespace Nikse.SubtitleEdit.Forms
             this.nTSC720x480ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.x352ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.x272ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.buttonMode = new System.Windows.Forms.Button();
             this.labelPreviewPleaseWait = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.labelPass = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.labelProgress = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.labelPleaseWait = new Nikse.SubtitleEdit.Controls.NikseLabel();
+            this.textBoxLog = new Nikse.SubtitleEdit.Controls.NikseTextBox();
+            this.buttonClear = new System.Windows.Forms.Button();
+            this.buttonRemoveFile = new System.Windows.Forms.Button();
+            this.buttonAddFile = new System.Windows.Forms.Button();
             this.contextMenuStripGenerate.SuspendLayout();
             this.groupBoxSettings.SuspendLayout();
             this.groupBoxCut.SuspendLayout();
             this.groupBoxVideo.SuspendLayout();
             this.groupBoxAudio.SuspendLayout();
+            this.contextMenuStripBatch.SuspendLayout();
             this.contextMenuStripRes.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -126,7 +142,7 @@ namespace Nikse.SubtitleEdit.Forms
             | System.Windows.Forms.AnchorStyles.Right)));
             this.progressBar1.Location = new System.Drawing.Point(12, 615);
             this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(653, 11);
+            this.progressBar1.Size = new System.Drawing.Size(603, 11);
             this.progressBar1.TabIndex = 22;
             this.progressBar1.Visible = false;
             // 
@@ -135,7 +151,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonGenerate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonGenerate.ContextMenuStrip = this.contextMenuStripGenerate;
             this.buttonGenerate.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonGenerate.Location = new System.Drawing.Point(671, 615);
+            this.buttonGenerate.Location = new System.Drawing.Point(621, 615);
             this.buttonGenerate.Name = "buttonGenerate";
             this.buttonGenerate.Size = new System.Drawing.Size(121, 23);
             this.buttonGenerate.TabIndex = 140;
@@ -162,9 +178,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(798, 615);
+            this.buttonCancel.Location = new System.Drawing.Point(748, 615);
             this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(75, 23);
+            this.buttonCancel.Size = new System.Drawing.Size(125, 23);
             this.buttonCancel.TabIndex = 141;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
@@ -180,8 +196,11 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxSettings.Controls.Add(this.buttonClear);
             this.groupBoxSettings.Controls.Add(this.panelForeColor);
+            this.groupBoxSettings.Controls.Add(this.buttonRemoveFile);
             this.groupBoxSettings.Controls.Add(this.buttonForeColor);
+            this.groupBoxSettings.Controls.Add(this.buttonAddFile);
             this.groupBoxSettings.Controls.Add(this.panelOutlineColor);
             this.groupBoxSettings.Controls.Add(this.buttonOutlineColor);
             this.groupBoxSettings.Controls.Add(this.videoPlayerContainer1);
@@ -201,6 +220,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxSettings.Controls.Add(this.labelFileName);
             this.groupBoxSettings.Controls.Add(this.numericUpDownFontSize);
             this.groupBoxSettings.Controls.Add(this.labelFontSize);
+            this.groupBoxSettings.Controls.Add(this.listViewBatch);
             this.groupBoxSettings.Location = new System.Drawing.Point(12, 13);
             this.groupBoxSettings.Name = "groupBoxSettings";
             this.groupBoxSettings.Size = new System.Drawing.Size(861, 547);
@@ -1209,10 +1229,96 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelFontSize.TabIndex = 0;
             this.labelFontSize.Text = "Font size";
             // 
+            // listViewBatch
+            // 
+            this.listViewBatch.AllowDrop = true;
+            this.listViewBatch.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.listViewBatch.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeaderVideoFile,
+            this.columnHeaderSize,
+            this.columnHeaderSubtitleFile,
+            this.columnHeaderStatus});
+            this.listViewBatch.ContextMenuStrip = this.contextMenuStripBatch;
+            this.listViewBatch.HideSelection = false;
+            this.listViewBatch.Location = new System.Drawing.Point(6, 316);
+            this.listViewBatch.Name = "listViewBatch";
+            this.listViewBatch.Size = new System.Drawing.Size(852, 191);
+            this.listViewBatch.TabIndex = 3;
+            this.listViewBatch.UseCompatibleStateImageBehavior = false;
+            this.listViewBatch.View = System.Windows.Forms.View.Details;
+            this.listViewBatch.DragDrop += new System.Windows.Forms.DragEventHandler(this.listViewBatch_DragDrop);
+            this.listViewBatch.DragEnter += new System.Windows.Forms.DragEventHandler(this.listViewBatch_DragEnter);
+            // 
+            // columnHeaderVideoFile
+            // 
+            this.columnHeaderVideoFile.Text = "Video file";
+            this.columnHeaderVideoFile.Width = 400;
+            // 
+            // columnHeaderSize
+            // 
+            this.columnHeaderSize.Text = "Size";
+            this.columnHeaderSize.Width = 140;
+            // 
+            // columnHeaderSubtitleFile
+            // 
+            this.columnHeaderSubtitleFile.Text = "Subtitle file";
+            this.columnHeaderSubtitleFile.Width = 200;
+            // 
+            // columnHeaderStatus
+            // 
+            this.columnHeaderStatus.Text = "Status";
+            this.columnHeaderStatus.Width = 80;
+            // 
+            // contextMenuStripBatch
+            // 
+            this.contextMenuStripBatch.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.addFilesToolStripMenuItem,
+            this.pickSubtitleFileToolStripMenuItem,
+            this.toolStripSeparator1,
+            this.deleteToolStripMenuItem,
+            this.clearToolStripMenuItem});
+            this.contextMenuStripBatch.Name = "contextMenuStripBatch";
+            this.contextMenuStripBatch.Size = new System.Drawing.Size(167, 98);
+            this.contextMenuStripBatch.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripBatch_Opening);
+            // 
+            // addFilesToolStripMenuItem
+            // 
+            this.addFilesToolStripMenuItem.Name = "addFilesToolStripMenuItem";
+            this.addFilesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.addFilesToolStripMenuItem.Text = "Add video files...";
+            this.addFilesToolStripMenuItem.Click += new System.EventHandler(this.addFilesToolStripMenuItem_Click);
+            // 
+            // pickSubtitleFileToolStripMenuItem
+            // 
+            this.pickSubtitleFileToolStripMenuItem.Name = "pickSubtitleFileToolStripMenuItem";
+            this.pickSubtitleFileToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.pickSubtitleFileToolStripMenuItem.Text = "Pick subtitle file...";
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
+            // 
+            // deleteToolStripMenuItem
+            // 
+            this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
+            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.deleteToolStripMenuItem.Text = "Delete";
+            this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
+            // 
+            // clearToolStripMenuItem
+            // 
+            this.clearToolStripMenuItem.Name = "clearToolStripMenuItem";
+            this.clearToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.clearToolStripMenuItem.Text = "Clear";
+            this.clearToolStripMenuItem.Click += new System.EventHandler(this.clearToolStripMenuItem_Click);
+            // 
             // buttonPreview
             // 
             this.buttonPreview.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonPreview.Location = new System.Drawing.Point(671, 586);
+            this.buttonPreview.Location = new System.Drawing.Point(621, 586);
             this.buttonPreview.Name = "buttonPreview";
             this.buttonPreview.Size = new System.Drawing.Size(121, 23);
             this.buttonPreview.TabIndex = 130;
@@ -1231,16 +1337,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.linkLabelHelp.TabStop = true;
             this.linkLabelHelp.Text = "Help";
             this.linkLabelHelp.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelHelp_LinkClicked);
-            // 
-            // textBoxLog
-            // 
-            this.textBoxLog.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            this.textBoxLog.Location = new System.Drawing.Point(12, 13);
-            this.textBoxLog.Multiline = true;
-            this.textBoxLog.Name = "textBoxLog";
-            this.textBoxLog.ReadOnly = true;
-            this.textBoxLog.Size = new System.Drawing.Size(188, 26);
-            this.textBoxLog.TabIndex = 31;
             // 
             // contextMenuStripRes
             // 
@@ -1360,6 +1456,18 @@ namespace Nikse.SubtitleEdit.Forms
             this.x272ToolStripMenuItem.Text = "640x272";
             this.x272ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
             // 
+            // buttonMode
+            // 
+            this.buttonMode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonMode.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.buttonMode.Location = new System.Drawing.Point(748, 586);
+            this.buttonMode.Name = "buttonMode";
+            this.buttonMode.Size = new System.Drawing.Size(125, 23);
+            this.buttonMode.TabIndex = 143;
+            this.buttonMode.Text = "Batch mode";
+            this.buttonMode.UseVisualStyleBackColor = true;
+            this.buttonMode.Click += new System.EventHandler(this.buttonMode_Click);
+            // 
             // labelPreviewPleaseWait
             // 
             this.labelPreviewPleaseWait.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
@@ -1374,7 +1482,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.labelPass.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.labelPass.AutoSize = true;
-            this.labelPass.Location = new System.Drawing.Point(614, 599);
+            this.labelPass.Location = new System.Drawing.Point(564, 599);
             this.labelPass.Name = "labelPass";
             this.labelPass.Size = new System.Drawing.Size(51, 13);
             this.labelPass.TabIndex = 47;
@@ -1400,11 +1508,55 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelPleaseWait.TabIndex = 25;
             this.labelPleaseWait.Text = "Please wait...";
             // 
+            // textBoxLog
+            // 
+            this.textBoxLog.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.textBoxLog.Location = new System.Drawing.Point(12, 13);
+            this.textBoxLog.Multiline = true;
+            this.textBoxLog.Name = "textBoxLog";
+            this.textBoxLog.ReadOnly = true;
+            this.textBoxLog.Size = new System.Drawing.Size(188, 26);
+            this.textBoxLog.TabIndex = 31;
+            // 
+            // buttonClear
+            // 
+            this.buttonClear.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonClear.Location = new System.Drawing.Point(165, 513);
+            this.buttonClear.Name = "buttonClear";
+            this.buttonClear.Size = new System.Drawing.Size(74, 23);
+            this.buttonClear.TabIndex = 146;
+            this.buttonClear.Text = "Clear";
+            this.buttonClear.UseVisualStyleBackColor = true;
+            this.buttonClear.Click += new System.EventHandler(this.buttonClear_Click);
+            // 
+            // buttonRemoveFile
+            // 
+            this.buttonRemoveFile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonRemoveFile.Location = new System.Drawing.Point(85, 513);
+            this.buttonRemoveFile.Name = "buttonRemoveFile";
+            this.buttonRemoveFile.Size = new System.Drawing.Size(74, 23);
+            this.buttonRemoveFile.TabIndex = 145;
+            this.buttonRemoveFile.Text = "Remove";
+            this.buttonRemoveFile.UseVisualStyleBackColor = true;
+            this.buttonRemoveFile.Click += new System.EventHandler(this.buttonRemoveFile_Click);
+            // 
+            // buttonAddFile
+            // 
+            this.buttonAddFile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonAddFile.Location = new System.Drawing.Point(6, 513);
+            this.buttonAddFile.Name = "buttonAddFile";
+            this.buttonAddFile.Size = new System.Drawing.Size(73, 23);
+            this.buttonAddFile.TabIndex = 144;
+            this.buttonAddFile.Text = "Add...";
+            this.buttonAddFile.UseVisualStyleBackColor = true;
+            this.buttonAddFile.Click += new System.EventHandler(this.buttonAddFile_Click);
+            // 
             // GenerateVideoWithHardSubs
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(885, 650);
+            this.Controls.Add(this.buttonMode);
             this.Controls.Add(this.labelPreviewPleaseWait);
             this.Controls.Add(this.groupBoxSettings);
             this.Controls.Add(this.labelPass);
@@ -1423,6 +1575,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.Text = "GenerateVideoWithHardSubs";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.GenerateVideoWithHardSubs_FormClosing);
             this.Shown += new System.EventHandler(this.GenerateVideoWithHardSubs_Shown);
+            this.ResizeEnd += new System.EventHandler(this.GenerateVideoWithHardSubs_ResizeEnd);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.GenerateVideoWithHardSubs_KeyDown);
             this.contextMenuStripGenerate.ResumeLayout(false);
             this.groupBoxSettings.ResumeLayout(false);
@@ -1433,6 +1586,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxVideo.PerformLayout();
             this.groupBoxAudio.ResumeLayout(false);
             this.groupBoxAudio.PerformLayout();
+            this.contextMenuStripBatch.ResumeLayout(false);
             this.contextMenuStripRes.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -1523,5 +1677,20 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.Button buttonOutlineColor;
         private System.Windows.Forms.Panel panelForeColor;
         private System.Windows.Forms.Button buttonForeColor;
+        private System.Windows.Forms.ListView listViewBatch;
+        private System.Windows.Forms.ColumnHeader columnHeaderVideoFile;
+        private System.Windows.Forms.ColumnHeader columnHeaderSubtitleFile;
+        private System.Windows.Forms.ColumnHeader columnHeaderSize;
+        private System.Windows.Forms.ColumnHeader columnHeaderStatus;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripBatch;
+        private System.Windows.Forms.ToolStripMenuItem addFilesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem pickSubtitleFileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem clearToolStripMenuItem;
+        private System.Windows.Forms.Button buttonMode;
+        private System.Windows.Forms.Button buttonClear;
+        private System.Windows.Forms.Button buttonRemoveFile;
+        private System.Windows.Forms.Button buttonAddFile;
     }
 }

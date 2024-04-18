@@ -12,6 +12,7 @@
    * Update Polish translation - thx admas
    * Update Korean translation - thx domddol
    * Show Vosk/Whisper done msgbox modal (also if not focused) - thx jupester 
+   * Allow re-encode with burn-in without subtitle - thx Leon
 * FIXED:
    * Fix for Antrophic translate  - thx venomousraid 
    * Fix possible crash in teletext reading - thx yellobyte
