@@ -302,7 +302,7 @@ namespace Nikse.SubtitleEdit.Forms
                 videoPlayerContainer1.Visible = false;
             }
 
-            if (_noSubtitles)
+            if (_noSubtitles && !BatchMode)
             {
                 checkBoxRightToLeft.Enabled = false;
                 labelProgress.Text = LanguageSettings.Current.Main.NoSubtitleLoaded;
