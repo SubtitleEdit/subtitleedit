@@ -146,6 +146,42 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                 Urls = MakeUrls("https://huggingface.co/Systran/faster-distil-whisper-large-v3/resolve/main"),
                 Folder = "faster-distil-whisper-large-v3",
             },
+
+            new WhisperModel
+            {
+                Name = "tiny.nb",
+                Size = "151 MB Norwegian",
+                Urls = MakeUrls("https://huggingface.co/NbAiLab/nb-whisper-tiny/resolve/main"),
+                Folder = "faster-whisper-tiny.nb",
+            },
+            new WhisperModel
+            {
+                Name = "base.nb",
+                Size = "290 MB Norwegian",
+                Urls = MakeUrls("https://huggingface.co/NbAiLab/nb-whisper-base/resolve/main"),
+                Folder = "faster-whisper-base.nb",
+            },
+            new WhisperModel
+            {
+                Name = "small.nb",
+                Size = "151 MB Norwegian",
+                Urls = MakeUrls("https://huggingface.co/NbAiLab/nb-whisper-small/resolve/main"),
+                Folder = "faster-whisper-small.nb",
+            },
+            new WhisperModel
+            {
+                Name = "medium.nb",
+                Size = "3.1 GB Norwegian",
+                Urls = MakeUrls("https://huggingface.co/NbAiLab/nb-whisper-medium/resolve/main"),
+                Folder = "faster-whisper-medium.nb",
+            },
+            new WhisperModel
+            {
+                Name = "large.nb",
+                Size = "6.2 GB Norwegian",
+                Urls = MakeUrls("https://huggingface.co/NbAiLab/nb-whisper-large/resolve/main"),
+                Folder = "faster-whisper-large.nb",
+            },
         };
 
         private string[] MakeUrls(string baseUrl)

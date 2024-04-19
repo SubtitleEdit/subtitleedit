@@ -8,6 +8,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
         public string[] Urls { get; set; }
         public string Size { get; set; }
         public string Name { get; set; }
+        public bool Rename { get; set; }
         public string Folder { get; set; }
         public bool AlreadyDownloaded { get; set; }
         public long Bytes { get; set; }
