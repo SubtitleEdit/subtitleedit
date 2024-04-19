@@ -346,6 +346,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 comboBoxFormality.Visible = true;
                 comboBoxFormality.DropDownStyle = ComboBoxStyle.DropDown;
                 comboBoxFormality.Items.Clear();
+                comboBoxFormality.Items.Add("llama3");
                 comboBoxFormality.Items.Add("llama2");
                 comboBoxFormality.Items.Add("mistral");
                 comboBoxFormality.Items.Add("dolphin-phi");
