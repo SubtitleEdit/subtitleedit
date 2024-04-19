@@ -38,6 +38,7 @@ namespace Nikse.SubtitleEdit.Forms
         public string VideoFileName { get; private set; }
         public long MillisecondsEncoding { get; private set; }
         private PreviewVideo _previewVideo;
+        private readonly bool _initialFontOn;
         public bool BatchMode { get; set; }
         public string BatchInfo { get; set; }
         private readonly List<BatchVideoAndSub> _batchVideoAndSubList;
@@ -176,6 +177,12 @@ namespace Nikse.SubtitleEdit.Forms
             numericUpDownCutToMinutes.Left = numericUpDownCutToHours.Right + 1;
             numericUpDownCutToSeconds.Left = numericUpDownCutToMinutes.Right + 1;
 
+            if (string.IsNullOrEmpty(inputVideoFileName) || _videoInfo == null || _videoInfo.Width == 0 || _videoInfo.Height == 0)
+            {
+                buttonMode_Click(null, null);
+                buttonMode.Visible = false;
+            }
+
             _isAssa = !fontSize.HasValue;
             if (fontSize.HasValue && !_noSubtitles)
             {
@@ -194,21 +201,12 @@ namespace Nikse.SubtitleEdit.Forms
 
                 checkBoxRightToLeft.Checked = Configuration.Settings.General.RightToLeftMode &&
                                               LanguageAutoDetect.CouldBeRightToLeftLanguage(_assaSubtitle);
+                _initialFontOn = true;
             }
             else
             {
-                numericUpDownFontSize.Enabled = false;
-                labelFontSize.Enabled = false;
-                labelSubtitleFont.Enabled = false;
-                comboBoxSubtitleFont.Enabled = false;
-                checkBoxRightToLeft.Left = checkBoxTargetFileSize.Left;
-                checkBoxAlignRight.Enabled = false;
-                checkBoxBox.Enabled = false;
-                labelInfo.Text = LanguageSettings.Current.GenerateVideoWithBurnedInSubs.InfoAssaOn;
-                buttonForeColor.Enabled = false;
-                buttonOutlineColor.Enabled = false;
-                panelOutlineColor.Enabled = false;
-                panelForeColor.Enabled = false;
+                _initialFontOn = false;
+                FontEnableOrDisable(false);
             }
 
             var initialFont = Configuration.Settings.Tools.GenVideoFontName;
@@ -216,6 +214,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 initialFont = Configuration.Settings.Tools.ExportBluRayFontName;
             }
+            labelInfo.Text = LanguageSettings.Current.GenerateVideoWithBurnedInSubs.InfoAssaOn;
             if (string.IsNullOrEmpty(initialFont))
             {
                 initialFont = UiUtil.GetDefaultFont().Name;
@@ -336,11 +335,30 @@ namespace Nikse.SubtitleEdit.Forms
                 listViewAudioTracks.Visible = false;
             }
 
+            FontEnableOrDisable(BatchMode || _initialFontOn);
+        }
 
-            if (string.IsNullOrEmpty(inputVideoFileName) || _videoInfo == null || _videoInfo.Width == 0 || _videoInfo.Height == 0)
+        private void FontEnableOrDisable(bool enabled)
+        {
+            numericUpDownFontSize.Enabled = enabled;
+            labelFontSize.Enabled = enabled;
+            labelSubtitleFont.Enabled = enabled;
+            comboBoxSubtitleFont.Enabled = enabled;
+            checkBoxRightToLeft.Left = checkBoxTargetFileSize.Left;
+            checkBoxAlignRight.Enabled = enabled;
+            checkBoxBox.Enabled = enabled;
+            buttonForeColor.Enabled = enabled;
+            buttonOutlineColor.Enabled = enabled;
+            panelOutlineColor.Enabled = enabled;
+            panelForeColor.Enabled = enabled;
+
+            if (!BatchMode)
             {
-                buttonMode_Click(null, null);
-                buttonMode.Visible = false;
+                labelInfo.Text = LanguageSettings.Current.GenerateVideoWithBurnedInSubs.InfoAssaOn;
+            }
+            else
+            {
+                labelInfo.Text = string.Empty;
             }
         }
 
@@ -1935,6 +1953,8 @@ namespace Nikse.SubtitleEdit.Forms
             buttonMode.Text = BatchMode
                 ? LanguageSettings.Current.AudioToText.BatchMode
                 : LanguageSettings.Current.Split.Basic;
+
+            FontEnableOrDisable(BatchMode || _initialFontOn);
         }
 
         private void addFilesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2106,6 +2126,25 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonClear_Click(object sender, EventArgs e)
         {
             clearToolStripMenuItem_Click(null, null);
+        }
+
+        private void pickSubtitleFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (var openFileDialog1 = new OpenFileDialog())
+            {
+                openFileDialog1.Title = LanguageSettings.Current.General.OpenSubtitle;
+                openFileDialog1.FileName = string.Empty;
+                openFileDialog1.Filter = UiUtil.SubtitleExtensionFilter.Value;
+                openFileDialog1.Multiselect = false;
+                if (openFileDialog1.ShowDialog(this) != DialogResult.OK)
+                {
+                    return;
+                }
+
+                var idx = listViewBatch.SelectedIndices[0];
+                _batchVideoAndSubList[idx].SubtitleFileName = openFileDialog1.FileName;
+                listViewBatch.Items[idx].SubItems[2].Text = Path.GetFileName(openFileDialog1.FileName);
+            }
         }
     }
 }
