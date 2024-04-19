@@ -446,6 +446,11 @@ namespace Nikse.SubtitleEdit.Forms
                     var videoAndSub = _batchVideoAndSubList[index];
                     _videoInfo = UiUtil.GetVideoInfo(videoAndSub.VideoFileName);
                     var subtitle = new Subtitle();
+                    if (!string.IsNullOrEmpty(videoAndSub.SubtitleFileName) & File.Exists(videoAndSub.SubtitleFileName))
+                    {
+                        subtitle = Subtitle.Parse(videoAndSub.SubtitleFileName);
+                    }
+
                     var path = Path.GetDirectoryName(videoAndSub.VideoFileName);
                     var nameNoExt = Path.GetFileNameWithoutExtension(videoAndSub.VideoFileName);
                     var ext = Path.GetExtension(videoAndSub.VideoFileName);
@@ -1951,8 +1956,8 @@ namespace Nikse.SubtitleEdit.Forms
             buttonRemoveFile.Visible = BatchMode;
             buttonClear.Visible = BatchMode;
             buttonMode.Text = BatchMode
-                ? LanguageSettings.Current.AudioToText.BatchMode
-                : LanguageSettings.Current.Split.Basic;
+                ? LanguageSettings.Current.Split.Basic
+                : LanguageSettings.Current.AudioToText.BatchMode;
 
             FontEnableOrDisable(BatchMode || _initialFontOn);
         }
