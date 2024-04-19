@@ -1,8 +1,9 @@
 ﻿Subtitle Edit Changelog
 
-4.0.6 (xth March 2024) BETA
+4.0.6 (xth May 2024) BETA
 * NEW:
    * Add "Text To Speech" - thx darnn
+   * Add burn-in batch mode - thx Leon
 * IMPROVED:
    * Update Portuguese translation - thx hugok79
    * Update Bulgarian translation - thx Калин

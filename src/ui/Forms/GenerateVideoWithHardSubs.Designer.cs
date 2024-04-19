@@ -54,6 +54,8 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxVideo = new System.Windows.Forms.GroupBox();
             this.buttonVideoChooseStandardRes = new System.Windows.Forms.Button();
             this.groupBoxAudio = new System.Windows.Forms.GroupBox();
+            this.listViewAudioTracks = new System.Windows.Forms.ListView();
+            this.columnHeaderAudioTrack = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.checkBoxMakeStereo = new System.Windows.Forms.CheckBox();
             this.checkBoxTargetFileSize = new System.Windows.Forms.CheckBox();
             this.listViewBatch = new System.Windows.Forms.ListView();
@@ -85,8 +87,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.x352ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.x272ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.buttonMode = new System.Windows.Forms.Button();
-            this.listViewAudioTracks = new System.Windows.Forms.ListView();
-            this.columnHeaderAudioTrack = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.labelPreviewPleaseWait = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.videoPlayerContainer1 = new Nikse.SubtitleEdit.Controls.VideoPlayerContainer();
             this.numericUpDownCutToSeconds = new Nikse.SubtitleEdit.Controls.NikseUpDown();
@@ -232,7 +232,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // buttonClear
             // 
-            this.buttonClear.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonClear.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonClear.Location = new System.Drawing.Point(165, 513);
             this.buttonClear.Name = "buttonClear";
             this.buttonClear.Size = new System.Drawing.Size(74, 23);
@@ -252,7 +252,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // buttonRemoveFile
             // 
-            this.buttonRemoveFile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonRemoveFile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonRemoveFile.Location = new System.Drawing.Point(85, 513);
             this.buttonRemoveFile.Name = "buttonRemoveFile";
             this.buttonRemoveFile.Size = new System.Drawing.Size(74, 23);
@@ -273,7 +273,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // buttonAddFile
             // 
-            this.buttonAddFile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonAddFile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonAddFile.Location = new System.Drawing.Point(6, 513);
             this.buttonAddFile.Name = "buttonAddFile";
             this.buttonAddFile.Size = new System.Drawing.Size(73, 23);
@@ -438,6 +438,26 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxAudio.TabStop = false;
             this.groupBoxAudio.Text = "Audio";
             // 
+            // listViewAudioTracks
+            // 
+            this.listViewAudioTracks.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.listViewAudioTracks.CheckBoxes = true;
+            this.listViewAudioTracks.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeaderAudioTrack});
+            this.listViewAudioTracks.HideSelection = false;
+            this.listViewAudioTracks.Location = new System.Drawing.Point(229, 29);
+            this.listViewAudioTracks.Name = "listViewAudioTracks";
+            this.listViewAudioTracks.Size = new System.Drawing.Size(190, 122);
+            this.listViewAudioTracks.TabIndex = 45;
+            this.listViewAudioTracks.UseCompatibleStateImageBehavior = false;
+            this.listViewAudioTracks.View = System.Windows.Forms.View.Details;
+            // 
+            // columnHeaderAudioTrack
+            // 
+            this.columnHeaderAudioTrack.Text = "Audio tracks";
+            this.columnHeaderAudioTrack.Width = 160;
+            // 
             // checkBoxMakeStereo
             // 
             this.checkBoxMakeStereo.AutoSize = true;
@@ -527,6 +547,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.pickSubtitleFileToolStripMenuItem.Name = "pickSubtitleFileToolStripMenuItem";
             this.pickSubtitleFileToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
             this.pickSubtitleFileToolStripMenuItem.Text = "Pick subtitle file...";
+            this.pickSubtitleFileToolStripMenuItem.Click += new System.EventHandler(this.pickSubtitleFileToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
@@ -699,26 +720,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonMode.Text = "Batch mode";
             this.buttonMode.UseVisualStyleBackColor = true;
             this.buttonMode.Click += new System.EventHandler(this.buttonMode_Click);
-            // 
-            // listViewAudioTracks
-            // 
-            this.listViewAudioTracks.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.listViewAudioTracks.CheckBoxes = true;
-            this.listViewAudioTracks.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeaderAudioTrack});
-            this.listViewAudioTracks.HideSelection = false;
-            this.listViewAudioTracks.Location = new System.Drawing.Point(229, 29);
-            this.listViewAudioTracks.Name = "listViewAudioTracks";
-            this.listViewAudioTracks.Size = new System.Drawing.Size(190, 122);
-            this.listViewAudioTracks.TabIndex = 45;
-            this.listViewAudioTracks.UseCompatibleStateImageBehavior = false;
-            this.listViewAudioTracks.View = System.Windows.Forms.View.Details;
-            // 
-            // columnHeaderAudioTrack
-            // 
-            this.columnHeaderAudioTrack.Text = "Audio tracks";
-            this.columnHeaderAudioTrack.Width = 160;
             // 
             // labelPreviewPleaseWait
             // 
