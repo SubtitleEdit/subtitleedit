@@ -1788,6 +1788,7 @@
     <Word from="pravougli" to="pravokutni" />
     <Word from="pre" to="prije" />
     <Word from="Pre" to="Prije" />
+    <Word from="pream" to="prema" />
     <Word from="predela" to="predjela" />
     <Word from="predele" to="predjele" />
     <Word from="predeli" to="predjeli" />
@@ -2499,6 +2500,7 @@
     <Word from="svežu" to="svježu" />
     <Word from="svida" to="sviđa" />
     <Word from="svidja" to="sviđa" />
+    <Word from="sviji" to="svoji" />
     <Word from="sviša" to="sviđa" />
     <Word from="svjest" to="svijest" />
     <Word from="Svjest" to="Svijest" />
@@ -5184,7 +5186,7 @@
     <RegEx find="dnp" replaceWith="dno" />
     <RegEx find="dnr" replaceWith="dne" />
     <RegEx find="doustal" replaceWith="odustal" />
-    <RegEx find="dp([nsš])" replaceWith="do$1" />
+    <RegEx find="dp([đnsš])" replaceWith="do$1" />
     <RegEx find="domač" replaceWith="domać" />
     <RegEx find="\bdral" replaceWith="deral" />
     <RegEx find="dranj" replaceWith="deranj" />
@@ -5365,6 +5367,7 @@
     <RegEx find="nls" replaceWith="nis" />
     <RegEx find="njg" replaceWith="njeg" />
     <RegEx find="njaće" replaceWith="njat će" />
+    <RegEx find="noat" replaceWith="nost" />
     <RegEx find="nspirisa([nlt])" replaceWith="nspirira$1" />
     <RegEx find="novj?eta" replaceWith="novijeta" />
     <RegEx find="nović" replaceWith="novit ć" />
