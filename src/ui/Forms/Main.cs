@@ -4039,13 +4039,13 @@ namespace Nikse.SubtitleEdit.Forms
                 if (formatType == typeof(SubStationAlpha))
                 {
                     string errors = AdvancedSubStationAlpha.CheckForErrors(_subtitle.Header);
-                    if (!string.IsNullOrEmpty(errors))
+                    if (!Configuration.Settings.General.DisableShowingLoadErrors && !string.IsNullOrEmpty(errors))
                     {
                         MessageBox.Show(this, errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
 
                     errors = (format as SubStationAlpha).Errors;
-                    if (!string.IsNullOrEmpty(errors))
+                    if (!Configuration.Settings.General.DisableShowingLoadErrors && !string.IsNullOrEmpty(errors))
                     {
                         MessageBox.Show(this, errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
@@ -4053,13 +4053,13 @@ namespace Nikse.SubtitleEdit.Forms
                 else if (formatType == typeof(AdvancedSubStationAlpha))
                 {
                     string errors = AdvancedSubStationAlpha.CheckForErrors(_subtitle.Header);
-                    if (!string.IsNullOrEmpty(errors))
+                    if (!Configuration.Settings.General.DisableShowingLoadErrors && !string.IsNullOrEmpty(errors))
                     {
                         MessageBox.Show(this, errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
 
                     errors = (format as AdvancedSubStationAlpha).Errors;
-                    if (!string.IsNullOrEmpty(errors))
+                    if (!Configuration.Settings.General.DisableShowingLoadErrors && !string.IsNullOrEmpty(errors))
                     {
                         MessageBox.Show(this, errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
@@ -4067,7 +4067,7 @@ namespace Nikse.SubtitleEdit.Forms
                 else if (formatType == typeof(SubRip))
                 {
                     string errors = (format as SubRip).Errors;
-                    if (!string.IsNullOrEmpty(errors))
+                    if (!Configuration.Settings.General.DisableShowingLoadErrors && !string.IsNullOrEmpty(errors))
                     {
                         MessageBox.Show(this, errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
@@ -4075,7 +4075,7 @@ namespace Nikse.SubtitleEdit.Forms
                 else if (formatType == typeof(MicroDvd))
                 {
                     string errors = (format as MicroDvd).Errors;
-                    if (!string.IsNullOrEmpty(errors))
+                    if (!Configuration.Settings.General.DisableShowingLoadErrors && !string.IsNullOrEmpty(errors))
                     {
                         MessageBox.Show(this, errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
@@ -4084,7 +4084,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     format.ToText(_subtitle, string.Empty);
                     string errors = (format as DCinemaSmpte2007).Errors;
-                    if (!string.IsNullOrEmpty(errors))
+                    if (!Configuration.Settings.General.DisableShowingLoadErrors && !string.IsNullOrEmpty(errors))
                     {
                         MessageBox.Show(errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
@@ -4093,7 +4093,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     format.ToText(_subtitle, string.Empty);
                     string errors = (format as DCinemaSmpte2010).Errors;
-                    if (!string.IsNullOrEmpty(errors))
+                    if (!Configuration.Settings.General.DisableShowingLoadErrors && !string.IsNullOrEmpty(errors))
                     {
                         MessageBox.Show(errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
@@ -4102,7 +4102,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     format.ToText(_subtitle, string.Empty);
                     string errors = (format as DCinemaSmpte2014).Errors;
-                    if (!string.IsNullOrEmpty(errors))
+                    if (!Configuration.Settings.General.DisableShowingLoadErrors && !string.IsNullOrEmpty(errors))
                     {
                         MessageBox.Show(errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
