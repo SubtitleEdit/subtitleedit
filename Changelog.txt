@@ -14,8 +14,9 @@
    * Update Korean translation - thx domddol
    * Show Vosk/Whisper done msgbox modal (also if not focused) - thx jupester 
    * Allow re-encode with burn-in without subtitle - thx Leon
+   * Add the new llama3 model and set as default for "Ollama translate"
 * FIXED:
-   * Fix for Antrophic translate  - thx venomousraid 
+   * Fix for Antrophic translate - thx venomousraid 
    * Fix possible crash in teletext reading - thx yellobyte
    * Fix unwanted text boxes background color change - thx Leon
    * Fix Whisper on selection in waveform in "translation mode" - thx rRobis
