@@ -1,6 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.VideoPlayers;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -11,7 +12,6 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Logic.VideoPlayers;
 using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms
@@ -42,6 +42,8 @@ namespace Nikse.SubtitleEdit.Forms
         public bool BatchMode { get; set; }
         public string BatchInfo { get; set; }
         private readonly List<BatchVideoAndSub> _batchVideoAndSubList;
+        private const int ListViewBatchSubItemIndexColumnSubtitleFile = 2;
+        private const int ListViewBatchSubItemIndexColumnStatus = 3;
 
         public class BatchVideoAndSub
         {
@@ -454,17 +456,32 @@ namespace Nikse.SubtitleEdit.Forms
                     var path = Path.GetDirectoryName(videoAndSub.VideoFileName);
                     var nameNoExt = Path.GetFileNameWithoutExtension(videoAndSub.VideoFileName);
                     var ext = Path.GetExtension(videoAndSub.VideoFileName);
-                    VideoFileName = Path.Combine(path, nameNoExt.TrimEnd('.', '.') + "_new" + ext);
+                    VideoFileName = Path.Combine(path, $"{nameNoExt.TrimEnd('.', '.')}_new{ext}");
+                    if (File.Exists(VideoFileName))
+                    {
+                        for (var i = 2; i < int.MaxValue; i++)
+                        {
+                            VideoFileName = Path.Combine(path, $"{nameNoExt.TrimEnd('.', '.')}_new_{i}{ext}");
+                            if (!File.Exists(VideoFileName))
+                            {
+                                break;
+                            }
+                        }
+                    }
+
+                    if (File.Exists(VideoFileName))
+                    {
+                    }
 
                     if (ConvertVideo(oldFontSizeEnabled, videoAndSub.VideoFileName, subtitle))
                     {
-                        listViewBatch.Items[index].SubItems[3].Text = "Converted";
+                        listViewBatch.Items[index].SubItems[ListViewBatchSubItemIndexColumnStatus].Text = "Converted";
                         sbInfo.AppendLine($"{index + 1}: {videoAndSub.VideoFileName} -> {VideoFileName}");
                         okCount++;
                     }
                     else
                     {
-                        listViewBatch.Items[index].SubItems[3].Text = "Error";
+                        listViewBatch.Items[index].SubItems[ListViewBatchSubItemIndexColumnStatus].Text = "Error";
                         sbInfo.AppendLine($"{index + 1}: {videoAndSub.VideoFileName} -> Failed!");
                         failCount++;
                     }
@@ -2031,8 +2048,11 @@ namespace Nikse.SubtitleEdit.Forms
                     item.SubtitleFileFileSizeInBytes = new FileInfo(subFileName).Length;
                 }
 
+                var vInfo = UiUtil.GetVideoInfo(fileName);
+
                 var listViewItem = new ListViewItem(fileName);
                 listViewItem.Tag = item;
+                listViewItem.SubItems.Add($"{vInfo.Width}x{vInfo.Height}");
                 var s = Utilities.FormatBytesToDisplayFileSize(item.VideoFileSizeInBytes);
                 listViewItem.SubItems.Add(s);
                 listViewItem.SubItems.Add(Path.GetFileName(item.SubtitleFileName));
@@ -2050,11 +2070,29 @@ namespace Nikse.SubtitleEdit.Forms
                 indices.Add(i);
             }
 
-            indices = indices.OrderBy(p => p).ToList();
-            for (var i = indices.Count - 1; i >= 0; i--)
+            if (indices.Count == 0)
+            {
+                return;
+            }
+
+            indices = indices.OrderByDescending(p => p).ToList();
+            var currentIndex = indices.Min();
+            foreach (var i in indices)
             {
                 listViewBatch.Items.RemoveAt(i);
                 _batchVideoAndSubList.RemoveAt(i);
+            }
+
+            var newIdx = currentIndex;
+            if (currentIndex >= _batchVideoAndSubList.Count - 1)
+            {
+                newIdx = _batchVideoAndSubList.Count - 1;
+            }
+
+            if (listViewBatch.Items.Count > 0)
+            {
+                listViewBatch.Items[newIdx].Selected = true;
+                listViewBatch.Items[newIdx].Focused = true;
             }
         }
 
@@ -2161,7 +2199,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 var idx = listViewBatch.SelectedIndices[0];
                 _batchVideoAndSubList[idx].SubtitleFileName = openFileDialog1.FileName;
-                listViewBatch.Items[idx].SubItems[2].Text = Path.GetFileName(openFileDialog1.FileName);
+                listViewBatch.Items[idx].SubItems[ListViewBatchSubItemIndexColumnSubtitleFile].Text = Path.GetFileName(openFileDialog1.FileName);
             }
         }
 
@@ -2178,7 +2216,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             foreach (int i in listViewBatch.SelectedIndices)
             {
-                listViewBatch.Items[i].SubItems[2].Text = string.Empty;
+                listViewBatch.Items[i].SubItems[ListViewBatchSubItemIndexColumnSubtitleFile].Text = string.Empty;
                 _batchVideoAndSubList[i].SubtitleFileName = null;
             }
         }
