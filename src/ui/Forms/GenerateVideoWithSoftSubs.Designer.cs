@@ -582,6 +582,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // checkBoxDeleteInputVideoAfterGeneration
             // 
+            this.checkBoxDeleteInputVideoAfterGeneration.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.checkBoxDeleteInputVideoAfterGeneration.AutoSize = true;
             this.checkBoxDeleteInputVideoAfterGeneration.Location = new System.Drawing.Point(531, 445);
             this.checkBoxDeleteInputVideoAfterGeneration.Name = "checkBoxDeleteInputVideoAfterGeneration";
