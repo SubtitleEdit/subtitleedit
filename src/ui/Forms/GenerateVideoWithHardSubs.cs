@@ -1925,6 +1925,8 @@ namespace Nikse.SubtitleEdit.Forms
         private void contextMenuStripBatch_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
             pickSubtitleFileToolStripMenuItem.Visible = listViewBatch.SelectedItems.Count == 1;
+            removeSubtitleFileToolStripMenuItem.Visible = listViewBatch.SelectedItems.Count >= 1;
+            toolStripSeparator2.Visible = listViewBatch.SelectedItems.Count >= 1;
 
             if (listViewBatch.Items.Count == 0)
             {
@@ -1998,16 +2000,16 @@ namespace Nikse.SubtitleEdit.Forms
 
                 var path = Path.GetDirectoryName(fileName);
                 var fileNameNoExt = Path.GetFileNameWithoutExtension(fileName);
-                var subFileName = Path.ChangeExtension(fileName, ".srt");
+                var subFileName = Path.ChangeExtension(fileName, ".ass");
 
                 if (!File.Exists(subFileName))
                 {
-                    subFileName = Path.ChangeExtension(fileName, ".ass");
+                    subFileName = Path.ChangeExtension(fileName, ".srt");
                 }
 
                 if (!File.Exists(subFileName))
                 {
-                    var files = Directory.GetFiles(path, fileNameNoExt + "*.srt");
+                    var files = Directory.GetFiles(path, fileNameNoExt + "*.ass");
                     if (files.Length > 0)
                     {
                         subFileName = files[0];
@@ -2016,7 +2018,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (!File.Exists(subFileName))
                 {
-                    var files = Directory.GetFiles(path, fileNameNoExt + "*.ass");
+                    var files = Directory.GetFiles(path, fileNameNoExt + "*.srt");
                     if (files.Length > 0)
                     {
                         subFileName = files[0];
@@ -2042,10 +2044,17 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            for (var i = listViewBatch.SelectedIndices.Count - 1; i >= 0; i--)
+            var indices = new List<int>();
+            foreach (int i in listViewBatch.SelectedIndices)
             {
-                listViewBatch.Items.RemoveAt(listViewBatch.SelectedIndices[i]);
-                _batchVideoAndSubList.RemoveAt(listViewBatch.SelectedIndices[i]);
+                indices.Add(i);
+            }
+
+            indices = indices.OrderBy(p => p).ToList();
+            for (var i = indices.Count - 1; i >= 0; i--)
+            {
+                listViewBatch.Items.RemoveAt(i);
+                _batchVideoAndSubList.RemoveAt(i);
             }
         }
 
@@ -2059,6 +2068,11 @@ namespace Nikse.SubtitleEdit.Forms
         {
             listViewBatch.AutoSizeLastColumn();
             listViewAudioTracks.AutoSizeLastColumn();
+        }
+
+        private void GenerateVideoWithHardSubs_Resize(object sender, EventArgs e)
+        {
+            GenerateVideoWithHardSubs_ResizeEnd(null, null);
         }
 
         private void listViewBatch_DragEnter(object sender, DragEventArgs e)
@@ -2101,7 +2115,6 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                     }
                 });
-
             }
             finally
             {
@@ -2149,6 +2162,24 @@ namespace Nikse.SubtitleEdit.Forms
                 var idx = listViewBatch.SelectedIndices[0];
                 _batchVideoAndSubList[idx].SubtitleFileName = openFileDialog1.FileName;
                 listViewBatch.Items[idx].SubItems[2].Text = Path.GetFileName(openFileDialog1.FileName);
+            }
+        }
+
+        private void listViewBatch_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Delete)
+            {
+                deleteToolStripMenuItem_Click(null, null);
+                e.SuppressKeyPress = true;
+            }
+        }
+
+        private void removeSubtitleFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            foreach (int i in listViewBatch.SelectedIndices)
+            {
+                listViewBatch.Items[i].SubItems[2].Text = string.Empty;
+                _batchVideoAndSubList[i].SubtitleFileName = null;
             }
         }
     }
