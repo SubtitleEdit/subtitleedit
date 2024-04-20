@@ -1552,6 +1552,7 @@ $HorzAlign          =   Center
         public string Company { get; set; }
         public bool MoveVideo100Or500MsPlaySmallSample { get; set; }
         public bool DisableVideoAutoLoading { get; set; }
+        public bool DisableShowingLoadErrors { get; set; }
         public bool AllowVolumeBoost { get; set; }
         public int NewEmptyDefaultMs { get; set; }
         public bool NewEmptyUseAutoDuration { get; set; }
@@ -4693,6 +4694,12 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.General.DisableVideoAutoLoading = Convert.ToBoolean(subNode.InnerText.Trim());
+            }
+
+            subNode = node.SelectSingleNode("DisableShowingLoadErrors");
+            if (subNode != null)
+            {
+                settings.General.DisableShowingLoadErrors = Convert.ToBoolean(subNode.InnerText.Trim());
             }
 
             subNode = node.SelectSingleNode("AllowVolumeBoost");
@@ -11848,6 +11855,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("Company", settings.General.Company);
                 textWriter.WriteElementString("MoveVideo100Or500MsPlaySmallSample", settings.General.MoveVideo100Or500MsPlaySmallSample.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("DisableVideoAutoLoading", settings.General.DisableVideoAutoLoading.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("DisableShowingLoadErrors", settings.General.DisableShowingLoadErrors.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AllowVolumeBoost", settings.General.AllowVolumeBoost.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("NewEmptyUseAutoDuration", settings.General.NewEmptyUseAutoDuration.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("RightToLeftMode", settings.General.RightToLeftMode.ToString(CultureInfo.InvariantCulture));
