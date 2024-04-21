@@ -942,7 +942,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (!CheckForPromptParameters(process, Text))
             {
                 _abort = true;
-                return;
+                return false;
             }
 
             process.Start();
