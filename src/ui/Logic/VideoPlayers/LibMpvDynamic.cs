@@ -851,9 +851,9 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 }
             }
             Application.DoEvents();
-            OnVideoLoaded?.Invoke(this, null);
-            Application.DoEvents();
             Pause();
+            Application.DoEvents();
+            OnVideoLoaded?.Invoke(this, null);
         }
 
         public override void DisposeVideoPlayer()

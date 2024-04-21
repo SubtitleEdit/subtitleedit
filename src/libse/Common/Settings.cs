@@ -191,6 +191,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public int AutoTranslateDelaySeconds { get; set; }
         public string GeminiProApiKey { get; set; }
         public string TextToSpeechEngine { get; set; }
+        public string TextToSpeechLastVoice { get; set; }
         public string TextToSpeechElevenLabsApiKey { get; set; }
         public bool DisableVidoInfoViaLabel { get; set; }
         public bool ListViewSyntaxColorDurationSmall { get; set; }
@@ -5462,6 +5463,12 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.Tools.TextToSpeechEngine = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("TextToSpeechLastVoice");
+            if (subNode != null)
+            {
+                settings.Tools.TextToSpeechLastVoice = subNode.InnerText;
             }
 
             subNode = node.SelectSingleNode("TextToSpeechElevenLabsApiKey");
@@ -11992,6 +11999,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("AutoTranslateDelaySeconds", settings.Tools.AutoTranslateDelaySeconds.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("GeminiProApiKey", settings.Tools.GeminiProApiKey);
                 textWriter.WriteElementString("TextToSpeechEngine", settings.Tools.TextToSpeechEngine);
+                textWriter.WriteElementString("TextToSpeechLastVoice", settings.Tools.TextToSpeechLastVoice);
                 textWriter.WriteElementString("TextToSpeechElevenLabsApiKey", settings.Tools.TextToSpeechElevenLabsApiKey);
                 textWriter.WriteElementString("DisableVidoInfoViaLabel", settings.Tools.DisableVidoInfoViaLabel.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewSyntaxColorDurationSmall", settings.Tools.ListViewSyntaxColorDurationSmall.ToString(CultureInfo.InvariantCulture));
