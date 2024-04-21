@@ -37,6 +37,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonCancel = new System.Windows.Forms.Button();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.groupBoxSettings = new System.Windows.Forms.GroupBox();
+            this.buttonOutputFileSettings = new System.Windows.Forms.Button();
             this.buttonClear = new System.Windows.Forms.Button();
             this.panelForeColor = new System.Windows.Forms.Panel();
             this.buttonRemoveFile = new System.Windows.Forms.Button();
@@ -133,7 +134,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelProgress = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.labelPleaseWait = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.textBoxLog = new Nikse.SubtitleEdit.Controls.NikseTextBox();
-            this.buttonOutputFileSettings = new System.Windows.Forms.Button();
             this.contextMenuStripGenerate.SuspendLayout();
             this.groupBoxSettings.SuspendLayout();
             this.groupBoxCut.SuspendLayout();
@@ -235,6 +235,17 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxSettings.TabIndex = 0;
             this.groupBoxSettings.TabStop = false;
             this.groupBoxSettings.Text = "Settings";
+            // 
+            // buttonOutputFileSettings
+            // 
+            this.buttonOutputFileSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonOutputFileSettings.Location = new System.Drawing.Point(245, 513);
+            this.buttonOutputFileSettings.Name = "buttonOutputFileSettings";
+            this.buttonOutputFileSettings.Size = new System.Drawing.Size(167, 23);
+            this.buttonOutputFileSettings.TabIndex = 148;
+            this.buttonOutputFileSettings.Text = "Output file/folder...";
+            this.buttonOutputFileSettings.UseVisualStyleBackColor = true;
+            this.buttonOutputFileSettings.Click += new System.EventHandler(this.buttonOutputFileSettings_Click);
             // 
             // buttonClear
             // 
@@ -1442,13 +1453,14 @@ namespace Nikse.SubtitleEdit.Forms
             this.x352ToolStripMenuItem,
             this.x272ToolStripMenuItem});
             this.contextMenuStripRes.Name = "contextMenuStripRes";
-            this.contextMenuStripRes.Size = new System.Drawing.Size(214, 334);
+            this.contextMenuStripRes.Size = new System.Drawing.Size(214, 356);
             // 
             // useSourceResoluton0x0ToolStripMenuItem
             // 
             this.useSourceResoluton0x0ToolStripMenuItem.Name = "useSourceResoluton0x0ToolStripMenuItem";
             this.useSourceResoluton0x0ToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
             this.useSourceResoluton0x0ToolStripMenuItem.Text = "Use source resoluton (0x0)";
+            this.useSourceResoluton0x0ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
             // 
             // x2160ToolStripMenuItem
             // 
@@ -1609,17 +1621,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.textBoxLog.ReadOnly = true;
             this.textBoxLog.Size = new System.Drawing.Size(188, 26);
             this.textBoxLog.TabIndex = 31;
-            // 
-            // buttonOutputFileSettings
-            // 
-            this.buttonOutputFileSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonOutputFileSettings.Location = new System.Drawing.Point(245, 513);
-            this.buttonOutputFileSettings.Name = "buttonOutputFileSettings";
-            this.buttonOutputFileSettings.Size = new System.Drawing.Size(167, 23);
-            this.buttonOutputFileSettings.TabIndex = 148;
-            this.buttonOutputFileSettings.Text = "Output file/folder...";
-            this.buttonOutputFileSettings.UseVisualStyleBackColor = true;
-            this.buttonOutputFileSettings.Click += new System.EventHandler(this.buttonOutputFileSettings_Click);
             // 
             // GenerateVideoWithHardSubs
             // 
