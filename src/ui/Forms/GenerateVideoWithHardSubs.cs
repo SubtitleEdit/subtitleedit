@@ -316,9 +316,12 @@ namespace Nikse.SubtitleEdit.Forms
             buttonAddFile.Visible = BatchMode;
 
             var audioTracks = _mediaInfo.Tracks.Where(p => p.TrackType == FfmpegTrackType.Audio).ToList();
+            useSourceResoluton0x0ToolStripMenuItem.Visible = BatchMode;
             if (BatchMode)
             {
                 listViewAudioTracks.Visible = false;
+                numericUpDownWidth.Value = 0;
+                numericUpDownHeight.Value = 0;
             }
             else if (audioTracks.Count > 1)
             {
@@ -437,6 +440,7 @@ namespace Nikse.SubtitleEdit.Forms
             Stopwatch stopWatch;
             if (BatchMode)
             {
+                var useSourceResolution = numericUpDownWidth.Value == 0 && numericUpDownHeight.Value == 0;
                 listViewBatch.SelectedIndices.Clear();
 
                 stopWatch = Stopwatch.StartNew();
@@ -449,6 +453,12 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     var videoAndSub = _batchVideoAndSubList[index];
                     _videoInfo = UiUtil.GetVideoInfo(videoAndSub.VideoFileName);
+                    if (useSourceResolution)
+                    {
+                        numericUpDownWidth.Value = _videoInfo.Width;
+                        numericUpDownHeight.Value = _videoInfo.Height;
+                    }
+
                     var subtitle = new Subtitle();
                     if (!string.IsNullOrEmpty(videoAndSub.SubtitleFileName) & File.Exists(videoAndSub.SubtitleFileName))
                     {
@@ -705,7 +715,10 @@ namespace Nikse.SubtitleEdit.Forms
 
             fileName += ".burn-in";
 
-            fileName += $".{numericUpDownWidth.Value}x{numericUpDownHeight.Value}";
+            if (numericUpDownWidth.Value > 0 && numericUpDownHeight.Value > 0)
+            {
+                fileName += $".{numericUpDownWidth.Value}x{numericUpDownHeight.Value}";
+            }
 
             if (comboBoxVideoEncoding.Text == "libx265" || comboBoxVideoEncoding.Text == "hevc_nvenc" || comboBoxVideoEncoding.Text == "hevc_amf")
             {

@@ -37,20 +37,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonCancel = new System.Windows.Forms.Button();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.groupBoxSettings = new System.Windows.Forms.GroupBox();
-            this.listViewBatch = new System.Windows.Forms.ListView();
-            this.columnHeaderVideoFile = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeaderResolution = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeaderSize = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeaderSubtitleFile = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeaderStatus = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.contextMenuStripBatch = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.addFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.pickSubtitleFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.removeSubtitleFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.clearToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.buttonClear = new System.Windows.Forms.Button();
             this.panelForeColor = new System.Windows.Forms.Panel();
             this.buttonRemoveFile = new System.Windows.Forms.Button();
@@ -109,6 +95,20 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelFileName = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.numericUpDownFontSize = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.labelFontSize = new Nikse.SubtitleEdit.Controls.NikseLabel();
+            this.listViewBatch = new System.Windows.Forms.ListView();
+            this.columnHeaderVideoFile = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeaderResolution = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeaderSize = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeaderSubtitleFile = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeaderStatus = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.contextMenuStripBatch = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.addFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.pickSubtitleFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.removeSubtitleFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.clearToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.buttonPreview = new System.Windows.Forms.Button();
             this.linkLabelHelp = new System.Windows.Forms.LinkLabel();
             this.contextMenuStripRes = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -132,12 +132,13 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelProgress = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.labelPleaseWait = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.textBoxLog = new Nikse.SubtitleEdit.Controls.NikseTextBox();
+            this.useSourceResoluton0x0ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStripGenerate.SuspendLayout();
             this.groupBoxSettings.SuspendLayout();
-            this.contextMenuStripBatch.SuspendLayout();
             this.groupBoxCut.SuspendLayout();
             this.groupBoxVideo.SuspendLayout();
             this.groupBoxAudio.SuspendLayout();
+            this.contextMenuStripBatch.SuspendLayout();
             this.contextMenuStripRes.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -232,115 +233,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxSettings.TabIndex = 0;
             this.groupBoxSettings.TabStop = false;
             this.groupBoxSettings.Text = "Settings";
-            // 
-            // listViewBatch
-            // 
-            this.listViewBatch.AllowDrop = true;
-            this.listViewBatch.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.listViewBatch.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeaderVideoFile,
-            this.columnHeaderResolution,
-            this.columnHeaderSize,
-            this.columnHeaderSubtitleFile,
-            this.columnHeaderStatus});
-            this.listViewBatch.ContextMenuStrip = this.contextMenuStripBatch;
-            this.listViewBatch.FullRowSelect = true;
-            this.listViewBatch.HideSelection = false;
-            this.listViewBatch.Location = new System.Drawing.Point(6, 316);
-            this.listViewBatch.Name = "listViewBatch";
-            this.listViewBatch.Size = new System.Drawing.Size(852, 191);
-            this.listViewBatch.TabIndex = 3;
-            this.listViewBatch.UseCompatibleStateImageBehavior = false;
-            this.listViewBatch.View = System.Windows.Forms.View.Details;
-            this.listViewBatch.DragDrop += new System.Windows.Forms.DragEventHandler(this.listViewBatch_DragDrop);
-            this.listViewBatch.DragEnter += new System.Windows.Forms.DragEventHandler(this.listViewBatch_DragEnter);
-            this.listViewBatch.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listViewBatch_KeyDown);
-            // 
-            // columnHeaderVideoFile
-            // 
-            this.columnHeaderVideoFile.Text = "Video file";
-            this.columnHeaderVideoFile.Width = 420;
-            // 
-            // columnHeaderResolution
-            // 
-            this.columnHeaderResolution.Text = "Resolution";
-            this.columnHeaderResolution.Width = 80;
-            // 
-            // columnHeaderSize
-            // 
-            this.columnHeaderSize.Text = "Size";
-            this.columnHeaderSize.Width = 80;
-            // 
-            // columnHeaderSubtitleFile
-            // 
-            this.columnHeaderSubtitleFile.Text = "Subtitle file";
-            this.columnHeaderSubtitleFile.Width = 180;
-            // 
-            // columnHeaderStatus
-            // 
-            this.columnHeaderStatus.Text = "Status";
-            this.columnHeaderStatus.Width = 80;
-            // 
-            // contextMenuStripBatch
-            // 
-            this.contextMenuStripBatch.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.addFilesToolStripMenuItem,
-            this.toolStripSeparator2,
-            this.pickSubtitleFileToolStripMenuItem,
-            this.removeSubtitleFileToolStripMenuItem,
-            this.toolStripSeparator1,
-            this.deleteToolStripMenuItem,
-            this.clearToolStripMenuItem});
-            this.contextMenuStripBatch.Name = "contextMenuStripBatch";
-            this.contextMenuStripBatch.Size = new System.Drawing.Size(179, 126);
-            this.contextMenuStripBatch.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripBatch_Opening);
-            // 
-            // addFilesToolStripMenuItem
-            // 
-            this.addFilesToolStripMenuItem.Name = "addFilesToolStripMenuItem";
-            this.addFilesToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
-            this.addFilesToolStripMenuItem.Text = "Add video files...";
-            this.addFilesToolStripMenuItem.Click += new System.EventHandler(this.addFilesToolStripMenuItem_Click);
-            // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(175, 6);
-            // 
-            // pickSubtitleFileToolStripMenuItem
-            // 
-            this.pickSubtitleFileToolStripMenuItem.Name = "pickSubtitleFileToolStripMenuItem";
-            this.pickSubtitleFileToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
-            this.pickSubtitleFileToolStripMenuItem.Text = "Pick subtitle file...";
-            this.pickSubtitleFileToolStripMenuItem.Click += new System.EventHandler(this.pickSubtitleFileToolStripMenuItem_Click);
-            // 
-            // removeSubtitleFileToolStripMenuItem
-            // 
-            this.removeSubtitleFileToolStripMenuItem.Name = "removeSubtitleFileToolStripMenuItem";
-            this.removeSubtitleFileToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
-            this.removeSubtitleFileToolStripMenuItem.Text = "Remove subtitle file";
-            this.removeSubtitleFileToolStripMenuItem.Click += new System.EventHandler(this.removeSubtitleFileToolStripMenuItem_Click);
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(175, 6);
-            // 
-            // deleteToolStripMenuItem
-            // 
-            this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
-            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
-            this.deleteToolStripMenuItem.Text = "Delete";
-            this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
-            // 
-            // clearToolStripMenuItem
-            // 
-            this.clearToolStripMenuItem.Name = "clearToolStripMenuItem";
-            this.clearToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
-            this.clearToolStripMenuItem.Text = "Clear";
-            this.clearToolStripMenuItem.Click += new System.EventHandler(this.clearToolStripMenuItem_Click);
             // 
             // buttonClear
             // 
@@ -1397,6 +1289,115 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelFontSize.TabIndex = 0;
             this.labelFontSize.Text = "Font size";
             // 
+            // listViewBatch
+            // 
+            this.listViewBatch.AllowDrop = true;
+            this.listViewBatch.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.listViewBatch.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeaderVideoFile,
+            this.columnHeaderResolution,
+            this.columnHeaderSize,
+            this.columnHeaderSubtitleFile,
+            this.columnHeaderStatus});
+            this.listViewBatch.ContextMenuStrip = this.contextMenuStripBatch;
+            this.listViewBatch.FullRowSelect = true;
+            this.listViewBatch.HideSelection = false;
+            this.listViewBatch.Location = new System.Drawing.Point(6, 316);
+            this.listViewBatch.Name = "listViewBatch";
+            this.listViewBatch.Size = new System.Drawing.Size(852, 191);
+            this.listViewBatch.TabIndex = 3;
+            this.listViewBatch.UseCompatibleStateImageBehavior = false;
+            this.listViewBatch.View = System.Windows.Forms.View.Details;
+            this.listViewBatch.DragDrop += new System.Windows.Forms.DragEventHandler(this.listViewBatch_DragDrop);
+            this.listViewBatch.DragEnter += new System.Windows.Forms.DragEventHandler(this.listViewBatch_DragEnter);
+            this.listViewBatch.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listViewBatch_KeyDown);
+            // 
+            // columnHeaderVideoFile
+            // 
+            this.columnHeaderVideoFile.Text = "Video file";
+            this.columnHeaderVideoFile.Width = 420;
+            // 
+            // columnHeaderResolution
+            // 
+            this.columnHeaderResolution.Text = "Resolution";
+            this.columnHeaderResolution.Width = 80;
+            // 
+            // columnHeaderSize
+            // 
+            this.columnHeaderSize.Text = "Size";
+            this.columnHeaderSize.Width = 80;
+            // 
+            // columnHeaderSubtitleFile
+            // 
+            this.columnHeaderSubtitleFile.Text = "Subtitle file";
+            this.columnHeaderSubtitleFile.Width = 180;
+            // 
+            // columnHeaderStatus
+            // 
+            this.columnHeaderStatus.Text = "Status";
+            this.columnHeaderStatus.Width = 80;
+            // 
+            // contextMenuStripBatch
+            // 
+            this.contextMenuStripBatch.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.addFilesToolStripMenuItem,
+            this.toolStripSeparator2,
+            this.pickSubtitleFileToolStripMenuItem,
+            this.removeSubtitleFileToolStripMenuItem,
+            this.toolStripSeparator1,
+            this.deleteToolStripMenuItem,
+            this.clearToolStripMenuItem});
+            this.contextMenuStripBatch.Name = "contextMenuStripBatch";
+            this.contextMenuStripBatch.Size = new System.Drawing.Size(179, 126);
+            this.contextMenuStripBatch.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripBatch_Opening);
+            // 
+            // addFilesToolStripMenuItem
+            // 
+            this.addFilesToolStripMenuItem.Name = "addFilesToolStripMenuItem";
+            this.addFilesToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
+            this.addFilesToolStripMenuItem.Text = "Add video files...";
+            this.addFilesToolStripMenuItem.Click += new System.EventHandler(this.addFilesToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(175, 6);
+            // 
+            // pickSubtitleFileToolStripMenuItem
+            // 
+            this.pickSubtitleFileToolStripMenuItem.Name = "pickSubtitleFileToolStripMenuItem";
+            this.pickSubtitleFileToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
+            this.pickSubtitleFileToolStripMenuItem.Text = "Pick subtitle file...";
+            this.pickSubtitleFileToolStripMenuItem.Click += new System.EventHandler(this.pickSubtitleFileToolStripMenuItem_Click);
+            // 
+            // removeSubtitleFileToolStripMenuItem
+            // 
+            this.removeSubtitleFileToolStripMenuItem.Name = "removeSubtitleFileToolStripMenuItem";
+            this.removeSubtitleFileToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
+            this.removeSubtitleFileToolStripMenuItem.Text = "Remove subtitle file";
+            this.removeSubtitleFileToolStripMenuItem.Click += new System.EventHandler(this.removeSubtitleFileToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(175, 6);
+            // 
+            // deleteToolStripMenuItem
+            // 
+            this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
+            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
+            this.deleteToolStripMenuItem.Text = "Delete";
+            this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
+            // 
+            // clearToolStripMenuItem
+            // 
+            this.clearToolStripMenuItem.Name = "clearToolStripMenuItem";
+            this.clearToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
+            this.clearToolStripMenuItem.Text = "Clear";
+            this.clearToolStripMenuItem.Click += new System.EventHandler(this.clearToolStripMenuItem_Click);
+            // 
             // buttonPreview
             // 
             this.buttonPreview.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
@@ -1423,6 +1424,7 @@ namespace Nikse.SubtitleEdit.Forms
             // contextMenuStripRes
             // 
             this.contextMenuStripRes.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.useSourceResoluton0x0ToolStripMenuItem,
             this.x2160ToolStripMenuItem,
             this.uHD3840x2160ToolStripMenuItem,
             this.k2048x1080ToolStripMenuItem,
@@ -1438,103 +1440,103 @@ namespace Nikse.SubtitleEdit.Forms
             this.x352ToolStripMenuItem,
             this.x272ToolStripMenuItem});
             this.contextMenuStripRes.Name = "contextMenuStripRes";
-            this.contextMenuStripRes.Size = new System.Drawing.Size(204, 312);
+            this.contextMenuStripRes.Size = new System.Drawing.Size(214, 356);
             // 
             // x2160ToolStripMenuItem
             // 
             this.x2160ToolStripMenuItem.Name = "x2160ToolStripMenuItem";
-            this.x2160ToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
+            this.x2160ToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
             this.x2160ToolStripMenuItem.Text = "4K (4096x2160)";
             this.x2160ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
             // 
             // uHD3840x2160ToolStripMenuItem
             // 
             this.uHD3840x2160ToolStripMenuItem.Name = "uHD3840x2160ToolStripMenuItem";
-            this.uHD3840x2160ToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
+            this.uHD3840x2160ToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
             this.uHD3840x2160ToolStripMenuItem.Text = "UHD (3840x2160)";
             this.uHD3840x2160ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
             // 
             // k2048x1080ToolStripMenuItem
             // 
             this.k2048x1080ToolStripMenuItem.Name = "k2048x1080ToolStripMenuItem";
-            this.k2048x1080ToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
+            this.k2048x1080ToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
             this.k2048x1080ToolStripMenuItem.Text = "2K (2048x1080)";
             this.k2048x1080ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
             // 
             // dCI2KScope2048x858ToolStripMenuItem
             // 
             this.dCI2KScope2048x858ToolStripMenuItem.Name = "dCI2KScope2048x858ToolStripMenuItem";
-            this.dCI2KScope2048x858ToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
+            this.dCI2KScope2048x858ToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
             this.dCI2KScope2048x858ToolStripMenuItem.Text = "DCI 2K Scope (2048x858)";
             this.dCI2KScope2048x858ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
             // 
             // dCI2KFlat1998x1080ToolStripMenuItem
             // 
             this.dCI2KFlat1998x1080ToolStripMenuItem.Name = "dCI2KFlat1998x1080ToolStripMenuItem";
-            this.dCI2KFlat1998x1080ToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
+            this.dCI2KFlat1998x1080ToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
             this.dCI2KFlat1998x1080ToolStripMenuItem.Text = "DCI 2K Flat (1998x1080)";
             this.dCI2KFlat1998x1080ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
             // 
             // p1920x1080ToolStripMenuItem
             // 
             this.p1920x1080ToolStripMenuItem.Name = "p1920x1080ToolStripMenuItem";
-            this.p1920x1080ToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
+            this.p1920x1080ToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
             this.p1920x1080ToolStripMenuItem.Text = "1080p (1920x1080)";
             this.p1920x1080ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
             // 
             // x1080ToolStripMenuItem
             // 
             this.x1080ToolStripMenuItem.Name = "x1080ToolStripMenuItem";
-            this.x1080ToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
+            this.x1080ToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
             this.x1080ToolStripMenuItem.Text = "1440x1080";
             this.x1080ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
             // 
             // p1280x720ToolStripMenuItem
             // 
             this.p1280x720ToolStripMenuItem.Name = "p1280x720ToolStripMenuItem";
-            this.p1280x720ToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
+            this.p1280x720ToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
             this.p1280x720ToolStripMenuItem.Text = "720p (1280x720)";
             this.p1280x720ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
             // 
             // x720ToolStripMenuItem
             // 
             this.x720ToolStripMenuItem.Name = "x720ToolStripMenuItem";
-            this.x720ToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
+            this.x720ToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
             this.x720ToolStripMenuItem.Text = "960x720";
             this.x720ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
             // 
             // p848x480ToolStripMenuItem
             // 
             this.p848x480ToolStripMenuItem.Name = "p848x480ToolStripMenuItem";
-            this.p848x480ToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
+            this.p848x480ToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
             this.p848x480ToolStripMenuItem.Text = "480p (848x480)";
             this.p848x480ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
             // 
             // pAL720x576ToolStripMenuItem
             // 
             this.pAL720x576ToolStripMenuItem.Name = "pAL720x576ToolStripMenuItem";
-            this.pAL720x576ToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
+            this.pAL720x576ToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
             this.pAL720x576ToolStripMenuItem.Text = "PAL (720x576)";
             this.pAL720x576ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
             // 
             // nTSC720x480ToolStripMenuItem
             // 
             this.nTSC720x480ToolStripMenuItem.Name = "nTSC720x480ToolStripMenuItem";
-            this.nTSC720x480ToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
+            this.nTSC720x480ToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
             this.nTSC720x480ToolStripMenuItem.Text = "NTSC (720x480)";
             this.nTSC720x480ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
             // 
             // x352ToolStripMenuItem
             // 
             this.x352ToolStripMenuItem.Name = "x352ToolStripMenuItem";
-            this.x352ToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
+            this.x352ToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
             this.x352ToolStripMenuItem.Text = "640x352";
             this.x352ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
             // 
             // x272ToolStripMenuItem
             // 
             this.x272ToolStripMenuItem.Name = "x272ToolStripMenuItem";
-            this.x272ToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
+            this.x272ToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
             this.x272ToolStripMenuItem.Text = "640x272";
             this.x272ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
             // 
@@ -1600,6 +1602,12 @@ namespace Nikse.SubtitleEdit.Forms
             this.textBoxLog.Size = new System.Drawing.Size(188, 26);
             this.textBoxLog.TabIndex = 31;
             // 
+            // useSourceResoluton0x0ToolStripMenuItem
+            // 
+            this.useSourceResoluton0x0ToolStripMenuItem.Name = "useSourceResoluton0x0ToolStripMenuItem";
+            this.useSourceResoluton0x0ToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
+            this.useSourceResoluton0x0ToolStripMenuItem.Text = "Use source resoluton (0x0)";
+            // 
             // GenerateVideoWithHardSubs
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1631,13 +1639,13 @@ namespace Nikse.SubtitleEdit.Forms
             this.contextMenuStripGenerate.ResumeLayout(false);
             this.groupBoxSettings.ResumeLayout(false);
             this.groupBoxSettings.PerformLayout();
-            this.contextMenuStripBatch.ResumeLayout(false);
             this.groupBoxCut.ResumeLayout(false);
             this.groupBoxCut.PerformLayout();
             this.groupBoxVideo.ResumeLayout(false);
             this.groupBoxVideo.PerformLayout();
             this.groupBoxAudio.ResumeLayout(false);
             this.groupBoxAudio.PerformLayout();
+            this.contextMenuStripBatch.ResumeLayout(false);
             this.contextMenuStripRes.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -1748,5 +1756,6 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem removeSubtitleFileToolStripMenuItem;
         private System.Windows.Forms.ColumnHeader columnHeaderResolution;
+        private System.Windows.Forms.ToolStripMenuItem useSourceResoluton0x0ToolStripMenuItem;
     }
 }
