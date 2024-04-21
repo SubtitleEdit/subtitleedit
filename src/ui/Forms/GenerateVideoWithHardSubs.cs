@@ -42,8 +42,8 @@ namespace Nikse.SubtitleEdit.Forms
         public bool BatchMode { get; set; }
         public string BatchInfo { get; set; }
         private readonly List<BatchVideoAndSub> _batchVideoAndSubList;
-        private const int ListViewBatchSubItemIndexColumnSubtitleFile = 2;
-        private const int ListViewBatchSubItemIndexColumnStatus = 3;
+        private const int ListViewBatchSubItemIndexColumnSubtitleFile = 3;
+        private const int ListViewBatchSubItemIndexColumnStatus = 4;
 
         public class BatchVideoAndSub
         {
@@ -437,6 +437,8 @@ namespace Nikse.SubtitleEdit.Forms
             Stopwatch stopWatch;
             if (BatchMode)
             {
+                listViewBatch.SelectedIndices.Clear();
+
                 stopWatch = Stopwatch.StartNew();
                 var sbInfo = new StringBuilder();
                 sbInfo.AppendLine($"Input for convert: {_batchVideoAndSubList.Count} video files:");
@@ -469,9 +471,9 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                     }
 
-                    if (File.Exists(VideoFileName))
-                    {
-                    }
+                    listViewBatch.Items[index].Selected = true;
+                    listViewBatch.Items[index].Focused = true;
+                    listViewBatch.Items[index].EnsureVisible();
 
                     if (ConvertVideo(oldFontSizeEnabled, videoAndSub.VideoFileName, subtitle))
                     {
