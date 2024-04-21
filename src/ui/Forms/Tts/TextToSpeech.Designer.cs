@@ -37,18 +37,18 @@
             this.groupBoxMsSettings = new System.Windows.Forms.GroupBox();
             this.checkBoxShowPreview = new System.Windows.Forms.CheckBox();
             this.labelApiKey = new System.Windows.Forms.Label();
+            this.nikseTextBoxApiKey = new Nikse.SubtitleEdit.Controls.NikseTextBox();
+            this.TextBoxTest = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.buttonTestVoice = new System.Windows.Forms.Button();
             this.checkBoxAddToVideoFile = new System.Windows.Forms.CheckBox();
             this.labelVoice = new System.Windows.Forms.Label();
+            this.nikseComboBoxVoice = new Nikse.SubtitleEdit.Controls.NikseComboBox();
+            this.nikseComboBoxEngine = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.listViewActors = new System.Windows.Forms.ListView();
             this.columnHeaderActor = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderVoice = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.contextMenuStripActors = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.labelActors = new System.Windows.Forms.Label();
-            this.nikseTextBoxApiKey = new Nikse.SubtitleEdit.Controls.NikseTextBox();
-            this.TextBoxTest = new Nikse.SubtitleEdit.Controls.NikseTextBox();
-            this.nikseComboBoxVoice = new Nikse.SubtitleEdit.Controls.NikseComboBox();
-            this.nikseComboBoxEngine = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.groupBoxMsSettings.SuspendLayout();
             this.SuspendLayout();
@@ -151,6 +151,28 @@
             this.labelApiKey.TabIndex = 28;
             this.labelApiKey.Text = "API key";
             // 
+            // nikseTextBoxApiKey
+            // 
+            this.nikseTextBoxApiKey.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.nikseTextBoxApiKey.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.nikseTextBoxApiKey.Location = new System.Drawing.Point(17, 258);
+            this.nikseTextBoxApiKey.Name = "nikseTextBoxApiKey";
+            this.nikseTextBoxApiKey.Size = new System.Drawing.Size(351, 20);
+            this.nikseTextBoxApiKey.TabIndex = 27;
+            // 
+            // TextBoxTest
+            // 
+            this.TextBoxTest.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.TextBoxTest.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.TextBoxTest.Location = new System.Drawing.Point(17, 187);
+            this.TextBoxTest.Name = "TextBoxTest";
+            this.TextBoxTest.Size = new System.Drawing.Size(351, 20);
+            this.TextBoxTest.TabIndex = 20;
+            this.TextBoxTest.Text = "Hello, how are you?";
+            this.TextBoxTest.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxTest_KeyDown);
+            // 
             // buttonTestVoice
             // 
             this.buttonTestVoice.Location = new System.Drawing.Point(17, 158);
@@ -183,72 +205,6 @@
             this.labelVoice.Size = new System.Drawing.Size(34, 13);
             this.labelVoice.TabIndex = 16;
             this.labelVoice.Text = "Voice";
-            // 
-            // listViewActors
-            // 
-            this.listViewActors.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.listViewActors.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeaderActor,
-            this.columnHeaderVoice});
-            this.listViewActors.ContextMenuStrip = this.contextMenuStripActors;
-            this.listViewActors.FullRowSelect = true;
-            this.listViewActors.GridLines = true;
-            this.listViewActors.HideSelection = false;
-            this.listViewActors.Location = new System.Drawing.Point(412, 42);
-            this.listViewActors.Name = "listViewActors";
-            this.listViewActors.Size = new System.Drawing.Size(430, 375);
-            this.listViewActors.TabIndex = 40;
-            this.listViewActors.UseCompatibleStateImageBehavior = false;
-            this.listViewActors.View = System.Windows.Forms.View.Details;
-            // 
-            // columnHeaderActor
-            // 
-            this.columnHeaderActor.Text = "Actor";
-            this.columnHeaderActor.Width = 200;
-            // 
-            // columnHeaderVoice
-            // 
-            this.columnHeaderVoice.Text = "Voice";
-            this.columnHeaderVoice.Width = 200;
-            // 
-            // contextMenuStripActors
-            // 
-            this.contextMenuStripActors.Name = "contextMenuStripActors";
-            this.contextMenuStripActors.Size = new System.Drawing.Size(61, 4);
-            // 
-            // labelActors
-            // 
-            this.labelActors.AutoSize = true;
-            this.labelActors.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.labelActors.Location = new System.Drawing.Point(412, 20);
-            this.labelActors.Name = "labelActors";
-            this.labelActors.Size = new System.Drawing.Size(170, 13);
-            this.labelActors.TabIndex = 19;
-            this.labelActors.Text = "Right-click to assign actor to voice";
-            // 
-            // nikseTextBoxApiKey
-            // 
-            this.nikseTextBoxApiKey.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.nikseTextBoxApiKey.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            this.nikseTextBoxApiKey.Location = new System.Drawing.Point(17, 258);
-            this.nikseTextBoxApiKey.Name = "nikseTextBoxApiKey";
-            this.nikseTextBoxApiKey.Size = new System.Drawing.Size(351, 20);
-            this.nikseTextBoxApiKey.TabIndex = 27;
-            // 
-            // TextBoxTest
-            // 
-            this.TextBoxTest.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.TextBoxTest.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            this.TextBoxTest.Location = new System.Drawing.Point(17, 187);
-            this.TextBoxTest.Name = "TextBoxTest";
-            this.TextBoxTest.Size = new System.Drawing.Size(351, 20);
-            this.TextBoxTest.TabIndex = 20;
-            this.TextBoxTest.Text = "Hello, how are you?";
-            this.TextBoxTest.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxTest_KeyDown);
             // 
             // nikseComboBoxVoice
             // 
@@ -303,6 +259,50 @@
             this.nikseComboBoxEngine.UsePopupWindow = false;
             this.nikseComboBoxEngine.SelectedIndexChanged += new System.EventHandler(this.nikseComboBoxEngine_SelectedIndexChanged);
             // 
+            // listViewActors
+            // 
+            this.listViewActors.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.listViewActors.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeaderActor,
+            this.columnHeaderVoice});
+            this.listViewActors.ContextMenuStrip = this.contextMenuStripActors;
+            this.listViewActors.FullRowSelect = true;
+            this.listViewActors.GridLines = true;
+            this.listViewActors.HideSelection = false;
+            this.listViewActors.Location = new System.Drawing.Point(412, 42);
+            this.listViewActors.Name = "listViewActors";
+            this.listViewActors.Size = new System.Drawing.Size(430, 375);
+            this.listViewActors.TabIndex = 40;
+            this.listViewActors.UseCompatibleStateImageBehavior = false;
+            this.listViewActors.View = System.Windows.Forms.View.Details;
+            // 
+            // columnHeaderActor
+            // 
+            this.columnHeaderActor.Text = "Actor";
+            this.columnHeaderActor.Width = 200;
+            // 
+            // columnHeaderVoice
+            // 
+            this.columnHeaderVoice.Text = "Voice";
+            this.columnHeaderVoice.Width = 200;
+            // 
+            // contextMenuStripActors
+            // 
+            this.contextMenuStripActors.Name = "contextMenuStripActors";
+            this.contextMenuStripActors.Size = new System.Drawing.Size(61, 4);
+            // 
+            // labelActors
+            // 
+            this.labelActors.AutoSize = true;
+            this.labelActors.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.labelActors.Location = new System.Drawing.Point(412, 20);
+            this.labelActors.Name = "labelActors";
+            this.labelActors.Size = new System.Drawing.Size(170, 13);
+            this.labelActors.TabIndex = 19;
+            this.labelActors.Text = "Right-click to assign actor to voice";
+            // 
             // buttonCancel
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
@@ -338,6 +338,7 @@
             this.Text = "Text to speech";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.TextToSpeech_FormClosing);
             this.Load += new System.EventHandler(this.TextToSpeech_Load);
+            this.Shown += new System.EventHandler(this.TextToSpeech_Shown);
             this.ResizeEnd += new System.EventHandler(this.TextToSpeech_ResizeEnd);
             this.SizeChanged += new System.EventHandler(this.TextToSpeech_SizeChanged);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextToSpeech_KeyDown);

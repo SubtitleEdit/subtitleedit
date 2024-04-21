@@ -1187,6 +1187,9 @@ namespace Nikse.SubtitleEdit.Forms.Tts
         private void TextToSpeech_ResizeEnd(object sender, EventArgs e)
         {
             listViewActors.AutoSizeLastColumn();
+
+            nikseComboBoxEngine.DropDownWidth = nikseComboBoxEngine.Width;
+            nikseComboBoxVoice.DropDownWidth = nikseComboBoxVoice.Width;
         }
 
         private void TextToSpeech_Load(object sender, EventArgs e)
@@ -1357,6 +1360,12 @@ namespace Nikse.SubtitleEdit.Forms.Tts
         private void buttonCancel_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.Cancel;
+        }
+
+        private void TextToSpeech_Shown(object sender, EventArgs e)
+        {
+            nikseComboBoxEngine.DropDownWidth = nikseComboBoxEngine.Width;
+            nikseComboBoxVoice.DropDownWidth = nikseComboBoxVoice.Width;
         }
     }
 }
