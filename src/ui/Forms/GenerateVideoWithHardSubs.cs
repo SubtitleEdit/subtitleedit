@@ -451,6 +451,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var failCount = 0;
                 for (var index = 0; index < _batchVideoAndSubList.Count; index++)
                 {
+                    labelPleaseWait.Text = $"{index+1}/{_batchVideoAndSubList.Count} - {LanguageSettings.Current.General.PleaseWait}";
                     var videoAndSub = _batchVideoAndSubList[index];
                     _videoInfo = UiUtil.GetVideoInfo(videoAndSub.VideoFileName);
                     if (useSourceResolution)
@@ -661,6 +662,11 @@ namespace Nikse.SubtitleEdit.Forms
 
             groupBoxSettings.Enabled = false;
             labelPleaseWait.Visible = true;
+            if (!BatchMode)
+            {
+                labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait;
+            }
+
             if (_videoInfo.TotalFrames > 0)
             {
                 progressBar1.Visible = true;
