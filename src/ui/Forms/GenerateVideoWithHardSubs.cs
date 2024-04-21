@@ -451,7 +451,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var failCount = 0;
                 for (var index = 0; index < _batchVideoAndSubList.Count; index++)
                 {
-                    labelPleaseWait.Text = $"{index+1}/{_batchVideoAndSubList.Count} - {LanguageSettings.Current.General.PleaseWait}";
+                    labelPleaseWait.Text = $"{index + 1}/{_batchVideoAndSubList.Count} - {LanguageSettings.Current.General.PleaseWait}";
                     var videoAndSub = _batchVideoAndSubList[index];
                     _videoInfo = UiUtil.GetVideoInfo(videoAndSub.VideoFileName);
                     if (useSourceResolution)
@@ -475,7 +475,12 @@ namespace Nikse.SubtitleEdit.Forms
                     }
 
                     var nameNoExt = Path.GetFileNameWithoutExtension(videoAndSub.VideoFileName);
-                    var ext = Path.GetExtension(videoAndSub.VideoFileName);
+                    var ext = Path.GetExtension(videoAndSub.VideoFileName).ToLowerInvariant();
+                    if (ext != ".mp4" && ext != ".mkv")
+                    {
+                        ext = ".mkv";
+                    }
+
                     VideoFileName = Path.Combine(path, $"{nameNoExt.TrimEnd('.', '.')}{Configuration.Settings.Tools.GenVideoOutputFileSuffix}{ext}");
                     if (File.Exists(VideoFileName))
                     {
@@ -504,6 +509,15 @@ namespace Nikse.SubtitleEdit.Forms
                         listViewBatch.Items[index].SubItems[ListViewBatchSubItemIndexColumnStatus].Text = "Error";
                         sbInfo.AppendLine($"{index + 1}: {videoAndSub.VideoFileName} -> Failed!");
                         failCount++;
+
+                        try
+                        {
+                            File.Delete(VideoFileName);
+                        }
+                        catch
+                        {
+                            // ignore
+                        }
                     }
                 }
 
@@ -679,13 +693,14 @@ namespace Nikse.SubtitleEdit.Forms
                 _totalFrames = (long)Math.Round(_totalFrames / factor) + 10;
             }
 
+            var result = true;
             if (checkBoxTargetFileSize.Checked)
             {
                 RunTwoPassEncoding(assaTempFileName, videoFileName);
             }
             else
             {
-                RunOnePassEncoding(assaTempFileName, videoFileName);
+                result = RunOnePassEncoding(assaTempFileName, videoFileName);
             }
 
             try
@@ -697,7 +712,7 @@ namespace Nikse.SubtitleEdit.Forms
                 // ignore
             }
 
-            return true;
+            return result;
         }
 
         private TimeSpan GetCutEnd()
@@ -919,7 +934,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void RunOnePassEncoding(string assaTempFileName, string videoFileName)
+        private bool RunOnePassEncoding(string assaTempFileName, string videoFileName)
         {
             var process = GetFfmpegProcess(videoFileName, VideoFileName, assaTempFileName);
             _log.AppendLine("ffmpeg arguments: " + process.StartInfo.Arguments);
@@ -949,6 +964,14 @@ namespace Nikse.SubtitleEdit.Forms
                 var v = (int)_processedFrames;
                 SetProgress(v);
             }
+
+            if (process.ExitCode != 0)
+            {
+                _log.AppendLine("ffmpeg exit code: " + process.ExitCode);
+                return false;
+            }
+
+            return true;
         }
 
         private bool CheckForPromptParameters(Process process, string title)
