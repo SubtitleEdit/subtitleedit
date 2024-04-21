@@ -1535,7 +1535,20 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void MediaPlayer_OnButtonClicked(object sender, EventArgs e)
         {
-
+            if (sender is PictureBox pb && pb.Name == "_pictureBoxFullscreenOver")
+            {
+                if (_previewVideo != null && !_previewVideo.IsDisposed)
+                {
+                    _previewVideo.Close();
+                    _previewVideo.Dispose();
+                    _previewVideo = null;
+                }
+                else
+                {
+                    _previewVideo = new PreviewVideo(_inputVideoFileName, _mpvSubtitleFileName, _assaSubtitle, true);
+                    _previewVideo.Show(this);
+                }
+            }
         }
 
         private void checkBoxTargetFileSize_CheckedChanged(object sender, EventArgs e)
