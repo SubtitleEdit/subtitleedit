@@ -191,6 +191,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public int AutoTranslateDelaySeconds { get; set; }
         public string GeminiProApiKey { get; set; }
         public string TextToSpeechEngine { get; set; }
+        public string TextToSpeechLastVoice { get; set; }
         public string TextToSpeechElevenLabsApiKey { get; set; }
         public bool DisableVidoInfoViaLabel { get; set; }
         public bool ListViewSyntaxColorDurationSmall { get; set; }
@@ -480,6 +481,9 @@ namespace Nikse.SubtitleEdit.Core.Common
         public string GenVideoEmbedOutputSuffix { get; set; }
         public string GenVideoEmbedOutputReplace { get; set; }
         public bool GenVideoDeleteInputVideoFile { get; set; }
+        public bool GenVideoUseOutputFolder { get; set; }
+        public string GenVideoOutputFolder { get; set; }
+        public string GenVideoOutputFileSuffix { get; set; }
 
         public bool VoskPostProcessing { get; set; }
         public string VoskModel { get; set; }
@@ -733,6 +737,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             GenVideoNonAssaTextColor = Color.White;
             GenVideoEmbedOutputSuffix = "embed";
             GenVideoEmbedOutputReplace = "embed" + Environment.NewLine + "SoftSub" + Environment.NewLine + "SoftSubbed";
+            GenVideoOutputFileSuffix = "_new";
             VoskPostProcessing = true;
             WhisperChoice = Configuration.IsRunningOnWindows ? AudioToText.WhisperChoice.PurfviewFasterWhisper : AudioToText.WhisperChoice.OpenAi;
             WhisperDeleteTempFiles = true;
@@ -5464,6 +5469,12 @@ $HorzAlign          =   Center
                 settings.Tools.TextToSpeechEngine = subNode.InnerText;
             }
 
+            subNode = node.SelectSingleNode("TextToSpeechLastVoice");
+            if (subNode != null)
+            {
+                settings.Tools.TextToSpeechLastVoice = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("TextToSpeechElevenLabsApiKey");
             if (subNode != null)
             {
@@ -7174,6 +7185,24 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.Tools.GenVideoDeleteInputVideoFile = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("GenVideoUseOutputFolder");
+            if (subNode != null)
+            {
+                settings.Tools.GenVideoUseOutputFolder = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("GenVideoOutputFolder");
+            if (subNode != null)
+            {
+                settings.Tools.GenVideoOutputFolder = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("GenVideoOutputFileSuffix");
+            if (subNode != null)
+            {
+                settings.Tools.GenVideoOutputFileSuffix = subNode.InnerText;
             }
 
 
@@ -11992,6 +12021,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("AutoTranslateDelaySeconds", settings.Tools.AutoTranslateDelaySeconds.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("GeminiProApiKey", settings.Tools.GeminiProApiKey);
                 textWriter.WriteElementString("TextToSpeechEngine", settings.Tools.TextToSpeechEngine);
+                textWriter.WriteElementString("TextToSpeechLastVoice", settings.Tools.TextToSpeechLastVoice);
                 textWriter.WriteElementString("TextToSpeechElevenLabsApiKey", settings.Tools.TextToSpeechElevenLabsApiKey);
                 textWriter.WriteElementString("DisableVidoInfoViaLabel", settings.Tools.DisableVidoInfoViaLabel.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewSyntaxColorDurationSmall", settings.Tools.ListViewSyntaxColorDurationSmall.ToString(CultureInfo.InvariantCulture));
@@ -12275,6 +12305,9 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("GenVideoEmbedOutputSuffix", settings.Tools.GenVideoEmbedOutputSuffix);
                 textWriter.WriteElementString("GenVideoEmbedOutputReplace", settings.Tools.GenVideoEmbedOutputReplace);
                 textWriter.WriteElementString("GenVideoDeleteInputVideoFile", settings.Tools.GenVideoDeleteInputVideoFile.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("GenVideoUseOutputFolder", settings.Tools.GenVideoUseOutputFolder.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("GenVideoOutputFileSuffix", settings.Tools.GenVideoOutputFolder);
+                textWriter.WriteElementString("GenVideoOutputFileSuffix", settings.Tools.GenVideoOutputFileSuffix);
                 textWriter.WriteElementString("VoskPostProcessing", settings.Tools.VoskPostProcessing.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("VoskModel", settings.Tools.VoskModel);
                 textWriter.WriteElementString("WhisperChoice", settings.Tools.WhisperChoice);
