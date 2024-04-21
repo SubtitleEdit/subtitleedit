@@ -4041,17 +4041,18 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 var shadowAlpha = parameter.ShadowAlpha;
                 if (parameter.ShadowWidth > 1)
                 {
-                    shadowAlpha = (int)Math.Round(shadowAlpha * 0.8);
+                    shadowAlpha = (int)Math.Round(shadowAlpha * 0.9);
                 }
 
                 var shadowPath = (GraphicsPath)path.Clone();
-                for (int k = 0; k < parameter.ShadowWidth; k++)
+                for (var k = 0; k < parameter.ShadowWidth; k++)
                 {
                     var translateMatrix = new Matrix();
                     translateMatrix.Translate(1, 1);
                     shadowPath.Transform(translateMatrix);
 
-                    using (var p1 = new Pen(new SolidBrush(Color.FromArgb(shadowAlpha, parameter.ShadowColor)), parameter.BorderWidth))
+                    var boderWidth = Math.Max(2, parameter.BorderWidth);
+                    using (var p1 = new Pen(new SolidBrush(Color.FromArgb(shadowAlpha, parameter.ShadowColor)), boderWidth))
                     {
                         SetLineJoin(parameter.LineJoin, p1);
                         g.DrawPath(p1, shadowPath);
