@@ -481,6 +481,9 @@ namespace Nikse.SubtitleEdit.Core.Common
         public string GenVideoEmbedOutputSuffix { get; set; }
         public string GenVideoEmbedOutputReplace { get; set; }
         public bool GenVideoDeleteInputVideoFile { get; set; }
+        public bool GenVideoUseOutputFolder { get; set; }
+        public string GenVideoOutputFolder { get; set; }
+        public string GenVideoOutputFileSuffix { get; set; }
 
         public bool VoskPostProcessing { get; set; }
         public string VoskModel { get; set; }
@@ -734,6 +737,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             GenVideoNonAssaTextColor = Color.White;
             GenVideoEmbedOutputSuffix = "embed";
             GenVideoEmbedOutputReplace = "embed" + Environment.NewLine + "SoftSub" + Environment.NewLine + "SoftSubbed";
+            GenVideoOutputFileSuffix = "_new";
             VoskPostProcessing = true;
             WhisperChoice = Configuration.IsRunningOnWindows ? AudioToText.WhisperChoice.PurfviewFasterWhisper : AudioToText.WhisperChoice.OpenAi;
             WhisperDeleteTempFiles = true;
@@ -7183,6 +7187,24 @@ $HorzAlign          =   Center
                 settings.Tools.GenVideoDeleteInputVideoFile = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
+            subNode = node.SelectSingleNode("GenVideoUseOutputFolder");
+            if (subNode != null)
+            {
+                settings.Tools.GenVideoUseOutputFolder = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("GenVideoOutputFolder");
+            if (subNode != null)
+            {
+                settings.Tools.GenVideoOutputFolder = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("GenVideoOutputFileSuffix");
+            if (subNode != null)
+            {
+                settings.Tools.GenVideoOutputFileSuffix = subNode.InnerText;
+            }
+
 
             subNode = node.SelectSingleNode("VoskPostProcessing");
             if (subNode != null)
@@ -12283,6 +12305,9 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("GenVideoEmbedOutputSuffix", settings.Tools.GenVideoEmbedOutputSuffix);
                 textWriter.WriteElementString("GenVideoEmbedOutputReplace", settings.Tools.GenVideoEmbedOutputReplace);
                 textWriter.WriteElementString("GenVideoDeleteInputVideoFile", settings.Tools.GenVideoDeleteInputVideoFile.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("GenVideoUseOutputFolder", settings.Tools.GenVideoUseOutputFolder.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("GenVideoOutputFileSuffix", settings.Tools.GenVideoOutputFolder);
+                textWriter.WriteElementString("GenVideoOutputFileSuffix", settings.Tools.GenVideoOutputFileSuffix);
                 textWriter.WriteElementString("VoskPostProcessing", settings.Tools.VoskPostProcessing.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("VoskModel", settings.Tools.VoskModel);
                 textWriter.WriteElementString("WhisperChoice", settings.Tools.WhisperChoice);
