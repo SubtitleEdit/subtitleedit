@@ -14,12 +14,12 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
         private readonly Subtitle _subtitle;
         private readonly TextToSpeech _textToSpeech;
-        private readonly List<string> _fileNames;
+        private readonly List<TextToSpeech.FileNameAndSpeedFactor> _fileNames;
         private bool _abortPlay;
         private LibMpvDynamic _libMpv;
         private Timer _mpvDoneTimer;
 
-        public ReviewAudioClips(TextToSpeech textToSpeech, Subtitle subtitle, List<string> fileNames)
+        public ReviewAudioClips(TextToSpeech textToSpeech, Subtitle subtitle, List<TextToSpeech.FileNameAndSpeedFactor> fileNames)
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
@@ -90,7 +90,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             }
 
             var idx = listView1.SelectedItems[0].Index;
-            var waveFileName = _fileNames[idx];
+            var waveFileName = _fileNames[idx].Filename;
 
             if (_libMpv != null)
             {
@@ -129,7 +129,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 listView1.Items[idx + 1].Selected = true;
                 listView1.Items[idx + 1].Focused = true;
                 listView1.Items[idx + 1].EnsureVisible();
-                TaskDelayHelper.RunDelayed(TimeSpan.FromMilliseconds(10), () =>  Play());
+                TaskDelayHelper.RunDelayed(TimeSpan.FromMilliseconds(10), () => Play());
                 Application.DoEvents();
             }
         }
@@ -192,7 +192,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             }
         }
 
-        private void buttonReGenerate_Click(object sender, EventArgs e)
+        private void buttonEdit_Click(object sender, EventArgs e)
         {
             if (listView1.SelectedItems.Count == 0)
             {
@@ -205,7 +205,8 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 var dr = form.ShowDialog(this);
                 if (dr == DialogResult.OK)
                 {
-                    _fileNames[idx] = form.NewAudioFileName;
+                    _fileNames[idx].Filename = form.FileNameAndSpeedFactor.Filename;
+                    _fileNames[idx].Factor = form.FileNameAndSpeedFactor.Factor;
                     listView1.Items[idx].SubItems[4].Text = _subtitle.Paragraphs[idx].Text;
                     Play(true);
                 }

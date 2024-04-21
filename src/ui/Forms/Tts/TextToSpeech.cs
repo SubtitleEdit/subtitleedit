@@ -21,6 +21,8 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 {
     public sealed partial class TextToSpeech : Form
     {
+        public Subtitle EditedSubtitle { get; set; }
+
         private readonly Subtitle _subtitle;
         private readonly string _videoFileName;
         private readonly VideoInfo _videoInfo;
@@ -39,6 +41,12 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             public int UseCount { get; set; }
             public string Voice { get; set; }
             public int VoiceIndex { get; set; }
+        }
+
+        public class FileNameAndSpeedFactor
+        {
+            public string Filename { get; set; }
+            public decimal Factor { get; set; }
         }
 
         public class TextToSpeechEngine
@@ -89,6 +97,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             checkBoxAddToVideoFile.Text = LanguageSettings.Current.TextToSpeech.AddAudioToVideo;
             buttonGenerateTTS.Text = LanguageSettings.Current.TextToSpeech.GenerateSpeech;
             buttonOK.Text = LanguageSettings.Current.General.Ok;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             UiUtil.FixLargeFonts(this, buttonOK);
 
             progressBar1.Visible = false;
@@ -193,7 +202,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 return;
             }
 
-            var fileNames = FixParagraphAudioSpeed();
+            var fileNameAndSpeedFactors = FixParagraphAudioSpeed(_subtitle, null);
             if (_abort)
             {
                 HandleAbort();
@@ -202,7 +211,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
             if (checkBoxShowPreview.Checked)
             {
-                using (var form = new ReviewAudioClips(this, _subtitle, fileNames))
+                using (var form = new ReviewAudioClips(this, _subtitle, fileNameAndSpeedFactors))
                 {
                     var dr = form.ShowDialog(this);
                     if (dr != DialogResult.OK)
@@ -214,12 +223,12 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
                     foreach (var idx in form.SkipIndices)
                     {
-                        fileNames[idx] = null; // skip these files
+                        fileNameAndSpeedFactors[idx] = null; // skip these files
                     }
                 }
             }
 
-            var tempAudioFile = MergeAudioParagraphs(fileNames);
+            var tempAudioFile = MergeAudioParagraphs(fileNameAndSpeedFactors);
             if (_abort)
             {
                 HandleAbort();
@@ -330,37 +339,47 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             }
         }
 
-        private List<string> FixParagraphAudioSpeed()
+        private List<FileNameAndSpeedFactor> FixParagraphAudioSpeed(Subtitle subtitle, string overrideFileName)
         {
-            var fileNames = new List<string>(_subtitle.Paragraphs.Count);
+            var fileNames = new List<FileNameAndSpeedFactor>(subtitle.Paragraphs.Count);
 
             labelProgress.Text = string.Empty;
             labelProgress.Refresh();
             Application.DoEvents();
 
             progressBar1.Value = 0;
-            progressBar1.Maximum = _subtitle.Paragraphs.Count;
+            progressBar1.Maximum = subtitle.Paragraphs.Count;
             progressBar1.Visible = true;
-            for (var index = 0; index < _subtitle.Paragraphs.Count; index++)
+            for (var index = 0; index < subtitle.Paragraphs.Count; index++)
             {
                 progressBar1.Value = index + 1;
-                labelProgress.Text = string.Format(LanguageSettings.Current.TextToSpeech.AdjustingSpeedXOfY, index + 1, _subtitle.Paragraphs.Count);
-                var p = _subtitle.Paragraphs[index];
-                var next = _subtitle.GetParagraphOrDefault(index + 1);
+                labelProgress.Text = string.Format(LanguageSettings.Current.TextToSpeech.AdjustingSpeedXOfY, index + 1, subtitle.Paragraphs.Count);
+                var p = subtitle.Paragraphs[index];
+                var next = subtitle.GetParagraphOrDefault(index + 1);
                 var pFileName = Path.Combine(_waveFolder, index + ".wav");
+                if (!string.IsNullOrEmpty(overrideFileName) && File.Exists(Path.Combine(_waveFolder, overrideFileName)))
+                {
+                    pFileName = Path.Combine(_waveFolder, overrideFileName);
+                }
+
                 if (!File.Exists(pFileName))
                 {
                     pFileName = Path.Combine(_waveFolder, index + ".mp3");
                 }
 
                 var outputFileName1 = Path.Combine(_waveFolder, index + "_u.wav");
+                if (!string.IsNullOrEmpty(overrideFileName) && File.Exists(Path.Combine(_waveFolder, overrideFileName)))
+                {
+                    outputFileName1 = Path.Combine(_waveFolder, Path.GetFileNameWithoutExtension(overrideFileName) + "_u.wav");
+                }
+
                 var trimProcess = VideoPreviewGenerator.TrimSilenceStartAndEnd(pFileName, outputFileName1);
                 trimProcess.Start();
                 while (!trimProcess.HasExited)
                 {
                     if (_abort)
                     {
-                        return new List<string>();
+                        return new List<FileNameAndSpeedFactor>();
                     }
                 }
 
@@ -377,19 +396,24 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
                 if (_abort)
                 {
-                    return new List<string>();
+                    return new List<FileNameAndSpeedFactor>();
                 }
 
                 var waveInfo = UiUtil.GetVideoInfo(outputFileName1);
                 if (waveInfo.TotalMilliseconds <= p.DurationTotalMilliseconds + addDuration)
                 {
-                    fileNames.Add(outputFileName1);
+                    fileNames.Add(new FileNameAndSpeedFactor { Filename = outputFileName1, Factor = 1 });
                     continue;
                 }
 
-                var factor = waveInfo.TotalMilliseconds / (p.DurationTotalMilliseconds + addDuration);
+                var factor = (decimal)waveInfo.TotalMilliseconds / (decimal)(p.DurationTotalMilliseconds + addDuration);
                 var outputFileName2 = Path.Combine(_waveFolder, index + "_t.wav");
-                fileNames.Add(outputFileName2);
+                if (!string.IsNullOrEmpty(overrideFileName) && File.Exists(Path.Combine(_waveFolder, overrideFileName)))
+                {
+                    outputFileName2 = Path.Combine(_waveFolder, Path.GetFileNameWithoutExtension(overrideFileName) + "_t.wav");
+                }
+
+                fileNames.Add(new FileNameAndSpeedFactor { Filename = outputFileName2, Factor = factor });
                 var mergeProcess = VideoPreviewGenerator.ChangeSpeed(outputFileName1, outputFileName2, (float)factor);
                 mergeProcess.Start();
 
@@ -398,7 +422,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                     Application.DoEvents();
                     if (_abort)
                     {
-                        return new List<string>();
+                        return new List<FileNameAndSpeedFactor>();
                     }
                 }
             }
@@ -406,7 +430,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             return fileNames;
         }
 
-        private string MergeAudioParagraphs(List<string> fileNames)
+        private string MergeAudioParagraphs(List<FileNameAndSpeedFactor> fileNames)
         {
             labelProgress.Text = string.Empty;
             labelProgress.Refresh();
@@ -427,14 +451,14 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 labelProgress.Text = string.Format(LanguageSettings.Current.TextToSpeech.MergingAudioTrackXOfY, index + 1, _subtitle.Paragraphs.Count);
                 var p = _subtitle.Paragraphs[index];
                 var pFileName = fileNames[index];
-                if (!File.Exists(pFileName))
+                if (!File.Exists(pFileName.Filename))
                 {
-                    SeLogger.Error($"TextToSpeech: File not found (skipping): {pFileName}");
+                    SeLogger.Error($"TextToSpeech: File not found (skipping): {pFileName.Filename}");
                     continue;
                 }
 
                 outputFileName = Path.Combine(_waveFolder, $"silence{index}.wav");
-                var mergeProcess = VideoPreviewGenerator.MergeAudioTracks(inputFileName, pFileName, outputFileName, (float)p.StartTime.TotalSeconds);
+                var mergeProcess = VideoPreviewGenerator.MergeAudioTracks(inputFileName, pFileName.Filename, outputFileName, (float)p.StartTime.TotalSeconds);
                 inputFileName = outputFileName;
                 mergeProcess.Start();
 
@@ -864,6 +888,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
+            EditedSubtitle = _subtitle;
             DialogResult = DialogResult.OK;
         }
 
@@ -1174,7 +1199,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             listViewActors.AutoSizeLastColumn();
         }
 
-        public async Task<string> GenerateAudio(Paragraph p, string voice)
+        public async Task<FileNameAndSpeedFactor> ReGenerateAudio(Paragraph p, string voice)
         {
             nikseComboBoxVoice.Text = voice;
             var sub = new Subtitle();
@@ -1186,7 +1211,9 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 return null;
             }
 
-            return Path.Combine(_waveFolder, waveFileNameOnly);
+            var fileNameAndSpeedFactors = FixParagraphAudioSpeed(sub, waveFileNameOnly);
+
+            return fileNameAndSpeedFactors.First();
         }
 
         private async void buttonTestVoice_Click(object sender, EventArgs e)
@@ -1325,6 +1352,11 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             }
 
             nikseComboBox.SelectedIndex = nikseComboBoxVoice.SelectedIndex;
+        }
+
+        private void buttonCancel_Click(object sender, EventArgs e)
+        {
+            DialogResult = DialogResult.Cancel;
         }
     }
 }

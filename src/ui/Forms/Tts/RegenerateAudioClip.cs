@@ -7,7 +7,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 {
     public partial class RegenerateAudioClip : Form
     {
-        public string NewAudioFileName { get; set; }
+        public TextToSpeech.FileNameAndSpeedFactor FileNameAndSpeedFactor { get; set; }
 
         private readonly TextToSpeech _textToSpeech;
         private readonly Subtitle _subtitle;
@@ -39,10 +39,10 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             {
                 Cursor = Cursors.WaitCursor;
                 buttonReGenerate.Enabled = false;
-                var fileName = await _textToSpeech.GenerateAudio(paragraph, nikseComboBoxVoice.Text);
-                if (!string.IsNullOrEmpty(fileName))
+                var fileNameAndSpeedFactor = await _textToSpeech.ReGenerateAudio(paragraph, nikseComboBoxVoice.Text);
+                if (fileNameAndSpeedFactor != null)
                 {
-                    NewAudioFileName = fileName;
+                    FileNameAndSpeedFactor = fileNameAndSpeedFactor;
                     Cursor = Cursors.Default;
                     DialogResult = DialogResult.OK;
                 }
