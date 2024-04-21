@@ -140,6 +140,7 @@
     <RegEx find="Ћ" replaceWith="Ć" />
     <RegEx find="Ч" replaceWith="Č" />
     <RegEx find="Џ" replaceWith="DŽ" />
+    <RegEx find="Ђ" replaceWith="Đ" />
     <RegEx find="Г" replaceWith="G" />
     <RegEx find="Е" replaceWith="E" />
     <RegEx find="Д" replaceWith="D" />
