@@ -441,6 +441,7 @@ namespace Nikse.SubtitleEdit.Forms
             Stopwatch stopWatch;
             if (BatchMode)
             {
+                checkBoxTargetFileSize.Checked = false;
                 var useSourceResolution = numericUpDownWidth.Value == 0 && numericUpDownHeight.Value == 0;
                 listViewBatch.SelectedIndices.Clear();
 
