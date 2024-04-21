@@ -40,7 +40,7 @@
             this.labelParagraphInfo = new System.Windows.Forms.Label();
             this.checkBoxContinuePlay = new System.Windows.Forms.CheckBox();
             this.buttonStop = new System.Windows.Forms.Button();
-            this.buttonReGenerate = new System.Windows.Forms.Button();
+            this.buttonEdit = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // listView1
@@ -137,7 +137,7 @@
             // 
             this.checkBoxContinuePlay.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.checkBoxContinuePlay.AutoSize = true;
-            this.checkBoxContinuePlay.Location = new System.Drawing.Point(703, 353);
+            this.checkBoxContinuePlay.Location = new System.Drawing.Point(717, 354);
             this.checkBoxContinuePlay.Name = "checkBoxContinuePlay";
             this.checkBoxContinuePlay.Size = new System.Drawing.Size(92, 17);
             this.checkBoxContinuePlay.TabIndex = 11;
@@ -156,24 +156,24 @@
             this.buttonStop.UseVisualStyleBackColor = true;
             this.buttonStop.Click += new System.EventHandler(this.buttonStop_Click);
             // 
-            // buttonReGenerate
+            // buttonEdit
             // 
-            this.buttonReGenerate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonReGenerate.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonReGenerate.Location = new System.Drawing.Point(703, 249);
-            this.buttonReGenerate.Name = "buttonReGenerate";
-            this.buttonReGenerate.Size = new System.Drawing.Size(180, 23);
-            this.buttonReGenerate.TabIndex = 13;
-            this.buttonReGenerate.Text = "Regenerate";
-            this.buttonReGenerate.UseVisualStyleBackColor = true;
-            this.buttonReGenerate.Click += new System.EventHandler(this.buttonReGenerate_Click);
+            this.buttonEdit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonEdit.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.buttonEdit.Location = new System.Drawing.Point(703, 249);
+            this.buttonEdit.Name = "buttonEdit";
+            this.buttonEdit.Size = new System.Drawing.Size(180, 23);
+            this.buttonEdit.TabIndex = 13;
+            this.buttonEdit.Text = "Edit";
+            this.buttonEdit.UseVisualStyleBackColor = true;
+            this.buttonEdit.Click += new System.EventHandler(this.buttonEdit_Click);
             // 
             // ReviewAudioClips
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(894, 448);
-            this.Controls.Add(this.buttonReGenerate);
+            this.Controls.Add(this.buttonEdit);
             this.Controls.Add(this.buttonStop);
             this.Controls.Add(this.checkBoxContinuePlay);
             this.Controls.Add(this.labelParagraphInfo);
@@ -211,6 +211,6 @@
         private System.Windows.Forms.Label labelParagraphInfo;
         private System.Windows.Forms.CheckBox checkBoxContinuePlay;
         private System.Windows.Forms.Button buttonStop;
-        private System.Windows.Forms.Button buttonReGenerate;
+        private System.Windows.Forms.Button buttonEdit;
     }
 }

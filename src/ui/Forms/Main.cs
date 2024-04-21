@@ -36804,9 +36804,13 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     using (var form = new TextToSpeech(_subtitle, GetCurrentSubtitleFormat(), _videoFileName, _videoInfo))
                     {
-                        if (form.ShowDialog(this) != DialogResult.OK)
+                        if (form.ShowDialog(this) == DialogResult.OK)
                         {
-                            return;
+                            var idx = FirstSelectedIndex;
+                            _subtitle = form.EditedSubtitle;
+                            SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
+                            _subtitleListViewIndex = -1;
+                            SubtitleListview1.SelectIndexAndEnsureVisibleFaster(idx);
                         }
                     }
                 }
