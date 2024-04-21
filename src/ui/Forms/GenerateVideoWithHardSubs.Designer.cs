@@ -113,7 +113,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonPreview = new System.Windows.Forms.Button();
             this.linkLabelHelp = new System.Windows.Forms.LinkLabel();
             this.contextMenuStripRes = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.useSourceResoluton0x0ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.useSourceResolutionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.x2160ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.uHD3840x2160ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.k2048x1080ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -1437,7 +1437,7 @@ namespace Nikse.SubtitleEdit.Forms
             // contextMenuStripRes
             // 
             this.contextMenuStripRes.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.useSourceResoluton0x0ToolStripMenuItem,
+            this.useSourceResolutionToolStripMenuItem,
             this.x2160ToolStripMenuItem,
             this.uHD3840x2160ToolStripMenuItem,
             this.k2048x1080ToolStripMenuItem,
@@ -1453,110 +1453,111 @@ namespace Nikse.SubtitleEdit.Forms
             this.x352ToolStripMenuItem,
             this.x272ToolStripMenuItem});
             this.contextMenuStripRes.Name = "contextMenuStripRes";
-            this.contextMenuStripRes.Size = new System.Drawing.Size(214, 356);
+            this.contextMenuStripRes.Size = new System.Drawing.Size(204, 334);
+            this.contextMenuStripRes.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripRes_Opening);
             // 
-            // useSourceResoluton0x0ToolStripMenuItem
+            // useSourceResolutionToolStripMenuItem
             // 
-            this.useSourceResoluton0x0ToolStripMenuItem.Name = "useSourceResoluton0x0ToolStripMenuItem";
-            this.useSourceResoluton0x0ToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
-            this.useSourceResoluton0x0ToolStripMenuItem.Text = "Use source resoluton (0x0)";
-            this.useSourceResoluton0x0ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
+            this.useSourceResolutionToolStripMenuItem.Name = "useSourceResolutionToolStripMenuItem";
+            this.useSourceResolutionToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
+            this.useSourceResolutionToolStripMenuItem.Text = "Use source resoluton";
+            this.useSourceResolutionToolStripMenuItem.Click += new System.EventHandler(this.useSourceResolutionToolStripMenuItem_Click);
             // 
             // x2160ToolStripMenuItem
             // 
             this.x2160ToolStripMenuItem.Name = "x2160ToolStripMenuItem";
-            this.x2160ToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
+            this.x2160ToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
             this.x2160ToolStripMenuItem.Text = "4K (4096x2160)";
             this.x2160ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
             // 
             // uHD3840x2160ToolStripMenuItem
             // 
             this.uHD3840x2160ToolStripMenuItem.Name = "uHD3840x2160ToolStripMenuItem";
-            this.uHD3840x2160ToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
+            this.uHD3840x2160ToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
             this.uHD3840x2160ToolStripMenuItem.Text = "UHD (3840x2160)";
             this.uHD3840x2160ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
             // 
             // k2048x1080ToolStripMenuItem
             // 
             this.k2048x1080ToolStripMenuItem.Name = "k2048x1080ToolStripMenuItem";
-            this.k2048x1080ToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
+            this.k2048x1080ToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
             this.k2048x1080ToolStripMenuItem.Text = "2K (2048x1080)";
             this.k2048x1080ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
             // 
             // dCI2KScope2048x858ToolStripMenuItem
             // 
             this.dCI2KScope2048x858ToolStripMenuItem.Name = "dCI2KScope2048x858ToolStripMenuItem";
-            this.dCI2KScope2048x858ToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
+            this.dCI2KScope2048x858ToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
             this.dCI2KScope2048x858ToolStripMenuItem.Text = "DCI 2K Scope (2048x858)";
             this.dCI2KScope2048x858ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
             // 
             // dCI2KFlat1998x1080ToolStripMenuItem
             // 
             this.dCI2KFlat1998x1080ToolStripMenuItem.Name = "dCI2KFlat1998x1080ToolStripMenuItem";
-            this.dCI2KFlat1998x1080ToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
+            this.dCI2KFlat1998x1080ToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
             this.dCI2KFlat1998x1080ToolStripMenuItem.Text = "DCI 2K Flat (1998x1080)";
             this.dCI2KFlat1998x1080ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
             // 
             // p1920x1080ToolStripMenuItem
             // 
             this.p1920x1080ToolStripMenuItem.Name = "p1920x1080ToolStripMenuItem";
-            this.p1920x1080ToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
+            this.p1920x1080ToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
             this.p1920x1080ToolStripMenuItem.Text = "1080p (1920x1080)";
             this.p1920x1080ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
             // 
             // x1080ToolStripMenuItem
             // 
             this.x1080ToolStripMenuItem.Name = "x1080ToolStripMenuItem";
-            this.x1080ToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
+            this.x1080ToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
             this.x1080ToolStripMenuItem.Text = "1440x1080";
             this.x1080ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
             // 
             // p1280x720ToolStripMenuItem
             // 
             this.p1280x720ToolStripMenuItem.Name = "p1280x720ToolStripMenuItem";
-            this.p1280x720ToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
+            this.p1280x720ToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
             this.p1280x720ToolStripMenuItem.Text = "720p (1280x720)";
             this.p1280x720ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
             // 
             // x720ToolStripMenuItem
             // 
             this.x720ToolStripMenuItem.Name = "x720ToolStripMenuItem";
-            this.x720ToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
+            this.x720ToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
             this.x720ToolStripMenuItem.Text = "960x720";
             this.x720ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
             // 
             // p848x480ToolStripMenuItem
             // 
             this.p848x480ToolStripMenuItem.Name = "p848x480ToolStripMenuItem";
-            this.p848x480ToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
+            this.p848x480ToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
             this.p848x480ToolStripMenuItem.Text = "480p (848x480)";
             this.p848x480ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
             // 
             // pAL720x576ToolStripMenuItem
             // 
             this.pAL720x576ToolStripMenuItem.Name = "pAL720x576ToolStripMenuItem";
-            this.pAL720x576ToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
+            this.pAL720x576ToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
             this.pAL720x576ToolStripMenuItem.Text = "PAL (720x576)";
             this.pAL720x576ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
             // 
             // nTSC720x480ToolStripMenuItem
             // 
             this.nTSC720x480ToolStripMenuItem.Name = "nTSC720x480ToolStripMenuItem";
-            this.nTSC720x480ToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
+            this.nTSC720x480ToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
             this.nTSC720x480ToolStripMenuItem.Text = "NTSC (720x480)";
             this.nTSC720x480ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
             // 
             // x352ToolStripMenuItem
             // 
             this.x352ToolStripMenuItem.Name = "x352ToolStripMenuItem";
-            this.x352ToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
+            this.x352ToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
             this.x352ToolStripMenuItem.Text = "640x352";
             this.x352ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
             // 
             // x272ToolStripMenuItem
             // 
             this.x272ToolStripMenuItem.Name = "x272ToolStripMenuItem";
-            this.x272ToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
+            this.x272ToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
             this.x272ToolStripMenuItem.Text = "640x272";
             this.x272ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
             // 
@@ -1770,7 +1771,7 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem removeSubtitleFileToolStripMenuItem;
         private System.Windows.Forms.ColumnHeader columnHeaderResolution;
-        private System.Windows.Forms.ToolStripMenuItem useSourceResoluton0x0ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem useSourceResolutionToolStripMenuItem;
         private System.Windows.Forms.Button buttonOutputFileSettings;
     }
 }

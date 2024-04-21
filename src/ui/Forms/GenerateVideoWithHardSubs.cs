@@ -317,12 +317,10 @@ namespace Nikse.SubtitleEdit.Forms
             buttonOutputFileSettings.Visible = BatchMode;
 
             var audioTracks = _mediaInfo.Tracks.Where(p => p.TrackType == FfmpegTrackType.Audio).ToList();
-            useSourceResoluton0x0ToolStripMenuItem.Visible = BatchMode;
             if (BatchMode)
             {
                 listViewAudioTracks.Visible = false;
-                numericUpDownWidth.Value = 0;
-                numericUpDownHeight.Value = 0;
+                useSourceResolutionToolStripMenuItem_Click(null, null);
             }
             else if (audioTracks.Count > 1)
             {
@@ -1537,20 +1535,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void MediaPlayer_OnButtonClicked(object sender, EventArgs e)
         {
-            if (sender is PictureBox pb && pb.Name == "_pictureBoxFullscreenOver")
-            {
-                if (_previewVideo != null && !_previewVideo.IsDisposed)
-                {
-                    _previewVideo.Close();
-                    _previewVideo.Dispose();
-                    _previewVideo = null;
-                }
-                else
-                {
-                    _previewVideo = new PreviewVideo(_inputVideoFileName, _mpvSubtitleFileName, _assaSubtitle, true);
-                    _previewVideo.Show(this);
-                }
-            }
+
         }
 
         private void checkBoxTargetFileSize_CheckedChanged(object sender, EventArgs e)
@@ -1749,6 +1734,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ResolutionPickClick(object sender, EventArgs e)
         {
+            labelX.Left = numericUpDownWidth.Left + numericUpDownWidth.Width + 3;
+            numericUpDownWidth.Visible = true;
+            labelX.Text = "x";
+            numericUpDownHeight.Visible = true;
+
             var text = (sender as ToolStripMenuItem).Text;
             var match = new Regex("\\d+x\\d+").Match(text);
             var parts = match.Value.Split('x');
@@ -2014,6 +2004,21 @@ namespace Nikse.SubtitleEdit.Forms
                 : LanguageSettings.Current.AudioToText.BatchMode;
 
             FontEnableOrDisable(BatchMode || _initialFontOn);
+
+            if (!numericUpDownWidth.Visible)
+            {
+                var item = new ToolStripMenuItem();
+                if (_videoInfo == null)
+                {
+                    item.Text = "(1920x1080)";
+                }
+                else
+                {
+                    item.Text = $"({_videoInfo.Width}x{_videoInfo.Height})";
+                }
+
+                ResolutionPickClick(item, null);
+            }
         }
 
         private void addFilesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2262,6 +2267,23 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 form.ShowDialog(this);
             }
+        }
+
+        private void useSourceResolutionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            numericUpDownWidth.Visible = false;
+            numericUpDownHeight.Visible = false;
+
+            labelX.Left = numericUpDownWidth.Left;
+            labelX.Text = "Use source";
+
+            numericUpDownWidth.Value = 0;
+            numericUpDownHeight.Value = 0;
+        }
+
+        private void contextMenuStripRes_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            useSourceResolutionToolStripMenuItem.Visible = BatchMode;
         }
     }
 }
