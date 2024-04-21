@@ -2,8 +2,8 @@
 
 4.0.6 (xth May 2024) BETA
 * NEW:
-   * Add "Text To Speech" - thx darnn
-   * Add burn-in batch mode - thx Leon
+   * Add "Text To Speech" - thx darnn/cvrle77/msjsc001
+   * Add burn-in batch mode - thx Leon/David
 * IMPROVED:
    * Update Portuguese translation - thx hugok79
    * Update Bulgarian translation - thx Калин

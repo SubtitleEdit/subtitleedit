@@ -42,8 +42,8 @@ namespace Nikse.SubtitleEdit.Forms
         public bool BatchMode { get; set; }
         public string BatchInfo { get; set; }
         private readonly List<BatchVideoAndSub> _batchVideoAndSubList;
-        private const int ListViewBatchSubItemIndexColumnSubtitleFile = 2;
-        private const int ListViewBatchSubItemIndexColumnStatus = 3;
+        private const int ListViewBatchSubItemIndexColumnSubtitleFile = 3;
+        private const int ListViewBatchSubItemIndexColumnStatus = 4;
 
         public class BatchVideoAndSub
         {
@@ -314,11 +314,13 @@ namespace Nikse.SubtitleEdit.Forms
             buttonRemoveFile.Visible = BatchMode;
             buttonClear.Visible = BatchMode;
             buttonAddFile.Visible = BatchMode;
+            buttonOutputFileSettings.Visible = BatchMode;
 
             var audioTracks = _mediaInfo.Tracks.Where(p => p.TrackType == FfmpegTrackType.Audio).ToList();
             if (BatchMode)
             {
                 listViewAudioTracks.Visible = false;
+                useSourceResolutionToolStripMenuItem_Click(null, null);
             }
             else if (audioTracks.Count > 1)
             {
@@ -437,9 +439,13 @@ namespace Nikse.SubtitleEdit.Forms
             Stopwatch stopWatch;
             if (BatchMode)
             {
+                checkBoxTargetFileSize.Checked = false;
+                var useSourceResolution = numericUpDownWidth.Value == 0 && numericUpDownHeight.Value == 0;
+                listViewBatch.SelectedIndices.Clear();
+
                 stopWatch = Stopwatch.StartNew();
                 var sbInfo = new StringBuilder();
-                sbInfo.AppendLine($"Input for convert: {_batchVideoAndSubList.Count} video files:");
+                sbInfo.AppendLine("Conversion report:");
                 sbInfo.AppendLine();
                 var okCount = 0;
                 var failCount = 0;
@@ -447,6 +453,12 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     var videoAndSub = _batchVideoAndSubList[index];
                     _videoInfo = UiUtil.GetVideoInfo(videoAndSub.VideoFileName);
+                    if (useSourceResolution)
+                    {
+                        numericUpDownWidth.Value = _videoInfo.Width;
+                        numericUpDownHeight.Value = _videoInfo.Height;
+                    }
+
                     var subtitle = new Subtitle();
                     if (!string.IsNullOrEmpty(videoAndSub.SubtitleFileName) & File.Exists(videoAndSub.SubtitleFileName))
                     {
@@ -454,14 +466,21 @@ namespace Nikse.SubtitleEdit.Forms
                     }
 
                     var path = Path.GetDirectoryName(videoAndSub.VideoFileName);
+                    if (Configuration.Settings.Tools.GenVideoUseOutputFolder &&
+                        !string.IsNullOrEmpty(Configuration.Settings.Tools.GenVideoOutputFolder) &&
+                        Directory.Exists(Configuration.Settings.Tools.GenVideoOutputFolder))
+                    {
+                        path = Configuration.Settings.Tools.GenVideoOutputFolder;
+                    }
+
                     var nameNoExt = Path.GetFileNameWithoutExtension(videoAndSub.VideoFileName);
                     var ext = Path.GetExtension(videoAndSub.VideoFileName);
-                    VideoFileName = Path.Combine(path, $"{nameNoExt.TrimEnd('.', '.')}_new{ext}");
+                    VideoFileName = Path.Combine(path, $"{nameNoExt.TrimEnd('.', '.')}{Configuration.Settings.Tools.GenVideoOutputFileSuffix}{ext}");
                     if (File.Exists(VideoFileName))
                     {
                         for (var i = 2; i < int.MaxValue; i++)
                         {
-                            VideoFileName = Path.Combine(path, $"{nameNoExt.TrimEnd('.', '.')}_new_{i}{ext}");
+                            VideoFileName = Path.Combine(path, $"{nameNoExt.TrimEnd('.', '.')}{Configuration.Settings.Tools.GenVideoOutputFileSuffix}_{i}{ext}");
                             if (!File.Exists(VideoFileName))
                             {
                                 break;
@@ -469,9 +488,9 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                     }
 
-                    if (File.Exists(VideoFileName))
-                    {
-                    }
+                    listViewBatch.Items[index].Selected = true;
+                    listViewBatch.Items[index].Focused = true;
+                    listViewBatch.Items[index].EnsureVisible();
 
                     if (ConvertVideo(oldFontSizeEnabled, videoAndSub.VideoFileName, subtitle))
                     {
@@ -488,10 +507,20 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 sbInfo.AppendLine();
-                sbInfo.AppendLine($"Video files converted in {stopWatch.Elapsed}: {okCount}");
+
+                var timeString = $"{stopWatch.Elapsed.Hours + stopWatch.Elapsed.Days * 24:00}:{stopWatch.Elapsed.Minutes:00}:{stopWatch.Elapsed.Seconds:00}";
+                if (okCount == 1)
+                {
+                    sbInfo.AppendLine($"One video file converted in {timeString}");
+                }
+                else
+                {
+                    sbInfo.AppendLine($"{okCount} video files converted in {timeString}");
+                }
+
                 if (failCount > 0)
                 {
-                    sbInfo.AppendLine($"Video files failed: {failCount}");
+                    sbInfo.AppendLine($"{failCount} video file(s) failed!");
                 }
 
                 BatchInfo = sbInfo.ToString();
@@ -703,7 +732,10 @@ namespace Nikse.SubtitleEdit.Forms
 
             fileName += ".burn-in";
 
-            fileName += $".{numericUpDownWidth.Value}x{numericUpDownHeight.Value}";
+            if (numericUpDownWidth.Value > 0 && numericUpDownHeight.Value > 0)
+            {
+                fileName += $".{numericUpDownWidth.Value}x{numericUpDownHeight.Value}";
+            }
 
             if (comboBoxVideoEncoding.Text == "libx265" || comboBoxVideoEncoding.Text == "hevc_nvenc" || comboBoxVideoEncoding.Text == "hevc_amf")
             {
@@ -1503,20 +1535,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void MediaPlayer_OnButtonClicked(object sender, EventArgs e)
         {
-            if (sender is PictureBox pb && pb.Name == "_pictureBoxFullscreenOver")
-            {
-                if (_previewVideo != null && !_previewVideo.IsDisposed)
-                {
-                    _previewVideo.Close();
-                    _previewVideo.Dispose();
-                    _previewVideo = null;
-                }
-                else
-                {
-                    _previewVideo = new PreviewVideo(_inputVideoFileName, _mpvSubtitleFileName, _assaSubtitle, true);
-                    _previewVideo.Show(this);
-                }
-            }
+
         }
 
         private void checkBoxTargetFileSize_CheckedChanged(object sender, EventArgs e)
@@ -1715,6 +1734,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ResolutionPickClick(object sender, EventArgs e)
         {
+            labelX.Left = numericUpDownWidth.Left + numericUpDownWidth.Width + 3;
+            numericUpDownWidth.Visible = true;
+            labelX.Text = "x";
+            numericUpDownHeight.Visible = true;
+
             var text = (sender as ToolStripMenuItem).Text;
             var match = new Regex("\\d+x\\d+").Match(text);
             var parts = match.Value.Split('x');
@@ -1974,11 +1998,27 @@ namespace Nikse.SubtitleEdit.Forms
             buttonAddFile.Visible = BatchMode;
             buttonRemoveFile.Visible = BatchMode;
             buttonClear.Visible = BatchMode;
+            buttonOutputFileSettings.Visible = BatchMode;
             buttonMode.Text = BatchMode
                 ? LanguageSettings.Current.Split.Basic
                 : LanguageSettings.Current.AudioToText.BatchMode;
 
             FontEnableOrDisable(BatchMode || _initialFontOn);
+
+            if (!numericUpDownWidth.Visible)
+            {
+                var item = new ToolStripMenuItem();
+                if (_videoInfo == null)
+                {
+                    item.Text = "(1920x1080)";
+                }
+                else
+                {
+                    item.Text = $"({_videoInfo.Width}x{_videoInfo.Height})";
+                }
+
+                ResolutionPickClick(item, null);
+            }
         }
 
         private void addFilesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2219,6 +2259,31 @@ namespace Nikse.SubtitleEdit.Forms
                 listViewBatch.Items[i].SubItems[ListViewBatchSubItemIndexColumnSubtitleFile].Text = string.Empty;
                 _batchVideoAndSubList[i].SubtitleFileName = null;
             }
+        }
+
+        private void buttonOutputFileSettings_Click(object sender, EventArgs e)
+        {
+            using (var form = new GenerateVideoWithHardSubsOutFile())
+            {
+                form.ShowDialog(this);
+            }
+        }
+
+        private void useSourceResolutionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            numericUpDownWidth.Visible = false;
+            numericUpDownHeight.Visible = false;
+
+            labelX.Left = numericUpDownWidth.Left;
+            labelX.Text = "Use source";
+
+            numericUpDownWidth.Value = 0;
+            numericUpDownHeight.Value = 0;
+        }
+
+        private void contextMenuStripRes_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            useSourceResolutionToolStripMenuItem.Visible = BatchMode;
         }
     }
 }
