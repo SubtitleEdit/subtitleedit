@@ -385,6 +385,12 @@
     <Compile Include="Forms\AudioToText\VoskModelDownload.Designer.cs">
       <DependentUpon>VoskModelDownload.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\GenerateVideoWithHardSubsOutFile.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\GenerateVideoWithHardSubsOutFile.Designer.cs">
+      <DependentUpon>GenerateVideoWithHardSubsOutFile.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\GenerateVideoWithSoftSubsLanguage.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1833,6 +1839,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\GenerateVideoFFmpegPrompt.resx">
       <DependentUpon>GenerateVideoFFmpegPrompt.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\GenerateVideoWithHardSubsOutFile.resx">
+      <DependentUpon>GenerateVideoWithHardSubsOutFile.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\GenerateVideoWithSoftSubs.resx">
       <DependentUpon>GenerateVideoWithSoftSubs.cs</DependentUpon>

@@ -314,8 +314,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonRemoveFile.Visible = BatchMode;
             buttonClear.Visible = BatchMode;
             buttonAddFile.Visible = BatchMode;
-            nikseLabelSuffix.Visible = BatchMode;
-            nikseTextBoxSuffix.Visible = BatchMode;
+            buttonOutputFileSettings.Visible = BatchMode;
 
             var audioTracks = _mediaInfo.Tracks.Where(p => p.TrackType == FfmpegTrackType.Audio).ToList();
             useSourceResoluton0x0ToolStripMenuItem.Visible = BatchMode;
@@ -468,14 +467,21 @@ namespace Nikse.SubtitleEdit.Forms
                     }
 
                     var path = Path.GetDirectoryName(videoAndSub.VideoFileName);
+                    if (Configuration.Settings.Tools.GenVideoUseOutputFolder &&
+                        !string.IsNullOrEmpty(Configuration.Settings.Tools.GenVideoOutputFolder) &&
+                        Directory.Exists(Configuration.Settings.Tools.GenVideoOutputFolder))
+                    {
+                        path = Configuration.Settings.Tools.GenVideoOutputFolder;
+                    }
+
                     var nameNoExt = Path.GetFileNameWithoutExtension(videoAndSub.VideoFileName);
                     var ext = Path.GetExtension(videoAndSub.VideoFileName);
-                    VideoFileName = Path.Combine(path, $"{nameNoExt.TrimEnd('.', '.')}{nikseTextBoxSuffix.Text}{ext}");
+                    VideoFileName = Path.Combine(path, $"{nameNoExt.TrimEnd('.', '.')}{Configuration.Settings.Tools.GenVideoOutputFileSuffix}{ext}");
                     if (File.Exists(VideoFileName))
                     {
                         for (var i = 2; i < int.MaxValue; i++)
                         {
-                            VideoFileName = Path.Combine(path, $"{nameNoExt.TrimEnd('.', '.')}{nikseTextBoxSuffix.Text}_{i}{ext}");
+                            VideoFileName = Path.Combine(path, $"{nameNoExt.TrimEnd('.', '.')}{Configuration.Settings.Tools.GenVideoOutputFileSuffix}_{i}{ext}");
                             if (!File.Exists(VideoFileName))
                             {
                                 break;
@@ -2001,8 +2007,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonAddFile.Visible = BatchMode;
             buttonRemoveFile.Visible = BatchMode;
             buttonClear.Visible = BatchMode;
-            nikseLabelSuffix.Visible = BatchMode;
-            nikseTextBoxSuffix.Visible = BatchMode;
+            buttonOutputFileSettings.Visible = BatchMode;
             buttonMode.Text = BatchMode
                 ? LanguageSettings.Current.Split.Basic
                 : LanguageSettings.Current.AudioToText.BatchMode;
@@ -2247,6 +2252,14 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 listViewBatch.Items[i].SubItems[ListViewBatchSubItemIndexColumnSubtitleFile].Text = string.Empty;
                 _batchVideoAndSubList[i].SubtitleFileName = null;
+            }
+        }
+
+        private void buttonOutputFileSettings_Click(object sender, EventArgs e)
+        {
+            using (var form = new GenerateVideoWithHardSubsOutFile())
+            {
+                form.ShowDialog(this);
             }
         }
     }
