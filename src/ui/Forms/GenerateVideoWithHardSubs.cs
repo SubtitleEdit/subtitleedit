@@ -314,6 +314,8 @@ namespace Nikse.SubtitleEdit.Forms
             buttonRemoveFile.Visible = BatchMode;
             buttonClear.Visible = BatchMode;
             buttonAddFile.Visible = BatchMode;
+            nikseLabelSuffix.Visible = BatchMode;
+            nikseTextBoxSuffix.Visible = BatchMode;
 
             var audioTracks = _mediaInfo.Tracks.Where(p => p.TrackType == FfmpegTrackType.Audio).ToList();
             useSourceResoluton0x0ToolStripMenuItem.Visible = BatchMode;
@@ -445,7 +447,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 stopWatch = Stopwatch.StartNew();
                 var sbInfo = new StringBuilder();
-                sbInfo.AppendLine($"Input for convert: {_batchVideoAndSubList.Count} video files:");
+                sbInfo.AppendLine("Conversion report:");
                 sbInfo.AppendLine();
                 var okCount = 0;
                 var failCount = 0;
@@ -468,12 +470,12 @@ namespace Nikse.SubtitleEdit.Forms
                     var path = Path.GetDirectoryName(videoAndSub.VideoFileName);
                     var nameNoExt = Path.GetFileNameWithoutExtension(videoAndSub.VideoFileName);
                     var ext = Path.GetExtension(videoAndSub.VideoFileName);
-                    VideoFileName = Path.Combine(path, $"{nameNoExt.TrimEnd('.', '.')}_new{ext}");
+                    VideoFileName = Path.Combine(path, $"{nameNoExt.TrimEnd('.', '.')}{nikseTextBoxSuffix.Text}{ext}");
                     if (File.Exists(VideoFileName))
                     {
                         for (var i = 2; i < int.MaxValue; i++)
                         {
-                            VideoFileName = Path.Combine(path, $"{nameNoExt.TrimEnd('.', '.')}_new_{i}{ext}");
+                            VideoFileName = Path.Combine(path, $"{nameNoExt.TrimEnd('.', '.')}{nikseTextBoxSuffix.Text}_{i}{ext}");
                             if (!File.Exists(VideoFileName))
                             {
                                 break;
@@ -500,10 +502,20 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 sbInfo.AppendLine();
-                sbInfo.AppendLine($"Video files converted in {stopWatch.Elapsed}: {okCount}");
+
+                var timeString = $"{stopWatch.Elapsed.Hours + stopWatch.Elapsed.Days * 24:00}:{stopWatch.Elapsed.Minutes:00}:{stopWatch.Elapsed.Seconds:00}";
+                if (okCount == 1)
+                {
+                    sbInfo.AppendLine($"One video file converted in {timeString}");
+                }
+                else
+                {
+                    sbInfo.AppendLine($"{okCount} video files converted in {timeString}");
+                }
+
                 if (failCount > 0)
                 {
-                    sbInfo.AppendLine($"Video files failed: {failCount}");
+                    sbInfo.AppendLine($"{failCount} video file(s) failed!");
                 }
 
                 BatchInfo = sbInfo.ToString();
@@ -1989,6 +2001,8 @@ namespace Nikse.SubtitleEdit.Forms
             buttonAddFile.Visible = BatchMode;
             buttonRemoveFile.Visible = BatchMode;
             buttonClear.Visible = BatchMode;
+            nikseLabelSuffix.Visible = BatchMode;
+            nikseTextBoxSuffix.Visible = BatchMode;
             buttonMode.Text = BatchMode
                 ? LanguageSettings.Current.Split.Basic
                 : LanguageSettings.Current.AudioToText.BatchMode;
