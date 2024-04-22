@@ -17,6 +17,8 @@ namespace Nikse.SubtitleEdit.Forms
             labelSuffix.Text = LanguageSettings.Current.Settings.Suffix;
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
+            radioButtonSaveInSourceFolder.Text = LanguageSettings.Current.BatchConvert.SaveInSourceFolder;
+            radioButtonSaveInOutputFolder.Text = LanguageSettings.Current.BatchConvert.SaveInOutputFolder;
 
             if (string.IsNullOrEmpty(Configuration.Settings.Tools.GenVideoOutputFolder) || !Directory.Exists(Configuration.Settings.Tools.GenVideoOutputFolder))
             {

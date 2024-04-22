@@ -140,6 +140,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxRightToLeft.Checked = Configuration.Settings.Tools.GenVideoNonAssaAlignRight;
 
             labelVideoBitrate.Text = string.Empty;
+            nikseLabelOutputFileFolder.Text = string.Empty;
 
             if (_videoInfo != null)
             {
@@ -2028,6 +2029,10 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonMode_Click(object sender, EventArgs e)
         {
             BatchMode = !BatchMode;
+
+            ShowLabelOutput();
+
+            nikseLabelOutputFileFolder.Visible = BatchMode;
             listViewBatch.Visible = BatchMode;
             listViewBatch.AutoSizeLastColumn();
             videoPlayerContainer1.Visible = !BatchMode;
@@ -2063,6 +2068,14 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             labelProgress.Text = string.Empty;
+        }
+
+        private void ShowLabelOutput()
+        {
+            nikseLabelOutputFileFolder.Left = buttonOutputFileSettings.Right + 3;
+            nikseLabelOutputFileFolder.Text = Configuration.Settings.Tools.GenVideoUseOutputFolder
+                ? Configuration.Settings.Tools.GenVideoOutputFolder
+                : LanguageSettings.Current.BatchConvert.SaveInSourceFolder;
         }
 
         private void addFilesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2310,6 +2323,8 @@ namespace Nikse.SubtitleEdit.Forms
             using (var form = new GenerateVideoWithHardSubsOutFile())
             {
                 form.ShowDialog(this);
+
+                ShowLabelOutput();
             }
         }
 
@@ -2328,6 +2343,11 @@ namespace Nikse.SubtitleEdit.Forms
         private void contextMenuStripRes_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
             useSourceResolutionToolStripMenuItem.Visible = BatchMode;
+        }
+
+        private void nikseLabelOutputFileFolder_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
