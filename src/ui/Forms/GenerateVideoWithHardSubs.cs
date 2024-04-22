@@ -2145,7 +2145,21 @@ namespace Nikse.SubtitleEdit.Forms
                     item.SubtitleFileFileSizeInBytes = new FileInfo(subFileName).Length;
                 }
 
-                var vInfo = UiUtil.GetVideoInfo(fileName);
+
+                var vInfo = new VideoInfo { Success = false };
+                if (fileName.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase))
+                {
+                    vInfo =  QuartsPlayer.GetVideoInfo(fileName);
+                    if (!vInfo.Success)
+                    {
+                        vInfo = LibMpvDynamic.GetVideoInfo(fileName);
+                    }
+                }
+
+                if (!vInfo.Success)
+                {
+                    vInfo = UiUtil.GetVideoInfo(fileName);
+                }
 
                 var listViewItem = new ListViewItem(fileName);
                 listViewItem.Tag = item;
