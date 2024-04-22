@@ -615,7 +615,7 @@ namespace Nikse.SubtitleEdit.Logic
                 StartInfo =
                 {
                     FileName = GetFfmpegLocation(),
-                    Arguments = $"-i \"{inputFileName}\" -af \"areverse,atrim=start=0.2,silenceremove=start_periods=1:start_silence=0.1:start_threshold=0.01,areverse,atrim=start=0,silenceremove=start_periods=1:start_silence=0.1:start_threshold=0.01\" \"{outputFileName}\"",
+                    Arguments = $"-i \"{inputFileName}\" -af \"areverse,atrim=start=0.1,silenceremove=start_periods=1:start_silence=0.1:start_threshold=0.01,areverse,atrim=start=0.1,silenceremove=start_periods=1:start_silence=0.1:start_threshold=0.01\" \"{outputFileName}\"",
                     UseShellExecute = false,
                     CreateNoWindow = true
                 }
