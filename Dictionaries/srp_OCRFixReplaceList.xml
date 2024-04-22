@@ -103,6 +103,67 @@
   <BeginLines />
   <EndLines />
   <RegularExpressions>
+    <RegEx find="а" replaceWith="a" />
+    <RegEx find="б" replaceWith="b" />
+    <RegEx find="в" replaceWith="v" />
+    <RegEx find="г" replaceWith="g" />
+    <RegEx find="д" replaceWith="d" />
+    <RegEx find="ђ" replaceWith="đ" />
+    <RegEx find="ж" replaceWith="ž" />
+    <RegEx find="з" replaceWith="z" />
+    <RegEx find="и" replaceWith="i" />
+    <RegEx find="ј" replaceWith="j" />
+    <RegEx find="к" replaceWith="k" />
+    <RegEx find="л" replaceWith="l" />
+    <RegEx find="љ" replaceWith="lj" />
+    <RegEx find="м" replaceWith="m" />
+    <RegEx find="н" replaceWith="n" />
+    <RegEx find="њ" replaceWith="nj" />
+    <RegEx find="о" replaceWith="o" />
+    <RegEx find="п" replaceWith="p" />
+    <RegEx find="р" replaceWith="r" />
+    <RegEx find="с" replaceWith="s" />
+    <RegEx find="ћ" replaceWith="ć" />
+    <RegEx find="у" replaceWith="u" />
+    <RegEx find="е" replaceWith="e" />
+    <RegEx find="ф" replaceWith="f" />
+    <RegEx find="х" replaceWith="h" />
+    <RegEx find="ц" replaceWith="c" />
+    <RegEx find="ч" replaceWith="č" />
+    <RegEx find="џ" replaceWith="dž" />
+    <RegEx find="ш" replaceWith="š" />
+    <RegEx find="т" replaceWith="t" />
+    
+    <RegEx find="А" replaceWith="A" />
+    <RegEx find="Б" replaceWith="B" />
+    <RegEx find="Ц" replaceWith="C" />
+    <RegEx find="Ћ" replaceWith="Ć" />
+    <RegEx find="Ч" replaceWith="Č" />
+    <RegEx find="Џ" replaceWith="DŽ" />
+    <RegEx find="Ђ" replaceWith="Đ" />
+    <RegEx find="Г" replaceWith="G" />
+    <RegEx find="Е" replaceWith="E" />
+    <RegEx find="Д" replaceWith="D" />
+    <RegEx find="И" replaceWith="I" />
+    <RegEx find="Ј" replaceWith="J" />
+    <RegEx find="К" replaceWith="K" />
+    <RegEx find="Л" replaceWith="L" />
+    <RegEx find="Љ" replaceWith="LJ" />
+    <RegEx find="Х" replaceWith="H" />
+    <RegEx find="М" replaceWith="M" />
+    <RegEx find="Н" replaceWith="N" />
+    <RegEx find="Њ" replaceWith="NJ" />
+    <RegEx find="О" replaceWith="O" />
+    <RegEx find="П" replaceWith="P" />
+    <RegEx find="Р" replaceWith="R" />
+    <RegEx find="С" replaceWith="S" />
+    <RegEx find="Ш" replaceWith="Š" />
+    <RegEx find="Т" replaceWith="T" />
+    <RegEx find="У" replaceWith="U" />
+    <RegEx find="В" replaceWith="V" />
+    <RegEx find="З" replaceWith="Z" />
+    <RegEx find="Ж" replaceWith="Ž" />
+    
     <RegEx find="ÄŤ" replaceWith="č" />
     <RegEx find="Ä" replaceWith="č" />
     <RegEx find="Ä‡" replaceWith="ć" />

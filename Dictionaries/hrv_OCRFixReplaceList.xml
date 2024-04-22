@@ -5483,6 +5483,7 @@
     <RegEx find="rijedel" replaceWith="rijedil" />
     <RegEx find="r([mv])isa" replaceWith="r$1ira" />
     <RegEx find="rj?evozn" replaceWith="rijevozn" />
+    <RegEx find="roaj" replaceWith="rosj" />
     <RegEx find="(?&lt;!r)ojd" replaceWith="ojed" />
     <RegEx find="rpeu" replaceWith="preu" />
     <RegEx find="rq([dlmtvz])" replaceWith="ra$1" />
