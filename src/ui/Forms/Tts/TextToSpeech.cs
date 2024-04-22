@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Controls;
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Core.TextToSpeech;
 using Nikse.SubtitleEdit.Logic;
@@ -6,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -14,7 +16,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Controls;
 using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms.Tts
@@ -102,6 +103,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
             progressBar1.Visible = false;
             labelProgress.Text = string.Empty;
+            labelVoiceCount.Text = string.Empty;
 
             _engines = new List<TextToSpeechEngine>();
             _engines.Add(new TextToSpeechEngine(TextToSpeechEngineId.Piper, "Piper (fast/good)", _engines.Count));
@@ -137,7 +139,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             if (!SubtitleFormatHasActors() || !_actors.Any())
             {
                 var w = groupBoxMsSettings.Width + 100;
-                var right = buttonOK.Right;
+                var right = buttonCancel.Right;
                 groupBoxMsSettings.Left = progressBar1.Left;
                 groupBoxMsSettings.Width = right - progressBar1.Left;
                 groupBoxMsSettings.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right | AnchorStyles.Bottom;
@@ -894,6 +896,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
         private void nikseComboBoxEngine_SelectedIndexChanged(object sender, EventArgs e)
         {
+            labelVoiceCount.Text = string.Empty;
             nikseComboBoxVoice.Items.Clear();
 
             labelApiKey.Visible = false;
@@ -968,7 +971,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
                 if (_elevenLabVoices.Count == 0)
                 {
-                    _elevenLabVoices.AddRange(GetElevelLabVoices());
+                    _elevenLabVoices.AddRange(GetElevenLabVoices());
                 }
 
                 foreach (var voice in _elevenLabVoices)
@@ -980,6 +983,11 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             if (nikseComboBoxVoice.Items.Count > 0)
             {
                 nikseComboBoxVoice.SelectedIndex = 0;
+            }
+
+            if (nikseComboBoxVoice.Items.Count > 1)
+            {
+                labelVoiceCount.Text = nikseComboBoxVoice.Items.Count.ToString(CultureInfo.InvariantCulture);
             }
 
             _actorAndVoices.Clear();
@@ -1114,7 +1122,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             }
         }
 
-        private List<ElevenLabModel> GetElevelLabVoices()
+        private List<ElevenLabModel> GetElevenLabVoices()
         {
             var ttsPath = Path.Combine(Configuration.DataDirectory, "TextToSpeech");
             if (!Directory.Exists(ttsPath))
@@ -1122,15 +1130,15 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 Directory.CreateDirectory(ttsPath);
             }
 
-            var elevelLabsPath = Path.Combine(ttsPath, "ElevenLabs");
-            if (!Directory.Exists(elevelLabsPath))
+            var elevenLabsPath = Path.Combine(ttsPath, "ElevenLabs");
+            if (!Directory.Exists(elevenLabsPath))
             {
-                Directory.CreateDirectory(elevelLabsPath);
+                Directory.CreateDirectory(elevenLabsPath);
             }
 
             var result = new List<ElevenLabModel>();
 
-            var jsonFileName = Path.Combine(elevelLabsPath, "eleven-labs-voices.json");
+            var jsonFileName = Path.Combine(elevenLabsPath, "eleven-labs-voices.json");
 
             if (!File.Exists(jsonFileName))
             {
@@ -1147,7 +1155,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                             if (!string.IsNullOrEmpty(fileName))
                             {
                                 var name = entry.FilenameInZip;
-                                var path = Path.Combine(elevelLabsPath, name.Replace('/', Path.DirectorySeparatorChar));
+                                var path = Path.Combine(elevenLabsPath, name.Replace('/', Path.DirectorySeparatorChar));
                                 zip.ExtractFile(entry, path);
                             }
                         }
