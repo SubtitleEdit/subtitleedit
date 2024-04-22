@@ -339,6 +339,14 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                     File.Delete(fileName);
                 }
             }
+
+            foreach (var fileName in Directory.GetFiles(waveFolder, "*.mp3"))
+            {
+                if (!fileName.Equals(resultAudioFile, StringComparison.OrdinalIgnoreCase))
+                {
+                    File.Delete(fileName);
+                }
+            }
         }
 
         private List<FileNameAndSpeedFactor> FixParagraphAudioSpeed(Subtitle subtitle, string overrideFileName)
