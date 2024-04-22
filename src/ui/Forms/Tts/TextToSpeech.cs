@@ -1207,7 +1207,8 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             nikseComboBoxVoice.Text = voice;
             var sub = new Subtitle();
             sub.Paragraphs.Add(p);
-            var waveFileNameOnly = Guid.NewGuid() + ".wav";
+
+            var waveFileNameOnly = Guid.NewGuid() + GetEngineAudioExtension();
             var ok = await GenerateParagraphAudio(sub, false, waveFileNameOnly);
             if (!ok)
             {
@@ -1217,6 +1218,17 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             var fileNameAndSpeedFactors = FixParagraphAudioSpeed(sub, waveFileNameOnly);
 
             return fileNameAndSpeedFactors.First();
+        }
+
+        private string GetEngineAudioExtension()
+        {
+            var engine = _engines.First(p => p.Index == nikseComboBoxEngine.SelectedIndex);
+            if (engine.Id == TextToSpeechEngineId.ElevenLabs)
+            {
+                return ".mp3";
+            }
+
+            return ".wav";
         }
 
         private async void buttonTestVoice_Click(object sender, EventArgs e)

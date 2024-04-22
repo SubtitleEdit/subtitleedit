@@ -2061,6 +2061,8 @@ namespace Nikse.SubtitleEdit.Forms
 
                 ResolutionPickClick(item, null);
             }
+
+            labelProgress.Text = string.Empty;
         }
 
         private void addFilesToolStripMenuItem_Click(object sender, EventArgs e)
