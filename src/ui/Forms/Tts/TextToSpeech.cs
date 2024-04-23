@@ -35,6 +35,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
         private readonly List<TextToSpeechEngine> _engines;
         private readonly List<ElevenLabModel> _elevenLabVoices;
         private bool _actorsOn;
+        private bool _converting;
 
         public class ActorAndVoice
         {
@@ -193,7 +194,8 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             }
 
             buttonGenerateTTS.Text = LanguageSettings.Current.General.Cancel;
-
+            _converting = true;
+            buttonOK.Enabled = false;
             _waveFolder = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
             Directory.CreateDirectory(_waveFolder);
 
@@ -253,8 +255,8 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 }
             }
 
-            HandleAbort();
             UiUtil.OpenFolder(_waveFolder);
+            HandleAbort();
         }
 
         private void HandleAbort()
@@ -270,6 +272,8 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             buttonGenerateTTS.Text = "Generate text to speech";
             buttonGenerateTTS.Enabled = true;
             _abort = false;
+            _converting = false;
+            buttonOK.Enabled = true;
         }
 
         private async Task<bool> GenerateParagraphAudio(Subtitle subtitle, bool showProgressBar, string overrideFileName)
@@ -1387,6 +1391,12 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
         private void buttonCancel_Click(object sender, EventArgs e)
         {
+            if (_converting)
+            {
+                _abort = true;
+                return;
+            }
+
             DialogResult = DialogResult.Cancel;
         }
 
