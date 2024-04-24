@@ -1145,21 +1145,9 @@ namespace Nikse.SubtitleEdit.Forms
             listViewFixes.Sort();
         }
 
-        private void ButtonSelectAllClick(object sender, EventArgs e)
-        {
-            foreach (ListViewItem item in listView1.Items)
-            {
-                item.Checked = true;
-            }
-        }
+        private void ButtonSelectAllClick(object sender, EventArgs e) => listView1.CheckAll();
 
-        private void ButtonInverseSelectionClick(object sender, EventArgs e)
-        {
-            foreach (ListViewItem item in listView1.Items)
-            {
-                item.Checked = !item.Checked;
-            }
-        }
+        private void ButtonInverseSelectionClick(object sender, EventArgs e) => listView1.InvertCheck();
 
         private void ListViewFixesSelectedIndexChanged(object sender, EventArgs e)
         {
@@ -1370,18 +1358,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonFixesSelectAllClick(object sender, EventArgs e)
         {
-            foreach (ListViewItem item in listViewFixes.Items)
-            {
-                item.Checked = true;
-            }
+            listViewFixes.CheckAll();
         }
 
         private void ButtonFixesInverseClick(object sender, EventArgs e)
         {
-            foreach (ListViewItem item in listViewFixes.Items)
-            {
-                item.Checked = !item.Checked;
-            }
+            listViewFixes.InvertCheck();
         }
 
         private void ButtonFixesApplyClick(object sender, EventArgs e)
@@ -1948,18 +1930,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void toolStripMenuItemSelectAll_Click(object sender, EventArgs e)
         {
-            foreach (ListViewItem item in listViewFixes.Items)
-            {
-                item.Checked = true;
-            }
+            listViewFixes.CheckAll();
         }
 
         private void toolStripMenuItemInverseSelection_Click(object sender, EventArgs e)
         {
-            foreach (ListViewItem item in listViewFixes.Items)
-            {
-                item.Checked = !item.Checked;
-            }
+            listViewFixes.InvertCheck();
         }
 
         private void setCurrentFixesAsDefaultToolStripMenuItem_Click(object sender, EventArgs e)
