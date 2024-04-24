@@ -11,6 +11,7 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Core.Forms;
+using System.Diagnostics;
 
 namespace Nikse.SubtitleEdit.Controls
 {
@@ -429,10 +430,12 @@ namespace Nikse.SubtitleEdit.Controls
                 return;
             }
 
-            const double additionalSeconds = 15.0; // Helps when scrolling
-            var startThresholdMilliseconds = (_startPositionSeconds - additionalSeconds) * TimeCode.BaseUnit;
-            var endThresholdMilliseconds = (EndPositionSeconds + additionalSeconds) * TimeCode.BaseUnit;
-            var displayableParagraphs = new List<Paragraph>();
+            double startVisibleMilliseconds = _startPositionSeconds * TimeCode.BaseUnit;
+            double endVisibleMilliseconds = EndPositionSeconds * TimeCode.BaseUnit;
+
+            DisplayableParagraphHelper paragraphHelper = new DisplayableParagraphHelper(
+                startVisibleMilliseconds, endVisibleMilliseconds, 15 * TimeCode.BaseUnit);
+
             for (var i = 0; i < subtitle.Paragraphs.Count; i++)
             {
                 var p = subtitle.Paragraphs[i];
@@ -442,30 +445,11 @@ namespace Nikse.SubtitleEdit.Controls
                     continue;
                 }
 
-                _subtitle.Paragraphs.Add(p);
-                if (p.EndTime.TotalMilliseconds >= startThresholdMilliseconds && p.StartTime.TotalMilliseconds <= endThresholdMilliseconds)
-                {
-                    displayableParagraphs.Add(p);
-                    if (displayableParagraphs.Count > 99)
-                    {
-                        break;
-                    }
-                }
+                paragraphHelper.Add(p);
             }
+            List<Paragraph> selectedParagraphs = paragraphHelper.GetParagraphs(100);
+            _displayableParagraphs.AddRange(selectedParagraphs);
 
-            displayableParagraphs = displayableParagraphs.OrderBy(p => p.StartTime.TotalMilliseconds).ToList();
-            var lastStartTime = -1d;
-            foreach (var p in displayableParagraphs)
-            {
-                if (displayableParagraphs.Count > 30 &&
-                    (p.DurationTotalMilliseconds < 0.01 || p.StartTime.TotalMilliseconds - lastStartTime < 90))
-                {
-                    continue;
-                }
-
-                _displayableParagraphs.Add(p);
-                lastStartTime = p.StartTime.TotalMilliseconds;
-            }
 
             var primaryParagraph = subtitle.GetParagraphOrDefault(primarySelectedIndex);
             if (primaryParagraph != null && !primaryParagraph.StartTime.IsMaxTime)
