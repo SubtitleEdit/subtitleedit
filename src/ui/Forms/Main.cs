@@ -345,6 +345,7 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.InitializeSubtitleFont(textBoxListViewText);
             UiUtil.InitializeSubtitleFont(textBoxListViewTextOriginal);
             UiUtil.InitializeSubtitleFont(SubtitleListview1);
+            UiUtil.InitializeSubtitleFont(textBoxSource);
         }
 
         private static string GetArgumentAfterColon(IEnumerable<string> commandLineArguments, string requestedArgumentName)
@@ -5783,6 +5784,7 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleListview1.BackColor = Configuration.Settings.General.SubtitleBackgroundColor;
 
                 UiUtil.InitializeSubtitleFont(SubtitleListview1);
+                UiUtil.InitializeSubtitleFont(textBoxSource);
                 mediaPlayer.SetSubtitleFont();
                 ShowSubtitle();
             }
