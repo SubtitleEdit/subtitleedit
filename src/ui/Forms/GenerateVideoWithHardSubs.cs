@@ -452,6 +452,11 @@ namespace Nikse.SubtitleEdit.Forms
                 var failCount = 0;
                 for (var index = 0; index < _batchVideoAndSubList.Count; index++)
                 {
+                    if (_abort)
+                    {
+                        break;
+                    }
+
                     labelPleaseWait.Text = $"{index + 1}/{_batchVideoAndSubList.Count} - {LanguageSettings.Current.General.PleaseWait}";
                     var videoAndSub = _batchVideoAndSubList[index];
                     _videoInfo = UiUtil.GetVideoInfo(videoAndSub.VideoFileName);
@@ -511,6 +516,18 @@ namespace Nikse.SubtitleEdit.Forms
                         sbInfo.AppendLine($"{index + 1}: {videoAndSub.VideoFileName} -> Failed!");
                         failCount++;
 
+                        try
+                        {
+                            File.Delete(VideoFileName);
+                        }
+                        catch
+                        {
+                            // ignore
+                        }
+                    }
+
+                    if (_abort && File.Exists(VideoFileName) && new FileInfo(VideoFileName).Length < 2_000)
+                    {
                         try
                         {
                             File.Delete(VideoFileName);
@@ -2149,7 +2166,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var vInfo = new VideoInfo { Success = false };
                 if (fileName.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase))
                 {
-                    vInfo =  QuartsPlayer.GetVideoInfo(fileName);
+                    vInfo = QuartsPlayer.GetVideoInfo(fileName);
                     if (!vInfo.Success)
                     {
                         vInfo = LibMpvDynamic.GetVideoInfo(fileName);
