@@ -2461,6 +2461,8 @@ namespace Nikse.SubtitleEdit.Logic
                 EvenLines = "Even-numbered lines",
                 DurationLessThan = "Duration less than",
                 DurationGreaterThan = "Duration greater than",
+                CpsLessThan = "CPS less than",
+                CpsGreaterThan = "CPS greater than",
                 ExactlyOneLine = "Exactly one line",
                 ExactlyTwoLines = "Exactly two lines",
                 MoreThanTwoLines = "More than two lines",

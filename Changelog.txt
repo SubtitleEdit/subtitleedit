@@ -4,6 +4,7 @@
 * NEW:
    * Add "Text To Speech" - thx darnn/cvrle77/msjsc001
    * Add burn-in batch mode - thx Leon/David
+   * Add new LRC with milliseconds format - thx eadmaster 
 * IMPROVED:
    * Update Portuguese translation - thx hugok79
    * Update Bulgarian translation - thx Калин
@@ -20,6 +21,7 @@
    * Fix possible crash in teletext reading - thx yellobyte
    * Fix unwanted text boxes background color change - thx Leon
    * Fix Whisper on selection in waveform in "translation mode" - thx rRobis
+   * Fix image export shadow when border is zero - thx pixelhunterX
 
 
 4.0.5 (13th April 2024) 
