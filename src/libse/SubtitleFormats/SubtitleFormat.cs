@@ -248,6 +248,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new WebVTT(),
                     new WebVTTFileWithLineNumber(),
                     new WhisperRaw(),
+                    new WhisperRaw2(),
                     new Xif(),
                     new Xmp(),
                     new YouTubeAnnotations(),
