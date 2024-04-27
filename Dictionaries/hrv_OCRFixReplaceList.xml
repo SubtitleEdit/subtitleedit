@@ -417,6 +417,7 @@
     <Word from="drugare" to="prijatelje" />
     <Word from="drugafije" to="drugačije" />
     <Word from="drugčiji" to="drugačiji" />
+    <Word from="Drugde" to="Drugdje" />
     <Word from="drugde" to="drugdje" />
     <Word from="druze" to="druže" />
     <Word from="drvoseča" to="drvosječa" />
@@ -2041,6 +2042,8 @@
     <Word from="razumeju" to="razumiju" />
     <Word from="Razumeju" to="Razumiju" />
     <Word from="razumijeti" to="razumjeti" />
+    <Word from="Razneću" to="Raznijet ću" />
+    <Word from="razneću" to="raznijet ću" />
     <Word from="recitujte" to="recitirajte" />
     <Word from="recitujem" to="recitiram" />
     <Word from="recituje" to="recitira" />
@@ -4055,6 +4058,7 @@
     <LinePart from="možeš da dobiješ" to="možeš dobiti" />
     <LinePart from="možeš da dođeš" to="možeš doći" />
     <LinePart from="može da uđe" to="može ući" />
+    <LinePart from="može da ide" to="može ići" />
     <LinePart from="možeš da imaš" to="možeš imati" />
     <LinePart from="možeš da odeš" to="možeš otići" />
     <LinePart from="možeš da uđeš" to="možeš ući" />
