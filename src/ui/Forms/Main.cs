@@ -23574,7 +23574,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SetAssaResolutionWithChecks()
         {
-            if (Configuration.Settings.SubtitleSettings.AssaResolutionAutoNew && IsAssa() && _videoInfo?.Height > 0)
+            if (Configuration.Settings.SubtitleSettings.AssaResolutionAutoNew  &&
+                string.IsNullOrEmpty(_subtitle?.Header) &&
+                IsAssa() && _videoInfo?.Height > 0)
             {
                 if (string.IsNullOrEmpty(_subtitle?.Header))
                 {
