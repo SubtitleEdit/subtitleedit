@@ -192,5 +192,50 @@ namespace Test.Core
 }".Replace('\'', '"'), "items");
             Assert.AreEqual(4, result.Count);
         }
+
+        [TestMethod]
+        public void GetRootElements_Simple_Value()
+        {
+            var parser = new SeJsonParser();
+            var result = parser.GetRootElements("{ \"tag\": \"hi there!\" }");
+            Assert.AreEqual(1, result.Count);
+            Assert.AreEqual("tag", result[0].Name);
+            Assert.AreEqual("hi there!", result[0].Json);
+        }
+
+        [TestMethod]
+        public void GetRootElements_Simple_Object()
+        {
+            var parser = new SeJsonParser();
+            var result = parser.GetRootElements("{ \"tag\": { \"name\" : \"Joe\" } }");
+            Assert.AreEqual(1, result.Count);
+            Assert.AreEqual("tag", result[0].Name);
+            Assert.AreEqual("{ \"name\" : \"Joe\" }", result[0].Json);
+        }
+
+
+        [TestMethod]
+        public void GetRootElements_Simple_Value_And_Object()
+        {
+            var parser = new SeJsonParser();
+            var result = parser.GetRootElements("{ \"tag1\": \"hi there!\", \"tag2\": { \"name\" : \"Joe\" } }");
+            Assert.AreEqual(2, result.Count);
+            Assert.AreEqual("tag1", result[0].Name);
+            Assert.AreEqual("hi there!", result[0].Json);
+            Assert.AreEqual("tag2", result[1].Name);
+            Assert.AreEqual("{ \"name\" : \"Joe\" }", result[1].Json);
+        }
+
+        [TestMethod]
+        public void GetRootElements_Two_Simple_Value()
+        {
+            var parser = new SeJsonParser();
+            var result = parser.GetRootElements("{ \"tag\": \"hi there!\",\"tag2\": \"hi!\", }");
+            Assert.AreEqual(2, result.Count);
+            Assert.AreEqual("tag", result[0].Name);
+            Assert.AreEqual("hi there!", result[0].Json);
+            Assert.AreEqual("tag2", result[1].Name);
+            Assert.AreEqual("hi!", result[1].Json);
+        }
     }
 }
