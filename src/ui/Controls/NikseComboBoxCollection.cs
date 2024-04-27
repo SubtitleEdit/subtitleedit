@@ -23,6 +23,11 @@ namespace Nikse.SubtitleEdit.Controls
             _items.AddRange(items);
         }
 
+        public void AddRange(string[] items)
+        {
+            _items.AddRange(items);
+        }
+
         public IEnumerator GetEnumerator()
         {
             return _items.GetEnumerator();
