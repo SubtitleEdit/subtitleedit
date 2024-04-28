@@ -3,11 +3,11 @@ using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Core.Enums;
 using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
 namespace Nikse.SubtitleEdit.Forms
@@ -94,13 +94,14 @@ namespace Nikse.SubtitleEdit.Forms
         private void listViewParts_DragDrop(object sender, DragEventArgs e)
         {
             var files = (string[])e.Data.GetData(DataFormats.FileDrop);
-            foreach (string fileName in files)
+            foreach (var fileName in files)
             {
                 if (!_fileNamesToJoin.Any(file => file.Equals(fileName, StringComparison.OrdinalIgnoreCase)))
                 {
                     _fileNamesToJoin.Add(fileName);
                 }
             }
+
             SortAndLoad();
         }
 
@@ -266,21 +267,16 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (!radioButtonJoinAddTime.Checked)
             {
-                for (int outer = 0; outer < subtitles.Count; outer++)
+                for (var outer = 0; outer < subtitles.Count; outer++)
                 {
-                    for (int inner = 1; inner < subtitles.Count; inner++)
+                    for (var inner = 1; inner < subtitles.Count; inner++)
                     {
                         var a = subtitles[inner - 1];
                         var b = subtitles[inner];
                         if (a.Paragraphs.Count > 0 && b.Paragraphs.Count > 0 && a.Paragraphs[0].StartTime.TotalMilliseconds > b.Paragraphs[0].StartTime.TotalMilliseconds)
                         {
-                            var t1 = _fileNamesToJoin[inner - 1];
-                            _fileNamesToJoin[inner - 1] = _fileNamesToJoin[inner];
-                            _fileNamesToJoin[inner] = t1;
-
-                            var t2 = subtitles[inner - 1];
-                            subtitles[inner - 1] = subtitles[inner];
-                            subtitles[inner] = t2;
+                            (_fileNamesToJoin[inner - 1], _fileNamesToJoin[inner]) = (_fileNamesToJoin[inner], _fileNamesToJoin[inner - 1]);
+                            (subtitles[inner - 1], subtitles[inner]) = (subtitles[inner], subtitles[inner - 1]);
                         }
                     }
                 }
@@ -329,6 +325,11 @@ namespace Nikse.SubtitleEdit.Forms
                     p.EndTime.TotalMilliseconds += addMs;
                     JoinedSubtitle.Paragraphs.Add(p);
                 }
+            }
+
+            if (radioButtonJoinPlain.Checked)
+            {
+                JoinedSubtitle.Sort(SubtitleSortCriteria.StartTime);
             }
 
             JoinedSubtitle.Renumber();
