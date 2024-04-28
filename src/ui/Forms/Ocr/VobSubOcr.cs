@@ -8600,6 +8600,13 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         // ignored
                     }
                 }
+
+                e.Handled = true;
+            }
+            else if (e.KeyCode == Keys.Delete)
+            {
+                removeAllXToolStripMenuItem_Click(null, null);
+                e.Handled = true;
             }
         }
 
