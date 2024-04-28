@@ -2117,6 +2117,8 @@ Command line: {1} {2}
     <EvenLines>匹配行</EvenLines>
     <DurationLessThan>时长小于</DurationLessThan>
     <DurationGreaterThan>时长大于</DurationGreaterThan>
+    <CpsLessThan>CPS 小于</CpsLessThan>
+    <CpsGreaterThan>CP S大于</CpsGreaterThan>
     <ExactlyOneLine>正好一行</ExactlyOneLine>
     <ExactlyTwoLines>正好两行</ExactlyTwoLines>
     <MoreThanTwoLines>超过两行</MoreThanTwoLines>
