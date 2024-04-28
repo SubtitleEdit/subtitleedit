@@ -1,8 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
@@ -60,6 +58,27 @@ namespace Nikse.SubtitleEdit.Logic
             var str2 = _numbers.Replace(lvi2.SubItems[ColumnNumber].Text, m => m.Value.PadLeft(10, '0')).RemoveChar(' ');
             var str1 = _numbers.Replace(lvi1.SubItems[ColumnNumber].Text, m => m.Value.PadLeft(10, '0')).RemoveChar(' ');
             return string.Compare(str2, str1, StringComparison.Ordinal);
+        }
+
+        public static void SetSortArrow(ColumnHeader columnHeader, SortOrder sortOrder)
+        {
+            const string ascArrow = " ▲";
+            const string descArrow = " ▼";
+
+            if (columnHeader.Text.EndsWith(ascArrow) || columnHeader.Text.EndsWith(descArrow))
+            {
+                columnHeader.Text = columnHeader.Text.Substring(0, columnHeader.Text.Length - 2);
+            }
+
+            switch (sortOrder)
+            {
+                case SortOrder.Ascending:
+                    columnHeader.Text += ascArrow;
+                    break;
+                case SortOrder.Descending:
+                    columnHeader.Text += descArrow;
+                    break;
+            }
         }
     }
 }
