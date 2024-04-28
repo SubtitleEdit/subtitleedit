@@ -117,6 +117,8 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             labelActors.Text = LanguageSettings.Current.TextToSpeech.ActorInfo;
             checkBoxAddToVideoFile.Text = LanguageSettings.Current.TextToSpeech.AddAudioToVideo;
             buttonGenerateTTS.Text = LanguageSettings.Current.TextToSpeech.GenerateSpeech;
+            labelRegion.Text = LanguageSettings.Current.General.Region;
+            checkBoxShowPreview.Text = LanguageSettings.Current.TextToSpeech.ReviewAudioClips;
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             UiUtil.FixLargeFonts(this, buttonOK);
@@ -172,6 +174,8 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             nikseComboBoxEngine_SelectedIndexChanged(null, null);
             nikseComboBoxEngine.SelectedIndexChanged += nikseComboBoxEngine_SelectedIndexChanged;
             nikseComboBoxVoice.Text = Configuration.Settings.Tools.TextToSpeechLastVoice;
+            checkBoxAddToVideoFile.Checked = Configuration.Settings.Tools.TextToSpeechAddToVideoFile;
+            checkBoxShowPreview.Checked = Configuration.Settings.Tools.TextToSpeechPreview;
         }
 
         private void SetActor(ActorAndVoice actor)
@@ -1775,6 +1779,8 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
             Configuration.Settings.Tools.TextToSpeechEngine = engine.Id.ToString();
             Configuration.Settings.Tools.TextToSpeechLastVoice = nikseComboBoxVoice.Text;
+            Configuration.Settings.Tools.TextToSpeechAddToVideoFile = checkBoxAddToVideoFile.Checked;
+            Configuration.Settings.Tools.TextToSpeechPreview = checkBoxShowPreview.Checked;
         }
 
         private void TextToSpeech_KeyDown(object sender, KeyEventArgs e)

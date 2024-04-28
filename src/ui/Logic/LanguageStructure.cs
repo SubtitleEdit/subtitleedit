@@ -3374,6 +3374,11 @@
             public string AdjustingSpeedXOfY { get; set; }
             public string MergingAudioTrackXOfY { get; set; }
             public string GeneratingSpeechFromTextXOfY { get; set; }
+            public string ReviewAudioClips { get; set; }
+            public string ReviewInfo { get; set; }
+            public string Play { get; set; }
+            public string AutoContinue { get; set; }
+            public string Regenerate { get; set; }
         }
 
         public class TimedTextSmpteTiming

@@ -8677,6 +8677,21 @@ namespace Nikse.SubtitleEdit.Logic
                 case "TextToSpeech/GeneratingSpeechFromTextXOfY":
                     language.TextToSpeech.GeneratingSpeechFromTextXOfY = reader.Value;
                     break;
+                case "TextToSpeech/ReviewAudioClips":
+                    language.TextToSpeech.ReviewAudioClips = reader.Value;
+                    break;
+                case "TextToSpeech/ReviewInfo":
+                    language.TextToSpeech.ReviewInfo = reader.Value;
+                    break;
+                case "TextToSpeech/Play":
+                    language.TextToSpeech.Play = reader.Value;
+                    break;
+                case "TextToSpeech/AutoContinue":
+                    language.TextToSpeech.AutoContinue = reader.Value;
+                    break;
+                case "TextToSpeech/Regenerate":
+                    language.TextToSpeech.Regenerate = reader.Value;
+                    break;
                 case "TimedTextSmpteTiming/Title":
                     language.TimedTextSmpteTiming.Title = reader.Value;
                     break;

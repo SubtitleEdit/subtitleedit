@@ -24,6 +24,14 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             UiUtil.PreInitialize(this);
             InitializeComponent();
             UiUtil.FixFonts(this);
+            Text = LanguageSettings.Current.TextToSpeech.ReviewAudioClips;
+            buttonEdit.Text = LanguageSettings.Current.ExportCustomText.Edit;
+            buttonPlay.Text = LanguageSettings.Current.TextToSpeech.Play;
+            checkBoxContinuePlay.Text = LanguageSettings.Current.TextToSpeech.AutoContinue;
+            columnHeaderCps.Text = LanguageSettings.Current.General.CharsPerSec;
+            columnHeaderInclude.Text = string.Empty; // include
+            columnHeaderText.Text = LanguageSettings.Current.General.Text;
+            columnHeaderVoice.Text = LanguageSettings.Current.TextToSpeech.Voice;
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             UiUtil.FixLargeFonts(this, buttonOK);
 
