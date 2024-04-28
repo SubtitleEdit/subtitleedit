@@ -29,7 +29,7 @@ namespace Nikse.SubtitleEdit.Forms
         private long _totalFrames;
         private StringBuilder _log;
         private readonly bool _isAssa;
-        private readonly FfmpegMediaInfo _mediaInfo;
+        private FfmpegMediaInfo _mediaInfo;
         private bool _promptFFmpegParameters;
         private readonly bool _mpvOn;
         private readonly string _mpvSubtitleFileName;
@@ -248,7 +248,6 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.FixLargeFonts(this, buttonGenerate);
             UiUtil.FixFonts(this, 2000);
 
-
             _mediaInfo = FfmpegMediaInfo.Parse(inputVideoFileName);
 
             if (_videoInfo != null && _videoInfo.TotalSeconds > 0)
@@ -459,6 +458,8 @@ namespace Nikse.SubtitleEdit.Forms
 
                     labelPleaseWait.Text = $"{index + 1}/{_batchVideoAndSubList.Count} - {LanguageSettings.Current.General.PleaseWait}";
                     var videoAndSub = _batchVideoAndSubList[index];
+
+                    _mediaInfo = FfmpegMediaInfo.Parse(videoAndSub.VideoFileName);
                     _videoInfo = UiUtil.GetVideoInfo(videoAndSub.VideoFileName);
                     if (useSourceResolution)
                     {
@@ -2162,25 +2163,38 @@ namespace Nikse.SubtitleEdit.Forms
                     item.SubtitleFileFileSizeInBytes = new FileInfo(subFileName).Length;
                 }
 
-
-                var vInfo = new VideoInfo { Success = false };
-                if (fileName.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase))
+                var width = 0;
+                var height = 0;
+                var mediaInfo = FfmpegMediaInfo.Parse(fileName);
+                if (mediaInfo.VideoWidth > 0 && mediaInfo.VideoHeight > 0)
                 {
-                    vInfo = QuartsPlayer.GetVideoInfo(fileName);
+                    width = mediaInfo.VideoWidth;
+                    height = mediaInfo.VideoHeight;
+                }
+                else
+                {
+                    var vInfo = new VideoInfo { Success = false };
+                    if (fileName.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase))
+                    {
+                        vInfo = QuartsPlayer.GetVideoInfo(fileName);
+                        if (!vInfo.Success)
+                        {
+                            vInfo = LibMpvDynamic.GetVideoInfo(fileName);
+                        }
+                    }
+
                     if (!vInfo.Success)
                     {
-                        vInfo = LibMpvDynamic.GetVideoInfo(fileName);
+                        vInfo = UiUtil.GetVideoInfo(fileName);
                     }
-                }
 
-                if (!vInfo.Success)
-                {
-                    vInfo = UiUtil.GetVideoInfo(fileName);
+                    width = vInfo.Width;
+                    height = vInfo.Height;
                 }
 
                 var listViewItem = new ListViewItem(fileName);
                 listViewItem.Tag = item;
-                listViewItem.SubItems.Add($"{vInfo.Width}x{vInfo.Height}");
+                listViewItem.SubItems.Add($"{width}x{height}");
                 var s = Utilities.FormatBytesToDisplayFileSize(item.VideoFileSizeInBytes);
                 listViewItem.SubItems.Add(s);
                 listViewItem.SubItems.Add(Path.GetFileName(item.SubtitleFileName));
