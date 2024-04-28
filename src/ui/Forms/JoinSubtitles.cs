@@ -3,6 +3,7 @@ using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -443,6 +444,7 @@ namespace Nikse.SubtitleEdit.Forms
             numericUpDownAddMs.Enabled = radioButtonJoinAddTime.Checked;
             labelAddTime.Enabled = radioButtonJoinAddTime.Checked;
             SortAndLoad();
+            SetSortArrow(listViewParts.Columns[3], SortOrder.None);
         }
 
         private void contextMenuStripParts_Opening(object sender, System.ComponentModel.CancelEventArgs e)
@@ -581,6 +583,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
+            SetSortArrow(listViewParts.Columns[3], SortOrder.None);
             MoveUp(listViewParts);
         }
 
@@ -591,6 +594,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
+            SetSortArrow(listViewParts.Columns[3], SortOrder.None);
             MoveDown(listViewParts);
         }
 
@@ -601,6 +605,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
+            SetSortArrow(listViewParts.Columns[3], SortOrder.None);
             MoveToTop(listViewParts);
         }
 
@@ -611,6 +616,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
+            SetSortArrow(listViewParts.Columns[3], SortOrder.None);
             MoveToBottom(listViewParts);
         }
 
@@ -641,6 +647,25 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             lv.Sort();
+
+            SetSortArrow(listViewParts.Columns[e.Column], sorter.Descending ? SortOrder.Descending : SortOrder.Ascending);
+        }
+
+        private static void SetSortArrow(ColumnHeader head, SortOrder order)
+        {
+            const string ascArrow = " ▲";
+            const string descArrow = " ▼";
+
+            // remove arrow
+            if (head.Text.EndsWith(ascArrow) || head.Text.EndsWith(descArrow))
+                head.Text = head.Text.Substring(0, head.Text.Length - 2);
+
+            // add arrow
+            switch (order)
+            {
+                case SortOrder.Ascending: head.Text += ascArrow; break;
+                case SortOrder.Descending: head.Text += descArrow; break;
+            }
         }
     }
 }
