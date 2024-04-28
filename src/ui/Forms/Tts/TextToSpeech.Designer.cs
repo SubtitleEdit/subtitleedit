@@ -34,7 +34,7 @@
             this.buttonGenerateTTS = new System.Windows.Forms.Button();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.labelEngine = new System.Windows.Forms.Label();
-            this.groupBoxMsSettings = new System.Windows.Forms.GroupBox();
+            this.groupBoxSettings = new System.Windows.Forms.GroupBox();
             this.labelRegion = new System.Windows.Forms.Label();
             this.nikseComboBoxRegion = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelVoiceCount = new System.Windows.Forms.Label();
@@ -55,7 +55,7 @@
             this.contextMenuStripActors = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.labelActors = new System.Windows.Forms.Label();
             this.buttonCancel = new System.Windows.Forms.Button();
-            this.groupBoxMsSettings.SuspendLayout();
+            this.groupBoxSettings.SuspendLayout();
             this.contextMenuStripVoices.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -113,29 +113,29 @@
             this.labelEngine.TabIndex = 14;
             this.labelEngine.Text = "Engine";
             // 
-            // groupBoxMsSettings
+            // groupBoxSettings
             // 
-            this.groupBoxMsSettings.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.groupBoxSettings.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
-            this.groupBoxMsSettings.Controls.Add(this.labelRegion);
-            this.groupBoxMsSettings.Controls.Add(this.nikseComboBoxRegion);
-            this.groupBoxMsSettings.Controls.Add(this.labelVoiceCount);
-            this.groupBoxMsSettings.Controls.Add(this.checkBoxShowPreview);
-            this.groupBoxMsSettings.Controls.Add(this.labelApiKey);
-            this.groupBoxMsSettings.Controls.Add(this.nikseTextBoxApiKey);
-            this.groupBoxMsSettings.Controls.Add(this.TextBoxTest);
-            this.groupBoxMsSettings.Controls.Add(this.buttonTestVoice);
-            this.groupBoxMsSettings.Controls.Add(this.checkBoxAddToVideoFile);
-            this.groupBoxMsSettings.Controls.Add(this.labelVoice);
-            this.groupBoxMsSettings.Controls.Add(this.nikseComboBoxVoice);
-            this.groupBoxMsSettings.Controls.Add(this.labelEngine);
-            this.groupBoxMsSettings.Controls.Add(this.nikseComboBoxEngine);
-            this.groupBoxMsSettings.Location = new System.Drawing.Point(15, 12);
-            this.groupBoxMsSettings.Name = "groupBoxMsSettings";
-            this.groupBoxMsSettings.Size = new System.Drawing.Size(391, 405);
-            this.groupBoxMsSettings.TabIndex = 1;
-            this.groupBoxMsSettings.TabStop = false;
-            this.groupBoxMsSettings.Text = "Settings";
+            this.groupBoxSettings.Controls.Add(this.labelRegion);
+            this.groupBoxSettings.Controls.Add(this.nikseComboBoxRegion);
+            this.groupBoxSettings.Controls.Add(this.labelVoiceCount);
+            this.groupBoxSettings.Controls.Add(this.checkBoxShowPreview);
+            this.groupBoxSettings.Controls.Add(this.labelApiKey);
+            this.groupBoxSettings.Controls.Add(this.nikseTextBoxApiKey);
+            this.groupBoxSettings.Controls.Add(this.TextBoxTest);
+            this.groupBoxSettings.Controls.Add(this.buttonTestVoice);
+            this.groupBoxSettings.Controls.Add(this.checkBoxAddToVideoFile);
+            this.groupBoxSettings.Controls.Add(this.labelVoice);
+            this.groupBoxSettings.Controls.Add(this.nikseComboBoxVoice);
+            this.groupBoxSettings.Controls.Add(this.labelEngine);
+            this.groupBoxSettings.Controls.Add(this.nikseComboBoxEngine);
+            this.groupBoxSettings.Location = new System.Drawing.Point(15, 12);
+            this.groupBoxSettings.Name = "groupBoxSettings";
+            this.groupBoxSettings.Size = new System.Drawing.Size(391, 405);
+            this.groupBoxSettings.TabIndex = 1;
+            this.groupBoxSettings.TabStop = false;
+            this.groupBoxSettings.Text = "Settings";
             // 
             // labelRegion
             // 
@@ -425,7 +425,7 @@
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.labelActors);
             this.Controls.Add(this.listViewActors);
-            this.Controls.Add(this.groupBoxMsSettings);
+            this.Controls.Add(this.groupBoxSettings);
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.buttonGenerateTTS);
             this.Controls.Add(this.labelProgress);
@@ -443,8 +443,8 @@
             this.ResizeEnd += new System.EventHandler(this.TextToSpeech_ResizeEnd);
             this.SizeChanged += new System.EventHandler(this.TextToSpeech_SizeChanged);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextToSpeech_KeyDown);
-            this.groupBoxMsSettings.ResumeLayout(false);
-            this.groupBoxMsSettings.PerformLayout();
+            this.groupBoxSettings.ResumeLayout(false);
+            this.groupBoxSettings.PerformLayout();
             this.contextMenuStripVoices.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -458,7 +458,7 @@
         private System.Windows.Forms.ProgressBar progressBar1;
         private Controls.NikseComboBox nikseComboBoxEngine;
         private System.Windows.Forms.Label labelEngine;
-        private System.Windows.Forms.GroupBox groupBoxMsSettings;
+        private System.Windows.Forms.GroupBox groupBoxSettings;
         private System.Windows.Forms.Label labelVoice;
         private Controls.NikseComboBox nikseComboBoxVoice;
         private System.Windows.Forms.CheckBox checkBoxAddToVideoFile;

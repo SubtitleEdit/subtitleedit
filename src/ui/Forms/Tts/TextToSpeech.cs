@@ -111,6 +111,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 .ToList();
 
             Text = LanguageSettings.Current.TextToSpeech.Title;
+            groupBoxSettings.Text = LanguageSettings.Current.Settings.Title;
             labelVoice.Text = LanguageSettings.Current.TextToSpeech.Voice;
             labelApiKey.Text = LanguageSettings.Current.VobSubOcr.ApiKey;
             buttonTestVoice.Text = LanguageSettings.Current.TextToSpeech.TestVoice;
@@ -160,11 +161,11 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
             if (!SubtitleFormatHasActors() || !_actors.Any())
             {
-                var w = groupBoxMsSettings.Width + 100;
+                var w = groupBoxSettings.Width + 100;
                 var right = buttonCancel.Right;
-                groupBoxMsSettings.Left = progressBar1.Left;
-                groupBoxMsSettings.Width = right - progressBar1.Left;
-                groupBoxMsSettings.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right | AnchorStyles.Bottom;
+                groupBoxSettings.Left = progressBar1.Left;
+                groupBoxSettings.Width = right - progressBar1.Left;
+                groupBoxSettings.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right | AnchorStyles.Bottom;
 
                 Width = w;
                 MinimumSize = new Size(w, MinimumSize.Height);
