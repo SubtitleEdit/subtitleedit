@@ -3565,6 +3565,11 @@ can edit in same subtitle file (collaboration)",
                 AdjustingSpeedXOfY = "Adjusting speed: {0} / {1}...",
                 MergingAudioTrackXOfY = "Merging audio track: {0} / {1}...",
                 GeneratingSpeechFromTextXOfY = "Generating speech from text: {0} / {1}...",
+                ReviewAudioClips = "Review audio clips",
+                ReviewInfo = "Review and edit/remove audio clips",
+                AutoContinue = "Auto-continue",
+                Play = "Play",
+                Regenerate = "Regenerate",
             };
 
             TimedTextSmpteTiming = new LanguageStructure.TimedTextSmpteTiming

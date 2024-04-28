@@ -3168,6 +3168,11 @@ Continue?</RestoreDefaultSettingsMsg>
     <AdjustingSpeedXOfY>Adjusting speed: {0} / {1}...</AdjustingSpeedXOfY>
     <MergingAudioTrackXOfY>Merging audio track: {0} / {1}...</MergingAudioTrackXOfY>
     <GeneratingSpeechFromTextXOfY>Generating speech from text: {0} / {1}...</GeneratingSpeechFromTextXOfY>
+    <ReviewAudioClips>Review audio clips</ReviewAudioClips>
+    <ReviewInfo>Review and edit/remove audio clips</ReviewInfo>
+    <Play>Play</Play>
+    <AutoContinue>Auto-continue</AutoContinue>
+    <Regenerate>Regenerate</Regenerate>
   </TextToSpeech>
   <TimedTextSmpteTiming>
     <Title>SMPTE timing</Title>
