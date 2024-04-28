@@ -13,7 +13,7 @@ namespace Nikse.SubtitleEdit.Logic
         public bool IsDisplayFileSize { get; set; }
         public bool Descending { get; set; }
 
-        private Regex _invariantNumber = new Regex(@"\d+\.{1,2}", RegexOptions.Compiled);
+        private readonly Regex _invariantNumber = new Regex(@"\d+\.{1,2}", RegexOptions.Compiled);
 
         public int Compare(object o1, object o2)
         {
