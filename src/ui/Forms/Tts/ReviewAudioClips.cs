@@ -25,6 +25,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             InitializeComponent();
             UiUtil.FixFonts(this);
             Text = LanguageSettings.Current.TextToSpeech.ReviewAudioClips;
+            labelInfo.Text = LanguageSettings.Current.TextToSpeech.ReviewInfo;
             buttonEdit.Text = LanguageSettings.Current.ExportCustomText.Edit;
             buttonPlay.Text = LanguageSettings.Current.TextToSpeech.Play;
             checkBoxContinuePlay.Text = LanguageSettings.Current.TextToSpeech.AutoContinue;
