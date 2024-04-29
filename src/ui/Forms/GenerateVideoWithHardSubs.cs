@@ -979,10 +979,16 @@ namespace Nikse.SubtitleEdit.Forms
                 if (_abort)
                 {
                     process.Kill();
+                    return false;
                 }
 
                 var v = (int)_processedFrames;
                 SetProgress(v);
+            }
+
+            if (_abort)
+            {
+                return false;
             }
 
             if (process.ExitCode != 0)
@@ -2113,6 +2119,7 @@ namespace Nikse.SubtitleEdit.Forms
                 try
                 {
                     Cursor = Cursors.WaitCursor;
+                    Refresh();
                     Application.DoEvents();
                     for (var i = 0; i < listViewBatch.Columns.Count; i++)
                     {
@@ -2121,6 +2128,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     foreach (var fileName in openFileDialog1.FileNames)
                     {
+                        Application.DoEvents();
                         AddInputFile(fileName);
                     }
                 }
@@ -2297,13 +2305,14 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            try
-            {
-                var fileNames = (string[])e.Data.GetData(DataFormats.FileDrop);
-                labelPleaseWait.Visible = true;
+            var fileNames = (string[])e.Data.GetData(DataFormats.FileDrop);
+            labelPleaseWait.Visible = true;
 
-                TaskDelayHelper.RunDelayed(TimeSpan.FromMilliseconds(5), () =>
+            TaskDelayHelper.RunDelayed(TimeSpan.FromMilliseconds(5), () =>
+            {
+                try
                 {
+                    Cursor = Cursors.WaitCursor;
                     foreach (var fileName in fileNames)
                     {
                         if (FileUtil.IsDirectory(fileName))
@@ -2312,15 +2321,17 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         else
                         {
+                            Application.DoEvents();
                             AddInputFile(fileName);
                         }
                     }
-                });
-            }
-            finally
-            {
-                labelPleaseWait.Visible = false;
-            }
+                }
+                finally
+                {
+                    Cursor = Cursors.Default;
+                    labelPleaseWait.Visible = false;
+                }
+            });
         }
 
         private void SearchFolder(string path)
@@ -2418,6 +2429,11 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
+            for (var i = 0; i < listViewBatch.Columns.Count; i++)
+            {
+                ListViewSorter.SetSortArrow(listViewBatch.Columns[i], SortOrder.None);
+            }
+
             var lv = (ListView)sender;
             if (!(lv.ListViewItemSorter is ListViewSorter sorter))
             {
@@ -2436,6 +2452,8 @@ namespace Nikse.SubtitleEdit.Forms
             else
             {
                 sorter.ColumnNumber = e.Column;
+                sorter.Descending = false;
+                sorter.IsDisplayFileSize = e.Column == ListViewBatchSubItemIndexColumnVideoSize;
             }
 
             lv.Sort();
