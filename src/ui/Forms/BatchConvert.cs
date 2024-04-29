@@ -3992,6 +3992,11 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
+            for (var i = 0; i < listViewInputFiles.Columns.Count; i++)
+            {
+                ListViewSorter.SetSortArrow(listViewInputFiles.Columns[i], SortOrder.None);
+            }
+
             if (!(listViewInputFiles.ListViewItemSorter is ListViewSorter sorter))
             {
                 sorter = new ListViewSorter
@@ -4014,7 +4019,10 @@ namespace Nikse.SubtitleEdit.Forms
                 sorter.IsNumber = false;
                 sorter.IsDisplayFileSize = e.Column == columnHeaderSize.DisplayIndex;
             }
+
             listViewInputFiles.Sort();
+
+            ListViewSorter.SetSortArrow(listViewInputFiles.Columns[e.Column], sorter.Descending ? SortOrder.Descending : SortOrder.Ascending);
         }
 
         private void buttonBrowseEncoding_Click(object sender, EventArgs e)
