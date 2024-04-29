@@ -6,6 +6,7 @@ using Nikse.SubtitleEdit.Core.VobSub;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -706,6 +707,58 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             return false;
+        }
+
+        public static string TryLocateSubtitleFile(string path, string videoFileNameNoExtension)
+        {
+            // search in these directories
+            var knownSubtitleDirectories = new[]
+            {
+                path, Path.Combine(path, "Subs"), Path.Combine(path, "Sub"), Path.Combine(path, "Subtitles")
+            };
+            foreach (var knownSubtitleDirectory in knownSubtitleDirectories)
+            {
+                var subtitleFileFromKnownDirectory = LocateSubtitle(knownSubtitleDirectory, videoFileNameNoExtension);
+                if (!string.IsNullOrEmpty(subtitleFileFromKnownDirectory))
+                {
+                    return subtitleFileFromKnownDirectory;
+                }
+            }
+
+            return string.Empty;
+
+            string LocateSubtitle(string localPath, in string localVideoFileName)
+            {
+                if (!Directory.Exists(localPath))
+                {
+                    return string.Empty;
+                }
+
+                // try to locate subtitle file that has the same name as the video file
+                var defaultSubtitles = new[]
+                {
+                    Path.Combine(localPath, Path.ChangeExtension(localVideoFileName, ".ass")),
+                    Path.Combine(localPath, Path.ChangeExtension(localVideoFileName, ".srt"))
+                };
+                foreach (var defaultSubtitle in defaultSubtitles)
+                {
+                    if (File.Exists(defaultSubtitle))
+                    {
+                        return defaultSubtitle;
+                    }
+                }
+
+                var assEnumerable = Directory.EnumerateFiles(localPath, "*.ass", SearchOption.TopDirectoryOnly);
+                var subripEnumerable = Directory.EnumerateFiles(localPath, "*.srt", SearchOption.TopDirectoryOnly);
+                var subtitleFile = assEnumerable.Concat(subripEnumerable).FirstOrDefault();
+                // subtitle file found in top directory
+                if (!string.IsNullOrEmpty(subtitleFile))
+                {
+                    return subtitleFile;
+                }
+
+                return string.Empty;
+            }
         }
     }
 }

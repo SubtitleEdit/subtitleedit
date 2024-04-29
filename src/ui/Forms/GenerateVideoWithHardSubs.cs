@@ -2131,54 +2131,32 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void AddInputFile(string fileName)
+        private void AddInputFile(string videoFileName)
         {
-            if (string.IsNullOrEmpty(fileName))
+            if (string.IsNullOrEmpty(videoFileName))
             {
                 return;
             }
 
-            var ext = Path.GetExtension(fileName).ToLowerInvariant();
-            if ((Utilities.AudioFileExtensions.Contains(ext) || Utilities.VideoFileExtensions.Contains(ext)) && File.Exists(fileName))
+            var ext = Path.GetExtension(videoFileName).ToLowerInvariant();
+            if ((Utilities.AudioFileExtensions.Contains(ext) || Utilities.VideoFileExtensions.Contains(ext)) && File.Exists(videoFileName))
             {
                 var item = new BatchVideoAndSub();
-                item.VideoFileName = fileName;
-                item.VideoFileSizeInBytes = new FileInfo(fileName).Length;
+                item.VideoFileName = videoFileName;
+                item.VideoFileSizeInBytes = new FileInfo(videoFileName).Length;
 
-                var path = Path.GetDirectoryName(fileName);
-                var fileNameNoExt = Path.GetFileNameWithoutExtension(fileName);
-                var subFileName = Path.ChangeExtension(fileName, ".ass");
+                var path = Path.GetDirectoryName(videoFileName);
+                var fileNameNoExt = Path.GetFileNameWithoutExtension(videoFileName);
 
-                if (!File.Exists(subFileName))
+                // try locate subtitle file for the input vide file
+                var subtitleFile = FileUtil.TryLocateSubtitleFile(path, videoFileName);
+                if (File.Exists(subtitleFile))
                 {
-                    subFileName = Path.ChangeExtension(fileName, ".srt");
+                    item.SubtitleFileName = subtitleFile;
+                    item.SubtitleFileFileSizeInBytes = new FileInfo(subtitleFile).Length;
                 }
 
-                if (!File.Exists(subFileName))
-                {
-                    var files = Directory.GetFiles(path, fileNameNoExt + "*.ass");
-                    if (files.Length > 0)
-                    {
-                        subFileName = files[0];
-                    }
-                }
-
-                if (!File.Exists(subFileName))
-                {
-                    var files = Directory.GetFiles(path, fileNameNoExt + "*.srt");
-                    if (files.Length > 0)
-                    {
-                        subFileName = files[0];
-                    }
-                }
-
-                if (File.Exists(subFileName))
-                {
-                    item.SubtitleFileName = subFileName;
-                    item.SubtitleFileFileSizeInBytes = new FileInfo(subFileName).Length;
-                }
-
-                var mediaInfo = FfmpegMediaInfo.Parse(fileName);
+                var mediaInfo = FfmpegMediaInfo.Parse(videoFileName);
                 int width;
                 int height;
                 if (mediaInfo.VideoWidth > 0 && mediaInfo.VideoHeight > 0)
@@ -2189,18 +2167,18 @@ namespace Nikse.SubtitleEdit.Forms
                 else
                 {
                     var vInfo = new VideoInfo { Success = false };
-                    if (fileName.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase))
+                    if (videoFileName.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase))
                     {
-                        vInfo = QuartsPlayer.GetVideoInfo(fileName);
+                        vInfo = QuartsPlayer.GetVideoInfo(videoFileName);
                         if (!vInfo.Success)
                         {
-                            vInfo = LibMpvDynamic.GetVideoInfo(fileName);
+                            vInfo = LibMpvDynamic.GetVideoInfo(videoFileName);
                         }
                     }
 
                     if (!vInfo.Success)
                     {
-                        vInfo = UiUtil.GetVideoInfo(fileName);
+                        vInfo = UiUtil.GetVideoInfo(videoFileName);
                     }
 
                     width = vInfo.Width;
@@ -2209,11 +2187,11 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (width == 0 || height == 0)
                 {
-                    SeLogger.Error("Skipping burn-in file with no video: " + fileName);
+                    SeLogger.Error("Skipping burn-in file with no video: " + videoFileName);
                     return; // skip audio or damaged files
                 }
 
-                var listViewItem = new ListViewItem(fileName);
+                var listViewItem = new ListViewItem(videoFileName);
                 listViewItem.Tag = item;
                 listViewItem.SubItems.Add($"{width}x{height}");
                 var s = Utilities.FormatBytesToDisplayFileSize(item.VideoFileSizeInBytes);
