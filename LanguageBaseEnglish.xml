@@ -1610,6 +1610,7 @@ To use an API key, go to "Options -&gt; Settings -&gt; Auto-translate" to enter 
         <GoToSourceView>Go to source view</GoToSourceView>
         <GoToListView>Go to list view</GoToListView>
         <ExtractAudio>Extract audio...</ExtractAudio>
+        <MediaInfo>Media information</MediaInfo>
       </ContextMenu>
     </Menu>
     <Controls>
