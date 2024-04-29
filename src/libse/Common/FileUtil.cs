@@ -709,7 +709,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             return false;
         }
 
-        public static string TryLocateSubtitleFile(string path, string videoFileNameNoExtension)
+        public static string TryLocateSubtitleFile(string path, string videoFileName)
         {
             // search in these directories
             var knownSubtitleDirectories = new[]
@@ -718,7 +718,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             };
             foreach (var knownSubtitleDirectory in knownSubtitleDirectories)
             {
-                var subtitleFileFromKnownDirectory = LocateSubtitle(knownSubtitleDirectory, videoFileNameNoExtension);
+                var subtitleFileFromKnownDirectory = LocateSubtitle(knownSubtitleDirectory, videoFileName);
                 if (!string.IsNullOrEmpty(subtitleFileFromKnownDirectory))
                 {
                     return subtitleFileFromKnownDirectory;
