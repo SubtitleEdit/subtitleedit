@@ -2146,9 +2146,7 @@ namespace Nikse.SubtitleEdit.Forms
                 item.VideoFileSizeInBytes = new FileInfo(videoFileName).Length;
 
                 var path = Path.GetDirectoryName(videoFileName);
-                var fileNameNoExt = Path.GetFileNameWithoutExtension(videoFileName);
-
-                // try locate subtitle file for the input vide file
+                // try to locate subtitle file for the input vide file
                 var subtitleFile = FileUtil.TryLocateSubtitleFile(path, videoFileName);
                 if (File.Exists(subtitleFile))
                 {
