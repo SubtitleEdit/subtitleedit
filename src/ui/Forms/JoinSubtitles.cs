@@ -94,15 +94,21 @@ namespace Nikse.SubtitleEdit.Forms
         private void listViewParts_DragDrop(object sender, DragEventArgs e)
         {
             var files = (string[])e.Data.GetData(DataFormats.FileDrop);
-            foreach (var fileName in files)
-            {
-                if (!_fileNamesToJoin.Any(file => file.Equals(fileName, StringComparison.OrdinalIgnoreCase)))
-                {
-                    _fileNamesToJoin.Add(fileName);
-                }
-            }
 
-            SortAndLoad();
+            TaskDelayHelper.RunDelayed(TimeSpan.FromMilliseconds(1), () =>
+            {
+                var fileNames = files.ToList();
+                fileNames.Sort(ListViewSorter.NaturalComparer);
+                foreach (var fileName in fileNames)
+                {
+                    if (!_fileNamesToJoin.Any(file => file.Equals(fileName, StringComparison.OrdinalIgnoreCase)))
+                    {
+                        _fileNamesToJoin.Add(fileName);
+                    }
+                }
+
+                SortAndLoad();
+            });
         }
 
         private void SortAndLoad()
@@ -289,6 +295,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 var sub = subtitles[i];
                 var lvi = new ListViewItem($"{sub.Paragraphs.Count:#,###,###}");
+                lvi.Tag = fileName;
                 if (sub.Paragraphs.Count > 0)
                 {
                     lvi.SubItems.Add(sub.Paragraphs[0].StartTime.ToString());
@@ -371,7 +378,9 @@ namespace Nikse.SubtitleEdit.Forms
             if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
             {
                 var sb = new StringBuilder();
-                foreach (string fileName in openFileDialog1.FileNames)
+                var fileNames = openFileDialog1.FileNames.ToList();
+                fileNames.Sort(ListViewSorter.NaturalComparer);
+                foreach (var fileName in fileNames)
                 {
                     Application.DoEvents();
                     if (File.Exists(fileName))
@@ -390,6 +399,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                     }
                 }
+
                 SortAndLoad();
                 if (sb.Length > 0)
                 {
@@ -650,6 +660,13 @@ namespace Nikse.SubtitleEdit.Forms
             lv.Sort();
 
             ListViewSorter.SetSortArrow(listViewParts.Columns[e.Column], sorter.Descending ? SortOrder.Descending : SortOrder.Ascending);
+
+            _fileNamesToJoin.Clear();
+            foreach (ListViewItem item in listViewParts.Items)
+            {
+                _fileNamesToJoin.Add((string)item.Tag);
+            }
+            SortAndLoad();
         }
     }
 }

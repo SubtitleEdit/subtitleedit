@@ -68,7 +68,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                         if (info.VideoWidth == 0 &&
                             parts.Length == 2 &&
                             int.TryParse(parts[0], out var w) &&
-                            int.TryParse(parts[0], out var h))
+                            int.TryParse(parts[1], out var h))
                         {
                             info.VideoWidth = w; 
                             info.VideoHeight = h;
