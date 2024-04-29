@@ -42,6 +42,7 @@ namespace Nikse.SubtitleEdit.Forms
         public bool BatchMode { get; set; }
         public string BatchInfo { get; set; }
         private readonly List<BatchVideoAndSub> _batchVideoAndSubList;
+        private const int ListViewBatchSubItemIndexColumnVideoSize = 2;
         private const int ListViewBatchSubItemIndexColumnSubtitleFile = 3;
         private const int ListViewBatchSubItemIndexColumnStatus = 4;
 
@@ -2109,9 +2110,23 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
 
-                foreach (var fileName in openFileDialog1.FileNames)
+                try
                 {
-                    AddInputFile(fileName);
+                    Cursor = Cursors.WaitCursor;
+                    Application.DoEvents();
+                    for (var i = 0; i < listViewBatch.Columns.Count; i++)
+                    {
+                        ListViewSorter.SetSortArrow(listViewBatch.Columns[i], SortOrder.None);
+                    }
+
+                    foreach (var fileName in openFileDialog1.FileNames)
+                    {
+                        AddInputFile(fileName);
+                    }
+                }
+                finally
+                {
+                    Cursor = Cursors.Default;
                 }
             }
         }
@@ -2163,9 +2178,9 @@ namespace Nikse.SubtitleEdit.Forms
                     item.SubtitleFileFileSizeInBytes = new FileInfo(subFileName).Length;
                 }
 
-                var width = 0;
-                var height = 0;
                 var mediaInfo = FfmpegMediaInfo.Parse(fileName);
+                int width;
+                int height;
                 if (mediaInfo.VideoWidth > 0 && mediaInfo.VideoHeight > 0)
                 {
                     width = mediaInfo.VideoWidth;
@@ -2390,9 +2405,42 @@ namespace Nikse.SubtitleEdit.Forms
             useSourceResolutionToolStripMenuItem.Visible = BatchMode;
         }
 
-        private void nikseLabelOutputFileFolder_Click(object sender, EventArgs e)
+        private void listViewBatch_ColumnClick(object sender, ColumnClickEventArgs e)
         {
+            if (_converting || listViewBatch.Items.Count == 0)
+            {
+                return;
+            }
 
+            var lv = (ListView)sender;
+            if (!(lv.ListViewItemSorter is ListViewSorter sorter))
+            {
+                sorter = new ListViewSorter
+                {
+                    ColumnNumber = e.Column,
+                    IsDisplayFileSize = e.Column == ListViewBatchSubItemIndexColumnVideoSize,
+                };
+                lv.ListViewItemSorter = sorter;
+            }
+
+            if (e.Column == sorter.ColumnNumber)
+            {
+                sorter.Descending = !sorter.Descending; // inverse sort direction
+            }
+            else
+            {
+                sorter.ColumnNumber = e.Column;
+            }
+
+            lv.Sort();
+
+            ListViewSorter.SetSortArrow(listViewBatch.Columns[e.Column], sorter.Descending ? SortOrder.Descending : SortOrder.Ascending);
+
+            _batchVideoAndSubList.Clear();
+            foreach (ListViewItem item in listViewBatch.Items)
+            {
+                _batchVideoAndSubList.Add((BatchVideoAndSub)item.Tag);
+            }
         }
     }
 }
