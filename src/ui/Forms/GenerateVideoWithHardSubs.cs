@@ -2207,6 +2207,12 @@ namespace Nikse.SubtitleEdit.Forms
                     height = vInfo.Height;
                 }
 
+                if (width == 0 || height == 0)
+                {
+                    SeLogger.Error("Skipping burn-in file with no video: " + fileName);
+                    return; // skip audio or damaged files
+                }
+
                 var listViewItem = new ListViewItem(fileName);
                 listViewItem.Tag = item;
                 listViewItem.SubItems.Add($"{width}x{height}");
