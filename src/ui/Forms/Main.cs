@@ -36696,9 +36696,46 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void labelVideoInfo_Click(object sender, EventArgs e)
+        private void ToolStripButtonVideoOpenClick(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(_videoFileName) || _videoInfo == null || Configuration.Settings.Tools.DisableVidoInfoViaLabel)
+            OpenVideoDialog();
+        }
+
+        private void runWhiperOnParagraphToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AudioToTextWhisperSelectedLines();
+        }
+
+        private void textToSpeechAndAddToVideoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TaskDelayHelper.RunDelayed(TimeSpan.FromMilliseconds(25), () =>
+            {
+                if (string.IsNullOrEmpty(_videoFileName) || _videoInfo == null)
+                {
+                    MessageBox.Show(LanguageSettings.Current.General.NoVideoLoaded);
+                    return;
+                }
+
+                if (RequireFfmpegOk())
+                {
+                    using (var form = new TextToSpeech(_subtitle, GetCurrentSubtitleFormat(), _videoFileName, _videoInfo))
+                    {
+                        if (form.ShowDialog(this) == DialogResult.OK)
+                        {
+                            var idx = FirstSelectedIndex;
+                            _subtitle = form.EditedSubtitle;
+                            SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
+                            _subtitleListViewIndex = -1;
+                            SubtitleListview1.SelectIndexAndEnsureVisibleFaster(idx);
+                        }
+                    }
+                }
+            });
+        }
+
+        private void videoInfoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(_videoFileName) || _videoInfo == null)
             {
                 return;
             }
@@ -36784,41 +36821,23 @@ namespace Nikse.SubtitleEdit.Forms
             MessageBox.Show(sb.ToString() + sbTrackInfo.ToString());
         }
 
-        private void ToolStripButtonVideoOpenClick(object sender, EventArgs e)
+        private void contextMenuStripVideoFileName_Opening(object sender, CancelEventArgs e)
         {
-            OpenVideoDialog();
-        }
-
-        private void runWhiperOnParagraphToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            AudioToTextWhisperSelectedLines();
-        }
-
-        private void textToSpeechAndAddToVideoToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            TaskDelayHelper.RunDelayed(TimeSpan.FromMilliseconds(25), () =>
+            if (string.IsNullOrEmpty(_videoFileName) || _videoInfo == null)
             {
-                if (string.IsNullOrEmpty(_videoFileName) || _videoInfo == null)
-                {
-                    MessageBox.Show(LanguageSettings.Current.General.NoVideoLoaded);
-                    return;
-                }
+                e.Cancel = true;
+            }
 
-                if (RequireFfmpegOk())
-                {
-                    using (var form = new TextToSpeech(_subtitle, GetCurrentSubtitleFormat(), _videoFileName, _videoInfo))
-                    {
-                        if (form.ShowDialog(this) == DialogResult.OK)
-                        {
-                            var idx = FirstSelectedIndex;
-                            _subtitle = form.EditedSubtitle;
-                            SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
-                            _subtitleListViewIndex = -1;
-                            SubtitleListview1.SelectIndexAndEnsureVisibleFaster(idx);
-                        }
-                    }
-                }
-            });
+            openContainingFolderToolStripMenuItem.Text = _language.Menu.File.OpenContainingFolder;
+            videoInfoToolStripMenuItem.Text = _language.Menu.ContextMenu.MediaInfo;
+        }
+
+        private void openContainingFolderToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(_videoFileName) && File.Exists(_videoFileName))
+            {
+                UiUtil.OpenFolderFromFileName(_videoFileName);
+            }
         }
     }
 }

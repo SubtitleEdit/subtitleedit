@@ -197,7 +197,6 @@ namespace Nikse.SubtitleEdit.Core.Common
         public string TextToSpeechAzureRegion { get; set; }
         public bool TextToSpeechPreview { get; set; }
         public bool TextToSpeechAddToVideoFile { get; set; }
-        public bool DisableVidoInfoViaLabel { get; set; }
         public bool ListViewSyntaxColorDurationSmall { get; set; }
         public bool ListViewSyntaxColorDurationBig { get; set; }
         public bool ListViewSyntaxColorOverlap { get; set; }
@@ -5515,12 +5514,6 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.Tools.TextToSpeechAddToVideoFile = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
-            }
-
-            subNode = node.SelectSingleNode("DisableVidoInfoViaLabel");
-            if (subNode != null)
-            {
-                settings.Tools.DisableVidoInfoViaLabel = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
             subNode = node.SelectSingleNode("ListViewSyntaxColorDurationSmall");
@@ -12057,7 +12050,6 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("TextToSpeechAzureRegion", settings.Tools.TextToSpeechAzureRegion);
                 textWriter.WriteElementString("TextToSpeechPreview", settings.Tools.TextToSpeechPreview.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("TextToSpeechAddToVideoFile", settings.Tools.TextToSpeechAddToVideoFile.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("DisableVidoInfoViaLabel", settings.Tools.DisableVidoInfoViaLabel.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewSyntaxColorDurationSmall", settings.Tools.ListViewSyntaxColorDurationSmall.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewSyntaxColorDurationBig", settings.Tools.ListViewSyntaxColorDurationBig.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewSyntaxColorLongLines", settings.Tools.ListViewSyntaxColorLongLines.ToString(CultureInfo.InvariantCulture));

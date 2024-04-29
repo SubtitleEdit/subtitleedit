@@ -5170,6 +5170,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Main/Menu/ContextMenu/ExtractAudio":
                     language.Main.Menu.ContextMenu.ExtractAudio = reader.Value;
                     break;
+                case "Main/Menu/ContextMenu/MediaInfo":
+                    language.Main.Menu.ContextMenu.MediaInfo = reader.Value;
+                    break;
                 case "Main/Controls/SubtitleFormat":
                     language.Main.Controls.SubtitleFormat = reader.Value;
                     break;

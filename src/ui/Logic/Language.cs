@@ -2210,6 +2210,7 @@ namespace Nikse.SubtitleEdit.Logic
                         GoToSourceView = "Go to source view",
                         GoToListView = "Go to list view",
                         ExtractAudio = "Extract audio...",
+                        MediaInfo = "Media information",
                     }
                 },
 
