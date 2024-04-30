@@ -711,34 +711,30 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public static string TryLocateSubtitleFile(string path, string videoFileName)
         {
-            // search in these directories
+            // search in these subdirectories: \Subs;\Sub;\Subtitles;
             var knownSubtitleDirectories = new[]
             {
                 path, Path.Combine(path, "Subs"), Path.Combine(path, "Sub"), Path.Combine(path, "Subtitles")
             };
+
+            // handles if video file was sent with full path
+            if (Path.IsPathRooted(videoFileName))
+            {
+                videoFileName = Path.GetFileName(videoFileName);
+            }
+            
             foreach (var knownSubtitleDirectory in knownSubtitleDirectories)
             {
-                var subtitleFileFromKnownDirectory = LocateSubtitle(knownSubtitleDirectory, videoFileName);
-                if (!string.IsNullOrEmpty(subtitleFileFromKnownDirectory))
+                if (!Directory.Exists(knownSubtitleDirectory))
                 {
-                    return subtitleFileFromKnownDirectory;
-                }
-            }
-
-            return string.Empty;
-
-            string LocateSubtitle(string localPath, in string localVideoFileName)
-            {
-                if (!Directory.Exists(localPath))
-                {
-                    return string.Empty;
+                    continue;
                 }
 
                 // try to locate subtitle file that has the same name as the video file
                 var defaultSubtitles = new[]
                 {
-                    Path.Combine(localPath, Path.ChangeExtension(localVideoFileName, ".ass")),
-                    Path.Combine(localPath, Path.ChangeExtension(localVideoFileName, ".srt"))
+                    Path.Combine(knownSubtitleDirectory, Path.ChangeExtension(videoFileName, ".ass")),
+                    Path.Combine(knownSubtitleDirectory, Path.ChangeExtension(videoFileName, ".srt"))
                 };
                 foreach (var defaultSubtitle in defaultSubtitles)
                 {
@@ -748,17 +744,17 @@ namespace Nikse.SubtitleEdit.Core.Common
                     }
                 }
 
-                var assEnumerable = Directory.EnumerateFiles(localPath, "*.ass", SearchOption.TopDirectoryOnly);
-                var subripEnumerable = Directory.EnumerateFiles(localPath, "*.srt", SearchOption.TopDirectoryOnly);
-                var subtitleFile = assEnumerable.Concat(subripEnumerable).FirstOrDefault();
-                // subtitle file found in top directory
+                // get first subtitle in path with extension .ass or .srt
+                var assEnumerable = Directory.EnumerateFiles(knownSubtitleDirectory, "*.ass", SearchOption.TopDirectoryOnly);
+                var subRipEnumerable = Directory.EnumerateFiles(knownSubtitleDirectory, "*.srt", SearchOption.TopDirectoryOnly);
+                var subtitleFile = assEnumerable.Concat(subRipEnumerable).FirstOrDefault();
                 if (!string.IsNullOrEmpty(subtitleFile))
                 {
                     return subtitleFile;
                 }
-
-                return string.Empty;
             }
+
+            return string.Empty;
         }
     }
 }
