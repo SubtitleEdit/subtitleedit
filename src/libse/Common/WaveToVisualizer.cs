@@ -637,7 +637,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             _stream.Read(data, 0, data.Length);
 
             // read peak values
-            WavePeak[] peaks = new WavePeak[_header.LengthInSamples];
+            WavePeak[] peaks = new WavePeak[_header.LengthInSamples + 5];
             int peakIndex = 0;
             if (_header.NumberOfChannels == 2)
             {
