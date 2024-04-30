@@ -76,6 +76,7 @@
     <Compile Include="Logic\BeautifyTimeCodesTest.cs" />
     <Compile Include="Logic\ConvertColorsToDialogTest.cs" />
     <Compile Include="Core\LanguageAutoDetectLanguagesTest.cs" />
+    <Compile Include="Logic\DimensionTest.cs" />
     <Compile Include="Logic\NetflixHelperTest.cs" />
     <Compile Include="Logic\SubtitleFormats\EbuStlTest.cs" />
     <Compile Include="Logic\SubtitleFormats\NetflixTimedTextTest.cs" />

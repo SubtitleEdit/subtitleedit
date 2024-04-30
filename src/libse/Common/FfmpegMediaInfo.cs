@@ -11,8 +11,8 @@ namespace Nikse.SubtitleEdit.Core.Common
     public class FfmpegMediaInfo
     {
         public List<FfmpegTrackInfo> Tracks { get; set; }
-        public int VideoWidth { get; set; }
-        public int VideoHeight { get; set; }
+        
+        public Dimension Dimension { get; set; }
 
         private static readonly Regex ResolutionRegex = new Regex(@"\d\d+x\d\d+", RegexOptions.Compiled);
 
@@ -65,13 +65,12 @@ namespace Nikse.SubtitleEdit.Core.Common
                     if (resolutionMatch.Success)
                     {
                         var parts = resolutionMatch.Value.Split('x');
-                        if (info.VideoWidth == 0 &&
+                        if (info.Dimension.Width == 0 &&
                             parts.Length == 2 &&
                             int.TryParse(parts[0], out var w) &&
                             int.TryParse(parts[1], out var h))
                         {
-                            info.VideoWidth = w; 
-                            info.VideoHeight = h;
+                            info.Dimension = new Dimension(h, w); 
                         }
                     }
 
