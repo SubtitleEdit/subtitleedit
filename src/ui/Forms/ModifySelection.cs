@@ -28,13 +28,15 @@ namespace Nikse.SubtitleEdit.Forms
         private const int FunctionEven = 7;
         private const int FunctionDurationLessThan = 8;
         private const int FunctionDurationGreaterThan = 9;
-        private const int FunctionExactlyOneLine = 10;
-        private const int FunctionExactlyTwoLines = 11;
-        private const int FunctionMoreThanTwoLines = 12;
-        private const int FunctionBookmarked = 13;
-        private const int FunctionBlankLines = 14;
-        private const int FunctionStyle = 15;
-        private const int FunctionActor = 16;
+        private const int FunctionCpsLessThan = 10;
+        private const int FunctionCpsGreaterThan = 11;
+        private const int FunctionExactlyOneLine = 12;
+        private const int FunctionExactlyTwoLines = 13;
+        private const int FunctionMoreThanTwoLines = 14;
+        private const int FunctionBookmarked = 15;
+        private const int FunctionBlankLines = 16;
+        private const int FunctionStyle = 17;
+        private const int FunctionActor = 18;
 
         private const string ContainsString = "Contains";
         private const string StartsWith = "Starts with";
@@ -46,6 +48,8 @@ namespace Nikse.SubtitleEdit.Forms
         private const string Even = "Even";
         private const string DurationLessThan = "Duration <";
         private const string DurationGreaterThan = "Duration >";
+        private const string CpsLessThan = "CPS <";
+        private const string CpsGreaterThan = "CPS >";
         private const string ExactlyOneLine = "Exactly one line";
         private const string ExactlyTwoLines = "Exactly two lines";
         private const string MoreThanTwoLines = "More than two lines";
@@ -97,6 +101,8 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxRule.Items.Add(LanguageSettings.Current.ModifySelection.EvenLines);
             comboBoxRule.Items.Add(LanguageSettings.Current.ModifySelection.DurationLessThan);
             comboBoxRule.Items.Add(LanguageSettings.Current.ModifySelection.DurationGreaterThan);
+            comboBoxRule.Items.Add(LanguageSettings.Current.ModifySelection.CpsLessThan);
+            comboBoxRule.Items.Add(LanguageSettings.Current.ModifySelection.CpsGreaterThan);
             comboBoxRule.Items.Add(LanguageSettings.Current.ModifySelection.ExactlyOneLine);
             comboBoxRule.Items.Add(LanguageSettings.Current.ModifySelection.ExactlyTwoLines);
             comboBoxRule.Items.Add(LanguageSettings.Current.ModifySelection.MoreThanTwoLines);
@@ -141,6 +147,12 @@ namespace Nikse.SubtitleEdit.Forms
                     break;
                 case DurationGreaterThan:
                     comboBoxRule.SelectedIndex = FunctionDurationGreaterThan;
+                    break;
+                case CpsLessThan:
+                    comboBoxRule.SelectedIndex = FunctionCpsLessThan;
+                    break;
+                case CpsGreaterThan:
+                    comboBoxRule.SelectedIndex = FunctionCpsGreaterThan;
                     break;
                 case ExactlyOneLine:
                     comboBoxRule.SelectedIndex = FunctionExactlyOneLine;
@@ -225,6 +237,12 @@ namespace Nikse.SubtitleEdit.Forms
                     break;
                 case FunctionDurationGreaterThan:
                     Configuration.Settings.Tools.ModifySelectionRule = DurationGreaterThan;
+                    break;
+                case FunctionCpsLessThan:
+                    Configuration.Settings.Tools.ModifySelectionRule = CpsLessThan;
+                    break;
+                case FunctionCpsGreaterThan:
+                    Configuration.Settings.Tools.ModifySelectionRule = CpsGreaterThan;
                     break;
                 case FunctionExactlyOneLine:
                     Configuration.Settings.Tools.ModifySelectionRule = ExactlyOneLine;
@@ -311,7 +329,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
+            for (var i = 0; i < _subtitle.Paragraphs.Count; i++)
             {
                 if ((radioButtonSubtractFromSelection.Checked || radioButtonIntersect.Checked) && _subtitleListView.Items[i].Selected ||
                     !radioButtonSubtractFromSelection.Checked && !radioButtonIntersect.Checked)
@@ -393,6 +411,20 @@ namespace Nikse.SubtitleEdit.Forms
                     else if (comboBoxRule.SelectedIndex == FunctionDurationGreaterThan) // Duration greater than
                     {
                         if (p.DurationTotalMilliseconds > (double)numericUpDownDuration.Value)
+                        {
+                            listViewItems.Add(MakeListViewItem(p, i));
+                        }
+                    }
+                    else if (comboBoxRule.SelectedIndex == FunctionCpsLessThan) // Cps less than
+                    {
+                        if (Utilities.GetCharactersPerSecond(p) < (double)numericUpDownDuration.Value)
+                        {
+                            listViewItems.Add(MakeListViewItem(p, i));
+                        }
+                    }
+                    else if (comboBoxRule.SelectedIndex == FunctionCpsGreaterThan) // Cps greater than
+                    {
+                        if (Utilities.GetCharactersPerSecond(p) > (double)numericUpDownDuration.Value)
                         {
                             listViewItems.Add(MakeListViewItem(p, i));
                         }
@@ -504,28 +536,37 @@ namespace Nikse.SubtitleEdit.Forms
         {
             textBoxText.Visible = true;
             listViewStyles.Visible = false;
-            numericUpDownDuration.Visible = comboBoxRule.SelectedIndex == FunctionDurationLessThan || comboBoxRule.SelectedIndex == FunctionDurationGreaterThan;
+            numericUpDownDuration.Visible =
+                comboBoxRule.SelectedIndex == FunctionDurationLessThan ||
+                comboBoxRule.SelectedIndex == FunctionDurationGreaterThan ||
+                comboBoxRule.SelectedIndex == FunctionCpsLessThan ||
+                comboBoxRule.SelectedIndex == FunctionCpsGreaterThan;
+
             if (comboBoxRule.SelectedIndex == FunctionRegEx) // RegEx
             {
-                // creat new context menu only if textBoxText doesn't already has one, this will prevent unnecessary
+                // create new context menu only if textBoxText doesn't already has one, this will prevent unnecessary
                 // allocation regex option is already selected and user re-select it
-                textBoxText.ContextMenuStrip = textBoxText.ContextMenuStrip ?? 
+                textBoxText.ContextMenuStrip = textBoxText.ContextMenuStrip ??
                                                FindReplaceDialogHelper.GetRegExContextMenu(new NativeTextBoxAdapter(textBoxText));
                 checkBoxCaseSensitive.Enabled = false;
             }
-            else if (comboBoxRule.SelectedIndex == FunctionOdd || 
-                     comboBoxRule.SelectedIndex == FunctionEven || 
-                     comboBoxRule.SelectedIndex == FunctionExactlyOneLine || 
-                     comboBoxRule.SelectedIndex == FunctionExactlyTwoLines || 
-                     comboBoxRule.SelectedIndex == FunctionMoreThanTwoLines || 
-                     comboBoxRule.SelectedIndex == FunctionBookmarked || 
+            else if (comboBoxRule.SelectedIndex == FunctionOdd ||
+                     comboBoxRule.SelectedIndex == FunctionEven ||
+                     comboBoxRule.SelectedIndex == FunctionExactlyOneLine ||
+                     comboBoxRule.SelectedIndex == FunctionExactlyTwoLines ||
+                     comboBoxRule.SelectedIndex == FunctionMoreThanTwoLines ||
+                     comboBoxRule.SelectedIndex == FunctionBookmarked ||
                      comboBoxRule.SelectedIndex == FunctionBlankLines)
             {
                 checkBoxCaseSensitive.Enabled = false;
                 textBoxText.ContextMenuStrip = null;
                 textBoxText.Visible = false;
             }
-            else if (comboBoxRule.SelectedIndex == FunctionDurationLessThan || comboBoxRule.SelectedIndex == FunctionDurationGreaterThan || comboBoxRule.SelectedIndex == FunctionAllUppercase)
+            else if (comboBoxRule.SelectedIndex == FunctionDurationLessThan ||
+                     comboBoxRule.SelectedIndex == FunctionDurationGreaterThan ||
+                     comboBoxRule.SelectedIndex == FunctionCpsLessThan ||
+                     comboBoxRule.SelectedIndex == FunctionCpsGreaterThan ||
+                     comboBoxRule.SelectedIndex == FunctionAllUppercase)
             {
                 checkBoxCaseSensitive.Enabled = false;
                 listViewStyles.Visible = false;
@@ -539,7 +580,7 @@ namespace Nikse.SubtitleEdit.Forms
                         numericUpDownDuration.Value = Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds;
                     }
                 }
-                else
+                else if (comboBoxRule.SelectedIndex == FunctionDurationGreaterThan)
                 {
                     if (numericUpDownDuration.Value == 0 &&
                         Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds >= numericUpDownDuration.Minimum &&
@@ -547,6 +588,14 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         numericUpDownDuration.Value = Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds;
                     }
+                }
+                else if (comboBoxRule.SelectedIndex == FunctionCpsLessThan)
+                {
+                    numericUpDownDuration.Value = (int)Math.Round(Math.Max(10, Configuration.Settings.General.SubtitleOptimalCharactersPerSeconds - 5), MidpointRounding.AwayFromZero);
+                }
+                else if (comboBoxRule.SelectedIndex == FunctionCpsGreaterThan)
+                {
+                    numericUpDownDuration.Value = (int)Math.Round(Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds, MidpointRounding.AwayFromZero);
                 }
             }
             else if (comboBoxRule.SelectedIndex == FunctionStyle)
@@ -642,18 +691,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void toolStripMenuItemSelectAll_Click(object sender, EventArgs e)
         {
-            foreach (ListViewItem item in listViewFixes.Items)
-            {
-                item.Checked = true;
-            }
+            listViewFixes.CheckAll();
         }
 
         private void toolStripMenuItemInverseSelection_Click(object sender, EventArgs e)
         {
-            foreach (ListViewItem item in listViewFixes.Items)
-            {
-                item.Checked = !item.Checked;
-            }
+            listViewFixes.InvertCheck();
         }
 
         private void ModifySelection_Resize(object sender, EventArgs e)

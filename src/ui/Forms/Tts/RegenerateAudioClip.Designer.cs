@@ -1,6 +1,6 @@
 ﻿namespace Nikse.SubtitleEdit.Forms.Tts
 {
-    partial class RegenerateAudioClip
+    sealed partial class RegenerateAudioClip
     {
         /// <summary>
         /// Required designer variable.

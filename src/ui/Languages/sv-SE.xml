@@ -1453,6 +1453,7 @@ Gå till "Alternativ -&gt; Inställningar -&gt; Verktyg" för att ange din nycke
         <RemoveOrExportShotChanges>Ta bort/exportera bildändringar...</RemoveOrExportShotChanges>
         <WaveformBatchGenerate>Batch genererar vågformdata...</WaveformBatchGenerate>
         <ShowHideWaveformAndSpectrogram>Visa/dölj ljudformat och spektrogram</ShowHideWaveformAndSpectrogram>
+        <TextToSpeechAndAddToVideo>Text till tal och lägg till video...</TextToSpeechAndAddToVideo>
         <UnDockVideoControls>Avdocka videokontrollerna</UnDockVideoControls>
         <ReDockVideoControls>Docka videokontrollerna</ReDockVideoControls>
       </Video>
@@ -2129,6 +2130,8 @@ Ladda ner och fortsätta?</VideoFromUrlRequirements>
     <EvenLines>Jämna radnummer</EvenLines>
     <DurationLessThan>Varaktighet kortare än</DurationLessThan>
     <DurationGreaterThan>Varaktighet längre än</DurationGreaterThan>
+    <CpsLessThan>CPS mindre än</CpsLessThan>
+    <CpsGreaterThan>CPS större än</CpsGreaterThan>
     <ExactlyOneLine>Exakt en rad</ExactlyOneLine>
     <ExactlyTwoLines>Exakt två rader</ExactlyTwoLines>
     <MoreThanTwoLines>Mer än två rader</MoreThanTwoLines>
@@ -3156,6 +3159,23 @@ och N bryter</WrapStyle2>
     <Info>En synkpunkt kommer att justera positionen. två eller flera synkroniseringspunkter kommer att justera position och hastighet</Info>
     <ApplySync>Verkställ</ApplySync>
   </PointSync>
+  <TextToSpeech>
+    <Title>Text till tal</Title>
+    <Voice>Röst</Voice>
+    <TestVoice>Testa röst</TestVoice>
+    <DefaultVoice>Standardröst</DefaultVoice>
+    <AddAudioToVideo>Lägg till ljud till videofil (ny fil)</AddAudioToVideo>
+    <GenerateSpeech>Generera tal från text</GenerateSpeech>
+    <ActorInfo>Högerklicka för att tilldela skådespelare till röst</ActorInfo>
+    <AdjustingSpeedXOfY>Justerar hastighet: {0} / {1}...</AdjustingSpeedXOfY>
+    <MergingAudioTrackXOfY>Slår ihop ljudspår: {0} / {1}...</MergingAudioTrackXOfY>
+    <GeneratingSpeechFromTextXOfY>Genererar tal från text: {0} / {1}...</GeneratingSpeechFromTextXOfY>
+    <ReviewAudioClips>Granska ljudklipp</ReviewAudioClips>
+    <ReviewInfo>Granska och redigera/ta bort ljudklipp</ReviewInfo>
+    <Play>Spela</Play>
+    <AutoContinue>Auto-fortsätt</AutoContinue>
+    <Regenerate>Regenerera</Regenerate>
+  </TextToSpeech>
   <TimedTextSmpteTiming>
     <Title>SMPTE-timing</Title>
     <UseSmpteTiming>Använd SMPTE-timing för aktuell undertext?</UseSmpteTiming>

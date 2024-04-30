@@ -3977,18 +3977,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void toolStripMenuItemSelectAll_Click(object sender, EventArgs e)
         {
-            foreach (ListViewItem item in listViewConvertOptions.Items)
-            {
-                item.Checked = true;
-            }
+            listViewConvertOptions.CheckAll();
         }
 
         private void inverseSelectionToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            foreach (ListViewItem item in listViewConvertOptions.Items)
-            {
-                item.Checked = !item.Checked;
-            }
+            listViewConvertOptions.InvertCheck();
         }
 
         private void listViewInputFiles_ColumnClick(object sender, ColumnClickEventArgs e)
@@ -3996,6 +3990,11 @@ namespace Nikse.SubtitleEdit.Forms
             if (_converting)
             {
                 return;
+            }
+
+            for (var i = 0; i < listViewInputFiles.Columns.Count; i++)
+            {
+                ListViewSorter.SetSortArrow(listViewInputFiles.Columns[i], SortOrder.None);
             }
 
             if (!(listViewInputFiles.ListViewItemSorter is ListViewSorter sorter))
@@ -4020,7 +4019,10 @@ namespace Nikse.SubtitleEdit.Forms
                 sorter.IsNumber = false;
                 sorter.IsDisplayFileSize = e.Column == columnHeaderSize.DisplayIndex;
             }
+
             listViewInputFiles.Sort();
+
+            ListViewSorter.SetSortArrow(listViewInputFiles.Columns[e.Column], sorter.Descending ? SortOrder.Descending : SortOrder.Ascending);
         }
 
         private void buttonBrowseEncoding_Click(object sender, EventArgs e)

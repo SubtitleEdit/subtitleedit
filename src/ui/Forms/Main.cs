@@ -345,6 +345,7 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.InitializeSubtitleFont(textBoxListViewText);
             UiUtil.InitializeSubtitleFont(textBoxListViewTextOriginal);
             UiUtil.InitializeSubtitleFont(SubtitleListview1);
+            UiUtil.InitializeSubtitleFont(textBoxSource);
         }
 
         private static string GetArgumentAfterColon(IEnumerable<string> commandLineArguments, string requestedArgumentName)
@@ -5783,6 +5784,7 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleListview1.BackColor = Configuration.Settings.General.SubtitleBackgroundColor;
 
                 UiUtil.InitializeSubtitleFont(SubtitleListview1);
+                UiUtil.InitializeSubtitleFont(textBoxSource);
                 mediaPlayer.SetSubtitleFont();
                 ShowSubtitle();
             }
@@ -23572,7 +23574,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SetAssaResolutionWithChecks()
         {
-            if (Configuration.Settings.SubtitleSettings.AssaResolutionAutoNew && IsAssa() && _videoInfo?.Height > 0)
+            if (Configuration.Settings.SubtitleSettings.AssaResolutionAutoNew  &&
+                string.IsNullOrEmpty(_subtitle?.Header) &&
+                IsAssa() && _videoInfo?.Height > 0)
             {
                 if (string.IsNullOrEmpty(_subtitle?.Header))
                 {
@@ -36692,9 +36696,46 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void labelVideoInfo_Click(object sender, EventArgs e)
+        private void ToolStripButtonVideoOpenClick(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(_videoFileName) || _videoInfo == null || Configuration.Settings.Tools.DisableVidoInfoViaLabel)
+            OpenVideoDialog();
+        }
+
+        private void runWhiperOnParagraphToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AudioToTextWhisperSelectedLines();
+        }
+
+        private void textToSpeechAndAddToVideoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TaskDelayHelper.RunDelayed(TimeSpan.FromMilliseconds(25), () =>
+            {
+                if (string.IsNullOrEmpty(_videoFileName) || _videoInfo == null)
+                {
+                    MessageBox.Show(LanguageSettings.Current.General.NoVideoLoaded);
+                    return;
+                }
+
+                if (RequireFfmpegOk())
+                {
+                    using (var form = new TextToSpeech(_subtitle, GetCurrentSubtitleFormat(), _videoFileName, _videoInfo))
+                    {
+                        if (form.ShowDialog(this) == DialogResult.OK)
+                        {
+                            var idx = FirstSelectedIndex;
+                            _subtitle = form.EditedSubtitle;
+                            SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
+                            _subtitleListViewIndex = -1;
+                            SubtitleListview1.SelectIndexAndEnsureVisibleFaster(idx);
+                        }
+                    }
+                }
+            });
+        }
+
+        private void videoInfoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(_videoFileName) || _videoInfo == null)
             {
                 return;
             }
@@ -36780,41 +36821,23 @@ namespace Nikse.SubtitleEdit.Forms
             MessageBox.Show(sb.ToString() + sbTrackInfo.ToString());
         }
 
-        private void ToolStripButtonVideoOpenClick(object sender, EventArgs e)
+        private void contextMenuStripVideoFileName_Opening(object sender, CancelEventArgs e)
         {
-            OpenVideoDialog();
-        }
-
-        private void runWhiperOnParagraphToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            AudioToTextWhisperSelectedLines();
-        }
-
-        private void textToSpeechAndAddToVideoToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            TaskDelayHelper.RunDelayed(TimeSpan.FromMilliseconds(25), () =>
+            if (string.IsNullOrEmpty(_videoFileName) || _videoInfo == null)
             {
-                if (string.IsNullOrEmpty(_videoFileName) || _videoInfo == null)
-                {
-                    MessageBox.Show(LanguageSettings.Current.General.NoVideoLoaded);
-                    return;
-                }
+                e.Cancel = true;
+            }
 
-                if (RequireFfmpegOk())
-                {
-                    using (var form = new TextToSpeech(_subtitle, GetCurrentSubtitleFormat(), _videoFileName, _videoInfo))
-                    {
-                        if (form.ShowDialog(this) == DialogResult.OK)
-                        {
-                            var idx = FirstSelectedIndex;
-                            _subtitle = form.EditedSubtitle;
-                            SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
-                            _subtitleListViewIndex = -1;
-                            SubtitleListview1.SelectIndexAndEnsureVisibleFaster(idx);
-                        }
-                    }
-                }
-            });
+            openContainingFolderToolStripMenuItem.Text = _language.Menu.File.OpenContainingFolder;
+            videoInfoToolStripMenuItem.Text = _language.Menu.ContextMenu.MediaInfo;
+        }
+
+        private void openContainingFolderToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(_videoFileName) && File.Exists(_videoFileName))
+            {
+                UiUtil.OpenFolderFromFileName(_videoFileName);
+            }
         }
     }
 }

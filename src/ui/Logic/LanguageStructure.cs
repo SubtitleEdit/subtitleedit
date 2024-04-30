@@ -2015,6 +2015,7 @@
                     public string GoToSourceView { get; set; }
                     public string GoToListView { get; set; }
                     public string ExtractAudio { get; set; }
+                    public string MediaInfo { get; set; }
                 }
 
                 public FileMenu File { get; set; }
@@ -2271,6 +2272,8 @@
             public string EvenLines { get; set; }
             public string DurationLessThan { get; set; }
             public string DurationGreaterThan { get; set; }
+            public string CpsLessThan { get; set; }
+            public string CpsGreaterThan { get; set; }
             public string ExactlyOneLine { get; set; }
             public string ExactlyTwoLines { get; set; }
             public string MoreThanTwoLines { get; set; }
@@ -3372,6 +3375,11 @@
             public string AdjustingSpeedXOfY { get; set; }
             public string MergingAudioTrackXOfY { get; set; }
             public string GeneratingSpeechFromTextXOfY { get; set; }
+            public string ReviewAudioClips { get; set; }
+            public string ReviewInfo { get; set; }
+            public string Play { get; set; }
+            public string AutoContinue { get; set; }
+            public string Regenerate { get; set; }
         }
 
         public class TimedTextSmpteTiming

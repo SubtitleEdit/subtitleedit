@@ -2210,6 +2210,7 @@ namespace Nikse.SubtitleEdit.Logic
                         GoToSourceView = "Go to source view",
                         GoToListView = "Go to list view",
                         ExtractAudio = "Extract audio...",
+                        MediaInfo = "Media information",
                     }
                 },
 
@@ -2461,6 +2462,8 @@ namespace Nikse.SubtitleEdit.Logic
                 EvenLines = "Even-numbered lines",
                 DurationLessThan = "Duration less than",
                 DurationGreaterThan = "Duration greater than",
+                CpsLessThan = "CPS less than",
+                CpsGreaterThan = "CPS greater than",
                 ExactlyOneLine = "Exactly one line",
                 ExactlyTwoLines = "Exactly two lines",
                 MoreThanTwoLines = "More than two lines",
@@ -3563,6 +3566,11 @@ can edit in same subtitle file (collaboration)",
                 AdjustingSpeedXOfY = "Adjusting speed: {0} / {1}...",
                 MergingAudioTrackXOfY = "Merging audio track: {0} / {1}...",
                 GeneratingSpeechFromTextXOfY = "Generating speech from text: {0} / {1}...",
+                ReviewAudioClips = "Review audio clips",
+                ReviewInfo = "Review and edit/remove audio clips",
+                AutoContinue = "Auto-continue",
+                Play = "Play",
+                Regenerate = "Regenerate",
             };
 
             TimedTextSmpteTiming = new LanguageStructure.TimedTextSmpteTiming

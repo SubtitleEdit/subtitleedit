@@ -1610,6 +1610,7 @@ To use an API key, go to "Options -&gt; Settings -&gt; Auto-translate" to enter 
         <GoToSourceView>Go to source view</GoToSourceView>
         <GoToListView>Go to list view</GoToListView>
         <ExtractAudio>Extract audio...</ExtractAudio>
+        <MediaInfo>Media information</MediaInfo>
       </ContextMenu>
     </Menu>
     <Controls>
@@ -2129,6 +2130,8 @@ Download and continue?</VideoFromUrlRequirements>
     <EvenLines>Even-numbered lines</EvenLines>
     <DurationLessThan>Duration less than</DurationLessThan>
     <DurationGreaterThan>Duration greater than</DurationGreaterThan>
+    <CpsLessThan>CPS less than</CpsLessThan>
+    <CpsGreaterThan>CPS greater than</CpsGreaterThan>
     <ExactlyOneLine>Exactly one line</ExactlyOneLine>
     <ExactlyTwoLines>Exactly two lines</ExactlyTwoLines>
     <MoreThanTwoLines>More than two lines</MoreThanTwoLines>
@@ -3166,6 +3169,11 @@ Continue?</RestoreDefaultSettingsMsg>
     <AdjustingSpeedXOfY>Adjusting speed: {0} / {1}...</AdjustingSpeedXOfY>
     <MergingAudioTrackXOfY>Merging audio track: {0} / {1}...</MergingAudioTrackXOfY>
     <GeneratingSpeechFromTextXOfY>Generating speech from text: {0} / {1}...</GeneratingSpeechFromTextXOfY>
+    <ReviewAudioClips>Review audio clips</ReviewAudioClips>
+    <ReviewInfo>Review and edit/remove audio clips</ReviewInfo>
+    <Play>Play</Play>
+    <AutoContinue>Auto-continue</AutoContinue>
+    <Regenerate>Regenerate</Regenerate>
   </TextToSpeech>
   <TimedTextSmpteTiming>
     <Title>SMPTE timing</Title>

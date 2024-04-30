@@ -5,7 +5,7 @@ using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms.Tts
 {
-    public partial class RegenerateAudioClip : Form
+    public sealed partial class RegenerateAudioClip : Form
     {
         public TextToSpeech.FileNameAndSpeedFactor FileNameAndSpeedFactor { get; set; }
 
@@ -23,6 +23,10 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             _textToSpeech = textToSpeech;
             _index = idx;
 
+            Text = LanguageSettings.Current.ExportCustomText.Edit;
+            labelText.Text = LanguageSettings.Current.General.Text;
+            labelVoice.Text = LanguageSettings.Current.TextToSpeech.Voice;
+            buttonReGenerate.Text = LanguageSettings.Current.TextToSpeech.Regenerate;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             UiUtil.FixLargeFonts(this, buttonCancel);
 

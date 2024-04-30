@@ -5170,6 +5170,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Main/Menu/ContextMenu/ExtractAudio":
                     language.Main.Menu.ContextMenu.ExtractAudio = reader.Value;
                     break;
+                case "Main/Menu/ContextMenu/MediaInfo":
+                    language.Main.Menu.ContextMenu.MediaInfo = reader.Value;
+                    break;
                 case "Main/Controls/SubtitleFormat":
                     language.Main.Controls.SubtitleFormat = reader.Value;
                     break;
@@ -5769,6 +5772,12 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "ModifySelection/DurationGreaterThan":
                     language.ModifySelection.DurationGreaterThan = reader.Value;
+                    break;
+                case "ModifySelection/CpsLessThan":
+                    language.ModifySelection.CpsLessThan = reader.Value;
+                    break;
+                case "ModifySelection/CpsGreaterThan":
+                    language.ModifySelection.CpsGreaterThan = reader.Value;
                     break;
                 case "ModifySelection/ExactlyOneLine":
                     language.ModifySelection.ExactlyOneLine = reader.Value;
@@ -8670,6 +8679,21 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "TextToSpeech/GeneratingSpeechFromTextXOfY":
                     language.TextToSpeech.GeneratingSpeechFromTextXOfY = reader.Value;
+                    break;
+                case "TextToSpeech/ReviewAudioClips":
+                    language.TextToSpeech.ReviewAudioClips = reader.Value;
+                    break;
+                case "TextToSpeech/ReviewInfo":
+                    language.TextToSpeech.ReviewInfo = reader.Value;
+                    break;
+                case "TextToSpeech/Play":
+                    language.TextToSpeech.Play = reader.Value;
+                    break;
+                case "TextToSpeech/AutoContinue":
+                    language.TextToSpeech.AutoContinue = reader.Value;
+                    break;
+                case "TextToSpeech/Regenerate":
+                    language.TextToSpeech.Regenerate = reader.Value;
                     break;
                 case "TimedTextSmpteTiming/Title":
                     language.TimedTextSmpteTiming.Title = reader.Value;

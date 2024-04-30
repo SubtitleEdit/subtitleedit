@@ -1447,6 +1447,7 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Bi
         <RemoveOrExportShotChanges>Fjern/eksporter sceneændringer...</RemoveOrExportShotChanges>
         <WaveformBatchGenerate>Batch generer bølgeformer...</WaveformBatchGenerate>
         <ShowHideWaveformAndSpectrogram>Vis/skjul bølgeform og spektrogram</ShowHideWaveformAndSpectrogram>
+        <TextToSpeechAndAddToVideo>Tekst til tale og føj til video...</TextToSpeechAndAddToVideo>
         <UnDockVideoControls>Pop video vinduer ud</UnDockVideoControls>
         <ReDockVideoControls>Saml video vinduer</ReDockVideoControls>
       </Video>
@@ -2120,6 +2121,8 @@ Hvis du har redigeret denne fil med Subtitle Edit du måske finde en backup via 
     <EvenLines>Lige linjer</EvenLines>
     <DurationLessThan>Varighed mindre end</DurationLessThan>
     <DurationGreaterThan>Varighed større end</DurationGreaterThan>
+    <CpsLessThan>CPS mindre end</CpsLessThan>
+    <CpsGreaterThan>CPS større end</CpsGreaterThan>
     <ExactlyOneLine>Præcis én linje</ExactlyOneLine>
     <ExactlyTwoLines>Præcis to linjer</ExactlyTwoLines>
     <MoreThanTwoLines>Mere end to linjer</MoreThanTwoLines>
@@ -3146,6 +3149,23 @@ Fortsæt?</RestoreDefaultSettingsMsg>
     <Info>Et synkronisering punkt vil justere positioner, to eller flere synkroniserings punkter vil justere position og hastighed</Info>
     <ApplySync>Anvend</ApplySync>
   </PointSync>
+  <TextToSpeech>
+    <Title>Tekst til tale</Title>
+    <Voice>Stemme</Voice>
+    <TestVoice>Test stemme</TestVoice>
+    <DefaultVoice>Standardstemme</DefaultVoice>
+    <AddAudioToVideo>Tilføj lyd til videofil (ny fil)</AddAudioToVideo>
+    <GenerateSpeech>Generer tale fra tekst</GenerateSpeech>
+    <ActorInfo>Højreklik for at tildele skuespiller til stemme</ActorInfo>
+    <AdjustingSpeedXOfY>Justerer hastighed: {0} / {1}...</AdjustingSpeedXOfY>
+    <MergingAudioTrackXOfY>Samler lydspor: {0} / {1}...</MergingAudioTrackXOfY>
+    <GeneratingSpeechFromTextXOfY>Genererer tale fra tekst: {0} / {1}...</GeneratingSpeechFromTextXOfY>
+    <ReviewAudioClips>Gennemgå lydklip</ReviewAudioClips>
+    <ReviewInfo>Gennemgå og rediger/fjern lydklip</ReviewInfo>
+    <Play>Spil</Play>
+    <AutoContinue>Auto-fortsæt</AutoContinue>
+    <Regenerate>Regenerer</Regenerate>
+  </TextToSpeech>
   <TimedTextSmpteTiming>
     <Title>SMPTE timing</Title>
     <UseSmpteTiming>Vil du bruge SMPTE-timing til aktuelle undertekster?</UseSmpteTiming>

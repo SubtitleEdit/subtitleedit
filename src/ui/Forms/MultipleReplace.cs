@@ -570,18 +570,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonReplacesSelectAll_Click(object sender, EventArgs e)
         {
-            foreach (ListViewItem item in listViewFixes.Items)
-            {
-                item.Checked = true;
-            }
+            listViewFixes.CheckAll();
         }
 
         private void buttonReplacesInverseSelection_Click(object sender, EventArgs e)
         {
-            foreach (ListViewItem item in listViewFixes.Items)
-            {
-                item.Checked = !item.Checked;
-            }
+            listViewFixes.InvertCheck();
         }
 
         private void contextMenuStrip1_Opening(object sender, System.ComponentModel.CancelEventArgs e)
@@ -1446,18 +1440,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void selectAllToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            foreach (ListViewItem item in listViewRules.Items)
-            {
-                item.Checked = true;
-            }
+            listViewRules.CheckAll();
         }
 
         private void inverseSelectionToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            foreach (ListViewItem item in listViewRules.Items)
-            {
-                item.Checked = !item.Checked;
-            }
+            listViewRules.InvertCheck();
         }
 
         private void ContextMenuStripListViewFixesOpening(object sender, System.ComponentModel.CancelEventArgs e)
