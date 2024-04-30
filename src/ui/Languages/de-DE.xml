@@ -3424,7 +3424,7 @@ Wir nutzen den dem Bild innewohnenden Rhythmus.</CreateSimpleChainingToolTip>
     <RemoveShotChangesFromSelection>Einstellungsänderungen aus der Auswahl entfernen</RemoveShotChangesFromSelection>
     <GuessTimeCodes>Zeitstempel ermitteln...</GuessTimeCodes>
     <SeekSilence>Stille suchen...</SeekSilence>
-    <InsertSubtitleHere>Untertitel hier einfügen...</InsertSubtitleHere>
+    <InsertSubtitleHere>Untertitel hier einfügen</InsertSubtitleHere>
     <CharsSecX>CPS: {0:0.00}</CharsSecX>
     <WordsMinX>WPM: {0:0.00}</WordsMinX>
   </Waveform>

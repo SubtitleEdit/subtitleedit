@@ -3379,7 +3379,7 @@ Manter as alterações?</KeepChangesMessage>
     <RemoveShotChangesFromSelection>Remover mudanças de cena da seleção</RemoveShotChangesFromSelection>
     <GuessTimeCodes>Identificar códigos de tempo...</GuessTimeCodes>
     <SeekSilence>Procurar silêncio...</SeekSilence>
-    <InsertSubtitleHere>Insira a legenda aqui...</InsertSubtitleHere>
+    <InsertSubtitleHere>Insira a legenda aqui</InsertSubtitleHere>
     <CharsSecX>CPS: {0:0.00}</CharsSecX>
     <WordsMinX>WPM: {0:0.00}</WordsMinX>
   </Waveform>

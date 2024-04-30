@@ -3355,7 +3355,7 @@ ames.xml)</FixOnlyNamesCasing>
     <RemoveShotChangesFromSelection>قم بإزالة تغييرات اللقطة من التحديد</RemoveShotChangesFromSelection>
     <GuessTimeCodes>تخمين رموز الوقت...</GuessTimeCodes>
     <SeekSilence>ابحث عن الصمت...</SeekSilence>
-    <InsertSubtitleHere>أدخل العنوان الفرعي هنا...</InsertSubtitleHere>
+    <InsertSubtitleHere>أدخل العنوان الفرعي هنا</InsertSubtitleHere>
     <CharsSecX>CPS: {0:0.00}</CharsSecX>
     <WordsMinX>WPM: {0:0.00}</WordsMinX>
   </Waveform>

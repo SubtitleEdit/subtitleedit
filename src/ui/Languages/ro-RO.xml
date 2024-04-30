@@ -2867,7 +2867,7 @@ Reții schimbările?</KeepChangesMessage>
     <RemoveShotChange>Elimină schimbarea de scenă</RemoveShotChange>
     <GuessTimeCodes>Estimează coduri de timp...</GuessTimeCodes>
     <SeekSilence>Căutare tacită...</SeekSilence>
-    <InsertSubtitleHere>Inserare subtitrare aici...</InsertSubtitleHere>
+    <InsertSubtitleHere>Inserare subtitrare aici</InsertSubtitleHere>
     <CharsSecX>CPS: {0:0.00}</CharsSecX>
     <WordsMinX>WPM: {0:0.00}</WordsMinX>
   </Waveform>

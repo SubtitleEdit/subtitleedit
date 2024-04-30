@@ -2827,7 +2827,7 @@ Gorde aldaketak?</KeepChangesMessage>
     <RemoveShotChange>Kendu agerraldi aldaketa</RemoveShotChange>
     <GuessTimeCodes>Ustezko denbora kodeak...</GuessTimeCodes>
     <SeekSilence>Bilatu isiltasuna</SeekSilence>
-    <InsertSubtitleHere>Txertatu azpidatzia hemen...</InsertSubtitleHere>
+    <InsertSubtitleHere>Txertatu azpidatzia hemen</InsertSubtitleHere>
     <CharsSecX>HKSG-ko: {0:0.00}</CharsSecX>
     <WordsMinX>HZMN-ko: {0:0.00}</WordsMinX>
   </Waveform>

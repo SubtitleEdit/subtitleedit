@@ -807,7 +807,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void AudioVisualizerInsertAtVideoPosition(object sender, EventArgs e)
         {
-            InsertNewTextAtVideoPosition(false);
+            InsertNewTextAtVideoPosition(false, mediaPlayer.CurrentPosition * TimeCode.BaseUnit);
         }
 
         private void AudioVisualizerPasteAtVideoPosition(object sender, EventArgs e)
@@ -974,6 +974,11 @@ namespace Nikse.SubtitleEdit.Forms
                 removeShotChangeToolStripMenuItem.Visible = false;
                 addShotChangeToolStripMenuItem.Visible = true;
             }
+
+            var ms = e.Seconds * 1000.0;
+            var paragraphsHere = _subtitle.Paragraphs
+                .Count(p => ms > p.StartTime.TotalMilliseconds - 250 && p.EndTime.TotalMilliseconds > ms);
+            insertNewSubtitleHereToolStripMenuItem.Visible = paragraphsHere == 0 && mediaPlayer.IsPaused;
 
             _audioWaveformRightClickSeconds = e.Seconds;
             contextMenuStripWaveform.Show(MousePosition.X, MousePosition.Y);
@@ -1144,6 +1149,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             SelectListViewIndexAndEnsureVisible(_subtitle.GetIndex(e.Paragraph));
 
+            insertNewSubtitleHereToolStripMenuItem.Visible = false;
             addParagraphHereToolStripMenuItem.Visible = false;
             addParagraphAndPasteToolStripMenuItem.Visible = false;
             toolStripMenuItemSetParagraphAsSelection.Visible = false;
@@ -2121,7 +2127,8 @@ namespace Nikse.SubtitleEdit.Forms
             showOnlyWaveformToolStripMenuItem.Text = languageWaveform.ShowWaveformOnly;
             showOnlySpectrogramToolStripMenuItem.Text = languageWaveform.ShowSpectrogramOnly;
             seekSilenceToolStripMenuItem.Text = languageWaveform.SeekSilence;
-            insertSubtitleHereToolStripMenuItem.Text = languageWaveform.InsertSubtitleHere;
+            insertSubtitleHereToolStripMenuItem.Text = languageWaveform.InsertSubtitleFileHere;
+            insertNewSubtitleHereToolStripMenuItem.Text = languageWaveform.InsertSubtitleHere;
             guessTimeCodesToolStripMenuItem.Text = languageWaveform.GuessTimeCodes;
             removeShotChangeToolStripMenuItem.Text = languageWaveform.RemoveShotChange;
             addShotChangeToolStripMenuItem.Text = languageWaveform.AddShotChange;
@@ -18785,7 +18792,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (_shortcuts.MainCreateInsertSubAtVideoPosNoTextBoxFocus == e.KeyData)
             {
-                var p = InsertNewTextAtVideoPosition(false);
+                var p = InsertNewTextAtVideoPosition(false, mediaPlayer.CurrentPosition * TimeCode.BaseUnit);
                 p.Text = string.Empty;
                 SubtitleListview1.SetText(_subtitle.GetIndex(p), p.Text);
                 textBoxListViewText.Text = p.Text;
@@ -18793,7 +18800,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (_shortcuts.MainCreateInsertSubAtVideoPosMax == e.KeyData)
             {
-                var p = InsertNewTextAtVideoPosition(true);
+                var p = InsertNewTextAtVideoPosition(true, mediaPlayer.CurrentPosition * TimeCode.BaseUnit);
                 p.Text = string.Empty;
                 SubtitleListview1.SetText(_subtitle.GetIndex(p), p.Text);
                 textBoxListViewText.Text = p.Text;
@@ -18876,7 +18883,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (_mainCreateStartDownEndUpParagraph == null)
                 {
-                    _mainCreateStartDownEndUpParagraph = InsertNewTextAtVideoPosition(false);
+                    _mainCreateStartDownEndUpParagraph = InsertNewTextAtVideoPosition(false, mediaPlayer.CurrentPosition * TimeCode.BaseUnit);
                 }
 
                 e.SuppressKeyPress = true;
@@ -24894,7 +24901,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             mediaPlayer.Pause();
 
-            var newParagraph = InsertNewTextAtVideoPosition(false);
+            var newParagraph = InsertNewTextAtVideoPosition(false, mediaPlayer.CurrentPosition * TimeCode.BaseUnit);
 
             if (!InSourceView)
             {
@@ -24908,10 +24915,8 @@ namespace Nikse.SubtitleEdit.Forms
             ShowStatus(string.Format(_language.VideoControls.NewTextInsertAtX, newParagraph.StartTime.ToShortString()));
         }
 
-        private Paragraph InsertNewTextAtVideoPosition(bool maxDuration)
+        private Paragraph InsertNewTextAtVideoPosition(bool maxDuration, double videoPositionInMilliseconds)
         {
-            // current movie Position
-            double videoPositionInMilliseconds = mediaPlayer.CurrentPosition * TimeCode.BaseUnit;
             if (!mediaPlayer.IsPaused && videoPositionInMilliseconds > Configuration.Settings.General.SetStartEndHumanDelay)
             {
                 videoPositionInMilliseconds -= Configuration.Settings.General.SetStartEndHumanDelay;
@@ -36849,6 +36854,23 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 UiUtil.OpenFolderFromFileName(_videoFileName);
             }
+        }
+
+        private void insertNewSubtitleHereToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (_audioWaveformRightClickSeconds == null)
+            {
+                return;
+            }
+
+            var newParagraph = InsertNewTextAtVideoPosition(false, _audioWaveformRightClickSeconds.Value * 1000.0);
+
+            if (!InSourceView)
+            {
+                textBoxListViewText.Focus();
+            }
+
+            ShowStatus(string.Format(_language.VideoControls.NewTextInsertAtX, newParagraph.StartTime.ToShortString()));
         }
     }
 }

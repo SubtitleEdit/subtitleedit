@@ -3409,7 +3409,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <RemoveShotChangesFromSelection>Премахване променена сцена от избраното</RemoveShotChangesFromSelection>
     <GuessTimeCodes>Разпознаване на времеви кодове...</GuessTimeCodes>
     <SeekSilence>Търсене на тишина (пауза)...</SeekSilence>
-    <InsertSubtitleHere>Поставете субтитри от тук...</InsertSubtitleHere>
+    <InsertSubtitleHere>Поставете субтитри от тук</InsertSubtitleHere>
     <CharsSecX>Симв./сек.: {0:0.00}</CharsSecX>
     <WordsMinX>Думи/мин.: {0:0.00}</WordsMinX>
   </Waveform>

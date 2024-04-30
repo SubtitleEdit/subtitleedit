@@ -3408,7 +3408,7 @@ Vuoi mantenere le modifiche?</KeepChangesMessage>
     <RemoveShotChangesFromSelection>Rimuovi le modifiche alla scena dalla selezione</RemoveShotChangesFromSelection>
     <GuessTimeCodes>Riconosci codici temporali...</GuessTimeCodes>
     <SeekSilence>Cerca il silenzio...</SeekSilence>
-    <InsertSubtitleHere>Inserisci qui i sottotitoli...</InsertSubtitleHere>
+    <InsertSubtitleHere>Inserisci qui i sottotitoli</InsertSubtitleHere>
     <CharsSecX>CPS: {0:0.00}</CharsSecX>
     <WordsMinX>WPM: {0:0.00}</WordsMinX>
   </Waveform>

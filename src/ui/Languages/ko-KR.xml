@@ -3385,7 +3385,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <RemoveShotChangesFromSelection>선택에서 장면전환 제거</RemoveShotChangesFromSelection>
     <GuessTimeCodes>타임코드 알아내기</GuessTimeCodes>
     <SeekSilence>무음 탐색...</SeekSilence>
-    <InsertSubtitleHere>여기에 자막 삽입...</InsertSubtitleHere>
+    <InsertSubtitleHere>여기에 자막 삽입</InsertSubtitleHere>
     <CharsSecX>문자/초: {0:0.00}</CharsSecX>
     <WordsMinX>단어/분: {0:0.00}</WordsMinX>
   </Waveform>
