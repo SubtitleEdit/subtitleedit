@@ -2139,98 +2139,86 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void AddInputFile(string fileName)
+        private void AddInputFile(string videoFileName)
         {
-            if (string.IsNullOrEmpty(fileName))
+            if (string.IsNullOrEmpty(videoFileName))
             {
                 return;
             }
 
-            var ext = Path.GetExtension(fileName).ToLowerInvariant();
-            if ((Utilities.AudioFileExtensions.Contains(ext) || Utilities.VideoFileExtensions.Contains(ext)) && File.Exists(fileName))
+            var ext = Path.GetExtension(videoFileName).ToLowerInvariant();
+            if ((Utilities.AudioFileExtensions.Contains(ext) || Utilities.VideoFileExtensions.Contains(ext)) && File.Exists(videoFileName))
             {
-                var item = new BatchVideoAndSub();
-                item.VideoFileName = fileName;
-                item.VideoFileSizeInBytes = new FileInfo(fileName).Length;
-
-                var path = Path.GetDirectoryName(fileName);
-                var fileNameNoExt = Path.GetFileNameWithoutExtension(fileName);
-                var subFileName = Path.ChangeExtension(fileName, ".ass");
-
-                if (!File.Exists(subFileName))
+                var videoDimension = GetVideoDimension(videoFileName);
+                if (!videoDimension.IsValid())
                 {
-                    subFileName = Path.ChangeExtension(fileName, ".srt");
+                    return;
                 }
-
-                if (!File.Exists(subFileName))
-                {
-                    var files = Directory.GetFiles(path, fileNameNoExt + "*.ass");
-                    if (files.Length > 0)
-                    {
-                        subFileName = files[0];
-                    }
-                }
-
-                if (!File.Exists(subFileName))
-                {
-                    var files = Directory.GetFiles(path, fileNameNoExt + "*.srt");
-                    if (files.Length > 0)
-                    {
-                        subFileName = files[0];
-                    }
-                }
-
-                if (File.Exists(subFileName))
-                {
-                    item.SubtitleFileName = subFileName;
-                    item.SubtitleFileFileSizeInBytes = new FileInfo(subFileName).Length;
-                }
-
-                var mediaInfo = FfmpegMediaInfo.Parse(fileName);
-                int width;
-                int height;
-                if (mediaInfo.VideoWidth > 0 && mediaInfo.VideoHeight > 0)
-                {
-                    width = mediaInfo.VideoWidth;
-                    height = mediaInfo.VideoHeight;
-                }
-                else
-                {
-                    var vInfo = new VideoInfo { Success = false };
-                    if (fileName.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase))
-                    {
-                        vInfo = QuartsPlayer.GetVideoInfo(fileName);
-                        if (!vInfo.Success)
-                        {
-                            vInfo = LibMpvDynamic.GetVideoInfo(fileName);
-                        }
-                    }
-
-                    if (!vInfo.Success)
-                    {
-                        vInfo = UiUtil.GetVideoInfo(fileName);
-                    }
-
-                    width = vInfo.Width;
-                    height = vInfo.Height;
-                }
-
-                if (width == 0 || height == 0)
-                {
-                    SeLogger.Error("Skipping burn-in file with no video: " + fileName);
-                    return; // skip audio or damaged files
-                }
-
-                var listViewItem = new ListViewItem(fileName);
-                listViewItem.Tag = item;
-                listViewItem.SubItems.Add($"{width}x{height}");
-                var s = Utilities.FormatBytesToDisplayFileSize(item.VideoFileSizeInBytes);
+                
+                var batchVideoAndSub = CreateBatchVideoAndSub(videoFileName);
+                var listViewItem = new ListViewItem(videoFileName) { Tag = batchVideoAndSub };
+                listViewItem.SubItems.Add(videoDimension.ToString());
+                var s = Utilities.FormatBytesToDisplayFileSize(batchVideoAndSub.VideoFileSizeInBytes);
                 listViewItem.SubItems.Add(s);
-                listViewItem.SubItems.Add(Path.GetFileName(item.SubtitleFileName));
+                listViewItem.SubItems.Add(Path.GetFileName(batchVideoAndSub.SubtitleFileName));
                 listViewItem.SubItems.Add(string.Empty);
                 listViewBatch.Items.Add(listViewItem);
-                _batchVideoAndSubList.Add(item);
+                _batchVideoAndSubList.Add(batchVideoAndSub);
             }
+        }
+
+        private BatchVideoAndSub CreateBatchVideoAndSub(string videoFileName)
+        {
+            var batchVideoAndSub = new BatchVideoAndSub
+            {
+                VideoFileName = videoFileName,
+                VideoFileSizeInBytes = new FileInfo(videoFileName).Length
+            };
+
+            var path = Path.GetDirectoryName(videoFileName);
+            // try to locate subtitle file for the input vide file
+            var subtitleFile = FileUtil.TryLocateSubtitleFile(path, videoFileName);
+            if (File.Exists(subtitleFile))
+            {
+                batchVideoAndSub.SubtitleFileName = subtitleFile;
+                batchVideoAndSub.SubtitleFileFileSizeInBytes = new FileInfo(subtitleFile).Length;
+            }
+
+            return batchVideoAndSub;
+        }
+
+        private Dimension GetVideoDimension(string videoFileName)
+        {
+            var mediaInfo = FfmpegMediaInfo.Parse(videoFileName);
+            if (mediaInfo.Dimension.IsValid())
+            {
+                return mediaInfo.Dimension;
+            }
+
+            var vInfo = new VideoInfo { Success = false };
+            if (videoFileName.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase))
+            {
+                vInfo = QuartsPlayer.GetVideoInfo(videoFileName);
+                if (!vInfo.Success)
+                {
+                    vInfo = LibMpvDynamic.GetVideoInfo(videoFileName);
+                }
+            }
+
+            if (!vInfo.Success)
+            {
+                vInfo = UiUtil.GetVideoInfo(videoFileName);
+            }
+
+            var dimension = new Dimension(vInfo.Height, vInfo.Width);
+
+            // skip audio or damaged files
+            if (!dimension.IsValid())
+            {
+                SeLogger.Error("Skipping burn-in file with no video: " + videoFileName);
+            }
+
+            return dimension;
         }
 
         private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
