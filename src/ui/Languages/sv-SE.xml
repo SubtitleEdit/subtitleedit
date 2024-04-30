@@ -1611,6 +1611,7 @@ Gå till "Alternativ -&gt; Inställningar -&gt; Verktyg" för att ange din nycke
         <GoToSourceView>Gå till källvy</GoToSourceView>
         <GoToListView>Gå till listvy</GoToListView>
         <ExtractAudio>Extrahera ljud...</ExtractAudio>
+        <MediaInfo>Mediainformation</MediaInfo>
       </ContextMenu>
     </Menu>
     <Controls>
@@ -3409,7 +3410,8 @@ Behålla ändringarna?</KeepChangesMessage>
     <RemoveShotChangesFromSelection>Ta bort skottändringar från markeringen</RemoveShotChangesFromSelection>
     <GuessTimeCodes>Gissa tidskoder...</GuessTimeCodes>
     <SeekSilence>Sök efter tystnad...</SeekSilence>
-    <InsertSubtitleHere>Infoga undertexter här</InsertSubtitleHere>
+    <InsertSubtitleHere>Infoga undertext här</InsertSubtitleHere>
+    <InsertSubtitleFileHere>Infoga undertextfil här...</InsertSubtitleFileHere>
     <CharsSecX>CPS: {0:0.00}</CharsSecX>
     <WordsMinX>WPM: {0:0.00}</WordsMinX>
   </Waveform>
