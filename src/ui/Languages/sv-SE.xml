@@ -3409,7 +3409,7 @@ Behålla ändringarna?</KeepChangesMessage>
     <RemoveShotChangesFromSelection>Ta bort skottändringar från markeringen</RemoveShotChangesFromSelection>
     <GuessTimeCodes>Gissa tidskoder...</GuessTimeCodes>
     <SeekSilence>Sök efter tystnad...</SeekSilence>
-    <InsertSubtitleHere>Infoga undertexter här...</InsertSubtitleHere>
+    <InsertSubtitleHere>Infoga undertexter här</InsertSubtitleHere>
     <CharsSecX>CPS: {0:0.00}</CharsSecX>
     <WordsMinX>WPM: {0:0.00}</WordsMinX>
   </Waveform>

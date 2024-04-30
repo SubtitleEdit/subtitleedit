@@ -3017,7 +3017,7 @@
     <RemoveShotChangesFromSelection>حذف تغییرات صحنه از انتخاب</RemoveShotChangesFromSelection>
     <GuessTimeCodes>حدس بزنید کدهای زمان...</GuessTimeCodes>
     <SeekSilence>جستجو برای سکوت...</SeekSilence>
-    <InsertSubtitleHere>قرار دادن زیرنویس در اینجا...</InsertSubtitleHere>
+    <InsertSubtitleHere>قرار دادن زیرنویس در اینجا</InsertSubtitleHere>
     <CharsSecX>CPS: {0:0.00}</CharsSecX>
     <WordsMinX>WPM: {0:0.00}</WordsMinX>
   </Waveform>

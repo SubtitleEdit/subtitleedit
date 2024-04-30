@@ -3013,7 +3013,7 @@ Cài đặt font cho phụ đề thường được dùng cho trình phát video
     <RemoveShotChangesFromSelection>Xóa các scene change khỏi lựa chọn</RemoveShotChangesFromSelection>
     <GuessTimeCodes>Tự tạo time...</GuessTimeCodes>
     <SeekSilence>Tìm vùng im lặng...</SeekSilence>
-    <InsertSubtitleHere>Chèn phụ đề ở đây...</InsertSubtitleHere>
+    <InsertSubtitleHere>Chèn phụ đề ở đây</InsertSubtitleHere>
     <CharsSecX>CPS: {0:0.00}</CharsSecX>
     <WordsMinX>WPM: {0:0.00}</WordsMinX>
   </Waveform>

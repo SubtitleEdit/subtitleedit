@@ -3385,7 +3385,7 @@ Command line: {1} {2}
     <RemoveShotChangesFromSelection>从所选中移除场景切换</RemoveShotChangesFromSelection>
     <GuessTimeCodes>猜测时间码...</GuessTimeCodes>
     <SeekSilence>搜索静音...</SeekSilence>
-    <InsertSubtitleHere>在这里插入字幕...</InsertSubtitleHere>
+    <InsertSubtitleHere>在这里插入字幕</InsertSubtitleHere>
     <CharsSecX>CPS: {0:0.00}</CharsSecX>
     <WordsMinX>WPM: {0:0.00}</WordsMinX>
   </Waveform>

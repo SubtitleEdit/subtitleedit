@@ -41,9 +41,9 @@ namespace Nikse.SubtitleEdit.Forms
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
-            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode13 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
-            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode14 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
-            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode15 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
+            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode1 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
+            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode2 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
+            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode3 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.labelStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripSelected = new System.Windows.Forms.ToolStripStatusLabel();
@@ -366,6 +366,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.audioVisualizer = new Nikse.SubtitleEdit.Controls.AudioVisualizer();
             this.checkBoxSyncListViewWithVideoWhilePlaying = new System.Windows.Forms.CheckBox();
             this.labelVideoInfo = new System.Windows.Forms.Label();
+            this.contextMenuStripVideoFileName = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.videoInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openContainingFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.trackBarWaveformPosition = new System.Windows.Forms.TrackBar();
             this.panelWaveformControls = new System.Windows.Forms.Panel();
             this.toolStripWaveControls = new System.Windows.Forms.ToolStrip();
@@ -442,6 +445,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.timerAutoContinue = new System.Windows.Forms.Timer(this.components);
             this.timerWaveform = new System.Windows.Forms.Timer(this.components);
             this.contextMenuStripWaveform = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.insertNewSubtitleHereToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addParagraphHereToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addParagraphAndPasteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemSetParagraphAsSelection = new System.Windows.Forms.ToolStripMenuItem();
@@ -582,14 +586,12 @@ namespace Nikse.SubtitleEdit.Forms
             this.timerOriginalTextUndo = new System.Windows.Forms.Timer(this.components);
             this.contextMenuStripShowVideoControls = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItemShowVideoControls = new System.Windows.Forms.ToolStripMenuItem();
-            this.contextMenuStripVideoFileName = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.videoInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.openContainingFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.contextMenuStripListView.SuspendLayout();
             this.groupBoxVideo.SuspendLayout();
+            this.contextMenuStripVideoFileName.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarWaveformPosition)).BeginInit();
             this.panelWaveformControls.SuspendLayout();
             this.toolStripWaveControls.SuspendLayout();
@@ -623,7 +625,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.panelVideoPlayer.SuspendLayout();
             this.contextMenuStripEmpty.SuspendLayout();
             this.contextMenuStripShowVideoControls.SuspendLayout();
-            this.contextMenuStripVideoFileName.SuspendLayout();
             this.SuspendLayout();
             // 
             // statusStrip1
@@ -3413,6 +3414,29 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelVideoInfo.Text = "No video file loaded";
             this.labelVideoInfo.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
+            // contextMenuStripVideoFileName
+            // 
+            this.contextMenuStripVideoFileName.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.videoInfoToolStripMenuItem,
+            this.openContainingFolderToolStripMenuItem});
+            this.contextMenuStripVideoFileName.Name = "contextMenuStripVideoFileName";
+            this.contextMenuStripVideoFileName.Size = new System.Drawing.Size(198, 48);
+            this.contextMenuStripVideoFileName.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripVideoFileName_Opening);
+            // 
+            // videoInfoToolStripMenuItem
+            // 
+            this.videoInfoToolStripMenuItem.Name = "videoInfoToolStripMenuItem";
+            this.videoInfoToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
+            this.videoInfoToolStripMenuItem.Text = "Video info";
+            this.videoInfoToolStripMenuItem.Click += new System.EventHandler(this.videoInfoToolStripMenuItem_Click);
+            // 
+            // openContainingFolderToolStripMenuItem
+            // 
+            this.openContainingFolderToolStripMenuItem.Name = "openContainingFolderToolStripMenuItem";
+            this.openContainingFolderToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
+            this.openContainingFolderToolStripMenuItem.Text = "Open containing folder";
+            this.openContainingFolderToolStripMenuItem.Click += new System.EventHandler(this.openContainingFolderToolStripMenuItem_Click);
+            // 
             // trackBarWaveformPosition
             // 
             this.trackBarWaveformPosition.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
@@ -3890,14 +3914,14 @@ namespace Nikse.SubtitleEdit.Forms
             this.timeUpDownVideoPosition.Size = new System.Drawing.Size(113, 23);
             this.timeUpDownVideoPosition.TabIndex = 12;
             this.timeUpDownVideoPosition.TabStop = false;
-            timeCode13.Hours = 0;
-            timeCode13.Milliseconds = 0;
-            timeCode13.Minutes = 0;
-            timeCode13.Seconds = 0;
-            timeCode13.TimeSpan = System.TimeSpan.Parse("00:00:00");
-            timeCode13.TotalMilliseconds = 0D;
-            timeCode13.TotalSeconds = 0D;
-            this.timeUpDownVideoPosition.TimeCode = timeCode13;
+            timeCode1.Hours = 0;
+            timeCode1.Milliseconds = 0;
+            timeCode1.Minutes = 0;
+            timeCode1.Seconds = 0;
+            timeCode1.TimeSpan = System.TimeSpan.Parse("00:00:00");
+            timeCode1.TotalMilliseconds = 0D;
+            timeCode1.TotalSeconds = 0D;
+            this.timeUpDownVideoPosition.TimeCode = timeCode1;
             this.timeUpDownVideoPosition.UseVideoOffset = false;
             // 
             // buttonGotoSub
@@ -4170,14 +4194,14 @@ namespace Nikse.SubtitleEdit.Forms
             this.timeUpDownVideoPositionAdjust.Size = new System.Drawing.Size(113, 23);
             this.timeUpDownVideoPositionAdjust.TabIndex = 13;
             this.timeUpDownVideoPositionAdjust.TabStop = false;
-            timeCode14.Hours = 0;
-            timeCode14.Milliseconds = 0;
-            timeCode14.Minutes = 0;
-            timeCode14.Seconds = 0;
-            timeCode14.TimeSpan = System.TimeSpan.Parse("00:00:00");
-            timeCode14.TotalMilliseconds = 0D;
-            timeCode14.TotalSeconds = 0D;
-            this.timeUpDownVideoPositionAdjust.TimeCode = timeCode14;
+            timeCode2.Hours = 0;
+            timeCode2.Milliseconds = 0;
+            timeCode2.Minutes = 0;
+            timeCode2.Seconds = 0;
+            timeCode2.TimeSpan = System.TimeSpan.Parse("00:00:00");
+            timeCode2.TotalMilliseconds = 0D;
+            timeCode2.TotalSeconds = 0D;
+            this.timeUpDownVideoPositionAdjust.TimeCode = timeCode2;
             this.timeUpDownVideoPositionAdjust.UseVideoOffset = false;
             // 
             // buttonAdjustSetEndTime
@@ -4449,6 +4473,7 @@ namespace Nikse.SubtitleEdit.Forms
             // contextMenuStripWaveform
             // 
             this.contextMenuStripWaveform.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.insertNewSubtitleHereToolStripMenuItem,
             this.addParagraphHereToolStripMenuItem,
             this.addParagraphAndPasteToolStripMenuItem,
             this.toolStripMenuItemSetParagraphAsSelection,
@@ -4476,9 +4501,16 @@ namespace Nikse.SubtitleEdit.Forms
             this.seekSilenceToolStripMenuItem,
             this.insertSubtitleHereToolStripMenuItem});
             this.contextMenuStripWaveform.Name = "contextMenuStripWaveform";
-            this.contextMenuStripWaveform.Size = new System.Drawing.Size(275, 512);
+            this.contextMenuStripWaveform.Size = new System.Drawing.Size(275, 534);
             this.contextMenuStripWaveform.Closing += new System.Windows.Forms.ToolStripDropDownClosingEventHandler(this.ContextMenuStripWaveformClosing);
             this.contextMenuStripWaveform.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripWaveformOpening);
+            // 
+            // insertNewSubtitleHereToolStripMenuItem
+            // 
+            this.insertNewSubtitleHereToolStripMenuItem.Name = "insertNewSubtitleHereToolStripMenuItem";
+            this.insertNewSubtitleHereToolStripMenuItem.Size = new System.Drawing.Size(274, 22);
+            this.insertNewSubtitleHereToolStripMenuItem.Text = "Insert subtitle here";
+            this.insertNewSubtitleHereToolStripMenuItem.Click += new System.EventHandler(this.insertNewSubtitleHereToolStripMenuItem_Click);
             // 
             // addParagraphHereToolStripMenuItem
             // 
@@ -5526,14 +5558,14 @@ namespace Nikse.SubtitleEdit.Forms
             this.timeUpDownStartTime.Size = new System.Drawing.Size(113, 23);
             this.timeUpDownStartTime.TabIndex = 0;
             this.timeUpDownStartTime.TabStop = false;
-            timeCode15.Hours = 0;
-            timeCode15.Milliseconds = 0;
-            timeCode15.Minutes = 0;
-            timeCode15.Seconds = 0;
-            timeCode15.TimeSpan = System.TimeSpan.Parse("00:00:00");
-            timeCode15.TotalMilliseconds = 0D;
-            timeCode15.TotalSeconds = 0D;
-            this.timeUpDownStartTime.TimeCode = timeCode15;
+            timeCode3.Hours = 0;
+            timeCode3.Milliseconds = 0;
+            timeCode3.Minutes = 0;
+            timeCode3.Seconds = 0;
+            timeCode3.TimeSpan = System.TimeSpan.Parse("00:00:00");
+            timeCode3.TotalMilliseconds = 0D;
+            timeCode3.TotalSeconds = 0D;
+            this.timeUpDownStartTime.TimeCode = timeCode3;
             this.timeUpDownStartTime.UseVideoOffset = false;
             // 
             // numericUpDownDuration
@@ -5887,29 +5919,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemShowVideoControls.Text = "Show video controls";
             this.toolStripMenuItemShowVideoControls.Click += new System.EventHandler(this.ToolStripMenuItemShowVideoControlsClick);
             // 
-            // contextMenuStripVideoFileName
-            // 
-            this.contextMenuStripVideoFileName.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.videoInfoToolStripMenuItem,
-            this.openContainingFolderToolStripMenuItem});
-            this.contextMenuStripVideoFileName.Name = "contextMenuStripVideoFileName";
-            this.contextMenuStripVideoFileName.Size = new System.Drawing.Size(198, 48);
-            this.contextMenuStripVideoFileName.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripVideoFileName_Opening);
-            // 
-            // videoInfoToolStripMenuItem
-            // 
-            this.videoInfoToolStripMenuItem.Name = "videoInfoToolStripMenuItem";
-            this.videoInfoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.videoInfoToolStripMenuItem.Text = "Video info";
-            this.videoInfoToolStripMenuItem.Click += new System.EventHandler(this.videoInfoToolStripMenuItem_Click);
-            // 
-            // openContainingFolderToolStripMenuItem
-            // 
-            this.openContainingFolderToolStripMenuItem.Name = "openContainingFolderToolStripMenuItem";
-            this.openContainingFolderToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
-            this.openContainingFolderToolStripMenuItem.Text = "Open containing folder";
-            this.openContainingFolderToolStripMenuItem.Click += new System.EventHandler(this.openContainingFolderToolStripMenuItem_Click);
-            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -5942,6 +5951,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.contextMenuStripListView.ResumeLayout(false);
             this.groupBoxVideo.ResumeLayout(false);
             this.groupBoxVideo.PerformLayout();
+            this.contextMenuStripVideoFileName.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.trackBarWaveformPosition)).EndInit();
             this.panelWaveformControls.ResumeLayout(false);
             this.panelWaveformControls.PerformLayout();
@@ -5986,7 +5996,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.panelVideoPlayer.ResumeLayout(false);
             this.contextMenuStripEmpty.ResumeLayout(false);
             this.contextMenuStripShowVideoControls.ResumeLayout(false);
-            this.contextMenuStripVideoFileName.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -6535,5 +6544,6 @@ namespace Nikse.SubtitleEdit.Forms
         private ContextMenuStrip contextMenuStripVideoFileName;
         private ToolStripMenuItem videoInfoToolStripMenuItem;
         private ToolStripMenuItem openContainingFolderToolStripMenuItem;
+        private ToolStripMenuItem insertNewSubtitleHereToolStripMenuItem;
     }
 }

@@ -3154,7 +3154,7 @@ Keep changes?</KeepChangesMessage>
     <RemoveShotChangesFromSelection>הסר שינויי צילום מהבחירה</RemoveShotChangesFromSelection>
     <GuessTimeCodes>נחשו קודי זמן...</GuessTimeCodes>
     <SeekSilence>חפש שקט...</SeekSilence>
-    <InsertSubtitleHere>הוסף כתובית כאן...</InsertSubtitleHere>
+    <InsertSubtitleHere>הוסף כתובית כאן</InsertSubtitleHere>
     <CharsSecX>CPS: {0:0.00}</CharsSecX>
     <WordsMinX>WPM: {0:0.00}</WordsMinX>
   </Waveform>

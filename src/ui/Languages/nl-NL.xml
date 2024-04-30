@@ -3382,7 +3382,7 @@ Wilt u deze wĳzigingen behouden?</KeepChangesMessage>
     <RemoveShotChangesFromSelection>Geselecteerde beeldwissels verwijderen</RemoveShotChangesFromSelection>
     <GuessTimeCodes>Tĳdcodes schatten...</GuessTimeCodes>
     <SeekSilence>Stilte zoeken...</SeekSilence>
-    <InsertSubtitleHere>Ondertitel hier invoegen...</InsertSubtitleHere>
+    <InsertSubtitleHere>Ondertitel hier invoegen</InsertSubtitleHere>
     <CharsSecX>CPS: {0:0.00}</CharsSecX>
     <WordsMinX>WPM: {0:0.00}</WordsMinX>
   </Waveform>

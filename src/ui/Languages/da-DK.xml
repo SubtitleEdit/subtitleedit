@@ -3397,7 +3397,7 @@ Fortsæt?</RestoreDefaultSettingsMsg>
     <RemoveShotChangesFromSelection>Fjern sceneskift fra markering</RemoveShotChangesFromSelection>
     <GuessTimeCodes>Gæt tidskoder...</GuessTimeCodes>
     <SeekSilence>Søg tavshed...</SeekSilence>
-    <InsertSubtitleHere>Indsæt undertekst her...</InsertSubtitleHere>
+    <InsertSubtitleHere>Indsæt undertekst her</InsertSubtitleHere>
     <CharsSecX>Tegn/sec: {0:0.00}</CharsSecX>
     <WordsMinX>Ord/min: {0:0.00}</WordsMinX>
   </Waveform>

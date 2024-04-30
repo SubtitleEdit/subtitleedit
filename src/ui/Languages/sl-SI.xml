@@ -3171,7 +3171,7 @@ Nastavitev pisave za podnapise se običajno izvaja v predvajalniku videoposnetko
     <RemoveShotChangesFromSelection>Odstrani spremembo posnetka iz izbora</RemoveShotChangesFromSelection>
     <GuessTimeCodes>Ugani časovne kode...</GuessTimeCodes>
     <SeekSilence>Išči tišino...</SeekSilence>
-    <InsertSubtitleHere>Tukaj vstavi podnapis...</InsertSubtitleHere>
+    <InsertSubtitleHere>Tukaj vstavi podnapis</InsertSubtitleHere>
     <CharsSecX>CPS: {0:0.00}</CharsSecX>
     <WordsMinX>WPM: {0:0.00}</WordsMinX>
   </Waveform>

@@ -2378,7 +2378,7 @@ Jaga perubahan?</KeepChangesMessage>
     <RemoveShotChange>Buang perubahan adegan</RemoveShotChange>
     <GuessTimeCodes>Tebak kode waktu...</GuessTimeCodes>
     <SeekSilence>Cari (durasi) hening...</SeekSilence>
-    <InsertSubtitleHere>Sisipkan subjudul di sini...</InsertSubtitleHere>
+    <InsertSubtitleHere>Sisipkan subjudul di sini</InsertSubtitleHere>
     <CharsSecX>CPS: {0:0.00}</CharsSecX>
     <WordsMinX>WPM: {0:0.00}</WordsMinX>
   </Waveform>

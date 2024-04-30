@@ -3641,6 +3641,7 @@
             public string GuessTimeCodes { get; set; }
             public string SeekSilence { get; set; }
             public string InsertSubtitleHere { get; set; }
+            public string InsertSubtitleFileHere { get; set; }
             public string CharsSecX { get; set; }
             public string WordsMinX { get; set; }
         }

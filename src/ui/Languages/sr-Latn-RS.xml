@@ -2459,7 +2459,7 @@ sa ugrađenim informacijama o fontu kao u "Advanced Sub Station Alpha" ili preko
     <RemoveShotChange>Ukloni promenu scene</RemoveShotChange>
     <GuessTimeCodes>Pogodi vremenske kodove...</GuessTimeCodes>
     <SeekSilence>Pronađi tišinu...</SeekSilence>
-    <InsertSubtitleHere>Uvezi prevod ovde...</InsertSubtitleHere>
+    <InsertSubtitleHere>Uvezi prevod ovde</InsertSubtitleHere>
     <CharsSecX>Karak/sek: {0:0.00}</CharsSecX>
     <WordsMinX>Reči/min: {0:0.00}</WordsMinX>
   </Waveform>

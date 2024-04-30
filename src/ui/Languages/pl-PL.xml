@@ -3385,7 +3385,7 @@ Zachować te zmiany?</KeepChangesMessage>
     <RemoveShotChangesFromSelection>Usuń zmianę ujęcia z zaznaczenia</RemoveShotChangesFromSelection>
     <GuessTimeCodes>Odgadnij kody czasowe...</GuessTimeCodes>
     <SeekSilence>Szukaj ciszy...</SeekSilence>
-    <InsertSubtitleHere>Wstaw napisy tutaj...</InsertSubtitleHere>
+    <InsertSubtitleHere>Wstaw napisy tutaj</InsertSubtitleHere>
     <CharsSecX>ZNS: {0:0.00}</CharsSecX>
     <WordsMinX>SNM: {0:0.00}</WordsMinX>
   </Waveform>
