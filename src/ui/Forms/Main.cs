@@ -24575,6 +24575,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             labelVideoInfo.Left = checkBoxSyncListViewWithVideoWhilePlaying.Right;
             labelVideoInfo.Width = labelVideoInfo.Parent.Width - labelVideoInfo.Left - 10;
+
+            pictureBoxBookmark.Left = numericUpDownDuration.Right - pictureBoxBookmark.Width + 4;
         }
 
         private void FixRightToLeftDependingOnLanguage()
