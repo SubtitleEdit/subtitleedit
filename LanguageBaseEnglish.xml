@@ -3409,6 +3409,7 @@ Keep changes?</KeepChangesMessage>
     <GuessTimeCodes>Guess time codes...</GuessTimeCodes>
     <SeekSilence>Seek silence...</SeekSilence>
     <InsertSubtitleHere>Insert subtitle here</InsertSubtitleHere>
+    <InsertSubtitleFileHere>Insert subtitle file here...</InsertSubtitleFileHere>
     <CharsSecX>CPS: {0:0.00}</CharsSecX>
     <WordsMinX>WPM: {0:0.00}</WordsMinX>
   </Waveform>
