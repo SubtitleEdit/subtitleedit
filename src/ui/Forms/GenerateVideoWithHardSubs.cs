@@ -2154,7 +2154,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     return;
                 }
-                
+
                 var batchVideoAndSub = CreateBatchVideoAndSub(videoFileName);
                 var listViewItem = new ListViewItem(videoFileName) { Tag = batchVideoAndSub };
                 listViewItem.SubItems.Add(videoDimension.ToString());
@@ -2176,7 +2176,7 @@ namespace Nikse.SubtitleEdit.Forms
             };
 
             var path = Path.GetDirectoryName(videoFileName);
-            // try to locate subtitle file for the input vide file
+            // try to locate subtitle file for the input video file
             var subtitleFile = FileUtil.TryLocateSubtitleFile(path, videoFileName);
             if (File.Exists(subtitleFile))
             {
@@ -2187,7 +2187,7 @@ namespace Nikse.SubtitleEdit.Forms
             return batchVideoAndSub;
         }
 
-        private Dimension GetVideoDimension(string videoFileName)
+        private static Dimension GetVideoDimension(string videoFileName)
         {
             var mediaInfo = FfmpegMediaInfo.Parse(videoFileName);
             if (mediaInfo.Dimension.IsValid())

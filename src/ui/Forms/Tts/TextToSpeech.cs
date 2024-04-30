@@ -973,12 +973,9 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             if (!useCache)
             {
                 var httpClient = new HttpClient();
-                httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json");
-                httpClient.DefaultRequestHeaders.TryAddWithoutValidation("accept", "application/json");
                 httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Ocp-Apim-Subscription-Key", nikseTextBoxApiKey.Text.Trim());
-
                 var url = $"https://{nikseComboBoxRegion.Text.Trim()}.tts.speech.microsoft.com/cognitiveservices/voices/list";
-                var result = await httpClient.GetAsync(new Uri(url), CancellationToken.None);
+                var result = httpClient.GetAsync(new Uri(url)).Result;
                 var bytes = await result.Content.ReadAsByteArrayAsync();
 
                 if (!result.IsSuccessStatusCode)
@@ -1858,14 +1855,14 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             nikseComboBoxVoice.DropDownWidth = nikseComboBoxVoice.Width;
         }
 
-        private void RefreshVoices()
+        private bool RefreshVoices()
         {
             if (nikseTextBoxApiKey.Visible && string.IsNullOrWhiteSpace(nikseTextBoxApiKey.Text))
             {
                 Cursor = Cursors.Default;
                 MessageBox.Show("Please add API key");
                 nikseTextBoxApiKey.Focus();
-                return;
+                return false;
             }
 
             var engine = _engines.First(p => p.Index == nikseComboBoxEngine.SelectedIndex);
@@ -1876,7 +1873,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                     Cursor = Cursors.Default;
                     MessageBox.Show("Please add region");
                     nikseComboBoxRegion.Focus();
-                    return;
+                    return false;
                 }
 
                 var _ = GetAzureVoices(false).Result;
@@ -1887,16 +1884,16 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 GetElevenLabVoices(false);
                 nikseComboBoxEngine_SelectedIndexChanged(null, null);
             }
+
+            return true;
         }
 
         private void contextMenuStripVoices_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
             var engine = _engines.First(p => p.Index == nikseComboBoxEngine.SelectedIndex);
-            if (
-                //engine.Id == TextToSpeechEngineId.AzureTextToSpeech ||
+            if (engine.Id == TextToSpeechEngineId.AzureTextToSpeech ||
                 engine.Id == TextToSpeechEngineId.ElevenLabs ||
-                engine.Id == TextToSpeechEngineId.Piper
-                )
+                engine.Id == TextToSpeechEngineId.Piper)
             {
                 return;
             }
@@ -1915,15 +1912,18 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             try
             {
                 Cursor = Cursors.WaitCursor;
-                RefreshVoices();
+                var ok = RefreshVoices();
                 Cursor = Cursors.Default;
-                MessageBox.Show(this, "Voice list downloaded");
+                if (ok)
+                {
+                    MessageBox.Show(this, "Voice list downloaded");
+                }
             }
             catch (Exception ex)
             {
                 Cursor = Cursors.Default;
-                MessageBox.Show(this, "Voice list download failed!" + Environment.NewLine + 
-                                      Environment.NewLine + 
+                MessageBox.Show(this, "Voice list download failed!" + Environment.NewLine +
+                                      Environment.NewLine +
                                       ex.Message);
             }
             finally
