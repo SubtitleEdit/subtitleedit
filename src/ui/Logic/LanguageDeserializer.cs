@@ -9310,6 +9310,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Waveform/InsertSubtitleHere":
                     language.Waveform.InsertSubtitleHere = reader.Value;
                     break;
+                case "Waveform/InsertSubtitleFileHere":
+                    language.Waveform.InsertSubtitleFileHere = reader.Value;
+                    break;
                 case "Waveform/CharsSecX":
                     language.Waveform.CharsSecX = reader.Value;
                     break;
