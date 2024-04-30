@@ -779,6 +779,15 @@ namespace Nikse.SubtitleEdit.Forms
                 SetColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color8));
                 e.SuppressKeyPress = true;
             }
+            else if (e.KeyData == _shortcuts.MainAutoTranslateSelectedLines)
+            {
+                e.SuppressKeyPress = true;
+                TaskDelayHelper.RunDelayed(TimeSpan.FromMilliseconds(1), () =>
+                {
+                    var onlySelectedLines = true;
+                    MakeAutoTranslate(onlySelectedLines);
+                });
+            }
         }
 
         private void InitializeWaveformZoomDropdown()
@@ -23574,7 +23583,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SetAssaResolutionWithChecks()
         {
-            if (Configuration.Settings.SubtitleSettings.AssaResolutionAutoNew  &&
+            if (Configuration.Settings.SubtitleSettings.AssaResolutionAutoNew &&
                 string.IsNullOrEmpty(_subtitle?.Header) &&
                 IsAssa() && _videoInfo?.Height > 0)
             {
