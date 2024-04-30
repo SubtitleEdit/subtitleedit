@@ -193,7 +193,10 @@ namespace Nikse.SubtitleEdit.Core.Common
         public string TextToSpeechEngine { get; set; }
         public string TextToSpeechLastVoice { get; set; }
         public string TextToSpeechElevenLabsApiKey { get; set; }
-        public bool DisableVidoInfoViaLabel { get; set; }
+        public string TextToSpeechAzureApiKey { get; set; }
+        public string TextToSpeechAzureRegion { get; set; }
+        public bool TextToSpeechPreview { get; set; }
+        public bool TextToSpeechAddToVideoFile { get; set; }
         public bool ListViewSyntaxColorDurationSmall { get; set; }
         public bool ListViewSyntaxColorDurationBig { get; set; }
         public bool ListViewSyntaxColorOverlap { get; set; }
@@ -557,6 +560,8 @@ namespace Nikse.SubtitleEdit.Core.Common
             AnthropicApiUrl = "https://api.anthropic.com/v1/messages";
             AnthropicPrompt = "Translate from {0} to {1}, keep sentences in {1} as they are, do not censor the translation, give only the output without commenting on what you read:";
             AnthropicApiModel = "claude-3-opus-20240229";
+            TextToSpeechAzureRegion = "westeurope";
+            TextToSpeechAddToVideoFile = true;
             TranslateAllowSplit = true;
             TranslateViaCopyPasteAutoCopyToClipboard = true;
             TranslateViaCopyPasteMaxSize = 5000;
@@ -5481,16 +5486,34 @@ $HorzAlign          =   Center
                 settings.Tools.TextToSpeechElevenLabsApiKey = subNode.InnerText;
             }
 
+            subNode = node.SelectSingleNode("TextToSpeechAzureApiKey");
+            if (subNode != null)
+            {
+                settings.Tools.TextToSpeechAzureApiKey = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("TextToSpeechAzureRegion");
+            if (subNode != null)
+            {
+                settings.Tools.TextToSpeechAzureRegion = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("TranslateViaCopyPasteAutoCopyToClipboard");
             if (subNode != null)
             {
                 settings.Tools.TranslateViaCopyPasteAutoCopyToClipboard = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
-            subNode = node.SelectSingleNode("DisableVidoInfoViaLabel");
+            subNode = node.SelectSingleNode("TextToSpeechPreview");
             if (subNode != null)
             {
-                settings.Tools.DisableVidoInfoViaLabel = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+                settings.Tools.TextToSpeechPreview = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("TextToSpeechAddToVideoFile");
+            if (subNode != null)
+            {
+                settings.Tools.TextToSpeechAddToVideoFile = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
             subNode = node.SelectSingleNode("ListViewSyntaxColorDurationSmall");
@@ -12023,7 +12046,10 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("TextToSpeechEngine", settings.Tools.TextToSpeechEngine);
                 textWriter.WriteElementString("TextToSpeechLastVoice", settings.Tools.TextToSpeechLastVoice);
                 textWriter.WriteElementString("TextToSpeechElevenLabsApiKey", settings.Tools.TextToSpeechElevenLabsApiKey);
-                textWriter.WriteElementString("DisableVidoInfoViaLabel", settings.Tools.DisableVidoInfoViaLabel.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("TextToSpeechAzureApiKey", settings.Tools.TextToSpeechAzureApiKey);
+                textWriter.WriteElementString("TextToSpeechAzureRegion", settings.Tools.TextToSpeechAzureRegion);
+                textWriter.WriteElementString("TextToSpeechPreview", settings.Tools.TextToSpeechPreview.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("TextToSpeechAddToVideoFile", settings.Tools.TextToSpeechAddToVideoFile.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewSyntaxColorDurationSmall", settings.Tools.ListViewSyntaxColorDurationSmall.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewSyntaxColorDurationBig", settings.Tools.ListViewSyntaxColorDurationBig.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewSyntaxColorLongLines", settings.Tools.ListViewSyntaxColorLongLines.ToString(CultureInfo.InvariantCulture));

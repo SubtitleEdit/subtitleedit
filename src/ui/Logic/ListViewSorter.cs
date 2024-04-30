@@ -13,7 +13,8 @@ namespace Nikse.SubtitleEdit.Logic
         public bool IsDisplayFileSize { get; set; }
         public bool Descending { get; set; }
 
-        private Regex _invariantNumber = new Regex(@"\d+\.{1,2}", RegexOptions.Compiled);
+        private static readonly Regex Numbers = new Regex(@"\d+", RegexOptions.Compiled);
+        private static readonly Regex InvariantNumber = new Regex(@"\d+\.{1,2}", RegexOptions.Compiled);
 
         public int Compare(object o1, object o2)
         {
@@ -32,7 +33,7 @@ namespace Nikse.SubtitleEdit.Logic
                 var s1 = lvi1.SubItems[ColumnNumber].Text;
                 var s2 = lvi2.SubItems[ColumnNumber].Text;
 
-                if (_invariantNumber.IsMatch(s1) && _invariantNumber.IsMatch(s2) && 
+                if (InvariantNumber.IsMatch(s1) && InvariantNumber.IsMatch(s2) &&
                     int.TryParse(s1, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var i1) &&
                     int.TryParse(s2, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var i2))
                 {
@@ -53,7 +54,35 @@ namespace Nikse.SubtitleEdit.Logic
                 return i1 > i2 ? 1 : i1 == i2 ? 0 : -1;
             }
 
-            return string.Compare(lvi2.SubItems[ColumnNumber].Text, lvi1.SubItems[ColumnNumber].Text, StringComparison.Ordinal);
+            return NaturalComparer(lvi2.SubItems[ColumnNumber].Text, lvi1.SubItems[ColumnNumber].Text);
+        }
+
+        public static void SetSortArrow(ColumnHeader columnHeader, SortOrder sortOrder)
+        {
+            const string ascArrow = " ▲";
+            const string descArrow = " ▼";
+
+            if (columnHeader.Text.EndsWith(ascArrow) || columnHeader.Text.EndsWith(descArrow))
+            {
+                columnHeader.Text = columnHeader.Text.Substring(0, columnHeader.Text.Length - 2);
+            }
+
+            switch (sortOrder)
+            {
+                case SortOrder.Ascending:
+                    columnHeader.Text += ascArrow;
+                    break;
+                case SortOrder.Descending:
+                    columnHeader.Text += descArrow;
+                    break;
+            }
+        }
+
+        public static int NaturalComparer(string x, string y)
+        {
+            var str2 = Numbers.Replace(x, m => m.Value.PadLeft(10, '0')).RemoveChar(' ');
+            var str1 = Numbers.Replace(y, m => m.Value.PadLeft(10, '0')).RemoveChar(' ');
+            return string.Compare(str2, str1, StringComparison.OrdinalIgnoreCase);
         }
     }
 }

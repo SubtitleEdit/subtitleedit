@@ -704,6 +704,20 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             _autoTranslator = GetCurrentEngine();
             var engineType = _autoTranslator.GetType();
 
+            if (_autoTranslator.Name == DeepLTranslate.StaticName && string.IsNullOrWhiteSpace(nikseTextBoxApiKey.Text))
+            {
+                MessageBox.Show(this, string.Format(LanguageSettings.Current.GoogleTranslate.XRequiresAnApiKey, _autoTranslator.Name), Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                _translationInProgress = false;
+                return;
+            }
+
+            if (_autoTranslator.Name == DeepLTranslate.StaticName && string.IsNullOrWhiteSpace(nikseComboBoxUrl.Text))
+            {
+                MessageBox.Show(this, string.Format("{0} require an url", _autoTranslator.Name), Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                _translationInProgress = false;
+                return;
+            }
+
             SaveSettings(engineType);
 
             buttonOK.Enabled = false;

@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonJoin = new System.Windows.Forms.Button();
             this.listViewParts = new System.Windows.Forms.ListView();
@@ -45,7 +46,13 @@
             this.numericUpDownAddMs = new Nikse.SubtitleEdit.Controls.NikseUpDown();
             this.radioButtonJoinAddTime = new System.Windows.Forms.RadioButton();
             this.labelAddTime = new Nikse.SubtitleEdit.Controls.NikseLabel();
+            this.contextMenuStripParts = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.moveUpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.moveDownToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.moveTopToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.moveBottomToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBoxPreview.SuspendLayout();
+            this.contextMenuStripParts.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonCancel
@@ -83,6 +90,7 @@
             this.columnHeaderStartTime,
             this.columnHeaderEndTime,
             this.columnHeaderFileName});
+            this.listViewParts.ContextMenuStrip = this.contextMenuStripParts;
             this.listViewParts.FullRowSelect = true;
             this.listViewParts.HideSelection = false;
             this.listViewParts.Location = new System.Drawing.Point(6, 19);
@@ -91,6 +99,7 @@
             this.listViewParts.TabIndex = 101;
             this.listViewParts.UseCompatibleStateImageBehavior = false;
             this.listViewParts.View = System.Windows.Forms.View.Details;
+            this.listViewParts.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.listViewParts_ColumnClick);
             this.listViewParts.DragDrop += new System.Windows.Forms.DragEventHandler(this.listViewParts_DragDrop);
             this.listViewParts.DragEnter += new System.Windows.Forms.DragEventHandler(this.listViewParts_DragEnter);
             // 
@@ -252,6 +261,49 @@
             this.labelAddTime.TabIndex = 34;
             this.labelAddTime.Text = "Add milliseconds after each file";
             // 
+            // contextMenuStripParts
+            // 
+            this.contextMenuStripParts.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.moveUpToolStripMenuItem,
+            this.moveDownToolStripMenuItem,
+            this.moveTopToolStripMenuItem,
+            this.moveBottomToolStripMenuItem});
+            this.contextMenuStripParts.Name = "contextMenuStrip1";
+            this.contextMenuStripParts.Size = new System.Drawing.Size(216, 92);
+            this.contextMenuStripParts.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripParts_Opening);
+            // 
+            // moveUpToolStripMenuItem
+            // 
+            this.moveUpToolStripMenuItem.Name = "moveUpToolStripMenuItem";
+            this.moveUpToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Up)));
+            this.moveUpToolStripMenuItem.Size = new System.Drawing.Size(215, 22);
+            this.moveUpToolStripMenuItem.Text = "Move up";
+            this.moveUpToolStripMenuItem.Click += new System.EventHandler(this.moveUpToolStripMenuItem_Click);
+            // 
+            // moveDownToolStripMenuItem
+            // 
+            this.moveDownToolStripMenuItem.Name = "moveDownToolStripMenuItem";
+            this.moveDownToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Down)));
+            this.moveDownToolStripMenuItem.Size = new System.Drawing.Size(215, 22);
+            this.moveDownToolStripMenuItem.Text = "Move down";
+            this.moveDownToolStripMenuItem.Click += new System.EventHandler(this.moveDownToolStripMenuItem_Click);
+            // 
+            // moveTopToolStripMenuItem
+            // 
+            this.moveTopToolStripMenuItem.Name = "moveTopToolStripMenuItem";
+            this.moveTopToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Home)));
+            this.moveTopToolStripMenuItem.Size = new System.Drawing.Size(215, 22);
+            this.moveTopToolStripMenuItem.Text = "Move to top";
+            this.moveTopToolStripMenuItem.Click += new System.EventHandler(this.moveTopToolStripMenuItem_Click);
+            // 
+            // moveBottomToolStripMenuItem
+            // 
+            this.moveBottomToolStripMenuItem.Name = "moveBottomToolStripMenuItem";
+            this.moveBottomToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.End)));
+            this.moveBottomToolStripMenuItem.Size = new System.Drawing.Size(215, 22);
+            this.moveBottomToolStripMenuItem.Text = "Move to bottom";
+            this.moveBottomToolStripMenuItem.Click += new System.EventHandler(this.moveBottomToolStripMenuItem_Click);
+            // 
             // JoinSubtitles
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -279,6 +331,7 @@
             this.Resize += new System.EventHandler(this.JoinSubtitles_Resize);
             this.groupBoxPreview.ResumeLayout(false);
             this.groupBoxPreview.PerformLayout();
+            this.contextMenuStripParts.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -303,5 +356,10 @@
         private Nikse.SubtitleEdit.Controls.NikseUpDown numericUpDownAddMs;
         private System.Windows.Forms.RadioButton radioButtonJoinAddTime;
         private Nikse.SubtitleEdit.Controls.NikseLabel labelAddTime;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripParts;
+        private System.Windows.Forms.ToolStripMenuItem moveUpToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem moveDownToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem moveTopToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem moveBottomToolStripMenuItem;
     }
 }

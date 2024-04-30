@@ -125,20 +125,8 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             }
         }
 
-        private void ToolStripMenuItemSelectAll_Click(object sender, EventArgs e)
-        {
-            foreach (ListViewItem item in listViewCategories.Items)
-            {
-                item.Checked = true;
-            }
-        }
+        private void ToolStripMenuItemSelectAll_Click(object sender, EventArgs e) => listViewCategories.CheckAll();
 
-        private void ToolStripMenuItemInverseSelection_Click(object sender, EventArgs e)
-        {
-            foreach (ListViewItem item in listViewCategories.Items)
-            {
-                item.Checked = !item.Checked;
-            }
-        }
+        private void ToolStripMenuItemInverseSelection_Click(object sender, EventArgs e) => listViewCategories.InvertCheck();
     }
 }

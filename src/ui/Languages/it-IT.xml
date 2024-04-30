@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>4.0.5</Version>
-    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 15.04.2024</TranslatedBy>
+    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 29.04.2024</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -1610,6 +1610,7 @@ Per usare una chiave API inserisci la chiave API di traduzione di Google in "Opz
         <GoToSourceView>Vista sorgente</GoToSourceView>
         <GoToListView>Vista elenco</GoToListView>
         <ExtractAudio>Estrai audio...</ExtractAudio>
+        <MediaInfo>Info media</MediaInfo>
       </ContextMenu>
     </Menu>
     <Controls>
@@ -2129,6 +2130,8 @@ Vuoi scaricare mpv e youtuibe-dl e continuare?</VideoFromUrlRequirements>
     <EvenLines>Righe uguali</EvenLines>
     <DurationLessThan>Durata inferiore a</DurationLessThan>
     <DurationGreaterThan>Durata maggiore di</DurationGreaterThan>
+    <CpsLessThan>CPS inferiore a</CpsLessThan>
+    <CpsGreaterThan>CPS superiore a</CpsGreaterThan>
     <ExactlyOneLine>Esattamente una linea</ExactlyOneLine>
     <ExactlyTwoLines>Esattamente due linee</ExactlyTwoLines>
     <MoreThanTwoLines>Più di due righe</MoreThanTwoLines>
@@ -3166,6 +3169,11 @@ Vuoi continuare?</RestoreDefaultSettingsMsg>
     <AdjustingSpeedXOfY>Regolazione velocità: {0} / {1}...</AdjustingSpeedXOfY>
     <MergingAudioTrackXOfY>Unione traccia audio: {0} / {1}...</MergingAudioTrackXOfY>
     <GeneratingSpeechFromTextXOfY>Generazione parlato dal testo: {0} / {1}...</GeneratingSpeechFromTextXOfY>
+    <ReviewAudioClips>Rivedi clip audio</ReviewAudioClips>
+    <ReviewInfo>Rivedi e modifica/rimuovi clip audio</ReviewInfo>
+    <Play>Riproduci</Play>
+    <AutoContinue>Continua automaticamente</AutoContinue>
+    <Regenerate>Rigenera</Regenerate>
   </TextToSpeech>
   <TimedTextSmpteTiming>
     <Title>Tempistica SMPTE</Title>
