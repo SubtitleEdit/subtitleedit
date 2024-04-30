@@ -1605,6 +1605,7 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Bi
         <GoToSourceView>Gå til kildevisning</GoToSourceView>
         <GoToListView>Gå til listevisning</GoToListView>
         <ExtractAudio>Uddrag lyd...</ExtractAudio>
+        <MediaInfo>Medieoplysninger</MediaInfo>
       </ContextMenu>
     </Menu>
     <Controls>
@@ -3398,6 +3399,7 @@ Fortsæt?</RestoreDefaultSettingsMsg>
     <GuessTimeCodes>Gæt tidskoder...</GuessTimeCodes>
     <SeekSilence>Søg tavshed...</SeekSilence>
     <InsertSubtitleHere>Indsæt undertekst her</InsertSubtitleHere>
+    <InsertSubtitleFileHere>Indsæt undertekstfil her...</InsertSubtitleFileHere>
     <CharsSecX>Tegn/sec: {0:0.00}</CharsSecX>
     <WordsMinX>Ord/min: {0:0.00}</WordsMinX>
   </Waveform>
