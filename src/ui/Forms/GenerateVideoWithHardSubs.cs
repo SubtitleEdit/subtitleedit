@@ -2202,14 +2202,15 @@ namespace Nikse.SubtitleEdit.Forms
                 vInfo = UiUtil.GetVideoInfo(videoFileName);
             }
 
-            if (vInfo.Width == 0 || vInfo.Height == 0)
+            var dimension = new Dimension(vInfo.Height, vInfo.Width);
+
+            // skip audio or damaged files
+            if (!dimension.IsValid())
             {
                 SeLogger.Error("Skipping burn-in file with no video: " + videoFileName);
-                // return; // skip audio or damaged files
-                return new Dimension(); 
             }
 
-            return new Dimension(vInfo.Height, vInfo.Width);
+            return dimension;
         }
 
         private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
