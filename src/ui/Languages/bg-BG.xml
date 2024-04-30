@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>4.0.5</Version>
-    <TranslatedBy>Последен превод на български 16.04.2024: KalinM</TranslatedBy>
+    <TranslatedBy>Последен превод на български 29.04.2024: KalinM</TranslatedBy>
     <CultureName>bg-BG</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -1609,6 +1609,7 @@ https://github.com/SubtitleEdit/subtitleedit
         <GoToSourceView>Към първоначалния изглед</GoToSourceView>
         <GoToListView>Към преглед на списъка</GoToListView>
         <ExtractAudio>Извличане на аудио...</ExtractAudio>
+        <MediaInfo>Медиина информация</MediaInfo>
       </ContextMenu>
     </Menu>
     <Controls>
@@ -2130,6 +2131,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <EvenLines>Редове с четни номера</EvenLines>
     <DurationLessThan>Продължителност по-малка от</DurationLessThan>
     <DurationGreaterThan>Продължителност по-голяма от</DurationGreaterThan>
+    <CpsLessThan>CPS по-малко от</CpsLessThan>
+    <CpsGreaterThan>CPS по-голям от</CpsGreaterThan>
     <ExactlyOneLine>Точно един ред</ExactlyOneLine>
     <ExactlyTwoLines>Точно два реда</ExactlyTwoLines>
     <MoreThanTwoLines>Повече от два реда</MoreThanTwoLines>
@@ -3167,6 +3170,11 @@ https://github.com/SubtitleEdit/subtitleedit
     <AdjustingSpeedXOfY>Регулиране на скоростта: {0} / {1}...</AdjustingSpeedXOfY>
     <MergingAudioTrackXOfY>Обединяване на аудио запис: {0} / {1}...</MergingAudioTrackXOfY>
     <GeneratingSpeechFromTextXOfY>Генериране на реч от текст: {0} / {1}...</GeneratingSpeechFromTextXOfY>
+    <ReviewAudioClips>Преглед на аудио клипове</ReviewAudioClips>
+    <ReviewInfo>Преглеждане и редактиране/премахване на аудио клипове</ReviewInfo>
+    <Play>Възпроизвеждане</Play>
+    <AutoContinue>Авт. продължаване</AutoContinue>
+    <Regenerate>Регенериране</Regenerate>
   </TextToSpeech>
   <TimedTextSmpteTiming>
     <Title>SMPTE синхронизация</Title>
