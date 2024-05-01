@@ -92,7 +92,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonDonate_Click(object sender, EventArgs e)
         {
-            UiUtil.OpenUrl("https://www.nikse.dk/Donate");
+            UiUtil.OpenUrl("https://www.paypal.com/donate?hosted_button_id=4XEHVLANCQBCU");
         }
 
         private void linkLabelGitBuildHash_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
