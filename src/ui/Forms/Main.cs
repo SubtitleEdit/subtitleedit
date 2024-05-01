@@ -1235,6 +1235,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             addParagraphHereToolStripMenuItem.Visible = true;
 
+            insertNewSubtitleHereToolStripMenuItem.Visible = false;
+
             try
             {
                 addParagraphAndPasteToolStripMenuItem.Visible = Clipboard.ContainsText();
