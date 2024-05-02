@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>4.0.5</Version>
-    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 29.04.2024</TranslatedBy>
+    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 02.05.2024</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -3408,7 +3408,8 @@ Vuoi mantenere le modifiche?</KeepChangesMessage>
     <RemoveShotChangesFromSelection>Rimuovi le modifiche alla scena dalla selezione</RemoveShotChangesFromSelection>
     <GuessTimeCodes>Riconosci codici temporali...</GuessTimeCodes>
     <SeekSilence>Cerca il silenzio...</SeekSilence>
-    <InsertSubtitleHere>Inserisci qui i sottotitoli</InsertSubtitleHere>
+    <InsertSubtitleHere>Inserisci qui testo sottotitoli</InsertSubtitleHere>
+    <InsertSubtitleFileHere>Inserisci qui file sottotitoli...</InsertSubtitleFileHere>
     <CharsSecX>CPS: {0:0.00}</CharsSecX>
     <WordsMinX>WPM: {0:0.00}</WordsMinX>
   </Waveform>
