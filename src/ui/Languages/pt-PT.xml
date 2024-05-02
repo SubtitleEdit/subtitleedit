@@ -1611,6 +1611,7 @@ Para usar a chave API, vá a "Opções -&gt; Definições -&gt; Tradução autom
         <GoToSourceView>Ir para a lista Original</GoToSourceView>
         <GoToListView>Ir para a Lista</GoToListView>
         <ExtractAudio>Extrair áudio...</ExtractAudio>
+        <MediaInfo>Informações do ficheiro</MediaInfo>
       </ContextMenu>
     </Menu>
     <Controls>
@@ -2107,7 +2108,7 @@ Transferir e continuar?</VideoFromUrlRequirements>
     <Title>Combinar linhas com os mesmos tempos</Title>
     <MaxDifferenceMilliseconds>Max. diferença milissegundos</MaxDifferenceMilliseconds>
     <MakeDialog>Fazer diálogos</MakeDialog>
-    <ReBreakLines>Requebrar as linhas</ReBreakLines>
+    <ReBreakLines>Quebrar linhas novamente</ReBreakLines>
     <NumberOfMergesX>Número de combinações: {0}</NumberOfMergesX>
     <MergedText>Texto combinado</MergedText>
   </MergeTextWithSameTimeCodes>
@@ -2126,10 +2127,12 @@ Transferir e continuar?</VideoFromUrlRequirements>
     <EndsWith>Termina com</EndsWith>
     <NoContains>Não Contém</NoContains>
     <RegEx>Expressão regular</RegEx>
-    <OddLines>Linhas com números ímpares</OddLines>
-    <EvenLines>Linhas com números pares</EvenLines>
+    <OddLines>Linhas ímpares</OddLines>
+    <EvenLines>Linhas pares</EvenLines>
     <DurationLessThan>Duração menor que</DurationLessThan>
     <DurationGreaterThan>Duração maior que</DurationGreaterThan>
+    <CpsLessThan>CPS menor que</CpsLessThan>
+    <CpsGreaterThan>CPS maior que</CpsGreaterThan>
     <ExactlyOneLine>Exactamente uma linha</ExactlyOneLine>
     <ExactlyTwoLines>Exactamente duas linhas</ExactlyTwoLines>
     <MoreThanTwoLines>Mais de duas linhas</MoreThanTwoLines>
@@ -3167,6 +3170,11 @@ Continuar?</RestoreDefaultSettingsMsg>
     <AdjustingSpeedXOfY>A regular a velocidade: {0} / {1}...</AdjustingSpeedXOfY>
     <MergingAudioTrackXOfY>A combinar a faixa de áudio: {0} / {1}...</MergingAudioTrackXOfY>
     <GeneratingSpeechFromTextXOfY>A gerar voz a partir de texto: {0} / {1}...</GeneratingSpeechFromTextXOfY>
+    <ReviewAudioClips>Rever clipes de áudio</ReviewAudioClips>
+    <ReviewInfo>Rever e editar/remover clipes de áudio</ReviewInfo>
+    <Play>Reproduzir</Play>
+    <AutoContinue>Continuar automaticamente</AutoContinue>
+    <Regenerate>Regenerar</Regenerate>
   </TextToSpeech>
   <TimedTextSmpteTiming>
     <Title>Temporização SMPTE</Title>
@@ -3402,6 +3410,7 @@ Manter as alterações?</KeepChangesMessage>
     <GuessTimeCodes>Adivinhar os tempos...</GuessTimeCodes>
     <SeekSilence>Localizar silêncio no áudio...</SeekSilence>
     <InsertSubtitleHere>Inserir legenda aqui</InsertSubtitleHere>
+    <InsertSubtitleFileHere>Inserir ficheiro de legenda aqui...</InsertSubtitleFileHere>
     <CharsSecX>CPS: {0:0.00}</CharsSecX>
     <WordsMinX>PPM: {0:0.00}</WordsMinX>
   </Waveform>
