@@ -71,38 +71,25 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
                 }
             }
 
-            if (File.Exists(dictionaryFolder + languageName + "_user.xml"))
+            var paths = new[] { 
+                dictionaryFolder + languageName + "_user.xml", 
+                dictionaryFolder + languageName + "_se.xml" };
+            
+            var xmlDoc = new XmlDocument();
+            foreach (var path in paths)
             {
-                var userWordDictionary = new XmlDocument();
-                userWordDictionary.Load(dictionaryFolder + languageName + "_user.xml");
-                var xmlNodeList = userWordDictionary.DocumentElement?.SelectNodes("word");
+                if (!File.Exists(path))
+                {
+                    continue;
+                }
+
+                xmlDoc.Load(path);
+                var xmlNodeList = xmlDoc.DocumentElement?.SelectNodes("word");
                 if (xmlNodeList != null)
                 {
                     foreach (XmlNode node in xmlNodeList)
                     {
                         string word = node.InnerText.Trim().ToLowerInvariant();
-                        if (word.Contains(' '))
-                        {
-                            _userPhraseList.Add(word);
-                        }
-                        else
-                        {
-                            _userWordList.Add(word);
-                        }
-                    }
-                }
-            }
-
-            if (File.Exists(dictionaryFolder + languageName + "_se.xml"))
-            {
-                var userWordDictionary = new XmlDocument();
-                userWordDictionary.Load(dictionaryFolder + languageName + "_se.xml");
-                var xmlNodeList = userWordDictionary.DocumentElement?.SelectNodes("word");
-                if (xmlNodeList != null)
-                {
-                    foreach (XmlNode node in xmlNodeList)
-                    {
-                        var word = node.InnerText.Trim().ToLowerInvariant();
                         if (word.Contains(' '))
                         {
                             _userPhraseList.Add(word);
