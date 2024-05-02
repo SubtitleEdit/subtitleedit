@@ -50,14 +50,14 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
                 LoadUseAlwaysList();
             }
 
-            foreach (string namesItem in _names)
+            foreach (var namesItem in _names)
             {
                 _namesListUppercase.Add(namesItem.ToUpperInvariant());
             }
 
             if (languageName.StartsWith("en_", StringComparison.OrdinalIgnoreCase))
             {
-                foreach (string namesItem in _names)
+                foreach (var namesItem in _names)
                 {
                     if (!namesItem.EndsWith('s'))
                     {
@@ -89,7 +89,7 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
                 {
                     foreach (XmlNode node in xmlNodeList)
                     {
-                        string word = node.InnerText.Trim().ToLowerInvariant();
+                        var word = node.InnerText.Trim().ToLowerInvariant();
                         if (word.Contains(' '))
                         {
                             _userPhraseList.Add(word);
