@@ -1072,19 +1072,13 @@ namespace Nikse.SubtitleEdit.Core.Common
             var languageIdFromWordCount = languageAndWordHitsOrdered
                 .FirstOrDefault(p => p.LanguageCode != "-")?.LanguageCode;
 
-            var languageIdViaLetters = GetEncodingViaLetter(allText);
 
             if (languageIdFromWordCount != null)
             {
                 return languageIdFromWordCount;
             }
 
-            if (languageIdViaLetters != null)
-            {
-                return languageIdViaLetters;
-            }
-
-            return null;
+            return GetEncodingViaLetter(allText);
         }
 
         public static string AutoDetectGoogleLanguageOrNull(Subtitle subtitle)
