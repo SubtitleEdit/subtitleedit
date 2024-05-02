@@ -1108,10 +1108,38 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
         private string GenerateWavFile(string videoFileName, int audioTrackNumber)
         {
+            if (videoFileName.EndsWith(".wav"))
+            {
+                try
+                {
+                    using (var waveFile = new WavePeakGenerator(videoFileName))
+                    {
+                        if (waveFile.Header != null && waveFile.Header.SampleRate == 16000)
+                        {
+                            return videoFileName;
+                        }
+                    }
+                }
+                catch
+                {
+                    // ignore
+                }
+            }
+
+            var ffmpegLog = new StringBuilder();
             var outWaveFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".wav");
             _filesToDelete.Add(outWaveFile);
             var process = GetFfmpegProcess(videoFileName, audioTrackNumber, outWaveFile);
+
+            process.ErrorDataReceived += (sender, args) =>
+            {
+                ffmpegLog.AppendLine(args.Data);
+            };
+
+            process.StartInfo.RedirectStandardError = true;
             process.Start();
+            process.BeginErrorReadLine();
+
             double seconds = 0;
             buttonCancel.Visible = true;
             try
@@ -1188,7 +1216,9 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                                "ffmpeg: " + process.StartInfo.FileName + Environment.NewLine +
                                "Parameters: " + process.StartInfo.Arguments + Environment.NewLine +
                                "OS: " + Environment.OSVersion + Environment.NewLine +
-                               "64-bit: " + Environment.Is64BitOperatingSystem);
+                               "64-bit: " + Environment.Is64BitOperatingSystem + Environment.NewLine +
+                               "ffmpeg exit code: " + process.ExitCode + Environment.NewLine +
+                               "ffmpeg log: " + ffmpegLog);
             }
 
             return outWaveFile;
@@ -1230,7 +1260,15 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             }
 
             var parameters = string.Format(fFmpegWaveTranscodeSettings, videoFileName, outWaveFile, audioParameter);
-            return new Process { StartInfo = new ProcessStartInfo(exeFilePath, parameters) { WindowStyle = ProcessWindowStyle.Hidden, CreateNoWindow = true } };
+            return new Process
+            {
+                StartInfo = new ProcessStartInfo(exeFilePath, parameters)
+                {
+                    WindowStyle = ProcessWindowStyle.Hidden,
+                    CreateNoWindow = true,
+                    UseShellExecute = false,
+                }
+            };
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)
