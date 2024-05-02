@@ -33,7 +33,6 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
         private readonly HashSet<string> _userWordList = new HashSet<string>();
         private readonly HashSet<string> _userPhraseList = new HashSet<string>();
         private readonly string _dictionaryFolder;
-        private HashSet<string> _skipAllList = new HashSet<string>();
         private readonly Dictionary<string, string> _useAlwaysList = new Dictionary<string, string>();
         private readonly string _languageName;
         private readonly IDoSpell _doSpell;
@@ -220,7 +219,6 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
             {
                 _useAlwaysList.Remove(oldKey.Trim());
             }
-            _skipAllList = new HashSet<string>(_skipAllList.OrderBy(p => p).ToList());
 
             foreach (KeyValuePair<string, string> kvp in _useAlwaysList)
             {
