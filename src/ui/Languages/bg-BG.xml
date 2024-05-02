@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>4.0.5</Version>
-    <TranslatedBy>Последен превод на български 29.04.2024: KalinM</TranslatedBy>
+    <TranslatedBy>Последен превод на български 02.05.2024: KalinM</TranslatedBy>
     <CultureName>bg-BG</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -1709,15 +1709,15 @@ https://github.com/SubtitleEdit/subtitleedit
     <BeforeShowLater>Преди показването по-късно</BeforeShowLater>
     <LineNumberX>Ред №: {0:#,##0.##}</LineNumberX>
     <OpenVideoFile>Отваряне на видео файл...</OpenVideoFile>
-    <NewFrameRateUsedToCalculateTimeCodes>Новата честота на кадри ({0}) беше използвана за определяне на началните/крайните времеви кодове</NewFrameRateUsedToCalculateTimeCodes>
-    <NewFrameRateUsedToCalculateFrameNumbers>Новата честота на кадри ({0}) беше използвана за определяне на началните/крайните номера на кадри</NewFrameRateUsedToCalculateFrameNumbers>
+    <NewFrameRateUsedToCalculateTimeCodes>Новата честота на кадри ({0}) е използвана за изчисляване на началните/крайните времеви кодове</NewFrameRateUsedToCalculateTimeCodes>
+    <NewFrameRateUsedToCalculateFrameNumbers>Новата честота на кадри ({0}) е използвана за изчисляване на началните/крайните номера на кадри</NewFrameRateUsedToCalculateFrameNumbers>
     <FindContinue>Търсения елемент не е намерен.
 Желаете ли търсенето да започне от началото на документа
 и да се потърси още веднъж?</FindContinue>
     <FindContinueTitle>Искате ли да продължите търсенето?</FindContinueTitle>
     <ReplaceContinueNotFound>Търсеното от вас на е намерено.
 Искате ли да започнете отначало на документа и да продължите с търсене и заместване?</ReplaceContinueNotFound>
-    <ReplaceXContinue>Търсеното беше заменено {0} път/и.
+    <ReplaceXContinue>Търсеният елемент е заменен {0} път/и.
 Искате ли да започнете отначало на документа и да продължите с търсене и заместване?</ReplaceXContinue>
     <ReplaceContinueTitle>Продължаване на «Замяна»?</ReplaceContinueTitle>
     <SearchingForXFromLineY>Търсене на «{0}» от ред № {1}...</SearchingForXFromLineY>
@@ -1861,10 +1861,10 @@ https://github.com/SubtitleEdit/subtitleedit
     <NumberOfWithRemovedLineBreakX>Брой редове с премахнато прекъсване на ред: {0}</NumberOfWithRemovedLineBreakX>
     <BeforeMultipleReplace>Преди множествената замяна</BeforeMultipleReplace>
     <NumberOfLinesReplacedX>Брой редове със заменен текст: {0}</NumberOfLinesReplacedX>
-    <NameXAddedToNameList>Думата «{0}» беше добавена към «Списък с думи»</NameXAddedToNameList>
-    <NameXNotAddedToNameList>Думата «{0}» НЕ беше добавена към «Списък с думи»</NameXNotAddedToNameList>
-    <WordXAddedToUserDic>Думата «{0}» беше добавена в потребителския речник</WordXAddedToUserDic>
-    <WordXNotAddedToUserDic>Думата «{0}» НЕ беше добавено в потребителския речник</WordXNotAddedToUserDic>
+    <NameXAddedToNameList>Думата «{0}» е добавена към «Списък с думи»</NameXAddedToNameList>
+    <NameXNotAddedToNameList>Думата «{0}» НЕ е добавена към «Списък с думи»</NameXNotAddedToNameList>
+    <WordXAddedToUserDic>Думата «{0}» е добавена в потребителския речник</WordXAddedToUserDic>
+    <WordXNotAddedToUserDic>Думата «{0}» НЕ е добавена в потребителския речник</WordXNotAddedToUserDic>
     <OcrReplacePairXAdded>За замяна в ОСR списъка «{0} -&gt; {1}» добавени към ОСR списъка за замяна</OcrReplacePairXAdded>
     <OcrReplacePairXNotAdded>За замяна в ОСR списъка «{0} -&gt; {1}» НЕ добавени към ОСR списъка за замяна</OcrReplacePairXNotAdded>
     <XLinesSelected>{0} избрани реда</XLinesSelected>
@@ -1932,7 +1932,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <ParsingTransportStream>Анализ на транспортния поток - изчакайте...</ParsingTransportStream>
     <XPercentCompleted>{0}% завършени</XPercentCompleted>
     <NextX>Следните: {0}</NextX>
-    <PromptInsertSubtitleOverlap>Поставянето на субтитри в позицията на вълновата форма на зв. сигнал ще доведе до припокриване!
+    <PromptInsertSubtitleOverlap>Вмъкването на субтитри в позицията на вълновата форма на зв. сигнал ще доведе до припокриване!
 
 Продължавате ли все пак?</PromptInsertSubtitleOverlap>
     <SubtitleContainsNegativeDurationsX>Субтитрите съдържат отрицателна продължителност в ред(ове): {0}</SubtitleContainsNegativeDurationsX>
@@ -2623,10 +2623,10 @@ https://github.com/SubtitleEdit/subtitleedit
     <RecalculateDurationOfCurrentSubtitle>Преизчисляване продължителността на текущия субтитър</RecalculateDurationOfCurrentSubtitle>
     <RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed>Преизчисляване продължителността на текущия субтитър (въз основа на оптималната скорост на четене)</RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed>
     <RecalculateDurationOfCurrentSubtitleByMinReadingSpeed>Преизчисляване продължителността на текущия субтитър (въз основа на минималната скорост на четене)</RecalculateDurationOfCurrentSubtitleByMinReadingSpeed>
-    <SetInCueToClosestShotChangeLeftGreenZone>Задаване на подсказка на минимално разстояние преди най-близката промяна на кадъра (лява зелена зона)</SetInCueToClosestShotChangeLeftGreenZone>
-    <SetInCueToClosestShotChangeRightGreenZone>Задаване на подсказка на минимално разстояние след най-близката промяна на кадъра (лява зелена зона)</SetInCueToClosestShotChangeRightGreenZone>
-    <SetOutCueToClosestShotChangeLeftGreenZone>Поставяне подсказката на минимално разстояние преди най-близката промяна на кадъра (лява зелена зона)</SetOutCueToClosestShotChangeLeftGreenZone>
-    <SetOutCueToClosestShotChangeRightGreenZone>Поставяне подсказката на минимално разстояние след най-близката промяна на кадъра (лява зелена зона)</SetOutCueToClosestShotChangeRightGreenZone>
+    <SetInCueToClosestShotChangeLeftGreenZone>Задай подсказката на минимално разстояние преди най-близката промяна на кадъра (лява зелена зона)</SetInCueToClosestShotChangeLeftGreenZone>
+    <SetInCueToClosestShotChangeRightGreenZone>Задай подсказката на минимално разстояние след най-близката промяна на кадъра (дясна зелена зона)</SetInCueToClosestShotChangeRightGreenZone>
+    <SetOutCueToClosestShotChangeLeftGreenZone>Постави подсказката на минимално разстояние преди най-близката промяна на кадъра (лява зелена зона)</SetOutCueToClosestShotChangeLeftGreenZone>
+    <SetOutCueToClosestShotChangeRightGreenZone>Постави подсказката на минимално разстояние след най-близката промяна на кадъра (дясна зелена зона)</SetOutCueToClosestShotChangeRightGreenZone>
     <MainCreateStartDownEndUp>Вмъкване на нови субтитри при натискане на клавиш - стрелка НАДОЛУ, задаване на крайно време при натискане на клавиш - стрелка НАГОРЕ</MainCreateStartDownEndUp>
     <MergeDialog>Диалог за обединяване (вмъкване на тирета)</MergeDialog>
     <MergeDialogWithNext>Обединяване на диалога със следващия (вмъкване на тирета)</MergeDialogWithNext>
@@ -2868,11 +2868,11 @@ https://github.com/SubtitleEdit/subtitleedit
   <SettingsMpv>
     <DownloadMpv>Изтегляне на MPV плеър</DownloadMpv>
     <DownloadMpvFailed>Неуспешно изтегляне на библиотеката mpv - моля, опитайте по-късно!</DownloadMpvFailed>
-    <DownloadMpvOk>MPV видео плеърът беше зареден и е готов за употреба.</DownloadMpvOk>
+    <DownloadMpvOk>MPV видео плеърът е изтеглен и е готов за употреба.</DownloadMpvOk>
   </SettingsMpv>
   <SettingsFfmpeg>
     <XDownloadFailed>Не може да се изтегли {0} - опитайте по-късно!</XDownloadFailed>
-    <XDownloadOk>{0} беше зареден и е готов за употреба.</XDownloadOk>
+    <XDownloadOk>{0} е изтеглен и е готов за употреба.</XDownloadOk>
   </SettingsFfmpeg>
   <SetVideoOffset>
     <Title>Задаване на Видео изместване</Title>
@@ -3203,11 +3203,11 @@ https://github.com/SubtitleEdit/subtitleedit
     <CoveragePercentageX>{0:0.##}%</CoveragePercentageX>
     <SortByCoverage>Сортиране по покритие</SortByCoverage>
     <SortByTime>Сортиране по време</SortByTime>
-    <Reload>Повторна проверка</Reload>
-    <Insert>Вмъкване</Insert>
-    <InsertAndNext>Вмъкни и премини към следващия</InsertAndNext>
-    <Dismiss>Отхвърляне</Dismiss>
-    <DismissAndNext>Отхвърли и премини към следващия</DismissAndNext>
+    <Reload>Повторна пров.</Reload>
+    <Insert>Вмъкни</Insert>
+    <InsertAndNext>Вмъкни и към следващ</InsertAndNext>
+    <Dismiss>Отхвърли</Dismiss>
+    <DismissAndNext>Отхвърли и към следв.</DismissAndNext>
   </VerifyCompleteness>
   <VisualSync>
     <Title>Визуална синхронизация</Title>
@@ -3409,7 +3409,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <RemoveShotChangesFromSelection>Премахване променена сцена от избраното</RemoveShotChangesFromSelection>
     <GuessTimeCodes>Разпознаване на времеви кодове...</GuessTimeCodes>
     <SeekSilence>Търсене на тишина (пауза)...</SeekSilence>
-    <InsertSubtitleHere>Поставете субтитри от тук</InsertSubtitleHere>
+    <InsertSubtitleHere>Въведи текста тук</InsertSubtitleHere>
+    <InsertSubtitleFileHere>Вмъкване на файл със субтитри тук...</InsertSubtitleFileHere>
     <CharsSecX>Симв./сек.: {0:0.00}</CharsSecX>
     <WordsMinX>Думи/мин.: {0:0.00}</WordsMinX>
   </Waveform>
