@@ -1050,7 +1050,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             };
 
             const string dash = "-";
-            var bestCountIndex = 0;
+            var bestCountIndex = -1;
             var bestCount = -1;
             for (var i = 0; i < list.Length; i++)
             {
@@ -1071,7 +1071,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
             }
 
-            return bestCount >= 1 ? list[bestCountIndex] : null;
+            return bestCountIndex >= 0 ? list[bestCountIndex] : null;
         }
 
         //TODO: improve... a lot ;)
