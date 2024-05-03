@@ -165,7 +165,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
             try
             {
-                var httpClient = DownloaderFactory.MakeHttpClient();
+                using (var httpClient = DownloaderFactory.MakeHttpClient())
                 using (var downloadStream = new MemoryStream())
                 {
                     var downloadTask = httpClient.DownloadAsync(downloadUrl, downloadStream, new Progress<float>((progress) =>
