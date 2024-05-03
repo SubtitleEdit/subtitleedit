@@ -102,10 +102,10 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                         }
                     }
                 }
-
+                
+                var httpClient = DownloaderFactory.MakeHttpClient();
                 foreach (var url in LastDownloadedModel.Urls)
                 {
-                    var httpClient = DownloaderFactory.MakeHttpClient();
                     currentDownloadUrl = url;
                     _downloadFileName = MakeDownloadFileName(LastDownloadedModel, url) + ".$$$";
                     labelFileName.Text = url.Split('/').Last();
@@ -140,7 +140,8 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                         CompleteDownload(downloadStream);
                     }
                 }
-
+                httpClient.Dispose();
+                
                 Cursor = Cursors.Default;
                 labelPleaseWait.Text = string.Empty;
 

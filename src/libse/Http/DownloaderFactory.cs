@@ -9,7 +9,7 @@ namespace Nikse.SubtitleEdit.Core.Http
     {
         public static IDownloader MakeHttpClient()
         {
-            var httpClient = new HttpClient(GetHttpClientHandler(Configuration.Settings.Proxy));
+            var httpClient = new HttpClient(CreateHandler(Configuration.Settings.Proxy));
             if (Configuration.Settings.General.UseLegacyDownloader)
             {
                 return new LegacyDownloader(httpClient);
@@ -18,7 +18,7 @@ namespace Nikse.SubtitleEdit.Core.Http
             return new HttpClientDownloader(httpClient);
         }
 
-        public static HttpClientHandler GetHttpClientHandler(ProxySettings proxySettings)
+        private static HttpClientHandler CreateHandler(ProxySettings proxySettings)
         {
             var handler = new HttpClientHandler();
 

@@ -15,7 +15,7 @@ namespace Nikse.SubtitleEdit.Core.Translate.Service
     ///
     /// Not used at the moment!
     /// </summary>
-    public class GoogleTranslator3 : ITranslationStrategy
+    public class GoogleTranslator3 : ITranslationStrategy, IDisposable
     {
         private readonly string _apiKey;
         private readonly string _projectNumberOrId;
@@ -117,5 +117,7 @@ namespace Nikse.SubtitleEdit.Core.Translate.Service
             }
             return resultList;
         }
+
+        public void Dispose() => _httpClient.Dispose();
     }
 }

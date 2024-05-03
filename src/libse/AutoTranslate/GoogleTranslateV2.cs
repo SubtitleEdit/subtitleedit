@@ -17,7 +17,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
     /// <summary>
     /// Google translate via Google Cloud V2 API - see https://cloud.google.com/translate/
     /// </summary>
-    public class GoogleTranslateV2 : IAutoTranslator
+    public class GoogleTranslateV2 : IAutoTranslator, IDisposable
     {
         private string _apiKey;
         private IDownloader _httpClient;
@@ -142,5 +142,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             }
             return Task.FromResult(string.Join(Environment.NewLine, resultList));
         }
+
+        public void Dispose() => _httpClient.Dispose();
     }
 }
