@@ -14,13 +14,14 @@ namespace Nikse.SubtitleEdit.Core
 
         public GermanNouns()
         {
-            _germanNouns = new List<string>();
             var inputFile = Path.Combine(Configuration.DictionariesDirectory, "deu_Nouns.txt");
             if (File.Exists(inputFile))
             {
                 _germanNouns = FileUtil.ReadAllLinesShared(inputFile, Encoding.UTF8).Select(p => p.Trim()).Where(p => p.Length > 1).ToList();
             }
 
+            _germanNouns = _germanNouns ?? new List<string>();
+            
             _regularExpressionList = new Dictionary<Regex, string>
             {
                 { new Regex(@"\bDas essen\b", RegexOptions.Compiled), "Das Essen" },
@@ -31,12 +32,14 @@ namespace Nikse.SubtitleEdit.Core
         public string UppercaseNouns(string text)
         {
             var textNoTags = HtmlUtil.RemoveHtmlTags(text, true);
-            if (textNoTags != textNoTags.ToUpperInvariant() && !string.IsNullOrEmpty(text))
+            if (textNoTags.ContainsLetter())
             {
                 var st = new StrippableText(text);
+                if (IsNounsLoaded())
+                {
+                    st.FixCasing(_germanNouns, true, false, false, string.Empty);
+                }
 
-                st.FixCasing(_germanNouns, true, false, false, string.Empty);
-                
                 foreach (var regex in _regularExpressionList.Keys)
                 {
                     st.StrippedText = regex.Replace(st.StrippedText, _regularExpressionList[regex]);
@@ -47,5 +50,7 @@ namespace Nikse.SubtitleEdit.Core
 
             return text;
         }
+
+        private bool IsNounsLoaded() => _germanNouns.Count > 0;
     }
 }
