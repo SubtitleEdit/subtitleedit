@@ -10,7 +10,6 @@ namespace Nikse.SubtitleEdit.Core.Common
 {
     public static class LanguageAutoDetect
     {
-
         private static int GetCount(string text, params string[] words)
         {
             var options = RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture;
@@ -827,12 +826,11 @@ namespace Nikse.SubtitleEdit.Core.Common
         {
             public string LanguageCode { get; set; }
             public string[] Words { get; set; }
-            public int WordCount { get; set; }
         }
 
-        public static LanguageForAutoDetect[] GetLanguagesWithCount(string text)
+        private static LanguageForAutoDetect GetLanguagesWithCount(string text)
         {
-            var list = new LanguageForAutoDetect[]
+            var list = new[]
             {
                 new LanguageForAutoDetect
                 {
@@ -1051,12 +1049,29 @@ namespace Nikse.SubtitleEdit.Core.Common
                 },
             };
 
-            foreach (var item in list)
+            const string dash = "-";
+            var bestCountIndex = 0;
+            var bestCount = -1;
+            for (var i = 0; i < list.Length; i++)
             {
-                item.WordCount = GetCount(text, item.Words);
+                var item = list[i];
+
+                // ignore these languages
+                if (item.LanguageCode.Equals(dash, StringComparison.Ordinal))
+                {
+                    continue;
+                }
+
+                // calculate match from current language
+                var count = GetCount(text, item.Words);
+                if (count > bestCount)
+                {
+                    bestCountIndex = i;
+                    bestCount = count;
+                }
             }
 
-            return list;
+            return bestCount >= 1 ? list[bestCountIndex] : null;
         }
 
         //TODO: improve... a lot ;)
@@ -1065,20 +1080,8 @@ namespace Nikse.SubtitleEdit.Core.Common
             var s = new Subtitle(subtitle);
             s.RemoveEmptyLines();
             var allText = s.GetAllTexts(500000).TrimEnd();
-            var languagesAndWords = GetLanguagesWithCount(allText);
-            var languageAndWordHitsOrdered = languagesAndWords
-                .Where(p => p.WordCount > 0)
-                .OrderByDescending(p => p.WordCount);
-            var languageIdFromWordCount = languageAndWordHitsOrdered
-                .FirstOrDefault(p => p.LanguageCode != "-")?.LanguageCode;
-
-
-            if (languageIdFromWordCount != null)
-            {
-                return languageIdFromWordCount;
-            }
-
-            return GetEncodingViaLetter(allText);
+            return GetLanguagesWithCount(allText)?.LanguageCode ??
+                   GetEncodingViaLetter(allText);
         }
 
         public static string AutoDetectGoogleLanguageOrNull(Subtitle subtitle)
