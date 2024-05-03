@@ -828,7 +828,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             public string[] Words { get; set; }
         }
 
-        private static LanguageForAutoDetect GetLanguagesWithCount(string text)
+        private static LanguageForAutoDetect GetBestMatchLanguage(string text)
         {
             var list = new[]
             {
@@ -1080,7 +1080,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             var s = new Subtitle(subtitle);
             s.RemoveEmptyLines();
             var allText = s.GetAllTexts(500000).TrimEnd();
-            return GetLanguagesWithCount(allText)?.LanguageCode ??
+            return GetBestMatchLanguage(allText)?.LanguageCode ??
                    GetEncodingViaLetter(allText);
         }
 
