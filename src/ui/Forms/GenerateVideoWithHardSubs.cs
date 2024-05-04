@@ -28,7 +28,7 @@ namespace Nikse.SubtitleEdit.Forms
         private long _startTicks;
         private long _totalFrames;
         private StringBuilder _log;
-        private readonly bool _isAssa;
+        private bool _isAssa;
         private FfmpegMediaInfo _mediaInfo;
         private bool _promptFFmpegParameters;
         private readonly bool _mpvOn;
@@ -472,6 +472,8 @@ namespace Nikse.SubtitleEdit.Forms
                     if (!string.IsNullOrEmpty(videoAndSub.SubtitleFileName) & File.Exists(videoAndSub.SubtitleFileName))
                     {
                         subtitle = Subtitle.Parse(videoAndSub.SubtitleFileName);
+                        _isAssa = videoAndSub.SubtitleFileName.EndsWith(".ass", StringComparison.OrdinalIgnoreCase) ||
+                                  videoAndSub.SubtitleFileName.EndsWith(".assa", StringComparison.OrdinalIgnoreCase);
                     }
 
                     var path = Path.GetDirectoryName(videoAndSub.VideoFileName);
