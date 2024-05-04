@@ -349,6 +349,23 @@ namespace Nikse.SubtitleEdit.Core.Common
             return false;
         }
 
+        public static bool ContainsLetter(this string s, UnicodeCategory unicodeCategory)
+        {
+            if (s != null)
+            {
+                foreach (var index in StringInfo.ParseCombiningCharacters(s))
+                {
+                    var uc = CharUnicodeInfo.GetUnicodeCategory(s, index);
+                    if (uc == unicodeCategory)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
         public static bool ContainsNumber(this string s)
         {
             if (s == null)

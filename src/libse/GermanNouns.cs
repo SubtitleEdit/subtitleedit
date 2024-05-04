@@ -1,5 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -32,7 +33,7 @@ namespace Nikse.SubtitleEdit.Core
         public string UppercaseNouns(string text)
         {
             var textNoTags = HtmlUtil.RemoveHtmlTags(text, true);
-            if (textNoTags.ContainsLetter())
+            if (textNoTags.ContainsLetter(UnicodeCategory.LowercaseLetter))
             {
                 var st = new StrippableText(text);
                 if (IsNounsLoaded())
