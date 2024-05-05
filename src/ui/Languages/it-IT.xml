@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>4.0.5</Version>
-    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 02.05.2024</TranslatedBy>
+    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 05.05.2024</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -1088,6 +1088,12 @@ Per usare una chiave API inserisci la chiave API di traduzione di Google in "Opz
     <XRequiresAnApiKey>"{0}" richiede una chiave API.</XRequiresAnApiKey>
     <ReadMore>Vuoi saperne di più?</ReadMore>
     <Formality>Formalità</Formality>
+    <TranslateCurrentLine>Traduci solo riga attuale</TranslateCurrentLine>
+    <ReTranslateCurrentLine>Ritraduci riga attuale</ReTranslateCurrentLine>
+    <MergeSplitStrategy>Gestione divisione/unione</MergeSplitStrategy>
+    <Delay>Ritardo tra chiamate al server</Delay>
+    <MaxBytes>Numero massimo byte in ciascuna chiamata al server</MaxBytes>
+    <PromptX>Prompt per {0}</PromptX>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
     <Title>Traduttore Google contro traduttore Microsoft</Title>
