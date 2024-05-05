@@ -162,38 +162,6 @@
             this.nikseComboBoxRegion.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.nikseComboBoxRegion.DropDownWidth = 0;
             this.nikseComboBoxRegion.FormattingEnabled = false;
-            this.nikseComboBoxRegion.Items.AddRange(new string[] {
-            "australiaeast",
-            "brazilsouth",
-            "canadacentral",
-            "centralus",
-            "eastasia",
-            "eastus",
-            "eastus2",
-            "francecentral",
-            "germanywestcentral",
-            "centralindia",
-            "japaneast",
-            "japanwest",
-            "jioindiawest",
-            "koreacentral",
-            "northcentralus",
-            "northeurope",
-            "norwayeast",
-            "southcentralus",
-            "southeastasia",
-            "swedencentral",
-            "switzerlandnorth",
-            "switzerlandwest",
-            "uaenorth",
-            "usgovarizona",
-            "usgovvirginia",
-            "uksouth",
-            "westcentralus",
-            "westeurope",
-            "westus",
-            "westus2",
-            "westus3"});
             this.nikseComboBoxRegion.Location = new System.Drawing.Point(17, 283);
             this.nikseComboBoxRegion.MaxLength = 32767;
             this.nikseComboBoxRegion.Name = "nikseComboBoxRegion";

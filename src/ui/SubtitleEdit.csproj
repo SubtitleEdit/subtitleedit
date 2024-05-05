@@ -2464,6 +2464,7 @@
     <EmbeddedResource Include="Resources\TesseractDictionaries.xml.gz" />
     <EmbeddedResource Include="Resources\eleven-labs-voices.zip" />
     <EmbeddedResource Include="Resources\AzureVoices.zip" />
+    <EmbeddedResource Include="Resources\AllTalkVoices.zip" />
     <None Include="Resources\nOCR_TesseractHelper.xml.gz" />
     <EmbeddedResource Include="Resources\PiperVoices.zip" />
     <None Include="Resources\SMPTE-428-7-2007-DCST.xsd">
