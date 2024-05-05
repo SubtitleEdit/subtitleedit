@@ -27,6 +27,11 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
 
             nikseUpDownDelay.Value = Configuration.Settings.Tools.AutoTranslateDelaySeconds;
+
+            if (Configuration.Settings.Tools.AutoTranslateMaxBytes <= 0)
+            {
+                Configuration.Settings.Tools.AutoTranslateMaxBytes = new ToolsSettings().AutoTranslateMaxBytes;
+            }
             nikseUpDownMaxBytes.Value = Configuration.Settings.Tools.AutoTranslateMaxBytes;
 
             comboBoxParagraphHandling.Left = labelParagraphHandling.Right + 4;
