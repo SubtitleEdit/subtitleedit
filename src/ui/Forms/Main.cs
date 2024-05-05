@@ -9113,24 +9113,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     using (var form = new GenerateVideoWithHardSubs(sub, GetCurrentSubtitleFormat(), _videoFileName, _videoInfo, fontSize, true))
                     {
-                        var result = form.ShowDialog(this);
-                        if (result != DialogResult.OK)
-                        {
-                            return;
-                        }
-
-                        if (form.BatchMode)
-                        {
-                            MessageBox.Show(form.BatchInfo);
-                        }
-                        else
-                        {
-                            var encodingTime = new TimeCode(form.MillisecondsEncoding).ToString();
-                            using (var f = new ExportPngXmlDialogOpenFolder(string.Format(LanguageSettings.Current.GenerateVideoWithBurnedInSubs.XGeneratedWithBurnedInSubsInX, Path.GetFileName(form.VideoFileName), encodingTime), Path.GetDirectoryName(form.VideoFileName), form.VideoFileName))
-                            {
-                                f.ShowDialog(this);
-                            }
-                        }
+                        form.ShowDialog(this);
                     }
                 };
             }
@@ -35690,24 +35673,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             using (var form = new GenerateVideoWithHardSubs(sub, GetCurrentSubtitleFormat(), _videoFileName, _videoInfo, fontSize, false))
             {
-                var result = form.ShowDialog(this);
-                if (result != DialogResult.OK)
-                {
-                    return;
-                }
-
-                if (form.BatchMode)
-                {
-                    MessageBox.Show(form.BatchInfo);
-                }
-                else
-                {
-                    var encodingTime = new TimeCode(form.MillisecondsEncoding).ToString();
-                    using (var f = new ExportPngXmlDialogOpenFolder(string.Format(LanguageSettings.Current.GenerateVideoWithBurnedInSubs.XGeneratedWithBurnedInSubsInX, Path.GetFileName(form.VideoFileName), encodingTime), Path.GetDirectoryName(form.VideoFileName), form.VideoFileName))
-                    {
-                        f.ShowDialog(this);
-                    }
-                }
+                form.ShowDialog(this);
             }
         }
 
