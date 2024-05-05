@@ -619,7 +619,18 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            DialogResult = DialogResult.OK;
+            if (BatchMode)
+            {
+                MessageBox.Show(BatchInfo);
+            }
+            else
+            {
+                var encodingTime = new TimeCode(MillisecondsEncoding).ToString();
+                using (var f = new ExportPngXmlDialogOpenFolder(string.Format(LanguageSettings.Current.GenerateVideoWithBurnedInSubs.XGeneratedWithBurnedInSubsInX, Path.GetFileName(VideoFileName), encodingTime), Path.GetDirectoryName(VideoFileName), VideoFileName))
+                {
+                    f.ShowDialog(this);
+                }
+            }
         }
 
         private bool ConvertVideo(bool oldFontSizeEnabled, string videoFileName, Subtitle subtitle)
