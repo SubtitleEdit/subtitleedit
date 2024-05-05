@@ -686,6 +686,12 @@
     <Compile Include="Forms\SeJobs\SeJobExport.Designer.cs">
       <DependentUpon>SeJobExport.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Translate\AutoTranslateSettings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Translate\AutoTranslateSettings.Designer.cs">
+      <DependentUpon>AutoTranslateSettings.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Tts\PiperDownload.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1977,6 +1983,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ShotChanges\AdjustTimingViaShotChanges.resx">
       <DependentUpon>AdjustTimingViaShotChanges.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Translate\AutoTranslateSettings.resx">
+      <DependentUpon>AutoTranslateSettings.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Tts\PiperDownload.resx">
       <DependentUpon>PiperDownload.cs</DependentUpon>

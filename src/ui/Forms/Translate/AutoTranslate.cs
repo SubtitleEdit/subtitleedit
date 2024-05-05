@@ -31,6 +31,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
         private bool _translationProgressDirty = true;
         private bool _breakTranslation;
         private bool _translationInProgress;
+        private bool _singleLineMode;
         private CancellationTokenSource _cancellationTokenSource;
 
         public AutoTranslate(Subtitle subtitle, Subtitle targetLines, string title, Encoding encoding)
@@ -109,7 +110,6 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             AutoTranslate_Resize(null, null);
             UpdateTranslation();
             MergeAndSplitHelper.MergeSplitProblems = false;
-            ShowDelayLabel();
         }
 
         private void InitializeAutoTranslatorEngines()
@@ -667,7 +667,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             subtitleListViewSource.Width = width;
             subtitleListViewTarget.Width = width;
 
-            var height = Height - (subtitleListViewSource.Top + buttonTranslate.Height + 80);
+            var height = Height - (subtitleListViewSource.Top + buttonTranslate.Height + 95);
             subtitleListViewSource.Height = height;
             subtitleListViewTarget.Height = height;
 
@@ -696,6 +696,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 buttonCancel.Enabled = true;
                 Application.DoEvents();
                 buttonOK.Refresh();
+                _singleLineMode = false;
                 return;
             }
 
@@ -708,13 +709,15 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             {
                 MessageBox.Show(this, string.Format(LanguageSettings.Current.GoogleTranslate.XRequiresAnApiKey, _autoTranslator.Name), Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 _translationInProgress = false;
+                _singleLineMode = false;
                 return;
             }
 
             if (_autoTranslator.Name == DeepLTranslate.StaticName && string.IsNullOrWhiteSpace(nikseComboBoxUrl.Text))
             {
-                MessageBox.Show(this, string.Format("{0} require an url", _autoTranslator.Name), Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(this, string.Format("{0} requires an url", _autoTranslator.Name), Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 _translationInProgress = false;
+                _singleLineMode = false;
                 return;
             }
 
@@ -738,9 +741,10 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             timerUpdate.Start();
             var linesTranslated = 0;
 
-            var forceSingleLineMode = translateSingleLinesToolStripMenuItem.Checked ||
-                _autoTranslator.Name == NoLanguageLeftBehindApi.StaticName ||  // NLLB seems to miss some text...
-                _autoTranslator.Name == NoLanguageLeftBehindServe.StaticName;
+            var forceSingleLineMode = Configuration.Settings.Tools.AutoTranslateStrategy == TranslateStrategy.TranslateEachLineSeparately.ToString() ||
+                                      _autoTranslator.Name == NoLanguageLeftBehindApi.StaticName ||  // NLLB seems to miss some text...
+                                      _autoTranslator.Name == NoLanguageLeftBehindServe.StaticName ||
+                                      _singleLineMode;
 
             var delaySeconds = Configuration.Settings.Tools.AutoTranslateDelaySeconds;
 
@@ -818,7 +822,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                         index++;
 
                         Application.DoEvents();
-                        if (_breakTranslation)
+                        if (_breakTranslation || _singleLineMode)
                         {
                             break;
                         }
@@ -832,6 +836,10 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 catch (Exception exception)
                 {
                     HandleError(exception, linesTranslated, engineType);
+                }
+                finally
+                {
+                    _singleLineMode = false;
                 }
             }
 
@@ -1176,6 +1184,12 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
         private void contextMenuStrip1_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            if (_translationInProgress)
+            {
+                e.Cancel = true;
+                return;
+            }
+
             startLibreTranslateServerToolStripMenuItem.Visible = false;
             startNLLBServeServerToolStripMenuItem.Visible = false;
             startNLLBAPIServerToolStripMenuItem.Visible = false;
@@ -1192,10 +1206,27 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 startLibreTranslateServerToolStripMenuItem.Visible = true;
                 toolStripSeparator2.Visible = true;
             }
+
+            var idx = subtitleListViewTarget.SelectedIndex;
+            if (idx >= 0 && !string.IsNullOrWhiteSpace(TranslatedSubtitle.Paragraphs[idx].Text))
+            {
+                translateCurrentLineToolStripMenuItem1.Text = LanguageSettings.Current.GoogleTranslate.ReTranslateCurrentLine;
+            }
+            else
+            {
+                translateCurrentLineToolStripMenuItem1.Text = LanguageSettings.Current.GoogleTranslate.TranslateCurrentLine;
+            }
+            translateCurrentLineToolStripMenuItem.Text = translateCurrentLineToolStripMenuItem1.Text;
         }
 
         private void contextMenuStrip2_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            if (_translationInProgress)
+            {
+                e.Cancel = true;
+                return;
+            }
+
             toolStripMenuItemStartLibre.Visible = false;
             toolStripMenuItemStartNLLBServe.Visible = false;
             toolStripMenuItemStartNLLBApi.Visible = false;
@@ -1212,6 +1243,17 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 toolStripMenuItemStartLibre.Visible = true;
                 toolStripSeparator1.Visible = true;
             }
+
+            var idx = subtitleListViewTarget.SelectedIndex;
+            if (idx >= 0 && !string.IsNullOrWhiteSpace(TranslatedSubtitle.Paragraphs[idx].Text))
+            {
+                translateCurrentLineToolStripMenuItem1.Text = "Re-translate current line";
+            }
+            else
+            {
+                translateCurrentLineToolStripMenuItem1.Text = "translate only current line";
+            }
+            translateCurrentLineToolStripMenuItem.Text = translateCurrentLineToolStripMenuItem1.Text;
         }
 
         private void subtitleListViewTarget_Click(object sender, EventArgs e)
@@ -1239,22 +1281,6 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                     }
                 }
             }
-        }
-
-        private void translateSingleLinesToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            ToggleTranslateSingleLines();
-        }
-
-        private void ToggleTranslateSingleLines()
-        {
-            translateSingleLinesToolStripMenuItem.Checked = !translateSingleLinesToolStripMenuItem.Checked;
-            translateSingleLinesToolStripMenuItem1.Checked = !translateSingleLinesToolStripMenuItem1.Checked;
-        }
-
-        private void translateSingleLinesToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            ToggleTranslateSingleLines();
         }
 
         private void subtitleListViewSource_DoubleClick(object sender, EventArgs e)
@@ -1337,28 +1363,23 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             }
         }
 
-        private void delayToolStripMenuItem1_Click(object sender, EventArgs e)
+        private void buttonStrategy_Click(object sender, EventArgs e)
         {
-            delayToolStripMenuItem_Click(null, null);
+            using (var form = new AutoTranslateSettings(_autoTranslator.GetType(), _autoTranslator.Name))
+            {
+                form.ShowDialog(this);
+            }
         }
 
-        private void delayToolStripMenuItem_Click(object sender, EventArgs e)
+        private void translateCurrentLineToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            if (Configuration.Settings.Tools.AutoTranslateDelaySeconds == 0)
-            {
-                Configuration.Settings.Tools.AutoTranslateDelaySeconds = 20;
-            }
-            else
-            {
-                Configuration.Settings.Tools.AutoTranslateDelaySeconds = 0;
-            }
-
-            ShowDelayLabel();
+            _singleLineMode = true;
+            buttonTranslate_Click(null, null);
         }
 
-        private void ShowDelayLabel()
+        private void translateCurrentLineToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            delayToolStripMenuItem1.Text = "Delay between API calls in seconds: " + Configuration.Settings.Tools.AutoTranslateDelaySeconds;
+            translateCurrentLineToolStripMenuItem1_Click(null, null);
         }
     }
 }

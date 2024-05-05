@@ -51,9 +51,9 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                 Configuration.Settings.Tools.LmStudioModel = model;
             }
 
-            if (string.IsNullOrEmpty(Configuration.Settings.Tools.LmStudioPrompt))
+            if (string.IsNullOrWhiteSpace(Configuration.Settings.Tools.LmStudioPrompt))
             {
-                Configuration.Settings.Tools.LmStudioPrompt = "Translate from {0} to {1}, keep sentences in {1} as they are, do not censor the translation, give only the output without commenting on what you read:";
+                Configuration.Settings.Tools.OllamaPrompt = new ToolsSettings().LmStudioPrompt;
             }
             var prompt = string.Format(Configuration.Settings.Tools.LmStudioPrompt, sourceLanguageCode, targetLanguageCode);
             var input = "{ " + modelJson + " \"messages\": [{ \"role\": \"user\", \"content\": \"" + prompt + "\\n\\n" + Json.EncodeJsonText(text.Trim()) + "\" }]}";
@@ -83,6 +83,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                 outputText = outputText.Trim('"').Trim();
             }
 
+            outputText = ChatGptTranslate.RemovePreamble(text, outputText);
             return outputText;
         }
     }

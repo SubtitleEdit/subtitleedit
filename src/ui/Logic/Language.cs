@@ -1349,6 +1349,12 @@ namespace Nikse.SubtitleEdit.Logic
                 XRequiresAnApiKey = "\"{0}\" requires an API key.",
                 ReadMore = "Read more?",
                 Formality = "Formality",
+                TranslateCurrentLine = "Translate only current line",
+                ReTranslateCurrentLine = "Re-translate current line",
+                Delay = "Delay between server calls",
+                MaxBytes = "Maximum bytes in each server call",
+                MergeSplitStrategy = "Split/merge handling",
+                PromptX = "Prompt for {0}",
             };
 
             GoogleOrMicrosoftTranslate = new LanguageStructure.GoogleOrMicrosoftTranslate

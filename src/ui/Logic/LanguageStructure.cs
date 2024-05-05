@@ -1167,6 +1167,12 @@
             public string XRequiresAnApiKey { get; set; }
             public string ReadMore { get; set; }
             public string Formality { get; set; }
+            public string TranslateCurrentLine { get; set; }
+            public string ReTranslateCurrentLine { get; set; }
+            public string MergeSplitStrategy { get; set; }
+            public string Delay { get; set; }
+            public string MaxBytes { get; set; }
+            public string PromptX { get; set; }
         }
 
         public class GoogleOrMicrosoftTranslate
