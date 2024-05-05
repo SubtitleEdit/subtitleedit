@@ -18,6 +18,8 @@
    * Show Vosk/Whisper done msgbox modal (also if not focused) - thx jupester 
    * Allow re-encode with burn-in without subtitle - thx Leon
    * Add the new llama3 model and set as default for "Ollama translate"
+   * Allow vertical zoom out in waveform (ctrl+shift+mouse-wheel) - thx Leon
+   * Add auto-translate advanced settings
 * FIXED:
    * Fix for Antrophic translate - thx venomousraid 
    * Fix possible crash in teletext reading - thx yellobyte
