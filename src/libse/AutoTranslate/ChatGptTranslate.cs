@@ -106,8 +106,10 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                 outputText = outputText.Trim('"').Trim();
             }
 
+            outputText = outputText.Replace("<br />", Environment.NewLine);
+            outputText = outputText.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
             outputText = RemovePreamble(text, outputText);
-            return outputText;
+            return outputText.Trim();
         }
 
         public static List<TranslationPair> ListLanguages()
