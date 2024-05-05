@@ -39,7 +39,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             public List<string> GetAllLanguages()
             {
                 var list = new List<string>();
-                var minCount = Math.Min(SubtitleIDs.Count, SubtitleTypes.Count);
+                var minCount = Math.Min(Subtitles.Count, Math.Min(SubtitleIDs.Count, SubtitleTypes.Count));
                 for (int i = 0; i < minCount; i++)
                 {
                     var ids = SubtitleIDs[i].Split(',');
