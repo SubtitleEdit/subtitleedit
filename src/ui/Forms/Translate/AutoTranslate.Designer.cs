@@ -88,7 +88,7 @@
             this.buttonCancel.Location = new System.Drawing.Point(971, 528);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
-            this.buttonCancel.TabIndex = 102;
+            this.buttonCancel.TabIndex = 202;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
@@ -99,7 +99,7 @@
             this.buttonOK.Location = new System.Drawing.Point(890, 528);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
-            this.buttonOK.TabIndex = 101;
+            this.buttonOK.TabIndex = 201;
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
@@ -257,7 +257,7 @@
             this.buttonStrategy.Location = new System.Drawing.Point(755, 528);
             this.buttonStrategy.Name = "buttonStrategy";
             this.buttonStrategy.Size = new System.Drawing.Size(129, 23);
-            this.buttonStrategy.TabIndex = 100;
+            this.buttonStrategy.TabIndex = 200;
             this.buttonStrategy.Text = "Advanced";
             this.buttonStrategy.UseVisualStyleBackColor = true;
             this.buttonStrategy.Click += new System.EventHandler(this.buttonStrategy_Click);
@@ -356,7 +356,7 @@
             this.nikseComboBoxUrl.SelectedItem = null;
             this.nikseComboBoxUrl.SelectedText = "";
             this.nikseComboBoxUrl.Size = new System.Drawing.Size(280, 23);
-            this.nikseComboBoxUrl.TabIndex = 105;
+            this.nikseComboBoxUrl.TabIndex = 99;
             this.nikseComboBoxUrl.TabStop = false;
             this.nikseComboBoxUrl.UsePopupWindow = false;
             this.nikseComboBoxUrl.SelectedIndexChanged += new System.EventHandler(this.nikseComboBoxUrl_SelectedIndexChanged);
