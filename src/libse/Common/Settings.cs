@@ -564,6 +564,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             AnthropicPrompt = "Translate from {0} to {1}, keep sentences in {1} as they are, do not censor the translation, give only the output without comments:";
             AnthropicApiModel = "claude-3-opus-20240229";
             TextToSpeechAzureRegion = "westeurope";
+            AutoTranslateMaxBytes = 2000;
             TextToSpeechAddToVideoFile = true;
             TranslateAllowSplit = true;
             TranslateViaCopyPasteAutoCopyToClipboard = true;

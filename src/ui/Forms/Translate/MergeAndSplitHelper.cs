@@ -28,8 +28,12 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             var tempSubtitle = new Subtitle(sourceSubtitle);
             var formattingList = HandleFormatting(tempSubtitle, index, target.Code);
 
-            // Merge text for better translation and save info enough to split again later
-            var maxChars = autoTranslator.MaxCharacters;
+            if (Configuration.Settings.Tools.AutoTranslateMaxBytes <= 0)
+            {
+                Configuration.Settings.Tools.AutoTranslateMaxBytes = new ToolsSettings().AutoTranslateMaxBytes;
+            }
+            var maxChars = Math.Min(autoTranslator.MaxCharacters, Configuration.Settings.Tools.AutoTranslateMaxBytes);
+
             if (MergeSplitProblems)
             {
                 MergeSplitProblems = false;
@@ -39,6 +43,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 }
             }
 
+            // Merge text for better translation and save info enough to split again later
             var mergeResult = MergeMultipleLines(tempSubtitle, index, maxChars, noSentenceEndingSource, noSentenceEndingTarget);
             var mergeCount = mergeResult.ParagraphCount;
             var text = mergeResult.Text;
@@ -472,7 +477,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
 
                     // use best match of the three arrays considering line separator, adherence to chars/sec
-                    
+
                     // same result for char split + duration split
                     if (pctCharArr[0].Length > 0 && pctCharArr[0] == pctDurationArr[0])
                     {
