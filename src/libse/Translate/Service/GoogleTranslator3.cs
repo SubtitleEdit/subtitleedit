@@ -118,6 +118,6 @@ namespace Nikse.SubtitleEdit.Core.Translate.Service
             return resultList;
         }
 
-        public void Dispose() => _httpClient.Dispose();
+        public void Dispose() => _httpClient?.Dispose();
     }
 }

@@ -299,6 +299,6 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             return new TranslationPair(name, code, twoLetter);
         }
 
-        public void Dispose() => _httpClient.Dispose();
+        public void Dispose() => _httpClient?.Dispose();
     }
 }

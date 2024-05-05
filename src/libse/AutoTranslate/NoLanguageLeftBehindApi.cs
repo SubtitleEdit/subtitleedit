@@ -59,6 +59,6 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             return resultText;
         }
 
-        public void Dispose() => _httpClient.Dispose();
+        public void Dispose() => _httpClient?.Dispose();
     }
 }

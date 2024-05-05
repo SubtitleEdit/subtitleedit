@@ -99,6 +99,6 @@ namespace Nikse.SubtitleEdit.Core.Http
             }
         }
 
-        public void Dispose() => _httpClient.Dispose();
+        public void Dispose() => _httpClient?.Dispose();
     }
 }
