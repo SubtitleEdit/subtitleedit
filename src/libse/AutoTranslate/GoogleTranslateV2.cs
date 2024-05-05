@@ -143,6 +143,6 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             return Task.FromResult(string.Join(Environment.NewLine, resultList));
         }
 
-        public void Dispose() => _httpClient.Dispose();
+        public void Dispose() => _httpClient?.Dispose();
     }
 }

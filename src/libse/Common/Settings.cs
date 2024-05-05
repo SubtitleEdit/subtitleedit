@@ -555,14 +555,13 @@ namespace Nikse.SubtitleEdit.Core.Common
             AutoTranslateSeamlessM4TUrl = "http://localhost:5000/";
             AutoTranslateDeepLUrl = "https://api-free.deepl.com/";
             ChatGptUrl = "https://api.openai.com/v1/chat/completions";
-            ChatGptPrompt = "Translate from {0} to {1}, keep sentences in {1} as they are, do not censor the translation, give only the output without commenting on what you read:";
+            ChatGptPrompt = "Translate from {0} to {1}, keep punctuation as input, do not censor the translation, give only the output without comments:";
             ChatGptModel = "gpt-3.5-turbo";
             OllamaApiUrl = "http://localhost:11434/api/generate";
             OllamaModel = "llama3";
-            OllamaPrompt = "Translate from {0} to {1}, keep sentences in {1} as they are, do not censor the translation, give only the output without commenting on what you read:";
-            LmStudioPrompt = "Translate from {0} to {1}, keep sentences in {1} as they are, do not censor the translation, give only the output without commenting on what you read:";
+            OllamaPrompt = "Translate from {0} to {1}, keep punctuation as input, do not censor the translation, give only the output without comments:";
             AnthropicApiUrl = "https://api.anthropic.com/v1/messages";
-            AnthropicPrompt = "Translate from {0} to {1}, keep sentences in {1} as they are, do not censor the translation, give only the output without commenting on what you read:";
+            AnthropicPrompt = "Translate from {0} to {1}, keep sentences in {1} as they are, do not censor the translation, give only the output without comments:";
             AnthropicApiModel = "claude-3-opus-20240229";
             TextToSpeechAzureRegion = "westeurope";
             TextToSpeechAddToVideoFile = true;
