@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -20,6 +21,24 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
         public string Url => "https://chat.openai.com/";
         public string Error { get; set; }
         public int MaxCharacters => 1500;
+
+        public static string RemovePreamble(string original, string translation)
+        {
+            if (original.Contains(":"))
+            {
+                return translation;
+            }
+
+            var regex = new Regex(@"^(Here is|Here's) [a-zA-Z ,]+:");
+            var match = regex.Match(translation);
+            if (match.Success)
+            {
+                var result = translation.Remove(match.Index, match.Value.Length);
+                return result.Trim();
+            }
+
+            return translation;
+        }
 
         public void Initialize()
         {
@@ -57,7 +76,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
 
             if (string.IsNullOrEmpty(Configuration.Settings.Tools.ChatGptPrompt))
             {
-                Configuration.Settings.Tools.ChatGptPrompt = "Translate from {0} to {1}, keep sentences in {1} as they are, do not censor the translation, give only the output without commenting on what you read:";
+                Configuration.Settings.Tools.ChatGptPrompt = new ToolsSettings().ChatGptPrompt;
             }
             var prompt = string.Format(Configuration.Settings.Tools.ChatGptPrompt, sourceLanguageCode, targetLanguageCode);
             var input = "{\"model\": \"" + model + "\",\"messages\": [{ \"role\": \"user\", \"content\": \"" + prompt + "\\n\\n" + Json.EncodeJsonText(text.Trim()) + "\" }]}";
@@ -87,6 +106,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                 outputText = outputText.Trim('"').Trim();
             }
 
+            outputText = RemovePreamble(text, outputText);
             return outputText;
         }
 

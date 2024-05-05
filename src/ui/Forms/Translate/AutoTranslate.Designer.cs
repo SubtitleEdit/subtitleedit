@@ -43,14 +43,17 @@
             this.toolStripMenuItemStartNLLBServe = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemStartNLLBApi = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.translateSingleLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.translateCurrentLineToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.startLibreTranslateServerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.startNLLBServeServerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.startNLLBAPIServerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.translateSingleLinesToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.translateCurrentLineToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.labelApiKey = new System.Windows.Forms.Label();
+            this.buttonStrategy = new System.Windows.Forms.Button();
+            this.labelFormality = new Nikse.SubtitleEdit.Controls.NikseLabel();
+            this.comboBoxFormality = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.nikseTextBoxApiKey = new Nikse.SubtitleEdit.Controls.NikseTextBox();
             this.nikseComboBoxEngine = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.nikseComboBoxUrl = new Nikse.SubtitleEdit.Controls.NikseComboBox();
@@ -58,10 +61,6 @@
             this.comboBoxTarget = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.subtitleListViewTarget = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.subtitleListViewSource = new Nikse.SubtitleEdit.Controls.SubtitleListView();
-            this.comboBoxFormality = new Nikse.SubtitleEdit.Controls.NikseComboBox();
-            this.labelFormality = new Nikse.SubtitleEdit.Controls.NikseLabel();
-            this.delayToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.delayToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip2.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -137,7 +136,7 @@
             // 
             this.labelUrl.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelUrl.AutoSize = true;
-            this.labelUrl.Location = new System.Drawing.Point(14, 513);
+            this.labelUrl.Location = new System.Drawing.Point(14, 500);
             this.labelUrl.Name = "labelUrl";
             this.labelUrl.Size = new System.Drawing.Size(23, 13);
             this.labelUrl.TabIndex = 106;
@@ -161,10 +160,9 @@
             this.toolStripMenuItemStartNLLBServe,
             this.toolStripMenuItemStartNLLBApi,
             this.toolStripSeparator1,
-            this.translateSingleLinesToolStripMenuItem,
-            this.delayToolStripMenuItem});
+            this.translateCurrentLineToolStripMenuItem1});
             this.contextMenuStrip2.Name = "contextMenuStrip1";
-            this.contextMenuStrip2.Size = new System.Drawing.Size(199, 120);
+            this.contextMenuStrip2.Size = new System.Drawing.Size(197, 98);
             this.contextMenuStrip2.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip2_Opening);
             // 
             // toolStripMenuItemStartLibre
@@ -192,12 +190,12 @@
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(193, 6);
             // 
-            // translateSingleLinesToolStripMenuItem
+            // translateCurrentLineToolStripMenuItem1
             // 
-            this.translateSingleLinesToolStripMenuItem.Name = "translateSingleLinesToolStripMenuItem";
-            this.translateSingleLinesToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
-            this.translateSingleLinesToolStripMenuItem.Text = "Translate single lines";
-            this.translateSingleLinesToolStripMenuItem.Click += new System.EventHandler(this.translateSingleLinesToolStripMenuItem_Click);
+            this.translateCurrentLineToolStripMenuItem1.Name = "translateCurrentLineToolStripMenuItem1";
+            this.translateCurrentLineToolStripMenuItem1.Size = new System.Drawing.Size(196, 22);
+            this.translateCurrentLineToolStripMenuItem1.Text = "Translate current line";
+            this.translateCurrentLineToolStripMenuItem1.Click += new System.EventHandler(this.translateCurrentLineToolStripMenuItem1_Click);
             // 
             // contextMenuStrip1
             // 
@@ -206,10 +204,9 @@
             this.startNLLBServeServerToolStripMenuItem,
             this.startNLLBAPIServerToolStripMenuItem,
             this.toolStripSeparator2,
-            this.translateSingleLinesToolStripMenuItem1,
-            this.delayToolStripMenuItem1});
+            this.translateCurrentLineToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(199, 142);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(197, 98);
             this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
             // 
             // startLibreTranslateServerToolStripMenuItem
@@ -237,28 +234,79 @@
             this.toolStripSeparator2.Name = "toolStripSeparator2";
             this.toolStripSeparator2.Size = new System.Drawing.Size(193, 6);
             // 
-            // translateSingleLinesToolStripMenuItem1
+            // translateCurrentLineToolStripMenuItem
             // 
-            this.translateSingleLinesToolStripMenuItem1.Name = "translateSingleLinesToolStripMenuItem1";
-            this.translateSingleLinesToolStripMenuItem1.Size = new System.Drawing.Size(196, 22);
-            this.translateSingleLinesToolStripMenuItem1.Text = "Translate single lines";
-            this.translateSingleLinesToolStripMenuItem1.Click += new System.EventHandler(this.translateSingleLinesToolStripMenuItem1_Click);
+            this.translateCurrentLineToolStripMenuItem.Name = "translateCurrentLineToolStripMenuItem";
+            this.translateCurrentLineToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
+            this.translateCurrentLineToolStripMenuItem.Text = "Translate current line";
+            this.translateCurrentLineToolStripMenuItem.Click += new System.EventHandler(this.translateCurrentLineToolStripMenuItem_Click);
             // 
             // labelApiKey
             // 
             this.labelApiKey.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelApiKey.AutoSize = true;
-            this.labelApiKey.Location = new System.Drawing.Point(360, 513);
+            this.labelApiKey.Location = new System.Drawing.Point(360, 500);
             this.labelApiKey.Name = "labelApiKey";
             this.labelApiKey.Size = new System.Drawing.Size(47, 13);
             this.labelApiKey.TabIndex = 111;
             this.labelApiKey.Text = "API key:";
             // 
+            // buttonStrategy
+            // 
+            this.buttonStrategy.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonStrategy.Location = new System.Drawing.Point(755, 528);
+            this.buttonStrategy.Name = "buttonStrategy";
+            this.buttonStrategy.Size = new System.Drawing.Size(129, 23);
+            this.buttonStrategy.TabIndex = 100;
+            this.buttonStrategy.Text = "Advanced";
+            this.buttonStrategy.UseVisualStyleBackColor = true;
+            this.buttonStrategy.Click += new System.EventHandler(this.buttonStrategy_Click);
+            // 
+            // labelFormality
+            // 
+            this.labelFormality.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.labelFormality.AutoSize = true;
+            this.labelFormality.Location = new System.Drawing.Point(12, 528);
+            this.labelFormality.Name = "labelFormality";
+            this.labelFormality.Size = new System.Drawing.Size(51, 13);
+            this.labelFormality.TabIndex = 113;
+            this.labelFormality.Text = "Formality:";
+            // 
+            // comboBoxFormality
+            // 
+            this.comboBoxFormality.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.comboBoxFormality.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBoxFormality.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.comboBoxFormality.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.comboBoxFormality.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.comboBoxFormality.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.comboBoxFormality.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.comboBoxFormality.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.comboBoxFormality.DropDownHeight = 400;
+            this.comboBoxFormality.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxFormality.DropDownWidth = 280;
+            this.comboBoxFormality.FormattingEnabled = true;
+            this.comboBoxFormality.Items.AddRange(new string[] {
+            "default",
+            "more",
+            "less",
+            "prefer_more",
+            "prefer_less"});
+            this.comboBoxFormality.Location = new System.Drawing.Point(71, 524);
+            this.comboBoxFormality.MaxLength = 32767;
+            this.comboBoxFormality.Name = "comboBoxFormality";
+            this.comboBoxFormality.SelectedIndex = -1;
+            this.comboBoxFormality.SelectedItem = null;
+            this.comboBoxFormality.SelectedText = "";
+            this.comboBoxFormality.Size = new System.Drawing.Size(280, 21);
+            this.comboBoxFormality.TabIndex = 112;
+            this.comboBoxFormality.UsePopupWindow = false;
+            // 
             // nikseTextBoxApiKey
             // 
             this.nikseTextBoxApiKey.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.nikseTextBoxApiKey.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            this.nikseTextBoxApiKey.Location = new System.Drawing.Point(409, 512);
+            this.nikseTextBoxApiKey.Location = new System.Drawing.Point(409, 499);
             this.nikseTextBoxApiKey.Name = "nikseTextBoxApiKey";
             this.nikseTextBoxApiKey.Size = new System.Drawing.Size(360, 20);
             this.nikseTextBoxApiKey.TabIndex = 110;
@@ -301,7 +349,7 @@
             this.nikseComboBoxUrl.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
             this.nikseComboBoxUrl.DropDownWidth = 280;
             this.nikseComboBoxUrl.FormattingEnabled = true;
-            this.nikseComboBoxUrl.Location = new System.Drawing.Point(56, 508);
+            this.nikseComboBoxUrl.Location = new System.Drawing.Point(56, 495);
             this.nikseComboBoxUrl.MaxLength = 32767;
             this.nikseComboBoxUrl.Name = "nikseComboBoxUrl";
             this.nikseComboBoxUrl.SelectedIndex = -1;
@@ -373,7 +421,7 @@
             this.subtitleListViewTarget.Location = new System.Drawing.Point(465, 53);
             this.subtitleListViewTarget.Name = "subtitleListViewTarget";
             this.subtitleListViewTarget.OwnerDraw = true;
-            this.subtitleListViewTarget.Size = new System.Drawing.Size(428, 446);
+            this.subtitleListViewTarget.Size = new System.Drawing.Size(428, 431);
             this.subtitleListViewTarget.SubtitleFontBold = false;
             this.subtitleListViewTarget.SubtitleFontName = "Tahoma";
             this.subtitleListViewTarget.SubtitleFontSize = 8;
@@ -396,7 +444,7 @@
             this.subtitleListViewSource.Location = new System.Drawing.Point(12, 53);
             this.subtitleListViewSource.Name = "subtitleListViewSource";
             this.subtitleListViewSource.OwnerDraw = true;
-            this.subtitleListViewSource.Size = new System.Drawing.Size(430, 446);
+            this.subtitleListViewSource.Size = new System.Drawing.Size(430, 431);
             this.subtitleListViewSource.SubtitleFontBold = false;
             this.subtitleListViewSource.SubtitleFontName = "Tahoma";
             this.subtitleListViewSource.SubtitleFontSize = 8;
@@ -407,66 +455,13 @@
             this.subtitleListViewSource.Click += new System.EventHandler(this.subtitleListViewSource_Click);
             this.subtitleListViewSource.DoubleClick += new System.EventHandler(this.subtitleListViewSource_DoubleClick);
             // 
-            // comboBoxFormality
-            // 
-            this.comboBoxFormality.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.comboBoxFormality.BackColor = System.Drawing.SystemColors.Window;
-            this.comboBoxFormality.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
-            this.comboBoxFormality.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
-            this.comboBoxFormality.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
-            this.comboBoxFormality.ButtonForeColor = System.Drawing.SystemColors.ControlText;
-            this.comboBoxFormality.ButtonForeColorDown = System.Drawing.Color.Orange;
-            this.comboBoxFormality.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            this.comboBoxFormality.DropDownHeight = 400;
-            this.comboBoxFormality.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxFormality.DropDownWidth = 280;
-            this.comboBoxFormality.FormattingEnabled = true;
-            this.comboBoxFormality.Items.AddRange(new object[] {
-            "default",
-            "more",
-            "less",
-            "prefer_more",
-            "prefer_less"});
-            this.comboBoxFormality.Location = new System.Drawing.Point(71, 537);
-            this.comboBoxFormality.MaxLength = 32767;
-            this.comboBoxFormality.Name = "comboBoxFormality";
-            this.comboBoxFormality.SelectedIndex = -1;
-            this.comboBoxFormality.SelectedItem = null;
-            this.comboBoxFormality.SelectedText = "";
-            this.comboBoxFormality.Size = new System.Drawing.Size(280, 21);
-            this.comboBoxFormality.TabIndex = 112;
-            this.comboBoxFormality.UsePopupWindow = false;
-            // 
-            // labelFormality
-            // 
-            this.labelFormality.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.labelFormality.AutoSize = true;
-            this.labelFormality.Location = new System.Drawing.Point(14, 540);
-            this.labelFormality.Name = "labelFormality";
-            this.labelFormality.Size = new System.Drawing.Size(51, 13);
-            this.labelFormality.TabIndex = 113;
-            this.labelFormality.Text = "Formality:";
-            // 
-            // delayToolStripMenuItem
-            // 
-            this.delayToolStripMenuItem.Name = "delayToolStripMenuItem";
-            this.delayToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
-            this.delayToolStripMenuItem.Text = "Delay between API calls";
-            this.delayToolStripMenuItem.Click += new System.EventHandler(this.delayToolStripMenuItem_Click);
-            // 
-            // delayToolStripMenuItem1
-            // 
-            this.delayToolStripMenuItem1.Name = "delayToolStripMenuItem1";
-            this.delayToolStripMenuItem1.Size = new System.Drawing.Size(198, 22);
-            this.delayToolStripMenuItem1.Text = "Delay between API calls";
-            this.delayToolStripMenuItem1.Click += new System.EventHandler(this.delayToolStripMenuItem1_Click);
-            // 
             // AutoTranslate
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1058, 563);
             this.ContextMenuStrip = this.contextMenuStrip1;
+            this.Controls.Add(this.buttonStrategy);
             this.Controls.Add(this.labelFormality);
             this.Controls.Add(this.comboBoxFormality);
             this.Controls.Add(this.labelApiKey);
@@ -532,12 +527,11 @@
         private Controls.NikseTextBox nikseTextBoxApiKey;
         private System.Windows.Forms.Label labelApiKey;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private System.Windows.Forms.ToolStripMenuItem translateSingleLinesToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
-        private System.Windows.Forms.ToolStripMenuItem translateSingleLinesToolStripMenuItem1;
         private Nikse.SubtitleEdit.Controls.NikseComboBox comboBoxFormality;
         private Nikse.SubtitleEdit.Controls.NikseLabel labelFormality;
-        private System.Windows.Forms.ToolStripMenuItem delayToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem delayToolStripMenuItem1;
+        private System.Windows.Forms.Button buttonStrategy;
+        private System.Windows.Forms.ToolStripMenuItem translateCurrentLineToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem translateCurrentLineToolStripMenuItem;
     }
 }

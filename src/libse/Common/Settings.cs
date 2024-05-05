@@ -189,6 +189,8 @@ namespace Nikse.SubtitleEdit.Core.Common
         public string AnthropicApiKey { get; set; }
         public string AnthropicApiModel { get; set; }
         public int AutoTranslateDelaySeconds { get; set; }
+        public int AutoTranslateMaxBytes { get; set; }
+        public string AutoTranslateStrategy { get; set; }
         public string GeminiProApiKey { get; set; }
         public string TextToSpeechEngine { get; set; }
         public string TextToSpeechLastVoice { get; set; }
@@ -557,6 +559,8 @@ namespace Nikse.SubtitleEdit.Core.Common
             ChatGptModel = "gpt-3.5-turbo";
             OllamaApiUrl = "http://localhost:11434/api/generate";
             OllamaModel = "llama3";
+            OllamaPrompt = "Translate from {0} to {1}, keep sentences in {1} as they are, do not censor the translation, give only the output without commenting on what you read:";
+            LmStudioPrompt = "Translate from {0} to {1}, keep sentences in {1} as they are, do not censor the translation, give only the output without commenting on what you read:";
             AnthropicApiUrl = "https://api.anthropic.com/v1/messages";
             AnthropicPrompt = "Translate from {0} to {1}, keep sentences in {1} as they are, do not censor the translation, give only the output without commenting on what you read:";
             AnthropicApiModel = "claude-3-opus-20240229";
@@ -5460,6 +5464,18 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.Tools.AutoTranslateDelaySeconds = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("AutoTranslateMaxBytes");
+            if (subNode != null)
+            {
+                settings.Tools.AutoTranslateMaxBytes = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("AutoTranslateStrategy");
+            if (subNode != null)
+            {
+                settings.Tools.AutoTranslateStrategy = subNode.InnerText;
             }
 
             subNode = node.SelectSingleNode("GeminiProApiKey");
@@ -12042,6 +12058,8 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("AnthropicApiKey", settings.Tools.AnthropicApiKey);
                 textWriter.WriteElementString("AnthropicApiModel", settings.Tools.AnthropicApiModel);
                 textWriter.WriteElementString("AutoTranslateDelaySeconds", settings.Tools.AutoTranslateDelaySeconds.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("AutoTranslateMaxBytes", settings.Tools.AutoTranslateMaxBytes.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("AutoTranslateStrategy", settings.Tools.AutoTranslateStrategy);
                 textWriter.WriteElementString("GeminiProApiKey", settings.Tools.GeminiProApiKey);
                 textWriter.WriteElementString("TextToSpeechEngine", settings.Tools.TextToSpeechEngine);
                 textWriter.WriteElementString("TextToSpeechLastVoice", settings.Tools.TextToSpeechLastVoice);
