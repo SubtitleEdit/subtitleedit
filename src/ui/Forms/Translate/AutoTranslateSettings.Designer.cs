@@ -60,7 +60,7 @@
             this.comboBoxParagraphHandling.SelectedItem = null;
             this.comboBoxParagraphHandling.SelectedText = "";
             this.comboBoxParagraphHandling.Size = new System.Drawing.Size(272, 21);
-            this.comboBoxParagraphHandling.TabIndex = 92;
+            this.comboBoxParagraphHandling.TabIndex = 10;
             this.comboBoxParagraphHandling.UsePopupWindow = false;
             // 
             // labelParagraphHandling
@@ -109,7 +109,7 @@
             0});
             this.nikseUpDownMaxBytes.Name = "nikseUpDownMaxBytes";
             this.nikseUpDownMaxBytes.Size = new System.Drawing.Size(75, 23);
-            this.nikseUpDownMaxBytes.TabIndex = 95;
+            this.nikseUpDownMaxBytes.TabIndex = 30;
             this.nikseUpDownMaxBytes.TabStop = false;
             this.nikseUpDownMaxBytes.Text = "nikseUpDown1";
             this.nikseUpDownMaxBytes.ThousandsSeparator = false;
@@ -126,7 +126,7 @@
             this.buttonCancel.Location = new System.Drawing.Point(378, 232);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
-            this.buttonCancel.TabIndex = 97;
+            this.buttonCancel.TabIndex = 101;
             this.buttonCancel.Text = "Cancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
@@ -138,7 +138,7 @@
             this.buttonOk.Location = new System.Drawing.Point(297, 232);
             this.buttonOk.Name = "buttonOk";
             this.buttonOk.Size = new System.Drawing.Size(75, 23);
-            this.buttonOk.TabIndex = 96;
+            this.buttonOk.TabIndex = 100;
             this.buttonOk.Text = "OK";
             this.buttonOk.UseVisualStyleBackColor = true;
             this.buttonOk.Click += new System.EventHandler(this.buttonOk_Click);
@@ -162,7 +162,7 @@
             this.nikseTextBoxPrompt.Multiline = true;
             this.nikseTextBoxPrompt.Name = "nikseTextBoxPrompt";
             this.nikseTextBoxPrompt.Size = new System.Drawing.Size(431, 50);
-            this.nikseTextBoxPrompt.TabIndex = 99;
+            this.nikseTextBoxPrompt.TabIndex = 40;
             // 
             // nikseUpDownDelay
             // 
@@ -192,7 +192,7 @@
             0});
             this.nikseUpDownDelay.Name = "nikseUpDownDelay";
             this.nikseUpDownDelay.Size = new System.Drawing.Size(75, 23);
-            this.nikseUpDownDelay.TabIndex = 100;
+            this.nikseUpDownDelay.TabIndex = 20;
             this.nikseUpDownDelay.TabStop = false;
             this.nikseUpDownDelay.Text = "nikseUpDown2";
             this.nikseUpDownDelay.ThousandsSeparator = false;
@@ -235,6 +235,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "AutoTranslateSettings";
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.AutoTranslateSettings_KeyDown);
             this.ResumeLayout(false);
             this.PerformLayout();
 

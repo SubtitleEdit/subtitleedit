@@ -75,7 +75,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             comboBoxParagraphHandling.Items.Add(LanguageSettings.Current.GenerateVideoWithEmbeddedSubs.Default);
             comboBoxParagraphHandling.Items.Add("Translate each line separately");
             comboBoxParagraphHandling.SelectedIndex = 0;
-            if (Enum.TryParse<TranslateStrategy>(Configuration.Settings.Tools.AutoTranslateStrategy, out var ts) && 
+            if (Enum.TryParse<TranslateStrategy>(Configuration.Settings.Tools.AutoTranslateStrategy, out var ts) &&
                 ts == TranslateStrategy.TranslateEachLineSeparately)
             {
                 comboBoxParagraphHandling.SelectedIndex = 1;
@@ -123,9 +123,18 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
         private void buttonCancel_KeyDown(object sender, KeyEventArgs e)
         {
+            DialogResult = DialogResult.Cancel;
+        }
+
+        private void AutoTranslateSettings_KeyDown(object sender, KeyEventArgs e)
+        {
             if (e.KeyCode == Keys.Escape)
             {
                 DialogResult = DialogResult.Cancel;
+            }
+            else if (e.KeyData == UiUtil.HelpKeys)
+            {
+                UiUtil.ShowHelp("#translation");
             }
         }
     }
