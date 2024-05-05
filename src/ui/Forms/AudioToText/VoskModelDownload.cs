@@ -71,7 +71,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 buttonDownload.Enabled = false;
                 Refresh();
                 Cursor = Cursors.WaitCursor;
-                var httpClient = DownloaderFactory.MakeHttpClient();
+                using (var httpClient = DownloaderFactory.MakeHttpClient())
                 using (var downloadStream = new MemoryStream())
                 {
                     var downloadTask = httpClient.DownloadAsync(url, downloadStream, new Progress<float>((progress) =>

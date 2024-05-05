@@ -135,19 +135,19 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
 
         private static string GetAccessToken(string apiKey, string tokenEndpoint)
         {
-            var httpClient = DownloaderFactory.MakeHttpClient();
-            httpClient.DefaultRequestHeaders
-                .Accept
-                .Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            httpClient.DefaultRequestHeaders.TryAddWithoutValidation(SecurityHeaderName, apiKey);
-            var response = httpClient.PostAsync(tokenEndpoint, new StringContent(string.Empty)).Result;
-            var result = response.Content.ReadAsStringAsync().Result;
-            if (!response.IsSuccessStatusCode)
+            using (var httpClient = DownloaderFactory.MakeHttpClient())
             {
-                SeLogger.Error($"{StaticName}: Error getting access token via {tokenEndpoint} and API key {apiKey}: {result}");
-            }
+                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                httpClient.DefaultRequestHeaders.TryAddWithoutValidation(SecurityHeaderName, apiKey);
+                var response = httpClient.PostAsync(tokenEndpoint, new StringContent(string.Empty)).Result;
+                var result = response.Content.ReadAsStringAsync().Result;
+                if (!response.IsSuccessStatusCode)
+                {
+                    SeLogger.Error($"{StaticName}: Error getting access token via {tokenEndpoint} and API key {apiKey}: {result}");
+                }
 
-            return response.Content.ReadAsStringAsync().Result;
+                return response.Content.ReadAsStringAsync().Result;
+            }
         }
 
         private static List<TranslationPair> GetTranslationPairs()

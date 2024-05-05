@@ -13,7 +13,7 @@ namespace Nikse.SubtitleEdit.Core.Translate.Service
     /// <summary>
     /// Google translate via Google V1 API - see https://cloud.google.com/translate/
     /// </summary>
-    public class GoogleTranslator1 : ITranslationStrategy
+    public class GoogleTranslator1 : ITranslationStrategy, IDisposable
     {
         private readonly IDownloader _httpClient;
         private const char SplitChar = '\n';
@@ -21,7 +21,6 @@ namespace Nikse.SubtitleEdit.Core.Translate.Service
 
         public GoogleTranslator1()
         {
-            var x = new HttpClient();
             _httpClient = DownloaderFactory.MakeHttpClient();
             _httpClient.DefaultRequestHeaders.Add("user-agent", "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36");
             _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json; charset=UTF-8");
@@ -305,5 +304,7 @@ namespace Nikse.SubtitleEdit.Core.Translate.Service
 
             return results.Count == paragraphs.Count ? results : input;
         }
+
+        public void Dispose() => _httpClient.Dispose();
     }
 }
