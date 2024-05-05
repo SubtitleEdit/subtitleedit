@@ -158,7 +158,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        public const double VerticalZoomMinimum = 1.0;
+        public const double VerticalZoomMinimum = 0.1;
         public const double VerticalZoomMaximum = 20.0;
         private double _verticalZoomFactor = 1.0; // 1.0=no zoom
 
