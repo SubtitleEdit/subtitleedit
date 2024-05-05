@@ -54,13 +54,13 @@ namespace Nikse.SubtitleEdit.Core.Translate.Service
 
         private static string GetAccessToken(string apiKey, string tokenEndpoint)
         {
-            var httpClient = DownloaderFactory.MakeHttpClient();
-            httpClient.DefaultRequestHeaders
-                .Accept
-                .Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            httpClient.DefaultRequestHeaders.TryAddWithoutValidation(SecurityHeaderName, apiKey);
-            var response = httpClient.PostAsync(tokenEndpoint, new StringContent(string.Empty)).Result;
-            return response.Content.ReadAsStringAsync().Result;
+            using (var httpClient = DownloaderFactory.MakeHttpClient())
+            {
+                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                httpClient.DefaultRequestHeaders.TryAddWithoutValidation(SecurityHeaderName, apiKey);
+                var response = httpClient.PostAsync(tokenEndpoint, new StringContent(string.Empty)).Result;
+                return response.Content.ReadAsStringAsync().Result;
+            }
         }
 
         private static List<TranslationPair> GetTranslationPairs()

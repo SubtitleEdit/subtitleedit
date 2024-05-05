@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Core.AutoTranslate
 {
-    public class MyMemoryApi : IAutoTranslator
+    public class MyMemoryApi : IAutoTranslator, IDisposable
     {
         private IDownloader _httpClient;
         private readonly SeJsonParser _jsonParser = new SeJsonParser();
@@ -227,5 +227,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
 
             return Task.FromResult(result);
         }
+
+        public void Dispose() => _httpClient?.Dispose();
     }
 }

@@ -30,7 +30,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             try
             {
                 Utilities.SetSecurityProtocol();
-                var httpClient = DownloaderFactory.MakeHttpClient();
+                using (var httpClient = DownloaderFactory.MakeHttpClient())
                 using (var downloadStream = new MemoryStream())
                 {
                     var downloadTask = httpClient.DownloadAsync(TesseractDownloadUrl, downloadStream, new Progress<float>((progress) =>
