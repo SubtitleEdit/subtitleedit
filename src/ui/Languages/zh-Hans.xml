@@ -1081,6 +1081,12 @@ Command line: {1} {2}
     <XRequiresAnApiKey>"{0}"需要一个API密钥。</XRequiresAnApiKey>
     <ReadMore>了解更多?</ReadMore>
     <Formality>正式程度</Formality>
+    <TranslateCurrentLine>仅翻译当前行</TranslateCurrentLine>
+    <ReTranslateCurrentLine>重新翻译当前行</ReTranslateCurrentLine>
+    <MergeSplitStrategy>拆分/合并处理</MergeSplitStrategy>
+    <Delay>服务器调用的延迟</Delay>
+    <MaxBytes>每次服务器调用的最大字节数</MaxBytes>
+    <PromptX>{0} 的提示词</PromptX>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
     <Title>谷歌 与 微软 翻译</Title>
