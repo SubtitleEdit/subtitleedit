@@ -2869,6 +2869,24 @@ namespace Nikse.SubtitleEdit.Logic
                 case "GoogleTranslate/Formality":
                     language.GoogleTranslate.Formality = reader.Value;
                     break;
+                case "GoogleTranslate/TranslateCurrentLine":
+                    language.GoogleTranslate.TranslateCurrentLine = reader.Value;
+                    break;
+                case "GoogleTranslate/ReTranslateCurrentLine":
+                    language.GoogleTranslate.ReTranslateCurrentLine = reader.Value;
+                    break;
+                case "GoogleTranslate/MergeSplitStrategy":
+                    language.GoogleTranslate.MergeSplitStrategy = reader.Value;
+                    break;
+                case "GoogleTranslate/Delay":
+                    language.GoogleTranslate.Delay = reader.Value;
+                    break;
+                case "GoogleTranslate/MaxBytes":
+                    language.GoogleTranslate.MaxBytes = reader.Value;
+                    break;
+                case "GoogleTranslate/PromptX":
+                    language.GoogleTranslate.PromptX = reader.Value;
+                    break;
                 case "GoogleOrMicrosoftTranslate/Title":
                     language.GoogleOrMicrosoftTranslate.Title = reader.Value;
                     break;
