@@ -114,6 +114,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 .ToList();
 
             Text = LanguageSettings.Current.TextToSpeech.Title;
+            labelEngine.Text = LanguageSettings.Current.AudioToText.Engine;
             groupBoxSettings.Text = LanguageSettings.Current.Settings.Title;
             labelVoice.Text = LanguageSettings.Current.TextToSpeech.Voice;
             labelApiKey.Text = LanguageSettings.Current.VobSubOcr.ApiKey;

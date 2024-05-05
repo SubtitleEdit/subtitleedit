@@ -1081,6 +1081,12 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <XRequiresAnApiKey>"{0}"에는 API 키가 필요합니다.</XRequiresAnApiKey>
     <ReadMore>더 많은 정보를 보시겠습니까?</ReadMore>
     <Formality>형식</Formality>
+    <TranslateCurrentLine>현재 줄만 번역</TranslateCurrentLine>
+    <ReTranslateCurrentLine>현재 줄 다시 번역</ReTranslateCurrentLine>
+    <MergeSplitStrategy>분할/병합 처리</MergeSplitStrategy>
+    <Delay>서버 호출 간 지연</Delay>
+    <MaxBytes>각 서버 호출의 최대 바이트 수</MaxBytes>
+    <PromptX>{0}개의 프롬프트</PromptX>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
     <Title>Google | Microsoft 번역기</Title>
@@ -1446,6 +1452,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
         <RemoveOrExportShotChanges>장면전환 제거/내보내기...</RemoveOrExportShotChanges>
         <WaveformBatchGenerate>파형 일괄 생성...</WaveformBatchGenerate>
         <ShowHideWaveformAndSpectrogram>파형 및 스펙트로그램 표시 | 숨김</ShowHideWaveformAndSpectrogram>
+        <TextToSpeechAndAddToVideo>텍스트를 음성으로 변환하고 비디오에 추가...</TextToSpeechAndAddToVideo>
         <UnDockVideoControls>비디오 컨트롤 분리</UnDockVideoControls>
         <ReDockVideoControls>비디오 컨트롤 연결</ReDockVideoControls>
       </Video>
@@ -1604,6 +1611,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
         <GoToSourceView>소스 보기로 이동</GoToSourceView>
         <GoToListView>자막 보기로 이동</GoToListView>
         <ExtractAudio>오디오 추출...</ExtractAudio>
+        <MediaInfo>미디어 정보</MediaInfo>
       </ContextMenu>
     </Menu>
     <Controls>
@@ -2127,6 +2135,8 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <EvenLines>짝수 라인</EvenLines>
     <DurationLessThan>표시시간 미달</DurationLessThan>
     <DurationGreaterThan>표시시간 초과</DurationGreaterThan>
+    <CpsLessThan>CPS 미달</CpsLessThan>
+    <CpsGreaterThan>CPS 초과</CpsGreaterThan>
     <ExactlyOneLine>정확히 한 줄</ExactlyOneLine>
     <ExactlyTwoLines>정확히 두 줄</ExactlyTwoLines>
     <MoreThanTwoLines>두 줄 이상</MoreThanTwoLines>
@@ -3153,6 +3163,23 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <Info>※ 하나의 동기화 지점을 정한 후 나머지 지점들의 위치와 속도를 정하고 조정합니다.</Info>
     <ApplySync>동기화 적용</ApplySync>
   </PointSync>
+  <TextToSpeech>
+    <Title>텍스트를 음성으로 변환</Title>
+    <Voice>음성</Voice>
+    <TestVoice>음성 테스트</TestVoice>
+    <DefaultVoice>기본 음성</DefaultVoice>
+    <AddAudioToVideo>비디오 파일에 오디오 추가 (새 파일)</AddAudioToVideo>
+    <GenerateSpeech>텍스트에서 음성 생성</GenerateSpeech>
+    <ActorInfo>우클릭하여 음성 할당</ActorInfo>
+    <AdjustingSpeedXOfY>속도 조정: {0} / {1}...</AdjustingSpeedXOfY>
+    <MergingAudioTrackXOfY>오디오 트랙 병합: {0} / {1}...</MergingAudioTrackXOfY>
+    <GeneratingSpeechFromTextXOfY>텍스트에서 음성 생성: {0} / {1}...</GeneratingSpeechFromTextXOfY>
+    <ReviewAudioClips>오디오 클립 검토</ReviewAudioClips>
+    <ReviewInfo>오디오 클립 검토 및 편집/제거</ReviewInfo>
+    <Play>재생</Play>
+    <AutoContinue>자동 계속</AutoContinue>
+    <Regenerate>재생성</Regenerate>
+  </TextToSpeech>
   <TimedTextSmpteTiming>
     <Title>SMPTE 타이밍</Title>
     <UseSmpteTiming>현재 자막에 SMPTE 타이밍을 사용하시겠습니까?</UseSmpteTiming>
@@ -3385,7 +3412,8 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <RemoveShotChangesFromSelection>선택에서 장면전환 제거</RemoveShotChangesFromSelection>
     <GuessTimeCodes>타임코드 알아내기</GuessTimeCodes>
     <SeekSilence>무음 탐색...</SeekSilence>
-    <InsertSubtitleHere>여기에 자막 삽입</InsertSubtitleHere>
+    <InsertSubtitleHere>여기에 텍스트 삽입</InsertSubtitleHere>
+    <InsertSubtitleFileHere>여기에 자막 파일 삽입...</InsertSubtitleFileHere>
     <CharsSecX>문자/초: {0:0.00}</CharsSecX>
     <WordsMinX>단어/분: {0:0.00}</WordsMinX>
   </Waveform>
