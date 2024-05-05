@@ -424,6 +424,12 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                     pFileName = Path.Combine(_waveFolder, index + ".mp3");
                 }
 
+                if (!File.Exists(pFileName))
+                {
+                    fileNames.Add(new FileNameAndSpeedFactor { Filename = pFileName, Factor = 1 });
+                    continue;
+                }
+
                 var outputFileName1 = Path.Combine(_waveFolder, index + "_u.wav");
                 if (!string.IsNullOrEmpty(overrideFileName) && File.Exists(Path.Combine(_waveFolder, overrideFileName)))
                 {
@@ -565,6 +571,11 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                     }
 
                     var p = subtitle.Paragraphs[index];
+                    if (string.IsNullOrWhiteSpace(p.Text))
+                    {
+                        continue;
+                    }
+
                     var wavFileName = Path.Combine(_waveFolder, string.IsNullOrEmpty(overrideFileName) ? index + ".wav" : overrideFileName);
                     synthesizer.SetOutputToWaveFile(wavFileName);
                     var builder = new System.Speech.Synthesis.PromptBuilder();
@@ -648,6 +659,11 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 }
 
                 var p = subtitle.Paragraphs[index];
+                if (string.IsNullOrWhiteSpace(p.Text))
+                {
+                    continue;
+                }
+
                 var outputFileName = Path.Combine(_waveFolder, string.IsNullOrEmpty(overrideFileName) ? index + ".wav" : overrideFileName);
                 if (File.Exists(outputFileName))
                 {
@@ -777,6 +793,11 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 }
 
                 var p = subtitle.Paragraphs[index];
+                if (string.IsNullOrWhiteSpace(p.Text))
+                {
+                    continue;
+                }
+
                 var outputFileName = Path.Combine(_waveFolder, string.IsNullOrEmpty(overrideFileName) ? index + ".wav" : overrideFileName);
 
                 var v = voice;
@@ -851,6 +872,11 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 }
 
                 var p = subtitle.Paragraphs[index];
+                if (string.IsNullOrWhiteSpace(p.Text))
+                {
+                    continue;
+                }
+
                 var outputFileName = Path.Combine(_waveFolder, string.IsNullOrEmpty(overrideFileName) ? index + ".wav" : overrideFileName);
 
                 var text = Utilities.UnbreakLine(p.Text);
@@ -894,6 +920,11 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
                 var voice = nikseComboBoxVoice.Text;
                 var p = subtitle.Paragraphs[index];
+                if (string.IsNullOrWhiteSpace(p.Text))
+                {
+                    continue;
+                }
+
                 if (_actorAndVoices.Count > 0 && !string.IsNullOrEmpty(p.Actor))
                 {
                     var f = _actorAndVoices.FirstOrDefault(x => x.Actor == p.Actor);
@@ -980,6 +1011,11 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 }
 
                 var p = subtitle.Paragraphs[index];
+                if (string.IsNullOrWhiteSpace(p.Text))
+                {
+                    continue;
+                }
+
                 var outputFileName = Path.Combine(_waveFolder, string.IsNullOrEmpty(overrideFileName) ? index + ".mp3" : overrideFileName.Replace(".wav", ".mp3"));
 
                 if (_actorAndVoices.Count > 0 && !string.IsNullOrEmpty(p.Actor))
@@ -1144,6 +1180,11 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 }
 
                 var p = subtitle.Paragraphs[index];
+                if (string.IsNullOrWhiteSpace(p.Text))
+                {
+                    continue;
+                }
+
                 var outputFileName = Path.Combine(_waveFolder, string.IsNullOrEmpty(overrideFileName) ? index + ".mp3" : overrideFileName.Replace(".wav", ".mp3"));
 
                 if (_actorAndVoices.Count > 0 && !string.IsNullOrEmpty(p.Actor))
