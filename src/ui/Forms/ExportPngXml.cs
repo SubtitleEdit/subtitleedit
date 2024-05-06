@@ -5896,31 +5896,70 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
         {
             try
             {
-                if (!string.IsNullOrWhiteSpace(_videoFileName) && LibVlcDynamic.IsInstalled)
+                if (!string.IsNullOrWhiteSpace(_videoFileName))
                 {
-                    using (var vlc = new LibVlcDynamic())
+                    if (!Configuration.IsRunningOnWindows || (!string.IsNullOrWhiteSpace(Configuration.Settings.General.FFmpegLocation) && File.Exists(Configuration.Settings.General.FFmpegLocation)))
                     {
-                        vlc.Initialize(panelVlcTemp, _videoFileName, null, null);
-                        Application.DoEvents();
-                        vlc.Volume = 0;
-                        vlc.Pause();
-                        vlc.CurrentPosition = p.StartTime.TotalSeconds;
-                        Application.DoEvents();
-                        var fileName = FileUtil.GetTempFileName(".bmp");
-                        vlc.TakeSnapshot(fileName, (uint)bmp.Width, (uint)bmp.Height);
-                        Application.DoEvents();
-                        Thread.Sleep(200);
-                        using (var tempBmp = new Bitmap(fileName))
+                        var ts = p.StartTime.TimeSpan;
+                        var s = $"{ts.Hours + ts.Days * 24:00}:{ts.Minutes:00}:{ts.Seconds:00}";
+                        var imageFileName = VideoPreviewGenerator.GetScreenShot(_videoFileName, s);
+
+                        if (File.Exists(imageFileName))
                         {
-                            g.DrawImageUnscaled(tempBmp, new Point(0, 0));
+                            using (var tempBmp = new Bitmap(imageFileName))
+                            {
+                                g.DrawImageUnscaled(tempBmp, new Point(0, 0));
+                            }
+
+                            try
+                            {
+                                File.Delete(imageFileName);
+                            }
+                            catch
+                            {
+                                // ignore
+                            }
+
+                            return;
                         }
                     }
-                    return;
+
+                    if (LibVlcDynamic.IsInstalled)
+                    {
+                        using (var vlc = new LibVlcDynamic())
+                        {
+                            vlc.Initialize(panelVlcTemp, _videoFileName, null, null);
+                            Application.DoEvents();
+                            vlc.Volume = 0;
+                            vlc.Pause();
+                            vlc.CurrentPosition = p.StartTime.TotalSeconds;
+                            Application.DoEvents();
+                            var fileName = FileUtil.GetTempFileName(".bmp");
+                            vlc.TakeSnapshot(fileName, (uint)bmp.Width, (uint)bmp.Height);
+                            Application.DoEvents();
+                            Thread.Sleep(200);
+                            using (var tempBmp = new Bitmap(fileName))
+                            {
+                                g.DrawImageUnscaled(tempBmp, new Point(0, 0));
+                            }
+
+                            try
+                            {
+                                File.Delete(fileName);
+                            }
+                            catch
+                            {
+                                // ignore
+                            }
+
+                            return;
+                        }
+                    }
                 }
             }
             catch
             {
-                // Was unable to grap screenshot via vlc
+                // Was unable to grap screenshot via ffmpeg/vlc
             }
 
             // Draw background with generated image
