@@ -1031,7 +1031,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
                 var url = "https://api.elevenlabs.io/v1/text-to-speech/" + voice.Model;
                 var text = Utilities.UnbreakLine(p.Text);
-                var data = "{ \"text\": \"" + Json.EncodeJsonText(text) + "\", \"model_id\": \"eleven_monolingual_v1\", \"voice_settings\": { \"stability\": 0.5, \"similarity_boost\": 0.5 } }";
+                var data = "{ \"text\": \"" + Json.EncodeJsonText(text) + "\", \"model_id\": \"eleven_multilingual_v2\", \"voice_settings\": { \"stability\": 0.8, \"similarity_boost\": 1.0 } }";
                 var content = new StringContent(data, Encoding.UTF8);
                 content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
                 var result = await httpClient.PostAsync(url, content, CancellationToken.None);
