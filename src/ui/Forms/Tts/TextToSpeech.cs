@@ -2202,7 +2202,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
         private void refreshVoicesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var dr = MessageBox.Show(this, "Download updated voice list from the internet?", "Update voices", MessageBoxButtons.YesNoCancel);
+            var dr = MessageBox.Show(this, "Download updated voice list?", "Update voices", MessageBoxButtons.YesNoCancel);
             if (dr != DialogResult.Yes)
             {
                 return;
@@ -2215,7 +2215,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 Cursor = Cursors.Default;
                 if (ok)
                 {
-                    MessageBox.Show(this, "Voice list downloaded");
+                    MessageBox.Show(this, "Voice list updated :)");
                 }
             }
             catch (Exception ex)
