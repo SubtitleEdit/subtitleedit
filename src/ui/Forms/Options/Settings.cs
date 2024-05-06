@@ -3022,7 +3022,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             openFileDialogFFmpeg.Title = LanguageSettings.Current.Settings.WaveformBrowseToVLC;
             if (Configuration.IsRunningOnWindows)
             {
-                openFileDialogFFmpeg.Filter = $"{LanguageSettings.Current.Settings.VlcMediaPlayer} (vlc.exe)|vlc.exe";
+                openFileDialogFFmpeg.Filter = $"{LanguageSettings.Current.Settings.VlcMediaPlayer} (vlc.exe)|vlc.exe|" + LanguageSettings.Current.General.AllFiles + "|*.*";
             }
             if (openFileDialogFFmpeg.ShowDialog(this) == DialogResult.OK)
             {
