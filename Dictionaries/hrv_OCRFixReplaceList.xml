@@ -2693,6 +2693,7 @@
     <Word from="upustva" to="uputstva" />
     <Word from="uprkos" to="usprkos" />
     <Word from="Uprkos" to="Usprkos" />
+    <Word from="upsije" to="uspije" />
     <Word from="uradio" to="učinio" />
     <Word from="Uredu" to="U redu" />
     <Word from="useva" to="usjeva" />
@@ -3016,6 +3017,7 @@
     <Word from="zista" to="zaista" />
     <Word from="zivot" to="život" />
     <Word from="zlodela" to="zlodjela" />
+    <Word from="zmači" to="znači" />
     <Word from="znaći" to="znači" />
     <Word from="zovr" to="zove" />
     <Word from="zs" to="za" />
@@ -4592,6 +4594,7 @@
     <RegEx find="([nN])a(gradi|pravi|tera|uči|zva)ć" replaceWith="$1a$2t ć" />
     <RegEx find="naučn" replaceWith="znanstven" />
     <RegEx find="Naučn" replaceWith="Znanstven" />
+    <RegEx find="ndos" replaceWith="dnos" />
     <RegEx find="\b([nN])e[cč]([eu]š?|emo|ete)\b" replaceWith="$1eć$2" />
     <RegEx find="edelj" replaceWith="edjelj" />
     <RegEx find="\b([nN])ež(an|n[aeiou]|nom|nima)\b" replaceWith="$1jež$2" />
@@ -5281,7 +5284,7 @@
     <RegEx find="jdi?n" replaceWith="jedin" />
     <RegEx find="jerm" replaceWith="jem" />
     <RegEx find="jho" replaceWith="jno" />
-    <RegEx find="jr([dgkls])" replaceWith="je$1" />
+    <RegEx find="jr([dgklst])" replaceWith="je$1" />
     <RegEx find="jw" replaceWith="je" />
     <RegEx find="kba" replaceWith="kva" />
     <RegEx find="kcj" replaceWith="kcij" />
