@@ -1089,6 +1089,12 @@ Gå till "Alternativ -&gt; Inställningar -&gt; Verktyg" för att ange din nycke
     <XRequiresAnApiKey>"{0}" kräver en API-nyckel.</XRequiresAnApiKey>
     <ReadMore>Läs mer?</ReadMore>
     <Formality>Formalitet</Formality>
+    <TranslateCurrentLine>Översätt endast aktuell rad</TranslateCurrentLine>
+    <ReTranslateCurrentLine>Översätt aktuell linje igen</ReTranslateCurrentLine>
+    <MergeSplitStrategy>Dela/sammanfoga hantering</MergeSplitStrategy>
+    <Delay>Fördröjning mellan serversamtal</Delay>
+    <MaxBytes>Maximalt antal byte i varje serveranrop</MaxBytes>
+    <PromptX>Prompt for {0}</PromptX>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
     <Title>Google mot Microsoft translate</Title>

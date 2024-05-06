@@ -1083,6 +1083,12 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Bi
     <XRequiresAnApiKey>"{0}" kræver en API-nøgle.</XRequiresAnApiKey>
     <ReadMore>Læs mere?</ReadMore>
     <Formality>Formalitet</Formality>
+    <TranslateCurrentLine>Oversæt kun den aktuelle linje</TranslateCurrentLine>
+    <ReTranslateCurrentLine>Oversæt den nuværende linje igen</ReTranslateCurrentLine>
+    <MergeSplitStrategy>Split/flet håndtering</MergeSplitStrategy>
+    <Delay>Forsinkelse mellem serveropkald</Delay>
+    <MaxBytes>Maksimalt antal bytes i hvert serverkald</MaxBytes>
+    <PromptX>Prompt for {0}</PromptX>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
     <Title>Google vs Microsoft oversætter</Title>
