@@ -154,10 +154,6 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
                     }
                 }
             }
-            else
-            {
-                xmlDoc.LoadXml("<UseAlways></UseAlways>");
-            }
         }
 
         private string GetUseAlwaysListFileName()
