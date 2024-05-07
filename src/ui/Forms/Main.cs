@@ -5676,6 +5676,7 @@ namespace Nikse.SubtitleEdit.Forms
             var oldUseDarkForeColor = Configuration.Settings.General.DarkThemeForeColor;
             var oldUseDarkBackColor = Configuration.Settings.General.DarkThemeBackColor;
             var oldDarkThemeShowListViewGridLines = Configuration.Settings.General.DarkThemeShowListViewGridLines;
+            var resetApplied = false;
             using (var settings = new Options.Settings())
             {
                 settings.Initialize(Icon, toolStripButtonFileNew.Image, toolStripButtonFileOpen.Image, toolStripButtonVideoOpen.Image, toolStripButtonSave.Image, toolStripButtonSaveAs.Image, toolStripButtonFind.Image,
@@ -5687,6 +5688,8 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     return; // settings update canceled
                 }
+
+                resetApplied = settings.ResetApplied;
             }
 
             try
@@ -5717,7 +5720,8 @@ namespace Nikse.SubtitleEdit.Forms
                                        Configuration.Settings.General.MaxNumberOfLines +
                                        Configuration.Settings.Tools.ListViewSyntaxErrorColor.ToArgb();
 
-            if (oldSubtitleFontSettings != Configuration.Settings.General.SubtitleFontName +
+            if (resetApplied ||
+                oldSubtitleFontSettings != Configuration.Settings.General.SubtitleFontName +
                 Configuration.Settings.General.SubtitleTextBoxFontBold +
                 Configuration.Settings.General.CenterSubtitleInTextBox +
                 Configuration.Settings.General.SubtitleTextBoxFontSize +
@@ -5887,22 +5891,23 @@ namespace Nikse.SubtitleEdit.Forms
                 RefreshTimeCodeMode();
             }
 
+            var darkThemeBackColor = Configuration.Settings.General.DarkThemeBackColor;
+            var darkThemeForeColor = Configuration.Settings.General.DarkThemeForeColor;
             var darkModeListViewSyntaxErrorColor = Color.FromArgb(125, 21, 0);
             var defaultListViewSyntaxErrorColor = new ToolsSettings().ListViewSyntaxErrorColor;
+            var darkModeWaveformSelectedColor = Color.FromArgb(150, 0, 0);
+            var slightlyLighter = Color.FromArgb(Math.Min(byte.MaxValue, darkThemeBackColor.R + 10), Math.Min(byte.MaxValue, darkThemeBackColor.G + 10), Math.Min(byte.MaxValue, darkThemeBackColor.B + 10));
+            var listViewDarkThemeUnfocusedBackColor = Color.FromArgb(Math.Min(byte.MaxValue, darkThemeBackColor.R + 20), Math.Min(byte.MaxValue, darkThemeBackColor.G + 20), Math.Min(byte.MaxValue, darkThemeBackColor.B + 50));
 
-            if (oldUseDarkTheme != Configuration.Settings.General.UseDarkTheme ||
+            if (resetApplied ||
+                oldUseDarkTheme != Configuration.Settings.General.UseDarkTheme ||
                 oldUseDarkForeColor != Configuration.Settings.General.DarkThemeForeColor ||
                 oldUseDarkBackColor != Configuration.Settings.General.DarkThemeBackColor ||
                 oldDarkThemeShowListViewGridLines != Configuration.Settings.General.DarkThemeShowListViewGridLines ||
                 (oldUseDarkTheme && Configuration.Settings.General.UseDarkTheme && SubtitleListview1.BackColor == Color.White))
             {
-                var darkThemeBackColor = Configuration.Settings.General.DarkThemeBackColor;
-                var darkThemeForeColor = Configuration.Settings.General.DarkThemeForeColor;
                 var defaultWaveformValues = new VideoControlsSettings();
                 var darkModeWaveformColor = Color.FromArgb(7, 65, 152);
-                var darkModeWaveformSelectedColor = Color.FromArgb(150, 0, 0);
-                var slightlyLighter = Color.FromArgb(Math.Min(byte.MaxValue, darkThemeBackColor.R + 10), Math.Min(byte.MaxValue, darkThemeBackColor.G + 10), Math.Min(byte.MaxValue, darkThemeBackColor.B + 10));
-                var listViewDarkThemeUnfocusedBackColor = Color.FromArgb(Math.Min(byte.MaxValue, darkThemeBackColor.R + 20), Math.Min(byte.MaxValue, darkThemeBackColor.G + 20), Math.Min(byte.MaxValue, darkThemeBackColor.B + 50));
 
                 if (Configuration.Settings.General.UseDarkTheme)
                 {
@@ -5937,7 +5942,7 @@ namespace Nikse.SubtitleEdit.Forms
                             Configuration.Settings.Tools.ListViewSyntaxErrorColor = darkModeListViewSyntaxErrorColor;
                         }
 
-                        if (Configuration.Settings.Tools.ListViewUnfocusedSelectedColor.ToArgb() == Color.LightBlue.ToArgb())
+                        if (Configuration.Settings.Tools.ListViewUnfocusedSelectedColor == new ToolsSettings().ListViewUnfocusedSelectedColor)
                         {
                             Configuration.Settings.Tools.ListViewUnfocusedSelectedColor = listViewDarkThemeUnfocusedBackColor;
                         }
@@ -6001,9 +6006,17 @@ namespace Nikse.SubtitleEdit.Forms
                 textBoxListViewText.DisposeHunspellAndDictionaries();
             }
 
-            if (Configuration.Settings.General.UseDarkTheme && Configuration.Settings.Tools.ListViewSyntaxErrorColor == defaultListViewSyntaxErrorColor)
+            if (Configuration.Settings.General.UseDarkTheme)
             {
-                Configuration.Settings.Tools.ListViewSyntaxErrorColor = darkModeListViewSyntaxErrorColor;
+                if (Configuration.Settings.Tools.ListViewSyntaxErrorColor == defaultListViewSyntaxErrorColor)
+                {
+                    Configuration.Settings.Tools.ListViewSyntaxErrorColor = darkModeListViewSyntaxErrorColor;
+                }
+
+                if (Configuration.Settings.Tools.ListViewUnfocusedSelectedColor == new ToolsSettings().ListViewUnfocusedSelectedColor)
+                {
+                    Configuration.Settings.Tools.ListViewUnfocusedSelectedColor = listViewDarkThemeUnfocusedBackColor;
+                }
             }
 
             SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
