@@ -36694,12 +36694,6 @@ namespace Nikse.SubtitleEdit.Forms
         {
             TaskDelayHelper.RunDelayed(TimeSpan.FromMilliseconds(25), () =>
             {
-                if (string.IsNullOrEmpty(_videoFileName) || _videoInfo == null)
-                {
-                    MessageBox.Show(LanguageSettings.Current.General.NoVideoLoaded);
-                    return;
-                }
-
                 if (RequireFfmpegOk())
                 {
                     using (var form = new TextToSpeech(_subtitle, GetCurrentSubtitleFormat(), _videoFileName, _videoInfo))

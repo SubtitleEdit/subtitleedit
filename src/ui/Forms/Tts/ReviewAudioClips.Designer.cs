@@ -137,6 +137,8 @@
             // 
             this.checkBoxContinuePlay.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.checkBoxContinuePlay.AutoSize = true;
+            this.checkBoxContinuePlay.Checked = true;
+            this.checkBoxContinuePlay.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxContinuePlay.Location = new System.Drawing.Point(717, 354);
             this.checkBoxContinuePlay.Name = "checkBoxContinuePlay";
             this.checkBoxContinuePlay.Size = new System.Drawing.Size(92, 17);
