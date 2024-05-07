@@ -3342,6 +3342,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
         private void buttonReset_Click(object sender, EventArgs e)
         {
+            ResetApplied = true;
             var result = MessageBox.Show(LanguageSettings.Current.Settings.RestoreDefaultSettingsMsg, LanguageSettings.Current.General.Title, MessageBoxButtons.YesNo);
             if (result == DialogResult.Yes)
             {
@@ -3351,6 +3352,8 @@ namespace Nikse.SubtitleEdit.Forms.Options
                 Init();
             }
         }
+
+        public bool ResetApplied { get; private set; }
 
         private void toolStripMenuItemShortcutsCollapse_Click(object sender, EventArgs e)
         {
