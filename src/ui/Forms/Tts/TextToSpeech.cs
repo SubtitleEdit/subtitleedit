@@ -543,9 +543,9 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 labelProgress.Text = string.Format(LanguageSettings.Current.TextToSpeech.MergingAudioTrackXOfY, index + 1, _subtitle.Paragraphs.Count);
                 var p = _subtitle.Paragraphs[index];
                 var pFileName = fileNames[index];
-                if (!File.Exists(pFileName.Filename))
+                if (pFileName == null || !File.Exists(pFileName.Filename))
                 {
-                    SeLogger.Error($"TextToSpeech: File not found (skipping): {pFileName.Filename}");
+                    SeLogger.Error($"TextToSpeech: File not found (skipping): {pFileName?.Filename}");
                     continue;
                 }
 
