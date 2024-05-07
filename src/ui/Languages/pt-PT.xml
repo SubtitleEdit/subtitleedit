@@ -1089,6 +1089,12 @@ Para usar a chave API, vá a "Opções -&gt; Definições -&gt; Tradução autom
     <XRequiresAnApiKey>"{0}" requer uma chave API.</XRequiresAnApiKey>
     <ReadMore>Ler mais?</ReadMore>
     <Formality>Formalidade</Formality>
+    <TranslateCurrentLine>Traduzir apenas a linha actual</TranslateCurrentLine>
+    <ReTranslateCurrentLine>Traduzir novamente a linha actual</ReTranslateCurrentLine>
+    <MergeSplitStrategy>Tratamento de dividir/combinar</MergeSplitStrategy>
+    <Delay>Atraso entre chamadas ao servidor</Delay>
+    <MaxBytes>Máximo de bytes em cada chamada ao servidor</MaxBytes>
+    <PromptX>Solicitar para {0}</PromptX>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
     <Title>Tradutor do Google vs Microsoft</Title>
@@ -3409,7 +3415,7 @@ Manter as alterações?</KeepChangesMessage>
     <RemoveShotChangesFromSelection>Remover mudanças de cena da selecção</RemoveShotChangesFromSelection>
     <GuessTimeCodes>Adivinhar os tempos...</GuessTimeCodes>
     <SeekSilence>Localizar silêncio no áudio...</SeekSilence>
-    <InsertSubtitleHere>Inserir legenda aqui</InsertSubtitleHere>
+    <InsertSubtitleHere>Inserir texto aqui</InsertSubtitleHere>
     <InsertSubtitleFileHere>Inserir ficheiro de legenda aqui...</InsertSubtitleFileHere>
     <CharsSecX>CPS: {0:0.00}</CharsSecX>
     <WordsMinX>PPM: {0:0.00}</WordsMinX>
