@@ -106,6 +106,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonRemoveFile.Text = LanguageSettings.Current.DvdSubRip.Remove;
             buttonClear.Text = LanguageSettings.Current.DvdSubRip.Clear;
             buttonAddFile.Text = LanguageSettings.Current.DvdSubRip.Add;
+            useSourceResolutionToolStripMenuItem.Text =  LanguageSettings.Current.GenerateVideoWithBurnedInSubs.UseSourceResolution;
 
             progressBar1.Visible = false;
             labelPleaseWait.Visible = false;
@@ -1943,7 +1944,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonCutTo_Click(object sender, EventArgs e)
         {
             var timeSpan = new TimeSpan((int)numericUpDownCutFromHours.Value, (int)numericUpDownCutToMinutes.Value, (int)numericUpDownCutFromSeconds.Value);
-            using (var form = new GetVideoPosition(_assaSubtitle, _inputVideoFileName, _videoInfo, timeSpan, LanguageSettings.Current.GenerateVideoWithBurnedInSubs.GetStartPosition))
+            using (var form = new GetVideoPosition(_assaSubtitle, _inputVideoFileName, _videoInfo, timeSpan, LanguageSettings.Current.GenerateVideoWithBurnedInSubs.GetEndPosition))
             {
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
@@ -2430,15 +2431,27 @@ namespace Nikse.SubtitleEdit.Forms
             numericUpDownHeight.Visible = false;
 
             labelX.Left = numericUpDownWidth.Left;
-            labelX.Text = "Use source";
+            if (BatchMode)
+            {
+                labelX.Text = LanguageSettings.Current.GenerateVideoWithBurnedInSubs.UseSource;
 
-            numericUpDownWidth.Value = 0;
-            numericUpDownHeight.Value = 0;
+                numericUpDownWidth.Value = 0;
+                numericUpDownHeight.Value = 0;
+            }
+            else
+            {
+                labelX.Text = $"{LanguageSettings.Current.GenerateVideoWithBurnedInSubs.UseSource} ({_videoInfo.Width}x{_videoInfo.Height})";
+
+                numericUpDownWidth.Value = _videoInfo.Width;
+                numericUpDownHeight.Value = _videoInfo.Height;
+            }
         }
 
         private void contextMenuStripRes_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            useSourceResolutionToolStripMenuItem.Visible = BatchMode;
+            useSourceResolutionToolStripMenuItem.Visible = 
+                BatchMode || 
+                (_videoInfo != null && !string.IsNullOrEmpty(_inputVideoFileName));
         }
 
         private void listViewBatch_ColumnClick(object sender, ColumnClickEventArgs e)

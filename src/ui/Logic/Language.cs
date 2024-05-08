@@ -1275,6 +1275,8 @@ namespace Nikse.SubtitleEdit.Logic
                 AlignRight = "Align right",
                 GetStartPosition = "Get start position",
                 GetEndPosition = "Get end position",
+                UseSource = "Use source",
+                UseSourceResolution = "Use source resolution",
             };
 
             GenerateVideoWithEmbeddedSubs = new LanguageStructure.GenerateVideoWithEmbeddedSubs

@@ -2701,6 +2701,12 @@ namespace Nikse.SubtitleEdit.Logic
                 case "GenerateVideoWithBurnedInSubs/GetEndPosition":
                     language.GenerateVideoWithBurnedInSubs.GetEndPosition = reader.Value;
                     break;
+                case "GenerateVideoWithBurnedInSubs/UseSource":
+                    language.GenerateVideoWithBurnedInSubs.UseSource = reader.Value;
+                    break;
+                case "GenerateVideoWithBurnedInSubs/UseSourceResolution":
+                    language.GenerateVideoWithBurnedInSubs.UseSourceResolution = reader.Value;
+                    break;
                 case "GenerateVideoWithEmbeddedSubs/Title":
                     language.GenerateVideoWithEmbeddedSubs.Title = reader.Value;
                     break;
