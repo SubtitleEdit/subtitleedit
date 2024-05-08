@@ -3386,6 +3386,7 @@
             public string Play { get; set; }
             public string AutoContinue { get; set; }
             public string Regenerate { get; set; }
+            public string Speed { get; set; }
         }
 
         public class TimedTextSmpteTiming

@@ -41,6 +41,7 @@
             this.checkBoxContinuePlay = new System.Windows.Forms.CheckBox();
             this.buttonStop = new System.Windows.Forms.Button();
             this.buttonEdit = new System.Windows.Forms.Button();
+            this.columnHeaderAdjustSpeed = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.SuspendLayout();
             // 
             // listView1
@@ -54,6 +55,7 @@
             this.columnHeaderNo,
             this.columnHeaderVoice,
             this.columnHeaderCps,
+            this.columnHeaderAdjustSpeed,
             this.columnHeaderText});
             this.listView1.FullRowSelect = true;
             this.listView1.HideSelection = false;
@@ -170,6 +172,10 @@
             this.buttonEdit.UseVisualStyleBackColor = true;
             this.buttonEdit.Click += new System.EventHandler(this.buttonEdit_Click);
             // 
+            // columnHeaderAdjustSpeed
+            // 
+            this.columnHeaderAdjustSpeed.Text = "Speed";
+            // 
             // ReviewAudioClips
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -214,5 +220,6 @@
         private System.Windows.Forms.CheckBox checkBoxContinuePlay;
         private System.Windows.Forms.Button buttonStop;
         private System.Windows.Forms.Button buttonEdit;
+        private System.Windows.Forms.ColumnHeader columnHeaderAdjustSpeed;
     }
 }

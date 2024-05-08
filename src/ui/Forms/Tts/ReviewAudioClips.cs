@@ -4,6 +4,7 @@ using Nikse.SubtitleEdit.Logic.VideoPlayers;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms.Tts
@@ -33,6 +34,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             columnHeaderInclude.Text = string.Empty; // include
             columnHeaderText.Text = LanguageSettings.Current.General.Text;
             columnHeaderVoice.Text = LanguageSettings.Current.TextToSpeech.Voice;
+            columnHeaderAdjustSpeed.Text = LanguageSettings.Current.TextToSpeech.Speed;
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             UiUtil.FixLargeFonts(this, buttonOK);
 
@@ -49,6 +51,17 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 item.SubItems.Add(p.Number.ToString(CultureInfo.InvariantCulture));
                 item.SubItems.Add(_textToSpeech.GetParagraphAudio(p));
                 item.SubItems.Add(Utilities.GetCharactersPerSecond(p).ToString("0.#", CultureInfo.InvariantCulture));
+
+                var pInfo = fileNames[subtitle.GetIndex(p)];
+                if (pInfo.Factor == 1)
+                {
+                    item.SubItems.Add("-");
+                }
+                else
+                {
+                    item.SubItems.Add($"{(pInfo.Factor * 100.0m):0.#}%");
+                }
+
                 item.SubItems.Add(p.Text);
                 listView1.Items.Add(item);
             }
@@ -190,6 +203,8 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                     }
                 };
             }
+
+            listView1.AutoSizeLastColumn();
         }
 
         private void listView1_KeyDown(object sender, KeyEventArgs e)
