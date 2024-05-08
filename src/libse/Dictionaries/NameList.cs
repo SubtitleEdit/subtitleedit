@@ -43,6 +43,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             {
                 LoadNamesList(Path.Combine(_dictionaryFolder, "names.xml"));
             }
+
             foreach (var name in _blackList)
             {
                 if (_namesList.Contains(name))
@@ -97,6 +98,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             {
                 twoLetterIsoLanguageName = LanguageName.Substring(0, 2);
             }
+
             return Path.Combine(_dictionaryFolder, twoLetterIsoLanguageName + "_names.xml");
         }
 
@@ -171,15 +173,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                 _namesMultiList.Remove(name);
 
                 var fileName = GetLocalNamesUserFileName();
-                var nameListXml = new XmlDocument { XmlResolver = null };
-                if (File.Exists(fileName))
-                {
-                    nameListXml.Load(fileName);
-                }
-                else
-                {
-                    nameListXml.LoadXml("<names><blacklist></blacklist></names>");
-                }
+                var nameListXml = CreateDocument(fileName);
 
                 // Add removed name to blacklist
                 var nameNode = nameListXml.CreateElement("name");
@@ -208,6 +202,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                         nameListXml.DocumentElement.RemoveChild(nodeToRemove);
                     }
                 }
+
                 try
                 {
                     nameListXml.Save(fileName);
@@ -218,6 +213,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                     System.Diagnostics.Debug.WriteLine("NamesList.Remove failed");
                 }
             }
+
             return false;
         }
 
@@ -229,40 +225,14 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                 return false;
             }
 
-            if (name.IndexOf(' ') >= 0)
+            if (!TryAdd(name))
             {
-                if (!_namesMultiList.Contains(name))
-                {
-                    _namesMultiList.Add(name);
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            else
-            {
-                if (!_namesList.Contains(name))
-                {
-                    _namesList.Add(name);
-                }
-                else
-                {
-                    return false;
-                }
+                return false;
             }
 
             // <two-letter-iso-code>_names.xml, e.g "en_names.xml"
             var fileName = GetLocalNamesUserFileName();
-            var nameListXml = new XmlDocument { XmlResolver = null };
-            if (File.Exists(fileName))
-            {
-                nameListXml.Load(fileName);
-            }
-            else
-            {
-                nameListXml.LoadXml("<names><blacklist></blacklist></names>");
-            }
+            var nameListXml = CreateDocument(fileName);
 
             var de = nameListXml.DocumentElement;
             if (de != null)
@@ -272,7 +242,29 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                 de.AppendChild(node);
                 nameListXml.Save(fileName);
             }
+
             return true;
+        }
+
+        private bool TryAdd(string name)
+        {
+            var collection = name.Contains(" ") ? _namesMultiList : _namesList;
+            return collection.Add(name);
+        }
+
+        private static XmlDocument CreateDocument(string fileName)
+        {
+            var xmlDocument = new XmlDocument { XmlResolver = null };
+            if (File.Exists(fileName))
+            {
+                xmlDocument.Load(fileName);
+            }
+            else
+            {
+                xmlDocument.LoadXml("<names><blacklist></blacklist></names>");
+            }
+
+            return xmlDocument;
         }
 
         public bool IsInNamesMultiWordList(string input, string word)
@@ -327,6 +319,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                     return true;
                 }
             }
+
             return false;
         }
 
