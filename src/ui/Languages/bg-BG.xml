@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>4.0.5</Version>
-    <TranslatedBy>Последен превод на български 02.05.2024: KalinM</TranslatedBy>
+    <TranslatedBy>Последен превод на български 08.05.2024: KalinM</TranslatedBy>
     <CultureName>bg-BG</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -990,7 +990,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <DurationInMinutes>Продължителност в минути</DurationInMinutes>
     <Background>Заден план</Background>
     <FfmpegParameters>Стартиране на FFmpeg с параметри:</FfmpegParameters>
-    <GenerateWithFfmpegParametersPrompt>Генериране с FFmpeg параметри</GenerateWithFfmpegParametersPrompt>
+    <GenerateWithFfmpegParametersPrompt>Генериране - запитване за FFmpeg параметри</GenerateWithFfmpegParametersPrompt>
   </GenerateBlankVideo>
   <GenerateVideoWithBurnedInSubs>
     <Title>Генериране на видео с вградени субтитри</Title>
@@ -1071,7 +1071,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <ProcessorMergeNext>Обединяване макс. два реда</ProcessorMergeNext>
     <ProcessorSentence>Обединяване на изречения</ProcessorSentence>
     <ProcessorSingle>Без обединяване</ProcessorSingle>
-    <AutoTranslateViaCopyPaste>Авт. превод чрез копиране и поставяне</AutoTranslateViaCopyPaste>
+    <AutoTranslateViaCopyPaste>Автоматичен превод чрез копиране и поставяне</AutoTranslateViaCopyPaste>
     <CopyPasteMaxSize>Максимален размер на блока</CopyPasteMaxSize>
     <AutoCopyToClipboard>Авт. копиране в клипборда</AutoCopyToClipboard>
     <AutoCopyLineSeparator>Разделител на редове</AutoCopyLineSeparator>
@@ -1087,9 +1087,15 @@ https://github.com/SubtitleEdit/subtitleedit
     <XRequiresAnApiKey>«{0}» изисква API ключ.</XRequiresAnApiKey>
     <ReadMore>Прочетете още?</ReadMore>
     <Formality>Формалности</Formality>
+    <TranslateCurrentLine>Превод само на текущия ред</TranslateCurrentLine>
+    <ReTranslateCurrentLine>Повторен превод на текущия ред</ReTranslateCurrentLine>
+    <MergeSplitStrategy>Разделяне/обединяване - Обработка</MergeSplitStrategy>
+    <Delay>Закъснение между повикванията на сървъра</Delay>
+    <MaxBytes>Макс. брой байтове при всяко повикване на сървъра</MaxBytes>
+    <PromptX>Запитване за {0}</PromptX>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
-    <Title>Превод с Google или Microsoft</Title>
+    <Title>Сравнителен превод в Google и Microsoft</Title>
     <From>От:</From>
     <To>Към:</To>
     <Translate>Превод</Translate>
@@ -1717,7 +1723,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <FindContinueTitle>Искате ли да продължите търсенето?</FindContinueTitle>
     <ReplaceContinueNotFound>Търсеното от вас на е намерено.
 Искате ли да започнете отначало на документа и да продължите с търсене и заместване?</ReplaceContinueNotFound>
-    <ReplaceXContinue>Търсеният елемент е заменен {0} път/и.
+    <ReplaceXContinue>Търсеният елемент е заменен {0} път(и).
 Искате ли да започнете отначало на документа и да продължите с търсене и заместване?</ReplaceXContinue>
     <ReplaceContinueTitle>Продължаване на «Замяна»?</ReplaceContinueTitle>
     <SearchingForXFromLineY>Търсене на «{0}» от ред № {1}...</SearchingForXFromLineY>
@@ -2923,7 +2929,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <AddXToUserDictionary>Добави «{0}» към потреб. речник</AddXToUserDictionary>
     <AutoFixNames>Поправяне на думи с разл. големина на буквите</AutoFixNames>
     <AutoFixNamesViaSuggestions>Поправяне на имената чрез «Предложение за проверка на правописа»</AutoFixNamesViaSuggestions>
-    <CheckOneLetterWords>Питане за непозната буква</CheckOneLetterWords>
+    <CheckOneLetterWords>Запитване за непознати думи с една буква</CheckOneLetterWords>
     <TreatINQuoteAsING>Промяна опред. член на думи, завършващи на «in», «ing»(Само за англ.)</TreatINQuoteAsING>
     <RememberUseAlwaysList>Запомняне на списъка «Използване винаги»</RememberUseAlwaysList>
     <LiveSpellCheck>Проверка на правописа на живо</LiveSpellCheck>
