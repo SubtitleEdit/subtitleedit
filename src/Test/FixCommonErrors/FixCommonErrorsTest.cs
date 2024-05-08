@@ -553,6 +553,18 @@ namespace Test.FixCommonErrors
         }
 
         [TestMethod]
+        public void FixCommonOcrErrorsFrenchHardCodedRuleNoChangeTwo()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                const string input = "Hello l'Arbre";
+                InitializeFixCommonErrorsLine(target, "Hello l'Arbre");
+                target.FixOcrErrorsViaReplaceList("fra");
+                Assert.AreEqual(input, target.Subtitle.Paragraphs[0].Text);
+            }
+        }
+        
+        [TestMethod]
         public void FixCommonOcrErrorsFrenchHardCodedRuleChange()
         {
             using (var target = GetFixCommonErrorsLib())
