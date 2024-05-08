@@ -590,6 +590,8 @@ namespace Nikse.SubtitleEdit.Forms
                 stopWatch = Stopwatch.StartNew();
                 if (!ConvertVideo(oldFontSizeEnabled, _inputVideoFileName, _assaSubtitle))
                 {
+                    buttonGenerate.Enabled = true;
+                    numericUpDownFontSize.Enabled = true;
                     return;
                 }
             }
@@ -606,6 +608,8 @@ namespace Nikse.SubtitleEdit.Forms
             if (_abort)
             {
                 DialogResult = DialogResult.Cancel;
+                buttonGenerate.Enabled = true;
+                numericUpDownFontSize.Enabled = true;
                 return;
             }
 
@@ -631,6 +635,9 @@ namespace Nikse.SubtitleEdit.Forms
                     f.ShowDialog(this);
                 }
             }
+
+            buttonGenerate.Enabled = true;
+            numericUpDownFontSize.Enabled = true;
         }
 
         private bool ConvertVideo(bool oldFontSizeEnabled, string videoFileName, Subtitle subtitle)
