@@ -227,9 +227,6 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
             try
             {
-
-
-
                 buttonGenerateTTS.Text = LanguageSettings.Current.General.Cancel;
                 _converting = true;
                 buttonOK.Enabled = false;
