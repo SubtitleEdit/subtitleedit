@@ -32614,9 +32614,17 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (ft == typeof(TimedTextImsc11))
             {
-                using (var properties = new TimedTextPropertiesImsc11(_subtitle))
+                var oldFr = Configuration.Settings.General.CurrentFrameRate;
+                using (var properties = new TimedTextPropertiesImsc11(_subtitle, _videoFileName))
                 {
                     properties.ShowDialog(this);
+
+                    if (oldFr != Configuration.Settings.General.CurrentFrameRate)
+                    {
+                        toolStripComboBoxFrameRate.Text = Configuration.Settings.General.DefaultFrameRate.ToString();
+                        SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
+                        RefreshSelectedParagraph();
+                    }
                 }
 
                 return;
