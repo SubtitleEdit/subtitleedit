@@ -668,6 +668,11 @@ namespace Nikse.SubtitleEdit.Forms
             _log.AppendLine("Video info total seconds: " + _videoInfo.TotalSeconds);
 
             labelFileName.Text = string.Format(LanguageSettings.Current.GenerateVideoWithBurnedInSubs.TargetFileName, VideoFileName);
+            if (labelFileName.Text.Length > 150)
+            {
+                labelFileName.Text = "..." + labelFileName.Text.Substring(labelFileName.Text.Length - 120);
+            }
+
             if (!_isAssa)
             {
                 SetStyleForNonAssa(subtitle);

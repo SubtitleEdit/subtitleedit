@@ -205,6 +205,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxSettings.Controls.Add(this.videoPlayerContainer1);
             this.groupBoxSettings.Controls.Add(this.buttonClear);
             this.groupBoxSettings.Controls.Add(this.panelForeColor);
             this.groupBoxSettings.Controls.Add(this.nikseLabelOutputFileFolder);
@@ -230,7 +231,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxSettings.Controls.Add(this.numericUpDownFontSize);
             this.groupBoxSettings.Controls.Add(this.labelFontSize);
             this.groupBoxSettings.Controls.Add(this.listViewBatch);
-            this.groupBoxSettings.Controls.Add(this.videoPlayerContainer1);
             this.groupBoxSettings.Controls.Add(this.buttonOutputFileSettings);
             this.groupBoxSettings.Location = new System.Drawing.Point(12, 13);
             this.groupBoxSettings.Name = "groupBoxSettings";
