@@ -1020,6 +1020,8 @@ We leverage the intrinsic rhythm of the image.</CreateSimpleChainingToolTip>
     <AlignRight>Align right</AlignRight>
     <GetStartPosition>Get start position</GetStartPosition>
     <GetEndPosition>Get end position</GetEndPosition>
+    <UseSource>Use source</UseSource>
+    <UseSourceResolution>Use source resolution</UseSourceResolution>
   </GenerateVideoWithBurnedInSubs>
   <GenerateVideoWithEmbeddedSubs>
     <Title>Generate video with added/removed embedded subtitles</Title>

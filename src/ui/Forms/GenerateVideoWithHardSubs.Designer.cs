@@ -37,6 +37,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonCancel = new System.Windows.Forms.Button();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.groupBoxSettings = new System.Windows.Forms.GroupBox();
+            this.videoPlayerContainer1 = new Nikse.SubtitleEdit.Controls.VideoPlayerContainer();
             this.buttonClear = new System.Windows.Forms.Button();
             this.panelForeColor = new System.Windows.Forms.Panel();
             this.nikseLabelOutputFileFolder = new System.Windows.Forms.Label();
@@ -109,7 +110,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.clearToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.videoPlayerContainer1 = new Nikse.SubtitleEdit.Controls.VideoPlayerContainer();
             this.buttonOutputFileSettings = new System.Windows.Forms.Button();
             this.buttonPreview = new System.Windows.Forms.Button();
             this.linkLabelHelp = new System.Windows.Forms.LinkLabel();
@@ -238,6 +238,31 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxSettings.TabIndex = 0;
             this.groupBoxSettings.TabStop = false;
             this.groupBoxSettings.Text = "Settings";
+            // 
+            // videoPlayerContainer1
+            // 
+            this.videoPlayerContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.videoPlayerContainer1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(18)))), ((int)(((byte)(18)))), ((int)(((byte)(18)))));
+            this.videoPlayerContainer1.Chapters = null;
+            this.videoPlayerContainer1.CurrentPosition = 0D;
+            this.videoPlayerContainer1.FontSizeFactor = 1F;
+            this.videoPlayerContainer1.LastParagraph = null;
+            this.videoPlayerContainer1.Location = new System.Drawing.Point(430, 313);
+            this.videoPlayerContainer1.Name = "videoPlayerContainer1";
+            this.videoPlayerContainer1.ShowFullscreenButton = true;
+            this.videoPlayerContainer1.ShowMuteButton = true;
+            this.videoPlayerContainer1.ShowStopButton = true;
+            this.videoPlayerContainer1.Size = new System.Drawing.Size(431, 226);
+            this.videoPlayerContainer1.SubtitleText = "";
+            this.videoPlayerContainer1.TabIndex = 110;
+            this.videoPlayerContainer1.TextRightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.videoPlayerContainer1.UsingFrontCenterAudioChannelOnly = false;
+            this.videoPlayerContainer1.VideoHeight = 0;
+            this.videoPlayerContainer1.VideoPlayer = null;
+            this.videoPlayerContainer1.VideoWidth = 0;
+            this.videoPlayerContainer1.Volume = 0D;
             // 
             // buttonClear
             // 
@@ -1389,31 +1414,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.clearToolStripMenuItem.Text = "Clear";
             this.clearToolStripMenuItem.Click += new System.EventHandler(this.clearToolStripMenuItem_Click);
             // 
-            // videoPlayerContainer1
-            // 
-            this.videoPlayerContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.videoPlayerContainer1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(18)))), ((int)(((byte)(18)))), ((int)(((byte)(18)))));
-            this.videoPlayerContainer1.Chapters = null;
-            this.videoPlayerContainer1.CurrentPosition = 0D;
-            this.videoPlayerContainer1.FontSizeFactor = 1F;
-            this.videoPlayerContainer1.LastParagraph = null;
-            this.videoPlayerContainer1.Location = new System.Drawing.Point(430, 313);
-            this.videoPlayerContainer1.Name = "videoPlayerContainer1";
-            this.videoPlayerContainer1.ShowFullscreenButton = true;
-            this.videoPlayerContainer1.ShowMuteButton = true;
-            this.videoPlayerContainer1.ShowStopButton = true;
-            this.videoPlayerContainer1.Size = new System.Drawing.Size(431, 226);
-            this.videoPlayerContainer1.SubtitleText = "";
-            this.videoPlayerContainer1.TabIndex = 110;
-            this.videoPlayerContainer1.TextRightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.videoPlayerContainer1.UsingFrontCenterAudioChannelOnly = false;
-            this.videoPlayerContainer1.VideoHeight = 0;
-            this.videoPlayerContainer1.VideoPlayer = null;
-            this.videoPlayerContainer1.VideoWidth = 0;
-            this.videoPlayerContainer1.Volume = 0D;
-            // 
             // buttonOutputFileSettings
             // 
             this.buttonOutputFileSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
@@ -1468,14 +1468,14 @@ namespace Nikse.SubtitleEdit.Forms
             this.x352ToolStripMenuItem,
             this.x272ToolStripMenuItem});
             this.contextMenuStripRes.Name = "contextMenuStripRes";
-            this.contextMenuStripRes.Size = new System.Drawing.Size(221, 356);
+            this.contextMenuStripRes.Size = new System.Drawing.Size(221, 378);
             this.contextMenuStripRes.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripRes_Opening);
             // 
             // useSourceResolutionToolStripMenuItem
             // 
             this.useSourceResolutionToolStripMenuItem.Name = "useSourceResolutionToolStripMenuItem";
             this.useSourceResolutionToolStripMenuItem.Size = new System.Drawing.Size(220, 22);
-            this.useSourceResolutionToolStripMenuItem.Text = "Use source resoluton";
+            this.useSourceResolutionToolStripMenuItem.Text = "Use source resolution";
             this.useSourceResolutionToolStripMenuItem.Click += new System.EventHandler(this.useSourceResolutionToolStripMenuItem_Click);
             // 
             // x2160ToolStripMenuItem
