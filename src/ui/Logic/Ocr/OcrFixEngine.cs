@@ -676,7 +676,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             {
                 // do not change 'L' to lowercase in text like "L'ASSASSIN"
                 return IsWordAfterApostropheUppercase(sentence, appostropheIndex) &&
-                       (sentence[1] == '\'' || sentence[1] == '’');
+                       (sentence[appostropheIndex] == '\'' || sentence[appostropheIndex] == '’');
             }
 
             return false;
