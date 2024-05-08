@@ -8713,6 +8713,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "TextToSpeech/Regenerate":
                     language.TextToSpeech.Regenerate = reader.Value;
                     break;
+                case "TextToSpeech/Speed":
+                    language.TextToSpeech.Speed = reader.Value;
+                    break;
                 case "TimedTextSmpteTiming/Title":
                     language.TimedTextSmpteTiming.Title = reader.Value;
                     break;
