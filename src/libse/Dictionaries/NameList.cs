@@ -225,27 +225,9 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                 return false;
             }
 
-            if (name.IndexOf(' ') >= 0)
+            if (!TryAdd(name))
             {
-                if (!_namesMultiList.Contains(name))
-                {
-                    _namesMultiList.Add(name);
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            else
-            {
-                if (!_namesList.Contains(name))
-                {
-                    _namesList.Add(name);
-                }
-                else
-                {
-                    return false;
-                }
+                return false;
             }
 
             // <two-letter-iso-code>_names.xml, e.g "en_names.xml"
@@ -262,6 +244,12 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             }
 
             return true;
+        }
+
+        private bool TryAdd(string name)
+        {
+            var collection = name.Contains(" ") ? _namesMultiList : _namesList;
+            return collection.Add(name);
         }
 
         private static XmlDocument CreateDocument(string fileName)
