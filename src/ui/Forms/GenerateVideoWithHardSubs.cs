@@ -440,9 +440,15 @@ namespace Nikse.SubtitleEdit.Forms
             Stopwatch stopWatch;
             if (BatchMode)
             {
+                for (var i = 0; i < listViewBatch.Items.Count; i++)
+                {
+                    listViewBatch.Items[i].SubItems[ListViewBatchSubItemIndexColumnStatus].Text = String.Empty;
+                }
+
                 checkBoxTargetFileSize.Checked = false;
                 var useSourceResolution = numericUpDownWidth.Value == 0 && numericUpDownHeight.Value == 0;
                 listViewBatch.SelectedIndices.Clear();
+                listViewBatch.Refresh();
 
                 stopWatch = Stopwatch.StartNew();
                 var sbInfo = new StringBuilder();
