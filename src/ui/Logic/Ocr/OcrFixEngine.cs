@@ -663,16 +663,44 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             return word;
         }
 
-        private static bool IsToKeepCasing(string sentence)
+        /// <summary>
+        /// Determines whether a sentence should keep L uppercase first letter.
+        /// </summary>
+        /// <param name="sentence">The sentence to check</param>
+        /// <returns>true if the sentence should keep L uppercase first letter; otherwise, false.</returns
+        private static bool IsToKeepLUppercase(string sentence)
         {
+            const int appostropheIndex = 1;
             // related to https://github.com/SubtitleEdit/subtitleedit/issues/8052
-            if (sentence.Length > 2)
+            if (sentence.Length > appostropheIndex + 1)
             {
                 // do not change 'L' to lowercase in text like "L'ASSASSIN"
-                return char.IsUpper(sentence[2]) && (sentence[1] == '\'' || sentence[1] == '’');
+                return IsWordAfterApostropheUppercase(sentence, appostropheIndex) &&
+                       (sentence[1] == '\'' || sentence[1] == '’');
             }
 
             return false;
+        }
+
+        // https://github.com/SubtitleEdit/subtitleedit/issues/8184
+        private static bool IsWordAfterApostropheUppercase(string sentence, int appostropheIndex)
+        {
+            var len = sentence.Length;
+            for (var i = appostropheIndex + 1; i < len; i++)
+            {
+                // only return false if a lowercase letter was found otherwise ignore any other symbol
+                if (char.IsLower(sentence[i]))
+                {
+                    return false;
+                }
+                // if whitespace is found, that mean the entire word were processed but no lowercase were found
+                else if (char.IsWhiteSpace(sentence[i]))
+                {
+                    break;
+                }
+            }
+
+            return true;
         }
         
         public static string FixFrenchLApostrophe(string input, string affix, string prevLine)
@@ -721,7 +749,9 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                         isPreviousLineClose = beforeThis.EndsWith('.') || beforeThis.EndsWith('!') || beforeThis.EndsWith('?');
                     }
 
-                    if (isPreviousLineClose || IsToKeepCasing(text.Substring(start + 1)))
+                    // note: L will only be kepe as uppercase if the word after apostrophe is uppercase
+                    // see: https://github.com/SubtitleEdit/subtitleedit/issues/8184
+                    if (isPreviousLineClose || IsToKeepLUppercase(text.Substring(start + 1)))
                     {
                         text = text.Remove(start + 1, 1).Insert(start + 1, "L");
                     }
