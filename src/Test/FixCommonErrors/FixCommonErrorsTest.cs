@@ -558,9 +558,21 @@ namespace Test.FixCommonErrors
             using (var target = GetFixCommonErrorsLib())
             {
                 const string input = "Hello l'Arbre";
-                InitializeFixCommonErrorsLine(target, "Hello l'Arbre");
+                InitializeFixCommonErrorsLine(target, input);
                 target.FixOcrErrorsViaReplaceList("fra");
                 Assert.AreEqual(input, target.Subtitle.Paragraphs[0].Text);
+            }
+        }
+
+        [TestMethod]
+        public void FixCommonOcrErrorsFrenchHardCodedRuleChangeTwo()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                const string input = "l'Arbre hello!";
+                InitializeFixCommonErrorsLine(target, input);
+                target.FixOcrErrorsViaReplaceList("fra");
+                Assert.AreEqual("L'Arbre hello!", target.Subtitle.Paragraphs[0].Text);
             }
         }
         
