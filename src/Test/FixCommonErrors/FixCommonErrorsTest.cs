@@ -558,9 +558,10 @@ namespace Test.FixCommonErrors
             using (var target = GetFixCommonErrorsLib())
             {
                 const string input = "Hello l'Arbre";
+                const string expectedOutput = input;
                 InitializeFixCommonErrorsLine(target, input);
                 target.FixOcrErrorsViaReplaceList("fra");
-                Assert.AreEqual(input, target.Subtitle.Paragraphs[0].Text);
+                Assert.AreEqual(expectedOutput, target.Subtitle.Paragraphs[0].Text);
             }
         }
 
@@ -570,9 +571,10 @@ namespace Test.FixCommonErrors
             using (var target = GetFixCommonErrorsLib())
             {
                 const string input = "l'Arbre hello!";
+                const string expectedOutput = "L'Arbre hello!";
                 InitializeFixCommonErrorsLine(target, input);
                 target.FixOcrErrorsViaReplaceList("fra");
-                Assert.AreEqual("L'Arbre hello!", target.Subtitle.Paragraphs[0].Text);
+                Assert.AreEqual(expectedOutput, target.Subtitle.Paragraphs[0].Text);
             }
         }
         
