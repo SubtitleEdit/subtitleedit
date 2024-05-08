@@ -3180,6 +3180,7 @@ Continue?</RestoreDefaultSettingsMsg>
     <Play>Play</Play>
     <AutoContinue>Auto-continue</AutoContinue>
     <Regenerate>Regenerate</Regenerate>
+    <Speed>Speed</Speed>
   </TextToSpeech>
   <TimedTextSmpteTiming>
     <Title>SMPTE timing</Title>
