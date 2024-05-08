@@ -749,7 +749,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                         isPreviousLineClose = beforeThis.EndsWith('.') || beforeThis.EndsWith('!') || beforeThis.EndsWith('?');
                     }
 
-                    // note: L will only be kepe as uppercase if the word after apostrophe is uppercase
+                    // note: L will only be kept as uppercase if the word after apostrophe is uppercase
                     // see: https://github.com/SubtitleEdit/subtitleedit/issues/8184
                     if (isPreviousLineClose || IsToKeepLUppercase(text.Substring(start + 1)))
                     {
