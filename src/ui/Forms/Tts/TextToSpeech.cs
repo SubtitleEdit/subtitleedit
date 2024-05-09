@@ -1701,7 +1701,8 @@ namespace Nikse.SubtitleEdit.Forms.Tts
         private void SetFirstLanguageHitAsVoice()
         {
             nikseComboBoxVoice.Text = Configuration.Settings.Tools.TextToSpeechLastVoice;
-            if (nikseComboBoxVoice.Text == Configuration.Settings.Tools.TextToSpeechLastVoice)
+            if (nikseComboBoxVoice.Text == Configuration.Settings.Tools.TextToSpeechLastVoice &&
+                !string.IsNullOrEmpty(Configuration.Settings.Tools.TextToSpeechLastVoice))
             {
                 return;
             }
