@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Http;
+using Nikse.SubtitleEdit.Core.Translate;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
@@ -7,10 +10,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using Nikse.SubtitleEdit.Core.Common;
-using Nikse.SubtitleEdit.Core.Http;
-using Nikse.SubtitleEdit.Core.Translate;
-using Nikse.SubtitleEdit.Core.Translate.Service;
 
 namespace Nikse.SubtitleEdit.Core.AutoTranslate
 {
@@ -38,12 +37,12 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
 
         public List<TranslationPair> GetSupportedSourceLanguages()
         {
-            return GoogleTranslationService.GetTranslationPairs();
+            return GoogleTranslateV1.GetTranslationPairs();
         }
 
         public List<TranslationPair> GetSupportedTargetLanguages()
         {
-            return GoogleTranslationService.GetTranslationPairs();
+            return GoogleTranslateV1.GetTranslationPairs();
         }
 
         public Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
