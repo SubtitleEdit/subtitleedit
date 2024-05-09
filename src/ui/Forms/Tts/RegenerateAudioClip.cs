@@ -34,7 +34,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             textToSpeech.SetCurrentVoices(nikseComboBoxVoice);
         }
 
-        private async void buttonReGenerate_Click(object sender, EventArgs e)
+        private void buttonReGenerate_Click(object sender, EventArgs e)
         {
             var paragraph = _subtitle.Paragraphs[_index];
             paragraph.Text = TextBoxReGenerate.Text.Trim();
@@ -43,7 +43,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             {
                 Cursor = Cursors.WaitCursor;
                 buttonReGenerate.Enabled = false;
-                var fileNameAndSpeedFactor = await _textToSpeech.ReGenerateAudio(paragraph, nikseComboBoxVoice.Text);
+                var fileNameAndSpeedFactor =  _textToSpeech.ReGenerateAudio(paragraph, nikseComboBoxVoice.Text);
                 if (fileNameAndSpeedFactor != null)
                 {
                     FileNameAndSpeedFactor = fileNameAndSpeedFactor;
