@@ -467,6 +467,8 @@ namespace Nikse.SubtitleEdit.Core.Common
 
 
         public string GenVideoFontName { get; set; }
+        public bool GenVideoFontBold { get; set; }
+        public decimal GenVideoOutline { get; set; }
         public int GenVideoFontSize { get; set; }
         public string GenVideoEncoding { get; set; }
         public string GenVideoPreset { get; set; }
@@ -741,6 +743,8 @@ namespace Nikse.SubtitleEdit.Core.Common
             GenVideoAudioEncoding = "copy";
             GenVideoAudioForceStereo = true;
             GenVideoAudioSampleRate = "48000";
+            GenVideoFontBold = true;
+            GenVideoOutline = 6;
             GenVideoFontSizePercentOfHeight = 0.078f;
             GenVideoNonAssaBox = true;
             GenVideoNonAssaBoxColor = Color.FromArgb(150, 0, 0, 0);
@@ -7113,6 +7117,18 @@ $HorzAlign          =   Center
                 settings.Tools.GenVideoFontName = subNode.InnerText;
             }
 
+            subNode = node.SelectSingleNode("GenVideoFontBold");
+            if (subNode != null)
+            {
+                settings.Tools.GenVideoFontBold = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("GenVideoOutline");
+            if (subNode != null)
+            {
+                settings.Tools.GenVideoOutline = Convert.ToDecimal(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("GenVideoFontSize");
             if (subNode != null)
             {
@@ -12331,6 +12347,8 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("AssaBgBoxDrawingOnly", settings.Tools.AssaBgBoxDrawingOnly.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AssaBgBoxDrawing", settings.Tools.AssaBgBoxDrawing);
                 textWriter.WriteElementString("GenVideoFontName", settings.Tools.GenVideoFontName);
+                textWriter.WriteElementString("GenVideoFontBold", settings.Tools.GenVideoFontBold.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("GenVideoOutline", settings.Tools.GenVideoOutline.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("GenVideoFontSize", settings.Tools.GenVideoFontSize.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("GenVideoEncoding", settings.Tools.GenVideoEncoding);
                 textWriter.WriteElementString("GenVideoPreset", settings.Tools.GenVideoPreset);
