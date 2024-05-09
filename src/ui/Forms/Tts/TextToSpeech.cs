@@ -1439,9 +1439,9 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 nikseComboBoxRegion.Text = Configuration.Settings.Tools.TextToSpeechAzureRegion;
             }
 
-            if (nikseComboBoxVoice.Items.Count > 0)
+            if (nikseComboBoxVoice.Items.Count > 0 && nikseComboBoxVoice.SelectedIndex < 0)
             {
-                nikseComboBoxVoice.SelectedIndex = 0;
+                SetFirstLanguageHitAsVoice();
             }
 
             if (nikseComboBoxVoice.Items.Count > 1)
@@ -1696,6 +1696,28 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                     _actorsOn = true;
                 }
             }
+        }
+
+        private void SetFirstLanguageHitAsVoice()
+        {
+            nikseComboBoxVoice.Text = Configuration.Settings.Tools.TextToSpeechLastVoice;
+            if (nikseComboBoxVoice.Text == Configuration.Settings.Tools.TextToSpeechLastVoice)
+            {
+                return;
+            }
+
+            var language = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle);
+            for (var index = 0; index < nikseComboBoxVoice.Items.Count; index++)
+            {
+                var item = (string)nikseComboBoxVoice.Items[index];
+                if (item.StartsWith(language, StringComparison.OrdinalIgnoreCase))
+                {
+                    nikseComboBoxVoice.SelectedIndex = index;
+                    return;
+                }
+            }
+
+            nikseComboBoxVoice.SelectedIndex = 0;
         }
 
         private List<PiperModel> GetPiperVoices(bool useCache)
