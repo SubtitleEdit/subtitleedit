@@ -14,7 +14,6 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using MessageBox = Nikse.SubtitleEdit.Forms.SeMsgBox.MessageBox;
 
@@ -233,8 +232,8 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 _waveFolder = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
                 Directory.CreateDirectory(_waveFolder);
 
-                _ = GenerateParagraphAudio(_subtitle, true, null).Result;
-                if (_abort)
+                var generateOk = GenerateParagraphAudio(_subtitle, true, null);
+                if (_abort || !generateOk)
                 {
                     HandleAbort();
                     return;
@@ -322,7 +321,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             buttonOK.Enabled = true;
         }
 
-        private async Task<bool> GenerateParagraphAudio(Subtitle subtitle, bool showProgressBar, string overrideFileName)
+        private bool GenerateParagraphAudio(Subtitle subtitle, bool showProgressBar, string overrideFileName)
         {
             var engine = _engines.First(p => p.Index == nikseComboBoxEngine.SelectedIndex);
             if (engine.Id == TextToSpeechEngineId.MsSpeechSynthesizer)
@@ -343,25 +342,25 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
             if (engine.Id == TextToSpeechEngineId.Coqui)
             {
-                var result = await GenerateParagraphAudioCoqui(subtitle, showProgressBar, overrideFileName);
+                var result = GenerateParagraphAudioCoqui(subtitle, showProgressBar, overrideFileName);
                 return result;
             }
 
             if (engine.Id == TextToSpeechEngineId.AllTalk)
             {
-                var result = await GenerateParagraphAudioAllTalk(subtitle, showProgressBar, overrideFileName);
+                var result = GenerateParagraphAudioAllTalk(subtitle, showProgressBar, overrideFileName);
                 return result;
             }
 
             if (engine.Id == TextToSpeechEngineId.ElevenLabs)
             {
-                var result = await GenerateParagraphAudioElevenLabs(subtitle, showProgressBar, overrideFileName);
+                var result = GenerateParagraphAudioElevenLabs(subtitle, showProgressBar, overrideFileName);
                 return result;
             }
 
             if (engine.Id == TextToSpeechEngineId.AzureTextToSpeech)
             {
-                var result = await GenerateParagraphAudioAzure(subtitle, showProgressBar, overrideFileName);
+                var result = GenerateParagraphAudioAzure(subtitle, showProgressBar, overrideFileName);
                 return result;
             }
 
@@ -890,7 +889,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             return true;
         }
 
-        private async Task<bool> GenerateParagraphAudioCoqui(Subtitle subtitle, bool showProgressBar, string overrideFileName)
+        private bool GenerateParagraphAudioCoqui(Subtitle subtitle, bool showProgressBar, string overrideFileName)
         {
             var httpClient = new HttpClient();
             httpClient.BaseAddress = new Uri(nikseComboBoxVoice.Text.StartsWith("http", StringComparison.OrdinalIgnoreCase) ? nikseComboBoxVoice.Text : "http://localhost:5002/api/tts");
@@ -916,8 +915,8 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 var outputFileName = Path.Combine(_waveFolder, string.IsNullOrEmpty(overrideFileName) ? index + ".wav" : overrideFileName);
 
                 var text = Utilities.UnbreakLine(p.Text);
-                var result = await httpClient.GetAsync("?text=" + Utilities.UrlEncode(text));
-                var bytes = await result.Content.ReadAsByteArrayAsync();
+                var result = httpClient.GetAsync("?text=" + Utilities.UrlEncode(text)).Result;
+                var bytes = result.Content.ReadAsByteArrayAsync().Result;
 
                 if (!result.IsSuccessStatusCode)
                 {
@@ -937,7 +936,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             return true;
         }
 
-        private async Task<bool> GenerateParagraphAudioAllTalk(Subtitle subtitle, bool showProgressBar, string overrideFileName)
+        private bool GenerateParagraphAudioAllTalk(Subtitle subtitle, bool showProgressBar, string overrideFileName)
         {
             var httpClient = new HttpClient();
             httpClient.BaseAddress = new Uri("http://127.0.0.1:7851");
@@ -985,8 +984,8 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 multipartContent.Add(new StringContent("false"), "output_file_timestamp");
                 multipartContent.Add(new StringContent("false"), "autoplay");
                 multipartContent.Add(new StringContent("1.0"), "autoplay_volume");
-                var result = await httpClient.PostAsync("/api/tts-generate", multipartContent);
-                var bytes = await result.Content.ReadAsByteArrayAsync();
+                var result = httpClient.PostAsync("/api/tts-generate", multipartContent).Result;
+                var bytes = result.Content.ReadAsByteArrayAsync().Result;
                 var resultJson = Encoding.UTF8.GetString(bytes);
 
                 if (!result.IsSuccessStatusCode)
@@ -1017,7 +1016,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             return true;
         }
 
-        private async Task<bool> GenerateParagraphAudioElevenLabs(Subtitle subtitle, bool showProgressBar, string overrideFileName)
+        private bool GenerateParagraphAudioElevenLabs(Subtitle subtitle, bool showProgressBar, string overrideFileName)
         {
             if (string.IsNullOrWhiteSpace(nikseTextBoxApiKey.Text))
             {
@@ -1070,8 +1069,8 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 var data = "{ \"text\": \"" + Json.EncodeJsonText(text) + "\", \"model_id\": \"eleven_multilingual_v2\", \"voice_settings\": { \"stability\": 0.8, \"similarity_boost\": 1.0 } }";
                 var content = new StringContent(data, Encoding.UTF8);
                 content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
-                var result = await httpClient.PostAsync(url, content, CancellationToken.None);
-                var bytes = await result.Content.ReadAsByteArrayAsync();
+                var result = httpClient.PostAsync(url, content, CancellationToken.None).Result;
+                var bytes = result.Content.ReadAsByteArrayAsync().Result;
 
                 if (!result.IsSuccessStatusCode)
                 {
@@ -1094,7 +1093,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             return true;
         }
 
-        private async Task<List<AzureVoiceModel>> GetAzureVoices(bool useCache)
+        private List<AzureVoiceModel> GetAzureVoices(bool useCache)
         {
             var ttsPath = Path.Combine(Configuration.DataDirectory, "TextToSpeech");
             if (!Directory.Exists(ttsPath))
@@ -1139,7 +1138,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Ocp-Apim-Subscription-Key", nikseTextBoxApiKey.Text.Trim());
                 var url = $"https://{nikseComboBoxRegion.Text.Trim()}.tts.speech.microsoft.com/cognitiveservices/voices/list";
                 var result = httpClient.GetAsync(new Uri(url)).Result;
-                var bytes = await result.Content.ReadAsByteArrayAsync();
+                var bytes = result.Content.ReadAsByteArrayAsync().Result;
 
                 if (!result.IsSuccessStatusCode)
                 {
@@ -1177,7 +1176,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             return list;
         }
 
-        private async Task<bool> GenerateParagraphAudioAzure(Subtitle subtitle, bool showProgressBar, string overrideFileName)
+        private bool GenerateParagraphAudioAzure(Subtitle subtitle, bool showProgressBar, string overrideFileName)
         {
             if (string.IsNullOrWhiteSpace(nikseTextBoxApiKey.Text))
             {
@@ -1238,8 +1237,8 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 var text = Utilities.UnbreakLine(p.Text);
                 var data = $"<speak version='1.0' xml:lang='en-US'><voice xml:lang='en-US' xml:gender='{voice.Gender}' name='{voice.ShortName}'>{System.Net.WebUtility.HtmlEncode(text)}</voice></speak>";
                 var content = new StringContent(data, Encoding.UTF8);
-                var result = await httpClient.PostAsync(url, content, CancellationToken.None);
-                var bytes = await result.Content.ReadAsByteArrayAsync();
+                var result = httpClient.PostAsync(url, content, CancellationToken.None).Result;
+                var bytes = result.Content.ReadAsByteArrayAsync().Result;
 
                 if (!result.IsSuccessStatusCode)
                 {
@@ -1396,7 +1395,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 labelApiKey.Visible = true;
                 nikseTextBoxApiKey.Visible = true;
 
-                var azureVoices = GetAzureVoices(true).Result;
+                var azureVoices = GetAzureVoices(true);
                 _azureVoices.AddRange(azureVoices);
                 nikseComboBoxVoice.Items.AddRange(_azureVoices.Select(p => p.ToString()).ToArray());
 
@@ -1988,14 +1987,14 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             listViewActors.AutoSizeLastColumn();
         }
 
-        public async Task<FileNameAndSpeedFactor> ReGenerateAudio(Paragraph p, string voice)
+        public FileNameAndSpeedFactor ReGenerateAudio(Paragraph p, string voice)
         {
             nikseComboBoxVoice.Text = voice;
             var sub = new Subtitle();
             sub.Paragraphs.Add(p);
 
             var waveFileNameOnly = Guid.NewGuid() + GetEngineAudioExtension();
-            var ok = await GenerateParagraphAudio(sub, false, waveFileNameOnly);
+            var ok = GenerateParagraphAudio(sub, false, waveFileNameOnly);
             if (!ok)
             {
                 return null;
@@ -2017,7 +2016,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             return ".wav";
         }
 
-        private async void buttonTestVoice_Click(object sender, EventArgs e)
+        private void buttonTestVoice_Click(object sender, EventArgs e)
         {
             try
             {
@@ -2032,7 +2031,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 var sub = new Subtitle();
                 sub.Paragraphs.Add(new Paragraph(text, 0, 2500));
                 var waveFileNameOnly = Guid.NewGuid() + ".wav";
-                var ok = await GenerateParagraphAudio(sub, false, waveFileNameOnly);
+                var ok = GenerateParagraphAudio(sub, false, waveFileNameOnly);
                 if (!ok)
                 {
                     MessageBox.Show(this, "Ups, voice generation failed!");
@@ -2205,7 +2204,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                     return false;
                 }
 
-                var _ = GetAzureVoices(false).Result;
+                var _ = GetAzureVoices(false);
                 nikseComboBoxEngine_SelectedIndexChanged(null, null);
             }
             else if (engine.Id == TextToSpeechEngineId.ElevenLabs)
