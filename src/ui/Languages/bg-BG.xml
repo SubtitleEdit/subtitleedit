@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>4.0.5</Version>
-    <TranslatedBy>Последен превод на български 08.05.2024: KalinM</TranslatedBy>
+    <TranslatedBy>Последен превод на български 09.05.2024: KalinM</TranslatedBy>
     <CultureName>bg-BG</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -1019,6 +1019,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <AlignRight>Подравняване вдясно</AlignRight>
     <GetStartPosition>Заемане на начална позиция</GetStartPosition>
     <GetEndPosition>Заемане на крайна позиция</GetEndPosition>
+    <UseSource>Използване на източника</UseSource>
+    <UseSourceResolution>Използване резолюцията на източника</UseSourceResolution>
   </GenerateVideoWithBurnedInSubs>
   <GenerateVideoWithEmbeddedSubs>
     <Title>Генериране на видео с Добавяне/Премахване на вградени субтитри</Title>
