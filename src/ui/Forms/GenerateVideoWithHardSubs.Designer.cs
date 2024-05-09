@@ -37,7 +37,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonCancel = new System.Windows.Forms.Button();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.groupBoxSettings = new System.Windows.Forms.GroupBox();
-            this.videoPlayerContainer1 = new Nikse.SubtitleEdit.Controls.VideoPlayerContainer();
+            this.checkBoxFontBold = new System.Windows.Forms.CheckBox();
             this.buttonClear = new System.Windows.Forms.Button();
             this.panelForeColor = new System.Windows.Forms.Panel();
             this.nikseLabelOutputFileFolder = new System.Windows.Forms.Label();
@@ -49,53 +49,17 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxCut = new System.Windows.Forms.GroupBox();
             this.buttonCutTo = new System.Windows.Forms.Button();
             this.buttonCutFrom = new System.Windows.Forms.Button();
-            this.numericUpDownCutToSeconds = new Nikse.SubtitleEdit.Controls.NikseUpDown();
-            this.numericUpDownCutToMinutes = new Nikse.SubtitleEdit.Controls.NikseUpDown();
-            this.numericUpDownCutToHours = new Nikse.SubtitleEdit.Controls.NikseUpDown();
-            this.numericUpDownCutFromSeconds = new Nikse.SubtitleEdit.Controls.NikseUpDown();
-            this.numericUpDownCutFromMinutes = new Nikse.SubtitleEdit.Controls.NikseUpDown();
-            this.numericUpDownCutFromHours = new Nikse.SubtitleEdit.Controls.NikseUpDown();
-            this.labelCutTo = new Nikse.SubtitleEdit.Controls.NikseLabel();
-            this.labelCutFrom = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.checkBoxCut = new System.Windows.Forms.CheckBox();
-            this.labelVideoBitrate = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.checkBoxBox = new System.Windows.Forms.CheckBox();
             this.checkBoxAlignRight = new System.Windows.Forms.CheckBox();
-            this.labelInfo = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.checkBoxRightToLeft = new System.Windows.Forms.CheckBox();
-            this.comboBoxSubtitleFont = new Nikse.SubtitleEdit.Controls.NikseComboBox();
-            this.labelSubtitleFont = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.groupBoxVideo = new System.Windows.Forms.GroupBox();
-            this.labelCrfHint = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.buttonVideoChooseStandardRes = new System.Windows.Forms.Button();
-            this.labelResolution = new Nikse.SubtitleEdit.Controls.NikseLabel();
-            this.numericUpDownWidth = new Nikse.SubtitleEdit.Controls.NikseUpDown();
-            this.numericUpDownHeight = new Nikse.SubtitleEdit.Controls.NikseUpDown();
-            this.labelX = new Nikse.SubtitleEdit.Controls.NikseLabel();
-            this.labelPreset = new Nikse.SubtitleEdit.Controls.NikseLabel();
-            this.comboBoxTune = new Nikse.SubtitleEdit.Controls.NikseComboBox();
-            this.comboBoxPreset = new Nikse.SubtitleEdit.Controls.NikseComboBox();
-            this.labelTune = new Nikse.SubtitleEdit.Controls.NikseLabel();
-            this.labelCRF = new Nikse.SubtitleEdit.Controls.NikseLabel();
-            this.comboBoxVideoEncoding = new Nikse.SubtitleEdit.Controls.NikseComboBox();
-            this.comboBoxCrf = new Nikse.SubtitleEdit.Controls.NikseComboBox();
-            this.labelVideoEncoding = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.groupBoxAudio = new System.Windows.Forms.GroupBox();
             this.listViewAudioTracks = new System.Windows.Forms.ListView();
             this.columnHeaderAudioTrack = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.labelAudioEnc = new Nikse.SubtitleEdit.Controls.NikseLabel();
-            this.comboBoxAudioBitRate = new Nikse.SubtitleEdit.Controls.NikseComboBox();
-            this.comboBoxAudioEnc = new Nikse.SubtitleEdit.Controls.NikseComboBox();
-            this.labelAudioBitRate = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.checkBoxMakeStereo = new System.Windows.Forms.CheckBox();
-            this.labelAudioSampleRate = new Nikse.SubtitleEdit.Controls.NikseLabel();
-            this.comboBoxAudioSampleRate = new Nikse.SubtitleEdit.Controls.NikseComboBox();
-            this.numericUpDownTargetFileSize = new Nikse.SubtitleEdit.Controls.NikseUpDown();
-            this.labelFileSize = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.checkBoxTargetFileSize = new System.Windows.Forms.CheckBox();
-            this.labelFileName = new Nikse.SubtitleEdit.Controls.NikseLabel();
-            this.numericUpDownFontSize = new Nikse.SubtitleEdit.Controls.NikseUpDown();
-            this.labelFontSize = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.listViewBatch = new System.Windows.Forms.ListView();
             this.columnHeaderVideoFile = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderResolution = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -115,6 +79,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.linkLabelHelp = new System.Windows.Forms.LinkLabel();
             this.contextMenuStripRes = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.useSourceResolutionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.x2160ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.uHD3840x2160ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.k2048x1080ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -126,7 +91,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.x720ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.p848x480ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pAL720x576ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.youTubeShortsTikTok10801920ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.youTubeShortsTikTokAspectRatio9167201280ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aAspectRatio916540960ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -134,12 +99,50 @@ namespace Nikse.SubtitleEdit.Forms
             this.aAspectRatio916270480ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.bAspectRatio916180270ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.buttonMode = new System.Windows.Forms.Button();
+            this.nikseLabelOutline = new Nikse.SubtitleEdit.Controls.NikseLabel();
+            this.numericUpDownOutline = new Nikse.SubtitleEdit.Controls.NikseUpDown();
+            this.videoPlayerContainer1 = new Nikse.SubtitleEdit.Controls.VideoPlayerContainer();
+            this.numericUpDownCutToSeconds = new Nikse.SubtitleEdit.Controls.NikseUpDown();
+            this.numericUpDownCutToMinutes = new Nikse.SubtitleEdit.Controls.NikseUpDown();
+            this.numericUpDownCutToHours = new Nikse.SubtitleEdit.Controls.NikseUpDown();
+            this.numericUpDownCutFromSeconds = new Nikse.SubtitleEdit.Controls.NikseUpDown();
+            this.numericUpDownCutFromMinutes = new Nikse.SubtitleEdit.Controls.NikseUpDown();
+            this.numericUpDownCutFromHours = new Nikse.SubtitleEdit.Controls.NikseUpDown();
+            this.labelCutTo = new Nikse.SubtitleEdit.Controls.NikseLabel();
+            this.labelCutFrom = new Nikse.SubtitleEdit.Controls.NikseLabel();
+            this.labelVideoBitrate = new Nikse.SubtitleEdit.Controls.NikseLabel();
+            this.labelInfo = new Nikse.SubtitleEdit.Controls.NikseLabel();
+            this.comboBoxSubtitleFont = new Nikse.SubtitleEdit.Controls.NikseComboBox();
+            this.labelSubtitleFont = new Nikse.SubtitleEdit.Controls.NikseLabel();
+            this.labelCrfHint = new Nikse.SubtitleEdit.Controls.NikseLabel();
+            this.labelResolution = new Nikse.SubtitleEdit.Controls.NikseLabel();
+            this.numericUpDownWidth = new Nikse.SubtitleEdit.Controls.NikseUpDown();
+            this.numericUpDownHeight = new Nikse.SubtitleEdit.Controls.NikseUpDown();
+            this.labelX = new Nikse.SubtitleEdit.Controls.NikseLabel();
+            this.labelPreset = new Nikse.SubtitleEdit.Controls.NikseLabel();
+            this.comboBoxTune = new Nikse.SubtitleEdit.Controls.NikseComboBox();
+            this.comboBoxPreset = new Nikse.SubtitleEdit.Controls.NikseComboBox();
+            this.labelTune = new Nikse.SubtitleEdit.Controls.NikseLabel();
+            this.labelCRF = new Nikse.SubtitleEdit.Controls.NikseLabel();
+            this.comboBoxVideoEncoding = new Nikse.SubtitleEdit.Controls.NikseComboBox();
+            this.comboBoxCrf = new Nikse.SubtitleEdit.Controls.NikseComboBox();
+            this.labelVideoEncoding = new Nikse.SubtitleEdit.Controls.NikseLabel();
+            this.labelAudioEnc = new Nikse.SubtitleEdit.Controls.NikseLabel();
+            this.comboBoxAudioBitRate = new Nikse.SubtitleEdit.Controls.NikseComboBox();
+            this.comboBoxAudioEnc = new Nikse.SubtitleEdit.Controls.NikseComboBox();
+            this.labelAudioBitRate = new Nikse.SubtitleEdit.Controls.NikseLabel();
+            this.labelAudioSampleRate = new Nikse.SubtitleEdit.Controls.NikseLabel();
+            this.comboBoxAudioSampleRate = new Nikse.SubtitleEdit.Controls.NikseComboBox();
+            this.numericUpDownTargetFileSize = new Nikse.SubtitleEdit.Controls.NikseUpDown();
+            this.labelFileSize = new Nikse.SubtitleEdit.Controls.NikseLabel();
+            this.labelFileName = new Nikse.SubtitleEdit.Controls.NikseLabel();
+            this.numericUpDownFontSize = new Nikse.SubtitleEdit.Controls.NikseUpDown();
+            this.labelFontSize = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.labelPreviewPleaseWait = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.labelPass = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.labelProgress = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.labelPleaseWait = new Nikse.SubtitleEdit.Controls.NikseLabel();
             this.textBoxLog = new Nikse.SubtitleEdit.Controls.NikseTextBox();
-            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.contextMenuStripGenerate.SuspendLayout();
             this.groupBoxSettings.SuspendLayout();
             this.groupBoxCut.SuspendLayout();
@@ -209,6 +212,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxSettings.Controls.Add(this.nikseLabelOutline);
+            this.groupBoxSettings.Controls.Add(this.numericUpDownOutline);
+            this.groupBoxSettings.Controls.Add(this.checkBoxFontBold);
             this.groupBoxSettings.Controls.Add(this.videoPlayerContainer1);
             this.groupBoxSettings.Controls.Add(this.buttonClear);
             this.groupBoxSettings.Controls.Add(this.panelForeColor);
@@ -236,42 +242,29 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxSettings.Controls.Add(this.labelFontSize);
             this.groupBoxSettings.Controls.Add(this.listViewBatch);
             this.groupBoxSettings.Controls.Add(this.buttonOutputFileSettings);
-            this.groupBoxSettings.Location = new System.Drawing.Point(12, 13);
+            this.groupBoxSettings.Location = new System.Drawing.Point(12, 12);
             this.groupBoxSettings.Name = "groupBoxSettings";
-            this.groupBoxSettings.Size = new System.Drawing.Size(861, 547);
+            this.groupBoxSettings.Size = new System.Drawing.Size(861, 548);
             this.groupBoxSettings.TabIndex = 0;
             this.groupBoxSettings.TabStop = false;
             this.groupBoxSettings.Text = "Settings";
             // 
-            // videoPlayerContainer1
+            // checkBoxFontBold
             // 
-            this.videoPlayerContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.videoPlayerContainer1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(18)))), ((int)(((byte)(18)))), ((int)(((byte)(18)))));
-            this.videoPlayerContainer1.Chapters = null;
-            this.videoPlayerContainer1.CurrentPosition = 0D;
-            this.videoPlayerContainer1.FontSizeFactor = 1F;
-            this.videoPlayerContainer1.LastParagraph = null;
-            this.videoPlayerContainer1.Location = new System.Drawing.Point(430, 313);
-            this.videoPlayerContainer1.Name = "videoPlayerContainer1";
-            this.videoPlayerContainer1.ShowFullscreenButton = true;
-            this.videoPlayerContainer1.ShowMuteButton = true;
-            this.videoPlayerContainer1.ShowStopButton = true;
-            this.videoPlayerContainer1.Size = new System.Drawing.Size(431, 226);
-            this.videoPlayerContainer1.SubtitleText = "";
-            this.videoPlayerContainer1.TabIndex = 110;
-            this.videoPlayerContainer1.TextRightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.videoPlayerContainer1.UsingFrontCenterAudioChannelOnly = false;
-            this.videoPlayerContainer1.VideoHeight = 0;
-            this.videoPlayerContainer1.VideoPlayer = null;
-            this.videoPlayerContainer1.VideoWidth = 0;
-            this.videoPlayerContainer1.Volume = 0D;
+            this.checkBoxFontBold.AutoSize = true;
+            this.checkBoxFontBold.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.checkBoxFontBold.Location = new System.Drawing.Point(187, 31);
+            this.checkBoxFontBold.Name = "checkBoxFontBold";
+            this.checkBoxFontBold.Size = new System.Drawing.Size(51, 17);
+            this.checkBoxFontBold.TabIndex = 20;
+            this.checkBoxFontBold.Text = "Bold";
+            this.checkBoxFontBold.UseVisualStyleBackColor = true;
+            this.checkBoxFontBold.CheckedChanged += new System.EventHandler(this.checkBoxFontBold_CheckedChanged);
             // 
             // buttonClear
             // 
             this.buttonClear.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonClear.Location = new System.Drawing.Point(165, 513);
+            this.buttonClear.Location = new System.Drawing.Point(165, 514);
             this.buttonClear.Name = "buttonClear";
             this.buttonClear.Size = new System.Drawing.Size(74, 23);
             this.buttonClear.TabIndex = 146;
@@ -282,9 +275,9 @@ namespace Nikse.SubtitleEdit.Forms
             // panelForeColor
             // 
             this.panelForeColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelForeColor.Location = new System.Drawing.Point(369, 54);
+            this.panelForeColor.Location = new System.Drawing.Point(369, 28);
             this.panelForeColor.Name = "panelForeColor";
-            this.panelForeColor.Size = new System.Drawing.Size(21, 20);
+            this.panelForeColor.Size = new System.Drawing.Size(21, 21);
             this.panelForeColor.TabIndex = 6;
             this.panelForeColor.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panelForeColor_MouseClick);
             // 
@@ -292,7 +285,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.nikseLabelOutputFileFolder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.nikseLabelOutputFileFolder.AutoSize = true;
-            this.nikseLabelOutputFileFolder.Location = new System.Drawing.Point(334, 518);
+            this.nikseLabelOutputFileFolder.Location = new System.Drawing.Point(334, 519);
             this.nikseLabelOutputFileFolder.Name = "nikseLabelOutputFileFolder";
             this.nikseLabelOutputFileFolder.Size = new System.Drawing.Size(90, 13);
             this.nikseLabelOutputFileFolder.TabIndex = 144;
@@ -301,7 +294,7 @@ namespace Nikse.SubtitleEdit.Forms
             // buttonRemoveFile
             // 
             this.buttonRemoveFile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonRemoveFile.Location = new System.Drawing.Point(85, 513);
+            this.buttonRemoveFile.Location = new System.Drawing.Point(85, 514);
             this.buttonRemoveFile.Name = "buttonRemoveFile";
             this.buttonRemoveFile.Size = new System.Drawing.Size(74, 23);
             this.buttonRemoveFile.TabIndex = 145;
@@ -311,10 +304,10 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // buttonForeColor
             // 
-            this.buttonForeColor.Location = new System.Drawing.Point(274, 52);
+            this.buttonForeColor.Location = new System.Drawing.Point(274, 25);
             this.buttonForeColor.Name = "buttonForeColor";
             this.buttonForeColor.Size = new System.Drawing.Size(89, 23);
-            this.buttonForeColor.TabIndex = 5;
+            this.buttonForeColor.TabIndex = 30;
             this.buttonForeColor.Text = "Color";
             this.buttonForeColor.UseVisualStyleBackColor = true;
             this.buttonForeColor.Click += new System.EventHandler(this.buttonForeColor_Click);
@@ -322,7 +315,7 @@ namespace Nikse.SubtitleEdit.Forms
             // buttonAddFile
             // 
             this.buttonAddFile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonAddFile.Location = new System.Drawing.Point(6, 513);
+            this.buttonAddFile.Location = new System.Drawing.Point(6, 514);
             this.buttonAddFile.Name = "buttonAddFile";
             this.buttonAddFile.Size = new System.Drawing.Size(73, 23);
             this.buttonAddFile.TabIndex = 144;
@@ -333,7 +326,7 @@ namespace Nikse.SubtitleEdit.Forms
             // panelOutlineColor
             // 
             this.panelOutlineColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelOutlineColor.Location = new System.Drawing.Point(369, 25);
+            this.panelOutlineColor.Location = new System.Drawing.Point(369, 56);
             this.panelOutlineColor.Name = "panelOutlineColor";
             this.panelOutlineColor.Size = new System.Drawing.Size(21, 20);
             this.panelOutlineColor.TabIndex = 4;
@@ -341,10 +334,10 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // buttonOutlineColor
             // 
-            this.buttonOutlineColor.Location = new System.Drawing.Point(274, 23);
+            this.buttonOutlineColor.Location = new System.Drawing.Point(274, 54);
             this.buttonOutlineColor.Name = "buttonOutlineColor";
             this.buttonOutlineColor.Size = new System.Drawing.Size(89, 23);
-            this.buttonOutlineColor.TabIndex = 3;
+            this.buttonOutlineColor.TabIndex = 60;
             this.buttonOutlineColor.Text = "Color";
             this.buttonOutlineColor.UseVisualStyleBackColor = true;
             this.buttonOutlineColor.Click += new System.EventHandler(this.buttonOutlineColor_Click);
@@ -387,6 +380,538 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonCutFrom.Text = "...";
             this.buttonCutFrom.UseVisualStyleBackColor = true;
             this.buttonCutFrom.Click += new System.EventHandler(this.buttonCutFrom_Click);
+            // 
+            // checkBoxCut
+            // 
+            this.checkBoxCut.AutoSize = true;
+            this.checkBoxCut.Location = new System.Drawing.Point(12, 36);
+            this.checkBoxCut.Name = "checkBoxCut";
+            this.checkBoxCut.Size = new System.Drawing.Size(42, 17);
+            this.checkBoxCut.TabIndex = 0;
+            this.checkBoxCut.Text = "Cut";
+            this.checkBoxCut.UseVisualStyleBackColor = true;
+            this.checkBoxCut.CheckedChanged += new System.EventHandler(this.checkBoxCut_CheckedChanged);
+            // 
+            // checkBoxBox
+            // 
+            this.checkBoxBox.AutoSize = true;
+            this.checkBoxBox.Location = new System.Drawing.Point(187, 60);
+            this.checkBoxBox.Name = "checkBoxBox";
+            this.checkBoxBox.Size = new System.Drawing.Size(44, 17);
+            this.checkBoxBox.TabIndex = 50;
+            this.checkBoxBox.Text = "Box";
+            this.checkBoxBox.UseVisualStyleBackColor = true;
+            this.checkBoxBox.CheckedChanged += new System.EventHandler(this.checkBoxBox_CheckedChanged);
+            // 
+            // checkBoxAlignRight
+            // 
+            this.checkBoxAlignRight.AutoSize = true;
+            this.checkBoxAlignRight.Location = new System.Drawing.Point(218, 114);
+            this.checkBoxAlignRight.Name = "checkBoxAlignRight";
+            this.checkBoxAlignRight.Size = new System.Drawing.Size(72, 17);
+            this.checkBoxAlignRight.TabIndex = 76;
+            this.checkBoxAlignRight.Text = "Align right";
+            this.checkBoxAlignRight.UseVisualStyleBackColor = true;
+            this.checkBoxAlignRight.CheckedChanged += new System.EventHandler(this.checkBoxAlignRight_CheckedChanged);
+            // 
+            // checkBoxRightToLeft
+            // 
+            this.checkBoxRightToLeft.AutoSize = true;
+            this.checkBoxRightToLeft.Location = new System.Drawing.Point(120, 114);
+            this.checkBoxRightToLeft.Name = "checkBoxRightToLeft";
+            this.checkBoxRightToLeft.Size = new System.Drawing.Size(80, 17);
+            this.checkBoxRightToLeft.TabIndex = 75;
+            this.checkBoxRightToLeft.Text = "Right to left";
+            this.checkBoxRightToLeft.UseVisualStyleBackColor = true;
+            this.checkBoxRightToLeft.CheckedChanged += new System.EventHandler(this.checkBoxRightToLeft_CheckedChanged);
+            // 
+            // groupBoxVideo
+            // 
+            this.groupBoxVideo.Controls.Add(this.labelCrfHint);
+            this.groupBoxVideo.Controls.Add(this.buttonVideoChooseStandardRes);
+            this.groupBoxVideo.Controls.Add(this.labelResolution);
+            this.groupBoxVideo.Controls.Add(this.numericUpDownWidth);
+            this.groupBoxVideo.Controls.Add(this.numericUpDownHeight);
+            this.groupBoxVideo.Controls.Add(this.labelX);
+            this.groupBoxVideo.Controls.Add(this.labelPreset);
+            this.groupBoxVideo.Controls.Add(this.comboBoxTune);
+            this.groupBoxVideo.Controls.Add(this.comboBoxPreset);
+            this.groupBoxVideo.Controls.Add(this.labelTune);
+            this.groupBoxVideo.Controls.Add(this.labelCRF);
+            this.groupBoxVideo.Controls.Add(this.comboBoxVideoEncoding);
+            this.groupBoxVideo.Controls.Add(this.comboBoxCrf);
+            this.groupBoxVideo.Controls.Add(this.labelVideoEncoding);
+            this.groupBoxVideo.Location = new System.Drawing.Point(6, 141);
+            this.groupBoxVideo.Name = "groupBoxVideo";
+            this.groupBoxVideo.Size = new System.Drawing.Size(416, 166);
+            this.groupBoxVideo.TabIndex = 70;
+            this.groupBoxVideo.TabStop = false;
+            this.groupBoxVideo.Text = "Video";
+            // 
+            // buttonVideoChooseStandardRes
+            // 
+            this.buttonVideoChooseStandardRes.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonVideoChooseStandardRes.Location = new System.Drawing.Point(257, 15);
+            this.buttonVideoChooseStandardRes.Name = "buttonVideoChooseStandardRes";
+            this.buttonVideoChooseStandardRes.Size = new System.Drawing.Size(79, 23);
+            this.buttonVideoChooseStandardRes.TabIndex = 3;
+            this.buttonVideoChooseStandardRes.Text = "...";
+            this.buttonVideoChooseStandardRes.UseVisualStyleBackColor = true;
+            this.buttonVideoChooseStandardRes.Click += new System.EventHandler(this.buttonVideoChooseStandardRes_Click);
+            // 
+            // groupBoxAudio
+            // 
+            this.groupBoxAudio.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxAudio.Controls.Add(this.listViewAudioTracks);
+            this.groupBoxAudio.Controls.Add(this.labelAudioEnc);
+            this.groupBoxAudio.Controls.Add(this.comboBoxAudioBitRate);
+            this.groupBoxAudio.Controls.Add(this.comboBoxAudioEnc);
+            this.groupBoxAudio.Controls.Add(this.labelAudioBitRate);
+            this.groupBoxAudio.Controls.Add(this.checkBoxMakeStereo);
+            this.groupBoxAudio.Controls.Add(this.labelAudioSampleRate);
+            this.groupBoxAudio.Controls.Add(this.comboBoxAudioSampleRate);
+            this.groupBoxAudio.Location = new System.Drawing.Point(430, 141);
+            this.groupBoxAudio.Name = "groupBoxAudio";
+            this.groupBoxAudio.Size = new System.Drawing.Size(425, 166);
+            this.groupBoxAudio.TabIndex = 90;
+            this.groupBoxAudio.TabStop = false;
+            this.groupBoxAudio.Text = "Audio";
+            // 
+            // listViewAudioTracks
+            // 
+            this.listViewAudioTracks.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.listViewAudioTracks.CheckBoxes = true;
+            this.listViewAudioTracks.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeaderAudioTrack});
+            this.listViewAudioTracks.HideSelection = false;
+            this.listViewAudioTracks.Location = new System.Drawing.Point(229, 29);
+            this.listViewAudioTracks.Name = "listViewAudioTracks";
+            this.listViewAudioTracks.Size = new System.Drawing.Size(190, 122);
+            this.listViewAudioTracks.TabIndex = 45;
+            this.listViewAudioTracks.UseCompatibleStateImageBehavior = false;
+            this.listViewAudioTracks.View = System.Windows.Forms.View.Details;
+            // 
+            // columnHeaderAudioTrack
+            // 
+            this.columnHeaderAudioTrack.Text = "Audio tracks";
+            this.columnHeaderAudioTrack.Width = 160;
+            // 
+            // checkBoxMakeStereo
+            // 
+            this.checkBoxMakeStereo.AutoSize = true;
+            this.checkBoxMakeStereo.Checked = true;
+            this.checkBoxMakeStereo.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxMakeStereo.Location = new System.Drawing.Point(91, 58);
+            this.checkBoxMakeStereo.Name = "checkBoxMakeStereo";
+            this.checkBoxMakeStereo.Size = new System.Drawing.Size(57, 17);
+            this.checkBoxMakeStereo.TabIndex = 2;
+            this.checkBoxMakeStereo.Text = "Stereo";
+            this.checkBoxMakeStereo.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxTargetFileSize
+            // 
+            this.checkBoxTargetFileSize.AutoSize = true;
+            this.checkBoxTargetFileSize.Location = new System.Drawing.Point(22, 327);
+            this.checkBoxTargetFileSize.Name = "checkBoxTargetFileSize";
+            this.checkBoxTargetFileSize.Size = new System.Drawing.Size(192, 17);
+            this.checkBoxTargetFileSize.TabIndex = 100;
+            this.checkBoxTargetFileSize.Text = "Target file size (two pass encoding)";
+            this.checkBoxTargetFileSize.UseVisualStyleBackColor = true;
+            this.checkBoxTargetFileSize.CheckedChanged += new System.EventHandler(this.checkBoxTargetFileSize_CheckedChanged);
+            // 
+            // listViewBatch
+            // 
+            this.listViewBatch.AllowDrop = true;
+            this.listViewBatch.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.listViewBatch.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeaderVideoFile,
+            this.columnHeaderResolution,
+            this.columnHeaderSize,
+            this.columnHeaderSubtitleFile,
+            this.columnHeaderStatus});
+            this.listViewBatch.ContextMenuStrip = this.contextMenuStripBatch;
+            this.listViewBatch.FullRowSelect = true;
+            this.listViewBatch.HideSelection = false;
+            this.listViewBatch.Location = new System.Drawing.Point(6, 316);
+            this.listViewBatch.Name = "listViewBatch";
+            this.listViewBatch.Size = new System.Drawing.Size(852, 192);
+            this.listViewBatch.TabIndex = 3;
+            this.listViewBatch.UseCompatibleStateImageBehavior = false;
+            this.listViewBatch.View = System.Windows.Forms.View.Details;
+            this.listViewBatch.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.listViewBatch_ColumnClick);
+            this.listViewBatch.DragDrop += new System.Windows.Forms.DragEventHandler(this.listViewBatch_DragDrop);
+            this.listViewBatch.DragEnter += new System.Windows.Forms.DragEventHandler(this.listViewBatch_DragEnter);
+            this.listViewBatch.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listViewBatch_KeyDown);
+            // 
+            // columnHeaderVideoFile
+            // 
+            this.columnHeaderVideoFile.Text = "Video file";
+            this.columnHeaderVideoFile.Width = 420;
+            // 
+            // columnHeaderResolution
+            // 
+            this.columnHeaderResolution.Text = "Resolution";
+            this.columnHeaderResolution.Width = 80;
+            // 
+            // columnHeaderSize
+            // 
+            this.columnHeaderSize.Text = "Size";
+            this.columnHeaderSize.Width = 80;
+            // 
+            // columnHeaderSubtitleFile
+            // 
+            this.columnHeaderSubtitleFile.Text = "Subtitle file";
+            this.columnHeaderSubtitleFile.Width = 180;
+            // 
+            // columnHeaderStatus
+            // 
+            this.columnHeaderStatus.Text = "Status";
+            this.columnHeaderStatus.Width = 80;
+            // 
+            // contextMenuStripBatch
+            // 
+            this.contextMenuStripBatch.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.addFilesToolStripMenuItem,
+            this.toolStripSeparator2,
+            this.pickSubtitleFileToolStripMenuItem,
+            this.removeSubtitleFileToolStripMenuItem,
+            this.toolStripSeparator1,
+            this.deleteToolStripMenuItem,
+            this.clearToolStripMenuItem});
+            this.contextMenuStripBatch.Name = "contextMenuStripBatch";
+            this.contextMenuStripBatch.Size = new System.Drawing.Size(179, 126);
+            this.contextMenuStripBatch.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripBatch_Opening);
+            // 
+            // addFilesToolStripMenuItem
+            // 
+            this.addFilesToolStripMenuItem.Name = "addFilesToolStripMenuItem";
+            this.addFilesToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
+            this.addFilesToolStripMenuItem.Text = "Add video files...";
+            this.addFilesToolStripMenuItem.Click += new System.EventHandler(this.addFilesToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(175, 6);
+            // 
+            // pickSubtitleFileToolStripMenuItem
+            // 
+            this.pickSubtitleFileToolStripMenuItem.Name = "pickSubtitleFileToolStripMenuItem";
+            this.pickSubtitleFileToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
+            this.pickSubtitleFileToolStripMenuItem.Text = "Pick subtitle file...";
+            this.pickSubtitleFileToolStripMenuItem.Click += new System.EventHandler(this.pickSubtitleFileToolStripMenuItem_Click);
+            // 
+            // removeSubtitleFileToolStripMenuItem
+            // 
+            this.removeSubtitleFileToolStripMenuItem.Name = "removeSubtitleFileToolStripMenuItem";
+            this.removeSubtitleFileToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
+            this.removeSubtitleFileToolStripMenuItem.Text = "Remove subtitle file";
+            this.removeSubtitleFileToolStripMenuItem.Click += new System.EventHandler(this.removeSubtitleFileToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(175, 6);
+            // 
+            // deleteToolStripMenuItem
+            // 
+            this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
+            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
+            this.deleteToolStripMenuItem.Text = "Delete";
+            this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
+            // 
+            // clearToolStripMenuItem
+            // 
+            this.clearToolStripMenuItem.Name = "clearToolStripMenuItem";
+            this.clearToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
+            this.clearToolStripMenuItem.Text = "Clear";
+            this.clearToolStripMenuItem.Click += new System.EventHandler(this.clearToolStripMenuItem_Click);
+            // 
+            // buttonOutputFileSettings
+            // 
+            this.buttonOutputFileSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonOutputFileSettings.Location = new System.Drawing.Point(255, 514);
+            this.buttonOutputFileSettings.Name = "buttonOutputFileSettings";
+            this.buttonOutputFileSettings.Size = new System.Drawing.Size(167, 23);
+            this.buttonOutputFileSettings.TabIndex = 148;
+            this.buttonOutputFileSettings.Text = "Output file/folder...";
+            this.buttonOutputFileSettings.UseVisualStyleBackColor = true;
+            this.buttonOutputFileSettings.Click += new System.EventHandler(this.buttonOutputFileSettings_Click);
+            // 
+            // buttonPreview
+            // 
+            this.buttonPreview.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonPreview.Location = new System.Drawing.Point(621, 586);
+            this.buttonPreview.Name = "buttonPreview";
+            this.buttonPreview.Size = new System.Drawing.Size(121, 23);
+            this.buttonPreview.TabIndex = 130;
+            this.buttonPreview.Text = "Preview";
+            this.buttonPreview.UseVisualStyleBackColor = true;
+            this.buttonPreview.Click += new System.EventHandler(this.buttonPreview_Click);
+            // 
+            // linkLabelHelp
+            // 
+            this.linkLabelHelp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.linkLabelHelp.AutoSize = true;
+            this.linkLabelHelp.Location = new System.Drawing.Point(844, 563);
+            this.linkLabelHelp.Name = "linkLabelHelp";
+            this.linkLabelHelp.Size = new System.Drawing.Size(29, 13);
+            this.linkLabelHelp.TabIndex = 120;
+            this.linkLabelHelp.TabStop = true;
+            this.linkLabelHelp.Text = "Help";
+            this.linkLabelHelp.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelHelp_LinkClicked);
+            // 
+            // contextMenuStripRes
+            // 
+            this.contextMenuStripRes.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.useSourceResolutionToolStripMenuItem,
+            this.toolStripSeparator3,
+            this.x2160ToolStripMenuItem,
+            this.uHD3840x2160ToolStripMenuItem,
+            this.k2048x1080ToolStripMenuItem,
+            this.dCI2KScope2048x858ToolStripMenuItem,
+            this.dCI2KFlat1998x1080ToolStripMenuItem,
+            this.p1920x1080ToolStripMenuItem,
+            this.x1080ToolStripMenuItem,
+            this.p1280x720ToolStripMenuItem,
+            this.x720ToolStripMenuItem,
+            this.p848x480ToolStripMenuItem,
+            this.pAL720x576ToolStripMenuItem,
+            this.toolStripSeparator4,
+            this.youTubeShortsTikTok10801920ToolStripMenuItem,
+            this.youTubeShortsTikTokAspectRatio9167201280ToolStripMenuItem,
+            this.aAspectRatio916540960ToolStripMenuItem,
+            this.bAspectRatio916360540ToolStripMenuItem,
+            this.aAspectRatio916270480ToolStripMenuItem,
+            this.bAspectRatio916180270ToolStripMenuItem});
+            this.contextMenuStripRes.Name = "contextMenuStripRes";
+            this.contextMenuStripRes.Size = new System.Drawing.Size(368, 412);
+            this.contextMenuStripRes.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripRes_Opening);
+            // 
+            // useSourceResolutionToolStripMenuItem
+            // 
+            this.useSourceResolutionToolStripMenuItem.Name = "useSourceResolutionToolStripMenuItem";
+            this.useSourceResolutionToolStripMenuItem.Size = new System.Drawing.Size(367, 22);
+            this.useSourceResolutionToolStripMenuItem.Text = "Use source resolution";
+            this.useSourceResolutionToolStripMenuItem.Click += new System.EventHandler(this.useSourceResolutionToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(364, 6);
+            // 
+            // x2160ToolStripMenuItem
+            // 
+            this.x2160ToolStripMenuItem.Name = "x2160ToolStripMenuItem";
+            this.x2160ToolStripMenuItem.Size = new System.Drawing.Size(367, 22);
+            this.x2160ToolStripMenuItem.Text = "4K DCI - Aspect Ratio 16∶9 - (4096x2160)";
+            this.x2160ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
+            // 
+            // uHD3840x2160ToolStripMenuItem
+            // 
+            this.uHD3840x2160ToolStripMenuItem.Name = "uHD3840x2160ToolStripMenuItem";
+            this.uHD3840x2160ToolStripMenuItem.Size = new System.Drawing.Size(367, 22);
+            this.uHD3840x2160ToolStripMenuItem.Text = "4K UHD - Aspect Ratio 16∶9 - (3840x2160)";
+            this.uHD3840x2160ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
+            // 
+            // k2048x1080ToolStripMenuItem
+            // 
+            this.k2048x1080ToolStripMenuItem.Name = "k2048x1080ToolStripMenuItem";
+            this.k2048x1080ToolStripMenuItem.Size = new System.Drawing.Size(367, 22);
+            this.k2048x1080ToolStripMenuItem.Text = "2K WQHD - Aspect Ratio 16∶9 - (2560x1440)";
+            this.k2048x1080ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
+            // 
+            // dCI2KScope2048x858ToolStripMenuItem
+            // 
+            this.dCI2KScope2048x858ToolStripMenuItem.Name = "dCI2KScope2048x858ToolStripMenuItem";
+            this.dCI2KScope2048x858ToolStripMenuItem.Size = new System.Drawing.Size(367, 22);
+            this.dCI2KScope2048x858ToolStripMenuItem.Text = "2K DCI - Aspect Ratio 16∶9 - (2048x1080)";
+            this.dCI2KScope2048x858ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
+            // 
+            // dCI2KFlat1998x1080ToolStripMenuItem
+            // 
+            this.dCI2KFlat1998x1080ToolStripMenuItem.Name = "dCI2KFlat1998x1080ToolStripMenuItem";
+            this.dCI2KFlat1998x1080ToolStripMenuItem.Size = new System.Drawing.Size(367, 22);
+            this.dCI2KFlat1998x1080ToolStripMenuItem.Text = "Full HD 1080p - Aspect Ratio 16∶9 - (1920x1080)";
+            this.dCI2KFlat1998x1080ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
+            // 
+            // p1920x1080ToolStripMenuItem
+            // 
+            this.p1920x1080ToolStripMenuItem.Name = "p1920x1080ToolStripMenuItem";
+            this.p1920x1080ToolStripMenuItem.Size = new System.Drawing.Size(367, 22);
+            this.p1920x1080ToolStripMenuItem.Text = "HD 720p - Aspect Ratio 16∶9 - (1280x720)";
+            this.p1920x1080ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
+            // 
+            // x1080ToolStripMenuItem
+            // 
+            this.x1080ToolStripMenuItem.Name = "x1080ToolStripMenuItem";
+            this.x1080ToolStripMenuItem.Size = new System.Drawing.Size(367, 22);
+            this.x1080ToolStripMenuItem.Text = "540p - Aspect Ratio 16∶9 - (960x540)";
+            this.x1080ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
+            // 
+            // p1280x720ToolStripMenuItem
+            // 
+            this.p1280x720ToolStripMenuItem.Name = "p1280x720ToolStripMenuItem";
+            this.p1280x720ToolStripMenuItem.Size = new System.Drawing.Size(367, 22);
+            this.p1280x720ToolStripMenuItem.Text = "SD PAL - Aspect Ratio 4:3 - (720x576)";
+            this.p1280x720ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
+            // 
+            // x720ToolStripMenuItem
+            // 
+            this.x720ToolStripMenuItem.Name = "x720ToolStripMenuItem";
+            this.x720ToolStripMenuItem.Size = new System.Drawing.Size(367, 22);
+            this.x720ToolStripMenuItem.Text = "SD NTSC - Aspect Ratio 3:2 - (720x480)";
+            this.x720ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
+            // 
+            // p848x480ToolStripMenuItem
+            // 
+            this.p848x480ToolStripMenuItem.Name = "p848x480ToolStripMenuItem";
+            this.p848x480ToolStripMenuItem.Size = new System.Drawing.Size(367, 22);
+            this.p848x480ToolStripMenuItem.Text = "VGA - Aspect Ratio 4:3 - (640x480)";
+            this.p848x480ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
+            // 
+            // pAL720x576ToolStripMenuItem
+            // 
+            this.pAL720x576ToolStripMenuItem.Name = "pAL720x576ToolStripMenuItem";
+            this.pAL720x576ToolStripMenuItem.Size = new System.Drawing.Size(367, 22);
+            this.pAL720x576ToolStripMenuItem.Text = "360p - Aspect Ratio 16∶9 - (640x360)";
+            this.pAL720x576ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
+            // 
+            // toolStripSeparator4
+            // 
+            this.toolStripSeparator4.Name = "toolStripSeparator4";
+            this.toolStripSeparator4.Size = new System.Drawing.Size(364, 6);
+            // 
+            // youTubeShortsTikTok10801920ToolStripMenuItem
+            // 
+            this.youTubeShortsTikTok10801920ToolStripMenuItem.Name = "youTubeShortsTikTok10801920ToolStripMenuItem";
+            this.youTubeShortsTikTok10801920ToolStripMenuItem.Size = new System.Drawing.Size(367, 22);
+            this.youTubeShortsTikTok10801920ToolStripMenuItem.Text = "YouTube shorts/TikTok - Aspect Ratio 9∶16 - (1080x1920)";
+            this.youTubeShortsTikTok10801920ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
+            // 
+            // youTubeShortsTikTokAspectRatio9167201280ToolStripMenuItem
+            // 
+            this.youTubeShortsTikTokAspectRatio9167201280ToolStripMenuItem.Name = "youTubeShortsTikTokAspectRatio9167201280ToolStripMenuItem";
+            this.youTubeShortsTikTokAspectRatio9167201280ToolStripMenuItem.Size = new System.Drawing.Size(367, 22);
+            this.youTubeShortsTikTokAspectRatio9167201280ToolStripMenuItem.Text = "YouTube shorts/TikTok - Aspect Ratio 9∶16 - (720x1280)";
+            this.youTubeShortsTikTokAspectRatio9167201280ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
+            // 
+            // aAspectRatio916540960ToolStripMenuItem
+            // 
+            this.aAspectRatio916540960ToolStripMenuItem.Name = "aAspectRatio916540960ToolStripMenuItem";
+            this.aAspectRatio916540960ToolStripMenuItem.Size = new System.Drawing.Size(367, 22);
+            this.aAspectRatio916540960ToolStripMenuItem.Text = "1/2 A - Aspect Ratio 9∶16 - (540x960)";
+            this.aAspectRatio916540960ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
+            // 
+            // bAspectRatio916360540ToolStripMenuItem
+            // 
+            this.bAspectRatio916360540ToolStripMenuItem.Name = "bAspectRatio916360540ToolStripMenuItem";
+            this.bAspectRatio916360540ToolStripMenuItem.Size = new System.Drawing.Size(367, 22);
+            this.bAspectRatio916360540ToolStripMenuItem.Text = "1/2 B - Aspect Ratio 9∶16 - (360x540)";
+            this.bAspectRatio916360540ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
+            // 
+            // aAspectRatio916270480ToolStripMenuItem
+            // 
+            this.aAspectRatio916270480ToolStripMenuItem.Name = "aAspectRatio916270480ToolStripMenuItem";
+            this.aAspectRatio916270480ToolStripMenuItem.Size = new System.Drawing.Size(367, 22);
+            this.aAspectRatio916270480ToolStripMenuItem.Text = "1/4 A - Aspect Ratio 9∶16 - (270x480)";
+            this.aAspectRatio916270480ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
+            // 
+            // bAspectRatio916180270ToolStripMenuItem
+            // 
+            this.bAspectRatio916180270ToolStripMenuItem.Name = "bAspectRatio916180270ToolStripMenuItem";
+            this.bAspectRatio916180270ToolStripMenuItem.Size = new System.Drawing.Size(367, 22);
+            this.bAspectRatio916180270ToolStripMenuItem.Text = "1/4 B - Aspect Ratio 9∶16 - (180x270)";
+            this.bAspectRatio916180270ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
+            // 
+            // buttonMode
+            // 
+            this.buttonMode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonMode.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.buttonMode.Location = new System.Drawing.Point(748, 586);
+            this.buttonMode.Name = "buttonMode";
+            this.buttonMode.Size = new System.Drawing.Size(125, 23);
+            this.buttonMode.TabIndex = 143;
+            this.buttonMode.Text = "Batch mode";
+            this.buttonMode.UseVisualStyleBackColor = true;
+            this.buttonMode.Click += new System.EventHandler(this.buttonMode_Click);
+            // 
+            // nikseLabelOutline
+            // 
+            this.nikseLabelOutline.AutoSize = true;
+            this.nikseLabelOutline.Location = new System.Drawing.Point(19, 58);
+            this.nikseLabelOutline.Name = "nikseLabelOutline";
+            this.nikseLabelOutline.Size = new System.Drawing.Size(40, 13);
+            this.nikseLabelOutline.TabIndex = 151;
+            this.nikseLabelOutline.Text = "Outline";
+            // 
+            // numericUpDownOutline
+            // 
+            this.numericUpDownOutline.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDownOutline.BackColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.numericUpDownOutline.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(173)))), ((int)(((byte)(179)))));
+            this.numericUpDownOutline.BorderColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
+            this.numericUpDownOutline.ButtonForeColor = System.Drawing.SystemColors.ControlText;
+            this.numericUpDownOutline.ButtonForeColorDown = System.Drawing.Color.Orange;
+            this.numericUpDownOutline.ButtonForeColorOver = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.numericUpDownOutline.DecimalPlaces = 1;
+            this.numericUpDownOutline.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.numericUpDownOutline.Location = new System.Drawing.Point(119, 54);
+            this.numericUpDownOutline.Maximum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.numericUpDownOutline.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+            this.numericUpDownOutline.Name = "numericUpDownOutline";
+            this.numericUpDownOutline.Size = new System.Drawing.Size(54, 23);
+            this.numericUpDownOutline.TabIndex = 40;
+            this.numericUpDownOutline.TabStop = false;
+            this.numericUpDownOutline.ThousandsSeparator = false;
+            this.numericUpDownOutline.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+            this.numericUpDownOutline.ValueChanged += new System.EventHandler(this.numericUpDownOutline_ValueChanged);
+            // 
+            // videoPlayerContainer1
+            // 
+            this.videoPlayerContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.videoPlayerContainer1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(18)))), ((int)(((byte)(18)))), ((int)(((byte)(18)))));
+            this.videoPlayerContainer1.Chapters = null;
+            this.videoPlayerContainer1.CurrentPosition = 0D;
+            this.videoPlayerContainer1.FontSizeFactor = 1F;
+            this.videoPlayerContainer1.LastParagraph = null;
+            this.videoPlayerContainer1.Location = new System.Drawing.Point(430, 313);
+            this.videoPlayerContainer1.Name = "videoPlayerContainer1";
+            this.videoPlayerContainer1.ShowFullscreenButton = true;
+            this.videoPlayerContainer1.ShowMuteButton = true;
+            this.videoPlayerContainer1.ShowStopButton = true;
+            this.videoPlayerContainer1.Size = new System.Drawing.Size(431, 227);
+            this.videoPlayerContainer1.SubtitleText = "";
+            this.videoPlayerContainer1.TabIndex = 110;
+            this.videoPlayerContainer1.TextRightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.videoPlayerContainer1.UsingFrontCenterAudioChannelOnly = false;
+            this.videoPlayerContainer1.VideoHeight = 0;
+            this.videoPlayerContainer1.VideoPlayer = null;
+            this.videoPlayerContainer1.VideoWidth = 0;
+            this.videoPlayerContainer1.Volume = 0D;
             // 
             // numericUpDownCutToSeconds
             // 
@@ -628,17 +1153,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelCutFrom.TabIndex = 14;
             this.labelCutFrom.Text = "From";
             // 
-            // checkBoxCut
-            // 
-            this.checkBoxCut.AutoSize = true;
-            this.checkBoxCut.Location = new System.Drawing.Point(12, 36);
-            this.checkBoxCut.Name = "checkBoxCut";
-            this.checkBoxCut.Size = new System.Drawing.Size(42, 17);
-            this.checkBoxCut.TabIndex = 0;
-            this.checkBoxCut.Text = "Cut";
-            this.checkBoxCut.UseVisualStyleBackColor = true;
-            this.checkBoxCut.CheckedChanged += new System.EventHandler(this.checkBoxCut_CheckedChanged);
-            // 
             // labelVideoBitrate
             // 
             this.labelVideoBitrate.AutoSize = true;
@@ -648,48 +1162,15 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelVideoBitrate.TabIndex = 14;
             this.labelVideoBitrate.Text = "labelVideoBitrate";
             // 
-            // checkBoxBox
-            // 
-            this.checkBoxBox.AutoSize = true;
-            this.checkBoxBox.Location = new System.Drawing.Point(226, 27);
-            this.checkBoxBox.Name = "checkBoxBox";
-            this.checkBoxBox.Size = new System.Drawing.Size(44, 17);
-            this.checkBoxBox.TabIndex = 2;
-            this.checkBoxBox.Text = "Box";
-            this.checkBoxBox.UseVisualStyleBackColor = true;
-            this.checkBoxBox.CheckedChanged += new System.EventHandler(this.checkBoxBox_CheckedChanged);
-            // 
-            // checkBoxAlignRight
-            // 
-            this.checkBoxAlignRight.AutoSize = true;
-            this.checkBoxAlignRight.Location = new System.Drawing.Point(217, 114);
-            this.checkBoxAlignRight.Name = "checkBoxAlignRight";
-            this.checkBoxAlignRight.Size = new System.Drawing.Size(72, 17);
-            this.checkBoxAlignRight.TabIndex = 10;
-            this.checkBoxAlignRight.Text = "Align right";
-            this.checkBoxAlignRight.UseVisualStyleBackColor = true;
-            this.checkBoxAlignRight.CheckedChanged += new System.EventHandler(this.checkBoxAlignRight_CheckedChanged);
-            // 
             // labelInfo
             // 
             this.labelInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelInfo.AutoSize = true;
-            this.labelInfo.Location = new System.Drawing.Point(5, 526);
+            this.labelInfo.Location = new System.Drawing.Point(5, 527);
             this.labelInfo.Name = "labelInfo";
             this.labelInfo.Size = new System.Drawing.Size(25, 13);
             this.labelInfo.TabIndex = 1;
             this.labelInfo.Text = "Info";
-            // 
-            // checkBoxRightToLeft
-            // 
-            this.checkBoxRightToLeft.AutoSize = true;
-            this.checkBoxRightToLeft.Location = new System.Drawing.Point(120, 114);
-            this.checkBoxRightToLeft.Name = "checkBoxRightToLeft";
-            this.checkBoxRightToLeft.Size = new System.Drawing.Size(80, 17);
-            this.checkBoxRightToLeft.TabIndex = 9;
-            this.checkBoxRightToLeft.Text = "Right to left";
-            this.checkBoxRightToLeft.UseVisualStyleBackColor = true;
-            this.checkBoxRightToLeft.CheckedChanged += new System.EventHandler(this.checkBoxRightToLeft_CheckedChanged);
             // 
             // comboBoxSubtitleFont
             // 
@@ -711,7 +1192,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.comboBoxSubtitleFont.SelectedItem = null;
             this.comboBoxSubtitleFont.SelectedText = "";
             this.comboBoxSubtitleFont.Size = new System.Drawing.Size(250, 21);
-            this.comboBoxSubtitleFont.TabIndex = 8;
+            this.comboBoxSubtitleFont.TabIndex = 70;
             this.comboBoxSubtitleFont.UsePopupWindow = false;
             this.comboBoxSubtitleFont.SelectedIndexChanged += new System.EventHandler(this.comboBoxSubtitleFont_SelectedValueChanged);
             // 
@@ -724,29 +1205,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelSubtitleFont.TabIndex = 7;
             this.labelSubtitleFont.Text = "Subtitle font";
             // 
-            // groupBoxVideo
-            // 
-            this.groupBoxVideo.Controls.Add(this.labelCrfHint);
-            this.groupBoxVideo.Controls.Add(this.buttonVideoChooseStandardRes);
-            this.groupBoxVideo.Controls.Add(this.labelResolution);
-            this.groupBoxVideo.Controls.Add(this.numericUpDownWidth);
-            this.groupBoxVideo.Controls.Add(this.numericUpDownHeight);
-            this.groupBoxVideo.Controls.Add(this.labelX);
-            this.groupBoxVideo.Controls.Add(this.labelPreset);
-            this.groupBoxVideo.Controls.Add(this.comboBoxTune);
-            this.groupBoxVideo.Controls.Add(this.comboBoxPreset);
-            this.groupBoxVideo.Controls.Add(this.labelTune);
-            this.groupBoxVideo.Controls.Add(this.labelCRF);
-            this.groupBoxVideo.Controls.Add(this.comboBoxVideoEncoding);
-            this.groupBoxVideo.Controls.Add(this.comboBoxCrf);
-            this.groupBoxVideo.Controls.Add(this.labelVideoEncoding);
-            this.groupBoxVideo.Location = new System.Drawing.Point(6, 141);
-            this.groupBoxVideo.Name = "groupBoxVideo";
-            this.groupBoxVideo.Size = new System.Drawing.Size(406, 166);
-            this.groupBoxVideo.TabIndex = 70;
-            this.groupBoxVideo.TabStop = false;
-            this.groupBoxVideo.Text = "Video";
-            // 
             // labelCrfHint
             // 
             this.labelCrfHint.AutoSize = true;
@@ -757,18 +1215,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelCrfHint.Size = new System.Drawing.Size(22, 12);
             this.labelCrfHint.TabIndex = 32;
             this.labelCrfHint.Text = "Hint";
-            // 
-            // buttonVideoChooseStandardRes
-            // 
-            this.buttonVideoChooseStandardRes.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonVideoChooseStandardRes.Location = new System.Drawing.Point(257, 15);
-            this.buttonVideoChooseStandardRes.Name = "buttonVideoChooseStandardRes";
-            this.buttonVideoChooseStandardRes.Size = new System.Drawing.Size(69, 23);
-            this.buttonVideoChooseStandardRes.TabIndex = 3;
-            this.buttonVideoChooseStandardRes.Text = "...";
-            this.buttonVideoChooseStandardRes.UseVisualStyleBackColor = true;
-            this.buttonVideoChooseStandardRes.Click += new System.EventHandler(this.buttonVideoChooseStandardRes_Click);
             // 
             // labelResolution
             // 
@@ -1030,45 +1476,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelVideoEncoding.TabIndex = 3;
             this.labelVideoEncoding.Text = "Video enc";
             // 
-            // groupBoxAudio
-            // 
-            this.groupBoxAudio.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBoxAudio.Controls.Add(this.listViewAudioTracks);
-            this.groupBoxAudio.Controls.Add(this.labelAudioEnc);
-            this.groupBoxAudio.Controls.Add(this.comboBoxAudioBitRate);
-            this.groupBoxAudio.Controls.Add(this.comboBoxAudioEnc);
-            this.groupBoxAudio.Controls.Add(this.labelAudioBitRate);
-            this.groupBoxAudio.Controls.Add(this.checkBoxMakeStereo);
-            this.groupBoxAudio.Controls.Add(this.labelAudioSampleRate);
-            this.groupBoxAudio.Controls.Add(this.comboBoxAudioSampleRate);
-            this.groupBoxAudio.Location = new System.Drawing.Point(430, 141);
-            this.groupBoxAudio.Name = "groupBoxAudio";
-            this.groupBoxAudio.Size = new System.Drawing.Size(425, 166);
-            this.groupBoxAudio.TabIndex = 90;
-            this.groupBoxAudio.TabStop = false;
-            this.groupBoxAudio.Text = "Audio";
-            // 
-            // listViewAudioTracks
-            // 
-            this.listViewAudioTracks.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.listViewAudioTracks.CheckBoxes = true;
-            this.listViewAudioTracks.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeaderAudioTrack});
-            this.listViewAudioTracks.HideSelection = false;
-            this.listViewAudioTracks.Location = new System.Drawing.Point(229, 29);
-            this.listViewAudioTracks.Name = "listViewAudioTracks";
-            this.listViewAudioTracks.Size = new System.Drawing.Size(190, 122);
-            this.listViewAudioTracks.TabIndex = 45;
-            this.listViewAudioTracks.UseCompatibleStateImageBehavior = false;
-            this.listViewAudioTracks.View = System.Windows.Forms.View.Details;
-            // 
-            // columnHeaderAudioTrack
-            // 
-            this.columnHeaderAudioTrack.Text = "Audio tracks";
-            this.columnHeaderAudioTrack.Width = 160;
-            // 
             // labelAudioEnc
             // 
             this.labelAudioEnc.AutoSize = true;
@@ -1143,18 +1550,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelAudioBitRate.Size = new System.Drawing.Size(40, 13);
             this.labelAudioBitRate.TabIndex = 4;
             this.labelAudioBitRate.Text = "Bit rate";
-            // 
-            // checkBoxMakeStereo
-            // 
-            this.checkBoxMakeStereo.AutoSize = true;
-            this.checkBoxMakeStereo.Checked = true;
-            this.checkBoxMakeStereo.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxMakeStereo.Location = new System.Drawing.Point(91, 58);
-            this.checkBoxMakeStereo.Name = "checkBoxMakeStereo";
-            this.checkBoxMakeStereo.Size = new System.Drawing.Size(57, 17);
-            this.checkBoxMakeStereo.TabIndex = 2;
-            this.checkBoxMakeStereo.Text = "Stereo";
-            this.checkBoxMakeStereo.UseVisualStyleBackColor = true;
             // 
             // labelAudioSampleRate
             // 
@@ -1241,17 +1636,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelFileSize.TabIndex = 12;
             this.labelFileSize.Text = "File size in MB";
             // 
-            // checkBoxTargetFileSize
-            // 
-            this.checkBoxTargetFileSize.AutoSize = true;
-            this.checkBoxTargetFileSize.Location = new System.Drawing.Point(22, 327);
-            this.checkBoxTargetFileSize.Name = "checkBoxTargetFileSize";
-            this.checkBoxTargetFileSize.Size = new System.Drawing.Size(192, 17);
-            this.checkBoxTargetFileSize.TabIndex = 100;
-            this.checkBoxTargetFileSize.Text = "Target file size (two pass encoding)";
-            this.checkBoxTargetFileSize.UseVisualStyleBackColor = true;
-            this.checkBoxTargetFileSize.CheckedChanged += new System.EventHandler(this.checkBoxTargetFileSize_CheckedChanged);
-            // 
             // labelFileName
             // 
             this.labelFileName.AutoSize = true;
@@ -1288,8 +1672,8 @@ namespace Nikse.SubtitleEdit.Forms
             0,
             0});
             this.numericUpDownFontSize.Name = "numericUpDownFontSize";
-            this.numericUpDownFontSize.Size = new System.Drawing.Size(64, 20);
-            this.numericUpDownFontSize.TabIndex = 1;
+            this.numericUpDownFontSize.Size = new System.Drawing.Size(54, 20);
+            this.numericUpDownFontSize.TabIndex = 10;
             this.numericUpDownFontSize.TabStop = false;
             this.numericUpDownFontSize.ThousandsSeparator = false;
             this.numericUpDownFontSize.Value = new decimal(new int[] {
@@ -1307,320 +1691,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelFontSize.Size = new System.Drawing.Size(49, 13);
             this.labelFontSize.TabIndex = 0;
             this.labelFontSize.Text = "Font size";
-            // 
-            // listViewBatch
-            // 
-            this.listViewBatch.AllowDrop = true;
-            this.listViewBatch.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.listViewBatch.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeaderVideoFile,
-            this.columnHeaderResolution,
-            this.columnHeaderSize,
-            this.columnHeaderSubtitleFile,
-            this.columnHeaderStatus});
-            this.listViewBatch.ContextMenuStrip = this.contextMenuStripBatch;
-            this.listViewBatch.FullRowSelect = true;
-            this.listViewBatch.HideSelection = false;
-            this.listViewBatch.Location = new System.Drawing.Point(6, 316);
-            this.listViewBatch.Name = "listViewBatch";
-            this.listViewBatch.Size = new System.Drawing.Size(852, 191);
-            this.listViewBatch.TabIndex = 3;
-            this.listViewBatch.UseCompatibleStateImageBehavior = false;
-            this.listViewBatch.View = System.Windows.Forms.View.Details;
-            this.listViewBatch.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.listViewBatch_ColumnClick);
-            this.listViewBatch.DragDrop += new System.Windows.Forms.DragEventHandler(this.listViewBatch_DragDrop);
-            this.listViewBatch.DragEnter += new System.Windows.Forms.DragEventHandler(this.listViewBatch_DragEnter);
-            this.listViewBatch.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listViewBatch_KeyDown);
-            // 
-            // columnHeaderVideoFile
-            // 
-            this.columnHeaderVideoFile.Text = "Video file";
-            this.columnHeaderVideoFile.Width = 420;
-            // 
-            // columnHeaderResolution
-            // 
-            this.columnHeaderResolution.Text = "Resolution";
-            this.columnHeaderResolution.Width = 80;
-            // 
-            // columnHeaderSize
-            // 
-            this.columnHeaderSize.Text = "Size";
-            this.columnHeaderSize.Width = 80;
-            // 
-            // columnHeaderSubtitleFile
-            // 
-            this.columnHeaderSubtitleFile.Text = "Subtitle file";
-            this.columnHeaderSubtitleFile.Width = 180;
-            // 
-            // columnHeaderStatus
-            // 
-            this.columnHeaderStatus.Text = "Status";
-            this.columnHeaderStatus.Width = 80;
-            // 
-            // contextMenuStripBatch
-            // 
-            this.contextMenuStripBatch.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.addFilesToolStripMenuItem,
-            this.toolStripSeparator2,
-            this.pickSubtitleFileToolStripMenuItem,
-            this.removeSubtitleFileToolStripMenuItem,
-            this.toolStripSeparator1,
-            this.deleteToolStripMenuItem,
-            this.clearToolStripMenuItem});
-            this.contextMenuStripBatch.Name = "contextMenuStripBatch";
-            this.contextMenuStripBatch.Size = new System.Drawing.Size(179, 126);
-            this.contextMenuStripBatch.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripBatch_Opening);
-            // 
-            // addFilesToolStripMenuItem
-            // 
-            this.addFilesToolStripMenuItem.Name = "addFilesToolStripMenuItem";
-            this.addFilesToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
-            this.addFilesToolStripMenuItem.Text = "Add video files...";
-            this.addFilesToolStripMenuItem.Click += new System.EventHandler(this.addFilesToolStripMenuItem_Click);
-            // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(175, 6);
-            // 
-            // pickSubtitleFileToolStripMenuItem
-            // 
-            this.pickSubtitleFileToolStripMenuItem.Name = "pickSubtitleFileToolStripMenuItem";
-            this.pickSubtitleFileToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
-            this.pickSubtitleFileToolStripMenuItem.Text = "Pick subtitle file...";
-            this.pickSubtitleFileToolStripMenuItem.Click += new System.EventHandler(this.pickSubtitleFileToolStripMenuItem_Click);
-            // 
-            // removeSubtitleFileToolStripMenuItem
-            // 
-            this.removeSubtitleFileToolStripMenuItem.Name = "removeSubtitleFileToolStripMenuItem";
-            this.removeSubtitleFileToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
-            this.removeSubtitleFileToolStripMenuItem.Text = "Remove subtitle file";
-            this.removeSubtitleFileToolStripMenuItem.Click += new System.EventHandler(this.removeSubtitleFileToolStripMenuItem_Click);
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(175, 6);
-            // 
-            // deleteToolStripMenuItem
-            // 
-            this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
-            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
-            this.deleteToolStripMenuItem.Text = "Delete";
-            this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
-            // 
-            // clearToolStripMenuItem
-            // 
-            this.clearToolStripMenuItem.Name = "clearToolStripMenuItem";
-            this.clearToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
-            this.clearToolStripMenuItem.Text = "Clear";
-            this.clearToolStripMenuItem.Click += new System.EventHandler(this.clearToolStripMenuItem_Click);
-            // 
-            // buttonOutputFileSettings
-            // 
-            this.buttonOutputFileSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonOutputFileSettings.Location = new System.Drawing.Point(255, 513);
-            this.buttonOutputFileSettings.Name = "buttonOutputFileSettings";
-            this.buttonOutputFileSettings.Size = new System.Drawing.Size(167, 23);
-            this.buttonOutputFileSettings.TabIndex = 148;
-            this.buttonOutputFileSettings.Text = "Output file/folder...";
-            this.buttonOutputFileSettings.UseVisualStyleBackColor = true;
-            this.buttonOutputFileSettings.Click += new System.EventHandler(this.buttonOutputFileSettings_Click);
-            // 
-            // buttonPreview
-            // 
-            this.buttonPreview.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonPreview.Location = new System.Drawing.Point(621, 586);
-            this.buttonPreview.Name = "buttonPreview";
-            this.buttonPreview.Size = new System.Drawing.Size(121, 23);
-            this.buttonPreview.TabIndex = 130;
-            this.buttonPreview.Text = "Preview";
-            this.buttonPreview.UseVisualStyleBackColor = true;
-            this.buttonPreview.Click += new System.EventHandler(this.buttonPreview_Click);
-            // 
-            // linkLabelHelp
-            // 
-            this.linkLabelHelp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.linkLabelHelp.AutoSize = true;
-            this.linkLabelHelp.Location = new System.Drawing.Point(844, 563);
-            this.linkLabelHelp.Name = "linkLabelHelp";
-            this.linkLabelHelp.Size = new System.Drawing.Size(29, 13);
-            this.linkLabelHelp.TabIndex = 120;
-            this.linkLabelHelp.TabStop = true;
-            this.linkLabelHelp.Text = "Help";
-            this.linkLabelHelp.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelHelp_LinkClicked);
-            // 
-            // contextMenuStripRes
-            // 
-            this.contextMenuStripRes.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.useSourceResolutionToolStripMenuItem,
-            this.toolStripSeparator3,
-            this.x2160ToolStripMenuItem,
-            this.uHD3840x2160ToolStripMenuItem,
-            this.k2048x1080ToolStripMenuItem,
-            this.dCI2KScope2048x858ToolStripMenuItem,
-            this.dCI2KFlat1998x1080ToolStripMenuItem,
-            this.p1920x1080ToolStripMenuItem,
-            this.x1080ToolStripMenuItem,
-            this.p1280x720ToolStripMenuItem,
-            this.x720ToolStripMenuItem,
-            this.p848x480ToolStripMenuItem,
-            this.pAL720x576ToolStripMenuItem,
-            this.toolStripSeparator4,
-            this.youTubeShortsTikTok10801920ToolStripMenuItem,
-            this.youTubeShortsTikTokAspectRatio9167201280ToolStripMenuItem,
-            this.aAspectRatio916540960ToolStripMenuItem,
-            this.bAspectRatio916360540ToolStripMenuItem,
-            this.aAspectRatio916270480ToolStripMenuItem,
-            this.bAspectRatio916180270ToolStripMenuItem});
-            this.contextMenuStripRes.Name = "contextMenuStripRes";
-            this.contextMenuStripRes.Size = new System.Drawing.Size(368, 434);
-            this.contextMenuStripRes.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripRes_Opening);
-            // 
-            // useSourceResolutionToolStripMenuItem
-            // 
-            this.useSourceResolutionToolStripMenuItem.Name = "useSourceResolutionToolStripMenuItem";
-            this.useSourceResolutionToolStripMenuItem.Size = new System.Drawing.Size(367, 22);
-            this.useSourceResolutionToolStripMenuItem.Text = "Use source resolution";
-            this.useSourceResolutionToolStripMenuItem.Click += new System.EventHandler(this.useSourceResolutionToolStripMenuItem_Click);
-            // 
-            // x2160ToolStripMenuItem
-            // 
-            this.x2160ToolStripMenuItem.Name = "x2160ToolStripMenuItem";
-            this.x2160ToolStripMenuItem.Size = new System.Drawing.Size(367, 22);
-            this.x2160ToolStripMenuItem.Text = "4K DCI - Aspect Ratio 16∶9 - (4096x2160)";
-            this.x2160ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
-            // 
-            // uHD3840x2160ToolStripMenuItem
-            // 
-            this.uHD3840x2160ToolStripMenuItem.Name = "uHD3840x2160ToolStripMenuItem";
-            this.uHD3840x2160ToolStripMenuItem.Size = new System.Drawing.Size(367, 22);
-            this.uHD3840x2160ToolStripMenuItem.Text = "4K UHD - Aspect Ratio 16∶9 - (3840x2160)";
-            this.uHD3840x2160ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
-            // 
-            // k2048x1080ToolStripMenuItem
-            // 
-            this.k2048x1080ToolStripMenuItem.Name = "k2048x1080ToolStripMenuItem";
-            this.k2048x1080ToolStripMenuItem.Size = new System.Drawing.Size(367, 22);
-            this.k2048x1080ToolStripMenuItem.Text = "2K WQHD - Aspect Ratio 16∶9 - (2560x1440)";
-            this.k2048x1080ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
-            // 
-            // dCI2KScope2048x858ToolStripMenuItem
-            // 
-            this.dCI2KScope2048x858ToolStripMenuItem.Name = "dCI2KScope2048x858ToolStripMenuItem";
-            this.dCI2KScope2048x858ToolStripMenuItem.Size = new System.Drawing.Size(367, 22);
-            this.dCI2KScope2048x858ToolStripMenuItem.Text = "2K DCI - Aspect Ratio 16∶9 - (2048x1080)";
-            this.dCI2KScope2048x858ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
-            // 
-            // dCI2KFlat1998x1080ToolStripMenuItem
-            // 
-            this.dCI2KFlat1998x1080ToolStripMenuItem.Name = "dCI2KFlat1998x1080ToolStripMenuItem";
-            this.dCI2KFlat1998x1080ToolStripMenuItem.Size = new System.Drawing.Size(367, 22);
-            this.dCI2KFlat1998x1080ToolStripMenuItem.Text = "Full HD 1080p - Aspect Ratio 16∶9 - (1920x1080)";
-            this.dCI2KFlat1998x1080ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
-            // 
-            // p1920x1080ToolStripMenuItem
-            // 
-            this.p1920x1080ToolStripMenuItem.Name = "p1920x1080ToolStripMenuItem";
-            this.p1920x1080ToolStripMenuItem.Size = new System.Drawing.Size(367, 22);
-            this.p1920x1080ToolStripMenuItem.Text = "HD 720p - Aspect Ratio 16∶9 - (1280x720)";
-            this.p1920x1080ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
-            // 
-            // x1080ToolStripMenuItem
-            // 
-            this.x1080ToolStripMenuItem.Name = "x1080ToolStripMenuItem";
-            this.x1080ToolStripMenuItem.Size = new System.Drawing.Size(367, 22);
-            this.x1080ToolStripMenuItem.Text = "540p - Aspect Ratio 16∶9 - (960x540)";
-            this.x1080ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
-            // 
-            // p1280x720ToolStripMenuItem
-            // 
-            this.p1280x720ToolStripMenuItem.Name = "p1280x720ToolStripMenuItem";
-            this.p1280x720ToolStripMenuItem.Size = new System.Drawing.Size(367, 22);
-            this.p1280x720ToolStripMenuItem.Text = "SD PAL - Aspect Ratio 4:3 - (720x576)";
-            this.p1280x720ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
-            // 
-            // x720ToolStripMenuItem
-            // 
-            this.x720ToolStripMenuItem.Name = "x720ToolStripMenuItem";
-            this.x720ToolStripMenuItem.Size = new System.Drawing.Size(367, 22);
-            this.x720ToolStripMenuItem.Text = "SD NTSC - Aspect Ratio 3:2 - (720x480)";
-            this.x720ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
-            // 
-            // p848x480ToolStripMenuItem
-            // 
-            this.p848x480ToolStripMenuItem.Name = "p848x480ToolStripMenuItem";
-            this.p848x480ToolStripMenuItem.Size = new System.Drawing.Size(367, 22);
-            this.p848x480ToolStripMenuItem.Text = "VGA - Aspect Ratio 4:3 - (640x480)";
-            this.p848x480ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
-            // 
-            // pAL720x576ToolStripMenuItem
-            // 
-            this.pAL720x576ToolStripMenuItem.Name = "pAL720x576ToolStripMenuItem";
-            this.pAL720x576ToolStripMenuItem.Size = new System.Drawing.Size(367, 22);
-            this.pAL720x576ToolStripMenuItem.Text = "360p - Aspect Ratio 16∶9 - (640x360)";
-            this.pAL720x576ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
-            // 
-            // toolStripSeparator3
-            // 
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(364, 6);
-            // 
-            // youTubeShortsTikTok10801920ToolStripMenuItem
-            // 
-            this.youTubeShortsTikTok10801920ToolStripMenuItem.Name = "youTubeShortsTikTok10801920ToolStripMenuItem";
-            this.youTubeShortsTikTok10801920ToolStripMenuItem.Size = new System.Drawing.Size(367, 22);
-            this.youTubeShortsTikTok10801920ToolStripMenuItem.Text = "YouTube shorts/TikTok - Aspect Ratio 9∶16 - (1080x1920)";
-            this.youTubeShortsTikTok10801920ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
-            // 
-            // youTubeShortsTikTokAspectRatio9167201280ToolStripMenuItem
-            // 
-            this.youTubeShortsTikTokAspectRatio9167201280ToolStripMenuItem.Name = "youTubeShortsTikTokAspectRatio9167201280ToolStripMenuItem";
-            this.youTubeShortsTikTokAspectRatio9167201280ToolStripMenuItem.Size = new System.Drawing.Size(367, 22);
-            this.youTubeShortsTikTokAspectRatio9167201280ToolStripMenuItem.Text = "YouTube shorts/TikTok - Aspect Ratio 9∶16 - (720x1280)";
-            this.youTubeShortsTikTokAspectRatio9167201280ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
-            // 
-            // aAspectRatio916540960ToolStripMenuItem
-            // 
-            this.aAspectRatio916540960ToolStripMenuItem.Name = "aAspectRatio916540960ToolStripMenuItem";
-            this.aAspectRatio916540960ToolStripMenuItem.Size = new System.Drawing.Size(367, 22);
-            this.aAspectRatio916540960ToolStripMenuItem.Text = "1/2 A - Aspect Ratio 9∶16 - (540x960)";
-            this.aAspectRatio916540960ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
-            // 
-            // bAspectRatio916360540ToolStripMenuItem
-            // 
-            this.bAspectRatio916360540ToolStripMenuItem.Name = "bAspectRatio916360540ToolStripMenuItem";
-            this.bAspectRatio916360540ToolStripMenuItem.Size = new System.Drawing.Size(367, 22);
-            this.bAspectRatio916360540ToolStripMenuItem.Text = "1/2 B - Aspect Ratio 9∶16 - (360x540)";
-            this.bAspectRatio916360540ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
-            // 
-            // aAspectRatio916270480ToolStripMenuItem
-            // 
-            this.aAspectRatio916270480ToolStripMenuItem.Name = "aAspectRatio916270480ToolStripMenuItem";
-            this.aAspectRatio916270480ToolStripMenuItem.Size = new System.Drawing.Size(367, 22);
-            this.aAspectRatio916270480ToolStripMenuItem.Text = "1/4 A - Aspect Ratio 9∶16 - (270x480)";
-            this.aAspectRatio916270480ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
-            // 
-            // bAspectRatio916180270ToolStripMenuItem
-            // 
-            this.bAspectRatio916180270ToolStripMenuItem.Name = "bAspectRatio916180270ToolStripMenuItem";
-            this.bAspectRatio916180270ToolStripMenuItem.Size = new System.Drawing.Size(367, 22);
-            this.bAspectRatio916180270ToolStripMenuItem.Text = "1/4 B - Aspect Ratio 9∶16 - (180x270)";
-            this.bAspectRatio916180270ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
-            // 
-            // buttonMode
-            // 
-            this.buttonMode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonMode.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonMode.Location = new System.Drawing.Point(748, 586);
-            this.buttonMode.Name = "buttonMode";
-            this.buttonMode.Size = new System.Drawing.Size(125, 23);
-            this.buttonMode.TabIndex = 143;
-            this.buttonMode.Text = "Batch mode";
-            this.buttonMode.UseVisualStyleBackColor = true;
-            this.buttonMode.Click += new System.EventHandler(this.buttonMode_Click);
             // 
             // labelPreviewPleaseWait
             // 
@@ -1671,11 +1741,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.textBoxLog.ReadOnly = true;
             this.textBoxLog.Size = new System.Drawing.Size(188, 26);
             this.textBoxLog.TabIndex = 31;
-            // 
-            // toolStripSeparator4
-            // 
-            this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(364, 6);
             // 
             // GenerateVideoWithHardSubs
             // 
@@ -1833,5 +1898,8 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripMenuItem aAspectRatio916270480ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem bAspectRatio916180270ToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
+        private System.Windows.Forms.CheckBox checkBoxFontBold;
+        private Controls.NikseUpDown numericUpDownOutline;
+        private Controls.NikseLabel nikseLabelOutline;
     }
 }

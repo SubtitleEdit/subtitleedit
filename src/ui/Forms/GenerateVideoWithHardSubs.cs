@@ -85,6 +85,8 @@ namespace Nikse.SubtitleEdit.Forms
             labelResolution.Text = LanguageSettings.Current.SubStationAlphaProperties.Resolution;
             labelPreviewPleaseWait.Text = LanguageSettings.Current.General.PleaseWait;
             labelFontSize.Text = LanguageSettings.Current.ExportPngXml.FontSize;
+            checkBoxFontBold.Text = LanguageSettings.Current.General.Bold;
+            numericUpDownOutline.Text = LanguageSettings.Current.SubStationAlphaStyles.Outline;
             labelSubtitleFont.Text = LanguageSettings.Current.ExportPngXml.FontFamily;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             labelAudioEnc.Text = LanguageSettings.Current.GenerateVideoWithBurnedInSubs.Encoding;
@@ -153,14 +155,18 @@ namespace Nikse.SubtitleEdit.Forms
             var left = Math.Max(Math.Max(labelResolution.Left + labelResolution.Width, labelFontSize.Left + labelFontSize.Width), labelSubtitleFont.Left + labelSubtitleFont.Width) + 5;
             numericUpDownFontSize.Left = left;
             comboBoxSubtitleFont.Left = left;
+            numericUpDownOutline.Left = left;
             numericUpDownWidth.Left = left;
             labelX.Left = numericUpDownWidth.Left + numericUpDownWidth.Width + 3;
             numericUpDownHeight.Left = labelX.Left + labelX.Width + 3;
             buttonVideoChooseStandardRes.Left = numericUpDownHeight.Left + numericUpDownHeight.Width + 9;
             labelInfo.Text = LanguageSettings.Current.GenerateVideoWithBurnedInSubs.InfoAssaOff;
+
+            checkBoxFontBold.Left = numericUpDownFontSize.Right + 12;
+            checkBoxBox.Left = numericUpDownOutline.Right + 12;
+
             checkBoxRightToLeft.Left = left;
-            checkBoxAlignRight.Left = checkBoxRightToLeft.Right + 15;
-            checkBoxBox.Left = numericUpDownFontSize.Right + 22;
+            checkBoxAlignRight.Left = checkBoxRightToLeft.Right + 12;
             buttonOutlineColor.Left = checkBoxBox.Right + 2;
             buttonOutlineColor.Text = LanguageSettings.Current.AssaSetBackgroundBox.BoxColor;
             panelOutlineColor.Left = buttonOutlineColor.Right + 3;
@@ -213,6 +219,9 @@ namespace Nikse.SubtitleEdit.Forms
                 _initialFontOn = false;
                 FontEnableOrDisable(false);
             }
+
+            checkBoxFontBold.Checked = Configuration.Settings.Tools.GenVideoFontBold;
+            numericUpDownOutline.Value = Configuration.Settings.Tools.GenVideoOutline;
 
             var initialFont = Configuration.Settings.Tools.GenVideoFontName;
             if (string.IsNullOrEmpty(initialFont))
@@ -347,12 +356,15 @@ namespace Nikse.SubtitleEdit.Forms
         private void FontEnableOrDisable(bool enabled)
         {
             numericUpDownFontSize.Enabled = enabled;
+            numericUpDownFontSize.Enabled = enabled;
             labelFontSize.Enabled = enabled;
+            nikseLabelOutline.Enabled = enabled;
             labelSubtitleFont.Enabled = enabled;
             comboBoxSubtitleFont.Enabled = enabled;
-            checkBoxRightToLeft.Left = checkBoxTargetFileSize.Left;
             checkBoxAlignRight.Enabled = enabled;
             checkBoxBox.Enabled = enabled;
+            checkBoxFontBold.Enabled = enabled;
+            numericUpDownOutline.Enabled = enabled;
             buttonForeColor.Enabled = enabled;
             buttonOutlineColor.Enabled = enabled;
             panelOutlineColor.Enabled = enabled;
@@ -1232,6 +1244,8 @@ namespace Nikse.SubtitleEdit.Forms
         private void GenerateVideoWithHardSubs_FormClosing(object sender, FormClosingEventArgs e)
         {
             Configuration.Settings.Tools.GenVideoFontName = comboBoxSubtitleFont.Text;
+            Configuration.Settings.Tools.GenVideoFontBold = checkBoxFontBold.Checked;
+            Configuration.Settings.Tools.GenVideoOutline = (int)numericUpDownOutline.Value;
             Configuration.Settings.Tools.GenVideoFontSize = (int)numericUpDownFontSize.Value;
             Configuration.Settings.Tools.GenVideoEncoding = comboBoxVideoEncoding.Text;
             Configuration.Settings.Tools.GenVideoPreset = comboBoxPreset.Text;
@@ -1790,9 +1804,12 @@ namespace Nikse.SubtitleEdit.Forms
             sub.Header = AdvancedSubStationAlpha.DefaultHeader;
             var style = AdvancedSubStationAlpha.GetSsaStyle("Default", sub.Header);
             style.FontSize = numericUpDownFontSize.Value;
+            style.Bold = checkBoxFontBold.Checked;
             style.FontName = comboBoxSubtitleFont.Text;
             style.Background = panelOutlineColor.BackColor;
             style.Primary = panelForeColor.BackColor;
+            style.OutlineWidth = numericUpDownOutline.Value;
+            style.ShadowWidth = style.OutlineWidth * 0.5m;
 
             if (checkBoxAlignRight.Checked)
             {
@@ -1802,7 +1819,12 @@ namespace Nikse.SubtitleEdit.Forms
             if (checkBoxBox.Checked)
             {
                 style.BorderStyle = "4"; // box - multi line
-                style.ShadowWidth = 5;
+                style.ShadowWidth = 0; 
+                style.OutlineWidth = numericUpDownOutline.Value;
+            }
+            else
+            {
+                style.Outline = panelOutlineColor.BackColor;
             }
 
             sub.Header = AdvancedSubStationAlpha.GetHeaderAndStylesFromAdvancedSubStationAlpha(sub.Header, new List<SsaStyle> { style });
@@ -2497,6 +2519,16 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 _batchVideoAndSubList.Add((BatchVideoAndSub)item.Tag);
             }
+        }
+
+        private void numericUpDownOutline_ValueChanged(object sender, EventArgs e)
+        {
+            UpdateVideoPreview();
+        }
+
+        private void checkBoxFontBold_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateVideoPreview();
         }
     }
 }
