@@ -1,11 +1,11 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.AutoTranslate;
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Translate;
-using Nikse.SubtitleEdit.Core.Translate.Service;
 using Nikse.SubtitleEdit.Forms.Translate;
 using Nikse.SubtitleEdit.Logic;
 using System;
-using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
@@ -14,8 +14,8 @@ namespace Nikse.SubtitleEdit.Forms
     {
         public string TranslatedText { get; set; }
 
-        private GoogleTranslationService _googleTranslationService;
-        private MicrosoftTranslationService _microsoftTranslationService;
+        private IAutoTranslator _googleTranslationService;
+        private IAutoTranslator _microsoftTranslationService;
         private string _toLanguage;
         private string _fromLanguage;
 
@@ -40,47 +40,23 @@ namespace Nikse.SubtitleEdit.Forms
             buttonMicrosoft.Text = string.Empty;
         }
 
-        private void InitLanguageComboboxes()
+        private void InitLanguageComboBoxes()
         {
-            var googleSourceLanguages = new List<TranslationPair>();
-            var googleTargetLanguages = new List<TranslationPair>();
+            var googleSourceLanguages = _googleTranslationService.GetSupportedSourceLanguages();
+            var googleTargetLanguages = _googleTranslationService.GetSupportedTargetLanguages();
 
-            var microsoftSourceLanguages = new List<TranslationPair>();
-            var microsoftTargetLanguages = new List<TranslationPair>();
+            var microsoftSourceLanguages = _microsoftTranslationService.GetSupportedSourceLanguages();
+            var microsoftTargetLanguages = _microsoftTranslationService.GetSupportedTargetLanguages();
 
+            var targetLanguages = googleTargetLanguages.Intersect(microsoftTargetLanguages);
+            var fromLanguages = googleSourceLanguages.Intersect(microsoftSourceLanguages);
 
-            if (_googleTranslationService != null)
-            {
-                googleSourceLanguages = _googleTranslationService.GetSupportedSourceLanguages();
-                googleTargetLanguages = _googleTranslationService.GetSupportedSourceLanguages();
-            }
+            AutoTranslate.FillComboWithLanguages(comboBoxFrom, fromLanguages);
+            AutoTranslate.FillComboWithLanguages(comboBoxTo, targetLanguages);
 
-            if (_microsoftTranslationService != null)
-            {
-                microsoftSourceLanguages = _microsoftTranslationService.GetSupportedSourceLanguages();
-                microsoftTargetLanguages = _microsoftTranslationService.GetSupportedSourceLanguages();
-            }
-
-            IEnumerable<TranslationPair> targetLanguages;
-            IEnumerable<TranslationPair> fromLanguages;
-            if (_googleTranslationService == null || _microsoftTranslationService == null)
-            {
-                targetLanguages = googleTargetLanguages.Union(microsoftTargetLanguages);
-                fromLanguages = googleSourceLanguages.Union(microsoftSourceLanguages);
-            }
-            else
-            {
-                targetLanguages = googleTargetLanguages.Intersect(microsoftTargetLanguages);
-                fromLanguages = googleSourceLanguages.Intersect(microsoftSourceLanguages);
-            }
-
-            GenericTranslate.FillComboWithLanguages(comboBoxFrom, fromLanguages);
-            GenericTranslate.FillComboWithLanguages(comboBoxTo, targetLanguages);
-
-            GenericTranslate.SelectLanguageCode(comboBoxFrom, _fromLanguage);
-            GenericTranslate.SelectLanguageCode(comboBoxTo, _toLanguage);
+            AutoTranslate.SelectLanguageCode(comboBoxFrom, _fromLanguage);
+            AutoTranslate.SelectLanguageCode(comboBoxTo, _toLanguage);
         }
-
 
         internal void InitializeFromLanguage(string defaultFromLanguage)
         {
@@ -88,7 +64,7 @@ namespace Nikse.SubtitleEdit.Forms
             _fromLanguage = defaultFromLanguage;
             if (_toLanguage == defaultFromLanguage)
             {
-                foreach (string s in Utilities.GetDictionaryLanguages())
+                foreach (var s in Utilities.GetDictionaryLanguages())
                 {
                     string temp = s.Replace("[", string.Empty).Replace("]", string.Empty);
                     if (temp.Length > 4)
@@ -112,10 +88,13 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void GoogleOrMicrosoftTranslate_Shown(object sender, EventArgs e)
         {
-            _googleTranslationService = GoogleTranslationInitializer.Init();
-            _microsoftTranslationService = MicrosoftTranslationInitializer.Init(true);
+            _googleTranslationService = new GoogleTranslateV1();
+            _googleTranslationService.Initialize();
 
-            InitLanguageComboboxes();
+            _microsoftTranslationService = new MicrosoftTranslator();
+            _microsoftTranslationService.Initialize();
+
+            InitLanguageComboBoxes();
 
             Refresh();
             Translate();
@@ -137,12 +116,12 @@ namespace Nikse.SubtitleEdit.Forms
 
                     if (_googleTranslationService != null)
                     {
-                        buttonGoogle.Text = _googleTranslationService.Translate(_fromLanguage, _toLanguage, new List<Paragraph> { new Paragraph { Text = textBoxSourceText.Text } }).FirstOrDefault();
+                        buttonGoogle.Text = _googleTranslationService.Translate(textBoxSourceText.Text, _fromLanguage, _toLanguage, CancellationToken.None).Result;
                     }
                     if (_microsoftTranslationService != null)
                     {
-                        var result = _microsoftTranslationService.Translate(_fromLanguage, _toLanguage, new List<Paragraph> { new Paragraph { Text = textBoxSourceText.Text } });
-                        buttonMicrosoft.Text = result[0];
+                        var result = _microsoftTranslationService.Translate(textBoxSourceText.Text, _fromLanguage, _toLanguage, CancellationToken.None).Result;
+                        buttonMicrosoft.Text = result;
                     }
                 }
             }
