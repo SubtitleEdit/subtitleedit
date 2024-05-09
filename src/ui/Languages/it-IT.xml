@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>4.0.5</Version>
-    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 05.05.2024</TranslatedBy>
+    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 09.05.2024</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -1020,6 +1020,8 @@ Si sfrutta così il ritmo intrinseco dell'immagine.</CreateSimpleChainingToolTip
     <AlignRight>Allinea a destra</AlignRight>
     <GetStartPosition>Ottieni posizione iniziale</GetStartPosition>
     <GetEndPosition>Ottieni posizione finale</GetEndPosition>
+    <UseSource>Usa sorgente</UseSource>
+    <UseSourceResolution>Usa risoluzione sorgente</UseSourceResolution>
   </GenerateVideoWithBurnedInSubs>
   <GenerateVideoWithEmbeddedSubs>
     <Title>Genera video con sottotitoli incorporati aggiunti/rimossi</Title>
@@ -3180,6 +3182,7 @@ Vuoi continuare?</RestoreDefaultSettingsMsg>
     <Play>Riproduci</Play>
     <AutoContinue>Continua automaticamente</AutoContinue>
     <Regenerate>Rigenera</Regenerate>
+    <Speed>Velocità</Speed>
   </TextToSpeech>
   <TimedTextSmpteTiming>
     <Title>Tempistica SMPTE</Title>
