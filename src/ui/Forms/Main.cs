@@ -4964,7 +4964,7 @@ namespace Nikse.SubtitleEdit.Forms
                     else
                     {
                         var originalLanguage = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitleOriginal);
-                        suffix = "." + GenericTranslate.EvaluateDefaultTargetLanguageCode(originalLanguage);
+                        suffix = "." + AutoTranslate.EvaluateDefaultTargetLanguageCode(originalLanguage);
                     }
                 }
                 else
