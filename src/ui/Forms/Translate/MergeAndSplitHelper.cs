@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -68,11 +69,13 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
             var linesTranslate = 0;
             var mergedTranslation = await autoTranslator.Translate(text, source.Code, target.Code, cancellationToken);
-            var splitResult = SplitMultipleLines(mergeResult, mergedTranslation, target.Code);
-            if (splitResult.Count == mergeCount && HasSameEmptyLines(splitResult, tempSubtitle, index))
-            {
-                // Split by line ending chars
 
+
+            // Split by line ending chars where period count matches
+            var splitResult = SplitMultipleLines(mergeResult, mergedTranslation, target.Code);
+            if (splitResult.Count == mergeCount && HasSameEmptyLines(splitResult, tempSubtitle, index) &&
+                Utilities.CountTagInText(text, '.') == Utilities.CountTagInText(mergedTranslation, '.'))
+            {
                 var idx = 0;
                 foreach (var line in splitResult)
                 {
@@ -86,14 +89,11 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 return linesTranslate;
             }
 
-            //TODO: better split - comma converted to period.
-            //TODO: check both "split by line ending char" + "number of lines" and find best match (number of chars? complete?)
 
+            // Split per number of lines
             var translatedLines = mergedTranslation.SplitToLines();
             if (translatedLines.Count == mergeResult.Text.SplitToLines().Count)
             {
-                // Split per number of lines
-
                 var newSub = new Subtitle();
                 for (var i = 0; i < mergeResult.ParagraphCount; i++)
                 {
@@ -119,7 +119,15 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                     var arr = TextSplit.SplitMulti(translatedText, numberOfParagraphs, target.TwoLetterIsoLanguageName);
                     for (var i = 0; i < arr.Count && paragraphIdx < newSub.Paragraphs.Count; i++)
                     {
-                        newSub.Paragraphs[paragraphIdx].Text = Utilities.AutoBreakLine(arr[i], Configuration.Settings.General.SubtitleLineMaximumLength * 2, 0, target.TwoLetterIsoLanguageName);
+                        var res = arr[i];
+                        if (res.Contains('\n') ||
+                            res.TrimEnd('.').Contains('.') ||
+                            res.Length >= Configuration.Settings.General.SubtitleLineMaximumLength)
+                        {
+                            res = Utilities.AutoBreakLine(arr[i], Configuration.Settings.General.SubtitleLineMaximumLength * 2, Configuration.Settings.General.MergeLinesShorterThan, target.TwoLetterIsoLanguageName);
+                        }
+
+                        newSub.Paragraphs[paragraphIdx].Text = res;
                         paragraphIdx++;
                     }
                 }
@@ -140,9 +148,66 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 }
             }
 
+            // Split by line ending chars - periods in numbers removed
+            var noPeriodsInNumbersTranslation = FixPeriodInNumbers(mergedTranslation);
+            splitResult = SplitMultipleLines(mergeResult, noPeriodsInNumbersTranslation, target.Code);
+            if (splitResult.Count == mergeCount && HasSameEmptyLines(splitResult, tempSubtitle, index) &&
+                Utilities.CountTagInText(text, '.') == Utilities.CountTagInText(noPeriodsInNumbersTranslation, '.'))
+            {
+                var idx = 0;
+                foreach (var line in splitResult)
+                {
+                    var reformattedText = formattingList[idx].ReAddFormatting(line.Replace('¤', '.'));
+                    targetSubtitle.Paragraphs[index].Text = reformattedText;
+                    index++;
+                    linesTranslate++;
+                    idx++;
+                }
+
+                return linesTranslate;
+            }
+
+
+            // Split by line ending chars
+            splitResult = SplitMultipleLines(mergeResult, mergedTranslation, target.Code);
+            if (splitResult.Count == mergeCount && HasSameEmptyLines(splitResult, tempSubtitle, index))
+            {
+                var idx = 0;
+                foreach (var line in splitResult)
+                {
+                    var reformattedText = formattingList[idx].ReAddFormatting(line);
+                    targetSubtitle.Paragraphs[index].Text = reformattedText;
+                    index++;
+                    linesTranslate++;
+                    idx++;
+                }
+
+                return linesTranslate;
+            }
+
+
             MergeSplitProblems = true;
 
             return linesTranslate;
+        }
+
+        private static string FixPeriodInNumbers(string mergedTranslation)
+        {
+            var findCommaNumber = new Regex(@"\d\.\d");
+            var s = mergedTranslation;
+            while (true)
+            {
+                var match = findCommaNumber.Match(s);
+                if (match.Success)
+                {
+                    s = s.Remove(match.Index + 1, 1);
+                    s = s.Insert(match.Index + 1, "¤");
+                }
+                else
+                {
+                    return s;
+                }
+            }
         }
 
         private static bool HasSameEmptyLines(Subtitle newSub, Subtitle sourceSubtitle, int index)
