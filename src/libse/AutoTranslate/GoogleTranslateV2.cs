@@ -73,16 +73,16 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
 
                 if ((int)result.StatusCode == 400)
                 {                   
-                    throw new TranslationException("API key invalid (or perhaps billing is not enabled)?");
+                    throw new Exception("API key invalid (or perhaps billing is not enabled)?");
                 }
                 if ((int)result.StatusCode == 403)
                 {
-                    throw new TranslationException("\"Perhaps billing is not enabled (or API key is invalid)?\"");
+                    throw new Exception("\"Perhaps billing is not enabled (or API key is invalid)?\"");
                 }
 
                 if (!result.IsSuccessStatusCode)
                 {
-                    throw new TranslationException($"An error occurred calling GT translate - status code: {result.StatusCode}");
+                    throw new Exception($"An error occurred calling GT translate - status code: {result.StatusCode}");
                 }
 
                 content = result.Content.ReadAsStringAsync().Result;
@@ -98,7 +98,8 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                 {
                     message = "Perhaps billing is not enabled (or API not enabled or API key is invalid)?";
                 }
-                throw new TranslationException(message, webException);
+
+                throw new Exception(message, webException);
             }
 
             var resultList = new List<string>();

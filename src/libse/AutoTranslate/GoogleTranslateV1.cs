@@ -65,7 +65,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             }
             catch (WebException webException)
             {
-                throw new TranslationException("Free API quota exceeded?", webException);
+                throw new Exception("Free API quota exceeded?", webException);
             }
 
             var resultList = ConvertJsonObjectToStringLines(jsonResultString);

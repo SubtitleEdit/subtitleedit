@@ -1,9 +1,8 @@
-﻿using Nikse.SubtitleEdit.Core.Translate.Processor;
-using System;
+﻿using System;
 
 namespace Nikse.SubtitleEdit.Core.Common
 {
-    public class Paragraph : ITranslationBaseUnit
+    public class Paragraph 
     {
         public int Number { get; set; }
 
