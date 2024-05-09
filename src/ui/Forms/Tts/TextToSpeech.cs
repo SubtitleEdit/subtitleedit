@@ -421,6 +421,12 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             progressBar1.Value = 0;
             progressBar1.Maximum = subtitle.Paragraphs.Count;
             progressBar1.Visible = true;
+            var ext = ".wav";
+            if (overrideFileName != null && overrideFileName.EndsWith(".mp3", StringComparison.OrdinalIgnoreCase))
+            {
+                ext = ".mp3";
+            }
+
             for (var index = 0; index < subtitle.Paragraphs.Count; index++)
             {
                 progressBar1.Value = index + 1;
@@ -431,6 +437,11 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 if (!string.IsNullOrEmpty(overrideFileName) && File.Exists(Path.Combine(_waveFolder, overrideFileName)))
                 {
                     pFileName = Path.Combine(_waveFolder, overrideFileName);
+                }
+
+                if (!string.IsNullOrEmpty(overrideFileName) && File.Exists(Path.Combine(_waveFolder, Path.ChangeExtension(overrideFileName, ".mp3"))))
+                {
+                    pFileName = Path.Combine(_waveFolder, Path.ChangeExtension(overrideFileName, ".mp3"));
                 }
 
                 if (!File.Exists(pFileName))
@@ -444,7 +455,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                     continue;
                 }
 
-                var outputFileName1 = Path.Combine(_waveFolder, index + "_u.wav");
+                var outputFileName1 = Path.Combine(_waveFolder, $"{index}_{Guid.NewGuid()}{ext}");
                 if (!string.IsNullOrEmpty(overrideFileName) && File.Exists(Path.Combine(_waveFolder, overrideFileName)))
                 {
                     outputFileName1 = Path.Combine(_waveFolder, Path.GetFileNameWithoutExtension(overrideFileName) + "_u.wav");
@@ -484,10 +495,10 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 }
 
                 var factor = (decimal)waveInfo.TotalMilliseconds / (decimal)(p.DurationTotalMilliseconds + addDuration);
-                var outputFileName2 = Path.Combine(_waveFolder, index + "_t.wav");
+                var outputFileName2 = Path.Combine(_waveFolder, $"{index}_{Guid.NewGuid()}{ext}");
                 if (!string.IsNullOrEmpty(overrideFileName) && File.Exists(Path.Combine(_waveFolder, overrideFileName)))
                 {
-                    outputFileName2 = Path.Combine(_waveFolder, Path.GetFileNameWithoutExtension(overrideFileName) + "_t.wav");
+                    outputFileName2 = Path.Combine(_waveFolder, $"{Path.GetFileNameWithoutExtension(overrideFileName)}_{Guid.NewGuid()}{ext}");
                 }
 
                 fileNames.Add(new FileNameAndSpeedFactor { Filename = outputFileName2, Factor = factor });

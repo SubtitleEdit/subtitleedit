@@ -231,7 +231,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 {
                     _fileNames[idx].Filename = form.FileNameAndSpeedFactor.Filename;
                     _fileNames[idx].Factor = form.FileNameAndSpeedFactor.Factor;
-                    listView1.Items[idx].SubItems[4].Text = _subtitle.Paragraphs[idx].Text;
+                    listView1.Items[idx].SubItems[5].Text = _subtitle.Paragraphs[idx].Text;
                     Play(true);
                 }
             }
