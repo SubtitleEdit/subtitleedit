@@ -3117,7 +3117,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
         private void linkLabelBingSubscribe_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            UiUtil.OpenUrl(MicrosoftTranslationService.SignUpUrl);
+            UiUtil.OpenUrl("https://learn.microsoft.com/en-us/azure/ai-services/translator/create-translator-resource");
         }
 
         private void ValidateShortcut(object sender, EventArgs e)

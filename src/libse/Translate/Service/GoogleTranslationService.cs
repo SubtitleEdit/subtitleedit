@@ -1,58 +1,9 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Nikse.SubtitleEdit.Core.Translate.Service
 {
-    public class GoogleTranslationService : ITranslationService
+    public class GoogleTranslationService 
     {
-
-        private readonly ITranslationStrategy _translationStrategy;
-
-        public GoogleTranslationService(ITranslationStrategy translationStrategy)
-        {
-            _translationStrategy = translationStrategy;
-        }
-
-        public string GetName()
-        {
-            return _translationStrategy.GetName();
-        }
-
-        public override string ToString()
-        {
-            return GetName();
-        }
-
-       public int GetMaxTextSize()
-        {
-            return _translationStrategy.GetMaxTextSize();
-        }
-
-        public int GetMaximumRequestArraySize()
-        {
-            return _translationStrategy.GetMaximumRequestArraySize();
-        }
-
-        public List<TranslationPair> GetSupportedSourceLanguages()
-        {
-            return GetTranslationPairs();
-        }
-
-        public List<TranslationPair> GetSupportedTargetLanguages()
-        {
-            return GetTranslationPairs();
-        }
-
-        public string GetUrl()
-        {
-            return "https://translate.google.com/";
-        }
-
-        public List<string> Translate(string sourceLanguage, string targetLanguage, List<Paragraph> sourceParagraphs)
-        {
-            return _translationStrategy.Translate(sourceLanguage, targetLanguage, sourceParagraphs);
-        }
-
         public static List<TranslationPair> GetTranslationPairs()
         {
             return new List<TranslationPair>
