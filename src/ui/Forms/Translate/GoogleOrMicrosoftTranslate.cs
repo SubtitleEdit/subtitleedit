@@ -1,14 +1,13 @@
-﻿using Nikse.SubtitleEdit.Core.AutoTranslate;
-using Nikse.SubtitleEdit.Core.Common;
-using Nikse.SubtitleEdit.Core.Translate;
-using Nikse.SubtitleEdit.Forms.Translate;
-using Nikse.SubtitleEdit.Logic;
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Core.AutoTranslate;
+using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Translate;
+using Nikse.SubtitleEdit.Logic;
 
-namespace Nikse.SubtitleEdit.Forms
+namespace Nikse.SubtitleEdit.Forms.Translate
 {
     public sealed partial class GoogleOrMicrosoftTranslate : Form
     {
