@@ -3361,6 +3361,13 @@ Wir nutzen den dem Bild innewohnenden Rhythmus.</CreateSimpleChainingToolTip>
     <InspectItems>Untersuche Text</InspectItems>
     <AddBetterMatch>Besseren Treffer hinzufügen</AddBetterMatch>
     <Add>Hinzufügen</Add>
+    <AddBetterMultiMatch>Besseren Multi-Treffer hinzufügen</AddBetterMultiMatch>
+    <AddOrUpdateMatch>Treffer hinzufügen oder ändern</AddOrUpdateMatch>
+    <SelectPrevousMatch>Vorherigen Treffer auswählen</SelectPrevousMatch>
+    <SelectNextMatch>Nächsten Treffer auswählen</SelectNextMatch>
+    <JumpPreviousMissingMatch>Vorherigen fehlenden Treffer auswählen</JumpPreviousMissingMatch>
+    <JumpNextMissingMatch>Nächsten fehlenden Treffer auswählen</JumpNextMissingMatch>
+    <FocusTextbox>Textfeld fokussieren</FocusTextbox>
   </VobSubOcrCharacterInspect>
   <VobSubOcrNewFolder>
     <Title>Neuer Ordner</Title>

@@ -3575,6 +3575,13 @@
             public string InspectItems { get; set; }
             public string AddBetterMatch { get; set; }
             public string Add { get; set; }
+            public string AddBetterMultiMatch { get; set; }
+            public string AddOrUpdateMatch { get; set; }
+            public string SelectPrevousMatch { get; set; }
+            public string SelectNextMatch { get; set; }
+            public string JumpPreviousMissingMatch { get; set; }
+            public string JumpNextMissingMatch { get; set; }
+            public string FocusTextbox { get; set; }
         }
 
         public class VobSubOcrNewFolder

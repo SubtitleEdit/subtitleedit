@@ -9172,6 +9172,27 @@ namespace Nikse.SubtitleEdit.Logic
                 case "VobSubOcrCharacterInspect/Add":
                     language.VobSubOcrCharacterInspect.Add = reader.Value;
                     break;
+                case "VobSubOcrCharacterInspect/AddBetterMultiMatch":
+                    language.VobSubOcrCharacterInspect.AddBetterMultiMatch = reader.Value;
+                    break;
+                case "VobSubOcrCharacterInspect/AddOrUpdateMatch":
+                    language.VobSubOcrCharacterInspect.AddOrUpdateMatch = reader.Value;
+                    break;
+                case "VobSubOcrCharacterInspect/SelectPrevousMatch":
+                    language.VobSubOcrCharacterInspect.SelectPrevousMatch = reader.Value;
+                    break;
+                case "VobSubOcrCharacterInspect/SelectNextMatch":
+                    language.VobSubOcrCharacterInspect.SelectNextMatch = reader.Value;
+                    break;
+                case "VobSubOcrCharacterInspect/JumpPreviousMissingMatch":
+                    language.VobSubOcrCharacterInspect.JumpPreviousMissingMatch = reader.Value;
+                    break;
+                case "VobSubOcrCharacterInspect/JumpNextMissingMatch":
+                    language.VobSubOcrCharacterInspect.JumpNextMissingMatch = reader.Value;
+                    break;
+                case "VobSubOcrCharacterInspect/FocusTextbox":
+                    language.VobSubOcrCharacterInspect.FocusTextbox = reader.Value;
+                    break;
                 case "VobSubOcrNewFolder/Title":
                     language.VobSubOcrNewFolder.Title = reader.Value;
                     break;
