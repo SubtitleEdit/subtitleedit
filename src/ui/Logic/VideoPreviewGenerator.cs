@@ -626,14 +626,16 @@ namespace Nikse.SubtitleEdit.Logic
             return processMakeVideo;
         }
 
-        public static Process AddAudioTrack(string inputFileName, string audioFileName, string outputFileName, DataReceivedEventHandler dataReceivedHandler = null)
+        public static Process AddAudioTrack(string inputFileName, string audioFileName, string outputFileName, bool forceStereo, DataReceivedEventHandler dataReceivedHandler = null)
         {
+            var ac2 = forceStereo ? " -ac 2 " : " ";
+
             var processMakeVideo = new Process
             {
                 StartInfo =
                 {
                     FileName = GetFfmpegLocation(),
-                    Arguments = $"-i \"{inputFileName}\" -i \"{audioFileName}\" -c copy -map 0:v:0 -map 1:a:0  \"{outputFileName}\"",
+                    Arguments = $"-i \"{inputFileName}\" -i \"{audioFileName}\" -c copy -map 0:v:0 -map 1:a:0{ac2}\"{outputFileName}\"",
                     UseShellExecute = false,
                     CreateNoWindow = true
                 }
