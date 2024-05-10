@@ -90,64 +90,26 @@ namespace Nikse.SubtitleEdit.Controls
 
         public void InitializeLanguage(LanguageStructure.General general, Settings settings)
         {
-            int idx = GetColumnIndex(SubtitleColumn.Number);
-            if (idx >= 0)
+            var dicIndexToCaption = new Dictionary<int, string>()
             {
-                Columns[idx].Text = general.NumberSymbol;
-            }
+                { GetColumnIndex(SubtitleColumn.Number), general.NumberSymbol },
+                { GetColumnIndex(SubtitleColumn.Start), general.StartTime },
+                { GetColumnIndex(SubtitleColumn.End), general.EndTime },
+                { GetColumnIndex(SubtitleColumn.Duration), general.Duration },
+                { GetColumnIndex(SubtitleColumn.CharactersPerSeconds), general.CharsPerSec },
+                { GetColumnIndex(SubtitleColumn.WordsPerMinute), general.WordsPerMin },
+                { GetColumnIndex(SubtitleColumn.Gap), general.Gap },
+                { GetColumnIndex(SubtitleColumn.Actor), general.Actor },
+                { GetColumnIndex(SubtitleColumn.Region), general.Region },
+                { GetColumnIndex(SubtitleColumn.Text), general.Text },
+            };
 
-            idx = GetColumnIndex(SubtitleColumn.Start);
-            if (idx >= 0)
+            foreach (var indexCaptionPair in dicIndexToCaption)
             {
-                Columns[idx].Text = general.StartTime;
-            }
-
-            idx = GetColumnIndex(SubtitleColumn.End);
-            if (idx >= 0)
-            {
-                Columns[idx].Text = general.EndTime;
-            }
-
-            idx = GetColumnIndex(SubtitleColumn.Duration);
-            if (idx >= 0)
-            {
-                Columns[idx].Text = general.Duration;
-            }
-
-            idx = GetColumnIndex(SubtitleColumn.CharactersPerSeconds);
-            if (idx >= 0)
-            {
-                Columns[idx].Text = general.CharsPerSec;
-            }
-
-            idx = GetColumnIndex(SubtitleColumn.WordsPerMinute);
-            if (idx >= 0)
-            {
-                Columns[idx].Text = general.WordsPerMin;
-            }
-
-            idx = GetColumnIndex(SubtitleColumn.Gap);
-            if (idx >= 0)
-            {
-                Columns[idx].Text = general.Gap;
-            }
-
-            idx = GetColumnIndex(SubtitleColumn.Actor);
-            if (idx >= 0)
-            {
-                Columns[idx].Text = general.Actor;
-            }
-
-            idx = GetColumnIndex(SubtitleColumn.Region);
-            if (idx >= 0)
-            {
-                Columns[idx].Text = general.Region;
-            }
-
-            idx = GetColumnIndex(SubtitleColumn.Text);
-            if (idx >= 0)
-            {
-                Columns[idx].Text = general.Text;
+                if (indexCaptionPair.Key >= 0)
+                {
+                    Columns[indexCaptionPair.Key].Text = indexCaptionPair.Value;
+                }
             }
 
             if (settings.General.ListViewLineSeparatorString != null)
@@ -176,64 +138,26 @@ namespace Nikse.SubtitleEdit.Controls
             if (_settings != null && _settings.General.ListViewColumnsRememberSize && _settings.General.ListViewNumberWidth > 1 &&
                 _settings.General.ListViewStartWidth > 1 && _settings.General.ListViewEndWidth > 1 && _settings.General.ListViewDurationWidth > 1)
             {
-                int idx = GetColumnIndex(SubtitleColumn.Number);
-                if (idx >= 0)
+                var dicIndexToWidth = new Dictionary<int, int>()
                 {
-                    Columns[idx].Width = Configuration.Settings.General.ListViewNumberWidth;
-                }
+                    { GetColumnIndex(SubtitleColumn.Number), Configuration.Settings.General.ListViewNumberWidth },
+                    { GetColumnIndex(SubtitleColumn.Start), _settings.General.ListViewStartWidth },
+                    { GetColumnIndex(SubtitleColumn.End), _settings.General.ListViewEndWidth },
+                    { GetColumnIndex(SubtitleColumn.Duration), _settings.General.ListViewDurationWidth },
+                    { GetColumnIndex(SubtitleColumn.CharactersPerSeconds), _settings.General.ListViewCpsWidth },
+                    { GetColumnIndex(SubtitleColumn.WordsPerMinute), _settings.General.ListViewWpmWidth },
+                    { GetColumnIndex(SubtitleColumn.Gap), _settings.General.ListViewGapWidth },
+                    { GetColumnIndex(SubtitleColumn.Actor), _settings.General.ListViewActorWidth },
+                    { GetColumnIndex(SubtitleColumn.Region), _settings.General.ListViewRegionWidth },
+                    { GetColumnIndex(SubtitleColumn.Text), _settings.General.ListViewTextWidth },
+                };
 
-                idx = GetColumnIndex(SubtitleColumn.Start);
-                if (idx >= 0)
+                foreach (var columnIndexToWidth in dicIndexToWidth)
                 {
-                    Columns[idx].Width = _settings.General.ListViewStartWidth;
-                }
-
-                idx = GetColumnIndex(SubtitleColumn.End);
-                if (idx >= 0)
-                {
-                    Columns[idx].Width = _settings.General.ListViewEndWidth;
-                }
-
-                idx = GetColumnIndex(SubtitleColumn.Duration);
-                if (idx >= 0)
-                {
-                    Columns[idx].Width = _settings.General.ListViewDurationWidth;
-                }
-
-                idx = GetColumnIndex(SubtitleColumn.CharactersPerSeconds);
-                if (idx >= 0)
-                {
-                    Columns[idx].Width = _settings.General.ListViewCpsWidth;
-                }
-
-                idx = GetColumnIndex(SubtitleColumn.WordsPerMinute);
-                if (idx >= 0)
-                {
-                    Columns[idx].Width = _settings.General.ListViewWpmWidth;
-                }
-
-                idx = GetColumnIndex(SubtitleColumn.Gap);
-                if (idx >= 0)
-                {
-                    Columns[idx].Width = _settings.General.ListViewGapWidth;
-                }
-
-                idx = GetColumnIndex(SubtitleColumn.Actor);
-                if (idx >= 0)
-                {
-                    Columns[idx].Width = _settings.General.ListViewActorWidth;
-                }
-
-                idx = GetColumnIndex(SubtitleColumn.Region);
-                if (idx >= 0)
-                {
-                    Columns[idx].Width = _settings.General.ListViewRegionWidth;
-                }
-
-                idx = GetColumnIndex(SubtitleColumn.Text);
-                if (idx >= 0)
-                {
-                    Columns[idx].Width = _settings.General.ListViewTextWidth;
+                    if (columnIndexToWidth.Key >= 0)
+                    {
+                        Columns[columnIndexToWidth.Key].Width = columnIndexToWidth.Value;
+                    }
                 }
 
                 _saveColumnWidthChanges = true;
@@ -245,22 +169,23 @@ namespace Nikse.SubtitleEdit.Controls
                     var timestampSizeF = graphics.MeasureString(new TimeCode(0, 0, 33, 527).ToDisplayString(), Font);
                     var timestampWidth = (int)(timestampSizeF.Width + 0.5) + 11;
 
-                    var idx = GetColumnIndex(SubtitleColumn.Start);
-                    if (idx >= 0)
+                    var timeColumns = new int[]
                     {
-                        Columns[idx].Width = timestampWidth;
-                    }
+                        GetColumnIndex(SubtitleColumn.Start),
+                        GetColumnIndex(SubtitleColumn.End),
+                        GetColumnIndex(SubtitleColumn.Duration)
+                    };
 
-                    idx = GetColumnIndex(SubtitleColumn.End);
-                    if (idx >= 0)
+                    var len = timeColumns.Length;
+                    var durationColumnIndex = timeColumns.Length - 1;
+                    for (var i = 0; i < len; i++)
                     {
-                        Columns[idx].Width = timestampWidth;
-                    }
-
-                    idx = GetColumnIndex(SubtitleColumn.Duration);
-                    if (idx >= 0)
-                    {
-                        Columns[idx].Width = (int)(timestampWidth * 0.8);
+                        var columnIndex = timeColumns[i];
+                        if (columnIndex >= 0)
+                        {
+                            // for duration column we take 80%
+                            Columns[columnIndex].Width = (int)(timestampWidth * (i < durationColumnIndex ? 1 : 0.8));
+                        }
                     }
                 }
             }
