@@ -273,14 +273,25 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 }
 
                 // rename result file
-                var targetName = string.IsNullOrEmpty(_videoFileName) ? _subtitle.FileName : _videoFileName;
-                if (string.IsNullOrEmpty(targetName))
+                var resultAudioFileName = string.IsNullOrEmpty(_videoFileName) ? _subtitle.FileName : _videoFileName;
+                if (!string.IsNullOrEmpty(resultAudioFileName))
                 {
-                    targetName = "Untitled";
+                    resultAudioFileName = Path.ChangeExtension(resultAudioFileName, ".wav");
+                    resultAudioFileName = Path.Combine(_waveFolder, Path.GetFileName(resultAudioFileName));
+                }
+                else
+                {
+                    resultAudioFileName = Path.Combine(_waveFolder, "Untitled.wav");
                 }
 
-                var resultAudioFileName = Path.Combine(Path.GetDirectoryName(tempAudioFile), targetName);
-                File.Move(tempAudioFile, resultAudioFileName);
+                if (File.Exists(resultAudioFileName))
+                {
+                    resultAudioFileName = tempAudioFile;
+                }
+                else
+                {
+                    File.Move(tempAudioFile, resultAudioFileName);
+                }
 
                 Cleanup(_waveFolder, resultAudioFileName);
 
