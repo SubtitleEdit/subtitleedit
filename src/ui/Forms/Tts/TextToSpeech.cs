@@ -279,7 +279,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                     targetName = "Untitled";
                 }
 
-                var resultAudioFileName = Path.Combine(Path.GetDirectoryName(tempAudioFile), Path.GetFileNameWithoutExtension(targetName) + ".mp3");
+                var resultAudioFileName = Path.Combine(Path.GetDirectoryName(tempAudioFile), targetName);
                 File.Move(tempAudioFile, resultAudioFileName);
 
                 Cleanup(_waveFolder, resultAudioFileName);
@@ -422,10 +422,6 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             progressBar1.Maximum = subtitle.Paragraphs.Count;
             progressBar1.Visible = true;
             var ext = ".wav";
-            if (overrideFileName != null && overrideFileName.EndsWith(".mp3", StringComparison.OrdinalIgnoreCase))
-            {
-                ext = ".mp3";
-            }
 
             for (var index = 0; index < subtitle.Paragraphs.Count; index++)
             {
@@ -523,7 +519,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             labelProgress.Text = string.Empty;
             labelProgress.Refresh();
             Application.DoEvents();
-            var silenceFileName = Path.Combine(_waveFolder, "silence.mp3");
+            var silenceFileName = Path.Combine(_waveFolder, "silence.wav");
 
             var durationInSeconds = 10f;
             if (_videoInfo != null)
@@ -556,7 +552,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                     continue;
                 }
 
-                outputFileName = Path.Combine(_waveFolder, $"silence{index}.mp3");
+                outputFileName = Path.Combine(_waveFolder, $"silence{index}.wav");
                 var mergeProcess = VideoPreviewGenerator.MergeAudioTracks(inputFileName, pFileName.Filename, outputFileName, (float)p.StartTime.TotalSeconds);
                 var deleteTempFileName = inputFileName;
                 inputFileName = outputFileName;
@@ -2042,7 +2038,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
         private string GetEngineAudioExtension()
         {
             var engine = _engines.First(p => p.Index == nikseComboBoxEngine.SelectedIndex);
-            if (engine.Id == TextToSpeechEngineId.ElevenLabs)
+            if (engine.Id == TextToSpeechEngineId.ElevenLabs || engine.Id == TextToSpeechEngineId.AzureTextToSpeech)
             {
                 return ".mp3";
             }
