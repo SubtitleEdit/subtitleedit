@@ -91,22 +91,15 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
         private static bool CanCapitalize(string input, IFixCallbacks callbacks)
         {
-            return !IsAppleNaming(input) && BeginsWithLetter(input);
+            return !IsAppleNaming(input) && IsFirstLetterConvertibleToUppercase(input);
         }
 
         /// <summary>
         /// Returns true if first character is convertible to uppercase otherwise false
         /// </summary>
-        private static bool BeginsWithLetter(string input)
+        private static bool IsFirstLetterConvertibleToUppercase(string input)
         {
-            if (input.Length == 0)
-            {
-                return false;
-            }
-
-            var ch = input[0];
-
-            return char.IsLetter(ch) && char.IsLower(ch);
+            return input.Length > 0 && char.IsLower(input[0]);
         }
 
         /// <summary>
