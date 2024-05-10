@@ -1,6 +1,8 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -19,8 +21,29 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string Name => "Csv Nuendo";
 
+        /// <summary>
+        /// Check if the given file has a known binary format extension.
+        /// </summary>
+        /// <param name="fileName">The name of the file.</param>
+        /// <returns>True if the file has a known binary format extension, false otherwise.</returns>
+        private bool HasKnownBinaryFormatExtension(string fileName)
+        {
+            if (!string.IsNullOrEmpty(fileName))
+            {
+                var extension = Path.GetExtension(fileName);
+                return GetBinaryFormats(false).Any(sf => extension.Equals(sf.Extension, StringComparison.OrdinalIgnoreCase));
+            }
+
+            return false;
+        }
+
         public override bool IsMine(List<string> lines, string fileName)
         {
+            if (HasKnownBinaryFormatExtension(fileName))
+            {
+                return false;
+            }
+
             var fine = 0;
             var errors = 0;
             var sb = new StringBuilder();
