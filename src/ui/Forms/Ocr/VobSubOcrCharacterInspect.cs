@@ -89,6 +89,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
 
             ShowCount();
+            listBoxInspectItems.Select();
         }
 
         private void listBoxInspectItems_SelectedIndexChanged(object sender, EventArgs e)
@@ -267,6 +268,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void buttonUpdate_Click(object sender, EventArgs e)
         {
+            UpdateMatch();
+        }
+
+        private void UpdateMatch()
+        {
             if (_selectedCompareNode == null && _selectedCompareBinaryOcrBitmap == null)
             {
                 return;
@@ -379,6 +385,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         }
 
         private void buttonAddBetterMatch_Click(object sender, EventArgs e)
+        {
+            AddBetterMatch();
+        }
+
+        private void AddBetterMatch()
         {
             if (listBoxInspectItems.SelectedIndex < 0)
             {
@@ -521,6 +532,32 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             listBoxInspectItems.SelectedIndex = index;
         }
 
+        private void SelectNoMatch(bool previous)
+        {
+            if (previous)
+            {
+                for (int i = listBoxInspectItems.SelectedIndex - 1; i >= 0; i--)
+                {
+                    if (_matches[i].Text == LanguageSettings.Current.VobSubOcr.NoMatch)
+                    {
+                        listBoxInspectItems.SelectedIndex = i;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                for (int i = listBoxInspectItems.SelectedIndex + 1; i < _matches.Count; i++)
+                {
+                    if (_matches[i].Text == LanguageSettings.Current.VobSubOcr.NoMatch)
+                    {
+                        listBoxInspectItems.SelectedIndex = i;
+                        break;
+                    }
+                }
+            }
+        }
+
         private void VobSubOcrCharacterInspect_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
@@ -622,6 +659,102 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 labelTextAssociatedWithImage.Font = new Font(labelTextAssociatedWithImage.Font.FontFamily, labelTextAssociatedWithImage.Font.Size);
                 textBoxText.Font = new Font(textBoxText.Font.FontFamily, textBoxText.Font.Size, FontStyle.Bold);
+            }
+        }
+
+        private void textBoxText_KeyDown(object sender, KeyEventArgs e)
+        {
+            bool executedAddOrUpdate = false;
+            bool changedSelection = false;
+            if (e.KeyCode == Keys.Enter)
+            {
+                //Instantly executes the least destructive action
+                if (buttonAddBetterMatch.Enabled)
+                {
+                    AddBetterMatch();
+                    executedAddOrUpdate = true;
+                }
+                else if (buttonUpdate.Enabled)
+                {
+                    UpdateMatch();
+                    executedAddOrUpdate = true;
+                }
+            }
+            else if (e.KeyCode == Keys.Up)
+            {
+                //Allow navigating the list box while in the text field. Put the cursor at the end too, in case there already is a character
+                if (e.Modifiers == Keys.Control)
+                {
+                    SelectNoMatch(true);
+                }
+                else
+                {
+                    if (listBoxInspectItems.SelectedIndex > 0)
+                    {
+                        listBoxInspectItems.SelectedIndex--;
+
+                        textBoxText.SelectionStart = 0;
+                        textBoxText.SelectionLength = textBoxText.Text.Length;
+                    }
+                }
+                changedSelection = true;
+            }
+            else if (e.KeyCode == Keys.Down)
+            {
+                if (e.Modifiers == Keys.Control)
+                {
+                    SelectNoMatch(false);
+                }
+                else
+                {
+                    if (listBoxInspectItems.SelectedIndex < listBoxInspectItems.Items.Count - 1)
+                    {
+                        listBoxInspectItems.SelectedIndex++;
+                    }
+                }
+                changedSelection = true;
+            }
+
+            if (changedSelection)
+            {
+                textBoxText.SelectionStart = 0;
+                textBoxText.SelectionLength = textBoxText.Text.Length;
+            }
+
+            if (executedAddOrUpdate || changedSelection)
+            {
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+            }
+        }
+
+        private void listBoxInspectItems_KeyDown(object sender, KeyEventArgs e)
+        {
+            //Allows instantly entering back into the textbox, editing the next recognized character.
+            bool handled = false;
+            if (e.KeyCode == Keys.Enter)
+            {
+                handled = true;
+                textBoxText.Focus();
+            }
+            else if (e.Modifiers == Keys.Control)
+            {
+                if (e.KeyCode == Keys.Up)
+                {
+                    handled = true;
+                    SelectNoMatch(true);
+                }
+                else if (e.KeyCode == Keys.Down)
+                {
+                    handled = true;
+                    SelectNoMatch(false);
+                }
+            }
+
+            if (handled)
+            {
+                e.Handled = true;
+                e.SuppressKeyPress = true;
             }
         }
     }
