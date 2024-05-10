@@ -90,18 +90,18 @@ namespace Nikse.SubtitleEdit.Controls
 
         public void InitializeLanguage(LanguageStructure.General general, Settings settings)
         {
-            var dicIndexToCaption = new Dictionary<int, string>()
+            var dicIndexToCaption = new KeyValuePair<int, string>[]
             {
-                { GetColumnIndex(SubtitleColumn.Number), general.NumberSymbol },
-                { GetColumnIndex(SubtitleColumn.Start), general.StartTime },
-                { GetColumnIndex(SubtitleColumn.End), general.EndTime },
-                { GetColumnIndex(SubtitleColumn.Duration), general.Duration },
-                { GetColumnIndex(SubtitleColumn.CharactersPerSeconds), general.CharsPerSec },
-                { GetColumnIndex(SubtitleColumn.WordsPerMinute), general.WordsPerMin },
-                { GetColumnIndex(SubtitleColumn.Gap), general.Gap },
-                { GetColumnIndex(SubtitleColumn.Actor), general.Actor },
-                { GetColumnIndex(SubtitleColumn.Region), general.Region },
-                { GetColumnIndex(SubtitleColumn.Text), general.Text },
+                new KeyValuePair<int, string>(GetColumnIndex(SubtitleColumn.Number), general.NumberSymbol),
+                new KeyValuePair<int, string>(GetColumnIndex(SubtitleColumn.Start), general.StartTime),
+                new KeyValuePair<int, string>(GetColumnIndex(SubtitleColumn.End), general.EndTime),
+                new KeyValuePair<int, string>(GetColumnIndex(SubtitleColumn.Duration), general.Duration),
+                new KeyValuePair<int, string>(GetColumnIndex(SubtitleColumn.CharactersPerSeconds), general.CharsPerSec),
+                new KeyValuePair<int, string>(GetColumnIndex(SubtitleColumn.WordsPerMinute), general.WordsPerMin),
+                new KeyValuePair<int, string>(GetColumnIndex(SubtitleColumn.Gap), general.Gap),
+                new KeyValuePair<int, string>(GetColumnIndex(SubtitleColumn.Actor), general.Actor),
+                new KeyValuePair<int, string>(GetColumnIndex(SubtitleColumn.Region), general.Region),
+                new KeyValuePair<int, string>(GetColumnIndex(SubtitleColumn.Text), general.Text),
             };
 
             foreach (var indexCaptionPair in dicIndexToCaption)
@@ -138,18 +138,18 @@ namespace Nikse.SubtitleEdit.Controls
             if (_settings != null && _settings.General.ListViewColumnsRememberSize && _settings.General.ListViewNumberWidth > 1 &&
                 _settings.General.ListViewStartWidth > 1 && _settings.General.ListViewEndWidth > 1 && _settings.General.ListViewDurationWidth > 1)
             {
-                var dicIndexToWidth = new Dictionary<int, int>()
+                var dicIndexToWidth = new KeyValuePair<int, int>[]
                 {
-                    { GetColumnIndex(SubtitleColumn.Number), Configuration.Settings.General.ListViewNumberWidth },
-                    { GetColumnIndex(SubtitleColumn.Start), _settings.General.ListViewStartWidth },
-                    { GetColumnIndex(SubtitleColumn.End), _settings.General.ListViewEndWidth },
-                    { GetColumnIndex(SubtitleColumn.Duration), _settings.General.ListViewDurationWidth },
-                    { GetColumnIndex(SubtitleColumn.CharactersPerSeconds), _settings.General.ListViewCpsWidth },
-                    { GetColumnIndex(SubtitleColumn.WordsPerMinute), _settings.General.ListViewWpmWidth },
-                    { GetColumnIndex(SubtitleColumn.Gap), _settings.General.ListViewGapWidth },
-                    { GetColumnIndex(SubtitleColumn.Actor), _settings.General.ListViewActorWidth },
-                    { GetColumnIndex(SubtitleColumn.Region), _settings.General.ListViewRegionWidth },
-                    { GetColumnIndex(SubtitleColumn.Text), _settings.General.ListViewTextWidth },
+                    new KeyValuePair<int, int>(GetColumnIndex(SubtitleColumn.Number), Configuration.Settings.General.ListViewNumberWidth),
+                    new KeyValuePair<int, int>(GetColumnIndex(SubtitleColumn.Start), _settings.General.ListViewStartWidth),
+                    new KeyValuePair<int, int>(GetColumnIndex(SubtitleColumn.End), _settings.General.ListViewEndWidth),
+                    new KeyValuePair<int, int>(GetColumnIndex(SubtitleColumn.Duration), _settings.General.ListViewDurationWidth),
+                    new KeyValuePair<int, int>(GetColumnIndex(SubtitleColumn.CharactersPerSeconds), _settings.General.ListViewCpsWidth),
+                    new KeyValuePair<int, int>(GetColumnIndex(SubtitleColumn.WordsPerMinute), _settings.General.ListViewWpmWidth),
+                    new KeyValuePair<int, int>(GetColumnIndex(SubtitleColumn.Gap), _settings.General.ListViewGapWidth),
+                    new KeyValuePair<int, int>(GetColumnIndex(SubtitleColumn.Actor), _settings.General.ListViewActorWidth),
+                    new KeyValuePair<int, int>(GetColumnIndex(SubtitleColumn.Region), _settings.General.ListViewRegionWidth),
+                    new KeyValuePair<int, int>(GetColumnIndex(SubtitleColumn.Text), _settings.General.ListViewTextWidth),
                 };
 
                 foreach (var columnIndexToWidth in dicIndexToWidth)
