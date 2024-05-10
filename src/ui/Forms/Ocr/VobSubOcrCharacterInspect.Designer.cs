@@ -183,6 +183,7 @@
             this.textBoxText.Name = "textBoxText";
             this.textBoxText.Size = new System.Drawing.Size(100, 23);
             this.textBoxText.TabIndex = 1;
+            this.textBoxText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxText_KeyDown);
             // 
             // contextMenuStripLetters
             // 
@@ -222,6 +223,7 @@
             this.listBoxInspectItems.Size = new System.Drawing.Size(240, 290);
             this.listBoxInspectItems.TabIndex = 12;
             this.listBoxInspectItems.SelectedIndexChanged += new System.EventHandler(this.listBoxInspectItems_SelectedIndexChanged);
+            this.listBoxInspectItems.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listBoxInspectItems_KeyDown);
             // 
             // contextMenuStripAddBetterMultiMatch
             // 
