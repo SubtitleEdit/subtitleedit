@@ -181,6 +181,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             checkBoxShowPreview.Checked = Configuration.Settings.Tools.TextToSpeechPreview;
 
             checkBoxAddToVideoFile.Enabled = _videoFileName != null;
+            checkBoxForceStereo.Enabled = _videoFileName != null;
         }
 
         private void SetActor(ActorAndVoice actor)
@@ -215,7 +216,6 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
         private void ButtonGenerateTtsClick(object sender, EventArgs e)
         {
-
             if (buttonGenerateTTS.Text == LanguageSettings.Current.General.Cancel)
             {
                 buttonGenerateTTS.Enabled = false;
@@ -297,7 +297,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
                 if (checkBoxAddToVideoFile.Checked && _videoFileName != null)
                 {
-                    AddAudioToVideoFile(resultAudioFileName);
+                    AddAudioToVideoFile(resultAudioFileName, checkBoxForceStereo.Checked);
                     if (_abort)
                     {
                         HandleAbort();
@@ -378,7 +378,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             return false;
         }
 
-        private void AddAudioToVideoFile(string audioFileName)
+        private void AddAudioToVideoFile(string audioFileName, bool forceStereo)
         {
             var videoExt = ".mkv";
             if (_videoFileName.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase))
@@ -388,7 +388,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
             labelProgress.Text = "Add audio to video file...";
             var outputFileName = Path.Combine(_waveFolder, Path.GetFileNameWithoutExtension(audioFileName) + videoExt);
-            var addAudioProcess = VideoPreviewGenerator.AddAudioTrack(_videoFileName, audioFileName, outputFileName);
+            var addAudioProcess = VideoPreviewGenerator.AddAudioTrack(_videoFileName, audioFileName, outputFileName, forceStereo);
             addAudioProcess.Start();
             while (!addAudioProcess.HasExited)
             {

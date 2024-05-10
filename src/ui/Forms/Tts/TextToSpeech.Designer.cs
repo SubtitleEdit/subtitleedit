@@ -35,6 +35,7 @@
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.labelEngine = new System.Windows.Forms.Label();
             this.groupBoxSettings = new System.Windows.Forms.GroupBox();
+            this.checkBoxForceStereo = new System.Windows.Forms.CheckBox();
             this.labelRegion = new System.Windows.Forms.Label();
             this.nikseComboBoxRegion = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelVoiceCount = new System.Windows.Forms.Label();
@@ -117,6 +118,7 @@
             // 
             this.groupBoxSettings.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
+            this.groupBoxSettings.Controls.Add(this.checkBoxForceStereo);
             this.groupBoxSettings.Controls.Add(this.labelRegion);
             this.groupBoxSettings.Controls.Add(this.nikseComboBoxRegion);
             this.groupBoxSettings.Controls.Add(this.labelVoiceCount);
@@ -136,6 +138,19 @@
             this.groupBoxSettings.TabIndex = 1;
             this.groupBoxSettings.TabStop = false;
             this.groupBoxSettings.Text = "Settings";
+            // 
+            // checkBoxForceStereo
+            // 
+            this.checkBoxForceStereo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.checkBoxForceStereo.AutoSize = true;
+            this.checkBoxForceStereo.Checked = true;
+            this.checkBoxForceStereo.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxForceStereo.Location = new System.Drawing.Point(34, 382);
+            this.checkBoxForceStereo.Name = "checkBoxForceStereo";
+            this.checkBoxForceStereo.Size = new System.Drawing.Size(85, 17);
+            this.checkBoxForceStereo.TabIndex = 33;
+            this.checkBoxForceStereo.Text = "Force stereo";
+            this.checkBoxForceStereo.UseVisualStyleBackColor = true;
             // 
             // labelRegion
             // 
@@ -188,7 +203,7 @@
             this.checkBoxShowPreview.AutoSize = true;
             this.checkBoxShowPreview.Checked = true;
             this.checkBoxShowPreview.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxShowPreview.Location = new System.Drawing.Point(17, 350);
+            this.checkBoxShowPreview.Location = new System.Drawing.Point(17, 335);
             this.checkBoxShowPreview.Name = "checkBoxShowPreview";
             this.checkBoxShowPreview.Size = new System.Drawing.Size(115, 17);
             this.checkBoxShowPreview.TabIndex = 25;
@@ -243,7 +258,7 @@
             this.checkBoxAddToVideoFile.AutoSize = true;
             this.checkBoxAddToVideoFile.Checked = true;
             this.checkBoxAddToVideoFile.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxAddToVideoFile.Location = new System.Drawing.Point(17, 373);
+            this.checkBoxAddToVideoFile.Location = new System.Drawing.Point(17, 358);
             this.checkBoxAddToVideoFile.Name = "checkBoxAddToVideoFile";
             this.checkBoxAddToVideoFile.Size = new System.Drawing.Size(176, 17);
             this.checkBoxAddToVideoFile.TabIndex = 26;
@@ -446,5 +461,6 @@
         private Controls.NikseComboBox nikseComboBoxRegion;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripVoices;
         private System.Windows.Forms.ToolStripMenuItem refreshVoicesToolStripMenuItem;
+        private System.Windows.Forms.CheckBox checkBoxForceStereo;
     }
 }
