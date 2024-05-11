@@ -1017,6 +1017,8 @@ Command line: {1} {2}
     <AlignRight>右对齐</AlignRight>
     <GetStartPosition>获取起始位置</GetStartPosition>
     <GetEndPosition>获取结束位置</GetEndPosition>
+    <UseSource>使用源</UseSource>
+    <UseSourceResolution>使用源分辨率</UseSourceResolution>
   </GenerateVideoWithBurnedInSubs>
   <GenerateVideoWithEmbeddedSubs>
     <Title>生成带有嵌入式字幕的视频</Title>
@@ -3165,6 +3167,7 @@ Command line: {1} {2}
     <Play>播放</Play>
     <AutoContinue>自动继续</AutoContinue>
     <Regenerate>重新生成</Regenerate>
+    <Speed>速度</Speed>
   </TextToSpeech>
   <TimedTextSmpteTiming>
     <Title>SMPTE 时序</Title>
