@@ -40,7 +40,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             _subtitle = subtitle;
 
-            if (!string.IsNullOrEmpty(text))
+            if (!string.IsNullOrWhiteSpace(text))
             {
                 textBoxAddName.Text = text.Trim().TrimEnd('.', '!', '?', ',');
                 if (textBoxAddName.Text.Length > 1)
@@ -77,7 +77,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             _subtitle = subtitle;
 
-            if (!string.IsNullOrEmpty(text))
+            if (!string.IsNullOrWhiteSpace(text))
             {
                 textBoxAddName.Text = text.Trim().TrimEnd('.', '!', '?');
                 if (textBoxAddName.Text.Length > 1)

@@ -19,6 +19,10 @@ namespace Nikse.SubtitleEdit.Logic
 {
     internal static class UiUtil
     {
+
+        private static long _lastShowSubTicks = DateTime.UtcNow.Ticks;
+        private static int _lastShowSubHash;
+
         public static readonly Lazy<string> SubtitleExtensionFilter = new Lazy<string>(GetOpenDialogFilter);
 
         public static VideoInfo GetVideoInfo(string fileName)
@@ -66,9 +70,6 @@ namespace Nikse.SubtitleEdit.Logic
             return LibMpvDynamic.GetVideoInfo(fileName);
         }
 
-        private static long _lastShowSubTicks = DateTime.UtcNow.Ticks;
-        private static int _lastShowSubHash;
-
         public static int ShowSubtitle(Subtitle subtitle, VideoPlayerContainer videoPlayerContainer, SubtitleFormat format)
         {
             if (videoPlayerContainer.VideoPlayer == null)
@@ -80,28 +81,28 @@ namespace Nikse.SubtitleEdit.Logic
             var max = subtitle.Paragraphs.Count;
             for (int i = 0; i < max; i++)
             {
-                var p = subtitle.Paragraphs[i];
-                if (p.StartTime.TotalMilliseconds <= positionInMilliseconds + 0.01 && p.EndTime.TotalMilliseconds >= positionInMilliseconds - 0.01)
+                var paragraph = subtitle.Paragraphs[i];
+                if (paragraph.StartTime.TotalMilliseconds <= positionInMilliseconds + 0.01 && paragraph.EndTime.TotalMilliseconds >= positionInMilliseconds - 0.01)
                 {
-                    string text = p.Text.Replace("|", Environment.NewLine);
-                    bool isInfo = p == subtitle.Paragraphs[0] && (Math.Abs(p.StartTime.TotalMilliseconds) < 0.01 && Math.Abs(p.DurationTotalMilliseconds) < 0.01 || Math.Abs(p.StartTime.TotalMilliseconds - Pac.PacNullTime.TotalMilliseconds) < 0.01);
+                    string text = paragraph.Text.Replace("|", Environment.NewLine);
+                    bool isInfo = paragraph == subtitle.Paragraphs[0] && (Math.Abs(paragraph.StartTime.TotalMilliseconds) < 0.01 && Math.Abs(paragraph.DurationTotalMilliseconds) < 0.01 || Math.Abs(paragraph.StartTime.TotalMilliseconds - Pac.PacNullTime.TotalMilliseconds) < 0.01);
                     if (!isInfo)
                     {
-                        if (videoPlayerContainer.LastParagraph != p)
+                        if (videoPlayerContainer.LastParagraph != paragraph)
                         {
-                            videoPlayerContainer.SetSubtitleText(text, p, subtitle, format);
+                            videoPlayerContainer.SetSubtitleText(text, paragraph, subtitle, format);
                         }
                         else if (videoPlayerContainer.SubtitleText != text)
                         {
-                            videoPlayerContainer.SetSubtitleText(text, p, subtitle, format);
+                            videoPlayerContainer.SetSubtitleText(text, paragraph, subtitle, format);
                         }
-                        TimeOutRefresh(subtitle, videoPlayerContainer, format, p);
+                        TimeOutRefresh(subtitle, videoPlayerContainer, format, paragraph);
                         return i;
                     }
                 }
             }
 
-            if (!string.IsNullOrEmpty(videoPlayerContainer.SubtitleText))
+            if (!string.IsNullOrWhiteSpace(videoPlayerContainer.SubtitleText))
             {
                 videoPlayerContainer.SetSubtitleText(string.Empty, null, subtitle, format);
             }
@@ -112,14 +113,14 @@ namespace Nikse.SubtitleEdit.Logic
             return -1;
         }
 
-        private static void TimeOutRefresh(Subtitle subtitle, VideoPlayerContainer videoPlayerContainer, SubtitleFormat format, Paragraph p = null)
+        private static void TimeOutRefresh(Subtitle subtitle, VideoPlayerContainer videoPlayerContainer, SubtitleFormat format, Paragraph paragraph = null)
         {
             if (DateTime.UtcNow.Ticks - _lastShowSubTicks > 10000 * 1000) // more than 1+ seconds ago
             {
                 var newHash = subtitle.GetFastHashCode(string.Empty);
                 if (newHash != _lastShowSubHash)
                 {
-                    videoPlayerContainer.SetSubtitleText(p == null ? string.Empty : p.Text, p, subtitle, format);
+                    videoPlayerContainer.SetSubtitleText(paragraph is null ? string.Empty : paragraph.Text, paragraph, subtitle, format);
                     _lastShowSubHash = newHash;
                 }
 
@@ -138,28 +139,28 @@ namespace Nikse.SubtitleEdit.Logic
             var max = subtitle.Paragraphs.Count;
             for (int i = 0; i < max; i++)
             {
-                var p = subtitle.Paragraphs[i];
-                if (p.StartTime.TotalMilliseconds <= positionInMilliseconds && p.EndTime.TotalMilliseconds > positionInMilliseconds)
+                var paragraph = subtitle.Paragraphs[i];
+                if (paragraph.StartTime.TotalMilliseconds <= positionInMilliseconds && paragraph.EndTime.TotalMilliseconds > positionInMilliseconds)
                 {
-                    var op = Utilities.GetOriginalParagraph(0, p, original.Paragraphs);
-                    string text = p.Text.Replace("|", Environment.NewLine);
-                    if (op != null)
+                    var originalParagraph = Utilities.GetOriginalParagraph(0, paragraph, original.Paragraphs);
+                    string text = paragraph.Text.Replace("|", Environment.NewLine);
+                    if (originalParagraph != null)
                     {
-                        text = text + Environment.NewLine + Environment.NewLine + op.Text.Replace("|", Environment.NewLine);
+                        text = text + Environment.NewLine + Environment.NewLine + originalParagraph.Text.Replace("|", Environment.NewLine);
                     }
 
-                    bool isInfo = p == subtitle.Paragraphs[0] && Math.Abs(p.StartTime.TotalMilliseconds) < 0.01 && positionInMilliseconds > 3000;
+                    bool isInfo = paragraph == subtitle.Paragraphs[0] && Math.Abs(paragraph.StartTime.TotalMilliseconds) < 0.01 && positionInMilliseconds > 3000;
                     if (!isInfo)
                     {
-                        if (videoPlayerContainer.LastParagraph != p || videoPlayerContainer.SubtitleText != text)
+                        if (videoPlayerContainer.LastParagraph != paragraph || videoPlayerContainer.SubtitleText != text)
                         {
-                            videoPlayerContainer.SetSubtitleText(text, p, subtitle, format);
+                            videoPlayerContainer.SetSubtitleText(text, paragraph, subtitle, format);
                         }
                         return i;
                     }
                 }
             }
-            if (!string.IsNullOrEmpty(videoPlayerContainer.SubtitleText))
+            if (!string.IsNullOrWhiteSpace(videoPlayerContainer.SubtitleText))
             {
                 videoPlayerContainer.SetSubtitleText(string.Empty, null, subtitle, format);
             }
@@ -202,11 +203,11 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static VideoPlayer GetVideoPlayer()
         {
-            var gs = Configuration.Settings.General;
+            var generalSetting = Configuration.Settings.General;
 
             if (Configuration.IsRunningOnLinux)
             {
-                if (gs.VideoPlayer == "VLC" && LibVlcDynamic.IsInstalled)
+                if (generalSetting.VideoPlayer == "VLC" && LibVlcDynamic.IsInstalled)
                 {
                     return new LibVlcDynamic();
                 }
@@ -225,17 +226,17 @@ namespace Nikse.SubtitleEdit.Logic
                 return new LibVlcMono();
             }
 
-            if (gs.VideoPlayer == "VLC" && LibVlcDynamic.IsInstalled)
+            if (generalSetting.VideoPlayer == "VLC" && LibVlcDynamic.IsInstalled)
             {
                 return new LibVlcDynamic();
             }
 
-            if (gs.VideoPlayer == "MPV" && LibMpvDynamic.IsInstalled)
+            if (generalSetting.VideoPlayer == "MPV" && LibMpvDynamic.IsInstalled)
             {
                 return new LibMpvDynamic();
             }
 
-            if (gs.VideoPlayer == "MPC-HC" && MpcHc.IsInstalled)
+            if (generalSetting.VideoPlayer == "MPC-HC" && MpcHc.IsInstalled)
             {
                 return new MpcHc();
             }
@@ -398,7 +399,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static Keys GetKeys(string keysInString)
         {
-            if (string.IsNullOrEmpty(keysInString))
+            if (string.IsNullOrWhiteSpace(keysInString))
             {
                 return Keys.None;
             }
@@ -486,7 +487,7 @@ namespace Nikse.SubtitleEdit.Logic
         {
             var gs = Configuration.Settings.General;
 
-            if (string.IsNullOrEmpty(gs.SubtitleFontName))
+            if (string.IsNullOrWhiteSpace(gs.SubtitleFontName))
             {
                 gs.SubtitleFontName = DefaultSystemFont.Name;
             }
@@ -577,7 +578,7 @@ namespace Nikse.SubtitleEdit.Logic
         public static Font GetDefaultFont()
         {
             var gs = Configuration.Settings.General;
-            if (string.IsNullOrEmpty(gs.SystemSubtitleFontNameOverride) || gs.SystemSubtitleFontSizeOverride < 5)
+            if (string.IsNullOrWhiteSpace(gs.SystemSubtitleFontNameOverride) || gs.SystemSubtitleFontSizeOverride < 5)
             {
                 return DefaultSystemFont;
             }
@@ -600,7 +601,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static void FixFonts(Control form, int iterations = 5)
         {
-            if (form == null)
+            if (form is null)
             {
                 return;
             }
@@ -649,14 +650,14 @@ namespace Nikse.SubtitleEdit.Logic
                 }
             }
 
-            foreach (Control c in form.Controls)
+            foreach (Control control in form.Controls)
             {
-                if (!c.Font.Name.Equals("Tahoma", StringComparison.Ordinal))
+                if (!control.Font.Name.Equals("Tahoma", StringComparison.Ordinal))
                 {
-                    c.Font = GetDefaultFont();
+                    control.Font = GetDefaultFont();
                 }
 
-                foreach (Control inner in c.Controls)
+                foreach (Control inner in control.Controls)
                 {
                     FixFontsInner(inner, iterations - 1);
                 }
@@ -665,7 +666,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static void FixLargeFonts(Control mainCtrl, Control ctrl)
         {
-            if (mainCtrl == null || ctrl == null)
+            if (mainCtrl is null || ctrl is null)
             {
                 return;
             }
@@ -1089,7 +1090,7 @@ namespace Nikse.SubtitleEdit.Logic
             AddExtension(sb, ".cdg"); // karaoke
             AddExtension(sb, ".pns"); // karaoke
 
-            if (!string.IsNullOrEmpty(Configuration.Settings.General.OpenSubtitleExtraExtensions))
+            if (!string.IsNullOrWhiteSpace(Configuration.Settings.General.OpenSubtitleExtraExtensions))
             {
                 var extraExtensions = Configuration.Settings.General.OpenSubtitleExtraExtensions.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
                 foreach (string ext in extraExtensions)
@@ -1130,7 +1131,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
             lv.EndUpdate();
         }
-        
+
         public static void InvertCheck(this ListView lv)
         {
             lv.BeginUpdate();
@@ -1140,7 +1141,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
             lv.EndUpdate();
         }
-        
+
         public static void UncheckAll(this ListView lv)
         {
             lv.BeginUpdate();
@@ -1150,7 +1151,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
             lv.EndUpdate();
         }
-        
+
         public static void SelectAll(this ListView lv)
         {
             lv.BeginUpdate();
@@ -1215,7 +1216,7 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 ToolStripItem x = tsmi.DropDownItems[k];
                 var fileName = (string)x.Tag;
-                if (!string.IsNullOrEmpty(fileName) && fileName.EndsWith(".dll", StringComparison.OrdinalIgnoreCase))
+                if (!string.IsNullOrWhiteSpace(fileName) && fileName.EndsWith(".dll", StringComparison.OrdinalIgnoreCase))
                 {
                     tsmi.DropDownItems.Remove(x);
                 }
@@ -1305,7 +1306,7 @@ namespace Nikse.SubtitleEdit.Logic
         public static void ShowHelp(string parameter)
         {
             var helpFile = LanguageSettings.Current.General.HelpFile;
-            if (string.IsNullOrEmpty(helpFile))
+            if (string.IsNullOrWhiteSpace(helpFile))
             {
                 helpFile = "https://www.nikse.dk/SubtitleEdit/Help";
             }
