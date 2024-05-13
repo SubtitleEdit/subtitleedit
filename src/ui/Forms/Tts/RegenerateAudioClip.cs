@@ -39,11 +39,13 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             var paragraph = _subtitle.Paragraphs[_index];
             paragraph.Text = TextBoxReGenerate.Text.Trim();
 
+            var next = _subtitle.GetParagraphOrDefault(_index + 1);
+
             try
             {
                 Cursor = Cursors.WaitCursor;
                 buttonReGenerate.Enabled = false;
-                var fileNameAndSpeedFactor =  _textToSpeech.ReGenerateAudio(paragraph, nikseComboBoxVoice.Text);
+                var fileNameAndSpeedFactor =  _textToSpeech.ReGenerateAudio(paragraph, next, nikseComboBoxVoice.Text);
                 if (fileNameAndSpeedFactor != null)
                 {
                     FileNameAndSpeedFactor = fileNameAndSpeedFactor;
