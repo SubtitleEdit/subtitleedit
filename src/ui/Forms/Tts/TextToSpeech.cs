@@ -344,14 +344,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 }
             }
 
-            try
-            {
-                File.Delete(audioFileName);
-            }
-            catch
-            {
-                // ignore
-            }
+            SafeFileDelete(audioFileName);
 
             return true;
         }
@@ -449,7 +442,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             {
                 if (!fileName.Equals(resultAudioFile, StringComparison.OrdinalIgnoreCase))
                 {
-                    File.Delete(fileName);
+                    SafeFileDelete(fileName);
                 }
             }
 
@@ -457,7 +450,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             {
                 if (!fileName.Equals(resultAudioFile, StringComparison.OrdinalIgnoreCase))
                 {
-                    File.Delete(fileName);
+                    SafeFileDelete(fileName);
                 }
             }
         }
@@ -554,6 +547,8 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 var mergeProcess = VideoPreviewGenerator.ChangeSpeed(outputFileName1, outputFileName2, (float)factor);
                 mergeProcess.Start();
 
+                SafeFileDelete(pFileName);
+
                 while (!mergeProcess.HasExited)
                 {
                     Application.DoEvents();
@@ -562,9 +557,23 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                         return new List<FileNameAndSpeedFactor>();
                     }
                 }
+
+                SafeFileDelete(outputFileName1);
             }
 
             return fileNames;
+        }
+
+        private static void SafeFileDelete(string pFileName)
+        {
+            try
+            {
+                File.Delete(pFileName);
+            }
+            catch
+            {
+                // ignore
+            }
         }
 
         private string MergeAudioParagraphs(List<FileNameAndSpeedFactor> fileNames)
@@ -620,14 +629,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                     }
                 }
 
-                try
-                {
-                    File.Delete(deleteTempFileName);
-                }
-                catch
-                {
-                    // ignore
-                }
+                SafeFileDelete(deleteTempFileName);
             }
 
             progressBar1.Visible = false;
@@ -762,14 +764,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 var outputFileName = Path.Combine(_waveFolder, string.IsNullOrEmpty(overrideFileName) ? index + ".wav" : overrideFileName);
                 if (File.Exists(outputFileName))
                 {
-                    try
-                    {
-                        File.Delete(outputFileName);
-                    }
-                    catch
-                    {
-                        // ignore
-                    }
+                    SafeFileDelete(outputFileName);
                 }
 
                 var voice = _piperVoices.First(x => x.ToString() == nikseComboBoxVoice.Text);
@@ -1057,15 +1052,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 var jsonParser = new SeJsonParser();
                 var allTalkOutput = jsonParser.GetFirstObject(resultJson, "output_file_path");
                 File.Copy(allTalkOutput, outputFileName);
-                try
-                {
-                    File.Delete(allTalkOutput);
-                }
-                catch
-                {
-                    // ignore
-                }
-
+                SafeFileDelete(allTalkOutput);
                 progressBar1.Refresh();
                 labelProgress.Refresh();
                 Application.DoEvents();
@@ -2152,14 +2139,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
                 TaskDelayHelper.RunDelayed(TimeSpan.FromSeconds(30), () =>
                 {
-                    try
-                    {
-                        File.Delete(waveFileName);
-                    }
-                    catch
-                    {
-                        // ignore
-                    }
+                    SafeFileDelete(waveFileName);
                 });
             }
             catch (Exception ex)

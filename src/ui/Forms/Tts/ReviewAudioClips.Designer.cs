@@ -36,6 +36,8 @@
             this.columnHeaderCps = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderAdjustSpeed = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderText = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.contextMenuStripListView = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.exportListAsCsvToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.buttonOK = new System.Windows.Forms.Button();
             this.labelInfo = new System.Windows.Forms.Label();
             this.buttonPlay = new System.Windows.Forms.Button();
@@ -43,8 +45,6 @@
             this.checkBoxContinuePlay = new System.Windows.Forms.CheckBox();
             this.buttonStop = new System.Windows.Forms.Button();
             this.buttonEdit = new System.Windows.Forms.Button();
-            this.contextMenuStripListView = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.exportListAsCsvToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStripListView.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -101,6 +101,20 @@
             this.columnHeaderText.Text = "Text";
             this.columnHeaderText.Width = 460;
             // 
+            // contextMenuStripListView
+            // 
+            this.contextMenuStripListView.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.exportListAsCsvToolStripMenuItem});
+            this.contextMenuStripListView.Name = "contextMenuStripListView";
+            this.contextMenuStripListView.Size = new System.Drawing.Size(170, 26);
+            // 
+            // exportListAsCsvToolStripMenuItem
+            // 
+            this.exportListAsCsvToolStripMenuItem.Name = "exportListAsCsvToolStripMenuItem";
+            this.exportListAsCsvToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+            this.exportListAsCsvToolStripMenuItem.Text = "Export list as csv...";
+            this.exportListAsCsvToolStripMenuItem.Click += new System.EventHandler(this.exportListAsCsvToolStripMenuItem_Click);
+            // 
             // buttonOK
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
@@ -126,7 +140,7 @@
             // 
             this.buttonPlay.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonPlay.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonPlay.Location = new System.Drawing.Point(702, 295);
+            this.buttonPlay.Location = new System.Drawing.Point(702, 294);
             this.buttonPlay.Name = "buttonPlay";
             this.buttonPlay.Size = new System.Drawing.Size(180, 23);
             this.buttonPlay.TabIndex = 9;
@@ -173,27 +187,13 @@
             // 
             this.buttonEdit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonEdit.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonEdit.Location = new System.Drawing.Point(703, 249);
+            this.buttonEdit.Location = new System.Drawing.Point(703, 246);
             this.buttonEdit.Name = "buttonEdit";
             this.buttonEdit.Size = new System.Drawing.Size(180, 23);
             this.buttonEdit.TabIndex = 13;
             this.buttonEdit.Text = "Edit";
             this.buttonEdit.UseVisualStyleBackColor = true;
             this.buttonEdit.Click += new System.EventHandler(this.buttonEdit_Click);
-            // 
-            // contextMenuStripListView
-            // 
-            this.contextMenuStripListView.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.exportListAsCsvToolStripMenuItem});
-            this.contextMenuStripListView.Name = "contextMenuStripListView";
-            this.contextMenuStripListView.Size = new System.Drawing.Size(181, 48);
-            // 
-            // exportListAsCsvToolStripMenuItem
-            // 
-            this.exportListAsCsvToolStripMenuItem.Name = "exportListAsCsvToolStripMenuItem";
-            this.exportListAsCsvToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.exportListAsCsvToolStripMenuItem.Text = "Export list as csv...";
-            this.exportListAsCsvToolStripMenuItem.Click += new System.EventHandler(this.exportListAsCsvToolStripMenuItem_Click);
             // 
             // ReviewAudioClips
             // 
