@@ -31,26 +31,52 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
-            VobSubEditCharacters.MakeToolStripLetters(contextMenuStripLetters, InsertLanguageCharacter);
+            VobSubEditCharacters.MakeToolStripLetters(contextMenuStripTextbox, InsertLanguageCharacter);
             UiUtil.FixFonts(this);
+
+            LanguageStructure.VobSubEditCharacters langCharEdit = LanguageSettings.Current.VobSubEditCharacters;
+            LanguageStructure.VobSubOcrCharacterInspect langCharInspect = LanguageSettings.Current.VobSubOcrCharacterInspect;
 
             labelCount.Text = string.Empty;
             labelExpandCount.Text = string.Empty;
             labelImageSize.Text = string.Empty;
-            Text = LanguageSettings.Current.VobSubOcrCharacterInspect.Title;
-            groupBoxInspectItems.Text = LanguageSettings.Current.VobSubOcrCharacterInspect.InspectItems;
+            Text = langCharInspect.Title;
+            groupBoxInspectItems.Text = langCharInspect.InspectItems;
             labelImageInfo.Text = string.Empty;
-            groupBoxCurrentCompareImage.Text = LanguageSettings.Current.VobSubEditCharacters.CurrentCompareImage;
-            labelTextAssociatedWithImage.Text = LanguageSettings.Current.VobSubEditCharacters.TextAssociatedWithImage;
-            checkBoxItalic.Text = LanguageSettings.Current.VobSubEditCharacters.IsItalic;
-            buttonUpdate.Text = LanguageSettings.Current.VobSubEditCharacters.Update;
-            buttonDelete.Text = LanguageSettings.Current.VobSubEditCharacters.Delete;
-            buttonAddBetterMatch.Text = LanguageSettings.Current.VobSubOcrCharacterInspect.AddBetterMatch;
-            labelDoubleSize.Text = LanguageSettings.Current.VobSubEditCharacters.ImageDoubleSize;
-            buttonOK.Text = LanguageSettings.Current.General.Ok;
+            groupBoxCurrentCompareImage.Text = langCharEdit.CurrentCompareImage;
+            labelTextAssociatedWithImage.Text = langCharEdit.TextAssociatedWithImage;
+            checkBoxItalic.Text = langCharEdit.IsItalic;
+            buttonUpdate.Text = langCharEdit.Update;
+            buttonDelete.Text = langCharEdit.Delete;
+            buttonAddBetterMatch.Text = langCharInspect.AddBetterMatch;
+            labelDoubleSize.Text = langCharEdit.ImageDoubleSize;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
             UiUtil.FixLargeFonts(this, buttonOK);
+
+            addBetterMultiMatchToolStripMenuItem.Text = langCharInspect.AddBetterMultiMatch;
+            addOrUpdateMatchToolStripMenuItem.Text = langCharInspect.AddOrUpdateMatch;
+            selectThePreviousMatchToolStripMenuItem.Text = langCharInspect.SelectPrevousMatch;
+            selectTheNextMatchToolStripMenuItem.Text = langCharInspect.SelectNextMatch;
+            jumpToPreviousMissingMatchToolStripMenuItem1.Text = langCharInspect.JumpPreviousMissingMatch;
+            jumpToPreviousMissingMatchToolStripMenuItem.Text = langCharInspect.JumpPreviousMissingMatch;
+            jumpToNextMissingMatchToolStripMenuItem1.Text = langCharInspect.JumpNextMissingMatch;
+            jumpToNextMissingMatchToolStripMenuItem.Text = langCharInspect.JumpNextMissingMatch;
+            focusTheTextInputToolStripMenuItem.Text = langCharInspect.FocusTextbox;
+
+            addOrUpdateMatchToolStripMenuItem.ShortcutKeyDisplayString = Keys.Enter.ToString();
+            selectThePreviousMatchToolStripMenuItem.ShortcutKeyDisplayString = Keys.Up.ToString();
+            selectTheNextMatchToolStripMenuItem.ShortcutKeyDisplayString = Keys.Down.ToString();
+            focusTheTextInputToolStripMenuItem.ShortcutKeyDisplayString = Keys.Enter.ToString();
+
             buttonDetectFont.Visible = Configuration.Settings.General.ShowBetaStuff;
+
+            ToolStripItem[] extraTextboxItems = new ToolStripItem[contextMenuStripTextbox2.Items.Count];
+            contextMenuStripTextbox2.Items.CopyTo(extraTextboxItems, 0);
+            foreach (ToolStripItem item in extraTextboxItems)
+            {
+                contextMenuStripTextbox.Items.Add(item);
+            }
         }
 
         internal void Initialize(string databaseFolderName, List<VobSubOcr.CompareMatch> matches, List<Bitmap> imageSources, BinaryOcrDb binOcrDb, List<ImageSplitterItem> splitterItems)
@@ -89,6 +115,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
 
             ShowCount();
+            listBoxInspectItems.Select();
         }
 
         private void listBoxInspectItems_SelectedIndexChanged(object sender, EventArgs e)
@@ -265,7 +292,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             pictureBoxCompareBitmapDouble.Image = bitmap;
         }
 
-        private void buttonUpdate_Click(object sender, EventArgs e)
+        private void buttonUpdate_Click(object sender, EventArgs e) => UpdateMatch();
+
+        private void UpdateMatch()
         {
             if (_selectedCompareNode == null && _selectedCompareBinaryOcrBitmap == null)
             {
@@ -378,7 +407,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             listBoxInspectItems_SelectedIndexChanged(null, null);
         }
 
-        private void buttonAddBetterMatch_Click(object sender, EventArgs e)
+        private void buttonAddBetterMatch_Click(object sender, EventArgs e) => AddBetterMatch();
+
+        private void AddBetterMatch()
         {
             if (listBoxInspectItems.SelectedIndex < 0)
             {
@@ -521,6 +552,46 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             listBoxInspectItems.SelectedIndex = index;
         }
 
+        private void SelectCharacterItem(bool previous, bool missingMatch)
+        {
+            if (previous)
+            {
+                if (missingMatch)
+                {
+                    for (int i = listBoxInspectItems.SelectedIndex - 1; i >= 0; i--)
+                    {
+                        if (_matches[i].Text == LanguageSettings.Current.VobSubOcr.NoMatch)
+                        {
+                            listBoxInspectItems.SelectedIndex = i;
+                            break;
+                        }
+                    }
+                }
+                else if (listBoxInspectItems.SelectedIndex > 0)
+                {
+                    listBoxInspectItems.SelectedIndex--;
+                }
+            }
+            else
+            {
+                if (missingMatch)
+                {
+                    for (int i = listBoxInspectItems.SelectedIndex + 1; i < _matches.Count; i++)
+                    {
+                        if (_matches[i].Text == LanguageSettings.Current.VobSubOcr.NoMatch)
+                        {
+                            listBoxInspectItems.SelectedIndex = i;
+                            break;
+                        }
+                    }
+                }
+                else if (listBoxInspectItems.SelectedIndex < listBoxInspectItems.Items.Count - 1)
+                {
+                    listBoxInspectItems.SelectedIndex++;
+                }
+            }
+        }
+
         private void VobSubOcrCharacterInspect_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
@@ -529,27 +600,27 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
         }
 
-        private void contextMenuStripAddBetterMultiMatch_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        private void contextMenuStripListBox_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
             if (listBoxInspectItems.SelectedIndex < 0 ||
                 listBoxInspectItems.SelectedIndex == listBoxInspectItems.Items.Count - 1 ||
                 _binOcrDb == null ||
                 _selectedCompareBinaryOcrBitmap != null && _selectedCompareBinaryOcrBitmap.ExpandCount > 1)
             {
-                e.Cancel = true;
+                addBetterMultiMatchToolStripMenuItem.Enabled = false;
                 return;
             }
 
             if (_matches[listBoxInspectItems.SelectedIndex].ImageSplitterItem == null)
             {
-                e.Cancel = true;
+                addBetterMultiMatchToolStripMenuItem.Enabled = false;
                 return;
             }
 
             var next = _matches[listBoxInspectItems.SelectedIndex + 1];
             if (next.ExpandCount > 0 || next.Extra?.Count > 0)
             {
-                e.Cancel = true;
+                addBetterMultiMatchToolStripMenuItem.Enabled = false;
                 return;
             }
 
@@ -560,7 +631,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             if (next.ImageSplitterItem?.NikseBitmap == null || !string.IsNullOrWhiteSpace(next.ImageSplitterItem.SpecialCharacter))
             {
-                e.Cancel = true;
+                addBetterMultiMatchToolStripMenuItem.Enabled = false;
             }
         }
 
@@ -624,5 +695,114 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 textBoxText.Font = new Font(textBoxText.Font.FontFamily, textBoxText.Font.Size, FontStyle.Bold);
             }
         }
+
+        private void TextBoxText_KeyDown(object sender, KeyEventArgs e)
+        {
+            bool executedAddOrUpdate = false;
+            bool changedSelection = false;
+            if (e.KeyCode == Keys.Enter)
+            {
+                //Instantly executes the least destructive action
+                if (buttonAddBetterMatch.Enabled)
+                {
+                    AddBetterMatch();
+                    executedAddOrUpdate = true;
+                }
+                else if (buttonUpdate.Enabled)
+                {
+                    UpdateMatch();
+                    executedAddOrUpdate = true;
+                }
+            }
+            else if (e.KeyCode == Keys.Up)
+            {
+                //Allow navigating the list box while in the text field. Put the cursor at the end too, in case there already is a character
+                if (e.Modifiers == Keys.Control)
+                {
+                    SelectCharacterItem(true, true);
+                }
+                else
+                {
+                    SelectCharacterItem(true, false);
+                }
+                changedSelection = true;
+            }
+            else if (e.KeyCode == Keys.Down)
+            {
+                if (e.Modifiers == Keys.Control)
+                {
+                    SelectCharacterItem(false, true);
+                }
+                else
+                {
+                    SelectCharacterItem(false, false);
+                }
+                changedSelection = true;
+            }
+
+            if (changedSelection)
+            {
+                textBoxText.SelectionStart = 0;
+                textBoxText.SelectionLength = textBoxText.Text.Length;
+            }
+
+            if (executedAddOrUpdate || changedSelection)
+            {
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+            }
+        }
+
+        private void ListBoxInspectItems_KeyDown(object sender, KeyEventArgs e)
+        {
+            //Allows instantly entering back into the textbox, editing the next recognized character.
+            bool handled = false;
+            if (e.KeyCode == Keys.Enter)
+            {
+                handled = true;
+                textBoxText.Focus();
+            }
+            else if (e.Modifiers == Keys.Control)
+            {
+                if (e.KeyCode == Keys.Up)
+                {
+                    handled = true;
+                    SelectCharacterItem(true, true);
+                }
+                else if (e.KeyCode == Keys.Down)
+                {
+                    handled = true;
+                    SelectCharacterItem(false, true);
+                }
+            }
+
+            if (handled)
+            {
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+            }
+        }
+
+        private void AddOrUpdateMatchToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (buttonAddBetterMatch.Enabled)
+            {
+                AddBetterMatch();
+            }
+            else if (buttonUpdate.Enabled)
+            {
+                UpdateMatch();
+            }
+        }
+
+        private void JumpToPreviousMissingMatchToolStripMenuItem_Click(object sender, EventArgs e) => SelectCharacterItem(true, true);
+
+        private void JumpToNextMissingMatchToolStripMenuItem_Click(object sender, EventArgs e) => SelectCharacterItem(false, true);
+
+        private void FocusTheTextInputToolStripMenuItem_Click(object sender, EventArgs e) => textBoxText.Focus();
+
+        private void SelectThePreviousMatchToolStripMenuItem_Click(object sender, EventArgs e) => SelectCharacterItem(true, false);
+
+        private void SelectTheNextMatchToolStripMenuItem_Click(object sender, EventArgs e) => SelectCharacterItem(false, false);
     }
 }

@@ -3768,6 +3768,13 @@ Keep changes?",
                 InspectItems = "Inspect items",
                 AddBetterMatch = "Add better match",
                 Add = "Add",
+                AddBetterMultiMatch = "Add better multi match",
+                AddOrUpdateMatch = "Add or update match",
+                SelectPrevousMatch = "Select the previous match",
+                SelectNextMatch = "Select the next match",
+                JumpPreviousMissingMatch = "Jump to the previous missing match",
+                JumpNextMissingMatch = "Jump to the next missing match",
+                FocusTextbox = "Focus the text input",
             };
 
             VobSubOcrNewFolder = new LanguageStructure.VobSubOcrNewFolder

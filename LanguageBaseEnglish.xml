@@ -3353,6 +3353,13 @@ Keep changes?</KeepChangesMessage>
     <InspectItems>Inspect items</InspectItems>
     <AddBetterMatch>Add better match</AddBetterMatch>
     <Add>Add</Add>
+    <AddBetterMultiMatch>Add better multi match</AddBetterMultiMatch>
+    <AddOrUpdateMatch>Add or update match</AddOrUpdateMatch>
+    <SelectPrevousMatch>Select the previous match</SelectPrevousMatch>
+    <SelectNextMatch>Select the next match</SelectNextMatch>
+    <JumpPreviousMissingMatch>Jump to the previous missing match</JumpPreviousMissingMatch>
+    <JumpNextMissingMatch>Jump to the next missing match</JumpNextMissingMatch>
+    <FocusTextbox>Focus the text input</FocusTextbox>
   </VobSubOcrCharacterInspect>
   <VobSubOcrNewFolder>
     <Title>New folder</Title>

@@ -40,24 +40,38 @@
             this.buttonUpdate = new System.Windows.Forms.Button();
             this.labelImageInfo = new System.Windows.Forms.Label();
             this.textBoxText = new Nikse.SubtitleEdit.Controls.NikseTextBox();
-            this.contextMenuStripLetters = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.contextMenuStripTextbox = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.pictureBoxCompareBitmap = new System.Windows.Forms.PictureBox();
             this.buttonOK = new System.Windows.Forms.Button();
             this.listBoxInspectItems = new System.Windows.Forms.ListBox();
-            this.contextMenuStripAddBetterMultiMatch = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.contextMenuCharacterList = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.addBetterMultiMatchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
+            this.jumpToPreviousMissingMatchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.jumpToNextMissingMatchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
+            this.focusTheTextInputToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBoxInspectItems = new System.Windows.Forms.GroupBox();
             this.buttonDetectFont = new System.Windows.Forms.Button();
             this.labelImageSize = new System.Windows.Forms.Label();
             this.labelExpandCount = new System.Windows.Forms.Label();
             this.pictureBoxInspectItem = new System.Windows.Forms.PictureBox();
             this.labelCount = new System.Windows.Forms.Label();
+            this.contextMenuStripTextbox2 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripSeparator();
+            this.addOrUpdateMatchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripSeparator();
+            this.selectThePreviousMatchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.selectTheNextMatchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.jumpToPreviousMissingMatchToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.jumpToNextMissingMatchToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBoxCurrentCompareImage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCompareBitmapDouble)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCompareBitmap)).BeginInit();
-            this.contextMenuStripAddBetterMultiMatch.SuspendLayout();
+            this.contextMenuCharacterList.SuspendLayout();
             this.groupBoxInspectItems.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxInspectItem)).BeginInit();
+            this.contextMenuStripTextbox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonCancel
@@ -177,17 +191,19 @@
             // 
             // textBoxText
             // 
-            this.textBoxText.ContextMenuStrip = this.contextMenuStripLetters;
+            this.textBoxText.ContextMenuStrip = this.contextMenuStripTextbox;
+            this.textBoxText.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.textBoxText.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBoxText.Location = new System.Drawing.Point(14, 35);
             this.textBoxText.Name = "textBoxText";
             this.textBoxText.Size = new System.Drawing.Size(100, 23);
             this.textBoxText.TabIndex = 1;
+            this.textBoxText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxText_KeyDown);
             // 
-            // contextMenuStripLetters
+            // contextMenuStripTextbox
             // 
-            this.contextMenuStripLetters.Name = "contextMenuStripLetters";
-            this.contextMenuStripLetters.Size = new System.Drawing.Size(181, 26);
+            this.contextMenuStripTextbox.Name = "contextMenuStripLetters";
+            this.contextMenuStripTextbox.Size = new System.Drawing.Size(61, 4);
             // 
             // pictureBoxCompareBitmap
             // 
@@ -214,7 +230,7 @@
             // 
             this.listBoxInspectItems.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
-            this.listBoxInspectItems.ContextMenuStrip = this.contextMenuStripAddBetterMultiMatch;
+            this.listBoxInspectItems.ContextMenuStrip = this.contextMenuCharacterList;
             this.listBoxInspectItems.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.listBoxInspectItems.FormattingEnabled = true;
             this.listBoxInspectItems.Location = new System.Drawing.Point(6, 19);
@@ -222,21 +238,61 @@
             this.listBoxInspectItems.Size = new System.Drawing.Size(240, 290);
             this.listBoxInspectItems.TabIndex = 12;
             this.listBoxInspectItems.SelectedIndexChanged += new System.EventHandler(this.listBoxInspectItems_SelectedIndexChanged);
+            this.listBoxInspectItems.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ListBoxInspectItems_KeyDown);
             // 
-            // contextMenuStripAddBetterMultiMatch
+            // contextMenuCharacterList
             // 
-            this.contextMenuStripAddBetterMultiMatch.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.addBetterMultiMatchToolStripMenuItem});
-            this.contextMenuStripAddBetterMultiMatch.Name = "contextMenuStripAddBetterMultiMatch";
-            this.contextMenuStripAddBetterMultiMatch.Size = new System.Drawing.Size(199, 26);
-            this.contextMenuStripAddBetterMultiMatch.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripAddBetterMultiMatch_Opening);
+            this.contextMenuCharacterList.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.addBetterMultiMatchToolStripMenuItem,
+            this.toolStripMenuItem1,
+            this.jumpToPreviousMissingMatchToolStripMenuItem,
+            this.jumpToNextMissingMatchToolStripMenuItem,
+            this.toolStripMenuItem2,
+            this.focusTheTextInputToolStripMenuItem});
+            this.contextMenuCharacterList.Name = "contextMenuStripAddBetterMultiMatch";
+            this.contextMenuCharacterList.Size = new System.Drawing.Size(298, 104);
+            this.contextMenuCharacterList.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripListBox_Opening);
             // 
             // addBetterMultiMatchToolStripMenuItem
             // 
             this.addBetterMultiMatchToolStripMenuItem.Name = "addBetterMultiMatchToolStripMenuItem";
-            this.addBetterMultiMatchToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.addBetterMultiMatchToolStripMenuItem.Size = new System.Drawing.Size(297, 22);
             this.addBetterMultiMatchToolStripMenuItem.Text = "Add better multi match";
             this.addBetterMultiMatchToolStripMenuItem.Click += new System.EventHandler(this.addBetterMultiMatchToolStripMenuItem_Click);
+            // 
+            // toolStripMenuItem1
+            // 
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(294, 6);
+            // 
+            // jumpToPreviousMissingMatchToolStripMenuItem
+            // 
+            this.jumpToPreviousMissingMatchToolStripMenuItem.Name = "jumpToPreviousMissingMatchToolStripMenuItem";
+            this.jumpToPreviousMissingMatchToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Up)));
+            this.jumpToPreviousMissingMatchToolStripMenuItem.Size = new System.Drawing.Size(297, 22);
+            this.jumpToPreviousMissingMatchToolStripMenuItem.Text = "Jump to previous missing match";
+            this.jumpToPreviousMissingMatchToolStripMenuItem.Click += new System.EventHandler(this.JumpToPreviousMissingMatchToolStripMenuItem_Click);
+            // 
+            // jumpToNextMissingMatchToolStripMenuItem
+            // 
+            this.jumpToNextMissingMatchToolStripMenuItem.Name = "jumpToNextMissingMatchToolStripMenuItem";
+            this.jumpToNextMissingMatchToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Down)));
+            this.jumpToNextMissingMatchToolStripMenuItem.Size = new System.Drawing.Size(297, 22);
+            this.jumpToNextMissingMatchToolStripMenuItem.Text = "Jump to next missing match";
+            this.jumpToNextMissingMatchToolStripMenuItem.Click += new System.EventHandler(this.JumpToNextMissingMatchToolStripMenuItem_Click);
+            // 
+            // toolStripMenuItem2
+            // 
+            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(294, 6);
+            // 
+            // focusTheTextInputToolStripMenuItem
+            // 
+            this.focusTheTextInputToolStripMenuItem.Name = "focusTheTextInputToolStripMenuItem";
+            this.focusTheTextInputToolStripMenuItem.ShortcutKeyDisplayString = "Enter";
+            this.focusTheTextInputToolStripMenuItem.Size = new System.Drawing.Size(297, 22);
+            this.focusTheTextInputToolStripMenuItem.Text = "Focus the text input";
+            this.focusTheTextInputToolStripMenuItem.Click += new System.EventHandler(this.FocusTheTextInputToolStripMenuItem_Click);
             // 
             // groupBoxInspectItems
             // 
@@ -304,6 +360,69 @@
             this.labelCount.TabIndex = 30;
             this.labelCount.Text = "labelCount";
             // 
+            // contextMenuStripTextbox2
+            // 
+            this.contextMenuStripTextbox2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItem4,
+            this.addOrUpdateMatchToolStripMenuItem,
+            this.toolStripMenuItem3,
+            this.selectThePreviousMatchToolStripMenuItem,
+            this.selectTheNextMatchToolStripMenuItem,
+            this.jumpToPreviousMissingMatchToolStripMenuItem1,
+            this.jumpToNextMissingMatchToolStripMenuItem1});
+            this.contextMenuStripTextbox2.Name = "contextMenuStripTextbox2";
+            this.contextMenuStripTextbox2.Size = new System.Drawing.Size(298, 126);
+            // 
+            // toolStripMenuItem4
+            // 
+            this.toolStripMenuItem4.Name = "toolStripMenuItem4";
+            this.toolStripMenuItem4.Size = new System.Drawing.Size(294, 6);
+            // 
+            // addOrUpdateMatchToolStripMenuItem
+            // 
+            this.addOrUpdateMatchToolStripMenuItem.Name = "addOrUpdateMatchToolStripMenuItem";
+            this.addOrUpdateMatchToolStripMenuItem.ShortcutKeyDisplayString = "Enter";
+            this.addOrUpdateMatchToolStripMenuItem.Size = new System.Drawing.Size(297, 22);
+            this.addOrUpdateMatchToolStripMenuItem.Text = "Add or update match";
+            this.addOrUpdateMatchToolStripMenuItem.Click += new System.EventHandler(this.AddOrUpdateMatchToolStripMenuItem_Click);
+            // 
+            // toolStripMenuItem3
+            // 
+            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(294, 6);
+            // 
+            // selectThePreviousMatchToolStripMenuItem
+            // 
+            this.selectThePreviousMatchToolStripMenuItem.Name = "selectThePreviousMatchToolStripMenuItem";
+            this.selectThePreviousMatchToolStripMenuItem.ShortcutKeyDisplayString = "Up";
+            this.selectThePreviousMatchToolStripMenuItem.Size = new System.Drawing.Size(297, 22);
+            this.selectThePreviousMatchToolStripMenuItem.Text = "Select the previous match";
+            this.selectThePreviousMatchToolStripMenuItem.Click += new System.EventHandler(this.SelectThePreviousMatchToolStripMenuItem_Click);
+            // 
+            // selectTheNextMatchToolStripMenuItem
+            // 
+            this.selectTheNextMatchToolStripMenuItem.Name = "selectTheNextMatchToolStripMenuItem";
+            this.selectTheNextMatchToolStripMenuItem.ShortcutKeyDisplayString = "Down";
+            this.selectTheNextMatchToolStripMenuItem.Size = new System.Drawing.Size(297, 22);
+            this.selectTheNextMatchToolStripMenuItem.Text = "Select the next match";
+            this.selectTheNextMatchToolStripMenuItem.Click += new System.EventHandler(this.SelectTheNextMatchToolStripMenuItem_Click);
+            // 
+            // jumpToPreviousMissingMatchToolStripMenuItem1
+            // 
+            this.jumpToPreviousMissingMatchToolStripMenuItem1.Name = "jumpToPreviousMissingMatchToolStripMenuItem1";
+            this.jumpToPreviousMissingMatchToolStripMenuItem1.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Up)));
+            this.jumpToPreviousMissingMatchToolStripMenuItem1.Size = new System.Drawing.Size(297, 22);
+            this.jumpToPreviousMissingMatchToolStripMenuItem1.Text = "Jump to previous missing match";
+            this.jumpToPreviousMissingMatchToolStripMenuItem1.Click += new System.EventHandler(this.JumpToPreviousMissingMatchToolStripMenuItem_Click);
+            // 
+            // jumpToNextMissingMatchToolStripMenuItem1
+            // 
+            this.jumpToNextMissingMatchToolStripMenuItem1.Name = "jumpToNextMissingMatchToolStripMenuItem1";
+            this.jumpToNextMissingMatchToolStripMenuItem1.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Down)));
+            this.jumpToNextMissingMatchToolStripMenuItem1.Size = new System.Drawing.Size(297, 22);
+            this.jumpToNextMissingMatchToolStripMenuItem1.Text = "Jump to next missing match";
+            this.jumpToNextMissingMatchToolStripMenuItem1.Click += new System.EventHandler(this.JumpToNextMissingMatchToolStripMenuItem_Click);
+            // 
             // VobSubOcrCharacterInspect
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -328,10 +447,11 @@
             this.groupBoxCurrentCompareImage.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCompareBitmapDouble)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCompareBitmap)).EndInit();
-            this.contextMenuStripAddBetterMultiMatch.ResumeLayout(false);
+            this.contextMenuCharacterList.ResumeLayout(false);
             this.groupBoxInspectItems.ResumeLayout(false);
             this.groupBoxInspectItems.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxInspectItem)).EndInit();
+            this.contextMenuStripTextbox2.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -357,10 +477,23 @@
         private System.Windows.Forms.Button buttonAddBetterMatch;
         private System.Windows.Forms.Label labelExpandCount;
         private System.Windows.Forms.Label labelCount;
-        private System.Windows.Forms.ContextMenuStrip contextMenuStripAddBetterMultiMatch;
+        private System.Windows.Forms.ContextMenuStrip contextMenuCharacterList;
         private System.Windows.Forms.ToolStripMenuItem addBetterMultiMatchToolStripMenuItem;
-        private System.Windows.Forms.ContextMenuStrip contextMenuStripLetters;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripTextbox;
         private System.Windows.Forms.Label labelImageSize;
         private System.Windows.Forms.Button buttonDetectFont;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem jumpToPreviousMissingMatchToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem jumpToNextMissingMatchToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
+        private System.Windows.Forms.ToolStripMenuItem focusTheTextInputToolStripMenuItem;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripTextbox2;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem4;
+        private System.Windows.Forms.ToolStripMenuItem addOrUpdateMatchToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem3;
+        private System.Windows.Forms.ToolStripMenuItem selectThePreviousMatchToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem selectTheNextMatchToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem jumpToPreviousMissingMatchToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem jumpToNextMissingMatchToolStripMenuItem1;
     }
 }
