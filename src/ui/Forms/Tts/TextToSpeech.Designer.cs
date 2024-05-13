@@ -108,7 +108,7 @@
             // 
             this.labelEngine.AutoSize = true;
             this.labelEngine.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.labelEngine.Location = new System.Drawing.Point(14, 22);
+            this.labelEngine.Location = new System.Drawing.Point(14, 21);
             this.labelEngine.Name = "labelEngine";
             this.labelEngine.Size = new System.Drawing.Size(40, 13);
             this.labelEngine.TabIndex = 14;
@@ -154,7 +154,7 @@
             // 
             this.labelRegion.AutoSize = true;
             this.labelRegion.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.labelRegion.Location = new System.Drawing.Point(14, 267);
+            this.labelRegion.Location = new System.Drawing.Point(14, 268);
             this.labelRegion.Name = "labelRegion";
             this.labelRegion.Size = new System.Drawing.Size(41, 13);
             this.labelRegion.TabIndex = 32;
@@ -175,7 +175,7 @@
             this.nikseComboBoxRegion.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.nikseComboBoxRegion.DropDownWidth = 0;
             this.nikseComboBoxRegion.FormattingEnabled = false;
-            this.nikseComboBoxRegion.Location = new System.Drawing.Point(17, 283);
+            this.nikseComboBoxRegion.Location = new System.Drawing.Point(17, 286);
             this.nikseComboBoxRegion.MaxLength = 32767;
             this.nikseComboBoxRegion.Name = "nikseComboBoxRegion";
             this.nikseComboBoxRegion.SelectedIndex = -1;
@@ -188,7 +188,7 @@
             // labelVoiceCount
             // 
             this.labelVoiceCount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelVoiceCount.Location = new System.Drawing.Point(268, 84);
+            this.labelVoiceCount.Location = new System.Drawing.Point(268, 83);
             this.labelVoiceCount.Name = "labelVoiceCount";
             this.labelVoiceCount.Size = new System.Drawing.Size(100, 23);
             this.labelVoiceCount.TabIndex = 29;
@@ -201,7 +201,7 @@
             this.checkBoxShowPreview.AutoSize = true;
             this.checkBoxShowPreview.Checked = true;
             this.checkBoxShowPreview.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxShowPreview.Location = new System.Drawing.Point(17, 335);
+            this.checkBoxShowPreview.Location = new System.Drawing.Point(17, 333);
             this.checkBoxShowPreview.Name = "checkBoxShowPreview";
             this.checkBoxShowPreview.Size = new System.Drawing.Size(115, 17);
             this.checkBoxShowPreview.TabIndex = 25;
@@ -212,7 +212,7 @@
             // 
             this.labelApiKey.AutoSize = true;
             this.labelApiKey.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.labelApiKey.Location = new System.Drawing.Point(20, 224);
+            this.labelApiKey.Location = new System.Drawing.Point(20, 219);
             this.labelApiKey.Name = "labelApiKey";
             this.labelApiKey.Size = new System.Drawing.Size(44, 13);
             this.labelApiKey.TabIndex = 28;
@@ -223,7 +223,7 @@
             this.nikseTextBoxApiKey.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.nikseTextBoxApiKey.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            this.nikseTextBoxApiKey.Location = new System.Drawing.Point(17, 240);
+            this.nikseTextBoxApiKey.Location = new System.Drawing.Point(17, 237);
             this.nikseTextBoxApiKey.Name = "nikseTextBoxApiKey";
             this.nikseTextBoxApiKey.Size = new System.Drawing.Size(351, 20);
             this.nikseTextBoxApiKey.TabIndex = 27;
@@ -233,7 +233,7 @@
             this.TextBoxTest.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.TextBoxTest.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            this.TextBoxTest.Location = new System.Drawing.Point(17, 168);
+            this.TextBoxTest.Location = new System.Drawing.Point(17, 172);
             this.TextBoxTest.Name = "TextBoxTest";
             this.TextBoxTest.Size = new System.Drawing.Size(351, 20);
             this.TextBoxTest.TabIndex = 20;
@@ -242,7 +242,7 @@
             // 
             // buttonTestVoice
             // 
-            this.buttonTestVoice.Location = new System.Drawing.Point(17, 139);
+            this.buttonTestVoice.Location = new System.Drawing.Point(17, 141);
             this.buttonTestVoice.Name = "buttonTestVoice";
             this.buttonTestVoice.Size = new System.Drawing.Size(150, 23);
             this.buttonTestVoice.TabIndex = 15;
@@ -256,7 +256,7 @@
             this.checkBoxAddToVideoFile.AutoSize = true;
             this.checkBoxAddToVideoFile.Checked = true;
             this.checkBoxAddToVideoFile.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxAddToVideoFile.Location = new System.Drawing.Point(17, 358);
+            this.checkBoxAddToVideoFile.Location = new System.Drawing.Point(17, 357);
             this.checkBoxAddToVideoFile.Name = "checkBoxAddToVideoFile";
             this.checkBoxAddToVideoFile.Size = new System.Drawing.Size(176, 17);
             this.checkBoxAddToVideoFile.TabIndex = 26;
@@ -267,7 +267,7 @@
             // 
             this.labelVoice.AutoSize = true;
             this.labelVoice.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.labelVoice.Location = new System.Drawing.Point(14, 94);
+            this.labelVoice.Location = new System.Drawing.Point(14, 93);
             this.labelVoice.Name = "labelVoice";
             this.labelVoice.Size = new System.Drawing.Size(34, 13);
             this.labelVoice.TabIndex = 16;
@@ -379,7 +379,7 @@
             // 
             this.labelActors.AutoSize = true;
             this.labelActors.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.labelActors.Location = new System.Drawing.Point(412, 20);
+            this.labelActors.Location = new System.Drawing.Point(412, 19);
             this.labelActors.Name = "labelActors";
             this.labelActors.Size = new System.Drawing.Size(170, 13);
             this.labelActors.TabIndex = 19;

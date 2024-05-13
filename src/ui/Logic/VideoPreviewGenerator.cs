@@ -663,5 +663,23 @@ namespace Nikse.SubtitleEdit.Logic
 
             return processMakeVideo;
         }
+
+        public static Process ConvertToAc2(string inputFileName, string outputFileName, DataReceivedEventHandler dataReceivedHandler = null)
+        {
+            var processMakeVideo = new Process
+            {
+                StartInfo =
+                {
+                    FileName = GetFfmpegLocation(),
+                    Arguments = $"-i \"{inputFileName}\" -ac 2 \"{outputFileName}\"",
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                }
+            };
+
+            SetupDataReceiveHandler(dataReceivedHandler, processMakeVideo);
+
+            return processMakeVideo;
+        }
     }
 }

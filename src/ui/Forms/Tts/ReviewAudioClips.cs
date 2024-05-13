@@ -1,10 +1,13 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
+﻿using NCalc;
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
+using System.IO;
+using System.Runtime.Remoting.Contexts;
+using System.Text;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms.Tts
@@ -44,7 +47,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
             SkipIndices = new List<int>();
 
-            listView1.BeginUpdate();
+            listViewAudioClips.BeginUpdate();
             foreach (var p in subtitle.Paragraphs)
             {
                 var item = new ListViewItem { Tag = p, Checked = true };
@@ -63,13 +66,13 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 }
 
                 item.SubItems.Add(p.Text);
-                listView1.Items.Add(item);
+                listViewAudioClips.Items.Add(item);
             }
-            listView1.EndUpdate();
+            listViewAudioClips.EndUpdate();
 
-            if (listView1.Items.Count > 0)
+            if (listViewAudioClips.Items.Count > 0)
             {
-                listView1.Items[0].Selected = true;
+                listViewAudioClips.Items[0].Selected = true;
             }
 
             labelParagraphInfo.Text = string.Empty;
@@ -78,9 +81,9 @@ namespace Nikse.SubtitleEdit.Forms.Tts
         private void buttonOK_Click(object sender, EventArgs e)
         {
             _libMpv?.Stop();
-            for (var index = 0; index < listView1.Items.Count; index++)
+            for (var index = 0; index < listViewAudioClips.Items.Count; index++)
             {
-                if (!listView1.Items[index].Checked)
+                if (!listViewAudioClips.Items[index].Checked)
                 {
                     SkipIndices.Add(index);
                 }
@@ -91,27 +94,27 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
         private void VoicePreviewList_Load(object sender, EventArgs e)
         {
-            listView1.AutoSizeLastColumn();
+            listViewAudioClips.AutoSizeLastColumn();
         }
 
         private void VoicePreviewList_ResizeEnd(object sender, EventArgs e)
         {
-            listView1.AutoSizeLastColumn();
+            listViewAudioClips.AutoSizeLastColumn();
         }
 
         private void VoicePreviewList_Resize(object sender, EventArgs e)
         {
-            listView1.AutoSizeLastColumn();
+            listViewAudioClips.AutoSizeLastColumn();
         }
 
         private void Play(bool noAutoContinue = false)
         {
-            if (listView1.SelectedItems.Count == 0)
+            if (listViewAudioClips.SelectedItems.Count == 0)
             {
                 return;
             }
 
-            var idx = listView1.SelectedItems[0].Index;
+            var idx = listViewAudioClips.SelectedItems[0].Index;
             var waveFileName = _fileNames[idx].Filename;
 
             if (_libMpv != null)
@@ -121,6 +124,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                     waveFileName,
                     (sender, args) =>
                     {
+                        _libMpv.PlayRate = 1;
                         _libMpv.Play();
                     },
                     null);
@@ -145,12 +149,12 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
         private void PlayNext(int idx)
         {
-            if (checkBoxContinuePlay.Checked && !_abortPlay && idx < listView1.Items.Count - 1)
+            if (checkBoxContinuePlay.Checked && !_abortPlay && idx < listViewAudioClips.Items.Count - 1)
             {
-                listView1.Items[idx].Selected = false;
-                listView1.Items[idx + 1].Selected = true;
-                listView1.Items[idx + 1].Focused = true;
-                listView1.Items[idx + 1].EnsureVisible();
+                listViewAudioClips.Items[idx].Selected = false;
+                listViewAudioClips.Items[idx + 1].Selected = true;
+                listViewAudioClips.Items[idx + 1].Focused = true;
+                listViewAudioClips.Items[idx + 1].EnsureVisible();
                 TaskDelayHelper.RunDelayed(TimeSpan.FromMilliseconds(10), () => Play());
                 Application.DoEvents();
             }
@@ -158,13 +162,13 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
         private void listView1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (listView1.SelectedItems.Count == 0)
+            if (listViewAudioClips.SelectedItems.Count == 0)
             {
                 labelParagraphInfo.Text = string.Empty;
                 return;
             }
 
-            var idx = listView1.SelectedItems[0].Index;
+            var idx = listViewAudioClips.SelectedItems[0].Index;
             var p = _subtitle.Paragraphs[idx];
             labelParagraphInfo.Text = p.StartTime.ToDisplayString() + " --> " + p.EndTime.ToDisplayString() + " : " + p.Duration.ToShortDisplayString();
         }
@@ -190,12 +194,12 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 _mpvDoneTimer.Interval = 100;
                 _mpvDoneTimer.Tick += (o, args) =>
                 {
-                    if (listView1.SelectedItems.Count == 0)
+                    if (listViewAudioClips.SelectedItems.Count == 0)
                     {
                         return;
                     }
 
-                    var idx = listView1.SelectedItems[0].Index;
+                    var idx = listViewAudioClips.SelectedItems[0].Index;
                     if (_libMpv.IsPaused && _libMpv.CurrentPosition > _libMpv.Duration - 1)
                     {
                         _mpvDoneTimer.Stop();
@@ -204,7 +208,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 };
             }
 
-            listView1.AutoSizeLastColumn();
+            listViewAudioClips.AutoSizeLastColumn();
         }
 
         private void listView1_KeyDown(object sender, KeyEventArgs e)
@@ -218,12 +222,12 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
         private void buttonEdit_Click(object sender, EventArgs e)
         {
-            if (listView1.SelectedItems.Count == 0)
+            if (listViewAudioClips.SelectedItems.Count == 0)
             {
                 return;
             }
 
-            var idx = listView1.SelectedItems[0].Index;
+            var idx = listViewAudioClips.SelectedItems[0].Index;
             using (var form = new RegenerateAudioClip(_textToSpeech, _subtitle, idx))
             {
                 var dr = form.ShowDialog(this);
@@ -231,9 +235,45 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 {
                     _fileNames[idx].Filename = form.FileNameAndSpeedFactor.Filename;
                     _fileNames[idx].Factor = form.FileNameAndSpeedFactor.Factor;
-                    listView1.Items[idx].SubItems[5].Text = _subtitle.Paragraphs[idx].Text;
+                    listViewAudioClips.Items[idx].SubItems[5].Text = _subtitle.Paragraphs[idx].Text;
                     Play(true);
                 }
+            }
+        }
+
+        private void exportListAsCsvToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (var saveDialog = new SaveFileDialog { FileName = string.Empty, Filter = "CSV|*.csv" })
+            {
+                if (saveDialog.ShowDialog(this) != DialogResult.OK)
+                {
+                    return;
+                }
+
+                var csvContent = new StringBuilder();
+
+                // Header
+                csvContent.AppendLine("LineNumber,Voice,Cps,Speed,Text");
+
+                for (var i = 0; i < _subtitle.Paragraphs.Count && i < _fileNames.Count; i++)
+                {
+                    var p = _subtitle.Paragraphs[i];
+                    var pInfo = _fileNames[i];
+
+                    var number = p.Number.ToString(CultureInfo.InvariantCulture);
+                    var voice = _textToSpeech.GetParagraphAudio(p);
+                    var cps = Utilities.GetCharactersPerSecond(p).ToString("0.#", CultureInfo.InvariantCulture);
+                    var factor = "-";
+                    if (pInfo.Factor != 1)
+                    {
+                        factor = $"{(pInfo.Factor * 100.0m):0.#}%";
+                    }
+
+                    csvContent.AppendLine($"{number},{voice},{cps},{factor},{p.Text}");
+                }
+
+                File.WriteAllText(saveDialog.FileName, csvContent.ToString(), Encoding.UTF8);
+                UiUtil.OpenFolderFromFileName(saveDialog.FileName);
             }
         }
     }
