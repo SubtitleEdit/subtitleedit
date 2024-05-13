@@ -28,11 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.listView1 = new System.Windows.Forms.ListView();
+            this.components = new System.ComponentModel.Container();
+            this.listViewAudioClips = new System.Windows.Forms.ListView();
             this.columnHeaderInclude = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderNo = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderVoice = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderCps = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeaderAdjustSpeed = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderText = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.buttonOK = new System.Windows.Forms.Button();
             this.labelInfo = new System.Windows.Forms.Label();
@@ -41,33 +43,36 @@
             this.checkBoxContinuePlay = new System.Windows.Forms.CheckBox();
             this.buttonStop = new System.Windows.Forms.Button();
             this.buttonEdit = new System.Windows.Forms.Button();
-            this.columnHeaderAdjustSpeed = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.contextMenuStripListView = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.exportListAsCsvToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextMenuStripListView.SuspendLayout();
             this.SuspendLayout();
             // 
-            // listView1
+            // listViewAudioClips
             // 
-            this.listView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.listViewAudioClips.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.listView1.CheckBoxes = true;
-            this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.listViewAudioClips.CheckBoxes = true;
+            this.listViewAudioClips.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeaderInclude,
             this.columnHeaderNo,
             this.columnHeaderVoice,
             this.columnHeaderCps,
             this.columnHeaderAdjustSpeed,
             this.columnHeaderText});
-            this.listView1.FullRowSelect = true;
-            this.listView1.HideSelection = false;
-            this.listView1.Location = new System.Drawing.Point(12, 52);
-            this.listView1.MultiSelect = false;
-            this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(684, 319);
-            this.listView1.TabIndex = 0;
-            this.listView1.UseCompatibleStateImageBehavior = false;
-            this.listView1.View = System.Windows.Forms.View.Details;
-            this.listView1.SelectedIndexChanged += new System.EventHandler(this.listView1_SelectedIndexChanged);
-            this.listView1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listView1_KeyDown);
+            this.listViewAudioClips.ContextMenuStrip = this.contextMenuStripListView;
+            this.listViewAudioClips.FullRowSelect = true;
+            this.listViewAudioClips.HideSelection = false;
+            this.listViewAudioClips.Location = new System.Drawing.Point(12, 52);
+            this.listViewAudioClips.MultiSelect = false;
+            this.listViewAudioClips.Name = "listViewAudioClips";
+            this.listViewAudioClips.Size = new System.Drawing.Size(684, 319);
+            this.listViewAudioClips.TabIndex = 0;
+            this.listViewAudioClips.UseCompatibleStateImageBehavior = false;
+            this.listViewAudioClips.View = System.Windows.Forms.View.Details;
+            this.listViewAudioClips.SelectedIndexChanged += new System.EventHandler(this.listView1_SelectedIndexChanged);
+            this.listViewAudioClips.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listView1_KeyDown);
             // 
             // columnHeaderInclude
             // 
@@ -86,6 +91,10 @@
             // columnHeaderCps
             // 
             this.columnHeaderCps.Text = "CPS";
+            // 
+            // columnHeaderAdjustSpeed
+            // 
+            this.columnHeaderAdjustSpeed.Text = "Speed";
             // 
             // columnHeaderText
             // 
@@ -172,9 +181,19 @@
             this.buttonEdit.UseVisualStyleBackColor = true;
             this.buttonEdit.Click += new System.EventHandler(this.buttonEdit_Click);
             // 
-            // columnHeaderAdjustSpeed
+            // contextMenuStripListView
             // 
-            this.columnHeaderAdjustSpeed.Text = "Speed";
+            this.contextMenuStripListView.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.exportListAsCsvToolStripMenuItem});
+            this.contextMenuStripListView.Name = "contextMenuStripListView";
+            this.contextMenuStripListView.Size = new System.Drawing.Size(181, 48);
+            // 
+            // exportListAsCsvToolStripMenuItem
+            // 
+            this.exportListAsCsvToolStripMenuItem.Name = "exportListAsCsvToolStripMenuItem";
+            this.exportListAsCsvToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.exportListAsCsvToolStripMenuItem.Text = "Export list as csv...";
+            this.exportListAsCsvToolStripMenuItem.Click += new System.EventHandler(this.exportListAsCsvToolStripMenuItem_Click);
             // 
             // ReviewAudioClips
             // 
@@ -188,7 +207,7 @@
             this.Controls.Add(this.buttonPlay);
             this.Controls.Add(this.labelInfo);
             this.Controls.Add(this.buttonOK);
-            this.Controls.Add(this.listView1);
+            this.Controls.Add(this.listViewAudioClips);
             this.KeyPreview = true;
             this.MinimumSize = new System.Drawing.Size(800, 450);
             this.Name = "ReviewAudioClips";
@@ -200,6 +219,7 @@
             this.Shown += new System.EventHandler(this.VoicePreviewList_Shown);
             this.ResizeEnd += new System.EventHandler(this.VoicePreviewList_ResizeEnd);
             this.Resize += new System.EventHandler(this.VoicePreviewList_Resize);
+            this.contextMenuStripListView.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -207,7 +227,7 @@
 
         #endregion
 
-        private System.Windows.Forms.ListView listView1;
+        private System.Windows.Forms.ListView listViewAudioClips;
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Label labelInfo;
         private System.Windows.Forms.ColumnHeader columnHeaderInclude;
@@ -221,5 +241,7 @@
         private System.Windows.Forms.Button buttonStop;
         private System.Windows.Forms.Button buttonEdit;
         private System.Windows.Forms.ColumnHeader columnHeaderAdjustSpeed;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripListView;
+        private System.Windows.Forms.ToolStripMenuItem exportListAsCsvToolStripMenuItem;
     }
 }

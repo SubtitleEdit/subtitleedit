@@ -295,13 +295,22 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
                 Cleanup(_waveFolder, resultAudioFileName);
 
-                if (checkBoxAddToVideoFile.Checked && _videoFileName != null)
+                if (checkBoxAddToVideoFile.Checked)
                 {
-                    AddAudioToVideoFile(resultAudioFileName, checkBoxForceStereo.Checked);
                     if (_abort)
                     {
                         HandleAbort();
                         return;
+                    }
+
+                    if (_videoFileName != null)
+                    {
+                        AddAudioToVideoFile(resultAudioFileName, checkBoxForceStereo.Checked);
+                    }
+
+                    if (checkBoxForceStereo.Checked)
+                    {
+                        ConvertWavToTwoChannelMp3(resultAudioFileName);
                     }
                 }
 
@@ -313,6 +322,38 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 MessageBox.Show("Ups: " + exception.Message + Environment.NewLine + exception.Message);
                 SeLogger.Error(exception, $"{Text}: Error running engine {nikseComboBoxEngine.Text} with video {_videoFileName}");
             }
+        }
+
+        private bool ConvertWavToTwoChannelMp3(string audioFileName)
+        {
+            var outputFileName = Path.ChangeExtension(audioFileName, ".mp3");
+            if (File.Exists(outputFileName))
+            {
+                SeLogger.Error($"Skipping converting {audioFileName} to mp3 as {outputFileName} already exists");
+                return true;
+            }
+
+            var addAudioProcess = VideoPreviewGenerator.ConvertToAc2(audioFileName, outputFileName);
+            addAudioProcess.Start();
+            while (!addAudioProcess.HasExited)
+            {
+                Application.DoEvents();
+                if (_abort)
+                {
+                    return false;
+                }
+            }
+
+            try
+            {
+                File.Delete(audioFileName);
+            }
+            catch
+            {
+                // ignore
+            }
+
+            return true;
         }
 
         private void HandleAbort()
@@ -778,7 +819,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 };
 
                 processPiper.Start();
-                var streamWriter = processPiper.StandardInput;
+                var streamWriter = new StreamWriter(processPiper.StandardInput.BaseStream, Encoding.UTF8);
                 var text = Utilities.UnbreakLine(p.Text);
                 streamWriter.Write(text);
                 streamWriter.Flush();
@@ -801,6 +842,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 progressBar1.Refresh();
                 labelProgress.Refresh();
                 Application.DoEvents();
+                streamWriter.Dispose();
             }
 
             progressBar1.Visible = false;
@@ -997,7 +1039,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 multipartContent.Add(new StringContent("false"), "narrator_enabled");
                 multipartContent.Add(new StringContent(voice), "narrator_voice_gen");
                 multipartContent.Add(new StringContent("character"), "text_not_inside");
-                multipartContent.Add(new StringContent("en"), "language");
+                multipartContent.Add(new StringContent(nikseComboBoxRegion.Text), "language");
                 multipartContent.Add(new StringContent("output"), "output_file_name");
                 multipartContent.Add(new StringContent("false"), "output_file_timestamp");
                 multipartContent.Add(new StringContent("false"), "autoplay");
@@ -1026,6 +1068,11 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 progressBar1.Refresh();
                 labelProgress.Refresh();
                 Application.DoEvents();
+
+                if (_abort)
+                {
+                    return false;
+                }
             }
 
             progressBar1.Visible = false;
