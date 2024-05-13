@@ -1,12 +1,10 @@
-﻿using NCalc;
-using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Runtime.Remoting.Contexts;
 using System.Text;
 using System.Windows.Forms;
 
@@ -253,7 +251,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 var csvContent = new StringBuilder();
 
                 // Header
-                csvContent.AppendLine("LineNumber,Voice,Cps,Speed,Text");
+                csvContent.AppendLine("LineNumber,Voice,Cps,Speed,FileName,Text");
 
                 for (var i = 0; i < _subtitle.Paragraphs.Count && i < _fileNames.Count; i++)
                 {
@@ -269,7 +267,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                         factor = $"{(pInfo.Factor * 100.0m):0.#}%";
                     }
 
-                    csvContent.AppendLine($"{number},{voice},{cps},{factor},{p.Text}");
+                    csvContent.AppendLine($"{number},{voice},{cps},{factor},{pInfo.Filename},{p.Text}");
                 }
 
                 File.WriteAllText(saveDialog.FileName, csvContent.ToString(), Encoding.UTF8);
