@@ -310,7 +310,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
 
                     if (checkBoxForceStereo.Checked)
                     {
-                        ConvertWavToTwoChannelMp3(resultAudioFileName);
+                        ConvertWavToTwoChannelAudio(resultAudioFileName);
                     }
                 }
 
@@ -324,12 +324,12 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             }
         }
 
-        private bool ConvertWavToTwoChannelMp3(string audioFileName)
+        private bool ConvertWavToTwoChannelAudio(string audioFileName)
         {
-            var outputFileName = Path.ChangeExtension(audioFileName, ".mp3");
+            var outputFileName = audioFileName.Remove(audioFileName.LastIndexOf('.')) + "_stereo.wav";
             if (File.Exists(outputFileName))
             {
-                SeLogger.Error($"Skipping converting {audioFileName} to mp3 as {outputFileName} already exists");
+                SeLogger.Error($"Skipping converting {audioFileName} to stereo wav as {outputFileName} already exists");
                 return true;
             }
 
