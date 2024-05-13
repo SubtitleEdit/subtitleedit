@@ -480,6 +480,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                 progressBar1.Value = index + 1;
                 labelProgress.Text = string.Format(LanguageSettings.Current.TextToSpeech.AdjustingSpeedXOfY, index + 1, subtitle.Paragraphs.Count);
                 var p = subtitle.Paragraphs[index];
+
                 var next = subtitle.GetParagraphOrDefault(index + 1);
                 var pFileName = Path.Combine(_waveFolder, index + ".wav");
                 if (!string.IsNullOrEmpty(overrideFileName) && File.Exists(Path.Combine(_waveFolder, overrideFileName)))
@@ -497,7 +498,7 @@ namespace Nikse.SubtitleEdit.Forms.Tts
                     pFileName = Path.Combine(_waveFolder, index + ".mp3");
                 }
 
-                if (!File.Exists(pFileName))
+                if (!File.Exists(pFileName) || string.IsNullOrWhiteSpace(p.Text))
                 {
                     fileNames.Add(new FileNameAndSpeedFactor { Filename = pFileName, Factor = 1 });
                     continue;
@@ -2075,11 +2076,17 @@ namespace Nikse.SubtitleEdit.Forms.Tts
             listViewActors.AutoSizeLastColumn();
         }
 
-        public FileNameAndSpeedFactor ReGenerateAudio(Paragraph p, string voice)
+        public FileNameAndSpeedFactor ReGenerateAudio(Paragraph p, Paragraph next, string voice)
         {
             nikseComboBoxVoice.Text = voice;
             var sub = new Subtitle();
             sub.Paragraphs.Add(p);
+
+            if (next != null)
+            {
+                var nextEmpty = new Paragraph(next) { Text = string.Empty };
+                sub.Paragraphs.Add(nextEmpty);
+            }
 
             var waveFileNameOnly = Guid.NewGuid() + GetEngineAudioExtension();
             var ok = GenerateParagraphAudio(sub, false, waveFileNameOnly);
