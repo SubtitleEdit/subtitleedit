@@ -31,6 +31,8 @@
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.groupBoxOptions = new System.Windows.Forms.GroupBox();
+            this.textBoxTitle = new Nikse.SubtitleEdit.Controls.SETextBox();
+            this.label6 = new System.Windows.Forms.Label();
             this.comboBoxFileExtensions = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelFileExtension = new System.Windows.Forms.Label();
             this.comboBoxTimeCodeFormat = new Nikse.SubtitleEdit.Controls.NikseComboBox();
@@ -47,8 +49,6 @@
             this.label1 = new System.Windows.Forms.Label();
             this.comboBoxDefaultStyle = new Nikse.SubtitleEdit.Controls.NikseComboBox();
             this.labelWrapStyle = new System.Windows.Forms.Label();
-            this.textBoxTitle = new Nikse.SubtitleEdit.Controls.SETextBox();
-            this.label6 = new System.Windows.Forms.Label();
             this.groupBoxOptions.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -103,6 +103,41 @@
             this.groupBoxOptions.Size = new System.Drawing.Size(473, 324);
             this.groupBoxOptions.TabIndex = 0;
             this.groupBoxOptions.TabStop = false;
+            // 
+            // textBoxTitle
+            // 
+            this.textBoxTitle.BackColor = System.Drawing.Color.DarkGray;
+            this.textBoxTitle.CurrentLanguage = "";
+            this.textBoxTitle.CurrentLineIndex = 0;
+            this.textBoxTitle.HideSelection = true;
+            this.textBoxTitle.IsDictionaryDownloaded = true;
+            this.textBoxTitle.IsSpellCheckerInitialized = false;
+            this.textBoxTitle.IsSpellCheckRequested = false;
+            this.textBoxTitle.IsWrongWord = false;
+            this.textBoxTitle.LanguageChanged = false;
+            this.textBoxTitle.Location = new System.Drawing.Point(191, 19);
+            this.textBoxTitle.MaxLength = 32767;
+            this.textBoxTitle.Multiline = true;
+            this.textBoxTitle.Name = "textBoxTitle";
+            this.textBoxTitle.Padding = new System.Windows.Forms.Padding(1);
+            this.textBoxTitle.ReadOnly = false;
+            this.textBoxTitle.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
+            this.textBoxTitle.SelectedText = "";
+            this.textBoxTitle.SelectionLength = 0;
+            this.textBoxTitle.SelectionStart = 0;
+            this.textBoxTitle.Size = new System.Drawing.Size(263, 20);
+            this.textBoxTitle.TabIndex = 1;
+            this.textBoxTitle.TextBoxFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBoxTitle.UseSystemPasswordChar = false;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(6, 21);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(27, 13);
+            this.label6.TabIndex = 24;
+            this.label6.Text = "Title";
             // 
             // comboBoxFileExtensions
             // 
@@ -389,41 +424,6 @@
             this.labelWrapStyle.Size = new System.Drawing.Size(65, 13);
             this.labelWrapStyle.TabIndex = 1;
             this.labelWrapStyle.Text = "Default style";
-            // 
-            // textBoxTitle
-            // 
-            this.textBoxTitle.BackColor = System.Drawing.Color.DarkGray;
-            this.textBoxTitle.CurrentLanguage = "";
-            this.textBoxTitle.CurrentLineIndex = 0;
-            this.textBoxTitle.HideSelection = true;
-            this.textBoxTitle.IsDictionaryDownloaded = true;
-            this.textBoxTitle.IsSpellCheckerInitialized = false;
-            this.textBoxTitle.IsSpellCheckRequested = false;
-            this.textBoxTitle.IsWrongWord = false;
-            this.textBoxTitle.LanguageChanged = false;
-            this.textBoxTitle.Location = new System.Drawing.Point(191, 19);
-            this.textBoxTitle.MaxLength = 32767;
-            this.textBoxTitle.Multiline = true;
-            this.textBoxTitle.Name = "textBoxTitle";
-            this.textBoxTitle.Padding = new System.Windows.Forms.Padding(1);
-            this.textBoxTitle.ReadOnly = false;
-            this.textBoxTitle.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
-            this.textBoxTitle.SelectedText = "";
-            this.textBoxTitle.SelectionLength = 0;
-            this.textBoxTitle.SelectionStart = 0;
-            this.textBoxTitle.Size = new System.Drawing.Size(263, 20);
-            this.textBoxTitle.TabIndex = 23;
-            this.textBoxTitle.TextBoxFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBoxTitle.UseSystemPasswordChar = false;
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(6, 21);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(27, 13);
-            this.label6.TabIndex = 24;
-            this.label6.Text = "Title";
             // 
             // TimedTextPropertiesImsc11
             // 

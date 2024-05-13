@@ -2,7 +2,6 @@
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic;
 using System;
-using System.Globalization;
 using System.Windows.Forms;
 using System.Xml;
 
@@ -11,11 +10,10 @@ namespace Nikse.SubtitleEdit.Forms
     public sealed partial class TimedTextPropertiesImsc11 : PositionAndSizeForm
     {
         private readonly Subtitle _subtitle;
-        private readonly string _videoFileName;
         private readonly XmlDocument _xml;
         private readonly XmlNamespaceManager _namespaceManager;
 
-        public TimedTextPropertiesImsc11(Subtitle subtitle, string videoFileName)
+        public TimedTextPropertiesImsc11(Subtitle subtitle)
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
@@ -25,7 +23,6 @@ namespace Nikse.SubtitleEdit.Forms
             Text = string.Format(LanguageSettings.Current.Main.Menu.File.FormatXProperties, new TimedTextImsc11().Name);
 
             _subtitle = subtitle;
-            _videoFileName = videoFileName;
             var notAvailable = "[" + LanguageSettings.Current.General.NotAvailable + "]";
             comboBoxDropMode.Items[0] = notAvailable;
             comboBoxTimeBase.Items[0] = notAvailable;
@@ -128,10 +125,6 @@ namespace Nikse.SubtitleEdit.Forms
                     break;
                 }
             }
-
-            comboBoxFrameRate.Enabled = string.IsNullOrEmpty(_videoFileName);
-            comboBoxFrameRateMultiplier.Enabled = string.IsNullOrEmpty(_videoFileName);
-            comboBoxDropMode.Enabled = string.IsNullOrEmpty(_videoFileName);
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)
@@ -141,36 +134,6 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(_videoFileName))
-            {
-                if (float.TryParse(comboBoxFrameRate.Text.Replace(",", "."), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var fr))
-                {
-                    if (comboBoxFrameRateMultiplier.Text == "1 1" || string.IsNullOrEmpty(comboBoxFrameRateMultiplier.Text))
-                    {
-                        Configuration.Settings.General.CurrentFrameRate = fr;
-                    }
-                    else
-                    {
-                        if (Math.Abs(fr - 24) < 0.001)
-                        {
-                            Configuration.Settings.General.CurrentFrameRate = 23.976;
-                        }
-                        else if (Math.Abs(fr - 30) < 0.001)
-                        {
-                            Configuration.Settings.General.CurrentFrameRate = 29.97;
-                        }
-                        else if (Math.Abs(fr - 60) < 0.001)
-                        {
-                            Configuration.Settings.General.CurrentFrameRate = 59.94;
-                        }
-                        else
-                        {
-                            Configuration.Settings.General.CurrentFrameRate = fr;
-                        }
-                    }
-                }
-            }
-
             XmlNode node = _xml.DocumentElement.SelectSingleNode("ttml:head/ttml:metadata/ttml:title", _namespaceManager);
             if (node != null)
             {
