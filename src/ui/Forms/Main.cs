@@ -32615,7 +32615,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (ft == typeof(TimedTextImsc11))
             {
                 var oldFr = Configuration.Settings.General.CurrentFrameRate;
-                using (var properties = new TimedTextPropertiesImsc11(_subtitle, _videoFileName))
+                using (var properties = new TimedTextPropertiesImsc11(_subtitle))
                 {
                     properties.ShowDialog(this);
 
