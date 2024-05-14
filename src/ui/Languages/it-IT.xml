@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>4.0.5</Version>
-    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 09.05.2024</TranslatedBy>
+    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 14.05.2024</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -3353,6 +3353,13 @@ Vuoi mantenere le modifiche?</KeepChangesMessage>
     <InspectItems>Elementi dei sottotitoli</InspectItems>
     <AddBetterMatch>Aggiungi corrispondenza migliore</AddBetterMatch>
     <Add>Aggiungi</Add>
+    <AddBetterMultiMatch>Aggiungi migliore corrispondenza multipla</AddBetterMultiMatch>
+    <AddOrUpdateMatch>Aggiungi o aggiorna corrispondenza</AddOrUpdateMatch>
+    <SelectPrevousMatch>Seleziona corrispondenza precedente</SelectPrevousMatch>
+    <SelectNextMatch>Seleziona corrispondenza successiva</SelectNextMatch>
+    <JumpPreviousMissingMatch>Vai alla corrispondenza mancante precedente</JumpPreviousMissingMatch>
+    <JumpNextMissingMatch>Vai alla corrispondenza mancante successiva</JumpNextMissingMatch>
+    <FocusTextbox>Metti a fuoco input testo</FocusTextbox>
   </VobSubOcrCharacterInspect>
   <VobSubOcrNewFolder>
     <Title>Nuova cartella</Title>
