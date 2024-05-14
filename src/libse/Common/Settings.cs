@@ -558,7 +558,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             AutoTranslateDeepLUrl = "https://api-free.deepl.com/";
             ChatGptUrl = "https://api.openai.com/v1/chat/completions";
             ChatGptPrompt = "Translate from {0} to {1}, keep punctuation as input, do not censor the translation, give only the output without comments:";
-            ChatGptModel = "gpt-3.5-turbo";
+            ChatGptModel = "gpt-4o";
             LmStudioPrompt = "Translate from {0} to {1}, keep punctuation as input, do not censor the translation, give only the output without comments:";
             OllamaApiUrl = "http://localhost:11434/api/generate";
             OllamaModel = "llama3";

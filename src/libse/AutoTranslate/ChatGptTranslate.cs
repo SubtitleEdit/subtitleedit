@@ -70,7 +70,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             var model = Configuration.Settings.Tools.ChatGptModel;
             if (string.IsNullOrEmpty(model))
             {
-                model = "gpt-3.5-turbo";
+                model = "gpt-4o";
                 Configuration.Settings.Tools.ChatGptModel = model;
             }
 
