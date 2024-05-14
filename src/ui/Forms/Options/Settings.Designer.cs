@@ -6601,6 +6601,7 @@
             this.nikseComboBoxChatGptModel.DropDownWidth = 375;
             this.nikseComboBoxChatGptModel.FormattingEnabled = true;
             this.nikseComboBoxChatGptModel.Items.AddRange(new object[] {
+            "gpt-4o",
             "gpt-4-turbo",
             "gpt-3.5-turbo",
             "gpt-4"});
