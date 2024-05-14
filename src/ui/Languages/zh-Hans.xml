@@ -3336,6 +3336,13 @@ Command line: {1} {2}
     <InspectItems>检查项目</InspectItems>
     <AddBetterMatch>添加最佳匹配</AddBetterMatch>
     <Add>添加</Add>
+    <AddBetterMultiMatch>添加更好的多重匹配</AddBetterMultiMatch>
+    <AddOrUpdateMatch>添加或更新匹配</AddOrUpdateMatch>
+    <SelectPrevousMatch>选择上一匹配项</SelectPrevousMatch>
+    <SelectNextMatch>选择下一匹配项</SelectNextMatch>
+    <JumpPreviousMissingMatch>跳转到上一缺失的匹配项</JumpPreviousMissingMatch>
+    <JumpNextMissingMatch>跳转到下一缺失的匹配项</JumpNextMissingMatch>
+    <FocusTextbox>聚焦文本输入</FocusTextbox>
   </VobSubOcrCharacterInspect>
   <VobSubOcrNewFolder>
     <Title>新建文件夹</Title>
